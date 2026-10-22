@@ -1,6 +1,9 @@
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
 extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_ROOM_ARENA)
 #endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+extern "C" volatile unsigned re4dc_vram_key_crc,re4dc_vram_key_fnv;   // vram_pages.cpp (WORLD_METER VRAMFAIL lines)
+#endif
 #if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
 #include "include/resident_list_cache.h"
 #endif
@@ -3311,6 +3314,11 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     for(auto& e:entries) if(e.valid && e.key==key) {entry_hint[hint]=EntryHint(&e-entries+1);RE4DC_TOUCH(e);RE4DC_GAD_HIT(e.key);RE4DC_PROFILE_COUNT(TextureHits,1);RE4DC_TEXCHK_BIND(e);return &e;}
 #else
     for(auto& e:entries) if(e.valid && e.key==key) {RE4DC_TOUCH(e);RE4DC_GAD_HIT(e.key);RE4DC_PROFILE_COUNT(TextureHits,1);RE4DC_TEXCHK_BIND(e);return &e;}
+#endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    // WORLD_METER: a failed texture-RAM allocation from here on names this key in its VRAMFAIL log line (vram_pages.cpp).
+    struct VramKeyScope{VramKeyScope(const Key& k){re4dc_vram_key_crc=k.crc;re4dc_vram_key_fnv=k.fnv;}
+                        ~VramKeyScope(){re4dc_vram_key_crc=0;re4dc_vram_key_fnv=0;}} vram_key_scope(key);
 #endif
 #if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
     if(fx_resident_only){++fx_resident_skips;

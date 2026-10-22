@@ -88,7 +88,31 @@ std::uint32_t place(const Extent& e, std::uint32_t len) {
     const std::uint32_t off = std::uint32_t(at - base);
     return off + len <= e.off + e.len ? off : ~0U;
 }
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+// WORLD_METER (game30.mk; QA disc): each failed allocation is queued here (interrupts may be off) and logged by
+// re4dc_vram_fail_drain once per tick: size, free bytes, largest free extent, the caller, the texture key being loaded.
+struct FailRec { std::uint32_t size, free, largest, caller, crc, fnv; };
+constexpr unsigned kFailRing = 128;
+FailRec fail_ring[kFailRing]; unsigned fail_head, fail_tail, fail_lost;
+#endif
 }
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+extern "C" { volatile unsigned re4dc_vram_key_crc, re4dc_vram_key_fnv; }   // native_ui.cpp load(): the texture loading
+namespace {
+__attribute__((noinline)) void note_fail(std::size_t size, void* caller) {
+    ++fails;
+    if(fail_head - fail_tail >= kFailRing) { ++fail_lost; return; }
+    std::uint32_t largest = 0;
+    for(unsigned i = 0; i < nfree; ++i) if(free_list[i].len > largest) largest = free_list[i].len;
+    fail_ring[fail_head % kFailRing] = FailRec{std::uint32_t(size), free_bytes, largest,
+        std::uint32_t(reinterpret_cast<std::uintptr_t>(caller)), re4dc_vram_key_crc, re4dc_vram_key_fnv};
+    ++fail_head;
+}
+}
+#define RE4DC_VRAM_FAIL(sz) note_fail((sz), __builtin_return_address(0))
+#else
+#define RE4DC_VRAM_FAIL(sz) (++fails)
+#endif
 
 extern "C" {
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
@@ -118,7 +142,7 @@ void pvr_mem_reset(void) {
     if(base && pool) { free_list[0] = {0, pool}; nfree = 1; free_bytes = pool; RE4DC_VRAM_POISON(0, pool); }
 }
 pvr_ptr_t pvr_mem_malloc(size_t size) {
-    if(!base || !size || size > pool) { ++fails; return nullptr; }
+    if(!base || !size || size > pool) { RE4DC_VRAM_FAIL(size); return nullptr; }
     const std::uint32_t len = (std::uint32_t(size) + kGran - 1) & ~(kGran - 1);
     irq_disable_scoped();
     unsigned best = ~0U; std::uint32_t best_at = 0, best_left = ~0U;
@@ -142,12 +166,12 @@ pvr_ptr_t pvr_mem_malloc(size_t size) {
         const std::uint32_t left = free_list[i].len - len;
         if(left < best_left) { best = i; best_at = at; best_left = left; if(!left) break; }
     }
-    if(best == ~0U || nalloc >= kMaxAlloc) { ++fails; return nullptr; }
+    if(best == ~0U || nalloc >= kMaxAlloc) { RE4DC_VRAM_FAIL(size); return nullptr; }
     const Extent e = free_list[best];
     const Extent front{e.off, best_at - e.off}, back{best_at + len, e.off + e.len - best_at - len};
     // Replace the extent by its non-empty remainders (at most one extra entry).
     if(front.len && back.len) {
-        if(nfree >= kMaxFree) { ++fails; return nullptr; }
+        if(nfree >= kMaxFree) { RE4DC_VRAM_FAIL(size); return nullptr; }
         free_list[best] = front; insert_at(free_list, nfree, kMaxFree, best + 1, back);
     }
     else if(front.len) free_list[best] = front;
@@ -211,5 +235,34 @@ void re4dc_vram_pages_census(unsigned* out) {
     for(unsigned k = 0; k < 5; ++k) out[5 + k] = hist[k];
     out[10] = fails; out[11] = peak_alloc; out[12] = peak_free;
 }
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+// Once per tick (tick_log.cpp): log the queued failures with the room, and count them per room.
+namespace { struct RoomFails { unsigned room, n; } room_fails[8]; unsigned last_fail_room, last_fail_n; }
+void re4dc_vram_fail_drain(unsigned room) {
+    for(;;) {
+        FailRec r;
+        {
+            irq_disable_scoped();
+            if(fail_tail == fail_head) break;
+            r = fail_ring[fail_tail % kFailRing]; ++fail_tail;
+        }
+        unsigned k = 0;
+        while(k < 8 && room_fails[k].n && room_fails[k].room != room) ++k;
+        if(k == 8) k = 7;   // table full: the last row collects the rest
+        if(room_fails[k].room != room) room_fails[k] = {room, 0};
+        ++room_fails[k].n;
+        last_fail_room = room; last_fail_n = room_fails[k].n;
+        re4dc_log("VRAMFAIL room=%03x n=%u size=%u free=%u largest=%u caller=%08x key=%08x/%08x total=%u lost=%u\n", room,
+                  room_fails[k].n, r.size, r.free, r.largest, r.caller, r.crc, r.fnv, fails, fail_lost);
+    }
+}
+// QA Diagnostics: the room with the latest failure and its count; rows of (room, count); returns the row count.
+unsigned re4dc_vram_fail_rooms(unsigned* last_room, unsigned* last_n, unsigned* rooms, unsigned* counts, unsigned max) {
+    *last_room = last_fail_room; *last_n = last_fail_n;
+    unsigned n = 0;
+    for(unsigned k = 0; k < 8 && n < max && room_fails[k].n; ++k, ++n) { rooms[n] = room_fails[k].room; counts[n] = room_fails[k].n; }
+    return n;
+}
+#endif
 }
 #endif

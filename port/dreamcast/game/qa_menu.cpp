@@ -35,6 +35,12 @@ void re4dc_disc_meter_totals(unsigned* reads, unsigned long long* bytes, unsigne
     __attribute__((weak));                                                                     // dvd_read_safe.cpp
 extern unsigned long re4dc_fx_esp_live[32] __attribute__((weak));                            // esp.cpp (FX_SCAN)
 extern volatile unsigned re4dc_qa_shore_far_mm __attribute__((weak));                      // native_static.cpp (LAKE_FAR)
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+// WORLD_METER (game30.mk): the world rows (0 = the game's own) and the VRAM failure rooms.
+extern volatile unsigned re4dc_qa_wopq_mm, re4dc_qa_wxlu_mm, re4dc_qa_wshell;               // native_static.cpp
+unsigned re4dc_vram_fail_rooms(unsigned* last_room, unsigned* last_n, unsigned* rooms, unsigned* counts, unsigned max);
+int re4dc_view_dist_get(void) __attribute__((weak));                                         // option_rows.cpp
+#endif
 extern volatile unsigned long re4dc_log_head;                                                  // platform/mem.cpp
 extern char re4dc_logbuf[0x10000];
 }
@@ -188,6 +194,24 @@ void load_presets() {
     re4dc_log("qa: %d presets in %d chapters\n", g_np, g_nch);
 }
 
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+// ---------------------------------------------------------------- world rows (WORLD_METER; this boot only)
+// Opaque world cut: GAME (the Options View distance) / 12.5 / 10 / 8 m. Translucent world far: GAME / FULL (the far before
+// the View distance cut, 25 m) / 12.5 / 8 m. Far shell: GAME (drawn at View distance Short) / ON (any View distance) / OFF.
+const unsigned kOpq[] = {0u, 12500u, 10000u, 8000u}, kXlu[] = {0u, 1u, 12500u, 8000u};
+template <unsigned N> unsigned next_of(const unsigned (&t)[N], unsigned v) {
+    for (unsigned i = 0; i < N; ++i) if (t[i] == v) return t[(i + 1) % N];
+    return t[0];
+}
+const char* mm_name(unsigned v) {
+    switch (v) { case 0: return "GAME"; case 1: return "FULL"; case 12500: return "12.5 M"; case 10000: return "10 M";
+                 case 8000: return "8 M"; default: return "?"; }
+}
+const char* wm_opq_name() { return mm_name(re4dc_qa_wopq_mm); }
+const char* wm_xlu_name() { return mm_name(re4dc_qa_wxlu_mm); }
+const char* wm_shell_name() { return re4dc_qa_wshell == 1 ? "ON" : re4dc_qa_wshell == 2 ? "OFF" : "GAME"; }
+#endif
+
 // ---------------------------------------------------------------- diagnostics
 // The game side (dbgwarp_bridge.cpp qa_poll, at menu open): room, Ganados alive, heap 4 free, preset name.
 struct QaGame { unsigned room; int alive, heap4; char preset[24]; };
@@ -242,8 +266,8 @@ void snap_diag() {
     if (re4dc_qa_speed && re4dc_qa_speed(v)) a = addf(a, "fps=%u.%u speed=%u cpu=%u\n", v[0] / 10, v[0] % 10, v[1], v[2]);
     else a = addf(a, "fps=NA\n");
     if (re4dc_tick_log_snapshot) {
-        const char* nm[32]; unsigned avg[32]; unsigned seq = 0;
-        const int n = re4dc_tick_log_snapshot(nm, avg, nullptr, 32, &seq);
+        const char* nm[40]; unsigned avg[40]; unsigned seq = 0;
+        const int n = re4dc_tick_log_snapshot(nm, avg, nullptr, 40, &seq);
         auto get = [&](const char* k) -> unsigned { for (int i = 0; i < n; ++i) if (nm[i] && !strcmp(nm[i], k)) return avg[i]; return 0u; };
         const unsigned logic = get("logic"), em = get("EspMove"), et = get("EspTrans");
         const unsigned objs = get("objTrans") + get("ShadowTrans") + get("MirrorTrans") + get("ClothTrans");
@@ -251,12 +275,45 @@ void snap_diag() {
         const unsigned other = trans > et + objs ? trans - et - objs : 0;
         const unsigned draw = remain > cpu ? remain - cpu : 0, wait = total > remain ? total - remain : 0;
         auto ms = [](unsigned us) { return (us + 50) / 100; };   // 0.1 ms
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+        // WORLD_METER: Render() (the "setup" phase: the world draw, the models' OT draw) split into the PS2 world passes
+        // and the rest (render); total = the tick's wall time; other = total minus every part shown, from the rounded
+        // parts, so the rows add up exactly. All values are means per tick (drawn and skipped ticks) over the window.
+        const unsigned p_logic = ms(logic > em ? logic - em : 0), p_fx = ms(em + et), p_mod = ms(objs), p_scn = ms(other),
+                       p_post = ms(post), p_draw = ms(draw), p_wait = ms(wait);
+        const unsigned wopq = ms(get("wopq")), wxlu = ms(get("wxlu")), wsh = ms(get("wshell")), wall = ms(get("wall"));
+        const int p_render = (int) ms(get("setup")) - (int) (wopq + wxlu + wsh);
+        const int shown = (int) (p_logic + p_fx + p_mod + p_scn + p_post + p_draw + p_wait + wopq + wxlu + wsh) + p_render;
+        a = addf(a, "ms10 logic=%u fx=%u models=%u scenery=%u post=%u draw=%u wait=%u\n", p_logic, p_fx, p_mod, p_scn, p_post,
+                 p_draw, p_wait);
+        a = addf(a, "ms10 world_opq=%u world_xlu=%u shell=%u render=%d other=%d total=%u\n", wopq, wxlu, wsh, p_render,
+                 (int) wall - shown, wall);
+        a = addf(a, "vtx world_opq=%u world_xlu=%u shell=%u\n", get("vopq"), get("vxlu"), get("vshell"));
+        (void) total;
+#else
         a = addf(a, "ms10 logic=%u fx=%u models=%u scenery=%u post=%u draw=%u wait=%u total=%u\n",
                  ms(logic > em ? logic - em : 0), ms(em + et), ms(objs), ms(other), ms(post), ms(draw), ms(wait), ms(total));
+#endif
     } else a = addf(a, "ms10=NA\n");
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    {
+        const int vd = re4dc_view_dist_get ? re4dc_view_dist_get() : -1;
+        a = addf(a, "world rows opq=%s xlu=%s shell=%s view=%s\n", wm_opq_name(), wm_xlu_name(), wm_shell_name(),
+                 vd == 2 ? "short" : vd == 1 ? "near" : vd == 0 ? "full" : "na");
+    }
+#endif
     a = addf(a, "heap4=%d\n", g_game.heap4);
     if (re4dc_kos_heap_state) { unsigned f = 0, u = 0, b = 0; re4dc_kos_heap_state(&f, &u, &b); a = addf(a, "kos free=%u used=%u brk=%u\n", f, u, b); }
     if (re4dc_vram_pages_census) { unsigned o[16] = {0}; re4dc_vram_pages_census(o); a = addf(a, "vram free=%u big=%u fails=%u\n", o[3], o[4], o[10]); }
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    {   // VRAM failures by room (the VRAMFAIL log lines carry each one's size, caller and texture key)
+        unsigned lr = 0, ln = 0, rr[8], rc[8];
+        const unsigned k = re4dc_vram_fail_rooms(&lr, &ln, rr, rc, 8);
+        a = addf(a, "vram fails last_room=%03x n=%u by room:", lr, ln);
+        for (unsigned i = 0; i < k; ++i) a = addf(a, " %03x=%u", rr[i], rc[i]);
+        a = addf(a, "\n");
+    }
+#endif
     if (re4dc_disc_meter_totals) {
         unsigned r = 0; unsigned long long by = 0, bl = 0;
         re4dc_disc_meter_totals(&r, &by, &bl);
@@ -336,11 +393,11 @@ void draw_diag(const Fb& fb) {
 
 // ---------------------------------------------------------------- menu
 enum { M_MAIN, M_CHAP, M_PRE, M_DIAG, M_QR };
-enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_TITLE, A_NORMAL, A_DIAG, A_SHORE };
+enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_TITLE, A_NORMAL, A_DIAG, A_SHORE, A_WOPQ, A_WXLU, A_WSHELL };
 struct Menu {
     bool boot;
     int screen, sel[5], chap, qr_page;
-    int items[12], nitems;
+    int items[16], nitems;
 };
 const char* onoff(unsigned bit) { return (g_flags & bit) ? "ON" : "OFF"; }
 const char* speed_name() { return (re4dc_quality_speed() & 2) ? "ON" : "OFF"; }
@@ -357,6 +414,11 @@ void item_text(int a, char* out, unsigned n) {
     case A_TITLE: snprintf(out, n, "QUIT TO THE TITLE SCREEN"); break;
     case A_DIAG: snprintf(out, n, "DIAGNOSTICS"); break;
     case A_SHORE: snprintf(out, n, "LAKE SHORE VIEW: %s", &re4dc_qa_shore_far_mm && re4dc_qa_shore_far_mm ? "30 M" : "45 M"); break;
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    case A_WOPQ: snprintf(out, n, "OPAQUE WORLD CUT: %s", wm_opq_name()); break;
+    case A_WXLU: snprintf(out, n, "TRANSLUCENT WORLD: %s", wm_xlu_name()); break;
+    case A_WSHELL: snprintf(out, n, "FAR SHELL: %s", wm_shell_name()); break;
+#endif
     default: out[0] = 0;
     }
 }
@@ -487,6 +549,14 @@ int run(Menu& m, bool boot) {
                 }
                 else if (a == A_DIAG) { snap_diag(); m.screen = M_DIAG; }
                 else if (a == A_SHORE) { if (&re4dc_qa_shore_far_mm) re4dc_qa_shore_far_mm = re4dc_qa_shore_far_mm ? 0u : 30000u; }
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+                else if (a == A_WOPQ || a == A_WXLU || a == A_WSHELL) {
+                    if (a == A_WOPQ) re4dc_qa_wopq_mm = next_of(kOpq, re4dc_qa_wopq_mm);
+                    else if (a == A_WXLU) re4dc_qa_wxlu_mm = next_of(kXlu, re4dc_qa_wxlu_mm);
+                    else re4dc_qa_wshell = (re4dc_qa_wshell + 1) % 3;
+                    re4dc_log("qa: world rows opq=%s xlu=%s shell=%s\n", wm_opq_name(), wm_xlu_name(), wm_shell_name());
+                }
+#endif
                 else return a;
                 if (a >= A_LEON && a <= A_ENEMY) re4dc_log("qa: toggles %x\n", (unsigned) g_flags);
             }
@@ -527,8 +597,13 @@ void re4dc_qa_game(unsigned room, int alive, int heap4, const char* preset) {
 // hold_ms each (captures), then a teleport to /cd/dc/qa/<file> (file empty: resume).
 int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
     static Menu m;
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
+                         A_WOPQ, A_WXLU, A_WSHELL, A_TITLE};
+#else
     const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, A_TITLE};
-    m.nitems = 10;
+#endif
+    m.nitems = (int) (sizeof(items) / sizeof(items[0]));
     memcpy(m.items, items, sizeof(items));
     load_presets();
     m.screen = M_MAIN;
@@ -559,8 +634,13 @@ int re4dc_qa_menu(const char** path) {
     static Menu m;
     m.boot = false;
     if (m.screen != M_MAIN) m.screen = M_MAIN;
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
+                         A_WOPQ, A_WXLU, A_WSHELL, A_TITLE};
+#else
     const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, A_TITLE};
-    m.nitems = 10;
+#endif
+    m.nitems = (int) (sizeof(items) / sizeof(items[0]));
     memcpy(m.items, items, sizeof(items));
     re4dc_log("qa: menu open\n");
     const int a = run(m, false);

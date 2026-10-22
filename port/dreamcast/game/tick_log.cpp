@@ -35,13 +35,23 @@
 // Optional counters of other game30 knobs (weak: absent unless that knob is built in).
 extern "C" unsigned long re4dc_rot_cache_hits __attribute__((weak));
 extern "C" unsigned long re4dc_rot_cache_misses __attribute__((weak));
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+#include <arch/timer.h>
+extern "C" void re4dc_world_meter_take(unsigned* us_out, unsigned* vtx_out);   // platform/native_static.cpp
+extern "C" void re4dc_vram_fail_drain(unsigned room);   // platform/vram_pages.cpp
+extern "C" unsigned re4dc_wm_room(void);                  // dbgwarp_bridge.cpp
+#endif
 #if RE4DC_PWC_DIAG_LOG   // GAME_PWC_DIAG=2 check builds only
 extern "C" unsigned long re4dc_pwc_diag_checks __attribute__((weak));
 extern "C" unsigned long re4dc_pwc_diag_mismatch __attribute__((weak));
 #endif
 
 namespace {
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+constexpr int kSlots = 40;   // WORLD_METER: 7 more slots
+#else
 constexpr int kSlots = 32;
+#endif
 constexpr unsigned kTicksPerUs10 = 405;   // 40.5 ticks per microsecond, x10
 struct Slot { const char* name; unsigned long long sum; unsigned max; unsigned n; };
 Slot g_slots[kSlots];
@@ -68,6 +78,20 @@ void add(const char* name, unsigned ticks)
     if (v > s.max) s.max = v;
     s.n++;
 }
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+void add_us(const char* name, unsigned v)   // a value already in us (or a count)
+{
+    int i;
+    for (i = 0; i < kSlots && g_slots[i].name; i++)
+        if (g_slots[i].name == name) break;
+    if (i == kSlots) return;
+    Slot& s = g_slots[i];
+    s.name = name;
+    s.sum += v;
+    if (v > s.max) s.max = v;
+    s.n++;
+}
+#endif
 
 // Appends one field; flushes the current line first when it would pass the line budget.
 struct Line {
@@ -96,6 +120,23 @@ extern "C" __attribute__((section(".text.re4dc_tick_log"))) void re4dc_tick_log_
 {
     static const char kTotal[] = "total", kSetup[] = "setup", kCpu[] = "cpu", kEnd[] = "end", kRemain[] = "remain";
     if (g_frames == 0) g_first = frame;
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    // WORLD_METER (game30.mk): the PS2 world passes this tick (us, vertices; native_static.cpp) and the wall time since the
+    // previous tick's log call (the whole iteration, pacing wait and Render_before included), as raw us slots.
+    {
+        static const char kWopq[] = "wopq", kWxlu[] = "wxlu", kWshell[] = "wshell", kWall[] = "wall", kVopq[] = "vopq",
+                          kVxlu[] = "vxlu", kVshell[] = "vshell";
+        static unsigned long long last_us;
+        unsigned u[3], v[3];
+        re4dc_world_meter_take(u, v);
+        const unsigned long long now = timer_us_gettime64();
+        const unsigned wall = last_us ? unsigned(now - last_us) : 0;
+        last_us = now;
+        add_us(kWopq, u[0]); add_us(kWxlu, u[1]); add_us(kWshell, u[2]); add_us(kWall, wall);
+        add_us(kVopq, v[0]); add_us(kVxlu, v[1]); add_us(kVshell, v[2]);
+        re4dc_vram_fail_drain(re4dc_wm_room());
+    }
+#endif
     add(kTotal, ticks[0]);
     add(kSetup, ticks[4]);
     unsigned prev = ticks[4];
