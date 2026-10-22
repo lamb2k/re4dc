@@ -1,0 +1,23 @@
+[
+  {
+    "path": "HISTORICAL-HANDBACK.md-BEFORE020-CLOSE.gz",
+    "raw_bytes": 407663,
+    "raw_sha256": "6babf324f38ad1659c9a3bab5ca1b12390994a8fadd50544a58909d669448f7e",
+    "gzip_sha256": "b09d4463af5c6d371dbbb5ba60c30cd0974f58c4cba989daad24d52e8e8e2b77",
+    "note": "Lossless byte-for-byte historical header copy; old bytes also remain below current header and in prior Git commit."
+  },
+  {
+    "path": "HISTORICAL-INBOX.md-BEFORE020-CLOSE.gz",
+    "raw_bytes": 35346,
+    "raw_sha256": "89a4deba8ca6d4c1af2695d1dc183a377208fa0ffb87036793dafdd01b55a949",
+    "gzip_sha256": "2bb101296cbe222d29d7420650fd35029ff5917415ecfea553d77c8fb294dc17",
+    "note": "Lossless byte-for-byte historical header copy; old bytes also remain below current header and in prior Git commit."
+  },
+  {
+    "path": "HISTORICAL-STATUS.md-BEFORE020-CLOSE.gz",
+    "raw_bytes": 3167,
+    "raw_sha256": "71ac31323c739dc355fad5969f501457e466397b04c4304984450ee040fe9798",
+    "gzip_sha256": "5f92153deadd80c900f254702fdd478a25224842b1d91d8f0f6ed08952ce13b5",
+    "note": "Lossless byte-for-byte historical header copy; old bytes also remain below current header and in prior Git commit."
+  }
+]
