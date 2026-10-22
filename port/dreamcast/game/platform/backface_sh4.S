@@ -78,17 +78,24 @@
  * words are consumed by the SQ stores before becoming exact determinant
  * temporaries. Cxy and the next Axy are the only four extra LS operations.
  * SZ=0 at entry/exit; compare direction and A-pair phase are unrolled.
+ * r5 holds constant5 in this path; back/terminal exits reconstruct last-front.
+ * SHLD folds the five-bit cache stride, and only EOL streams retain raw index.
  * mode 0 world, 1 explicit actor, 2 EOL-aware actor stream.
  */
         .macro FAST_STEP label,ax,ay,nx,ny,positive,mode,next
 \label:
+        .if \mode == 2
         mov.b   @r6+,r3
         extu.b  r3,r3
         mov     r3,r0
+        .else
+        mov.b   @r6+,r0
+        extu.b  r0,r0
+        .endif
+        .if \mode
         and     r11,r0
-        shll2   r0
-        shll2   r0
-        add     r0,r0
+        .endif
+        shld    r5,r0
         add     r8,r0
         mov     r0,r7
         add     #4,r0
@@ -446,6 +453,7 @@ _re4dc_backface_sq:
         fmov    @r1+,dr6
         fschg
         add     #32,r12
+        mov     #5,r5
         add     #1,r13
         mov     r13,r1
         mov.l   @(16,r14),r0

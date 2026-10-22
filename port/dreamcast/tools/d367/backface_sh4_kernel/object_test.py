@@ -172,6 +172,12 @@ class Machine:
             out=fbits(_fmaf(*[asfloat(v) for v in values]))
             if self.fpscr&(1<<18) and out&0x7f800000==0: out&=0x80000000
             self.sf(n,out)
+        elif w&0xf00f==0x400d:
+            count=R[m]
+            if count&0x80000000:
+                shift=(-count)&31
+                R[n]=(R[n]>>shift) if shift else 0
+            else: R[n]=(R[n]<<(count&31))&U32
         elif w&0xf00f==0xf005: self.t=int(asfloat(self.f(n))>asfloat(self.f(m)))
         elif w&0xf00f in (0xf008,0xf009):
             size=8 if self.fpscr&(1<<20) else 4
