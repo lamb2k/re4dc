@@ -1,0 +1,93 @@
+{
+  "scope": "SourceSAT full3leg Northern wideorbit, no diagonalshortcut across hearingradius; current292 originalenemyhasalreadyheardnearEastpoint soinitialwalkescapes oldheardtarget, cannotpromise silence/safety/rearwindow. Dynamicactors/collisionauthoritative.",
+  "current_state_sha256": "8cb3c0145e6e13aa159ff4b2b36cf0b753f444e0569446df05f44c7cfb40fb4f",
+  "legs": [
+    {
+      "start": [
+        28490.353515625,
+        -47492.69140625
+      ],
+      "end": [
+        28500,
+        -43000
+      ],
+      "blocked": []
+    },
+    {
+      "start": [
+        28500,
+        -43000
+      ],
+      "end": [
+        23500,
+        -43000
+      ],
+      "blocked": [
+        [
+          25067.16417910448,
+          -43000.0
+        ],
+        [
+          24992.537313432837,
+          -43000.0
+        ],
+        [
+          24917.910447761195,
+          -43000.0
+        ],
+        [
+          24843.283582089553,
+          -43000.0
+        ],
+        [
+          24768.65671641791,
+          -43000.0
+        ],
+        [
+          24694.02985074627,
+          -43000.0
+        ]
+      ]
+    },
+    {
+      "start": [
+        23500,
+        -43000
+      ],
+      "end": [
+        23500,
+        -44250
+      ],
+      "blocked": [
+        [
+          23500.0,
+          -43661.76470588235
+        ],
+        [
+          23500.0,
+          -43735.294117647056
+        ],
+        [
+          23500.0,
+          -43808.82352941176
+        ],
+        [
+          23500.0,
+          -43882.35294117647
+        ],
+        [
+          23500.0,
+          -43955.882352941175
+        ],
+        [
+          23500.0,
+          -44029.41176470588
+        ],
+        [
+          23500.0,
+          -44102.94117647059
+        ]
+      ]
+    }
+  ]
+}

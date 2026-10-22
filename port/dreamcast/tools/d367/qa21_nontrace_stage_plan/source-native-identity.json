@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-22T00:12:20.674188+00:00",
+  "scope": "read-only fsutil/Get-Item identity queries, no mutation",
+  "path": "C:/Flycast-Evidence/re4-dreamcast/qa21-death-repair-runtime-20261021/trace-input/gdemu/track03.iso",
+  "file_id": "0x00000000000000000023000000028780",
+  "hardlink_paths": [
+    "/Flycast-Evidence/re4-dreamcast/qa21-death-repair-runtime-20261021/trace-input/gdemu/track03.iso"
+  ],
+  "link_count": 1,
+  "length": 1032499200,
+  "attributes_numeric": 32,
+  "last_write_UTC": "2026-10-21T23:05:51.1911485Z",
+  "source_logical_SHA256": "3c216e5ae8e8c9716906eace0ac98bc1b0712c8540f053359438d32ba77a9238",
+  "limitations": "Attributes32 alone do not diagnose WOF/LZX compression or current allocated size; future cap uses full logical allocation conservatively. No extra source sharing/hardlinks allowed."
+}

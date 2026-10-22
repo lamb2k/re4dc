@@ -1,0 +1,1546 @@
+{
+  "scope": "Exact frozen ELF DWARF member offsets only; type widths and executable sites additionally checked in ABI receipt.",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "classes": {
+    "GlobalWork": {
+      "name": "GlobalWork",
+      "depth": 1,
+      "die": "13795",
+      "byte_size": 34432,
+      "members": {
+        "dev_mode": {
+          "offset": "0",
+          "type_die": "<0x12172>"
+        },
+        "shooting_mode": {
+          "offset": "4",
+          "type_die": "<0x12191>"
+        },
+        "save_no": {
+          "offset": "5",
+          "type_die": "<0x12191>"
+        },
+        "pad_6": {
+          "offset": "6",
+          "type_die": "<0x12bc2>"
+        },
+        "CardStatus": {
+          "offset": "8",
+          "type_die": "<0x121b4>"
+        },
+        "pad_C": {
+          "offset": "12",
+          "type_die": "<0x12400>"
+        },
+        "card_serial": {
+          "offset": "16",
+          "type_die": "<0x121cc>"
+        },
+        "pFont": {
+          "offset": "24",
+          "type_die": "<0x123d2>"
+        },
+        "IsMessageInit": {
+          "offset": "28",
+          "type_die": "<0x12172>"
+        },
+        "vtx_buf_no": {
+          "offset": "36",
+          "type_die": "<0x121b4>"
+        },
+        "next_point": {
+          "offset": "42",
+          "type_die": "<0x12191>"
+        },
+        "pad_2B": {
+          "offset": "43",
+          "type_die": "<0x12191>"
+        },
+        "NextPos": {
+          "offset": "44",
+          "type_die": "<0x1223b>"
+        },
+        "NextY": {
+          "offset": "56",
+          "type_die": "<0x121d8>"
+        },
+        "pStFnt": {
+          "offset": "60",
+          "type_die": "<0x123d2>"
+        },
+        "pRoom": {
+          "offset": "64",
+          "type_die": "<0x123d2>"
+        },
+        "pWep": {
+          "offset": "68",
+          "type_die": "<0x123d2>"
+        },
+        "pArc": {
+          "offset": "72",
+          "type_die": "<0x14016>"
+        },
+        "pOption": {
+          "offset": "76",
+          "type_die": "<0x123d2>"
+        },
+        "pPlayer": {
+          "offset": "80",
+          "type_die": "<0x1401b>"
+        },
+        "System_flg": {
+          "offset": "84",
+          "type_die": "<0x121b4>"
+        },
+        "Disp_flg": {
+          "offset": "88",
+          "type_die": "<0x121b4>"
+        },
+        "game_start_time": {
+          "offset": "92",
+          "type_die": "<0x121b4>"
+        },
+        "Debug_flg": {
+          "offset": "96",
+          "type_die": "<0x123c2>"
+        },
+        "mot_speed": {
+          "offset": "112",
+          "type_die": "<0x121d8>"
+        },
+        "Cam": {
+          "offset": "116",
+          "type_die": "<0x131b3>"
+        },
+        "pad_16C": {
+          "offset": "364",
+          "type_die": "<0x12400>"
+        },
+        "Stop_flg": {
+          "offset": "368",
+          "type_die": "<0x121b4>"
+        },
+        "Room_flg": {
+          "offset": "372",
+          "type_die": "<0x123c2>"
+        },
+        "gxStage": {
+          "offset": "388",
+          "type_die": "<0x136dc>"
+        },
+        "mtxPalette": {
+          "offset": "400",
+          "type_die": "<0x14020>"
+        },
+        "pad_3010": {
+          "offset": "12304",
+          "type_die": "<0x1403c>"
+        },
+        "prim_base": {
+          "offset": "20240",
+          "type_die": "<0x12172>"
+        },
+        "prim_rate": {
+          "offset": "20244",
+          "type_die": "<0x121d8>"
+        },
+        "prim_cnt": {
+          "offset": "20248",
+          "type_die": "<0x12172>"
+        },
+        "nPrim": {
+          "offset": "20252",
+          "type_die": "<0x12172>"
+        },
+        "RoomMes": {
+          "offset": "20256",
+          "type_die": "<0x123d2>"
+        },
+        "pCamCore": {
+          "offset": "20260",
+          "type_die": "<0x123d2>"
+        },
+        "pCamRoom": {
+          "offset": "20264",
+          "type_die": "<0x123d2>"
+        },
+        "Rtp": {
+          "offset": "20268",
+          "type_die": "<0x123d2>"
+        },
+        "pEmi": {
+          "offset": "20272",
+          "type_die": "<0x123d2>"
+        },
+        "pOsd": {
+          "offset": "20276",
+          "type_die": "<0x123d2>"
+        },
+        "AreaNo": {
+          "offset": "20280",
+          "type_die": "<0x12148>"
+        },
+        "pad_4F39": {
+          "offset": "20281",
+          "type_die": "<0x123d4>"
+        },
+        "bell_pos": {
+          "offset": "20284",
+          "type_die": "<0x1223b>"
+        },
+        "bell_stat": {
+          "offset": "20296",
+          "type_die": "<0x12191>"
+        },
+        "pad_4F49": {
+          "offset": "20297",
+          "type_die": "<0x1404d>"
+        },
+        "quake_ofs": {
+          "offset": "20336",
+          "type_die": "<0x1223b>"
+        },
+        "weapon_no_old": {
+          "offset": "20348",
+          "type_die": "<0x12191>"
+        },
+        "door_no": {
+          "offset": "20349",
+          "type_die": "<0x12191>"
+        },
+        "cdown_add_sec": {
+          "offset": "20350",
+          "type_die": "<0x121a8>"
+        },
+        "save_data_start_addr": {
+          "offset": "20352",
+          "type_die": "<0x12400>"
+        },
+        "point": {
+          "offset": "20356",
+          "type_die": "<0x12172>"
+        },
+        "Game_level": {
+          "offset": "20360",
+          "type_die": "<0x12191>"
+        },
+        "x4F89": {
+          "offset": "20361",
+          "type_die": "<0x12191>"
+        },
+        "chapter": {
+          "offset": "20362",
+          "type_die": "<0x12191>"
+        },
+        "pad_4F8B": {
+          "offset": "20363",
+          "type_die": "<0x12191>"
+        },
+        "save_cnt": {
+          "offset": "20364",
+          "type_die": "<0x121a8>"
+        },
+        "game_cnt": {
+          "offset": "20366",
+          "type_die": "<0x121a8>"
+        },
+        "r_continue_cnt": {
+          "offset": "20368",
+          "type_die": "<0x121a8>"
+        },
+        "snd_tbl_no": {
+          "offset": "20370",
+          "type_die": "<0x12191>"
+        },
+        "language": {
+          "offset": "20371",
+          "type_die": "<0x12191>"
+        },
+        "play_time": {
+          "offset": "20372",
+          "type_die": "<0x121b4>"
+        },
+        "peseta": {
+          "offset": "20376",
+          "type_die": "<0x121b4>"
+        },
+        "Part_old": {
+          "offset": "20386",
+          "type_die": "<0x12191>"
+        },
+        "em_list_no": {
+          "offset": "20387",
+          "type_die": "<0x12148>"
+        },
+        "pl_life": {
+          "offset": "20388",
+          "type_die": "<0x121a8>"
+        },
+        "pl_life_max": {
+          "offset": "20390",
+          "type_die": "<0x121a8>"
+        },
+        "ashley_life": {
+          "offset": "20392",
+          "type_die": "<0x121a8>"
+        },
+        "ashley_life_max": {
+          "offset": "20394",
+          "type_die": "<0x121a8>"
+        },
+        "pad_4FAC": {
+          "offset": "20396",
+          "type_die": "<0x12400>"
+        },
+        "weapon_lv_speed": {
+          "offset": "20404",
+          "type_die": "<0x12191>"
+        },
+        "weapon_lv_blt": {
+          "offset": "20405",
+          "type_die": "<0x12191>"
+        },
+        "pad_4FB6": {
+          "offset": "20406",
+          "type_die": "<0x12bc2>"
+        },
+        "pad_4FBC": {
+          "offset": "20412",
+          "type_die": "<0x12bc2>"
+        },
+        "pl_flag": {
+          "offset": "20414",
+          "type_die": "<0x121a8>"
+        },
+        "sub_pos": {
+          "offset": "20416",
+          "type_die": "<0x1223b>"
+        },
+        "sub_angle": {
+          "offset": "20428",
+          "type_die": "<0x121d8>"
+        },
+        "pad_4FD0": {
+          "offset": "20432",
+          "type_die": "<0x1405d>"
+        },
+        "Status_flg": {
+          "offset": "20492",
+          "type_die": "<0x123c2>"
+        },
+        "em_dead": {
+          "offset": "20508",
+          "type_die": "<0x1406d>"
+        },
+        "item_flags": {
+          "offset": "20892",
+          "type_die": "<0x12304>"
+        },
+        "Item_find_flg": {
+          "offset": "20924",
+          "type_die": "<0x121b4>"
+        },
+        "Scenario_flg": {
+          "offset": "20928",
+          "type_die": "<0x14083>"
+        },
+        "door_flags_51C8": {
+          "offset": "20936",
+          "type_die": "<0x121b4>"
+        },
+        "door_flags_51CC": {
+          "offset": "20940",
+          "type_die": "<0x121b4>"
+        },
+        "door_flags_51D0": {
+          "offset": "20944",
+          "type_die": "<0x121b4>"
+        },
+        "pad_51D4": {
+          "offset": "20948",
+          "type_die": "<0x12f14>"
+        },
+        "door_unlock": {
+          "offset": "20956",
+          "type_die": "<0x14083>"
+        },
+        "Frame_cnt": {
+          "offset": "20964",
+          "type_die": "<0x121b4>"
+        },
+        "save_free_work": {
+          "offset": "20968",
+          "type_die": "<0x14093>"
+        },
+        "Em_list": {
+          "offset": "21224",
+          "type_die": "<0x140a3>"
+        },
+        "item_save": {
+          "offset": "29416",
+          "type_die": "<0x140b4>"
+        },
+        "ope_x82E8": {
+          "offset": "33512",
+          "type_die": "<0x121b4>"
+        },
+        "ope_ow_type": {
+          "offset": "33516",
+          "type_die": "<0x12191>"
+        },
+        "pad_82ED": {
+          "offset": "33517",
+          "type_die": "<0x123d4>"
+        },
+        "ope_mdt_bits": {
+          "offset": "33520",
+          "type_die": "<0x1233a>"
+        },
+        "ope_x82FC": {
+          "offset": "33532",
+          "type_die": "<0x121b4>"
+        },
+        "ope_mdt_no": {
+          "offset": "33536",
+          "type_die": "<0x12172>"
+        },
+        "pad_8304": {
+          "offset": "33540",
+          "type_die": "<0x140c4>"
+        },
+        "peseta_bak": {
+          "offset": "33580",
+          "type_die": "<0x121b4>"
+        },
+        "shootingScore": {
+          "offset": "33584",
+          "type_die": "<0x140d4>"
+        },
+        "c_continue_cnt": {
+          "offset": "33592",
+          "type_die": "<0x121a8>"
+        },
+        "g_continue_cnt": {
+          "offset": "33594",
+          "type_die": "<0x121a8>"
+        },
+        "c_kill_cnt": {
+          "offset": "33596",
+          "type_die": "<0x121b4>"
+        },
+        "g_kill_cnt": {
+          "offset": "33600",
+          "type_die": "<0x121b4>"
+        },
+        "c_hit_cnt": {
+          "offset": "33604",
+          "type_die": "<0x121b4>"
+        },
+        "g_hit_cnt": {
+          "offset": "33608",
+          "type_die": "<0x121b4>"
+        },
+        "c_shot_cnt": {
+          "offset": "33612",
+          "type_die": "<0x121b4>"
+        },
+        "g_shot_cnt": {
+          "offset": "33616",
+          "type_die": "<0x121b4>"
+        },
+        "game_mode": {
+          "offset": "33620",
+          "type_die": "<0x12191>"
+        },
+        "pad_8355": {
+          "offset": "33621",
+          "type_die": "<0x123d4>"
+        },
+        "SaveKind": {
+          "offset": "33624",
+          "type_die": "<0x12172>"
+        },
+        "pad_835C": {
+          "offset": "33628",
+          "type_die": "<0x140e4>"
+        },
+        "debug_mode": {
+          "offset": "34424",
+          "type_die": "<0x12148>"
+        },
+        "debug_disp": {
+          "offset": "34425",
+          "type_die": "<0x12148>"
+        },
+        "pad_867A": {
+          "offset": "34426",
+          "type_die": "<0x140f5>"
+        }
+      }
+    },
+    "cUnit": {
+      "name": "cUnit",
+      "depth": 1,
+      "die": "15de7",
+      "byte_size": 12,
+      "members": {
+        "_vptr.cUnit": {
+          "offset": "0",
+          "type_die": "<0x15f7c>"
+        },
+        "be_flag": {
+          "offset": "4",
+          "type_die": "<0x121b4>"
+        },
+        "pNext": {
+          "offset": "8",
+          "type_die": "<0x15f62>"
+        }
+      }
+    },
+    "cCoord": {
+      "name": "cCoord",
+      "depth": 1,
+      "die": "1b1fd",
+      "byte_size": 244,
+      "members": {
+        "mat": {
+          "offset": "12",
+          "type_die": "<0x18790>"
+        },
+        "l_mat": {
+          "offset": "60",
+          "type_die": "<0x18790>"
+        },
+        "pParent": {
+          "offset": "108",
+          "type_die": "<0x1b2f2>"
+        },
+        "world": {
+          "offset": "112",
+          "type_die": "<0x18784>"
+        },
+        "world_old": {
+          "offset": "124",
+          "type_die": "<0x18784>"
+        },
+        "world_old2": {
+          "offset": "136",
+          "type_die": "<0x18784>"
+        },
+        "pos": {
+          "offset": "148",
+          "type_die": "<0x18784>"
+        },
+        "ang": {
+          "offset": "160",
+          "type_die": "<0x18784>"
+        },
+        "scale": {
+          "offset": "172",
+          "type_die": "<0x18784>"
+        },
+        "r_scale": {
+          "offset": "184",
+          "type_die": "<0x18784>"
+        },
+        "prevMat": {
+          "offset": "196",
+          "type_die": "<0x18790>"
+        }
+      }
+    },
+    "ActBtnWork": {
+      "name": "ActBtnWork",
+      "depth": 1,
+      "die": "4d124",
+      "byte_size": 24,
+      "members": {
+        "tag": {
+          "offset": "0",
+          "type_die": "<0x4cd87>"
+        },
+        "func": {
+          "offset": "4",
+          "type_die": "<0x4ce5f>"
+        },
+        "arg": {
+          "offset": "8",
+          "type_die": "<0x4cdc5>"
+        },
+        "kind": {
+          "offset": "12",
+          "type_die": "<0x4cd62>"
+        },
+        "slot": {
+          "offset": "13",
+          "type_die": "<0x4cd62>"
+        },
+        "type": {
+          "offset": "14",
+          "type_die": "<0x4cd62>"
+        },
+        "btn": {
+          "offset": "15",
+          "type_die": "<0x4cd62>"
+        },
+        "d": {
+          "offset": "16",
+          "type_die": "<0x4cdc5>"
+        },
+        "flags": {
+          "offset": "20",
+          "type_die": "<0x4cd87>"
+        }
+      }
+    },
+    "cActionButton": {
+      "name": "cActionButton",
+      "depth": 1,
+      "die": "4d1a4",
+      "byte_size": 260,
+      "members": {
+        "m_ot": {
+          "offset": "0",
+          "type_die": "<0x4d32b>"
+        },
+        "m_num": {
+          "offset": "64",
+          "type_die": "<0x4cd62>"
+        },
+        "m_stop_flag_old": {
+          "offset": "65",
+          "type_die": "<0x4cd62>"
+        },
+        "m_active_flag": {
+          "offset": "66",
+          "type_die": "<0x4cd62>"
+        },
+        "pad_43": {
+          "offset": "67",
+          "type_die": "<0x4cd62>"
+        },
+        "work": {
+          "offset": "68",
+          "type_die": "<0x4d33b>"
+        }
+      }
+    },
+    "Message": {
+      "name": "Message",
+      "depth": 1,
+      "die": "4e9d8",
+      "byte_size": 236,
+      "members": {
+        "_vptr.Message": {
+          "offset": "0",
+          "type_die": "<0x50eeb>"
+        },
+        "stop_bak": {
+          "offset": "4",
+          "type_die": "<0x4cd87>"
+        },
+        "be_flag": {
+          "offset": "8",
+          "type_die": "<0x4cd87>"
+        },
+        "r_no_0": {
+          "offset": "12",
+          "type_die": "<0x4cd62>"
+        },
+        "r_no_1": {
+          "offset": "13",
+          "type_die": "<0x4cd62>"
+        },
+        "r_no_2": {
+          "offset": "14",
+          "type_die": "<0x4cd62>"
+        },
+        "r_no_3": {
+          "offset": "15",
+          "type_die": "<0x4cd62>"
+        },
+        "flags2": {
+          "offset": "16",
+          "type_die": "<0x4cd87>"
+        },
+        "m_scale_w": {
+          "offset": "20",
+          "type_die": "<0x4cda6>"
+        },
+        "m_scale_h": {
+          "offset": "24",
+          "type_die": "<0x4cda6>"
+        },
+        "m_font_w": {
+          "offset": "28",
+          "type_die": "<0x4cd2a>"
+        },
+        "m_font_h": {
+          "offset": "29",
+          "type_die": "<0x4cd2a>"
+        },
+        "m_item_no": {
+          "offset": "30",
+          "type_die": "<0x4cd74>"
+        },
+        "m_ot_type": {
+          "offset": "32",
+          "type_die": "<0x4cd74>"
+        },
+        "m_ot_no": {
+          "offset": "34",
+          "type_die": "<0x4cd74>"
+        },
+        "m_pFont": {
+          "offset": "36",
+          "type_die": "<0x4e96b>"
+        },
+        "m_pos_x": {
+          "offset": "40",
+          "type_die": "<0x4cd74>"
+        },
+        "m_pos_y": {
+          "offset": "42",
+          "type_die": "<0x4cd74>"
+        },
+        "m_pos0_x": {
+          "offset": "44",
+          "type_die": "<0x50f3a>"
+        },
+        "m_pos0_y": {
+          "offset": "76",
+          "type_die": "<0x4cd74>"
+        },
+        "m_width": {
+          "offset": "78",
+          "type_die": "<0x50f3a>"
+        },
+        "m_width_max": {
+          "offset": "110",
+          "type_die": "<0x4cd3c>"
+        },
+        "m_height": {
+          "offset": "112",
+          "type_die": "<0x4cd74>"
+        },
+        "waitCnt": {
+          "offset": "114",
+          "type_die": "<0x4cd74>"
+        },
+        "m_btn": {
+          "offset": "116",
+          "type_die": "<0x4cd62>"
+        },
+        "m_evt_no": {
+          "offset": "117",
+          "type_die": "<0x4cd2a>"
+        },
+        "m_lines": {
+          "offset": "118",
+          "type_die": "<0x4cd2a>"
+        },
+        "x73": {
+          "offset": "119",
+          "type_die": "<0x4cd62>"
+        },
+        "m_number_width": {
+          "offset": "120",
+          "type_die": "<0x4cd74>"
+        },
+        "charSpace": {
+          "offset": "124",
+          "type_die": "<0x4cd74>"
+        },
+        "x7A": {
+          "offset": "126",
+          "type_die": "<0x4cd74>"
+        },
+        "m_col": {
+          "offset": "128",
+          "type_die": "<0x4cd87>"
+        },
+        "m_attr": {
+          "offset": "132",
+          "type_die": "<0x4cd87>"
+        },
+        "m_spd": {
+          "offset": "136",
+          "type_die": "<0x4cd3c>"
+        },
+        "m_spd_cnt": {
+          "offset": "138",
+          "type_die": "<0x4cd3c>"
+        },
+        "m_spd_old": {
+          "offset": "140",
+          "type_die": "<0x4cd3c>"
+        },
+        "m_spd_flag": {
+          "offset": "142",
+          "type_die": "<0x4cd3c>"
+        },
+        "x8C": {
+          "offset": "144",
+          "type_die": "<0x4cd74>"
+        },
+        "m_wait_cnt": {
+          "offset": "146",
+          "type_die": "<0x4cd3c>"
+        },
+        "m_jump_mes": {
+          "offset": "148",
+          "type_die": "<0x4cf35>"
+        },
+        "m_jump_idx": {
+          "offset": "154",
+          "type_die": "<0x4cd2a>"
+        },
+        "m_jump_max": {
+          "offset": "155",
+          "type_die": "<0x4cd2a>"
+        },
+        "m_pMes": {
+          "offset": "156",
+          "type_die": "<0x4e7f0>"
+        },
+        "m_pRetAddr": {
+          "offset": "160",
+          "type_die": "<0x4e7f0>"
+        },
+        "m_pRetFont": {
+          "offset": "164",
+          "type_die": "<0x4e96b>"
+        },
+        "m_number": {
+          "offset": "168",
+          "type_die": "<0x4cd87>"
+        },
+        "digit": {
+          "offset": "172",
+          "type_die": "<0x4cd74>"
+        },
+        "pad_AA": {
+          "offset": "174",
+          "type_die": "<0x4cf45>"
+        },
+        "numberSave": {
+          "offset": "176",
+          "type_die": "<0x4cd87>"
+        },
+        "digitSave": {
+          "offset": "180",
+          "type_die": "<0x4cd74>"
+        },
+        "pad_B2": {
+          "offset": "182",
+          "type_die": "<0x4e097>"
+        },
+        "qbase": {
+          "offset": "188",
+          "type_die": "<0x50f4a>"
+        },
+        "qp": {
+          "offset": "192",
+          "type_die": "<0x50f4a>"
+        },
+        "selCur": {
+          "offset": "196",
+          "type_die": "<0x50f4f>"
+        },
+        "m_selTbl_size": {
+          "offset": "228",
+          "type_die": "<0x4cd2a>"
+        },
+        "m_sel": {
+          "offset": "229",
+          "type_die": "<0x4cd2a>"
+        },
+        "m_cur": {
+          "offset": "230",
+          "type_die": "<0x4cd2a>"
+        },
+        "m_cursol_time": {
+          "offset": "231",
+          "type_die": "<0x4cd2a>"
+        },
+        "m_who": {
+          "offset": "232",
+          "type_die": "<0x4cd62>"
+        },
+        "pad_E5": {
+          "offset": "233",
+          "type_die": "<0x4ce61>"
+        }
+      }
+    },
+    "MessageControl": {
+      "name": "MessageControl",
+      "depth": 1,
+      "die": "4f19d",
+      "byte_size": 4608,
+      "members": {
+        "_vptr.MessageControl": {
+          "offset": "0",
+          "type_die": "<0x50eeb>"
+        },
+        "x0": {
+          "offset": "4",
+          "type_die": "<0x4cd87>"
+        },
+        "mes": {
+          "offset": "8",
+          "type_die": "<0x50efa>"
+        },
+        "fontBuf": {
+          "offset": "3784",
+          "type_die": "<0x50f0a>"
+        },
+        "m_state": {
+          "offset": "3800",
+          "type_die": "<0x4cd87>"
+        },
+        "pad_ED8": {
+          "offset": "3804",
+          "type_die": "<0x50f1a>"
+        },
+        "x11F8": {
+          "offset": "4604",
+          "type_die": "<0x4cd87>"
+        }
+      }
+    },
+    "MessageData": {
+      "name": "MessageData",
+      "depth": 1,
+      "die": "94d65",
+      "byte_size": 24,
+      "members": {
+        "lang": {
+          "offset": "0",
+          "type_die": "<0x929eb>"
+        },
+        "ptr": {
+          "offset": "4",
+          "type_die": "<0x94e14>"
+        }
+      }
+    },
+    "cEm": {
+      "name": "cEm",
+      "depth": 1,
+      "die": "f101d",
+      "byte_size": 3552,
+      "members": {
+        "hp": {
+          "offset": "800",
+          "type_die": "<0xefaa3>"
+        },
+        "hp_max": {
+          "offset": "802",
+          "type_die": "<0xefaa3>"
+        },
+        "dmg": {
+          "offset": "804",
+          "type_die": "<0xf0eb5>"
+        },
+        "hitInfo": {
+          "offset": "828",
+          "type_die": "<0xf0e21>"
+        },
+        "plDist2": {
+          "offset": "880",
+          "type_die": "<0xefb19>"
+        },
+        "l_sub": {
+          "offset": "884",
+          "type_die": "<0xefb19>"
+        },
+        "subArc": {
+          "offset": "888",
+          "type_die": "<0xf2a83>"
+        },
+        "subArc2": {
+          "offset": "892",
+          "type_die": "<0xf2a83>"
+        },
+        "lockOfs": {
+          "offset": "896",
+          "type_die": "<0xefb6e>"
+        },
+        "lockParts": {
+          "offset": "908",
+          "type_die": "<0xefad0>"
+        },
+        "set": {
+          "offset": "909",
+          "type_die": "<0xefad0>"
+        },
+        "pad_38E": {
+          "offset": "910",
+          "type_die": "<0xf007e>"
+        },
+        "pScenario": {
+          "offset": "912",
+          "type_die": "<0xf3a76>"
+        },
+        "pad_394": {
+          "offset": "916",
+          "type_die": "<0xefce4>"
+        },
+        "emset_no": {
+          "offset": "920",
+          "type_die": "<0xefad0>"
+        },
+        "pad_399": {
+          "offset": "921",
+          "type_die": "<0xefcb8>"
+        },
+        "x3A8": {
+          "offset": "936",
+          "type_die": "<0xefb6e>"
+        },
+        "catchTurn": {
+          "offset": "948",
+          "type_die": "<0xefb19>"
+        },
+        "dmgType": {
+          "offset": "952",
+          "type_die": "<0xefb31>"
+        },
+        "RckStat": {
+          "offset": "956",
+          "type_die": "<0xefad0>"
+        },
+        "RckMy": {
+          "offset": "957",
+          "type_die": "<0xefa91>"
+        },
+        "RckTo": {
+          "offset": "958",
+          "type_die": "<0xefa91>"
+        },
+        "RckNear": {
+          "offset": "959",
+          "type_die": "<0xefa91>"
+        },
+        "pad_3C0": {
+          "offset": "960",
+          "type_die": "<0xefce4>"
+        },
+        "status": {
+          "offset": "964",
+          "type_die": "<0xefaf5>"
+        },
+        "flag": {
+          "offset": "968",
+          "type_die": "<0xefaf5>"
+        },
+        "Guard_r": {
+          "offset": "972",
+          "type_die": "<0xefb19>"
+        },
+        "Character": {
+          "offset": "976",
+          "type_die": "<0xefad0>"
+        },
+        "itemFlag": {
+          "offset": "977",
+          "type_die": "<0xefad0>"
+        },
+        "pad_3D2": {
+          "offset": "978",
+          "type_die": "<0xefce4>"
+        },
+        "Item_id": {
+          "offset": "982",
+          "type_die": "<0xefae2>"
+        },
+        "Item_num": {
+          "offset": "984",
+          "type_die": "<0xefae2>"
+        },
+        "Item_flg": {
+          "offset": "986",
+          "type_die": "<0xefae2>"
+        },
+        "Auto_item_flg": {
+          "offset": "988",
+          "type_die": "<0xefae2>"
+        },
+        "pad_3DE": {
+          "offset": "990",
+          "type_die": "<0xf007e>"
+        },
+        "subHand": {
+          "offset": "1316",
+          "type_die": "<0xf3b5a>"
+        },
+        "fWork0": {
+          "offset": "1324",
+          "type_die": "<0xefb19>"
+        },
+        "subHideMode": {
+          "offset": "1328",
+          "type_die": "<0xefb31>"
+        },
+        "subX534": {
+          "offset": "1332",
+          "type_die": "<0xefb31>"
+        },
+        "sub538": {
+          "offset": "1336",
+          "type_die": "<0xefb31>"
+        },
+        "sub53C": {
+          "offset": "1340",
+          "type_die": "<0xefb31>"
+        },
+        "sub540": {
+          "offset": "1344",
+          "type_die": "<0xefb31>"
+        },
+        "subHidePos": {
+          "offset": "1348",
+          "type_die": "<0xefb6e>"
+        },
+        "m_FallWaitTimer": {
+          "offset": "1360",
+          "type_die": "<0xefad0>"
+        },
+        "pad_551": {
+          "offset": "1361",
+          "type_die": "<0xefcb8>"
+        },
+        "pAnotherRoute": {
+          "offset": "1364",
+          "type_die": "<0xf37e9>"
+        },
+        "m_PlActPos": {
+          "offset": "1368",
+          "type_die": "<0xefb6e>"
+        },
+        "m_PlActAngY": {
+          "offset": "1380",
+          "type_die": "<0xefb19>"
+        },
+        "subAux0": {
+          "offset": "1384",
+          "type_die": "<0xefb31>"
+        },
+        "subAux1": {
+          "offset": "1388",
+          "type_die": "<0xefb31>"
+        },
+        "subMoveTo": {
+          "offset": "1392",
+          "type_die": "<0xefba1>"
+        },
+        "m_PlActTime": {
+          "offset": "1408",
+          "type_die": "<0xefad0>"
+        },
+        "m_PlActType": {
+          "offset": "1409",
+          "type_die": "<0xefad0>"
+        },
+        "pad_582": {
+          "offset": "1410",
+          "type_die": "<0xf007e>"
+        },
+        "subMot0": {
+          "offset": "1412",
+          "type_die": "<0xefc1f>"
+        },
+        "subMot1": {
+          "offset": "1416",
+          "type_die": "<0xefc1f>"
+        },
+        "subFlags58C": {
+          "offset": "1420",
+          "type_die": "<0xefad0>"
+        },
+        "pad_58D": {
+          "offset": "1421",
+          "type_die": "<0xf3b6a>"
+        },
+        "subSndId": {
+          "offset": "1476",
+          "type_die": "<0xefaf5>"
+        },
+        "subX5C8": {
+          "offset": "1480",
+          "type_die": "<0xefb19>"
+        },
+        "subHit": {
+          "offset": "1484",
+          "type_die": "<0xf3b7a>"
+        },
+        "pad_668": {
+          "offset": "1640",
+          "type_die": "<0xf3b8a>"
+        },
+        "m_pSatMask": {
+          "offset": "1848",
+          "type_die": "<0xefb31>"
+        },
+        "pFuncAux": {
+          "offset": "1852",
+          "type_die": "<0xf3ba5>"
+        },
+        "m_pEffRoom": {
+          "offset": "1856",
+          "type_die": "<0xf3baa>"
+        },
+        "m_pBoss": {
+          "offset": "1860",
+          "type_die": "<0xefc1f>"
+        },
+        "m_pBossRmf": {
+          "offset": "1864",
+          "type_die": "<0xefc1f>"
+        },
+        "m_FallVec": {
+          "offset": "1868",
+          "type_die": "<0xefb6e>"
+        },
+        "m_JumpVec": {
+          "offset": "1880",
+          "type_die": "<0xefb6e>"
+        },
+        "m_JumpAdjY": {
+          "offset": "1892",
+          "type_die": "<0xefb19>"
+        },
+        "m_ActCross": {
+          "offset": "1896",
+          "type_die": "<0xefb6e>"
+        },
+        "m_ActNorm": {
+          "offset": "1908",
+          "type_die": "<0xefb6e>"
+        },
+        "m_ActAttr": {
+          "offset": "1920",
+          "type_die": "<0xefaf5>"
+        },
+        "pad_784": {
+          "offset": "1924",
+          "type_die": "<0xefce4>"
+        },
+        "Wep": {
+          "offset": "1928",
+          "type_die": "<0xf3202>"
+        },
+        "Neck": {
+          "offset": "1932",
+          "type_die": "<0xf3697>"
+        },
+        "Waist": {
+          "offset": "1936",
+          "type_die": "<0xf36f6>"
+        },
+        "Body": {
+          "offset": "1940",
+          "type_die": "<0xf2dff>"
+        },
+        "pad_798": {
+          "offset": "1944",
+          "type_die": "<0xf0997>"
+        },
+        "Push": {
+          "offset": "1952",
+          "type_die": "<0xf3bb4>"
+        },
+        "MotBase": {
+          "offset": "1956",
+          "type_die": "<0xf3bbe>"
+        },
+        "pad_7A8": {
+          "offset": "1960",
+          "type_die": "<0xefce4>"
+        },
+        "pad_7D0": {
+          "offset": "2000",
+          "type_die": "<0xefce4>"
+        },
+        "subLight": {
+          "offset": "2004",
+          "type_die": "<0xf0d82>"
+        },
+        "subShape": {
+          "offset": "2008",
+          "type_die": "<0xefc1f>"
+        },
+        "subFunc": {
+          "offset": "2012",
+          "type_die": "<0xf36fd>"
+        },
+        "subBustBase": {
+          "offset": "2016",
+          "type_die": "<0xf1bf9>"
+        },
+        "pad_804": {
+          "offset": "2052",
+          "type_die": "<0xf3bc3>"
+        },
+        "x880": {
+          "offset": "2176",
+          "type_die": "<0xefb19>"
+        },
+        "pad_884": {
+          "offset": "2180",
+          "type_die": "<0xf0069>"
+        },
+        "x890": {
+          "offset": "2192",
+          "type_die": "<0xefb31>"
+        },
+        "x894": {
+          "offset": "2196",
+          "type_die": "<0xefb31>"
+        },
+        "x898": {
+          "offset": "2200",
+          "type_die": "<0xefb31>"
+        },
+        "pad_89C": {
+          "offset": "2204",
+          "type_die": "<0xf3bd3>"
+        },
+        "x9BC": {
+          "offset": "2492",
+          "type_die": "<0xefb19>"
+        },
+        "pad_9C0": {
+          "offset": "2496",
+          "type_die": "<0xf3be4>"
+        },
+        "rackMat": {
+          "offset": "3424",
+          "type_die": "<0xefb7a>"
+        },
+        "rackInvMat": {
+          "offset": "3472",
+          "type_die": "<0xefb7a>"
+        },
+        "rackRange": {
+          "offset": "3520",
+          "type_die": "<0xefba1>"
+        },
+        "rackFlags": {
+          "offset": "3536",
+          "type_die": "<0xefad0>"
+        },
+        "pad_DD1": {
+          "offset": "3537",
+          "type_die": "<0xf3bf5>"
+        }
+      }
+    },
+    "cEmMgr": {
+      "name": "cEmMgr",
+      "depth": 1,
+      "die": "f1c09",
+      "byte_size": 56,
+      "members": {
+        "Guid": {
+          "offset": "52",
+          "type_die": "<0xefaf5>"
+        }
+      }
+    },
+    "cManager<cEm>": {
+      "name": "cManager<cEm>",
+      "depth": 1,
+      "die": "f3c05",
+      "byte_size": 52,
+      "members": {
+        "_vptr.cManager": {
+          "offset": "0",
+          "type_die": "<0xf4400>"
+        },
+        "pArray": {
+          "offset": "4",
+          "type_die": "<0xf1bd0>"
+        },
+        "nArray": {
+          "offset": "8",
+          "type_die": "<0xefaf5>"
+        },
+        "size": {
+          "offset": "12",
+          "type_die": "<0xefaf5>"
+        },
+        "flag": {
+          "offset": "16",
+          "type_die": "<0xefad0>"
+        },
+        "pAlive": {
+          "offset": "20",
+          "type_die": "<0xf1bd0>"
+        },
+        "pAlivePush": {
+          "offset": "24",
+          "type_die": "<0xefaf5>"
+        },
+        "pArrayPush": {
+          "offset": "28",
+          "type_die": "<0xefaf5>"
+        },
+        "nArrayPush": {
+          "offset": "32",
+          "type_die": "<0xefaf5>"
+        },
+        "maxAlive": {
+          "offset": "36",
+          "type_die": "<0xefaf5>"
+        },
+        "name": {
+          "offset": "40",
+          "type_die": "<0xefff6>"
+        },
+        "warnDiv": {
+          "offset": "44",
+          "type_die": "<0xefaf5>"
+        },
+        "funcTbl": {
+          "offset": "48",
+          "type_die": "<0xf4410>"
+        }
+      }
+    },
+    "EmListData": {
+      "name": "EmListData",
+      "depth": 1,
+      "die": "104afc",
+      "byte_size": 32,
+      "members": {
+        "be_flag": {
+          "offset": "0",
+          "type_die": "<0x1043d0>"
+        },
+        "id": {
+          "offset": "1",
+          "type_die": "<0x1043d0>"
+        },
+        "type": {
+          "offset": "2",
+          "type_die": "<0x1043d0>"
+        },
+        "set": {
+          "offset": "3",
+          "type_die": "<0x1043d0>"
+        },
+        "flag": {
+          "offset": "4",
+          "type_die": "<0x1043f5>"
+        },
+        "hp": {
+          "offset": "8",
+          "type_die": "<0x1043e2>"
+        },
+        "emset_no": {
+          "offset": "10",
+          "type_die": "<0x1043d0>"
+        },
+        "Character": {
+          "offset": "11",
+          "type_die": "<0x1043d0>"
+        },
+        "pos": {
+          "offset": "12",
+          "type_die": "<0x104bb0>"
+        },
+        "rot": {
+          "offset": "18",
+          "type_die": "<0x104bb0>"
+        },
+        "room": {
+          "offset": "24",
+          "type_die": "<0x1043e2>"
+        },
+        "Guard_r": {
+          "offset": "26",
+          "type_die": "<0x1043aa>"
+        },
+        "pad_1C": {
+          "offset": "28",
+          "type_die": "<0x1045c2>"
+        }
+      }
+    },
+    "SceAtSysWork": {
+      "name": "SceAtSysWork",
+      "depth": 1,
+      "die": "45df43",
+      "byte_size": 292,
+      "members": {
+        "pAtData": {
+          "offset": "0",
+          "type_die": "<0x4529cd>"
+        },
+        "pAtWork": {
+          "offset": "4",
+          "type_die": "<0x45287e>"
+        },
+        "pItemData": {
+          "offset": "8",
+          "type_die": "<0x4529cd>"
+        },
+        "pItemWork": {
+          "offset": "12",
+          "type_die": "<0x45287e>"
+        },
+        "hitFlg": {
+          "offset": "16",
+          "type_die": "<0x453ae5>"
+        },
+        "execFlg": {
+          "offset": "48",
+          "type_die": "<0x453ae5>"
+        },
+        "ot": {
+          "offset": "80",
+          "type_die": "<0x453b37>"
+        },
+        "stop": {
+          "offset": "144",
+          "type_die": "<0x45287e>"
+        },
+        "x94": {
+          "offset": "148",
+          "type_die": "<0x45287e>"
+        },
+        "hideActive": {
+          "offset": "152",
+          "type_die": "<0x45285b>"
+        },
+        "pad_99": {
+          "offset": "153",
+          "type_die": "<0x452a67>"
+        },
+        "reserve": {
+          "offset": "156",
+          "type_die": "<0x45e037>"
+        },
+        "x11C": {
+          "offset": "284",
+          "type_die": "<0x45285b>"
+        },
+        "x11D": {
+          "offset": "285",
+          "type_die": "<0x45285b>"
+        },
+        "pad_11E": {
+          "offset": "286",
+          "type_die": "<0x452eb5>"
+        },
+        "pCamAt": {
+          "offset": "288",
+          "type_die": "<0x45e047>"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "scope": "OFFLINE source SAT conservative route hypothesis only, no guest or state writes. Four full legs: South flank, far West original patrol wait, South flank again, West firing point. Actual collision remains authoritative.",
+  "legs": [
+    {
+      "start": [
+        27774.599609375,
+        -44822.61328125
+      ],
+      "end": [
+        23500,
+        -47500
+      ],
+      "blocked_samples": []
+    },
+    {
+      "start": [
+        23500,
+        -47500
+      ],
+      "end": [
+        16000,
+        -45500
+      ],
+      "blocked_samples": []
+    },
+    {
+      "start": [
+        16000,
+        -45500
+      ],
+      "end": [
+        23500,
+        -47500
+      ],
+      "blocked_samples": []
+    },
+    {
+      "start": [
+        23500,
+        -47500
+      ],
+      "end": [
+        19000,
+        -45000
+      ],
+      "blocked_samples": []
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "scope": "CONTROLLED exact017state: existing Goto slots/current-entry admission only; native204Door4 to209, physicalDoor1 then original leader cut. No actor/room/outcome writes.",
+  "last": null,
+  "events": [
+    {
+      "observer_failure": "FileNotFoundError(2, 'No such file or directory')",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\observe-controlled-ch32-door018.py\", line 226, in <module>\n    check();mapping=startup_log_mapping((cap/'flycast.log').read_text(errors='replace'),cap/'data/disc.state')\n                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\pathlib.py\", line 1027, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors) as f:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\pathlib.py\", line 1013, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Flycast-Evidence\\\\re4-dreamcast\\\\castle18-20261018\\\\Test21\\\\recovered-j-content-20261021\\\\route-walk-controlled-ch32-door018\\\\flycast.log'\n"
+    },
+    {
+      "exact_owned_WM_CLOSE": true,
+      "process_age": 0.030458345427177846
+    }
+  ],
+  "owned_close_sent": true,
+  "source_fields_not_acceptance_alone": true,
+  "controlled_setup_not_event_completion": true,
+  "read_failure_count": 0,
+  "region_failure_count": 0,
+  "read_diagnostics": []
+}

@@ -1,0 +1,90 @@
+{
+  "scope": "literal P/path and with_name AST inventory, actual resolved local targets; not dynamic path override",
+  "files": [
+    {
+      "source": "outer-driver.py",
+      "line": 130,
+      "local_path": "inner-adapter.py",
+      "bytes": 14262,
+      "sha256": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e"
+    },
+    {
+      "source": "outer-driver.py",
+      "line": 131,
+      "local_path": "guest-supervisor-core.py",
+      "bytes": 5185,
+      "sha256": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb"
+    },
+    {
+      "source": "outer-driver.py",
+      "line": 131,
+      "local_path": "windows-backend.py",
+      "bytes": 15331,
+      "sha256": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e"
+    },
+    {
+      "source": "outer-driver.py",
+      "line": 141,
+      "local_path": "inner-adapter.py",
+      "bytes": 14262,
+      "sha256": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e"
+    },
+    {
+      "source": "inner-adapter.py",
+      "line": 39,
+      "local_path": "controller-core.py",
+      "bytes": 7468,
+      "sha256": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b"
+    },
+    {
+      "source": "inner-adapter.py",
+      "line": 136,
+      "local_path": "input-deadlines.py",
+      "bytes": 3728,
+      "sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9"
+    },
+    {
+      "source": "inner-adapter.py",
+      "line": 39,
+      "local_path": "capture-budget.py",
+      "bytes": 712,
+      "sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda"
+    },
+    {
+      "source": "inner-adapter.py",
+      "line": 102,
+      "local_path": "input-deadlines.py",
+      "bytes": 3728,
+      "sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9"
+    },
+    {
+      "source": "inner-adapter.py",
+      "line": 178,
+      "local_path": "exact-log-symbols.json",
+      "bytes": 634,
+      "sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29"
+    },
+    {
+      "source": "controller-core.py",
+      "line": 5,
+      "local_path": "policies.py",
+      "bytes": 3455,
+      "sha256": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233"
+    },
+    {
+      "source": "observe.py",
+      "line": 4,
+      "local_path": "observer-v2.py",
+      "bytes": 8805,
+      "sha256": "3d91acc380e386b1950082abde2d8001e9f9b72aefa111ad180380d543652abf"
+    },
+    {
+      "source": "observer-v2.py",
+      "line": 6,
+      "local_path": "layout-contract.py",
+      "bytes": 4538,
+      "sha256": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5"
+    }
+  ],
+  "source_manifest_self": "P/source-manifest.json must exist and exact outer --tools-sha256 pin checks it before imports; excluded self-hash to avoid recursive manifest"
+}

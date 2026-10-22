@@ -1,0 +1,49 @@
+{
+  "scope": "Offline source floor/wall clearance only; actual normal collision and unchanged injury/resource guards remain authoritative. No guest or game writes.",
+  "source_sha256": "908a16ccce6063b6ddf81774e4dde5e023fe800f65bd415baccb632e73dc5781",
+  "seed_state_sha256": "87353f19830668287a781389f73876cb2ff2a3a47315436c0630c26ee33687ba",
+  "segments": [
+    {
+      "start": [
+        25145.619140625,
+        -1999.999267578125,
+        -43514.73046875
+      ],
+      "end": [
+        27000,
+        -2000,
+        -45000
+      ],
+      "samples": 33,
+      "blocked_samples": []
+    },
+    {
+      "start": [
+        27000,
+        -2000,
+        -45000
+      ],
+      "end": [
+        27500,
+        -2000,
+        -45000
+      ],
+      "samples": 8,
+      "blocked_samples": []
+    },
+    {
+      "start": [
+        27500,
+        -2000,
+        -45000
+      ],
+      "end": [
+        19000,
+        -2000,
+        -45000
+      ],
+      "samples": 115,
+      "blocked_samples": []
+    }
+  ]
+}

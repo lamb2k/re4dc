@@ -88,7 +88,14 @@ static_assert(sizeof(nmr::Weight)==16,"package weight records");
 #endif
 #if RE4DC_NMR_POOL && defined(RE4DC_NMR_ROLES5) && RE4DC_NMR_ROLES5
 // ROLES5: 32 package textures (r227: em14 types 6..9 carry 20 atlas pages).
-constexpr unsigned kRegDescriptors=16,kRegChunks=RE4DC_NMR_CHUNKS,kRegGeometry=64,kRegTextures=32,kRegBones=RE4DC_NMR_BONES;
+// r202's original monks, closed/open Merchant and full Ashley partner need 69 unique geometries.
+// Reserve eight additional records only in the explicit recipe; the loader admits >64 only in r202.
+#if defined(RE4DC_NMR_R202_CAST_CAPACITY) && RE4DC_NMR_R202_CAST_CAPACITY
+#define RE4DC_NMR_ROLES5_GEOMETRY 72
+#else
+#define RE4DC_NMR_ROLES5_GEOMETRY 64
+#endif
+constexpr unsigned kRegDescriptors=16,kRegChunks=RE4DC_NMR_CHUNKS,kRegGeometry=RE4DC_NMR_ROLES5_GEOMETRY,kRegTextures=32,kRegBones=RE4DC_NMR_BONES;
 constexpr unsigned kRegPoolSections=48;  // a pool descriptor's sections (role rows); a plan still draws <= 8 of them
 #elif RE4DC_NMR_POOL
 constexpr unsigned kRegDescriptors=16,kRegChunks=RE4DC_NMR_CHUNKS,kRegGeometry=64,kRegTextures=RE4DC_NMR_REG_TEXTURES,kRegBones=RE4DC_NMR_BONES;
@@ -1058,7 +1065,14 @@ extern "C" int re4dc_registry_merchant_robe(unsigned appearance,unsigned role,un
 extern "C" int re4dc_registry_model(const cModel* m,const Re4dcActorPlan* p) {
     const auto* desc=p?registry_descriptor(p->appearance):nullptr;
 #if RE4DC_NMR_SLOTS
-    return desc && m && m->id==desc->model_id && m->nParts==registry_source_bones(*desc) && RE4DC_PLAN_SHAPE(p,desc) && RE4DC_REGISTRY_OT_OK(m,desc);
+    bool player_ot=false;
+#if RE4DC_NMR_ASHLEY >= 2 && defined(RE4DC_NMR_PL_ASHLEY) && RE4DC_NMR_PL_ASHLEY
+    // cPlAshley uses the source OT7 callback (including its skirt second pass).
+    // Leon's model0/119-joint owner and unrelated OT7 models cannot qualify.
+    player_ot=desc && m && (const cModel*)pPL==m && m->ot_type==7u &&
+        desc->model_id==0u && desc->source_bones==141u && desc->sections==7u;
+#endif
+    return desc && m && m->id==desc->model_id && m->nParts==registry_source_bones(*desc) && RE4DC_PLAN_SHAPE(p,desc) && (RE4DC_REGISTRY_OT_OK(m,desc) || player_ot);
 #else
     return desc && m && m->id==desc->model_id && m->nParts==desc->bones && RE4DC_PLAN_SHAPE(p,desc) && RE4DC_REGISTRY_OT_OK(m,desc);
 #endif

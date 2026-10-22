@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-22T05:51:34.1583004Z",
+  "owner": "root",
+  "allocated015": true,
+  "allowed_runs": 1,
+  "wrapper_sha256": "471e05d515d70c931fbdaa25bd9c89dec0c6ef000926e6af26bda53e4fb4b2bb",
+  "pins_sha256": "cb3c62871def0f354e3236be64021a8835f5c4ca3bbd4016ead99f0ff2ff37a3",
+  "observer_sha256": "acff6e46df7e0b8e5362966da7fd74e4fea3853083c6f4da5ec924ac06a40127",
+  "shell_sha256": "89e34913194b2b5944da84fc0603896a72c20a0f6f37a9e9bc20182065bb0d22",
+  "trace_lock_sha256": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688",
+  "seed_sha256": "3713cb2a4442ec5ddbf3dc4aec8dff107aa66721913e75813858c326a820adc5",
+  "proposal_sha256": "4944263790174035d5f71c5dcc06933a502974c19ddfa561883c0fa7b943b050",
+  "review_commit": "c4c73c27ade414fc79609e68c8a8bdaa382f11a7",
+  "review_sha256": "c3f893e55b3fbb058372a23c784cdaad3e15a90a02ffcea9205610d01a95112e",
+  "C_free_bytes": 145034530816,
+  "globalFlycastCount": 0,
+  "castleFlycastCount": 0,
+  "resources": {
+    "start_free_bytes": 20342374400,
+    "runtime_free_bytes": 19394461696,
+    "raw_seconds": 41,
+    "normalclose_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_cap_bytes": 62914560,
+    "global16": true,
+    "castle2": true,
+    "current_peer_charges_required": true
+  },
+  "argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-drain015.sh",
+    "--execute-allocated015"
+  ],
+  "no_retry": true,
+  "no_following_guest": true,
+  "scope": "ONE exactcontrolled014state continuation; source-gatedordinaryintro-page-A thenactualnativeYes andoriginaldrain/end. Inheritedintro notnewprogress; no rearm/newlever/teleport/outcome writes. Preserveallprotectedstates/VMUs, no release/hardware/performanceclaim."
+}

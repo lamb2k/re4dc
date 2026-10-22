@@ -34,6 +34,9 @@
 extern "C" int re4dc_ps2_world_covers(unsigned room);   // platform/native_ps2_world.cpp
 #endif
 #include "global.h"
+#if defined(RE4DC_PAUSE_NATIVE_PRESENTATION) && RE4DC_PAUSE_NATIVE_PRESENTATION
+extern "C" int re4dc_game_option_from_play();
+#endif
 #include "player.h"
 #include "pl_npc.h"
 #include "em.h"
@@ -853,6 +856,14 @@ extern "C" int re4dc_coarse_source_camera(float view[12], float projection[7], f
 extern "C" int re4dc_coarse_tick(int dropped)
 {
     int ctx = pG && pG->Rno0 == 3 && !(pG->System_flg & (0x400 | 0x100000)) && !(pG->Status_flg[2] & 0x04000000);
+#if defined(RE4DC_PAUSE_NATIVE_PRESENTATION) && RE4DC_PAUSE_NATIVE_PRESENTATION
+    // OPTIONS keeps the original room alive. Retain its native presentation;
+    // gameOption still owns the simulation stop and every menu transition.
+    if(pG && pG->Rno0==6 && pG->Rno1<=2 &&
+       re4dc_game_option_from_play() &&
+       !(pG->System_flg & (0x400 | 0x100000)) &&
+       !(pG->Status_flg[2] & 0x04000000))ctx=1;
+#endif
     if (ctx && re4dc_ui_movie_texture && re4dc_ui_movie_texture()) {
         ctx = 0;
     }

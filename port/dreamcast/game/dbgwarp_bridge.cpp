@@ -16,6 +16,9 @@
 //    and they keep counting inside the sub screen (inventory, files), whose loop pauses the game
 //    loop, so `act 300 y 3` + `act 600 b 3` opens and closes the inventory. Every room entry and
 //    action is logged with vblank and wall time.
+//  - Observe: alivelog <period> without a room directive keeps the original title,
+//    CardLoad and gameplay path. After native room entry it only reports alive
+//    enemies/in-view counts; placement, flags, input and damage actions stay off.
 //  - Boot: the VMU_SAVE card screen (card=8/1) is answered Up+A, so a warp disc needs no padscript.
 //  - Debug trigger: `trg <no> <room frame> [room]` makes the source's developer shortcut
 //    DebugTrg(no) (retail stub: always 0) return 1 once, at or after that frame of the current room
@@ -42,6 +45,7 @@
 //   room 0x100 | jp 0 | pos x y z | dir 0x8000 | ang <rad> | rsf <room> <bit>... |
 //   scenario <0|1> <hex> | find <hex> | unlock <0|1> <hex> | status <0..3> <hex> | dead <no>... | inv default | area <no> [dx dz] |
 //   act <frame> <a|b|x|y|start|fwd|back|none|0xMASK> <hold> | arm <frame> <item id> | trg <no> <frame> [room] | kill <id> <frame> [room [kind]] |
+//   killnext <id> <frame> <room> <kind> <repeat> <gap> (WARP_KILL_PHASE=1 only): one next target after death/event.
 //   killrep <count> <gap> | killpart <partsNo> (every kill hit on that hit box; 5 = the head, so the kill loses it) |
 //   killnear (each kill target is the live enemy nearest Leon) | handpose <frame> <type> <id> (cEm10::setHand, both hands) |
 //   bring <distance> [side] (the handpose / kill target moved that far in front of Leon, side to his right: still pairs) |
@@ -223,8 +227,14 @@ struct Warp {
     unsigned n_act;
     bool has_trg, trg_fired;
     int trg_no;
+    bool has_atlog, atlog_done;  // `atlog <frame>` (lane backface22): the room's scenario areas, once
+    unsigned atlog_frame;
     u32 trg_frame;
     u16 trg_room;  // 0: any room
+#if defined(RE4DC_WARP_KILL_PHASE) && RE4DC_WARP_KILL_PHASE
+    bool kill_next_pending;
+    u32 kill_next_id, kill_next_frame, kill_next_room, kill_next_kind, kill_next_rep, kill_next_gap;
+#endif
     bool has_kill, kill_done;
     int kill_id;
     u32 kill_frame, kill_hits;
@@ -342,8 +352,20 @@ struct Warp {
     // soft reset, then warps from the title shown after it (the s30 heap gate after load -> reset -> New Game).
     bool after_reset;
 #endif
+    // Observation only, when alivelog is present without any room directive.
+    // Kept at the end so existing warp field offsets remain unchanged.
+    bool observe_ready;
+    u16 observe_room;
 };
 Warp wp;
+
+#if defined(RE4DC_WARP_KILL_PHASE) && RE4DC_WARP_KILL_PHASE
+static bool kill_phase_args_valid(u32 id, u32 frame, u32 room, u32 kind, u32 repeat, u32 gap)
+{
+    return id <= 0x5F && frame > 0 && frame <= 0x7FFFFFFF && room > 0 && room <= 0x3FF &&
+           kind <= 0xFF && repeat <= 255 && gap > 0 && gap <= 60000;
+}
+#endif
 
 u32 num(const char* s) { return (u32) strtoul(s, nullptr, 0); }
 
@@ -498,6 +520,8 @@ void load()
             a.frame = num(tok[1]);
             a.id = (u16) num(tok[2]);
             a.done = false;
+        } else if (!strcmp(k, "atlog") && n >= 2) {
+            wp.has_atlog = true; wp.atlog_done = false; wp.atlog_frame = num(tok[1]);
         } else if (!strcmp(k, "trg") && n >= 3) {
             wp.has_trg = true;
             wp.trg_no = (int) num(tok[1]);
@@ -509,6 +533,20 @@ void load()
             wp.kill_frame = num(tok[2]);
             wp.kill_room = n >= 4 ? (u16) num(tok[3]) : 0;
             wp.kill_kind = n >= 5 ? (u8) num(tok[4]) : 1;
+#if defined(RE4DC_WARP_KILL_PHASE) && RE4DC_WARP_KILL_PHASE
+        } else if (!strcmp(k, "killnext")) {
+            // One later source-damage target; no direct HP, room flag or event edits.
+            if (n != 7 || wp.kill_next_pending ||
+                !kill_phase_args_valid(num(tok[1]), num(tok[2]), num(tok[3]), num(tok[4]), num(tok[5]), num(tok[6]))) {
+                wp.kill_next_pending = false;
+                re4dc_missing("warp killnext requires id frame room kind repeat gap (one phase)");
+            } else {
+                wp.kill_next_id = num(tok[1]); wp.kill_next_frame = num(tok[2]);
+                wp.kill_next_room = num(tok[3]); wp.kill_next_kind = num(tok[4]);
+                wp.kill_next_rep = num(tok[5]); wp.kill_next_gap = num(tok[6]);
+                wp.kill_next_pending = true;
+            }
+#endif
         } else if (!strcmp(k, "alivelog") && n >= 2) {
             wp.alive_period = num(tok[1]);
             wp.alive_last = ~0u;
@@ -819,18 +857,48 @@ void dump_areas()
 // hit (kind 1) whenever none is pending, registered as PlWepHitCheck3 does (cDmgInfo::set on the
 // hit box emSphereAtCk picks around the enemy); its own damage check applies it (LifeDownSet2,
 // the hp <= 0 death, the scene links). Ends when its hp is gone or it left the live list.
-void kill_poll()
+#if defined(RE4DC_WARP_KILL_PHASE) && RE4DC_WARP_KILL_PHASE
+static void kill_phase_poll()
 {
-#if defined(RE4DC_FAR_SHELL) && RE4DC_FAR_SHELL
-    if (farshell_probe_frame && wp.rooms == 1 && wp.room_frames >= farshell_probe_frame) {
-        farshell_probe_frame = 0;
-        const s32 free_bytes = memCheckHeapActive(4) ? OSCheckHeap(Heap[4].handle) : -1;
-        void* p = free_bytes > 0 ? mem_alloc((u32) free_bytes, "warp farshellprobe", 0, 0, 4) : nullptr;
-        re4dc_log("warp: farshellprobe room frame %u heap4 free=%d request %s, free after=%d\n", (unsigned) wp.room_frames,
-                  (int) free_bytes, p ? "fit" : "short", memCheckHeapActive(4) ? (int) OSCheckHeap(Heap[4].handle) : -1);
-        if (p) Mem_free_h(p, 4);
-    }
+    if (!wp.kill_next_pending || !wp.has_kill || !wp.kill_done || !pG ||
+        pG->room_id != wp.kill_next_room || wp.room_frames < wp.kill_next_frame ||
+        (pG->Status_flg[1] & 0x10000000) || SceSys.event_start_cnt) return;
+    wp.kill_next_pending = false;
+    wp.kill_id = (int) wp.kill_next_id;
+    wp.kill_frame = wp.kill_next_frame;
+    wp.kill_room = (u16) wp.kill_next_room;
+    wp.kill_kind = (u8) wp.kill_next_kind;
+    wp.kill_rep = wp.kill_next_rep;
+    wp.kill_gap = wp.kill_next_gap;
+    wp.kill_done = false;
+    wp.kill_em = nullptr;
+    wp.kill_hits = wp.kill_watch = 0;
+    wp.kill_part = 0;
+    wp.kill_near = false;
+    re4dc_log("warp: killnext 0x%02x activated in %03x at room frame %u after original death/event\n",
+              (unsigned) wp.kill_id, (unsigned) pG->room_id, (unsigned) wp.room_frames);
+}
 #endif
+
+// With no room directive the title/card-load path remains untouched. Only the
+// existing alive/frustum report is requested; none of the warp actions can run.
+bool native_alive_observe_enabled()
+{
+    return !wp.active && !wp.room && wp.alive_period;
+}
+
+void native_alive_room_enter()
+{
+    if (!native_alive_observe_enabled() || !pG) return;
+    wp.observe_ready = true;
+    wp.observe_room = pG->room_id;
+    wp.room_frames = 0;
+    wp.alive_last = ~0u;
+    re4dc_log("warp: observe room enter %03x (native load, no room override)\n", (unsigned) pG->room_id);
+}
+
+void alive_log_poll()
+{
     if (wp.alive_period && (wp.room_frames % wp.alive_period) == 0 && wp.room_frames != wp.alive_last) {
         // `alivelog <period>`: Ganados alive (the rooms' own count, ids 0x10..0x20) every period room frames
         wp.alive_last = wp.room_frames;
@@ -873,6 +941,34 @@ void kill_poll()
         line[len] = 0;
         re4dc_log("warp: alivelist room %03x frame %u ids%s\n", (unsigned) pG->room_id, (unsigned) wp.room_frames, line);
     }
+}
+
+void native_alive_poll()
+{
+    // Never inspect EmMgr while the title, load, room jump or teardown owns it.
+    // A new room must reach the normal entry hook before it can be observed.
+    if (!native_alive_observe_enabled() || !wp.observe_ready || !pG || !pPL ||
+        pG->room_id != wp.observe_room || pG->Rno0 != 3 || pG->Rno1 != 0) return;
+    ++wp.room_frames;
+    alive_log_poll();
+}
+
+void kill_poll()
+{
+#if defined(RE4DC_WARP_KILL_PHASE) && RE4DC_WARP_KILL_PHASE
+    kill_phase_poll();
+#endif
+#if defined(RE4DC_FAR_SHELL) && RE4DC_FAR_SHELL
+    if (farshell_probe_frame && wp.rooms == 1 && wp.room_frames >= farshell_probe_frame) {
+        farshell_probe_frame = 0;
+        const s32 free_bytes = memCheckHeapActive(4) ? OSCheckHeap(Heap[4].handle) : -1;
+        void* p = free_bytes > 0 ? mem_alloc((u32) free_bytes, "warp farshellprobe", 0, 0, 4) : nullptr;
+        re4dc_log("warp: farshellprobe room frame %u heap4 free=%d request %s, free after=%d\n", (unsigned) wp.room_frames,
+                  (int) free_bytes, p ? "fit" : "short", memCheckHeapActive(4) ? (int) OSCheckHeap(Heap[4].handle) : -1);
+        if (p) Mem_free_h(p, 4);
+    }
+#endif
+    alive_log_poll();
     if (wp.kill_watch && wp.kill_em && (wp.room_frames % 15) == 0) {
         --wp.kill_watch;
         cEm* em = wp.kill_em;
@@ -1075,6 +1171,20 @@ static void warp_heap4_census(unsigned frame)
 
 void goto_poll()
 {
+    // `atlog <frame>` (lane backface22, finding event trigger areas for fixtures): every enabled scenario area of the
+    // room with its type, number, trigger bits and its area's first words (xz4: floor, height, radius, 4 x/z corners).
+    if (wp.has_atlog && !wp.atlog_done && wp.room_frames >= wp.atlog_frame) {
+        wp.atlog_done = true;
+        for (int no = 0; no < 128; ++no) {
+            SceAtWork* w = SceAtPtr(no);
+            if (!w) continue;
+            const f32* f = (const f32*) &w->area.u;
+            re4dc_log("warp: atlog room %03x no=%d type=%u flag=%02x trig=%02x chk=%u atype=%u f=%d,%d,%d %d,%d %d,%d %d,%d %d,%d\n",
+                      (unsigned) pG->room_id, no, w->type, w->flag, w->trigger, w->checkType, w->area.type, (int) f[0],
+                      (int) f[1], (int) f[2], (int) f[3], (int) f[4], (int) f[5], (int) f[6], (int) f[7], (int) f[8],
+                      (int) f[9], (int) f[10]);
+        }
+    }
     for (unsigned i = 0; i < wp.n_go; ++i) {
         Warp::Goto& g = wp.go[i];
         if (g.done || g.entry != wp.rooms || wp.room_frames < g.frame || !pPL || (pG->Status_flg[1] & 0x10000000)) continue;
@@ -1554,7 +1664,10 @@ void re4dc_warp_room_enter(void)
     re4dc_qa_in_room(1);
     qa_frames = 0;
 #endif
-    if (!wp.active) return;
+    if (!wp.active) {
+        native_alive_room_enter();
+        return;
+    }
     ++wp.rooms;
     wp.room_frames = 0;
 #if RE4DC_WARP_JUMP
@@ -1602,7 +1715,10 @@ void re4dc_warp_poll(void)
 #if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
     if (qa_poll()) return;
 #endif
-    if (!wp.active) return;
+    if (!wp.active) {
+        native_alive_poll();
+        return;
+    }
     // `still` counts this room's poll frames (wp.room_frames, the clock the act lines share in the first room).
     if (wp.still_next < wp.n_still && pG && wp.rooms == 1 && wp.room_frames >= wp.still_tick[wp.still_next]) {
         const unsigned i = wp.still_next++;

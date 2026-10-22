@@ -1,0 +1,21 @@
+{
+  "scope": "ONE root allocated native inventory04; no release/Flycast/input",
+  "argv": [
+    "C:/Users/lambd/AppData/Local/Programs/Python/Python312/python.exe",
+    "-B",
+    "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_native_job_inventory_v4\\supervisor.py",
+    "--tools-sha256",
+    "031077676c334cb7989039c53bbcdbb0153e9b6ff93590d93a4eec71f73ac115",
+    "--execute-root-allocation"
+  ],
+  "pid": 28456,
+  "birth_filetime": 134371324932155834,
+  "path": "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "utc_start": "2026-10-22T08:48:13.2129964Z",
+  "fresh_free_bytes": 154065666048,
+  "request_sha256": "e6df4294699d9762bfa23d62166b22b788e6d891136f4ba5f2924e31a78a9d0f",
+  "exit_code": 0,
+  "actual_seconds": 0.6192251,
+  "wrapper_seconds": 0.6311152,
+  "exit_filetime": 134371324938348085
+}

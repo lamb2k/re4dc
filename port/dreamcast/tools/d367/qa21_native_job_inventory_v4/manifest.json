@@ -1,0 +1,60 @@
+{
+  "scope": "SOURCE-only strict DETACHED_PROCESS inventory04 candidate; no allocation/adoption",
+  "files": [
+    {
+      "path": "supervisor.py",
+      "absolute": false,
+      "sha256": "4ef4bf4a07971982e5840fabb2a0a6a6ee56ada3d5bbe25940cad98b37770b34"
+    },
+    {
+      "path": "coordinator.py",
+      "absolute": false,
+      "sha256": "75f0e5c21eb05fadd12493a1db42dc3c352e7f2451892239f2166063d0cd9a20"
+    },
+    {
+      "path": "inventory.py",
+      "absolute": false,
+      "sha256": "bc24bd095ae1e7e9c164abdbf849755ea092a98627e1f9228f9fd387b2c9fee4"
+    },
+    {
+      "path": "cleanup.py",
+      "absolute": false,
+      "sha256": "5a76565c99154461ec11c1aa91fbb8ccd04aa43a06267c453a26e965748af585"
+    },
+    {
+      "path": "startup.py",
+      "absolute": false,
+      "sha256": "d0e7e01ce2d965fb45b714126218f61bee3ab37253fba9d860f50ed60856bd78"
+    },
+    {
+      "path": "allocation.py",
+      "absolute": false,
+      "sha256": "0a63f1c869bf6965a009850cd81ea655c37d08662e12849b9a11acd3f48f6c31"
+    },
+    {
+      "path": "frozen-windows-backend.py",
+      "absolute": false,
+      "sha256": "0b0646c7d2d704707922ee671fafea5edeb97d7d160fa4a6f698f97555702a55"
+    },
+    {
+      "path": "frozen-native-reference-api.py",
+      "absolute": false,
+      "sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255"
+    },
+    {
+      "path": "config.json",
+      "absolute": false,
+      "sha256": "24c8c2c7de271ed8ba3c0962aaf3037a919c65f90afb04d27c8cbbae3f44f21d"
+    },
+    {
+      "path": "FUTURE_ROOT_ALLOCATION_BYTES.json",
+      "absolute": false,
+      "sha256": "dcd1143bf78bcb856d37932f87206dab1b0169bf7b7c6b09d58ffaff2cfaefaa"
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_owned_adapter_v1\\inner-adapter.py",
+      "absolute": true,
+      "sha256": "3f576be885b7f165f9d3a40ef6fd75292114db881754c620f159417223452758"
+    }
+  ]
+}

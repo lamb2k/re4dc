@@ -1,0 +1,580 @@
+{
+  "scope": "Independent original qualified J VMU/CardLoad lineage. Normal movement and original death/Continue only. Every failed arm is retained; source Continue legitimately restores its internal backup, with no host snapshot rollback or game-memory writes.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk129",
+      "result": "Normal cell exit passed. Current collision stopped approach at25051,-41583;528/600 unchanged. Garrador remains4000.",
+      "elapsed_s": 15.8,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "a0e845643b3e53605cca1de4ba4dfc86c693c341c03e28c893fba1244b2e12e7",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk129\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            32000.0,
+            -42000.0
+          ],
+          "pos": [
+            32054.068359375,
+            -2000.00439453125,
+            -42072.0546875
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            29345.0,
+            -41980.0
+          ],
+          "pos": [
+            29502.888671875,
+            -2000.00390625,
+            -41971.8125
+          ]
+        },
+        {
+          "normal_input_has_no_displacement": true,
+          "frame": 38339,
+          "pos": [
+            25051.009765625,
+            -1999.99951171875,
+            -41582.90234375
+          ],
+          "target": [
+            25000.0,
+            -42000.0
+          ],
+          "source_tick_window": 229
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk129\\shots\\checkpoint-source-38340\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk129\\shots\\checkpoint-source-38340\\checkpoint-context.json"
+        },
+        {
+          "owned_close_after_collision_stop": true
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "last_sample": {
+        "host_monotonic": 304706.109,
+        "room": "0x201",
+        "frame": 38339,
+        "player_hp": 528,
+        "partner_hp": 600,
+        "pos": [
+          25051.009765625,
+          -1999.99951171875,
+          -41582.90234375
+        ],
+        "yaw": -2.9278693199157715,
+        "target_distance": 420.2052487039644,
+        "angle_error": -0.09203069636765848,
+        "Garrador": {
+          "hp": 4000,
+          "pos": [
+            15828.298828125,
+            1765.343505859375,
+            -38905.02734375
+          ],
+          "yaw": 0.04426714777946472,
+          "routines": [
+            1,
+            16,
+            1,
+            0
+          ],
+          "player_back_dot": -2267.1218891162644
+        },
+        "source_Key_on": "0x45040045",
+        "player_routines": [
+          0,
+          3,
+          3,
+          4
+        ]
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk129",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Normal cell exit passed. Current collision stopped approach at25051,-41583;528/600 unchanged. Garrador remains4000.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk129\\shots\\checkpoint-source-38340\\frames\\fb0.png",
+          "png_sha256": "1f2c61520a2ac169587827d67c4a61589269d8c910e67b44f3ca11b0c7705f80",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk129\\shots\\checkpoint-source-38340\\checkpoint-context.json",
+          "source_frame_interval": [
+            38340,
+            38350
+          ],
+          "health_before": [
+            528,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            528,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk130",
+      "result": "Current source-SAT route passed six lower-floor/stair waypoints. Original Garrador attack reduced Leon528 to80; Ashley600. Fight not complete.",
+      "elapsed_s": 21.9,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "148ec906c777d0377e36d0a4ba7857f7d7120da25b003936b118c6bfedf40a6a",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk130\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            25750.0,
+            -42250.0
+          ],
+          "pos": [
+            25784.02734375,
+            -2000.00048828125,
+            -42200.94921875
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            25250.0,
+            -43500.0
+          ],
+          "pos": [
+            25176.580078125,
+            -2000.0029296875,
+            -43457.56640625
+          ]
+        },
+        {
+          "waypoint_reached": 2,
+          "target": [
+            23250.0,
+            -44500.0
+          ],
+          "pos": [
+            23291.255859375,
+            -1999.999267578125,
+            -44469.1171875
+          ]
+        },
+        {
+          "waypoint_reached": 3,
+          "target": [
+            17000.0,
+            -45500.0
+          ],
+          "pos": [
+            16887.224609375,
+            -2000.002197265625,
+            -45459.546875
+          ]
+        },
+        {
+          "waypoint_reached": 4,
+          "target": [
+            16750.0,
+            -45250.0
+          ],
+          "pos": [
+            16822.46875,
+            -1918.32470703125,
+            -45285.328125
+          ]
+        },
+        {
+          "waypoint_reached": 5,
+          "target": [
+            16750.0,
+            -44500.0
+          ],
+          "pos": [
+            16632.931640625,
+            -1472.409423828125,
+            -44512.98828125
+          ]
+        },
+        {
+          "any_further_original_damage_stop": true,
+          "health": [
+            80,
+            600
+          ],
+          "frame": 38928
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk130\\shots\\checkpoint-source-38928\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk130\\shots\\checkpoint-source-38928\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "last_sample": {
+        "host_monotonic": 304839.75,
+        "room": "0x201",
+        "frame": 38926,
+        "player_hp": 528,
+        "partner_hp": 600,
+        "pos": [
+          15435.3486328125,
+          581.789794921875,
+          -40955.01171875
+        ],
+        "yaw": -0.00686490535736084,
+        "target_distance": 317.8512676123725,
+        "angle_error": 1.7196769056152208,
+        "Garrador": {
+          "hp": 4000,
+          "pos": [
+            15899.837890625,
+            834.2000732421875,
+            -40517.828125
+          ],
+          "yaw": 3.0107128620147705,
+          "routines": [
+            1,
+            43,
+            1,
+            0
+          ],
+          "player_back_dot": 372.82571431030505
+        },
+        "source_Key_on": "0x8000008",
+        "player_routines": [
+          0,
+          4,
+          2,
+          0
+        ]
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk130",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Current source-SAT route passed six lower-floor/stair waypoints. Original Garrador attack reduced Leon528 to80; Ashley600. Fight not complete.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk130\\shots\\checkpoint-source-38928\\frames\\fb0.png",
+          "png_sha256": "7894ae05ac8c36269eb85d603f3a018399f6bfda67911b5d1f44d7e16c4e55ab",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk130\\shots\\checkpoint-source-38928\\checkpoint-context.json",
+          "source_frame_interval": [
+            38928,
+            38936
+          ],
+          "health_before": [
+            80,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            80,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk132",
+      "result": "Quiet upper-stair recovery reached15679,-38904 before original lethal Garrador attack80 to0. Actual death retained; no game-fault or kill claim.",
+      "elapsed_s": 11.3,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "76b89c4f07c98d7a43f86f90afa8db4ab05a0f7f9b81cc542732fc54da40d45a",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk132\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "abort": "AssertionError(('sourceplayerinactive/dead', 0, 1200))"
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk132\\shots\\checkpoint-source-39125\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk132\\shots\\checkpoint-source-39125\\checkpoint-context.json"
+        },
+        {
+          "owned_close_on_guard": true
+        }
+      ],
+      "last_sample": {
+        "host_monotonic": 305112.171,
+        "room": "0x201",
+        "frame": 39123,
+        "player_hp": 80,
+        "partner_hp": 600,
+        "pos": [
+          15679.4150390625,
+          1766.001953125,
+          -38903.8828125
+        ],
+        "yaw": 0.11073185503482819,
+        "target_distance": 410.00434502997473,
+        "angle_error": 0.06228670123376068,
+        "Garrador": {
+          "hp": 4000,
+          "pos": [
+            15916.361328125,
+            1431.8076171875,
+            -39482.734375
+          ],
+          "yaw": -0.20192432403564453,
+          "routines": [
+            1,
+            43,
+            1,
+            0
+          ],
+          "player_back_dot": 614.6114681384512
+        },
+        "source_Key_on": "0x9000009",
+        "player_routines": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk132",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Quiet upper-stair recovery reached15679,-38904 before original lethal Garrador attack80 to0. Actual death retained; no game-fault or kill claim.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk132\\shots\\checkpoint-source-39125\\frames\\fb0.png",
+          "png_sha256": "1ccf2c1c914ecb6de475ea5c028aafc91fda15a250c86c4da88a633ced9dd935",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk132\\shots\\checkpoint-source-39125\\checkpoint-context.json",
+          "source_frame_interval": [
+            39125,
+            39135
+          ],
+          "health_before": [
+            0,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            0,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk133",
+      "result": "Original GameOver default Continue through normalA restores actual source backup720/600 inr201. Death flag clears and live world returns. No host rollback or health writes.",
+      "elapsed_s": 26.8,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "01182664e60afd88a805beb554ad9fdb608148641b975e9a9a05c0d0bf6e9af0",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk133\\data\\disc.state"
+        },
+        {
+          "actual_original_death_before_normal_Continue": {
+            "frame": 39135,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x80400100",
+            "death_flags": "0x3180100",
+            "flags5010": "0x200",
+            "SSLoop": 0,
+            "life": 0,
+            "maxlife": 1200,
+            "ashley_life": 600,
+            "maxashley": 600,
+            "Continue_source_log": false
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk133\\shots\\checkpoint-source-39135\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk133\\shots\\checkpoint-source-39135\\checkpoint-context.json"
+        },
+        {
+          "original_Continue_recovered": {
+            "frame": 33577,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "death_flags": "0x3000100",
+            "flags5010": "0x200",
+            "SSLoop": 0,
+            "life": 720,
+            "maxlife": 1200,
+            "ashley_life": 600,
+            "maxashley": 600,
+            "Continue_source_log": true
+          },
+          "initial_death_observed": true
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk133\\shots\\checkpoint-source-33577\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk133\\shots\\checkpoint-source-33577\\checkpoint-context.json"
+        },
+        {
+          "owned_close_after_original_Continue": true
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "last_sample": {
+        "frame": 33577,
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "death_flags": "0x3000100",
+        "flags5010": "0x200",
+        "SSLoop": 0,
+        "life": 720,
+        "maxlife": 1200,
+        "ashley_life": 600,
+        "maxashley": 600,
+        "Continue_source_log": true
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk133",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Original GameOver default Continue through normalA restores actual source backup720/600 inr201. Death flag clears and live world returns. No host rollback or health writes.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk133\\shots\\checkpoint-source-33577\\frames\\fb0.png",
+          "png_sha256": "c68a20feaec46be8f2d81f9bc0c9bcdb6cbf171c49ac704338826512e31c4d7e",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk133\\shots\\checkpoint-source-33577\\checkpoint-context.json",
+          "source_frame_interval": [
+            33577,
+            33577
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": null
+        },
+        {
+          "run": "current-j-route-walk133",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Original GameOver default Continue through normalA restores actual source backup720/600 inr201. Death flag clears and live world returns. No host rollback or health writes.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk133\\shots\\checkpoint-source-39135\\frames\\fb0.png",
+          "png_sha256": "814a78d2e76d67690a276ab97d7c86c4cf21e37b882bb029c8b2a19c18a26580",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk133\\shots\\checkpoint-source-39135\\checkpoint-context.json",
+          "source_frame_interval": [
+            39135,
+            39138
+          ],
+          "health_before": [
+            0,
+            1200,
+            600,
+            600
+          ],
+          "health_after": null
+        }
+      ]
+    }
+  ],
+  "prelaunch_refusal": {
+    "run": "current-j-route-walk131",
+    "result": "Original unchanged diskpreflight refused before cap/guestcreation. Only RAMimage hardlinks prepared; no state advance or input. Current J130seed remains authoritative.",
+    "required_free_bytes": 17314086912,
+    "guest_started": false,
+    "source_state_sha256": "148ec906c777d0377e36d0a4ba7857f7d7120da25b003936b118c6bfedf40a6a"
+  },
+  "lossless_disk_recovery": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\finished-j-exe-hardlink-dedup-20261021.json",
+      "sha256": "f5cebb273ca6dacc8044577f09a3dc39e6cc46a5ace51b3ec8b2ba762ed80d94",
+      "scope": "Lossless exact-SHA hardlink dedup of only completed owned J capture flycast.exe files. Every original path/content preserved; excludes current J130 seed and prepared J131. No state/image/log/program/asset removal.",
+      "path_count": 127,
+      "free_before": 15548424192,
+      "free_after": 17119371264,
+      "all_original_paths_preserved": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\finished-other-main-exe-hardlink-dedup-20261021.json",
+      "sha256": "54b6f5cf4a7903961f2bb30af8b89ac796b4da261cc1ad24056979d8b9f82330",
+      "scope": "Lossless exact-SHA hardlink dedup of only completed owned non-J-route main Test21 capture flycast.exe files. Every original path/content preserved; excludes current I07/K05/Ashley-source fixture and all J route outputs. No state/image/log/program/asset removal.",
+      "path_count": 33,
+      "free_before": 16882982912,
+      "free_after": 17358749696,
+      "all_original_paths_preserved": true
+    }
+  ],
+  "limits": [
+    "Actual J132 death is ordinary combat failure, not runtime freeze. J133 source log proves original Continue selection and healthy world return.",
+    "No Garrador damage/kill, dungeon exit, waves or chapter-end save acceptance. Prior lever pass remains a retained historical step; Continue resets according to source backup.",
+    "Native, effects, texture residency and motion performance evidence remain separately scoped. No whole-drive quiet or hardware timing claim."
+  ],
+  "next": "Original herb recovery, then intended bell lure and actual weakpoint fight. Same J source/image; no source fix, data patch, build or staging."
+}

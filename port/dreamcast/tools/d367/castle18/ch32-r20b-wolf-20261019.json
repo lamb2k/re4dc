@@ -1,0 +1,8 @@
+{
+  "replace": {
+    "dc/tex/c/c0afb726-15c7c9b5.re4tex": "/root/re4data/private/castle18-ch32-r20b-wolf-v2-20261019/files/dc/tex/c/c0afb726-15c7c9b5.re4tex",
+    "dc/native/r20b/registry.re4nmr": "/root/re4data/private/castle18-ch32-r20b-wolf-v2-20261019/files/dc/native/r20b/registry.re4nmr"
+  },
+  "remove": [],
+  "provenance": "r20b full PS2 em22 type0 body package from unchanged qualified r11b geometry. Current BIN4 exact endian source; TPL5 has exact header/samplers and verified source-key R4NREF for its externalized pixels. Runtime gate pending."
+}

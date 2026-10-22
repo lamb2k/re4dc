@@ -1,3 +1,13 @@
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_ROOM_ARENA)
+#endif
+#if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
+#include "include/resident_list_cache.h"
+#endif
+#if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
+extern "C" void re4dc_bfc_feed(unsigned list,const void* data,unsigned bytes);
+extern "C" void re4dc_bfc_scene(unsigned frame,int present);
+#endif
 #include "include/movie_world_arena.h"
 #include "include/actor_visibility_diag.h"
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
@@ -31,6 +41,15 @@ extern "C" unsigned re4dc_lbx_rows_last;  // letterbox_clip.cpp (MCHECK_SAFE, mc
 #endif
 #ifndef RE4DC_PS2_WORLD_DRAW
 #define RE4DC_PS2_WORLD_DRAW 0
+#endif
+#ifndef RE4DC_WORLD_RECT21
+#define RE4DC_WORLD_RECT21 0
+#endif
+#if RE4DC_WORLD_RECT21
+#if !RE4DC_PS2_WORLD_DRAW || !RE4DC_PS2_WORLD_MESH || !RE4DC_MESH_DIRECT
+#error WORLD_RECT21 requires the qualified PS2 world mesh direct consumer
+#endif
+#include "../../tools/d367/texture_rect21/world_rect_bind.h"
 #endif
 #if RE4DC_PS2_WORLD_DRAW
 #include "re4dc_screen.h"
@@ -302,9 +321,21 @@ unsigned kos_headroom(){unsigned f=0,u=0,b=0;re4dc_kos_heap_state(&f,&u,&b);retu
 #endif
 #endif
 struct Key { unsigned crc,fnv; bool operator==(const Key& b)const{return crc==b.crc && fnv==b.fnv;} };
-#if RE4DC_TEX_PACK
+#ifndef RE4DC_TEX_PAYLOAD_RETRY
+#define RE4DC_TEX_PAYLOAD_RETRY 0
+#endif
+#if RE4DC_TEX_PAYLOAD_RETRY && (!RE4DC_TEX_PACK || !RE4DC_TEX_RESIDENT)
+#error TEX_PAYLOAD_RETRY requires TEX_PACK and TEX_RESIDENT
+#endif
+#if RE4DC_TEX_PAYLOAD_RETRY
+#include "texpack_payload_retry.inc"
+#endif
 // TEX_PACK (game30.mk; tools/d367/texpack.py): dc/tex.pak index, validation and failure policy.
+#if RE4DC_TEX_PACK
 #include "texpack_index.inc"
+#if RE4DC_TEX_PAYLOAD_RETRY
+static_assert(texpack_payload_retry::kMembers==texpack::kMaxCount,"payload retry ordinal cap must match the validated pack cap");
+#endif
 #endif
 struct Entry { re4dc::texture::Package package; Key key{}; unsigned frame=0; bool valid=false;
 #if RE4DC_D349_RENDERER_STACK
@@ -371,6 +402,18 @@ Key room_pin_key{};
 #define RE4DC_WRAP_SAFE(pkg) ((((pkg).header().flags>>30)&1U)!=0U)
 #else
 #define RE4DC_WRAP_SAFE(pkg) false
+#endif
+#if defined(RE4DC_OVL_WATCH) && RE4DC_OVL_WATCH
+extern "C" void re4dc_ovl_watch(const char* where);
+#define OVLW(x) re4dc_ovl_watch(x)
+#else
+#define OVLW(x) ((void)0)
+#endif
+#if defined(RE4DC_OVL_GUARD) && RE4DC_OVL_GUARD
+extern "C" void re4dc_ovl_guard(const char* where);
+#define OVLG(x) re4dc_ovl_guard(x)
+#else
+#define OVLG(x) ((void)0)
 #endif
 #if RE4DC_ACTOR_TRANSACTION
 re4dc_actor::TextureLeases<kTextureCount> actor_texture_leases;
@@ -453,7 +496,16 @@ unsigned movie_window_release(unsigned bytes,bool pinned_ok,unsigned& released_b
 #if RE4DC_UI_VRAM && RE4DC_TEX_RESIDENT && RE4DC_UI_OVERLAY_SLAB_KB
 constexpr unsigned kOverlaySlabBytes=RE4DC_UI_OVERLAY_SLAB_KB*1024U;
 pvr_ptr_t overlay_slab; const Entry* overlay_owner; unsigned overlay_uses;
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+void overlay_slab_take(){
+    if(overlay_slab || overlay_owner)return;
+    re4dc_vram_arena_class=2;   // VRAM_ROOM_ARENA: long-lived, from the top
+    overlay_slab=pvr_mem_malloc(kOverlaySlabBytes);
+    re4dc_vram_arena_class=0;
+}
+#else
 void overlay_slab_take(){ if(!overlay_slab && !overlay_owner)overlay_slab=pvr_mem_malloc(kOverlaySlabBytes); }
+#endif
 #endif
 #if RE4DC_TEX_RESIDENT
 bool preload_pending; unsigned preload_loads,preload_skipped,preload_runs;
@@ -2136,6 +2188,9 @@ void stream_close(bool present) {
 #if defined(RE4DC_MCHECK_PT) && RE4DC_MCHECK_PT
     pt_audit_scene(frame,present);
 #endif
+#if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
+    re4dc_bfc_scene(frame,present?1:0);
+#endif
 #if defined(RE4DC_MCHECK_SAFE) && RE4DC_MCHECK_SAFE
     safe_audit_scene(present);
 #endif
@@ -3106,6 +3161,7 @@ void vram_room_track(){
     if(free_bytes<vroom.min_free)vroom.min_free=free_bytes;
 }
 void vram_room_frame(){
+    OVLG("frame");
     vram_room_track();
     if(frame%30==0){unsigned largest,alloc;vram_room_largest(largest,alloc);if(largest<vroom.min_largest)vroom.min_largest=largest;}
     if(frame!=vroom.since && (frame-vroom.since)%600==0)vram_room_sample("tick");
@@ -3115,6 +3171,7 @@ void vram_room_frame(){
 }
 #endif
 void close_entry(Entry& entry) {
+    struct OvlwAfter{~OvlwAfter(){OVLW("close");OVLG("close");}} ovlw_after;
 #if RE4DC_TEX_CHECK
     if(entry.valid)texchk::verify(entry,"close",true);
     texchk::armed[&entry-entries]=false;
@@ -3288,16 +3345,30 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     // an absent key so it is never tried again.
 #if RE4DC_TEX_PACK
     unsigned pack_offset=0,pack_size=0;
+#if RE4DC_TEX_PAYLOAD_RETRY
+    unsigned pack_member=~0U,pack_epoch=0;
+#define RE4DC_PACK_FIND() texpack::find(key,pack_offset,pack_size,frame,&pack_member,&pack_epoch)
+#else
+#define RE4DC_PACK_FIND() texpack::find(key,pack_offset,pack_size,frame)
+#endif
 #if RE4DC_QUALITY_ASSETS
     // texlow/ keys (Standard index additions) are never in tex/, so never in the pack: skip the lookup.
-    const texpack::Result pack=re4dc_std_texlow(key.crc,key.fnv)?texpack::kNotInPack:texpack::find(key,pack_offset,pack_size,frame);
+    const texpack::Result pack=re4dc_std_texlow(key.crc,key.fnv)?texpack::kNotInPack:RE4DC_PACK_FIND();
 #else
-    const texpack::Result pack=texpack::find(key,pack_offset,pack_size,frame);
+    const texpack::Result pack=RE4DC_PACK_FIND();
 #endif
     // A pack read error is transient: no eviction, no per-file probe, and the key is not remembered as missing
     // (on a packed disc its loose file is gone); a later use retries (texpack_index.inc spaces the retries in UI frames).
     if(pack==texpack::kError){++pack_error_skips;RE4DC_PROFILE_COUNT(TextureOpenFailures,1);RE4DC_TEXCHK_FAIL(key,"pack-error");return nullptr;}
     const bool in_pack=pack==texpack::kFound;
+#undef RE4DC_PACK_FIND
+#if RE4DC_TEX_PAYLOAD_RETRY
+    // Existing resident hits returned above. Only this exact failed member waits,
+    // before close_entry/eviction or a new package open; never a loose-key miss.
+    if(in_pack && texpack::payload_blocked(pack_member,frame,pack_epoch)){
+        RE4DC_TEXCHK_FAIL(key,"pack-payload-retry");return nullptr;
+    }
+#endif
     if(slot->valid && !in_pack){
 #else
     if(slot->valid){
@@ -3404,6 +3475,15 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
             if(!evict()) {RE4DC_PROFILE_COUNT(TextureBudgetFailures,1);ok=false;}
     }
     const unsigned vram_before=pvr_mem_available();
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+    // VRAM_ROOM_ARENA: core keys (cross-room) from the top of texture RAM, every other texture from the bottom.
+    struct ArenaClass { explicit ArenaClass(unsigned c){re4dc_vram_arena_class=c;} ~ArenaClass(){re4dc_vram_arena_class=0;} };
+    bool arena_core=false;
+#if defined(RE4DC_CORE_PIN) && RE4DC_CORE_PIN
+    for(unsigned k=0;k<core_nkeys && !arena_core;++k)arena_core=core_keys[k]==slot->key;
+#endif
+    const ArenaClass arena_class(arena_core?2U:1U);
+#endif
     if(ok) {RE4DC_PROFILE_SCOPE(TextureUpload);
         ok=slot->package.upload();
 #if RE4DC_TEX_RESIDENT && RE4DC_UI_OVERLAY_SLAB_KB
@@ -3532,8 +3612,16 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     }
 #endif
     re4dc_log("native UI: upload %s vram=%u\n",ok?"ok":"FAILED",slot->package.vram_bytes());
+    OVLW("upload");
+    OVLG("upload");
 #if RE4DC_TEX_CHECK
     const char* const texchk_why=slot->package.error()?slot->package.error():"upload";
+#endif
+#if RE4DC_TEX_PAYLOAD_RETRY
+    if(in_pack){
+        if(ok)texpack::payload_succeeded(pack_member,pack_epoch);
+        else if(texpack_payload_retry::source_error(slot->package.error()))texpack::payload_failed(pack_member,frame,pack_epoch);
+    }
 #endif
     if(!ok) slot->package.close();
 #if RE4DC_TEX_META_EVICT
@@ -3822,23 +3910,63 @@ void preload_select(const re4dc::texture::SourceIdentityTable& table,unsigned& n
 // piece at a time into a stack buffer (re4dc::texture::read_file_range: a handle per read, IO_SERIAL like the opens);
 // without the file there is no list.
 unsigned resident_listed,resident_picked;
+#if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
+re4dc::texture::ResidentListCache resident_list_cache;
+#endif
 void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned limit,unsigned byte_limit){
     re4dc::profile::Source src{};
 #if defined(__sh__)
     re4dc_profile_source(&src);
 #endif
     resident_listed=resident_picked=0;
+#if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
+    using Rec=re4dc::texture::ResidentListRecord;
+#else
     struct Rec { std::uint16_t room,width,height,format; std::uint32_t crc,fnv; };
+#endif
     static_assert(sizeof(Rec)==16,"dc/resident.bin record");
     Rec buf[32];
     unsigned pieces=0;
 #if defined(RE4DC_CORE_PIN) && RE4DC_CORE_PIN==2
     unsigned own=0;
 #endif
+#if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
+    // The disc list is immutable. Keep only copied rows for this room, never owner/archive pointers.
+    const bool cached=resident_list_cache.matches(src.room);
+    if(!cached)resident_list_cache.begin(src.room);
+    unsigned long long first_file_bytes=0;
+    bool have_file_bytes=false,same_file_bytes=true;
+    for(unsigned block=0;;++block){
+        const Rec* records=buf;
+        unsigned record_count=32;
+        if(cached){
+            if(block)break;
+            records=resident_list_cache.data();record_count=resident_list_cache.size();
+        }else{
+            unsigned long long file_bytes=0;
+            const auto result=re4dc::texture::read_file_range("/cd/dc/resident.bin",pieces*sizeof(buf),buf,
+                                                            sizeof(buf),&file_bytes);
+            if(!have_file_bytes){first_file_bytes=file_bytes;have_file_bytes=true;}
+            else if(first_file_bytes!=file_bytes)same_file_bytes=false;
+            if(result!=re4dc::texture::RangeRead::ok){
+                // An exact EOF certifies a complete list. Errors, trailing partial pieces and overflow retry later.
+                const bool complete=result==re4dc::texture::RangeRead::short_file && same_file_bytes &&
+                                    file_bytes==static_cast<unsigned long long>(pieces)*sizeof(buf);
+                resident_list_cache.finish(complete);break;
+            }
+            ++pieces;
+            // Capture independently of today's admission limits: a later owner/pass may have more space.
+            for(const auto& r:buf)resident_list_cache.append(r);
+        }
+        // Discovery must not depend on texture admission: earlier owner passes may fill the budget.
+        for(unsigned i=0;i<record_count;++i){
+            const Rec& r=records[i];
+#else
     for(;re4dc::texture::read_file_range("/cd/dc/resident.bin",pieces*sizeof(buf),buf,sizeof(buf),nullptr)==
           re4dc::texture::RangeRead::ok;++pieces){
         for(unsigned i=0;i<32 && n+resident<limit;++i){
             const Rec& r=buf[i];
+#endif
 #if defined(RE4DC_CORE_PIN) && RE4DC_CORE_PIN
             if(!r.room && r.width && (r.crc|r.fnv)){   // CORE_PIN: a core key, pinned and listed in every room
                 const Key ck{r.crc,r.fnv};bool have=false;
@@ -3851,6 +3979,10 @@ void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned li
             if((r.room!=src.room && r.room) || !r.width || !r.height || r.width>1024 || r.height>1024)continue;
 #else
             if(r.room!=src.room || !r.width || !r.height || r.width>1024 || r.height>1024)continue;
+#endif
+#if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
+            // Keep admission and its accounting bounded after discovering core keys and room-list ownership.
+            if(n+resident>=limit)continue;
 #endif
             ++resident_listed;
 #if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
@@ -3877,6 +4009,10 @@ void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned li
     }
     if(pieces)re4dc_log("native texture preload: resident list room=%03x pieces=%u listed=%u picked=%u\n",src.room,pieces,
                         resident_listed,resident_picked);
+#if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
+    if(cached)re4dc_log("native resident list cache: room=%03x rows=%u listed=%u picked=%u reads=0\n",
+                       src.room,resident_list_cache.size(),resident_listed,resident_picked);
+#endif
 #if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP && defined(RE4DC_TEX_PKG_SKIP_LISTED) && RE4DC_TEX_PKG_SKIP_LISTED
     if(pieces)re4dc_log("TEXPKG listed kept=%u\n",pkg_listed_kept);
     pkg_listed_kept=0;
@@ -4109,7 +4245,11 @@ void preload_identities(){
         for(auto& e:entries){
             if(!e.valid || RE4DC_ENTRY_PINNED(e))continue;
             const unsigned sz=e.package.vram_bytes();
-#if defined(RE4DC_ROOM_REENTRY_EVICT) && RE4DC_ROOM_REENTRY_EVICT
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+            // VRAM_ROOM_ARENA: the old room's region is freed as one block; core keys live at the top. Nothing else
+            // is kept, so the new room's preload fills one hole-free region from the bottom.
+            if(RE4DC_CORE_PINNED(e)){++kept;kept_bytes+=sz;continue;}
+#elif defined(RE4DC_ROOM_REENTRY_EVICT) && RE4DC_ROOM_REENTRY_EVICT
             if(!rce_same && e.frame+RE4DC_ROOM_CHANGE_EVICT>=rce_retire_frame){++kept;kept_bytes+=sz;continue;}
 #else
             if(e.frame+RE4DC_ROOM_CHANGE_EVICT>=rce_retire_frame){++kept;kept_bytes+=sz;continue;}
@@ -4849,7 +4989,13 @@ void glyph_init(){
         glyph_twx[i]=(unsigned short)x;glyph_twy[i]=(unsigned short)y;
     }
     const unsigned before=pvr_mem_available();
+    #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+    re4dc_vram_arena_class=2;   // VRAM_ROOM_ARENA: long-lived, from the top
+#endif
     glyph_atlas=pvr_mem_malloc(kGlyphAtlasBytes);
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+    re4dc_vram_arena_class=0;
+#endif
     if(!glyph_atlas){re4dc_log("native mes: glyph atlas allocation FAILED (free=%u); message text off\n",before);return;}
     alignas(32) static const unsigned char zero[512]={};
     for(unsigned n=0;n<kGlyphAtlasBytes;n+=sizeof(zero))pvr_txr_load(zero,(char*)glyph_atlas+n,sizeof(zero));
@@ -6469,6 +6615,9 @@ extern "C" void re4dc_ta_hash(const void* data,unsigned bytes){
 #if defined(RE4DC_MCHECK_PT) && RE4DC_MCHECK_PT
     pt_audit_feed(unsigned(stream_list),data,bytes,__builtin_return_address(0));
 #endif
+#if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
+    re4dc_bfc_feed(unsigned(stream_list),data,bytes);  // backface_census.cpp (lane backface22)
+#endif
 #if RE4DC_TA_BIN_DIAG
     tabin::cur_ra=__builtin_return_address(0);
     tabin::feed(l,data,bytes);
@@ -7417,6 +7566,9 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
 #if defined(RE4DC_PS2_FX_ADDITIONS) && RE4DC_PS2_FX_ADDITIONS
 #include "include/native_effect_stage1_batch.inc"
 #endif
+#if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
+#include "include/native_effect_strip21.inc"
+#endif
 #if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
 // Esp19's source line becomes one untextured, colour-interpolated strip in
 // the same bounded OT queue as effect sprites. All packet bytes are copied
@@ -8028,6 +8180,9 @@ static_assert(sizeof(pvr_poly_hdr_t)==32);
 Ps2HdrSlot ps2_hdr[kPs2HdrSets][kPs2HdrWays];
 unsigned char ps2_hdr_next[kPs2HdrSets];
 unsigned ps2_hdr_hits,ps2_hdr_fills,ps2_hdr_log=~0U;
+#if RE4DC_SCENERY_PIECE_STATE
+unsigned ps2_piece_hits; // SCENERY_PIECE_STATE: hits found through the part's slot word
+#endif
 #if RE4DC_PS2_WORLD_HDR_CACHE==2
 unsigned ps2_hdr_checked,ps2_hdr_bad;
 #endif
@@ -8077,6 +8232,9 @@ extern "C" int re4dc_ui_texture_resident(unsigned crc,unsigned fnv){
     return 0;
 }
 #endif
+#if RE4DC_SCENERY_PIECE_STATE
+extern "C" { std::uint32_t* re4dc_ps2_piece_slot=nullptr; } // native_static.cpp sets it around a PS2 part's bind
+#endif
 extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* out){
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(1);
@@ -8102,6 +8260,19 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
     if(!re4dc_r11f_binding_valid()){re4dc_r11f_binding_failed();return 0;}
 #endif
     const Key key{k[0],k[1]};
+#if RE4DC_WORLD_RECT21
+    float rect_u=1.0f,rect_v=1.0f;
+    // The selected representation owns its UV rule. Repeat-square scales the
+    // short axis; filtered shorter-square keeps normalized UVs unchanged.
+    // Never infer either rule from a dimension mismatch alone.
+    const auto rect_scale=[&](const Entry& entry){
+        const auto& t=entry.package.textures()[0];
+        if(t.width==k[2] && t.height==k[3])return true;
+        return re4dc::rect21::adapt(k[0],k[1],k[2],k[3],
+            {t.width,t.height,t.format,t.flags,t.payload,t.data_size,entry.package.header().payload_crc32},
+            rect_u,rect_v,true);
+    };
+#endif
 #if RE4DC_PS2_WORLD_PREFLIGHT_DIAG
     sourceWorldDiagBind(key); // before a cache hit or a load, and before SQ lock
 #endif
@@ -8121,16 +8292,41 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
             ps2_hdr_log=frame;
 #if RE4DC_PS2_WORLD_HDR_CACHE==2
             re4dc_log("PS2HDR frame=%u hits=%u fills=%u checked=%u mismatched=%u\n",frame,ps2_hdr_hits,ps2_hdr_fills,ps2_hdr_checked,ps2_hdr_bad);
+#elif RE4DC_SCENERY_PIECE_STATE
+            re4dc_log("PS2HDR frame=%u hits=%u fills=%u piece_hits=%u\n",frame,ps2_hdr_hits,ps2_hdr_fills,ps2_piece_hits);
 #else
             re4dc_log("PS2HDR frame=%u hits=%u fills=%u\n",frame,ps2_hdr_hits,ps2_hdr_fills);
 #endif
         }
+#if RE4DC_SCENERY_PIECE_STATE
+        // SCENERY_PIECE_STATE: the part's slot word (room file SCPS) names its slot: no set scan when it still holds
+        // this key (the entry / VRAM address test below applies as for any hit)
+        if(re4dc_ps2_piece_slot && *re4dc_ps2_piece_slot && *re4dc_ps2_piece_slot<=kPs2HdrSets*kPs2HdrWays){
+            Ps2HdrSlot& s=(&ps2_hdr[0][0])[*re4dc_ps2_piece_slot-1U];
+            if(s.mode==hdr_mode && s.crc==k[0] && s.fnv==k[1] && s.size==hdr_size){hit=&s;++ps2_piece_hits;}
+        }
+        if(!hit)
+#endif
         for(auto& s:ps2_hdr[hdr_set])
             if(s.mode==hdr_mode && s.crc==k[0] && s.fnv==k[1] && s.size==hdr_size){hit=&s;break;}
+#if RE4DC_SCENERY_PIECE_STATE
+        if(hit && re4dc_ps2_piece_slot)*re4dc_ps2_piece_slot=unsigned(hit-&ps2_hdr[0][0])+1U;
+#endif
     }
+#if RE4DC_WORLD_RECT21
+    if(hit && hit->entry->valid && hit->entry->key==key){
+        const auto& resident=hit->entry->package.textures()[0];
+        if(!re4dc::rect21::header_dimensions(hit->words[2],RE4DC_TSP_W(resident),RE4DC_TSP_H(resident)))hit=nullptr;
+    }
+#endif
     if(hit && hit->entry->valid && hit->entry->key==key && hit->entry->package.pvr_texture(0)==hit->texture){
         const Ps2HdrSlot& slot=*hit;
         Entry* const handle=slot.entry;
+#if RE4DC_WORLD_RECT21
+        // The same complete descriptor gate runs on hot and cold paths, before
+        // any header reaches the TA. Top-level drops or replaced data reject.
+        if(!rect_scale(*handle)){RE4DC_WHD(7);return 0;}
+#endif
         {constexpr bool pin=false;RE4DC_TOUCH(*handle);} // load()'s hit bookkeeping (pin=false)
         const unsigned pass=k[4];
         const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;
@@ -8230,7 +8426,11 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #endif
         ++frame_pvr_calls;frame_pvr_bytes+=32;stream_model_bytes+=32;
         out->sq=sq+8;out->scratch=model_packets+model_pending;out->scratch_capacity=kModelPacketBytes/32-model_pending;
+#if RE4DC_WORLD_RECT21
+        out->u_scale=rect_u;out->v_scale=rect_v;
+#else
         out->u_scale=out->v_scale=1;
+#endif
         return 1;
     }
 #endif
@@ -8248,7 +8448,11 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #endif
     if(!handle || !frame_ready || stream_aborted || direct_open){RE4DC_WHD(!handle?6U:!frame_ready?2U:stream_aborted?3U:1U);++model_texture_rejects;return 0;}
     const auto& t=handle->package.textures()[0];
+#if RE4DC_WORLD_RECT21
+    if(!rect_scale(*handle)){RE4DC_WHD(7);return 0;}
+#else
     if(t.width!=k[2] || t.height!=k[3]){RE4DC_WHD(7);return 0;} // repeated UVs cannot use padding
+#endif
     const unsigned pass=k[4];
     const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;
     stream_select(list);
@@ -8289,6 +8493,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         slot.texture=handle->package.pvr_texture(0);
         for(unsigned i=0;i<4;++i)slot.words[i]=hw[i];
         ++ps2_hdr_fills;
+#if RE4DC_SCENERY_PIECE_STATE
+        if(re4dc_ps2_piece_slot)*re4dc_ps2_piece_slot=unsigned(&slot-&ps2_hdr[0][0])+1U;
+#endif
     }
 #endif
 #if RE4DC_PS2_INTERIOR_CULL==2
@@ -8333,7 +8540,11 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #endif
     ++frame_pvr_calls;frame_pvr_bytes+=32;stream_model_bytes+=32;
     out->sq=sq+8;out->scratch=model_packets+model_pending;out->scratch_capacity=kModelPacketBytes/32-model_pending;
+#if RE4DC_WORLD_RECT21
+    out->u_scale=rect_u;out->v_scale=rect_v;
+#else
     out->u_scale=out->v_scale=1;
+#endif
     return 1;
 #else
     (void)k;(void)out;return 0;
@@ -8420,6 +8631,13 @@ extern "C" void re4dc_model_finish_source_draws(){
 #endif
 #endif
 #if RE4DC_EFFECT_SPRITES
+#if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
+        if(deferred_first->lighting==kEffectQuad21Tag){
+            const auto* packet=reinterpret_cast<const unsigned char*>(deferred_first)+kEffectQuad21Node;
+            const unsigned bytes=deferred_first->changed[0];
+            deferred_first=deferred_first->next;stream_send(packet,bytes);continue;
+        }
+#endif
         if(deferred_first->lighting==kSpriteTag){
             auto* packet=reinterpret_cast<unsigned char*>(deferred_first)+kSpriteNode;
             const bool screen=deferred_first->changed[0]!=0;
@@ -8875,5 +9093,28 @@ extern "C" int re4dc_ui_part_key(const Re4dcModelPart* p,unsigned* crc,unsigned*
     ok=image_key(p->image,k);
 #endif
     *crc=k.crc;*fnv=k.fnv;return ok?1:0;
+}
+#endif
+
+#if defined(RE4DC_TEX_MIP_DADJ) && RE4DC_TEX_MIP_DADJ
+// TEX_MIP_DADJ (lane mipmap22): replace KOS's default mipmap D adjust in every compiled header (render only).
+extern "C" void __real_pvr_poly_compile(pvr_poly_hdr_t* dst,const pvr_poly_cxt_t* src);
+extern "C" void __real_pvr_sprite_compile(pvr_sprite_hdr_t* dst,const pvr_sprite_cxt_t* src);
+extern "C" void __real_pvr_poly_mod_compile(pvr_poly_mod_hdr_t* dst,const pvr_poly_cxt_t* src);
+extern "C" void __wrap_pvr_poly_compile(pvr_poly_hdr_t* dst,const pvr_poly_cxt_t* src) {
+    pvr_poly_cxt_t c=*src;
+    if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
+    __real_pvr_poly_compile(dst,&c);
+}
+extern "C" void __wrap_pvr_sprite_compile(pvr_sprite_hdr_t* dst,const pvr_sprite_cxt_t* src) {
+    pvr_sprite_cxt_t c=*src;
+    if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
+    __real_pvr_sprite_compile(dst,&c);
+}
+extern "C" void __wrap_pvr_poly_mod_compile(pvr_poly_mod_hdr_t* dst,const pvr_poly_cxt_t* src) {
+    pvr_poly_cxt_t c=*src;
+    if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
+    if(c.txr2.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr2.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
+    __real_pvr_poly_mod_compile(dst,&c);
 }
 #endif

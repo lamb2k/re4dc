@@ -1,0 +1,113 @@
+{
+  "scope": "IMMUTABLE SOURCE-ONLY proposal; not an adopted runtime rule, launch seal, allocation or preflight",
+  "created_utc": "2026-10-22T06:13:47.281071+00:00",
+  "extension_default": false,
+  "adoption_authorized": false,
+  "tools_source": {
+    "commit": "505f3ee487a1bb658199986f4988fdf14008c960",
+    "source_only_manifest_sha256": "0b73077358b87a8b73325d6d823acd24c0037e57a7b653ad8f6f76a5bcc25e63",
+    "independent_review_commit": "df55d43ad37385bb9059b4564907db4a20579abd",
+    "independent_review_sha256": "831a09011d5abf352c3aa8d48639a04c0479ea858402bf4789f151bf159116a9"
+  },
+  "fixed_runtime": {
+    "game_source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+    "program_sha256": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+    "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+    "profile_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+    "runtime_flags": "existing c57 default-off cache/trace/CABIN flags unchanged"
+  },
+  "image": {
+    "sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+    "bytes": 1032499200,
+    "native_file_id": "0x000000000000000000030000004cbccd",
+    "inode": 844424935161037,
+    "mtime_ns": 1792628865730857700,
+    "source_path": "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/track03.iso"
+  },
+  "baseline": {
+    "guard": "immutable profile4c expects exactly source+oldfailedcold, two links; unchanged and currently refuses actual retained3",
+    "expected_links": 2,
+    "paths": [
+      "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/track03.iso",
+      "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-guests-20261021/cold-shoot01/track03.iso"
+    ]
+  },
+  "proposed_phase_rules": {
+    "prelaunch": {
+      "expected_links": 3,
+      "paths": [
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/track03.iso",
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-guests-20261021/cold-shoot01/track03.iso",
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-observer01/track03.iso"
+      ]
+    },
+    "live_owned": {
+      "expected_links": 4,
+      "paths": [
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/track03.iso",
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-guests-20261021/cold-shoot01/track03.iso",
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-observer01/track03.iso",
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-domains01/track03.iso"
+      ],
+      "extra_requirements": [
+        "separate root guest allocation",
+        "exact new output owner marker",
+        "retained current owned PID/path/start",
+        "active ref created by reviewed runner for that cap only"
+      ]
+    },
+    "post_clean": {
+      "expected_links": 3,
+      "paths": [
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/track03.iso",
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-guests-20261021/cold-shoot01/track03.iso",
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-observer01/track03.iso"
+      ]
+    }
+  },
+  "new_output_contract_proposal": {
+    "semantic_mode": "return-door01 ONLY",
+    "output_name": "return-door-domains01",
+    "control_name": "return-door-domains01-control",
+    "seed_path": "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/cold-shoot01",
+    "seed_state_sha256": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75",
+    "seed_frame": 533,
+    "strict_same_profile_parent": true,
+    "preserve_failed_outputs": [
+      "return-door01",
+      "return-door-observer01"
+    ],
+    "arbitrary_name_option": false,
+    "no_automatic_retry": true
+  },
+  "required_fresh_checks": [
+    "whole source image hash with unchanged disk/resource guard",
+    "canonical absolute paths/no ancestor aliases/reparse points",
+    "native FileID and samefile for source and every declared reference",
+    "native all-hardlink-name enumeration equals exact phase path set",
+    "link count equals expected phase count on source and every reference",
+    "size/mtime/inode/native identity match reviewed pins before and after hashing",
+    "full programme/ELF/asset/profile/source seals unchanged",
+    "fresh root peer/global/resource admission separately allocated"
+  ],
+  "failure_policy": "fail closed and preserve every reference/partial; never unlink/rename to satisfy this contract; failed active fourth ref forces hold and a new reviewed declaration",
+  "unchanged_bounds": {
+    "inner_seconds": 41,
+    "input_cutoff_seconds": 40.75,
+    "private_job_seconds": 47.0,
+    "absolute_actual_seconds": 47.5,
+    "evidence_cap_bytes": 60000000,
+    "admission_bytes": 19461570560,
+    "runtime_floor_bytes": 19394461696,
+    "max_png": 8,
+    "global_limit": 16,
+    "per_lane_limit": 2
+  },
+  "authority": "root concrete contract review first; no preflight, adopted seal, actual allocation or guest by this proposal",
+  "derived_from_retained_receipt": {
+    "path": "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_run_preparation/return-door-observer01-failure/retained-reference-identity.json",
+    "sha256": "486068d7fa65ef54c550bf278f7fffd760f49f5b413029ee5be82ab5d751f0cc",
+    "measured_utc": "2026-10-22T05:54:20.442524+00:00",
+    "fresh_verification_performed_this_unit": false
+  }
+}

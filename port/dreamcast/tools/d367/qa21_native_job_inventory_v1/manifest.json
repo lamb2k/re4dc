@@ -1,0 +1,45 @@
+{
+  "scope": "startup-only exact source inputs; no runtime allocation",
+  "files": [
+    {
+      "path": "supervisor.py",
+      "absolute": false,
+      "sha256": "67c168c7a95a460261221a97d7421050ba3599a1f65dd32c5b503a0f68965850"
+    },
+    {
+      "path": "coordinator.py",
+      "absolute": false,
+      "sha256": "0125df51b242eeb7611dba790c5cb44292451927568012f3dc46aa9267c70c94"
+    },
+    {
+      "path": "inventory.py",
+      "absolute": false,
+      "sha256": "8a893aed5683e13fd1b996a08ca126e86c6f73fd8e72ac84f88ef5e12f050532"
+    },
+    {
+      "path": "frozen-windows-backend.py",
+      "absolute": false,
+      "sha256": "0b0646c7d2d704707922ee671fafea5edeb97d7d160fa4a6f698f97555702a55"
+    },
+    {
+      "path": "frozen-native-reference-api.py",
+      "absolute": false,
+      "sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255"
+    },
+    {
+      "path": "config.json",
+      "absolute": false,
+      "sha256": "54924a6f67833ea621f10d54c28291f48c836ce006f37e318b6d6d6d3c34eae2"
+    },
+    {
+      "path": "FUTURE_ROOT_ALLOCATION_BYTES.json",
+      "absolute": false,
+      "sha256": "23392643240c32412e90f0fad4d49fde157264269ac23f8938c4687a42d66737"
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_owned_adapter_v1\\inner-adapter.py",
+      "absolute": true,
+      "sha256": "3f576be885b7f165f9d3a40ef6fd75292114db881754c620f159417223452758"
+    }
+  ]
+}

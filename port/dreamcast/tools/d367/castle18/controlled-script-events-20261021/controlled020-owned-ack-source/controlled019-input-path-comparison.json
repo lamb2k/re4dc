@@ -1,0 +1,244 @@
+{
+  "scope": "Focused closed-evidence/native-source comparison only; no guest/attach/input/Winfocusmutation. No speculativecause assigned.",
+  "records": {
+    "017": {
+      "emu_cfg_sha256": "6e6e65448d0d00944fe15caa197704d08b784c670d18b3a4cd76aa2a0ebcbc91",
+      "flycast_sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+      "cfg": "[config]\nDebug.GDBEnabled = yes\nDebug.GDBPort = 3263\nDebug.GDBWaitForConnection = no\nDebug.SerialConsoleEnabled = yes\nDreamcast.AutoLoadState = yes\nDreamcast.AutoSaveState = yes\nDreamcast.Broadcast = 0\nDreamcast.Cable = 3\nDreamcast.Region = 1\nDreamcast.SavestateSlot = 0\nrend.EmulateFramebuffer = yes\nrend.vsync = no\n\n[input]\nmaple_sdl_joystick_0 = -1\nmaple_sdl_joystick_1 = -1\nmaple_sdl_joystick_2 = -1\nmaple_sdl_joystick_3 = -1\nmaple_sdl_joystick_4 = -1\nmaple_sdl_joystick_5 = -1\nmaple_sdl_joystick_6 = -1\nmaple_sdl_joystick_7 = -1\n\n[log]\nLogToConsole = no\nLogToFile = yes\n\n[window]\nfullscreen = no\nheight = 480\nleft = 960\nmaximized = no\ntop = 480\nwidth = 640\n\n",
+      "sourcefields": {
+        "process_age": 1.0770521850790828,
+        "frame": 1771,
+        "room": "0x205",
+        "Part": 0,
+        "Stop": "0x0",
+        "status0": "0x3080300",
+        "status1": "0x610",
+        "Key_on": "0x0",
+        "Key_trg": "0x0"
+      },
+      "pulse": {
+        "ordinary_owned_UI_pulse": "native-upper-Door0-A",
+        "seconds": 0.2,
+        "ack_observations": [
+          {
+            "frame": 1771,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 1771,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 1771,
+            "Key_trg": "0x80080480"
+          },
+          {
+            "frame": 1772,
+            "Key_trg": "0x80080480"
+          },
+          {
+            "frame": 1773,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 1773,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 1773,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 1773,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 1773,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 1773,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 1773,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 1773,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 1773,
+            "Key_trg": "0x0"
+          }
+        ],
+        "process_age": 1.2800521850585938
+      },
+      "startup": {
+        "startup_exact_state_load_and_mapping": {
+          "RAM": 140687562768384,
+          "mapping_line": "00:00:623 hw\\mem\\addrspace.cpp:461 N[VMEM]: BASE 00007FF454340000 RAM(16 MB) 00007FF460340000 VRAM64(8 MB) 00007FF458340000 ARAM(2 MB) 00007FF474340000",
+          "state_load_line": "00:00:717 nullDC.cpp:360 N[SAVESTATE]: Loaded state ver 854 from C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door017\\data\\disc.state size 28152878",
+          "mapping_precedes_load": true
+        },
+        "process_age": 0.7490521850413643,
+        "process_identity": {
+          "pid": 57540,
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door017\\flycast.exe",
+          "start_filetime": 134371249730346326,
+          "created_utc": "2026-10-22T06:42:53.042013+00:00",
+          "rights": "retained subprocess handle receipt"
+        },
+        "initial_pG_region": {
+          "returned_bytes": 48,
+          "error": 0,
+          "requested_host": "0x7ff4606291dc",
+          "requested_bytes": 4,
+          "base": "0x7ff460629000",
+          "allocation_base": "0x7ff460340000",
+          "region_bytes": 13725696,
+          "state": "0x1000",
+          "protect": "0x4",
+          "type": "0x40000",
+          "covers": true,
+          "committed": true,
+          "accessible": true
+        }
+      },
+      "window_ownership_record": "Code checks exactPID/path/start and exactlyoneSDL_app beforePostMessage; rawHWNDvalue/foreground/focus notretained.",
+      "mapping_files_current": [
+        "emu.cfg",
+        "shots\\controlled-deadline-context\\emu.cfg",
+        "shots\\controlled-original-204Part1-entry\\emu.cfg",
+        "shots\\controlled-original-first-cut-return\\emu.cfg"
+      ]
+    },
+    "019": {
+      "emu_cfg_sha256": "6e6e65448d0d00944fe15caa197704d08b784c670d18b3a4cd76aa2a0ebcbc91",
+      "flycast_sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+      "cfg": "[config]\nDebug.GDBEnabled = yes\nDebug.GDBPort = 3263\nDebug.GDBWaitForConnection = no\nDebug.SerialConsoleEnabled = yes\nDreamcast.AutoLoadState = yes\nDreamcast.AutoSaveState = yes\nDreamcast.Broadcast = 0\nDreamcast.Cable = 3\nDreamcast.Region = 1\nDreamcast.SavestateSlot = 0\nrend.EmulateFramebuffer = yes\nrend.vsync = no\n\n[input]\nmaple_sdl_joystick_0 = -1\nmaple_sdl_joystick_1 = -1\nmaple_sdl_joystick_2 = -1\nmaple_sdl_joystick_3 = -1\nmaple_sdl_joystick_4 = -1\nmaple_sdl_joystick_5 = -1\nmaple_sdl_joystick_6 = -1\nmaple_sdl_joystick_7 = -1\n\n[log]\nLogToConsole = no\nLogToFile = yes\n\n[window]\nfullscreen = no\nheight = 480\nleft = 960\nmaximized = no\ntop = 480\nwidth = 640\n\n",
+      "sourcefields": {
+        "process_age": 1.0803299312246963,
+        "frame": 2606,
+        "room": "0x204",
+        "Part": 1,
+        "Stop": "0x0",
+        "status0": "0x3080100",
+        "status1": "0x8000200",
+        "Key_on": "0x0",
+        "Key_trg": "0x0"
+      },
+      "pulse": {
+        "ordinary_owned_UI_pulse": "native204-Door4-A",
+        "stage": 1,
+        "seconds": 0.2,
+        "ack_observations": [
+          {
+            "frame": 2606,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 2606,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 2607,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 2608,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 2608,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 2608,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 2609,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 2610,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 2610,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 2610,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 2610,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 2611,
+            "Key_trg": "0x0"
+          },
+          {
+            "frame": 2611,
+            "Key_trg": "0x0"
+          }
+        ],
+        "process_age": 1.283329931262415
+      },
+      "startup": {
+        "startup_exact_state_load_and_mapping": {
+          "RAM": 140689727881216,
+          "mapping_line": "00:00:635 hw\\mem\\addrspace.cpp:461 N[VMEM]: BASE 00007FF4D5410000 RAM(16 MB) 00007FF4E1410000 VRAM64(8 MB) 00007FF4D9410000 ARAM(2 MB) 00007FF4F5410000",
+          "state_load_line": "00:00:730 nullDC.cpp:360 N[SAVESTATE]: Loaded state ver 854 from C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\data\\disc.state size 28204558",
+          "mapping_precedes_load": true
+        },
+        "process_age": 0.7833299312624149,
+        "process_identity": {
+          "pid": 44276,
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\flycast.exe",
+          "start_filetime": 134371276796594504,
+          "created_utc": "2026-10-22T07:27:59.667271+00:00",
+          "rights": "retained subprocess handle receipt"
+        },
+        "initial_pG_region": {
+          "returned_bytes": 48,
+          "error": 0,
+          "requested_host": "0x7ff4e16f91dc",
+          "requested_bytes": 4,
+          "base": "0x7ff4e16f9000",
+          "allocation_base": "0x7ff4e1410000",
+          "region_bytes": 13725696,
+          "state": "0x1000",
+          "protect": "0x4",
+          "type": "0x40000",
+          "covers": true,
+          "committed": true,
+          "accessible": true
+        }
+      },
+      "window_ownership_record": "Code checks exactPID/path/start and exactlyoneSDL_app beforePostMessage; rawHWNDvalue/foreground/focus notretained.",
+      "mapping_files_current": [
+        "emu.cfg",
+        "shots\\controlled-deadline-context\\emu.cfg"
+      ]
+    }
+  },
+  "observations": [
+    "Bothactualemu.cfg699B byteidentical6e6e6544 andsame64491EXE. No stagedmappingfiles exceptemu.cfg arepresentnow; historicalexternalmappingstate notcaptured.",
+    "Pulseprecheckprocessages0171.077052 and0191.080330; currentstateLoadlogs0.717/0.730. Timingissimilarnotproof ofSDLreadiness.",
+    "017Key_trg80080480ackwasobservedat1771/1772.01913samplesthrough2606..2611all0; donotclaimsamplingcanexcludeeverytransient.",
+    "FrozenELFnmKey8c3a948c, nativeDWARFKeyWork.on16/trg24 u64; low32littleendianA mask80080000iswithinread. SourcePadReadcomputestrg(old^on)&on; gameeventclearsmaymaketrgtransient.",
+    "PostMessageAPIacceptance/oneownedSDLwindowwerecheckedbycode. Foreground/focus,rawHWND/UIthreadandSDLreceiveacknotrecorded, cannotretroactivelyclassifyfocus/SDLdeliverycause.",
+    "SourceStatus1bit08000000differentisrenderer/effects use, notidentifiedinputblock; Stopwas0andAOPENvisible. No wrongdoor/scriptdefectidentified."
+  ],
+  "next_source_method": "Useactual019atDoor4; nofirstgoto/replay. RecordownedPID/HWND/UIthread/foreground/focus. Requestonlyownedwindowforegroundifneededandverifybeforepulse; ONEordinaryA helduntilcoherentnativeKey.on/trgAackorsourceeffectorboundedtimeout, alwayskeyupfinally/noautomaticretry. Actual209entry thenunchangedstage2physicalDoor1/originalcut; newallocationonlyremaining29Bconfig. Fullhold/twoAactionsstaywithin41/39/47.5/60MiB.",
+  "unused_alternative": "ExistingDBG_WARPAct/nativePADhookwasread-onlyinspected; rootchoseestablishedWindowsinputhelper fornextsourcecandidate. NoActconfigwriteisproposed orperformed.",
+  "key_DWARF_sha256": "435b7811682093c5eadee5ba80a9654997b1f1d1929d2ebf16913a4cc4f2fce7",
+  "actual019_seed_sha256": "669b920f06e89403a15d3796021878c39ee9807fe020487e6a8666220f635631",
+  "root_visual_pin": "2677cf7a (rootcoordinationreference; notinventedfullSHA)",
+  "root_visual_png_sha256": "e35f41e9f2fbc890779bf04b76a4468ea8e0c5880d75d3c53085683725c369a2"
+}

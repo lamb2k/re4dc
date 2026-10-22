@@ -1,0 +1,79 @@
+--- retained/checkpoint_runner18.py@8960ffcf
++++ NEW/checkpoint_runner18.child.py
+@@ -23,6 +23,8 @@
+ FLOOR = 18 * 1024**3 + 64 * 1024**2
+ CAPTURE_LIMIT = 128 * 1024**2
+ STOP_REQUESTED = False
++REFERENCE_HOOKS = None  # default disarmed; future reviewed adapter only
++RETAINED_READER = Path(r'C:\Flycast-Evidence\re4-dreamcast\qa21-combined-regression-20261021\dependencies-route-v4\checkpoint_read_log.py')
+ TRACKS = ('disc.gdi', 'track01.bin', 'track01.iso', 'track02.raw', 'track03.bin', 'track03.iso')
+ # Flycast default keyboard map (SDL scancodes via the window's WM_KEYDOWN scan code): set-1 scan code, extended
+ KEYS = dict(a=(0x2D, 0), b=(0x2E, 0), x=(0x1F, 0), y=(0x20, 0), start=(0x1C, 0),
+@@ -107,7 +109,12 @@
+     assert 30 <= a.seconds <= 4000
+     cap = Path(a.cap)
+     maxfc = int(os.environ.get('RE4DC_MAX_FLYCASTS', '10'))
++    hooks = REFERENCE_HOOKS
++    if hooks is None:
++        raise RuntimeError('owned-reference child runner is DISARMED; no adopted seal/allocation')
++    hooks.before_create(a, cap, Path(__file__))
+     cap.mkdir(parents=True, exist_ok=False)
++    hooks.cap_created()
+     linked = {}
+     fixtures = {}
+     if a.base:
+@@ -138,11 +145,14 @@
+                 shutil.copyfile(disc / name, cap / name)
+             else:
+                 os.link(disc / name, cap / name)
++                hooks.link_created(disc / name, cap / name)
+             linked[name] = os.path.getsize(cap / name)
+     assert a.base or 'disc.gdi' in linked, 'no disc.gdi in %s' % disc
++    # MUST remain before the existing launch try/finally: refusal preserves links.
++    hooks.staged()
+     for name in ('emu.cfg', 'capture_ui_vram.py'):
+         shutil.copyfile(TEMPLATE / name, cap / name)
+-    shutil.copyfile(Path(__file__).with_name('checkpoint_read_log.py'), cap / 'read_log.py')
++    shutil.copyfile(RETAINED_READER, cap / 'read_log.py')
+     shutil.copyfile(emu_exe(), cap / 'flycast.exe')  # the template exe is at the NTFS 1024-link limit
+     for src in (TEMPLATE / 'data').rglob('*'):
+         if src.is_file():
+@@ -158,6 +168,7 @@
+                 dst = cap/'data'/src.relative_to(Path(seed)/'data')
+                 dst.parent.mkdir(parents=True, exist_ok=True)
+                 shutil.copyfile(src, dst)
++    sys.path.insert(0, str(RETAINED_READER.parent))  # explicit retained checkpoint.py dependency
+     from checkpoint import files
+     (cap/'initial-data.json').write_text(json.dumps(files(cap/'data'), indent=2)+'\n')
+     syms = a.syms.split()[:3]
+@@ -205,15 +216,18 @@
+     while count_flycasts() >= maxfc:
+         time.sleep(5)
+     startup = subprocess.STARTUPINFO(); startup.dwFlags |= subprocess.STARTF_USESHOWWINDOW; startup.wShowWindow = 0
++    hooks.before_spawn()  # outside launch try; no automatic unlink on refusal
+     serial = open(cap / 'serial.txt', 'xb'); log = open(cap / 'run-output.txt', 'xb'); logerr = open(cap / 'read-log.err', 'xb')
+     proc = reader = None
+     t0 = time.monotonic(); last_growth = t0; stop_at = None; lastshot = t0; pos = 0; text = ''; ktext = ''
+     try:
+         proc = subprocess.Popen([str(cap / 'flycast.exe'), 'disc.gdi'], cwd=cap, stdout=serial, stderr=subprocess.STDOUT,
+                                 startupinfo=startup, env=env)
++        hooks.guest_started(proc)  # actual HANDLE/birth/job BEFORE observer PID publication
+         (cap / 'flycast.pid').write_text(str(proc.pid))
+         reader = subprocess.Popen([sys.executable, str(cap / 'read_log.py'), *syms, str(a.seconds)], cwd=cap, stdout=log,
+                                   stderr=logerr, creationflags=subprocess.CREATE_NO_WINDOW)
++        hooks.reader_started(reader)
+         print(json.dumps(dict(status='RUNNING', name=a.name, pid=proc.pid, cap=str(cap))), flush=True)
+         si = 0; since = 0; matched_at = None
+         while time.monotonic() - t0 < a.seconds and not STOP_REQUESTED:
+@@ -295,10 +309,7 @@
+                     c.kill(); c.wait(timeout=1)
+         for f in (serial, log, logerr):
+             f.close()
+-        for name in TRACKS[1:]:
+-            p = cap / name
+-            if p.exists():
+-                p.unlink()
++        hooks.cleanup(rep['status'])  # parent actual retained signaled exits + exact owned refs only
+         rep['log_idle_s'] = round(time.monotonic() - last_growth, 1)
+         rep.update(end_utc=now(), elapsed_s=round(time.monotonic() - t0, 1), emulator_exited=proc is None or proc.poll() is not None)
+         (cap / 'run-result.json').write_text(json.dumps(rep, indent=2) + '\n')

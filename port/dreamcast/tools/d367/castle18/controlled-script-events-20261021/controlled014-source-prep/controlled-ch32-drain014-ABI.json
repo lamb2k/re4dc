@@ -1,0 +1,96 @@
+{
+  "scope": "Frozen4d823 ELF DWARF offsets + nm/disassembly executable sites; readonly observer ABI/source qualification, not live input or event acceptance.",
+  "ELF_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "DWARF_sha256": "ac0c7fb410a572522b494954f906250e6194835dcd21690031ec5cbb8725fc2b",
+  "selected_offsets": {
+    "cCoord": {
+      "mat": 12,
+      "pos": 148
+    },
+    "MessageControl": {
+      "mes": 8
+    },
+    "Message": {
+      "be_flag": 8,
+      "flags2": 16,
+      "waitCnt": 114,
+      "m_btn": 116,
+      "m_attr": 132,
+      "m_pMes": 156,
+      "m_selTbl_size": 228,
+      "m_sel": 229,
+      "m_cur": 230
+    },
+    "SceAtSysWork": {
+      "pAtData": 0,
+      "pAtWork": 4,
+      "hitFlg": 16,
+      "execFlg": 48
+    },
+    "cActionButton": {
+      "m_active_flag": 66,
+      "work": 68
+    },
+    "ActBtnWork": {
+      "func": 4,
+      "arg": 8,
+      "kind": 12,
+      "type": 14,
+      "btn": 15,
+      "d": 16,
+      "flags": 20
+    },
+    "GlobalWork": {
+      "RoomMes": 20256,
+      "chapter": 20362,
+      "Status_flg": 20492,
+      "Frame_cnt": 20964
+    },
+    "cEm": {
+      "hp": 800,
+      "emset_no": 920,
+      "status": 964
+    },
+    "cManager<cEm>": {
+      "pAlive": 20
+    },
+    "MessageData": {
+      "lang": 0,
+      "ptr": 4
+    }
+  },
+  "globals": {
+    "pG": "0x8c2e91dc",
+    "player": "0x8c39d700",
+    "ActBtn": "0x8c392e20",
+    "SceAtSys": "0x8c3b93cc",
+    "pS": "0x8c3b94f0",
+    "cMes": "0x8c3b684c",
+    "MesData": "0x8c3b64c4",
+    "EmMgr": "0x8c39d3b8",
+    "Message_vptr": "0x8c2ce56c"
+  },
+  "sites": {
+    "sceAtCheck_main": "8c04bd30: playerpos+94;8c04bdb2mat+12;8c04be22..38SatMgr.hitCheck(pos,front,front) before sceAtHitCheck/SetHitFlg/ActBtn.set",
+    "SceAtHitCheck": "8c14adbc loads pS+16, bit80000000>>(no&31)",
+    "MessageData_getAddr": "8c10fd24 lang*4/ptr[type]+4;block+4 count,+8 offset; resolves native room205 MDT no0",
+    "SceMesSet": "8c14efc4 attr1002;flags20 adds10;native slot0/current sel-1",
+    "SceMesGetSelection": "8c14f0fc native cMes+ed signedbyte waits0",
+    "Action_set": "8c087974 stride24/work68/func+4,arg+8,type14,button15,d16",
+    "Message_code08": "8c110f0c; nativeA=>cur+1;attr00800000Up/Down elseLeft/Right",
+    "SceCheckEmAlive": "8c14f178 be_flag&201==1 thencheckStatus(5); cEm::checkStatus8c0210fc usesstatus+3c4 bit1<<5. Actor68 active classification matches source, HP is separate observation."
+  },
+  "native_front_observation": "Matrix-derived front is UNCLIPPED diagnostic. Source hit08, type1-only checkType and registered action observe actual engine collision-clipped test result; no numeric clippedpoint reconstruction or function invocation.",
+  "write_allowlist": [
+    "Existing coldfixture title room205/jp0/chapter7/NextPos/NextY +49152B squeeze; no prior state input and no RSF/HP/AI writes",
+    "Exactowned SDL window normal WM_KEYDOWN/UP for A and at mostone direction toYes, each200ms, max3pulses with immediate coherent gate",
+    "Exactowned WM_CLOSE at39s; V5 owns bounded failclosed/absoluteexit"
+  ],
+  "never": [
+    "WriteProcessMemory",
+    "native code invocation",
+    "flag/selection/HP/AI memory writes",
+    "rollback or change actual013/auth127/294/009VMU",
+    "atfunc/kill/dead/god/outcome presets"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "file": "DOOR021-ROOT-ALLOCATION.json",
+  "owner": "root",
+  "utc": "2026-10-22T08:30:28.6934602Z",
+  "allowed_runs": 1,
+  "no_retry": true,
+  "no_following_guest": true,
+  "allow_debug_goto_command_writes": true,
+  "observer_sha256": "c5c82a4a8aee041da75e09c90d3e635055a1482a53c5507852f28ce5c2e99c93",
+  "wrapper_sha256": "471bc9c7aa4a5494a436de0bd241b4b46bca3ba03dafcad6c6ddfb26860818c9",
+  "pins_sha256": "d6ab721588fd7a8f8a7074f5f5c1c4bfb0aefeea39a8d1e453562e473e60b357",
+  "proposal_sha256": "97e491a21a5bcbbbdc3ca9fb8d323daa82dd8fb5bcd2d4b1b5024d9fa887ec44",
+  "review_sha256": "ed9c319e9167d969be692d3e019918516560f883f13e82a8b61e8d6da7cd47d0",
+  "source": "Frozen021 source86abbcf0c, game12a841d7 unchanged",
+  "seed_sha256": "eba7a32afa7c59381ec7ce36918ea706feea187757e8fbb40a2fe5f2695ac008",
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff60",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c4801b6",
+      "bytes": 1
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ],
+  "maximum_successful_command_bytes": 29,
+  "scope": "One021 from actual020/source4761 Door4, no firstgoto/replay. Experimental ordinary scan-code SendInput per reviewed contract; record API/OS/native acknowledgement separately. Actual209 required before unchanged29B stage2 then native physicaldoor/event. No forced outcome/retry/following guest.",
+  "resources": {
+    "start_bytes": 20342374400,
+    "runtime_bytes": 19394461696,
+    "raw_seconds": 41,
+    "close_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_bytes": 62914560,
+    "global_Flycast_limit": 16,
+    "castle_limit": 2,
+    "standing_source_peer_bytes": 67108864,
+    "focus_run_admission": "FreshnopeerFlycast; rootQAandotherGUI-inputguestsmustbeclosedbeforeallocation/lease. Non-guestsource/build/readbacklanesremainparallel."
+  },
+  "global_Flycasts": 0,
+  "C_free_bytes": 154130452480,
+  "peer_reserved_bytes": 67108864,
+  "additional_object_reserve_bytes": 134217728,
+  "protected_inputs": "All wrapper pins and current process/resource guards remain mandatory.",
+  "allow_owned_window_focus": true,
+  "exclusive_gui_input": true,
+  "allocated021": true,
+  "allow_scan_code_SendInput": true
+}

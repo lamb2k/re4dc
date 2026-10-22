@@ -1,0 +1,21 @@
+{
+  "scope": "Fresh FULL streamed SHA verification after authentic284death/285originalContinue and288normalherbUse. Read-only; original127/source33328 and runtime12a frozen unchanged. Not release or physicalDreamcast acceptance.",
+  "timestamp": "2026-10-21T20:12:49.122558-04:00",
+  "files": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master\\track03.iso",
+      "bytes": 1018789888,
+      "sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\builds\\c21jmW\\re4dc-game.elf",
+      "bytes": 33089164,
+      "sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk127\\data\\disc.state",
+      "bytes": 11938699,
+      "sha256": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16"
+    }
+  ]
+}

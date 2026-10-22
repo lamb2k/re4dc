@@ -1,0 +1,16 @@
+{
+  "scope": "11NEW pure fake-metadata cases; no source image/reference query/preflight/adoption/guest",
+  "utc": "2026-10-22T06:16:39.567470+00:00",
+  "platform": "Windows-11-10.0.26220-SP0",
+  "sources": {
+    "REFERENCE_EXTENSION_CONTRACT.json": "59f6bb01ea28822c319549a180fcdaad4998442167da67823bb3aa87f2732b45",
+    "reference-model.py": "928b524321eda692402f73da27e09904bf09884e6178691e6c8245e70b8fd135",
+    "test-reference-model.py": "32e575c56df15d14e0b770687d82624b8c3dcbba87d957845f27da8aa49925ae",
+    "run-reference-model-tests.py": "03dd69093f21b6158eb544cb8253a21811a37441a5991069fffd042a2c3c0ba4"
+  },
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "test_alias_reparse_or_non_samefile_refused (__main__.Contract.test_alias_reparse_or_non_samefile_refused) ... ok\ntest_existing_default_off_two_link_guard_refuses_three (__main__.Contract.test_existing_default_off_two_link_guard_refuses_three) ... ok\ntest_extra_missing_duplicate_native_names_refused (__main__.Contract.test_extra_missing_duplicate_native_names_refused) ... ok\ntest_live_fourth_only_exact_fixed_cap_with_all_ownership_proofs (__main__.Contract.test_live_fourth_only_exact_fixed_cap_with_all_ownership_proofs) ... ok\ntest_native_identity_size_mtime_inode_and_source_hash_changes_refused (__main__.Contract.test_native_identity_size_mtime_inode_and_source_hash_changes_refused) ... ok\ntest_post_clean_fourth_leftover_fails_preserves_no_cleanup_api (__main__.Contract.test_post_clean_fourth_leftover_fails_preserves_no_cleanup_api) ... ok\ntest_reference_count_two_or_four_cannot_pass_retained_three (__main__.Contract.test_reference_count_two_or_four_cannot_pass_retained_three) ... ok\ntest_retained_three_model_matches_but_never_adopts_or_authorizes (__main__.Contract.test_retained_three_model_matches_but_never_adopts_or_authorizes) ... ok\ntest_source_identity_change_during_hash_refused (__main__.Contract.test_source_identity_change_during_hash_refused) ... ok\ntest_staged_fourth_requires_owned_inner_job_before_guest_PID_exists (__main__.Contract.test_staged_fourth_requires_owned_inner_job_before_guest_PID_exists) ... ok\ntest_unreviewed_phase_and_enabled_proposal_refused (__main__.Contract.test_unreviewed_phase_and_enabled_proposal_refused) ... ok\n\n----------------------------------------------------------------------\nRan 11 tests in 0.005s\n\nOK\n",
+  "preflight_performed": false,
+  "launch_authorized": false
+}

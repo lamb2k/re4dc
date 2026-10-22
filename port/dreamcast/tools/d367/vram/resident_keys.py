@@ -18,6 +18,13 @@
       Which listed rooms the packed file does not fully cover (lane r200-17, 10-16): a data set built from an older
       tree or a partial list set (the ch4 lane's resident-ch3.bin listed 6 of r10f's 153 keys and missed r112's set,
       so their r10f / r112 runs re-read 49 / 65 pictures from disc). Prints one line per short room; exit 1 if any.
+  resident_keys.py release <out.bin> [<d367 tools dir>]
+      The release dc/resident.bin in one step (lane residentbin22, 10-22): every top-level vram/resident/r*.tsv
+      plus every water/resident/r*.tsv, deduplicated, sorted and padded. Byte-identical to the res17b / res18f
+      method (pack vram/resident/*.tsv, then water/water_resident.py pack ... water/resident/*.tsv). Not the
+      castle18/ split (chapter 3 discs), not the vram lists alone (that drops the water rooms' pictures).
+      test_resident_release.py proves it rebuilds the shipped res18f (a9dca43b) from lane/fix18's lists and that
+      vram/resident/RELEASE.sha256 matches the current lists (rebuild resident.bin and update it with every list edit).
 
 The lists are data: tools/d367/vram/resident/r<room>.tsv, checked in, regenerated from the benchmark and play
 logs of a room when its texture set changes. The runtime loads a listed key only while the preload's slot and byte
@@ -120,8 +127,22 @@ def cmd_pack(a):
     print('%s: %d records, %d bytes' % (out, len(recs), len(b)))
 
 
-def coverage(bin_path, tsvs):
-    """[(room, listed, packed_of_listed)] for every list whose keys the packed file does not all carry."""
+def load_remap(path):
+    """{(room, crc, fnv) original: (room, crc, fnv) scoped} from a remap table (room, original, scoped, why; lane
+    mipmap22's mip22 data set, written by mipmap22/tables_resident.py parts). Only rows with why == remapped count."""
+    m = {}
+    for ln in Path(path).read_text().splitlines()[1:]:
+        f = ln.split('\t')
+        if len(f) >= 4 and f[3] == 'remapped':
+            room = int(f[0], 16)
+            m[(room, *(int(x, 16) for x in f[1].split('-')))] = (room, *(int(x, 16) for x in f[2].split('-')))
+    return m
+
+
+def coverage(bin_path, tsvs, remap=None):
+    """[(room, listed, packed_of_listed)] for every list whose keys the packed file does not all carry. remap
+    (load_remap): an original key also counts as carried when the file carries the scoped key the table maps it to
+    (WORLD_RECT21 discs); an original that is neither carried nor mapped is still short."""
     b = Path(bin_path).read_bytes()
     have = set()
     for o in range(0, len(b) - 15, 16):
@@ -132,10 +153,46 @@ def coverage(bin_path, tsvs):
     for t in tsvs:
         room = int(re.match(r'r([0-9a-f]+)', Path(t).stem).group(1), 16)
         keys = [ln.split('\t')[0] for ln in Path(t).read_text().splitlines()[1:] if ln.strip()]
-        got = sum(1 for k in keys if (room, *(int(x, 16) for x in k.split('-'))) in have)
+        remap = remap or {}
+        got = 0
+        for k in keys:
+            o = (room, *(int(x, 16) for x in k.split('-')))
+            got += o in have or remap.get(o) in have
         if got < len(keys):
             short.append((room, len(keys), got))
     return short
+
+
+def cmd_extend(a):
+    """extend <out.bin> <base resident.bin> <remap.tsv|-> <list.tsv>...: the base file's records plus every listed key it
+    does not carry (directly or through the remap table), sorted and padded as pack does (lane codex22, 10-22: the
+    first-use keys on top of mip22's remapped file; deterministic: same inputs, same bytes)."""
+    out, base, rm = Path(a[0]), Path(a[1]), a[2]
+    remap = load_remap(rm) if rm != '-' else {}
+    b = base.read_bytes()
+    recs = set()
+    for o in range(0, len(b) - 15, 16):
+        r, w, h, f, c, v = struct.unpack_from('<4H2I', b, o)
+        if r or w:
+            recs.add((r, c, v, w, h, f))
+    have = {(r, c, v) for r, c, v, _w, _h, _f in recs}
+    added = 0
+    for t in a[3:]:
+        room = int(re.match(r'r([0-9a-f]+)', Path(t).stem).group(1), 16)
+        for ln in Path(t).read_text().splitlines()[1:]:
+            if not ln.strip():
+                continue
+            k, w, h, f, _n = ln.split('\t')
+            crc, fnv = (int(x, 16) for x in k.split('-'))
+            o = (room, crc, fnv)
+            if o in have or remap.get(o) in have:
+                continue
+            recs.add((room, crc, fnv, int(w), int(h), int(f))); have.add(o); added += 1
+    rs = sorted(recs)
+    out_b = b''.join(struct.pack('<4H2I', r, w, h, f, c, v) for r, c, v, w, h, f in rs)
+    out_b += b'\0' * (-len(out_b) % 512)
+    out.write_bytes(out_b)
+    print('%s: %d records (%d added), %d bytes' % (out, len(rs), added, len(out_b)))
 
 
 def cmd_check(a):
@@ -146,5 +203,31 @@ def cmd_check(a):
     sys.exit(1 if short else 0)
 
 
+def release_lists(d367):
+    d367 = Path(d367)
+    return sorted((d367 / 'vram' / 'resident').glob('r*.tsv')) + sorted((d367 / 'water' / 'resident').glob('r*.tsv'))
+
+
+def release_bytes(d367):
+    recs = set()
+    for t in release_lists(d367):
+        room = int(re.match(r'r([0-9a-f]+)', t.stem).group(1), 16)
+        for ln in t.read_text().splitlines()[1:]:
+            if not ln.strip():
+                continue
+            k, w, h, f, _n = ln.split('\t')
+            crc, fnv = (int(x, 16) for x in k.split('-'))
+            recs.add((room, crc, fnv, int(w), int(h), int(f)))
+    b = b''.join(struct.pack('<4H2I', r, w, h, f, c, v) for r, c, v, w, h, f in sorted(recs))
+    return b + b'\0' * (-len(b) % 512), len(recs)
+
+
+def cmd_release(a):
+    import hashlib
+    b, n = release_bytes(a[1] if len(a) > 1 else Path(__file__).resolve().parents[1])
+    Path(a[0]).write_bytes(b)
+    print('%s: %d records, %d bytes, sha256 %s' % (a[0], n, len(b), hashlib.sha256(b).hexdigest()))
+
+
 if __name__ == '__main__':
-    {'list': cmd_list, 'pack': cmd_pack, 'check': cmd_check}[sys.argv[1]](sys.argv[2:])
+    {'list': cmd_list, 'pack': cmd_pack, 'check': cmd_check, 'release': cmd_release, 'extend': cmd_extend}[sys.argv[1]](sys.argv[2:])

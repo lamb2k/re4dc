@@ -524,3 +524,17 @@ EFFECTS30_PLATFORM = $(OBJDIR)/platform/native_ui.o
 $(EFFECTS30_GAME) $(EFFECTS30_PLATFORM): $(OBJDIR)/effects30.h
 $(EFFECTS30_GAME): GAME_CPPFLAGS += -include $(OBJDIR)/effects30.h
 $(EFFECTS30_PLATFORM): PLATFORM_CPPFLAGS += -include $(OBJDIR)/effects30.h
+
+# FX_STRIP21: source Esp01/Esp02 view-space quads, original UVs/current color,
+# existing effect deferred FIFO and PVR owner. Experimental; never in a recipe.
+FX_STRIP21 ?= 0
+ifneq ($(filter-out 0 1,$(FX_STRIP21)),)
+$(error FX_STRIP21 is 0 or 1)
+endif
+ifeq ($(FX_STRIP21),1)
+ifneq ($(EFFECT_SPRITES),1)
+$(error FX_STRIP21 needs EFFECT_SPRITES=1)
+endif
+$(OBJDIR)/src/game/esp.o $(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/esp01.o $(OBJDIR)/src/game/esp02.o: GAME_CPPFLAGS += -DRE4DC_FX_STRIP21=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FX_STRIP21=1
+endif

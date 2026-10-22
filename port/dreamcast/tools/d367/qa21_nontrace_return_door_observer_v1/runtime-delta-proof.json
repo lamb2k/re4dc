@@ -1,0 +1,64 @@
+{
+  "scope": "onlyfixedoutputcontract/dooronlyparser delta from reviewed7c; nativeguardian invariants exact",
+  "reviewed_base": "7c17119ea2517c390acd2e143a33ea839334cc12",
+  "independent_review": "599c2a063e8679af55aa2cae86f77fad81ed1790",
+  "runtime_files": {
+    "outer-driver.py": {
+      "reviewed7c_sha256": "41c408bb3af6fe2f2be7dfd8fbaacba7687626a37574a3547e677dce1964fa2c",
+      "new_sha256": "067073caf97a651ea585db29106004e2091c0286fc7b9793e2ad010ba286cc57",
+      "same": false
+    },
+    "inner-adapter.py": {
+      "reviewed7c_sha256": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e",
+      "new_sha256": "1a9e98bed53017256f1ebf5b6e449cacce30d40d5a75cb311988a3c2d23ed34c",
+      "same": false
+    },
+    "windows-backend.py": {
+      "reviewed7c_sha256": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e",
+      "new_sha256": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e",
+      "same": true
+    },
+    "guest-supervisor-core.py": {
+      "reviewed7c_sha256": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb",
+      "new_sha256": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb",
+      "same": true
+    },
+    "input-deadlines.py": {
+      "reviewed7c_sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9",
+      "new_sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9",
+      "same": true
+    },
+    "controller-core.py": {
+      "reviewed7c_sha256": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b",
+      "new_sha256": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b",
+      "same": true
+    },
+    "policies.py": {
+      "reviewed7c_sha256": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233",
+      "new_sha256": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233",
+      "same": true
+    },
+    "observe.py": {
+      "reviewed7c_sha256": "4f98cc5c10c1242930edc871f9a03dbcb8dc86eaec2bf9ac7f2ac1cc18b48c03",
+      "new_sha256": "4f98cc5c10c1242930edc871f9a03dbcb8dc86eaec2bf9ac7f2ac1cc18b48c03",
+      "same": true
+    },
+    "observer-v2.py": {
+      "reviewed7c_sha256": "254f708a1374d2a43f13225b7759fa014b61c9898b5672f0738316fef754157a",
+      "new_sha256": "254f708a1374d2a43f13225b7759fa014b61c9898b5672f0738316fef754157a",
+      "same": true
+    },
+    "layout-contract.py": {
+      "reviewed7c_sha256": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5",
+      "new_sha256": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5",
+      "same": true
+    },
+    "capture-budget.py": {
+      "reviewed7c_sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda",
+      "new_sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda",
+      "same": true
+    }
+  },
+  "profile_byte_exact": true,
+  "arbitrary_name_option": false
+}

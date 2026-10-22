@@ -1,0 +1,164 @@
+{
+  "scope": "SOURCE-QUALIFIED CANDIDATE018 ONLY. Independent implementation review/root exact allocation still required. No guest/build/image/input/command writes executed.",
+  "utc": "2026-10-22T07:10:25.220832+00:00",
+  "prepared": {
+    "prepared_only": true,
+    "no_guest": true,
+    "observer_sha256": "16154512b11b99880c76392e198b2b7de38650d7618502ba83236928b4f21eae",
+    "wrapper_sha256": "cdd4de7242f870fac6c9e595142a9f6d5a0f37d5d43e6a2d904440d728e40a33",
+    "pins_sha256": "2bb24552c810c222f6f08795bbb18637e798625a6cab6ea3cd94cb4f782412fc",
+    "argv": [
+      "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\tools\\fp_run_ram.py",
+      "--base",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+      "--cap",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door018",
+      "--syms",
+      "0x4319a0 0x4419a4 0x4419a0",
+      "--seconds",
+      "41",
+      "--vmu",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event009\\data\\T0000_vmu_save_A1.bin",
+      "--state-seed",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door017\\data",
+      "--warp",
+      "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\controlled-ch32-drain014-warp.txt",
+      "--period",
+      "0",
+      "--name",
+      "castle21-CONTROLLED-original209-door018"
+    ],
+    "admission_bytes": 20342374400,
+    "runtime_floor": 19394461696,
+    "capture_cap": 62914560,
+    "global_limit": 16,
+    "lane_limit": 2,
+    "source_only": true
+  },
+  "source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "source_current_bytes": {
+    "src/st2/r209.cpp": "49e6cc2a3f0ef1042c9be28ac3dcc590c83909f1a748e4803f39bc2ff79e71ee",
+    "src/game/emdoor.cpp": "e313c681b46d73f70f94024277b961908917d08b59e0ca8177b7e1de00cc4d1c",
+    "src/game/EtcModel.cpp": "6b3a6bebbb1ecae1e70a1189aae12cf141ef0db44edb113a5b2df21c72d2b235",
+    "src/game/act_btn.cpp": "61cda8eada8140e52d808dfc8aa206340607380b0323883bd90fa2f7474dad77",
+    "port/dreamcast/game/dbgwarp_bridge.cpp": "69d47a81a6a43621639612225a45caf4a5e18d6846166a3f4ff019cc5dc0535f",
+    "include/cam_ctrl.h": "2ac891e596fb1bde591f7a11929ebcfe538f8c2767dd77c842abad7dfec80436",
+    "include/emdoor.h": "3e99c019b13d81732b75548a760ef3d570bda1e86f26b2076a00859678e51cee"
+  },
+  "selected_actual_assets": {
+    "dc/native/r209/ps2-world.ids": {
+      "sha256": "4ff5a041799660d56861efcbced321f76f0000ed0ac505c2aacfdfa666c505fb",
+      "bytes": 160
+    },
+    "dc/native/r209/ps2-world.r4pw": {
+      "sha256": "01b6a17f5348199f9dc3d833b39cd3a6a3830fc719c8b22a959c5ce3bf9e76a8",
+      "bytes": 13468
+    },
+    "dc/native/r209/ps2-world.re4mesh": {
+      "sha256": "e424647fb2c0dd87b3478e362867d3ac62afd5722959ebbf2c59671d6b9d0797",
+      "bytes": 860320
+    },
+    "dc/native/r209/registry.re4nmr": {
+      "sha256": "cf4e269a942886442017b0d2099d392b36b79a45f891688e79799a7bce3821da",
+      "bytes": 185952
+    },
+    "dc/native/r209/room.r4rc": {
+      "sha256": "f93ef9188f07d444dc7a40c14ec603fe2c1ef1e50d803f393f969701d4844dca",
+      "bytes": 37936
+    },
+    "dc/st2_1.ovl": {
+      "sha256": "53494d01f3e10e83eddf81f0e03c342f239c5220da0bfc687f1c366ca15b4410",
+      "bytes": 116100
+    },
+    "st2/r209.arc": {
+      "sha256": "b257fdea9e1d556603ed0718cddb5d8300653042c38f39e30041f4b287feb36c",
+      "bytes": 1804608
+    }
+  },
+  "source_route_review": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle209-door-event-source-review21-20261022\\REVIEW.json",
+    "sha256": "5d8e249ef250a6230a5283943127b43c27f2ec51f686d694e79e6d911ad926d2"
+  },
+  "inherited_programme_binding": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\frozen-master-programme-binding-20261021.json",
+    "sha256": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed"
+  },
+  "seed": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door017\\data\\disc.state",
+    "sha256": "1b1485784a8c796fbaad18573002ae353f75d9b67c0b4b156e1724bf296ac04b",
+    "minimum_frame": 2604,
+    "room": "0x204",
+    "Part": 1,
+    "previous": "0x205",
+    "Stop": 0
+  },
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff48",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c47ff60",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c4801b6",
+      "bytes": 1
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ],
+  "maximum_successful_command_bytes": 58,
+  "stages": [
+    "Actual204Part1/Stop0/sourceframe advancement then currententry2 unusedslot1 descriptor\u2192max_entry2\u2192count2 last. Engineposeplacement atDoor4 then source-nativehit/action/ONEA\u2192actual209entry.",
+    "ONLYafteractual209Part0/previous204/Stop0/readableframeadvance: unusedslot2/currententry3 descriptor\u2192max_entry3\u2192count3 last. Combined originalphysicalDoor1/AEV0A pose; nativeactionONEA\u2192originalopening\u2192waiterCam3/2/end."
+  ],
+  "actual_acceptance": [
+    "native204Door4 request and actual209 entry separately",
+    "native game-thread placement/actualpose and exactphysicalDoor1sourceaction identity",
+    "physicalDoor1flag10000000 afterordinaryA",
+    "originalAEV0A execution observation ifsampled; nativeeventactive andCam3then2 theneventclear/Stop0/sourceadvance/screenshots. Flag/roomalone cannot passcut."
+  ],
+  "limitations": [
+    "No natural route/chandeliers/chase/switch/no-warp3-2 acceptance. Controlledteleportcoverage only.",
+    "AEVexecFlg is one-frame; observation maymissit. Preserve partialevent ifbound instead of claimingcompletion.",
+    "Bounded fit is unproven; no automaticretry or followupguest.",
+    "Root017visual: entryLoading,firstcutreturnlabelstillcinematicpixels,deadlineLeon/HUD; state/event andpixelsdistinct. RootvisualSHAe5f13910c4668aa4db09f772bbb7d2337841b214e93b0f5767f56a2fde06fb40, prior7078auditunchanged."
+  ],
+  "guards": {
+    "start_bytes": 20342374400,
+    "runtime_bytes": 19394461696,
+    "raw_seconds": 41,
+    "normal_close": 39,
+    "absolute_seconds": 47.5,
+    "capture_bytes": 62914560,
+    "global_flycast": 16,
+    "castle": 2,
+    "global_source_peer_bytes": 67108864
+  },
+  "qualification": {
+    "command_source_cases": 44,
+    "readiness_source_cases": 17,
+    "actual_guest": 0,
+    "prepare_pin_count": 35,
+    "command_receipt_sha256": "40efd24cc1b9bdbbb008b7d55cfb1d85644e7eae4a516a025e96ac96635f553f",
+    "readiness_receipt_sha256": "2157581bb5cb98c07751b480da61dd623e4bb86f82cf93a09bb81b05a9698214"
+  },
+  "root_argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-door018.sh",
+    "--execute-allocated018"
+  ],
+  "shell_sha256": "79130af2d477928a171a04581a529e68df404ce850e13f669e527e9ebe8c7d3f",
+  "shared_trace_lock_sha256": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688",
+  "resource_scope": "Own018source+metadata+mirrors<=512KiB withinstandingglobal64MiBpeer. Reviewer hasfreshseparate512KiB; previouscloseoutpreserved. No runtime allocation inferred."
+}

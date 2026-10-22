@@ -1,0 +1,56 @@
+{
+  "scope": "SOURCE ONLY native cold LOAD preparation; no guest/root allocation. Actual009 privateVMU425595 output copied by harness; no state-seed/snapshot/warp outcomes. Default preparation hash/AST check passed, independent static source review CLEAR. No nativeLOAD acceptance yet.",
+  "files": {
+    "observe-controlled-native-load010.py": {
+      "bytes": 6614,
+      "sha256": "cf7482461bd94554346ba3fa597bcf71c7e258fc865ffb736989d23c846c9185"
+    },
+    "run-controlled-native-load010.py": {
+      "bytes": 5101,
+      "sha256": "d119ac6ca2379f6553a9b11a4751c4b9e520f05d7d8627f1b23d3e0ce1413955"
+    },
+    "run-controlled-native-load010.sh": {
+      "bytes": 356,
+      "sha256": "220a9c28f914173f3b68a0a60be9063fa30df77a3056f20f131b645a566b623d"
+    },
+    "controlled-native-load010-pins.json": {
+      "bytes": 2346,
+      "sha256": "c05ca4ffdf3699f64e93a85f1bd4c6ff96723a52775e55a45f0155f0fc9fa53c"
+    },
+    "controlled-native-load010-pins-before-template-pin.json": {
+      "bytes": 1779,
+      "sha256": "24d4250fa352b6723368ea4ab2aafc88ef748a707bf7e196e92b85784931c209"
+    },
+    "observe-controlled-native-load010-before-template-pin.py": {
+      "bytes": 6479,
+      "sha256": "6eba328ba86d6567629decb3ac0f957a9b2c9b494da6ae8a1cc69c3a0cc36754"
+    },
+    "run-controlled-native-load010-before-template-pin.py": {
+      "bytes": 4983,
+      "sha256": "4deaf44966c5738b98ed99e278819831d715e1182ad16fc79ba4dcf163f22cb7"
+    },
+    "REVIEW-CONTROLLED-NATIVE-LOAD010.md": {
+      "bytes": 3153,
+      "sha256": "f3c0a6482b230687283b90de0767e9fda484d92091c508e822968543a14d6a02"
+    }
+  },
+  "bytes": 30811,
+  "source_cap_not_created": true,
+  "launch": "Only after explicit root allocation: bash run-controlled-native-load010.sh --execute-allocated010",
+  "bounds": {
+    "raw41": true,
+    "observer_close39": true,
+    "V5absolute47_5": true,
+    "captureMiB60": true,
+    "start_bytes": 20342374400,
+    "runtime_floor": 19394461696,
+    "global16": true
+  },
+  "future_acceptance": [
+    "Original card-vmu load file0 blocks12 ok1 plus source load completion",
+    "Actual loaded chapter7/room204 gameplay/state, screenshots and source interval",
+    "Actual runtimeVMU identity versus immutable009source425595",
+    "V5 retained exactPID/path/start closure; failures separate from functionality"
+  ],
+  "canonical_mipmap_priority_preserved": true
+}

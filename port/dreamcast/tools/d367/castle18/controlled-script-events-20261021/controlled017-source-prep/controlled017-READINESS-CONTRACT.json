@@ -1,0 +1,40 @@
+{
+  "scope": "SOURCEONLY017 startup/readability repair. No guest or liveRAMprobe performed by this source unit; actual016 APIs error and bytes remain unrecorded.",
+  "actual016_failure_audit_sha256": "16a9bf92d5e2a402a0c8831f2acd94d15f923c10a0994bbeac9479af61d97eb2",
+  "confirmed_method_defect": "016 sampled pG andclosed0.6624 beforeactualstateLoaded0.730; RAMannouncementalone was admitted. Underlying RPM OSerror cannot be reconstructed.",
+  "seed_actual016_sha256": "a33b2ac44cce042d035f7a981e96cf57b19bec1484f04c86084ece22803f73e8",
+  "host_read_ABI": {
+    "pointer_bytes": 8,
+    "MemoryBasicInformation_bytes": 48,
+    "fields": {
+      "BaseAddress": 0,
+      "AllocationBase": 8,
+      "AllocationProtect": 16,
+      "PartitionId": 20,
+      "RegionSize": 24,
+      "State": 32,
+      "Protect": 36,
+      "Type": 40
+    }
+  },
+  "readiness": "Require exactcurrentcap stateLoaded line afterlastRAMmapping; VirtualQueryEx committed/accesscoverspG4; then actualmaincodeanchors/readableseed/nativefields andtwo coherent sourceframes advancing at/after1769, samepg/mapping beforeanysetupwrite orUI. RecordexactsuccessfulpG4byteprobe/processbirth. TransientRPMunavailable clearsinputreadiness andcontinuesboundedobservation; errors recordbool/host+guest/length/got/lastError/partialbytes/VQE, bounded100records. No inventederrorattribution.",
+  "control_contract": "Inherited016 WPMfunction stillONLY24B existingGoto slot then4Bcountlast, now additionallyrequiresmemory_ready. No directactor/room/flags/health writes. If readunavailableinside command/input action, blockfurtheractions/no retry, keepobservingto39s andretainactualstate; normal samplerunavailability waitsforfreshreadablesequence. Identity failures/WPMfailures/resources remain failclosed underV5.",
+  "unchanged_write_ABI_sha256": "c63c8ac0f3ab8ee4810fb3776286570631f2cd6126e454f01635b9e30e15dbaf",
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff30",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ],
+  "source_qualification": {
+    "command_cases": 24,
+    "readiness_cases": 17,
+    "mock299_not_actual016_error": true
+  },
+  "runtime_acceptance": "No new runtime claim. Need actual017readiness/commandconsumption/nativeDoor0/request\u2192actual204Part1/firstcut; inherited015drain and016no-commandfailure stayseparate.",
+  "default_off": true
+}

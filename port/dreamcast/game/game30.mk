@@ -26,6 +26,33 @@
 #                     timing-perturbation control arm that proves the fixture is insensitive to
 #                     CPU speed before any A/B verdict is trusted.
 # Build every arm in its own OBJDIR (flag changes do not rebuild existing objects).
+# Event storage bookkeeping: every TU must use the same template policy.
+# Native only; other manager predicates/layout and recipe defaults are unchanged.
+# Retire native reset borrowers before destroying their source heaps.
+RESET_RETIRE_BEFORE_HEAPS ?= 1
+ifneq ($(RESET_RETIRE_BEFORE_HEAPS),0)
+ifneq ($(RESET_RETIRE_BEFORE_HEAPS),1)
+$(error RESET_RETIRE_BEFORE_HEAPS must be 0 or 1)
+endif
+GAME_CPPFLAGS += -DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1
+endif
+# Conditional failed-restore containment; optional source candidate only.
+SS_RESTORE_VALIDATE_FIRST ?= 1
+ifneq ($(SS_RESTORE_VALIDATE_FIRST),0)
+ifneq ($(SS_RESTORE_VALIDATE_FIRST),1)
+$(error SS_RESTORE_VALIDATE_FIRST must be 0 or 1)
+endif
+GAME_CPPFLAGS += -DRE4DC_SS_RESTORE_VALIDATE_FIRST=1
+endif
+EVENT_MANAGER_STORAGE_FLAGS ?= 1
+ifneq ($(EVENT_MANAGER_STORAGE_FLAGS),0)
+ifneq ($(EVENT_MANAGER_STORAGE_FLAGS),1)
+$(error EVENT_MANAGER_STORAGE_FLAGS must be 0 or 1)
+endif
+GAME_CPPFLAGS += -DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1
+PLATFORM_CPPFLAGS += -DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1
+endif
+
 GAME_CPU ?= 0
 ifeq ($(GAME_CPU),1)
 GAME_PS_ALIAS ?= 1
@@ -135,6 +162,22 @@ $(error MOTION_RESERVE_PACK needs MOTION_PRESSURE_BACKING=1)
 endif
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_RESERVE_PACK=$(MOTION_RESERVE_PACK)
 endif
+# MOTION_CAPACITY=1 (default off): reclaimable v2 heap overflow after packed
+# reserve fills, under the existing aggregate pressure payload cap. Required
+# source heap4 allocations drain only this overflow before final diagnostics.
+# No v3 policy, private reserve size, archive format or fixed margin changes.
+MOTION_CAPACITY ?= 0
+ifneq ($(MOTION_CAPACITY),0)
+ifneq ($(MOTION_CAPACITY),1)
+$(error MOTION_CAPACITY must be 0 or 1)
+endif
+ifneq ($(MOTION_RESERVE_PACK),1)
+$(error MOTION_CAPACITY needs MOTION_RESERVE_PACK=1)
+endif
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_CAPACITY=1
+$(OBJDIR)/motion_bridge.o $(OBJDIR)/ui_bridge.o $(OBJDIR)/src/game/main_mem.o: GAME_CPPFLAGS += -DRE4DC_MOTION_CAPACITY=1
+$(OBJDIR)/sdk/OSAlloc.o: SDK_CFLAGS += -DRE4DC_MOTION_CAPACITY=1
+endif
 # MOTION_PRESSURE_GROW=<bytes> (test 14 r103 motion thrash, crash lane 10-15; needs MOTION_PRESSURE_BYTES; render and
 # I/O only, default 0 = image unchanged): a key load over the MOTION_PRESSURE_BYTES cap does not evict while heap 4
 # keeps at least <bytes> free after it (as MOTION_RESERVE_SPILL): the cap holds only under heap 4 pressure. The r103
@@ -232,6 +275,26 @@ ifneq ($(MOVIE_BALLAST_TEST),0)
 $(OBJDIR)/platform/native_movie.o: PLATFORM_CPPFLAGS += -DRE4DC_MOVIE_BALLAST_TEST=$(MOVIE_BALLAST_TEST)
 endif
 endif
+# MOTION_RESUME=1 (default off): restore only recent source-used, movie-evicted
+# heap FCVs at the final route boundary. Bounded admission; no pins/cap growth.
+MOTION_RESUME ?= 0
+ifneq ($(MOTION_RESUME),0)
+ifneq ($(MOTION_RESUME),1)
+$(error MOTION_RESUME must be 0 or 1)
+endif
+ifneq ($(MOTION_PRESSURE_BACKING),1)
+$(error MOTION_RESUME needs MOTION_PRESSURE_BACKING=1)
+endif
+ifneq ($(MOVIE_HEAP_EVICT),1)
+$(error MOTION_RESUME needs MOVIE_HEAP_EVICT=1)
+endif
+ifneq ($(ROUTE_MOVIES),1)
+$(error MOTION_RESUME needs ROUTE_MOVIES=1)
+endif
+$(OBJDIR)/platform/native_motion.o $(OBJDIR)/platform/native_movie.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_RESUME=1
+$(OBJDIR)/route_movie_bridge.o: GAME_CPPFLAGS += -DRE4DC_MOTION_RESUME=1
+endif
+
 ifneq ($(MOTION_OOM_EVICT),0)
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_OOM_EVICT=$(MOTION_OOM_EVICT)
 endif
@@ -1295,6 +1358,18 @@ $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_COARSE=$(COARSE)
 $(OBJDIR)/coarse.o: coarse.cpp
 	@mkdir -p $(dir $@)
 	kos-c++ $(KOS_CFLAGS) $(GAME_CPPFLAGS) -DRE4DC_COARSE=$(COARSE) -MMD -MP -c $< -o $@
+endif
+# PAUSE_NATIVE_PRESENTATION: ordinary OPTIONS over a live gameplay room keeps
+# the qualified native view. Movie/held/subscreen guards remain in coarse_tick.
+PAUSE_NATIVE_PRESENTATION ?= 0
+ifneq ($(PAUSE_NATIVE_PRESENTATION),0)
+ifneq ($(PAUSE_NATIVE_PRESENTATION),1)
+$(error PAUSE_NATIVE_PRESENTATION must be 0 or 1)
+endif
+ifneq ($(COARSE),1)
+$(error PAUSE_NATIVE_PRESENTATION needs COARSE=1)
+endif
+$(OBJDIR)/coarse.o $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PAUSE_NATIVE_PRESENTATION=1
 endif
 # COARSE_NO_STD_SCENERY=1 (heap-4 reclaim, render-only; only with COARSE=1 and COARSE_WORLD set, below): in the
 #   room the coarse world draws (coarse_world.h kRoom) native_static.cpp bind_mesh() neither opens nor binds the
@@ -2418,6 +2493,24 @@ ifneq ($(TEX_PACK_FAULT),0)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PACK_FAULT=$(TEX_PACK_FAULT)
 endif
 endif
+# TEX_PAYLOAD_RETRY=1 (default 0): space only failed packed-member I/O/validation retries
+# before eviction; dense exact ordinals require the immutable index sector CRC receipts.
+TEX_PAYLOAD_RETRY ?= $(if $(and $(filter 1,$(TEX_PACK)),$(filter 1,$(TEX_RESIDENT))),1,0)
+ifneq ($(words $(TEX_PAYLOAD_RETRY)),1)
+$(error TEX_PAYLOAD_RETRY must be exactly 0 or 1)
+endif
+ifeq ($(filter 0 1,$(TEX_PAYLOAD_RETRY)),)
+$(error TEX_PAYLOAD_RETRY must be exactly 0 or 1)
+endif
+ifeq ($(TEX_PAYLOAD_RETRY),1)
+ifneq ($(TEX_PACK),1)
+$(error TEX_PAYLOAD_RETRY needs TEX_PACK=1)
+endif
+ifneq ($(TEX_RESIDENT),1)
+$(error TEX_PAYLOAD_RETRY needs TEX_RESIDENT=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAYLOAD_RETRY=1
+endif
 # TEX_PACK_WINDOW=KB (lane plainread16 2026-10-16, user-approved "per-room large texture reads"; default 0 = image
 # unchanged; needs TEX_PACK=1, DISC_READ_FALLBACK=2 and TEX_PAYLOAD_CRC=0): each room preload pass reads tex.pak through
 # a KB read-ahead window (room/texture_package.hpp pack_window_*; a transient staging buffer from the current heap, freed
@@ -2525,6 +2618,30 @@ endif
 $(OBJDIR)/coarse.o: GAME_CPPFLAGS += -DRE4DC_PS2_WORLD_MESH=1
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ps2_world.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_MESH=1
 endif
+# WORLD_RECT21=1: private selected rectangle representations on the qualified
+# PS2 mesh direct consumer only. Exact key, dimensions, format, flags, layout,
+# payload size and descriptor CRC select the UV rule. No production recipe uses
+# it. Generic, actor and legacy world packet dimension guards stay unchanged.
+WORLD_RECT21 ?= 0
+ifneq ($(words $(WORLD_RECT21)),1)
+$(error WORLD_RECT21 must be 0 or 1)
+endif
+ifneq ($(filter 0 1,$(WORLD_RECT21)),$(WORLD_RECT21))
+$(error WORLD_RECT21 must be 0 or 1)
+endif
+ifeq ($(WORLD_RECT21),1)
+ifneq ($(PS2_WORLD_DRAW),1)
+$(error WORLD_RECT21=1 requires PS2_WORLD_DRAW=1)
+endif
+ifneq ($(PS2_WORLD_MESH),1)
+$(error WORLD_RECT21=1 requires PS2_WORLD_MESH=1)
+endif
+ifneq ($(MESH_DIRECT),1)
+$(error WORLD_RECT21=1 requires MESH_DIRECT=1)
+endif
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_RECT21=1
+endif
+
 # PS2_WORLD_HDR_CACHE=1 (native_ui.cpp, render only, exact, default 0; needs PS2_WORLD_MESH=1): the PS2 world's
 # direct bind (re4dc_ps2_world_direct_begin) keeps each material's compiled header (texture key/size, pass, cull, fog)
 # with its texture Entry in a 4-way 128-slot table (5 KiB), valid while that Entry holds the key at the same VRAM address:
@@ -2795,6 +2912,36 @@ $(error PS2_WORLD_PARTS needs COARSE_SOURCE_OBJECTS=1 COARSE_SCENERY_FALLBACK=1)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_PARTS=1
 $(OBJDIR)/src/game/scroll.o $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_PS2_WORLD_PARTS=1
+endif
+# PS2_WORLD_NONEMPTY_LOD=1: after the ordinary PS2 world LOD error test,
+# keep the nearest finer nonempty geometry instead of an empty reduction.
+# Source visibility/culling, authored empty bases and source meshes stay intact.
+PS2_WORLD_NONEMPTY_LOD ?= 0
+ifneq ($(PS2_WORLD_NONEMPTY_LOD),0)
+ifneq ($(PS2_WORLD_NONEMPTY_LOD),1)
+$(error PS2_WORLD_NONEMPTY_LOD must be 0 or 1)
+endif
+ifneq ($(MESH_LOD),1)
+$(error PS2_WORLD_NONEMPTY_LOD needs MESH_LOD=1)
+endif
+ifeq ($(filter 1 2,$(PS2_WORLD_ROOMS)),)
+$(error PS2_WORLD_NONEMPTY_LOD needs PS2_WORLD_ROOMS=1 or 2)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_NONEMPTY_LOD=1
+endif
+# PS2_WORLD_ROOT_POSE=1: keep one-bone animated scenery on its PS2 geometry,
+# using current root-world * inverse(bind root-world). Multi-bone owners keep
+# the existing source hierarchy path. Refused root witnesses hide, never bake.
+PS2_WORLD_ROOT_POSE ?= 0
+ifneq ($(PS2_WORLD_ROOT_POSE),0)
+ifneq ($(PS2_WORLD_ROOT_POSE),1)
+$(error PS2_WORLD_ROOT_POSE must be 0 or 1)
+endif
+ifneq ($(PS2_WORLD_PARTS),1)
+$(error PS2_WORLD_ROOT_POSE needs PS2_WORLD_PARTS=1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_ROOT_POSE=1
+$(OBJDIR)/src/game/scroll.o: GAME_CPPFLAGS += -DRE4DC_PS2_WORLD_ROOT_POSE=1
 endif
 # PS2_WORLD_SOURCE_OWNER=1: bounded r200 noncoarse event-image ownership at
 # original model callbacks. Source OTs, callbacks and model postludes remain.
@@ -3318,6 +3465,32 @@ RESET_HEAP_FIX ?= 0
 ifeq ($(RESET_HEAP_FIX),1)
 GAME_CPPFLAGS += -DRE4DC_RESET_HEAP_FIX=1
 endif
+# EM_READ_RETRY=1 (issue #52, default ON, crash fix): read.cpp readEmData re-issues a failed enemy module read (no
+#   free DVD queue slot / GD read error; GDEMU only) up to 8 times with a growing sleep instead of returning 0, and
+#   r10c's first-villager event retries a NULL EmSetFromList2 for 60 frames, then skips the axe cut (spawning the
+#   bank's enemies 3/4 as its exit does) instead of dereferencing NULL. 0: the original code.
+EM_READ_RETRY ?= 1
+ifeq ($(EM_READ_RETRY),1)
+GAME_CPPFLAGS += -DRE4DC_EM_READ_RETRY=1
+endif
+# EM_READ_FAIL_INJECT=N (test only, default 0 = no code): enemy module reads in room EM_READ_FAIL_INJECT_ROOM (default 0x10C) fail N times (>= 99: always), the
+#   issue #52 console failure on Flycast.
+EM_READ_FAIL_INJECT ?= 0
+EM_READ_FAIL_INJECT_ROOM ?= 0x10C
+ifneq ($(EM_READ_FAIL_INJECT),0)
+GAME_CPPFLAGS += -DRE4DC_EM_READ_FAIL_INJECT=$(EM_READ_FAIL_INJECT) -DRE4DC_EM_READ_FAIL_INJECT_ROOM=$(EM_READ_FAIL_INJECT_ROOM)
+endif
+# GUARD_FAIL_INJECT=N (test only, lane guards22, default 0 = no code): in room GUARD_FAIL_INJECT_ROOM (default 0x100)
+#   fresh event file reads (MASK bit 0) are refused and first effect-file admissions (bit 1) take the invalid-file path,
+#   N times each (>= 99: always). The failure-injection proof of the audit guard set; never in a product image.
+GUARD_FAIL_INJECT ?= 0
+GUARD_FAIL_INJECT_ROOM ?= 0x100
+GUARD_FAIL_INJECT_MASK ?= 3
+# GUARD_FAIL_INJECT_EVT=0xNN: only event file sNN of that room (and effect admissions after its first read); -1 = any.
+GUARD_FAIL_INJECT_EVT ?= -1
+ifneq ($(GUARD_FAIL_INJECT),0)
+$(OBJDIR)/src/game/event.o $(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_GUARD_FAIL_INJECT=$(GUARD_FAIL_INJECT) -DRE4DC_GUARD_FAIL_INJECT_ROOM=$(GUARD_FAIL_INJECT_ROOM) -DRE4DC_GUARD_FAIL_INJECT_MASK=$(GUARD_FAIL_INJECT_MASK) -DRE4DC_GUARD_FAIL_INJECT_EVT=$(GUARD_FAIL_INJECT_EVT)
+endif
 # RESET_MEM_FIX=1 (lane resetmem; load a save, Game Reset / Retry, New Game: r100 started with less heap 4 and KOS
 #   malloc than after a fresh boot): state the port keeps across a soft reset goes back to its fresh-boot value.
 #   ACTOR_PL08_PACK: the bound player file is forgotten with the player archive (systemResetCommon), so a New Game's
@@ -3380,6 +3553,68 @@ $(error TEX_PAL4_ALPHA is 0 or 1)
 endif
 ifeq ($(TEX_PAL4_ALPHA),1)
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL4_ALPHA=1
+endif
+
+# Compact square twiddled PAL4 ARGB4444 mip chains; render-only, opt-in.
+# Off adds no compiler definitions and preserves previous admission/sampling.
+TEX_PAL4_MIPMAP ?= 0
+ifeq ($(filter $(TEX_PAL4_MIPMAP),0 1),)
+$(error TEX_PAL4_MIPMAP must be 0 or 1)
+endif
+ifeq ($(TEX_PAL4_MIPMAP),1)
+ifneq ($(TEX_PAL4_ALPHA)$(CAST_MIPMAP),11)
+$(error TEX_PAL4_MIPMAP=1 requires TEX_PAL4_ALPHA=1 CAST_MIPMAP=1)
+endif
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL4_MIPMAP=1
+endif
+
+# Exact square uncompressed PAL8 ARGB4444, with aligned shared palettes.
+# Off adds no definition or admission; it does not change any release recipe.
+TEX_PAL8_ALPHA ?= 0
+TEX_PAL8_MIPMAP ?= 0
+ifeq ($(filter $(TEX_PAL8_ALPHA),0 1),)
+$(error TEX_PAL8_ALPHA must be 0 or 1)
+endif
+ifeq ($(filter $(TEX_PAL8_MIPMAP),0 1),)
+$(error TEX_PAL8_MIPMAP must be 0 or 1)
+endif
+ifeq ($(TEX_PAL8_ALPHA),1)
+ifneq ($(TEX_PAL4_ALPHA),1)
+$(error TEX_PAL8_ALPHA=1 requires TEX_PAL4_ALPHA=1)
+endif
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL8_ALPHA=1
+endif
+ifeq ($(TEX_PAL8_MIPMAP),1)
+ifneq ($(TEX_PAL8_ALPHA)$(CAST_MIPMAP),11)
+$(error TEX_PAL8_MIPMAP=1 requires TEX_PAL8_ALPHA=1 CAST_MIPMAP=1)
+endif
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL8_MIPMAP=1
+endif
+
+# Native square 16-bit twiddled mip chains, with unchanged base texels.
+# Off contributes no compiler definition; existing CAST_MIPMAP forwards TCW.
+TEX_TWIDDLED_MIPMAP ?= 0
+ifeq ($(filter $(TEX_TWIDDLED_MIPMAP),0 1),)
+$(error TEX_TWIDDLED_MIPMAP must be 0 or 1)
+endif
+ifeq ($(TEX_TWIDDLED_MIPMAP),1)
+ifneq ($(CAST_MIPMAP),1)
+$(error TEX_TWIDDLED_MIPMAP=1 requires CAST_MIPMAP=1)
+endif
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_TWIDDLED_MIPMAP=1
+endif
+
+# TEX_MIP_DADJ=<1..15> (lane mipmap22, render only, default 0 = KOS default 1.00): the PVR "mipmap D adjust" (LOD bias)
+# every compiled polygon / sprite / modifier header carries when its context left KOS's default (PVR_MIPBIAS_NORMAL).
+# 4 = 1.00 (KOS default), 3 = 0.75, 2 = 0.50, 1 = 0.25 (sharper: lower mip levels are chosen later). Only mipmapped
+# textures use it. Link wraps pvr_poly_compile / pvr_sprite_compile / pvr_poly_mod_compile (platform/native_ui.cpp).
+TEX_MIP_DADJ ?= 0
+ifeq ($(filter $(TEX_MIP_DADJ),0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15),)
+$(error TEX_MIP_DADJ must be 0..15)
+endif
+ifneq ($(TEX_MIP_DADJ),0)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_MIP_DADJ=$(TEX_MIP_DADJ)
+GAME_LDFLAGS += -Wl,--wrap=pvr_poly_compile -Wl,--wrap=pvr_sprite_compile -Wl,--wrap=pvr_poly_mod_compile
 endif
 
 # Exact private r11f Mendez/Luis version3 profiles; legacy version2 stays unchanged.
@@ -3579,6 +3814,25 @@ $(OBJDIR)/sh4zam-inline.ok: $(SH4ZAM_OBJS)
 	@if sh-elf-nm -u $^ | grep ' _shz_' >&2; then echo "$^: undefined SH4ZAM symbols above (out-of-line SH4ZAM calls need libsh4zam.a: make sh4zam-lib, and link it)" >&2; exit 1; fi
 	@touch $@
 endif
+# ISSUE52_ACTOR_DIAG=1: copy the dam event's source phase, returned actor address
+# and trusted st1_2 overlay base into one early crash-screen row. No actor reads.
+ISSUE52_ACTOR_DIAG ?= 0
+ifneq ($(filter-out 0 1,$(ISSUE52_ACTOR_DIAG)),)
+$(error ISSUE52_ACTOR_DIAG must be 0 or 1)
+endif
+ifeq ($(ISSUE52_ACTOR_DIAG),1)
+ifneq ($(CRASH_SCREEN),1)
+$(error ISSUE52_ACTOR_DIAG needs CRASH_SCREEN=1)
+endif
+ifneq ($(STAGE_OVL),1)
+$(error ISSUE52_ACTOR_DIAG needs STAGE_OVL=1)
+endif
+ifneq ($(ROUTE_OVL),1)
+$(error ISSUE52_ACTOR_DIAG needs ROUTE_OVL=1 via ROUTE_CH13=1)
+endif
+$(OBJDIR)/mod/st1_2/src/st1/r10c.o: GAME_CPPFLAGS += -DRE4DC_ISSUE52_ACTOR_DIAG=1
+$(OBJDIR)/platform/modules.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_ISSUE52_ACTOR_DIAG=1
+endif
 # MOTION_MISS_LOG=1 (castle lane 2026-10-15; diagnostic, log only, default 0): "motion miss" lines (clip, wait, slab).
 MOTION_MISS_LOG ?= 0
 ifeq ($(filter $(MOTION_MISS_LOG),0 1),)
@@ -3586,4 +3840,26 @@ $(error MOTION_MISS_LOG must be 0 or 1)
 endif
 ifeq ($(MOTION_MISS_LOG),1)
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_MISS_LOG=1
+endif
+
+# Validate controller/model/part inputs before native effect record reads.
+EFFECT_CONTROLLER_VALIDATE_FIRST ?= 1
+ifneq ($(words $(EFFECT_CONTROLLER_VALIDATE_FIRST)),1)
+$(error EFFECT_CONTROLLER_VALIDATE_FIRST must be 0 or 1)
+endif
+ifeq ($(filter $(EFFECT_CONTROLLER_VALIDATE_FIRST),0 1),)
+$(error EFFECT_CONTROLLER_VALIDATE_FIRST must be 0 or 1)
+endif
+ifeq ($(EFFECT_CONTROLLER_VALIDATE_FIRST),1)
+$(OBJDIR)/src/game/espgen10.o: GAME_CPPFLAGS += -DRE4DC_EFFECT_CONTROLLER_VALIDATE_FIRST=1
+endif
+
+# CLOTH_LIGHT_ABI_FIX: SH4 caller passes the live Vec address expected by the
+# existing commonClothLightSet definition. Original OFF/PPC path stays exact.
+CLOTH_LIGHT_ABI_FIX ?= 0
+ifneq ($(filter-out 0 1,$(CLOTH_LIGHT_ABI_FIX)),)
+$(error CLOTH_LIGHT_ABI_FIX is 0 or 1)
+endif
+ifeq ($(CLOTH_LIGHT_ABI_FIX),1)
+$(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_LIGHT_ABI_FIX=1
 endif

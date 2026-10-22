@@ -1,0 +1,42 @@
+{
+  "name": "castle21-CONTROLLED-original204-radio-handoff012",
+  "status": "RUN_COMPLETE",
+  "start_utc": "2026-10-22T04:24:46.304842+00:00",
+  "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+  "tracks": {
+    "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+    "kind": "release",
+    "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+  },
+  "seconds": 41,
+  "vmu": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event009\\data\\T0000_vmu_save_A1.bin",
+  "keys": null,
+  "stop": null,
+  "fixtures": {
+    "warp": {
+      "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+      "bytes": 73,
+      "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+    },
+    "pad": {
+      "src": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\native-load011-pad.txt",
+      "bytes": 308,
+      "sha256": "1f3fb7d3f47468024e5fae39d0381e912f757119e1c4f6342cb158369d65b403"
+    },
+    "w11": {
+      "src": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "errors": [],
+  "key_log": [],
+  "align": false,
+  "emu": "harness",
+  "emu_env": {},
+  "early_emulator_exit": 0,
+  "log_idle_s": 0.5,
+  "end_utc": "2026-10-22T04:25:26.310994+00:00",
+  "elapsed_s": 39.9,
+  "emulator_exited": true
+}

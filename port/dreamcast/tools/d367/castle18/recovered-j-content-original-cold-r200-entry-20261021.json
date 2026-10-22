@@ -1,0 +1,167 @@
+{
+  "scope": "Recovered J content NEW cold lineage, original handoff VMU through normal Title/CardLoad. Four exact ELF anchors. No historical J state seed, code/asset changes, warps or game-memory writes.",
+  "source_frame": 5302,
+  "state_sha256": "2c2678974605f0042145af528528db919c4827de0bf965236a0f2bbd3cc830f4",
+  "room": "0x200",
+  "chapter": 6,
+  "phase": [
+    3,
+    0
+  ],
+  "Stop": "0x0",
+  "SSLoop": 0,
+  "health": [
+    1200,
+    1200,
+    600,
+    600
+  ],
+  "player_pos": [
+    82730.90625,
+    10118.0859375,
+    -51543.26953125
+  ],
+  "partner_pos": [
+    82305.5078125,
+    10118.0859375,
+    -51551.17578125
+  ],
+  "original_vmu_sha256": "3fd96a3481bbccb641441707ebf3a5d28c632a025b9020402c334f9c96f4ea91",
+  "immutable_vmu_copy_sha256": "3fd96a3481bbccb641441707ebf3a5d28c632a025b9020402c334f9c96f4ea91",
+  "new_iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "CAST_GC": "PASS: Leon/Ashley/merchant4200native each,0GC",
+  "NOT_DRAWN": "PASS:21alivelist lines,0judged enemyrows; not an enemyfight acceptance",
+  "runs": [
+    {
+      "name": "castle21-recoveredJ-NEW-cold-CardLoad",
+      "status": "RUN_COMPLETE",
+      "start_utc": "2026-10-21T13:57:50.469292+00:00",
+      "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+      "tracks": {
+        "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "kind": "release",
+        "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+      },
+      "seconds": 50,
+      "vmu": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\original-handoff-VMU-cold-copy.bin",
+      "keys": null,
+      "stop": null,
+      "fixtures": {
+        "warp": {
+          "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+          "bytes": 73,
+          "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+        },
+        "pad": {
+          "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+          "bytes": 208,
+          "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+        },
+        "w11": {
+          "src": null,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "errors": [],
+      "key_log": [],
+      "align": false,
+      "emu": "harness",
+      "emu_env": {},
+      "log_idle_s": 1.5,
+      "end_utc": "2026-10-21T13:58:41.183496+00:00",
+      "elapsed_s": 50.6,
+      "emulator_exited": true
+    },
+    {
+      "name": "castle21-recoveredJ-NEW-cold-CardLoad",
+      "status": "RUN_COMPLETE",
+      "start_utc": "2026-10-21T13:59:51.103641+00:00",
+      "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+      "tracks": {
+        "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "kind": "release",
+        "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+      },
+      "seconds": 50,
+      "vmu": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\original-handoff-VMU-cold-copy.bin",
+      "keys": null,
+      "stop": null,
+      "fixtures": {
+        "warp": {
+          "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+          "bytes": 73,
+          "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+        },
+        "pad": {
+          "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+          "bytes": 208,
+          "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+        },
+        "w11": {
+          "src": null,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "errors": [],
+      "key_log": [],
+      "align": false,
+      "emu": "harness",
+      "emu_env": {},
+      "log_idle_s": 1.1,
+      "end_utc": "2026-10-21T14:00:42.121461+00:00",
+      "elapsed_s": 50.9,
+      "emulator_exited": true
+    },
+    {
+      "name": "castle21-recoveredJ-NEW-cold-CardLoad",
+      "status": "RUN_COMPLETE",
+      "start_utc": "2026-10-21T14:01:28.728485+00:00",
+      "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+      "tracks": {
+        "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "kind": "release",
+        "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+      },
+      "seconds": 50,
+      "vmu": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\original-handoff-VMU-cold-copy.bin",
+      "keys": null,
+      "stop": null,
+      "fixtures": {
+        "warp": {
+          "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+          "bytes": 73,
+          "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+        },
+        "pad": {
+          "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+          "bytes": 208,
+          "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+        },
+        "w11": {
+          "src": null,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "errors": [],
+      "key_log": [],
+      "align": false,
+      "emu": "harness",
+      "emu_env": {},
+      "log_idle_s": 1.2,
+      "end_utc": "2026-10-21T14:02:19.921394+00:00",
+      "elapsed_s": 51.1,
+      "emulator_exited": true
+    }
+  ],
+  "checkpoint_png": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\coldload03\\shots\\t0041\\frames\\fb0.png",
+  "checkpoint_context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\coldload03\\shots\\t0041\\checkpoint-context.json",
+  "screenshot_source_interval": [
+    5034,
+    5037
+  ],
+  "old_j221_resumed": false
+}

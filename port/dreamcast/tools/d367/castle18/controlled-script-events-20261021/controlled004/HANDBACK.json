@@ -1,0 +1,30 @@
+{
+  "scope": "CONTROLLED TEST. No authenticcombat/release/physicalDreamcastacceptance.",
+  "state_sha256": "9904d44d6371bcbb3ecb20256de22a62990ad50c85f35b03d84925d38a30ad36",
+  "source": 486,
+  "room": "0x204",
+  "phase": [
+    2,
+    0
+  ],
+  "health": [
+    1440,
+    1440,
+    600,
+    600
+  ],
+  "PASS": "Original208 crank rise: baselineRSF5clear, originalDebugTrg0 declaredpressurebypass, originaleventheld\u2192return, nativeSmd4E4984/4F4000 and registeredAEV2 observed at source316.",
+  "PARTIAL": "Native ordinaryA280 triggered actual204 roomload; snapshot/PNG show204phase2Loading. No completedphase3arrival/event204/chapter/save/radio acceptance.",
+  "not_exercised": [
+    "pressure plates",
+    "bridge operation",
+    "footings",
+    "sniping",
+    "native201\u2192208 exit",
+    "secondary201wave"
+  ],
+  "next": "005 initial204AEV2 nooutcomeflagpreset, actual movie/chapterUI flow. EarlyRSF0/chapter7/RSF7 not sufficient for completion. Radio0xE is not typewriter/save.",
+  "protected": "Authentic127/294 fullSHA unchanged in closedproof.",
+  "guard": "PID50848 exited normally; raw40.1s V4observed39.70s no actions; unchanged runtime/disk/capture/process guards.",
+  "visual": "Finalfb0 directly inspected: Loading screen, matching phase2. No claim that this PNG depicts crank geometry."
+}

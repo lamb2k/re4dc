@@ -1,0 +1,74 @@
+{
+  "schema": "re4dc-cloth-light-ABI-qualification-1",
+  "candidate_only": true,
+  "default_knob": "CLOTH_LIGHT_ABI_FIX=0",
+  "source_base": "5ceff070b2d88671def507bb88a7c21193bf963a",
+  "defect": "cloth.cpp byvalue Vec third argument disagrees with existing C-linkage trans_lit.cpp Vec* definition. SH4 oldcaller puts12 bytes on outgoing stack while actualcallee reads r6 as pointer.",
+  "enabled_repair": "NON-PPC enabled caller declares Vec* and synchronously passes &model.pos; existing definition copies *pos into obj_pos and retains no input pointer.",
+  "actual_recipe_caller": "ON explicitly moves live model.pos address r10 to r6. Callee reads offsets0/4/8 from r6 and stores radiusfr5; both source objects use exact currentQA -m4-single flags.",
+  "source_contract_tests": {
+    "actual_cross_TU_callee_prefix": true,
+    "ASan_UBSan": true,
+    "live_nonnull_address_identity": true,
+    "value_copy_not_alias": true,
+    "lifetime_within_clothTrans_model_scope": true,
+    "OFF_and_PPC_selected_source_unchanged": true
+  },
+  "standalone_SH4": {
+    "OFF_object_exact": true,
+    "ON_object_sha256": "44e20671a42ba11864c2eab9addda9bcf2d83baca8387aa13b58498ea4655682",
+    "PPC_preprocessed_tokens": [
+      {
+        "PPC": false,
+        "exact": true,
+        "token_sha256": "9d13203e028a2f924ed131ffd92065263461966acba908f38c2d8883083f2bc0"
+      },
+      {
+        "PPC": true,
+        "exact": true,
+        "token_sha256": "62802a96eff9539e8a6b021aa001deb13a3d8f79b9299852cba2c01179922109"
+      }
+    ],
+    "actual_definition_partial_link": "00000000 T commonClothLightSet"
+  },
+  "actual_QA_recipe_SH4": {
+    "OFF_object_exact": true,
+    "ON_object_sha256": "e78dbd7e83c5d824c1836127b3aaee5d90b4e09ec58477da068e1f810ea4f37c",
+    "actual_definition_partial_link": "00000000 T commonClothLightSet",
+    "normalization": "g0/frandom-seed=cloth21-recipe/strip-debug only; original code flags otherwise exact"
+  },
+  "selected_existing_QA": {
+    "source": "b21116ec0cf2c984e9f49769a148373553bff00d",
+    "program_sha256": "8942ad7e90d9adab56873d0738d76c274b98c28c35587e52fc93e2091f13300d",
+    "ELF_sha256": "51da665e4293a113ac541dfc79c68f525ce83322f7e1abf26c2ab9b3d5d41802",
+    "symbol": "8c16fa88 T commonClothLightSet",
+    "ClothDraw": "8c09a8b8",
+    "clothTrans": "8c09a014",
+    "scope": "Read-only selected existing program/ELF; this fix has not been rebuilt into a fullprogram."
+  },
+  "source_files": [
+    {
+      "path": "src/game/cloth.cpp",
+      "sha256": "fbf9e40d5cf366d6985e13a4b3d9e8a7a7c3fbeefea68f650a74c13dd7de22c1"
+    },
+    {
+      "path": "src/game/trans_lit.cpp",
+      "sha256": "5f58e0dc7129152ebf46224affe9cae989b664d9c014c428702f0c607f1087e2"
+    },
+    {
+      "path": "port/dreamcast/game/game30.mk",
+      "sha256": "5a53528fdc31404515a3cb1472e47705770378e7b837260e403ed4bf5d32ef2f"
+    },
+    {
+      "path": "port/dreamcast/tests/test_cloth_light_abi21.py",
+      "sha256": "51adf11c8e3c83e536443999e30abbd80bc7b8b87d234718731734f2b361a3aa"
+    }
+  ],
+  "limits": [
+    "Default-off source ABI repair only; no gameplay/cloth simulation/renderer/recipe changes. OFF/PPC source remains original.",
+    "No reproduction or assertedcause of an issue52 texture/crash, no new fullprogram identity, guest, memory/timing or physical hardware acceptance.",
+    "Standalone minimal -m4-single-only controls and actualrecipe -m4-single controls are separately preserved; exact recipe establishes the actual float/r6 contract."
+  ],
+  "private_set": "mipmap21-cloth-light-abi-qualification-20261021",
+  "private_sums_sha256": "4380c4c99990de1823ad64ea24f14a64cf70a2f07d8f135835aaafd2f448b543"
+}

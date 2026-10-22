@@ -1,0 +1,226 @@
+{
+  "scope": "Actual SH-4 event.o only; no linked-program, guest or hardware acceptance",
+  "baseline_revision": "6540f37ef",
+  "candidate_event_sha256": "d59d82e351ba81c2eef0a0042324b572ef38c151907097f1b6ad96b685240e60",
+  "qualifier_sha256": "355153499171dac1148802d7eafd952bd82395c26e0bd59bee91a213661b9aa5",
+  "baseline_make_sha256": "5693de2577287606a8ddedf5fd08e1a661407a3af7f41b5cd4cd851940a7af57",
+  "start_C_free_bytes": 19521245184,
+  "finish_C_free_bytes": 19517493248,
+  "start_guard": 17314086912,
+  "stop_guard": 17246978048,
+  "invalid_knobs_rejected": [
+    "2",
+    "-1",
+    "yes"
+  ],
+  "missing_make_prerequisites_rejected": [],
+  "direct_source_prerequisites_rejected": [],
+  "ppc_selected_preprocessed_sha256": "06138205e2152093a7039148ac176c4abecdcff9e3fc241ab6af503b3618061f",
+  "ppc_limit": "Selected-source preprocessing only, not a PPC object/full-game identity claim.",
+  "objects": [
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_MODULE_VALIDATE_FIRST": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "ae27d08f41aed2e4715ca28c0cf010d6d33e7a87106c41ef049cb5b3f1e2bb91",
+      "stripped_event_o_sha256": "cbb29914d2d746dab7900cfe66abdf2541c808a1c61f06477953ee50df22adcf",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  38885\t      4\t    640\t  39529\t   9a69\t/root/probe/cache21-callers-module-validate-sh4-20261022-01/cabin0-txn0/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:3091:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2913:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2851:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_MODULE_VALIDATE_FIRST": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "d59d82e351ba81c2eef0a0042324b572ef38c151907097f1b6ad96b685240e60",
+      "stripped_event_o_sha256": "cbb29914d2d746dab7900cfe66abdf2541c808a1c61f06477953ee50df22adcf",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  38885\t      4\t    640\t  39529\t   9a69\t/root/probe/cache21-callers-module-validate-sh4-20261022-01/cabin0-txn0/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:3098:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2920:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2858:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_MODULE_VALIDATE_FIRST": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "d59d82e351ba81c2eef0a0042324b572ef38c151907097f1b6ad96b685240e60",
+      "stripped_event_o_sha256": "365719f64d16a6c9c13e919599a2b5639e4ff9bca1ea3d3e464453517c22e84b",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  38881\t      4\t    640\t  39525\t   9a65\t/root/probe/cache21-callers-module-validate-sh4-20261022-01/cabin0-txn0/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:3098:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2920:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2858:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_MODULE_VALIDATE_FIRST": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "ae27d08f41aed2e4715ca28c0cf010d6d33e7a87106c41ef049cb5b3f1e2bb91",
+      "stripped_event_o_sha256": "e45f1072f25a2db05491189ccaa2b6b5e7a38702ef28527d7fbd840dd886568d",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39841\t      4\t    640\t  40485\t   9e25\t/root/probe/cache21-callers-module-validate-sh4-20261022-01/cabin0-txn1/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:3091:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2913:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2851:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_MODULE_VALIDATE_FIRST": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "d59d82e351ba81c2eef0a0042324b572ef38c151907097f1b6ad96b685240e60",
+      "stripped_event_o_sha256": "e45f1072f25a2db05491189ccaa2b6b5e7a38702ef28527d7fbd840dd886568d",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39841\t      4\t    640\t  40485\t   9e25\t/root/probe/cache21-callers-module-validate-sh4-20261022-01/cabin0-txn1/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:3098:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2920:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2858:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_MODULE_VALIDATE_FIRST": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "d59d82e351ba81c2eef0a0042324b572ef38c151907097f1b6ad96b685240e60",
+      "stripped_event_o_sha256": "41a4fdc7de78160dd901c183d45f622d55d655803f9ece3c2ce01c1b76978fe4",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39837\t      4\t    640\t  40481\t   9e21\t/root/probe/cache21-callers-module-validate-sh4-20261022-01/cabin0-txn1/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:3098:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2920:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2858:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_MODULE_VALIDATE_FIRST": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "ae27d08f41aed2e4715ca28c0cf010d6d33e7a87106c41ef049cb5b3f1e2bb91",
+      "stripped_event_o_sha256": "bd46343f42ea3107ce8d4082dde337e4b7a13f9b545d64afa5d10debe1070882",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39405\t      4\t    640\t  40049\t   9c71\t/root/probe/cache21-callers-module-validate-sh4-20261022-01/cabin1-txn0/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:3091:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2913:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2851:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_MODULE_VALIDATE_FIRST": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "d59d82e351ba81c2eef0a0042324b572ef38c151907097f1b6ad96b685240e60",
+      "stripped_event_o_sha256": "bd46343f42ea3107ce8d4082dde337e4b7a13f9b545d64afa5d10debe1070882",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39405\t      4\t    640\t  40049\t   9c71\t/root/probe/cache21-callers-module-validate-sh4-20261022-01/cabin1-txn0/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:3098:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2920:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2858:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_MODULE_VALIDATE_FIRST": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "d59d82e351ba81c2eef0a0042324b572ef38c151907097f1b6ad96b685240e60",
+      "stripped_event_o_sha256": "1ca67110380fe0c641613783f483d75c0247a9a6ca11876845ed411ee0655cd7",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39401\t      4\t    640\t  40045\t   9c6d\t/root/probe/cache21-callers-module-validate-sh4-20261022-01/cabin1-txn0/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:3098:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2920:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2858:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_MODULE_VALIDATE_FIRST": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "ae27d08f41aed2e4715ca28c0cf010d6d33e7a87106c41ef049cb5b3f1e2bb91",
+      "stripped_event_o_sha256": "4da5cc73e3273ff54fdc081268e98b1900a91d73a24c811e862ba0a771ca2969",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40371\t      4\t    640\t  41015\t   a037\t/root/probe/cache21-callers-module-validate-sh4-20261022-01/cabin1-txn1/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:3091:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2913:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2851:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_MODULE_VALIDATE_FIRST": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "d59d82e351ba81c2eef0a0042324b572ef38c151907097f1b6ad96b685240e60",
+      "stripped_event_o_sha256": "4da5cc73e3273ff54fdc081268e98b1900a91d73a24c811e862ba0a771ca2969",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40371\t      4\t    640\t  41015\t   a037\t/root/probe/cache21-callers-module-validate-sh4-20261022-01/cabin1-txn1/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:3098:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2920:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2858:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_MODULE_VALIDATE_FIRST": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "d59d82e351ba81c2eef0a0042324b572ef38c151907097f1b6ad96b685240e60",
+      "stripped_event_o_sha256": "0e9cf495284dbd236d53b1ea6958083ff0d970bd012cb7a73af4c928f562f32b",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40367\t      4\t    640\t  41011\t   a033\t/root/probe/cache21-callers-module-validate-sh4-20261022-01/cabin1-txn1/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:3098:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2920:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-module-validate-sh4-20261022-01/event.cpp:2858:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    }
+  ]
+}

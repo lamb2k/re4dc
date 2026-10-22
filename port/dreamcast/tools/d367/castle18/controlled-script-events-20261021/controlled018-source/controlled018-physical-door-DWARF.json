@@ -1,0 +1,82 @@
+{
+  "ELF_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "selected": {
+    "cEm": {
+      "root_die": "f101d",
+      "size": 3552,
+      "members": {
+        "status": {
+          "offset": 964,
+          "type_die": "efaf5",
+          "member_die": "f15ee"
+        },
+        "flag": {
+          "offset": 968,
+          "type_die": "efaf5",
+          "member_die": "f15fc"
+        },
+        "x3E0": {
+          "offset": 992,
+          "type_die": "efaf5",
+          "member_die": "f1082"
+        }
+      }
+    },
+    "EmDoorWork": {
+      "root_die": "12653f",
+      "size": 1088,
+      "members": {
+        "Be_flg": {
+          "offset": 0,
+          "type_die": "122169",
+          "member_die": "12654c"
+        },
+        "Height": {
+          "offset": 32,
+          "type_die": "122188",
+          "member_die": "12658d"
+        },
+        "Width": {
+          "offset": 36,
+          "type_die": "122188",
+          "member_die": "12659a"
+        },
+        "base_dir": {
+          "offset": 920,
+          "type_die": "122188",
+          "member_die": "126641"
+        },
+        "base_mat": {
+          "offset": 924,
+          "type_die": "1221f5",
+          "member_die": "12664f"
+        },
+        "base_im": {
+          "offset": 972,
+          "type_die": "1221f5",
+          "member_die": "12665d"
+        },
+        "Key_flag": {
+          "offset": 1020,
+          "type_die": "122169",
+          "member_die": "12666b"
+        },
+        "Open_timer": {
+          "offset": 1024,
+          "type_die": "1221a0",
+          "member_die": "126679"
+        },
+        "Open_flag": {
+          "offset": 1085,
+          "type_die": "12213f",
+          "member_die": "1266f7"
+        },
+        "Etc_no": {
+          "offset": 1087,
+          "type_die": "12213f",
+          "member_die": "126713"
+        }
+      }
+    }
+  }
+}

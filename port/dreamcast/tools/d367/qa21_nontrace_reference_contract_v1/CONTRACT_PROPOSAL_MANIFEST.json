@@ -1,0 +1,69 @@
+{
+  "scope": "immutable metadata proposal integrity only, NOT source-manifest.json or launchseal",
+  "files": {
+    ".gitattributes": {
+      "bytes": 53,
+      "sha256": "cb7343d8ccc169881c6cc3ac19178335576351b06faedab70c14e7b1b5eefe15"
+    },
+    "CONTRACT_PLAN.md": {
+      "bytes": 4642,
+      "sha256": "c39f10dd75824999c21066b79e18fe776f0144c6b0b745d2fbeb159b8a6f9324"
+    },
+    "PROPOSAL_CHECKS.json": {
+      "bytes": 1358,
+      "sha256": "e6059c9889ee5f866f8ea5ea6a395ea1665c981c1f9a58d9e2d48844dc418c8a"
+    },
+    "REFERENCE_EXTENSION_CONTRACT.json": {
+      "bytes": 6995,
+      "sha256": "59f6bb01ea28822c319549a180fcdaad4998442167da67823bb3aa87f2732b45"
+    },
+    "SOURCE_REVIEW_PINS.json": {
+      "bytes": 744,
+      "sha256": "0457fdeff7a5bbc34e1a208a91a6b549a8359fda76b34c48d3e73c0520b0db28"
+    },
+    "incidents/REFERENCE_EXTENSION_CONTRACT.json.initial10": {
+      "bytes": 5799,
+      "sha256": "96232ff6f8a96c2e8a80c180552aae566441aa00d12744f55cb402e788f40166"
+    },
+    "incidents/reference-model.py.initial10": {
+      "bytes": 3175,
+      "sha256": "f01b967efe3f4982538da7ed6d3b88ec4f3692b47e01238e202ac7af4f74f725"
+    },
+    "incidents/run-reference-model-tests.py.initial10": {
+      "bytes": 1184,
+      "sha256": "fd9a54826eb49f10df098cd93b2f463339348e38b9edef174dc4972814ce406f"
+    },
+    "incidents/test-reference-model.py.initial10": {
+      "bytes": 4282,
+      "sha256": "5dd5a1d7e48ce3c862ce9295abddb9cd9e205354b2745ac1718ce5cc657aa2d1"
+    },
+    "reference-model-tests-linux-20261022T061531941005Z.json": {
+      "bytes": 2274,
+      "sha256": "3cb6b4811d84de941ca71adf4c616ece2d016f73202e28d217e4a4e953c65b59"
+    },
+    "reference-model-tests-linux-20261022T061639295113Z.json": {
+      "bytes": 2438,
+      "sha256": "951b2e05ce87f8ee0c84530bc9cb47fc115878c70679d1d6532d2cfd9adc8090"
+    },
+    "reference-model-tests-windows-20261022T061532273971Z.json": {
+      "bytes": 2254,
+      "sha256": "873eccd988b43a0c931e62817cb3eb449efdf129e88ca1dbef84998112189caa"
+    },
+    "reference-model-tests-windows-20261022T061639625086Z.json": {
+      "bytes": 2418,
+      "sha256": "ee79604cf4bb71760865db5c61fc220094b352a8b4e99a0bdd13778dda8179e7"
+    },
+    "reference-model.py": {
+      "bytes": 3060,
+      "sha256": "928b524321eda692402f73da27e09904bf09884e6178691e6c8245e70b8fd135"
+    },
+    "run-reference-model-tests.py": {
+      "bytes": 1187,
+      "sha256": "03dd69093f21b6158eb544cb8253a21811a37441a5991069fffd042a2c3c0ba4"
+    },
+    "test-reference-model.py": {
+      "bytes": 4755,
+      "sha256": "32e575c56df15d14e0b770687d82624b8c3dcbba87d957845f27da8aa49925ae"
+    }
+  }
+}

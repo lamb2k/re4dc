@@ -110,3 +110,46 @@ $(OBJDIR)/coarse_ganado.o: $(GANADO_LOD_HDR)
 $(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_GANADO_LOD=1 -DRE4DC_GANADO_LOD_LEVEL=$(GANADO_LOD_LEVEL) -I$(OBJDIR)/ganado_lod
 $(OBJDIR)/coarse_actor.o $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_GANADO_LOD=1
 endif
+
+# Ganados keep the gameplay LOD level through in-engine events (no package reload at event start/end).
+# Render-only approximation, default off (user 2026-10-22 option 1).
+GANADO_EVENT_KEEP_LOD ?= 0
+ifneq ($(filter 0 1,$(GANADO_EVENT_KEEP_LOD)),$(GANADO_EVENT_KEEP_LOD))
+$(error GANADO_EVENT_KEEP_LOD must be 0 or 1)
+endif
+ifeq ($(GANADO_EVENT_KEEP_LOD),1)
+ifneq ($(GANADO_LOD),1)
+$(error GANADO_EVENT_KEEP_LOD needs GANADO_LOD=1)
+endif
+$(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_GANADO_EVENT_KEEP_LOD=1
+endif
+
+# Selected square128 Leon body tile isolation. Experimental, render only.
+# No production recipe enables this. Data is emitted by texture_atlas21/runtime_header.py.
+LEON_ATLAS_SPLIT ?= 0
+LEON_ATLAS_SPLIT_DIR ?=
+ifneq ($(words $(LEON_ATLAS_SPLIT)),1)
+$(error LEON_ATLAS_SPLIT must be 0 or 1)
+endif
+ifneq ($(filter 0 1,$(LEON_ATLAS_SPLIT)),$(LEON_ATLAS_SPLIT))
+$(error LEON_ATLAS_SPLIT must be 0 or 1)
+endif
+ifeq ($(LEON_ATLAS_SPLIT),1)
+ifneq ($(PS2_LEON),1)
+$(error LEON_ATLAS_SPLIT needs PS2_LEON=1)
+endif
+ifneq ($(ACTOR_PL08),1)
+$(error LEON_ATLAS_SPLIT needs ACTOR_PL08=1)
+endif
+ifneq ($(ACTOR_PL08_PACK),1)
+$(error LEON_ATLAS_SPLIT needs ACTOR_PL08_PACK=1)
+endif
+ifneq ($(LEON_LOD),0)
+$(error LEON_ATLAS_SPLIT has no alternate LEON_LOD package qualification)
+endif
+ifeq ($(strip $(LEON_ATLAS_SPLIT_DIR)),)
+$(error LEON_ATLAS_SPLIT needs LEON_ATLAS_SPLIT_DIR)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_ATLAS_SPLIT=1 -I$(LEON_ATLAS_SPLIT_DIR)
+$(OBJDIR)/coarse_actor.o: $(LEON_ATLAS_SPLIT_DIR)/leon_atlas_split_data.h ../tools/d367/texture_atlas21/atlas_bind.h coarse_actor_atlas_split.inc
+endif

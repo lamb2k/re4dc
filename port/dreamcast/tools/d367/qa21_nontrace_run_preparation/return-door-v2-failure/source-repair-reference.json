@@ -1,0 +1,14 @@
+{
+  "scope": "source-only successor, missinglive field remainsunavailable",
+  "path": "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_observer_lifecycle_v1",
+  "runtime_delta": {
+    "bytes": 2767,
+    "sha256": "bb8f71ab7b375622f972caf36075da8187c9dd0d6bb18673299b76dee52eae3d"
+  },
+  "qualification": {
+    "bytes": 1209,
+    "sha256": "e04711c66a91353de63a38eca15ed8231ee90e98705155b5f381196205921944"
+  },
+  "review_pending": true,
+  "guest_allocated": false
+}

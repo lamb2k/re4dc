@@ -1,0 +1,11 @@
+{
+  "scope": "immutable source successor; old v1 untouched",
+  "commit": "25763e7e0a045bf8e14c298a8978d16479d0dd0e",
+  "manifest_sha256": "d15859daa1f98a4b76f53432feee947b6e5f9acc405bab702429f2b0c27603fb",
+  "source_v1_path": "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_owned_runner_v1",
+  "review_findings": [
+    "retained creator marker lacked current-alias/deleted/type checks",
+    "resource boundary must be >=60000000"
+  ],
+  "no_native_query_or_adoption": true
+}

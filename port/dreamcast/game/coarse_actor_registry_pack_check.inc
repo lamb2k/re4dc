@@ -231,6 +231,10 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
         detail=k;
         if(kind!=k+1 || off%32u || off<end || off>size || bytes>size-off || !count || count+RE4DC_PBK(k)>kPackCapacity[k] ||
            bytes!=count*kPackRecord[k])return kPwTable;
+#if defined(RE4DC_NMR_R202_CAST_CAPACITY) && RE4DC_NMR_R202_CAST_CAPACITY
+        // The r202 source cast is exactly 53 primary + 16 partner geometries. All other rooms retain 64.
+        if(k==kGeom && count+RE4DC_PBK(k)>(room==0x202u?69u:64u))return kPwTable;
+#endif
 #if RE4DC_ROUTE_CH22 && !RE4DC_ROUTE_CH23 && !RE4DC_NMR_POOL
         if(k==kFPart && room!=0x11cu && count>32u)return kPwTable;
 #endif
@@ -550,11 +554,28 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
         }
         if(same){detail=a*256+b;return kPwDuplicate;}
     }
-    // ---- source blobs: one per fact model, enemy archives; every role's model has the blob of its BIN
+    // ---- source blobs: one per fact model; every role's model has the blob of its BIN
     for(unsigned k=0;k<sec[kSBlob].count;++k) {
         const unsigned char* r=p+sec[kSBlob].at+k*32;detail=k;
         const unsigned fm=pu32(r,0),family=pu32(r,4),bin=pu32(r,8);
-        if(fm>=sec[kFModel].count || family!=2 || !bin || !pu32(r,12) || pu32(r,24) || pu32(r,28))return kPwBlob;
+        if(fm>=sec[kFModel].count || !bin || !pu32(r,12) || pu32(r,24) || pu32(r,28))return kPwBlob;
+        unsigned expected_family=2;
+#if RE4DC_NMR_ASHLEY >= 2 && defined(RE4DC_NMR_PL_ASHLEY) && RE4DC_NMR_PL_ASHLEY
+        // Every role using this fact must belong to the typed playable owner.
+        // A shared/enemy fact cannot be relabelled as player storage.
+        bool used=false,player=true;
+        for(unsigned q=0;q<sec[kRole].count;++q)if(PKR[q].model==&PKM[fm]) {
+            used=true;bool typed=false;
+            for(unsigned d=0;d<sec[kDesc].count;++d) {
+                const auto& desc=PKD[d];
+                if(desc.appearance==PKR[q].appearance && desc.model_id==0u &&
+                   desc.source_bones==141u && desc.sections==7u)typed=true;
+            }
+            player&=typed;
+        }
+        if(used && player)expected_family=1;
+#endif
+        if(family!=expected_family)return kPwBlob;
         for(unsigned u=0;u<k;++u)if(PKB[u].model==&PKM[fm])return kPwDuplicate;
         PKB[k]={&PKM[fm],family,bin,{pu32(r,12),pu32(r,16),pu32(r,20)}};
     }

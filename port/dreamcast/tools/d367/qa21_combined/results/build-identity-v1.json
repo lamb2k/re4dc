@@ -1,0 +1,13 @@
+{
+  "source": "6f9d31b0e00497a75fdd7e25bb04f92305103087",
+  "program_sha256": "ce080eb290aec073f406e93da27911f4fa70b457768288f52a893175a6846e8e",
+  "elf_sha256": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+  "input_track03_sha256": "97a3219f2876783cd28c5250479882e0b7643fecbff7a9bbbfc5df0886fc0a18",
+  "default_off_program_and_14_overlays_exact": true,
+  "qa_control_program_and_14_overlays_exact": true,
+  "unchanged_file_count": 1728,
+  "relocated_files": {},
+  "skin_flags": "GAME_SH4ZAM=1 SKIN_SH4ZAM=0",
+  "SS_WINDOW_HOLD_RESTORE": 0,
+  "scope": "Source, full-build and private staging identity only. Runtime qualification in progress; no release or physical Dreamcast acceptance."
+}

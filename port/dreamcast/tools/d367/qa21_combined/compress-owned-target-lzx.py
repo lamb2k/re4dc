@@ -1,0 +1,13 @@
+from pathlib import Path
+import ctypes,hashlib,json,os,subprocess,time
+R=Path('C:/Flycast-Evidence/re4-dreamcast/qa21-combined-regression-20261021');p=R/'combined-input/gdemu/track03.iso';out=R/'OWNED-STAGE-LZX-COMPRESSION-20261021.json';assert not out.exists()
+k=ctypes.WinDLL('kernel32',use_last_error=True);k.GetCompressedFileSizeW.argtypes=[ctypes.c_wchar_p,ctypes.POINTER(ctypes.c_ulong)];k.GetCompressedFileSizeW.restype=ctypes.c_ulong
+k.CreateFileW.argtypes=[ctypes.c_wchar_p,ctypes.c_ulong,ctypes.c_ulong,ctypes.c_void_p,ctypes.c_ulong,ctypes.c_ulong,ctypes.c_void_p];k.CreateFileW.restype=ctypes.c_void_p;k.CloseHandle.argtypes=[ctypes.c_void_p]
+h=k.CreateFileW(str(p),0x80000000,0,None,3,0,None);assert h not in (None,ctypes.c_void_p(-1).value),'Target is open/owned by another reader';k.CloseHandle(h)
+def allocated():
+ high=ctypes.c_ulong();ctypes.set_last_error(0);low=k.GetCompressedFileSizeW(str(p),ctypes.byref(high));assert low!=0xffffffff or ctypes.get_last_error()==0;return high.value<<32|low
+def sha(path):
+ with path.open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()
+keep={str(x.relative_to(R)):sha(x) for x in R.rglob('*KEEP*') if x.is_file()};s=p.stat();before={'sha256':sha(p),'allocated_bytes':allocated(),'logical_bytes':s.st_size,'file_id':[s.st_dev,s.st_ino],'attributes':s.st_file_attributes};assert before['sha256']=='97a3219f2876783cd28c5250479882e0b7643fecbff7a9bbbfc5df0886fc0a18'
+r=subprocess.run(['compact.exe','/C','/F','/EXE:LZX','/I','/Q',str(p)],text=True,capture_output=True);s=p.stat();after={'sha256':sha(p),'allocated_bytes':allocated(),'logical_bytes':s.st_size,'file_id':[s.st_dev,s.st_ino],'attributes':s.st_file_attributes};assert before['sha256']==after['sha256'] and before['logical_bytes']==after['logical_bytes'];assert keep=={str(x.relative_to(R)):sha(x) for x in R.rglob('*KEEP*') if x.is_file()}
+row={'time':time.strftime('%Y-%m-%dT%H:%M:%S%z'),'path':str(p),'scope':'Idle owned target only; exclusive-read admission probe; transparent LZX storage compression; all logical game bytes and KEEP retained','before':before,'after':after,'allocated_recovered_bytes':before['allocated_bytes']-after['allocated_bytes'],'compact_exit':r.returncode,'compact_stdout':r.stdout,'compact_stderr':r.stderr,'keep_hashes':keep,'host_throughput_comparison':'No performance or throughput comparison across storage compression boundary'};out.write_text(json.dumps(row,indent=2)+'\n');print(json.dumps({'exit':r.returncode,'before_allocated':before['allocated_bytes'],'after_allocated':after['allocated_bytes'],'recovered':row['allocated_recovered_bytes'],'sha':after['sha256']}))

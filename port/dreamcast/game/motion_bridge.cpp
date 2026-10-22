@@ -24,3 +24,21 @@ extern "C" void re4dc_motion_free(void* p) {
     auto* allocation=(MotionAllocation*)p-1;
     OSFreeToHeap(allocation->heap,allocation);
 }
+
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+extern "C" int re4dc_motion_heap_handle() {
+    return memCheckHeapActive(4)?Heap[4].handle:-1;
+}
+extern "C" void* re4dc_motion_source_try_alloc(int heap,unsigned bytes) {
+    if(heap<0 || re4dc_motion_heap_handle()!=heap)return nullptr;
+    return OSAllocFromHeap(heap,bytes);
+}
+extern "C" void* re4dc_motion_alloc_optional(unsigned bytes) {
+    const int owner=re4dc_motion_heap_handle();
+    if(owner<0)return nullptr;
+    auto* p=(MotionAllocation*)mem_alloc(bytes+sizeof(MotionAllocation),
+        "native motion overflow",0,0,4);
+    if(!p)return nullptr;
+    p->heap=owner;return p+1;
+}
+#endif

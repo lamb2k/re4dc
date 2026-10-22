@@ -1,0 +1,16 @@
+[
+  {
+    "path": "owned-resource-guard.json.gz",
+    "raw_bytes": 160052,
+    "raw_sha256": "133cc2b3110addedba1277afa6a4a8b73272cca0dc4f862354673e72c7db18af",
+    "gzip_sha256": "4eb45b64f097a118f5a8d231fb4b7f6cd1fa1eb6a010c1f92e4754528e9d74ff",
+    "original_unchanged": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\owned-resource-guard.json"
+  },
+  {
+    "path": "controlled-door020-observer-summary.json.gz",
+    "raw_bytes": 125750,
+    "raw_sha256": "babfe122a7f7be34373c63a6ef989fb25f8ec150e569c0caca4df5e646e4845a",
+    "gzip_sha256": "9d0f1f510faa7083ac28cca6997d3851e1b992dc0eab8a591189d48f058da1e9",
+    "original_unchanged": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\controlled-door020-observer-summary.json"
+  }
+]

@@ -45,6 +45,35 @@ SDK_GEN = $(addprefix platform/sdk/gen/,$(addsuffix .c,$(SDK_UNITS)))
 
 OBJDIR = obj
 
+# Diagnostic only: exact player life/damage/death callers. Default 0 changes no game code.
+# Keep this define on the three traced source units; no platform, overlay or recipe default change.
+DEATH_TRACE ?= 0
+ifneq ($(DEATH_TRACE),0)
+ifneq ($(DEATH_TRACE),1)
+$(error DEATH_TRACE must be 0 or 1)
+endif
+$(OBJDIR)/src/game/em_sub.o $(OBJDIR)/src/game/pl_dmg.o $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_DEATH_TRACE=1
+endif
+
+# Native Ganado routine-byte repair; default off preserves the original object bytes.
+GANADO_ROUTINE_BYTES ?= 0
+ifneq ($(GANADO_ROUTINE_BYTES),0)
+ifneq ($(GANADO_ROUTINE_BYTES),1)
+$(error GANADO_ROUTINE_BYTES must be 0 or 1)
+endif
+$(OBJDIR)/mod/em10g/shared/src/em10/em10.o: GAME_CPPFLAGS += -DRE4DC_GANADO_ROUTINE_BYTES=1
+endif
+
+# EM_ADMISSION_DISP_FIX=1 (default 0): restore the caller's display flags when
+# readEm cannot find a free module slot, as on its transport-failure return.
+EM_ADMISSION_DISP_FIX ?= 1
+ifneq ($(EM_ADMISSION_DISP_FIX),0)
+ifneq ($(EM_ADMISSION_DISP_FIX),1)
+$(error EM_ADMISSION_DISP_FIX must be 0 or 1)
+endif
+$(OBJDIR)/src/game/read.o: GAME_CPPFLAGS += -DRE4DC_EM_ADMISSION_DISP_FIX=1
+endif
+
 # UI_POLY_ORDER: keep pickup/subscreen polygon headers in the source UI list.
 UI_POLY_ORDER ?= 0
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_UI_POLY_ORDER=$(UI_POLY_ORDER)
@@ -343,6 +372,76 @@ endif
 #   r11c r11d).
 ALIVE_CAP ?= 0
 ALIVE_CAP_LOG ?= 0
+# ALIVE_CAP_DEFER_FLAGS_BEGIN: preserve original setFlag commands on held handles.
+# Default off; apply after original first AI initialization, never force admission.
+ALIVE_CAP_DEFER_FLAGS ?= 0
+ifneq ($(words $(ALIVE_CAP_DEFER_FLAGS)),1)
+$(error ALIVE_CAP_DEFER_FLAGS must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(ALIVE_CAP_DEFER_FLAGS)),)
+$(error ALIVE_CAP_DEFER_FLAGS must be 0 or 1)
+endif
+ifeq ($(ALIVE_CAP_DEFER_FLAGS),1)
+ifeq ($(ALIVE_CAP),0)
+$(error ALIVE_CAP_DEFER_FLAGS=1 requires ALIVE_CAP)
+endif
+$(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_DEFER_FLAGS=1
+$(OBJDIR)/mod/%.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_DEFER_FLAGS=1
+endif
+# ALIVE_CAP_DEFER_FLAGS_END
+# ALIVE_CAP_DEFER_GOTO_R207_BEGIN: source-proven r207 queued movement only.
+# Other rooms, including unresolved r214 event capacity, keep their old behavior.
+ALIVE_CAP_DEFER_GOTO_R207 ?= 0
+ifneq ($(words $(ALIVE_CAP_DEFER_GOTO_R207)),1)
+$(error ALIVE_CAP_DEFER_GOTO_R207 must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(ALIVE_CAP_DEFER_GOTO_R207)),)
+$(error ALIVE_CAP_DEFER_GOTO_R207 must be 0 or 1)
+endif
+ifeq ($(ALIVE_CAP_DEFER_GOTO_R207),1)
+ifeq ($(ALIVE_CAP),0)
+$(error ALIVE_CAP_DEFER_GOTO_R207=1 requires ALIVE_CAP)
+endif
+ifneq ($(ALIVE_CAP_DEFER_FLAGS),1)
+$(error ALIVE_CAP_DEFER_GOTO_R207=1 requires ALIVE_CAP_DEFER_FLAGS=1)
+endif
+$(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_DEFER_GOTO_R207=1
+$(OBJDIR)/mod/%.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_DEFER_GOTO_R207=1
+endif
+# ALIVE_CAP_DEFER_GOTO_R207_END
+# ALIVE_CAP_NOVIS=1 (I-006, default off): stage-2 Novistadors (id2D) share
+# the existing ALIVE_CAP budget with Ganados. Creation/send holds and fresh
+# accounting only; castle pointer-owner rooms remain excluded from parking.
+ALIVE_CAP_NOVIS ?= 0
+# PARTS_LINKED_FLAG: preserve the source indexing promise on linked fallback.
+# Demand-backed parts can reuse a model after a prior contiguous joint.
+PARTS_LINKED_FLAG ?= 1
+ifneq ($(words $(PARTS_LINKED_FLAG)),1)
+$(error PARTS_LINKED_FLAG must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(PARTS_LINKED_FLAG)),)
+$(error PARTS_LINKED_FLAG must be 0 or 1)
+endif
+ifeq ($(PARTS_LINKED_FLAG),1)
+$(OBJDIR)/src/game/model.o: GAME_CPPFLAGS += -DRE4DC_PARTS_LINKED_FLAG=1
+endif
+# ALIVE_CAP_R202_GATE_BEGIN: default-off original gate/operator initial admission.
+# The normal r202 camera event needs operator2E's rock. At cap4, visit its
+# original ESL record before operator21; all eligibility/held/death guards remain.
+ALIVE_CAP_R202_GATE ?= 0
+ifneq ($(words $(ALIVE_CAP_R202_GATE)),1)
+$(error ALIVE_CAP_R202_GATE must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(ALIVE_CAP_R202_GATE)),)
+$(error ALIVE_CAP_R202_GATE must be 0 or 1)
+endif
+ifeq ($(ALIVE_CAP_R202_GATE),1)
+ifneq ($(ALIVE_CAP),4)
+$(error ALIVE_CAP_R202_GATE=1 requires ALIVE_CAP=4)
+endif
+$(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_R202_GATE=1
+endif
+# ALIVE_CAP_R202_GATE_END
 # CAP_COMPARE=1 (below): the cap values the sources compare with (the constants, or the runtime re4dc_cap_rt)
 CAP_COMPARE ?= 0
 ALIVE_CAP_N = $(if $(filter 1,$(CAP_COMPARE)),re4dc_cap_rt,$(ALIVE_CAP))
@@ -357,6 +456,9 @@ R101_ALIVE_CAP := $(ALIVE_CAP)
 endif
 $(OBJDIR)/src/game/em_set.o $(OBJDIR)/src/game/sce_com.o $(OBJDIR)/src/game/sce_sys.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP=$(ALIVE_CAP) -DRE4DC_ALIVE_CAP_R101=$(ALIVE_CAP_R101) -DRE4DC_ALIVE_CAP_LOG=$(ALIVE_CAP_LOG)
 $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_N=$(ALIVE_CAP_N)
+ifneq ($(ALIVE_CAP_NOVIS),0)
+$(OBJDIR)/src/game/em_set.o $(OBJDIR)/mod/st2_1/src/st2/r205.o $(OBJDIR)/mod/st2_2/src/st2/r213.o $(OBJDIR)/mod/st2_3/src/st2/r21d.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_NOVIS=$(ALIVE_CAP_NOVIS)
+endif
 ifneq ($(or $(ALIVE_CAP_PARK),0),0)
 $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_PARK=1
 endif
@@ -788,6 +890,129 @@ endif
 MODULES += wep01 wep07 wep09 wep11 wep13 wep19
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_WEAPON_MODULES=1
 endif
+# EVD_ADMISSION_TXN=1 (default 0): publish SetEvd only after all required bins
+# succeed; roll back only this attempt's bin references on admission failure.
+EVD_ADMISSION_TXN ?= 1
+ifneq ($(EVD_ADMISSION_TXN),0)
+ifneq ($(EVD_ADMISSION_TXN),1)
+$(error EVD_ADMISSION_TXN must be 0 or 1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_ADMISSION_TXN=1
+endif
+# EVD_START_CLEANUP=1 (default 0): locally abandon work whose init failed;
+# publish its effect-model view only after validation. Admission/read ownership
+# remains with the caller and is not repaired by this switch.
+EVD_START_CLEANUP ?= 1
+ifneq ($(EVD_START_CLEANUP),0)
+ifneq ($(EVD_START_CLEANUP),1)
+$(error EVD_START_CLEANUP must be 0 or 1)
+endif
+ifneq ($(EVD_ADMISSION_TXN),1)
+$(error EVD_START_CLEANUP requires EVD_ADMISSION_TXN=1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_START_CLEANUP=1
+endif
+# EVD_START_ROLLBACK=1 (default 0): undo this call's complete new parent/bin
+# admission when starting its Event fails. Preserve pre-existing owners.
+EVD_START_ROLLBACK ?= 1
+ifneq ($(EVD_START_ROLLBACK),0)
+ifneq ($(EVD_START_ROLLBACK),1)
+$(error EVD_START_ROLLBACK must be 0 or 1)
+endif
+ifneq ($(EVD_ADMISSION_TXN),1)
+$(error EVD_START_ROLLBACK requires EVD_ADMISSION_TXN=1)
+endif
+ifneq ($(EVD_START_CLEANUP),1)
+$(error EVD_START_ROLLBACK requires EVD_START_CLEANUP=1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_START_ROLLBACK=1
+endif
+# EVD_DEBUG_READ_CLEANUP=1 (default 0): release a fresh debug-file allocation
+# when bin/event admission refuses. Transactional event admission is required.
+EVD_DEBUG_READ_CLEANUP ?= 1
+ifneq ($(EVD_DEBUG_READ_CLEANUP),0)
+ifneq ($(EVD_DEBUG_READ_CLEANUP),1)
+$(error EVD_DEBUG_READ_CLEANUP must be 0 or 1)
+endif
+ifneq ($(EVD_ADMISSION_TXN),1)
+$(error EVD_DEBUG_READ_CLEANUP requires EVD_ADMISSION_TXN=1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_DEBUG_READ_CLEANUP=1
+endif
+# EVD_EXEC_FAILURE_CLEANUP=1 (default 0): direct em0 read/start failure returns
+# failure, preserves a prior read, releases only an unborrowed fresh input and
+# pairs its scenario bracket. Module exchanges retain their existing path.
+EVD_EXEC_FAILURE_CLEANUP ?= 1
+ifneq ($(EVD_EXEC_FAILURE_CLEANUP),0)
+ifneq ($(EVD_EXEC_FAILURE_CLEANUP),1)
+$(error EVD_EXEC_FAILURE_CLEANUP must be 0 or 1)
+endif
+ifneq ($(EVD_START_ROLLBACK),1)
+$(error EVD_EXEC_FAILURE_CLEANUP requires EVD_START_ROLLBACK=1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_EXEC_FAILURE_CLEANUP=1
+endif
+# EVD_ARAM_ALLOC_RETRY=1 (default 0): preserve a prior immutable cabin preload
+# after exact allocation refusal using the existing carrier epoch receipt.
+EVD_ARAM_ALLOC_RETRY ?= 0
+ifneq ($(EVD_ARAM_ALLOC_RETRY),0)
+ifneq ($(EVD_ARAM_ALLOC_RETRY),1)
+$(error EVD_ARAM_ALLOC_RETRY must be 0 or 1)
+endif
+ifneq ($(CABIN_SOURCE),1)
+$(error EVD_ARAM_ALLOC_RETRY requires CABIN_SOURCE=1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_ARAM_ALLOC_RETRY=1
+$(OBJDIR)/platform/native_event_file.o: PLATFORM_CPPFLAGS += -DRE4DC_EVD_ARAM_ALLOC_RETRY=1
+endif
+# EVD_READ_RELEASE_REFS=1 (default 0): EvtFree drops only one registration when
+# an exact temporary ReadTbl row has multiple references. Final unit/carrier
+# release still follows the existing reader/refusal contract.
+EVD_READ_RELEASE_REFS ?= 1
+ifneq ($(EVD_READ_RELEASE_REFS),0)
+ifneq ($(EVD_READ_RELEASE_REFS),1)
+$(error EVD_READ_RELEASE_REFS must be 0 or 1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_READ_RELEASE_REFS=1
+endif
+# EVD_READ_ADMISSION_PREFLIGHT=1 (default 0): reject impossible fresh table
+# admission before acquiring a descriptor, and retain an existing swapped role.
+# This does not reserve a table slot across file/diagnostic callbacks.
+EVD_READ_ADMISSION_PREFLIGHT ?= 1
+ifneq ($(EVD_READ_ADMISSION_PREFLIGHT),0)
+ifneq ($(EVD_READ_ADMISSION_PREFLIGHT),1)
+$(error EVD_READ_ADMISSION_PREFLIGHT must be 0 or 1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_READ_ADMISSION_PREFLIGHT=1
+endif
+# EVD_MODULE_VALIDATE_FIRST=1 (default 0): validate existing module/size before
+# releasing its effects for exchange. Forward exchange completion is separate.
+EVD_MODULE_VALIDATE_FIRST ?= 1
+ifneq ($(EVD_MODULE_VALIDATE_FIRST),0)
+ifneq ($(EVD_MODULE_VALIDATE_FIRST),1)
+$(error EVD_MODULE_VALIDATE_FIRST must be 0 or 1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_MODULE_VALIDATE_FIRST=1
+endif
+# EVD_FORWARD_RECEIPT=1 (default 0): accepted prepared first-forward source
+# receipt before/after effect release and the void MemorySwap boundary.
+# Unsupported initial zero epochs and rows retain their existing behavior.
+EVD_FORWARD_RECEIPT ?= 0
+ifneq ($(EVD_FORWARD_RECEIPT),0)
+ifneq ($(EVD_FORWARD_RECEIPT),1)
+$(error EVD_FORWARD_RECEIPT must be 0 or 1)
+endif
+ifneq ($(CABIN_SOURCE),1)
+$(error EVD_FORWARD_RECEIPT requires CABIN_SOURCE=1)
+endif
+ifneq ($(EVD_ARAM_ALLOC_RETRY),1)
+$(error EVD_FORWARD_RECEIPT requires EVD_ARAM_ALLOC_RETRY=1)
+endif
+ifneq ($(EVD_MODULE_VALIDATE_FIRST),1)
+$(error EVD_FORWARD_RECEIPT requires EVD_MODULE_VALIDATE_FIRST=1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_FORWARD_RECEIPT=1
+endif
 # WEAPON_HEAP4=1 (option 3 of issue lamb2k/re4dc#1, default 0: no effect): a weapon body larger than the resident
 # weapon block (WEAPON_RESIDENT_BYTES; the r104 merchant's rifle 398,144 / with scope 404,608, rocket launcher
 # 382,688, TMP 289,248 / with stock 299,200) is read into heap 4, the room heap, as Krauser's body goes to
@@ -796,6 +1021,25 @@ endif
 # Heap 4 short after one motion-key eviction pass: the equip is reverted to the previously loaded weapon (or bare
 # hands), item state included ("weapon heap4 alloc failed"). A route movie short of heap 4 borrows the body and
 # returns it after the movie. WEAPON_HEAP4_FAILTEST=1 (test only): every heap-4 weapon allocation fails.
+# WEAPON_ARCHIVE_REUSE=1: retain a successfully linked same-file weapon archive across re-equip.
+# Publish the reuse identity after ReleaseWepData/load/link, invalidate it on every release,
+# and check the actual file/module/backing before reuse. Distinct archives still load normally.
+# EFFECT_ADMISSION_GUARD=1: reject an invalid first EFF load before publishing its owner reference.
+# Existing valid duplicate/refcount behavior is preserved. Default-off source path is unchanged.
+EFFECT_ADMISSION_GUARD ?= 1
+ifneq ($(EFFECT_ADMISSION_GUARD),0)
+ifneq ($(EFFECT_ADMISSION_GUARD),1)
+$(error EFFECT_ADMISSION_GUARD must be 0 or 1)
+endif
+$(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_EFFECT_ADMISSION_GUARD=1
+endif
+WEAPON_ARCHIVE_REUSE ?= 0
+ifneq ($(WEAPON_ARCHIVE_REUSE),0)
+ifneq ($(WEAPON_ARCHIVE_REUSE),1)
+$(error WEAPON_ARCHIVE_REUSE must be 0 or 1)
+endif
+$(OBJDIR)/src/game/read.o: GAME_CPPFLAGS += -DRE4DC_WEAPON_ARCHIVE_REUSE=1
+endif
 WEAPON_HEAP4 ?= 0
 WEAPON_HEAP4_FAILTEST ?= 0
 # WEAPON_HEAP4_TOP=1 (with WEAPON_HEAP4): the body goes to the top of the highest free heap-4 cell that fits, so a
@@ -1126,6 +1370,18 @@ endif
 # D367 audio: AICA_AUDIO=1 plays the recovered sound driver on the AICA
 # (platform/audio_aica.cpp); default images keep the silent audio_stub.cpp.
 AICA_AUDIO ?= 0
+# AICA_LAYOUT_RECOVER=1: roll back failed first-layout accounting and retry a missing stream ring
+# independently from valid one-shot banks. No payload budget/source-registration change; default off.
+AICA_LAYOUT_RECOVER ?= 0
+ifneq ($(filter-out 0 1,$(AICA_LAYOUT_RECOVER)),)
+$(error AICA_LAYOUT_RECOVER must be 0 or 1)
+endif
+ifeq ($(AICA_LAYOUT_RECOVER),1)
+ifneq ($(AICA_AUDIO),1)
+$(error AICA_LAYOUT_RECOVER=1 requires AICA_AUDIO=1)
+endif
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_LAYOUT_RECOVER=1
+endif
 ifneq ($(AICA_AUDIO),1)
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/audio_aica.o,$(PLATFORM_OBJS))
 endif
@@ -1182,6 +1438,17 @@ $(OBJDIR)/platform/audio_stub.o: PLATFORM_CPPFLAGS += -include $(OBJDIR)/aica-au
 # MOTION_LEASE_LEAN=1 removes acquire-only telemetry timers and reuses the
 # guard's existing owner slot for its extra lease; =2 compares the source lookup.
 # Counts, mutex/pins/release order and cancellation ownership remain unchanged.
+# Bulk motion retirement preflight; no room-reset/admission serialization claim.
+MOTION_RETIRE_PREFLIGHT ?= 1
+ifneq ($(words $(MOTION_RETIRE_PREFLIGHT)),1)
+$(error MOTION_RETIRE_PREFLIGHT must be 0 or 1)
+endif
+ifeq ($(filter $(MOTION_RETIRE_PREFLIGHT),0 1),)
+$(error MOTION_RETIRE_PREFLIGHT must be 0 or 1)
+endif
+ifeq ($(MOTION_RETIRE_PREFLIGHT),1)
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_RETIRE_PREFLIGHT=1
+endif
 MOTION_LEASE_LEAN ?= 0
 .PHONY: motion-lease-lean-force
 $(OBJDIR)/motion-lease-lean.h: motion-lease-lean-force
@@ -2457,6 +2724,33 @@ VRAM_CENSUS ?= 0
 #   10 KB (largest 10,368 B; the bell gate then loaded 7 pictures in play). Placement only: the same textures, bytes and
 #   draws. Doc: VRAM101-20261017.md (lane notes).
 VRAM_PAGES_VQ_ONLY ?= 0
+# VRAM_ROOM_ARENA=1 (lane mipmap22 2026-10-22, render only, default 0 = image unchanged; needs VRAM_PAGES=1, UI_VRAM=1
+# and ROOM_CHANGE_EVICT): two-ended texture RAM. Core keys, the glyph atlas and the overlay slab fill from the top;
+# room textures from the bottom (first fit); dynamic allocations (movie, door, lake) keep best fit in between. At a
+# room change every unpinned, non-core texture of the old room closes (the listed keys of the new room are pinned),
+# so the new room's preload fills one hole-free region (r101 -> r100 x3 had 14 KB largest blocks and 82 evictions).
+VRAM_ROOM_ARENA ?= 0
+# CRASH_OVL_LINE=1 (lane mipfault22, diagnostic, default 0 = image unchanged): the crash screen lists each loaded
+# route overlay as name@image+bytes, so a console fault pc / pr in an overlay can be symbolized.
+CRASH_OVL_LINE ?= 0
+# OVL_WATCH=1 (lane mipfault22, diagnostic only): log every changed word of a loaded route overlay (after each
+# texture upload and close, and at release).
+OVL_WATCH ?= 0
+# OVL_GUARD=1 (lane mipfault22, console diagnostic only): stop on the first changed word of a loaded route overlay's
+# code (checked per UI frame and texture upload / close) and arm the SH-4 UBC on st1_1 (see platform/modules.cpp).
+OVL_GUARD ?= 0
+ifneq ($(OVL_GUARD),0)
+$(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_GUARD=1
+endif
+ifneq ($(OVL_WATCH),0)
+$(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_WATCH=1
+endif
+ifneq ($(CRASH_OVL_LINE),0)
+$(OBJDIR)/platform/modules.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_CRASH_OVL_LINE=1
+endif
+ifneq ($(VRAM_ROOM_ARENA),0)
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/vram_pages.o: PLATFORM_CPPFLAGS += -DRE4DC_VRAM_ROOM_ARENA=1
+endif
 ifneq ($(filter-out 0 1,$(VRAM_PAGES_VQ_ONLY)),)
 $(error VRAM_PAGES_VQ_ONLY must be 0 or 1)
 endif
@@ -2621,6 +2915,15 @@ PRELOAD_LARGE_FIRST ?= 0
 # the room's list in dc/resident.bin (tools/d367/vram/resident_keys.py: the textures its scenes otherwise load on
 # first sight), so the room's set is resident from its entry. Without the file the preload is as before.
 ROOM_RESIDENT ?= 0
+# RESIDENT_LIST_CACHE=1: retain bounded copied current-room/core list metadata between owner admissions.
+# New owner identities and missing textures still use the original preload; no payload reserve changes.
+RESIDENT_LIST_CACHE ?= 0
+ifneq ($(filter-out 0 1,$(RESIDENT_LIST_CACHE)),)
+$(error RESIDENT_LIST_CACHE must be 0 or 1)
+endif
+ifeq ($(RESIDENT_LIST_CACHE)$(ROOM_RESIDENT),10)
+$(error RESIDENT_LIST_CACHE=1 needs ROOM_RESIDENT=1)
+endif
 ifneq ($(filter-out 0 1,$(ROOM_RESIDENT)),)
 $(error ROOM_RESIDENT must be 0 or 1)
 endif
@@ -2670,6 +2973,7 @@ $(OBJDIR)/pipeline30.h: pipeline30-force
 	@printf '#define RE4DC_TEX_META_EVICT %s\n' '$(TEX_META_EVICT)' >> $@.tmp
 	@printf '#define RE4DC_PRELOAD_LARGE_FIRST %s\n' '$(PRELOAD_LARGE_FIRST)' >> $@.tmp
 	@printf '#define RE4DC_ROOM_RESIDENT %s\n' '$(ROOM_RESIDENT)' >> $@.tmp
+	@printf '#define RE4DC_RESIDENT_LIST_CACHE %s\n' '$(RESIDENT_LIST_CACHE)' >> $@.tmp
 	@printf '#define RE4DC_UI_HANDLES %s\n#define RE4DC_UI_HEADERS %s\n' '$(UI_HANDLES)' '$(UI_HEADERS)' >> $@.tmp
 	@printf '#define RE4DC_TEX_RESIDENT %s\n#define RE4DC_TEX_RESIDENT_RESERVE_KB %s\n#define RE4DC_TEX_PAYLOAD_CRC %s\n#define RE4DC_TEX_SLOTS %s\n' '$(TEX_RESIDENT)' '$(TEX_RESIDENT_RESERVE_KB)' '$(TEX_PAYLOAD_CRC)' '$(TEX_SLOTS)' >> $@.tmp
 	@printf '#define RE4DC_TEX_KEEP %s\n#define RE4DC_PVR_LATCH %s\n' '$(TEX_KEEP)' '$(PVR_LATCH)' >> $@.tmp
@@ -2951,6 +3255,7 @@ include blender30.mk
 include tahash.mk
 # D367 machine checks (MCHECK_PT, MCHECK_SAFE; test builds; default off: no effect).
 include mcheck.mk
+include backface.mk
 # D367 PS2 world holes (WORLD_HOLE_DIAG; test 11 item E; default off: no effect).
 include worldhole.mk
 # D367 effect sprite trimming (FX_SPRITE_TRIM; test 11; default off: no effect).

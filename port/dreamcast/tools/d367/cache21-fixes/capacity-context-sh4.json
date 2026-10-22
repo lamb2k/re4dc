@@ -1,0 +1,44 @@
+{
+  "scope": "Actual native_motion SH-4 object only; copied sealed flags/headers, no full program or gameplay qualification",
+  "baseline_revision": "1f7c34e4fc7a72222fd99c81afe66d08f890aa9e",
+  "sealed_command_receipt_sha256": "d6b969e255f830f988f00e6fa6542235578eb16c952c0e87fd5fef67634d995a",
+  "forced_header_sha256": {
+    "/root/probe/cache21-successor-build/out-on/obj/motion-lease-lean.h": "6d0183c0506ffb98e70ffe2fa2e104b61fa93c6c1344c5758555c413c1e1261f",
+    "/root/probe/cache21-successor-build/out-on/obj/motion-read.h": "727772dd760f5f035a4c96bd769924d42a32e08881df1bd11e27a4be87a47103",
+    "/root/probe/cache21-successor-build/out-on/obj/io-probe.h": "617620cd946566af2f7b024c112c66557988071ac5c0cf7e7aaf1c77c0757b75",
+    "/root/probe/cache21-successor-build/out-on/obj/subscreen.h": "e1859086e91b60235c8b9eee3b22f1b0e12dc911ee8866aeeccc61d406892505"
+  },
+  "start_C_free_bytes": 24332906496,
+  "finish_C_free_bytes": 24331284480,
+  "objects": [
+    {
+      "capacity": 0,
+      "variant": "baseline",
+      "source_sha256": "cbd4ce8c8a9c88f61a891b5471be593e2ecebeef39d9842980ed1197a4f250f5",
+      "stripped_object_sha256": "496cfa7b1fcb1549db2869b9c066a41eb63f6944252055533115c730f1024e98",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  12793\t      0\t   1126\t  13919\t   365f\t/root/probe/cache21-context-sh4-20261021-01/capacity0-baseline/native_motion-stripped.o\n"
+    },
+    {
+      "capacity": 0,
+      "variant": "guard",
+      "source_sha256": "341bb4dab1c208e215d67dbbf3c7b76bb942a3d9e280e3c8e1cbd42bca59e8aa",
+      "stripped_object_sha256": "496cfa7b1fcb1549db2869b9c066a41eb63f6944252055533115c730f1024e98",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  12793\t      0\t   1126\t  13919\t   365f\t/root/probe/cache21-context-sh4-20261021-01/capacity0-guard/native_motion-stripped.o\n"
+    },
+    {
+      "capacity": 1,
+      "variant": "baseline",
+      "source_sha256": "cbd4ce8c8a9c88f61a891b5471be593e2ecebeef39d9842980ed1197a4f250f5",
+      "stripped_object_sha256": "afd0242f0a3480d0588ffaba35ac4848b3ccddd43dae3224d11afc9ea0be5066",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  14959\t      0\t   1283\t  16242\t   3f72\t/root/probe/cache21-context-sh4-20261021-01/capacity1-baseline/native_motion-stripped.o\n"
+    },
+    {
+      "capacity": 1,
+      "variant": "guard",
+      "source_sha256": "341bb4dab1c208e215d67dbbf3c7b76bb942a3d9e280e3c8e1cbd42bca59e8aa",
+      "stripped_object_sha256": "9cf204c9a3c7eb02ea959c583ef9d655a6ac7ba459788c36805f66c3f80533eb",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  14959\t      0\t   1283\t  16242\t   3f72\t/root/probe/cache21-context-sh4-20261021-01/capacity1-guard/native_motion-stripped.o\n"
+    }
+  ],
+  "default_off_identity": "PASS versus exact1f7 MOTION_CAPACITY=0 with otherwise identical flags/headers"
+}

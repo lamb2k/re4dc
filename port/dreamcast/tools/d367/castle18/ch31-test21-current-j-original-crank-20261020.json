@@ -1,0 +1,525 @@
+{
+  "scope": "Fresh current J continuous original CardLoad route through normal western stairs, upper bridge and original crank. Same program/disc throughout; no warp, prior-program state retarget, game/process/state writes or hardware timing claim.",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "disc_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "chain": [
+    {
+      "capture": "current-j-route-walk15",
+      "elapsed_s": 50.9,
+      "snapshot": {
+        "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+        "state_sha256": "5ca1ab39c7b6f3dea63f544cf989b80b2d982397a71a0d77335e10ee1fc901a2",
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x202",
+        "chapter": 6,
+        "source_frame": 7347,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "stop": "0x0",
+        "actual_death": false,
+        "Leon": {
+          "pointer": "0x8caba800",
+          "pos": [
+            -5843.0,
+            6599.998046875,
+            -38447.28515625
+          ],
+          "yaw": 2.696065902709961
+        },
+        "Ashley": {
+          "pointer": "0x8cce56c0",
+          "pos": [
+            10519.9091796875,
+            -0.00341796875,
+            -14702.6708984375
+          ],
+          "yaw": 2.7459588050842285
+        }
+      },
+      "inputs_sha256": "fc1e8217da3ef1dee6953ac1191f5f1333ab4c6afd53b7b343017b262df693b1",
+      "run_result_sha256": "7360c1d19e494cf8ede870745b02d06f0fb70e1c607995bbd6464bce5cbb994c"
+    },
+    {
+      "capture": "current-j-route-walk16",
+      "elapsed_s": 50.8,
+      "snapshot": {
+        "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+        "state_sha256": "fccab8a5752aeb9d5ee4570b6aff4654920a5e81eb5a0d5cd8919dd8c3556054",
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x202",
+        "chapter": 6,
+        "source_frame": 7496,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "stop": "0x0",
+        "actual_death": false,
+        "Leon": {
+          "pointer": "0x8caba800",
+          "pos": [
+            4052.656982421875,
+            9496.111328125,
+            -32741.779296875
+          ],
+          "yaw": -0.0022694244980812073
+        },
+        "Ashley": {
+          "pointer": "0x8cce56c0",
+          "pos": [
+            10519.9091796875,
+            -0.000244140625,
+            -14702.6708984375
+          ],
+          "yaw": 2.7459588050842285
+        }
+      },
+      "inputs_sha256": "c8e5d6fa2e341e4873085b33b738818cdf5e80dccb20dd7c34e1b64b71f97373",
+      "run_result_sha256": "65b9d08a935e4beedc30fe11225945aacf9250bb0d69275bb3f1ac2e3661d14e"
+    },
+    {
+      "capture": "current-j-route-walk17",
+      "elapsed_s": 50.7,
+      "snapshot": {
+        "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+        "state_sha256": "f318845fbb61f9c7e62603ee39999a1baf840e7dfff3c9053b90f50eec1669fc",
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x202",
+        "chapter": 6,
+        "source_frame": 7664,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "stop": "0x0",
+        "actual_death": false,
+        "Leon": {
+          "pointer": "0x8caba800",
+          "pos": [
+            10967.890625,
+            9170.4921875,
+            -26752.029296875
+          ],
+          "yaw": -0.028108954429626465
+        },
+        "Ashley": {
+          "pointer": "0x8cce56c0",
+          "pos": [
+            10519.9091796875,
+            0.000244140625,
+            -14702.6708984375
+          ],
+          "yaw": 2.7459588050842285
+        }
+      },
+      "inputs_sha256": "c0c907fb17bf5a9ac3a5fcb66177eba4013a1f6721eba7973b620ce187dbc4f8",
+      "run_result_sha256": "870a1db05494f75605bef9037f8b7ad1cb37fbfaf26f694c2386abba80c823d2"
+    },
+    {
+      "capture": "current-j-route-walk18",
+      "elapsed_s": 50.8,
+      "snapshot": {
+        "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+        "state_sha256": "89669e1bb96ebc614c668c7753c82b402f01258c4a1c506810e4cc3fc3c74b76",
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x202",
+        "chapter": 6,
+        "source_frame": 7852,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "stop": "0x0",
+        "actual_death": false,
+        "Leon": {
+          "pointer": "0x8caba800",
+          "pos": [
+            19613.021484375,
+            10595.908203125,
+            -22142.974609375
+          ],
+          "yaw": -0.10576684772968292
+        },
+        "Ashley": {
+          "pointer": "0x8cce56c0",
+          "pos": [
+            10519.9091796875,
+            -0.0025634765625,
+            -14702.6708984375
+          ],
+          "yaw": 2.7459588050842285
+        }
+      },
+      "inputs_sha256": "b55229b68a4e2847cfb1820411a1d5fd1b216db9ec1deb8b3a063992951b79f9",
+      "run_result_sha256": "f174569b1eb9123c0500e095a3260acc4dee130ab9c8ca68e785475f098a5eb5"
+    },
+    {
+      "capture": "current-j-route-walk19",
+      "elapsed_s": 50.7,
+      "snapshot": {
+        "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+        "state_sha256": "a75a3c82ace6db676696b8ea92643dfde14acd0da6cff2c9e52b989ffc0c6101",
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x202",
+        "chapter": 6,
+        "source_frame": 7966,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "stop": "0x0",
+        "actual_death": false,
+        "Leon": {
+          "pointer": "0x8caba800",
+          "pos": [
+            20537.3828125,
+            10595.908203125,
+            -21893.63671875
+          ],
+          "yaw": -1.5707963705062866
+        },
+        "Ashley": {
+          "pointer": "0x8cce56c0",
+          "pos": [
+            10519.9091796875,
+            -0.001220703125,
+            -14702.6708984375
+          ],
+          "yaw": 2.7459588050842285
+        }
+      },
+      "inputs_sha256": "8378fece77e73fcf2fe3925de8c66a1c1bfdee6dede9482b80cbfca54c5e6dc1",
+      "run_result_sha256": "65d2a6387e741e34f3a478b7b46ca1d0fe5bd07ac00a8a6c9b450d120b375930"
+    },
+    {
+      "capture": "current-j-route-walk20",
+      "elapsed_s": 50.7,
+      "snapshot": {
+        "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+        "state_sha256": "19a355bfe8cece6d37322b88723332b63d63033687d5b5485ca2d5513fbd74d7",
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x202",
+        "chapter": 6,
+        "source_frame": 8064,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "stop": "0x0",
+        "actual_death": false,
+        "Leon": {
+          "pointer": "0x8caba800",
+          "pos": [
+            20515.3515625,
+            10595.908203125,
+            -21963.0078125
+          ],
+          "yaw": -1.5707963705062866
+        },
+        "Ashley": {
+          "pointer": "0x8cce56c0",
+          "pos": [
+            10519.9091796875,
+            0.001220703125,
+            -14702.6708984375
+          ],
+          "yaw": 2.7459588050842285
+        }
+      },
+      "inputs_sha256": "499e810954b9375e64ed2485c46cd5a9154aaf7f6225d84067363431f7a4aad0",
+      "run_result_sha256": "bd3b7ef1264e8a875f30457a00948d3ec1db83e6d01a9f04dfe466747853e61d"
+    },
+    {
+      "capture": "current-j-route-walk21",
+      "elapsed_s": 44.0,
+      "snapshot": {
+        "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+        "state_sha256": "d6661312a8a8d77e0046b716a820916d4aa724d7dd4dd1473b6db152586feee6",
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x202",
+        "chapter": 6,
+        "source_frame": 8244,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "stop": "0x0",
+        "actual_death": false,
+        "Leon": {
+          "pointer": "0x8caba800",
+          "pos": [
+            20526.37890625,
+            10595.908203125,
+            -21900.5859375
+          ],
+          "yaw": -1.5707963705062866
+        },
+        "Ashley": {
+          "pointer": "0x8cce56c0",
+          "pos": [
+            10519.9091796875,
+            -0.00341796875,
+            -14702.6708984375
+          ],
+          "yaw": 2.7459588050842285
+        }
+      },
+      "inputs_sha256": "2300fe58dd50c23323d5c2cefa30db12e02f6f611c37d237e95044c7f6508d65",
+      "run_result_sha256": "6c18a55259f91eaad53ca50a5dee8df11086600ef85e9a3e3eaf1c18e253b867"
+    }
+  ],
+  "original_crank": {
+    "frame": 8244,
+    "Rsf": "0xa3000000",
+    "source_life": 1200
+  },
+  "physical_source_lift": {
+    "scope": "Read-only saved currentJ RAM with four ELF anchors; R202Work identified by original static crank position, exact+0x13c owner field and three wall pointers whose source7539-unit lift deltas agree. No guest/state/process writes or forced progress.",
+    "rows": [
+      {
+        "capture": "current-j-route-walk19",
+        "source_frame": 7966,
+        "work": "0x8cb85280",
+        "crank": "0x8cb48ad8",
+        "wall_objects": [
+          "0x8cae4930",
+          "0x8cae4558",
+          "0x8cb40b48"
+        ],
+        "raised_y": [
+          0.0,
+          0.0,
+          10577.046875
+        ],
+        "actual_y": [
+          -6513.0,
+          -6513.0,
+          4064.046875
+        ],
+        "remaining_lift": 6513.0,
+        "completed_lift": 1026.0
+      },
+      {
+        "capture": "current-j-route-walk20",
+        "source_frame": 8064,
+        "work": "0x8cb85280",
+        "crank": "0x8cb48ad8",
+        "wall_objects": [
+          "0x8cae4930",
+          "0x8cae4558",
+          "0x8cb40b48"
+        ],
+        "raised_y": [
+          0.0,
+          0.0,
+          10577.046875
+        ],
+        "actual_y": [
+          -4302.0,
+          -4302.0,
+          6275.046875
+        ],
+        "remaining_lift": 4302.0,
+        "completed_lift": 3237.0
+      },
+      {
+        "capture": "current-j-route-walk21",
+        "source_frame": 8244,
+        "work": "0x8cb85280",
+        "crank": "0x8cb48ad8",
+        "wall_objects": [
+          "0x8cae4930",
+          "0x8cae4558",
+          "0x8cb40b48"
+        ],
+        "raised_y": [
+          0.0,
+          0.0,
+          10577.046875
+        ],
+        "actual_y": [
+          0.0,
+          0.0,
+          10577.046875
+        ],
+        "remaining_lift": 0.0,
+        "completed_lift": 7539.0
+      }
+    ]
+  },
+  "controller_sha256": "fed5298244e947c40b1b1644a05cef8d4ac45d2b8de2e6a2a30ec6fd5ca92ea3",
+  "character_check": {
+    "rows": [
+      {
+        "room": "r202",
+        "id": "00",
+        "name": "Leon",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 2811,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          7
+        ],
+        "parts": [
+          119
+        ]
+      },
+      {
+        "room": "r202",
+        "id": "03",
+        "name": "Ashley",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 605,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          141
+        ]
+      },
+      {
+        "room": "r202",
+        "id": "11",
+        "name": "em11",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 3507,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          37
+        ]
+      }
+    ],
+    "packages": {},
+    "fails": 0,
+    "not_drawn": [
+      {
+        "room": "r202",
+        "id": "11",
+        "name": "em11",
+        "samples": 12,
+        "max_alive": 4,
+        "nearest": 2839,
+        "in_view": 0,
+        "verdict": "drawn"
+      }
+    ]
+  },
+  "vram_check": {
+    "rooms": [
+      {
+        "room": "202",
+        "start": 4172,
+        "samples": 1,
+        "closed": false,
+        "min_free": 77728,
+        "min_largest": 12288,
+        "peak_pinned": 1912160,
+        "last": {
+          "pinned": 518656,
+          "dynamic": 1889920,
+          "other": 65536,
+          "free": 93312,
+          "largest": 12288,
+          "min_free": 77728,
+          "min_largest": 12288,
+          "peak_pinned": 1912160,
+          "loads": 241,
+          "evicted": 9,
+          "retries": 6,
+          "at": "tick",
+          "f": 5372
+        },
+        "gaps": {
+          "refusals": 0,
+          "guard": 0,
+          "guard_p": 0,
+          "nocontig": 0,
+          "latched": 0,
+          "absent": 0,
+          "gc_fx": 0,
+          "dropped": 67,
+          "fx_dropped": 15,
+          "tex_rej": 0,
+          "snd_fail": 0,
+          "meta": 0
+        },
+        "snd_used": 1804992,
+        "loads": 241,
+        "evicted": 9,
+        "retries": 6,
+        "min_kos": 23536,
+        "menu_loads": 0,
+        "play_loads": null,
+        "play_evicted": null
+      }
+    ],
+    "failures": [],
+    "known_gaps": [],
+    "notes": [],
+    "new_format": true
+  },
+  "room_closure": "OPEN: official checker failures are empty, but cumulative actual9evictions/6retries,67dropped/15fx_dropped remain explicit, together with enemy motion thrash. No zero-churn or whole-room acceptance.",
+  "pending": [
+    "original cannon fire and full source callback",
+    "r207 onward and Garrador/dungeon/exit/waves/end save",
+    "r203/r208 checks",
+    "whole-room residency/effects",
+    "hardware timing"
+  ]
+}

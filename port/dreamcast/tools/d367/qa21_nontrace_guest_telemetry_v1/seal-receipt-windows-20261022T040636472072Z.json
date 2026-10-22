@@ -1,0 +1,33 @@
+{
+  "scope": "newseal source/fake tests30; onWindows additional3tinyPython child tests; noFlycast/RAM/input/build/image",
+  "utc": "2026-10-22T04:06:36.413851+00:00",
+  "platform": "Windows-11-10.0.26220-SP0",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "sources": {
+    "outer-driver.py": "41c408bb3af6fe2f2be7dfd8fbaacba7687626a37574a3547e677dce1964fa2c",
+    "inner-adapter.py": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e",
+    "windows-backend.py": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e",
+    "guest-supervisor-core.py": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb",
+    "input-deadlines.py": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9",
+    "guest-profile-v2.json": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+    "observer-binding-v2.json": "ce53a9509462d920d9a2bee26e54566ba9c04f0080d11fadec82c89cf41d4bcd",
+    "test-failure-telemetry.py": "f2ee60d6ced646115f980e01384d192909210bee11293d174c7ac729c9eaa5dc",
+    "test-seal.py": "63b4ba7559b5dbc7c0e7291357da7bf5ace221a1e7ac740471261131f73d6bbe",
+    "test-native-seal.py": "21aa1826986d014fddff4d025c40c6faa07f0e6c026fe342959c903740bde525",
+    "run-seal-tests.py": "34afe005a75081ed508509f8bf195de42c2647c47d914d1c954d78a45da3b4ea"
+  },
+  "selected_modules": [
+    "test-native-seal.py"
+  ],
+  "results": [
+    {
+      "module": "test-native-seal.py",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "test_actual_birth_retained_exit_final_resources_and_closed_job (__main__.Native.test_actual_birth_retained_exit_final_resources_and_closed_job) ... ok\ntest_closed_fd0_release_failure_still_waits_and_closes_owned_job (__main__.Native.test_closed_fd0_release_failure_still_waits_and_closes_owned_job) ... ok\ntest_exception_after_birth_reaps_descendant_and_retains_numeric_exit (__main__.Native.test_exception_after_birth_reaps_descendant_and_retains_numeric_exit) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 1.290s\n\nOK\n"
+    }
+  ],
+  "pass": true,
+  "guest_qualified": false,
+  "old_shoot01_remains_failed": true
+}

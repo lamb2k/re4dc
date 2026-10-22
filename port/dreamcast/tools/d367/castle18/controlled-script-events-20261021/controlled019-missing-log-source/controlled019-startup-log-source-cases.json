@@ -1,0 +1,73 @@
+{
+  "scope": "Two focused source cases execute actual019startup wait path using mocklog/clock/identity/region only. No OSchild/DLL/Flycast/input/memoryprobe; no unrelated44/17/31rerun.",
+  "observer_sha256": "fe49e279d47c0c6e5cdbfa5bac6e669a4997031dd33bb88ea21427a616e30885",
+  "passed": 2,
+  "cases": [
+    {
+      "case": "missing-log-then-created-current-load",
+      "passed": true,
+      "returned_mapping": {
+        "RAM": 140685948747776,
+        "mapping_line": "00:00:613 RAM(16 MB) 00007FF400000000 VRAM64",
+        "state_load_line": "00:00:730 Loaded state ver 854 from C:\\cap019\\data\\disc.state size 28204558",
+        "mapping_precedes_load": true
+      },
+      "final_process_age": 0.07,
+      "log_reads": 3,
+      "calls": {
+        "identity": 3,
+        "regions": 1,
+        "readmemory": 0,
+        "writememory": 0,
+        "inputs": 0
+      },
+      "events": [
+        {
+          "startup_log_not_created_pending": true,
+          "process_age": 0.01,
+          "no_inputs": true
+        },
+        {
+          "startup_exact_state_load_and_mapping": {
+            "RAM": 140685948747776,
+            "mapping_line": "00:00:613 RAM(16 MB) 00007FF400000000 VRAM64",
+            "state_load_line": "00:00:730 Loaded state ver 854 from C:\\cap019\\data\\disc.state size 28204558",
+            "mapping_precedes_load": true
+          },
+          "process_age": 0.07,
+          "process_identity": {
+            "pid": 51601,
+            "start_filetime": 123
+          },
+          "initial_pG_region": {
+            "committed": true,
+            "accessible": true,
+            "covers": true
+          }
+        }
+      ]
+    },
+    {
+      "case": "permanent-absence-bounded-timeout",
+      "passed": true,
+      "returned_mapping": null,
+      "final_process_age": 38.020000000000685,
+      "log_reads": 1267,
+      "calls": {
+        "identity": 1267,
+        "regions": 0,
+        "readmemory": 0,
+        "writememory": 0,
+        "inputs": 0
+      },
+      "events": [
+        {
+          "startup_log_not_created_pending": true,
+          "process_age": 0.01,
+          "no_inputs": true
+        }
+      ]
+    }
+  ],
+  "only_missing_file_pending": true
+}

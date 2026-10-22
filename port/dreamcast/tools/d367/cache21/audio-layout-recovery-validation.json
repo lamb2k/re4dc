@@ -1,0 +1,47 @@
+{
+  "host": {
+    "base": "c7e0358a44677a15123a7f4233c4115eba627694",
+    "source_sha256": "462de3a65f0aaff3458d52d1a50f45c6a439f0c9105b09a57c8f9faf726ea054",
+    "generated_sha256": "8c705e75a3f8ea80522b4c94be8b2bfabf99a7b6cd9ea5e974b40f096209fb15",
+    "result": "PASS checks=396 actual-source layout/ring recovery; disabled matches control; serialized owner/reader race",
+    "scope": "Actual layout/helper functions with mock allocator/timer; ASan+UBSan, serialized bank/reader threads; exact real lock callsites checked. No full backend/console or disc I/O diagnosis."
+  },
+  "target": {
+    "base": "c7e0358a44677a15123a7f4233c4115eba627694",
+    "candidate_source_sha256": "462de3a65f0aaff3458d52d1a50f45c6a439f0c9105b09a57c8f9faf726ea054",
+    "recipe_sha256": "0f4ba4ab8fcfd6bdf56b376ff57dd1ace256833cee6d9b3e49914d4994cd24dc",
+    "checks": {
+      "baseline": {
+        "preprocessed_sha256": "ae372996809f5fa0845d31cb9438cd8df7afe8cff24b2c807dfd76ab2becde1a",
+        "object_sha256": "ccab215d0fcdfb874a57d5a4a0088a7d76700aa7542c2ba1f79f3d73afbac84f",
+        "stripped_sha256": "53c6959766087789e313c23d02b52cefda418cbce314693b674ce3d8846a989b",
+        "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n  22058\t     28\t  71207\t  93293\t  16c6d\t/root/probe/cache21-audio-object-20261020/baseline.o"
+      },
+      "off": {
+        "preprocessed_sha256": "5b10ae6e803291cca02a95730e2a0d55c940d000194239c1856fe02022ddc66d",
+        "object_sha256": "9b7d074ef0a3e58392c0082798d944f0d984d92ee3cd4501aa8de504fabd1f99",
+        "stripped_sha256": "53c6959766087789e313c23d02b52cefda418cbce314693b674ce3d8846a989b",
+        "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n  22058\t     28\t  71207\t  93293\t  16c6d\t/root/probe/cache21-audio-object-20261020/off.o"
+      },
+      "on": {
+        "preprocessed_sha256": "9173d23ed9c7b54229346db6cd4c154fdafcac841f81cde03632ae035ceefc92",
+        "object_sha256": "e33efe84e2c207b19574f0cf9ac389505763ee576ceab2fdb6da38501dfbd5a9",
+        "stripped_sha256": "d30d12e61e51d94be92e8967aca7e54b958710f4511b02a5067f478a8c2dcd0e",
+        "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n  22429\t     28\t  71215\t  93672\t  16de8\t/root/probe/cache21-audio-object-20261020/on.o"
+      }
+    },
+    "off_identity": true
+  },
+  "stack": {
+    "baseline": [
+      "<stdin>:21455:31:void* {anonymous}::str_main(void*)\t64\tstatic",
+      "<stdin>:21548:6:void re4dc_audio_arq(u32, u32, u32)\t180\tstatic"
+    ],
+    "on": [
+      "<stdin>:20492:6:void {anonymous}::stream_ring_retry_locked(u64)\t12\tstatic",
+      "<stdin>:21472:31:void* {anonymous}::str_main(void*)\t64\tstatic",
+      "<stdin>:21570:6:void re4dc_audio_arq(u32, u32, u32)\t252\tstatic"
+    ]
+  },
+  "status": "Host/SH4 translation-unit qualified only; no full game build, linked memory/KOS squeeze, target fault playback or console acceptance."
+}

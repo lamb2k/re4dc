@@ -1,0 +1,345 @@
+{
+  "scope": "Read-only exact extracted asset verification and retained compile command sites; no guest/build. Existing ccd160 binding closes ELF/raw/image/18-overlay identities; this is not a whole historical dependency-closure rebuild.",
+  "created_utc": "2026-10-22T04:51:53.997413+00:00",
+  "parent_receipt_sha256": "828cb32d2db55dba6dfa0fafbd6221a78e95dd21330b6b73f548117ba3d716bb",
+  "actual_assets": {
+    "dc/movie/r204s00.seq": {
+      "size": 6841067,
+      "sha256": "21c9ca96f64009abac471212823bbae3cc21839cd9e36eadd66c935658d85cf8",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/movie/r206s00.seq": {
+      "size": 21196738,
+      "sha256": "1fe9a6252b63ea671ce56365d3dba9954195a65c6a1cf7a33bad1c87508f61a3",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/movie/r206s10.seq": {
+      "size": 2534384,
+      "sha256": "4674f6da9511502c192b1588944360790765d43619261b4455b40ea2f5d1f3b4",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/movie/r206s20.seq": {
+      "size": 3422423,
+      "sha256": "b7e4a0ba6088a967a99a081f78838eeccceaa5a90dcc6d27137fbad2d6a94077",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/movie/r209s00.seq": {
+      "size": 13378309,
+      "sha256": "6e931a047aec63ff2befe7d88433f76c244e3604de06e5454e35cf8d239edf2f",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/movie/r20bs00.seq": {
+      "size": 16086835,
+      "sha256": "c17b6752635c7b3f6b2fd993789be8897dea7201c518852a18c00ed4ca31102c",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r204/partner.re4nmr": {
+      "size": 229952,
+      "sha256": "0cd634b4864624d9991ed4442a63d564f8fcf32e2a59802656b7294c439bbc68",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r204/ps2-world.ids": {
+      "size": 160,
+      "sha256": "e39fa0c30b19baf547db4e30e5fef91e19ec94d5a0babfb450f16c4313977726",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r204/ps2-world.r4pw": {
+      "size": 15452,
+      "sha256": "f09b47cab1667fd4549422d3160d15151e58836e6720e14f75ee850d53ddc69a",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r204/ps2-world.re4mesh": {
+      "size": 731168,
+      "sha256": "518e2efc1241e6587d410baf6879831c1fc4997f00aa6ef4612b12aacdb512b7",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r204/registry.re4nmr": {
+      "size": 101792,
+      "sha256": "f5a470cd9a030ad9f8f249c7e336c5028b5574155d44efc29007735b24bb2942",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r204/room.r4rc": {
+      "size": 16688,
+      "sha256": "6c292974c77b6e6252c31f4f1f4d8cf27e3a73490500127244921550d3d0918c",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r205/ps2-world.ids": {
+      "size": 160,
+      "sha256": "c28e35db3cb374de2351862ff5fa302656575670e65a3947747fe95d6044752f",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r205/ps2-world.r4pw": {
+      "size": 13564,
+      "sha256": "3d267102d065971daf3974ba657cf1d5f5f81b1a64383e88ad29d7742839633c",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r205/ps2-world.re4mesh": {
+      "size": 888960,
+      "sha256": "358f3301b804a938541a1f848d82c366b3172e31bf68d3a7c08642bb7c428d0f",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r205/registry.re4nmr": {
+      "size": 222304,
+      "sha256": "6afbcf24c02b57f24e3265ad224b272a2e53be3769eb236f72ef0dfc92f2b6c7",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r205/room.r4rc": {
+      "size": 34208,
+      "sha256": "90cbaa2fdd564005773617155d2135353656a87eb941a3d4e352f44c0f54f74e",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r206/ps2-world.ids": {
+      "size": 128,
+      "sha256": "0d3e74f20009da8f72200af41c4cf838ec6b09f195a916210ce43aa82eeddba0",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r206/ps2-world.r4pw": {
+      "size": 9264,
+      "sha256": "1c2d137cd0320692505831ef8ef6f8703c09a293642e0bbb4b9145ece9cda945",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r206/ps2-world.re4mesh": {
+      "size": 564896,
+      "sha256": "2e5f2fac60d82bc7bdf9aafe63559d628a1c88653951d416929270d110d8b783",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r206/room.r4rc": {
+      "size": 11776,
+      "sha256": "df02a6fb8d613701160dcd4803fa3e0a87c1f09e57830700631c8953c886f0fd",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r209/ps2-world.ids": {
+      "size": 160,
+      "sha256": "4ff5a041799660d56861efcbced321f76f0000ed0ac505c2aacfdfa666c505fb",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r209/ps2-world.r4pw": {
+      "size": 13468,
+      "sha256": "01b6a17f5348199f9dc3d833b39cd3a6a3830fc719c8b22a959c5ce3bf9e76a8",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r209/ps2-world.re4mesh": {
+      "size": 860320,
+      "sha256": "e424647fb2c0dd87b3478e362867d3ac62afd5722959ebbf2c59671d6b9d0797",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r209/registry.re4nmr": {
+      "size": 185952,
+      "sha256": "cf4e269a942886442017b0d2099d392b36b79a45f891688e79799a7bce3821da",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r209/room.r4rc": {
+      "size": 37936,
+      "sha256": "f93ef9188f07d444dc7a40c14ec603fe2c1ef1e50d803f393f969701d4844dca",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20a/ps2-world.ids": {
+      "size": 64,
+      "sha256": "4762d68f3b2938fa45a810bf5e6023e2164a7580888315b81338b6e1c8c71499",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20a/ps2-world.r4pw": {
+      "size": 3708,
+      "sha256": "e7839daff9b5eebff9c7a2f4dffe2fce84ef095e84605917cf629d5f779a17c8",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20a/ps2-world.re4mesh": {
+      "size": 749024,
+      "sha256": "05abfeafaf56aa469a7c42fd4c6d92882d917abfe0e5e99ac5b4bda8022607ca",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20a/registry.re4nmr": {
+      "size": 62560,
+      "sha256": "16763313c3c0a83f98e08a205844e9b4d3b8ff55b3299f1fe75a6d99d97c09b2",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20a/room.r4rc": {
+      "size": 22208,
+      "sha256": "1ad2104cbc79c2dc807378c72c0439eb6105a352bd92992ae0a43b5a21d5814b",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20b/ps2-world.ids": {
+      "size": 192,
+      "sha256": "81132a95ecf20bc31d1d5c5abe3ca7e24a1828e52349ed569995f0fa305b89cf",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20b/ps2-world.r4pw": {
+      "size": 14560,
+      "sha256": "aa2457e2d03801f0112beaf1bf2ff0e8b5e27e502f5b216ec5e0ea7341533b6d",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20b/ps2-world.re4mesh": {
+      "size": 1011424,
+      "sha256": "2211df403e4e78da148504a1995a8cbaab030f3e250f20aefb715d0bd25c0186",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20b/registry.re4nmr": {
+      "size": 36768,
+      "sha256": "bbebff57e0bb7d88ce818ff4c87c6f260f1eb226c677c490ec5067b9a51df229",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20b/room.r4rc": {
+      "size": 33536,
+      "sha256": "578686e9fd0b483ec1339427eb0494e3c0218b9f3868b8cdbed55e86c47d4d81",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20c/ps2-world.ids": {
+      "size": 64,
+      "sha256": "54e8d177b6a0157e82e37202c2c8681ca49d87abeb7b9f14cb18cbc0c2e3c4bb",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20c/ps2-world.r4pw": {
+      "size": 2796,
+      "sha256": "0a7143fb2d05a1ed854a0efc774ccd81c43b2c3e5d36911a05102b0a358ae3ca",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20c/ps2-world.re4mesh": {
+      "size": 662848,
+      "sha256": "8194749bf8b45420d192f6ccc9868ab74a5889f94e94f800eac58f44e5595358",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20c/registry.re4nmr": {
+      "size": 217536,
+      "sha256": "0082606f4b751ffc789368e0b941a5729da08c6b229f7dee9832c7d2e40b3462",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20c/room.r4rc": {
+      "size": 13088,
+      "sha256": "ff0e361595254c86ef94c226a59b5924a5120bb6bc7aba939da06006fa596780",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20f/ps2-world.ids": {
+      "size": 96,
+      "sha256": "3e5b5f38804bae7e97427d5925700156eda8d7114380ebad6a8330f652dacbb0",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20f/ps2-world.r4pw": {
+      "size": 6156,
+      "sha256": "fe4674103c4692cfc53b538b7a9cbc0fbd194efddaaf26d806849d2905d3a03b",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20f/ps2-world.re4mesh": {
+      "size": 790400,
+      "sha256": "c204c424ad40e022d2bbefa4ef8f1c92c7c1f3b6ed7c3807cceb9e8417065cd2",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20f/registry.re4nmr": {
+      "size": 273728,
+      "sha256": "d034c033b2e7796c5f260fdc51fdb31b77ec3e6dbccff4728b7f1fa8a218b3bc",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/native/r20f/room.r4rc": {
+      "size": 23648,
+      "sha256": "76c75828bac7196b80b5c7143055216f9608087195811fe1ac7db96e3ac2ae30",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/st2_0.ovl": {
+      "size": 94308,
+      "sha256": "3e161ce6f585681e7568c842f50c28a3ece95769df7e7dfc745bea43ba54bf4c",
+      "actual_extracted_tree_verified": true
+    },
+    "dc/st2_1.ovl": {
+      "size": 116100,
+      "sha256": "53494d01f3e10e83eddf81f0e03c342f239c5220da0bfc687f1c366ca15b4410",
+      "actual_extracted_tree_verified": true
+    },
+    "etc/emleon07.esl": {
+      "size": 8160,
+      "sha256": "1bcbab47c440a1b9d2406a7ae5a3a96d899fb17d3f083951f74f51ab92aa7bfc",
+      "actual_extracted_tree_verified": true
+    },
+    "etc/emleon08.esl": {
+      "size": 8192,
+      "sha256": "4938a9f9190ca92a2989bf53ca7882049c355600ca5b9f8165f64263c284d932",
+      "actual_extracted_tree_verified": true
+    }
+  },
+  "retained_buildlog_sha256": "b6e8644ac743f117a2c47888fff45d5c7fcc2bb4ec5632e8552f1c9188261d69",
+  "compile_sites": [
+    {
+      "line": 426,
+      "sha256": "61b390ec2a63fabdbe9f9dce8eaa5c2dccc0a1f8f09d398452576e9c9af9a16c",
+      "source": [
+        "src/st2/r204.cpp"
+      ],
+      "defines": [
+        "-DRE4DC_ALIVE_CAP_DEFER_FLAGS=1",
+        "-DRE4DC_ALIVE_CAP_ON=1",
+        "-DRE4DC_ALIVE_CAP_DEFER_FLAGS=1",
+        "-DRE4DC_ALIVE_CAP_ON=1",
+        "-DRE4DC_ROUTE_MOVIES_CH3=1"
+      ]
+    },
+    {
+      "line": 427,
+      "sha256": "73ae5066898205be909cc2b85e96ea7262f8bd66f00f70fc39e588582214d3b6",
+      "source": [
+        "src/st2/r205.cpp"
+      ],
+      "defines": [
+        "-DRE4DC_ALIVE_CAP_DEFER_FLAGS=1",
+        "-DRE4DC_ALIVE_CAP_ON=1",
+        "-DRE4DC_ALIVE_CAP_DEFER_FLAGS=1",
+        "-DRE4DC_ALIVE_CAP_ON=1",
+        "-DRE4DC_ALIVE_CAP_NOVIS=1"
+      ]
+    },
+    {
+      "line": 429,
+      "sha256": "950c7933f38444eb24d0582f444a91f3c0c7e500476137e64f16a05e02466a93",
+      "source": [
+        "src/st2/r209.cpp"
+      ],
+      "defines": [
+        "-DRE4DC_ALIVE_CAP_DEFER_FLAGS=1",
+        "-DRE4DC_ALIVE_CAP_ON=1",
+        "-DRE4DC_ALIVE_CAP_DEFER_FLAGS=1",
+        "-DRE4DC_ALIVE_CAP_ON=1",
+        "-DRE4DC_ROUTE_MOVIES_CH3=1"
+      ]
+    },
+    {
+      "line": 430,
+      "sha256": "ae9e75a35997ad502d16158af47dbb7244be90c379fb6fe80dddc52f45f30d38",
+      "source": [
+        "src/st2/r20a.cpp"
+      ],
+      "defines": [
+        "-DRE4DC_ALIVE_CAP_DEFER_FLAGS=1",
+        "-DRE4DC_ALIVE_CAP_ON=1",
+        "-DRE4DC_ALIVE_CAP_DEFER_FLAGS=1",
+        "-DRE4DC_ALIVE_CAP_ON=1"
+      ]
+    },
+    {
+      "line": 431,
+      "sha256": "ff009b6341a0f3cd46dbc535defc97cae71e33fd01f94cd9b35e66d2821c34c3",
+      "source": [
+        "src/st2/r20b.cpp"
+      ],
+      "defines": [
+        "-DRE4DC_ALIVE_CAP_DEFER_FLAGS=1",
+        "-DRE4DC_ALIVE_CAP_ON=1",
+        "-DRE4DC_ALIVE_CAP_DEFER_FLAGS=1",
+        "-DRE4DC_ALIVE_CAP_ON=1",
+        "-DRE4DC_PS2_ENEMY_CASTLE=0xe7",
+        "-DRE4DC_ROUTE_MOVIES_CH3=1"
+      ]
+    }
+  ],
+  "source_current_vs_frozen": "git diff12a on r204/r205/r209/r20a/r20b/r206 and game/dbgwarp_bridge.cpp empty before plan; source hashes in parent receipt",
+  "master_overlays": {
+    "dc/em22.ovl": {
+      "sha256": "fa9394838cd9e99dbf66dc5899b4703424b78f72c4ff1fd2e13b29b224549e9d",
+      "size": 27236
+    },
+    "dc/em2d.ovl": {
+      "sha256": "b5e2cc5414c3ae1344d9d4c6ce6f5b1781e85e0da23c20c4c52753db6dc23902",
+      "size": 68628
+    },
+    "dc/st2_1.ovl": {
+      "sha256": "53494d01f3e10e83eddf81f0e03c342f239c5220da0bfc687f1c366ca15b4410",
+      "size": 116100
+    }
+  }
+}

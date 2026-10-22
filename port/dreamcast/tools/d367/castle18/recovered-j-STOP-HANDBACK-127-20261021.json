@@ -1,0 +1,207 @@
+{
+  "status": "STOPPED at explicit user fresh-session request;127 finished safely, no128prepared or launched.",
+  "actual": {
+    "scope": "Read-only exact owned127 immutable-state/ELF/freeworld handoff. No game or statewrites.",
+    "state_sha256": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16",
+    "source": 33328,
+    "health": [
+      220,
+      1200,
+      90,
+      600
+    ],
+    "boss": {
+      "ptr": "0x8caf2460",
+      "hp": 3464,
+      "pos": [
+        16163.7998046875,
+        525.736328125,
+        -41052.09765625
+      ],
+      "yaw": -0.06313306838274002,
+      "routines": [
+        1,
+        16,
+        1,
+        0
+      ]
+    },
+    "r201_RSF": "0x6c400000",
+    "items": [
+      {
+        "id": 124,
+        "num": 1,
+        "bullet": 0
+      },
+      {
+        "id": 35,
+        "num": 1,
+        "bullet": 6
+      },
+      {
+        "id": 4,
+        "num": 10,
+        "bullet": 0
+      },
+      {
+        "id": 172,
+        "num": 1,
+        "bullet": 0
+      },
+      {
+        "id": 173,
+        "num": 1,
+        "bullet": 0
+      }
+    ]
+  },
+  "run_result": {
+    "elapsed_s": 48.4,
+    "errors": [],
+    "emulator_exited": true
+  },
+  "program": {
+    "runtime": "12a841d7c",
+    "elf_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\builds\\c21jmW\\re4dc-game.elf",
+    "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f"
+  },
+  "image": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master\\track03.iso",
+    "size": 1018789888,
+    "sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+  },
+  "inputs": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk127-inputs.json",
+  "screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk127\\shots\\checkpoint-source-33325\\frames\\fb0.png",
+  "screenshot_context": {
+    "run": "route-walk127",
+    "lineage": "Recovered J NEW cold boot progression",
+    "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+    "runtime": "12a841d7c",
+    "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+    "room": "0x201",
+    "source_frame_interval": [
+      33325,
+      33327
+    ],
+    "health_before": [
+      220,
+      1200,
+      90,
+      600
+    ],
+    "health_after": [
+      220,
+      1200,
+      90,
+      600
+    ],
+    "action_result": {
+      "key": "ready",
+      "up": true,
+      "host_monotonic": 361581.765
+    },
+    "last_sample": {
+      "frame": 33321,
+      "room": "0x201",
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "SSLoop": 0,
+      "health": [
+        220,
+        1200,
+        90,
+        600
+      ],
+      "source_Key_on": "0x800010",
+      "original_weakpoint_scaled_radius": 249.99908361638367,
+      "player_pos": [
+        28818.091796875,
+        -2000.001708984375,
+        -43437.6796875
+      ],
+      "yaw": -1.670005440711975,
+      "player_routines": [
+        0,
+        6,
+        1,
+        1
+      ],
+      "Garrador_hp": 3464,
+      "Garrador_pos": [
+        16200.4453125,
+        437.607177734375,
+        -41204.74609375
+      ],
+      "Garrador_yaw": -0.0743689313530922,
+      "Garrador_routines": [
+        1,
+        16,
+        1,
+        0
+      ],
+      "weakpoint37_world": [
+        16225.073084890842,
+        2141.757069826126,
+        -41336.21079108119
+      ],
+      "player_back_dot": -3164.2577069531926,
+      "partner_safe_corner_pos": [
+        29378.64453125,
+        -2000.00048828125,
+        -42718.609375
+      ],
+      "weakpoint_velocity_per_source_tick": 44.113974024305094,
+      "status1": "0x204",
+      "audible_footstep": false,
+      "actual_damage_record": {
+        "weapon": 2,
+        "part_ptr": "0x8caf2bd8",
+        "partNo": 37,
+        "flags": 0
+      },
+      "standing_target_yaw_error": 0.26456117468857254,
+      "normal_aim_point_offset_within_original_sphere": [
+        0,
+        -70,
+        0
+      ],
+      "weapon_object": "0x8cab2dc8",
+      "muzzle": [
+        28618.705615207553,
+        -541.0170197784901,
+        -43574.052287347615
+      ],
+      "ray_direction": [
+        -0.9843247330049549,
+        0.15511413662292,
+        0.0839310706142263
+      ],
+      "ray_pitch": 0.1557429872908167,
+      "ray_yaw_error": 0.0935770867902006,
+      "ray_pitch_error": 0.04881622195139729,
+      "ray_sphere_miss": 1371.9856403832916,
+      "ray_forward_distance": 12803.319650675463,
+      "range_dependent_aim_tolerance": 0.004686284622819253
+    },
+    "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+    "png_paths": [
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk127\\shots\\checkpoint-source-33325\\frames\\fb0.png",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk127\\shots\\checkpoint-source-33325\\frames\\fb1.png"
+    ]
+  },
+  "last_result": "127 stationary aim48.4s/no shots or HP loss; boss3464 naturally climbed towardstairs.120/126 originalbell shots and126 back-source-ack thenB quickturn qualified.123/124 escaped after122injury to220; no reset since105.",
+  "correction121": "Preparation incorrectly claimed21SATpointPASS although native validator failed and PowerShell continued; actualcollisionguardstopped1200/90. No path-clearance acceptance. Corrected11point westoffset receipt retained privately;122originalinjury and all failureframes retained.",
+  "shortest_next": "Do not repeat long far/occluded aim127. On explicitresume, one bounded normal westward lower-stair approach via previously used floorwaypoints, then inspect actual laser/weakpoint exposure. No new build/assets/state retarget; kill/stairs/waves/end save remain open.",
+  "restart_preparation_only": "& 'C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe' 'C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\prepare-recovered-j-bounded-arm.py' 128 'owned-window-recovered-j-r201-sealed-injury-recovery-still.py' '27000,-42000;21300,-42000;19000,-45000' 180 201 'Explicit-resume only: actual127220/90/boss3464; finite normal west/lowerstairs approach through previously used source floorwaypoints, anyHP/PID/collision guards unchanged. No rollback or gamewrites.'",
+  "restart_after_successful_preparation_and_live_guards": "wsl.exe -d Ubuntu-24.04 -u root -- bash '/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-recovered-j-route-walk128.sh'",
+  "processes": "No owned guest/controller/build/stage; latestWindowscheck hostFlycast0. WSL no matching own runner. All shared source claims released.",
+  "saved_private_wip": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18",
+  "limits": [
+    "OriginalJ221 frozen/separate; only recoveredb67 ownstatechain continues.",
+    "No furtherguest/preparation/implementation after userstop.",
+    "Original injury220/Ashley90 authoritative; no healing or kill inferred."
+  ]
+}

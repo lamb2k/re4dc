@@ -1,0 +1,12 @@
+{
+  "replace": {
+    "dc/resident.bin": "/root/re4data/private/castle18-ch41-r212-gameplay-resident-20261019/files/dc/resident.bin"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Nine gameplay source-observed keys only; source dimensions/format and actual package winners retained.",
+    "base_resident_sha256": "fbc6957986724720d9127021a6bfda8d2fce66dac8a988a121c5bd103dd25568",
+    "resident_sha256": "b93f1fdd53a413dc351667c9521d413567152e355dfdaf3f2137152a81e8e73b",
+    "integration": "Preserves all5791 current V18 records. Compose only these r212 additions into any newer union."
+  }
+}

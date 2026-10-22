@@ -430,6 +430,16 @@ static void R213EventSuBreakEnd()
 // The enemies of the s00 event; the two behind the statue only while it stands.
 void R213EmSet()
 {
+#if RE4DC_ALIVE_CAP_NOVIS
+    // These two initialize against the intact hive SAT. Late creation after
+    // SuBreak removes it selects AirWalk instead of the source nest state;
+    // the original callback's hp=0 then cannot complete their nest death.
+    // Reserve two of the same four slots before sending the regular seven.
+    if (RsfCheck(G_ROOM_ID, 2) == 0) {
+        r213_work.p->em[3].setPtr(0xC5, -1, 0);
+        r213_work.p->em[6].setPtr(0xC8, -1, 0);
+    }
+#endif
     r213_work.p->em[0].setPtr(0xC2, -1, 0);
     r213_work.p->em[1].setPtr(0xC3, -1, 0);
     r213_work.p->em[2].setPtr(0xC4, -1, 0);
@@ -445,9 +455,11 @@ void R213EmSet()
         r213_work.p->em[5].setFlag(0x20000000);
         r213_work.p->em[7].setFlag(0x20000000);
         r213_work.p->em[8].setFlag(0x20000000);
+#if !RE4DC_ALIVE_CAP_NOVIS
     } else {
         r213_work.p->em[3].setPtr(0xC5, -1, 0);
         r213_work.p->em[6].setPtr(0xC8, -1, 0);
+#endif
     }
 }
 

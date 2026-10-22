@@ -1,0 +1,338 @@
+{
+  "scope": "Current unchanged J fresh original VMU/CardLoad lineage; normal owned-window navigation and source inventory actions. No warp, rollback, process/state writes, new build or data changes. Whole chapter and upper C4/wall callback remain open.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk75",
+      "elapsed_s": 29.3,
+      "errors": [],
+      "emulator_exited": true,
+      "result": "Normal table-cover detour; health1200/600",
+      "state_sha256": "0c4f227e445ea1f8e84f1d543b4536398d2c668bdf3ed600f9d749769edd7d97",
+      "screenshots": [
+        {
+          "run": "current-j-route-walk75",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x207",
+          "action_result": "Normal table-cover detour; health1200/600",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk75\\shots\\checkpoint-source-12726\\frames\\fb0.png",
+          "png_sha256": "62acaf51eb17203b00a12504b45d69f31cf6206a4f9eb330f437255abfd3a346",
+          "source_frame_interval": [
+            12726,
+            12735
+          ],
+          "health_before": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk75\\shots\\checkpoint-source-12726\\checkpoint-context.json"
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk76",
+      "elapsed_s": 3.6,
+      "errors": [],
+      "emulator_exited": true,
+      "result": "Original Ashley Wait accepted at table cover; health1200/600",
+      "state_sha256": "05db1c49593d15e70d354bca032e653cdea7f8f8467e2106db72b2f766e25474",
+      "screenshots": [
+        {
+          "run": "current-j-route-walk76",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x207",
+          "action_result": "Original Ashley Wait accepted at table cover; health1200/600",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk76\\shots\\checkpoint-source-12776\\frames\\fb0.png",
+          "png_sha256": "dfd6ca76352a5f3f52bc7d6234df103b1fdbc64a6493f2344cebc63bb51d1294",
+          "source_frame_interval": [
+            12776,
+            12785
+          ],
+          "health_before": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "health_after": null,
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk76\\shots\\checkpoint-source-12776\\checkpoint-context.json"
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk77",
+      "elapsed_s": 51.0,
+      "errors": [],
+      "emulator_exited": true,
+      "result": "Normal upstairs approach; pickup not yet completed",
+      "state_sha256": "d5543e41af2bc96d268de535023d70d043b5940505c8c28a0cd8cd5ff34afb76",
+      "screenshots": [
+        {
+          "run": "current-j-route-walk77",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x207",
+          "action_result": "Normal upstairs approach; pickup not yet completed",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk77\\shots\\checkpoint-source-14224\\frames\\fb0.png",
+          "png_sha256": "011baebc203d00740e1c37f6048daba0ba658ccce75b6a760a6dbe4bec713cb2",
+          "source_frame_interval": [
+            14224,
+            14233
+          ],
+          "health_before": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk77\\shots\\checkpoint-source-14224\\checkpoint-context.json"
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk78",
+      "elapsed_s": 16.6,
+      "errors": [],
+      "emulator_exited": true,
+      "result": "Original Golden Sword pickup and callback completed; health1200/600",
+      "state_sha256": "fc751ff9bcd71647086d94f93f4a5d5a52a13d3b2848673834534078f27a5926",
+      "screenshots": [
+        {
+          "run": "current-j-route-walk78",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x207",
+          "action_result": "Original Golden Sword pickup and callback completed; health1200/600",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk78\\shots\\checkpoint-source-14648\\frames\\fb0.png",
+          "png_sha256": "f29c5d7d6176738544b5ebc74420ec718ea304a2c599b0a620e8fe33bd1a7aa2",
+          "source_frame_interval": [
+            14648,
+            14657
+          ],
+          "health_before": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk78\\shots\\checkpoint-source-14648\\checkpoint-context.json"
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk79",
+      "elapsed_s": 23.5,
+      "errors": [],
+      "emulator_exited": true,
+      "result": "Original descent; Leon took heavy source damage to120, Ashley600",
+      "state_sha256": "bb6e3b37d8af1caa8eb8ffccb08419d3cd42b830a7f10125edeeea358eda45af",
+      "screenshots": [
+        {
+          "run": "current-j-route-walk79",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x207",
+          "action_result": "Original descent; Leon took heavy source damage to120, Ashley600",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk79\\shots\\checkpoint-source-15241\\frames\\fb0.png",
+          "png_sha256": "fb8fe2d99a258d4b79a340e40732dc31b156bc0c33f99bb955ec9add615c1a9e",
+          "source_frame_interval": [
+            15241,
+            15250
+          ],
+          "health_before": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk79\\shots\\checkpoint-source-15241\\checkpoint-context.json"
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk80",
+      "elapsed_s": 21.2,
+      "errors": [],
+      "emulator_exited": true,
+      "result": "Normal recovery/run and lower Platinum pickup completed; health120/600 unchanged",
+      "state_sha256": "61d9e5ecbb3d437599c6a15bd780f3505ffc1bab22b1164a2cf65a609e2681da",
+      "screenshots": [
+        {
+          "run": "current-j-route-walk80",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x207",
+          "action_result": "Normal recovery/run and lower Platinum pickup completed; health120/600 unchanged",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk80\\shots\\checkpoint-source-15815\\frames\\fb0.png",
+          "png_sha256": "65741d046aa9256d928e91cb5ef56d3b0a391a2676767214f258f89bb1a0abc4",
+          "source_frame_interval": [
+            15815,
+            15824
+          ],
+          "health_before": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk80\\shots\\checkpoint-source-15815\\checkpoint-context.json"
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk81",
+      "elapsed_s": 7.9,
+      "errors": [],
+      "emulator_exited": true,
+      "result": "Original lower Golden Sword placement completed; C4 retained, health120/600 unchanged",
+      "state_sha256": "5ddf9fc5e7343a0ed8f9c7de1a798c70ea95fa40d8dda6edeca7328f58d3f1d0",
+      "screenshots": [
+        {
+          "run": "current-j-route-walk81",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x207",
+          "action_result": "Original lower Golden Sword placement completed; C4 retained, health120/600 unchanged",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk81\\shots\\checkpoint-source-15910\\frames\\fb0.png",
+          "png_sha256": "d677359b484d7379610762a6f596f4880c2131c8af9c9de938ba4ac71cee40c9",
+          "source_frame_interval": [
+            15910,
+            15920
+          ],
+          "health_before": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk81\\shots\\checkpoint-source-15910\\checkpoint-context.json"
+        }
+      ]
+    }
+  ],
+  "current_snapshot_audit": {
+    "scope": "Immutable current J original no-warp CardLoad lineage, four exact ELF anchors; original inventory and RSF read-only. No state changes.",
+    "state_sha256": "5ddf9fc5e7343a0ed8f9c7de1a798c70ea95fa40d8dda6edeca7328f58d3f1d0",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x207",
+    "chapter": 6,
+    "source_frame": 15920,
+    "health": [
+      120,
+      1200,
+      600,
+      600
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "death_flags": "0x3080100",
+    "door_flags": "0x884002b4",
+    "partner_subflags": "0x46",
+    "r207_RSF": "0x88300000",
+    "player_pos": [
+      1045.1683349609375,
+      147.3289794921875,
+      -7450.8984375
+    ],
+    "partner_pos": [
+      2510.12109375,
+      126.74322509765625,
+      -2016.5745849609375
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 10
+      },
+      {
+        "id": "0x4",
+        "num": 10,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xc4",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ]
+  },
+  "limits": [
+    "Leon critical120, Ashley600 original Wait",
+    "Upper C4 placement, wall callback and onward door not yet complete",
+    "No enemy completed-death or full-room clear claim",
+    "Native texture/audio/effects and total drive quiet remain separate"
+  ]
+}

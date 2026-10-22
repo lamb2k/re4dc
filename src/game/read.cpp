@@ -118,6 +118,11 @@ extern "C" void re4dc_leon_hands_weapon(const char* name);  // coarse_actor_leon
 static void* in_data_addr;
 u32 out_data_size;
 u8 oldWepId;
+#if defined(RE4DC_WEAPON_ARCHIVE_REUSE) && RE4DC_WEAPON_ARCHIVE_REUSE
+// File identity distinguishes the per-character tables, even when their mapped weapon numbers agree.
+// Published only after a successful load/link and invalidated before any weapon backing is released.
+static u16 wepResidentFile;
+#endif
 
 ReadModule EmReadModule[4] __attribute__((aligned(32)));
 ReadModule PlReadModule __attribute__((aligned(32)));
@@ -441,6 +446,9 @@ static void* readEm(int id, void* addr, u32 size)
     BitOff(pG->Disp_flg, 0x800);
     m = pullEmModule();
     if (m == NULL) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EM_ADMISSION_DISP_FIX) && RE4DC_EM_ADMISSION_DISP_FIX
+        pG->Disp_flg = flags;
+#endif
         return NULL;
     }
     if (readEmData(m, id, addr, size) == 0) {
@@ -577,6 +585,27 @@ int readEmData(ReadModule* m, int id, void* addr, u32 size)
     if (pG->Rno0 == 2) {
         mode = 0x100;
     }
+#if defined(RE4DC_EM_READ_RETRY) && RE4DC_EM_READ_RETRY
+    // EM_READ_RETRY (issue #52, default 1): a failed enemy module read (no free DVD queue slot, a GD read error or
+    // a cancelled request; seen on GDEMU, never on Flycast) is issued again after a short sleep instead of
+    // returning 0, which made EmCreate / EmSetFromList2 return NULL to room events that dereference it (r10c
+    // dam first villager: FAULT 0e0 on the NULL enemy's vptr). A read that succeeds first time is unchanged.
+    int tries = 0;
+retry:
+#endif
+#if defined(RE4DC_EM_READ_FAIL_INJECT) && RE4DC_EM_READ_FAIL_INJECT
+    // EM_READ_FAIL_INJECT=N (test only, issue #52 proof): in r10c the enemy reads fail N times in a row (as a
+    // console read error would; N >= 99: every time) without touching the disc.
+    {
+        static int injected;
+
+        if (pG->room_id == RE4DC_EM_READ_FAIL_INJECT_ROOM && (RE4DC_EM_READ_FAIL_INJECT >= 99 || injected < RE4DC_EM_READ_FAIL_INJECT)) {
+            injected++;
+            req = -3;
+            goto issued;
+        }
+    }
+#endif
     if (addr == NULL) {
 #line 725 "D:/Bio4/Prog/read.cpp"
         req = DVD_READ_N(name, NULL, 0, 0, 0, mode | 0x8004);
@@ -584,8 +613,28 @@ int readEmData(ReadModule* m, int id, void* addr, u32 size)
 #line 728 "D:/Bio4/Prog/read.cpp"
         req = DVD_READ_N(name, addr, 0, 0, 0, mode | 0x8000);
     }
+#if defined(RE4DC_EM_READ_FAIL_INJECT) && RE4DC_EM_READ_FAIL_INJECT
+issued:
+#endif
     while ((ret = Dvd.ReadCheckInfo(req, &info)) != 1) {
         if (ret < 0) {
+#if defined(RE4DC_EM_READ_RETRY) && RE4DC_EM_READ_RETRY
+            if (++tries <= 8) {
+                int k;
+
+                OSReport("readEmData: %s read failed (%d), retry %d\n", name, ret, tries);
+                for (k = 0; k < 4 * tries; k++) {
+                    if (SceSys.checkCTaskRange() == 1) {
+                        SceSys.x73 = 1;
+                        SceSleep(1);
+                        SceSys.x73 = 0;
+                    } else {
+                        TaskSleep(1);
+                    }
+                }
+                goto retry;
+            }
+#endif
             pLog->err(0, 0, "readEmData(): error! %s", name);
             return 0;
         }
@@ -1037,6 +1086,10 @@ static void* wepHeap4Alloc(u32 need)
 
 void ReleaseWepData()
 {
+#if defined(RE4DC_WEAPON_ARCHIVE_REUSE) && RE4DC_WEAPON_ARCHIVE_REUSE
+    wepResidentFile = 0;
+    oldWepId = 0xFF;
+#endif
     if (pG->weapon_no_old != 0xFF) {
         InitModule(&WepReadModule);
         pG->weapon_no_old = 0xFF;
@@ -1314,10 +1367,21 @@ void ReadWepData(u32 no, u32 type)
     if (e->file == 0) {
         return;
     }
+#if defined(RE4DC_WEAPON_ARCHIVE_REUSE) && RE4DC_WEAPON_ARCHIVE_REUSE
+    if (oldWepId != 0xFF && no == oldWepId && wepResidentFile == e->file &&
+        pG->weapon_no_old != 0xFF && WepReadModule.pArc != NULL &&
+        pG->pWep == WepReadModule.pArc && BitChk16(WepReadModule.flag, 2)) {
+        // Different logical weapons can share an archive (grenades/eggs). Keep the equipped
+        // identity current while preserving the linked data used by the following weaponInit.
+        pG->weapon_no_old = pG->weapon_no;
+        return;
+    }
+#else
     if (oldWepId != 0xFF && no == oldWepId) {
         return;
     }
     oldWepId = no;
+#endif
     ReleaseWepData();
     pG->weapon_no_old = pG->weapon_no;
     if (e->dll != 0) {
@@ -1394,6 +1458,10 @@ void ReadWepData(u32 no, u32 type)
 #if defined(RE4DC_LEON_HAND_PACK) && RE4DC_LEON_HAND_PACK
     // LEON_HAND_PACK (render only): the weapon's PS2 hands into Leon's hand cache with the weapon load.
     re4dc_leon_hands_weapon(FileTbl[e->file].name);
+#endif
+#if defined(RE4DC_WEAPON_ARCHIVE_REUSE) && RE4DC_WEAPON_ARCHIVE_REUSE
+    oldWepId = no;
+    wepResidentFile = e->file;
 #endif
 }
 
@@ -1491,5 +1559,22 @@ extern "C" const void* re4dc_cabin_source_module(const void* pointer,unsigned by
     // Both original r11c swaps borrow the already-loaded module 0x13.
     const ReadModule* module=SearchEmModule(0x13);
     return module && module->pArc==pointer && bytes && bytes<=module->size ? module : NULL;
+}
+#endif
+#if defined(RE4DC_EM_READ_RETRY) && RE4DC_EM_READ_RETRY
+// em_set.cpp EM_MUST backoff: sleeps the calling task (the scenario task through SceSleep, as readEmData waits).
+extern "C" void re4dc_em_sleep(int frames)
+{
+    int k;
+
+    for (k = 0; k < frames; k++) {
+        if (SceSys.checkCTaskRange() == 1) {
+            SceSys.x73 = 1;
+            SceSleep(1);
+            SceSys.x73 = 0;
+        } else {
+            TaskSleep(1);
+        }
+    }
 }
 #endif

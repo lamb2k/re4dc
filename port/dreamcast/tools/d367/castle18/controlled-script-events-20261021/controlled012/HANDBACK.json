@@ -1,0 +1,600 @@
+{
+  "scope": "CONTROLLED exact011 fullstate continuation; actualnative204 entry/originalradio execution ongoing. Not anothercoldload, visiblefreeplay, completedradio, audio/sync, release or hardwareacceptance.",
+  "status": "PASS_NATIVE_R204_ENTRY_RADIO_EXECUTION_ONGOING",
+  "visible_result": "Native204 room-enter hook/ROOMFILE/lifecycle execute. Entry PNG stillLoading, not visiblefreeplay. Fresh type20 backingopen and inspectedSalazar/Leon codecPNG plus laterEnglishsubtitle/changedportrait prove radio execution. Radioongoingatdeadline; no eventreturn/backingclose acceptance.",
+  "native_load_log_seen": true,
+  "state_sha256": "64a178245be5dd8b9dbb14ec1a4f4da0e8be08b3d5041e8c6b0388ab0b809436",
+  "closed_native_fields": {
+    "source_frame": 2750,
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x204",
+    "chapter": 7,
+    "health_restored_from_save": [
+      1440,
+      1440,
+      600,
+      600
+    ]
+  },
+  "VMU_source_and_runtime_sha256": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+  "source_009_unchanged": true,
+  "protected_authentic_states": {
+    "route-walk127": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16",
+    "route-walk294": "cb7a314b8fd0383af0b7baf17c2e87a712705beb122a1d39c7705553dd795258"
+  },
+  "programme_binding_receipt_sha256": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed",
+  "ELF_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "master_image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "guard": {
+    "PASS_normal_owned_closure": true,
+    "owner": {
+      "pid": 32672,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-handoff012\\flycast.exe",
+      "start_filetime": 134371166864688773,
+      "created_utc": "2026-10-22T04:24:46.476440+00:00",
+      "rights": "retained subprocess handle receipt"
+    },
+    "closed_identity": {
+      "initial_live_identity_pinned": true,
+      "retained_handle_signaled": true,
+      "exit_code": 0,
+      "postexit_times_available": true,
+      "postexit_path_query": false,
+      "proof_reason": "normal or absolute loop exit"
+    },
+    "exit_age": 39.832073652301915,
+    "max_capture_logical_bytes": 26253939,
+    "minimum_runtime_free_bytes": 39451598848,
+    "not_a_new_fail_closed_path_test": true
+  },
+  "harness": {
+    "status": "RUN_COMPLETE",
+    "elapsed_s": 39.9,
+    "errors": []
+  },
+  "screenshots": [
+    {
+      "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-handoff012\\shots\\controlled-deadline-context\\controlled-context.json",
+      "context_sha256": "6da3efef35e96797afa7ff23d2d702c74db296e9ae09590321bed1d94149fff5",
+      "context": {
+        "scope": "Controlled original204/radio evidence only; typed fields and RSF7 do not replace observed event execution/return",
+        "observation": {
+          "process_age": 36.02958035469055,
+          "pg": 2352652060,
+          "frame": 2659,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x77ffffbf",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x10000000",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "before": {
+          "process_age": 36.02958035469055,
+          "pg": 2352652060,
+          "frame": 2659,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x77ffffbf",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x10000000",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "after": {
+          "process_age": 36.07658035471104,
+          "pg": 2352652060,
+          "frame": 2661,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x77ffffbf",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x0",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "pngs": [
+          {
+            "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-handoff012\\shots\\controlled-deadline-context\\frames\\fb0.png",
+            "sha256": "189fe920e65c6b22c88f1c2db4286088cb9f4abd4349759699d8841364873848"
+          },
+          {
+            "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-handoff012\\shots\\controlled-deadline-context\\frames\\fb1.png",
+            "sha256": "0b5215057ed70fafdf48eb91fccf3872741d6de205ae75d4a92c0b8cee4ae8ff"
+          }
+        ]
+      }
+    },
+    {
+      "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-handoff012\\shots\\controlled-original-radio\\controlled-context.json",
+      "context_sha256": "15285cd4bad82e89c2532e75a7b669fa1a07ef0cb286a40dc60438c25a79d5a3",
+      "context": {
+        "scope": "Controlled original204/radio evidence only; typed fields and RSF7 do not replace observed event execution/return",
+        "observation": {
+          "process_age": 17.57658035471104,
+          "pg": 2352652060,
+          "frame": 2130,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x77ffffbf",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x10000000",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "before": {
+          "process_age": 17.5925803547143,
+          "pg": 2352652060,
+          "frame": 2130,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x77ffffbf",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x10000000",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "after": {
+          "process_age": 17.623580354673322,
+          "pg": 2352652060,
+          "frame": 2131,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x77ffffbf",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x10000000",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "pngs": [
+          {
+            "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-handoff012\\shots\\controlled-original-radio\\frames\\fb0.png",
+            "sha256": "8798423fac7902ba842741cc277c98e514f7ed018d0927e4b83521f4f10c59ca"
+          },
+          {
+            "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-handoff012\\shots\\controlled-original-radio\\frames\\fb1.png",
+            "sha256": "9f327682a27e3d9bbbde29ed7520882e1508069d449349a4629bb55b2bd39194"
+          }
+        ]
+      }
+    },
+    {
+      "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-handoff012\\shots\\controlled-original204-entry\\controlled-context.json",
+      "context_sha256": "5bd11f86450c619a11dde489c25cec086ee947e2ab2a6c44687a3a4b1e802d35",
+      "context": {
+        "scope": "Controlled original204/radio evidence only; typed fields and RSF7 do not replace observed event execution/return",
+        "observation": {
+          "process_age": 9.545580354693811,
+          "pg": 2352652060,
+          "frame": 2030,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x80400100",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x0",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "before": {
+          "process_age": 9.70158035471104,
+          "pg": 2352652060,
+          "frame": 2030,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x80400100",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x0",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "after": {
+          "process_age": 9.732580354670063,
+          "pg": 2352652060,
+          "frame": 2030,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x80400100",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x0",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "pngs": [
+          {
+            "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-handoff012\\shots\\controlled-original204-entry\\frames\\fb0.png",
+            "sha256": "36cbe5141fe9239b3be2abf3fd4c5cf9d56c8cee8408ef50c725518e06927cb6"
+          },
+          {
+            "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-handoff012\\shots\\controlled-original204-entry\\frames\\fb1.png",
+            "sha256": "36cbe5141fe9239b3be2abf3fd4c5cf9d56c8cee8408ef50c725518e06927cb6"
+          }
+        ]
+      }
+    }
+  ],
+  "fixture_and_card_log": [
+    {
+      "line": 79,
+      "text": "fixture: state title=1/0 at frame 40"
+    },
+    {
+      "line": 114,
+      "text": "fixture: state card=0/2 at frame 138"
+    },
+    {
+      "line": 116,
+      "text": "fixture: state card=0/3 at frame 140"
+    },
+    {
+      "line": 118,
+      "text": "card-vmu: op=mount file=-1 vbl=15 rc=0"
+    },
+    {
+      "line": 121,
+      "text": "fixture: state card=0/4 at frame 158"
+    },
+    {
+      "line": 123,
+      "text": "fixture: state card=0/5 at frame 160"
+    },
+    {
+      "line": 127,
+      "text": "fixture: state card=0/6 at frame 164"
+    },
+    {
+      "line": 129,
+      "text": "card-vmu: op=info file=0 vbl=3 rc=0"
+    },
+    {
+      "line": 133,
+      "text": "fixture: state card=0/7 at frame 214"
+    },
+    {
+      "line": 136,
+      "text": "fixture: state card=1/0 at frame 218"
+    },
+    {
+      "line": 139,
+      "text": "fixture: state card=1/1 at frame 220"
+    },
+    {
+      "line": 145,
+      "text": "card-vmu: op=sysread file=20 vbl=2 rc=0"
+    },
+    {
+      "line": 149,
+      "text": "fixture: state card=1/2 at frame 234"
+    },
+    {
+      "line": 151,
+      "text": "fixture: state card=1/3 at frame 236"
+    },
+    {
+      "line": 172,
+      "text": "fixture: state card=2/0 at frame 280"
+    },
+    {
+      "line": 175,
+      "text": "fixture: state card=3/0 at frame 282"
+    },
+    {
+      "line": 177,
+      "text": "fixture: state card=4/0 at frame 284"
+    },
+    {
+      "line": 180,
+      "text": "fixture: state card=4/1 at frame 286"
+    },
+    {
+      "line": 181,
+      "text": "fixture: state title=1/1 at frame 290"
+    },
+    {
+      "line": 182,
+      "text": "fixture: state title=1/2 at frame 293"
+    },
+    {
+      "line": 192,
+      "text": "fixture: state title=2/0 at frame 426"
+    },
+    {
+      "line": 193,
+      "text": "fixture: delivered 1000 at frame 195 (entry 0 for title)"
+    },
+    {
+      "line": 194,
+      "text": "fixture: state title=2/1 at frame 428"
+    },
+    {
+      "line": 224,
+      "text": "fixture: state title=2/2 at frame 554"
+    },
+    {
+      "line": 226,
+      "text": "fixture: state title=3/0 at frame 586"
+    },
+    {
+      "line": 263,
+      "text": "fixture: state title=4/0 at frame 799"
+    },
+    {
+      "line": 314,
+      "text": "fixture: state title=4/2 at frame 1049"
+    },
+    {
+      "line": 353,
+      "text": "fixture: state title=4/4 at frame 1249"
+    },
+    {
+      "line": 473,
+      "text": "fixture: state title=4/6 at frame 1759"
+    },
+    {
+      "line": 474,
+      "text": "fixture: state title=5/0 at frame 1761"
+    },
+    {
+      "line": 490,
+      "text": "fixture: state title=5/1 at frame 1766"
+    },
+    {
+      "line": 491,
+      "text": "fixture: delivered 0000 at frame 862 (entry 1 for title)"
+    },
+    {
+      "line": 492,
+      "text": "fixture: delivered 0100 at frame 863 (entry 2 for title)"
+    },
+    {
+      "line": 496,
+      "text": "fixture: state title=5/7 at frame 1769"
+    },
+    {
+      "line": 567,
+      "text": "fixture: state card=0/1 at frame 1871"
+    },
+    {
+      "line": 606,
+      "text": "fixture: state card=1/0 at frame 1882"
+    },
+    {
+      "line": 614,
+      "text": "fixture: state card=1/1 at frame 1883"
+    },
+    {
+      "line": 623,
+      "text": "fixture: state card=1/2 at frame 1886"
+    },
+    {
+      "line": 657,
+      "text": "card-vmu: op=mount file=-1 vbl=15 rc=0"
+    },
+    {
+      "line": 663,
+      "text": "fixture: state card=1/3 at frame 1905"
+    },
+    {
+      "line": 668,
+      "text": "fixture: state card=1/4 at frame 1907"
+    },
+    {
+      "line": 674,
+      "text": "card-vmu: op=info file=0 vbl=3 rc=0"
+    },
+    {
+      "line": 679,
+      "text": "fixture: state card=1/5 at frame 1968"
+    },
+    {
+      "line": 682,
+      "text": "fixture: state card=1/6 at frame 1972"
+    },
+    {
+      "line": 685,
+      "text": "fixture: state card=1/7 at frame 1976"
+    },
+    {
+      "line": 687,
+      "text": "fixture: state card=2/0 at frame 1978"
+    },
+    {
+      "line": 689,
+      "text": "fixture: state card=2/1 at frame 1980"
+    },
+    {
+      "line": 691,
+      "text": "fixture: delivered 0000 at frame 945 (entry 3 for card)"
+    },
+    {
+      "line": 692,
+      "text": "fixture: delivered 0100 at frame 946 (entry 4 for card)"
+    },
+    {
+      "line": 694,
+      "text": "fixture: state card=2/2 at frame 1984"
+    },
+    {
+      "line": 696,
+      "text": "fixture: state card=2/5 at frame 1986"
+    },
+    {
+      "line": 698,
+      "text": "fixture: state card=2/6 at frame 1988"
+    },
+    {
+      "line": 699,
+      "text": "fixture: delivered 0000 at frame 949 (entry 5 for card)"
+    },
+    {
+      "line": 701,
+      "text": "fixture: delivered 0001 at frame 950 (entry 6 for card)"
+    },
+    {
+      "line": 703,
+      "text": "fixture: delivered 0000 at frame 953 (entry 7 for card)"
+    },
+    {
+      "line": 704,
+      "text": "fixture: delivered 0100 at frame 954 (entry 8 for card)"
+    },
+    {
+      "line": 706,
+      "text": "fixture: state card=3/0 at frame 2002"
+    },
+    {
+      "line": 709,
+      "text": "fixture: state card=3/2 at frame 2004"
+    },
+    {
+      "line": 730,
+      "text": "card-vmu: load file=0  blocks=12 ok=1"
+    },
+    {
+      "line": 731,
+      "text": "card-vmu: load digest file=0 a569c07d"
+    },
+    {
+      "line": 732,
+      "text": "card-vmu: op=load file=0 vbl=13 rc=0"
+    },
+    {
+      "line": 734,
+      "text": "fixture: state card=3/3 at frame 2020"
+    },
+    {
+      "line": 736,
+      "text": "fixture: state card=3/4 at frame 2022"
+    },
+    {
+      "line": 738,
+      "text": "fixture: state card=3/5 at frame 2024"
+    },
+    {
+      "line": 740,
+      "text": "fixture: state card=4/0 at frame 2026"
+    },
+    {
+      "line": 745,
+      "text": "fixture: state card=4/1 at frame 2028"
+    },
+    {
+      "line": 747,
+      "text": "fixture: state card=4/2 at frame 2030"
+    },
+    {
+      "line": 842,
+      "text": "fixture: state title=5/3 at frame 2153"
+    },
+    {
+      "line": 846,
+      "text": "fixture: state title=7/3 at frame 2153"
+    }
+  ],
+  "next": "No followingguest allocated. Preserveactual012 mid-radio state; a separately reviewed exactstate continuation mayfinishoriginalradio/eventreturn. No automatic retry, input/rearm/outcome edits.",
+  "protected_011_seed_state_sha256": "b9a39fbffe221e840f50041eea820cbc75f4720a7b74560e34dc2b74be60339e",
+  "native_LOAD011_previous_success": "Original coldload file0/CRC/digesta569c07d at7bcfd6c2e. Restored ringlog fragments are not a secondnativecoldload.",
+  "radio_execution": {
+    "native204_entry_hook": true,
+    "fresh_type20_backingopen": true,
+    "codec_Salazar_Leon_PNG_inspected": true,
+    "English_subtitle_and_changed_portrait_PNG_inspected": true,
+    "stream1_154_started": true,
+    "audible_quality_or_sync_assessed": false,
+    "event_return_observed": false
+  },
+  "saved_RSF204": "0x81000000"
+}

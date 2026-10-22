@@ -1,0 +1,12 @@
+{
+  "replace": {
+    "dc/resident.bin": "/root/re4data/private/castle18-ch32-r205-resident-20261019/files/dc/resident.bin"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "r205 +16 exact source-observed resident keys; all 5591 prior records unchanged.",
+    "base_resident_sha256": "7752f0443501811dc9ab523acc04b419515f8b8d1cbee005976de41428f0a601",
+    "resident_sha256": "c16366f345830bf823e392154944de8f3fb3fbae035ca85eeee36b2b2088c607",
+    "warning": "Compose the r205 records into any newer resident union; never overwrite later room additions."
+  }
+}

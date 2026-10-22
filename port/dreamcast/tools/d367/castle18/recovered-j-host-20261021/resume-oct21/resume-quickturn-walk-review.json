@@ -1,0 +1,6 @@
+{
+  "source_sha256": "81c1e33fd7af80ea8cfc53ba1b6d07191aa854567246aa7f224ad7951b2f080f",
+  "candidate_sha256": "1b8ed650c9eb3c908bac6fa1ef1066713c1482c73cea2922e40013bc194fd510",
+  "reason": "Existing125/126 control qualification proved normal analog Back must be source-acknowledged before fresh B edge. Old generic navigation still posted both together. Extend the proven126 sequence to whole waypoint navigation; never write actor yaw or source keys.",
+  "validation": "AST compile and one exact control block replacement; retains nested HP/PID/time guards; actual full route pending."
+}

@@ -1,0 +1,147 @@
+{
+  "scope": "SOURCEONLY021 experimental ordinary SendInput delivery. NO guest/build/image/allocation. Not a causal fix; historical PostMessage route supportsX, actual020 failure cause unclassified.",
+  "utc": "2026-10-22T08:21:23.706385+00:00",
+  "seed": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\data\\disc.state",
+    "sha256": "eba7a32afa7c59381ec7ce36918ea706feea187757e8fbb40a2fe5f2695ac008",
+    "source_frame": 4761,
+    "room": "0x204",
+    "Part": 1,
+    "Stop": 0,
+    "no_firstgoto_replay": true
+  },
+  "prepared": {
+    "prepared_only": true,
+    "no_guest": true,
+    "observer_sha256": "c5c82a4a8aee041da75e09c90d3e635055a1482a53c5507852f28ce5c2e99c93",
+    "wrapper_sha256": "471bc9c7aa4a5494a436de0bd241b4b46bca3ba03dafcad6c6ddfb26860818c9",
+    "pins_sha256": "d6ab721588fd7a8f8a7074f5f5c1c4bfb0aefeea39a8d1e453562e473e60b357",
+    "argv": [
+      "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\tools\\fp_run_ram.py",
+      "--base",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+      "--cap",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door021",
+      "--syms",
+      "0x4319a0 0x4419a4 0x4419a0",
+      "--seconds",
+      "41",
+      "--vmu",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event009\\data\\T0000_vmu_save_A1.bin",
+      "--state-seed",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\data",
+      "--warp",
+      "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\controlled-ch32-drain014-warp.txt",
+      "--period",
+      "0",
+      "--name",
+      "castle21-CONTROLLED-original209-door021"
+    ],
+    "admission_bytes": 20342374400,
+    "runtime_floor": 19394461696,
+    "capture_cap": 62914560,
+    "global_limit": 16,
+    "lane_limit": 2,
+    "exclusive_gui_input_required": true,
+    "source_only": true
+  },
+  "input_contract": "ONEacceptedscan-codeXdownperstage; exactownedforeground/GUIactive/focus and nativeDoorready plus OSasyncXnotheld beforedown. SendInput count/error independent from OSasyncX and coherentnative64Key/doorrequest. Hold<=.75s orack/focusloss; finallyonekeyup foracceptedowndown evenlostfocus/deadguest/readerror. No keyupwhenpreheldX/downcount0. No retries. ExclusiveGUIlease mandatory.",
+  "Windows_SendInput": {
+    "INPUT_size": 40,
+    "union_offset": 8,
+    "KEYBDINPUT_size": 24,
+    "MOUSEINPUT_size": 32,
+    "word_bits": 16,
+    "DWORD_bits": 32,
+    "extraInfo_type": "c_size_t/ULONG_PTR",
+    "scan": "0x2d",
+    "wVk": 0,
+    "down_flags": "0x8",
+    "up_flags": "0xa",
+    "count": 1,
+    "GetAsyncKeyState_return": "signedSHORT/high0x8000",
+    "extraInfo_offset": 16
+  },
+  "native_Key": {
+    "symbol": "0x8c3a948c",
+    "old": 8,
+    "on": 16,
+    "trg": 24,
+    "width": 8,
+    "endian": "little",
+    "mask": "0x80080000",
+    "DWARF_sha256": "435b7811682093c5eadee5ba80a9654997b1f1d1929d2ebf16913a4cc4f2fce7"
+  },
+  "source_qualification": {
+    "receipt_sha256": "f5120482d70207db747a73931730079d7cd15fee87f19b66801749936360368d",
+    "checks": 34,
+    "changed_pulse_scenarios": 11,
+    "scope": "Extracted helper/ABI mocks plus inherited function AST comparison only; no26/broad suite reruns.",
+    "default_dependency_pins": 41
+  },
+  "historical_backend_review": {
+    "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle-controls21\\REVIEW-CASTLE020-INPUT-BACKEND.md",
+    "sha256": "a8fcead47839f68c608a3d7f26fec8ccbdc562e28a69552bb00eb4f59b459a7e",
+    "SDK_recipe_path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle-controls21\\input-backend020-SDK-input-recipe-source.json",
+    "SDK_recipe_sha256": "c396a432ec2d841be00032730a919ad8389bbeeed9a04f41cea6822d7375a96c",
+    "conclusion": "Exact64491 baselineEXE embedded12bb/SDL00d4 corroborated by historicalsource. PostMessagecanmapXtoDC_A. NoactualSDLreceive/repeat/capture/resolvedRawInput witness andnofullreprobuildbinding; causeunclassified. SendInputexperimental, notrequired or guaranteed SDL/rawinput fix."
+  },
+  "root_allocation_required_fields": {
+    "allocated021": true,
+    "allow_debug_goto_command_writes": true,
+    "allow_owned_window_focus": true,
+    "allow_scan_code_SendInput": true,
+    "exclusive_gui_input": true,
+    "maximum_successful_command_bytes": 29
+  },
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff60",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c4801b6",
+      "bytes": 1
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ],
+  "maximum_successful_command_bytes": 29,
+  "exclusive_gui_input": "RootmustcloseQAandallpeerGUIinputbeforeallocation, reserveexclusiveguileasefor021. WrapperfreshFlycastinventorymustbeemptybeforelaunch; observerandwrapperrequireallocationexclusive_gui_input=true. Nopeerinputguestsduringfocuschanges. Global16/castle2capacityunchanged; thisunitserializesonlyitsconflictingGUIresource.",
+  "root_argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-door021.sh",
+    "--execute-allocated021"
+  ],
+  "shell_sha256": "a7aeb66484c273f8a09b1e0ef53268116ec755c9b6a18b145eea79b6438fbd24",
+  "guards": {
+    "start_bytes": 20342374400,
+    "runtime_bytes": 19394461696,
+    "raw_seconds": 41,
+    "close_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_bytes": 62914560,
+    "global_Flycast_limit": 16,
+    "castle_limit": 2,
+    "standing_source_peer_bytes": 67108864,
+    "admission": "RootexclusiveGUIlease/nopeerFlycastbeforelaunch andthroughinputunit; source/build/readback lanes parallel. Rootchargescurrentfutureprogramme/otherpeers unchanged."
+  },
+  "acceptance": [
+    "SendInput count/error, OSasyncX highbit, coherentnative64Key/doorrequest separately; API1/OSstate notnativeevent proof.",
+    "Onlyoneaccepteddown+finallyupperstage; preheldX/notverifiedownedfocus/noAPIacceptance=>nohold/retry; ownaccepteddownreleasesonreaderror/exit/focusloss.",
+    "Actualnative204Door4request then209entry required beforeexistingremaining29Bstage2countlast command. NoHP/room/RSF/AI/outcome writes.",
+    "Actual209physicalDoor1nativeaction/open/Cam3then2/eventclear/Stopreturn/frames andPNG separately. Preserveboundedpartial; nofollowingguest."
+  ],
+  "programme": "Frozen12a/ELF4d823/raw78fb/masterb67/hostEXE64491+sameassets unchanged; all41freshpins/defaultprotectedchecks passed.",
+  "protected": "Auth127/294,013..020 andVMUs009/425 preserved; actual020 directseed andnootherstate replay.",
+  "release_hardware_performance_acceptance": false
+}

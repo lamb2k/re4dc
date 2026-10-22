@@ -1,0 +1,46 @@
+{
+ "registry": "ps2-ch4-r20a",
+ "about": "castle18: missing r20a registry; reuse already prepared full PS2 Novistador type0 without modeling, source identities/material/camouflage unchanged.",
+ "cast_dir": "/root/re4data/private/castle18-novis-r20a-20261018/regcast",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets; existing runtime source lighting and camouflage blend table",
+ "descriptors": [
+  {
+   "name": "novis-em2d-00",
+   "archive": "em2d",
+   "model_id": "0x2d",
+   "source_types": [
+    0
+   ],
+   "module": "src/em2d/em2d.cpp em2d_R0_Init type0/default BIN5 TPL6; shared PS2/GC 91-bone skeleton; shift3",
+   "source_drops": [
+    "bump"
+   ]
+  },
+  {
+   "name": "novis-em2d-02",
+   "archive": "em2d",
+   "model_id": "0x2d",
+   "source_types": [
+    2
+   ],
+   "module": "src/em2d/em2d.cpp em2d_R0_Init type2 BIN9 TPL0xA; PS2 91 bones, shared GC57 parts, no PS2-only weights; shift3",
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "0": "/root/re4data/private/castle18-novis-r205-20261018/mask-novis-em2d-02-ps2-s0"
+   }
+  }
+ ],
+ "room_packages": {
+  "20a": {
+   "descriptors": [
+    "novis-em2d-00"
+   ],
+   "evidence": "Effective emleon03 and chapter4 emleon04 r20a each contain exactly two type0 Novistadors; novis-cap-esl-inventory.json. Type4 r213/r21d explicitly excluded."
+  }
+ }
+}

@@ -54,6 +54,15 @@ W=$RR_HOME/work/$ID; EVU=$EBASE/$ID; EVW='C:\Flycast-Evidence\re4-dreamcast\rr\'
 mkdir -p "$W" "$EVU/_jobs" "$EVU/fixtures"
 STEPS=$W/steps.tsv; : > "$STEPS"
 exec > >(tee -a "$W/cycle.log") 2>&1
+# the recipe of the commit being built (rr-wire 10-21): tools/d367/rr/recipe.conf at $SHA; the installed copy only when
+# that commit has none. rr-jobs.sh, rr-qa.sh and rr-judge.py read $W/recipe.conf.
+if git -C "$MAIN" show "$SHA:port/dreamcast/tools/d367/rr/recipe.conf" 2>/dev/null | tr -d '\r' > "$W/recipe.conf" && [ -s "$W/recipe.conf" ]; then
+  echo "recipe.conf: from ${S8}"
+else
+  cp "$BIN/recipe.conf" "$W/recipe.conf"; echo "recipe.conf: installed copy (none at ${S8})"
+fi
+# shellcheck source=/dev/null
+. "$W/recipe.conf"
 log "cycle $ID tier=$TIER sha=$S8 recipe='$RR_RECIPE_NAME' free_c=${free_gb}G"
 T0=$(date +%s)
 step() { local _n=$1; shift; local _t0; _t0=$(date +%s); local _rc=0
@@ -115,6 +124,8 @@ package() {
     || { tail -20 "$W/package.txt"; return 1; }
   grep -E 'disc_lint|boot file|PACKAGE|tracks-match' "$W/package.txt" | cut -c1-200
   cp "$W/pkg/logs/"disc_lint-*.txt "$EVU/" 2>/dev/null || true
+  # the game tracks' sums for fp_gate (NOZIP=1 package has no zip to carry them)
+  (cd "$CAND/gdemu" && sha256sum disc.gdi track01.bin track02.raw track03.bin | sed 's#  #  gdemu/#') > "$CAND/SHA256SUMS.txt"
   echo "$CAND" > "$W/cand.txt"
 }
 bases() {
@@ -203,6 +214,13 @@ else
   if [ -n "$CAND" ] && [ "$CAND" != "$LGC" ]; then case "$CAND" in "$CBASE"/cand-*) rm -rf "${CAND:?}" ;; esac; fi
   LGS7=$(sed -n 's/^s7=//p' "$RR_HOME/state/last-good" 2>/dev/null || true)
   [ "$LGS7" = "$S7" ] || bash "$BIN/rr-clean-builds.sh" "$S7"
+fi
+# QA disc (standing rule 8; user 10-21: right after the quick smoke test, first thing on the new candidate, before
+# the full tier). Never blocks: its own QA rows in RELEASE-READY.md; the game verdict and last-good stay as they are.
+# The QA zip stays in the candidate dir (RE4DC-QA-TestRR-<sha8>-<date>-GDEMU.zip) so it can go to testers first.
+if [ "$VERDICT" = PASS ]; then
+  QV=$(bash "$BIN/rr-qa-tier.sh" "$W" "$TA" "$SHA" "$ID" 2>&1 | tee -a "$W/cycle.log" | tail -1) || true
+  log "cycle $ID QA ${QV:-FAIL} (reported only; the game verdict is unchanged)"
 fi
 # keep the last 10 work dirs (logs only; the pkg trees are deleted by t16-package.sh)
 ls -dt "$RR_HOME"/work/*/ 2>/dev/null | tail -n +11 | while read -r d; do

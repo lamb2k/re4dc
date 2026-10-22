@@ -1,0 +1,141 @@
+{
+  "scope": "SOURCE PREPARATION ONLY; current sealedv1 return-door is unsafe forA.15 contract and MUST NOT launch",
+  "utc": "2026-10-22T04:36:14.938396+00:00",
+  "status": "minimal candidate and plan READY; future child tool seal required, no guest allocated",
+  "base_tools_commit": "f63bb6de05630a4e06084baf769f2b4b364b3f0f",
+  "cold_acceptance_commit": "64e075fb95a3f31dde891c037d6ddd4dda5e43dc",
+  "fixed_runtime": {
+    "source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+    "program_sha256": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+    "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+    "all14": {
+      "em22.ovl": "9b0d94e44950538646eaec6191f6d0ca91356c6fbdbdf2c34757ff04fe861f7c",
+      "em2b.ovl": "370e53495f33fff29424f5d268b4028ea52db55bdd259799a6e6b7ee3ecb69f0",
+      "em2f.ovl": "8b3841b7adbca6be06ffe5caaee601fcd7d0b1d3a3f0c1819062e122fd85b38a",
+      "em35.ovl": "1abb74bdedd0e7671ce9763a43f1605c0c98ee82f5814b06d4928b655053ace2",
+      "em3b.ovl": "1ca7839fc3d5774783253bc49e5a17c4f685b84a766b362f89ba635752b77a44",
+      "pl0f.ovl": "31bcfb11c774370074f8484e4a3ceeed46ed06ea99cce33ba0b99b80332c204d",
+      "pl11.ovl": "801907fdf2729b8b8c4f3e28a50a9efd995e42d57a78154ecd55227de957d3f3",
+      "pl14.ovl": "539df3d0a50cb7f94d56ccc84ba3bad3f238a3eb5e9abda8b284d5cd0b6e8334",
+      "sscrn.ovl": "a032b5d336a637aa90eb9d1a54b90f61c57c28867c4019f9766cd0d7efc41421",
+      "st1_0.ovl": "5dd28dbd5962da5ef1b40fc28e294b6dc4fea54c23413196fa953f02e4fab455",
+      "st1_1.ovl": "2c89e0e4bf1a2eaf4d7b5d4d19fcf88ab994ad883c587acc345f56ca9f1c5661",
+      "st1_2.ovl": "974c0ee4941756cf316664da1f4e1b19eca127f46cb5ea74f1bbbf0afd556d07",
+      "st1_3.ovl": "2cc5413537f9b13c3332493f22ed7c7dcb825e7c4957f000b8c9301673e4cb2e",
+      "st2_0.ovl": "3b6c1b20edcec8db482d882f4ba29eb51f6f3e0d7114faecfa360f37027b234d"
+    },
+    "flags": {
+      "GAME_SH4ZAM": 1,
+      "SKIN_SH4ZAM": 0,
+      "QA_MENU": 1,
+      "GANADO_ROUTINE_BYTES": 1,
+      "CABIN": 0,
+      "all15cacheguards": 0,
+      "DEATH_TRACE": "absent",
+      "RENDER_ONLY": 1
+    },
+    "later_main_changes": "not imported"
+  },
+  "profile_sha256_preserved": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+  "base_tools_sha256": "0b12c09410599ee55c96d49875dadf5236b210ef8d8267cc0d7aaa82ad921bfd",
+  "candidate_controller_sha256": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b",
+  "candidate_change": "only Door contact A hold .2 -> .15; no timer/guard/controllerpath other change",
+  "future_child_tool_manifest_sha256": null,
+  "future_child_seal_available": false,
+  "seed": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01",
+    "checkpoint_sha256": "c61d68c940e1ee3fd72446ae066ee28bbf32eda9959ea4e5ea6f08f33c0a0d4d",
+    "state_sha256": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75",
+    "qualification_sha256": "a46f87ab02469a2504c525aedb19ebbe73da9ba5b1ab7519c23866f9cbb31afb",
+    "ordinary_discharge_acceptance_sha256": "c5fcc6141cca426099e1fc34537edfeb522987c8c8a7814059afa150b279b83e",
+    "source_frame": 533,
+    "room": 259,
+    "life": 1200,
+    "same_profile_parent_validator_passed_readonly": true,
+    "changed_profile_refused": true,
+    "checkpoint_verify_exact_programme_ELF_disc_VMUs_passed_readonly": true
+  },
+  "initial_source_contract": {
+    "state_sha256": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75",
+    "state_bytes": 9273760,
+    "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+    "decoded_bytes": 28274510,
+    "ram_serialization_offset": 11490769,
+    "immutable_anchors": [
+      {
+        "address": "0x8c014000",
+        "bytes": 256,
+        "sha256": "e02ebee59ecd8990d3619d9d34cf98672c6261f206b9dadbba3f4b1dceda4650"
+      },
+      {
+        "address": "0x8c050000",
+        "bytes": 256,
+        "sha256": "7c85749186f81547f95f3fc105b533ab5adeac8ac2e37ceba42dc32a26fb7d54"
+      },
+      {
+        "address": "0x8c110000",
+        "bytes": 256,
+        "sha256": "8596b92764a701d1b0686d3d9ada950a06385df8ad0c28c059af3b5226153c0a"
+      },
+      {
+        "address": "0x8c190000",
+        "bytes": 256,
+        "sha256": "05bbac539b83bf0233b20f0c4424165c5d38ea872056d1cbc3e7cdf8716170e2"
+      }
+    ],
+    "log_head": 169995,
+    "room": 259,
+    "frame": 533,
+    "stop": 0,
+    "player_life": 1200,
+    "player_life_max": 1200,
+    "player_pos": [
+      -47630.48046875,
+      58.71270751953125,
+      7032.71826171875
+    ],
+    "player_rno": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "event_start_cnt": 0,
+    "qa_flags": 0,
+    "memory_edits": false
+  },
+  "route": {
+    "source_room": "r103",
+    "target_xz": [
+      -49731,
+      7670
+    ],
+    "initial_pure_fixture": "turnleft .65 at serialized533; future live firstaction must re-gatefresh sample",
+    "contact_gate": "aligned abs(yawerror)<=.15; px<-48300 and5800<pz<9500",
+    "normal_controls": "turnleft/right<=.65; fwd<=.5; proposedcontactA<=.15, max4; noR/B/QA/health/actor/flagwrites",
+    "navigation_stop": "any room!=r103, naturaldeath, stale/noncoherent/missing sample, UI/event/QAunsafe or40.75cutoff"
+  },
+  "required_witnesses": {
+    "starting_live": "sameprogramme seed freshcoherent<=.2s live row; r103/global3,0/stop0/event0/UI0/Loop0/life>0/QA0/alive; no actor-chain assumption",
+    "transition": "actual normaldoor r103->r101 from source room+native room/door logs, no warp/fixture/inputscriptcommand afterseed",
+    "manual": "new native PlayingManual2 since exactparentlog_head169995; source roomr101/subscreen64/Loop1/QA0/Leon>0, originalwindow pixels. Sealedpostflight also requires original_manual_witness andlastroom101",
+    "PNG": "retain acceptedcoldfinal beforecontext; newrole defaultfinal capturepair2PNGs must showordinarymanual, withsource sidecar. If transition/manualnotcaptured, remainunqualified; no extrapolated screenshot/cinematic claim",
+    "end_state": "exactnewprogramme checkpoint ancestry to e81e/coldPASS, immutableELFanchors+allVMUs/data/profile/asset hashes; no oldprogramstate"
+  },
+  "bounds": {
+    "inner_seconds": 41,
+    "input_cutoff_seconds": 40.75,
+    "absolute_actual_seconds": 47.5,
+    "independent_conservative_private_job_seconds": 47.0,
+    "evidence_bytes": 60000000,
+    "disk_admission": 19461570560,
+    "disk_runtime": 19394461696,
+    "global_admission": "<16",
+    "global_runtime": "<=16",
+    "max_PNG": 8,
+    "periodic_capture": 0
+  },
+  "allocation": "NONE; root review candidate/newchildseal/fresh peer+source resource envelope before any future guest",
+  "old_failed_shoot01": "preservedFAILED and distinct fromcoldPASS; not a parent",
+  "independent_followup": "No cinematic/AI/Continue acceptance; actuator measurements and all8coldPNGs preserved"
+}

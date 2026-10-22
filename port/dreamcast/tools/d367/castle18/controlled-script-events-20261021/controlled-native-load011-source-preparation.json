@@ -1,0 +1,52 @@
+{
+  "created_utc": "2026-10-22T04:08:21.532973+00:00",
+  "scope": "SOURCE ONLY successor native LOAD011, no root allocation or guest. Actual010 partial title/V5 clean closure preserved separately at78c811763. No native load/gameplay acceptance claimed.",
+  "files": {
+    "native-load011-pad.txt": {
+      "sha256": "103b7d67a4c993d936d4ae46a46765a582c1429bbfa0a563d062e795444faceb",
+      "bytes": 319
+    },
+    "run-controlled-native-load011.py": {
+      "sha256": "7a0001135f0010fcc3f2a464ed9d93eaed44ff89256fedae0fc73f84cdafa37c",
+      "bytes": 5143
+    },
+    "observe-controlled-native-load011.py": {
+      "sha256": "2d9482e8bc9d680da43b92e088886c3886df862c674b234975db03fceb8964e0",
+      "bytes": 6692
+    },
+    "run-controlled-native-load011.sh": {
+      "sha256": "e397b513e39f1c4b9b321fd80a102a00f00316d226a30e6a12f1378059c99d49",
+      "bytes": 356
+    },
+    "controlled-native-load011-pins.json": {
+      "sha256": "06b25f5bda43c73ac76cc4dc5c286a0d530a35e4b0112fbec4b4784fdd2568b3",
+      "bytes": 2330
+    },
+    "NATIVE-LOAD011-METHOD.md": {
+      "sha256": "eb7f95a370e73f9852aff6ae384b718bb58a189bd14e461e49d6aefb566c4a00",
+      "bytes": 2755
+    },
+    "native-load011-source-review-identities.json": {
+      "sha256": "51b4b47644edec1c45bc90702cc66e54c1de198acff6788a6fa9e98b3b22c4ab",
+      "bytes": 2315
+    }
+  },
+  "independent_review": "castle_controls21 exactfixture/source review identified no blocker; source hashes equal frozen12a. FirstStart/title2 harmless and not a Nintendo skip.",
+  "static_default_preparation": "All input SHA pins and Python syntax checks passed; no cap or guest created.",
+  "input_VMUsource": "controlled009 actual VMU425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+  "no_state_seed": true,
+  "source_delta": "Existing QA nativepad uses actual title5/1 andcard2/1,2/6 gates. Absolute1500/+120/+40 waits replaced by eligible-state inputs with neutral boundaries. No runtime source, recipe, media bytes, outcome flags, HP/AI/position edits.",
+  "initial_prepare_erratum": "First mechanical name copy accidentally changed010 substring inside pinned V5 SHA. Default prepare-only assertion rejected it before any mutation or guest; old local copies preserved. Final name-only copy hashes/syntax verified and immutable method above uses unchanged V5exact7aa.",
+  "bounds": {
+    "raw_seconds": 41,
+    "normal_close_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_cap_bytes": 62914560,
+    "start_floor": 20342374400,
+    "runtime_floor": 19394461696,
+    "globalFlycast16": true,
+    "castleFlycast2": true
+  },
+  "next": "Root must review immutablemethod/fresh launch request before any011guest. Original script event progression waits for actual nativeLoad outcome.",
+  "shell_line_endings": "Final launch shell explicitly normalized to LF before commit, CR absent; initial pre-commit metadata preserved additively before-shell-LF-fix. No shell/guest execution occurred with old bytes."
+}

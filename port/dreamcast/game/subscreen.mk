@@ -48,7 +48,45 @@
 #                  and the port showed a full tan (r100 fog) frame before each call / inventory, held on
 #                  screen through the backing save. Render only. =2: no change, logs what =1 would do.
 SUBSCREEN ?= 0
+# Typed original slot-1 completion and answer fields for the port ABI.
+SS_MSG_FIELDS ?= $(if $(filter 1,$(SUBSCREEN)),1,0)
+ifeq ($(filter $(SS_MSG_FIELDS),0 1),)
+$(error SS_MSG_FIELDS must be 0 or 1)
+endif
+ifeq ($(SS_MSG_FIELDS),1)
+ifneq ($(SUBSCREEN),1)
+$(error SS_MSG_FIELDS=1 requires SUBSCREEN=1)
+endif
+$(OBJDIR)/mod/Sscrn/src/Sscrn/ss_pzzl.o: GAME_CPPFLAGS += -DRE4DC_SS_MSG_FIELDS=1
+endif
+# Preserve original actor inputs while the inventory backing owns their memory.
+# Original successful-Use motion resets run only after the checked restore.
+SS_ACTOR_LIFETIME ?= $(if $(filter 1,$(SUBSCREEN)),1,0)
+ifeq ($(filter $(SS_ACTOR_LIFETIME),0 1),)
+$(error SS_ACTOR_LIFETIME must be 0 or 1)
+endif
+ifeq ($(SS_ACTOR_LIFETIME),1)
+ifneq ($(SUBSCREEN),1)
+$(error SS_ACTOR_LIFETIME=1 requires SUBSCREEN=1)
+endif
+$(OBJDIR)/sscrn_bridge.o $(OBJDIR)/src/game/cockpit.o $(OBJDIR)/src/game/pl_npc.o $(OBJDIR)/mod/Sscrn/src/Sscrn/ss_pzzl.o: GAME_CPPFLAGS += -DRE4DC_SS_ACTOR_LIFETIME=1
+endif
 SS_PACK ?= 0
+# SS_DATA_LZ=1 (lane inv23 2026-10-22, user-approved option A; default 0 = image unchanged; needs SUBSCREEN=1): each
+# sub screen open reads SS/<lang>/ss_cmmn.lz and ss_pzzl.lz (data set sslz23, tools/d367/inv23/ss_lz.py: one LZ4 block
+# each) into the area's free tail and decodes them, instead of the 1,443,744 B of ss_cmmn.dat + ss_pzzl.dat
+# (822,053 B packed, -43% disc bytes per open). A disc without the .lz files, or a bad file, reads the .dat files.
+SS_DATA_LZ ?= 0
+ifeq ($(filter $(SS_DATA_LZ),0 1),)
+$(error SS_DATA_LZ must be 0 or 1)
+endif
+ifeq ($(SS_DATA_LZ),1)
+ifneq ($(SUBSCREEN),1)
+$(error SS_DATA_LZ=1 requires SUBSCREEN=1)
+endif
+$(OBJDIR)/sscrn_bridge.o: GAME_CPPFLAGS += -DRE4DC_SS_DATA_LZ=1
+$(OBJDIR)/platform/subscreen_backing.o: PLATFORM_CPPFLAGS += -DRE4DC_SS_DATA_LZ=1
+endif
 # SS_HOLD_RESTORE=1 (test 14 #1, needs SS_PACK=1; render only, default 0 = image unchanged): VRAM graphics memory rule.
 # The packed backing holds the room preload while the sub screen is open (re4dc_ui_vram_hold), and the preload runs
 # again after the close only when the hold released uploads (claim_released). The sub screen's own pictures (r101

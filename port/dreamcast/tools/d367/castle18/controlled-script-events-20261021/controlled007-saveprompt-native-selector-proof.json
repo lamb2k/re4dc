@@ -1,0 +1,11 @@
+{
+  "scope": "Read-only current007 saved-state native selector proof. FrozenELF SceMesGetSelection reads8c3b6939. Message::code08 native E4/E5/E6 pluscontrolbase8 gives tableEC/selectionED/currentEE. Not header-comment or DWARF claim.",
+  "state_sha256": "e20edc2f58299c01b890e97cc321945a6e0d6d6459e18a768d14d87507f567b0",
+  "cMes": "0x8c3b684c",
+  "message0": "0x8c3b6854",
+  "table_size": 2,
+  "selection": 0,
+  "current": 0,
+  "attribute": "0x1001",
+  "message_button": 1
+}

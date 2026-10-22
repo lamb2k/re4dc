@@ -1,0 +1,80 @@
+{
+  "state": "CLEAR_NARROW_SOURCE_DELTA_ROOT_ALLOCATION_REQUIRED",
+  "observer_sha256": "acff6e46df7e0b8e5362966da7fd74e4fea3853083c6f4da5ec924ac06a40127",
+  "wrapper_sha256": "471e05d515d70c931fbdaa25bd9c89dec0c6ef000926e6af26bda53e4fb4b2bb",
+  "pins_sha256": "cb3c62871def0f354e3236be64021a8835f5c4ca3bbd4016ead99f0ff2ff37a3",
+  "proposal_sha256": "4944263790174035d5f71c5dcc06933a502974c19ddfa561883c0fa7b943b050",
+  "014_exact_seed_state": "3713cb2a4442ec5ddbf3dc4aec8dff107aa66721913e75813858c326a820adc5",
+  "014_closed_audit_sha256": "3d11567fb53bacab219cbdd97ac769285965894173e7633696d08cf81ef57062",
+  "prior_review_commit": "54c05c140f67b4b8c9fd6e45a8c6103aa80c75dc",
+  "unchanged_AST_functions": [
+    "check",
+    "read",
+    "close",
+    "inram",
+    "native_message",
+    "live_native_anchors",
+    "sample"
+  ],
+  "owned_pulse_AST_same_after_narrow_kind_predicate_rename": true,
+  "repaired_helper_lifecycle_AST_unchanged": true,
+  "new_target_ABI_fields": 0,
+  "actual_nativeMDT0_EN_hash": "81de22f3af7f69f5bf996eb294de0b236b4669e6e4464a46a5ecc0873d8787f2",
+  "intro_offset74_actual_halfwords": [
+    8,
+    4
+  ],
+  "choice_offset132_actual_halfwords": [
+    8,
+    1
+  ],
+  "independent_existing_gate_cases": {
+    "scope": "Actual014 closedtypedintro tests plus source-modeled choicegate checks; no actual015 UI/input/guest. Existing014source/ABI remainsunchanged.",
+    "observer_sha256": "acff6e46df7e0b8e5362966da7fd74e4fea3853083c6f4da5ec924ac06a40127",
+    "actual014_state_sha256": "3713cb2a4442ec5ddbf3dc4aec8dff107aa66721913e75813858c326a820adc5",
+    "actual014_audit_sha256": "3d11567fb53bacab219cbdd97ac769285965894173e7633696d08cf81ef57062",
+    "PASS": 14,
+    "tests": [
+      "actual014typedintro_pagegate_accepts",
+      "actual014intro_cannotconfirmYes",
+      "rejectwrongintro_current_offset_bytes",
+      "rejectwrongintro_opcode",
+      "rejectwrongintro_next_opcode",
+      "rejectwrongintro_language",
+      "rejectwrongpage_table_size",
+      "rejectwrongpage_button",
+      "rejectwrongpage_selection",
+      "rejectwrongpage_wait",
+      "neverrepeat_introA",
+      "page_sentflag_alone_notYes",
+      "source_modeled_actual_choice_gate",
+      "rejectalreadyanswered"
+    ]
+  },
+  "independent_default_prepare": {
+    "tool_chunk": "612162",
+    "no_guest": true,
+    "exit_code": 0,
+    "pin_assertions": 21,
+    "protected_inputs": 6,
+    "exact_state_seed_argv": true
+  },
+  "findings": [],
+  "review": [
+    "014 is preservedPARTIAL: originallever/intro, noYes/drainend. The missingnonchoice-pageA was a hostmethod gap, not a proven game drain bug.",
+    "015usesexactclosed014state/VMU, AutoLoadyes, sameuntouched014warpfixture andexactsource/programme/assets. No newleverinput/rearm/coldplacement/teleport/outcomeRSF/HP/AI writes. Inheritedinvoked/exec/held booleans are hostlabels only andmustnotbe reported asnewexecution.",
+    "ONEintroA requires liveactualsameEnglishMDT0hash/span andoffset74/op08next04/table0/button1/wait0/pendingcurrent0, eventheld/RSF0+1clear/codeanchors/currentownedframe. Unknown orothermessage states stayreadonly.",
+    "AfterpageAisposted, actualchoicegate stillrequires liveoffset132/op08next01/table2/nativependingcurrent0or1. One-shot pageflag alone doesnot authorizeYes; maxoneoptionaldirection andoneconfirmAremain. No inferredchoice-pagecapturefromsourcemodel.",
+    "Immediatecoherent rechecks andkeyupfinally remain identical toreviewed014pulse exceptnarrowkind/predicate rename. ReadonlyABI/core/sample/anchors unchanged; sourceframebracketing is not atomicfullgameplay/presentationproof.",
+    "Message::code08 nonchoiceA/B returns0 then sourcecode04callsnewpage code00; code07 buildschoices beforethelatercode08. Newgate matches actualnativeMessageVM andactualstagedEnglishMDT0 bytes, not injectedselection or copiedtext.",
+    "Fixedstartup/helpercleanup/V5/lifecycle are ASTidentical torevieweddbdb014. Exact015rootallocationfile andexecute flag, freshcapture/ready namespace, all21pins, sixprotectedinputs, ownedhandles/processidentity,41raw/39normalclose/47.5absolute/60MiB/global16/castle2 anddisk+currentpeer checks retained."
+  ],
+  "limits": [
+    "SOURCE_REVIEW_ONLY: no015guest/gamebuild/image or UIinput performed. Fourteen cases useactualretained014typedintro plusSOURCE_MODELEDfuturechoice, notfresh015runtime.",
+    "Source/programme12a/ELF4d823/raw78fb/masterb67 andprevious35offset/width review remain unchanged; nofreshABIrebuildneeded.",
+    "Rootretains freshprocess/disk/peeradmission/exactone-runallocation. Preserve014actualseed/VMU/auth127/294/013/009. Noautomaticretry/followingguest inferred.",
+    "Actualpageadvance/Yes/draincamera/end/actor68/areas/Stop/frameprogress/screenshots stayruntimeacceptance; absenceisnotheld,1Bregistrationisnot58wave. No-warp/release/physicalDreamcastacceptance separate."
+  ],
+  "no_guest": true,
+  "no_runtime_or_shared_edits": true
+}

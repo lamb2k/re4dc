@@ -119,6 +119,11 @@ inline bool room_colour_scale(unsigned scale,bool flat_native_look) {
 }
 #if RE4DC_NATIVE_MODEL_REGISTRY && defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
 inline unsigned source_model_tev_group(const cModel* m,bool leon,bool registry) {
+#if defined(RE4DC_NMR_PL_ASHLEY) && RE4DC_NMR_PL_ASHLEY && RE4DC_NMR_ASHLEY >= 2
+    // cPlAshley::setModel assigns source TEV group1. registry_model already
+    // proved the exact model0/141-joint/seven-role descriptor before this call.
+    if(registry && m && m==(const cModel*)pPL && m->id==0u && m->nParts==141u)return 1u;
+#endif
     // cSubLuis::init uses group 1. pSubEm is player.h's canonical pSUB alias;
     // registry_model and frame membership have already proved this descriptor.
 #if defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY
@@ -133,6 +138,11 @@ inline unsigned source_model_tev_group(const cModel* m,bool leon,bool registry) 
 // PS2_ASHLEY: the partner Ashley (pSUB, model id 3) is set up with TEV group 1 like Leon and Luis (pl_ashley.cpp
 // TevScaleGroup = 1; census: ACTOR_MATERIAL live tevgrp=1); her registry descriptor is drawn with the same native look.
 inline unsigned source_model_tev_group(const cModel* m,bool leon,bool registry) {
+#if defined(RE4DC_NMR_PL_ASHLEY) && RE4DC_NMR_PL_ASHLEY && RE4DC_NMR_ASHLEY >= 2
+    // cPlAshley::setModel assigns source TEV group1. registry_model already
+    // proved the exact model0/141-joint/seven-role descriptor before this call.
+    if(registry && m && m==(const cModel*)pPL && m->id==0u && m->nParts==141u)return 1u;
+#endif
     return registry && m && m==(const cModel*)pSubEm && m->id==3 ? 1u : (leon?1u:0u);
 }
 #endif
@@ -673,6 +683,13 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
     // source_drops "bump"); =2 also draws her head at the PS2 rest face (the GC shapes are not shown; user look decision
     // pending), which is the head role's Morph need (info() above admits only that role's shape bit).
     if(registry && m->id==3u && m==(cModel*)pSubEm)implemented|=RE4DC_NMR_ASHLEY>=2?unsigned(Bump|Morph):unsigned(Bump);
+#if defined(RE4DC_NMR_PL_ASHLEY) && RE4DC_NMR_PL_ASHLEY && RE4DC_NMR_ASHLEY >= 2
+    // The same opt-in PS2 rest-face contract belongs to the exact playable
+    // owner too. info() has proved its face BIN7/TPL9 and every live modifier;
+    // registry_runs_match has proved its mask/material passes above.
+    if(registry && m==(cModel*)pPL && m->id==0u && m->nParts==141u &&
+       re4dc_registry_player_ashley_face(p->appearance,1u))implemented|=Bump|Morph;
+#endif
 #endif
 #if RE4DC_ROUTE_CH22
     // Qualified Luis source rows retain the material/TPL proof; the source

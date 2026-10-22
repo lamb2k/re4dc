@@ -1,0 +1,12 @@
+{
+  "replace": {
+    "dc/resident.bin": "/root/re4data/private/castle18-ch41-r212-partner-resident-20261019/files/dc/resident.bin"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Four package-derived full-partner atlas/mask keys; not r212 runtime-observed; source dimensions/format and actual package winners retained.",
+    "base_resident_sha256": "e776711c58b93c7affcea345df37cab41bdb8ddbd4f0f300f351c42b9dd80259",
+    "resident_sha256": "2d5d4613b96af8bc70daaafee0dce6203077097dcc37e7293d4c49d14fa9569e",
+    "integration": "Preserves all5772 current native-r219 union records. Compose only these r212 additions into any newer union."
+  }
+}

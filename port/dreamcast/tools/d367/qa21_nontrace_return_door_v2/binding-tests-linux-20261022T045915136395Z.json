@@ -1,0 +1,17 @@
+{
+  "scope": "5NEW focused actual-local startup data binding tests only; no guest/nativechild/RAM/input",
+  "utc": "2026-10-22T04:59:15.135008+00:00",
+  "platform": "Linux-6.6.87.2-unicode+-x86_64-with-glibc2.39",
+  "sources": {
+    "test-startup-binding.py": "cf9b84875e6b9ec83d0fad0c10906678dd8137ff738a25a38e0fbee58979b8b3",
+    "run-startup-binding-tests.py": "8316f875b29c73ac688bd7b817d4943af834d33aacfdc852467cf723c76b1ea7",
+    "inner-adapter.py": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e",
+    "exact-log-symbols.json": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29",
+    "runtime-source-proof.json": "9b1611e7a11980be6099ae428830f2296a20e2cd85299a1db99de0db0d471273",
+    "guest-profile-v2.json": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b"
+  },
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "test_actual_startup_assignments_succeed_without_watch_or_runner (__main__.Binding.test_actual_startup_assignments_succeed_without_watch_or_runner) ... ok\ntest_all_actual_literal_local_dependencies_exist_and_are_byteexact_v1 (__main__.Binding.test_all_actual_literal_local_dependencies_exist_and_are_byteexact_v1) ... ok\ntest_all_runtime_profile_bytes_and_only_contact_delta_unchanged (__main__.Binding.test_all_runtime_profile_bytes_and_only_contact_delta_unchanged) ... ok\ntest_blocked_old_target_reproduces_missing_read_and_preserved_seal (__main__.Binding.test_blocked_old_target_reproduces_missing_read_and_preserved_seal) ... ok\ntest_local_metadata_exact_v1_elf_and_required_unambiguous_object_symbols (__main__.Binding.test_local_metadata_exact_v1_elf_and_required_unambiguous_object_symbols) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.029s\n\nOK\n",
+  "guest_qualified": false
+}

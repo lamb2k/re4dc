@@ -1,0 +1,3440 @@
+{
+  "scope": "Independent original qualified J route, same program/image and continuous source Continue lineage. Only ordinary movement, inventory, partner commands and gun input; read-only feedback. No game/health/item/AI/flag/projectile/state writes, host rollback, source changes, build or staging.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk134",
+      "result": "Original Continue-lineage herb pickup passes; no Use yet.",
+      "elapsed_s": 21.1,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "35923678c080940053218dbf466d3c075326582b63048786d2cd5a67db584179",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 34083,
+        "room": "0x201",
+        "health": [
+          720,
+          1200,
+          600,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x6",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk134\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            16012.0,
+            -45000.0
+          ],
+          "pos": [
+            16049.294921875,
+            -1702.045654296875,
+            -44910.73828125
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            19000.0,
+            -45000.0
+          ],
+          "pos": [
+            18899.052734375,
+            -2000.001220703125,
+            -45084.19140625
+          ]
+        },
+        {
+          "waypoint_reached": 2,
+          "target": [
+            21300.0,
+            -42000.0
+          ],
+          "pos": [
+            21176.021484375,
+            -2000.003173828125,
+            -42096.2578125
+          ]
+        },
+        {
+          "waypoint_reached": 3,
+          "target": [
+            22250.0,
+            -47750.0
+          ],
+          "pos": [
+            22261.294921875,
+            -2000.004150390625,
+            -47676.04296875
+          ]
+        },
+        {
+          "waypoint_reached": 4,
+          "target": [
+            23250.0,
+            -47750.0
+          ],
+          "pos": [
+            23122.056640625,
+            -2000.001220703125,
+            -47779.8671875
+          ]
+        },
+        {
+          "original_r201_dungeon_Green_Herb_before_A": {
+            "host_monotonic": 305397.218,
+            "room": "0x201",
+            "frame": 33994,
+            "player_hp": 720,
+            "partner_hp": 600,
+            "pos": [
+              23564.423828125,
+              -2000.002685546875,
+              -49562.80859375
+            ],
+            "yaw": -1.407433032989502,
+            "target_distance": 89.97415784063821,
+            "angle_error": 0.6093404039397385,
+            "player_routines": [
+              0,
+              4,
+              2,
+              0
+            ],
+            "source_Green_Herb6": []
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk134\\shots\\checkpoint-source-33995\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk134\\shots\\checkpoint-source-33995\\checkpoint-context.json"
+        },
+        {
+          "normal_original_dungeon_Green_Herb6_A": 34000
+        },
+        {
+          "original_dungeon_Green_Herb6_pickup_complete": {
+            "frame": 34075,
+            "items": [
+              {
+                "id": "0x6",
+                "num": 1,
+                "flags": 1,
+                "type": 0
+              }
+            ],
+            "health": [
+              720,
+              1200,
+              600,
+              600
+            ],
+            "item_find_flags": "0x310004",
+            "normal_world_ticks_after_pickup": 31
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk134\\shots\\checkpoint-source-34075\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk134\\shots\\checkpoint-source-34075\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk134",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Original Continue-lineage herb pickup passes; no Use yet.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk134\\shots\\checkpoint-source-33995\\frames\\fb0.png",
+          "png_sha256": "fe89793cdb41545efdb43ce57a4e5e878738f822b96a4b7189e443751163e765",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk134\\shots\\checkpoint-source-33995\\checkpoint-context.json",
+          "source_frame_interval": [
+            33995,
+            34000
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        },
+        {
+          "run": "current-j-route-walk134",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Original Continue-lineage herb pickup passes; no Use yet.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk134\\shots\\checkpoint-source-34075\\frames\\fb0.png",
+          "png_sha256": "129d1ba0f283143c2cb328fbb752c2ad4f4c3949566e4151a484a2ca71361205",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk134\\shots\\checkpoint-source-34075\\checkpoint-context.json",
+          "source_frame_interval": [
+            34075,
+            34082
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk135",
+      "result": "Normal inventory opens; private observer refuses uninitialized puzzle board before selection. Herb remains intact.",
+      "elapsed_s": 5.1,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "025cae5e7eef68a997f6e5ef7dc3725764bc36005f3098f820252fee7ba38ea3",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 34124,
+        "room": "0x201",
+        "health": [
+          720,
+          1200,
+          600,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x77ffffbf",
+        "SSLoop": 1,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x6",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk135\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "normal_inventory_Y_pulse": 34113
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk135\\shots\\checkpoint-source-34123\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk135\\shots\\checkpoint-source-34123\\checkpoint-context.json"
+        },
+        {
+          "owned_close_on_guard": true
+        },
+        {
+          "abort": "AssertionError(('unexpected source board', '0x29', '0x3f800000'))",
+          "traceback": "Traceback (most recent call last):\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\owned-window-test21-j-original-r201-Green-Herb-use-still.py\", line 100, in <module>\n    assert cur==board and 0x8c000000<=board<0x8cfff000,('unexpected source board',hex(cur),hex(board));inhand=u32(pp+0x10);assert not inhand,'refuse item move/discard state';pieces=u32(pp+8);n=read(pp+0xc,1)[0];assert 0<n<=128 and 0x8c000000<=pieces and pieces+n*0x2c<0x8d000000;matches=[]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: ('unexpected source board', '0x29', '0x3f800000')\n"
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk135",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Normal inventory opens; private observer refuses uninitialized puzzle board before selection. Herb remains intact.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk135\\shots\\checkpoint-source-34123\\frames\\fb0.png",
+          "png_sha256": "7a4a26d05f79df0030f626f42ccc08ad72b3a64da930b918151b56b57bd6dbfd",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk135\\shots\\checkpoint-source-34123\\checkpoint-context.json",
+          "source_frame_interval": [
+            34123,
+            34124
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk136",
+      "result": "Source-ready ordinary inventory Use consumes herb6 and heals720 to1200; live world returns.",
+      "elapsed_s": 7.4,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "fd1962836f8270ab932c50a5bd0246f453a9b33db5413a927c77a20a5e51dbc6",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 34217,
+        "room": "0x201",
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk136\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "normal_Green_Herb_context_A": 34163
+        },
+        {
+          "normal_Green_Herb_Use_or_default_Leon_A": 34166
+        },
+        {
+          "original_Green_Herb_used_and_normal_inventory_return": {
+            "frame": 34209,
+            "life": 1200,
+            "Ashley": 600,
+            "initial": {
+              "life": 720,
+              "herb_count": 1
+            }
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk136\\shots\\checkpoint-source-34209\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk136\\shots\\checkpoint-source-34209\\checkpoint-context.json"
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk136",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Source-ready ordinary inventory Use consumes herb6 and heals720 to1200; live world returns.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk136\\shots\\checkpoint-source-34209\\frames\\fb0.png",
+          "png_sha256": "923734d4d1897084c3204b96895c40b29538faa1c3af87e65e7d18be164e5fbf",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk136\\shots\\checkpoint-source-34209\\checkpoint-context.json",
+          "source_frame_interval": [
+            34209,
+            34217
+          ],
+          "health_before": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            1200,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk137",
+      "result": "Original chained-Garrador upcut returns and normal Ashley Wait is confirmed outside cell.",
+      "elapsed_s": 14.3,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "9f0545d917d7547df4dd5be8469902e125e33ca04c395581c06fc57e311a2f6d",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 34584,
+        "room": "0x201",
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk137\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action",
+            "partner"
+          ]
+        },
+        {
+          "original_cell_exterior_before_normal_Ashley_Wait": {
+            "host_monotonic": 305637.921,
+            "room": "0x201",
+            "frame": 34532,
+            "player_hp": 1200,
+            "partner_hp": 600,
+            "pos": [
+              29277.390625,
+              -2000.002685546875,
+              -42132.64453125
+            ],
+            "yaw": 0.569723904132843,
+            "target_distance": 166.94723869660993,
+            "angle_error": -0.15277295986047434,
+            "source_Key_on": "0x41040041",
+            "player_routines": [
+              0,
+              3,
+              3,
+              4
+            ],
+            "partner_flags": "0x40",
+            "partner_pos": [
+              28976.126953125,
+              -2000.001708984375,
+              -43125.86328125
+            ]
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk137\\shots\\checkpoint-source-34532\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk137\\shots\\checkpoint-source-34532\\checkpoint-context.json"
+        },
+        {
+          "original_cell_exterior_approach_and_normal_Ashley_Wait_confirmed": {
+            "host_monotonic": 305639.406,
+            "room": "0x201",
+            "frame": 34576,
+            "player_hp": 1200,
+            "partner_hp": 600,
+            "pos": [
+              29345.2734375,
+              -2000.000732421875,
+              -41835.76171875
+            ],
+            "yaw": 0.569723904132843,
+            "target_distance": 144.2385404322316,
+            "angle_error": 2.573764481783142,
+            "source_Key_on": "0x0",
+            "player_routines": [
+              0,
+              0,
+              1,
+              0
+            ],
+            "partner_flags": "0x42",
+            "partner_pos": [
+              29291.68359375,
+              -1999.999755859375,
+              -42711.12109375
+            ]
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk137\\shots\\checkpoint-source-34576\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk137\\shots\\checkpoint-source-34576\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk137",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Original chained-Garrador upcut returns and normal Ashley Wait is confirmed outside cell.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk137\\shots\\checkpoint-source-34532\\frames\\fb0.png",
+          "png_sha256": "b5e84186c5f962d289fabd7918ab22e4caec371224956c9414191886f264aceb",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk137\\shots\\checkpoint-source-34532\\checkpoint-context.json",
+          "source_frame_interval": [
+            34532,
+            34541
+          ],
+          "health_before": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            1200,
+            1200,
+            600,
+            600
+          ]
+        },
+        {
+          "run": "current-j-route-walk137",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Original chained-Garrador upcut returns and normal Ashley Wait is confirmed outside cell.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk137\\shots\\checkpoint-source-34576\\frames\\fb0.png",
+          "png_sha256": "2e87e4173613e60d17dbaa561cce9a7a8c0fc586d41bd293a1c0a3a587dc43e7",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk137\\shots\\checkpoint-source-34576\\checkpoint-context.json",
+          "source_frame_interval": [
+            34576,
+            34584
+          ],
+          "health_before": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            1200,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk138",
+      "result": "Normal cellA opens the door;90 source world ticks observed with full health.",
+      "elapsed_s": 7.4,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "f6ee590505bb19412e3d9d95f135f20deab8b1d4182ec57d8333601a3d83d761",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 34737,
+        "room": "0x201",
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk138\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "original_cell_door_before_normal_A": {
+            "frame": 34630,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              1200,
+              1200,
+              600,
+              600
+            ],
+            "player_pos": [
+              29345.271484375,
+              -2000.003662109375,
+              -41874.4609375
+            ],
+            "partner_pos": [
+              29291.537109375,
+              -2000.002685546875,
+              -42711.07421875
+            ],
+            "partner_flags": "0x46",
+            "source_player_routines": [
+              0,
+              4,
+              2,
+              0
+            ],
+            "yaw": 1.4891873598098755,
+            "door_facing_error": 0.02395264019012444
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk138\\shots\\checkpoint-source-34630\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk138\\shots\\checkpoint-source-34630\\checkpoint-context.json"
+        },
+        {
+          "normal_cell_A_actual_press_after_screenshot_frame": 34639
+        },
+        {
+          "original_cell_A_observed_90_source_world_ticks": {
+            "frame": 34729,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              1200,
+              1200,
+              600,
+              600
+            ],
+            "player_pos": [
+              29694.962890625,
+              -1999.999267578125,
+              -41934.7578125
+            ],
+            "partner_pos": [
+              29280.361328125,
+              -2000.004150390625,
+              -42712.62109375
+            ],
+            "partner_flags": "0x46",
+            "source_player_routines": [
+              0,
+              0,
+              1,
+              0
+            ]
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk138\\shots\\checkpoint-source-34729\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk138\\shots\\checkpoint-source-34729\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk138",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Normal cellA opens the door;90 source world ticks observed with full health.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk138\\shots\\checkpoint-source-34630\\frames\\fb0.png",
+          "png_sha256": "5d360935a2286dcc3743909c4664ca131c6bb59834a41c0222e9c26f7232f180",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk138\\shots\\checkpoint-source-34630\\checkpoint-context.json",
+          "source_frame_interval": [
+            34630,
+            34639
+          ],
+          "health_before": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            1200,
+            1200,
+            600,
+            600
+          ]
+        },
+        {
+          "run": "current-j-route-walk138",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Normal cellA opens the door;90 source world ticks observed with full health.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk138\\shots\\checkpoint-source-34729\\frames\\fb0.png",
+          "png_sha256": "ae91a95abd7eec5003ff1cbc4a45214f32d4cadccbac58b89f1006db2275ea9e",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk138\\shots\\checkpoint-source-34729\\checkpoint-context.json",
+          "source_frame_interval": [
+            34729,
+            34737
+          ],
+          "health_before": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            1200,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk139",
+      "result": "Normal area10 step activates Garrador; source-SAT retreat reaches lower-bell firing position.",
+      "elapsed_s": 9.0,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "fbf70bb022a338c8f74ffa1a80f5f9f66e425e2969148af766ff30bdb2652973",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 34917,
+        "room": "0x201",
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk139\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            31000.0,
+            -42000.0
+          ],
+          "pos": [
+            30826.9453125,
+            -2000.001708984375,
+            -41896.8671875
+          ],
+          "Garrador": {
+            "hp": 4000,
+            "pos": [
+              34590.61328125,
+              -2003.77001953125,
+              -41650.83203125
+            ],
+            "yaw": -1.5707963705062866,
+            "routines": [
+              1,
+              94,
+              5,
+              0
+            ],
+            "player_back_dot": 3763.667979504535
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk139\\shots\\checkpoint-source-34782\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk139\\shots\\checkpoint-source-34782\\checkpoint-context.json"
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            29250.0,
+            -42000.0
+          ],
+          "pos": [
+            29348.365234375,
+            -1999.999267578125,
+            -41927.44921875
+          ],
+          "Garrador": {
+            "hp": 4000,
+            "pos": [
+              32525.548828125,
+              -1999.999755859375,
+              -41850.96484375
+            ],
+            "yaw": -1.5707963705062866,
+            "routines": [
+              1,
+              94,
+              5,
+              0
+            ],
+            "player_back_dot": 3177.183597093235
+          }
+        },
+        {
+          "normal_source_cell_activation_and_bell_standoff_route_complete": true,
+          "frame": 34917,
+          "pos": [
+            28554.630859375,
+            -2000.002685546875,
+            -47893.9765625
+          ],
+          "health": [
+            1200,
+            600
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk139\\shots\\checkpoint-source-34917\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk139\\shots\\checkpoint-source-34917\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk139",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Normal area10 step activates Garrador; source-SAT retreat reaches lower-bell firing position.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk139\\shots\\checkpoint-source-34782\\frames\\fb0.png",
+          "png_sha256": "c030449b209b73a50e41e14c0fdb94efc82deefb7dd319eb67bedf26ebb7151b",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk139\\shots\\checkpoint-source-34782\\checkpoint-context.json",
+          "source_frame_interval": [
+            34782,
+            34792
+          ],
+          "health_before": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            1200,
+            1200,
+            600,
+            600
+          ]
+        },
+        {
+          "run": "current-j-route-walk139",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Normal area10 step activates Garrador; source-SAT retreat reaches lower-bell firing position.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk139\\shots\\checkpoint-source-34917\\frames\\fb0.png",
+          "png_sha256": "786d8fd3db2eef8e09874b8436cf54bca94d2ec8d330cbd85f479ecf35e8dc3c",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk139\\shots\\checkpoint-source-34917\\checkpoint-context.json",
+          "source_frame_interval": [
+            34917,
+            34917
+          ],
+          "health_before": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            1200,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk140",
+      "result": "Bell shot is not attempted: original Garrador collaterally hits waiting Ashley600 to420.",
+      "elapsed_s": 4.1,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "8e97eafc1a5c41decaa6a8b77089e597c054c56e48508c9ebc0cea6a48823c14",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 34967,
+        "room": "0x201",
+        "health": [
+          1200,
+          1200,
+          420,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk140\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "stop_on_any_further_original_health_loss": {
+            "frame": 34957,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              1200,
+              1200,
+              420,
+              600
+            ]
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk140\\shots\\checkpoint-source-34957\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk140\\shots\\checkpoint-source-34957\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk140",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Bell shot is not attempted: original Garrador collaterally hits waiting Ashley600 to420.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk140\\shots\\checkpoint-source-34957\\frames\\fb0.png",
+          "png_sha256": "33a161874840f90dbbe475a502881151d7e766b360577872ecf4efdf6cbe638e",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk140\\shots\\checkpoint-source-34957\\checkpoint-context.json",
+          "source_frame_interval": [
+            34957,
+            34966
+          ],
+          "health_before": [
+            1200,
+            1200,
+            420,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            420,
+            600
+          ],
+          "authoritative_saved_health": [
+            1200,
+            1200,
+            420,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk141",
+      "result": "Follow presses occur while original partner damage routine blocks commands; no Follow acceptance.",
+      "elapsed_s": 4.1,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "acc77c6a7a4c6f3562275746c24dc2a7695c26d4ffcee60d2e9a420ef658aed4",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 35019,
+        "room": "0x201",
+        "health": [
+          1200,
+          1200,
+          420,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk141\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "partner",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "normal_S_Follow_command": {
+            "frame": 34970,
+            "room": "0x201",
+            "health": [
+              1200,
+              1200,
+              420,
+              600
+            ],
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "player_pos": [
+              28520.79296875,
+              -1999.999755859375,
+              -48093.94140625
+            ],
+            "partner_pos": [
+              29184.751953125,
+              -1999.9986572265625,
+              -42998.51953125
+            ],
+            "partner_flags": "0x46",
+            "partner_routines": [
+              1,
+              1,
+              0,
+              0
+            ],
+            "distance": 5138.498381547084
+          }
+        },
+        {
+          "normal_S_Follow_command": {
+            "frame": 34990,
+            "room": "0x201",
+            "health": [
+              1200,
+              1200,
+              420,
+              600
+            ],
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "player_pos": [
+              28520.943359375,
+              -2000.003662109375,
+              -48091.12890625
+            ],
+            "partner_pos": [
+              28846.35546875,
+              -2000.002685546875,
+              -43427.4375
+            ],
+            "partner_flags": "0x46",
+            "partner_routines": [
+              1,
+              1,
+              0,
+              0
+            ],
+            "distance": 4675.03054253755
+          }
+        },
+        {
+          "abort": "AssertionError('Normal Follow command did not clear Wait')",
+          "traceback": "Traceback (most recent call last):\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\owned-window-test21-j-original-r201-injured-Ashley-Follow-still.py\", line 95, in <module>\n    assert commands<2,'Normal Follow command did not clear Wait';before=ff;transition({'partner'});until=time.monotonic()+1\n           ^^^^^^^^^^\nAssertionError: Normal Follow command did not clear Wait\n"
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk141\\shots\\checkpoint-source-35011\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk141\\shots\\checkpoint-source-35011\\checkpoint-context.json"
+        },
+        {
+          "owned_close_on_guard": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk141",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Follow presses occur while original partner damage routine blocks commands; no Follow acceptance.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk141\\shots\\checkpoint-source-35011\\frames\\fb0.png",
+          "png_sha256": "2063fe80844b2d1bee8e260c9b856d7af68c286b22fb50127d0e5ee26602ec29",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk141\\shots\\checkpoint-source-35011\\checkpoint-context.json",
+          "source_frame_interval": [
+            35011,
+            35019
+          ],
+          "health_before": [
+            1200,
+            1200,
+            420,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            420,
+            600
+          ],
+          "authoritative_saved_health": [
+            1200,
+            1200,
+            420,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk142",
+      "result": "Source-ready normalS clears Wait and partner moves toward Leon,1200/420.",
+      "elapsed_s": 3.6,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "2f865eff4ccdb6c0299770633d718bec9d16b7b0fa7b17b53164e57c750fefac",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 35055,
+        "room": "0x201",
+        "health": [
+          1200,
+          1200,
+          420,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk142\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "partner",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "normal_S_Follow_command": {
+            "frame": 35022,
+            "room": "0x201",
+            "health": [
+              1200,
+              1200,
+              420,
+              600
+            ],
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "player_pos": [
+              28521.373046875,
+              -2000.001708984375,
+              -48087.67578125
+            ],
+            "partner_pos": [
+              28834.611328125,
+              -2000.000732421875,
+              -43423.859375
+            ],
+            "partner_flags": "0x42",
+            "partner_routines": [
+              0,
+              0,
+              2,
+              0
+            ],
+            "distance": 4674.323661456069,
+            "source_SubCharCheckCtrl": true,
+            "player_routines": [
+              0,
+              0,
+              1,
+              0
+            ]
+          }
+        },
+        {
+          "original_Follow_and_actual_partner_movement_toward_Leon": {
+            "frame": 35046,
+            "room": "0x201",
+            "health": [
+              1200,
+              1200,
+              420,
+              600
+            ],
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "player_pos": [
+              28520.91015625,
+              -2000.001708984375,
+              -48093.5390625
+            ],
+            "partner_pos": [
+              28536.5390625,
+              -2000.000732421875,
+              -44449.40625
+            ],
+            "partner_flags": "0x40",
+            "partner_routines": [
+              0,
+              1,
+              3,
+              1
+            ],
+            "distance": 3644.1663268641682,
+            "source_SubCharCheckCtrl": true,
+            "player_routines": [
+              0,
+              0,
+              1,
+              0
+            ]
+          },
+          "initial_distance": 4673.976991236988
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk142\\shots\\checkpoint-source-35047\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk142\\shots\\checkpoint-source-35047\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk142",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Source-ready normalS clears Wait and partner moves toward Leon,1200/420.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk142\\shots\\checkpoint-source-35047\\frames\\fb0.png",
+          "png_sha256": "feb9f5a9e735f1632039b34c7f09fb372398b47fef09946642720a4fa4a5ac5d",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk142\\shots\\checkpoint-source-35047\\checkpoint-context.json",
+          "source_frame_interval": [
+            35047,
+            35055
+          ],
+          "health_before": [
+            1200,
+            1200,
+            420,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            420,
+            600
+          ],
+          "authoritative_saved_health": [
+            1200,
+            1200,
+            420,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk143",
+      "result": "One ordinary handgun shot rings original lower bell:timer88/bell_stat2/sourceflag20000000. No Garrador damage claim.",
+      "elapsed_s": 4.6,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "49e385eaccd6127772b624697e69025dbc0abd5a285782435d90e36f309bcc79",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 35111,
+        "room": "0x201",
+        "health": [
+          1200,
+          1200,
+          420,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 9
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk143\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "ordinary_RT_A_at_original_bell_hitbody1_when_source_laser_matches": {
+            "frame": 35099,
+            "hp": 1000,
+            "magazine": 10,
+            "ray_miss": 47.51152722987863,
+            "back_dot": 1920.3828125
+          }
+        },
+        {
+          "actual_original_bell_ringTimer_and_source_global_announcement_after_normal_shot": {
+            "frame": 35104,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              1200,
+              1200,
+              420,
+              600
+            ],
+            "source_Key_on": "0x800010",
+            "original_bell_obj": "0x8caddab8",
+            "ringTimer": 88,
+            "bell_stat": 2,
+            "bell_pos": [
+              26972.0,
+              -1999.998046875,
+              -49754.0
+            ],
+            "flags5010": "0x20000204",
+            "player_pos": [
+              28475.791015625,
+              -2000.000732421875,
+              -48083.6171875
+            ],
+            "yaw": -2.4330618381500244,
+            "player_routines": [
+              0,
+              6,
+              2,
+              1
+            ],
+            "Garrador_hp": 1000,
+            "Garrador_pos": [
+              26972.0,
+              178.0,
+              -50004.0
+            ],
+            "Garrador_yaw": 0.0,
+            "Garrador_routines": [
+              1,
+              1,
+              0,
+              0
+            ],
+            "weakpoint37_world": [
+              26877.843567103148,
+              -464.55076348781586,
+              -50031.62398570776
+            ],
+            "player_back_dot": 1920.3828125
+          },
+          "baseline_HP": 4000,
+          "ordinary_shot_count": 1
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk143\\shots\\checkpoint-source-35104\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk143\\shots\\checkpoint-source-35104\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk143",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "One ordinary handgun shot rings original lower bell:timer88/bell_stat2/sourceflag20000000. No Garrador damage claim.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk143\\shots\\checkpoint-source-35104\\frames\\fb0.png",
+          "png_sha256": "b469fc118b5afd06c06c3abb1ab866a0805f030a32187f84022e5dcdbc60fa84",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk143\\shots\\checkpoint-source-35104\\checkpoint-context.json",
+          "source_frame_interval": [
+            35104,
+            35111
+          ],
+          "health_before": [
+            1200,
+            1200,
+            420,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            420,
+            600
+          ],
+          "authoritative_saved_health": [
+            1200,
+            1200,
+            420,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk144",
+      "result": "Already-running critical charge hits Leon1200 to360 before bell retarget. No weakpoint shot.",
+      "elapsed_s": 3.1,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "736452fc06bc54577bf08a7db8692521a2c6408340edf56c7fbf9c07612dde88",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 35133,
+        "room": "0x201",
+        "health": [
+          360,
+          1200,
+          420,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 9
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk144\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "stop_on_any_further_original_health_loss": {
+            "frame": 35124,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              360,
+              1200,
+              420,
+              600
+            ]
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk144\\shots\\checkpoint-source-35124\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk144\\shots\\checkpoint-source-35124\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk144",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Already-running critical charge hits Leon1200 to360 before bell retarget. No weakpoint shot.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk144\\shots\\checkpoint-source-35124\\frames\\fb0.png",
+          "png_sha256": "9739c334158a5126791fc61ee447509d09add1e5c5f7fa92073bc03aadef933e",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk144\\shots\\checkpoint-source-35124\\checkpoint-context.json",
+          "source_frame_interval": [
+            35124,
+            35133
+          ],
+          "health_before": [
+            360,
+            1200,
+            420,
+            600
+          ],
+          "health_after": [
+            360,
+            1200,
+            420,
+            600
+          ],
+          "authoritative_saved_health": [
+            360,
+            1200,
+            420,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk145",
+      "result": "Normal lateral west escape passes without further injury.",
+      "elapsed_s": 6.4,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "75996688a4b2866b8ae823304bdbadb2cd8095d7bbcdc596c759baeb3e35adba",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 35252,
+        "room": "0x201",
+        "health": [
+          360,
+          1200,
+          420,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 9
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk145\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "normal_bell_charge_lateral_escape_complete": true,
+          "frame": 35243,
+          "pos": [
+            24151.005859375,
+            -2000.004150390625,
+            -48006.234375
+          ],
+          "health": [
+            360,
+            420
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk145\\shots\\checkpoint-source-35243\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk145\\shots\\checkpoint-source-35243\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk145",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Normal lateral west escape passes without further injury.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk145\\shots\\checkpoint-source-35243\\frames\\fb0.png",
+          "png_sha256": "d47a9347e767b26b846844c7df773712a819f08e07c4f276d1f65d413a770fa3",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk145\\shots\\checkpoint-source-35243\\checkpoint-context.json",
+          "source_frame_interval": [
+            35243,
+            35252
+          ],
+          "health_before": [
+            360,
+            1200,
+            420,
+            600
+          ],
+          "health_after": [
+            360,
+            1200,
+            420,
+            600
+          ],
+          "authoritative_saved_health": [
+            360,
+            1200,
+            420,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk146",
+      "result": "Quiet source-SAT northward approach passes; boss changes facing naturally. No exposed-rear or hit claim.",
+      "elapsed_s": 6.9,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "24d000c459a532cf16c0071ec891c61ffd1a4f406d99092dd5d7d90dc1705c07",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 35393,
+        "room": "0x201",
+        "health": [
+          360,
+          1200,
+          420,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 9
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk146\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "normal_quiet_Garrador_flank_segment_complete": true,
+          "frame": 35383,
+          "pos": [
+            27337.8828125,
+            -2000.002197265625,
+            -44136.23046875
+          ],
+          "health": [
+            360,
+            420
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk146\\shots\\checkpoint-source-35383\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk146\\shots\\checkpoint-source-35383\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk146",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Quiet source-SAT northward approach passes; boss changes facing naturally. No exposed-rear or hit claim.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk146\\shots\\checkpoint-source-35383\\frames\\fb0.png",
+          "png_sha256": "b39d36544918f95b73f77fc1982463c3b465c828183bbcb19be55d31c0ba3753",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk146\\shots\\checkpoint-source-35383\\checkpoint-context.json",
+          "source_frame_interval": [
+            35383,
+            35393
+          ],
+          "health_before": [
+            360,
+            1200,
+            420,
+            600
+          ],
+          "health_after": [
+            360,
+            1200,
+            420,
+            600
+          ],
+          "authoritative_saved_health": [
+            360,
+            1200,
+            420,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk147",
+      "result": "Quiet northeast route reaches endpoint; asynchronous screenshot interval includes real Ashley420 to240 injury.",
+      "elapsed_s": 4.1,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "fbdd0556e907856a81b67dc974daa01f579738958885e55bc4edfbd49404d1d1",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 35442,
+        "room": "0x201",
+        "health": [
+          360,
+          1200,
+          240,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 9
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk147\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "normal_quiet_Garrador_flank_segment_complete": true,
+          "frame": 35435,
+          "pos": [
+            28860.462890625,
+            -2000.004150390625,
+            -43091.21484375
+          ],
+          "health": [
+            360,
+            420
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk147\\shots\\checkpoint-source-35435\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk147\\shots\\checkpoint-source-35435\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk147",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Quiet northeast route reaches endpoint; asynchronous screenshot interval includes real Ashley420 to240 injury.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk147\\shots\\checkpoint-source-35435\\frames\\fb0.png",
+          "png_sha256": "5e1994dd05fe6f9e97f2c3be8e7ca19e8b4a3cb3227e23127e86b22830eede46",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk147\\shots\\checkpoint-source-35435\\checkpoint-context.json",
+          "source_frame_interval": [
+            35435,
+            35442
+          ],
+          "health_before": [
+            360,
+            1200,
+            420,
+            600
+          ],
+          "health_after": [
+            360,
+            1200,
+            240,
+            600
+          ],
+          "authoritative_saved_health": [
+            360,
+            1200,
+            240,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk148",
+      "result": "Private stale-health guard refuses before input; current saved health is360/240.",
+      "elapsed_s": 2.1,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "5c9abe41ecbafd69f52e991663702ae0810857890fa5a53eb1ef0c30f545611b",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 35444,
+        "room": "0x201",
+        "health": [
+          360,
+          1200,
+          240,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 9
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk148\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "abort": "AssertionError('Requires actual latest injury360/420 checkpoint')"
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk148\\shots\\checkpoint-source-35442\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk148\\shots\\checkpoint-source-35442\\checkpoint-context.json"
+        },
+        {
+          "owned_close_on_guard": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk148",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Private stale-health guard refuses before input; current saved health is360/240.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk148\\shots\\checkpoint-source-35442\\frames\\fb0.png",
+          "png_sha256": "5fe13e75036195a1c2041d2529dd07da44c36bdd0eca05aa3ccac76d1f89964b",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk148\\shots\\checkpoint-source-35442\\checkpoint-context.json",
+          "source_frame_interval": [
+            35442,
+            35443
+          ],
+          "health_before": [
+            360,
+            1200,
+            240,
+            600
+          ],
+          "health_after": [
+            360,
+            1200,
+            240,
+            600
+          ],
+          "authoritative_saved_health": [
+            360,
+            1200,
+            240,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk149",
+      "result": "Normal escape request is unacknowledged initially; original claw hits Leon360 to168.",
+      "elapsed_s": 3.1,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "a076027d5368bf21e8871135f2917656453f44ffa7152aa14f41635d2952387b",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 35470,
+        "room": "0x201",
+        "health": [
+          168,
+          1200,
+          240,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 9
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk149\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "any_further_original_damage_stop": true,
+          "health": [
+            168,
+            240
+          ],
+          "frame": 35465
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk149\\shots\\checkpoint-source-35465\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk149\\shots\\checkpoint-source-35465\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk149",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Normal escape request is unacknowledged initially; original claw hits Leon360 to168.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk149\\shots\\checkpoint-source-35465\\frames\\fb0.png",
+          "png_sha256": "533af7f3f86768136602e009354085d0000f15cf836cd0f38675ad0603d1f9f8",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk149\\shots\\checkpoint-source-35465\\checkpoint-context.json",
+          "source_frame_interval": [
+            35465,
+            35470
+          ],
+          "health_before": [
+            168,
+            1200,
+            240,
+            600
+          ],
+          "health_after": [
+            168,
+            1200,
+            240,
+            600
+          ],
+          "authoritative_saved_health": [
+            168,
+            1200,
+            240,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk150",
+      "result": "Normal owned key release/repress restores source input; existing claw follow-up hits Leon168 to72 during stagger.",
+      "elapsed_s": 3.1,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "d44a5d7128f55641ca2c0584b0ee79741fb959bc04c748e34d4a4f89361d60db",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 35498,
+        "room": "0x201",
+        "health": [
+          72,
+          1200,
+          240,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 9
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk150\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "normal_owned_key_release_repress_after_source_Key_zero": {
+            "source_frame": 35470,
+            "wanted": [
+              "dash",
+              "forward",
+              "right"
+            ],
+            "count": 1
+          }
+        },
+        {
+          "any_further_original_damage_stop": true,
+          "health": [
+            72,
+            240
+          ],
+          "frame": 35489
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk150\\shots\\checkpoint-source-35489\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk150\\shots\\checkpoint-source-35489\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk150",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Normal owned key release/repress restores source input; existing claw follow-up hits Leon168 to72 during stagger.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk150\\shots\\checkpoint-source-35489\\frames\\fb0.png",
+          "png_sha256": "c84e590b2a221eaf566266176eee697c1b69a819203454519ec90ee55f90d4eb",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk150\\shots\\checkpoint-source-35489\\checkpoint-context.json",
+          "source_frame_interval": [
+            35489,
+            35497
+          ],
+          "health_before": [
+            72,
+            1200,
+            240,
+            600
+          ],
+          "health_after": [
+            72,
+            1200,
+            240,
+            600
+          ],
+          "authoritative_saved_health": [
+            72,
+            1200,
+            240,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk151",
+      "result": "Existing claw follow-up hits Ashley240 to60 while Leon remains in original stagger.",
+      "elapsed_s": 2.6,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "2de86610d9b142ef1890242d8e89722fa31e2618d10583733dfb569a48ec0609",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 35517,
+        "room": "0x201",
+        "health": [
+          72,
+          1200,
+          60,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 9
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk151\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "normal_owned_key_release_repress_after_source_Key_zero": {
+            "source_frame": 35498,
+            "wanted": [
+              "dash",
+              "forward",
+              "right"
+            ],
+            "count": 1
+          }
+        },
+        {
+          "any_further_original_damage_stop": true,
+          "health": [
+            72,
+            60
+          ],
+          "frame": 35508
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk151\\shots\\checkpoint-source-35508\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk151\\shots\\checkpoint-source-35508\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk151",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Existing claw follow-up hits Ashley240 to60 while Leon remains in original stagger.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk151\\shots\\checkpoint-source-35508\\frames\\fb0.png",
+          "png_sha256": "c5750ec67e3e9efed96e579c9992aa691efb6699ae9b382c486e15c53de3eba8",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk151\\shots\\checkpoint-source-35508\\checkpoint-context.json",
+          "source_frame_interval": [
+            35508,
+            35517
+          ],
+          "health_before": [
+            72,
+            1200,
+            60,
+            600
+          ],
+          "health_after": [
+            72,
+            1200,
+            60,
+            600
+          ],
+          "authoritative_saved_health": [
+            72,
+            1200,
+            60,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk152",
+      "result": "Original attack kills Leon; saved health0/60 and death flag set. No runtime-fault or boss-kill claim.",
+      "elapsed_s": 2.6,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "080362b9dd24969d8f2c9c62262e5a32914c9ad866cb4da6b44d571881ef9459",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 35532,
+        "room": "0x201",
+        "health": [
+          0,
+          1200,
+          60,
+          600
+        ],
+        "death_flag": true,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x80400100",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 9
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk152\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "normal_owned_key_release_repress_after_source_Key_zero": {
+            "source_frame": 35517,
+            "wanted": [
+              "dash",
+              "forward",
+              "right"
+            ],
+            "count": 1
+          }
+        },
+        {
+          "abort": "AssertionError(('original source death flag active', '0x3180100'))"
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk152\\shots\\checkpoint-source-35522\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk152\\shots\\checkpoint-source-35522\\checkpoint-context.json"
+        },
+        {
+          "owned_close_on_guard": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk152",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Original attack kills Leon; saved health0/60 and death flag set. No runtime-fault or boss-kill claim.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk152\\shots\\checkpoint-source-35522\\frames\\fb0.png",
+          "png_sha256": "4a430cec4dd1d93bf9be5c370592592ca21d492691534523494c4573209067c1",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk152\\shots\\checkpoint-source-35522\\checkpoint-context.json",
+          "source_frame_interval": [
+            35522,
+            35531
+          ],
+          "health_before": [
+            0,
+            1200,
+            60,
+            600
+          ],
+          "health_after": [
+            0,
+            1200,
+            60,
+            600
+          ],
+          "authoritative_saved_health": [
+            0,
+            1200,
+            60,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk153",
+      "result": "Normal original GameOver Continue restores source backup720/600 and live world; no host rollback.",
+      "elapsed_s": 26.3,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "950941de749b87dda73b2ce5939b914af81f3caecccf3753469247be987610fa",
+      "saved_state_audit": {
+        "scope": "Immutable saved state verified against four exact current ELF anchors; authoritative globals and inventory only.",
+        "source_frame": 33584,
+        "room": "0x201",
+        "health": [
+          720,
+          1200,
+          600,
+          600
+        ],
+        "death_flag": false,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ]
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk153\\data\\disc.state"
+        },
+        {
+          "actual_original_death_before_normal_Continue": {
+            "frame": 35532,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x80400100",
+            "death_flags": "0x3180100",
+            "flags5010": "0x200",
+            "SSLoop": 0,
+            "life": 0,
+            "maxlife": 1200,
+            "ashley_life": 60,
+            "maxashley": 600,
+            "Continue_source_log": false
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk153\\shots\\checkpoint-source-35532\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk153\\shots\\checkpoint-source-35532\\checkpoint-context.json"
+        },
+        {
+          "original_Continue_recovered": {
+            "frame": 33584,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "death_flags": "0x3000100",
+            "flags5010": "0x200",
+            "SSLoop": 0,
+            "life": 720,
+            "maxlife": 1200,
+            "ashley_life": 600,
+            "maxashley": 600,
+            "Continue_source_log": true
+          },
+          "initial_death_observed": true
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk153\\shots\\checkpoint-source-33584\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk153\\shots\\checkpoint-source-33584\\checkpoint-context.json"
+        },
+        {
+          "owned_close_after_original_Continue": true
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk153",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Normal original GameOver Continue restores source backup720/600 and live world; no host rollback.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk153\\shots\\checkpoint-source-33584\\frames\\fb0.png",
+          "png_sha256": "c68a20feaec46be8f2d81f9bc0c9bcdb6cbf171c49ac704338826512e31c4d7e",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk153\\shots\\checkpoint-source-33584\\checkpoint-context.json",
+          "source_frame_interval": [
+            33584,
+            33584
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": null,
+          "authoritative_saved_health": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        },
+        {
+          "run": "current-j-route-walk153",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Normal original GameOver Continue restores source backup720/600 and live world; no host rollback.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk153\\shots\\checkpoint-source-35532\\frames\\fb0.png",
+          "png_sha256": "5c0799c4aef976f57426467457e3a3f5fe5b7301827dfded033bffb41f969c6a",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk153\\shots\\checkpoint-source-35532\\checkpoint-context.json",
+          "source_frame_interval": [
+            35532,
+            35535
+          ],
+          "health_before": [
+            0,
+            1200,
+            60,
+            600
+          ],
+          "health_after": null,
+          "authoritative_saved_health": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    }
+  ],
+  "bell_source_audit": {
+    "scope": "Read-only immutable exact current J136 world snapshot, four ELF anchors, source obj14 and _ObjMgr. Bell sound/lure must be produced by ordinary weapon hit; no game/AI/bell writes.",
+    "source_frame": 34217,
+    "bells": [
+      {
+        "obj": "0x8caddab8",
+        "position": [
+          26972.0,
+          178.0,
+          -50004.0
+        ],
+        "routines": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "ringTimer": 0,
+        "hit": "0x8cc28b00",
+        "hit_id": "4d01",
+        "hitpartsNo": 1,
+        "hitofs": [
+          0.0,
+          -650.0,
+          0.0
+        ],
+        "width": 300.0,
+        "height": 50.0,
+        "hitworld": [
+          26972.0,
+          -472.0,
+          -50004.0
+        ]
+      },
+      {
+        "obj": "0x8cadd6e0",
+        "position": [
+          27273.0,
+          178.0,
+          -33277.0
+        ],
+        "routines": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "ringTimer": 0,
+        "hit": "0x8cc27d20",
+        "hit_id": "4d01",
+        "hitpartsNo": 1,
+        "hitofs": [
+          0.0,
+          -650.0,
+          0.0
+        ],
+        "width": 300.0,
+        "height": 50.0,
+        "hitworld": [
+          27273.0,
+          -472.0,
+          -33277.0
+        ]
+      }
+    ],
+    "objects_visited": 101
+  },
+  "important_labels": [
+    "J140/J143 bell-shot controller inherited Garrador_* and weakpoint37_world labels for its target. Those rows refer to bell14 and its pEmHit4d body, not actual Garrador HP. J143 targetHP1000 is the bell hitbody; real boss remains4000.",
+    "J147 movement endpoint360/420 is distinct from PNG interval35435 to35442 health_after360/240 and authoritative saved state360/240. J148 correctly refuses the stale expectation before input.",
+    "Exact J147..150 snapshots show actual ClawAtk motion15/156,17/156,43/156,71/156. Leon custom handler is source plemDmMStar, shared flail/claw heavy stagger,36 frames; no QTE. Normal input is ignored during that original stagger.",
+    "Source input acknowledgment correction uses only exact-owned normal key-up/repress when read-only Key.on stays0. It adds no game memory writes."
+  ],
+  "limits": [
+    "The actual bell mechanism is positive; no boss damage or kill is established. The failed critical charge and later claw combo are ordinary gameplay failures.",
+    "No dungeon exit, reset-wave clear, chapter-end save, whole-room residency, whole-drive quiet or hardware timing claim. Native/effects/texture limits remain separately recorded."
+  ],
+  "next": "Original Continue has restored720/600. Collect existing ammunition and put Ashley safely away from the charge path before another fight. Do not repeat the previous preparation unchanged."
+}

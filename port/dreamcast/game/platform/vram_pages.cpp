@@ -32,6 +32,24 @@ std::uintptr_t base; std::uint32_t pool, free_bytes;
 bool free_place;   // set only inside re4dc_vram_pages_malloc_any: this request needs no page
 #endif
 unsigned fails, peak_alloc, peak_free;
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+// VRAM_ROOM_ARENA (Makefile; lane mipmap22): two-ended placement. Class 2 (long-lived: core keys, glyph atlas, overlay
+// slab) takes the highest place that fits, class 1 (room-lifetime textures) the lowest; class 0 (dynamic: movie, door,
+// lake, probes) keeps best fit in between. native_ui.cpp sets re4dc_vram_arena_class around its allocations.
+// Highest page-rule placement of `len` bytes in extent e, or ~0 if it does not fit.
+std::uint32_t place_high(const Extent& e, std::uint32_t len) {
+    if(len > e.len) return ~0U;
+    std::uintptr_t at = base + e.off + e.len - len;
+#if defined(RE4DC_VRAM_PAGES_VQ_ONLY) && RE4DC_VRAM_PAGES_VQ_ONLY
+    if(free_place && len > kPage) {}
+    else
+#endif
+    if(len >= kPage) at &= ~std::uintptr_t(kPage - 1);
+    else if((at & (kPage - 1)) + len > kPage) at = ((at + len) & ~std::uintptr_t(kPage - 1)) - len;
+    if(at < base + e.off) return ~0U;
+    return std::uint32_t(at - base);
+}
+#endif
 #if defined(RE4DC_TEX_CHECK) && RE4DC_TEX_CHECK == 2
 // TEX_CHECK=2 (test only): free texture RAM reads magenta (RGB565 0xF81F), so a draw from never-written or
 // freed VRAM is visible on Flycast (which zeroes VRAM; a console holds noise there).
@@ -73,6 +91,9 @@ std::uint32_t place(const Extent& e, std::uint32_t len) {
 }
 
 extern "C" {
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+volatile unsigned re4dc_vram_arena_class;
+#endif
 #if defined(RE4DC_VRAM_PAGES_VQ_ONLY) && RE4DC_VRAM_PAGES_VQ_ONLY
 // VRAM_PAGES_VQ_ONLY (Makefile): texture_package.cpp allocate_texture allocates a non-VQ texture of more than one
 // page here; it may start anywhere (32-byte granularity). Every other request keeps the page rule. The flag is set
@@ -101,6 +122,20 @@ pvr_ptr_t pvr_mem_malloc(size_t size) {
     const std::uint32_t len = (std::uint32_t(size) + kGran - 1) & ~(kGran - 1);
     irq_disable_scoped();
     unsigned best = ~0U; std::uint32_t best_at = 0, best_left = ~0U;
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+    const unsigned cls = re4dc_vram_arena_class;
+    if(cls == 1) {          // room: lowest address that fits
+        for(unsigned i = 0; i < nfree && best == ~0U; ++i) {
+            const std::uint32_t at = place(free_list[i], len);
+            if(at != ~0U) { best = i; best_at = at; }
+        }
+    } else if(cls == 2) {   // long-lived: highest address that fits
+        for(unsigned i = nfree; i-- > 0 && best == ~0U;) {
+            const std::uint32_t at = place_high(free_list[i], len);
+            if(at != ~0U) { best = i; best_at = at; }
+        }
+    } else
+#endif
     for(unsigned i = 0; i < nfree; ++i) {
         const std::uint32_t at = place(free_list[i], len);
         if(at == ~0U) continue;

@@ -1,0 +1,73 @@
+{
+  "scope": "SOURCE ONLY controlled012 exact011 fullstate continuation for original game handoff/radio. No root guest allocation, no active guest or next cap created.",
+  "created_utc": "2026-10-22T04:21:32.207313+00:00",
+  "seed_state_sha256": "b9a39fbffe221e840f50041eea820cbc75f4720a7b74560e34dc2b74be60339e",
+  "original009_and_seedVMU_sha256": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+  "source_state_RSF204": "80000000; originalInit will queue helper only after it runs",
+  "native_LOAD011_result": "PASS saved-byte FNV a569c07d/native file0 ok1 rc0, room/gameplay pending; actualevidence7bcfd6c2e unchanged",
+  "files": {
+    "run-controlled-native-handoff012.py": {
+      "bytes": 5588,
+      "sha256": "61634b604504fe5ea0af16d1e32bfe5fac2febc51241dc4a5a4a73755271bb08"
+    },
+    "observe-controlled-native-handoff012.py": {
+      "bytes": 7656,
+      "sha256": "ad7776e699ff4aed3ac3c9fec03645503376b1538a856bad05000d6ec4a79965"
+    },
+    "run-controlled-native-handoff012.sh": {
+      "bytes": 362,
+      "sha256": "b7ab68b8f10fdaef2e551f723f97b996eb30dfbb86834e5ec2864e7da3ad51a4"
+    },
+    "controlled-native-handoff012-pins.json": {
+      "bytes": 2790,
+      "sha256": "738ef0503fa9d4d44dc508efbf1ab960a39f2458bfd52c556f9b920eda640d75"
+    },
+    "NATIVE-HANDOFF012-METHOD.md": {
+      "bytes": 2890,
+      "sha256": "beec16c0ae5c57f11c46d0a51896098bc213309a6ce78dac0ec7e0d010396979"
+    },
+    "run-controlled-native-handoff012-before-pad-path-fix.py": {
+      "bytes": 5390,
+      "sha256": "35a90ab9f2dac7313295140e02ca7f452d9cd9a3264c1089a7d96c7f07a4f59f"
+    },
+    "observe-controlled-native-handoff012-before-pad-path-fix.py": {
+      "bytes": 7655,
+      "sha256": "487ea13ec941975d7a2c6cde78ec9b9d3649ef1ad56b069d4f5d4cef7fde2e4d"
+    },
+    "controlled-native-handoff012-pins-before-pad-path-fix.json": {
+      "bytes": 2790,
+      "sha256": "70ff2f3dddbdf69a0372179c3b0d59e7685d8ea1660734c0b046bd00c6f82f3b"
+    },
+    "REVIEW-LOAD012-AUTO-RADIO.md": {
+      "bytes": 3321,
+      "sha256": "777dfe45b421931b3bb2e810c8c3f5451c96e29443594df30896bc2cb1f12d97"
+    },
+    "REVIEW-LOAD012-FINAL-DELTA.md": {
+      "bytes": 1787,
+      "sha256": "4bd6712098989e9b903fb848f15131189cc02e5cef9577989e4e8f296664197f"
+    },
+    "load012-radio-source-identities.json": {
+      "bytes": 1551,
+      "sha256": "7900101d1004ab757affe79aa632fd6220eaa85ec7f9725d2fd5379d8186d068"
+    },
+    "load012-final-delta-review.json": {
+      "bytes": 1047,
+      "sha256": "e81f4aef1b8f58f61541011659b9ceed1aaeb009177ff7a7914ad37a1c36a10c"
+    }
+  },
+  "source_metadata_bytes": 42827,
+  "source_review": "No further concrete blocker after actualargvpadfix and correctAutoLoad=yes diagnostic; original and finaldelta receipts preserved.",
+  "preparation_checks": "Final actualargv paths required-in-pinmap and all hashes/syntax passed; shell LF and bash-n passed. No live012 qualification.",
+  "bounds": {
+    "raw_seconds": 41,
+    "close_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_cap_bytes": 62914560,
+    "admission_bytes": 20342374400,
+    "runtime_floor_bytes": 19394461696,
+    "global16": true,
+    "castle2": true
+  },
+  "actions": "No new buttons/rearm/teleport/HP/AI/RSF edits. Same media, oldnativepad all9entries alreadydelivered. State continuation explicitly AutoLoad=yes.",
+  "acceptance": "Actual204 room entry/freeplay; freshopen type20 plus inspectedcodecPNG forradio; eventreturn/backinghash/Stop/sourceframe progress separately. RSF7alone and audiostreamlogs are not completedradio/audioacceptance."
+}

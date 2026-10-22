@@ -1,0 +1,123 @@
+{
+  "scope": "V2 UNADOPTED SOURCE-ONLY concrete collector child hook successor; no launch seal, native query, image read, preflight or guest",
+  "utc": "2026-10-22T07:03:47.358898+00:00",
+  "parent_commit": "25763e7e0a045bf8e14c298a8978d16479d0dd0e",
+  "frozen_505f_source": "505f3ee487a1bb658199986f4988fdf14008c960",
+  "fixed_runtime": {
+    "game_source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+    "program_sha256": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+    "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+    "profile_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+    "runtime_flags": "existing c57 default-off cache/trace/CABIN flags unchanged"
+  },
+  "files": {
+    ".gitattributes": {
+      "sha256": "3d518c8907fb67ffad0685f52e941b1440892ccffa35724ae820d33fb2cd62e1",
+      "bytes": 105
+    },
+    "CLAIM.md": {
+      "sha256": "bef83d31ba5acd6b10c7f9ecf56d25713d5cfa740f4dc812ef04d9a5316f88ed",
+      "bytes": 598
+    },
+    "COLLECTOR_CONTRACT.json": {
+      "sha256": "ff15e0f1ae5dd059a01f71bd25245b16c977f576ece6f8c0d07ff6b30a4546b1",
+      "bytes": 5411
+    },
+    "HOOK_PLAN.md": {
+      "sha256": "dc1dd45834aa650ec353ee471201a6d586f393e15af53fe50b4152ce8e0e652d",
+      "bytes": 10043
+    },
+    "PROPOSAL_INPUT.json": {
+      "sha256": "59f6bb01ea28822c319549a180fcdaad4998442167da67823bb3aa87f2732b45",
+      "bytes": 6995
+    },
+    "V1_PARENT.json": {
+      "sha256": "8edd811d79d611a0930bc7009e01dfdbcf4ef2bbfc5ce36196cfdcbd0dbb9a7b",
+      "bytes": 504
+    },
+    "V1_REVIEW.json": {
+      "sha256": "a459bbcdcbf99b0c02d1cc55bbe8d341fed258be524bdfcac903d79b2a0b6f9b",
+      "bytes": 378
+    },
+    "V2_DELTA_PROOF.json": {
+      "sha256": "3745f0270ada3373d5f02d4aa5149ca8636100b8aaf29428e5e3c67d3f63a4c5",
+      "bytes": 1591
+    },
+    "V2_TEST_SCOPE.md": {
+      "sha256": "39951a00a790dd8c8f0ea50e998d5a1290a2be492331545545c08aeade1f2ffa",
+      "bytes": 693
+    },
+    "checkpoint_runner18.child.py": {
+      "sha256": "b9229b91c96c4b8bbc0417e9a0822e419c3eda04f64506f50e32b3d5349584e6",
+      "bytes": 18115
+    },
+    "checkpoint_runner18.original.txt": {
+      "sha256": "8960ffcf6652e1aac9f846d2857cc5932314bf03bcbf99ae538d68d131d1ca20",
+      "bytes": 17566
+    },
+    "child-runner.diff": {
+      "sha256": "c7b0cc5a1f5588f746bb900bc4cc39259369ec7709db489dcf88854192f4aa0a",
+      "bytes": 4497
+    },
+    "child_reference_proxy.py": {
+      "sha256": "35fd3ab48a43f7a0604770b8b2b1708d0eb546371bd2101eb21ae3e022b6af19",
+      "bytes": 5369
+    },
+    "frozen-source-proof.json": {
+      "sha256": "2be9c2584430896782f9dd86f0242bcd253c11cb2d36d4708500dae9c4485844",
+      "bytes": 5869
+    },
+    "guest-profile-v2.json": {
+      "sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+      "bytes": 13113
+    },
+    "native_reference_api.py": {
+      "sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255",
+      "bytes": 9151
+    },
+    "parent_reference_broker.py": {
+      "sha256": "4d77a1871d197a91c4cdf8321afbcd44dc929ee7118fefaa5691b499024df75f",
+      "bytes": 16780
+    },
+    "receipt-linux.json": {
+      "sha256": "59747627f36f8672e44d3d35b1ff4a53338612fc7e9f471a13afc59efc9508d9",
+      "bytes": 8379
+    },
+    "receipt-windows.json": {
+      "sha256": "9a17dedc26ef220214e90c33f8c46c386d8fe8c048a359cb279102184c217c34",
+      "bytes": 8412
+    },
+    "reference_collector.py": {
+      "sha256": "fb86ea60f8d39f61aa25e6a5facc5c3eafa11a695f2bf3ee40211243be17165d",
+      "bytes": 6856
+    },
+    "retained-all-track-declarations.json": {
+      "sha256": "dc7e2d19fce835f3d68cde66ae1a15afd3705dabb982921730fdd43cc92a0af0",
+      "bytes": 4295
+    },
+    "run_source_tests.py": {
+      "sha256": "72b32633875c67427d8ccb124965548e06fdb6fcad2a0eb3eb7e3ab0c685e4b8",
+      "bytes": 1489
+    },
+    "runner-origin.json": {
+      "sha256": "43db462a9f865031d2c6b3851a1316db0708bdec95f988d072173fe57144edb1",
+      "bytes": 495
+    },
+    "test_owned_runner.py": {
+      "sha256": "8a5abf5086d1175670f7e0f6b8205a6d082eef7d68b340e1dfbd425d2f07583f",
+      "bytes": 31889
+    },
+    "v2-source.diff": {
+      "sha256": "1ed043b583f8d5ebed027e7a0c749daac04c0c3cd311143c96bc0abed62c8fd6",
+      "bytes": 5453
+    }
+  },
+  "source_tests": {
+    "Linux": 48,
+    "Windows": 48,
+    "new_direct_methods": 10,
+    "native_interoperability_or_timing_acceptance": false
+  },
+  "runtime_adopted": false,
+  "root_concrete_review_required": true
+}

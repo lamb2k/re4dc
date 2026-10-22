@@ -1,0 +1,29 @@
+{
+  "scope": "one allocated cold-shoot01 exact argv wrapper",
+  "utc": "2026-10-22T02:43:02.039317+00:00",
+  "free_C_before": 21743587328,
+  "peer_reserved": 553648128,
+  "aggregate_admission": 20015218688,
+  "global_flycast_before": 0,
+  "invocation_sha256": "8070dc77357e12331c90053f96b7f26e81506a1b8d126f0f0ad6cde811e384f7",
+  "argv": [
+    "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest\\outer-driver.py",
+    "--profile",
+    "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest\\guest-profile-v2.json",
+    "--profile-sha256",
+    "8aae247a6c0998af06ffce2d16a3832bfaaaf99dbab1769fc75b32b1a2103d1b",
+    "--tools-sha256",
+    "3557c5224df6b3715d282d3deab5fff7557b1c2ec8273c7d0ea76c1f359a41c1",
+    "--mode",
+    "cold-shoot01"
+  ],
+  "outer_pid": 43336,
+  "outer_spawn_utc": "2026-10-22T02:43:02.052319+00:00",
+  "outer_returncode": 1,
+  "wrapper_elapsed": 36.85999999998603,
+  "stdout": "{\"status\": \"RUNNING\", \"name\": \"cold-shoot01\", \"pid\": 39248, \"cap\": \"C:\\\\Flycast-Evidence\\\\re4-dreamcast\\\\qa21-ganado-reader-guests-20261021\\\\cold-shoot01\"}\n{\"qualified\": false, \"control\": \"C:\\\\Flycast-Evidence\\\\re4-dreamcast\\\\qa21-ganado-reader-guests-20261021\\\\cold-shoot01-control\", \"mode\": \"cold-shoot01\"}\n",
+  "stderr": "",
+  "free_C_after": 21727768576,
+  "finished_utc": "2026-10-22T02:43:38.906463+00:00"
+}

@@ -2,6 +2,9 @@
 // Pieces are the pzlPlayer / pzlBoard / pzlPiece of game/puzzle.cpp; this unit draws them
 // (piece models, cursor, grid) and runs the select / command / combine / case change widgets.
 #include "types.h"
+#if defined(RE4DC_SS_ACTOR_LIFETIME) && RE4DC_SS_ACTOR_LIFETIME
+#include "re4dc_subscreen_actor.h"
+#endif
 #include "global.h"
 #include "map_obj.h"
 #include "light.h"
@@ -195,8 +198,14 @@ public:
 };
 #define cMesS (*(MessageControlS*) &cMes)
 
+#if defined(RE4DC_SS_MSG_FIELDS) && RE4DC_SS_MSG_FIELDS && !defined(__PPC__)
+// The port compiler places virtual pointers before the original message fields.
+#define CMES_FLAGS (cMes.getMes(1)->flags2)
+#define CMES_RESULT (cMes.getMes(1)->m_sel)
+#else
 #define CMES_FLAGS (*(u32*) ((u8*) &cMes + 0xFC))
 #define CMES_RESULT (*(s8*) ((u8*) &cMes + 0x1D1))
+#endif
 
 // Queues clearZbuffer into OT 0xF before the case/piece models (they draw over the 2D background).
 void pzzlClearZ(SUB_SCREEN* wk)
@@ -2616,7 +2625,11 @@ void PieceCommand::move(SUB_SCREEN* wk)
                 break;
             }
             case 4:
+#if defined(RE4DC_SS_ACTOR_LIFETIME) && RE4DC_SS_ACTOR_LIFETIME
+                if (re4dc_ss_actor_is_ashley()) {
+#else
                 if (pSUB && ((cModel*) pSUB)->id == 3) {
+#endif
                     mode = 1;
                     subSel = 0;
                     SndCall(0, 4, 0, 0, 0, 0);
@@ -2625,7 +2638,11 @@ void PieceCommand::move(SUB_SCREEN* wk)
                 ItemMgr.m_to_whom = 0;
                 used = ItemMgr.use(pzzl_sel->item);
                 if (used) {
+#if defined(RE4DC_SS_ACTOR_LIFETIME) && RE4DC_SS_ACTOR_LIFETIME
+                    re4dc_ss_actor_reset(0);
+#else
                     PlMotionReset();
+#endif
                 }
                 break;
             case 5:
@@ -2748,9 +2765,17 @@ void PieceCommand::move(SUB_SCREEN* wk)
                 }
                 if (used) {
                     if (ItemMgr.m_to_whom == 0) {
+#if defined(RE4DC_SS_ACTOR_LIFETIME) && RE4DC_SS_ACTOR_LIFETIME
+                        re4dc_ss_actor_reset(0);
+#else
                         PlMotionReset();
+#endif
                     } else {
+#if defined(RE4DC_SS_ACTOR_LIFETIME) && RE4DC_SS_ACTOR_LIFETIME
+                        re4dc_ss_actor_reset(1);
+#else
                         SubCharMotionReset();
+#endif
                     }
                     SndCall(0, 8, 0, 0, 0, 0);
                 } else {

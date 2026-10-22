@@ -1,0 +1,19 @@
+{
+  "result": "PASS",
+  "checks": [
+    {
+      "arm": "C",
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\texture-rect21-20261021\\standalone-C-01\\gdemu\\track03.iso",
+      "bytes": 1032499200,
+      "sha256": "13c998136f24212e39a86bc82a0dc54eb14bb8bacca38ca14cb855e2897309fd"
+    },
+    {
+      "arm": "B",
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\texture-rect21-20261021\\standalone-B-01\\gdemu\\track03.iso",
+      "bytes": 1032499200,
+      "sha256": "e9efca156ff9b11005af57688accc085c9e568ceef32c2085e8a2d8f789db434"
+    }
+  ],
+  "C_free": 21872709632,
+  "scope": "Source staged image bytes unchanged after fresh C03/B01 cold guests; no physical Dreamcast or release acceptance"
+}

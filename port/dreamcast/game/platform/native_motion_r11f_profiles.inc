@@ -9,6 +9,8 @@ unsigned bounded_profile(const unsigned char* a,unsigned bytes,unsigned rel,cons
         {47u,32768u,69u,384064u,0x5f23565eu,0xddcc1084u,0u},
         // pl11-hot (castle lane 2026-10-15): pl11-r11f + Ashley's 8 near-enemy clips retained in the body.
         {47u,32768u,61u,411744u,0x3913017bu,0xeb2fce03u,0u},
+        // pl11-walk: additive source ARC22/23/37 retention for the confirmed r202 follow working set.
+        {47u,32768u,58u,423136u,0x99957b47u,0xe0461bb7u,0u},
     };
     for(const auto& p:profiles) {
         if(bytes!=p.bytes || word(mtc+28)!=p.cap || word(mtc+12)!=p.count || word(mtc+20)!=p.table_crc ||

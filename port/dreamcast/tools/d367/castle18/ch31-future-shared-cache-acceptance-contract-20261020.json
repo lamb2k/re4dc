@@ -1,0 +1,136 @@
+{
+  "status": "FUTURE_INTEGRATION_PREPARATION_ONLY; independent J progression continues",
+  "root_six_fix_source": "d4a3b31fac3362937a3f21eaa874e07be94fd061",
+  "root_QA_elf": "52a5d671203e22e9f20728a8fbc3b61e080f7ba44e06891df635248a374dd053",
+  "shared_knobs": [
+    "MOTION_PRESSURE_BACKING=1",
+    "MOTION_RESERVE_PACK=1",
+    "MOTION_RESUME=1",
+    "WEAPON_ARCHIVE_REUSE=1",
+    "LEON_HAND_RETAIN=1",
+    "RESIDENT_LIST_CACHE=1"
+  ],
+  "capacity_candidate": "Boss /root/probe/codex-boss21-motion-capacity; reviewed runtime commit/knob pending; do not infer d4 solves K05",
+  "K05_state_sha256": "bc758ad5a77145742d0c6e440b3810a6d4c0207beffb8b34986128e425f22046",
+  "K05_source_frame": 6925,
+  "K05_body_keys": [
+    0,
+    0,
+    152,
+    86
+  ],
+  "distinct_body_bytes": 72224,
+  "reserved_payload_bytes": 64832,
+  "deficit_bytes": 7392,
+  "temporal_union_bytes": 81376,
+  "heap4_free_and_largest_bytes": 83168,
+  "castle_spill_margin_bytes": 131072,
+  "global_cap_bytes": 262144,
+  "no_new_profiles_or_margin_reduction": true,
+  "current_J_health_gold": {
+    "scope": "Immutable current J original no-warp CardLoad lineage, four exact ELF anchors; original inventory and RSF read-only. No state changes.",
+    "state_sha256": "fc751ff9bcd71647086d94f93f4a5d5a52a13d3b2848673834534078f27a5926",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x207",
+    "chapter": 6,
+    "source_frame": 14658,
+    "health": [
+      1200,
+      1200,
+      600,
+      600
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "death_flags": "0x3080100",
+    "door_flags": "0x884002b4",
+    "partner_subflags": "0x46",
+    "r207_RSF": "0x82300000",
+    "player_pos": [
+      -9420.0146484375,
+      4149.16064453125,
+      -10474.3515625
+    ],
+    "partner_pos": [
+      2510.12109375,
+      126.740966796875,
+      -2016.5745849609375
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 10
+      },
+      {
+        "id": "0x4",
+        "num": 10,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x80",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ]
+  },
+  "sealed_audit_hashes": {
+    "K05-alive-motion-proxy-snapshot-audit.json": "7a307a9819bc64b71588fe6eb93725d2e33e27367cf3da19036ebb192f73b9be",
+    "K05-binding-hotflags-audit.json": "afdbfe7873b4436230472f858c00d73a1eec739554d6f96f92540412e3928330",
+    "K05-heap4-snapshot-audit.json": "aa391cf6e7e251d6a9c88af26d1ee3b6cd3a46b60ce281ea7b1d885fe48bdea9",
+    "K05-em11-recurring-working-set-audit.json": "6bb473b7407ff3a925c8ca457c6a9e1b899b793a2a3e92117c4d6d3ca1addd2b"
+  },
+  "qualified_pl11": {
+    "path": "/root/re4data/private/castle21-ashley-walk-candidate-20261020/pl11.drs",
+    "wrapper_sha256": "12bf1589821db613693f4d0c6545b622a42ed831cc02fd9061869849dfcd3e3f",
+    "body_sha256": "940d2f7b3642c3ccc2a876abc31ba861cc9a47cd56aba569a0ff9fed368df671",
+    "body_bytes": 423136,
+    "cold_records": 58,
+    "table_crc": "99957b47",
+    "body_crc": "e0461bb7",
+    "existing_admission_commit": "a0c32e797788ab8a719f9c71c0714a9bb0a1c55a"
+  },
+  "fresh_vmu": {
+    "path": "C:/Flycast-Evidence/re4-dreamcast/discsets20-20261020/fixtures/handoff-ch23end-A1.bin",
+    "sha256": "3fd96a3481bbccb641441707ebf3a5d28c632a025b9020402c334f9c96f4ea91"
+  },
+  "disc2_baseline": {
+    "files": 6762,
+    "data_sectors": 496343,
+    "ISO_sectors": 497456,
+    "limit": 504000,
+    "spare": 6544,
+    "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b"
+  },
+  "jobs_started_for_contract": []
+}

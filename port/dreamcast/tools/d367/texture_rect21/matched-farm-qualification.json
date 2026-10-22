@@ -1,0 +1,134 @@
+{
+  "source": "80a62f039f8412d912908506897c62114a472fc8",
+  "status": "STRICT_MATCH_FAILED_NO_SPEEDUP_OR_DELTA",
+  "predeclared_window": [
+    241,
+    360
+  ],
+  "mismatching_ticks": 47,
+  "boundary241": "B one variant, C two; player and camera differences",
+  "boundary300": "One variant each; camera differs while player/life agree",
+  "boundary301_360": "Exact observed scene sets match; do not use these to replace rejected boundaries",
+  "B_original_binding": "Actual e19cfc46 pack17 originals all earlier-source bytes exact,128x64/RGB565/no-mip/VQ4096;66 B stable tables show9 exact original keys/CRC/material/packoffset/descriptors/upload/owned pointers",
+  "C_binding": "Scoped9 exact CRC64x64/VQmip3414 live; single minimum header outsidecomparisonwindow",
+  "counter_observation": {
+    "B": {
+      "source_edge_values": {
+        "240": [
+          {
+            "block_us": 9926746,
+            "bytes": 15785856,
+            "reads": 1502
+          }
+        ],
+        "360": [
+          {
+            "block_us": 9926746,
+            "bytes": 15785856,
+            "reads": 1502
+          }
+        ]
+      },
+      "single_value_at_each_sampled_edge": true,
+      "observed_source_associated_delta": {
+        "block_us": 0,
+        "bytes": 0,
+        "reads": 0
+      },
+      "limit": "Frame count coherence is not completed-state phase latch; no exact PT-edge attribution inferred"
+    },
+    "C": {
+      "source_edge_values": {
+        "240": [
+          {
+            "block_us": 9917840,
+            "bytes": 15775712,
+            "reads": 1500
+          }
+        ],
+        "360": [
+          {
+            "block_us": 9917840,
+            "bytes": 15775712,
+            "reads": 1500
+          }
+        ]
+      },
+      "single_value_at_each_sampled_edge": true,
+      "observed_source_associated_delta": {
+        "block_us": 0,
+        "bytes": 0,
+        "reads": 0
+      },
+      "limit": "Frame count coherence is not completed-state phase latch; no exact PT-edge attribution inferred"
+    }
+  },
+  "CPU": "Raw direct cpu means/max remain in strict report; no paired calculation, no overlapping row sums",
+  "programme": "Both frozen a585/e08c and same controls; unrelated programmes excluded",
+  "guest_limits": "Only completed rectangle-owned C03/B01; no further guest/state writes",
+  "next": "Source-only phase cursor/latch inventory against exact ELF; no matched-row cherry-pick",
+  "inputs": {
+    "C:\\Flycast-Evidence\\re4-dreamcast\\texture21-benchmark-20261021\\candidate-C03-review-01\\summary.json": "fc69ca0da891b2137c3963f9bfa46af6404e7b1dbd4ca16483202bd75fb45cb4",
+    "C:\\Flycast-Evidence\\re4-dreamcast\\texture21-benchmark-20261021\\matched-B01-C03-review-01\\strict-pair-review.json": "058639d0cd022cd23008f44f7048df494dc8fde758cde5990e3ab550328907ff",
+    "C:\\Flycast-Evidence\\re4-dreamcast\\texture-rect21-20261021\\standalone-C-01\\guest-invocation-03\\observer.py": "694b31d3442beb135638dfbb88ebef7923a7616ee0faf5ca23feba9cd13d35b3",
+    "C:\\Flycast-Evidence\\re4-dreamcast\\texture-rect21-20261021\\standalone-B-01\\guest-invocation-01\\observer.py": "694b31d3442beb135638dfbb88ebef7923a7616ee0faf5ca23feba9cd13d35b3",
+    "C:\\Flycast-Evidence\\re4-dreamcast\\texture-rect21-20261021\\standalone-C-01\\guest-invocation-03\\process-supervisor.json": "26df88ce04349d164f82c8ccc4b1b5a122447d0da97cf1bda07863b6dc929ee0",
+    "C:\\Flycast-Evidence\\re4-dreamcast\\texture-rect21-20261021\\standalone-B-01\\guest-invocation-01\\process-supervisor.json": "7a0f22d5e3b57ded6c60cecd4fc053b25b9fad960d8b674d2d68babb991cd1ba"
+  },
+  "frozen_runtime": "004cf224674fa60cf08dc10e641c723de238a0fd",
+  "program_sha256": "a58579b87da0c45267cb93efe29feea2438da9ddab62d0fe31c47a1c6ff32c71",
+  "elf_sha256": "e08c9abc8f6bb44bb2a94642fc9a2e664d22039659cea7fcce311cb9989d7433",
+  "independent_summary_sha256": "c2ee8e28034003793d7b445a9c5a1f5da97c4f523855961a4726436b8e3073ec",
+  "independent_seal": "27bf34ceb9be1bbb7c4ee20f6cc9be95646ec23d2ffc0e8bf446f5e85b82a4b4",
+  "owned_guests": {
+    "B": {
+      "capture": "cold-functional-B-01",
+      "invocation": "standalone-B-01/guest-invocation-01",
+      "process_supervisor": {
+        "pid": 27436,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\texture-rect21-20261021\\cold-functional-B-01\\flycast.exe",
+        "start_filetime": 134371010457756917,
+        "exit_filetime": 134371010878561072,
+        "guest_seconds": 42.0804155,
+        "exit_code": 1,
+        "inner_exit": 0,
+        "observer_exit": 0,
+        "max_capture_growth": 16789535,
+        "final_C_free": 21901479936,
+        "foreign_state": false,
+        "save_checkpoint": false,
+        "reason": null
+      },
+      "capture_manifest_sha256": "07976b8157ff0f0ce7ed9ccc6bdff512f64c3de1138173e459567a14fa1662b0",
+      "inspected_screenshot": "shots/t0037/frames/fb1.png",
+      "screenshot_sha256": "9e412e1a0b16f6a24b8459a8b49385cd1061b83e6fdfd8973733bae23404d667"
+    },
+    "C": {
+      "capture": "cold-functional-C-03",
+      "invocation": "standalone-C-01/guest-invocation-03",
+      "process_supervisor": {
+        "pid": 50088,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\texture-rect21-20261021\\cold-functional-C-03\\flycast.exe",
+        "start_filetime": 134371008866242571,
+        "exit_filetime": 134371009285589097,
+        "guest_seconds": 41.9346526,
+        "exit_code": 1,
+        "inner_exit": 0,
+        "observer_exit": 0,
+        "max_capture_growth": 16816537,
+        "final_C_free": 19862933504,
+        "foreign_state": false,
+        "save_checkpoint": false,
+        "reason": null
+      },
+      "capture_manifest_sha256": "1b22763890641482df70797571ce3c41e9e8f0d7a1308b0aa7931c12f6de2d97",
+      "inspected_screenshot": "shots/t0037/frames/fb1.png",
+      "screenshot_sha256": "11de3b4acc89fd3d493a1f4a79bcc49f8c0e317c8043d41e820a7505f645a690"
+    }
+  },
+  "look": "Both full farm views inspected: candidate ground filtering appears softer. Approximation and source/frame match not accepted.",
+  "performance_improvement": false,
+  "release_acceptance": false,
+  "physical_Dreamcast_acceptance": false,
+  "remaining_keys": "Eight r100 keys pending actual target admission/use/look; existing QA preset0 house plan is a distinct scene from historical natural woods benchmark."
+}

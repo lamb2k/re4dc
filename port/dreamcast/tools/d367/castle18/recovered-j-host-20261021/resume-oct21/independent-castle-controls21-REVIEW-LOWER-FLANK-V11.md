@@ -1,0 +1,15 @@
+# Lower-floor consolidated flank v11: read-only review
+
+Inspected `castle18/owned-window-recovered-j-r201-lower-quiet-flank-combat-v11-still.py`, 44,254 bytes, SHA-256 `aa60f37d259248a3e5bd39a696320500a4d5e48d2f69f26cd9cbcf74ed97b66b`. Python AST parsing passed; the controller was not executed. Castle21 owns all implementation and guest work. This review does not qualify the proposed corridor or current combat state.
+
+Three concrete contract discrepancies were sent to castle21 before adoption:
+
+- The movement recovery branch uses `{'forward','dash',side}` when `routine[0]==4` and the target angle is at least 0.15 rad. This contradicts the new Forward-only/B-only-for-quickturn contract and can restore run-expanded hearing outside a quickturn. Remove dash from the recovery fallback if that contract is intended. This is a host branch issue, not a runtime defect.
+- The upper-stairs ban checks waypoint x/z coordinates only. It does not constrain the actual path/floor or monitor `pos.y`. It proves that target points avoid the excluded area, not that collision, authored motion or a segment cannot enter it. Add an actual floor/region bound based on the owned source/route evidence, or describe the assertion as a target-only restriction. Prior completed lower-route traversal remains separate evidence.
+- `capture_before_close` retains a 16 GiB + 64 MiB local disk floor. Current standing policy is 18 GiB + 64 MiB. The outer runner may independently enforce the higher floor; that does not make this helper's literal threshold conform. Update the next owned controller/helper consistently.
+
+The reviewed fine-input fixes are present: fine entry drains inherited coarse raw axes; each selected signed raw axis must acknowledge before the fine source interval; final firing preparation universally drains raw axes and translated direction plus three ticks. Both held-feedback and final geometry aim at the actual weakpoint center. The 15-tick occlusion stop is restricted to the strong-rear condition, and the final firing predicate retains forward intersection, miss below 75, strong rear, laser target, surface agreement, ammo/shot limits and subsequent source part-37/HP proof.
+
+The controller budgets a movement subset below 25 wall seconds and a total outer combat loop below 42 wall seconds measured from movement start. Nested finite acknowledgement/neutral operations can extend an outer-loop iteration; the owned external guest limit remains authoritative. The first newly appended waypoint event still says stairs in its label, and the large scope string contains historical superseded descriptions; these strings should not be used as evidence that v11 traversed stairs, enabled a 9,000-unit guard, or retained the old lower-edge aim offset. Actual new code, exact identity and closed-state results take precedence.
+
+No controller/source edits, guest, image/build, asset generation, release checks or physical Dreamcast tests were performed by this lane. Normal walking remains audible; the 3,500-versus-8,000 hearing distinction and direct claw target refresh caveats are in GARRADOR-HEARING.md.

@@ -166,6 +166,18 @@ $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_HAND_PACK=1 -I$(OBJDIR)/
 $(OBJDIR)/src/game/read.o $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_LEON_HAND_PACK=1
 $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_LEON_HAND_PACK=1
 endif
+# LEON_HAND_RETAIN=1 (default off): demand-priority two-cell hand retention,
+# current-slot/cached reuse and stale-job admission; same package/AICA bytes.
+LEON_HAND_RETAIN ?= 0
+ifeq ($(filter $(LEON_HAND_RETAIN),0 1),)
+$(error LEON_HAND_RETAIN must be 0 or 1)
+endif
+ifeq ($(LEON_HAND_RETAIN),1)
+ifneq ($(LEON_HAND_PACK),1)
+$(error LEON_HAND_RETAIN needs LEON_HAND_PACK=1)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_HAND_RETAIN=1
+endif
 # LEON_HEADLESS=1 (lane garr18, 2026-10-19; default 0: no effect; render only; needs ACTOR_PL08=1 PS2_LEON=1
 #              LEON_HAND_POSES=1 and LEON_HEADLESS_DIR, a space-free private dir holding ps2leon_neck.h from
 #              tools/d367/ps2leon/build_neck.py): Leon after his head comes off (cPlLeon::setHead(0): chainsaw / claw /
@@ -271,6 +283,21 @@ $(error SS_CERT=1 needs ACTOR_TRANSACTION=1 and SUBSCREEN=1)
 endif
 $(OBJDIR)/coarse_actor.o $(OBJDIR)/sscrn_bridge.o: GAME_CPPFLAGS += -DRE4DC_SS_CERT=1
 $(OBJDIR)/coarse_actor.o: actor_swap_park.inc
+endif
+# SS_CERT_PARTNER_CAPACITY=1: 32 parked source assets for a full Castle monk archive plus Ashley.
+# Default off; only storage grows, with all SS_CERT ownership and restore checks unchanged.
+SS_CERT_PARTNER_CAPACITY ?= $(if $(filter 1,$(SS_CERT)),1,0)
+ifneq ($(words $(SS_CERT_PARTNER_CAPACITY)),1)
+$(error SS_CERT_PARTNER_CAPACITY must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(SS_CERT_PARTNER_CAPACITY)),)
+$(error SS_CERT_PARTNER_CAPACITY must be 0 or 1)
+endif
+ifeq ($(SS_CERT_PARTNER_CAPACITY),1)
+ifneq ($(SS_CERT),1)
+$(error SS_CERT_PARTNER_CAPACITY=1 needs SS_CERT=1)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_SS_CERT_PARTNER_CAPACITY=1
 endif
 CROWD_CULL ?= 0
 CROWD_CENSUS ?= 0

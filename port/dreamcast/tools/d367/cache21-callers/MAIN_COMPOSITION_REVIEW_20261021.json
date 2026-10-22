@@ -1,0 +1,63 @@
+{
+  "kind": "bounded-actual-source-host-composition",
+  "source": "7569acb03aab69e67492262bd5887cc66bdd4fb5",
+  "source_identities": [
+    {
+      "path": "/root/probe/codex-cache21-integration-next/src/game/event.cpp",
+      "sha256": "177f46842cb81a9c96c647feb7fa9f3db23cc07af6a6cebc5edec1ef034b6b37"
+    },
+    {
+      "path": "/root/probe/codex-cache21-integration-next/src/game/datactrl.cpp",
+      "sha256": "31d38c14806250cdf1d7ad58a7dd742641bc2fbe6e3af5cf5c0f361163277216"
+    },
+    {
+      "path": "/root/probe/codex-cache21-integration-next/src/game/sce_com.cpp",
+      "sha256": "b18dd8fe318e0bd3e9be6277beef056bc3a8ba7a121f8f70a7ab0a8f93a2ff0e"
+    },
+    {
+      "path": "/root/probe/codex-cache21-integration-next/port/dreamcast/game/platform/native_event_file.cpp",
+      "sha256": "ab5f2f85b530e9237cb4eb60acd49a332400351f9e066aab2e675179f9e37db2"
+    },
+    {
+      "path": "/root/probe/codex-cache21-integration-next/port/dreamcast/game/platform/include/native_cabin.h",
+      "sha256": "d47467dfb29a17dd344c03cb45f77408ba89914343499edd03646844bada5660"
+    },
+    {
+      "path": "/root/probe/codex-cache21-integration-next/port/dreamcast/game/Makefile",
+      "sha256": "8a4c237904c0cfad6d3d5d58ce4aa9a957f43ade385688ab8afe8b78c511d7b3"
+    }
+  ],
+  "host_receipts": [
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-integration-prep-20261021/caller-composition-host-v1/exec/receipt.json",
+      "sha256": "bcfd0c09c6f0b4f91e1eb781557a79b4346b39e08ce3e21e8250dbf7161c68f3"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-integration-prep-20261021/caller-composition-host-v1/cabin/receipt.json",
+      "sha256": "df6b6aff2a6df0c1883c7cc0ad89946fecfd18ce7e78aa6b5c464843700e243b"
+    }
+  ],
+  "results": [
+    "Exec cleanup OFF/ON: 146/153 cabin0 and146/154 cabin1 actual-source cases pass UBSan within explicit scaffold boundaries.",
+    "CABIN retry enabled, registration release OFF/ON:42/45 actual-source cases pass UBSan."
+  ],
+  "review": [
+    "CABIN preload receipt accepts existing immutable source only, no module/allocation/reader/DMA role. Exact owner/epoch and descriptor/row/readEm bytes revalidated after allocation refusal; restore only six owned fields.",
+    "Changed receipt returns failure and retains current state; message currently does not distinguish restored versus receipt-lost refusal.",
+    "Count2..32767 releases one actual DatTbl registration only; final reader/module retirement is not solved by Count.",
+    "Current backend refuses fresh debug-input paths; their repair is not an observed gameplay traffic win.",
+    "No-epoch prior failure, late SetRead refusal, forward exchange completion and whole reset remain open."
+  ],
+  "next_contract": [
+    "Validate source module address/range/size before irreversible EspEmDataSwapPush (actual effect release).",
+    "Forward MemorySwap requires exact accepted native completion receipt before publishing swapped/output; void return is insufficient.",
+    "Reset preflight must occur before first destructive action, freeze admissions across yielding callbacks, and retire actual Event/DMA/native readers before heap/unit reset."
+  ],
+  "limits": [
+    "Source host tests are not full object/linked-program identity of this new composition.",
+    "Five-fix105/9398 OFF program plus14 overlays remain a separate frozen qualified control.",
+    "No enabled integration program/stage/Flycast/release/hardware acceptance.",
+    "All switches default0; no production recipes changed."
+  ],
+  "time_unix": 1792619716.7461855
+}

@@ -1,0 +1,45 @@
+{
+  "scope": "Source/AST and prepared host profiles only; v15/v16 no runtime acceptance yet. v13 actual290 and v14 actual292 qualify only their recorded outputs.",
+  "inputs": [
+    {
+      "path": "owned-window-recovered-j-r201-full-cell-exit-and-sourcebell-v13-still.py",
+      "sha256": "2156623a2cbe08fbc275ac6595d176ce21fa7401ade972e17e0910f9485409b5"
+    },
+    {
+      "path": "owned-window-recovered-j-r201-sourceAstar-lower-quiet-combat-v14-still.py",
+      "sha256": "57875bc57d94a3ab770f3a80df9367f69ae51b6db1c4d78cf1d5f5814991b378"
+    },
+    {
+      "path": "owned-window-recovered-j-r201-South-escape-bell-quiet-combat-v15-still.py",
+      "sha256": "888b280a233a9fffb4b385d7d015eb99f81d8bb7f3fef08b0ed9e10e69dd3d23"
+    },
+    {
+      "path": "owned-window-recovered-j-r201-South-escape-bell-quiet-combat-v16-still.py",
+      "sha256": "e956c990fc3ae06efde587c072cc5548eee8ad2eea73abef864854f66c02f393"
+    },
+    {
+      "path": "prepare-full-South-escape-bell-quiet-combat-v15.py",
+      "sha256": "07a1d7a1afab88b31d3468394b80739bf056633d9eea0d3df7ae738fbc76774e"
+    },
+    {
+      "path": "prepare-v16-and-absolute-preparer.py",
+      "sha256": "fdc201f5173d66685c4f4f91d64a7afd5c92e23c96c275749e769d641b1beea5"
+    },
+    {
+      "path": "prepare-recovered-j-41inner-47absolute-arm.py",
+      "sha256": "da2cd87b990beffa3a16defe904ee6fca81a04300ed081c7f5f9a7dd3fe25386"
+    },
+    {
+      "path": "prepare-absolute-resource-runner.py",
+      "sha256": "2e85477f74d5e5425fd7d9062a05be07fb0da90e4266b8575f733856c23730f8"
+    },
+    {
+      "path": "guard-resume-41inner-47absolute-resources.py",
+      "sha256": "70d7dc236ebd1161f856c77506c4251f713f5942890bf35149117a0d83d243fe"
+    },
+    {
+      "path": "run-resume-41inner-47absolute-resource-guard.py",
+      "sha256": "8cd81b3f96164b342eb7719233b1f509257dd9fa556c7cfb9ed3beaf4b9832b8"
+    }
+  ]
+}

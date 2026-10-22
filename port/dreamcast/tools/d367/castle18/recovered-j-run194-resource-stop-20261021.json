@@ -1,0 +1,13 @@
+{
+  "scope": "External monitor only; no keys or gameplay memory writes. Exact PID/path/start/window checked WM_CLOSE only if resource boundary crosses.",
+  "runtime_floor": 19394461696,
+  "capture_cap": 62914560,
+  "closed": true,
+  "samples": [
+    {
+      "monotonic": 366447.421,
+      "free": 19242016768,
+      "cap_logical_bytes": 28779661
+    }
+  ]
+}

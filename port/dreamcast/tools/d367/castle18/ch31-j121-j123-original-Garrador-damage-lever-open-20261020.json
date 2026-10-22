@@ -1,0 +1,415 @@
+{
+  "scope": "Same qualified J original VMU/CardLoad no-warp lineage. Normal movement/turn/A only; read-only actor/source feedback, no game/HP/item/AI/flag/state writes, rollback, new source/data/build/stage.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk121",
+      "result": "Original Garrador activation/approach; actual enemy attack1200to752 before lever; no lever completion.",
+      "elapsed_s": 11.0,
+      "errors": [
+        {
+          "kind": "screenshot",
+          "error": "incomplete VRAM read"
+        }
+      ],
+      "emulator_exited": true,
+      "state_sha256": "91869a775c4abf378e211cf1df445291f0b8667d3e8a9e29b4bbd99aac6ebffc",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk121\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            31300.0,
+            -42000.0
+          ],
+          "pos": [
+            31206.09765625,
+            -2000.00146484375,
+            -41987.921875
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            32500.0,
+            -42000.0
+          ],
+          "pos": [
+            32580.037109375,
+            -2000.00390625,
+            -42063.90234375
+          ]
+        },
+        {
+          "any_further_original_damage_stop": true,
+          "health": [
+            752,
+            600
+          ],
+          "frame": 35056
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk121\\shots\\checkpoint-source-35056\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk121\\shots\\checkpoint-source-35056\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk121",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Original Garrador activation/approach; actual enemy attack1200to752 before lever; no lever completion.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk121\\shots\\checkpoint-source-35056\\frames\\fb0.png",
+          "png_sha256": "3926e7b540ac57d5bbf21e2a033dbebdc17b88ac3ff3ff219452e1c22db4ce74",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk121\\shots\\checkpoint-source-35056\\checkpoint-context.json",
+          "source_frame_interval": [
+            35056,
+            35063
+          ],
+          "health_before": [
+            752,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            752,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk122",
+      "result": "Normal source-valid A lever operation; original callback completes, savedRSF68400000to6c400000, switchstate1/opened1, health752/600; Garrador4000stilllive.",
+      "elapsed_s": 7.4,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "16633cf3a277cc42def0442fc29991dc3e503d49945f770affb9f38233613598",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk122\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "normal_A_when_original_switch_1500reach_front45degree_player_action_predicates_pass": {
+            "frame": 35093,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              752,
+              1200,
+              600,
+              600
+            ],
+            "player_pos": [
+              34205.92578125,
+              -2000.00244140625,
+              -40467.37890625
+            ],
+            "yaw": 0.4193580746650696,
+            "player_routines": [
+              0,
+              0,
+              1,
+              0
+            ],
+            "partner_flags": "0x46",
+            "source_switch": {
+              "pos": [
+                34738.12109375,
+                -500.0,
+                -40000.0
+              ],
+              "yaw": -1.5707499980926514,
+              "reach": 1500.0,
+              "state": 2,
+              "opened": 0,
+              "actButton": 1
+            },
+            "Garrador": {
+              "hp": 4000,
+              "pos": [
+                33619.0703125,
+                -2000.004150390625,
+                -40888.8515625
+              ],
+              "yaw": 0.10842395573854446,
+              "routines": [
+                1,
+                43,
+                1,
+                0
+              ]
+            },
+            "r201_saved_RSF": "0x68400000",
+            "source_switch_distance": 708.290118986859,
+            "source_player_facing_error": 0.4307934487361442,
+            "source_switch_front_error": -0.7206911320959279
+          }
+        },
+        {
+          "original_lever_saved_RSF5_open_switch_full_gameplay_callback": {
+            "frame": 35218,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              752,
+              1200,
+              600,
+              600
+            ],
+            "player_pos": [
+              34197.01953125,
+              -1999.9989013671875,
+              -40467.23828125
+            ],
+            "yaw": 0.4193580746650696,
+            "player_routines": [
+              0,
+              0,
+              1,
+              0
+            ],
+            "partner_flags": "0x46",
+            "source_switch": {
+              "pos": [
+                34738.12109375,
+                -500.0,
+                -40000.0
+              ],
+              "yaw": -1.5707499980926514,
+              "reach": 1500.0,
+              "state": 1,
+              "opened": 1,
+              "actButton": 1
+            },
+            "Garrador": {
+              "hp": 4000,
+              "pos": [
+                33606.921875,
+                -1999.999755859375,
+                -40889.39453125
+              ],
+              "yaw": 0.10842395573854446,
+              "routines": [
+                1,
+                43,
+                1,
+                0
+              ]
+            },
+            "r201_saved_RSF": "0x6c400000"
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk122\\shots\\checkpoint-source-35218\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk122\\shots\\checkpoint-source-35218\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk122",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Normal source-valid A lever operation; original callback completes, savedRSF68400000to6c400000, switchstate1/opened1, health752/600; Garrador4000stilllive.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk122\\shots\\checkpoint-source-35218\\frames\\fb0.png",
+          "png_sha256": "22d06c7c6dbb239c269c941a0644772188a224f9a5ccf214f42044e635b7be56",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk122\\shots\\checkpoint-source-35218\\checkpoint-context.json",
+          "source_frame_interval": [
+            35218,
+            35227
+          ],
+          "health_before": [
+            752,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            752,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk123",
+      "result": "Normal quiet flank caught during initial turn; actual original damage752to528, Ashley600; no flank/kill/exit completion.",
+      "elapsed_s": 3.1,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "ebff7fee417e37472976b4f570848109476bc754cdc644f8d5eb627c9835396d",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk123\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "any_further_original_damage_stop": true,
+          "health": [
+            528,
+            600
+          ],
+          "frame": 35244
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk123\\shots\\checkpoint-source-35244\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk123\\shots\\checkpoint-source-35244\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk123",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Normal quiet flank caught during initial turn; actual original damage752to528, Ashley600; no flank/kill/exit completion.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk123\\shots\\checkpoint-source-35244\\frames\\fb0.png",
+          "png_sha256": "7b8ce8f48010665eeb03105c7505fcc3586f600d8282345b855edff6014b7078",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk123\\shots\\checkpoint-source-35244\\checkpoint-context.json",
+          "source_frame_interval": [
+            35244,
+            35253
+          ],
+          "health_before": [
+            528,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            528,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    }
+  ],
+  "original_damage_audit": {
+    "source_frame": 35063,
+    "health": [
+      752,
+      1200,
+      600,
+      600
+    ],
+    "player_pos": [
+      34206.02734375,
+      -1999.99951171875,
+      -39940.2109375
+    ],
+    "player_yaw": 0.4193580746650696,
+    "player_routines": [
+      4,
+      0,
+      1,
+      1
+    ],
+    "player_damage_owner": "0x8caf2460",
+    "switch": {
+      "ptr": "0x8caf01e0",
+      "id": 75,
+      "pos": [
+        34738.12109375,
+        -500.0,
+        -40000.0
+      ],
+      "yaw": -1.5707499980926514,
+      "state": 2,
+      "opened": 0,
+      "Mode": 1,
+      "Damage_ck": 1,
+      "reach": 1500.0,
+      "actButton": 1
+    },
+    "Garrador": {
+      "ptr": "0x8caf2460",
+      "hp": 4000,
+      "pos": [
+        33677.84765625,
+        -2000.001220703125,
+        -40883.4296875
+      ],
+      "yaw": 0.10842395573854446,
+      "routines": [
+        1,
+        43,
+        1,
+        0
+      ]
+    }
+  },
+  "limits": [
+    "J121 periodic screenshot incompleteVRAMread races ownedclose; its explicit injury checkpointPNG remains valid. No errors[] claim for J121.",
+    "Lever pass is original callback savedRSF5 plus switchstate/opened, not temporary Room_flg guess.",
+    "Actual Garrador remains4000HP; no kill/dungeonexit/waves/chapterendsave claim.",
+    "J DISC_READ_METER0/IO_PROBE0: no whole-drive quiet/hardwareperformance claim. Previous native/effects/texture gaps remain separate."
+  ],
+  "next": "Continue from actual J123528/600 injury checkpoint with normal recovery/escape/combat. No rollback; screenshot every meaningful result."
+}

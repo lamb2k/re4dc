@@ -1,0 +1,50 @@
+{
+  "scope": "019source/018failedactual preserved; no019guest.",
+  "members": [
+    {
+      "path": ".gitattributes",
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    {
+      "path": "run-result.json",
+      "bytes": 1508,
+      "sha256": "25155e88e35f25131882b56914325cb933b56efb69afd735862f3d80f2fa4b61"
+    },
+    {
+      "path": "owned-process.json",
+      "bytes": 324,
+      "sha256": "1bc198296eb84e92ca86434aaca315d2ee70b623aefb931c558166e6e17398f6"
+    },
+    {
+      "path": "DOOR018-ROOT-ALLOCATION.json",
+      "bytes": 1906,
+      "sha256": "38307368beddd517738d2a732d5bd10e548c3604414fb1575ef214449dc345d4"
+    },
+    {
+      "path": "run-start.json",
+      "bytes": 543,
+      "sha256": "b14427700c297b1171391917ac602feeff1191a440d5e43694b92f30a465105b"
+    },
+    {
+      "path": "audit-controlled018-missing-log-failure.py",
+      "bytes": 4081,
+      "sha256": "8db2e2959bfc64aa43363411cb383ec82df443121afdfd0c6c1a8a42162c0f8f"
+    },
+    {
+      "path": "controlled-door018-observer-summary.json",
+      "bytes": 1720,
+      "sha256": "8e3e46b775705f46804fbe15e7d3ce71df0cf3c3f57e80964154d951f2ece57c"
+    },
+    {
+      "path": "owned-resource-guard.json",
+      "bytes": 6730,
+      "sha256": "7a27177805944416687d892049c0883cbe86efa26cdd615f899e493d1e5ea541"
+    },
+    {
+      "path": "controlled018-missing-log-startup-failure-audit.json",
+      "bytes": 10360,
+      "sha256": "1142507a900e76777ab557d842c500aa160b64928343bc61223d2ac5eac18f0f"
+    }
+  ]
+}

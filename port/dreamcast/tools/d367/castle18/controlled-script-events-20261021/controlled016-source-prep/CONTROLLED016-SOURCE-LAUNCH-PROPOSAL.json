@@ -1,0 +1,125 @@
+{
+  "scope": "SOURCEONLY016 candidate; independent finalimplementation reviewpending, NO guest/build/image/allocation.",
+  "created_utc": "2026-10-22T06:12:04.614792+00:00",
+  "inputs_sha256": {
+    "observe-controlled-ch32-door016.py": "718e1c2e2ede7ded9f2de6d74970447c94f2820e56c0f77e98d3f8709d7405cd",
+    "run-controlled-ch32-door016.py": "41984c58a9b9160f826a33f7ae7575caa22fd295744c054f2c26b53878b860b8",
+    "run-controlled-ch32-door016.sh": "155a7f6325a8d7bac65da90e040e5af9f1dc8916c27d459c9fb73b142ac64128",
+    "controlled-ch32-door016-pins.json": "03f30e8c5e0bdc4ff8e9a58726c5e8b10ef3691b76c3dc83d0b7e020454de87d",
+    "controlled016-ABI-WRITE-ALLOWLIST.json": "c63c8ac0f3ab8ee4810fb3776286570631f2cd6126e454f01635b9e30e15dbaf",
+    "controlled016-frozen-Warp-DWARF.json": "2aadd9424935d2cbe5e76d468d0a03d6ec25e0e6e319db1296a40b7e4c080b79",
+    "controlled016-native-door-DWARF.json": "d2c7256bfabd385e081e1d2585a379fa7880a9419cde972a5966e3cb2e4e7912",
+    "controlled016-source-gates.json": "cd0b72c7dcba3e666a27bf83f10e4f1aeb52a3578dd3a6818334c93e3d064be7"
+  },
+  "seed_sha256": "2236156faabd0def3e9f38d708dbe983d2632441cd3fba521ef8fab634eb5237",
+  "default_prepare": {
+    "PASS": true,
+    "dependency_pins": 26,
+    "execute_flag_used": false
+  },
+  "source_cases": {
+    "scope": "Actual016 extracted source pure predicates/command-publication function with mock kernel, no OS processes/DLL/guest/native acceptance.",
+    "observer_sha256": "718e1c2e2ede7ded9f2de6d74970447c94f2820e56c0f77e98d3f8709d7405cd",
+    "checks": [
+      "actual015-shaped-ready-unused-slot",
+      "eventStop",
+      "eventstatus",
+      "wrongroom",
+      "dead-no-input",
+      "unverified-code",
+      "reject-n_go",
+      "reject-go0",
+      "reject-rooms",
+      "reject-flags",
+      "ordinary-positive-injury-still-eligible",
+      "publish-actual-function",
+      "descriptor24-before-count4-only",
+      "descriptor-payload-exact",
+      "no-republish-after-count1",
+      "write-allowlist-0x8c000000-1",
+      "write-allowlist-0x8c47ff30-24",
+      "write-allowlist-0x8c47fff0-4",
+      "native-source-shaped-door-ready",
+      "goto-not-consumed",
+      "no-native-front",
+      "wrongnativecallback",
+      "wrongdest",
+      "locked"
+    ],
+    "passed": 24,
+    "write_calls": [
+      {
+        "address": "0x8c47ff30",
+        "bytes": 24
+      },
+      {
+        "address": "0x8c47fff0",
+        "bytes": 4
+      }
+    ]
+  },
+  "source_route_review": {
+    "commit": "202fed03bd101fdd1769786a040e7b3d6edea98e",
+    "sha256": "2e7fe3a5ada2451f396746f25d781cb812910ed1938f85c7215ed8faa746e527",
+    "checks": 27
+  },
+  "method": "Exact actual015 fullstate continuation. Initial unused existing DBG_WARP Goto slot24B only; count4B publishedlast after readback+coherent205/Stop0/eventclear/draincomplete check. Engine on game thread marksdone andcallssetPos/setAng. Host observesconsumption andactualnativeclipped-front hit0/correctDoor0registeredaction before oneordinaryA. No directactor/room/outcome writes. No secondentry descriptor/max_entry mutation, no rollback/rewrite afterpublished/partialfailures. Exactrootwriteallowlistconsent is requiredbywrapperANDobserver.",
+  "acceptance": "Sourcecase/template checks qualifyonlysource. Requireactualgoto/destination/phase4request thenactual204phase3/previous205/Part1; naturalfirstcut Stop10000000 holdandreturnobservedseparately. RSF1/Scenario0 alone early. No209claim/automaticguestloop; firstcutclearsStatus1eventbitbeforeStopclear, so future209requiresgatedsourceunit. Actor68absence prior015 remains unresolved/notheld.",
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff30",
+      "bytes": 24,
+      "value": "frame0;target7314.582275390625,9996.8271484375,42846.009765625;ang0;has_ang1;done0;sub0;entry1"
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4,
+      "value": "uint32le1 published LAST after slot readback/coherent205freeplay recheck"
+    }
+  ],
+  "root_argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-door016.sh",
+    "--execute-allocated016"
+  ],
+  "allocation_gate": {
+    "file": "DOOR016-ROOT-ALLOCATION.json",
+    "allocated016": true,
+    "allow_debug_goto_command_writes": true,
+    "observer_sha256": "718e1c2e2ede7ded9f2de6d74970447c94f2820e56c0f77e98d3f8709d7405cd",
+    "wrapper_sha256": "41984c58a9b9160f826a33f7ae7575caa22fd295744c054f2c26b53878b860b8",
+    "pins_sha256": "03f30e8c5e0bdc4ff8e9a58726c5e8b10ef3691b76c3dc83d0b7e020454de87d",
+    "write_allowlist": [
+      {
+        "address": "0x8c47ff30",
+        "bytes": 24
+      },
+      {
+        "address": "0x8c47fff0",
+        "bytes": 4
+      }
+    ]
+  },
+  "resources": {
+    "start_free_bytes": 20342374400,
+    "runtime_free_bytes": 19394461696,
+    "raw_seconds": 41,
+    "normalclose_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_cap_bytes": 62914560,
+    "global16": true,
+    "castle2": true,
+    "fresh_parent_peer_charges_required": true
+  },
+  "V5_sha256": "7aa4113d44b5bab5b1010649a432ed1d50e34aaf4de7fb4899aaf692055b0ba0",
+  "trace_lock_sha256": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688",
+  "protected": "Original127/294/013/014/015 stateinputs and all009/runtimeVMUs unchanged, wrapperpre/post hashes8+dependency26. Exactmaster/programme/assetsfrozen12a/4d823/78fb/b67; sourceABIdeclaresactualassetchecks. No physical/release/performance acceptance.",
+  "prepare_errata": "Onlydefaultprepare firststopped on generator-copiedfixturefloat015->016; correctedexactoriginalfloat andshellallocationflag before anyexecute. Earliercopiesretained .before-default-prepare. No guest/artifactcap created.",
+  "budget_erratum": "Initial extractor retained unrelated repeatedGlobalWork definitions; exact original bytes losslesslyarchived controlled016-Warp-DWARF-redundant-original.json.gz SHA8e8169e550fa3ef27d642ae050260e40bb8ffa4586fa60b504257ead86205c9d; activeWarp/Goto metadata nowcompact, numericABIunchanged."
+}

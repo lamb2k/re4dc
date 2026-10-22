@@ -1,0 +1,1 @@
+{ global: rect_oracle_decode; mipmap_oracle_decode*; local: *; };

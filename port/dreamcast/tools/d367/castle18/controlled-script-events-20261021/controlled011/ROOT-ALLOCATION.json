@@ -1,0 +1,30 @@
+{
+  "utc": "2026-10-22T04:10:15.8134335Z",
+  "authorization": "Root allocated ONE source-gated native cold LOAD011 after method/review455d8306 and exact hashes validated",
+  "wrapper_sha256": "7a0001135f0010fcc3f2a464ed9d93eaed44ff89256fedae0fc73f84cdafa37c",
+  "shell_sha256": "e397b513e39f1c4b9b321fd80a102a00f00316d226a30e6a12f1378059c99d49",
+  "pins_sha256": "06b25f5bda43c73ac76cc4dc5c286a0d530a35e4b0112fbec4b4784fdd2568b3",
+  "fixture_sha256": "103b7d67a4c993d936d4ae46a46765a582c1429bbfa0a563d062e795444faceb",
+  "C_free_bytes": 39252086784,
+  "globalFlycastCount": 0,
+  "castleFlycastCount": 0,
+  "start_floor_bytes": 20342374400,
+  "runtime_floor_bytes": 19394461696,
+  "capture_cap_bytes": 62914560,
+  "raw_seconds": 41,
+  "normal_close_seconds": 39,
+  "absolute_seconds": 47.5,
+  "argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-native-load011.sh",
+    "--execute-allocated011"
+  ],
+  "no_retry": true,
+  "no_following_guest": true
+}

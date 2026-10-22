@@ -1,0 +1,18 @@
+{
+  "runtime_source": "004cf224674fa60cf08dc10e641c723de238a0fd",
+  "source_docs": "0b025f93cd034ad70aca7c4bbea7a24f53e0629c",
+  "C_track": "13c998136f24212e39a86bc82a0dc54eb14bb8bacca38ca14cb855e2897309fd",
+  "B_track": "e9efca156ff9b11005af57688accc085c9e568ceef32c2085e8a2d8f789db434",
+  "all1743_LBAs_preserved": true,
+  "C_changed_members": 18,
+  "B_changed_members": 16,
+  "metadata_field_pairs": 3,
+  "no_file_additions": true,
+  "all14_source_ELF_bound": true,
+  "program": "a58579b87da0c45267cb93efe29feea2438da9ddab62d0fe31c47a1c6ff32c71",
+  "elf": "e08c9abc8f6bb44bb2a94642fc9a2e664d22039659cea7fcce311cb9989d7433",
+  "staging_complete": true,
+  "performance_attribution": false,
+  "physical_Dreamcast_acceptance": false,
+  "evidence": "C:/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/standalone-pair-stage-identity01.json"
+}

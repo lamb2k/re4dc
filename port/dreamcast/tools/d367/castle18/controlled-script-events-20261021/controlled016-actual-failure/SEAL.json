@@ -1,0 +1,42 @@
+{
+  "flycast.log": {
+    "bytes": 3798,
+    "sha256": "1abea0c628688d31cb298defa481f2ccc38faf1cdf383b84dacef6ec71e5de09"
+  },
+  "controlled-door016-observer-summary.json": {
+    "bytes": 1790,
+    "sha256": "d95c48476e67071f48fdced003da9ce2200740567d07741cddc8b4c852a10346"
+  },
+  ".gitattributes": {
+    "bytes": 8,
+    "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+  },
+  "audit-controlled016-startup-failure.py": {
+    "bytes": 4667,
+    "sha256": "3dde8c286663cca54e7604eb83169886dc0ccbd875520c35993c5c42ea459c74"
+  },
+  "run-result.json": {
+    "bytes": 1508,
+    "sha256": "1081e8e38489845db15aa42acbb4f81aa43ab19fcfd97087cf72a552984a58b5"
+  },
+  "owned-process.json": {
+    "bytes": 324,
+    "sha256": "29b3535ac4e36a9df512716fff7649ea4338877bd7bd708013b11e4520a1697f"
+  },
+  "run-start.json": {
+    "bytes": 544,
+    "sha256": "e7d81d3b25a25e583486c511f96fbf7042c06cac81240fc3249ebd74ea359b62"
+  },
+  "owned-resource-guard.json": {
+    "bytes": 6314,
+    "sha256": "451804b98016674aca7fbe0bbb2424a8fc3f54289105c7131bd1bafa1415edbf"
+  },
+  "controlled016-startup-failure-audit.json": {
+    "bytes": 9699,
+    "sha256": "16a9bf92d5e2a402a0c8831f2acd94d15f923c10a0994bbeac9479af61d97eb2"
+  },
+  "DOOR016-ROOT-ALLOCATION.json": {
+    "bytes": 1851,
+    "sha256": "a131e0f3549d6f54cb25dd8c870e7a53163df17d705dc3b9a322fefc800834a3"
+  }
+}

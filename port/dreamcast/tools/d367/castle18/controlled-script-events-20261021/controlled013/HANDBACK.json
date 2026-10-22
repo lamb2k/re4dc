@@ -1,0 +1,335 @@
+{
+  "scope": "CONTROLLED exact012 fullstate continuation, originalradio return and visiblegameplay verified. No authenticcombat, audio/sync, performance, release or hardwareacceptance.",
+  "status": "PASS_ORIGINAL_RADIO_RETURN_AND_GAMEPLAY",
+  "visible_result": "Originalradio streamstopped/closed; fresh backingclose hash15e45996 ok, Stopreturned0, postreturn sourceframesadvance. Inspectedafter-radio-close PNG showsLeon/gameworld/HUD in204. No input/skip added; audio/sync/hardware remainunassessed.",
+  "native_load_log_seen": false,
+  "state_sha256": "97b63602b83d6234a1603dc24a90fa42f2d0702db626ead2e4d4e5e20efafe13",
+  "closed_native_fields": {
+    "source_frame": 3880,
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x204",
+    "chapter": 7,
+    "health_restored_from_save": [
+      1440,
+      1440,
+      600,
+      600
+    ]
+  },
+  "VMU_source_and_runtime_sha256": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+  "source_009_unchanged": true,
+  "protected_authentic_states": {
+    "route-walk127": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16",
+    "route-walk294": "cb7a314b8fd0383af0b7baf17c2e87a712705beb122a1d39c7705553dd795258"
+  },
+  "programme_binding_receipt_sha256": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed",
+  "ELF_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "master_image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "guard": {
+    "PASS_normal_owned_closure": true,
+    "owner": {
+      "pid": 28984,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-radio013\\flycast.exe",
+      "start_filetime": 134371173760113763,
+      "created_utc": "2026-10-22T04:36:16.018006+00:00",
+      "rights": "retained subprocess handle receipt"
+    },
+    "closed_identity": {
+      "initial_live_identity_pinned": true,
+      "retained_handle_signaled": true,
+      "exit_code": 0,
+      "postexit_times_available": true,
+      "postexit_path_query": false,
+      "proof_reason": "normal or absolute loop exit"
+    },
+    "exit_age": 39.82514139363775,
+    "max_capture_logical_bytes": 28541275,
+    "minimum_runtime_free_bytes": 132373630976,
+    "not_a_new_fail_closed_path_test": true
+  },
+  "harness": {
+    "status": "RUN_COMPLETE",
+    "elapsed_s": 40.3,
+    "errors": []
+  },
+  "screenshots": [
+    {
+      "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-radio013\\shots\\controlled-after-radio-close\\controlled-context.json",
+      "context_sha256": "17e6c84033903a66551c0406cb5d8b13da50ad5a70c35347d28cf1c0d6e63fe1",
+      "context": {
+        "scope": "Controlled originalradio continuation; inheritedRSF7/openlogs are not newexecution orcompletion. Actualclose/hash, Stop/frame progress and inspectedgameplay required.",
+        "observation": {
+          "process_age": 26.11513962171739,
+          "pg": 2352652060,
+          "frame": 3493,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x0",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x0",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "before": {
+          "process_age": 26.13013962173136,
+          "pg": 2352652060,
+          "frame": 3493,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x0",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x10000000",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "after": {
+          "process_age": 26.17713962175185,
+          "pg": 2352652060,
+          "frame": 3495,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x0",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x10000000",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "pngs": [
+          {
+            "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-radio013\\shots\\controlled-after-radio-close\\frames\\fb0.png",
+            "sha256": "a5d7ac83f7e24bf6226b7bc42d3ffb1a960c2f7d0f55bc691e1eb3555e5bea31"
+          },
+          {
+            "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-radio013\\shots\\controlled-after-radio-close\\frames\\fb1.png",
+            "sha256": "40399646b2994f1598bad0082f4648dbe79bd22a7eee3fa8d2c5ed2315181df7"
+          }
+        ]
+      }
+    },
+    {
+      "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-radio013\\shots\\controlled-continued-radio\\controlled-context.json",
+      "context_sha256": "7d8ca8b674ac2a139167332739fcd89a81c656f25a5880734471145a8245a076",
+      "context": {
+        "scope": "Controlled originalradio continuation; inheritedRSF7/openlogs are not newexecution orcompletion. Actualclose/hash, Stop/frame progress and inspectedgameplay required.",
+        "observation": {
+          "process_age": 2.0371396217378788,
+          "pg": 2352652060,
+          "frame": 2783,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x77ffffbf",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x10000000",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "before": {
+          "process_age": 2.1771396217518486,
+          "pg": 2352652060,
+          "frame": 2788,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x77ffffbf",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x10000000",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "after": {
+          "process_age": 2.2401396217173897,
+          "pg": 2352652060,
+          "frame": 2790,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x77ffffbf",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x10000000",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "pngs": [
+          {
+            "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-radio013\\shots\\controlled-continued-radio\\frames\\fb0.png",
+            "sha256": "a7df65b9f217f4195d616b7c8eee6f03e4af00d29c5b61544f65dcda4df67558"
+          },
+          {
+            "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-radio013\\shots\\controlled-continued-radio\\frames\\fb1.png",
+            "sha256": "16de564f5d0ef511e05f38d2be270ae36550b33eb37af068fac0dd565c627b79"
+          }
+        ]
+      }
+    },
+    {
+      "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-radio013\\shots\\controlled-deadline-context\\controlled-context.json",
+      "context_sha256": "3568fd268ec55d3ed1b28035cdacbf7ba160cf922bf534bfcc391c6c4095f09b",
+      "context": {
+        "scope": "Controlled originalradio continuation; inheritedRSF7/openlogs are not newexecution orcompletion. Actualclose/hash, Stop/frame progress and inspectedgameplay required.",
+        "observation": {
+          "process_age": 36.03713962173788,
+          "pg": 2352652060,
+          "frame": 3790,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x0",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x10000000",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "before": {
+          "process_age": 36.03713962173788,
+          "pg": 2352652060,
+          "frame": 3790,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x0",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x10000000",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "after": {
+          "process_age": 36.08313962171087,
+          "pg": 2352652060,
+          "frame": 3792,
+          "phase": [
+            3,
+            0
+          ],
+          "room": "0x204",
+          "chapter": 7,
+          "Stop": "0x0",
+          "health": [
+            1440,
+            1440,
+            600,
+            600
+          ],
+          "CardStatus": "0x80000005",
+          "status3": "0x0",
+          "partner_ptr": "0x0",
+          "saved_RSF204": "0x81000000"
+        },
+        "pngs": [
+          {
+            "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-radio013\\shots\\controlled-deadline-context\\frames\\fb0.png",
+            "sha256": "fc36a72437bc9ab8a9ec5fde1a0055430afc92bdd6d3eccd036a4e650663d025"
+          },
+          {
+            "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-radio013\\shots\\controlled-deadline-context\\frames\\fb1.png",
+            "sha256": "e4407ca5a54d64cb175f2f4116866795ccffcfa9cdb870c88b562e399542fe7d"
+          }
+        ]
+      }
+    }
+  ],
+  "fixture_and_card_log": [],
+  "next": "No followingguest allocated. Originalradio return iscomplete; preserveactual013 state andprepare nextchapter nativeevent route onlyunderrootcoordination.",
+  "protected_012_seed_state_sha256": "64a178245be5dd8b9dbb14ec1a4f4da0e8be08b3d5041e8c6b0388ab0b809436",
+  "native_LOAD011_previous_success": "Originalcoldload file0/CRC/digesta569c07d at7bcfd6c2e; restoredlogrecords are not a secondcoldload.",
+  "prior012_radio_execution": "Native204entry andoriginalSalazar/Leoncodec execution at31a3e7849, ongoingatitsdeadline.",
+  "radio_return": {
+    "new_backingclose": "subscreen backing: close area=8c8b0de0 restored=3145728 restore_us=351669 hash=15e45996 ok pool_free=456064",
+    "close_event": {
+      "backing_close_log": true,
+      "hash": "15e45996",
+      "result": "ok",
+      "process_age": 24.08313962171087,
+      "frame": 3436
+    },
+    "Stop_returned_zero": true,
+    "postreturn_source_frame_interval": [
+      3438,
+      3879
+    ],
+    "postreturn_rows": 347,
+    "afterclose_gameworld_HUD_PNG_inspected": true,
+    "stream1_154_stopped": true,
+    "stream1_154_closed": true,
+    "audible_quality_or_sync_assessed": false
+  },
+  "saved_RSF204": "0x81000000"
+}

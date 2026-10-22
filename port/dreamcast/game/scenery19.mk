@@ -68,3 +68,36 @@ CHUNK_SUBMIT ?= 0
 ifneq ($(CHUNK_SUBMIT),0)
 $(OBJDIR)/platform/chunk_submit.o: PLATFORM_CPPFLAGS += -O2 -DRE4DC_CHUNK_SUBMIT=1
 endif
+# --- lane scenery21 (scenery-pieces, P2 second half; SCENERY21-STATUS.md). Default 0: no code, image unchanged.
+# Data: the sc21 set (tools/d367/scenery21/scn21_build.py): every PS2 world room's package with facing-grouped strip groups
+# (ps2-world.re4mesh + ps2-world.r4sg) and its room file with the SCCN / SCPS sections. Without the data (or with a stale
+# section) each knob logs why and draws as knob off for that room.
+# SCENERY_CONE=1 (render only; needs SCENERY_CHUNK, PS2_STRIP_GROUPS): per strip group back-face cone (SCCN); chunk_select
+# drops a group whose every triangle faces the side the part's cull removes. SCENERY_CONE_SIGN=+1|-1: the projection's
+# handedness (fixed; calibrated by the look check).
+SCENERY_CONE ?= 0
+SCENERY_CONE_SIGN ?= 1
+ifneq ($(SCENERY_CONE),0)
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_CONE needs SCENERY_CHUNK)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_CONE=1 -DRE4DC_SCENERY_CONE_SIGN=$(SCENERY_CONE_SIGN)
+endif
+# SCENERY_PIECE_STATE=1 (exact; needs PS2_WORLD_HDR_CACHE): per part header-slot word (SCPS): a bind goes straight to its
+# header-cache slot (still checked: key, entry, VRAM address) instead of hashing and scanning the set.
+SCENERY_PIECE_STATE ?= 0
+ifneq ($(SCENERY_PIECE_STATE),0)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_PIECE_STATE=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_PIECE_STATE=1
+endif
+# SCENERY21_AB=1 (console A/B bench disc only; needs BENCHMARK=1): arm B (bench start screen) reads each room's sc21 package
+# / strip groups / room file from dc/native/rXXX/sc21/ when present and turns SCENERY_CONE / SCENERY_PIECE_STATE on; arm A
+# reads the shipped files with both off.
+SCENERY21_AB ?= 0
+ifneq ($(SCENERY21_AB),0)
+ifneq ($(BENCHMARK),1)
+$(error SCENERY21_AB needs BENCHMARK=1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY21_AB=1
+ROOMFILE_SECTIONS += -DRE4DC_SCENERY21_AB=1
+endif

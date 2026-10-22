@@ -4,6 +4,12 @@
 #include "actor_material_owner.h"
 #include "actor_lifetime.h"
 #include "actor_material_policy.h"
+#if defined(RE4DC_LEON_ATLAS_SPLIT) && RE4DC_LEON_ATLAS_SPLIT
+extern "C" int re4dc_atlas_apply(Re4dcActorPlan*);
+extern "C" int re4dc_atlas_has_tile(const Re4dcActorPlan*);
+extern "C" unsigned re4dc_atlas_capability(const Re4dcActorPlan*);
+extern "C" void re4dc_atlas_retire_pl08();
+#endif
 #if RE4DC_PS2_LEON
 // ps2leon.mk PS2_LEON: the arm's hair as one owned run per hair material it uses (A: 1, B: 2; tools/d367/ps2leon
 // pack_arm.py, restripified as CHARBAKE_HAIR's runs), the leon_hair_runs.h API; its palette_count is chunk 7's.
@@ -345,6 +351,9 @@ extern "C" int re4dc_actor_plan_leon(cModel* m,Re4dcActorPlan* out) {
         r.uv={RE4DC_LEON_HAIR_UV_DATA,RE4DC_LEON_HAIR_UV_SIZE};r.stream={run.stream,run.bytes};
     }
     if((re4dc_actor_material_runs_capability(&p)&3u)!=3u)return 0;
+#if defined(RE4DC_LEON_ATLAS_SPLIT) && RE4DC_LEON_ATLAS_SPLIT
+    re4dc_atlas_apply(&p); // atomic decline preserves the ordinary qualified plan
+#endif
     *out=p;return 1;
 }
 extern "C" int re4dc_actor_hair_texture_key(const Re4dcUiImage* i,unsigned* c,unsigned* f) {
@@ -354,6 +363,9 @@ extern "C" int re4dc_actor_hair_texture_key(const Re4dcUiImage* i,unsigned* c,un
     return 0;
 }
 extern "C" unsigned re4dc_actor_material_runs_capability(const Re4dcActorPlan* p) {
+#if defined(RE4DC_LEON_ATLAS_SPLIT) && RE4DC_LEON_ATLAS_SPLIT
+    if(re4dc_atlas_has_tile(p))return re4dc_atlas_capability(p);
+#endif
     // The hair runs of the included header: 14 (leon_hair_runs.h), 2 with CHARBAKE_HAIR (leon_hair_runs_g2.h), the
     // arm's with PS2_LEON (ps2leon_hair_runs.h: 1 for A, 2 for B).
     constexpr unsigned kHair=leon_hair_runs::run_count;
@@ -429,6 +441,9 @@ namespace leon_lod { void reset_ids() {
 #endif
 #if RE4DC_ACTOR_PL08
 #include "coarse_actor_owner_pl08.inc"
+#endif
+#if defined(RE4DC_LEON_ATLAS_SPLIT) && RE4DC_LEON_ATLAS_SPLIT
+#include "coarse_actor_atlas_split.inc"
 #endif
 #include "coarse_actor_transaction.inc"
 #if RE4DC_ACTOR_PL08_PACK

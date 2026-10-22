@@ -1,0 +1,372 @@
+{
+  "source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+  "source_files": {
+    "src/em10/em10.cpp": "065613c2d2297a5f843d71c897daffd14a715d7aac7e17c3fe563c6be990aaad",
+    "src/game/item.cpp": "237faf2e2af0d2d5336ca50634b6a7e98d9e5404e09ec47b2e518bcaaa963785",
+    "src/game/objWep.cpp": "b8e2e42ed1fb39aaa4012d9272a4db55c746a8a56f961ee116994fcef14788be",
+    "src/wep/pl_handgun.cpp": "1d53774b578f0b83903c9d28478e539784144554e73d09959540469332885029",
+    "src/game/pl_wep.cpp": "c0ada3f1d5a6c33a4eb54b4b6c3d928eb1a388abcf2127cc7e263de1e07c7276",
+    "src/game/pl_sub.cpp": "48baf9cabffaf71a7093ce265471f7cb73ad06295f197489ae8604313052c199",
+    "src/game/pl_leon.cpp": "88ab1411999e7483f3289786d6b27d724f40308eb0fab1ac0695cf57ae558601",
+    "src/game/em.cpp": "12f2df9e82640ede3c4ba408edbb8b1684ceb08b63f3042a0e3331267b229fbb",
+    "src/game/game.cpp": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90",
+    "src/game/em_sub.cpp": "ddefd4571fd38c21f1af86bdf4f4362aee2009ac2e99cc5d8ddd8f4514700ba0",
+    "src/game/pl_dmg.cpp": "e8dc7a1cc2f6e1b6d6918092a84d51c2b69e3c2a8d4119581311c62c45040ea9",
+    "include/item.h": "03d00db69b808f1552d5babaaf96a3d7fe77afd55e38e1c6a008792f662142f1",
+    "include/main.h": "515e9281589e10154f273aa82c8503f4648b489eca2933ebf22674439c2eda58",
+    "include/global.h": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a",
+    "include/model.h": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5",
+    "include/em.h": "3fde0e04cd508f086be1c193bc761b55e3ff8ee7cb08c522c344b4d14b19e74f",
+    "include/em10.h": "c6ab1e95154903cf0eb007f9258266b50afd7095fc1741e597aa9f174b21fbda",
+    "include/player.h": "a0d87601f9db55fad40c7aa9ba6cfd4ef16c50aa43f2c84dea699a010c151e04",
+    "include/pl_body.h": "ffe21e96fa67adc151204ce5e64c18db91ccc87ee2b3824ad69ab51543cb81d9",
+    "include/camera.h": "d22b4698b6f90eb4a5aab88f2d289b967c590ec409c51f9129b47829907bb33b",
+    "include/cManager.h": "19ce63044d273bce47c208773df8921f08f90fc58bdfc162e7bb9507f5940e3c",
+    "port/dreamcast/game/Makefile": "de05ed757c084ae3842491d4cb406a63a69dd79967321347288de510fbc183d1"
+  },
+  "scope": "Pinned source casts and item classification; no gameplay observations",
+  "ordinary_loaded_round_item_ids": [
+    3,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    54,
+    55,
+    62,
+    64,
+    81,
+    82,
+    107,
+    108,
+    148,
+    153,
+    171
+  ],
+  "item_classification_source": "src/game/item.cpp itemInfo first switch group sets type1; ItemWork.type is inventory owner and is NOT item class",
+  "opaque_motion_view": "Corrected v2: cModel.Motion is INLINE MotionWork220B at+472. pMotion is Motion.pMot data pointer, never dereferenced as a work. include/model.h472-474 and exact DWARF Motion member prove this.",
+  "trace_fields_unavailable": [
+    "death_trace",
+    "lethal_caller",
+    "LifeDownSet2_before_after"
+  ],
+  "wep_info": [
+    {
+      "id": 35,
+      "attribute": 0,
+      "weapon_no": 2,
+      "weapon_type": 0,
+      "bullet_id": 4
+    },
+    {
+      "id": 36,
+      "attribute": 0,
+      "weapon_no": 2,
+      "weapon_type": 1,
+      "bullet_id": 4
+    },
+    {
+      "id": 37,
+      "attribute": 0,
+      "weapon_no": 3,
+      "weapon_type": 0,
+      "bullet_id": 4
+    },
+    {
+      "id": 38,
+      "attribute": 0,
+      "weapon_no": 3,
+      "weapon_type": 2,
+      "bullet_id": 4
+    },
+    {
+      "id": 3,
+      "attribute": 0,
+      "weapon_no": 17,
+      "weapon_type": 0,
+      "bullet_id": 4
+    },
+    {
+      "id": 33,
+      "attribute": 0,
+      "weapon_no": 1,
+      "weapon_type": 0,
+      "bullet_id": 4
+    },
+    {
+      "id": 34,
+      "attribute": 0,
+      "weapon_no": 1,
+      "weapon_type": 1,
+      "bullet_id": 4
+    },
+    {
+      "id": 64,
+      "attribute": 0,
+      "weapon_no": 1,
+      "weapon_type": 0,
+      "bullet_id": 4
+    },
+    {
+      "id": 39,
+      "attribute": 0,
+      "weapon_no": 4,
+      "weapon_type": 0,
+      "bullet_id": 4
+    },
+    {
+      "id": 40,
+      "attribute": 0,
+      "weapon_no": 4,
+      "weapon_type": 1,
+      "bullet_id": 4
+    },
+    {
+      "id": 41,
+      "attribute": 0,
+      "weapon_no": 5,
+      "weapon_type": 0,
+      "bullet_id": 0
+    },
+    {
+      "id": 44,
+      "attribute": 0,
+      "weapon_no": 7,
+      "weapon_type": 0,
+      "bullet_id": 24
+    },
+    {
+      "id": 45,
+      "attribute": 0,
+      "weapon_no": 8,
+      "weapon_type": 0,
+      "bullet_id": 24
+    },
+    {
+      "id": 46,
+      "attribute": 0,
+      "weapon_no": 9,
+      "weapon_type": 0,
+      "bullet_id": 7
+    },
+    {
+      "id": 107,
+      "attribute": 0,
+      "weapon_no": 9,
+      "weapon_type": 1,
+      "bullet_id": 7
+    },
+    {
+      "id": 153,
+      "attribute": 0,
+      "weapon_no": 9,
+      "weapon_type": 2,
+      "bullet_id": 7
+    },
+    {
+      "id": 47,
+      "attribute": 0,
+      "weapon_no": 10,
+      "weapon_type": 0,
+      "bullet_id": 7
+    },
+    {
+      "id": 108,
+      "attribute": 0,
+      "weapon_no": 10,
+      "weapon_type": 1,
+      "bullet_id": 7
+    },
+    {
+      "id": 81,
+      "attribute": 0,
+      "weapon_no": 10,
+      "weapon_type": 2,
+      "bullet_id": 7
+    },
+    {
+      "id": 48,
+      "attribute": 0,
+      "weapon_no": 11,
+      "weapon_type": 0,
+      "bullet_id": 32
+    },
+    {
+      "id": 49,
+      "attribute": 0,
+      "weapon_no": 11,
+      "weapon_type": 1,
+      "bullet_id": 32
+    },
+    {
+      "id": 50,
+      "attribute": 0,
+      "weapon_no": 11,
+      "weapon_type": 2,
+      "bullet_id": 32
+    },
+    {
+      "id": 51,
+      "attribute": 0,
+      "weapon_no": 11,
+      "weapon_type": 3,
+      "bullet_id": 32
+    },
+    {
+      "id": 54,
+      "attribute": 0,
+      "weapon_no": 14,
+      "weapon_type": 0,
+      "bullet_id": 70
+    },
+    {
+      "id": 171,
+      "attribute": 0,
+      "weapon_no": 14,
+      "weapon_type": 1,
+      "bullet_id": 70
+    },
+    {
+      "id": 42,
+      "attribute": 0,
+      "weapon_no": 6,
+      "weapon_type": 0,
+      "bullet_id": 0
+    },
+    {
+      "id": 43,
+      "attribute": 0,
+      "weapon_no": 6,
+      "weapon_type": 1,
+      "bullet_id": 0
+    },
+    {
+      "id": 52,
+      "attribute": 0,
+      "weapon_no": 12,
+      "weapon_type": 0,
+      "bullet_id": 106
+    },
+    {
+      "id": 53,
+      "attribute": 0,
+      "weapon_no": 13,
+      "weapon_type": 0,
+      "bullet_id": 255
+    },
+    {
+      "id": 23,
+      "attribute": 0,
+      "weapon_no": 13,
+      "weapon_type": 1,
+      "bullet_id": 255
+    },
+    {
+      "id": 109,
+      "attribute": 0,
+      "weapon_no": 13,
+      "weapon_type": 2,
+      "bullet_id": 255
+    },
+    {
+      "id": 55,
+      "attribute": 0,
+      "weapon_no": 15,
+      "weapon_type": 0,
+      "bullet_id": 26
+    },
+    {
+      "id": 56,
+      "attribute": 0,
+      "weapon_no": 16,
+      "weapon_type": 0,
+      "bullet_id": 255
+    },
+    {
+      "id": 1,
+      "attribute": 0,
+      "weapon_no": 19,
+      "weapon_type": 0,
+      "bullet_id": 255
+    },
+    {
+      "id": 2,
+      "attribute": 0,
+      "weapon_no": 22,
+      "weapon_type": 0,
+      "bullet_id": 255
+    },
+    {
+      "id": 14,
+      "attribute": 0,
+      "weapon_no": 23,
+      "weapon_type": 0,
+      "bullet_id": 255
+    },
+    {
+      "id": 2048,
+      "attribute": 0,
+      "weapon_no": 0,
+      "weapon_type": 0,
+      "bullet_id": 255
+    },
+    {
+      "id": 8,
+      "attribute": 0,
+      "weapon_no": 25,
+      "weapon_type": 0,
+      "bullet_id": 255
+    },
+    {
+      "id": 9,
+      "attribute": 0,
+      "weapon_no": 31,
+      "weapon_type": 0,
+      "bullet_id": 255
+    },
+    {
+      "id": 10,
+      "attribute": 0,
+      "weapon_no": 32,
+      "weapon_type": 0,
+      "bullet_id": 255
+    },
+    {
+      "id": 148,
+      "attribute": 0,
+      "weapon_no": 33,
+      "weapon_type": 0,
+      "bullet_id": 24
+    },
+    {
+      "id": 82,
+      "attribute": 0,
+      "weapon_no": 28,
+      "weapon_type": 0,
+      "bullet_id": 114
+    },
+    {
+      "id": 62,
+      "attribute": 0,
+      "weapon_no": 11,
+      "weapon_type": 0,
+      "bullet_id": 32
+    }
+  ]
+}

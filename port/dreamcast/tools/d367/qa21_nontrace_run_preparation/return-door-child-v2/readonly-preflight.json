@@ -1,0 +1,85 @@
+{
+  "scope": "actual childv2 path/hash expressions + full preflight + strictparent + retainedcheckpoint verify READONLY only; no backend/job/output/guest",
+  "utc": "2026-10-22T05:00:45.278713+00:00",
+  "pass": true,
+  "profile_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+  "tools_sha256": "e25ba6a875a64d42fa44a1553e1d55b8f4055c404837e95af2fa23f54b5ead37",
+  "checked_manifest_files": 108,
+  "actual_absolute_readonly_files": 84,
+  "local_log_metadata_sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29",
+  "source_disc": {
+    "disc.gdi": {
+      "sha256": "9765f17c6431b1e55ae57ce1fc3055cdb0228ed91585c4cf4390412f7bd7a140",
+      "bytes": 83
+    },
+    "track01.bin": {
+      "sha256": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9",
+      "bytes": 1058400
+    },
+    "track02.raw": {
+      "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+      "bytes": 1237152
+    },
+    "track03.iso": {
+      "sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+      "bytes": 1032499200
+    }
+  },
+  "parent_checkpoint_sha256": "c61d68c940e1ee3fd72446ae066ee28bbf32eda9959ea4e5ea6f08f33c0a0d4d",
+  "audit": {
+    "state_sha256": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75",
+    "state_bytes": 9273760,
+    "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+    "decoded_bytes": 28274510,
+    "ram_serialization_offset": 11490769,
+    "immutable_anchors": [
+      {
+        "address": "0x8c014000",
+        "bytes": 256,
+        "sha256": "e02ebee59ecd8990d3619d9d34cf98672c6261f206b9dadbba3f4b1dceda4650"
+      },
+      {
+        "address": "0x8c050000",
+        "bytes": 256,
+        "sha256": "7c85749186f81547f95f3fc105b533ab5adeac8ac2e37ceba42dc32a26fb7d54"
+      },
+      {
+        "address": "0x8c110000",
+        "bytes": 256,
+        "sha256": "8596b92764a701d1b0686d3d9ada950a06385df8ad0c28c059af3b5226153c0a"
+      },
+      {
+        "address": "0x8c190000",
+        "bytes": 256,
+        "sha256": "05bbac539b83bf0233b20f0c4424165c5d38ea872056d1cbc3e7cdf8716170e2"
+      }
+    ],
+    "log_head": 169995,
+    "room": 259,
+    "frame": 533,
+    "stop": 0,
+    "player_life": 1200,
+    "player_life_max": 1200,
+    "player_pos": [
+      -47630.48046875,
+      58.71270751953125,
+      7032.71826171875
+    ],
+    "player_rno": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "event_start_cnt": 0,
+    "qa_flags": 0,
+    "memory_edits": false
+  },
+  "changed_profile_refused": true,
+  "no_parent_mutation": true,
+  "guard_samples": 833,
+  "minimum_C_snapshot": 145141096448,
+  "snapshot_not_allocation": true,
+  "door_outputs_absent": true,
+  "guest_allocated": false
+}

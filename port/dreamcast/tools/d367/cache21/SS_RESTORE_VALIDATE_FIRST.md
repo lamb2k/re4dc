@@ -1,0 +1,9 @@
+# Conditional restore-fault containment candidate
+
+SS_RESTORE_VALIDATE_FIRST defaults0 and accepts only0/1. It adds an early computed-hash check after all restored spans are hashed, before backing close, pool thaw, message restore and motion recount. A mismatch retains the existing suspension/backing ownership and calls the existing fatal diagnostic. The existing late check remains. No production recipe or selected programme changes.
+
+Confirmed source defect: an already-computed bad restore hash previously reached motion recount before the final fatal. Recount reads restored Slot.data and its allocation header, so corrupt pointers can preempt the intended diagnostic. This is conditional fault containment; no observed restore corruption, normal-gameplay bug, issue52 cause or performance gain is asserted. Actual re4dc_missing in platform/mem.cpp215 ends in an unconditional thd_sleep loop.
+
+Actual swap-close function extraction is compiled under ASan/UBSan in baseline54ba44079, currentdefault, explicit0 and enabled1. Matching restores retain the original sequence. Enabled bad hash halts before backing close/thaw/recount with swapped stilltrue. Default/0 preprocessed function bytes are exact baseline. Source SHA2c9179df90c206bf079d3915f4ade4175ed8b0f2f79ca774cfadf0379de123b9 and private receipt /root/probe/cache21-ss-restore-first-host-20261022-01/receipt.json identify the checked function.
+
+Host seams replace platform I/O/timer/hash functions and model the actual nonreturning fatal with an exception. This checks control flow, not packed decoder correctness, SH4 objects, a linked programme, Flycast or physical Dreamcast. FullTU OFF/ON object controls and target restore qualification remain separate. Existing frozen QA c57/521 and mipmap636444 source/programme data are untouched.

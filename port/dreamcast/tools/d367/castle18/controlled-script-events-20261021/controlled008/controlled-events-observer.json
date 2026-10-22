@@ -1,0 +1,244 @@
+{
+  "scope": "CONTROLLED direct continuation of closed006 movie state. No rearm/outcome state edits. Exactly one ordinaryA pulse at coherent native SaveYes prompt; no later blind buttons. Original005 chapter6/partner/AEV2 setup inherited. Early RSF0/chapter7/RSF7 do not prove movieEOF/resultsUI/savewrite/radio. Authentic127/294 untouched.",
+  "owner": {
+    "pid": 9492,
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event008\\flycast.exe",
+    "start_filetime": 134371078460165366,
+    "created_utc": "2026-10-22T01:57:26.023799+00:00",
+    "rights": "retained subprocess handle receipt"
+  },
+  "baseline_crank": null,
+  "crank_full_frame": null,
+  "baseline_RSF5_clear_seen": false,
+  "events": [
+    {
+      "chapter_task_early_transition": {
+        "pg": 2352652060,
+        "process_age": 0.7551510982448235,
+        "frame": 850,
+        "room": "0x204",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0xffffffbf",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "status1": "0x10000200",
+        "status3": "0x0",
+        "chapter": 7,
+        "partner_ptr": "0x0",
+        "player_pos": [
+          -676.848876953125,
+          -0.0009765625,
+          -41378.0625
+        ],
+        "saved_RSF": "0x80000000",
+        "CardStatus": "0x80000000",
+        "message0": {
+          "table_size": 2,
+          "selection": 0,
+          "current": 0,
+          "button": 1,
+          "attribute": "0x1001"
+        },
+        "baseline_RSF0_clear_seen": false,
+        "event_hold_seen": true
+      }
+    },
+    {
+      "original_event_RSF0_early": {
+        "pg": 2352652060,
+        "process_age": 2.0051510982448235,
+        "frame": 885,
+        "room": "0x204",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0xffffffbf",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "status1": "0x10000200",
+        "status3": "0x0",
+        "chapter": 7,
+        "partner_ptr": "0x0",
+        "player_pos": [
+          -676.848876953125,
+          -0.0009765625,
+          -41378.0625
+        ],
+        "saved_RSF": "0x80000000",
+        "CardStatus": "0x80000000",
+        "message0": {
+          "table_size": 2,
+          "selection": 0,
+          "current": 0,
+          "button": 1,
+          "attribute": "0x1001"
+        },
+        "baseline_RSF0_clear_seen": false,
+        "event_hold_seen": true
+      }
+    },
+    {
+      "screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event008\\shots\\controlled-original-r204-event-start",
+      "source_interval": [
+        886,
+        887
+      ]
+    },
+    {
+      "actual_native_Save_Yes_prompt_before_A": {
+        "pg": 2352652060,
+        "process_age": 2.0051510982448235,
+        "frame": 885,
+        "room": "0x204",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0xffffffbf",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "status1": "0x10000200",
+        "status3": "0x0",
+        "chapter": 7,
+        "partner_ptr": "0x0",
+        "player_pos": [
+          -676.848876953125,
+          -0.0009765625,
+          -41378.0625
+        ],
+        "saved_RSF": "0x80000000",
+        "CardStatus": "0x80000000",
+        "message0": {
+          "table_size": 2,
+          "selection": 0,
+          "current": 0,
+          "button": 1,
+          "attribute": "0x1001"
+        },
+        "baseline_RSF0_clear_seen": false,
+        "event_hold_seen": true
+      }
+    },
+    {
+      "immediate_native_SaveYes_recheck": true,
+      "frame": 888,
+      "process_age": 2.084151098271832
+    },
+    {
+      "ordinary_A_X_pulse_seconds": 0.2,
+      "source_Key_trg_samples": [
+        {
+          "frame": 888,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 888,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 889,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 889,
+          "Key_trg": "0x80080000"
+        },
+        {
+          "frame": 890,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 891,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 891,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 892,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 893,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 893,
+          "Key_trg": "0x0"
+        }
+      ],
+      "release_before_age": 2.2871510982513428
+    },
+    {
+      "screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event008\\shots\\controlled-original-chapter-CardSave-after-A",
+      "source_interval": [
+        1028,
+        1030
+      ]
+    },
+    {
+      "screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event008\\shots\\controlled-inner-deadline",
+      "source_interval": [
+        1948,
+        1950
+      ]
+    },
+    {
+      "exact_owned_WM_CLOSE": true
+    }
+  ],
+  "last": {
+    "pg": 2352652060,
+    "process_age": 38.9741510982858,
+    "frame": 1947,
+    "room": "0x204",
+    "phase": [
+      3,
+      0
+    ],
+    "Stop": "0x7fffffbf",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "status1": "0x10000200",
+    "status3": "0x0",
+    "chapter": 7,
+    "partner_ptr": "0x0",
+    "player_pos": [
+      -676.848876953125,
+      -0.0009765625,
+      -41378.0625
+    ],
+    "saved_RSF": "0x80000000",
+    "CardStatus": "0x80000028",
+    "message0": {
+      "table_size": 0,
+      "selection": 0,
+      "current": 0,
+      "button": 1,
+      "attribute": "0x1020051"
+    },
+    "baseline_RSF0_clear_seen": false,
+    "event_hold_seen": true
+  }
+}

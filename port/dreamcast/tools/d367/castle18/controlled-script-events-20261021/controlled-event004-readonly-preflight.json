@@ -1,0 +1,44 @@
+{
+  "time": "2026-10-21T21:33:54.2284278-04:00",
+  "free": 20523413504,
+  "processes": [],
+  "source_hashes": [
+    {
+      "Algorithm": "SHA256",
+      "Hash": "33222970DE982FC6366AFB2C4455C5C957497AE845F19B257C2B4432C9AAE52E",
+      "Path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-castle18\\src\\st2\\r208.cpp"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "C07923996FED358183EFCA25CB52F13C6DCE5F7E0B32326506030D01370EFB4B",
+      "Path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-castle18\\src\\st2\\r204.cpp"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "69D47A81A6A43621639612225A45CAF4A5E18D6846166A3F4FF019CC5DC0535F",
+      "Path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-castle18\\port\\dreamcast\\game\\dbgwarp_bridge.cpp"
+    }
+  ],
+  "host_hashes": [
+    {
+      "Algorithm": "SHA256",
+      "Hash": "12AD4B88C83EFC6AE00EA138EF713CE9162E83E02CC531CE02211BD646370DB0",
+      "Path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\controlled-event004-warp.txt"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "3E84F16FA5C828A7726E87F93C5E1C998C992869590D99BDB85DD43A4EE5C553",
+      "Path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\observe-controlled-r208-event004.py"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "37D1B71B666844470B53AAB22BB2EC08D25318D81D6D872423EE8299A736B9AF",
+      "Path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\run-controlled-event004.py"
+    },
+    {
+      "Algorithm": "SHA256",
+      "Hash": "C166C7A00D8B34082DD9C5CB4957BD66A4D10E54ABBC3104AA316E11C70571E7",
+      "Path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\guard-resume-41inner-47absolute-resources-v4.py"
+    }
+  ]
+}

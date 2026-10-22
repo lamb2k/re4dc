@@ -1,0 +1,217 @@
+# Actor texture mip candidates
+
+This opt-in offline tool prepares sparse replacements for already accepted
+square RGB565 VQ actor textures. The input contract pins the exact normal-pack
+winner, selected consumer and private source evidence. It reuses `mipmap_vq.py`;
+it adds no runtime, recipe, rendering or SH4ZAM changes.
+
+The existing 2048-byte codebook and full-resolution index plane remain exact.
+Lower levels are box filtered and quantized into that existing codebook. They
+are intentionally approximate. The five existing Ganado mip packages are
+protected and cannot be selected by this tool.
+
+## Selected Leon checkpoint, 2026-10-21
+
+Private set: `texture-actors21-20261021/leon-v1`, mirrored under the Windows
+private asset store, with 42 SHA256-verified files. No game data is in Git.
+
+| Evidence | Result |
+|---|---|
+| Exact recovered Release21 normal pack | 6501 entries, 156254208 bytes, SHA256 `18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef` |
+| Selected standard Leon key | `ec255e66-76812316`, 512-square RGB565 VQ |
+| Consumer | `coarse_actor.cpp` and `charbake_variants.h`: CUR / boot variant 0; Test21 recipe enables PS2_LEON and CHARBAKE_TOGGLE; `charbake.mk` defaults the variant to 0 |
+| Selected private runtime header | SHA256 `4bc27368debda1009875c0d69e9fa15da4589f7825385eb9179ca3360a219d22`; every role's quantized source-mesh UV set matches its runtime array |
+| Source package | `954af686e924e0d7c5d8043b1fec60bf7b17b254cf61154408be840a35a93c99` |
+| Candidate package | `dae101e984f8e373188006345d543480f329995755a1614ee1a60cc4a7c1fd6c` |
+| Exact preserved codebook | `19b7db700fc8fe7c254245fa8f5780e18f942ea93da51ff22f6ea70813b02242` |
+| Exact preserved base indices | `87f0ea6c56b1038318f27751d89d9b0cfa62e494d292d6575dd2eb8081e029c5` |
+| Independent decoder | Pinned KOS pvrtex oracle, binary SHA256 `79f1a50557ca59383ce12c67f370eaa30393fe8015ede0c0186a72714d0f8868`; all 10 levels pass |
+| Unrelated pack entries | All 6500 exact, including the existing five Ganado mip packages |
+| Payload allocation request | 67584 to 89430 bytes: +21846 bytes |
+| Request rounded to 32 bytes | 67584 to 89440 bytes: +21856 bytes |
+| Canonical reconstructed pack | 156274688 bytes, +20480 archive bytes; SHA256 `0e3544de07b3543bfb83e31f5197ecb9ed551f735560f2a65edd47a7c414d55f`; reconstructed in memory, no full pack output |
+| Private file receipt | `leon-v1/SHA256SUMS`, SHA256 `0eb41ec8489be58e4d1a904ffc1e2374c727ff8c53af96e7e9343eb4bb285af1` |
+
+The raw original Release21 disc track is absent. The exact pack was recovered
+from the sealed farm candidate and preserved originals, then checked against
+the retained release manifest. The selected source files and manifest are
+copied into this private candidate and hash pinned.
+
+## Leon sampling policy and limitation
+
+Leon's nine atlas tiles retain their two-texel gutters. The source mesh uses
+`x=u*512, y=(1-v)*512`, matching `ps2leon/pack_arm.py`. All 4473 body triangles
+and 13419 corners belong to one tile per triangle. The separately owned hair
+role uses its colour/mask runs and is excluded from the body footprint audit.
+The atlas is opaque RGB565; its alpha values and the separate masks are exact.
+
+This UV identity check covers the static base chunk arrays. The current release
+also enables `LEON_HAND_PACK` and `LEON_HEADLESS`. Dynamic hand poses and
+headless substitutions require separate UV/derivative evidence. The contained
+256 level in the static audit is not a guarantee for every runtime pose or
+substitution. Their assets and drawing code are unchanged by these candidates.
+
+The audit combines each mip's aligned source box with both bilinear taps. It
+is a conservative source footprint bound, not measured screen derivatives or
+proof that a camera selects a level. At an exact tap centre it still includes
+both taps. It does not assume that a two-pixel gutter is sufficient forever.
+
+| Mip side | Body corners with a footprint crossing their tile | Filter boxes mixing tile owners |
+|---|---:|---:|
+| 512 | 0 | 0 |
+| 256 | 0 | 0 |
+| 128 | 69 | 0 |
+| 64 | 1172 | 0 |
+| 32 | 2371 | 0 |
+| 16 | 4065 | 0 |
+| 8 | 7094 | 0 |
+| 4 | 11827 | 2 |
+| 2 | 13419 | 3 |
+| 1 | 13419 | 1 |
+
+**The full Leon chain is a private review candidate. Its sampling has not been
+accepted for runtime adoption.** The 512 and 256 footprints are contained;
+the 128 and smaller levels need an explicit sampler/atlas decision and a look
+check. The tool changes neither UVs, atlas layout nor sampling state. Blind
+padding or stretching would change the source contract and is not performed.
+
+Private previews include the unchanged original, each mip, corresponding box
+references, a contact sheet and `quality.json`. At 256, fixed-codebook
+quantization measures 29.37 dB RGB PSNR against the rounded box reference;
+this describes a texture-level difference, not a gameplay image or acceptance.
+
+## Native actor cohort checkpoint
+
+`native-v1` contains 16 existing-VQ actor keys with 51 primary-geometry consumer
+bindings. Every selected native registry/partner file was recovered from
+existing private sources by exact SHA256 and size against the retained original
+release manifest. All 39 selected registry/partner files match. Their private
+copies and pinned proofs are preserved; no original disc was required.
+
+The cohort includes Ashley, em17, Del Lago, its boat, Mendez's legs, Luis,
+merchant, cows, chickens, dogs, crow and traps. Each declared room consumer is
+checked for a real primary-geometry texture reference. All native UV words,
+geometry, mask run references and separate mask packages remain exact.
+
+| Evidence | Result |
+|---|---|
+| Independent levels | 144 pass the same pinned pvrtex decoder |
+| Base pixels, codebooks and indices | Exact for all 16 keys |
+| Unselected normal-pack entries | All 6485 exact, including the five protected Ganado mips |
+| Payload request increase | 173408 bytes across the unique 16-key cohort |
+| 32-byte rounded request increase | 173568 bytes across the unique 16-key cohort |
+| Canonical reconstructed pack | 156405760 bytes; SHA256 `234a147a1022d856801c1809f076b58f2ae65e5353ab36c5c4dc3599fe31225d`; not written |
+| Windows mirror | 400 verified private files, including copied consumer blobs and all mip/reference/contact images |
+| Private SHA256SUMS | `e4646d49954f7ea84f7999ea2376586b16e8f0fd1c1f38a272484ca2093b921d` |
+
+Native atlas tile layouts and actual sampling derivatives have not been
+qualified. These are review candidates, with that limitation recorded per key.
+At the first lower level, RGB PSNR against each rounded box reference ranges
+from 29.03 to 39.62 dB. Separate per-key quality reports and previews preserve
+the differences; these numbers do not accept their rendered appearance.
+
+`allocation_summary.py` combines explicit sparse candidates while refusing
+overlapping keys or different source packs. The Leon + native summary contains
+17 unique keys and 26 source-bound native rooms. The total increase is 195254
+raw bytes or 195424 rounded bytes across the whole unique set, not a simultaneous
+room peak. Within the native subset, r11c has three referenced keys and +65568
+rounded bytes. Standard Leon deliberately has no automatic room assignment:
+pl00/pl08 and live selection need their own evidence. There is no overlap with
+the original 1488-key world sidecar cohort.
+
+```sh
+python3 allocation_summary.py --candidate /private/leon-v1 \
+  --candidate /private/native-v1 --out /private/new-allocation-requests.json
+```
+
+Fourteen rectangular native actor keys, including Gigante and Mendez's full
+body, have an explicit private source-binding handoff to the rectangular
+adaptation owner. No stretching, padding or UV change was made. Original
+registry names outside the normal-pack namespace are not labelled runtime
+failures merely because they do not match a pack member.
+
+## Remaining existing-VQ Leon cohort
+
+`leon-extra-v1` adds three source-bound candidates, each retaining its existing
+VQ codebook and base indices:
+
+| Key | Consumer | Source selection |
+|---|---|---|
+| `7506e95f-68cf2211` | No-jacket Leon / pl08 | Exact ACTOR_PL08 owner and selected costume package |
+| `49abeafe-882b9aa5` | LVQ | Explicit charbake variant 4, conditional; not the boot choice |
+| `172a4735-95d0fae5` | GVQ | Explicit charbake variant 5, conditional; not the boot choice |
+
+The pl08 package is 61184 bytes, SHA256
+`beb8c19886d60a0546d11312e84e2b922a343b805fc9b7ca24186d513ac5283f`,
+exact against the original release manifest. Its own source infos 0/1/6 match
+the package's UV arrays; the six shared infos match their mapped standard Leon
+runtime arrays. The pl08 static body audit covers 4789 triangles / 14367
+corners. Its 256 footprints are contained; 94 corner footprints cross tile
+ownership at 128. The two conditional variants reuse the static standard Leon
+audit, preserving their own distinct original full-resolution bytes.
+
+All 30 levels independently decode. The additional raw request is 65538 bytes,
+or 65568 after 32-byte rounding. All 6498 unselected pack entries and five
+Ganado mip packages remain exact. The Windows subset contains 94 verified
+files; SHA256SUMS is
+`a37930b5d27176758a84b2f7c948d38834481cd2354c88bdda017e98e2f9a0b9`.
+
+The complete three-set source checkpoint contains 20 texture candidates and
+184 independently decoded levels. Across all unique keys, request deltas are
+260792 raw bytes or 260992 rounded bytes. That includes alternate costumes
+and conditional look choices, and is not a simultaneous room budget. Source
+request accounting cannot accept residency, sampling, rendered look or timing.
+
+AO, SKY and GCB are the other three named conditional Leon variants. They are
+native16 packages, not existing VQ. Their owners are explicit in the same
+source table, but this lane does not silently re-encode their bases or assume
+that they are the normal boot selection. Their format policy remains with the
+broader texture pipeline owner.
+
+## Use
+
+The private JSON contract has schema `re4dc-actor-mip-contract-1`, an exact
+`source_pack_sha256`, SHA256-pinned `proofs` with explicit IDs and paths, and
+explicit `textures`. A standard Leon binding requires the selected source,
+variant, recipe, default, tile, source mesh and selected runtime header proofs.
+A native-registry binding requires a pinned `.re4nmr` whose texture entry is
+actually referenced by a descriptor's primary geometry. Native registry UVs
+are read for bounds and preserved. Atlas lower-level acceptance stays pending
+unless separately qualified. Alpha-bearing actor textures currently refuse:
+they require a separately reviewed coverage policy.
+
+Generate with a Python environment containing NumPy and Pillow:
+
+```sh
+python actor_candidate.py --source-pack /private/tex.pak \
+  --contract /private/actor-contract.json --out /private/new-actor-candidate \
+  --enable-mipmaps --engine numpy --previews
+```
+
+Omit `--enable-mipmaps` for exact base-package identity. Existing output
+directories refuse. Only the sparse original/replacement packages and their
+evidence are written; normal-pack lookup remains authoritative.
+
+On the Linux host, independently decode and seal all levels:
+
+```sh
+python3 seal_candidate.py /private/new-actor-candidate \
+  --source-pack /private/tex.pak --oracle /private/pinned-oracle.so \
+  --oracle-sha256 EXPECTED_SHA256
+```
+
+The seal checks every decoded mip against the actual KOS decoder, independently
+compares original and candidate base pixels, verifies protected/unselected
+members, reconstructs the canonical pack in memory and writes SHA256SUMS.
+Mirror that sealed set to the Windows private store and verify every receipt.
+
+```sh
+python3 test_actor_candidate.py
+```
+
+Eleven source/tool regression tests cover explicit selection, disabled identity,
+owner and hash refusal, primary-geometry binding, protected Ganado packages,
+every declared room consumer, atlas boundaries, explicit conditional variants,
+changed boot selection and selected-runtime/package UV disagreement. These and
+the private decoder seal establish source/data correctness. Runtime VRAM,
+residency, look, gameplay and physical hardware timing remain separate gates.

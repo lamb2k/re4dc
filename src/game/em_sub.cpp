@@ -28,6 +28,19 @@
 #include "math_sub.h"
 #include "db_log.h"
 
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_DEATH_TRACE) && RE4DC_DEATH_TRACE
+extern "C" void re4dc_log(const char*, ...);
+// Diagnostic reads only. No damage, flags, RNG draws or source control flow are changed.
+static void deathTracePlayer(const char* where, int damage, int rnd, int flag, int type, const void* caller)
+{
+    if (!pG || !pPL) return;
+    re4dc_log("death trace: %s frame=%u caller=%08x dmg=%d rnd=%d flag=%x type=%d life=%d rno=%u/%u/%u/%u\n",
+              where, unsigned(pG->Frame_cnt), unsigned((u32) caller), damage, rnd, flag, type,
+              int(s16(pG->pl_life)), unsigned(pPL->r_no_0), unsigned(pPL->r_no_1),
+              unsigned(pPL->r_no_2), unsigned(pPL->r_no_3));
+}
+#endif
+
 extern "C" {
 int MotionMove(cModel* m, int a);   // motion.cpp
 }
@@ -1988,8 +2001,15 @@ int LifeDownSet(cEm* em, int dmg, int flag)
 
 // Take `dmg` (+-rnd) off the life of `em`: the player (id 0), the partner (ids 1..0xD) or an enemy.
 // flag bit0 leaves 1 life point. Returns the remaining life.
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_DEATH_TRACE) && RE4DC_DEATH_TRACE
+__attribute__((noinline))
+#endif
 int LifeDownSet2(cEm* em, int dmg, int rnd, int flag)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_DEATH_TRACE) && RE4DC_DEATH_TRACE
+    const void* const death_caller = __builtin_return_address(0);
+    if (em && em->id == 0) deathTracePlayer("life.before", dmg, rnd, flag, -1, death_caller);
+#endif
     int r;
     int ret;
     f32 rate;
@@ -2003,6 +2023,9 @@ int LifeDownSet2(cEm* em, int dmg, int rnd, int flag)
     }
     if (em->id == 0) {
         if ((s16) pG->pl_life <= 0) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_DEATH_TRACE) && RE4DC_DEATH_TRACE
+            deathTracePlayer("life.early_dead", dmg, rnd, flag, -1, death_caller);
+#endif
             return 0;
         }
         rate = (f32) pG->Game_level * 0.1f + 0.5f;
@@ -2116,13 +2139,22 @@ int LifeDownSet2(cEm* em, int dmg, int rnd, int flag)
             GameAddPoint(LVADD_EM_DIE);
         }
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_DEATH_TRACE) && RE4DC_DEATH_TRACE
+    if (em && em->id == 0) deathTracePlayer("life.after", dmg, rnd, flag, -1, death_caller);
+#endif
     return ret;
 }
 
 // Player damage entry: register the hit, take the life, and start the damage motion `type`
 // (6/7 die, 8 knocked down; on 0 life 8 becomes 7 and the invincibility flags turn 6/7 into 2/8).
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_DEATH_TRACE) && RE4DC_DEATH_TRACE
+__attribute__((noinline))
+#endif
 void PlSetDamage(int type, int dmg, int flag)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_DEATH_TRACE) && RE4DC_DEATH_TRACE
+    deathTracePlayer("damage.enter", dmg, 0, flag, type, __builtin_return_address(0));
+#endif
     pPL->dmg.set(0, 0x1E);
     pPL->subArc = pPL->subArc2;
     if (dmg != 0) {

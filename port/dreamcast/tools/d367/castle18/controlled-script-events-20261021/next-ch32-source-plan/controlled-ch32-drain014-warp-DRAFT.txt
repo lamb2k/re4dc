@@ -1,0 +1,9 @@
+squeeze 49152 0
+name castle21-CONTROLLED-ch32-drain014
+room 0x205
+jp 0
+chapter 7
+pos 46118.5419921875 996.8269653320312 48787.291015625
+ang 0
+alivelog 30
+dump

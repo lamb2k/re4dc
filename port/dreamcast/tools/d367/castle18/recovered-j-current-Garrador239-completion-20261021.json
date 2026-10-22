@@ -1,0 +1,293 @@
+{
+  "scope": "CURRENT replay after original death200/Continue201. Fourteen ordinary RT+A source-qualified part37 hits, no guest memory writes, health setters, forced flags, rollback or resets. The original death/door callback and30 stable source freeplay ticks completed. Historical192 kill remains independent. Stairs/waves/chapter completion and formal texture/motion/audio/release/physical acceptance remain open.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "original127_sha256": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16",
+  "original_injury_lineage": "OriginalContinue201903/90, normalherbUse2031200/90, originalcombo205816/90 and206624/90; no further health loss through239. All original states/death/Continue retained.",
+  "weakpoint_hits": 14,
+  "curve": [
+    {
+      "run": 214,
+      "before": 4000,
+      "after": 3698,
+      "hits": 1,
+      "source": 29746,
+      "state_sha256": "2802cc5f34d0062aab735017d0ee68fee51c586ac66465032cf55559b9f544df"
+    },
+    {
+      "run": 216,
+      "before": 3698,
+      "after": 3396,
+      "hits": 1,
+      "source": 31479,
+      "state_sha256": "af0064bd6d51ca1e7600cb29c9008642a32ac4378af485d19457ba70315cfa05"
+    },
+    {
+      "run": 218,
+      "before": 3396,
+      "after": 3094,
+      "hits": 1,
+      "source": 32754,
+      "state_sha256": "c8ecc88e06c5a8f42b918e4916ae2f3b52c96c20c425e7895abaacadb2d76373"
+    },
+    {
+      "run": 221,
+      "before": 3094,
+      "after": 2792,
+      "hits": 1,
+      "source": 34290,
+      "state_sha256": "1b4cc4bdf00eed60554c6b5bd37bfb3afa608c1c6e46c0bf8badd468020f947a"
+    },
+    {
+      "run": 223,
+      "before": 2792,
+      "after": 2490,
+      "hits": 1,
+      "source": 35752,
+      "state_sha256": "4a4dd44db0fe49413eb7a7d4bfc4c286e9d3cf371e4207de5047b5b38eb301df"
+    },
+    {
+      "run": 225,
+      "before": 2490,
+      "after": 2188,
+      "hits": 1,
+      "source": 37112,
+      "state_sha256": "89cd5490da092a1b5852d4ba97b625d87e52706621044caff292e441576b836e"
+    },
+    {
+      "run": 227,
+      "before": 2188,
+      "after": 1584,
+      "hits": 2,
+      "source": 38181,
+      "state_sha256": "eeeaa17bcf41f286b9645ccb9040cad6050a398de81d2bada8a35f6d9237420b"
+    },
+    {
+      "run": 229,
+      "before": 1584,
+      "after": 1282,
+      "hits": 1,
+      "source": 39782,
+      "state_sha256": "a7557a2be6dffc8a773bda5cf43ac9cd0547ade9f26fdcf4af70afd1fcc4ddc8"
+    },
+    {
+      "run": 231,
+      "before": 1282,
+      "after": 980,
+      "hits": 1,
+      "source": 41202,
+      "state_sha256": "8c57eae234eac5d03c40b7bc5ab1eddc40197d01770e1b18b6452d2f637d56d2"
+    },
+    {
+      "run": 233,
+      "before": 980,
+      "after": 678,
+      "hits": 1,
+      "source": 42005,
+      "state_sha256": "8d39c77c4660d6a78c844544a2db2f20de4c65b8293a86a4da508c7b03e230ca"
+    },
+    {
+      "run": 235,
+      "before": 678,
+      "after": 376,
+      "hits": 1,
+      "source": 43178,
+      "state_sha256": "e9ff451e5281e69cc0d3a9b4b2d52dd87129ccdb91d016198424fc9c81546a69"
+    },
+    {
+      "run": 237,
+      "before": 376,
+      "after": 74,
+      "hits": 1,
+      "source": 44074,
+      "state_sha256": "1cdc3a0dffe4189270b90fe4e7e6d279ce95d84812df490a11418a7add2c9d8c"
+    },
+    {
+      "run": 239,
+      "before": 74,
+      "after": 0,
+      "hits": 1,
+      "source": 45349,
+      "state_sha256": "20df6761068009d849c734007d76c20d33e2ce0443a8a36e14bb9f09d319bc42"
+    }
+  ],
+  "completion": {
+    "frame": 45348,
+    "room": "0x201",
+    "phase": [
+      3,
+      0
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "health": [
+      624,
+      1200,
+      90,
+      600
+    ],
+    "source_Key_on": "0x0",
+    "Garrador_hp": 0,
+    "Garrador_routines": [
+      3,
+      0,
+      2,
+      1
+    ],
+    "original_r201_saved_RSF": "0xec400000"
+  },
+  "closed239": {
+    "scope": "Read-only exact closed checkpoint combat state, not last asynchronous controller sample. No guest or state writes.",
+    "run": "route-walk239",
+    "state_sha256": "20df6761068009d849c734007d76c20d33e2ce0443a8a36e14bb9f09d319bc42",
+    "source": 45349,
+    "health": [
+      624,
+      1200,
+      90,
+      600
+    ],
+    "hero_pos": [
+      18619.978515625,
+      -2000.000732421875,
+      -44929.5546875
+    ],
+    "hero_yaw": -0.5006406307220459,
+    "hero_routines": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "partner_pos": [
+      29459.595703125,
+      -2000.00390625,
+      -42314.953125
+    ],
+    "partner_flags": "0x46",
+    "boss": {
+      "hp": 0,
+      "pos": [
+        16014.4306640625,
+        1367.3984375,
+        -39594.2890625
+      ],
+      "yaw": 0.04018765315413475,
+      "routines": [
+        3,
+        0,
+        2,
+        1
+      ]
+    },
+    "items": [
+      {
+        "id": 124,
+        "num": 1,
+        "bullet": 0
+      },
+      {
+        "id": 35,
+        "num": 1,
+        "bullet": 5
+      },
+      {
+        "id": 172,
+        "num": 1,
+        "bullet": 0
+      },
+      {
+        "id": 173,
+        "num": 1,
+        "bullet": 0
+      }
+    ],
+    "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+    "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+  },
+  "controller_sha256": "d5ee00dc9d818a1ee1a5513875e5771a0175e8fc7af2d778d06836d43b1d099f",
+  "screenshots": [
+    {
+      "run": "route-walk239",
+      "lineage": "Recovered J NEW cold boot progression",
+      "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+      "runtime": "12a841d7c",
+      "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+      "room": "0x201",
+      "source_frame_interval": [
+        45348,
+        45349
+      ],
+      "health_before": [
+        624,
+        1200,
+        90,
+        600
+      ],
+      "health_after": [
+        624,
+        1200,
+        90,
+        600
+      ],
+      "action_result": {
+        "actual_original_death_callback_RSF0_and_stable_world": {
+          "frame": 45348,
+          "room": "0x201",
+          "phase": [
+            3,
+            0
+          ],
+          "Stop": "0x0",
+          "SSLoop": 0,
+          "health": [
+            624,
+            1200,
+            90,
+            600
+          ],
+          "source_Key_on": "0x0",
+          "Garrador_hp": 0,
+          "Garrador_routines": [
+            3,
+            0,
+            2,
+            1
+          ],
+          "original_r201_saved_RSF": "0xec400000"
+        }
+      },
+      "last_sample": {
+        "frame": 45348,
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "health": [
+          624,
+          1200,
+          90,
+          600
+        ],
+        "source_Key_on": "0x0",
+        "Garrador_hp": 0,
+        "Garrador_routines": [
+          3,
+          0,
+          2,
+          1
+        ],
+        "original_r201_saved_RSF": "0xec400000"
+      },
+      "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+      "png_paths": [
+        "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk239\\shots\\checkpoint-source-45348\\frames\\fb0.png",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk239\\shots\\checkpoint-source-45348\\frames\\fb1.png"
+      ]
+    }
+  ]
+}

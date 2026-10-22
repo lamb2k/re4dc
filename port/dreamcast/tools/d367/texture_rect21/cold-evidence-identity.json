@@ -1,0 +1,36 @@
+{
+  "scope": "Preserved bounded cold evidence identity; no target performance/release/physical acceptance",
+  "captures": {
+    "cold-functional-C-01": {
+      "manifest_sha256": "efb2822f8802026e8384a9bd4073ec189a85129dac8bb111d82fd52d78a74a52",
+      "seal_sha256": "8bfe68cd2dccf8c7d60cabd9d44c4bf3ff8c7a4266076765686ac6af03c1a16f"
+    },
+    "cold-functional-C-02": {
+      "manifest_sha256": "9bf09e8bb2c55cc6199c4bbd2c2ea11424ad9a2cb60a77d59a67d9efe8f33313",
+      "seal_sha256": "cc6b44e21731acc3a2e51046432c3c71fe6994a39909a04a79315a39220a9e9d"
+    },
+    "cold-functional-C-03": {
+      "manifest_sha256": "1b22763890641482df70797571ce3c41e9e8f0d7a1308b0aa7931c12f6de2d97",
+      "seal_sha256": "7aab5052977f96643028645e5fa206519dffed975c058259edc1fe5ab05b3af0"
+    },
+    "cold-functional-B-01": {
+      "manifest_sha256": "07976b8157ff0f0ce7ed9ccc6bdff512f64c3de1138173e459567a14fa1662b0",
+      "seal_sha256": "1b97561799e94369e42c6a1229f5d2d664bfd2e8660a72ed146acbcb57c690ca"
+    }
+  },
+  "mirror": {
+    "path": "/root/re4data/private/texture-rect21-cold-qualification-20261021",
+    "bytes": 8174828,
+    "files": 359,
+    "manifest_sha256": "a8b81a388301b6c3d571ab6d185de6202f09c1668329d1ec81e8db6ae316c3a8",
+    "scope": "Exact screenshots/source/observer/log metadata, excluding full images/emulator/VMU/states; original C copies retained",
+    "cap": 20971520
+  },
+  "authorization_correction": "C03 inherited false B_guest_authorized bookkeeping from C02 template; correction preserved separately without changing measurements/raw evidence",
+  "next": {
+    "status": "PLAN_ONLY_NO_ALLOCATION",
+    "path": "C:/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/woods-cold-plan-01",
+    "plan_sha256": "61da88beb7af1b3417d6f100341542012b8d62360ffef40ed56907debf691aad",
+    "scene": "Existing QA R100 house afterS20, distinct from natural woods benchmark;8 keys49material rows"
+  }
+}

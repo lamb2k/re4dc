@@ -1,0 +1,60 @@
+{
+ "registry": "castle18-variants-r209",
+ "about": "Complete source type7/8 alternate accessory pools; exact source211/220 and217/219 selections.",
+ "cast_dir": "/root/re4data/private/castle18-cast-variants-20261018/cast-em1a-v2",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit preset (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "zealot-em1a-07q",
+   "archive": "em1a",
+   "model_id": "0x1a",
+   "source_types": [
+    7
+   ],
+   "module": "src/em1a/em1a_set.cpp Em1aSet type 7 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+   "partial_sections": true,
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/re4data/private/castle18-cast-variants-20261018/mask/zealot-em1a-07q/13",
+    "16": "/root/re4data/private/castle18-cast-variants-20261018/mask/zealot-em1a-07q/16",
+    "20": "/root/re4data/private/castle18-cast-variants-20261018/mask/zealot-em1a-07q/20",
+    "22": "/root/re4data/private/castle18-cast-variants-20261018/mask/zealot-em1a-07q/22"
+   }
+  },
+  {
+   "name": "zealot-em1a-08q",
+   "archive": "em1a",
+   "model_id": "0x1a",
+   "source_types": [
+    8
+   ],
+   "module": "src/em1a/em1a_set.cpp Em1aSet type 8 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+   "partial_sections": true,
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/re4data/private/castle18-cast-variants-20261018/mask/zealot-em1a-08q/13",
+    "16": "/root/re4data/private/castle18-cast-variants-20261018/mask/zealot-em1a-08q/16",
+    "20": "/root/re4data/private/castle18-cast-variants-20261018/mask/zealot-em1a-08q/20",
+    "22": "/root/re4data/private/castle18-cast-variants-20261018/mask/zealot-em1a-08q/22"
+   }
+  }
+ ],
+ "room_packages": {
+  "209": {
+   "descriptors": [
+    "zealot-em1a-07q",
+    "zealot-em1a-08q"
+   ],
+   "evidence": "source type8 original pairs 211/220 and217/219; r208 NMRBIN181 and current293 r209 source combat"
+  }
+ }
+}

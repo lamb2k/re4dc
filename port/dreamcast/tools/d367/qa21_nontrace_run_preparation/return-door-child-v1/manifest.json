@@ -1,0 +1,18 @@
+{
+  "LAUNCH-REQUEST.json": {
+    "bytes": 5030,
+    "sha256": "dadfedacf34803b339fa667854c6aa9d7bb570fbccb3db3e16794ed143b9c27d"
+  },
+  ".gitattributes": {
+    "bytes": 8,
+    "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+  },
+  "LAUNCH-REQUEST.md": {
+    "bytes": 2156,
+    "sha256": "45169935766843cff504547b460091dd91f026bc895d57e04a62d8b70a9bd756"
+  },
+  "readonly-preflight.json": {
+    "bytes": 26000,
+    "sha256": "a55b6d86257def3c7a32c887525d0a560a535d6a4502ec27dba65337306b063f"
+  }
+}

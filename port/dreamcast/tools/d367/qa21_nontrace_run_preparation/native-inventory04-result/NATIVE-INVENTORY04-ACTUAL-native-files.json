@@ -1,0 +1,102 @@
+{
+  "scope": "postclose read-only exact owned fixture files; no image/state reads",
+  "files": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-native-job-inventory-20261022-04\\coordinator-result.json",
+      "native": {
+        "volume": 14332939485708580193,
+        "native_file_id": "0x000000000000000000020000004cff8d",
+        "size": 4775,
+        "allocated": 8192,
+        "links": 1,
+        "deleted": false,
+        "directory": false,
+        "mtime_ns": 1792658893802836500,
+        "creation_filetime": 134371324938028365,
+        "attributes": 32
+      },
+      "hash": {
+        "sha256": "111f997156a59acf5213f9d15b62a8e16f945c97e99be4597da1323668dd8d9a",
+        "bytes": 4775
+      }
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-native-job-inventory-20261022-04\\inventory.json",
+      "native": {
+        "volume": 14332939485708580193,
+        "native_file_id": "0x000000000000000000020000004cff8c",
+        "size": 1081,
+        "allocated": 4096,
+        "links": 1,
+        "deleted": false,
+        "directory": false,
+        "mtime_ns": 1792658893799832400,
+        "creation_filetime": 134371324936767200,
+        "attributes": 32
+      },
+      "hash": {
+        "sha256": "f621859cc280eaf79042a4bb069ac10f23ce4e43c19b6e9cca34ed723afc59e2",
+        "bytes": 1081
+      }
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-native-job-inventory-20261022-04\\KEEP",
+      "native": {
+        "volume": 14332939485708580193,
+        "native_file_id": "0x000000000000000000080000004cfeca",
+        "size": 83,
+        "allocated": 88,
+        "links": 1,
+        "deleted": false,
+        "directory": false,
+        "mtime_ns": 1792658893468289500,
+        "creation_filetime": 134371324934682895,
+        "attributes": 32
+      },
+      "hash": {
+        "sha256": "57dc876acd3c641395f37f4d3500be9370cdde7dc72ca6b9cc80863006dda4d2",
+        "bytes": 83
+      }
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-native-job-inventory-20261022-04\\startup.json",
+      "native": {
+        "volume": 14332939485708580193,
+        "native_file_id": "0x000000000000000000030000004cfed3",
+        "size": 383,
+        "allocated": 384,
+        "links": 1,
+        "deleted": false,
+        "directory": false,
+        "mtime_ns": 1792658893676720000,
+        "creation_filetime": 134371324936757197,
+        "attributes": 32
+      },
+      "hash": {
+        "sha256": "4e11a4ad699bd4ff7e832de2aef493e3b69897a96bbfce02a8e0f49b20041630",
+        "bytes": 383
+      }
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-native-job-inventory-20261022-04\\supervisor-result.json",
+      "native": {
+        "volume": 14332939485708580193,
+        "native_file_id": "0x000000000000000000020000004cff8e",
+        "size": 581,
+        "allocated": 584,
+        "links": 1,
+        "deleted": false,
+        "directory": false,
+        "mtime_ns": 1792658893829176100,
+        "creation_filetime": 134371324938291761,
+        "attributes": 32
+      },
+      "hash": {
+        "sha256": "594b94d8bc2a47bda583440f0769ebb4a6c107ef903f0bbdf93a0127cd81939d",
+        "bytes": 581
+      }
+    }
+  ],
+  "sum_max_logical_actual_allocated": 13344,
+  "closed_all_handles": true
+}

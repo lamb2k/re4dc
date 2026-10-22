@@ -1,0 +1,79 @@
+{
+  "scope": "Controlled original204/radio evidence only; typed fields and RSF7 do not replace observed event execution/return",
+  "observation": {
+    "process_age": 9.545580354693811,
+    "pg": 2352652060,
+    "frame": 2030,
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x204",
+    "chapter": 7,
+    "Stop": "0x80400100",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "CardStatus": "0x80000005",
+    "status3": "0x0",
+    "partner_ptr": "0x0",
+    "saved_RSF204": "0x81000000"
+  },
+  "before": {
+    "process_age": 9.70158035471104,
+    "pg": 2352652060,
+    "frame": 2030,
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x204",
+    "chapter": 7,
+    "Stop": "0x80400100",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "CardStatus": "0x80000005",
+    "status3": "0x0",
+    "partner_ptr": "0x0",
+    "saved_RSF204": "0x81000000"
+  },
+  "after": {
+    "process_age": 9.732580354670063,
+    "pg": 2352652060,
+    "frame": 2030,
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x204",
+    "chapter": 7,
+    "Stop": "0x80400100",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "CardStatus": "0x80000005",
+    "status3": "0x0",
+    "partner_ptr": "0x0",
+    "saved_RSF204": "0x81000000"
+  },
+  "pngs": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-handoff012\\shots\\controlled-original204-entry\\frames\\fb0.png",
+      "sha256": "36cbe5141fe9239b3be2abf3fd4c5cf9d56c8cee8408ef50c725518e06927cb6"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-handoff012\\shots\\controlled-original204-entry\\frames\\fb1.png",
+      "sha256": "36cbe5141fe9239b3be2abf3fd4c5cf9d56c8cee8408ef50c725518e06927cb6"
+    }
+  ]
+}

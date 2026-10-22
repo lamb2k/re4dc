@@ -81,6 +81,13 @@ endif
 ifeq ($(SCENERY_DEDUP),2)
 ROOMFILE_SECTIONS += -DRE4DC_ROOMFILE_SCDD=1
 endif
+# SCENERY_CONE / SCENERY_PIECE_STATE (lane scenery21, scenery19.mk): the room file's SCCN / SCPS sections.
+ifneq ($(filter-out 0,$(SCENERY_CONE)),)
+ROOMFILE_SECTIONS += -DRE4DC_ROOMFILE_SCCN=1
+endif
+ifneq ($(filter-out 0,$(SCENERY_PIECE_STATE)),)
+ROOMFILE_SECTIONS += -DRE4DC_ROOMFILE_SCPS=1
+endif
 ifneq ($(strip $(ROOMFILE_SECTIONS)),)
 $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_ROOM_FILE=1 -Iplatform/include
 PLATFORM_OBJS += $(OBJDIR)/platform/room_file.o

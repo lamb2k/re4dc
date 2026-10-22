@@ -1,3 +1,4 @@
+#include "include/bfc_class.h"
 #include "include/movie_world_arena.h"
 #include "include/native_cabin.h"
 #if RE4DC_MOVIE_WORLD_ARENA
@@ -15,6 +16,16 @@
 #endif
 #ifndef RE4DC_PS2_WORLD_MESH
 #define RE4DC_PS2_WORLD_MESH 0
+#endif
+#ifndef RE4DC_WORLD_RECT21
+#define RE4DC_WORLD_RECT21 0
+#endif
+#if RE4DC_WORLD_RECT21
+#if !RE4DC_PS2_WORLD_DRAW || !RE4DC_PS2_WORLD_MESH
+#error WORLD_RECT21 provenance requires the PS2 world mesh consumer
+#endif
+#include "../../tools/d367/texture_rect21/world_rect_provenance.h"
+#include "../../tools/d367/texture_rect21/scoped_origin.h"
 #endif
 // MESH_DEPTH_CULL: the meshlet fast path drops a strip whose corners all lie outside one depth
 // plane instead of clipping it to nothing (exact). On with PS2_WORLD_MESH.
@@ -57,6 +68,9 @@ extern "C" volatile unsigned re4dc_rigid_hide;   // native_actor_fast.cpp (RIGID
 #include "../../room/room_package.hpp"
 #include "../../room/static_room_prepare.hpp"
 #include "../../room/pvr_geometry.hpp"
+#if RE4DC_PS2_WORLD_NONEMPTY_LOD
+#include "../../room/nonempty_lod.hpp"
+#endif
 
 #ifndef RE4DC_NATIVE_STATIC
 #define RE4DC_NATIVE_STATIC 0
@@ -158,6 +172,9 @@ static volatile unsigned ps2_mask_select=1U+RE4DC_PS2_PASS_MASK_SELECT;
 #endif
 #if RE4DC_NATIVE_MESH && RE4DC_MESH_FASTPATH
 #include "../../room/mesh_fastpath.hpp"
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+#include "../../room/backface_emit.hpp"  // CPU_BACKFACE (backface.mk, lane backface22)
+#endif
 #if RE4DC_MESH_VP_SCHED
 #include "../../room/mesh_fastpath_sched.hpp"
 #endif
@@ -832,6 +849,18 @@ bool locate(const Re4dcModelPart& p,Located& out){
 // Strip emission shared by package and mesh draws: one source part's packet.
 #if RE4DC_PS2_WORLD_MESH
 extern "C" int re4dc_ps2_world_direct_begin(const unsigned* key,Re4dcModelDirect* out); // native_ui.cpp
+#if RE4DC_SCENERY_PIECE_STATE
+} // namespace: the slot word is a global C symbol
+extern "C" std::uint32_t* re4dc_ps2_piece_slot; // native_ui.cpp: the slot word for the next re4dc_ps2_world_direct_begin
+namespace {
+#endif
+#if RE4DC_SCENERY21_AB
+} // namespace
+extern "C" char re4dc_bench_arm(void) __attribute__((weak)); // bench.cpp: the start screen's arm
+namespace {
+// SCENERY21_AB (bench disc): arm B = the scenery21 data and paths (sc21/ packages), arm A = as shipped
+bool scn21_arm_b(){return re4dc_bench_arm && re4dc_bench_arm()=='B';}
+#endif
 #endif
 struct Emitter {
     const Re4dcModelPart& p;
@@ -847,6 +876,9 @@ struct Emitter {
     re4dc::render::ClipParameters clip{};
 #if RE4DC_PS2_WORLD_MESH
     const unsigned* ps2=nullptr; // PS2_WORLD_MESH part: {crc, fnv, width, height, pass, cull}; binds by key, not by p
+#if RE4DC_SCENERY_PIECE_STATE
+    std::uint32_t* piece_slot=nullptr; // SCENERY_PIECE_STATE: this part's header-slot word (SCPS), nullptr: none
+#endif
 #endif
 #if RE4DC_HW_LEAN
     float proj_bx=0,proj_by=0; // project()'s viewport offsets in 640x480 pixels
@@ -924,7 +956,14 @@ struct Emitter {
         if(direct){
             Re4dcModelDirect out{};
 #if RE4DC_PS2_WORLD_MESH
+#if RE4DC_SCENERY_PIECE_STATE
+            re4dc_ps2_piece_slot=ps2?piece_slot:nullptr;
+            const int begun=ps2?re4dc_ps2_world_direct_begin(ps2,&out):re4dc_model_direct_begin(&p,&out);
+            re4dc_ps2_piece_slot=nullptr;
+            if(!begun)return false;
+#else
             if(!(ps2?re4dc_ps2_world_direct_begin(ps2,&out):re4dc_model_direct_begin(&p,&out)))return false;
+#endif
 #else
             if(!re4dc_model_direct_begin(&p,&out))return false;
 #endif
@@ -2153,6 +2192,23 @@ __attribute__((noinline)) void fill(const re4dc::vp::Vertex12* in,pvr_vertex_t* 
 }
 }
 #endif
+#if RE4DC_SCENERY_CONE
+// SCENERY_CONE (scenery21.mk; render only): the room file's SCCN section (tools/d367/scenery21/scn21_build.py), one
+// back-face cone per strip group (8 B: s8 axis[3], u8 k, f32 R; k 0 = none). chunk_select drops a group whose every
+// triangle faces the culled side for this eye (in grid coordinates): the PVR would cull each of them.
+namespace cone {
+const std::uint8_t* rec=nullptr;  // meshlet x groups x 8 B
+const float* tab2=nullptr;        // 64 squared slopes (T_k^2)
+const void* pkg=nullptr;          // the package the section matches
+unsigned tests=0,rejects=0,vskip=0,picks_dropped=0,logged=0;
+}
+#endif
+#if RE4DC_SCENERY_PIECE_STATE
+// SCENERY_PIECE_STATE (scenery21.mk; exact): the room file's SCPS section, one header-slot word per PS2 world part
+// (native_ui.cpp PS2_WORLD_HDR_CACHE slot index + 1, 0 = none yet), written at the part's first bind in the room and
+// checked at every bind (native_ui.cpp re4dc_ps2_piece_slot).
+namespace piece { std::uint32_t* table=nullptr; const void* pkg=nullptr; }
+#endif
 #if RE4DC_SCENERY_CHUNK
 // SCENERY_CHUNK (scenery19.mk): the per-part / per-meshlet walk at -O2 (this unit is -Os). The same expressions, so the
 // same decisions and vertex words (FP contraction is the same at -Os and -O2).
@@ -2409,6 +2465,9 @@ struct MeshDraw : Emitter {
                 stats.vertices+=n;
                 if(c.all&screen)++stats.strips_culled;
 #if RE4DC_MESH_DIRECT
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+                else if(sq && bf_on()){bf_send(s,n);output+=n-2;++stats.strips;}
+#endif
                 else if(sq){sq=vp::emit_sq(sq,cache,s,n);slots+=n;output+=n-2;++stats.strips;}
 #endif
                 else {
@@ -2430,6 +2489,37 @@ struct MeshDraw : Emitter {
     // input = sum n - 2 * strips, stats.vertices = sum n. lean_flush() writes these back before the
     // clipper (which reads and updates the members) and at the end; the clip strip itself runs the
     // original code. Returns nullptr when the meshlet is done (result: meshlet()'s value).
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+    // CPU_BACKFACE (lane backface22): parts whose header culls (p.cull 1 CCW, 2 CW) send only the triangles the ISP would
+    // keep (room/backface_emit.hpp); cull-none parts keep the unchanged paths. strips_bf: the lean walk's decisions in C
+    // (depth-all cull, clipper for a depth crossing or n > limit, screen-all cull, else the back-face split).
+    bool bf_on()const{return p.cull==1U || p.cull==2U;}
+    void bf_send(const std::uint8_t* s,unsigned n){
+        slots+=re4dc::bf::strip(cache,s,n,0xffU,p.cull,[&](const std::uint8_t* i,unsigned c){sq=re4dc::vp::emit_sq(sq,cache,i,c);});
+    }
+    const std::uint8_t* strips_bf(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
+                                  const re4dc::room::CompactBatch& batch,int& result){
+        namespace vp=re4dc::vp;
+        constexpr unsigned screen=vp::screen_mask(vp::kChecksAll),depth=vp::depth_mask(vp::kChecksAll);
+        while(s<end){
+            const unsigned n=*s++;
+            input+=n-2;
+            const vp::StripCodes c=vp::codes(outcodes,s,n);
+            if(c.all&depth){stats.vertices+=n;++stats.strips_culled;s+=n;continue;}
+            if((c.any&depth) || n>limit){
+                if(n<=limit)stats.vertices+=n;
+                result=clip_strip(base,batch,s,n);
+                if(result<=0)return nullptr;
+            }else{
+                stats.vertices+=n;
+                if(c.all&screen)++stats.strips_culled;
+                else{bf_send(s,n);output+=n-2;++stats.strips;}
+            }
+            s+=n;
+        }
+        result=1;return nullptr;
+    }
+#endif
     void lean_flush(const std::uint8_t* s,const std::uint8_t* mark,std::uint32_t* q,const std::uint32_t* qmark,
                     unsigned culled,unsigned emitted){
         const unsigned strips=culled+emitted,sum=unsigned(s-mark)-strips,v=unsigned(q-qmark)/8U;
@@ -2438,6 +2528,9 @@ struct MeshDraw : Emitter {
     }
     const std::uint8_t* strips_lean(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
                                     const re4dc::room::CompactBatch& batch,int& result){
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+        if(bf_on())return strips_bf(s,end,base,batch,result);
+#endif
         for(;;){
             const std::uint8_t* const mark=s;std::uint32_t* q=sq;const std::uint32_t* const qmark=q;
             unsigned culled=0,emitted=0;
@@ -2639,6 +2732,9 @@ struct MeshDraw : Emitter {
             if(depth<near)depth=near;
             unsigned level=cl.level_count-1;
             while(level && levels[cl.first_level+level].error*lod_scale>depth)--level;
+#if RE4DC_PS2_WORLD_NONEMPTY_LOD
+            if(ps2)level=re4dc::room::nonempty_lod(levels+cl.first_level,cl.level_count,level);
+#endif
             ++stats.lod_draws[level<3?level:3];
             const auto& lv=levels[cl.first_level+level];
             const auto* lets=package.meshlets()+lv.first_meshlet;
@@ -2696,6 +2792,26 @@ struct MeshDraw : Emitter {
         const auto* clusters=package.clusters();const auto* levels=package.levels();const auto* all=package.meshlets();
         const bool groups=sg && lean_am;
         unsigned np=0;
+#if RE4DC_SCENERY_CONE
+        // SCENERY_CONE: the eye in grid coordinates (view = M g + t: e = -M^-1 t) and the culled side's sign (part cull
+        // 1 CCW / 2 CW, det(M), and the projection's fixed handedness RE4DC_SCENERY_CONE_SIGN).
+        bool cone_on=sg && cone::pkg==static_cast<const void*>(&package) && p.cull>0U && p.cull<=2U;
+        float ex=0,ey=0,ez=0,csgn=1;
+        if(cone_on){
+            const float* m=mvq;
+            const float c0=m[5]*m[10]-m[6]*m[9],c1=m[6]*m[8]-m[4]*m[10],c2=m[4]*m[9]-m[5]*m[8];
+            const float det=m[0]*c0+m[1]*c1+m[2]*c2;
+            if(!(std::fabs(det)>1e-20f))cone_on=false;
+            else{
+                const float id=-1.0f/det,tx=m[3],ty=m[7],tz=m[11];
+                // e = -adj(M) t / det
+                ex=id*(c0*tx+(m[2]*m[9]-m[1]*m[10])*ty+(m[1]*m[6]-m[2]*m[5])*tz);
+                ey=id*(c1*tx+(m[0]*m[10]-m[2]*m[8])*ty+(m[2]*m[4]-m[0]*m[6])*tz);
+                ez=id*(c2*tx+(m[1]*m[8]-m[0]*m[9])*ty+(m[0]*m[5]-m[1]*m[4])*tz);
+                csgn=float(RE4DC_SCENERY_CONE_SIGN)*(p.cull==1U?1.0f:-1.0f)*(det>0.0f?1.0f:-1.0f);
+            }
+        }
+#endif
         for(unsigned c=lod.first_cluster;c<lod.first_cluster+lod.cluster_count;++c){
             const auto& cl=clusters[c];
             float lo[3],hi[3];
@@ -2719,6 +2835,9 @@ struct MeshDraw : Emitter {
             if(depth<near)depth=near;
             unsigned level=cl.level_count-1;
             while(level && levels[cl.first_level+level].error*lod_scale>depth)--level;
+#if RE4DC_PS2_WORLD_NONEMPTY_LOD
+            if(ps2)level=re4dc::room::nonempty_lod(levels+cl.first_level,cl.level_count,level);
+#endif
             ++stats.lod_draws[level<3?level:3];
             const auto& lv=levels[cl.first_level+level];
             for(unsigned i=0;i<lv.meshlet_count;++i){
@@ -2780,6 +2899,42 @@ struct MeshDraw : Emitter {
                         pk.nr=std::uint8_t(nr);pk.gmask=std::uint8_t(bits);pk.lo=std::uint8_t(glo);pk.hi=std::uint8_t(ghi);
                     }
                 }
+#if RE4DC_SCENERY_CONE
+                if(cone_on && pk.nr){
+                    // the groups still drawn (all non-empty ones for a whole pick), then each one's cone
+                    const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*li);
+                    const std::uint8_t* cr=cone::rec+8U*sg_groups*li;
+                    unsigned keep=0,prev=0;
+                    for(unsigned q=0;q<sg_groups;++q){const unsigned gend=g[8*q+6];if(gend!=prev)keep|=1U<<q;prev=gend;}
+                    if(pk.nr!=0xffU)keep&=pk.gmask;
+                    unsigned rej=0;
+                    for(unsigned q=0;q<sg_groups;++q){
+                        const std::uint8_t* r=cr+8U*q;
+                        if(!((keep>>q)&1U) || !r[3])continue;
+                        const std::uint16_t* b=g+8*q;
+                        const float vx=0.5f*(float(b[0])+float(b[3]))-ex,vy=0.5f*(float(b[1])+float(b[4]))-ey,
+                                    vz=0.5f*(float(b[2])+float(b[5]))-ez;
+                        const float d=csgn*(float(std::int8_t(r[0]))*vx+float(std::int8_t(r[1]))*vy+float(std::int8_t(r[2]))*vz);
+                        float R;std::memcpy(&R,r+4,4);
+                        ++cone::tests;
+                        if(d>R){const float e=d-R;if(e*e>cone::tab2[r[3]]*(vx*vx+vy*vy+vz*vz))rej|=1U<<q;}
+                    }
+                    if(rej){
+                        keep&=~rej;
+                        unsigned nr=0,vlo=255,vhi=0;
+                        const unsigned was=pk.nr==0xffU?l.vertex_count:unsigned(pk.hi-pk.lo+1U);
+                        for(unsigned q=0;q<sg_groups;++q)if((keep>>q)&1U){
+                            ++nr;const unsigned v0=g[8*q+7]&255U,v1=g[8*q+7]>>8;
+                            if(v0<vlo)vlo=v0;
+                            if(v1>vhi)vhi=v1;
+                        }
+                        cone::rejects+=__builtin_popcount(rej);
+                        if(!nr){--np;++cone::picks_dropped;cone::vskip+=was;continue;}
+                        cone::vskip+=was-(vhi-vlo+1U);
+                        pk.nr=std::uint8_t(nr);pk.gmask=std::uint8_t(keep);pk.lo=std::uint8_t(vlo);pk.hi=std::uint8_t(vhi);
+                    }
+                }
+#endif
             }
         }
         return np;
@@ -3951,6 +4106,7 @@ int mesh_submit(const Re4dcModelPart& p){
 }
 #endif
 extern "C" int re4dc_static_submit(const Re4dcModelPart* part){
+    RE4DC_BFC_SCOPE(2u,0u);  // BACKFACE_CENSUS
 #if RE4DC_NATIVE_STATIC
     const Re4dcModelPart& p=*part;
     const unsigned frame=re4dc_ui_frame();
@@ -4061,6 +4217,9 @@ struct Ps2World {
 #endif
 #if RE4DC_PS2_STRIP_GROUPS
     unsigned char* sg_block=nullptr; const std::uint8_t* sg=nullptr; unsigned sg_groups=0; // ps2-world.r4sg (heap 4)
+#if RE4DC_SCENERY21_AB
+    bool alt=false; // SCENERY21_AB: the package came from dc/native/rXXX/sc21/ (arm B)
+#endif
 #endif
 #if RE4DC_WORLD_VERT
     unsigned vert_loaded=0; // WORLD_VERT: the level resident in storage
@@ -4234,7 +4393,16 @@ unsigned state=~0U,flags_room=0,flags=0,skipped=0;
 void open(unsigned room,std::uint32_t crc,unsigned n){
     cur=nullptr;state=~0U;hidden[0]=hidden[1]=hidden[2]=0;
     for(const auto& r:kRooms)if(r.room==room){
+#if RE4DC_WORLD_RECT21
+        // The retained r107 R4ID binds all 71 placement ordinals to this
+        // original source CRC; its six group masks exactly match this table.
+        // Certified remaps supply that policy identity, never a forged file CRC.
+        const bool source_crc=r.crc==crc ||
+            (r.room==0x107 && r.placements==71 && crc==0x43dc8ff9U);
+        if(source_crc && r.placements==n)cur=&r;
+#else
         if(r.crc==crc && r.placements==n)cur=&r;
+#endif
         re4dc_log("PS2AREA room=%03x package crc=%08x placements=%u %s\n",room,unsigned(crc),n,cur?"ok":"mismatch: off");
     }
 }
@@ -4269,6 +4437,9 @@ struct Slot {
     const unsigned char* obj; std::uint32_t serial; float rest[12];
 #if RE4DC_PS2_WORLD_PARTS
     PartPose* parts; unsigned nparts,pose_offset; bool source;
+#if RE4DC_PS2_WORLD_ROOT_POSE
+    unsigned root_matrix_offset; // offset plus one; ~0U invalid; nonzero records a refused root witness
+#endif
 #endif
 };
 unsigned char* block=nullptr;                      // heap-4 block: the ids file
@@ -4337,6 +4508,34 @@ unsigned query(unsigned id){
     Slot& s=slots[slot_of[id]];
     std::uint32_t flag=0,serial=0;
     if(s.obj){std::memcpy(&flag,s.obj+off_flag,4);std::memcpy(&serial,s.obj+off_serial,4);}
+#if RE4DC_PS2_WORLD_ROOT_POSE
+    // A one-bone model has one rigid transform for all of its geometry. Follow
+    // that live root on the existing PS2 mesh instead of switching to the
+    // source BIN, whose geometry may have been released by offline staging.
+    if(s.root_matrix_offset){
+        if(!s.obj || (flag&7U)!=7U || serial!=s.serial || !s.parts || s.root_matrix_offset==~0U){
+            state[id]=2;++hidden;return 1;
+        }
+        const auto* now=reinterpret_cast<const float*>(s.parts[0].part+s.root_matrix_offset-1U);
+        const auto* rest=reinterpret_cast<const float*>(s.parts+1);
+        const float* inv=rest+12; // computed once at bind, before any changed tick
+        float change[12];
+        bool valid=true;
+        for(unsigned i=0;i<12;++i)valid=valid && std::isfinite(now[i]);
+        if(valid && std::memcmp(now,rest,12U*sizeof(float))){
+            concat(now,inv,change);
+            for(float v:change)valid=valid && std::isfinite(v);
+            if(valid && nmoved<kMoved){
+                std::memcpy(delta[nmoved],change,sizeof(change));moved_of[id]=std::uint8_t(nmoved++);
+                state[id]=3;++moved;return 2;
+            }
+            if(valid)++overflow;
+            valid=false;
+        }
+        if(!valid){state[id]=2;++hidden;return 1;} // never display stale baked geometry on refusal
+        state[id]=1;return 0;
+    }
+#endif
     if(s.obj && (flag&1U) && serial==s.serial){
         const float* m=reinterpret_cast<const float*>(s.obj+off_mat);
 #if RE4DC_PS2_WORLD_PARTS
@@ -4388,6 +4587,17 @@ extern "C" int re4dc_ps2_placements_intact(unsigned room,const unsigned char* fi
             const unsigned id=dyn::ids[p];
             if(id<dyn::kIds && dyn::slot_of[id]!=dyn::kNone){
                 const dyn::Slot& s=dyn::slots[dyn::slot_of[id]];
+#if RE4DC_PS2_WORLD_ROOT_POSE
+                if(s.root_matrix_offset){
+                    if(!s.obj || !s.parts || s.root_matrix_offset==~0U)return 0;
+                    std::uint32_t flag=0,serial=0;
+                    std::memcpy(&flag,s.obj+dyn::off_flag,4);std::memcpy(&serial,s.obj+dyn::off_serial,4);
+                    if((flag&7U)!=7U || serial!=s.serial)return 0;
+                    const auto* now=s.parts[0].part+s.root_matrix_offset-1U;
+                    const auto* rest=reinterpret_cast<const float*>(s.parts+1);
+                    if(std::memcmp(now,rest,12U*sizeof(float)))return 0;
+                }
+#endif
                 if(s.obj){
                     std::uint32_t flag=0,serial=0;
                     std::memcpy(&flag,s.obj+dyn::off_flag,4);std::memcpy(&serial,s.obj+dyn::off_serial,4);
@@ -4702,8 +4912,64 @@ static void note(unsigned pass,unsigned drawn){
 }
 } // namespace trans
 #endif
-#if RE4DC_SCENERY_DEDUP==2
+#if RE4DC_SCENERY_DEDUP==2 || RE4DC_SCENERY_CONE || RE4DC_SCENERY_PIECE_STATE
 #include "include/room_file.h"
+#endif
+#if RE4DC_SCENERY_CONE || RE4DC_SCENERY_PIECE_STATE
+// scenery21: the room file's SCCN / SCPS sections against this package (crc, bytes, counts; SCCN also needs the
+// package's strip groups). A missing or stale section leaves its knob's path off for the room (SCN21 log line says why).
+void scn21_open(){
+    auto& pk=ps2w.package;const auto& h=pk.header();
+    unsigned len=0,ver=0,fl=0;
+#if RE4DC_SCENERY21_AB
+    if(!ps2w.alt){   // arm A (or no sc21 package for this room): both paths stay off
+#if RE4DC_SCENERY_CONE
+        cone::pkg=nullptr;cone::rec=nullptr;cone::tab2=nullptr;
+#endif
+#if RE4DC_SCENERY_PIECE_STATE
+        piece::pkg=nullptr;piece::table=nullptr;
+#endif
+        re4dc_log("SCN21 room=%03x arm A or no sc21 package: off\n",ps2w.room);
+        return;
+    }
+#endif
+#if RE4DC_SCENERY_CONE
+    {
+        cone::pkg=nullptr;cone::rec=nullptr;cone::tab2=nullptr;
+        const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCCN",&len,&ver,&fl,nullptr));
+        const char* why=nullptr;std::uint32_t w[4]={};
+        if(!sec)why="no section";
+        else if(re4dc_room_file_room()!=ps2w.room)why="room";
+        else if(!ps2w.sg)why="no strip groups";
+        else{
+            std::memcpy(w,sec,16);
+            if(ver!=1 || w[0]!=h.crc || w[1]!=h.bytes || w[2]!=h.meshlet_count || w[3]!=ps2w.sg_groups ||
+               len<16U+256U+8U*w[2]*w[3])why="package";
+        }
+        if(!why){cone::tab2=reinterpret_cast<const float*>(sec+16);cone::rec=sec+16+256;cone::pkg=&pk;}
+        re4dc_log("SCN21 cone room=%03x %s groups=%u bytes=%u\n",ps2w.room,why?why:"on",unsigned(w[3]),len);
+    }
+#endif
+#if RE4DC_SCENERY_PIECE_STATE
+    {
+        piece::pkg=nullptr;piece::table=nullptr;
+        const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCPS",&len,&ver,&fl,nullptr));
+        const char* why=nullptr;std::uint32_t w[4]={};
+        if(!sec)why="no section";
+        else if(re4dc_room_file_room()!=ps2w.room)why="room";
+        else{
+            std::memcpy(w,sec,16);
+            if(ver!=1 || w[0]!=h.crc || w[1]!=h.bytes || w[2]!=h.part_count || len<16U+4U*w[2])why="package";
+        }
+        if(!why){
+            piece::table=reinterpret_cast<std::uint32_t*>(const_cast<std::uint8_t*>(sec)+16);
+            std::memset(piece::table,0,4U*w[2]);   // slot words are this program's: start empty at every open
+            piece::pkg=&pk;
+        }
+        re4dc_log("SCN21 piece room=%03x %s parts=%u\n",ps2w.room,why?why:"on",unsigned(w[2]));
+    }
+#endif
+}
 #endif
 #if RE4DC_SCENERY_DEDUP
 namespace dedup {
@@ -4923,7 +5189,17 @@ bool ps2_open(){
     snprintf(mpath,sizeof(mpath),"/cd/dc/native/r%03x/ps2-world.re4mesh",ps2w.room);
     snprintf(ppath,sizeof(ppath),"/cd/dc/native/r%03x/ps2-world.r4pw",ps2w.room);
     re4dc_log("PS2MESH room=%03x open\n",ps2w.room);
-#if RE4DC_WORLD_VERT
+#if RE4DC_SCENERY21_AB
+    // SCENERY21_AB (bench disc): arm B reads the sc21 package of a room that has one (dc/native/rXXX/sc21/)
+    ps2w.alt=false;
+    file_t fm=FILEHND_INVALID;
+    if(scn21_arm_b()){
+        char apath[48];snprintf(apath,sizeof(apath),"/cd/dc/native/r%03x/sc21/ps2-world.re4mesh",ps2w.room);
+        fm=fs_open(apath,O_RDONLY);
+        if(fm!=FILEHND_INVALID)ps2w.alt=true;
+    }
+    if(fm==FILEHND_INVALID)fm=fs_open(mpath,O_RDONLY);
+#elif RE4DC_WORLD_VERT
     file_t fm=fs_open(mpath,O_RDONLY);
 #else
     const file_t fm=fs_open(mpath,O_RDONLY);
@@ -5026,8 +5302,24 @@ bool ps2_open(){
         return false;
     }
     ps2w.storage=s;ps2w.bytes=total;ps2w.nplacements=h.placements;
+    // Geometry/material policy identity is separate from the physical R4PW
+    // checksum. Only the certified scoped17 lineage can reuse original baked
+    // metadata; profiles, logs and movie lifetime fingerprints remain actual.
+    const std::uint32_t policySourceCrc=
+#if RE4DC_WORLD_RECT21 && RE4DC_PS2_WORLD_ROOMS
+        re4dc::rect21::provenance::policy_source_crc(ps2w.room,s+mbytes,psize,
+            ps2w.package.header().crc,ps2w.package.header().bytes,
+            ps2w.package.header().part_count,ps2w.package.header().mesh_count);
+#else
+        h.crc;
+#endif
 #if RE4DC_PS2_AREA_HIDE
+#if RE4DC_WORLD_RECT21
+    // A certified scoped world keeps its original group table (from 63644457; mipfix22).
+    area::open(ps2w.room,policySourceCrc,h.placements);
+#else
     area::open(ps2w.room,h.crc,h.placements);
+#endif
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     r11fSidecarCrc=h.crc;
@@ -5037,7 +5329,7 @@ bool ps2_open(){
     sourceWorldSidecarCrc=h.crc;
 #endif
 #if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
-    enemyVisSidecarCrc=h.crc;
+    enemyVisSidecarCrc=policySourceCrc;
 #endif
 #if RE4DC_PS2_WORLD_DYNAMIC && RE4DC_PS2_WORLD_ROOMS
     {
@@ -5061,7 +5353,7 @@ bool ps2_open(){
         if(iread){
             std::memcpy(&ih,ib,sizeof(ih));
             iwhy="header";
-            if(!std::memcmp(ih.magic,"R4ID",4) && ih.version==1 && ih.crc==h.crc && ih.count==h.placements &&
+            if(!std::memcmp(ih.magic,"R4ID",4) && ih.version==1 && ih.crc==policySourceCrc && ih.count==h.placements &&
                ih.count<=isize-sizeof(ih)){
                 const std::uint8_t* idv=ib+sizeof(ih);
                 std::uint8_t count[dyn::kIds]={};
@@ -5096,13 +5388,13 @@ bool ps2_open(){
     }
 #endif
 #if defined(RE4DC_TRANS_POLICY)
-    trans::open(ps2w.room,h.crc,h.parts);
+    trans::open(ps2w.room,policySourceCrc,h.parts);
 #if RE4DC_PS2_PASS_MASK
     trans::mask(ps2w.parts,ps2w.placements,h.placements);
 #endif
 #endif
 #if RE4DC_PS2_PVS
-    pvs::open(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes,h.crc);
+    pvs::open(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes,policySourceCrc);
 #endif
 #if RE4DC_MESH_FASTPATH
     auto* lut=reinterpret_cast<std::uint32_t*>(s+mbytes+pbytes);re4dc::vp::build_lut(lut);ps2w.lut=lut;
@@ -5111,7 +5403,7 @@ bool ps2_open(){
     const auto& mh=ps2w.package.header();
 #if RE4DC_PS2_INTERIOR_CULL
     // The cell's portals hold for the package it was built from only.
-    pc::st.ok=ps2w.room==pc::kPcRoom && mh.crc==pc::kPcMeshUse && h.crc==pc::kPcSidecarUse && mh.bytes==pc::kPcMeshBytesUse;
+    pc::st.ok=ps2w.room==pc::kPcRoom && mh.crc==pc::kPcMeshUse && policySourceCrc==pc::kPcSidecarUse && mh.bytes==pc::kPcMeshBytesUse;
     re4dc_log("PCCULL cell room=%03x mesh_crc=%08x sidecar_crc=%08x %s cells=%u portals=%u mode=%d\n",ps2w.room,unsigned(mh.crc),unsigned(h.crc),
         pc::st.ok?"adopted":"not this package",pc::kPcCellCount,pc::kPcPortalCount,int(RE4DC_PS2_INTERIOR_CULL));
     pc::data.lent=false;
@@ -5136,6 +5428,9 @@ bool ps2_open(){
         // PS2_STRIP_GROUPS: tools/ps2_strip_groups.py's group records for this exact package (mesh crc / bytes, R4PW
         // crc, record crc). Absent or not matching: no groups (the whole-meshlet path).
         char gpath[48];snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-world.r4sg",ps2w.room);
+#if RE4DC_SCENERY21_AB
+        if(ps2w.alt)snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/sc21/ps2-world.r4sg",ps2w.room);
+#endif
 #if RE4DC_WORLD_VERT
         // WORLD_VERT: the level's own group records, in a block sized by level 0's (memory neutral; larger: no groups).
         file_t fg=fs_open(gpath,O_RDONLY);
@@ -5165,7 +5460,7 @@ bool ps2_open(){
         if(!gwhy){
             std::memcpy(w,gb,32);
             if(std::memcmp(gb,"R4SG",4) || w[1]!=1U || w[2]!=mh.meshlet_count || !w[3] || w[3]>8U || w[4]!=mh.crc ||
-               w[5]!=mh.bytes || w[6]!=h.crc || gsize!=32U+16U*w[2]*w[3] || ps2_crc32(gb+32,gsize-32U)!=w[7])gwhy="header";
+               w[5]!=mh.bytes || w[6]!=policySourceCrc || gsize!=32U+16U*w[2]*w[3] || ps2_crc32(gb+32,gsize-32U)!=w[7])gwhy="header";
         }
         if(gwhy){if(gb)re4dc_static_free(gb);}
         else {ps2w.sg_block=gb;ps2w.sg=gb+32;ps2w.sg_groups=w[3];
@@ -5176,6 +5471,9 @@ bool ps2_open(){
         re4dc_log("PS2SG room=%03x groups=%s per_meshlet=%u bytes=%u heap=%d\n",ps2w.room,gwhy?gwhy:"ok",unsigned(w[3]),gsize,
                   re4dc_static_heap_free());
     }
+#endif
+#if RE4DC_SCENERY_CONE || RE4DC_SCENERY_PIECE_STATE
+    scn21_open();
 #endif
 #if RE4DC_SCENERY_DEDUP
     dedup_open();
@@ -5205,6 +5503,9 @@ bool ps2_movie_reload(){
     Re4dcIoScope io;
     char mesh_path[64],side_path[64];
     snprintf(mesh_path,sizeof(mesh_path),"/cd/dc/native/r%03x/ps2-world.re4mesh",ps2w.room);
+#if RE4DC_SCENERY21_AB
+    if(ps2w.alt)snprintf(mesh_path,sizeof(mesh_path),"/cd/dc/native/r%03x/sc21/ps2-world.re4mesh",ps2w.room);
+#endif
     snprintf(side_path,sizeof(side_path),"/cd/dc/native/r%03x/ps2-world.r4pw",ps2w.room);
     const file_t fm=fs_open(mesh_path,O_RDONLY);
     const file_t fp=fs_open(side_path,O_RDONLY);
@@ -5385,6 +5686,9 @@ constexpr std::uint32_t kMistParts[][2]={{0xe967b886U,0x9bd0a435U}};
 static unsigned skipped,last_room;static std::uint32_t last_frame;
 static bool world_part(unsigned pass,std::uint32_t crc,std::uint32_t fnv){
     if(pass!=2)return false;
+#if RE4DC_WORLD_RECT21
+    re4dc::rect21::origin::original(crc,fnv); // policy keys are original material keys (mipfix22)
+#endif
     bool cut=(re4dc_mist_cut&16U)!=0;
     if(!cut && (re4dc_mist_cut&2U))for(const auto& k:kMistParts)cut=cut||(k[0]==crc && k[1]==fnv);
     if(!cut)return false;
@@ -5426,12 +5730,24 @@ static unsigned moved,dropped,last_room;static std::uint32_t last_frame;
 // The pass a pass-2 part draws in at NEAR / OFF: 1 punch-through, 2 translucent (as today), 3 not drawn.
 static unsigned pass_of(const Ps2Part& m){
     if(m.pass!=2 || re4dc_foliage-1U>1U || (m.reserved&1U))return m.pass;
+#if RE4DC_WORLD_RECT21
+    std::uint32_t crc=m.crc,fnv=m.fnv;
+    // A scoped rect21 key (texture loading) keeps its original material's class (mipfix22).
+    re4dc::rect21::origin::original(crc,fnv);
+    unsigned level=0,lo=0,hi=sizeof(kKeys)/sizeof(kKeys[0]); // kKeys is sorted by crc, fnv
+    while(lo<hi){
+        const unsigned mid=(lo+hi)/2;const Key& k=kKeys[mid];
+        if(k.crc<crc || (k.crc==crc && k.fnv<fnv))lo=mid+1;
+        else{if(k.crc==crc && k.fnv==fnv)level=k.level;hi=mid;}
+    }
+#else
     unsigned level=0,lo=0,hi=sizeof(kKeys)/sizeof(kKeys[0]); // kKeys is sorted by crc, fnv
     while(lo<hi){
         const unsigned mid=(lo+hi)/2;const Key& k=kKeys[mid];
         if(k.crc<m.crc || (k.crc==m.crc && k.fnv<m.fnv))lo=mid+1;
         else{if(k.crc==m.crc && k.fnv==m.fnv)level=k.level;hi=mid;}
     }
+#endif
     if(re4dc_foliage==2U)return level?3U:2U;
     return level==1?3U:level==2?1U:2U;
 }
@@ -5607,6 +5923,16 @@ int ps2_pass(unsigned pass,float zfar){
     }
     const std::uint8_t* const pvs_cur=pvs::cur;
 #endif
+#if RE4DC_SCENERY_CONE
+    if(!pass){
+        const unsigned f=re4dc_ui_frame();
+        if(f-cone::logged>=600U){
+            cone::logged=f;
+            re4dc_log("SCN21 cone frame=%u room=%03x on=%u tests=%u rejects=%u picks_dropped=%u vskip=%u\n",f,ps2w.room,
+                      cone::pkg?1U:0U,cone::tests,cone::rejects,cone::picks_dropped,cone::vskip);
+        }
+    }
+#endif
     Re4dcModelPart part{};
     std::memcpy(part.projection,P,sizeof(part.projection));std::memcpy(part.viewport,ps2w.viewport,sizeof(part.viewport));
     part.alpha_state=255;part.source_key[2]=1;
@@ -5638,6 +5964,9 @@ int ps2_pass(unsigned pass,float zfar){
             e.part_index=x.index;e.lod_scale=x.lod_scale;e.lean_part=true;
             e.sg=ps2w.sg;e.sg_groups=ps2w.sg_groups;
             std::memcpy(e.mvq,x.mvq,sizeof(x.mvq));std::memcpy(e.mv,x.mvq,sizeof(x.mvq));e.ps2=x.key;
+#if RE4DC_SCENERY_PIECE_STATE
+            e.piece_slot=piece::pkg==static_cast<const void*>(&cpkg)?piece::table+x.index:nullptr;
+#endif
             const int result=e.chunk_emit(cpk+x.first,x.count);
             e.end_direct();
             if(result>0)++c.native;
@@ -5922,6 +6251,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
             std::memcpy(d.mvq,mvq,sizeof(mvq));std::memcpy(d.mv,mvq,sizeof(mvq));
             const unsigned key[6]={meta.crc,meta.fnv,meta.width,meta.height,pass,meta.cull};d.ps2=key;
+#if RE4DC_SCENERY_PIECE_STATE
+            d.piece_slot=piece::pkg==static_cast<const void*>(&pk)?piece::table+index:nullptr;
+#endif
 #if RE4DC_PS2_INTERIOR_ACTORS && RE4DC_PS2_INTERIOR_CULL==2
             if(!pass && !pcact::have_key){std::memcpy(pcact::key,key,sizeof(key));pcact::key[5]=0;pcact::have_key=true;}
 #endif
@@ -6155,6 +6487,7 @@ void pc_scan(unsigned frame){
 #undef RE4DC_FAR_SHELL_PART
 #endif
 extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
+    RE4DC_BFC_SCOPE(1u,0u);  // BACKFACE_CENSUS
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return 1;
 #endif
@@ -6365,6 +6698,9 @@ extern "C" void re4dc_ps2_dyn_bind(unsigned room,unsigned id,const void* object,
 #if RE4DC_PS2_WORLD_PARTS
     if(s.parts)re4dc_static_free(s.parts);
     s.parts=nullptr;s.nparts=0;s.source=false;
+#if RE4DC_PS2_WORLD_ROOT_POSE
+    s.root_matrix_offset=0;
+#endif
 #endif
     s.obj=o;std::memcpy(&s.serial,serial,4);std::memcpy(s.rest,mat,sizeof(s.rest));
 #if RE4DC_PS2_WORLD_PARTS
@@ -6374,11 +6710,21 @@ extern "C" void re4dc_ps2_dyn_bind(unsigned room,unsigned id,const void* object,
 }
 #if RE4DC_PS2_WORLD_PARTS
 extern "C" void re4dc_ps2_dyn_parts(unsigned room,unsigned id,const void* object,const void* first,
-                                     unsigned count,unsigned next_offset,unsigned pose_offset){
+                                     unsigned count,unsigned next_offset,unsigned pose_offset
+#if RE4DC_PS2_WORLD_ROOT_POSE
+                                     ,unsigned matrix_offset
+#endif
+                                     ){
     if(!dyn::ids || ps2w.room!=room || id>=dyn::kIds || dyn::slot_of[id]==dyn::kNone || !count || count>255)return;
     dyn::Slot& s=dyn::slots[dyn::slot_of[id]];
     if(s.obj!=object || s.parts)return;
-    auto* poses=static_cast<dyn::PartPose*>(re4dc_static_alloc(count*sizeof(dyn::PartPose)));
+#if RE4DC_PS2_WORLD_ROOT_POSE
+    if(count==1)s.root_matrix_offset=matrix_offset+1U;
+    const unsigned root_bytes=count==1?24U*sizeof(float):0U;
+#else
+    const unsigned root_bytes=0;
+#endif
+    auto* poses=static_cast<dyn::PartPose*>(re4dc_static_alloc(count*sizeof(dyn::PartPose)+root_bytes));
     if(!poses){re4dc_log("PS2PART no heap id=%02x parts=%u\n",id,count);return;}
     const auto* p=static_cast<const unsigned char*>(first);
     for(unsigned i=0;i<count;++i){
@@ -6386,8 +6732,17 @@ extern "C" void re4dc_ps2_dyn_parts(unsigned room,unsigned id,const void* object
         poses[i].part=p;std::memcpy(poses[i].pose,p+pose_offset,sizeof(poses[i].pose));
         std::memcpy(&p,p+next_offset,sizeof(p));
     }
+#if RE4DC_PS2_WORLD_ROOT_POSE
+    if(count==1){
+        auto* root=reinterpret_cast<float*>(poses+1);
+        std::memcpy(root,static_cast<const unsigned char*>(first)+matrix_offset,12U*sizeof(float));
+        bool valid=inverse(root,root+12);
+        for(unsigned i=0;i<24;++i)valid=valid && std::isfinite(root[i]);
+        if(!valid)s.root_matrix_offset=~0U;
+    }
+#endif
     s.parts=poses;s.nparts=count;s.pose_offset=pose_offset;
-    re4dc_log("PS2PART bind id=%02x parts=%u bytes=%u heap=%d\n",id,count,unsigned(count*sizeof(dyn::PartPose)),re4dc_static_heap_free());
+    re4dc_log("PS2PART bind id=%02x parts=%u bytes=%u heap=%d\n",id,count,unsigned(count*sizeof(dyn::PartPose)+root_bytes),re4dc_static_heap_free());
 }
 extern "C" int re4dc_ps2_dyn_source(unsigned room,const void* object,unsigned serial){
     if(!dyn::ids || ps2w.room!=room)return 0;

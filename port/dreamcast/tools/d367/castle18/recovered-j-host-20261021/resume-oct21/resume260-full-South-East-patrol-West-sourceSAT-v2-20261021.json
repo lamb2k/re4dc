@@ -1,0 +1,48 @@
+{
+  "scope": "Offline source floor/wall clearance only, not dynamic enemy safety. Previous-48000endpoint crossing wasrejected offline with5blocked samples; no261guest launched. Actual normal collision/injury/phase/PID/resources remain authoritative.",
+  "seed_state_sha256": "6d509b48d5ef233de847c079a343b231fec84162b9613c064dfe9aa3cb0fcbfe",
+  "segments": [
+    {
+      "start": [
+        18173.1171875,
+        -2000.00244140625,
+        -47312.84765625
+      ],
+      "end": [
+        23500,
+        -2000,
+        -47500
+      ],
+      "samples": 73,
+      "blocked": []
+    },
+    {
+      "start": [
+        23500,
+        -2000,
+        -47500
+      ],
+      "end": [
+        27500,
+        -2000,
+        -45000
+      ],
+      "samples": 64,
+      "blocked": []
+    },
+    {
+      "start": [
+        27500,
+        -2000,
+        -45000
+      ],
+      "end": [
+        19000,
+        -2000,
+        -45000
+      ],
+      "samples": 115,
+      "blocked": []
+    }
+  ]
+}

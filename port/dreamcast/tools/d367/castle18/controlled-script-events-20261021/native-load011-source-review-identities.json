@@ -1,0 +1,97 @@
+{
+  "scope": "Read-only source and exact fixture audit; no guest/test/source edits",
+  "runtime_source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "sources": [
+    {
+      "path": "src/game/title.cpp",
+      "current_sha256": "311c06df939b136040182583d96d488ecb9f11fc691227b7fc8c777db49d91a4",
+      "frozen_blob_sha256": "311c06df939b136040182583d96d488ecb9f11fc691227b7fc8c777db49d91a4"
+    },
+    {
+      "path": "src/game/card.cpp",
+      "current_sha256": "541c21d1ec6ebd74078203f54dc32c41a71ef02c22e5efb4efceaeac7667ceab",
+      "frozen_blob_sha256": "541c21d1ec6ebd74078203f54dc32c41a71ef02c22e5efb4efceaeac7667ceab"
+    },
+    {
+      "path": "src/game/mes.cpp",
+      "current_sha256": "e8ed43a07c480cc953365247de9c23891e0fd1b76377d3959b6d8977d81eaa64",
+      "frozen_blob_sha256": "e8ed43a07c480cc953365247de9c23891e0fd1b76377d3959b6d8977d81eaa64"
+    },
+    {
+      "path": "port/dreamcast/game/platform/pad.cpp",
+      "current_sha256": "6eeff8d5882182961cd0abb95bb6fedd9f0e33042e7bc02ad45f20796cffbd57",
+      "frozen_blob_sha256": "6eeff8d5882182961cd0abb95bb6fedd9f0e33042e7bc02ad45f20796cffbd57"
+    },
+    {
+      "path": "port/dreamcast/game/ui_bridge.cpp",
+      "current_sha256": "426a06c09524c21b6246a818aac130c58bd9fab44fe4d4959f9e8e3042b21f69",
+      "frozen_blob_sha256": "426a06c09524c21b6246a818aac130c58bd9fab44fe4d4959f9e8e3042b21f69"
+    }
+  ],
+  "fixture_sha256": "103b7d67a4c993d936d4ae46a46765a582c1429bbfa0a563d062e795444faceb",
+  "fixture_entries": [
+    [
+      "0",
+      "1000",
+      "3",
+      "title=2",
+      "1800"
+    ],
+    [
+      "+0",
+      "0000",
+      "1",
+      "title=5/1",
+      "2400"
+    ],
+    [
+      "+1",
+      "0100",
+      "3",
+      "title=5/1",
+      "1200"
+    ],
+    [
+      "+0",
+      "0000",
+      "1",
+      "card=2/1",
+      "6000"
+    ],
+    [
+      "+1",
+      "0100",
+      "3",
+      "card=2/1",
+      "600"
+    ],
+    [
+      "+0",
+      "0000",
+      "1",
+      "card=2/6",
+      "900"
+    ],
+    [
+      "+1",
+      "0001",
+      "3",
+      "card=2/6",
+      "600"
+    ],
+    [
+      "+0",
+      "0000",
+      "1",
+      "card=2/6",
+      "600"
+    ],
+    [
+      "+1",
+      "0100",
+      "3",
+      "card=2/6",
+      "600"
+    ]
+  ]
+}

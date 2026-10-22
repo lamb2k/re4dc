@@ -1,0 +1,1566 @@
+{
+  "scope": "Frozen original recovered-J progression, no source/AI/assets/build/stage/state retarget.115 second actual weakpoint hit3732to3464 without injury;116 originalboss climbedstairs/no shot.",
+  "rows": [
+    {
+      "run": "route-walk112",
+      "source": 27831,
+      "state_sha256": "25a4ac8abd6317df17e16c47274bd373050538ed1cb5ab8c8753d0f083bad9e1",
+      "health": [
+        1200,
+        1200,
+        90,
+        600
+      ],
+      "player_pos": [
+        33717.66015625,
+        -2000.004150390625,
+        -40011.69921875
+      ],
+      "partner_pos": [
+        29375.314453125,
+        -2000.00341796875,
+        -42780.69140625
+      ],
+      "boss_hp": 3732,
+      "evidence_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk112",
+      "preparation": {
+        "scope": "PREPARED ONLY, one existing50s guarded arm; no guest, continuous loop, new assets/program or guard change.",
+        "new_run": "route-walk112",
+        "seed": "route-walk111",
+        "seed_sha256": "cb4f3a9bec2b3172909bd7605016e68b7f08d3862ccd8089e020d38ccdce93b6",
+        "source_frame": 27818,
+        "health": [
+          1200,
+          1200,
+          90,
+          600
+        ],
+        "controller": "owned-window-recovered-j-r201-neutral-rear-observe112-still.py",
+        "controller_sha256": "273699d5d1ace9c3599e8b220169dc2e74b25f8db56dd713c43898b71c234218",
+        "targets": [
+          [
+            33729.0,
+            -40033.0
+          ]
+        ],
+        "tolerance": 180,
+        "room": "201",
+        "action": "Actual111 weakpoint37 hit3732/full1200/90; bounded neutral source-AI observation120ticks max,close3500/anyHP/phase/PID guards; no movement,shot,sourceAI/flag/statewrites. Preserve actualbody turn, no forced exposure.",
+        "driver_sha256": "69c17abd5677fcb424154a4dbc6357317705b4d40f88fbd5b3f6ac93ab6d8b58"
+      },
+      "result": {
+        "name": "castle21-recoveredJ-route-walk112",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T19:31:15.966323+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "early_emulator_exit": 0,
+        "log_idle_s": 1.0,
+        "end_utc": "2026-10-21T19:31:18.629212+00:00",
+        "elapsed_s": 2.6,
+        "emulator_exited": true
+      },
+      "events": [
+        {
+          "pulsed_normal_movement_footstep_observed_stop_no_silent_route_claim": {
+            "host_monotonic": 360343.75,
+            "room": "0x201",
+            "frame": 27829,
+            "player_hp": 1200,
+            "partner_hp": 90,
+            "pos": [
+              33717.66015625,
+              -2000.003173828125,
+              -40011.69921875
+            ],
+            "yaw": -2.0030415058135986,
+            "target_distance": 24.131210871706493,
+            "angle_error": -1.6277562293399264,
+            "Garrador": {
+              "hp": 3732,
+              "pos": [
+                29084.798828125,
+                -1999.9986572265625,
+                -41667.84765625
+              ],
+              "yaw": -0.9013783931732178,
+              "routines": [
+                2,
+                15,
+                1,
+                0
+              ],
+              "player_back_dot": -2605.3218369203314
+            },
+            "source_Joy_main": [
+              0,
+              0
+            ],
+            "source_Key_main": [
+              0,
+              0
+            ],
+            "status1": "0x80000200",
+            "audible_footstep": true
+          }
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "route-walk112",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "source_frame_interval": [
+            27829,
+            27830
+          ],
+          "health_before": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "action_result": {
+            "pulsed_normal_movement_footstep_observed_stop_no_silent_route_claim": {
+              "host_monotonic": 360343.75,
+              "room": "0x201",
+              "frame": 27829,
+              "player_hp": 1200,
+              "partner_hp": 90,
+              "pos": [
+                33717.66015625,
+                -2000.003173828125,
+                -40011.69921875
+              ],
+              "yaw": -2.0030415058135986,
+              "target_distance": 24.131210871706493,
+              "angle_error": -1.6277562293399264,
+              "Garrador": {
+                "hp": 3732,
+                "pos": [
+                  29084.798828125,
+                  -1999.9986572265625,
+                  -41667.84765625
+                ],
+                "yaw": -0.9013783931732178,
+                "routines": [
+                  2,
+                  15,
+                  1,
+                  0
+                ],
+                "player_back_dot": -2605.3218369203314
+              },
+              "source_Joy_main": [
+                0,
+                0
+              ],
+              "source_Key_main": [
+                0,
+                0
+              ],
+              "status1": "0x80000200",
+              "audible_footstep": true
+            }
+          },
+          "last_sample": {
+            "host_monotonic": 360343.75,
+            "room": "0x201",
+            "frame": 27829,
+            "player_hp": 1200,
+            "partner_hp": 90,
+            "pos": [
+              33717.66015625,
+              -2000.003173828125,
+              -40011.69921875
+            ],
+            "yaw": -2.0030415058135986,
+            "target_distance": 24.131210871706493,
+            "angle_error": -1.6277562293399264,
+            "Garrador": {
+              "hp": 3732,
+              "pos": [
+                29084.798828125,
+                -1999.9986572265625,
+                -41667.84765625
+              ],
+              "yaw": -0.9013783931732178,
+              "routines": [
+                2,
+                15,
+                1,
+                0
+              ],
+              "player_back_dot": -2605.3218369203314
+            },
+            "source_Joy_main": [
+              0,
+              0
+            ],
+            "source_Key_main": [
+              0,
+              0
+            ],
+            "status1": "0x80000200",
+            "audible_footstep": true
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk112\\shots\\checkpoint-source-27829\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk112\\shots\\checkpoint-source-27829\\frames\\fb1.png"
+          ]
+        }
+      ]
+    },
+    {
+      "run": "route-walk113",
+      "source": 27839,
+      "state_sha256": "9b887098d1aa5284320c834f6631bb8293c35f2e3fec539456ecf15f4b1827c9",
+      "health": [
+        1200,
+        1200,
+        90,
+        600
+      ],
+      "player_pos": [
+        33717.66796875,
+        -2000.002197265625,
+        -40011.40234375
+      ],
+      "partner_pos": [
+        29379.5859375,
+        -2000.0009765625,
+        -42773.25
+      ],
+      "boss_hp": 3732,
+      "evidence_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk113",
+      "preparation": {
+        "scope": "PREPARED ONLY, one existing50s guarded arm; no guest, continuous loop, new assets/program or guard change.",
+        "new_run": "route-walk113",
+        "seed": "route-walk112",
+        "seed_sha256": "25a4ac8abd6317df17e16c47274bd373050538ed1cb5ab8c8753d0f083bad9e1",
+        "source_frame": 27831,
+        "health": [
+          1200,
+          1200,
+          90,
+          600
+        ],
+        "controller": "owned-window-recovered-j-r201-neutral-rear-observe113-still.py",
+        "controller_sha256": "8efa7ca155c08ff862d5d711b17dfcbc001368af3e9aa7260307ca0e4ff8fbf7",
+        "targets": [
+          [
+            33718.0,
+            -40012.0
+          ]
+        ],
+        "tolerance": 180,
+        "room": "201",
+        "action": "Actual112 neutral animation footstepbit observed despiteJoy0, no damage/AIchange. Continue purelyneutral originalAI observation120source ticks/3500distance/anyHP/PID guards. Recordfootstep bit, no movement or silentclaim.",
+        "driver_sha256": "dddff2f15f9737ef00cc1c2e312e9179f33b742ceb7cb292d2af76421d25124c"
+      },
+      "result": {
+        "name": "castle21-recoveredJ-route-walk113",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T19:31:45.648567+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "early_emulator_exit": 0,
+        "log_idle_s": 1.0,
+        "end_utc": "2026-10-21T19:31:48.302522+00:00",
+        "elapsed_s": 2.6,
+        "emulator_exited": true
+      },
+      "events": [
+        {
+          "bounded_neutral_original_AI_observation": {
+            "frame": 27837,
+            "start_frame": 27831,
+            "source_ticks": 6,
+            "Garrador_distance": 5080.672581382451,
+            "strong_rear_available": true,
+            "close_distance_guard": false,
+            "health": [
+              1200,
+              90
+            ]
+          }
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "route-walk113",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "source_frame_interval": [
+            27837,
+            27838
+          ],
+          "health_before": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "action_result": {
+            "bounded_neutral_original_AI_observation": {
+              "frame": 27837,
+              "start_frame": 27831,
+              "source_ticks": 6,
+              "Garrador_distance": 5080.672581382451,
+              "strong_rear_available": true,
+              "close_distance_guard": false,
+              "health": [
+                1200,
+                90
+              ]
+            }
+          },
+          "last_sample": {
+            "host_monotonic": 360373.265,
+            "room": "0x201",
+            "frame": 27837,
+            "player_hp": 1200,
+            "partner_hp": 90,
+            "pos": [
+              33717.6640625,
+              -2000.001708984375,
+              -40011.48828125
+            ],
+            "yaw": -2.0030415058135986,
+            "target_distance": 0.6121356736931874,
+            "angle_error": -1.7194742235830667,
+            "Garrador": {
+              "hp": 3732,
+              "pos": [
+                28896.421875,
+                -2000.002685546875,
+                -41614.25390625
+              ],
+              "yaw": -1.6867767572402954,
+              "routines": [
+                2,
+                15,
+                1,
+                0
+              ],
+              "player_back_dot": -4974.3251257768925
+            },
+            "source_Joy_main": [
+              0,
+              0
+            ],
+            "source_Key_main": [
+              0,
+              0
+            ],
+            "status1": "0x204",
+            "audible_footstep": false,
+            "source_Key_on": "0x0"
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk113\\shots\\checkpoint-source-27837\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk113\\shots\\checkpoint-source-27837\\frames\\fb1.png"
+          ]
+        }
+      ]
+    },
+    {
+      "run": "route-walk114",
+      "source": 27900,
+      "state_sha256": "02fa8cdef95ecaf879bb5985c4ba6a7e2c7ed0723842771bdb3f7e710a283b18",
+      "health": [
+        1200,
+        1200,
+        90,
+        600
+      ],
+      "player_pos": [
+        33717.6796875,
+        -2000.003173828125,
+        -40011.1953125
+      ],
+      "partner_pos": [
+        29375.169921875,
+        -2000.001953125,
+        -42782.73828125
+      ],
+      "boss_hp": 3732,
+      "evidence_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk114",
+      "preparation": {
+        "scope": "PREPARED ONLY, one existing50s guarded arm; no guest, continuous loop, new assets/program or guard change.",
+        "new_run": "route-walk114",
+        "seed": "route-walk113",
+        "seed_sha256": "9b887098d1aa5284320c834f6631bb8293c35f2e3fec539456ecf15f4b1827c9",
+        "source_frame": 27839,
+        "health": [
+          1200,
+          1200,
+          90,
+          600
+        ],
+        "controller": "owned-window-recovered-j-r201-ready-first-weakpoint3732-still.py",
+        "controller_sha256": "77ec3eb04101f792d572f9c1e86a36a38f90d74d0abbc91334f0881983b37870",
+        "targets": [
+          [
+            33718.0,
+            -40012.0
+          ]
+        ],
+        "tolerance": 180,
+        "room": "201",
+        "action": "Actual113 originalAI rear at5080range,3732HP/full1200/90. Samequalified stationaryRT-first weakpoint37/ray/laser/health/rear guards, max6shots; exactinitialbossHP3732 onlychanged to matchactualstate. No gamewrites.",
+        "driver_sha256": "e4f481cd81c1ebacbb6bfe0047ba48943058ec568ddb60d003d786c5920abfc8"
+      },
+      "result": {
+        "name": "castle21-recoveredJ-route-walk114",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T19:32:03.828581+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "early_emulator_exit": 0,
+        "log_idle_s": 1.0,
+        "end_utc": "2026-10-21T19:32:08.008640+00:00",
+        "elapsed_s": 4.1,
+        "emulator_exited": true
+      },
+      "events": [
+        {
+          "rear_exposure_lost_save_before_frontal_attack": {
+            "frame": 27898,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              1200,
+              1200,
+              90,
+              600
+            ],
+            "source_Key_on": "0x800010",
+            "original_weakpoint_scaled_radius": 249.99977337670765,
+            "player_pos": [
+              33717.6796875,
+              -2000.001708984375,
+              -40011.1953125
+            ],
+            "yaw": -2.0030415058135986,
+            "player_routines": [
+              0,
+              6,
+              1,
+              1
+            ],
+            "Garrador_hp": 3732,
+            "Garrador_pos": [
+              28803.57421875,
+              -2000.003173828125,
+              -41656.7109375
+            ],
+            "Garrador_yaw": 2.103118419647217,
+            "Garrador_routines": [
+              1,
+              45,
+              1,
+              0
+            ],
+            "weakpoint37_world": [
+              28521.645510435104,
+              -587.5298852920532,
+              -41688.704945623875
+            ],
+            "player_back_dot": 3398.9872856118354,
+            "partner_safe_corner_pos": [
+              29375.90234375,
+              -2000.0009765625,
+              -42781.703125
+            ],
+            "weakpoint_velocity_per_source_tick": 25.555168393086277,
+            "status1": "0x200",
+            "audible_footstep": false,
+            "actual_damage_record": {
+              "weapon": 2,
+              "part_ptr": "0x8caf2bd8",
+              "partNo": 37,
+              "flags": 0
+            },
+            "wait_original_lure_rear_exposure": true
+          }
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "route-walk114",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "source_frame_interval": [
+            27898,
+            27900
+          ],
+          "health_before": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "action_result": {
+            "rear_exposure_lost_save_before_frontal_attack": {
+              "frame": 27898,
+              "room": "0x201",
+              "phase": [
+                3,
+                0
+              ],
+              "Stop": "0x0",
+              "SSLoop": 0,
+              "health": [
+                1200,
+                1200,
+                90,
+                600
+              ],
+              "source_Key_on": "0x800010",
+              "original_weakpoint_scaled_radius": 249.99977337670765,
+              "player_pos": [
+                33717.6796875,
+                -2000.001708984375,
+                -40011.1953125
+              ],
+              "yaw": -2.0030415058135986,
+              "player_routines": [
+                0,
+                6,
+                1,
+                1
+              ],
+              "Garrador_hp": 3732,
+              "Garrador_pos": [
+                28803.57421875,
+                -2000.003173828125,
+                -41656.7109375
+              ],
+              "Garrador_yaw": 2.103118419647217,
+              "Garrador_routines": [
+                1,
+                45,
+                1,
+                0
+              ],
+              "weakpoint37_world": [
+                28521.645510435104,
+                -587.5298852920532,
+                -41688.704945623875
+              ],
+              "player_back_dot": 3398.9872856118354,
+              "partner_safe_corner_pos": [
+                29375.90234375,
+                -2000.0009765625,
+                -42781.703125
+              ],
+              "weakpoint_velocity_per_source_tick": 25.555168393086277,
+              "status1": "0x200",
+              "audible_footstep": false,
+              "actual_damage_record": {
+                "weapon": 2,
+                "part_ptr": "0x8caf2bd8",
+                "partNo": 37,
+                "flags": 0
+              },
+              "wait_original_lure_rear_exposure": true
+            }
+          },
+          "last_sample": {
+            "frame": 27898,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              1200,
+              1200,
+              90,
+              600
+            ],
+            "source_Key_on": "0x800010",
+            "original_weakpoint_scaled_radius": 249.99977337670765,
+            "player_pos": [
+              33717.6796875,
+              -2000.001708984375,
+              -40011.1953125
+            ],
+            "yaw": -2.0030415058135986,
+            "player_routines": [
+              0,
+              6,
+              1,
+              1
+            ],
+            "Garrador_hp": 3732,
+            "Garrador_pos": [
+              28803.57421875,
+              -2000.003173828125,
+              -41656.7109375
+            ],
+            "Garrador_yaw": 2.103118419647217,
+            "Garrador_routines": [
+              1,
+              45,
+              1,
+              0
+            ],
+            "weakpoint37_world": [
+              28521.645510435104,
+              -587.5298852920532,
+              -41688.704945623875
+            ],
+            "player_back_dot": 3398.9872856118354,
+            "partner_safe_corner_pos": [
+              29375.90234375,
+              -2000.0009765625,
+              -42781.703125
+            ],
+            "weakpoint_velocity_per_source_tick": 25.555168393086277,
+            "status1": "0x200",
+            "audible_footstep": false,
+            "actual_damage_record": {
+              "weapon": 2,
+              "part_ptr": "0x8caf2bd8",
+              "partNo": 37,
+              "flags": 0
+            },
+            "wait_original_lure_rear_exposure": true
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk114\\shots\\checkpoint-source-27898\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk114\\shots\\checkpoint-source-27898\\frames\\fb1.png"
+          ]
+        }
+      ]
+    },
+    {
+      "run": "route-walk115",
+      "source": 29278,
+      "state_sha256": "401b2acae2cdd2bb94a60b49ea526edd42ac6007dfd4f1b773dd11eec8f9b4f6",
+      "health": [
+        1200,
+        1200,
+        90,
+        600
+      ],
+      "player_pos": [
+        33717.6796875,
+        -2000.001708984375,
+        -40011.1953125
+      ],
+      "partner_pos": [
+        29378.642578125,
+        -2000.0009765625,
+        -42774.95703125
+      ],
+      "boss_hp": 3464,
+      "evidence_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk115",
+      "preparation": {
+        "scope": "PREPARED ONLY, one existing50s guarded arm; no guest, continuous loop, new assets/program or guard change.",
+        "new_run": "route-walk115",
+        "seed": "route-walk114",
+        "seed_sha256": "02fa8cdef95ecaf879bb5985c4ba6a7e2c7ed0723842771bdb3f7e710a283b18",
+        "source_frame": 27900,
+        "health": [
+          1200,
+          1200,
+          90,
+          600
+        ],
+        "controller": "owned-window-recovered-j-r201-far-track-weakpoint115-still.py",
+        "controller_sha256": "390164ec466b7d4016bd99287eaa4395bb1d4aa854b45fe0d1279e2bef21bea6",
+        "targets": [
+          [
+            33718.0,
+            -40011.0
+          ]
+        ],
+        "tolerance": 180,
+        "room": "201",
+        "action": "Actual1143732HP/full1200/90,far5181. Consolidate purestationary RT aim/normalAI observation intoone50s arm; no movement,unchangedray/laser/strongrear/part37 firepredicate,max6. Closefrontboss<=3500/anydamage; noAI/statewrites.",
+        "driver_sha256": "a1b12d39e8a5d5dfd1efd46ac2f918e7edee899d1dd9239705df5c2e8addc2ea"
+      },
+      "result": {
+        "name": "castle21-recoveredJ-route-walk115",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T19:32:53.047240+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "early_emulator_exit": 0,
+        "log_idle_s": 1.5,
+        "end_utc": "2026-10-21T19:33:41.544894+00:00",
+        "elapsed_s": 48.4,
+        "emulator_exited": true
+      },
+      "events": [
+        {
+          "ordinary_RT_A_when_actual_weapon_ray_intersects_weakpoint37_sphere": {
+            "frame": 28347,
+            "hp": 3732,
+            "magazine": 9,
+            "ray_miss": 52.310325699857685,
+            "back_dot": -11911.263002604614
+          }
+        },
+        {
+          "actual_original_handgun_Garrador_HP_drop": {
+            "frame": 28351,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              1200,
+              1200,
+              90,
+              600
+            ],
+            "source_Key_on": "0x800010",
+            "original_weakpoint_scaled_radius": 249.999566754446,
+            "player_pos": [
+              33717.6796875,
+              -2000.000732421875,
+              -40011.1953125
+            ],
+            "yaw": -2.0030415058135986,
+            "player_routines": [
+              0,
+              6,
+              2,
+              1
+            ],
+            "Garrador_hp": 3464,
+            "Garrador_pos": [
+              23010.318359375,
+              -2000.001708984375,
+              -45450.54296875
+            ],
+            "Garrador_yaw": -2.0408241748809814,
+            "Garrador_routines": [
+              2,
+              15,
+              1,
+              0
+            ],
+            "weakpoint37_world": [
+              23057.672475397587,
+              -388.3721580505371,
+              -45394.31999513507
+            ],
+            "player_back_dot": -12009.749769940103,
+            "partner_safe_corner_pos": [
+              29375.23828125,
+              -1999.99951171875,
+              -42780.79296875
+            ],
+            "weakpoint_velocity_per_source_tick": 44.87626099298051,
+            "status1": "0x204",
+            "audible_footstep": false,
+            "actual_damage_record": {
+              "weapon": 2,
+              "part_ptr": "0x8caf2bd8",
+              "partNo": 37,
+              "flags": 0
+            }
+          },
+          "baseline_HP": 3732,
+          "ordinary_shot_count": 1
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "route-walk115",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "source_frame_interval": [
+            28351,
+            28353
+          ],
+          "health_before": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "action_result": {
+            "actual_original_handgun_Garrador_HP_drop": {
+              "frame": 28351,
+              "room": "0x201",
+              "phase": [
+                3,
+                0
+              ],
+              "Stop": "0x0",
+              "SSLoop": 0,
+              "health": [
+                1200,
+                1200,
+                90,
+                600
+              ],
+              "source_Key_on": "0x800010",
+              "original_weakpoint_scaled_radius": 249.999566754446,
+              "player_pos": [
+                33717.6796875,
+                -2000.000732421875,
+                -40011.1953125
+              ],
+              "yaw": -2.0030415058135986,
+              "player_routines": [
+                0,
+                6,
+                2,
+                1
+              ],
+              "Garrador_hp": 3464,
+              "Garrador_pos": [
+                23010.318359375,
+                -2000.001708984375,
+                -45450.54296875
+              ],
+              "Garrador_yaw": -2.0408241748809814,
+              "Garrador_routines": [
+                2,
+                15,
+                1,
+                0
+              ],
+              "weakpoint37_world": [
+                23057.672475397587,
+                -388.3721580505371,
+                -45394.31999513507
+              ],
+              "player_back_dot": -12009.749769940103,
+              "partner_safe_corner_pos": [
+                29375.23828125,
+                -1999.99951171875,
+                -42780.79296875
+              ],
+              "weakpoint_velocity_per_source_tick": 44.87626099298051,
+              "status1": "0x204",
+              "audible_footstep": false,
+              "actual_damage_record": {
+                "weapon": 2,
+                "part_ptr": "0x8caf2bd8",
+                "partNo": 37,
+                "flags": 0
+              }
+            },
+            "baseline_HP": 3732,
+            "ordinary_shot_count": 1
+          },
+          "last_sample": {
+            "frame": 28351,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              1200,
+              1200,
+              90,
+              600
+            ],
+            "source_Key_on": "0x800010",
+            "original_weakpoint_scaled_radius": 249.999566754446,
+            "player_pos": [
+              33717.6796875,
+              -2000.000732421875,
+              -40011.1953125
+            ],
+            "yaw": -2.0030415058135986,
+            "player_routines": [
+              0,
+              6,
+              2,
+              1
+            ],
+            "Garrador_hp": 3464,
+            "Garrador_pos": [
+              23010.318359375,
+              -2000.001708984375,
+              -45450.54296875
+            ],
+            "Garrador_yaw": -2.0408241748809814,
+            "Garrador_routines": [
+              2,
+              15,
+              1,
+              0
+            ],
+            "weakpoint37_world": [
+              23057.672475397587,
+              -388.3721580505371,
+              -45394.31999513507
+            ],
+            "player_back_dot": -12009.749769940103,
+            "partner_safe_corner_pos": [
+              29375.23828125,
+              -1999.99951171875,
+              -42780.79296875
+            ],
+            "weakpoint_velocity_per_source_tick": 44.87626099298051,
+            "status1": "0x204",
+            "audible_footstep": false,
+            "actual_damage_record": {
+              "weapon": 2,
+              "part_ptr": "0x8caf2bd8",
+              "partNo": 37,
+              "flags": 0
+            }
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk115\\shots\\checkpoint-source-28351\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk115\\shots\\checkpoint-source-28351\\frames\\fb1.png"
+          ]
+        },
+        {
+          "run": "route-walk115",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "source_frame_interval": [
+            29277,
+            29278
+          ],
+          "health_before": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "action_result": {
+            "key": "ready",
+            "up": true,
+            "host_monotonic": 360486.375
+          },
+          "last_sample": {
+            "frame": 29273,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              1200,
+              1200,
+              90,
+              600
+            ],
+            "source_Key_on": "0x800010",
+            "original_weakpoint_scaled_radius": 249.99964545376696,
+            "player_pos": [
+              33717.6796875,
+              -1999.999267578125,
+              -40011.1953125
+            ],
+            "yaw": -1.9127991199493408,
+            "player_routines": [
+              0,
+              6,
+              1,
+              1
+            ],
+            "Garrador_hp": 3464,
+            "Garrador_pos": [
+              16300.337890625,
+              1011.07421875,
+              -40211.46484375
+            ],
+            "Garrador_yaw": -0.0630129873752594,
+            "Garrador_routines": [
+              1,
+              93,
+              1,
+              0
+            ],
+            "weakpoint37_world": [
+              16269.89355301857,
+              2728.2461074590683,
+              -40217.15811827779
+            ],
+            "player_back_dot": -896.9205109010159,
+            "partner_safe_corner_pos": [
+              29375.140625,
+              -2000.00439453125,
+              -42781.50390625
+            ],
+            "weakpoint_velocity_per_source_tick": 15.248814193458134,
+            "status1": "0x200",
+            "audible_footstep": false,
+            "actual_damage_record": {
+              "weapon": 2,
+              "part_ptr": "0x8caf2bd8",
+              "partNo": 37,
+              "flags": 0
+            },
+            "standing_target_yaw_error": 0.3301988176678794,
+            "normal_aim_point_offset_within_original_sphere": [
+              0,
+              -70,
+              0
+            ],
+            "weapon_object": "0x8cab2dc8",
+            "muzzle": [
+              33550.8437448591,
+              -543.5239531695843,
+              -40192.52946372703
+            ],
+            "ray_direction": [
+              -0.9806113985621342,
+              0.13120306442125151,
+              -0.14555768923862486
+            ],
+            "ray_pitch": 0.13158243754153157,
+            "ray_yaw_error": 0.14593447984249508,
+            "ray_pitch_error": 0.05161738380967998,
+            "ray_sphere_miss": 2704.708378191747,
+            "ray_forward_distance": 17378.74788418497,
+            "range_dependent_aim_tolerance": 0.0034524926881873506
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk115\\shots\\checkpoint-source-29277\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk115\\shots\\checkpoint-source-29277\\frames\\fb1.png"
+          ]
+        }
+      ]
+    },
+    {
+      "run": "route-walk116",
+      "source": 30654,
+      "state_sha256": "2c82b5be00fb33cce1f951af98362430dced768e99c544f3d0c2a778b421dc5f",
+      "health": [
+        1200,
+        1200,
+        90,
+        600
+      ],
+      "player_pos": [
+        33716.3671875,
+        -2000.000244140625,
+        -40007.19921875
+      ],
+      "partner_pos": [
+        29378.091796875,
+        -1999.9989013671875,
+        -42777.3515625
+      ],
+      "boss_hp": 3464,
+      "evidence_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk116",
+      "preparation": {
+        "scope": "PREPARED ONLY, one existing50s guarded arm; no guest, continuous loop, new assets/program or guard change.",
+        "new_run": "route-walk116",
+        "seed": "route-walk115",
+        "seed_sha256": "401b2acae2cdd2bb94a60b49ea526edd42ac6007dfd4f1b773dd11eec8f9b4f6",
+        "source_frame": 29278,
+        "health": [
+          1200,
+          1200,
+          90,
+          600
+        ],
+        "controller": "owned-window-recovered-j-r201-sealed-far-track-weakpoint-still.py",
+        "controller_sha256": "fe3d744dfd81aea850f113b850aaac33086e38543c99922b12f091c521ac9967",
+        "targets": [
+          [
+            33718.0,
+            -40011.0
+          ]
+        ],
+        "tolerance": 180,
+        "room": "201",
+        "action": "Actual115 second confirmedweakpoint373464HP/full1200/90; originalbosswanderedupstairs, stationaryqualifiedaimtracksactualsource. StartHPfromsealedexactstate/controlreceipt, liveinitialassert. Samefinite50s/max6/strongrear/ray/laser/part/healthguards, no sourcewrites.",
+        "driver_sha256": "2d1d6cff0af94037bc8caafe6b0a9e53589169f71cb656ad3b3cc826b8646f42"
+      },
+      "result": {
+        "name": "castle21-recoveredJ-route-walk116",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T19:34:32.627471+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "early_emulator_exit": 0,
+        "log_idle_s": 0.5,
+        "end_utc": "2026-10-21T19:35:20.577231+00:00",
+        "elapsed_s": 47.9,
+        "emulator_exited": true
+      },
+      "events": [],
+      "screenshots": [
+        {
+          "run": "route-walk116",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "source_frame_interval": [
+            30652,
+            30654
+          ],
+          "health_before": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "action_result": {
+            "key": "ready",
+            "up": true,
+            "host_monotonic": 360585.859
+          },
+          "last_sample": {
+            "frame": 30648,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              1200,
+              1200,
+              90,
+              600
+            ],
+            "source_Key_on": "0x800010",
+            "original_weakpoint_scaled_radius": 249.99945551244252,
+            "player_pos": [
+              33716.55078125,
+              -2000.002685546875,
+              -40008.40625
+            ],
+            "yaw": -1.6745805740356445,
+            "player_routines": [
+              0,
+              6,
+              1,
+              1
+            ],
+            "Garrador_hp": 3464,
+            "Garrador_pos": [
+              15876.3525390625,
+              1765.0775146484375,
+              -38905.50390625
+            ],
+            "Garrador_yaw": 0.03758767247200012,
+            "Garrador_routines": [
+              1,
+              16,
+              1,
+              0
+            ],
+            "weakpoint37_world": [
+              15897.301064874977,
+              3477.4577934741974,
+              -39039.063011050224
+            ],
+            "player_back_dot": -431.7096884215573,
+            "partner_safe_corner_pos": [
+              29380.521484375,
+              -2000.001953125,
+              -42772.30078125
+            ],
+            "weakpoint_velocity_per_source_tick": 5.49373003394193,
+            "status1": "0x200",
+            "audible_footstep": false,
+            "actual_damage_record": {
+              "weapon": 2,
+              "part_ptr": "0x8caf2bd8",
+              "partNo": 37,
+              "flags": 0
+            },
+            "far_original_AI_tracking_no_frontal_shot": true,
+            "standing_target_yaw_error": 0.15812933942207064,
+            "normal_aim_point_offset_within_original_sphere": [
+              0,
+              -70,
+              0
+            ],
+            "weapon_object": "0x8cab2dc8",
+            "muzzle": [
+              33531.47232185304,
+              -533.4495251774788,
+              -40146.933341261
+            ],
+            "ray_direction": [
+              -0.9747919218342294,
+              0.21413813123809722,
+              0.06265436837591755
+            ],
+            "ray_pitch": 0.21580940841024676,
+            "ray_yaw_error": -0.0014435777747339174,
+            "ray_pitch_error": 0.003640172187868579,
+            "ray_sphere_miss": 136.67946322788745,
+            "ray_forward_distance": 18117.94880311063,
+            "range_dependent_aim_tolerance": 0.003311633157374787
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk116\\shots\\checkpoint-source-30652\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk116\\shots\\checkpoint-source-30652\\frames\\fb1.png"
+          ]
+        }
+      ]
+    }
+  ],
+  "cast_notdrawn115": {
+    "rows": [
+      {
+        "room": "r201",
+        "id": "00",
+        "name": "Leon",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 70930,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          7
+        ],
+        "parts": [
+          119
+        ]
+      },
+      {
+        "room": "r201",
+        "id": "01",
+        "name": "pl01",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 2510,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          1
+        ]
+      },
+      {
+        "room": "r201",
+        "id": "03",
+        "name": "Ashley",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 60290,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          141
+        ]
+      },
+      {
+        "room": "r201",
+        "id": "1b",
+        "name": "em1b",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 51110,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          38
+        ]
+      }
+    ],
+    "packages": {},
+    "fails": 0,
+    "not_drawn": [
+      {
+        "room": "r201",
+        "id": "1b",
+        "name": "em1b",
+        "samples": 35,
+        "max_alive": 1,
+        "nearest": 1293,
+        "in_view": 35,
+        "verdict": "drawn"
+      }
+    ]
+  },
+  "next_prepared": {
+    "scope": "PREPARED ONLY, one existing50s guarded arm; no guest, continuous loop, new assets/program or guard change.",
+    "new_run": "route-walk117",
+    "seed": "route-walk116",
+    "seed_sha256": "2c82b5be00fb33cce1f951af98362430dced768e99c544f3d0c2a778b421dc5f",
+    "source_frame": 30654,
+    "health": [
+      1200,
+      1200,
+      90,
+      600
+    ],
+    "controller": "owned-window-recovered-j-r201-sealed-injury-recovery-still.py",
+    "controller_sha256": "81c1e33fd7af80ea8cfc53ba1b6d07191aa854567246aa7f224ad7951b2f080f",
+    "targets": [
+      [
+        32500.0,
+        -42000.0
+      ],
+      [
+        30350.0,
+        -42000.0
+      ],
+      [
+        29345.0,
+        -41980.0
+      ],
+      [
+        27000.0,
+        -42000.0
+      ]
+    ],
+    "tolerance": 180,
+    "room": "201",
+    "action": "Actual1161200/90 boss3464 naturallyupstairs17kaway, rayoccluded/nohits. Finite normal reverselever floorroute exitscell to27000widedungeon; originalrun audibleintentional, anydamage/PID/phase/collision guardsunchanged. No source/AI/statewrites.",
+    "driver_sha256": "c699f1bb704ce1d3c95140beb0c035facb639a03a1b01a8a34ad8f9e5799bd7b"
+  },
+  "limits": [
+    "Boss3464 remains live; original deathcallback/stairs/waves/end save pending.",
+    "Strong-rear/ray/laser/part37 firing predicate preserved; far neutraltracking closes front-facing boss<=3500 or anydamage.",
+    "No sustained silentwalk, whole-drive quiet or hardware performance claim."
+  ]
+}

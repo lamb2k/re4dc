@@ -75,6 +75,9 @@ void cEsp02::move()
     }
 }
 
+#if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
+extern "C" void re4dc_esp_strip21_color(GXColor);
+#endif
 // EspTransTbl[0x02]: GX setup then the strip geometry.
 extern "C" void Esp02_Trans(cEsp02* esp)
 {
@@ -187,6 +190,10 @@ void esp02Trans_sub(cEsp02* esp)
             c.b = (u8)esp->m_Col_b;
             c.a = (u8)(esp->m_Col_a * nz);
             GXSetChanMatColor(4, c);
+#if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
+            re4dc_esp_strip21_color(c);
+#endif
+
         }
         EspStrip_draw_poly(esp, i, v, 1, 1);
     }

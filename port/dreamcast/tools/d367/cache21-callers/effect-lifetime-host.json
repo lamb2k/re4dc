@@ -1,0 +1,150 @@
+{
+  "scope": "Read-only actual effect registration/release/est lookup and Push/Pop, plus actual non-CABIN MemorySwap with controlled software ARAM. Not complete CABIN forward/publication/teardown acceptance.",
+  "head": "bf250af8e8719516b2048ce502ed06370d10efed",
+  "source_sha256": {
+    "src/game/eff_sys.cpp": "8a6137510329a78580f9486be9cab01d520d28b22f58190715a7b022afaeb55f",
+    "src/game/emdata.cpp": "49def1a264b98effd9c346567324fee63c3b167711c5e6dbddf5e28e3e4074ec",
+    "src/game/event.cpp": "c3671a9f6107ae9fa44320609cbb58df69c86d5211deb369d61a5aeb0788aeb2",
+    "src/game/dvd.cpp": "eef52f4007e7351c2574ee29a69d707f46bafa71e4cbf8380ba92fb431b16343",
+    "include/espgen.h": "245308dc8833b1e18f71682bcf2a0564e73480eda629f076313f6c037be09757",
+    "include/esp.h": "a02bdcd8632113b4c2e7b099ea90cfefea9c7f0f1c779b31e354dfd634e0e1ba",
+    "src/game/read.cpp": "1333da510986bbf7f75ffb35aa9588463db84e5817b8d838ab3c58100e84dfa1"
+  },
+  "selected_methods": [
+    {
+      "path": "src/game/eff_sys.cpp",
+      "signature": "struct EffIdTbl {",
+      "line": 31,
+      "sha256": "abfd46cece32bfba801ba986323fd60427c0dba7b3635f74ae0cc059ce9e9012"
+    },
+    {
+      "path": "src/game/eff_sys.cpp",
+      "signature": "struct EffOfsTbl {",
+      "line": 39,
+      "sha256": "3a99df4f4db32531b8dada852b2d93de0622c3f1913d873eb0865e30f062e583"
+    },
+    {
+      "path": "src/game/eff_sys.cpp",
+      "signature": "struct EffEfmEnt {",
+      "line": 43,
+      "sha256": "1cefb6ceac96ad8e37038b2f06253fea2b859565baf91cf4e4593428e28636de"
+    },
+    {
+      "path": "src/game/eff_sys.cpp",
+      "signature": "struct EffData {",
+      "line": 50,
+      "sha256": "f5c906c665b324037f94bef26020e99ecfb79a21c23a5ead5412c64755504f4f"
+    },
+    {
+      "path": "include/espgen.h",
+      "signature": "struct SstList {",
+      "line": 30,
+      "sha256": "4f632db3f10614848fb7148d3c064b40d5566de90c47178ba136750df47ef651"
+    },
+    {
+      "path": "include/espgen.h",
+      "signature": "struct SstData {",
+      "line": 49,
+      "sha256": "b00f534d8310b876d5555d3e9656f6450636e42c7df0f16ced20bf84c26e1c14"
+    },
+    {
+      "path": "include/espgen.h",
+      "signature": "struct SstTbl {",
+      "line": 53,
+      "sha256": "30004b78fcb3ffc7badd38f5546902f8ccb6877823cfa99c9362c097c834116c"
+    },
+    {
+      "path": "src/game/eff_sys.cpp",
+      "signature": "int EspDataLoad(",
+      "line": 435,
+      "sha256": "9b0a418ff2c2821f79588cb8ed7e13bf7d1e4165210c86278c8d27c314739d74"
+    },
+    {
+      "path": "src/game/eff_sys.cpp",
+      "signature": "int EspDataRelease(",
+      "line": 520,
+      "sha256": "e65ad75ae7c6b1fef0f2e99e08150e4dc3dfa1296e7d0981f5bf4fa58250b2aa"
+    },
+    {
+      "path": "src/game/eff_sys.cpp",
+      "signature": "int estRegist(",
+      "line": 726,
+      "sha256": "1f6ff4ba5dd51daf520062c974cbc72cb6cf6da9b904ce04413d26f9467ebe03"
+    },
+    {
+      "path": "src/game/eff_sys.cpp",
+      "signature": "EspSeqData* EspGetEstAddr(",
+      "line": 749,
+      "sha256": "5d960160eca1be06d3b26036ca969320e429495f00a4901dc8e6435f8ddd91f7"
+    },
+    {
+      "path": "src/game/eff_sys.cpp",
+      "signature": "int estRelease(",
+      "line": 927,
+      "sha256": "f7e86e44d1a340ca7e4a0bcd6de7e1c5a87b16c0f41f1524434262fd22c5abf1"
+    },
+    {
+      "path": "src/game/emdata.cpp",
+      "signature": "int GetEmEffId(",
+      "line": 27,
+      "sha256": "748d1047a4d9c64c2441efc5d5f1589b3bf0a3e6096f241af6a9bc2161688601"
+    },
+    {
+      "path": "src/game/emdata.cpp",
+      "signature": "void EspEmDataSwapPush(",
+      "line": 79,
+      "sha256": "efffa6bbd8c9ff7337e5265840c2b3b511e2433d996f21a56fb1c43af540f416"
+    },
+    {
+      "path": "src/game/emdata.cpp",
+      "signature": "void EspEmDataSwapPop(",
+      "line": 91,
+      "sha256": "a93264a309f031df36435f9554c231e67dc2f23fae8344b91f6103218fe6d179"
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "signature": "void MemorySwap(",
+      "line": 517,
+      "sha256": "684e18359ddc37f14754574d723f5bf18595bee6b87c3241f2b404945efc601a"
+    }
+  ],
+  "test_sha256": {
+    "test_effect_lifetime_characterization.py": "3c5cf4e75ce3e1d6cf2af9ba2c8ff6bfdc694b45ca4c4db1baf4f9880e5543a1",
+    "effect_lifetime_characterization_host.cpp": "58ec1104c01e48c710d255adbcc6757b716a1a5565f8769de8697f8227b852e2"
+  },
+  "command": [
+    "g++",
+    "-std=c++17",
+    "-O1",
+    "-g",
+    "-fsanitize=undefined",
+    "-fno-sanitize-recover=all",
+    "-fno-pie",
+    "-no-pie",
+    "-Wall",
+    "-Wextra",
+    "-fpermissive",
+    "-I/root/probe/cache21-callers-effect-lifetime-host-20261022-02",
+    "/root/probe/codex-cache21-callers/port/dreamcast/tools/d367/cache21-callers/effect_lifetime_characterization_host.cpp",
+    "-o",
+    "/root/probe/cache21-callers-effect-lifetime-host-20261022-02/test"
+  ],
+  "output": "EFFECT_ARCHIVE first_inside=0 refs=1 live_after_swap=0 PASS\nEFFECT_ARCHIVE first_inside=0 refs=2 live_after_swap=1 PASS\nEFFECT_ARCHIVE first_inside=0 refs=200 live_after_swap=1 PASS\nEFFECT_ARCHIVE first_inside=1 refs=1 live_after_swap=0 PASS\nEFFECT_ARCHIVE first_inside=1 refs=2 live_after_swap=1 PASS\nEFFECT_ARCHIVE first_inside=1 refs=200 live_after_swap=1 PASS\nEFFECT_INVALID_VERSION poisons_count_then_retry_returns_success_without_registration PASS\nEFFECT_POP_MISSING_EFF void_failure_keeps_owner_unregistered PASS\nEFFECT_POP_INVALID_VERSION void_failure_keeps_poisoned_count PASS\nEFFECT_NULL_DATA preserves_zero_count PASS\nEFFECT_LIFETIME_CHARACTERIZATION_CASES=10 PASS\n",
+  "abi_adapters": [
+    "cEspSystem projects ownerCnt and estTbl only; actual Sst types extracted. ReadModule pArc lookup/GetDataExt are controlled boundaries.",
+    "Actual EspDataLoad definition renamed actual_EspDataLoad; Pop pointer/int bridge calls it and counts invocations."
+  ],
+  "boundaries": [
+    "Synthetic valid EFF headers/est record markers; texture and effect-model count0 paths. sst/path registration and four non-est release helpers are controlled dispatch boundaries.",
+    "Actual estRegist/estRelease/EspGetEstAddr execute; software DMA copies execute actual MemorySwap body with CABIN_SOURCE and EVENT_FILES undefined, null DVD queue and no-op flush.",
+    "No private assets or actual live effect/model scheduler. Direct source callability/reproduction, not proved gameplay occurrence or global transaction closure.",
+    "bf250 forward/native protocol acceptance remains a separate sealed fixture; this unit does not assert a combined effect-ownership receipt."
+  ],
+  "resource_guard": {
+    "start_C_free_bytes": 23592726528,
+    "finish_C_free_bytes": 23591993344,
+    "floor_bytes": 19461570560,
+    "output_bytes_before_receipt": 432948,
+    "output_limit_bytes": 20971520
+  }
+}

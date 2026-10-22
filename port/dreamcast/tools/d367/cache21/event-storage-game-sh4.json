@@ -1,0 +1,83 @@
+{
+  "scope": "Actual full SH4 event/game TU token and stripped object checks only; no full programme/guest/hardware acceptance.",
+  "baseline": "720b75381a68f51636b17031f82fd762e72e05d3",
+  "tools_sha256": "4cae12257679b07b748570de6589fcfacb76501b415e2229de312dd1e44c8fbe",
+  "rows": [
+    {
+      "tu": "game",
+      "variants": {
+        "baseline": {
+          "object_sha256": "667f656646ccd91284acf0f22e415c8a4be4b168f234cd1fbc2b13d99bdb8664",
+          "pp_token_sha256": "4e43ebaa6d68c7b1b53b4d795a727b7106aab08004bef4b5d37301816fb00d00",
+          "size": [
+            19627,
+            72,
+            401
+          ]
+        },
+        "default": {
+          "object_sha256": "667f656646ccd91284acf0f22e415c8a4be4b168f234cd1fbc2b13d99bdb8664",
+          "pp_token_sha256": "4e43ebaa6d68c7b1b53b4d795a727b7106aab08004bef4b5d37301816fb00d00",
+          "size": [
+            19627,
+            72,
+            401
+          ]
+        },
+        "zero": {
+          "object_sha256": "667f656646ccd91284acf0f22e415c8a4be4b168f234cd1fbc2b13d99bdb8664",
+          "pp_token_sha256": "4e43ebaa6d68c7b1b53b4d795a727b7106aab08004bef4b5d37301816fb00d00",
+          "size": [
+            19627,
+            72,
+            401
+          ]
+        },
+        "on": {
+          "object_sha256": "667f656646ccd91284acf0f22e415c8a4be4b168f234cd1fbc2b13d99bdb8664",
+          "pp_token_sha256": "c94bc861be86c31680b263559dcb8f2474caf138bd9d029d238ad4f33f3f1ed7",
+          "size": [
+            19627,
+            72,
+            401
+          ]
+        }
+      }
+    }
+  ],
+  "source_sha256": {
+    "include/cManager.h": {
+      "baseline": "19ce63044d273bce47c208773df8921f08f90fc58bdfc162e7bb9507f5940e3c",
+      "candidate": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20"
+    },
+    "src/game/event.cpp": {
+      "baseline": "c3671a9f6107ae9fa44320609cbb58df69c86d5211deb369d61a5aeb0788aeb2",
+      "candidate": "7a067adcfb2b218a404aed79bac1190889adf813f7b557a82e75876a584076fa"
+    },
+    "src/game/game.cpp": {
+      "baseline": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90",
+      "candidate": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90"
+    }
+  },
+  "invalid_knobs_rejected": [
+    "2",
+    "-1",
+    "yes"
+  ],
+  "cap_bytes": 33554432,
+  "floor_bytes": 19428016128,
+  "platform_define_propagation": [
+    {
+      "enabled": 0,
+      "command": "kos-c++ -O2 -fno-PIC -fno-PIE -fomit-frame-pointer -m4-single -ml -mfsrra -mfsca -ffunction-sections -fdata-sections -matomic-model=soft-gusa -ftls-model=local-exec -D__DREAMCAST__  -isystem /root/work/kos-re4dc-d367/include -isystem /root/work/kos-re4dc-d367/kernel/arch/dreamcast/include -isystem /root/work/kos-re4dc-d367/addons/include/ -isystem /root/work/kos-ports/include -D_arch_dreamcast=1 -D_arch_sub_pristine=1 -Wall -g -std=gnu++20 -Wall -Wextra -O1 -Iplatform/include -DRE4DC_GAME   -DRE4DC_ACTOR_TRANSACTION=0 -DRE4DC_ACTOR_LEON_NATIVE_LOOK=0 -DRE4DC_VMU_DIALOG=0 -DRE4DC_ROUTE_CH22=1 -include /root/probe/cache21-event-storage-qualification-20261022-03/obj/crash-screen.h -include /root/probe/cache21-event-storage-qualification-20261022-03/obj/subscreen.h -MMD -MP -c platform/modules.cpp -o /root/probe/cache21-event-storage-qualification-20261022-03/obj/platform/modules.o"
+    },
+    {
+      "enabled": 1,
+      "command": "kos-c++ -O2 -fno-PIC -fno-PIE -fomit-frame-pointer -m4-single -ml -mfsrra -mfsca -ffunction-sections -fdata-sections -matomic-model=soft-gusa -ftls-model=local-exec -D__DREAMCAST__  -isystem /root/work/kos-re4dc-d367/include -isystem /root/work/kos-re4dc-d367/kernel/arch/dreamcast/include -isystem /root/work/kos-re4dc-d367/addons/include/ -isystem /root/work/kos-ports/include -D_arch_dreamcast=1 -D_arch_sub_pristine=1 -Wall -g -std=gnu++20 -Wall -Wextra -O1 -Iplatform/include -DRE4DC_GAME -DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1   -DRE4DC_ACTOR_TRANSACTION=0 -DRE4DC_ACTOR_LEON_NATIVE_LOOK=0 -DRE4DC_VMU_DIALOG=0 -DRE4DC_ROUTE_CH22=1 -include /root/probe/cache21-event-storage-qualification-20261022-03/obj/crash-screen.h -include /root/probe/cache21-event-storage-qualification-20261022-03/obj/subscreen.h -MMD -MP -c platform/modules.cpp -o /root/probe/cache21-event-storage-qualification-20261022-03/obj/platform/modules.o"
+    }
+  ],
+  "event_gate_receipt": "/root/probe/cache21-event-storage-qualification-20261022-02/EVENT-PARTIAL-RECEIPT.json",
+  "game_gate_configuration": "DVD_READ_SAFE=1 supplies source-required door_probe.h; PVR_PIPELINE=1. These are qualification inputs, not production recipe changes.",
+  "output_bytes": 2390076,
+  "final_C_free_bytes": 39220469760
+}

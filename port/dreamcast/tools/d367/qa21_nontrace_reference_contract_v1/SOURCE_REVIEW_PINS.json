@@ -1,0 +1,16 @@
+{
+  "scope": "static source/review metadata only; notruntimepreflight",
+  "source_commit": "505f3ee487a1bb658199986f4988fdf14008c960",
+  "source_manifest": {
+    "path": "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/SOURCE_ONLY_MANIFEST.json",
+    "bytes": 4973,
+    "sha256": "0b73077358b87a8b73325d6d823acd24c0037e57a7b653ad8f6f76a5bcc25e63",
+    "matches_exact_git_blob": true
+  },
+  "review_commit": "df55d43ad37385bb9059b4564907db4a20579abd",
+  "review": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/qa-domains-exit-independent-review-v1/review.json",
+    "bytes": 15156,
+    "sha256": "831a09011d5abf352c3aa8d48639a04c0479ea858402bf4789f151bf159116a9"
+  }
+}

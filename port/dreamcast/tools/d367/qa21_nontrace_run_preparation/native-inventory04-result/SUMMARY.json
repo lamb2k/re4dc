@@ -1,0 +1,54 @@
+{
+  "scope": "ONE root-allocated actual inventory04; unreleased startup qualification ONLY",
+  "qualified_startup_only": true,
+  "supervisor": {
+    "pid": 28456,
+    "birth": 134371324932155834,
+    "seconds": 0.6192251,
+    "exit_code": 0
+  },
+  "coordinator": {
+    "pid": 13776,
+    "birth": 134371324934873205,
+    "seconds": 0.3202695,
+    "exit_code": 0,
+    "signaled": true
+  },
+  "inner": {
+    "pid": 37868,
+    "birth": 134371324936721656,
+    "seconds": 0.1289468,
+    "exit_code": 125,
+    "signaled": true
+  },
+  "snapshots": [
+    [
+      37868
+    ],
+    [
+      37868
+    ],
+    [
+      37868
+    ]
+  ],
+  "added": [],
+  "missing": [],
+  "original_pin_matches": true,
+  "cleanup_errors": [],
+  "private_job_empty": true,
+  "hardstop_fired": false,
+  "remaining_exact_owned_and_global_flycast": [],
+  "explicit_child_launches": 2,
+  "no_release": true,
+  "no_profile_state_image_read": true,
+  "no_input_flycast": true,
+  "source_commit": "86f54d1c0",
+  "native_charged_before_final_supervisor_result": 16856,
+  "postclose_native_files": 13344,
+  "postclose_plus4096directory": 17440,
+  "four_mib_breach": false,
+  "original55368_cause": "UNKNOWN",
+  "full_job_IPC_game_acceptance": false,
+  "actual_retry": false
+}

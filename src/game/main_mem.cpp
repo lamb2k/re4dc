@@ -12,6 +12,9 @@
 #include "global.h"
 #include "main_mem.h"
 #include "db_log.h"
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+#include "native_motion.h"
+#endif
 #include "joy.h"
 #include "eprintf.h"
 #include "file.h"
@@ -415,6 +418,11 @@ int MemDestroyHeap(int no)
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ACTOR_TRANSACTION
         re4dc_actor_forget_range((void*)Heap[no].start,Heap[no].end-Heap[no].start);
 #endif
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+        if(no==4 && !re4dc_motion_capacity_retire()) {
+            re4dc_missing("motion overflow reader before heap destruction");return 0;
+        }
+#endif
         OSDestroyHeap(Heap[no].handle);
         Heap[no].handle = -1;
         OSReport("succeed!!\n");
@@ -563,6 +571,11 @@ void MemClearAllHeap()
     }
 #endif
 #endif
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+    if(Heap[4].handle>=0 && !re4dc_motion_capacity_retire()) {
+        re4dc_missing("motion overflow reader before all-heap clear");return;
+    }
+#endif
     for (i = 0; i < MEM_HEAP_NUM; i++) {
         if (Heap[i].handle >= 0) {
             MemDestroyHeap(i);
@@ -603,12 +616,18 @@ void* mem_alloc(u32 size, const char* file, int line, int flag, int heap)
             p = (u8*) OSAllocFromHeap(Heap[heap].handle, size);
         }
 #endif
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+        if(p==NULL && heap==4)p=(u8*)re4dc_motion_required_alloc(Heap[heap].handle,size);
+#endif
     } else {
         p = (u8*) OSAllocFromHeap(Heap[heap].handle, size + 0x20);
 #if defined(RE4DC_FAR_SHELL) && RE4DC_FAR_SHELL
         if (p == NULL && heap == 4 && re4dc_far_shell_shortfall(size + 0x20, file)) {
             p = (u8*) OSAllocFromHeap(Heap[heap].handle, size + 0x20);
         }
+#endif
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+        if(p==NULL && heap==4)p=(u8*)re4dc_motion_required_alloc(Heap[heap].handle,size+0x20);
 #endif
         name = strrchr(file, '/');
         if (name == NULL) {
@@ -893,6 +912,9 @@ void* Debug_alloc(u32 size, int flag)
     }
     size = (size + 0x1F) & ~0x1F;
     p = (u8*) OSAllocFromHeap(Heap[CurrentDbgHeap].handle, size);
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+    if(p==NULL && CurrentDbgHeap==4)p=(u8*)re4dc_motion_required_alloc(Heap[4].handle,size);
+#endif
     if (p != NULL) {
         memclr_asm(p, size);
         if (Dalloc_flg == 1 && flag == 1) {

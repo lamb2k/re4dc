@@ -1,0 +1,126 @@
+{
+  "status": "PASS",
+  "aborted_guest_pid": 28052,
+  "original_wrongly_charged_tracks_logical_bytes": 1034794752,
+  "track_allocation_during_after": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\accounting-test\\track01.bin",
+      "source": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track01.bin",
+      "logical_bytes": 1058400,
+      "source_allocated_during": 1058400,
+      "same_file": true,
+      "source_links_during": 2,
+      "source_allocated_after": 1058400,
+      "source_links_after": 1
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\accounting-test\\track02.raw",
+      "source": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track02.raw",
+      "logical_bytes": 1237152,
+      "source_allocated_during": 1237152,
+      "same_file": true,
+      "source_links_during": 2,
+      "source_allocated_after": 1237152,
+      "source_links_after": 1
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\accounting-test\\track03.iso",
+      "source": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track03.iso",
+      "logical_bytes": 1032499200,
+      "source_allocated_during": 1032499200,
+      "same_file": true,
+      "source_links_during": 2,
+      "source_allocated_after": 1032499200,
+      "source_links_after": 1
+    }
+  ],
+  "baseline": {
+    "charged_logical_bytes": 14415872,
+    "charged_allocated_bytes": 14415872,
+    "charged_bytes": 14415872,
+    "excluded_exact_track_references": [
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\accounting-test\\track01.bin",
+        "reference": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track01.bin",
+        "logical_bytes": 1058400,
+        "allocated_bytes": 1058400,
+        "new_file_data_bytes": 0,
+        "identity": {
+          "device": 14332939485708580193,
+          "inode": 1688849860310472,
+          "links": 2
+        }
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\accounting-test\\track02.raw",
+        "reference": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track02.raw",
+        "logical_bytes": 1237152,
+        "allocated_bytes": 1237152,
+        "new_file_data_bytes": 0,
+        "identity": {
+          "device": 14332939485708580193,
+          "inode": 46724846134015433,
+          "links": 2
+        }
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\accounting-test\\track03.iso",
+        "reference": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track03.iso",
+        "logical_bytes": 1032499200,
+        "allocated_bytes": 1032499200,
+        "new_file_data_bytes": 0,
+        "identity": {
+          "device": 14332939485708580193,
+          "inode": 562949955817434,
+          "links": 2
+        }
+      }
+    ]
+  },
+  "growth_delta": 4096,
+  "grown": {
+    "charged_logical_bytes": 14419968,
+    "charged_allocated_bytes": 14419968,
+    "charged_bytes": 14419968,
+    "excluded_exact_track_references": [
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\accounting-test\\track01.bin",
+        "reference": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track01.bin",
+        "logical_bytes": 1058400,
+        "allocated_bytes": 1058400,
+        "new_file_data_bytes": 0,
+        "identity": {
+          "device": 14332939485708580193,
+          "inode": 1688849860310472,
+          "links": 2
+        }
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\accounting-test\\track02.raw",
+        "reference": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track02.raw",
+        "logical_bytes": 1237152,
+        "allocated_bytes": 1237152,
+        "new_file_data_bytes": 0,
+        "identity": {
+          "device": 14332939485708580193,
+          "inode": 46724846134015433,
+          "links": 2
+        }
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\accounting-test\\track03.iso",
+        "reference": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track03.iso",
+        "logical_bytes": 1032499200,
+        "allocated_bytes": 1032499200,
+        "new_file_data_bytes": 0,
+        "identity": {
+          "device": 14332939485708580193,
+          "inode": 562949955817434,
+          "links": 2
+        }
+      }
+    ]
+  },
+  "cap_unchanged": 60000000,
+  "temporary_test_files_removed": true
+}

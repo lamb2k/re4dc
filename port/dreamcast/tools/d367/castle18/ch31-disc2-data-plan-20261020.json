@@ -1,0 +1,76 @@
+{
+  "replace": {
+    "dc/tex.pak": "/root/re4data/private/castle21-ch31-disc2-20261020/files/dc/tex.pak",
+    "dc/resident.bin": "/root/re4data/private/castle21-playable-ashley-resident-20261020/files/dc/resident.bin",
+    "dc/native/r201/partner.re4nmr": "/root/re4data/private/castle18-ch31-r201-partner-20261019/files/dc/native/r201/partner.re4nmr",
+    "dc/native/r203/partner.re4nmr": "/root/re4data/private/castle18-ch31-remaining-partners-20261019/files/dc/native/r203/partner.re4nmr",
+    "dc/native/r208/partner.re4nmr": "/root/re4data/private/castle18-ch31-remaining-partners-20261019/files/dc/native/r208/partner.re4nmr",
+    "dc/native/r204/partner.re4nmr": "/root/re4data/private/castle18-ch31-remaining-partners-20261019/files/dc/native/r204/partner.re4nmr",
+    "dc/native/r20d/partner.re4nmr": "/root/re4data/private/castle21-playable-ashley-20261020/files/dc/native/r20d/partner.re4nmr",
+    "dc/native/r20e/partner.re4nmr": "/root/re4data/private/castle21-playable-ashley-20261020/files/dc/native/r20e/partner.re4nmr",
+    "dc/tex/0/052dc14c-ebd1af87.re4tex": "/root/re4data/private/castle21-playable-ashley-20261020/files/dc/tex/0/052dc14c-ebd1af87.re4tex",
+    "dc/tex/3/38010d17-f2c8c0d7.re4tex": "/mnt/c/Game Dev/Emulators/re4-assets-private/castle18-ch34-player-textures-20261019/textures/38010d17-f2c8c0d7.re4tex",
+    "dc/tex/4/44dfd9d6-28519c94.re4tex": "/root/re4data/private/castle21-playable-ashley-20261020/files/dc/tex/4/44dfd9d6-28519c94.re4tex",
+    "dc/tex/9/9f94a5a5-921e2562.re4tex": "/root/re4data/private/castle21-playable-ashley-20261020/files/dc/tex/9/9f94a5a5-921e2562.re4tex",
+    "em/pl01.drs": "/mnt/c/Game Dev/Emulators/re4-assets-private/castle18-ch34-player-textures-20261019/pl01.drs"
+  },
+  "remove": [
+    "dc/native/r201/MAINSCENARIO.re4mesh",
+    "dc/native/r202/MAINSCENARIO.re4mesh",
+    "dc/native/r203/MAINSCENARIO.re4mesh",
+    "dc/native/r204/MAINSCENARIO.re4mesh",
+    "dc/native/r207/MAINSCENARIO.re4mesh",
+    "dc/native/r208/MAINSCENARIO.re4mesh"
+  ],
+  "provenance": {
+    "scope": "Fresh Disc2 data only: preserve current release missing keys and all qualified Castle winners. Existing Castle pack wins conflicting entries. No source/state/mesh conversion.",
+    "current_source": "40dc7860a",
+    "current_upstream": "5f26453a9",
+    "resident": "f2827a24dfd8c0bfe35aaa6507f94951dd6ef4e17a122f0f648edda606fa8e43",
+    "no_runtime_acceptance": true,
+    "plan_data_sectors": 496134,
+    "baseline_disc2_sectors": 478463,
+    "delta_sectors": 17671,
+    "limit": 504000,
+    "nostd_castle": [
+      {
+        "path": "dc/native/r201/MAINSCENARIO.re4mesh",
+        "bytes": 862368
+      },
+      {
+        "path": "dc/native/r202/MAINSCENARIO.re4mesh",
+        "bytes": 951872
+      },
+      {
+        "path": "dc/native/r203/MAINSCENARIO.re4mesh",
+        "bytes": 323776
+      },
+      {
+        "path": "dc/native/r204/MAINSCENARIO.re4mesh",
+        "bytes": 662336
+      },
+      {
+        "path": "dc/native/r207/MAINSCENARIO.re4mesh",
+        "bytes": 347392
+      },
+      {
+        "path": "dc/native/r208/MAINSCENARIO.re4mesh",
+        "bytes": 1028672
+      }
+    ],
+    "r212_input_rows": 5858,
+    "r212_output_rows": 5874,
+    "source_after_r212_merge": "78905e14b",
+    "data_manifest_sha256": "5ffa9a8f9b05b1bdc262593a597549439c27eb135c62ff49194b854bd1997deb",
+    "r212_manifest_sha256": "8728850e240c74abdb8de43bec9687398c67a0c1e8814eb4b9def6e8455a5be4",
+    "resident_rows": 5882,
+    "ashley_winner_manifest": "638a59c7ff4cdeb79b29afeb2436678604920fdf11e2a0a27538c6a1cf8f09b4",
+    "ashley_added_sectors": 675,
+    "actual_data_sectors": 496134,
+    "actual_master_iso_sectors": 497247,
+    "actual_master_iso_bytes": 1018361856,
+    "disc_sha256": "dc536893569c42a928c19ad1568c0dba6d41e3d82ea0028bd63d8e3b0032150b",
+    "C_disc_retention": "pending capacity preflight; exact mastered bytes retained in RAM",
+    "r200_occl_exception": "r200 has17832-byteOCCL; other41castle room files haveGRIDonly. No blanketno-opclaim."
+  }
+}

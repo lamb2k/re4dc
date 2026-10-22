@@ -1,0 +1,14 @@
+{
+  "scope": "Read-only exact delta/source review; no tests/guest/runtime edits",
+  "old_unrun_wrapper_sha256": "35a90ab9f2dac7313295140e02ca7f452d9cd9a3264c1089a7d96c7f07a4f59f",
+  "final_wrapper_sha256": "61634b604504fe5ea0af16d1e32bfe5fac2febc51241dc4a5a4a73755271bb08",
+  "wrapper_only_actual_pad_fix_and_required_argv_pin_guard": true,
+  "old_observer_sha256": "487ea13ec941975d7a2c6cde78ec9b9d3649ef1ad56b069d4f5d4cef7fde2e4d",
+  "final_observer_sha256": "ad7776e699ff4aed3ac3c9fec03645503376b1538a856bad05000d6ec4a79965",
+  "observer_only_assert_message_no_to_yes": true,
+  "actual_pad_path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\native-load011-pad.txt",
+  "actual_pad_sha256": "103b7d67a4c993d936d4ae46a46765a582c1429bbfa0a563d062e795444faceb",
+  "final_pins_sha256": "738ef0503fa9d4d44dc508efbf1ab960a39f2458bfd52c556f9b920eda640d75",
+  "source_method": "REVIEW-LOAD012-AUTO-RADIO.md",
+  "disposition": "No remaining concrete blocker identified; source review only, root owns allocation and actual acceptance"
+}

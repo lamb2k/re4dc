@@ -1,0 +1,234 @@
+{
+  "scope": "Unchanged qualified J original no-warp VMU/CardLoad lineage, ordinary movement/A only. No guest writes, rollback/retarget, asset changes or new build/stage.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk89",
+      "result": "Normal source-SAT approach and A opened original first interior door;120/600 unchanged",
+      "elapsed_s": 31.4,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "698c61248fc38315a8d14d2c86e63694bb1c866738c720df77bff7ed97b9d793",
+      "events": [
+        {
+          "original_r203_interior_door_action_observed_90_ticks": {
+            "host_monotonic": 295940.906,
+            "room": "0x203",
+            "frame": 20877,
+            "player_hp": 120,
+            "partner_hp": 600,
+            "pos": [
+              -37187.875,
+              4155.7724609375,
+              -9844.2958984375
+            ],
+            "yaw": -1.6892598867416382,
+            "target_distance": 244.00980076297205,
+            "angle_error": -2.331093334913735,
+            "player_routines": [
+              0,
+              0,
+              1,
+              0
+            ]
+          }
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk89",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Normal source-SAT approach and A opened original first interior door;120/600 unchanged",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk89\\shots\\checkpoint-source-20877\\frames\\fb0.png",
+          "png_sha256": "3028317b4cd89548b51d1cc22d8e52f1f879dc211c6beffeb006416b92533dcf",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk89\\shots\\checkpoint-source-20877\\checkpoint-context.json",
+          "source_frame_interval": [
+            20877,
+            20885
+          ],
+          "health_before": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            120,
+            1200,
+            600,
+            600
+          ]
+        }
+      ],
+      "motion": {
+        "scope": "Observed motion-cache counters only; current recipe drive meter0 means no whole-drive quiet or hardware claim.",
+        "valid_samples": 151,
+        "excluded_samples": 0,
+        "first": {
+          "frame": 20009,
+          "misses": 4446,
+          "evictions": 4368,
+          "loads": 4446
+        },
+        "last": {
+          "frame": 20885,
+          "misses": 4447,
+          "evictions": 4368,
+          "loads": 4447
+        }
+      }
+    },
+    {
+      "run": "current-j-route-walk90",
+      "result": "Normal two-segment source approach passed interior door into courtyard;120/600 unchanged",
+      "elapsed_s": 8.0,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "a3ad7c3bbc49da3dec296de5500fbdd98f77661e550b15abf24a7e956bfa9120",
+      "events": [
+        {
+          "normal_r203_herb_approach_segment_complete": true,
+          "frame": 21050,
+          "pos": [
+            -51434.8828125,
+            4179.47607421875,
+            -3800.678466796875
+          ],
+          "health": [
+            120,
+            600
+          ]
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk90",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Normal two-segment source approach passed interior door into courtyard;120/600 unchanged",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk90\\shots\\checkpoint-source-21050\\frames\\fb0.png",
+          "png_sha256": "bcb68b264c2dfa6762eb90a7f6da94d60edf774181e7a9aa9b8d7e9f9bafbcbb",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk90\\shots\\checkpoint-source-21050\\checkpoint-context.json",
+          "source_frame_interval": [
+            21050,
+            21058
+          ],
+          "health_before": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            120,
+            1200,
+            600,
+            600
+          ]
+        }
+      ],
+      "motion": {
+        "scope": "Observed motion-cache counters only; current recipe drive meter0 means no whole-drive quiet or hardware claim.",
+        "valid_samples": 34,
+        "excluded_samples": 0,
+        "first": {
+          "frame": 20885,
+          "misses": 4447,
+          "evictions": 4368,
+          "loads": 4447
+        },
+        "last": {
+          "frame": 21059,
+          "misses": 4448,
+          "evictions": 4368,
+          "loads": 4448
+        }
+      }
+    },
+    {
+      "run": "current-j-route-walk91",
+      "result": "Original movement collision-stopped at courtyard arch; lower door/herb not reached,120/600 unchanged",
+      "elapsed_s": 8.5,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "b6e1f8d06fe36f742bdccc21b4509a10c5942631861364e918e09068d4abf170",
+      "events": [
+        {
+          "normal_input_has_no_displacement": true,
+          "frame": 21233,
+          "pos": [
+            -51680.1953125,
+            4186.00927734375,
+            -3507.743408203125
+          ],
+          "target": [
+            -51750.0,
+            7250.0
+          ],
+          "source_tick_window": 174
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk91",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Original movement collision-stopped at courtyard arch; lower door/herb not reached,120/600 unchanged",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk91\\shots\\checkpoint-source-21233\\frames\\fb0.png",
+          "png_sha256": "8be9efd4c032a6c67055a5b92268b0a55af363d8e33ad5d0b20d34f0433eda47",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk91\\shots\\checkpoint-source-21233\\checkpoint-context.json",
+          "source_frame_interval": [
+            21233,
+            21243
+          ],
+          "health_before": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            120,
+            1200,
+            600,
+            600
+          ]
+        }
+      ],
+      "motion": {
+        "scope": "Observed motion-cache counters only; current recipe drive meter0 means no whole-drive quiet or hardware claim.",
+        "valid_samples": 35,
+        "excluded_samples": 0,
+        "first": {
+          "frame": 21059,
+          "misses": 4448,
+          "evictions": 4368,
+          "loads": 4448
+        },
+        "last": {
+          "frame": 21243,
+          "misses": 4449,
+          "evictions": 4368,
+          "loads": 4449
+        }
+      }
+    }
+  ],
+  "current_health": [
+    120,
+    600
+  ],
+  "next": "Current J91 same-program state; east ramp footpoints identified from original actual historical walk against exact same selected source SHA e0d95bb76cc1cc5adc4d787185aaa0a9e8dcc6064fcca8f5b170bbd3c5ce72db. Historical state/program never substituted. Continue original healing/key/waves route.",
+  "limits": [
+    "Herb not collected",
+    "Lower key-room door not yet reached",
+    "Original four em11 still alive; no combat/wave-clear claim",
+    "Coarse compressed navigation hypothesis failed at arch; original collision authoritative"
+  ]
+}

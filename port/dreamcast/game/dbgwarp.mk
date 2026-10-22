@@ -36,6 +36,17 @@ $(DBGWARP_LATE_PLATFORM): PLATFORM_CPPFLAGS += -include $(OBJDIR)/dbgwarp.h
 #                room through the source's SceAtExecRoomJump (room lifetime proofs between rooms with no wired door).
 #                Default 0: the directive compiles out and the DBG_WARP image is unchanged.
 WARP_JUMP ?= 0
+# Test only: after `kill` completes and its source event ends, `killnext id frame room kind repeat gap`
+# changes only the damage rig's target. Default 0 leaves the existing DBG_WARP image unchanged.
+WARP_KILL_PHASE ?= 0
+ifneq ($(filter-out 0 1,$(WARP_KILL_PHASE)),)
+$(error WARP_KILL_PHASE must be 0 or 1)
+endif
+ifeq ($(WARP_KILL_PHASE),1)
+ifneq ($(DBG_WARP),1)
+$(error WARP_KILL_PHASE needs DBG_WARP=1)
+endif
+endif
 #   WARP_AFTER_RESET=1  test builds only, needs DBG_WARP=1 (lane resetmem): an `after_reset` warp.txt keeps the rig
 #                passive until the first soft reset (main.cpp systemSoftReset), then warps from the title after it
 #                (the s30 heap gate after load -> Game Reset -> New Game). Default 0: compiled out.
@@ -60,7 +71,7 @@ PLATFORM_OBJS += $(OBJDIR)/dbgwarp_bridge.o
 $(TARGET): $(OBJDIR)/dbgwarp_bridge.o
 $(OBJDIR)/dbgwarp_bridge.o: dbgwarp_bridge.cpp $(OBJDIR)/dbgwarp.h
 	@mkdir -p $(dir $@)
-	kos-c++ $(KOS_CFLAGS) $(GAME_CPPFLAGS) -Iplatform/include -include $(OBJDIR)/dbgwarp.h $(if $(filter 1,$(WARP_JUMP)),-DRE4DC_WARP_JUMP=1) -MMD -MP -c $< -o $@
+	kos-c++ $(KOS_CFLAGS) $(GAME_CPPFLAGS) -Iplatform/include -include $(OBJDIR)/dbgwarp.h $(if $(filter 1,$(WARP_JUMP)),-DRE4DC_WARP_JUMP=1) $(if $(filter 1,$(WARP_KILL_PHASE)),-DRE4DC_WARP_KILL_PHASE=1) -MMD -MP -c $< -o $@
 -include $(OBJDIR)/dbgwarp_bridge.d
 endif
 #   CODEC_READY_FIXTURE=1  test builds only, needs DBG_WARP=1 (deterministic external-ready contract): the codec

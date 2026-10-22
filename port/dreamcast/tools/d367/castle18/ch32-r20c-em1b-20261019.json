@@ -1,0 +1,7 @@
+{
+  "replace": {
+    "dc/native/r20c/registry.re4nmr": "/root/re4data/private/castle18-ch32-r20c-em1b-v2-20261019/files/dc/native/r20c/registry.re4nmr"
+  },
+  "remove": [],
+  "provenance": "Existing complete r201 em1b07p/08p/0ag geometry and all source facts unchanged for original r20c7/10. Parasites, waves and route remain separate."
+}

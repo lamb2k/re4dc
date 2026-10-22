@@ -1,0 +1,202 @@
+{
+  "scope": "Separate fresh current r200 diagnostic observed entry/gameplay window with49152held, full current data; no normal-route state/program substitution, no chapter or other-room acceptance, no hardware/IO/performance claim.",
+  "build": {
+    "scope": "Dedicated current48KiB squeeze diagnostic build; target not yet run. No old state may be retargeted.",
+    "source": "1e8dc478987ee6f60732d5452f1ce1da9f386112",
+    "elf_sha256": "db520f68ae2c95cf4e7832861a424a53d70b7093fa2eb8f24bf7347a387fce82",
+    "end": "8c484798",
+    "knobs": {
+      "KOS_SQUEEZE": "1",
+      "KOS_SQUEEZE_BYTES": "49152",
+      "KOS_CENSUS": "2",
+      "KOS_WATCH": "1",
+      "HEAP4_WATER": "1",
+      "PC_SAMPLER": "0",
+      "DISC_SET": "1",
+      "PS2_ASHLEY": "2",
+      "NATIVE_MODEL_REGISTRY_BONES": "96",
+      "ENEMY_VIS_CULL": "1"
+    }
+  },
+  "actual_tree": {
+    "removed_fixture": 345,
+    "replaced": 543,
+    "added": 5389,
+    "skipped": 0,
+    "village_pruned": 0,
+    "village_bytes": 0,
+    "files": 6762,
+    "data_sectors": 496135,
+    "limit": 504000
+  },
+  "retained_C_image": {
+    "scope": "Exact immutable RAM master retained as owned C image; no remaster/truncation or current input changes.",
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\squeeze-base\\track03.iso",
+    "bytes": 1018363904,
+    "iso_sectors": 497248,
+    "sha256": "ece7acdf4e3c2c5a3050b30257cf60e642fcb5810c9027d1c15e6d9a18ab5806",
+    "before_free": 22733148160,
+    "after_free": 21713915904
+  },
+  "run": {
+    "elapsed_s": 50.9,
+    "errors": [],
+    "exited": true,
+    "fixtures": {
+      "warp": {
+        "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\r200-squeeze-observer.txt",
+        "bytes": 172,
+        "sha256": "472369686a2b6502a07fefec3f696c07e9fbdd985830473afc60353c29b43dd6"
+      },
+      "pad": {
+        "src": null,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "w11": {
+        "src": null,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "snapshot": {
+    "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+    "state_sha256": "c6e487b97778b54d2357283f2b9fd2ce6fef9154dd876256a111793610f4e329",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x200",
+    "chapter": 6,
+    "source_frame": 756,
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "stop": "0x0",
+    "actual_death": false,
+    "Leon": {
+      "pointer": "0x8cafce60",
+      "pos": [
+        82729.6171875,
+        10118.0830078125,
+        -51538.91796875
+      ],
+      "yaw": 2.930000066757202
+    },
+    "Ashley": {
+      "pointer": "0x8cd15360",
+      "pos": [
+        82309.2734375,
+        10118.0830078125,
+        -51549.97265625
+      ],
+      "yaw": 1.5877960920333862
+    }
+  },
+  "held_bytes": 49152,
+  "kos_watch": {
+    "min_headroom": 26024,
+    "last": {
+      "frame": 720,
+      "free": 5608,
+      "used": 11948672,
+      "break": 20480,
+      "headroom": 26088,
+      "min": 26024,
+      "top": 24320,
+      "holes": 1768
+    }
+  },
+  "vram_r200": {
+    "room": "200",
+    "start": 167,
+    "samples": 6,
+    "closed": false,
+    "min_free": 324512,
+    "min_largest": 272384,
+    "peak_pinned": 2185538,
+    "last": {
+      "pinned": 2185538,
+      "dynamic": 0,
+      "other": 57374,
+      "free": 324512,
+      "largest": 272384,
+      "min_free": 324512,
+      "min_largest": 272384,
+      "peak_pinned": 2185538,
+      "loads": 287,
+      "evicted": 0,
+      "retries": 0,
+      "at": "preload",
+      "f": 183
+    },
+    "gaps": {
+      "refusals": 0,
+      "guard": 0,
+      "guard_p": 0,
+      "nocontig": 0,
+      "latched": 0,
+      "absent": 0,
+      "gc_fx": 0,
+      "dropped": 0,
+      "fx_dropped": 0,
+      "tex_rej": 0,
+      "snd_fail": 0,
+      "meta": 0
+    },
+    "snd_used": 1804992,
+    "loads": 287,
+    "evicted": 0,
+    "retries": 0,
+    "min_kos": 26088,
+    "menu_loads": 0,
+    "play_loads": 0,
+    "play_evicted": 0
+  },
+  "cast_gc_fails": 0,
+  "native_rows": [
+    {
+      "id": "00",
+      "native": 450,
+      "gc": 0
+    },
+    {
+      "id": "03",
+      "native": 450,
+      "gc": 0
+    }
+  ],
+  "not_drawn": [
+    {
+      "room": "r200",
+      "id": "12",
+      "name": "em12",
+      "samples": 9,
+      "max_alive": 4,
+      "nearest": 57845,
+      "in_view": 0,
+      "verdict": "out of view (in view in 0 sample(s); not judged)"
+    },
+    {
+      "room": "r200",
+      "id": "3b",
+      "name": "em3b",
+      "samples": 9,
+      "max_alive": 1,
+      "nearest": 97469,
+      "in_view": 0,
+      "verdict": "out of view (in view in 0 sample(s); not judged)"
+    }
+  ],
+  "receipts": {
+    "current-r200-squeeze01/run-result.json": "565af56f012abc228f9069de53c11eb0bd8d327bd10db0a3a0a9da39128331fc",
+    "r200-squeeze-characters.json": "263e190309fc317d12e24ed1595165925de062ab79d91e67d6f27612ff5f0393",
+    "r200-squeeze-vram.json": "5665be148f9d685ab7e1c555e969d01972f622feae3a18b084328464bf11fba0",
+    "current-r200-squeeze-snapshot-audit.json": "6ac34ec10aecfb47030f6b4b96151b498f800be419afa694f12562ae6633a0fc",
+    "C-squeeze-disc-retention-receipt.json": "09388954a09833a593cbc3e5ad8f0201f122890c1646e8429cf3decf17e4fcf1"
+  }
+}

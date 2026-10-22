@@ -1,0 +1,41 @@
+{
+  "scope": "Main holistic A11 archive overwrite/retirement contract; design and source evidence, not implementation acceptance",
+  "runtime_freeze": "3dcd35da608e5373958cb556b62089880fbf24d6",
+  "source_pins": {
+    "src/game/eff_sys.cpp": "83c5ae8deb709982a37dfeb371038a8d5263f36b7fe180530ddda0857828465f",
+    "src/game/emdata.cpp": "49def1a264b98effd9c346567324fee63c3b167711c5e6dbddf5e28e3e4074ec",
+    "src/game/est.cpp": "8b49c628aac0a10d084a7666e7d35bcafea3f503686d6078ed8aa9739b2312bd",
+    "src/game/espgen.cpp": "43bc31c723c59f77d706864322de95d5dd4c3f29bb33bc7fb3dd64e6b1a2bb07",
+    "src/game/espgen00.cpp": "08abab772e8056ac5ff5ff409916b631a1809ea05217376449c177822ed4619c",
+    "src/game/espgen10.cpp": "5f2d991b2839505a66d4f3e4b0b6489da15293bf3c91f6d1d6028ce653920ef2",
+    "src/game/read.cpp": "fa7688e8cf6a2f21548d7d31e93b3f0e6023131333c3b8c90d25c4d61ce78d08",
+    "src/game/game.cpp": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90",
+    "src/game/event.cpp": "c3671a9f6107ae9fa44320609cbb58df69c86d5211deb369d61a5aeb0788aeb2",
+    "port/dreamcast/game/platform/native_effect.cpp": "e1ac17d4375424739857ae450d8b36ceced5cb8e92cc39aa358b0b1916d43d8f",
+    "port/dreamcast/game/platform/native_event_file.cpp": "ab5f2f85b530e9237cb4eb60acd49a332400351f9e066aab2e675179f9e37db2"
+  },
+  "established": [
+    "Actual initial-version admission guard already exists in selected b3101919/860890b0b. Fresh main16OFF/16ON controls pass; no duplicate runtime repair added.",
+    "Shared owner count is registration accounting. Actual EST registration stores first-archive pointers; refs2->1 retains those pointers while a controlled MemorySwap overwrites that same archive.",
+    "Controller10 caches head; generator00 caches record. Actual event deletion/activation64-case matrix preserves Core1/801/2001/3001 and keeps them active during event; Core800 survives suspended.",
+    "Source adapter Binding.entries and raw record refs borrow archive storage, without an acquisition lease/generation through final use.",
+    "Main controller-validation fix98b20de3e avoids early decoder reads on rejected models/parts only. It does not establish backing safety for valid/global controllers.",
+    "Forward receipt protects accepted CABIN row/unit/module/epoch publication around void exchange only. It does not retire effect registries, iterators, controllers or in-flight decoders."
+  ],
+  "required_before_mutating_archive": [
+    "Identify exact overwritten/restored byte range and current allocation/module/carrier epoch, not owner count alone.",
+    "Find registry data/list/model/texture pointers and active or suspended cached records that actually overlap that range. Keep separately loaded nonoverlapping shared-owner registrations intact.",
+    "Establish a source-supported admission freeze and drain readers/callbacks before any effect release, archive overwrite or free. A point-in-time empty scan alone is not a lease.",
+    "If an intentional permanent/event borrower cannot be retired under original semantics, refuse admission before mutation and retain its backing; do not force count0 or silently delete it.",
+    "After permitted retirement, revalidate range/owner/epoch and keep the freeze through final read/exchange. Native partial-copy requests preserve displaced bytes and must not be mistaken for rollback.",
+    "Reverse/Pop must publish restored registration only after verified original bytes and successful registration; its current void/missing-EFF behavior remains a separate open contract.",
+    "Reset preflight must precede every affected weapon/overlay/archive/heap destruction and propagate refusal through outer callers; post-destruction inspection cannot restore ownership."
+  ],
+  "current_limits": [
+    "Host source controls establish direct callability and retention policy, not the occurrence of this archive overlap in a captured gameplay route.",
+    "ReleasePlData/ReleaseWepData mutate fields after void InitModule, but an actual native refusal may be unreachable for non-enemy modules. Caller lane must prove reachability before declaring or patching a defect.",
+    "No new range-pin/admission-freeze implementation is accepted by this review. A01-A16 and main cache target gates remain open.",
+    "Private non-CABIN linked profile43f4599a is not enabled production behavior and has no Flycast/release/hardware acceptance. CABIN1 needs its own matched control.",
+    "Menu-window candidate remains disabled after102 extra requests/168032B; exact source accounting replay is in progress, not performance acceptance."
+  ]
+}

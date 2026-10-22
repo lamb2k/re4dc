@@ -1,0 +1,14 @@
+{
+  "scope": "UNALLOCATED source-only exact request",
+  "argv": [
+    "C:/Users/lambd/AppData/Local/Programs/Python/Python312/python.exe",
+    "-B",
+    "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_native_job_inventory_v1\\supervisor.py",
+    "--tools-sha256",
+    "96b6796fd6cc198907820d3914559ab083e9049e2271306f28390f6007a2f564",
+    "--execute-root-allocation"
+  ],
+  "allocation_path": "C:/Game Dev/Emulators/codex-lanes/qa21-combined-regression/NATIVE-JOB-INVENTORY01-ROOT-ALLOCATION.json",
+  "allocation_template_sha256": "23392643240c32412e90f0fad4d49fde157264269ac23f8938c4687a42d66737",
+  "tools_sha256": "96b6796fd6cc198907820d3914559ab083e9049e2271306f28390f6007a2f564"
+}

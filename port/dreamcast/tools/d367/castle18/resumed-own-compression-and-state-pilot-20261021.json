@@ -1,0 +1,224 @@
+[
+  {
+    "scope": "Only owned inactive resumed-run executable copies. Lossless LZX filesystem compression, every byte hash unchanged. No deletion, state/image/program or gameplay mutation.",
+    "free_before": 19493122048,
+    "free_after": 19554082816,
+    "rows": [
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk197\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk197\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk198\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk198\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk199\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk199\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk200\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk200\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk201\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk201\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk202\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk202\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk203\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk203\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk204\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk204\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      }
+    ]
+  },
+  {
+    "scope": "Only owned inactive resumed-run executable copies. Lossless LZX filesystem compression, every byte hash unchanged. No deletion, state/image/program or gameplay mutation.",
+    "free_before": 19450523648,
+    "free_after": 19474186240,
+    "rows": [
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk205\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk205\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk206\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk206\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk207\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk207\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      }
+    ]
+  },
+  {
+    "scope": "Only owned inactive resumed-run executable copies. Lossless LZX filesystem compression, every byte hash unchanged. No deletion, state/image/program or gameplay mutation.",
+    "free_before": 19444367360,
+    "free_after": 19610128384,
+    "rows": [
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk201\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk201\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk202\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk202\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk203\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk203\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk204\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk204\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk205\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk205\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk206\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk206\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk207\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk207\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk208\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk208\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk209\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk209\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk210\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk210\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk211\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk211\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk212\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk212\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk213\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk213\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk214\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk214\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk215\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk215\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk216\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk216\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk217\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk217\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk218\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk218\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk219\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk219\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk220\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk220\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk221\\flycast.exe",
+        "sha256_before": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "sha256_after": "64491C005DB917CC643B50E312F78C5B04CCFA77ACEBBE1CD07AD6371D422C8A",
+        "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk221\\\n\n\n1 files within 1 directories were compressed.\n14,415,872 total bytes of data are stored in 6,537,216 bytes.\nThe compression ratio is 2.2 to 1."
+      }
+    ]
+  },
+  {
+    "scope": "Only own inactive208 state, NTFS LZX compression with exact SHA unchanged; no logical byte mutation/deletion/replay/rollback. Original127 untouched.",
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk208\\data\\disc.state",
+    "hash_before": "45D41F4959CEDFFBFB3961331CED8BE255F78F82F073CF45E2B0E29179B7223A",
+    "hash_after": "45D41F4959CEDFFBFB3961331CED8BE255F78F82F073CF45E2B0E29179B7223A",
+    "free_before": 19445436416,
+    "free_after": 19445485568,
+    "output": "\n Compressing files in C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk208\\data\\\n\n\n1 files within 1 directories were compressed.\n11,693,472 total bytes of data are stored in 11,644,928 bytes.\nThe compression ratio is 1.0 to 1."
+  }
+]

@@ -1,0 +1,81 @@
+{
+  "schema": "rect21-standalone-image-plan-1",
+  "runtime_source": "004cf224674fa60cf08dc10e641c723de238a0fd",
+  "program_sha256": "a58579b87da0c45267cb93efe29feea2438da9ddab62d0fe31c47a1c6ff32c71",
+  "elf_sha256": "e08c9abc8f6bb44bb2a94642fc9a2e664d22039659cea7fcce311cb9989d7433",
+  "baseline_source": "b21116ec0cf2c984e9f49769a148373553bff00d",
+  "baseline_gdi_root": "/mnt/c/Flycast-Evidence/re4-dreamcast/feedback21-runtime-20261021/qa-aafc10f3-input/gdemu",
+  "baseline_files_verified": 1743,
+  "iso_tree_complete": true,
+  "joliet_present": false,
+  "joliet_contract": "Update all records if present; this baseline has no Joliet SVD/tree. Do not invent a new tree.",
+  "selected_allowlist_count": 18,
+  "selected_allowlist": [
+    "/1ST_READ.BIN",
+    "/dc/tex.pak",
+    "/dc/em22.ovl",
+    "/dc/em2b.ovl",
+    "/dc/em2f.ovl",
+    "/dc/em35.ovl",
+    "/dc/em3b.ovl",
+    "/dc/pl0f.ovl",
+    "/dc/pl11.ovl",
+    "/dc/pl14.ovl",
+    "/dc/sscrn.ovl",
+    "/dc/st1_0.ovl",
+    "/dc/st1_1.ovl",
+    "/dc/st1_2.ovl",
+    "/dc/st1_3.ovl",
+    "/dc/st2_0.ovl",
+    "/dc/native/r100/ps2-world.r4pw",
+    "/dc/native/r103/ps2-world.r4pw"
+  ],
+  "preserved_file_count": 1725,
+  "standalone_scoped_stage_bound": 1034794967,
+  "optional_same_program_base948_control_stage_bound": 1034794967,
+  "pair_stage_bound": 2069589934,
+  "pair_limit_bytes": 2469606195,
+  "asset_pack_sha256": "bbcef25f0090fa4004e03331a33c84f8f89fd3582704e4a08945a8f6a15d5026",
+  "base948_pack_sha256": "e19cfc464e789e97ca96864adfc2a4cd44443a9f4775bebd842c3e184a65559b",
+  "no_stage_no_guest": true,
+  "approach": "Stream raw2352 sectors to one cooked2048 track per arm. Preserve all1743 file LBAs. Expand only final program into two verified zero tail sectors; both packs and overlays/sidecars fit original allocations. Patch all matching ISO/RockRidge and Joliet directory-record extent/size fields, both-endian volume-space counts. Preserve every unrelated file extent/size/hash, directory positions, path tables, IP.BIN/system data and other tracks. No full extraction/rebuild or intermediate duplicate track.",
+  "resource": "Plan metadata/tools only <=20MiB. Future stage allocation requires fresh C >=18GiB+2.3GiB+all outstanding capture/build reservations (at least21796959028B before other reservations). Runtime C>=18GiB+64MiB (19394461696B), enforce <=2.3GiB total new stage. One output per arm,no fulltrack mirror/intermediate,stagebound excludes guestcapture which needs separate allocation. Main must approve allocation before any image output.",
+  "zero_tail_slack": {
+    "lba": 549000,
+    "sectors": 150,
+    "bytes": 307200,
+    "sha256": "7818f5542a0404157573be6cffc0e0c8e68ce3c0f5d17d07ccdd9313fb700baf",
+    "consumed_program_sectors": 2,
+    "preserved_tail_sectors": 148
+  },
+  "pair_stage_bound_with_16MiB_metadata_reserve": 2086367150,
+  "single_stage_bound_with_8MiB_metadata_reserve": 1043183575,
+  "virtual_cooked_tracks": {
+    "base948": {
+      "sha256": "e9efca156ff9b11005af57688accc085c9e568ceef32c2085e8a2d8f789db434",
+      "bytes": 1032499200,
+      "changed_members": 16,
+      "metadata_fields": 3
+    },
+    "scoped17": {
+      "sha256": "13c998136f24212e39a86bc82a0dc54eb14bb8bacca38ca14cb855e2897309fd",
+      "bytes": 1032499200,
+      "changed_members": 18,
+      "metadata_fields": 3
+    }
+  },
+  "virtual_gdi_sha256": "8c3dd2ca65d52d6f622f298a78a59ba394616f3664388655471e9d223e333f25",
+  "metadata_qualification": "Virtual streaming hash only; no image file was opened for output. Frozen payload+padding overlays and3metadatafield replacements determine expected cookedtrack digest. Future stage/readback/boot remain required.",
+  "evidence": "C:/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/image-plan-04",
+  "room_key_part_counts": {
+    "r100": [
+      8,
+      49
+    ],
+    "r103": [
+      9,
+      29
+    ]
+  },
+  "cold_plan": "cold-qualification-plan.json (same evidence directory)"
+}

@@ -1,0 +1,24 @@
+{
+  "scope": "13 NEW telemetry exception tests only; no Flycast/build/stage/input/RAM",
+  "utc": "2026-10-22T02:55:19.721639+00:00",
+  "platform": "Windows-11-10.0.26220-SP0",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "argv": [
+    "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest\\test-failure-telemetry.py"
+  ],
+  "returncode": 0,
+  "sources": {
+    "input-deadlines.py": "c0f6f02cf3d8456a2fcff6181724e54e0399f41d90de498fea702cf8fdd470d5",
+    "inner-adapter.py": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e",
+    "windows-backend.py": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e",
+    "guest-supervisor-core.py": "3227d411abf7370901b12f894dd35c33ca2b865f8be3eb88099f324814f87510",
+    "test-failure-telemetry.py": "9ddb641cc9f076f847721a344d99dadf4915bb58be374f03d41c4b8d41590067",
+    "run-failure-telemetry-tests.py": "4e5193fb67165a26809d77a6536ed980aefcf5c97b54af5b4b3f6556851c9fcd"
+  },
+  "stdout": "",
+  "stderr": "test_no_retained_guest_is_explicit_unavailable (__main__.ExitBackend.test_no_retained_guest_is_explicit_unavailable) ... ok\ntest_retained_exited_handle_has_exact_raw_times_duration_identity (__main__.ExitBackend.test_retained_exited_handle_has_exact_raw_times_duration_identity) ... ok\ntest_start_mismatch_refuses_recycled_identity (__main__.ExitBackend.test_start_mismatch_refuses_recycled_identity) ... ok\ntest_unfinalized_exit_has_no_invented_duration (__main__.ExitBackend.test_unfinalized_exit_has_no_invented_duration) ... ok\ntest_exception_keeps_false_original_error_and_exact_exit_before_close (__main__.FailureCleanup.test_exception_keeps_false_original_error_and_exact_exit_before_close) ... ok\ntest_telemetry_exception_cannot_skip_privatejob_cleanup (__main__.FailureCleanup.test_telemetry_exception_cannot_skip_privatejob_cleanup) ... ok\ntest_atomic_marker_preserves_complete_numeric_failure (__main__.Pulse.test_atomic_marker_preserves_complete_numeric_failure) ... ok\ntest_exited_noop_is_not_recorded_as_successful_keyup (__main__.Pulse.test_exited_noop_is_not_recorded_as_successful_keyup) ... ok\ntest_first_failure_is_not_replaced (__main__.Pulse.test_first_failure_is_not_replaced) ... ok\ntest_late_numeric_receipt_preserves_existing_failure (__main__.Pulse.test_late_numeric_receipt_preserves_existing_failure) ... ok\ntest_native_queue_exception_preserves_partial_receipt_and_null_return (__main__.Pulse.test_native_queue_exception_preserves_partial_receipt_and_null_return) ... ok\ntest_no_telemetry_callback_is_explicit_unavailable (__main__.Pulse.test_no_telemetry_callback_is_explicit_unavailable) ... ok\ntest_serialization_failure_never_publishes_partial_final_marker (__main__.Pulse.test_serialization_failure_never_publishes_partial_final_marker) ... ok\n\n----------------------------------------------------------------------\nRan 13 tests in 0.015s\n\nOK\n",
+  "guest_qualified": false,
+  "old_failed_run_remains_failed": true,
+  "timing_guards_unchanged": true
+}

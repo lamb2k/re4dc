@@ -1,0 +1,41 @@
+{
+  "file": "DOOR016-ROOT-ALLOCATION.json",
+  "allocated016": true,
+  "allow_debug_goto_command_writes": true,
+  "observer_sha256": "718e1c2e2ede7ded9f2de6d74970447c94f2820e56c0f77e98d3f8709d7405cd",
+  "wrapper_sha256": "41984c58a9b9160f826a33f7ae7575caa22fd295744c054f2c26b53878b860b8",
+  "pins_sha256": "03f30e8c5e0bdc4ff8e9a58726c5e8b10ef3691b76c3dc83d0b7e020454de87d",
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff30",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ],
+  "utc": "2026-10-22T06:23:26.9774774Z",
+  "owner": "root",
+  "allowed_runs": 1,
+  "no_retry": true,
+  "no_following_guest": true,
+  "scope": "Exact actual015 fullstate continuation. Initial unused existing DBG_WARP Goto slot24B only; count4B publishedlast after readback+coherent205/Stop0/eventclear/draincomplete check. Engine on game thread marksdone andcallssetPos/setAng. Host observesconsumption andactualnativeclipped-front hit0/correctDoor0registeredaction before oneordinaryA. No directactor/room/outcome writes. No secondentry descriptor/max_entry mutation, no rollback/rewrite afterpublished/partialfailures. Exactrootwriteallowlistconsent is requiredbywrapperANDobserver.",
+  "resources": {
+    "start_free_bytes": 20342374400,
+    "runtime_free_bytes": 19394461696,
+    "raw_seconds": 41,
+    "normalclose_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_cap_bytes": 62914560,
+    "global16": true,
+    "castle2": true,
+    "fresh_parent_peer_charges_required": true
+  },
+  "peer_reserved_bytes": 67108864,
+  "C_free_bytes": 146740514816,
+  "initial_Flycasts": 0,
+  "source": "d319c89ed",
+  "review_sha256": "eb1c06bd81c1bc1917f5b5c06b21eb1ca47e68c47e86a8d9df6c555b7ed249d8",
+  "proposal_sha256": "508bc5e6dc7f44a72668eee4729c769c9e9fa3ebfdb72220460f6291cb48a23c"
+}

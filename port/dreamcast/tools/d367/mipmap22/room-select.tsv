@@ -1,0 +1,5 @@
+# lane mipmap22 per-room chain selection (read by mipmap21/mip_quality.py --hold-keys): chains held at their base.
+# Rule: r100 and r101 are tight on re-entry (r101 -> r100 -> r101 largest free block); chains whose base side <= 64
+# gain little (small textures) and are held there first. A held key keeps its original representation everywhere.
+# Round 4 (2026-10-22): every hold re-admitted under VRAM_ROOM_ARENA; a gate failure re-holds by lowest measured minified area.
+key	rooms	side	format	reason

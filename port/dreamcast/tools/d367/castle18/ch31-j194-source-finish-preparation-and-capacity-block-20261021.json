@@ -1,0 +1,455 @@
+{
+  "scope": "Offline source/navigation/host-input preparation while unchanged disk guard blocks new guests. This does not establish a new runtime gate or integrate capacity/runtime fixes.",
+  "time_utc": "2026-10-21T07:23:13.822900+00:00",
+  "branch": "codex/castle18",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "authoritative_current": {
+    "run": "current-j-route-walk194",
+    "state_sha256": "a088e5cb06dbc14a958251b9f03d35223838004b15a66e1afe4171def4dfba1d",
+    "frame": 50543,
+    "health": [
+      368,
+      1200,
+      600,
+      600
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 4
+      },
+      {
+        "id": "0x4",
+        "num": 15,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ],
+    "player_pos": [
+      23758.80859375,
+      -1999.999267578125,
+      -45989.04296875
+    ],
+    "player_routines": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "Garrador_HP": 761,
+    "Garrador_pos": [
+      16040.5927734375,
+      -847.13330078125,
+      -43429.97265625
+    ],
+    "Garrador_routines": [
+      1,
+      43,
+      1,
+      0
+    ],
+    "partner_pos": [
+      23325.18359375,
+      -2000.002685546875,
+      -48813.41796875
+    ],
+    "partner_flags": "0x46",
+    "r201_saved_RSF": "0x2c400000"
+  },
+  "capacity": {
+    "C_free_bytes": 17627365376,
+    "guest_preflight_bytes": 17314086912,
+    "runtime_retained_bytes": 17246978048,
+    "required_external_recovery_bytes": 0,
+    "no_guest_running": true,
+    "no_new_guest_launched": true,
+    "guards_unchanged": true,
+    "initial_observed_C_free_bytes": 16489517056,
+    "initial_guard_gap_bytes": 824569856,
+    "current_guard_allows_next_guest": true,
+    "restored_utc": "2026-10-21T07:23:48.959207+00:00",
+    "note": "Capacity bounced above unchanged guard during offline preparation, cause not attributed. No guard bypass or image deletion. Resume existing J195 after fresh process/resource check."
+  },
+  "prepared_next": {
+    "run": "current-j-route-walk195",
+    "runner": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\test21-run-j-route-walk195.py",
+    "shell": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\test21-run-j-route-walk195.sh",
+    "controller": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\owned-window-test21-j-original-r201-injured-timed-bell195-still.py",
+    "expected_health": [
+      368,
+      600
+    ],
+    "expected_boss_HP": 761,
+    "state_seed": "current-j-route-walk194/data",
+    "kind": "Original source-timed bell RT/A only, no new game program/data; prepared but NOT run."
+  },
+  "optional_host_input_candidate": {
+    "path": "port/dreamcast/tools/d367/castle18/original_j_r201_finish_controller.py",
+    "sha256": "14a5b124b024a56692e6d20df33b6f19e41e61d74b9aee6d372d4280035c9c84",
+    "validation": "Syntax only; UNQUALIFIED and not automatically selected by J195.",
+    "arguments": "cap, waypoint-text, tolerance, room-hex, actual expected boss HP, authoritative saved hero HP (currently368)",
+    "changes": [
+      "Normal centre aim on clear lower floor, source-scaled sphere and actual laser target checks retained. Do not use centre aim through the known upper doorway occlusion without a successful original laser target.",
+      "Coarser proportional normal stick pulses capped8source ticks,3neutral ticks, original ready-state and finite6shot bounds.",
+      "Actual part37 required after HP drop; wrong body part stops. No HP/item/AI/flag/projectile/hit/position writes.",
+      "Intermediate periodic stills preserve ordinary input flow; explicit HP0-not-yet-kill and final source-death-callback screenshots.",
+      "Source death callback/phase guards remain mandatory; no earlier snapshot restoration or new binary with old state."
+    ]
+  },
+  "source": {
+    "path": "src/st2/r201.cpp",
+    "sha256": "13265eb6c38e8b248c2109637ee263f4df4aa2cd34813d008404a35c16b0e67a",
+    "geometry": "J194-authoritative-postboss-dungeon-exit-source-SAT-route.json",
+    "source_census_note": "J120 same-J source/ABI area coordinates only; no historical state retarget or current runtime claim from them.",
+    "area_coordinates": [
+      {
+        "pointer": "0x8ca7c248",
+        "chunk": "AEV",
+        "no": "0xa",
+        "kind": 11,
+        "flags": 2,
+        "area_type": 1,
+        "center": [
+          16155.415771484375,
+          1541.1055908203125,
+          -38352.587890625
+        ],
+        "trigger": 2,
+        "checkFlag": 1,
+        "angle": 0,
+        "func": "0x0"
+      },
+      {
+        "pointer": "0x8ca7c2e4",
+        "chunk": "AEV",
+        "no": "0xb",
+        "kind": 2,
+        "flags": 2,
+        "area_type": 1,
+        "center": [
+          16012.06689453125,
+          1999.995361328125,
+          -38198.27734375
+        ],
+        "trigger": 8,
+        "checkFlag": 1,
+        "angle": 0,
+        "func": "0x8c906d3c"
+      },
+      {
+        "pointer": "0x8ca7c380",
+        "chunk": "AEV",
+        "no": "0xc",
+        "kind": 2,
+        "flags": 3,
+        "area_type": 1,
+        "center": [
+          16188.01025390625,
+          1969.78076171875,
+          -30606.27783203125
+        ],
+        "trigger": 129,
+        "checkFlag": 1,
+        "angle": 0,
+        "func": "0x0"
+      },
+      {
+        "pointer": "0x8ca7c41c",
+        "chunk": "AEV",
+        "no": "0xd",
+        "kind": 0,
+        "flags": 3,
+        "area_type": 1,
+        "center": [
+          37263.125,
+          1999.998291015625,
+          -29360.845703125
+        ],
+        "trigger": 2,
+        "checkFlag": 1,
+        "angle": 0,
+        "func": "0x0"
+      },
+      {
+        "pointer": "0x8ca7c68c",
+        "chunk": "AEV",
+        "no": "0x11",
+        "kind": 2,
+        "flags": 3,
+        "area_type": 1,
+        "center": [
+          15555.198486328125,
+          -1332.1297607421875,
+          -43025.046875
+        ],
+        "trigger": 129,
+        "checkFlag": 0,
+        "angle": 0,
+        "func": "0x0"
+      },
+      {
+        "pointer": "0x8ca7c728",
+        "chunk": "AEV",
+        "no": "0x12",
+        "kind": 0,
+        "flags": 3,
+        "area_type": 1,
+        "center": [
+          41319.9580078125,
+          1999.997802734375,
+          -30477.705078125
+        ],
+        "trigger": 2,
+        "checkFlag": 3,
+        "angle": -180,
+        "func": "0x0"
+      },
+      {
+        "pointer": "0x8ca7c7c4",
+        "chunk": "AEV",
+        "no": "0x13",
+        "kind": 0,
+        "flags": 3,
+        "area_type": 1,
+        "center": [
+          42259.37109375,
+          1999.997802734375,
+          -43016.44921875
+        ],
+        "trigger": 2,
+        "checkFlag": 1,
+        "angle": 0,
+        "func": "0x0"
+      },
+      {
+        "pointer": "0x8ca7c860",
+        "chunk": "AEV",
+        "no": "0x14",
+        "kind": 0,
+        "flags": 3,
+        "area_type": 1,
+        "center": [
+          40355.89453125,
+          1999.997802734375,
+          -43062.88671875
+        ],
+        "trigger": 2,
+        "checkFlag": 1,
+        "angle": 0,
+        "func": "0x0"
+      },
+      {
+        "pointer": "0x8ca7c8fc",
+        "chunk": "AEV",
+        "no": "0x15",
+        "kind": 0,
+        "flags": 3,
+        "area_type": 1,
+        "center": [
+          36212.53125,
+          1999.997802734375,
+          -51598.40234375
+        ],
+        "trigger": 2,
+        "checkFlag": 1,
+        "angle": 0,
+        "func": "0x0"
+      },
+      {
+        "pointer": "0x8ca7c998",
+        "chunk": "AEV",
+        "no": "0x16",
+        "kind": 0,
+        "flags": 3,
+        "area_type": 1,
+        "center": [
+          41415.8759765625,
+          1999.996337890625,
+          -33254.66357421875
+        ],
+        "trigger": 2,
+        "checkFlag": 1,
+        "angle": 0,
+        "func": "0x0"
+      },
+      {
+        "pointer": "0x8ca7ca34",
+        "chunk": "AEV",
+        "no": "0x17",
+        "kind": 0,
+        "flags": 3,
+        "area_type": 1,
+        "center": [
+          36194.47265625,
+          1999.997802734375,
+          -52747.26953125
+        ],
+        "trigger": 2,
+        "checkFlag": 1,
+        "angle": 0,
+        "func": "0x0"
+      },
+      {
+        "pointer": "0x8ca7cad0",
+        "chunk": "AEV",
+        "no": "0x18",
+        "kind": 0,
+        "flags": 3,
+        "area_type": 1,
+        "center": [
+          30985.673828125,
+          2000.0057373046875,
+          -30363.884765625
+        ],
+        "trigger": 2,
+        "checkFlag": 1,
+        "angle": 0,
+        "func": "0x0"
+      },
+      {
+        "pointer": "0x8ca7d52c",
+        "chunk": "AEV",
+        "no": "0x29",
+        "kind": 11,
+        "flags": 2,
+        "area_type": 1,
+        "center": [
+          16155.415771484375,
+          1541.1055908203125,
+          -38352.587890625
+        ],
+        "trigger": 2,
+        "checkFlag": 1,
+        "angle": 0,
+        "func": "0x0"
+      }
+    ]
+  },
+  "death_acceptance": {
+    "required": [
+      "Actual ordinary damage to enemy HP0 is recorded separately from completed death.",
+      "Original r201_appearClawMan waits em.isActive()!=1, then sets RSF0 (0x80000000).",
+      "Original battle-door opening sets RSF1 (0x40000000), Global door_flags_51CC bit0x40000000; at least1600 door rise disables AEV0xA collision, full rise2600.",
+      "Require original live-world return phase3/0,Stop0,SSLoop0 and stable30source ticks before acceptance.",
+      "Require normal subsequent stair/collision traversal and retained before/after PNGs; no flag or position writes."
+    ],
+    "current_RSF": "0x2c400000",
+    "current_lever_RSF5": "set",
+    "current_death_RSF0": "clear",
+    "current_battle_door_RSF1": "clear",
+    "expected_mask_after_death_open": "RSF &0xc0000000 ==0xc0000000; preserve existing lever04000000. Do not overwrite flags."
+  },
+  "door_event_correction": {
+    "run": "current-j-route-walk193",
+    "fact": "17 controller samples observe original Stop0x80400100 fromsource50351 through50425; saved RSF1 changes fromopen toclosed. The escape fails while entering the stair/battle-door event.",
+    "inference_limit": "Earlier shorthand collision/ramp is not an isolated physics diagnosis. Original battle-door event also suspends ordinary inputs; no new game bug/fix is claimed."
+  },
+  "postboss_exit_hypothesis": {
+    "source_floor_wall_only": true,
+    "runtime_unqualified": true,
+    "clearance_units": 300,
+    "grid_units": 250,
+    "max_neighbor_height": 550,
+    "length": 17064.264907088724,
+    "authoritative_saved_start": [
+      23758.80859375,
+      -1999.999267578125,
+      -45989.04296875
+    ],
+    "turns": [
+      [
+        23750,
+        -2000.0,
+        -46000,
+        1
+      ],
+      [
+        23750,
+        -2000.0,
+        -45500,
+        1
+      ],
+      [
+        16750,
+        -2000.0,
+        -45500,
+        0
+      ],
+      [
+        16750,
+        -21.53388248409925,
+        -42000,
+        43
+      ],
+      [
+        16000,
+        -21.532233417729117,
+        -42000,
+        43
+      ],
+      [
+        16000,
+        1999.9999999999998,
+        -37750,
+        20
+      ]
+    ],
+    "gate_must_be_originally_open": true,
+    "partner": "Use normal source-ready S Follow after fight, prove bit2 clear/actual movement and600HP; no host relocation. Guard native actors and actual collision while ascending."
+  },
+  "reset_wave_acceptance": {
+    "trigger": "Original AEV0xC near16188,1969.78,-30606 after bossRSF0 and leverRSF5.",
+    "initial_source_list2_ids": [
+      "0x57",
+      "0x5b",
+      "0x5c"
+    ],
+    "side_source_list2_ids": [
+      "0x58",
+      "0x59",
+      "0x5a"
+    ],
+    "initial_order": "Original setGoto toward AEV0xD then0x18/0x17, source waits ckGoto and clears FindPL/setsflag10 at end.",
+    "side_order": "Original side watcher waits AEV0x12 or0x16, then source60/15/150tick orders to0x13/0x14/0x15, bomb-fire completion predicate remains intact.",
+    "runtime_requirements": [
+      "Track all6logical source actors, cap4/held sends and eventual original releases; do not infer closure from4visible.",
+      "Prove alive actors are native-drawn, source deaths/waves/doors, material/audio/texture misses and memory separately.",
+      "Known deferred-Goto issue from r203 is not assumed repaired in J; diagnose actual original callback/held behaviour if it appears, no source-force/allowlist/counter bypass."
+    ]
+  },
+  "resource_and_save": {
+    "current_magazine": 4,
+    "current_reserve": 15,
+    "queued_bell_expected_ammo_cost": 1,
+    "remaining_upper_ammo20": "Original ITA8B uncollected, requires actual opened corridor path and normal pickup; no ammo equivalence claim before pickup.",
+    "healing": "No invented heal; hero368/1200, Ashley600/600 authoritative. Preserve any actual injury/death screenshot and source Continue reset if death occurs.",
+    "end_save": "Chapter-end original UI/VMU save and normal reload remain OPEN. No room/door/source flag alone certifies chapter save."
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "scope": "SOURCE-ONLY successor015 continuation, independent reviewpending, NOguestallocation. Actual014partial andallrawinputs frozen.",
+  "created_utc": "2026-10-22T05:42:41.843292+00:00",
+  "observer_sha256": "acff6e46df7e0b8e5362966da7fd74e4fea3853083c6f4da5ec924ac06a40127",
+  "wrapper_sha256": "471e05d515d70c931fbdaa25bd9c89dec0c6ef000926e6af26bda53e4fb4b2bb",
+  "shell_sha256": "89e34913194b2b5944da84fc0603896a72c20a0f6f37a9e9bc20182065bb0d22",
+  "pins_sha256": "cb3c62871def0f354e3236be64021a8835f5c4ca3bbd4016ead99f0ff2ff37a3",
+  "actual014_seed_sha256": "3713cb2a4442ec5ddbf3dc4aec8dff107aa66721913e75813858c326a820adc5",
+  "actual014_audit_sha256": "3d11567fb53bacab219cbdd97ac769285965894173e7633696d08cf81ef57062",
+  "source_gate_case_sha256": "1ca7f43a0b4c7f336c75ff275b6208b976ceeea9d4d7cd68a31efd7d613f3db3",
+  "source_gate_cases": 14,
+  "default_21_pin_prepare": true,
+  "root_command": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-drain015.sh",
+    "--execute-allocated015"
+  ],
+  "root_allocation_required": {
+    "file": "DRAIN015-ROOT-ALLOCATION.json",
+    "allocated015": true,
+    "wrapper_sha256": "471e05d515d70c931fbdaa25bd9c89dec0c6ef000926e6af26bda53e4fb4b2bb",
+    "pins_sha256": "cb3c62871def0f354e3236be64021a8835f5c4ca3bbd4016ead99f0ff2ff37a3"
+  },
+  "inherited": "Native014alreadyinvoked originallever/drainintro; inheritedpGframes/exec/eventhold/sourceNo0 notnewprogress. Exact14fullstate+VMU/samemaster+ELF+unchanged14fixture, AutoLoadStateyes. No rearm, newcoldplacement, newlever, teleport, HP/AI/flag/selectionmemorywrites.",
+  "method": "ONE ordinarypage-A onlyknownactualENNo0offset74/op08next04/nativebutton1/wait0/table0/sel0/cur0/vptr+active+attr1012/sourcehash. Hostpage_advanced flag tracks sentpulse; actualnewtwochoiceopcode08offset132,next01/table2 thennativeYesrequired. OptionaloneLeft ifactualcur1; max3pulses,recheck+keyupfinally. Observeoriginaldrain/end untilnormal39close, noearlycloseatflag.",
+  "resources": {
+    "start_free_bytes": 20342374400,
+    "runtime_free_bytes": 19394461696,
+    "raw_seconds": 41,
+    "normalclose_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_cap_bytes": 62914560,
+    "global16": true,
+    "castle2": true,
+    "current_peer_charges_required": true
+  },
+  "unchanged_guard": "7aa4113d44b5bab5b1010649a432ed1d50e34aaf4de7fb4899aaf692055b0ba0",
+  "additional_trace_lock_pin": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688",
+  "acceptance": "Freshactualpage\u2192nativeYes\u2192sourceRSF0/1+areas+Stopreturn/source68exactactive. Earlyflags/source-onlycases/inheritedintro alone notcompletion. Source/renderGCfailure separate; no audio/performance/release/hardwareclaim."
+}

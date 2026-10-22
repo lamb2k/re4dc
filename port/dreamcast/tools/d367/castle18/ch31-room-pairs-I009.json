@@ -1,0 +1,19 @@
+{
+  "replace": {
+    "dc/tex/a/a7ed275f-c2425e1d.re4tex": "/root/re4data/private/castle18-ch31-source-pairs-20261019/textures/a7ed275f-c2425e1d.re4tex"
+  },
+  "remove": [],
+  "provenance": {
+    "directive": "Castle I-009 2026-10-19",
+    "source_fix": "boss18 c0a09950, original Castle prepared bytes reused",
+    "rooms": [
+      "r201",
+      "r218"
+    ],
+    "scope": "Global selected ROOM pair for both room fixtures; AUX_OBJ_NATIVE remains0. No body/core/model/material edit. Residency still needs the actual room gate.",
+    "source": "Original GC r201.das ARC9 TPL2+3",
+    "source_sha256": "57009ea20c309a9eac3de0eaf3333cd1a761011af7c689eba112242e771ff587",
+    "package_bytes": 8336,
+    "package_sha256": "1c2743e6dd88bf83ae490404b2f7ee803e431df8bef50df32ab65bc91de44b60"
+  }
+}

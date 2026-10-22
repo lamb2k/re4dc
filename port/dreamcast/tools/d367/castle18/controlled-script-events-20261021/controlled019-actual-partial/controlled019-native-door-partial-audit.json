@@ -1,0 +1,2285 @@
+{
+  "scope": "ACTUAL019 closed-files-only audit; no retry/new guest/attach/extra input or cap mutation.",
+  "utc": "2026-10-22T07:31:41.210994+00:00",
+  "functional_result": "PARTIAL: startup/readiness andnative placementat204Door4 executed; nativeAOPENprompt visible, ONEPostMessageX pulse but all13 samplednativeKey_trg acknowledgements0 andno doorrequest/actual209. PhysicalDoor1/leadercut untested. Causeofinputnonacknowledgement unclassified; notgamecrash/eventfailure.",
+  "startup_result": "No read/query/logexception. This actualrun did not log missing-filepending, so absencebranch remains source-casequalified; normalactualstartupgate passed.",
+  "supervisor_result": "PASS exactretainedPID signaled exit0",
+  "guard": {
+    "scope": "Owned process resources/time only; PID/path/start verified. Filesystem sampler isolated on daemon thread; deadline loop never performs filesystem I/O. Fail closed if sampler stale1s. WM_CLOSE at45s or resource boundary, terminate only same verified process at47.1s if needed. Asynchronous termination cleanup retains pinned handle until exit proof within47.5, preserving failed run status; no gameplay memory writes.",
+    "owner": {
+      "pid": 44276,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\flycast.exe",
+      "start_filetime": 134371276796594504,
+      "created_utc": "2026-10-22T07:27:59.667271+00:00",
+      "rights": "retained subprocess handle receipt"
+    },
+    "closed_identity": {
+      "initial_live_identity_pinned": true,
+      "retained_handle_signaled": true,
+      "exit_code": 0,
+      "postexit_times_available": true,
+      "postexit_path_query": false,
+      "proof_reason": "normal or absolute loop exit"
+    },
+    "process_exited": true,
+    "runtime_floor": 19394461696,
+    "capture_cap": 62914560,
+    "inner_input_seconds": 41,
+    "absolute_process_seconds": 47.5,
+    "exit_age": 39.608844078087714,
+    "actions": []
+  },
+  "harness": {
+    "name": "castle21-CONTROLLED-original209-door019",
+    "status": "RUN_COMPLETE",
+    "start_utc": "2026-10-22T07:27:59.506877+00:00",
+    "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+    "tracks": {
+      "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+      "kind": "release",
+      "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+    },
+    "seconds": 41,
+    "vmu": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event009\\data\\T0000_vmu_save_A1.bin",
+    "keys": null,
+    "stop": null,
+    "fixtures": {
+      "warp": {
+        "src": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\controlled-ch32-drain014-warp.txt",
+        "bytes": 159,
+        "sha256": "26b551c37eef728d17e3686cfb60763cde8c43b979dd5d1a029ca1f7f31a9ebe"
+      },
+      "pad": {
+        "src": null,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "w11": {
+        "src": null,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "errors": [],
+    "key_log": [],
+    "align": false,
+    "emu": "harness",
+    "emu_env": {},
+    "early_emulator_exit": 0,
+    "log_idle_s": 1.0,
+    "end_utc": "2026-10-22T07:28:39.760308+00:00",
+    "elapsed_s": 40.1,
+    "emulator_exited": true
+  },
+  "minimum_free": 145604657152,
+  "maximum_cap": 34753969,
+  "read_failure_count": 0,
+  "region_failure_count": 0,
+  "milestones": {
+    "startup_log_not_created_pending": null,
+    "startup_exact_state_load_and_mapping": {
+      "startup_exact_state_load_and_mapping": {
+        "RAM": 140689727881216,
+        "mapping_line": "00:00:635 hw\\mem\\addrspace.cpp:461 N[VMEM]: BASE 00007FF4D5410000 RAM(16 MB) 00007FF4E1410000 VRAM64(8 MB) 00007FF4D9410000 ARAM(2 MB) 00007FF4F5410000",
+        "state_load_line": "00:00:730 nullDC.cpp:360 N[SAVESTATE]: Loaded state ver 854 from C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\data\\disc.state size 28204558",
+        "mapping_precedes_load": true
+      },
+      "process_age": 0.7833299312624149,
+      "process_identity": {
+        "pid": 44276,
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\flycast.exe",
+        "start_filetime": 134371276796594504,
+        "created_utc": "2026-10-22T07:27:59.667271+00:00",
+        "rights": "retained subprocess handle receipt"
+      },
+      "initial_pG_region": {
+        "returned_bytes": 48,
+        "error": 0,
+        "requested_host": "0x7ff4e16f91dc",
+        "requested_bytes": 4,
+        "base": "0x7ff4e16f9000",
+        "allocation_base": "0x7ff4e1410000",
+        "region_bytes": 13725696,
+        "state": "0x1000",
+        "protect": "0x4",
+        "type": "0x40000",
+        "covers": true,
+        "committed": true,
+        "accessible": true
+      }
+    },
+    "initial_readable_native_sequence": {
+      "initial_readable_native_sequence": {
+        "process_age": 0.9553299312246963,
+        "pg": 2352652060,
+        "frame": 2605,
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x204",
+        "chapter": 7,
+        "Stop": "0x0",
+        "status0": "0x3080100",
+        "status1": "0x200",
+        "status3": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "Part": 1,
+        "previous_room": "0x205",
+        "next_room": "0x204",
+        "next_point": 1,
+        "scenario0": "0x840000",
+        "partner_ptr": 0,
+        "live_native_code_anchors_verified": true,
+        "player_ptr": 2359870976,
+        "player_pos": [
+          9569.224609375,
+          5999.99658203125,
+          -3662.234619140625
+        ],
+        "player_matrix": [
+          -0.17718790471553802,
+          -0.0,
+          -0.9841770529747009,
+          9569.224609375,
+          -0.0,
+          1.0,
+          -0.0,
+          5999.99658203125,
+          0.9841770529747009,
+          -0.0,
+          -0.17718790471553802,
+          -3662.234619140625
+        ],
+        "transformed_front_unclipped": [
+          9027.927230238914,
+          6249.99658203125,
+          -3759.687966734171
+        ],
+        "areas": {
+          "0x0": {
+            "ptr": 2359520528,
+            "floor": 0.0057373046875,
+            "height": 1000.0,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x208",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                -3.6889731884002686,
+                11000.0048828125,
+                -105673.0
+              ],
+              "angle": 0.028541050851345062
+            },
+            "quad": [
+              [
+                -1388.6806640625,
+                -893.1177368164062
+              ],
+              [
+                1401.8045654296875,
+                -861.5324096679688
+              ],
+              [
+                1326.92236328125,
+                536.5576171875
+              ],
+              [
+                -1447.115966796875,
+                397.48919677734375
+              ]
+            ]
+          },
+          "0x4": {
+            "ptr": 2359521152,
+            "floor": 5999.99853515625,
+            "height": 1000.0,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x209",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                574.0350341796875,
+                0.0057373046875,
+                120.4645767211914
+              ],
+              "angle": -1.3819975852966309
+            },
+            "quad": [
+              [
+                -11931.58203125,
+                -29502.669921875
+              ],
+              [
+                -10457.66015625,
+                -29301.81640625
+              ],
+              [
+                -10403.4765625,
+                -27625.251953125
+              ],
+              [
+                -11927.22265625,
+                -27503.802734375
+              ]
+            ]
+          },
+          "0xa": {
+            "ptr": 2359522088,
+            "floor": -0.001190185546875,
+            "height": 1163.8001708984375,
+            "enabled": true,
+            "type": 11,
+            "checkFlag": 1,
+            "trigger": 2,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                -2.5921813345236953e-31,
+                -2.5939568011911772e-31,
+                1.401298464324817e-45
+              ],
+              "angle": 8.96831017167883e-44
+            },
+            "quad": [
+              [
+                -714.1799926757812,
+                -15790.4765625
+              ],
+              [
+                785.8220825195312,
+                -15790.4765625
+              ],
+              [
+                785.8220825195312,
+                -14290.470703125
+              ],
+              [
+                -725.9551391601562,
+                -14304.771484375
+              ]
+            ]
+          }
+        },
+        "native_AEV04_clipped_hit": false,
+        "native_AEV0A_clipped_hit": false,
+        "native_AEV0A_executed": false,
+        "camera_no": -1,
+        "action": {
+          "active": 0,
+          "stop_old": 0,
+          "num": 0,
+          "work": [
+            {
+              "func": 2350164316,
+              "arg": 2359897296,
+              "kind": 16,
+              "slot": 2,
+              "type": 2,
+              "button": 1,
+              "d": 2360067264,
+              "flags": 128
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            }
+          ]
+        },
+        "saved_RSF205": 3254779904,
+        "saved_RSF204": 1073741824,
+        "warp": {
+          "flags": [
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "name": "castle21-CONTROLLED-ch32-drain0",
+          "room": "0x205",
+          "rooms": 2,
+          "room_frames": 797,
+          "max_entry": 1,
+          "n_go": 1,
+          "go0": "00000000a894e4454f331c46025e27470000000001010001",
+          "go1": "000000000000000000000000000000000000000000000000",
+          "go2": "000000000000000000000000000000000000000000000000",
+          "n_act": 0,
+          "n_rsf": 0,
+          "has_trg": 0,
+          "has_kill": 0
+        },
+        "actors": [
+          {
+            "ptr": "0x8cc83280",
+            "id": 76,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x2",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cc67420",
+            "id": 20,
+            "type": 7,
+            "source_list": 76,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cc66640",
+            "id": 20,
+            "type": 7,
+            "source_list": 75,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae7ec0",
+            "id": 20,
+            "type": 7,
+            "source_list": 74,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae70e0",
+            "id": 20,
+            "type": 8,
+            "source_list": 81,
+            "hp": 1800,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae4d40",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae3f60",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae26e0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae1900",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadf3a0",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cade5c0",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadd300",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadc520",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadaf80",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cada1a0",
+            "id": 78,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad68e0",
+            "id": 78,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad5b00",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad4280",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad34a0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8ca8d3e0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8ca8c600",
+            "id": 0,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1440,
+            "native_status": "0x0",
+            "be_flag": "0xf002077",
+            "routines": [
+              0,
+              0,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cad8f40",
+            "id": 75,
+            "type": 0,
+            "source_list": 255,
+            "hp": 0,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "physical_doors1": []
+      },
+      "RAM_base": "0x7ff4e1410000",
+      "no_inputs_before_readiness": true,
+      "exact_successful_pG_probe": {
+        "guest_address": "0x8c2e91dc",
+        "host_address": "0x7ff4e16f91dc",
+        "requested_bytes": 4,
+        "api_ok": true,
+        "bytes_read": 4,
+        "data_hex": "1c9f3a8c",
+        "process_identity": {
+          "pid": 44276,
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\flycast.exe",
+          "start_filetime": 134371276796594504,
+          "created_utc": "2026-10-22T07:27:59.667271+00:00",
+          "rights": "retained subprocess handle receipt"
+        }
+      }
+    },
+    "native_existing_goto_consumed": {
+      "native_existing_goto_consumed": {
+        "process_age": 1.0803299312246963,
+        "pg": 2352652060,
+        "frame": 2606,
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x204",
+        "chapter": 7,
+        "Stop": "0x0",
+        "status0": "0x3080100",
+        "status1": "0x8000200",
+        "status3": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "Part": 1,
+        "previous_room": "0x205",
+        "next_room": "0x204",
+        "next_point": 1,
+        "scenario0": "0x840000",
+        "partner_ptr": 0,
+        "live_native_code_anchors_verified": true,
+        "player_ptr": 2359870976,
+        "player_pos": [
+          -11180.197265625,
+          6000.99853515625,
+          -28483.19140625
+        ],
+        "player_matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -11180.197265625,
+          0.0,
+          1.0,
+          0.0,
+          6000.99853515625,
+          -0.0,
+          0.0,
+          1.0,
+          -28483.19140625
+        ],
+        "transformed_front_unclipped": [
+          -11180.197265625,
+          6250.99853515625,
+          -27933.19140625
+        ],
+        "areas": {
+          "0x0": {
+            "ptr": 2359520528,
+            "floor": 0.0057373046875,
+            "height": 1000.0,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x208",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                -3.6889731884002686,
+                11000.0048828125,
+                -105673.0
+              ],
+              "angle": 0.028541050851345062
+            },
+            "quad": [
+              [
+                -1388.6806640625,
+                -893.1177368164062
+              ],
+              [
+                1401.8045654296875,
+                -861.5324096679688
+              ],
+              [
+                1326.92236328125,
+                536.5576171875
+              ],
+              [
+                -1447.115966796875,
+                397.48919677734375
+              ]
+            ]
+          },
+          "0x4": {
+            "ptr": 2359521152,
+            "floor": 5999.99853515625,
+            "height": 1000.0,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x209",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                574.0350341796875,
+                0.0057373046875,
+                120.4645767211914
+              ],
+              "angle": -1.3819975852966309
+            },
+            "quad": [
+              [
+                -11931.58203125,
+                -29502.669921875
+              ],
+              [
+                -10457.66015625,
+                -29301.81640625
+              ],
+              [
+                -10403.4765625,
+                -27625.251953125
+              ],
+              [
+                -11927.22265625,
+                -27503.802734375
+              ]
+            ]
+          },
+          "0xa": {
+            "ptr": 2359522088,
+            "floor": -0.001190185546875,
+            "height": 1163.8001708984375,
+            "enabled": true,
+            "type": 11,
+            "checkFlag": 1,
+            "trigger": 2,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                -2.5921813345236953e-31,
+                -2.5939568011911772e-31,
+                1.401298464324817e-45
+              ],
+              "angle": 8.96831017167883e-44
+            },
+            "quad": [
+              [
+                -714.1799926757812,
+                -15790.4765625
+              ],
+              [
+                785.8220825195312,
+                -15790.4765625
+              ],
+              [
+                785.8220825195312,
+                -14290.470703125
+              ],
+              [
+                -725.9551391601562,
+                -14304.771484375
+              ]
+            ]
+          }
+        },
+        "native_AEV04_clipped_hit": true,
+        "native_AEV0A_clipped_hit": false,
+        "native_AEV0A_executed": false,
+        "camera_no": -1,
+        "action": {
+          "active": 1,
+          "stop_old": 0,
+          "num": 0,
+          "work": [
+            {
+              "func": 2350164316,
+              "arg": 2359521152,
+              "kind": 16,
+              "slot": 2,
+              "type": 2,
+              "button": 1,
+              "d": 2359870976,
+              "flags": 128
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            }
+          ]
+        },
+        "saved_RSF205": 3254779904,
+        "saved_RSF204": 1073741824,
+        "warp": {
+          "flags": [
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "name": "castle21-CONTROLLED-ch32-drain0",
+          "room": "0x205",
+          "rooms": 2,
+          "room_frames": 798,
+          "max_entry": 2,
+          "n_go": 2,
+          "go0": "00000000a894e4454f331c46025e27470000000001010001",
+          "go1": "00000000f1af2ec6fd87bb45c586dec60000000001010002",
+          "go2": "000000000000000000000000000000000000000000000000",
+          "n_act": 0,
+          "n_rsf": 0,
+          "has_trg": 0,
+          "has_kill": 0
+        },
+        "actors": [
+          {
+            "ptr": "0x8cc83280",
+            "id": 76,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x2",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cc67420",
+            "id": 20,
+            "type": 7,
+            "source_list": 76,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cc66640",
+            "id": 20,
+            "type": 7,
+            "source_list": 75,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae7ec0",
+            "id": 20,
+            "type": 7,
+            "source_list": 74,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae70e0",
+            "id": 20,
+            "type": 8,
+            "source_list": 81,
+            "hp": 1800,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae4d40",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae3f60",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae26e0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae1900",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadf3a0",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cade5c0",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadd300",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadc520",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadaf80",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cada1a0",
+            "id": 78,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad68e0",
+            "id": 78,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad5b00",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad4280",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad34a0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8ca8d3e0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8ca8c600",
+            "id": 0,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1440,
+            "native_status": "0x0",
+            "be_flag": "0x7002077",
+            "routines": [
+              0,
+              0,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cad8f40",
+            "id": 75,
+            "type": 0,
+            "source_list": 255,
+            "hp": 0,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "physical_doors1": []
+      },
+      "stage": 1
+    },
+    "immediate_native_door_A_recheck": {
+      "immediate_native_door_A_recheck": {
+        "process_age": 1.0803299312246963,
+        "pg": 2352652060,
+        "frame": 2606,
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x204",
+        "chapter": 7,
+        "Stop": "0x0",
+        "status0": "0x3080100",
+        "status1": "0x8000200",
+        "status3": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "Part": 1,
+        "previous_room": "0x205",
+        "next_room": "0x204",
+        "next_point": 1,
+        "scenario0": "0x840000",
+        "partner_ptr": 0,
+        "live_native_code_anchors_verified": true,
+        "player_ptr": 2359870976,
+        "player_pos": [
+          -11180.197265625,
+          6000.99853515625,
+          -28483.19140625
+        ],
+        "player_matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -11180.197265625,
+          0.0,
+          1.0,
+          0.0,
+          6000.99853515625,
+          -0.0,
+          0.0,
+          1.0,
+          -28483.19140625
+        ],
+        "transformed_front_unclipped": [
+          -11180.197265625,
+          6250.99853515625,
+          -27933.19140625
+        ],
+        "areas": {
+          "0x0": {
+            "ptr": 2359520528,
+            "floor": 0.0057373046875,
+            "height": 1000.0,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x208",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                -3.6889731884002686,
+                11000.0048828125,
+                -105673.0
+              ],
+              "angle": 0.028541050851345062
+            },
+            "quad": [
+              [
+                -1388.6806640625,
+                -893.1177368164062
+              ],
+              [
+                1401.8045654296875,
+                -861.5324096679688
+              ],
+              [
+                1326.92236328125,
+                536.5576171875
+              ],
+              [
+                -1447.115966796875,
+                397.48919677734375
+              ]
+            ]
+          },
+          "0x4": {
+            "ptr": 2359521152,
+            "floor": 5999.99853515625,
+            "height": 1000.0,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x209",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                574.0350341796875,
+                0.0057373046875,
+                120.4645767211914
+              ],
+              "angle": -1.3819975852966309
+            },
+            "quad": [
+              [
+                -11931.58203125,
+                -29502.669921875
+              ],
+              [
+                -10457.66015625,
+                -29301.81640625
+              ],
+              [
+                -10403.4765625,
+                -27625.251953125
+              ],
+              [
+                -11927.22265625,
+                -27503.802734375
+              ]
+            ]
+          },
+          "0xa": {
+            "ptr": 2359522088,
+            "floor": -0.001190185546875,
+            "height": 1163.8001708984375,
+            "enabled": true,
+            "type": 11,
+            "checkFlag": 1,
+            "trigger": 2,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                -2.5921813345236953e-31,
+                -2.5939568011911772e-31,
+                1.401298464324817e-45
+              ],
+              "angle": 8.96831017167883e-44
+            },
+            "quad": [
+              [
+                -714.1799926757812,
+                -15790.4765625
+              ],
+              [
+                785.8220825195312,
+                -15790.4765625
+              ],
+              [
+                785.8220825195312,
+                -14290.470703125
+              ],
+              [
+                -725.9551391601562,
+                -14304.771484375
+              ]
+            ]
+          }
+        },
+        "native_AEV04_clipped_hit": true,
+        "native_AEV0A_clipped_hit": false,
+        "native_AEV0A_executed": false,
+        "camera_no": -1,
+        "action": {
+          "active": 1,
+          "stop_old": 0,
+          "num": 0,
+          "work": [
+            {
+              "func": 2350164316,
+              "arg": 2359521152,
+              "kind": 16,
+              "slot": 2,
+              "type": 2,
+              "button": 1,
+              "d": 2359870976,
+              "flags": 128
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            }
+          ]
+        },
+        "saved_RSF205": 3254779904,
+        "saved_RSF204": 1073741824,
+        "warp": {
+          "flags": [
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "name": "castle21-CONTROLLED-ch32-drain0",
+          "room": "0x205",
+          "rooms": 2,
+          "room_frames": 798,
+          "max_entry": 2,
+          "n_go": 2,
+          "go0": "00000000a894e4454f331c46025e27470000000001010001",
+          "go1": "00000000f1af2ec6fd87bb45c586dec60000000001010002",
+          "go2": "000000000000000000000000000000000000000000000000",
+          "n_act": 0,
+          "n_rsf": 0,
+          "has_trg": 0,
+          "has_kill": 0
+        },
+        "actors": [
+          {
+            "ptr": "0x8cc83280",
+            "id": 76,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x2",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cc67420",
+            "id": 20,
+            "type": 7,
+            "source_list": 76,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cc66640",
+            "id": 20,
+            "type": 7,
+            "source_list": 75,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae7ec0",
+            "id": 20,
+            "type": 7,
+            "source_list": 74,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae70e0",
+            "id": 20,
+            "type": 8,
+            "source_list": 81,
+            "hp": 1800,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae4d40",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae3f60",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae26e0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae1900",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadf3a0",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cade5c0",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadd300",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadc520",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadaf80",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cada1a0",
+            "id": 78,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad68e0",
+            "id": 78,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad5b00",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad4280",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad34a0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8ca8d3e0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8ca8c600",
+            "id": 0,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1440,
+            "native_status": "0x0",
+            "be_flag": "0x7002077",
+            "routines": [
+              0,
+              0,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cad8f40",
+            "id": 75,
+            "type": 0,
+            "source_list": 255,
+            "hp": 0,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "physical_doors1": []
+      },
+      "stage": 1
+    },
+    "original_native_209_door_request": null,
+    "actual_209_entry": null,
+    "original_physicalDoor1_open_flag": null,
+    "original_leader_cut_camera3": null,
+    "original_leader_cut_camera2": null,
+    "original_leader_cut_return": null
+  },
+  "actual_command_writes": [
+    {
+      "controlled_existing_rig_command_write": true,
+      "stage": 1,
+      "address": "0x8c47ff48",
+      "before": "000000000000000000000000000000000000000000000000",
+      "after_requested": "00000000f1af2ec6fd87bb45c586dec60000000001000002",
+      "process_age": 0.9553299312246963,
+      "api_ok": true,
+      "bytes_written": 24,
+      "observed_after": "00000000f1af2ec6fd87bb45c586dec60000000001000002"
+    },
+    {
+      "controlled_existing_rig_command_write": true,
+      "stage": 1,
+      "address": "0x8c4801b6",
+      "before": "01",
+      "after_requested": "02",
+      "process_age": 0.9553299312246963,
+      "api_ok": true,
+      "bytes_written": 1,
+      "observed_after": "02"
+    },
+    {
+      "controlled_existing_rig_command_write": true,
+      "stage": 1,
+      "address": "0x8c47fff0",
+      "before": "01000000",
+      "after_requested": "02000000",
+      "process_age": 0.9553299312246963,
+      "api_ok": true,
+      "bytes_written": 4,
+      "observed_after": "02000000"
+    }
+  ],
+  "successful_command_bytes": 29,
+  "ordinary_input_pulses": [
+    {
+      "ordinary_owned_UI_pulse": "native204-Door4-A",
+      "stage": 1,
+      "seconds": 0.2,
+      "ack_observations": [
+        {
+          "frame": 2606,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 2606,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 2607,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 2608,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 2608,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 2608,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 2609,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 2610,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 2610,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 2610,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 2610,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 2611,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 2611,
+          "Key_trg": "0x0"
+        }
+      ],
+      "process_age": 1.283329931262415
+    }
+  ],
+  "closed_state": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\data\\disc.state",
+    "sha256": "669b920f06e89403a15d3796021878c39ee9807fe020487e6a8666220f635631",
+    "main_ELF_anchors": 4,
+    "native": {
+      "frame": 3684,
+      "phase": [
+        3,
+        0
+      ],
+      "room": "0x204",
+      "Part": 1,
+      "previous_room": "0x205",
+      "Stop": "0x0",
+      "health": [
+        1440,
+        1440,
+        600,
+        600
+      ],
+      "Key_on": "0x0",
+      "Key_trg": "0x0",
+      "player_pos": [
+        -11179.7578125,
+        6000.99853515625,
+        -28483.630859375
+      ],
+      "warp": {
+        "flags": [
+          1,
+          1,
+          0,
+          1,
+          1
+        ],
+        "rooms": 2,
+        "max_entry": 2,
+        "n_go": 2,
+        "go0": "00000000a894e4454f331c46025e27470000000001010001",
+        "go1": "00000000f1af2ec6fd87bb45c586dec60000000001010002",
+        "go2": "000000000000000000000000000000000000000000000000"
+      }
+    }
+  },
+  "sourcepins": {
+    "count": 37,
+    "sha256": "818945d5ab42c80ef6d18ef55ba8b7582addf8f803677e140d2d968ffa5436f3",
+    "all37_freshlymatched": true
+  },
+  "protected_inputs_fresh": {
+    "route-walk127/data/disc.state": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16",
+    "route-walk294/data/disc.state": "cb7a314b8fd0383af0b7baf17c2e87a712705beb122a1d39c7705553dd795258",
+    "route-walk-controlled-native-radio013/data/disc.state": "97b63602b83d6234a1603dc24a90fa42f2d0702db626ead2e4d4e5e20efafe13",
+    "route-walk-controlled-event009/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+    "route-walk-controlled-ch32-drain014/data/disc.state": "3713cb2a4442ec5ddbf3dc4aec8dff107aa66721913e75813858c326a820adc5",
+    "route-walk-controlled-ch32-drain014/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+    "route-walk-controlled-ch32-drain015/data/disc.state": "2236156faabd0def3e9f38d708dbe983d2632441cd3fba521ef8fab634eb5237",
+    "route-walk-controlled-ch32-drain015/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+    "route-walk-controlled-ch32-door016/data/disc.state": "a33b2ac44cce042d035f7a981e96cf57b19bec1484f04c86084ece22803f73e8",
+    "route-walk-controlled-ch32-door016/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+    "route-walk-controlled-ch32-door017/data/disc.state": "1b1485784a8c796fbaad18573002ae353f75d9b67c0b4b156e1724bf296ac04b",
+    "route-walk-controlled-ch32-door017/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+    "route-walk-controlled-ch32-door018/data/disc.state": "4d7178b9d7420156b39328396cae08661f92c297f4ed28794b145a3cfe03ecdc",
+    "route-walk-controlled-ch32-door018/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0"
+  },
+  "VMU019_sha256": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+  "screenshots": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\shots\\controlled-deadline-context\\controlled-context.json",
+      "sha256": "252e67e29ab191793ff13266699abd9db24c2aad126dbebebfd60c2761d53fe6",
+      "PNGs": [
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\shots\\controlled-deadline-context\\frames\\fb0.png",
+          "sha256": "e35f41e9f2fbc890779bf04b76a4468ea8e0c5880d75d3c53085683725c369a2",
+          "bytes": 164333
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\shots\\controlled-deadline-context\\frames\\fb1.png",
+          "sha256": "5cfb13dedf3adcb4c2aed3748df787862ee552978b9a1f6d6e5e581b9f9db85d",
+          "bytes": 164302
+        }
+      ]
+    }
+  ],
+  "visual_observation": "Workerinspectedactualdeadlinefb0: Leonatbarreddoorwaywithvisible redAOPENprompt/HUD. Confirms204doorready, doesnotproveinputdelivery/209entry.",
+  "raw_identities": {
+    "flycast.exe": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\flycast.exe",
+      "bytes": 14415872,
+      "sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a"
+    },
+    "emu.cfg": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\emu.cfg",
+      "bytes": 699,
+      "sha256": "6e6e65448d0d00944fe15caa197704d08b784c670d18b3a4cd76aa2a0ebcbc91"
+    },
+    "disc.gdi": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\disc.gdi",
+      "bytes": 87,
+      "sha256": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4"
+    },
+    "fixture-warp.txt": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\fixture-warp.txt",
+      "bytes": 159,
+      "sha256": "26b551c37eef728d17e3686cfb60763cde8c43b979dd5d1a029ca1f7f31a9ebe"
+    },
+    "flycast.log": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\flycast.log",
+      "bytes": 3798,
+      "sha256": "577e218b2f9c8836ccf6acac01e82587edcd367b251349e3ec9d894a1ae189c9"
+    },
+    "run-start.json": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\run-start.json",
+      "bytes": 543,
+      "sha256": "84e8e48d5989afa4373ad6d9dfec6261ecc33967d8e5c29eb76031557912ff7f"
+    },
+    "run-result.json": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\run-result.json",
+      "bytes": 1509,
+      "sha256": "86cb765bd497742df9954171838de922141d820e1fb7e0d6bbf4436b0b087899"
+    },
+    "run-output.txt": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\run-output.txt",
+      "bytes": 526369,
+      "sha256": "1d5f7c6640f965be4534e87babd6d36c4d327ddb90d1b48302cf9bf95bb483ac"
+    },
+    "controlled-door019-observer-summary.json": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\controlled-door019-observer-summary.json",
+      "bytes": 83217,
+      "sha256": "484240df41b36b4edc08c6438b7bff8e5a6d964c42c035c996b5cb2eb246efe3"
+    },
+    "controlled-door019-observations.jsonl": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\controlled-door019-observations.jsonl",
+      "bytes": 8439932,
+      "sha256": "d2c9a13f17ab9b06a49ba68938c594bbaf22256b98b3d45af5e08b91cea3fbb6"
+    },
+    "owned-resource-guard.json": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\owned-resource-guard.json",
+      "bytes": 159589,
+      "sha256": "be7d714e7e50145e25336c9a2152b1a9037c1d7ed2a179718380134e7ac6ed2e"
+    }
+  },
+  "allocation_sha256": "305a7223ad4d7c207b3fea342e9e2df2de5f8312fdb386de9ae21ccbacf14307",
+  "source_programme_assets": {
+    "source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+    "ELF": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+    "master": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+    "binding": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed"
+  },
+  "physical_release_performance_acceptance": false,
+  "next": "Preserveactual019source/pose/config advancement; no rewindto017/018. No retry/followingguestallocated. Source/read-only nativeinput-pathdiagnosis mayfollowrootdirection."
+}

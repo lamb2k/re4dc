@@ -1,0 +1,306 @@
+{
+  "source": "6f9d31b0e00497a75fdd7e25bb04f92305103087",
+  "program": "ce080eb290aec073f406e93da27911f4fa70b457768288f52a893175a6846e8e",
+  "elf": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+  "qualified": [
+    "Three cold QA reopening cycles and ordinary world return without stale map input",
+    "OPTIONS walls/floor/menu together, then ordinary resume and forward/back movement",
+    "Exact-program unedited checkpoint continuation with four immutable code anchors"
+  ],
+  "runs": {
+    "qa-cold01": {
+      "elapsed_s": 47.5,
+      "keys_executed": 10,
+      "errors": [],
+      "emulator_exited": true,
+      "final_source_sample": {
+        "host_s": 46.954,
+        "non_atomic": true,
+        "qa_frames": 164,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 564,
+          "stop": 0,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            50331904,
+            33554944,
+            0,
+            0
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 251666551,
+          "rno": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -82898.921875,
+            860.205078125,
+            -38488.046875
+          ],
+          "ang": [
+            0.0,
+            -0.12929999828338623,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c7058c0",
+          "motion_frame": 72.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "checkpoint_sealed": false,
+      "event_images": {
+        "qa-cold01\\events\\05-before-start\\frames\\fb0.png": "b056b921fbc97c40891e20e10cf9e52a0386268e91bfcdb87c3b276c6af72f76",
+        "qa-cold01\\events\\05-qa-chord-released\\frames\\fb0.png": "b056b921fbc97c40891e20e10cf9e52a0386268e91bfcdb87c3b276c6af72f76",
+        "qa-cold01\\events\\07-before-start\\frames\\fb0.png": "b056b921fbc97c40891e20e10cf9e52a0386268e91bfcdb87c3b276c6af72f76",
+        "qa-cold01\\events\\07-qa-chord-released\\frames\\fb0.png": "b056b921fbc97c40891e20e10cf9e52a0386268e91bfcdb87c3b276c6af72f76",
+        "qa-cold01\\events\\09-before-start\\frames\\fb0.png": "b056b921fbc97c40891e20e10cf9e52a0386268e91bfcdb87c3b276c6af72f76",
+        "qa-cold01\\events\\09-qa-chord-released\\frames\\fb0.png": "b056b921fbc97c40891e20e10cf9e52a0386268e91bfcdb87c3b276c6af72f76",
+        "qa-cold01\\events\\10-checkpoint-close\\frames\\fb0.png": "70f9611a63d21bfcbfe70d48046dbedccd6312b71c73bdfcaa40491bc05c24e8"
+      },
+      "checkpoint_tool_failure": "The run passed ordinary QA input, but its initial launcher used the plain runner; post-run optional checkpoint sealing found no state. No continuation uses it."
+    },
+    "pause-cold01": {
+      "elapsed_s": 47.8,
+      "keys_executed": 9,
+      "errors": [],
+      "emulator_exited": true,
+      "final_source_sample": {
+        "host_s": 46.922,
+        "non_atomic": true,
+        "qa_frames": 192,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            6,
+            1,
+            0,
+            0
+          ],
+          "frame": 797,
+          "stop": 2147483583,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            50331904,
+            33554944,
+            0,
+            268435456
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 251666551,
+          "rno": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "pos": [
+            -82908.8125,
+            860.20068359375,
+            -38480.484375
+          ],
+          "ang": [
+            0.0,
+            -0.12929999828338623,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c7058c0",
+          "motion_frame": 14.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "checkpoint_sealed": true,
+      "event_images": {
+        "pause-cold01\\events\\04-before-start\\frames\\fb0.png": "160157adab3358af09b80175a1b4744af01adf29f575b92785d11fea76cb16cc",
+        "pause-cold01\\events\\05-before-start\\frames\\fb0.png": "d1efe67422b333f2327406edd8d3d1fa0ad815fc0c46630579e000e53f677841",
+        "pause-cold01\\events\\07-before-start\\frames\\fb0.png": "b8aa27c2bfbf408c64c54ddac2e9d2ce4dcb32813160065eb7b640b6f53677b1",
+        "pause-cold01\\events\\08-before-start\\frames\\fb0.png": "b30d69f758a67b51e89c67233d50fde0cdf89bcaa2e453af0621017caf6de06d",
+        "pause-cold01\\events\\09-checkpoint-close\\frames\\fb0.png": "e766ee76d7f4944dec32cbb43d9a01db4f4cef7e3e85f2e5f61bf50845064ef1"
+      }
+    },
+    "pause-return01": {
+      "elapsed_s": 47.9,
+      "keys_executed": 5,
+      "errors": [],
+      "emulator_exited": true,
+      "final_source_sample": {
+        "host_s": 47.093,
+        "non_atomic": true,
+        "qa_frames": 1367,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 2184,
+          "stop": 0,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            50331904,
+            33554944,
+            0,
+            268435456
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 117448823,
+          "rno": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -82876.28125,
+            860.20068359375,
+            -38581.03515625
+          ],
+          "ang": [
+            0.0,
+            -0.12929999828338623,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c7058c0",
+          "motion_frame": 64.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "checkpoint_sealed": true,
+      "event_images": {
+        "pause-return01\\events\\02-before-start\\frames\\fb0.png": "2701875ea0812ad964e690d041c11e07d8ebe490d2d544cdb224fe15934dee47",
+        "pause-return01\\events\\03-before-start\\frames\\fb0.png": "2d64eda68ff09cb4abfc073a310989602a31ca25189f8bd10e901c33b47a8491",
+        "pause-return01\\events\\05-checkpoint-close\\frames\\fb0.png": "155ec0fcc592e7fd19608d85367943afe73b7749112d40e2e4a05e10c98fbc05"
+      }
+    }
+  },
+  "remaining": [
+    "Inventory qualification currently active",
+    "Movie/skip and held background",
+    "Death/Continue",
+    "Original room transitions",
+    "Combined release tier and physical Dreamcast acceptance"
+  ],
+  "scope": "Bounded functional Flycast only; no performance, release or hardware acceptance"
+}

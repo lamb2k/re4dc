@@ -1,0 +1,25 @@
+{
+  "scope": "Historical setter-only static metadata control; known EM_RTN reader defect. No cinematic acceptance. Successor c57ff60f0 awaits fullpair/image/runtime.",
+  "source": "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f",
+  "elf_sha256": "e3024f3c3a2baf3642677a75f79664ca7a4ab2499dc4c6ba7b49dd41459bff66",
+  "program_sha256": "453ff2f7ae824ecc6141b34649912e955c527482c04842743af8f5406e40aeb8",
+  "overlays": {
+    "em22.ovl": "8ea19e13923ac2c6cfb100239c0621ceb8e93141812d57ba838b8bf026b3ea1f",
+    "em2b.ovl": "042ed4aa42fdc66bb973aacd56f4e00068e60b82f2c171fbff03876aec2df16c",
+    "em2f.ovl": "840f4fa6cda622de468930be37a01ed805cc003146b37403262149b3a4dd86ad",
+    "em35.ovl": "7e64ff2044bfe3d54be528e4dace5faf4e587306f8ae90b8f0074063937c5d36",
+    "em3b.ovl": "659f777c65f72abbe40399f7742be3146ddc4cdcc31986609b0d683b7e61893a",
+    "pl0f.ovl": "e26a886cfdf7ad7b7a9b891527d68c4e2e739e13931e884e99fdb9e80804c9bc",
+    "pl11.ovl": "3864aa52f0ddf33c082a5168e965c5eeb2efc1602cc9138775bed572e3eaa1c5",
+    "pl14.ovl": "f611bca441978597b911ad20005003266849b776ee5153941c0a9f889b3585cd",
+    "sscrn.ovl": "be45d4adaa0de0c54917e482cc53e22d2dd3436733df7b6a6d091b2d86893d9a",
+    "st1_0.ovl": "81ffec777d7a27af8b7864217a37dbf02294b568f1e5f86bf7c817c04a9e6ceb",
+    "st1_1.ovl": "2554248d73ec12ba4f42cd4292ce29d91fc81b703c8ab479cd7686d7535eed45",
+    "st1_2.ovl": "fcf90ed0a44ea14ab63f21f6b052d7f5fa1b3b469184545d561d3a1f84167f44",
+    "st1_3.ovl": "de47f939a16894030199abb4153e508ec4b7e2600df052374bffa0ec6f8df40d",
+    "st2_0.ovl": "d7985959dc928795dcc4bf35701b081867e32c1139da2f94fad28a2052bb3b09"
+  },
+  "existing_overlay_binding_receipt": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-integration-prep-20261021/ganado-nontrace-v1/qualification.json",
+  "existing_recipe_sha256": "725a37281fef8b08b423158aa306523827ee8e4f06a7d410d669906bca8cf66e",
+  "not_run": "Binder prepared but not run against ELF; only historical DWARF export completed."
+}

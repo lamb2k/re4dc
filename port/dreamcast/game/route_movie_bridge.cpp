@@ -66,6 +66,10 @@ extern "C" void re4dc_far_shell_movie_restore();   // native_static.cpp far_shel
 static inline void re4dc_far_shell_movie_restore() {}
 #endif
 
+#if defined(RE4DC_MOTION_RESUME) && RE4DC_MOTION_RESUME
+extern "C" unsigned re4dc_motion_movie_restore();
+#endif
+
 // Event::ExeBeginEvt, lasting part: scenario event nesting, event-running status, begin func.
 static void routeBegin(unsigned flags, RouteEvtFunc func)
 {
@@ -97,6 +101,9 @@ static void routeEnd(unsigned id, unsigned flags, RouteEvtFunc func, int st)
     BitOff(pG->Status_flg[2], 0x00080000);
     BitOff(pG->Status_flg[2], 0x00010000);
     SceEventEnd(0);
+#if defined(RE4DC_MOTION_RESUME) && RE4DC_MOTION_RESUME
+    re4dc_motion_movie_restore();
+#endif
     re4dc_log("route cutscene: id=%05x terminal=%d end_func=%d pose=%s scenario0=%08x system=%08x room0=%08x\n",
               id, st, func != 0, (flags & ROUTE_MOVIE_KEEP_POSE) ? "kept" : "zero-parts", pG->Scenario_flg[0],
               pG->System_flg, pG->Room_flg[0]);
@@ -249,6 +256,9 @@ int RouteMoviePlay(unsigned id, unsigned flags, RouteEvtFunc func, RouteMovieTic
     }
 #endif
     SceEventEnd(0);
+#if defined(RE4DC_MOTION_RESUME) && RE4DC_MOTION_RESUME
+    re4dc_motion_movie_restore();
+#endif
     re4dc_log("route cutscene: id=%05x terminal=%d skip_func=%d end_func=%d pose=%s scenario0=%08x system=%08x\n",
               id, st, st == RE4DC_MOVIE_SKIP && func != 0, func != 0,
               (flags & ROUTE_MOVIE_KEEP_POSE) ? "kept" : "zero-parts", pG->Scenario_flg[0], pG->System_flg);

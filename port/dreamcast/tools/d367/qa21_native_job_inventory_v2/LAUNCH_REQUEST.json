@@ -1,0 +1,14 @@
+{
+  "scope": "UNALLOCATED corrected v2 SOURCE-only exact request; root must review failure HOLD/time contract before actual allocation",
+  "argv": [
+    "C:/Users/lambd/AppData/Local/Programs/Python/Python312/python.exe",
+    "-B",
+    "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_native_job_inventory_v2\\supervisor.py",
+    "--tools-sha256",
+    "dd43ac827378e107bf774f03f2be4ad68e51543a16683697f45cb5fd91a23734",
+    "--execute-root-allocation"
+  ],
+  "allocation_path": "C:/Game Dev/Emulators/codex-lanes/qa21-combined-regression/NATIVE-JOB-INVENTORY02-ROOT-ALLOCATION.json",
+  "allocation_template_sha256": "64b49d83f5281fca9f428d6e441ef9ce5a47a29a9853d865f6caee6ae26c1f1a",
+  "tools_sha256": "dd43ac827378e107bf774f03f2be4ad68e51543a16683697f45cb5fd91a23734"
+}

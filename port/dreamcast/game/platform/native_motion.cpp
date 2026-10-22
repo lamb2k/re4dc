@@ -3,6 +3,12 @@
 #include "native_motion.h"
 #include "re4dc_platform.h"
 #include "../../room/room_storage.hpp"
+#ifndef RE4DC_MOTION_RETIRE_PREFLIGHT
+#define RE4DC_MOTION_RETIRE_PREFLIGHT 0
+#endif
+#if RE4DC_MOTION_RETIRE_PREFLIGHT != 0 && RE4DC_MOTION_RETIRE_PREFLIGHT != 1
+#error MOTION_RETIRE_PREFLIGHT must be 0 or 1
+#endif
 #ifndef RE4DC_IO_PROBE
 #define RE4DC_IO_PROBE 0
 #endif
@@ -10,13 +16,21 @@
 // Total time spent in motion-key misses (read + check + relocate); room-entry telemetry.
 extern "C" { unsigned long long re4dc_motion_wait_total_us; }
 #endif
+#ifndef RE4DC_MOTION_RESUME
+#define RE4DC_MOTION_RESUME 0
+#endif
+#if RE4DC_MOTION_RESUME
+#include "motion_resume_journal.hpp"
+extern "C" unsigned re4dc_fixture_source_frame();
+extern "C" unsigned re4dc_heap_largest_current(unsigned*) __attribute__((weak));
+#endif
 #ifndef RE4DC_MOTION_RESERVE_SPILL
 #define RE4DC_MOTION_RESERVE_SPILL 0
 #endif
 #ifndef RE4DC_MOTION_COLD_POOL
 #define RE4DC_MOTION_COLD_POOL 0
 #endif
-#if RE4DC_MOTION_RESERVE_SPILL || RE4DC_MOTION_COLD_POOL
+#if RE4DC_MOTION_RESERVE_SPILL || RE4DC_MOTION_COLD_POOL || RE4DC_MOTION_RESUME
 extern "C" int re4dc_static_heap_free();   // ui_bridge.cpp: heap 4 free bytes (-1 when inactive)
 #endif
 #ifndef RE4DC_MOTION_COLD_POOL_CASTLE
@@ -38,6 +52,14 @@ static inline unsigned cold_pool_margin() {
 #include <cstdio>
 #include <cstring>
 #include <cstdint>
+#ifndef RE4DC_MOTION_CAPACITY
+#define RE4DC_MOTION_CAPACITY 0
+#endif
+#if RE4DC_MOTION_CAPACITY
+extern "C" void* re4dc_motion_alloc_optional(unsigned);
+extern "C" int re4dc_motion_heap_handle();
+extern "C" void* re4dc_motion_source_try_alloc(int,unsigned);
+#endif
 #ifndef RE4DC_MOTION_LEASE_LEAN
 #define RE4DC_MOTION_LEASE_LEAN 0
 #endif
@@ -72,14 +94,23 @@ static_assert(RE4DC_MOTION_PRESSURE_BYTES >= 65536 &&
 #ifndef RE4DC_MOTION_PRESSURE_BACKING
 #define RE4DC_MOTION_PRESSURE_BACKING 0
 #endif
+#if defined(RE4DC_MOTION_RESERVE_PACK) && RE4DC_MOTION_RESERVE_PACK
+extern "C" unsigned re4dc_heap_largest_current(unsigned*) __attribute__((weak));
+#endif
 #ifndef RE4DC_MOTION_RESERVE_PACK
 #define RE4DC_MOTION_RESERVE_PACK 0
+#endif
+#if RE4DC_MOTION_CAPACITY && (!RE4DC_MOTION_RESERVE_PACK || !RE4DC_MOTION_PRESSURE_BACKING)
+#error "motion capacity needs packed reserve and pressure backing"
 #endif
 #if RE4DC_MOTION_RESERVE_PACK && !RE4DC_MOTION_PRESSURE_BACKING
 #error "motion reserve packing needs backing accounting"
 #endif
 #if RE4DC_MOTION_PRESSURE_BACKING && (!RE4DC_MOTION_RESERVE || !RE4DC_MOTION_PRESSURE_BYTES)
 #error "motion backing accounting needs reserve and pressure budget"
+#endif
+#if RE4DC_MOTION_RESUME && (!RE4DC_MOTION_PRESSURE_BACKING || !RE4DC_MOVIE_HEAP_EVICT)
+#error "motion resume needs backing accounting and movie eviction"
 #endif
 #if RE4DC_MOTION_BOUNDED_R11F
 #if !RE4DC_MOTION_RESERVE || RE4DC_MOTION_USAGE_LOG
@@ -100,8 +131,15 @@ struct Binding {
     unsigned char* archive; unsigned bytes;
     const unsigned char* records; unsigned count;
     Slot* slots; unsigned budget, hot_bytes, resident;
+#if RE4DC_MOTION_CAPACITY
+    unsigned char overflow[32]; // only new reclaimable v2 payloads, never slabs/hot/v3
+    int overflow_heap;
+#endif
 #if RE4DC_MOTION_BOUNDED_R11F
     bool bounded; // static binding marker; checked before any suspended archive/slot access
+#endif
+#if RE4DC_MOTION_RESERVE_PACK
+    bool joined; // existing bounded flag stays in place; slab[1] is a non-owning half
 #endif
 #if RE4DC_MOTION_RESERVE
     // MOTION_RESERVE=1: the cold part of the budget (two clips of the largest cold size) is
@@ -115,6 +153,11 @@ struct Binding {
 };
 struct Owner { const void* thread; unsigned leases; };
 Binding bindings[kArchives]{};
+#if RE4DC_MOTION_RESUME
+re4dc::motion::ResumeJournal resume_journal;
+re4dc::motion::ResumeTickets resume_pending;
+bool resume_pending_live;
+#endif
 #if RE4DC_SUBSCREEN
 // Sub screen open (sscrn_bridge.cpp): the game's heaps 2/3/4 are suspended and their cells in
 // the swapped area hold sub screen data, so nothing already resident may be evicted (freed
@@ -135,6 +178,21 @@ inline void ws_touch(const Binding& b,unsigned i) {
 #endif
 std::uint64_t stamp;
 mutex_t lock=MUTEX_INITIALIZER;
+#if RE4DC_MOTION_CAPACITY
+const void* lock_owner;
+unsigned required_waiters;
+bool capacity_retiring;
+#if RE4DC_MOTION_RESUME
+const void* capacity_movie_owner;
+#endif
+bool overflow_key(const Binding& b,unsigned i) { return (b.overflow[i>>3] & (1u<<(i&7)))!=0; }
+void overflow_mark(Binding& b,unsigned i,bool on) {
+    const unsigned char bit=static_cast<unsigned char>(1u<<(i&7));
+    if(on)b.overflow[i>>3]|=bit;else b.overflow[i>>3]&=static_cast<unsigned char>(~bit);
+}
+void locked_enter() { int old=irq_disable();lock_owner=thd_current;irq_restore(old); }
+void locked_leave() { int old=irq_disable();lock_owner=nullptr;irq_restore(old); }
+#endif
 unsigned word(const unsigned char* p) { unsigned n;std::memcpy(&n,p,4);return n; }
 unsigned aligned(unsigned n) { return (n+31)&~31U; }
 #if RE4DC_MOTION_BOUNDED_R11F
@@ -204,7 +262,11 @@ struct Locked {
     // This guard's count keeps the static slot occupied across mutex_lock and
     // until its destructor. Retaining a lease need not find that same slot again.
     Owner* owner;
-    Locked():owner(owner_add()) { mutex_lock(&lock); }
+    Locked():owner(owner_add()) { mutex_lock(&lock);
+#if RE4DC_MOTION_CAPACITY
+        locked_enter();
+#endif
+    }
     void retain_lease() {
         int old=irq_disable();
         if(owner->thread!=thd_current || !owner->leases) {
@@ -224,18 +286,28 @@ struct Locked {
 #endif
     }
 #else
-    Locked() { owner_add();mutex_lock(&lock); }
+    Locked() { owner_add();mutex_lock(&lock);
+#if RE4DC_MOTION_CAPACITY
+        locked_enter();
 #endif
-    ~Locked() { mutex_unlock(&lock);owner_drop(); }
+    }
+#endif
+    ~Locked() {
+#if RE4DC_MOTION_CAPACITY
+        locked_leave();
+#endif
+        mutex_unlock(&lock);owner_drop();
+    }
 };
 const unsigned char* record(const Binding& b,unsigned i) { return b.records+20*i; }
 #if RE4DC_MOTION_RESERVE_PACK
 const unsigned char* reserved_base(const Binding& b,const unsigned char* p) {
     if(!p)return nullptr;
     const auto address=reinterpret_cast<std::uintptr_t>(p);
-    for(const auto* slab:b.slab)if(slab) {
+    for(unsigned i=0;i<(b.joined?1u:2u);++i)if(const auto* slab=b.slab[i]) {
         const auto base=reinterpret_cast<std::uintptr_t>(slab);
-        if(address>=base && address-base<b.slab_bytes)return slab;
+        const unsigned span=b.joined?2*b.slab_bytes:b.slab_bytes;
+        if(address>=base && address-base<span)return slab;
     }
     return nullptr;
 }
@@ -253,6 +325,9 @@ void discard(Binding& b,unsigned i) {
     if(s.data!=b.slab[0] && s.data!=b.slab[1])   // a slab stays with the binding
 #endif
     re4dc_motion_free(s.data);
+#if RE4DC_MOTION_CAPACITY
+    overflow_mark(b,i,false);
+#endif
     s={};b.resident-=bytes;stats.resident_bytes-=bytes;
 }
 #if RE4DC_MOTION_RESERVE
@@ -262,9 +337,9 @@ bool slab_busy(const Binding& b,const unsigned char* p) {
 }
 #if RE4DC_MOTION_RESERVE_PACK
 // First-fit gaps, derived from the existing slot table. Never move live/cached
-// payloads: a leased relocated FCV table keeps exactly the same address. Both
-// slab allocations and every subregion remain 32-byte aligned. No extra heap
-// metadata. Strict v3 profiles deliberately retain one whole clip per slab.
+// payloads: a leased relocated FCV table keeps exactly the same address. V2
+// prefers one allocation of the unchanged two-slab payload; its old two-cell
+// fallback remains packable separately. Strict v3 keeps two whole-clip cells.
 unsigned char* reserve_fit(const Binding& b,unsigned bytes) {
 #if RE4DC_MOTION_BOUNDED_R11F
     if(b.bounded) {
@@ -273,8 +348,9 @@ unsigned char* reserve_fit(const Binding& b,unsigned bytes) {
     }
 #endif
     if(bytes>b.slab_bytes)return nullptr;
-    for(auto* slab:b.slab)if(slab) {
-        const auto base=reinterpret_cast<std::uintptr_t>(slab),end=base+b.slab_bytes;
+    for(unsigned i=0;i<(b.joined?1u:2u);++i)if(auto* slab=b.slab[i]) {
+        const unsigned span=b.joined?2*b.slab_bytes:b.slab_bytes;
+        const auto base=reinterpret_cast<std::uintptr_t>(slab),end=base+span;
         auto candidate=base;
         while(candidate<=end-bytes) {
             auto next=candidate;
@@ -290,19 +366,54 @@ unsigned char* reserve_fit(const Binding& b,unsigned bytes) {
     }
     return nullptr;
 }
+// Same payload bound, with a single owning base when the raw SDK cell can
+// fit payload + MotionAllocation32 + MAD32 + SDKcell32. An absent query or
+// fragmented heap takes the old two-allocation path without a failed large
+// required allocation. A race/allocator refusal also falls back safely.
+bool reserve_allocate(Binding& b,unsigned largest) {
+    b.slab_bytes=aligned(largest);
+    bool v2=true;
+#if RE4DC_MOTION_BOUNDED_R11F
+    v2=!b.bounded;
+#endif
+    unsigned free_bytes=0;
+    const unsigned whole=2*b.slab_bytes;
+    if(v2 && re4dc_heap_largest_current &&
+       re4dc_heap_largest_current(&free_bytes)>=whole+96 && free_bytes>=whole+96) {
+        if(auto* base=static_cast<unsigned char*>(re4dc_motion_alloc(whole))) {
+            b.joined=true;b.slab[0]=base;b.slab[1]=base+b.slab_bytes;
+            stats.metadata_bytes+=whole;return true;
+        }
+    }
+    for(auto*& p:b.slab) {
+        p=static_cast<unsigned char*>(re4dc_motion_alloc(b.slab_bytes));
+        if(!p)return false;
+        stats.metadata_bytes+=b.slab_bytes;
+    }
+    return true;
+}
 #endif
 #endif
 void release_binding(Binding& b) {
     for(unsigned i=0;i<b.count;++i) if(b.slots[i].pins)fail("motion archive retired while pinned");
+#if RE4DC_MOTION_RESUME
+    resume_journal.binding_changed(unsigned(&b-bindings));
+#endif
     for(unsigned i=0;i<b.count;++i)discard(b,i);
     stats.metadata_bytes-=aligned(b.count*sizeof(Slot));stats.hot_bytes-=b.hot_bytes;
 #if RE4DC_MOTION_RESERVE
+#if RE4DC_MOTION_RESERVE_PACK
+    for(unsigned i=0;i<(b.joined?1u:2u);++i)if(b.slab[i])re4dc_motion_free(b.slab[i]);
+    // Charge only successful allocations, including partial fallback failure.
+    stats.metadata_bytes-=b.joined?2*b.slab_bytes:((b.slab[0]!=nullptr)+(b.slab[1]!=nullptr))*b.slab_bytes;
+#else
     for(auto* p:b.slab)if(p)re4dc_motion_free(p);
 #if RE4DC_MOTION_BOUNDED_R11F
     // New profile accounting charges each successful slab allocation separately.
     stats.metadata_bytes-=b.bounded?((b.slab[0]!=nullptr)+(b.slab[1]!=nullptr))*b.slab_bytes:2*b.slab_bytes;
 #else
     stats.metadata_bytes-=2*b.slab_bytes;
+#endif
 #endif
 #endif
 #if RE4DC_MOTION_USAGE_LOG
@@ -408,7 +519,37 @@ unsigned char* oom_evict_alloc(unsigned bytes) {
     return data;
 }
 #endif
+#if RE4DC_MOTION_CAPACITY
+// Caller owns the motion mutex. Never speculate while a required source request
+// is draining us. Reserve pointers and strict v3's two-cell policy never change.
+unsigned char* overflow_alloc(Binding& b,unsigned bytes) {
+#if RE4DC_SUBSCREEN
+    if(hold)return nullptr;
+#endif
+#if RE4DC_MOTION_BOUNDED_R11F
+    if(b.bounded)return nullptr;
+#endif
+    int old=irq_disable();const bool waiting=required_waiters!=0;irq_restore(old);
+    if(waiting || capacity_retiring)return nullptr;
+    unsigned pinned=0;
+    for(const auto& q:bindings)if(q.archive)for(unsigned j=0;j<q.count;++j) {
+        const auto& slot=q.slots[j];
+        if(slot.data && slot.pins && !reserved_data(q,slot.data))pinned+=aligned(word(record(q,j)+4));
+    }
+    // pressure_room_for may reject an all-pinned cap. Optional overflow must
+    // fall back to the established reserve path rather than create that failure.
+    if(bytes>unsigned(RE4DC_MOTION_PRESSURE_BYTES) || pinned>unsigned(RE4DC_MOTION_PRESSURE_BYTES)-bytes)return nullptr;
+    pressure_room_for(bytes);
+    auto* data=static_cast<unsigned char*>(re4dc_motion_alloc_optional(bytes));
+    if(data)b.overflow_heap=re4dc_motion_heap_handle();
+    return data;
+}
+#endif
+#if RE4DC_MOTION_RESUME
+unsigned* load(Binding& b,unsigned i,unsigned char* prepared=nullptr) {
+#else
 unsigned* load(Binding& b,unsigned i) {
+#endif
     const auto* e=record(b,i);auto& s=b.slots[i];
 #if defined(RE4DC_MOTION_STATS_LOG) && RE4DC_MOTION_STATS_LOG
     ws_touch(b,i);
@@ -416,6 +557,9 @@ unsigned* load(Binding& b,unsigned i) {
     if(s.data) { ++stats.hits;s.used=++stamp; }
     else {
         ++stats.misses;const auto started=timer_us_gettime64();
+#if RE4DC_MOTION_CAPACITY
+        bool new_overflow=false;
+#endif
         const unsigned size=word(e+4),bytes=aligned(size);
 #if RE4DC_MOTION_PRESSURE_BYTES
 #if !RE4DC_MOTION_PRESSURE_BACKING
@@ -437,7 +581,15 @@ unsigned* load(Binding& b,unsigned i) {
         }
 #endif
         if(re4dc_motion_current_heap()!=4)fail("motion miss outside owning room heap");
+#if RE4DC_MOTION_RESUME
+        // Resume preflight already allocated this exact owning-heap payload.
+        // Reuse the same read/retry/identity/relocation path without pressure,
+        // slab replacement, OOM eviction or a second allocation.
+        unsigned char* data=prepared;
+        if(!data) {
+#else
         unsigned char* data=nullptr;
+#endif
 #if RE4DC_MOTION_RESERVE
 #if RE4DC_SUBSCREEN
         if(!hold && b.slab_bytes && !word(e+16) && bytes<=b.slab_bytes) {
@@ -451,6 +603,10 @@ unsigned* load(Binding& b,unsigned i) {
                 for(auto* p:b.slab)if(!slab_busy(b,p)) { data=p;break; }
 #endif
                 if(data)break;
+#if RE4DC_MOTION_CAPACITY
+                data=overflow_alloc(b,bytes);
+                if(data) { new_overflow=true;break; }
+#endif
 #if RE4DC_MOTION_RESERVE_SPILL
                 // Both slabs busy: cache this key in heap 4 while the source keeps its margin (MOTION_RESERVE_SPILL).
                 if(
@@ -517,6 +673,9 @@ unsigned* load(Binding& b,unsigned i) {
         }
 #if RE4DC_MOTION_OOM_EVICT
         if(!data)data=oom_evict_alloc(bytes);
+#endif
+#if RE4DC_MOTION_RESUME
+        }
 #endif
         if(!data)fail("motion key allocation");
         re4dc::storage::Arena arena;arena.init(data,bytes);
@@ -602,6 +761,9 @@ unsigned* load(Binding& b,unsigned i) {
             table[j]=static_cast<unsigned>(reinterpret_cast<std::uintptr_t>(data)+offset);
         }
         s.data=data;s.used=++stamp;b.resident+=bytes;stats.resident_bytes+=bytes;
+#if RE4DC_MOTION_CAPACITY
+        overflow_mark(b,i,new_overflow);
+#endif
         if(stats.resident_bytes>stats.peak_cache_bytes)stats.peak_cache_bytes=stats.resident_bytes;
         ++stats.loads;const auto wait=timer_us_gettime64()-started;
 #if RE4DC_IO_PROBE
@@ -629,6 +791,108 @@ unsigned* load(Binding& b,unsigned i) {
     return reinterpret_cast<unsigned*>(s.data+prefix(s.data)-4*s.data[2]);
 }
 }
+#if RE4DC_MOTION_CAPACITY
+namespace {
+// Keep cancellation draining across mutex contention and every pin wait, not
+// merely while Locked is alive. No allocation, I/O or logging in this scope.
+struct RequiredScope {
+    RequiredScope() { owner_add();int old=irq_disable();++required_waiters;irq_restore(old); }
+    ~RequiredScope() { int old=irq_disable();--required_waiters;irq_restore(old);owner_drop(); }
+};
+bool can_wait_required() {
+    // KOS returns the complete prior SR. A partial IMASK, blocked exceptions
+    // (BL), or exception register bank (RB) is still a protected caller context.
+    // Restore that exact state; never enable it just to wait for cache readers.
+    constexpr unsigned protected_sr=0x300000f0U;
+    int old=irq_disable();bool allowed=thd_current && !irq_inside_int() && !(unsigned(old)&protected_sr) && lock_owner!=thd_current;
+    for(const auto& o:owners)if(o.thread==thd_current && o.leases)allowed=false;
+    irq_restore(old);return allowed;
+}
+// Required source memory may reclaim only candidate overflow. Existing hot
+// residency, slab backing and movie-victim tickets keep their original policy.
+Binding* overflow_victim(int heap,unsigned* index,bool* pinned) {
+    Binding* victim=nullptr;std::uint64_t oldest=~std::uint64_t(0);*pinned=false;
+    for(auto& b:bindings)if(b.archive && b.overflow_heap==heap)for(unsigned i=0;i<b.count;++i)if(overflow_key(b,i)) {
+        auto& slot=b.slots[i];
+        if(!slot.data)continue;
+        if(slot.pins) { *pinned=true;continue; }
+        if(slot.used<oldest) { oldest=slot.used;victim=&b;*index=i; }
+    }
+    return victim;
+}
+}
+extern "C" void* re4dc_motion_required_alloc(int heap,unsigned bytes) {
+    // Binding metadata/reserve admission already owns this mutex. Reclaim in
+    // place using only SDK try/free calls: no recursive lock or native alloc,
+    // no pin wait, and no false final required-allocation diagnostic.
+    int old=irq_disable();const bool internal=thd_current && lock_owner==thd_current;irq_restore(old);
+    if(internal) {
+#if RE4DC_SUBSCREEN
+        if(hold)return nullptr;
+#endif
+        if(re4dc_motion_heap_handle()!=heap)return nullptr;
+        for(;;) {
+            if(void* p=re4dc_motion_source_try_alloc(heap,bytes))return p;
+            unsigned i=0;bool pinned=false;auto* victim=overflow_victim(heap,&i,&pinned);
+            if(!victim)return nullptr;
+            discard(*victim,i);++stats.evictions;
+        }
+    }
+    // A same-thread evaluator, IRQ,
+    // or caller-masked critical section cannot wait for itself or another CPU
+    // owner; these unsupported call contexts retain the original NULL result.
+    if(!can_wait_required())return nullptr;
+    RequiredScope request;
+    for(;;) {
+        bool pinned=false;
+        {
+            Locked guard;
+#if RE4DC_SUBSCREEN
+            if(hold)return nullptr;
+#endif
+            if(re4dc_motion_heap_handle()!=heap)return nullptr;
+            for(;;) {
+                // Allocate before dropping the mutex: cache refill cannot take
+                // the gap just reclaimed for the exact required request.
+                if(void* p=re4dc_motion_source_try_alloc(heap,bytes))return p;
+                unsigned i=0;auto* victim=overflow_victim(heap,&i,&pinned);
+                if(!victim)break;
+#if RE4DC_MOTION_RESUME
+                // The movie's own staging request is still a movie loan.
+                // Background/equipment pressure during it is not a ticket.
+                if(capacity_movie_owner==thd_current)resume_journal.movie_evicted(unsigned(victim-bindings),i);
+#endif
+                discard(*victim,i);++stats.evictions;
+            }
+        }
+        if(!pinned)return nullptr;
+        // All selected lease consumers are bounded evaluator-only scopes; the
+        // source proof and host concurrent pin test are mandatory for this wait.
+        thd_pass();
+    }
+}
+extern "C" int re4dc_motion_capacity_retire() {
+    if(!can_wait_required())return 0;
+    RequiredScope request;
+    for(;;) {
+        bool pinned=false;
+        {
+            Locked guard;
+#if RE4DC_SUBSCREEN
+            if(hold)return 0;
+#endif
+            const int heap=re4dc_motion_heap_handle();
+            for(;;) {
+                unsigned i=0;auto* victim=overflow_victim(heap,&i,&pinned);
+                if(!victim)break;
+                discard(*victim,i);++stats.evictions;
+            }
+            if(!pinned) { capacity_retiring=true;return 1; }
+        }
+        thd_pass();
+    }
+}
+#endif
 extern "C" int re4dc_motion_thread_busy(const void* owner) {
     int old=irq_disable();unsigned busy=0;
     for(const auto& o:owners) if(o.thread==owner)busy=o.leases;
@@ -723,12 +987,22 @@ extern "C" int re4dc_motion_bind(void* archive,unsigned bytes) {
     // diagnostic until the source prefetch/concurrency closure is complete.
     // Hot entries are never LRU victims; a budget miss is explicit, not thrash.
     *b={a,bytes,mtc+32,count,slots,hot+2*largest,hot,0};
+#if RE4DC_MOTION_CAPACITY
+    capacity_retiring=false;
+#endif
 #if RE4DC_MOTION_BOUNDED_R11F
     b->bounded=bounded;
 #endif
     stats.metadata_bytes+=meta;stats.hot_bytes+=hot;
+#if RE4DC_MOTION_RESUME
+    resume_journal.binding_changed(unsigned(b-bindings));
+#endif
 #if RE4DC_MOTION_RESERVE
     if(largest) {
+#if RE4DC_MOTION_RESERVE_PACK
+        if(!reserve_allocate(*b,largest)) {re4dc_log("motion bind: reserve backing of 2x%u failed\n",b->slab_bytes);release_binding(*b);return 0;}
+        re4dc_log("motion reserve: backing=%s payload=%u\n",b->joined?"joined":"two-cell",2*b->slab_bytes);
+#else
         b->slab_bytes=aligned(largest);
         for(auto*& p:b->slab) {
             p=static_cast<unsigned char*>(re4dc_motion_alloc(b->slab_bytes));
@@ -741,6 +1015,7 @@ extern "C" int re4dc_motion_bind(void* archive,unsigned bytes) {
         if(!b->bounded)
 #endif
         stats.metadata_bytes+=2*b->slab_bytes;
+#endif
         re4dc_log("motion reserve: bind slabs=2x%u\n",b->slab_bytes);
     }
 #endif
@@ -797,6 +1072,9 @@ extern "C" int re4dc_motion_acquire(const void* header,unsigned** table) {
             const auto wait=timer_us_gettime64()-started;
             if(wait>stats.worst_wait_us)stats.worst_wait_us=wait;
 #endif
+#if RE4DC_MOTION_RESUME
+            resume_journal.acquired(bno,i,re4dc_fixture_source_frame());
+#endif
             return bno*256+i+1;
         }
     }
@@ -814,7 +1092,11 @@ extern "C" void re4dc_motion_unbind(void* archive) {
 }
 #if RE4DC_SUBSCREEN
 extern "C" int re4dc_motion_owner_live(const void* p);  // motion_bridge.cpp
-extern "C" void re4dc_motion_hold(int on) { Locked guard;hold=on!=0; }
+extern "C" void re4dc_motion_hold(int on) { Locked guard;hold=on!=0;
+#if RE4DC_MOTION_RESUME
+    if(hold){resume_journal.cancel_movie();resume_pending={};resume_pending_live=false;}
+#endif
+}
 // Sub screen close, after the area holds the game's bytes again: a slot table inside the area
 // is back to its state at open; clips loaded meanwhile came from heap 12, which is gone. Those
 // slots (and a binding whose table was in heap 12) are forgotten, not freed, and the resident
@@ -827,7 +1109,11 @@ extern "C" unsigned re4dc_motion_forget_dead_heaps() {
 #if RE4DC_MOTION_RESERVE
             stats.metadata_bytes-=2*b.slab_bytes;
 #endif
-            stats.metadata_bytes-=aligned(b.count*sizeof(Slot));stats.hot_bytes-=b.hot_bytes;b={};++n;continue;
+            stats.metadata_bytes-=aligned(b.count*sizeof(Slot));stats.hot_bytes-=b.hot_bytes;
+#if RE4DC_MOTION_RESUME
+            resume_journal.binding_changed(unsigned(&b-bindings));
+#endif
+            b={};++n;continue;
         }
         b.resident=0;
         for(unsigned i=0;i<b.count;++i) {
@@ -836,9 +1122,20 @@ extern "C" unsigned re4dc_motion_forget_dead_heaps() {
             // owner_live reads the allocator header before a base pointer.
             // Packed FCVs borrow the slab allocation; an interior FCV has none.
             const auto* owner=reserved_base(b,s.data);
-            if(s.data && !re4dc_motion_owner_live(owner?owner:s.data)){s={};++n;}
+            if(s.data && !re4dc_motion_owner_live(owner?owner:s.data)){
+#if RE4DC_MOTION_RESUME
+                resume_journal.key_forgotten(unsigned(&b-bindings),i);
+#endif
+#if RE4DC_MOTION_CAPACITY
+                overflow_mark(b,i,false);
+#endif
+                s={};++n;}
 #else
-            if(s.data && !re4dc_motion_owner_live(s.data)){s={};++n;}
+            if(s.data && !re4dc_motion_owner_live(s.data)){
+#if RE4DC_MOTION_RESUME
+                resume_journal.key_forgotten(unsigned(&b-bindings),i);
+#endif
+                s={};++n;}
 #endif
             if(!s.data)continue;
             b.resident+=aligned(word(record(b,i)+4));
@@ -851,14 +1148,26 @@ extern "C" unsigned re4dc_motion_forget_dead_heaps() {
 }
 #endif
 extern "C" void re4dc_motion_retire_all() {
-    Locked guard;for(auto& b:bindings)if(b.archive)release_binding(b);
+    Locked guard;
+#if RE4DC_MOTION_RETIRE_PREFLIGHT
+    // Validate the complete set under the same lock used for retirement.
+    // A later pinned binding must not leave earlier bindings already freed.
+    for(const auto& b:bindings)if(b.archive)
+        for(unsigned i=0;i<b.count;++i)
+            if(b.slots[i].pins)fail("motion archive retired while pinned");
+#endif
+    for(auto& b:bindings)if(b.archive)release_binding(b);
 }
 #if RE4DC_MOVIE_HEAP_EVICT
 // MOVIE_HEAP_EVICT=1 (game30.mk): a route movie whose staging allocation fails evicts the least recently
 // used unpinned motion key and retries (native_movie.cpp plm_alloc). The movie owns the frame, so no
 // character animates while it plays; an evicted key reloads from disc at its next use, as after
 // MOTION_OOM_EVICT. Returns the bytes freed, 0 when no key can go.
+#if RE4DC_MOTION_RESUME
+namespace { unsigned evict_heap_key(bool movie) {
+#else
 extern "C" unsigned re4dc_motion_evict_one() {
+#endif
     Locked guard;
 #if RE4DC_SUBSCREEN
     if(hold)return 0;
@@ -879,7 +1188,108 @@ extern "C" unsigned re4dc_motion_evict_one() {
     }
     if(!victim)return 0;
     const unsigned freed=aligned(word(record(*victim,index)+4));
+#if RE4DC_MOTION_RESUME
+    if(movie)resume_journal.movie_evicted(unsigned(victim-bindings),index);
+#endif
     discard(*victim,index);++stats.evictions;
     return freed;
+}
+#if RE4DC_MOTION_RESUME
+}
+extern "C" unsigned re4dc_motion_evict_one() { return evict_heap_key(false); }
+extern "C" unsigned re4dc_motion_movie_evict_one() { return evict_heap_key(true); }
+#endif
+#endif
+
+#if RE4DC_MOTION_RESUME
+extern "C" void re4dc_motion_movie_begin() {
+    Locked guard;
+#if RE4DC_SUBSCREEN
+    if(hold){resume_journal.cancel_movie();resume_pending={};resume_pending_live=false;return;}
+#endif
+    if(re4dc_motion_current_heap()!=4){resume_journal.cancel_movie();resume_pending={};resume_pending_live=false;return;}
+#if RE4DC_MOTION_CAPACITY
+    capacity_movie_owner=thd_current;
+#endif
+    if(!resume_journal.begin_movie(re4dc_fixture_source_frame())) {
+#if RE4DC_MOTION_CAPACITY
+        capacity_movie_owner=nullptr;
+#endif
+        resume_journal.cancel_movie();resume_pending={};resume_pending_live=false; // fail closed for an unexpected nested owner
+        re4dc_log("motion resume: nested movie owner, tracking cancelled\n");
+    }
+}
+extern "C" void re4dc_motion_movie_finish(int retiring) {
+    Locked guard;auto ended=resume_journal.finish_movie();
+#if RE4DC_MOTION_CAPACITY
+    capacity_movie_owner=nullptr;
+#endif
+#if RE4DC_SUBSCREEN
+    if(hold)retiring=1;
+#endif
+    if(retiring || re4dc_motion_current_heap()!=4){resume_pending={};resume_pending_live=false;return;}
+    // A skipped movie may immediately open its cancel/QTE clip before the
+    // route reaches its final boundary. Keep still-current tickets from both.
+    if(resume_pending_live)for(unsigned k=0;k<kArchives;++k)
+        if(resume_journal.current(resume_pending,k) && resume_journal.current(ended,k))
+            for(unsigned w=0;w<8;++w)ended.keys[k][w]|=resume_pending.keys[k][w];
+    resume_pending=ended;resume_pending_live=false;
+    for(const auto& row:resume_pending.keys)for(const auto bits:row)if(bits)resume_pending_live=true;
+}
+extern "C" unsigned re4dc_motion_movie_restore() {
+    Locked guard;if(!resume_pending_live)return 0;
+    auto tickets=resume_pending;resume_pending={};resume_pending_live=false;
+#if RE4DC_SUBSCREEN
+    if(hold)return 0; // no borrowed archive/record/slot access across suspension
+#endif
+    if(re4dc_motion_current_heap()!=4 || !re4dc_heap_largest_current)return 0;
+    if(!resume_journal.restrict_recent(tickets,re4dc_fixture_source_frame()))return 0;
+    unsigned count=0,bytes=0,margin=0;bool refused=false;
+    for(unsigned k=0;k<kArchives;++k) {
+        const auto& b=bindings[k];if(!b.archive || !resume_journal.current(tickets,k))continue;
+        for(unsigned i=0;i<b.count;++i)if(tickets.contains(k,i) && !b.slots[i].data) {
+#if RE4DC_MOTION_BOUNDED_R11F
+            if(b.bounded){refused=true;continue;} // v3 never gains a heap-key path
+#endif
+            const auto* e=record(b,i);bytes+=aligned(word(e+4));++count;
+            if(!word(e+16)) {
+                unsigned cold=~0u;
+#if RE4DC_MOTION_RESERVE_SPILL
+                cold=RE4DC_MOTION_RESERVE_SPILL;
+#endif
+#if RE4DC_MOTION_COLD_POOL
+                if(cold_pool_margin()<cold)cold=cold_pool_margin();
+#endif
+                if(cold==~0u)refused=true;
+                else if(cold>margin)margin=cold;
+            }
+        }
+    }
+    if(!count)return 0;
+    unsigned free_bytes=0,largest=re4dc_heap_largest_current(&free_bytes);
+    constexpr unsigned allocation_overhead=96; // MotionAllocation32 + MAD tag32 + SDK heap cell32
+    const unsigned overhead=count*allocation_overhead;
+    const unsigned need=bytes+overhead;
+    const bool cap=bytes<=RE4DC_MOTION_PRESSURE_BYTES && pressure_heap_bytes()<=RE4DC_MOTION_PRESSURE_BYTES-bytes;
+    if(refused || !cap || largest<need || free_bytes<need || margin>free_bytes-need) {
+        re4dc_log("motion resume: deferred keys=%u bytes=%u margin=%u free=%u largest=%u policy=%d cap=%d\n",count,bytes,margin,free_bytes,largest,refused?0:1,cap?1:0);
+        return 0;
+    }
+    unsigned restored=0,read=0;
+    for(unsigned k=0;k<kArchives;++k) {
+        auto& b=bindings[k];if(!b.archive || !resume_journal.current(tickets,k))continue;
+        for(unsigned i=0;i<b.count;++i)if(tickets.contains(k,i) && !b.slots[i].data) {
+            const unsigned n=aligned(word(record(b,i)+4));
+            largest=re4dc_heap_largest_current(&free_bytes);
+            // Other resource owners can allocate while storage yields. Stop
+            // safely rather than invoke OOM/pressure eviction or force memory.
+            if(re4dc_motion_current_heap()!=4 || largest<n+allocation_overhead || free_bytes<n+allocation_overhead || margin>free_bytes-n-allocation_overhead)goto done;
+            auto* data=static_cast<unsigned char*>(re4dc_motion_alloc(n));if(!data)goto done;
+            load(b,i,data);++restored;read+=n;
+        }
+    }
+ done:
+    re4dc_log("motion resume: planned=%u restored=%u bytes=%u deferred=%u evictions=0\n",count,restored,read,count-restored);
+    return restored;
 }
 #endif

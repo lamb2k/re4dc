@@ -1,0 +1,162 @@
+{
+  "ELF_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "selected": {
+    "GlobalWork": {
+      "root_die": "13795",
+      "size": 34432,
+      "members": {
+        "next_room": {
+          "offset": 40,
+          "type_die": "121a8",
+          "member_die": "13825"
+        },
+        "next_point": {
+          "offset": 42,
+          "type_die": "12191",
+          "member_die": "13a2f"
+        },
+        "NextPos": {
+          "offset": 44,
+          "type_die": "1223b",
+          "member_die": "13a49"
+        },
+        "NextY": {
+          "offset": 56,
+          "type_die": "121d8",
+          "member_die": "13a56"
+        },
+        "Stop_flg": {
+          "offset": 368,
+          "type_die": "121b4",
+          "member_die": "13b0d"
+        },
+        "room_id": {
+          "offset": 20382,
+          "type_die": "121a8",
+          "member_die": "13854"
+        },
+        "Part": {
+          "offset": 20381,
+          "type_die": "12191",
+          "member_die": "13877"
+        },
+        "room_id_prev": {
+          "offset": 20384,
+          "type_die": "121a8",
+          "member_die": "138e1"
+        },
+        "Scenario_flg": {
+          "offset": 20928,
+          "type_die": "14083",
+          "member_die": "13e39"
+        }
+      }
+    },
+    "SceAtWork": {
+      "root_die": "50a67",
+      "size": 156,
+      "members": {
+        "area": {
+          "offset": 4,
+          "type_die": "505eb",
+          "member_die": "50bf3"
+        },
+        "flag": {
+          "offset": 52,
+          "type_die": "4cd62",
+          "member_die": "50c00"
+        },
+        "type": {
+          "offset": 53,
+          "type_die": "4cd62",
+          "member_die": "50c0d"
+        },
+        "no": {
+          "offset": 54,
+          "type_die": "4cd62",
+          "member_die": "50c1a"
+        },
+        "checkFlag": {
+          "offset": 55,
+          "type_die": "4cd62",
+          "member_die": "50c26"
+        },
+        "trigger": {
+          "offset": 56,
+          "type_die": "4cd62",
+          "member_die": "50c33"
+        },
+        "checkType": {
+          "offset": 57,
+          "type_die": "4cd62",
+          "member_die": "50c40"
+        },
+        "arg": {
+          "offset": 60,
+          "type_die": "4cdc5",
+          "member_die": "50c67"
+        },
+        "func": {
+          "offset": 64,
+          "type_die": "503b7",
+          "member_die": "50c74"
+        },
+        "angle": {
+          "offset": 72,
+          "type_die": "4cd2a",
+          "member_die": "50cb5"
+        },
+        "angleRange": {
+          "offset": 73,
+          "type_die": "4cd2a",
+          "member_die": "50cc2"
+        },
+        "actBtnKind": {
+          "offset": 74,
+          "type_die": "4cd62",
+          "member_die": "50ccf"
+        },
+        "dstPos": {
+          "offset": 92,
+          "type_die": "4cdfa",
+          "member_die": "50a83"
+        },
+        "dstAngle": {
+          "offset": 104,
+          "type_die": "4cda6",
+          "member_die": "50a90"
+        },
+        "dstStage": {
+          "offset": 108,
+          "type_die": "4cd62",
+          "member_die": "50a9d"
+        },
+        "dstRoom": {
+          "offset": 109,
+          "type_die": "4cd62",
+          "member_die": "50aaa"
+        },
+        "lockType": {
+          "offset": 110,
+          "type_die": "4cd62",
+          "member_die": "50ab7"
+        },
+        "lockFlag": {
+          "offset": 111,
+          "type_die": "4cd62",
+          "member_die": "50ac4"
+        },
+        "doorFunc": {
+          "offset": 112,
+          "type_die": "4ffaa",
+          "member_die": "50ad1"
+        },
+        "dstPart": {
+          "offset": 116,
+          "type_die": "4cd62",
+          "member_die": "50ade"
+        }
+      }
+    }
+  }
+}

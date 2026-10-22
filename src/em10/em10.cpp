@@ -545,8 +545,18 @@ static inline int em10DmgDeadCk(cDmgInfo* d)
 
 #define EM10_WINDOW(w) ((w)->pWindow)
 
-// Routine test on the cModel status word (xFC / xFD as the upper half of `stat`).
+// Routine tests must use the same byte order as native routine writes. The helper
+// accepts the common model base (including player callers) and evaluates em once.
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GANADO_ROUTINE_BYTES) && RE4DC_GANADO_ROUTINE_BYTES
+static inline int Em10RoutineIs(const cModel* em, int r0, int r1)
+{
+    return em->r_no_0 == r0 && em->r_no_1 == r1;
+}
+#define EM_RTN(em, fc, fd) Em10RoutineIs((em), (fc), (fd))
+#else
+// Recovered big-endian status word: xFC / xFD occupy the upper half of stat.
 #define EM_RTN(em, fc, fd) (((em)->stat & 0xFFFF0000) == (u32) (((fc) << 24) | ((fd) << 16)))
+#endif
 
 // The bell / rung point (emwep.cpp): the byte-pointer copy keeps the pG reload before the next store.
 #define SET_BELL_POS(pos) memcpy((u8*) pG + ((u32) &((GlobalWork*) 0)->bell_pos), pos, sizeof(Vec))
@@ -581,7 +591,20 @@ struct PlayerPtr {
     cPlayer* p;
 };
 #define pPLS (((PlayerPtr*) &pPL)->p)
+// Routine words are big endian on the recovered target. Set the named bytes on native
+// little-endian builds so the branch's new routine runs in this same source tick.
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GANADO_ROUTINE_BYTES) && RE4DC_GANADO_ROUTINE_BYTES
+static inline void Em10RoutineBytes(cEm10* em, int r0, int r1)
+{
+    em->r_no_0 = u8(r0);
+    em->r_no_1 = u8(r1);
+    em->r_no_2 = 0;
+    em->r_no_3 = 0;
+}
+#define EM_RTN_SET(em, fc, fd) Em10RoutineBytes((em), (fc), (fd))
+#else
 #define EM_RTN_SET(em, fc, fd) ((em)->stat = (u32) (((fc) << 24) | ((fd) << 16)))
+#endif
 
 Em10Func Em10SetFunc = 0;
 

@@ -1,0 +1,51 @@
+{
+  "scope": "Source-qualified014 candidate and launch proposal only. NO guest/build/image allocation or execution. Independent perf21_scene review pending.",
+  "observer": "4240eedd162e968b4b381005bd19ea61c159baa64644719c7ef934764205750e",
+  "wrapper": "3d9f0169b3603a0f3135d5b5b3cc1372861be466922baef982795e85f58d1c42",
+  "shell": "8db6799ad4d6fc01256a577b27ee89da224c7aa69be8117b79b44d615c8b9936",
+  "pins": "6495d4b3de069c4006428c3b94e3e84a8eb7804b31424578bc1a691b4f956890",
+  "fixture": "26b551c37eef728d17e3686cfb60763cde8c43b979dd5d1a029ca1f7f31a9ebe",
+  "ABI": "f6726b590fe7be21f2ec257da8a96af595e3d01b7d703dd4ddc7bc4a92f74745",
+  "DWARF": "ac0c7fb410a572522b494954f906250e6194835dcd21690031ec5cbb8725fc2b",
+  "message0_identity": "d9954a3b9bac1b35b31f953323b4e820798a4514192a88d6d9c75b0e919e33fb",
+  "focused_source_checks": "446e0978209c5be9365719adbead528e2a721e28e239c57d78bfe70d6b7a69a6",
+  "source_checks_pass": 27,
+  "native_offset_checks": 34,
+  "root_command": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-drain014.sh",
+    "--execute-allocated014"
+  ],
+  "allocation_required": {
+    "file": "DRAIN014-ROOT-ALLOCATION.json",
+    "allocated014": true,
+    "wrapper_sha256": "3d9f0169b3603a0f3135d5b5b3cc1372861be466922baef982795e85f58d1c42",
+    "pins_sha256": "6495d4b3de069c4006428c3b94e3e84a8eb7804b31424578bc1a691b4f956890"
+  },
+  "resources": {
+    "start_free_bytes": 20342374400,
+    "runtime_free_bytes": 19394461696,
+    "raw_seconds": 41,
+    "normal_close_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_cap_bytes": 62914560,
+    "global_Flycasts": 16,
+    "castle_Flycasts": 2,
+    "peers": "Conservative floor retains18GiB+128MiB+200MiBstandingpeers+640MiBformerextra. Global64MiBsourcepeer included; root must charge any newer peer allocation before execution."
+  },
+  "method": "Cold205 at original lever. Actual native collision-clipped hit08 and registeredaction gate ordinaryA. Exact sourceMDT message0 native slot0/hash/readiness gates ordinaryYes; no blind input or memorywrites. Observe original drain/end+source68 status truthfully, retainpartial atbound. No optional upperdoor/goto, no snapshot seed or outcome flag presets.",
+  "protected": "Actual01397b636,auth127ec9ed,auth294cb7a,009VMU425595 rehashed by default wrapper; no use as snapshot seed.",
+  "known_limits": [
+    "Storedsource/ELF/asset qualification and purehostpredicates are not actual gameplay acceptance",
+    "Actionwork is a registered candidate; actualnativeclipped-hit and resulting exactsourceprompt establish execution. No selected-action-pointer ABI is invented.",
+    "Source68 absence alone is not a proven cap hold; inspect original log/cap reason separately",
+    "Camouflage CAST failure remains independent; no performance/release/hardwareclaim"
+  ],
+  "additional_guards": "5live32B maincode/vtable PT_LOAD anchors; transient readiness/coherence onlyskipsinput, preserves fullboundedobservation. No guestexecuted."
+}

@@ -1,0 +1,23 @@
+{
+  "scope": "CONTROLLED exact015state continuation: existing DBG_WARP Goto command setup, ordinary native Door0 to204Part1; no actor/room/outcome memory writes.",
+  "last": null,
+  "events": [
+    {
+      "inherited015_drain_completion": true,
+      "state_sha256": "2236156faabd0def3e9f38d708dbe983d2632441cd3fba521ef8fab634eb5237",
+      "actor68_active_not_observed": true,
+      "not_held_proof": true
+    },
+    {
+      "observer_failure": "AssertionError()",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\observe-controlled-ch32-door016.py\", line 176, in <module>\n    check();row=sample()\n                ^^^^^^^^\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\observe-controlled-ch32-door016.py\", line 50, in sample\n    pg=u32(0x8c2e91dc)\n       ^^^^^^^^^^^^^^^\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\observe-controlled-ch32-door016.py\", line 18, in <lambda>\n    u32=lambda a:struct.unpack('<I',read(a,4))[0]\n                                    ^^^^^^^^^\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\observe-controlled-ch32-door016.py\", line 17, in read\n    assert 0x8c000000<=a and a+n<=0x8d000000;buf=C.create_string_buffer(n);got=C.c_size_t();assert k.ReadProcessMemory(h,ram+a-0x8c000000,buf,n,C.byref(got))and got.value==n;return buf.raw\n                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    },
+    {
+      "exact_owned_WM_CLOSE": true,
+      "process_age": 0.6624111804994754
+    }
+  ],
+  "owned_close_sent": true,
+  "source_fields_not_acceptance_alone": true,
+  "no_209_command": true
+}

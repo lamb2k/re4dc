@@ -1,0 +1,16 @@
+from pathlib import Path
+import hashlib,json,shutil,subprocess,datetime
+L=Path(r'C:\Game Dev\Emulators\codex-lanes\castle18');R=Path(r'C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21');D=R/'recovered-j-content-20261021';T=Path(r'\\wsl.localhost\Ubuntu-24.04\root\probe\codex-castle18');O=T/'port/dreamcast/tools/d367/castle18/controlled-script-events-20261021'
+sha=lambda p:hashlib.file_digest(p.open('rb'),'sha256').hexdigest()
+paths=['port/dreamcast/tools/d367/castle18/build-test21-disc2.sh','port/dreamcast/tools/d367/ch2/ch2-build.sh','port/dreamcast/tools/d367/test15/t15-build.sh','port/dreamcast/tools/d367/route/route-build.sh','port/dreamcast/tools/d367/discsets/mkdisc2.py','port/dreamcast/game/tools/link.sh','port/dreamcast/game/tools/gen_overlay.py','port/dreamcast/game/tools/ovl_id_patch.py','port/dreamcast/tools/d367/build-r21.sh']
+result=subprocess.run(['wsl.exe','-d','Ubuntu-24.04','-u','root','--','git','-C','/root/probe/codex-castle18','diff','12a841d7c','--',*paths],capture_output=True,check=True);assert not result.stdout
+p=D/'frozen-master-programme-binding-20261021.json';j=json.loads(p.read_text()); assert j['overlay_count']==18
+stamp=datetime.datetime.now(datetime.timezone.utc).isoformat()
+side=dict(created_utc=stamp,receipt_sha256=sha(p),auditor_sha256=sha(L/'audit-frozen-master-programme-binding.py'),frozen_source_commit='12a841d7cfe2c747266b0c330555557e651a4af0',current_derivation_scripts_byte_identical_to_frozen_commit=paths,script_hashes={n:sha(T/n)for n in paths},audit_first_invocation='All binding assertions passed and final receipt written; unrelated cp1252 status refresh then raised UnicodeDecodeError. Original receipt unchanged; metadata refresh now uses UTF8. No target guest ran.',scope='Stored byte/source binding, no full historical per-TU dependency closure reconstruction, no live target or hardware acceptance.')
+q=D/'frozen-master-programme-binding-source-addendum.json';assert not q.exists();q.write_text(json.dumps(side,indent=2)+'\n',encoding='utf-8')
+for src in [p,q,L/'audit-frozen-master-programme-binding.py',L/'seal-frozen-master-binding.py']:shutil.copyfile(src,O/src.name)
+intro='CURRENT: PROGRAM_ELF_BINDING_AUDIT PASS; no active guest or next allocation. V5 source repair independently CLEAR7aa4113d; repair claim released. Exact ELF4d823→PT_LOAD raw78fb→masterb67 plus all18 overlay bindings PASS; nominationa692 is exact KOS scramble. Controlled009 VMU save/CRC PASS and V4failure/008seed boundaries remain separate. Authentic127/294 protected.\n\n'
+for name in ['STATUS.md','HANDBACK.md','INBOX.md']:
+ f=L/name;s=f.read_text(encoding='utf-8');f.write_text(intro+s,encoding='utf-8')
+f=L/'STATUS.md';s=f.read_text(encoding='utf-8');s=s.replace('V5 source cleanup repair is prepared for independentreview; no nextguest allocated.','V5 source cleanup repair independently CLEAR; exact master/ELF binding PASS. No next guest allocated.').replace('V5 source repair awaiting independentreview.','V5 source repair independently CLEAR; PROGRAM_ELF_BINDING_AUDIT PASS.').replace('V5source-only review pending.','V5 source-only review CLEAR; no new guest.');f.write_text(s,encoding='utf-8')
+print(json.dumps(dict(binding_sha256=sha(p),addendum_sha256=sha(q),auditor_sha256=sha(L/'audit-frozen-master-programme-binding.py'),metadata_only=True)))

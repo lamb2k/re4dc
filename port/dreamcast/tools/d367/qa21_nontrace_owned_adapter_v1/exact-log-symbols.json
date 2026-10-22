@@ -1,0 +1,31 @@
+{
+  "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+  "symbols": {
+    "_re4dc_logbuf": [
+      {
+        "address": 2352853856,
+        "bytes": 65536,
+        "type": "STT_OBJECT",
+        "section": 11
+      }
+    ],
+    "_re4dc_log_head": [
+      {
+        "address": 2352919396,
+        "bytes": 4,
+        "type": "STT_OBJECT",
+        "section": 11
+      }
+    ],
+    "_re4dc_stage": [
+      {
+        "address": 2352919392,
+        "bytes": 4,
+        "type": "STT_OBJECT",
+        "section": 11
+      }
+    ]
+  },
+  "reader_closed": true,
+  "scope": "ELF symbol identity only; no runtime"
+}

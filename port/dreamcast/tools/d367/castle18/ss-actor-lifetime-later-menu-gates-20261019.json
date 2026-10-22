@@ -1,0 +1,176 @@
+{
+  "scope": "Frozen e86 enabled healing continuation; original inputs, read-only source health/items/metadata. Diagnostic-origin source route, not whole chapter/current083/hardware acceptance.",
+  "elf": "c9f614ea31c94dc0c17b3bad7d5cf4903f97079df747ceab472312727defbb24",
+  "disc": "4b05422487fc729adf34c959df5d650c3280c2cb0b4a05f77ad81c447210072e",
+  "runs": {
+    "healneg01": {
+      "elapsed_s": 11.69,
+      "owned_emulator_exited": true,
+      "errors": []
+    },
+    "healon08": {
+      "elapsed_s": 21.05,
+      "owned_emulator_exited": true,
+      "errors": []
+    },
+    "healon09": {
+      "elapsed_s": 52.47,
+      "owned_emulator_exited": true,
+      "errors": []
+    },
+    "healon10": {
+      "elapsed_s": 51.97,
+      "owned_emulator_exited": true,
+      "errors": []
+    },
+    "healon11": {
+      "elapsed_s": 11.2,
+      "owned_emulator_exited": true,
+      "errors": []
+    },
+    "healon12": {
+      "elapsed_s": 7.16,
+      "owned_emulator_exited": true,
+      "errors": []
+    },
+    "healon13": {
+      "elapsed_s": 26.09,
+      "owned_emulator_exited": true,
+      "errors": []
+    },
+    "healon14": {
+      "elapsed_s": 6.16,
+      "owned_emulator_exited": true,
+      "errors": []
+    },
+    "healon15": {
+      "elapsed_s": 5.12,
+      "owned_emulator_exited": true,
+      "errors": []
+    },
+    "healfar01": {
+      "elapsed_s": 26.05,
+      "owned_emulator_exited": true,
+      "errors": []
+    },
+    "healfar02": {
+      "elapsed_s": 26.05,
+      "owned_emulator_exited": true,
+      "errors": []
+    },
+    "healfar03": {
+      "elapsed_s": 49.72,
+      "owned_emulator_exited": true,
+      "errors": []
+    }
+  },
+  "gates": {
+    "repeated_failed_Use_and_cancel": {
+      "result": "PASS",
+      "receipt": {
+        "frame": 3025,
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "metadata_zero": true,
+        "all_items_exact": true
+      },
+      "actual_successful_repeat_unexercised": true
+    },
+    "successful_Leon_Use_and_close": {
+      "result": "PASS_OBSERVED",
+      "before_health": [
+        720,
+        1440,
+        600,
+        600
+      ],
+      "after_health": [
+        1440,
+        1440,
+        600,
+        600
+      ],
+      "recipient": 0,
+      "one_original_spray_consumed": true,
+      "all_other_item_ammo_bytes_exact": true,
+      "active_pending_while_swapped": [
+        1,
+        1
+      ],
+      "metadata_zero_on_close": 48,
+      "compiled_original_reset_call_order_separate": true,
+      "receipts": [
+        "SSCERT unpark restored=1 rows=1 archives=2/2 assets=32/32 infos=32/32 dropped=0/23 temporary=563 serial=1489 exhausted=0",
+        "subscreen backing: close area=8c89eea0 restored=3145728 restore_us=362799 hash=b7ec7b40 ok pool_free=166624"
+      ],
+      "intended_far_Ashley_input_attempt": "INVALID: one-tick right was not accepted; actual target0 explicitly retained, never called far refusal"
+    },
+    "far_Ashley_refusal": {
+      "result": "PASS_REFUSAL_ONLY",
+      "viewed_selection": "healfar01: three-tick right then independent visual readback",
+      "viewed_original_text": "Ashley has to be beside you to heal her!",
+      "source_healing": 0,
+      "target": 1,
+      "health": [
+        720,
+        1440,
+        600,
+        600
+      ],
+      "all_items_ammo_exact": true,
+      "pending": 0,
+      "close_result": "FAIL: completed message flag is read from wrong original-platform field; see independent source/DWARF/state audit"
+    },
+    "completed_message_wrong_field": {
+      "result": "CONFIRMED_SOURCE_AND_SAVED_STATE",
+      "audit_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\workers\\ch32\\healing\\message-field-layout-saved-state-audit.json",
+      "audit_sha256": "4f47bd53e2a3e291f6048a24b6749378c3fcf132aabf169fb17b2caddda9beb2",
+      "message_size": 236,
+      "control_mes_offset": 8,
+      "typed_flags2_offset": "0x104",
+      "legacy_alias_offset": "0xFC",
+      "legacy_reads": "Message.be_flag",
+      "before": {
+        "frame": 6112,
+        "flags2": 1,
+        "be_flag": 1,
+        "m_pMes": "0x8c8ee374"
+      },
+      "after": {
+        "frame": 6873,
+        "flags2": 2,
+        "be_flag": 0,
+        "r_no_0": 1,
+        "m_pMes": "0x8c8ee376",
+        "Loop": 1
+      },
+      "selection_alias_separate_source_risk": {
+        "legacy": "0x1D1",
+        "typed": "0x1D9",
+        "guest_yes_no_failure_not_claimed": true
+      }
+    }
+  },
+  "pending": [
+    "successful genuinely injured Ashley healing and deferred partner reset",
+    "repeated successful or mixed-target guest Use",
+    "current083 integration",
+    "source message refusal completion correction and runtime gate"
+  ],
+  "invalid_or_unexercised": {
+    "healon04": "copied entrance guard rejected before input; previously retained",
+    "healon10": "genuine ordinary Leon death while returning; no Ashley injury, not repair failure",
+    "healon11": "ordinary Follow did not take within bounded host guard",
+    "healon14": "far-target intended input mismatch; actual positive Leon result retained separately",
+    "Ashley_positive": "UNEXERCISED; main will preserve a genuine injured production CardSave, no repeated artificial injury hunt",
+    "far03_close": "FAIL as above; not called a general engine hang"
+  },
+  "private_proof": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\workers\\ch32\\healing\\enabled-later-menu-gates-and-message-blocker.json",
+    "sha256": "87fafa97e711d34e81a5544000f36a3f1728b65c1ec30da9212a0ab24df291f9"
+  }
+}

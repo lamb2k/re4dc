@@ -432,6 +432,10 @@ done:
 // the first load, registers every texture (+ animation), the est / sst / path tables and the
 // effect models. A repeated load returns 1 silently unless flag == 1 (then it is an error).
 // 0 on a NULL / wrong-version file.
+#if defined(RE4DC_GUARD_FAIL_INJECT) && RE4DC_GUARD_FAIL_INJECT && (RE4DC_GUARD_FAIL_INJECT_MASK & 2)
+extern "C" void OSReport(const char* fmt, ...);
+extern int re4dc_guard_inject_armed;
+#endif
 int EspDataLoad(u32 addr, u32 owner, int flag)
 {
     EffData* data = (EffData*) addr;
@@ -448,6 +452,31 @@ int EspDataLoad(u32 addr, u32 owner, int flag)
         OWNER_ERR(owner, "EspDataLoad():EffData [%s:NULL] Invalid.", "EspDataLoad():EffData [%x:NULL] Invalid.");
         return 0;
     }
+#if defined(RE4DC_GUARD_FAIL_INJECT) && RE4DC_GUARD_FAIL_INJECT && (RE4DC_GUARD_FAIL_INJECT_MASK & 2)
+    // GUARD_FAIL_INJECT (test only, lane guards22): a first effect admission in room GUARD_FAIL_INJECT_ROOM arrives
+    // damaged N times (>= 99: always): the load takes the invalid-file path (as a bad disc read would).
+    {
+        static int injected;
+        if (re4dc_guard_inject_armed && sys->ownerCnt[owner] == 0 && pG->room_id == RE4DC_GUARD_FAIL_INJECT_ROOM &&
+            (RE4DC_GUARD_FAIL_INJECT >= 99 || injected < RE4DC_GUARD_FAIL_INJECT)) {
+            injected++;
+            OSReport("guard inject: effect load refused owner %u (%d)\n", (unsigned) owner, injected);
+#if !defined(RE4DC_EFFECT_ADMISSION_GUARD) || !RE4DC_EFFECT_ADMISSION_GUARD
+            sys->ownerCnt[owner]++;
+#endif
+            return 0;
+        }
+    }
+#endif
+#if defined(RE4DC_EFFECT_ADMISSION_GUARD) && RE4DC_EFFECT_ADMISSION_GUARD
+    // Validate the first admission before publishing its reference. Existing
+    // registrations retain the original duplicate/refcount semantics below.
+    if (sys->ownerCnt[owner] == 0 && data->version != 0xB) {
+        OWNER_ERR2(owner, "EspDataLoad():EffData [%s:0x%x] Invalid.", "EspDataLoad():EffData [%x:0x%x] Invalid.",
+                   data);
+        return 0;
+    }
+#endif
     if (sys->ownerCnt[owner] <= 0xC7) {
         sys->ownerCnt[owner]++;
     }

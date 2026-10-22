@@ -1,0 +1,15 @@
+# Private 792-entry source integration candidate
+
+This candidate extends frozen source33504b9df434b82cd92e7bab3bb4630663a72ddd with the final142 alpha rectangle packages. WORLD_RECT21 remains default0. No production recipe, pack, programme, image or guest is changed by this source unit.
+
+All650 prior descriptor rows are retained exactly. The142 additions comprise119 compact,16 exact-BASE repeat alternatives and7 missing-profile-only compact representations. They add142 unique keys, not158. Together with the frozen1004 and614 opaque conversions, there are1760 unique converted/package-qualified candidates; the tested Flycast pack still contains1004.
+
+The compositor verifies the sealed91303 packet, actual142 package SHA/descriptor/bodyCRC, corrected metric identities, actual29 final-world hashes/CRC/FNV and their resolved650 parents. Across508 new aliases, all material fields, logical dimensions, geometry identity and placements remain exact.468 references preserve the shipped class;40 intentional-unlisted references remain explicitly distinct. No class file is rewritten or restamped. The27 physical certificates exclude r11f/r200. The existing r107 AREA policy bridge is unchanged from33504.
+
+Inputs: packet seal9b388f786df86266145c3d77c127036281540cd0c4d75ab8c30b26d859ca3ade; additionsdb5d4d32bfb37c4f256666b3a7eebcd053f868038b5b270068a317fa5b70f406; lineage62b05566694fd7c5942d83de6220e77008be3b1b7c82e58009e6cbaaeb9c8fe2; corrected metrics31a5789424686776c716321a9d34a5d0b12def3c807774b85bcaf7f384d330f5. Private paths stay in the external root receipt.
+
+Host qualification: actual frozen042 linear lookup versus this sorted792 table,25344 comparisons, ASan/UBSan, maximum10 binary iterations. Includes disabled admission, all11 descriptor/key mutations and unsigned boundary keys; failure preserves both output scales. The actual certificate helper passes551 world/mesh/room/header/body/size mutation cases and1102 null/short controls across all29 worlds, including held-room refusal. These are source/host results, not SH4 object/link or target timing evidence.
+
+External root receipt: C:/Flycast-Evidence/re4-dreamcast/mipmap21-next792-integration-20261022/ROOT-selected792-20261022.json, SHAa8e5a20512639e775e8f31415cbcf72957236204caf11a96045dbc0e13949339. Initial host lookup receipt preserved separately because its source list named inherited650 tools; corrected source identities are in host-20261022-02. Initial compositor UV parser failed before writes; the corrected parser completed all gates.
+
+Next: independent actual-source/asset review, fresh resolved-flag SH4 controls and programme tool closure, then separately allocated full-pack materialization and image/guest qualification. The full1760 pack requires7293 members and57 index sectors, so all offsets must be recomputed; no full1760 SHA exists yet. Alpha appearance, filtered mip selection, lifecycle, VRAM, frame time, full release and physical Dreamcast acceptance remain open. The menu-window restoration experiment remains disabled after+102 low-level requests/+168032B in the tested inventory cycle.

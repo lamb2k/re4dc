@@ -1,0 +1,207 @@
+{
+  "scope": "Bounded read-only CLOSED014 outcome audit; zero live attach/input/newguest/build/image. Main owns PNG visual review.",
+  "created_utc": "2026-10-22T05:36:00.777051+00:00",
+  "functional_status": "PARTIAL_NATIVE_LEVER_AND_DRAIN_INTRO_OPEN; DRAIN_NOT_COMPLETED",
+  "closure_status": "PASS_V5_NORMAL_OWNED_EXIT0",
+  "guard": {
+    "owner": {
+      "pid": 21020,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain014\\flycast.exe",
+      "start_filetime": 134371207057512164,
+      "created_utc": "2026-10-22T05:31:45.758382+00:00",
+      "rights": "retained subprocess handle receipt"
+    },
+    "exit_age": 39.715238401375245,
+    "closed_identity": {
+      "initial_live_identity_pinned": true,
+      "retained_handle_signaled": true,
+      "exit_code": 0,
+      "postexit_times_available": true,
+      "postexit_path_query": false,
+      "proof_reason": "normal or absolute loop exit"
+    },
+    "minimum_free_bytes": 145030914048,
+    "maximum_cap_logical_bytes": 30282497,
+    "receipt_sha256": "8383be4f83f750cda500055ba2f6ef1e485ea48074232dec18d3bebcfb3f6f9b"
+  },
+  "harness": {
+    "elapsed_s": 40.1,
+    "errors": [],
+    "status": "RUN_COMPLETE",
+    "receipt_sha256": "d091a8bdbbbd098d9911d4bba13cd1dffce4599c72e035618ce9f14ef005afe1"
+  },
+  "closed_state": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain014\\data\\disc.state",
+    "sha256": "3713cb2a4442ec5ddbf3dc4aec8dff107aa66721913e75813858c326a820adc5",
+    "native": {
+      "source_frame": 629,
+      "room": "0x205",
+      "phase": [
+        3,
+        0
+      ],
+      "chapter": 7,
+      "Stop": "0x80400100",
+      "health": [
+        1440,
+        1440,
+        600,
+        600
+      ],
+      "status1": "0x18000610"
+    },
+    "exact_main_ELF_anchors": 4,
+    "message0": {
+      "vptr": "0x8c2ce56c",
+      "be_flag": 1,
+      "flags2": 1,
+      "button": 1,
+      "attribute": "0x1012",
+      "wait": 0,
+      "table_size": 0,
+      "selection": 0,
+      "current": 0,
+      "text": "0x8ca9593e",
+      "opcode": 8,
+      "next_opcode": 4
+    },
+    "source_identity": {
+      "language": 1,
+      "table": "0x8ca957e0",
+      "message_no": 0,
+      "start": "0x8ca958f4",
+      "end": "0x8ca9597c",
+      "source_hash": "81de22f3af7f69f5bf996eb294de0b236b4669e6e4464a46a5ecc0873d8787f2",
+      "current_offset_bytes": 74
+    }
+  },
+  "actual_pulses": [
+    {
+      "ordinary_owned_UI_pulse": "lever-A",
+      "seconds": 0.2,
+      "ack_observations": [
+        {
+          "frame": 211,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 211,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 211,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 211,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 211,
+          "Key_trg": "0x80080480"
+        },
+        {
+          "frame": 211,
+          "Key_trg": "0x80080480"
+        },
+        {
+          "frame": 211,
+          "Key_trg": "0x80080480"
+        },
+        {
+          "frame": 213,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 213,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 213,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 215,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 216,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 216,
+          "Key_trg": "0x0"
+        }
+      ],
+      "process_age": 25.272236246149987
+    }
+  ],
+  "observed_no_Yes_no_end": true,
+  "last_observer_selected": {
+    "frame": 628,
+    "Stop": "0x80400100",
+    "status1": "0x18000610",
+    "saved_RSF205": 0,
+    "source68_active_observed": false,
+    "native_AEV08_executed": true,
+    "live_native_code_anchors_verified": true
+  },
+  "diagnosis": "Actual native sourceMDT0 intro waits atcode08 withoutchoices(table0), followed bycode04newpage; originalMessage::code08 nonchoice branch acceptsA/B then sourcecode00/07/08 buildsYesNo. Frozen014controller requiredtable2 and omitted ordinarypageadvance, so never sentYes. This is an incomplete hostmethod, not a proven game drain defect.",
+  "source_sites": [
+    "src/game/mes.cpp:1517..1524 nonchoice08 nextcursor andA/B",
+    "src/game/mes.cpp:1372 code04 newpage",
+    "src/st2/r205.cpp:523..570 originalprompt/drain/end"
+  ],
+  "save": {
+    "native_save_write_seen": false,
+    "runtime_VMU_sha256": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+    "source009_unchanged": true,
+    "card_log": [
+      {
+        "line": 473,
+        "text": "card-vmu: op=mount file=-1 vbl=15 rc=0"
+      },
+      {
+        "line": 484,
+        "text": "card-vmu: op=info file=0 vbl=3 rc=0"
+      },
+      {
+        "line": 501,
+        "text": "card-vmu: op=sysread file=20 vbl=2 rc=0"
+      }
+    ]
+  },
+  "screenshots": [
+    {
+      "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain014\\shots\\controlled-deadline-context\\controlled-context.json",
+      "sha256": "e588b51e4402e5281e1d0f433affb017df3697a3e66e518916ce15714f8d7fa3",
+      "PNGs": [
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain014\\shots\\controlled-deadline-context\\frames\\fb0.png",
+          "sha256": "040bbbd603f2e61c847beb8163b8a4300d8da29138bfa50b92ad8cbc10fb6aa3"
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain014\\shots\\controlled-deadline-context\\frames\\fb1.png",
+          "sha256": "4f41346cc461e746820bf28d768a9bce3fc17e4ff8fccfd1787675be2fe6846a"
+        }
+      ]
+    }
+  ],
+  "protected_inputs": {
+    "route-walk127/data/disc.state": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16",
+    "route-walk294/data/disc.state": "cb7a314b8fd0383af0b7baf17c2e87a712705beb122a1d39c7705553dd795258",
+    "route-walk-controlled-native-radio013/data/disc.state": "97b63602b83d6234a1603dc24a90fa42f2d0702db626ead2e4d4e5e20efafe13",
+    "route-walk-controlled-event009/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0"
+  },
+  "programme": {
+    "ELF_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+    "master_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+    "binding_receipt_sha256": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed"
+  },
+  "source_controls": {
+    "observe-controlled-ch32-drain014.py": "c2b0331770e8f013e3d68a1522814e8d2b655eb2595cd11d62998a72cda31688",
+    "run-controlled-ch32-drain014.py": "dbdb673f9b8bc0ef7fb86b9e9d21d98e756523563493de2b120bc1a63980f600",
+    "controlled-ch32-drain014-pins.json": "3d01155a3c1bd7c4b4c85c1d1d8f23b5ced1d94dd1626fdb9ffac9bfb5f331bd"
+  },
+  "next": "No retry/newguest allocated. Separate015 source-only sameactual014-state continuation may addONE exactknownMDT0pageA thenactualnativeYes; preserveall014bytes/evidence."
+}

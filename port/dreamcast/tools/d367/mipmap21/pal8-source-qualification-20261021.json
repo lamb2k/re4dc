@@ -1,0 +1,114 @@
+{
+  "schema": "re4dc-pal8-source-qualification-1",
+  "source_commit": "a6f05767baf0fd5f6f3630b97b75b5e6b3566849",
+  "source_base": "892c10dde",
+  "controls": "dc4e5e507 pre-PAL8 runtime",
+  "default_off_knobs": [
+    "TEX_PAL8_ALPHA",
+    "TEX_PAL8_MIPMAP"
+  ],
+  "required_parents": {
+    "TEX_PAL8_ALPHA": [
+      "TEX_PAL4_ALPHA=1"
+    ],
+    "TEX_PAL8_MIPMAP": [
+      "TEX_PAL8_ALPHA=1",
+      "CAST_MIPMAP=1"
+    ]
+  },
+  "tests": {
+    "focused_cases": 28,
+    "passed": 27,
+    "optional_numpy_skipped": 1,
+    "actual_real_fixture_host_cases": 8,
+    "independent_original_and_PAL8_level_decodes": 20,
+    "base_and_all_existing_chain_RGBA_alpha_exact": true,
+    "host_and_SH4_OFF_objects_exact": true
+  },
+  "SH4_objects": [
+    {
+      "label": "control",
+      "UI_VRAM": 0,
+      "object_sha256": "5ff24a5455cc1c53d25ec3d1cc8b4d3ee02749a069d950f3ee0618faa93df524",
+      "text_bytes": 7510,
+      "data_bytes": 52,
+      "bss_bytes": 2129,
+      "planner_static_frame_bytes": null
+    },
+    {
+      "label": "off",
+      "UI_VRAM": 0,
+      "object_sha256": "5ff24a5455cc1c53d25ec3d1cc8b4d3ee02749a069d950f3ee0618faa93df524",
+      "text_bytes": 7510,
+      "data_bytes": 52,
+      "bss_bytes": 2129,
+      "planner_static_frame_bytes": null
+    },
+    {
+      "label": "on",
+      "UI_VRAM": 0,
+      "object_sha256": "e8f0373a65e1c8c62701500d22293e68556fcab8a025328999181e02a0dca511",
+      "text_bytes": 8302,
+      "data_bytes": 52,
+      "bss_bytes": 4257,
+      "planner_static_frame_bytes": 468
+    },
+    {
+      "label": "control",
+      "UI_VRAM": 1,
+      "object_sha256": "6302b96f47b2bc59abd72a1c9b1ff9b0bd5c1b714d249a6e7696d3e4ca3f15c9",
+      "text_bytes": 7618,
+      "data_bytes": 52,
+      "bss_bytes": 2129,
+      "planner_static_frame_bytes": null
+    },
+    {
+      "label": "off",
+      "UI_VRAM": 1,
+      "object_sha256": "6302b96f47b2bc59abd72a1c9b1ff9b0bd5c1b714d249a6e7696d3e4ca3f15c9",
+      "text_bytes": 7618,
+      "data_bytes": 52,
+      "bss_bytes": 2129,
+      "planner_static_frame_bytes": null
+    },
+    {
+      "label": "on",
+      "UI_VRAM": 1,
+      "object_sha256": "e2e4b42d8fba35e901ac351c77d3ca7bb8e356cafa3e7862aa250953370151f4",
+      "text_bytes": 8438,
+      "data_bytes": 52,
+      "bss_bytes": 4257,
+      "planner_static_frame_bytes": 468
+    }
+  ],
+  "private_receipts": [
+    {
+      "set": "mipmap21-pal8-runtime-qualification-20261021",
+      "files": 25,
+      "SHA256SUMS_sha256": "f8e89a5635c4f2da42017d7bf471c4348d64bc63461741624f70fd9dbc79a725"
+    },
+    {
+      "set": "mipmap21-r105-exact-pal8-20261021",
+      "files": 10,
+      "SHA256SUMS_sha256": "e03ad9e86f9e973dad36ecb4fdd3cb66ef010c72d8486ee5deab7be75e185869"
+    }
+  ],
+  "request_examples": {
+    "original_base": 131072,
+    "PAL8_base": 66048,
+    "original_native_mips": 174768,
+    "PAL8_mips": 87896,
+    "scope": "Actual Package host allocator calls in both UI modes, not target residency."
+  },
+  "palette_transaction": "After ordinary payload upload, before any palette write or owner mutation. No extra palette preflight disc read. Failure leaves backing owned until close().",
+  "corrected_enabled_only_baseline_defects": [
+    "Live pack-window release closes an invalid unowned handle.",
+    "PAL4 exact-word sharing may confuse legacy ARGB1555 and ARGB4444 interpretation."
+  ],
+  "consumer_source": "native_ui.cpp shared pvr_format callers; no renderer or SH4ZAM edit.",
+  "open_gates": [
+    "Full-program OFF identity and combined KOS/VRAM/palette capacity.",
+    "Target sampler/look with exact selected scene and later same-scene timing.",
+    "No recipe/default/release/SD changes. No blanket conversion of228 data-fit keys."
+  ]
+}

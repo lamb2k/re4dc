@@ -36,6 +36,8 @@ class cModel { public: unsigned serial;void* pParts;cModelInfo* pModelInfo;unsig
 #include "actor_lifetime.h"
 #include "actor_transaction_diag.h"
 #define RE4DC_LEON_LIKE(app) ((app)==0x100u)
+#define RE4DC_LEON_HEADLESS 0
+#define RE4DC_HEAD_APP(app) 0
 constexpr unsigned kRe4dcActorRoles=8u;
 extern "C" unsigned re4dc_registry_sections(unsigned) {return 0;}
 static unsigned log_lines;static char last_log[512];
@@ -62,7 +64,12 @@ struct Role { unsigned appearance,role,source_bin,source_tpl;const Model* model;
 struct SourceBlob { const Model* model;unsigned family,bin;Digest normalized; };
 enum class Error : unsigned { None,BadRange };
 Model test_model{},other_model{};
-Role roles[kTestRole+1];SourceBlob source_blobs[kTestBlob+1];
+Role roles[kTestRole+1];
+#if TEST_PARTNER_FIXTURE
+SourceBlob source_blobs[kTestBlob+22]; // BIN4 plus 21 exact additional BINs; all fit the 64-bit host mask.
+#else
+SourceBlob source_blobs[kTestBlob+1];
+#endif
 #if RE4DC_NATIVE_MODEL_REGISTRY_PACK
 constexpr unsigned kBaseRoles=sizeof(roles)/sizeof(roles[0]),kBaseBlobs=sizeof(source_blobs)/sizeof(source_blobs[0]);
 struct RoomRows { const Role* roles;const SourceBlob* blobs;unsigned role_count,blob_count,generation; };
@@ -284,6 +291,66 @@ void capacity() {
     swap_open();CHECK(park.narchive==kParkArchives && park.revoked_at_open==1);ui_frees();swap_close();
     unsigned back=0;for(unsigned k=0;k<5;++k)back+=proof(a[k]);CHECK(back==kParkArchives);
 }
+#if TEST_PARTNER_FIXTURE
+// Two real source archives adopted through the production entry point: the r207 capacity shape,
+// not direct fabrication of live certificates. Extra BINs have the same independently hashed fixture
+// geometry at distinct source entries; only BIN4 has a model-info instance.
+Arch make_many(unsigned char* at,unsigned char* info_at,unsigned nbins) {
+    CHECK(nbins>=1 && nbins<=23);
+    constexpr unsigned bytes=0x1900,boff=0x200,tploff=0x1800;
+    std::memset(at,0,bytes);const unsigned count=nbins+1;
+    std::memcpy(at,&count,4);
+    for(unsigned i=0;i<count;++i) {
+        const unsigned off=i==1?tploff:boff+(i?i-1:0)*0x80;
+        std::memcpy(at+16+i*4,&off,4);
+        std::memcpy(at+16+count*4+i*4,i==1?"TPL":"BIN",3);
+        if(i!=1)pristine_bin(at+off);
+    }
+    const unsigned self=unsigned(reinterpret_cast<std::uintptr_t>(at+tploff));
+    std::memcpy(at+tploff+8,&self,4);
+    re4dc_actor_archive_adopt(at,at,bytes,2);
+    for(unsigned i=0;i<nbins;++i) {
+        Arch part{at+boff+i*0x80-kBin,nullptr,{}};
+        relocate(part);
+    }
+    Arch a{at,reinterpret_cast<cModelInfo*>(info_at),{}};
+    *a.info=cModelInfo{reinterpret_cast<ModelData*>(at+boff),at+tploff,nullptr};
+    a.m.pModelInfo=a.info;a.m.serial=1;re4dc_actor_info_adopt(a.info);return a;
+}
+void partner_capacity() {
+    // Extra source entries 6..27; 23 BINs can exercise the still-refused 33-asset case.
+    unsigned char raw[kBin];pristine_bin(raw);unsigned c,f;crcfnv(raw,kBin,c,f);
+    for(unsigned i=1;i<=21;++i)source_blobs[kTestBlob+i]={&test_model,2,5+i,{kBin,c,f}};
+    auto pair=[](unsigned n) {
+        Arch a=make_many(W+0x10000,W+0x24000,n);
+        Arch b=make_many(W+0x14000,W+0x24100,10);
+        CHECK(proof(a) && proof(b));CHECK(live_archives()==2);
+        return std::vector<Arch>{a,b};
+    };
+    reset();auto a=pair(22);swap_open();
+#if RE4DC_SS_CERT_PARTNER_CAPACITY
+    CHECK(park.narchive==2 && park.nasset==32 && park.revoked_at_open==0);
+#else
+    CHECK(park.narchive==1 && park.nasset==22 && park.revoked_at_open==1);
+#endif
+    ui_frees();swap_close();CHECK(proof(a[0]));
+#if RE4DC_SS_CERT_PARTNER_CAPACITY
+    CHECK(proof(a[1]));CHECK(park.published_assets==32);
+#else
+    CHECK(!proof(a[1]));
+#endif
+    // The larger park must still reject a changed source archive and an unsaved byte.
+    reset();a=pair(22);swap_open();backing[0x14000+0x210]^=1;swap_close();
+    CHECK(proof(a[0]) && !proof(a[1]));
+    reset();a=pair(22);hole_lo=reinterpret_cast<std::uintptr_t>(W+0x14008);hole_hi=hole_lo+1;
+    swap_open();CHECK(park.revoked_at_open==1);swap_close();CHECK(proof(a[0]) && !proof(a[1]));
+    // Capacity is bounded: 23+10 still cannot park both. The 23rd BIN uses no new template,
+    // so add its reviewed source row temporarily in the existing unused row zero.
+    source_blobs[0]={&test_model,2,27,{kBin,c,f}};
+    reset();a=pair(23);swap_open();CHECK(park.narchive==1 && park.nasset==23 && park.revoked_at_open==1);
+    swap_close();CHECK(proof(a[0]) && !proof(a[1]));
+}
+#endif
 void room_rows_change() {
 #if RE4DC_NATIVE_MODEL_REGISTRY_PACK
     reset();{room_rows_publish(nullptr,0,nullptr,0,7);Arch a=make(W+0x10000,W+0x20000);swap_open();swap_close();CHECK(proof(a));}
@@ -324,6 +391,9 @@ int main() {
 #if RE4DC_SS_CERT
     repair();restore_failed();bytes_changed();skipped_free_cell();cross_boundary();genuine_retire();overlapping_owner();
     outside_objects();serials();nested_and_pending();capacity();room_rows_change();unrelocated_at_open();
+#if TEST_PARTNER_FIXTURE
+    partner_capacity();
+#endif
 #endif
     std::printf("swap_park_test ss_cert=%d wide=%d role_words=%u blob_bits=%u test_role=%u test_blob=%u checks=%u fails=%u log=%u %s\n",
                 RE4DC_SS_CERT,TEST_WIDE,kRoleMaskWords,kBlobMaskBits,kTestRole,kTestBlob,checks,fails,log_lines,fails?"FAIL":"PASS");

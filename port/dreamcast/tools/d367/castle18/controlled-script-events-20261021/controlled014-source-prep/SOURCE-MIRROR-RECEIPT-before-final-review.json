@@ -1,0 +1,54 @@
+{
+  "scope": "Source-only exactCbytes mirrored; folder-local -text preserves raw hash identity through Git. Not a guest/build/image or actualinput/event result. Independentfinalreview pending.",
+  "files": {
+    "observe-controlled-ch32-drain014.py": {
+      "sha256": "4240eedd162e968b4b381005bd19ea61c159baa64644719c7ef934764205750e",
+      "bytes": 16643
+    },
+    "run-controlled-ch32-drain014.py": {
+      "sha256": "3d9f0169b3603a0f3135d5b5b3cc1372861be466922baef982795e85f58d1c42",
+      "bytes": 6285
+    },
+    "run-controlled-ch32-drain014.sh": {
+      "sha256": "8db6799ad4d6fc01256a577b27ee89da224c7aa69be8117b79b44d615c8b9936",
+      "bytes": 354
+    },
+    "controlled-ch32-drain014-warp.txt": {
+      "sha256": "26b551c37eef728d17e3686cfb60763cde8c43b979dd5d1a029ca1f7f31a9ebe",
+      "bytes": 159
+    },
+    "controlled-ch32-drain014-ABI.json": {
+      "sha256": "f6726b590fe7be21f2ec257da8a96af595e3d01b7d703dd4ddc7bc4a92f74745",
+      "bytes": 3167
+    },
+    "controlled-ch32-drain014-frozen-DWARF.json": {
+      "sha256": "ac0c7fb410a572522b494954f906250e6194835dcd21690031ec5cbb8725fc2b",
+      "bytes": 35837
+    },
+    "controlled-ch32-drain014-room-message0.json": {
+      "sha256": "d9954a3b9bac1b35b31f953323b4e820798a4514192a88d6d9c75b0e919e33fb",
+      "bytes": 1877
+    },
+    "controlled-ch32-drain014-pins.json": {
+      "sha256": "6495d4b3de069c4006428c3b94e3e84a8eb7804b31424578bc1a691b4f956890",
+      "bytes": 3239
+    },
+    "controlled-ch32-drain014-focused-source-checks.json": {
+      "sha256": "446e0978209c5be9365719adbead528e2a721e28e239c57d78bfe70d6b7a69a6",
+      "bytes": 1299
+    },
+    "test-controlled014-source-predicates.py": {
+      "sha256": "96a8462e9455352fb2509fc5266220cf39f17892ac71622be4e2984d6394cc90",
+      "bytes": 3357
+    },
+    "extract-controlled014-frozen-DWARF.py": {
+      "sha256": "57f45dc162b9b3c9d140267d7479b43ed6e319faf903db7420f25a166864694f",
+      "bytes": 1932
+    },
+    "CONTROLLED014-SOURCE-LAUNCH-PROPOSAL.json": {
+      "sha256": "2f7a1250ef40d7f7b5473e94b42351857fb8b75c76c59f72e338d3a413cd9a3c",
+      "bytes": 3118
+    }
+  },
+  "C_plus_checkout_mirror_bytes": 154542
+}

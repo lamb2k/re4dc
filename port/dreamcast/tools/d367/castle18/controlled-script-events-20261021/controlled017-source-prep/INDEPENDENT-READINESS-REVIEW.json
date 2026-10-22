@@ -1,0 +1,56 @@
+{
+  "verdict": "CLEAR_SOURCE_ONLY",
+  "scope": "Narrow017 startup/read diagnostics delta; no live probe, guest, writes, input, build, image or broad target ABI copy. Actual016 failure remains preserved; APIs OS cause not attributed.",
+  "frozen_inputs": {
+    "observe-controlled-ch32-door017.py": "b1f6d683c3359cf89cc1186ba96b2b9256292906bf9e8b5df2dea1e66358300a",
+    "run-controlled-ch32-door017.py": "cccc779f574fcc35e0c284ca71eb05f77b95055bcb6c396f60f428229795cbba",
+    "controlled-ch32-door017-pins.json": "dd0f27924bf2657df2096cd774c7084ce6077331f31db9d3e2d367ef4c0e032d",
+    "controlled017-READINESS-CONTRACT.json": "7122a0d2c864243bdb02d77996756bc1a364b9daafad5989d8661685821fee13",
+    "CONTROLLED017-SOURCE-LAUNCH-PROPOSAL.json": "a71329c5f580384e9a40b190f9ca5876230fcd6ac2e844b2a8d3393ee9691a06",
+    "run-controlled-ch32-door017.sh": "9514aa90e5f6bbd65dee7ed65a0bc823b4299e620e4fb7c4ee857c6cac83e66f"
+  },
+  "checks": [
+    "frozen-observe-controlled-ch32-door017.py",
+    "frozen-run-controlled-ch32-door017.py",
+    "command-only-redirect-own-receipt",
+    "readiness-only-redirect-own-receipt",
+    "unchanged-source-function-check",
+    "unchanged-source-function-sample",
+    "unchanged-source-function-setup_ready",
+    "unchanged-source-function-door_ready",
+    "unchanged-source-function-publish_existing_goto",
+    "unchanged-source-function-live_native_anchors",
+    "unchanged-source-function-close",
+    "same-cleared-helper-lifecycle",
+    "command-requires-readiness",
+    "input-readiness-in-final-gate",
+    "action-read-failure-blocks-further-actions",
+    "sampler-unavailable-clears-pair",
+    "no-early-close-on-sampler-failure",
+    "preserves-original-write-ABI",
+    "no-new-write-callsite",
+    "default-prepare-success",
+    "no-guest-default",
+    "29-pins"
+  ],
+  "passed": 22,
+  "existing_mock_checks": {
+    "command": 24,
+    "readiness": 17
+  },
+  "seed": "actual016 a33b2ac44cce042d035f7a981e96cf57b19bec1484f04c86084ece22803f73e8",
+  "review": [
+    "Exact current-cap stateLoaded path must follow final RAM line before VQE/pG reads.",
+    "VQE validates committed coverage and no PAGE_NOACCESS/GUARD; successful RPM plus advancing coherent native frames establishes actual readability. It is not a general permission proof.",
+    "MemoryUnavailable captures lastError before the diagnostic VQE call; exact request/got/APIbool/partial bytes bounded100records.",
+    "Read failure during sampler resets readiness/pair; command/input failure blocks further actions without retry while bounded observation remains.",
+    "Original28B descriptor/count-last, native Door0 input predicates, code anchors and fixed helper lifecycle preserved."
+  ],
+  "limits": [
+    "This does not prove underlying cause of016 RPM failure. Mock ERROR_PARTIAL_COPY299 is not actual016 evidence.",
+    "Frame/phase/room brackets are consistency filters, not atomic snapshots.",
+    "If a read fails during key acknowledgement after keydown, finally releases key and blocks future actions; resulting run remains partial/failure, not proof no input occurred.",
+    "Actual017 state load/readiness/consumption/pose/native action/204Part1/firstcut remain runtime acceptance and root allocation.",
+    "Some inherited capture/print descriptive strings say015/016; actual argv/cap/seed/protected SHA labels are017 with actual016 seed."
+  ]
+}

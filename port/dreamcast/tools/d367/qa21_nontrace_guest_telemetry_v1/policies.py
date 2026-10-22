@@ -1,0 +1,48 @@
+"""Pure source-state gates: no process, input, memory-write or emulator API."""
+import math
+
+def valid_sample(row):
+ g=row.get('global') or {};p=row.get('player') or {}
+ if row.get('valid') is not True or row.get('coherent') is not True:return False
+ return isinstance(g.get('player_life'),int) and isinstance(g.get('frame'),int) and isinstance(g.get('room'),int) and bool(p.get('ptr')) and len(p.get('pos',[]))==3 and len(p.get('ang',[]))==3 and all(type(v) in (int,float) and math.isfinite(v) for v in p['pos']+p['ang']) and len(p.get('rno',[]))==4
+
+def free_play(row):
+ if not valid_sample(row):return False
+ g=row['global'];p=row['player']
+ return g['player_life']>0 and g.get('rno',[])[:2]==[3,0] and g.get('stop')==0 and not row.get('event_start_cnt',1) and row.get('subscreen_type',1)==0 and not row.get('ssloop',1) and bool(p.get('alive',0)&1)
+
+def shooting_safe(row):
+ if not free_play(row):return False
+ g=row['global'];status=g.get('status',[])
+ return len(status)==4 and not(status[0]&0x200000) and not(status[2]&0x80000000) and row['player']['rno'][0]==0
+
+def ordinary_weapon_ready(row):
+ if not shooting_safe(row):return False
+ w=row.get('weapon') or {};debug=row.get('debug_flags') or []
+ return w.get('valid_inventory_slot') is True and w.get('item_class')==1 and w.get('weapon_source_match') is True and w.get('id') not in (0x52,0x6d) and type(w.get('loaded_rounds')) is int and w['loaded_rounds']>0 and len(debug)>=3 and not(debug[2]&0x400000)
+
+def qa_safe(row):
+ frames=row.get('qa_frames')
+ return isinstance(frames,int) and frames>=30 and free_play(row) and row.get('qa_flags') is not None
+
+def discharge(before,after):
+ """Strict ordinary gun-round evidence; caller separately records source/input windows."""
+ try:
+  for row in (before,after):
+   if not valid_sample(row):raise ValueError()
+   state=row.get('global',row)
+   if any(type(state[k]) is not int for k in ('room','frame')):raise ValueError()
+   w=row['weapon'];c=row['counters']
+   if w.get('valid_inventory_slot') is not True or w.get('item_class')!=1 or w.get('weapon_source_match') is not True:raise ValueError()
+   if not w['slot'] or any(type(w[k]) is not int for k in ('slot','id','equipped_id','weapon_no','loaded_rounds')) or not 0<=w['loaded_rounds']<=0x1fff:raise ValueError()
+   if len(row['debug_flags'])<3 or any(type(c[k]) is not int for k in ('g_shot_cnt','c_shot_cnt','g_hit_cnt','g_kill_cnt')):raise ValueError()
+ except (KeyError,TypeError,ValueError):
+  return {'accepted':False,'rounds':0,'reasons':['incomplete ordinary-weapon sample']}
+ a=before['weapon'];b=after['weapon'];ca=before['counters'];cb=after['counters'];reason=[]
+ sb=before.get('global',before);sa=after.get('global',after)
+ if sb['room']!=sa['room'] or not 0<sa['frame']-sb['frame']<=120:reason.append('room/frame discontinuity')
+ if any(a[k]!=b[k] for k in ('slot','id','equipped_id','weapon_no')):reason.append('weapon/slot switch')
+ if a['id'] in (0x52,0x6d) or (before['debug_flags'][2]|after['debug_flags'][2])&0x00400000:reason.append('special/infinite ammunition')
+ spent=a['loaded_rounds']-b['loaded_rounds'];shots=cb['g_shot_cnt']-ca['g_shot_cnt'];chapter=cb['c_shot_cnt']-ca['c_shot_cnt']
+ if spent<=0 or shots!=spent or chapter!=spent:reason.append('ammo/counter discharge mismatch')
+ return {'accepted':not reason,'rounds':spent if not reason else 0,'reasons':reason,'hit_count_delta':cb['g_hit_cnt']-ca['g_hit_cnt'],'kill_count_delta':cb['g_kill_cnt']-ca['g_kill_cnt']}

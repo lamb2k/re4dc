@@ -457,10 +457,33 @@ u32 fnv1a(const u8* p, u32 n)
     return h;
 }
 
+#if defined(RE4DC_AICA_LAYOUT_RECOVER) && RE4DC_AICA_LAYOUT_RECOVER
+// Callers serialize with g_lock (bank ARQ or the stream reader). One-shot layout validity does
+// not depend on the ring. A failed ring attempt retries at most once per second, without
+// freeing banks, borrowing the movie reserve, or changing source bank registration.
+u64 g_ringRetryAt;
+void stream_ring_retry_locked(u64 now)
+{
+    if(!g_layout || g_strRing || now<g_ringRetryAt)return;
+    const bool retry=g_ringRetryAt!=0;
+    g_ringRetryAt=now+1000000;
+    const u32 limit=kAicaPoolBytes-kMovieReserveBytes;
+    if(g_aicaUsed>limit || kStrRingBytes>limit-g_aicaUsed)return;
+    const u32 ring=snd_mem_malloc(kStrRingBytes);
+    if(!ring)return;
+    g_strRing=ring;g_aicaUsed+=kStrRingBytes;g_ringRetryAt=0;
+    if(retry)re4dc_log("aica: stream ring recovered %06x+%u, %u AICA bytes in use\n",
+                      (unsigned)ring,(unsigned)kStrRingBytes,(unsigned)g_aicaUsed);
+}
+#endif
+
 // First converted bank: reserve the whole route layout, in slot order.
 bool layout_init(const AicaBankHeader& h)
 {
     if (g_layout) {
+#if defined(RE4DC_AICA_LAYOUT_RECOVER) && RE4DC_AICA_LAYOUT_RECOVER
+        stream_ring_retry_locked(timer_us_gettime64());
+#endif
         for (int i = 0; i < 9; i++)
             if (h.slot_bytes[i] != g_slot[i].size && !g_layoutWarned) {
                 g_layoutWarned = true;
@@ -478,22 +501,42 @@ bool layout_init(const AicaBankHeader& h)
                   (unsigned) (want - kStrRingBytes), (unsigned) kStrRingBytes, (unsigned) kMovieReserveBytes);
         return false;
     }
+#if defined(RE4DC_AICA_LAYOUT_RECOVER) && RE4DC_AICA_LAYOUT_RECOVER
+    Slot pending[9]{};   // Publish only after all slots are owned; no working bank is replaced on failure.
+    u32 owned_bytes=0;
+#endif
     for (int i = 0; i < 9; i++) {
         if (!h.slot_bytes[i]) continue;
         u32 a = snd_mem_malloc(h.slot_bytes[i]);
         if (!a) {
             re4dc_log("aica: layout slot %d (%u bytes) does not fit, %u bytes in use\n", i,
                       (unsigned) h.slot_bytes[i], (unsigned) g_aicaUsed);
+#if defined(RE4DC_AICA_LAYOUT_RECOVER) && RE4DC_AICA_LAYOUT_RECOVER
+            for (int k = 0; k < i; k++) if (pending[k].base) snd_mem_free(pending[k].base);
+            g_aicaUsed-=owned_bytes;   // Subtract this attempt only, preserving any other owner's accounting.
+#else
             for (int k = 0; k < i; k++) if (g_slot[k].base) snd_mem_free(g_slot[k].base);
             memset(g_slot, 0, sizeof(g_slot));
+#endif
             return false;
         }
+#if defined(RE4DC_AICA_LAYOUT_RECOVER) && RE4DC_AICA_LAYOUT_RECOVER
+        pending[i]={a,h.slot_bytes[i]};owned_bytes+=(h.slot_bytes[i]+31)&~31u;
+#else
         g_slot[i].base = a;
         g_slot[i].size = h.slot_bytes[i];
+#endif
         g_aicaUsed += (h.slot_bytes[i] + 31) & ~31u;
     }
+#if defined(RE4DC_AICA_LAYOUT_RECOVER) && RE4DC_AICA_LAYOUT_RECOVER
+    memcpy(g_slot,pending,sizeof(g_slot));
+#endif
     g_layout = true;
+#if defined(RE4DC_AICA_LAYOUT_RECOVER) && RE4DC_AICA_LAYOUT_RECOVER
+    stream_ring_retry_locked(timer_us_gettime64());
+#else
     if (!g_strRing && (g_strRing = snd_mem_malloc(kStrRingBytes)) != 0) g_aicaUsed += kStrRingBytes;
+#endif
     re4dc_log("aica: layout core=%06x+%u pl=%06x+%u wep=%06x+%u bgm0=%06x+%u bgm1=%06x+%u door=%06x+%u arena=%06x+%u "
               "str=%06x+%u, %u bytes, %u free (movie reserve %u)\n",
               (unsigned) g_slot[0].base, (unsigned) g_slot[0].size, (unsigned) g_slot[1].base, (unsigned) g_slot[1].size,
@@ -1726,6 +1769,13 @@ __attribute__((unused)) void* str_main(void*)
     if (!str_index_load()) return nullptr;
     for (;;) {
         thd_sleep(10);
+#if defined(RE4DC_AICA_LAYOUT_RECOVER) && RE4DC_AICA_LAYOUT_RECOVER
+        if(!g_strRing){
+            mutex_lock(&g_lock);
+            stream_ring_retry_locked(timer_us_gettime64());
+            mutex_unlock(&g_lock);
+        }
+#endif
         Stream& s = g_str;
         if (s.state == kStrIdle) str_scan();
         u32 gen = s.gen;

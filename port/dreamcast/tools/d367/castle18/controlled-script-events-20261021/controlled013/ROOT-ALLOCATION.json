@@ -1,0 +1,31 @@
+{
+  "utc": "2026-10-22T04:36:13.5453050Z",
+  "authorization": "Root allocated ONE exact012-state RADIO013 after argv/seed/pins/source review validated",
+  "wrapper_sha256": "fd3b07c4a7e51a343c172c9953b337c304ee90b5e23dafd5872b8c687d4b99b2",
+  "shell_sha256": "4c4a7c73bf4934242e6f5ac1b6566ac4accbacac3d86049dd1e3007effc3b203",
+  "pins_sha256": "b134b9525899b79e2f3cb265abd94f5b549b781c2a867e67fb21d4463dedb837",
+  "seed_sha256": "64a178245be5dd8b9dbb14ec1a4f4da0e8be08b3d5041e8c6b0388ab0b809436",
+  "C_free_bytes": 132402380800,
+  "globalFlycastCount": 0,
+  "castleFlycastCount": 0,
+  "start_floor_bytes": 20342374400,
+  "runtime_floor_bytes": 19394461696,
+  "capture_cap_bytes": 62914560,
+  "raw_seconds": 41,
+  "normal_close_seconds": 39,
+  "absolute_seconds": 47.5,
+  "argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-native-radio013.sh",
+    "--execute-allocated013"
+  ],
+  "no_retry": true,
+  "no_new_inputs": true,
+  "no_following_guest": true
+}

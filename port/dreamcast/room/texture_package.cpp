@@ -26,6 +26,33 @@ extern "C" void re4dc_pvr_vram_fence();
 #define RE4DC_TEX_PAL4_ALPHA 0
 #endif
 
+#ifndef RE4DC_TEX_PAL4_MIPMAP
+#define RE4DC_TEX_PAL4_MIPMAP 0
+#endif
+#if RE4DC_TEX_PAL4_MIPMAP && (!RE4DC_TEX_PAL4_ALPHA || !RE4DC_CAST_MIPMAP)
+#error TEX_PAL4_MIPMAP requires TEX_PAL4_ALPHA and CAST_MIPMAP
+#endif
+
+#ifndef RE4DC_TEX_PAL8_ALPHA
+#define RE4DC_TEX_PAL8_ALPHA 0
+#endif
+#ifndef RE4DC_TEX_PAL8_MIPMAP
+#define RE4DC_TEX_PAL8_MIPMAP 0
+#endif
+#if RE4DC_TEX_PAL8_ALPHA && !RE4DC_TEX_PAL4_ALPHA
+#error TEX_PAL8_ALPHA requires TEX_PAL4_ALPHA
+#endif
+#if RE4DC_TEX_PAL8_MIPMAP && (!RE4DC_TEX_PAL8_ALPHA || !RE4DC_CAST_MIPMAP)
+#error TEX_PAL8_MIPMAP requires TEX_PAL8_ALPHA and CAST_MIPMAP
+#endif
+
+#ifndef RE4DC_TEX_TWIDDLED_MIPMAP
+#define RE4DC_TEX_TWIDDLED_MIPMAP 0
+#endif
+#if RE4DC_TEX_TWIDDLED_MIPMAP && !RE4DC_CAST_MIPMAP
+#error TEX_TWIDDLED_MIPMAP requires CAST_MIPMAP
+#endif
+
 namespace re4dc::texture {
 namespace {
 #if defined(RE4DC_TEX_META_EVICT) && RE4DC_TEX_META_EVICT
@@ -499,8 +526,33 @@ bool Package::validate() {
         const bool mip = (texture.flags & kMipmap) != 0;
         std::uint64_t vq_indices = pixels / 4U;
         if(mip) {
+#if RE4DC_TEX_TWIDDLED_MIPMAP || RE4DC_TEX_PAL8_MIPMAP
+            const bool native_mip =
+#if RE4DC_TEX_TWIDDLED_MIPMAP
+                (texture.format <= kArgb4444 && texture.payload == kPayloadTwiddled)
+#else
+                false
+#endif
+#if RE4DC_TEX_PAL4_MIPMAP
+                || (texture.format == kPal4Argb4444 && texture.payload == kPayloadTwiddled)
+#endif
+#if RE4DC_TEX_PAL8_MIPMAP
+                || (texture.format == kPal8Argb4444 && texture.payload == kPayloadTwiddled)
+#endif
+                ;
+            if(!dimensions || texture.width != texture.height ||
+               (!native_mip && (texture.payload != kPayloadVq || texture.format > kArgb4444))) {
+                error_ = "unsupported square native mip layout";
+#elif RE4DC_TEX_PAL4_MIPMAP
+            const bool pal4_mip = texture.format == kPal4Argb4444 &&
+                texture.payload == kPayloadTwiddled;
+            if(!dimensions || texture.width != texture.height ||
+               (!pal4_mip && (texture.payload != kPayloadVq || texture.format > kArgb4444))) {
+                error_ = "unsupported square native mip layout";
+#else
             if(texture.payload != kPayloadVq || texture.width != texture.height || texture.format > kArgb4444) {
                 error_ = "mipmapped texture must be square 16-bit VQ";
+#endif
                 close();
                 return false;
             }
@@ -511,28 +563,72 @@ bool Package::validate() {
 #else
 #define RE4DC_VQ_INDICES (pixels / 4U)
 #endif
+#if RE4DC_TEX_TWIDDLED_MIPMAP
+        // Native 16-bit twiddled mips: three padding texels, then 1x1
+        // through the original base plane. No upload-time re-twiddling.
+        const std::uint64_t raw_bytes = ((texture.flags & kMipmap) &&
+            texture.payload == kPayloadTwiddled && texture.format <= kArgb4444)
+            ? (pixels * 4U / 3U + 3U) * 2U : pixels * 2U;
+#define RE4DC_RAW_BYTES raw_bytes
+#else
+#define RE4DC_RAW_BYTES (pixels * 2U)
+#endif
 #if RE4DC_TEX_PAL4_ALPHA
+#if RE4DC_TEX_PAL4_MIPMAP
+        const bool pal4_alpha = texture.format == kPal4Argb4444 &&
+            texture.payload == kPayloadTwiddled;
+        // KOS pvrtex: ceil-chain pixels = floor(base*4/3)+3; PAL4 packs
+        // two indices per byte. Three prefix nibbles precede the 1x1 texel.
+        // The shared ARGB4444 palette remains the final 32 payload bytes.
+        const std::uint64_t pal4_bytes = (texture.flags & kMipmap)
+            ? (pixels * 4U / 3U + 3U) / 2U + 32U : pixels / 2U + 32U;
+#else
         const bool pal4_alpha = texture.format == kPal4Argb4444 &&
             texture.payload == kPayloadTwiddled && !(texture.flags & kMipmap);
+#endif
         const bool pal4_vq = RE4DC_TREE_IMPOSTOR && texture.format == kPal4 &&
             texture.payload == kPayloadVq && !(texture.flags & kMipmap);
-        const std::uint64_t expected = pal4_alpha ? pixels / 2U + 32U :
+#if RE4DC_TEX_PAL8_ALPHA
+        const bool pal8_alpha = texture.format == kPal8Argb4444 &&
+            texture.payload == kPayloadTwiddled && texture.width == texture.height &&
+            !(texture.flags & kTopDrop) &&
+            (!(texture.flags & kMipmap) || RE4DC_TEX_PAL8_MIPMAP);
+        const std::uint64_t pal8_bytes = ((texture.flags & kMipmap)
+            ? pixels * 4U / 3U + 3U : pixels) + 512U;
+#endif
+#if RE4DC_TEX_PAL4_MIPMAP
+        const std::uint64_t expected =
+#if RE4DC_TEX_PAL8_ALPHA
+            pal8_alpha ? pal8_bytes :
+#endif
+            pal4_alpha ? pal4_bytes :
+#else
+        const std::uint64_t expected =
+#if RE4DC_TEX_PAL8_ALPHA
+            pal8_alpha ? pal8_bytes :
+#endif
+            pal4_alpha ? pixels / 2U + 32U :
+#endif
             pal4_vq ? 2048U + pixels / 16U + 32U :
-            texture.payload == kPayloadVq ? 2048U + RE4DC_VQ_INDICES : pixels * 2U;
+            texture.payload == kPayloadVq ? 2048U + RE4DC_VQ_INDICES : RE4DC_RAW_BYTES;
         if(!dimensions || texture.payload > kPayloadVq || texture.reserved_0 != 0 ||
            texture.data_size != expected ||
-           (texture.format > kArgb4444 && !pal4_alpha && !pal4_vq) ||
+            (texture.format > kArgb4444 && !pal4_alpha && !pal4_vq
+#if RE4DC_TEX_PAL8_ALPHA
+             && !pal8_alpha
+#endif
+            ) ||
 #elif RE4DC_TREE_IMPOSTOR
         // kPal4: 256 8-byte codebook entries of 4x4 texels, one index byte
         // per 4x4 block, then the 16-entry palette.
         const bool pal4 = texture.format == kPal4 && texture.payload == kPayloadVq;
         const std::uint64_t expected = pal4 ? 2048U + pixels / 16U + 32U :
-            texture.payload == kPayloadVq ? 2048U + RE4DC_VQ_INDICES : pixels * 2U;
+            texture.payload == kPayloadVq ? 2048U + RE4DC_VQ_INDICES : RE4DC_RAW_BYTES;
         if(!dimensions || texture.payload > kPayloadVq || texture.reserved_0 != 0 ||
            texture.data_size != expected || (texture.format > kArgb4444 && !pal4) ||
 #else
         const std::uint64_t expected = texture.payload == kPayloadVq
-            ? 2048U + RE4DC_VQ_INDICES : pixels * 2U;
+            ? 2048U + RE4DC_VQ_INDICES : RE4DC_RAW_BYTES;
         if(!dimensions || texture.payload > kPayloadVq || texture.reserved_0 != 0 ||
            texture.data_size != expected || texture.format > kArgb4444 ||
 #endif
@@ -545,6 +641,7 @@ bool Package::validate() {
             return false;
         }
 #undef RE4DC_VQ_INDICES
+#undef RE4DC_RAW_BYTES
     }
     error_ = nullptr;
     return true;
@@ -559,8 +656,16 @@ std::uint64_t palette_reserved, palette_banks;
 // is freed with its last texture. Banks outside palette_reserved only.
 std::uint8_t palette_refs[64];
 std::uint16_t palette_words[64][16];
+#if RE4DC_TEX_PAL8_ALPHA
+std::uint32_t palette8_refs[4];
+std::uint16_t palette8_words[4][256];
+std::uint8_t palette4_formats[64];
+#endif
 bool uses_palette(const Texture& texture) {
     return texture.format == kPal4Argb4444 ||
+#if RE4DC_TEX_PAL8_ALPHA
+        texture.format == kPal8Argb4444 ||
+#endif
         (RE4DC_TREE_IMPOSTOR && texture.format == kPal4);
 }
 // Check the whole transaction before allocating VRAM or writing palette RAM.
@@ -571,9 +676,18 @@ bool palettes_available(const Package& package) {
         if(uses_palette(package.textures()[i])) ++needed;
     if(!needed) return true;
     if(!palettes_initialized) return false;
+#if RE4DC_TEX_PAL8_ALPHA
+    // Streamed metadata does not retain palette tails. Check the exact whole
+    // transaction after the normal payload upload, before any palette write or
+    // ownership change; this avoids an extra disc read solely for preflight.
+    // A refused upload still owns its VRAM until close(), as other failures do.
+    (void)available;
+    return true;
+#else
     for(unsigned bank = 0; bank < 64U; ++bank)
         if(!(palette_banks & (std::uint64_t(1) << bank))) ++available;
     return needed <= available;
+#endif
 }
 std::uint32_t palette_argb8888(std::uint16_t value, bool alpha4) {
     if(alpha4) return ((value >> 12U) * 17U << 24U) |
@@ -585,6 +699,116 @@ std::uint32_t palette_argb8888(std::uint16_t value, bool alpha4) {
         (((r << 3U) | (r >> 2U)) << 16U) |
         (((g << 3U) | (g >> 2U)) << 8U) | (b << 3U) | (b >> 2U);
 }
+#if RE4DC_TEX_PAL8_ALPHA
+// A bounded stack plan points either at immutable live palette words or at
+// already-uploaded, fenced VRAM. No extra IO or per-texture allocation. Plan the
+// complete transaction first; exhaustion cannot overwrite a live palette bank.
+struct PalettePlan {
+    std::uint64_t occupied;
+    std::uint8_t refs4[64], formats4[64];
+    std::uint32_t refs8[4];
+    const volatile std::uint16_t* words4[64];
+    const volatile std::uint16_t* words8[4];
+};
+std::uint64_t palette8_mask(unsigned block) {
+    return std::uint64_t(0xffffU) << (block * 16U);
+}
+bool equal_palette(const volatile std::uint16_t* a,
+                   const volatile std::uint16_t* b, unsigned count) {
+    for(unsigned k = 0; k < count; ++k) if(a[k] != b[k]) return false;
+    return true;
+}
+bool plan_palettes(Package& package, bool commit) {
+    PalettePlan plan{};
+    plan.occupied = palette_banks;
+    std::memcpy(plan.refs4, palette_refs, sizeof(plan.refs4));
+    std::memcpy(plan.formats4, palette4_formats, sizeof(plan.formats4));
+    std::memcpy(plan.refs8, palette8_refs, sizeof(plan.refs8));
+    for(unsigned b = 0; b < 64U; ++b) plan.words4[b] = palette_words[b];
+    for(unsigned b = 0; b < 4U; ++b) plan.words8[b] = palette8_words[b];
+    for(std::uint32_t i = 0; i < package.header().texture_count; ++i) {
+        auto& texture = const_cast<Texture&>(package.textures()[i]);
+        if(!uses_palette(texture)) continue;
+        const bool pal8 = texture.format == kPal8Argb4444;
+        const unsigned count = pal8 ? 256U : 16U;
+        const auto* words = reinterpret_cast<const volatile std::uint16_t*>(
+            static_cast<const std::uint8_t*>(package.pvr_texture(i)) +
+            texture.data_size - count * 2U);
+        unsigned bank = 64U;
+        bool fresh = false;
+        if(pal8) {
+            unsigned block = 4U;
+            for(unsigned b = 0; b < 4U; ++b)
+                if(plan.refs8[b] && plan.refs8[b] != 0xffffffffU &&
+                   equal_palette(plan.words8[b], words, 256U)) { block = b; break; }
+            if(block == 4U) {
+                for(unsigned b = 0; b < 4U; ++b)
+                    if(!(plan.occupied & palette8_mask(b))) { block = b; break; }
+                if(block == 4U) return false;
+                plan.occupied |= palette8_mask(block);
+                plan.words8[block] = words;
+                fresh = true;
+            }
+            ++plan.refs8[block];
+            bank = block * 16U;
+            if(commit && fresh)
+                for(unsigned k = 0; k < 256U; ++k) palette8_words[block][k] = words[k];
+        } else {
+            // Legacy ARGB1555 impostors retain separate banks. ARGB4444 shares
+            // only with the same palette interpretation, never a PAL8 sub-bank.
+            if(texture.format == kPal4Argb4444)
+                for(unsigned b = 0; b < 64U; ++b)
+                    if(plan.refs4[b] && plan.refs4[b] < 255U &&
+                       plan.formats4[b] == texture.format &&
+                       equal_palette(plan.words4[b], words, 16U)) { bank = b; break; }
+            if(bank == 64U) {
+                for(unsigned b = 0; b < 64U; ++b)
+                    if(!(plan.occupied & (std::uint64_t(1) << b))) { bank = b; break; }
+                if(bank == 64U) return false;
+                plan.occupied |= std::uint64_t(1) << bank;
+                plan.words4[bank] = words;
+                plan.formats4[bank] = static_cast<std::uint8_t>(texture.format);
+                fresh = true;
+            }
+            ++plan.refs4[bank];
+            if(commit && fresh)
+                for(unsigned k = 0; k < 16U; ++k) palette_words[bank][k] = words[k];
+        }
+        if(commit) {
+            texture.reserved_0 = bank + 1U;
+            if(fresh)
+                for(unsigned k = 0; k < count; ++k)
+                    pvr_set_pal_entry(bank * 16U + k,
+                        palette_argb8888(words[k], texture.format != kPal4));
+        }
+    }
+    if(commit) {
+        palette_banks = plan.occupied;
+        std::memcpy(palette_refs, plan.refs4, sizeof(palette_refs));
+        std::memcpy(palette4_formats, plan.formats4, sizeof(palette4_formats));
+        std::memcpy(palette8_refs, plan.refs8, sizeof(palette8_refs));
+    }
+    return true;
+}
+bool bind_palettes(Package& package) {
+    return plan_palettes(package, false) && plan_palettes(package, true);
+}
+void release_palettes(const Package& package) {
+    for(std::uint32_t i = 0; i < package.header().texture_count; ++i) {
+        auto& texture = const_cast<Texture&>(package.textures()[i]);
+        if(!uses_palette(texture) || !texture.reserved_0) continue;
+        const unsigned bank = texture.reserved_0 - 1U;
+        if(texture.format == kPal8Argb4444) {
+            const unsigned block = bank / 16U;
+            if(--palette8_refs[block] == 0U) palette_banks &= ~palette8_mask(block);
+        } else if(--palette_refs[bank] == 0U) {
+            palette_banks &= ~(std::uint64_t(1) << bank);
+            palette4_formats[bank] = 0;
+        }
+        texture.reserved_0 = 0;
+    }
+}
+#else
 bool bind_palettes(Package& package) {
     // upload() fenced before any writes; repeat capacity validation before
     // committing so exhaustion never leaves a partial bank reservation.
@@ -633,6 +857,7 @@ void release_palettes(const Package& package) {
         texture.reserved_0 = 0;
     }
 }
+#endif
 } // namespace
 bool initialize_palettes(std::uint64_t reserved_banks) {
     if(palettes_initialized) return reserved_banks == palette_reserved;
@@ -677,9 +902,22 @@ void release_palettes(const Package& package) {
 #endif
 
 std::uint32_t pvr_format(const Texture& texture) {
+#if RE4DC_TEX_PAL8_ALPHA
+    if(texture.format == kPal8Argb4444)
+        return PVR_TXRFMT_PAL8BPP | PVR_TXRFMT_8BPP_PAL((texture.reserved_0 - 1U) / 16U) |
+            PVR_TXRFMT_TWIDDLED
+#if RE4DC_TEX_PAL8_MIPMAP
+            | ((texture.flags & kMipmap) ? 0x80000000U : 0U)
+#endif
+            ;
+#endif
 #if RE4DC_TEX_PAL4_ALPHA
     if(texture.format == kPal4Argb4444)
-        return PVR_TXRFMT_PAL4BPP | PVR_TXRFMT_4BPP_PAL(texture.reserved_0 - 1U) | PVR_TXRFMT_TWIDDLED;
+        return PVR_TXRFMT_PAL4BPP | PVR_TXRFMT_4BPP_PAL(texture.reserved_0 - 1U) | PVR_TXRFMT_TWIDDLED
+#if RE4DC_TEX_PAL4_MIPMAP
+            | ((texture.flags & kMipmap) ? 0x80000000U : 0U)
+#endif
+            ;
 #endif
 #if RE4DC_TREE_IMPOSTOR
     if(texture.format == kPal4) // reserved_0: palette bank + 1 (bind_palettes)
@@ -882,6 +1120,10 @@ bool Package::release_payload() {
     }
     if(streamed_) {
         // No whole-file CPU payload was allocated: do not count it as freed.
+#if defined(RE4DC_TEX_PACK_WINDOW) && RE4DC_TEX_PACK_WINDOW
+        // A live pack window owns the handle. This package has none to close (any texture format; was TEX_PAL8_ALPHA only).
+        if(file_ != FILEHND_INVALID)
+#endif
         fs_close(file_);file_=FILEHND_INVALID;
         size_=metadata_bytes_;payload_released_=true;return true;
     }

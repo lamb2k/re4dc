@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "linked_reference": {
+    "charged_logical_bytes": 13000,
+    "charged_allocated_bytes": 16384,
+    "charged_bytes": 16384,
+    "excluded_exact_track_references": [
+      {
+        "path": "/tmp/qa21-footprint-bx0ncc6a/case/track03.iso",
+        "reference": "/tmp/qa21-footprint-bx0ncc6a/disc/track03.iso",
+        "logical_bytes": 1073741824,
+        "allocated_bytes": 0,
+        "new_file_data_bytes": 0,
+        "identity": {
+          "device": 2080,
+          "inode": 693331,
+          "links": 2
+        }
+      }
+    ]
+  },
+  "growth_delta": 5000,
+  "preexisting_baseline_charged": true,
+  "untrusted_track_charged": true,
+  "disappearing_temp_tolerated": true
+}

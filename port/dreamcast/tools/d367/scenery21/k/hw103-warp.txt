@@ -1,0 +1,6 @@
+name ap19-hw103
+# r103 from the r101 door (5 Ganados, corpses, cows, chickens, dog)
+room 0x103
+pos -47609 12 7084
+ang 1.8890
+inv default

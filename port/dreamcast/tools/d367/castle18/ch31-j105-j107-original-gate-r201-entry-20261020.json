@@ -1,0 +1,306 @@
+{
+  "scope": "Qualified J original no-warp VMU/CardLoad lineage, latest own states only. Normal owned-window controls/read-only feedback, no rollback/guest/state writes, source changes or rebuild/stage.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk105",
+      "result": "Preparation/control limit: standing-turn one-frame taps never align, no A sent, no gate entry; r203720/600 unchanged",
+      "elapsed_s": 47.3,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "78b349ec5e4dee1c1a27ba0a0b2cd8078c34edd20acc274c430daea5c8957c8c",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk105\\data\\disc.state"
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk105\\shots\\checkpoint-source-26846\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk105\\shots\\checkpoint-source-26846\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk105",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Preparation/control limit: standing-turn one-frame taps never align, no A sent, no gate entry; r203720/600 unchanged",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk105\\shots\\checkpoint-source-26846\\frames\\fb0.png",
+          "png_sha256": "ea30c4640931ae92e28878f683b6300248eff414c14ed2c76a27fc61f602681f",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk105\\shots\\checkpoint-source-26846\\checkpoint-context.json",
+          "source_frame_interval": [
+            26846,
+            26855
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk106",
+      "result": "Preparation/control limit: reversed standing-turn one-frame taps also do not align, no A sent; r203720/600 unchanged",
+      "elapsed_s": 47.4,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "39e8716389ea4eb40a8412d406d230eb5caa24308f363a0b72cad7722abe07b2",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk106\\data\\disc.state"
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk106\\shots\\checkpoint-source-28199\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk106\\shots\\checkpoint-source-28199\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk106",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Preparation/control limit: reversed standing-turn one-frame taps also do not align, no A sent; r203720/600 unchanged",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk106\\shots\\checkpoint-source-28199\\frames\\fb0.png",
+          "png_sha256": "ec7c22dfecbfccb9c31a7bb7489f3517758be5d648800beefa7476e3fd185dde",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk106\\shots\\checkpoint-source-28199\\checkpoint-context.json",
+          "source_frame_interval": [
+            28199,
+            28208
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk107",
+      "result": "Sustained normal turn with read-only15tick calibration, original A through unlocked gate enters r201, normal world15ticks720/600",
+      "elapsed_s": 19.5,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "f3636f2d9b3c1da73d9759a37da22ce01ec306877d9e5e1e6338f729f5e6956c",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk107\\data\\disc.state"
+        },
+        {
+          "normal_continuous_turn_calibration": {
+            "source_frames": [
+              28238,
+              28253
+            ],
+            "yaw_change": -0.9194633662700653,
+            "right_yaw_sign": -1
+          }
+        },
+        {
+          "normal_aligned_A_at_original_unlocked_front_gate": {
+            "frame": 28293,
+            "room": "0x203",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              720,
+              1200,
+              600,
+              600
+            ],
+            "player_pos": [
+              -30641.201171875,
+              4155.76220703125,
+              -23262.154296875
+            ],
+            "partner_pos": [
+              -31324.158203125,
+              4155.76123046875,
+              -23251.390625
+            ],
+            "partner_flags": "0x44",
+            "yaw": -3.08671236038208,
+            "door_facing_error": -0.05488029320771304,
+            "turn_mapping": "J105 actual stationary right input increased yaw; choose physical right for positive error and left for negative error",
+            "source_Key_on": "0x4000004",
+            "source_Key_trg": "0x0"
+          }
+        },
+        {
+          "original_normal_unlocked_gate_r201_entry": {
+            "frame": 28344,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              720,
+              1200,
+              600,
+              600
+            ],
+            "player_pos": [
+              -124.53063201904297,
+              -0.00079345703125,
+              1782.11328125
+            ],
+            "partner_pos": [
+              -514.591552734375,
+              0.00018310546875,
+              1877.9779052734375
+            ],
+            "partner_flags": "0x40"
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk107\\shots\\checkpoint-source-28344\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk107\\shots\\checkpoint-source-28344\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk107",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Sustained normal turn with read-only15tick calibration, original A through unlocked gate enters r201, normal world15ticks720/600",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk107\\shots\\checkpoint-source-28344\\frames\\fb0.png",
+          "png_sha256": "97fc14865affd3923e8539a804fde6fb3830ec583eab8fd85c5d5c4331df5a3b",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk107\\shots\\checkpoint-source-28344\\checkpoint-context.json",
+          "source_frame_interval": [
+            28344,
+            28352
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    }
+  ],
+  "current_snapshot_audit": {
+    "scope": "Immutable current J original no-warp CardLoad lineage, four exact ELF anchors; original inventory and RSF read-only. No state changes.",
+    "state_sha256": "f3636f2d9b3c1da73d9759a37da22ce01ec306877d9e5e1e6338f729f5e6956c",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x201",
+    "chapter": 6,
+    "source_frame": 28354,
+    "health": [
+      720,
+      1200,
+      600,
+      600
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "death_flags": "0x3080100",
+    "door_flags": "0xa84002b4",
+    "door_unlock": [
+      "0x820000",
+      "0x0"
+    ],
+    "partner_subflags": "0x40",
+    "r203_RSF": "0x18000000",
+    "player_pos": [
+      -126.06266784667969,
+      0.00115966796875,
+      1777.3250732421875
+    ],
+    "partner_pos": [
+      -514.591552734375,
+      -0.00390625,
+      1877.9779052734375
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 10
+      },
+      {
+        "id": "0x4",
+        "num": 10,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ]
+  },
+  "control_correction": "One-tick standing-turn taps did not give durable convergence. Sustained normal input measured15source ticks/yaw change-0.91946 and calibrated right yaw sign-1 before original A. Inherited descriptive turn_mapping strings inside raw rows are superseded by actual calibration event; no game-turn bug claim.",
+  "r201_selected_source_sha256": "adc818de7cd3363a25e501ca9518e4c561ada4c481c171a593433adbdc96e594",
+  "limits": [
+    "Short r201 entry does not prove full native census, texture/audio residency, held-wave clear or chapter completion.",
+    "No physical-drive/hardware performance claim."
+  ],
+  "next": "Normal hall/stairs/interior door to original Prison Key C3 and dungeon/Garrador progression."
+}

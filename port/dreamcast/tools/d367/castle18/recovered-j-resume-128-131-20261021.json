@@ -1,0 +1,4594 @@
+{
+  "scope": "Resumed original recovered-J lineage. Source and controls only; Flycast progression results do not establish release or physical Dreamcast acceptance.",
+  "summary": "Resumed128 west approach passed;129 original weakpoint37 hit3464to3196HP.130 genuine death preserved.131 normal Continue returned903/90, all runs errors[] and exited.",
+  "checkpoints": [
+    {
+      "scope": "Read-only immutable checkpoint audit of recovered-J NEW cold lineage only. No original J state retarget or game writes.",
+      "run": "route-walk128",
+      "state_sha256": "4f86fdd359a4d81bd9e8c0e2519c6ddd4c548b371958356723888e16feac8a5f",
+      "source_frame": 33524,
+      "room": "0x201",
+      "chapter": 6,
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "SSLoop": 0,
+      "held_world": "0x0",
+      "health": [
+        220,
+        1200,
+        90,
+        600
+      ],
+      "start": {
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "disc_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+        "ram_gdi": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\segments\\route-walk128\\disc.gdi",
+        "seed": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk127\\data",
+        "start_utc": "2026-10-21T20:00:52.660568+00:00"
+      },
+      "result": {
+        "name": "castle21-recoveredJ-route-walk128",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T20:00:52.482802+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "early_emulator_exit": 0,
+        "log_idle_s": 2.7,
+        "end_utc": "2026-10-21T20:01:02.953937+00:00",
+        "elapsed_s": 10.3,
+        "emulator_exited": true
+      },
+      "ELF_anchors": 4,
+      "player_pos": [
+        18790.01171875,
+        -2000.001220703125,
+        -45158.38671875
+      ],
+      "partner_pos": [
+        29401.06640625,
+        -2000.0,
+        -42656.5
+      ],
+      "partner_subflags": "0x46",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk128\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "normal_owned_key_release_repress_after_source_Key_zero": {
+            "source_frame": 33328,
+            "wanted": [
+              "left"
+            ],
+            "count": 1
+          }
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            27000.0,
+            -42000.0
+          ],
+          "pos": [
+            27033.380859375,
+            -2000.003662109375,
+            -42041.35546875
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            21300.0,
+            -42000.0
+          ],
+          "pos": [
+            21228.96875,
+            -1999.9986572265625,
+            -41854.078125
+          ]
+        },
+        {
+          "normal_Garrador_sourceSAT_west_escape_segment_complete": true,
+          "frame": 33511,
+          "pos": [
+            19023.400390625,
+            -2000.000732421875,
+            -44909.75
+          ],
+          "health": [
+            220,
+            90
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk128\\shots\\checkpoint-source-33511\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk128\\shots\\checkpoint-source-33511\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "last_sample": {
+        "host_monotonic": 362126.156,
+        "room": "0x201",
+        "frame": 33511,
+        "player_hp": 220,
+        "partner_hp": 90,
+        "pos": [
+          19023.400390625,
+          -2000.000732421875,
+          -44909.75
+        ],
+        "yaw": -2.368441343307495,
+        "target_distance": 93.23433263236558,
+        "angle_error": -0.5194539318336338,
+        "Garrador": {
+          "hp": 3464,
+          "pos": [
+            16133.029296875,
+            1763.585693359375,
+            -38908.06640625
+          ],
+          "yaw": -0.09526578336954117,
+          "routines": [
+            1,
+            16,
+            1,
+            0
+          ],
+          "player_back_dot": -6249.406993738256
+        },
+        "source_Key_on": "0x45040045",
+        "player_routines": [
+          0,
+          3,
+          3,
+          4
+        ]
+      },
+      "screenshot_contexts": [
+        {
+          "run": "route-walk128",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "source_frame_interval": [
+            33511,
+            33524
+          ],
+          "health_before": [
+            220,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            220,
+            1200,
+            90,
+            600
+          ],
+          "action_result": {
+            "normal_Garrador_sourceSAT_west_escape_segment_complete": true,
+            "frame": 33511,
+            "pos": [
+              19023.400390625,
+              -2000.000732421875,
+              -44909.75
+            ],
+            "health": [
+              220,
+              90
+            ]
+          },
+          "last_sample": {
+            "host_monotonic": 362126.156,
+            "room": "0x201",
+            "frame": 33511,
+            "player_hp": 220,
+            "partner_hp": 90,
+            "pos": [
+              19023.400390625,
+              -2000.000732421875,
+              -44909.75
+            ],
+            "yaw": -2.368441343307495,
+            "target_distance": 93.23433263236558,
+            "angle_error": -0.5194539318336338,
+            "Garrador": {
+              "hp": 3464,
+              "pos": [
+                16133.029296875,
+                1763.585693359375,
+                -38908.06640625
+              ],
+              "yaw": -0.09526578336954117,
+              "routines": [
+                1,
+                16,
+                1,
+                0
+              ],
+              "player_back_dot": -6249.406993738256
+            },
+            "source_Key_on": "0x45040045",
+            "player_routines": [
+              0,
+              3,
+              3,
+              4
+            ]
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk128\\shots\\checkpoint-source-33511\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk128\\shots\\checkpoint-source-33511\\frames\\fb1.png"
+          ]
+        }
+      ],
+      "motion_first_sample": {
+        "host_s": 0.015,
+        "frame": 33328,
+        "hits": 134219,
+        "misses": 3193,
+        "evictions": 3120,
+        "loads": 3193,
+        "resident": 163616,
+        "bindings": [
+          {
+            "slot": 0,
+            "archive": "0x8caf4380",
+            "bytes": 1163168,
+            "count": 173,
+            "budget": 64832,
+            "hot_bytes": 0,
+            "resident": 149184,
+            "keys": [
+              [
+                93,
+                10368,
+                "e9788255-26d064b2",
+                0
+              ],
+              [
+                94,
+                4672,
+                "59d9b309-d3e8a902",
+                0
+              ],
+              [
+                95,
+                4704,
+                "ea23d036-e3f9c91e",
+                0
+              ],
+              [
+                98,
+                18944,
+                "c7f3b979-37a90fa1",
+                0
+              ],
+              [
+                100,
+                15776,
+                "a20385d7-27ba8293",
+                0
+              ],
+              [
+                101,
+                9216,
+                "54b62553-571ab29b",
+                0
+              ],
+              [
+                102,
+                28928,
+                "cc093679-beebd2c2",
+                0
+              ],
+              [
+                103,
+                26944,
+                "9f685293-d9034c4e",
+                0
+              ],
+              [
+                104,
+                11968,
+                "32bb3fe7-563cb6f3",
+                0
+              ],
+              [
+                137,
+                6112,
+                "0d8fb760-91029c79",
+                0
+              ],
+              [
+                138,
+                11552,
+                "1e22a0b5-da5a4a95",
+                0
+              ]
+            ]
+          },
+          {
+            "slot": 1,
+            "archive": "0x8cc2aa20",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 14432,
+            "keys": [
+              [
+                27,
+                9088,
+                "5ffcdc79-69f63d5a",
+                0
+              ],
+              [
+                51,
+                5344,
+                "92503ed4-d5cc7ea5",
+                0
+              ]
+            ]
+          }
+        ],
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      },
+      "motion_last_sample": {
+        "host_s": 8.484,
+        "frame": 33524,
+        "hits": 134976,
+        "misses": 3195,
+        "evictions": 3122,
+        "loads": 3195,
+        "resident": 163616,
+        "bindings": [
+          {
+            "slot": 0,
+            "archive": "0x8caf4380",
+            "bytes": 1163168,
+            "count": 173,
+            "budget": 64832,
+            "hot_bytes": 0,
+            "resident": 149184,
+            "keys": [
+              [
+                93,
+                10368,
+                "e9788255-26d064b2",
+                0
+              ],
+              [
+                94,
+                4672,
+                "59d9b309-d3e8a902",
+                0
+              ],
+              [
+                95,
+                4704,
+                "ea23d036-e3f9c91e",
+                0
+              ],
+              [
+                98,
+                18944,
+                "c7f3b979-37a90fa1",
+                0
+              ],
+              [
+                100,
+                15776,
+                "a20385d7-27ba8293",
+                0
+              ],
+              [
+                101,
+                9216,
+                "54b62553-571ab29b",
+                0
+              ],
+              [
+                102,
+                28928,
+                "cc093679-beebd2c2",
+                0
+              ],
+              [
+                103,
+                26944,
+                "9f685293-d9034c4e",
+                0
+              ],
+              [
+                104,
+                11968,
+                "32bb3fe7-563cb6f3",
+                0
+              ],
+              [
+                137,
+                6112,
+                "0d8fb760-91029c79",
+                0
+              ],
+              [
+                138,
+                11552,
+                "1e22a0b5-da5a4a95",
+                0
+              ]
+            ]
+          },
+          {
+            "slot": 1,
+            "archive": "0x8cc2aa20",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 14432,
+            "keys": [
+              [
+                27,
+                9088,
+                "5ffcdc79-69f63d5a",
+                0
+              ],
+              [
+                51,
+                5344,
+                "92503ed4-d5cc7ea5",
+                0
+              ]
+            ]
+          }
+        ],
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      }
+    },
+    {
+      "scope": "Read-only immutable checkpoint audit of recovered-J NEW cold lineage only. No original J state retarget or game writes.",
+      "run": "route-walk129",
+      "state_sha256": "c98b6ccc48926e89e9aecd4ba9e7d00b85cfd943a2bfc6b5545c2a418f1795b2",
+      "source_frame": 34339,
+      "room": "0x201",
+      "chapter": 6,
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "SSLoop": 0,
+      "held_world": "0x0",
+      "health": [
+        220,
+        1200,
+        90,
+        600
+      ],
+      "start": {
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "disc_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+        "ram_gdi": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\segments\\route-walk129\\disc.gdi",
+        "seed": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk128\\data",
+        "start_utc": "2026-10-21T20:01:50.171727+00:00"
+      },
+      "result": {
+        "name": "castle21-recoveredJ-route-walk129",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T20:01:50.028876+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "early_emulator_exit": 0,
+        "log_idle_s": 1.0,
+        "end_utc": "2026-10-21T20:02:19.728907+00:00",
+        "elapsed_s": 29.6,
+        "emulator_exited": true
+      },
+      "ELF_anchors": 4,
+      "player_pos": [
+        18789.74609375,
+        -2000.000732421875,
+        -45158.7421875
+      ],
+      "partner_pos": [
+        29401.06640625,
+        -1999.99951171875,
+        -42656.5
+      ],
+      "partner_subflags": "0x46",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk129\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33531,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 1.962856899536252,
+            "ray_pitch_error": 0.19597643209833016,
+            "settle_through": 33539
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33539,
+            "keys": [
+              "back",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 2.041726660724743,
+            "ray_pitch_error": 0.4745047471350294,
+            "settle_through": 33547
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33547,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 1.982793184632535,
+            "ray_pitch_error": 0.5119523571049647,
+            "settle_through": 33555
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33555,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 1.893037281917004,
+            "ray_pitch_error": 0.47321400676543474,
+            "settle_through": 33563
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33563,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 1.8285351751663752,
+            "ray_pitch_error": 0.42858571630148995,
+            "settle_through": 33571
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33571,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 1.7361951835989036,
+            "ray_pitch_error": 0.3408244498082257,
+            "settle_through": 33579
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33579,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 1.6830065594473336,
+            "ray_pitch_error": 0.2881632443412967,
+            "settle_through": 33587
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33587,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 1.5831838567538226,
+            "ray_pitch_error": 0.19233107098382063,
+            "settle_through": 33595
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33595,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 2,
+            "ray_yaw_error": 1.4721872823640805,
+            "ray_pitch_error": 0.08341124072840317,
+            "settle_through": 33600
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33600,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 1.3968886406978882,
+            "ray_pitch_error": 0.009718546094153346,
+            "settle_through": 33608
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33608,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 1.277733146009231,
+            "ray_pitch_error": -0.006688979611881973,
+            "settle_through": 33616
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33616,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 1.156295984909308,
+            "ray_pitch_error": -0.006240379315905931,
+            "settle_through": 33624
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33624,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 1.0661844403756238,
+            "ray_pitch_error": 0.0008049362109129321,
+            "settle_through": 33632
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33632,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 0.8699548457800512,
+            "ray_pitch_error": 0.005428001505179858,
+            "settle_through": 33640
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33640,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 0.7734078950884364,
+            "ray_pitch_error": 0.0022508062488312275,
+            "settle_through": 33648
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33648,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 0.6685643129828724,
+            "ray_pitch_error": 0.0020010823213141293,
+            "settle_through": 33656
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33657,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 0.5508650572577114,
+            "ray_pitch_error": 0.002032822373113863,
+            "settle_through": 33665
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33665,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 0.4250550053775006,
+            "ray_pitch_error": 0.0012053334784241088,
+            "settle_through": 33673
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33673,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": 0.15426040074834146,
+            "ray_pitch_error": -0.005753977787892328,
+            "settle_through": 33681
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33681,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 2,
+            "ray_yaw_error": -0.061857734479570325,
+            "ray_pitch_error": -0.005800693120299516,
+            "settle_through": 33686
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33686,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 2,
+            "ray_yaw_error": -0.05456857948625604,
+            "ray_pitch_error": -0.003435973488683408,
+            "settle_through": 33691
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33691,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.047660481062716364,
+            "ray_pitch_error": -0.0054849926075791755,
+            "settle_through": 33695
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33695,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.039235371648300266,
+            "ray_pitch_error": 5.816900782273926e-05,
+            "settle_through": 33699
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33699,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.01401487069997831,
+            "ray_pitch_error": 0.005132869592257339,
+            "settle_through": 33703
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33711,
+            "keys": [
+              "forward",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.0015828941198532398,
+            "ray_pitch_error": 0.00935720808566376,
+            "settle_through": 33715
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33715,
+            "keys": [
+              "back",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.004415110675037859,
+            "ray_pitch_error": 0.012016546772376513,
+            "settle_through": 33719
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33719,
+            "keys": [
+              "forward",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.003085684259328758,
+            "ray_pitch_error": 0.023352733464196418,
+            "settle_through": 33724
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33724,
+            "keys": [
+              "forward",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.0018372374124004942,
+            "ray_pitch_error": 0.01313037111940285,
+            "settle_through": 33728
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33728,
+            "keys": [
+              "forward",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.00510103878343493,
+            "ray_pitch_error": 0.011736611128958407,
+            "settle_through": 33732
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33732,
+            "keys": [
+              "forward",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.015158237146545073,
+            "ray_pitch_error": 0.013419494047098413,
+            "settle_through": 33736
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33736,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.01909999179101085,
+            "ray_pitch_error": 0.014672490219828638,
+            "settle_through": 33740
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33740,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.019228861269014796,
+            "ray_pitch_error": 0.00995374887370215,
+            "settle_through": 33744
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33744,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.02170584598098202,
+            "ray_pitch_error": 0.010112001288215211,
+            "settle_through": 33748
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33748,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.019850936939943775,
+            "ray_pitch_error": 0.0033852432919370123,
+            "settle_through": 33752
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33752,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.021503041307067594,
+            "ray_pitch_error": -0.0007949260876025654,
+            "settle_through": 33756
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33756,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.02002312659202854,
+            "ray_pitch_error": -0.0028671991016133713,
+            "settle_through": 33761
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33761,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.010622628554564084,
+            "ray_pitch_error": 0.002184305098408279,
+            "settle_through": 33765
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33765,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.009921072142782261,
+            "ray_pitch_error": 0.005518845210302548,
+            "settle_through": 33769
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33769,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.014464320399103503,
+            "ray_pitch_error": 0.0029026354093365514,
+            "settle_through": 33773
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33773,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.02083809007654125,
+            "ray_pitch_error": -0.006463513428254353,
+            "settle_through": 33778
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33778,
+            "keys": [
+              "forward",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.023087320700272418,
+            "ray_pitch_error": -0.008499220985713651,
+            "settle_through": 33782
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33782,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.018640162151743578,
+            "ray_pitch_error": -0.016211948856085345,
+            "settle_through": 33786
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33786,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.011065349653374579,
+            "ray_pitch_error": -0.01461512889066352,
+            "settle_through": 33790
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33790,
+            "keys": [
+              "back",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.004658928493639358,
+            "ray_pitch_error": -0.009632475912055627,
+            "settle_through": 33795
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33796,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.011036487956507468,
+            "ray_pitch_error": -0.0007219597455502269,
+            "settle_through": 33800
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33800,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.019639680622567823,
+            "ray_pitch_error": -0.002242891608533415,
+            "settle_through": 33804
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33805,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.01837649261404284,
+            "ray_pitch_error": 0.002210551492656143,
+            "settle_through": 33809
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33809,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.014398263077200824,
+            "ray_pitch_error": 0.001388837677546828,
+            "settle_through": 33813
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33813,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.014127963071117744,
+            "ray_pitch_error": 0.0044357702008605004,
+            "settle_through": 33817
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33817,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.013944545646878304,
+            "ray_pitch_error": 0.008542266326428849,
+            "settle_through": 33821
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33821,
+            "keys": [
+              "back",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.020679186382273507,
+            "ray_pitch_error": 0.012142344768920954,
+            "settle_through": 33825
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33825,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.027786742599944958,
+            "ray_pitch_error": 0.01707074459444413,
+            "settle_through": 33829
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33829,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.02637001159437924,
+            "ray_pitch_error": 0.014695389206899168,
+            "settle_through": 33833
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33833,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.018985396511640662,
+            "ray_pitch_error": 0.014777732113057773,
+            "settle_through": 33837
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33837,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.012152265146178287,
+            "ray_pitch_error": 0.013480211752213367,
+            "settle_through": 33841
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33842,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.007846612695062483,
+            "ray_pitch_error": 0.01237529469209142,
+            "settle_through": 33846
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33850,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.0083081072926241,
+            "ray_pitch_error": -0.00016326113237630224,
+            "settle_through": 33854
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33854,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.012708220632151601,
+            "ray_pitch_error": -0.0020492077745074555,
+            "settle_through": 33858
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33858,
+            "keys": [
+              "back",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.022870815364165686,
+            "ray_pitch_error": -0.5195812650303933,
+            "settle_through": 33862
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33862,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.014932403384540827,
+            "ray_pitch_error": 0.0033243644741755007,
+            "settle_through": 33866
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33866,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.013045382122670368,
+            "ray_pitch_error": -0.00670218788988175,
+            "settle_through": 33870
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33872,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.009469183289863903,
+            "ray_pitch_error": -0.003782116379464462,
+            "settle_through": 33876
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33876,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.013880910494766585,
+            "ray_pitch_error": -0.0026512158856107915,
+            "settle_through": 33880
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33880,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.021893032851699523,
+            "ray_pitch_error": -0.0029848555336043914,
+            "settle_through": 33884
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33884,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.022711859657722044,
+            "ray_pitch_error": -5.699405366099697e-05,
+            "settle_through": 33888
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33888,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.020017981442334243,
+            "ray_pitch_error": -0.002191649108154059,
+            "settle_through": 33892
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33892,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.017953413073804825,
+            "ray_pitch_error": 0.0001929663167702378,
+            "settle_through": 33896
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33896,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.015586042781251308,
+            "ray_pitch_error": 0.001376432283481499,
+            "settle_through": 33900
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33902,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.009744322156262086,
+            "ray_pitch_error": 0.0015976107038886411,
+            "settle_through": 33906
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33906,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.022784446147750437,
+            "ray_pitch_error": -0.00044534648437377644,
+            "settle_through": 33910
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33910,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.029932900721349576,
+            "ray_pitch_error": 6.13673944915849e-05,
+            "settle_through": 33914
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33915,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.03967698212726978,
+            "ray_pitch_error": 0.006351503480521381,
+            "settle_through": 33919
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33919,
+            "keys": [
+              "forward",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.03988902279200168,
+            "ray_pitch_error": 0.01231695679171485,
+            "settle_through": 33923
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33923,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.03279968902118302,
+            "ray_pitch_error": 0.01544758395720558,
+            "settle_through": 33928
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33928,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.03200526421773375,
+            "ray_pitch_error": 0.014078827393962268,
+            "settle_through": 33932
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33932,
+            "keys": [
+              "forward",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.03578503804647237,
+            "ray_pitch_error": 0.01945380681772324,
+            "settle_through": 33936
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33936,
+            "keys": [
+              "forward",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.03135621231276842,
+            "ray_pitch_error": 0.011439951300640128,
+            "settle_through": 33940
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33940,
+            "keys": [
+              "forward",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.029745217314415484,
+            "ray_pitch_error": 0.014142498235949597,
+            "settle_through": 33944
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33945,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.02383504831652772,
+            "ray_pitch_error": 0.019213337623739335,
+            "settle_through": 33949
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33949,
+            "keys": [
+              "forward",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.020469626746117076,
+            "ray_pitch_error": 0.02308823886049738,
+            "settle_through": 33953
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33953,
+            "keys": [
+              "forward",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.01160862745702751,
+            "ray_pitch_error": 0.022765359014089714,
+            "settle_through": 33957
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33957,
+            "keys": [
+              "forward",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.00479198199532016,
+            "ray_pitch_error": 0.017630406077821292,
+            "settle_through": 33962
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33962,
+            "keys": [
+              "forward",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.005750980880363965,
+            "ray_pitch_error": 0.010920171916065424,
+            "settle_through": 33966
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33966,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.010951279634595856,
+            "ray_pitch_error": 0.0029338946088716122,
+            "settle_through": 33970
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33970,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.019168251567508676,
+            "ray_pitch_error": 0.0036536398978150864,
+            "settle_through": 33974
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33974,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.027985645628885614,
+            "ray_pitch_error": 0.0009445287611618003,
+            "settle_through": 33978
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33978,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.03414967544644254,
+            "ray_pitch_error": 0.0006011956870665136,
+            "settle_through": 33982
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33982,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.04135046363530437,
+            "ray_pitch_error": -0.0014556928647757594,
+            "settle_through": 33986
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33986,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.036762238431313765,
+            "ray_pitch_error": -0.0006532086788152425,
+            "settle_through": 33990
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33990,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.021844052636695643,
+            "ray_pitch_error": -0.0058530210809734085,
+            "settle_through": 33994
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33994,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.022387732238815516,
+            "ray_pitch_error": -0.01808199853507597,
+            "settle_through": 33998
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 33998,
+            "keys": [
+              "forward",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.022679311962305437,
+            "ray_pitch_error": -0.026883091568415396,
+            "settle_through": 34002
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34002,
+            "keys": [
+              "forward",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.021017456938016377,
+            "ray_pitch_error": -0.02267353191371224,
+            "settle_through": 34006
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34006,
+            "keys": [
+              "forward",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.014788785269280957,
+            "ray_pitch_error": -0.01905539086519159,
+            "settle_through": 34010
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34010,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.010809145426664557,
+            "ray_pitch_error": -0.02026811482877644,
+            "settle_through": 34015
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34016,
+            "keys": [
+              "back",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.0035548926382178436,
+            "ray_pitch_error": -0.018340147125302297,
+            "settle_through": 34020
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34020,
+            "keys": [
+              "back",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.007110622477831896,
+            "ray_pitch_error": -0.015632697180038013,
+            "settle_through": 34024
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34024,
+            "keys": [
+              "forward",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.013010112498038406,
+            "ray_pitch_error": -0.02119212870066267,
+            "settle_through": 34028
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34029,
+            "keys": [
+              "forward",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.017542642758967997,
+            "ray_pitch_error": -0.02455031865589652,
+            "settle_through": 34033
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34033,
+            "keys": [
+              "forward",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.016990868020513084,
+            "ray_pitch_error": -0.02305436671200911,
+            "settle_through": 34037
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34037,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.019722134271912495,
+            "ray_pitch_error": -0.02548139901915225,
+            "settle_through": 34041
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34041,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.013711063541192114,
+            "ray_pitch_error": -0.01962261247496333,
+            "settle_through": 34045
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34045,
+            "keys": [
+              "forward",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.007935600560811551,
+            "ray_pitch_error": -0.022369190282721774,
+            "settle_through": 34049
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34049,
+            "keys": [
+              "forward",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.00294611856888638,
+            "ray_pitch_error": -0.016593798726066256,
+            "settle_through": 34053
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34053,
+            "keys": [
+              "forward",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.005094776176676419,
+            "ray_pitch_error": -0.015945456770800726,
+            "settle_through": 34057
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34057,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.013984000515618877,
+            "ray_pitch_error": -0.01484102140653365,
+            "settle_through": 34061
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34062,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.023795547527509786,
+            "ray_pitch_error": -0.016171431169855532,
+            "settle_through": 34066
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34066,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.016927580271906884,
+            "ray_pitch_error": -0.015315655014124463,
+            "settle_through": 34070
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34070,
+            "keys": [
+              "back",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.011168510944587595,
+            "ray_pitch_error": -0.01826217175822542,
+            "settle_through": 34074
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34074,
+            "keys": [
+              "forward",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.007576682087738096,
+            "ray_pitch_error": -0.020900115425821708,
+            "settle_through": 34078
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34078,
+            "keys": [
+              "back",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.00953066711621009,
+            "ray_pitch_error": -0.023173313621944858,
+            "settle_through": 34082
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34082,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.018889778828480086,
+            "ray_pitch_error": -0.02366755003246912,
+            "settle_through": 34086
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34086,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.01291946862969695,
+            "ray_pitch_error": -0.019411290587993846,
+            "settle_through": 34090
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34090,
+            "keys": [
+              "back",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.017171596736976102,
+            "ray_pitch_error": -0.024454130281902242,
+            "settle_through": 34094
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34094,
+            "keys": [
+              "back",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.021665451316223105,
+            "ray_pitch_error": -0.021758817656555407,
+            "settle_through": 34099
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34100,
+            "keys": [
+              "back",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.02827946809190296,
+            "ray_pitch_error": -0.016718546802306222,
+            "settle_through": 34104
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34104,
+            "keys": [
+              "back",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.03279583194098601,
+            "ray_pitch_error": -0.009683687537029306,
+            "settle_through": 34108
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34108,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.03482857109954551,
+            "ray_pitch_error": -0.0016936921672666694,
+            "settle_through": 34112
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34112,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.03588965151995094,
+            "ray_pitch_error": 0.006892592679732856,
+            "settle_through": 34116
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34116,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.03171560907413262,
+            "ray_pitch_error": 0.005178644660803644,
+            "settle_through": 34120
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34120,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.023762823792488952,
+            "ray_pitch_error": 0.0042780679607047345,
+            "settle_through": 34124
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34124,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.015522354380880898,
+            "ray_pitch_error": 0.00538790220234775,
+            "settle_through": 34129
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34130,
+            "keys": [
+              "forward",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.006843353951819342,
+            "ray_pitch_error": 0.015814586567857503,
+            "settle_through": 34134
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34134,
+            "keys": [
+              "forward",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.006433041176787668,
+            "ray_pitch_error": 0.016400205174365245,
+            "settle_through": 34138
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34138,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.008352997086256142,
+            "ray_pitch_error": 0.009244382864557421,
+            "settle_through": 34143
+          }
+        },
+        {
+          "ordinary_RT_A_when_actual_weapon_ray_intersects_weakpoint37_sphere": {
+            "frame": 34147,
+            "hp": 3464,
+            "magazine": 6,
+            "ray_miss": 65.63074297690731,
+            "back_dot": -6030.4760193345155
+          }
+        },
+        {
+          "actual_original_handgun_Garrador_HP_drop": {
+            "frame": 34150,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              220,
+              1200,
+              90,
+              600
+            ],
+            "source_Key_on": "0x800010",
+            "original_weakpoint_scaled_radius": 249.99893130073508,
+            "player_pos": [
+              18789.74609375,
+              -2000.002197265625,
+              -45158.7421875
+            ],
+            "yaw": -0.5496163964271545,
+            "player_routines": [
+              0,
+              6,
+              2,
+              1
+            ],
+            "Garrador_hp": 3196,
+            "Garrador_pos": [
+              15795.0126953125,
+              1765.536865234375,
+              -38904.6953125
+            ],
+            "Garrador_yaw": -0.015485748648643494,
+            "Garrador_routines": [
+              2,
+              15,
+              1,
+              0
+            ],
+            "weakpoint37_world": [
+              15827.915358811617,
+              3379.3696444034576,
+              -38983.431826770306
+            ],
+            "player_back_dot": -6299.6708386167,
+            "partner_safe_corner_pos": [
+              29401.06640625,
+              -2000.0009765625,
+              -42656.5
+            ],
+            "weakpoint_velocity_per_source_tick": 43.25456507325267,
+            "status1": "0x204",
+            "audible_footstep": false,
+            "actual_damage_record": {
+              "weapon": 2,
+              "part_ptr": "0x8caf2bd8",
+              "partNo": 37,
+              "flags": 0
+            }
+          },
+          "baseline_HP": 3464,
+          "ordinary_shot_count": 1
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk129\\shots\\checkpoint-source-34150\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk129\\shots\\checkpoint-source-34150\\checkpoint-context.json"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34162,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.02357722605367707,
+            "ray_pitch_error": -0.01008178613644195,
+            "settle_through": 34166
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34166,
+            "keys": [
+              "back",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.004735267704087498,
+            "ray_pitch_error": -0.008780169576339758,
+            "settle_through": 34170
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34170,
+            "keys": [
+              "back",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.00748985676586722,
+            "ray_pitch_error": -0.007916326800125995,
+            "settle_through": 34174
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34174,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.0362913936239595,
+            "ray_pitch_error": -0.023882333745952167,
+            "settle_through": 34178
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34178,
+            "keys": [
+              "back",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.04423175119822531,
+            "ray_pitch_error": -0.03970983832821939,
+            "settle_through": 34182
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34182,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.03125272188350925,
+            "ray_pitch_error": -0.041497743925064834,
+            "settle_through": 34186
+          }
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34186,
+            "keys": [
+              "back",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.033539549950099,
+            "ray_pitch_error": -0.048903514565833195,
+            "settle_through": 34190
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34190,
+            "keys": [
+              "back",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.04779266221929346,
+            "ray_pitch_error": -0.036640291250096824,
+            "settle_through": 34194
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34194,
+            "keys": [
+              "back",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.06451391120390859,
+            "ray_pitch_error": -0.021578025763627995,
+            "settle_through": 34198
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34198,
+            "keys": [
+              "back",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.07318537791834334,
+            "ray_pitch_error": -0.015399923595804776,
+            "settle_through": 34202
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34202,
+            "keys": [
+              "back",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.07886785019996667,
+            "ray_pitch_error": -0.013603436720418749,
+            "settle_through": 34206
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34206,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 2,
+            "ray_yaw_error": 0.07109594146460152,
+            "ray_pitch_error": -0.00429977310749885,
+            "settle_through": 34211
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34211,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.026646738633612443,
+            "ray_pitch_error": -0.0034269907445179104,
+            "settle_through": 34215
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34215,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.018035353561220546,
+            "ray_pitch_error": -0.018411574105531403,
+            "settle_through": 34219
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34219,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.03672159745440462,
+            "ray_pitch_error": -0.02924649496917925,
+            "settle_through": 34223
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34223,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.05345603465282034,
+            "ray_pitch_error": -0.023490506451054938,
+            "settle_through": 34227
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34227,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.07108828846371296,
+            "ray_pitch_error": -0.012909193892014836,
+            "settle_through": 34232
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34232,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 2,
+            "ray_yaw_error": -0.07228410213504333,
+            "ray_pitch_error": -0.007426150411762533,
+            "settle_through": 34237
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34237,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 2,
+            "ray_yaw_error": -0.06002593760238373,
+            "ray_pitch_error": -0.005669729959849934,
+            "settle_through": 34243
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34243,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.016125776809656323,
+            "ray_pitch_error": -0.00276038644159482,
+            "settle_through": 34247
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34247,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.0494619637833118,
+            "ray_pitch_error": -0.005179459757246541,
+            "settle_through": 34251
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34251,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 2,
+            "ray_yaw_error": 0.06280223238557792,
+            "ray_pitch_error": 0.00470206342554913,
+            "settle_through": 34256
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34256,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 2,
+            "ray_yaw_error": 0.06956851869656244,
+            "ray_pitch_error": 0.0032057568496690614,
+            "settle_through": 34261
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34262,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.059247658517409096,
+            "ray_pitch_error": 0.009571672423562383,
+            "settle_through": 34266
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34266,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.056483774115066776,
+            "ray_pitch_error": 0.008143338688135993,
+            "settle_through": 34270
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34270,
+            "keys": [
+              "forward",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.04829246168069101,
+            "ray_pitch_error": 0.012337913764787545,
+            "settle_through": 34274
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34274,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 2,
+            "ray_yaw_error": 0.06136361723682171,
+            "ray_pitch_error": 0.006848632119799691,
+            "settle_through": 34279
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34279,
+            "keys": [
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 2,
+            "ray_yaw_error": 0.050909123010446145,
+            "ray_pitch_error": -0.0014380368830738677,
+            "settle_through": 34284
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34284,
+            "keys": [
+              "back",
+              "left",
+              "ready"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": 0.0198796462234041,
+            "ray_pitch_error": -0.010154462642269824,
+            "settle_through": 34288
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34288,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.02380033383753588,
+            "ray_pitch_error": -0.0024235541244974623,
+            "settle_through": 34292
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34292,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 2,
+            "ray_yaw_error": -0.051480284706381774,
+            "ray_pitch_error": 0.004197982081342033,
+            "settle_through": 34297
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34298,
+            "keys": [
+              "forward",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.05971281553570851,
+            "ray_pitch_error": 0.008395669500275371,
+            "settle_through": 34302
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34302,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.04945588922961841,
+            "ray_pitch_error": 0.004126141480712886,
+            "settle_through": 34307
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34308,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.043134329750199374,
+            "ray_pitch_error": 0.002373933771116943,
+            "settle_through": 34312
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34312,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.03330321456232088,
+            "ray_pitch_error": 0.007249648319672342,
+            "settle_through": 34316
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34316,
+            "keys": [
+              "forward",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.12664674949071708,
+            "ray_pitch_error": 0.012686170599342073,
+            "settle_through": 34320
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34320,
+            "keys": [
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 5,
+            "ray_yaw_error": -0.20109013026274436,
+            "ray_pitch_error": -0.005905646587532787,
+            "settle_through": 34328
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34328,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 1,
+            "ray_yaw_error": -0.34212107980670714,
+            "ray_pitch_error": -0.04561496253552727,
+            "settle_through": 34332
+          }
+        },
+        {
+          "normal_two_axis_stick_pulse_then_pose_settle": {
+            "frame": 34332,
+            "keys": [
+              "back",
+              "ready",
+              "right"
+            ],
+            "held_source_ticks": 3,
+            "ray_yaw_error": -0.44398708177862467,
+            "ray_pitch_error": -0.0959646340280001,
+            "settle_through": 34338
+          }
+        },
+        {
+          "front_facing_boss_within3500_close_without_shot": {
+            "frame": 34338,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              220,
+              1200,
+              90,
+              600
+            ],
+            "source_Key_on": "0x800010",
+            "original_weakpoint_scaled_radius": 249.99901181992277,
+            "player_pos": [
+              18789.74609375,
+              -1999.999755859375,
+              -45158.7421875
+            ],
+            "yaw": -0.539720356464386,
+            "player_routines": [
+              0,
+              6,
+              1,
+              1
+            ],
+            "Garrador_hp": 3196,
+            "Garrador_pos": [
+              15762.92578125,
+              -1425.045166015625,
+              -44430.9609375
+            ],
+            "Garrador_yaw": 3.068423271179199,
+            "Garrador_routines": [
+              1,
+              17,
+              1,
+              0
+            ],
+            "weakpoint37_world": [
+              15733.91511568427,
+              400.49094116687775,
+              -44478.26060307026
+            ],
+            "player_back_dot": 947.1069456501134,
+            "partner_safe_corner_pos": [
+              29401.06640625,
+              -1999.9989013671875,
+              -42656.5
+            ],
+            "weakpoint_velocity_per_source_tick": 265.1718327239159,
+            "status1": "0x204",
+            "audible_footstep": false,
+            "actual_damage_record": {
+              "weapon": 2,
+              "part_ptr": "0x8caf2bd8",
+              "partNo": 37,
+              "flags": 0
+            },
+            "far_original_AI_tracking_no_frontal_shot": true
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk129\\shots\\checkpoint-source-34338\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk129\\shots\\checkpoint-source-34338\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "last_sample": {
+        "frame": 34338,
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "health": [
+          220,
+          1200,
+          90,
+          600
+        ],
+        "source_Key_on": "0x800010",
+        "original_weakpoint_scaled_radius": 249.99901181992277,
+        "player_pos": [
+          18789.74609375,
+          -1999.999755859375,
+          -45158.7421875
+        ],
+        "yaw": -0.539720356464386,
+        "player_routines": [
+          0,
+          6,
+          1,
+          1
+        ],
+        "Garrador_hp": 3196,
+        "Garrador_pos": [
+          15762.92578125,
+          -1425.045166015625,
+          -44430.9609375
+        ],
+        "Garrador_yaw": 3.068423271179199,
+        "Garrador_routines": [
+          1,
+          17,
+          1,
+          0
+        ],
+        "weakpoint37_world": [
+          15733.91511568427,
+          400.49094116687775,
+          -44478.26060307026
+        ],
+        "player_back_dot": 947.1069456501134,
+        "partner_safe_corner_pos": [
+          29401.06640625,
+          -1999.9989013671875,
+          -42656.5
+        ],
+        "weakpoint_velocity_per_source_tick": 265.1718327239159,
+        "status1": "0x204",
+        "audible_footstep": false,
+        "actual_damage_record": {
+          "weapon": 2,
+          "part_ptr": "0x8caf2bd8",
+          "partNo": 37,
+          "flags": 0
+        },
+        "far_original_AI_tracking_no_frontal_shot": true
+      },
+      "screenshot_contexts": [
+        {
+          "run": "route-walk129",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "source_frame_interval": [
+            34150,
+            34153
+          ],
+          "health_before": [
+            220,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            220,
+            1200,
+            90,
+            600
+          ],
+          "action_result": {
+            "actual_original_handgun_Garrador_HP_drop": {
+              "frame": 34150,
+              "room": "0x201",
+              "phase": [
+                3,
+                0
+              ],
+              "Stop": "0x0",
+              "SSLoop": 0,
+              "health": [
+                220,
+                1200,
+                90,
+                600
+              ],
+              "source_Key_on": "0x800010",
+              "original_weakpoint_scaled_radius": 249.99893130073508,
+              "player_pos": [
+                18789.74609375,
+                -2000.002197265625,
+                -45158.7421875
+              ],
+              "yaw": -0.5496163964271545,
+              "player_routines": [
+                0,
+                6,
+                2,
+                1
+              ],
+              "Garrador_hp": 3196,
+              "Garrador_pos": [
+                15795.0126953125,
+                1765.536865234375,
+                -38904.6953125
+              ],
+              "Garrador_yaw": -0.015485748648643494,
+              "Garrador_routines": [
+                2,
+                15,
+                1,
+                0
+              ],
+              "weakpoint37_world": [
+                15827.915358811617,
+                3379.3696444034576,
+                -38983.431826770306
+              ],
+              "player_back_dot": -6299.6708386167,
+              "partner_safe_corner_pos": [
+                29401.06640625,
+                -2000.0009765625,
+                -42656.5
+              ],
+              "weakpoint_velocity_per_source_tick": 43.25456507325267,
+              "status1": "0x204",
+              "audible_footstep": false,
+              "actual_damage_record": {
+                "weapon": 2,
+                "part_ptr": "0x8caf2bd8",
+                "partNo": 37,
+                "flags": 0
+              }
+            },
+            "baseline_HP": 3464,
+            "ordinary_shot_count": 1
+          },
+          "last_sample": {
+            "frame": 34150,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              220,
+              1200,
+              90,
+              600
+            ],
+            "source_Key_on": "0x800010",
+            "original_weakpoint_scaled_radius": 249.99893130073508,
+            "player_pos": [
+              18789.74609375,
+              -2000.002197265625,
+              -45158.7421875
+            ],
+            "yaw": -0.5496163964271545,
+            "player_routines": [
+              0,
+              6,
+              2,
+              1
+            ],
+            "Garrador_hp": 3196,
+            "Garrador_pos": [
+              15795.0126953125,
+              1765.536865234375,
+              -38904.6953125
+            ],
+            "Garrador_yaw": -0.015485748648643494,
+            "Garrador_routines": [
+              2,
+              15,
+              1,
+              0
+            ],
+            "weakpoint37_world": [
+              15827.915358811617,
+              3379.3696444034576,
+              -38983.431826770306
+            ],
+            "player_back_dot": -6299.6708386167,
+            "partner_safe_corner_pos": [
+              29401.06640625,
+              -2000.0009765625,
+              -42656.5
+            ],
+            "weakpoint_velocity_per_source_tick": 43.25456507325267,
+            "status1": "0x204",
+            "audible_footstep": false,
+            "actual_damage_record": {
+              "weapon": 2,
+              "part_ptr": "0x8caf2bd8",
+              "partNo": 37,
+              "flags": 0
+            }
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk129\\shots\\checkpoint-source-34150\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk129\\shots\\checkpoint-source-34150\\frames\\fb1.png"
+          ]
+        },
+        {
+          "run": "route-walk129",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "source_frame_interval": [
+            34338,
+            34339
+          ],
+          "health_before": [
+            220,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            220,
+            1200,
+            90,
+            600
+          ],
+          "action_result": {
+            "front_facing_boss_within3500_close_without_shot": {
+              "frame": 34338,
+              "room": "0x201",
+              "phase": [
+                3,
+                0
+              ],
+              "Stop": "0x0",
+              "SSLoop": 0,
+              "health": [
+                220,
+                1200,
+                90,
+                600
+              ],
+              "source_Key_on": "0x800010",
+              "original_weakpoint_scaled_radius": 249.99901181992277,
+              "player_pos": [
+                18789.74609375,
+                -1999.999755859375,
+                -45158.7421875
+              ],
+              "yaw": -0.539720356464386,
+              "player_routines": [
+                0,
+                6,
+                1,
+                1
+              ],
+              "Garrador_hp": 3196,
+              "Garrador_pos": [
+                15762.92578125,
+                -1425.045166015625,
+                -44430.9609375
+              ],
+              "Garrador_yaw": 3.068423271179199,
+              "Garrador_routines": [
+                1,
+                17,
+                1,
+                0
+              ],
+              "weakpoint37_world": [
+                15733.91511568427,
+                400.49094116687775,
+                -44478.26060307026
+              ],
+              "player_back_dot": 947.1069456501134,
+              "partner_safe_corner_pos": [
+                29401.06640625,
+                -1999.9989013671875,
+                -42656.5
+              ],
+              "weakpoint_velocity_per_source_tick": 265.1718327239159,
+              "status1": "0x204",
+              "audible_footstep": false,
+              "actual_damage_record": {
+                "weapon": 2,
+                "part_ptr": "0x8caf2bd8",
+                "partNo": 37,
+                "flags": 0
+              },
+              "far_original_AI_tracking_no_frontal_shot": true
+            }
+          },
+          "last_sample": {
+            "frame": 34338,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              220,
+              1200,
+              90,
+              600
+            ],
+            "source_Key_on": "0x800010",
+            "original_weakpoint_scaled_radius": 249.99901181992277,
+            "player_pos": [
+              18789.74609375,
+              -1999.999755859375,
+              -45158.7421875
+            ],
+            "yaw": -0.539720356464386,
+            "player_routines": [
+              0,
+              6,
+              1,
+              1
+            ],
+            "Garrador_hp": 3196,
+            "Garrador_pos": [
+              15762.92578125,
+              -1425.045166015625,
+              -44430.9609375
+            ],
+            "Garrador_yaw": 3.068423271179199,
+            "Garrador_routines": [
+              1,
+              17,
+              1,
+              0
+            ],
+            "weakpoint37_world": [
+              15733.91511568427,
+              400.49094116687775,
+              -44478.26060307026
+            ],
+            "player_back_dot": 947.1069456501134,
+            "partner_safe_corner_pos": [
+              29401.06640625,
+              -1999.9989013671875,
+              -42656.5
+            ],
+            "weakpoint_velocity_per_source_tick": 265.1718327239159,
+            "status1": "0x204",
+            "audible_footstep": false,
+            "actual_damage_record": {
+              "weapon": 2,
+              "part_ptr": "0x8caf2bd8",
+              "partNo": 37,
+              "flags": 0
+            },
+            "far_original_AI_tracking_no_frontal_shot": true
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk129\\shots\\checkpoint-source-34338\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk129\\shots\\checkpoint-source-34338\\frames\\fb1.png"
+          ]
+        }
+      ],
+      "motion_first_sample": {
+        "host_s": 0.0,
+        "frame": 33524,
+        "hits": 134976,
+        "misses": 3195,
+        "evictions": 3122,
+        "loads": 3195,
+        "resident": 163616,
+        "bindings": [
+          {
+            "slot": 0,
+            "archive": "0x8caf4380",
+            "bytes": 1163168,
+            "count": 173,
+            "budget": 64832,
+            "hot_bytes": 0,
+            "resident": 149184,
+            "keys": [
+              [
+                93,
+                10368,
+                "e9788255-26d064b2",
+                0
+              ],
+              [
+                94,
+                4672,
+                "59d9b309-d3e8a902",
+                0
+              ],
+              [
+                95,
+                4704,
+                "ea23d036-e3f9c91e",
+                0
+              ],
+              [
+                98,
+                18944,
+                "c7f3b979-37a90fa1",
+                0
+              ],
+              [
+                100,
+                15776,
+                "a20385d7-27ba8293",
+                0
+              ],
+              [
+                101,
+                9216,
+                "54b62553-571ab29b",
+                0
+              ],
+              [
+                102,
+                28928,
+                "cc093679-beebd2c2",
+                0
+              ],
+              [
+                103,
+                26944,
+                "9f685293-d9034c4e",
+                0
+              ],
+              [
+                104,
+                11968,
+                "32bb3fe7-563cb6f3",
+                0
+              ],
+              [
+                137,
+                6112,
+                "0d8fb760-91029c79",
+                0
+              ],
+              [
+                138,
+                11552,
+                "1e22a0b5-da5a4a95",
+                0
+              ]
+            ]
+          },
+          {
+            "slot": 1,
+            "archive": "0x8cc2aa20",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 14432,
+            "keys": [
+              [
+                27,
+                9088,
+                "5ffcdc79-69f63d5a",
+                0
+              ],
+              [
+                51,
+                5344,
+                "92503ed4-d5cc7ea5",
+                0
+              ]
+            ]
+          }
+        ],
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      },
+      "motion_last_sample": {
+        "host_s": 28.359,
+        "frame": 34339,
+        "hits": 137734,
+        "misses": 3196,
+        "evictions": 3122,
+        "loads": 3196,
+        "resident": 171424,
+        "bindings": [
+          {
+            "slot": 0,
+            "archive": "0x8caf4380",
+            "bytes": 1163168,
+            "count": 173,
+            "budget": 64832,
+            "hot_bytes": 0,
+            "resident": 156992,
+            "keys": [
+              [
+                93,
+                10368,
+                "e9788255-26d064b2",
+                0
+              ],
+              [
+                94,
+                4672,
+                "59d9b309-d3e8a902",
+                0
+              ],
+              [
+                95,
+                4704,
+                "ea23d036-e3f9c91e",
+                0
+              ],
+              [
+                98,
+                18944,
+                "c7f3b979-37a90fa1",
+                0
+              ],
+              [
+                99,
+                7808,
+                "d9bf4650-1e504fc1",
+                0
+              ],
+              [
+                100,
+                15776,
+                "a20385d7-27ba8293",
+                0
+              ],
+              [
+                101,
+                9216,
+                "54b62553-571ab29b",
+                0
+              ],
+              [
+                102,
+                28928,
+                "cc093679-beebd2c2",
+                0
+              ],
+              [
+                103,
+                26944,
+                "9f685293-d9034c4e",
+                0
+              ],
+              [
+                104,
+                11968,
+                "32bb3fe7-563cb6f3",
+                0
+              ],
+              [
+                137,
+                6112,
+                "0d8fb760-91029c79",
+                0
+              ],
+              [
+                138,
+                11552,
+                "1e22a0b5-da5a4a95",
+                0
+              ]
+            ]
+          },
+          {
+            "slot": 1,
+            "archive": "0x8cc2aa20",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 14432,
+            "keys": [
+              [
+                27,
+                9088,
+                "5ffcdc79-69f63d5a",
+                0
+              ],
+              [
+                51,
+                5344,
+                "92503ed4-d5cc7ea5",
+                0
+              ]
+            ]
+          }
+        ],
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      }
+    },
+    {
+      "scope": "Read-only immutable checkpoint audit of recovered-J NEW cold lineage only. No original J state retarget or game writes.",
+      "run": "route-walk130",
+      "state_sha256": "1521d6706bee811d37229d7fa0c847b3ade34e6355b3393a875e85f7bf7a7209",
+      "source_frame": 34364,
+      "room": "0x201",
+      "chapter": 6,
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x80400100",
+      "SSLoop": 0,
+      "held_world": "0x0",
+      "health": [
+        0,
+        1200,
+        90,
+        600
+      ],
+      "start": {
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "disc_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+        "ram_gdi": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\segments\\route-walk130\\disc.gdi",
+        "seed": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk129\\data",
+        "start_utc": "2026-10-21T20:02:43.969171+00:00"
+      },
+      "result": {
+        "name": "castle21-recoveredJ-route-walk130",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T20:02:43.835172+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "early_emulator_exit": 0,
+        "log_idle_s": 1.0,
+        "end_utc": "2026-10-21T20:02:47.012871+00:00",
+        "elapsed_s": 3.1,
+        "emulator_exited": true
+      },
+      "ELF_anchors": 4,
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk130\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "abort": "AssertionError(('sourceplayerinactive/dead', 0, 1200))"
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk130\\shots\\checkpoint-source-34363\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk130\\shots\\checkpoint-source-34363\\checkpoint-context.json"
+        },
+        {
+          "owned_close_on_guard": true
+        }
+      ],
+      "last_sample": {
+        "host_monotonic": 362232.0,
+        "room": "0x201",
+        "frame": 34362,
+        "player_hp": 220,
+        "partner_hp": 90,
+        "pos": [
+          18701.142578125,
+          -2000.000244140625,
+          -45066.4609375
+        ],
+        "yaw": 0.9934816360473633,
+        "target_distance": 4799.317619380713,
+        "angle_error": 0.5634662507975783,
+        "Garrador": {
+          "hp": 3196,
+          "pos": [
+            17980.634765625,
+            -1999.999267578125,
+            -45358.3359375
+          ],
+          "yaw": 1.3133658170700073,
+          "routines": [
+            1,
+            43,
+            1,
+            0
+          ],
+          "player_back_dot": 771.075548749107
+        },
+        "source_Key_on": "0x8000008",
+        "player_routines": [
+          0,
+          4,
+          2,
+          0
+        ]
+      },
+      "screenshot_contexts": [
+        {
+          "run": "route-walk130",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "source_frame_interval": [
+            34363,
+            34364
+          ],
+          "health_before": [
+            0,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            0,
+            1200,
+            90,
+            600
+          ],
+          "action_result": {
+            "abort": "AssertionError(('sourceplayerinactive/dead', 0, 1200))"
+          },
+          "last_sample": {
+            "host_monotonic": 362232.0,
+            "room": "0x201",
+            "frame": 34362,
+            "player_hp": 220,
+            "partner_hp": 90,
+            "pos": [
+              18701.142578125,
+              -2000.000244140625,
+              -45066.4609375
+            ],
+            "yaw": 0.9934816360473633,
+            "target_distance": 4799.317619380713,
+            "angle_error": 0.5634662507975783,
+            "Garrador": {
+              "hp": 3196,
+              "pos": [
+                17980.634765625,
+                -1999.999267578125,
+                -45358.3359375
+              ],
+              "yaw": 1.3133658170700073,
+              "routines": [
+                1,
+                43,
+                1,
+                0
+              ],
+              "player_back_dot": 771.075548749107
+            },
+            "source_Key_on": "0x8000008",
+            "player_routines": [
+              0,
+              4,
+              2,
+              0
+            ]
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk130\\shots\\checkpoint-source-34363\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk130\\shots\\checkpoint-source-34363\\frames\\fb1.png"
+          ]
+        }
+      ],
+      "motion_first_sample": {
+        "host_s": 0.0,
+        "frame": 34339,
+        "hits": 137734,
+        "misses": 3196,
+        "evictions": 3122,
+        "loads": 3196,
+        "resident": 171424,
+        "bindings": [
+          {
+            "slot": 0,
+            "archive": "0x8caf4380",
+            "bytes": 1163168,
+            "count": 173,
+            "budget": 64832,
+            "hot_bytes": 0,
+            "resident": 156992,
+            "keys": [
+              [
+                93,
+                10368,
+                "e9788255-26d064b2",
+                0
+              ],
+              [
+                94,
+                4672,
+                "59d9b309-d3e8a902",
+                0
+              ],
+              [
+                95,
+                4704,
+                "ea23d036-e3f9c91e",
+                0
+              ],
+              [
+                98,
+                18944,
+                "c7f3b979-37a90fa1",
+                0
+              ],
+              [
+                99,
+                7808,
+                "d9bf4650-1e504fc1",
+                0
+              ],
+              [
+                100,
+                15776,
+                "a20385d7-27ba8293",
+                0
+              ],
+              [
+                101,
+                9216,
+                "54b62553-571ab29b",
+                0
+              ],
+              [
+                102,
+                28928,
+                "cc093679-beebd2c2",
+                0
+              ],
+              [
+                103,
+                26944,
+                "9f685293-d9034c4e",
+                0
+              ],
+              [
+                104,
+                11968,
+                "32bb3fe7-563cb6f3",
+                0
+              ],
+              [
+                137,
+                6112,
+                "0d8fb760-91029c79",
+                0
+              ],
+              [
+                138,
+                11552,
+                "1e22a0b5-da5a4a95",
+                0
+              ]
+            ]
+          },
+          {
+            "slot": 1,
+            "archive": "0x8cc2aa20",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 14432,
+            "keys": [
+              [
+                27,
+                9088,
+                "5ffcdc79-69f63d5a",
+                0
+              ],
+              [
+                51,
+                5344,
+                "92503ed4-d5cc7ea5",
+                0
+              ]
+            ]
+          }
+        ],
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      },
+      "motion_last_sample": {
+        "host_s": 0.797,
+        "frame": 34358,
+        "hits": 137811,
+        "misses": 3196,
+        "evictions": 3122,
+        "loads": 3196,
+        "resident": 171424,
+        "bindings": [
+          {
+            "slot": 0,
+            "archive": "0x8caf4380",
+            "bytes": 1163168,
+            "count": 173,
+            "budget": 64832,
+            "hot_bytes": 0,
+            "resident": 156992,
+            "keys": [
+              [
+                93,
+                10368,
+                "e9788255-26d064b2",
+                0
+              ],
+              [
+                94,
+                4672,
+                "59d9b309-d3e8a902",
+                0
+              ],
+              [
+                95,
+                4704,
+                "ea23d036-e3f9c91e",
+                0
+              ],
+              [
+                98,
+                18944,
+                "c7f3b979-37a90fa1",
+                0
+              ],
+              [
+                99,
+                7808,
+                "d9bf4650-1e504fc1",
+                0
+              ],
+              [
+                100,
+                15776,
+                "a20385d7-27ba8293",
+                0
+              ],
+              [
+                101,
+                9216,
+                "54b62553-571ab29b",
+                0
+              ],
+              [
+                102,
+                28928,
+                "cc093679-beebd2c2",
+                0
+              ],
+              [
+                103,
+                26944,
+                "9f685293-d9034c4e",
+                0
+              ],
+              [
+                104,
+                11968,
+                "32bb3fe7-563cb6f3",
+                0
+              ],
+              [
+                137,
+                6112,
+                "0d8fb760-91029c79",
+                0
+              ],
+              [
+                138,
+                11552,
+                "1e22a0b5-da5a4a95",
+                0
+              ]
+            ]
+          },
+          {
+            "slot": 1,
+            "archive": "0x8cc2aa20",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 14432,
+            "keys": [
+              [
+                27,
+                9088,
+                "5ffcdc79-69f63d5a",
+                0
+              ],
+              [
+                51,
+                5344,
+                "92503ed4-d5cc7ea5",
+                0
+              ]
+            ]
+          }
+        ],
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      }
+    },
+    {
+      "scope": "Read-only immutable checkpoint audit of recovered-J NEW cold lineage only. No original J state retarget or game writes.",
+      "run": "route-walk131",
+      "state_sha256": "781bcf19312429cb337e76629f157cc0cf7c3db3944bdbb8dd64341ad5f36224",
+      "source_frame": 25728,
+      "room": "0x201",
+      "chapter": 6,
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "SSLoop": 0,
+      "held_world": "0x0",
+      "health": [
+        903,
+        1200,
+        90,
+        600
+      ],
+      "start": {
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "disc_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+        "ram_gdi": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\segments\\route-walk131\\disc.gdi",
+        "seed": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk130\\data",
+        "start_utc": "2026-10-21T20:03:07.050847+00:00"
+      },
+      "result": {
+        "name": "castle21-recoveredJ-route-walk131",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T20:03:06.919837+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "early_emulator_exit": 0,
+        "log_idle_s": 0.5,
+        "end_utc": "2026-10-21T20:03:33.884603+00:00",
+        "elapsed_s": 26.9,
+        "emulator_exited": true
+      },
+      "ELF_anchors": 4,
+      "player_pos": [
+        15982.0205078125,
+        1999.9957275390625,
+        -37797.53515625
+      ],
+      "partner_pos": [
+        15982.0537109375,
+        1999.9967041015625,
+        -37797.55078125
+      ],
+      "partner_subflags": "0x40",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk131\\data\\disc.state"
+        },
+        {
+          "actual_original_death_before_normal_Continue": {
+            "frame": 34364,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x80400100",
+            "death_flags": "0x3180100",
+            "flags5010": "0x200",
+            "SSLoop": 0,
+            "life": 0,
+            "maxlife": 1200,
+            "ashley_life": 90,
+            "maxashley": 600,
+            "Continue_source_log": false
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk131\\shots\\checkpoint-source-34364\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk131\\shots\\checkpoint-source-34364\\checkpoint-context.json"
+        },
+        {
+          "original_Continue_recovered": {
+            "frame": 25728,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "death_flags": "0x3000100",
+            "flags5010": "0x200",
+            "SSLoop": 0,
+            "life": 903,
+            "maxlife": 1200,
+            "ashley_life": 90,
+            "maxashley": 600,
+            "Continue_source_log": true
+          },
+          "initial_death_observed": true
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk131\\shots\\checkpoint-source-25728\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk131\\shots\\checkpoint-source-25728\\checkpoint-context.json"
+        },
+        {
+          "owned_close_after_original_Continue": true
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "last_sample": {
+        "frame": 25728,
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "death_flags": "0x3000100",
+        "flags5010": "0x200",
+        "SSLoop": 0,
+        "life": 903,
+        "maxlife": 1200,
+        "ashley_life": 90,
+        "maxashley": 600,
+        "Continue_source_log": true
+      },
+      "screenshot_contexts": [
+        {
+          "run": "route-walk131",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "source_frame_interval": [
+            25728,
+            25728
+          ],
+          "health_before": [
+            903,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            903,
+            1200,
+            90,
+            600
+          ],
+          "action_result": {
+            "original_Continue_recovered": {
+              "frame": 25728,
+              "room": "0x201",
+              "phase": [
+                3,
+                0
+              ],
+              "Stop": "0x0",
+              "death_flags": "0x3000100",
+              "flags5010": "0x200",
+              "SSLoop": 0,
+              "life": 903,
+              "maxlife": 1200,
+              "ashley_life": 90,
+              "maxashley": 600,
+              "Continue_source_log": true
+            },
+            "initial_death_observed": true
+          },
+          "last_sample": {
+            "frame": 25728,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "death_flags": "0x3000100",
+            "flags5010": "0x200",
+            "SSLoop": 0,
+            "life": 903,
+            "maxlife": 1200,
+            "ashley_life": 90,
+            "maxashley": 600,
+            "Continue_source_log": true
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk131\\shots\\checkpoint-source-25728\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk131\\shots\\checkpoint-source-25728\\frames\\fb1.png"
+          ]
+        },
+        {
+          "run": "route-walk131",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "source_frame_interval": [
+            34364,
+            34364
+          ],
+          "health_before": [
+            0,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            0,
+            1200,
+            90,
+            600
+          ],
+          "action_result": {
+            "actual_original_death_before_normal_Continue": {
+              "frame": 34364,
+              "room": "0x201",
+              "phase": [
+                3,
+                0
+              ],
+              "Stop": "0x80400100",
+              "death_flags": "0x3180100",
+              "flags5010": "0x200",
+              "SSLoop": 0,
+              "life": 0,
+              "maxlife": 1200,
+              "ashley_life": 90,
+              "maxashley": 600,
+              "Continue_source_log": false
+            }
+          },
+          "last_sample": {
+            "frame": 34364,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x80400100",
+            "death_flags": "0x3180100",
+            "flags5010": "0x200",
+            "SSLoop": 0,
+            "life": 0,
+            "maxlife": 1200,
+            "ashley_life": 90,
+            "maxashley": 600,
+            "Continue_source_log": false
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk131\\shots\\checkpoint-source-34364\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk131\\shots\\checkpoint-source-34364\\frames\\fb1.png"
+          ]
+        }
+      ],
+      "motion_first_sample": {
+        "host_s": 25.265,
+        "frame": 25728,
+        "hits": 138160,
+        "misses": 3198,
+        "evictions": 3122,
+        "loads": 3198,
+        "resident": 11456,
+        "bindings": [
+          {
+            "slot": 0,
+            "archive": "0x8caf4380",
+            "bytes": 1163168,
+            "count": 173,
+            "budget": 64832,
+            "hot_bytes": 0,
+            "resident": 6112,
+            "keys": [
+              [
+                137,
+                6112,
+                "0d8fb760-91029c79",
+                0
+              ]
+            ]
+          },
+          {
+            "slot": 1,
+            "archive": "0x8cc2aa20",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 5344,
+            "keys": [
+              [
+                51,
+                5344,
+                "92503ed4-d5cc7ea5",
+                0
+              ]
+            ]
+          }
+        ],
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      },
+      "motion_last_sample": {
+        "host_s": 25.859,
+        "frame": 25728,
+        "hits": 138160,
+        "misses": 3198,
+        "evictions": 3122,
+        "loads": 3198,
+        "resident": 11456,
+        "bindings": [
+          {
+            "slot": 0,
+            "archive": "0x8caf4380",
+            "bytes": 1163168,
+            "count": 173,
+            "budget": 64832,
+            "hot_bytes": 0,
+            "resident": 6112,
+            "keys": [
+              [
+                137,
+                6112,
+                "0d8fb760-91029c79",
+                0
+              ]
+            ]
+          },
+          {
+            "slot": 1,
+            "archive": "0x8cc2aa20",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 5344,
+            "keys": [
+              [
+                51,
+                5344,
+                "92503ed4-d5cc7ea5",
+                0
+              ]
+            ]
+          }
+        ],
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      }
+    }
+  ],
+  "host_inputs": [
+    {
+      "path": "prepare-recovered-j-bounded-arm.py",
+      "sha256": "6d50271f1b2b7bfeb222c108ed0cc8de6d6c46ba5b9aa2eda7d95b94e78380b8"
+    },
+    {
+      "path": "audit-recovered-j-checkpoint.py",
+      "sha256": "e99ce275c195b3a0eeb7b2fe6af8dedd145ea4073c645fc04999ec3976c8a6ac"
+    },
+    {
+      "path": "seal-resume-oct21.py",
+      "sha256": "8e7d91b278d8c4b2b00dcf4c835be3d10511bd2931327fe8a6cda52960cef71c"
+    },
+    {
+      "path": "owned-window-recovered-j-r201-sealed-injury-recovery-still.py",
+      "sha256": "81c1e33fd7af80ea8cfc53ba1b6d07191aa854567246aa7f224ad7951b2f080f"
+    },
+    {
+      "path": "owned-window-recovered-j-r201-sealed-health-far-track-weakpoint-still.py",
+      "sha256": "f3aef5869f8fb1ed1008e2ddb54d9d7c39d111275a4cd5a87ac5cfe9311503a1"
+    },
+    {
+      "path": "owned-window-recovered-j-r201-original-Continue90-still.py",
+      "sha256": "38721a22fccd755ab171cfa506f6839f7e423eb05c62ea13c1e9cd322b07597c"
+    },
+    {
+      "path": "run-recovered-j-route-walk128.py",
+      "sha256": "1581083bb72d65d668a0e3cac6e08f23788f982a7aec77ec70026dd90e33ddef"
+    },
+    {
+      "path": "run-recovered-j-route-walk128.sh",
+      "sha256": "cbc783d1fe34cf846f0772b223884079044e7612b01cc2851f1acb17061ca9b6"
+    },
+    {
+      "path": "run-recovered-j-route-walk129.py",
+      "sha256": "32aadd03675657f593a2ca1a448d3ae75df634b3407066bf3127ccae5c341c56"
+    },
+    {
+      "path": "run-recovered-j-route-walk129.sh",
+      "sha256": "ecc69055453731b6118e3c9af03fca9b5ecc1cc476d0101fc4660b7824db953f"
+    },
+    {
+      "path": "run-recovered-j-route-walk130.py",
+      "sha256": "5466e0edbe9930d3cef8dfb0200aecf4a03ad220b34a06a5a50a11d341fb4c69"
+    },
+    {
+      "path": "run-recovered-j-route-walk130.sh",
+      "sha256": "c3c81bc652b9c8733a3e4d8e1c848ed633d61df2082b64f96a3e35c346400982"
+    },
+    {
+      "path": "run-recovered-j-route-walk131.py",
+      "sha256": "7916b13138f614b2944151fdd984d4cef8b25005a0e129ef4f75686c701b48cf"
+    },
+    {
+      "path": "run-recovered-j-route-walk131.sh",
+      "sha256": "399aa223c68e30e98f33440b46ccd7a29154e9e73784bcc6bbba9eda504ab3f0"
+    }
+  ],
+  "next": "Executing the known normal reload, herb and lever replay; then combat with earlier post-hit disengagement. No new build or shared source claim.",
+  "source": "codex/castle18 runtime12a841d7c",
+  "program": "c21jmW ELF4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "original127_preserved": true,
+  "shared_claims": []
+}

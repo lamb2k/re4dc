@@ -1,0 +1,167 @@
+{
+  "scope": "Independent static AST/hash/source review only; no QA module imported, test rerun, native process test child or guest/build/stage/reseal; subprocesses perform git source reads only.",
+  "base": "1bcbc5df33ed2f3b3dfaf376e06416b34f7176bb",
+  "first_candidate": "368b92fab4fcfdc48c98061611a872fb5ec693f7",
+  "reviewed_successor": "85bac7a7113816d3e8c9564d0c301ed4c670aa94",
+  "static_controls": {
+    "Inputs.__init___AST_unchanged": true,
+    "Inputs.down_AST_unchanged": true,
+    "Inputs.up_AST_unchanged": true,
+    "Inputs.expire_AST_unchanged": true,
+    "Inputs.release_all_AST_unchanged": true,
+    "Inputs.close_AST_unchanged": true,
+    "Inputs.release_before_capture_AST_unchanged": true,
+    "late_bound_comparison_unchanged": true,
+    "supervisor_constant_assignments_unchanged": true,
+    "monitor_AST_identical_after_removing_new_telemetry": true,
+    "backend_AST_identical_except_added_final_reporter": true,
+    "inner.validate_role_AST_unchanged": true,
+    "inner.input_allowed_AST_unchanged": true,
+    "inner.elapsed_AST_unchanged": true,
+    "inner.synchronize_AST_unchanged": true,
+    "inner.post_AST_unchanged": true,
+    "inner.release_all_AST_unchanged": true,
+    "inner.qa_press_AST_unchanged": true,
+    "inner.capture_work_AST_unchanged": true,
+    "inner.capture_AST_unchanged": true,
+    "inner.watch_AST_unchanged": true
+  },
+  "unchanged_sources": {
+    "controller-core.py": {
+      "sha256": "e553ac26486ef9d56b32d379112dfd5211c59858976d257236fc260f8940c84a",
+      "bytes": 7467
+    },
+    "policies.py": {
+      "sha256": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233",
+      "bytes": 3455
+    },
+    "observe.py": {
+      "sha256": "d6d7e8da58de0c4d8c11f089ec919989357b9de5445d4dd3397ba9fe16b8a490",
+      "bytes": 6626
+    },
+    "observer-v2.py": {
+      "sha256": "3d91acc380e386b1950082abde2d8001e9f9b72aefa111ad180380d543652abf",
+      "bytes": 8805
+    },
+    "outer-driver.py": {
+      "sha256": "2c36123ba025ad431a85735e4a7cff8a9b1315613ba7595dbefc215adc83a6e8",
+      "bytes": 10969
+    },
+    "guest-profile-v2.json": {
+      "sha256": "8aae247a6c0998af06ffce2d16a3832bfaaaf99dbab1769fc75b32b1a2103d1b",
+      "bytes": 10101
+    },
+    "source-manifest.json": {
+      "sha256": "3557c5224df6b3715d282d3deab5fff7557b1c2ec8273c7d0ea76c1f359a41c1",
+      "bytes": 8224
+    },
+    "PLAN.md": {
+      "sha256": "8e9b78a36618d6bb6575592a77ba125431ae55d5f1e8e2aaeb260a9bd6d96846",
+      "bytes": 15074
+    }
+  },
+  "manifest_verified": {
+    "input-deadlines.py": {
+      "bytes": 3728,
+      "sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9"
+    },
+    "inner-adapter.py": {
+      "bytes": 14262,
+      "sha256": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e"
+    },
+    "windows-backend.py": {
+      "bytes": 15331,
+      "sha256": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e"
+    },
+    "guest-supervisor-core.py": {
+      "bytes": 4346,
+      "sha256": "3227d411abf7370901b12f894dd35c33ca2b865f8be3eb88099f324814f87510"
+    },
+    "test-failure-telemetry.py": {
+      "bytes": 10106,
+      "sha256": "f2ee60d6ced646115f980e01384d192909210bee11293d174c7ac729c9eaa5dc"
+    },
+    "run-failure-telemetry-tests.py": {
+      "bytes": 1375,
+      "sha256": "ef00458cfcf726144f81d0a3fa759b2491e77c9ae9e8584b2b9c302dd709f28b"
+    },
+    "failure-telemetry-receipt-linux-20261022T025519891785Z.json": {
+      "bytes": 3073,
+      "sha256": "039cb2fbab4625ca0eb6b93240cc59e10b3c594095b7269dfa1b39730106d6f8",
+      "current_candidate_sources": false,
+      "tests": 13
+    },
+    "failure-telemetry-receipt-linux-20261022T025913277743Z.json": {
+      "bytes": 3586,
+      "sha256": "5670352449edb1558c8c7d7489bdb1b39031cdac592fb0195001df5c205c2fa9",
+      "current_candidate_sources": true,
+      "tests": 16
+    },
+    "failure-telemetry-receipt-windows-20261022T025519788197Z.json": {
+      "bytes": 3183,
+      "sha256": "780b152275bc42a857ac363257b50bf86cf1375c9ecd9333dd25c6f07c9b3591",
+      "current_candidate_sources": false,
+      "tests": 13
+    },
+    "failure-telemetry-receipt-windows-20261022T025913173135Z.json": {
+      "bytes": 3696,
+      "sha256": "2cc9646d73bfe8186db3054b004bf5d4c69d77ac046d588ff77ee87f55ad5fb1",
+      "current_candidate_sources": true,
+      "tests": 16
+    }
+  },
+  "retained_receipts_not_rerun": {
+    "failure-telemetry-receipt-linux-20261022T025519891785Z.json": {
+      "sha256": "039cb2fbab4625ca0eb6b93240cc59e10b3c594095b7269dfa1b39730106d6f8",
+      "platform": "Linux-6.6.87.2-unicode+-x86_64-with-glibc2.39",
+      "returncode": 0,
+      "stderr": "test_no_retained_guest_is_explicit_unavailable (__main__.ExitBackend.test_no_retained_guest_is_explicit_unavailable) ... ok\ntest_retained_exited_handle_has_exact_raw_times_duration_identity (__main__.ExitBackend.test_retained_exited_handle_has_exact_raw_times_duration_identity) ... ok\ntest_start_mismatch_refuses_recycled_identity (__main__.ExitBackend.test_start_mismatch_refuses_recycled_identity) ... ok\ntest_unfinalized_exit_has_no_invented_duration (__main__.ExitBackend.test_unfinalized_exit_has_no_invented_duration) ... ok\ntest_exception_keeps_false_original_error_and_exact_exit_before_close (__main__.FailureCleanup.test_exception_keeps_false_original_error_and_exact_exit_before_close) ... ok\ntest_telemetry_exception_cannot_skip_privatejob_cleanup (__main__.FailureCleanup.test_telemetry_exception_cannot_skip_privatejob_cleanup) ... ok\ntest_atomic_marker_preserves_complete_numeric_failure (__main__.Pulse.test_atomic_marker_preserves_complete_numeric_failure) ... ok\ntest_exited_noop_is_not_recorded_as_successful_keyup (__main__.Pulse.test_exited_noop_is_not_recorded_as_successful_keyup) ... ok\ntest_first_failure_is_not_replaced (__main__.Pulse.test_first_failure_is_not_replaced) ... ok\ntest_late_numeric_receipt_preserves_existing_failure (__main__.Pulse.test_late_numeric_receipt_preserves_existing_failure) ... ok\ntest_native_queue_exception_preserves_partial_receipt_and_null_return (__main__.Pulse.test_native_queue_exception_preserves_partial_receipt_and_null_return) ... ok\ntest_no_telemetry_callback_is_explicit_unavailable (__main__.Pulse.test_no_telemetry_callback_is_explicit_unavailable) ... ok\ntest_serialization_failure_never_publishes_partial_final_marker (__main__.Pulse.test_serialization_failure_never_publishes_partial_final_marker) ... ok\n\n----------------------------------------------------------------------\nRan 13 tests in 0.003s\n\nOK\n",
+      "guest_qualified": false
+    },
+    "failure-telemetry-receipt-linux-20261022T025913277743Z.json": {
+      "sha256": "5670352449edb1558c8c7d7489bdb1b39031cdac592fb0195001df5c205c2fa9",
+      "platform": "Linux-6.6.87.2-unicode+-x86_64-with-glibc2.39",
+      "returncode": 0,
+      "stderr": "test_no_retained_guest_is_explicit_unavailable (__main__.ExitBackend.test_no_retained_guest_is_explicit_unavailable) ... ok\ntest_retained_exited_handle_has_exact_raw_times_duration_identity (__main__.ExitBackend.test_retained_exited_handle_has_exact_raw_times_duration_identity) ... ok\ntest_start_mismatch_refuses_recycled_identity (__main__.ExitBackend.test_start_mismatch_refuses_recycled_identity) ... ok\ntest_unfinalized_exit_has_no_invented_duration (__main__.ExitBackend.test_unfinalized_exit_has_no_invented_duration) ... ok\ntest_exception_keeps_false_original_error_and_exact_exit_before_close (__main__.FailureCleanup.test_exception_keeps_false_original_error_and_exact_exit_before_close) ... ok\ntest_telemetry_exception_cannot_skip_privatejob_cleanup (__main__.FailureCleanup.test_telemetry_exception_cannot_skip_privatejob_cleanup) ... ok\ntest_atomic_marker_preserves_complete_numeric_failure (__main__.Pulse.test_atomic_marker_preserves_complete_numeric_failure) ... ok\ntest_engine_up_elapsed_exception_preserves_successful_native_queue (__main__.Pulse.test_engine_up_elapsed_exception_preserves_successful_native_queue) ... ok\ntest_engine_up_queue_exception_publishes_before_controller_stringification (__main__.Pulse.test_engine_up_queue_exception_publishes_before_controller_stringification) ... ok\ntest_exited_noop_is_not_recorded_as_successful_keyup (__main__.Pulse.test_exited_noop_is_not_recorded_as_successful_keyup) ... ok\ntest_first_failure_is_not_replaced (__main__.Pulse.test_first_failure_is_not_replaced) ... ok\ntest_late_numeric_receipt_preserves_existing_failure (__main__.Pulse.test_late_numeric_receipt_preserves_existing_failure) ... ok\ntest_native_queue_exception_preserves_partial_receipt_and_null_return (__main__.Pulse.test_native_queue_exception_preserves_partial_receipt_and_null_return) ... ok\ntest_no_telemetry_callback_is_explicit_unavailable (__main__.Pulse.test_no_telemetry_callback_is_explicit_unavailable) ... ok\ntest_release_all_queue_exception_publishes_before_aggregate_loses_attributes (__main__.Pulse.test_release_all_queue_exception_publishes_before_aggregate_loses_attributes) ... ok\ntest_serialization_failure_never_publishes_partial_final_marker (__main__.Pulse.test_serialization_failure_never_publishes_partial_final_marker) ... ok\n\n----------------------------------------------------------------------\nRan 16 tests in 0.005s\n\nOK\n",
+      "guest_qualified": false
+    },
+    "failure-telemetry-receipt-windows-20261022T025519788197Z.json": {
+      "sha256": "780b152275bc42a857ac363257b50bf86cf1375c9ecd9333dd25c6f07c9b3591",
+      "platform": "Windows-11-10.0.26220-SP0",
+      "returncode": 0,
+      "stderr": "test_no_retained_guest_is_explicit_unavailable (__main__.ExitBackend.test_no_retained_guest_is_explicit_unavailable) ... ok\ntest_retained_exited_handle_has_exact_raw_times_duration_identity (__main__.ExitBackend.test_retained_exited_handle_has_exact_raw_times_duration_identity) ... ok\ntest_start_mismatch_refuses_recycled_identity (__main__.ExitBackend.test_start_mismatch_refuses_recycled_identity) ... ok\ntest_unfinalized_exit_has_no_invented_duration (__main__.ExitBackend.test_unfinalized_exit_has_no_invented_duration) ... ok\ntest_exception_keeps_false_original_error_and_exact_exit_before_close (__main__.FailureCleanup.test_exception_keeps_false_original_error_and_exact_exit_before_close) ... ok\ntest_telemetry_exception_cannot_skip_privatejob_cleanup (__main__.FailureCleanup.test_telemetry_exception_cannot_skip_privatejob_cleanup) ... ok\ntest_atomic_marker_preserves_complete_numeric_failure (__main__.Pulse.test_atomic_marker_preserves_complete_numeric_failure) ... ok\ntest_exited_noop_is_not_recorded_as_successful_keyup (__main__.Pulse.test_exited_noop_is_not_recorded_as_successful_keyup) ... ok\ntest_first_failure_is_not_replaced (__main__.Pulse.test_first_failure_is_not_replaced) ... ok\ntest_late_numeric_receipt_preserves_existing_failure (__main__.Pulse.test_late_numeric_receipt_preserves_existing_failure) ... ok\ntest_native_queue_exception_preserves_partial_receipt_and_null_return (__main__.Pulse.test_native_queue_exception_preserves_partial_receipt_and_null_return) ... ok\ntest_no_telemetry_callback_is_explicit_unavailable (__main__.Pulse.test_no_telemetry_callback_is_explicit_unavailable) ... ok\ntest_serialization_failure_never_publishes_partial_final_marker (__main__.Pulse.test_serialization_failure_never_publishes_partial_final_marker) ... ok\n\n----------------------------------------------------------------------\nRan 13 tests in 0.015s\n\nOK\n",
+      "guest_qualified": false
+    },
+    "failure-telemetry-receipt-windows-20261022T025913173135Z.json": {
+      "sha256": "2cc9646d73bfe8186db3054b004bf5d4c69d77ac046d588ff77ee87f55ad5fb1",
+      "platform": "Windows-11-10.0.26220-SP0",
+      "returncode": 0,
+      "stderr": "test_no_retained_guest_is_explicit_unavailable (__main__.ExitBackend.test_no_retained_guest_is_explicit_unavailable) ... ok\ntest_retained_exited_handle_has_exact_raw_times_duration_identity (__main__.ExitBackend.test_retained_exited_handle_has_exact_raw_times_duration_identity) ... ok\ntest_start_mismatch_refuses_recycled_identity (__main__.ExitBackend.test_start_mismatch_refuses_recycled_identity) ... ok\ntest_unfinalized_exit_has_no_invented_duration (__main__.ExitBackend.test_unfinalized_exit_has_no_invented_duration) ... ok\ntest_exception_keeps_false_original_error_and_exact_exit_before_close (__main__.FailureCleanup.test_exception_keeps_false_original_error_and_exact_exit_before_close) ... ok\ntest_telemetry_exception_cannot_skip_privatejob_cleanup (__main__.FailureCleanup.test_telemetry_exception_cannot_skip_privatejob_cleanup) ... ok\ntest_atomic_marker_preserves_complete_numeric_failure (__main__.Pulse.test_atomic_marker_preserves_complete_numeric_failure) ... ok\ntest_engine_up_elapsed_exception_preserves_successful_native_queue (__main__.Pulse.test_engine_up_elapsed_exception_preserves_successful_native_queue) ... ok\ntest_engine_up_queue_exception_publishes_before_controller_stringification (__main__.Pulse.test_engine_up_queue_exception_publishes_before_controller_stringification) ... ok\ntest_exited_noop_is_not_recorded_as_successful_keyup (__main__.Pulse.test_exited_noop_is_not_recorded_as_successful_keyup) ... ok\ntest_first_failure_is_not_replaced (__main__.Pulse.test_first_failure_is_not_replaced) ... ok\ntest_late_numeric_receipt_preserves_existing_failure (__main__.Pulse.test_late_numeric_receipt_preserves_existing_failure) ... ok\ntest_native_queue_exception_preserves_partial_receipt_and_null_return (__main__.Pulse.test_native_queue_exception_preserves_partial_receipt_and_null_return) ... ok\ntest_no_telemetry_callback_is_explicit_unavailable (__main__.Pulse.test_no_telemetry_callback_is_explicit_unavailable) ... ok\ntest_release_all_queue_exception_publishes_before_aggregate_loses_attributes (__main__.Pulse.test_release_all_queue_exception_publishes_before_aggregate_loses_attributes) ... ok\ntest_serialization_failure_never_publishes_partial_final_marker (__main__.Pulse.test_serialization_failure_never_publishes_partial_final_marker) ... ok\n\n----------------------------------------------------------------------\nRan 16 tests in 0.030s\n\nOK\n",
+      "guest_qualified": false
+    }
+  },
+  "old_launch_manifest_mismatches": {
+    "input-deadlines.py": {
+      "sealed_sha256": "6917893fe1b2f27f87cb49ebea7a93843e84c249e7acdc1242fcf1420164fb8a",
+      "candidate_sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9"
+    },
+    "inner-adapter.py": {
+      "sealed_sha256": "90b39901bce2489bf2eeff6f3dbb7540f4ac02a87dca9634b95f5c97ab6b21e4",
+      "candidate_sha256": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e"
+    },
+    "windows-backend.py": {
+      "sealed_sha256": "561885621f9984226b42ed5ab89387e9e0179dff290a541cc8645cdbdbd4334e",
+      "candidate_sha256": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e"
+    },
+    "guest-supervisor-core.py": {
+      "sealed_sha256": "2d32dbc3df77c67d6865cef6faa92ce815ec2a92dd9519896ac4500d29b57de0",
+      "candidate_sha256": "3227d411abf7370901b12f894dd35c33ca2b865f8be3eb88099f324814f87510"
+    }
+  },
+  "review_finding": {
+    "first_candidate": "Numeric pulse record could be lost by direct engine-up/release_all exception aggregation/stringification.",
+    "successor": "_up now calls existing fail callback after attaching pulse in both native-post and elapsed exception handlers, before wrappers;3 focused cases added,16 per platform retained.",
+    "disposition": "No remaining blocking defect found in the bounded telemetry change. Diagnostic failures remain fail-closed; cleanup and hard deadline paths remain independent.",
+    "limits": "No timing repair, reconstructed historical measurements, new allocation or runtime/target qualification. New tools remain rejected by unchanged old launch manifest."
+  }
+}

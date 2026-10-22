@@ -1,0 +1,452 @@
+{
+  "scope": "Original unchanged J source/program/image and exact current state chain. Normal owned-window input only; no source/game-memory writes, rollback, retarget, build or stage.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "disc_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "source_contracts": {
+    "enemy_states": "src/em10/em10.cpp R0=2 DAMAGE, R0=3 DIE; HP0 Damage alone does not prove completed death callback",
+    "gun_aim": "src/game/pl_wep.cpp PlWepLockCtrl uses m3r pitch and cPlayer m_Fwork0 waist, include/em.h offset0x400; exact J _m3r2352712684",
+    "gun_states": "Observed source gun stance1=6 with substate0 initial,1 ready,2 fire,4 reload. Guard does not read initialized waist before stance setup.",
+    "controls": "Normal RT+B reload and physical analog pitch/turn/RT+A only; no pitch/waist writes"
+  },
+  "chain": [
+    {
+      "run": "current-j-route-walk69",
+      "elapsed_s": 19.1,
+      "errors": [],
+      "owned_exited": true,
+      "state_sha256": "0e0a122178b047b1baeb92a6ca18bc08f865d156935733cb490087af10ded709",
+      "controller_sha256": "d27696f5737125531fa96e55c0fea0aba7312efd630561441b71d17e8bdf75b7",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk69\\data\\disc.state"
+        },
+        {
+          "owned_close_on_any_further_original_damage": {
+            "frame": 12392,
+            "phase": [
+              3,
+              0
+            ],
+            "room": "0x207",
+            "health": [
+              120,
+              1200,
+              360,
+              600
+            ],
+            "Stop": "0x0"
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk69\\shots\\checkpoint-source-12393\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk69\\shots\\checkpoint-source-12393\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "detail_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk69\\owned-window-current-stair-walk.json"
+    },
+    {
+      "run": "current-j-route-walk70",
+      "elapsed_s": 4.1,
+      "errors": [],
+      "owned_exited": true,
+      "state_sha256": "428df1cfe0dfec4de46e25eab4cc0d28bee047f4be7647540d727cfd228c2f95",
+      "controller_sha256": "7d71febfe27625735cdeba3ec7aad65a496a3cfe5c54e2bdb027c7a8f21bf36a",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk70\\data\\disc.state"
+        },
+        {
+          "abort": "AssertionError()"
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk70\\shots\\checkpoint-source-12446\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk70\\shots\\checkpoint-source-12446\\checkpoint-context.json"
+        },
+        {
+          "owned_close_on_guard": true
+        }
+      ],
+      "detail_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk70\\owned-window-current-stair-walk.json"
+    },
+    {
+      "run": "current-j-route-walk71",
+      "elapsed_s": 5.9,
+      "errors": [],
+      "owned_exited": true,
+      "state_sha256": "a9ff26f1bb6569c234088db9a550d04d072bbf82c3e44163e98388ee0af2769f",
+      "controller_sha256": "babfc6c9d8d7d640ccd54838df6452854a8a841ca0e1cd85c59b9fca9259e495",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk71\\data\\disc.state"
+        },
+        {
+          "normal_RT_B_reload": 12456
+        },
+        {
+          "normal_original_handgun_hit": {
+            "frame": 12533,
+            "phase": [
+              3,
+              0
+            ],
+            "room": "0x207",
+            "health": [
+              120,
+              1200,
+              360,
+              600
+            ],
+            "Stop": "0x0",
+            "player_routines": [
+              0,
+              6,
+              2,
+              1
+            ],
+            "player_pos": [
+              1321.4892578125,
+              126.7396240234375,
+              -2020.072998046875
+            ],
+            "yaw": -0.3789811134338379,
+            "enemies": [
+              {
+                "pointer": 2361172896,
+                "id": 17,
+                "type": 8,
+                "hp": 2027,
+                "routines": [
+                  2,
+                  0,
+                  0,
+                  0
+                ],
+                "pos": [
+                  135.79244995117188,
+                  126.743896484375,
+                  190.62606811523438
+                ]
+              }
+            ],
+            "aim_waist_yaw": -0.16755162179470062,
+            "target": 2361172896,
+            "target_hp": 2027,
+            "angle_error": 0.05423382325631776
+          },
+          "initial_enemy_hp": 2161
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk71\\shots\\checkpoint-source-12533\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk71\\shots\\checkpoint-source-12533\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "detail_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk71\\owned-window-current-stair-walk.json"
+    },
+    {
+      "run": "current-j-route-walk72",
+      "elapsed_s": 13.8,
+      "errors": [],
+      "owned_exited": true,
+      "state_sha256": "148146e51426e4b842dba062b55c471de5a728336d6320c7646692b1127eb748",
+      "controller_sha256": "1043df9becc9406ca543608f9a5dd34d0b25f8e188b86c308829ef7e95bc38c0",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk72\\data\\disc.state"
+        },
+        {
+          "owned_close_on_any_further_original_damage": {
+            "frame": 12867,
+            "phase": [
+              3,
+              0
+            ],
+            "room": "0x207",
+            "health": [
+              0,
+              1200,
+              360,
+              600
+            ],
+            "Stop": "0x0"
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk72\\shots\\checkpoint-source-12868\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk72\\shots\\checkpoint-source-12868\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "detail_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk72\\owned-window-current-stair-walk.json"
+    },
+    {
+      "run": "current-j-route-walk73",
+      "elapsed_s": 26.3,
+      "errors": [],
+      "owned_exited": true,
+      "state_sha256": "57a7d5222891cde894dd4b018d51a097520daf2158fe990d312abf6e7baa2b8f",
+      "controller_sha256": "8acded14c9a3b55b249c5358a7dd2cc6dce09687c8e8f41f361f4eb7f318dc19",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk73\\data\\disc.state"
+        },
+        {
+          "original_Continue_recovered": {
+            "frame": 11834,
+            "room": "0x207",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "death_flags": "0x3000100",
+            "flags5010": "0x200",
+            "SSLoop": 0,
+            "life": 1200,
+            "maxlife": 1200,
+            "ashley_life": 600,
+            "maxashley": 600,
+            "Continue_source_log": true
+          },
+          "initial_death_observed": true
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk73\\shots\\checkpoint-source-11834\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk73\\shots\\checkpoint-source-11834\\checkpoint-context.json"
+        },
+        {
+          "owned_close_after_original_Continue": true
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "detail_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk73\\owned-window-current-stair-walk.json"
+    },
+    {
+      "run": "current-j-route-walk74",
+      "elapsed_s": 5.9,
+      "errors": [],
+      "owned_exited": true,
+      "state_sha256": "35e1b5ea93391a50816d916c859617ed4e444d4553147088adae4219c5278903",
+      "controller_sha256": "eba3c4c721584ac1ec8b74935d1c5a979759a55c8b34ca755e41453bcb2d3740",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk74\\data\\disc.state"
+        },
+        {
+          "original_no_positiveHP_type8_after30ticks_callback_pending": {
+            "frame": 11866,
+            "phase": [
+              3,
+              0
+            ],
+            "room": "0x207",
+            "health": [
+              1200,
+              1200,
+              600,
+              600
+            ],
+            "Stop": "0x0",
+            "player_routines": [
+              0,
+              0,
+              1,
+              1
+            ],
+            "player_pos": [
+              522.3171997070312,
+              126.74365234375,
+              -45.848201751708984
+            ],
+            "yaw": -2.8606011867523193,
+            "enemies": []
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk74\\shots\\checkpoint-source-11866\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk74\\shots\\checkpoint-source-11866\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "detail_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk74\\owned-window-current-stair-walk.json"
+    }
+  ],
+  "screenshots": [
+    {
+      "run": "current-j-route-walk69",
+      "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+      "room": "0x207",
+      "source_frame_interval": [
+        12393,
+        12401
+      ],
+      "health_before": [
+        120,
+        1200,
+        360,
+        600
+      ],
+      "health_after": [
+        120,
+        1200,
+        360,
+        600
+      ],
+      "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk69\\shots\\checkpoint-source-12393\\checkpoint-context.json",
+      "png": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk69\\shots\\checkpoint-source-12393\\frames\\fb0.png",
+      "label": "Original injury/failure checkpoint"
+    },
+    {
+      "run": "current-j-route-walk70",
+      "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+      "room": "0x207",
+      "source_frame_interval": [
+        12446,
+        12452
+      ],
+      "health_before": [
+        120,
+        1200,
+        360,
+        600
+      ],
+      "health_after": [
+        120,
+        1200,
+        360,
+        600
+      ],
+      "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk70\\shots\\checkpoint-source-12446\\checkpoint-context.json",
+      "png": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk70\\shots\\checkpoint-source-12446\\frames\\fb0.png",
+      "label": "Private stance-initialization guard control"
+    },
+    {
+      "run": "current-j-route-walk71",
+      "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+      "room": "0x207",
+      "source_frame_interval": [
+        12533,
+        12542
+      ],
+      "health_before": [
+        120,
+        1200,
+        360,
+        600
+      ],
+      "health_after": [
+        120,
+        1200,
+        360,
+        600
+      ],
+      "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk71\\shots\\checkpoint-source-12533\\checkpoint-context.json",
+      "png": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk71\\shots\\checkpoint-source-12533\\frames\\fb0.png",
+      "label": "Original reload/lower-aim hit checkpoint; no death completion"
+    },
+    {
+      "run": "current-j-route-walk72",
+      "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+      "room": "0x207",
+      "source_frame_interval": [
+        12868,
+        12878
+      ],
+      "health_before": [
+        0,
+        1200,
+        360,
+        600
+      ],
+      "health_after": [
+        0,
+        1200,
+        360,
+        600
+      ],
+      "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk72\\shots\\checkpoint-source-12868\\checkpoint-context.json",
+      "png": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk72\\shots\\checkpoint-source-12868\\frames\\fb0.png",
+      "label": "Original injury/failure checkpoint"
+    },
+    {
+      "run": "current-j-route-walk73",
+      "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+      "room": "0x207",
+      "source_frame_interval": [
+        11834,
+        11834
+      ],
+      "health_before": [
+        1200,
+        1200,
+        600,
+        600
+      ],
+      "health_after": null,
+      "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk73\\shots\\checkpoint-source-11834\\checkpoint-context.json",
+      "png": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk73\\shots\\checkpoint-source-11834\\frames\\fb0.png",
+      "label": "Original Continue gameplay return"
+    },
+    {
+      "run": "current-j-route-walk74",
+      "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+      "room": "0x207",
+      "source_frame_interval": [
+        11866,
+        11928
+      ],
+      "health_before": [
+        1200,
+        1200,
+        600,
+        600
+      ],
+      "health_after": [
+        1200,
+        1200,
+        600,
+        600
+      ],
+      "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk74\\shots\\checkpoint-source-11866\\checkpoint-context.json",
+      "png": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk74\\shots\\checkpoint-source-11866\\frames\\fb0.png",
+      "label": "Neutral type8-not-present observation; no combat closure"
+    }
+  ],
+  "positive71": {
+    "normal_reload": "Original0 to10 bullets",
+    "source_pitch_observed": [
+      0.003995,
+      -0.256089
+    ],
+    "desired_pitch": -0.267117,
+    "type8_hp_before": 2161,
+    "type8_hp_after": 2027,
+    "health_unchanged": [
+      120,
+      1200,
+      360,
+      600
+    ],
+    "source_frame": 12533
+  },
+  "limitations": [
+    "69 body shots mostly fail to establish new damage; original heavy attack leaves120/360.",
+    "70 private waist guard triggers before gun stance initialization; no gamefailure claim.",
+    "72 subsequent ordinary continuation ends original Leon death0/Ashley360; no melee event or Die3 established.",
+    "73 original Continue restores1200/600;74 no type8 present in its30tick window, not combat closure.",
+    "Original puzzle placements/wall opening/chapter completion pending; K05 frozen and separate cache remedy not used.",
+    "Framebuffer stills are asynchronous; sidecars give source-frame interval and context, no pixel-exact or hardware-performance claim."
+  ]
+}

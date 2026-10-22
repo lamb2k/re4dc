@@ -1,0 +1,12 @@
+{
+  "replace": {
+    "dc/resident.bin": "/root/re4data/private/castle18-ch32-r20c-release-resident-v17-20261019/files/dc/resident.bin"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "r20c +3 exact source-observed release/death resident keys; all 5765 latest union records unchanged.",
+    "base_resident_sha256": "0f24b9b6ab80f6ee2be86c840c63f731bf1675802d6f3f104b99736cbe0ad99b",
+    "resident_sha256": "e2513c50c96836b8a457281ff8a34a602507bc90ecae37a3d80d37182d21f392",
+    "warning": "Compose the r20c records into any newer resident union; never overwrite later room additions."
+  }
+}

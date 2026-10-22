@@ -1,0 +1,215 @@
+{
+  "scope": "Source-only nontraced shooting/cinematic/transition qualification preparation; no image or guest admission",
+  "source": "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f",
+  "source_files": {
+    "src/em10/em10.cpp": "bf6507e9c5be7261c316e28111e9b8ed5bd2bafc098bc8f78ca17361306c6099",
+    "src/game/item.cpp": "237faf2e2af0d2d5336ca50634b6a7e98d9e5404e09ec47b2e518bcaaa963785",
+    "src/game/objWep.cpp": "b8e2e42ed1fb39aaa4012d9272a4db55c746a8a56f961ee116994fcef14788be",
+    "src/wep/pl_handgun.cpp": "1d53774b578f0b83903c9d28478e539784144554e73d09959540469332885029",
+    "src/game/pl_wep.cpp": "c0ada3f1d5a6c33a4eb54b4b6c3d928eb1a388abcf2127cc7e263de1e07c7276",
+    "src/game/pl_sub.cpp": "48baf9cabffaf71a7093ce265471f7cb73ad06295f197489ae8604313052c199",
+    "src/game/pl_leon.cpp": "88ab1411999e7483f3289786d6b27d724f40308eb0fab1ac0695cf57ae558601",
+    "src/game/em.cpp": "12f2df9e82640ede3c4ba408edbb8b1684ceb08b63f3042a0e3331267b229fbb",
+    "src/game/game.cpp": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90",
+    "src/game/em_sub.cpp": "ddefd4571fd38c21f1af86bdf4f4362aee2009ac2e99cc5d8ddd8f4514700ba0",
+    "src/game/pl_dmg.cpp": "e8dc7a1cc2f6e1b6d6918092a84d51c2b69e3c2a8d4119581311c62c45040ea9",
+    "include/item.h": "03d00db69b808f1552d5babaaf96a3d7fe77afd55e38e1c6a008792f662142f1",
+    "include/main.h": "515e9281589e10154f273aa82c8503f4648b489eca2933ebf22674439c2eda58",
+    "include/global.h": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a",
+    "include/model.h": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5",
+    "include/em.h": "3fde0e04cd508f086be1c193bc761b55e3ff8ee7cb08c522c344b4d14b19e74f",
+    "include/em10.h": "c6ab1e95154903cf0eb007f9258266b50afd7095fc1741e597aa9f174b21fbda",
+    "include/player.h": "a0d87601f9db55fad40c7aa9ba6cfd4ef16c50aa43f2c84dea699a010c151e04",
+    "include/pl_body.h": "ffe21e96fa67adc151204ce5e64c18db91ccc87ee2b3824ad69ab51543cb81d9",
+    "include/camera.h": "d22b4698b6f90eb4a5aab88f2d289b967c590ec409c51f9129b47829907bb33b",
+    "include/cManager.h": "19ce63044d273bce47c208773df8921f08f90fc58bdfc162e7bb9507f5940e3c",
+    "port/dreamcast/game/Makefile": "de05ed757c084ae3842491d4cb406a63a69dd79967321347288de510fbc183d1"
+  },
+  "no_f99_trace_calls_in_three_game_sources": true,
+  "macro_call_sites": [
+    {
+      "id": "M01",
+      "line": 11594,
+      "function": "static void em10_R1_br_C_SawAtk(cEm10* em)",
+      "to_rno": [
+        1,
+        48,
+        0,
+        0
+      ],
+      "target": "C_SawHit",
+      "source_context": "    }\n    pl->x3A8 = pl->pos;\n    pl->subArc = pl->subArc2;\n}\n\n// Branch check of C_SawAtk (0x2F): on the saw's hit frames em10CsawHitCk decides whether the saw\n// caught the player (C_SawHit 0x30).\nstatic void em10_R1_br_C_SawAtk(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 1) && w->pWep && em10CsawHitCk(em)) {\n        EM_RTN_SET(em, 1, 0x30);\n    }\n}",
+      "prior_trace_proxy": "f94759a48 ordinary saw catch",
+      "new_nontraced_runtime": "NOT RUN / no allocation"
+    },
+    {
+      "id": "M02",
+      "line": 11847,
+      "function": "static void em10_R1_br_C_SawCriAtk(cEm10* em)",
+      "to_rno": [
+        1,
+        48,
+        0,
+        0
+      ],
+      "target": "C_SawHit",
+      "source_context": "    }\n    pl->x3A8 = pl->pos;\n    pl->subArc = pl->subArc2;\n}\n\n// Branch check of C_SawCriAtk (0x31): em10CsawHitCk on the hit frames goes to C_SawCriHit (0x32).\nstatic void em10_R1_br_C_SawCriAtk(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 1) && w->pWep && em10CsawHitCk(em)) {\n        if (fabsf(pPL->pos.y - em->pos.y) > 50.0f) {\n            EM_RTN_SET(em, 1, 0x30);\n        } else {\n            EM_RTN_SET(em, 1, 0x32);",
+      "prior_trace_proxy": "not exercised",
+      "new_nontraced_runtime": "NOT RUN / no allocation"
+    },
+    {
+      "id": "M03",
+      "line": 11849,
+      "function": "static void em10_R1_br_C_SawCriAtk(cEm10* em)",
+      "to_rno": [
+        1,
+        50,
+        0,
+        0
+      ],
+      "target": "C_SawCriHit",
+      "source_context": "    pl->subArc = pl->subArc2;\n}\n\n// Branch check of C_SawCriAtk (0x31): em10CsawHitCk on the hit frames goes to C_SawCriHit (0x32).\nstatic void em10_R1_br_C_SawCriAtk(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 1) && w->pWep && em10CsawHitCk(em)) {\n        if (fabsf(pPL->pos.y - em->pos.y) > 50.0f) {\n            EM_RTN_SET(em, 1, 0x30);\n        } else {\n            EM_RTN_SET(em, 1, 0x32);\n        }\n    }",
+      "prior_trace_proxy": "not exercised",
+      "new_nontraced_runtime": "NOT RUN / no allocation"
+    },
+    {
+      "id": "M04",
+      "line": 12010,
+      "function": "static void em10_R1_br_Catch(cEm10* em)",
+      "to_rno": [
+        1,
+        54,
+        0,
+        0
+      ],
+      "target": "NeckHang_Ashley",
+      "source_context": "}\n\n// Branch check of Catch (0x33): on the catch frame (seFlags28B bit1) em10CatchCk decides the grab:\n// a dynamite Ganado with the fuse lit goes to Bombhold (0x38), one behind the player with others\n// around or Ashley present to Backhold (0x37), else NeckHang (0x34); em10CatchSubCk grabs the partner.\nstatic void em10_R1_br_Catch(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 2)) {\n        if (em10CatchCk(em)) {\n            if (pG->pl_type == 1) {\n                EM_RTN_SET(em, 1, 0x36);\n            } else if ((fabsf(Muku2(em->ang.y, pPL->ang.y, PI)) < 1.5707964f && (em10SomebodyNearCk(em) || pSUB)) || w->Wep_type == 9) {\n                if (w->Wep_type == 9 && w->Fire_timer) {",
+      "prior_trace_proxy": "not exercised",
+      "new_nontraced_runtime": "NOT RUN / no allocation"
+    },
+    {
+      "id": "M05",
+      "line": 12013,
+      "function": "static void em10_R1_br_Catch(cEm10* em)",
+      "to_rno": [
+        1,
+        56,
+        0,
+        0
+      ],
+      "target": "Bombhold",
+      "source_context": "// a dynamite Ganado with the fuse lit goes to Bombhold (0x38), one behind the player with others\n// around or Ashley present to Backhold (0x37), else NeckHang (0x34); em10CatchSubCk grabs the partner.\nstatic void em10_R1_br_Catch(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 2)) {\n        if (em10CatchCk(em)) {\n            if (pG->pl_type == 1) {\n                EM_RTN_SET(em, 1, 0x36);\n            } else if ((fabsf(Muku2(em->ang.y, pPL->ang.y, PI)) < 1.5707964f && (em10SomebodyNearCk(em) || pSUB)) || w->Wep_type == 9) {\n                if (w->Wep_type == 9 && w->Fire_timer) {\n                    EM_RTN_SET(em, 1, 0x38);\n                } else {\n                    EM_RTN_SET(em, 1, 0x37);",
+      "prior_trace_proxy": "not exercised",
+      "new_nontraced_runtime": "NOT RUN / no allocation"
+    },
+    {
+      "id": "M06",
+      "line": 12015,
+      "function": "static void em10_R1_br_Catch(cEm10* em)",
+      "to_rno": [
+        1,
+        55,
+        0,
+        0
+      ],
+      "target": "Backhold",
+      "source_context": "static void em10_R1_br_Catch(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 2)) {\n        if (em10CatchCk(em)) {\n            if (pG->pl_type == 1) {\n                EM_RTN_SET(em, 1, 0x36);\n            } else if ((fabsf(Muku2(em->ang.y, pPL->ang.y, PI)) < 1.5707964f && (em10SomebodyNearCk(em) || pSUB)) || w->Wep_type == 9) {\n                if (w->Wep_type == 9 && w->Fire_timer) {\n                    EM_RTN_SET(em, 1, 0x38);\n                } else {\n                    EM_RTN_SET(em, 1, 0x37);\n                }\n            } else {",
+      "prior_trace_proxy": "not exercised",
+      "new_nontraced_runtime": "NOT RUN / no allocation"
+    },
+    {
+      "id": "M07",
+      "line": 12018,
+      "function": "static void em10_R1_br_Catch(cEm10* em)",
+      "to_rno": [
+        1,
+        52,
+        0,
+        0
+      ],
+      "target": "NeckHang",
+      "source_context": "\n    if (em->hp > 0 && (em->seFlags28B & 2)) {\n        if (em10CatchCk(em)) {\n            if (pG->pl_type == 1) {\n                EM_RTN_SET(em, 1, 0x36);\n            } else if ((fabsf(Muku2(em->ang.y, pPL->ang.y, PI)) < 1.5707964f && (em10SomebodyNearCk(em) || pSUB)) || w->Wep_type == 9) {\n                if (w->Wep_type == 9 && w->Fire_timer) {\n                    EM_RTN_SET(em, 1, 0x38);\n                } else {\n                    EM_RTN_SET(em, 1, 0x37);\n                }\n            } else {\n                EM_RTN_SET(em, 1, 0x34);\n            }\n        } else {",
+      "prior_trace_proxy": "not exercised",
+      "new_nontraced_runtime": "NOT RUN / no allocation"
+    },
+    {
+      "id": "M08",
+      "line": 13131,
+      "function": "static void em10_R1_br_DashCatch(cEm10* em)",
+      "to_rno": [
+        1,
+        56,
+        0,
+        0
+      ],
+      "target": "Bombhold",
+      "source_context": "    pl->subArc = pl->subArc2;\n}\n\n// Branch check of DashCatch (0x39): the running grab; on the catch frame the same Bombhold / Backhold /\n// NeckHang choice as br_Catch.\nstatic void em10_R1_br_DashCatch(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 2) && em10CatchCk(em)) {\n        if (fabsf(Muku2(em->ang.y, pPL->ang.y, PI)) < 1.5707964f && (em10SomebodyNearCk(em) || pSUB || w->Wep_type == 9)) {\n            if (w->Wep_type == 9 && w->Fire_timer) {\n                EM_RTN_SET(em, 1, 0x38);\n            } else {\n                EM_RTN_SET(em, 1, 0x37);",
+      "prior_trace_proxy": "not exercised",
+      "new_nontraced_runtime": "NOT RUN / no allocation"
+    },
+    {
+      "id": "M09",
+      "line": 13133,
+      "function": "static void em10_R1_br_DashCatch(cEm10* em)",
+      "to_rno": [
+        1,
+        55,
+        0,
+        0
+      ],
+      "target": "Backhold",
+      "source_context": "\n// Branch check of DashCatch (0x39): the running grab; on the catch frame the same Bombhold / Backhold /\n// NeckHang choice as br_Catch.\nstatic void em10_R1_br_DashCatch(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 2) && em10CatchCk(em)) {\n        if (fabsf(Muku2(em->ang.y, pPL->ang.y, PI)) < 1.5707964f && (em10SomebodyNearCk(em) || pSUB || w->Wep_type == 9)) {\n            if (w->Wep_type == 9 && w->Fire_timer) {\n                EM_RTN_SET(em, 1, 0x38);\n            } else {\n                EM_RTN_SET(em, 1, 0x37);\n            }\n        } else {",
+      "prior_trace_proxy": "not exercised",
+      "new_nontraced_runtime": "NOT RUN / no allocation"
+    },
+    {
+      "id": "M10",
+      "line": 13136,
+      "function": "static void em10_R1_br_DashCatch(cEm10* em)",
+      "to_rno": [
+        1,
+        52,
+        0,
+        0
+      ],
+      "target": "NeckHang",
+      "source_context": "static void em10_R1_br_DashCatch(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 2) && em10CatchCk(em)) {\n        if (fabsf(Muku2(em->ang.y, pPL->ang.y, PI)) < 1.5707964f && (em10SomebodyNearCk(em) || pSUB || w->Wep_type == 9)) {\n            if (w->Wep_type == 9 && w->Fire_timer) {\n                EM_RTN_SET(em, 1, 0x38);\n            } else {\n                EM_RTN_SET(em, 1, 0x37);\n            }\n        } else {\n            EM_RTN_SET(em, 1, 0x34);\n        }\n    }",
+      "prior_trace_proxy": "not exercised",
+      "new_nontraced_runtime": "NOT RUN / no allocation"
+    },
+    {
+      "id": "M11",
+      "line": 17685,
+      "function": "int em10CatchSubCk(cEm10* em)",
+      "to_rno": [
+        1,
+        53,
+        0,
+        0
+      ],
+      "target": "NeckHang_Luis",
+      "source_context": "    a.z = 0.0f;\n    b.x = 300.0f;\n    b.y = 500.0f;\n    b.z = 500.0f;\n    PSMTXMultVec(m, &a, &a);\n    PSMTXMultVec(m, &b, &b);\n    if (EatMgr.hitCheck(&a, &b, 0, 0, 0, 0)) {\n        return 0;\n    }\n    if (pSUB->id == 4) {\n        BitOn(pG->Status_flg[1], 0x00010000);\n        BitOn(pG->Status_flg[2], 0x20000000);\n        EM_RTN_SET(em, 1, 0x35);\n    } else {\n        BitOn(pG->Status_flg[1], 0x00010000);",
+      "prior_trace_proxy": "not exercised",
+      "new_nontraced_runtime": "NOT RUN / no allocation"
+    },
+    {
+      "id": "M12",
+      "line": 17689,
+      "function": "int em10CatchSubCk(cEm10* em)",
+      "to_rno": [
+        1,
+        58,
+        0,
+        0
+      ],
+      "target": "TakeAway",
+      "source_context": "    PSMTXMultVec(m, &a, &a);\n    PSMTXMultVec(m, &b, &b);\n    if (EatMgr.hitCheck(&a, &b, 0, 0, 0, 0)) {\n        return 0;\n    }\n    if (pSUB->id == 4) {\n        BitOn(pG->Status_flg[1], 0x00010000);\n        BitOn(pG->Status_flg[2], 0x20000000);\n        EM_RTN_SET(em, 1, 0x35);\n    } else {\n        BitOn(pG->Status_flg[1], 0x00010000);\n        BitOn(pG->Status_flg[2], 0x20000000);\n        EM_RTN_SET(em, 1, 0x3A);\n    }\n    return 1;",
+      "prior_trace_proxy": "not exercised",
+      "new_nontraced_runtime": "NOT RUN / no allocation"
+    }
+  ],
+  "total_call_sites": 12,
+  "distinct_destinations": 8,
+  "new_nontraced_remaining": 12,
+  "prior_traced_unexercised_call_sites": 11
+}

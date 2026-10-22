@@ -17,6 +17,8 @@ db351823,40fb4deb,135fde2b | gc-fallback | * | ^LEONGC (?!armed) | KNOWN_ISSUES 
 # "After loading a save and resetting, the first room starts with less free memory" (test 9, Open, #26).
 db351823,40fb4deb,135fde2b,a93e8be0,bd57e195,af0eedf6,eb4e8813 | reset-memory | reset | . | KNOWN_ISSUES "After loading a save and resetting, the first room starts with less free memory" (#26)
 # Soft reset destroys heap 4 on purpose (RESET_HEAP_FIX): fp_check already notes drops inside the reset window.
+# 2026-10-22 (lane reset22): FIXED by RESET_MEM_FIX=1 in the rr recipe (the 61,312 B was the pl08 package cell, reloaded
+# into r100 because the bound player file survived the reset). The "*" row pinned to 61312 B is removed: any deficit fails.
 
 # --- Found by this gate on 2026-10-14 (test 9 and 9.1), not yet in KNOWN_ISSUES.md: add rows there. ---
 # Scoped to the test 9 / 9.1 trees only, so any later build that still has them FAILS.

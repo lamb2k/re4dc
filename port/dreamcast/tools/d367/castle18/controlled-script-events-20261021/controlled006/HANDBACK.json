@@ -1,0 +1,14 @@
+{
+  "scope": "CONTROLLED TEST HOST OBSERVER FAILURE, no originalmovieEOF/results/save acceptance. No decoderfailure established.",
+  "source": 181,
+  "state_sha256": "606f9193c58c5e9d5df4b5374a3b4d4e864914f25b8da6ee09c4fd842dd672ff",
+  "health": [
+    1440,
+    1440,
+    600,
+    600
+  ],
+  "cause": "Restored RSF0set atage0.78 led optional screenshot before newnativefb log, AssertionError Framebuffer notready; generic observerfailure closed ownedguest. Exactexit0/V4verified1.405s, raw1.5s, noresourceactions. Allfailureevidence unchanged.",
+  "next": "007 prepared directACTUAL006state606f...672ff, no rollback/replay/rearm/buttons. FrozenELF pvr_state livefallback proven against005log+005/006savedstate; readinessdelay2s; no newguest without rootallocation.",
+  "protected": "Authentic127/294 fullSHA unchanged in closedproof;005 originalsnapshot also unchanged."
+}

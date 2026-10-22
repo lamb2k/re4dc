@@ -1,0 +1,59 @@
+{
+  "schema": "rect21-C02-typed-functional-1",
+  "source_runtime": "004cf224674fa60cf08dc10e641c723de238a0fd",
+  "program_sha256": "a58579b87da0c45267cb93efe29feea2438da9ddab62d0fe31c47a1c6ff32c71",
+  "elf_sha256": "e08c9abc8f6bb44bb2a94642fc9a2e664d22039659cea7fcce311cb9989d7433",
+  "track_sha256": "13c998136f24212e39a86bc82a0dc54eb14bb8bacca38ca14cb855e2897309fd",
+  "pack_sha256": "bbcef25f0090fa4004e03331a33c84f8f89fd3582704e4a08945a8f6a15d5026",
+  "emulator_sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+  "observer_sha256": "e9fcae9dbaaeccf484ccc7a895bd6d7d203c477432a8ddf7ba8585c68ea5ad1f",
+  "observer_binding_sha256": "70a2755d1285983b93ecc426acef14c6b020e0bb4ed8b8f3eb6d26c252ed9fdf",
+  "pid": 21528,
+  "guest_seconds": 41.9251635,
+  "max_capture_growth": 16531462,
+  "capture_final_bytes": 16533378,
+  "source_tick_range": [
+    179,
+    427
+  ],
+  "sample_rows": 312,
+  "stable_tables": 81,
+  "table_rows": 81,
+  "rejected_selected_rows": [
+    {
+      "tick": 283,
+      "key": "00bdfb7c-15425fe6",
+      "admission": "UNKNOWN",
+      "reason": "torn selected entry/package"
+    }
+  ],
+  "simultaneously_accepted_candidate_keys": 9,
+  "simultaneously_owned_known_bases": 9,
+  "selected_original_ids_observed": 0,
+  "live_payload_bytes": 30726,
+  "rounded_request_lower_bound": 30816,
+  "accounting_meaning": "Nine selected owned known allocation bases and Package payload/request lower bounds. Full physical allocator extent/high-water and all other original alias representations unavailable.",
+  "minimum_SQ_header_witnesses": 0,
+  "draw_use": "UNKNOWN: zero sampled stable witnesses does not show nonuse or total vertex/raster work",
+  "controller_pose_camera": "Captured source controller pose/parameters. Its view/projection arrays zero; active render camera is pG->Cam and was not read in C02. Do not claim active camera match.",
+  "scene": "Original QA r103f preset/defaultVMU, ordinary PID-targeted menu input, no input after selection, source scheduledkill unchanged",
+  "harness_errors": [],
+  "memory_writes": false,
+  "checkpoint_save_restore": false,
+  "new_cold_userdata": true,
+  "all_owned_guest_observer_processes_exited": true,
+  "performance_attribution": false,
+  "B_guest_authorized": false,
+  "release_acceptance": false,
+  "physical_Dreamcast_acceptance": false,
+  "source_tests_separate": true,
+  "open_gates": [
+    "All8woods keys",
+    "Per-key SQ/vertex/raster use",
+    "Complete physical RAM/VRAM high-water",
+    "Active render camera/projection and matched B/C frame window",
+    "Inventory/door/restore lifecycle",
+    "B guest and target/hardware acceptance"
+  ],
+  "evidence": "C:/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/cold-functional-C-02"
+}

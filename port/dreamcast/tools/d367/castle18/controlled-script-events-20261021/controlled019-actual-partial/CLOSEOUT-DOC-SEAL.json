@@ -1,0 +1,17 @@
+{
+  "scope": "Additive closedcurrentstatus; originalrawactualseal aad5fef3 retained.",
+  "prior_actual_seal_sha256": "aad5fef3b5b713237573276cb42f2b163306363ea15264cce410e1a42857260d",
+  "root_visual_reference": "2677cf7a",
+  "members": [
+    {
+      "path": "HISTORICAL-STATUS-BEFORE019-CLOSE.md",
+      "sha256": "f92d62dfaa55d6f503590a475a463baa1e65f9d90a59217f02b14d4a0349fb69",
+      "bytes": 4583
+    },
+    {
+      "path": "CURRENT-CLOSED-STATUS.md",
+      "sha256": "53fdb5cb0fdd3cd8eb96743fa10fc295d4676b759b3706930fad03ebe0024746",
+      "bytes": 2024
+    }
+  ]
+}

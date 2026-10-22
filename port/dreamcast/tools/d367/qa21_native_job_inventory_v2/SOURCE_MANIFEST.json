@@ -1,0 +1,86 @@
+{
+  "scope": "immutable corrected v2 SOURCE-only; unallocated",
+  "preserved_blocked_v1": "10c6036a8",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "bytes": 8
+    },
+    {
+      "path": "FUTURE_ROOT_ALLOCATION_BYTES.json",
+      "sha256": "64b49d83f5281fca9f428d6e441ef9ce5a47a29a9853d865f6caee6ae26c1f1a",
+      "bytes": 345
+    },
+    {
+      "path": "LAUNCH_REQUEST.json",
+      "sha256": "1de2fa1ae8a4ca01b8b76fb15fe20e8366eadf302dac400d24cec267b060622b",
+      "bytes": 829
+    },
+    {
+      "path": "NATIVE_INVENTORY_PLAN.md",
+      "sha256": "7f4069c5f322eca77ba3968d75a93d60cbc20b712f9bfabe50eacf034e5738fd",
+      "bytes": 4060
+    },
+    {
+      "path": "README.md",
+      "sha256": "adb8529d3ce0e1ed96436bb2e1cc285e63db28bcc2ae951f0335eeda23cb49dd",
+      "bytes": 474
+    },
+    {
+      "path": "cleanup.py",
+      "sha256": "4434c916fb046aa64246ceeffe0d274868d1d3c6985264eb6fbacc2aed8b062a",
+      "bytes": 2968
+    },
+    {
+      "path": "config.json",
+      "sha256": "85dc14eedfb09ba7d8e7bd8a00f82a8481055f20f3691c88a829ba1403605629",
+      "bytes": 940
+    },
+    {
+      "path": "coordinator.py",
+      "sha256": "66beee09d6cb7144ed560c03624d8a17bd23f1e0ffd19c554dd914c219177e21",
+      "bytes": 4847
+    },
+    {
+      "path": "frozen-native-reference-api.py",
+      "sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255",
+      "bytes": 9151
+    },
+    {
+      "path": "frozen-windows-backend.py",
+      "sha256": "0b0646c7d2d704707922ee671fafea5edeb97d7d160fa4a6f698f97555702a55",
+      "bytes": 16010
+    },
+    {
+      "path": "inventory.py",
+      "sha256": "bc24bd095ae1e7e9c164abdbf849755ea092a98627e1f9228f9fd387b2c9fee4",
+      "bytes": 1480
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "dd43ac827378e107bf774f03f2be4ad68e51543a16683697f45cb5fd91a23734",
+      "bytes": 1648
+    },
+    {
+      "path": "receipt-linux.json",
+      "sha256": "9a93ccd3f809a69c99cfdf361623b0132ba6385ddb73bac8eb81d5421f1479e6",
+      "bytes": 452
+    },
+    {
+      "path": "receipt-windows.json",
+      "sha256": "6b0189bc270b8854859ff154464d05517763d69a814c17c1f6a20c79d26d8d43",
+      "bytes": 452
+    },
+    {
+      "path": "supervisor.py",
+      "sha256": "afd80ef58a8bd4fb8405d96a17ad26e81327e770821c0a8c5fded22e77abc44f",
+      "bytes": 8906
+    },
+    {
+      "path": "test_inventory.py",
+      "sha256": "f953f30bbc279d4c4e8e1b50564a9b3c94421d4b907a56dcb4255b7def5999fd",
+      "bytes": 5931
+    }
+  ]
+}

@@ -1,0 +1,471 @@
+{
+  "scope": "Diagnostic source/full-link/Flycast evidence only; no release,performance or physical Dreamcast acceptance",
+  "runtime_source": "f99dc69ad8bfeebcdb10913443543514dc40f9cc over frozen6f9d31b0e",
+  "full_build_tools_source": "58b589413deb2adc6af052cf0910deab164366d7",
+  "harness_tools_commit": "8759cbae0",
+  "program_sha256": "ca30bfc0c28490c91d18dbd37182e89d1f905cbf9bf735280bc7cd90cdb93b94",
+  "elf_sha256": "56bc10f8c82ff08bed11f6481dbcc57043d8c13b1d75cbd6155b0d31297fead8",
+  "image_sha256": "2e40da769c049ab502f3608ea4f633b2b8ff32f4e9fe290b0c15ae30ac31b0aa",
+  "source_image_sha256_after_guests": "97a3219f2876783cd28c5250479882e0b7643fecbff7a9bbbfc5df0886fc0a18",
+  "full_OFF_exact_raw_and_all14": true,
+  "stage_receipt": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\stage-receipt.json",
+    "sha256": "b9a2dfadbb703dfdcc61ac6fdb2392af9cf74e6dc69c407aa5449b38afce01d3",
+    "unrelated_files_exact": 1728
+  },
+  "cases": {
+    "deathtrace-cold-r10302": {
+      "process": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 38732,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-cold-r10302\\flycast.exe",
+        "start_filetime": 134370965916743990,
+        "latest_evidence_footprint": {
+          "charged_logical_bytes": 27099123,
+          "charged_allocated_bytes": 27099123,
+          "charged_bytes": 27099123,
+          "excluded_exact_track_references": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-cold-r10302\\track01.bin",
+              "reference": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track01.bin",
+              "logical_bytes": 1058400,
+              "allocated_bytes": 1058400,
+              "new_file_data_bytes": 0,
+              "identity": {
+                "device": 14332939485708580193,
+                "inode": 1688849860310472,
+                "links": 2
+              }
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-cold-r10302\\track02.raw",
+              "reference": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track02.raw",
+              "logical_bytes": 1237152,
+              "allocated_bytes": 1237152,
+              "new_file_data_bytes": 0,
+              "identity": {
+                "device": 14332939485708580193,
+                "inode": 46724846134015433,
+                "links": 2
+              }
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-cold-r10302\\track03.iso",
+              "reference": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track03.iso",
+              "logical_bytes": 1032499200,
+              "allocated_bytes": 1032499200,
+              "new_file_data_bytes": 0,
+              "identity": {
+                "device": 14332939485708580193,
+                "inode": 562949955817434,
+                "links": 2
+              }
+            }
+          ]
+        },
+        "exit_code": 0,
+        "exit_filetime": 134370966331831800,
+        "actual_guest_seconds": 41.508781,
+        "launcher_exit": 0
+      },
+      "checkpoint": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-cold-r10302\\checkpoint.json",
+        "sha256": "3b53bcfb1ffb2aaf38c784dfbf26b975e66dbfafeba8bafd3fc2b2d1bd3838fc",
+        "state_sha256": "74cc509516d3e36fb41374c2e38e6655151d9c20c0c695d5588bd5428e6bbbf2",
+        "audit": {
+          "state_sha256": "74cc509516d3e36fb41374c2e38e6655151d9c20c0c695d5588bd5428e6bbbf2",
+          "state_bytes": 9093527,
+          "elf_sha256": "56bc10f8c82ff08bed11f6481dbcc57043d8c13b1d75cbd6155b0d31297fead8",
+          "decoded_bytes": 27785294,
+          "ram_serialization_offset": 11001553,
+          "immutable_anchors": [
+            {
+              "address": "0x8c014000",
+              "bytes": 256,
+              "sha256": "ecaa69dd39bff6a1d63a9f80dfa09af725926c18153ec342f977da8209868a95"
+            },
+            {
+              "address": "0x8c050000",
+              "bytes": 256,
+              "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+            },
+            {
+              "address": "0x8c110000",
+              "bytes": 256,
+              "sha256": "ea29a7edf07c45a2a2218f6b87755e0e5463cd6e2d72efaf05028dab05410266"
+            },
+            {
+              "address": "0x8c190000",
+              "bytes": 256,
+              "sha256": "2348eedc05d0aa3c51f160e31e9612f39db962d610d3233d20c4f49379af32ed"
+            }
+          ],
+          "log_head": 166835,
+          "room": 259,
+          "frame": 516,
+          "stop": 0,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "player_pos": [
+            -47613.35546875,
+            57.6439208984375,
+            7081.60986328125
+          ],
+          "player_rno": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "event_start_cnt": 0,
+          "qa_flags": 0,
+          "memory_edits": false
+        },
+        "parent": null
+      },
+      "log": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-cold-r10302\\run-output.txt",
+        "sha256": "f26a7a3ddfe7e7a964f82b340f77ac29210b7b31926a33350f6f523b2ff4987e"
+      },
+      "input_posts": [
+        [
+          "down"
+        ],
+        [
+          "a"
+        ],
+        [
+          "a"
+        ],
+        [
+          "down"
+        ],
+        [
+          "down"
+        ],
+        [
+          "down"
+        ],
+        [
+          "down"
+        ],
+        [
+          "a"
+        ]
+      ],
+      "screenshot": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-cold-r10302\\shots\\t0038\\frames\\fb0.png",
+        "sha256": "26c0086b4e3dc9724567954ed82fc7a3d54cc872cce1e62589c1a563559623e9",
+        "visually_inspected": true
+      },
+      "ownership_guard_sha256": "e0c9f5b716b73e8236dcbf9b8034e7b825602d38840191f68d6b5b12c72e981c"
+    },
+    "deathtrace-return-door02": {
+      "process": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 49596,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-return-door02\\flycast.exe",
+        "start_filetime": 134370966542026939,
+        "latest_evidence_footprint": {
+          "charged_logical_bytes": 27675466,
+          "charged_allocated_bytes": 27675466,
+          "charged_bytes": 27675466,
+          "excluded_exact_track_references": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-return-door02\\track01.bin",
+              "reference": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track01.bin",
+              "logical_bytes": 1058400,
+              "allocated_bytes": 1058400,
+              "new_file_data_bytes": 0,
+              "identity": {
+                "device": 14332939485708580193,
+                "inode": 1688849860310472,
+                "links": 2
+              }
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-return-door02\\track02.raw",
+              "reference": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track02.raw",
+              "logical_bytes": 1237152,
+              "allocated_bytes": 1237152,
+              "new_file_data_bytes": 0,
+              "identity": {
+                "device": 14332939485708580193,
+                "inode": 46724846134015433,
+                "links": 2
+              }
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-return-door02\\track03.iso",
+              "reference": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track03.iso",
+              "logical_bytes": 1032499200,
+              "allocated_bytes": 1032499200,
+              "new_file_data_bytes": 0,
+              "identity": {
+                "device": 14332939485708580193,
+                "inode": 562949955817434,
+                "links": 2
+              }
+            }
+          ]
+        },
+        "exit_code": 0,
+        "exit_filetime": 134370966958064850,
+        "actual_guest_seconds": 41.6037911,
+        "launcher_exit": 0,
+        "controller_exit": 0
+      },
+      "checkpoint": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-return-door02\\checkpoint.json",
+        "sha256": "ac937b20492eb960b0f21c9360245f80d96960aff27f509588ddadc63d3dd7e8",
+        "state_sha256": "0d51d2947007693f7adda44974dd7ac1b43c6ecd87eb43754b8194943361c84f",
+        "audit": {
+          "state_sha256": "0d51d2947007693f7adda44974dd7ac1b43c6ecd87eb43754b8194943361c84f",
+          "state_bytes": 10474482,
+          "elf_sha256": "56bc10f8c82ff08bed11f6481dbcc57043d8c13b1d75cbd6155b0d31297fead8",
+          "decoded_bytes": 28082158,
+          "ram_serialization_offset": 11298417,
+          "immutable_anchors": [
+            {
+              "address": "0x8c014000",
+              "bytes": 256,
+              "sha256": "ecaa69dd39bff6a1d63a9f80dfa09af725926c18153ec342f977da8209868a95"
+            },
+            {
+              "address": "0x8c050000",
+              "bytes": 256,
+              "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+            },
+            {
+              "address": "0x8c110000",
+              "bytes": 256,
+              "sha256": "ea29a7edf07c45a2a2218f6b87755e0e5463cd6e2d72efaf05028dab05410266"
+            },
+            {
+              "address": "0x8c190000",
+              "bytes": 256,
+              "sha256": "2348eedc05d0aa3c51f160e31e9612f39db962d610d3233d20c4f49379af32ed"
+            }
+          ],
+          "log_head": 344153,
+          "room": 257,
+          "frame": 1207,
+          "stop": 2013265855,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "player_pos": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "player_rno": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "event_start_cnt": 0,
+          "qa_flags": 0,
+          "memory_edits": false
+        },
+        "parent": {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-cold-r10302",
+          "receipt_sha256": "3b53bcfb1ffb2aaf38c784dfbf26b975e66dbfafeba8bafd3fc2b2d1bd3838fc"
+        }
+      },
+      "log": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-return-door02\\run-output.txt",
+        "sha256": "530efaf2a088fd592792bfa366ba55695eeb088b09b7257b506f4fe0e9bfb7fb"
+      },
+      "input_posts": [],
+      "screenshot": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-return-door02\\shots\\t0038\\frames\\fb0.png",
+        "sha256": "43e105eddd98f8e105bbaf95d4e8f944f6225b32762a05b13683fc6053994a51",
+        "visually_inspected": true
+      },
+      "ownership_guard_sha256": "390227a745c302374035a9f9f3cece11f88877b534c7734bd8b8933608d155e0"
+    },
+    "deathtrace-BB-only02": {
+      "process": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 37568,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-BB-only02\\flycast.exe",
+        "start_filetime": 134370967046071991,
+        "latest_evidence_footprint": {
+          "charged_logical_bytes": 33817395,
+          "charged_allocated_bytes": 33817395,
+          "charged_bytes": 33817395,
+          "excluded_exact_track_references": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-BB-only02\\track01.bin",
+              "reference": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track01.bin",
+              "logical_bytes": 1058400,
+              "allocated_bytes": 1058400,
+              "new_file_data_bytes": 0,
+              "identity": {
+                "device": 14332939485708580193,
+                "inode": 1688849860310472,
+                "links": 2
+              }
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-BB-only02\\track02.raw",
+              "reference": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track02.raw",
+              "logical_bytes": 1237152,
+              "allocated_bytes": 1237152,
+              "new_file_data_bytes": 0,
+              "identity": {
+                "device": 14332939485708580193,
+                "inode": 46724846134015433,
+                "links": 2
+              }
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-BB-only02\\track03.iso",
+              "reference": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track03.iso",
+              "logical_bytes": 1032499200,
+              "allocated_bytes": 1032499200,
+              "new_file_data_bytes": 0,
+              "identity": {
+                "device": 14332939485708580193,
+                "inode": 562949955817434,
+                "links": 2
+              }
+            }
+          ]
+        },
+        "exit_code": 0,
+        "exit_filetime": 134370967464189373,
+        "actual_guest_seconds": 41.8117382,
+        "launcher_exit": 0
+      },
+      "checkpoint": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-BB-only02\\checkpoint.json",
+        "sha256": "6013881915e7744d726ff2bbbcb9190efb4c98757c8628dd83c9b987006480ad",
+        "state_sha256": "0e2b78b14b6861a341d5dd465bdb8efc827f372698d80d7d04b707c45962c73f",
+        "audit": {
+          "state_sha256": "0e2b78b14b6861a341d5dd465bdb8efc827f372698d80d7d04b707c45962c73f",
+          "state_bytes": 11582682,
+          "elf_sha256": "56bc10f8c82ff08bed11f6481dbcc57043d8c13b1d75cbd6155b0d31297fead8",
+          "decoded_bytes": 28057806,
+          "ram_serialization_offset": 11274065,
+          "immutable_anchors": [
+            {
+              "address": "0x8c014000",
+              "bytes": 256,
+              "sha256": "ecaa69dd39bff6a1d63a9f80dfa09af725926c18153ec342f977da8209868a95"
+            },
+            {
+              "address": "0x8c050000",
+              "bytes": 256,
+              "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+            },
+            {
+              "address": "0x8c110000",
+              "bytes": 256,
+              "sha256": "ea29a7edf07c45a2a2218f6b87755e0e5463cd6e2d72efaf05028dab05410266"
+            },
+            {
+              "address": "0x8c190000",
+              "bytes": 256,
+              "sha256": "2348eedc05d0aa3c51f160e31e9612f39db962d610d3233d20c4f49379af32ed"
+            }
+          ],
+          "log_head": 447809,
+          "room": 257,
+          "frame": 2362,
+          "stop": 0,
+          "player_life": 1,
+          "player_life_max": 1200,
+          "player_pos": [
+            38724.17578125,
+            3035.942138671875,
+            -25967.33984375
+          ],
+          "player_rno": [
+            2,
+            2,
+            0,
+            0
+          ],
+          "event_start_cnt": 0,
+          "qa_flags": 0,
+          "memory_edits": false
+        },
+        "parent": {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-return-door02",
+          "receipt_sha256": "ac937b20492eb960b0f21c9360245f80d96960aff27f509588ddadc63d3dd7e8"
+        }
+      },
+      "log": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-BB-only02\\run-output.txt",
+        "sha256": "70aadb57a70c596f763e53e3b2a8b4cf6bdf8dcc374cb8fd723e8229e348a02b"
+      },
+      "input_posts": [
+        [
+          "b"
+        ],
+        [
+          "b"
+        ]
+      ],
+      "screenshot": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\deathtrace-BB-only02\\shots\\t0039\\frames\\fb0.png",
+        "sha256": "c2bbc06e66844a88c11a48ac269e46453df85943f1d018d971fb04f7298dd297",
+        "visually_inspected": true
+      },
+      "ownership_guard_sha256": "3edfe4d269f73c314c49b53eae8ffacdf61e21b390a1d5a08875e79d0d2c4296"
+    }
+  },
+  "damage_trace": [
+    "death trace: life.before frame=1599 caller=8c0b1d8c dmg=9999 rnd=0 flag=0 type=-1 life=1200 rno=0/0/1/1",
+    "death trace: life.after frame=1599 caller=8c0b1d8c dmg=1200 rnd=0 flag=0 type=-1 life=0 rno=0/0/1/1",
+    "death trace: damage.enter frame=1599 caller=8c0b1da0 dmg=0 rnd=0 flag=0 type=0 life=0 rno=0/0/1/1",
+    "death trace: die.enter frame=1599 caller=8c05c440 life=1 rno=2/0/0/0",
+    "death trace: check frame=1600 caller=8c01b478 life=1 rno=2/1/0/0",
+    "death trace: check frame=1630 caller=8c01b478 life=1 rno=2/1/0/0",
+    "death trace: check frame=1660 caller=8c01b478 life=1 rno=2/1/0/0",
+    "death trace: check frame=1690 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=1720 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=1750 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=1780 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=1810 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=1840 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=1870 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=1900 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=1930 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=1960 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=1990 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=2020 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=2050 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=2080 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=2110 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=2140 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=2170 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=2200 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=2230 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=2260 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=2290 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=2320 caller=8c01b478 life=1 rno=2/2/0/0",
+    "death trace: check frame=2350 caller=8c01b478 life=1 rno=2/2/0/0"
+  ],
+  "return_address_mapping": {
+    "8c0b1d8c": "EmAtkHitCk em_sub.cpp3103",
+    "8c0b1da0": "EmAtkHitCk em_sub.cpp3107",
+    "8c05c440": "cPlayer::move player.cpp357",
+    "8c01b478": "gameMainLoop game.cpp701"
+  },
+  "finding": "LifeDownSet2 records life1200->0; PlSetDamage(type0) enters at0; first Pl_R0_Die entry already1 in same sourceframe1599; life1 persists tofinal2362/rno2/2. Intervening writer under independent source investigation; no gameplay fix claimed.",
+  "disqualified": [
+    "first ON build supervisor exception",
+    "cold01 cap falsely counted immutable linked tracks; actual0.1033545s, no usable state"
+  ],
+  "accounting_test_receipt_sha256": "0afdc7f58dcd6ca6e7248a585085ebd85f2db61a5c697215dc210e751f700d9e",
+  "sealed_utc": "2026-10-21T22:53:23.936477+00:00"
+}

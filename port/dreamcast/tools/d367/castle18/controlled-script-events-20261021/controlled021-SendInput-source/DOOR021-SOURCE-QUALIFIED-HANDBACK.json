@@ -1,0 +1,90 @@
+{
+  "scope": "FINAL021 SOURCE QUALIFIED ONLY; no021guest/input/allocation. Root owns final review/resources/exclusiveGUIlease and exact one-run allocation.",
+  "source_commit": "86abbcf0c85601cffb652e965833323e679a2672",
+  "observer_sha256": "c5c82a4a8aee041da75e09c90d3e635055a1482a53c5507852f28ce5c2e99c93",
+  "wrapper_sha256": "471bc9c7aa4a5494a436de0bd241b4b46bca3ba03dafcad6c6ddfb26860818c9",
+  "pins_sha256": "d6ab721588fd7a8f8a7074f5f5c1c4bfb0aefeea39a8d1e453562e473e60b357",
+  "proposal_sha256": "97e491a21a5bcbbbdc3ca9fb8d323daa82dd8fb5bcd2d4b1b5024d9fa887ec44",
+  "shell_sha256": "a7aeb66484c273f8a09b1e0ef53268116ec755c9b6a18b145eea79b6438fbd24",
+  "source_seal_sha256": "689b55e7b567769b50305857fb6d125e71d6affab85ae3b6de8d77ae86984302",
+  "independent_review": {
+    "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle-controls21\\REVIEW-CASTLE021-SENDINPUT-DELTA.md",
+    "sha256": "ed9c319e9167d969be692d3e019918516560f883f13e82a8b61e8d6da7cd47d0",
+    "identities_path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle-controls21\\review-castle021-SendInput-source-identities.json",
+    "identities_sha256": "cc21d2901969e0bfe8696bf3121509519c02c7e514680e83496027c15a385946",
+    "result": "NO_CONCRETE_SOURCE_BLOCKER",
+    "owner34_checks_read_not_rerun": true,
+    "no_guest_input_tests": true
+  },
+  "owner_qualification": {
+    "receipt_sha256": "f5120482d70207db747a73931730079d7cd15fee87f19b66801749936360368d",
+    "checks": 34,
+    "changed_pulse_scenarios": 11,
+    "scope": "Extracted helper/ABI mocks plus inherited function AST comparison only; no26/broad suite reruns.",
+    "default_dependency_pins": 41
+  },
+  "seed": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\data\\disc.state",
+    "sha256": "eba7a32afa7c59381ec7ce36918ea706feea187757e8fbb40a2fe5f2695ac008",
+    "source_frame": 4761,
+    "room": "0x204",
+    "Part": 1,
+    "Stop": 0,
+    "no_firstgoto_replay": true
+  },
+  "root_required_fields": {
+    "allocated021": true,
+    "allow_debug_goto_command_writes": true,
+    "allow_owned_window_focus": true,
+    "allow_scan_code_SendInput": true,
+    "exclusive_gui_input": true,
+    "maximum_successful_command_bytes": 29
+  },
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff60",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c4801b6",
+      "bytes": 1
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ],
+  "maximum_successful_command_bytes": 29,
+  "root_argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-door021.sh",
+    "--execute-allocated021"
+  ],
+  "guards": {
+    "start_bytes": 20342374400,
+    "runtime_bytes": 19394461696,
+    "raw_seconds": 41,
+    "close_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_bytes": 62914560,
+    "global_Flycast_limit": 16,
+    "castle_limit": 2,
+    "standing_source_peer_bytes": 67108864,
+    "admission": "RootexclusiveGUIlease/nopeerFlycastbeforelaunch andthroughinputunit; source/build/readback lanes parallel. Rootchargescurrentfutureprogramme/otherpeers unchanged."
+  },
+  "input": "Experimentalordinaryscan-code SendInputX; OSAPIcount/error/asyncstate/native64Key andoriginaldoorrequest separate. PreheldX orunverifiedownedfocus=>noinput. ONEaccepteddownperstage withfinallykeyup evenfocusloss/exit/readerror; noretry/firstgoto/replay. ExclusiveGUIlease/nopeerinput mandatory.",
+  "acceptance": "Actual209entry THENonlyremaining29Bcurrententry3countlast placement; physicalDoor1nativeA/open/originalCam3then2/eventclear/Stopreturn/frame/PNG separate. Partialpreserved atbound; nooutcomepokes. Not causalfix/performance/hardware/release acceptance.",
+  "actual020": {
+    "commit": "39a632dbfb99d9e068f88fd89b4d8ad7901f1d4d",
+    "audit_sha256": "c6f1502b01a41614c750be5f09dda56c0598442fdde7fb0bf93e194f0f7e4755",
+    "functional": "PARTIAL, verifiedOSfocus/no195samplednativeack/no209; source4761/Stop0/HP1440,1440,600,600",
+    "retained_exit": "PID24400/signaled/exit0/39.700315s"
+  },
+  "protected": "Authentic127/294,013..020 plus009VMU425 andallpriorfailedreceipts preserved. No actual021yet."
+}

@@ -1,0 +1,17 @@
+{
+  "source": "627c4fde9216823ea208a913b8d1173569053be9",
+  "manifest_sha256": "c0c76c772d05b1c6fa22ceed725f260c1e0c5cbb84863b118795a95b472e9383",
+  "review_commit": "5ba7b86d9878fb7c06eda314b2355780e07d0e90",
+  "review_sha256": "2c7d0e2fcfc5cf2064a411f942e3ab979986768b15a7006f2ec63948bf624061",
+  "local_hooks": {
+    "COLLECTOR_CONTRACT.json": "ff15e0f1ae5dd059a01f71bd25245b16c977f576ece6f8c0d07ff6b30a4546b1",
+    "checkpoint_runner18.child.py": "b9229b91c96c4b8bbc0417e9a0822e419c3eda04f64506f50e32b3d5349584e6",
+    "child_reference_proxy.py": "35fd3ab48a43f7a0604770b8b2b1708d0eb546371bd2101eb21ae3e022b6af19",
+    "native_reference_api.py": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255",
+    "parent_reference_broker.py": "4d77a1871d197a91c4cdf8321afbcd44dc929ee7118fefaa5691b499024df75f",
+    "reference_collector.py": "fb86ea60f8d39f61aa25e6a5facc5c3eafa11a695f2bf3ee40211243be17165d",
+    "retained-all-track-declarations.json": "dc7e2d19fce835f3d68cde66ae1a15afd3705dabb982921730fdd43cc92a0af0"
+  },
+  "adopted_for_runtime": false,
+  "review_path": "C:/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/qa-owned-runner-independent-review-v2/review-627c4f.json"
+}

@@ -17,8 +17,7 @@
    "module": "src/em2d/em2d.cpp em2d_R0_Init type0/default BIN5 TPL6; shared PS2/GC 91-bone skeleton; shift3",
    "source_drops": [
     "bump"
-   ],
-   "partial_sections": true
+   ]
   },
   {
    "name": "novis-em2d-02",
@@ -31,7 +30,6 @@
    "source_drops": [
     "bump"
    ],
-   "partial_sections": true,
    "mask_runs": {
     "0": "/root/re4data/private/castle18-novis-r205-20261018/mask-novis-em2d-02-ps2-s0"
    }

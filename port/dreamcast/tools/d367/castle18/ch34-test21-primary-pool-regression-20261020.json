@@ -1,0 +1,16 @@
+{
+  "first_candidate": {
+    "source": "46a0a20e9",
+    "program": "c21dmW",
+    "elf_sha256": "7c5364b7223448172d89e4806202f8ad77948c2b80ee7c584c358a85a0f8b54e",
+    "actual_run_seconds": 50.9,
+    "errors": [],
+    "qualified": false,
+    "reason": "Unintended removal of the pre-existing pool mask-only exemption rejected primary r20d ref16 before partner load.",
+    "held_kos_bytes": 49152
+  },
+  "repair": "Restore exact original mask_only/luis/desc.pool predicate; no new exemption.",
+  "corrected_host_combined_r20d": "/dev/shm/castle21-main-20261020/skin-player-disc2/tree/dc/native/r20d/registry.re4nmr none 0\n+/root/re4data/private/castle21-playable-ashley-player-family-20261020/files/dc/native/r20d/partner.re4nmr none 0\n",
+  "geometry_assets_unchanged": true,
+  "target_rerun_pending": true
+}

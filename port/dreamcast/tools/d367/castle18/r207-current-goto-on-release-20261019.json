@@ -1,0 +1,74 @@
+{
+  "status": "ORIGINAL_R207_HELD_GOTO_DELIVERY_PASS",
+  "program_source": "Frozen a808-integrated paired programs; not current e86 upstream",
+  "elf_sha256": "e445ed8db922490cfb14253cc8990302b71c675069a63a1dd287bd4409f2923a",
+  "disc_sha256": "7fd2c29f5219939a961ecaf2bce47e6631a9faa44d7f3fcacaaae6b102c294bc",
+  "private_proof_sha256": "7625f9dec3d7741ce6d87840b35f1a63267ed1fc8b834b1bbe29c438e9c594af",
+  "off_control_proof_sha256": "52fd3b7df907e323e84faa1979dca84654376d21554d5a5fb736a1a1062554ff",
+  "staged_pair_proof_sha256": "1c621a0660522c22c1af28b845a8d97a34485c195f4656bc47e40b26f3949ac2",
+  "runs": 10,
+  "data_files_identical": 6579,
+  "source_mode": 13,
+  "source_target": [
+    -1834,
+    4149,
+    -11795
+  ],
+  "typed_floor_adjusted_target": [
+    -1834.0,
+    4199.16162109375,
+    -11795.0
+  ],
+  "allocation_frame": 2969,
+  "post_init_first_frame": 2970,
+  "last_frame": 3000,
+  "all_samples_retained": 39,
+  "post_init_matching_samples": 38,
+  "max_alive": 4,
+  "source_kill_counter": [
+    0,
+    1
+  ],
+  "final_health": [
+    1440,
+    600
+  ],
+  "remaining_held": "D5 exact pending command preserved",
+  "scope": "Fresh frozen a808-integrated on/off comparison, original radio/event/normal controls and real source kill. Diagnostic room-entry/Ashley-init/source chapter0 precondition disclosed. No kill rig, guest state/health/ammo/position edits. Specific released-actor native drawing, death/Continue, pre-event cap-full waiter branch, whole fight and no-warp chapter acceptance remain separate. Newer upstream is not this frozen program.",
+  "limits": [
+    "First allocation frame routine0 intentionally precedes original init and command delivery.",
+    "Death/Continue and pre-event cap-full wait branch pending.",
+    "Whole fight and no-warp chapter acceptance pending.",
+    "Official residency has one late load in this shorter on-arm window; no comparison of counts against longer off window.",
+    "No hardware timing or frame-identical gameplay claim."
+  ],
+  "native_followthrough": {
+    "private_proof_sha256": "c2904a0fe3bc902f2663bd3f1660c3b32b5417087d5ae0a8254dcb821b2fb4eb",
+    "D4_native_frames": 114,
+    "D4_native_first_last": [
+      2970,
+      3196
+    ],
+    "D5_native_frames": 59,
+    "D5_native_first_last": [
+      3008,
+      3124
+    ],
+    "declines": 0,
+    "D5_release_frame": 3007,
+    "second_kill_counter_frame": 3006,
+    "original_source_dead_rows": [
+      "D9",
+      "D8"
+    ],
+    "cap_active_before_after": [
+      4,
+      4
+    ],
+    "both_original_Goto_commands_finished": true,
+    "health": [
+      1440,
+      600
+    ]
+  }
+}

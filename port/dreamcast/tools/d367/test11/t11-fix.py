@@ -640,6 +640,23 @@ T17R_DATA = T17T_DATA + ',res17b'
 # (a9dca43b; only those three rooms differ). Goes last, after res17b, on the Test 18 data line (not T17R_DATA).
 RES18FD = os.environ.get('RES18FD', '/root/re4data/private/fix18-20261018')
 DATA['res18f'] = {'dc/resident.bin': RES18FD + '/resident.bin'}
+# Lane residentbin22 (10-22, data only, no knob): res22 = dc/resident.bin from vram/resident_keys.py release (all
+# top-level vram/resident/r*.tsv + water/resident/r*.tsv in one step; the res17b / res18f method, which it rebuilds byte
+# for byte: vram/test_resident_release.py). res18f + r100 3d9d333a (in play after the sub screen closes) + 95 census
+# in-play uploads of 13 rooms; 5,502 records, sha256 8fb526cc (= vram/resident/RELEASE.sha256). Last: replaces res18f's.
+RES22D = os.environ.get('RES22D', '/root/re4data/private/res22-20261022')
+DATA['res22'] = {'dc/resident.bin': RES22D + '/resident.bin'}
+# Lane codex22 (10-22, Codex audit unit, data only, no knob): lake22 = the lake trees' bark fix (Codex issue52-visuals
+# a8bd34686, repair_lake_bark.py): PS2 image 2 (bark) is GC image 4, so 406 bark triangles drew under the alpha-masked
+# branch material and the trees looked fragmented. st1/r10b.dar 39bd07e1 -> 8c84649b (same 5,808,128 B; 5,079 bytes of
+# BIN 0x1e change; all 529 PS2 triangles kept). Input = the release disc's r10b.dar (checked on cand-d3733810).
+LAKE22D = os.environ.get('LAKE22D', '/root/re4data/private/lake22-20261022')
+DATA['lake22'] = {'st1/r10b.dar': LAKE22D + '/r10b.dar'}
+# Lane inv23 (10-22, user-approved option A): sslz23 = ss/eng/ss_cmmn.lz + ss_pzzl.lz, the sub screen data files packed
+# by tools/d367/inv23/ss_lz.py set (one LZ4 block each; 1,443,744 -> 822,053 B; SHA256SUMS in the set). Read only by
+# SS_DATA_LZ=1 programs; the .dat files stay on the disc for every other program. Any place in the data line.
+SSLZ23D = os.environ.get('SSLZ23D', '/root/re4data/private/sslz23-20261022')
+DATA['sslz23'] = {'ss/eng/ss_cmmn.lz': SSLZ23D + '/ss/eng/ss_cmmn.lz', 'ss/eng/ss_pzzl.lz': SSLZ23D + '/ss/eng/ss_pzzl.lz'}
 # Release lane rel18 (10-19, Test 18 item 10): garr18h = the LEON_HEADLESS v2 archives of data set garr18-head-20261019
 # (tools/d367/ps2leon/build_head.py): em/pl00.drs and em/pl08.drs with GC arc 0xC stubbed and the PS2 severed head as
 # its payload. Built from the payload disc's pl00 (1fdb5378) / pl08 (f4acbfad); no set on the Test 18 line stages either.
@@ -698,6 +715,16 @@ for _r in ('r10c', 'r10d', 'r10e'):
     for _f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids'):
         DATA['ch21l']['dc/native/%s/%s' % (_r, _f)] = '%s/dc/native/%s/%s' % (CH21LD, _r, _f)
 PAK_DERIVED['ch21l'] = CH21LD + '/pak-derived.json'
+# sc21 (lane scenery21 10-20, SCENERY_CONE / SCENERY_PIECE_STATE): every PS2 world room's package with facing-grouped
+# strip groups (dc/native/<room>/ps2-world.re4mesh + ps2-world.r4sg: the same triangles, corners renumbered per group) and
+# its room file with the SCCN / SCPS sections (tools/d367/scenery21/scn21_build.py over the Test 20 line disc's
+# dc/native). Last in the data line (after ch21l: built from its r10c..r10e worlds). Knob-off programs read the r4sg
+# (PS2_STRIP_GROUPS) and draw the same triangles. Private store copy: re4-assets-private/sc21-20261020 (SHA256SUMS).
+SC21D = os.environ.get('SC21D', '/root/re4data/private/sc21-20261020')
+if os.path.isdir(SC21D):
+    DATA['sc21'] = {'dc/native/%s/%s' % (r, f): '%s/%s/%s' % (SC21D, r, f)
+                    for r in sorted(os.listdir(SC21D)) if os.path.isdir('%s/%s' % (SC21D, r))
+                    for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
 # Over the payload base (the 16.4 disc, payroot18), which already carries T15_DATA except the far shells (fsh: 16.x
 # shipped without FAR_SHELL): fsh + every set after T15_DATA.
 T17R_PAYLOAD = 'fsh' + T17R_DATA[len(T15_DATA):]
@@ -732,7 +759,12 @@ def resident_gate(v, rec):
     s_ = iu_.spec_from_file_location('resident_keys', os.path.join(here_, '..', 'vram', 'resident_keys.py'))
     m_ = iu_.module_from_spec(s_); s_.loader.exec_module(m_)
     tsvs = sorted(glob.glob(os.path.join(here_, '..', 'vram', 'resident', 'r*.tsv')))
-    short = m_.coverage(v, tsvs)
+    # A data set that remaps resident keys (mip22: WORLD_RECT21 scoped keys) ships its table beside the file.
+    rm_ = os.path.join(os.path.dirname(v), 'resident-remap.tsv')
+    remap_ = m_.load_remap(rm_) if os.path.isfile(rm_) else None
+    if remap_:
+        rec.append('RESIDENT REMAP %s %d' % (rm_, len(remap_)))
+    short = m_.coverage(v, tsvs, remap_)
     for room, n, got in short:
         rec.append('RESIDENT SHORT r%03x %d/%d' % (room, got, n))
         sys.stderr.write('t11-fix: dc/resident.bin %s carries %d of the %d keys r%03x lists\n' % (v, got, n, room))
@@ -841,6 +873,34 @@ def main():
 # After ch2 in the data line. Private store copy: re4-assets-private/ash21-20261020 (RECIPE.txt, SHA256SUMS).
 ASH21D = os.environ.get('ASH21D', '/root/re4data/private/ash21-20261020')
 DATA['ash21'] = {'em/pl11.drs': ASH21D + '/em/pl11.drs'}
+
+# mip22 (lane mipmap22 10-22, Test 22): the texture pipeline data for CAST_MIPMAP / TEX_*_MIPMAP / WORLD_RECT21: dc/tex.pak
+# = pack v5 (a21e75d1: ch21l's pack with 885 packages re-encoded with mip chains and 798 scoped rect21 keys added; every
+# base key kept), the 27 PS2 worlds' r4pw part records rekeyed to the scoped keys, and dc/resident.bin remapped to them.
+# Last in the data line (after ash21). Release discs only (not in KSETS). Private store copy:
+# re4-assets-private/mip22-20261022 (RECIPE.txt, SHA256SUMS).
+MIP22D = os.environ.get('MIP22D', '/root/re4data/private/mip22-20261022')
+if os.path.isdir(MIP22D):
+    DATA['mip22'] = {'dc/tex.pak': MIP22D + '/dc/tex.pak', 'dc/resident.bin': MIP22D + '/dc/resident.bin'}
+    for _r in sorted(os.listdir(MIP22D + '/dc/native')):
+        DATA['mip22']['dc/native/%s/ps2-world.r4pw' % _r] = '%s/dc/native/%s/ps2-world.r4pw' % (MIP22D, _r)
+    PAK_DERIVED['mip22'] = MIP22D + '/pak-derived.json'
+# mip22b (lane mipfault22 10-22): mip22 with da197067-8f589a03 held at its ch21l 16-bit original. mip22 had re-encoded it
+# to PAL8 and r11c ran out of PAL8 palette blocks (TEXCHK r11c "PVR palette banks exhausted" on 48f71838). Replaces mip22
+# in the data line. Private store copy: re4-assets-private/mip22b-20261022 (RECIPE.txt, SHA256SUMS).
+MIP22BD = os.environ.get('MIP22BD', '/root/re4data/private/mip22b-20261022')
+if os.path.isdir(MIP22BD):
+    DATA['mip22b'] = {'dc/tex.pak': MIP22BD + '/dc/tex.pak', 'dc/resident.bin': MIP22BD + '/dc/resident.bin'}
+    for _r in sorted(os.listdir(MIP22BD + '/dc/native')):
+        DATA['mip22b']['dc/native/%s/ps2-world.r4pw' % _r] = '%s/dc/native/%s/ps2-world.r4pw' % (MIP22BD, _r)
+    PAK_DERIVED['mip22b'] = MIP22BD + '/pak-derived.json'
+# res22c (lane codex22, 10-22, data only): dc/resident.bin = mip22's remapped file + the listed keys it lacks
+# (mip22b ships the same resident.bin and remap; vram/resident_keys.py extend <out> mip22/dc/resident.bin mip22/dc/resident-remap.tsv vram/resident/r*.tsv; same inputs,
+# same bytes). Carries the first-use keys (HUD ammo digits in r000, shot effects, first Ganado pictures). Ships the remap
+# table beside it for the coverage gate. After mip22 / mip22b; release discs only (not in KSETS, like mip22). 10-22: 5,520 records
+# (13 added: r000 HUD digits 2-9 + muzzle flash 148d2ff5 / 3a866b91; r100 983d1064 96f42df9; r101 cf2208cd), sha256 b81231ff.
+RES22CD = os.environ.get('RES22CD', '/root/re4data/private/res22c-20261022')
+DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
 
 
 if __name__ == '__main__':

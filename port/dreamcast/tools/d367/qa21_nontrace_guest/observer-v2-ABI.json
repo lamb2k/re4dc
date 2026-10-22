@@ -1,0 +1,1798 @@
+{
+  "source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+  "ELF": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+  "layout_sha256": "17289a5336a9fb5de4e83a3ed7b198696fcc2249342e26fe03d2aeaa6ca5baf8",
+  "ABI": {
+    "fields": [
+      {
+        "structure": "GlobalWork",
+        "requested": "Frame_cnt",
+        "path": "Frame_cnt",
+        "offset": 20964,
+        "format": "I",
+        "type": "long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "Frame_cnt",
+            "die_offset": 81549,
+            "offset": 20964,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "GlobalWork",
+        "requested": "room_id",
+        "path": "room_id",
+        "offset": 20382,
+        "format": "H",
+        "type": "short unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 2,
+        "route": [
+          {
+            "name": "@anonymous",
+            "die_offset": 81171,
+            "offset": 20380,
+            "tag": "DW_TAG_member"
+          },
+          {
+            "name": "@anonymous",
+            "die_offset": 80043,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          },
+          {
+            "name": "room_id",
+            "die_offset": 79956,
+            "offset": 2,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "GlobalWork",
+        "requested": "pl_life",
+        "path": "pl_life",
+        "offset": 20388,
+        "format": "H",
+        "type": "short unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 2,
+        "route": [
+          {
+            "name": "pl_life",
+            "die_offset": 81213,
+            "offset": 20388,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "GlobalWork",
+        "requested": "Rno0",
+        "path": "Rno0",
+        "offset": 32,
+        "format": "4B",
+        "type": "unsigned char",
+        "tag": "DW_TAG_base_type",
+        "bytes": 1,
+        "route": [
+          {
+            "name": "@anonymous",
+            "die_offset": 80406,
+            "offset": 32,
+            "tag": "DW_TAG_member"
+          },
+          {
+            "name": "@anonymous",
+            "die_offset": 79860,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          },
+          {
+            "name": "Rno0",
+            "die_offset": 79795,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "GlobalWork",
+        "requested": "Stop_flg",
+        "path": "Stop_flg",
+        "offset": 368,
+        "format": "I",
+        "type": "long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "Stop_flg",
+            "die_offset": 80653,
+            "offset": 368,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "GlobalWork",
+        "requested": "Status_flg",
+        "path": "Status_flg",
+        "offset": 20492,
+        "format": "4I",
+        "type": "",
+        "tag": "DW_TAG_array_type",
+        "bytes": 16,
+        "route": [
+          {
+            "name": "Status_flg",
+            "die_offset": 81409,
+            "offset": 20492,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "GlobalWork",
+        "requested": "Debug_flg",
+        "path": "Debug_flg",
+        "offset": 96,
+        "format": "4I",
+        "type": "",
+        "tag": "DW_TAG_array_type",
+        "bytes": 16,
+        "route": [
+          {
+            "name": "Debug_flg",
+            "die_offset": 80600,
+            "offset": 96,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "GlobalWork",
+        "requested": "weapon_no",
+        "path": "weapon_no",
+        "offset": 20403,
+        "format": "B",
+        "type": "unsigned char",
+        "tag": "DW_TAG_base_type",
+        "bytes": 1,
+        "route": [
+          {
+            "name": "@anonymous",
+            "die_offset": 81283,
+            "offset": 20400,
+            "tag": "DW_TAG_member"
+          },
+          {
+            "name": "@anonymous",
+            "die_offset": 80196,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          },
+          {
+            "name": "weapon_no",
+            "die_offset": 80170,
+            "offset": 3,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "GlobalWork",
+        "requested": "pl_type",
+        "path": "pl_type",
+        "offset": 20408,
+        "format": "B",
+        "type": "unsigned char",
+        "tag": "DW_TAG_base_type",
+        "bytes": 1,
+        "route": [
+          {
+            "name": "@anonymous",
+            "die_offset": 81332,
+            "offset": 20408,
+            "tag": "DW_TAG_member"
+          },
+          {
+            "name": "@anonymous",
+            "die_offset": 80283,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          },
+          {
+            "name": "pl_type",
+            "die_offset": 80218,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "GlobalWork",
+        "requested": "g_shot_cnt",
+        "path": "g_shot_cnt",
+        "offset": 33616,
+        "format": "I",
+        "type": "long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "g_shot_cnt",
+            "die_offset": 81829,
+            "offset": 33616,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "GlobalWork",
+        "requested": "c_shot_cnt",
+        "path": "c_shot_cnt",
+        "offset": 33612,
+        "format": "I",
+        "type": "long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "c_shot_cnt",
+            "die_offset": 81815,
+            "offset": 33612,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "GlobalWork",
+        "requested": "g_hit_cnt",
+        "path": "g_hit_cnt",
+        "offset": 33608,
+        "format": "I",
+        "type": "long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "g_hit_cnt",
+            "die_offset": 81801,
+            "offset": 33608,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "GlobalWork",
+        "requested": "c_hit_cnt",
+        "path": "c_hit_cnt",
+        "offset": 33604,
+        "format": "I",
+        "type": "long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "c_hit_cnt",
+            "die_offset": 81787,
+            "offset": 33604,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "GlobalWork",
+        "requested": "g_kill_cnt",
+        "path": "g_kill_cnt",
+        "offset": 33600,
+        "format": "I",
+        "type": "long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "g_kill_cnt",
+            "die_offset": 81773,
+            "offset": 33600,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "GlobalWork",
+        "requested": "c_kill_cnt",
+        "path": "c_kill_cnt",
+        "offset": 33596,
+        "format": "I",
+        "type": "long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "c_kill_cnt",
+            "die_offset": 81759,
+            "offset": 33596,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cPlayer",
+        "requested": "ang",
+        "path": "cEm.cModel.cCoord.ang",
+        "offset": 160,
+        "format": "3f",
+        "type": "",
+        "tag": "DW_TAG_structure_type",
+        "bytes": 12,
+        "route": [
+          {
+            "name": "cEm",
+            "die_offset": 4132815,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "cModel",
+            "die_offset": 988262,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "cCoord",
+            "die_offset": 3008237,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "ang",
+            "die_offset": 111174,
+            "offset": 160,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cPlayer",
+        "requested": "pos",
+        "path": "cEm.cModel.cCoord.pos",
+        "offset": 148,
+        "format": "3f",
+        "type": "",
+        "tag": "DW_TAG_structure_type",
+        "bytes": 12,
+        "route": [
+          {
+            "name": "cEm",
+            "die_offset": 4132815,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "cModel",
+            "die_offset": 988262,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "cCoord",
+            "die_offset": 3008237,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "pos",
+            "die_offset": 111163,
+            "offset": 148,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cPlayer",
+        "requested": "r_no_0",
+        "path": "cEm.cModel.r_no_0",
+        "offset": 252,
+        "format": "4B",
+        "type": "unsigned char",
+        "tag": "DW_TAG_base_type",
+        "bytes": 1,
+        "route": [
+          {
+            "name": "cEm",
+            "die_offset": 4132815,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "cModel",
+            "die_offset": 988262,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "@anonymous",
+            "die_offset": 3008289,
+            "offset": 252,
+            "tag": "DW_TAG_member"
+          },
+          {
+            "name": "@anonymous",
+            "die_offset": 3007305,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          },
+          {
+            "name": "r_no_0",
+            "die_offset": 3007240,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cPlayer",
+        "requested": "be_flag",
+        "path": "cEm.cModel.cCoord.cUnit.be_flag",
+        "offset": 4,
+        "format": "I",
+        "type": "long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "cEm",
+            "die_offset": 4132815,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "cModel",
+            "die_offset": 988262,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "cCoord",
+            "die_offset": 3008237,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "cUnit",
+            "die_offset": 111082,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "be_flag",
+            "die_offset": 89667,
+            "offset": 4,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cPlayer",
+        "requested": "serial",
+        "path": "cEm.cModel.serial",
+        "offset": 248,
+        "format": "I",
+        "type": "long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "cEm",
+            "die_offset": 4132815,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "cModel",
+            "die_offset": 988262,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "serial",
+            "die_offset": 3008276,
+            "offset": 248,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cPlayer",
+        "requested": "dmgType",
+        "path": "cEm.dmgType",
+        "offset": 952,
+        "format": "i",
+        "type": "int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "cEm",
+            "die_offset": 4132815,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "dmgType",
+            "die_offset": 988552,
+            "offset": 952,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cPlayer",
+        "requested": "pMotion",
+        "path": "cEm.cModel.pMotion",
+        "offset": 472,
+        "format": "I",
+        "type": "",
+        "tag": "DW_TAG_pointer_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "cEm",
+            "die_offset": 4132815,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "cModel",
+            "die_offset": 988262,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "@anonymous",
+            "die_offset": 3008479,
+            "offset": 472,
+            "tag": "DW_TAG_member"
+          },
+          {
+            "name": "@anonymous",
+            "die_offset": 3008103,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          },
+          {
+            "name": "pMotion",
+            "die_offset": 3007832,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cPlayer",
+        "requested": "Body",
+        "path": "cEm.Body",
+        "offset": 1940,
+        "format": "I",
+        "type": "",
+        "tag": "DW_TAG_pointer_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "cEm",
+            "die_offset": 4132815,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "Body",
+            "die_offset": 989405,
+            "offset": 1940,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": {
+          "type": "cPlBody",
+          "tag": "DW_TAG_class_type"
+        }
+      },
+      {
+        "structure": "cSceSys",
+        "requested": "event_start_cnt",
+        "path": "event_start_cnt",
+        "offset": 110,
+        "format": "B",
+        "type": "unsigned char",
+        "tag": "DW_TAG_base_type",
+        "bytes": 1,
+        "route": [
+          {
+            "name": "event_start_cnt",
+            "die_offset": 88173,
+            "offset": 110,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "SUB_SCREEN",
+        "requested": "type",
+        "path": "type",
+        "offset": 44,
+        "format": "i",
+        "type": "long int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "type",
+            "die_offset": 84341,
+            "offset": 44,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "SUB_SCREEN",
+        "requested": "Loop",
+        "path": "Loop",
+        "offset": 40,
+        "format": "B",
+        "type": "unsigned char",
+        "tag": "DW_TAG_base_type",
+        "bytes": 1,
+        "route": [
+          {
+            "name": "Loop",
+            "die_offset": 84315,
+            "offset": 40,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "KeyWork",
+        "requested": "on",
+        "path": "on",
+        "offset": 16,
+        "format": "Q",
+        "type": "long long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 8,
+        "route": [
+          {
+            "name": "on",
+            "die_offset": 326687,
+            "offset": 16,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "KeyWork",
+        "requested": "trg",
+        "path": "trg",
+        "offset": 24,
+        "format": "Q",
+        "type": "long long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 8,
+        "route": [
+          {
+            "name": "trg",
+            "die_offset": 326699,
+            "offset": 24,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "KeyWork",
+        "requested": "rel",
+        "path": "rel",
+        "offset": 32,
+        "format": "Q",
+        "type": "long long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 8,
+        "route": [
+          {
+            "name": "rel",
+            "die_offset": 326712,
+            "offset": 32,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cItemMgr",
+        "requested": "pArm",
+        "path": "pArm",
+        "offset": 12,
+        "format": "I",
+        "type": "",
+        "tag": "DW_TAG_pointer_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "pArm",
+            "die_offset": 694703,
+            "offset": 12,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": {
+          "type": "ItemWork",
+          "tag": "DW_TAG_structure_type"
+        }
+      },
+      {
+        "structure": "cItemMgr",
+        "requested": "m_wep_id",
+        "path": "m_wep_id",
+        "offset": 16,
+        "format": "H",
+        "type": "short unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 2,
+        "route": [
+          {
+            "name": "m_wep_id",
+            "die_offset": 694716,
+            "offset": 16,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cItemMgr",
+        "requested": "pItems",
+        "path": "pItems",
+        "offset": 20,
+        "format": "I",
+        "type": "",
+        "tag": "DW_TAG_pointer_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "pItems",
+            "die_offset": 694755,
+            "offset": 20,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": {
+          "type": "ItemWork",
+          "tag": "DW_TAG_structure_type"
+        }
+      },
+      {
+        "structure": "cItemMgr",
+        "requested": "nItems",
+        "path": "nItems",
+        "offset": 28,
+        "format": "i",
+        "type": "long int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "nItems",
+            "die_offset": 694781,
+            "offset": 28,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cItemMgr",
+        "requested": "type",
+        "path": "type",
+        "offset": 19,
+        "format": "B",
+        "type": "unsigned char",
+        "tag": "DW_TAG_base_type",
+        "bytes": 1,
+        "route": [
+          {
+            "name": "type",
+            "die_offset": 694742,
+            "offset": 19,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "ItemWork",
+        "requested": "id",
+        "path": "id",
+        "offset": 0,
+        "format": "H",
+        "type": "short unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 2,
+        "route": [
+          {
+            "name": "id",
+            "die_offset": 694399,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "ItemWork",
+        "requested": "bullet",
+        "path": "bullet",
+        "offset": 8,
+        "format": "H",
+        "type": "short unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 2,
+        "route": [
+          {
+            "name": "bullet",
+            "die_offset": 694456,
+            "offset": 8,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "ItemWork",
+        "requested": "flags",
+        "path": "flags",
+        "offset": 4,
+        "format": "B",
+        "type": "unsigned char",
+        "tag": "DW_TAG_base_type",
+        "bytes": 1,
+        "route": [
+          {
+            "name": "flags",
+            "die_offset": 694424,
+            "offset": 4,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "ItemWork",
+        "requested": "type",
+        "path": "type",
+        "offset": 5,
+        "format": "B",
+        "type": "unsigned char",
+        "tag": "DW_TAG_base_type",
+        "bytes": 1,
+        "route": [
+          {
+            "name": "type",
+            "die_offset": 694437,
+            "offset": 5,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "MotionWork",
+        "requested": "pMot",
+        "path": "pMot",
+        "offset": 0,
+        "format": "I",
+        "type": "",
+        "tag": "DW_TAG_pointer_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "pMot",
+            "die_offset": 105725,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": {
+          "type": "MotionData",
+          "tag": "DW_TAG_structure_type"
+        }
+      },
+      {
+        "structure": "MotionWork",
+        "requested": "Mot_frame",
+        "path": "Mot_frame",
+        "offset": 36,
+        "format": "f",
+        "type": "float",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "Mot_frame",
+            "die_offset": 105777,
+            "offset": 36,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "MotionWork",
+        "requested": "Seq_frame",
+        "path": "Seq_frame",
+        "offset": 184,
+        "format": "f",
+        "type": "float",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "Seq_frame",
+            "die_offset": 106109,
+            "offset": 184,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "MotionWork",
+        "requested": "Seq_frame_num",
+        "path": "Seq_frame_num",
+        "offset": 188,
+        "format": "H",
+        "type": "short unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 2,
+        "route": [
+          {
+            "name": "Seq_frame_num",
+            "die_offset": 106123,
+            "offset": 188,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cPlBody",
+        "requested": "pHeadData",
+        "path": "pHeadData",
+        "offset": 8,
+        "format": "I",
+        "type": "",
+        "tag": "DW_TAG_pointer_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "pHeadData",
+            "die_offset": 994419,
+            "offset": 8,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cPlBody",
+        "requested": "pShape",
+        "path": "pShape",
+        "offset": 16,
+        "format": "I",
+        "type": "",
+        "tag": "DW_TAG_pointer_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "pShape",
+            "die_offset": 994445,
+            "offset": 16,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": {
+          "type": "cModelInfo",
+          "tag": "DW_TAG_class_type"
+        }
+      },
+      {
+        "structure": "cPlBody",
+        "requested": "pHair",
+        "path": "pHair",
+        "offset": 36,
+        "format": "I",
+        "type": "",
+        "tag": "DW_TAG_pointer_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "pHair",
+            "die_offset": 994510,
+            "offset": 36,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": {
+          "type": "cModelInfo",
+          "tag": "DW_TAG_class_type"
+        }
+      },
+      {
+        "structure": "cPlBody",
+        "requested": "pEye",
+        "path": "pEye",
+        "offset": 40,
+        "format": "I",
+        "type": "",
+        "tag": "DW_TAG_pointer_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "pEye",
+            "die_offset": 994523,
+            "offset": 40,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": {
+          "type": "cModelInfo",
+          "tag": "DW_TAG_class_type"
+        }
+      },
+      {
+        "structure": "SystemWork",
+        "requested": "region",
+        "path": "region",
+        "offset": 9,
+        "format": "B",
+        "type": "unsigned char",
+        "tag": "DW_TAG_base_type",
+        "bytes": 1,
+        "route": [
+          {
+            "name": "region",
+            "die_offset": 82718,
+            "offset": 9,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "SystemWork",
+        "requested": "key_type",
+        "path": "key_type",
+        "offset": 11,
+        "format": "B",
+        "type": "unsigned char",
+        "tag": "DW_TAG_base_type",
+        "bytes": 1,
+        "route": [
+          {
+            "name": "key_type",
+            "die_offset": 82744,
+            "offset": 11,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "SystemWork",
+        "requested": "flags",
+        "path": "flags",
+        "offset": 0,
+        "format": "I",
+        "type": "long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "flags",
+            "die_offset": 82679,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "CameraParam",
+        "requested": "pos",
+        "path": "pos",
+        "offset": 0,
+        "format": "3f",
+        "type": "",
+        "tag": "DW_TAG_structure_type",
+        "bytes": 12,
+        "route": [
+          {
+            "name": "pos",
+            "die_offset": 78207,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "CameraParam",
+        "requested": "at",
+        "path": "at",
+        "offset": 12,
+        "format": "3f",
+        "type": "",
+        "tag": "DW_TAG_structure_type",
+        "bytes": 12,
+        "route": [
+          {
+            "name": "at",
+            "die_offset": 78220,
+            "offset": 12,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "CameraParam",
+        "requested": "roll",
+        "path": "roll",
+        "offset": 24,
+        "format": "f",
+        "type": "float",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "roll",
+            "die_offset": 78232,
+            "offset": 24,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "CameraParam",
+        "requested": "fovy",
+        "path": "fovy",
+        "offset": 28,
+        "format": "f",
+        "type": "float",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "fovy",
+            "die_offset": 78245,
+            "offset": 28,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cEm",
+        "requested": "be_flag",
+        "path": "cModel.cCoord.cUnit.be_flag",
+        "offset": 4,
+        "format": "I",
+        "type": "long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "cModel",
+            "die_offset": 988262,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "cCoord",
+            "die_offset": 3008237,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "cUnit",
+            "die_offset": 111082,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "be_flag",
+            "die_offset": 89667,
+            "offset": 4,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cEm",
+        "requested": "pNext",
+        "path": "cModel.cCoord.cUnit.pNext",
+        "offset": 8,
+        "format": "I",
+        "type": "",
+        "tag": "DW_TAG_pointer_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "cModel",
+            "die_offset": 988262,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "cCoord",
+            "die_offset": 3008237,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "cUnit",
+            "die_offset": 111082,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "pNext",
+            "die_offset": 89680,
+            "offset": 8,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": {
+          "type": "cUnit",
+          "tag": "DW_TAG_class_type"
+        }
+      },
+      {
+        "structure": "cEm",
+        "requested": "ang",
+        "path": "cModel.cCoord.ang",
+        "offset": 160,
+        "format": "3f",
+        "type": "",
+        "tag": "DW_TAG_structure_type",
+        "bytes": 12,
+        "route": [
+          {
+            "name": "cModel",
+            "die_offset": 988262,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "cCoord",
+            "die_offset": 3008237,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "ang",
+            "die_offset": 111174,
+            "offset": 160,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cEm",
+        "requested": "serial",
+        "path": "cModel.serial",
+        "offset": 248,
+        "format": "I",
+        "type": "long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "cModel",
+            "die_offset": 988262,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "serial",
+            "die_offset": 3008276,
+            "offset": 248,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cEm",
+        "requested": "id",
+        "path": "cModel.id",
+        "offset": 256,
+        "format": "B",
+        "type": "unsigned char",
+        "tag": "DW_TAG_base_type",
+        "bytes": 1,
+        "route": [
+          {
+            "name": "cModel",
+            "die_offset": 988262,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "id",
+            "die_offset": 3008295,
+            "offset": 256,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cEm",
+        "requested": "type",
+        "path": "cModel.type",
+        "offset": 257,
+        "format": "B",
+        "type": "unsigned char",
+        "tag": "DW_TAG_base_type",
+        "bytes": 1,
+        "route": [
+          {
+            "name": "cModel",
+            "die_offset": 988262,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "type",
+            "die_offset": 3008311,
+            "offset": 257,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cEm",
+        "requested": "r_no_0",
+        "path": "cModel.r_no_0",
+        "offset": 252,
+        "format": "4B",
+        "type": "unsigned char",
+        "tag": "DW_TAG_base_type",
+        "bytes": 1,
+        "route": [
+          {
+            "name": "cModel",
+            "die_offset": 988262,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "@anonymous",
+            "die_offset": 3008289,
+            "offset": 252,
+            "tag": "DW_TAG_member"
+          },
+          {
+            "name": "@anonymous",
+            "die_offset": 3007305,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          },
+          {
+            "name": "r_no_0",
+            "die_offset": 3007240,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cEm",
+        "requested": "hp",
+        "path": "hp",
+        "offset": 800,
+        "format": "h",
+        "type": "short int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 2,
+        "route": [
+          {
+            "name": "hp",
+            "die_offset": 988297,
+            "offset": 800,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cEm",
+        "requested": "dmgType",
+        "path": "dmgType",
+        "offset": 952,
+        "format": "i",
+        "type": "int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "dmgType",
+            "die_offset": 988552,
+            "offset": 952,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cEm",
+        "requested": "pos",
+        "path": "cModel.cCoord.pos",
+        "offset": 148,
+        "format": "3f",
+        "type": "",
+        "tag": "DW_TAG_structure_type",
+        "bytes": 12,
+        "route": [
+          {
+            "name": "cModel",
+            "die_offset": 988262,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "cCoord",
+            "die_offset": 3008237,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "pos",
+            "die_offset": 111163,
+            "offset": 148,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cEm",
+        "requested": "frame",
+        "path": "cModel.frame",
+        "offset": 656,
+        "format": "f",
+        "type": "float",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "cModel",
+            "die_offset": 988262,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "@anonymous",
+            "die_offset": 3008479,
+            "offset": 472,
+            "tag": "DW_TAG_member"
+          },
+          {
+            "name": "@anonymous",
+            "die_offset": 3008103,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          },
+          {
+            "name": "@anonymous",
+            "die_offset": 3007968,
+            "offset": 184,
+            "tag": "DW_TAG_member"
+          },
+          {
+            "name": "frame",
+            "die_offset": 3007739,
+            "offset": 0,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "Em10Work",
+        "requested": "Timer",
+        "path": "Timer",
+        "offset": 4,
+        "format": "i",
+        "type": "int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "Timer",
+            "die_offset": 118736,
+            "offset": 4,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "Em10Work",
+        "requested": "Timer2",
+        "path": "Timer2",
+        "offset": 8,
+        "format": "i",
+        "type": "int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "Timer2",
+            "die_offset": 118749,
+            "offset": 8,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "Em10Work",
+        "requested": "Wep_type",
+        "path": "Wep_type",
+        "offset": 1714,
+        "format": "B",
+        "type": "unsigned char",
+        "tag": "DW_TAG_base_type",
+        "bytes": 1,
+        "route": [
+          {
+            "name": "Wep_type",
+            "die_offset": 120784,
+            "offset": 1714,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "Em10Work",
+        "requested": "Fire_timer",
+        "path": "Fire_timer",
+        "offset": 1600,
+        "format": "i",
+        "type": "long int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "Fire_timer",
+            "die_offset": 119958,
+            "offset": 1600,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "Em10Work",
+        "requested": "pWep",
+        "path": "pWep",
+        "offset": 364,
+        "format": "I",
+        "type": "",
+        "tag": "DW_TAG_pointer_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "pWep",
+            "die_offset": 118866,
+            "offset": 364,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": {
+          "type": "cEmWep",
+          "tag": "DW_TAG_class_type"
+        }
+      },
+      {
+        "structure": "cEmMgr",
+        "requested": "pArray",
+        "path": "cManager<cEm>.pArray",
+        "offset": 4,
+        "format": "I",
+        "type": "",
+        "tag": "DW_TAG_pointer_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "cManager<cEm>",
+            "die_offset": 990218,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "pArray",
+            "die_offset": 998440,
+            "offset": 4,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": {
+          "type": "cEm",
+          "tag": "DW_TAG_class_type"
+        }
+      },
+      {
+        "structure": "cEmMgr",
+        "requested": "nArray",
+        "path": "cManager<cEm>.nArray",
+        "offset": 8,
+        "format": "I",
+        "type": "long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "cManager<cEm>",
+            "die_offset": 990218,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "nArray",
+            "die_offset": 998453,
+            "offset": 8,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cEmMgr",
+        "requested": "size",
+        "path": "cManager<cEm>.size",
+        "offset": 12,
+        "format": "I",
+        "type": "long unsigned int",
+        "tag": "DW_TAG_base_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "cManager<cEm>",
+            "die_offset": 990218,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "size",
+            "die_offset": 998466,
+            "offset": 12,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": null
+      },
+      {
+        "structure": "cEmMgr",
+        "requested": "pAlive",
+        "path": "cManager<cEm>.pAlive",
+        "offset": 20,
+        "format": "I",
+        "type": "",
+        "tag": "DW_TAG_pointer_type",
+        "bytes": 4,
+        "route": [
+          {
+            "name": "cManager<cEm>",
+            "die_offset": 990218,
+            "offset": 0,
+            "tag": "DW_TAG_inheritance"
+          },
+          {
+            "name": "pAlive",
+            "die_offset": 998492,
+            "offset": 20,
+            "tag": "DW_TAG_member"
+          }
+        ],
+        "pointee": {
+          "type": "cEm",
+          "tag": "DW_TAG_class_type"
+        }
+      }
+    ],
+    "object_views": [
+      {
+        "structure": "GlobalWork",
+        "path": "Cam",
+        "offset": 116,
+        "target": "Camera",
+        "bytes": 248
+      },
+      {
+        "structure": "Camera",
+        "path": "param",
+        "offset": 164,
+        "target": "CameraParam",
+        "bytes": 32
+      },
+      {
+        "structure": "cPlayer",
+        "path": "cEm.cModel.Motion",
+        "offset": 472,
+        "target": "MotionWork",
+        "bytes": 220
+      },
+      {
+        "structure": "cEm",
+        "path": "cModel.Motion",
+        "offset": 472,
+        "target": "MotionWork",
+        "bytes": 220
+      },
+      {
+        "structure": "cEm",
+        "path": "x3E0",
+        "offset": 992,
+        "target": "Em10Work",
+        "source_cast_required": true
+      }
+    ],
+    "field_count": 73,
+    "missing_diagnostic_fields": [
+      "death_trace",
+      "lethal_caller",
+      "LifeDownSet2_before_after"
+    ],
+    "motion_view": "MotionWork is inline cModel.Motion at+472/220B. pMotion aliases Motion.pMot data pointer and is NEVER dereferenced as work"
+  },
+  "v1_semantics_superseded": "pMotion was incorrectly dereferenced in v1 synthetic fixture; no v1 new-program guest ran; stage unaffected"
+}

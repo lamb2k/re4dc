@@ -3,6 +3,10 @@
 // readiness, playback clocks and retirement; these hooks own output tagging.
 #if defined(RE4DC_CABIN_SOURCE) && RE4DC_CABIN_SOURCE
 extern "C" {
+#if defined(RE4DC_EVD_ARAM_ALLOC_RETRY) && RE4DC_EVD_ARAM_ALLOC_RETRY
+// Read-only exact immutable-preload epoch; zero means no accepted receipt.
+unsigned re4dc_cabin_carrier_preload_epoch(const void* unit,unsigned logical,unsigned bytes);
+#endif
 int re4dc_cabin_preflight(unsigned costume);
 int re4dc_cabin_begin(unsigned id,const void* heap,unsigned heap_bytes,const void* room,unsigned room_bytes);
 void re4dc_cabin_event_bound(const void* event,const char* key);

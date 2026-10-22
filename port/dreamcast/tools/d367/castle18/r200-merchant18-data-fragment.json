@@ -1,0 +1,35 @@
+{
+  "schema": "castle18-private-data-fragment-v1",
+  "room": "r200",
+  "data_set": "castle18-r200-merchant18-v2-20261019",
+  "manifest_sha256": "d178a1efd0819aa1c9b05d0a132d779cda2c8c854334095010b6a00266a7107c",
+  "replace": {
+    "dc/tex/6/61519868-9ee3f93f.re4tex": {
+      "relative_source": "files/dc/tex/6/61519868-9ee3f93f.re4tex",
+      "sha256": "2af4bac78227dc4008ffc79c86877a0d62cd56b24aed05b45cdbf8ec247bb3a4",
+      "bytes": 67728
+    },
+    "dc/tex/f/fc75dd46-779f14bd.re4tex": {
+      "relative_source": "files/dc/tex/f/fc75dd46-779f14bd.re4tex",
+      "sha256": "152341d2825a854211824523035ce5849ace4fe2a86ea3947c16f41d97083385",
+      "bytes": 65680
+    },
+    "dc/tex/4/4da9c3fa-98934ea1.re4tex": {
+      "relative_source": "files/dc/tex/4/4da9c3fa-98934ea1.re4tex",
+      "sha256": "46069427ff6d5e4ec918d6116b273fb71ff6dd00a01b6a0fd0d9a69b5d768338",
+      "bytes": 65680
+    },
+    "dc/tex/3/3f690586-7edb7c3e.re4tex": {
+      "relative_source": "files/dc/tex/3/3f690586-7edb7c3e.re4tex",
+      "sha256": "042777630c021a28003aa78f0e60e1b248b17dc4f66fae7e2f2637bd2b2d99a4",
+      "bytes": 65680
+    },
+    "dc/native/r200/registry.re4nmr": {
+      "relative_source": "files/dc/native/r200/registry.re4nmr",
+      "sha256": "dd6119d486fa9e7b5fb25d925e9f110486f33c4d55fb67f815ad2d2f29d20dd5",
+      "bytes": 242304
+    }
+  },
+  "requires_partner_sha256": "025d4cb8a557c6aa641cc72f35f9338819b59c840cf3ae73e55f7036dd6b14a6",
+  "scope": "Existing truck+Merchant primary; exactexistingAshley partner retained. No defaults/source changes. ClosedMerchant/nativeVMU gate qualified; originalTrade and door route pending."
+}

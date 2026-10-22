@@ -1,0 +1,16 @@
+{
+  "scope": "source-only candidate no immutablelaunchseal/allocation",
+  "path": "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1",
+  "source_qualification": {
+    "bytes": 1547,
+    "sha256": "762b38b8fc95f71b2b454c826bf166d1efa522d2956d64cc0a1db2bc5d8659fd"
+  },
+  "runtime_delta_proof": {
+    "bytes": 2871,
+    "sha256": "10ed117c9083cf1463c7b34f367ad31d5add7d476c91ce22fd0b4af66b66c4a3"
+  },
+  "original_attempt_qualified": false,
+  "original_state_preserved": true,
+  "new_guest_allocated": false,
+  "review_pending": true
+}

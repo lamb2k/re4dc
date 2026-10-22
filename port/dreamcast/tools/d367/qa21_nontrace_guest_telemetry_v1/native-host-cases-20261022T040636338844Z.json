@@ -1,0 +1,133 @@
+{
+  "scope": "tiny Python host children only; noFlycast/RAM/input",
+  "utc": "20261022T040636338844Z",
+  "cases": [
+    {
+      "case": "actual-birth-normal-exit",
+      "inner_identity": {
+        "pid": 42016,
+        "start_filetime": 134371155951886775,
+        "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe"
+      },
+      "result": {
+        "qualified": true,
+        "actual_guest_seconds": 0.2183815,
+        "input_release_before41": false,
+        "identity": {
+          "pid": 42016,
+          "start_filetime": 134371155951886775,
+          "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe"
+        },
+        "process_telemetry": {
+          "available": true,
+          "identity": {
+            "pid": 42016,
+            "start_filetime": 134371155951886775,
+            "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe"
+          },
+          "creation_filetime": 134371155951886775,
+          "exit_filetime": 134371155954070590,
+          "kernel_100ns": 312500,
+          "user_100ns": 0,
+          "actual_guest_seconds": 0.2183815,
+          "exit_code": 0,
+          "source": "retained verified handle after private job stop/waits, before handle closure; pinned live path, signaled exit"
+        },
+        "final_resources": {
+          "available": true,
+          "free_C_bytes": 39257726976,
+          "charged_evidence_bytes": 16,
+          "global_flycast_count": 0,
+          "runtime_floor": 19394461696,
+          "evidence_cap": 60000000,
+          "global_limit": 16,
+          "phase": "after owned stop/waits and private-job empty check, before handle close"
+        }
+      },
+      "job_closed": true
+    },
+    {
+      "case": "closed-fd0-release-failure",
+      "inner_identity": {
+        "pid": 49916,
+        "start_filetime": 134371155956912964,
+        "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe"
+      },
+      "result": {
+        "qualified": false,
+        "error": "OSError: [Errno 22] Invalid argument",
+        "cleanup_errors": [
+          "pipe close: OSError: [Errno 22] Invalid argument"
+        ],
+        "process_telemetry": {
+          "available": false,
+          "reason": "no verified retained guest handle acquired"
+        },
+        "final_resources": {
+          "available": true,
+          "free_C_bytes": 39257726976,
+          "charged_evidence_bytes": 10,
+          "global_flycast_count": 0,
+          "runtime_floor": 19394461696,
+          "evidence_cap": 60000000,
+          "global_limit": 16,
+          "phase": "after owned stop/waits and private-job empty check, before handle close"
+        }
+      },
+      "job_closed": true,
+      "inner_returncode": 125
+    },
+    {
+      "case": "exception-descendant-shutdown",
+      "inner_identity": {
+        "pid": 45472,
+        "start_filetime": 134371155960008119,
+        "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe"
+      },
+      "descendant_identities": [
+        {
+          "pid": 50844,
+          "start_filetime": 134371155960668238,
+          "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe"
+        }
+      ],
+      "result": {
+        "qualified": false,
+        "error": "RuntimeError: injected after verified birth",
+        "process_telemetry": {
+          "available": true,
+          "identity": {
+            "pid": 45472,
+            "start_filetime": 134371155960008119,
+            "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe"
+          },
+          "creation_filetime": 134371155960008119,
+          "exit_filetime": 134371155962021920,
+          "kernel_100ns": 156250,
+          "user_100ns": 156250,
+          "actual_guest_seconds": 0.2013801,
+          "exit_code": 125,
+          "source": "retained verified handle after private job stop/waits, before handle closure; pinned live path, signaled exit"
+        },
+        "identity": {
+          "pid": 45472,
+          "start_filetime": 134371155960008119,
+          "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe"
+        },
+        "actual_guest_seconds": 0.2013801,
+        "final_resources": {
+          "available": true,
+          "free_C_bytes": 39257726976,
+          "charged_evidence_bytes": 10,
+          "global_flycast_count": 0,
+          "runtime_floor": 19394461696,
+          "evidence_cap": 60000000,
+          "global_limit": 16,
+          "phase": "after owned stop/waits and private-job empty check, before handle close"
+        }
+      },
+      "job_closed": true
+    }
+  ],
+  "pass": true
+}

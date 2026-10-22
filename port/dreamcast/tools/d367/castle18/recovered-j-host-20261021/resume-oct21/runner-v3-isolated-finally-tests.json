@@ -1,0 +1,26 @@
+{
+  "scope": "Isolated real runner finally block, synthetic watcher and receipt; no launch/no real process. Driver-return/failure path must wait watcher, require process_exited and propagate nonzero guard status.",
+  "runner_sha256": "ab0f6f12e8a8e42054a34e03a865a5ac9a38d63b6f4588e17cb40b86fc2477cb",
+  "results": [
+    {
+      "case": "driver_failure_with_live_child",
+      "watcher_waited": true,
+      "timeout": 85,
+      "returncode": 0,
+      "status": [
+        "No guest is active; exact resource watcher verified run0 process exit. Inspect its checkpoint, screenshots and guard receipt before continuing."
+      ],
+      "error": null
+    },
+    {
+      "case": "driver_failure_with_live_child",
+      "watcher_waited": true,
+      "timeout": 85,
+      "returncode": 9,
+      "status": [
+        "No guest is active; exact resource watcher verified run0 process exit. Inspect its checkpoint, screenshots and guard receipt before continuing."
+      ],
+      "error": "AssertionError(('Guard failed closed; inspect preserved checkpoint', 9))"
+    }
+  ]
+}

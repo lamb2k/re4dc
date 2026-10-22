@@ -1,0 +1,80 @@
+{
+  "scope": "Actual020 PARTIAL closed-files-only evidence. OS foreground/focus verified; nativeA unacknowledged/no209/event. Retained exactPID exit0. No retry or21 allocation. No physical/performance/release acceptance.",
+  "utc": "2026-10-22T08:15:08.238406+00:00",
+  "external_audit": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\controlled020-native-input-partial-audit.json",
+    "sha256": "c6f1502b01a41614c750be5f09dda56c0598442fdde7fb0bf93e194f0f7e4755"
+  },
+  "members": [
+    {
+      "path": ".gitattributes",
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    {
+      "path": "audit-controlled020-native-input-partial.py",
+      "bytes": 7244,
+      "sha256": "a753d9061f1a0d4dc7b098005613ba0f231b2fb1a3a305f7233c0c961760e907"
+    },
+    {
+      "path": "controlled-door020-observer-summary.json.gz",
+      "bytes": 5955,
+      "sha256": "9d0f1f510faa7083ac28cca6997d3851e1b992dc0eab8a591189d48f058da1e9"
+    },
+    {
+      "path": "controlled020-native-input-partial-audit.json",
+      "bytes": 54158,
+      "sha256": "c6f1502b01a41614c750be5f09dda56c0598442fdde7fb0bf93e194f0f7e4755"
+    },
+    {
+      "path": "CURRENT-STATUS.md",
+      "bytes": 4032,
+      "sha256": "fd0afa045162bb9d3b8dae88bcc84f57a2c907ed92a32d9b48dfd0c9fa185236"
+    },
+    {
+      "path": "DOOR020-ROOT-ALLOCATION.json",
+      "bytes": 2128,
+      "sha256": "9796e8ec069f1be37c7a630c44abe0d2ce27729593564b6722e0503963dc5478"
+    },
+    {
+      "path": "HISTORICAL-HANDBACK.md-BEFORE020-CLOSE.gz",
+      "bytes": 147212,
+      "sha256": "b09d4463af5c6d371dbbb5ba60c30cd0974f58c4cba989daad24d52e8e8e2b77"
+    },
+    {
+      "path": "HISTORICAL-IDENTITIES.json",
+      "bytes": 1197,
+      "sha256": "b5bf224b7ed7331af7148ba234054efc4c95908777223712f63343844cd0911e"
+    },
+    {
+      "path": "HISTORICAL-INBOX.md-BEFORE020-CLOSE.gz",
+      "bytes": 14300,
+      "sha256": "2bb101296cbe222d29d7420650fd35029ff5917415ecfea553d77c8fb294dc17"
+    },
+    {
+      "path": "HISTORICAL-STATUS.md-BEFORE020-CLOSE.gz",
+      "bytes": 1735,
+      "sha256": "5f92153deadd80c900f254702fdd478a25224842b1d91d8f0f6ed08952ce13b5"
+    },
+    {
+      "path": "owned-resource-guard.json.gz",
+      "bytes": 9276,
+      "sha256": "4eb45b64f097a118f5a8d231fb4b7f6cd1fa1eb6a010c1f92e4754528e9d74ff"
+    },
+    {
+      "path": "RAW-RECEIPT-IDENTITIES.json",
+      "bytes": 919,
+      "sha256": "6937c9ae686fbac60843aa68d188026b6a0beec55aaa7a7f179eaf1faeae7223"
+    },
+    {
+      "path": "ROOT-LEASE-RELEASE-IDENTITY.json",
+      "bytes": 849,
+      "sha256": "d754da914b9fd4a2f6dc2e53819849180db12b37a1ad8beb34dc1fe6a0deafa0"
+    },
+    {
+      "path": "run-result.json",
+      "bytes": 1509,
+      "sha256": "eb213beab81627f4ed43a988273471f855c8eea65df1e97dd433b03283d93550"
+    }
+  ]
+}

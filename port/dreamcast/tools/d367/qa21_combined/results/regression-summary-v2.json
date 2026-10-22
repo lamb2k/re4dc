@@ -1,0 +1,717 @@
+{
+  "source": "6f9d31b0e00497a75fdd7e25bb04f92305103087",
+  "program": "ce080eb290aec073f406e93da27911f4fa70b457768288f52a893175a6846e8e",
+  "elf": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+  "track": "97a3219f2876783cd28c5250479882e0b7643fecbff7a9bbbfc5df0886fc0a18",
+  "qualified": [
+    "Three fresh-cold QA reopening cycles and normal world return",
+    "OPTIONS native walls/floor/menu, ordinary resume and movement",
+    "Four original inventory opens/closes; matching source backing hashes restored",
+    "Original r100s03 normal Start skip followed by live original encounter",
+    "Authentic original damage/death1200 to440 to0, then original Continue leave/entry generation1 to2 and free play life1200"
+  ],
+  "runs": {
+    "qa-cold01": {
+      "elapsed_s": 47.5,
+      "errors": [],
+      "keys_executed": 10,
+      "emulator_exited": true,
+      "checkpoint_sealed": false,
+      "final_sample": {
+        "host_s": 46.954,
+        "non_atomic": true,
+        "qa_frames": 164,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 564,
+          "stop": 0,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            50331904,
+            33554944,
+            0,
+            0
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 251666551,
+          "rno": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -82898.921875,
+            860.205078125,
+            -38488.046875
+          ],
+          "ang": [
+            0.0,
+            -0.12929999828338623,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c7058c0",
+          "motion_frame": 72.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "actual_health_min": 0,
+      "window_closes": [],
+      "movie_results": [],
+      "room_lifecycle": [
+        "room lifecycle: phase=enter room=100 generation=1 frames=0 heap4=8c895f00-8cfbf080 size=7508352 free=7424704 heap_check=ok native4=2/83408 stale=0 refused=0",
+        "room lifecycle: phase=enter vram_free=2477312 kos_free=9232 kos_used=12102424 kos_break=180224 aram_sp=700000 aram_blocks=2 modules=1/0/0/1 threads=4/4/0 heap=4"
+      ]
+    },
+    "pause-cold01": {
+      "elapsed_s": 47.8,
+      "errors": [],
+      "keys_executed": 9,
+      "emulator_exited": true,
+      "checkpoint_sealed": true,
+      "final_sample": {
+        "host_s": 46.922,
+        "non_atomic": true,
+        "qa_frames": 192,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            6,
+            1,
+            0,
+            0
+          ],
+          "frame": 797,
+          "stop": 2147483583,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            50331904,
+            33554944,
+            0,
+            268435456
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 251666551,
+          "rno": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "pos": [
+            -82908.8125,
+            860.20068359375,
+            -38480.484375
+          ],
+          "ang": [
+            0.0,
+            -0.12929999828338623,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c7058c0",
+          "motion_frame": 14.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "actual_health_min": 0,
+      "window_closes": [],
+      "movie_results": [],
+      "room_lifecycle": [
+        "room lifecycle: phase=enter room=100 generation=1 frames=0 heap4=8c895f00-8cfbf080 size=7508352 free=7424704 heap_check=ok native4=2/83408 stale=0 refused=0",
+        "room lifecycle: phase=enter vram_free=2477312 kos_free=5168 kos_used=12102392 kos_break=184320 aram_sp=700000 aram_blocks=2 modules=1/0/0/1 threads=4/4/0 heap=4"
+      ]
+    },
+    "pause-return01": {
+      "elapsed_s": 47.9,
+      "errors": [],
+      "keys_executed": 5,
+      "emulator_exited": true,
+      "checkpoint_sealed": true,
+      "final_sample": {
+        "host_s": 47.093,
+        "non_atomic": true,
+        "qa_frames": 1367,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 2184,
+          "stop": 0,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            50331904,
+            33554944,
+            0,
+            268435456
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 117448823,
+          "rno": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -82876.28125,
+            860.20068359375,
+            -38581.03515625
+          ],
+          "ang": [
+            0.0,
+            -0.12929999828338623,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c7058c0",
+          "motion_frame": 64.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "actual_health_min": 1200,
+      "window_closes": [],
+      "movie_results": [],
+      "room_lifecycle": []
+    },
+    "inventory01": {
+      "elapsed_s": 47.8,
+      "errors": [],
+      "keys_executed": 7,
+      "emulator_exited": true,
+      "checkpoint_sealed": true,
+      "final_sample": {
+        "host_s": 46.828,
+        "non_atomic": true,
+        "qa_frames": 0,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 3167,
+          "stop": 2013265855,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            17039360,
+            514,
+            67108864,
+            268435456
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 0,
+          "rno": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ang": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hp": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 1,
+        "mendez": [],
+        "manager_nodes_seen": 8
+      },
+      "actual_health_min": 1200,
+      "window_closes": [
+        "subscreen backing: close area=8c862b60 restored=3145728 restore_us=319305 hash=c079be6a ok pool_free=74432"
+      ],
+      "movie_results": [],
+      "room_lifecycle": []
+    },
+    "inventory02": {
+      "elapsed_s": 47.9,
+      "errors": [],
+      "keys_executed": 7,
+      "emulator_exited": true,
+      "checkpoint_sealed": true,
+      "final_sample": {
+        "host_s": 46.796,
+        "non_atomic": true,
+        "qa_frames": 451,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 4335,
+          "stop": 0,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            50331904,
+            167772672,
+            0,
+            0
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 117448823,
+          "rno": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -82853.5234375,
+            860.203369140625,
+            -38617.25
+          ],
+          "ang": [
+            0.0,
+            -0.12929999828338623,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c7058c0",
+          "motion_frame": 5.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "actual_health_min": 1200,
+      "window_closes": [
+        "subscreen backing: close area=8c862b60 restored=3145728 restore_us=316764 hash=01beb092 ok pool_free=74432",
+        "subscreen backing: close area=8c862b60 restored=3145728 restore_us=316721 hash=3458b223 ok pool_free=74432",
+        "subscreen backing: close area=8c862b60 restored=3145728 restore_us=319291 hash=0c2971b8 ok pool_free=74432"
+      ],
+      "movie_results": [],
+      "room_lifecycle": []
+    },
+    "movie-skip02": {
+      "elapsed_s": 48.1,
+      "errors": [],
+      "keys_executed": 3,
+      "emulator_exited": true,
+      "checkpoint_sealed": true,
+      "final_sample": {
+        "host_s": 46.906,
+        "non_atomic": true,
+        "qa_frames": 0,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 5530,
+          "stop": 2151678208,
+          "player_life": 0,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            51380480,
+            167772672,
+            0,
+            0
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 50339959,
+          "rno": [
+            2,
+            2,
+            0,
+            0
+          ],
+          "pos": [
+            -84255.1484375,
+            860.20458984375,
+            -38416.609375
+          ],
+          "ang": [
+            0.0,
+            1.75,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c6b1e20",
+          "motion_frame": 86.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "actual_health_min": 0,
+      "window_closes": [],
+      "movie_results": [
+        "route movie start: id=10003 path=/cd/dc/movie/r100s03.seq size=288x192 frames=1465 media_us=48882166 staged=363328 heap=912320->548128 range=full path=pvr-yuv-converter",
+        "route movie skip: id=10003 mask=1000 picture=117 elapsed_us=3934460",
+        "route movie terminal=2 id=10003 frames=118/1465 uploaded=117 presented=117 wall_us=3904686 media_us=48882166 underruns=1 silence_bytes=1472 heap_before=912320 heap_active=548128 staged=363328"
+      ],
+      "room_lifecycle": []
+    },
+    "death-continue01": {
+      "elapsed_s": 48.3,
+      "errors": [],
+      "keys_executed": 3,
+      "emulator_exited": true,
+      "checkpoint_sealed": true,
+      "final_sample": {
+        "host_s": 47.156,
+        "non_atomic": true,
+        "qa_frames": 536,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 727,
+          "stop": 0,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            50331904,
+            512,
+            0,
+            268435456
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 50339959,
+          "rno": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "pos": [
+            -99685.3671875,
+            -454.61688232421875,
+            -1343.046630859375
+          ],
+          "ang": [
+            0.0,
+            2.246000051498413,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c7058c0",
+          "motion_frame": 86.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "actual_health_min": 0,
+      "window_closes": [],
+      "movie_results": [],
+      "room_lifecycle": [
+        "room lifecycle: phase=leave room=100 generation=1 frames=4352 heap4=8c895f00-8cfbf080 size=7508352 free=4186464 heap_check=ok native4=0/0 stale=0 refused=0",
+        "room lifecycle: phase=leave vram_free=77056 kos_free=3840 kos_used=12214312 kos_break=73728 aram_sp=700000 aram_blocks=2 modules=8/4/10/2 threads=9/21/0 heap=4",
+        "room lifecycle: phase=enter room=100 generation=2 frames=0 heap4=8c895f00-8cfbf080 size=7508352 free=7424704 heap_check=ok native4=2/83408 stale=0 refused=0",
+        "room lifecycle: phase=enter vram_free=77056 kos_free=7936 kos_used=12214312 kos_break=69632 aram_sp=700000 aram_blocks=2 modules=9/4/11/2 threads=9/22/0 heap=4",
+        "room lifecycle: phase=enter drift heap4=0 vram=-2400256 kos=-111920"
+      ]
+    }
+  },
+  "rejected": {
+    "qa-cold01-checkpoint": {
+      "reason": "Initial launcher selected plain runner; QA input qualifies but no checkpoint exists. No later scenario restores it."
+    },
+    "movie-skip01": {
+      "reason": "Watchdog empty PID-file race; root lane stopped only its verified owned guest at43s. No state is restored from this trial."
+    },
+    "qa-after-continue01": {
+      "reason": "Overall harness52.3s, hard-limit termination and truncated/rejected checkpoint. Process lifetime was not independently recorded; do not qualify or continue it."
+    },
+    "movie-natural-cold01": {
+      "reason": "C floor preflight refused launch; no guest started."
+    }
+  },
+  "inspected_images": {
+    "pause-cold01/events/07-before-start/frames/fb0.png": "b8aa27c2bfbf408c64c54ddac2e9d2ce4dcb32813160065eb7b640b6f53677b1",
+    "pause-cold01/events/08-before-start/frames/fb0.png": "b30d69f758a67b51e89c67233d50fde0cdf89bcaa2e453af0621017caf6de06d",
+    "inventory02/shots/t0013/frames/fb0.png": "e3541ca2ae275a17b80ae8f62e061bce37c626c5ba2494d6af114762af856b01",
+    "inventory02/shots/t0036/frames/fb0.png": "d6de6f7050d112f4d8e2d8ebb143eeaedf5270ecaf6320e825d4b82699f78b83",
+    "death-continue01/shots/t0006/frames/fb0.png": "6bc022639fb644af1069a5b88ab4556a6b14af2ef1b2ef297a3155a862109ea4",
+    "death-continue01/events/03-checkpoint-close/frames/fb0.png": "7af340a4d482627c1fc289656edb5b9b13a7bcd7f40d9b30e34a1b3034649880"
+  },
+  "resource_limits": [
+    "Continue KOS free3840B leaving/7936B entering",
+    "Inventory texture fragmentation retries remain",
+    "New guests blocked under C18GiB+64MiB; no floor lowered"
+  ],
+  "remaining": [
+    "Natural movie EOF",
+    "Radio/held background",
+    "Original doors/new-room progression",
+    "Post-Continue QA qualification under new independent supervisor",
+    "Release full tier",
+    "Physical Dreamcast acceptance"
+  ],
+  "scope": "Bounded preset-started functional Flycast only. No performance, whole-cache, release or physical-console acceptance."
+}

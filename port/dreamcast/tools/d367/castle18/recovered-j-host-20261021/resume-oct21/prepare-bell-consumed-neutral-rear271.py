@@ -1,0 +1,14 @@
+from pathlib import Path
+import hashlib
+L=Path(r'C:\Game Dev\Emulators\codex-lanes\castle18');s=(L/'owned-window-recovered-j-r201-Garrador-sourceack-fine-neutral-fire-v5-still.py').read_text();a=s.index(' started=time.monotonic()');b=s.index(' transition(set());check()',a);loop=""" started=time.monotonic();rear_since=None;first_frame=None
+ while time.monotonic()-started<42:
+  check();pg=u32(0x8c2e91dc);ff=u32(pg+0x51e4);health=list(struct.unpack('<4H',read(pg+0x4fa4,8)));assert health[0]>=_sp['health'][0] and health[2]>=_sp['health'][2],'Original injury during neutral bell observation';assert struct.unpack('<H',read(pg+0x4f9e,2))[0]==0x201 and tuple(read(pg+0x20,2))==(3,0) and u32(pg+0x170)==0 and read(0x8c3de064+0x28,1)[0]==0;assert not(u32(pg+0x500c)&0x100000)
+  pl=u32(0x8c39d700);sub=u32(0x8c39d6fc);assert struct.unpack('<H',read(sub+0x400,2))[0]&2;pp=struct.unpack('<3f',read(pl+0x94,12));ap=struct.unpack('<3f',read(sub+0x94,12));gp=0x8caf2460;assert read(gp+0x100,2)==b'\\x1b\\x0a';gg=struct.unpack('<3f',read(gp+0x94,12));gy=struct.unpack('<f',read(gp+0xa4,4))[0];sep=math.hypot(pp[0]-gg[0],pp[2]-gg[2]);ashsep=math.dist(ap,gg);dot=(pp[0]-gg[0])*math.sin(gy)+(pp[2]-gg[2])*math.cos(gy);ghp=struct.unpack('<h',read(gp+0x320,2))[0];assert ghp==sealed_boss_hp;rt=list(read(gp+0xfc,4));tp=struct.unpack('<3f',read(gp+0x914,12));xp=struct.unpack('<3f',read(gp+0x9d0,12));ring=struct.unpack('<h',read(0x8caddab8+0x332,2))[0];row=dict(frame=ff,health=health,player_pos=pp,partner_pos=ap,Garrador_hp=ghp,Garrador_pos=gg,Garrador_yaw=gy,Garrador_routines=rt,player_back_dot=dot,player_distance=sep,partner_distance=ashsep,original_route_target=tp,original_attack_target=xp,bellTimer=ring);samples.append(row);transition(set());assert sep>=3500 and ashsep>=3500,'Original3500 Leon-or-Ashley stationary bell observation stop'
+  if first_frame is None:first_frame=ff;assert math.hypot(tp[0]-26972,tp[2]+49754)<1 and math.hypot(xp[0]-26972,xp[2]+49754)<1,'Original exact bell target consumption must precede observation'
+  if dot<-.7*sep:
+   if rear_since is None:rear_since=ff
+   if ff-rear_since>=3:events.append({'original_bell_distraction_actual_strongrear_stable3':row});capture_before_close();assert u.PostMessageW(hwnd,0x10,0,0);break
+  else:rear_since=None
+  if ff-first_frame>=600:events.append({'bounded_original_bell_observation_no_rear':row});capture_before_close();assert u.PostMessageW(hwnd,0x10,0,0);break
+  time.sleep(.015)
+""";s=s[:a]+loop+s[b:];s=s.replace("'scope':'","'scope':'Pure neutral original bell-target observation after exact consumption; no aim/movement/fire. Require unchangedHP/Wait, exact initial originalbell targets,3500distance to BOTH Leon/Ashley, strongrear3ticks or600source/42s bounded stop. ",1);p=L/'owned-window-recovered-j-r201-bell-consumed-neutral-rear-still.py';assert not p.exists();compile(s,str(p),'exec');p.write_text(s);print(p.name,hashlib.sha256(p.read_bytes()).hexdigest())

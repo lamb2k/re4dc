@@ -1,0 +1,92 @@
+{
+  "scope": "CONTROLLED cold204 original scripted event coverage. Chapter6/partner/initialAEV2 are SETUP; no event outcome bits preset. Early RSF0/chapter7/RSF7 do not prove movieEOF/resultsUI/savewrite/radio. Authentic127/294 untouched.",
+  "owner": {
+    "pid": 26076,
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event005\\flycast.exe",
+    "start_filetime": 134371067223746478,
+    "created_utc": "2026-10-22T01:38:42.382324+00:00",
+    "rights": "retained subprocess handle receipt"
+  },
+  "baseline_crank": null,
+  "crank_full_frame": null,
+  "baseline_RSF5_clear_seen": true,
+  "events": [
+    {
+      "original_event_RSF0_early": {
+        "pg": 2352652060,
+        "process_age": 21.615184682887048,
+        "frame": 181,
+        "room": "0x204",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "status1": "0x200",
+        "status3": "0x4000000",
+        "chapter": 6,
+        "partner_ptr": "0x8cad8160",
+        "player_pos": [
+          -676.848876953125,
+          -0.0009765625,
+          -41378.0625
+        ],
+        "saved_RSF": "0x80000000",
+        "baseline_RSF0_clear_seen": true,
+        "event_hold_seen": false
+      }
+    },
+    {
+      "screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event005\\shots\\controlled-original-r204-event-start",
+      "source_interval": [
+        181,
+        181
+      ]
+    },
+    {
+      "screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event005\\shots\\controlled-inner-deadline",
+      "source_interval": [
+        181,
+        181
+      ]
+    },
+    {
+      "exact_owned_WM_CLOSE": true
+    }
+  ],
+  "last": {
+    "pg": 2352652060,
+    "process_age": 38.99018468288705,
+    "frame": 181,
+    "room": "0x204",
+    "phase": [
+      3,
+      0
+    ],
+    "Stop": "0x80400900",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "status1": "0x10000200",
+    "status3": "0x4000000",
+    "chapter": 6,
+    "partner_ptr": "0x8cad8160",
+    "player_pos": [
+      -676.848876953125,
+      -0.0009765625,
+      -41378.0625
+    ],
+    "saved_RSF": "0x80000000",
+    "baseline_RSF0_clear_seen": true,
+    "event_hold_seen": true
+  }
+}

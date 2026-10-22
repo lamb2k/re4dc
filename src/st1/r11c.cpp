@@ -565,12 +565,12 @@ static void r11c_EventBesiegedStart()
     cEm* ashley = W->ashley;
     Vec* pa = &ang;
 
-    ashley->setPos(&pos);
+    if (EM_OK(ashley)) ashley->setPos(&pos);
     ang.x = 0.0f;
     pa->y = ry;
     ang.z = 0.0f;
-    ashley->setAng(&ang);
-    W->ashley->set = 1;
+    if (EM_OK(ashley)) ashley->setAng(&ang);
+    if (EM_OK(W->ashley)) W->ashley->set = 1;
     W->mod4 = SearchEmModule(4);
     {
         cPlayer* pl = pPLS;
@@ -785,7 +785,7 @@ static void r11c_EventBesiegedStart()
         t++;
         if (t == 3600) {
             r11c_save()->flags |= 0x02000000;
-            W->ashley->set = 2;
+            if (EM_OK(W->ashley)) W->ashley->set = 2;
             if (getRoomEtcLadder(6, &ladder, 1)) {
                 ((cObjLadder*) ladder)->setOn();
             }

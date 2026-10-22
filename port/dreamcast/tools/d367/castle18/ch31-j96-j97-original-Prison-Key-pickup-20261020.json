@@ -1,0 +1,415 @@
+{
+  "scope": "Unchanged qualified J original no-warp VMU/CardLoad lineage; normal movement and A/dialog, no guest/item/health/state writes, rollback, program substitution, data changes or build/stage.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk96",
+      "result": "Original chest A/callback complete and TAKE prompt visible; Castle Gate Key not yet collected,720/600 unchanged",
+      "elapsed_s": 9.2,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "b1bad37a98b72b34d81adafdf2255fe6314468ad13d4569d1d8122142e20d3ba",
+      "events": [
+        {
+          "original_key_chest_callback_complete": {
+            "host_monotonic": 297372.015,
+            "room": "0x203",
+            "frame": 22810,
+            "player_hp": 720,
+            "partner_hp": 600,
+            "pos": [
+              -66784.6171875,
+              4189.2744140625,
+              761.6436157226562
+            ],
+            "yaw": -1.50156831741333,
+            "target_distance": 36.52291688114524,
+            "angle_error": -2.886354333754764,
+            "chest_event_pending": false,
+            "r203_RSF": "0x18000000"
+          }
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk96",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Original chest A/callback complete and TAKE prompt visible; Castle Gate Key not yet collected,720/600 unchanged",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk96\\shots\\checkpoint-source-22811\\frames\\fb0.png",
+          "png_sha256": "e41a97aa1fd9c79ec41999b00cbee806d1b8fbb6411140acc283bbb948aa16b3",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk96\\shots\\checkpoint-source-22811\\checkpoint-context.json",
+          "source_frame_interval": [
+            22811,
+            22825
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk97",
+      "result": "Original aligned A/dialog collects Castle Gate Key A7; inventory A7x1 and30 normal world ticks,720/600 unchanged; four new held/sent enemies, no wave clear",
+      "elapsed_s": 6.4,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "2927eb8cff8aac2b3cdef2b83d8951ed896562b96ad920bd2ef7c74276e817ff",
+      "events": [
+        {
+          "original_Prison_Key_pickup_complete": {
+            "frame": 22947,
+            "items": [
+              {
+                "id": "0xa7",
+                "num": 1,
+                "flags": 1,
+                "type": 0
+              }
+            ],
+            "health": [
+              720,
+              1200,
+              600,
+              600
+            ],
+            "item_find_flags": "0x300004",
+            "normal_world_ticks_after_pickup": 30
+          }
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk97",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Original aligned A/dialog collects Castle Gate Key A7; inventory A7x1 and30 normal world ticks,720/600 unchanged; four new held/sent enemies, no wave clear",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk97\\shots\\checkpoint-source-22947\\frames\\fb0.png",
+          "png_sha256": "b961a10f78721956d1954e1b930e8311744f81fb28660df67247aa6e96266ae4",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk97\\shots\\checkpoint-source-22947\\checkpoint-context.json",
+          "source_frame_interval": [
+            22947,
+            22956
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    }
+  ],
+  "queue_audit": {
+    "scope": "Read-only immutable exact J96/J97 snapshots, four ELF anchors each. Scoped symbol and source64-byte u8 held arrays; only first aliveCapN bytes decoded. No source/game/state edits or new guest.",
+    "symbols": {
+      "__ZL9aliveCapN": "0x8c39d8a0",
+      "__ZL12aliveCapHeld": "0x8c39d8e4",
+      "__ZL12aliveCapSent": "0x8c39d8a4"
+    },
+    "rows": [
+      {
+        "run": "current-j-route-walk96",
+        "source_frame": 22825,
+        "state_sha256": "b1bad37a98b72b34d81adafdf2255fe6314468ad13d4569d1d8122142e20d3ba",
+        "health": [
+          720,
+          1200,
+          600,
+          600
+        ],
+        "held_count": 5,
+        "held_ids": [
+          "0x48",
+          "0x37",
+          "0x39",
+          "0x3a",
+          "0x3b"
+        ],
+        "held_sent": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "active_em11": [
+          {
+            "pointer": "0x8cb88520",
+            "type": 7,
+            "hp": 1000,
+            "routines": [
+              1,
+              1,
+              1,
+              0
+            ],
+            "pos": [
+              -51990.33984375,
+              4155.76025390625,
+              -16911.642578125
+            ]
+          },
+          {
+            "pointer": "0x8cb7aa20",
+            "type": 7,
+            "hp": 1000,
+            "routines": [
+              1,
+              1,
+              1,
+              0
+            ],
+            "pos": [
+              -47931.23046875,
+              4155.7626953125,
+              -13578.9287109375
+            ]
+          },
+          {
+            "pointer": "0x8cb79c40",
+            "type": 7,
+            "hp": 1000,
+            "routines": [
+              1,
+              16,
+              1,
+              0
+            ],
+            "pos": [
+              -52735.54296875,
+              3174.986328125,
+              5566.72998046875
+            ]
+          },
+          {
+            "pointer": "0x8ca1fa20",
+            "type": 7,
+            "hp": 1000,
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ],
+            "pos": [
+              -47412.2578125,
+              4155.76025390625,
+              -16106.5380859375
+            ]
+          }
+        ]
+      },
+      {
+        "run": "current-j-route-walk97",
+        "source_frame": 22956,
+        "state_sha256": "2927eb8cff8aac2b3cdef2b83d8951ed896562b96ad920bd2ef7c74276e817ff",
+        "health": [
+          720,
+          1200,
+          600,
+          600
+        ],
+        "held_count": 9,
+        "held_ids": [
+          "0x48",
+          "0x37",
+          "0x39",
+          "0x3a",
+          "0x3b",
+          "0x4b",
+          "0x4c",
+          "0x4d",
+          "0x4e"
+        ],
+        "held_sent": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "active_em11": [
+          {
+            "pointer": "0x8cb88520",
+            "type": 7,
+            "hp": 1000,
+            "routines": [
+              1,
+              1,
+              1,
+              0
+            ],
+            "pos": [
+              -52023.5625,
+              4155.763671875,
+              -16943.373046875
+            ]
+          },
+          {
+            "pointer": "0x8cb7aa20",
+            "type": 7,
+            "hp": 1000,
+            "routines": [
+              1,
+              1,
+              1,
+              0
+            ],
+            "pos": [
+              -47879.57421875,
+              4155.76025390625,
+              -13656.7802734375
+            ]
+          },
+          {
+            "pointer": "0x8cb79c40",
+            "type": 7,
+            "hp": 1000,
+            "routines": [
+              1,
+              16,
+              1,
+              0
+            ],
+            "pos": [
+              -53079.703125,
+              3173.06591796875,
+              6234.55029296875
+            ]
+          },
+          {
+            "pointer": "0x8ca1fa20",
+            "type": 7,
+            "hp": 1000,
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ],
+            "pos": [
+              -47418.3203125,
+              4155.763671875,
+              -16144.8876953125
+            ]
+          }
+        ]
+      }
+    ],
+    "added_held_ids": [
+      "0x4b",
+      "0x4c",
+      "0x4d",
+      "0x4e"
+    ],
+    "limit": "Original key pickup enqueues observed source sends. No ordinary kill/release/wave-clear or deferred goto semantics acceptance from this snapshot comparison."
+  },
+  "cast_not_drawn": {
+    "rows": [
+      {
+        "room": "r203",
+        "id": "00",
+        "name": "Leon",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 10861,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          7
+        ],
+        "parts": [
+          119
+        ]
+      },
+      {
+        "room": "r203",
+        "id": "03",
+        "name": "Ashley",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 10861,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          141
+        ]
+      },
+      {
+        "room": "r203",
+        "id": "11",
+        "name": "em11",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 9812,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          37
+        ]
+      }
+    ],
+    "packages": {},
+    "fails": 0,
+    "not_drawn": [
+      {
+        "room": "r203",
+        "id": "11",
+        "name": "em11",
+        "samples": 12,
+        "max_alive": 4,
+        "nearest": 6514,
+        "in_view": 7,
+        "verdict": "drawn"
+      }
+    ]
+  },
+  "limits": [
+    "Held queue5 to9 and four additional sent bits; four actual active em11 remainHP1000. No completed kill, held release or full wave closure.",
+    "Native observations include retained same-program room history, not isolated post-inventory cost or whole-room residency.",
+    "DISC_READ_METER0/IO_PROBE0: no whole-drive quiet or hardware timing claim."
+  ],
+  "next": "Normal return to original r201 locked door and original Castle Gate Key Use/unlock; keep independent qualified J route.",
+  "naming_correction": "A7 is Castle Gate Key, confirmed by original key-item screen/source-backed CASTLE_CH31_NATIVE_SAVE_PROGRESS_20261019.md. Later r201 Prison Key is C3. Existing evidence filenames retained; numeric item/state/input proof unchanged."
+}

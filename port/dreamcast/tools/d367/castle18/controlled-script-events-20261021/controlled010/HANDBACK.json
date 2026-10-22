@@ -1,0 +1,267 @@
+{
+  "scope": "CONTROLLED native cold LOAD010 partial outcome, not loaded gameplay/release/hardware acceptance.",
+  "status": "PARTIAL_TITLE_LOAD_SELECTED",
+  "visible_result": "Inspected fb0 PNG shows original title menu with LOAD selected. Native CardLoad/gameplay not reached within bounded unit.",
+  "native_load_log_seen": false,
+  "state_sha256": "bffe1251ec3e0ca7defb4084cc2adf07edbfc3c12abeec51fb7ae681bc1624a2",
+  "closed_native_fields": {
+    "source_frame": 1055,
+    "phase": [
+      0,
+      0
+    ],
+    "room": "0x120",
+    "chapter": 0,
+    "health_uninitialized_title": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "VMU_source_and_runtime_sha256": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+  "source_009_unchanged": true,
+  "protected_authentic_states": {
+    "route-walk127": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16",
+    "route-walk294": "cb7a314b8fd0383af0b7baf17c2e87a712705beb122a1d39c7705553dd795258"
+  },
+  "programme_binding_receipt_sha256": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed",
+  "ELF_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "master_image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "guard": {
+    "PASS_normal_owned_closure": true,
+    "owner": {
+      "pid": 46756,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-load010\\flycast.exe",
+      "start_filetime": 134371151036794500,
+      "created_utc": "2026-10-22T03:58:23.688750+00:00",
+      "rights": "retained subprocess handle receipt"
+    },
+    "closed_identity": {
+      "initial_live_identity_pinned": true,
+      "retained_handle_signaled": true,
+      "exit_code": 0,
+      "postexit_times_available": true,
+      "postexit_path_query": false,
+      "proof_reason": "normal or absolute loop exit"
+    },
+    "exit_age": 39.53281378746033,
+    "max_capture_logical_bytes": 22339918,
+    "minimum_runtime_free_bytes": 38569570304,
+    "not_a_new_fail_closed_path_test": true
+  },
+  "harness": {
+    "status": "RUN_COMPLETE",
+    "elapsed_s": 40.0,
+    "errors": []
+  },
+  "screenshots": [
+    {
+      "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-load010\\shots\\controlled-native-load-context\\controlled-context.json",
+      "context_sha256": "58a53055953942a4b57237b6e387c8142c0380edaedde3b29ea8c4ea55f4b60a",
+      "context": {
+        "scope": "Native LOAD controlled evidence only; typed fields do not replace observed Load result/gameplay",
+        "observation": {
+          "process_age": 36.029830322251655,
+          "pg": 2352652060,
+          "frame": 965,
+          "phase": [
+            0,
+            0
+          ],
+          "room": "0x120",
+          "chapter": 0,
+          "Stop": "0x0",
+          "health": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "CardStatus": "0x80000001",
+          "status3": "0x0",
+          "partner_ptr": "0x0"
+        },
+        "before": {
+          "process_age": 36.513830322248396,
+          "pg": 2352652060,
+          "frame": 980,
+          "phase": [
+            0,
+            0
+          ],
+          "room": "0x120",
+          "chapter": 0,
+          "Stop": "0x0",
+          "health": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "CardStatus": "0x80000001",
+          "status3": "0x0",
+          "partner_ptr": "0x0"
+        },
+        "after": {
+          "process_age": 36.576830322272144,
+          "pg": 2352652060,
+          "frame": 982,
+          "phase": [
+            0,
+            0
+          ],
+          "room": "0x120",
+          "chapter": 0,
+          "Stop": "0x0",
+          "health": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "CardStatus": "0x80000001",
+          "status3": "0x0",
+          "partner_ptr": "0x0"
+        },
+        "pngs": [
+          {
+            "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-load010\\shots\\controlled-native-load-context\\frames\\fb0.png",
+            "sha256": "18b6a55836c015d1afc4cd9dfd2d969b53dac36115b8fc0a56d6e89e9872e5df"
+          },
+          {
+            "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-load010\\shots\\controlled-native-load-context\\frames\\fb1.png",
+            "sha256": "fb1971a3114d80a7bc653bb4e858af21a81aa3f58d09854ccc037a6762982ffe"
+          }
+        ]
+      }
+    }
+  ],
+  "fixture_and_card_log": [
+    {
+      "line": 332,
+      "text": "fixture: /cd/dc/padscript.txt: 8 entries, source clock"
+    },
+    {
+      "line": 429,
+      "text": "fixture: state title=1/0 at frame 40"
+    },
+    {
+      "line": 465,
+      "text": "fixture: state card=0/2 at frame 138"
+    },
+    {
+      "line": 467,
+      "text": "fixture: state card=0/3 at frame 140"
+    },
+    {
+      "line": 469,
+      "text": "card-vmu: op=mount file=-1 vbl=15 rc=0"
+    },
+    {
+      "line": 472,
+      "text": "fixture: state card=0/4 at frame 158"
+    },
+    {
+      "line": 474,
+      "text": "fixture: state card=0/5 at frame 160"
+    },
+    {
+      "line": 478,
+      "text": "fixture: state card=0/6 at frame 164"
+    },
+    {
+      "line": 480,
+      "text": "card-vmu: op=info file=0 vbl=3 rc=0"
+    },
+    {
+      "line": 484,
+      "text": "fixture: state card=0/7 at frame 214"
+    },
+    {
+      "line": 487,
+      "text": "fixture: state card=1/0 at frame 218"
+    },
+    {
+      "line": 490,
+      "text": "fixture: state card=1/1 at frame 220"
+    },
+    {
+      "line": 496,
+      "text": "card-vmu: op=sysread file=20 vbl=2 rc=0"
+    },
+    {
+      "line": 500,
+      "text": "fixture: state card=1/2 at frame 234"
+    },
+    {
+      "line": 502,
+      "text": "fixture: state card=1/3 at frame 236"
+    },
+    {
+      "line": 523,
+      "text": "fixture: state card=2/0 at frame 280"
+    },
+    {
+      "line": 526,
+      "text": "fixture: state card=3/0 at frame 282"
+    },
+    {
+      "line": 528,
+      "text": "fixture: state card=4/0 at frame 284"
+    },
+    {
+      "line": 531,
+      "text": "fixture: state card=4/1 at frame 286"
+    },
+    {
+      "line": 532,
+      "text": "fixture: state title=1/1 at frame 290"
+    },
+    {
+      "line": 534,
+      "text": "fixture: state title=1/2 at frame 293"
+    },
+    {
+      "line": 545,
+      "text": "fixture: state title=2/0 at frame 426"
+    },
+    {
+      "line": 546,
+      "text": "fixture: state title=2/1 at frame 428"
+    },
+    {
+      "line": 576,
+      "text": "fixture: state title=2/2 at frame 554"
+    },
+    {
+      "line": 578,
+      "text": "fixture: state title=3/0 at frame 586"
+    },
+    {
+      "line": 615,
+      "text": "fixture: state title=4/0 at frame 799"
+    },
+    {
+      "line": 666,
+      "text": "fixture: state title=4/2 at frame 1049"
+    },
+    {
+      "line": 705,
+      "text": "fixture: state title=4/4 at frame 1249"
+    },
+    {
+      "line": 825,
+      "text": "fixture: state title=4/6 at frame 1759"
+    },
+    {
+      "line": 826,
+      "text": "fixture: state title=5/0 at frame 1761"
+    },
+    {
+      "line": 842,
+      "text": "fixture: state title=5/1 at frame 1766"
+    }
+  ],
+  "next": "No retry or following guest allocated. Preserve exact010 state; review remaining native source-gated pad state before a bounded same-lineage continuation. Teleport/event progression waits until actualLoad context is established."
+}

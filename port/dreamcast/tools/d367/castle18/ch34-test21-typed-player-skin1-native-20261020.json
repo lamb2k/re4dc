@@ -1,0 +1,89 @@
+{
+  "scope": "Fresh disclosed r206 source-selection diagnostic reaches actual r20d cPlAshley. This is typed-player native drawing/memory coverage, not chapter progression or whole-room acceptance.",
+  "source": "dcd61bc85",
+  "program": "c21imW",
+  "elf_sha256": "45679331fb9d687bd1450b72978fdd5d38ffb8eef0497522064e446646368b34",
+  "build": {
+    "seconds": 57,
+    "missing": 0,
+    "end": "8c485338"
+  },
+  "backend": {
+    "SKIN_SH4ZAM": 1,
+    "check": 0,
+    "dependency_pin": "516f192bb6585a4f5986ff10301a5d34d4b5c3ed",
+    "native_actor_compile_flag": true,
+    "object_call_relocations": [
+      "000009b0 R_SH_DIR32        _re4dc_shz_pos_skin_u16",
+      "000009bc R_SH_DIR32        _re4dc_shz_pos_skin_s16",
+      "00000008 R_SH_DIR32        _shz_xmtrx_project_skinned_u16_sh4",
+      "00000008 R_SH_DIR32        _shz_xmtrx_project_skinned_s16_sh4"
+    ],
+    "linked_symbols": [
+      "8c266d3c T re4dc_shz_pos_skin_s16",
+      "8c266d30 T re4dc_shz_pos_skin_u16",
+      "8c266d60 T shz_xmtrx_project_skinned_s16_sh4",
+      "8c267200 T shz_xmtrx_project_skinned_u16_sh4"
+    ],
+    "existing_numerical_modelled_gate_reused": true,
+    "current_matched_scene_cost_claim": false,
+    "hardware_claim": false
+  },
+  "disc": {
+    "iso_sectors": 497451,
+    "data_sectors": 496338,
+    "added_vs_original_current_A": 204,
+    "added_vs_disc2_baseline": 17875,
+    "limit": 504000,
+    "sha256": "c8b5022301e36ffc4327f9213cabc2d10eca8832df2826c8e1b2e5c79ee6809a",
+    "source": "Pinned RAM byte-verified master; source/programs/selected assets/states/logs/proof retained C. FinalCmaster copy deferred under18GiB staging floor."
+  },
+  "run": {
+    "seconds": 50.9,
+    "errors": [],
+    "owned_exited": true,
+    "player_census": [
+      {
+        "frame": 400,
+        "native": 150,
+        "declined": 0,
+        "registry_declined": 0
+      },
+      {
+        "frame": 550,
+        "native": 300,
+        "declined": 0,
+        "registry_declined": 0
+      }
+    ],
+    "material_required": "ff",
+    "matched_roles": 7,
+    "typed_owner": {
+      "actual": "cPlAshley",
+      "vtable": "0x8c2cf9cc",
+      "source_joints": 141,
+      "draw_slots": 68,
+      "roles": 7,
+      "OT": 7,
+      "player_archive_family": 1,
+      "source_TEV_group": 1,
+      "live_info_records": 7,
+      "hand_variant": "unique original open; no Leon hand shortcut"
+    },
+    "KOS": {
+      "held_bytes": 49152,
+      "min_watch_headroom": 25792
+    },
+    "snapshot_state_sha256": "1838da6dc04e950b28f91b242819c96c3710ec40cd2edf0b79e647d5924b61f1",
+    "source_frame": 672
+  },
+  "gaps": {
+    "room_CAST_GC": "FAIL solely inherited enemy19 GC450/native0; no allowlist added",
+    "NOT_DRAWN": "PASS",
+    "full_VRAM": "FAIL: r206 inherited50lateuploads/10guards/GCfx9; r20d soundbank1nofit. Actualr20d0afterpreloadtextureuploads/evictions/guards/texrej.",
+    "visual": "Actualt0041 upperbody/head/hair native still inspected; movement/hands/events furthercoverage pending.",
+    "facial_expressions": "Inherited PS2_ASHLEY2 rest-face approximation; source morph-expression parity not claimed",
+    "chapter34_progression": "Not accepted from this diagnostic",
+    "r203_r208_motion": "Explicit currenthotdata checks pending"
+  }
+}

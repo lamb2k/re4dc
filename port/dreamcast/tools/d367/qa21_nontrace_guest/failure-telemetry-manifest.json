@@ -1,0 +1,66 @@
+{
+  "scope": "source-only failure-telemetry successor; NOT guest-qualified, original profile/source-manifest intentionally retained and reject changed tools",
+  "utc": "2026-10-22T02:59:43.766907+00:00",
+  "parent": "1bcbc5df33ed2f3b3dfaf376e06416b34f7176bb",
+  "old_reviewed_code": "14996210df933406fc74f23f6df9404e4a5b9f48",
+  "old_profile_sha256": "8aae247a6c0998af06ffce2d16a3832bfaaaf99dbab1769fc75b32b1a2103d1b",
+  "old_tools_sha256": "3557c5224df6b3715d282d3deab5fff7557b1c2ec8273c7d0ea76c1f359a41c1",
+  "unchanged_AST_controls": [
+    "ALL core timing/disk/cap constants",
+    "complete Inputs.down including lease start/timer delay/safety margin",
+    "controller/policies/observer/outer/profile/PLAN source bytes exact"
+  ],
+  "sources": {
+    "input-deadlines.py": {
+      "bytes": 3728,
+      "sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9"
+    },
+    "inner-adapter.py": {
+      "bytes": 14262,
+      "sha256": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e"
+    },
+    "windows-backend.py": {
+      "bytes": 15331,
+      "sha256": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e"
+    },
+    "guest-supervisor-core.py": {
+      "bytes": 4346,
+      "sha256": "3227d411abf7370901b12f894dd35c33ca2b865f8be3eb88099f324814f87510"
+    },
+    "test-failure-telemetry.py": {
+      "bytes": 10106,
+      "sha256": "f2ee60d6ced646115f980e01384d192909210bee11293d174c7ac729c9eaa5dc"
+    },
+    "run-failure-telemetry-tests.py": {
+      "bytes": 1375,
+      "sha256": "ef00458cfcf726144f81d0a3fa759b2491e77c9ae9e8584b2b9c302dd709f28b"
+    }
+  },
+  "receipts": {
+    "failure-telemetry-receipt-linux-20261022T025519891785Z.json": {
+      "bytes": 3073,
+      "sha256": "039cb2fbab4625ca0eb6b93240cc59e10b3c594095b7269dfa1b39730106d6f8",
+      "current_candidate_sources": false,
+      "tests": 13
+    },
+    "failure-telemetry-receipt-linux-20261022T025913277743Z.json": {
+      "bytes": 3586,
+      "sha256": "5670352449edb1558c8c7d7489bdb1b39031cdac592fb0195001df5c205c2fa9",
+      "current_candidate_sources": true,
+      "tests": 16
+    },
+    "failure-telemetry-receipt-windows-20261022T025519788197Z.json": {
+      "bytes": 3183,
+      "sha256": "780b152275bc42a857ac363257b50bf86cf1375c9ecd9333dd25c6f07c9b3591",
+      "current_candidate_sources": false,
+      "tests": 13
+    },
+    "failure-telemetry-receipt-windows-20261022T025913173135Z.json": {
+      "bytes": 3696,
+      "sha256": "2cc9646d73bfe8186db3054b004bf5d4c69d77ac046d588ff77ee87f55ad5fb1",
+      "current_candidate_sources": true,
+      "tests": 16
+    }
+  },
+  "review_correction": "keyup native/elapsed errors call failure publisher before engine-up/release_all aggregation/stringification;16NEW cases per platform"
+}

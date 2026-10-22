@@ -1,0 +1,11 @@
+{
+  "replace": {
+    "dc/resident.bin": "/root/re4data/private/castle18-route-resident-v11-20261019/files/dc/resident.bin"
+  },
+  "remove": [],
+  "provenance": {
+    "set": "castle18-route-resident-v11-20261019",
+    "sha256": "70042ab3a47d383570b99f6db2c240011d69f083224a52d3ca46d3caafe9c272",
+    "scope": "5697 existing records plus ten auditedr20e source records; no other file replacement. Runtime qualification pending."
+  }
+}

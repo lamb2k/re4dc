@@ -1,0 +1,41 @@
+{
+  "/dc/qa/menu.txt": {
+    "extent": 259632,
+    "bytes": 1154,
+    "sha256": "01bc0329388b7db82a8373014757792d98c4d420cf17d0a9a1f6753ae3c54958",
+    "declared_patch": false,
+    "text": "# QA disc presets (tools/d367/qa20/mkqa.py)\nch CHAPTER 1-1: VILLAGE\np r100.txt S R100 FOREST PATH (HOUSE, AFTER S20)\np r101.txt S R101 VILLAGE SQUARE (FIGHT START)\np r101x.txt S R101 VILLAGE SQUARE, BY THE CROSS\np r102.txt S R102 ENTRY\np r103.txt S R103 FARM (ENTRY)\np r103f.txt S R103 FARM FIGHT (ONE DOWN)\np r104.txt S R104 ENTRY\np r105.txt S R105 ENTRY\np r106.txt S R106 ENTRY\np r107.txt S R107 ENTRY\nch CHAPTER 1-2\np r108.txt S R108 ENTRY\np r109.txt S R109 ENTRY\np r10a.txt S R10A ENTRY\np r117.txt S R117 ENTRY\np r118.txt S R118 ENTRY\np r119.txt S R119 EL GIGANTE (FIGHT)\nch CHAPTER 1-3: LAKE\np r10b.txt S R10B LAKE PATH, BOAT START\np r10bd.txt S R10B DEL LAGO FIGHT\np r11a.txt S R11A ENTRY\nch CHAPTER 2-1: NIGHT LAKE AND DAM\np r11bn.txt S R11B NIGHT SHORE AFTER DEL LAGO\np r11b.txt S R11B NIGHT SHORE (WALK)\np r10c.txt S R10C DAM\np r10d.txt S R10D DAM SIDE ROOM\np r10e.txt S R10E DAM\np r10f.txt S R10F ENTRY\nch CHAPTER 2-2\np r111.txt S R111 ENTRY\np r112.txt S R112 ENTRY\np r113.txt S R113 ENTRY\np r11c.txt S R11C CABIN\nch CHAPTER 2-3\np r11d.txt S R11D ENTRY\np r11e.txt S R11E EL GIGANTE (FIGHT)\np r11f.txt S R11F ENTRY\np r200.txt S R200 CASTLE GATE\n"
+  },
+  "/dc/qa/r103.txt": {
+    "extent": 259637,
+    "bytes": 99,
+    "sha256": "3d0105ca3ddf9959ed3815c096507ed21986105571184f0602e5e76c1ef15bd8",
+    "declared_patch": false,
+    "text": "# QA preset r103: R103 FARM (ENTRY)\nname r103\nroom 0x103\npos -47609 12 7084\nang 1.8890\ninv default\n"
+  },
+  "/dc/qa/r103f.txt": {
+    "extent": 259638,
+    "bytes": 130,
+    "sha256": "b967d9b4def96ea1bdbf4f633178abbfcdd235385751f57a76547094df844a76",
+    "declared_patch": false,
+    "text": "# QA preset r103f: R103 FARM FIGHT (ONE DOWN)\nname r103f\nroom 0x103\npos -47609 12 7084\nang 1.8890\ninv default\nkill 0x12 150 0x103\n"
+  },
+  "/em/em15.drs": {
+    "extent": 351649,
+    "bytes": 6681472,
+    "sha256": "6c281e96971f68ef6a2d16490622abc8ba45079bf87bccadc9f7500ad7300289",
+    "declared_patch": false
+  },
+  "/st1/r103.arc": {
+    "extent": 466760,
+    "bytes": 1455456,
+    "sha256": "c3e83a19f654194c9cdae9980327667d993a7dbbf66af458561df72d33de059b",
+    "declared_patch": false
+  },
+  "/st1/r103.dar": {
+    "extent": 467471,
+    "bytes": 4919296,
+    "sha256": "c9b0a8b532ddb9f82b53d7ab95011cc88de40e92a9295b8bd0bad239348181d5",
+    "declared_patch": false
+  }
+}

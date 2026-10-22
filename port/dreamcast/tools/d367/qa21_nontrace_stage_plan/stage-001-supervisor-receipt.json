@@ -1,0 +1,86 @@
+{
+  "qualified": true,
+  "returncode": 0,
+  "owned": {
+    "pid": 992823,
+    "pgid": 992823,
+    "proc_start": "3910895"
+  },
+  "child_exited": true,
+  "seconds": 70.61625151100452,
+  "scope": "c57 fixed521 standalone stage",
+  "config_sha256": "4c912017f8220dd431c6e0ec43e1bdffa592a6baa83f8cdf96c8ee2908cb7039",
+  "minimum_C": 19936587776,
+  "peak_stage_bytes": 1035678270,
+  "cumulative": {
+    "bytes": 1035158680,
+    "entries": [
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/budget-identity.json",
+        "logical": 307,
+        "allocated": 0,
+        "charged": 307
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/writer.log",
+        "logical": 557,
+        "allocated": 0,
+        "charged": 557
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/stage-receipt.json",
+        "logical": 6203,
+        "allocated": 8192,
+        "charged": 8192
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/owned-process.json",
+        "logical": 64,
+        "allocated": 0,
+        "charged": 64
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/KEEP.txt",
+        "logical": 165,
+        "allocated": 0,
+        "charged": 165
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/track03.iso",
+        "logical": 1032499200,
+        "allocated": 1032499200,
+        "charged": 1032499200
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/track02.raw",
+        "logical": 1237152,
+        "allocated": 1241088,
+        "charged": 1241088
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/track01.bin",
+        "logical": 1058400,
+        "allocated": 1060864,
+        "charged": 1060864
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/disc.gdi",
+        "logical": 83,
+        "allocated": 0,
+        "charged": 83
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/file-manifest.json",
+        "logical": 327006,
+        "allocated": 327680,
+        "charged": 327680
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/.supervisor.lock",
+        "logical": 0,
+        "allocated": 0,
+        "charged": 0
+      }
+    ]
+  }
+}
