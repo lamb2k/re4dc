@@ -1,0 +1,61 @@
+{
+  "source": "004cf224674fa60cf08dc10e641c723de238a0fd",
+  "documentation_parent": "b1152608a03180aebdbd792a83efea5cf2276f47",
+  "recipe_sha256": "54d2e5d56f84d76c5c0071484771ca74957c6649d28b103a5974943728715f70",
+  "off_program_sha256": "8942ad7e90d9adab56873d0738d76c274b98c28c35587e52fc93e2091f13300d",
+  "on_program_sha256": "a58579b87da0c45267cb93efe29feea2438da9ddab62d0fe31c47a1c6ff32c71",
+  "off_elf_sha256": "b1edcf78d0a76b6bd29a435735971c162b5c518495bca132d95037fc0c293c5d",
+  "on_elf_sha256": "e08c9abc8f6bb44bb2a94642fc9a2e664d22039659cea7fcce311cb9989d7433",
+  "off_program_all14_byteexact": true,
+  "off_PT_LOAD_headers_payloads_exact": true,
+  "enabled_all14_source_outputs": true,
+  "on_compiler_definitions_proven": true,
+  "atlas": "Runtime hook absent from frozen source; atlas two keys absent from scoped pack; absent knob omitted to respect build-r21 deadknob rejection",
+  "asset_pack_sha256": "bbcef25f0090fa4004e03331a33c84f8f89fd3582704e4a08945a8f6a15d5026",
+  "asset_manifest_sha256": "b2dc69e1d1ee705ded6604b13f0649313c69378ac09f7945035c4ada95e1cfbe",
+  "static_costs": {
+    "text_delta": 1984,
+    "rodata_delta": 896,
+    "data_delta": 0,
+    "bss_delta": 2112,
+    "linked_end_delta": 5120,
+    "char_data_reserved_bytes": 491520,
+    "direct_begin_frame_off": 360,
+    "direct_begin_frame_on": 384,
+    "world_match_helper_frame": 40,
+    "palette_plan_frame": 480
+  },
+  "pinned_inputs": "KOS and private dependency/header/library full seal checked before each arm and after build; actual .d non-system closure plus changed TU -M full system/private closure; compiler driver pre-build and internal compiler/library identities final readback",
+  "artifacts_mirrored_exact": true,
+  "limits": [
+    "Static frames are per function, not measured call-chain high-water.",
+    "948+17 data source compatibility only. No selected staged image or guest run.",
+    "Look, actual key use, residency/co-resident originals, combined regressions, performance and physical Dreamcast acceptance remain open."
+  ],
+  "stage_or_guest": false,
+  "evidence": "C:/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/program-pair-01",
+  "enabled_resolved_flags": {
+    "CAST_MIPMAP": "1",
+    "TEX_PAL4_ALPHA": "1",
+    "PS2_WORLD_DRAW": "1",
+    "PS2_WORLD_MESH": "1",
+    "MESH_DIRECT": "1",
+    "TEX_TWIDDLED_MIPMAP": "1",
+    "TEX_PAL4_MIPMAP": "1",
+    "TEX_PAL8_ALPHA": "1",
+    "TEX_PAL8_MIPMAP": "1",
+    "WORLD_RECT21": "1"
+  },
+  "off_resolved_flags": {
+    "CAST_MIPMAP": "1",
+    "TEX_PAL4_ALPHA": "1",
+    "PS2_WORLD_DRAW": "1",
+    "PS2_WORLD_MESH": "1",
+    "MESH_DIRECT": "1",
+    "TEX_TWIDDLED_MIPMAP": "0",
+    "TEX_PAL4_MIPMAP": "0",
+    "TEX_PAL8_ALPHA": "0",
+    "TEX_PAL8_MIPMAP": "0",
+    "WORLD_RECT21": "0"
+  }
+}

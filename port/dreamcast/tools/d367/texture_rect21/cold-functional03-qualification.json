@@ -1,0 +1,86 @@
+{
+  "schema": "rect21-C03-typed-functional-1",
+  "source_runtime": "004cf224674fa60cf08dc10e641c723de238a0fd",
+  "program_sha256": "a58579b87da0c45267cb93efe29feea2438da9ddab62d0fe31c47a1c6ff32c71",
+  "elf_sha256": "e08c9abc8f6bb44bb2a94642fc9a2e664d22039659cea7fcce311cb9989d7433",
+  "track_sha256": "13c998136f24212e39a86bc82a0dc54eb14bb8bacca38ca14cb855e2897309fd",
+  "pack_sha256": "bbcef25f0090fa4004e03331a33c84f8f89fd3582704e4a08945a8f6a15d5026",
+  "emulator_sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+  "observer_sha256": "694b31d3442beb135638dfbb88ebef7923a7616ee0faf5ca23feba9cd13d35b3",
+  "observer_binding_sha256": "63429904302a51532dc6423b8970f229ec21b194c83f8acc55cd86c92c6811e0",
+  "pid": 50088,
+  "guest_seconds": 41.9346526,
+  "max_capture_growth": 16816537,
+  "capture_final_bytes": 16818453,
+  "source_tick_range": [
+    179,
+    427
+  ],
+  "sample_rows": 320,
+  "stable_tables": 80,
+  "table_rows": 81,
+  "rejected_selected_rows": [],
+  "simultaneously_accepted_candidate_keys": 9,
+  "simultaneously_owned_known_bases": 9,
+  "selected_original_ids_observed": 0,
+  "live_payload_bytes": 30726,
+  "rounded_request_lower_bound": 30816,
+  "accounting_meaning": "Nine selected owned known allocation bases and Package payload/request lower bounds. Full physical allocator extent/high-water and all other original alias representations unavailable.",
+  "minimum_SQ_header_witnesses": 1,
+  "draw_use": "One minimum stable SQ header witness; not total vertex/raster/per-key work; other keys unknown",
+  "controller_pose_camera": "Active pG->Cam complete and controller recorded separately. Matrices populated during active postload gameplay. B/C matching not established.",
+  "scene": "Original QA r103f preset/defaultVMU, ordinary PID-targeted menu input, no input after selection, source scheduledkill unchanged",
+  "harness_errors": [],
+  "memory_writes": false,
+  "checkpoint_save_restore": false,
+  "new_cold_userdata": true,
+  "all_owned_guest_observer_processes_exited": true,
+  "performance_attribution": false,
+  "release_acceptance": false,
+  "physical_Dreamcast_acceptance": false,
+  "source_tests_separate": true,
+  "open_gates": [
+    "All8woods keys",
+    "Per-key SQ/vertex/raster use",
+    "Complete physical RAM/VRAM high-water",
+    "Matched B/C camera and frame window",
+    "Inventory/door/restore lifecycle",
+    "B guest and target/hardware acceptance"
+  ],
+  "evidence": "C:/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/cold-functional-C-03",
+  "active_camera_samples": 211,
+  "active_camera_source_tick_range": [
+    241,
+    427
+  ],
+  "postload_complete_gameMainLoop_windows": [
+    "PT f=181-240 n=60 total=60382/1657296 setup=43203/1644442 CamCtrl.Check=144/380 ScenarioMove=257/352 EmMgr.move=1356/2538 Player=1734/2086 ObjMgr.move=1928/1998 CameraMove=344/447 EspMove=831/5396 LightMove=26/28",
+    "PT f=241-300 n=60 total=33397/35827 setup=14741/17102 CamCtrl.Check=145/199 ScenarioMove=255/302 EmMgr.move=1295/2478 Player=1746/2088 ObjMgr.move=1929/2010 CameraMove=338/355 EspMove=819/1181 LightMove=26/28",
+    "PT f=301-360 n=60 total=33391/35822 setup=15861/17990 CamCtrl.Check=147/256 ScenarioMove=255/292 EmMgr.move=1490/2960 Player=1738/2099 ObjMgr.move=1926/2004 CameraMove=342/488 EspMove=1456/3206 LightMove=27/106",
+    "PT f=361-420 n=60 total=33396/72172 setup=15525/60836 CamCtrl.Check=144/262 ScenarioMove=982/43846 EmMgr.move=1693/3656 Player=1730/2133 ObjMgr.move=1932/2000 CameraMove=345/420 EspMove=1074/3404 LightMove=26/28"
+  ],
+  "phase_evidence": "GameMainLoop-only Player/ObjMgr/CameraMove complete PT windows plus finite nonzero active camera/source tick progression and inspected farm t0037/fb1; direct Rno0/Stop flags unavailable.",
+  "minimum_header_witness_samples": [
+    {
+      "source_tick": 399,
+      "witness": {
+        "key": "00bdfb7c-15425fe6",
+        "ui_frame": 399,
+        "header": "8a008480000000dadb24082000950dc800000000000000000000000000000000",
+        "tsp": 537404635,
+        "tcw": 3356333312,
+        "physical_64_square": true,
+        "vq": true,
+        "mipmap": true,
+        "scope": "sampled minimum SQ header submission only; no total/vertex/raster/nonuse proof"
+      }
+    }
+  ],
+  "screenshot_inspected": {
+    "path": "shots/t0037/frames/fb1.png",
+    "sha256": "11de3b4acc89fd3d493a1f4a79bcc49f8c0e317c8043d41e820a7505f645a690",
+    "view": "Active farm/Leon/ground/hut/tree/HUD; compact filtering approximation, no matched B look approval."
+  },
+  "B_guest_authorization": "Root conditionally authorized after C03 active/freeplay gate and fresh resource checks; B01 subsequently executed under that allocation",
+  "receipt_correction": "Private C03 typed-functional-qualification.json inherited false B_guest_authorized field from C02 summary template; this authorization bookkeeping field is corrected here, preserving the sealed private original and raw capture."
+}

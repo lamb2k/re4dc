@@ -2602,6 +2602,30 @@ endif
 $(OBJDIR)/coarse.o: GAME_CPPFLAGS += -DRE4DC_PS2_WORLD_MESH=1
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ps2_world.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_MESH=1
 endif
+# WORLD_RECT21=1: private selected rectangle representations on the qualified
+# PS2 mesh direct consumer only. Exact key, dimensions, format, flags, layout,
+# payload size and descriptor CRC select the UV rule. No production recipe uses
+# it. Generic, actor and legacy world packet dimension guards stay unchanged.
+WORLD_RECT21 ?= 0
+ifneq ($(words $(WORLD_RECT21)),1)
+$(error WORLD_RECT21 must be 0 or 1)
+endif
+ifneq ($(filter 0 1,$(WORLD_RECT21)),$(WORLD_RECT21))
+$(error WORLD_RECT21 must be 0 or 1)
+endif
+ifeq ($(WORLD_RECT21),1)
+ifneq ($(PS2_WORLD_DRAW),1)
+$(error WORLD_RECT21=1 requires PS2_WORLD_DRAW=1)
+endif
+ifneq ($(PS2_WORLD_MESH),1)
+$(error WORLD_RECT21=1 requires PS2_WORLD_MESH=1)
+endif
+ifneq ($(MESH_DIRECT),1)
+$(error WORLD_RECT21=1 requires MESH_DIRECT=1)
+endif
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_RECT21=1
+endif
+
 # PS2_WORLD_HDR_CACHE=1 (native_ui.cpp, render only, exact, default 0; needs PS2_WORLD_MESH=1): the PS2 world's
 # direct bind (re4dc_ps2_world_direct_begin) keeps each material's compiled header (texture key/size, pass, cull, fog)
 # with its texture Entry in a 4-way 128-slot table (5 KiB), valid while that Entry holds the key at the same VRAM address:
@@ -3457,6 +3481,55 @@ $(error TEX_PAL4_ALPHA is 0 or 1)
 endif
 ifeq ($(TEX_PAL4_ALPHA),1)
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL4_ALPHA=1
+endif
+
+# Compact square twiddled PAL4 ARGB4444 mip chains; render-only, opt-in.
+# Off adds no compiler definitions and preserves previous admission/sampling.
+TEX_PAL4_MIPMAP ?= 0
+ifeq ($(filter $(TEX_PAL4_MIPMAP),0 1),)
+$(error TEX_PAL4_MIPMAP must be 0 or 1)
+endif
+ifeq ($(TEX_PAL4_MIPMAP),1)
+ifneq ($(TEX_PAL4_ALPHA)$(CAST_MIPMAP),11)
+$(error TEX_PAL4_MIPMAP=1 requires TEX_PAL4_ALPHA=1 CAST_MIPMAP=1)
+endif
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL4_MIPMAP=1
+endif
+
+# Exact square uncompressed PAL8 ARGB4444, with aligned shared palettes.
+# Off adds no definition or admission; it does not change any release recipe.
+TEX_PAL8_ALPHA ?= 0
+TEX_PAL8_MIPMAP ?= 0
+ifeq ($(filter $(TEX_PAL8_ALPHA),0 1),)
+$(error TEX_PAL8_ALPHA must be 0 or 1)
+endif
+ifeq ($(filter $(TEX_PAL8_MIPMAP),0 1),)
+$(error TEX_PAL8_MIPMAP must be 0 or 1)
+endif
+ifeq ($(TEX_PAL8_ALPHA),1)
+ifneq ($(TEX_PAL4_ALPHA),1)
+$(error TEX_PAL8_ALPHA=1 requires TEX_PAL4_ALPHA=1)
+endif
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL8_ALPHA=1
+endif
+ifeq ($(TEX_PAL8_MIPMAP),1)
+ifneq ($(TEX_PAL8_ALPHA)$(CAST_MIPMAP),11)
+$(error TEX_PAL8_MIPMAP=1 requires TEX_PAL8_ALPHA=1 CAST_MIPMAP=1)
+endif
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL8_MIPMAP=1
+endif
+
+# Native square 16-bit twiddled mip chains, with unchanged base texels.
+# Off contributes no compiler definition; existing CAST_MIPMAP forwards TCW.
+TEX_TWIDDLED_MIPMAP ?= 0
+ifeq ($(filter $(TEX_TWIDDLED_MIPMAP),0 1),)
+$(error TEX_TWIDDLED_MIPMAP must be 0 or 1)
+endif
+ifeq ($(TEX_TWIDDLED_MIPMAP),1)
+ifneq ($(CAST_MIPMAP),1)
+$(error TEX_TWIDDLED_MIPMAP=1 requires CAST_MIPMAP=1)
+endif
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_TWIDDLED_MIPMAP=1
 endif
 
 # Exact private r11f Mendez/Luis version3 profiles; legacy version2 stays unchanged.

@@ -1,0 +1,83 @@
+{
+  "schema": "re4dc-canonical-PAL8-source-data-qualification-1",
+  "source_file_sha256": "4760cb936ba5c3d602520c47d966dea35f1849f1b93c30ba319c59fe40a6e7a0",
+  "sealed_original_generator_sha256": "458fd31385cde1dc5cf0df76bd480d648879040168a89b1de168aa1b21295d92",
+  "metadata_note": "The current generator explicitly lists the two inherited PAL4/native16 mip switches in addition to the four PAL8 dependencies; it reproduces the same exact pack. The v1 generator source is archived with its receipt.",
+  "source_cases": 5,
+  "candidate_pack_sha256": "00fe02fd954018de9614e1bbcedcf8461a48ee32f2911371b4e87aaa9327dc7c",
+  "candidate_pack_bytes": 155779072,
+  "base_pack_sha256": "0429adcc5005353a921a67710942066da48e0304846ffc3f498afe2df9e35f1e",
+  "original_pack_sha256": "18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef",
+  "changed_from_base": 3,
+  "unrelated_base_members_exact": 6498,
+  "changed_from_original": 1000,
+  "original_members_exact": 5501,
+  "mipmapped_keys": 870,
+  "canonical_PAL8_keys": 3,
+  "independent_changed_levels": 25,
+  "independent_native_levels": 25,
+  "independent_original_bases": 3,
+  "one_canonical_palette": true,
+  "full_chain_RGBA_alpha_exact": true,
+  "archive_delta_from_base": -133120,
+  "payload_delta_from_base": -129544,
+  "rounded32_descriptor_delta_from_base": -129568,
+  "host_cases": [
+    {
+      "UI_VRAM": 0,
+      "actual_Package_requests": [
+        87896,
+        22360,
+        22360,
+        87896
+      ],
+      "three_simultaneous_packages_one_palette": true,
+      "palette_writes_after_three_uploads": 256,
+      "palette_writes_after_last_release_and_new_upload": 512,
+      "fences_and_last_reference_lifetime": true
+    },
+    {
+      "UI_VRAM": 1,
+      "actual_Package_requests": [
+        87896,
+        22360,
+        22360,
+        87896
+      ],
+      "three_simultaneous_packages_one_palette": true,
+      "palette_writes_after_three_uploads": 256,
+      "palette_writes_after_last_release_and_new_upload": 512,
+      "fences_and_last_reference_lifetime": true
+    }
+  ],
+  "full_required_texture_build_knobs": [
+    "TEX_PAL4_ALPHA=1",
+    "CAST_MIPMAP=1",
+    "TEX_PAL4_MIPMAP=1",
+    "TEX_TWIDDLED_MIPMAP=1",
+    "TEX_PAL8_ALPHA=1",
+    "TEX_PAL8_MIPMAP=1"
+  ],
+  "private_sets": [
+    {
+      "name": "mipmap21-world-canonical-pal8-20261021",
+      "files": 12,
+      "SHA256SUMS_sha256": "a1733c11ad1acc9685f803571f90f5e294779573117602adc146663f09c746dd"
+    },
+    {
+      "name": "mipmap21-current-wholepack-policy-v4-20261021",
+      "files": 3,
+      "SHA256SUMS_sha256": "700e7ede5f28ab662e90458cd16efc597f0bbb976ca939e21cf0943034a202ab"
+    }
+  ],
+  "owner_scope": [
+    "Existing r100/r11c native-world mip keys and source-qualified r105 effect key; no UI/unclassified/actor conversion.",
+    "All6501 normal winners and51 loose/conditional entries retain separate policy rows. Existing20 actor candidates stay uncomposed."
+  ],
+  "limits": [
+    "Byte/source/host proof only; the inherited mip look gates, full-program identity and combined live KOS/VRAM/palette acceptance remain open.",
+    "Per-room key unions are not simultaneous residency; no performance, renderer/SH4ZAM/default/release or SD claim."
+  ],
+  "qualified_generator_sha256_prior_to_additional_actor_binding_hold": "c5801748ed9a515dafe9c1b4d5c6663c8966a1c26188c7eaf8b1c7d50d04de12",
+  "selected_keys_have_no_original_actor_registry_bindings": true
+}

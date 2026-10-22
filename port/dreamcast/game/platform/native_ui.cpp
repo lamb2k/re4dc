@@ -35,6 +35,15 @@ extern "C" unsigned re4dc_lbx_rows_last;  // letterbox_clip.cpp (MCHECK_SAFE, mc
 #ifndef RE4DC_PS2_WORLD_DRAW
 #define RE4DC_PS2_WORLD_DRAW 0
 #endif
+#ifndef RE4DC_WORLD_RECT21
+#define RE4DC_WORLD_RECT21 0
+#endif
+#if RE4DC_WORLD_RECT21
+#if !RE4DC_PS2_WORLD_DRAW || !RE4DC_PS2_WORLD_MESH || !RE4DC_MESH_DIRECT
+#error WORLD_RECT21 requires the qualified PS2 world mesh direct consumer
+#endif
+#include "../../tools/d367/texture_rect21/world_rect_bind.h"
+#endif
 #if RE4DC_PS2_WORLD_DRAW
 #include "re4dc_screen.h"
 #include "include/native_ps2_world.h"
@@ -8191,6 +8200,19 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
     if(!re4dc_r11f_binding_valid()){re4dc_r11f_binding_failed();return 0;}
 #endif
     const Key key{k[0],k[1]};
+#if RE4DC_WORLD_RECT21
+    float rect_u=1.0f,rect_v=1.0f;
+    // The selected representation owns its UV rule. Repeat-square scales the
+    // short axis; filtered shorter-square keeps normalized UVs unchanged.
+    // Never infer either rule from a dimension mismatch alone.
+    const auto rect_scale=[&](const Entry& entry){
+        const auto& t=entry.package.textures()[0];
+        if(t.width==k[2] && t.height==k[3])return true;
+        return re4dc::rect21::adapt(k[0],k[1],k[2],k[3],
+            {t.width,t.height,t.format,t.flags,t.payload,t.data_size,entry.package.header().payload_crc32},
+            rect_u,rect_v,true);
+    };
+#endif
 #if RE4DC_PS2_WORLD_PREFLIGHT_DIAG
     sourceWorldDiagBind(key); // before a cache hit or a load, and before SQ lock
 #endif
@@ -8231,9 +8253,20 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         if(hit && re4dc_ps2_piece_slot)*re4dc_ps2_piece_slot=unsigned(hit-&ps2_hdr[0][0])+1U;
 #endif
     }
+#if RE4DC_WORLD_RECT21
+    if(hit && hit->entry->valid && hit->entry->key==key){
+        const auto& resident=hit->entry->package.textures()[0];
+        if(!re4dc::rect21::header_dimensions(hit->words[2],RE4DC_TSP_W(resident),RE4DC_TSP_H(resident)))hit=nullptr;
+    }
+#endif
     if(hit && hit->entry->valid && hit->entry->key==key && hit->entry->package.pvr_texture(0)==hit->texture){
         const Ps2HdrSlot& slot=*hit;
         Entry* const handle=slot.entry;
+#if RE4DC_WORLD_RECT21
+        // The same complete descriptor gate runs on hot and cold paths, before
+        // any header reaches the TA. Top-level drops or replaced data reject.
+        if(!rect_scale(*handle)){RE4DC_WHD(7);return 0;}
+#endif
         {constexpr bool pin=false;RE4DC_TOUCH(*handle);} // load()'s hit bookkeeping (pin=false)
         const unsigned pass=k[4];
         const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;
@@ -8333,7 +8366,11 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #endif
         ++frame_pvr_calls;frame_pvr_bytes+=32;stream_model_bytes+=32;
         out->sq=sq+8;out->scratch=model_packets+model_pending;out->scratch_capacity=kModelPacketBytes/32-model_pending;
+#if RE4DC_WORLD_RECT21
+        out->u_scale=rect_u;out->v_scale=rect_v;
+#else
         out->u_scale=out->v_scale=1;
+#endif
         return 1;
     }
 #endif
@@ -8351,7 +8388,11 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #endif
     if(!handle || !frame_ready || stream_aborted || direct_open){RE4DC_WHD(!handle?6U:!frame_ready?2U:stream_aborted?3U:1U);++model_texture_rejects;return 0;}
     const auto& t=handle->package.textures()[0];
+#if RE4DC_WORLD_RECT21
+    if(!rect_scale(*handle)){RE4DC_WHD(7);return 0;}
+#else
     if(t.width!=k[2] || t.height!=k[3]){RE4DC_WHD(7);return 0;} // repeated UVs cannot use padding
+#endif
     const unsigned pass=k[4];
     const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;
     stream_select(list);
@@ -8439,7 +8480,11 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #endif
     ++frame_pvr_calls;frame_pvr_bytes+=32;stream_model_bytes+=32;
     out->sq=sq+8;out->scratch=model_packets+model_pending;out->scratch_capacity=kModelPacketBytes/32-model_pending;
+#if RE4DC_WORLD_RECT21
+    out->u_scale=rect_u;out->v_scale=rect_v;
+#else
     out->u_scale=out->v_scale=1;
+#endif
     return 1;
 #else
     (void)k;(void)out;return 0;

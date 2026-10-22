@@ -1,0 +1,524 @@
+{
+  "schema": "re4dc-rect21-held-room-cohort-1",
+  "room": "r101",
+  "logical": [
+    256,
+    128
+  ],
+  "source_pack_sha256": "18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef",
+  "queue_sha256": "06bac8fb1d09669e69dbc50a5acfa06981a52d6a674ca9e63f487f659d4cab58",
+  "bindings_sha256": "e24a1ee4150c91f1228879f92bb9e6e934176fc6d3c1011f45c265ea8d606003",
+  "oracle_sha256": "9aa99db42201950e20a5cd7d9f83e038b319aa4d7eb3b19a27e61449abe5dc70",
+  "selected": [
+    {
+      "key": "308b32a1-bd84c500",
+      "logical": [
+        256,
+        128
+      ],
+      "physical": [
+        128,
+        128
+      ],
+      "uv_scale": [
+        1.0,
+        1.0
+      ],
+      "source_sha256": "4fbd7ee7e015dce6a1816c7224004d774a491f591cad8c78d4ece8c30da5cce9",
+      "candidate_sha256": "d8adab05bb40b3b0c0600c5a2828081dfef93a153eee701e85a62e732b1bb68d",
+      "candidate_crc32": 803169148,
+      "source_payload": 10240,
+      "candidate_payload": 7510,
+      "source_rounded": 10240,
+      "candidate_rounded": 7520,
+      "codebook_exact": true,
+      "base_exact": false,
+      "source_texel_center_rgb_rmse": 22.156868320261175,
+      "source_texel_center_rgb_psnr": 21.220636075405253,
+      "maximum_base_channel_error": 132.25,
+      "decoded_levels": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "bindings": [
+        {
+          "world": "dc/native/r101/ps2-world.r4pw",
+          "key": "308b32a1-bd84c500",
+          "width": 256,
+          "height": 128,
+          "render_pass": 0,
+          "cull": 2,
+          "texture": 51,
+          "flags": 0,
+          "part": 52
+        },
+        {
+          "world": "dc/native/r101/ps2-world.r4pw",
+          "key": "308b32a1-bd84c500",
+          "width": 256,
+          "height": 128,
+          "render_pass": 0,
+          "cull": 2,
+          "texture": 51,
+          "flags": 0,
+          "part": 151
+        }
+      ]
+    },
+    {
+      "key": "475b7c63-27e0b178",
+      "logical": [
+        256,
+        128
+      ],
+      "physical": [
+        128,
+        128
+      ],
+      "uv_scale": [
+        1.0,
+        1.0
+      ],
+      "source_sha256": "b170a29bf6bdd776dce19f74811ea897d0be4176fdc6c75a71dc38a8b30931da",
+      "candidate_sha256": "72b13290cfa042fd1ee17e07c10424d9a9cef4b3fa634925fcfc6e8162ea787f",
+      "candidate_crc32": 2072756669,
+      "source_payload": 10240,
+      "candidate_payload": 7510,
+      "source_rounded": 10240,
+      "candidate_rounded": 7520,
+      "codebook_exact": true,
+      "base_exact": false,
+      "source_texel_center_rgb_rmse": 16.417233349206107,
+      "source_texel_center_rgb_psnr": 23.824804185665958,
+      "maximum_base_channel_error": 168.0,
+      "decoded_levels": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "bindings": [
+        {
+          "world": "dc/native/r101/ps2-world.r4pw",
+          "key": "475b7c63-27e0b178",
+          "width": 256,
+          "height": 128,
+          "render_pass": 0,
+          "cull": 2,
+          "texture": 73,
+          "flags": 0,
+          "part": 71
+        }
+      ]
+    },
+    {
+      "key": "5df07929-a30d4fdc",
+      "logical": [
+        256,
+        128
+      ],
+      "physical": [
+        128,
+        128
+      ],
+      "uv_scale": [
+        1.0,
+        1.0
+      ],
+      "source_sha256": "8e62e252d9a9e40baa860170337fbde6b795a156da510a88a8cd006d0634fdca",
+      "candidate_sha256": "20d22c9c007e0c78168dc8c74a5fddedfda6131bbfbc78f6cd6417530b3a3d0a",
+      "candidate_crc32": 2128333971,
+      "source_payload": 10240,
+      "candidate_payload": 7510,
+      "source_rounded": 10240,
+      "candidate_rounded": 7520,
+      "codebook_exact": true,
+      "base_exact": false,
+      "source_texel_center_rgb_rmse": 24.0072191824871,
+      "source_texel_center_rgb_psnr": 20.52396645805372,
+      "maximum_base_channel_error": 136.25,
+      "decoded_levels": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "bindings": [
+        {
+          "world": "dc/native/r101/ps2-world.r4pw",
+          "key": "5df07929-a30d4fdc",
+          "width": 256,
+          "height": 128,
+          "render_pass": 0,
+          "cull": 2,
+          "texture": 27,
+          "flags": 0,
+          "part": 299
+        }
+      ]
+    },
+    {
+      "key": "63089054-43d521f9",
+      "logical": [
+        256,
+        128
+      ],
+      "physical": [
+        128,
+        128
+      ],
+      "uv_scale": [
+        1.0,
+        1.0
+      ],
+      "source_sha256": "7fa6399ee55d50bb69bde33b3bc908c79e0df829ea184c1d39987951f58ce31a",
+      "candidate_sha256": "67cccfc63ed514ec13a03a60f4f4cdbf33841beb30306b28ab9aea45403f91c7",
+      "candidate_crc32": 3516856917,
+      "source_payload": 10240,
+      "candidate_payload": 7510,
+      "source_rounded": 10240,
+      "candidate_rounded": 7520,
+      "codebook_exact": true,
+      "base_exact": false,
+      "source_texel_center_rgb_rmse": 28.26084390203189,
+      "source_texel_center_rgb_psnr": 19.10710108367702,
+      "maximum_base_channel_error": 134.5,
+      "decoded_levels": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "bindings": [
+        {
+          "world": "dc/native/r101/ps2-world.r4pw",
+          "key": "63089054-43d521f9",
+          "width": 256,
+          "height": 128,
+          "render_pass": 0,
+          "cull": 2,
+          "texture": 71,
+          "flags": 0,
+          "part": 319
+        }
+      ]
+    },
+    {
+      "key": "85607cd4-ca88bf3b",
+      "logical": [
+        256,
+        128
+      ],
+      "physical": [
+        128,
+        128
+      ],
+      "uv_scale": [
+        1.0,
+        1.0
+      ],
+      "source_sha256": "66c8689c9aaa9cfe4a2d66b79cc858883261e54e7ed8002bb5fd10b38eab860e",
+      "candidate_sha256": "6e4a7a47c46bdb62d353296d277a619e2534e1d40ab63a693980939ae8b61a80",
+      "candidate_crc32": 3682556775,
+      "source_payload": 10240,
+      "candidate_payload": 7510,
+      "source_rounded": 10240,
+      "candidate_rounded": 7520,
+      "codebook_exact": true,
+      "base_exact": false,
+      "source_texel_center_rgb_rmse": 17.357599267746707,
+      "source_texel_center_rgb_psnr": 23.341010455544303,
+      "maximum_base_channel_error": 138.25,
+      "decoded_levels": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "bindings": [
+        {
+          "world": "dc/native/r101/ps2-world.r4pw",
+          "key": "85607cd4-ca88bf3b",
+          "width": 256,
+          "height": 128,
+          "render_pass": 0,
+          "cull": 2,
+          "texture": 24,
+          "flags": 0,
+          "part": 51
+        },
+        {
+          "world": "dc/native/r101/ps2-world.r4pw",
+          "key": "85607cd4-ca88bf3b",
+          "width": 256,
+          "height": 128,
+          "render_pass": 0,
+          "cull": 2,
+          "texture": 24,
+          "flags": 0,
+          "part": 302
+        }
+      ]
+    },
+    {
+      "key": "93799a1c-67be730b",
+      "logical": [
+        256,
+        128
+      ],
+      "physical": [
+        128,
+        128
+      ],
+      "uv_scale": [
+        1.0,
+        1.0
+      ],
+      "source_sha256": "64c88dadd8878feac033a1b67d7b14939e42e910bd1a10d159c0ffc88c791069",
+      "candidate_sha256": "2cf8c7ad688967b92d981041a2f5c9ad0627c589d6492397aa90204edd27d472",
+      "candidate_crc32": 1422320444,
+      "source_payload": 10240,
+      "candidate_payload": 7510,
+      "source_rounded": 10240,
+      "candidate_rounded": 7520,
+      "codebook_exact": true,
+      "base_exact": false,
+      "source_texel_center_rgb_rmse": 30.621541436497,
+      "source_texel_center_rgb_psnr": 18.410262637466005,
+      "maximum_base_channel_error": 154.75,
+      "decoded_levels": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "bindings": [
+        {
+          "world": "dc/native/r101/ps2-world.r4pw",
+          "key": "93799a1c-67be730b",
+          "width": 256,
+          "height": 128,
+          "render_pass": 0,
+          "cull": 2,
+          "texture": 10,
+          "flags": 0,
+          "part": 310
+        },
+        {
+          "world": "dc/native/r101/ps2-world.r4pw",
+          "key": "93799a1c-67be730b",
+          "width": 256,
+          "height": 128,
+          "render_pass": 0,
+          "cull": 2,
+          "texture": 10,
+          "flags": 0,
+          "part": 311
+        }
+      ]
+    },
+    {
+      "key": "9a9f254e-deb70f2a",
+      "logical": [
+        256,
+        128
+      ],
+      "physical": [
+        128,
+        128
+      ],
+      "uv_scale": [
+        1.0,
+        1.0
+      ],
+      "source_sha256": "15cf20279444cf272a0e8a4a3f698930c0b2c637736618cd9511c5740537c4e2",
+      "candidate_sha256": "ad2298e5c62cd88e09a6f3c37669c82a1bbc25b7027f7d38decfca8e0980bc2d",
+      "candidate_crc32": 4292184588,
+      "source_payload": 10240,
+      "candidate_payload": 7510,
+      "source_rounded": 10240,
+      "candidate_rounded": 7520,
+      "codebook_exact": true,
+      "base_exact": false,
+      "source_texel_center_rgb_rmse": 13.989693253748788,
+      "source_texel_center_rgb_psnr": 25.21463976868493,
+      "maximum_base_channel_error": 127.25,
+      "decoded_levels": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "bindings": [
+        {
+          "world": "dc/native/r101/ps2-world.r4pw",
+          "key": "9a9f254e-deb70f2a",
+          "width": 256,
+          "height": 128,
+          "render_pass": 0,
+          "cull": 2,
+          "texture": 26,
+          "flags": 0,
+          "part": 300
+        }
+      ]
+    },
+    {
+      "key": "ea664eb5-26d5d701",
+      "logical": [
+        256,
+        128
+      ],
+      "physical": [
+        128,
+        128
+      ],
+      "uv_scale": [
+        1.0,
+        1.0
+      ],
+      "source_sha256": "e62554c31420f8703bcfc66cf99f626b0b79cf37ac6b6fa6efc091979cfa159e",
+      "candidate_sha256": "f3af9c4984de0d04edbda0db6f0e5c341a099069793e42568aa813c296eb5fd6",
+      "candidate_crc32": 2312600827,
+      "source_payload": 10240,
+      "candidate_payload": 7510,
+      "source_rounded": 10240,
+      "candidate_rounded": 7520,
+      "codebook_exact": true,
+      "base_exact": false,
+      "source_texel_center_rgb_rmse": 6.61527137682177,
+      "source_texel_center_rgb_psnr": 31.71985031156091,
+      "maximum_base_channel_error": 55.25,
+      "decoded_levels": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "bindings": [
+        {
+          "world": "dc/native/r101/ps2-world.r4pw",
+          "key": "ea664eb5-26d5d701",
+          "width": 256,
+          "height": 128,
+          "render_pass": 0,
+          "cull": 2,
+          "texture": 2,
+          "flags": 0,
+          "part": 0
+        }
+      ]
+    },
+    {
+      "key": "ff084d79-36fda215",
+      "logical": [
+        256,
+        128
+      ],
+      "physical": [
+        128,
+        128
+      ],
+      "uv_scale": [
+        1.0,
+        1.0
+      ],
+      "source_sha256": "ba323ee35c5e0ffadc07332c9576a777c410a5a8b746a1dc9da52a22b2f56b6d",
+      "candidate_sha256": "b5534a9ddab0c4ff5140d72646a01be5c94628a3bafa174fa1096e257e43263f",
+      "candidate_crc32": 1379179899,
+      "source_payload": 10240,
+      "candidate_payload": 7510,
+      "source_rounded": 10240,
+      "candidate_rounded": 7520,
+      "codebook_exact": true,
+      "base_exact": false,
+      "source_texel_center_rgb_rmse": 24.234627481961695,
+      "source_texel_center_rgb_psnr": 20.442076640003517,
+      "maximum_base_channel_error": 125.75,
+      "decoded_levels": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "bindings": [
+        {
+          "world": "dc/native/r101/ps2-world.r4pw",
+          "key": "ff084d79-36fda215",
+          "width": 256,
+          "height": 128,
+          "render_pass": 0,
+          "cull": 2,
+          "texture": 38,
+          "flags": 0,
+          "part": 229
+        }
+      ]
+    }
+  ],
+  "held": [],
+  "source_payload": 92160,
+  "candidate_payload": 67590,
+  "source_rounded": 92160,
+  "candidate_rounded": 67680,
+  "independent_mip_decodes": 72,
+  "limits": [
+    "Held offline approximation only; active scoped17 source table and frozen data set stay unchanged.",
+    "Original codebooks retained; full-resolution base filtered/requantized. Normalized UVs remain1,1.",
+    "Original-key filenames are evidence labels only; none is inserted into a runtime pack or staged. Scoped IDs/consumer closure are required before future selection.",
+    "No actual allocation, scene look, frame-time, full program, release or physical Dreamcast acceptance."
+  ],
+  "source_files_sha256": {
+    "port/dreamcast/tools/d367/texture_rect21/room_cohort.py": "71753ebee74ea03b98e0a291f0eae3e5f70c01d30a4f6efaa953f926690c7ed7",
+    "port/dreamcast/tools/d367/texture_rect21/compact.py": "ba0dac3559ec19ce42d05b7ae36bf30910d06655c1d5c82adf02a385b925d892",
+    "port/dreamcast/tools/d367/texture_rect21/qualify_packages.py": "00a122bd88b6a54d885d9c5d68a5d9860af01802dd8304c3d4b804c1cf84ff46",
+    "port/dreamcast/tools/d367/texture_rect21/world_rect_bind.h": "8feabe767fbf77428e0f414a22150c4dfa582cba5221a418aa6a80fd174cd072",
+    "port/dreamcast/tools/d367/texture_rect21/scoped_representations.inc": "f2d9c952b090442b6652ea9d44da6cd33e2227edf2f4d18799499a393edc9490"
+  },
+  "host_package_receipt_sha256": "38cb1b16217eace28d28bcb6052fcd0f22472379d585c35ca49afabb4143d24d",
+  "actual_package_sanitizer_cases": 9,
+  "actual_package_mip_disabled_refusals": 9,
+  "offline_contact_inspected": true,
+  "active_fixture_unchanged": "texture-rect21-scoped17-20261021",
+  "active_runtime_source": "004cf224674fa60cf08dc10e641c723de238a0fd",
+  "selected_for_runtime": false,
+  "scoped_key_ids_allocated": false
+}

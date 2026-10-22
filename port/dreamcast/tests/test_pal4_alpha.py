@@ -227,7 +227,7 @@ int main(int argc,char** argv){
     std::vector<std::unique_ptr<Package>> owners;
     for(unsigned i=0;i<capacity;++i){
         auto q=std::make_unique<Package>();
-        assert(q->open_streamed((root+(i%2?"/legacy":"/alpha")).c_str()));
+        assert(q->open_streamed((root+"/cap"+std::to_string(i)).c_str()));
         inflight=true;assert(q->upload());check_palette(*q);
         assert(q->release_payload() && !open_files);owners.push_back(std::move(q));
     }
@@ -250,10 +250,11 @@ int main(int argc,char** argv){
     const auto attempts=allocation_calls,writes=palette_writes;
     assert(!p.upload() && allocation_calls==attempts && palette_writes==writes);p.close();
     close_checked(*owners.back());owners.pop_back();
-    // Reuse both banks after the fence; aliases own separate banks but one VRAM payload.
+    // Reuse after the fence; identical ARGB4444 palettes share one bank,
+    // and aliases share one VRAM payload while retaining separate references.
     assert(p.open_streamed((root+"/alias").c_str()));assert(p.upload());check_palette(p);
     assert(p.shared_textures()==1 && p.pvr_texture(0)==p.pvr_texture(1));
-    assert(p.textures()[0].reserved_0!=p.textures()[1].reserved_0);
+    assert(p.textures()[0].reserved_0==p.textures()[1].reserved_0);
     assert(p.release_payload());close_checked(p);
     // Partial allocation/read/injected failures own no bank; their VRAM closes once.
     for(unsigned mode=0;mode<3;++mode){
@@ -313,6 +314,14 @@ class PackagePaletteTests(unittest.TestCase):
                                "size": mutate(alpha, 5, 63), "crc": alpha[:-1] + bytes([alpha[-1] ^ 1]),
                                "truncated": alpha[:-1]}.items():
                 (root / name).write_bytes(data)
+            # Sharing makes repeated identical alpha palettes consume one bank.
+            # Use distinct palettes to exercise real bank-capacity exhaustion.
+            for index in range(64):
+                cap = bytearray(alpha)
+                words = struct.unpack_from("<16H", cap, len(cap) - 32)
+                struct.pack_into("<16H", cap, len(cap) - 32, *(w ^ index for w in words))
+                struct.pack_into("<I", cap, 36, zlib.crc32(cap[48:]) & 0xffffffff)
+                (root / ("cap" + str(index))).write_bytes(cap)
             cpp = root / "fixture.cpp"; cpp.write_text(FIXTURE)
             exe = root / "fixture"
             for knob in (0, 1):

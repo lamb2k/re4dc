@@ -1,0 +1,1265 @@
+{
+  "schema": "re4dc-rect21-scoped-source-qualification-1",
+  "source_ancestor": "b6fbd1362a852bbcbac928496311ada9e509ffec",
+  "fixture": {
+    "schema": "re4dc-rect21-native-scoped-1",
+    "source_pack_sha256": "18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef",
+    "candidate_pack_sha256": "e4fb6975831e8a226a6d733ce4d6ba4979eca7ef2dd1ba37aa6ee50eaf0f2c30",
+    "source_pack_bytes": 156254208,
+    "candidate_pack_bytes": 156323840,
+    "archive_delta": 69632,
+    "original_members_exact": 6501,
+    "appended_members": 17,
+    "candidate_pack_members": 6518,
+    "namespace": "SHA256(RE4DC_WORLD_RECT21_COMPACT_V1 NUL + original pair LE + candidate SHA256)[0:8] as pair LE",
+    "reserved_atlas_keys": [
+      "3662c0aa-c9e71c00",
+      "fefdf580-f15c1f47"
+    ],
+    "coverage_sha256": "f1c83ea0af2bcbe55a96ac01cd11090c3adbc3058482c0a37dacb3dcc1dea450",
+    "binding_receipt_sha256": "e24a1ee4150c91f1228879f92bb9e6e934176fc6d3c1011f45c265ea8d606003",
+    "compact_receipt_sha256": "402a3652dd64bf900092976e641c4965e9b98ee814b947989e89d09362b57b7a",
+    "selected": [
+      {
+        "original_key": "02239cbf-347d2a60",
+        "scoped_key": "4fe71459-b7a5c78f",
+        "source_sha256": "9243f0caf63d6f48f1f659b0c0c1863bbf42b0afa1e7ebb7b9b9315442724e6b",
+        "candidate_sha256": "21501a6143e024ff20ff51db473ba88b50decbb8b05299765a9a982df8aad8d8",
+        "decoded_levels": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "candidate_crc32": 999171470,
+        "logical": [
+          128,
+          64
+        ],
+        "physical": [
+          64,
+          64
+        ],
+        "uv_scale": [
+          1.0,
+          1.0
+        ],
+        "rounded_candidate": 3424,
+        "rounded_original": 4096
+      },
+      {
+        "original_key": "1170b2b5-9710ab82",
+        "scoped_key": "9d1f3e3f-59130ea9",
+        "source_sha256": "2ac314e44100a4294a6a9c89589f1eb16611eb0d39add673fe541a4330583aed",
+        "candidate_sha256": "a5106d59233df070fc5a29d8521cd49edab4a3e3bc15d57065e7e07368cadcf9",
+        "decoded_levels": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "candidate_crc32": 4145859618,
+        "logical": [
+          128,
+          64
+        ],
+        "physical": [
+          64,
+          64
+        ],
+        "uv_scale": [
+          1.0,
+          1.0
+        ],
+        "rounded_candidate": 3424,
+        "rounded_original": 4096
+      },
+      {
+        "original_key": "1ab5c10f-d8d37c49",
+        "scoped_key": "6fb611d3-c97598e9",
+        "source_sha256": "b27770abf2e70e9a9d1f30af8c4988beb85f976d5914628de1d2bbe30d6763fa",
+        "candidate_sha256": "8c11b565783b936beda0f06e326d2b06b64f626c0ed26727980fe64fd58ff24b",
+        "decoded_levels": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "candidate_crc32": 3324533408,
+        "logical": [
+          128,
+          64
+        ],
+        "physical": [
+          64,
+          64
+        ],
+        "uv_scale": [
+          1.0,
+          1.0
+        ],
+        "rounded_candidate": 3424,
+        "rounded_original": 4096
+      },
+      {
+        "original_key": "1c7a6886-9dcfa8d2",
+        "scoped_key": "874671b7-b2f854c6",
+        "source_sha256": "d69c1923d71458e19f719db7757f7f422c22f8405837f5034a581f359a5155f2",
+        "candidate_sha256": "843afc1b24fd6fa2ad94c392b55faabfdd3f2b51c0b82f141b2c6514a18a21a0",
+        "decoded_levels": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "candidate_crc32": 271574062,
+        "logical": [
+          128,
+          64
+        ],
+        "physical": [
+          64,
+          64
+        ],
+        "uv_scale": [
+          1.0,
+          1.0
+        ],
+        "rounded_candidate": 3424,
+        "rounded_original": 4096
+      },
+      {
+        "original_key": "1cd705c5-422a1831",
+        "scoped_key": "890d33cd-ffe09614",
+        "source_sha256": "5a3d357a1745a58ced6f1e1f35d8711ff6a6763539958eaaf90225755a231598",
+        "candidate_sha256": "62e19fb3941a3d02cfc3f76d3f01a79611f32acd4abad85bdd28ce33df544cff",
+        "decoded_levels": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "candidate_crc32": 4138427216,
+        "logical": [
+          128,
+          64
+        ],
+        "physical": [
+          64,
+          64
+        ],
+        "uv_scale": [
+          1.0,
+          1.0
+        ],
+        "rounded_candidate": 3424,
+        "rounded_original": 4096
+      },
+      {
+        "original_key": "24b92cf4-ddafaf29",
+        "scoped_key": "8d9b3838-6da1f099",
+        "source_sha256": "35ff45f6d255fd742496f3576b678ba76999fe5234c2d4dbae4a0b87ea5a3061",
+        "candidate_sha256": "089a9321b1b4aab0fc4ed71ba30bd0a42ab459ad9446e22f96a2eb2838ecf4d5",
+        "decoded_levels": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "candidate_crc32": 1215882320,
+        "logical": [
+          128,
+          64
+        ],
+        "physical": [
+          64,
+          64
+        ],
+        "uv_scale": [
+          1.0,
+          1.0
+        ],
+        "rounded_candidate": 3424,
+        "rounded_original": 4096
+      },
+      {
+        "original_key": "335b42c7-684df0bc",
+        "scoped_key": "d329d57d-a833b782",
+        "source_sha256": "f5aee1dda0cb15d1a44e402cccf1764b50e66411188fbc15eda6d6aa8a68d44e",
+        "candidate_sha256": "6caa7b5ab4ffae846d54015582c279476c775ed7c3ea2cb96faafc741bd7b082",
+        "decoded_levels": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "candidate_crc32": 4176367317,
+        "logical": [
+          128,
+          64
+        ],
+        "physical": [
+          64,
+          64
+        ],
+        "uv_scale": [
+          1.0,
+          1.0
+        ],
+        "rounded_candidate": 3424,
+        "rounded_original": 4096
+      },
+      {
+        "original_key": "349ca1a8-cc0ba3df",
+        "scoped_key": "00bdfb7c-15425fe6",
+        "source_sha256": "2fc06f35fd8eab88de86a5d03a7d9b181d32fc0f16aa57ddf511820feda56467",
+        "candidate_sha256": "b995264c3b0a93f8614febbc4562dc615a8e0abdbaf462466bd89a237c086c5e",
+        "decoded_levels": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "candidate_crc32": 4067268504,
+        "logical": [
+          128,
+          64
+        ],
+        "physical": [
+          64,
+          64
+        ],
+        "uv_scale": [
+          1.0,
+          1.0
+        ],
+        "rounded_candidate": 3424,
+        "rounded_original": 4096
+      },
+      {
+        "original_key": "34fa47ac-db4423fa",
+        "scoped_key": "d65fdf0f-6c9842a8",
+        "source_sha256": "431b7e89991d3b1234b2c4bf07b71ccba617015e774175e55c7e7077ed34bc78",
+        "candidate_sha256": "bc6ad9a6e2f24bc37e8a80cdbf132415556a3f004988cbfaad6a7e08a016bd9d",
+        "decoded_levels": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "candidate_crc32": 45033793,
+        "logical": [
+          128,
+          64
+        ],
+        "physical": [
+          64,
+          64
+        ],
+        "uv_scale": [
+          1.0,
+          1.0
+        ],
+        "rounded_candidate": 3424,
+        "rounded_original": 4096
+      },
+      {
+        "original_key": "4a3954fb-60ddff9a",
+        "scoped_key": "b3ac4be3-638fef62",
+        "source_sha256": "a953d1e3095b2cf72bac0e61e2197ceb089b1d03102d17226f3a05d302dd4ef6",
+        "candidate_sha256": "06ceb0981f7899ee7c33ba6c02019c0657c8d1f7ceec393742fd382991a6044c",
+        "decoded_levels": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "candidate_crc32": 3684553028,
+        "logical": [
+          128,
+          64
+        ],
+        "physical": [
+          64,
+          64
+        ],
+        "uv_scale": [
+          1.0,
+          1.0
+        ],
+        "rounded_candidate": 3424,
+        "rounded_original": 4096
+      },
+      {
+        "original_key": "5cbedd66-ce488718",
+        "scoped_key": "9c2b6729-0b13b6a8",
+        "source_sha256": "622414507557676ceb2c84455913fa15a2579b4c56560df3dc6277d63c030168",
+        "candidate_sha256": "a3486a425f1eb0458ff2ba87b069f5e774ad17b23503b8a1193e23bdd474aef6",
+        "decoded_levels": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "candidate_crc32": 1894637091,
+        "logical": [
+          128,
+          64
+        ],
+        "physical": [
+          64,
+          64
+        ],
+        "uv_scale": [
+          1.0,
+          1.0
+        ],
+        "rounded_candidate": 3424,
+        "rounded_original": 4096
+      },
+      {
+        "original_key": "9dd5cea4-777fd070",
+        "scoped_key": "8fe18585-328f7858",
+        "source_sha256": "b027f8e1c9bdc543fc9b3da4c11eed755edf2c55049c555fae594bf32743354c",
+        "candidate_sha256": "2346cc737c84cbf49e38f844efa11d65386a4b6056714cba124cca6063d11a64",
+        "decoded_levels": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "candidate_crc32": 4039266334,
+        "logical": [
+          128,
+          64
+        ],
+        "physical": [
+          64,
+          64
+        ],
+        "uv_scale": [
+          1.0,
+          1.0
+        ],
+        "rounded_candidate": 3424,
+        "rounded_original": 4096
+      },
+      {
+        "original_key": "a4bc0431-e9070b44",
+        "scoped_key": "62772270-6946e558",
+        "source_sha256": "ff8fb6c5b8cb93c381dad2eaaca29124e3feac3622aa98b9df9d40e7e78a079e",
+        "candidate_sha256": "68dfd188afe119325a229d836503ee56f7c951d63610a37e5393ed89ed73d6f9",
+        "decoded_levels": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "candidate_crc32": 181609726,
+        "logical": [
+          128,
+          64
+        ],
+        "physical": [
+          64,
+          64
+        ],
+        "uv_scale": [
+          1.0,
+          1.0
+        ],
+        "rounded_candidate": 3424,
+        "rounded_original": 4096
+      },
+      {
+        "original_key": "a62b71a7-74ee44d7",
+        "scoped_key": "7d576fa4-b4f02945",
+        "source_sha256": "72de5de9fab2dd47af26cc278c585e994c1dac3dc28a3ad64656c3e8596c223a",
+        "candidate_sha256": "401f65398157e190b01c5a77c75bae503691eb29b7e441d44148b2f5bdb52052",
+        "decoded_levels": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "candidate_crc32": 2656164006,
+        "logical": [
+          128,
+          64
+        ],
+        "physical": [
+          64,
+          64
+        ],
+        "uv_scale": [
+          1.0,
+          1.0
+        ],
+        "rounded_candidate": 3424,
+        "rounded_original": 4096
+      },
+      {
+        "original_key": "ab7ff941-1d6c24da",
+        "scoped_key": "610ec5f4-4e9f255d",
+        "source_sha256": "225580b2fb394dd3bf0d69d51cb20b55b1eb080a4cf2d474375b4f951fa9ea9a",
+        "candidate_sha256": "0e167cecb7e8e4fbbdb2ce88c11b6875643720743358e969dd356f8aee12dc2e",
+        "decoded_levels": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "candidate_crc32": 1301247181,
+        "logical": [
+          128,
+          64
+        ],
+        "physical": [
+          64,
+          64
+        ],
+        "uv_scale": [
+          1.0,
+          1.0
+        ],
+        "rounded_candidate": 3424,
+        "rounded_original": 4096
+      },
+      {
+        "original_key": "d7a6befc-bfc49686",
+        "scoped_key": "b0b27473-dcca4cea",
+        "source_sha256": "990f0fddaa38ae39c21608eba1df1d4e14cbea0b9534e8edc824dbdf14718401",
+        "candidate_sha256": "66f8da1d8f27c29ee282991ec4086f8ed7ceb8ec0c5199150e3a280be9f67a99",
+        "decoded_levels": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "candidate_crc32": 1763613856,
+        "logical": [
+          128,
+          64
+        ],
+        "physical": [
+          64,
+          64
+        ],
+        "uv_scale": [
+          1.0,
+          1.0
+        ],
+        "rounded_candidate": 3424,
+        "rounded_original": 4096
+      },
+      {
+        "original_key": "fc5a4bc9-aa9c7067",
+        "scoped_key": "46df6ca6-30ee4810",
+        "source_sha256": "e83d136cf196514a6cacb558867c1a8ad837b219e951a350fc3ebb74c3f607be",
+        "candidate_sha256": "de8ca696fabadfe681090e0b1f3dbb3962e3230207ec4dcf3c22ee86b2c22acd",
+        "decoded_levels": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32,
+          64
+        ],
+        "candidate_crc32": 2832964765,
+        "logical": [
+          128,
+          64
+        ],
+        "physical": [
+          64,
+          64
+        ],
+        "uv_scale": [
+          1.0,
+          1.0
+        ],
+        "rounded_candidate": 3424,
+        "rounded_original": 4096
+      }
+    ],
+    "worlds": [
+      {
+        "path": "dc/native/r100/ps2-world.r4pw",
+        "source_sha256": "be83fed734478553d92a07b4e7d6684b5772c14b8397794348b5b50b3f32d5cb",
+        "candidate_sha256": "f2f155a53dcac2e1e4e817b3db7b05b14aeea552ebc130f21fb4d984ad2d9b2b",
+        "size": 19612,
+        "changed_parts": [
+          {
+            "part": 0,
+            "original_key": "9dd5cea4-777fd070",
+            "scoped_key": "8fe18585-328f7858",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 1,
+            "original_key": "9dd5cea4-777fd070",
+            "scoped_key": "8fe18585-328f7858",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 7,
+            "original_key": "24b92cf4-ddafaf29",
+            "scoped_key": "8d9b3838-6da1f099",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 9,
+            "original_key": "24b92cf4-ddafaf29",
+            "scoped_key": "8d9b3838-6da1f099",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 20,
+            "original_key": "24b92cf4-ddafaf29",
+            "scoped_key": "8d9b3838-6da1f099",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 23,
+            "original_key": "24b92cf4-ddafaf29",
+            "scoped_key": "8d9b3838-6da1f099",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 29,
+            "original_key": "24b92cf4-ddafaf29",
+            "scoped_key": "8d9b3838-6da1f099",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 31,
+            "original_key": "24b92cf4-ddafaf29",
+            "scoped_key": "8d9b3838-6da1f099",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 37,
+            "original_key": "34fa47ac-db4423fa",
+            "scoped_key": "d65fdf0f-6c9842a8",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 39,
+            "original_key": "fc5a4bc9-aa9c7067",
+            "scoped_key": "46df6ca6-30ee4810",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 47,
+            "original_key": "9dd5cea4-777fd070",
+            "scoped_key": "8fe18585-328f7858",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 48,
+            "original_key": "fc5a4bc9-aa9c7067",
+            "scoped_key": "46df6ca6-30ee4810",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 51,
+            "original_key": "1170b2b5-9710ab82",
+            "scoped_key": "9d1f3e3f-59130ea9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 163,
+            "original_key": "24b92cf4-ddafaf29",
+            "scoped_key": "8d9b3838-6da1f099",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 174,
+            "original_key": "02239cbf-347d2a60",
+            "scoped_key": "4fe71459-b7a5c78f",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 178,
+            "original_key": "34fa47ac-db4423fa",
+            "scoped_key": "d65fdf0f-6c9842a8",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 190,
+            "original_key": "34fa47ac-db4423fa",
+            "scoped_key": "d65fdf0f-6c9842a8",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 201,
+            "original_key": "1170b2b5-9710ab82",
+            "scoped_key": "9d1f3e3f-59130ea9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 204,
+            "original_key": "fc5a4bc9-aa9c7067",
+            "scoped_key": "46df6ca6-30ee4810",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 252,
+            "original_key": "1ab5c10f-d8d37c49",
+            "scoped_key": "6fb611d3-c97598e9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 253,
+            "original_key": "5cbedd66-ce488718",
+            "scoped_key": "9c2b6729-0b13b6a8",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 254,
+            "original_key": "1ab5c10f-d8d37c49",
+            "scoped_key": "6fb611d3-c97598e9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 255,
+            "original_key": "1ab5c10f-d8d37c49",
+            "scoped_key": "6fb611d3-c97598e9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 256,
+            "original_key": "1ab5c10f-d8d37c49",
+            "scoped_key": "6fb611d3-c97598e9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 257,
+            "original_key": "1ab5c10f-d8d37c49",
+            "scoped_key": "6fb611d3-c97598e9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 258,
+            "original_key": "5cbedd66-ce488718",
+            "scoped_key": "9c2b6729-0b13b6a8",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 259,
+            "original_key": "1ab5c10f-d8d37c49",
+            "scoped_key": "6fb611d3-c97598e9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 260,
+            "original_key": "1ab5c10f-d8d37c49",
+            "scoped_key": "6fb611d3-c97598e9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 261,
+            "original_key": "1ab5c10f-d8d37c49",
+            "scoped_key": "6fb611d3-c97598e9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 262,
+            "original_key": "5cbedd66-ce488718",
+            "scoped_key": "9c2b6729-0b13b6a8",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 263,
+            "original_key": "1ab5c10f-d8d37c49",
+            "scoped_key": "6fb611d3-c97598e9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 264,
+            "original_key": "5cbedd66-ce488718",
+            "scoped_key": "9c2b6729-0b13b6a8",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 265,
+            "original_key": "1ab5c10f-d8d37c49",
+            "scoped_key": "6fb611d3-c97598e9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 266,
+            "original_key": "5cbedd66-ce488718",
+            "scoped_key": "9c2b6729-0b13b6a8",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 267,
+            "original_key": "1ab5c10f-d8d37c49",
+            "scoped_key": "6fb611d3-c97598e9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 268,
+            "original_key": "5cbedd66-ce488718",
+            "scoped_key": "9c2b6729-0b13b6a8",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 270,
+            "original_key": "5cbedd66-ce488718",
+            "scoped_key": "9c2b6729-0b13b6a8",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 274,
+            "original_key": "5cbedd66-ce488718",
+            "scoped_key": "9c2b6729-0b13b6a8",
+            "width": 128,
+            "height": 64,
+            "render_pass": 2
+          },
+          {
+            "part": 275,
+            "original_key": "5cbedd66-ce488718",
+            "scoped_key": "9c2b6729-0b13b6a8",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 276,
+            "original_key": "1ab5c10f-d8d37c49",
+            "scoped_key": "6fb611d3-c97598e9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 2
+          },
+          {
+            "part": 277,
+            "original_key": "1ab5c10f-d8d37c49",
+            "scoped_key": "6fb611d3-c97598e9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 278,
+            "original_key": "5cbedd66-ce488718",
+            "scoped_key": "9c2b6729-0b13b6a8",
+            "width": 128,
+            "height": 64,
+            "render_pass": 2
+          },
+          {
+            "part": 279,
+            "original_key": "5cbedd66-ce488718",
+            "scoped_key": "9c2b6729-0b13b6a8",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 280,
+            "original_key": "1ab5c10f-d8d37c49",
+            "scoped_key": "6fb611d3-c97598e9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 281,
+            "original_key": "1ab5c10f-d8d37c49",
+            "scoped_key": "6fb611d3-c97598e9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 2
+          },
+          {
+            "part": 283,
+            "original_key": "fc5a4bc9-aa9c7067",
+            "scoped_key": "46df6ca6-30ee4810",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 288,
+            "original_key": "1ab5c10f-d8d37c49",
+            "scoped_key": "6fb611d3-c97598e9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 289,
+            "original_key": "1ab5c10f-d8d37c49",
+            "scoped_key": "6fb611d3-c97598e9",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 302,
+            "original_key": "24b92cf4-ddafaf29",
+            "scoped_key": "8d9b3838-6da1f099",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          }
+        ],
+        "source_body_crc32": 336693965,
+        "candidate_body_crc32": 3655965499
+      },
+      {
+        "path": "dc/native/r103/ps2-world.r4pw",
+        "source_sha256": "a72fa798212b7847da1f3c9248d3363254c837dd74ed339f0720ae1529450558",
+        "candidate_sha256": "465add59c7d55805fbdb112add6273531c8209e3d1b5c37f66c7f136bcf26fee",
+        "size": 11272,
+        "changed_parts": [
+          {
+            "part": 29,
+            "original_key": "1cd705c5-422a1831",
+            "scoped_key": "890d33cd-ffe09614",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 36,
+            "original_key": "4a3954fb-60ddff9a",
+            "scoped_key": "b3ac4be3-638fef62",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 38,
+            "original_key": "335b42c7-684df0bc",
+            "scoped_key": "d329d57d-a833b782",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 39,
+            "original_key": "1cd705c5-422a1831",
+            "scoped_key": "890d33cd-ffe09614",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 40,
+            "original_key": "4a3954fb-60ddff9a",
+            "scoped_key": "b3ac4be3-638fef62",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 84,
+            "original_key": "ab7ff941-1d6c24da",
+            "scoped_key": "610ec5f4-4e9f255d",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 89,
+            "original_key": "ab7ff941-1d6c24da",
+            "scoped_key": "610ec5f4-4e9f255d",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 92,
+            "original_key": "ab7ff941-1d6c24da",
+            "scoped_key": "610ec5f4-4e9f255d",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 94,
+            "original_key": "ab7ff941-1d6c24da",
+            "scoped_key": "610ec5f4-4e9f255d",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 103,
+            "original_key": "a4bc0431-e9070b44",
+            "scoped_key": "62772270-6946e558",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 104,
+            "original_key": "a4bc0431-e9070b44",
+            "scoped_key": "62772270-6946e558",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 105,
+            "original_key": "a4bc0431-e9070b44",
+            "scoped_key": "62772270-6946e558",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 106,
+            "original_key": "a4bc0431-e9070b44",
+            "scoped_key": "62772270-6946e558",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 107,
+            "original_key": "a4bc0431-e9070b44",
+            "scoped_key": "62772270-6946e558",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 108,
+            "original_key": "a4bc0431-e9070b44",
+            "scoped_key": "62772270-6946e558",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 133,
+            "original_key": "d7a6befc-bfc49686",
+            "scoped_key": "b0b27473-dcca4cea",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 135,
+            "original_key": "a62b71a7-74ee44d7",
+            "scoped_key": "7d576fa4-b4f02945",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 181,
+            "original_key": "a4bc0431-e9070b44",
+            "scoped_key": "62772270-6946e558",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 182,
+            "original_key": "a4bc0431-e9070b44",
+            "scoped_key": "62772270-6946e558",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 197,
+            "original_key": "1c7a6886-9dcfa8d2",
+            "scoped_key": "874671b7-b2f854c6",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 200,
+            "original_key": "1c7a6886-9dcfa8d2",
+            "scoped_key": "874671b7-b2f854c6",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 201,
+            "original_key": "1c7a6886-9dcfa8d2",
+            "scoped_key": "874671b7-b2f854c6",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 202,
+            "original_key": "1cd705c5-422a1831",
+            "scoped_key": "890d33cd-ffe09614",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 215,
+            "original_key": "349ca1a8-cc0ba3df",
+            "scoped_key": "00bdfb7c-15425fe6",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 216,
+            "original_key": "349ca1a8-cc0ba3df",
+            "scoped_key": "00bdfb7c-15425fe6",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 234,
+            "original_key": "349ca1a8-cc0ba3df",
+            "scoped_key": "00bdfb7c-15425fe6",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 241,
+            "original_key": "335b42c7-684df0bc",
+            "scoped_key": "d329d57d-a833b782",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 242,
+            "original_key": "ab7ff941-1d6c24da",
+            "scoped_key": "610ec5f4-4e9f255d",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          },
+          {
+            "part": 247,
+            "original_key": "335b42c7-684df0bc",
+            "scoped_key": "d329d57d-a833b782",
+            "width": 128,
+            "height": 64,
+            "render_pass": 0
+          }
+        ],
+        "source_body_crc32": 720518534,
+        "candidate_body_crc32": 1701608546
+      }
+    ],
+    "independent_mip_decodes": 119,
+    "selected_rounded_before": 69632,
+    "selected_rounded_after": 58208,
+    "selected_rounded_delta": -11424,
+    "possible_original_plus_candidate_rounded": 127840,
+    "limits": [
+      "Private source/decoder/pack/sidecar gate only; no full program, rendered scene, performance or hardware acceptance.",
+      "All original keys/packages stay exact. Selected candidate IDs are only in two changed R4PW copies; no source/actor/generic references change.",
+      "Candidate requests shrink, archive grows, and any original copies still loaded can coexist. Actual peak and main/VRAM budgets remain open.",
+      "WORLD_RECT21 stays default0; data input must be staged only with the guarded qualified source."
+    ]
+  },
+  "fixture_receipt_sha256": "47d3e12b3696fb7625163fa3d6f93662d8579f91ea7148357f8d362a73c42f40",
+  "source_files_sha256": {
+    "port/dreamcast/tools/d367/texture_rect21/world_rect_bind.h": "8feabe767fbf77428e0f414a22150c4dfa582cba5221a418aa6a80fd174cd072",
+    "port/dreamcast/tools/d367/texture_rect21/scoped_representations.inc": "f2d9c952b090442b6652ea9d44da6cd33e2227edf2f4d18799499a393edc9490",
+    "port/dreamcast/tools/d367/texture_rect21/scoped_candidate.py": "de2fdfcde3d4d60a452099f4b13110d028146483f053bc3c79194f6502565491",
+    "port/dreamcast/tools/d367/texture_rect21/qualify_scoped.py": "bfca3c370b9eaf72b006ed0f320dc224176a9df456b4ae325124b4254d889e12",
+    "port/dreamcast/tools/d367/texture_rect21/bind_probe.cpp": "0ae0447cffdcc80fb1608cc947ed7ddb8028bca5678a7cd0a74431ca72a3223f",
+    "port/dreamcast/game/platform/native_ui.cpp": "e4ab91d9c219b1f9f533fba51866e6826b6e4b6004886dda78c6083def982da0",
+    "port/dreamcast/game/game30.mk": "8a0821b2ccca2d76bc0e274298374395978f5b80de903cc82c2b282478d2a87a"
+  },
+  "source_only_tests": 4,
+  "adapter_host": {
+    "selected": 17,
+    "rejected": 221,
+    "held_original_key_refusals": 36,
+    "cached_extent_checks": 55,
+    "sanitizers": "ASan/UBSan"
+  },
+  "package_host": {
+    "selected": 17,
+    "all_passed": true,
+    "mip_disabled_refusals": 17
+  },
+  "objects": {
+    "source_base": "f0fd510b72e32500bd8653ec15e480433daa7e57",
+    "modified_source_sha256": "e4ab91d9c219b1f9f533fba51866e6826b6e4b6004886dda78c6083def982da0",
+    "full_disabled_preprocessed_TU_exact": true,
+    "full_disabled_object_exact": true,
+    "enabled_object_differs": true,
+    "source_sha256": "ae7b63b968aecd2abc1c53a641a2e5c2510172f6f75ad1fce7d96e76359b1df7",
+    "preprocessed_sha256": {
+      "control": "f7907d08201cea60d21c51e8c6b0ff0fb60115283fdc1319f9f4c237cdb26c3e",
+      "off": "f7907d08201cea60d21c51e8c6b0ff0fb60115283fdc1319f9f4c237cdb26c3e",
+      "on": "e2b92c611c411518f1966d9cf0b95046b91fdd458a0f36c1909d577c947f4cbd"
+    },
+    "object_sha256": {
+      "control": "6535d03fadf2edf0d494dfe51bde682b9c450a316c16d02063abf271e181a58d",
+      "off": "6535d03fadf2edf0d494dfe51bde682b9c450a316c16d02063abf271e181a58d",
+      "on": "c3d35371a5426b7e5e09e57014aa44fc36bf02de687fd585d79b595c1b932908"
+    },
+    "limits": [
+      "Actual SH-4 native_ui translation unit compiled under saved QA recipe flags, not a full program or runtime gate.",
+      "WORLD_RECT21 is a direct compiler macro in this source gate; production recipes/defaults untouched."
+    ]
+  },
+  "object_sections": {
+    "off": {
+      "text": 75586,
+      "rodata": 14934,
+      "data": 100501,
+      "bss": 149885
+    },
+    "on": {
+      "text": 75990,
+      "rodata": 15818,
+      "data": 100501,
+      "bss": 149885
+    },
+    "delta": {
+      "text": 404,
+      "rodata": 884,
+      "data": 0,
+      "bss": 0
+    }
+  },
+  "runtime_program": null,
+  "guest_screenshots": [],
+  "limits": [
+    "Active allowlist contains scoped17 keys only. The original36 experimental records are retained as held offline evidence and are refused by this source.",
+    "No source original key/package or generic alias is changed. r100/r103 native sidecars alone point to appended immutable IDs.",
+    "Archive grows69632B; selected rounded texture requests shrink11424B, but originals may coexist. Actual target heap/VRAM peak remains open.",
+    "Source/host/decoder/pack/sidecar/SH4 object gates only, not a complete program/Flycast/release/hardware acceptance."
+  ]
+}

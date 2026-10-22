@@ -1,0 +1,235 @@
+{
+  "schema": "rect21-Cwoods01-functional-1",
+  "status": "PASS_ACTIVE_HOUSE_EIGHT_KEY_ADMISSION_WITH_FOUR_ORIGINALS_CORESIDENT",
+  "source_runtime": "004cf224674fa60cf08dc10e641c723de238a0fd",
+  "program_sha256": "a58579b87da0c45267cb93efe29feea2438da9ddab62d0fe31c47a1c6ff32c71",
+  "elf_sha256": "e08c9abc8f6bb44bb2a94642fc9a2e664d22039659cea7fcce311cb9989d7433",
+  "track_sha256": "13c998136f24212e39a86bc82a0dc54eb14bb8bacca38ca14cb855e2897309fd",
+  "pack_sha256": "bbcef25f0090fa4004e03331a33c84f8f89fd3582704e4a08945a8f6a15d5026",
+  "observer_sha256": "694b31d3442beb135638dfbb88ebef7923a7616ee0faf5ca23feba9cd13d35b3",
+  "observer_binding_sha256": "63429904302a51532dc6423b8970f229ec21b194c83f8acc55cd86c92c6811e0",
+  "source_descriptor_receipt_sha256": "50786533953e25f9568b0ab755ebf433ab99ebea40397c015a84e7706e365473",
+  "process": {
+    "pid": 45360,
+    "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\texture-rect21-20261021\\cold-functional-C-woods-01\\flycast.exe",
+    "start_filetime": 134371020130332585,
+    "exit_filetime": 134371020551988145,
+    "guest_seconds": 42.165556,
+    "exit_code": 1,
+    "inner_exit": 0,
+    "observer_exit": 0,
+    "max_capture_growth": 17975073,
+    "final_C_free": 20673101824,
+    "foreign_state": false,
+    "save_checkpoint": false,
+    "reason": null
+  },
+  "scene": "Existing QA preset0 HOUSE AFTERS20; player inside r100 house. Distinct from historical natural-start woods benchmark and farm comparison.",
+  "new_cold_userdata": true,
+  "foreign_state": false,
+  "state_write": false,
+  "gameplay_memory_writes": false,
+  "source_tick_range": [
+    179,
+    569
+  ],
+  "samples": 475,
+  "stable_tables": 104,
+  "torn_source_tick_tables": 2,
+  "accepted_candidate_keys": [
+    "46df6ca6-30ee4810",
+    "4fe71459-b7a5c78f",
+    "6fb611d3-c97598e9",
+    "8d9b3838-6da1f099",
+    "8fe18585-328f7858",
+    "9c2b6729-0b13b6a8",
+    "9d1f3e3f-59130ea9",
+    "d65fdf0f-6c9842a8"
+  ],
+  "unseen_keys": [],
+  "all8_simultaneously_live_tables": 87,
+  "all8_live_tick_range": [
+    180,
+    565
+  ],
+  "live_payload_lowerbound": 27312,
+  "rounded_request_lowerbound": 27392,
+  "minimum_header_witnesses": [
+    {
+      "source_tick": 213,
+      "witness": {
+        "key": "d65fdf0f-6c9842a8",
+        "ui_frame": 208,
+        "header": "8a008480000000dadb24082000080fc800000000000000000000000000000000",
+        "tsp": 537404635,
+        "tcw": 3356428288,
+        "physical_64_square": true,
+        "vq": true,
+        "mipmap": true,
+        "scope": "sampled minimum SQ header submission only; no total/vertex/raster/nonuse proof"
+      }
+    },
+    {
+      "source_tick": 229,
+      "witness": {
+        "key": "d65fdf0f-6c9842a8",
+        "ui_frame": 224,
+        "header": "8a008480000000dadb24082000080fc800000000000000000000000000000000",
+        "tsp": 537404635,
+        "tcw": 3356428288,
+        "physical_64_square": true,
+        "vq": true,
+        "mipmap": true,
+        "scope": "sampled minimum SQ header submission only; no total/vertex/raster/nonuse proof"
+      }
+    },
+    {
+      "source_tick": 247,
+      "witness": {
+        "key": "46df6ca6-30ee4810",
+        "ui_frame": 242,
+        "header": "8a008480000000dadb24082000400ec800000000000000000000000000000000",
+        "tsp": 537404635,
+        "tcw": 3356377088,
+        "physical_64_square": true,
+        "vq": true,
+        "mipmap": true,
+        "scope": "sampled minimum SQ header submission only; no total/vertex/raster/nonuse proof"
+      }
+    },
+    {
+      "source_tick": 309,
+      "witness": {
+        "key": "8fe18585-328f7858",
+        "ui_frame": 304,
+        "header": "8a008480000000dadb240820008b0ec800000000000000000000000000000000",
+        "tsp": 537404635,
+        "tcw": 3356396288,
+        "physical_64_square": true,
+        "vq": true,
+        "mipmap": true,
+        "scope": "sampled minimum SQ header submission only; no total/vertex/raster/nonuse proof"
+      }
+    },
+    {
+      "source_tick": 323,
+      "witness": {
+        "key": "8fe18585-328f7858",
+        "ui_frame": 318,
+        "header": "8a008480000000dadb240820008b0ec800000000000000000000000000000000",
+        "tsp": 537404635,
+        "tcw": 3356396288,
+        "physical_64_square": true,
+        "vq": true,
+        "mipmap": true,
+        "scope": "sampled minimum SQ header submission only; no total/vertex/raster/nonuse proof"
+      }
+    },
+    {
+      "source_tick": 325,
+      "witness": {
+        "key": "8fe18585-328f7858",
+        "ui_frame": 320,
+        "header": "8a008480000000dadb240820008b0ec800000000000000000000000000000000",
+        "tsp": 537404635,
+        "tcw": 3356396288,
+        "physical_64_square": true,
+        "vq": true,
+        "mipmap": true,
+        "scope": "sampled minimum SQ header submission only; no total/vertex/raster/nonuse proof"
+      }
+    },
+    {
+      "source_tick": 442,
+      "witness": {
+        "key": "8fe18585-328f7858",
+        "ui_frame": 437,
+        "header": "8a008480000000dadb240820008b0ec800000000000000000000000000000000",
+        "tsp": 537404635,
+        "tcw": 3356396288,
+        "physical_64_square": true,
+        "vq": true,
+        "mipmap": true,
+        "scope": "sampled minimum SQ header submission only; no total/vertex/raster/nonuse proof"
+      }
+    },
+    {
+      "source_tick": 453,
+      "witness": {
+        "key": "46df6ca6-30ee4810",
+        "ui_frame": 448,
+        "header": "8a008480000000dadb24082000400ec800000000000000000000000000000000",
+        "tsp": 537404635,
+        "tcw": 3356377088,
+        "physical_64_square": true,
+        "vq": true,
+        "mipmap": true,
+        "scope": "sampled minimum SQ header submission only; no total/vertex/raster/nonuse proof"
+      }
+    }
+  ],
+  "minimum_unique_header_key_count": 3,
+  "header_witness_limit": "Stable minimum current SQ header submissions only; not full vertices/raster/pixel use,not per-key totals,absence unknown",
+  "active_camera_samples": 367,
+  "active_camera_tick_range": [
+    241,
+    569
+  ],
+  "active_freeplay_PT_windows": [
+    "PT f=241-300 n=60 total=33395/35875 setup=14729/17132 CamCtrl.Check=146/186 ScenarioMove=277/289 EmMgr.move=1291/1700 Player=1571/1904 ObjMgr.move=893/985 CameraMove=280/282 EspMove=1445/1525 LightMove=30/32",
+    "PT f=301-360 n=60 total=33394/35904 setup=14735/14890 CamCtrl.Check=141/184 ScenarioMove=279/323 EmMgr.move=1292/1690 Player=1571/1905 ObjMgr.move=889/985 CameraMove=282/337 EspMove=1453/1553 LightMove=30/33",
+    "PT f=361-420 n=60 total=33396/35818 setup=14859/15314 CamCtrl.Check=141/186 ScenarioMove=278/321 EmMgr.move=1334/1814 Player=1557/1902 ObjMgr.move=890/985 CameraMove=280/294 EspMove=1507/3963 LightMove=30/34",
+    "PT f=421-480 n=60 total=33396/35860 setup=14994/17439 CamCtrl.Check=147/195 ScenarioMove=277/284 EmMgr.move=1374/1872 Player=1591/3770 ObjMgr.move=890/985 CameraMove=280/337 EspMove=1478/1582 LightMove=30/32",
+    "PT f=481-540 n=60 total=33396/35818 setup=15080/17492 CamCtrl.Check=143/204 ScenarioMove=280/323 EmMgr.move=1317/1834 Player=1552/1905 ObjMgr.move=890/985 CameraMove=280/282 EspMove=1482/1552 LightMove=30/33"
+  ],
+  "phase_limit": "Active gameMainLoop-only PT/camera/screenshot evidence; no new completed-state latch,sourceFrame alone not phase lock",
+  "screenshot": {
+    "path": "shots/t0037/frames/fb1.png",
+    "sha256": "66798178e47415fa19093a658bc862a5e228d76af23043c8943c851d5c4c26b2",
+    "inspected": "Leon/HUD inside r100 house; full textures/geometry present. No matched original look approval."
+  },
+  "accounting_limit": "Known owned bases and payload/rounded-request lowerbounds only. Full physical allocator extents/high-water and other alias representations unavailable.",
+  "matched_timing": false,
+  "performance_improvement": false,
+  "release_acceptance": false,
+  "physical_Dreamcast_acceptance": false,
+  "next": "Independent source-only four-original preload/consumer provenance map under new4MiB allocation; no removal/shared edit/newguest.",
+  "qualified_selected_original_keys": [
+    "1170b2b5-9710ab82",
+    "1ab5c10f-d8d37c49",
+    "24b92cf4-ddafaf29",
+    "5cbedd66-ce488718"
+  ],
+  "coexisting_candidate8_original4_tables": 87,
+  "coexisting_12base_tick_range": [
+    180,
+    565
+  ],
+  "coexisting_payload_lowerbound": 43696,
+  "coexisting_rounded_request_lowerbound": 43776,
+  "original_descriptor_source_receipt_sha256": "8894fd22ddf8d8679b9cb3631948591fce6dd7c9f6f4fbabf549cd0d12475c24",
+  "residency_limit": "Four exact selected originals coexist with8candidates on12distinct owned known bases; no whole-scene/net VRAM-saving or B-house comparison claim. Other aliases and allocator extents/highwater remain open.",
+  "postprocessor_correction": "Summary01 used reserved instead of actual observer field reserved_0 and erroneously rejected valid candidates. Preserved original failed postprocess;02 corrects field mapping;03 adds independent originalCRC/material/packoffset qualification. Raw694b observer and guest unchanged.",
+  "selected_candidate_rejections": 4,
+  "independent_review": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\texture21-benchmark-20261021\\woods-functional-review-01\\summary.json",
+    "sha256": "7eec5af85876b7fb37a259d5b2505d860d0428657501695b4c35d068677a6d49",
+    "seal": "33bfa2e05e5c989ecb941ecaa58c92a0e915b17e2bdab72c8a38a90ed092ad02",
+    "source": "5e5f53a51"
+  },
+  "source_UI_clock_limit": "Every SQ event source_tick is ui_frame+5. Both observed clocks retained; actual pace_skipped_frames not read by694b; no phase/presentation equality inferred.",
+  "capture_identity": {
+    "manifest": "c70dd9f6babca3ebd01ea9752fe5a879160fae0c828a62bd6ac1be0bb4c3ba94",
+    "seal": "7ebcb01c97fcace766c2df4df12397364cc0bed1835c8026ffa65ac793a0a721",
+    "bytes": 20925153,
+    "files": 61
+  },
+  "mirror_identity": {
+    "path": "/root/re4data/private/texture-rect21-woods-cold-qualification-20261021",
+    "bytes": 6585307,
+    "files": 112,
+    "manifest": "fde2575e9d586c5a5ed779a1a15749e58a48b87e45576bc10d37c48ea1a6cf3f",
+    "cumulative_farm_plus_woods_bytes": 14760135,
+    "cap": 20971520
+  }
+}

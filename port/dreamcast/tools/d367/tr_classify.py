@@ -21,6 +21,12 @@ Class bytes (must match native_static.cpp trans::):
 Deterministic: same inputs, byte-identical outputs (sorted rooms, no timestamps). --check compares instead of writing.
 Texture lookup: --tex DIR (any *.re4tex below it, named <crc>-<fnv>.re4tex; repeatable) and --pak FILE|DIR
 (RE4PAK1 packs; repeatable). The first source that has a key wins, in argument order.
+
+--mip-aware-alpha opts into bounded base-level reading for native 16-bit VQ,
+twiddled and nonmip linear packages. It rejects unsupported layouts/formats
+(including PAL), bad extents and unknown CRC conventions as UNKNOWN. Default
+behavior is unchanged; this option does not change tex_class/part_class rules
+or establish compatibility with previously generated R4TC class bytes.
 """
 import argparse
 import collections
@@ -43,8 +49,67 @@ TEX_TO_CLASS = {'OPAQUE': 'OPAQUE_IN_TR', 'FLAT': 'FLAT', 'FLATMID': 'FLATMID', 
                 'ALL0': 'DROP', 'NOTEX': 'UNKNOWN'}
 
 
+def native_base_alpha(blob):
+    """Opt-in native16 base histogram; unsupported/invalid input returns None.
+
+    Layouts match texture_package.cpp and mipmap_{vq,twiddled}.py: full VQ
+    codebook followed by levels 1x1..base; twiddled16 has six prefix bytes
+    followed by levels 1x1..base. Histograms need no Morton permutation.
+    Legacy payload-only CRC input is accepted, as in the existing offline
+    mip readers; this function is not a strict runtime Package admission gate.
+    """
+    if not blob or len(blob) < 144:
+        return None
+    head = struct.unpack_from('<8s10I', blob)
+    if (head[:6] != (b'RE4DCTX\0', 2, 48, 96, 1, 48) or
+            head[6] != 144 or head[6] + head[7] != len(blob)):
+        return None
+    _, w, h, fmt, off, size, flags, pay, reserved = struct.unpack_from('<64s8I', blob, 48)
+    if (not (8 <= w <= 1024 and 8 <= h <= 1024) or
+            w & (w - 1) or h & (h - 1) or fmt not in (0, 1, 2) or
+            pay not in (0, 1, 2) or flags & ~7 or reserved or
+            off != 144 or size != head[7]):
+        return None
+    mip = bool(flags & 4)
+    if mip and (w != h or pay == 0):
+        return None
+    pixels = w * h
+    if pay == 2:
+        indices = pixels // 4
+        if mip:
+            indices, side = 1, 2
+            while side <= w:
+                indices += side * side // 4
+                side *= 2
+        expected = 2048 + indices
+        start = expected - pixels // 4
+    else:
+        expected = (pixels * 4 // 3 + 3) * 2 if mip else pixels * 2
+        start = expected - pixels * 2
+    if size != expected:
+        return None
+    payload = blob[off:]
+    if head[8] not in (zlib.crc32(blob[48:]) & 0xffffffff,
+                       zlib.crc32(payload) & 0xffffffff):
+        return None
+    if fmt == 0:
+        return ({15: pixels}, 15)
+    shift, mask = (15, 1) if fmt == 1 else (12, 15)
+    levels = collections.Counter()
+    if pay == 2:
+        book = struct.unpack_from('<1024H', payload)
+        for index, count in collections.Counter(payload[start:]).items():
+            for corner in range(4):
+                levels[(book[index * 4 + corner] >> shift) & mask] += count
+    else:
+        for word, in struct.iter_unpack('<H', payload[start:]):
+            levels[(word >> shift) & mask] += 1
+    return (dict(levels), 1 if fmt == 1 else 15)
+
+
 class Textures:
-    def __init__(self, tex_dirs, paks):
+    def __init__(self, tex_dirs, paks, *, mip_aware_alpha=False):
+        self.mip_aware_alpha = mip_aware_alpha
         self.sources = []
         for d in tex_dirs:
             idx = {}
@@ -89,6 +154,10 @@ class Textures:
         if key in self.cache:
             return self.cache[key]
         b = self.blob(key)
+        if self.mip_aware_alpha:
+            r = native_base_alpha(b)
+            self.cache[key] = r
+            return r
         r = None
         if b and b[:8] == b'RE4DCTX\0':
             head = struct.unpack_from('<8s10I', b)
@@ -214,8 +283,10 @@ def main():
     ap.add_argument('--out', required=True, help='output root: <out>/<room>/ps2-world.r4tc and <out>/TRCLASS.tsv')
     ap.add_argument('--check', action='store_true', help='compare with existing outputs, write nothing')
     ap.add_argument('--strict', action='store_true', help='exit 1 if any TR part is UNKNOWN (coverage gate)')
+    ap.add_argument('--mip-aware-alpha', action='store_true',
+                    help='opt-in bounded native16 base histogram; unsupported input is UNKNOWN')
     a = ap.parse_args()
-    tex = Textures(a.tex, a.pak)
+    tex = Textures(a.tex, a.pak, mip_aware_alpha=a.mip_aware_alpha)
     allrows = []
     unknown = 0
     status = 0

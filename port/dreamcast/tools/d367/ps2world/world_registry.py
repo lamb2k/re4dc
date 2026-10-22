@@ -291,7 +291,20 @@ TEX_CRC_DATA_NOTE = ('payload_crc32 covers the texel data only (ps2_room_r4im.py
                      'and by stage.sh\'s staging check')
 
 
-def tex_package_error(b, width, height, *, pal4_alpha=False):
+def _texture_feature_error(*, pal4_alpha=False, cast_mipmap=False,
+                           twiddled_mipmap=False, pal4_mipmap=False,
+                           pal8_alpha=False, pal8_mipmap=False):
+    if ((twiddled_mipmap and not cast_mipmap) or
+            (pal4_mipmap and not (pal4_alpha and cast_mipmap)) or
+            (pal8_alpha and not pal4_alpha) or
+            (pal8_mipmap and not (pal8_alpha and cast_mipmap))):
+        return 'inconsistent native texture feature options'
+    return None
+
+
+def tex_package_error(b, width, height, *, pal4_alpha=False, cast_mipmap=False,
+                      twiddled_mipmap=False, pal4_mipmap=False, pal8_alpha=False,
+                      pal8_mipmap=False):
     """(None, crc rule) if the RE4DCTX bytes `b` load the way the game loads a PS2 part texture, else (reason, None).
 
     The game opens /cd/dc/tex/<c>/<crc>-<fnv>.re4tex with texture::Package::open_streamed (native_ui.cpp
@@ -304,7 +317,14 @@ def tex_package_error(b, width, height, *, pal4_alpha=False):
     (the runtime rule, crc rule 'header') or, the PS2 converter's rule, of the data range when it ends the file
     (crc rule 'data', TEX_CRC_DATA_NOTE). Either catches a truncated or altered payload.
     Format4 requires explicit pal4_alpha=True, corresponding to TEX_PAL4_ALPHA=1;
-    its base-level twiddled payload is w*h/2 index bytes plus 32 palette bytes."""
+    its base-level twiddled payload is w*h/2 index bytes plus 32 palette bytes.
+    PAL8 and each mip family require the corresponding explicit runtime features;
+    none is inferred from a filename or accepted merely because its CRC passes."""
+    feature_error = _texture_feature_error(pal4_alpha=pal4_alpha, cast_mipmap=cast_mipmap,
+        twiddled_mipmap=twiddled_mipmap, pal4_mipmap=pal4_mipmap,
+        pal8_alpha=pal8_alpha, pal8_mipmap=pal8_mipmap)
+    if feature_error:
+        return feature_error, None
     if len(b) < 48:
         return 'shorter than the header', None
     magic, version, hsize, stride, count, toff, doff, dsize, pcrc, _nsrc, _flags = struct.unpack_from('<8s10I', b)
@@ -324,10 +344,29 @@ def tex_package_error(b, width, height, *, pal4_alpha=False):
     for i in range(count):
         tw, th, fmt, off, size, _fl, payload, reserved = struct.unpack_from('<8I', b, toff + 96 * i + 64)
         dims = 8 <= tw <= 1024 and 8 <= th <= 1024 and not tw & (tw - 1) and not th & (th - 1)
-        pal4 = fmt == 3 and payload == 2
-        alpha4 = pal4_alpha and fmt == 4 and payload == 1 and not (_fl & 4)
-        expected = tw * th // 2 + 32 if alpha4 else 2048 + tw * th // 16 + 32 if pal4 else 2048 + tw * th // 4 if payload == 2 else tw * th * 2
-        if (not dims or payload > 2 or reserved or size != expected or (fmt > 2 and not pal4 and not alpha4) or off < doff
+        mip = bool(_fl & 4)
+        pal4 = fmt == 3 and payload == 2 and not mip
+        alpha4 = pal4_alpha and fmt == 4 and payload == 1 and (not mip or pal4_mipmap)
+        alpha8 = (pal8_alpha and fmt == 5 and payload == 1 and tw == th and
+                  not (_fl & (1 << 30)) and (not mip or pal8_mipmap))
+        if mip:
+            supported = (fmt <= 2 and (payload == 2 or payload == 1 and twiddled_mipmap) or
+                         alpha4 and pal4_mipmap or alpha8 and pal8_mipmap)
+            if not (dims and tw == th and cast_mipmap and supported):
+                return 'descriptor %d: unsupported native mip family' % i, None
+        pixels = tw * th
+        if alpha8:
+            expected = (pixels * 4 // 3 + 3 if mip else pixels) + 512
+        elif alpha4:
+            expected = (pixels * 4 // 3 + 3) // 2 + 32 if mip else pixels // 2 + 32
+        elif pal4:
+            expected = 2048 + pixels // 16 + 32
+        elif payload == 2:
+            # Square full-codebook chain: one 1x1 index, then 2x2 blocks.
+            expected = 2048 + (pixels + 2) // 3 if mip else 2048 + pixels // 4
+        else:
+            expected = (pixels * 4 // 3 + 3) * 2 if mip else pixels * 2
+        if (not dims or payload > 2 or reserved or size != expected or (fmt > 2 and not pal4 and not alpha4 and not alpha8) or off < doff
                 or off + size > doff + dsize or off < 48 or off + size > len(b)):
             return 'descriptor %d: dimensions, format, layout or payload size' % i, None
         if payload == 0:
@@ -338,7 +377,9 @@ def tex_package_error(b, width, height, *, pal4_alpha=False):
     return None, rule
 
 
-def check_textures(pkg_dir, keys, replace, resolver=None, *, pal4_alpha=False):
+def check_textures(pkg_dir, keys, replace, resolver=None, *, pal4_alpha=False,
+                   cast_mipmap=False, twiddled_mipmap=False, pal4_mipmap=False,
+                   pal8_alpha=False, pal8_mipmap=False):
     """Every part's texture (unique key + size): present, loadable (tex_package_error) and hashed. resolver(key) ->
     (bytes or None, source) replaces the package-dir lookup (a fixture-selected package: the staged bytes)."""
     uniq = sorted({(k[0], k[1], k[2], k[3]) for k in keys})
@@ -356,7 +397,9 @@ def check_textures(pkg_dir, keys, replace, resolver=None, *, pal4_alpha=False):
                 missing.append(key)
                 continue
             b = p.read_bytes()
-        why, rule = tex_package_error(b, w, h, pal4_alpha=pal4_alpha)
+        why, rule = tex_package_error(b, w, h, pal4_alpha=pal4_alpha, cast_mipmap=cast_mipmap,
+                twiddled_mipmap=twiddled_mipmap, pal4_mipmap=pal4_mipmap,
+                pal8_alpha=pal8_alpha, pal8_mipmap=pal8_mipmap)
         if why:
             bad.append(dict(key=key, size=[w, h], why=why))
         else:
@@ -803,7 +846,16 @@ def main():
                     'textures_sha256, verdict, capture, by, date}]}; counted only for the same three hashes')
     ap.add_argument('--inc-check', type=Path, help='the runtime room list to report registered rooms against '
                     '(default: game/platform/include/ps2_world_rooms.inc)')
+    for feature in ('cast-mipmap', 'twiddled-mipmap', 'pal4-alpha', 'pal4-mipmap',
+                    'pal8-alpha', 'pal8-mipmap'):
+        ap.add_argument('--' + feature, action='store_true',
+                        help='validate textures with the matching explicit runtime feature')
     a = ap.parse_args()
+    texture_features = {key: getattr(a, key) for key in ('cast_mipmap', 'twiddled_mipmap',
+        'pal4_alpha', 'pal4_mipmap', 'pal8_alpha', 'pal8_mipmap')}
+    config_error = _texture_feature_error(**texture_features)
+    if config_error:
+        ap.error(config_error)
     corpora = a.corpus or CORPORA
     reviews = json.loads(a.reviews.read_text()) if a.reviews else {}
     inc_path = a.inc_check or (REPO_DC / 'game/platform/include/ps2_world_rooms.inc')
@@ -905,7 +957,7 @@ def main():
                 pfail = []
             val['failures'] += pfail
             fx = pkg.get('fixture')
-            tex = check_textures(pd, keys, None, resolver=fx.texture if fx else None) if ck.get('ok') else None
+            tex = check_textures(pd, keys, None, resolver=fx.texture if fx else None, **texture_features) if ck.get('ok') else None
             if tex and fx:
                 tex['resolved_from'] = 'fixture %s (%s)' % (fx.name, fx.pack()[2] if fx.pack()[1] is not None
                                                              else 'loose files; ' + fx.pack()[2])
@@ -1070,6 +1122,8 @@ def main():
                             inc=str(a.inc) if a.inc else None),
                counts=collections.Counter(v['result'] for v in out_rooms.values()),
                rooms=out_rooms)
+    if any(texture_features.values()):
+        doc['native_texture_features'] = texture_features
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / 'world-coverage.json').write_text(json.dumps(doc, indent=1, default=str) + '\n')
     if a.inc:

@@ -27,7 +27,7 @@ def read_pak(blob):
 
 def restamp(src, new):
     """The VQ package with the source package's material name and flags (Package::find looks materials up by
-    name) and the source's CRC rule (full body after the header, or the older texel-only rule)."""
+    name) and the canonical runtime CRC over descriptors and payload."""
     import zlib
     tpl = vq.tpl
     sh, nh = list(tpl.HEADER.unpack_from(src)), list(tpl.HEADER.unpack_from(new))
@@ -40,7 +40,7 @@ def restamp(src, new):
         raise SystemExit('source CRC rule unknown')
     nt[0], nt[6] = st[0], st[6]
     body = tpl.TEXTURE.pack(*nt) + new[nh[6]:]
-    nh[8] = zlib.crc32(body if rule == 'header' else new[nh[6]:]) & 0xffffffff
+    nh[8] = zlib.crc32(body) & 0xffffffff
     return tpl.HEADER.pack(*nh) + body, rule
 
 
@@ -63,7 +63,8 @@ def main():
         entry['source_flags'] = flags
         new, rule = restamp(blob, (outd / (name + '.re4tex')).read_bytes())
         (outd / (name + '.re4tex')).write_bytes(new)
-        entry['crc_rule'] = rule
+        entry['source_crc_rule'] = rule
+        entry['crc_rule'] = 'header'
         entry['package_sha256'] = __import__('hashlib').sha256(new).hexdigest()
         pkgs[k] = new
         report.append(entry)
