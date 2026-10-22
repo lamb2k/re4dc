@@ -4,6 +4,10 @@ extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_R
 #if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
 #include "include/resident_list_cache.h"
 #endif
+#if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
+extern "C" void re4dc_bfc_feed(unsigned list,const void* data,unsigned bytes);
+extern "C" void re4dc_bfc_scene(unsigned frame,int present);
+#endif
 #include "include/movie_world_arena.h"
 #include "include/actor_visibility_diag.h"
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
@@ -2183,6 +2187,9 @@ void stream_close(bool present) {
 #endif
 #if defined(RE4DC_MCHECK_PT) && RE4DC_MCHECK_PT
     pt_audit_scene(frame,present);
+#endif
+#if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
+    re4dc_bfc_scene(frame,present?1:0);
 #endif
 #if defined(RE4DC_MCHECK_SAFE) && RE4DC_MCHECK_SAFE
     safe_audit_scene(present);
@@ -6607,6 +6614,9 @@ extern "C" void re4dc_ta_hash(const void* data,unsigned bytes){
 #endif
 #if defined(RE4DC_MCHECK_PT) && RE4DC_MCHECK_PT
     pt_audit_feed(unsigned(stream_list),data,bytes,__builtin_return_address(0));
+#endif
+#if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
+    re4dc_bfc_feed(unsigned(stream_list),data,bytes);  // backface_census.cpp (lane backface22)
 #endif
 #if RE4DC_TA_BIN_DIAG
     tabin::cur_ra=__builtin_return_address(0);
