@@ -266,8 +266,13 @@ void snap_diag() {
     if (re4dc_qa_speed && re4dc_qa_speed(v)) a = addf(a, "fps=%u.%u speed=%u cpu=%u\n", v[0] / 10, v[0] % 10, v[1], v[2]);
     else a = addf(a, "fps=NA\n");
     if (re4dc_tick_log_snapshot) {
-        const char* nm[40]; unsigned avg[40]; unsigned seq = 0;
-        const int n = re4dc_tick_log_snapshot(nm, avg, nullptr, 40, &seq);
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+        constexpr int kSnap = 40;   // tick_log.cpp's WORLD_METER slots
+#else
+        constexpr int kSnap = 32;
+#endif
+        const char* nm[kSnap]; unsigned avg[kSnap]; unsigned seq = 0;
+        const int n = re4dc_tick_log_snapshot(nm, avg, nullptr, kSnap, &seq);
         auto get = [&](const char* k) -> unsigned { for (int i = 0; i < n; ++i) if (nm[i] && !strcmp(nm[i], k)) return avg[i]; return 0u; };
         const unsigned logic = get("logic"), em = get("EspMove"), et = get("EspTrans");
         const unsigned objs = get("objTrans") + get("ShadowTrans") + get("MirrorTrans") + get("ClothTrans");
@@ -397,7 +402,11 @@ enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED,
 struct Menu {
     bool boot;
     int screen, sel[5], chap, qr_page;
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     int items[16], nitems;
+#else
+    int items[12], nitems;
+#endif
 };
 const char* onoff(unsigned bit) { return (g_flags & bit) ? "ON" : "OFF"; }
 const char* speed_name() { return (re4dc_quality_speed() & 2) ? "ON" : "OFF"; }
