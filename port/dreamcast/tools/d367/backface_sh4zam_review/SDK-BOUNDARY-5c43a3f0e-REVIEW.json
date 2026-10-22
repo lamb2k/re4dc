@@ -1,0 +1,34 @@
+{
+  "commit": "5c43a3f0e7838c217cc639fc870243d08bf78df0",
+  "scope": "Read-only committed source review, no compiler/make execution or guest",
+  "source_sha256": {
+    "port/dreamcast/game/backface.mk": "744d9a87c8e01f67707b80585b8b28478e51f2f8638a109f927d9d028ca6268e",
+    "port/dreamcast/game/platform/backface_sh4.S": "e74261b72f748bc6a70797aa874e1b5c1aee2338a6b403b79a251e46199a7b48",
+    "port/dreamcast/room/backface_sh4.hpp": "1774570b3f36ac41e8e021d35c592af9b78198659952eb704068dd7abdf5ddd2",
+    "port/dreamcast/room/mesh_strip_lean.hpp": "0cbfb2d425fecc2462641ae9391cbeb134553de15e11d8a290b9175165631b1c",
+    "port/dreamcast/tools/d367/backface_sh4zam_fused/materialize.py": "7609e4dff64484eaafb564e34068af87d6dde640d06275aa9f24d4feb283914a",
+    "port/dreamcast/tools/d367/backface_sh4zam_fused/manifest.json": "c9528fb0740c89ebb51789b49b9750c567161ecf9f8798dbcb312bac11574e90"
+  },
+  "patch_sha256": "30e0c415001737828bd9003dda2be0ac1a946a7dcb618051c1fea3a618703892",
+  "sdk_pin": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+  "runtime_files": {
+    "include/sh4zam/shz_strip.h": "ed96d15b9c13035fccc8f9be1471f083e0c573a2376b13b6189dbd61c60df334",
+    "source/shz_strip.cpp": "e3538ff6850511613afeea2f83000a2fa605d2a2ec220ea1ae37601649315981",
+    "source/shz_strip.S": "5ac4e2f5ece9c2985dc7a750c8c9ab4f43dc1afcd62f84cdad75f2b19e38c22e",
+    "source/shz_strip_area.inc": "9008380cfeded462b4cb811eeedf206428fd89f710c9447bd5f775bf368db26e",
+    "CMakeLists.txt": "4f4e8ca23c12bc8e90c34684fb25b6c571740cc2d555fa73775abd31b2a375c1"
+  },
+  "actionable_issues": [],
+  "cleared": [
+    "CPU2-only SDK objects/include/verifier selection",
+    "CPU0/C1 native include guards retain previous arms",
+    "Patch and immutable materializer identity mapping",
+    "Thin adapters and relocated long/actor/whole-stream contracts",
+    "CMake-only final addition leaves runtime file identities unchanged"
+  ],
+  "not_proven": [
+    "Full OFF programme/overlay identity on final build",
+    "Faster-than-OFF acceptance",
+    "Pixels/memory/release/physical gates"
+  ]
+}

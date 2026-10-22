@@ -1,0 +1,7 @@
+from pathlib import Path
+import subprocess,hashlib,json
+R=Path('/root/probe/codex-backface-sh4zam-fused');D=Path('/root/probe/codex-backface-sh4zam-review/port/dreamcast/tools/d367/backface_sh4zam_review');commit='5c43a3f0e7838c217cc639fc870243d08bf78df0';prefix='port/dreamcast/tools/d367/backface_sh4zam_fused/'
+read=lambda p:subprocess.check_output(['git','-C',str(R),'show',commit+':'+p]);sha=lambda b:hashlib.sha256(b).hexdigest();m=json.loads(read(prefix+'manifest.json'));patch=read(prefix+'0001-strip-sq-api.patch');assert sha(patch)==m['patch_sha256']
+paths=['port/dreamcast/game/backface.mk','port/dreamcast/game/platform/backface_sh4.S','port/dreamcast/room/backface_sh4.hpp','port/dreamcast/room/mesh_strip_lean.hpp',prefix+'materialize.py',prefix+'manifest.json']
+receipt=dict(commit=commit,scope='Read-only committed source review, no compiler/make execution or guest',source_sha256={p:sha(read(p))for p in paths},patch_sha256=sha(patch),sdk_pin=m['sdk_pin'],runtime_files=m['files'],actionable_issues=[],cleared=['CPU2-only SDK objects/include/verifier selection','CPU0/C1 native include guards retain previous arms','Patch and immutable materializer identity mapping','Thin adapters and relocated long/actor/whole-stream contracts','CMake-only final addition leaves runtime file identities unchanged'],not_proven=['Full OFF programme/overlay identity on final build','Faster-than-OFF acceptance','Pixels/memory/release/physical gates'])
+(D/'SDK-BOUNDARY-5c43a3f0e-REVIEW.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt,indent=2))
