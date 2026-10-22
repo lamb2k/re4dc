@@ -1,0 +1,217 @@
+{
+  "scope": "SOURCE/hash/AST/retained receipts only; no imports/tests/nativequery/image/preflight/build/guest/adoption",
+  "utc": "2026-10-22T07:06:33.887773+00:00",
+  "candidate": "627c4fde9216823ea208a913b8d1173569053be9",
+  "disposition": "CLEAR bounded source-only corrected collector/runner components; no adoption/native qualification",
+  "manifest": "c0c76c772d05b1c6fa22ceed725f260c1e0c5cbb84863b118795a95b472e9383",
+  "pins": [
+    {
+      "path": ".gitattributes",
+      "bytes": 105,
+      "sha256": "3d518c8907fb67ffad0685f52e941b1440892ccffa35724ae820d33fb2cd62e1"
+    },
+    {
+      "path": "CLAIM.md",
+      "bytes": 598,
+      "sha256": "bef83d31ba5acd6b10c7f9ecf56d25713d5cfa740f4dc812ef04d9a5316f88ed"
+    },
+    {
+      "path": "COLLECTOR_CONTRACT.json",
+      "bytes": 5411,
+      "sha256": "ff15e0f1ae5dd059a01f71bd25245b16c977f576ece6f8c0d07ff6b30a4546b1"
+    },
+    {
+      "path": "HOOK_PLAN.md",
+      "bytes": 10043,
+      "sha256": "dc1dd45834aa650ec353ee471201a6d586f393e15af53fe50b4152ce8e0e652d"
+    },
+    {
+      "path": "PROPOSAL_INPUT.json",
+      "bytes": 6995,
+      "sha256": "59f6bb01ea28822c319549a180fcdaad4998442167da67823bb3aa87f2732b45"
+    },
+    {
+      "path": "V1_PARENT.json",
+      "bytes": 504,
+      "sha256": "8edd811d79d611a0930bc7009e01dfdbcf4ef2bbfc5ce36196cfdcbd0dbb9a7b"
+    },
+    {
+      "path": "V1_REVIEW.json",
+      "bytes": 378,
+      "sha256": "a459bbcdcbf99b0c02d1cc55bbe8d341fed258be524bdfcac903d79b2a0b6f9b"
+    },
+    {
+      "path": "V2_DELTA_PROOF.json",
+      "bytes": 1591,
+      "sha256": "3745f0270ada3373d5f02d4aa5149ca8636100b8aaf29428e5e3c67d3f63a4c5"
+    },
+    {
+      "path": "V2_TEST_SCOPE.md",
+      "bytes": 693,
+      "sha256": "39951a00a790dd8c8f0ea50e998d5a1290a2be492331545545c08aeade1f2ffa"
+    },
+    {
+      "path": "checkpoint_runner18.child.py",
+      "bytes": 18115,
+      "sha256": "b9229b91c96c4b8bbc0417e9a0822e419c3eda04f64506f50e32b3d5349584e6"
+    },
+    {
+      "path": "checkpoint_runner18.original.txt",
+      "bytes": 17566,
+      "sha256": "8960ffcf6652e1aac9f846d2857cc5932314bf03bcbf99ae538d68d131d1ca20"
+    },
+    {
+      "path": "child-runner.diff",
+      "bytes": 4497,
+      "sha256": "c7b0cc5a1f5588f746bb900bc4cc39259369ec7709db489dcf88854192f4aa0a"
+    },
+    {
+      "path": "child_reference_proxy.py",
+      "bytes": 5369,
+      "sha256": "35fd3ab48a43f7a0604770b8b2b1708d0eb546371bd2101eb21ae3e022b6af19"
+    },
+    {
+      "path": "frozen-source-proof.json",
+      "bytes": 5869,
+      "sha256": "2be9c2584430896782f9dd86f0242bcd253c11cb2d36d4708500dae9c4485844"
+    },
+    {
+      "path": "guest-profile-v2.json",
+      "bytes": 13113,
+      "sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b"
+    },
+    {
+      "path": "native_reference_api.py",
+      "bytes": 9151,
+      "sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255"
+    },
+    {
+      "path": "parent_reference_broker.py",
+      "bytes": 16780,
+      "sha256": "4d77a1871d197a91c4cdf8321afbcd44dc929ee7118fefaa5691b499024df75f"
+    },
+    {
+      "path": "receipt-linux.json",
+      "bytes": 8379,
+      "sha256": "59747627f36f8672e44d3d35b1ff4a53338612fc7e9f471a13afc59efc9508d9"
+    },
+    {
+      "path": "receipt-windows.json",
+      "bytes": 8412,
+      "sha256": "9a17dedc26ef220214e90c33f8c46c386d8fe8c048a359cb279102184c217c34"
+    },
+    {
+      "path": "reference_collector.py",
+      "bytes": 6856,
+      "sha256": "fb86ea60f8d39f61aa25e6a5facc5c3eafa11a695f2bf3ee40211243be17165d"
+    },
+    {
+      "path": "retained-all-track-declarations.json",
+      "bytes": 4295,
+      "sha256": "dc7e2d19fce835f3d68cde66ae1a15afd3705dabb982921730fdd43cc92a0af0"
+    },
+    {
+      "path": "run_source_tests.py",
+      "bytes": 1489,
+      "sha256": "72b32633875c67427d8ccb124965548e06fdb6fcad2a0eb3eb7e3ab0c685e4b8"
+    },
+    {
+      "path": "runner-origin.json",
+      "bytes": 495,
+      "sha256": "43db462a9f865031d2c6b3851a1316db0708bdec95f988d072173fe57144edb1"
+    },
+    {
+      "path": "test_owned_runner.py",
+      "bytes": 31889,
+      "sha256": "8a5abf5086d1175670f7e0f6b8205a6d082eef7d68b340e1dfbd425d2f07583f"
+    },
+    {
+      "path": "v2-source.diff",
+      "bytes": 5453,
+      "sha256": "1ed043b583f8d5ebed027e7a0c749daac04c0c3cd311143c96bc0abed62c8fd6"
+    }
+  ],
+  "v1_pins_preserved": 25,
+  "only_changed_production_methods": [
+    "native_reference_api.py:WindowsApi.stat",
+    "parent_reference_broker.py:Broker.resource_guard",
+    "parent_reference_broker.py:Broker.marker_proof"
+  ],
+  "unchanged_production_methods": [
+    "native_reference_api.py:canonical",
+    "native_reference_api.py:WindowsApi.__init__",
+    "native_reference_api.py:WindowsApi.checked",
+    "native_reference_api.py:WindowsApi.close",
+    "native_reference_api.py:WindowsApi.open_file",
+    "native_reference_api.py:WindowsApi.final_path",
+    "native_reference_api.py:WindowsApi.names",
+    "native_reference_api.py:WindowsApi.hash_file",
+    "native_reference_api.py:WindowsApi.delete_opened_link",
+    "native_reference_api.py:WindowsApi.duplicate",
+    "native_reference_api.py:WindowsApi.process",
+    "native_reference_api.py:WindowsApi.job_pids",
+    "native_reference_api.py:WindowsApi.now_filetime",
+    "parent_reference_broker.py:digest",
+    "parent_reference_broker.py:atomic_new",
+    "parent_reference_broker.py:allocation_proof",
+    "parent_reference_broker.py:Broker.__init__",
+    "parent_reference_broker.py:Broker.inner_proof",
+    "parent_reference_broker.py:Broker.fail",
+    "parent_reference_broker.py:Broker.retain_remote",
+    "parent_reference_broker.py:Broker.stopped",
+    "parent_reference_broker.py:Broker.dispatch",
+    "parent_reference_broker.py:Broker.start",
+    "parent_reference_broker.py:Broker.close"
+  ],
+  "byteexact_components": [
+    "checkpoint_runner18.child.py",
+    "checkpoint_runner18.original.txt",
+    "reference_collector.py",
+    "child_reference_proxy.py",
+    "guest-profile-v2.json",
+    "retained-all-track-declarations.json",
+    "PROPOSAL_INPUT.json",
+    "runner-origin.json",
+    "run_source_tests.py"
+  ],
+  "marker_source": "def marker_proof(self):\n        path=self.cap/'.owned-reference-creator.json';key=canonical(str(path))\n        expected={'inner_pid':self.inner.pid,'nonce':self.nonce,'runner_sha256':self.runner_sha,'allocation_sha256':self.authority['sha256']}\n        raw=json.dumps(expected,sort_keys=True).encode('utf-8')\n        wanted={'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw)}\n        if self.marker_handle is None:\n            self.collector.parents(str(path));self.marker_handle=self.api.open_file(str(path))\n            # Pin original creator identity once. Never reseal a replacement alias.\n            self.marker_original=self.api.stat(self.marker_handle)\n        def current():\n            retained=self.api.stat(self.marker_handle)\n            if retained['deleted'] or retained['directory'] or retained['creation_filetime']<=0 or retained!=self.marker_original or self.api.final_path(self.marker_handle)!=key:\n                raise Refusal('retained creator marker identity/type/path changed')\n            fresh=self.api.open_file(str(path))\n            try:\n                now=self.api.stat(fresh)\n                if now['deleted'] or now['directory'] or self.api.final_path(fresh)!=key or now!=self.marker_original:\n                    raise Refusal('current creator marker alias differs from original retained identity')\n                # Fresh pathname and original retained object must BOTH contain the\n                # exact creator data, around every operation; no request Boolean.\n                hashed=self.api.hash_file(fresh,self.resource_guard)\n                if hashed!=wanted:raise Refusal('current creator marker contents differ')\n                after=self.api.stat(fresh)\n                if after!=now or after['deleted'] or after['directory'] or self.api.final_path(fresh)!=key:\n                    raise Refusal('current creator marker changed during hash')\n                # Re-open the pathname AFTER hashing as well. The retained handle\n                # can still name a removed/renamed object when DELETE sharing allows\n                # a replacement at its old pathname.\n                post=self.api.open_file(str(path))\n                try:\n                    poststat=self.api.stat(post)\n                    if poststat!=self.marker_original or poststat['deleted'] or poststat['directory'] or self.api.final_path(post)!=key:\n                        raise Refusal('creator marker current pathname changed after operation')\n                finally:self.api.close(post)\n                return after\n            finally:self.api.close(fresh)\n        before=current();hashed=self.api.hash_file(self.marker_handle,self.resource_guard)\n        if hashed!=wanted:raise Refusal('original retained creator marker contents differ')\n        after=current()\n        if before!=after or self.api.stat(self.marker_handle)!=self.marker_original or self.api.final_path(self.marker_handle)!=key:\n            raise Refusal('creator marker alias/retained identity changed across operation')\n        return {'native_identity':after,'hash':hashed,'exact_contents':expected}",
+  "evidence_cap_exact_GTE": true,
+  "retained_coverage": [
+    {
+      "platform": "linux",
+      "receipt": "59747627f36f8672e44d3d35b1ff4a53338612fc7e9f471a13afc59efc9508d9",
+      "retained_tests": 48,
+      "current_source_hashes": true,
+      "rerun": false
+    },
+    {
+      "platform": "windows",
+      "receipt": "9a17dedc26ef220214e90c33f8c46c386d8fe8c048a359cb279102184c217c34",
+      "retained_tests": 48,
+      "current_source_hashes": true,
+      "rerun": false
+    }
+  ],
+  "new_direct_test_methods": [
+    "MarkerProofTests.test_real_marker_proof_pins_birth_id_hash_and_fresh_path",
+    "MarkerProofTests.test_real_marker_replacement_same_data_never_reseals_original",
+    "MarkerProofTests.test_real_marker_unlink_and_rename_with_stale_retained_path_refuse",
+    "MarkerProofTests.test_real_marker_deleted_and_directory_never_accept",
+    "MarkerProofTests.test_real_marker_birth_or_renamed_retained_path_refuses",
+    "MarkerProofTests.test_real_marker_replacement_during_each_actual_hash_refuses",
+    "MarkerProofTests.test_real_marker_unlink_during_each_actual_hash_refuses",
+    "MarkerProofTests.test_real_marker_wrong_contents_and_missing_creation_birth_refuse",
+    "MarkerProofTests.test_exact_60000000_boundary_and_lower_control",
+    "MarkerProofTests.test_actual_native_stat_exposes_creation_filetime"
+  ],
+  "all_prior_test_AST_unchanged": true,
+  "frozen_505f_files_verified": 17,
+  "v1_block_review_sha256": "67bdcba217d0deb139bfcc850404aa75f45084e41f87905f5959d679f277e2d1",
+  "limitations": [
+    "Injected handle/path separation tests do not establish nativeWindows sharing/disposition/IPC compatibility or wallclockfeasibility",
+    "Initial native metadata is pinned on firstacceptedmarker open; no replacement reseal thereafter",
+    "Namespace/delete is not atomic; concurrentcleanupincident mustdisqualify/preserve remainingevidence",
+    "Futureouter/inner adoption/allocation schema/pins/proxycontext/deadline-arm/brokerclose-beforebackendclose wiring remainsrequired",
+    "No505f/profile4c/failed13bf/threecurrentreferences/nativequery/image/preflight/guest orproductionrecipe changed"
+  ]
+}
