@@ -132,7 +132,7 @@ def load_remap(path):
     mipmap22's mip22 data set, written by mipmap22/tables_resident.py parts). Only rows with why == remapped count."""
     m = {}
     for ln in Path(path).read_text().splitlines()[1:]:
-        f = ln.split('	')
+        f = ln.split('\t')
         if len(f) >= 4 and f[3] == 'remapped':
             room = int(f[0], 16)
             m[(room, *(int(x, 16) for x in f[1].split('-')))] = (room, *(int(x, 16) for x in f[2].split('-')))
@@ -161,6 +161,38 @@ def coverage(bin_path, tsvs, remap=None):
         if got < len(keys):
             short.append((room, len(keys), got))
     return short
+
+
+def cmd_extend(a):
+    """extend <out.bin> <base resident.bin> <remap.tsv|-> <list.tsv>...: the base file's records plus every listed key it
+    does not carry (directly or through the remap table), sorted and padded as pack does (lane codex22, 10-22: the
+    first-use keys on top of mip22's remapped file; deterministic: same inputs, same bytes)."""
+    out, base, rm = Path(a[0]), Path(a[1]), a[2]
+    remap = load_remap(rm) if rm != '-' else {}
+    b = base.read_bytes()
+    recs = set()
+    for o in range(0, len(b) - 15, 16):
+        r, w, h, f, c, v = struct.unpack_from('<4H2I', b, o)
+        if r or w:
+            recs.add((r, c, v, w, h, f))
+    have = {(r, c, v) for r, c, v, _w, _h, _f in recs}
+    added = 0
+    for t in a[3:]:
+        room = int(re.match(r'r([0-9a-f]+)', Path(t).stem).group(1), 16)
+        for ln in Path(t).read_text().splitlines()[1:]:
+            if not ln.strip():
+                continue
+            k, w, h, f, _n = ln.split('\t')
+            crc, fnv = (int(x, 16) for x in k.split('-'))
+            o = (room, crc, fnv)
+            if o in have or remap.get(o) in have:
+                continue
+            recs.add((room, crc, fnv, int(w), int(h), int(f))); have.add(o); added += 1
+    rs = sorted(recs)
+    out_b = b''.join(struct.pack('<4H2I', r, w, h, f, c, v) for r, c, v, w, h, f in rs)
+    out_b += b'\0' * (-len(out_b) % 512)
+    out.write_bytes(out_b)
+    print('%s: %d records (%d added), %d bytes' % (out, len(rs), added, len(out_b)))
 
 
 def cmd_check(a):
@@ -198,4 +230,4 @@ def cmd_release(a):
 
 
 if __name__ == '__main__':
-    {'list': cmd_list, 'pack': cmd_pack, 'check': cmd_check, 'release': cmd_release}[sys.argv[1]](sys.argv[2:])
+    {'list': cmd_list, 'pack': cmd_pack, 'check': cmd_check, 'release': cmd_release, 'extend': cmd_extend}[sys.argv[1]](sys.argv[2:])

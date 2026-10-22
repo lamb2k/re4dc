@@ -646,6 +646,12 @@ DATA['res18f'] = {'dc/resident.bin': RES18FD + '/resident.bin'}
 # in-play uploads of 13 rooms; 5,502 records, sha256 8fb526cc (= vram/resident/RELEASE.sha256). Last: replaces res18f's.
 RES22D = os.environ.get('RES22D', '/root/re4data/private/res22-20261022')
 DATA['res22'] = {'dc/resident.bin': RES22D + '/resident.bin'}
+# Lane codex22 (10-22, Codex audit unit, data only, no knob): lake22 = the lake trees' bark fix (Codex issue52-visuals
+# a8bd34686, repair_lake_bark.py): PS2 image 2 (bark) is GC image 4, so 406 bark triangles drew under the alpha-masked
+# branch material and the trees looked fragmented. st1/r10b.dar 39bd07e1 -> 8c84649b (same 5,808,128 B; 5,079 bytes of
+# BIN 0x1e change; all 529 PS2 triangles kept). Input = the release disc's r10b.dar (checked on cand-d3733810).
+LAKE22D = os.environ.get('LAKE22D', '/root/re4data/private/lake22-20261022')
+DATA['lake22'] = {'st1/r10b.dar': LAKE22D + '/r10b.dar'}
 # Lane inv23 (10-22, user-approved option A): sslz23 = ss/eng/ss_cmmn.lz + ss_pzzl.lz, the sub screen data files packed
 # by tools/d367/inv23/ss_lz.py set (one LZ4 block each; 1,443,744 -> 822,053 B; SHA256SUMS in the set). Read only by
 # SS_DATA_LZ=1 programs; the .dat files stay on the disc for every other program. Any place in the data line.
@@ -888,6 +894,13 @@ if os.path.isdir(MIP22BD):
     for _r in sorted(os.listdir(MIP22BD + '/dc/native')):
         DATA['mip22b']['dc/native/%s/ps2-world.r4pw' % _r] = '%s/dc/native/%s/ps2-world.r4pw' % (MIP22BD, _r)
     PAK_DERIVED['mip22b'] = MIP22BD + '/pak-derived.json'
+# res22c (lane codex22, 10-22, data only): dc/resident.bin = mip22's remapped file + the listed keys it lacks
+# (mip22b ships the same resident.bin and remap; vram/resident_keys.py extend <out> mip22/dc/resident.bin mip22/dc/resident-remap.tsv vram/resident/r*.tsv; same inputs,
+# same bytes). Carries the first-use keys (HUD ammo digits in r000, shot effects, first Ganado pictures). Ships the remap
+# table beside it for the coverage gate. After mip22 / mip22b; release discs only (not in KSETS, like mip22). 10-22: 5,520 records
+# (13 added: r000 HUD digits 2-9 + muzzle flash 148d2ff5 / 3a866b91; r100 983d1064 96f42df9; r101 cf2208cd), sha256 b81231ff.
+RES22CD = os.environ.get('RES22CD', '/root/re4data/private/res22c-20261022')
+DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
 
 
 if __name__ == '__main__':

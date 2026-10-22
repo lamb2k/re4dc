@@ -111,6 +111,19 @@ $(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_GANADO_LOD=1 -DRE4DC_GANADO_
 $(OBJDIR)/coarse_actor.o $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_GANADO_LOD=1
 endif
 
+# Ganados keep the gameplay LOD level through in-engine events (no package reload at event start/end).
+# Render-only approximation, default off (user 2026-10-22 option 1).
+GANADO_EVENT_KEEP_LOD ?= 0
+ifneq ($(filter 0 1,$(GANADO_EVENT_KEEP_LOD)),$(GANADO_EVENT_KEEP_LOD))
+$(error GANADO_EVENT_KEEP_LOD must be 0 or 1)
+endif
+ifeq ($(GANADO_EVENT_KEEP_LOD),1)
+ifneq ($(GANADO_LOD),1)
+$(error GANADO_EVENT_KEEP_LOD needs GANADO_LOD=1)
+endif
+$(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_GANADO_EVENT_KEEP_LOD=1
+endif
+
 # Selected square128 Leon body tile isolation. Experimental, render only.
 # No production recipe enables this. Data is emitted by texture_atlas21/runtime_header.py.
 LEON_ATLAS_SPLIT ?= 0
