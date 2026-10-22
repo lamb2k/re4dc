@@ -1,0 +1,9 @@
+from pathlib import Path
+import json,struct,hashlib,sys
+L=Path(r'C:\Game Dev\Emulators\codex-lanes\castle18');D=Path(r'C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21\recovered-j-content-20261021');out=D/'controlled-event002-native-barred-proof.json';assert not out.exists();sys.argv=['audit-controlled-event-closed.py','2'];source=(L/'audit-controlled-event-closed.py').read_text().split('sha=lambda p:')[0].replace('assert not out.exists()','assert out.exists()');h={};exec(source,h);read=h['read'];r=[]
+for a in h['actors']:
+ if a['id']!=0x4e:continue
+ p=int(a['ptr'],16);pos0=list(struct.unpack('<3f',read(p+0x5f4,12)));height=struct.unpack('<f',read(p+0x600,4))[0];r.append(dict(actor=a,status=struct.unpack('<i',read(p+0x61c,4))[0],open_flag=struct.unpack('<i',read(p+0x620,4))[0],etc_no=read(p+0x62e,1)[0],closed_position=pos0,height=height,animated_open_target_y=pos0[1]+height,actual_y=a['pos'][1]))
+gate=next(a for a in r if a['etc_no']==0x10);assert gate['status']==1 and gate['open_flag']==1 and abs(gate['actual_y']-gate['animated_open_target_y'])<1
+proof=dict(scope='Read-only correction of controlled002 typed barred observation. Runtime actor id4E is distinct from ETC resource alias4C. Existing raw observer incorrectly castid4C, preserved unchanged. No guest/replay/flags/statewrites. FrozenDWARF: cEmx3E0 unionoffset992; EmBarredWorkStatus572/Open_flag576/Etc_no590 relative =>61c/620/62e. Animated fullheight measuredfromHeight, notconstant2500.',state_sha256=hashlib.sha256((D/'route-walk-controlled-event002/data/disc.state').read_bytes()).hexdigest(),source=h['u32'](h['pg']+0x51e4),correct_native_barred=gate,full_open=True,not_Smd53_door='This is lever-driven barred gate; separate from controlled001Smd53+2600 door proof.')
+out.write_text(json.dumps(proof,indent=2)+'\n');print(json.dumps(proof,indent=2))

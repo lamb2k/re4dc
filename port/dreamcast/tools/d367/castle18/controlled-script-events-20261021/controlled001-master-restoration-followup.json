@@ -1,0 +1,10 @@
+{
+  "scope": "Postrestore nativefileidentity/linkcount andKEEP metadata only; no imagebytesmodified.",
+  "time": "2026-10-21T21:05:25.588428-04:00",
+  "file_id": 562949958397416,
+  "device": 14332939485708580193,
+  "hardlink_count_after_restore": 197,
+  "master_keep": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master\\KEEP",
+  "source": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\segments\\route-walk294\\track03.iso",
+  "samefile": true
+}

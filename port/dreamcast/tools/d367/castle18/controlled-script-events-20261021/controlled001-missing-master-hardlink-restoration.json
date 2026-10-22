@@ -1,0 +1,10 @@
+{
+  "scope": "Failedprelaunch no process launched. Missingmasterpathname restored asNTFShardlink toexistingowned294 exactimage; no bytescopied/deleted/rebuilt/retargeted. Emptyfailedsegmentrenamed/preserved.",
+  "time": "2026-10-21T21:04:51.851717-04:00",
+  "source": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\segments\\route-walk294\\track03.iso",
+  "restored": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master\\track03.iso",
+  "sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "same_file_id": 562949958397416,
+  "bytes": 1018789888,
+  "preserved_failed_segment": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\segments\\route-walk-controlled-event001-prelaunch-missing-master"
+}

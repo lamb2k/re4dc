@@ -1,0 +1,9 @@
+{
+  "scope": "293 actualcombat sourceguard refusal (zero rounds) and normalemulatorexit are separate from SUPERVISORFAILURE. ReceiptgenericAssertionError inunconditionalpostexitverify cannotdistinguish exactAPI; no specificQueryfailure claimed.",
+  "runner_raw_bytes_sha256": "f841df5bf9d16d686d569826b3d0901d948907bfbb68afd631a10be147927300",
+  "runner_canonical_lf_sha256": "ab0f6f12e8a8e42054a34e03a865a5ac9a38d63b6f4588e17cb40b86fc2477cb",
+  "guard_receipt": "actual293-owned-resource-guard.json",
+  "supervisor_qualified": false,
+  "emulator_exit_code": 0,
+  "current_state": "ffccc76c0546a8a200ad5dd398317b7abc345df8f7881f884f26fb168ee3ef24"
+}

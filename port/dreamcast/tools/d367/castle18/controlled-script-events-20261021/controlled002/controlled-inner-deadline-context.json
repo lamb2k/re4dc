@@ -1,0 +1,915 @@
+{
+  "scope": "CONTROLLED teleport/scripted-event coverage; not authentic combat or hardware acceptance",
+  "source_frame_interval": [
+    575,
+    578
+  ],
+  "observation": {
+    "pg": 2352652060,
+    "process_age": 38.98810499004321,
+    "frame": 574,
+    "room": "0x201",
+    "phase": [
+      3,
+      0
+    ],
+    "Stop": "0x0",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "player_pos": [
+      16183.3974609375,
+      1999.9998779296875,
+      -30610.505859375
+    ],
+    "status1": "0x204",
+    "room_flags0": "0x18000000",
+    "door_flags": "0x884002b4",
+    "saved_RSF": "0x84000000",
+    "door_Smd53": "0x8cad47f0",
+    "door_y": 2000.0,
+    "door_delta_y": 0.0,
+    "AEV0A_enabled": true,
+    "areas": {
+      "0x80": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x81": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x82": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x83": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x84": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x85": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x86": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x87": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x88": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x89": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x8a": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x8b": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x8c": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x8e": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x8f": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x90": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x94": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x95": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x96": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x0": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x1": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x2": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x3": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x4": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x5": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x6": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x7": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x8": {
+        "enabled": true,
+        "func": "0x8c906bf8"
+      },
+      "0x9": {
+        "enabled": true,
+        "func": "0x8c9072c4"
+      },
+      "0xa": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0xb": {
+        "enabled": true,
+        "func": "0x8c906d3c"
+      },
+      "0xc": {
+        "enabled": false,
+        "func": "0x8c906e94"
+      },
+      "0xd": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0xe": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0xf": {
+        "enabled": true,
+        "func": "0x8c90736c"
+      },
+      "0x10": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x11": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x12": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x13": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x14": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x15": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x16": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x17": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x18": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x19": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x1a": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x1b": {
+        "enabled": true,
+        "func": "0x8c90809c"
+      },
+      "0x1c": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x1d": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x1e": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x1f": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x20": {
+        "enabled": true,
+        "func": "0x8c906dfc"
+      },
+      "0x21": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x22": {
+        "enabled": true,
+        "func": "0x8c907b88"
+      },
+      "0x23": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x24": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x25": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x26": {
+        "enabled": true,
+        "func": "0x8c14edec"
+      },
+      "0x27": {
+        "enabled": true,
+        "func": "0x8c14edec"
+      },
+      "0x28": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x29": {
+        "enabled": false,
+        "func": "0x0"
+      }
+    },
+    "AEV0A": "0x8ca7c248",
+    "actors": [
+      {
+        "ptr": "0x8ccc90c0",
+        "id": 27,
+        "type": 7,
+        "source_list": 92,
+        "hp": 1000,
+        "be_flag": "0x2002077",
+        "routines": [
+          1,
+          16,
+          1,
+          0
+        ],
+        "pos": [
+          41452.4375,
+          1999.9967041015625,
+          -32548.1953125
+        ]
+      },
+      {
+        "ptr": "0x8ccbe6a0",
+        "id": 27,
+        "type": 7,
+        "source_list": 91,
+        "hp": 1000,
+        "be_flag": "0x2002077",
+        "routines": [
+          1,
+          16,
+          1,
+          0
+        ],
+        "pos": [
+          42057.8515625,
+          1999.9971923828125,
+          -35164.046875
+        ]
+      },
+      {
+        "ptr": "0x8ccbd8c0",
+        "id": 27,
+        "type": 7,
+        "source_list": 87,
+        "hp": 1000,
+        "be_flag": "0x2002077",
+        "routines": [
+          1,
+          19,
+          1,
+          0
+        ],
+        "pos": [
+          41489.01171875,
+          1999.9967041015625,
+          -29466.53125
+        ]
+      },
+      {
+        "ptr": "0x8ccb9de0",
+        "id": 76,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          -94.35804748535156,
+          11558.4296875,
+          -17263.455078125
+        ]
+      },
+      {
+        "ptr": "0x8ccb9000",
+        "id": 76,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          26246.85546875,
+          2399.994873046875,
+          -42114.640625
+        ]
+      },
+      {
+        "ptr": "0x8cc22560",
+        "id": 27,
+        "type": 10,
+        "source_list": 86,
+        "hp": 4000,
+        "be_flag": "0x2002077",
+        "routines": [
+          1,
+          94,
+          1,
+          0
+        ],
+        "pos": [
+          34794.53515625,
+          -2000.0,
+          -41582.46875
+        ]
+      },
+      {
+        "ptr": "0x8cc21780",
+        "id": 77,
+        "type": 1,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x2002067",
+        "routines": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "pos": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "ptr": "0x8caf2460",
+        "id": 77,
+        "type": 1,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x2002067",
+        "routines": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "pos": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "ptr": "0x8caf1680",
+        "id": 71,
+        "type": 5,
+        "source_list": 255,
+        "hp": 1,
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          27006.79296875,
+          4717.68505859375,
+          -30000.0
+        ]
+      },
+      {
+        "ptr": "0x8caed0e0",
+        "id": 67,
+        "type": 6,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          5000.0,
+          9947.3828125,
+          -40081.921875
+        ]
+      },
+      {
+        "ptr": "0x8caec300",
+        "id": 67,
+        "type": 6,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          25380.130859375,
+          2900.0,
+          -32259.15625
+        ]
+      },
+      {
+        "ptr": "0x8caea7a0",
+        "id": 65,
+        "type": 2,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          29895.314453125,
+          -2000.0,
+          -40925.0078125
+        ]
+      },
+      {
+        "ptr": "0x8cae99c0",
+        "id": 67,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          17529.44921875,
+          2000.0,
+          -34672.99609375
+        ]
+      },
+      {
+        "ptr": "0x8cae8700",
+        "id": 67,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          17471.1953125,
+          2000.0,
+          -36650.9453125
+        ]
+      },
+      {
+        "ptr": "0x8cae7920",
+        "id": 71,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          29220.837890625,
+          628.8079833984375,
+          -45000.0
+        ]
+      },
+      {
+        "ptr": "0x8cae5dc0",
+        "id": 71,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          19132.234375,
+          628.8079833984375,
+          -38310.68359375
+        ]
+      },
+      {
+        "ptr": "0x8cae4fe0",
+        "id": 65,
+        "type": 1,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          10103.6259765625,
+          2000.0,
+          -29438.068359375
+        ]
+      },
+      {
+        "ptr": "0x8cae3d20",
+        "id": 67,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          42341.484375,
+          2000.0,
+          -28604.212890625
+        ]
+      },
+      {
+        "ptr": "0x8cae2f40",
+        "id": 67,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          41131.06640625,
+          2000.0,
+          -28604.212890625
+        ]
+      },
+      {
+        "ptr": "0x8cae19a0",
+        "id": 78,
+        "type": 1,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x2002877",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          41310.328125,
+          4300.0,
+          -49305.93359375
+        ]
+      },
+      {
+        "ptr": "0x8cae0bc0",
+        "id": 67,
+        "type": 7,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          8374.99609375,
+          1999.9990234375,
+          -18597.158203125
+        ]
+      },
+      {
+        "ptr": "0x8cadf900",
+        "id": 67,
+        "type": 7,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          6749.9970703125,
+          1999.9990234375,
+          -18597.158203125
+        ]
+      },
+      {
+        "ptr": "0x8cadeb20",
+        "id": 67,
+        "type": 7,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          -6749.9951171875,
+          1999.9990234375,
+          -18597.158203125
+        ]
+      },
+      {
+        "ptr": "0x8caa0ec0",
+        "id": 67,
+        "type": 7,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          -8374.9912109375,
+          1999.9990234375,
+          -18597.158203125
+        ]
+      },
+      {
+        "ptr": "0x8caa00e0",
+        "id": 0,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1440,
+        "be_flag": "0xf002077",
+        "routines": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "pos": [
+          16183.2509765625,
+          1999.9993896484375,
+          -30610.62109375
+        ]
+      },
+      {
+        "ptr": "0x8caf01e0",
+        "id": 75,
+        "type": 0,
+        "source_list": 255,
+        "hp": 0,
+        "be_flag": "0x2002877",
+        "routines": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "pos": [
+          34738.12109375,
+          -500.0,
+          -40000.0
+        ]
+      },
+      {
+        "ptr": "0x8caef400",
+        "id": 3,
+        "type": 0,
+        "source_list": 255,
+        "hp": 600,
+        "be_flag": "0x2002077",
+        "routines": [
+          0,
+          0,
+          2,
+          0
+        ],
+        "pos": [
+          16477.015625,
+          1999.9993896484375,
+          -30332.13671875
+        ]
+      },
+      {
+        "ptr": "0x8cccff60",
+        "id": 66,
+        "type": 0,
+        "source_list": 255,
+        "hp": 0,
+        "be_flag": "0x2002067",
+        "routines": [
+          1,
+          3,
+          0,
+          0
+        ],
+        "pos": [
+          -86.0,
+          -28.0,
+          -6.0
+        ]
+      }
+    ],
+    "switch": {
+      "ptr": "0x8caf01e0",
+      "id": 75,
+      "type": 0,
+      "source_list": 255,
+      "hp": 0,
+      "be_flag": "0x2002877",
+      "routines": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "pos": [
+        34738.12109375,
+        -500.0,
+        -40000.0
+      ],
+      "opened": 1,
+      "state": 1,
+      "etc_no": 28
+    },
+    "barred": [
+      {
+        "ptr": "0x8ccb9de0",
+        "id": 76,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          -94.35804748535156,
+          11558.4296875,
+          -17263.455078125
+        ],
+        "status": -1079206969,
+        "open_flag": -1082930286,
+        "etc_no": 243
+      },
+      {
+        "ptr": "0x8ccb9000",
+        "id": 76,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          26246.85546875,
+          2399.994873046875,
+          -42114.640625
+        ],
+        "status": 1073024135,
+        "open_flag": -1077115610,
+        "etc_no": 246
+      }
+    ],
+    "Garrador": {
+      "ptr": "0x8cc22560",
+      "hp": 4000,
+      "be_flag": "0x2002077",
+      "list_no": 86,
+      "routines": [
+        1,
+        94,
+        1,
+        0
+      ]
+    },
+    "wave_lists_seen": [
+      87,
+      91,
+      92
+    ],
+    "baseline_RSF5_clear_seen": true,
+    "event_hold_seen": true
+  },
+  "pngs": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event002\\shots\\controlled-inner-deadline\\frames\\fb0.png",
+      "sha256": "145915e4b50efd4bd1bd6b9c36ebd0f6f1a7b9b03b90a7f374f7776c3560ba0d"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event002\\shots\\controlled-inner-deadline\\frames\\fb1.png",
+      "sha256": "ac6530e5576162dcd10a679b7aad50377571a3dd385865414aa462566c78b0a6"
+    }
+  ]
+}

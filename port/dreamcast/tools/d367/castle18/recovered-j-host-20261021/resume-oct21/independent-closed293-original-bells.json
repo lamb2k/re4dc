@@ -1,0 +1,93 @@
+{
+  "scope": "Read-only exact closed293 state, unique RAM offset from four ELF code anchors. Hero-to-target and boss-center planar geometry only, not source collision/visibility or muzzle/fire qualification.",
+  "state_sha256": "ffccc76c0546a8a200ad5dd398317b7abc345df8f7881f884f26fb168ee3ef24",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "source": 29083,
+  "health": [
+    1200,
+    1200,
+    90,
+    600
+  ],
+  "hero_pos": [
+    18679.85546875,
+    -2000.004150390625,
+    -44815.25390625
+  ],
+  "boss_pos": [
+    24288.578125,
+    -2000.003662109375,
+    -47932.0546875
+  ],
+  "bells": [
+    {
+      "obj": "0x8caddab8",
+      "position": [
+        26972.0,
+        178.0,
+        -50004.0
+      ],
+      "routines": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "ringTimer": 0,
+      "hit": "0x8cc28b00",
+      "hit_id": "4d01",
+      "hitpartsNo": 1,
+      "hitofs": [
+        0.0,
+        -650.0,
+        0.0
+      ],
+      "width": 300.0,
+      "height": 50.0,
+      "hitworld": [
+        26972.0,
+        -472.0,
+        -50004.0
+      ],
+      "hero_planar_range": 9781.755821556024,
+      "hero_target_bearing": 2.1299292964067065,
+      "boss_planar_line_projection_fraction": 0.6550880778027453,
+      "boss_center_planar_line_distance": 332.9949428024309
+    },
+    {
+      "obj": "0x8cadd6e0",
+      "position": [
+        27273.0,
+        178.0,
+        -33277.0
+      ],
+      "routines": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "ringTimer": 0,
+      "hit": "0x8cc27d20",
+      "hit_id": "4d01",
+      "hitpartsNo": 1,
+      "hitofs": [
+        0.0,
+        -650.0,
+        0.0
+      ],
+      "width": 300.0,
+      "height": 50.0,
+      "hitworld": [
+        27273.0,
+        -472.0,
+        -33277.0
+      ],
+      "hero_planar_range": 14386.571382370616,
+      "hero_target_bearing": 0.6401343017222364,
+      "boss_planar_line_projection_fraction": 0.05910964160305952,
+      "boss_center_planar_line_distance": 6359.957717101779
+    }
+  ],
+  "objects_visited": 110
+}

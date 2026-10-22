@@ -1,0 +1,42 @@
+{
+  "name": "castle21-CONTROLLED-r201-events001",
+  "status": "RUN_COMPLETE",
+  "start_utc": "2026-10-22T01:04:53.032656+00:00",
+  "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+  "tracks": {
+    "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+    "kind": "release",
+    "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+  },
+  "seconds": 41,
+  "vmu": null,
+  "keys": null,
+  "stop": null,
+  "fixtures": {
+    "warp": {
+      "src": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\controlled-event001-warp.txt",
+      "bytes": 264,
+      "sha256": "8f84bc7fbf8e3b28bf17da641d5b7769728c602dfb5baa6b7183c0b756d47d46"
+    },
+    "pad": {
+      "src": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "w11": {
+      "src": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "errors": [],
+  "key_log": [],
+  "align": false,
+  "emu": "harness",
+  "emu_env": {},
+  "early_emulator_exit": 0,
+  "log_idle_s": 1.0,
+  "end_utc": "2026-10-22T01:05:29.123067+00:00",
+  "elapsed_s": 36.0,
+  "emulator_exited": true
+}

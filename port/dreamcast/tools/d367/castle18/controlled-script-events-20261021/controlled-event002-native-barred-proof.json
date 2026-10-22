@@ -1,0 +1,40 @@
+{
+  "scope": "Read-only correction of controlled002 typed barred observation. Runtime actor id4E is distinct from ETC resource alias4C. Existing raw observer incorrectly castid4C, preserved unchanged. No guest/replay/flags/statewrites. FrozenDWARF: cEmx3E0 unionoffset992; EmBarredWorkStatus572/Open_flag576/Etc_no590 relative =>61c/620/62e. Animated fullheight measuredfromHeight, notconstant2500.",
+  "state_sha256": "66d8f6129effca32fbe727cc7295558110154eb2160e82f9c4338f7ef91e9116",
+  "source": 578,
+  "correct_native_barred": {
+    "actor": {
+      "ptr": "0x8cae19a0",
+      "id": 78,
+      "type": 1,
+      "source_list": 255,
+      "hp": 1000,
+      "vtable": "0x8c2ca2e4",
+      "be_flag_native": "0x2002877",
+      "routines": [
+        1,
+        0,
+        1,
+        0
+      ],
+      "pos": [
+        41310.328125,
+        4300.0,
+        -49305.93359375
+      ]
+    },
+    "status": 1,
+    "open_flag": 1,
+    "etc_no": 16,
+    "closed_position": [
+      41310.328125,
+      2000.0,
+      -49305.93359375
+    ],
+    "height": 2300.0,
+    "animated_open_target_y": 4300.0,
+    "actual_y": 4300.0
+  },
+  "full_open": true,
+  "not_Smd53_door": "This is lever-driven barred gate; separate from controlled001Smd53+2600 door proof."
+}
