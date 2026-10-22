@@ -706,6 +706,7 @@ void systemHardReset()
 }
 
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_RESET_RETIRE_BEFORE_HEAPS
+extern "C" void re4dc_room_leave();
 extern "C" void re4dc_motion_retire_all();
 extern "C" void re4dc_effect_retire_room();
 extern "C" void re4dc_ui_retire_room();
@@ -724,8 +725,13 @@ void systemSoftReset()
     SndSoftReset();
     DbmenuModuleInit();
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_RESET_RETIRE_BEFORE_HEAPS
-    // Restore a borrowed UI and release source modules while their heaps live.
-    // Keep the existing common epilog order; native leftovers retire afterward.
+    // Restore suspended storage and stop its producers before native retirement.
+    // The common UI/task calls below are idempotent after this prephase.
+    SubScreenExitCore(&SubScreenWk);
+    TaskAllClear();
+    re4dc_room_leave();
+    // Preserve per-module cleanup order while all source heaps are still alive.
+    // The unconditional trio also covers a reset without an active Room4 owner.
     systemResetCommon();
     re4dc_motion_retire_all();
     re4dc_effect_retire_room();
