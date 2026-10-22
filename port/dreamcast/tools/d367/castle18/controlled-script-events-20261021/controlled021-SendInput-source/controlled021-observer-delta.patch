@@ -1,0 +1,93 @@
+--- frozen020
++++ source021
+@@ -1 +1 @@
+-"""CONTROLLED exact019state alreadyatnative204Door4: acknowledgedowned-windowA to209, remainingcurrententryGoto thenphysicalDoor1/originalleadercut. No actor/room/outcome writes."""
++"""CONTROLLED exact020state alreadyatnative204Door4: experimentalSendInputA to209, remainingcurrententryGoto thenphysicalDoor1/originalleadercut. No actor/room/outcome writes."""
+@@ -5 +5 @@
+-L=Path(__file__).parent;D=Path(r'C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21\recovered-j-content-20261021');cap=Path(sys.argv[1]).resolve();assert cap==D/'route-walk-controlled-ch32-door020'
++L=Path(__file__).parent;D=Path(r'C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21\recovered-j-content-20261021');cap=Path(sys.argv[1]).resolve();assert cap==D/'route-walk-controlled-ch32-door021'
+@@ -19,0 +20,12 @@
++class KeyboardInput(C.Structure):
++ _fields_=[('wVk',W.WORD),('wScan',W.WORD),('dwFlags',W.DWORD),('time',W.DWORD),('dwExtraInfo',C.c_size_t)]
++class MouseInput(C.Structure):
++ _fields_=[('dx',W.LONG),('dy',W.LONG),('mouseData',W.DWORD),('dwFlags',W.DWORD),('time',W.DWORD),('dwExtraInfo',C.c_size_t)]
++class InputUnion(C.Union):
++ _fields_=[('ki',KeyboardInput),('mi',MouseInput)]
++class NativeInput(C.Structure):
++ _anonymous_=('value',)
++ _fields_=[('type',W.DWORD),('value',InputUnion)]
++assert C.sizeof(KeyboardInput)==24 and C.sizeof(MouseInput)==32 and C.sizeof(NativeInput)==40 and NativeInput.value.offset==8
++u.SendInput.argtypes=[W.UINT,C.POINTER(NativeInput),C.c_int];u.SendInput.restype=W.UINT
++u.GetAsyncKeyState.argtypes=[C.c_int];u.GetAsyncKeyState.restype=W.SHORT
+@@ -74 +86 @@
+- return bool(row and previous and row.get('live_native_code_anchors_verified')is True and row.get('phase')==[3,0]and row.get('room')in['0x204','0x209']and row.get('pg')==previous.get('pg')and current_ram==previous.get('RAM_base')and row.get('frame',0)>previous.get('frame',0)and row.get('frame',0)>=3684)
++ return bool(row and previous and row.get('live_native_code_anchors_verified')is True and row.get('phase')==[3,0]and row.get('room')in['0x204','0x209']and row.get('pg')==previous.get('pg')and current_ram==previous.get('RAM_base')and row.get('frame',0)>previous.get('frame',0)and row.get('frame',0)>=4761)
+@@ -243,0 +256,11 @@
++def async_x_state():
++ value=int(u.GetAsyncKeyState(0x58))
++ return dict(vk='0x58',signed_short=value,high_bit_down=bool(value&0x8000),scope='OS asynchronous key state; separate from nativeKey/SDLreceive')
++
++def send_x_input(keyup):
++ event=NativeInput();event.type=1;event.ki=KeyboardInput(0,0x2d,0x8|(0x2 if keyup else 0),0,0)
++ C.set_last_error(0);count=int(u.SendInput(1,C.byref(event),C.sizeof(NativeInput)));error=C.get_last_error()
++ proof=dict(keyup=keyup,requested=1,accepted_count=count,last_error=error,cbSize=C.sizeof(NativeInput),wVk=0,wScan='0x2d',flags=hex(event.ki.dwFlags),not_native_ack=True)
++ events.append(dict(ordinary_scan_code_SendInput=proof,process_age=age()))
++ return count==1
++
+@@ -245 +268 @@
+- check();row=sample();result=dict(pressed=False,acknowledged=False,stage=stage)
++ check();row=sample();result=dict(pressed=False,acknowledged=False,stage=stage,delivery='experimental SendInput scan-code; no causalfix claim')
+@@ -253 +276 @@
+- assert u.EnumWindows(cb,0)and len(wins)==1;hwnd=wins[0];pressed=False;ack=[];vk=ord('X');scan=0x2d
++ assert u.EnumWindows(cb,0)and len(wins)==1;hwnd=wins[0];pressed=False;ack=[];os_states=[]
+@@ -256 +279 @@
+-  check();assert memory_ready and age()<32;row=sample();focus=window_evidence(hwnd)
++  check();assert memory_ready and age()<32;row=sample();focus=window_evidence(hwnd);baseline=async_x_state();os_states.append(baseline)
+@@ -258 +281,13 @@
+-  events.append(dict(immediate_native_door_A_recheck=row,stage=stage,owned_window_evidence=focus));assert u.PostMessageW(hwnd,0x100,vk,1|(scan<<16));pressed=True;result['pressed']=True;until=time.monotonic()+.75
++  if baseline['high_bit_down']:
++   events.append(dict(preexisting_X_down=baseline,no_input_or_keyup=True,stage=stage));return result
++  events.append(dict(immediate_native_door_A_recheck=row,stage=stage,owned_window_evidence=focus,OS_async_X_before=baseline))
++  # Only the verified guest foreground receives this global ordinary-key experiment.
++  # A source action and the current key state are rechecked immediately, no capture intervenes.
++  check();focus=window_evidence(hwnd)
++  if not verified_owned_focus(focus):return result
++  baseline=async_x_state();os_states.append(baseline)
++  if baseline['high_bit_down']:
++   events.append(dict(preexisting_X_down=baseline,no_input_or_keyup=True,stage=stage));return result
++  pressed=send_x_input(False);result['pressed']=pressed
++  if not pressed:return result
++  until=time.monotonic()+.75
+@@ -260 +295,3 @@
+-   check();assert age()<40.5;proof=native_input_ack(row,stage);ack.append(proof)
++   check();assert age()<40.5;focus=window_evidence(hwnd)
++   if not verified_owned_focus(focus):events.append(dict(owned_focus_lost_during_hold=focus,release_own_key=True));break
++   os_states.append(async_x_state());proof=native_input_ack(row,stage);ack.append(proof)
+@@ -264,3 +301,5 @@
+-  if pressed and k.WaitForSingleObject(h,0)==258:
+-   check();p=W.DWORD();u.GetWindowThreadProcessId(hwnd,C.byref(p));assert p.value==owner['pid'];assert u.PostMessageW(hwnd,0x101,vk,1|(scan<<16)|0xc0000000)
+- if pressed:events.append(dict(ordinary_owned_UI_pulse=('native204-Door4-A'if stage==1 else'native209-physicalDoor1-A'),stage=stage,maximum_hold_seconds=.75,one_keydown_only=True,result=result,ack_observations=ack,owned_window_after_release=window_evidence(hwnd),process_age=age()))
++  # Release our accepted injection even on lostfocus/process exit/read error.
++  # No keyup at all if user X was already down or keydown was not accepted.
++  if pressed:
++   released=send_x_input(True);events.append(dict(ordinary_own_X_finally_release=bool(released),stage=stage));assert released,'Own injected X keyup was not accepted'
++ if pressed:events.append(dict(ordinary_owned_UI_pulse=('native204-Door4-A'if stage==1 else'native209-physicalDoor1-A'),stage=stage,maximum_hold_seconds=.75,one_keydown_only=True,result=result,ack_observations=ack,OS_async_X_observations=os_states,OS_async_X_after_release=async_x_state(),owned_window_after_release=window_evidence(hwnd),process_age=age()))
+@@ -267,0 +307 @@
++
+@@ -278 +318 @@
+- (shot/'controlled-context.json').write_text(json.dumps(dict(scope='CONTROLLED actual019state; existing config command setup separate from original204Door4/209physicalDoor1/leader-event outputs.',observation=row,before=before,after=after,pngs=[dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest())for p in(shot/'frames').glob('*.png')]),indent=2)+'\n')
++ (shot/'controlled-context.json').write_text(json.dumps(dict(scope='CONTROLLED actual020state; existing config command setup separate from original204Door4/209physicalDoor1/leader-event outputs.',observation=row,before=before,after=after,pngs=[dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest())for p in(shot/'frames').glob('*.png')]),indent=2)+'\n')
+@@ -281 +321 @@
+- allocation=json.loads((L/'DOOR020-ROOT-ALLOCATION.json').read_text(encoding='utf-8'));assert allocation['allocated020']is True and allocation['allow_debug_goto_command_writes']is True and allocation['allow_owned_window_focus']is True and allocation['exclusive_gui_input']is True and allocation['maximum_successful_command_bytes']==29 and allocation['observer_sha256']==hashlib.sha256(Path(__file__).read_bytes()).hexdigest() and allocation['write_allowlist']==WRITE_ALLOWLIST, 'Exact root-owned debug command allocation required'
++ allocation=json.loads((L/'DOOR021-ROOT-ALLOCATION.json').read_text(encoding='utf-8'));assert allocation['allocated021']is True and allocation['allow_debug_goto_command_writes']is True and allocation['allow_owned_window_focus']is True and allocation['allow_scan_code_SendInput']is True and allocation['exclusive_gui_input']is True and allocation['maximum_successful_command_bytes']==29 and allocation['observer_sha256']==hashlib.sha256(Path(__file__).read_bytes()).hexdigest() and allocation['write_allowlist']==WRITE_ALLOWLIST, 'Exact root-owned debug command allocation required'
+@@ -286 +326 @@
+- assert re.search(r'(?m)^Dreamcast\.AutoLoadState = yes\s*$',(cap/'emu.cfg').read_text()),'Exact019 fullstate continuation requires AutoLoadState=yes'
++ assert re.search(r'(?m)^Dreamcast\.AutoLoadState = yes\s*$',(cap/'emu.cfg').read_text()),'Exact020 fullstate continuation requires AutoLoadState=yes'
+@@ -291,2 +331,2 @@
+- events.append(dict(inherited017_firstcut_return=True,inherited019_placement_already_consumed=True,state_sha256='669b920f06e89403a15d3796021878c39ee9807fe020487e6a8666220f635631',no_replay_015_drain_or_017_firstcut=True,controlled_setup_maximum_successful_bytes=29))
+- with(cap/'controlled-door020-observations.jsonl').open('x')as out:
++ events.append(dict(inherited017_firstcut_return=True,inherited020_placement_already_consumed=True,state_sha256='eba7a32afa7c59381ec7ce36918ea706feea187757e8fbb40a2fe5f2695ac008',no_replay_015_drain_or_017_firstcut=True,controlled_setup_maximum_successful_bytes=29))
++ with(cap/'controlled-door021-observations.jsonl').open('x')as out:
+@@ -352 +392 @@
+- if cap.exists():(cap/'controlled-door020-observer-summary.json').write_text(json.dumps(dict(scope=__doc__,last=last,events=events,owned_close_sent=closed_sent,source_fields_not_acceptance_alone=True,controlled_setup_not_event_completion=True,read_failure_count=read_failure_count,region_failure_count=region_failure_count,read_diagnostics=read_diagnostics),indent=2)+'\n')
++ if cap.exists():(cap/'controlled-door021-observer-summary.json').write_text(json.dumps(dict(scope=__doc__,last=last,events=events,owned_close_sent=closed_sent,source_fields_not_acceptance_alone=True,controlled_setup_not_event_completion=True,read_failure_count=read_failure_count,region_failure_count=region_failure_count,read_diagnostics=read_diagnostics),indent=2)+'\n')
