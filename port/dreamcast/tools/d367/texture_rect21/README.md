@@ -144,3 +144,15 @@ C01/C02 failures/limits remain intact. The conditional same-program B control
 must pass actual camera/player/health/source/control and counter comparison
 before any matched timing statement. These are Flycast proxy observations;
 release checks and physical Dreamcast acceptance remain separate.
+
+The conditional B01 control completed42.0804155 seconds,16,789,535 maximum
+capture bytes, with fresh userdata and the same a585/e08 program/observer.
+`matched-farm-qualification.json` binds independent original-pack descriptors:
+nine128x64 RGB565/VQ4096 no-mip originals are live on owned known bases in66
+coherent B tables. C uses the corresponding nine64x64 mip/VQ3414 candidates.
+Strict comparison fails47/120 source-tick pose/camera sets in the predeclared
+241–360 window; boundaries241/300 differ,301/360 match. Those later matching
+boundaries do not replace the rejected comparison. No speedup or paired timing
+delta is reported. Sampled disc counters stay constant240→360 in each arm,
+but source-frame coherence is not a completed-state phase latch. The benchmark
+lane owns that next source-only audit. Both staged image hashes are unchanged.
