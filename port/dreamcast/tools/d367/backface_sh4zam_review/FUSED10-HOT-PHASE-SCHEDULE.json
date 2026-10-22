@@ -1,0 +1,229 @@
+{
+  "scope": "MODELLED actual compile10 one representative fused phase, default no cache/memory/TA model",
+  "phase_cycles": 18,
+  "phase": [
+    {
+      "pc": "0x100d5a",
+      "instruction": "rotcl\tr6",
+      "cycle": 0,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": false
+    },
+    {
+      "pc": "0x100d5c",
+      "instruction": "fmov\tfr10,fr3",
+      "cycle": 0,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": true
+    },
+    {
+      "pc": "0x100d5e",
+      "instruction": "bra\t100d88 <_shz_strip_walk_sq+0xd82>",
+      "cycle": 1,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": false
+    },
+    {
+      "pc": "0x100d60",
+      "instruction": "fmov\tfr11,fr1",
+      "cycle": 1,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": true
+    },
+    {
+      "pc": "0x100d88",
+      "instruction": "dt\tr13",
+      "cycle": 3,
+      "extra_wait_cycles": 1,
+      "waiting_registers": [],
+      "paired": false
+    },
+    {
+      "pc": "0x100d8a",
+      "instruction": "bt\t100dbe <_shz_strip_walk_sq+0xdb8>",
+      "cycle": 4,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": false
+    },
+    {
+      "pc": "0x100d8c",
+      "instruction": "fsub\tfr13,fr2",
+      "cycle": 4,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": true
+    },
+    {
+      "pc": "0x100d8e",
+      "instruction": "mov.b\t@r4+,r0",
+      "cycle": 5,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": false
+    },
+    {
+      "pc": "0x100d90",
+      "instruction": "fsub\tfr12,fr3",
+      "cycle": 5,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": true
+    },
+    {
+      "pc": "0x100d92",
+      "instruction": "fsub\tfr12,fr0",
+      "cycle": 6,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": false
+    },
+    {
+      "pc": "0x100d94",
+      "instruction": "extu.b\tr0,r0",
+      "cycle": 7,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": false
+    },
+    {
+      "pc": "0x100d96",
+      "instruction": "fsub\tfr13,fr1",
+      "cycle": 7,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": true
+    },
+    {
+      "pc": "0x100d98",
+      "instruction": "fmul\tfr3,fr2",
+      "cycle": 8,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": false
+    },
+    {
+      "pc": "0x100d9a",
+      "instruction": "mov.b\t@(r0,r7),r1",
+      "cycle": 8,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": true
+    },
+    {
+      "pc": "0x100d9c",
+      "instruction": "shld\tr11,r0",
+      "cycle": 9,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": false
+    },
+    {
+      "pc": "0x100d9e",
+      "instruction": "and\tr1,r2",
+      "cycle": 10,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": false
+    },
+    {
+      "pc": "0x100da0",
+      "instruction": "or\tr1,r3",
+      "cycle": 11,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": false
+    },
+    {
+      "pc": "0x100da2",
+      "instruction": "fneg\tfr2",
+      "cycle": 11,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": true
+    },
+    {
+      "pc": "0x100da4",
+      "instruction": "add\tr8,r0",
+      "cycle": 12,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": false
+    },
+    {
+      "pc": "0x100da6",
+      "instruction": "fmac\tfr0,fr1,fr2",
+      "cycle": 12,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": true
+    },
+    {
+      "pc": "0x100da8",
+      "instruction": "add\t#4,r0",
+      "cycle": 13,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": false
+    },
+    {
+      "pc": "0x100daa",
+      "instruction": "fmov\t@r0+,fr12",
+      "cycle": 14,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": false
+    },
+    {
+      "pc": "0x100dac",
+      "instruction": "fmov\t@r0,fr13",
+      "cycle": 15,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": false
+    },
+    {
+      "pc": "0x100dae",
+      "instruction": "fcmp/gt\tfr2,fr14",
+      "cycle": 15,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": true
+    },
+    {
+      "pc": "0x100db0",
+      "instruction": "fmov\tfr11,fr2",
+      "cycle": 16,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": false
+    },
+    {
+      "pc": "0x100db2",
+      "instruction": "rotcl\tr5",
+      "cycle": 17,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": false
+    },
+    {
+      "pc": "0x100db4",
+      "instruction": "fmov\tfr10,fr0",
+      "cycle": 17,
+      "extra_wait_cycles": 0,
+      "waiting_registers": [],
+      "paired": true
+    }
+  ],
+  "extra_wait_by_instruction": {
+    "dt\tr13": 1
+  },
+  "limitations": [
+    "This explains the existing AVK approximation; no hardware scheduling proof.",
+    "Seven FE arithmetic/compare issues and fixed opcode serial dependencies remain; all regs and branch outcomes from actual interpreter path."
+  ]
+}
