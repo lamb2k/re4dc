@@ -12,7 +12,7 @@ class DynamicParts(unittest.TestCase):
         source = (Path(__file__).resolve().parents[1] /
                   'game/platform/native_static.cpp').read_text()
         state = source[source.index('namespace dyn {'):]
-        state = state[:state.index('\n#endif\nstd::uint32_t ps2_crc32')]
+        state = state[:state.index('\n}\n#endif\n#if defined(RE4DC_ENEMY_VIS_CULL)') + 2]
         functions = source[source.index('extern "C" void re4dc_ps2_dyn_bind('):]
         functions = functions[:functions.index('\n#endif\n#endif\n#if RE4DC_PS2_WORLD_ROOMS')] + '\n#endif\n'
         preamble = r'''
