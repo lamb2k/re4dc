@@ -1,0 +1,432 @@
+{
+  "scope": "SOURCE_ONLY delta review; no frozen imports/job/materialization",
+  "manifest": [
+    {
+      "role": "writer1618",
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1618-writer-adapter-01/source/immutable_append1618_writer.py",
+      "bytes": 15440,
+      "sha256": "0b97fd7afdf5c1811bc8d3530bb6ba7ed1145f27faa027a154fa3c44d6bed4d0",
+      "crlf": 212,
+      "lf": 212
+    },
+    {
+      "role": "writer1600",
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "bytes": 14943,
+      "sha256": "53015865a712cc061cbb29206d316135a3e0d1f609788083b070b06440570b1a",
+      "crlf": 0,
+      "lf": 204
+    },
+    {
+      "role": "plan1618",
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1618-writer-adapter-01/writer-plan.json",
+      "bytes": 2506,
+      "sha256": "6f80df864bea4577b5d40d79cf81e61780a2542a35a018fa9aedbc2d132b6111",
+      "crlf": 46,
+      "lf": 46
+    },
+    {
+      "role": "controller1618",
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1618-pack-job.py",
+      "bytes": 22314,
+      "sha256": "e5d738e4094c161f7040a1abeeb6a7a504ee7075f9cc6e44394a815b81a6a5a9",
+      "crlf": 0,
+      "lf": 272
+    },
+    {
+      "role": "controller1600",
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "bytes": 21158,
+      "sha256": "dbfd602aef443ce6fc150565e4c98b098e6d3a942698a00dc1a0aba3906e9782",
+      "crlf": 0,
+      "lf": 263
+    },
+    {
+      "role": "doc",
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/PACK1618-JOB-CONTROLLER.md",
+      "bytes": 5021,
+      "sha256": "f808f637f2c3ccc204f926f5cdfe461570a0c55f502f98cc63304313a67f955b",
+      "crlf": 0,
+      "lf": 32
+    }
+  ],
+  "checks": [
+    {
+      "name": "exact raw source plan controller SHA",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "family7151 members d43d bytes",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "new parent seal0eb5233f",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "two packs plus12MiB fixed cap",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "floor peer once plus new admission",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "new fixed root names",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "four exact source dependencies raw bytes",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged writer helper Budget",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged writer helper sha",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged writer helper json_new",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged writer helper sealed",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged writer helper source_stream",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged writer helper inspect_pack",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged writer helper write_one",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged writer helper copy_blocks",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged writer helper allocation",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged writer helper re_hash",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged controller helper native",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged controller helper sha",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged controller helper canonical",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged controller helper within",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged controller helper main",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged native lifecycle helper checked",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged native lifecycle helper fail",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged native lifecycle helper terminate",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged native lifecycle helper times",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged native lifecycle helper live_pin",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged native lifecycle helper size_tree",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged native lifecycle helper resources",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged native lifecycle helper log_reader",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "unchanged native lifecycle helper hard_guard",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "child query accepts only known codes otherwise raises",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "child query success charges max round native",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "new Budget default binds new local strict query function",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "dontwrite gate precedes all local imports",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "full writer env validation before resolver and known loader",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "full env does NOT precede local imports",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "controller production checks inherited cache before child creation",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "effective and explicit env plus fresh exact prefix checked",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "child request inherits checked env without mutation",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "new resolve inherits1600 exact resolver and seals",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "old general child fallback helper never imported as Budget charge",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "live authoritative writer raw equals frozen C bytes",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    },
+    {
+      "name": "raw CRLF versus Git LF explicit",
+      "result": "PASS",
+      "kind": "static source or byte identity only"
+    }
+  ],
+  "unchanged_AST_helpers": [
+    {
+      "kind": "writer",
+      "name": "Budget",
+      "start": 67,
+      "end": 104
+    },
+    {
+      "kind": "writer",
+      "name": "sha",
+      "start": 29,
+      "end": 30
+    },
+    {
+      "kind": "writer",
+      "name": "json_new",
+      "start": 31,
+      "end": 32
+    },
+    {
+      "kind": "writer",
+      "name": "sealed",
+      "start": 33,
+      "end": 37
+    },
+    {
+      "kind": "writer",
+      "name": "source_stream",
+      "start": 106,
+      "end": 122
+    },
+    {
+      "kind": "writer",
+      "name": "inspect_pack",
+      "start": 124,
+      "end": 137
+    },
+    {
+      "kind": "writer",
+      "name": "write_one",
+      "start": 139,
+      "end": 156
+    },
+    {
+      "kind": "writer",
+      "name": "copy_blocks",
+      "start": 157,
+      "end": 159
+    },
+    {
+      "kind": "writer",
+      "name": "allocation",
+      "start": 161,
+      "end": 167
+    },
+    {
+      "kind": "writer",
+      "name": "re_hash",
+      "start": 168,
+      "end": 168
+    },
+    {
+      "kind": "controller",
+      "name": "native",
+      "start": 85,
+      "end": 102
+    },
+    {
+      "kind": "controller",
+      "name": "sha",
+      "start": 18,
+      "end": 19
+    },
+    {
+      "kind": "controller",
+      "name": "canonical",
+      "start": 20,
+      "end": 23
+    },
+    {
+      "kind": "controller",
+      "name": "within",
+      "start": 24,
+      "end": 26
+    },
+    {
+      "kind": "controller",
+      "name": "main",
+      "start": 265,
+      "end": 271
+    },
+    {
+      "kind": "controller.run",
+      "name": "checked",
+      "start": 110,
+      "end": 112
+    },
+    {
+      "kind": "controller.run",
+      "name": "fail",
+      "start": 113,
+      "end": 113
+    },
+    {
+      "kind": "controller.run",
+      "name": "terminate",
+      "start": 114,
+      "end": 116
+    },
+    {
+      "kind": "controller.run",
+      "name": "times",
+      "start": 117,
+      "end": 118
+    },
+    {
+      "kind": "controller.run",
+      "name": "live_pin",
+      "start": 119,
+      "end": 125
+    },
+    {
+      "kind": "controller.run",
+      "name": "size_tree",
+      "start": 126,
+      "end": 142
+    },
+    {
+      "kind": "controller.run",
+      "name": "resources",
+      "start": 143,
+      "end": 147
+    },
+    {
+      "kind": "controller.run",
+      "name": "log_reader",
+      "start": 148,
+      "end": 163
+    },
+    {
+      "kind": "controller.run",
+      "name": "hard_guard",
+      "start": 164,
+      "end": 171
+    }
+  ],
+  "git_lf": {
+    "bytes": 15228,
+    "sha256": "07c2e9d612375e2ee741a63a7d0930e2374a894446d944014ef9eff9375edce2",
+    "executable_raw_sha256": "0b97fd7afdf5c1811bc8d3530bb6ba7ed1145f27faa027a154fa3c44d6bed4d0",
+    "raw_bytes": 15440
+  },
+  "limits": [
+    "Full writer prefix/env validation is after local imports; accepted coupled controller launch prevalidates and inherits correct env. Do not claim standalone full preimport guard.",
+    "Child known error fallback is code-restricted but not UNC-path-restricted. Outer retains UNC+code restriction.",
+    "51s starts postresolve/cooperative;130s guard begins post pin/assignment. No OS API preemption claim."
+  ]
+}

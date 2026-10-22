@@ -1,0 +1,248 @@
+{
+  "scope": "read-only concrete schema/hash/current-empty-path proof only; no executable imports/job/payload allocation by reviewer",
+  "files": [
+    {
+      "role": "child",
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\texture21-benchmark\\APPEND1618-CHILD-ALLOCATION.json",
+      "sha256": "c41b8b974821bca497346a04f07d352c10521c91780f6a4f15ee7d1f6ed3b875",
+      "bytes": 1209
+    },
+    {
+      "role": "outer",
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\texture21-benchmark\\APPEND1618-OUTER-PLAN.json",
+      "sha256": "0dd8021ecced51d49e827061952518cac76540a29bec0f18efcc6980efb4b119",
+      "bytes": 4712
+    },
+    {
+      "role": "allocation",
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\texture21-benchmark\\APPEND1618-OUTER-ALLOCATION.json",
+      "sha256": "39904b018030f9c360b65f315d4fedb2621c110fab3e0f4bf59fa35f09786bff",
+      "bytes": 1005
+    },
+    {
+      "role": "preparation",
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\texture21-benchmark\\APPEND1618-ROOT-PREPARATION.json",
+      "sha256": "545be931b494832a23cfc7ab71555c75b8a97983c43d8dc83d5ef598f493bdde",
+      "bytes": 770
+    }
+  ],
+  "checks": [
+    {
+      "name": "root outer plan allocation exact SHA",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "child allocation raw writer/controller/plan",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "child cap baseline peer inner",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "same exact new3roots across all plans",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "outer allocation SHA links child and outerplan",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "outer allocation cap floor source seal",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "outer frozen130 cap8MiB log peer",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "native interpreter direct script no shell",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "exact once child argv --plan",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "exact once child argv --plan-sha256",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "exact once child argv --allocation-receipt",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "exact once child argv --allocation-sha256",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "actual raw writer from argv pinned",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "pinned input python.exe",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "pinned input writer-plan.json",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "pinned input APPEND1618-CHILD-ALLOCATION.json",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "pinned input SHA256SUMS",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "pinned input file_charge.py",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "pinned input immutable_append1600_writer.py",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "pinned input immutable_append1618_writer.py",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "pinned input mipmap_pair_plan.py",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "pinned input texpack.py",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "child file explicitly pinned",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "controller native absolute cwd",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "root metadata prepared empty",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "both payload roots absent canonical",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "all3roots canonical",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "explicit new roots and no duplicated outputs",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "outputs within exact roots absent",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "controller receiptlog absent under metadata",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "prepared exact BOTH env schema matches frozen plan",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "root prep exact outer hashchain",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    },
+    {
+      "name": "new full admission bytes peer once",
+      "result": "PASS",
+      "kind": "read-only JSON/source SHA/path check, no operational qualification"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+      "bytes": 104952
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\texture21-benchmark-20261021\\append1618-writer-adapter-01\\writer-plan.json",
+      "sha256": "6f80df864bea4577b5d40d79cf81e61780a2542a35a018fa9aedbc2d132b6111",
+      "bytes": 2506
+    },
+    {
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\texture21-benchmark\\APPEND1618-CHILD-ALLOCATION.json",
+      "sha256": "c41b8b974821bca497346a04f07d352c10521c91780f6a4f15ee7d1f6ed3b875",
+      "bytes": 1209
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\texture21-benchmark-20261021\\append1618-delta-01\\SHA256SUMS",
+      "sha256": "0eb5233f21ed050d1cf1dc8aef0a6f8277292d60409122e074b525d4636d43ac",
+      "bytes": 1706
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-texture21-benchmark\\port\\dreamcast\\tools\\d367\\texture21_benchmark\\file_charge.py",
+      "sha256": "78bff1657d6416271617b57f93883625f6dd6f6ebcdae9cf4279f546052957ef",
+      "bytes": 7172
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-texture21-benchmark\\port\\dreamcast\\tools\\d367\\texture21_benchmark\\immutable_append1600_writer.py",
+      "sha256": "53015865a712cc061cbb29206d316135a3e0d1f609788083b070b06440570b1a",
+      "bytes": 14943
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-texture21-benchmark\\port\\dreamcast\\tools\\d367\\texture21_benchmark\\immutable_append1618_writer.py",
+      "sha256": "0b97fd7afdf5c1811bc8d3530bb6ba7ed1145f27faa027a154fa3c44d6bed4d0",
+      "bytes": 15440
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-texture21-benchmark\\port\\dreamcast\\tools\\d367\\texture21_benchmark\\mipmap_pair_plan.py",
+      "sha256": "f77d2e3f414d1e549cc029fbab3b103e045adb80e9c5ded84531a319a0c8a57a",
+      "bytes": 14106
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-texture-atlas21\\port\\dreamcast\\tools\\d367\\texpack.py",
+      "sha256": "199fb53bc3855ba3c831e4f9013c1e8fd4383cf36615803cbc29acacedcf5bbf",
+      "bytes": 5859
+    }
+  ],
+  "required_root_remaining": [
+    "Set BOTH inherited environment values before controller Python startup, preserve absent prefix, use-B for root controller startup. ROOT-PREPARATION is recorded intent, not live environment proof.",
+    "Run exact controller default validation then fresh resource floor+aggregate19794472960/global64MiB peer admission before execute.",
+    "Retained process/job/final resource proof and actual child/fullpack/mirror readback remain future gates."
+  ]
+}
