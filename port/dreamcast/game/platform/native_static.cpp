@@ -5263,7 +5263,12 @@ bool ps2_open(){
         h.crc;
 #endif
 #if RE4DC_PS2_AREA_HIDE
+#if RE4DC_WORLD_RECT21
+    // A certified scoped world keeps its original group table (from 63644457; mipfix22).
+    area::open(ps2w.room,policySourceCrc,h.placements);
+#else
     area::open(ps2w.room,h.crc,h.placements);
+#endif
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     r11fSidecarCrc=h.crc;
