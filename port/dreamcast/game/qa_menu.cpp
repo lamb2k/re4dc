@@ -663,6 +663,9 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
             for (unsigned t = 0; t < hold_ms; t += 16) spin_us(16000);
         }
     }
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    re4dc_world_meter_resume(); // captures keep the sealed snapshot; all exits reset the next interval
+#endif
     if (!file || !file[0]) return 0;
     snprintf(g_path, sizeof(g_path), "/cd/dc/qa/%s", file);
     re4dc_log("qa: auto teleport %s\n", g_path);

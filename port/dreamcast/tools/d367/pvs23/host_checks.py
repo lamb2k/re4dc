@@ -203,6 +203,33 @@ int main(){
         # This catches UI branches and type/signature errors without a target
         # object or full-program build.
         qa=(GAME/'qa_menu.cpp').read_text()
+        auto_start=qa.index('int re4dc_qa_menu_auto(')
+        auto_end=qa.index('\n}\n\n// In-game menu',auto_start)+2
+        auto_driver=r'''
+#include <cassert>
+#include <cstdio>
+#include <cstring>
+enum {A_RESUME,A_TELEPORT_MENU,A_DIAG,A_HEALTH,A_LEON,A_PARTNER,A_ENEMY,A_SPEED,A_SHORE,A_WOPQ,A_WXLU,A_WSHELL,A_TITLE};
+enum {M_MAIN,M_DIAG,M_QR};
+struct Menu {int items[16],nitems,screen,qr_page;};
+unsigned resumes=0,captures=0;int g_diag_len=10;char g_path[48];
+void re4dc_world_meter_resume(){++resumes;}
+void load_presets(){}int fb_displayed(){return 0;}
+void draw(int,const Menu&){}void spin_us(unsigned){}
+void snap_diag(){assert(resumes==0);++captures;}
+int qr_pages(){return 1;}void re4dc_log(const char*,...){}
+'''+qa[auto_start:auto_end]+r'''
+int main(){
+    const char* path=nullptr;
+    assert(re4dc_qa_menu_auto(nullptr,&path,16)==0 && resumes==1 && captures==1);
+    resumes=0;captures=0;
+    assert(re4dc_qa_menu_auto("",&path,0)==0 && resumes==1 && captures==0);
+    resumes=0;captures=0;
+    assert(re4dc_qa_menu_auto("fixture.txt",&path,16)==1 && resumes==1 && captures==1);
+    assert(!strcmp(path,"/cd/dc/qa/fixture.txt"));
+}
+'''
+        compile_run(scratch,'auto-resume',auto_driver,('-DRE4DC_WORLD_METER=1',))
         (scratch/'dc/maple').mkdir(parents=True)
         (scratch/'kos.h').write_text('''#pragma once
 #include <cstdint>
