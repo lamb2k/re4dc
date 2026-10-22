@@ -1,3 +1,46 @@
+# r200 source-world preparation regression repair
+
+Confirmed failure: ch23end at r200, key fa6fe38c-1a02365f. The mip22/mip22b
+member is valid 256-square ARGB4444 full-codebook VQ with 23,894 payload bytes.
+Its upload succeeds. The source-world preparation/transition-pin predicate
+still admitted only source raw16 bytes (131,072) or base-only VQ (18,432),
+so it rejected the successfully uploaded mip representation and emitted
+source-world-prep-descriptor / ready=0. Aggregate VRAM FAILS does not establish
+an allocation refusal; WORLD_METER VRAMFAIL events distinguish real refusals.
+
+The narrow runtime fix in native_ui_source_world.inc checks the resident
+descriptor's supported 16-bit format, layout, flags, dimensions and data_size
+against actual upload bytes. It retains all legacy linear/twiddled raw16 and
+base-only VQ forms. With SOURCE_TEX_VQ and CAST_MIPMAP it accepts only the exact
+full-codebook mip layout: one 1x1 index plus one index per 2x2 block at each
+level through the base. That gives 23,894 bytes at 256 square. Unknown/indexed,
+top-dropped, partial, truncated and representation-mismatched inputs refuse.
+Key, generation, lifetime, frame ownership and upload-completion guards remain.
+
+Package::validate contains the canonical bounded index sum but exposes no size
+helper. This narrow repair mirrors that exact calculation; moving the validator
+API would require broader shared texture-file ownership. Both preparation and
+transition pin use the same new helper. No texture_package/allocator/arena,
+recipe, inventory, converter or private texture bytes change. All 41 shared
+Ganado textures, prepared overlays and quality holds remain authoritative.
+
+test_r200_prep.py runs the actual production preparation/readiness bodies with
+synthetic source/cache/GPU services. The pre-fix include fails the added current
+mip readiness assertion; the patched include passes 762 checks in each of
+legacy-only, VQ-without-mips and VQ-with-mips configurations under ASan/UBSan.
+The fixture's original source/lifetime controls remain, with faithful descriptor
+metadata and explicit malformed-layout negatives added. The actual source
+other_profile.h supplies its default-off marker definition for host compilation.
+
+Successful proof is the private mipmap23-r200-prep-20261022-v3 host dataset.
+Earlier v1/v2 attempts are superseded harness diagnostics, not acceptance:
+missing default-off profile definition, then a corrected test-loop edit.
+No full game build/link or guest ran. Host readiness repair does not claim
+ch23end guest completion, measured VRAM fit, sampled minification or console
+acceptance. Main owns narrow source integration and a fresh ch23end check.
+
+---
+
 # Per-key follow-on: item materials and selected mask runs
 
 The next bounded unit prepares seven further chains as individual .re4tex
