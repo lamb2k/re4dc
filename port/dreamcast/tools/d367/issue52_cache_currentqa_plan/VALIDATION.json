@@ -1,0 +1,25 @@
+{
+  "state": "SOURCE_PLAN_VALIDATED_NO_COMPILER_OR_LINK",
+  "files_external_pins_checked": true,
+  "objects": 447,
+  "constituents": 14,
+  "reused": 13,
+  "fresh_proposed_TUs": 2,
+  "historical_vs_qualified_default_objects_readonly_observation": [
+    {
+      "tu": "sscrn",
+      "old": "/root/probe/texture-rect21-program-pair-20261021-01/obj/sscrn_bridge.o",
+      "old_projection": "288e2937325309e1cb4f6a93fdbdfdf2d62f88aed2b19d92a65d728bbeafb5b7",
+      "qualified_default_projection": "288e2937325309e1cb4f6a93fdbdfdf2d62f88aed2b19d92a65d728bbeafb5b7",
+      "allocated_and_normalized_relocations_exact": true
+    },
+    {
+      "tu": "reset",
+      "old": "/root/probe/texture-rect21-program-pair-20261021-01/obj/src/game/main.o",
+      "old_projection": "8a41fe487c1dfde89cace0c16902fb84e84582200c2362fc6f4d912dd51c3c63",
+      "qualified_default_projection": "8a41fe487c1dfde89cace0c16902fb84e84582200c2362fc6f4d912dd51c3c63",
+      "allocated_and_normalized_relocations_exact": true
+    }
+  ],
+  "not_programme_acceptance": "Fresh raw52190/all14/allocated+loadableELF remains mandatory. No header swap/waiver."
+}
