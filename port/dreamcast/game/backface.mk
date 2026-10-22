@@ -13,5 +13,5 @@ ifneq ($(TA_HASH),1)
 $(error BACKFACE_CENSUS=1 needs TA_HASH=1)
 endif
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/backface_census.o: PLATFORM_CPPFLAGS += -DRE4DC_BACKFACE_CENSUS=1
-$(OBJDIR)/coarse.o: GAME_CPPFLAGS += -DRE4DC_BACKFACE_CENSUS=1
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_BACKFACE_CENSUS=1
 endif

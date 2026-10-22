@@ -19,7 +19,6 @@
 #if RE4DC_PS2_WORLD_DRAW
 #include "re4dc_screen.h"
 #include "platform/include/native_ps2_world.h"
-#include "platform/include/bfc_class.h"
 #endif
 #ifndef RE4DC_COARSE_SCENERY_FALLBACK
 #define RE4DC_COARSE_SCENERY_FALLBACK 0

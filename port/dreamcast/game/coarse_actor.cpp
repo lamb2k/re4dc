@@ -1,6 +1,7 @@
 // COARSE_LEON=1: isolated, opaque 4K Leon presentation proof. The game owns
 // the pose, part visibility and simulation. Input is the offline-qualified
 // native actor representation; no source game data is overwritten.
+#include "platform/include/bfc_class.h"
 #include "global.h"
 #include "model.h"
 #include "native_actor.hpp"
