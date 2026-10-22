@@ -108,7 +108,13 @@ bool load(unsigned level) {
 // The owner plans' gate: the first plan loads the requested level.
 // The level drawn now: level 0 (today's full meshes) while an in-engine event / cutscene holds the game (Status_flg[1]
 // 0x10000000; user 2026-10-15: cutscenes keep the full models), else the requested gameplay level.
+#if defined(RE4DC_GANADO_EVENT_KEEP_LOD) && RE4DC_GANADO_EVENT_KEEP_LOD
+// GANADO_EVENT_KEEP_LOD=1 (user 2026-10-22, option 1): events keep the gameplay level, so no package reload at
+// event start/end. Render-only approximation.
+unsigned want() {return level_req;}
+#else
 unsigned want() {return (pG && (pG->Status_flg[1]&0x10000000u))?0u:level_req;}
+#endif
 bool ready() {
     if(level_cur!=~0u)return true;
     if(dir_state==2 || fails>=3)return false;
