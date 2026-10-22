@@ -1,0 +1,76 @@
+{
+  "scope": "Native LOAD controlled evidence only; typed fields do not replace observed Load result/gameplay",
+  "observation": {
+    "process_age": 36.029830322251655,
+    "pg": 2352652060,
+    "frame": 965,
+    "phase": [
+      0,
+      0
+    ],
+    "room": "0x120",
+    "chapter": 0,
+    "Stop": "0x0",
+    "health": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "CardStatus": "0x80000001",
+    "status3": "0x0",
+    "partner_ptr": "0x0"
+  },
+  "before": {
+    "process_age": 36.513830322248396,
+    "pg": 2352652060,
+    "frame": 980,
+    "phase": [
+      0,
+      0
+    ],
+    "room": "0x120",
+    "chapter": 0,
+    "Stop": "0x0",
+    "health": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "CardStatus": "0x80000001",
+    "status3": "0x0",
+    "partner_ptr": "0x0"
+  },
+  "after": {
+    "process_age": 36.576830322272144,
+    "pg": 2352652060,
+    "frame": 982,
+    "phase": [
+      0,
+      0
+    ],
+    "room": "0x120",
+    "chapter": 0,
+    "Stop": "0x0",
+    "health": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "CardStatus": "0x80000001",
+    "status3": "0x0",
+    "partner_ptr": "0x0"
+  },
+  "pngs": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-load010\\shots\\controlled-native-load-context\\frames\\fb0.png",
+      "sha256": "18b6a55836c015d1afc4cd9dfd2d969b53dac36115b8fc0a56d6e89e9872e5df"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-load010\\shots\\controlled-native-load-context\\frames\\fb1.png",
+      "sha256": "fb1971a3114d80a7bc653bb4e858af21a81aa3f58d09854ccc037a6762982ffe"
+    }
+  ]
+}
