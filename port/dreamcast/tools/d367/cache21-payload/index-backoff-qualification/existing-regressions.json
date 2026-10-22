@@ -1,0 +1,171 @@
+{
+  "scope": "Existing source-host controls on exact candidate index snapshot. No new runtime edits or program/guest qualification.",
+  "source_ref": "edfe8f1765fbbd418235537e7b2f0b3b6aeab25d",
+  "native_ui_sha256": "09b256cf1fcf33d900d4a1f00a3ca748b597f5584354d0ac4a707ffeb8bb23df",
+  "snapshot_source": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-host-v1",
+  "inputs": {
+    "texpack_index.inc": "bf95fea5f7bc4881fe438b7c57baea7dc086b34a059573185d6fea8170e02c1d",
+    "texpack_payload_retry.inc": "915601b92d8a9d10d763a377da6680c1579d39ad9109a1750f402fa3f8ed8f38",
+    "actual_load.inc": "e6344b34875820a8091fd24e7a4e09895abcfc9e84e6f8cb1c9e699703a04459",
+    "actual_load_interleaved.inc": "11c47e36faa2564773bb802eeb239760889d4bfad88978c6888eccdc5773891e"
+  },
+  "runs": [
+    {
+      "name": "policy",
+      "guard": 1,
+      "fixture_sha256": "44aa2f45714a2eb3b459fa9047a6f9633838f21c3ffdda15d42beb8ab04a7d93",
+      "command": [
+        "bash",
+        "/root/probe/d367-buildslot.sh",
+        "g++",
+        "-std=c++17",
+        "-O1",
+        "-g",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "-Wno-int-to-pointer-cast",
+        "-DRE4DC_TEX_PAYLOAD_RETRY=1",
+        "-I/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-regressions-v1",
+        "/root/probe/codex-cache21-payload/port/dreamcast/tools/d367/cache21-payload/policy_probe.cpp",
+        "-o",
+        "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-regressions-v1/policy1"
+      ],
+      "output": "POLICY_PROBE PASS checks=21898 maps=2048 epochs=5 latency=31..60 UI frames\n"
+    },
+    {
+      "name": "load",
+      "guard": 0,
+      "fixture_sha256": "c6cf9f5fb610099ee0c9f55bec70f356cb828bc6352e8feb7895352e2bf7fe22",
+      "command": [
+        "bash",
+        "/root/probe/d367-buildslot.sh",
+        "g++",
+        "-std=c++17",
+        "-O1",
+        "-g",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "-Wno-int-to-pointer-cast",
+        "-DRE4DC_TEX_PAYLOAD_RETRY=0",
+        "-I/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-regressions-v1",
+        "/root/probe/codex-cache21-payload/port/dreamcast/tools/d367/cache21-payload/load_probe.cpp",
+        "-o",
+        "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-regressions-v1/load0"
+      ],
+      "output": "ACTUAL_LOAD_PROBE PASS calls=20 evictions=20 missing=0\n"
+    },
+    {
+      "name": "load",
+      "guard": 1,
+      "fixture_sha256": "c6cf9f5fb610099ee0c9f55bec70f356cb828bc6352e8feb7895352e2bf7fe22",
+      "command": [
+        "bash",
+        "/root/probe/d367-buildslot.sh",
+        "g++",
+        "-std=c++17",
+        "-O1",
+        "-g",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "-Wno-int-to-pointer-cast",
+        "-DRE4DC_TEX_PAYLOAD_RETRY=1",
+        "-I/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-regressions-v1",
+        "/root/probe/codex-cache21-payload/port/dreamcast/tools/d367/cache21-payload/load_probe.cpp",
+        "-o",
+        "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-regressions-v1/load1"
+      ],
+      "output": "ACTUAL_LOAD_PROBE PASS calls=24 evictions=24 missing=0\n"
+    },
+    {
+      "name": "index",
+      "guard": 0,
+      "fixture_sha256": "ff567cfa9508025f208cd9181b3666a8a8351ddcb51823a6198caa91a990603a",
+      "command": [
+        "bash",
+        "/root/probe/d367-buildslot.sh",
+        "g++",
+        "-std=c++17",
+        "-O1",
+        "-g",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "-Wno-int-to-pointer-cast",
+        "-DRE4DC_TEX_PAYLOAD_RETRY=0",
+        "-I/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-regressions-v1",
+        "/root/probe/codex-cache21-payload/port/dreamcast/tools/d367/cache21-payload/index_probe.cpp",
+        "-o",
+        "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-regressions-v1/index0"
+      ],
+      "output": "HEALTHY: 300 entries, 3 sectors, hits=3 misses=3\nTRANSIENT_HEADER_READ: first=error, 30 frames later found, reads=6\nTRANSIENT_INDEX_READ: error, then found\nSPACED_RETRY: one attempt per burst, 30 frames apart, then every 300 frames; a room load retries at once\nFRAME_WRAP: spacing holds across the counter wrap\nFIRST_ROOM: recovered without a room load\nRETRY_LOG: 5 lines for 40 failed attempts\nLOOKUP_SECTOR_READ: error, no re-read for 30 frames, then found\nABSENT: per-file\nSHORT_FILE: 100-byte and empty packs rejected as invalid\nCORRUPT_INDEX: rejected by the index CRC\nHEADER_FIELDS: count 0x10000000 / 0 / 8193, index offset, data offset rejected\nINDEX_ENTRIES: order, duplicates, alignment, extents, empty rejected\nMAX_COUNT: 8192 entries found\nTEXPACK_INDEX_HOST_TEST PASS\n"
+    },
+    {
+      "name": "index",
+      "guard": 1,
+      "fixture_sha256": "ff567cfa9508025f208cd9181b3666a8a8351ddcb51823a6198caa91a990603a",
+      "command": [
+        "bash",
+        "/root/probe/d367-buildslot.sh",
+        "g++",
+        "-std=c++17",
+        "-O1",
+        "-g",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "-Wno-int-to-pointer-cast",
+        "-DRE4DC_TEX_PAYLOAD_RETRY=1",
+        "-I/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-regressions-v1",
+        "/root/probe/codex-cache21-payload/port/dreamcast/tools/d367/cache21-payload/index_probe.cpp",
+        "-o",
+        "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-regressions-v1/index1"
+      ],
+      "output": "HEALTHY: 300 entries, 3 sectors, hits=3 misses=3\nTRANSIENT_HEADER_READ: first=error, 30 frames later found, reads=6\nTRANSIENT_INDEX_READ: error, then found\nSPACED_RETRY: one attempt per burst, 30 frames apart, then every 300 frames; a room load retries at once\nFRAME_WRAP: spacing holds across the counter wrap\nFIRST_ROOM: recovered without a room load\nRETRY_LOG: 5 lines for 40 failed attempts\nLOOKUP_SECTOR_READ: error, no re-read for 30 frames, then found\nABSENT: per-file\nSHORT_FILE: 100-byte and empty packs rejected as invalid\nCORRUPT_INDEX: rejected by the index CRC\nHEADER_FIELDS: count 0x10000000 / 0 / 8193, index offset, data offset rejected\nINDEX_ENTRIES: order, duplicates, alignment, extents, empty rejected\nMAX_COUNT: 8192 entries found\nPAYLOAD_INDEX_ORDINAL_AND_RESET PASS\nTEXPACK_INDEX_HOST_TEST PASS\n"
+    },
+    {
+      "name": "interleaved",
+      "guard": 0,
+      "fixture_sha256": "da06f947365f453fc4d85970401087fb346ade78a8eb93c492bd3f9f2bc1df7d",
+      "command": [
+        "bash",
+        "/root/probe/d367-buildslot.sh",
+        "g++",
+        "-std=c++17",
+        "-O1",
+        "-g",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "-Wno-int-to-pointer-cast",
+        "-DRE4DC_TEX_PAYLOAD_RETRY=0",
+        "-I/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-regressions-v1",
+        "/root/probe/codex-cache21-payload/port/dreamcast/tools/d367/cache21-payload/interleaved_probe.cpp",
+        "-o",
+        "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-regressions-v1/interleaved0"
+      ],
+      "output": "INTERLEAVED actual_index_reads=60 index_bytes=122880 payload_opens=60 evictions=0 healthy_resident_hits=60\nHEALTHY_FIRST_USE opens=3\nINTERLEAVED_PROBE PASS\n"
+    },
+    {
+      "name": "interleaved",
+      "guard": 1,
+      "fixture_sha256": "da06f947365f453fc4d85970401087fb346ade78a8eb93c492bd3f9f2bc1df7d",
+      "command": [
+        "bash",
+        "/root/probe/d367-buildslot.sh",
+        "g++",
+        "-std=c++17",
+        "-O1",
+        "-g",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "-Wno-int-to-pointer-cast",
+        "-DRE4DC_TEX_PAYLOAD_RETRY=1",
+        "-I/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-regressions-v1",
+        "/root/probe/codex-cache21-payload/port/dreamcast/tools/d367/cache21-payload/interleaved_probe.cpp",
+        "-o",
+        "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-regressions-v1/interleaved1"
+      ],
+      "output": "INTERLEAVED actual_index_reads=60 index_bytes=122880 payload_opens=3 evictions=0 healthy_resident_hits=60\nHEALTHY_FIRST_USE opens=3\nEPOCH_RESET_CONTROLS PASS after_find/during_open/republish/late_success/exhaustion\nINTERLEAVED_PROBE PASS\n"
+    }
+  ],
+  "runner_sha256": "0b3e70baea82be0783f6443f914fd55310bae40e91e8a560d866c7493bda03ca",
+  "output_bytes_before_receipt": 824668,
+  "C_end": 21719990272
+}

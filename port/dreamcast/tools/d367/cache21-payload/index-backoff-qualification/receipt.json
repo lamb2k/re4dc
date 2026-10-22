@@ -1,0 +1,671 @@
+{
+  "scope": "Main working-tree per-sector index candidate plus frozen helper compiled unchanged with synthetic fault reader over fresh original sorted header/index only. No package payload/guest/runtime edits.",
+  "source_parent_ref": "edfe8f1765fbbd418235537e7b2f0b3b6aeab25d",
+  "working_index": "/root/probe/codex-cache21-integration-next/port/dreamcast/game/platform/include/texpack_index.inc",
+  "source_inputs": {
+    "port/dreamcast/game/platform/include/texpack_index.inc": {
+      "bytes": 14013,
+      "sha256": "bf95fea5f7bc4881fe438b7c57baea7dc086b34a059573185d6fea8170e02c1d"
+    },
+    "port/dreamcast/game/platform/include/texpack_payload_retry.inc": {
+      "bytes": 2368,
+      "sha256": "915601b92d8a9d10d763a377da6680c1579d39ad9109a1750f402fa3f8ed8f38"
+    }
+  },
+  "fixture_sha256": "377e2c90c63041393ce98b5c422c391ab61c9eb729867865010a9f19e47bdd8c",
+  "runner_sha256": "fb42cba9a4fcef8c006d52368392d8289b1b548a373d2bd6d96038e9a8a3e971",
+  "pack_index": {
+    "source": "/root/re4data/private/mipmap21-release21-pack-recovery-20261021/tex.pak",
+    "pack_size": 156254208,
+    "count": 6501,
+    "sectors": 51,
+    "prefix_bytes": 106496,
+    "fresh_prefix_sha256": "5cb0097cb28b03c30fbf0b59443f659420f7ee4be247e6ca2ad48d730cb21b40",
+    "previously_sealed_pack_sha256": "18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef",
+    "full_pack_rehashed_this_unit": false
+  },
+  "runs": [
+    {
+      "guard": 0,
+      "command": [
+        "bash",
+        "/root/probe/d367-buildslot.sh",
+        "g++",
+        "-std=c++17",
+        "-O1",
+        "-g",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "-DRE4DC_TEX_PAYLOAD_RETRY=0",
+        "-DRE4DC_TEX_PACK_FAULT=0",
+        "-I/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-host-v1",
+        "/root/probe/codex-cache21-payload/port/dreamcast/tools/d367/cache21-payload/index-backoff-qualification/probe.cpp",
+        "-o",
+        "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-host-v1/probe0"
+      ],
+      "results": [
+        {
+          "case": "minimal_ABA_same_frame",
+          "fault": 1,
+          "reads_A": 2,
+          "reads_B": 1,
+          "reads_healthy": 0,
+          "all_reads": 3,
+          "error_logs": 3,
+          "bad_sector": 0
+        },
+        {
+          "case": "minimal_AHBHAH_same_frame",
+          "fault": 1,
+          "reads_A": 2,
+          "reads_B": 1,
+          "reads_healthy": 3,
+          "all_reads": 6,
+          "error_logs": 3,
+          "bad_sector": 0
+        },
+        {
+          "case": "one_failed_sector_30_frames",
+          "fault": 1,
+          "reads_A": 1,
+          "reads_B": 0,
+          "reads_healthy": 1,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 0
+        },
+        {
+          "case": "two_failed_sectors_30_frames",
+          "fault": 1,
+          "reads_A": 30,
+          "reads_B": 30,
+          "reads_healthy": 30,
+          "all_reads": 90,
+          "error_logs": 60,
+          "bad_sector": 1
+        },
+        {
+          "case": "two_failed_sectors_30_same_frame_cycles",
+          "fault": 1,
+          "reads_A": 30,
+          "reads_B": 30,
+          "reads_healthy": 30,
+          "all_reads": 90,
+          "error_logs": 60,
+          "bad_sector": 1
+        },
+        {
+          "case": "last_slot_replacement",
+          "fault": 1,
+          "reads_A": 2,
+          "reads_B": 2,
+          "reads_healthy": 0,
+          "all_reads": 4,
+          "error_logs": 4,
+          "bad_sector": 1
+        },
+        {
+          "case": "single_sector_retry_boundary_recovery",
+          "fault": 1,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "room_reset_recovery",
+          "fault": 1,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "single_sector_wrap_recovery",
+          "fault": 1,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "minimal_ABA_same_frame",
+          "fault": 2,
+          "reads_A": 2,
+          "reads_B": 1,
+          "reads_healthy": 0,
+          "all_reads": 3,
+          "error_logs": 3,
+          "bad_sector": 0
+        },
+        {
+          "case": "minimal_AHBHAH_same_frame",
+          "fault": 2,
+          "reads_A": 2,
+          "reads_B": 1,
+          "reads_healthy": 3,
+          "all_reads": 6,
+          "error_logs": 3,
+          "bad_sector": 0
+        },
+        {
+          "case": "one_failed_sector_30_frames",
+          "fault": 2,
+          "reads_A": 1,
+          "reads_B": 0,
+          "reads_healthy": 1,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 0
+        },
+        {
+          "case": "two_failed_sectors_30_frames",
+          "fault": 2,
+          "reads_A": 30,
+          "reads_B": 30,
+          "reads_healthy": 30,
+          "all_reads": 90,
+          "error_logs": 60,
+          "bad_sector": 1
+        },
+        {
+          "case": "two_failed_sectors_30_same_frame_cycles",
+          "fault": 2,
+          "reads_A": 30,
+          "reads_B": 30,
+          "reads_healthy": 30,
+          "all_reads": 90,
+          "error_logs": 60,
+          "bad_sector": 1
+        },
+        {
+          "case": "last_slot_replacement",
+          "fault": 2,
+          "reads_A": 2,
+          "reads_B": 2,
+          "reads_healthy": 0,
+          "all_reads": 4,
+          "error_logs": 4,
+          "bad_sector": 1
+        },
+        {
+          "case": "single_sector_retry_boundary_recovery",
+          "fault": 2,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "room_reset_recovery",
+          "fault": 2,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "single_sector_wrap_recovery",
+          "fault": 2,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "CRC_only_mutation_not_checked_OFF",
+          "fault": 3,
+          "reads_A": 30,
+          "reads_B": 30,
+          "reads_healthy": 30,
+          "all_reads": 90,
+          "error_logs": 0,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "8192_max_ordinal_8193_header_refusal",
+          "guard": 0
+        },
+        {
+          "checks": 3122,
+          "guard": 0
+        }
+      ]
+    },
+    {
+      "guard": 1,
+      "command": [
+        "bash",
+        "/root/probe/d367-buildslot.sh",
+        "g++",
+        "-std=c++17",
+        "-O1",
+        "-g",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "-DRE4DC_TEX_PAYLOAD_RETRY=1",
+        "-DRE4DC_TEX_PACK_FAULT=0",
+        "-I/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-host-v1",
+        "/root/probe/codex-cache21-payload/port/dreamcast/tools/d367/cache21-payload/index-backoff-qualification/probe.cpp",
+        "-o",
+        "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-host-v1/probe1"
+      ],
+      "results": [
+        {
+          "case": "minimal_ABA_same_frame",
+          "fault": 1,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "minimal_AHBHAH_same_frame",
+          "fault": 1,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 2,
+          "all_reads": 4,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "one_failed_sector_30_frames",
+          "fault": 1,
+          "reads_A": 1,
+          "reads_B": 0,
+          "reads_healthy": 1,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 0
+        },
+        {
+          "case": "two_failed_sectors_30_frames",
+          "fault": 1,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 1,
+          "all_reads": 3,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "two_failed_sectors_30_same_frame_cycles",
+          "fault": 1,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 1,
+          "all_reads": 3,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "last_slot_replacement",
+          "fault": 1,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "single_sector_retry_boundary_recovery",
+          "fault": 1,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "room_reset_recovery",
+          "fault": 1,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "single_sector_wrap_recovery",
+          "fault": 1,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "minimal_ABA_same_frame",
+          "fault": 2,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "minimal_AHBHAH_same_frame",
+          "fault": 2,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 2,
+          "all_reads": 4,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "one_failed_sector_30_frames",
+          "fault": 2,
+          "reads_A": 1,
+          "reads_B": 0,
+          "reads_healthy": 1,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 0
+        },
+        {
+          "case": "two_failed_sectors_30_frames",
+          "fault": 2,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 1,
+          "all_reads": 3,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "two_failed_sectors_30_same_frame_cycles",
+          "fault": 2,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 1,
+          "all_reads": 3,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "last_slot_replacement",
+          "fault": 2,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "single_sector_retry_boundary_recovery",
+          "fault": 2,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "room_reset_recovery",
+          "fault": 2,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "single_sector_wrap_recovery",
+          "fault": 2,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "minimal_ABA_same_frame",
+          "fault": 3,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "minimal_AHBHAH_same_frame",
+          "fault": 3,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 2,
+          "all_reads": 4,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "one_failed_sector_30_frames",
+          "fault": 3,
+          "reads_A": 1,
+          "reads_B": 0,
+          "reads_healthy": 1,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 0
+        },
+        {
+          "case": "two_failed_sectors_30_frames",
+          "fault": 3,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 1,
+          "all_reads": 3,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "two_failed_sectors_30_same_frame_cycles",
+          "fault": 3,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 1,
+          "all_reads": 3,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "last_slot_replacement",
+          "fault": 3,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "single_sector_retry_boundary_recovery",
+          "fault": 3,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "room_reset_recovery",
+          "fault": 3,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "single_sector_wrap_recovery",
+          "fault": 3,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "minimal_ABA_same_frame",
+          "fault": 4,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "minimal_AHBHAH_same_frame",
+          "fault": 4,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 2,
+          "all_reads": 4,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "one_failed_sector_30_frames",
+          "fault": 4,
+          "reads_A": 1,
+          "reads_B": 0,
+          "reads_healthy": 1,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 0
+        },
+        {
+          "case": "two_failed_sectors_30_frames",
+          "fault": 4,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 1,
+          "all_reads": 3,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "two_failed_sectors_30_same_frame_cycles",
+          "fault": 4,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 1,
+          "all_reads": 3,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "last_slot_replacement",
+          "fault": 4,
+          "reads_A": 1,
+          "reads_B": 1,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 2,
+          "bad_sector": 1
+        },
+        {
+          "case": "single_sector_retry_boundary_recovery",
+          "fault": 4,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "room_reset_recovery",
+          "fault": 4,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "single_sector_wrap_recovery",
+          "fault": 4,
+          "reads_A": 2,
+          "reads_B": 0,
+          "reads_healthy": 0,
+          "all_reads": 2,
+          "error_logs": 1,
+          "bad_sector": 4294967295
+        },
+        {
+          "case": "all64_failure_hold_deadline_recovery",
+          "failed_reads": 64,
+          "held_extra_reads": 0,
+          "recovery_reads": 64
+        },
+        {
+          "case": "31_32_independent_staggered_deadlines",
+          "reads31": 2,
+          "reads32": 2
+        },
+        {
+          "case": "31_32_staggered_UINT_wrap",
+          "reads31": 2,
+          "reads32": 2
+        },
+        {
+          "case": "room_reset_all64_stale_deadlines_ignored",
+          "immediate_recoveries": 64
+        },
+        {
+          "case": "validated_new_ready_all64_clear",
+          "old_failed_sectors": 64
+        },
+        {
+          "case": "healthy_sector_among63_failed",
+          "first_failed_reads": 63,
+          "first_healthy_reads": 63,
+          "held_extra_reads": 0
+        },
+        {
+          "case": "8192_max_ordinal_8193_header_refusal",
+          "guard": 1
+        },
+        {
+          "checks": 10640,
+          "guard": 1
+        }
+      ]
+    }
+  ],
+  "C_start": 21753864192,
+  "C_end": 21751607296,
+  "output_bytes_before_receipt": 859343,
+  "limits": "Injected read errors/key changes/CRC refusals after complete valid init; no normal-media occurrence, payload I/O saving, target timing, lifetime/race, full program, Flycast, release or hardware acceptance claim."
+}
