@@ -4821,6 +4821,7 @@ namespace {
 #endif
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     ++stats.parts;
+    if (part) nj_note(part);
     PXF_BEGIN(part);
 #if defined(RE4DC_CALLPROF) && RE4DC_CALLPROF
     re4dc_callprof_part(part ? part->model : nullptr, 0);
@@ -5459,6 +5460,7 @@ int one_chunk_core(Re4dcModelPart& p, OneWindow& w, const SkinEntry* known, cons
     re4dc_callprof_part(p.model, 1);
 #endif
     if (p.positions) return -1;
+    nj_note(&p);
     ++stats.parts;
     const SkinEntry* se = nullptr;
     Re4dcActorSource src{};
@@ -5467,6 +5469,7 @@ int one_chunk_core(Re4dcModelPart& p, OneWindow& w, const SkinEntry* known, cons
 #else
 int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     if (p.positions) return -1;
+    nj_note(&p);
     APROF_SPAN(aprof_chunk, APROF_CHUNK);
     APROF_COUNT(APROF_N_CHUNKS, 1);
     ++stats.parts;
@@ -5477,6 +5480,13 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     Re4dcActorSource src{};
     if (!one_qualifies(p, se, src)) { ++stats.declined; return 0; }
 #endif
+    if (src.normals) {
+        bool seen = false;
+        for (unsigned i = 0; i < nj_nn; ++i) if (nj_norm[i].arr == src.normals) seen = true;
+        if (!seen && nj_nn < 512)
+            nj_norm[nj_nn++] = {src.normals, p.model, src.normal_count * (src.small_normals ? 4U : 8U),
+                                src.normal_count, src.small_normals ? 6U : 14U, src.small_normals ? 4U : 8U};
+    }
     const float near_distance = p.projection[6] / (p.projection[5] - 1.0f);
     const float far_distance = p.projection[6] / p.projection[5];
     if (!re4dc::render::is_finite(near_distance) || !re4dc::render::is_finite(far_distance) ||

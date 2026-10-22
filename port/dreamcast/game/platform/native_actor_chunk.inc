@@ -49,6 +49,8 @@ void chunk_positions(Part& e, const Records& r, unsigned n, const PosConst& k, b
         chunk_stats_log = frame_serial;
         re4dc_log("char chunk: frame=%u chunks=%u records=%u points=%u\n", frame_serial, chunk_stats.chunks,
                   chunk_stats.records, chunk_stats.points);
+        void nj_dump(unsigned);
+        nj_dump(frame_serial);
     }
     if (u == n) { pass_positions(e, r, n, k, s16_uv, all, any); return; }
     for (unsigned j = 0; j < kChunkRecPad * 3U; ++j) chunk_rec[u * 3U + j] = chunk_rec[(u - 1U) * 3U + j % 3U];
@@ -227,11 +229,53 @@ bool chunk_backend(Part& e, const Records& r, const u8* index, unsigned nv, unsi
 }
 #endif
 
+// NINJA DIAG (throwaway, lane chardraw19 Ninja guide check; never delivered)
+const Re4dcModelPart* nj_part;
+struct NjM { const void* model; unsigned char id, typ; unsigned tris, strips, idx; };
+NjM nj_rows[64];
+struct NjN { const void* arr; const void* model; unsigned bytes, count, shift, stride; };
+NjN nj_norm[512]; unsigned nj_nn;
+inline NjM& nj_row() {
+    const void* m = nj_part ? nj_part->model : nullptr;
+    for (auto& x : nj_rows) {
+        if (x.model == m) return x;
+        if (!x.model) { x.model = m; x.id = m ? static_cast<const unsigned char*>(m)[0x100] : 0xff;
+                        x.typ = m ? static_cast<const unsigned char*>(m)[0x101] : 0xff; return x; }
+    }
+    return nj_rows[63];
+}
+inline void nj_note(const Re4dcModelPart* p) {
+    nj_part = p;
+    if (!p->normals) return;
+    for (unsigned i = 0; i < nj_nn; ++i) if (nj_norm[i].arr == p->normals) return;
+    if (nj_nn < 512) nj_norm[nj_nn++] = {p->normals, p->model, p->normal_count * p->normal_stride, p->normal_count,
+                                         p->normal_shift, p->normal_stride};
+}
+void nj_dump(unsigned frame) {
+    for (auto& x : nj_rows) {
+        if (!x.model) break;
+        unsigned nb = 0, nc = 0, sh = 0, st = 0, arrs = 0;
+        for (unsigned i = 0; i < nj_nn; ++i)
+            if (nj_norm[i].model == x.model) { nb += nj_norm[i].bytes; nc += nj_norm[i].count; sh = nj_norm[i].shift;
+                                               st = nj_norm[i].stride; ++arrs; }
+        printf("NJ frame=%u model=%08x id=%02x typ=%02x tris=%u strips=%u idx=%u normals=%u arrays=%u bytes=%u shift=%u stride=%u\n",
+               frame, unsigned(reinterpret_cast<uintptr_t>(x.model)), x.id, x.typ, x.tris, x.strips, x.idx, nc, arrs,
+               nb, sh, st);
+    }
+    __builtin_memset(nj_rows, 0, sizeof(nj_rows));
+    nj_nn = 0;
+}
+
 struct ChunkSink { Part* e; };
 inline void chunk_sink_begin(ChunkSink& s, Part& e) { s.e = &e; }
 inline bool chunk_sink_strips(ChunkSink& s, const Records& r, const u8* index, unsigned nv, unsigned ni, unsigned nt,
                               unsigned any) {
     Part& e = *s.e;
+    {
+        NjM& row = nj_row();
+        row.tris += nt; row.idx += ni;
+        for (unsigned k = 0; k < ni; ++k) row.strips += (index[k] & 0x80U) != 0;
+    }
 #if defined(RE4DC_CHAR_CHUNK_BACKEND) && RE4DC_CHAR_CHUNK_BACKEND
     bool ok = true;
     if (chunk_backend(e, r, index, nv, ni, nt, ok)) return ok;
