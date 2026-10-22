@@ -1,14 +1,14 @@
 {
-  "scope": "source/mock-only; latest25 NEW livewire cases each platform; old suites/native-child receipts historical, no rerun",
-  "created_utc": "2026-10-22T02:19:49.404453+00:00",
+  "scope": "source/mock-only;25NEW livewire cases each platform; independent source reviewCLEAR, no code/test rerun for disposition seal",
+  "created_utc": "2026-10-22T02:26:02.671399+00:00",
   "files": {
     ".gitattributes": {
       "bytes": 71,
       "sha256": "c672647d019253d54bd214271a954e3b7f1c32e683a2e0582ab9f2df4c7ee3b7"
     },
     "LIVEWIRE_REPAIRS.md": {
-      "bytes": 2938,
-      "sha256": "dbed0de9ba00064f322b6d253c5c7c2f2639eb534ed364b7a9fc4f740bf39da7"
+      "bytes": 3064,
+      "sha256": "c86d13565ba5c2b4da20ff8cbd1d663913bb0ee5dbcb58c888ba6376fa3f5e09"
     },
     "PLAN.md": {
       "bytes": 15074,
@@ -49,6 +49,10 @@
     "guest-supervisor-core.py": {
       "bytes": 3485,
       "sha256": "2d32dbc3df77c67d6865cef6faa92ce815ec2a92dd9519896ac4500d29b57de0"
+    },
+    "independent-livewire-review.md": {
+      "bytes": 7997,
+      "sha256": "013c6e4f9b26b037b3bcd168b86b42951c0553af4cb7f12d97a00af0ae7ed1a9"
     },
     "inner-adapter.py": {
       "bytes": 13084,
@@ -103,8 +107,8 @@
       "sha256": "ca53110195b0526b18fad945dcecf9ee5feb83e276c405b4e81117bc9f5299c7"
     },
     "livewire-review.json": {
-      "bytes": 1878,
-      "sha256": "52dd807187135fe56bc1b21d3e2d82dcf3f5c1610cf3a4bcbb686b25e03eb444"
+      "bytes": 2521,
+      "sha256": "8b1dea0dc97a019d72bf6c55dd70643e773166c513f8aebdaf5912f4dd8d90c3"
     },
     "native-tests-initial-incident.json": {
       "bytes": 1077,
@@ -203,11 +207,12 @@
       "sha256": "561885621f9984226b42ed5ab89387e9e0179dff290a541cc8645cdbdbd4334e"
     }
   },
-  "logical_bytes": 311715,
-  "actual_tree_bytes_including_bytecode": 550287,
+  "logical_bytes": 320481,
+  "actual_tree_bytes_including_bytecode": 561559,
   "allocation_limit": 4194304,
   "extra_receipts_limit": 2097152,
   "all_prior_fixtures_preserved": true,
+  "reviewed_code_commit": "14996210df933406fc74f23f6df9404e4a5b9f48",
   "launch_ready": false,
-  "remaining_gate": "final independent hardstop/cleanup review, main exact-tool review and separately allocated fresh guest; no automatic launch/retry"
+  "remaining_gate": "main reviews exact final tools/profile and separately allocates fresh bounded guest after peer resources; no automatic launch/retry"
 }
