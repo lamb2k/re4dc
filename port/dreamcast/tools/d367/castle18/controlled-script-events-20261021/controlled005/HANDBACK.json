@@ -1,0 +1,31 @@
+{
+  "scope": "CONTROLLED TEST mid-event continuation; no authenticcombat/release/hardware acceptance.",
+  "state_sha256": "40556645e59094f21b3051eecbffb0c71d08182acdef60e321ac76eb33705f86",
+  "source": 181,
+  "room": "0x204",
+  "phase": [
+    3,
+    0
+  ],
+  "health": [
+    1440,
+    1440,
+    600,
+    600
+  ],
+  "chapter": 6,
+  "Stop": "0x80400900",
+  "observed": "OriginalAEV2 fired with RSF0clear baseline\u219280000000 and sourceeventheld. Native log route movie20400 start/firstpicture,995frames/media33.199833s. FinalPNGvisiblyLeon originalcutscene.",
+  "not_yet_observed": [
+    "movieEOF",
+    "chapterendtask",
+    "resultsUI",
+    "saveprompt",
+    "CardSavewrite",
+    "radio"
+  ],
+  "next": "006 direct005snapshot continuation, same exactprogramme/image, no rearm/replay/stateedit/buttons. No laterguestautomatic.",
+  "protected": "Authentic127/294 fullSHA unchanged in closedproof.",
+  "guard": "PID26076 exited normally/raw40.0s, V4verified; no bound change.",
+  "visual": "Initialevent-start PNG is blackfade, notpositivevisualproof; finalfb0 directlyinspected displaysLeon cutscene."
+}
