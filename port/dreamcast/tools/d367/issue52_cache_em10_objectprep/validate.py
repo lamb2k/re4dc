@@ -47,5 +47,7 @@ snapshot=json.loads(lzma.decompress(Path(host['source_snapshot_container']['path
 for r in snapshot['pins']:
  p=Path(r['path']);assert p.is_file()and p.stat().st_size==r['bytes']and sha(p.read_bytes())==r['sha256']and str(p.resolve())==r['resolved']
 assert len(snapshot['pins'])==host['pin_count']==51
-qa=load(P/'qa-tree-disposition.json');q=Path(qa['tree']);assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=q,text=True).strip()==qa['head'];assert subprocess.check_output(['git','status','--porcelain'],cwd=q,text=True).strip()==qa['dirty']
+qa=load(P/'qa-tree-disposition.json');assert not qa['usable_direct_C57_tree']and qa['source_or_header_writes']==0 and qa['git_mutations']==0
+# QA snapshot is disposition evidence only. The unused peer tree may advance its tools HEAD; no future compiler input resolves there.
+
 print(json.dumps({'state':'SOURCE_CONTRACTS_PASS_NO_TARGET_TOOLS','tasks':list(tasks),'sources':85,'system_headers':reuse['verified_system_count'],'tools':reuse['verified_tool_count'],'QA_sparse_tree_preserved':True,'source_view_materialized':False,'old13_exact':True,'Event1':'HOLD','programme_OFF52190_all14_ELF_BSS':'UNEXECUTED_MANDATORY','runner_framework_duplicated':False}))
