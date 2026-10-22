@@ -5688,17 +5688,24 @@ static unsigned moved,dropped,last_room;static std::uint32_t last_frame;
 // The pass a pass-2 part draws in at NEAR / OFF: 1 punch-through, 2 translucent (as today), 3 not drawn.
 static unsigned pass_of(const Ps2Part& m){
     if(m.pass!=2 || re4dc_foliage-1U>1U || (m.reserved&1U))return m.pass;
-    std::uint32_t crc=m.crc,fnv=m.fnv;
 #if RE4DC_WORLD_RECT21
+    std::uint32_t crc=m.crc,fnv=m.fnv;
     // A scoped rect21 key (texture loading) keeps its original material's class (mipfix22).
     re4dc::rect21::origin::original(crc,fnv);
-#endif
     unsigned level=0,lo=0,hi=sizeof(kKeys)/sizeof(kKeys[0]); // kKeys is sorted by crc, fnv
     while(lo<hi){
         const unsigned mid=(lo+hi)/2;const Key& k=kKeys[mid];
         if(k.crc<crc || (k.crc==crc && k.fnv<fnv))lo=mid+1;
         else{if(k.crc==crc && k.fnv==fnv)level=k.level;hi=mid;}
     }
+#else
+    unsigned level=0,lo=0,hi=sizeof(kKeys)/sizeof(kKeys[0]); // kKeys is sorted by crc, fnv
+    while(lo<hi){
+        const unsigned mid=(lo+hi)/2;const Key& k=kKeys[mid];
+        if(k.crc<m.crc || (k.crc==m.crc && k.fnv<m.fnv))lo=mid+1;
+        else{if(k.crc==m.crc && k.fnv==m.fnv)level=k.level;hi=mid;}
+    }
+#endif
     if(re4dc_foliage==2U)return level?3U:2U;
     return level==1?3U:level==2?1U:2U;
 }
