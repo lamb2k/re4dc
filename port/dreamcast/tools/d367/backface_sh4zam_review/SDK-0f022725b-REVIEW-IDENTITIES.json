@@ -1,0 +1,28 @@
+{
+  "source": "0f022725b",
+  "scope": "Read-only source/object receipt verification; no compiler or guest",
+  "provenance_exact": {
+    "tools/d367/backface_sh4zam_sdk/generate.py": true,
+    "tools/d367/backface_sh4zam_sdk/area_probe.cpp": true,
+    "tools/d367/backface_sh4zam_sdk/abi_probe.cpp": true,
+    "room/backface_sh4zam.hpp": true,
+    "game/third_party/sh4zam/include/sh4zam/shz_vector.h": true,
+    "game/third_party/sh4zam/include/sh4zam/shz_scalar.h": true,
+    "game/third_party/sh4zam/include/sh4zam/inline/shz_vector.inl.h": true,
+    "game/third_party/sh4zam/include/sh4zam/inline/shz_scalar.inl.h": true
+  },
+  "objects_exact": {
+    "abi_probe.o": true,
+    "area_probe.o": true,
+    "kernel-trace0.o": true,
+    "kernel-trace1.o": true
+  },
+  "peer_source_exact": {
+    "game/platform/backface_sh4.S": true,
+    "game/platform/backface_sh4zam_area.inc": true,
+    "room/backface_sh4zam.hpp": true
+  },
+  "sdk_provenance_sha256": "8bc1a54555b42e80779a97d0b406afa627f6094d6e148aece4cb53086cd2d297",
+  "object_tests_sha256": "36431eb940b76bea05a7603c579c474629f2a036404607870d34141b16fb86d8",
+  "macro_pin_exact": true
+}

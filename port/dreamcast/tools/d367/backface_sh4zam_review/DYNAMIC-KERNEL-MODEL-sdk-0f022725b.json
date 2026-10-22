@@ -1,0 +1,554 @@
+{
+  "scope": "MODELLED actual opcode executed paths, not target execution or hardware timing",
+  "object_sha256": "92adaa7e6fd2a3f667292f817e34b6045a5e13af4047516d5cfe87e2b4dab47b",
+  "test_source_sha256": "8b7878f02be628904c4d3ff464ccbaf13f4b15d79ee866fd9c715ed9ba5a7476",
+  "sim_source_sha256": "f52d4245a011fbfe844480de254c43bb0b74a470c4cf2dbd11c6d6f879b2c8dc",
+  "rows": [
+    {
+      "mode": "world",
+      "input_vertices": 4,
+      "triangles": 2,
+      "case": "front",
+      "emitted_vertices": 4,
+      "modelled_function_cycles": 298,
+      "modelled_cycles_per_input_triangle": 149.0,
+      "instructions": 311
+    },
+    {
+      "mode": "world",
+      "input_vertices": 4,
+      "triangles": 2,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 212,
+      "modelled_cycles_per_input_triangle": 106.0,
+      "instructions": 210
+    },
+    {
+      "mode": "world",
+      "input_vertices": 4,
+      "triangles": 2,
+      "case": "mixed",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 212,
+      "modelled_cycles_per_input_triangle": 106.0,
+      "instructions": 210
+    },
+    {
+      "mode": "world",
+      "input_vertices": 8,
+      "triangles": 6,
+      "case": "front",
+      "emitted_vertices": 8,
+      "modelled_function_cycles": 450,
+      "modelled_cycles_per_input_triangle": 75.0,
+      "instructions": 471
+    },
+    {
+      "mode": "world",
+      "input_vertices": 8,
+      "triangles": 6,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 414,
+      "modelled_cycles_per_input_triangle": 69.0,
+      "instructions": 406
+    },
+    {
+      "mode": "world",
+      "input_vertices": 8,
+      "triangles": 6,
+      "case": "mixed",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 414,
+      "modelled_cycles_per_input_triangle": 69.0,
+      "instructions": 406
+    },
+    {
+      "mode": "world",
+      "input_vertices": 16,
+      "triangles": 14,
+      "case": "front",
+      "emitted_vertices": 16,
+      "modelled_function_cycles": 754,
+      "modelled_cycles_per_input_triangle": 53.857,
+      "instructions": 791
+    },
+    {
+      "mode": "world",
+      "input_vertices": 16,
+      "triangles": 14,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 818,
+      "modelled_cycles_per_input_triangle": 58.429,
+      "instructions": 798
+    },
+    {
+      "mode": "world",
+      "input_vertices": 16,
+      "triangles": 14,
+      "case": "mixed",
+      "emitted_vertices": 8,
+      "modelled_function_cycles": 854,
+      "modelled_cycles_per_input_triangle": 61.0,
+      "instructions": 863
+    },
+    {
+      "mode": "world",
+      "input_vertices": 32,
+      "triangles": 30,
+      "case": "front",
+      "emitted_vertices": 32,
+      "modelled_function_cycles": 1362,
+      "modelled_cycles_per_input_triangle": 45.4,
+      "instructions": 1431
+    },
+    {
+      "mode": "world",
+      "input_vertices": 32,
+      "triangles": 30,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 1626,
+      "modelled_cycles_per_input_triangle": 54.2,
+      "instructions": 1582
+    },
+    {
+      "mode": "world",
+      "input_vertices": 32,
+      "triangles": 30,
+      "case": "mixed",
+      "emitted_vertices": 17,
+      "modelled_function_cycles": 1710,
+      "modelled_cycles_per_input_triangle": 57.0,
+      "instructions": 1733
+    },
+    {
+      "mode": "world",
+      "input_vertices": 64,
+      "triangles": 62,
+      "case": "front",
+      "emitted_vertices": 64,
+      "modelled_function_cycles": 2578,
+      "modelled_cycles_per_input_triangle": 41.581,
+      "instructions": 2711
+    },
+    {
+      "mode": "world",
+      "input_vertices": 64,
+      "triangles": 62,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 3242,
+      "modelled_cycles_per_input_triangle": 52.29,
+      "instructions": 3150
+    },
+    {
+      "mode": "world",
+      "input_vertices": 64,
+      "triangles": 62,
+      "case": "mixed",
+      "emitted_vertices": 35,
+      "modelled_function_cycles": 3422,
+      "modelled_cycles_per_input_triangle": 55.194,
+      "instructions": 3473
+    },
+    {
+      "mode": "world",
+      "input_vertices": 128,
+      "triangles": 126,
+      "case": "front",
+      "emitted_vertices": 128,
+      "modelled_function_cycles": 5010,
+      "modelled_cycles_per_input_triangle": 39.762,
+      "instructions": 5271
+    },
+    {
+      "mode": "world",
+      "input_vertices": 128,
+      "triangles": 126,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 6474,
+      "modelled_cycles_per_input_triangle": 51.381,
+      "instructions": 6286
+    },
+    {
+      "mode": "world",
+      "input_vertices": 128,
+      "triangles": 126,
+      "case": "mixed",
+      "emitted_vertices": 71,
+      "modelled_function_cycles": 6846,
+      "modelled_cycles_per_input_triangle": 54.333,
+      "instructions": 6953
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 4,
+      "triangles": 2,
+      "case": "front",
+      "emitted_vertices": 4,
+      "modelled_function_cycles": 308,
+      "modelled_cycles_per_input_triangle": 154.0,
+      "instructions": 321
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 4,
+      "triangles": 2,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 209,
+      "modelled_cycles_per_input_triangle": 104.5,
+      "instructions": 206
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 4,
+      "triangles": 2,
+      "case": "mixed",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 209,
+      "modelled_cycles_per_input_triangle": 104.5,
+      "instructions": 206
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 8,
+      "triangles": 6,
+      "case": "front",
+      "emitted_vertices": 8,
+      "modelled_function_cycles": 460,
+      "modelled_cycles_per_input_triangle": 76.667,
+      "instructions": 485
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 8,
+      "triangles": 6,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 411,
+      "modelled_cycles_per_input_triangle": 68.5,
+      "instructions": 402
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 8,
+      "triangles": 6,
+      "case": "mixed",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 411,
+      "modelled_cycles_per_input_triangle": 68.5,
+      "instructions": 402
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 16,
+      "triangles": 14,
+      "case": "front",
+      "emitted_vertices": 16,
+      "modelled_function_cycles": 764,
+      "modelled_cycles_per_input_triangle": 54.571,
+      "instructions": 813
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 16,
+      "triangles": 14,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 815,
+      "modelled_cycles_per_input_triangle": 58.214,
+      "instructions": 794
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 16,
+      "triangles": 14,
+      "case": "mixed",
+      "emitted_vertices": 8,
+      "modelled_function_cycles": 864,
+      "modelled_cycles_per_input_triangle": 61.714,
+      "instructions": 877
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 32,
+      "triangles": 30,
+      "case": "front",
+      "emitted_vertices": 32,
+      "modelled_function_cycles": 1372,
+      "modelled_cycles_per_input_triangle": 45.733,
+      "instructions": 1469
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 32,
+      "triangles": 30,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 1623,
+      "modelled_cycles_per_input_triangle": 54.1,
+      "instructions": 1578
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 32,
+      "triangles": 30,
+      "case": "mixed",
+      "emitted_vertices": 17,
+      "modelled_function_cycles": 1733,
+      "modelled_cycles_per_input_triangle": 57.767,
+      "instructions": 1767
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 64,
+      "triangles": 62,
+      "case": "front",
+      "emitted_vertices": 64,
+      "modelled_function_cycles": 2588,
+      "modelled_cycles_per_input_triangle": 41.742,
+      "instructions": 2781
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 64,
+      "triangles": 62,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 3239,
+      "modelled_cycles_per_input_triangle": 52.242,
+      "instructions": 3146
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 64,
+      "triangles": 62,
+      "case": "mixed",
+      "emitted_vertices": 35,
+      "modelled_function_cycles": 3471,
+      "modelled_cycles_per_input_triangle": 55.984,
+      "instructions": 3547
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 128,
+      "triangles": 126,
+      "case": "front",
+      "emitted_vertices": 128,
+      "modelled_function_cycles": 5020,
+      "modelled_cycles_per_input_triangle": 39.841,
+      "instructions": 5405
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 128,
+      "triangles": 126,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 6471,
+      "modelled_cycles_per_input_triangle": 51.357,
+      "instructions": 6282
+    },
+    {
+      "mode": "actor-strip",
+      "input_vertices": 128,
+      "triangles": 126,
+      "case": "mixed",
+      "emitted_vertices": 71,
+      "modelled_function_cycles": 6947,
+      "modelled_cycles_per_input_triangle": 55.135,
+      "instructions": 7107
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 4,
+      "triangles": 2,
+      "case": "front",
+      "emitted_vertices": 4,
+      "modelled_function_cycles": 319,
+      "modelled_cycles_per_input_triangle": 159.5,
+      "instructions": 331
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 4,
+      "triangles": 2,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 214,
+      "modelled_cycles_per_input_triangle": 107.0,
+      "instructions": 215
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 4,
+      "triangles": 2,
+      "case": "mixed",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 214,
+      "modelled_cycles_per_input_triangle": 107.0,
+      "instructions": 215
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 8,
+      "triangles": 6,
+      "case": "front",
+      "emitted_vertices": 8,
+      "modelled_function_cycles": 479,
+      "modelled_cycles_per_input_triangle": 79.833,
+      "instructions": 507
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 8,
+      "triangles": 6,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 420,
+      "modelled_cycles_per_input_triangle": 70.0,
+      "instructions": 423
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 8,
+      "triangles": 6,
+      "case": "mixed",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 420,
+      "modelled_cycles_per_input_triangle": 70.0,
+      "instructions": 423
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 16,
+      "triangles": 14,
+      "case": "front",
+      "emitted_vertices": 16,
+      "modelled_function_cycles": 799,
+      "modelled_cycles_per_input_triangle": 57.071,
+      "instructions": 859
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 16,
+      "triangles": 14,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 832,
+      "modelled_cycles_per_input_triangle": 59.429,
+      "instructions": 839
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 16,
+      "triangles": 14,
+      "case": "mixed",
+      "emitted_vertices": 8,
+      "modelled_function_cycles": 891,
+      "modelled_cycles_per_input_triangle": 63.643,
+      "instructions": 923
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 32,
+      "triangles": 30,
+      "case": "front",
+      "emitted_vertices": 32,
+      "modelled_function_cycles": 1439,
+      "modelled_cycles_per_input_triangle": 47.967,
+      "instructions": 1563
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 32,
+      "triangles": 30,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 1656,
+      "modelled_cycles_per_input_triangle": 55.2,
+      "instructions": 1671
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 32,
+      "triangles": 30,
+      "case": "mixed",
+      "emitted_vertices": 17,
+      "modelled_function_cycles": 1786,
+      "modelled_cycles_per_input_triangle": 59.533,
+      "instructions": 1861
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 64,
+      "triangles": 62,
+      "case": "front",
+      "emitted_vertices": 64,
+      "modelled_function_cycles": 2719,
+      "modelled_cycles_per_input_triangle": 43.855,
+      "instructions": 2971
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 64,
+      "triangles": 62,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 3304,
+      "modelled_cycles_per_input_triangle": 53.29,
+      "instructions": 3335
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 64,
+      "triangles": 62,
+      "case": "mixed",
+      "emitted_vertices": 35,
+      "modelled_function_cycles": 3576,
+      "modelled_cycles_per_input_triangle": 57.677,
+      "instructions": 3737
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 128,
+      "triangles": 126,
+      "case": "front",
+      "emitted_vertices": 128,
+      "modelled_function_cycles": 5279,
+      "modelled_cycles_per_input_triangle": 41.897,
+      "instructions": 5787
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 128,
+      "triangles": 126,
+      "case": "back",
+      "emitted_vertices": 0,
+      "modelled_function_cycles": 6600,
+      "modelled_cycles_per_input_triangle": 52.381,
+      "instructions": 6663
+    },
+    {
+      "mode": "actor-whole",
+      "input_vertices": 128,
+      "triangles": 126,
+      "case": "mixed",
+      "emitted_vertices": 71,
+      "modelled_function_cycles": 7156,
+      "modelled_cycles_per_input_triangle": 56.794,
+      "instructions": 7489
+    }
+  ],
+  "limitations": [
+    "Existing SH4 issue/latency/group rules; no cache, external memory, SQ destination/TA stalls or FPU exceptions.",
+    "Includes kernel prologue, full classify/front/back/split/copy, terminal EOL and epilogue; excludes caller outcode scan and C call/walk overhead.",
+    "No scene cycle totals or actor class acceptance without actual runtime strip distributions.",
+    "Historical slow baseline receipts are retained separately."
+  ]
+}
