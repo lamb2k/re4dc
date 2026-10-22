@@ -1,0 +1,43 @@
+{
+  "expected_inner": {
+    "pid": 37868,
+    "start_filetime": 134371324936721656,
+    "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe"
+  },
+  "member_pids": [
+    37868
+  ],
+  "added": [],
+  "missing": [],
+  "members": [
+    {
+      "pid": 37868,
+      "proof": {
+        "pid": 37868,
+        "retained_times": [
+          134371324936721656,
+          0,
+          312500,
+          312500
+        ],
+        "identity": {
+          "pid": 37868,
+          "start_filetime": 134371324936721656,
+          "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe"
+        },
+        "native": {
+          "pid": 37868,
+          "start_filetime": 134371324936721656,
+          "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe",
+          "exit_filetime": 0,
+          "wait_status": 258,
+          "phase": "live",
+          "kernel_100ns": 312500,
+          "user_100ns": 312500
+        }
+      },
+      "matches_original_retained_pin": true
+    }
+  ],
+  "strict_membership": true
+}
