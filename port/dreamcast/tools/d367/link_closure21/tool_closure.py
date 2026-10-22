@@ -190,6 +190,7 @@ def capture(driver, driver_log, additional_tools=(), host_dependencies=True, ldd
                 loader_absence_invariants=loader_absent,
                 controller_host_elf_maps=controller_maps,
                 host_dependency_paths=sorted(dependencies) if host_dependencies else [],
+                host_dependency_inspector=str(Path(ldd).absolute()) if host_dependencies else None,
                 future_requirement='Capture BEFORE first compiler/tool invocation and again AFTER. '
                 'Check exact resolved tool/host-library pins and actual driver queries/exec/plugin paths. '
                 'This source-plan snapshot cannot retroactively qualify an earlier build.')
@@ -209,7 +210,7 @@ def check(snapshot):
     if snapshot.get('host_dependency_reports'):
         observed = set()
         for report in snapshot['host_dependency_reports']:
-            paths, _ = dynamic_dependencies(report['path'], '/usr/bin/ldd')
+            paths, _ = dynamic_dependencies(report['path'], snapshot.get('host_dependency_inspector', '/usr/bin/ldd'))
             observed.update(paths)
         if observed != set(snapshot['host_dependency_paths']):
             raise ValueError('host loader selection changed')
