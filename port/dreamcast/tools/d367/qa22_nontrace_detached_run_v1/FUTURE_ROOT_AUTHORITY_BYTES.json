@@ -1,0 +1,17 @@
+{
+  "absolute_actual_seconds": 47.5,
+  "attempt_limit": 1,
+  "cap": "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-domains02",
+  "contract_sha256": "fb19b53f804afe461c5904fbd848fc5c7c10b63490c4f8b631624dda9ff12f65",
+  "control": "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-domains02-control\\reference-hooks",
+  "evidence_cap_bytes": 60000000,
+  "inner_seconds": 41,
+  "input_cutoff_seconds": 40.75,
+  "private_job_seconds": 47.0,
+  "profile_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+  "runner_sha256": "b80455da27b608aa419bea755d17a1bb05182517cb11399a930654d3cc34f387",
+  "runtime_floor_bytes": 19394461696,
+  "semantic_mode": "return-door01",
+  "tools_sha256": "352cc7ee1955fec689291617965b3fb786aaa4166a1295e4df29fb18b72acdd6",
+  "tools_source": "505f3ee487a1bb658199986f4988fdf14008c960"
+}

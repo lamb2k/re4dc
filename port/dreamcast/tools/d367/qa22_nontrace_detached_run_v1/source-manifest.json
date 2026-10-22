@@ -1,0 +1,122 @@
+{
+  "files": {
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    "EXTRA_REFERENCE_RECEIPT.json": {
+      "bytes": 719,
+      "sha256": "1488c51fff53a60d72fd9e1addcb2f88a5996f187ff110f3207a90aeebda894c"
+    },
+    "REVIEWED_COMPONENTS.json": {
+      "bytes": 1681,
+      "sha256": "9a79ada1517830d22076f66b598f7b927c3f936eeb12422a5caa30afe327d8b3"
+    },
+    "SEALED_SOURCE_PROVENANCE.json": {
+      "bytes": 4785,
+      "sha256": "b13758626f314d47b3c419e70ba10b97871cb581821f0e9b3fe4e4d08d87e0ce"
+    },
+    "SEED_CONTRACT.json": {
+      "bytes": 380,
+      "sha256": "2d8c4a5f9c3812ec1c746c0c3ce5c031029ed471cd752885c307564ba00093eb"
+    },
+    "capture-budget.py": {
+      "bytes": 712,
+      "sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda"
+    },
+    "controller-core.py": {
+      "bytes": 7468,
+      "sha256": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b"
+    },
+    "evidence-footprint-native.py": {
+      "bytes": 2436,
+      "sha256": "0f9be202ecd802b47930aec3f6dd69d3cf5139a84382766c89fb21efbf96d164"
+    },
+    "exact-log-symbols.json": {
+      "bytes": 634,
+      "sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29"
+    },
+    "global-ui-ABI-supplement.json": {
+      "bytes": 1860,
+      "sha256": "44a0a870112b16bca38bda2a06e5e325d39bd17a57aae82c1ab302c1639aa2dc"
+    },
+    "guest-profile-v2.json": {
+      "bytes": 13113,
+      "sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b"
+    },
+    "guest-supervisor-core.py": {
+      "bytes": 6484,
+      "sha256": "f85d2de4373483e46ae0058124aace162086d2d73efdc0083dc3c67313f29890"
+    },
+    "inner-adapter.py": {
+      "bytes": 15928,
+      "sha256": "2f2245d7f8302c3b52ec50eb04d7b0f9cb2500aa940d06355d7667ff50e5a094"
+    },
+    "input-deadlines.py": {
+      "bytes": 3728,
+      "sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9"
+    },
+    "layout-contract.py": {
+      "bytes": 4606,
+      "sha256": "74754ec6977299b1268bc8c1a48423e42bed9e3b236d96e84cec36e255667b2e"
+    },
+    "native-process-count.py": {
+      "bytes": 1968,
+      "sha256": "bb381698b1a731f630c7ca560628355f44575877643f15a566b7cc4642d5211b"
+    },
+    "observe.py": {
+      "bytes": 8571,
+      "sha256": "ab9f4d942bb2fac633ad16ba4ed81d8ee8f0e38e69cd0fbd3f906ce9b333d6dc"
+    },
+    "observer-v2.py": {
+      "bytes": 11338,
+      "sha256": "b4ce92c72aba84010a4b22db372622415433c3ad531adae26bc17eed5dc7194c"
+    },
+    "outer-driver.py": {
+      "bytes": 16676,
+      "sha256": "23c303790f5c1c6d908bfb6cd2b7e6491bcfb6ffa7e36a8d8f6ee435ec0f9444"
+    },
+    "policies.py": {
+      "bytes": 4231,
+      "sha256": "f1f23f2ae281f9e35410d2a51fee6de13dc18d1643501644955fc0d40b92e899"
+    },
+    "reference-hooks/COLLECTOR_CONTRACT.json": {
+      "bytes": 5411,
+      "sha256": "fb19b53f804afe461c5904fbd848fc5c7c10b63490c4f8b631624dda9ff12f65"
+    },
+    "reference-hooks/checkpoint_runner18.child.py": {
+      "bytes": 18192,
+      "sha256": "b80455da27b608aa419bea755d17a1bb05182517cb11399a930654d3cc34f387"
+    },
+    "reference-hooks/child_reference_proxy.py": {
+      "bytes": 5369,
+      "sha256": "35fd3ab48a43f7a0604770b8b2b1708d0eb546371bd2101eb21ae3e022b6af19"
+    },
+    "reference-hooks/native_reference_api.py": {
+      "bytes": 9151,
+      "sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255"
+    },
+    "reference-hooks/parent_reference_broker.py": {
+      "bytes": 16780,
+      "sha256": "4d77a1871d197a91c4cdf8321afbcd44dc929ee7118fefaa5691b499024df75f"
+    },
+    "reference-hooks/reference_collector.py": {
+      "bytes": 6856,
+      "sha256": "fb86ea60f8d39f61aa25e6a5facc5c3eafa11a695f2bf3ee40211243be17165d"
+    },
+    "reference-hooks/retained-all-track-declarations.json": {
+      "bytes": 4295,
+      "sha256": "dc7e2d19fce835f3d68cde66ae1a15afd3705dabb982921730fdd43cc92a0af0"
+    },
+    "windows-backend.py": {
+      "bytes": 17536,
+      "sha256": "233bc7e8bb5b02fbb3ec6f026d8c5d962225b33f4a0dd401489c244f6b1e9847"
+    },
+    "wiring-backend.py": {
+      "bytes": 4336,
+      "sha256": "8b416981222490e35405295b736f8e4fed4c13035acbc8475a19c0c906f900c2"
+    }
+  },
+  "scope": "Concrete future runtime launch seal; unallocated and missing exact QA image; no execution",
+  "source_commit": "fc8f707efd980ac3cb98de529e52c5ec03c90286"
+}

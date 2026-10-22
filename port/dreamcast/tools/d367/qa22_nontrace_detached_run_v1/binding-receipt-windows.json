@@ -1,0 +1,40 @@
+{
+  "scope": "focused pure binding controls; AST/pure actual functions/small metadata only; no native API/process/image/input",
+  "platform": "Windows-11-10.0.26220-SP0",
+  "utc": "2026-10-22T17:39:23.510104+00:00",
+  "tests_run": 8,
+  "passed": true,
+  "failures": 0,
+  "errors": 0,
+  "pins": {
+    "FUTURE_ROOT_AUTHORITY_BYTES.json": {
+      "bytes": 930,
+      "sha256": "8ae39cb7aef2f7f32cf6162796a270b1628447dfb5000b3048bab6918160cec8"
+    },
+    "IMAGE_PATH_METADATA.json": {
+      "bytes": 3954,
+      "sha256": "78522268450a91423649a8ab04760fca7cabce6844052f824a677d1cda757ab6"
+    },
+    "LAUNCH_REQUEST.json": {
+      "bytes": 4037,
+      "sha256": "259bcfbecc919abd991502b14f1f75c154ac5dff5d2703cc771b77036ba7d324"
+    },
+    "run_binding_tests.py": {
+      "bytes": 1360,
+      "sha256": "bb0ad4f568a61e1cee8bdd1aeaba189f7142a8c37f65a2c80adab9715105c5c4"
+    },
+    "SEALED_SOURCE_PROVENANCE.json": {
+      "bytes": 4785,
+      "sha256": "b13758626f314d47b3c419e70ba10b97871cb581821f0e9b3fe4e4d08d87e0ce"
+    },
+    "source-manifest.json": {
+      "bytes": 4422,
+      "sha256": "352cc7ee1955fec689291617965b3fb786aaa4166a1295e4df29fb18b72acdd6"
+    },
+    "test_seal_binding.py": {
+      "bytes": 8088,
+      "sha256": "5859a1ff85578d542ada1d5fb933c4ddfaa47f63b4983a73696514f201ae0711"
+    }
+  },
+  "output": "test_actual_allocation_schema_accepts_exact_template_and_rejects_changed_fields (seal_binding.Tests.test_actual_allocation_schema_accepts_exact_template_and_rejects_changed_fields) ... ok\ntest_both_actual_counter_bindings_and_native_footprint_are_sealed (seal_binding.Tests.test_both_actual_counter_bindings_and_native_footprint_are_sealed) ... ok\ntest_exact_seed_profile_reference_and_guards_stay_frozen (seal_binding.Tests.test_exact_seed_profile_reference_and_guards_stay_frozen) ... ok\ntest_known_missing_image_is_explicit_block_and_no_authority_created (seal_binding.Tests.test_known_missing_image_is_explicit_block_and_no_authority_created) ... ok\ntest_literal_argv_accepted_by_actual_parser_and_default_off (seal_binding.Tests.test_literal_argv_accepted_by_actual_parser_and_default_off) ... ok\ntest_new_output_fields_reference_contract_and_template_agree (seal_binding.Tests.test_new_output_fields_reference_contract_and_template_agree) ... ok\ntest_runtime_seal_covers_every_mirror_and_exact_reviewed_bytes (seal_binding.Tests.test_runtime_seal_covers_every_mirror_and_exact_reviewed_bytes) ... ok\ntest_wrong_template_hash_and_foreign_authority_path_refuse (seal_binding.Tests.test_wrong_template_hash_and_foreign_authority_path_refuse) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 1.133s\n\nOK\n"
+}

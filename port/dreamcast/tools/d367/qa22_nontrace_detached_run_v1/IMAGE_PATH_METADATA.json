@@ -1,0 +1,111 @@
+{
+  "scope": "ordinary pathlib stat metadata only; no native API/full image hash/repair/identity acceptance",
+  "utc": "2026-10-22T17:36:55.414283+00:00",
+  "rows": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-runtime-20261021\\attempts\\stage-001\\input\\gdemu\\disc.gdi",
+      "exists": true,
+      "size": 83,
+      "mtime_ns": 1792628865767859800,
+      "inode": 1688849865293044,
+      "device": 14332939485708580193,
+      "links": 1,
+      "is_file": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-runtime-20261021\\attempts\\stage-001\\input\\gdemu\\track01.bin",
+      "exists": true,
+      "size": 1058400,
+      "mtime_ns": 1792601985000000000,
+      "inode": 562949958428473,
+      "device": 14332939485708580193,
+      "links": 16,
+      "is_file": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-runtime-20261021\\attempts\\stage-001\\input\\gdemu\\track02.raw",
+      "exists": true,
+      "size": 1237152,
+      "mtime_ns": 1792601985000000000,
+      "inode": 281474981717818,
+      "device": 14332939485708580193,
+      "links": 16,
+      "is_file": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-runtime-20261021\\attempts\\stage-001\\input\\gdemu\\track03.iso",
+      "exists": false,
+      "reason": "FileNotFoundError"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021\\cold-shoot01\\track01.bin",
+      "exists": true,
+      "size": 1058400,
+      "mtime_ns": 1792601985000000000,
+      "inode": 562949958428473,
+      "device": 14332939485708580193,
+      "links": 16,
+      "is_file": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-observer01\\track01.bin",
+      "exists": true,
+      "size": 1058400,
+      "mtime_ns": 1792601985000000000,
+      "inode": 562949958428473,
+      "device": 14332939485708580193,
+      "links": 16,
+      "is_file": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021\\cold-shoot01\\track02.raw",
+      "exists": true,
+      "size": 1237152,
+      "mtime_ns": 1792601985000000000,
+      "inode": 281474981717818,
+      "device": 14332939485708580193,
+      "links": 16,
+      "is_file": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-observer01\\track02.raw",
+      "exists": true,
+      "size": 1237152,
+      "mtime_ns": 1792601985000000000,
+      "inode": 281474981717818,
+      "device": 14332939485708580193,
+      "links": 16,
+      "is_file": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021\\cold-shoot01\\track03.iso",
+      "exists": false,
+      "reason": "FileNotFoundError"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-observer01\\track03.iso",
+      "exists": false,
+      "reason": "FileNotFoundError"
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\cache21-ganado-reader-build-20261021\\on-01\\re4dc-game.elf",
+      "exists": true,
+      "size": 28582232,
+      "mtime_ns": 1792626937898346900,
+      "inode": 734971,
+      "device": 0,
+      "links": 1,
+      "is_file": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-domains02",
+      "exists": false,
+      "reason": "FileNotFoundError"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-domains02-control",
+      "exists": false,
+      "reason": "FileNotFoundError"
+    }
+  ]
+}

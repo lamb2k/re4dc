@@ -1,0 +1,12 @@
+{
+  "path": "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-observer01-control/qualification.json",
+  "sha256": "7f910f9fe2c6139e75f8d7c270e1c56ac62c4511a4ee261bac679379424557a8",
+  "qualified": false,
+  "source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+  "program_sha256": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+  "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+  "image_sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+  "profile_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+  "mode": "return-door01",
+  "output_name": "return-door-observer01"
+}
