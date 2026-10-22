@@ -1,0 +1,28 @@
+{
+  "source_only_fake_helpers": true,
+  "no_native_query_subprocess_or_guest": true,
+  "launcher_sha256": "eddd8e40a9ff87ff0a81fe0c71fa64d99c4d8d7084994148d55c2139c9ad2b36",
+  "fp_run_sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747",
+  "controls": [
+    {
+      "control": "fake Popen admitted at0 returns at2 afterdeadline1",
+      "observed": "child appended and alive; no post-create deadline check",
+      "passes_as_reproduction": true
+    },
+    {
+      "control": "fake quota stat raisesOSError",
+      "observed": "monitor unwinds without reason/cleanup",
+      "passes_as_reproduction": true
+    },
+    {
+      "control": "three owned128B files, no hardlinks",
+      "actual_file_bytes": 384,
+      "reported_usage": 128,
+      "excluded_new_copies": [
+        "flycast.exe",
+        "track01.iso"
+      ],
+      "passes_as_reproduction": true
+    }
+  ]
+}
