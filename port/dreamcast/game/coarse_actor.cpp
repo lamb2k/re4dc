@@ -253,7 +253,13 @@ extern "C" int re4dc_coarse_actor_source(const void* info,Re4dcActorSource* out)
 #if RE4DC_NATIVE_MODEL_REGISTRY
 extern "C" int re4dc_registry_texture_key(const Re4dcUiImage*,unsigned*,unsigned*);  // coarse_actor_owner_registry.inc
 #endif
+#if defined(RE4DC_LEON_ATLAS_SPLIT) && RE4DC_LEON_ATLAS_SPLIT
+extern "C" int re4dc_atlas_texture_key(const Re4dcUiImage*,unsigned*,unsigned*);
+#endif
 extern "C" int re4dc_coarse_actor_texture_key(const Re4dcUiImage* i,unsigned* c,unsigned* f) {
+#if defined(RE4DC_LEON_ATLAS_SPLIT) && RE4DC_LEON_ATLAS_SPLIT
+    if(re4dc_atlas_texture_key(i,c,f))return 1;
+#endif
 #if RE4DC_ACTOR_TRANSACTION
     if(re4dc_actor_hair_texture_key(i,c,f))return 1;
 #endif

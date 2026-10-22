@@ -22,6 +22,9 @@ unsigned char* pl08_hook_alloc(unsigned bytes) {return static_cast<unsigned char
 void pl08_hook_free(unsigned char* cell) {re4dc_static_free(cell);}
 bool pl08_hook_preflight(const Pl08ChunkView&,unsigned&);
 unsigned pl08_hook_reset() {
+#if defined(RE4DC_LEON_ATLAS_SPLIT) && RE4DC_LEON_ATLAS_SPLIT
+    re4dc_atlas_retire_pl08(); // revoke borrowed source spans BEFORE reset/free/republication
+#endif
     unsigned n=actor_immutable_reset_pl08();
     if(skin_costume==1u && skin_state){skin_state=0;++n;}  // the costume-1 skin program is rebuilt from the new bytes
     return n;

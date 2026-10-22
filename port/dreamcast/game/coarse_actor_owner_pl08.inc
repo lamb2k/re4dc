@@ -153,6 +153,9 @@ int pl08_headless_plan(cModel* m,Re4dcActorPlan* out) {
     if(!p.palette_bytes || !p.workspace_bytes || (re4dc_actor_material_runs_capability(&p)&3u)!=3u)return 0;
     static unsigned logs;if(logs<4){++logs;re4dc_log("LEON_HEADLESS plan f=%u palette=%u workspace=%u neck_tris=%u\n",
         unsigned(pG->Frame_cnt),p.palette_bytes,p.workspace_bytes,leon_neck::chunk.triangles);}
+#if defined(RE4DC_LEON_ATLAS_SPLIT) && RE4DC_LEON_ATLAS_SPLIT
+    re4dc_atlas_apply(&p);
+#endif
     *out=p;return 1;
 }
 #if defined(RE4DC_LEON_HEAD_IDS)
@@ -354,5 +357,8 @@ extern "C" int re4dc_actor_plan_pl08(cModel* m,Re4dcActorPlan* out) {
         r.role=8;r.immutable_asset_id=p.immutable_asset_id[8];r.triangles=c.triangles;r.uv=c.uv;r.stream=c.stream;
     }
     if((re4dc_actor_material_runs_capability(&p)&3u)!=3u)return 0;
+#if defined(RE4DC_LEON_ATLAS_SPLIT) && RE4DC_LEON_ATLAS_SPLIT
+    re4dc_atlas_apply(&p);
+#endif
     *out=p;return 1;
 }
