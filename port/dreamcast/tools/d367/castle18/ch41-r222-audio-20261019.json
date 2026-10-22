@@ -1,0 +1,19 @@
+{
+  "replace": {
+    "st2/r222.dar": "/root/re4data/private/castle18-ch41-r222-audio-20261019/st2/r222.dar",
+    "bgm/bio4midi.dat": "/root/re4data/private/castle18-ch41-bgm14-20261019/bgm/bio4midi.dat"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Existing frozen-layout ROOM/FOOT preparation, unchanged enemy voices and reused checked BGM14. No program, model, texture, motion or AI change.",
+    "room_sha256": "61830c29658e81465f3922100b538a3304827a34e3d3f83ad38132afeeb0b0dc",
+    "private_manifest_sha256": "741491b9ad4d30f3262753c3071b63d8279adcd7efc79f2bd5d67a0d7971b1e4",
+    "bgm_candidate_sha256": "293df040f919e5bb9ad410e4404ed01b72aaedcdc4f41738de10199c29774ba0",
+    "bgm_aram_offset": 8677280,
+    "bgm_aram_length": 476379,
+    "integration": "All bytes outside the original bank14 ARAM slice are exact. Validate and compose that slice into any newer BGM container rather than replacing other bank edits.",
+    "runtime_status": "Current-program entry: audio-fit/TEX/VRAM failures zero, zero late texture uploads in the observed window, exact 49152-byte reserve, 23 program payloads unchanged. Enemy draw acceptance is withheld: all em11 census rows are crowd-skipped with native=0 at roughly45m distance, despite the stock NOT-DRAWN check passing. Near encounter, combat and chapter progression remain unqualified.",
+    "runtime_log_sha256": "f3c10d1e5358b410c7bccbe08e506c93e32dd040603176a14e81d395b2050863",
+    "runtime_disc_sha256": "268ebbed9c8167369c55ee918ffaeec03416fef26ff5483015fb71cab58d50a6"
+  }
+}

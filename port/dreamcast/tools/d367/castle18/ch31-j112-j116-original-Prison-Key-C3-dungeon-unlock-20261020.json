@@ -1,0 +1,1269 @@
+{
+  "scope": "Qualified J original no-warp VMU/CardLoad lineage, latest own snapshots only. Normal exact-owned-window controls and read-only guest feedback. No guest/item/health/state writes, rollback, source/data changes or rebuild/stage.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk112",
+      "result": "Return input control: initial held turn does not move from picture,720/600/C3 preserved; no completed path",
+      "elapsed_s": 51.0,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "cbbcb67d224e4a6e9da458e228f73dc6698bd7c90e3dcfd05f723ed055d79f5f",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk112\\data\\disc.state"
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk112\\shots\\checkpoint-source-31287\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk112\\shots\\checkpoint-source-31287\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk112",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Return input control: initial held turn does not move from picture,720/600/C3 preserved; no completed path",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk112\\shots\\checkpoint-source-31287\\frames\\fb0.png",
+          "png_sha256": "b5ece2bf835cb3610abe26fedf7cb75d6605c00838ca3ce9b1cbc668c7c95061",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk112\\shots\\checkpoint-source-31287\\checkpoint-context.json",
+          "source_frame_interval": [
+            31287,
+            31296
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk113",
+      "result": "Private wrong directional Key-mask guard stops safely after2normal returnwaypoints,720/600/C3 preserved; no gamefailure",
+      "elapsed_s": 7.4,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "522370a0ee7ecba4dca48c051c72dcf52c7671f6db65f6d01a2ec49bf888a69e",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk113\\data\\disc.state"
+        },
+        {
+          "normal_owned_input_edge_refresh_after_source_Key_not_observed": {
+            "frame": 31341,
+            "missing": [
+              "right"
+            ],
+            "source_Key_on": "0x4000004",
+            "attempt": 1
+          }
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            45000.0,
+            -36500.0
+          ],
+          "pos": [
+            45001.07421875,
+            1999.9967041015625,
+            -36674.54296875
+          ]
+        },
+        {
+          "normal_owned_input_edge_refresh_after_source_Key_not_observed": {
+            "frame": 31375,
+            "missing": [
+              "right"
+            ],
+            "source_Key_on": "0x0",
+            "attempt": 2
+          }
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            43500.0,
+            -36500.0
+          ],
+          "pos": [
+            43590.2421875,
+            1999.9979248046875,
+            -36651.87109375
+          ]
+        },
+        {
+          "normal_owned_input_edge_refresh_after_source_Key_not_observed": {
+            "frame": 31409,
+            "missing": [
+              "left"
+            ],
+            "source_Key_on": "0x0",
+            "attempt": 3
+          }
+        },
+        {
+          "normal_owned_input_edge_refresh_after_source_Key_not_observed": {
+            "frame": 31439,
+            "missing": [
+              "left"
+            ],
+            "source_Key_on": "0x49040049",
+            "attempt": 4
+          }
+        },
+        {
+          "abort": "AssertionError('Stop repeated host input mismatch')"
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk113\\shots\\checkpoint-source-31439\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk113\\shots\\checkpoint-source-31439\\checkpoint-context.json"
+        },
+        {
+          "owned_close_on_guard": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk113",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Private wrong directional Key-mask guard stops safely after2normal returnwaypoints,720/600/C3 preserved; no gamefailure",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk113\\shots\\checkpoint-source-31439\\frames\\fb0.png",
+          "png_sha256": "6e056779764128aca73f3e76317d0a2f9a0b1227f033603aaf7d08c0d5d2fe07",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk113\\shots\\checkpoint-source-31439\\checkpoint-context.json",
+          "source_frame_interval": [
+            31439,
+            31448
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk114",
+      "result": "Ordinary exact-owned startup buttonreleases then30neutral ticks and all8remaining normalwaypoints reach dungeon A CHECK,720/600/C3",
+      "elapsed_s": 18.1,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "e25b279bda64820c7aef9e9d4a99d7fcb627633a685f090f87d0b371c3fcf460",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk114\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            43500.0,
+            -35000.0
+          ],
+          "pos": [
+            43410.32421875,
+            1999.9962158203125,
+            -34921.859375
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            42000.0,
+            -34750.0
+          ],
+          "pos": [
+            42110.98828125,
+            1999.9979248046875,
+            -34801.14453125
+          ]
+        },
+        {
+          "waypoint_reached": 2,
+          "target": [
+            41500.0,
+            -33000.0
+          ],
+          "pos": [
+            41421.42578125,
+            1999.9971923828125,
+            -33149.74609375
+          ]
+        },
+        {
+          "waypoint_reached": 3,
+          "target": [
+            41000.0,
+            -31750.0
+          ],
+          "pos": [
+            41110.65234375,
+            2000.0009765625,
+            -31836.818359375
+          ]
+        },
+        {
+          "waypoint_reached": 4,
+          "target": [
+            39000.0,
+            -30500.0
+          ],
+          "pos": [
+            39060.73828125,
+            1999.9989013671875,
+            -30608.51171875
+          ]
+        },
+        {
+          "waypoint_reached": 5,
+          "target": [
+            17000.0,
+            -30500.0
+          ],
+          "pos": [
+            17158.615234375,
+            1999.9971923828125,
+            -30520.412109375
+          ]
+        },
+        {
+          "waypoint_reached": 6,
+          "target": [
+            16100.0,
+            -37000.0
+          ],
+          "pos": [
+            16077.0205078125,
+            1999.9984130859375,
+            -36839.80078125
+          ]
+        },
+        {
+          "normal_r201_original_dungeon_lock_approach_complete": true,
+          "frame": 31919,
+          "pos": [
+            16000.572265625,
+            1999.9979248046875,
+            -37650.44140625
+          ],
+          "health": [
+            720,
+            600
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk114\\shots\\checkpoint-source-31919\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk114\\shots\\checkpoint-source-31919\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk114",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Ordinary exact-owned startup buttonreleases then30neutral ticks and all8remaining normalwaypoints reach dungeon A CHECK,720/600/C3",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk114\\shots\\checkpoint-source-31919\\frames\\fb0.png",
+          "png_sha256": "0c3f334ac8ac074b6d3e9652f209de96de893ab99037d73479d0a6f1d1d372c5",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk114\\shots\\checkpoint-source-31919\\checkpoint-context.json",
+          "source_frame_interval": [
+            31919,
+            31928
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk115",
+      "result": "Initial dungeon A duration uses stale pre-screenshot sourceframe and is too short/unaccepted; C3/health unchanged, no unlock",
+      "elapsed_s": 47.4,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "99d8d9a0792210f12ca4ee88dd0e7f1c2e4a9d36fa9c3067456e7d77647461a2",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk115\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "normal_aligned_A_at_original_dungeon_CHECK": {
+            "frame": 31964,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 0,
+            "Stop": "0x0",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false,
+            "pos": [
+              15975.8916015625,
+              1999.9998779296875,
+              -37798.0546875
+            ],
+            "yaw": 3.1268584728240967,
+            "door_facing_error": -0.015855472824096495,
+            "source_idle_routines": [
+              0,
+              4,
+              1,
+              0
+            ]
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk115\\shots\\checkpoint-source-31964\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk115\\shots\\checkpoint-source-31964\\checkpoint-context.json"
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk115\\shots\\checkpoint-source-33272\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk115\\shots\\checkpoint-source-33272\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk115",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Initial dungeon A duration uses stale pre-screenshot sourceframe and is too short/unaccepted; C3/health unchanged, no unlock",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk115\\shots\\checkpoint-source-31964\\frames\\fb0.png",
+          "png_sha256": "fe64b79cd5dd4fcb8ef8599315fff9d9af155fbb12b373b9fa004fee39f796cb",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk115\\shots\\checkpoint-source-31964\\checkpoint-context.json",
+          "source_frame_interval": [
+            31964,
+            31973
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        },
+        {
+          "run": "current-j-route-walk115",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Initial dungeon A duration uses stale pre-screenshot sourceframe and is too short/unaccepted; C3/health unchanged, no unlock",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk115\\shots\\checkpoint-source-33272\\frames\\fb0.png",
+          "png_sha256": "619ad13f4355b12b86bb74405b0ceff33876eb1d5affc6d63bca0cc5604c8ace",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk115\\shots\\checkpoint-source-33272\\checkpoint-context.json",
+          "source_frame_interval": [
+            33272,
+            33279
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk116",
+      "result": "Full10source-tick A counted AFTER screenshot opens originaldialog; soleC3/Use0 consumes key, original unlock8000+savedRsf1+actual barriercollisionrelease,15worldticks720/600",
+      "elapsed_s": 14.8,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "f54fa759971fc089265b08849d80de703b84a0e5394d3a30201534161465e108",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk116\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "normal_aligned_A_at_original_dungeon_CHECK": {
+            "frame": 33318,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 0,
+            "Stop": "0x0",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false,
+            "pos": [
+              15965.75,
+              2000.0003662109375,
+              -37777.9296875
+            ],
+            "yaw": 3.050236463546753,
+            "door_facing_error": 0.060766536453247255,
+            "source_idle_routines": [
+              0,
+              4,
+              2,
+              0
+            ]
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk116\\shots\\checkpoint-source-33319\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk116\\shots\\checkpoint-source-33319\\checkpoint-context.json"
+        },
+        {
+          "normal_dungeon_A_actual_press_after_screenshot_frame": 33328
+        },
+        {
+          "normal_A_advances_original_dungeon_dialog": {
+            "frame": 33353,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 0,
+            "Stop": "0xffffffbf",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false
+          }
+        },
+        {
+          "normal_A_advances_original_dungeon_dialog": {
+            "frame": 33378,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 0,
+            "Stop": "0xffffffbf",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false
+          }
+        },
+        {
+          "normal_A_advances_original_dungeon_dialog": {
+            "frame": 33403,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 0,
+            "Stop": "0xffffffbf",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false
+          }
+        },
+        {
+          "normal_A_on_verified_Prison_Key_C3_and_Use0": {
+            "frame": 33427,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 1,
+            "Stop": "0x400900",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false,
+            "item_cursor": "000000000000000000",
+            "col": 0,
+            "idx": 0,
+            "sel": 0,
+            "cmd": 0,
+            "source_key_item_order": [
+              "0xc3"
+            ],
+            "selected_source_id": "0xc3"
+          }
+        },
+        {
+          "normal_A_on_verified_Prison_Key_C3_and_Use0": {
+            "frame": 33452,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 1,
+            "Stop": "0x400900",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false,
+            "item_cursor": "000000000000ffff00",
+            "col": 0,
+            "idx": 0,
+            "sel": 0,
+            "cmd": 0,
+            "source_key_item_order": [
+              "0xc3"
+            ],
+            "selected_source_id": "0xc3"
+          }
+        },
+        {
+          "normal_A_on_verified_Prison_Key_C3_and_Use0": {
+            "frame": 33477,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 1,
+            "Stop": "0x400900",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false,
+            "item_cursor": "000000000000ffff00",
+            "col": 0,
+            "idx": 0,
+            "sel": 0,
+            "cmd": 0,
+            "source_key_item_order": [
+              "0xc3"
+            ],
+            "selected_source_id": "0xc3"
+          }
+        },
+        {
+          "normal_A_on_verified_Prison_Key_C3_and_Use0": {
+            "frame": 33502,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 1,
+            "Stop": "0x400900",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false,
+            "item_cursor": "000000000000ffff00",
+            "col": 0,
+            "idx": 0,
+            "sel": 0,
+            "cmd": 0,
+            "source_key_item_order": [
+              "0xc3"
+            ],
+            "selected_source_id": "0xc3"
+          }
+        },
+        {
+          "normal_A_advances_original_dungeon_dialog": {
+            "frame": 33528,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 0,
+            "Stop": "0xffffffbf",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": true
+          }
+        },
+        {
+          "normal_A_advances_original_dungeon_dialog": {
+            "frame": 33553,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 0,
+            "Stop": "0xffffffbf",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": true
+          }
+        },
+        {
+          "original_Prison_Key_C3_consumed_and_unlock_bit_set": {
+            "frame": 33597,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 0,
+            "Stop": "0x0",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": true,
+            "r201_RSF": "0x48400000",
+            "door_flags": "0xe84002b4",
+            "battle_collision_area_A_flags": 2
+          }
+        },
+        {
+          "original_Prison_Key_C3_unlock_callback_world_return_complete": {
+            "frame": 33612,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 0,
+            "Stop": "0x0",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": true,
+            "r201_RSF": "0x48400000",
+            "door_flags": "0xe84002b4",
+            "battle_collision_area_A_flags": 2
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk116\\shots\\checkpoint-source-33612\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk116\\shots\\checkpoint-source-33612\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk116",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Full10source-tick A counted AFTER screenshot opens originaldialog; soleC3/Use0 consumes key, original unlock8000+savedRsf1+actual barriercollisionrelease,15worldticks720/600",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk116\\shots\\checkpoint-source-33319\\frames\\fb0.png",
+          "png_sha256": "acd7c0dfcc422c5634bd462874f95f2f0d44b184795b480fec13bdc5af31bea0",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk116\\shots\\checkpoint-source-33319\\checkpoint-context.json",
+          "source_frame_interval": [
+            33319,
+            33328
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        },
+        {
+          "run": "current-j-route-walk116",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Full10source-tick A counted AFTER screenshot opens originaldialog; soleC3/Use0 consumes key, original unlock8000+savedRsf1+actual barriercollisionrelease,15worldticks720/600",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk116\\shots\\checkpoint-source-33612\\frames\\fb0.png",
+          "png_sha256": "2342f252b2e2f570b4779a3449c2eedce1a50f962e2d1b204a56b24d52c84753",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk116\\shots\\checkpoint-source-33612\\checkpoint-context.json",
+          "source_frame_interval": [
+            33612,
+            33619
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    }
+  ],
+  "current_snapshot_audit": {
+    "battle_collision_area_A_flags": 2,
+    "scope": "Immutable current J original no-warp CardLoad lineage, four exact ELF anchors; original inventory and RSF read-only. No state changes.",
+    "state_sha256": "f54fa759971fc089265b08849d80de703b84a0e5394d3a30201534161465e108",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x201",
+    "chapter": 6,
+    "source_frame": 33620,
+    "health": [
+      720,
+      1200,
+      600,
+      600
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "death_flags": "0x3080100",
+    "door_flags": "0xe84002b4",
+    "door_unlock": [
+      "0x828000",
+      "0x0"
+    ],
+    "partner_subflags": "0x44",
+    "r203_RSF": "0x18000000",
+    "r201_RSF": "0x48400000",
+    "player_pos": [
+      15952.892578125,
+      1999.9989013671875,
+      -37789.53515625
+    ],
+    "partner_pos": [
+      15813.2265625,
+      2000.0003662109375,
+      -37405.8359375
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 10
+      },
+      {
+        "id": "0x4",
+        "num": 10,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ]
+  },
+  "source_gate": "r201_checkDungeonKeyUse waits original ItemMgr.checkC3, sets unlock8000 and disablesB; original confirmation/SceEventEnd then roomflag1/doorflag/GameSaveSave,12tick wait and r201_setBattleArea. The original child waits object53 rises1600 before disabling collision areaA. Live and immutable areaAflags2 prove enablebit0, then15normal worldticks observed.",
+  "limits": [
+    "Original GameSaveSave is the source Continuebackup; not a physical VMUchapter-end save.",
+    "Private controls112/113/115 are retained incomplete/guarded controls, not gamefailures or unlocksuccess.",
+    "No Garradoractivation/kill, dungeonexit/waves, full residency or chapter closure. Existing r20127postpreloadupload/8knownGCfx gaps remain.",
+    "No whole-drive/hardware timing claim."
+  ],
+  "next": "Normal dungeonstairs and original lower GreenHerb6 pickup/Use, then Garrador/lever/exit/waves/end-save."
+}

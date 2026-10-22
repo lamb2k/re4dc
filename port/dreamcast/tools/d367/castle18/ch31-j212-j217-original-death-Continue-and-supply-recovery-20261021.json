@@ -1,0 +1,1837 @@
+{
+  "scope": "Independent original no-warp J route. Original death and GameContinue restore are actual game operations via physical A, never host state rollback/retarget. Normal supply pickup/Use/Wait then new rematch preparation on unchanged program/image, no game-memory writes/build/stage.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk212",
+      "result": "Normal east-corridor north-gate approach passes,1/240 preserved; original58HP400 approaches.",
+      "elapsed_s": 4.1,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "a641981b1be3acadeb27de9530f73879d1e62d9c9e9ff32581b43739a1d50017",
+      "four_ELF_anchor_saved_state_audit": {
+        "frame": 56175,
+        "health": [
+          1,
+          1200,
+          240,
+          600
+        ],
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "Status0": "0x3080100",
+        "Status1": "0x204",
+        "room_continue_counter": 2,
+        "scene_actor_inspection_skipped": false,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 5,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ],
+        "player_pos": [
+          41454.21484375,
+          1999.9979248046875,
+          -39233.9375
+        ],
+        "partner_pos": [
+          41095.75,
+          1999.9971923828125,
+          -38459.55859375
+        ],
+        "partner_flags": "0x44",
+        "Garrador_HP": 0,
+        "Garrador_routines": [
+          3,
+          0,
+          2,
+          1
+        ],
+        "r201_saved_RSF": "0xec400000"
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk212\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action",
+            "ready",
+            "knife",
+            "inventory",
+            "partner"
+          ]
+        },
+        {
+          "normal_owned_key_release_repress_after_source_Key_zero": {
+            "source_frame": 56120,
+            "wanted": [
+              "dash",
+              "forward"
+            ],
+            "count": 1
+          }
+        },
+        {
+          "normal_original_east_barred_gate_north_approach_waypoint_reached": true,
+          "frame": 56167,
+          "pos": [
+            41472.41015625,
+            1999.9957275390625,
+            -38891.453125
+          ],
+          "health": [
+            1,
+            240
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk212\\shots\\checkpoint-source-56168\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk212\\shots\\checkpoint-source-56168\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "full_controller_log": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk212\\owned-window-current-stair-walk.json",
+        "sha256": "6d25ecd5787caee629a3a2cd5219fbb90d51997ca183c4821dc6720f9b0160bf"
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk212",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "r201",
+          "action_result": "Normal east-corridor north-gate approach passes,1/240 preserved; original58HP400 approaches.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk212\\shots\\checkpoint-source-56168\\frames\\fb0.png",
+          "png_sha256": "4a53d7dc865c38c11f46573852a78dbcf8adb6d9e8b990f710576b73c44efb99",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk212\\shots\\checkpoint-source-56168\\checkpoint-context.json",
+          "source_frame_interval": [
+            56168,
+            56175
+          ],
+          "health_before": [
+            1,
+            1200,
+            240,
+            600
+          ],
+          "health_after": [
+            1,
+            1200,
+            240,
+            600
+          ],
+          "authoritative_saved_health": [
+            1,
+            1200,
+            240,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk213",
+      "result": "No controller firing event; physical pitch tracking never settled before original enemy reaches Leon. Genuine original deathHP0/Ashley240; death PNG retained.",
+      "elapsed_s": 9.5,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "b29692108058b3b7d106a0317da337206c5641829b0db45c99c71eefd6b1160a",
+      "four_ELF_anchor_saved_state_audit": {
+        "frame": 56353,
+        "health": [
+          0,
+          1200,
+          240,
+          600
+        ],
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x80400100",
+        "SSLoop": 0,
+        "Status0": "0x3180100",
+        "Status1": "0x200",
+        "room_continue_counter": 2,
+        "scene_actor_inspection_skipped": true
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk213\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "stop_on_any_further_original_health_loss": {
+            "frame": 56338,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x80400100",
+            "SSLoop": 0,
+            "health": [
+              0,
+              1200,
+              240,
+              600
+            ]
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk213\\shots\\checkpoint-source-56338\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk213\\shots\\checkpoint-source-56338\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "full_controller_log": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk213\\owned-window-current-stair-walk.json",
+        "sha256": "95054a76001f5c3140d37ee8fbf79a871fc8a27a3ac32fdcbd0a32638467abd5"
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk213",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "r201",
+          "action_result": "No controller firing event; physical pitch tracking never settled before original enemy reaches Leon. Genuine original deathHP0/Ashley240; death PNG retained.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk213\\shots\\checkpoint-source-56338\\frames\\fb0.png",
+          "png_sha256": "8f0e4ca9aae40445348298662ae645ef98021dc69cb2b6b327033db863daafa2",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk213\\shots\\checkpoint-source-56338\\checkpoint-context.json",
+          "source_frame_interval": [
+            56338,
+            56353
+          ],
+          "health_before": [
+            0,
+            1200,
+            240,
+            600
+          ],
+          "health_after": [
+            0,
+            1200,
+            240,
+            600
+          ],
+          "authoritative_saved_health": [
+            0,
+            1200,
+            240,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk214",
+      "result": "Original Game Over default Continue via normal A restores prior checkpoint720/600,boss4000,lever/deathclear. Source frame resets56353to33591 by GameContinue, not host rollback.",
+      "elapsed_s": 27.0,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "b7e6a211c8b7c3a003974bfa99a0e6b0e5df012d1a171bc7f8e5a9ec28d07649",
+      "four_ELF_anchor_saved_state_audit": {
+        "frame": 33591,
+        "health": [
+          720,
+          1200,
+          600,
+          600
+        ],
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "Status0": "0x3000100",
+        "Status1": "0x200",
+        "room_continue_counter": 3,
+        "scene_actor_inspection_skipped": false,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 10,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ],
+        "player_pos": [
+          15953.189453125,
+          1999.9993896484375,
+          -37798.59375
+        ],
+        "partner_pos": [
+          15952.9619140625,
+          2000.0003662109375,
+          -37798.4140625
+        ],
+        "partner_flags": "0x40",
+        "Garrador_HP": 4000,
+        "Garrador_routines": [
+          1,
+          94,
+          1,
+          0
+        ],
+        "r201_saved_RSF": "0x48400000"
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk214\\data\\disc.state"
+        },
+        {
+          "actual_original_death_before_normal_Continue": {
+            "frame": 56353,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x80400100",
+            "death_flags": "0x3180100",
+            "flags5010": "0x200",
+            "SSLoop": 0,
+            "life": 0,
+            "maxlife": 1200,
+            "ashley_life": 240,
+            "maxashley": 600,
+            "Continue_source_log": false
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk214\\shots\\checkpoint-source-56353\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk214\\shots\\checkpoint-source-56353\\checkpoint-context.json"
+        },
+        {
+          "original_Continue_recovered": {
+            "frame": 33591,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "death_flags": "0x3000100",
+            "flags5010": "0x200",
+            "SSLoop": 0,
+            "life": 720,
+            "maxlife": 1200,
+            "ashley_life": 600,
+            "maxashley": 600,
+            "Continue_source_log": true
+          },
+          "initial_death_observed": true
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk214\\shots\\checkpoint-source-33591\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk214\\shots\\checkpoint-source-33591\\checkpoint-context.json"
+        },
+        {
+          "owned_close_after_original_Continue": true
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "full_controller_log": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk214\\owned-window-current-stair-walk.json",
+        "sha256": "360b11f047b1dcbd2ffaa6fef23cebfc4cd2a8c9a408a331d3fb440d72c0c1aa"
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk214",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "r201",
+          "action_result": "Original Game Over default Continue via normal A restores prior checkpoint720/600,boss4000,lever/deathclear. Source frame resets56353to33591 by GameContinue, not host rollback.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk214\\shots\\checkpoint-source-33591\\frames\\fb0.png",
+          "png_sha256": "bd41b8a9d5cd7f1cb493c767027e0f762d4c18b628f26801f83170dd9dbc479d",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk214\\shots\\checkpoint-source-33591\\checkpoint-context.json",
+          "source_frame_interval": [
+            33591,
+            33591
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": null,
+          "authoritative_saved_health": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        },
+        {
+          "run": "current-j-route-walk214",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "r201",
+          "action_result": "Original Game Over default Continue via normal A restores prior checkpoint720/600,boss4000,lever/deathclear. Source frame resets56353to33591 by GameContinue, not host rollback.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk214\\shots\\checkpoint-source-56353\\frames\\fb0.png",
+          "png_sha256": "ce28f603bf755c1b66d9e63e11ce368a0a5b6571bfa8a702a094640e501d2e93",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk214\\shots\\checkpoint-source-56353\\checkpoint-context.json",
+          "source_frame_interval": [
+            56353,
+            56356
+          ],
+          "health_before": [
+            0,
+            1200,
+            240,
+            600
+          ],
+          "health_after": null,
+          "authoritative_saved_health": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk215",
+      "result": "Normal upperhall ammo15 pickup gives10loaded+25reserve,720/600 unchanged.",
+      "elapsed_s": 16.8,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "9e87742fd94d11ff3f32b04eaa86541318ea8ff1e55245636866527f3c3e20cd",
+      "four_ELF_anchor_saved_state_audit": {
+        "frame": 33973,
+        "health": [
+          720,
+          1200,
+          600,
+          600
+        ],
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "Status0": "0x3080100",
+        "Status1": "0x204",
+        "room_continue_counter": 3,
+        "scene_actor_inspection_skipped": false,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 25,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ],
+        "player_pos": [
+          20274.427734375,
+          1999.9984130859375,
+          -23842.13671875
+        ],
+        "partner_pos": [
+          19664.259765625,
+          1999.9993896484375,
+          -24564.34375
+        ],
+        "partner_flags": "0x40",
+        "Garrador_HP": 4000,
+        "Garrador_routines": [
+          1,
+          94,
+          3,
+          0
+        ],
+        "r201_saved_RSF": "0x48400000"
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk215\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            17750.0,
+            -25250.0
+          ],
+          "pos": [
+            17706.8046875,
+            1999.9957275390625,
+            -25333.40234375
+          ]
+        },
+        {
+          "original_r201_dungeon_Handgun_Ammo15_before_A": {
+            "host_monotonic": 337376.796,
+            "room": "0x201",
+            "frame": 33863,
+            "player_hp": 720,
+            "partner_hp": 600,
+            "pos": [
+              20263.6796875,
+              2000.0015869140625,
+              -23869.353515625
+            ],
+            "yaw": -0.3658389449119568,
+            "target_distance": 294.2711020124891,
+            "angle_error": -1.6649778069475238,
+            "player_routines": [
+              0,
+              4,
+              1,
+              0
+            ],
+            "source_Handgun_Ammo15": [
+              {
+                "id": "0x4",
+                "num": 10,
+                "flags": 1,
+                "type": 0
+              }
+            ]
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk215\\shots\\checkpoint-source-33863\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk215\\shots\\checkpoint-source-33863\\checkpoint-context.json"
+        },
+        {
+          "normal_original_dungeon_Handgun_Ammo15_A": 33872
+        },
+        {
+          "original_dungeon_Handgun_Ammo15_pickup_complete": {
+            "frame": 33966,
+            "items": [
+              {
+                "id": "0x4",
+                "num": 25,
+                "flags": 1,
+                "type": 0
+              }
+            ],
+            "health": [
+              720,
+              1200,
+              600,
+              600
+            ],
+            "item_find_flags": "0x310004",
+            "normal_world_ticks_after_pickup": 31
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk215\\shots\\checkpoint-source-33966\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk215\\shots\\checkpoint-source-33966\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "full_controller_log": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk215\\owned-window-current-stair-walk.json",
+        "sha256": "bed5fe33e279f2cb2cc7628e6abd9bc54fd1d4053f5820d7fa58052f0ea16a32"
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk215",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "r201",
+          "action_result": "Normal upperhall ammo15 pickup gives10loaded+25reserve,720/600 unchanged.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk215\\shots\\checkpoint-source-33863\\frames\\fb0.png",
+          "png_sha256": "ba3be2f1f037d7d0157f92ba8db92992b7f92033db69e43caf786fe638dfb897",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk215\\shots\\checkpoint-source-33863\\checkpoint-context.json",
+          "source_frame_interval": [
+            33863,
+            33872
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        },
+        {
+          "run": "current-j-route-walk215",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "r201",
+          "action_result": "Normal upperhall ammo15 pickup gives10loaded+25reserve,720/600 unchanged.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk215\\shots\\checkpoint-source-33966\\frames\\fb0.png",
+          "png_sha256": "5fd1cab144a816119f1ba6eb26023c61d09f6ef104f4127b762c4cbeb57ed093",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk215\\shots\\checkpoint-source-33966\\checkpoint-context.json",
+          "source_frame_interval": [
+            33966,
+            33973
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk216",
+      "result": "Normal original green-herb pickup passes,720/600 unchanged; no bosswake.",
+      "elapsed_s": 20.6,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "a0b142c44c91f7f7db4988d539b695b9f8fff020d2894f1ecd00b3999087e8f1",
+      "four_ELF_anchor_saved_state_audit": {
+        "frame": 34499,
+        "health": [
+          720,
+          1200,
+          600,
+          600
+        ],
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "Status0": "0x3080100",
+        "Status1": "0x204",
+        "room_continue_counter": 3,
+        "scene_actor_inspection_skipped": false,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 25,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x6",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ],
+        "player_pos": [
+          23555.767578125,
+          -1999.999755859375,
+          -49559.765625
+        ],
+        "partner_pos": [
+          23334.0859375,
+          -2000.00390625,
+          -48696.0625
+        ],
+        "partner_flags": "0x44",
+        "Garrador_HP": 4000,
+        "Garrador_routines": [
+          1,
+          94,
+          3,
+          0
+        ],
+        "r201_saved_RSF": "0x48400000"
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk216\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            17750.0,
+            -25250.0
+          ],
+          "pos": [
+            17879.064453125,
+            1999.9974365234375,
+            -25217.435546875
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            16250.0,
+            -38750.0
+          ],
+          "pos": [
+            16193.77734375,
+            1906.960205078125,
+            -38659.74609375
+          ]
+        },
+        {
+          "waypoint_reached": 2,
+          "target": [
+            16750.0,
+            -45500.0
+          ],
+          "pos": [
+            16723.931640625,
+            -1956.7470703125,
+            -45351.8984375
+          ]
+        },
+        {
+          "waypoint_reached": 3,
+          "target": [
+            23250.0,
+            -47750.0
+          ],
+          "pos": [
+            23120.486328125,
+            -2000.000244140625,
+            -47689.94921875
+          ]
+        },
+        {
+          "original_r201_dungeon_Green_Herb_before_A": {
+            "host_monotonic": 337454.375,
+            "room": "0x201",
+            "frame": 34409,
+            "player_hp": 720,
+            "partner_hp": 600,
+            "pos": [
+              23552.396484375,
+              -2000.002197265625,
+              -49576.703125
+            ],
+            "yaw": -1.3397560119628906,
+            "target_distance": 92.89112422414343,
+            "angle_error": 0.7404574521948817,
+            "player_routines": [
+              0,
+              4,
+              2,
+              0
+            ],
+            "source_Green_Herb6": []
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk216\\shots\\checkpoint-source-34409\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk216\\shots\\checkpoint-source-34409\\checkpoint-context.json"
+        },
+        {
+          "normal_original_dungeon_Green_Herb6_A": 34418
+        },
+        {
+          "original_dungeon_Green_Herb6_pickup_complete": {
+            "frame": 34491,
+            "items": [
+              {
+                "id": "0x6",
+                "num": 1,
+                "flags": 1,
+                "type": 0
+              }
+            ],
+            "health": [
+              720,
+              1200,
+              600,
+              600
+            ],
+            "item_find_flags": "0x310004",
+            "normal_world_ticks_after_pickup": 30
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk216\\shots\\checkpoint-source-34491\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk216\\shots\\checkpoint-source-34491\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "full_controller_log": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk216\\owned-window-current-stair-walk.json",
+        "sha256": "967bacd0ccf583c7da0916549e0a4465d44def2d25fe25b63d5cf22247966d95"
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk216",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "r201",
+          "action_result": "Normal original green-herb pickup passes,720/600 unchanged; no bosswake.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk216\\shots\\checkpoint-source-34409\\frames\\fb0.png",
+          "png_sha256": "3e426adf600561dc39a08f02d86f24fbf485781d1f9bb513920fe7b08d6ddb67",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk216\\shots\\checkpoint-source-34409\\checkpoint-context.json",
+          "source_frame_interval": [
+            34409,
+            34418
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        },
+        {
+          "run": "current-j-route-walk216",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "r201",
+          "action_result": "Normal original green-herb pickup passes,720/600 unchanged; no bosswake.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk216\\shots\\checkpoint-source-34491\\frames\\fb0.png",
+          "png_sha256": "b090b7dff76898df082342a2abaf650dee88d1cfdd6e9389576b3c8543374896",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk216\\shots\\checkpoint-source-34491\\checkpoint-context.json",
+          "source_frame_interval": [
+            34491,
+            34498
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk217",
+      "result": "Normal inventory green Use heals720to1200, consumesherb; original S Wait placesAshley in safe western corner. Boss remains4000,lever/deathclear.",
+      "elapsed_s": 9.5,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "aabe914ceb0434f670bc9236602191bc0c42bf8eed17c687ce4050bb7ebad76d",
+      "four_ELF_anchor_saved_state_audit": {
+        "frame": 34635,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "Status0": "0x3080100",
+        "Status1": "0x204",
+        "room_continue_counter": 3,
+        "scene_actor_inspection_skipped": false,
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 25,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ],
+        "player_pos": [
+          23548.3515625,
+          -2000.003662109375,
+          -49552.640625
+        ],
+        "partner_pos": [
+          23325.130859375,
+          -2000.001953125,
+          -48699.265625
+        ],
+        "partner_flags": "0x46",
+        "Garrador_HP": 4000,
+        "Garrador_routines": [
+          1,
+          94,
+          3,
+          0
+        ],
+        "r201_saved_RSF": "0x48400000"
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk217\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "partner",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "normal_inventory_Y_pulse": 34529
+        },
+        {
+          "normal_inventory_Y_pulse": 34536
+        },
+        {
+          "normal_Green_Herb_context_A": 34551
+        },
+        {
+          "normal_Green_Herb_Use_or_default_Leon_A": 34554
+        },
+        {
+          "normal_S_Wait_at_western_herb_corner": {
+            "frame": 34597,
+            "partner_flags": "0x44",
+            "partner_pos": [
+              23359.125,
+              -2000.0009765625,
+              -48677.81640625
+            ]
+          }
+        },
+        {
+          "original_Green_Herb_Use_and_source_ready_safe_corner_Wait": {
+            "frame": 34625,
+            "life": 1200,
+            "Ashley": 600,
+            "initial": {
+              "life": 720,
+              "herb_count": 1
+            },
+            "partner_flags": "0x46",
+            "partner_pos": [
+              23328.58984375,
+              -2000.0029296875,
+              -48695.0625
+            ]
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk217\\shots\\checkpoint-source-34626\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk217\\shots\\checkpoint-source-34626\\checkpoint-context.json"
+        }
+      ],
+      "full_controller_log": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk217\\owned-window-current-Green-Herb-use.json",
+        "sha256": "fc47c24a722148d999825da9c579ae4c659cee1208e9ef8ae23e76fc7b4db8c2"
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk217",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "r201",
+          "action_result": "Normal inventory green Use heals720to1200, consumesherb; original S Wait placesAshley in safe western corner. Boss remains4000,lever/deathclear.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk217\\shots\\checkpoint-source-34626\\frames\\fb0.png",
+          "png_sha256": "b16f002621798268e6c4d785dceee8ec468fb171b962598a48b0fa46322175d3",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk217\\shots\\checkpoint-source-34626\\checkpoint-context.json",
+          "source_frame_interval": [
+            34626,
+            34635
+          ],
+          "health_before": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            1200,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    }
+  ],
+  "cast": {
+    "212": {
+      "rows": [
+        {
+          "room": "r201",
+          "id": "00",
+          "name": "Leon",
+          "path": "PS2",
+          "plan": "Leon/pl08 plan",
+          "native": 110208,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [],
+          "verdict": "",
+          "ot": [
+            7
+          ],
+          "parts": [
+            119
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "01",
+          "name": "pl01",
+          "path": "PS2",
+          "plan": "Leon/pl08 plan",
+          "native": 676,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            1
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "03",
+          "name": "Ashley",
+          "path": "PS2",
+          "plan": "registry package",
+          "native": 54234,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [
+            "ashley11"
+          ],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            141
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "1b",
+          "name": "em1b",
+          "path": "PS2",
+          "plan": "registry package",
+          "native": 63292,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [
+            "zealot-em1b-07p"
+          ],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            37,
+            38
+          ]
+        }
+      ],
+      "packages": {},
+      "fails": 0,
+      "not_drawn": [
+        {
+          "room": "r201",
+          "id": "1b",
+          "name": "em1b",
+          "samples": 13,
+          "max_alive": 4,
+          "nearest": 1027,
+          "in_view": 9,
+          "verdict": "drawn"
+        }
+      ]
+    },
+    "213": {
+      "rows": [
+        {
+          "room": "r201",
+          "id": "00",
+          "name": "Leon",
+          "path": "PS2",
+          "plan": "Leon/pl08 plan",
+          "native": 138135,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [],
+          "verdict": "",
+          "ot": [
+            7
+          ],
+          "parts": [
+            119
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "01",
+          "name": "pl01",
+          "path": "PS2",
+          "plan": "Leon/pl08 plan",
+          "native": 845,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            1
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "03",
+          "name": "Ashley",
+          "path": "PS2",
+          "plan": "registry package",
+          "native": 68166,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [
+            "ashley11"
+          ],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            141
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "1b",
+          "name": "em1b",
+          "path": "PS2",
+          "plan": "registry package",
+          "native": 79596,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [
+            "zealot-em1b-07p"
+          ],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            37,
+            38
+          ]
+        }
+      ],
+      "packages": {},
+      "fails": 0,
+      "not_drawn": [
+        {
+          "room": "r201",
+          "id": "1b",
+          "name": "em1b",
+          "samples": 14,
+          "max_alive": 4,
+          "nearest": 1563,
+          "in_view": 10,
+          "verdict": "drawn"
+        }
+      ]
+    },
+    "214": {
+      "rows": [
+        {
+          "room": "r201",
+          "id": "00",
+          "name": "Leon",
+          "path": "PS2",
+          "plan": "Leon/pl08 plan",
+          "native": 166878,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [],
+          "verdict": "",
+          "ot": [
+            7
+          ],
+          "parts": [
+            119
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "01",
+          "name": "pl01",
+          "path": "PS2",
+          "plan": "Leon/pl08 plan",
+          "native": 1014,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            1
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "03",
+          "name": "Ashley",
+          "path": "PS2",
+          "plan": "registry package",
+          "native": 83128,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [
+            "ashley11"
+          ],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            141
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "1b",
+          "name": "em1b",
+          "path": "PS2",
+          "plan": "registry package",
+          "native": 97896,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [
+            "zealot-em1b-07p"
+          ],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            37,
+            38
+          ]
+        }
+      ],
+      "packages": {
+        "r201": "open"
+      },
+      "fails": 0,
+      "not_drawn": [
+        {
+          "room": "r201",
+          "id": "1b",
+          "name": "em1b",
+          "samples": 16,
+          "max_alive": 5,
+          "nearest": 2614,
+          "in_view": 12,
+          "verdict": "drawn"
+        }
+      ]
+    },
+    "215": {
+      "rows": [
+        {
+          "room": "r201",
+          "id": "00",
+          "name": "Leon",
+          "path": "PS2",
+          "plan": "Leon/pl08 plan",
+          "native": 84511,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [],
+          "verdict": "",
+          "ot": [
+            7
+          ],
+          "parts": [
+            119
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "01",
+          "name": "pl01",
+          "path": "PS2",
+          "plan": "Leon/pl08 plan",
+          "native": 507,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            1
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "03",
+          "name": "Ashley",
+          "path": "PS2",
+          "plan": "registry package",
+          "native": 43060,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [
+            "ashley11"
+          ],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            141
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "1b",
+          "name": "em1b",
+          "path": "PS2",
+          "plan": "registry package",
+          "native": 51486,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            37,
+            38
+          ]
+        }
+      ],
+      "packages": {},
+      "fails": 0,
+      "not_drawn": [
+        {
+          "room": "r201",
+          "id": "1b",
+          "name": "em1b",
+          "samples": 6,
+          "max_alive": 1,
+          "nearest": 30574,
+          "in_view": 0,
+          "verdict": "drawn"
+        }
+      ]
+    },
+    "216": {
+      "rows": [
+        {
+          "room": "r201",
+          "id": "00",
+          "name": "Leon",
+          "path": "PS2",
+          "plan": "Leon/pl08 plan",
+          "native": 170276,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [],
+          "verdict": "",
+          "ot": [
+            7
+          ],
+          "parts": [
+            119
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "01",
+          "name": "pl01",
+          "path": "PS2",
+          "plan": "Leon/pl08 plan",
+          "native": 1014,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            1
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "03",
+          "name": "Ashley",
+          "path": "PS2",
+          "plan": "registry package",
+          "native": 87374,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [
+            "ashley11"
+          ],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            141
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "1b",
+          "name": "em1b",
+          "path": "PS2",
+          "plan": "registry package",
+          "native": 103039,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [
+            "zealot-em1b-07p",
+            "zealot-em1b-0ag"
+          ],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            37,
+            38
+          ]
+        }
+      ],
+      "packages": {},
+      "fails": 0,
+      "not_drawn": [
+        {
+          "room": "r201",
+          "id": "1b",
+          "name": "em1b",
+          "samples": 15,
+          "max_alive": 1,
+          "nearest": 19077,
+          "in_view": 1,
+          "verdict": "drawn"
+        }
+      ]
+    },
+    "217": {
+      "rows": [
+        {
+          "room": "r201",
+          "id": "00",
+          "name": "Leon",
+          "path": "PS2",
+          "plan": "Leon/pl08 plan",
+          "native": 142895,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [],
+          "verdict": "",
+          "ot": [
+            7
+          ],
+          "parts": [
+            119
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "01",
+          "name": "pl01",
+          "path": "PS2",
+          "plan": "Leon/pl08 plan",
+          "native": 845,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            1
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "03",
+          "name": "Ashley",
+          "path": "PS2",
+          "plan": "registry package",
+          "native": 73810,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            141
+          ]
+        },
+        {
+          "room": "r201",
+          "id": "1b",
+          "name": "em1b",
+          "path": "PS2",
+          "plan": "registry package",
+          "native": 85944,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [
+            "zealot-em1b-07p",
+            "zealot-em1b-0ag"
+          ],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            37,
+            38
+          ]
+        }
+      ],
+      "packages": {},
+      "fails": 0,
+      "not_drawn": [
+        {
+          "room": "r201",
+          "id": "1b",
+          "name": "em1b",
+          "samples": 12,
+          "max_alive": 1,
+          "nearest": 19077,
+          "in_view": 1,
+          "verdict": "drawn"
+        }
+      ]
+    }
+  },
+  "limits": [
+    "J213 is a genuine original gameplay death during unqualified private input tracking, not an engine/renderer fault or accepted wave kill. Earlier J202 kill/stairs/wave states remain historical immutable proof, not current restored completion.",
+    "Original GameContinue reloads pSaveData and increments room continue counter. It resets source frame and restores earlier boss4000/leverclear checkpoint. This is distinguished from forbidden host snapshot rollback.",
+    "No actors/bindings inspected in the held death snapshot; exact ELF anchors and globals only. Healthy restored snapshots permit scene audit.",
+    "Bounded native/not-drawn logs include prior-room/death/Continue history. J214 maxalive5 is from a bounded log spanning death and restored room history; it is not a current freeplay positive-HP census. Source current healthy checkpoint has one boss.",
+    "Original end save/CardSave/reload, current boss clearance and complete reset-wave release/kill remain open. No full-residency, whole-drive quiet or hardware-performance claim.",
+    "Some reused supply screenshot helpers lack a post-capture health field; this is stored as null, with authoritative saved health separately audited."
+  ]
+}

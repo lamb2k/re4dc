@@ -1,0 +1,238 @@
+{
+  "scope": "Same qualified J original no-warp VMU/CardLoad lineage. Source-area walking and neutral original r203s00 movie; no A/START skip, guest writes, snapshot rollback/retarget, source/assets/build/stage changes.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk87",
+      "result": "Normal source SAT walk triggered original r203s00; movie partial at bounded close",
+      "elapsed_s": 51.2,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "a35fa6f072b54f9b79d0713997ab3f612f21a1799d8a0d5693a68b45988a416e",
+      "callback_events": [],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk87",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Normal source SAT walk triggered original r203s00; movie partial at bounded close",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk87\\shots\\checkpoint-source-20003\\frames\\fb0.png",
+          "png_sha256": "3e4856042fd7844e3be54d2c25b18963c79084ca3d8adb0ed4335fd7fe3dbede",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk87\\shots\\checkpoint-source-20003\\checkpoint-context.json",
+          "source_frame_interval": [
+            20003,
+            20003
+          ],
+          "health_before": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "visual_limit": "Framebuffer remains the movie end image in J88 although source callback has returned; asynchronous capture is not an exact world frame."
+        }
+      ],
+      "motion": {
+        "scope": "Read-only exact J counters, excluded held/menu phase rows; first approach/return only, no all-room/total-drive/hardware claim",
+        "valid_samples": 68,
+        "excluded_samples": 183,
+        "first": {
+          "frame": 19609,
+          "hits": 134980,
+          "misses": 4445,
+          "evictions": 4368,
+          "loads": 4445
+        },
+        "last": {
+          "frame": 20002,
+          "hits": 136572,
+          "misses": 4446,
+          "evictions": 4368,
+          "loads": 4446
+        }
+      }
+    },
+    {
+      "run": "current-j-route-walk88",
+      "result": "Neutral same-program original movie continuation; source callback returned gameplay,120/600 unchanged",
+      "elapsed_s": 19.5,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "3e8846168b8a6c2feeb492506292d836f04f9dc86fb3df9a9f582b69c5f7cd9c",
+      "callback_events": [
+        {
+          "original_r203_reunion_callback_complete": {
+            "host_monotonic": 295621.921,
+            "room": "0x203",
+            "frame": 20003,
+            "player_hp": 120,
+            "partner_hp": 600,
+            "pos": [
+              -27823.0,
+              4155.77294921875,
+              -7863.0
+            ],
+            "yaw": -2.450000047683716,
+            "target_distance": 11083.099656684497,
+            "angle_error": -2.0453151939764895,
+            "r203_RSF": "0x10000000"
+          }
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk88",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Neutral same-program original movie continuation; source callback returned gameplay,120/600 unchanged",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk88\\shots\\checkpoint-source-20003\\frames\\fb0.png",
+          "png_sha256": "c97e17109223233468c3d8021dfde53244ee6502b0ddb6c0c8d9d8b7cc403b89",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk88\\shots\\checkpoint-source-20003\\checkpoint-context.json",
+          "source_frame_interval": [
+            20003,
+            20009
+          ],
+          "health_before": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "visual_limit": "Framebuffer remains the movie end image in J88 although source callback has returned; asynchronous capture is not an exact world frame."
+        }
+      ],
+      "motion": {
+        "scope": "Read-only exact J counters, excluded held/menu phase rows; first approach/return only, no all-room/total-drive/hardware claim",
+        "valid_samples": 6,
+        "excluded_samples": 87,
+        "first": {
+          "frame": 20003,
+          "hits": 136578,
+          "misses": 4446,
+          "evictions": 4368,
+          "loads": 4446
+        },
+        "last": {
+          "frame": 20009,
+          "hits": 136620,
+          "misses": 4446,
+          "evictions": 4368,
+          "loads": 4446
+        }
+      }
+    }
+  ],
+  "current_snapshot_audit": {
+    "scope": "Immutable current J original no-warp CardLoad lineage, four exact ELF anchors; original inventory and RSF read-only. No state changes.",
+    "state_sha256": "3e8846168b8a6c2feeb492506292d836f04f9dc86fb3df9a9f582b69c5f7cd9c",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x203",
+    "chapter": 6,
+    "source_frame": 20009,
+    "health": [
+      120,
+      1200,
+      600,
+      600
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "death_flags": "0x3080100",
+    "door_flags": "0xa84002b4",
+    "partner_subflags": "0x40",
+    "r203_RSF": "0x10000000",
+    "player_pos": [
+      -27822.82421875,
+      4155.7724609375,
+      -7864.0107421875
+    ],
+    "partner_pos": [
+      -28223.0,
+      4155.7724609375,
+      -7863.0
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 10
+      },
+      {
+        "id": "0x4",
+        "num": 10,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ]
+  },
+  "native": {
+    "result": "PASS",
+    "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\J87-r203-cast-not-drawn.json",
+    "room": "r203",
+    "Leon_native": 450,
+    "Ashley_native": 450,
+    "em11_native": 809,
+    "GC": 0,
+    "alive_max": 4,
+    "limit": "Actual approach census, no completed fight or all-wave admission proof"
+  },
+  "vram": {
+    "result": "PASS",
+    "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\J87-vram-gate.json",
+    "last_pinned": 1297664,
+    "last_dynamic": 0,
+    "last_other": 90112,
+    "last_free": 1179648,
+    "last_largest": 1155072,
+    "min_kos": 39496,
+    "gameplay_uploads": 0,
+    "evictions": 0,
+    "retries": 0,
+    "sound_fail": 0,
+    "scope": "First approach/movie-entry observed window only; exact original report retained, no full traverse or whole-drive quiet"
+  },
+  "next": "Original source-SAT first interior door, healing pickup and key/waves/door progression;120/600 critical guard unchanged."
+}

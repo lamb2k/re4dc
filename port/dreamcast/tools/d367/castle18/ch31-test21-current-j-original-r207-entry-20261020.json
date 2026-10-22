@@ -1,0 +1,365 @@
+{
+  "scope": "Fresh J continuous original CardLoad route after original cannon: normal Follow, source-floor navigation, handgun reload, original r202 door and r207 terminal dialogue return. Same current program/disc/state lineage; no warp, program substitution or game/process/state writes.",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "disc_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "chain": [
+    {
+      "capture": "current-j-route-walk33",
+      "elapsed_s": 18.1,
+      "state_sha256": "a7555b64a014ec78d19d92e4a3b290ae454307ee9f9801a8bc19e409328179e6",
+      "inputs_sha256": "7cab7e891053d1b30e4e38040b87cbcc417997c6de4b79808f5ee9aa5f77843d",
+      "run_result_sha256": "70df8fce41c63d358b50c7d1ba66f672d81fc31b1f9d6a51ea73086af7d695fc",
+      "controller_sha256": "07276797086f49c57351519ee4205ebdbb399ab93c29aec54cd97d7d56880d67",
+      "guards": []
+    },
+    {
+      "capture": "current-j-route-walk34",
+      "elapsed_s": 14.3,
+      "state_sha256": "125d5f37561f18fdac43d6c786786fae7648f42d4c011814744da1398e409dd2",
+      "inputs_sha256": "709fa2418adecb0212d2ab280e57d9b0ca86a4d4661570d62237121a24723910",
+      "run_result_sha256": "c1f890f63a8a26d9d6cbf8b6aca681a0222645dd595376ab32f66ac4b2be5280",
+      "controller_sha256": "f2c5791fcdb6eda75078eae579412bd7d245b5cf585902ac3c7d083a202daa1e",
+      "guards": []
+    },
+    {
+      "capture": "current-j-route-walk35",
+      "elapsed_s": 12.8,
+      "state_sha256": "c4e60803928faa7d615dc74b3d74469fd92489e4556542d2f1d407f0ba76fd48",
+      "inputs_sha256": "cc95aa37bf5cf6376e6ffdac7e5a8c69b854e386cd8a1e4b03b604412bd14749",
+      "run_result_sha256": "9202fc0d4ca230ab3e266524e724cffb1d8a598facc8f765085dbcb26e67ed25",
+      "controller_sha256": "f2c5791fcdb6eda75078eae579412bd7d245b5cf585902ac3c7d083a202daa1e",
+      "guards": [
+        {
+          "normal_input_has_no_displacement": true,
+          "frame": 10235,
+          "pos": [
+            14317.3779296875,
+            9031.7998046875,
+            -48455.3203125
+          ],
+          "target": [
+            15000.0,
+            -50000.0
+          ],
+          "source_tick_window": 238
+        }
+      ]
+    },
+    {
+      "capture": "current-j-route-walk36",
+      "elapsed_s": 2.6,
+      "state_sha256": "78c81bc7dc71a0124c4e7440c7d5c5a5d51f95092ef2247d79a7ae7c40b54e4d",
+      "inputs_sha256": "819e728560b6a55aa611b76ad4b59033d1797b94ef7085f70a42d61d2a3e2f14",
+      "run_result_sha256": "76d5c3c082bb06578d42d5518eb4f8edb8030b1c911e91bbfe1104e9be43d03d",
+      "controller_sha256": "26afe1102318df312c719cc969af6b927c98a732a9c87df5f4d008c11ed9769d",
+      "guards": [
+        {
+          "abort": "AssertionError('Requires actual r202 exit-door footpoint')"
+        }
+      ]
+    },
+    {
+      "capture": "current-j-route-walk37",
+      "elapsed_s": 12.5,
+      "state_sha256": "775028f477ddd353efc13129f71d105c03a98bfe980e648af8d0b1242963d37d",
+      "inputs_sha256": "22f3be194d04b370fb548271b05a4076474259578059fe1c7a2ff5caa49d954b",
+      "run_result_sha256": "f1dde69f77596605a0ac01a8a5e94544313df82e715050b0872cdde83c175a87",
+      "controller_sha256": "f2c5791fcdb6eda75078eae579412bd7d245b5cf585902ac3c7d083a202daa1e",
+      "guards": []
+    },
+    {
+      "capture": "current-j-route-walk38",
+      "elapsed_s": 9.5,
+      "state_sha256": "fa69d9d4778e4eae2fb26a4ea4620d6f9111ab412ffe4872b54d7fcb88307dfc",
+      "inputs_sha256": "ae4498aa592bd6ceca7b8d5572c76e0d4a9f94a36a31b7c1fbcecf861df5d7fe",
+      "run_result_sha256": "5ca4d9d10754bd19984aaa35c44bf3d06649af4b60637724b7a0e1cf0d0a7da8",
+      "controller_sha256": "a310f86d19163bcee2e85e0100e604f29a2564a5b446b452ff51b7511b907274",
+      "guards": [
+        {
+          "abort": "AssertionError('Normal source reload did not complete')"
+        }
+      ]
+    },
+    {
+      "capture": "current-j-route-walk39",
+      "elapsed_s": 50.9,
+      "state_sha256": "3170a8984f9afde43c5987b30c8e9f512c31a7579f9161d93921a53cb815f4ad",
+      "inputs_sha256": "0dfbf256391dc0d85632d92b3357bd7225f5bb55641d5592c7c9840b25dd9ee9",
+      "run_result_sha256": "1ec241a8ae481c3732a6607d5657e8ffbc4207d650a35be98d313f9fcbc493ff",
+      "controller_sha256": "2926b4a505ca78ca39a8a883d883619270c2b1bb75e07346d4a248c86995d808",
+      "guards": []
+    },
+    {
+      "capture": "current-j-route-walk40",
+      "elapsed_s": 4.1,
+      "state_sha256": "ab4f819f315f4f9c178c1ee0d950f169505a260616ee850202f441583074fc9f",
+      "inputs_sha256": "ebe96728e8cfd7bd7c2dcda96ecc55142faa73a1455dd9c1ab5406500dcd67dd",
+      "run_result_sha256": "0cef9a8659e19f4736eb9a2426ec9dd92329f07494218ec69885019119debe61",
+      "controller_sha256": "b07018eda0fd19ae54d1ddda0840a6f9e9f47398e3ab4465ef9df48287af7079",
+      "guards": []
+    }
+  ],
+  "normal_follow": {
+    "frame": 9208,
+    "stable_source_ticks": 30,
+    "subFlags": "0x44",
+    "partner_hp": 600,
+    "partner_pos": [
+      15473.4443359375,
+      0.001220703125,
+      -18109.357421875
+    ],
+    "stable_anchor": [
+      11375.265625,
+      -0.0025634765625,
+      -15861.6494140625
+    ]
+  },
+  "normal_reload": {
+    "frame": 10810,
+    "loaded": 10,
+    "weapon_item_hex": "0x23",
+    "source_reload_type": 0
+  },
+  "terminal_return": {
+    "frame": 11807,
+    "phase": [
+      3,
+      0
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "health": [
+      1200,
+      1200,
+      600,
+      600
+    ],
+    "player_pos": [
+      523.8397216796875,
+      126.7432861328125,
+      -49.68268585205078
+    ],
+    "partner_pos": [
+      139.01052856445312,
+      126.7442626953125,
+      59.515586853027344
+    ]
+  },
+  "snapshot": {
+    "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+    "state_sha256": "ab4f819f315f4f9c178c1ee0d950f169505a260616ee850202f441583074fc9f",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x207",
+    "chapter": 6,
+    "source_frame": 11807,
+    "health": [
+      1200,
+      1200,
+      600,
+      600
+    ],
+    "stop": "0x0",
+    "actual_death": false,
+    "Leon": {
+      "pointer": "0x8c9b8fe0",
+      "pos": [
+        523.8397216796875,
+        126.7432861328125,
+        -49.68268585205078
+      ],
+      "yaw": -2.8606011867523193
+    },
+    "Ashley": {
+      "pointer": "0x8cb3ad60",
+      "pos": [
+        139.01052856445312,
+        126.7442626953125,
+        59.515586853027344
+      ],
+      "yaw": -2.8606011867523193
+    }
+  },
+  "inventory_restore": {
+    "scope": "Read-only exact current J40 snapshot; fourELFanchors and current GCC cItemMgr/cManager layout. Original normal reload moved10 rounds from ammo to equipped handgun. All actor IDs and source gameplay guards validated.",
+    "items": [
+      {
+        "index": 0,
+        "id": "0x7c",
+        "num": 1,
+        "type": 0,
+        "loaded": null,
+        "raw": "7c00010001000000000000000000"
+      },
+      {
+        "index": 1,
+        "id": "0x23",
+        "num": 1,
+        "type": 0,
+        "loaded": 10,
+        "raw": "23000100010000000a0002010001"
+      },
+      {
+        "index": 2,
+        "id": "0x4",
+        "num": 10,
+        "type": 0,
+        "loaded": null,
+        "raw": "04000a0001000000000007000001"
+      },
+      {
+        "index": 4,
+        "id": "0xac",
+        "num": 1,
+        "type": 0,
+        "loaded": null,
+        "raw": "ac00010001000000000000000000"
+      },
+      {
+        "index": 5,
+        "id": "0xad",
+        "num": 1,
+        "type": 0,
+        "loaded": null,
+        "raw": "ad00010001000000000000000000"
+      }
+    ],
+    "restored_world": {
+      "SSLoop": 0,
+      "parts_saved_alive_pointer": "0x0",
+      "parts_saved_array_pointer": "0x0",
+      "parts_saved_array_count": 0
+    },
+    "R207_Rsf": "0x86200000"
+  },
+  "postcannon_r202_draw_check": {
+    "rows": [
+      {
+        "room": "r202",
+        "id": "00",
+        "name": "Leon",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 14970,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          7
+        ],
+        "parts": [
+          119
+        ]
+      },
+      {
+        "room": "r202",
+        "id": "03",
+        "name": "Ashley",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 4123,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          141
+        ]
+      },
+      {
+        "room": "r202",
+        "id": "11",
+        "name": "em11",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 9318,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          37
+        ]
+      },
+      {
+        "room": "r202",
+        "id": "18",
+        "name": "em18",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 2443,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          61
+        ]
+      }
+    ],
+    "packages": {},
+    "fails": 0,
+    "not_drawn": []
+  },
+  "r207_entry_check": {
+    "rows": [
+      {
+        "room": "r207",
+        "id": "00",
+        "name": "Leon",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 70,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          7
+        ],
+        "parts": [
+          119
+        ]
+      }
+    ],
+    "packages": {},
+    "fails": 0,
+    "not_drawn": [
+      {
+        "room": "r207",
+        "id": "11",
+        "name": "em11",
+        "samples": 1,
+        "max_alive": 3,
+        "nearest": 5321,
+        "in_view": 0,
+        "verdict": "out of view (in view in 0 sample(s); not judged)"
+      }
+    ]
+  },
+  "limits": [
+    "r202 current merchant18 is native2443/0GC in retained census; no new allowlist.",
+    "r207 entry checker sees Leon only and enemies out of view; it does not qualify full room/native/enemy visibility.",
+    "Old observer metadata during SSLoop1 is excluded: original world heap is held and former metadata pointers can address portraits. Future v2 observer guards SSLoop/phase/Stop/live actor IDs.",
+    "J35 collision,36early door guard and38source reload timeout are retained bounded normal-input controls, no game failure.",
+    "Sword puzzle, r203 onward, Garrador/dungeon/exit/waves/end save and whole-room residency/effects remain pending; no hardware timing."
+  ]
+}

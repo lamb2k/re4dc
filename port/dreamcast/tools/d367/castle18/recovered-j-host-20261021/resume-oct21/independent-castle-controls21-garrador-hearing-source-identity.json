@@ -1,0 +1,72 @@
+{
+  "created_utc": "2026-10-21T23:54:29.395932+00:00",
+  "runtime": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "inspected_head": "189acce6571dcd4e029aa19c7328c00fc8d09d9b",
+  "scope": "Read-only source review, not a new host/game test or guest. Existing runtime ELF/image identities remain in original source-and-existing-evidence-audit.json.",
+  "source": [
+    {
+      "path": "src/game/pl_class.cpp",
+      "bytes": 46412,
+      "sha256": "f6e5ad418cf57ac588ee1faf6328d3f0353210a5d7feb9412263daa0a0dce65c",
+      "git_blob": "084d7580ba74c580404817463cc81dfccc61b213",
+      "equal_current_head_and_working_bytes": true
+    },
+    {
+      "path": "src/game/player.cpp",
+      "bytes": 48647,
+      "sha256": "2e057dbe9771fec28c522dc5a407c615a695c78d5baf932224cf9bb3fefe0ddd",
+      "git_blob": "fb6c4afdc24ca89b313b6fd5cebd1db6a7f0d5c2",
+      "equal_current_head_and_working_bytes": true
+    },
+    {
+      "path": "src/game/game.cpp",
+      "bytes": 67752,
+      "sha256": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90",
+      "git_blob": "53ad0e7322de9ad1d1b9b218ac05982ac9a7c9e2",
+      "equal_current_head_and_working_bytes": true
+    },
+    {
+      "path": "src/game/obj14.cpp",
+      "bytes": 8078,
+      "sha256": "515d908265b66c49ff496e0cc866ecd103325d775ea9031b0d472a506ca90672",
+      "git_blob": "f220b672eb0de7237d8ba8ae309f782f4f8b905e",
+      "equal_current_head_and_working_bytes": true
+    },
+    {
+      "path": "src/em10/em10.cpp",
+      "bytes": 868058,
+      "sha256": "88ab2aaff5c17f59a969c522e7d384d1113d23723919f485cfc42ae122b0a0a3",
+      "git_blob": "152d3357a37bcad53553e48109c8ea7b4d2d980b",
+      "equal_current_head_and_working_bytes": true
+    },
+    {
+      "path": "include/em10.h",
+      "bytes": 19754,
+      "sha256": "c6ab1e95154903cf0eb007f9258266b50afd7095fc1741e597aa9f174b21fbda",
+      "git_blob": "6ace7c0c0ac157da094dd969437397c35a69e2a7",
+      "equal_current_head_and_working_bytes": true
+    },
+    {
+      "path": "include/global.h",
+      "bytes": 19112,
+      "sha256": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a",
+      "git_blob": "fb113412392d539601e6dbdacbde3058566c6ea4",
+      "equal_current_head_and_working_bytes": true
+    }
+  ],
+  "hearing": {
+    "bit31_producer": "cPlayer::seqSeCtrl clears every call then sets for motion seNo minus1 in 0,1,2,3,13,14,20, irrespective of run predicate",
+    "footstep_squared_radius": 12250000,
+    "run_squared_radius": 64000000,
+    "unconditional_squared_radius": 1000000,
+    "bell_squared_radius": 400000000,
+    "room_forced_route_limit": 25000
+  },
+  "controller_rear_guard_half_angle_degrees": 45.5729959991943,
+  "caveats": [
+    "Radius comparison uses em->plDist2 rather than a newly measured host planar distance.",
+    "Source enemy update precedes player sound publication; last step pulse can be consumed after movement release.",
+    "Remembered x5F0 remains after pulse; claw-specific movement can sample Leon directly.",
+    "Quiet hearing does not prove no enemy target refresh, safe approach, fixed rear window or successful combat."
+  ]
+}

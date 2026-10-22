@@ -1,0 +1,27 @@
+{
+  "scope": "OFFLINE sourceSAT quietSouthflank afterprospectiveNorthbellfromactual293Westposition; no guest/belllineofsight/dynamicAI/safety guarantee.",
+  "legs": [
+    {
+      "start": [
+        18679.85546875,
+        -44815.25390625
+      ],
+      "end": [
+        23500,
+        -47500
+      ],
+      "blocked": []
+    },
+    {
+      "start": [
+        23500,
+        -47500
+      ],
+      "end": [
+        25000,
+        -49000
+      ],
+      "blocked": []
+    }
+  ]
+}

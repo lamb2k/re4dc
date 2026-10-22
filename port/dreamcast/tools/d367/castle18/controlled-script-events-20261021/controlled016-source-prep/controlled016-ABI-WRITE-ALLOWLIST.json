@@ -1,0 +1,136 @@
+{
+  "scope": "SOURCE ONLY016; root must explicitly allocate exact write-capable controlledlineage. No guest/build/image or runtime edits executed.",
+  "runtime_source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "ELF_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "existing_frozen_ABI_sha256": "7c1d549c21590c4a6027f784cca4a0e995489beb4cbc2b37333dd3f7f3bdecea",
+  "Warp_DWARF_sha256": "2aadd9424935d2cbe5e76d468d0a03d6ec25e0e6e319db1296a40b7e4c080b79",
+  "native_door_DWARF_sha256": "d2c7256bfabd385e081e1d2585a379fa7880a9419cde972a5966e3cb2e4e7912",
+  "wp": "0x8c47fb58",
+  "Goto_size": 24,
+  "Warp_size": 1836,
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff30",
+      "bytes": 24,
+      "value": "frame0;target7314.582275390625,9996.8271484375,42846.009765625;ang0;has_ang1;done0;sub0;entry1"
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4,
+      "value": "uint32le1 published LAST after slot readback/coherent205freeplay recheck"
+    }
+  ],
+  "writes_forbidden": [
+    "player/partner positions or matrices",
+    "health,AI,RSF,room/outcome flags",
+    "pGroom/nextroom",
+    "native code/function calls",
+    "wp.loaded/active/applied/rooms/max_entry/event configuration",
+    "slot rewrite/count rollback after publication"
+  ],
+  "command_contract": "Loaded active existingrig ignores changedwarp.txt. With n_go0 slotunused, write24B command then verify; repoll coherentexact205/Stop0/eventbitclear/draincomplete, publish4B count1 last. Existing game-thread goto_poll checks entry/frames/eventbit, marksdone, then setPos/setAng. No second/futureentry descriptor. Logpartialerrors without retries/rollback.",
+  "sites": {
+    "goto_poll": "0x8c26cf88",
+    "native_door": "0x8c14a95c",
+    "r205_door_exit_callback": "0x8c910320"
+  },
+  "inherited015_snapshot": {
+    "state_sha256": "2236156faabd0def3e9f38d708dbe983d2632441cd3fba521ef8fab634eb5237",
+    "flags": [
+      1,
+      1,
+      0,
+      1,
+      1
+    ],
+    "name": "castle21-CONTROLLED-ch32-drain0",
+    "n_go": 0,
+    "go0": "000000000000000000000000000000000000000000000000",
+    "rooms": 1,
+    "max_entry": 1,
+    "room_frames": 1560,
+    "partner_ptr": "0x0"
+  },
+  "source_hashes": {
+    "port/dreamcast/game/dbgwarp_bridge.cpp": "69d47a81a6a43621639612225a45caf4a5e18d6846166a3f4ff019cc5dc0535f",
+    "src/game/sce_at.cpp": "d7136020456aeeac72122daec47f4864889532075937a83c477ac098720c16ec",
+    "src/st2/r204.cpp": "c07923996fed358183efca25cb52f13c6dce5f7e0b32326506030d01370efb4b",
+    "src/st2/r205.cpp": "76213c6934ad53f516584ab345cf455f9f3d4cbf71f7e7130d2be451120c5c06",
+    "include/sce_at.h": "959395cb5395054fe40542c2117592ab48536b8ce4455fb16e415ad7f4aadcf4",
+    "include/global.h": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a"
+  },
+  "assets_actual_verified": {
+    "dc/em2d.ovl": {
+      "sha256": "b5e2cc5414c3ae1344d9d4c6ce6f5b1781e85e0da23c20c4c52753db6dc23902",
+      "size": 68628
+    },
+    "dc/native/r204/partner.re4nmr": {
+      "sha256": "0cd634b4864624d9991ed4442a63d564f8fcf32e2a59802656b7294c439bbc68",
+      "size": 229952
+    },
+    "dc/native/r204/ps2-world.ids": {
+      "sha256": "e39fa0c30b19baf547db4e30e5fef91e19ec94d5a0babfb450f16c4313977726",
+      "size": 160
+    },
+    "dc/native/r204/ps2-world.r4pw": {
+      "sha256": "f09b47cab1667fd4549422d3160d15151e58836e6720e14f75ee850d53ddc69a",
+      "size": 15452
+    },
+    "dc/native/r204/ps2-world.re4mesh": {
+      "sha256": "518e2efc1241e6587d410baf6879831c1fc4997f00aa6ef4612b12aacdb512b7",
+      "size": 731168
+    },
+    "dc/native/r204/registry.re4nmr": {
+      "sha256": "f5a470cd9a030ad9f8f249c7e336c5028b5574155d44efc29007735b24bb2942",
+      "size": 101792
+    },
+    "dc/native/r204/room.r4rc": {
+      "sha256": "6c292974c77b6e6252c31f4f1f4d8cf27e3a73490500127244921550d3d0918c",
+      "size": 16688
+    },
+    "dc/st2_1.ovl": {
+      "sha256": "53494d01f3e10e83eddf81f0e03c342f239c5220da0bfc687f1c366ca15b4410",
+      "size": 116100
+    },
+    "st2/r204.arc": {
+      "sha256": "01f320f1e7174d23b5f7f1ce7a777449e4dcf06c7b8b4fc52544bab72a1ef21f",
+      "size": 1367200
+    },
+    "st2/r205.arc": {
+      "sha256": "e0be4a7b572cd8a1ed6ae0a4ca1582ea0e3bfcb0ca0d75294ac015a2638c6083",
+      "size": 1560032
+    }
+  },
+  "programme_binding_sha256": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed",
+  "door0": {
+    "native_ptr": "0x8ca92cd0",
+    "type": 1,
+    "func0": true,
+    "native_trigger": 8,
+    "disk_trigger": 2,
+    "checkFlag": 1,
+    "checkType": 1,
+    "lockType": 0,
+    "lockFlag": 0,
+    "Part": 1,
+    "destination": "0x204",
+    "actKind16": true,
+    "source_action": "sceAtFunc_door/arg=Door0ptr/type2/button1/d=player",
+    "engine_front": "Native clipped-front hit0 andregisteredaction aremandatory; matrix-derivedfrontdiagnostic only",
+    "pose": [
+      7314.582275390625,
+      9996.8271484375,
+      42846.009765625,
+      0.0
+    ]
+  },
+  "acceptance": "Native goto consumption+actualpose/hit/action; oneordinaryA; sourcephase4/next204point1 onlyrequest, actual204phase3/previous205/Part1 needed. Original firstcut Stop10000000 hold/return sampled separately; RSF1 early. No209goto since firstcut clearsStatus1eventbit whileStopstillset; optionalfuture209 requiresseparategate/allocation. Source68absence preservednotheld.",
+  "default_off": true,
+  "redundant_DWARF_preservation": {
+    "path": "controlled016-Warp-DWARF-redundant-original.json.gz",
+    "uncompressed_sha256": "60e444e63acdf5788bfa14b8ca0a08bf93ea120bfd4c3c667ee155245c0e5dd5",
+    "uncompressed_bytes": 4119868,
+    "gzip_sha256": "8e8169e550fa3ef27d642ae050260e40bb8ffa4586fa60b504257ead86205c9d",
+    "gzip_bytes": 197332
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "ELF_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "selected": {
+    "CameraControl": {
+      "root_die": "780b1",
+      "size": 1796,
+      "members": {
+        "areaNo": {
+          "offset": 1680,
+          "type_die": "7673f",
+          "member_die": "7822d"
+        },
+        "cameraNo": {
+          "offset": 1682,
+          "type_die": "7673f",
+          "member_die": "78249"
+        }
+      }
+    }
+  }
+}

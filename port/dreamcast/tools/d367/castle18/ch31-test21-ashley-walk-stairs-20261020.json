@@ -1,0 +1,255 @@
+{
+  "scope": "Fresh J current release/Disc2 original chapter2-3 VMU CardLoad then normal original r200 stair navigation. Unchanged J program/data throughout, no I state retarget, no castlewarp, no gameplay or state writes. Functional Flycast RAM-read evidence; no hardware performance or whole-chapter acceptance.",
+  "source": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "disc_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "disc_iso_sectors": 497456,
+  "added_sectors_vs_I": 5,
+  "coldload_chain": [
+    {
+      "cap": "current-j-coldload01",
+      "state_sha256": "5a03041e8e5979a99a6ef2f286f69def69a2ee34bb7e2f7100d85394803b6abb"
+    },
+    {
+      "cap": "current-j-coldload02",
+      "state_sha256": "4005fe474ad3c8d284c0859e155030608c0ffffdf46aead1a364190583c03f6b"
+    },
+    {
+      "cap": "current-j-coldload03",
+      "state_sha256": "d268db038fff5a318c9788be9244b05aaabd3fc45106974cef96b558a1c83f8b"
+    }
+  ],
+  "coldload02_capacity_incomplete": true,
+  "stairs": {
+    "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk01",
+    "run": {
+      "name": "castle21-currentJ-original-stairs",
+      "status": "RUN_COMPLETE",
+      "start_utc": "2026-10-20T21:17:11.021098+00:00",
+      "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\skin-player-j-base",
+      "tracks": {
+        "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\skin-player-j-base",
+        "kind": "release",
+        "track03_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b"
+      },
+      "seconds": 50,
+      "vmu": null,
+      "keys": null,
+      "stop": null,
+      "fixtures": {
+        "warp": {
+          "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+          "bytes": 73,
+          "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+        },
+        "pad": {
+          "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+          "bytes": 208,
+          "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+        },
+        "w11": {
+          "src": null,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "errors": [],
+      "key_log": [],
+      "align": false,
+      "emu": "harness",
+      "emu_env": {},
+      "early_emulator_exit": 0,
+      "log_idle_s": 1.0,
+      "end_utc": "2026-10-20T21:17:25.780938+00:00",
+      "elapsed_s": 14.7,
+      "emulator_exited": true
+    },
+    "snapshot": {
+      "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+      "state_sha256": "b34397e6b323e115979d28b653603f539199061e44d78acfb6201961af2296a5",
+      "phase": [
+        3,
+        0
+      ],
+      "room": "0x200",
+      "chapter": 6,
+      "source_frame": 5405,
+      "health": [
+        1200,
+        1200,
+        600,
+        600
+      ],
+      "stop": "0x0",
+      "actual_death": false,
+      "Leon": {
+        "pointer": "0x8cafda20",
+        "pos": [
+          80432.6875,
+          15871.0380859375,
+          -68550.1015625
+        ],
+        "yaw": 1.9043996334075928
+      },
+      "Ashley": {
+        "pointer": "0x8cb4b680",
+        "pos": [
+          79398.5546875,
+          15672.4775390625,
+          -68832.5
+        ],
+        "yaw": 1.5087172985076904
+      }
+    },
+    "normal_waypoints": 6,
+    "controller_sha256": "27ff927aa4d60bcac38029e1331a2cfc715d2cac96a708da9c82ed911a5b3c6c"
+  },
+  "motion": {
+    "body_bytes": 423136,
+    "cold_records": 58,
+    "bindings_observed": 4,
+    "rows": 66,
+    "first": {
+      "host_s": 0.0,
+      "frame": 5038,
+      "hits": 312,
+      "misses": 2,
+      "evictions": 0,
+      "loads": 2,
+      "resident": 24704,
+      "bindings": [
+        {
+          "slot": 0,
+          "archive": "0x8cb4c4a0",
+          "bytes": 423136,
+          "count": 58,
+          "budget": 50880,
+          "hot_bytes": 0,
+          "resident": 24704,
+          "keys": [
+            [
+              1,
+              15616,
+              "f0448a79-19fe5c0a",
+              0
+            ],
+            [
+              27,
+              9088,
+              "5ffcdc79-69f63d5a",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    "last": {
+      "host_s": 13.047,
+      "frame": 5405,
+      "hits": 312,
+      "misses": 2,
+      "evictions": 0,
+      "loads": 2,
+      "resident": 24704,
+      "bindings": [
+        {
+          "slot": 0,
+          "archive": "0x8cb4c4a0",
+          "bytes": 423136,
+          "count": 58,
+          "budget": 50880,
+          "hot_bytes": 0,
+          "resident": 24704,
+          "keys": [
+            [
+              1,
+              15616,
+              "f0448a79-19fe5c0a",
+              0
+            ],
+            [
+              27,
+              9088,
+              "5ffcdc79-69f63d5a",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    "sampler_sha256": "9fdb5eb2ee92e02a0df31dc2f138e95ea3890cea27c2079fb85367b8e79a5157"
+  },
+  "gates": {
+    "cast_gc": "PASS",
+    "not_drawn": "PASS",
+    "vram": {
+      "rooms": [
+        {
+          "room": "200",
+          "start": 2630,
+          "samples": 2,
+          "closed": false,
+          "min_free": 77184,
+          "min_largest": 49152,
+          "peak_pinned": 1945890,
+          "last": {
+            "pinned": 478848,
+            "dynamic": 1499842,
+            "other": 90142,
+            "free": 498592,
+            "largest": 447456,
+            "min_free": 77184,
+            "min_largest": 49152,
+            "peak_pinned": 1945890,
+            "loads": 357,
+            "evicted": 10,
+            "retries": 0,
+            "at": "tick",
+            "f": 3830
+          },
+          "gaps": {
+            "refusals": 0,
+            "guard": 0,
+            "guard_p": 0,
+            "nocontig": 0,
+            "latched": 0,
+            "absent": 0,
+            "gc_fx": 0,
+            "dropped": 0,
+            "fx_dropped": 0,
+            "tex_rej": 0,
+            "snd_fail": 0,
+            "meta": 0
+          },
+          "snd_used": 1804992,
+          "loads": 357,
+          "evicted": 10,
+          "retries": 0,
+          "min_kos": 32456,
+          "menu_loads": 0,
+          "play_loads": null,
+          "play_evicted": null
+        }
+      ],
+      "failures": [],
+      "known_gaps": [],
+      "notes": [],
+      "new_format": true
+    },
+    "log_note": "Snapshot ring retains entry history; checker aggregates are not claimed as a matched fresh draw-count measurement."
+  },
+  "pending": [
+    "r202 repeated1/2/14 working-set check",
+    "actual Wait followup",
+    "r203/r208 checks",
+    "Garrador stairs/dungeon/exit/waves/end save",
+    "whole chapter acceptance",
+    "hardware timing"
+  ],
+  "evidence_sha256": {
+    "run-output.txt": "1e9cf8d3e96843a468fa2758783f54072e9d2653c33b06c29da2188db54da6f4",
+    "official-characters.json": "0ec17e871f42ce1f5273efed1f7391690a861437c07027322f2df2cf2295284d",
+    "official-vram.json": "4738891744e8604b62fc8f6b082c4e50cd62b9963bcdafe2ba31260fcc6e1639",
+    "readonly-motion-cache.jsonl": "fc2eb075e756047d35cb0d255ca3c634f568cd9c7b6f6b81568a7e9a9d0f97e0"
+  }
+}

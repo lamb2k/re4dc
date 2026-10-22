@@ -1,0 +1,587 @@
+{
+  "scope": "Same qualified J original VMU/CardLoad no-warp lineage, current realdamage retained. Normal movement/turn/RT/analog/A only; read-only source weaponmatrix/laser/weakpoint guidance. No game/HP/item/AI/flag/state writes, rollback, new source/data/build/stage.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk124",
+      "result": "Normal source-SAT west escape PASS; actual32010,-2000,-43230,528/600 unchanged;boss4000.",
+      "elapsed_s": 7.4,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "119772d7dd7bded4ca03b25af48313fb4358944fbd352af6cc8cf34c339efcca",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk124\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            32000.0,
+            -39500.0
+          ],
+          "pos": [
+            32065.05078125,
+            -2000.00390625,
+            -39581.484375
+          ]
+        },
+        {
+          "normal_Garrador_sourceSAT_west_escape_segment_complete": true,
+          "frame": 35394,
+          "pos": [
+            32010.158203125,
+            -2000.0029296875,
+            -43229.85546875
+          ],
+          "health": [
+            528,
+            600
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk124\\shots\\checkpoint-source-35394\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk124\\shots\\checkpoint-source-35394\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "last_sample": {
+        "host_monotonic": 304113.406,
+        "room": "0x201",
+        "frame": 35394,
+        "player_hp": 528,
+        "partner_hp": 600,
+        "pos": [
+          32010.158203125,
+          -2000.0029296875,
+          -43229.85546875
+        ],
+        "yaw": -3.1218743324279785,
+        "target_distance": 70.87626087069624,
+        "angle_error": 0.12410001681988092,
+        "Garrador": {
+          "hp": 4000,
+          "pos": [
+            32367.419921875,
+            -2000.003662109375,
+            -40664.453125
+          ],
+          "yaw": -1.2753973007202148,
+          "routines": [
+            1,
+            43,
+            1,
+            0
+          ],
+          "player_back_dot": -405.05677219562807
+        },
+        "source_Key_on": "0x41040041",
+        "player_routines": [
+          0,
+          3,
+          3,
+          4
+        ]
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk124",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Normal source-SAT west escape PASS; actual32010,-2000,-43230,528/600 unchanged;boss4000.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk124\\shots\\checkpoint-source-35394\\frames\\fb0.png",
+          "png_sha256": "eaba783e10520d987950268d7abd9fc9aa11302750c46852ba25d262d0a7e7f8",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk124\\shots\\checkpoint-source-35394\\checkpoint-context.json",
+          "source_frame_interval": [
+            35394,
+            35403
+          ],
+          "health_before": [
+            528,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            528,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk125",
+      "result": "Quiet no-B rear approach PASS33612,-43080,528/600; actualboss4000/backdot-1305.",
+      "elapsed_s": 4.1,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "1592014ab89fde6b1e17c7fc8210cc8c60d20a1fcc418f586f3414a0f747d389",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk125\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "normal_quiet_Garrador_flank_segment_complete": true,
+          "frame": 35457,
+          "pos": [
+            33611.75,
+            -2000.00439453125,
+            -43080.3828125
+          ],
+          "health": [
+            528,
+            600
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk125\\shots\\checkpoint-source-35458\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk125\\shots\\checkpoint-source-35458\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "last_sample": {
+        "host_monotonic": 304171.062,
+        "room": "0x201",
+        "frame": 35457,
+        "player_hp": 528,
+        "partner_hp": 600,
+        "pos": [
+          33611.75,
+          -2000.00439453125,
+          -43080.3828125
+        ],
+        "yaw": 1.3009225130081177,
+        "target_distance": 204.69357353226837,
+        "angle_error": -0.13368991209806946,
+        "Garrador": {
+          "hp": 4000,
+          "pos": [
+            32910.28515625,
+            -1999.999267578125,
+            -40904.03125
+          ],
+          "yaw": -1.2753973007202148,
+          "routines": [
+            1,
+            43,
+            1,
+            0
+          ],
+          "player_back_dot": -1304.6646167407598
+        },
+        "source_Key_on": "0x1000001",
+        "player_routines": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk125",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Quiet no-B rear approach PASS33612,-43080,528/600; actualboss4000/backdot-1305.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk125\\shots\\checkpoint-source-35458\\frames\\fb0.png",
+          "png_sha256": "efb0d0f93f95f5980458674dd99c945b85861599b0f948d6fe01a7c0f1f33a63",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk125\\shots\\checkpoint-source-35458\\checkpoint-context.json",
+          "source_frame_interval": [
+            35458,
+            35466
+          ],
+          "health_before": [
+            528,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            528,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk126",
+      "result": "Private standing-turn control failed to changeyaw; nofire/noHPdrop,528/600 unchanged; all actualsimulation retained.",
+      "elapsed_s": 48.6,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "1bbd14334cbe17acc1e582543364fc0b3f640d64bf5c1338952076f11b23534f",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk126\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk126\\shots\\checkpoint-source-36840\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk126\\shots\\checkpoint-source-36840\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "last_sample": {
+        "frame": 36839,
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "health": [
+          528,
+          1200,
+          600,
+          600
+        ],
+        "player_pos": [
+          33878.4453125,
+          -1999.99951171875,
+          -42998.99609375
+        ],
+        "yaw": 1.3009225130081177,
+        "player_routines": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "Garrador_hp": 4000,
+        "Garrador_pos": [
+          16699.826171875,
+          -1101.1829833984375,
+          -43870.00390625
+        ],
+        "Garrador_yaw": -0.1548544466495514,
+        "Garrador_routines": [
+          1,
+          16,
+          1,
+          0
+        ],
+        "weakpoint37_world": [
+          16743.3146212548,
+          595.8730752468109,
+          -44001.46779847145
+        ],
+        "player_back_dot": -1788.9811459486718,
+        "standing_target_yaw_error": -2.930156113748705
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk126",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Private standing-turn control failed to changeyaw; nofire/noHPdrop,528/600 unchanged; all actualsimulation retained.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk126\\shots\\checkpoint-source-36840\\frames\\fb0.png",
+          "png_sha256": "dfe46117ef3fdddf2ba7f201664e4b088308546ede32ab9ee1c3b8daf5d767ab",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk126\\shots\\checkpoint-source-36840\\checkpoint-context.json",
+          "source_frame_interval": [
+            36840,
+            36849
+          ],
+          "health_before": [
+            528,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            528,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk127",
+      "result": "30source-neutral input readiness restores actualturn andgunready; privateobserver PPCweaponoffset guard stops beforefire;528/600.",
+      "elapsed_s": 5.1,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "d69726d684036a1d1d7493bbb21953a7fad1916eee2242683bc4df07babf9881",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk127\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "abort": "AssertionError('Exact handgun source offset table only')",
+          "traceback": "Traceback (most recent call last):\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\owned-window-test21-j-original-r201-weakpoint37-aim-ready-still.py\", line 122, in <module>\n    wep=u32(pl+0x788);obj=u32(wep+0x34);assert 0x8c000000<=obj<0x8cff0000;assert read(pg+0x4fb0,1)[0]==2,'Exact handgun source offset table only'\n                                                                                 ^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Exact handgun source offset table only\n"
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk127\\shots\\checkpoint-source-36926\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk127\\shots\\checkpoint-source-36926\\checkpoint-context.json"
+        },
+        {
+          "owned_close_on_guard": true
+        }
+      ],
+      "last_sample": {
+        "frame": 36925,
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "health": [
+          528,
+          1200,
+          600,
+          600
+        ],
+        "source_Key_on": "0x800010",
+        "player_pos": [
+          33799.09375,
+          -2000.00048828125,
+          -43019.88671875
+        ],
+        "yaw": -1.6107113361358643,
+        "player_routines": [
+          0,
+          6,
+          1,
+          4
+        ],
+        "Garrador_hp": 4000,
+        "Garrador_pos": [
+          16486.63671875,
+          -242.859130859375,
+          -42383.3515625
+        ],
+        "Garrador_yaw": -0.16033661365509033,
+        "Garrador_routines": [
+          1,
+          16,
+          1,
+          0
+        ],
+        "weakpoint37_world": [
+          16530.845805820078,
+          1454.2206287384033,
+          -42514.57047390938
+        ],
+        "player_back_dot": -3392.313325902567,
+        "standing_target_yaw_error": 0.06916940070119715
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk127",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "30source-neutral input readiness restores actualturn andgunready; privateobserver PPCweaponoffset guard stops beforefire;528/600.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk127\\shots\\checkpoint-source-36926\\frames\\fb0.png",
+          "png_sha256": "64d42488c3aa56678faf634161b7221373d397731c08df8f8df17275058da661",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk127\\shots\\checkpoint-source-36926\\checkpoint-context.json",
+          "source_frame_interval": [
+            36926,
+            36934
+          ],
+          "health_before": [
+            528,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            528,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk128",
+      "result": "Normal analog aim/RT+A consumed10to9mag; original laser matchedbossnearweakpoint but actualHP4000unchanged after30ticks;528/600. No hitclaim.",
+      "elapsed_s": 36.2,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "27bd39ac13418ed62ad7d305d0b9e2b2a33f611ab842544ea379f4c86eb6dfbf",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk128\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "ordinary_RT_A_when_actual_weapon_ray_intersects_weakpoint37_sphere": {
+            "frame": 37911,
+            "hp": 4000,
+            "magazine": 10,
+            "ray_miss": 118.43730962078726,
+            "back_dot": -3925.97267965469
+          }
+        },
+        {
+          "ordinary_one_shot_reaction_observation_complete_without_HP_drop": {
+            "frame": 37941,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              528,
+              1200,
+              600,
+              600
+            ],
+            "source_Key_on": "0x800010"
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk128\\shots\\checkpoint-source-37941\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk128\\shots\\checkpoint-source-37941\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "last_sample": {
+        "frame": 37941,
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "health": [
+          528,
+          1200,
+          600,
+          600
+        ],
+        "source_Key_on": "0x800010"
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk128",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Normal analog aim/RT+A consumed10to9mag; original laser matchedbossnearweakpoint but actualHP4000unchanged after30ticks;528/600. No hitclaim.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk128\\shots\\checkpoint-source-37941\\frames\\fb0.png",
+          "png_sha256": "194365f94b7919df3b10ec4f8e9a56ebc11c4878148360d8676539ff6a1819a9",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk128\\shots\\checkpoint-source-37941\\checkpoint-context.json",
+          "source_frame_interval": [
+            37941,
+            37949
+          ],
+          "health_before": [
+            528,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            528,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    }
+  ],
+  "input_observer_correction": "global.h little-endian weapon_id32 union places weapon_no4FB3/type4FB2; PPCbyte4FB0 is power onDC. J127guard refused beforefire.30source-neutral atload resolves lostnormalturn; rawsourceKeyfeedback retained.",
+  "limits": [
+    "SourceSAT conservative pathfinding rejects proposed eastperimeter; corrected realwestpath passes actualmovement.",
+    "J128 actual bullet spent but noHPdrop; laser/matrix alignment alone is not actual damage proof.",
+    "Garrador remains4000, leveropen preserved; dungeonexit/waves/chapterendsave remain pending.",
+    "No whole-drive quiet/hardwareperformance/residencyclaim; native/effects/texturegaps remain explicit."
+  ],
+  "next": "Normal cell exit/currentdungeon route to approach liveGarrador closer, continue actual fight without rollback."
+}

@@ -1,0 +1,16 @@
+from pathlib import Path
+import json,hashlib,shutil,datetime
+L=Path(__file__).parent;D=Path(r'C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21\recovered-j-content-20261021');H=Path(r'\\wsl.localhost\Ubuntu-24.04\root\probe\codex-castle18\port\dreamcast\tools\d367\castle18\controlled-script-events-20261021');cap=D/'route-walk-controlled-event005';dest=H/'controlled005';dest.mkdir(exist_ok=False);sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+for name in ['controlled-events-observer.json','run-start.json','run-result.json','owned-resource-guard.json','owned-process.json']:
+ p=cap/name;shutil.copyfile(p,dest/name)
+p=D/'controlled-event005-closed-proof.json';shutil.copyfile(p,dest/'closed-proof.json')
+for p in sorted((cap/'shots').glob('controlled-*/controlled-context.json')):shutil.copyfile(p,dest/(p.parent.name+'-context.json'))
+for name in ['controlled-event005-warp.txt','observe-controlled-r204-event005.py','run-controlled-event005.py','run-controlled-event005.sh','prepare-controlled-event006.py','controlled-event005-warp.txt','observe-controlled-r204-event006.py','run-controlled-event006.py','run-controlled-event006.sh','prepare-controlled-event005.py','audit-controlled-event-generic.py','extract-r204-frozen-controlled-areas.py','seal-controlled003.py','seal-controlled004.py']:shutil.copyfile(L/name,H/name)
+for name in ['r204-frozen-selected-source-AEV-controlled-20261021.json','controlled-event004-readonly-preflight.json']:shutil.copyfile(D/name,H/name)
+for name in ['REVIEW-CONTROLLED-EVENT004.md','R204-MINIMAL-EVENT-PLAN.md']:
+ p=L.parent/'castle-controls21'/name;shutil.copyfile(p,H/('independent-'+name))
+record=dict(scope='CONTROLLED TEST mid-event continuation; no authenticcombat/release/hardware acceptance.',state_sha256=sha(cap/'data/disc.state'),source=181,room='0x204',phase=[3,0],health=[1440,1440,600,600],chapter=6,Stop='0x80400900',observed='OriginalAEV2 fired with RSF0clear baseline→80000000 and sourceeventheld. Native log route movie20400 start/firstpicture,995frames/media33.199833s. FinalPNGvisiblyLeon originalcutscene.',not_yet_observed=['movieEOF','chapterendtask','resultsUI','saveprompt','CardSavewrite','radio'],next='006 direct005snapshot continuation, same exactprogramme/image, no rearm/replay/stateedit/buttons. No laterguestautomatic.',protected='Authentic127/294 fullSHA unchanged in closedproof.',guard='PID26076 exited normally/raw40.0s, V4verified; no bound change.',visual='Initialevent-start PNG is blackfade, notpositivevisualproof; finalfb0 directlyinspected displaysLeon cutscene.')
+(dest/'HANDBACK.json').write_text(json.dumps(record,indent=2)+'\n')
+for name in ['HANDBACK.md','INBOX.md']:
+ p=L/name;s=p.read_text(encoding='utf-8');p.write_text('CURRENT USER OBJECTIVE: Controlled teleport/event coverage ACTIVE.005 closed mid-original20400 movie source181/chapter6;006 directsnapshot continuation prepared. No active PID. NoEOF/results/save/radio acceptance yet. Authentic127/294 protected.\n\n'+s,encoding='utf-8')
+print(dest)

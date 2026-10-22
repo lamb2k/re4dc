@@ -1,0 +1,828 @@
+{
+  "status": "ORIGINAL_DEATH_CONTINUE_PASS_WITH_EXPLICIT_UNEXERCISED_HELD_BRANCH",
+  "program_scope": "Frozen a808 paired program; not newest e86 integration. Diagnostic doorway/Ashley-init/source chapter0, original source Continue backup. No game memory/save edits or forced death.",
+  "elf_sha256": "e445ed8db922490cfb14253cc8990302b71c675069a63a1dd287bd4409f2923a",
+  "disc_sha256": "7fd2c29f5219939a961ecaf2bce47e6631a9faa44d7f3fcacaaae6b102c294bc",
+  "normal_recovery": {
+    "runs": [
+      {
+        "scenario": "cx-r207-walk-gotoon11",
+        "previous": "cx-r207-walk-gotoon10",
+        "seconds": 16.16,
+        "state_sha256": "8e2c81e47056fe61e937250383523ddfdb6f8959c39d7b36ab29fa6c548a8349",
+        "log_sha256": "75372f902f58a509b813a339268f85ce3a00b4e79150e845c3145854ba4e2e5d",
+        "run_result_sha256": "7783dd480b1c4a79be5caada16f7486f073eca878b82242b8d1cf38aea2bcd6f",
+        "seed_sha256": "474df574470a20a18b3f3e8553b5cf8a92a4453b445e5e5357bf0501f0d13ded"
+      },
+      {
+        "scenario": "cx-r207-walk-gotoon12",
+        "previous": "cx-r207-walk-gotoon11",
+        "seconds": 32.48,
+        "state_sha256": "c3ead14a9d3753251bf9bd6f06c11599d271266681cd51536bae924e7785585d",
+        "log_sha256": "a2ba66ef1e853547366926ca650b289f9cea04054688c3060d090c550080654e",
+        "run_result_sha256": "536d7ec18d31f5e68966416d6f1cd8290c97a6049e8da962e429f9cb431d9405",
+        "seed_sha256": "8e2c81e47056fe61e937250383523ddfdb6f8959c39d7b36ab29fa6c548a8349"
+      }
+    ],
+    "controller_sha256": "2ace2b8787fec42ace03cfb9834ba3c50dc8ee1b9651bce25c0b45b33f7d9596",
+    "minimum_observed_health": 0,
+    "recovery": {
+      "chapter_kill_count": 0,
+      "game_kill_count": 0,
+      "source_death_bits": {
+        "d0": false,
+        "d1": false,
+        "d2": false,
+        "d3": false,
+        "d4": false,
+        "d5": false,
+        "d6": false,
+        "d7": false,
+        "d8": false,
+        "d9": false,
+        "da": false
+      },
+      "frame": 880,
+      "room": "0x207",
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "status0_500c": "0x3000100",
+      "life": 1440,
+      "maxlife": 1440,
+      "ashley_life": 600,
+      "maxashley": 600
+    },
+    "all64_metadata_receipt_sha256": "4a1c5aa71848964599453bf052d7582163745520d766a1c58ad4321cfd806823",
+    "zero_command_bytes_sha256": "80422bc3d307b4a25bdafcc84ac7fb01cb55a09810e8b0f37bb12e0edb5c48ca",
+    "continue_counts": {
+      "room": 1,
+      "chapter": 1,
+      "game": 1
+    },
+    "held_at_death": false
+  },
+  "held_branch": {
+    "status": "NOT_EXERCISED_NO_DEATH",
+    "runs": [
+      {
+        "scenario": "cx-r207-walk-gotohelddeath01",
+        "previous": "cx-r207-walk-gotoon08",
+        "seconds": 56.17,
+        "state_sha256": "be138c216e3a234651cf5c07bd7d35eacc06e67d3605da9af3cc39f686e3a9ef",
+        "log_sha256": "0eb3d0abc93d85d06db9073151c5417f0f3fd0d601c969252cddcaecd4d72ce2",
+        "run_result_sha256": "e1b7543faa33870c2138785a1727eef0b852fbfc12a6ece22c1848d01fc07483",
+        "seed_sha256": "5e5d46a0ea4a53e825746280fd4038ab4041c2f5c43bf6e4ae375aaaeae3e7ab",
+        "first_frame": 2840,
+        "last_frame": 3021,
+        "observer_sha256": "32ec2781ea32e5c16fbe1d14cf5e24e0f6ec0dd128da0fb4b7af245daa561af6",
+        "observations": 196,
+        "health": [
+          1440,
+          600
+        ],
+        "held": [
+          "D4",
+          "D5"
+        ]
+      },
+      {
+        "scenario": "cx-r207-walk-gotohelddeath02",
+        "previous": "cx-r207-walk-gotohelddeath01",
+        "seconds": 10.2,
+        "state_sha256": "66d7029c98f80df10ed68ddebb7a73b5f85b4ecbe3edfc6f1de6cef946ef0ac8",
+        "log_sha256": "0e97417f39d0cebf16d5750a077c24cca1f7e2f00a4b464923203506d7ccea89",
+        "run_result_sha256": "26755135f83983b421cf3c8689079ea35c6fb9ae5187426aaf3b7a2a202c9e7a",
+        "seed_sha256": "be138c216e3a234651cf5c07bd7d35eacc06e67d3605da9af3cc39f686e3a9ef",
+        "first_frame": 3040,
+        "last_frame": 3066,
+        "observer_sha256": "04ccad35234685e128861955ec0bdb9b14c6b5ab5950dbeb67af7ef58b28ea00",
+        "observations": 30,
+        "health": [
+          1440,
+          600
+        ],
+        "held": [
+          "D4",
+          "D5"
+        ]
+      },
+      {
+        "scenario": "cx-r207-walk-gotohelddeath03",
+        "previous": "cx-r207-walk-gotohelddeath02",
+        "seconds": 56.23,
+        "state_sha256": "739324e53d2fa542801560690e6a414e85d7997246ec49f9126fdd7031858106",
+        "log_sha256": "63d4a564887aaf6320c4b7248dd0315557f6656f2b11dc6444b7005000292031",
+        "run_result_sha256": "522337acdc3ea882ebdcf7812213c7ae67004f04ff6f10c64bdf2a864ddc8cb6",
+        "seed_sha256": "66d7029c98f80df10ed68ddebb7a73b5f85b4ecbe3edfc6f1de6cef946ef0ac8",
+        "first_frame": 3087,
+        "last_frame": 4548,
+        "observer_sha256": "d7c8f5ed531165d6a4d623f57a9e4ac2714f50a7253128d70a73367dab055e47",
+        "observations": 196,
+        "health": [
+          1440,
+          600
+        ],
+        "held": [
+          "D4",
+          "D5"
+        ]
+      },
+      {
+        "scenario": "cx-r207-walk-gotohelddeath04",
+        "previous": "cx-r207-walk-gotohelddeath03",
+        "seconds": 56.27,
+        "state_sha256": "8e60a9bcd361083a0471e871129a90ce359b942fde55d676c8afc296435fae99",
+        "log_sha256": "9d63caece7ac0d122b21710f9694cd444f4702db114c7e133f89488b0af1b08d",
+        "run_result_sha256": "729edd86a9f17cb24d555376c49ec12927fffa9c80700feb0c6d8489c4644675",
+        "seed_sha256": "739324e53d2fa542801560690e6a414e85d7997246ec49f9126fdd7031858106",
+        "first_frame": 4706,
+        "last_frame": 6174,
+        "observer_sha256": "3e904befcf36efc8fd52a52f50d5ea14cd16422ffa91eedb5842c084ab457506",
+        "observations": 196,
+        "health": [
+          1440,
+          600
+        ],
+        "held": [
+          "D4",
+          "D5"
+        ]
+      }
+    ],
+    "start_frame": 2836,
+    "final_frame": 6304,
+    "pending_bytes_sha256": "07a730c8a251a12f67c80a4dc534188fb844e20330a69bd620b3977b1d74a28f",
+    "held_commands_unchanged": true,
+    "continue_counts": {
+      "room": 0,
+      "chapter": 0,
+      "game": 0
+    },
+    "reason": "Original nearby Find/Catch activity never damaged Leon in these bounded windows. No forced death or extra repeated capture. The exact held checkpoint remains resumable; host reset tests remain separate evidence.",
+    "attacker_context": [
+      {
+        "scenario": "cx-r207-walk-gotohelddeath01",
+        "first": {
+          "frame": 2840,
+          "phase": [
+            3,
+            0
+          ],
+          "stop": "0x0",
+          "player_pos": [
+            -9668.7978515625,
+            4149.16162109375,
+            -10644.22265625
+          ],
+          "nearest": {
+            "source_row": "0xd8",
+            "pos": [
+              -9218.5830078125,
+              4149.15869140625,
+              -9980.802734375
+            ],
+            "vertical_delta_mm": -0.0029296875,
+            "distance_mm": 801.7601875137298,
+            "routine": [
+              2,
+              0,
+              1,
+              0
+            ],
+            "hp": 564
+          }
+        },
+        "last": {
+          "frame": 3021,
+          "phase": [
+            3,
+            0
+          ],
+          "stop": "0x0",
+          "player_pos": [
+            -9668.76171875,
+            4149.16162109375,
+            -10674.8662109375
+          ],
+          "nearest": {
+            "source_row": "0xd8",
+            "pos": [
+              -9459.9921875,
+              4149.1640625,
+              -10276.224609375
+            ],
+            "vertical_delta_mm": 0.00244140625,
+            "distance_mm": 449.9998263117667,
+            "routine": [
+              1,
+              13,
+              1,
+              0
+            ],
+            "hp": 564
+          }
+        },
+        "closest": {
+          "frame": 3017,
+          "phase": [
+            3,
+            0
+          ],
+          "stop": "0x0",
+          "player_pos": [
+            -9661.3759765625,
+            4149.16357421875,
+            -10662.2392578125
+          ],
+          "nearest": {
+            "source_row": "0xd8",
+            "pos": [
+              -9469.5576171875,
+              4149.16015625,
+              -10260.044921875
+            ],
+            "vertical_delta_mm": -0.00341796875,
+            "distance_mm": 445.5946216744607,
+            "routine": [
+              1,
+              13,
+              1,
+              0
+            ],
+            "hp": 564
+          }
+        },
+        "source_stop_values": [
+          "0x0"
+        ],
+        "source_phases": [
+          [
+            3,
+            0
+          ]
+        ],
+        "observed_enemy_routines": [
+          [
+            0,
+            0,
+            52,
+            1
+          ],
+          [
+            1,
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            13,
+            0,
+            0
+          ],
+          [
+            1,
+            13,
+            1,
+            0
+          ],
+          [
+            1,
+            16,
+            0,
+            0
+          ],
+          [
+            1,
+            16,
+            1,
+            124
+          ],
+          [
+            1,
+            17,
+            1,
+            0
+          ],
+          [
+            1,
+            27,
+            0,
+            0
+          ],
+          [
+            1,
+            27,
+            1,
+            0
+          ],
+          [
+            1,
+            51,
+            0,
+            0
+          ],
+          [
+            1,
+            51,
+            1,
+            0
+          ],
+          [
+            2,
+            0,
+            1,
+            0
+          ]
+        ]
+      },
+      {
+        "scenario": "cx-r207-walk-gotohelddeath02",
+        "first": {
+          "frame": 3040,
+          "phase": [
+            3,
+            0
+          ],
+          "stop": "0x0",
+          "player_pos": [
+            -9674.3447265625,
+            4149.16357421875,
+            -10686.341796875
+          ],
+          "nearest": {
+            "source_row": "0xd8",
+            "pos": [
+              -9470.6689453125,
+              4149.16064453125,
+              -10281.0595703125
+            ],
+            "vertical_delta_mm": -0.0029296875,
+            "distance_mm": 453.58296599832596,
+            "routine": [
+              1,
+              13,
+              1,
+              0
+            ],
+            "hp": 564
+          }
+        },
+        "last": {
+          "frame": 3066,
+          "phase": [
+            3,
+            0
+          ],
+          "stop": "0x0",
+          "player_pos": [
+            -9585.66796875,
+            4149.16259765625,
+            -10354.59765625
+          ],
+          "nearest": {
+            "source_row": "0xd8",
+            "pos": [
+              -9157.642578125,
+              4149.15966796875,
+              -10136.4169921875
+            ],
+            "vertical_delta_mm": -0.0029296875,
+            "distance_mm": 480.4253711025474,
+            "routine": [
+              1,
+              13,
+              1,
+              0
+            ],
+            "hp": 564
+          }
+        },
+        "closest": {
+          "frame": 3040,
+          "phase": [
+            3,
+            0
+          ],
+          "stop": "0x0",
+          "player_pos": [
+            -9674.3447265625,
+            4149.16357421875,
+            -10686.341796875
+          ],
+          "nearest": {
+            "source_row": "0xd8",
+            "pos": [
+              -9470.6689453125,
+              4149.16064453125,
+              -10281.0595703125
+            ],
+            "vertical_delta_mm": -0.0029296875,
+            "distance_mm": 453.58296599832596,
+            "routine": [
+              1,
+              13,
+              1,
+              0
+            ],
+            "hp": 564
+          }
+        },
+        "source_stop_values": [
+          "0x0"
+        ],
+        "source_phases": [
+          [
+            3,
+            0
+          ]
+        ],
+        "observed_enemy_routines": [
+          [
+            1,
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            13,
+            1,
+            0
+          ],
+          [
+            1,
+            27,
+            1,
+            0
+          ]
+        ]
+      },
+      {
+        "scenario": "cx-r207-walk-gotohelddeath03",
+        "first": {
+          "frame": 3087,
+          "phase": [
+            3,
+            0
+          ],
+          "stop": "0x0",
+          "player_pos": [
+            -9527.0771484375,
+            4149.1640625,
+            -10400.0888671875
+          ],
+          "nearest": {
+            "source_row": "0xd8",
+            "pos": [
+              -9131.7421875,
+              4149.1611328125,
+              -10104.1376953125
+            ],
+            "vertical_delta_mm": -0.0029296875,
+            "distance_mm": 493.83886793388746,
+            "routine": [
+              1,
+              13,
+              1,
+              0
+            ],
+            "hp": 564
+          }
+        },
+        "last": {
+          "frame": 4548,
+          "phase": [
+            3,
+            0
+          ],
+          "stop": "0x0",
+          "player_pos": [
+            -9380.7021484375,
+            4149.16015625,
+            -10671.9140625
+          ],
+          "nearest": {
+            "source_row": "0xd9",
+            "pos": [
+              -9704.3857421875,
+              4149.16259765625,
+              -10274.65234375
+            ],
+            "vertical_delta_mm": 0.00244140625,
+            "distance_mm": 512.4333537671797,
+            "routine": [
+              1,
+              13,
+              1,
+              0
+            ],
+            "hp": 60
+          }
+        },
+        "closest": {
+          "frame": 4005,
+          "phase": [
+            3,
+            0
+          ],
+          "stop": "0x0",
+          "player_pos": [
+            -9450.6396484375,
+            4149.16162109375,
+            -10575.66015625
+          ],
+          "nearest": {
+            "source_row": "0xd9",
+            "pos": [
+              -9689.2373046875,
+              4149.15869140625,
+              -10235.484375
+            ],
+            "vertical_delta_mm": -0.0029296875,
+            "distance_mm": 415.50981182834187,
+            "routine": [
+              1,
+              51,
+              1,
+              0
+            ],
+            "hp": 60
+          }
+        },
+        "source_stop_values": [
+          "0x0"
+        ],
+        "source_phases": [
+          [
+            3,
+            0
+          ]
+        ],
+        "observed_enemy_routines": [
+          [
+            0,
+            0,
+            52,
+            1
+          ],
+          [
+            0,
+            0,
+            55,
+            1
+          ],
+          [
+            1,
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            13,
+            0,
+            0
+          ],
+          [
+            1,
+            13,
+            1,
+            0
+          ],
+          [
+            1,
+            16,
+            0,
+            0
+          ],
+          [
+            1,
+            21,
+            0,
+            0
+          ],
+          [
+            1,
+            27,
+            0,
+            0
+          ],
+          [
+            1,
+            27,
+            1,
+            0
+          ],
+          [
+            1,
+            51,
+            0,
+            0
+          ],
+          [
+            1,
+            51,
+            1,
+            0
+          ]
+        ]
+      },
+      {
+        "scenario": "cx-r207-walk-gotohelddeath04",
+        "first": {
+          "frame": 4706,
+          "phase": [
+            3,
+            0
+          ],
+          "stop": "0x0",
+          "player_pos": [
+            -9360.7412109375,
+            4149.1591796875,
+            -10689.060546875
+          ],
+          "nearest": {
+            "source_row": "0xd9",
+            "pos": [
+              -9696.2958984375,
+              4149.16162109375,
+              -10389.2216796875
+            ],
+            "vertical_delta_mm": 0.00244140625,
+            "distance_mm": 450.00032731706585,
+            "routine": [
+              1,
+              51,
+              1,
+              0
+            ],
+            "hp": 60
+          }
+        },
+        "last": {
+          "frame": 6174,
+          "phase": [
+            3,
+            0
+          ],
+          "stop": "0x0",
+          "player_pos": [
+            -9248.8818359375,
+            4149.16259765625,
+            -10766.8017578125
+          ],
+          "nearest": {
+            "source_row": "0xd9",
+            "pos": [
+              -9648.9931640625,
+              4149.15966796875,
+              -10972.833984375
+            ],
+            "vertical_delta_mm": -0.0029296875,
+            "distance_mm": 450.04261274332214,
+            "routine": [
+              1,
+              13,
+              1,
+              0
+            ],
+            "hp": 60
+          }
+        },
+        "closest": {
+          "frame": 5557,
+          "phase": [
+            3,
+            0
+          ],
+          "stop": "0x0",
+          "player_pos": [
+            -9270.6796875,
+            4149.15966796875,
+            -10760.5166015625
+          ],
+          "nearest": {
+            "source_row": "0xd9",
+            "pos": [
+              -9713.1533203125,
+              4149.162109375,
+              -10688.716796875
+            ],
+            "vertical_delta_mm": 0.00244140625,
+            "distance_mm": 448.26122706901015,
+            "routine": [
+              1,
+              51,
+              1,
+              0
+            ],
+            "hp": 60
+          }
+        },
+        "source_stop_values": [
+          "0x0"
+        ],
+        "source_phases": [
+          [
+            3,
+            0
+          ]
+        ],
+        "observed_enemy_routines": [
+          [
+            0,
+            0,
+            52,
+            1
+          ],
+          [
+            0,
+            0,
+            55,
+            1
+          ],
+          [
+            1,
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            13,
+            0,
+            0
+          ],
+          [
+            1,
+            13,
+            1,
+            0
+          ],
+          [
+            1,
+            16,
+            0,
+            0
+          ],
+          [
+            1,
+            27,
+            0,
+            0
+          ],
+          [
+            1,
+            27,
+            1,
+            0
+          ],
+          [
+            1,
+            51,
+            0,
+            0
+          ],
+          [
+            1,
+            51,
+            1,
+            0
+          ]
+        ]
+      }
+    ],
+    "context_limit": "Nearby is geometric proximity, not a verified successful hit. Actor Y and original Stop/phase retained; no floor/attack attribution inferred from absent health change."
+  },
+  "preflight": {
+    "status": "ORIGINAL_SELECTED_ENTRY_TRUE_BRANCH_UNREACHABLE",
+    "source_and_census_proof_sha256": "32a9e5b1dcc839f604dfebc6fe01bee5145dcb22f9abd46ba3833cd317a2962f",
+    "all6_exec_area_ownership_sha256": "b198c9951df684e146d48a6e91be471db050c1571f7b2bc203d321d141566647",
+    "initial_active_rows": [
+      "D8",
+      "D9",
+      "DA"
+    ],
+    "why": "Only three original source actors precede the guard; all other room sends occur after it. Actual D3 creates the fourth and D4/D5 queue. Full-cap true-branch scheduling is source-extracted host-tested, not guest-exercised."
+  },
+  "residency": {
+    "status": "FAIL_BEFORE_CONTINUE",
+    "generation_proof_sha256": "04c95ec79b8b536b634fa6bd9d6f289c56fd89bbed4f5244e9d845155319a76a",
+    "before_Continue_late": 41,
+    "after_Continue_late": 0,
+    "raw_first_sight_distinct": 50,
+    "raw_first_sight_unlisted": 49,
+    "source_ownership": "Unclassified; no resident edit/parser filtering. Final reload-generation PASS does not replace prior failure."
+  },
+  "limits": [
+    "Held-command death/Continue guest branch unexercised.",
+    "Preflight full-cap true branch guest-unexercised and unreachable for the untouched selected initial actor set.",
+    "Full fight/no-warp chapter and latest upstream integration remain open.",
+    "No new recipe enable, hardware timing or frame-identical gameplay claim."
+  ],
+  "private_proof_sha256": "7e6cc008365fa756642e1df98c4d1cbde6fe41cc81732c237f41cbb7d36683f6"
+}

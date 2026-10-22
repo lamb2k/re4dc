@@ -1,0 +1,300 @@
+{
+  "scope": "CONTROLLED scripted coverage. Cold208 chapter/partner and DebugTrg0 pressure bypass are SETUP. Observe original crank rise and native204 transition separately. Plates/bridge/footings not exercised. Authentic294/127 untouched.",
+  "owner": {
+    "pid": 50848,
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event004\\flycast.exe",
+    "start_filetime": 134371065186076804,
+    "created_utc": "2026-10-22T01:35:18.615769+00:00",
+    "rights": "retained subprocess handle receipt"
+  },
+  "baseline_crank": {
+    "0x4e": {
+      "ptr": "0x8cac8438",
+      "y": 4984.4091796875
+    },
+    "0x4f": {
+      "ptr": "0x8cac8060",
+      "y": 4000.0
+    }
+  },
+  "crank_full_frame": 316,
+  "baseline_RSF5_clear_seen": true,
+  "events": [
+    {
+      "initial_crank": {
+        "0x4e": {
+          "ptr": "0x8cac8438",
+          "y": 4984.4091796875
+        },
+        "0x4f": {
+          "ptr": "0x8cac8060",
+          "y": 4000.0
+        }
+      },
+      "frame": 180
+    },
+    {
+      "original_crank_full_and_event_return": {
+        "pg": 2352652060,
+        "process_age": 29.224596431769896,
+        "frame": 316,
+        "room": "0x208",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "status1": "0x204",
+        "room_flags0": "0x13000000",
+        "player_pos": [
+          -1.6870057582855225,
+          3999.9990234375,
+          -1180.0479736328125
+        ],
+        "saved_RSF": "0x44000000",
+        "crank": {
+          "0x4e": {
+            "ptr": "0x8cac8438",
+            "y": 4984.0
+          },
+          "0x4f": {
+            "ptr": "0x8cac8060",
+            "y": 4000.0
+          }
+        },
+        "areas": {
+          "0x80": {
+            "enabled": false,
+            "func": "0x0"
+          },
+          "0x81": {
+            "enabled": false,
+            "func": "0x0"
+          },
+          "0x82": {
+            "enabled": false,
+            "func": "0x0"
+          },
+          "0x83": {
+            "enabled": false,
+            "func": "0x0"
+          },
+          "0x84": {
+            "enabled": false,
+            "func": "0x0"
+          },
+          "0x85": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x86": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x87": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x88": {
+            "enabled": false,
+            "func": "0x0"
+          },
+          "0x89": {
+            "enabled": false,
+            "func": "0x0"
+          },
+          "0x8a": {
+            "enabled": false,
+            "func": "0x0"
+          },
+          "0x8b": {
+            "enabled": false,
+            "func": "0x0"
+          },
+          "0x8c": {
+            "enabled": false,
+            "func": "0x0"
+          },
+          "0x8e": {
+            "enabled": false,
+            "func": "0x0"
+          },
+          "0x8f": {
+            "enabled": false,
+            "func": "0x0"
+          },
+          "0x0": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x1": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x2": {
+            "enabled": true,
+            "func": "0x8c90e9c4"
+          },
+          "0x3": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x4": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x5": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x6": {
+            "enabled": true,
+            "func": "0x8c9106cc"
+          },
+          "0x7": {
+            "enabled": true,
+            "func": "0x8c9106cc"
+          },
+          "0x8": {
+            "enabled": true,
+            "func": "0x8c910760"
+          },
+          "0x9": {
+            "enabled": true,
+            "func": "0x8c910760"
+          },
+          "0xa": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0xb": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0xc": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0xd": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0xe": {
+            "enabled": false,
+            "func": "0x8c91181c"
+          },
+          "0xf": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x10": {
+            "enabled": true,
+            "func": "0x8c912ac4"
+          },
+          "0x11": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x12": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x13": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x14": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x15": {
+            "enabled": true,
+            "func": "0x8c910eb0"
+          },
+          "0x16": {
+            "enabled": false,
+            "func": "0x8c91181c"
+          },
+          "0x17": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x18": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x19": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x1a": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x1b": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x1c": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x1d": {
+            "enabled": true,
+            "func": "0x0"
+          },
+          "0x1e": {
+            "enabled": true,
+            "func": "0x0"
+          }
+        },
+        "baseline_RSF5_clear_seen": true,
+        "event_hold_seen": true,
+        "crank_full_frame": 316
+      }
+    },
+    {
+      "screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event004\\shots\\controlled-inner-deadline",
+      "source_interval": [
+        486,
+        486
+      ]
+    },
+    {
+      "exact_owned_WM_CLOSE": true
+    }
+  ],
+  "last": {
+    "pg": 2352652060,
+    "process_age": 38.990596431773156,
+    "frame": 486,
+    "room": "0x204",
+    "phase": [
+      2,
+      0
+    ],
+    "Stop": "0x0",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "status1": "0x200",
+    "room_flags0": "0x0",
+    "player_pos": [
+      -134.73126220703125,
+      -0.002685546875,
+      -1397.9508056640625
+    ],
+    "baseline_RSF5_clear_seen": true,
+    "event_hold_seen": true,
+    "crank_full_frame": 316
+  }
+}

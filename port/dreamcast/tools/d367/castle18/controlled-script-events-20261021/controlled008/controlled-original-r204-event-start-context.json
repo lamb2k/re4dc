@@ -1,0 +1,55 @@
+{
+  "scope": "CONTROLLED teleport/scripted-event coverage; not authentic combat or hardware acceptance",
+  "source_frame_interval": [
+    886,
+    887
+  ],
+  "framebuffer_source": "current native log",
+  "observation": {
+    "pg": 2352652060,
+    "process_age": 2.0051510982448235,
+    "frame": 885,
+    "room": "0x204",
+    "phase": [
+      3,
+      0
+    ],
+    "Stop": "0xffffffbf",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "status1": "0x10000200",
+    "status3": "0x0",
+    "chapter": 7,
+    "partner_ptr": "0x0",
+    "player_pos": [
+      -676.848876953125,
+      -0.0009765625,
+      -41378.0625
+    ],
+    "saved_RSF": "0x80000000",
+    "CardStatus": "0x80000000",
+    "message0": {
+      "table_size": 2,
+      "selection": 0,
+      "current": 0,
+      "button": 1,
+      "attribute": "0x1001"
+    },
+    "baseline_RSF0_clear_seen": false,
+    "event_hold_seen": true
+  },
+  "pngs": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event008\\shots\\controlled-original-r204-event-start\\frames\\fb0.png",
+      "sha256": "811d5b1acbe30aaeaf755ecddebade08b5054304eaa1a743c4b92a3e2aac7c86"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event008\\shots\\controlled-original-r204-event-start\\frames\\fb1.png",
+      "sha256": "dcc27500abdcd1f1bffd74a17d271c26b7d08af3be80493a14527dc0a20edc5f"
+    }
+  ]
+}

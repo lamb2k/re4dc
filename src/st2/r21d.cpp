@@ -279,6 +279,10 @@ void r21d_checkEmResetPoint(Vec* pos, f32* ang)
     }
 }
 
+#if defined(RE4DC_ALIVE_CAP_NOVIS) && RE4DC_ALIVE_CAP_NOVIS
+extern "C" int re4dc_aliveCapFull();
+#endif
+
 // Task: resets enemy `no` after the wait (at once when the final wave is running).
 static void r21d_setEmReset(int no)
 {
@@ -292,6 +296,15 @@ static void r21d_setEmReset(int no)
         }
         SceSleep(1);
     }
+#if defined(RE4DC_ALIVE_CAP_NOVIS) && RE4DC_ALIVE_CAP_NOVIS
+    // A corpse is not ACTIVE. Another held send may have filled its slot
+    // during resetWait: keep this original reset task pending, never retire
+    // the wrapper's enemy or count a reset as a kill. setReset reactivates
+    // immediately through em2dInitRtnSet before the next task can run.
+    while (re4dc_aliveCapFull()) {
+        SceSleep(1);
+    }
+#endif
     Vec ang = {0.0f, 0.0f, 0.0f};
 
     r21d_checkEmResetPoint(&pos, &ang.y);

@@ -1,0 +1,127 @@
+
+/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/Test21/builds/c21jmW/re4dc-game.elf:     file format elf32-shl
+
+
+Disassembly of section .text:
+
+8c27d594 <_pvr_get_front_buffer>:
+8c27d594:	86 2f       	mov.l	r8,@-r15
+8c27d596:	96 2f       	mov.l	r9,@-r15
+8c27d598:	22 4f       	sts.l	pr,@-r15
+8c27d59a:	02 09       	stc	sr,r9
+8c27d59c:	14 d0       	mov.l	8c27d5f0 <_pvr_get_front_buffer+0x5c>,r0	! efffff0f
+8c27d59e:	99 20       	and	r9,r0
+8c27d5a0:	f0 cb       	or	#240,r0
+8c27d5a2:	0e 40       	ldc	r0,sr
+8c27d5a4:	13 d1       	mov.l	8c27d5f4 <_pvr_get_front_buffer+0x60>,r1	! 8c483e00 <_pvr_state>
+8c27d5a6:	00 e4       	mov	#0,r4
+8c27d5a8:	13 62       	mov	r1,r2
+8c27d5aa:	40 72       	add	#64,r2
+8c27d5ac:	1b 53       	mov.l	@(44,r1),r3
+8c27d5ae:	24 50       	mov.l	@(16,r2),r0
+8c27d5b0:	25 52       	mov.l	@(20,r2),r2
+8c27d5b2:	2b 20       	or	r2,r0
+8c27d5b4:	3a 20       	xor	r3,r0
+8c27d5b6:	27 70       	add	#39,r0
+8c27d5b8:	08 40       	shll2	r0
+8c27d5ba:	0c 30       	add	r0,r0
+8c27d5bc:	1e 08       	mov.l	@(r0,r1),r8
+8c27d5be:	0e d0       	mov.l	8c27d5f8 <_pvr_get_front_buffer+0x64>,r0	! 8c277c00 <_hardware_sys_mode>
+8c27d5c0:	0b 40       	jsr	@r0
+8c27d5c2:	09 00       	nop
+8c27d5c4:	08 20       	tst	r0,r0
+8c27d5c6:	09 8b       	bf	8c27d5dc <_pvr_get_front_buffer+0x48>
+8c27d5c8:	0c d1       	mov.l	8c27d5fc <_pvr_get_front_buffer+0x68>,r1	! 7fffff
+8c27d5ca:	0e 49       	ldc	r9,sr
+8c27d5cc:	0c d0       	mov.l	8c27d600 <_pvr_get_front_buffer+0x6c>,r0	! d2800000
+8c27d5ce:	19 28       	and	r1,r8
+8c27d5d0:	8c 30       	add	r8,r0
+8c27d5d2:	0c 30       	add	r0,r0
+8c27d5d4:	26 4f       	lds.l	@r15+,pr
+8c27d5d6:	f6 69       	mov.l	@r15+,r9
+8c27d5d8:	0b 00       	rts
+8c27d5da:	f6 68       	mov.l	@r15+,r8
+8c27d5dc:	09 d1       	mov.l	8c27d604 <_pvr_get_front_buffer+0x70>,r1	! ffffff
+8c27d5de:	0e 49       	ldc	r9,sr
+8c27d5e0:	07 d0       	mov.l	8c27d600 <_pvr_get_front_buffer+0x6c>,r0	! d2800000
+8c27d5e2:	19 28       	and	r1,r8
+8c27d5e4:	8c 30       	add	r8,r0
+8c27d5e6:	0c 30       	add	r0,r0
+8c27d5e8:	26 4f       	lds.l	@r15+,pr
+8c27d5ea:	f6 69       	mov.l	@r15+,r9
+8c27d5ec:	0b 00       	rts
+8c27d5ee:	f6 68       	mov.l	@r15+,r8
+8c27d5f0:	0f ff       	.word 0xff0f
+8c27d5f2:	ff ef       	mov	#-1,r15
+8c27d5f4:	00 3e       	cmp/eq	r0,r14
+8c27d5f6:	48 8c       	.word 0x8c48
+8c27d5f8:	00 7c       	add	#0,r12
+8c27d5fa:	27 8c       	.word 0x8c27
+8c27d5fc:	ff ff       	.word 0xffff
+8c27d5fe:	7f 00       	mac.l	@r7+,@r0+
+8c27d600:	00 00       	.word 0x0000
+8c27d602:	80 d2       	mov.l	8c27d804 <_pvr_poly_compile+0x178>,r2	! 2379c90f
+8c27d604:	ff ff       	.word 0xffff
+8c27d606:	ff 00       	mac.l	@r15+,@r0+
+
+8c27d608 <_pvr_get_back_buffer>:
+8c27d608:	86 2f       	mov.l	r8,@-r15
+8c27d60a:	96 2f       	mov.l	r9,@-r15
+8c27d60c:	22 4f       	sts.l	pr,@-r15
+8c27d60e:	02 09       	stc	sr,r9
+8c27d610:	15 d0       	mov.l	8c27d668 <_pvr_get_back_buffer+0x60>,r0	! efffff0f
+8c27d612:	99 20       	and	r9,r0
+8c27d614:	f0 cb       	or	#240,r0
+8c27d616:	0e 40       	ldc	r0,sr
+8c27d618:	14 d1       	mov.l	8c27d66c <_pvr_get_back_buffer+0x64>,r1	! 8c483e00 <_pvr_state>
+8c27d61a:	00 e4       	mov	#0,r4
+8c27d61c:	13 62       	mov	r1,r2
+8c27d61e:	40 72       	add	#64,r2
+8c27d620:	1b 53       	mov.l	@(44,r1),r3
+8c27d622:	24 50       	mov.l	@(16,r2),r0
+8c27d624:	25 52       	mov.l	@(20,r2),r2
+8c27d626:	2b 20       	or	r2,r0
+8c27d628:	3a 20       	xor	r3,r0
+8c27d62a:	01 ca       	xor	#1,r0
+8c27d62c:	27 70       	add	#39,r0
+8c27d62e:	08 40       	shll2	r0
+8c27d630:	0c 30       	add	r0,r0
+8c27d632:	1e 08       	mov.l	@(r0,r1),r8
+8c27d634:	0e d0       	mov.l	8c27d670 <_pvr_get_back_buffer+0x68>,r0	! 8c277c00 <_hardware_sys_mode>
+8c27d636:	0b 40       	jsr	@r0
+8c27d638:	09 00       	nop
+8c27d63a:	08 20       	tst	r0,r0
+8c27d63c:	09 8b       	bf	8c27d652 <_pvr_get_back_buffer+0x4a>
+8c27d63e:	0d d1       	mov.l	8c27d674 <_pvr_get_back_buffer+0x6c>,r1	! 7fffff
+8c27d640:	0e 49       	ldc	r9,sr
+8c27d642:	0d d0       	mov.l	8c27d678 <_pvr_get_back_buffer+0x70>,r0	! d2800000
+8c27d644:	19 28       	and	r1,r8
+8c27d646:	8c 30       	add	r8,r0
+8c27d648:	0c 30       	add	r0,r0
+8c27d64a:	26 4f       	lds.l	@r15+,pr
+8c27d64c:	f6 69       	mov.l	@r15+,r9
+8c27d64e:	0b 00       	rts
+8c27d650:	f6 68       	mov.l	@r15+,r8
+8c27d652:	0a d1       	mov.l	8c27d67c <_pvr_get_back_buffer+0x74>,r1	! ffffff
+8c27d654:	0e 49       	ldc	r9,sr
+8c27d656:	08 d0       	mov.l	8c27d678 <_pvr_get_back_buffer+0x70>,r0	! d2800000
+8c27d658:	19 28       	and	r1,r8
+8c27d65a:	8c 30       	add	r8,r0
+8c27d65c:	0c 30       	add	r0,r0
+8c27d65e:	26 4f       	lds.l	@r15+,pr
+8c27d660:	f6 69       	mov.l	@r15+,r9
+8c27d662:	0b 00       	rts
+8c27d664:	f6 68       	mov.l	@r15+,r8
+8c27d666:	09 00       	nop
+8c27d668:	0f ff       	.word 0xff0f
+8c27d66a:	ff ef       	mov	#-1,r15
+8c27d66c:	00 3e       	cmp/eq	r0,r14
+8c27d66e:	48 8c       	.word 0x8c48
+8c27d670:	00 7c       	add	#0,r12
+8c27d672:	27 8c       	.word 0x8c27
+8c27d674:	ff ff       	.word 0xffff
+8c27d676:	7f 00       	mac.l	@r7+,@r0+
+8c27d678:	00 00       	.word 0x0000
+8c27d67a:	80 d2       	mov.l	8c27d87c <_pvr_poly_compile+0x1f0>,r2	! 7950afe2
+8c27d67c:	ff ff       	.word 0xffff
+8c27d67e:	ff 00       	mac.l	@r15+,@r0+

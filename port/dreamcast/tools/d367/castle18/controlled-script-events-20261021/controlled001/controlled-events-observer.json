@@ -1,0 +1,137 @@
+{
+  "scope": "CONTROLLED SCRIPT EVENT COVERAGE, readonlyprocess observer plus exactowned WM_CLOSE only; no gameplay memory writes or combat inputs. Nativefixture debugsetup declaredseparately; authentic294/127 neverseeded/modified.",
+  "owner": {
+    "pid": 25820,
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\flycast.exe",
+    "start_filetime": 134371046931863618,
+    "created_utc": "2026-10-22T01:04:53.194186+00:00",
+    "rights": "retained subprocess handle receipt"
+  },
+  "baseline_door_y": 2000.0,
+  "baseline_positive_boss_seen": true,
+  "events": [
+    {
+      "initial_door_y": 2000.0,
+      "frame": 180
+    },
+    {
+      "screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\shots\\controlled-before-debug-setup",
+      "source_interval": [
+        180,
+        180
+      ]
+    },
+    {
+      "original_death_and_full_door_postconditions_observed": {
+        "pg": 2352652060,
+        "process_age": 34.70484171487624,
+        "frame": 430,
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "player_pos": [
+          19000.552734375,
+          -2000.00244140625,
+          -44999.29296875
+        ],
+        "status1": "0x204",
+        "room_flags0": "0x40000000",
+        "door_flags": "0xc84002b4",
+        "saved_RSF": "0xc0000000",
+        "door_Smd53": "0x8cad47f0",
+        "door_y": 4600.0,
+        "door_delta_y": 2600.0,
+        "AEV0A_enabled": false,
+        "AEV0A": "0x8ca7c248",
+        "Garrador": {
+          "ptr": "0x8caf2460",
+          "hp": 0,
+          "be_flag": "0x8c2d1d2c",
+          "list_no": 86,
+          "routines": [
+            3,
+            2,
+            1,
+            0
+          ]
+        },
+        "baseline_positive_boss_seen": true,
+        "event_hold_seen": true
+      }
+    },
+    {
+      "screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\shots\\controlled-original-door-open",
+      "source_interval": [
+        430,
+        431
+      ]
+    },
+    {
+      "exact_owned_WM_CLOSE": true
+    },
+    {
+      "screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\shots\\controlled-inner-deadline",
+      "source_interval": [
+        432,
+        432
+      ]
+    },
+    {
+      "exact_owned_WM_CLOSE": true
+    }
+  ],
+  "last": {
+    "pg": 2352652060,
+    "process_age": 34.70484171487624,
+    "frame": 430,
+    "room": "0x201",
+    "phase": [
+      3,
+      0
+    ],
+    "Stop": "0x0",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "player_pos": [
+      19000.552734375,
+      -2000.00244140625,
+      -44999.29296875
+    ],
+    "status1": "0x204",
+    "room_flags0": "0x40000000",
+    "door_flags": "0xc84002b4",
+    "saved_RSF": "0xc0000000",
+    "door_Smd53": "0x8cad47f0",
+    "door_y": 4600.0,
+    "door_delta_y": 2600.0,
+    "AEV0A_enabled": false,
+    "AEV0A": "0x8ca7c248",
+    "Garrador": {
+      "ptr": "0x8caf2460",
+      "hp": 0,
+      "be_flag": "0x8c2d1d2c",
+      "list_no": 86,
+      "routines": [
+        3,
+        2,
+        1,
+        0
+      ]
+    },
+    "baseline_positive_boss_seen": true,
+    "event_hold_seen": true
+  }
+}

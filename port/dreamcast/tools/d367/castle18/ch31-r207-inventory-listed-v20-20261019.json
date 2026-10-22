@@ -1,0 +1,37 @@
+{
+  "replace": {
+    "dc/resident.bin": "/root/re4data/private/castle18-r207-inventory-listed-v20-20261019/files/dc/resident.bin"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "I014 one source-observed r207 role key; no image/runtime/admission change",
+    "upstream": "a8088ad6 includes a7373d34",
+    "base": "/root/re4data/private/castle18-ch41-r212-gameplay-resident-20261019/files/dc/resident.bin",
+    "base_sha256": "b93f1fdd53a413dc351667c9521d413567152e355dfdaf3f2137152a81e8e73b",
+    "input_records": 5800,
+    "output_records": 5801,
+    "added_record": [
+      519,
+      64,
+      64,
+      14,
+      268676282,
+      1181136597
+    ],
+    "source_observed_WHF": [
+      64,
+      64,
+      14
+    ],
+    "source_observation": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/r207j-V9-postinventory-first-sight-keys-20261019.json",
+    "source_observation_sha256": "e04d60f0f1be7c4ca9e4eb07704a635dc69ce34d92b2134f191f2ff9cdc5a447",
+    "existing_selected_package_winner": "pak",
+    "package_sha256": "61b2869fa2c1f8eb40c1b650bd2373f64ddd35950b9ef5a693208238e483f594",
+    "package_bytes": 3216,
+    "resident_sha256": "85c5b10cf1587d6f281d74ed0a5502739db855654017d618d3068802a49c4ff7",
+    "all_prior_records_exact": true,
+    "every_other_room_exact": true,
+    "runtime_gate": "PENDING fresh current exact-program inventory-open0load test; no 746 snapshot retarget",
+    "chapter_knob": "TEX_PKG_SKIP_LISTED1 requires existing TEX_PKG_SKIP1; other new upstream optional knobs stay off unless instructed"
+  }
+}

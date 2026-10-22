@@ -1,0 +1,62 @@
+{
+  "scope": "CONTROLLED teleport/scripted-event coverage; not authentic combat or hardware acceptance",
+  "source_frame_interval": [
+    432,
+    432
+  ],
+  "observation": {
+    "pg": 2352652060,
+    "process_age": 34.70484171487624,
+    "frame": 430,
+    "room": "0x201",
+    "phase": [
+      3,
+      0
+    ],
+    "Stop": "0x0",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "player_pos": [
+      19000.552734375,
+      -2000.00244140625,
+      -44999.29296875
+    ],
+    "status1": "0x204",
+    "room_flags0": "0x40000000",
+    "door_flags": "0xc84002b4",
+    "saved_RSF": "0xc0000000",
+    "door_Smd53": "0x8cad47f0",
+    "door_y": 4600.0,
+    "door_delta_y": 2600.0,
+    "AEV0A_enabled": false,
+    "AEV0A": "0x8ca7c248",
+    "Garrador": {
+      "ptr": "0x8caf2460",
+      "hp": 0,
+      "be_flag": "0x8c2d1d2c",
+      "list_no": 86,
+      "routines": [
+        3,
+        2,
+        1,
+        0
+      ]
+    },
+    "baseline_positive_boss_seen": true,
+    "event_hold_seen": true
+  },
+  "pngs": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\shots\\controlled-inner-deadline\\frames\\fb0.png",
+      "sha256": "d2df508ff8724e3e8b0b175e05c9f7552a5666653ed601077155d4144c67037a"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\shots\\controlled-inner-deadline\\frames\\fb1.png",
+      "sha256": "4245f809a0f164ddde61d10f9d7bf69453dff44b464aa0dfa020451e98d2fe93"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+Preserve controlled014 original native lever/intro-only partial result, state3713cb2a and all original raw screenshots/logs. V5 closed PASS; drain NOT completed. Authoritative audit 3d11567fb53bacab219cbdd97ac769285965894173e7633696d08cf81ef57062

@@ -1,0 +1,35 @@
+00:00:000 rend\dx11\dx11context.cpp:54 N[RENDERER]: DX11 Context initializing
+00:00:004 sdl\sdl.cpp:901 N[RENDERER]: Monitor refresh rate: 360 Hz (2560 x 1440)
+00:00:141 rend\dx11\dx11context.cpp:198 N[RENDERER]: No system-provided shader cache
+00:00:170 ui\gui.cpp:245 N[RENDERER]: Screen DPI is 96, size 640 x 480. Scaling by 1.00
+00:00:171 rend\dx11\dx11context.cpp:327 N[RENDERER]: Swapchain resized: 640 x 480
+00:00:176 rend\dx11\dx11_shaders.cpp:785 N[RENDERER]: Loaded 21 shaders from C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21\recovered-j-content-20261021\route-walk-controlled-ch32-door016\data\dx11_shader_cache.bin
+00:00:177 rend\dx11\dx11context.cpp:409 W[RENDERER]: Format B4G4R4A4 doesn't support mipmap autogen
+00:00:412 rend\dx11\dx11_renderer.cpp:45 N[RENDERER]: DX11 renderer initializing
+00:00:489 sdl\dreamlink.cpp:54 N[INPUT]: GUID: 030057564c050000e60c000000016800 VID:054c PID:0ce6
+00:00:500 sdl\sdl_gamepad.cpp:221 N[INPUT]: SDL: Opened joystick 0 on port 0: 'DualSense Wireless Controller' unique_id=sdl_joystick_0
+00:00:554 sdl\dreamlink.cpp:54 N[INPUT]: GUID: 0300858d550900001772000000000000 VID:0955 PID:7217
+00:00:554 sdl\sdl_gamepad.cpp:221 N[INPUT]: SDL: Opened joystick 2 on port 1: 'axis 16 button device' unique_id=sdl_joystick_2
+00:00:605 sdl\dreamlink.cpp:54 N[INPUT]: GUID: 030053cce40a00000307000000000000 VID:0ae4 PID:0703
+00:00:605 sdl\sdl_gamepad.cpp:221 N[INPUT]: SDL: Opened joystick 1 on port 2: 'TAITO USB Arcade Control Panel' unique_id=sdl_joystick_1
+00:00:606 hw\mem\addrspace.cpp:425 N[VMEM]: Info: nvmem is enabled
+00:00:613 hw\mem\addrspace.cpp:461 N[VMEM]: BASE 00007FF4C1790000 RAM(16 MB) 00007FF4CD790000 VRAM64(8 MB) 00007FF4C5790000 ARAM(2 MB) 00007FF4E1790000
+00:00:616 hw\mem\addrspace.cpp:425 N[VMEM]: Info: nvmem is enabled
+00:00:623 hw\mem\addrspace.cpp:461 N[VMEM]: BASE 00007FF4C1790000 RAM(16 MB) 00007FF4CD790000 VRAM64(8 MB) 00007FF4C5790000 ARAM(2 MB) 00007FF4E1790000
+00:00:641 emulator.cpp:60 N[BOOT]: Game ID is [T0000]
+00:00:644 rend\dx11\dx11_renderer.cpp:175 N[RENDERER]: DX11 renderer terminating
+00:00:647 emulator.cpp:619 N[BOOT]: Did not load BIOS, using reios
+00:00:657 emulator.cpp:60 N[BOOT]: Game ID is [T0000]
+00:00:657 sdl\sdl_gamepad.cpp:652 N[INPUT]: Resetting SDL gamepad to default: 0 1
+00:00:657 sdl\sdl_gamepad.cpp:652 N[INPUT]: Resetting SDL gamepad to default: 0 1
+00:00:658 sdl\sdl_gamepad.cpp:652 N[INPUT]: Resetting SDL gamepad to default: 0 1
+00:00:730 nullDC.cpp:360 N[SAVESTATE]: Loaded state ver 854 from C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21\recovered-j-content-20261021\route-walk-controlled-ch32-door016\data\disc.state size 28152878
+00:01:179 nullDC.cpp:249 N[SAVESTATE]: Saved state to C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21\recovered-j-content-20261021\route-walk-controlled-ch32-door016\data\disc.state size 28152878
+00:01:185 sdl\sdl_gamepad.cpp:652 N[INPUT]: Resetting SDL gamepad to default: 0 1
+00:01:185 sdl\sdl_gamepad.cpp:652 N[INPUT]: Resetting SDL gamepad to default: 0 1
+00:01:185 sdl\sdl_gamepad.cpp:652 N[INPUT]: Resetting SDL gamepad to default: 0 1
+00:01:187 rend\dx11\dx11context.cpp:213 N[RENDERER]: DX11 Context terminating
+00:01:187 rend\dx11\dx11_shaders.cpp:759 N[RENDERER]: Saved 21 shaders to C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21\recovered-j-content-20261021\route-walk-controlled-ch32-door016\data\dx11_shader_cache.bin
+00:01:205 sdl\sdl_gamepad.cpp:499 N[INPUT]: SDL: Joystick 'DualSense Wireless Controller' on port -1 disconnected
+00:01:205 sdl\sdl_gamepad.cpp:499 N[INPUT]: SDL: Joystick 'TAITO USB Arcade Control Panel' on port -1 disconnected
+00:01:206 sdl\sdl_gamepad.cpp:499 N[INPUT]: SDL: Joystick 'axis 16 button device' on port -1 disconnected

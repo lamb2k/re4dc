@@ -1,0 +1,45 @@
+{
+  "scope": "Controlled Flycast actual014 partial/source-only015, no hardware/release claim",
+  "files": {
+    "run-controlled-ch32-drain015.sh": {
+      "bytes": 354,
+      "sha256": "89e34913194b2b5944da84fc0603896a72c20a0f6f37a9e9bc20182065bb0d22"
+    },
+    "CONTROLLED015-SOURCE-LAUNCH-PROPOSAL.json": {
+      "bytes": 2858,
+      "sha256": "4944263790174035d5f71c5dcc06933a502974c19ddfa561883c0fa7b943b050"
+    },
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    "INDEPENDENT-REVIEW.json": {
+      "bytes": 4888,
+      "sha256": "c3f893e55b3fbb058372a23c784cdaad3e15a90a02ffcea9205610d01a95112e"
+    },
+    "controlled-ch32-drain015-pins.json": {
+      "bytes": 3694,
+      "sha256": "cb3c62871def0f354e3236be64021a8835f5c4ca3bbd4016ead99f0ff2ff37a3"
+    },
+    "run-controlled-ch32-drain015.py": {
+      "bytes": 7728,
+      "sha256": "471e05d515d70c931fbdaa25bd9c89dec0c6ef000926e6af26bda53e4fb4b2bb"
+    },
+    "test-controlled015-actual-intro-source-gates.py": {
+      "bytes": 2564,
+      "sha256": "3358d077ae5589d1745f6543419498306b5a44994a5e799d431fd019f44e2751"
+    },
+    "controlled-ch32-drain015-source-gates.json": {
+      "bytes": 976,
+      "sha256": "1ca7f43a0b4c7f336c75ff275b6208b976ceeea9d4d7cd68a31efd7d613f3db3"
+    },
+    "observe-controlled-ch32-drain015.py": {
+      "bytes": 17679,
+      "sha256": "acff6e46df7e0b8e5362966da7fd74e4fea3853083c6f4da5ec924ac06a40127"
+    },
+    "DRAIN015-SOURCE-QUALIFIED-HANDBACK.json": {
+      "bytes": 4167,
+      "sha256": "71316755a91a45d5c54a213057cb0d5fde552d642ed32f704e09768e886be56b"
+    }
+  }
+}

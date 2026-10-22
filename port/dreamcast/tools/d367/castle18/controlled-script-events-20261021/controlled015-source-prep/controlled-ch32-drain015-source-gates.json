@@ -1,0 +1,23 @@
+{
+  "scope": "Actual014 closedtypedintro tests plus source-modeled choicegate checks; no actual015 UI/input/guest. Existing014source/ABI remainsunchanged.",
+  "observer_sha256": "acff6e46df7e0b8e5362966da7fd74e4fea3853083c6f4da5ec924ac06a40127",
+  "actual014_state_sha256": "3713cb2a4442ec5ddbf3dc4aec8dff107aa66721913e75813858c326a820adc5",
+  "actual014_audit_sha256": "3d11567fb53bacab219cbdd97ac769285965894173e7633696d08cf81ef57062",
+  "PASS": 14,
+  "tests": [
+    "actual014typedintro_pagegate_accepts",
+    "actual014intro_cannotconfirmYes",
+    "rejectwrongintro_current_offset_bytes",
+    "rejectwrongintro_opcode",
+    "rejectwrongintro_next_opcode",
+    "rejectwrongintro_language",
+    "rejectwrongpage_table_size",
+    "rejectwrongpage_button",
+    "rejectwrongpage_selection",
+    "rejectwrongpage_wait",
+    "neverrepeat_introA",
+    "page_sentflag_alone_notYes",
+    "source_modeled_actual_choice_gate",
+    "rejectalreadyanswered"
+  ]
+}

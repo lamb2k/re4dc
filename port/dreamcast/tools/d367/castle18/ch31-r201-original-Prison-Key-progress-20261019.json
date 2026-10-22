@@ -1,0 +1,245 @@
+{
+  "scope": "Read-only exact historical746 snapshot; four code anchors; no edits",
+  "state_sha256": "144b6dcb94ac130b3d32a66fca46aaf903384c1823a6c6a976ef2c25c235867f",
+  "frame": 47626,
+  "phase": [
+    3,
+    0
+  ],
+  "stop": "0x0",
+  "room": "0x201",
+  "health": [
+    1440,
+    1440,
+    360,
+    600
+  ],
+  "actors": {
+    "Leon": {
+      "pointer": "0x8ca89b20",
+      "id": 0,
+      "pos": [
+        15954.7568359375,
+        1999.9998779296875,
+        -37793.66015625
+      ],
+      "yaw": 3.1110033988952637
+    },
+    "Ashley": {
+      "pointer": "0x8cad8e40",
+      "id": 3,
+      "pos": [
+        15365.578125,
+        1999.9979248046875,
+        -37361.9921875
+      ],
+      "yaw": 2.202108860015869,
+      "partner_flags": "0x44"
+    }
+  },
+  "inventory_A7": [],
+  "cap_held_source_rows": [],
+  "EmMgr": [
+    {
+      "pointer": "0x8cc9a040",
+      "id": "0x4c",
+      "type": 0,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8cc99260",
+      "id": "0x4c",
+      "type": 0,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0xbe552498"
+    },
+    {
+      "pointer": "0x8cc121c0",
+      "id": "0x4d",
+      "type": 1,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8cc113e0",
+      "id": "0x4d",
+      "type": 1,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8cadbea0",
+      "id": "0x1b",
+      "type": 10,
+      "source_row": "0x56",
+      "hp": 4000,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8cadb0c0",
+      "id": "0x47",
+      "type": 5,
+      "source_row": "0xff",
+      "hp": 1,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8cad6b20",
+      "id": "0x43",
+      "type": 6,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8cad5d40",
+      "id": "0x43",
+      "type": 6,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8cad41e0",
+      "id": "0x41",
+      "type": 2,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x80000000"
+    },
+    {
+      "pointer": "0x8cad3400",
+      "id": "0x43",
+      "type": 3,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8cad2140",
+      "id": "0x43",
+      "type": 3,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8cad1360",
+      "id": "0x47",
+      "type": 0,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8cacf800",
+      "id": "0x47",
+      "type": 0,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8cacea20",
+      "id": "0x41",
+      "type": 1,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x80000000"
+    },
+    {
+      "pointer": "0x8cacd760",
+      "id": "0x43",
+      "type": 3,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8cacc980",
+      "id": "0x43",
+      "type": 3,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8cacb3e0",
+      "id": "0x4e",
+      "type": 1,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8caca600",
+      "id": "0x43",
+      "type": 7,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8cac9340",
+      "id": "0x43",
+      "type": 7,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8cac8560",
+      "id": "0x43",
+      "type": 7,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8ca8a900",
+      "id": "0x43",
+      "type": 7,
+      "source_row": "0xff",
+      "hp": 1000,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8ca89b20",
+      "id": "0x0",
+      "type": 0,
+      "source_row": "0xff",
+      "hp": 1440,
+      "raw_unclassified_offset10": "0x0"
+    },
+    {
+      "pointer": "0x8cad9c20",
+      "id": "0x4b",
+      "type": 0,
+      "source_row": "0xff",
+      "hp": 0,
+      "raw_unclassified_offset10": "0x80000000"
+    },
+    {
+      "pointer": "0x8cad8e40",
+      "id": "0x3",
+      "type": 0,
+      "source_row": "0xff",
+      "hp": 360,
+      "raw_unclassified_offset10": "0x0"
+    }
+  ],
+  "door_unlock0": "0x28000",
+  "Item_find_flg": "0x310006",
+  "actual_death_flag": false,
+  "inventory_C3": [],
+  "original_dungeon_unlock_bit": true,
+  "pickup_state_sha256": "fb0a116a0df91d7b27e53a7ea33d5c3bf5e6af552de7bc17dd6fa46cdda32024",
+  "pickup_receipt": "r201-native-DO-original-Prison-Key-pickup-snapshot-20261019.json",
+  "scope_limit": "Historical unchanged746/60aa native-route original source progression; not current-source chapter acceptance.",
+  "controller_inputs": "Owned-window normal movement, CHECK, message acknowledgement, key selection and original Use only; no guest writes."
+}

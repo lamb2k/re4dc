@@ -1,0 +1,3203 @@
+{
+  "scope": "Recovered J NEW cold normal original r202 exit and r207 terminal return functional PASS. No old snapshot, changed code/assets/knobs, warp or game-memory writes.",
+  "checkpoints": [
+    {
+      "scope": "Read-only immutable checkpoint audit of recovered-J NEW cold lineage only. No original J state retarget or game writes.",
+      "run": "route-walk25",
+      "state_sha256": "87c9b27da12ed986cc1c4c2c95929dddc996c3c01ea985c6bd3695f415d6cf65",
+      "source_frame": 10696,
+      "room": "0x202",
+      "chapter": 6,
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "SSLoop": 0,
+      "held_world": "0x0",
+      "health": [
+        1200,
+        1200,
+        600,
+        600
+      ],
+      "start": {
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "disc_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+        "ram_gdi": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\segments\\route-walk25\\disc.gdi",
+        "seed": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk24\\data",
+        "start_utc": "2026-10-21T16:02:18.952163+00:00"
+      },
+      "result": {
+        "name": "castle21-recoveredJ-original-r207-footpoint",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T16:02:18.823604+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "early_emulator_exit": 0,
+        "log_idle_s": 0.5,
+        "end_utc": "2026-10-21T16:02:40.836840+00:00",
+        "elapsed_s": 21.9,
+        "emulator_exited": true
+      },
+      "ELF_anchors": 4,
+      "player_pos": [
+        20271.1640625,
+        9031.798828125,
+        -58025.03125
+      ],
+      "partner_pos": [
+        20032.025390625,
+        9031.8037109375,
+        -58352.2421875
+      ],
+      "partner_subflags": "0x40",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk25\\data\\disc.state"
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            12600.0,
+            -48000.0
+          ],
+          "pos": [
+            12527.880859375,
+            9031.798828125,
+            -47971.671875
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            12600.0,
+            -50750.0
+          ],
+          "pos": [
+            12554.1591796875,
+            9031.8037109375,
+            -50776.2109375
+          ]
+        },
+        {
+          "normal_back_and_B_quickturn": true,
+          "frame": 10255,
+          "starting_yaw": -1.2051023244857788,
+          "desired_angle_error": -2.773454294456563
+        },
+        {
+          "waypoint_reached": 2,
+          "target": [
+            16000.0,
+            -54000.0
+          ],
+          "pos": [
+            16003.544921875,
+            9031.798828125,
+            -53929.734375
+          ]
+        },
+        {
+          "waypoint_reached": 3,
+          "target": [
+            19250.0,
+            -54000.0
+          ],
+          "pos": [
+            19220.341796875,
+            9031.798828125,
+            -53982.85546875
+          ]
+        },
+        {
+          "waypoint_reached": 4,
+          "target": [
+            19250.0,
+            -57250.0
+          ],
+          "pos": [
+            19229.12109375,
+            9031.802734375,
+            -57249.21484375
+          ]
+        },
+        {
+          "normal_back_and_B_quickturn": true,
+          "frame": 10599,
+          "starting_yaw": 2.1051712036132812,
+          "desired_angle_error": 2.936676736560491
+        },
+        {
+          "waypoint_reached": 5,
+          "target": [
+            20353.0,
+            -58180.0
+          ],
+          "pos": [
+            20422.87890625,
+            9031.8046875,
+            -58156.45703125
+          ]
+        },
+        {
+          "neutral_source_settle_ticks": 30,
+          "settled_pos": [
+            20270.53515625,
+            9031.802734375,
+            -58025.28125
+          ],
+          "settled_routine": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk25\\shots\\checkpoint-source-10693\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk25\\shots\\checkpoint-source-10693\\checkpoint-context.json"
+        },
+        {
+          "owned_close_after_goals": true
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "last_sample": {
+        "host_monotonic": 347825.468,
+        "room": "0x202",
+        "frame": 10663,
+        "player_hp": 1200,
+        "partner_hp": 600,
+        "pos": [
+          20422.87890625,
+          9031.8046875,
+          -58156.45703125
+        ],
+        "yaw": -1.453321099281311,
+        "target_distance": 73.73827307619678,
+        "angle_error": -0.44244217447745315,
+        "player_routines": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "screenshot_contexts": [
+        {
+          "run": "route-walk25",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x202",
+          "source_frame_interval": [
+            10693,
+            10695
+          ],
+          "health_before": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "action_result": {
+            "neutral_source_settle_ticks": 30,
+            "settled_pos": [
+              20270.53515625,
+              9031.802734375,
+              -58025.28125
+            ],
+            "settled_routine": [
+              0,
+              0,
+              1,
+              0
+            ]
+          },
+          "last_sample": {
+            "host_monotonic": 347825.468,
+            "room": "0x202",
+            "frame": 10663,
+            "player_hp": 1200,
+            "partner_hp": 600,
+            "pos": [
+              20422.87890625,
+              9031.8046875,
+              -58156.45703125
+            ],
+            "yaw": -1.453321099281311,
+            "target_distance": 73.73827307619678,
+            "angle_error": -0.44244217447745315,
+            "player_routines": [
+              0,
+              1,
+              1,
+              0
+            ]
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk25\\shots\\checkpoint-source-10693\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk25\\shots\\checkpoint-source-10693\\frames\\fb1.png"
+          ]
+        }
+      ],
+      "motion_first_sample": {
+        "host_s": 0.0,
+        "frame": 10096,
+        "hits": 14735,
+        "misses": 2975,
+        "evictions": 2969,
+        "loads": 2975,
+        "resident": 24704,
+        "bindings": [
+          {
+            "slot": 1,
+            "archive": "0x8cce64e0",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 24704,
+            "keys": [
+              [
+                1,
+                15616,
+                "f0448a79-19fe5c0a",
+                0
+              ],
+              [
+                27,
+                9088,
+                "5ffcdc79-69f63d5a",
+                0
+              ]
+            ]
+          }
+        ],
+        "room": "0x202",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      },
+      "motion_last_sample": {
+        "host_s": 20.656,
+        "frame": 10696,
+        "hits": 14735,
+        "misses": 2975,
+        "evictions": 2969,
+        "loads": 2975,
+        "resident": 24704,
+        "bindings": [
+          {
+            "slot": 1,
+            "archive": "0x8cce64e0",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 24704,
+            "keys": [
+              [
+                1,
+                15616,
+                "f0448a79-19fe5c0a",
+                0
+              ],
+              [
+                27,
+                9088,
+                "5ffcdc79-69f63d5a",
+                0
+              ]
+            ]
+          }
+        ],
+        "room": "0x202",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      }
+    },
+    {
+      "scope": "Read-only immutable checkpoint audit of recovered-J NEW cold lineage only. No original J state retarget or game writes.",
+      "run": "route-walk26",
+      "state_sha256": "3197d2a40b640c10e15fabce916cb7ab34d08924ac1ec368c044c9f9aa566388",
+      "source_frame": 11703,
+      "room": "0x207",
+      "chapter": 6,
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "SSLoop": 0,
+      "held_world": "0x0",
+      "health": [
+        1200,
+        1200,
+        600,
+        600
+      ],
+      "start": {
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "disc_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+        "ram_gdi": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\segments\\route-walk26\\disc.gdi",
+        "seed": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk25\\data",
+        "start_utc": "2026-10-21T16:03:42.244350+00:00"
+      },
+      "result": {
+        "name": "castle21-recoveredJ-original-r207-door",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T16:03:42.121796+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "log_idle_s": 0.5,
+        "end_utc": "2026-10-21T16:04:32.610217+00:00",
+        "elapsed_s": 50.4,
+        "emulator_exited": true
+      },
+      "ELF_anchors": 4,
+      "player_pos": [
+        523.8613891601562,
+        126.740478515625,
+        -49.924774169921875
+      ],
+      "partner_pos": [
+        139.1130828857422,
+        126.741455078125,
+        59.48646545410156
+      ],
+      "partner_subflags": "0x40",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk26\\data\\disc.state"
+        },
+        {
+          "aligned_original_door_A_attempt": 0,
+          "yaw": 3.1165997982025146,
+          "partner_distance": 442.93425718002925
+        },
+        {
+          "original_door207_complete": {
+            "frame": 11703,
+            "room": "0x207",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "health": [
+              1200,
+              1200,
+              600,
+              600
+            ]
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk26\\shots\\checkpoint-source-11703\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk26\\shots\\checkpoint-source-11703\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "last_sample": {
+        "frame": 10764,
+        "pos": [
+          20106.748046875,
+          9031.80078125,
+          -57915.65625
+        ],
+        "partner_pos": [
+          20032.025390625,
+          9031.798828125,
+          -58352.2421875
+        ],
+        "partner_distance": 442.93425718002925,
+        "yaw": 3.1165997982025146,
+        "error": 0.024992855387278468,
+        "source_key_on": "0x4000004",
+        "source_key_trg": "0x0",
+        "Stop": "0x0"
+      },
+      "screenshot_contexts": [
+        {
+          "run": "route-walk26",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x207",
+          "source_frame_interval": [
+            11703,
+            11703
+          ],
+          "health_before": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "action_result": {
+            "original_door207_complete": {
+              "frame": 11703,
+              "room": "0x207",
+              "phase": [
+                3,
+                0
+              ],
+              "Stop": "0x0",
+              "health": [
+                1200,
+                1200,
+                600,
+                600
+              ]
+            }
+          },
+          "last_sample": {
+            "frame": 10764,
+            "pos": [
+              20106.748046875,
+              9031.80078125,
+              -57915.65625
+            ],
+            "partner_pos": [
+              20032.025390625,
+              9031.798828125,
+              -58352.2421875
+            ],
+            "partner_distance": 442.93425718002925,
+            "yaw": 3.1165997982025146,
+            "error": 0.024992855387278468,
+            "source_key_on": "0x4000004",
+            "source_key_trg": "0x0",
+            "Stop": "0x0"
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk26\\shots\\checkpoint-source-11703\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk26\\shots\\checkpoint-source-11703\\frames\\fb1.png"
+          ]
+        }
+      ],
+      "motion_first_sample": {
+        "host_s": 0.0,
+        "frame": 10696,
+        "hits": 14735,
+        "misses": 2975,
+        "evictions": 2969,
+        "loads": 2975,
+        "resident": 24704,
+        "bindings": [
+          {
+            "slot": 1,
+            "archive": "0x8cce64e0",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 24704,
+            "keys": [
+              [
+                1,
+                15616,
+                "f0448a79-19fe5c0a",
+                0
+              ],
+              [
+                27,
+                9088,
+                "5ffcdc79-69f63d5a",
+                0
+              ]
+            ]
+          }
+        ],
+        "room": "0x202",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      },
+      "motion_last_sample": {
+        "host_s": 49.313,
+        "frame": 11703,
+        "hits": 14758,
+        "misses": 2976,
+        "evictions": 2969,
+        "loads": 2976,
+        "resident": 22400,
+        "bindings": [
+          {
+            "slot": 0,
+            "archive": "0x8c9d6900",
+            "bytes": 1323136,
+            "count": 157,
+            "budget": 64832,
+            "hot_bytes": 0,
+            "resident": 22400,
+            "keys": [
+              [
+                0,
+                22400,
+                "18f9ad45-ba6230e7",
+                0
+              ]
+            ]
+          },
+          {
+            "slot": 1,
+            "archive": "0x8cb3bb80",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 0,
+            "keys": []
+          }
+        ],
+        "room": "0x207",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      }
+    },
+    {
+      "scope": "Read-only immutable checkpoint audit of recovered-J NEW cold lineage only. No original J state retarget or game writes.",
+      "run": "route-walk27",
+      "state_sha256": "caf1597745381f79d3328b514f1d00a2303ae665d6027db71842d6c70d5e7b62",
+      "source_frame": 11711,
+      "room": "0x207",
+      "chapter": 6,
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "SSLoop": 0,
+      "held_world": "0x0",
+      "health": [
+        1200,
+        1200,
+        600,
+        600
+      ],
+      "start": {
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "disc_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+        "ram_gdi": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\segments\\route-walk27\\disc.gdi",
+        "seed": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk26\\data",
+        "start_utc": "2026-10-21T16:05:22.431423+00:00"
+      },
+      "result": {
+        "name": "castle21-recoveredJ-original-r207-terminal",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T16:05:22.308932+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "early_emulator_exit": 0,
+        "log_idle_s": 1.0,
+        "end_utc": "2026-10-21T16:05:24.959050+00:00",
+        "elapsed_s": 2.6,
+        "emulator_exited": true
+      },
+      "ELF_anchors": 4,
+      "player_pos": [
+        523.8397216796875,
+        126.7432861328125,
+        -49.68268585205078
+      ],
+      "partner_pos": [
+        139.01052856445312,
+        126.7442626953125,
+        59.515586853027344
+      ],
+      "partner_subflags": "0x40",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk27\\data\\disc.state"
+        },
+        {
+          "original_terminal_returned_r207_gameplay": {
+            "frame": 11709,
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              1200,
+              1200,
+              600,
+              600
+            ],
+            "player_pos": [
+              523.7797241210938,
+              126.7442626953125,
+              -49.71959686279297
+            ],
+            "partner_pos": [
+              139.0515899658203,
+              126.73876953125,
+              59.50393295288086
+            ]
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk27\\shots\\checkpoint-source-11709\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk27\\shots\\checkpoint-source-11709\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "last_sample": {
+        "frame": 11709,
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ]
+      },
+      "screenshot_contexts": [
+        {
+          "run": "route-walk27",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x207",
+          "source_frame_interval": [
+            11709,
+            11710
+          ],
+          "health_before": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "action_result": {
+            "original_terminal_returned_r207_gameplay": {
+              "frame": 11709,
+              "phase": [
+                3,
+                0
+              ],
+              "Stop": "0x0",
+              "SSLoop": 0,
+              "health": [
+                1200,
+                1200,
+                600,
+                600
+              ],
+              "player_pos": [
+                523.7797241210938,
+                126.7442626953125,
+                -49.71959686279297
+              ],
+              "partner_pos": [
+                139.0515899658203,
+                126.73876953125,
+                59.50393295288086
+              ]
+            }
+          },
+          "last_sample": {
+            "frame": 11709,
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              1200,
+              1200,
+              600,
+              600
+            ]
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk27\\shots\\checkpoint-source-11709\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk27\\shots\\checkpoint-source-11709\\frames\\fb1.png"
+          ]
+        }
+      ],
+      "motion_first_sample": {
+        "host_s": 0.0,
+        "frame": 11703,
+        "hits": 14758,
+        "misses": 2976,
+        "evictions": 2969,
+        "loads": 2976,
+        "resident": 22400,
+        "bindings": [
+          {
+            "slot": 0,
+            "archive": "0x8c9d6900",
+            "bytes": 1323136,
+            "count": 157,
+            "budget": 64832,
+            "hot_bytes": 0,
+            "resident": 22400,
+            "keys": [
+              [
+                0,
+                22400,
+                "18f9ad45-ba6230e7",
+                0
+              ]
+            ]
+          },
+          {
+            "slot": 1,
+            "archive": "0x8cb3bb80",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 0,
+            "keys": []
+          }
+        ],
+        "room": "0x207",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      },
+      "motion_last_sample": {
+        "host_s": 1.0,
+        "frame": 11711,
+        "hits": 14790,
+        "misses": 2976,
+        "evictions": 2969,
+        "loads": 2976,
+        "resident": 22400,
+        "bindings": [
+          {
+            "slot": 0,
+            "archive": "0x8c9d6900",
+            "bytes": 1323136,
+            "count": 157,
+            "budget": 64832,
+            "hot_bytes": 0,
+            "resident": 22400,
+            "keys": [
+              [
+                0,
+                22400,
+                "18f9ad45-ba6230e7",
+                0
+              ]
+            ]
+          },
+          {
+            "slot": 1,
+            "archive": "0x8cb3bb80",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 0,
+            "keys": []
+          }
+        ],
+        "room": "0x207",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      }
+    }
+  ],
+  "terminal_return": {
+    "frame": 11709,
+    "phase": [
+      3,
+      0
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "health": [
+      1200,
+      1200,
+      600,
+      600
+    ],
+    "player_pos": [
+      523.7797241210938,
+      126.7442626953125,
+      -49.71959686279297
+    ],
+    "partner_pos": [
+      139.0515899658203,
+      126.73876953125,
+      59.50393295288086
+    ]
+  },
+  "source_route": {
+    "scope": "Read-only exact selected r202.arc original SAT route hypothesis. 50-unit samples, original floor height, body-height wall slices. Actual normal collision governs. No runtime mutation.",
+    "source_arc_sha256": "79042994f58f719cd7b7af166fbf9922552851dd6aaed88bfd3502065574b216",
+    "points": [
+      [
+        10436.2421875,
+        -47034.96875
+      ],
+      [
+        12600,
+        -48000
+      ],
+      [
+        12600,
+        -50750
+      ],
+      [
+        16000,
+        -54000
+      ],
+      [
+        19250,
+        -54000
+      ],
+      [
+        19250,
+        -57250
+      ],
+      [
+        20353,
+        -58180
+      ]
+    ],
+    "samples": 363,
+    "minimum_wall_clearance": 329.734375,
+    "all_at_least300": true,
+    "rows": [
+      [
+        10436.2421875,
+        9031.802734375,
+        -47034.96875,
+        1697.1638395407401
+      ],
+      [
+        10481.320475260416,
+        9031.802734375,
+        -47055.073567708336,
+        1672.9823839734518
+      ],
+      [
+        10526.398763020834,
+        9031.802734375,
+        -47075.178385416664,
+        1649.923491369007
+      ],
+      [
+        10571.47705078125,
+        9031.802734375,
+        -47095.283203125,
+        1628.0348611445966
+      ],
+      [
+        10616.555338541666,
+        9031.802734375,
+        -47115.388020833336,
+        1607.3643029126629
+      ],
+      [
+        10661.633626302084,
+        9031.802734375,
+        -47135.492838541664,
+        1587.9593845242666
+      ],
+      [
+        10706.7119140625,
+        9031.802734375,
+        -47155.59765625,
+        1569.8670399000284
+      ],
+      [
+        10751.790201822916,
+        9031.802734375,
+        -47175.702473958336,
+        1553.1331399707044
+      ],
+      [
+        10796.868489583334,
+        9031.802734375,
+        -47195.807291666664,
+        1537.802031937471
+      ],
+      [
+        10841.94677734375,
+        9031.802734375,
+        -47215.912109375,
+        1523.9160540632747
+      ],
+      [
+        10887.025065104166,
+        9031.802734375,
+        -47236.016927083336,
+        1511.515035213855
+      ],
+      [
+        10932.103352864584,
+        9031.802734375,
+        -47256.121744791664,
+        1500.635790246345
+      ],
+      [
+        10977.181640625,
+        9031.802734375,
+        -47276.2265625,
+        1491.3116239418298
+      ],
+      [
+        11022.259928385416,
+        9031.802734375,
+        -47296.331380208336,
+        1483.5718573378085
+      ],
+      [
+        11067.338216145834,
+        9031.802734375,
+        -47316.436197916664,
+        1477.4413908884724
+      ],
+      [
+        11112.41650390625,
+        9031.802734375,
+        -47336.541015625,
+        1472.9403187438336
+      ],
+      [
+        11157.494791666666,
+        9031.802734375,
+        -47356.645833333336,
+        1470.0836075192803
+      ],
+      [
+        11202.573079427084,
+        9031.802734375,
+        -47376.750651041664,
+        1468.8808512121013
+      ],
+      [
+        11247.6513671875,
+        9031.802734375,
+        -47396.85546875,
+        1469.3361114677905
+      ],
+      [
+        11292.729654947916,
+        9031.802734375,
+        -47416.960286458336,
+        1471.44784933547
+      ],
+      [
+        11337.807942708334,
+        9031.802734375,
+        -47437.065104166664,
+        1475.2089511691702
+      ],
+      [
+        11382.88623046875,
+        9031.802734375,
+        -47457.169921875,
+        1480.606847664268
+      ],
+      [
+        11427.964518229166,
+        9031.802734375,
+        -47477.274739583336,
+        1487.623721421513
+      ],
+      [
+        11473.042805989584,
+        9031.802734375,
+        -47497.379557291664,
+        1496.2367951519677
+      ],
+      [
+        11518.12109375,
+        9031.802734375,
+        -47517.484375,
+        1506.4186898874718
+      ],
+      [
+        11563.199381510416,
+        9031.802734375,
+        -47537.589192708336,
+        1518.137840501624
+      ],
+      [
+        11608.277669270834,
+        9031.802734375,
+        -47557.694010416664,
+        1531.3589545656996
+      ],
+      [
+        11653.35595703125,
+        9031.802734375,
+        -47577.798828125,
+        1546.0435000798602
+      ],
+      [
+        11698.434244791666,
+        9031.802734375,
+        -47597.903645833336,
+        1562.1502078848916
+      ],
+      [
+        11743.512532552084,
+        9031.802734375,
+        -47618.008463541664,
+        1579.6355754715723
+      ],
+      [
+        11788.5908203125,
+        9031.802734375,
+        -47638.11328125,
+        1598.4543603246905
+      ],
+      [
+        11833.669108072916,
+        9031.802734375,
+        -47658.218098958336,
+        1618.3764591618008
+      ],
+      [
+        11878.747395833334,
+        9031.802734375,
+        -47678.322916666664,
+        1638.4328808927828
+      ],
+      [
+        11923.82568359375,
+        9031.802734375,
+        -47698.427734375,
+        1638.5216005431255
+      ],
+      [
+        11968.903971354166,
+        9031.802734375,
+        -47718.532552083336,
+        1590.8289175655682
+      ],
+      [
+        12013.982259114584,
+        9031.802734375,
+        -47738.637369791664,
+        1543.2409941173387
+      ],
+      [
+        12059.060546875,
+        9031.802734375,
+        -47758.7421875,
+        1495.7678290198278
+      ],
+      [
+        12104.138834635416,
+        9031.802734375,
+        -47778.847005208336,
+        1448.4207062114576
+      ],
+      [
+        12149.217122395834,
+        9031.802734375,
+        -47798.951822916664,
+        1401.2124026993586
+      ],
+      [
+        12194.29541015625,
+        9031.802734375,
+        -47819.056640625,
+        1354.1574370138444
+      ],
+      [
+        12239.373697916666,
+        9031.802734375,
+        -47839.161458333336,
+        1307.272367338303
+      ],
+      [
+        12284.451985677084,
+        9031.802734375,
+        -47859.266276041664,
+        1260.5761508285327
+      ],
+      [
+        12329.5302734375,
+        9031.802734375,
+        -47879.37109375,
+        1214.0905786283213
+      ],
+      [
+        12374.608561197916,
+        9031.802734375,
+        -47899.475911458336,
+        1167.8408049196673
+      ],
+      [
+        12419.686848958334,
+        9031.802734375,
+        -47919.580729166664,
+        1121.8559932548305
+      ],
+      [
+        12464.76513671875,
+        9031.802734375,
+        -47939.685546875,
+        1076.1701097006608
+      ],
+      [
+        12509.843424479166,
+        9031.802734375,
+        -47959.790364583336,
+        1030.822900341991
+      ],
+      [
+        12554.921712239584,
+        9031.802734375,
+        -47979.895182291664,
+        985.8611008508336
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48000.0,
+        941.3399385541574
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48000.0,
+        941.3399385541574
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48050.0,
+        903.4602432687034
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48100.0,
+        866.8102113018425
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48150.0,
+        831.5524479352729
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48200.0,
+        797.8715466271151
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48250.0,
+        765.9755454106513
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48300.0,
+        736.0965068638383
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48350.0,
+        708.4896602401088
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48400.0,
+        683.4304133685775
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48450.0,
+        661.2084854016506
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48500.0,
+        642.1185189800593
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48550.0,
+        626.4469041085164
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48600.0,
+        614.4552505407898
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48650.0,
+        606.3619267130356
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48700.0,
+        602.3240966598836
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48750.0,
+        601.2551249739981
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48800.0,
+        600.3157250730821
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48850.0,
+        599.3763251721663
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48900.0,
+        598.4369252712504
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -48950.0,
+        597.4975253703344
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -49000.0,
+        596.5581254694185
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -49050.0,
+        595.6187255685027
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -49100.0,
+        594.6793256675867
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -49150.0,
+        593.7399257666708
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -49200.0,
+        592.8005258657549
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -49250.0,
+        591.861125964839
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -49300.0,
+        590.9217260639231
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -49350.0,
+        589.9823261630072
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -49400.0,
+        589.0429262620914
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -49450.0,
+        588.1035263611758
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -49500.0,
+        587.1641264602599
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -49550.0,
+        586.2247265593443
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -49600.0,
+        585.2853266584286
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -49650.0,
+        584.3459267575128
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -49700.0,
+        583.4065268565971
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -49750.0,
+        582.4684562238248
+      ],
+      [
+        12600.0,
+        9031.802734374998,
+        -49800.0,
+        583.7804215805509
+      ],
+      [
+        12600.0,
+        9031.802734374998,
+        -49850.0,
+        589.3468068512509
+      ],
+      [
+        12600.0,
+        9031.802734374998,
+        -49900.0,
+        599.0490271010927
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -49950.0,
+        612.6906356357715
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -50000.0,
+        630.0157879932578
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -50050.0,
+        650.730336810699
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -50100.0,
+        674.522089609203
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -50150.0,
+        701.0778326946058
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -50200.0,
+        730.0960249314919
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -50250.0,
+        761.2951357691481
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -50300.0,
+        794.4182537371393
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -50350.0,
+        829.2348521352475
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -50400.0,
+        865.5405929942083
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -50450.0,
+        903.1559091573091
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -50500.0,
+        941.9239217531136
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -50550.0,
+        981.7080790620834
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -50600.0,
+        1022.389764532473
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -50650.0,
+        1063.8660201105051
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -50700.0,
+        1106.0474614006243
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -50750.0,
+        1148.856416179048
+      ],
+      [
+        12600.0,
+        9031.802734375,
+        -50750.0,
+        1148.856416179048
+      ],
+      [
+        12635.78947368421,
+        9031.802734375,
+        -50784.21052631579,
+        1161.2032704127932
+      ],
+      [
+        12671.578947368422,
+        9031.802734375,
+        -50818.42105263158,
+        1175.507336648212
+      ],
+      [
+        12707.368421052632,
+        9031.802734375,
+        -50852.63157894737,
+        1191.6981391631682
+      ],
+      [
+        12743.157894736842,
+        9031.802734375,
+        -50886.84210526316,
+        1209.6999232582234
+      ],
+      [
+        12778.947368421053,
+        9031.802734375,
+        -50921.05263157895,
+        1229.433140456088
+      ],
+      [
+        12814.736842105263,
+        9031.802734375,
+        -50955.26315789474,
+        1250.81584673656
+      ],
+      [
+        12850.526315789473,
+        9031.802734375,
+        -50989.47368421053,
+        1273.7649748354877
+      ],
+      [
+        12886.315789473685,
+        9031.802734375,
+        -51023.68421052631,
+        1298.197455267416
+      ],
+      [
+        12922.105263157895,
+        9031.802734375,
+        -51057.89473684211,
+        1324.031173229222
+      ],
+      [
+        12957.894736842105,
+        9031.802734375,
+        -51092.10526315789,
+        1351.1857590936486
+      ],
+      [
+        12993.684210526315,
+        9031.802734375,
+        -51126.31578947369,
+        1379.5832184203387
+      ],
+      [
+        13029.473684210527,
+        9031.802734375,
+        -51160.52631578947,
+        1409.148413259346
+      ],
+      [
+        13065.263157894737,
+        9031.802734375,
+        -51194.73684210526,
+        1439.8094102034606
+      ],
+      [
+        13101.052631578947,
+        9031.802734375,
+        -51228.94736842105,
+        1471.4977125039493
+      ],
+      [
+        13136.842105263158,
+        9031.802734375,
+        -51263.15789473684,
+        1504.148394000088
+      ],
+      [
+        13172.631578947368,
+        9031.802734375,
+        -51297.36842105263,
+        1537.7001520181193
+      ],
+      [
+        13208.421052631578,
+        9031.802734375,
+        -51331.57894736842,
+        1571.8605653587015
+      ],
+      [
+        13244.21052631579,
+        9031.802734375,
+        -51365.78947368421,
+        1606.0452988145826
+      ],
+      [
+        13280.0,
+        9031.802734375,
+        -51400.0,
+        1640.2300322704564
+      ],
+      [
+        13315.78947368421,
+        9031.802734375,
+        -51434.21052631579,
+        1674.4147657263302
+      ],
+      [
+        13351.578947368422,
+        9031.802734375,
+        -51468.42105263158,
+        1708.5994991822113
+      ],
+      [
+        13387.368421052632,
+        9031.802734375,
+        -51502.63157894737,
+        1742.7842326380853
+      ],
+      [
+        13423.157894736842,
+        9031.802734375,
+        -51536.84210526316,
+        1776.9689660939664
+      ],
+      [
+        13458.947368421053,
+        9031.802734375,
+        -51571.05263157895,
+        1811.1536995498402
+      ],
+      [
+        13494.736842105263,
+        9031.802734375,
+        -51605.26315789474,
+        1845.3384330057213
+      ],
+      [
+        13530.526315789473,
+        9031.802734375,
+        -51639.47368421053,
+        1879.523166461595
+      ],
+      [
+        13566.315789473683,
+        9031.802734375,
+        -51673.68421052631,
+        1913.707899917469
+      ],
+      [
+        13602.105263157895,
+        9031.802734375,
+        -51707.89473684211,
+        1947.89263337335
+      ],
+      [
+        13637.894736842105,
+        9031.802734375,
+        -51742.10526315789,
+        1982.0773668292238
+      ],
+      [
+        13673.684210526317,
+        9031.802734375,
+        -51776.31578947369,
+        2016.262100285105
+      ],
+      [
+        13709.473684210527,
+        9031.802734375,
+        -51810.52631578947,
+        2050.446833740979
+      ],
+      [
+        13745.263157894737,
+        9031.802734375,
+        -51844.73684210526,
+        2084.6315671968528
+      ],
+      [
+        13781.052631578947,
+        9031.802734375,
+        -51878.94736842105,
+        2118.816300652734
+      ],
+      [
+        13816.842105263158,
+        9031.802734375,
+        -51913.15789473684,
+        2136.0404133705592
+      ],
+      [
+        13852.631578947368,
+        9031.802734375,
+        -51947.36842105263,
+        2137.9681485447413
+      ],
+      [
+        13888.421052631578,
+        9031.802734375,
+        -51981.57894736842,
+        2141.0393396446866
+      ],
+      [
+        13924.21052631579,
+        9031.802734375,
+        -52015.78947368421,
+        2145.249075677529
+      ],
+      [
+        13960.0,
+        9031.802734375,
+        -52050.0,
+        2150.590670620331
+      ],
+      [
+        13995.78947368421,
+        9031.802734375,
+        -52084.21052631579,
+        2157.0557159002424
+      ],
+      [
+        14031.578947368422,
+        9031.802734375,
+        -52118.42105263158,
+        2164.6341454184408
+      ],
+      [
+        14067.368421052632,
+        9031.802734375,
+        -52152.63157894737,
+        2173.314311966796
+      ],
+      [
+        14103.157894736842,
+        9031.802734375,
+        -52186.84210526316,
+        2142.89226973684
+      ],
+      [
+        14138.947368421053,
+        9031.802734375,
+        -52221.05263157895,
+        2108.6817434210534
+      ],
+      [
+        14174.736842105263,
+        9031.802734375,
+        -52255.26315789474,
+        2074.4712171052597
+      ],
+      [
+        14210.526315789473,
+        9031.802734375,
+        -52289.47368421053,
+        2040.2606907894733
+      ],
+      [
+        14246.315789473683,
+        9031.802734375,
+        -52323.68421052631,
+        2006.050164473687
+      ],
+      [
+        14282.105263157895,
+        9031.802734375,
+        -52357.89473684211,
+        1971.8396381578932
+      ],
+      [
+        14317.894736842105,
+        9031.802734375,
+        -52392.10526315789,
+        1937.6291118421068
+      ],
+      [
+        14353.684210526317,
+        9031.802734375,
+        -52426.31578947369,
+        1903.418585526313
+      ],
+      [
+        14389.473684210527,
+        9031.802734375,
+        -52460.52631578947,
+        1869.2080592105267
+      ],
+      [
+        14425.263157894737,
+        9031.802734375,
+        -52494.73684210526,
+        1834.9975328947403
+      ],
+      [
+        14461.052631578947,
+        9031.802734375,
+        -52528.94736842105,
+        1800.7870065789466
+      ],
+      [
+        14496.842105263158,
+        9031.802734375,
+        -52563.15789473684,
+        1766.5764802631602
+      ],
+      [
+        14532.631578947368,
+        9031.802734375,
+        -52597.36842105263,
+        1732.3659539473665
+      ],
+      [
+        14568.421052631578,
+        9031.802734375,
+        -52631.57894736842,
+        1698.15542763158
+      ],
+      [
+        14604.21052631579,
+        9031.802734375,
+        -52665.78947368421,
+        1663.9449013157864
+      ],
+      [
+        14640.0,
+        9031.802734375,
+        -52700.0,
+        1629.734375
+      ],
+      [
+        14675.78947368421,
+        9031.802734375,
+        -52734.21052631579,
+        1595.5238486842136
+      ],
+      [
+        14711.578947368422,
+        9031.802734375,
+        -52768.42105263158,
+        1561.31332236842
+      ],
+      [
+        14747.368421052632,
+        9031.802734375,
+        -52802.63157894737,
+        1527.1027960526335
+      ],
+      [
+        14783.157894736842,
+        9031.802734375,
+        -52836.84210526316,
+        1492.8922697368398
+      ],
+      [
+        14818.947368421053,
+        9031.802734375,
+        -52871.05263157895,
+        1458.6817434210534
+      ],
+      [
+        14854.736842105263,
+        9031.802734375,
+        -52905.26315789473,
+        1424.471217105267
+      ],
+      [
+        14890.526315789473,
+        9031.802734375,
+        -52939.47368421053,
+        1390.2606907894733
+      ],
+      [
+        14926.315789473683,
+        9031.802734375,
+        -52973.68421052631,
+        1356.050164473687
+      ],
+      [
+        14962.105263157895,
+        9031.802734375,
+        -53007.89473684211,
+        1321.8396381578932
+      ],
+      [
+        14997.894736842105,
+        9031.802734375,
+        -53042.10526315789,
+        1287.6291118421068
+      ],
+      [
+        15033.684210526317,
+        9031.802734375,
+        -53076.31578947369,
+        1253.418585526313
+      ],
+      [
+        15069.473684210527,
+        9031.802734375,
+        -53110.52631578947,
+        1219.2080592105267
+      ],
+      [
+        15105.263157894737,
+        9031.802734375,
+        -53144.73684210527,
+        1184.997532894733
+      ],
+      [
+        15141.052631578947,
+        9031.802734375,
+        -53178.94736842105,
+        1150.7870065789466
+      ],
+      [
+        15176.842105263158,
+        9031.802734375,
+        -53213.15789473684,
+        1116.5764802631602
+      ],
+      [
+        15212.631578947368,
+        9031.802734375,
+        -53247.36842105263,
+        1082.3659539473665
+      ],
+      [
+        15248.421052631578,
+        9031.802734375,
+        -53281.57894736842,
+        1048.15542763158
+      ],
+      [
+        15284.21052631579,
+        9031.802734375,
+        -53315.78947368421,
+        1013.9449013157864
+      ],
+      [
+        15320.0,
+        9031.802734375,
+        -53350.0,
+        979.734375
+      ],
+      [
+        15355.78947368421,
+        9031.802734375,
+        -53384.21052631579,
+        945.5238486842136
+      ],
+      [
+        15391.578947368422,
+        9031.802734375,
+        -53418.42105263158,
+        911.3133223684199
+      ],
+      [
+        15427.368421052632,
+        9031.802734375,
+        -53452.63157894737,
+        877.1027960526335
+      ],
+      [
+        15463.157894736842,
+        9031.802734375,
+        -53486.84210526316,
+        842.8922697368398
+      ],
+      [
+        15498.947368421053,
+        9031.802734375,
+        -53521.05263157895,
+        808.6817434210534
+      ],
+      [
+        15534.736842105263,
+        9031.802734375,
+        -53555.26315789473,
+        774.471217105267
+      ],
+      [
+        15570.526315789473,
+        9031.802734375,
+        -53589.47368421053,
+        740.2606907894733
+      ],
+      [
+        15606.315789473683,
+        9031.802734375,
+        -53623.68421052631,
+        706.0501644736869
+      ],
+      [
+        15642.105263157895,
+        9031.802734375,
+        -53657.89473684211,
+        671.8396381578932
+      ],
+      [
+        15677.894736842105,
+        9031.802734375,
+        -53692.10526315789,
+        637.6291118421068
+      ],
+      [
+        15713.684210526317,
+        9031.802734375,
+        -53726.31578947369,
+        603.4185855263131
+      ],
+      [
+        15749.473684210527,
+        9031.802734375,
+        -53760.52631578947,
+        569.2080592105267
+      ],
+      [
+        15785.263157894737,
+        9031.802734375,
+        -53794.73684210527,
+        534.997532894733
+      ],
+      [
+        15821.052631578947,
+        9031.802734375,
+        -53828.94736842105,
+        500.7870065789466
+      ],
+      [
+        15856.842105263158,
+        9031.802734375,
+        -53863.15789473684,
+        466.5764802631602
+      ],
+      [
+        15892.631578947368,
+        9031.802734375,
+        -53897.36842105263,
+        432.3659539473665
+      ],
+      [
+        15928.421052631578,
+        9031.802734375,
+        -53931.57894736842,
+        398.1554276315801
+      ],
+      [
+        15964.21052631579,
+        9031.802734375,
+        -53965.78947368421,
+        363.9449013157864
+      ],
+      [
+        16000.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16000.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16050.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16100.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16150.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16200.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16250.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16300.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16350.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16400.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16450.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16500.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16550.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16600.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16650.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16700.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16750.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16800.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16850.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16900.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        16950.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17000.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17050.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17100.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17150.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17200.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17250.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17300.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17350.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17400.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17450.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17500.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17550.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17600.0,
+        9031.802734374998,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17650.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17700.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17750.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17800.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17850.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17900.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        17950.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        18000.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        18050.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        18100.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        18150.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        18200.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        18250.0,
+        9031.802734374998,
+        -54000.0,
+        329.734375
+      ],
+      [
+        18300.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        18350.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        18400.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        18450.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        18500.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        18550.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        18600.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        18650.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        18700.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        18750.0,
+        9031.802734375,
+        -54000.0,
+        329.734375
+      ],
+      [
+        18800.0,
+        9031.802734375,
+        -54000.0,
+        331.15495762109805
+      ],
+      [
+        18850.0,
+        9031.802734375,
+        -54000.0,
+        339.4520120091075
+      ],
+      [
+        18900.0,
+        9031.802734374998,
+        -54000.0,
+        354.6712998778323
+      ],
+      [
+        18950.0,
+        9031.802734374998,
+        -54000.0,
+        375.97312863691633
+      ],
+      [
+        19000.0,
+        9031.802734375,
+        -54000.0,
+        402.39266389564216
+      ],
+      [
+        19050.0,
+        9031.802734375,
+        -54000.0,
+        432.9941321277129
+      ],
+      [
+        19100.0,
+        9031.802734375,
+        -54000.0,
+        466.9560803298649
+      ],
+      [
+        19150.0,
+        9031.802734375,
+        -54000.0,
+        503.5990900081445
+      ],
+      [
+        19200.0,
+        9031.802734375,
+        -54000.0,
+        542.380038309884
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54000.0,
+        582.8723431910552
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54000.0,
+        582.8723431910552
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54050.0,
+        556.1175513837261
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54100.0,
+        532.7225295189149
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54150.0,
+        513.1470120316703
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54200.0,
+        497.8417604591154
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54250.0,
+        487.20938102322214
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54300.0,
+        481.5594910881014
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54350.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54400.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54450.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54500.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54550.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54600.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54650.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54700.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54750.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54800.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54850.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54900.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -54950.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55000.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55050.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55100.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55150.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55200.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55250.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55300.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55350.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55400.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55450.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55500.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55550.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55600.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55650.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55700.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55750.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55800.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55850.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55900.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -55950.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56000.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56050.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56100.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56150.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56200.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56250.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56300.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56350.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56400.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56450.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56500.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56550.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56600.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56650.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56700.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56750.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56800.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56850.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56900.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -56950.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -57000.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -57050.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -57100.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -57150.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -57200.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -57250.0,
+        480.640625
+      ],
+      [
+        19250.0,
+        9031.802734375,
+        -57250.0,
+        480.640625
+      ],
+      [
+        19288.03448275862,
+        9031.802734375,
+        -57282.06896551724,
+        518.6751077586196
+      ],
+      [
+        19326.068965517243,
+        9031.802734375,
+        -57314.137931034486,
+        556.7095905172428
+      ],
+      [
+        19364.103448275862,
+        9031.802734375,
+        -57346.206896551725,
+        594.7440732758623
+      ],
+      [
+        19402.137931034482,
+        9031.802734375,
+        -57378.275862068964,
+        632.7785560344819
+      ],
+      [
+        19440.172413793105,
+        9031.802734375,
+        -57410.34482758621,
+        670.8130387931051
+      ],
+      [
+        19478.206896551725,
+        9031.802734375,
+        -57442.41379310345,
+        708.8475215517246
+      ],
+      [
+        19516.241379310344,
+        9031.802734375,
+        -57474.48275862069,
+        746.8820043103442
+      ],
+      [
+        19554.275862068964,
+        9031.802734375,
+        -57506.55172413793,
+        784.9164870689638
+      ],
+      [
+        19592.310344827587,
+        9031.802734375,
+        -57538.620689655174,
+        822.950969827587
+      ],
+      [
+        19630.344827586207,
+        9031.802734375,
+        -57570.68965517241,
+        860.9854525862065
+      ],
+      [
+        19668.379310344826,
+        9031.802734375,
+        -57602.75862068965,
+        899.0199353448261
+      ],
+      [
+        19706.41379310345,
+        9031.802734375,
+        -57634.8275862069,
+        937.0544181034493
+      ],
+      [
+        19744.44827586207,
+        9031.802734375,
+        -57666.89655172414,
+        975.0889008620688
+      ],
+      [
+        19782.48275862069,
+        9031.802734375,
+        -57698.96551724138,
+        953.2766702586232
+      ],
+      [
+        19820.51724137931,
+        9031.802734375,
+        -57731.03448275862,
+        921.2077047413768
+      ],
+      [
+        19858.55172413793,
+        9031.802734375,
+        -57763.10344827586,
+        889.1387392241377
+      ],
+      [
+        19896.58620689655,
+        9031.802734375,
+        -57795.1724137931,
+        857.0697737068986
+      ],
+      [
+        19934.620689655174,
+        9031.802734375,
+        -57827.24137931035,
+        825.0008081896522
+      ],
+      [
+        19972.655172413793,
+        9031.802734375,
+        -57859.31034482759,
+        792.931842672413
+      ],
+      [
+        20010.689655172413,
+        9031.802734375,
+        -57891.379310344826,
+        760.8628771551739
+      ],
+      [
+        20048.724137931036,
+        9031.802734375,
+        -57923.44827586207,
+        728.7939116379275
+      ],
+      [
+        20086.758620689656,
+        9031.802734375,
+        -57955.51724137931,
+        696.7249461206884
+      ],
+      [
+        20124.793103448275,
+        9031.802734375,
+        -57987.58620689655,
+        664.6559806034493
+      ],
+      [
+        20162.827586206895,
+        9031.802734375,
+        -58019.65517241379,
+        632.5870150862102
+      ],
+      [
+        20200.862068965518,
+        9031.802734375,
+        -58051.724137931036,
+        600.5180495689638
+      ],
+      [
+        20238.896551724138,
+        9031.802734375,
+        -58083.793103448275,
+        568.4490840517246
+      ],
+      [
+        20276.931034482757,
+        9031.802734375,
+        -58115.862068965514,
+        536.3801185344855
+      ],
+      [
+        20314.96551724138,
+        9031.802734375,
+        -58147.93103448276,
+        504.3111530172391
+      ],
+      [
+        20353.0,
+        9031.802734375002,
+        -58180.0,
+        472.2421875
+      ]
+    ]
+  },
+  "limits": [
+    "Sword puzzle and chapter progression remain pending in this NEW recovered lineage.",
+    "R207 entry is a functional door/dialogue return, not whole-room native/render/texture/residency or hardware acceptance.",
+    "Original r202 TEXCHK2/scenery and motion-churn limitations remain open.",
+    "Original J221 and all old evidence remain separate and unchanged."
+  ]
+}

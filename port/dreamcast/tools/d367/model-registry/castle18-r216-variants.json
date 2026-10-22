@@ -1,0 +1,90 @@
+{
+ "registry": "castle18-variants-r216",
+ "about": "Complete PS2 armor source body, chainmail and attached weapon for each em3c type0..3. Same source skeleton and1.2 source scale.",
+ "cast_dir": "/root/re4data/private/castle18-cast-variants-20261018/cast-em3c",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit source normals",
+ "descriptors": [
+  {
+   "name": "armor-em3c-00w",
+   "archive": "em3c",
+   "model_id": "0x3c",
+   "source_types": [
+    0
+   ],
+   "partial_sections": true,
+   "pool": true,
+   "module": "src/em3c/em3c.cpp em3cModelInit body, chainmail and original weapon selection",
+   "source_drops": [
+    "bump",
+    "alt-specular"
+   ],
+   "mask_runs": {}
+  },
+  {
+   "name": "armor-em3c-01w",
+   "archive": "em3c",
+   "model_id": "0x3c",
+   "source_types": [
+    1
+   ],
+   "partial_sections": true,
+   "pool": true,
+   "module": "src/em3c/em3c.cpp em3cModelInit body, chainmail and original weapon selection",
+   "source_drops": [
+    "bump",
+    "alt-specular"
+   ],
+   "mask_runs": {}
+  },
+  {
+   "name": "armor-em3c-02w",
+   "archive": "em3c",
+   "model_id": "0x3c",
+   "source_types": [
+    2
+   ],
+   "partial_sections": true,
+   "pool": true,
+   "module": "src/em3c/em3c.cpp em3cModelInit body, chainmail and original weapon selection",
+   "source_drops": [
+    "bump",
+    "alt-specular"
+   ],
+   "mask_runs": {
+    "0": "/root/re4data/private/castle18-cast-variants-20261018/mask/armor-em3c-02w/0"
+   }
+  },
+  {
+   "name": "armor-em3c-03w",
+   "archive": "em3c",
+   "model_id": "0x3c",
+   "source_types": [
+    3
+   ],
+   "partial_sections": true,
+   "pool": true,
+   "module": "src/em3c/em3c.cpp em3cModelInit body, chainmail and original weapon selection",
+   "source_drops": [
+    "bump",
+    "alt-specular"
+   ],
+   "mask_runs": {
+    "0": "/root/re4data/private/castle18-cast-variants-20261018/mask/armor-em3c-03w/0"
+   }
+  }
+ ],
+ "room_packages": {
+  "216": {
+   "descriptors": [
+    "armor-em3c-00w",
+    "armor-em3c-01w",
+    "armor-em3c-02w",
+    "armor-em3c-03w"
+   ],
+   "evidence": "src/em3c/em3c.cpp em3cModelInit source selects all3 infos; actual type2 C/D NMRBIN"
+  }
+ }
+}

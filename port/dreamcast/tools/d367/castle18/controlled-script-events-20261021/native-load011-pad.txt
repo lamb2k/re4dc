@@ -1,0 +1,11 @@
+# New source-gated native load method. No absolute1500 or inter-screen timed waits.
+clock source
+0 1000 3 title=2 1800
++0 0000 1 title=5/1 2400
++1 0100 3 title=5/1 1200
++0 0000 1 card=2/1 6000
++1 0100 3 card=2/1 600
++0 0000 1 card=2/6 900
++1 0001 3 card=2/6 600
++0 0000 1 card=2/6 600
++1 0100 3 card=2/6 600

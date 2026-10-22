@@ -1,0 +1,13 @@
+{
+  "replace": {
+    "bgm/bio4midi.dat": "/root/re4data/private/castle18-ch41-bgm7-20261019/bgm/bio4midi.dat"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Reuse the exact recovered BGM7 encoded ARAM slice; no sound re-encoding or change to any other bank.",
+    "source_sha256": "293df040f919e5bb9ad410e4404ed01b72aaedcdc4f41738de10199c29774ba0",
+    "candidate_sha256": "d413a6ee6f894baa0d83bd8326ca763822522c78522c7b4fa97b97b40c385413",
+    "integration": "Compose only this checked BGM7 slice into newer containers; preserve BGM14 and every other bank.",
+    "runtime_qualification": false
+  }
+}

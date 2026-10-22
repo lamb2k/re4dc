@@ -1,0 +1,58 @@
+{
+  "scope": "Fresh isolated current program containing additive exact pl11-walk source profile admission. Build/host evidence only; target remains pending and current I original route is immutable. No recipe/default/cache policy change.",
+  "source": "12a841d7c",
+  "profile_commit": "a0c32e797",
+  "build": "c21jmW",
+  "elapsed_s": 55,
+  "missing": 0,
+  "end": "8c485358",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "programs": {
+    "1ST_READ.BIN": "a692188076ec6cb6ffd09c0299e48e4ec5d97362581020cdcd014727d427aaaa",
+    "em22.ovl": "fa9394838cd9e99dbf66dc5899b4703424b78f72c4ff1fd2e13b29b224549e9d",
+    "em25.ovl": "82b11b1277314e5503f4b608c594b4d026f11d66e46186ea8a55860bbcf08e2e",
+    "em2b.ovl": "09d813aa606a7d39993613f0767934b93e16e6e4bd031bd394ce14c5880312d0",
+    "em2c.ovl": "a93e9edaaa46214f42b0cf495b1dca12a739d059d16fa101c37c3835684dd447",
+    "em2d.ovl": "b5e2cc5414c3ae1344d9d4c6ce6f5b1781e85e0da23c20c4c52753db6dc23902",
+    "em2f.ovl": "f517094228b7d08b72da1e57a0504182da6d84f2257316b01f30df13ab99e604",
+    "em35.ovl": "1d0819bb17c820f8b4376b6318600faab95be79fa04079bb9c6c76c1715586be",
+    "em38.ovl": "c11afe330141b34c7df3d347943fc1223af13ba94092aef6071dbe825d3e7465",
+    "em3b.ovl": "a4f35caac97754b39cb2dac1d88fcf0884038d8f88a69f8ab0f5c24e7a3e97eb",
+    "em3c.ovl": "1381a00f45ced1fac1d73a3cdf82a1f2237d76a64d4bb95db3b3cab81479fbdf",
+    "pl0f.ovl": "16c8fab40b64334a13973e288a258599d9f4d478a424fb7374d808084a0b5a42",
+    "pl11.ovl": "9087a0cf3ca94982268771babbf0a6cc112971c588639964c1e5561eb07d26e2",
+    "pl14.ovl": "98a93495ed51eb5a4eb352f10518b288fb01f6d8e5358bd517f41849c758cfaa",
+    "sscrn.ovl": "54b0b258d5265da6a08357c93e0b7aebc55a61d795c30d8f588e1c8fd1f06b9e",
+    "st1_0.ovl": "2afff23dd2dbc5d4f51b3e6b9a9d07a3b5ae0065b6584c42c41a05867f43985a",
+    "st1_1.ovl": "0c140d617ac3d07eb34a6b5f65846e3139ce028b242f935b3e2a9640c4f58b43",
+    "st1_2.ovl": "05ad5273c92508d6b3147d8fe8af621aa384c3e1762e2df2753472766a4b74c1",
+    "st1_3.ovl": "e7002df3081e5eee3803e379f265c5dcf319dd6b50c22372fa55ca9af2d2982f",
+    "st2_0.ovl": "3e161ce6f585681e7568c842f50c28a3ece95769df7e7dfc745bea43ba54bf4c",
+    "st2_1.ovl": "53494d01f3e10e83eddf81f0e03c342f239c5220da0bfc687f1c366ca15b4410",
+    "st2_2.ovl": "2af553000246fc2da1b1b7507752f554e0c77169a2aa16a1709eb814f8b60d8f",
+    "st2_3.ovl": "09712688397f5feee280ac7e8b1d390c44677f78fd6ca3608cc26f8c0a2941ac"
+  },
+  "knobs": {
+    "SKIN_SH4ZAM": "1",
+    "SKIN_SH4ZAM_CHECK": "0",
+    "NATIVE_MODEL_REGISTRY_BONES": "96",
+    "PS2_ASHLEY": "2",
+    "NATIVE_MODEL_REGISTRY_PL_ASHLEY": "1",
+    "KOS_SQUEEZE": "1",
+    "KOS_SQUEEZE_BYTES": "49152"
+  },
+  "isolated_sh4zam": "516f192bb6585a4f5986ff10301a5d34d4b5c3ed",
+  "linked_skin_symbols": [
+    "re4dc_shz_pos_skin_s16",
+    "re4dc_shz_pos_skin_u16",
+    "shz_xmtrx_project_skinned_s16_sh4",
+    "shz_xmtrx_project_skinned_u16_sh4"
+  ],
+  "private_body_sha256": "940d2f7b3642c3ccc2a876abc31ba861cc9a47cd56aba569a0ff9fed368df671",
+  "pending": [
+    "Fresh r202 target follows+cache/audio/memory gate",
+    "Complete source-prefetch coverage",
+    "Current r203/r208 checks",
+    "No-warp full chapter completion"
+  ]
+}

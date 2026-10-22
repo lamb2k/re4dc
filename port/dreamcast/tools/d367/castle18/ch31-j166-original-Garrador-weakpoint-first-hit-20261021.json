@@ -1,0 +1,468 @@
+{
+  "scope": "Independent original J no-warp progression, same VMU/CardLoad/normal Continue lineage and unchanged program/image. Owned-window normal RT/analog/A inputs plus read-only feedback only.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "run": "current-j-route-walk166",
+  "elapsed_s": 10.5,
+  "errors": [],
+  "emulator_exited": true,
+  "state_sha256": "9ce558a3b427ea814135141693d4ffb739b9aa50bcaa2c5a3abdb362875cfe83",
+  "four_ELF_anchor_saved_state_audit": {
+    "source_frame": 37446,
+    "health": [
+      1200,
+      1200,
+      600,
+      600
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 7
+      },
+      {
+        "id": "0x4",
+        "num": 25,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ],
+    "Garrador_HP": 3698,
+    "actual_damage_weapon": 2,
+    "actual_damage_part": 37,
+    "damage_hitbox": "0x8caf2bd8",
+    "routines": [
+      2,
+      15,
+      1,
+      0
+    ],
+    "position": [
+      25733.146484375,
+      -2000.002197265625,
+      -49116.08203125
+    ]
+  },
+  "events": [
+    {
+      "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk166\\data\\disc.state"
+    },
+    {
+      "normal_owned_all_button_releases_after_exact_snapshot_load": [
+        "forward",
+        "left",
+        "right",
+        "dash",
+        "back",
+        "ready",
+        "fire",
+        "knife",
+        "inventory",
+        "menu_left",
+        "menu_right",
+        "menu_up",
+        "menu_down"
+      ]
+    },
+    {
+      "normal_release_then_repress_after_no_source_input": {
+        "frame": 37277,
+        "wanted": [
+          "ready"
+        ]
+      }
+    },
+    {
+      "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+        "frame": 37289,
+        "key": "right",
+        "held_source_ticks": 3,
+        "starting_ray_error": -0.38421454356790896,
+        "settle_through": 37298
+      }
+    },
+    {
+      "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+        "frame": 37298,
+        "key": "right",
+        "held_source_ticks": 3,
+        "starting_ray_error": -0.3585142106735546,
+        "settle_through": 37307
+      }
+    },
+    {
+      "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+        "frame": 37307,
+        "key": "right",
+        "held_source_ticks": 3,
+        "starting_ray_error": -0.34333043342220115,
+        "settle_through": 37316
+      }
+    },
+    {
+      "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+        "frame": 37316,
+        "key": "right",
+        "held_source_ticks": 3,
+        "starting_ray_error": -0.33770264536019035,
+        "settle_through": 37325
+      }
+    },
+    {
+      "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+        "frame": 37325,
+        "key": "right",
+        "held_source_ticks": 3,
+        "starting_ray_error": -0.26475746687897406,
+        "settle_through": 37334
+      }
+    },
+    {
+      "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+        "frame": 37334,
+        "key": "right",
+        "held_source_ticks": 1,
+        "starting_ray_error": -0.19765880585966755,
+        "settle_through": 37341
+      }
+    },
+    {
+      "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+        "frame": 37341,
+        "key": "right",
+        "held_source_ticks": 1,
+        "starting_ray_error": -0.18536949521813417,
+        "settle_through": 37348
+      }
+    },
+    {
+      "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+        "frame": 37348,
+        "key": "right",
+        "held_source_ticks": 1,
+        "starting_ray_error": -0.10145644075176286,
+        "settle_through": 37355
+      }
+    },
+    {
+      "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+        "frame": 37355,
+        "key": "right",
+        "held_source_ticks": 1,
+        "starting_ray_error": -0.09329128334732006,
+        "settle_through": 37362
+      }
+    },
+    {
+      "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+        "frame": 37363,
+        "key": "right",
+        "held_source_ticks": 1,
+        "starting_ray_error": -0.07104006810869468,
+        "settle_through": 37370
+      }
+    },
+    {
+      "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+        "frame": 37371,
+        "key": "right",
+        "held_source_ticks": 1,
+        "starting_ray_error": -0.11697239767138301,
+        "settle_through": 37378
+      }
+    },
+    {
+      "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+        "frame": 37378,
+        "key": "right",
+        "held_source_ticks": 1,
+        "starting_ray_error": -0.08484773383263633,
+        "settle_through": 37385
+      }
+    },
+    {
+      "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+        "frame": 37385,
+        "key": "right",
+        "held_source_ticks": 1,
+        "starting_ray_error": -0.06348574535310947,
+        "settle_through": 37392
+      }
+    },
+    {
+      "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+        "frame": 37392,
+        "key": "right",
+        "held_source_ticks": 1,
+        "starting_ray_error": -0.03588901626245322,
+        "settle_through": 37399
+      }
+    },
+    {
+      "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+        "frame": 37399,
+        "key": "right",
+        "held_source_ticks": 1,
+        "starting_ray_error": -0.028311701525633115,
+        "settle_through": 37406
+      }
+    },
+    {
+      "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+        "frame": 37406,
+        "key": "right",
+        "held_source_ticks": 1,
+        "starting_ray_error": -0.029088142279831697,
+        "settle_through": 37413
+      }
+    },
+    {
+      "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+        "frame": 37413,
+        "key": "right",
+        "held_source_ticks": 1,
+        "starting_ray_error": -0.025678341303610352,
+        "settle_through": 37420
+      }
+    },
+    {
+      "ordinary_RT_A_when_actual_weapon_ray_intersects_weakpoint37_sphere": {
+        "frame": 37440,
+        "hp": 4000,
+        "magazine": 8,
+        "ray_miss": 86.26318051160273,
+        "back_dot": -2292.22522430718
+      }
+    },
+    {
+      "actual_original_handgun_Garrador_HP_drop": {
+        "frame": 37444,
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "source_Key_on": "0x80880490",
+        "player_pos": [
+          25050.1328125,
+          -2000.003173828125,
+          -44926.43359375
+        ],
+        "yaw": -3.046065092086792,
+        "player_routines": [
+          0,
+          6,
+          2,
+          1
+        ],
+        "Garrador_hp": 3698,
+        "Garrador_pos": [
+          25640.41796875,
+          -2000.000732421875,
+          -49072.9453125
+        ],
+        "Garrador_yaw": 2.0080795288085938,
+        "Garrador_routines": [
+          2,
+          15,
+          0,
+          0
+        ],
+        "weakpoint37_world": [
+          25541.758193969727,
+          -291.64477252960205,
+          -49065.61077079177
+        ],
+        "player_back_dot": -2290.7068161341354,
+        "partner_safe_corner_pos": [
+          23260.255859375,
+          -2000.002197265625,
+          -48677.04296875
+        ],
+        "weakpoint_velocity_per_source_tick": 0.0,
+        "actual_damage_record": {
+          "weapon": 2,
+          "part_ptr": "0x8caf2bd8",
+          "partNo": 37,
+          "flags": 0
+        }
+      },
+      "baseline_HP": 4000,
+      "ordinary_shot_count": 1
+    },
+    {
+      "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk166\\shots\\checkpoint-source-37444\\frames\\fb0.png",
+      "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk166\\shots\\checkpoint-source-37444\\checkpoint-context.json"
+    },
+    {
+      "owned_close_at_input_deadline": true
+    }
+  ],
+  "screenshots": [
+    {
+      "run": "current-j-route-walk166",
+      "runtime": "12a841d7c",
+      "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+      "room": "r201",
+      "action_result": "First genuine original Garrador weakpoint37 hit: 4000 to3698HP, full Leon1200/Ashley600, safe western Wait.",
+      "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk166\\shots\\checkpoint-source-37444\\frames\\fb0.png",
+      "png_sha256": "24a6bca046b10312ce12ffb48c96423e73266688ad488c48910018d685f0b1c0",
+      "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk166\\shots\\checkpoint-source-37444\\checkpoint-context.json",
+      "source_frame_interval": [
+        37444,
+        37446
+      ],
+      "health_before": [
+        1200,
+        1200,
+        600,
+        600
+      ],
+      "health_after": [
+        1200,
+        1200,
+        600,
+        600
+      ],
+      "authoritative_saved_health": [
+        1200,
+        1200,
+        600,
+        600
+      ]
+    }
+  ],
+  "cast": {
+    "rows": [
+      {
+        "room": "r201",
+        "id": "00",
+        "name": "Leon",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 78354,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          7
+        ],
+        "parts": [
+          119
+        ]
+      },
+      {
+        "room": "r201",
+        "id": "01",
+        "name": "pl01",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 1014,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          1
+        ]
+      },
+      {
+        "room": "r201",
+        "id": "03",
+        "name": "Ashley",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 51996,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          141
+        ]
+      },
+      {
+        "room": "r201",
+        "id": "1b",
+        "name": "em1b",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 25419,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          38
+        ]
+      }
+    ],
+    "packages": {},
+    "fails": 0,
+    "not_drawn": [
+      {
+        "room": "r201",
+        "id": "1b",
+        "name": "em1b",
+        "samples": 16,
+        "max_alive": 1,
+        "nearest": 3980,
+        "in_view": 3,
+        "verdict": "drawn"
+      }
+    ]
+  },
+  "limits": [
+    "CAST totals include retained same-room ring history; NOT-DRAWN observes16 Garrador samples,3in-view,drawn. This is a bounded native weakpoint hit, not whole-fight coverage.",
+    "Original kill/death callback, lever replay after Continue, dungeon exit, waves, chapter-end save, full residency and hardware performance remain open.",
+    "No game/HP/item/AI/flag/hit/projectile/position writes, host rollback, state retarget, source/data/build/stage changes."
+  ]
+}

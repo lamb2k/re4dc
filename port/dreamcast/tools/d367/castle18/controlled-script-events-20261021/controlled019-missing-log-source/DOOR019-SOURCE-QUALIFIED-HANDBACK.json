@@ -1,0 +1,73 @@
+{
+  "scope": "019 source-qualified narrow missing-log repair only; actual018 failure preserved, no019guest/allocation.",
+  "source_commit": "f9ef20a6e6b6f87ef8b12ead917dc9074d614e9e",
+  "independent_review": {
+    "commit": "03b1e42d79a4b2127ce19e4de23de4917e1ccc65",
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle019-startup-log-review21-20261022\\REVIEW.json",
+    "sha256": "157aa54e4239c83caea2acdd7f0c41a9669db9816ecdc77b704ba1dc0f52b763",
+    "seal_sha256": "b9208d1d11a9a5da30296116809b5e70bb34b4fd41a5156d1a4a72270493d53f",
+    "result": "CLEAR_SOURCE_ONLY",
+    "focused_cases": 2,
+    "narrow_checks": 16,
+    "default_pins": 37,
+    "no_unrelated_suite_rerun": true
+  },
+  "observer_sha256": "fe49e279d47c0c6e5cdbfa5bac6e669a4997031dd33bb88ea21427a616e30885",
+  "wrapper_sha256": "f1dec0d483080df1fb266a48083d2d6aa3cbddd600070501066d7e3d17ffaeb8",
+  "pins_sha256": "818945d5ab42c80ef6d18ef55ba8b7582addf8f803677e140d2d968ffa5436f3",
+  "proposal_sha256": "5f792029e9ae8c28accbee430fae52532ee99fdf928f7796b34a7b8519d42778",
+  "shell_sha256": "b6696a56be94892fee5a1dd890ca05d6c82cbcad1f749f90ad0d1f0957fa6f72",
+  "seed": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door018\\data\\disc.state",
+    "sha256": "4d7178b9d7420156b39328396cae08661f92c297f4ed28794b145a3cfe03ecdc",
+    "selection": "Exactactual018serializedstate,source2604same017/room204Part1/Stop0 andnoWPM/UI. Preserveperipherallineage, no rollbackto017 despiteeligibleunchangedsourceframe."
+  },
+  "actual018_audit": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\controlled018-missing-log-startup-failure-audit.json",
+    "sha256": "1142507a900e76777ab557d842c500aa160b64928343bc61223d2ac5eac18f0f"
+  },
+  "method_delta": "Catch ONLY FileNotFoundError from exactcurrentcap flycast.log read as bounded pending under original process-age<38 loop/identitycheck. Require unchanged exactcurrentstateLoaded aftermapping, committedpGregion/mainanchors/twoadvancingsourceframes before anyWPM/UI. Permanentabsence returnsNone/noinput at38 thennormalclose39/V5absolute47.5. Otherexceptionsfailclosed.",
+  "argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-door019.sh",
+    "--execute-allocated019"
+  ],
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff48",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c47ff60",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c4801b6",
+      "bytes": 1
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ],
+  "maximum_successful_command_bytes": 58,
+  "guards": {
+    "start_bytes": 20342374400,
+    "runtime_bytes": 19394461696,
+    "raw_seconds": 41,
+    "normal_close_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_bytes": 62914560,
+    "global_flycast": 16,
+    "castle": 2,
+    "standing_source_peer": 67108864
+  },
+  "actual_acceptance": "Unchanged actual209entry/physicalDoor1opening/originalCam3\u21922/eventclear/Stop0/frames.018sourcequalificationdidnotcatchlogcreationrace;018actualtargetsunexercised.019sourceclearnotactualfixacceptance.",
+  "next": "Root exactone-run allocation/resources/writeconsent required; no retry/followingguest inferred."
+}

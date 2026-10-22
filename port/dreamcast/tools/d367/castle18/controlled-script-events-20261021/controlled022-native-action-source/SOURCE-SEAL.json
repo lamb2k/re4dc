@@ -1,0 +1,65 @@
+{
+  "scope": "Frozen022sourceonly no guest/input/allocation. Existing021partial/oldsource budgets unchanged. Fresh512KiB sourceunit.",
+  "members": [
+    {
+      "path": "observe-controlled-ch32-door022.py",
+      "bytes": 29344,
+      "sha256": "8ebb0f5d32620dcf7edfebc45ac7cda83d397116cb8d869da63ccfdece95b48d"
+    },
+    {
+      "path": "run-controlled-ch32-door022.py",
+      "bytes": 10679,
+      "sha256": "3849d7bf7b70f6931fe8ab241cb14de0eb3700342f72584e49ed4b526e4fd292"
+    },
+    {
+      "path": "run-controlled-ch32-door022.sh",
+      "bytes": 352,
+      "sha256": "03eb6ad4986fe06d58a27061d0ed43610ca3da8ec3697f87e11bde746736e7b6"
+    },
+    {
+      "path": "controlled-ch32-door022-pins.json",
+      "bytes": 7547,
+      "sha256": "a8e52dbdb5ac199f6f0ec410f1a10316c8d3fdc1b152cfbf2c2b0e8a6a66fd1a"
+    },
+    {
+      "path": "controlled022-OWNED-INPUT-CONTRACT.json",
+      "bytes": 2679,
+      "sha256": "cae1c1cd35d9258ccb388749d845fa478bf16f430492be8fa74101a50f90d063"
+    },
+    {
+      "path": "test-controlled022-native-action-source.py",
+      "bytes": 3868,
+      "sha256": "aad44d02f3805a34b5754f013ad669c9efbb199629d2f67edcad4372fdd4d7db"
+    },
+    {
+      "path": "controlled022-native-action-source-cases.json",
+      "bytes": 1450,
+      "sha256": "77726c0b6afb7b76b6c148e8903dca0d60b5f5f8bbd0c4922d37a9952b2d4002"
+    },
+    {
+      "path": "controlled022-default-prepare.json",
+      "bytes": 1603,
+      "sha256": "dbfb5e64236b2dc14dd8f6de6b11338acdd506ab27f5574ee06657df2714f350"
+    },
+    {
+      "path": "CONTROLLED022-SOURCE-LAUNCH-PROPOSAL.json",
+      "bytes": 6418,
+      "sha256": "14463b8984be7df14a2042a07717f108fc817cb09b26992646430dd7d7605e51"
+    },
+    {
+      "path": "controlled022-observer-delta.patch",
+      "bytes": 13013,
+      "sha256": "2a7c57ace79605b5c969320fc7cf34792ced1d6a5ded72da00d05f6174d30dce"
+    },
+    {
+      "path": "prepare-controlled022-native-action-delta.py",
+      "bytes": 8422,
+      "sha256": "bbe51c6fa2bc9f9d03f9f803abc93e15cc0ed3d5c4e9c3aaf81c7079ea096fdf"
+    },
+    {
+      "path": "prepare-controlled022-source-handoff.py",
+      "bytes": 5356,
+      "sha256": "e02bf38613f496b80668c8122501fa70d3ce8405a85ff95005ec92f4d6a57324"
+    }
+  ]
+}

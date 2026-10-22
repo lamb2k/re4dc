@@ -1,0 +1,81 @@
+{
+  "scope": "FINAL022 SOURCE QUALIFIED ONLY; NO022guest/input/allocation. Root final review/resources/exclusiveGUIlease required.",
+  "source_commit": "766208ec2c667720686aac3f3e212a67a87f982f",
+  "observer_sha256": "8ebb0f5d32620dcf7edfebc45ac7cda83d397116cb8d869da63ccfdece95b48d",
+  "wrapper_sha256": "3849d7bf7b70f6931fe8ab241cb14de0eb3700342f72584e49ed4b526e4fd292",
+  "pins_sha256": "a8e52dbdb5ac199f6f0ec410f1a10316c8d3fdc1b152cfbf2c2b0e8a6a66fd1a",
+  "proposal_sha256": "14463b8984be7df14a2042a07717f108fc817cb09b26992646430dd7d7605e51",
+  "shell_sha256": "03eb6ad4986fe06d58a27061d0ed43610ca3da8ec3697f87e11bde746736e7b6",
+  "source_seal_sha256": "a4ea57cf27ec5d0df8d2e3e929935eb377283c5a33eb354e5a3dfebcf5992191",
+  "independent_review": {
+    "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle-controls21\\REVIEW-CASTLE022-NATIVE-ACTION-ZEROWPM.md",
+    "sha256": "9fabc5a95aa8fec6da307166dd0af189ab2d2214d83c3b7c378ab2e322a56685",
+    "identities_path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle-controls21\\review-castle022-native-action-zeroWPM-identities.json",
+    "identities_sha256": "dadd2fe380fef841297fd99844b05194cb1ef7613907c027147c29cfd9e575da",
+    "result": "NO_CONCRETE_SOURCE_BLOCKER",
+    "owner31_checks_read_not_rerun": true,
+    "no_guest_input_or_broad_tests": true
+  },
+  "owner_qualification": {
+    "changedlogic_and_inherited_AST_checks": 31,
+    "receipt_sha256": "77726c0b6afb7b76b6c148e8903dca0d60b5f5f8bbd0c4922d37a9952b2d4002",
+    "default_pins": 41,
+    "no_34_26_or_broad_rerun": true
+  },
+  "seed": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door021\\data\\disc.state",
+    "sha256": "93fa4f5243a3c2ffbbaa45617ca046294b56274b17eaf62e1f3ab2ecb604339d",
+    "source_frame": 5508,
+    "room": "0x209",
+    "Part": 0,
+    "previous": "0x204",
+    "Stop": 0
+  },
+  "root_required_fields": {
+    "allocated022": true,
+    "allow_debug_goto_command_writes": false,
+    "allow_owned_window_focus": true,
+    "allow_scan_code_SendInput": true,
+    "exclusive_gui_input": true,
+    "maximum_successful_command_bytes": 0
+  },
+  "write_allowlist": [],
+  "maximum_successful_command_bytes": 0,
+  "root_argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-door022.sh",
+    "--execute-allocated022"
+  ],
+  "guards": {
+    "start_bytes": 20342374400,
+    "runtime_bytes": 19394461696,
+    "raw_seconds": 41,
+    "close_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_bytes": 62914560,
+    "global_Flycast_limit": 16,
+    "castle_limit": 2,
+    "standing_source_peer_bytes": 67108864,
+    "admission": "RootexclusiveGUIlease/nopeerFlycastbeforelaunch andthroughinputunit; source/build/readback lanes parallel. Rootchargescurrentfutureprogramme/otherpeers unchanged."
+  },
+  "placement": "Currentcode/readidentity,209/Part0/previous204/Stop0/healthpositive; inheritedgo2consumed/count3/max3/rooms3; exactnativephysicalDoor1id41/Etc1/type1/unlocked/sourceconstructorposition+ownedslot5/callback8c0bc300or384/button1/type0/d0/flags0 action. NO hostdescriptor-radius/no initialcommand/replay. OriginalAEV0Adisabledwaiter is preserved.",
+  "input": "Unchanged021ordinaryownedfocus/preheldX/scanSendInput/finallykeyup/native64ack. OnephysicalDoor1Aattempt only; no repeat or initialgoto/game-memorywrite. Read-only process rights0x101010.",
+  "acceptance": [
+    "Inherited209entry/AOPEN/currentpose is prerequisite only, notnewprogress. OneordinarynativephysicalDoor1A attempt usesunchangedownedfocus/preheld/SendInput/finallyrelease contract.",
+    "APIcount/error,OSasyncstate/native64Keyack independent. ActualDoor1openingflag thenoriginalAEV0Awaiter SceEventStart/Cam3/Cam2/eventclear/Stop0/advancingframes andPNGs separately.",
+    "Do not setdoor/RSF/eventdone/HP/AI/roomflags. No WriteProcessMemorybinding/calls/VMwrite rights, zero commandallowlist.",
+    "Preserveactualpartialat41raw/39close/47.5absolute; no retry/followingguest. Sourcequalification not actualphysics/audio/hardware/release/performance acceptance."
+  ],
+  "actual021_audit": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\controlled021-native-exit-host-pose-partial-audit.json",
+    "sha256": "08bad93e8054cd4a722d573b6237389eea192714a582db79eb7c6e5e8042ef12",
+    "result": "Actualnativeexit/209entry PASS; physicaldooreventunattempted duehostdistance<150 versus750retainedconsumedrowsminimum150.003348. Currentnativephysicaldooraction/AOPEN exists."
+  },
+  "protected": "Samefrozen12a/4d823/raw78fb/masterb67/assets/host64491 unchanged; protectauth127/294,013..021 and009VMU425. Existingoriginaleventwaiter no atfunc retrigger/rearm."
+}

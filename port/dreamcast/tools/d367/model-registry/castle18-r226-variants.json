@@ -1,0 +1,78 @@
+{
+ "registry": "castle18-variants-r226",
+ "about": "Source type8 em11 flag2 accessory original211/220; original213/214 and complete source role pool retained.",
+ "cast_dir": "/root/re4data/private/castle18-cast-variants-20261018/cast-em11",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "zealot-em11-07p",
+   "archive": "em11",
+   "model_id": "0x11",
+   "source_types": [
+    7
+   ],
+   "partial_sections": true,
+   "module": "src/em11/em11_set.cpp Em11Set type 7 (em10.cpp creates; ps2_cast.py pool)",
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/re4data/private/castle18-cast-rooms-20261018/em11/mask/zealot-em11-07p/13",
+    "16": "/root/re4data/private/castle18-cast-rooms-20261018/em11/mask/zealot-em11-07p/16",
+    "20": "/root/re4data/private/castle18-cast-rooms-20261018/em11/mask/zealot-em11-07p/20"
+   }
+  },
+  {
+   "name": "zealot-em11-08h",
+   "archive": "em11",
+   "model_id": "0x11",
+   "source_types": [
+    8
+   ],
+   "partial_sections": true,
+   "module": "src/em11/em11_set.cpp Em11Set type 8 (em10.cpp creates; ps2_cast.py pool)",
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/re4data/private/castle18-cast-variants-20261018/mask/zealot-em11-08h/13",
+    "16": "/root/re4data/private/castle18-cast-variants-20261018/mask/zealot-em11-08h/16",
+    "20": "/root/re4data/private/castle18-cast-variants-20261018/mask/zealot-em11-08h/20"
+   }
+  },
+  {
+   "name": "zealot-em11-09g",
+   "archive": "em11",
+   "model_id": "0x11",
+   "source_types": [
+    9
+   ],
+   "partial_sections": true,
+   "module": "src/em11/em11_set.cpp Em11Set type 9 (em10.cpp creates; ps2_cast.py pool)",
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/re4data/private/castle18-cast-rooms-20261018/em11/mask/zealot-em11-09g/13",
+    "16": "/root/re4data/private/castle18-cast-rooms-20261018/em11/mask/zealot-em11-09g/16",
+    "20": "/root/re4data/private/castle18-cast-rooms-20261018/em11/mask/zealot-em11-09g/20"
+   }
+  }
+ ],
+ "room_packages": {
+  "226": {
+   "descriptors": [
+    "zealot-em11-07p",
+    "zealot-em11-08h",
+    "zealot-em11-09g"
+   ],
+   "evidence": "r226 current293 NMRBIN frame283 complete8-info type8 actor"
+  }
+ }
+}

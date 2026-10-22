@@ -1,0 +1,47 @@
+{
+  "scope": "Source-only planning closure, no guest/build/image/shared game-source changes. Draft is not launchable observer/wrapper or allocation.",
+  "created_utc": "2026-10-22T04:54:48.335459+00:00",
+  "protected_actual_files": {
+    "route-walk-controlled-native-radio013/data/disc.state": "97b63602b83d6234a1603dc24a90fa42f2d0702db626ead2e4d4e5e20efafe13",
+    "route-walk127/data/disc.state": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16",
+    "route-walk294/data/disc.state": "cb7a314b8fd0383af0b7baf17c2e87a712705beb122a1d39c7705553dd795258",
+    "route-walk-controlled-event009/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0"
+  },
+  "files": {
+    "NEXT-CH32-ORIGINAL-EVENT-PLAN-20261022.md": {
+      "sha256": "98c25c10d38c921d8585cdaf6e006520950cb75e865bd1c85b441f68a3930d81",
+      "bytes": 7795
+    },
+    "NEXT-CH32-SOURCE-CAPABILITY-20261022.json": {
+      "sha256": "828cb32d2db55dba6dfa0fafbd6221a78e95dd21330b6b73f548117ba3d716bb",
+      "bytes": 38330
+    },
+    "NEXT-CH32-ACTUAL-ASSET-COMPILE-20261022.json": {
+      "sha256": "279d139881361e6cc22a64b3e1763ac954943485e7f5e5bfe5b7e0186a2f11cc",
+      "bytes": 13081
+    },
+    "controlled-ch32-drain014-warp-DRAFT.txt": {
+      "sha256": "26b551c37eef728d17e3686cfb60763cde8c43b979dd5d1a029ca1f7f31a9ebe",
+      "bytes": 159
+    },
+    "audit-next-ch32-source-capability-20261022.py": {
+      "sha256": "741fc302f063bf9a61c666afc22aaf69b038217b6a2a6d80ecde03a7c2a68feb",
+      "bytes": 3245
+    },
+    "prepare-next-ch32-source-plan-20261022.py": {
+      "sha256": "3617fb1f4c782f087846dd7920190122b06318b7207534f1334d4025f2732513",
+      "bytes": 2577
+    },
+    "write-next-ch32-plan-20261022.py": {
+      "sha256": "227e12da9a4146395b377d17d8199fbcb3c69bd42b001b23ac87f6c010d3be39",
+      "bytes": 9348
+    }
+  },
+  "independent_review": {
+    "path": "/root/probe/castle32-source-independent-review21-20261022/SOURCE-AEV-REVIEW.json",
+    "sha256": "d48dc6b8481f35f37be718932690f41955e9d8d02270355d3865bd4fb803ca69",
+    "scope": "31source/AEV checks only; finalobserver/wrapper/guardABI pending"
+  },
+  "fresh_inspection": "WindowsCIM noFlycast; WSLps no compiler/harness tasks at inspection. Branchcodex/castle18 clean4e81d7864 before metadata. Cfree145197830144B observed, no attribution of external free-space changes.",
+  "next": "Root reviews plan. Implement source-gated ordinaryA/promptYes/drainend observer and pin optional source-nativegoto before any concrete014 launch request. NO guest allocated."
+}

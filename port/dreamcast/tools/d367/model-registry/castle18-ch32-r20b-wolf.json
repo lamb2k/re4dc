@@ -1,0 +1,28 @@
+{
+  "registry": "castle18-ch32-r20b-wolf",
+  "about": "Unchanged full PS2 em22 type0 Colmillos body for original chapter3-2 r20b enemy list. Source back parasites remain separate original objects; no model reduction or source event change.",
+  "cast_dir": "/root/re4data/private/castle18-ch32-r20b-wolf-v2-20261019/cast",
+  "revision_overlay": "ps2-overlay",
+  "level": "conservative",
+  "archive_audit": "source/archive-audit.json",
+  "lighting": "the source GX lighting record (NATIVE_MODEL_REGISTRY_SOURCE_LIGHT bit 4), as the source path lights it today; source cull",
+  "descriptors": [
+    {
+      "name": "wolf-em22-00",
+      "archive": "em22",
+      "model_id": "0x22",
+      "source_types": [
+        0
+      ],
+      "module": "src/em22/em22.cpp em22_R0_Init: modelInit(ARC 4, ARC 5)"
+    }
+  ],
+  "room_packages": {
+    "20b": {
+      "descriptors": [
+        "wolf-em22-00"
+      ],
+      "evidence": "Current prepared emleon03 contains18 r20b em22 type0 rows; r20b.cpp original waves and chapter3-2 S00 remain unchanged."
+    }
+  }
+}

@@ -1,0 +1,315 @@
+{
+  "scope": "Actual currentI no-warp r202 normal navigation after source door. This is a confirmed additional Ashley working-set gap, not a qualified full-room fix. Existing exact QA hot payload loaded; remaining cold entries1/2/14 thrash. Source headers/events and normal game inputs unchanged.",
+  "elf_sha256": "45679331fb9d687bd1450b72978fdd5d38ffb8eef0497522064e446646368b34",
+  "run": {
+    "elapsed_s": 50.5,
+    "errors": [],
+    "emulator_exited": true
+  },
+  "snapshot": {
+    "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+    "state_sha256": "369fc27274e736976432332d5bfa505cb8b5146c0c28f5e9b90302673b239a4f",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x202",
+    "chapter": 6,
+    "source_frame": 6740,
+    "health": [
+      1200,
+      1200,
+      600,
+      600
+    ],
+    "stop": "0x0",
+    "actual_death": false,
+    "Leon": {
+      "pointer": "0x8caba7e0",
+      "pos": [
+        10603.619140625,
+        -0.000244140625,
+        -7278.9501953125
+      ],
+      "yaw": 1.8651310205459595
+    },
+    "Ashley": {
+      "pointer": "0x8cce56a0",
+      "pos": [
+        9559.7646484375,
+        0.000732421875,
+        -7373.5244140625
+      ],
+      "yaw": 1.8853627443313599
+    }
+  },
+  "observer": {
+    "sha256": "40fe73d12ee5010ad9774e8770a8d3ed80a63e6177d3be4b45d433a837654ce3",
+    "samples": 247,
+    "first": {
+      "host_s": 0.0,
+      "frame": 6408,
+      "hits": 1168,
+      "misses": 29,
+      "evictions": 26,
+      "loads": 29,
+      "resident": 22400,
+      "bindings": [
+        {
+          "slot": 0,
+          "archive": "0x8cb856e0",
+          "bytes": 1323136,
+          "count": 157,
+          "budget": 64832,
+          "hot_bytes": 0,
+          "resident": 22400,
+          "keys": [
+            [
+              0,
+              22400,
+              "18f9ad45-ba6230e7",
+              0
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "archive": "0x8cce64c0",
+          "bytes": 411744,
+          "count": 61,
+          "budget": 50880,
+          "hot_bytes": 0,
+          "resident": 0,
+          "keys": []
+        }
+      ]
+    },
+    "last": {
+      "host_s": 49.437,
+      "frame": 6740,
+      "hits": 1835,
+      "misses": 344,
+      "evictions": 338,
+      "loads": 343,
+      "resident": 17664,
+      "bindings": [
+        {
+          "slot": 0,
+          "archive": "0x8cb856e0",
+          "bytes": 1323136,
+          "count": 157,
+          "budget": 64832,
+          "hot_bytes": 0,
+          "resident": 9152,
+          "keys": [
+            [
+              6,
+              9152,
+              "c64f139d-98988b59",
+              0
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "archive": "0x8cce64c0",
+          "bytes": 411744,
+          "count": 61,
+          "budget": 50880,
+          "hot_bytes": 0,
+          "resident": 8512,
+          "keys": [
+            [
+              1,
+              5088,
+              "07688fa0-46cd60ed",
+              0
+            ],
+            [
+              2,
+              3424,
+              "9097142e-74a9729c",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    "ashley_transitions": [
+      {
+        "host_s": 0.0,
+        "source_frame": 6408,
+        "misses": 29,
+        "keys": []
+      },
+      {
+        "host_s": 4.609,
+        "source_frame": 6421,
+        "misses": 41,
+        "keys": [
+          14
+        ]
+      },
+      {
+        "host_s": 8.234,
+        "source_frame": 6432,
+        "misses": 55,
+        "keys": [
+          1
+        ]
+      },
+      {
+        "host_s": 8.437,
+        "source_frame": 6434,
+        "misses": 57,
+        "keys": [
+          1,
+          2
+        ]
+      },
+      {
+        "host_s": 43.0,
+        "source_frame": 6712,
+        "misses": 288,
+        "keys": [
+          2,
+          14
+        ]
+      },
+      {
+        "host_s": 46.422,
+        "source_frame": 6726,
+        "misses": 322,
+        "keys": [
+          1,
+          2
+        ]
+      }
+    ]
+  },
+  "cold_cycle": [
+    {
+      "source_offset": 587680,
+      "slots": [
+        18
+      ],
+      "bytes": 5088,
+      "prefix_bytes": 168,
+      "resident_bytes": 192,
+      "hot": false,
+      "source_arc_indices": [
+        22
+      ],
+      "key": "07688fa0-46cd60ed",
+      "crc": 124293024,
+      "fnv": 1187864813,
+      "sha256": "6fb9c5b464f70a4269eda71fd5154e12f48b73949ef37892046447231eb83aad",
+      "classification": "reloadable key data; stable header retained",
+      "resident_offset": 340416
+    },
+    {
+      "source_offset": 592768,
+      "slots": [
+        19
+      ],
+      "bytes": 3424,
+      "prefix_bytes": 140,
+      "resident_bytes": 160,
+      "hot": false,
+      "source_arc_indices": [
+        23
+      ],
+      "key": "9097142e-74a9729c",
+      "crc": 2425820206,
+      "fnv": 1957261980,
+      "sha256": "a076b4554e81a2f53c389d993c30b149fe52c4b3a837c0be24da07738cb1f688",
+      "classification": "reloadable key data; stable header retained",
+      "resident_offset": 340608
+    },
+    {
+      "source_offset": 669216,
+      "slots": [
+        33
+      ],
+      "bytes": 3488,
+      "prefix_bytes": 168,
+      "resident_bytes": 192,
+      "hot": false,
+      "source_arc_indices": [
+        37
+      ],
+      "key": "8b37242d-f73dd34d",
+      "crc": 2335646765,
+      "fnv": 4148024141,
+      "sha256": "81152af6e11ecb1c55a6e87f07116a252d8dc673e9a6c6e0488f0597172cad20",
+      "classification": "reloadable key data; stable header retained",
+      "resident_offset": 351168
+    }
+  ],
+  "offline_candidate": {
+    "runtime_qualified": false,
+    "body": {
+      "profile": "pl11-walk-diagnostic",
+      "module": 47,
+      "version": 3,
+      "clip_cap": 32768,
+      "count": 58,
+      "table_crc32": 2576710471,
+      "body_bytes": 423136,
+      "body_crc32": 3762690999,
+      "body_sha256": "940d2f7b3642c3ccc2a876abc31ba861cc9a47cd56aba569a0ff9fed368df671",
+      "descriptor_sha256": "56f200f02c619bc96c5af94d6cbfd28fbc8cf13f77c9396329296ebaaeffdc6a",
+      "descriptor_words": [
+        47,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        3690987521,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "preserved_full_arcs": [
+        64,
+        67,
+        18,
+        19,
+        21,
+        24,
+        36,
+        68,
+        108,
+        109,
+        22,
+        23,
+        37
+      ],
+      "policy": "two reserved slabs only; zero hot flags; no spill; no heap12 cache"
+    },
+    "audio_preservation": {
+      "scope": "Offline candidate only; original current qualified wrapper and all audio/transport bytes preserved, exactly like QA fix. No runtime admission exists yet. No new slab/cache policy, events/rate/cloth/geometry modifications.",
+      "source_wrapper_sha256": "ecf3098097fcb2b2c86d632b62fd3d9112e61f5e39b56819db6a2e277fffcfa2",
+      "body_sha256": "940d2f7b3642c3ccc2a876abc31ba861cc9a47cd56aba569a0ff9fed368df671",
+      "wrapper_sha256": "12bf1589821db613693f4d0c6545b622a42ed831cc02fd9061869849dfcd3e3f",
+      "body_bytes": 423136,
+      "wrapper_bytes": 2192928,
+      "wrapper_growth_vs_qualified_hot": 11392,
+      "file_sector_growth_vs_qualified_hot": 5,
+      "changed_old_header_byte_count": 6,
+      "aic1_headers": 1,
+      "runtime_qualified": false
+    },
+    "remaining_cold_count": 58,
+    "remaining_keys_sha_unchanged": true,
+    "scope": "Offline additive retention candidate only; no runtime admission or production selection. Retains original pl11-hot ten full ARC identities plus three proven currentr202 follow clips22/23/37. All remaining cold FCVs, source headers/events/cloth/sounds preserved; same two slabs and cachepolicy. Full source prefetch audit and target qualification remain open."
+  },
+  "controller_correction": "Corrected source interpretation: cSubChar::moveCore returns before ordinary follow when numeric subFlags bit0x2 is SET; cFlag::check(1) is 1<<1. Thus bit0x2 SET is Wait and CLEAR is Follow. Control-mode comments in pl_sub.cpp are misleading. Prior private helper/public metadata interpretation was wrong, and I04/I05 stayed in actual following; neither establishes Wait acceptance. Normal following is precisely the captured thrashing case. No game-source behavior changed."
+}

@@ -1,0 +1,15 @@
+{
+  "scope": "Exact byte reconstruction metadata and padding for recovered-J NEW image. Read-only image/source, no additional image copy, master, guest, source change or old-J state retarget.",
+  "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "image_bytes": 1018789888,
+  "content_files": 6762,
+  "metadata_padding_bytes": 13504123,
+  "metadata_padding_sha256": "913ad02cc062483b32cbecb56a02d0d328119d90ba68d09bd4e6a0658c5fc739",
+  "stream_reconstruction_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "stream_reconstruction_PASS": true,
+  "source_tree": "/root/probe/castle21-recovered-j-content-20261021/tree",
+  "original_J_iso_recovered": false,
+  "private_complete_receipt": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\exact-reconstruction\\receipt.json",
+  "metadata_padding_ranges_count": 6744,
+  "no_new_image_copy": true
+}

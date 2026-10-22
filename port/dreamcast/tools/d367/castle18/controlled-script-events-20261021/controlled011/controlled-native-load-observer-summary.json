@@ -1,0 +1,32 @@
+{
+  "scope": "Read-only frozen-programme native LOAD observer; only normal owned WM_CLOSE.",
+  "last": {
+    "process_age": 38.99248391913716,
+    "pg": 2352652060,
+    "frame": 2031,
+    "phase": [
+      0,
+      0
+    ],
+    "room": "0x204",
+    "chapter": 7,
+    "Stop": "0x0",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "CardStatus": "0x80000005",
+    "status3": "0x0",
+    "partner_ptr": "0x0"
+  },
+  "events": [
+    {
+      "exact_owned_WM_CLOSE": true,
+      "process_age": 39.02448391914368
+    }
+  ],
+  "owned_close_sent": true,
+  "source_fields_not_acceptance_alone": true
+}

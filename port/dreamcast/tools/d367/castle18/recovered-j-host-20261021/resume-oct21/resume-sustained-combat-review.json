@@ -1,0 +1,14 @@
+{
+  "source_sha256": "f3aef5869f8fb1ed1008e2ddb54d9d7c39d111275a4cd5a87ac5cfe9311503a1",
+  "candidate_sha256": "a18087a10e52a6d3ba334d1fd06d4937fdc2ac1c766564c67ef9161bc9fcf626",
+  "reason": "129 got genuine hit but3500 frontal checkpoint left no escape time at220HP.145 immediatehit and146 escape passed1200/90. Keep known six-shot sustained combat unit with6500 early frontal checkpoint; shorten host bound42s to preserve launch/screenshot headroom.",
+  "unchanged": [
+    "Source actual ray and laser weakpoint37 predicates",
+    "Strong rear and stable target guards",
+    "Any injury stop",
+    "Exact PID path start-time identity",
+    "Original damage/death callback semantics",
+    "Original max6 shots/hits"
+  ],
+  "validation": "AST compile and exactly two guard changes; runtime pending."
+}

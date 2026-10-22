@@ -1,0 +1,857 @@
+{
+  "scope": "Original qualified J no-warp progression; same game program/image and continuous original Continue lineage. Normal owned-window controls/read-only feedback only, no host game/health/AI/flag/position/timer/hit/projectile writes, rollback/retarget/build/stage.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk195",
+      "result": "One original bell shot rings timer/stat; saved boss destination still old. Legacy repeated flag-read event is not accepted as AI-consumption proof.",
+      "elapsed_s": 9.5,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "3102ddce972e48ad1976d2450295437f36c2f31ab8610e106f60911df89e1a50",
+      "four_ELF_anchor_saved_state_audit": {
+        "frame": 50762,
+        "health": [
+          368,
+          1200,
+          600,
+          600
+        ],
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 3
+          },
+          {
+            "id": "0x4",
+            "num": 15,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ],
+        "player_pos": [
+          23757.923828125,
+          -2000.000732421875,
+          -46010.67578125
+        ],
+        "Garrador_HP": 761,
+        "Garrador_pos": [
+          15864.0380859375,
+          -467.3857421875,
+          -42772.24609375
+        ],
+        "Garrador_routines": [
+          1,
+          21,
+          1,
+          0
+        ],
+        "Garrador_destination": [
+          17761.779296875,
+          -2000.000732421875,
+          -45562.46875
+        ],
+        "Garrador_route": [
+          15913.392578125,
+          -1500.0,
+          -46548.5546875
+        ],
+        "partner_pos": [
+          23280.3671875,
+          -2000.004150390625,
+          -48784.96875
+        ],
+        "partner_flags": "0x46",
+        "r201_saved_RSF": "0x2c400000"
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk195\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "normal_pitch_direction_calibrated": "back"
+        },
+        {
+          "normal_pitch_direction_calibrated": "forward"
+        },
+        {
+          "ordinary_RT_A_at_original_bell_hitbody1_when_source_laser_matches": {
+            "frame": 50741,
+            "hp": 1000,
+            "magazine": 4,
+            "ray_miss": 142.51372810396225,
+            "back_dot": 3993.29296875
+          }
+        },
+        {
+          "actual_original_bell_ringTimer_and_source_global_announcement_after_normal_shot": {
+            "frame": 50753,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              368,
+              1200,
+              600,
+              600
+            ],
+            "source_Key_on": "0x0",
+            "original_bell_obj": "0x8caddab8",
+            "ringTimer": 82,
+            "bell_stat": 2,
+            "bell_pos": [
+              26972.0,
+              -1999.998046875,
+              -49754.0
+            ],
+            "flags5010": "0x204",
+            "player_pos": [
+              23757.259765625,
+              -2000.001708984375,
+              -46010.70703125
+            ],
+            "yaw": 2.5132737159729004,
+            "player_routines": [
+              0,
+              6,
+              2,
+              1
+            ],
+            "bell_hitbody_hp": 1000,
+            "bell_object_pos": [
+              26972.0,
+              178.0,
+              -50004.0
+            ],
+            "bell_object_yaw": 0.0,
+            "bell_hitbody_routines": [
+              1,
+              1,
+              0,
+              0
+            ],
+            "bell_hitworld": [
+              27278.163202226162,
+              -363.31920635700226,
+              -50193.04390782118
+            ],
+            "player_bell_axis_dot": 3993.29296875,
+            "actual_Garrador_context": {
+              "hp": 761,
+              "pos": [
+                15894.75390625,
+                -503.8983154296875,
+                -42835.48828125
+              ],
+              "routines": [
+                1,
+                21,
+                1,
+                0
+              ],
+              "original_target_x5F0": [
+                17761.779296875,
+                -2000.000732421875,
+                -45562.46875
+              ],
+              "route_target_Pl_pos": [
+                15913.392578125,
+                -1500.0,
+                -46548.5546875
+              ],
+              "CriAtk_wait": 0
+            },
+            "partner_safe_corner_pos": [
+              23278.94921875,
+              -1999.999755859375,
+              -48779.4765625
+            ]
+          },
+          "baseline_HP": 1000,
+          "ordinary_shot_count": 1
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk195\\shots\\checkpoint-source-50753\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk195\\shots\\checkpoint-source-50753\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "full_controller_log": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk195\\owned-window-current-stair-walk.json",
+        "sha256": "7cba848dce46313c242be7e41d5233c08730a5b06672f397a441758169181303"
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk195",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "r201",
+          "action_result": "One original bell shot rings timer/stat; saved boss destination still old. Legacy repeated flag-read event is not accepted as AI-consumption proof.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk195\\shots\\checkpoint-source-50753\\frames\\fb0.png",
+          "png_sha256": "a1993afd46fc8e45b81945fc217dfceab735a26fe8e90c314a51d0600417f3d1",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk195\\shots\\checkpoint-source-50753\\checkpoint-context.json",
+          "source_frame_interval": [
+            50753,
+            50762
+          ],
+          "health_before": [
+            368,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            368,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            368,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk196",
+      "result": "Normal no-B backstep plus independent recorded boss destination==bell for5ticks at50784,38ticks by endpoint.368/600 unchanged.",
+      "elapsed_s": 4.1,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "08f67d51eb126c6b433d362b77989fadabce437a0e55f21be342ad0b99b32f76",
+      "four_ELF_anchor_saved_state_audit": {
+        "frame": 50825,
+        "health": [
+          368,
+          1200,
+          600,
+          600
+        ],
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 3
+          },
+          {
+            "id": "0x4",
+            "num": 15,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ],
+        "player_pos": [
+          25065.21484375,
+          -2000.002197265625,
+          -43927.9375
+        ],
+        "Garrador_HP": 761,
+        "Garrador_pos": [
+          15926.283203125,
+          -439.61798095703125,
+          -42724.14453125
+        ],
+        "Garrador_routines": [
+          1,
+          89,
+          1,
+          0
+        ],
+        "Garrador_destination": [
+          26972.0,
+          -1999.998046875,
+          -49754.0
+        ],
+        "Garrador_route": [
+          15913.392578125,
+          -1500.0,
+          -46548.5546875
+        ],
+        "partner_pos": [
+          23327.755859375,
+          -1999.999755859375,
+          -48820.85546875
+        ],
+        "partner_flags": "0x42",
+        "r201_saved_RSF": "0x2c400000"
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk196\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action",
+            "ready",
+            "knife",
+            "inventory",
+            "partner"
+          ]
+        },
+        {
+          "normal_owned_key_release_repress_after_source_Key_zero": {
+            "source_frame": 50766,
+            "wanted": [
+              "left"
+            ],
+            "count": 1
+          }
+        },
+        {
+          "actual_recorded_source_boss_destination_matches_original_bell5ticks": {
+            "host_monotonic": 317001.468,
+            "room": "0x201",
+            "frame": 50784,
+            "player_hp": 368,
+            "partner_hp": 600,
+            "pos": [
+              23732.064453125,
+              -1999.999755859375,
+              -45726.08984375
+            ],
+            "yaw": -2.9781687259674072,
+            "target_distance": 2141.7391763998958,
+            "angle_error": 0.4701292750999855,
+            "Garrador": {
+              "hp": 761,
+              "pos": [
+                15931.6171875,
+                -462.1676025390625,
+                -42763.19921875
+              ],
+              "yaw": 0.06387698650360107,
+              "routines": [
+                1,
+                89,
+                1,
+                0
+              ],
+              "player_back_dot": -2458.9176955753683
+            },
+            "actual_boss_x5F0": [
+              26972.0,
+              -1999.998046875,
+              -49754.0
+            ],
+            "original_bell_pos": [
+              26972.0,
+              -1999.998046875,
+              -49754.0
+            ],
+            "source_bell_timer": 50,
+            "recorded_bell_destination_match_source_ticks": 5
+          }
+        },
+        {
+          "normal_original_backstep_rear_firing_position_complete": true,
+          "frame": 50817,
+          "pos": [
+            24872.703125,
+            -2000.004150390625,
+            -44105.03125
+          ],
+          "health": [
+            368,
+            600
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk196\\shots\\checkpoint-source-50817\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk196\\shots\\checkpoint-source-50817\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "full_controller_log": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk196\\owned-window-current-stair-walk.json",
+        "sha256": "dc4f78ff2d209400db8c503a4023605a7c83f5559110f91ca9d1b47c5120fe80"
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk196",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "r201",
+          "action_result": "Normal no-B backstep plus independent recorded boss destination==bell for5ticks at50784,38ticks by endpoint.368/600 unchanged.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk196\\shots\\checkpoint-source-50817\\frames\\fb0.png",
+          "png_sha256": "65101ddb12fd8de8cf210075aab6777f983b2913903edcaaf2f2b59f1cd25069",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk196\\shots\\checkpoint-source-50817\\checkpoint-context.json",
+          "source_frame_interval": [
+            50817,
+            50825
+          ],
+          "health_before": [
+            368,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            368,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            368,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk197",
+      "result": "Neutral original-AI observation returns north-facing upperstairs. Bell arrival is not established;368/600,boss761 unchanged.",
+      "elapsed_s": 26.6,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "56ce18fbd42e96a5e5184190e6557475c4b694bc4414d99e90b30849a6569e4b",
+      "four_ELF_anchor_saved_state_audit": {
+        "frame": 51541,
+        "health": [
+          368,
+          1200,
+          600,
+          600
+        ],
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 3
+          },
+          {
+            "id": "0x4",
+            "num": 15,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ],
+        "player_pos": [
+          25054.123046875,
+          -2000.000244140625,
+          -43931.35546875
+        ],
+        "Garrador_HP": 761,
+        "Garrador_pos": [
+          16275.255859375,
+          1362.564208984375,
+          -39602.671875
+        ],
+        "Garrador_routines": [
+          1,
+          16,
+          1,
+          0
+        ],
+        "Garrador_destination": [
+          26972.0,
+          -1999.998046875,
+          -49754.0
+        ],
+        "Garrador_route": [
+          15913.392578125,
+          -1500.0,
+          -46548.5546875
+        ],
+        "partner_pos": [
+          23346.666015625,
+          -2000.003662109375,
+          -48851.52734375
+        ],
+        "partner_flags": "0x46",
+        "r201_saved_RSF": "0x2c400000"
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk197\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "original_AI_returns_upper_stairs_with_north_facing_rear_opportunity": {
+            "frame": 51531,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              368,
+              1200,
+              600,
+              600
+            ],
+            "source_Key_on": "0x0",
+            "original_weakpoint_scaled_radius": 249.99808213389846,
+            "player_pos": [
+              25058.064453125,
+              -2000.000732421875,
+              -43932.27734375
+            ],
+            "yaw": -2.349848747253418,
+            "player_routines": [
+              0,
+              0,
+              1,
+              0
+            ],
+            "Garrador_hp": 761,
+            "Garrador_pos": [
+              16323.126953125,
+              1260.866943359375,
+              -39778.8125
+            ],
+            "Garrador_yaw": -0.14036670327186584,
+            "Garrador_routines": [
+              1,
+              16,
+              1,
+              0
+            ],
+            "weakpoint37_world": [
+              16364.627575613558,
+              2965.6901965141296,
+              -39920.135149016976
+            ],
+            "player_back_dot": -5334.68660853195,
+            "partner_safe_corner_pos": [
+              23346.666015625,
+              -1999.9986572265625,
+              -48851.52734375
+            ],
+            "original_boss_destination": [
+              26972.0,
+              -1999.998046875,
+              -49754.0
+            ],
+            "original_boss_route": [
+              15913.392578125,
+              -1500.0,
+              -46548.5546875
+            ],
+            "original_lower_bell_timer": 0,
+            "source_bell_stat": 2,
+            "source_Status1": "0x204",
+            "boss_horizontal_distance": 9672.145746274373
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk197\\shots\\checkpoint-source-51531\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk197\\shots\\checkpoint-source-51531\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "full_controller_log": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk197\\owned-window-current-stair-walk.json",
+        "sha256": "bdfc7375b23fce355af7da0cbae9f086e9d4a8c348a4e01fd08f421ca7d2401c"
+      },
+      "screenshots": [
+        {
+          "run": "current-j-route-walk197",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "r201",
+          "action_result": "Neutral original-AI observation returns north-facing upperstairs. Bell arrival is not established;368/600,boss761 unchanged.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk197\\shots\\checkpoint-source-51531\\frames\\fb0.png",
+          "png_sha256": "85c1d976189ae482c31643d780cd8f8ab0a089fa04c51832deb1ea8b83c9fdbe",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk197\\shots\\checkpoint-source-51531\\checkpoint-context.json",
+          "source_frame_interval": [
+            51531,
+            51541
+          ],
+          "health_before": [
+            368,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            368,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            368,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    }
+  ],
+  "prelaunch_refusal": {
+    "run": "current-j-route-walk198",
+    "guest_started": false,
+    "cap_created": false,
+    "state_advanced": false,
+    "RAM_step": "Only same-image hardlinks prepared before unchanged Cpreflight refusal.",
+    "observed_C_free_bytes": 16764518400,
+    "required_C_free_bytes": 17314086912,
+    "current_C_free_bytes": 16760602624,
+    "source_state_unchanged": "current-j-route-walk197/data/disc.state"
+  },
+  "prepared_retry": {
+    "run": "current-j-route-walk199",
+    "seed": "current-j-route-walk197/data",
+    "seed_sha256": "56ce18fbd42e96a5e5184190e6557475c4b694bc4414d99e90b30849a6569e4b",
+    "runner": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\test21-run-j-route-walk199.py",
+    "shell": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\test21-run-j-route-walk199.sh",
+    "controller": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\owned-window-test21-j-original-r201-injured-west-rear-return199-still.py",
+    "not_launched": true
+  },
+  "cast": {
+    "rows": [
+      {
+        "room": "r201",
+        "id": "00",
+        "name": "Leon",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 213769,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          7
+        ],
+        "parts": [
+          119
+        ]
+      },
+      {
+        "room": "r201",
+        "id": "01",
+        "name": "pl01",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 1521,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          1
+        ]
+      },
+      {
+        "room": "r201",
+        "id": "03",
+        "name": "Ashley",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 107459,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          141
+        ]
+      },
+      {
+        "room": "r201",
+        "id": "1b",
+        "name": "em1b",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 111913,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          38
+        ]
+      }
+    ],
+    "packages": {},
+    "fails": 0,
+    "not_drawn": [
+      {
+        "room": "r201",
+        "id": "1b",
+        "name": "em1b",
+        "samples": 26,
+        "max_alive": 1,
+        "nearest": 600,
+        "in_view": 15,
+        "verdict": "drawn"
+      }
+    ]
+  },
+  "limits": [
+    "J195 proves bell hit only: legacy repeated live flag reads can enter the success branch without recorded destination match. Saved source state confirms old destination. Raw log is preserved, not relabelled into a pass.",
+    "J196 independent recorded destination matches original bell for5source ticks; no transient flag shortcut, no game guard changes.",
+    "Boss761HP remains live, hero368/1200,Ashley600/600. No kill/exit/waves/chapter-save/full-residency/hardware acceptance.",
+    "CAST/NOT-DRAWN bounded ring contains previous same-room history; not a whole-fight proof."
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "file": "DOOR020-ROOT-ALLOCATION.json",
+  "owner": "root",
+  "utc": "2026-10-22T08:01:10.9024889Z",
+  "allowed_runs": 1,
+  "no_retry": true,
+  "no_following_guest": true,
+  "allow_debug_goto_command_writes": true,
+  "observer_sha256": "7edaf6ad057cd3291795b5260b52283091a0a6ed4fd808f46e7366978a4b2522",
+  "wrapper_sha256": "9151ec8b466a01d9e5ef2ad164fa5af403f3697b202d0d948e463fa3b9853eaa",
+  "pins_sha256": "6ddc80d2a2cb92f92e04b2c64ff9b201e3a07581902a93c9ecb29013a77672ed",
+  "proposal_sha256": "74b087687ecf0e38bf3d2539dc5532afa6980f83dc35119c35cabe7dd34cb910",
+  "review_sha256": "946eb7a819cfe9cffcd90efce7462a6c576c10f7771f482e0e4c88d0ebb625f8",
+  "source": "Frozen020 source seal87a21cda, game12a841d7 unchanged",
+  "seed_sha256": "669b920f06e89403a15d3796021878c39ee9807fe020487e6a8666220f635631",
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff60",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c4801b6",
+      "bytes": 1
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ],
+  "maximum_successful_command_bytes": 29,
+  "scope": "One020 from actual019 atDoor4, no firstgoto/replay. Owned verifiedfocus and one acknowledged nativeA perstage; actual209 then29B remainingconfig/nativeDoor1/originalevent. No forced outcomes/retry/followingguest.",
+  "resources": {
+    "start_bytes": 20342374400,
+    "runtime_bytes": 19394461696,
+    "raw_seconds": 41,
+    "close_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_bytes": 62914560,
+    "global_Flycast_limit": 16,
+    "castle_limit": 2,
+    "standing_source_peer_bytes": 67108864,
+    "focus_run_admission": "FreshnopeerFlycast; rootQAandotherGUI-inputguestsmustbeclosedbeforeallocation/lease. Non-guestsource/build/readbacklanesremainparallel."
+  },
+  "global_Flycasts": 0,
+  "C_free_bytes": 142376247296,
+  "peer_reserved_bytes": 67108864,
+  "additional_object_reserve_bytes": 33554432,
+  "protected_inputs": "All wrapper pins and current process/resource guards remain mandatory.",
+  "allocated020": true,
+  "allow_owned_window_focus": true,
+  "exclusive_gui_input": true
+}

@@ -1,0 +1,205 @@
+{
+  "scope": "MOCKED Windows API supervisor fault tests ONLY; PID0 is synthetic, no real process/guest/input or game writes. Tests cover failclosed on diskquery/noSDL/PostMessage failure, ordinary45close, hard47.1stop plusfilesystem3sstall starting44.9; normalpostexitqueriesfail; exitbetweenidentitycalls; reusedPIDnewstartidentitymustberejectedwithouttouchingotherprocess. All real APIs mocked.",
+  "watcher_sha256": "c166c7a00d8b34082dd9c5cb4957bd66a4d10e54abbc3104aa316e11c70571e7",
+  "tests": [
+    {
+      "case": "disk_query_failure",
+      "error": "AssertionError(('Resource sampler failed', \"OSError('injected disk query failure')\"))",
+      "result": {
+        "alive": false,
+        "terminates": 1,
+        "closes": 0,
+        "handlecloses": 1,
+        "times_calls": 2,
+        "dead_path_queries": 0,
+        "termination_process_age": 5.029001712799072
+      },
+      "receipt": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-resource-guard-v4-adversarial-disk_query_failure\\owned-resource-guard.json",
+      "actions": [
+        {
+          "action": "watcher_exception_fail_closed",
+          "error": "AssertionError(('Resource sampler failed', \"OSError('injected disk query failure')\"))",
+          "traceback": "Traceback (most recent call last):\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\guard-resume-41inner-47absolute-resources-v4.py\", line 41, in <module>\n    snap=dict(latest);assert not snap['error'],('Resource sampler failed',snap['error']);assert time.monotonic()-snap['time']<1,'Resource sampler stalled; fail closed'\n                             ^^^^^^^^^^^^^^^^^\nAssertionError: ('Resource sampler failed', \"OSError('injected disk query failure')\")\n"
+        },
+        {
+          "action": "exact_owned_fail_closed_termination",
+          "reason": "AssertionError(('Resource sampler failed', \"OSError('injected disk query failure')\"))"
+        }
+      ]
+    },
+    {
+      "case": "missing_SDL_window",
+      "error": "AssertionError([])",
+      "result": {
+        "alive": false,
+        "terminates": 1,
+        "closes": 0,
+        "handlecloses": 1,
+        "times_calls": 3,
+        "dead_path_queries": 0,
+        "termination_process_age": 46.03167915344238
+      },
+      "receipt": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-resource-guard-v4-adversarial-missing_SDL_window\\owned-resource-guard.json",
+      "actions": [
+        {
+          "action": "watcher_exception_fail_closed",
+          "error": "AssertionError([])",
+          "traceback": "Traceback (most recent call last):\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\guard-resume-41inner-47absolute-resources-v4.py\", line 55, in <module>\n    assert len(wins)==1,wins;posted=u.PostMessageW(wins[0],0x10,0,0)\n           ^^^^^^^^^^^^\nAssertionError: []\n"
+        },
+        {
+          "action": "exact_owned_fail_closed_termination",
+          "reason": "AssertionError([])"
+        }
+      ]
+    },
+    {
+      "case": "WM_CLOSE_failure",
+      "error": "AssertionError()",
+      "result": {
+        "alive": false,
+        "terminates": 1,
+        "closes": 1,
+        "handlecloses": 1,
+        "times_calls": 3,
+        "dead_path_queries": 0,
+        "termination_process_age": 46.03215003013611
+      },
+      "receipt": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-resource-guard-v4-adversarial-WM_CLOSE_failure\\owned-resource-guard.json",
+      "actions": [
+        {
+          "action": "watcher_exception_fail_closed",
+          "error": "AssertionError()",
+          "traceback": "Traceback (most recent call last):\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\guard-resume-41inner-47absolute-resources-v4.py\", line 57, in <module>\n    assert posted;close_sent=True;actions.append(dict(action='exact_owned_SDL_WM_CLOSE',age=age,free=free,cap_logical_bytes=logical,hwnd=wins[0]))\n           ^^^^^^\nAssertionError\n"
+        },
+        {
+          "action": "exact_owned_fail_closed_termination",
+          "reason": "AssertionError()"
+        }
+      ]
+    },
+    {
+      "case": "ordinary_close",
+      "error": null,
+      "result": {
+        "alive": false,
+        "terminates": 0,
+        "closes": 1,
+        "handlecloses": 1,
+        "times_calls": 3,
+        "dead_path_queries": 0
+      },
+      "receipt": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-resource-guard-v4-adversarial-ordinary_close\\owned-resource-guard.json",
+      "actions": [
+        {
+          "action": "exact_owned_SDL_WM_CLOSE",
+          "age": 46.02000035287347,
+          "free": 19998679040,
+          "cap_logical_bytes": 222,
+          "hwnd": 456
+        }
+      ]
+    },
+    {
+      "case": "absolute_stop",
+      "error": null,
+      "result": {
+        "alive": false,
+        "terminates": 1,
+        "closes": 0,
+        "handlecloses": 1,
+        "times_calls": 3,
+        "dead_path_queries": 0,
+        "termination_process_age": 47.20600080490112
+      },
+      "receipt": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-resource-guard-v4-adversarial-absolute_stop\\owned-resource-guard.json",
+      "actions": [
+        {
+          "action": "exact_owned_absolute_termination",
+          "age": 47.20500302314758,
+          "reason": "47.5s absolute bound; WM_CLOSE grace exhausted"
+        }
+      ]
+    },
+    {
+      "case": "slow_sampler",
+      "error": "AssertionError('Resource sampler stalled; fail closed')",
+      "result": {
+        "alive": false,
+        "terminates": 1,
+        "closes": 0,
+        "handlecloses": 1,
+        "times_calls": 2,
+        "dead_path_queries": 0,
+        "termination_process_age": 45.918395042419434
+      },
+      "receipt": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-resource-guard-v4-adversarial-slow_sampler\\owned-resource-guard.json",
+      "actions": [
+        {
+          "action": "watcher_exception_fail_closed",
+          "error": "AssertionError('Resource sampler stalled; fail closed')",
+          "traceback": "Traceback (most recent call last):\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\guard-resume-41inner-47absolute-resources-v4.py\", line 41, in <module>\n    snap=dict(latest);assert not snap['error'],('Resource sampler failed',snap['error']);assert time.monotonic()-snap['time']<1,'Resource sampler stalled; fail closed'\n                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Resource sampler stalled; fail closed\n"
+        },
+        {
+          "action": "exact_owned_fail_closed_termination",
+          "reason": "AssertionError('Resource sampler stalled; fail closed')"
+        }
+      ]
+    },
+    {
+      "case": "normal_exit_queries_fail",
+      "error": null,
+      "result": {
+        "alive": false,
+        "terminates": 0,
+        "closes": 1,
+        "handlecloses": 1,
+        "times_calls": 3,
+        "dead_path_queries": 0
+      },
+      "receipt": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-resource-guard-v4-adversarial-normal_exit_queries_fail\\owned-resource-guard.json",
+      "actions": [
+        {
+          "action": "exact_owned_SDL_WM_CLOSE",
+          "age": 46.03907523723319,
+          "free": 19998580736,
+          "cap_logical_bytes": 232,
+          "hwnd": 456
+        }
+      ]
+    },
+    {
+      "case": "exit_between_identity_calls",
+      "error": null,
+      "result": {
+        "alive": false,
+        "terminates": 0,
+        "closes": 0,
+        "handlecloses": 1,
+        "times_calls": 3,
+        "dead_path_queries": 0
+      },
+      "receipt": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-resource-guard-v4-adversarial-exit_between_identity_calls\\owned-resource-guard.json",
+      "actions": []
+    },
+    {
+      "case": "reused_PID_new_identity_rejected",
+      "error": "AssertionError('Live process start identity mismatch')",
+      "result": {
+        "alive": true,
+        "terminates": 0,
+        "closes": 0,
+        "handlecloses": 1,
+        "times_calls": 2,
+        "dead_path_queries": 0
+      },
+      "receipt": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-resource-guard-v4-adversarial-reused_PID_new_identity_rejected\\owned-resource-guard.json",
+      "actions": [
+        {
+          "action": "watcher_exception_fail_closed",
+          "error": "AssertionError('Live process start identity mismatch')",
+          "traceback": "Traceback (most recent call last):\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\guard-resume-41inner-47absolute-resources-v4.py\", line 22, in <module>\n    verify();baseage=time.time()-(owner['start_filetime']/1e7-11644473600);t0=time.monotonic();close_sent=False\n    ^^^^^^^^\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\guard-resume-41inner-47absolute-resources-v4.py\", line 16, in verify\n    assert ok,'Live process times query failed';assert a.dwLowDateTime+(a.dwHighDateTime<<32)==owner['start_filetime'],'Live process start identity mismatch'\n                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Live process start identity mismatch\n"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "scope": "Offline compatibility only for private original-J screenshot decoder. Same eight-MiB read-only VRAM bank mapping and RGB565 method as existing capture harness, vectorized host decoding. Deterministic synthetic bytes, including bank boundary; no guest/capture/state/image edit. Host decoding time is not game or hardware performance.",
+  "old_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk221\\capture_ui_vram.py",
+  "old_sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57",
+  "new_path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\capture-original-J-fast-RGB565.py",
+  "new_sha256": "5237ac180e5473a301f037206970e2a8f4526307194c27844fc52ab56812def1",
+  "checks": [
+    {
+      "offset": "0x0",
+      "width": 640,
+      "height": 480,
+      "pixels_exact": true,
+      "rgb_sha256": "5e4bc31ed1e46b66c295e71043d6648df021afc2937a06720fde43e667d77cba",
+      "old_host_decode_seconds": 0.3778055000002496,
+      "new_host_decode_seconds": 0.006662299972958863
+    },
+    {
+      "offset": "0x3e0000",
+      "width": 640,
+      "height": 480,
+      "pixels_exact": true,
+      "rgb_sha256": "0bbbdc8d55eb839b0ddad3a9636e2d5b2019efaa44bdeb6b0e17ec63e9584b52",
+      "old_host_decode_seconds": 0.7048688000068069,
+      "new_host_decode_seconds": 0.0031565999961458147
+    },
+    {
+      "offset": "0x400000",
+      "width": 64,
+      "height": 64,
+      "pixels_exact": true,
+      "rgb_sha256": "099467b80d646b1bda4253adc349a15ae28108865ef26d9f97328d64b228a9b3",
+      "old_host_decode_seconds": 0.002205899974796921,
+      "new_host_decode_seconds": 0.0002484999713487923
+    }
+  ],
+  "live_gate": "Pending next functional guest; preload imports before guest state load and retain sampled source-frame/health interval."
+}

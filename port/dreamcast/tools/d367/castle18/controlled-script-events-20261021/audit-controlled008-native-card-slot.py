@@ -1,0 +1,8 @@
+from pathlib import Path
+import struct,json,hashlib
+L=Path(__file__).parent;D=Path(r'C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21\recovered-j-content-20261021');h={};exec((L/'audit-authoritative-life-extended-history-20261019.py').read_text().split('targets=[')[0],h);p=D/'route-walk-controlled-event008/data/disc.state';raw=h['decode'](p);va,code=h['load_segments'](D.parent/'builds/c21jmW/re4dc-game.elf');rb=raw.find(code[0x4000:0x4100])-(va+0x4000-0x8c000000)
+for off in [0x100000,0x120000,0x140000]:assert raw[rb+va+off-0x8c000000:rb+va+off+256-0x8c000000]==code[off:off+256]
+rd=lambda a,n:raw[rb+a-0x8c000000:rb+a-0x8c000000+n];u32=lambda a:struct.unpack('<I',rd(a,4))[0];cp=u32(0x8c396744);assert 0x8c000000<=cp<0x8cfff000
+row=dict(scope='Read-only closed008 native cCard. Source cCard has no inheritance/virtual members; source-backed offsets agree with native card state2/1 and viewedSlot01 UI. Not constructor-disassembly/DWARF qualification. No gameplay writes.',state_sha256=hashlib.sha256(p.read_bytes()).hexdigest(),pCard=hex(cp),routines=list(rd(cp+4,4)),status=hex(u32(cp+0x10)),type=struct.unpack('<i',rd(cp+0x14,4))[0],is_system=u32(cp+0x18),slot=rd(cp+0x1c,1)[0],save_no=rd(cp+0x1d,1)[0],error=struct.unpack('<i',rd(cp+0x20,4))[0],Message0=dict(table=rd(0x8c3b6938,1)[0],selection=rd(0x8c3b6939,1)[0],current=rd(0x8c3b693a,1)[0],attribute=hex(u32(0x8c3b684c+0x8c))))
+assert row['routines'][:2]==[2,1] and row['type']==1 and row['save_no']==0 and row['error']==0
+out=D/'controlled008-native-CardSave-slot-proof.json';assert not out.exists();out.write_text(json.dumps(row,indent=2)+'\n');print(json.dumps(row,indent=2))

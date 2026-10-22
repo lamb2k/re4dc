@@ -1,0 +1,10 @@
+{
+  "scope": "ONE focused actual-wrapper AST control case with fake helpers only. Zero spawned OS processes/Flycast/guest/ownership/files. Does not qualify live kernel stalls or guest cleanup.",
+  "wrapper_sha256": "dbdb673f9b8bc0ef7fb86b9e9d21d98e756523563493de2b120bc1a63980f600",
+  "expected_exception": "focused fake observer spawn failure; no child or guest created",
+  "helper_Popen_calls": 2,
+  "started_fake_watcher_terminate_calls": 1,
+  "started_fake_watcher_wait_calls": 1,
+  "harness_started": false,
+  "PASS": true
+}

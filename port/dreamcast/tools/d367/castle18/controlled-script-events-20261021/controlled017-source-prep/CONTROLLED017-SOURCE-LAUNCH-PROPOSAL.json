@@ -1,0 +1,107 @@
+{
+  "scope": "SOURCEONLY017 successor from actual016 state; independent narrowreview pending; NO guest/allocation/build/image. Immutable016failure retained.",
+  "created_utc": "2026-10-22T06:36:09.566292+00:00",
+  "inputs_sha256": {
+    "observe-controlled-ch32-door017.py": "b1f6d683c3359cf89cc1186ba96b2b9256292906bf9e8b5df2dea1e66358300a",
+    "run-controlled-ch32-door017.py": "cccc779f574fcc35e0c284ca71eb05f77b95055bcb6c396f60f428229795cbba",
+    "run-controlled-ch32-door017.sh": "9514aa90e5f6bbd65dee7ed65a0bc823b4299e620e4fb7c4ee857c6cac83e66f",
+    "controlled-ch32-door017-pins.json": "dd0f27924bf2657df2096cd774c7084ce6077331f31db9d3e2d367ef4c0e032d",
+    "controlled017-READINESS-CONTRACT.json": "7122a0d2c864243bdb02d77996756bc1a364b9daafad5989d8661685821fee13",
+    "controlled017-source-gates.json": "843214e7f5d3375e12834f6e20e2e6c4d38481c1732d2a9c79aa232ead3321aa",
+    "controlled017-readiness-source-cases.json": "8ae0c89c52a2017001222a35518211a29becfc92df8a1c867a3861455a25bc60"
+  },
+  "actual016_audit_sha256": "16a9bf92d5e2a402a0c8831f2acd94d15f923c10a0994bbeac9479af61d97eb2",
+  "seed_sha256": "a33b2ac44cce042d035f7a981e96cf57b19bec1484f04c86084ece22803f73e8",
+  "inherited_programme": "Frozen12a/ELF4d823/raw78fb/masterb67/actual10assets and nativeDoor/Goto ABI c63c8ac0 unchanged. No game-source/build/image change.",
+  "diagnosis": "Observed016 pre-load firstpG readfailure/WM_CLOSE0.6624 precedesactualstateLoaded0.730. Combinedassert omittedRPMbool/got/Win32error; OSreason UNCLASSIFIED andnotproven gamecrash. Source017 repairsadmissionsequencing andaddsdiagnostics; no new actualRAMfailure classified.",
+  "method": {
+    "scope": "SOURCEONLY017 startup/readability repair. No guest or liveRAMprobe performed by this source unit; actual016 APIs error and bytes remain unrecorded.",
+    "actual016_failure_audit_sha256": "16a9bf92d5e2a402a0c8831f2acd94d15f923c10a0994bbeac9479af61d97eb2",
+    "confirmed_method_defect": "016 sampled pG andclosed0.6624 beforeactualstateLoaded0.730; RAMannouncementalone was admitted. Underlying RPM OSerror cannot be reconstructed.",
+    "seed_actual016_sha256": "a33b2ac44cce042d035f7a981e96cf57b19bec1484f04c86084ece22803f73e8",
+    "host_read_ABI": {
+      "pointer_bytes": 8,
+      "MemoryBasicInformation_bytes": 48,
+      "fields": {
+        "BaseAddress": 0,
+        "AllocationBase": 8,
+        "AllocationProtect": 16,
+        "PartitionId": 20,
+        "RegionSize": 24,
+        "State": 32,
+        "Protect": 36,
+        "Type": 40
+      }
+    },
+    "readiness": "Require exactcurrentcap stateLoaded line afterlastRAMmapping; VirtualQueryEx committed/accesscoverspG4; then actualmaincodeanchors/readableseed/nativefields andtwo coherent sourceframes advancing at/after1769, samepg/mapping beforeanysetupwrite orUI. RecordexactsuccessfulpG4byteprobe/processbirth. TransientRPMunavailable clearsinputreadiness andcontinuesboundedobservation; errors recordbool/host+guest/length/got/lastError/partialbytes/VQE, bounded100records. No inventederrorattribution.",
+    "control_contract": "Inherited016 WPMfunction stillONLY24B existingGoto slot then4Bcountlast, now additionallyrequiresmemory_ready. No directactor/room/flags/health writes. If readunavailableinside command/input action, blockfurtheractions/no retry, keepobservingto39s andretainactualstate; normal samplerunavailability waitsforfreshreadablesequence. Identity failures/WPMfailures/resources remain failclosed underV5.",
+    "unchanged_write_ABI_sha256": "c63c8ac0f3ab8ee4810fb3776286570631f2cd6126e454f01635b9e30e15dbaf",
+    "write_allowlist": [
+      {
+        "address": "0x8c47ff30",
+        "bytes": 24
+      },
+      {
+        "address": "0x8c47fff0",
+        "bytes": 4
+      }
+    ],
+    "source_qualification": {
+      "command_cases": 24,
+      "readiness_cases": 17,
+      "mock299_not_actual016_error": true
+    },
+    "runtime_acceptance": "No new runtime claim. Need actual017readiness/commandconsumption/nativeDoor0/request\u2192actual204Part1/firstcut; inherited015drain and016no-commandfailure stayseparate.",
+    "default_off": true
+  },
+  "qualification": {
+    "inherited_command_pure_cases": 24,
+    "new_readiness_fakeAPI_cases": 17,
+    "default_prepare_pins": 29,
+    "no_live_probe_or_execute": true
+  },
+  "root_argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-door017.sh",
+    "--execute-allocated017"
+  ],
+  "allocation_gate": {
+    "file": "DOOR017-ROOT-ALLOCATION.json",
+    "allocated017": true,
+    "allow_debug_goto_command_writes": true,
+    "observer_sha256": "b1f6d683c3359cf89cc1186ba96b2b9256292906bf9e8b5df2dea1e66358300a",
+    "wrapper_sha256": "cccc779f574fcc35e0c284ca71eb05f77b95055bcb6c396f60f428229795cbba",
+    "pins_sha256": "dd0f27924bf2657df2096cd774c7084ce6077331f31db9d3e2d367ef4c0e032d",
+    "write_allowlist": [
+      {
+        "address": "0x8c47ff30",
+        "bytes": 24
+      },
+      {
+        "address": "0x8c47fff0",
+        "bytes": 4
+      }
+    ]
+  },
+  "resources": {
+    "start_free_bytes": 20342374400,
+    "runtime_free_bytes": 19394461696,
+    "raw_seconds": 41,
+    "normalclose_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_cap_bytes": 62914560,
+    "global16": true,
+    "castle2": true,
+    "fresh_parent_peer_charges_required": true
+  },
+  "V5_sha256": "7aa4113d44b5bab5b1010649a432ed1d50e34aaf4de7fb4899aaf692055b0ba0",
+  "trace_lock_sha256": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688",
+  "scope_limits": "No016retry/mutation; separate017 only ifrootallocates. Continue actual016snapshot, preserve original015drain/protectedauth127/294/013/014/015/016/VMUs. No209descriptor, directactor/room/RSF/HP/AI/outcome writes or production/release/hardware/performance claims.",
+  "actual_acceptance": "Futureactual017 startup stateLoad+mapping/VQE/RPMsuccess andtwoadvancingnativeframes before anydebugcommand/UI; actualgotoconsumption/nativeDoorA/room204Part1/firstcutholdreturn separately. Unavailablememory means noinput, keepboundedobservation andpreservepartial states."
+}

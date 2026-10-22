@@ -1,0 +1,7494 @@
+{
+  "scope": "CONTROLLED exact016state continuation: existing DBG_WARP Goto command setup, ordinary native Door0 to204Part1; no actor/room/outcome memory writes.",
+  "last": {
+    "process_age": 38.999052185041364,
+    "pg": 2352652060,
+    "frame": 2602,
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x204",
+    "chapter": 7,
+    "Stop": "0x0",
+    "status0": "0x3080100",
+    "status1": "0x200",
+    "status3": "0x0",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "Key_on": "0x0",
+    "Key_trg": "0x0",
+    "Part": 1,
+    "previous_room": "0x205",
+    "next_room": "0x204",
+    "next_point": 1,
+    "scenario0": "0x840000",
+    "partner_ptr": 0,
+    "live_native_code_anchors_verified": true,
+    "player_ptr": 2359870976,
+    "player_pos": [
+      9569.548828125,
+      5999.99755859375,
+      -3661.7294921875
+    ],
+    "player_matrix": [
+      -0.17718790471553802,
+      -0.0,
+      -0.9841770529747009,
+      9569.548828125,
+      -0.0,
+      1.0,
+      -0.0,
+      5999.99755859375,
+      0.9841770529747009,
+      -0.0,
+      -0.17718790471553802,
+      -3661.7294921875
+    ],
+    "transformed_front_unclipped": [
+      9028.251448988914,
+      6249.99755859375,
+      -3759.182839781046
+    ],
+    "areas": {
+      "0x0": {
+        "ptr": 2359520528,
+        "enabled": true,
+        "type": 1,
+        "checkFlag": 1,
+        "trigger": 8,
+        "checkType": 1,
+        "func": 0,
+        "door": {
+          "destination": "0x208",
+          "Part": 0,
+          "lockType": 0,
+          "lockFlag": 0,
+          "callback": "0x0",
+          "position": [
+            -3.6889731884002686,
+            11000.0048828125,
+            -105673.0
+          ],
+          "angle": 0.028541050851345062
+        },
+        "quad": [
+          [
+            -1388.6806640625,
+            -893.1177368164062
+          ],
+          [
+            1401.8045654296875,
+            -861.5324096679688
+          ],
+          [
+            1326.92236328125,
+            536.5576171875
+          ],
+          [
+            -1447.115966796875,
+            397.48919677734375
+          ]
+        ]
+      },
+      "0x3": {
+        "ptr": 2359520996,
+        "enabled": true,
+        "type": 1,
+        "checkFlag": 1,
+        "trigger": 8,
+        "checkType": 1,
+        "func": 0,
+        "door": {
+          "destination": "0x205",
+          "Part": 0,
+          "lockType": 0,
+          "lockFlag": 0,
+          "callback": "0x0",
+          "position": [
+            7782.1884765625,
+            9995.8291015625,
+            43061.65234375
+          ],
+          "angle": 1.6785211563110352
+        },
+        "quad": [
+          [
+            9951.9892578125,
+            -4487.447265625
+          ],
+          [
+            11451.9892578125,
+            -4487.447265625
+          ],
+          [
+            11610.7021484375,
+            -2182.65869140625
+          ],
+          [
+            9956.3486328125,
+            -2488.571533203125
+          ]
+        ]
+      },
+      "0x4": {
+        "ptr": 2359521152,
+        "enabled": true,
+        "type": 1,
+        "checkFlag": 1,
+        "trigger": 8,
+        "checkType": 1,
+        "func": 0,
+        "door": {
+          "destination": "0x209",
+          "Part": 0,
+          "lockType": 0,
+          "lockFlag": 0,
+          "callback": "0x0",
+          "position": [
+            574.0350341796875,
+            0.0057373046875,
+            120.4645767211914
+          ],
+          "angle": -1.3819975852966309
+        },
+        "quad": [
+          [
+            -11931.58203125,
+            -29502.669921875
+          ],
+          [
+            -10457.66015625,
+            -29301.81640625
+          ],
+          [
+            -10403.4765625,
+            -27625.251953125
+          ],
+          [
+            -11927.22265625,
+            -27503.802734375
+          ]
+        ]
+      },
+      "0x7": {
+        "ptr": 2359521620,
+        "enabled": true,
+        "type": 16,
+        "checkFlag": 1,
+        "trigger": 8,
+        "checkType": 1,
+        "func": 0,
+        "door": {
+          "destination": "0x600",
+          "Part": 0,
+          "lockType": 1,
+          "lockFlag": 19,
+          "callback": "0x0",
+          "position": [
+            6616.62255859375,
+            2.44757080078125,
+            -3516.858642578125
+          ],
+          "angle": -1.5707964897155762
+        },
+        "quad": [
+          [
+            5730.732421875,
+            -4246.87744140625
+          ],
+          [
+            6785.4384765625,
+            -4281.958984375
+          ],
+          [
+            6785.4384765625,
+            -2781.959228515625
+          ],
+          [
+            5759.544921875,
+            -2793.926025390625
+          ]
+        ]
+      },
+      "0x8": {
+        "ptr": 2359521776,
+        "enabled": false,
+        "type": 2,
+        "checkFlag": 1,
+        "trigger": 8,
+        "checkType": 1,
+        "func": 2350181868,
+        "door": {
+          "destination": "0x0",
+          "Part": 0,
+          "lockType": 0,
+          "lockFlag": 0,
+          "callback": "0x0",
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angle": 0.0
+        },
+        "quad": [
+          [
+            9316.0712890625,
+            -29320.501953125
+          ],
+          [
+            10287.5146484375,
+            -29241.541015625
+          ],
+          [
+            10290.3203125,
+            -27618.900390625
+          ],
+          [
+            9322.92578125,
+            -27682.6171875
+          ]
+        ]
+      },
+      "0x11": {
+        "ptr": 2359523180,
+        "enabled": true,
+        "type": 5,
+        "checkFlag": 1,
+        "trigger": 8,
+        "checkType": 1,
+        "func": 0,
+        "door": {
+          "destination": "0x0",
+          "Part": 0,
+          "lockType": 0,
+          "lockFlag": 0,
+          "callback": "0x0",
+          "position": [
+            9.183549615799121e-41,
+            0.0,
+            0.0
+          ],
+          "angle": 0.0
+        },
+        "quad": [
+          [
+            -711.07275390625,
+            -61308.84765625
+          ],
+          [
+            788.9273071289062,
+            -61308.84765625
+          ],
+          [
+            788.9273071289062,
+            -59808.84765625
+          ],
+          [
+            -711.07275390625,
+            -59808.84765625
+          ]
+        ]
+      },
+      "0x15": {
+        "ptr": 2359523804,
+        "enabled": true,
+        "type": 4,
+        "checkFlag": 0,
+        "trigger": 1,
+        "checkType": 1,
+        "func": 0,
+        "door": {
+          "destination": "0x0",
+          "Part": 0,
+          "lockType": 0,
+          "lockFlag": 0,
+          "callback": "0x0",
+          "position": [
+            5.969307250269429e-39,
+            0.0,
+            0.0
+          ],
+          "angle": 0.0
+        },
+        "quad": [
+          [
+            4464.8564453125,
+            -12819.927734375
+          ],
+          [
+            6314.9833984375,
+            -13013.771484375
+          ],
+          [
+            6618.095703125,
+            -8553.955078125
+          ],
+          [
+            4456.0791015625,
+            -9321.4189453125
+          ]
+        ]
+      }
+    },
+    "native_AEV00_collision_clipped_front_hit": false,
+    "native_AEV08_executed": false,
+    "action": {
+      "active": 0,
+      "stop_old": 0,
+      "num": 0,
+      "work": [
+        {
+          "func": 2350164316,
+          "arg": 2359897296,
+          "kind": 16,
+          "slot": 2,
+          "type": 2,
+          "button": 1,
+          "d": 2360067264,
+          "flags": 128
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        }
+      ]
+    },
+    "saved_RSF205": 3254779904,
+    "saved_RSF204": 1073741824,
+    "warp": {
+      "flags": [
+        1,
+        1,
+        0,
+        1,
+        1
+      ],
+      "name": "castle21-CONTROLLED-ch32-drain0",
+      "room": "0x205",
+      "rooms": 2,
+      "room_frames": 794,
+      "max_entry": 1,
+      "n_go": 1,
+      "go0": "00000000a894e4454f331c46025e27470000000001010001",
+      "n_act": 0,
+      "n_rsf": 0,
+      "has_trg": 0,
+      "has_kill": 0
+    },
+    "actors": [
+      {
+        "ptr": "0x8cc83280",
+        "id": 76,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x2",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cc67420",
+        "id": 20,
+        "type": 7,
+        "source_list": 76,
+        "hp": 1000,
+        "native_status": "0x20",
+        "be_flag": "0x2002077",
+        "routines": [
+          1,
+          81,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cc66640",
+        "id": 20,
+        "type": 7,
+        "source_list": 75,
+        "hp": 1000,
+        "native_status": "0x20",
+        "be_flag": "0x2002077",
+        "routines": [
+          1,
+          81,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cae7ec0",
+        "id": 20,
+        "type": 7,
+        "source_list": 74,
+        "hp": 1000,
+        "native_status": "0x20",
+        "be_flag": "0x2002077",
+        "routines": [
+          1,
+          81,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cae70e0",
+        "id": 20,
+        "type": 8,
+        "source_list": 81,
+        "hp": 1800,
+        "native_status": "0x20",
+        "be_flag": "0x2002077",
+        "routines": [
+          1,
+          81,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cae4d40",
+        "id": 70,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2002867",
+        "routines": [
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cae3f60",
+        "id": 70,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2002867",
+        "routines": [
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cae26e0",
+        "id": 70,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2002867",
+        "routines": [
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cae1900",
+        "id": 70,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2002867",
+        "routines": [
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cadf3a0",
+        "id": 67,
+        "type": 7,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cade5c0",
+        "id": 67,
+        "type": 7,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cadd300",
+        "id": 67,
+        "type": 7,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cadc520",
+        "id": 67,
+        "type": 7,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cadaf80",
+        "id": 67,
+        "type": 7,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cada1a0",
+        "id": 78,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2002877",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cad68e0",
+        "id": 78,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2002877",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cad5b00",
+        "id": 70,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2002867",
+        "routines": [
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cad4280",
+        "id": 70,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2002867",
+        "routines": [
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cad34a0",
+        "id": 70,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2002867",
+        "routines": [
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8ca8d3e0",
+        "id": 70,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2002867",
+        "routines": [
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8ca8c600",
+        "id": 0,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1440,
+        "native_status": "0x0",
+        "be_flag": "0xf002077",
+        "routines": [
+          0,
+          0,
+          1,
+          1
+        ]
+      },
+      {
+        "ptr": "0x8cad8f40",
+        "id": 75,
+        "type": 0,
+        "source_list": 255,
+        "hp": 0,
+        "native_status": "0x802",
+        "be_flag": "0x2002877",
+        "routines": [
+          1,
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "source68_active_observed": false
+  },
+  "events": [
+    {
+      "startup_exact_state_load_and_mapping": {
+        "RAM": 140687562768384,
+        "mapping_line": "00:00:623 hw\\mem\\addrspace.cpp:461 N[VMEM]: BASE 00007FF454340000 RAM(16 MB) 00007FF460340000 VRAM64(8 MB) 00007FF458340000 ARAM(2 MB) 00007FF474340000",
+        "state_load_line": "00:00:717 nullDC.cpp:360 N[SAVESTATE]: Loaded state ver 854 from C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door017\\data\\disc.state size 28152878",
+        "mapping_precedes_load": true
+      },
+      "process_age": 0.7490521850413643,
+      "process_identity": {
+        "pid": 57540,
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door017\\flycast.exe",
+        "start_filetime": 134371249730346326,
+        "created_utc": "2026-10-22T06:42:53.042013+00:00",
+        "rights": "retained subprocess handle receipt"
+      },
+      "initial_pG_region": {
+        "returned_bytes": 48,
+        "error": 0,
+        "requested_host": "0x7ff4606291dc",
+        "requested_bytes": 4,
+        "base": "0x7ff460629000",
+        "allocation_base": "0x7ff460340000",
+        "region_bytes": 13725696,
+        "state": "0x1000",
+        "protect": "0x4",
+        "type": "0x40000",
+        "covers": true,
+        "committed": true,
+        "accessible": true
+      }
+    },
+    {
+      "inherited016_no_command_progress": true,
+      "inherited015_original_drain_completion": true,
+      "state_sha256": "a33b2ac44cce042d035f7a981e96cf57b19bec1484f04c86084ece22803f73e8",
+      "actor68_active_not_observed": true,
+      "not_held_proof": true
+    },
+    {
+      "live_frozen_maincode_anchors": [
+        {
+          "address": "0x8c04bd30",
+          "bytes": 32,
+          "sha256": "50e7e906b1c61dcf502215a4f8de7a06ca0b5ab10cc8c319c93bfab45fc25c61"
+        },
+        {
+          "address": "0x8c087974",
+          "bytes": 32,
+          "sha256": "0eff3f56fdff82c90140058928eb241a6138e3aaf721502c22b82179b90470b7"
+        },
+        {
+          "address": "0x8c110f0c",
+          "bytes": 32,
+          "sha256": "9a24efd20e46ca5cb2030775c0b94a46a5ca477062bda114b1625caccda193ea"
+        },
+        {
+          "address": "0x8c14f0fc",
+          "bytes": 32,
+          "sha256": "503cc45e61da66176f9cf4ce66837adedb4ec6953fb8dfb33022c6fd09797ecb"
+        },
+        {
+          "address": "0x8c2ce564",
+          "bytes": 32,
+          "sha256": "a2187979d8530bba62e6a8382f1f30ad291f85d57b084ccd65a4397b03245b90"
+        },
+        {
+          "address": "0x8c26cf88",
+          "bytes": 32,
+          "sha256": "e44793ed04b3057afa16285c3ae3779f81e026057f02ac2b5ba7bc43549a4d59"
+        },
+        {
+          "address": "0x8c14a95c",
+          "bytes": 32,
+          "sha256": "65a829286587ca6c087600d0f28382de52610ea4fae048cf757e3eed5f792940"
+        }
+      ],
+      "process_age": 0.7650521850446239
+    },
+    {
+      "initial_readable_native_sequence": {
+        "process_age": 0.8900521850446239,
+        "pg": 2352652060,
+        "frame": 1770,
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x205",
+        "chapter": 7,
+        "Stop": "0x0",
+        "status0": "0x3080300",
+        "status1": "0x610",
+        "status3": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "Part": 0,
+        "previous_room": "0xfff",
+        "next_room": "0x205",
+        "next_point": 0,
+        "scenario0": "0x840000",
+        "partner_ptr": 0,
+        "live_native_code_anchors_verified": true,
+        "player_ptr": 2360067264,
+        "player_pos": [
+          46219.890625,
+          995.8314819335938,
+          48606.16015625
+        ],
+        "player_matrix": [
+          1.0,
+          0.0,
+          0.0,
+          46219.890625,
+          0.0,
+          1.0,
+          0.0,
+          995.8314819335938,
+          -0.0,
+          0.0,
+          1.0,
+          48606.16015625
+        ],
+        "transformed_front_unclipped": [
+          46219.890625,
+          1245.8314819335938,
+          49156.16015625
+        ],
+        "areas": {
+          "0x0": {
+            "ptr": 2359897296,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x204",
+              "Part": 1,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x8c910320",
+              "position": [
+                9567.837890625,
+                5999.99853515625,
+                -3664.46240234375
+              ],
+              "angle": -1.748924732208252
+            },
+            "quad": [
+              [
+                6553.3330078125,
+                41576.609375
+              ],
+              [
+                8052.55908203125,
+                41523.97265625
+              ],
+              [
+                8082.11767578125,
+                44156.609375
+              ],
+              [
+                6570.3193359375,
+                44126.84765625
+              ]
+            ]
+          },
+          "0x3": {
+            "ptr": 2359897764,
+            "enabled": true,
+            "type": 2,
+            "checkFlag": 0,
+            "trigger": 129,
+            "checkType": 1,
+            "func": 2358315728,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                25762.19140625,
+                15815.1953125
+              ],
+              [
+                31144.353515625,
+                15637.197265625
+              ],
+              [
+                31278.24609375,
+                22554.81640625
+              ],
+              [
+                25351.20703125,
+                22797.970703125
+              ]
+            ]
+          },
+          "0x4": {
+            "ptr": 2359897920,
+            "enabled": true,
+            "type": 16,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x600",
+              "Part": 0,
+              "lockType": 1,
+              "lockFlag": 16,
+              "callback": "0x0",
+              "position": [
+                9010.029296875,
+                4090.305419921875,
+                41600.484375
+              ],
+              "angle": -3.1415927410125732
+            },
+            "quad": [
+              [
+                8281.376953125,
+                40879.33984375
+              ],
+              [
+                9781.376953125,
+                40879.33984375
+              ],
+              [
+                9781.376953125,
+                42379.33984375
+              ],
+              [
+                8281.376953125,
+                42379.33984375
+              ]
+            ]
+          },
+          "0x7": {
+            "ptr": 2359898388,
+            "enabled": false,
+            "type": 11,
+            "checkFlag": 1,
+            "trigger": 2,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x1",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 2.9595423566540137e-42
+            },
+            "quad": [
+              [
+                38875.15625,
+                45904.140625
+              ],
+              [
+                45147.671875,
+                45993.34375
+              ],
+              [
+                45192.2734375,
+                46884.27734375
+              ],
+              [
+                38959.7578125,
+                46823.16015625
+              ]
+            ]
+          },
+          "0x8": {
+            "ptr": 2359898544,
+            "enabled": false,
+            "type": 0,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 2358316008,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                45540.140625,
+                48020.11328125
+              ],
+              [
+                46822.87890625,
+                48288.0625
+              ],
+              [
+                46672.7734375,
+                49480.07421875
+              ],
+              [
+                45438.375,
+                49360.9140625
+              ]
+            ]
+          },
+          "0x11": {
+            "ptr": 2359899948,
+            "enabled": true,
+            "type": 4,
+            "checkFlag": 1,
+            "trigger": 1,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                46691.8828125,
+                29645.201171875
+              ],
+              [
+                48221.6953125,
+                29678.59765625
+              ],
+              [
+                48330.21875,
+                34515.73828125
+              ],
+              [
+                46830.21875,
+                34515.73828125
+              ]
+            ]
+          },
+          "0x15": {
+            "ptr": 2359900572,
+            "enabled": false,
+            "type": 5,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                9.183549615799121e-41,
+                1.5414283107572988e-44,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                38853.25390625,
+                45648.61328125
+              ],
+              [
+                44805.1484375,
+                45729.62109375
+              ],
+              [
+                44883.6171875,
+                46276.36328125
+              ],
+              [
+                38875.5859375,
+                46137.47265625
+              ]
+            ]
+          },
+          "0x1b": {
+            "ptr": 2359901508,
+            "enabled": true,
+            "type": 2,
+            "checkFlag": 0,
+            "trigger": 129,
+            "checkType": 1,
+            "func": 2358315400,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                41101.10546875,
+                52916.70703125
+              ],
+              [
+                43299.328125,
+                52966.4453125
+              ],
+              [
+                43000.08984375,
+                54445.12890625
+              ],
+              [
+                41101.10546875,
+                54416.70703125
+              ]
+            ]
+          }
+        },
+        "native_AEV00_collision_clipped_front_hit": false,
+        "native_AEV08_executed": false,
+        "action": {
+          "active": 0,
+          "stop_old": 0,
+          "num": 0,
+          "work": [
+            {
+              "func": 2350160700,
+              "arg": 2359898544,
+              "kind": 20,
+              "slot": 2,
+              "type": 2,
+              "button": 1,
+              "d": 2360067264,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            }
+          ]
+        },
+        "saved_RSF205": 3254779904,
+        "saved_RSF204": 0,
+        "warp": {
+          "flags": [
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "name": "castle21-CONTROLLED-ch32-drain0",
+          "room": "0x205",
+          "rooms": 1,
+          "room_frames": 1561,
+          "max_entry": 1,
+          "n_go": 0,
+          "go0": "000000000000000000000000000000000000000000000000",
+          "n_act": 0,
+          "n_rsf": 0,
+          "has_trg": 0,
+          "has_kill": 0
+        },
+        "actors": [
+          {
+            "ptr": "0x8cd251a0",
+            "id": 45,
+            "type": 0,
+            "source_list": 87,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cd243c0",
+            "id": 45,
+            "type": 0,
+            "source_list": 86,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cd230a0",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd222c0",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd21000",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd20220",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb464c0",
+            "id": 45,
+            "type": 0,
+            "source_list": 109,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cb456e0",
+            "id": 45,
+            "type": 0,
+            "source_list": 108,
+            "hp": 1000,
+            "native_status": "0x28",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              39,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb34260",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb33480",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb304a0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2f6c0",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2e400",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2d620",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2bac0",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2ace0",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              7,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb29180",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              7,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb283a0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb26660",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb25880",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb245c0",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb237e0",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb21c80",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb20ea0",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1f340",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1e560",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1c000",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1b220",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb19f60",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb19180",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb17ec0",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb170e0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb14b00",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb13d20",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cabd2a0",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cabc4c0",
+            "id": 0,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1440,
+            "native_status": "0x0",
+            "be_flag": "0xb002077",
+            "routines": [
+              0,
+              0,
+              1,
+              1
+            ]
+          }
+        ],
+        "source68_active_observed": false
+      },
+      "RAM_base": "0x7ff460340000",
+      "no_inputs_before_readiness": true,
+      "exact_successful_pG_probe": {
+        "guest_address": "0x8c2e91dc",
+        "host_address": "0x7ff4606291dc",
+        "requested_bytes": 4,
+        "api_ok": true,
+        "bytes_read": 4,
+        "data_hex": "1c9f3a8c",
+        "process_identity": {
+          "pid": 57540,
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door017\\flycast.exe",
+          "start_filetime": 134371249730346326,
+          "created_utc": "2026-10-22T06:42:53.042013+00:00",
+          "rights": "retained subprocess handle receipt"
+        }
+      }
+    },
+    {
+      "immediate_command_recheck": {
+        "process_age": 0.8900521850446239,
+        "pg": 2352652060,
+        "frame": 1770,
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x205",
+        "chapter": 7,
+        "Stop": "0x0",
+        "status0": "0x3080300",
+        "status1": "0x610",
+        "status3": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "Part": 0,
+        "previous_room": "0xfff",
+        "next_room": "0x205",
+        "next_point": 0,
+        "scenario0": "0x840000",
+        "partner_ptr": 0,
+        "live_native_code_anchors_verified": true,
+        "player_ptr": 2360067264,
+        "player_pos": [
+          46219.890625,
+          995.8314819335938,
+          48606.16015625
+        ],
+        "player_matrix": [
+          1.0,
+          0.0,
+          0.0,
+          46219.890625,
+          0.0,
+          1.0,
+          0.0,
+          995.8314819335938,
+          -0.0,
+          0.0,
+          1.0,
+          48606.16015625
+        ],
+        "transformed_front_unclipped": [
+          46219.890625,
+          1245.8314819335938,
+          49156.16015625
+        ],
+        "areas": {
+          "0x0": {
+            "ptr": 2359897296,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x204",
+              "Part": 1,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x8c910320",
+              "position": [
+                9567.837890625,
+                5999.99853515625,
+                -3664.46240234375
+              ],
+              "angle": -1.748924732208252
+            },
+            "quad": [
+              [
+                6553.3330078125,
+                41576.609375
+              ],
+              [
+                8052.55908203125,
+                41523.97265625
+              ],
+              [
+                8082.11767578125,
+                44156.609375
+              ],
+              [
+                6570.3193359375,
+                44126.84765625
+              ]
+            ]
+          },
+          "0x3": {
+            "ptr": 2359897764,
+            "enabled": true,
+            "type": 2,
+            "checkFlag": 0,
+            "trigger": 129,
+            "checkType": 1,
+            "func": 2358315728,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                25762.19140625,
+                15815.1953125
+              ],
+              [
+                31144.353515625,
+                15637.197265625
+              ],
+              [
+                31278.24609375,
+                22554.81640625
+              ],
+              [
+                25351.20703125,
+                22797.970703125
+              ]
+            ]
+          },
+          "0x4": {
+            "ptr": 2359897920,
+            "enabled": true,
+            "type": 16,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x600",
+              "Part": 0,
+              "lockType": 1,
+              "lockFlag": 16,
+              "callback": "0x0",
+              "position": [
+                9010.029296875,
+                4090.305419921875,
+                41600.484375
+              ],
+              "angle": -3.1415927410125732
+            },
+            "quad": [
+              [
+                8281.376953125,
+                40879.33984375
+              ],
+              [
+                9781.376953125,
+                40879.33984375
+              ],
+              [
+                9781.376953125,
+                42379.33984375
+              ],
+              [
+                8281.376953125,
+                42379.33984375
+              ]
+            ]
+          },
+          "0x7": {
+            "ptr": 2359898388,
+            "enabled": false,
+            "type": 11,
+            "checkFlag": 1,
+            "trigger": 2,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x1",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 2.9595423566540137e-42
+            },
+            "quad": [
+              [
+                38875.15625,
+                45904.140625
+              ],
+              [
+                45147.671875,
+                45993.34375
+              ],
+              [
+                45192.2734375,
+                46884.27734375
+              ],
+              [
+                38959.7578125,
+                46823.16015625
+              ]
+            ]
+          },
+          "0x8": {
+            "ptr": 2359898544,
+            "enabled": false,
+            "type": 0,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 2358316008,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                45540.140625,
+                48020.11328125
+              ],
+              [
+                46822.87890625,
+                48288.0625
+              ],
+              [
+                46672.7734375,
+                49480.07421875
+              ],
+              [
+                45438.375,
+                49360.9140625
+              ]
+            ]
+          },
+          "0x11": {
+            "ptr": 2359899948,
+            "enabled": true,
+            "type": 4,
+            "checkFlag": 1,
+            "trigger": 1,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                46691.8828125,
+                29645.201171875
+              ],
+              [
+                48221.6953125,
+                29678.59765625
+              ],
+              [
+                48330.21875,
+                34515.73828125
+              ],
+              [
+                46830.21875,
+                34515.73828125
+              ]
+            ]
+          },
+          "0x15": {
+            "ptr": 2359900572,
+            "enabled": false,
+            "type": 5,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                9.183549615799121e-41,
+                1.5414283107572988e-44,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                38853.25390625,
+                45648.61328125
+              ],
+              [
+                44805.1484375,
+                45729.62109375
+              ],
+              [
+                44883.6171875,
+                46276.36328125
+              ],
+              [
+                38875.5859375,
+                46137.47265625
+              ]
+            ]
+          },
+          "0x1b": {
+            "ptr": 2359901508,
+            "enabled": true,
+            "type": 2,
+            "checkFlag": 0,
+            "trigger": 129,
+            "checkType": 1,
+            "func": 2358315400,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                41101.10546875,
+                52916.70703125
+              ],
+              [
+                43299.328125,
+                52966.4453125
+              ],
+              [
+                43000.08984375,
+                54445.12890625
+              ],
+              [
+                41101.10546875,
+                54416.70703125
+              ]
+            ]
+          }
+        },
+        "native_AEV00_collision_clipped_front_hit": false,
+        "native_AEV08_executed": false,
+        "action": {
+          "active": 0,
+          "stop_old": 0,
+          "num": 0,
+          "work": [
+            {
+              "func": 2350160700,
+              "arg": 2359898544,
+              "kind": 20,
+              "slot": 2,
+              "type": 2,
+              "button": 1,
+              "d": 2360067264,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            }
+          ]
+        },
+        "saved_RSF205": 3254779904,
+        "saved_RSF204": 0,
+        "warp": {
+          "flags": [
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "name": "castle21-CONTROLLED-ch32-drain0",
+          "room": "0x205",
+          "rooms": 1,
+          "room_frames": 1561,
+          "max_entry": 1,
+          "n_go": 0,
+          "go0": "000000000000000000000000000000000000000000000000",
+          "n_act": 0,
+          "n_rsf": 0,
+          "has_trg": 0,
+          "has_kill": 0
+        },
+        "actors": [
+          {
+            "ptr": "0x8cd251a0",
+            "id": 45,
+            "type": 0,
+            "source_list": 87,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cd243c0",
+            "id": 45,
+            "type": 0,
+            "source_list": 86,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cd230a0",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd222c0",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd21000",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd20220",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb464c0",
+            "id": 45,
+            "type": 0,
+            "source_list": 109,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cb456e0",
+            "id": 45,
+            "type": 0,
+            "source_list": 108,
+            "hp": 1000,
+            "native_status": "0x28",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              39,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb34260",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb33480",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb304a0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2f6c0",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2e400",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2d620",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2bac0",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2ace0",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              7,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb29180",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              7,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb283a0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb26660",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb25880",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb245c0",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb237e0",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb21c80",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb20ea0",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1f340",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1e560",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1c000",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1b220",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb19f60",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb19180",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb17ec0",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb170e0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb14b00",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb13d20",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cabd2a0",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cabc4c0",
+            "id": 0,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1440,
+            "native_status": "0x0",
+            "be_flag": "0xb002077",
+            "routines": [
+              0,
+              0,
+              1,
+              1
+            ]
+          }
+        ],
+        "source68_active_observed": false
+      },
+      "write_allowlist": {
+        "descriptor": "0x8c47ff30",
+        "publication": "0x8c47fff0"
+      },
+      "no_actor_room_or_outcome_writes": true
+    },
+    {
+      "controlled_existing_rig_command_write": true,
+      "address": "0x8c47ff30",
+      "before": "000000000000000000000000000000000000000000000000",
+      "after_requested": "00000000a894e4454f331c46025e27470000000001000001",
+      "process_age": 0.8900521850446239,
+      "api_ok": true,
+      "bytes_written": 24,
+      "observed_after": "00000000a894e4454f331c46025e27470000000001000001"
+    },
+    {
+      "controlled_existing_rig_command_write": true,
+      "address": "0x8c47fff0",
+      "before": "00000000",
+      "after_requested": "01000000",
+      "process_age": 0.8900521850446239,
+      "api_ok": true,
+      "bytes_written": 4,
+      "observed_after": "01000000"
+    },
+    {
+      "existing_goto_published": true,
+      "process_age": 0.8900521850446239,
+      "entry": 1,
+      "sub": false,
+      "engine_owns_done": true
+    },
+    {
+      "native_existing_goto_consumed": {
+        "process_age": 1.0770521850790828,
+        "pg": 2352652060,
+        "frame": 1771,
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x205",
+        "chapter": 7,
+        "Stop": "0x0",
+        "status0": "0x3080300",
+        "status1": "0x610",
+        "status3": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "Part": 0,
+        "previous_room": "0xfff",
+        "next_room": "0x205",
+        "next_point": 0,
+        "scenario0": "0x840000",
+        "partner_ptr": 0,
+        "live_native_code_anchors_verified": true,
+        "player_ptr": 2360067264,
+        "player_pos": [
+          7314.478515625,
+          9996.8271484375,
+          42846.13671875
+        ],
+        "player_matrix": [
+          1.0,
+          0.0,
+          0.0,
+          7314.478515625,
+          0.0,
+          1.0,
+          0.0,
+          9996.8271484375,
+          -0.0,
+          0.0,
+          1.0,
+          42846.13671875
+        ],
+        "transformed_front_unclipped": [
+          7314.478515625,
+          10246.8271484375,
+          43396.13671875
+        ],
+        "areas": {
+          "0x0": {
+            "ptr": 2359897296,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x204",
+              "Part": 1,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x8c910320",
+              "position": [
+                9567.837890625,
+                5999.99853515625,
+                -3664.46240234375
+              ],
+              "angle": -1.748924732208252
+            },
+            "quad": [
+              [
+                6553.3330078125,
+                41576.609375
+              ],
+              [
+                8052.55908203125,
+                41523.97265625
+              ],
+              [
+                8082.11767578125,
+                44156.609375
+              ],
+              [
+                6570.3193359375,
+                44126.84765625
+              ]
+            ]
+          },
+          "0x3": {
+            "ptr": 2359897764,
+            "enabled": true,
+            "type": 2,
+            "checkFlag": 0,
+            "trigger": 129,
+            "checkType": 1,
+            "func": 2358315728,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                25762.19140625,
+                15815.1953125
+              ],
+              [
+                31144.353515625,
+                15637.197265625
+              ],
+              [
+                31278.24609375,
+                22554.81640625
+              ],
+              [
+                25351.20703125,
+                22797.970703125
+              ]
+            ]
+          },
+          "0x4": {
+            "ptr": 2359897920,
+            "enabled": true,
+            "type": 16,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x600",
+              "Part": 0,
+              "lockType": 1,
+              "lockFlag": 16,
+              "callback": "0x0",
+              "position": [
+                9010.029296875,
+                4090.305419921875,
+                41600.484375
+              ],
+              "angle": -3.1415927410125732
+            },
+            "quad": [
+              [
+                8281.376953125,
+                40879.33984375
+              ],
+              [
+                9781.376953125,
+                40879.33984375
+              ],
+              [
+                9781.376953125,
+                42379.33984375
+              ],
+              [
+                8281.376953125,
+                42379.33984375
+              ]
+            ]
+          },
+          "0x7": {
+            "ptr": 2359898388,
+            "enabled": false,
+            "type": 11,
+            "checkFlag": 1,
+            "trigger": 2,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x1",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 2.9595423566540137e-42
+            },
+            "quad": [
+              [
+                38875.15625,
+                45904.140625
+              ],
+              [
+                45147.671875,
+                45993.34375
+              ],
+              [
+                45192.2734375,
+                46884.27734375
+              ],
+              [
+                38959.7578125,
+                46823.16015625
+              ]
+            ]
+          },
+          "0x8": {
+            "ptr": 2359898544,
+            "enabled": false,
+            "type": 0,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 2358316008,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                45540.140625,
+                48020.11328125
+              ],
+              [
+                46822.87890625,
+                48288.0625
+              ],
+              [
+                46672.7734375,
+                49480.07421875
+              ],
+              [
+                45438.375,
+                49360.9140625
+              ]
+            ]
+          },
+          "0x11": {
+            "ptr": 2359899948,
+            "enabled": true,
+            "type": 4,
+            "checkFlag": 1,
+            "trigger": 1,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                46691.8828125,
+                29645.201171875
+              ],
+              [
+                48221.6953125,
+                29678.59765625
+              ],
+              [
+                48330.21875,
+                34515.73828125
+              ],
+              [
+                46830.21875,
+                34515.73828125
+              ]
+            ]
+          },
+          "0x15": {
+            "ptr": 2359900572,
+            "enabled": false,
+            "type": 5,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                9.183549615799121e-41,
+                1.5414283107572988e-44,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                38853.25390625,
+                45648.61328125
+              ],
+              [
+                44805.1484375,
+                45729.62109375
+              ],
+              [
+                44883.6171875,
+                46276.36328125
+              ],
+              [
+                38875.5859375,
+                46137.47265625
+              ]
+            ]
+          },
+          "0x1b": {
+            "ptr": 2359901508,
+            "enabled": true,
+            "type": 2,
+            "checkFlag": 0,
+            "trigger": 129,
+            "checkType": 1,
+            "func": 2358315400,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                41101.10546875,
+                52916.70703125
+              ],
+              [
+                43299.328125,
+                52966.4453125
+              ],
+              [
+                43000.08984375,
+                54445.12890625
+              ],
+              [
+                41101.10546875,
+                54416.70703125
+              ]
+            ]
+          }
+        },
+        "native_AEV00_collision_clipped_front_hit": true,
+        "native_AEV08_executed": false,
+        "action": {
+          "active": 1,
+          "stop_old": 0,
+          "num": 0,
+          "work": [
+            {
+              "func": 2350164316,
+              "arg": 2359897296,
+              "kind": 16,
+              "slot": 2,
+              "type": 2,
+              "button": 1,
+              "d": 2360067264,
+              "flags": 128
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            }
+          ]
+        },
+        "saved_RSF205": 3254779904,
+        "saved_RSF204": 0,
+        "warp": {
+          "flags": [
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "name": "castle21-CONTROLLED-ch32-drain0",
+          "room": "0x205",
+          "rooms": 1,
+          "room_frames": 1562,
+          "max_entry": 1,
+          "n_go": 1,
+          "go0": "00000000a894e4454f331c46025e27470000000001010001",
+          "n_act": 0,
+          "n_rsf": 0,
+          "has_trg": 0,
+          "has_kill": 0
+        },
+        "actors": [
+          {
+            "ptr": "0x8cd251a0",
+            "id": 45,
+            "type": 0,
+            "source_list": 87,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cd243c0",
+            "id": 45,
+            "type": 0,
+            "source_list": 86,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cd230a0",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd222c0",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd21000",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd20220",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb464c0",
+            "id": 45,
+            "type": 0,
+            "source_list": 109,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cb456e0",
+            "id": 45,
+            "type": 0,
+            "source_list": 108,
+            "hp": 1000,
+            "native_status": "0x28",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              39,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb34260",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb33480",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb304a0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2f6c0",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2e400",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2d620",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2bac0",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2ace0",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              7,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb29180",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              7,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb283a0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb26660",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb25880",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb245c0",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb237e0",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb21c80",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb20ea0",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1f340",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1e560",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1c000",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1b220",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb19f60",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb19180",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb17ec0",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb170e0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb14b00",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb13d20",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cabd2a0",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cabc4c0",
+            "id": 0,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1440,
+            "native_status": "0x0",
+            "be_flag": "0xb002077",
+            "routines": [
+              0,
+              0,
+              1,
+              1
+            ]
+          }
+        ],
+        "source68_active_observed": false
+      }
+    },
+    {
+      "immediate_native_door_A_recheck": {
+        "process_age": 1.0770521850790828,
+        "pg": 2352652060,
+        "frame": 1771,
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x205",
+        "chapter": 7,
+        "Stop": "0x0",
+        "status0": "0x3080300",
+        "status1": "0x610",
+        "status3": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "Part": 0,
+        "previous_room": "0xfff",
+        "next_room": "0x205",
+        "next_point": 0,
+        "scenario0": "0x840000",
+        "partner_ptr": 0,
+        "live_native_code_anchors_verified": true,
+        "player_ptr": 2360067264,
+        "player_pos": [
+          7314.478515625,
+          9996.8271484375,
+          42846.13671875
+        ],
+        "player_matrix": [
+          1.0,
+          0.0,
+          0.0,
+          7314.478515625,
+          0.0,
+          1.0,
+          0.0,
+          9996.8271484375,
+          -0.0,
+          0.0,
+          1.0,
+          42846.13671875
+        ],
+        "transformed_front_unclipped": [
+          7314.478515625,
+          10246.8271484375,
+          43396.13671875
+        ],
+        "areas": {
+          "0x0": {
+            "ptr": 2359897296,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x204",
+              "Part": 1,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x8c910320",
+              "position": [
+                9567.837890625,
+                5999.99853515625,
+                -3664.46240234375
+              ],
+              "angle": -1.748924732208252
+            },
+            "quad": [
+              [
+                6553.3330078125,
+                41576.609375
+              ],
+              [
+                8052.55908203125,
+                41523.97265625
+              ],
+              [
+                8082.11767578125,
+                44156.609375
+              ],
+              [
+                6570.3193359375,
+                44126.84765625
+              ]
+            ]
+          },
+          "0x3": {
+            "ptr": 2359897764,
+            "enabled": true,
+            "type": 2,
+            "checkFlag": 0,
+            "trigger": 129,
+            "checkType": 1,
+            "func": 2358315728,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                25762.19140625,
+                15815.1953125
+              ],
+              [
+                31144.353515625,
+                15637.197265625
+              ],
+              [
+                31278.24609375,
+                22554.81640625
+              ],
+              [
+                25351.20703125,
+                22797.970703125
+              ]
+            ]
+          },
+          "0x4": {
+            "ptr": 2359897920,
+            "enabled": true,
+            "type": 16,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x600",
+              "Part": 0,
+              "lockType": 1,
+              "lockFlag": 16,
+              "callback": "0x0",
+              "position": [
+                9010.029296875,
+                4090.305419921875,
+                41600.484375
+              ],
+              "angle": -3.1415927410125732
+            },
+            "quad": [
+              [
+                8281.376953125,
+                40879.33984375
+              ],
+              [
+                9781.376953125,
+                40879.33984375
+              ],
+              [
+                9781.376953125,
+                42379.33984375
+              ],
+              [
+                8281.376953125,
+                42379.33984375
+              ]
+            ]
+          },
+          "0x7": {
+            "ptr": 2359898388,
+            "enabled": false,
+            "type": 11,
+            "checkFlag": 1,
+            "trigger": 2,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x1",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 2.9595423566540137e-42
+            },
+            "quad": [
+              [
+                38875.15625,
+                45904.140625
+              ],
+              [
+                45147.671875,
+                45993.34375
+              ],
+              [
+                45192.2734375,
+                46884.27734375
+              ],
+              [
+                38959.7578125,
+                46823.16015625
+              ]
+            ]
+          },
+          "0x8": {
+            "ptr": 2359898544,
+            "enabled": false,
+            "type": 0,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 2358316008,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                45540.140625,
+                48020.11328125
+              ],
+              [
+                46822.87890625,
+                48288.0625
+              ],
+              [
+                46672.7734375,
+                49480.07421875
+              ],
+              [
+                45438.375,
+                49360.9140625
+              ]
+            ]
+          },
+          "0x11": {
+            "ptr": 2359899948,
+            "enabled": true,
+            "type": 4,
+            "checkFlag": 1,
+            "trigger": 1,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                46691.8828125,
+                29645.201171875
+              ],
+              [
+                48221.6953125,
+                29678.59765625
+              ],
+              [
+                48330.21875,
+                34515.73828125
+              ],
+              [
+                46830.21875,
+                34515.73828125
+              ]
+            ]
+          },
+          "0x15": {
+            "ptr": 2359900572,
+            "enabled": false,
+            "type": 5,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                9.183549615799121e-41,
+                1.5414283107572988e-44,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                38853.25390625,
+                45648.61328125
+              ],
+              [
+                44805.1484375,
+                45729.62109375
+              ],
+              [
+                44883.6171875,
+                46276.36328125
+              ],
+              [
+                38875.5859375,
+                46137.47265625
+              ]
+            ]
+          },
+          "0x1b": {
+            "ptr": 2359901508,
+            "enabled": true,
+            "type": 2,
+            "checkFlag": 0,
+            "trigger": 129,
+            "checkType": 1,
+            "func": 2358315400,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                41101.10546875,
+                52916.70703125
+              ],
+              [
+                43299.328125,
+                52966.4453125
+              ],
+              [
+                43000.08984375,
+                54445.12890625
+              ],
+              [
+                41101.10546875,
+                54416.70703125
+              ]
+            ]
+          }
+        },
+        "native_AEV00_collision_clipped_front_hit": true,
+        "native_AEV08_executed": false,
+        "action": {
+          "active": 1,
+          "stop_old": 0,
+          "num": 0,
+          "work": [
+            {
+              "func": 2350164316,
+              "arg": 2359897296,
+              "kind": 16,
+              "slot": 2,
+              "type": 2,
+              "button": 1,
+              "d": 2360067264,
+              "flags": 128
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            }
+          ]
+        },
+        "saved_RSF205": 3254779904,
+        "saved_RSF204": 0,
+        "warp": {
+          "flags": [
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "name": "castle21-CONTROLLED-ch32-drain0",
+          "room": "0x205",
+          "rooms": 1,
+          "room_frames": 1562,
+          "max_entry": 1,
+          "n_go": 1,
+          "go0": "00000000a894e4454f331c46025e27470000000001010001",
+          "n_act": 0,
+          "n_rsf": 0,
+          "has_trg": 0,
+          "has_kill": 0
+        },
+        "actors": [
+          {
+            "ptr": "0x8cd251a0",
+            "id": 45,
+            "type": 0,
+            "source_list": 87,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cd243c0",
+            "id": 45,
+            "type": 0,
+            "source_list": 86,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cd230a0",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd222c0",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd21000",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd20220",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb464c0",
+            "id": 45,
+            "type": 0,
+            "source_list": 109,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cb456e0",
+            "id": 45,
+            "type": 0,
+            "source_list": 108,
+            "hp": 1000,
+            "native_status": "0x28",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              39,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb34260",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb33480",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb304a0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2f6c0",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2e400",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2d620",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2bac0",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2ace0",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              7,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb29180",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              7,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb283a0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb26660",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb25880",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb245c0",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb237e0",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb21c80",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb20ea0",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1f340",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1e560",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1c000",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1b220",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb19f60",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb19180",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb17ec0",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb170e0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb14b00",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb13d20",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cabd2a0",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cabc4c0",
+            "id": 0,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1440,
+            "native_status": "0x0",
+            "be_flag": "0xb002077",
+            "routines": [
+              0,
+              0,
+              1,
+              1
+            ]
+          }
+        ],
+        "source68_active_observed": false
+      }
+    },
+    {
+      "ordinary_owned_UI_pulse": "native-upper-Door0-A",
+      "seconds": 0.2,
+      "ack_observations": [
+        {
+          "frame": 1771,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 1771,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 1771,
+          "Key_trg": "0x80080480"
+        },
+        {
+          "frame": 1772,
+          "Key_trg": "0x80080480"
+        },
+        {
+          "frame": 1773,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 1773,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 1773,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 1773,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 1773,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 1773,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 1773,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 1773,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 1773,
+          "Key_trg": "0x0"
+        }
+      ],
+      "process_age": 1.2800521850585938
+    },
+    {
+      "original_native_door_request": {
+        "process_age": 1.312052185065113,
+        "pg": 2352652060,
+        "frame": 1773,
+        "phase": [
+          4,
+          0
+        ],
+        "room": "0x205",
+        "chapter": 7,
+        "Stop": "0xffffffff",
+        "status0": "0x3080300",
+        "status1": "0x610",
+        "status3": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "Key_on": "0x80080000",
+        "Key_trg": "0x0",
+        "Part": 0,
+        "previous_room": "0x205",
+        "next_room": "0x204",
+        "next_point": 1,
+        "scenario0": "0x840000",
+        "partner_ptr": 0
+      }
+    },
+    {
+      "actual_204Part1_entry": {
+        "process_age": 9.374052185041364,
+        "pg": 2352652060,
+        "frame": 1808,
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x204",
+        "chapter": 7,
+        "Stop": "0x927ef7bf",
+        "status0": "0x3000100",
+        "status1": "0x200",
+        "status3": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "Part": 1,
+        "previous_room": "0x205",
+        "next_room": "0x204",
+        "next_point": 1,
+        "scenario0": "0x840000",
+        "partner_ptr": 0,
+        "live_native_code_anchors_verified": true,
+        "player_ptr": 2359870976,
+        "player_pos": [
+          9567.8466796875,
+          5999.99755859375,
+          -3664.426513671875
+        ],
+        "player_matrix": [
+          -0.17718790471553802,
+          -0.0,
+          -0.9841770529747009,
+          9567.8466796875,
+          -0.0,
+          1.0,
+          -0.0,
+          5999.99755859375,
+          0.9841770529747009,
+          -0.0,
+          -0.17718790471553802,
+          -3664.426513671875
+        ],
+        "transformed_front_unclipped": [
+          9026.549300551414,
+          6249.99755859375,
+          -3761.879861265421
+        ],
+        "areas": {
+          "0x0": {
+            "ptr": 2359520528,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x208",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                -3.6889731884002686,
+                11000.0048828125,
+                -105673.0
+              ],
+              "angle": 0.028541050851345062
+            },
+            "quad": [
+              [
+                -1388.6806640625,
+                -893.1177368164062
+              ],
+              [
+                1401.8045654296875,
+                -861.5324096679688
+              ],
+              [
+                1326.92236328125,
+                536.5576171875
+              ],
+              [
+                -1447.115966796875,
+                397.48919677734375
+              ]
+            ]
+          },
+          "0x3": {
+            "ptr": 2359520996,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x205",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                7782.1884765625,
+                9995.8291015625,
+                43061.65234375
+              ],
+              "angle": 1.6785211563110352
+            },
+            "quad": [
+              [
+                9951.9892578125,
+                -4487.447265625
+              ],
+              [
+                11451.9892578125,
+                -4487.447265625
+              ],
+              [
+                11610.7021484375,
+                -2182.65869140625
+              ],
+              [
+                9956.3486328125,
+                -2488.571533203125
+              ]
+            ]
+          },
+          "0x4": {
+            "ptr": 2359521152,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x209",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                574.0350341796875,
+                0.0057373046875,
+                120.4645767211914
+              ],
+              "angle": -1.3819975852966309
+            },
+            "quad": [
+              [
+                -11931.58203125,
+                -29502.669921875
+              ],
+              [
+                -10457.66015625,
+                -29301.81640625
+              ],
+              [
+                -10403.4765625,
+                -27625.251953125
+              ],
+              [
+                -11927.22265625,
+                -27503.802734375
+              ]
+            ]
+          },
+          "0x7": {
+            "ptr": 2359521620,
+            "enabled": true,
+            "type": 16,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x600",
+              "Part": 0,
+              "lockType": 1,
+              "lockFlag": 19,
+              "callback": "0x0",
+              "position": [
+                6616.62255859375,
+                2.44757080078125,
+                -3516.858642578125
+              ],
+              "angle": -1.5707964897155762
+            },
+            "quad": [
+              [
+                5730.732421875,
+                -4246.87744140625
+              ],
+              [
+                6785.4384765625,
+                -4281.958984375
+              ],
+              [
+                6785.4384765625,
+                -2781.959228515625
+              ],
+              [
+                5759.544921875,
+                -2793.926025390625
+              ]
+            ]
+          },
+          "0x8": {
+            "ptr": 2359521776,
+            "enabled": false,
+            "type": 2,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 2350181868,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                9316.0712890625,
+                -29320.501953125
+              ],
+              [
+                10287.5146484375,
+                -29241.541015625
+              ],
+              [
+                10290.3203125,
+                -27618.900390625
+              ],
+              [
+                9322.92578125,
+                -27682.6171875
+              ]
+            ]
+          },
+          "0x11": {
+            "ptr": 2359523180,
+            "enabled": true,
+            "type": 5,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                9.183549615799121e-41,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                -711.07275390625,
+                -61308.84765625
+              ],
+              [
+                788.9273071289062,
+                -61308.84765625
+              ],
+              [
+                788.9273071289062,
+                -59808.84765625
+              ],
+              [
+                -711.07275390625,
+                -59808.84765625
+              ]
+            ]
+          },
+          "0x15": {
+            "ptr": 2359523804,
+            "enabled": true,
+            "type": 4,
+            "checkFlag": 0,
+            "trigger": 1,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                5.969307250269429e-39,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                4464.8564453125,
+                -12819.927734375
+              ],
+              [
+                6314.9833984375,
+                -13013.771484375
+              ],
+              [
+                6618.095703125,
+                -8553.955078125
+              ],
+              [
+                4456.0791015625,
+                -9321.4189453125
+              ]
+            ]
+          }
+        },
+        "native_AEV00_collision_clipped_front_hit": false,
+        "native_AEV08_executed": false,
+        "action": {
+          "active": 1,
+          "stop_old": 0,
+          "num": 0,
+          "work": [
+            {
+              "func": 2350164316,
+              "arg": 2359897296,
+              "kind": 16,
+              "slot": 2,
+              "type": 2,
+              "button": 1,
+              "d": 2360067264,
+              "flags": 128
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            }
+          ]
+        },
+        "saved_RSF205": 3254779904,
+        "saved_RSF204": 1073741824,
+        "warp": {
+          "flags": [
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "name": "castle21-CONTROLLED-ch32-drain0",
+          "room": "0x205",
+          "rooms": 2,
+          "room_frames": 0,
+          "max_entry": 1,
+          "n_go": 1,
+          "go0": "00000000a894e4454f331c46025e27470000000001010001",
+          "n_act": 0,
+          "n_rsf": 0,
+          "has_trg": 0,
+          "has_kill": 0
+        },
+        "actors": [
+          {
+            "ptr": "0x8cc83280",
+            "id": 76,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x2",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cc67420",
+            "id": 20,
+            "type": 7,
+            "source_list": 76,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cc66640",
+            "id": 20,
+            "type": 7,
+            "source_list": 75,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae7ec0",
+            "id": 20,
+            "type": 7,
+            "source_list": 74,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae70e0",
+            "id": 20,
+            "type": 8,
+            "source_list": 81,
+            "hp": 1800,
+            "native_status": "0x20",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae4d40",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae3f60",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae26e0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae1900",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadf3a0",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200286f",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cade5c0",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200286f",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadd300",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200286f",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadc520",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200286f",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadaf80",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200286f",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cada1a0",
+            "id": 78,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad68e0",
+            "id": 78,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad5b00",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad4280",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad34a0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8ca8d3e0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8ca8c600",
+            "id": 0,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1440,
+            "native_status": "0x0",
+            "be_flag": "0x7002077",
+            "routines": [
+              0,
+              0,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cad8f40",
+            "id": 75,
+            "type": 0,
+            "source_list": 255,
+            "hp": 0,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "source68_active_observed": false
+      }
+    },
+    {
+      "original_first_cut_hold": {
+        "process_age": 9.374052185041364,
+        "pg": 2352652060,
+        "frame": 1808,
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x204",
+        "chapter": 7,
+        "Stop": "0x927ef7bf",
+        "status0": "0x3000100",
+        "status1": "0x200",
+        "status3": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "Part": 1,
+        "previous_room": "0x205",
+        "next_room": "0x204",
+        "next_point": 1,
+        "scenario0": "0x840000",
+        "partner_ptr": 0,
+        "live_native_code_anchors_verified": true,
+        "player_ptr": 2359870976,
+        "player_pos": [
+          9567.8466796875,
+          5999.99755859375,
+          -3664.426513671875
+        ],
+        "player_matrix": [
+          -0.17718790471553802,
+          -0.0,
+          -0.9841770529747009,
+          9567.8466796875,
+          -0.0,
+          1.0,
+          -0.0,
+          5999.99755859375,
+          0.9841770529747009,
+          -0.0,
+          -0.17718790471553802,
+          -3664.426513671875
+        ],
+        "transformed_front_unclipped": [
+          9026.549300551414,
+          6249.99755859375,
+          -3761.879861265421
+        ],
+        "areas": {
+          "0x0": {
+            "ptr": 2359520528,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x208",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                -3.6889731884002686,
+                11000.0048828125,
+                -105673.0
+              ],
+              "angle": 0.028541050851345062
+            },
+            "quad": [
+              [
+                -1388.6806640625,
+                -893.1177368164062
+              ],
+              [
+                1401.8045654296875,
+                -861.5324096679688
+              ],
+              [
+                1326.92236328125,
+                536.5576171875
+              ],
+              [
+                -1447.115966796875,
+                397.48919677734375
+              ]
+            ]
+          },
+          "0x3": {
+            "ptr": 2359520996,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x205",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                7782.1884765625,
+                9995.8291015625,
+                43061.65234375
+              ],
+              "angle": 1.6785211563110352
+            },
+            "quad": [
+              [
+                9951.9892578125,
+                -4487.447265625
+              ],
+              [
+                11451.9892578125,
+                -4487.447265625
+              ],
+              [
+                11610.7021484375,
+                -2182.65869140625
+              ],
+              [
+                9956.3486328125,
+                -2488.571533203125
+              ]
+            ]
+          },
+          "0x4": {
+            "ptr": 2359521152,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x209",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                574.0350341796875,
+                0.0057373046875,
+                120.4645767211914
+              ],
+              "angle": -1.3819975852966309
+            },
+            "quad": [
+              [
+                -11931.58203125,
+                -29502.669921875
+              ],
+              [
+                -10457.66015625,
+                -29301.81640625
+              ],
+              [
+                -10403.4765625,
+                -27625.251953125
+              ],
+              [
+                -11927.22265625,
+                -27503.802734375
+              ]
+            ]
+          },
+          "0x7": {
+            "ptr": 2359521620,
+            "enabled": true,
+            "type": 16,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x600",
+              "Part": 0,
+              "lockType": 1,
+              "lockFlag": 19,
+              "callback": "0x0",
+              "position": [
+                6616.62255859375,
+                2.44757080078125,
+                -3516.858642578125
+              ],
+              "angle": -1.5707964897155762
+            },
+            "quad": [
+              [
+                5730.732421875,
+                -4246.87744140625
+              ],
+              [
+                6785.4384765625,
+                -4281.958984375
+              ],
+              [
+                6785.4384765625,
+                -2781.959228515625
+              ],
+              [
+                5759.544921875,
+                -2793.926025390625
+              ]
+            ]
+          },
+          "0x8": {
+            "ptr": 2359521776,
+            "enabled": false,
+            "type": 2,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 2350181868,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                9316.0712890625,
+                -29320.501953125
+              ],
+              [
+                10287.5146484375,
+                -29241.541015625
+              ],
+              [
+                10290.3203125,
+                -27618.900390625
+              ],
+              [
+                9322.92578125,
+                -27682.6171875
+              ]
+            ]
+          },
+          "0x11": {
+            "ptr": 2359523180,
+            "enabled": true,
+            "type": 5,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                9.183549615799121e-41,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                -711.07275390625,
+                -61308.84765625
+              ],
+              [
+                788.9273071289062,
+                -61308.84765625
+              ],
+              [
+                788.9273071289062,
+                -59808.84765625
+              ],
+              [
+                -711.07275390625,
+                -59808.84765625
+              ]
+            ]
+          },
+          "0x15": {
+            "ptr": 2359523804,
+            "enabled": true,
+            "type": 4,
+            "checkFlag": 0,
+            "trigger": 1,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                5.969307250269429e-39,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                4464.8564453125,
+                -12819.927734375
+              ],
+              [
+                6314.9833984375,
+                -13013.771484375
+              ],
+              [
+                6618.095703125,
+                -8553.955078125
+              ],
+              [
+                4456.0791015625,
+                -9321.4189453125
+              ]
+            ]
+          }
+        },
+        "native_AEV00_collision_clipped_front_hit": false,
+        "native_AEV08_executed": false,
+        "action": {
+          "active": 1,
+          "stop_old": 0,
+          "num": 0,
+          "work": [
+            {
+              "func": 2350164316,
+              "arg": 2359897296,
+              "kind": 16,
+              "slot": 2,
+              "type": 2,
+              "button": 1,
+              "d": 2360067264,
+              "flags": 128
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            }
+          ]
+        },
+        "saved_RSF205": 3254779904,
+        "saved_RSF204": 1073741824,
+        "warp": {
+          "flags": [
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "name": "castle21-CONTROLLED-ch32-drain0",
+          "room": "0x205",
+          "rooms": 2,
+          "room_frames": 0,
+          "max_entry": 1,
+          "n_go": 1,
+          "go0": "00000000a894e4454f331c46025e27470000000001010001",
+          "n_act": 0,
+          "n_rsf": 0,
+          "has_trg": 0,
+          "has_kill": 0
+        },
+        "actors": [
+          {
+            "ptr": "0x8cc83280",
+            "id": 76,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x2",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cc67420",
+            "id": 20,
+            "type": 7,
+            "source_list": 76,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cc66640",
+            "id": 20,
+            "type": 7,
+            "source_list": 75,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae7ec0",
+            "id": 20,
+            "type": 7,
+            "source_list": 74,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae70e0",
+            "id": 20,
+            "type": 8,
+            "source_list": 81,
+            "hp": 1800,
+            "native_status": "0x20",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae4d40",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae3f60",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae26e0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae1900",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadf3a0",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200286f",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cade5c0",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200286f",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadd300",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200286f",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadc520",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200286f",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadaf80",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200286f",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cada1a0",
+            "id": 78,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad68e0",
+            "id": 78,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad5b00",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad4280",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad34a0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8ca8d3e0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8ca8c600",
+            "id": 0,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1440,
+            "native_status": "0x0",
+            "be_flag": "0x7002077",
+            "routines": [
+              0,
+              0,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cad8f40",
+            "id": 75,
+            "type": 0,
+            "source_list": 255,
+            "hp": 0,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "source68_active_observed": false
+      }
+    },
+    {
+      "original_first_cut_return": {
+        "process_age": 18.608052185038105,
+        "pg": 2352652060,
+        "frame": 1991,
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x204",
+        "chapter": 7,
+        "Stop": "0x0",
+        "status0": "0x3080100",
+        "status1": "0x200",
+        "status3": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "Part": 1,
+        "previous_room": "0x205",
+        "next_room": "0x204",
+        "next_point": 1,
+        "scenario0": "0x840000",
+        "partner_ptr": 0,
+        "live_native_code_anchors_verified": true,
+        "player_ptr": 2359870976,
+        "player_pos": [
+          9567.8583984375,
+          5999.9970703125,
+          -3664.3837890625
+        ],
+        "player_matrix": [
+          -0.17718790471553802,
+          -0.0,
+          -0.9841770529747009,
+          9567.8583984375,
+          -0.0,
+          1.0,
+          -0.0,
+          5999.9970703125,
+          0.9841770529747009,
+          -0.0,
+          -0.17718790471553802,
+          -3664.3837890625
+        ],
+        "transformed_front_unclipped": [
+          9026.561019301414,
+          6249.9970703125,
+          -3761.837136656046
+        ],
+        "areas": {
+          "0x0": {
+            "ptr": 2359520528,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x208",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                -3.6889731884002686,
+                11000.0048828125,
+                -105673.0
+              ],
+              "angle": 0.028541050851345062
+            },
+            "quad": [
+              [
+                -1388.6806640625,
+                -893.1177368164062
+              ],
+              [
+                1401.8045654296875,
+                -861.5324096679688
+              ],
+              [
+                1326.92236328125,
+                536.5576171875
+              ],
+              [
+                -1447.115966796875,
+                397.48919677734375
+              ]
+            ]
+          },
+          "0x3": {
+            "ptr": 2359520996,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x205",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                7782.1884765625,
+                9995.8291015625,
+                43061.65234375
+              ],
+              "angle": 1.6785211563110352
+            },
+            "quad": [
+              [
+                9951.9892578125,
+                -4487.447265625
+              ],
+              [
+                11451.9892578125,
+                -4487.447265625
+              ],
+              [
+                11610.7021484375,
+                -2182.65869140625
+              ],
+              [
+                9956.3486328125,
+                -2488.571533203125
+              ]
+            ]
+          },
+          "0x4": {
+            "ptr": 2359521152,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x209",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                574.0350341796875,
+                0.0057373046875,
+                120.4645767211914
+              ],
+              "angle": -1.3819975852966309
+            },
+            "quad": [
+              [
+                -11931.58203125,
+                -29502.669921875
+              ],
+              [
+                -10457.66015625,
+                -29301.81640625
+              ],
+              [
+                -10403.4765625,
+                -27625.251953125
+              ],
+              [
+                -11927.22265625,
+                -27503.802734375
+              ]
+            ]
+          },
+          "0x7": {
+            "ptr": 2359521620,
+            "enabled": true,
+            "type": 16,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x600",
+              "Part": 0,
+              "lockType": 1,
+              "lockFlag": 19,
+              "callback": "0x0",
+              "position": [
+                6616.62255859375,
+                2.44757080078125,
+                -3516.858642578125
+              ],
+              "angle": -1.5707964897155762
+            },
+            "quad": [
+              [
+                5730.732421875,
+                -4246.87744140625
+              ],
+              [
+                6785.4384765625,
+                -4281.958984375
+              ],
+              [
+                6785.4384765625,
+                -2781.959228515625
+              ],
+              [
+                5759.544921875,
+                -2793.926025390625
+              ]
+            ]
+          },
+          "0x8": {
+            "ptr": 2359521776,
+            "enabled": false,
+            "type": 2,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 2350181868,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                9316.0712890625,
+                -29320.501953125
+              ],
+              [
+                10287.5146484375,
+                -29241.541015625
+              ],
+              [
+                10290.3203125,
+                -27618.900390625
+              ],
+              [
+                9322.92578125,
+                -27682.6171875
+              ]
+            ]
+          },
+          "0x11": {
+            "ptr": 2359523180,
+            "enabled": true,
+            "type": 5,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                9.183549615799121e-41,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                -711.07275390625,
+                -61308.84765625
+              ],
+              [
+                788.9273071289062,
+                -61308.84765625
+              ],
+              [
+                788.9273071289062,
+                -59808.84765625
+              ],
+              [
+                -711.07275390625,
+                -59808.84765625
+              ]
+            ]
+          },
+          "0x15": {
+            "ptr": 2359523804,
+            "enabled": true,
+            "type": 4,
+            "checkFlag": 0,
+            "trigger": 1,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                5.969307250269429e-39,
+                0.0,
+                0.0
+              ],
+              "angle": 0.0
+            },
+            "quad": [
+              [
+                4464.8564453125,
+                -12819.927734375
+              ],
+              [
+                6314.9833984375,
+                -13013.771484375
+              ],
+              [
+                6618.095703125,
+                -8553.955078125
+              ],
+              [
+                4456.0791015625,
+                -9321.4189453125
+              ]
+            ]
+          }
+        },
+        "native_AEV00_collision_clipped_front_hit": false,
+        "native_AEV08_executed": false,
+        "action": {
+          "active": 0,
+          "stop_old": 1,
+          "num": 0,
+          "work": [
+            {
+              "func": 2350164316,
+              "arg": 2359897296,
+              "kind": 16,
+              "slot": 2,
+              "type": 2,
+              "button": 1,
+              "d": 2360067264,
+              "flags": 128
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            }
+          ]
+        },
+        "saved_RSF205": 3254779904,
+        "saved_RSF204": 1073741824,
+        "warp": {
+          "flags": [
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "name": "castle21-CONTROLLED-ch32-drain0",
+          "room": "0x205",
+          "rooms": 2,
+          "room_frames": 183,
+          "max_entry": 1,
+          "n_go": 1,
+          "go0": "00000000a894e4454f331c46025e27470000000001010001",
+          "n_act": 0,
+          "n_rsf": 0,
+          "has_trg": 0,
+          "has_kill": 0
+        },
+        "actors": [
+          {
+            "ptr": "0x8cc83280",
+            "id": 76,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x2",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cc67420",
+            "id": 20,
+            "type": 7,
+            "source_list": 76,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cc66640",
+            "id": 20,
+            "type": 7,
+            "source_list": 75,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae7ec0",
+            "id": 20,
+            "type": 7,
+            "source_list": 74,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae70e0",
+            "id": 20,
+            "type": 8,
+            "source_list": 81,
+            "hp": 1800,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae4d40",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae3f60",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae26e0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae1900",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadf3a0",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cade5c0",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadd300",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadc520",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadaf80",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cada1a0",
+            "id": 78,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad68e0",
+            "id": 78,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad5b00",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad4280",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad34a0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8ca8d3e0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8ca8c600",
+            "id": 0,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1440,
+            "native_status": "0x0",
+            "be_flag": "0xf002077",
+            "routines": [
+              0,
+              0,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cad8f40",
+            "id": 75,
+            "type": 0,
+            "source_list": 255,
+            "hp": 0,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "source68_active_observed": false
+      }
+    },
+    {
+      "exact_owned_WM_CLOSE": true,
+      "process_age": 39.030052185058594
+    }
+  ],
+  "owned_close_sent": true,
+  "source_fields_not_acceptance_alone": true,
+  "no_209_command": true,
+  "read_failure_count": 0,
+  "region_failure_count": 0,
+  "read_diagnostics": []
+}

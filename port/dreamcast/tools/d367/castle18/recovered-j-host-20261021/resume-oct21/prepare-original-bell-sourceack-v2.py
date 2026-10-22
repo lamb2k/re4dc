@@ -1,0 +1,13 @@
+from pathlib import Path
+import hashlib
+L=Path(r'C:\Game Dev\Emulators\codex-lanes\castle18');boss=(L/'owned-window-recovered-j-r201-Garrador-sourceack-fine-neutral-fire-v5-still.py').read_text();s=(L/'owned-window-recovered-j-r201-original-bell120-still.py').read_text();p=L/'owned-window-recovered-j-r201-original-bell-sourceack-neutral-v2-still.py';assert not p.exists()
+a=s.index("_sc=json.loads((_seed/'owned-window-current-stair-walk.json').read_text())");b=s.index('\n',a);ba=boss.index('_bc=json.loads(');bb=boss.index('\n',ba);s=s[:a]+boss[ba:bb]+s[b:]
+a=boss.index(' sy=json.loads(');b=boss.index(' started=time.monotonic()',a);helpers=boss[a:b];a=helpers.index("  assert read(gp+0x100,2)");b=helpers.index('\n',a);helpers=helpers[:a]+"  assert read(gp+0x100,2)==b'\\x1b\\x0a';gg=struct.unpack('<3f',read(gp+0x94,12));assert math.dist(pp,gg)>=3500,'Original3500 stationary bell disengagement during input'"+helpers[b:]
+helpers=helpers.replace('wp,rr=weakpoint(gp)','wp,rr=bellpoint(gp)').replace('av=[vv[0],vv[1]-70,vv[2]]','av=list(vv)');helpers+=""" def bellpoint(gp):
+  bell=0x8caddab8;assert read(bell+0x100,1)[0]==0x14 and math.dist(struct.unpack('<3f',read(bell+0x94,12)),(26972,178,-50004))<1;assert u32(bell+0x334)==0x8cc28b00 and read(0x8cc28b00+0x100,2)==bytes([0x4d,1]);wp,_=point(bell,1,(0,-650,0));return wp,300
+"""
+a=s.index(' started=time.monotonic()');s=s[:a]+helpers+s[a:];s=s.replace('started=time.monotonic();','started=time.monotonic();body_align_since=None;body_coast_until_idle=False;body_previous=None;body_quick_done=False;body_input_frame=-999;body_refresh=0;',1);s=s.replace('while time.monotonic()-started<46:','while time.monotonic()-started<42:',1)
+a=s.index('  if input_frame is None:');b=s.index('  if ff<input_frame+6:',a);ba=boss.index('  pl=u32(0x8c39d700);sub=u32(0x8c39d6fc);assert read(pl+0x100,1)[0]==0');bb=boss.index('  if ff<input_frame+6:',ba);pre=boss[ba:bb].replace('qh,_=weakpoint(gp)','qh,_=bellpoint(gp)');s=s[:a]+pre+s[b:]
+s=s.replace("  transition({'ready'})\n  if routine[2]", "  if not(active & {'left','right','forward','back'}):transition({'ready'})\n  if routine[2]",1)
+a=s.index('  if pitch_check is not None:');b=s.index('  if aim_settled_since is None:',a);ba=boss.index("  pitch_up_key='back'if");bb=boss.index('  if aim_settled_since is None:',ba);s=s[:a]+boss[ba:bb]+s[b:]
+s=s.replace("'scope':'","'scope':'Normal one-shot original southbell with same source-reviewed bodycoast/rawaxisack/fine neutral controls as prepared Garradorv5; original exact bellobject/hitbody/physicalray/laser/ringTimer guards and3500health/PID/resource limits. Source prepared until Flycast. ",1);compile(s,str(p),'exec');p.write_text(s);print(p.name,hashlib.sha256(p.read_bytes()).hexdigest())

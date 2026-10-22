@@ -1,0 +1,79 @@
+{
+  "scope": "Original J image metadata limit and independently authorized recovered-content cold lineage. No oldstate retarget.",
+  "original_image": {
+    "bytes": 1018789888,
+    "sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+    "C_receipt_preserved": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\C-skin-player-j-disc-retention-receipt.json",
+    "master_absent": true,
+    "timestamps_and_layout_not_preserved_in_hash_manifest": true,
+    "original_track01_creation": "2026-10-20T16:57:01-04:00"
+  },
+  "original_checkpoint": {
+    "run": "current-j-route-walk221",
+    "source_frame": 35405,
+    "state_sha256": "d20f2640fc472e2bf0fcb80a4835a5dddcf7ad266ce9666bd1cdef1c792b0890",
+    "health": [
+      1200,
+      600
+    ],
+    "Garrador_HP": 4000,
+    "resumed": false
+  },
+  "recovered_master": {
+    "scope": "Recovered J content master; new cold-boot lineage only; old J snapshots/VMU changes prohibited",
+    "master": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/Test21/recovered-j-content-20261021/master/track03.iso",
+    "iso_bytes": 1018789888,
+    "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+    "iso_sectors": 497456,
+    "data_sectors": 496343,
+    "content_file_count": 6765,
+    "original_manifest_all_hashes_equal": true,
+    "program_elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+    "new_PVD_creation_hex": "32303236313032313039353530353030f0",
+    "new_PVD_modification_hex": "32303236313032313039353530353030f0",
+    "layout_sha256": "758046377b938a1eb32f233e8e58087a96a2957b84023d18c2b3a4b370670c97",
+    "C_free_after": 25971630080,
+    "created_utc": "2026-10-21T13:56:06.019884+00:00",
+    "old_state_retargeted": false
+  },
+  "reconstruction_inputs": {
+    "scope": "New recovered-J-content cold-boot lineage only. Exact old6765 content hashes; original ISO metadata lost. Old J snapshots and VMU untouched; no old-state retarget allowed.",
+    "original_iso_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+    "original_iso_bytes": 1018789888,
+    "content_files": 6765,
+    "tree_files": 6762,
+    "zero_fixture_files": {
+      "dc/padscript.txt": {
+        "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+        "size": 8192
+      },
+      "dc/w11.txt": {
+        "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+        "size": 8192
+      },
+      "dc/warp.txt": {
+        "sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+        "size": 8192
+      }
+    },
+    "source_inventory_sha256": "02037b878e4fef507ffc07fa9e114628457668cc82026f781f28d54a328d490d",
+    "original_manifest_sha256": "e759c03572a7e01843396bac1e6da780282a8c91cc05fb59dfafee9d88311847",
+    "IP_sha256": "0e4e13d0b8df6477d9e43370591fd1a580c54b4df2209b944610d2a0b6b0062c",
+    "private_helper_sha256": "f410385c66b0f1458da558598ce4e21f380976cd875fc6d390233b971296b243",
+    "helper_only_change": "Temporary work location uses owned persistent ext4 on same filesystem as reconstructed tree; genisoimage arguments and fixture redirections unchanged.",
+    "created_utc": "2026-10-21T13:54:13.554824+00:00",
+    "C_free_after_tree": 27283632128,
+    "tree": "/root/probe/castle21-recovered-j-content-20261021/tree",
+    "old_image_resumed": false
+  },
+  "inventory_receipt": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\input-inventory.json",
+  "new_cold_lineage_authorized_by_parent": true,
+  "mastering_recipe_change": "Only temporary work placement moved to owned persistent ext4; genisoimage and redirection recipe unchanged. New ISO metadata explicitly retained.",
+  "original_content_sources": {
+    "direct_private_CAS_program_matches": 5959,
+    "retained_raw_secondary_matches": 803,
+    "zero8192_fixture_matches": 3,
+    "total": 6765
+  },
+  "no_build_or_game_code_asset_knob_change": true
+}

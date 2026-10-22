@@ -1,0 +1,61 @@
+{
+  "scope": "Every owned guest had live18GiB+64MiB disk/60MiB capture guard. All closed normally with no resource alarm.",
+  "rows": [
+    {
+      "run": 155,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk155\\owned-resource-guard.json",
+      "sha256": "8f4fddab5c50d00d9fb07fc4fd3ff9c0424bc4392441aac4b7ebe38788a9e5f0",
+      "closed": false,
+      "minimum_C_free": 20550455296,
+      "maximum_cap_logical_bytes": 29095339
+    },
+    {
+      "run": 156,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk156\\owned-resource-guard.json",
+      "sha256": "52d59837d4667b2c31439fbe4de66d565b26dc7b0b0cd33d936bb9dcc1c76ad7",
+      "closed": false,
+      "minimum_C_free": 20462927872,
+      "maximum_cap_logical_bytes": 29123142
+    },
+    {
+      "run": 157,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk157\\owned-resource-guard.json",
+      "sha256": "fc594653aabc411ea4de56eae216061acaeaf2e9103bad0d77568a2115fa83e0",
+      "closed": false,
+      "minimum_C_free": 20345798656,
+      "maximum_cap_logical_bytes": 28609462
+    },
+    {
+      "run": 158,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk158\\owned-resource-guard.json",
+      "sha256": "f4ef0dea028894eb41445a74359599d2fec8e5fd116e44b5d076e61b02dcf185",
+      "closed": false,
+      "minimum_C_free": 20083736576,
+      "maximum_cap_logical_bytes": 28670319
+    },
+    {
+      "run": 159,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk159\\owned-resource-guard.json",
+      "sha256": "26d51d08ebb1c6d94795368186f7f1eac49c4b9a4f8058a27b16a04317f39ec5",
+      "closed": false,
+      "minimum_C_free": 20052971520,
+      "maximum_cap_logical_bytes": 28870190
+    },
+    {
+      "run": 160,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk160\\owned-resource-guard.json",
+      "sha256": "28ad163a504fe0f7018a5cd43dc72edb129d1e5b8a9b932b56f735b17d37062e",
+      "closed": false,
+      "minimum_C_free": 19960745984,
+      "maximum_cap_logical_bytes": 29429851
+    },
+    {
+      "run": 161,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk161\\owned-resource-guard.json",
+      "sha256": "263cdca3d104167bc9d20accc4fac7651ff2fcea169bf496318b0ea2708195bf",
+      "closed": false,
+      "minimum_C_free": 19888537600,
+      "maximum_cap_logical_bytes": 29829791
+    }
+  ]
+}

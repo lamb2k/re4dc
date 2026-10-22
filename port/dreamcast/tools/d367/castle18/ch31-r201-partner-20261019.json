@@ -1,0 +1,11 @@
+{
+  "replace": {
+    "dc/native/r201/partner.re4nmr": "/root/re4data/private/castle18-ch31-r201-partner-20261019/files/dc/native/r201/partner.re4nmr"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Data-only exact full partner reuse for original r201 source-created Ashley. Both primary and partner pass the actual loader together. Runtime native, cloth, puzzle, memory and chapter gates remain open.",
+    "partner_sha256": "208562a4d5bb5acb8e7cee58995ce1a3d93d1eeb1a764becdb7e5bda52f58f2e",
+    "donor_sha256": "2f25149420bb81e14ec3a546c5efe3b52513ca6a66149857eaf1026ad799ba5f"
+  }
+}

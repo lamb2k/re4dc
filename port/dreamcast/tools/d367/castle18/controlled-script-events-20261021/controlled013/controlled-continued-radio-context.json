@@ -1,0 +1,79 @@
+{
+  "scope": "Controlled originalradio continuation; inheritedRSF7/openlogs are not newexecution orcompletion. Actualclose/hash, Stop/frame progress and inspectedgameplay required.",
+  "observation": {
+    "process_age": 2.0371396217378788,
+    "pg": 2352652060,
+    "frame": 2783,
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x204",
+    "chapter": 7,
+    "Stop": "0x77ffffbf",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "CardStatus": "0x80000005",
+    "status3": "0x10000000",
+    "partner_ptr": "0x0",
+    "saved_RSF204": "0x81000000"
+  },
+  "before": {
+    "process_age": 2.1771396217518486,
+    "pg": 2352652060,
+    "frame": 2788,
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x204",
+    "chapter": 7,
+    "Stop": "0x77ffffbf",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "CardStatus": "0x80000005",
+    "status3": "0x10000000",
+    "partner_ptr": "0x0",
+    "saved_RSF204": "0x81000000"
+  },
+  "after": {
+    "process_age": 2.2401396217173897,
+    "pg": 2352652060,
+    "frame": 2790,
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x204",
+    "chapter": 7,
+    "Stop": "0x77ffffbf",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "CardStatus": "0x80000005",
+    "status3": "0x10000000",
+    "partner_ptr": "0x0",
+    "saved_RSF204": "0x81000000"
+  },
+  "pngs": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-radio013\\shots\\controlled-continued-radio\\frames\\fb0.png",
+      "sha256": "a7df65b9f217f4195d616b7c8eee6f03e4af00d29c5b61544f65dcda4df67558"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-radio013\\shots\\controlled-continued-radio\\frames\\fb1.png",
+      "sha256": "16de564f5d0ef511e05f38d2be270ae36550b33eb37af068fac0dd565c627b79"
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "scope": "External monitor only; no keys or gameplay memory writes. Exact PID/path/start/window checked WM_CLOSE only if resource boundary crosses.",
+  "runtime_floor": 19394461696,
+  "capture_cap": 62914560,
+  "closed": true,
+  "samples": [
+    {
+      "monotonic": 369446.687,
+      "free": 19481808896,
+      "cap_logical_bytes": 28539390
+    },
+    {
+      "monotonic": 369447.187,
+      "free": 19481776128,
+      "cap_logical_bytes": 28540137
+    },
+    {
+      "monotonic": 369447.687,
+      "free": 19481702400,
+      "cap_logical_bytes": 28610062
+    },
+    {
+      "monotonic": 369448.187,
+      "free": 19481694208,
+      "cap_logical_bytes": 28612349
+    },
+    {
+      "monotonic": 369448.687,
+      "free": 19481669632,
+      "cap_logical_bytes": 28617677
+    },
+    {
+      "monotonic": 369449.187,
+      "free": 19481669632,
+      "cap_logical_bytes": 28619964
+    },
+    {
+      "monotonic": 369449.703,
+      "free": 19481538560,
+      "cap_logical_bytes": 28623270
+    },
+    {
+      "monotonic": 369450.203,
+      "free": 19481538560,
+      "cap_logical_bytes": 28625612
+    },
+    {
+      "monotonic": 369450.703,
+      "free": 19481522176,
+      "cap_logical_bytes": 28629783
+    },
+    {
+      "monotonic": 369451.203,
+      "free": 19480997888,
+      "cap_logical_bytes": 28632293
+    },
+    {
+      "monotonic": 369451.703,
+      "free": 19480981504,
+      "cap_logical_bytes": 28639962
+    },
+    {
+      "monotonic": 369452.203,
+      "free": 19480981504,
+      "cap_logical_bytes": 28645715
+    },
+    {
+      "monotonic": 369452.718,
+      "free": 19482685440,
+      "cap_logical_bytes": 28649045
+    },
+    {
+      "monotonic": 369453.218,
+      "free": 19482677248,
+      "cap_logical_bytes": 28651175
+    },
+    {
+      "monotonic": 369453.718,
+      "free": 19482677248,
+      "cap_logical_bytes": 28654536
+    },
+    {
+      "monotonic": 369454.218,
+      "free": 19482677248,
+      "cap_logical_bytes": 28656987
+    },
+    {
+      "monotonic": 369454.718,
+      "free": 19481808896,
+      "cap_logical_bytes": 28662353
+    },
+    {
+      "monotonic": 369455.218,
+      "free": 19481808896,
+      "cap_logical_bytes": 28664640
+    },
+    {
+      "monotonic": 369455.734,
+      "free": 19481808896,
+      "cap_logical_bytes": 28667903
+    },
+    {
+      "monotonic": 369456.234,
+      "free": 19481776128,
+      "cap_logical_bytes": 28670485
+    },
+    {
+      "monotonic": 369456.734,
+      "free": 19481776128,
+      "cap_logical_bytes": 28678368
+    },
+    {
+      "monotonic": 369457.234,
+      "free": 19481321472,
+      "cap_logical_bytes": 29125716
+    },
+    {
+      "monotonic": 369457.734,
+      "free": 19481321472,
+      "cap_logical_bytes": 29129151
+    },
+    {
+      "monotonic": 369458.25,
+      "free": 19481317376,
+      "cap_logical_bytes": 29131283
+    },
+    {
+      "monotonic": 369458.75,
+      "free": 19481317376,
+      "cap_logical_bytes": 29134784
+    },
+    {
+      "monotonic": 369459.25,
+      "free": 19481296896,
+      "cap_logical_bytes": 29137504
+    },
+    {
+      "monotonic": 369459.75,
+      "free": 19481034752,
+      "cap_logical_bytes": 29140925
+    },
+    {
+      "monotonic": 369460.265,
+      "free": 19011272704,
+      "cap_logical_bytes": 29145455
+    }
+  ]
+}

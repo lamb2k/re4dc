@@ -1,0 +1,33 @@
+{
+  "scope": "Narrow actual020 extracted focus/ack/pulse/release/no-retry/no-firstwrite tests only; mockAPI/clock, no OSchild/guest/input. No44/17/31rerun.",
+  "observer_sha256": "7edaf6ad057cd3291795b5260b52283091a0a6ed4fd808f46e7366978a4b2522",
+  "passed": 26,
+  "checks": [
+    "native64-GUIThreadInfo72",
+    "actualownedfocusready",
+    "reject-focus-gui_query_ok",
+    "reject-focus-foreground_hwnd",
+    "reject-focus-active_hwnd",
+    "reject-focus-focus_pid",
+    "reject-focus-focus_hwnd",
+    "reject-focus-owner_pid",
+    "focus-alreadyowned",
+    "focus-ownedrequestworks",
+    "focus-denied",
+    "nativeack-keys",
+    "nativeack-upperonly",
+    "nativeack-effect",
+    "nativeack-none",
+    "nativeKey24Bcorrectbase",
+    "nativeack-oneDown-oneUp-finally",
+    "nativeack-releasesafterack",
+    "timeout-oneDown-oneUp-finally",
+    "timeout-noack-boundedrelease",
+    "focusdenied-noinput",
+    "ackreaderror-oneDown-oneUp-finally",
+    "readerror-propagatesafterownedkeyup",
+    "no-firstplacementwrite",
+    "attemptflag-beforecall",
+    "exactremaining29allowlist"
+  ]
+}

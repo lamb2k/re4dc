@@ -1,0 +1,38 @@
+{
+  "runtime_source": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "actual_staged_program": {
+    "sha256": "78fb06976cc394ec6e4cb7861046c24a15f82ddf7bcb2fcbfd452d3fcbf72e33",
+    "size": 3643960
+  },
+  "program_exact_build_raw_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\builds\\c21jmW\\1ST_READ.raw.bin",
+  "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "master_manifest_sha256": "e759c03572a7e01843396bac1e6da780282a8c91cc05fb59dfafee9d88311847",
+  "assets": {
+    "st2/r201.arc": {
+      "sha256": "adc818de7cd3363a25e501ca9518e4c561ada4c481c171a593433adbdc96e594",
+      "size": 1507776
+    },
+    "st2/r208.arc": {
+      "sha256": "c1f170c28bcbd8671fa2d21262e3acd70641caf85e5298463b4a28d14834d13f",
+      "size": 1472608
+    },
+    "st2/r204.arc": {
+      "sha256": "01f320f1e7174d23b5f7f1ce7a777449e4dcf06c7b8b4fc52544bab72a1ef21f",
+      "size": 1367200
+    },
+    "dc/st2_0.ovl": {
+      "sha256": "3e161ce6f585681e7568c842f50c28a3ece95769df7e7dfc745bea43ba54bf4c",
+      "size": 94308
+    },
+    "dc/st2_1.ovl": {
+      "sha256": "53494d01f3e10e83eddf81f0e03c342f239c5220da0bfc687f1c366ca15b4410",
+      "size": 116100
+    },
+    "dc/movie/r204s00.seq": {
+      "sha256": "21c9ca96f64009abac471212823bbae3cc21839cd9e36eadd66c935658d85cf8",
+      "size": 6841067
+    }
+  },
+  "nomination_folder_note": "programs/candidate-routec21jmW/1ST_READ.BIN is a different unconsumed nomination; --base harness consumes masterimage1ST_READ (78fb...), identical to builds/c21jmW/1ST_READ.raw.bin. Only identical syms.txt was read from nomination folder; no runtime identity inferred from folderlabel."
+}

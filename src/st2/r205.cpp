@@ -98,6 +98,10 @@ public:
 };
 #define BEGIN_EVENT(p, mode) ((cUnitEvent*) (p))->beginEvent(mode)
 
+#if defined(RE4DC_ALIVE_CAP_NOVIS) && RE4DC_ALIVE_CAP_NOVIS
+extern "C" int re4dc_aliveCapFull();
+#endif
+
 void r205_Em105AppearCheck();
 void r205_Em106AppearCheck();
 void r205_Em107AppearCheck();
@@ -260,6 +264,11 @@ void r205_Em105AppearCheck()
         if (r205_work.p->ems[6].dead == 1) {
             Vec pos;
 
+#if defined(RE4DC_ALIVE_CAP_NOVIS) && RE4DC_ALIVE_CAP_NOVIS
+            if (re4dc_aliveCapFull()) {
+                return;   // keep this source wave/door owed until an actual slot is free
+            }
+#endif
             RsfSet(G_ROOM_ID, 2);
             r205_work.p->ems[1].em.setEm(0x69, -1, 1, 1, 1);
             r205_work.p->ems[1].em.setFlag(1);
@@ -324,6 +333,11 @@ void r205_Em111AppearCheck()
                 if (r205_work.p->ems[6].dead == 1) {
                     Vec pos;
 
+#if defined(RE4DC_ALIVE_CAP_NOVIS) && RE4DC_ALIVE_CAP_NOVIS
+                    if (re4dc_aliveCapFull()) {
+                        return;   // keep this source wave/door owed until an actual slot is free
+                    }
+#endif
                     RsfSet(G_ROOM_ID, 7);
                     r205_work.p->ems[5].em.setEm(0x6F, -1, 1, 1, 1);
                     r205_work.p->ems[5].em.setFlag(1);
@@ -355,6 +369,14 @@ int r205_AtHitCheckEmNum(int atA, int atB)
 
         if (e->dead == 0) {
             if (e->em.isAlive() == 1) {
+#if defined(RE4DC_ALIVE_CAP_NOVIS) && RE4DC_ALIVE_CAP_NOVIS
+                // A held enemy has no entry in an actor hit list. Do not use
+                // getPtr here: that accessor must materialize a needed pointer
+                // and is intentionally allowed to pass the cap for scripts.
+                if (EM_WRAP_HELD_NOW(&e->em)) {
+                    continue;
+                }
+#endif
                 if (SceAtCheckHitModel(atA, e->em.getPtr()) == 1) {
                     cnt++;
                 } else if (atB != -1 && SceAtCheckHitModel(atB, e->em.getPtr()) == 1) {

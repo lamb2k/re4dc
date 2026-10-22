@@ -1,0 +1,128 @@
+{
+  "scope": "SOURCEONLY022 oneconsolidatedcurrent209nativeDoor1A\u2192originalleadercut attempt; no guest/allocation/build/image. Existingactual021entry/pose/AEVwaiter not replayed.",
+  "seed": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door021\\data\\disc.state",
+    "sha256": "93fa4f5243a3c2ffbbaa45617ca046294b56274b17eaf62e1f3ab2ecb604339d",
+    "source_frame": 5508,
+    "room": "0x209",
+    "Part": 0,
+    "previous": "0x204",
+    "Stop": 0
+  },
+  "prepared": {
+    "prepared_only": true,
+    "no_guest": true,
+    "observer_sha256": "8ebb0f5d32620dcf7edfebc45ac7cda83d397116cb8d869da63ccfdece95b48d",
+    "wrapper_sha256": "3849d7bf7b70f6931fe8ab241cb14de0eb3700342f72584e49ed4b526e4fd292",
+    "pins_sha256": "a8e52dbdb5ac199f6f0ec410f1a10316c8d3fdc1b152cfbf2c2b0e8a6a66fd1a",
+    "argv": [
+      "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\tools\\fp_run_ram.py",
+      "--base",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+      "--cap",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door022",
+      "--syms",
+      "0x4319a0 0x4419a4 0x4419a0",
+      "--seconds",
+      "41",
+      "--vmu",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event009\\data\\T0000_vmu_save_A1.bin",
+      "--state-seed",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door021\\data",
+      "--warp",
+      "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\controlled-ch32-drain014-warp.txt",
+      "--period",
+      "0",
+      "--name",
+      "castle21-CONTROLLED-original209-door022"
+    ],
+    "admission_bytes": 20342374400,
+    "runtime_floor": 19394461696,
+    "capture_cap": 62914560,
+    "global_limit": 16,
+    "lane_limit": 2,
+    "exclusive_gui_input_required": true,
+    "source_only": true
+  },
+  "root_allocation_required_fields": {
+    "allocated022": true,
+    "allow_debug_goto_command_writes": false,
+    "allow_owned_window_focus": true,
+    "allow_scan_code_SendInput": true,
+    "exclusive_gui_input": true,
+    "maximum_successful_command_bytes": 0
+  },
+  "write_allowlist": [],
+  "maximum_successful_command_bytes": 0,
+  "placement_admission": "Currentcode/readidentity,209/Part0/previous204/Stop0/healthpositive; inheritedgo2consumed/count3/max3/rooms3; exactnativephysicalDoor1id41/Etc1/type1/unlocked/sourceconstructorposition+ownedslot5/callback8c0bc300or384/button1/type0/d0/flags0 action. NO hostdescriptor-radius/no initialcommand/replay. OriginalAEV0Adisabledwaiter is preserved.",
+  "input_contract": "ONEacceptedscan-codeXdownperstage; exactownedforeground/GUIactive/focus and nativeDoorready plus OSasyncXnotheld beforedown. SendInput count/error independent from OSasyncX and coherentnative64Key/doorrequest. Hold<=.75s orack/focusloss; finallyonekeyup foracceptedowndown evenlostfocus/deadguest/readerror. No keyupwhenpreheldX/downcount0. No retries. ExclusiveGUIlease mandatory.",
+  "ABI": {
+    "INPUT_size": 40,
+    "union_offset": 8,
+    "KEYBDINPUT_size": 24,
+    "MOUSEINPUT_size": 32,
+    "word_bits": 16,
+    "DWORD_bits": 32,
+    "extraInfo_type": "c_size_t/ULONG_PTR",
+    "scan": "0x2d",
+    "wVk": 0,
+    "down_flags": "0x8",
+    "up_flags": "0xa",
+    "count": 1,
+    "GetAsyncKeyState_return": "signedSHORT/high0x8000",
+    "extraInfo_offset": 16
+  },
+  "native_Key": {
+    "symbol": "0x8c3a948c",
+    "old": 8,
+    "on": 16,
+    "trg": 24,
+    "width": 8,
+    "endian": "little",
+    "mask": "0x80080000",
+    "DWARF_sha256": "435b7811682093c5eadee5ba80a9654997b1f1d1929d2ebf16913a4cc4f2fce7"
+  },
+  "guards": {
+    "start_bytes": 20342374400,
+    "runtime_bytes": 19394461696,
+    "raw_seconds": 41,
+    "close_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_bytes": 62914560,
+    "global_Flycast_limit": 16,
+    "castle_limit": 2,
+    "standing_source_peer_bytes": 67108864,
+    "admission": "RootexclusiveGUIlease/nopeerFlycastbeforelaunch andthroughinputunit; source/build/readback lanes parallel. Rootchargescurrentfutureprogramme/otherpeers unchanged."
+  },
+  "root_argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-door022.sh",
+    "--execute-allocated022"
+  ],
+  "shell_sha256": "03eb6ad4986fe06d58a27061d0ed43610ca3da8ec3697f87e11bde746736e7b6",
+  "qualification": {
+    "changedlogic_and_inherited_AST_checks": 31,
+    "receipt_sha256": "77726c0b6afb7b76b6c148e8903dca0d60b5f5f8bbd0c4922d37a9952b2d4002",
+    "default_pins": 41,
+    "no_34_26_or_broad_rerun": true
+  },
+  "actual021_audit": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\controlled021-native-exit-host-pose-partial-audit.json",
+    "sha256": "08bad93e8054cd4a722d573b6237389eea192714a582db79eb7c6e5e8042ef12",
+    "result": "Actualnativeexit/209entry PASS; physicaldooreventunattempted duehostdistance<150 versus750retainedconsumedrowsminimum150.003348. Currentnativephysicaldooraction/AOPEN exists."
+  },
+  "acceptance": [
+    "Inherited209entry/AOPEN/currentpose is prerequisite only, notnewprogress. OneordinarynativephysicalDoor1A attempt usesunchangedownedfocus/preheld/SendInput/finallyrelease contract.",
+    "APIcount/error,OSasyncstate/native64Keyack independent. ActualDoor1openingflag thenoriginalAEV0Awaiter SceEventStart/Cam3/Cam2/eventclear/Stop0/advancingframes andPNGs separately.",
+    "Do not setdoor/RSF/eventdone/HP/AI/roomflags. No WriteProcessMemorybinding/calls/VMwrite rights, zero commandallowlist.",
+    "Preserveactualpartialat41raw/39close/47.5absolute; no retry/followingguest. Sourcequalification not actualphysics/audio/hardware/release/performance acceptance."
+  ],
+  "protected": "Samefrozen12a/4d823/raw78fb/masterb67/assets/host64491 unchanged; protectauth127/294,013..021 and009VMU425. Existingoriginaleventwaiter no atfunc retrigger/rearm."
+}

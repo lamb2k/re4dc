@@ -1,0 +1,507 @@
+{
+  "scope": "Same original J program/image after source Continue. Normal upper Golden pickup, source Wait and original injury controls; no state rollback, game-memory writes, new build or stage.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "disc_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "chain": [
+    {
+      "capture": "current-j-route-walk54",
+      "elapsed_s": 23.8,
+      "errors": [],
+      "owned_exited": true,
+      "state_sha256": "d1b61bd2724b3a6074596740d5130c3ee2f3996b4379f4115c1c6626442a875b",
+      "controller_sha256": "cf8be9c61160e97985414adc6b6d4c57ddab399d437d4bd9efabdb79b89a566b",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk54\\data\\disc.state"
+        },
+        {
+          "abort": "AssertionError(('sourcepartnerinactive/dead', 90))"
+        },
+        {
+          "owned_close_on_guard": true
+        }
+      ]
+    },
+    {
+      "capture": "current-j-route-walk55",
+      "elapsed_s": 51.0,
+      "errors": [],
+      "owned_exited": true,
+      "state_sha256": "05d90872865edbd4efdb60b4c2b6d83c9288448de5f384d4b90ed9922ff9e908",
+      "controller_sha256": "61d07d05914380fd417030b246dae884e347a3d0adc0b7fc6afc5359e1396d4a",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk55\\data\\disc.state"
+        },
+        {
+          "normal_original_upper_sword_A": 13709
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ]
+    },
+    {
+      "capture": "current-j-route-walk56",
+      "elapsed_s": 4.1,
+      "errors": [],
+      "owned_exited": true,
+      "state_sha256": "063b73abeda542158b5d1e37267405cc07a065fbce5de5a7b836150603c585a1",
+      "controller_sha256": "3349043a0b812491fd22b6b224c831a05333d07619017ab3d688b96dbd9d8386",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk56\\data\\disc.state"
+        },
+        {
+          "original_upper_sword_pickup_complete": {
+            "frame": 13862,
+            "swords": [
+              {
+                "id": "0x80",
+                "num": 1,
+                "flags": 1,
+                "type": 0
+              }
+            ],
+            "health": [
+              1200,
+              1200,
+              90,
+              600
+            ]
+          }
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ]
+    },
+    {
+      "capture": "current-j-route-walk57",
+      "elapsed_s": 3.6,
+      "errors": [],
+      "owned_exited": true,
+      "state_sha256": "7aaca45a56d44de0fc232d91640f292cbcc864cf49fd34f083155d42b0ecb870",
+      "controller_sha256": "554f437d9177f00df13c1608f4145b194aab9753edf838fc5aeb56c2dc5f8da5",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk57\\data\\disc.state"
+        },
+        {
+          "normal_S_partner_Wait": 13862
+        },
+        {
+          "original_Ashley_Wait_confirmed": {
+            "frame": 13898,
+            "health": [
+              1200,
+              90
+            ],
+            "subFlags": "0x46",
+            "partner_pos": [
+              -9139.875,
+              4149.16015625,
+              -10333.421875
+            ]
+          },
+          "stable_source_ticks": 30
+        }
+      ]
+    },
+    {
+      "capture": "current-j-route-walk58",
+      "elapsed_s": 10.1,
+      "errors": [],
+      "owned_exited": true,
+      "state_sha256": "2545887ba0b61187b9cb64eea281772f1b5005bd0c10af9dd14753d873b600a9",
+      "controller_sha256": "2c84b61e9d2216e8d65bc9c63da196b35662efee4008675b003d3e0eef824dc1",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk58\\data\\disc.state"
+        },
+        {
+          "any_further_original_damage_stop": true,
+          "health": [
+            778,
+            90
+          ],
+          "frame": 14113
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ]
+    }
+  ],
+  "after_upper_pickup": {
+    "scope": "Immutable current J original no-warp CardLoad lineage, four exact ELF anchors; original inventory and RSF read-only. No state changes.",
+    "state_sha256": "05d90872865edbd4efdb60b4c2b6d83c9288448de5f384d4b90ed9922ff9e908",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x207",
+    "chapter": 6,
+    "source_frame": 13807,
+    "health": [
+      1200,
+      1200,
+      90,
+      600
+    ],
+    "Stop": "0xd27ef7bf",
+    "SSLoop": 0,
+    "death_flags": "0x3080100",
+    "door_flags": "0x884002b4",
+    "r207_RSF": "0x86300000",
+    "player_pos": [
+      -9535.8681640625,
+      4149.1591796875,
+      -10396.845703125
+    ],
+    "partner_pos": [
+      -9136.66015625,
+      4149.162109375,
+      -10351.197265625
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 10
+      },
+      {
+        "id": "0x4",
+        "num": 10,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x80",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ]
+  },
+  "original_damage58": {
+    "scope": "Read-only exact J58 immutable low-health checkpoint with four ELF anchors; damage pointer matched against original alive actor list, no game/source/state writes.",
+    "state_sha256": "2545887ba0b61187b9cb64eea281772f1b5005bd0c10af9dd14753d873b600a9",
+    "source_frame": 14113,
+    "health": [
+      778,
+      1200,
+      90,
+      600
+    ],
+    "player_pos": [
+      -4987.26123046875,
+      4149.1640625,
+      -10947.3251953125
+    ],
+    "player_routines": [
+      4,
+      0,
+      0,
+      1
+    ],
+    "partner_pos": [
+      -9270.9609375,
+      4149.16064453125,
+      -10113.6162109375
+    ],
+    "partner_routines": [
+      0,
+      0,
+      2,
+      0
+    ],
+    "partner_dmgType": "0x0",
+    "dmgType": "0x8cbca3a0",
+    "alive": [
+      {
+        "actor": "0x8cbca3a0",
+        "id": "0x11",
+        "type": 7,
+        "routines": [
+          1,
+          38,
+          1,
+          0
+        ],
+        "hp": 1000,
+        "pos": [
+          -5296.40869140625,
+          4149.16064453125,
+          -10336.8818359375
+        ],
+        "distance": 684.2610960889278,
+        "matches_damage_type": true
+      },
+      {
+        "actor": "0x8cb30740",
+        "id": "0x11",
+        "type": 7,
+        "routines": [
+          1,
+          13,
+          1,
+          0
+        ],
+        "hp": 1000,
+        "pos": [
+          -5891.30859375,
+          4149.162109375,
+          -10615.1953125
+        ],
+        "distance": 963.1261049917815,
+        "matches_damage_type": false
+      },
+      {
+        "actor": "0x8cb2f960",
+        "id": "0x11",
+        "type": 7,
+        "routines": [
+          1,
+          13,
+          1,
+          0
+        ],
+        "hp": 1000,
+        "pos": [
+          -8783.7763671875,
+          4149.15966796875,
+          -10101.5908203125
+        ],
+        "distance": 3889.5750174550612,
+        "matches_damage_type": false
+      },
+      {
+        "actor": "0x8c9d5260",
+        "id": "0x11",
+        "type": 7,
+        "routines": [
+          1,
+          13,
+          1,
+          0
+        ],
+        "hp": 1000,
+        "pos": [
+          -9119.63671875,
+          4149.15966796875,
+          -10793.88671875
+        ],
+        "distance": 4135.223155073597,
+        "matches_damage_type": false
+      },
+      {
+        "actor": "0x8c9d4480",
+        "id": "0x43",
+        "type": 0,
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "hp": 1000,
+        "pos": [
+          1482.531982421875,
+          4781.39111328125,
+          668.0159912109375
+        ],
+        "distance": 13310.675645535535,
+        "matches_damage_type": false
+      },
+      {
+        "actor": "0x8c9b9dc0",
+        "id": "0x43",
+        "type": 0,
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "hp": 1000,
+        "pos": [
+          1501.134033203125,
+          5476.6982421875,
+          759.5900268554688
+        ],
+        "distance": 13450.408325211034,
+        "matches_damage_type": false
+      },
+      {
+        "actor": "0x8c9b8fe0",
+        "id": "0x0",
+        "type": 0,
+        "routines": [
+          4,
+          0,
+          0,
+          1
+        ],
+        "hp": 1200,
+        "pos": [
+          -4987.26123046875,
+          4149.1640625,
+          -10947.3251953125
+        ],
+        "distance": 0.0,
+        "matches_damage_type": false
+      },
+      {
+        "actor": "0x8cb3ad60",
+        "id": "0x3",
+        "type": 0,
+        "routines": [
+          0,
+          0,
+          2,
+          0
+        ],
+        "hp": 90,
+        "pos": [
+          -9270.9609375,
+          4149.16064453125,
+          -10113.6162109375
+        ],
+        "distance": 4364.075371789412,
+        "matches_damage_type": false
+      },
+      {
+        "actor": "0x8cb39f80",
+        "id": "0x42",
+        "type": 0,
+        "routines": [
+          1,
+          3,
+          0,
+          0
+        ],
+        "hp": 0,
+        "pos": [
+          -86.0,
+          -28.0,
+          -6.0
+        ],
+        "distance": 12695.81262794618,
+        "matches_damage_type": false
+      }
+    ]
+  },
+  "native_observed_log55": {
+    "rows": [
+      {
+        "room": "r207",
+        "id": "00",
+        "name": "Leon",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 69872,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          7
+        ],
+        "parts": [
+          119
+        ]
+      },
+      {
+        "room": "r207",
+        "id": "03",
+        "name": "Ashley",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 70336,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [
+          "ashley11"
+        ],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          141
+        ]
+      },
+      {
+        "room": "r207",
+        "id": "11",
+        "name": "em11",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 81471,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [
+          "zealot-em11-07p"
+        ],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          37
+        ]
+      }
+    ],
+    "packages": {},
+    "fails": 0,
+    "not_drawn": [
+      {
+        "room": "r207",
+        "id": "11",
+        "name": "em11",
+        "samples": 33,
+        "max_alive": 4,
+        "nearest": 713,
+        "in_view": 19,
+        "verdict": "drawn"
+      }
+    ]
+  },
+  "limits": [
+    "55 snapshot is before final callback;56 completes callback and Gold80 remains.",
+    "Original Ashley damage54 leaves90HP, then upper55/56/Wait57 preserve that actual health.",
+    "58 actual original type7 attack reduces Leon1200 to778; injury guards preserve all checkpoints. No combat kill credited.",
+    "Native/NOTDRAWN log pass is separate from texture/audio/residency, cache churn, hardware performance and chapter progression.",
+    "Lower Platinum pickup, both placements, wall opening and remainder of chapter still pending."
+  ]
+}

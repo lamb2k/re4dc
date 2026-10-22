@@ -1,0 +1,118 @@
+{
+  "scope": "Native LOAD controlled evidence only; typed fields do not replace observed Load result/gameplay",
+  "observation": {
+    "process_age": 36.03948391915765,
+    "pg": 2352652060,
+    "frame": 941,
+    "phase": [
+      0,
+      0
+    ],
+    "room": "0x120",
+    "chapter": 0,
+    "Stop": "0x7fffffbf",
+    "health": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "CardStatus": "0x80000001",
+    "status3": "0x0",
+    "partner_ptr": "0x0",
+    "card_source_correlated": {
+      "pointer": "0x8cb5dee0",
+      "routines": [
+        1,
+        6,
+        0,
+        0
+      ],
+      "status": "0x0",
+      "type": 0,
+      "slot": 0,
+      "save_no": 0,
+      "error": 0
+    }
+  },
+  "before": {
+    "process_age": 36.19548391911667,
+    "pg": 2352652060,
+    "frame": 946,
+    "phase": [
+      0,
+      0
+    ],
+    "room": "0x120",
+    "chapter": 0,
+    "Stop": "0x7fffffbf",
+    "health": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "CardStatus": "0x80000001",
+    "status3": "0x0",
+    "partner_ptr": "0x0",
+    "card_source_correlated": {
+      "pointer": "0x8cb5dee0",
+      "routines": [
+        2,
+        1,
+        0,
+        0
+      ],
+      "status": "0x0",
+      "type": 0,
+      "slot": 0,
+      "save_no": 0,
+      "error": 0
+    }
+  },
+  "after": {
+    "process_age": 36.25848391914042,
+    "pg": 2352652060,
+    "frame": 948,
+    "phase": [
+      0,
+      0
+    ],
+    "room": "0x120",
+    "chapter": 0,
+    "Stop": "0x7fffffbf",
+    "health": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "CardStatus": "0x80000001",
+    "status3": "0x0",
+    "partner_ptr": "0x0",
+    "card_source_correlated": {
+      "pointer": "0x8cb5dee0",
+      "routines": [
+        2,
+        5,
+        0,
+        0
+      ],
+      "status": "0x0",
+      "type": 0,
+      "slot": 0,
+      "save_no": 0,
+      "error": 0
+    }
+  },
+  "pngs": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-load011\\shots\\controlled-native-load-context\\frames\\fb0.png",
+      "sha256": "1efbbc48ea7e61d9310bfdb8ede81268521ac1c4f884fb9b382227e66b466793"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-load011\\shots\\controlled-native-load-context\\frames\\fb1.png",
+      "sha256": "1efbbc48ea7e61d9310bfdb8ede81268521ac1c4f884fb9b382227e66b466793"
+    }
+  ]
+}

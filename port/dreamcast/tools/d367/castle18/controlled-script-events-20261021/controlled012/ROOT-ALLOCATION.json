@@ -1,0 +1,32 @@
+{
+  "utc": "2026-10-22T04:24:44.1044505Z",
+  "authorization": "Root allocated ONE exact011-state HANDOFF012 after finalwrapper/pins/shell and review4bd67120 validated",
+  "wrapper_sha256": "61634b604504fe5ea0af16d1e32bfe5fac2febc51241dc4a5a4a73755271bb08",
+  "shell_sha256": "b7ab68b8f10fdaef2e551f723f97b996eb30dfbb86834e5ec2864e7da3ad51a4",
+  "pins_sha256": "738ef0503fa9d4d44dc508efbf1ab960a39f2458bfd52c556f9b920eda640d75",
+  "seed_sha256": "b9a39fbffe221e840f50041eea820cbc75f4720a7b74560e34dc2b74be60339e",
+  "C_free_bytes": 39489802240,
+  "globalFlycastCount": 0,
+  "castleFlycastCount": 0,
+  "peer_envelope": "Parent QA60,000,000B and global source64MiB covered by unchanged conservative admission",
+  "start_floor_bytes": 20342374400,
+  "runtime_floor_bytes": 19394461696,
+  "capture_cap_bytes": 62914560,
+  "raw_seconds": 41,
+  "normal_close_seconds": 39,
+  "absolute_seconds": 47.5,
+  "argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-native-handoff012.sh",
+    "--execute-allocated012"
+  ],
+  "no_retry": true,
+  "no_new_inputs": true,
+  "no_following_guest": true
+}

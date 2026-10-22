@@ -372,6 +372,76 @@ endif
 #   r11c r11d).
 ALIVE_CAP ?= 0
 ALIVE_CAP_LOG ?= 0
+# ALIVE_CAP_DEFER_FLAGS_BEGIN: preserve original setFlag commands on held handles.
+# Default off; apply after original first AI initialization, never force admission.
+ALIVE_CAP_DEFER_FLAGS ?= 0
+ifneq ($(words $(ALIVE_CAP_DEFER_FLAGS)),1)
+$(error ALIVE_CAP_DEFER_FLAGS must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(ALIVE_CAP_DEFER_FLAGS)),)
+$(error ALIVE_CAP_DEFER_FLAGS must be 0 or 1)
+endif
+ifeq ($(ALIVE_CAP_DEFER_FLAGS),1)
+ifeq ($(ALIVE_CAP),0)
+$(error ALIVE_CAP_DEFER_FLAGS=1 requires ALIVE_CAP)
+endif
+$(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_DEFER_FLAGS=1
+$(OBJDIR)/mod/%.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_DEFER_FLAGS=1
+endif
+# ALIVE_CAP_DEFER_FLAGS_END
+# ALIVE_CAP_DEFER_GOTO_R207_BEGIN: source-proven r207 queued movement only.
+# Other rooms, including unresolved r214 event capacity, keep their old behavior.
+ALIVE_CAP_DEFER_GOTO_R207 ?= 0
+ifneq ($(words $(ALIVE_CAP_DEFER_GOTO_R207)),1)
+$(error ALIVE_CAP_DEFER_GOTO_R207 must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(ALIVE_CAP_DEFER_GOTO_R207)),)
+$(error ALIVE_CAP_DEFER_GOTO_R207 must be 0 or 1)
+endif
+ifeq ($(ALIVE_CAP_DEFER_GOTO_R207),1)
+ifeq ($(ALIVE_CAP),0)
+$(error ALIVE_CAP_DEFER_GOTO_R207=1 requires ALIVE_CAP)
+endif
+ifneq ($(ALIVE_CAP_DEFER_FLAGS),1)
+$(error ALIVE_CAP_DEFER_GOTO_R207=1 requires ALIVE_CAP_DEFER_FLAGS=1)
+endif
+$(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_DEFER_GOTO_R207=1
+$(OBJDIR)/mod/%.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_DEFER_GOTO_R207=1
+endif
+# ALIVE_CAP_DEFER_GOTO_R207_END
+# ALIVE_CAP_NOVIS=1 (I-006, default off): stage-2 Novistadors (id2D) share
+# the existing ALIVE_CAP budget with Ganados. Creation/send holds and fresh
+# accounting only; castle pointer-owner rooms remain excluded from parking.
+ALIVE_CAP_NOVIS ?= 0
+# PARTS_LINKED_FLAG: preserve the source indexing promise on linked fallback.
+# Demand-backed parts can reuse a model after a prior contiguous joint.
+PARTS_LINKED_FLAG ?= 0
+ifneq ($(words $(PARTS_LINKED_FLAG)),1)
+$(error PARTS_LINKED_FLAG must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(PARTS_LINKED_FLAG)),)
+$(error PARTS_LINKED_FLAG must be 0 or 1)
+endif
+ifeq ($(PARTS_LINKED_FLAG),1)
+$(OBJDIR)/src/game/model.o: GAME_CPPFLAGS += -DRE4DC_PARTS_LINKED_FLAG=1
+endif
+# ALIVE_CAP_R202_GATE_BEGIN: default-off original gate/operator initial admission.
+# The normal r202 camera event needs operator2E's rock. At cap4, visit its
+# original ESL record before operator21; all eligibility/held/death guards remain.
+ALIVE_CAP_R202_GATE ?= 0
+ifneq ($(words $(ALIVE_CAP_R202_GATE)),1)
+$(error ALIVE_CAP_R202_GATE must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(ALIVE_CAP_R202_GATE)),)
+$(error ALIVE_CAP_R202_GATE must be 0 or 1)
+endif
+ifeq ($(ALIVE_CAP_R202_GATE),1)
+ifneq ($(ALIVE_CAP),4)
+$(error ALIVE_CAP_R202_GATE=1 requires ALIVE_CAP=4)
+endif
+$(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_R202_GATE=1
+endif
+# ALIVE_CAP_R202_GATE_END
 # CAP_COMPARE=1 (below): the cap values the sources compare with (the constants, or the runtime re4dc_cap_rt)
 CAP_COMPARE ?= 0
 ALIVE_CAP_N = $(if $(filter 1,$(CAP_COMPARE)),re4dc_cap_rt,$(ALIVE_CAP))
@@ -386,6 +456,9 @@ R101_ALIVE_CAP := $(ALIVE_CAP)
 endif
 $(OBJDIR)/src/game/em_set.o $(OBJDIR)/src/game/sce_com.o $(OBJDIR)/src/game/sce_sys.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP=$(ALIVE_CAP) -DRE4DC_ALIVE_CAP_R101=$(ALIVE_CAP_R101) -DRE4DC_ALIVE_CAP_LOG=$(ALIVE_CAP_LOG)
 $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_N=$(ALIVE_CAP_N)
+ifneq ($(ALIVE_CAP_NOVIS),0)
+$(OBJDIR)/src/game/em_set.o $(OBJDIR)/mod/st2_1/src/st2/r205.o $(OBJDIR)/mod/st2_2/src/st2/r213.o $(OBJDIR)/mod/st2_3/src/st2/r21d.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_NOVIS=$(ALIVE_CAP_NOVIS)
+endif
 ifneq ($(or $(ALIVE_CAP_PARK),0),0)
 $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_PARK=1
 endif

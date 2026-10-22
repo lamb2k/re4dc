@@ -1,0 +1,14 @@
+{
+  "scope": "Read-only exact249, source PlWepLockCtrl pitch target audit, no guest.",
+  "m3r_address": "0x8c3b8bec",
+  "m3r": [
+    -0.011630738154053688,
+    -0.011630738154053688,
+    0.0
+  ],
+  "system_pointer": "0x8c3a9ee4",
+  "system_flags": "0x2000000",
+  "pitch_inverted": false,
+  "source": "src/game/pl_wep.cpp:1016-1050: noninverted stickY positive raises m3r; inverted reverses. Animated muzzle-ray changes are not a reliable pitch-key calibration.",
+  "state_sha256": "2fbddd0a8996dbdb9917e55b54384f2c8e23918e3852864d9c96a67f3b47ebe2"
+}

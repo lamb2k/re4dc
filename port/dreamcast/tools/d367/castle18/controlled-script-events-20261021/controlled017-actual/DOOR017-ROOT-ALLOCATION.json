@@ -1,0 +1,42 @@
+{
+  "file": "DOOR017-ROOT-ALLOCATION.json",
+  "allocated017": true,
+  "allow_debug_goto_command_writes": true,
+  "observer_sha256": "b1f6d683c3359cf89cc1186ba96b2b9256292906bf9e8b5df2dea1e66358300a",
+  "wrapper_sha256": "cccc779f574fcc35e0c284ca71eb05f77b95055bcb6c396f60f428229795cbba",
+  "pins_sha256": "dd0f27924bf2657df2096cd774c7084ce6077331f31db9d3e2d367ef4c0e032d",
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff30",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ],
+  "scope": "ONEactual016state continuation with independently-reviewed loaded/readable/advancing native sequence, then exact28B existingenginecommand andnativeDoor0A; actual204Part1/firstcutacceptance separate; no209/outcomeinjection",
+  "no_retry": true,
+  "seed_sha256": "a33b2ac44cce042d035f7a981e96cf57b19bec1484f04c86084ece22803f73e8",
+  "global_Flycasts": 0,
+  "proposal_sha256": "a71329c5f580384e9a40b190f9ca5876230fcd6ac2e844b2a8d3393ee9691a06",
+  "resources": {
+    "start_free_bytes": 20342374400,
+    "runtime_free_bytes": 19394461696,
+    "raw_seconds": 41,
+    "normalclose_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_cap_bytes": 62914560,
+    "global16": true,
+    "castle2": true,
+    "fresh_parent_peer_charges_required": true
+  },
+  "utc": "2026-10-22T06:42:50.5886499Z",
+  "owner": "root",
+  "allowed_runs": 1,
+  "no_following_guest": true,
+  "peer_reserved_bytes": 67108864,
+  "source": "15df4a021",
+  "review_sha256": "4d2006184d6b57e084c19583b3673625cdf3bdc083ee040235a6ad47ea1d272d",
+  "C_free_bytes": 146471178240
+}

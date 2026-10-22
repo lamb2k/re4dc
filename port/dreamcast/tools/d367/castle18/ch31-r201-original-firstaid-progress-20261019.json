@@ -1,0 +1,30 @@
+{
+  "scope": "Original game First Aid Spray use within unchanged historical746/60aa native route; no guest health, inventory, actor, flag or snapshot writes. Not current083 or chapter acceptance.",
+  "elf_sha256": "746a2a5feb7cf6293ea31c2738c815a3f6ce305a29c8af82b482ca8758b2136e",
+  "disc_sha256": "60aa53ee11ce24e79630447aa302899bac322c5a8b0eb98a2b35097b3e8684c1",
+  "capture_elapsed_s": 8.48,
+  "owned_emulator_exited": true,
+  "capture_errors": [],
+  "controller_sha256": "42bc2eed63feeb371f6b0ccfa0d78cf504860b64ec8419d8aa9980fccef69a6e",
+  "state_sha256": "f7bb0366218162a4b6294fd8288f4c944afb82e0d9ab8743f2fb7dafaf5bf05c",
+  "event": {
+    "frame": 49226,
+    "life": 1440,
+    "Ashley": 360,
+    "initial": {
+      "life": 224,
+      "spray_count": 1
+    }
+  },
+  "active_item05_before": 1,
+  "active_item05_after": 0,
+  "garrador_hp_after": 3985,
+  "original_last_damage_partsNo": 2,
+  "original_weak_hit_partsNo": 37,
+  "open_work": [
+    "Garrador death and dungeon exit",
+    "source waves and later rooms",
+    "current-source replay and full room residency",
+    "chapter-end save"
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "scope": "Data-only source-exact existing full pl11 partner addition for missing chapter3-1 room consumers; host checks only, runtime and chapter acceptance pending.",
+  "source_role_proof": "workers/ch34/r219-partner-host-proof.json",
+  "source_archive_sha256": "f6fd174c7a02949c467f792eb08ecbd0529034a66189766dd7fd87e0ee991c58",
+  "prepared_archive_sha256": "ecf3098097fcb2b2c86d632b62fd3d9112e61f5e39b56819db6a2e277fffcfa2",
+  "donor_sha256": "208562a4d5bb5acb8e7cee58995ce1a3d93d1eeb1a764becdb7e5bda52f58f2e",
+  "all21_source_roles_and_3_full_appearances_exact": true,
+  "actual_loader_executable_sha256": "f1672f45954863db551ca48a76d3297bf0ee263e229fead6accda73c3c1931ee",
+  "textures_exact_in_native_and_current_selections": [
+    {
+      "key": "2353f21e-bfc44079",
+      "sha256": "b2d617321db01949b7fbc6c5c750366a489a5828c4e3780cf9721f063c836480",
+      "native_winner": "pak",
+      "current_winner": "pak",
+      "bytes": 67728
+    },
+    {
+      "key": "bc5bb46e-c514110b",
+      "sha256": "52add231469cc7ac4f1486bdfd4fe947cde26323fbe076cda6998c550a098c19",
+      "native_winner": "pak",
+      "current_winner": "pak",
+      "bytes": 8336
+    },
+    {
+      "key": "56d70169-8a2e5214",
+      "sha256": "a9bb6897ef8dd521a03e1ea485d59bdf17fb052e8ff58ca04d302d65f54ee1cb",
+      "native_winner": "pak",
+      "current_winner": "pak",
+      "bytes": 8336
+    },
+    {
+      "key": "2c9c252a-51c59944",
+      "sha256": "32025a792ec1bfb45b334db19f923c2a45e0188a00d55312043fb6fe6577b3ce",
+      "native_winner": "pak",
+      "current_winner": "pak",
+      "bytes": 6288
+    },
+    {
+      "key": "bc5bb46e-c514110b",
+      "sha256": "52add231469cc7ac4f1486bdfd4fe947cde26323fbe076cda6998c550a098c19",
+      "native_winner": "pak",
+      "current_winner": "pak",
+      "bytes": 8336
+    },
+    {
+      "key": "56d70169-8a2e5214",
+      "sha256": "a9bb6897ef8dd521a03e1ea485d59bdf17fb052e8ff58ca04d302d65f54ee1cb",
+      "native_winner": "pak",
+      "current_winner": "pak",
+      "bytes": 8336
+    },
+    {
+      "key": "2c9c252a-51c59944",
+      "sha256": "32025a792ec1bfb45b334db19f923c2a45e0188a00d55312043fb6fe6577b3ce",
+      "native_winner": "pak",
+      "current_winner": "pak",
+      "bytes": 6288
+    },
+    {
+      "key": "bc5bb46e-c514110b",
+      "sha256": "52add231469cc7ac4f1486bdfd4fe947cde26323fbe076cda6998c550a098c19",
+      "native_winner": "pak",
+      "current_winner": "pak",
+      "bytes": 8336
+    },
+    {
+      "key": "56d70169-8a2e5214",
+      "sha256": "a9bb6897ef8dd521a03e1ea485d59bdf17fb052e8ff58ca04d302d65f54ee1cb",
+      "native_winner": "pak",
+      "current_winner": "pak",
+      "bytes": 8336
+    },
+    {
+      "key": "2c9c252a-51c59944",
+      "sha256": "32025a792ec1bfb45b334db19f923c2a45e0188a00d55312043fb6fe6577b3ce",
+      "native_winner": "pak",
+      "current_winner": "pak",
+      "bytes": 6288
+    }
+  ],
+  "rooms": [
+    {
+      "room": "r203",
+      "bytes": 229952,
+      "sha256": "cf3a4a4eeb4cdb9ad160218596f0ef6ca3b02e36cfccb7b8b17b07172435e1b5",
+      "primary_bytes": 113760,
+      "primary_sha256": "ce974c57f8c29c44181efb6a0dbb3cff8648ce7a29154d747ade02e9263679ea",
+      "only_room_header_and_checksum_changed": true,
+      "positive": "/root/re4data/private/castle18-cast-rooms-20261018/reg-r203/package/r203/registry.re4nmr none 0\n+/root/re4data/private/castle18-ch31-remaining-partners-20261019/files/dc/native/r203/partner.re4nmr none 0\n",
+      "wrong_room_negative": "+/root/re4data/private/castle18-ch31-remaining-partners-20261019/files/dc/native/r203/partner.re4nmr room 515\n",
+      "sanitizer_stderr": ""
+    },
+    {
+      "room": "r208",
+      "bytes": 229952,
+      "sha256": "84d4709144ec07a3b37ad6910d0a77fe4c0f16496c43c58b152c3ddea10a0561",
+      "primary_bytes": 185952,
+      "primary_sha256": "e28cd7a354284a2bb24967ccf147989e75be789501c5ceacfbf58092bce56352",
+      "only_room_header_and_checksum_changed": true,
+      "positive": "/root/re4data/private/castle18-cast-variants-20261018/reg-r208-v2/package/r208/registry.re4nmr none 0\n+/root/re4data/private/castle18-ch31-remaining-partners-20261019/files/dc/native/r208/partner.re4nmr none 0\n",
+      "wrong_room_negative": "+/root/re4data/private/castle18-ch31-remaining-partners-20261019/files/dc/native/r208/partner.re4nmr room 520\n",
+      "sanitizer_stderr": ""
+    },
+    {
+      "room": "r204",
+      "bytes": 229952,
+      "sha256": "0cd634b4864624d9991ed4442a63d564f8fcf32e2a59802656b7294c439bbc68",
+      "primary_bytes": 101792,
+      "primary_sha256": "f5a470cd9a030ad9f8f249c7e336c5028b5574155d44efc29007735b24bb2942",
+      "only_room_header_and_checksum_changed": true,
+      "positive": "/mnt/c/Game Dev/Emulators/re4-assets-private/castle18-r204-em14-v2-20261019/files/dc/native/r204/registry.re4nmr none 0\n+/root/re4data/private/castle18-ch31-remaining-partners-20261019/files/dc/native/r204/partner.re4nmr none 0\n",
+      "wrong_room_negative": "+/root/re4data/private/castle18-ch31-remaining-partners-20261019/files/dc/native/r204/partner.re4nmr room 516\n",
+      "sanitizer_stderr": ""
+    }
+  ],
+  "existing_consumers_preserved": [
+    "r200",
+    "r202",
+    "r207"
+  ],
+  "r201_separate_native_entry_proof": "r201-e86-full-partner-native-entry-proof-20261019.json",
+  "limits": [
+    "No primary registry, archive, model, image, source flags or source runtime change.",
+    "Host admission only; each room needs runtime draw/reserve/residency/progression and full current chapter replay.",
+    "r204 em14 PS2 provenance and other existing room concerns remain separate."
+  ],
+  "manifest_sha256": "1baf29e0ecf4975a0d783348e61fb66b5d0b03810352f11f6efedffa9cce3abf"
+}

@@ -1,0 +1,378 @@
+{
+  "scope": "Original key-chest area7 event/callback62 PASS, key pickup still pending.",
+  "checkpoint": {
+    "scope": "Read-only immutable checkpoint audit of recovered-J NEW cold lineage only. No original J state retarget or game writes.",
+    "run": "route-walk62",
+    "state_sha256": "b8bdce186b04adba81c18c7290d3cc5ca06a21a07eb8002de0f7767f8844b2bb",
+    "source_frame": 19647,
+    "room": "0x203",
+    "chapter": 6,
+    "phase": [
+      3,
+      0
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "held_world": "0x0",
+    "health": [
+      903,
+      1200,
+      90,
+      600
+    ],
+    "start": {
+      "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+      "disc_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+      "ram_gdi": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\segments\\route-walk62\\disc.gdi",
+      "seed": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk61\\data",
+      "start_utc": "2026-10-21T17:34:46.966914+00:00"
+    },
+    "result": {
+      "name": "castle21-recoveredJ-route-walk62",
+      "status": "RUN_COMPLETE",
+      "start_utc": "2026-10-21T17:34:46.849004+00:00",
+      "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+      "tracks": {
+        "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "kind": "release",
+        "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+      },
+      "seconds": 50,
+      "vmu": null,
+      "keys": null,
+      "stop": null,
+      "fixtures": {
+        "warp": {
+          "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+          "bytes": 73,
+          "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+        },
+        "pad": {
+          "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+          "bytes": 208,
+          "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+        },
+        "w11": {
+          "src": null,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "errors": [],
+      "key_log": [],
+      "align": false,
+      "emu": "harness",
+      "emu_env": {},
+      "early_emulator_exit": 0,
+      "log_idle_s": 0.5,
+      "end_utc": "2026-10-21T17:35:02.522316+00:00",
+      "elapsed_s": 15.6,
+      "emulator_exited": true
+    },
+    "ELF_anchors": 4,
+    "player_pos": [
+      -66763.3125,
+      4189.2744140625,
+      755.052978515625
+    ],
+    "partner_pos": [
+      -36006.41015625,
+      4155.7724609375,
+      -9887.40625
+    ],
+    "partner_subflags": "0x46",
+    "events": [
+      {
+        "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk62\\data\\disc.state"
+      },
+      {
+        "normal_A_at_verified_original_key_chest_event": {
+          "frame": 19593,
+          "event": "0x8cb8fa80",
+          "health": [
+            903,
+            90
+          ]
+        }
+      },
+      {
+        "original_key_chest_callback_complete": {
+          "host_monotonic": 353367.468,
+          "room": "0x203",
+          "frame": 19645,
+          "player_hp": 903,
+          "partner_hp": 90,
+          "pos": [
+            -66763.390625,
+            4189.275390625,
+            754.8870239257812
+          ],
+          "yaw": -1.5998879671096802,
+          "target_distance": 14.25453754920809,
+          "angle_error": -2.7625626799579512,
+          "chest_event_pending": false,
+          "r203_RSF": "0x18000000"
+        }
+      },
+      {
+        "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk62\\shots\\checkpoint-source-19645\\frames\\fb0.png",
+        "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk62\\shots\\checkpoint-source-19645\\checkpoint-context.json"
+      },
+      {
+        "owned_close_at_input_deadline": true
+      }
+    ],
+    "last_sample": {
+      "host_monotonic": 353367.468,
+      "room": "0x203",
+      "frame": 19645,
+      "player_hp": 903,
+      "partner_hp": 90,
+      "pos": [
+        -66763.390625,
+        4189.275390625,
+        754.8870239257812
+      ],
+      "yaw": -1.5998879671096802,
+      "target_distance": 14.25453754920809,
+      "angle_error": -2.7625626799579512,
+      "chest_event_pending": false,
+      "r203_RSF": "0x18000000"
+    },
+    "screenshot_contexts": [
+      {
+        "run": "route-walk62",
+        "lineage": "Recovered J NEW cold boot progression",
+        "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+        "runtime": "12a841d7c",
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "room": "0x203",
+        "source_frame_interval": [
+          19645,
+          19647
+        ],
+        "health_before": [
+          903,
+          1200,
+          90,
+          600
+        ],
+        "health_after": [
+          903,
+          1200,
+          90,
+          600
+        ],
+        "action_result": {
+          "original_key_chest_callback_complete": {
+            "host_monotonic": 353367.468,
+            "room": "0x203",
+            "frame": 19645,
+            "player_hp": 903,
+            "partner_hp": 90,
+            "pos": [
+              -66763.390625,
+              4189.275390625,
+              754.8870239257812
+            ],
+            "yaw": -1.5998879671096802,
+            "target_distance": 14.25453754920809,
+            "angle_error": -2.7625626799579512,
+            "chest_event_pending": false,
+            "r203_RSF": "0x18000000"
+          }
+        },
+        "last_sample": {
+          "host_monotonic": 353367.468,
+          "room": "0x203",
+          "frame": 19645,
+          "player_hp": 903,
+          "partner_hp": 90,
+          "pos": [
+            -66763.390625,
+            4189.275390625,
+            754.8870239257812
+          ],
+          "yaw": -1.5998879671096802,
+          "target_distance": 14.25453754920809,
+          "angle_error": -2.7625626799579512,
+          "chest_event_pending": false,
+          "r203_RSF": "0x18000000"
+        },
+        "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+        "png_paths": [
+          "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk62\\shots\\checkpoint-source-19645\\frames\\fb0.png",
+          "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk62\\shots\\checkpoint-source-19645\\frames\\fb1.png"
+        ]
+      }
+    ],
+    "motion_first_sample": {
+      "host_s": 0.0,
+      "frame": 19262,
+      "hits": 81473,
+      "misses": 3043,
+      "evictions": 3000,
+      "loads": 3043,
+      "resident": 86464,
+      "bindings": [
+        {
+          "slot": 0,
+          "archive": "0x8ca20be0",
+          "bytes": 1323136,
+          "count": 157,
+          "budget": 64832,
+          "hot_bytes": 0,
+          "resident": 72032,
+          "keys": [
+            [
+              0,
+              22400,
+              "18f9ad45-ba6230e7",
+              0
+            ],
+            [
+              54,
+              17696,
+              "648e518b-9bece019",
+              0
+            ],
+            [
+              86,
+              17408,
+              "ba4d09f9-27cc4d48",
+              0
+            ],
+            [
+              89,
+              14528,
+              "fc023680-7d42cbf6",
+              1
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "archive": "0x8cb91760",
+          "bytes": 423136,
+          "count": 58,
+          "budget": 50880,
+          "hot_bytes": 0,
+          "resident": 14432,
+          "keys": [
+            [
+              27,
+              9088,
+              "5ffcdc79-69f63d5a",
+              0
+            ],
+            [
+              51,
+              5344,
+              "92503ed4-d5cc7ea5",
+              0
+            ]
+          ]
+        }
+      ],
+      "room": "0x203",
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "SSLoop": 0
+    },
+    "motion_last_sample": {
+      "host_s": 14.063,
+      "frame": 19647,
+      "hits": 83702,
+      "misses": 3045,
+      "evictions": 3000,
+      "loads": 3045,
+      "resident": 114560,
+      "bindings": [
+        {
+          "slot": 0,
+          "archive": "0x8ca20be0",
+          "bytes": 1323136,
+          "count": 157,
+          "budget": 64832,
+          "hot_bytes": 0,
+          "resident": 100128,
+          "keys": [
+            [
+              0,
+              22400,
+              "18f9ad45-ba6230e7",
+              0
+            ],
+            [
+              54,
+              17696,
+              "648e518b-9bece019",
+              0
+            ],
+            [
+              63,
+              12224,
+              "19a2d5bf-062558f3",
+              0
+            ],
+            [
+              65,
+              15872,
+              "806195b1-5680610b",
+              0
+            ],
+            [
+              86,
+              17408,
+              "ba4d09f9-27cc4d48",
+              0
+            ],
+            [
+              89,
+              14528,
+              "fc023680-7d42cbf6",
+              0
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "archive": "0x8cb91760",
+          "bytes": 423136,
+          "count": 58,
+          "budget": 50880,
+          "hot_bytes": 0,
+          "resident": 14432,
+          "keys": [
+            [
+              27,
+              9088,
+              "5ffcdc79-69f63d5a",
+              0
+            ],
+            [
+              51,
+              5344,
+              "92503ed4-d5cc7ea5",
+              0
+            ]
+          ]
+        }
+      ],
+      "room": "0x203",
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "SSLoop": 0
+    }
+  },
+  "outcome": "Normal original A after strict unique event4/camera3/item8A verification; event retired and originalRSF18000000 confirms chest callback.903/90 unchanged, corridorWait preserved.",
+  "limits": [
+    "No key item or wave-clear acceptance from chest alone."
+  ]
+}

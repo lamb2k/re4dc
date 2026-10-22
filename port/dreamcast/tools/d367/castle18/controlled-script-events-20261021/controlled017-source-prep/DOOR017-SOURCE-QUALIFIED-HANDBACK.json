@@ -1,0 +1,82 @@
+{
+  "scope": "FINAL017 SOURCE QUALIFIED ONLY. Root owns allocation/launch. Actual016 remains observerstartupfailure before anycommand/UI; V5 closurePASS separate.",
+  "utc": "2026-10-22T06:40:03.202266+00:00",
+  "proposal_sha256": "a71329c5f580384e9a40b190f9ca5876230fcd6ac2e844b2a8d3393ee9691a06",
+  "frozen_inputs": {
+    "observe-controlled-ch32-door017.py": "b1f6d683c3359cf89cc1186ba96b2b9256292906bf9e8b5df2dea1e66358300a",
+    "run-controlled-ch32-door017.py": "cccc779f574fcc35e0c284ca71eb05f77b95055bcb6c396f60f428229795cbba",
+    "run-controlled-ch32-door017.sh": "9514aa90e5f6bbd65dee7ed65a0bc823b4299e620e4fb7c4ee857c6cac83e66f",
+    "controlled-ch32-door017-pins.json": "dd0f27924bf2657df2096cd774c7084ce6077331f31db9d3e2d367ef4c0e032d",
+    "controlled017-READINESS-CONTRACT.json": "7122a0d2c864243bdb02d77996756bc1a364b9daafad5989d8661685821fee13",
+    "controlled017-source-gates.json": "843214e7f5d3375e12834f6e20e2e6c4d38481c1732d2a9c79aa232ead3321aa",
+    "controlled017-readiness-source-cases.json": "8ae0c89c52a2017001222a35518211a29becfc92df8a1c867a3861455a25bc60"
+  },
+  "actual016_audit_sha256": "16a9bf92d5e2a402a0c8831f2acd94d15f923c10a0994bbeac9479af61d97eb2",
+  "seed_actual016_sha256": "a33b2ac44cce042d035f7a981e96cf57b19bec1484f04c86084ece22803f73e8",
+  "independent_review": {
+    "commit": "a7f2be38c950f2e7e42a071021d4dc8edb7ddbaa",
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle017-readiness-review21-20261022\\REVIEW.json",
+    "sha256": "4d2006184d6b57e084c19583b3673625cdf3bdc083ee040235a6ad47ea1d272d",
+    "seal": "e95da97857c5479c14730a280fefb5019eddf438bb830e6b350260b3641dadaf",
+    "command_cases": 24,
+    "readiness_cases": 17,
+    "independent_checks": 22,
+    "default_pins": 29
+  },
+  "diagnosis_limit": "016 exactRPMbool/bytes/error were notlogged. Source andmock299 doNOTestablishactualOSfailurecause. Observedpre-loadadmissiondefect isconfirmed; source017repairsreadiness. No gamecrashclaim.",
+  "capture_label_erratum": "Some inherited capture/print prose says015/016; actual017cap/argv/actual016seed are exactpinned. No source/codeidentityinferencefromlabels.",
+  "root_argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-door017.sh",
+    "--execute-allocated017"
+  ],
+  "allocation_gate": {
+    "file": "DOOR017-ROOT-ALLOCATION.json",
+    "allocated017": true,
+    "allow_debug_goto_command_writes": true,
+    "observer_sha256": "b1f6d683c3359cf89cc1186ba96b2b9256292906bf9e8b5df2dea1e66358300a",
+    "wrapper_sha256": "cccc779f574fcc35e0c284ca71eb05f77b95055bcb6c396f60f428229795cbba",
+    "pins_sha256": "dd0f27924bf2657df2096cd774c7084ce6077331f31db9d3e2d367ef4c0e032d",
+    "write_allowlist": [
+      {
+        "address": "0x8c47ff30",
+        "bytes": 24
+      },
+      {
+        "address": "0x8c47fff0",
+        "bytes": 4
+      }
+    ]
+  },
+  "resources": {
+    "start_free_bytes": 20342374400,
+    "runtime_free_bytes": 19394461696,
+    "raw_seconds": 41,
+    "normalclose_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_cap_bytes": 62914560,
+    "global16": true,
+    "castle2": true,
+    "fresh_parent_peer_charges_required": true
+  },
+  "guard_sha256": "7aa4113d44b5bab5b1010649a432ed1d50e34aaf4de7fb4899aaf692055b0ba0",
+  "trace_lock_sha256": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688",
+  "readiness": "Require exactcurrentcap stateLoaded line afterlastRAMmapping; VirtualQueryEx committed/accesscoverspG4; then actualmaincodeanchors/readableseed/nativefields andtwo coherent sourceframes advancing at/after1769, samepg/mapping beforeanysetupwrite orUI. RecordexactsuccessfulpG4byteprobe/processbirth. TransientRPMunavailable clearsinputreadiness andcontinuesboundedobservation; errors recordbool/host+guest/length/got/lastError/partialbytes/VQE, bounded100records. No inventederrorattribution.",
+  "protected_inputs_fresh": {
+    "route-walk127/data/disc.state": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16",
+    "route-walk294/data/disc.state": "cb7a314b8fd0383af0b7baf17c2e87a712705beb122a1d39c7705553dd795258",
+    "route-walk-controlled-native-radio013/data/disc.state": "97b63602b83d6234a1603dc24a90fa42f2d0702db626ead2e4d4e5e20efafe13",
+    "route-walk-controlled-event009/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+    "route-walk-controlled-ch32-drain014/data/disc.state": "3713cb2a4442ec5ddbf3dc4aec8dff107aa66721913e75813858c326a820adc5",
+    "route-walk-controlled-ch32-drain015/data/disc.state": "2236156faabd0def3e9f38d708dbe983d2632441cd3fba521ef8fab634eb5237"
+  },
+  "no_guest_or_allocation": true,
+  "no_live_RAM_probe": true,
+  "no_build_or_image": true
+}

@@ -1,0 +1,7 @@
+{
+  "source_sha256": "aebbc8f83915a92cc48ad0c6ca3f6aa6cbd8b03521aeb4982ddff1d140f2fa1a",
+  "candidate_sha256": "475ff8cf3f67bb1cb68f7c57f5bd586676aefd571c3d2e2c2b7a9004f27e7ccb",
+  "defect": "Actual134 original inventory opened, source board pointer allocated while current board0 during initialization. Guard closed903HP with herb intact.135 incorrectly prepared lever; no route input; exact owned close retained menu state. Its prepared scope incorrectly claimed healing; actual immutable checkpoints override that label.",
+  "repair": "Use existing original-J136 source-proven neutral board initialization wait before dereferencing or selecting. Whole guest bound, health, item selection, no item move and exact PID guards retained.",
+  "validation": "AST compilation and exact one predicate replacement; runtime pending."
+}

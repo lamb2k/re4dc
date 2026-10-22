@@ -1,0 +1,53 @@
+{
+  "scope": "Extracted018 functions; fake WinAPI only, no DLL/OpenProcess/guest. Mock299 doesNOTclassifyactual016error, which is unrecorded.",
+  "observer_sha256": "16154512b11b99880c76392e198b2b7de38650d7618502ba83236928b4f21eae",
+  "checks": [
+    "mapping-alone-no-read-admission",
+    "wrong-state-path-not-ready",
+    "exact-state-plus-mapping-ready",
+    "later-remapping-not-admitted",
+    "first-readable-sample-not-enough",
+    "advancing-native-pair-ready",
+    "same-source-frame-not-ready",
+    "other-RAM-not-ready",
+    "unverified-code-not-ready",
+    "native64-MBI-size48",
+    "VQE-committed-accessible-covers",
+    "exact-four-byte-read-success",
+    "exact-request-addresses",
+    "exact-error-and-bytes-preserved-before-VQE",
+    "unavailable-clears-input-readiness",
+    "partial-bytes-recorded",
+    "VQE-failure-reported-not-ready"
+  ],
+  "passed": 17,
+  "mock_read_error": {
+    "operation": "ReadProcessMemory",
+    "guest_address": "0x8c2e91dc",
+    "host_address": "0x7ff4cda791dc",
+    "RAM_base": "0x7ff4cd790000",
+    "requested_bytes": 4,
+    "api_ok": false,
+    "bytes_read": 2,
+    "win32_error": 299,
+    "partial_data_hex": "1ca7",
+    "process_age": 0.75,
+    "pid": 999,
+    "process_start_filetime": 123,
+    "region": {
+      "returned_bytes": 48,
+      "error": 5,
+      "requested_host": "0x7ff4cda791dc",
+      "requested_bytes": 4,
+      "base": "0x7ff4cd790000",
+      "allocation_base": "0x7ff4cd790000",
+      "region_bytes": 16777216,
+      "state": "0x1000",
+      "protect": "0x4",
+      "type": "0x40000",
+      "covers": true,
+      "committed": true,
+      "accessible": true
+    }
+  }
+}

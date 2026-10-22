@@ -1,0 +1,27 @@
+{
+  "runtime_source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "ELF_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "actual_master_programme": {
+    "sha256": "78fb06976cc394ec6e4cb7861046c24a15f82ddf7bcb2fcbfd452d3fcbf72e33",
+    "size": 3643960
+  },
+  "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "manifest_sha256": "e759c03572a7e01843396bac1e6da780282a8c91cc05fb59dfafee9d88311847",
+  "binding_receipt_sha256": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed",
+  "Flycast_EXE_sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+  "assets": {
+    "st2/r204.arc": {
+      "sha256": "01f320f1e7174d23b5f7f1ce7a777449e4dcf06c7b8b4fc52544bab72a1ef21f",
+      "size": 1367200
+    },
+    "dc/st2_1.ovl": {
+      "sha256": "53494d01f3e10e83eddf81f0e03c342f239c5220da0bfc687f1c366ca15b4410",
+      "size": 116100
+    },
+    "dc/movie/r204s00.seq": {
+      "sha256": "21c9ca96f64009abac471212823bbae3cc21839cd9e36eadd66c935658d85cf8",
+      "size": 6841067
+    }
+  },
+  "raw_preserved_label_erratum": "Final wrapper stdout says Controlled010 closed because copied concluding print label was not renamed. Actual run-name, rootallocation, cap, PID, source observations, state and VMU identities are011. No source/run artifact changed afterexecution."
+}

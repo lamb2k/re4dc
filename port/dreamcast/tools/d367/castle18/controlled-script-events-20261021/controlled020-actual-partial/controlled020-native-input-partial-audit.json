@@ -1,0 +1,1853 @@
+{
+  "scope": "ACTUAL020 closed-files-only audit. No guest/attach/new input/config write/retry/cap mutation.",
+  "utc": "2026-10-22T08:13:43.083493+00:00",
+  "functional_result": "PARTIAL: current native204Door4 prompt remained ready; verified OS-owned focus and ONE bounded ordinary A hold yielded no sampled native acknowledgement or209 transition. PhysicalDoor1 and original leader cut untested. Cause unclassified; no gamecrash, door/script defect, focusfix or performance claim.",
+  "supervisor_result": "PASS retained exact PID24400 signaled exit0",
+  "guard": {
+    "scope": "Owned process resources/time only; PID/path/start verified. Filesystem sampler isolated on daemon thread; deadline loop never performs filesystem I/O. Fail closed if sampler stale1s. WM_CLOSE at45s or resource boundary, terminate only same verified process at47.1s if needed. Asynchronous termination cleanup retains pinned handle until exit proof within47.5, preserving failed run status; no gameplay memory writes.",
+    "owner": {
+      "pid": 24400,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\flycast.exe",
+      "start_filetime": 134371297334246081,
+      "created_utc": "2026-10-22T08:02:13.431763+00:00",
+      "rights": "retained subprocess handle receipt"
+    },
+    "closed_identity": {
+      "initial_live_identity_pinned": true,
+      "retained_handle_signaled": true,
+      "exit_code": 0,
+      "postexit_times_available": true,
+      "postexit_path_query": false,
+      "proof_reason": "normal or absolute loop exit"
+    },
+    "process_exited": true,
+    "runtime_floor": 19394461696,
+    "capture_cap": 62914560,
+    "inner_input_seconds": 41,
+    "absolute_process_seconds": 47.5,
+    "exit_age": 39.70031472394476,
+    "actions": []
+  },
+  "harness": {
+    "name": "castle21-CONTROLLED-original209-door020",
+    "status": "RUN_COMPLETE",
+    "start_utc": "2026-10-22T08:02:13.274271+00:00",
+    "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+    "tracks": {
+      "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+      "kind": "release",
+      "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+    },
+    "seconds": 41,
+    "vmu": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event009\\data\\T0000_vmu_save_A1.bin",
+    "keys": null,
+    "stop": null,
+    "fixtures": {
+      "warp": {
+        "src": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\controlled-ch32-drain014-warp.txt",
+        "bytes": 159,
+        "sha256": "26b551c37eef728d17e3686cfb60763cde8c43b979dd5d1a029ca1f7f31a9ebe"
+      },
+      "pad": {
+        "src": null,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "w11": {
+        "src": null,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "errors": [],
+    "key_log": [],
+    "align": false,
+    "emu": "harness",
+    "emu_env": {},
+    "early_emulator_exit": 0,
+    "log_idle_s": 0.5,
+    "end_utc": "2026-10-22T08:02:53.588244+00:00",
+    "elapsed_s": 40.2,
+    "emulator_exited": true
+  },
+  "minimum_free": 144836161536,
+  "maximum_cap": 34820049,
+  "read_failure_count": 0,
+  "region_failure_count": 0,
+  "milestones": {
+    "startup_exact_state_load_and_mapping": {
+      "startup_exact_state_load_and_mapping": {
+        "RAM": 140687870525440,
+        "mapping_line": "00:00:667 hw\\mem\\addrspace.cpp:461 N[VMEM]: BASE 00007FF4668C0000 RAM(16 MB) 00007FF4728C0000 VRAM64(8 MB) 00007FF46A8C0000 ARAM(2 MB) 00007FF4868C0000",
+        "state_load_line": "00:00:762 nullDC.cpp:360 N[SAVESTATE]: Loaded state ver 854 from C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\data\\disc.state size 28346350",
+        "mapping_precedes_load": true
+      },
+      "process_age": 0.8218269309727475,
+      "process_identity": {
+        "pid": 24400,
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\flycast.exe",
+        "start_filetime": 134371297334246081,
+        "created_utc": "2026-10-22T08:02:13.431763+00:00",
+        "rights": "retained subprocess handle receipt"
+      },
+      "initial_pG_region": {
+        "returned_bytes": 48,
+        "error": 0,
+        "requested_host": "0x7ff472ba91dc",
+        "requested_bytes": 4,
+        "base": "0x7ff472ba9000",
+        "allocation_base": "0x7ff4728c0000",
+        "region_bytes": 13725696,
+        "state": "0x1000",
+        "protect": "0x4",
+        "type": "0x40000",
+        "covers": true,
+        "committed": true,
+        "accessible": true
+      }
+    },
+    "live_frozen_maincode_anchors": {
+      "live_frozen_maincode_anchors": [
+        {
+          "address": "0x8c04bd30",
+          "bytes": 32,
+          "sha256": "50e7e906b1c61dcf502215a4f8de7a06ca0b5ab10cc8c319c93bfab45fc25c61"
+        },
+        {
+          "address": "0x8c087974",
+          "bytes": 32,
+          "sha256": "0eff3f56fdff82c90140058928eb241a6138e3aaf721502c22b82179b90470b7"
+        },
+        {
+          "address": "0x8c110f0c",
+          "bytes": 32,
+          "sha256": "9a24efd20e46ca5cb2030775c0b94a46a5ca477062bda114b1625caccda193ea"
+        },
+        {
+          "address": "0x8c14f0fc",
+          "bytes": 32,
+          "sha256": "503cc45e61da66176f9cf4ce66837adedb4ec6953fb8dfb33022c6fd09797ecb"
+        },
+        {
+          "address": "0x8c2ce564",
+          "bytes": 32,
+          "sha256": "a2187979d8530bba62e6a8382f1f30ad291f85d57b084ccd65a4397b03245b90"
+        },
+        {
+          "address": "0x8c26cf88",
+          "bytes": 32,
+          "sha256": "e44793ed04b3057afa16285c3ae3779f81e026057f02ac2b5ba7bc43549a4d59"
+        },
+        {
+          "address": "0x8c14a95c",
+          "bytes": 32,
+          "sha256": "65a829286587ca6c087600d0f28382de52610ea4fae048cf757e3eed5f792940"
+        },
+        {
+          "address": "0x8c0bc300",
+          "bytes": 32,
+          "sha256": "900bf432c2abf34df16bb7606afcacc35e361f7d4ba9283187e34d8bf1bd0c83"
+        },
+        {
+          "address": "0x8c0bc384",
+          "bytes": 32,
+          "sha256": "8e401c0f30209cea3ab1fceeaf8e45d91aff90be47b74b1e483857ce997ca1a7"
+        }
+      ],
+      "process_age": 0.8378269309760071
+    },
+    "initial_readable_native_sequence": {
+      "initial_readable_native_sequence": {
+        "process_age": 0.9938269309932366,
+        "pg": 2352652060,
+        "frame": 3685,
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x204",
+        "chapter": 7,
+        "Stop": "0x0",
+        "status0": "0x3080100",
+        "status1": "0x200",
+        "status3": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "Part": 1,
+        "previous_room": "0x205",
+        "next_room": "0x204",
+        "next_point": 1,
+        "scenario0": "0x840000",
+        "partner_ptr": 0,
+        "live_native_code_anchors_verified": true,
+        "player_ptr": 2359870976,
+        "player_pos": [
+          -11179.7578125,
+          6000.99853515625,
+          -28483.630859375
+        ],
+        "player_matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -11179.7578125,
+          0.0,
+          1.0,
+          0.0,
+          6000.99853515625,
+          -0.0,
+          0.0,
+          1.0,
+          -28483.630859375
+        ],
+        "transformed_front_unclipped": [
+          -11179.7578125,
+          6250.99853515625,
+          -27933.630859375
+        ],
+        "areas": {
+          "0x0": {
+            "ptr": 2359520528,
+            "floor": 0.0057373046875,
+            "height": 1000.0,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x208",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                -3.6889731884002686,
+                11000.0048828125,
+                -105673.0
+              ],
+              "angle": 0.028541050851345062
+            },
+            "quad": [
+              [
+                -1388.6806640625,
+                -893.1177368164062
+              ],
+              [
+                1401.8045654296875,
+                -861.5324096679688
+              ],
+              [
+                1326.92236328125,
+                536.5576171875
+              ],
+              [
+                -1447.115966796875,
+                397.48919677734375
+              ]
+            ]
+          },
+          "0x4": {
+            "ptr": 2359521152,
+            "floor": 5999.99853515625,
+            "height": 1000.0,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x209",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                574.0350341796875,
+                0.0057373046875,
+                120.4645767211914
+              ],
+              "angle": -1.3819975852966309
+            },
+            "quad": [
+              [
+                -11931.58203125,
+                -29502.669921875
+              ],
+              [
+                -10457.66015625,
+                -29301.81640625
+              ],
+              [
+                -10403.4765625,
+                -27625.251953125
+              ],
+              [
+                -11927.22265625,
+                -27503.802734375
+              ]
+            ]
+          },
+          "0xa": {
+            "ptr": 2359522088,
+            "floor": -0.001190185546875,
+            "height": 1163.8001708984375,
+            "enabled": true,
+            "type": 11,
+            "checkFlag": 1,
+            "trigger": 2,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                -2.5921813345236953e-31,
+                -2.5939568011911772e-31,
+                1.401298464324817e-45
+              ],
+              "angle": 8.96831017167883e-44
+            },
+            "quad": [
+              [
+                -714.1799926757812,
+                -15790.4765625
+              ],
+              [
+                785.8220825195312,
+                -15790.4765625
+              ],
+              [
+                785.8220825195312,
+                -14290.470703125
+              ],
+              [
+                -725.9551391601562,
+                -14304.771484375
+              ]
+            ]
+          }
+        },
+        "native_AEV04_clipped_hit": true,
+        "native_AEV0A_clipped_hit": false,
+        "native_AEV0A_executed": false,
+        "camera_no": -1,
+        "action": {
+          "active": 1,
+          "stop_old": 0,
+          "num": 0,
+          "work": [
+            {
+              "func": 2350164316,
+              "arg": 2359521152,
+              "kind": 16,
+              "slot": 2,
+              "type": 2,
+              "button": 1,
+              "d": 2359870976,
+              "flags": 128
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            }
+          ]
+        },
+        "saved_RSF205": 3254779904,
+        "saved_RSF204": 1073741824,
+        "warp": {
+          "flags": [
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "name": "castle21-CONTROLLED-ch32-drain0",
+          "room": "0x205",
+          "rooms": 2,
+          "room_frames": 1876,
+          "max_entry": 2,
+          "n_go": 2,
+          "go0": "00000000a894e4454f331c46025e27470000000001010001",
+          "go1": "00000000f1af2ec6fd87bb45c586dec60000000001010002",
+          "go2": "000000000000000000000000000000000000000000000000",
+          "n_act": 0,
+          "n_rsf": 0,
+          "has_trg": 0,
+          "has_kill": 0
+        },
+        "actors": [
+          {
+            "ptr": "0x8cc83280",
+            "id": 76,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x2",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cc67420",
+            "id": 20,
+            "type": 7,
+            "source_list": 76,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cc66640",
+            "id": 20,
+            "type": 7,
+            "source_list": 75,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae7ec0",
+            "id": 20,
+            "type": 7,
+            "source_list": 74,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae70e0",
+            "id": 20,
+            "type": 8,
+            "source_list": 81,
+            "hp": 1800,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae4d40",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae3f60",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae26e0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae1900",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadf3a0",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cade5c0",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadd300",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadc520",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadaf80",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cada1a0",
+            "id": 78,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad68e0",
+            "id": 78,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad5b00",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad4280",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad34a0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8ca8d3e0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8ca8c600",
+            "id": 0,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1440,
+            "native_status": "0x0",
+            "be_flag": "0xf002077",
+            "routines": [
+              0,
+              0,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cad8f40",
+            "id": 75,
+            "type": 0,
+            "source_list": 255,
+            "hp": 0,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "physical_doors1": []
+      },
+      "RAM_base": "0x7ff4728c0000",
+      "no_inputs_before_readiness": true,
+      "exact_successful_pG_probe": {
+        "guest_address": "0x8c2e91dc",
+        "host_address": "0x7ff472ba91dc",
+        "requested_bytes": 4,
+        "api_ok": true,
+        "bytes_read": 4,
+        "data_hex": "1c9f3a8c",
+        "process_identity": {
+          "pid": 24400,
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\flycast.exe",
+          "start_filetime": 134371297334246081,
+          "created_utc": "2026-10-22T08:02:13.431763+00:00",
+          "rights": "retained subprocess handle receipt"
+        }
+      }
+    },
+    "owned_window_before_focus": {
+      "owned_window_before_focus": {
+        "hwnd": 32902356,
+        "owner_pid": 24400,
+        "thread_id": 43884,
+        "foreground_hwnd": 12846990,
+        "foreground_pid": 10896,
+        "gui_query_ok": true,
+        "gui_query_error": 0,
+        "active_hwnd": 0,
+        "focus_hwnd": 0,
+        "focus_pid": 0,
+        "focus_is_owned_child": false,
+        "gui_flags": 0,
+        "visible": false,
+        "iconic": false,
+        "process_age": 0.9938269309932366
+      }
+    },
+    "owned_window_focus_verified": {
+      "owned_window_focus_verified": {
+        "hwnd": 32902356,
+        "owner_pid": 24400,
+        "thread_id": 43884,
+        "foreground_hwnd": 32902356,
+        "foreground_pid": 24400,
+        "gui_query_ok": true,
+        "gui_query_error": 0,
+        "active_hwnd": 32902356,
+        "focus_hwnd": 32902356,
+        "focus_pid": 24400,
+        "focus_is_owned_child": false,
+        "gui_flags": 0,
+        "visible": false,
+        "iconic": false,
+        "process_age": 1.0098269309964962
+      },
+      "SetForegroundWindow_returned": true
+    },
+    "immediate_native_door_A_recheck": {
+      "immediate_native_door_A_recheck": {
+        "process_age": 1.0098269309964962,
+        "pg": 2352652060,
+        "frame": 3685,
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x204",
+        "chapter": 7,
+        "Stop": "0x0",
+        "status0": "0x3080100",
+        "status1": "0x200",
+        "status3": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "Part": 1,
+        "previous_room": "0x205",
+        "next_room": "0x204",
+        "next_point": 1,
+        "scenario0": "0x840000",
+        "partner_ptr": 0,
+        "live_native_code_anchors_verified": true,
+        "player_ptr": 2359870976,
+        "player_pos": [
+          -11179.7578125,
+          6000.99853515625,
+          -28483.630859375
+        ],
+        "player_matrix": [
+          1.0,
+          0.0,
+          0.0,
+          -11179.7578125,
+          0.0,
+          1.0,
+          0.0,
+          6000.99853515625,
+          -0.0,
+          0.0,
+          1.0,
+          -28483.630859375
+        ],
+        "transformed_front_unclipped": [
+          -11179.7578125,
+          6250.99853515625,
+          -27933.630859375
+        ],
+        "areas": {
+          "0x0": {
+            "ptr": 2359520528,
+            "floor": 0.0057373046875,
+            "height": 1000.0,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x208",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                -3.6889731884002686,
+                11000.0048828125,
+                -105673.0
+              ],
+              "angle": 0.028541050851345062
+            },
+            "quad": [
+              [
+                -1388.6806640625,
+                -893.1177368164062
+              ],
+              [
+                1401.8045654296875,
+                -861.5324096679688
+              ],
+              [
+                1326.92236328125,
+                536.5576171875
+              ],
+              [
+                -1447.115966796875,
+                397.48919677734375
+              ]
+            ]
+          },
+          "0x4": {
+            "ptr": 2359521152,
+            "floor": 5999.99853515625,
+            "height": 1000.0,
+            "enabled": true,
+            "type": 1,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x209",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                574.0350341796875,
+                0.0057373046875,
+                120.4645767211914
+              ],
+              "angle": -1.3819975852966309
+            },
+            "quad": [
+              [
+                -11931.58203125,
+                -29502.669921875
+              ],
+              [
+                -10457.66015625,
+                -29301.81640625
+              ],
+              [
+                -10403.4765625,
+                -27625.251953125
+              ],
+              [
+                -11927.22265625,
+                -27503.802734375
+              ]
+            ]
+          },
+          "0xa": {
+            "ptr": 2359522088,
+            "floor": -0.001190185546875,
+            "height": 1163.8001708984375,
+            "enabled": true,
+            "type": 11,
+            "checkFlag": 1,
+            "trigger": 2,
+            "checkType": 1,
+            "func": 0,
+            "door": {
+              "destination": "0x0",
+              "Part": 0,
+              "lockType": 0,
+              "lockFlag": 0,
+              "callback": "0x0",
+              "position": [
+                -2.5921813345236953e-31,
+                -2.5939568011911772e-31,
+                1.401298464324817e-45
+              ],
+              "angle": 8.96831017167883e-44
+            },
+            "quad": [
+              [
+                -714.1799926757812,
+                -15790.4765625
+              ],
+              [
+                785.8220825195312,
+                -15790.4765625
+              ],
+              [
+                785.8220825195312,
+                -14290.470703125
+              ],
+              [
+                -725.9551391601562,
+                -14304.771484375
+              ]
+            ]
+          }
+        },
+        "native_AEV04_clipped_hit": true,
+        "native_AEV0A_clipped_hit": false,
+        "native_AEV0A_executed": false,
+        "camera_no": -1,
+        "action": {
+          "active": 1,
+          "stop_old": 0,
+          "num": 0,
+          "work": [
+            {
+              "func": 2350164316,
+              "arg": 2359521152,
+              "kind": 16,
+              "slot": 2,
+              "type": 2,
+              "button": 1,
+              "d": 2359870976,
+              "flags": 128
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            }
+          ]
+        },
+        "saved_RSF205": 3254779904,
+        "saved_RSF204": 1073741824,
+        "warp": {
+          "flags": [
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "name": "castle21-CONTROLLED-ch32-drain0",
+          "room": "0x205",
+          "rooms": 2,
+          "room_frames": 1877,
+          "max_entry": 2,
+          "n_go": 2,
+          "go0": "00000000a894e4454f331c46025e27470000000001010001",
+          "go1": "00000000f1af2ec6fd87bb45c586dec60000000001010002",
+          "go2": "000000000000000000000000000000000000000000000000",
+          "n_act": 0,
+          "n_rsf": 0,
+          "has_trg": 0,
+          "has_kill": 0
+        },
+        "actors": [
+          {
+            "ptr": "0x8cc83280",
+            "id": 76,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x2",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cc67420",
+            "id": 20,
+            "type": 7,
+            "source_list": 76,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cc66640",
+            "id": 20,
+            "type": 7,
+            "source_list": 75,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae7ec0",
+            "id": 20,
+            "type": 7,
+            "source_list": 74,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae70e0",
+            "id": 20,
+            "type": 8,
+            "source_list": 81,
+            "hp": 1800,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              81,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae4d40",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae3f60",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae26e0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cae1900",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadf3a0",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cade5c0",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadd300",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadc520",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cadaf80",
+            "id": 67,
+            "type": 7,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cada1a0",
+            "id": 78,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad68e0",
+            "id": 78,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad5b00",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad4280",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cad34a0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8ca8d3e0",
+            "id": 70,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8ca8c600",
+            "id": 0,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1440,
+            "native_status": "0x0",
+            "be_flag": "0xf002077",
+            "routines": [
+              0,
+              0,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cad8f40",
+            "id": 75,
+            "type": 0,
+            "source_list": 255,
+            "hp": 0,
+            "native_status": "0x802",
+            "be_flag": "0x2002877",
+            "routines": [
+              1,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "physical_doors1": []
+      },
+      "stage": 1,
+      "owned_window_evidence": {
+        "hwnd": 32902356,
+        "owner_pid": 24400,
+        "thread_id": 43884,
+        "foreground_hwnd": 32902356,
+        "foreground_pid": 24400,
+        "gui_query_ok": true,
+        "gui_query_error": 0,
+        "active_hwnd": 32902356,
+        "focus_hwnd": 32902356,
+        "focus_pid": 24400,
+        "focus_is_owned_child": false,
+        "gui_flags": 0,
+        "visible": false,
+        "iconic": false,
+        "process_age": 1.0098269309964962
+      }
+    },
+    "single_action_attempt": {
+      "single_action_attempt": {
+        "pressed": true,
+        "acknowledged": false,
+        "stage": 1
+      },
+      "no_automatic_retry": true
+    },
+    "exact_owned_WM_CLOSE": {
+      "exact_owned_WM_CLOSE": true,
+      "process_age": 39.009826930996496
+    },
+    "original_native_209_door_request": null,
+    "actual_209_entry": null,
+    "original_physicalDoor1_open_flag": null,
+    "original_leader_cut_camera3": null,
+    "original_leader_cut_camera2": null,
+    "original_leader_cut_return": null
+  },
+  "ordinary_input_pulse": {
+    "ordinary_owned_UI_pulse": "native204-Door4-A",
+    "stage": 1,
+    "maximum_hold_seconds": 0.75,
+    "one_keydown_only": true,
+    "result": {
+      "pressed": true,
+      "acknowledged": false,
+      "stage": 1
+    },
+    "owned_window_after_release": {
+      "hwnd": 32902356,
+      "owner_pid": 24400,
+      "thread_id": 43884,
+      "foreground_hwnd": 32902356,
+      "foreground_pid": 24400,
+      "gui_query_ok": true,
+      "gui_query_error": 0,
+      "active_hwnd": 32902356,
+      "focus_hwnd": 32902356,
+      "focus_pid": 24400,
+      "focus_is_owned_child": false,
+      "gui_flags": 0,
+      "visible": false,
+      "iconic": false,
+      "process_age": 1.7598269309964962
+    },
+    "process_age": 1.7598269309964962,
+    "native_ack_samples": {
+      "count": 195,
+      "first": {
+        "frame": 3685,
+        "coherent": true,
+        "Key_old": "0x0",
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "phase": [
+          3,
+          0
+        ],
+        "next_room": "0x204",
+        "native_key_ack": false,
+        "original_door_request_ack": false,
+        "acknowledged": false
+      },
+      "last": {
+        "frame": 3702,
+        "coherent": true,
+        "Key_old": "0x0",
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "phase": [
+          3,
+          0
+        ],
+        "next_room": "0x204",
+        "native_key_ack": false,
+        "original_door_request_ack": false,
+        "acknowledged": false
+      },
+      "all_old_on_trg_zero": true,
+      "raw_full_samples_preserved_in": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\controlled-door020-observer-summary.json"
+    }
+  },
+  "actual_command_writes": [],
+  "successful_command_bytes": 0,
+  "last_live_native": {
+    "frame": 4759,
+    "room": "0x204",
+    "Part": 1,
+    "previous_room": "0x205",
+    "Stop": "0x0",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "action": {
+      "active": 1,
+      "stop_old": 0,
+      "num": 0,
+      "work": [
+        {
+          "func": 2350164316,
+          "arg": 2359521152,
+          "kind": 16,
+          "slot": 2,
+          "type": 2,
+          "button": 1,
+          "d": 2359870976,
+          "flags": 128
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        }
+      ]
+    },
+    "native_AEV04_clipped_hit": true,
+    "camera_no": -1,
+    "physical_doors1": []
+  },
+  "closed_state": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\data\\disc.state",
+    "sha256": "eba7a32afa7c59381ec7ce36918ea706feea187757e8fbb40a2fe5f2695ac008",
+    "main_ELF_anchors": 4,
+    "native": {
+      "frame": 4761,
+      "phase": [
+        3,
+        0
+      ],
+      "room": "0x204",
+      "Part": 1,
+      "previous_room": "0x205",
+      "Stop": "0x0",
+      "health": [
+        1440,
+        1440,
+        600,
+        600
+      ],
+      "Key_old": "0x0",
+      "Key_on": "0x0",
+      "Key_trg": "0x0",
+      "player_pos": [
+        -11178.8681640625,
+        6000.99853515625,
+        -28484.498046875
+      ],
+      "warp": {
+        "flags": [
+          1,
+          1,
+          0,
+          1,
+          1
+        ],
+        "rooms": 2,
+        "max_entry": 2,
+        "n_go": 2,
+        "go0": "00000000a894e4454f331c46025e27470000000001010001",
+        "go1": "00000000f1af2ec6fd87bb45c586dec60000000001010002",
+        "go2": "000000000000000000000000000000000000000000000000",
+        "n_act": 0,
+        "pad_frames": 2156,
+        "boot_us": 1,
+        "act_source_clock": 0
+      }
+    }
+  },
+  "sourcepins": {
+    "count": 41,
+    "sha256": "6ddc80d2a2cb92f92e04b2c64ff9b201e3a07581902a93c9ecb29013a77672ed",
+    "all41_freshlymatched": true
+  },
+  "protected_inputs_fresh": {
+    "route-walk127/data/disc.state": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16",
+    "route-walk294/data/disc.state": "cb7a314b8fd0383af0b7baf17c2e87a712705beb122a1d39c7705553dd795258",
+    "route-walk-controlled-native-radio013/data/disc.state": "97b63602b83d6234a1603dc24a90fa42f2d0702db626ead2e4d4e5e20efafe13",
+    "route-walk-controlled-event009/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+    "route-walk-controlled-ch32-drain014/data/disc.state": "3713cb2a4442ec5ddbf3dc4aec8dff107aa66721913e75813858c326a820adc5",
+    "route-walk-controlled-ch32-drain014/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+    "route-walk-controlled-ch32-drain015/data/disc.state": "2236156faabd0def3e9f38d708dbe983d2632441cd3fba521ef8fab634eb5237",
+    "route-walk-controlled-ch32-drain015/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+    "route-walk-controlled-ch32-door016/data/disc.state": "a33b2ac44cce042d035f7a981e96cf57b19bec1484f04c86084ece22803f73e8",
+    "route-walk-controlled-ch32-door016/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+    "route-walk-controlled-ch32-door017/data/disc.state": "1b1485784a8c796fbaad18573002ae353f75d9b67c0b4b156e1724bf296ac04b",
+    "route-walk-controlled-ch32-door017/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+    "route-walk-controlled-ch32-door018/data/disc.state": "4d7178b9d7420156b39328396cae08661f92c297f4ed28794b145a3cfe03ecdc",
+    "route-walk-controlled-ch32-door018/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+    "route-walk-controlled-ch32-door019/data/disc.state": "669b920f06e89403a15d3796021878c39ee9807fe020487e6a8666220f635631",
+    "route-walk-controlled-ch32-door019/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0"
+  },
+  "VMU020_sha256": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+  "screenshots": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\shots\\controlled-deadline-context\\controlled-context.json",
+      "sha256": "4e33c3562b2eec194d13a33fcac4630887271c48dd3627b4e2c5cdb37ab6d74f",
+      "PNGs": [
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\shots\\controlled-deadline-context\\frames\\fb0.png",
+          "sha256": "5bc17dff11a59306ab9c88a75094857ea33655a1fa6d44e7632ff8488e69935c",
+          "bytes": 164600
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\shots\\controlled-deadline-context\\frames\\fb1.png",
+          "sha256": "4a519c41a1b2c273d92c009c04fcda0d76a8c7fd381270d1fbb35ea30291f30b",
+          "bytes": 164579
+        }
+      ]
+    }
+  ],
+  "visual_observation": "Worker viewed actual020 deadlinefb0: Leon/HUD and native redA OPEN at barreddoorway. Confirms prompt pixels, notSDLreceive/nativekeydelivery/209entry.",
+  "raw_identities": {
+    "flycast.exe": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\flycast.exe",
+      "bytes": 14415872,
+      "sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a"
+    },
+    "emu.cfg": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\emu.cfg",
+      "bytes": 699,
+      "sha256": "6e6e65448d0d00944fe15caa197704d08b784c670d18b3a4cd76aa2a0ebcbc91"
+    },
+    "disc.gdi": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\disc.gdi",
+      "bytes": 87,
+      "sha256": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4"
+    },
+    "fixture-warp.txt": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\fixture-warp.txt",
+      "bytes": 159,
+      "sha256": "26b551c37eef728d17e3686cfb60763cde8c43b979dd5d1a029ca1f7f31a9ebe"
+    },
+    "flycast.log": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\flycast.log",
+      "bytes": 3798,
+      "sha256": "7ea7b907fc4b6d0234a7881188bd1a6d26a56588d5879690d57133e6a834ab08"
+    },
+    "run-start.json": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\run-start.json",
+      "bytes": 543,
+      "sha256": "000b6136d20f50c998746d33bdac81724cee74161cdb8d718c15dcde004c7782"
+    },
+    "run-result.json": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\run-result.json",
+      "bytes": 1509,
+      "sha256": "eb213beab81627f4ed43a988273471f855c8eea65df1e97dd433b03283d93550"
+    },
+    "run-output.txt": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\run-output.txt",
+      "bytes": 522497,
+      "sha256": "441f3457e40af3e0d0d24388ff29b1e18d6554fbc05ec0addabcca9461a53d95"
+    },
+    "controlled-door020-observer-summary.json": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\controlled-door020-observer-summary.json",
+      "bytes": 125750,
+      "sha256": "babfe122a7f7be34373c63a6ef989fb25f8ec150e569c0caca4df5e646e4845a"
+    },
+    "controlled-door020-observations.jsonl": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\controlled-door020-observations.jsonl",
+      "bytes": 8326695,
+      "sha256": "3f41f13d1d6d7e964eadfa5194cc3a2b770c0786e5d18d47d5c47233e4614de8"
+    },
+    "owned-resource-guard.json": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door020\\owned-resource-guard.json",
+      "bytes": 160052,
+      "sha256": "133cc2b3110addedba1277afa6a4a8b73272cca0dc4f862354673e72c7db18af"
+    }
+  },
+  "allocation_sha256": "9796e8ec069f1be37c7a630c44abe0d2ce27729593564b6722e0503963dc5478",
+  "source_programme_assets": {
+    "source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+    "ELF": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+    "master": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+    "binding": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed"
+  },
+  "limits": {
+    "raw_seconds": 41,
+    "normal_close_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_bytes": 62914560,
+    "global16": true,
+    "castle2": true
+  },
+  "next": "Source-only matching Flycast input-backend diagnosis with castle_controls21; preserve actual020 terminal state, no21 allocated and no retry/replay. Root has released GUI lease.",
+  "physical_release_performance_acceptance": false
+}

@@ -1,0 +1,19 @@
+{
+  "scope": "Correction sidecar:250 action scope wrongly says8 pitch flips after a Select-First8 preview. Full249 count is14. Original scope/trace bytes retained; no retroactive evidence edits. Counts are existing Flycast traces, not fresh runtime/benchmark claims.",
+  "counts": {
+    "249": {
+      "trace_sha256": "b23fc04a1ea7da66c43040f64e65f760734be300b2458947c34917ee9061d345",
+      "pitch_calibration_flips": 14,
+      "pulses": 54,
+      "one_tick_pulses": 45,
+      "ordinary_fire_events": 0
+    },
+    "252": {
+      "trace_sha256": "7b5db6f00c9c4da2751e27bd8014773aa1c9ad004aaa4cee8a37bc6856050511",
+      "pitch_calibration_flips": 0,
+      "pulses": 27,
+      "one_tick_pulses": 23,
+      "ordinary_fire_events": 0
+    }
+  }
+}

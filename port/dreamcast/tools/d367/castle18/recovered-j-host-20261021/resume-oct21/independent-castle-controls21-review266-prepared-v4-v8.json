@@ -1,0 +1,328 @@
+{
+  "created_utc": "2026-10-21T23:45:56.930653+00:00",
+  "scope": "Read-only existing266 and prepared host-controller review. No controller edits/execution, guest, source/build/assets or acceptance.",
+  "controllers": [
+    {
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\owned-window-recovered-j-r201-Garrador-coarseheld-finepulse-coast-v4-still.py",
+      "sha256": "bf26a32d00765bfb60c9b9bb6b7828aa85b65a838327c56bd6701621ee89e0e0",
+      "bytes": 32739,
+      "syntax_only": "ast.parse; script not executed",
+      "anchors": {
+        "if fine:ticks=1": [
+          246
+        ],
+        "before=u32(pg+0x51e4)": [
+          67,
+          78,
+          247
+        ],
+        "while u32(pg+0x51e4)<before+ticks:": [
+          248
+        ],
+        "if abs(jxy[0])<1 and abs(jxy[1])<1 and not(kon&15):": [
+          266
+        ],
+        "if key_on&15:": [
+          272
+        ]
+      }
+    },
+    {
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\owned-window-recovered-j-r201-source5C-coarseheld-finepulse-coast-v8-still.py",
+      "sha256": "7949d0c14b0f1cd9cc292e5ab36d31e011dd4b95f01907b9c78d26ed82fdd106",
+      "bytes": 34788,
+      "syntax_only": "ast.parse; script not executed",
+      "anchors": {
+        "if fine:ticks=1": [
+          257
+        ],
+        "before=u32(pg+0x51e4)": [
+          67,
+          78,
+          258
+        ],
+        "while u32(pg+0x51e4)<before+ticks:": [
+          259
+        ],
+        "if abs(jxy[0])<1 and abs(jxy[1])<1 and not(kon&15):": [
+          277
+        ],
+        "if key_on&15:": [
+          283
+        ]
+      }
+    }
+  ],
+  "existing_trace": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk266\\owned-window-current-stair-walk.json",
+    "sha256": "ddaee1a19716442b02164523484704fa07b965a4cd0d0a6fde5fd4ad303fd6d0",
+    "bytes": 313363,
+    "sampled_frame_interval": [
+      30093,
+      30460
+    ],
+    "corrections": 47,
+    "fire_events": 0,
+    "first_corrections": [
+      {
+        "interval": [
+          30130,
+          30132
+        ],
+        "keys": [
+          "back",
+          "ready",
+          "right"
+        ],
+        "errors_first": [
+          -0.2999852625580295,
+          -0.3262474128400349
+        ],
+        "errors_last": [
+          -0.21163873079064466,
+          0.01745732681031451
+        ],
+        "feedback": [
+          {
+            "frame": 30130,
+            "errors": [
+              -0.2999852625580295,
+              -0.3262474128400349
+            ],
+            "Joy_xy": [
+              0,
+              0
+            ],
+            "Key_on": "0x800010"
+          },
+          {
+            "frame": 30131,
+            "errors": [
+              -0.2068330703589787,
+              -0.009788139313311014
+            ],
+            "Joy_xy": [
+              0,
+              0
+            ],
+            "Key_on": "0x800010"
+          },
+          {
+            "frame": 30132,
+            "errors": [
+              -0.21163873079064466,
+              0.01745732681031451
+            ],
+            "Joy_xy": [
+              0,
+              0
+            ],
+            "Key_on": "0x800010"
+          }
+        ]
+      },
+      {
+        "interval": [
+          30135,
+          30145
+        ],
+        "keys": [
+          "ready",
+          "right"
+        ],
+        "errors_first": [
+          -0.2124600548846738,
+          0.027139641484275966
+        ],
+        "errors_last": [
+          -0.0665171038545811,
+          0.0019439894173343434
+        ],
+        "feedback": [
+          {
+            "frame": 30135,
+            "errors": [
+              -0.2124600548846738,
+              0.027139641484275966
+            ],
+            "Joy_xy": [
+              3,
+              -3
+            ],
+            "Key_on": "0x800010"
+          },
+          {
+            "frame": 30136,
+            "errors": [
+              -0.21084681373986935,
+              0.034547591120773546
+            ],
+            "Joy_xy": [
+              0,
+              0
+            ],
+            "Key_on": "0x800010"
+          },
+          {
+            "frame": 30137,
+            "errors": [
+              -0.21093001326994543,
+              0.03728083407584607
+            ],
+            "Joy_xy": [
+              0,
+              0
+            ],
+            "Key_on": "0x800010"
+          },
+          {
+            "frame": 30138,
+            "errors": [
+              -0.20978369707510058,
+              0.03769934083523572
+            ],
+            "Joy_xy": [
+              33,
+              0
+            ],
+            "Key_on": "0x4800014"
+          },
+          {
+            "frame": 30139,
+            "errors": [
+              -0.19073516858898776,
+              0.0004684686617304739
+            ],
+            "Joy_xy": [
+              62,
+              0
+            ],
+            "Key_on": "0x4800014"
+          },
+          {
+            "frame": 30140,
+            "errors": [
+              -0.19056681515842433,
+              0.00047068074421713173
+            ],
+            "Joy_xy": [
+              72,
+              0
+            ],
+            "Key_on": "0x4800014"
+          },
+          {
+            "frame": 30141,
+            "errors": [
+              -0.18092396095229812,
+              0.0005516065679201263
+            ],
+            "Joy_xy": [
+              72,
+              0
+            ],
+            "Key_on": "0x4800014"
+          },
+          {
+            "frame": 30142,
+            "errors": [
+              -0.16592035462259558,
+              0.0007129698711823467
+            ],
+            "Joy_xy": [
+              72,
+              0
+            ],
+            "Key_on": "0x4800014"
+          },
+          {
+            "frame": 30143,
+            "errors": [
+              -0.11938352631086868,
+              0.0009960905698932917
+            ],
+            "Joy_xy": [
+              72,
+              0
+            ],
+            "Key_on": "0x4800014"
+          },
+          {
+            "frame": 30144,
+            "errors": [
+              -0.08818993059010971,
+              0.0014266153994582495
+            ],
+            "Joy_xy": [
+              72,
+              0
+            ],
+            "Key_on": "0x4800014"
+          }
+        ]
+      },
+      {
+        "interval": [
+          30145,
+          30148
+        ],
+        "keys": [
+          "ready",
+          "right"
+        ],
+        "errors_first": [
+          -0.0665171038545811,
+          0.0019439894173343434
+        ],
+        "errors_last": [
+          0.0807250826340189,
+          0.002107428474830113
+        ],
+        "feedback": [
+          {
+            "frame": 30145,
+            "errors": [
+              -0.0665171038545811,
+              0.0019439894173343434
+            ],
+            "Joy_xy": [
+              72,
+              0
+            ],
+            "Key_on": "0x4800014"
+          },
+          {
+            "frame": 30146,
+            "errors": [
+              -0.013233257620961503,
+              0.002252376735133709
+            ],
+            "Joy_xy": [
+              72,
+              0
+            ],
+            "Key_on": "0x4800014"
+          },
+          {
+            "frame": 30147,
+            "errors": [
+              -0.01307634599630525,
+              0.0021225295522450285
+            ],
+            "Joy_xy": [
+              72,
+              0
+            ],
+            "Key_on": "0x4800014"
+          }
+        ]
+      }
+    ]
+  },
+  "findings": [
+    "Fine interval starts at host request rather than raw-axis acknowledgement; actual input can arrive after nominal one tick.",
+    "Coarse-to-fine transition can inherit nonzero raw axis and repCtr ramp; drain before fine entry.",
+    "Final fire preparation checks translated Key direction and elapsed neutral ticks but lacks universal raw-axis-zero latch. Raw stick magnitudes below30 still drive aim."
+  ],
+  "recommended_ack": "After all axes are drained to zero, first nonzero selected raw axis of expected sign suffices because PlWepLockCtrl consumes raw axes directly. Require all selected axes if diagonal; observe Key but do not require its30unit direction threshold. Count finite one-tick interval from source ack, retain phase/routine/RT/health/proximity/time guards. Read-only asynchronous snapshots do not prove exactly one executed control call."
+}

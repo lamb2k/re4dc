@@ -1,0 +1,968 @@
+{
+  "scope": "Original continuous qualified J no-warp progression. Same program/image, no memory writes/rollback/retarget/build/stage. No extra shots or boss HP loss in these3arms.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk167",
+      "result": "Original weakpoint damage reaction narrows rear exposure; no shot; checkpoint before frontal attack.",
+      "elapsed_s": 5.9,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "eb27d4708843881d8cbb2098d5507bb065c9e7b63881574fd570e572b2be2a32",
+      "four_ELF_anchor_saved_state_audit": {
+        "frame": 37555,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 7
+          },
+          {
+            "id": "0x4",
+            "num": 25,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ],
+        "player_pos": [
+          25000.70703125,
+          -1999.999267578125,
+          -44928.70703125
+        ],
+        "player_routines": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "Garrador_HP": 3698,
+        "Garrador_pos": [
+          25549.99609375,
+          -2000.002685546875,
+          -49518.9453125
+        ],
+        "Garrador_routines": [
+          2,
+          15,
+          1,
+          0
+        ],
+        "partner_pos": [
+          23256.185546875,
+          -2000.004150390625,
+          -48671.1953125
+        ],
+        "partner_flags": "0x46"
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk167\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+            "frame": 37455,
+            "key": "right",
+            "held_source_ticks": 1,
+            "starting_ray_error": -0.18035162877416067,
+            "settle_through": 37462
+          }
+        },
+        {
+          "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+            "frame": 37462,
+            "key": "right",
+            "held_source_ticks": 1,
+            "starting_ray_error": -0.1374840193956146,
+            "settle_through": 37469
+          }
+        },
+        {
+          "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+            "frame": 37469,
+            "key": "right",
+            "held_source_ticks": 1,
+            "starting_ray_error": -0.10239454434252737,
+            "settle_through": 37476
+          }
+        },
+        {
+          "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+            "frame": 37476,
+            "key": "right",
+            "held_source_ticks": 1,
+            "starting_ray_error": -0.0972125441046301,
+            "settle_through": 37483
+          }
+        },
+        {
+          "normal_release_then_repress_after_no_source_input": {
+            "frame": 37498,
+            "wanted": [
+              "right"
+            ]
+          }
+        },
+        {
+          "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+            "frame": 37517,
+            "key": "right",
+            "held_source_ticks": 1,
+            "starting_ray_error": -0.06603400737058784,
+            "settle_through": 37524
+          }
+        },
+        {
+          "normal_fine_yaw_pulse_then_neutral_pose_settle": {
+            "frame": 37524,
+            "key": "right",
+            "held_source_ticks": 1,
+            "starting_ray_error": -0.07986672023942676,
+            "settle_through": 37531
+          }
+        },
+        {
+          "rear_exposure_lost_save_before_frontal_attack": {
+            "frame": 37546,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              1200,
+              1200,
+              600,
+              600
+            ],
+            "source_Key_on": "0x0",
+            "player_pos": [
+              25001.45703125,
+              -2000.000244140625,
+              -44929.09375
+            ],
+            "yaw": 3.120166778564453,
+            "player_routines": [
+              0,
+              0,
+              1,
+              0
+            ],
+            "Garrador_hp": 3698,
+            "Garrador_pos": [
+              25557.646484375,
+              -2000.004150390625,
+              -49540.23828125
+            ],
+            "Garrador_yaw": 1.5600130558013916,
+            "Garrador_routines": [
+              2,
+              15,
+              1,
+              0
+            ],
+            "weakpoint37_world": [
+              25629.38396692276,
+              -334.4102418422699,
+              -49513.718770086765
+            ],
+            "player_back_dot": -506.43485943106543,
+            "partner_safe_corner_pos": [
+              23254.466796875,
+              -1999.999755859375,
+              -48670.19921875
+            ],
+            "weakpoint_velocity_per_source_tick": 17.851757868901498,
+            "actual_damage_record": {
+              "weapon": 2,
+              "part_ptr": "0x8caf2bd8",
+              "partNo": 37,
+              "flags": 0
+            },
+            "wait_original_lure_rear_exposure": true
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk167\\shots\\checkpoint-source-37546\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk167\\shots\\checkpoint-source-37546\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk167",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "r201",
+          "action_result": "Original weakpoint damage reaction narrows rear exposure; no shot; checkpoint before frontal attack.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk167\\shots\\checkpoint-source-37546\\frames\\fb0.png",
+          "png_sha256": "71fbd29662bb08404392cc64f84caf5db197f77ee9562ee67af9d96d69ae2bdc",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk167\\shots\\checkpoint-source-37546\\checkpoint-context.json",
+          "source_frame_interval": [
+            37546,
+            37555
+          ],
+          "health_before": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            1200,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk168",
+      "result": "Normal west-spacing attempt takes original ClawAtk43, Leon1200 to816; Ashley600. Injury frame retained; periodic harness screenshot races close (incomplete VRAM read).",
+      "elapsed_s": 5.6,
+      "errors": [
+        {
+          "kind": "screenshot",
+          "error": "incomplete VRAM read"
+        }
+      ],
+      "emulator_exited": true,
+      "state_sha256": "0fabad35be3fcde653c2158344aee368e897063183978ed6f3d8acabf8da35e8",
+      "four_ELF_anchor_saved_state_audit": {
+        "frame": 37645,
+        "health": [
+          816,
+          1200,
+          600,
+          600
+        ],
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 7
+          },
+          {
+            "id": "0x4",
+            "num": 25,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ],
+        "player_pos": [
+          24652.359375,
+          -2000.001708984375,
+          -44550.28515625
+        ],
+        "player_routines": [
+          4,
+          0,
+          1,
+          1
+        ],
+        "Garrador_HP": 3698,
+        "Garrador_pos": [
+          25019.55078125,
+          -1999.999755859375,
+          -45449.09375
+        ],
+        "Garrador_routines": [
+          1,
+          43,
+          1,
+          0
+        ],
+        "partner_pos": [
+          23314.44140625,
+          -2000.000732421875,
+          -48691.140625
+        ],
+        "partner_flags": "0x42"
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk168\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "normal_release_then_repress_after_no_source_input": {
+            "frame": 37608,
+            "wanted": [
+              "right"
+            ]
+          }
+        },
+        {
+          "normal_release_then_repress_after_no_source_input": {
+            "frame": 37631,
+            "wanted": [
+              "right"
+            ]
+          }
+        },
+        {
+          "stop_on_any_further_original_health_loss": {
+            "frame": 37641,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              816,
+              1200,
+              600,
+              600
+            ]
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk168\\shots\\checkpoint-source-37641\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk168\\shots\\checkpoint-source-37641\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk168",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "r201",
+          "action_result": "Normal west-spacing attempt takes original ClawAtk43, Leon1200 to816; Ashley600. Injury frame retained; periodic harness screenshot races close (incomplete VRAM read).",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk168\\shots\\checkpoint-source-37641\\frames\\fb0.png",
+          "png_sha256": "e45bb7af2323f6de48bbe61044edb3ef58948d1d2141a4c2d3641ae44e102237",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk168\\shots\\checkpoint-source-37641\\checkpoint-context.json",
+          "source_frame_interval": [
+            37641,
+            37645
+          ],
+          "health_before": [
+            816,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            816,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            816,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk169",
+      "result": "Source-SAT north escape with normal held run during original stagger passes; Leon816/Ashley600 unchanged, boss3698. Western Ashley Wait preserved.",
+      "elapsed_s": 6.4,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "f4eb0b5db90bd11d7514395e729c516a01a5a0c2d60ca582a6eaac02c933a1ec",
+      "four_ELF_anchor_saved_state_audit": {
+        "frame": 37765,
+        "health": [
+          816,
+          1200,
+          600,
+          600
+        ],
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 7
+          },
+          {
+            "id": "0x4",
+            "num": 25,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ],
+        "player_pos": [
+          24422.349609375,
+          -2000.002197265625,
+          -41147.921875
+        ],
+        "player_routines": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "Garrador_HP": 3698,
+        "Garrador_pos": [
+          25498.84765625,
+          -1999.999755859375,
+          -46067.4609375
+        ],
+        "Garrador_routines": [
+          1,
+          43,
+          1,
+          0
+        ],
+        "partner_pos": [
+          23314.44140625,
+          -2000.001220703125,
+          -48691.140625
+        ],
+        "partner_flags": "0x42"
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk169\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action",
+            "ready",
+            "knife",
+            "inventory",
+            "partner"
+          ]
+        },
+        {
+          "normal_owned_key_release_repress_after_source_Key_zero": {
+            "source_frame": 37645,
+            "wanted": [
+              "dash",
+              "forward",
+              "left"
+            ],
+            "count": 1
+          }
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            25750.0,
+            -42000.0
+          ],
+          "pos": [
+            25782.693359375,
+            -2000.000244140625,
+            -42182.2265625
+          ]
+        },
+        {
+          "normal_owned_key_release_repress_after_source_Key_zero": {
+            "source_frame": 37706,
+            "wanted": [
+              "right"
+            ],
+            "count": 2
+          }
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            24750.0,
+            -41250.0
+          ],
+          "pos": [
+            24829.90234375,
+            -2000.003662109375,
+            -41058.26953125
+          ]
+        },
+        {
+          "normal_owned_key_release_repress_after_source_Key_zero": {
+            "source_frame": 37737,
+            "wanted": [
+              "right"
+            ],
+            "count": 3
+          }
+        },
+        {
+          "normal_north_escape_after_original_damage_complete": true,
+          "frame": 37756,
+          "pos": [
+            24533.431640625,
+            -2000.003662109375,
+            -41125.1484375
+          ],
+          "health": [
+            816,
+            600
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk169\\shots\\checkpoint-source-37757\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk169\\shots\\checkpoint-source-37757\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk169",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "r201",
+          "action_result": "Source-SAT north escape with normal held run during original stagger passes; Leon816/Ashley600 unchanged, boss3698. Western Ashley Wait preserved.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk169\\shots\\checkpoint-source-37757\\frames\\fb0.png",
+          "png_sha256": "704fcb553a837c6ca356890e1da9931c0e72095c007071193924cf7efc94be7e",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk169\\shots\\checkpoint-source-37757\\checkpoint-context.json",
+          "source_frame_interval": [
+            37757,
+            37765
+          ],
+          "health_before": [
+            816,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            816,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            816,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    }
+  ],
+  "source_SAT_route": {
+    "scope": "Read-only source SAT floor+wall conservative250mm grid,300mm wallclearance,550mm maxneighborheight change. No source/game/model edits; path is a navigation hypothesis governed by actual normal collision.",
+    "start": [
+      24652,
+      -2000,
+      -44550
+    ],
+    "goal": [
+      24500,
+      -2000,
+      -41250
+    ],
+    "start_node": [
+      24750,
+      -2000.0000000000002,
+      -44500,
+      1
+    ],
+    "goal_node": [
+      24500,
+      -2000.0,
+      -41250,
+      0
+    ],
+    "length": 5500.0,
+    "all_points": [
+      [
+        24750,
+        -2000.0000000000002,
+        -44500,
+        1
+      ],
+      [
+        24750,
+        -2000.0,
+        -44250,
+        1
+      ],
+      [
+        24750,
+        -2000.0,
+        -44000,
+        1
+      ],
+      [
+        24750,
+        -2000.0,
+        -43750,
+        1
+      ],
+      [
+        25000,
+        -2000.0,
+        -43750,
+        1
+      ],
+      [
+        25000,
+        -2000.0000000000002,
+        -43500,
+        1
+      ],
+      [
+        25250,
+        -2000.0,
+        -43500,
+        1
+      ],
+      [
+        25250,
+        -2000.0,
+        -43250,
+        1
+      ],
+      [
+        25500,
+        -2000.0,
+        -43250,
+        1
+      ],
+      [
+        25500,
+        -2000.0,
+        -43000,
+        1
+      ],
+      [
+        25500,
+        -2000.0,
+        -42750,
+        1
+      ],
+      [
+        25500,
+        -2000.0,
+        -42500,
+        1
+      ],
+      [
+        25750,
+        -2000.0,
+        -42500,
+        1
+      ],
+      [
+        25750,
+        -2000.0,
+        -42250,
+        1
+      ],
+      [
+        25750,
+        -2000.0,
+        -42000,
+        1
+      ],
+      [
+        25500,
+        -2000.0000000000002,
+        -42000,
+        1
+      ],
+      [
+        25500,
+        -2000.0,
+        -41750,
+        1
+      ],
+      [
+        25250,
+        -2000.0,
+        -41750,
+        1
+      ],
+      [
+        25250,
+        -2000.0,
+        -41500,
+        1
+      ],
+      [
+        25000,
+        -2000.0,
+        -41500,
+        1
+      ],
+      [
+        25000,
+        -2000.0,
+        -41250,
+        0
+      ],
+      [
+        24750,
+        -2000.0,
+        -41250,
+        0
+      ],
+      [
+        24500,
+        -2000.0,
+        -41250,
+        0
+      ]
+    ],
+    "turns": [
+      [
+        24750,
+        -2000.0000000000002,
+        -44500,
+        1
+      ],
+      [
+        24750,
+        -2000.0,
+        -43750,
+        1
+      ],
+      [
+        25000,
+        -2000.0,
+        -43750,
+        1
+      ],
+      [
+        25000,
+        -2000.0000000000002,
+        -43500,
+        1
+      ],
+      [
+        25250,
+        -2000.0,
+        -43500,
+        1
+      ],
+      [
+        25250,
+        -2000.0,
+        -43250,
+        1
+      ],
+      [
+        25500,
+        -2000.0,
+        -43250,
+        1
+      ],
+      [
+        25500,
+        -2000.0,
+        -42500,
+        1
+      ],
+      [
+        25750,
+        -2000.0,
+        -42500,
+        1
+      ],
+      [
+        25750,
+        -2000.0,
+        -42000,
+        1
+      ],
+      [
+        25500,
+        -2000.0000000000002,
+        -42000,
+        1
+      ],
+      [
+        25500,
+        -2000.0,
+        -41750,
+        1
+      ],
+      [
+        25250,
+        -2000.0,
+        -41750,
+        1
+      ],
+      [
+        25250,
+        -2000.0,
+        -41500,
+        1
+      ],
+      [
+        25000,
+        -2000.0,
+        -41500,
+        1
+      ],
+      [
+        25000,
+        -2000.0,
+        -41250,
+        0
+      ],
+      [
+        24500,
+        -2000.0,
+        -41250,
+        0
+      ]
+    ],
+    "normal_input_waypoints": [
+      [
+        25750,
+        -2000.0,
+        -42000,
+        1
+      ],
+      [
+        24750,
+        -2000.0,
+        -41250,
+        0
+      ],
+      [
+        24500,
+        -2000.0,
+        -41250,
+        0
+      ]
+    ]
+  },
+  "limits": [
+    "J168 injury screenshot is substantially occluded by the original room camera/wall; health and source attack are proven by saved state.",
+    "J168 periodic harness screenshot error is retained, not errors[]; explicit checkpoint PNG succeeds.",
+    "Boss still3698HP; kill, lever replay, exit, waves and chapter save remain open."
+  ]
+}

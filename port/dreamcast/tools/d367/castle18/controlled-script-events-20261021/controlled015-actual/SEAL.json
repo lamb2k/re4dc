@@ -1,0 +1,42 @@
+{
+  ".gitattributes": {
+    "bytes": 8,
+    "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+  },
+  "audit-seal-controlled015-closed.py": {
+    "bytes": 7778,
+    "sha256": "31c1a035f4c8fcdb3839252a05cf4b0f8e299d1455846705a68871d7456a208d"
+  },
+  "controlled-drain015-observer-summary.json": {
+    "bytes": 83685,
+    "sha256": "1560b80d1ee6e7f31a78eec6e46d9abf2ad084a90a51cc3b012461fb0d1a8385"
+  },
+  "KEEP-CONTROLLED015.txt": {
+    "bytes": 271,
+    "sha256": "61d294622726adf32f93332fb0cc7a0fd0204dfe01545bfcc6a94fdf45eaf04c"
+  },
+  "run-result.json": {
+    "bytes": 1510,
+    "sha256": "f70f18400a1a6a55f40f5d9b9b40138dca4765a035f393f4afddb5f070adeb40"
+  },
+  "controlled-ch32-drain015-closed-audit.json": {
+    "bytes": 27016,
+    "sha256": "101565e36c31a6c6e40e3532ec15b85c189eb904ae729615369441ea7b45104c"
+  },
+  "owned-process.json": {
+    "bytes": 325,
+    "sha256": "3877a3cb4fd4c78d177fade511f9f6cd4cf4375a6e77d3962afb31948e98102a"
+  },
+  "run-start.json": {
+    "bytes": 545,
+    "sha256": "475a7135ab24048f3b59d6ee093ea21b4c20a30255ab200f7c67656944033298"
+  },
+  "owned-resource-guard.json": {
+    "bytes": 159948,
+    "sha256": "f5c22c9a103eb4f82fe46185d17437d39ee33d17b92e9b2aff612e12f7f1972c"
+  },
+  "DRAIN015-ROOT-ALLOCATION.json": {
+    "bytes": 1849,
+    "sha256": "ba288fafe5ce3a9203f583f47d67b5bd2ad80157308f2f8ee97354b529b22c73"
+  }
+}

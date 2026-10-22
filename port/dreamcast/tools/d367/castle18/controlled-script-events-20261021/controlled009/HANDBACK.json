@@ -1,0 +1,79 @@
+{
+  "scope": "CONTROLLED TEST functional source save persistence PASS; V4 supervisor qualification FAIL preserved. No physicalDreamcast/release/authenticcombat acceptance.",
+  "functional_PASS": "Source normalA\u2192actualemptySlot01 confirmationNo\u2192ordinaryLeft\u2192actualYes\u2192A (3pulses). Native game/system VMU write rc0; Saved game data PNG directly inspected. ExistingreadonlyFAT/VMSCRC16/R4DCrawCRC/LZ/SaveInfoCRC validate actualRE4DCS01A andRE4DCSYS; savedmode2/chapter7/nativeRoom204.",
+  "private_VMU_sha256": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+  "guard_FAIL": "Sampler snapshot stale>1s atage32.1 triggered exactownedTerminateProcess74. V4 then asserted300ms exitwait, rawclosed_identity null/process_exited false. Do not rewrite or call supervisorPASS.",
+  "harness_exit_observation": {
+    "emulator_exited": true,
+    "early_exit": 74,
+    "elapsed_s": 33.4
+  },
+  "closure_boundary": "Harness retainedchild later reportedexit74 at33.4; currentCIM found noFlycast. This supplementary observation is not V4retainedhandlePASS. Runtime009statefile equals008seed739b, no post009autosave. Actualprogress is ROtrace+screenshots+persistedVMU, not thatseedstate.",
+  "state_sha256": "739bbcf1a551961d4b95c44079283f3a6879e4cddd3f1f242ae867f10f31cd8c",
+  "last_live_observation": {
+    "pg": 2352652060,
+    "process_age": 32.05152606964111,
+    "frame": 2886,
+    "room": "0x204",
+    "phase": [
+      3,
+      0
+    ],
+    "Stop": "0x7fffffbf",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "status1": "0x10000200",
+    "status3": "0x0",
+    "chapter": 7,
+    "partner_ptr": "0x0",
+    "player_pos": [
+      -676.848876953125,
+      -0.0009765625,
+      -41378.0625
+    ],
+    "saved_RSF": "0x80000000",
+    "CardStatus": "0x80000028",
+    "message0": {
+      "table_size": 0,
+      "selection": 0,
+      "current": 0,
+      "button": 1,
+      "attribute": "0x1020051"
+    },
+    "card": {
+      "ptr": "0x8cd050a0",
+      "routines": [
+        8,
+        10,
+        0,
+        0
+      ],
+      "status": "0x1",
+      "type": 1,
+      "slot": 0,
+      "save_no": 0,
+      "error": 0
+    },
+    "baseline_RSF0_clear_seen": false,
+    "event_hold_seen": true
+  },
+  "protected_authentic_states": {
+    "route-walk127": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16",
+    "route-walk294": "cb7a314b8fd0383af0b7baf17c2e87a712705beb122a1d39c7705553dd795258"
+  },
+  "not_yet_observed": [
+    "saveUIexit",
+    "radio0xE/RSF7",
+    "cold ingame load of actualVMU"
+  ],
+  "next": "V5 source repair independentreview only; no nextguestallocated. Futureunit should use actualVMUload or source-backed continuation, never label009seed as postwrite runtime snapshot.",
+  "V5": {
+    "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\guard-resume-41inner-47absolute-resources-v5.py",
+    "sha256": "7aa4113d44b5bab5b1010649a432ed1d50e34aaf4de7fb4899aaf692055b0ba0",
+    "focused_test": "ONE tinyownedPythonchild exits74 at0.739s afterold300mswait258; notlivekernelIOstall/fullFlycastqualification. Sampler1s/floors/60MiB/47.5/strictidentity unchanged. Failedruns remainfailed evenwithclosedproof."
+  }
+}

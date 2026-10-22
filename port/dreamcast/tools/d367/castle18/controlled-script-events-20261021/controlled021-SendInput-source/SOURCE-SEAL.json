@@ -1,0 +1,65 @@
+{
+  "scope": "SOURCEONLY021 noallocation/guest/input. Existing020actualpartial preserved.",
+  "members": [
+    {
+      "path": "observe-controlled-ch32-door021.py",
+      "bytes": 34329,
+      "sha256": "c5c82a4a8aee041da75e09c90d3e635055a1482a53c5507852f28ce5c2e99c93"
+    },
+    {
+      "path": "run-controlled-ch32-door021.py",
+      "bytes": 10529,
+      "sha256": "471bc9c7aa4a5494a436de0bd241b4b46bca3ba03dafcad6c6ddfb26860818c9"
+    },
+    {
+      "path": "run-controlled-ch32-door021.sh",
+      "bytes": 352,
+      "sha256": "a7aeb66484c273f8a09b1e0ef53268116ec755c9b6a18b145eea79b6438fbd24"
+    },
+    {
+      "path": "controlled-ch32-door021-pins.json",
+      "bytes": 7547,
+      "sha256": "d6ab721588fd7a8f8a7074f5f5c1c4bfb0aefeea39a8d1e453562e473e60b357"
+    },
+    {
+      "path": "controlled021-OWNED-INPUT-CONTRACT.json",
+      "bytes": 2599,
+      "sha256": "b2632e6f7814b87fa09a42ef64c3f0bb6855bf2547a6a056ed24154508326493"
+    },
+    {
+      "path": "test-controlled021-SendInput-source.py",
+      "bytes": 4920,
+      "sha256": "8f32345ec828ac80f323161eba6301ee4ab6109ff10eaa56afb18fc2701deec9"
+    },
+    {
+      "path": "controlled021-SendInput-source-cases.json",
+      "bytes": 1619,
+      "sha256": "f5120482d70207db747a73931730079d7cd15fee87f19b66801749936360368d"
+    },
+    {
+      "path": "controlled021-default-prepare.json",
+      "bytes": 1603,
+      "sha256": "edf79d64952e17d8637a89b9a90f50dbd38c73ef62c1d1afff73505532959d65"
+    },
+    {
+      "path": "CONTROLLED021-SOURCE-LAUNCH-PROPOSAL.json",
+      "bytes": 7081,
+      "sha256": "97e491a21a5bcbbbdc3ca9fb8d323daa82dd8fb5bcd2d4b1b5024d9fa887ec44"
+    },
+    {
+      "path": "controlled021-observer-delta.patch",
+      "bytes": 10108,
+      "sha256": "2ef2550de20b2259e3717932e16f8a295f01435505c8098e1f5052e578fab987"
+    },
+    {
+      "path": "prepare-controlled021-SendInput-delta.py",
+      "bytes": 8831,
+      "sha256": "3c41f9f56b587ff621f906d0e05fbb028904cd41355bb69ca99893720b5583f4"
+    },
+    {
+      "path": "prepare-controlled021-source-handoff.py",
+      "bytes": 6032,
+      "sha256": "d717d5372dec24570dff7391903b5139ff68f0bfd7dbf9cfb690505d9e2c23a9"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "scope": "Additive root/worker actual019 visual witness; no cap mutation.",
+  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\shots\\controlled-deadline-context\\frames\\fb0.png",
+  "PNG_sha256": "e35f41e9f2fbc890779bf04b76a4468ea8e0c5880d75d3c53085683725c369a2",
+  "root_report": "Root independently inspected actual019 deadline fb0: Leon/HUD and red A OPEN at barred doorway.",
+  "worker_report": "Worker inspected same PNG from filesystem and agrees.",
+  "interpretation": "204 doorway/prompt ready. Not actualinputacknowledgement or209entry; no gamecrash/scriptdefect inferred.",
+  "root_report_source": "Trusted parent coordination message2026-10-22 after019 closure; this sidecar was authoredbycastleworker, not presentedasroot-authoredreceipt."
+}

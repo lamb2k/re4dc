@@ -1,0 +1,12 @@
+{
+  "replace": {
+    "dc/resident.bin": "/root/re4data/private/castle18-ch34-r20e-resident-20261019/files/dc/resident.bin"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "r20e +10 exact source-observed resident keys; all 5591 prior records unchanged.",
+    "base_resident_sha256": "7752f0443501811dc9ab523acc04b419515f8b8d1cbee005976de41428f0a601",
+    "resident_sha256": "a1233414e1c35d43dd50f59c00ee1c73d86dbd7c678c21d881e8fdeba82d3686",
+    "warning": "Compose the r20e records into any newer resident union; never overwrite later room additions."
+  }
+}

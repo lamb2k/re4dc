@@ -1,0 +1,41 @@
+{
+  "scope": "Actual016 extracted source pure predicates/command-publication function with mock kernel, no OS processes/DLL/guest/native acceptance.",
+  "observer_sha256": "718e1c2e2ede7ded9f2de6d74970447c94f2820e56c0f77e98d3f8709d7405cd",
+  "checks": [
+    "actual015-shaped-ready-unused-slot",
+    "eventStop",
+    "eventstatus",
+    "wrongroom",
+    "dead-no-input",
+    "unverified-code",
+    "reject-n_go",
+    "reject-go0",
+    "reject-rooms",
+    "reject-flags",
+    "ordinary-positive-injury-still-eligible",
+    "publish-actual-function",
+    "descriptor24-before-count4-only",
+    "descriptor-payload-exact",
+    "no-republish-after-count1",
+    "write-allowlist-0x8c000000-1",
+    "write-allowlist-0x8c47ff30-24",
+    "write-allowlist-0x8c47fff0-4",
+    "native-source-shaped-door-ready",
+    "goto-not-consumed",
+    "no-native-front",
+    "wrongnativecallback",
+    "wrongdest",
+    "locked"
+  ],
+  "passed": 24,
+  "write_calls": [
+    {
+      "address": "0x8c47ff30",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ]
+}

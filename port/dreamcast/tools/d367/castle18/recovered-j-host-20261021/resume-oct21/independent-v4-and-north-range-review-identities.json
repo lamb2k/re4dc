@@ -1,0 +1,157 @@
+{
+  "scope": "Read-only static source and existing nine mocked watcher tests; no new test/guest",
+  "supervisor": [
+    {
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\guard-resume-41inner-47absolute-resources-v4.py",
+      "raw_sha256": "c166c7a00d8b34082dd9c5cb4957bd66a4d10e54abbc3104aa316e11c70571e7",
+      "bytes": 6709
+    },
+    {
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\guard-v4-mocked-adversarial-tests.json",
+      "raw_sha256": "6740278aa59001db2aecc5911788d151f1c8c6285868f5f9ba224dc2cc98c5af",
+      "bytes": 9898
+    }
+  ],
+  "cases": [
+    {
+      "case": "disk_query_failure",
+      "error": "AssertionError(('Resource sampler failed', \"OSError('injected disk query failure')\"))",
+      "result": {
+        "alive": false,
+        "terminates": 1,
+        "closes": 0,
+        "handlecloses": 1,
+        "times_calls": 2,
+        "dead_path_queries": 0,
+        "termination_process_age": 5.029001712799072
+      }
+    },
+    {
+      "case": "missing_SDL_window",
+      "error": "AssertionError([])",
+      "result": {
+        "alive": false,
+        "terminates": 1,
+        "closes": 0,
+        "handlecloses": 1,
+        "times_calls": 3,
+        "dead_path_queries": 0,
+        "termination_process_age": 46.03167915344238
+      }
+    },
+    {
+      "case": "WM_CLOSE_failure",
+      "error": "AssertionError()",
+      "result": {
+        "alive": false,
+        "terminates": 1,
+        "closes": 1,
+        "handlecloses": 1,
+        "times_calls": 3,
+        "dead_path_queries": 0,
+        "termination_process_age": 46.03215003013611
+      }
+    },
+    {
+      "case": "ordinary_close",
+      "error": null,
+      "result": {
+        "alive": false,
+        "terminates": 0,
+        "closes": 1,
+        "handlecloses": 1,
+        "times_calls": 3,
+        "dead_path_queries": 0
+      }
+    },
+    {
+      "case": "absolute_stop",
+      "error": null,
+      "result": {
+        "alive": false,
+        "terminates": 1,
+        "closes": 0,
+        "handlecloses": 1,
+        "times_calls": 3,
+        "dead_path_queries": 0,
+        "termination_process_age": 47.20600080490112
+      }
+    },
+    {
+      "case": "slow_sampler",
+      "error": "AssertionError('Resource sampler stalled; fail closed')",
+      "result": {
+        "alive": false,
+        "terminates": 1,
+        "closes": 0,
+        "handlecloses": 1,
+        "times_calls": 2,
+        "dead_path_queries": 0,
+        "termination_process_age": 45.918395042419434
+      }
+    },
+    {
+      "case": "normal_exit_queries_fail",
+      "error": null,
+      "result": {
+        "alive": false,
+        "terminates": 0,
+        "closes": 1,
+        "handlecloses": 1,
+        "times_calls": 3,
+        "dead_path_queries": 0
+      }
+    },
+    {
+      "case": "exit_between_identity_calls",
+      "error": null,
+      "result": {
+        "alive": false,
+        "terminates": 0,
+        "closes": 0,
+        "handlecloses": 1,
+        "times_calls": 3,
+        "dead_path_queries": 0
+      }
+    },
+    {
+      "case": "reused_PID_new_identity_rejected",
+      "error": "AssertionError('Live process start identity mismatch')",
+      "result": {
+        "alive": true,
+        "terminates": 0,
+        "closes": 0,
+        "handlecloses": 1,
+        "times_calls": 2,
+        "dead_path_queries": 0
+      }
+    }
+  ],
+  "frozen_runtime_source": [
+    {
+      "path": "src/wep/pl_handgun.cpp",
+      "runtime_blob": "004867fc327913dda7faf0004556976ad7088ac0",
+      "sha256": "1d53774b578f0b83903c9d28478e539784144554e73d09959540469332885029"
+    },
+    {
+      "path": "src/game/objWep.cpp",
+      "runtime_blob": "35faa2752c0a0c47c3db38d88919677c0e22d590",
+      "sha256": "b8e2e42ed1fb39aaa4012d9272a4db55c746a8a56f961ee116994fcef14788be"
+    },
+    {
+      "path": "src/game/em_sub.cpp",
+      "runtime_blob": "24d85d03166f1972cf2d60f1e38f219ff68b1fe5",
+      "sha256": "ddefd4571fd38c21f1af86bdf4f4362aee2009ac2e99cc5d8ddd8f4514700ba0"
+    },
+    {
+      "path": "src/game/pl_wep.cpp",
+      "runtime_blob": "21b0ec12e4ffb1a7612518becf350752da5f40a2",
+      "sha256": "c0ada3f1d5a6c33a4eb54b4b6c3d928eb1a388abcf2127cc7e263de1e07c7276"
+    },
+    {
+      "path": "src/st2/r201.cpp",
+      "runtime_blob": "eac3fbf94dbf9d79ae6ccaeb0750cfc0f794b0a8",
+      "sha256": "13265eb6c38e8b248c2109637ee263f4df4aa2cd34813d008404a35c16b0e67a"
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "scope": "Immutable actual016 closed-file-only audit; no live attach/probe/write/input/retry. Exact APIs errors not recorded in016 and cannot be reconstructed.",
+  "utc": "2026-10-22T06:27:16.147090+00:00",
+  "functional_status": "NOT_RUN: first observer sample failed before any command publication/native door input",
+  "supervisor_status": "PASS retained signaled exit0; observer/wrapper FAILED separately",
+  "guard": {
+    "scope": "Owned process resources/time only; PID/path/start verified. Filesystem sampler isolated on daemon thread; deadline loop never performs filesystem I/O. Fail closed if sampler stale1s. WM_CLOSE at45s or resource boundary, terminate only same verified process at47.1s if needed. Asynchronous termination cleanup retains pinned handle until exit proof within47.5, preserving failed run status; no gameplay memory writes.",
+    "owner": {
+      "pid": 30920,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door016\\flycast.exe",
+      "start_filetime": 134371238195003923,
+      "created_utc": "2026-10-22T06:23:39.508289+00:00",
+      "rights": "retained subprocess handle receipt"
+    },
+    "closed_identity": {
+      "initial_live_identity_pinned": true,
+      "retained_handle_signaled": true,
+      "exit_code": 0,
+      "postexit_times_available": true,
+      "postexit_path_query": false,
+      "proof_reason": "normal or absolute loop exit"
+    },
+    "process_exited": true,
+    "runtime_floor": 19394461696,
+    "capture_cap": 62914560,
+    "inner_input_seconds": 41,
+    "absolute_process_seconds": 47.5,
+    "exit_age": 1.3339179573231377,
+    "actions": []
+  },
+  "harness": {
+    "name": "castle21-CONTROLLED-original205-door016",
+    "status": "RUN_COMPLETE",
+    "start_utc": "2026-10-22T06:23:39.344716+00:00",
+    "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+    "tracks": {
+      "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+      "kind": "release",
+      "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+    },
+    "seconds": 41,
+    "vmu": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event009\\data\\T0000_vmu_save_A1.bin",
+    "keys": null,
+    "stop": null,
+    "fixtures": {
+      "warp": {
+        "src": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\controlled-ch32-drain014-warp.txt",
+        "bytes": 159,
+        "sha256": "26b551c37eef728d17e3686cfb60763cde8c43b979dd5d1a029ca1f7f31a9ebe"
+      },
+      "pad": {
+        "src": null,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "w11": {
+        "src": null,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "errors": [],
+    "key_log": [],
+    "align": false,
+    "emu": "harness",
+    "emu_env": {},
+    "early_emulator_exit": 0,
+    "log_idle_s": 0.5,
+    "end_utc": "2026-10-22T06:23:41.030815+00:00",
+    "elapsed_s": 1.6,
+    "emulator_exited": true
+  },
+  "observer": {
+    "scope": "CONTROLLED exact015state continuation: existing DBG_WARP Goto command setup, ordinary native Door0 to204Part1; no actor/room/outcome memory writes.",
+    "last": null,
+    "events": [
+      {
+        "inherited015_drain_completion": true,
+        "state_sha256": "2236156faabd0def3e9f38d708dbe983d2632441cd3fba521ef8fab634eb5237",
+        "actor68_active_not_observed": true,
+        "not_held_proof": true
+      },
+      {
+        "observer_failure": "AssertionError()",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\observe-controlled-ch32-door016.py\", line 176, in <module>\n    check();row=sample()\n                ^^^^^^^^\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\observe-controlled-ch32-door016.py\", line 50, in sample\n    pg=u32(0x8c2e91dc)\n       ^^^^^^^^^^^^^^^\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\observe-controlled-ch32-door016.py\", line 18, in <lambda>\n    u32=lambda a:struct.unpack('<I',read(a,4))[0]\n                                    ^^^^^^^^^\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\observe-controlled-ch32-door016.py\", line 17, in read\n    assert 0x8c000000<=a and a+n<=0x8d000000;buf=C.create_string_buffer(n);got=C.c_size_t();assert k.ReadProcessMemory(h,ram+a-0x8c000000,buf,n,C.byref(got))and got.value==n;return buf.raw\n                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      {
+        "exact_owned_WM_CLOSE": true,
+        "process_age": 0.6624111804994754
+      }
+    ],
+    "owned_close_sent": true,
+    "source_fields_not_acceptance_alone": true,
+    "no_209_command": true
+  },
+  "closed_state": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door016\\data\\disc.state",
+    "sha256": "a33b2ac44cce042d035f7a981e96cf57b19bec1484f04c86084ece22803f73e8",
+    "main_ELF_anchors": 4,
+    "native": {
+      "frame": 1769,
+      "room": "0x205",
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "status1": "0x610",
+      "health": [
+        1440,
+        1440,
+        600,
+        600
+      ],
+      "wp_flags": [
+        1,
+        1,
+        0,
+        1,
+        1
+      ],
+      "wp_rooms": 1,
+      "wp_n_go": 0,
+      "wp_go0": "000000000000000000000000000000000000000000000000"
+    }
+  },
+  "observed_failure_request": {
+    "guest_address": "0x8c2e91dc",
+    "host_RAM_base": "0x7ff4cd790000",
+    "derived_host_address": "0x7ff4cda791dc",
+    "requested_bytes": 4,
+    "api_bool": "UNRECORDED",
+    "bytes_read": "UNRECORDED",
+    "win32_error": "UNRECORDED",
+    "VirtualQueryEx": "NOT_CALLED",
+    "process_identity": {
+      "pid": 30920,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door016\\flycast.exe",
+      "start_filetime": 134371238195003923,
+      "created_utc": "2026-10-22T06:23:39.508289+00:00",
+      "rights": "retained subprocess handle receipt"
+    }
+  },
+  "startup_order": {
+    "RAM_mapping_lines": [
+      "00:00:613 hw\\mem\\addrspace.cpp:461 N[VMEM]: BASE 00007FF4C1790000 RAM(16 MB) 00007FF4CD790000 VRAM64(8 MB) 00007FF4C5790000 ARAM(2 MB) 00007FF4E1790000",
+      "00:00:623 hw\\mem\\addrspace.cpp:461 N[VMEM]: BASE 00007FF4C1790000 RAM(16 MB) 00007FF4CD790000 VRAM64(8 MB) 00007FF4C5790000 ARAM(2 MB) 00007FF4E1790000"
+    ],
+    "state_load_lines": [
+      "00:00:730 nullDC.cpp:360 N[SAVESTATE]: Loaded state ver 854 from C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door016\\data\\disc.state size 28152878"
+    ],
+    "observer_owned_close_age": 0.6624111804994754,
+    "interpretation": "Observer readfailed andrequestedclose at0.6624, before loggedstateLoad0.730. This proves methodadmittedsamplingbeforestate-loadready; doesNOTidentifyOSunderlyingRPMerror orprovegamecrash."
+  },
+  "protected_inputs_fresh": {
+    "route-walk127/data/disc.state": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16",
+    "route-walk294/data/disc.state": "cb7a314b8fd0383af0b7baf17c2e87a712705beb122a1d39c7705553dd795258",
+    "route-walk-controlled-native-radio013/data/disc.state": "97b63602b83d6234a1603dc24a90fa42f2d0702db626ead2e4d4e5e20efafe13",
+    "route-walk-controlled-event009/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+    "route-walk-controlled-ch32-drain014/data/disc.state": "3713cb2a4442ec5ddbf3dc4aec8dff107aa66721913e75813858c326a820adc5",
+    "route-walk-controlled-ch32-drain015/data/disc.state": "2236156faabd0def3e9f38d708dbe983d2632441cd3fba521ef8fab634eb5237"
+  },
+  "runtimeVMU_sha256": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+  "identities": {
+    "flycast.exe": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+    "emu.cfg": "6e6e65448d0d00944fe15caa197704d08b784c670d18b3a4cd76aa2a0ebcbc91",
+    "disc.gdi": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4",
+    "fixture-warp.txt": "26b551c37eef728d17e3686cfb60763cde8c43b979dd5d1a029ca1f7f31a9ebe",
+    "run-start.json": "e7d81d3b25a25e583486c511f96fbf7042c06cac81240fc3249ebd74ea359b62",
+    "run-output.txt": "31e362069762ad6ef3674c589af7d9dbeb171ae249464db4bcadacfe7891f2ba",
+    "flycast.log": "1abea0c628688d31cb298defa481f2ccc38faf1cdf383b84dacef6ec71e5de09",
+    "owned-resource-guard.json": "451804b98016674aca7fbe0bbb2424a8fc3f54289105c7131bd1bafa1415edbf",
+    "controlled-door016-observer-summary.json": "d95c48476e67071f48fdced003da9ce2200740567d07741cddc8b4c852a10346"
+  },
+  "root_allocation_sha256": "a131e0f3549d6f54cb25dd8c870e7a53163df17d705dc3b9a322fefc800834a3",
+  "programme_binding_sha256": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed",
+  "next": "New017 SOURCEONLY candidate may continue this actual016state once rootreviewsloaded-state/readability/anchor gate and exactread/VQE diagnostics. No guestallocated. Original016capandstatesimmutable."
+}

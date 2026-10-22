@@ -1,0 +1,620 @@
+{
+  "scope": "ACTUAL021 closed-file audit only. Nativeexit/209progress PASS; physicalDoor1/cut PARTIAL due host150radius admission, no secondpulse/eventcompletion. No newguest/input/write/retry.",
+  "utc": "2026-10-22T08:36:07.440498+00:00",
+  "source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "ELF": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "master": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "binding": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed",
+  "sourcepins": {
+    "count": 41,
+    "sha256": "d6ab721588fd7a8f8a7074f5f5c1c4bfb0aefeea39a8d1e453562e473e60b357",
+    "all_freshly_matched": true,
+    "protected_count": 18,
+    "protected_all_freshly_matched": true,
+    "closed_main_anchors": 4
+  },
+  "closed": {
+    "PID": 41508,
+    "retained_signaled": true,
+    "exit_code": 0,
+    "exit_age": 39.72178036882542,
+    "guard_actions": [],
+    "harness_seconds": 40.2,
+    "harness_errors": [],
+    "minimum_free": 154089140224,
+    "maximum_cap": 37681154
+  },
+  "read_failures": 0,
+  "query_failures": 0,
+  "state": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door021\\data\\disc.state",
+    "sha256": "93fa4f5243a3c2ffbbaa45617ca046294b56274b17eaf62e1f3ab2ecb604339d",
+    "native": {
+      "frame": 5508,
+      "room": "0x209",
+      "Part": 0,
+      "previous": "0x204",
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "HP": [
+        1440,
+        1440,
+        600,
+        600
+      ],
+      "position": [
+        -16300.1298828125,
+        1999.9974365234375,
+        13499.8388671875
+      ],
+      "Key": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "VMU": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+  "milestones": {
+    "original_native_209_door_request": {
+      "process_age": 1.1657745513948612,
+      "frame": 4765,
+      "room": "0x204",
+      "Part": 1,
+      "previous_room": "0x204",
+      "phase": [
+        4,
+        0
+      ],
+      "Stop": "0xffffffff"
+    },
+    "actual_209_entry": {
+      "process_age": 12.930774551408831,
+      "frame": 4785,
+      "room": "0x209",
+      "Part": 0,
+      "previous_room": "0x204",
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "camera_no": 1
+    },
+    "original_AEV0A_execution_observed": {
+      "process_age": 14.86877455143258,
+      "frame": 4787,
+      "room": "0x209",
+      "Part": 0,
+      "previous_room": "0x204",
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "camera_no": 1
+    },
+    "original_physicalDoor1_open_flag": null,
+    "original_leader_cut_camera3": null,
+    "original_leader_cut_camera2": null,
+    "original_leader_cut_return": null
+  },
+  "SendInput": [
+    {
+      "ordinary_scan_code_SendInput": {
+        "keyup": false,
+        "requested": 1,
+        "accepted_count": 1,
+        "last_error": 0,
+        "cbSize": 40,
+        "wVk": 0,
+        "wScan": "0x2d",
+        "flags": "0x8",
+        "not_native_ack": true
+      },
+      "process_age": 1.1027745514293201
+    },
+    {
+      "ordinary_scan_code_SendInput": {
+        "keyup": true,
+        "requested": 1,
+        "accepted_count": 1,
+        "last_error": 0,
+        "cbSize": 40,
+        "wVk": 0,
+        "wScan": "0x2d",
+        "flags": "0xa",
+        "not_native_ack": true
+      },
+      "process_age": 1.133774551388342
+    }
+  ],
+  "pulse": {
+    "ordinary_owned_UI_pulse": "native204-Door4-A",
+    "stage": 1,
+    "maximum_hold_seconds": 0.75,
+    "one_keydown_only": true,
+    "result": {
+      "pressed": true,
+      "acknowledged": true,
+      "stage": 1,
+      "delivery": "experimental SendInput scan-code; no causalfix claim"
+    },
+    "ack_observations": [
+      {
+        "frame": 4762,
+        "coherent": true,
+        "Key_old": "0x0",
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "phase": [
+          3,
+          0
+        ],
+        "next_room": "0x204",
+        "native_key_ack": false,
+        "original_door_request_ack": false,
+        "acknowledged": false
+      },
+      {
+        "frame": 4762,
+        "coherent": true,
+        "Key_old": "0x0",
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "phase": [
+          3,
+          0
+        ],
+        "next_room": "0x204",
+        "native_key_ack": false,
+        "original_door_request_ack": false,
+        "acknowledged": false
+      },
+      {
+        "frame": 4763,
+        "coherent": true,
+        "Key_old": "0x0",
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "phase": [
+          3,
+          0
+        ],
+        "next_room": "0x204",
+        "native_key_ack": false,
+        "original_door_request_ack": false,
+        "acknowledged": false
+      },
+      {
+        "frame": 4763,
+        "coherent": true,
+        "Key_old": "0x0",
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "phase": [
+          3,
+          0
+        ],
+        "next_room": "0x204",
+        "native_key_ack": false,
+        "original_door_request_ack": false,
+        "acknowledged": false
+      },
+      {
+        "frame": 4763,
+        "coherent": true,
+        "Key_old": "0x0",
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "phase": [
+          3,
+          0
+        ],
+        "next_room": "0x204",
+        "native_key_ack": false,
+        "original_door_request_ack": false,
+        "acknowledged": false
+      },
+      {
+        "frame": 4763,
+        "coherent": true,
+        "Key_old": "0x80080480",
+        "Key_on": "0x80080480",
+        "Key_trg": "0x80080480",
+        "phase": [
+          3,
+          0
+        ],
+        "next_room": "0x204",
+        "native_key_ack": true,
+        "original_door_request_ack": false,
+        "acknowledged": true
+      }
+    ],
+    "OS_async_X_observations": [
+      {
+        "vk": "0x58",
+        "signed_short": 0,
+        "high_bit_down": false,
+        "scope": "OS asynchronous key state; separate from nativeKey/SDLreceive"
+      },
+      {
+        "vk": "0x58",
+        "signed_short": 0,
+        "high_bit_down": false,
+        "scope": "OS asynchronous key state; separate from nativeKey/SDLreceive"
+      },
+      {
+        "vk": "0x58",
+        "signed_short": -32767,
+        "high_bit_down": true,
+        "scope": "OS asynchronous key state; separate from nativeKey/SDLreceive"
+      },
+      {
+        "vk": "0x58",
+        "signed_short": -32768,
+        "high_bit_down": true,
+        "scope": "OS asynchronous key state; separate from nativeKey/SDLreceive"
+      },
+      {
+        "vk": "0x58",
+        "signed_short": -32768,
+        "high_bit_down": true,
+        "scope": "OS asynchronous key state; separate from nativeKey/SDLreceive"
+      },
+      {
+        "vk": "0x58",
+        "signed_short": -32768,
+        "high_bit_down": true,
+        "scope": "OS asynchronous key state; separate from nativeKey/SDLreceive"
+      },
+      {
+        "vk": "0x58",
+        "signed_short": -32768,
+        "high_bit_down": true,
+        "scope": "OS asynchronous key state; separate from nativeKey/SDLreceive"
+      },
+      {
+        "vk": "0x58",
+        "signed_short": -32768,
+        "high_bit_down": true,
+        "scope": "OS asynchronous key state; separate from nativeKey/SDLreceive"
+      }
+    ],
+    "OS_async_X_after_release": {
+      "vk": "0x58",
+      "signed_short": 0,
+      "high_bit_down": false,
+      "scope": "OS asynchronous key state; separate from nativeKey/SDLreceive"
+    },
+    "owned_window_after_release": {
+      "hwnd": 156567778,
+      "owner_pid": 41508,
+      "thread_id": 42532,
+      "foreground_hwnd": 156567778,
+      "foreground_pid": 41508,
+      "gui_query_ok": true,
+      "gui_query_error": 0,
+      "active_hwnd": 156567778,
+      "focus_hwnd": 156567778,
+      "focus_pid": 41508,
+      "focus_is_owned_child": false,
+      "gui_flags": 0,
+      "visible": false,
+      "iconic": false,
+      "process_age": 1.133774551388342
+    },
+    "process_age": 1.133774551388342
+  },
+  "command_writes": [
+    {
+      "controlled_existing_rig_command_write": true,
+      "stage": 2,
+      "address": "0x8c47ff60",
+      "before": "000000000000000000000000000000000000000000000000",
+      "after_requested": "000000001f587cc60020fa44edef5246560ec93f01000003",
+      "process_age": 14.83777455141535,
+      "api_ok": true,
+      "bytes_written": 24,
+      "observed_after": "000000001f587cc60020fa44edef5246560ec93f01000003"
+    },
+    {
+      "controlled_existing_rig_command_write": true,
+      "stage": 2,
+      "address": "0x8c4801b6",
+      "before": "02",
+      "after_requested": "03",
+      "process_age": 14.83777455141535,
+      "api_ok": true,
+      "bytes_written": 1,
+      "observed_after": "03"
+    },
+    {
+      "controlled_existing_rig_command_write": true,
+      "stage": 2,
+      "address": "0x8c47fff0",
+      "before": "02000000",
+      "after_requested": "03000000",
+      "process_age": 14.83777455141535,
+      "api_ok": true,
+      "bytes_written": 4,
+      "observed_after": "03000000"
+    }
+  ],
+  "host_gate_diagnosis": {
+    "contract": "pose_matches distance<150 thenplaced flag gatessecondA",
+    "descriptor_float32": [
+      -16150.0302734375,
+      2001.0,
+      13499.9814453125
+    ],
+    "retained_consumed_rows": 750,
+    "minimum": {
+      "frame": 4871,
+      "distance": 150.0033476027324
+    },
+    "maximum": {
+      "frame": 5465,
+      "distance": 155.22212470548462
+    },
+    "any_sample_admitted": false,
+    "no_second_pulse": true,
+    "native_physical_action": {
+      "active": 1,
+      "stop_old": 0,
+      "num": 1,
+      "work": [
+        {
+          "func": 2349581056,
+          "arg": 2360323552,
+          "kind": 16,
+          "slot": 5,
+          "type": 0,
+          "button": 1,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        }
+      ]
+    },
+    "native_physical_doors": [
+      {
+        "ptr": "0x8cafade0",
+        "id": 65,
+        "type": 1,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "flag": "0x0",
+        "position": [
+          -15750.0,
+          2000.0,
+          12850.0
+        ],
+        "Etc_no": 1,
+        "door_work_flags": "0x0",
+        "base_dir": 1.5707499980926514,
+        "base_matrix": [
+          4.63287033198867e-05,
+          0.0,
+          1.0,
+          -15750.0302734375,
+          0.0,
+          1.0,
+          0.0,
+          2000.0,
+          -1.0,
+          0.0,
+          4.63287033198867e-05,
+          13500.0
+        ],
+        "base_inverse": [
+          4.63287033198867e-05,
+          -0.0,
+          -1.0,
+          13500.7294921875,
+          -0.0,
+          1.0,
+          -0.0,
+          -2000.0,
+          1.0,
+          -0.0,
+          4.63287033198867e-05,
+          15749.4052734375
+        ],
+        "key_flag": 54,
+        "open_flag": 0
+      }
+    ],
+    "final_position": [
+      -16300.09765625,
+      1999.9979248046875,
+      13499.9052734375
+    ],
+    "original_AEV0A": {
+      "ptr": 2360034572,
+      "floor": 1999.997314453125,
+      "height": 1000.0,
+      "enabled": false,
+      "type": 2,
+      "checkFlag": 1,
+      "trigger": 129,
+      "checkType": 1,
+      "func": 2358341392,
+      "door": {
+        "destination": "0x0",
+        "Part": 0,
+        "lockType": 0,
+        "lockFlag": 0,
+        "callback": "0x0",
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angle": 0.0
+      },
+      "quad": [
+        [
+          -15975.5224609375,
+          12740.634765625
+        ],
+        [
+          -15475.1123046875,
+          12712.177734375
+        ],
+        [
+          -15475.1123046875,
+          14212.177734375
+        ],
+        [
+          -15975.5224609375,
+          14240.634765625
+        ]
+      ]
+    },
+    "interpretation": "Hostradius rejectedallretainedpostconsumptionpositions despiteexactnativephysicalDoor1AOPENaction. Notwrongdoor/gamefailure/SendInputfailure; physicaldoororiginalwaiterstillopen."
+  },
+  "screenshots": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door021\\shots\\controlled-deadline-context\\frames\\fb0.png",
+      "bytes": 261155,
+      "sha256": "8d2cc1b9fc57b2288119e8b6cef90c5322014776628fa50e02a2cbc879523101"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door021\\shots\\controlled-deadline-context\\frames\\fb1.png",
+      "bytes": 261096,
+      "sha256": "12f7e5938c02acd7ad2882295a9ab5a09d195a3b7ad0fafdc9b5ddff06a8fc15"
+    }
+  ],
+  "visual": "Worker vieweddeadlinefb0: Leon/HUD/nativeAOPEN atornatemetalphysicaldoor. Noeventcompletionpixelsclaimed.",
+  "raw": {
+    "flycast.exe": {
+      "bytes": 14415872,
+      "sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a"
+    },
+    "emu.cfg": {
+      "bytes": 699,
+      "sha256": "6e6e65448d0d00944fe15caa197704d08b784c670d18b3a4cd76aa2a0ebcbc91"
+    },
+    "disc.gdi": {
+      "bytes": 87,
+      "sha256": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4"
+    },
+    "fixture-warp.txt": {
+      "bytes": 159,
+      "sha256": "26b551c37eef728d17e3686cfb60763cde8c43b979dd5d1a029ca1f7f31a9ebe"
+    },
+    "flycast.log": {
+      "bytes": 3798,
+      "sha256": "66b3168a803aa0a3336857b62ea9c528e34496309fb639aae51e90d8765481bd"
+    },
+    "run-start.json": {
+      "bytes": 543,
+      "sha256": "681c4dbeca05ce63d5a3077509bf4329f143da35d7f21a93f6c4e6e7d4f97bb2"
+    },
+    "run-result.json": {
+      "bytes": 1509,
+      "sha256": "3d248013171bf20d31869194238ce720f6312cc3b47b343cd3e9b48654572ec8"
+    },
+    "run-output.txt": {
+      "bytes": 313540,
+      "sha256": "d317185635fe5186cfb7805dc6149a494d04db09d86d9345f75550044f2f23f7"
+    },
+    "controlled-door021-observer-summary.json": {
+      "bytes": 163529,
+      "sha256": "7ca4656523575d610022db2de850a32d49a4c8207f4bd828675e492e04b97f25"
+    },
+    "controlled-door021-observations.jsonl": {
+      "bytes": 11143505,
+      "sha256": "2c376024c683b577a2cb327c7e160d1e82afb0146a4a42a970ad9a3942f48eaa"
+    },
+    "owned-resource-guard.json": {
+      "bytes": 159653,
+      "sha256": "1486b352099d6c646aaa261127c92abff41d3c27dab2c0f33fdbf695d26b47aa"
+    }
+  },
+  "root_allocation": "5cf9ff3a2c33bf5b7abd389d4f43d7d495bcb5d2c634f0976da80448ea020293",
+  "acceptance_limits": "Controlledteleport+originalscript only; notauthenticcombat/no-warp/performance/release/physicalDreamcast. APIaccepted1 plusOSstate notcausalexplanationof020.",
+  "next": "RootauthorizedSOURCEONLY022 fromactual0215508/nativeDoor1ready, zeroinitialcommands/replay; nativeaction replaceshostradius; noactual022allocated."
+}

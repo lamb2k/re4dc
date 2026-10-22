@@ -1,0 +1,13 @@
+# Recovered J bounded controls — 2026-10-21
+
+Movement already uses scripted ordinary owned-window input with read-only source feedback. It does not manually step every game frame. The remaining agent work selects a bounded known route, checks a failure or milestone, and preserves the resulting checkpoint.
+
+`prepare_recovered_j_bounded_arm.py` prepares exactly one existing 50-second arm. It never starts a guest, changes a controller, integrates a build, or runs a continuous play loop. It requires the latest actual finished recovered checkpoint, its exact state SHA and frozen image identity. It refuses skipped/stale seeds, existing prepared/output paths, and the failed running-table controller. Room/coordinate/tolerance validation is retained, then the unchanged owner/resource/screenshot-ready harness runs separately.
+
+Arguments are the next run number, existing controller filename, established x/z targets, tolerance, room and a precise action description. All game input still goes through the chosen controller's existing event/health/SSLoop/held/ownership guards. The helper does not offer health or safety overrides. Preparation emits an immutable recipe receipt and scripts; an actual result is still required before acceptance.
+
+The transport template is route40's ordinary runner boilerplate, whose ownership and resource behavior completed normally. Its movement controller is explicitly UNQUALIFIED and denied for replay: it ran a table segment that earlier used walking, produced a different exposed Ashley anchor, and stopped on actual injury before Wait or sword pickup. Future consolidated controls must preserve each qualified walking/running profile and verify cover, rather than treating faster movement as equivalent.
+
+Current checkpoint is recovered40: source12031/state397e6bb20b2811642c3ac8788528e5aba902b4ac8dd99966525ba464c853c588, health725/330. Original Continue39 reset the swords. Earlier pickup/placement results remain historical. Prepared41 is normal Use of the existing original First Aid Spray05 for default Leon, with consumption/full-heal/world-restore checks; it has not run yet. The one-off recipient behavior is not inferred from the preparer's compilation.
+
+Validation here is Python syntax compilation only. No new guest or runtime qualification is claimed for this preparer. The current release batch retains guest priority; its installed default12 process guard is separate from the user's host16 maximum and is owned by the release lane. No external process, guard, image or protected evidence was changed.

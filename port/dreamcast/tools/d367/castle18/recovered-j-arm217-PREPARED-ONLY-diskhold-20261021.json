@@ -1,0 +1,33 @@
+{
+  "scope": "PREPARED ONLY, one existing50s guarded arm; no guest, continuous loop, new assets/program or guard change.",
+  "new_run": "route-walk217",
+  "seed": "route-walk216",
+  "seed_sha256": "af0064bd6d51ca1e7600cb29c9008642a32ac4378af485d19457ba70315cfa05",
+  "source_frame": 31479,
+  "health": [
+    624,
+    1200,
+    90,
+    600
+  ],
+  "controller": "owned-window-recovered-j-r201-combined-escape-patrol-return-still.py",
+  "controller_sha256": "cd6d38de0bcdc84f02b25fb009ea35372df61ab89d52e823ddfff340f8326f6c",
+  "targets": [
+    [
+      23500.0,
+      -45000.0
+    ],
+    [
+      25000.0,
+      -43750.0
+    ],
+    [
+      19000.0,
+      -45000.0
+    ]
+  ],
+  "tolerance": 180,
+  "room": "201",
+  "action": "Actual216 originalweakpoint3698to3396,624/90 intactHG7+10. Fullcombinedeastescape, originalupperpatrol16/farseparationstable30ticks andfullwestreturn; allguards",
+  "driver_sha256": "5b468d53494fcc435ddb09a6698d34d86a3beb554ac54d50732554f1e9f75dde"
+}

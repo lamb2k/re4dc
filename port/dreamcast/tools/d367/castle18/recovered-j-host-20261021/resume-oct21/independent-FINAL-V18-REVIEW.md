@@ -1,0 +1,9 @@
+# V18 concrete host review
+
+Inspected controller `owned-window-recovered-j-r201-Northbell-Southquiet-centercombat-v18-still.py`, 57,319 bytes, SHA-256 `b76f0b6047c999a5d37864ca13d4e5ac87e6d34b18782e62c0b1fdf50a961707`. AST parsing passed; controller not executed. No new concrete NameError, stage-dispatch, identity-pin or guard defect was identified.
+
+North object `0x8cadd6e0`, hit `0x8cc27d20` and position (27273,178,-33277) match the fresh closed-293 census. The target point uses the actual part matrix, retaining the North rotation. `bellpoint`, `control_stage` and quiet-target storage are defined before execution. The original bell callback is required before quiet movement; stage switches to combat only after movement completes. Process-age shot/callback/movement/input bounds remain 23/25/33/40.5 seconds. Quiet recovery does not add dash. Raw-axis acknowledgement/drain and actual-center final ray predicates remain present.
+
+Read the existing offline SAT receipt `current293-Northbell-Southquiet-combat-sourceSAT-20261021.json`: the two supplied legs, current West to (23500,-47500), then (25000,-49000), each have an empty blocked list. This does not qualify dynamic enemy movement, a firing line or actual collision traversal. Frozen range source and corrected watcher-v4 review are in REVIEW-V4-AND-NORTH-RANGE.md; no further review blocker was identified there.
+
+The next bounded guest is already within the user's authorized work. Castle21 retains execution and must verify fresh resource admission, exact closed-293 starting identity, actual watcher result, final state and screenshots. This lane performed no guest, input, process termination, controller/source/state edit or release action. Source, syntax, mocked supervisor tests, new Flycast results and physical Dreamcast acceptance remain distinct.

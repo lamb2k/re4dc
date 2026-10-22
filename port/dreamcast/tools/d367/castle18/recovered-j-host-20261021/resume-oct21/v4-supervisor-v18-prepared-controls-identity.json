@@ -1,0 +1,45 @@
+{
+  "scope": "V4source/AST/ninesyntheticadversarialtests andv18PREPAREDONLY. Actual293v3supervisorfailure retainedseparately. No newruntime/hardware/release acceptance.",
+  "files": [
+    {
+      "path": "prepare-absolute-resource-runner-v4.py",
+      "raw_sha256": "2d20d010edc2da84b2c0212b61166de5ab06b7ae180f2357af65fe9b2d426512"
+    },
+    {
+      "path": "prepare-v4-live-to-exit-race.py",
+      "raw_sha256": "5364e3ff1cad57a8b91d9d08b688fbac667c914d902acb32428d7bd068980e91"
+    },
+    {
+      "path": "guard-resume-41inner-47absolute-resources-v4.py",
+      "raw_sha256": "c166c7a00d8b34082dd9c5cb4957bd66a4d10e54abbc3104aa316e11c70571e7"
+    },
+    {
+      "path": "run-resume-41inner-47absolute-resource-guard-v4.py",
+      "raw_sha256": "276ab4a7a46826709dc3198093ebde6cf3ce2dd1f8c21b9b3ffe5ac82ddbb46e"
+    },
+    {
+      "path": "prepare-v4-adversarial-tests.py",
+      "raw_sha256": "7c372ca7a82e9818540f28e54749405ac875262e5a3b312ca5c74c02d870b022"
+    },
+    {
+      "path": "test-guard-v4-mocked-adversarial.py",
+      "raw_sha256": "ff8bd81b95d98691d18837d4755143017784c087aeb7bf26b13ff1a37e55019d"
+    },
+    {
+      "path": "guard-v4-mocked-adversarial-tests.json",
+      "raw_sha256": "6740278aa59001db2aecc5911788d151f1c8c6285868f5f9ba224dc2cc98c5af"
+    },
+    {
+      "path": "prepare-current293-Northbell-Southquiet-sourceSAT.py",
+      "raw_sha256": "ef89869ac27dee768b9b5d5909a9587d00cff641f37b52cd47c07497d5f105bf"
+    },
+    {
+      "path": "prepare-Northbell-Southquiet-centercombat-v18.py",
+      "raw_sha256": "049005fbc4b7602bd35961528dbffba3fdf05cdbaaf792b455567304d733af9a"
+    },
+    {
+      "path": "owned-window-recovered-j-r201-Northbell-Southquiet-centercombat-v18-still.py",
+      "raw_sha256": "b76f0b6047c999a5d37864ca13d4e5ac87e6d34b18782e62c0b1fdf50a961707"
+    }
+  ]
+}

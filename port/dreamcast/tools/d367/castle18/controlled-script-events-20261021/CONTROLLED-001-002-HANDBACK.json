@@ -1,0 +1,226 @@
+{
+  "scope": "Controlledteleport/scripted-eventTEST coverage. 001DebugTrgHP1+originaldamage areSETUPthenoriginaldeath/RSF0/fullSmd53door+2600 observed. 002RSF0SETUPonly, originalA/switch/disarmTrap/RSF5/fullbarredHeight2300/trapdisable/EventEnd/primarywaves57,5b,5c observed. No secondarywave/exit/chapter/save/hardware/authenticcombat acceptance.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "asset_manifest": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master\\base-manifest.json",
+    "sha256": "e759c03572a7e01843396bac1e6da780282a8c91cc05fb59dfafee9d88311847"
+  },
+  "r201_arc": {
+    "sha256": "adc818de7cd3363a25e501ca9518e4c561ada4c481c171a593433adbdc96e594",
+    "size": 1507776
+  },
+  "host_inputs": [
+    {
+      "path": "controlled-event001-warp.txt",
+      "raw_sha256": "8e753b50382054b6917133dfe2ed7f7efb28f8799cc896f57cc500111e85fae6"
+    },
+    {
+      "path": "observe-controlled-r201-event001.py",
+      "raw_sha256": "f1108533c7371cfaabee17d1d12293d2adb7144c153169b4147bc400e21710ab"
+    },
+    {
+      "path": "run-controlled-event001.py",
+      "raw_sha256": "e2c5858f76e86f8cd0eacc807653ca02739e68f1a460416adf8c2ab1d25addac"
+    },
+    {
+      "path": "run-controlled-event001.sh",
+      "raw_sha256": "98f3e717dd80eec4260a54daf1dc2900effd882f2e4c059a929c9e7b517bf067"
+    },
+    {
+      "path": "controlled-event002-warp.txt",
+      "raw_sha256": "a904756ba904ff6068027c5bce38f209a2640585d58d0ed49ff8e16acc9ae61f"
+    },
+    {
+      "path": "observe-controlled-r201-event002.py",
+      "raw_sha256": "1e3f5162db42e210073d4fa098e2ce1bc73a83d6d3c4a2e7eb2e331ede8cb07b"
+    },
+    {
+      "path": "run-controlled-event002.py",
+      "raw_sha256": "d5decd85bf016ae0c53ecf542fd9e66ff2414d5aaf7e29d0ffed4d98e1c844d3"
+    },
+    {
+      "path": "run-controlled-event002.sh",
+      "raw_sha256": "e9eb9ab56daf40582de12f63bd05597ef2eb94343efbf56c7b8ca26defbce04b"
+    },
+    {
+      "path": "prepare-controlled-event002-observer-wrapper.py",
+      "raw_sha256": "5e45f1c9e8a620063fef781900f4baa97087684c28defd1f1552a3614619852e"
+    },
+    {
+      "path": "finish-controlled-event002-wrapper.py",
+      "raw_sha256": "036be86113f867119c3bcc5cbd4265b2839f100ea98f9e262224fa08a10e107e"
+    },
+    {
+      "path": "audit-controlled-event-closed.py",
+      "raw_sha256": "b860543c616bf3d835b3dc5a3336044b3c0d444db4a8642a4814183ac2e502bf"
+    },
+    {
+      "path": "audit-controlled002-native-barred-proof.py",
+      "raw_sha256": "5b91af2f29185e48fecb9260c9344c2938aad00b92b6ec277951820f7d29164a"
+    },
+    {
+      "path": "restore-missing-owned-master-hardlink-controlled001.py",
+      "raw_sha256": "426ae67d3f51987d528752b059b74cba5de92d5011e30cbadc78a727ba154cd9"
+    },
+    {
+      "path": "protect-restored-master-controlled001.py",
+      "raw_sha256": "5972a46bb92f1cbfcd40ca735d53726a76db44a62166fb49735a53f8ce83ab04"
+    }
+  ],
+  "runs": [
+    {
+      "run": "route-walk-controlled-event001",
+      "closed_proof_sha256": "f4cfd52d57e23f859e844097401eb05d03008c724b0a4f8e2d707ed19af0ff0d",
+      "state_sha256": "6d32243e7be4a1ce9308ffd3f14d22cbb3f44ad5abc03fca8d6e799be8554ad6",
+      "files": [
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\controlled-events-observer.json",
+          "sha256": "7e5643fec6d56946a2028f60514f759556335b68205d92a427d9fe500f9bb2e9"
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\run-start.json",
+          "sha256": "7f1a75ae09d2df745d0545c9edf1221524235aa3c6c4d3dbb83f8877d8df12b9"
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\run-result.json",
+          "sha256": "e648a30c3ecc60281e0ac395ace3d751acb1ad44cb85c4565350d1a9559206ed"
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\owned-resource-guard.json",
+          "sha256": "0a0874cdd5d1d7fbe3caf8df86ce9d5dcc47089a2de398edebc62d5b4ebf8b48"
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\owned-process.json",
+          "sha256": "62913bd73403f83f7517a46adea3e314bccdb895b5366b8752c70bb79f165210"
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\shots\\controlled-before-debug-setup\\controlled-context.json",
+          "sha256": "4929f5ac4a6e98d5c23dc66cd4c520d48f398b301faac6aa2ae2ff3c3b9be078",
+          "source_interval": [
+            180,
+            180
+          ],
+          "pngs": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\shots\\controlled-before-debug-setup\\frames\\fb0.png",
+              "sha256": "9347fe86f6b448518e30d671057b4ece3e7f2cf3906488168f63736a4c990bc0"
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\shots\\controlled-before-debug-setup\\frames\\fb1.png",
+              "sha256": "36cbe5141fe9239b3be2abf3fd4c5cf9d56c8cee8408ef50c725518e06927cb6"
+            }
+          ]
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\shots\\controlled-inner-deadline\\controlled-context.json",
+          "sha256": "bb93c8fefa7341913c54e047870b26784fa469b1cf823cb7c16f9cf5ee3dd48a",
+          "source_interval": [
+            432,
+            432
+          ],
+          "pngs": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\shots\\controlled-inner-deadline\\frames\\fb0.png",
+              "sha256": "d2df508ff8724e3e8b0b175e05c9f7552a5666653ed601077155d4144c67037a"
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\shots\\controlled-inner-deadline\\frames\\fb1.png",
+              "sha256": "4245f809a0f164ddde61d10f9d7bf69453dff44b464aa0dfa020451e98d2fe93"
+            }
+          ]
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\shots\\controlled-original-door-open\\controlled-context.json",
+          "sha256": "9fc1e470f8f67029d106ea70bb576c1b165f7a9f8c5cdce3355fd5b5ec338310",
+          "source_interval": [
+            430,
+            431
+          ],
+          "pngs": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\shots\\controlled-original-door-open\\frames\\fb0.png",
+              "sha256": "d2df508ff8724e3e8b0b175e05c9f7552a5666653ed601077155d4144c67037a"
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event001\\shots\\controlled-original-door-open\\frames\\fb1.png",
+              "sha256": "d2df508ff8724e3e8b0b175e05c9f7552a5666653ed601077155d4144c67037a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run": "route-walk-controlled-event002",
+      "closed_proof_sha256": "65168f057a33e1dedf22b37712a58a1af9c77c95bc01e26c33caf4726b146b54",
+      "state_sha256": "66d8f6129effca32fbe727cc7295558110154eb2160e82f9c4338f7ef91e9116",
+      "files": [
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event002\\controlled-events-observer.json",
+          "sha256": "aa010862692ecd2ffc3ed5bdbcabd1c3981e714add4225d81fb88c81cab85718"
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event002\\run-start.json",
+          "sha256": "b27cd9d5460c964e9725a4ea7993f57f539398c2f2679dd6eb4061a4ec0bc613"
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event002\\run-result.json",
+          "sha256": "3fefae891c5f7fa569c3e5dd6995442b0dc6523a4d7d2e7accb244c71b785b44"
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event002\\owned-resource-guard.json",
+          "sha256": "5adeb9bb1d5437f14f32562edc1b601d4d329c311e6f07a9598740d5b3676cbe"
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event002\\owned-process.json",
+          "sha256": "47b036445cee75725abe0ae08bd8adf97ff0c906a723c5acbb7bc69f7232fc69"
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event002\\shots\\controlled-before-switch-action\\controlled-context.json",
+          "sha256": "ee98132049ccab9bfae6d10d2b5498e21097103b068a363bbf3d6d8a66c86b56",
+          "source_interval": [
+            240,
+            242
+          ],
+          "pngs": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event002\\shots\\controlled-before-switch-action\\frames\\fb0.png",
+              "sha256": "b46916d17f3d83d19355f7d9e66c141899548b70f6b224d5e159c1cf9284bc49"
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event002\\shots\\controlled-before-switch-action\\frames\\fb1.png",
+              "sha256": "35c32bd1a9af6d18ec5b718208f5ed2b5a6399c7890a4b4b15c69fedfeb7ca62"
+            }
+          ]
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event002\\shots\\controlled-inner-deadline\\controlled-context.json",
+          "sha256": "963884171a6c88cd2b2e66689c4ae7e09518ac0717947ac5c9c9dd1a83c6c9ff",
+          "source_interval": [
+            575,
+            578
+          ],
+          "pngs": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event002\\shots\\controlled-inner-deadline\\frames\\fb0.png",
+              "sha256": "145915e4b50efd4bd1bd6b9c36ebd0f6f1a7b9b03b90a7f374f7776c3560ba0d"
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event002\\shots\\controlled-inner-deadline\\frames\\fb1.png",
+              "sha256": "ac6530e5576162dcd10a679b7aad50377571a3dd385865414aa462566c78b0a6"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errata": [
+    "001be_flaglabelactuallyvtable; correctednativeoffset4 inclosedproof, noacceptanceusedbadfield",
+    "001baselinePNGblackfade; notvisualNPCproof. FinaldoorPNGvisuallyinspected.",
+    "001extra inner-deadlinelabelispostgoalclosegrace, notdeadlinefailure",
+    "002barredclassruntimeid4E, notETCresourcealias4C; additiveclosedstateproofcorrectsfieldcast withoutreplay"
+  ],
+  "protected_states": "Authentic127 and294 fullSHA checkedunchanged by bothclosedproofs; allstates/images preserved.",
+  "last_working_tree_commit": "94839227c; only owned evidence/host scripts added, no game source/recipe/build changes"
+}

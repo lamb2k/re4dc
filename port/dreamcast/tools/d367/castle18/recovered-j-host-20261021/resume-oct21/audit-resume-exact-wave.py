@@ -1,0 +1,8 @@
+from pathlib import Path
+import sys,json,struct,hashlib
+L=Path(r'C:\Game Dev\Emulators\codex-lanes\castle18');n=int(sys.argv[1]);ns={'sys':sys};sys.argv=['audit',str(n)];s=(L/'audit-resume-exact-combat.py').read_text().split('record=dict(')[0].replace('assert not p.exists()','assert p.exists()');exec(compile(s,'same-method-exact-state-wave-audit','exec'),ns);read=ns['read'];u32=ns['u32'];sy=json.loads((ns['R']/'J-elf-scoped-symbols.json').read_text())['symbols'];sym=lambda x:next(z['address']for z in sy if z['name']==x);ptr=u32(0x8c39d3b8+20);seen=set();aa=[]
+while ptr:
+ assert ptr not in seen and len(seen)<128;seen.add(ptr);b=read(ptr,0x3d0)
+ if 3<b[0x100]<0x40:aa.append(dict(ptr=hex(ptr),id=hex(b[0x100]),type=b[0x101],source_list_no=hex(b[0x398]),hp=struct.unpack_from('<h',b,0x320)[0],pos=list(struct.unpack_from('<3f',b,0x94)),routines=list(b[0xfc:0x100])))
+ ptr=struct.unpack_from('<I',b,8)[0]
+held=u32(sym('__ZL9aliveCapN'));assert held<64;r=dict(scope='Read-only exact CLOSED snapshot linked-list and scoped held-array audit, four frozenELF anchors; not asynchronouslastsample, no game/statewrites.',run=n,state_sha256=ns['proof']['state_sha256'],source=u32(ns['pg']+0x51e4),health=list(struct.unpack('<4H',read(ns['pg']+0x4fa4,8))),actors=aa,held_ids=list(read(sym('__ZL12aliveCapHeld'),held)),m3r=list(struct.unpack('<3f',read(sym('m3r'),12))),system_flags=hex(u32(u32(sym('_pSys')))),elf_sha256=ns['proof']['start']['elf_sha256'],image_sha256=ns['proof']['start']['disc_sha256']);p=ns['D']/f'route-walk{n}-exact-wave.json';assert not p.exists();p.write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r))

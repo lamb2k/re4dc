@@ -1,0 +1,16 @@
+from pathlib import Path
+import json,hashlib,shutil,datetime
+L=Path(__file__).parent;D=Path(r'C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21\recovered-j-content-20261021');H=Path(r'\\wsl.localhost\Ubuntu-24.04\root\probe\codex-castle18\port\dreamcast\tools\d367\castle18\controlled-script-events-20261021');cap=D/'route-walk-controlled-event004';dest=H/'controlled004';dest.mkdir(exist_ok=False);sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+for name in ['controlled-events-observer.json','run-start.json','run-result.json','owned-resource-guard.json','owned-process.json']:
+ p=cap/name;shutil.copyfile(p,dest/name)
+p=D/'controlled-event004-closed-proof.json';shutil.copyfile(p,dest/'closed-proof.json')
+for p in sorted((cap/'shots').glob('controlled-*/controlled-context.json')):shutil.copyfile(p,dest/(p.parent.name+'-context.json'))
+for name in ['controlled-event004-warp.txt','observe-controlled-r208-event004.py','run-controlled-event004.py','run-controlled-event004.sh','prepare-controlled-event004.py','controlled-event005-warp.txt','observe-controlled-r204-event005.py','run-controlled-event005.py','run-controlled-event005.sh','prepare-controlled-event005.py','audit-controlled-event-generic.py','extract-r204-frozen-controlled-areas.py','seal-controlled003.py','seal-controlled004.py']:shutil.copyfile(L/name,H/name)
+for name in ['r204-frozen-selected-source-AEV-controlled-20261021.json','controlled-event004-readonly-preflight.json']:shutil.copyfile(D/name,H/name)
+for name in ['REVIEW-CONTROLLED-EVENT004.md','R204-MINIMAL-EVENT-PLAN.md']:
+ p=L.parent/'castle-controls21'/name;shutil.copyfile(p,H/('independent-'+name))
+record=dict(scope='CONTROLLED TEST. No authenticcombat/release/physicalDreamcastacceptance.',state_sha256=sha(cap/'data/disc.state'),source=486,room='0x204',phase=[2,0],health=[1440,1440,600,600],PASS='Original208 crank rise: baselineRSF5clear, originalDebugTrg0 declaredpressurebypass, originaleventheld→return, nativeSmd4E4984/4F4000 and registeredAEV2 observed at source316.',PARTIAL='Native ordinaryA280 triggered actual204 roomload; snapshot/PNG show204phase2Loading. No completedphase3arrival/event204/chapter/save/radio acceptance.',not_exercised=['pressure plates','bridge operation','footings','sniping','native201→208 exit','secondary201wave'],next='005 initial204AEV2 nooutcomeflagpreset, actual movie/chapterUI flow. EarlyRSF0/chapter7/RSF7 not sufficient for completion. Radio0xE is not typewriter/save.',protected='Authentic127/294 fullSHA unchanged in closedproof.',guard='PID50848 exited normally; raw40.1s V4observed39.70s no actions; unchanged runtime/disk/capture/process guards.',visual='Finalfb0 directly inspected: Loading screen, matching phase2. No claim that this PNG depicts crank geometry.')
+(dest/'HANDBACK.json').write_text(json.dumps(record,indent=2)+'\n')
+for name in ['HANDBACK.md','INBOX.md']:
+ p=L/name;s=p.read_text(encoding='utf-8');p.write_text('CURRENT USER OBJECTIVE: Controlled teleport/event coverage ACTIVE. 004 closed: original208 crank full/eventreturn PASS, native204load phase2 partial. No active PID;005 prepared for root allocation. Radio0xE is not save UI. Authentic127/294 protected.\n\n'+s,encoding='utf-8')
+print(dest)

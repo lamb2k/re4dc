@@ -1,0 +1,11 @@
+{
+  "replace": {
+    "st2/r211.dar": "/root/re4data/private/castle18-ch41-r211-audio-20261019/st2/r211.dar"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Existing frozen-layout ROOM/FOOT preparation. Non-audio archive and wavetable bytes exact; runtime and preceding partner-state overlap pending.",
+    "candidate_sha256": "fb19ffd6e2afef92bfc8ffddc6b48ea65264149f223aae2ad503c524de37f4eb",
+    "runtime_qualification": false
+  }
+}

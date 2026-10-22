@@ -1,0 +1,32 @@
+{
+  "scope": "Evidence field-name correction only. Current SH4 GCC places the manager vptr first; original header comments describe the GC layout. Old C proof remains untouched and its health/item/capture outcomes are unchanged.",
+  "state_sha256": "a4f9a24e58aadedcee9b4f86346bfa7b2afa74da7a7bc324e38558b7781b9b02",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "previous_proof_sha256": "79a414d877deec4ed8f2005a1353c8355e43a45efd23db47fcdc9ced835407a9",
+  "previous_field_labels": {
+    "parts_array_push": {
+      "read_offset": 24,
+      "actual_member": "pAlivePush"
+    },
+    "parts_count_push": {
+      "read_offset": 28,
+      "actual_member": "pArrayPush"
+    }
+  },
+  "verified_current_member_offsets": {
+    "pAlive": 20,
+    "pAlivePush": 24,
+    "pArrayPush": 28,
+    "nArrayPush": 32
+  },
+  "verified_values": {
+    "pAlivePush": "0x0",
+    "pArrayPush": "0x0",
+    "nArrayPush": 0
+  },
+  "manager_symbol": "PartsMgr8c3b7a80",
+  "dwarf_die": "cManager<cParts>@2e1dac",
+  "dwarf_text_sha256": "47d6162293c3e9acc250752b23d6250a4ea8fb0a2ad412352b4065ac618b75f6",
+  "v2_audit_sha256": "54766af675de3ac167cbd9ec85b0b312ca44ee9a78499eb29ec8f8b07d9e9475",
+  "result": "Inventory restoration remains PASS; both saved pointers and the actual saved count are zero. No runtime or state change."
+}

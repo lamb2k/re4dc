@@ -1,0 +1,467 @@
+{
+  "scope": "CONTROLLED native cold LOAD011 partial outcome, not loaded gameplay/release/hardware acceptance.",
+  "status": "PASS_NATIVE_VMU_LOAD_GAME_HANDOFF_PENDING",
+  "visible_result": "Inspected fb0 PNG shows original CardLoad UI during exit/fade. Native load file0 blocks12 ok1/rc0 and title5/7\u21925/3\u21927/3 occurred. Room entry/gameplay remains pending.",
+  "native_load_log_seen": true,
+  "state_sha256": "b9a39fbffe221e840f50041eea820cbc75f4720a7b74560e34dc2b74be60339e",
+  "closed_native_fields": {
+    "source_frame": 2033,
+    "phase": [
+      0,
+      0
+    ],
+    "room": "0x204",
+    "chapter": 7,
+    "health_restored_from_save": [
+      1440,
+      1440,
+      600,
+      600
+    ]
+  },
+  "VMU_source_and_runtime_sha256": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+  "source_009_unchanged": true,
+  "protected_authentic_states": {
+    "route-walk127": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16",
+    "route-walk294": "cb7a314b8fd0383af0b7baf17c2e87a712705beb122a1d39c7705553dd795258"
+  },
+  "programme_binding_receipt_sha256": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed",
+  "ELF_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "master_image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "guard": {
+    "PASS_normal_owned_closure": true,
+    "owner": {
+      "pid": 52640,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-load011\\flycast.exe",
+      "start_filetime": 134371158181216005,
+      "created_utc": "2026-10-22T04:10:18.130058+00:00",
+      "rights": "retained subprocess handle receipt"
+    },
+    "closed_identity": {
+      "initial_live_identity_pinned": true,
+      "retained_handle_signaled": true,
+      "exit_code": 0,
+      "postexit_times_available": true,
+      "postexit_path_query": false,
+      "proof_reason": "normal or absolute loop exit"
+    },
+    "exit_age": 39.574990001681726,
+    "max_capture_logical_bytes": 23018114,
+    "minimum_runtime_free_bytes": 39228264448,
+    "not_a_new_fail_closed_path_test": true
+  },
+  "harness": {
+    "status": "RUN_COMPLETE",
+    "elapsed_s": 40.0,
+    "errors": []
+  },
+  "screenshots": [
+    {
+      "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-load011\\shots\\controlled-native-load-context\\controlled-context.json",
+      "context_sha256": "8222d2a09503891ae254a87c6a7f5a3f81b368594096f8b10abfe753316d9b12",
+      "context": {
+        "scope": "Native LOAD controlled evidence only; typed fields do not replace observed Load result/gameplay",
+        "observation": {
+          "process_age": 36.03948391915765,
+          "pg": 2352652060,
+          "frame": 941,
+          "phase": [
+            0,
+            0
+          ],
+          "room": "0x120",
+          "chapter": 0,
+          "Stop": "0x7fffffbf",
+          "health": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "CardStatus": "0x80000001",
+          "status3": "0x0",
+          "partner_ptr": "0x0",
+          "card_source_correlated": {
+            "pointer": "0x8cb5dee0",
+            "routines": [
+              1,
+              6,
+              0,
+              0
+            ],
+            "status": "0x0",
+            "type": 0,
+            "slot": 0,
+            "save_no": 0,
+            "error": 0
+          }
+        },
+        "before": {
+          "process_age": 36.19548391911667,
+          "pg": 2352652060,
+          "frame": 946,
+          "phase": [
+            0,
+            0
+          ],
+          "room": "0x120",
+          "chapter": 0,
+          "Stop": "0x7fffffbf",
+          "health": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "CardStatus": "0x80000001",
+          "status3": "0x0",
+          "partner_ptr": "0x0",
+          "card_source_correlated": {
+            "pointer": "0x8cb5dee0",
+            "routines": [
+              2,
+              1,
+              0,
+              0
+            ],
+            "status": "0x0",
+            "type": 0,
+            "slot": 0,
+            "save_no": 0,
+            "error": 0
+          }
+        },
+        "after": {
+          "process_age": 36.25848391914042,
+          "pg": 2352652060,
+          "frame": 948,
+          "phase": [
+            0,
+            0
+          ],
+          "room": "0x120",
+          "chapter": 0,
+          "Stop": "0x7fffffbf",
+          "health": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "CardStatus": "0x80000001",
+          "status3": "0x0",
+          "partner_ptr": "0x0",
+          "card_source_correlated": {
+            "pointer": "0x8cb5dee0",
+            "routines": [
+              2,
+              5,
+              0,
+              0
+            ],
+            "status": "0x0",
+            "type": 0,
+            "slot": 0,
+            "save_no": 0,
+            "error": 0
+          }
+        },
+        "pngs": [
+          {
+            "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-load011\\shots\\controlled-native-load-context\\frames\\fb0.png",
+            "sha256": "1efbbc48ea7e61d9310bfdb8ede81268521ac1c4f884fb9b382227e66b466793"
+          },
+          {
+            "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-load011\\shots\\controlled-native-load-context\\frames\\fb1.png",
+            "sha256": "1efbbc48ea7e61d9310bfdb8ede81268521ac1c4f884fb9b382227e66b466793"
+          }
+        ]
+      }
+    }
+  ],
+  "fixture_and_card_log": [
+    {
+      "line": 331,
+      "text": "fixture: /cd/dc/padscript.txt: 9 entries, source clock"
+    },
+    {
+      "line": 428,
+      "text": "fixture: state title=1/0 at frame 40"
+    },
+    {
+      "line": 464,
+      "text": "fixture: state card=0/2 at frame 138"
+    },
+    {
+      "line": 466,
+      "text": "fixture: state card=0/3 at frame 140"
+    },
+    {
+      "line": 468,
+      "text": "card-vmu: op=mount file=-1 vbl=15 rc=0"
+    },
+    {
+      "line": 471,
+      "text": "fixture: state card=0/4 at frame 158"
+    },
+    {
+      "line": 473,
+      "text": "fixture: state card=0/5 at frame 160"
+    },
+    {
+      "line": 477,
+      "text": "fixture: state card=0/6 at frame 164"
+    },
+    {
+      "line": 479,
+      "text": "card-vmu: op=info file=0 vbl=3 rc=0"
+    },
+    {
+      "line": 483,
+      "text": "fixture: state card=0/7 at frame 214"
+    },
+    {
+      "line": 486,
+      "text": "fixture: state card=1/0 at frame 218"
+    },
+    {
+      "line": 489,
+      "text": "fixture: state card=1/1 at frame 220"
+    },
+    {
+      "line": 495,
+      "text": "card-vmu: op=sysread file=20 vbl=2 rc=0"
+    },
+    {
+      "line": 499,
+      "text": "fixture: state card=1/2 at frame 234"
+    },
+    {
+      "line": 501,
+      "text": "fixture: state card=1/3 at frame 236"
+    },
+    {
+      "line": 522,
+      "text": "fixture: state card=2/0 at frame 280"
+    },
+    {
+      "line": 525,
+      "text": "fixture: state card=3/0 at frame 282"
+    },
+    {
+      "line": 527,
+      "text": "fixture: state card=4/0 at frame 284"
+    },
+    {
+      "line": 530,
+      "text": "fixture: state card=4/1 at frame 286"
+    },
+    {
+      "line": 531,
+      "text": "fixture: state title=1/1 at frame 290"
+    },
+    {
+      "line": 533,
+      "text": "fixture: state title=1/2 at frame 293"
+    },
+    {
+      "line": 544,
+      "text": "fixture: state title=2/0 at frame 426"
+    },
+    {
+      "line": 545,
+      "text": "fixture: delivered 1000 at frame 195 (entry 0 for title)"
+    },
+    {
+      "line": 546,
+      "text": "fixture: state title=2/1 at frame 428"
+    },
+    {
+      "line": 576,
+      "text": "fixture: state title=2/2 at frame 554"
+    },
+    {
+      "line": 578,
+      "text": "fixture: state title=3/0 at frame 586"
+    },
+    {
+      "line": 615,
+      "text": "fixture: state title=4/0 at frame 799"
+    },
+    {
+      "line": 666,
+      "text": "fixture: state title=4/2 at frame 1049"
+    },
+    {
+      "line": 705,
+      "text": "fixture: state title=4/4 at frame 1249"
+    },
+    {
+      "line": 825,
+      "text": "fixture: state title=4/6 at frame 1759"
+    },
+    {
+      "line": 826,
+      "text": "fixture: state title=5/0 at frame 1761"
+    },
+    {
+      "line": 842,
+      "text": "fixture: state title=5/1 at frame 1766"
+    },
+    {
+      "line": 843,
+      "text": "fixture: delivered 0000 at frame 862 (entry 1 for title)"
+    },
+    {
+      "line": 844,
+      "text": "fixture: delivered 0100 at frame 863 (entry 2 for title)"
+    },
+    {
+      "line": 848,
+      "text": "fixture: state title=5/7 at frame 1769"
+    },
+    {
+      "line": 919,
+      "text": "fixture: state card=0/1 at frame 1871"
+    },
+    {
+      "line": 958,
+      "text": "fixture: state card=1/0 at frame 1882"
+    },
+    {
+      "line": 966,
+      "text": "fixture: state card=1/1 at frame 1883"
+    },
+    {
+      "line": 975,
+      "text": "fixture: state card=1/2 at frame 1886"
+    },
+    {
+      "line": 1009,
+      "text": "card-vmu: op=mount file=-1 vbl=15 rc=0"
+    },
+    {
+      "line": 1015,
+      "text": "fixture: state card=1/3 at frame 1905"
+    },
+    {
+      "line": 1020,
+      "text": "fixture: state card=1/4 at frame 1907"
+    },
+    {
+      "line": 1026,
+      "text": "card-vmu: op=info file=0 vbl=3 rc=0"
+    },
+    {
+      "line": 1031,
+      "text": "fixture: state card=1/5 at frame 1968"
+    },
+    {
+      "line": 1034,
+      "text": "fixture: state card=1/6 at frame 1972"
+    },
+    {
+      "line": 1037,
+      "text": "fixture: state card=1/7 at frame 1976"
+    },
+    {
+      "line": 1039,
+      "text": "fixture: state card=2/0 at frame 1978"
+    },
+    {
+      "line": 1041,
+      "text": "fixture: state card=2/1 at frame 1980"
+    },
+    {
+      "line": 1043,
+      "text": "fixture: delivered 0000 at frame 945 (entry 3 for card)"
+    },
+    {
+      "line": 1044,
+      "text": "fixture: delivered 0100 at frame 946 (entry 4 for card)"
+    },
+    {
+      "line": 1046,
+      "text": "fixture: state card=2/2 at frame 1984"
+    },
+    {
+      "line": 1048,
+      "text": "fixture: state card=2/5 at frame 1986"
+    },
+    {
+      "line": 1050,
+      "text": "fixture: state card=2/6 at frame 1988"
+    },
+    {
+      "line": 1051,
+      "text": "fixture: delivered 0000 at frame 949 (entry 5 for card)"
+    },
+    {
+      "line": 1053,
+      "text": "fixture: delivered 0001 at frame 950 (entry 6 for card)"
+    },
+    {
+      "line": 1055,
+      "text": "fixture: delivered 0000 at frame 953 (entry 7 for card)"
+    },
+    {
+      "line": 1056,
+      "text": "fixture: delivered 0100 at frame 954 (entry 8 for card)"
+    },
+    {
+      "line": 1058,
+      "text": "fixture: state card=3/0 at frame 2002"
+    },
+    {
+      "line": 1061,
+      "text": "fixture: state card=3/2 at frame 2004"
+    },
+    {
+      "line": 1082,
+      "text": "card-vmu: load file=0  blocks=12 ok=1"
+    },
+    {
+      "line": 1083,
+      "text": "card-vmu: load digest file=0 a569c07d"
+    },
+    {
+      "line": 1084,
+      "text": "card-vmu: op=load file=0 vbl=13 rc=0"
+    },
+    {
+      "line": 1086,
+      "text": "fixture: state card=3/3 at frame 2020"
+    },
+    {
+      "line": 1088,
+      "text": "fixture: state card=3/4 at frame 2022"
+    },
+    {
+      "line": 1090,
+      "text": "fixture: state card=3/5 at frame 2024"
+    },
+    {
+      "line": 1092,
+      "text": "fixture: state card=4/0 at frame 2026"
+    },
+    {
+      "line": 1097,
+      "text": "fixture: state card=4/1 at frame 2028"
+    },
+    {
+      "line": 1099,
+      "text": "fixture: state card=4/2 at frame 2030"
+    },
+    {
+      "line": 1194,
+      "text": "fixture: state title=5/3 at frame 2153"
+    },
+    {
+      "line": 1198,
+      "text": "fixture: state title=7/3 at frame 2153"
+    }
+  ],
+  "next": "No guest allocated. Prepare read-only exact011state continuation to finish original TitleExit/GameTask and observe original R204Init/radio if savedRSF0set/7clear. No rearm, input or outcome edits.",
+  "exact_saved_payload_byte_FNV_matches_runtime_load": "0xa569c07d",
+  "saved_RSF204": "0x80000000"
+}

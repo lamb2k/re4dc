@@ -1,0 +1,99 @@
+{
+  "scope": "SOURCE ONLY019 narrow missing-current-log readiness repair; no new guest/allocation. Actual018 failure immutable.",
+  "seed": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door018\\data\\disc.state",
+    "sha256": "4d7178b9d7420156b39328396cae08661f92c297f4ed28794b145a3cfe03ecdc",
+    "selection": "Exactactual018serializedstate,source2604same017/room204Part1/Stop0 andnoWPM/UI. Preserveperipherallineage, no rollbackto017 despiteeligibleunchangedsourceframe."
+  },
+  "actual018_audit": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\controlled018-missing-log-startup-failure-audit.json",
+    "sha256": "1142507a900e76777ab557d842c500aa160b64928343bc61223d2ac5eac18f0f"
+  },
+  "prepared": {
+    "prepared_only": true,
+    "no_guest": true,
+    "observer_sha256": "fe49e279d47c0c6e5cdbfa5bac6e669a4997031dd33bb88ea21427a616e30885",
+    "wrapper_sha256": "f1dec0d483080df1fb266a48083d2d6aa3cbddd600070501066d7e3d17ffaeb8",
+    "pins_sha256": "818945d5ab42c80ef6d18ef55ba8b7582addf8f803677e140d2d968ffa5436f3",
+    "argv": [
+      "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\tools\\fp_run_ram.py",
+      "--base",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+      "--cap",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019",
+      "--syms",
+      "0x4319a0 0x4419a4 0x4419a0",
+      "--seconds",
+      "41",
+      "--vmu",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event009\\data\\T0000_vmu_save_A1.bin",
+      "--state-seed",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door018\\data",
+      "--warp",
+      "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\controlled-ch32-drain014-warp.txt",
+      "--period",
+      "0",
+      "--name",
+      "castle21-CONTROLLED-original209-door019"
+    ],
+    "admission_bytes": 20342374400,
+    "runtime_floor": 19394461696,
+    "capture_cap": 62914560,
+    "global_limit": 16,
+    "lane_limit": 2,
+    "source_only": true
+  },
+  "method_delta": "Catch ONLY FileNotFoundError from exactcurrentcap flycast.log read as bounded pending under original process-age<38 loop/identitycheck. Require unchanged exactcurrentstateLoaded aftermapping, committedpGregion/mainanchors/twoadvancingsourceframes before anyWPM/UI. Permanentabsence returnsNone/noinput at38 thennormalclose39/V5absolute47.5. Otherexceptionsfailclosed.",
+  "qualification": {
+    "source_cases": 2,
+    "receipt_sha256": "728447a495c82ff2ae5c8c6048f73cb47acfe7b319e846dd4911580a3be8a252",
+    "default_pin_count": 37,
+    "no_unrelated_44_17_31_rerun": true,
+    "actual019_guest": 0
+  },
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff48",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c47ff60",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c4801b6",
+      "bytes": 1
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ],
+  "maximum_successful_command_bytes": 58,
+  "guards": {
+    "start_bytes": 20342374400,
+    "runtime_bytes": 19394461696,
+    "raw_seconds": 41,
+    "normal_close_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_bytes": 62914560,
+    "global_flycast": 16,
+    "castle": 2,
+    "standing_source_peer": 67108864
+  },
+  "root_argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-door019.sh",
+    "--execute-allocated019"
+  ],
+  "shell_sha256": "b6696a56be94892fee5a1dd890ca05d6c82cbcad1f749f90ad0d1f0957fa6f72",
+  "prior_source_qualified_commit": "3b095e77db9f9d564155e43a3c1669597205f947",
+  "acceptance": "Unchanged actual209entry/physicalDoor1opening/originalCam3\u21922/eventclear/Stop0/frames.018sourcequalificationdidnotcatchlogcreationrace;018actualtargetsunexercised.019sourceclearnotactualfixacceptance."
+}

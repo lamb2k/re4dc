@@ -1,0 +1,42 @@
+{
+  "utc": "2026-10-22T05:31:43.6299432Z",
+  "owner": "root",
+  "allocated014": true,
+  "allowed_runs": 1,
+  "wrapper_sha256": "dbdb673f9b8bc0ef7fb86b9e9d21d98e756523563493de2b120bc1a63980f600",
+  "pins_sha256": "3d01155a3c1bd7c4b4c85c1d1d8f23b5ced1d94dd1626fdb9ffac9bfb5f331bd",
+  "observer_sha256": "c2b0331770e8f013e3d68a1522814e8d2b655eb2595cd11d62998a72cda31688",
+  "shell_sha256": "8db6799ad4d6fc01256a577b27ee89da224c7aa69be8117b79b44d615c8b9936",
+  "trace_lock_sha256": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688",
+  "proposal_sha256": "79022fc5cbf8d5bae2527ef844262697aef368d4efcf359f4139fa259df98955",
+  "review_commit": "54c05c140f67b4b8c9fd6e45a8c6103aa80c75dc",
+  "review_sha256": "cc1a8ae7c81e2e9e262a549aabcd71db9554a54407f723c21016a2448ef50969",
+  "C_free_bytes": 145064529920,
+  "globalFlycastCount": 0,
+  "castleFlycastCount": 0,
+  "resources": {
+    "start_free_bytes": 20342374400,
+    "runtime_free_bytes": 19394461696,
+    "raw_seconds": 41,
+    "normal_close_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_cap_bytes": 62914560,
+    "global_Flycasts": 16,
+    "castle_Flycasts": 2,
+    "peers": "Conservative floor retains18GiB+128MiB+200MiBstandingpeers+640MiBformerextra. Global64MiBsourcepeer included; root must charge any newer peer allocation before execution."
+  },
+  "argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-drain014.sh",
+    "--execute-allocated014"
+  ],
+  "no_retry": true,
+  "no_following_guest": true,
+  "scope": "ONE controlledcold205 teleport to original lever, actualnativefront/action/MDTprompt gatedordinaryYes andoriginaldrain/end; no outcome memorywrites/state seed/HP/flags. Preserveauth127/294/013/009VMU. ExactV5 andnativePID guards unchanged; no release/hardware/performanceclaim."
+}

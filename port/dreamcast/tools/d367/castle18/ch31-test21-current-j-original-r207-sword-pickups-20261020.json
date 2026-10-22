@@ -1,0 +1,494 @@
+{
+  "scope": "Existing immutable J program/image, original VMU/CardLoad lineage continued through original no-warp r207 sword pickups. Normal owned-window movement/dialogue only; no guest/process/state writes, retarget/build/stage or K05 workaround.",
+  "source_runtime": "12a841d7c",
+  "source_checkpoint": "104afded7",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "disc_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "chain": [
+    {
+      "capture": "current-j-route-walk41",
+      "elapsed_s": 8.1,
+      "seed_state_sha256": "ab4f819f315f4f9c178c1ee0d950f169505a260616ee850202f441583074fc9f",
+      "state_sha256": "0b43acaeb3f12cb101613f15e5b0e0e2d4c1672c1bdd5493ff31d4a9852a041f",
+      "run_sha256": "2088edcfff3af968c9f127258d5b069073c395f256aba0b128311d6840f61a7e",
+      "controller_sha256": "f02b4593df97f39ac8896f7d5637b302952a86712db53711b3dbf0314169b77d"
+    },
+    {
+      "capture": "current-j-route-walk42",
+      "elapsed_s": 8.1,
+      "seed_state_sha256": "0b43acaeb3f12cb101613f15e5b0e0e2d4c1672c1bdd5493ff31d4a9852a041f",
+      "state_sha256": "a4c0e72f0d33ecd0f3496e179f9fcd9e5bef9a39926d97284e2c4bb13d07c4fe",
+      "run_sha256": "27d001b6824e52ba18a263e5202db40c767617c5d50cfdb616d0fc88b8ca0613",
+      "controller_sha256": "37d9382ccf57e38ced288215e24ca3aeb985c50fd2e8498ee9d95b4b7d88e90e"
+    },
+    {
+      "capture": "current-j-route-walk43",
+      "elapsed_s": 22.2,
+      "seed_state_sha256": "a4c0e72f0d33ecd0f3496e179f9fcd9e5bef9a39926d97284e2c4bb13d07c4fe",
+      "state_sha256": "140d477c0c63864165b52c574c4811d0e63c83ccd1190388d7915e2a2f2f12bb",
+      "run_sha256": "59a574ff4b7be942ebc9fbd6a7732e37da24d92fb831e695bae536a28bcfefbc",
+      "controller_sha256": "a459d835fb718129ad567d22932015dad5ee77d484d5740a17956ad508d4d154"
+    },
+    {
+      "capture": "current-j-route-walk44",
+      "elapsed_s": 24.6,
+      "seed_state_sha256": "140d477c0c63864165b52c574c4811d0e63c83ccd1190388d7915e2a2f2f12bb",
+      "state_sha256": "6898a8d8f40f7c48549474acfc61afef2394407ba32c5a6760d5424b46ae90e8",
+      "run_sha256": "c18b00f7a86a399eb1448d69b33b9a296417a688cad54c7bb0a27929401d7863",
+      "controller_sha256": "efb4a38cd5c1e04ddefcd3462522272869f9920812ebf72b15a280b56aba61da"
+    },
+    {
+      "capture": "current-j-route-walk45",
+      "elapsed_s": 51.3,
+      "seed_state_sha256": "6898a8d8f40f7c48549474acfc61afef2394407ba32c5a6760d5424b46ae90e8",
+      "state_sha256": "f4e8c9f78f96347755010a6706386a8663fce8ba26e935053d9e50961711083d",
+      "run_sha256": "fe6470d4ed456a495afc440812174148fa80728ee345a6b8168e107a841d4eb7",
+      "controller_sha256": "3853be534f4c58cd82b271f757d36fe7f55431deeab694b5d5f06d00c818e8b8"
+    },
+    {
+      "capture": "current-j-route-walk46",
+      "elapsed_s": 4.1,
+      "seed_state_sha256": "f4e8c9f78f96347755010a6706386a8663fce8ba26e935053d9e50961711083d",
+      "state_sha256": "458a74f39e5d8adf09b8ccf486633b42c196358c870d8cdeea574588c8cac7df",
+      "run_sha256": "ae776edb408854458513ac5e37ea821f4e49b12115553b02885a78b96cec45b5",
+      "controller_sha256": "aee1b04279f4da1746a696685827b86042dd23dad8150e82bdf91bd00cfe7be9"
+    }
+  ],
+  "before": {
+    "scope": "Immutable current J original no-warp CardLoad lineage, four exact ELF anchors; original inventory and RSF read-only. No state changes.",
+    "state_sha256": "ab4f819f315f4f9c178c1ee0d950f169505a260616ee850202f441583074fc9f",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x207",
+    "chapter": 6,
+    "source_frame": 11807,
+    "health": [
+      1200,
+      1200,
+      600,
+      600
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "r207_RSF": "0x86200000",
+    "player_pos": [
+      523.8397216796875,
+      126.7432861328125,
+      -49.68268585205078
+    ],
+    "partner_pos": [
+      139.01052856445312,
+      126.7442626953125,
+      59.515586853027344
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 10
+      },
+      {
+        "id": "0x4",
+        "num": 10,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ]
+  },
+  "lower_complete": {
+    "scope": "Immutable current J original no-warp CardLoad lineage, four exact ELF anchors; original inventory and RSF read-only. No state changes.",
+    "state_sha256": "6898a8d8f40f7c48549474acfc61afef2394407ba32c5a6760d5424b46ae90e8",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x207",
+    "chapter": 6,
+    "source_frame": 13410,
+    "health": [
+      1200,
+      1200,
+      600,
+      600
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "r207_RSF": "0x84200000",
+    "player_pos": [
+      761.5521850585938,
+      146.8662109375,
+      -7368.1201171875
+    ],
+    "partner_pos": [
+      372.6530456542969,
+      147.4945068359375,
+      -7484.63525390625
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 10
+      },
+      {
+        "id": "0x4",
+        "num": 10,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xc4",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ]
+  },
+  "upper_complete": {
+    "scope": "Immutable current J original no-warp CardLoad lineage, four exact ELF anchors; original inventory and RSF read-only. No state changes.",
+    "state_sha256": "458a74f39e5d8adf09b8ccf486633b42c196358c870d8cdeea574588c8cac7df",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x207",
+    "chapter": 6,
+    "source_frame": 14905,
+    "health": [
+      1200,
+      1200,
+      600,
+      600
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "r207_RSF": "0x80300000",
+    "player_pos": [
+      -9587.8818359375,
+      4149.16357421875,
+      -10280.3447265625
+    ],
+    "partner_pos": [
+      -9010.22265625,
+      4149.16259765625,
+      -10517.2275390625
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 10
+      },
+      {
+        "id": "0x4",
+        "num": 10,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xc4",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x80",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ]
+  },
+  "native_lower": {
+    "rows": [
+      {
+        "room": "r207",
+        "id": "00",
+        "name": "Leon",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 8730,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          7
+        ],
+        "parts": [
+          119
+        ]
+      },
+      {
+        "room": "r207",
+        "id": "03",
+        "name": "Ashley",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 8100,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          141
+        ]
+      },
+      {
+        "room": "r207",
+        "id": "11",
+        "name": "em11",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 2323,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [
+          "zealot-em11-07p"
+        ],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          37
+        ]
+      }
+    ],
+    "packages": {},
+    "fails": 0,
+    "not_drawn": [
+      {
+        "room": "r207",
+        "id": "11",
+        "name": "em11",
+        "samples": 24,
+        "max_alive": 3,
+        "nearest": 5197,
+        "in_view": 3,
+        "verdict": "drawn"
+      }
+    ]
+  },
+  "native_stairs_upper": {
+    "rows": [
+      {
+        "room": "r207",
+        "id": "00",
+        "name": "Leon",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 26385,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          7
+        ],
+        "parts": [
+          119
+        ]
+      },
+      {
+        "room": "r207",
+        "id": "03",
+        "name": "Ashley",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 25405,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          141
+        ]
+      },
+      {
+        "room": "r207",
+        "id": "11",
+        "name": "em11",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 13081,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [
+          "zealot-em11-07p",
+          "zealot-em11-08h"
+        ],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          37
+        ]
+      }
+    ],
+    "packages": {},
+    "fails": 0,
+    "not_drawn": [
+      {
+        "room": "r207",
+        "id": "11",
+        "name": "em11",
+        "samples": 36,
+        "max_alive": 4,
+        "nearest": 450,
+        "in_view": 19,
+        "verdict": "drawn"
+      }
+    ]
+  },
+  "vram_stairs_upper": {
+    "rooms": [
+      {
+        "room": "207",
+        "start": 8040,
+        "samples": 3,
+        "closed": false,
+        "min_free": 117952,
+        "min_largest": 10752,
+        "peak_pinned": 1913408,
+        "last": {
+          "pinned": 895872,
+          "dynamic": 1056448,
+          "other": 90112,
+          "free": 524992,
+          "largest": 479232,
+          "min_free": 117952,
+          "min_largest": 10752,
+          "peak_pinned": 1913408,
+          "loads": 209,
+          "evicted": 0,
+          "retries": 0,
+          "at": "tick",
+          "f": 11640
+        },
+        "gaps": {
+          "refusals": 0,
+          "guard": 0,
+          "guard_p": 0,
+          "nocontig": 0,
+          "latched": 0,
+          "absent": 0,
+          "gc_fx": 0,
+          "dropped": 0,
+          "fx_dropped": 0,
+          "tex_rej": 0,
+          "snd_fail": 0,
+          "meta": 0
+        },
+        "snd_used": 1804992,
+        "loads": 209,
+        "evicted": 0,
+        "retries": 0,
+        "min_kos": 31016,
+        "menu_loads": 0,
+        "play_loads": null,
+        "play_evicted": null
+      }
+    ],
+    "failures": [],
+    "known_gaps": [],
+    "notes": [],
+    "new_format": true
+  },
+  "limits": [
+    "41/42 entry table stops and43 corridor displacement stop are preserved guarded controls; actual right-hand table detour plus source SAT corridor turns then succeed. Static SAT alone omits this original object obstacle.",
+    "45 reaches upper sword; original pickup completes just after helper deadline while source UI/callback still holds.46 normalA advances original dialogue until Stop0 and mount bit clear. Both exact current ELF anchored snapshots retained.",
+    "Native CAST/NOTDRAWN passes observed lower/stair/upper windows. Reported209textureloads/0evictions/0retries/0sndfail/minKOS31016B are window telemetry, not whole-room residency/readquiet. Motion cache remains the original J policy; K05 shared budget proof is untouched.",
+    "Both collected swords are now inventory1; swapping mounts, original wall opening/onward room, Garrador/dungeon/waves/end save and full chapter acceptance remain pending."
+  ]
+}

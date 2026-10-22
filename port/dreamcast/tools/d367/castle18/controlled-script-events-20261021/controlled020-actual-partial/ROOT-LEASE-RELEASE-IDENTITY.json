@@ -1,0 +1,18 @@
+{
+  "path": "C:\\Game Dev\\Emulators\\codex-lanes\\cache21\\CASTLE020-EXCLUSIVE-GUI-LEASE.json",
+  "sha256": "15c7d954ef203d0746216cbed25a0113885fd22016e74a5e0bc737d8310425e1",
+  "read_only": true,
+  "root_owns_lease": true,
+  "receipt": {
+    "active": false,
+    "owner": "root",
+    "QA_actual_closed": true,
+    "utc": "2026-10-22T08:01:10.9024889Z",
+    "scope": "Exclusive GUI-input/focus resource for this one bounded unit; global16/lane2 capacity unchanged",
+    "no_peer_Flycast_at_admission": true,
+    "release": "Only after retained process/job closure; source/build/readback workers continue",
+    "unit": "castle020",
+    "closed_utc": "2026-10-22T08:06:16.9133600Z",
+    "closure": "Actual02024400 retainedsignaled/exit0 at39.700315s, wrapper/jobclosed/errors[]; no nativeA ack/209entry. Root inventoryempty."
+  }
+}

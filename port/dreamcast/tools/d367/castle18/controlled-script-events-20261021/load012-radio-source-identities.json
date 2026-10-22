@@ -1,0 +1,36 @@
+{
+  "scope": "Read-only proposed012 native auto-radio source review; no guest/test/runtime edits",
+  "source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "sources": [
+    {
+      "path": "src/st2/r204.cpp",
+      "current_sha256": "c07923996fed358183efca25cb52f13c6dce5f7e0b32326506030d01370efb4b",
+      "frozen_sha256": "c07923996fed358183efca25cb52f13c6dce5f7e0b32326506030d01370efb4b"
+    },
+    {
+      "path": "src/game/sscrn.cpp",
+      "current_sha256": "46ad97e6a8951e9e5fe7502aaa4798b4a97dd213576a70daef0f74a64f56267a",
+      "frozen_sha256": "46ad97e6a8951e9e5fe7502aaa4798b4a97dd213576a70daef0f74a64f56267a"
+    },
+    {
+      "path": "src/Sscrn/ss_term.cpp",
+      "current_sha256": "6b7b5cb17e64b68aed53418678b6187e799d5c0fcd3b469ea8c90cb2c02109f2",
+      "frozen_sha256": "6b7b5cb17e64b68aed53418678b6187e799d5c0fcd3b469ea8c90cb2c02109f2"
+    },
+    {
+      "path": "include/sscrn.h",
+      "current_sha256": "247493f212c5daf84312d860cde9fef3346dfb8e3a3e617581955e61ea5a236d",
+      "frozen_sha256": "247493f212c5daf84312d860cde9fef3346dfb8e3a3e617581955e61ea5a236d"
+    },
+    {
+      "path": "port/dreamcast/game/sscrn_bridge.cpp",
+      "current_sha256": "dd8e8cae2e51ea5e5f6189b51119eaea8f89fbfc4901dc6be8814fa44a366510",
+      "frozen_sha256": "dd8e8cae2e51ea5e5f6189b51119eaea8f89fbfc4901dc6be8814fa44a366510"
+    }
+  ],
+  "resolved_knobs_sha256": "ef7217aaba111dae32bc5b6cb2cd0f67833b59ad5fc351cb1592ccfe96483bda",
+  "radio_flags": {
+    "RADIO_SUB_LOG": "0",
+    "RADIO_SUB_RT": "1"
+  }
+}

@@ -16,4 +16,13 @@ for v in "0 0 0" "1 0 0" "1 1 0" "1 1 1"; do
       -DRE4DC_SS_CERT=$1 -DTEST_WIDE=$2 -DRE4DC_NMR_PARK_UNRELOCATED=$3 -I"$GAME" -I"$GAME/platform/include" "$HERE/swap_park_test.cpp" -o "$bin"
   "$bin"
 done
+# r207 regression: production 22+10 asset shape, current stump capacity versus the opt-in 32.
+for partner in 0 1; do
+  bin=$OUT/swap_park_test-partner$partner
+  g++ -std=gnu++20 -O1 -g -Wall -Wextra -Wno-unused-function -Wno-misleading-indentation -Wno-missing-field-initializers -fsanitize=address,undefined -fno-sanitize-recover=all \
+      -DRE4DC_SS_CERT=1 -DTEST_WIDE=1 -DRE4DC_NMR_PARK_UNRELOCATED=1 -DRE4DC_ACTOR_GANADO_PS2_STUMP=1 \
+      -DTEST_PARTNER_FIXTURE=1 -DRE4DC_SS_CERT_PARTNER_CAPACITY=$partner \
+      -I"$GAME" -I"$GAME/platform/include" "$HERE/swap_park_test.cpp" -o "$bin"
+  "$bin"
+done
 echo "SS_CERT HOST GATES PASS"

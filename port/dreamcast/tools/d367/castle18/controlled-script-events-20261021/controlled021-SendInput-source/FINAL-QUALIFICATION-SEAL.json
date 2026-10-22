@@ -1,0 +1,16 @@
+{
+  "scope": "Final021 independent source qualification addendum only; original frozen candidate and020partial unchanged; no guest/allocation.",
+  "prior_source_seal_sha256": "689b55e7b567769b50305857fb6d125e71d6affab85ae3b6de8d77ae86984302",
+  "members": [
+    {
+      "path": "DOOR021-SOURCE-QUALIFIED-HANDBACK.json",
+      "bytes": 4340,
+      "sha256": "b82a9b5ec1150a6e47113f58b4f7411a768db14b21e88bec643b97cffd2d2eee"
+    },
+    {
+      "path": "CURRENT-STATUS.md",
+      "bytes": 750,
+      "sha256": "31ed38337a764269453fcb4ce9ac965ad91b4afe123ac0a543d5b5be92899e3c"
+    }
+  ]
+}

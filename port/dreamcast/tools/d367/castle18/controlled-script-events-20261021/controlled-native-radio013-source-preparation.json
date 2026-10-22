@@ -1,0 +1,47 @@
+{
+  "created_utc": "2026-10-22T04:34:23.278470+00:00",
+  "scope": "SOURCE ONLY proposed013 exact012-state continuation of originalongoingradio, no new inputs/rearm/teleport/outcomes and no guest allocation.",
+  "files": {
+    "run-controlled-native-radio013.py": {
+      "bytes": 5729,
+      "sha256": "fd3b07c4a7e51a343c172c9953b337c304ee90b5e23dafd5872b8c687d4b99b2"
+    },
+    "observe-controlled-native-radio013.py": {
+      "bytes": 7820,
+      "sha256": "cb1de085394df7ee86b44dc7961741563cb11e243b8139dc99558cc4aedf6344"
+    },
+    "run-controlled-native-radio013.sh": {
+      "bytes": 358,
+      "sha256": "4c4a7c73bf4934242e6f5ac1b6566ac4accbacac3d86049dd1e3007effc3b203"
+    },
+    "controlled-native-radio013-pins.json": {
+      "bytes": 3251,
+      "sha256": "b134b9525899b79e2f3cb265abd94f5b549b781c2a867e67fb21d4463dedb837"
+    },
+    "NATIVE-RADIO013-METHOD.md": {
+      "bytes": 2254,
+      "sha256": "fb8d883a4fbd2c802865234037e5500fc43f0a57f590e0610faf2cf5adfa0dd4"
+    },
+    "REVIEW-NATIVE-RADIO013.md": {
+      "bytes": 2267,
+      "sha256": "a3b0a9160cb1cac6eaea672520dbfd45115372a1bf6e6f3dbf6c7d05b92800a8"
+    }
+  },
+  "source_metadata_bytes": 21679,
+  "seed_state_sha256": "64a178245be5dd8b9dbb14ec1a4f4da0e8be08b3d5041e8c6b0388ab0b809436",
+  "sourceVMUsha256": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+  "actual012_evidence": "31a3e7849: original204entry+radioexecutionPASS, eventreturn/freeplaypending, V5normalcleanclosure.",
+  "checks": "Actualarg-awarepins/hash/AST defaultpreparePASS; LF shell bash-nPASS. Independentstaticreviewa3b0a916 found no new blocker. No live013 result.",
+  "acceptance": "Newbackingclose hash15e45996 ok, then Stopreturn/postreturnFrameadvance and inspectedgameplay. Inheritedopen/RSF7notnewprogress; audio/sync/hardwareseparate.",
+  "bounds": {
+    "raw": 41,
+    "normal_close": 39,
+    "absolute": 47.5,
+    "cap_bytes": 62914560,
+    "start_floor": 20342374400,
+    "runtime_floor": 19394461696,
+    "global16": true,
+    "castle2": true
+  },
+  "no_cap_exists": true
+}

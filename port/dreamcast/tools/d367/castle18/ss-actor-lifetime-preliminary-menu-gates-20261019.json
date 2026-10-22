@@ -1,0 +1,141 @@
+{
+  "scope": "Frozen e86 enabled SS_ACTOR_LIFETIME preliminary actual-menu gates only. Fresh diagnostic source entry with disclosed partner-init precondition; no old-program snapshot retarget. Not current083 chapter or hardware acceptance.",
+  "source_commit": "a414bdee7443cb9825472e726c0aa54e1b6cc4a4",
+  "elf": "c9f614ea31c94dc0c17b3bad7d5cf4903f97079df747ceab472312727defbb24",
+  "disc": "4b05422487fc729adf34c959df5d650c3280c2cb0b4a05f77ad81c447210072e",
+  "runs": {
+    "05": {
+      "elapsed_s": 26.08,
+      "owned_emulator_exited": true,
+      "errors": []
+    },
+    "06": {
+      "elapsed_s": 26.08,
+      "owned_emulator_exited": true,
+      "errors": []
+    },
+    "07": {
+      "elapsed_s": 5.14,
+      "owned_emulator_exited": true,
+      "errors": []
+    }
+  },
+  "gates": {
+    "WHO": {
+      "result": "PASS",
+      "viewed_image": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\workers\\ch32\\h-c32hnmW-r207heal\\scenarios\\cx-r207-walk-healon05\\capture\\shots\\t0020\\frames\\fb0.png",
+      "original_menu": "Leon / Ashley, initial Leon selection",
+      "before_source_identity": {
+        "frame": 2147,
+        "sub_pointer": "0x8cb28e60",
+        "sub_id": 3,
+        "partner_pos": [
+          -9330.9990234375,
+          4149.1640625,
+          -11040.087890625
+        ],
+        "player_pos": [
+          -9716.2060546875,
+          4149.16357421875,
+          -10919.5595703125
+        ],
+        "distance3d": 403.6230084150673,
+        "source_health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "source_routines": [
+          0,
+          0,
+          2,
+          0
+        ],
+        "player_routines": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "player_pointer": "0x8c9a70e0",
+        "partner_flags": 68
+      },
+      "swapped_source_id": 0,
+      "snapshot": {
+        "address": "0x8c468990",
+        "active": 1,
+        "pending": 0,
+        "pointers": {
+          "global": "0x8c3a429c",
+          "player": "0x8c9a70e0",
+          "partner": "0x8cb28e60",
+          "screen": "0x8c3d83e4",
+          "window": "0x8c89eea0"
+        },
+        "room": "0x207",
+        "player_id": 0,
+        "partner_id": 3,
+        "view": {
+          "player_stat": 65536,
+          "partner_stat": 131072,
+          "partner_present": 1,
+          "partner_is_ashley": 1,
+          "partner_wait": 0,
+          "partner_move": 0,
+          "partner_routine0": 0,
+          "partner_routine1": 0
+        },
+        "raw": "000001000000020001010000000000009c423a8ce0709a8c608eb28ce4833d8ca0ee898c070200030000000001000000"
+      }
+    },
+    "full_health_rejection": {
+      "result": "PASS",
+      "original_right_then_A": true,
+      "source_health": [
+        1440,
+        1440,
+        600,
+        600
+      ],
+      "recipient": 1,
+      "all_item_records_byte_exact": true,
+      "pending": 0,
+      "active": 1
+    },
+    "negative_close": {
+      "result": "PASS",
+      "receipt": [
+        "SSCERT unpark restored=1 rows=1 archives=2/2 assets=32/32 infos=32/32 dropped=0/13 temporary=399 serial=654 exhausted=0",
+        "subscreen backing: close area=8c89eea0 restored=3145728 restore_us=365951 hash=d0fe9857 ok pool_free=181920"
+      ],
+      "metadata_zero_bytes": 48,
+      "global_health": [
+        1440,
+        1440,
+        600,
+        600
+      ],
+      "items_byte_exact": true,
+      "actor_ids": [
+        0,
+        3
+      ],
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": 0
+    }
+  },
+  "pending": [
+    "actual injured-Ashley heal and pending partner reset",
+    "repeated/cancel Use guest branches",
+    "post-success close/follow",
+    "current upstream acceptance"
+  ],
+  "private_proof": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\workers\\ch32\\healing\\enabled-preliminary-menu-gates.json",
+    "sha256": "40ce26c852383bd4536bdbef7f429b1dd8a81afa9c0b032e975a1c2a1ebc8e31"
+  }
+}

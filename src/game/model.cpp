@@ -1734,6 +1734,11 @@ int cModel::makePartsList(int n)
     if (pList != NULL) {
         be_flag |= 0x2000;
     } else {
+#if defined(RE4DC_PARTS_LINKED_FLAG) && RE4DC_PARTS_LINKED_FLAG
+        // A prior joint may have used a contiguous run. The fallback below
+        // links individually allocated parts; getPartsPtr must follow that list.
+        be_flag &= ~0x2000;
+#endif
         for (i = 0; i < num; i++) {
             cParts* np = pm->create();
             if (np == NULL) {

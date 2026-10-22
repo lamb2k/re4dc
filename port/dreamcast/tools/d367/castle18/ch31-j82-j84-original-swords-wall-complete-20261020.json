@@ -1,0 +1,252 @@
+{
+  "scope": "Unchanged qualified J original no-warp VMU/CardLoad lineage; normal physical input only, no state retarget/rollback/game-memory writes. Original puzzle complete; onward room entry remains pending.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk82",
+      "result": "Normal source stairs return to upper mount;120/600 unchanged",
+      "elapsed_s": 33.3,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "e2cd1768dcf95e99ec93ffdd9b3c7acaa61b79a2fefb81eb85b34442d08bb201",
+      "completion_events": [
+        {
+          "normal_upper_return_waypoint_complete": true,
+          "frame": 16820,
+          "pos": [
+            -9715.849609375,
+            4149.1611328125,
+            -10816.0400390625
+          ],
+          "health": [
+            120,
+            600
+          ]
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk82",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x207",
+          "action_result": "Normal source stairs return to upper mount;120/600 unchanged",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk82\\shots\\checkpoint-source-16820\\frames\\fb0.png",
+          "png_sha256": "cc5bad58460141bc8b54fa7032615b9dc8973f49edd6ee420ea2751117e272cd",
+          "source_frame_interval": [
+            16820,
+            16829
+          ],
+          "health_before": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk82\\shots\\checkpoint-source-16820\\checkpoint-context.json"
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk83",
+      "result": "Unaccepted upper A attempts while facing north; C4 retained, placement/wall NOT complete",
+      "elapsed_s": 48.0,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "0324fbdfc87d43858efd3c4eafcaa6ea91d1810217669ad9995c19d28eb0d4fe",
+      "completion_events": [],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk83",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x207",
+          "action_result": "Unaccepted upper A attempts while facing north; C4 retained, placement/wall NOT complete",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk83\\shots\\checkpoint-source-18184\\frames\\fb0.png",
+          "png_sha256": "4530601ab25a79ab534ef27b27da66918492a514c99e2ebd0da23cb5f088acad",
+          "source_frame_interval": [
+            18184,
+            18194
+          ],
+          "health_before": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk83\\shots\\checkpoint-source-18184\\checkpoint-context.json"
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk84",
+      "result": "Normal west-facing upper C4 Use0; both swords placed and original wall-end callback complete,120/600 unchanged",
+      "elapsed_s": 45.0,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "9df18b8d86d9c5abaa98ab52aff6911e73b7d94a169dce6bf6b6a917661ef016",
+      "completion_events": [
+        {
+          "original_both_sword_placements_wall_callback_complete": {
+            "frame": 19429,
+            "life": 120,
+            "Ashley": 600,
+            "Loop": 0,
+            "Stop": "0x0",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "Rsf": "0xc9300000"
+          }
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk84",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x207",
+          "action_result": "Normal west-facing upper C4 Use0; both swords placed and original wall-end callback complete,120/600 unchanged",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk84\\shots\\checkpoint-source-19429\\frames\\fb0.png",
+          "png_sha256": "7a8570b2ee74b4d17a001c59b6cbebfb8e1e7ee0017995b004c52345236e9130",
+          "source_frame_interval": [
+            19429,
+            19438
+          ],
+          "health_before": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk84\\shots\\checkpoint-source-19429\\checkpoint-context.json"
+        }
+      ]
+    }
+  ],
+  "current_snapshot_audit": {
+    "scope": "Immutable current J original no-warp CardLoad lineage, four exact ELF anchors; original inventory and RSF read-only. No state changes.",
+    "state_sha256": "9df18b8d86d9c5abaa98ab52aff6911e73b7d94a169dce6bf6b6a917661ef016",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x207",
+    "chapter": 6,
+    "source_frame": 19438,
+    "health": [
+      120,
+      1200,
+      600,
+      600
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "death_flags": "0x3080100",
+    "door_flags": "0xa84002b4",
+    "partner_subflags": "0x46",
+    "r207_RSF": "0xc9300000",
+    "player_pos": [
+      -9600.8359375,
+      4149.15869140625,
+      -10386.2373046875
+    ],
+    "partner_pos": [
+      1853.282470703125,
+      126.73876953125,
+      -178.52125549316406
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 10
+      },
+      {
+        "id": "0x4",
+        "num": 10,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ]
+  },
+  "cast_not_drawn": {
+    "result": "PASS",
+    "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\J84-cast-not-drawn.json",
+    "scope": "Official checker on current arm log; census totals include retained same-program history, no frame cost or full room clear claim"
+  },
+  "next": "Original S Follow/rejoin then upper door r203. Health120/600 stop any further loss."
+}

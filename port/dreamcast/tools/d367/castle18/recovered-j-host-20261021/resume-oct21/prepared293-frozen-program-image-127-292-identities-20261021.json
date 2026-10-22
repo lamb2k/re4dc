@@ -1,0 +1,26 @@
+{
+  "scope": "Full streamed SHA verification before prepared293; read only. No guest, no image/state writes.",
+  "checked": "2026-10-21T20:40:38.566315-04:00",
+  "identities": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master\\track03.iso",
+      "sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+      "bytes": 1018789888
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\builds\\c21jmW\\re4dc-game.elf",
+      "sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+      "bytes": 33089164
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk127\\data\\disc.state",
+      "sha256": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16",
+      "bytes": 11938699
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk292\\data\\disc.state",
+      "sha256": "8cb3c0145e6e13aa159ff4b2b36cf0b753f444e0569446df05f44c7cfb40fb4f",
+      "bytes": 11633031
+    }
+  ]
+}

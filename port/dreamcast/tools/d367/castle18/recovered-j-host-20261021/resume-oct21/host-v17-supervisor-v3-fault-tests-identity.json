@@ -1,0 +1,73 @@
+{
+  "scope": "Prepared/AST/mocked APIs only. No real guest/runtime result. v1/v2supervisors andv15/v16controllers preserved unrun, supersededbyv3/v17 after independent review; no game source or runtime writes.",
+  "inputs": [
+    {
+      "path": "prepare-inner-timer-v17.py",
+      "sha256": "541301642e8280972dca98bc77b44176ef439d1d44bd1ab567d331456875d8c2"
+    },
+    {
+      "path": "owned-window-recovered-j-r201-South-escape-bell-quiet-combat-v17-still.py",
+      "sha256": "9e1f3ed9d2f93d3c1f4a5d389a1572d93ad3bf5e6a0261f0b3f8c201ce43511b"
+    },
+    {
+      "path": "prepare-absolute-resource-runner-v2.py",
+      "sha256": "5096c1f36a1f9c7ec73aa2215a6caca384b89a64297e5b2b3715009f4c33094c"
+    },
+    {
+      "path": "guard-resume-41inner-47absolute-resources-v2.py",
+      "sha256": "01115ee17a2c8aeaae9b3e60df07e57ba74308c99ede4669ba3a82693040015f"
+    },
+    {
+      "path": "run-resume-41inner-47absolute-resource-guard-v2.py",
+      "sha256": "4444d2da2dc3c3ad3155011fd92cf4f6d5cea81831c920ea4c95192169fbc0c2"
+    },
+    {
+      "path": "prepare-absolute-resource-runner-v3.py",
+      "sha256": "880601286a769ec30f6c5f2828bee016bbebc3e0c825c6172783f607c73fbe55"
+    },
+    {
+      "path": "guard-resume-41inner-47absolute-resources-v3.py",
+      "sha256": "e87881248adf5796bf361f401a62325853d976fab11c684c6e32271b456c9694"
+    },
+    {
+      "path": "run-resume-41inner-47absolute-resource-guard-v3.py",
+      "sha256": "f841df5bf9d16d686d569826b3d0901d948907bfbb68afd631a10be147927300"
+    },
+    {
+      "path": "test-guard-v2-mocked-faults.py",
+      "sha256": "482ffd9735c57f02186b7a62f8272f31598a15921a5af8561765c3d7fa014982"
+    },
+    {
+      "path": "guard-v2-mocked-fault-tests.json",
+      "sha256": "e0eb7b5abbc79497c81f8b77b70f563d179c9de12ea57628aefc6e47ab2431bd"
+    },
+    {
+      "path": "prepare-guard-v3-mock-tests.py",
+      "sha256": "49c61c900e260f70ff7e510db83a5ba295c6e5b093eaeb8998ff11869d6939b6"
+    },
+    {
+      "path": "test-guard-v3-mocked-faults.py",
+      "sha256": "2839795c0de5f33d4ed2d315089b0eb1a1fc8529c84b39a7e74806b795b18006"
+    },
+    {
+      "path": "guard-v3-mocked-fault-tests.json",
+      "sha256": "99e325eaa4c31a4f6dc3d2560e921eeea3b1fc92e830f2e44d703b4c6ceb3fa5"
+    },
+    {
+      "path": "test-runner-v3-isolated-finally.py",
+      "sha256": "2331bf078d2e775c607d5f245569d750be1a1ddc7306ac8d6d70ef486717851a"
+    },
+    {
+      "path": "runner-v3-isolated-finally-tests.json",
+      "sha256": "ecfedcb631b725f534027e0ac0a730a33799783c999d15c87b4c75be7b2c2d4a"
+    },
+    {
+      "path": "test-controller-v17-isolated-inner-deadline.py",
+      "sha256": "a9df0d02d10118a1155c7537a93789c259bff841d9101cd9391b99fccb6405ab"
+    },
+    {
+      "path": "controller-v17-isolated-inner-deadline-test.json",
+      "sha256": "4ef1c817c7c29538b49ed30d23bd47564ca34f6f74c58bafb8def3a7d70b6c1f"
+    }
+  ]
+}

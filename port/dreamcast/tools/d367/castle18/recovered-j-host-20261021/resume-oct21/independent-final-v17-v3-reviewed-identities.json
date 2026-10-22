@@ -1,0 +1,43 @@
+{
+  "scope": "Static code and existing mocked receipts only; no execution/new guest",
+  "files": [
+    {
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\owned-window-recovered-j-r201-South-escape-bell-quiet-combat-v17-still.py",
+      "bytes": 64675,
+      "raw_sha256": "9e1f3ed9d2f93d3c1f4a5d389a1572d93ad3bf5e6a0261f0b3f8c201ce43511b",
+      "normalized_text_sha256": "01c4f8cc3884e6763fa2d0cd5c1cd4a03aec1c74968ab360fc0889945fc97702"
+    },
+    {
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\guard-resume-41inner-47absolute-resources-v3.py",
+      "bytes": 5098,
+      "raw_sha256": "e87881248adf5796bf361f401a62325853d976fab11c684c6e32271b456c9694",
+      "normalized_text_sha256": "38b86f2a7db797c352150f9da3e21eebcfc1ae3b97ce8cfe180ad6f8c6b80f5e"
+    },
+    {
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\run-resume-41inner-47absolute-resource-guard-v3.py",
+      "bytes": 2182,
+      "raw_sha256": "f841df5bf9d16d686d569826b3d0901d948907bfbb68afd631a10be147927300",
+      "normalized_text_sha256": "ab0f6f12e8a8e42054a34e03a865a5ac9a38d63b6f4588e17cb40b86fc2477cb"
+    },
+    {
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\guard-v3-mocked-fault-tests-timed.json",
+      "bytes": 5016,
+      "raw_sha256": "ba36ecbf5fa4671eb6ae9cc34c58e3d756fdeb50109ab63d86bccd77ba96e560",
+      "normalized_text_sha256": "082c50a7ee60c79002b79a8b0ac5edc730e9404de76aa38b000d837262cbe051"
+    },
+    {
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\controller-v17-isolated-inner-deadline-test.json",
+      "bytes": 558,
+      "raw_sha256": "4ef1c817c7c29538b49ed30d23bd47564ca34f6f74c58bafb8def3a7d70b6c1f",
+      "normalized_text_sha256": "dc2cba96ff637be2d0b3041c5b94a419cf7e922cd17988c389a8b5b26e937fff"
+    },
+    {
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\runner-v3-isolated-finally-tests.json",
+      "bytes": 1090,
+      "raw_sha256": "ecfedcb631b725f534027e0ac0a730a33799783c999d15c87b4c75be7b2c2d4a",
+      "normalized_text_sha256": "91ce3467f27f8012b79f6590d1180379fb743fd94c0cfc64bf14c07af6b7144e"
+    }
+  ],
+  "mocked_cases": 6,
+  "new_concrete_launch_blocker_identified": false
+}
