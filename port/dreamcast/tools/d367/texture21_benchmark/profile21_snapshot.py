@@ -1,0 +1,20 @@
+#!/usr/bin/env python3
+"""Preserve bounded retained profiles; no new optimization or target execution."""
+import argparse,collections,csv,hashlib,json,re
+from pathlib import Path
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def main():
+ a=argparse.ArgumentParser(description=__doc__);a.add_argument('--evidence',type=Path,required=True);a.add_argument('--out',type=Path,required=True);a=a.parse_args();records=[]
+ paths=['scenery21-20261020/hwmodel-h1k','scenery21-20261020/hwmodel-h3103k','bodysvc20-20261020/hwmodel-f-c3','bodysvc20-20261020/hwmodel-b-c3']
+ for rel in paths:
+  p=a.evidence/rel;func=p/'proj/rep/functions.tsv';areas=p/'proj/rep/areas.tsv'
+  if not func.exists():records.append({'path':str(p),'status':'UNAVAILABLE at snapshot'});continue
+  rows=list(csv.DictReader(func.open(),delimiter='\t'));ar=list(csv.DictReader(areas.open(),delimiter='\t'));words=dict(re.findall(r'(\w+)=([^\s]+)',(p/'candidate.txt').read_text()));fixture=json.loads((p/'fixture.json').read_text());replace=fixture['replace']
+  names=['ANIMALS_OFF','ALIVE_CAP','R101_ALIVE_CAP','PACE_MODE','BODY_CORPSE','BODY_ROUTE','BODY_IK','BODY_GRID','CHAR_CHUNK','RIGID_CHUNK','GAME_SH4ZAM','GAME_SH4ZAM_RENDER_ONLY','GAME_SH4ZAM_LOGIC','SKIN_SH4ZAM','SCENERY_CHUNK','SCENERY_FAR_LOD','SCENERY_PIECE_STATE','SCENERY_CONE','SCENERY_DEDUP','TRANS_POLICY']
+  metadata={n:sha(p/n) for n in ('candidate.txt','fixture.json','source.txt','SCENE.txt','warp.txt','elf.sha256','run.pcs.json') if (p/n).exists()};metadata.update({n:sha(p/n) for n in ('proj/rep/functions.tsv','proj/rep/areas.tsv','proj/nominal.frames.tsv')})
+  wanted={k:v for k,v in replace.items() if k in ('1st_read.bin','1ST_READ.BIN','dc/tex.pak') or (k.startswith(('dc/native/r100/','dc/native/r103/')) and any(s in k for s in ('ps2-world','room.r4rc','registry')))}
+  records.append({'path':str(p),'status':'RETAINED_MODEL_ONLY_NOT_CURRENT_COMBINED_BUILD','source_path_recorded':(p/'source.txt').read_text().strip(),'source_commit':'Not recovered from this receipt; no current-source inference','ELF_recorded':(p/'elf.sha256').read_text().strip(),'ELF_actual_sha256':sha(p/'re4dc-game.elf') if (p/'re4dc-game.elf').exists() else 'UNAVAILABLE: retained hash receipt only','scene':(p/'SCENE.txt').read_text().strip(),'warp':(p/'warp.txt').read_text() if (p/'warp.txt').exists() else None,'candidate_last_assignment_only_NOT_full_preprocess':{n:words.get(n,'not explicit') for n in names},'artifact_paths_from_frozen_fixture':wanted,'metadata_sha256':metadata,'coarse_exclusive_areas':[{k:r[k] for k in ('area','hw_ms','flymodel_ms','wi_low','wi_high')} for r in ar],'function_exclusive_sum_ms':sum(float(r['hw_ms']) for r in rows),'top20_exclusive_functions':[{'function':r['func'],'area':r['area'],'model_ms':float(r['hw_ms'])} for r in sorted(rows,key=lambda r:float(r['hw_ms']),reverse=True)[:20]],'scope':'Each flat function is exclusive; do not add coarse area to its functions. flymodel is modeled dynarec charge, wi_console is a model variant, neither is console acceptance. Source windows differ across profiles; no direct speedup arithmetic.'})
+ report={'result':'BOUNDED_FINDINGS_PRESERVED_GENERAL_HUNT_STOPPED','reason':'User correction: mipmaps are the performance enabler to finish. No generic new arm or guest/build/image allocation. Next benchmark scope exact matched mipmap qualification.','profiles':records,'known_landed':'BODY_CORPSE/ROUTE and RIGID_CHUNK landed in Test21 recipe, scenery chunk/select/screen memo/farLOD and actor plan already enabled; do not price them as new savings. Scenery21 piece state0.1..0.7 modeled ms; cone/dedup and char chunk/lighttable were regressions. Old47.8ms budget is historical, not a current measurement.','missing_current_gate':'No same-scene source-qualified current combined mipmap timing pair exists. Broken historical C CRC behavior and47/120pose mismatch stay failed. No significant speedup or hardware FPS claimed.'}
+ with a.out.open('x') as f:json.dump(report,f,indent=2);f.write('\n')
+ print(json.dumps({'out':str(a.out),'sha256':sha(a.out),'bytes':a.out.stat().st_size,'profiles':len(records)}))
+if __name__=='__main__':main()
