@@ -1,7 +1,7 @@
 """Host controls for actual actor caller bodies and trace words; not ASM execution."""
 from pathlib import Path
 import hashlib,json,subprocess,os
-T=Path(__file__).resolve().parents[5];G=T/'port/dreamcast/game';O=Path('/root/probe/codex-backface-sh4zam-actors-objects02/host-dispatch-sealed-v2')
+T=Path(__file__).resolve().parents[5];G=T/'port/dreamcast/game';O=Path(os.environ.get('BACKFACE_ACTOR_OUTPUT','/root/probe/codex-backface-sh4zam-actors-objects02/host-dispatch-sealed-v2'))
 assert os.environ.get('D367_SLOT_HELD')=='1';assert not O.exists();O.mkdir()
 s=(G/'platform/native_actor_fast.cpp').read_text()
 # Select only the mutually exclusive opening brace for the CPU2 host body;
@@ -45,7 +45,7 @@ TAG_SCOPE
 tagged_class=re4dc_bfc_class;tagged_id=re4dc_bfc_id;
 }
 BackfaceSq seen{};unsigned calls=0,legacy_strip=0,legacy_mesh=0,seen_class=0,seen_id=0;
-extern "C" void re4dc_backface_sq(BackfaceSq* c){seen=*c;++calls;seen_class=re4dc_bfc_class;seen_id=re4dc_bfc_id;c->sent=3;c->pieces=1;c->q+=24;}
+extern "C" void shz_strip_sq(BackfaceSq* c){seen=*c;++calls;seen_class=re4dc_bfc_class;seen_id=re4dc_bfc_id;c->sent=3;c->pieces=1;c->q+=24;}
 std::uint32_t* emit_sq(std::uint32_t* q,const pvr_vertex_t*,const u8*,unsigned n){++legacy_strip;return q+8*n;}
 template<bool SQ>void* emit_meshlet(void* q,const pvr_vertex_t*,const u8*,unsigned n){++legacy_mesh;return static_cast<std::uint32_t*>(q)+8*n;}
 void emit(pvr_vertex_t*,const pvr_vertex_t*,const u8*,unsigned){}
@@ -77,7 +77,7 @@ int main(){
  std::puts("PASS actual caller dispatch/whole EOL mask/source classes/material bypass/MOVCA trace exact words");
 }
 '''.replace('METHODS',methods).replace('TRACE_LOOP',trace_loop).replace('TAG_GETTER',tag_getter).replace('TAG_SCOPE',tag_scope)
-p=O/'host.cpp';p.write_text(program);cmd=['g++','-std=c++20','-O2','-Wall','-Wextra','-I'+str(G/'platform'),str(p),str(G/'platform/backface_sh4_trace.cpp'),'-o',str(O/'host')];r=subprocess.run(cmd,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT);(O/'compile.log').write_text(r.stdout);assert r.returncode==0,r.stdout
+p=O/'host.cpp';p.write_text(program);cmd=['g++','-std=c++20','-O2','-Wall','-Wextra','-I'+str(G/'platform'),'-I'+os.environ['BACKFACE_SDK_INCLUDE'],str(p),str(G/'platform/backface_sh4_trace.cpp'),'-o',str(O/'host')];r=subprocess.run(cmd,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT);(O/'compile.log').write_text(r.stdout);assert r.returncode==0,r.stdout
 r=subprocess.run([str(O/'host')],text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT);assert r.returncode==0,r.stdout
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();j=dict(scope=__doc__,source=sha(G/'platform/native_actor_fast.cpp'),model_bridge=sha(G/'model_bridge.cpp'),common_header=sha(T/'port/dreamcast/room/backface_sh4.hpp'),actual_trace=sha(G/'platform/backface_sh4_trace.cpp'),program=sha(p),stdout=r.stdout,compiler_command=cmd,CPU2_single_strip_mask127=True,CPU2_whole_meshlet_one_call_mask0x17f=True,no_C_boundary_scan=True,BFC_sourceclasses_and_restore=True,generic_deferred_typed_model_tag_and_restore=True,cullnone_and_nondirect_unchanged=True,MOVCA_C_trace_matches_ASM_trace=True,all_words1to7_preserved=True,limits='Host mock records common ASM ABI calls; real SH-4 kernel output/cycles and target pixels remain separate gates.')
 (O/'RECEIPT.json').write_text(json.dumps(j,indent=2)+'\n');print(json.dumps(dict(receipt=sha(O/'RECEIPT.json'),stdout=r.stdout)))

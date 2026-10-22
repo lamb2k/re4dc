@@ -40,17 +40,29 @@ $(TARGET): $(OBJDIR)/platform/backface_sh4.o
 ifneq ($(filter-out 0 4,$(TA_HASH)),)
 PLATFORM_OBJS += $(OBJDIR)/platform/backface_sh4_trace.o
 $(TARGET): $(OBJDIR)/platform/backface_sh4_trace.o
-$(OBJDIR)/platform/backface_sh4.o: KOS_CFLAGS += -DRE4DC_BACKFACE_SH4_TRACE=1
+$(OBJDIR)/platform/backface_sh4.o: KOS_CFLAGS += -DSHZ_STRIP_TRACE=1 -DSHZ_STRIP_TRACE_CALLBACK=_re4dc_backface_sh4_trace
 endif
-# Compile the real pinned SDK primitives and verify the inline runtime body.
-# Order-only: verify each build without forcing an unchanged object to rebuild.
+# The complete classifier/run/copy implementation is a reproducible patch to
+# the fetchable clean SDK pin. CPU0/C1 acquire no SDK overlay or extra object.
+BACKFACE_SDK_OVERLAY := $(OBJDIR)/sh4zam-strip-sdk
+BACKFACE_SDK_TOOLS := ../tools/d367/backface_sh4zam_fused
+BACKFACE_SDK_MANIFEST := $(BACKFACE_SDK_TOOLS)/manifest.json
+BACKFACE_SDK_CPPFLAGS := -I$(BACKFACE_SDK_OVERLAY)/include
+$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += $(BACKFACE_SDK_CPPFLAGS)
+PLATFORM_OBJS += $(OBJDIR)/platform/backface_sh4_walk.o
+$(TARGET): $(OBJDIR)/platform/backface_sh4_walk.o
 .PHONY: backface-sh4zam-verify
 backface-sh4zam-verify:
 	python3 ../tools/d367/backface_sh4zam_sdk/generate.py --check
-$(OBJDIR)/platform/backface_sh4.o: | backface-sh4zam-verify
-$(OBJDIR)/platform/backface_sh4.o: platform/backface_sh4.S platform/backface_sh4zam_area.inc ../tools/d367/backface_sh4zam_sdk/generate.py ../room/backface_sh4zam.hpp
+	python3 $(BACKFACE_SDK_TOOLS)/materialize.py --output $(BACKFACE_SDK_OVERLAY)
+$(OBJDIR)/platform/backface_sh4.o $(OBJDIR)/platform/backface_sh4_walk.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o: | backface-sh4zam-verify
+$(OBJDIR)/platform/backface_sh4.o: $(BACKFACE_SDK_MANIFEST) $(BACKFACE_SDK_TOOLS)/0001-strip-sq-api.patch $(BACKFACE_SDK_TOOLS)/materialize.py
 	@mkdir -p $(dir $@)
-	kos-cc $(KOS_CFLAGS) -c $< -o $@
+	kos-cc $(KOS_CFLAGS) $(BACKFACE_SDK_CPPFLAGS) -c $(BACKFACE_SDK_OVERLAY)/source/shz_strip.S -o $@
+$(OBJDIR)/platform/backface_sh4_walk.o: $(BACKFACE_SDK_MANIFEST) $(BACKFACE_SDK_TOOLS)/0001-strip-sq-api.patch $(BACKFACE_SDK_TOOLS)/materialize.py
+	@mkdir -p $(dir $@)
+	kos-c++ $(KOS_CFLAGS) $(BACKFACE_SDK_CPPFLAGS) -fno-fast-math -ffp-contract=fast -c $(BACKFACE_SDK_OVERLAY)/source/shz_strip.cpp -o $@
+
 endif
 # ACTOR_BACKFACE=1 (render, look change; needs CPU_BACKFACE=1 or 2): Leon, the Ganados and El Gigante (owned path) use the source model's cull
 #   mode instead of cull none, so CPU_BACKFACE drops their back faces too; alpha-mask and no-depth-write materials stay

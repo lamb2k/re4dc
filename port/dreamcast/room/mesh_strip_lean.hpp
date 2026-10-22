@@ -135,41 +135,11 @@ inline const std::uint8_t* walk_lean(const std::uint8_t* s,const std::uint8_t* e
 inline const std::uint8_t* walk_lean_sq(const std::uint8_t* s,const std::uint8_t* end,const std::uint8_t* oc,
                                        const pvr_vertex_t* cache,unsigned lim,unsigned cull,std::uint32_t*& q,
                                        unsigned& culled,unsigned& emitted,unsigned& accepted_triangles){
-    while(s<end){
-        const unsigned n=*s;
-        const std::uint8_t* const indices=s+1;
-        const std::uint8_t* ip=indices;unsigned left=n,all=0xffU,any=0U,t;
-        // Same preload/consume order and sign-extending outcode loads as the
-        // original lean scan. No FPU mode change around the common kernel call.
-        __asm__ __volatile__(
-            "mov.b   @%[ip]+,r0\n\t"
-            "dt      %[left]\n\t"
-            "bt/s    2f\n\t"
-            "extu.b  r0,r0\n"
-            "1:\n\t"
-            "mov.b   @(r0,%[oc]),%[t]\n\t"
-            "mov.b   @%[ip]+,r0\n\t"
-            "dt      %[left]\n\t"
-            "and     %[t],%[all]\n\t"
-            "extu.b  r0,r0\n\t"
-            "bf/s    1b\n\t"
-            "or      %[t],%[any]\n"
-            "2:\n\t"
-            "mov.b   @(r0,%[oc]),%[t]\n\t"
-            "and     %[t],%[all]\n\t"
-            "or      %[t],%[any]\n"
-            : [ip]"+r"(ip),[left]"+r"(left),[all]"+r"(all),[any]"+r"(any),[t]"=&r"(t)
-            : [oc]"r"(oc)
-            : "r0","t","memory");
-        if(all&3U){++culled;s=ip;continue;}
-        if((any&3U) || n>lim)return s;
-        if(all&0x3cU)++culled;
-        else{
-            re4dc::bf::strip_sq(cache,indices,n,0xffU,cull,q);
-            ++emitted;accepted_triangles+=n-2U;
-        }
-        s=ip;
-    }
+    shz_strip_walk_t context{s,end,oc,cache,lim,cull,q,culled,emitted,accepted_triangles};
+    shz_strip_walk_sq(&context);
+    q=context.q;culled=context.culled;emitted=context.emitted;
+    accepted_triangles=context.accepted_triangles;
+    s=context.cursor;
     return s;
 }
 #endif

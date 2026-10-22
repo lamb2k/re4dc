@@ -1,0 +1,254 @@
+{
+  "scope": "MODELLED actual trace-off linked SDK world caller AND kernel, full function paths, no compiler/guest",
+  "working_head": "0f022725bafe5ee45e57670ce0868a5fa7779895",
+  "source_state": "Pinned working bytes; not a sealed implementation commit",
+  "files": {
+    "/root/probe/codex-backface-sh4zam-fused/.fused-objects/walk-trace0.elf": {
+      "sha256": "05c3ab2d4796c91eec49a611cde40f31d3818fbf96ce420c181247ade5cade8f",
+      "bytes": 3636
+    },
+    "/root/probe/codex-backface-sh4zam-fused/.fused-objects/sdk-walk.o": {
+      "sha256": "42c7286dcc06f7523e1aceffd091566c4aa1fa4436dd4e4df338751a98296054",
+      "bytes": 1200
+    },
+    "/root/probe/codex-backface-sh4zam-fused/.fused-objects/sdk-caller01-controls.json": {
+      "sha256": "3cc1d16141d37a604e3181ee07ef05b81a53471cd41b752f589f6cee4d4bcad6",
+      "bytes": 631
+    },
+    "/root/probe/codex-backface-sh4zam-fused/.fused-objects/kernel-trace0.o": {
+      "sha256": "2b502c8bd2e918036eb9da3956a5234954d6470bc869fdde53b37c83f082af1b",
+      "bytes": 2680
+    },
+    "/root/probe/codex-backface-sh4zam-fused/.fused-objects/sdk-api01/source/shz_strip.cpp": {
+      "sha256": "e3538ff6850511613afeea2f83000a2fa605d2a2ec220ea1ae37601649315981",
+      "bytes": 1518
+    },
+    "/root/probe/codex-backface-sh4zam-fused/.fused-objects/sdk-api01/source/shz_strip.S": {
+      "sha256": "2e78df31e7abb1327c1124c4e6e4ab2ac7dec35b9b92bfeb740498ab3de61273",
+      "bytes": 15343
+    },
+    "/root/probe/codex-backface-sh4zam-fused/.fused-objects/sdk-api01/include/sh4zam/shz_strip.h": {
+      "sha256": "edda45da564f454c5141c3260d7c3af4c3561890992e84e23ebe604123bd7418",
+      "bytes": 1687
+    },
+    "/root/probe/codex-backface-sh4zam-fused/port/dreamcast/tools/d367/backface_sh4zam_fused/0001-strip-sq-api.patch": {
+      "sha256": "30ee92b666d6b526802a208115061e8cbbffdad26fd3e742022a220952a1d1c4",
+      "bytes": 21435
+    },
+    "/root/probe/codex-backface-sh4zam-fused/port/dreamcast/tools/d367/backface_sh4zam_fused/manifest.json": {
+      "sha256": "8a405b6899ca51e07f94eeb2c1a6bc9210313ed57d7e4a3e5b41dae8ba3f49e2",
+      "bytes": 610
+    },
+    "/root/probe/codex-backface-sh4zam-fused/port/dreamcast/tools/d367/backface_sh4zam_fused/materialize.py": {
+      "sha256": "7609e4dff64484eaafb564e34068af87d6dde640d06275aa9f24d4feb283914a",
+      "bytes": 2354
+    },
+    "/root/probe/codex-backface-sh4zam-fused/port/dreamcast/tools/d367/backface_sh4zam_fused/caller_test.py": {
+      "sha256": "173caa925177bfc9060baff0951863377d289649723573b48a4942d2cacc3339",
+      "bytes": 5267
+    }
+  },
+  "rows": [
+    {
+      "vertices": 4,
+      "triangles": 2,
+      "pattern": "front",
+      "emitted": 4,
+      "full_sdk_caller_modelled_cycles": 391,
+      "per_input_triangle": 195.5,
+      "instructions": 422
+    },
+    {
+      "vertices": 4,
+      "triangles": 2,
+      "pattern": "back",
+      "emitted": 0,
+      "full_sdk_caller_modelled_cycles": 305,
+      "per_input_triangle": 152.5,
+      "instructions": 321
+    },
+    {
+      "vertices": 4,
+      "triangles": 2,
+      "pattern": "mixed",
+      "emitted": 0,
+      "full_sdk_caller_modelled_cycles": 305,
+      "per_input_triangle": 152.5,
+      "instructions": 321
+    },
+    {
+      "vertices": 8,
+      "triangles": 6,
+      "pattern": "front",
+      "emitted": 8,
+      "full_sdk_caller_modelled_cycles": 563,
+      "per_input_triangle": 93.833,
+      "instructions": 610
+    },
+    {
+      "vertices": 8,
+      "triangles": 6,
+      "pattern": "back",
+      "emitted": 0,
+      "full_sdk_caller_modelled_cycles": 527,
+      "per_input_triangle": 87.833,
+      "instructions": 545
+    },
+    {
+      "vertices": 8,
+      "triangles": 6,
+      "pattern": "mixed",
+      "emitted": 0,
+      "full_sdk_caller_modelled_cycles": 527,
+      "per_input_triangle": 87.833,
+      "instructions": 545
+    },
+    {
+      "vertices": 16,
+      "triangles": 14,
+      "pattern": "front",
+      "emitted": 16,
+      "full_sdk_caller_modelled_cycles": 907,
+      "per_input_triangle": 64.786,
+      "instructions": 986
+    },
+    {
+      "vertices": 16,
+      "triangles": 14,
+      "pattern": "back",
+      "emitted": 0,
+      "full_sdk_caller_modelled_cycles": 971,
+      "per_input_triangle": 69.357,
+      "instructions": 993
+    },
+    {
+      "vertices": 16,
+      "triangles": 14,
+      "pattern": "mixed",
+      "emitted": 8,
+      "full_sdk_caller_modelled_cycles": 1007,
+      "per_input_triangle": 71.929,
+      "instructions": 1058
+    },
+    {
+      "vertices": 32,
+      "triangles": 30,
+      "pattern": "front",
+      "emitted": 32,
+      "full_sdk_caller_modelled_cycles": 1595,
+      "per_input_triangle": 53.167,
+      "instructions": 1738
+    },
+    {
+      "vertices": 32,
+      "triangles": 30,
+      "pattern": "back",
+      "emitted": 0,
+      "full_sdk_caller_modelled_cycles": 1859,
+      "per_input_triangle": 61.967,
+      "instructions": 1889
+    },
+    {
+      "vertices": 32,
+      "triangles": 30,
+      "pattern": "mixed",
+      "emitted": 17,
+      "full_sdk_caller_modelled_cycles": 1943,
+      "per_input_triangle": 64.767,
+      "instructions": 2040
+    },
+    {
+      "vertices": 64,
+      "triangles": 62,
+      "pattern": "front",
+      "emitted": 64,
+      "full_sdk_caller_modelled_cycles": 2971,
+      "per_input_triangle": 47.919,
+      "instructions": 3242
+    },
+    {
+      "vertices": 64,
+      "triangles": 62,
+      "pattern": "back",
+      "emitted": 0,
+      "full_sdk_caller_modelled_cycles": 3635,
+      "per_input_triangle": 58.629,
+      "instructions": 3681
+    },
+    {
+      "vertices": 64,
+      "triangles": 62,
+      "pattern": "mixed",
+      "emitted": 35,
+      "full_sdk_caller_modelled_cycles": 3815,
+      "per_input_triangle": 61.532,
+      "instructions": 4004
+    },
+    {
+      "vertices": 128,
+      "triangles": 126,
+      "pattern": "front",
+      "emitted": 128,
+      "full_sdk_caller_modelled_cycles": 5723,
+      "per_input_triangle": 45.421,
+      "instructions": 6250
+    },
+    {
+      "vertices": 128,
+      "triangles": 126,
+      "pattern": "back",
+      "emitted": 0,
+      "full_sdk_caller_modelled_cycles": 7187,
+      "per_input_triangle": 57.04,
+      "instructions": 7265
+    },
+    {
+      "vertices": 128,
+      "triangles": 126,
+      "pattern": "mixed",
+      "emitted": 71,
+      "full_sdk_caller_modelled_cycles": 7559,
+      "per_input_triangle": 59.992,
+      "instructions": 7932
+    },
+    {
+      "vertices": 64,
+      "pattern": "depth-all",
+      "emitted": 0,
+      "stop_offset": 65,
+      "full_sdk_caller_modelled_cycles": 367,
+      "instructions": 499
+    },
+    {
+      "vertices": 64,
+      "pattern": "screen-all",
+      "emitted": 0,
+      "stop_offset": 65,
+      "full_sdk_caller_modelled_cycles": 374,
+      "instructions": 509
+    },
+    {
+      "vertices": 64,
+      "pattern": "limit-stop",
+      "emitted": 0,
+      "stop_offset": 0,
+      "full_sdk_caller_modelled_cycles": 364,
+      "instructions": 500
+    },
+    {
+      "vertices": 64,
+      "pattern": "depth-cross",
+      "emitted": 0,
+      "stop_offset": 0,
+      "full_sdk_caller_modelled_cycles": 361,
+      "instructions": 496
+    }
+  ],
+  "limitations": [
+    "Existing AVK issue/latency/group approximation, actualbranchoutcomes; no cache/SQ/TA stalls or FPU exceptions.",
+    "Includes count stream/outcode/clip decisions, struct setup, calls, kernel, counters and returns. Excludes RE4 thin adapter above SDKAPI.",
+    "World count stream only; actors strip/whole use separately priced core and need adapter integration binding.",
+    "OFF reference is actual original world leanwalk from pairedCobject; same projected input patterns, outcodes and limits.",
+    "No stage1 speed acceptance, rendered-frame, scene-weighted or physical claim."
+  ]
+}

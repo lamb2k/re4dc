@@ -1,0 +1,31 @@
+{
+  "scope": "Host controls for actual actor caller bodies and trace words; not ASM execution.",
+  "source": "d93b5ee8e9d1a077918193a69010a5bbb29bce8e06307d54125e65e0d0ec559e",
+  "model_bridge": "2796499d6927fa4015cbf9b953ba18a99b450d7053730773a267f91c10676839",
+  "common_header": "1774570b3f36ac41e8e021d35c592af9b78198659952eb704068dd7abdf5ddd2",
+  "actual_trace": "8ca6a2e5db2203cd2769b8b4d040169793d26417d0de267d14cdb3eed57b4f80",
+  "program": "eaf93eb8299703fd838a2530b0523f5ac7f7d6ca274e44bb382da3aca6af87d0",
+  "stdout": "PASS actual caller dispatch/whole EOL mask/source classes/material bypass/MOVCA trace exact words\n",
+  "compiler_command": [
+    "g++",
+    "-std=c++20",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-I/root/probe/codex-backface-sh4zam-fused/port/dreamcast/game/platform",
+    "-I/root/probe/codex-backface-sh4zam-fused/.fused-objects/boundary02/sdk/include",
+    "/root/probe/codex-backface-sh4zam-fused/.fused-objects/boundary02/actor-dispatch/host.cpp",
+    "/root/probe/codex-backface-sh4zam-fused/port/dreamcast/game/platform/backface_sh4_trace.cpp",
+    "-o",
+    "/root/probe/codex-backface-sh4zam-fused/.fused-objects/boundary02/actor-dispatch/host"
+  ],
+  "CPU2_single_strip_mask127": true,
+  "CPU2_whole_meshlet_one_call_mask0x17f": true,
+  "no_C_boundary_scan": true,
+  "BFC_sourceclasses_and_restore": true,
+  "generic_deferred_typed_model_tag_and_restore": true,
+  "cullnone_and_nondirect_unchanged": true,
+  "MOVCA_C_trace_matches_ASM_trace": true,
+  "all_words1to7_preserved": true,
+  "limits": "Host mock records common ASM ABI calls; real SH-4 kernel output/cycles and target pixels remain separate gates."
+}
