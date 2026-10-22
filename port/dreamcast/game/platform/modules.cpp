@@ -18,6 +18,12 @@
 // is also what a per-link constructor pass would run.
 
 #include "re4dc_platform.h"
+#if defined(RE4DC_OVL_GUARD) && RE4DC_OVL_GUARD
+#include <stdlib.h>
+#include <string.h>
+namespace { void ovlGuardAdd(const char* name, unsigned char* image, unsigned long code_bytes); void ovlGuardDropAll(); }
+extern "C" void re4dc_ovl_guard(const char* where);
+#endif
 #if defined(RE4DC_OVL_WATCH) && RE4DC_OVL_WATCH
 #include <stdlib.h>
 #include <string.h>
@@ -614,6 +620,9 @@ static void routeOverlayLoad(unsigned index)
 #if defined(RE4DC_OVL_WATCH) && RE4DC_OVL_WATCH
     ovlWatchAdd(m.name, image, h.image_bytes);
 #endif
+#if defined(RE4DC_OVL_GUARD) && RE4DC_OVL_GUARD
+    ovlGuardAdd(m.name, image, (h.data - h.base) & ~3u);
+#endif
     re4dc_module_overlay(m.id, reinterpret_cast<void (*)(void)>(image + h.prolog),
                          reinterpret_cast<void (*)(void)>(image + h.epilog), reinterpret_cast<char*>(image + h.data),
                          reinterpret_cast<char*>(image + h.data_end), reinterpret_cast<char*>(image + h.bss),
@@ -664,6 +673,112 @@ extern "C" void re4dc_ovl_watch(const char* where)
 }
 #endif
 
+#if defined(RE4DC_OVL_GUARD) && RE4DC_OVL_GUARD
+// OVL_GUARD=1 (lane mipfault22, console diagnostic only, default 0 = image unchanged). The B3 bench disc faults on the
+// console in r101 (ui frame ~208): st1_1 code / literal words read 0x0c8a8001 after a clean load (hash checked).
+// Flycast (fast, gdemu profile, SH-4 cache model) never shows it. On every route overlay load this keeps a copy of
+// the relocated code ([0, data)) and checks it at each texture upload / close and once per UI frame; the first
+// changed word stops the game on the crash screen:  FAULT code bad pc <live word> pr <expected word> addr <address>.
+// For st1_1 it also arms the SH-4 UBC (user break controller), so a CPU store is caught at the storing instruction:
+//   channel A: operand write anywhere in the 4 KB page holding r101_checkFindPlayer's pG literal (st1_1+0x6114);
+//   channel B: operand write of the value seen on the console, (image+0x12c60 physical) | 1, at any address.
+// A UBC stop shows  FAULT code 1e0 pc <storing pc> pr <its pr> addr <TEA>  with the registers.
+// A guard stop with no UBC stop means the bytes changed without a CPU store to that page (DMA, cache write-back).
+#include <dc/ubc.h>
+extern "C" void re4dc_crash_screen_fault(unsigned code, unsigned long pc, unsigned long pr, unsigned long addr);
+extern "C" void re4dc_crash_screen_context(const irq_context_t* ctx) __attribute__((weak));
+extern "C" void re4dc_set_stage(unsigned long stage);
+namespace {
+// one FNV-1a per 64-byte block of the code (no copy: KOS heap has no 72 KB to spare); 2 overlays at a time
+constexpr u32 kGuardBlock = 64, kGuardMax = 2048;
+struct OvlGuard { const char* name; u8* image; u32 bytes; u32 hash[kGuardMax]; };
+OvlGuard g_guard[2];
+u32 guardHash(const u8* p) { u32 h = 2166136261U; for (u32 i = 0; i < kGuardBlock; i += 4) h = (h ^ *reinterpret_cast<const u32*>(p + i)) * 16777619U; return h; }
+bool g_guard_stop;
+ubc_breakpoint_t g_ubc_page, g_ubc_value;
+bool g_ubc_armed;
+[[noreturn]] void ovlGuardStop(unsigned code, u32 a, u32 b, u32 c)
+{
+    g_guard_stop = true;
+    re4dc_set_stage(0xDEAD0000ul | code);
+    irq_disable();
+    re4dc_crash_screen_fault(code, a, b, c);
+    for (;;) {
+    }
+}
+bool ovlGuardUbc(const ubc_breakpoint_t* bp, const irq_context_t* ctx, void*)
+{
+    re4dc_log("OVLGUARD UBC %s pc=%08lx pr=%08lx\n", bp == &g_ubc_page ? "page" : "value", u32(ctx->pc), u32(ctx->pr));
+    if (re4dc_crash_screen_context) re4dc_crash_screen_context(ctx);
+    ovlGuardStop(0x1e0, u32(ctx->pc), u32(ctx->pr), *(volatile u32*) 0xff00000c);
+}
+void ovlGuardUbcOff()
+{
+    if (!g_ubc_armed) return;
+    ubc_remove_breakpoint(&g_ubc_value);
+    ubc_remove_breakpoint(&g_ubc_page);
+    g_ubc_armed = false;
+}
+void ovlGuardAdd(const char* name, u8* image, u32 code_bytes)
+{
+    for (auto& g : g_guard) if (g.image == image) g.image = 0;
+    if (code_bytes > kGuardBlock * kGuardMax) code_bytes = kGuardBlock * kGuardMax;
+    code_bytes &= ~(kGuardBlock - 1);
+    for (auto& g : g_guard) if (!g.image) {
+        for (u32 b = 0; b < code_bytes / kGuardBlock; ++b) g.hash[b] = guardHash(image + b * kGuardBlock);
+        g.image = image; g.bytes = code_bytes; g.name = name;
+        re4dc_log("OVLGUARD arm %s at %08lx code %lx\n", name, u32(image), code_bytes);
+        break;
+    }
+    if (!strcmp(name, "st1_1") && code_bytes > 0x6118) {
+        ovlGuardUbcOff();
+        g_ubc_value = ubc_breakpoint_t();
+        g_ubc_value.address = nullptr;
+        g_ubc_value.address_mask = ubc_address_mask_all;
+        g_ubc_value.access = ubc_access_operand;
+        g_ubc_value.operand.rw = ubc_rw_write;
+        g_ubc_value.operand.size = ubc_size_32bit;
+        g_ubc_value.operand.data.enabled = true;
+        g_ubc_value.operand.data.value = ((u32(image) + 0x12c60u) & 0x1fffffffu) | 1u;
+        g_ubc_value.operand.data.mask = 0;
+        g_ubc_page = ubc_breakpoint_t();
+        g_ubc_page.address = image + 0x6114;
+        g_ubc_page.address_mask = ubc_address_mask_12;
+        g_ubc_page.access = ubc_access_operand;
+        g_ubc_page.operand.rw = ubc_rw_write;
+        const bool v = ubc_add_breakpoint(&g_ubc_value, ovlGuardUbc, nullptr);
+        const bool p = ubc_add_breakpoint(&g_ubc_page, ovlGuardUbc, nullptr);
+        g_ubc_armed = v || p;
+        re4dc_log("OVLGUARD UBC value %08lx %s, page %08lx %s\n", g_ubc_value.operand.data.value, v ? "on" : "FAILED",
+                  (u32(image) + 0x6114u) & ~0xfffu, p ? "on" : "FAILED");
+    }
+}
+void ovlGuardDropAll()
+{
+    ovlGuardUbcOff();
+    for (auto& g : g_guard) g.image = 0;
+}
+}  // namespace
+extern "C" void re4dc_ovl_guard(const char* where)
+{
+    if (g_guard_stop) return;
+    for (auto& g : g_guard) {
+        if (!g.image) continue;
+        for (u32 b = 0; b < g.bytes / kGuardBlock; ++b) {
+            if (guardHash(g.image + b * kGuardBlock) == g.hash[b]) continue;
+            const u32* w = reinterpret_cast<const u32*>(g.image + b * kGuardBlock);
+            re4dc_log("OVLGUARD %s: %s+%lx (%08lx) block changed: %08lx %08lx %08lx %08lx\n", where, g.name,
+                      b * kGuardBlock, u32(g.image) + b * kGuardBlock, w[0], w[1], w[2], w[3]);
+            // crash screen: pc = block address, pr = first word of the block whose value looks like 0x0c......,
+            // else its first word; addr = image base
+            u32 hit = w[0];
+            for (u32 k = 0; k < kGuardBlock / 4; ++k) if ((w[k] >> 24) == 0x0cu) { hit = w[k]; break; }
+            ovlGuardStop(0xbad, u32(g.image) + b * kGuardBlock, hit, u32(g.image));
+        }
+    }
+}
+#endif
+
 #if defined(RE4DC_CRASH_OVL_LINE) && RE4DC_CRASH_OVL_LINE
 // CRASH_OVL_LINE (lane mipfault22, diagnostic, default 0): the crash screen's overlay line, "name@image+bytes" per
 // loaded route overlay, so a console pc / pr inside an overlay can be symbolized against its .dbg.elf.
@@ -698,6 +813,10 @@ static void routeOverlayRelease(unsigned index, const char* why)
     re4dc_ovl_watch("release");
     ovlWatchDrop(image);
 #endif
+#if defined(RE4DC_OVL_GUARD) && RE4DC_OVL_GUARD
+    re4dc_ovl_guard("release");
+    ovlGuardDropAll();
+#endif
     for (u32 i = 0; i + 2 <= o.image_bytes; i += 2) *reinterpret_cast<unsigned short*>(image + i) = 0xC3FF;
     dcache_flush_range(reinterpret_cast<uintptr_t>(image), o.image_bytes);
     icache_flush_range(reinterpret_cast<uintptr_t>(image), o.image_bytes);
@@ -710,6 +829,10 @@ static void routeOverlayRelease(unsigned index, const char* why)
 // gameRoomMemInit (src/game/game.cpp), before heap 4 is rebuilt.
 extern "C" void re4dc_route_overlay_room_reset()
 {
+#if defined(RE4DC_OVL_GUARD) && RE4DC_OVL_GUARD
+    re4dc_ovl_guard("room reset");
+    ovlGuardDropAll();   // heap 3 / heap 4 are rebuilt next: stop watching first
+#endif
     for (unsigned i = 0; i < kModules; ++i) {
 #if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
         if (stageSlot(g_modules[i].id) >= 0) continue;  // heap 3 with the room REL: dropped at the relink
@@ -778,6 +901,9 @@ extern "C" int re4dc_module_bind(void* header)
     if (!restart && stageSlot(m->id) >= 0 && g_stage_ovl[stageSlot(m->id)].block) {
         // MemReplaceHeap(2, 3) rebuilt heap 3 since the last link: the old block is gone with it (no free, no fill).
         g_stage_ovl[stageSlot(m->id)].block = 0;
+#if defined(RE4DC_OVL_GUARD) && RE4DC_OVL_GUARD
+        ovlGuardDropAll();
+#endif
         re4dc_module_overlay(m->id, 0, 0, 0, 0, 0, 0, 0);
         re4dc_log("route overlay: %s dropped with heap 3 (relink)\n", m->name);
     }

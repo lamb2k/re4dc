@@ -874,6 +874,15 @@ if os.path.isdir(MIP22D):
     for _r in sorted(os.listdir(MIP22D + '/dc/native')):
         DATA['mip22']['dc/native/%s/ps2-world.r4pw' % _r] = '%s/dc/native/%s/ps2-world.r4pw' % (MIP22D, _r)
     PAK_DERIVED['mip22'] = MIP22D + '/pak-derived.json'
+# mip22b (lane mipfault22 10-22): mip22 with da197067-8f589a03 held at its ch21l 16-bit original. mip22 had re-encoded it
+# to PAL8 and r11c ran out of PAL8 palette blocks (TEXCHK r11c "PVR palette banks exhausted" on 48f71838). Replaces mip22
+# in the data line. Private store copy: re4-assets-private/mip22b-20261022 (RECIPE.txt, SHA256SUMS).
+MIP22BD = os.environ.get('MIP22BD', '/root/re4data/private/mip22b-20261022')
+if os.path.isdir(MIP22BD):
+    DATA['mip22b'] = {'dc/tex.pak': MIP22BD + '/dc/tex.pak', 'dc/resident.bin': MIP22BD + '/dc/resident.bin'}
+    for _r in sorted(os.listdir(MIP22BD + '/dc/native')):
+        DATA['mip22b']['dc/native/%s/ps2-world.r4pw' % _r] = '%s/dc/native/%s/ps2-world.r4pw' % (MIP22BD, _r)
+    PAK_DERIVED['mip22b'] = MIP22BD + '/pak-derived.json'
 
 
 if __name__ == '__main__':
