@@ -1,3 +1,4 @@
+#include "backface_sh4zam_area.inc"
 /* Common CPU_BACKFACE=2 strip classifier and store-queue emitter.
  * BackfaceSq: cache,indices,n,mask,cull,q,sent,pieces at 0,4,...28.
  * mask low byte: 255 world (preserve normal command word), 127 actor
@@ -99,19 +100,16 @@
         fmov    dr6,@-r12
         fmov    dr4,@-r12
         fmov    dr2,@-r12
-        fsub    fr\ax,fr12
+        SH4ZAM_BACKFACE_CX \ax
         fmov    dr0,@-r12
-        fsub    fr\ay,fr13
-        fsub    fr\ax,fr1
+        SH4ZAM_BACKFACE_CY \ay
+        SH4ZAM_BACKFACE_BX \ax
         .if \mode
         mov.l   r2,@r12
         .endif
-        fsub    fr\ay,fr2
-        fmul    fr12,fr2
-        fneg    fr2
+        SH4ZAM_BACKFACE_PRODUCT \ay
         fschg
-        fmov    fr1,fr0
-        fmac    fr0,fr13,fr2
+        SH4ZAM_BACKFACE_FMAC
         .if \positive
         fcmp/gt fr14,fr2
         .else
@@ -367,17 +365,7 @@ _re4dc_backface_sq:
         add     #4,r0
         fmov.s  @r0+,fr12
         fmov.s  @r0,fr13
-        fmov    fr10,fr0
-        fmov    fr13,fr1
-        fmov    fr11,fr2
-        fmov    fr12,fr3
-        fsub    fr8,fr0
-        fsub    fr9,fr1
-        fsub    fr9,fr2
-        fsub    fr8,fr3
-        fmul    fr3,fr2
-        fneg    fr2
-        fmac    fr0,fr1,fr2
+        SH4ZAM_BACKFACE_AREA
         mov     r13,r2
         mov     #1,r0
         and     r0,r2
