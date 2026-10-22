@@ -621,7 +621,7 @@ static void routeOverlayLoad(unsigned index)
     ovlWatchAdd(m.name, image, h.image_bytes);
 #endif
 #if defined(RE4DC_OVL_GUARD) && RE4DC_OVL_GUARD
-    ovlGuardAdd(m.name, image, (h.data - h.base) & ~3u);
+    ovlGuardAdd(m.name, image, h.data & ~3u);   // header offsets are from the image start
 #endif
     re4dc_module_overlay(m.id, reinterpret_cast<void (*)(void)>(image + h.prolog),
                          reinterpret_cast<void (*)(void)>(image + h.epilog), reinterpret_cast<char*>(image + h.data),
