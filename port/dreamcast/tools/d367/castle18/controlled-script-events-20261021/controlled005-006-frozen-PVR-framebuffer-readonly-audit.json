@@ -1,0 +1,41 @@
+{
+  "scope": "Read-only saved-state proof against frozenELF front/back disassembly. Native pvr_state two framebuffer structs at312/320, standardDC mask7fffff and KOS conversion. Current live pointer reads still need bounded/identity checks.",
+  "records": [
+    {
+      "run": 5,
+      "state_sha256": "40556645e59094f21b3051eecbffb0c71d08182acdef60e321ac76eb33705f86",
+      "pvr_state": "0x8c483e00",
+      "framebuffers_native": [
+        "0x230980",
+        "0x630980"
+      ],
+      "rgb565_pointers": [
+        "0xa5461300",
+        "0xa5c61300"
+      ],
+      "frame_select": 1,
+      "dma_render": 0,
+      "render_to_texture": 1,
+      "logged": [
+        "fb=a5461300,a5c61300"
+      ]
+    },
+    {
+      "run": 6,
+      "state_sha256": "606f9193c58c5e9d5df4b5374a3b4d4e864914f25b8da6ee09c4fd842dd672ff",
+      "pvr_state": "0x8c483e00",
+      "framebuffers_native": [
+        "0x230980",
+        "0x630980"
+      ],
+      "rgb565_pointers": [
+        "0xa5461300",
+        "0xa5c61300"
+      ],
+      "frame_select": 1,
+      "dma_render": 0,
+      "render_to_texture": 1,
+      "logged": []
+    }
+  ]
+}

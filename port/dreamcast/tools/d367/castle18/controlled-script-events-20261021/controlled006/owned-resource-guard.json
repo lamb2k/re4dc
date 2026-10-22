@@ -1,0 +1,215 @@
+{
+  "scope": "Owned process resources/time only; PID/path/start verified. Filesystem sampler isolated on daemon thread; deadline loop never performs filesystem I/O. Fail closed if sampler stale1s. WM_CLOSE at45s or resource boundary, terminate only same verified process at47.1s if needed; no gameplay memory writes.",
+  "owner": {
+    "pid": 53312,
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event006\\flycast.exe",
+    "start_filetime": 134371069634212977,
+    "created_utc": "2026-10-22T01:42:43.428651+00:00",
+    "rights": "retained subprocess handle receipt"
+  },
+  "closed_identity": {
+    "initial_live_identity_pinned": true,
+    "retained_handle_signaled": true,
+    "exit_code": 0,
+    "postexit_times_available": true,
+    "postexit_path_query": false
+  },
+  "process_exited": true,
+  "runtime_floor": 19394461696,
+  "capture_cap": 62914560,
+  "inner_input_seconds": 41,
+  "absolute_process_seconds": 47.5,
+  "exit_age": 1.4050705432891846,
+  "actions": [],
+  "samples": [
+    {
+      "monotonic": 382629.265,
+      "process_age_seconds": 0.04507054330315441,
+      "free": 21507121152,
+      "cap_logical_bytes": 25597103,
+      "sample_monotonic": 382629.25
+    },
+    {
+      "monotonic": 382629.312,
+      "process_age_seconds": 0.09207054326543584,
+      "free": 21507121152,
+      "cap_logical_bytes": 25597103,
+      "sample_monotonic": 382629.25
+    },
+    {
+      "monotonic": 382629.375,
+      "process_age_seconds": 0.15507054328918457,
+      "free": 21507121152,
+      "cap_logical_bytes": 25597103,
+      "sample_monotonic": 382629.25
+    },
+    {
+      "monotonic": 382629.421,
+      "process_age_seconds": 0.20107054326217622,
+      "free": 21507121152,
+      "cap_logical_bytes": 25597103,
+      "sample_monotonic": 382629.25
+    },
+    {
+      "monotonic": 382629.468,
+      "process_age_seconds": 0.2480705432826653,
+      "free": 21507088384,
+      "cap_logical_bytes": 25597686,
+      "sample_monotonic": 382629.453
+    },
+    {
+      "monotonic": 382629.515,
+      "process_age_seconds": 0.2950705433031544,
+      "free": 21507088384,
+      "cap_logical_bytes": 25597686,
+      "sample_monotonic": 382629.453
+    },
+    {
+      "monotonic": 382629.578,
+      "process_age_seconds": 0.3580705432686955,
+      "free": 21507088384,
+      "cap_logical_bytes": 25597686,
+      "sample_monotonic": 382629.453
+    },
+    {
+      "monotonic": 382629.625,
+      "process_age_seconds": 0.40507054328918457,
+      "free": 21507088384,
+      "cap_logical_bytes": 25597686,
+      "sample_monotonic": 382629.453
+    },
+    {
+      "monotonic": 382629.671,
+      "process_age_seconds": 0.4510705432621762,
+      "free": 21507088384,
+      "cap_logical_bytes": 25597686,
+      "sample_monotonic": 382629.671
+    },
+    {
+      "monotonic": 382629.718,
+      "process_age_seconds": 0.4980705432826653,
+      "free": 21507088384,
+      "cap_logical_bytes": 25597686,
+      "sample_monotonic": 382629.671
+    },
+    {
+      "monotonic": 382629.765,
+      "process_age_seconds": 0.5450705433031544,
+      "free": 21507088384,
+      "cap_logical_bytes": 25597686,
+      "sample_monotonic": 382629.671
+    },
+    {
+      "monotonic": 382629.828,
+      "process_age_seconds": 0.6080705432686955,
+      "free": 21507088384,
+      "cap_logical_bytes": 25597686,
+      "sample_monotonic": 382629.671
+    },
+    {
+      "monotonic": 382629.875,
+      "process_age_seconds": 0.6550705432891846,
+      "free": 21507088384,
+      "cap_logical_bytes": 25598230,
+      "sample_monotonic": 382629.875
+    },
+    {
+      "monotonic": 382629.921,
+      "process_age_seconds": 0.7010705432621762,
+      "free": 21507088384,
+      "cap_logical_bytes": 25598230,
+      "sample_monotonic": 382629.875
+    },
+    {
+      "monotonic": 382629.968,
+      "process_age_seconds": 0.7480705432826653,
+      "free": 21507088384,
+      "cap_logical_bytes": 25598230,
+      "sample_monotonic": 382629.875
+    },
+    {
+      "monotonic": 382630.031,
+      "process_age_seconds": 0.811070543306414,
+      "free": 21507088384,
+      "cap_logical_bytes": 25598230,
+      "sample_monotonic": 382629.875
+    },
+    {
+      "monotonic": 382630.078,
+      "process_age_seconds": 0.8580705432686955,
+      "free": 21507088384,
+      "cap_logical_bytes": 25598230,
+      "sample_monotonic": 382629.875
+    },
+    {
+      "monotonic": 382630.125,
+      "process_age_seconds": 0.9050705432891846,
+      "free": 21515792384,
+      "cap_logical_bytes": 16893920,
+      "sample_monotonic": 382630.078
+    },
+    {
+      "monotonic": 382630.171,
+      "process_age_seconds": 0.9510705432621762,
+      "free": 21515792384,
+      "cap_logical_bytes": 16893920,
+      "sample_monotonic": 382630.078
+    },
+    {
+      "monotonic": 382630.218,
+      "process_age_seconds": 0.9980705432826653,
+      "free": 21515792384,
+      "cap_logical_bytes": 16893920,
+      "sample_monotonic": 382630.078
+    },
+    {
+      "monotonic": 382630.281,
+      "process_age_seconds": 1.061070543306414,
+      "free": 21515792384,
+      "cap_logical_bytes": 16893920,
+      "sample_monotonic": 382630.078
+    },
+    {
+      "monotonic": 382630.328,
+      "process_age_seconds": 1.1080705432686955,
+      "free": 21511204864,
+      "cap_logical_bytes": 20498400,
+      "sample_monotonic": 382630.281
+    },
+    {
+      "monotonic": 382630.375,
+      "process_age_seconds": 1.1550705432891846,
+      "free": 21511204864,
+      "cap_logical_bytes": 20498400,
+      "sample_monotonic": 382630.281
+    },
+    {
+      "monotonic": 382630.421,
+      "process_age_seconds": 1.2010705432621762,
+      "free": 21511204864,
+      "cap_logical_bytes": 20498400,
+      "sample_monotonic": 382630.281
+    },
+    {
+      "monotonic": 382630.468,
+      "process_age_seconds": 1.2480705432826653,
+      "free": 21511204864,
+      "cap_logical_bytes": 20498400,
+      "sample_monotonic": 382630.281
+    },
+    {
+      "monotonic": 382630.531,
+      "process_age_seconds": 1.311070543306414,
+      "free": 21505175552,
+      "cap_logical_bytes": 24684512,
+      "sample_monotonic": 382630.484
+    },
+    {
+      "monotonic": 382630.578,
+      "process_age_seconds": 1.3580705432686955,
+      "free": 21505175552,
+      "cap_logical_bytes": 24684512,
+      "sample_monotonic": 382630.484
+    }
+  ]
+}
