@@ -28,6 +28,14 @@
 # Build every arm in its own OBJDIR (flag changes do not rebuild existing objects).
 # Event storage bookkeeping: every TU must use the same template policy.
 # Native only; other manager predicates/layout and recipe defaults are unchanged.
+# Conditional failed-restore containment; optional source candidate only.
+SS_RESTORE_VALIDATE_FIRST ?= 0
+ifneq ($(SS_RESTORE_VALIDATE_FIRST),0)
+ifneq ($(SS_RESTORE_VALIDATE_FIRST),1)
+$(error SS_RESTORE_VALIDATE_FIRST must be 0 or 1)
+endif
+GAME_CPPFLAGS += -DRE4DC_SS_RESTORE_VALIDATE_FIRST=1
+endif
 EVENT_MANAGER_STORAGE_FLAGS ?= 0
 ifneq ($(EVENT_MANAGER_STORAGE_FLAGS),0)
 ifneq ($(EVENT_MANAGER_STORAGE_FLAGS),1)
