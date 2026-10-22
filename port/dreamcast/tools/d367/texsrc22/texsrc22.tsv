@@ -1,0 +1,1036 @@
+key	sources	rooms	cls	decision	reason	w	h	fmt	layout	bytes	route_rooms	texclass22	contradiction
+00869f9a-3f87b041	pak:PS2 r10a texture 13	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+00cc95e5-5d18488d	pak:PS2 r106 texture 21	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+00d329b0-f5f505ed	pak:PS2 r11b texture 8	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+00f8c875-90d7a79b	pak:PS2 r106 texture 18	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+010589f2-03e000b3	pak:PS2 r102 object et2c00.bin image 0	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+01327785-df050085	pak:PS2 r10a texture 13	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+01852d38-70ba6952	pak:PS2 r10e texture 53	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+0199eae6-6059a49e	pak:PS2 r100 texture 42	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+01b57e21-a2bb9519	pak:PS2 r109 texture 16	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	ARGB4444	twiddled	131216	1	not-on-route	
+020ef72b-9a58c1e6	gc:em/em10.drs:em/em10.drs:0#558 | gc:em/em1d.drs:em/em1d.drs:0#558 | gc:em/em20.drs:em/em20.drs:0#558 | gc:em/em4d.drs:em/em4d.drs:0#558 | gc:em/em50.drs:em/em50.drs:0#558 | gc:em/em5d.drs:em/em5d.drs:0#558 | gc:em/em60.drs:em/em60.drs:0#558 | gc:em/em6d.drs:em/em6d.drs:0#558	global	enemy	convert-blocked	rectangular 128x256: needs a rect21 square scoped representation	128	256	RGB565	twiddled	65680	0	not-on-route	texclass22 not-on-route but statically bound on route
+021852ce-2dba5bd2	pak:PS2 r104 texture 46	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+02193f41-e8ace747	pak:PS2 r108 texture 25	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+02aff703-70c3b1b8	pak:PS2 r104 texture 35	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+02bb4296-0b8ef20a	pak:PS2 r103 texture 8	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+02dc3205-c9367d5a	pak:PS2 r106 texture 35	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+02eea6dd-e5cfcd6b	pak:PS2 r105 texture 8	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+0307f7a7-11ae8763	pak:cast_human	global	character	convert-blocked	rectangular 1024x512: needs a rect21 square scoped representation	1024	512	RGB565	vq	133264	0	not-on-route	texclass22 not-on-route but statically bound on route
+033a7e21-61af83e0	pak:PS2 r118 texture 1	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+0356154d-435f09f1	pak:PS2 r106 texture 9	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+039fc7d4-a7e8266a	pak:PS2 r105 texture 136	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+03d8fd7f-e4026676	pak:PS2 items 03d8fd7f-e4026676 | resident:r107	r107	item	convert-blocked	rectangular 128x64: needs a rect21 square scoped representation	128	64	RGB565	vq	4240	1	not-on-route	texclass22 not-on-route but statically bound on route
+043266e1-444b967e	pak:PS2 r119 texture 15	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+04712bfa-b5e1a32c	pak:PS2 r104 texture 36	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+049531b1-1b73b2dd	pak:PS2 r107 texture 25	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+04c830d1-c4e1f9fe	pak:PS2 r100 texture 52	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+06156971-6f843fcf	pak:PS2 r105 texture 147	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+0685ad99-1ab8158a	pak:PS2 r11b texture 31	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+0758d870-20e8e0b7	gc:ss/cmn/itm6a.tpl:ss/cmn/itm6a.tpl | pak:source	global	hud	exclude	screen-space HUD/UI (1:1)	256	128	RGB565	vq	10384	0	not-on-route	
+079d9325-b26eae92	pak:PS2 r104 texture 54	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+07c3ea2a-fb74c4c2	pak:PS2 r117 texture 8	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+07ed02f8-b18a21d0	pak:PS2 r107 object et0700.bin image 0 | resident:r107	r107	world	convert-blocked	rectangular 256x32: needs a rect21 square scoped representation	256	32	RGB565	vq	4240	1	not-on-route	texclass22 not-on-route but statically bound on route
+0848fbc4-7cafafe1	pak:PS2 r11b texture 21	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	128	RGB565	vq	18576	1	not-on-route	
+085e9434-5275a22e	pak:PS2 r10a texture 23	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+090929f5-3cb50697	pak:PS2 r118 texture 26	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+090d4b15-0b59527b	pak:PS2 r100 texture 19	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+0927090c-174d546a	pak:PS2 r118 texture 4	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+094d31cc-b329452c	pak:PS2 items 094d31cc-b329452c	-	item	not-reachable	no shipped package, room archive or resident list binds it	128	64	RGB565	vq	4240	0	not-on-route	
+0966365a-7b9aa570	pak:PS2 r11a texture 15	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+09778a51-63e646e3	pak:PS2 r102 texture 15	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	ARGB4444	twiddled	2192	1	not-on-route	
+0991154d-ab0c8698	pak:PS2 r117 texture 53	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+09af79e2-5818936f	pak:PS2 r107 texture 47	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+09b9d35d-9a1a2fc2	pak:PS2 r104 object et1700.bin image 1 | resident:r104	r104	world	mip-chain	minified 3D surface (world)	64	64	RGB565	vq	3216	1	not-on-route	texclass22 not-on-route but statically bound on route
+09f08484-96151836	pak:PS2 r105 texture 68	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+0a795561-a98877f0	pak:PS2 r107 texture 26	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+0a7dddfd-3e261715	pak:PS2 r104 texture 37	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+0aaeaefc-1afe28fb	pak:PS2 r105 texture 130	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+0b133c0c-d44003f4	gc:em/em10.drs:em/em10.drs:0#546 | gc:em/em1b.drs:em/em1b.drs:0#546 | gc:em/em1c.drs:em/em1c.drs:0#546 | gc:em/em4c.drs:em/em4c.drs:0#546 | gc:em/em5c.drs:em/em5c.drs:0#546 | gc:em/em6c.drs:em/em6c.drs:0#546 | pak:source	global	enemy	convert-blocked	rectangular 32x64: needs a rect21 square scoped representation	32	64	ARGB4444	twiddled	4240	0	not-on-route	texclass22 not-on-route but statically bound on route
+0b1dbdd5-203ee448	gc:em/em10.drs:em/em10.drs:0#586 | gc:em/em1d.drs:em/em1d.drs:0#586 | gc:em/em20.drs:em/em20.drs:0#586 | gc:em/em4d.drs:em/em4d.drs:0#586 | gc:em/em50.drs:em/em50.drs:0#586 | gc:em/em5d.drs:em/em5d.drs:0#586 | gc:em/em60.drs:em/em60.drs:0#586 | gc:em/em6d.drs:em/em6d.drs:0#586	global	enemy	mip-chain	minified 3D surface (enemy)	256	256	RGB565	twiddled	131216	0	not-on-route	texclass22 not-on-route but statically bound on route
+0b3b6a3b-f8722b32	pak:PS2 r109 texture 24	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+0c53b993-447518a8	pak:PS2 r10a texture 10	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+0cce4c81-ca41c39c	pak:PS2 r107 texture 40	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+0ce4c0e3-692a8874	pak:PS2 breakables 0ce4c0e3-692a8874 | resident:r102	r102	world-object	exclude	tiny (<=16): a chain buys nothing	16	16	ARGB4444	twiddled	656	1	not-on-route	
+0d03bc24-8651fd36	pak:PS2 breakables 0d03bc24-8651fd36 | resident:r102	r102	world-object	convert-blocked	rectangular 64x128: needs a rect21 square scoped representation	64	128	ARGB4444	twiddled	16528	1	not-on-route	texclass22 not-on-route but statically bound on route
+0d6df88c-7be2c28e	pak:PS2 r109 texture 18	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+0da6dcd3-1153b1a0	gc:evd/r101s21.evd:evd/r101s21.evd#38 | gc:evd/r101s30.evd:evd/r101s30.evd#33 | gc:evd/r119s00.evd:evd/r119s00.evd#35 | pak:source	r101,r119	cutscene	mip-chain	minified 3D surface (cutscene)	256	256	RGB565	twiddled	131216	2	not-on-route	texclass22 not-on-route but statically bound on route
+0debb4e2-5bee967d	pak:PS2 r10b object 0x1e image 0	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+0df5acc2-b3dcc006	pak:PS2 r107 texture 9	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+0e072d3e-cbb0e779	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	128	128	ARGB4444	vq	6288	0	not-on-route	
+0e2494fb-a7ce0a57	gc:em/em10.drs:em/em10.drs:0#544 | gc:em/em1c.drs:em/em1c.drs:0#544 | gc:em/em4c.drs:em/em4c.drs:0#544 | gc:em/em5c.drs:em/em5c.drs:0#544 | gc:em/em6c.drs:em/em6c.drs:0#544 | pak:source	global	enemy	mip-chain	minified 3D surface (enemy)	128	128	ARGB4444	twiddled	32912	0	not-on-route	texclass22 not-on-route but statically bound on route
+0e577fd9-ab3a3dc8	pak:ps2cast_gigante_em2b_00_gctex | resident:r119	r119	enemy	convert-blocked	rectangular 1024x512: needs a rect21 square scoped representation	1024	512	RGB565	vq	133264	1	not-on-route	texclass22 not-on-route but statically bound on route
+0e80c998-3aeeebb9	pak:ps2mask_ganado_em17_0c | resident:r108 | resident:r113 | resident:r118	r108,r113,r118	enemy	convert-blocked	rectangular 64x128: needs a rect21 square scoped representation	64	128	ARGB4444	twiddled	16528	3	not-worth	
+0ec137f0-ab5c0632	pak:PS2 r103 texture 34	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+0ec2ec89-02cfe8ab	pak:PS2 r10b texture 2	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB1555	twiddled	16528	1	not-on-route	
+0ec66328-686ca37d	pak:PS2 r105 texture 38	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+0f20d747-2d977dc1	gc:evd/r100s00.evd:evd/r100s00.evd#7 | gc:evd/r100s03.evd:evd/r100s03.evd#17 | gc:evd/r101s21.evd:evd/r101s21.evd#32 | gc:evd/r101s21.evd:evd/r101s21.evd#36 | gc:evd/r101s30.evd:evd/r101s30.evd#26 | gc:evd/r101s30.evd:evd/r101s30.evd#31 | gc:evd/r106s00.evd:evd/r106s00.evd#32 | gc:evd/r119s00.evd:evd/r119s00.evd#29	r100,r101,r106,r119,r11c,global	cutscene	mip-chain	minified 3D surface (cutscene)	32	32	RGB565	twiddled	2192	5	not-on-route	texclass22 not-on-route but statically bound on route
+0f82700e-fc4a5b74	pak:PS2 r106 texture 41	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+0fa6e42c-f4091698	pak:PS2 r10e texture 31	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+1025d198-dce4e83f	pak:PS2 r105 texture 42	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	ARGB4444	twiddled	4240	1	not-on-route	
+1047970a-047259e8	pak:PS2 r119 texture 27	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	ARGB4444	twiddled	2192	1	not-on-route	
+104dc0a1-92b61836	pak:PS2 r118 texture 27	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	16	RGB565	twiddled	1168	1	not-on-route	
+10c22a89-bb6af806	pak:PS2 r105 texture 43	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	ARGB4444	twiddled	2192	1	not-on-route	
+11182025-b67edcdd	pak:PS2 r10e texture 9	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	ARGB4444	twiddled	8336	1	not-on-route	
+1171513a-27416704	pak:PS2 r107 texture 4	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+11cd04b0-0d87771a	pak:PS2 r104 texture 11	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB4444	twiddled	65680	1	not-on-route	
+11eea870-3ee1907e	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	256	32	ARGB4444	vq	4240	0	not-on-route	
+11f18909-d7da4963	pak:PS2 r106 texture 33	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	ARGB4444	twiddled	32912	1	not-on-route	
+122543d6-d34839bf	pak:PS2 r103 texture 50	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+1229008a-8fd85a17	pak:cast_animal_69ff56c8655119743e6dc05f	-	enemy	not-reachable	no shipped package, room archive or resident list binds it	256	256	RGB565	vq	18576	0	not-on-route	
+1279a218-f8cb0063	pak:cast_human	global	character	convert-blocked	rectangular 1024x512: needs a rect21 square scoped representation	1024	512	RGB565	vq	133264	0	not-on-route	texclass22 not-on-route but statically bound on route
+127af368-b8234b53	pak:PS2 r109 texture 16	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	ARGB4444	twiddled	131216	1	not-on-route	
+127fd547-f5ffca98	pak:PS2 r102 texture 36	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	16	RGB565	vq	3216	1	not-on-route	
+13786e88-70750382	pak:PS2 r11a texture 6	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+13ba13b0-9a6b02ee	pak:PS2 r103 texture 9	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+13eb48ff-4d8add22	pak:PS2 r10d texture 39	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+13f824a8-aab93630	pak:PS2 r103 texture 6	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+14a67eda-9f0984b8	pak:PS2 r105 texture 89	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+14a6d3d9-0c861139	pak:PS2 r106 texture 35	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+14da791b-27d93e5d	pak:PS2 breakables 14da791b-27d93e5d | resident:r119	r119	world-object	convert-blocked	rectangular 128x256: needs a rect21 square scoped representation	128	256	RGB565	vq	10384	1	not-on-route	texclass22 not-on-route but statically bound on route
+155f7a2f-7ee8c172	pak:PS2 items 155f7a2f-7ee8c172	-	item	not-reachable	no shipped package, room archive or resident list binds it	64	64	RGB565	vq	3216	0	not-on-route	
+15728879-8b99f7ca	gc:em/em10.drs:em/em10.drs:0#574 | gc:em/em10.drs:em/em10.drs:0#588 | gc:em/em1d.drs:em/em1d.drs:0#574 | gc:em/em1d.drs:em/em1d.drs:0#588 | gc:em/em1e.drs:em/em1e.drs:0#588 | gc:em/em1f.drs:em/em1f.drs:0#588 | gc:em/em20.drs:em/em20.drs:0#574 | gc:em/em20.drs:em/em20.drs:0#588	global	enemy	mip-chain	minified 3D surface (enemy)	64	64	RGB565	twiddled	8336	0	not-on-route	texclass22 not-on-route but statically bound on route
+157c13b8-5a5814c2	pak:PS2 r106 texture 18	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+15d14aac-df28ea4f	pak:PS2 r104 texture 27	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+15eb41ec-439f3753	pak:PS2 items 15eb41ec-439f3753 | resident:r105	r105	item	mip-chain	minified 3D surface (item)	64	64	ARGB4444	twiddled	8336	1	not-on-route	texclass22 not-on-route but statically bound on route
+167af333-d535f7c8	pak:PS2 r108 texture 44	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+16c0c419-f337d98f	pak:PS2 r11b texture 40	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+16fd3683-f09afb75	pak:cast_animal_f7799fc1754d9219e5f8aa3c	-	enemy	not-reachable	no shipped package, room archive or resident list binds it	128	128	RGB565	vq	6288	0	not-on-route	
+172a4735-95d0fae5	pak:leon4k	global	character	mip-chain	minified 3D surface (character)	512	512	RGB565	vq	67728	0	not-on-route	texclass22 not-on-route but statically bound on route
+1774a7d9-eb94f9fa	pak:PS2 r105 texture 114	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+17a3eda7-f80f9052	pak:PS2 r11b texture 52	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+17fe456a-9ef89935	pak:PS2 r102 texture 65	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+17fee8fd-1a776763	pak:PS2 r117 texture 46	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	ARGB4444	twiddled	2192	1	not-on-route	
+183f82ef-c115be2f	pak:PS2 r105 texture 76	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+184ccb16-4a53a9a0	pak:PS2 r102 texture 34	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+186b4bc3-8f4ca8d6	pak:PS2 r11a texture 12	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+18815d26-ac2e22d8	pak:PS2 r107 texture 8	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+18d0fd82-2c9a9309	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	256	256	ARGB4444	vq	18576	0	not-on-route	
+19210dbd-da21101a	pak:PS2 r105 texture 52	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+19db8a55-537cf487	pak:PS2 r105 texture 132	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+19f10bc4-38fb09e8	pak:PS2 r100 texture 51	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+1a64bcf4-f0b70132	pak:PS2 breakables 1a64bcf4-f0b70132 | resident:r102	r102	world-object	convert-blocked	rectangular 64x128: needs a rect21 square scoped representation	64	128	RGB565	vq	4240	1	not-on-route	texclass22 not-on-route but statically bound on route
+1aad1b6c-e247646e	gc:em/em10.drs:em/em10.drs:0#552 | gc:em/em10.drs:em/em10.drs:0#554 | gc:em/em1d.drs:em/em1d.drs:0#552 | gc:em/em1d.drs:em/em1d.drs:0#554 | gc:em/em4d.drs:em/em4d.drs:0#552 | gc:em/em4d.drs:em/em4d.drs:0#554 | gc:em/em5d.drs:em/em5d.drs:0#552 | gc:em/em5d.drs:em/em5d.drs:0#554	r320,r327,global	enemy	mip-chain	minified 3D surface (enemy)	256	256	RGB565	twiddled	131216	0	not-on-route	texclass22 not-on-route but statically bound on route
+1aaeaa86-80d13b11	pak:PS2 r10a texture 12	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	64	RGB565	vq	10384	1	not-on-route	
+1ac6dbd5-375dd23e	pak:PS2 r102 texture 45	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+1aef5f3c-4c72f847	pak:PS2 r117 texture 33	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+1af32334-394c7569	pak:PS2 r106 texture 28	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+1b2f9252-a7eb9d48	pak:PS2 r104 texture 41	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+1b96ed4a-c4e8db9c	pak:PS2 r105 texture 28	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+1bd084bf-46b9023f	pak:PS2 r107 texture 35	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+1bd8a03e-3f67401f	pak:PS2 r117 texture 49	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+1d13abab-fe3a62c6	pak:PS2 r108 texture 38	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+1d359366-d6dbfb0a	pak:PS2 items 1d359366-d6dbfb0a	-	item	not-reachable	no shipped package, room archive or resident list binds it	128	64	RGB565	vq	4240	0	not-on-route	
+1da3a9a2-2fceec00	pak:PS2 r103 texture 35	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	ARGB4444	twiddled	131216	1	not-on-route	
+1e22620c-d6ea5386	pak:PS2 r105 texture 91	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+1e306c5e-4f8cf619	pak:PS2 breakables 1e306c5e-4f8cf619	-	world-object	not-reachable	no shipped package, room archive or resident list binds it	64	256	RGB565	vq	6288	0	not-on-route	
+1e50ba6c-a7d212b7	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	64	64	ARGB4444	twiddled	8336	0	not-on-route	
+1ec2ffdc-bf33a65a	pak:PS2 r103 texture 7	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+1ef6fcef-754d20e7	pak:PS2 r105 texture 17	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+1f361972-39e7cac3	pak:PS2 r11a texture 4	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+1fdc83dd-c82c2a72	gc:em/em10.drs:em/em10.drs:0#576 | gc:em/em1d.drs:em/em1d.drs:0#576 | gc:em/em20.drs:em/em20.drs:0#576 | gc:em/em4d.drs:em/em4d.drs:0#576 | gc:em/em50.drs:em/em50.drs:0#576 | gc:em/em5d.drs:em/em5d.drs:0#576 | gc:em/em60.drs:em/em60.drs:0#576 | gc:em/em6d.drs:em/em6d.drs:0#576	global	enemy	mip-chain	minified 3D surface (enemy)	64	64	RGB565	twiddled	8336	0	not-on-route	texclass22 not-on-route but statically bound on route
+1fece423-ea28aa32	pak:PS2 r105 texture 86	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+1ffce19f-1dee5492	pak:cast_human	global	character	convert-blocked	rectangular 1024x512: needs a rect21 square scoped representation	1024	512	RGB565	vq	133264	0	not-on-route	texclass22 not-on-route but statically bound on route
+2037f42a-8081ff8d	pak:PS2 r102 object et0d00.bin image 0	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	256	RGB565	vq	10384	1	not-on-route	
+206a9ab5-ad669e96	pak:PS2 r102 texture 33	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	ARGB4444	twiddled	8336	1	not-on-route	
+20b41c62-133dd8fa	gc:etc/core.das:etc/core.das:0#1/efm4/tpl | pak:source	global	other	mip-chain	minified 3D surface (other)	64	64	RGB565	twiddled	8336	0	not-on-route	texclass22 not-on-route but statically bound on route
+21a461eb-61b08f8b	pak:PS2 r108 texture 51	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB4444	twiddled	65680	1	not-on-route	
+21ea643d-e9519053	pak:PS2 r105 texture 22	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+2223194f-ba43ee6b	pak:PS2 breakables 2223194f-ba43ee6b	-	world-object	not-reachable	no shipped package, room archive or resident list binds it	32	64	RGB565	vq	2704	0	not-on-route	
+225cc273-43b58307	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	64	64	ARGB4444	twiddled	8336	0	not-on-route	
+22611655-e6a7956b	pak:PS2 r119 texture 19	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+2291e74b-1d6944c0	pak:PS2 r104 texture 18	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+22da377b-06038e67	pak:PS2 r103 object et0600.bin image 0 | resident:r103 | resident:r104	r103,r104	world	convert-blocked	rectangular 16x64: needs a rect21 square scoped representation	16	64	RGB565	twiddled	2192	2	not-on-route	texclass22 not-on-route but statically bound on route
+230ba840-6376baeb	pak:PS2 r108 texture 48	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+2342f112-4a390f11	pak:PS2 r10d texture 35	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+23bd1a5d-93ff8075	pak:PS2 r103 texture 45	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB1555	twiddled	65680	1	not-on-route	
+246ef208-1ac18c98	pak:PS2 r117 texture 22	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+2486fc99-f69534b9	pak:PS2 r108 texture 0	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	16	RGB565	twiddled	1168	1	not-on-route	
+249f2533-80551dc0	pak:PS2 r105 texture 138	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+253e0537-d5883973	pak:PS2 r103 texture 46	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB1555	twiddled	16528	1	not-on-route	
+2565cd0f-68857a6d	pak:PS2 r104 texture 21	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	16	RGB565	twiddled	2192	1	not-on-route	
+25eaea81-f9de283b	pak:PS2 r106 texture 39	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+2657ab83-ac1b3af0	pak:PS2 r107 texture 30	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+269ed4b1-beff5be6	pak:PS2 r107 texture 2	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+26da59a5-cd4ab144	pak:PS2 r11b texture 2	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+26dd3f5d-3bae7cd9	pak:PS2 r106 texture 34	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	ARGB4444	twiddled	32912	1	not-on-route	
+2734201f-1e9d151b	pak:PS2 r104 texture 18	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+27630189-94766607	pak:PS2 r10a texture 19	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+278208f4-ac0d6cc9	pak:PS2 r119 texture 33	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+279052e0-b695f91f	pak:source | resident:r207	r207	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	128	256	ARGB4444	vq	10384	1	needs-work	texclass22 saw it drawn but no static binding found
+27d5e9f2-a2e9e538	pak:PS2 r102 object et0a00.bin pair 0+1	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	16	16	ARGB4444	twiddled	656	1	not-on-route	
+27e088c4-f6836f02	gc:em/em10.drs:em/em10.drs:0#558 | gc:em/em10.drs:em/em10.drs:0#582 | gc:em/em10.drs:em/em10.drs:0#584 | gc:em/em1d.drs:em/em1d.drs:0#558 | gc:em/em1d.drs:em/em1d.drs:0#582 | gc:em/em1d.drs:em/em1d.drs:0#584 | gc:em/em1e.drs:em/em1e.drs:0#558 | gc:em/em1f.drs:em/em1f.drs:0#558	global	enemy	convert-blocked	rectangular 32x64: needs a rect21 square scoped representation	32	64	RGB565	twiddled	4240	0	not-on-route	texclass22 not-on-route but statically bound on route
+283f6b4f-6043d52f	pak:PS2 r118 texture 68	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+285238c7-49559757	pak:PS2 r117 texture 42	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+289047b8-871057dc	pak:PS2 r107 texture 30	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+292d0fe8-5a128946	pak:PS2 r10a texture 40	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+2973387a-d2b755da	pak:PS2 r104 texture 30	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+29e59ddf-f90a497c	pak:PS2 r108 texture 13	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+2a2e4bfa-8197ed75	pak:PS2 r10e texture 42	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+2a4a0788-42189aae	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	128	256	ARGB4444	vq	10384	0	not-on-route	
+2a5dbd63-6f27ca5d	pak:PS2 r108 texture 37	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+2a8dfebd-7c74f03b	pak:PS2 r102 texture 76	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+2adace9b-dd126fb6	pak:PS2 r104 texture 48	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+2af8e751-23a6e61d	pak:PS2 r106 texture 39	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+2ba6ff9e-1f253f2e	pak:PS2 r117 texture 4	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	16	RGB565	twiddled	2192	1	not-on-route	
+2bc3df8d-c562e20c	pak:PS2 r106 texture 28	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+2c13e564-6bd5636e	pak:PS2 r11b texture 26	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+2c2205d8-b0efc54e	pak:PS2 r108 texture 30	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+2c6c79f4-5b0666dd	pak:PS2 r105 texture 16	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+2c914a69-44f0b2b9	pak:PS2 r105 object et2400.bin image 0 | resident:r105	r105	world	convert-blocked	rectangular 128x256: needs a rect21 square scoped representation	128	256	RGB565	vq	10384	1	not-on-route	texclass22 not-on-route but statically bound on route
+2c9c252a-51c59944	pak:ps2mask_conv4_h3 | resident:r111 | resident:r112 | resident:r113 | resident:r117 | resident:r118 | resident:r11c	r111,r112,r113,r117,r118,r11c	enemy	mip-chain	minified 3D surface (enemy)	128	128	ARGB4444	vq	6288	6	not-worth	
+2cfd7d1d-85a7fa09	pak:ganado874	-	enemy	not-reachable	no shipped package, room archive or resident list binds it	512	512	RGB565	vq	67728	0	not-on-route	
+2d029ed3-89dd2f2a	pak:PS2 r104 texture 33	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+2da107c7-d7724b38	pak:PS2 r102 object et0a00.bin image 4	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	128	RGB565	vq	4240	1	not-on-route	
+2dc05d3c-fad4e189	pak:PS2 r106 texture 6	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+2ddc3144-0a976ba6	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	128	128	ARGB4444	vq	6288	0	not-on-route	
+2de71f34-0ade9016	pak:ps2_luis_source_diffuse_alpha | resident:r11c	r11c,global	character	convert-blocked	rectangular 64x128: needs a rect21 square scoped representation	64	128	ARGB4444	vq	4240	1	not-on-route	texclass22 not-on-route but statically bound on route
+2e305449-fba60dd3	pak:PS2 r10b texture 6	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+2e4fbbbd-828298a7	pak:PS2 r117 texture 29	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+2e9cbbdd-ce9e7f9f	pak:PS2 r10d texture 22	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB4444	twiddled	65680	1	not-on-route	
+2eda5ede-6ace689a	pak:PS2 r10a texture 26	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+2fac2b5f-01b26a2f	pak:PS2 r105 texture 41	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+3048f29b-125f32a3	pak:PS2 r105 texture 117	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+31036736-1e4cb733	pak:PS2 r119 texture 10	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+311a739c-fccc20f6	pak:PS2 r105 texture 134	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	128	RGB565	vq	18576	1	not-on-route	
+31645579-c9ea2234	gc:em/em10.drs:em/em10.drs:0#552 | gc:em/em1d.drs:em/em1d.drs:0#552 | gc:em/em4d.drs:em/em4d.drs:0#552 | gc:em/em5d.drs:em/em5d.drs:0#552 | gc:em/em6d.drs:em/em6d.drs:0#552 | pak:source	global	enemy	mip-chain	minified 3D surface (enemy)	256	256	RGB565	twiddled	131216	0	not-on-route	texclass22 not-on-route but statically bound on route
+31d347f2-2c0d3ff7	pak:PS2 r117 texture 4	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	16	RGB565	twiddled	2192	1	not-on-route	
+31dfb569-bf26ac3c	pak:PS2 r107 texture 19	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+31ed9baa-3032a742	pak:PS2 r10d texture 44	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	16	RGB565	twiddled	2192	1	not-on-route	
+31f37910-4c5af8ae	pak:PS2 items 31f37910-4c5af8ae	-	item	not-reachable	no shipped package, room archive or resident list binds it	64	64	RGB565	vq	3216	0	not-on-route	
+32287485-d629d436	pak:PS2 r10a texture 25	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+32a46e99-f22d474b	pak:PS2 r104 texture 31	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+3301576a-a658922f	pak:PS2 breakables 3301576a-a658922f	-	world-object	not-reachable	no shipped package, room archive or resident list binds it	32	64	RGB565	vq	2704	0	not-on-route	
+3394a1d7-fbe3e388	pak:PS2 r119 texture 26	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+33b340d2-a206647a	pak:PS2 r117 texture 37	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+33e6958f-e65a42c9	pak:PS2 r107 texture 5	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+341aa61b-ddb4b5e1	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	128	256	ARGB4444	vq	10384	0	not-on-route	
+34d5e2fa-590c85d4	pak:PS2 r106 texture 9	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+3598a450-9473095a	pak:PS2 r102 texture 68	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+35b16b88-21f97045	pak:PS2 r117 texture 7	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+35d4ac91-0dd2dc3d	pak:PS2 r103 texture 40	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB1555	twiddled	16528	1	not-on-route	
+35df449a-c64cb8ea	pak:PS2 r105 texture 109	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+35f7f05e-3d886f53	pak:PS2 r108 texture 26	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+3615defa-ad3421e2	pak:PS2 r108 texture 5	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+366c6f1e-7f3cc680	pak:PS2 r105 texture 90	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	128	RGB565	vq	18576	1	not-on-route	
+36a9dda9-d2364dab	pak:PS2 r10e texture 49	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+36e4de50-e0658824	gc:em/em10.drs:em/em10.drs:0#572 | gc:em/em1d.drs:em/em1d.drs:0#572 | gc:em/em20.drs:em/em20.drs:0#572 | gc:em/em4d.drs:em/em4d.drs:0#572 | gc:em/em50.drs:em/em50.drs:0#572 | gc:em/em5d.drs:em/em5d.drs:0#572 | gc:em/em60.drs:em/em60.drs:0#572 | gc:em/em6d.drs:em/em6d.drs:0#572	global	enemy	mip-chain	minified 3D surface (enemy)	64	64	RGB565	twiddled	8336	0	not-on-route	texclass22 not-on-route but statically bound on route
+370833fa-189be2a6	pak:PS2 r105 texture 133	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+370a8f01-97e38d5e	pak:PS2 r104 texture 0	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+3746e318-82af028e	pak:PS2 r119 texture 16	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	ARGB4444	twiddled	4240	1	not-on-route	
+3774304b-0d5dfa67	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	512	256	ARGB4444	vq	34960	0	not-on-route	
+37f232de-95743302	pak:PS2 r108 texture 28	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	ARGB4444	twiddled	8336	1	not-on-route	
+386480a4-46432775	pak:PS2 r102 texture 42	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	ARGB4444	twiddled	8336	1	not-on-route	
+38c2c250-3976ca77	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	128	128	ARGB4444	vq	6288	0	not-on-route	
+39002fb2-1aadd1a9	pak:PS2 r118 texture 63	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+390c2081-2f7ec10e	pak:PS2 r11b texture 32	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+3965f4b0-e1903c91	pak:PS2 r108 texture 39	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+399c898b-f0168122	pak:PS2 r118 texture 39	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+39d33f85-c721aa79	pak:PS2 r107 texture 47	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+39da3d4e-dfa96b2a	gc:ss/cmn/itm95.tpl:ss/cmn/itm95.tpl | gc:ss/cmn/itm97.tpl:ss/cmn/itm97.tpl | pak:source	global	hud	exclude	screen-space HUD/UI (1:1)	128	64	RGB565	twiddled	16528	0	not-on-route	
+39ed4db0-ef816296	pak:PS2 r119 texture 19	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+39ed5c39-32b9b30e	pak:PS2 r102 texture 5	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB1555	twiddled	16528	1	not-on-route	
+3a2564db-9e7bf464	gc:evd/r101s21.evd:evd/r101s21.evd#42 | gc:evd/r101s30.evd:evd/r101s30.evd#37 | gc:evd/r106s00.evd:evd/r106s00.evd#34 | gc:evd/r10bs00.evd:brute | gc:evd/r119s00.evd:evd/r119s00.evd#39 | gc:evd/r11cs00.evd:brute | gc:evd/r200s00.evd:brute | gc:evd/s11cs00.evd:brute	r101,r106,r10b,r119,r11c,r200,global	cutscene	mip-chain	minified 3D surface (cutscene)	256	256	RGB565	twiddled	131216	6	not-on-route	texclass22 not-on-route but statically bound on route
+3a3edeff-cbb0ad09	pak:PS2 r11b texture 50	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+3a601d2d-7525b44f	pak:PS2 r107 texture 18	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+3b14d9f2-5297fdf8	pak:PS2 r10b texture 44	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+3b2fff65-6f451ff8	pak:PS2 r10b texture 39	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+3b6de176-5e1baa4e	pak:PS2 r106 texture 14	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+3bae5ae9-8d12fc86	pak:PS2 r11b texture 11	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+3c7b4266-ee3b45d1	pak:PS2 r107 texture 3	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+3cc44ad2-cf744e0e	pak:PS2 r100 texture 46	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	ARGB4444	twiddled	4240	1	not-on-route	
+3cd6537d-66d6d261	pak:PS2 r105 texture 82	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+3cfb8fea-a032092e	pak:PS2 r107 texture 13	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+3d134c3a-80a12f1e	pak:PS2 r10d texture 59	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+3d15af49-311cc721	gc:etc/core.das:etc/core.das:0#1/efm1/tpl | pak:source	global	other	mip-chain	minified 3D surface (other)	64	64	RGB565	twiddled	8336	0	not-on-route	texclass22 not-on-route but statically bound on route
+3d87b18b-8a697d1c	pak:ps2mask_fish_em27_00 | resident:r10b | resident:r11b	r10b,r11b	enemy	convert-blocked	rectangular 128x64: needs a rect21 square scoped representation	128	64	ARGB4444	twiddled	16528	2	not-on-route	texclass22 not-on-route but statically bound on route
+3d89ea99-a6b4567c	pak:PS2 r104 texture 24	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+3d9eb8fa-86cdf1a5	pak:PS2 r105 texture 6	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+3de56f9f-e01215f5	pak:PS2 r10b object 0x1e image 2	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	128	RGB565	vq	4240	1	not-on-route	
+3debb6c0-f74d6502	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	128	128	ARGB4444	vq	6288	0	not-on-route	
+3e0bf632-0f5d6eba	pak:PS2 r119 object 0x22 image 0 | resident:r119	r119	world	convert-blocked	rectangular 64x256: needs a rect21 square scoped representation	64	256	RGB565	vq	6288	1	needs-work	
+3e3aca1b-a7ba29aa	pak:PS2 r107 texture 29	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+3e5b3dae-b21e7218	pak:PS2 r105 texture 102	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+3e8a8037-8d506dfd	pak:PS2 r109 texture 13	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+3eef2044-72f5709d	pak:leon4k	global	character	mip-chain	minified 3D surface (character)	512	512	RGB565	twiddled	524432	0	not-on-route	texclass22 not-on-route but statically bound on route
+3f1d4dc0-a05ed30b	gc:ss/eng/ss_term.dat:ss/eng/ss_term.dat#1/tpl2 | pak:source	global	hud	exclude	screen-space HUD/UI (1:1)	512	512	RGB565	vq	67728	0	not-on-route	
+3f5d7c6b-b8b7909e	pak:PS2 r11a texture 12	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+3f690586-7edb7c3e	pak:ps2mask_merchant18_o0 | resident:r10f | resident:r112 | resident:r305 | resident:r30a | resident:r312 | resident:r315 | resident:r31a	r10f,r112,r305,r30a,r312,r315,r31a,r31d,r329,r331	enemy	convert-blocked	rectangular 256x128: needs a rect21 square scoped representation	256	128	ARGB4444	vq	10384	2	needs-work	
+3f8c402c-0cfd9074	pak:PS2 r107 texture 27	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+40783ecb-2a806d3d	pak:PS2 r10d texture 0	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	512	RGB565	vq	67728	1	not-on-route	
+40b8bed8-1ec662ce	pak:PS2 r103 texture 8	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+40cf0d10-0671a86d	pak:PS2 r105 texture 63	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+4134dd49-ca843380	pak:PS2 r103 texture 40	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+41538474-8a2e714d	pak:PS2 r105 texture 58	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+41638ae2-555c6b4d	pak:PS2 r10d texture 34	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+4166aba4-23610a99	pak:ps2mask_mendez35_full | resident:r11f	r11f	enemy	mip-chain	minified 3D surface (enemy)	128	128	ARGB4444	twiddled	32912	1	not-on-route	texclass22 not-on-route but statically bound on route
+418251c6-a2823f3d	pak:PS2 r104 object et1700.bin image 0 | resident:r104	r104	world	convert-blocked	rectangular 128x256: needs a rect21 square scoped representation	128	256	RGB565	vq	10384	1	not-on-route	texclass22 not-on-route but statically bound on route
+4230b114-364b1451	pak:PS2 r105 texture 116	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+42a2196d-04d56dbf	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	128	64	ARGB4444	vq	4240	0	not-on-route	
+431f38ab-2a00131e	pak:PS2 r117 texture 53	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+438eb8af-66107cc6	pak:PS2 r118 texture 19	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+43cb8b3b-fea35b99	pak:PS2 r10e texture 18	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+444e63da-a216e6c2	pak:PS2 r105 texture 143	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	ARGB4444	twiddled	4240	1	not-on-route	
+44acb1c9-7f201e61	pak:PS2 r102 texture 61	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+44cfe36c-0af630b4	pak:PS2 r105 texture 44	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+44d10275-964cf78a	pak:PS2 breakables 44d10275-964cf78a	-	world-object	not-reachable	no shipped package, room archive or resident list binds it	16	16	RGB565	twiddled	656	0	not-on-route	
+452c6e09-169937d4	pak:PS2 r105 texture 75	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+453b0ed2-be9d4835	pak:PS2 r119 texture 34	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	ARGB4444	twiddled	4240	1	not-on-route	
+45b86655-f3c6c6e1	pak:PS2 r109 texture 30	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+45ce5bd8-7a2321e8	pak:PS2 r118 texture 30	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	ARGB4444	twiddled	8336	1	not-on-route	
+46098cd6-3c417f96	pak:PS2 r109 texture 11	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+463edd54-95033757	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	64	128	RGB565	twiddled	16528	0	not-on-route	
+46681f75-bfb7cfba	pak:PS2 breakables 46681f75-bfb7cfba	-	world-object	not-reachable	no shipped package, room archive or resident list binds it	64	64	RGB565	vq	3216	0	not-on-route	
+468197f5-0930306f	pak:PS2 r103 texture 48	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+469f5219-1f71b425	pak:PS2 r102 texture 40	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+4739be9c-d3c70971	pak:PS2 items 4739be9c-d3c70971	-	item	not-reachable	no shipped package, room archive or resident list binds it	128	64	RGB565	vq	4240	0	not-on-route	
+4764d110-36cf43f4	pak:PS2 r109 texture 25	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+476e5c91-4d19cf6b	pak:PS2 r100 texture 50	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+482332fa-5e5a89fd	pak:PS2 r102 texture 33	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	ARGB4444	twiddled	8336	1	not-on-route	
+48369d01-cf9063bd	pak:source | resident:r100	r100	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	128	128	ARGB4444	vq	6288	1	not-on-route	
+484e152b-64f1fb4a	gc:em/em10.drs:em/em10.drs:0#552 | gc:em/em10.drs:em/em10.drs:0#554 | gc:em/em1d.drs:em/em1d.drs:0#552 | gc:em/em1d.drs:em/em1d.drs:0#554 | gc:em/em4d.drs:em/em4d.drs:0#552 | gc:em/em4d.drs:em/em4d.drs:0#554 | gc:em/em5d.drs:em/em5d.drs:0#552 | gc:em/em5d.drs:em/em5d.drs:0#554	global	enemy	mip-chain	minified 3D surface (enemy)	128	128	ARGB4444	twiddled	32912	0	not-on-route	texclass22 not-on-route but statically bound on route
+49238a13-268dfbe3	pak:PS2 r106 texture 29	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+494053fc-10003b8f	pak:PS2 items 494053fc-10003b8f | resident:r105	r105	item	mip-chain	minified 3D surface (item)	64	64	RGB565	vq	3216	1	not-on-route	texclass22 not-on-route but statically bound on route
+49abeafe-882b9aa5	pak:leon4k	global	character	already-mipped	pack carries a chain	512	512	RGB565	vq	89574	0	not-on-route	texclass22 not-on-route but statically bound on route
+49ad180b-4e7d9b82	pak:PS2 r105 texture 83	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+4a551e48-8ec153da	pak:PS2 r109 texture 18	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+4a9441ac-d4f6f24e	pak:PS2 r119 texture 18	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+4afa129a-4c06f8ab	pak:PS2 r106 object 0x36 image 0	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	128	RGB565	vq	4240	1	not-on-route	
+4b10c6d5-3dac91bc	pak:PS2 r107 texture 39	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+4b41c52f-44d5fefe	pak:PS2 r104 texture 29	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+4b70ab0c-aa039a32	pak:PS2 r107 texture 9	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+4b740139-5bfa641a	pak:PS2 r105 texture 46	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+4b7844fc-ace38087	pak:PS2 r11b texture 25	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+4c5ab9aa-1a604ee3	pak:PS2 r102 texture 62	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+4d8477a5-dcb6d8b3	pak:PS2 r104 texture 9	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+4da9c3fa-98934ea1	pak:ps2mask_merchant18_o0	-	enemy	not-reachable	no shipped package, room archive or resident list binds it	256	128	ARGB4444	twiddled	65680	0	not-on-route	
+4dac4766-22c5aa90	pak:PS2 r103 texture 25	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+4db50c08-8ca524a8	pak:PS2 r107 texture 32	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+4e2e355e-68991a62	pak:PS2 r118 texture 40	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+4e4f13a4-de7b3d54	pak:PS2 r10d texture 54	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+4ee2229c-ce6b2de4	pak:leon4k	global	character	mip-chain	minified 3D surface (character)	512	512	RGB565	twiddled	524432	0	not-on-route	texclass22 not-on-route but statically bound on route
+4f784887-fc80dbee	pak:PS2 r109 object et1000.bin image 0 | resident:r109 | resident:r119	r109,r119	world	mip-chain	minified 3D surface (world)	64	64	RGB565	vq	3216	2	not-on-route	texclass22 not-on-route but statically bound on route
+4f7bae67-5490d6d4	pak:PS2 r106 texture 23	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+4fb93f12-6b3f6550	pak:ps2mask_mendez35_upper	-	enemy	not-reachable	no shipped package, room archive or resident list binds it	128	128	ARGB4444	twiddled	32912	0	not-on-route	
+50017a5c-3d1e0d15	pak:PS2 r102 texture 66	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+5151d6d3-f0ffff8a	pak:PS2 r106 texture 8	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+519ddde5-b08f96a2	pak:PS2 r109 texture 27	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	ARGB4444	twiddled	2192	1	not-on-route	
+519ffac9-ea079025	pak:PS2 r105 texture 60	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+5200ebfe-b26f3202	pak:PS2 r105 texture 107	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+522df054-b1209907	pak:PS2 r10b texture 18	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+525022c1-d2904da9	pak:PS2 r103 texture 43	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+52bb40e5-e5d3d57d	pak:PS2 r11b texture 22	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+52fb8201-19d3b657	pak:PS2 r10b texture 14	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+52fd394a-7e74cf3f	pak:PS2 items 52fd394a-7e74cf3f	-	item	not-reachable	no shipped package, room archive or resident list binds it	64	32	ARGB4444	twiddled	4240	0	not-on-route	
+53149ece-0cd812f3	pak:PS2 r102 object et0a00.bin image 2	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	128	RGB565	vq	4240	1	not-on-route	
+5366a188-0b045830	pak:PS2 r10b texture 36	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+538965fc-9d736b20	pak:PS2 r108 texture 45	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	ARGB4444	twiddled	131216	1	not-on-route	
+54514eaa-6ed47ab8	pak:PS2 r102 texture 66	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+545385be-aa2f0d51	pak:PS2 r105 texture 27	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+549b2f72-cea0bbec	pak:PS2 r117 texture 48	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+5509abf7-6f428cd0	pak:PS2 r105 texture 127	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+5539ebfe-67d7db2b	gc:evd/r101s21.evd:evd/r101s21.evd#40 | gc:evd/r101s30.evd:evd/r101s30.evd#35 | gc:evd/r10bs00.evd:brute | gc:evd/r119s00.evd:evd/r119s00.evd#37 | gc:evd/r200s00.evd:brute | gc:evd/s200s00.evd:brute | pak:source	r101,r10b,r119,r200,global	cutscene	mip-chain	minified 3D surface (cutscene)	32	32	RGB565	twiddled	2192	4	not-on-route	texclass22 not-on-route but statically bound on route
+553a3999-10fffc5f	pak:PS2 r10d texture 21	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+5542ba7d-2c69a4dc	pak:PS2 r105 texture 121	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+5552e13b-a36370de	pak:PS2 r109 texture 15	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	ARGB4444	twiddled	131216	1	not-on-route	
+55589653-a62465cc	pak:PS2 r118 texture 14	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+555f7179-79463231	pak:PS2 r119 texture 17	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	ARGB4444	twiddled	131216	1	not-on-route	
+5575d7b4-71f8f8a5	pak:PS2 r105 texture 135	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+5593fa6e-ab31db79	pak:PS2 r105 texture 40	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+559a3c32-359c389e	pak:PS2 r11b texture 15	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+55a2eab3-ed240c75	pak:PS2 r103 texture 14	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+55e096ea-5b620d97	pak:PS2 r105 texture 18	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+55e3587d-8d56ac7a	pak:PS2 r105 texture 91	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+56006145-e6303d51	pak:PS2 r118 texture 66	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+562026c0-f7f29de1	pak:PS2 r11a texture 23	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+56d70169-8a2e5214	pak:ps2mask_conv4_h3 | resident:r111 | resident:r112 | resident:r113 | resident:r117 | resident:r118 | resident:r11c	r111,r112,r113,r117,r118,r11c	enemy	mip-chain	minified 3D surface (enemy)	64	64	ARGB4444	twiddled	8336	6	not-worth	
+56f59325-7ad71908	pak:PS2 r102 texture 64	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+57195a2e-7efd25b1	pak:PS2 r11a texture 7	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+572fa570-0a80f46d	pak:PS2 r104 texture 27	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+57e5b078-c738eacc	pak:PS2 r105 texture 46	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+5819933f-12c7603e	gc:em/em10.drs:em/em10.drs:0#628/tpl0 | gc:em/em1d.drs:em/em1d.drs:0#628/tpl0 | gc:em/em1e.drs:em/em1e.drs:0#628/tpl0 | gc:em/em1f.drs:em/em1f.drs:0#628/tpl0 | gc:em/em20.drs:em/em20.drs:0#628/tpl0 | gc:em/em4d.drs:em/em4d.drs:0#628/tpl0 | gc:em/em4f.drs:em/em4f.drs:0#628/tpl0 | gc:em/em50.drs:em/em50.drs:0#628/tpl0	global	enemy	convert-blocked	rectangular 32x64: needs a rect21 square scoped representation	32	64	ARGB4444	twiddled	4240	0	not-on-route	texclass22 not-on-route but statically bound on route
+5821dc13-37b4e764	pak:PS2 r105 texture 33	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+58632445-8dda3fd2	gc:em/em10.drs:em/em10.drs:0#544 | gc:em/em1c.drs:em/em1c.drs:0#544 | gc:em/em4c.drs:em/em4c.drs:0#544 | gc:em/em5c.drs:em/em5c.drs:0#544 | gc:em/em6c.drs:em/em6c.drs:0#544 | pak:source	global	enemy	mip-chain	minified 3D surface (enemy)	256	256	RGB565	twiddled	131216	0	not-on-route	texclass22 not-on-route but statically bound on route
+588763fb-b7c46fbc	pak:PS2 r10a texture 32	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+5893dec1-48258401	pak:PS2 r10b texture 44	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+58bb7a1c-39e64ff6	pak:PS2 r107 object et2b00.bin image 0 | resident:r107	r107	world	convert-blocked	rectangular 128x256: needs a rect21 square scoped representation	128	256	RGB565	vq	10384	1	not-on-route	texclass22 not-on-route but statically bound on route
+5926862b-e61d4941	pak:PS2 r106 object 0x34 image 0 | resident:r106	r106	world	mip-chain	minified 3D surface (world)	256	256	RGB565	vq	18576	1	not-on-route	texclass22 not-on-route but statically bound on route
+59475499-6a84b360	pak:PS2 r105 texture 64	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+59a83bbb-180c2a37	gc:em/em10.drs:em/em10.drs:0#576 | gc:em/em1d.drs:em/em1d.drs:0#576 | gc:em/em1f.drs:em/em1f.drs:0#576 | gc:em/em20.drs:em/em20.drs:0#576 | gc:em/em4d.drs:em/em4d.drs:0#576 | gc:em/em4f.drs:em/em4f.drs:0#576 | gc:em/em50.drs:em/em50.drs:0#576 | gc:em/em5d.drs:em/em5d.drs:0#576	global	enemy	convert-blocked	rectangular 32x128: needs a rect21 square scoped representation	32	128	RGB565	twiddled	8336	0	not-on-route	texclass22 not-on-route but statically bound on route
+5a014356-71dc0a54	pak:PS2 r119 texture 27	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	ARGB4444	twiddled	2192	1	not-on-route	
+5a0de4fe-508f318d	pak:PS2 r104 texture 20	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	16	RGB565	twiddled	1168	1	not-on-route	
+5a2d4d61-aefae96a	pak:PS2 r108 texture 41	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+5a2eac46-3d5c85fe	pak:PS2 r100 texture 7	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+5a932f58-8b022cc3	pak:PS2 r10a texture 35	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB4444	twiddled	65680	1	not-on-route	
+5af8bc58-ae646054	pak:PS2 r105 texture 4	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+5b1123b0-54c2f126	gc:em/em10.drs:em/em10.drs:0#580 | gc:em/em1d.drs:em/em1d.drs:0#580 | gc:em/em20.drs:em/em20.drs:0#580 | gc:em/em4d.drs:em/em4d.drs:0#580 | gc:em/em50.drs:em/em50.drs:0#580 | gc:em/em5d.drs:em/em5d.drs:0#580 | gc:em/em60.drs:em/em60.drs:0#580 | gc:em/em6d.drs:em/em6d.drs:0#580	global	enemy	convert-blocked	rectangular 128x256: needs a rect21 square scoped representation	128	256	RGB565	twiddled	65680	0	not-on-route	texclass22 not-on-route but statically bound on route
+5b60bcb3-e333d4ae	pak:PS2 breakables 5b60bcb3-e333d4ae | resident:r102	r102	world-object	convert-blocked	rectangular 64x128: needs a rect21 square scoped representation	64	128	RGB565	vq	4240	1	not-on-route	texclass22 not-on-route but statically bound on route
+5b9a4329-06e97dd1	pak:PS2 r108 texture 40	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+5bb4f7b6-a27a8831	pak:PS2 r102 texture 58	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+5bde298e-c48154cf	gc:em/em10.drs:em/em10.drs:0#588 | gc:em/em1d.drs:em/em1d.drs:0#588 | gc:em/em1e.drs:em/em1e.drs:0#588 | gc:em/em1f.drs:em/em1f.drs:0#588 | gc:em/em20.drs:em/em20.drs:0#588 | gc:em/em4d.drs:em/em4d.drs:0#588 | gc:em/em4f.drs:em/em4f.drs:0#588 | gc:em/em50.drs:em/em50.drs:0#588	global	enemy	mip-chain	minified 3D surface (enemy)	128	128	RGB565	twiddled	32912	0	not-on-route	texclass22 not-on-route but statically bound on route
+5be6d1d4-6760d676	gc:em/em10.drs:em/em10.drs:0#552 | gc:em/em1d.drs:em/em1d.drs:0#552 | gc:em/em4d.drs:em/em4d.drs:0#552 | gc:em/em5d.drs:em/em5d.drs:0#552 | gc:em/em6d.drs:em/em6d.drs:0#552 | pak:source	global	enemy	mip-chain	minified 3D surface (enemy)	256	256	RGB565	twiddled	131216	0	not-on-route	texclass22 not-on-route but statically bound on route
+5bea37b2-7eaf02a5	gc:em/em10.drs:em/em10.drs:0#552 | gc:em/em1d.drs:em/em1d.drs:0#552 | gc:em/em4d.drs:em/em4d.drs:0#552 | gc:em/em5d.drs:em/em5d.drs:0#552 | gc:em/em6d.drs:em/em6d.drs:0#552 | pak:source	global	enemy	convert-blocked	rectangular 64x128: needs a rect21 square scoped representation	64	128	ARGB4444	twiddled	16528	0	not-on-route	texclass22 not-on-route but statically bound on route
+5c1db0dc-283cb320	pak:PS2 r102 texture 5	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+5c441d9e-3001d9c2	pak:PS2 r103 texture 49	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+5c5ddde4-7e25173c	pak:PS2 r117 texture 41	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	ARGB4444	twiddled	32912	1	not-on-route	
+5ca62c16-f6c8b7d8	pak:PS2 r105 texture 18	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+5cf0b973-625d131d	pak:PS2 r105 texture 145	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+5ddcfdb1-5da5bfdb	pak:PS2 r107 texture 48	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+5e1e1382-04066913	pak:PS2 r10b texture 49	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB4444	twiddled	65680	1	not-on-route	
+5e33cb52-2b41ed98	pak:PS2 r108 texture 17	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+5ebd0111-82366cdb	pak:PS2 r11a texture 28	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+5f5e1d44-dc7f12ea	pak:PS2 r118 texture 67	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+5f762387-bcb3654c	pak:PS2 r117 texture 17	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+5f79ef76-688df1b2	pak:PS2 r117 texture 38	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+5faee1db-099f72b1	gc:em/em10.drs:em/em10.drs:0#548 | gc:em/em1b.drs:em/em1b.drs:0#548 | gc:em/em1c.drs:em/em1c.drs:0#548 | gc:em/em4c.drs:em/em4c.drs:0#548 | gc:em/em5c.drs:em/em5c.drs:0#548 | gc:em/em6c.drs:em/em6c.drs:0#548 | pak:source	global	enemy	convert-blocked	rectangular 128x64: needs a rect21 square scoped representation	128	64	ARGB4444	twiddled	16528	0	not-on-route	texclass22 not-on-route but statically bound on route
+60b2dbc8-a216976a	pak:PS2 r105 texture 23	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+614761a9-33d9458c	pak:PS2 r11b texture 40	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+61c0d119-e0d862af	pak:PS2 r106 texture 10	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+61cf0106-785c90c1	pak:PS2 r10b texture 35	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+620ce75f-70c8762e	pak:PS2 r117 texture 31	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	16	RGB565	vq	2704	1	not-on-route	
+6215f039-b12bdd80	pak:PS2 r103 texture 5	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+621c59f8-9571e09a	pak:PS2 r106 texture 15	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+62415c3f-cb4f3bdc	pak:PS2 r105 texture 136	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+6247d8b2-9545bd8d	pak:PS2 r117 texture 8	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+628a66ab-711d6b46	pak:ps2mask_truck_em3b_00 | resident:r200	r200	enemy	mip-chain	minified 3D surface (enemy)	128	128	ARGB4444	vq	6288	1	not-on-route	texclass22 not-on-route but statically bound on route
+62eaa047-2c449ebc	pak:PS2 r117 texture 15	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+63122dac-cdbefb62	pak:PS2 r108 texture 48	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+632fc3be-e419a9d1	pak:PS2 breakables 632fc3be-e419a9d1	-	world-object	not-reachable	no shipped package, room archive or resident list binds it	256	256	RGB565	vq	18576	0	not-on-route	
+641e22cb-bdf43f28	pak:PS2 items 641e22cb-bdf43f28	-	item	not-reachable	no shipped package, room archive or resident list binds it	64	64	RGB565	vq	3216	0	not-on-route	
+643e1a5e-e407e6de	pak:PS2 r117 texture 52	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+644e6996-0550c280	pak:PS2 r11a texture 16	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+6455b1e3-c82ac79d	pak:PS2 r117 texture 40	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+64bd70d9-24a9b453	pak:PS2 r100 texture 22	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB1555	twiddled	65680	1	not-on-route	
+64ce05f1-418b7353	pak:PS2 r105 texture 76	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+64d2856e-7f7a9ee4	pak:PS2 r10b texture 31	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+6515052d-9604b115	pak:PS2 items 6515052d-9604b115	-	item	not-reachable	no shipped package, room archive or resident list binds it	128	64	RGB565	vq	4240	0	not-on-route	
+6538897e-d889f3c6	pak:PS2 r106 texture 29	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+657e0322-055c14a0	pak:PS2 r10b texture 12	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+6596bca3-f2f292f2	pak:PS2 items 6596bca3-f2f292f2 | resident:r101 | resident:r102 | resident:r103 | resident:r105 | resident:r107 | resident:r10a | resident:r10b	r101,r102,r103,r105,r107,r10a,r10b,r118,r119,r11b	item	mip-chain	minified 3D surface (item)	64	64	ARGB4444	vq	3216	10	not-on-route	texclass22 not-on-route but statically bound on route
+659a0537-2dc191ca	pak:PS2 r102 texture 44	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	512	RGB565	vq	67728	1	not-on-route	
+65a31923-3efe5a4b	pak:PS2 breakables 65a31923-3efe5a4b	-	world-object	not-reachable	no shipped package, room archive or resident list binds it	128	256	RGB565	vq	10384	0	not-on-route	
+65bd0c91-badf7fee	pak:PS2 r106 texture 36	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	ARGB4444	twiddled	131216	1	not-on-route	
+66a3c8be-951d7c0d	gc:evd/r101s21.evd:evd/r101s21.evd#34 | gc:evd/r101s30.evd:evd/r101s30.evd#29 | gc:evd/r119s00.evd:evd/r119s00.evd#31 | pak:source	r101,r119	cutscene	mip-chain	minified 3D surface (cutscene)	256	256	RGB565	twiddled	131216	2	not-on-route	texclass22 not-on-route but statically bound on route
+66a6504b-deb52942	pak:PS2 r107 texture 34	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+673f2aab-d3e11d07	pak:PS2 r108 texture 71	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+6752af88-998d2bef	pak:PS2 r102 texture 58	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+677912ad-44b86e5b	pak:PS2 r106 texture 32	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+68c8f5aa-aad3764e	gc:em/em10.drs:em/em10.drs:0#584 | gc:em/em1d.drs:em/em1d.drs:0#584 | gc:em/em20.drs:em/em20.drs:0#584 | gc:em/em4d.drs:em/em4d.drs:0#584 | gc:em/em50.drs:em/em50.drs:0#584 | gc:em/em5d.drs:em/em5d.drs:0#584 | gc:em/em60.drs:em/em60.drs:0#584 | gc:em/em6d.drs:em/em6d.drs:0#584	global	enemy	convert-blocked	rectangular 128x256: needs a rect21 square scoped representation	128	256	RGB565	twiddled	65680	0	not-on-route	texclass22 not-on-route but statically bound on route
+68c9fb04-02ca1f1e	pak:PS2 r104 texture 24	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+68d65866-f0a339f2	pak:PS2 r11a texture 3	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+69275d55-6fb5f00a	gc:evd/r100s00.evd:evd/r100s00.evd#5 | gc:evd/r100s03.evd:evd/r100s03.evd#15 | gc:evd/r101s21.evd:evd/r101s21.evd#30 | gc:evd/r101s30.evd:evd/r101s30.evd#24 | gc:evd/r106s00.evd:evd/r106s00.evd#30 | gc:evd/r119s00.evd:evd/r119s00.evd#27 | gc:evd/r11cs10.evd:evd/r11cs10.evd#35 | gc:evd/s11cs10.evd:evd/s11cs10.evd#35	r100,r101,r106,r119,r11c,global	cutscene	mip-chain	minified 3D surface (cutscene)	256	256	RGB565	twiddled	131216	5	not-on-route	texclass22 not-on-route but statically bound on route
+6998bdab-3427e980	pak:PS2 r107 texture 2	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+69fc2509-f6e82ee4	pak:PS2 r106 texture 11	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+6a2597c8-a3fd0886	pak:PS2 r10b texture 27	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+6a9f4f23-a80491e7	pak:PS2 r108 texture 40	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+6ab9a6cb-eb8dc42f	pak:PS2 r105 texture 25	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+6afc7984-6264bc8a	pak:PS2 r10d texture 38	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+6b1f2726-25e336e1	pak:PS2 r10a texture 9	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+6b75ae91-d779d67c	pak:PS2 r10a texture 7	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+6c7b69e7-5ee8ee0b	gc:evd/r100s03.evd:evd/r100s03.evd#8 | gc:evd/r100s20.evd:evd/r100s20.evd#1 | gc:evd/r100s30.evd:evd/r100s30.evd#1 | gc:evd/r100s41.evd:evd/r100s41.evd#1 | gc:evd/r100s43.evd:evd/r100s43.evd#1 | gc:evd/r101s00.evd:evd/r101s00.evd#1 | gc:evd/r101s21.evd:evd/r101s21.evd#23 | gc:evd/r101s30.evd:evd/r101s30.evd#17	r100,r101,r102,r104,r105,r106,r10b,r117,r119,r11b,r11c,r11f,r120,r201,r204,r206,r20b,r212,r213,r214,r215,r227,r228,r22a,r310,global	cutscene	mip-chain	minified 3D surface (cutscene)	512	512	RGB565	twiddled	524432	24	not-on-route	texclass22 not-on-route but statically bound on route
+6ca072ca-e2a993d4	pak:PS2 breakables 6ca072ca-e2a993d4	-	world-object	not-reachable	no shipped package, room archive or resident list binds it	128	256	RGB565	vq	10384	0	not-on-route	
+6cdbc558-a3f95fb4	pak:PS2 r105 texture 58	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+6d2214fb-8e6dfe49	pak:PS2 r105 texture 143	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	ARGB4444	twiddled	4240	1	not-on-route	
+6d64d8b7-327bc4d2	pak:ps2mask_ganado_em16_0bp	-	enemy	not-reachable	no shipped package, room archive or resident list binds it	64	128	ARGB4444	twiddled	16528	0	not-on-route	
+6d6fcf16-de1e973c	pak:PS2 r105 texture 104	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+6da3c892-5b4dd21f	gc:em/em10.drs:em/em10.drs:0#582 | gc:em/em1d.drs:em/em1d.drs:0#582 | gc:em/em20.drs:em/em20.drs:0#582 | gc:em/em4d.drs:em/em4d.drs:0#582 | gc:em/em50.drs:em/em50.drs:0#582 | gc:em/em5d.drs:em/em5d.drs:0#582 | gc:em/em60.drs:em/em60.drs:0#582 | gc:em/em6d.drs:em/em6d.drs:0#582	global	enemy	convert-blocked	rectangular 128x256: needs a rect21 square scoped representation	128	256	RGB565	twiddled	65680	0	not-on-route	texclass22 not-on-route but statically bound on route
+6da8c35b-a936da0c	pak:PS2 breakables 6da8c35b-a936da0c | resident:r100 | resident:r101 | resident:r103 | resident:r107 | resident:r108 | resident:r10f | resident:r111	r100,r101,r103,r107,r108,r10f,r111,r113,r118,r119,r11c,r11d,r11e,r11f,r200,r216,r225,r300,r306,r307,r30b,r30d,r30f,r310,r311,r315,r31a,r31b,r31c,r320,r327,r329,r330	world-object	mip-chain	minified 3D surface (world-object)	64	64	ARGB4444	vq	3216	17	not-on-route	texclass22 not-on-route but statically bound on route
+6dd7f659-07eb67df	pak:PS2 r10d texture 51	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+6e112e29-78d087e7	pak:PS2 r102 texture 56	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+6e1c86ba-72e580cf	pak:PS2 r109 texture 19	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+6e4500c6-14644627	pak:PS2 r108 texture 25	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+6e89bb78-430a2aa9	pak:PS2 r105 texture 112	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+6f4e1772-8db4025e	pak:PS2 r117 texture 2	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+6f6abeef-3312d10a	pak:PS2 r10b texture 4	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+6fb92305-b9e9e143	pak:PS2 r104 texture 19	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+7009dc9d-c17a103a	pak:PS2 r100 texture 4	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+70aead5f-07fae149	gc:em/em10.drs:em/em10.drs:0#542 | gc:em/em1b.drs:em/em1b.drs:0#542 | gc:em/em1c.drs:em/em1c.drs:0#542 | gc:em/em4c.drs:em/em4c.drs:0#542 | gc:em/em5c.drs:em/em5c.drs:0#542 | gc:em/em6c.drs:em/em6c.drs:0#542 | pak:source | resident:r201	r201,global	enemy	mip-chain	minified 3D surface (enemy)	256	256	RGB565	vq	18576	1	not-on-route	texclass22 not-on-route but statically bound on route
+70de6b18-2e360d47	pak:PS2 r105 texture 75	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+71094671-3b78142e	pak:PS2 r11b texture 18	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+711d7345-9ea5e673	pak:PS2 r102 object et2c00.bin pair 0+1 | resident:r102	r102	world	convert-blocked	rectangular 128x64: needs a rect21 square scoped representation	128	64	ARGB4444	twiddled	16528	1	not-on-route	texclass22 not-on-route but statically bound on route
+712c9c6f-7acb7f3d	pak:PS2 r109 texture 27	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	ARGB4444	twiddled	2192	1	not-on-route	
+7163bf4f-54eb9781	pak:PS2 r10a texture 15	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+7183d41e-eb52bbe3	pak:PS2 r117 texture 15	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+7188e62f-4bc2e6f7	pak:PS2 r11b texture 37	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+71bc98ee-19db8712	pak:PS2 r11a texture 23	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+71dbe5b0-1dc37543	pak:PS2 r104 texture 54	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+720970aa-987ad2e2	pak:PS2 r11b texture 15	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+724c98bf-f129809d	pak:PS2 r117 texture 28	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+7266b238-d187c6d4	pak:PS2 r10e texture 22	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+72cc6b7d-2ad1a6a8	pak:source-pair	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	64	128	ARGB4444	twiddled	16528	0	not-on-route	
+7349d488-9f5341ba	pak:PS2 r102 texture 67	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+734b3802-84e8d1d8	pak:PS2 r107 texture 28	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+739503a9-07dfcace	pak:PS2 r10d texture 17	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+739695eb-6c7067fa	pak:PS2 r105 texture 48	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+7470f6da-56b1dd02	pak:PS2 r105 texture 129	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+7474f82e-2b84d8bf	pak:PS2 r10d texture 18	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+7479c753-cea027c1	pak:PS2 r105 texture 110	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+74f466d2-92946fd3	pak:PS2 r109 texture 25	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+7506e95f-68cf2211	pak:leon4k | resident:r102 | resident:r104 | resident:r105 | resident:r107 | resident:r108 | resident:r109 | resident:r10a	r102,r104,r105,r107,r108,r109,r10a,r10b,r10f,r111,r112,r113,r117,r118,r119,r11b,r11c,r11d,r11e,r11f,r200,r201,r202,r203,r204,r205,r206,r207,r208,r209,r20a,r20b,r20c,r20d,r20e,r20f,r210,r211,r212,r213,r214,r216,r217,r218,r219,r21b,r21d,r220,r222,r223,r224,r225,r226,r229,r300,r301,r303,r304,r305,r306,r307,r308,r309,r30a,r30b,r30c,r30d,r30e,r30f,r310,r311,r312,r315,r316,r317,r318,r31a,r31b,r31c,r31d,r320,r321,r325,r326,r327,r329,r330,r331,r332,global	character	already-mipped	pack carries a chain	512	512	RGB565	vq	89574	54	already-mipped	
+7560efa8-788f197a	pak:PS2 r104 texture 42	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+758a0626-3212c491	pak:PS2 r10a texture 27	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+758e4e88-84b26ded	pak:PS2 r117 texture 34	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+75a5545d-594d5631	pak:PS2 r118 texture 66	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+75a69541-38bdf9ee	pak:PS2 r10e texture 43	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+75af7cb6-3c6d6464	pak:PS2 r107 texture 3	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+75b6485b-64cb20f9	pak:PS2 r117 texture 22	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+75d6bca1-d2ffe0f4	pak:PS2 r117 texture 27	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+7602478b-8ce3bd7b	pak:PS2 r103 texture 43	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+761e77f9-3692556e	pak:PS2 r107 object et1600.bin image 0 | resident:r107	r107	world	convert-blocked	rectangular 128x256: needs a rect21 square scoped representation	128	256	RGB565	vq	10384	1	not-worth	
+7622506e-ec1326f1	pak:PS2 r109 texture 23	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+7636c613-f582b23f	pak:PS2 r103 texture 45	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB1555	twiddled	65680	1	not-on-route	
+7653fe0e-a2e56df1	pak:PS2 r105 texture 100	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+76794df8-eef9283a	pak:PS2 r102 object et2c00.bin image 2 | resident:r102	r102	world	convert-blocked	rectangular 256x64: needs a rect21 square scoped representation	256	64	RGB565	vq	6288	1	not-on-route	texclass22 not-on-route but statically bound on route
+7680b572-abcfcc84	pak:PS2 r105 texture 85	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+76c71220-bee364e9	pak:PS2 items 76c71220-bee364e9	-	item	not-reachable	no shipped package, room archive or resident list binds it	64	32	RGB565	vq	2704	0	not-on-route	
+7720a92b-ff54d935	pak:PS2 r107 texture 33	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	ARGB4444	twiddled	8336	1	not-on-route	
+778219f8-a78076d8	pak:PS2 r10e texture 39	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+77c9df52-3b0946ea	pak:PS2 r105 texture 48	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+77db6080-975d8dbe	pak:PS2 r118 texture 40	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+7834bd03-7aee3012	pak:PS2 r105 texture 22	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+78768b8b-54583273	pak:PS2 r11b texture 34	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+791d574f-d692b4c2	pak:PS2 r102 object et0a00.bin pair 2+3	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	128	ARGB4444	twiddled	16528	1	not-on-route	
+79f7f479-932449f0	pak:PS2 breakables 79f7f479-932449f0 | resident:r119	r119	world-object	convert-blocked	rectangular 128x512: needs a rect21 square scoped representation	128	512	RGB565	vq	18576	1	not-on-route	texclass22 not-on-route but statically bound on route
+7a60239f-1ccac7f6	pak:PS2 r108 texture 52	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	ARGB4444	twiddled	8336	1	not-on-route	
+7b5ab72d-a079b388	pak:PS2 r117 texture 42	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+7b6471e0-89710edf	pak:PS2 r107 texture 5	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+7ba4e95c-dacd4f0e	pak:PS2 r105 texture 115	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+7bbb99a0-ce071290	pak:PS2 r102 texture 55	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+7be3c7de-680b12fd	pak:PS2 r109 texture 12	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+7c26c65d-a08dc2be	pak:PS2 items 7c26c65d-a08dc2be | resident:r101	r101	item	convert-blocked	rectangular 128x64: needs a rect21 square scoped representation	128	64	RGB565	vq	4240	1	not-on-route	texclass22 not-on-route but statically bound on route
+7c49003c-3d90eae5	pak:PS2 r106 texture 34	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	ARGB4444	twiddled	32912	1	not-on-route	
+7c8d0425-ba6f9485	pak:PS2 r100 texture 22	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB4444	twiddled	65680	1	not-on-route	
+7c93dfb2-dd1c6ec1	pak:PS2 r104 texture 44	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+7d37ff2a-1cc5f24a	pak:PS2 r102 texture 47	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+7d7b0e07-f7df3aa3	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	512	256	ARGB4444	vq	34960	0	not-on-route	
+7e0be51e-e53553a7	pak:PS2 r105 texture 50	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+7e35880f-01bd778e	pak:PS2 r103 texture 22	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+7e605ca8-06bc188a	pak:PS2 r11a texture 29	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+7e8fbd22-2794eb26	pak:PS2 r103 texture 0	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+7ee51eb8-1c744d20	pak:PS2 r10d texture 23	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+7ee60b4c-374b121c	pak:PS2 r104 texture 47	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+7eea0efc-c47fdcfd	pak:PS2 r103 object et0500.bin image 0 | resident:r103	r103	world	convert-blocked	rectangular 128x256: needs a rect21 square scoped representation	128	256	RGB565	vq	10384	1	not-on-route	texclass22 not-on-route but statically bound on route
+7efa159e-083cea1b	pak:PS2 r11b texture 23	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+7f2c0b52-c210fe60	pak:PS2 r10e texture 7	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+7f4dee2d-4de04072	pak:PS2 r104 texture 40	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+7f631cf3-7323c2f4	pak:PS2 r106 texture 5	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+7f6c55cf-f34c2388	pak:PS2 r10b texture 29	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+7f9fd84a-e51ffa15	pak:PS2 r10d texture 19	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	16	RGB565	vq	2704	1	not-on-route	
+7fd6ccc6-d7e8137c	pak:PS2 r104 texture 43	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+80e1f1ba-8c48996b	pak:PS2 r117 texture 13	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+8112c18d-c5a4ef6e	pak:PS2 r11b texture 36	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+8145003d-58fee9d9	pak:PS2 r103 texture 50	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+81599ea4-c8b86fcd	pak:PS2 items 81599ea4-c8b86fcd	-	item	not-reachable	no shipped package, room archive or resident list binds it	128	64	RGB565	vq	4240	0	not-on-route	
+81a691de-7c729c49	pak:PS2 r104 texture 31	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+820566f1-dcd80e3f	pak:PS2 r105 texture 5	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+824906f2-47dbedf2	pak:PS2 r108 texture 14	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+8251287f-542f36c5	pak:PS2 items 8251287f-542f36c5 | resident:r118	r118	item	convert-blocked	rectangular 64x32: needs a rect21 square scoped representation	64	32	ARGB4444	twiddled	4240	1	not-on-route	texclass22 not-on-route but statically bound on route
+826765cc-bdc43f2d	pak:PS2 r106 texture 38	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+82946741-203692d8	pak:PS2 r108 texture 21	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+83094b89-08d8c7bb	pak:PS2 r10d texture 52	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+83bf1aff-60b764d3	pak:PS2 r104 texture 44	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+83e2ae47-101668d0	pak:PS2 r11a texture 1	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	16	RGB565	twiddled	2192	1	not-on-route	
+83fef658-3fc6836e	pak:PS2 items 83fef658-3fc6836e | resident:r119	r119	item	mip-chain	minified 3D surface (item)	64	64	ARGB4444	twiddled	8336	1	not-on-route	texclass22 not-on-route but statically bound on route
+84366a24-d985eab7	pak:PS2 r103 texture 22	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+84801f54-853eaed7	pak:PS2 r104 texture 32	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+84803a6f-4485b056	pak:PS2 r103 texture 29	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+84d450d5-ede2f8a1	pak:hud-core-mask-12 | resident:r100 | resident:r101 | resident:r102 | resident:r103 | resident:r104 | resident:r105 | resident:r106	r100,r101,r102,r103,r104,r105,r106,r107,r108,r109,r10a,r10b,r10f,r111,r112,r113,r117,r118,r119,r11b,r11c,r11d,r11e,r11f,r200,r201,r202,r203,r204,r205,r206,r207,r208,r209,r20a,r20b,r20c,r20d,r20e,r20f,r210,r211,r212,r213,r214,r216,r217,r218,r219,r21b,r21d,r220,r222,r223,r224,r225,r226,r229,r300,r301,r303,r304,r305,r306,r307,r308,r309,r30a,r30b,r30c,r30d,r30e,r30f,r310,r311,r312,r315,r316,r317,r318,r31a,r31b,r31c,r31d,r320,r321,r325,r326,r327,r329,r330,r331,r332,global	hud	exclude	screen-space HUD/UI (1:1)	64	64	ARGB4444	vq	3216	58	never	
+84f30292-25f346f6	pak:PS2 r10e texture 20	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+8576064a-679be420	pak:PS2 r104 texture 51	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+8601e92e-4784cc98	pak:PS2 r104 texture 26	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+860a82b2-6afebc84	pak:PS2 r118 texture 69	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+8618b408-302b6aa6	pak:PS2 r105 texture 45	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	ARGB4444	twiddled	8336	1	not-on-route	
+86327ec0-ef423b14	pak:PS2 r105 texture 130	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+865cb1cc-9184bdc9	pak:PS2 r11b texture 23	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+86948ced-53d72722	pak:PS2 r10d texture 53	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+86f17caf-6a985c44	pak:PS2 r105 texture 127	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+8722852b-a1f544e8	pak:PS2 r10b texture 22	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	128	RGB565	vq	18576	1	not-on-route	
+874daae9-f87d5054	pak:PS2 r103 texture 40	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB1555	twiddled	16528	1	not-on-route	
+87df84c6-69229eb7	pak:PS2 r106 texture 27	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+88053442-9cdddf10	pak:PS2 r11b texture 39	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+8810138b-50a8e06d	pak:PS2 r11a texture 13	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	64	RGB565	vq	10384	1	not-on-route	
+88603a53-08826d32	pak:source | resident:r11f | resident:r200	r11f,r200	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	64	128	ARGB4444	vq	4240	2	not-on-route	
+8874ef87-ae65e7ec	pak:PS2 r105 texture 104	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+8899e8a0-4b4b61c2	pak:PS2 r11b texture 10	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+88f5c613-5062815c	pak:PS2 r103 texture 2	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+8972e2dc-8479d04d	pak:PS2 breakables 8972e2dc-8479d04d	-	world-object	not-reachable	no shipped package, room archive or resident list binds it	64	64	RGB565	vq	3216	0	not-on-route	
+8a5aa1b9-b2990dae	pak:PS2 r107 texture 23	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+8a87a40f-aeff54fa	pak:PS2 r102 object et1300.bin image 0 | resident:r102 | resident:r104	r102,r104	world	convert-blocked	rectangular 128x256: needs a rect21 square scoped representation	128	256	RGB565	vq	10384	2	not-worth	
+8a957bd9-50b42008	pak:PS2 r105 texture 17	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+8ad20463-c565621e	pak:PS2 r109 texture 10	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB4444	twiddled	65680	1	not-on-route	
+8adc1e00-e98d1fa7	pak:PS2 r109 texture 28	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	ARGB4444	twiddled	4240	1	not-on-route	
+8b44d7f3-4738a3c7	pak:PS2 r107 texture 36	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+8b470ff0-e2dffff0	pak:PS2 r103 texture 2	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+8b8b6f4b-e0472ea9	pak:PS2 r102 texture 23	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+8bce48ea-3d09b3dd	pak:PS2 r10b texture 39	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+8c27c1fb-5c3dc9c3	pak:PS2 r108 texture 54	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+8ca6fed3-530c6b18	pak:PS2 r103 texture 4	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+8cb10eba-b1d4f77e	pak:PS2 r108 texture 46	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+8ce32dc6-721ca995	pak:PS2 r103 texture 42	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+8d1db18c-414eabf5	pak:PS2 r10b texture 19	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+8d620ef1-e722dbda	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	64	128	RGB565	twiddled	16528	0	not-on-route	
+8d6c7705-00f7483c	pak:PS2 r10b texture 48	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB4444	twiddled	65680	1	not-on-route	
+8db481d3-73c425d9	pak:PS2 r11b texture 24	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+8e07b11f-905a0313	pak:PS2 r117 texture 43	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+8e227c8a-290ae8da	pak:PS2 r104 texture 10	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	16	ARGB4444	twiddled	4240	1	not-on-route	
+8e37950e-6d93bcfd	pak:PS2 r106 texture 4	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	ARGB4444	twiddled	131216	1	not-on-route	
+8ed5b494-37ec8b80	pak:PS2 r107 texture 20	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+8f14dd00-037b611f	pak:PS2 r106 texture 24	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+8f4d2c8a-7f7ffb92	gc:etc/core.das:etc/core.das:0#1/efm2/tpl | pak:source	global	other	exclude	tiny (<=16): a chain buys nothing	16	16	RGB565	twiddled	656	0	not-on-route	
+8f6dfbef-14faa84e	pak:PS2 r108 texture 55	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+8fc0ff87-087c0a14	pak:PS2 r105 texture 50	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+8fd08c98-f9242794	pak:PS2 r100 texture 17	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB1555	twiddled	32912	1	not-on-route	
+901bef78-6887fa81	pak:PS2 r109 texture 0	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+902ca858-7b353a37	pak:PS2 r102 texture 24	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+90347a49-d54694e5	pak:PS2 r108 texture 31	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+9054823d-bfc037b0	pak:PS2 r105 texture 21	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+90bd2218-f23fdc88	pak:PS2 r106 texture 31	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+90d71e3c-c28e3837	pak:PS2 r11b texture 52	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+91194bc4-4f6f7727	pak:PS2 r108 texture 69	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+913770ca-d5ed5530	pak:PS2 r105 texture 25	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+915322b6-16c5ec9e	pak:PS2 r10a texture 16	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+915dd6ea-e4a67ad8	pak:PS2 r119 texture 28	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+91840549-61c718b8	pak:PS2 r107 texture 49	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+91a8e1e5-623efb4d	pak:PS2 r100 texture 30	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+91ab5fa2-d0dd27f2	pak:PS2 r107 texture 15	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+91db180e-fd5f9232	pak:PS2 r106 texture 0	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+91e89c44-4fb80f23	pak:PS2 r105 texture 99	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+92139786-08b86972	pak:PS2 r10a texture 24	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+923675a1-acd41b92	pak:PS2 r10e texture 36	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+926081f9-6c4ba683	pak:PS2 r117 texture 39	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+926fc9f0-4951a7f8	pak:PS2 r102 object et0a00.bin image 0	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	16	16	RGB565	twiddled	656	1	not-on-route	
+92c9c103-2945fe0d	gc:em/em10.drs:em/em10.drs:0#578 | gc:em/em1d.drs:em/em1d.drs:0#578 | gc:em/em20.drs:em/em20.drs:0#578 | gc:em/em4d.drs:em/em4d.drs:0#578 | gc:em/em50.drs:em/em50.drs:0#578 | gc:em/em5d.drs:em/em5d.drs:0#578 | gc:em/em60.drs:em/em60.drs:0#578 | gc:em/em6d.drs:em/em6d.drs:0#578	global	enemy	mip-chain	minified 3D surface (enemy)	256	256	RGB565	twiddled	131216	0	not-on-route	texclass22 not-on-route but statically bound on route
+931c37a2-fe7a1400	pak:PS2 r11a texture 34	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+93ae87cb-bbc65f56	pak:PS2 r10e texture 46	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+93db287c-b0dcd7bd	pak:PS2 r105 texture 20	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+945bfa54-eb7dd76e	pak:PS2 r105 texture 107	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+94876906-499c439d	pak:PS2 r103 texture 21	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+94a75018-6c4517df	pak:PS2 items 94a75018-6c4517df	-	item	not-reachable	no shipped package, room archive or resident list binds it	128	64	RGB565	vq	4240	0	not-on-route	
+94f2caaa-a312b879	pak:PS2 r105 texture 84	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+952c4f35-09647e00	pak:ps2mask_bat_em29_00	-	enemy	not-reachable	no shipped package, room archive or resident list binds it	128	64	ARGB4444	twiddled	16528	0	not-on-route	
+9536dcb7-2159f9fb	pak:PS2 r105 texture 101	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+9560a820-23232404	pak:PS2 r105 texture 8	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+956aecc8-22d14090	pak:PS2 r105 texture 4	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+95942f8a-18b0a554	pak:PS2 r105 texture 128	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+95a617d1-343815db	pak:PS2 r102 texture 4	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+95a96aa8-d4929107	pak:PS2 r105 texture 52	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+95aa7b4d-a8fd67a9	pak:PS2 r109 texture 9	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+95cacac6-04519b04	gc:em/em10.drs:em/em10.drs:0#556 | gc:em/em1d.drs:em/em1d.drs:0#556 | gc:em/em20.drs:em/em20.drs:0#556 | gc:em/em4d.drs:em/em4d.drs:0#556 | gc:em/em50.drs:em/em50.drs:0#556 | gc:em/em5d.drs:em/em5d.drs:0#556 | gc:em/em60.drs:em/em60.drs:0#556 | gc:em/em6d.drs:em/em6d.drs:0#556	global	enemy	convert-blocked	rectangular 32x64: needs a rect21 square scoped representation	32	64	RGB565	twiddled	4240	0	not-on-route	texclass22 not-on-route but statically bound on route
+95e685c9-b3d27d88	pak:PS2 items 95e685c9-b3d27d88 | resident:r119	r119	item	mip-chain	minified 3D surface (item)	64	64	RGB565	vq	3216	1	not-on-route	texclass22 not-on-route but statically bound on route
+961f02a1-28c736b7	pak:PS2 r103 texture 41	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+96531b59-a321890f	pak:PS2 r108 texture 58	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+96a9cc0e-e6cff4be	pak:PS2 r109 texture 23	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+9709f021-30385e6c	pak:PS2 r106 texture 17	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+9748eb3e-adc42079	pak:PS2 r104 texture 38	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	ARGB4444	twiddled	8336	1	not-on-route	
+979f7d2a-c7e8ded3	pak:PS2 r118 texture 42	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+97a0d064-cc00d99f	pak:PS2 r102 texture 51	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+980385e1-24c9fb3b	gc:em/em10.drs:em/em10.drs:0#578 | gc:em/em10.drs:em/em10.drs:0#580 | gc:em/em1d.drs:em/em1d.drs:0#578 | gc:em/em1d.drs:em/em1d.drs:0#580 | gc:em/em20.drs:em/em20.drs:0#578 | gc:em/em20.drs:em/em20.drs:0#580 | gc:em/em4d.drs:em/em4d.drs:0#578 | gc:em/em4d.drs:em/em4d.drs:0#580	global	enemy	convert-blocked	rectangular 32x64: needs a rect21 square scoped representation	32	64	RGB565	twiddled	4240	0	not-on-route	texclass22 not-on-route but statically bound on route
+9805f8e8-2aa13dc9	pak:PS2 r105 texture 92	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB4444	twiddled	65680	1	not-on-route	
+98a336e8-6e941c3b	pak:PS2 r11b texture 26	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+98c40b26-84be1101	gc:em/em10.drs:em/em10.drs:0#544 | gc:em/em1c.drs:em/em1c.drs:0#544 | gc:em/em4c.drs:em/em4c.drs:0#544 | gc:em/em5c.drs:em/em5c.drs:0#544 | gc:em/em6c.drs:em/em6c.drs:0#544 | pak:source	global	enemy	mip-chain	minified 3D surface (enemy)	128	128	ARGB4444	twiddled	32912	0	not-on-route	texclass22 not-on-route but statically bound on route
+99031471-a319a81d	pak:cast_animal_ec544ab68a22e5f99d9e42ea	-	enemy	not-reachable	no shipped package, room archive or resident list binds it	128	128	RGB565	vq	6288	0	not-on-route	
+99a9a6a6-078875c6	pak:PS2 r107 texture 13	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+99b2b118-1b08d5ce	pak:PS2 r105 texture 92	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB1555	twiddled	65680	1	not-on-route	
+9a196b77-5103c1d6	pak:PS2 r117 texture 17	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+9a3475f1-18127486	pak:PS2 r109 texture 12	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+9a430eab-fcb4ae28	pak:PS2 r117 texture 36	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+9a446309-c53a4e09	gc:em/em10.drs:em/em10.drs:0#552 | gc:em/em1d.drs:em/em1d.drs:0#552 | gc:em/em4d.drs:em/em4d.drs:0#552 | gc:em/em5d.drs:em/em5d.drs:0#552 | gc:em/em6d.drs:em/em6d.drs:0#552 | pak:source	global	enemy	mip-chain	minified 3D surface (enemy)	256	256	RGB565	twiddled	131216	0	not-on-route	texclass22 not-on-route but statically bound on route
+9a66bb51-c08134a2	pak:PS2 r102 texture 53	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+9a86c61c-8848191e	pak:PS2 r108 texture 45	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	ARGB4444	twiddled	131216	1	not-on-route	
+9a87d49c-82b8f61c	pak:PS2 r10d texture 46	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	16	RGB565	twiddled	2192	1	not-on-route	
+9ae6fd27-84c3e5db	pak:PS2 r106 texture 40	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+9b7b4856-7f00a406	pak:PS2 r10e texture 45	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+9b7cc90e-dc4d6ec2	pak:PS2 r108 texture 10	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+9bc23b55-4521e1a5	pak:PS2 r104 texture 47	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+9bdd9a09-6e06bbc7	pak:PS2 r107 texture 31	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+9be58b0d-f1df36e2	pak:PS2 r107 texture 17	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+9c0b0eb6-3af09b76	pak:PS2 r108 texture 23	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	16	RGB565	vq	2704	1	not-on-route	
+9c8d5c50-601f44d7	pak:PS2 r105 texture 118	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+9cb0957d-c79fcce0	pak:PS2 r10b texture 45	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+9cdbac38-bddb1ae4	pak:PS2 r10d texture 7	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+9d2ee714-70c9162b	pak:PS2 r104 texture 6	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+9df5675f-b928951f	pak:PS2 r105 texture 83	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+9e19cc34-2980316f	pak:PS2 r108 texture 9	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+9e2cba2a-fb3bea42	pak:PS2 r103 texture 21	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+9f6cc9f9-c29c687b	pak:PS2 r106 texture 22	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+9f759afa-55b9b22f	pak:PS2 r104 texture 48	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+9fc1c535-62d6e407	pak:PS2 r108 texture 50	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+9fdcd8b1-d71a134e	gc:evd/r101s30.evd:evd/r101s30.evd#27 | gc:evd/r104s00.evd:evd/r104s00.evd#26 | gc:evd/r104s01.evd:evd/r104s01.evd#22 | gc:evd/r104s02.evd:evd/r104s02.evd#7 | pak:source	r101,r104	cutscene	mip-chain	minified 3D surface (cutscene)	32	32	RGB565	twiddled	2192	2	not-on-route	texclass22 not-on-route but statically bound on route
+a02a08d2-77238409	pak:source | resident:r11f	r11f	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	128	128	ARGB4444	vq	6288	1	not-on-route	
+a02bbf8d-7500d323	pak:PS2 r11b texture 30	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+a058bc9b-c0ec2a1a	pak:PS2 r11b texture 22	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+a068ca3b-090d2b1e	pak:PS2 r117 texture 27	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+a0ccc488-a56757a1	gc:evd/r100s20.evd:evd/r100s20.evd#3 | gc:evd/r100s30.evd:evd/r100s30.evd#3 | gc:evd/r100s40.evd:evd/r100s40.evd#6 | gc:evd/r100s41.evd:evd/r100s41.evd#3 | gc:evd/r100s43.evd:evd/r100s43.evd#3 | gc:evd/r101s00.evd:evd/r101s00.evd#3 | gc:evd/r101s21.evd:evd/r101s21.evd#25 | gc:evd/r101s30.evd:evd/r101s30.evd#19	r100,r101,r102,r104,r105,r106,r10b,r117,r119,r11b,r11c,r11f,r120,r200,r201,r204,r206,r209,r20b,r212,r213,r214,r215,r227,r228,r22a,r310,global	cutscene	mip-chain	minified 3D surface (cutscene)	128	128	RGB565	twiddled	32912	26	not-on-route	texclass22 not-on-route but statically bound on route
+a0e78d84-f7f8e183	gc:em/em10.drs:em/em10.drs:0#556 | gc:em/em10.drs:em/em10.drs:0#578 | gc:em/em1d.drs:em/em1d.drs:0#556 | gc:em/em1d.drs:em/em1d.drs:0#578 | gc:em/em20.drs:em/em20.drs:0#556 | gc:em/em20.drs:em/em20.drs:0#578 | gc:em/em4d.drs:em/em4d.drs:0#556 | gc:em/em4d.drs:em/em4d.drs:0#578	global	enemy	convert-blocked	rectangular 128x256: needs a rect21 square scoped representation	128	256	RGB565	twiddled	65680	0	not-on-route	texclass22 not-on-route but statically bound on route
+a13f3372-6730544f	pak:PS2 r118 texture 38	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+a16c450b-ce45a16e	pak:PS2 r107 texture 20	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+a1c2b697-859818a7	pak:PS2 r10b texture 2	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+a288f9ec-e9cd92d8	pak:PS2 r104 texture 1	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+a2d34027-04f19a86	pak:PS2 r119 texture 24	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+a31a60c7-b325c2de	pak:PS2 r118 texture 33	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+a382dfa3-790e1995	pak:PS2 r109 texture 15	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	ARGB4444	twiddled	131216	1	not-on-route	
+a3d0ac23-3acd6bf4	pak:PS2 r11b texture 27	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+a3d841d0-3c15c4db	pak:PS2 r108 texture 69	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+a4236d0c-352bfc51	pak:PS2 r11a texture 7	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+a43edf8d-473e64fb	pak:PS2 r117 texture 16	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+a44a3ba2-89785724	pak:PS2 r117 texture 30	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+a48c2119-d6e28641	pak:PS2 r102 texture 52	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	32	RGB565	vq	6288	1	not-on-route	
+a4a1d958-45da4a5b	pak:PS2 r103 texture 24	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+a4c5b41b-4ceea8c1	pak:PS2 r105 texture 131	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+a4ec6629-29d75a05	pak:PS2 r108 texture 68	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+a4fdbf20-e4dca280	pak:PS2 r10a texture 3	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+a4fff555-9e8dbad5	pak:PS2 r108 texture 28	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	ARGB4444	twiddled	8336	1	not-on-route	
+a516f129-fca1eb4c	pak:PS2 r106 texture 27	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+a540cb31-3d54c138	pak:PS2 r104 texture 30	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+a575e047-bf77b466	pak:PS2 r105 texture 43	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	ARGB4444	twiddled	2192	1	not-on-route	
+a5dddff4-a1d6a16c	pak:PS2 r106 texture 11	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+a6a13dac-ff868c2a	pak:PS2 breakables a6a13dac-ff868c2a | resident:r104	r104	world-object	convert-blocked	rectangular 128x256: needs a rect21 square scoped representation	128	256	RGB565	vq	10384	1	not-on-route	texclass22 not-on-route but statically bound on route
+a6d309c6-798615a4	pak:PS2 r105 texture 124	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+a6ddd5fc-eaed9de6	pak:PS2 r10d texture 45	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+a796fd05-3b49b0b5	pak:PS2 r109 texture 26	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+a79d0744-af9d8170	pak:PS2 r11a texture 31	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+a7bd3c7e-0024597e	pak:PS2 r109 texture 9	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+a7c52d0f-a0e1f15a	pak:PS2 r106 texture 17	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+a7d5347a-09e73bb1	pak:PS2 r118 texture 34	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+a7dc83f2-12df2019	pak:PS2 r104 texture 11	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB4444	twiddled	65680	1	not-on-route	
+a7ead722-1a09f03a	pak:PS2 r106 texture 31	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+a7f5bce0-03d16dbf	pak:PS2 r105 texture 56	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+a832e6c1-e98901cb	pak:PS2 r10b texture 21	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+a867d9e0-2c697cab	pak:PS2 breakables a867d9e0-2c697cab	-	world-object	not-reachable	no shipped package, room archive or resident list binds it	256	256	RGB565	vq	18576	0	not-on-route	
+a86ae81c-e16c73bf	pak:PS2 r106 texture 40	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+a88f63ad-5a9f1ea7	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	32	256	ARGB4444	vq	4240	0	not-on-route	
+a8ba2e55-85e240ce	pak:PS2 breakables a8ba2e55-85e240ce	-	world-object	not-reachable	no shipped package, room archive or resident list binds it	256	128	RGB565	vq	10384	0	not-on-route	
+a8e7752c-b56b80dd	pak:PS2 r100 texture 15	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+a938f9f0-2a8eb6f7	pak:PS2 r100 texture 24	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+a93a06f5-5035b26c	pak:PS2 r107 texture 34	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB1555	twiddled	32912	1	not-on-route	
+a9405da5-560d2b91	pak:PS2 breakables a9405da5-560d2b91	-	world-object	not-reachable	no shipped package, room archive or resident list binds it	64	64	RGB565	vq	3216	0	not-on-route	
+a961a411-40880806	pak:PS2 r119 texture 12	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+aa280803-d3394ee9	pak:PS2 r11a texture 14	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+aa4039a6-418ee891	gc:em/em10.drs:em/em10.drs:0#576 | gc:em/em1d.drs:em/em1d.drs:0#576 | gc:em/em20.drs:em/em20.drs:0#576 | gc:em/em4d.drs:em/em4d.drs:0#576 | gc:em/em50.drs:em/em50.drs:0#576 | gc:em/em5d.drs:em/em5d.drs:0#576 | gc:em/em60.drs:em/em60.drs:0#576 | gc:em/em6d.drs:em/em6d.drs:0#576	global	enemy	mip-chain	minified 3D surface (enemy)	128	128	RGB565	twiddled	32912	0	not-on-route	texclass22 not-on-route but statically bound on route
+aa7e9648-6feccb4e	pak:PS2 r119 texture 11	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+ab393640-f942b75c	gc:evd/r100s03.evd:evd/r100s03.evd#12 | gc:evd/r100s20.evd:evd/r100s20.evd#5 | gc:evd/r100s30.evd:evd/r100s30.evd#5 | gc:evd/r100s40.evd:evd/r100s40.evd#8 | gc:evd/r100s41.evd:evd/r100s41.evd#5 | gc:evd/r100s43.evd:evd/r100s43.evd#5 | gc:evd/r101s00.evd:evd/r101s00.evd#5 | gc:evd/r101s21.evd:evd/r101s21.evd#27	r100,r101,r102,r104,r105,r106,r10b,r117,r119,r11b,r11c,r11f,r120,r200,r201,r203,r204,r206,r209,r20b,r212,r213,r214,r215,r227,r228,r22a,global	cutscene	convert-blocked	rectangular 64x32: needs a rect21 square scoped representation	64	32	ARGB4444	twiddled	4240	27	not-on-route	texclass22 not-on-route but statically bound on route
+ab5219ee-7f298132	pak:PS2 r105 texture 23	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+ab67d11f-381925c4	pak:PS2 r105 texture 138	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+abfb74d5-34ed6723	pak:PS2 r11b texture 55	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB4444	twiddled	65680	1	not-on-route	
+ac23b5fe-01af40e8	pak:ps2mask_zealot_em11_07p	-	enemy	not-reachable	no shipped package, room archive or resident list binds it	64	64	ARGB4444	twiddled	8336	0	not-on-route	
+ac7466f8-2f63b717	pak:PS2 r100 texture 18	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+ac87b979-99c3df1d	pak:PS2 r105 texture 122	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+ac9d32c7-3b2e0ed8	pak:PS2 r107 texture 6	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+acfcae72-ccf1609c	pak:hud-core-mask-17 | resident:r100 | resident:r102 | resident:r111 | resident:r113 | resident:r119 | resident:r11c | resident:r11f	r100,r102,r111,r113,r119,r11c,r11f,r208,global	hud	exclude	screen-space HUD/UI (1:1)	64	64	ARGB4444	vq	3216	8	not-on-route	
+ad64ff13-75016352	pak:PS2 r11a texture 24	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+adca237a-3f152c65	pak:PS2 r103 texture 42	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+add4d19a-44180dc2	pak:PS2 r109 texture 22	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	ARGB4444	twiddled	8336	1	not-on-route	
+adfa0f9a-1b88ada3	gc:evd/r101s00.evd:evd/r101s00.evd#20 | gc:evd/r10bs00.evd:brute | gc:evd/r214s00.evd:brute | gc:evd/s214s00.evd:brute | pak:source	r101,r10b,r214,global	cutscene	mip-chain	minified 3D surface (cutscene)	64	64	ARGB4444	twiddled	8336	3	not-on-route	texclass22 not-on-route but statically bound on route
+ae27ee20-518e9c96	pak:PS2 r118 texture 0	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+ae8b9eae-408640de	pak:PS2 items ae8b9eae-408640de	-	item	not-reachable	no shipped package, room archive or resident list binds it	64	32	RGB565	vq	2704	0	not-on-route	
+aed7458c-5447584d	pak:PS2 r105 texture 66	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	ARGB4444	twiddled	2192	1	not-on-route	
+af0ab8cd-751f4035	pak:PS2 r108 texture 29	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	16	ARGB4444	twiddled	1168	1	not-on-route	
+af1446c2-484a0bf2	pak:PS2 r104 texture 39	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	ARGB4444	twiddled	8336	1	not-on-route	
+af16d89f-6c73da33	pak:PS2 r109 texture 30	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+b0b9ab6f-95105439	pak:PS2 r105 texture 74	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+b0c6c291-4ce1ff85	pak:PS2 r105 texture 142	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+b12f4629-b7f7f882	pak:PS2 r119 texture 9	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+b1324f4b-eec942bc	pak:PS2 r107 texture 21	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+b162418b-3153c9ac	pak:PS2 r11b texture 30	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+b1c17368-59030dfb	pak:PS2 r109 texture 22	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	ARGB4444	twiddled	8336	1	not-on-route	
+b1c49c7a-04535bbb	pak:PS2 r105 texture 64	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+b1d77ac5-2647989b	pak:PS2 breakables b1d77ac5-2647989b | resident:r117	r117	world-object	convert-blocked	rectangular 64x256: needs a rect21 square scoped representation	64	256	ARGB4444	twiddled	32912	1	not-on-route	texclass22 not-on-route but statically bound on route
+b1f28c5f-24b72844	pak:PS2 r10a texture 31	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+b250650d-327a40cd	pak:PS2 r102 texture 46	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+b292f304-f3d88fcf	pak:PS2 r100 texture 32	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+b2baa1e8-63f298c0	pak:PS2 r10b texture 43	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+b2c170b7-c75b1acb	pak:ps2mask_mendez35_upper | resident:r11f	r11f	enemy	mip-chain	minified 3D surface (enemy)	128	128	ARGB4444	twiddled	32912	1	not-on-route	texclass22 not-on-route but statically bound on route
+b2d6c4a1-3883e9f5	pak:PS2 r11b texture 56	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB4444	twiddled	65680	1	not-on-route	
+b2de8da1-c23d2d13	pak:PS2 r109 texture 10	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB4444	twiddled	65680	1	not-on-route	
+b33d904d-2648954f	pak:PS2 r104 texture 39	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	ARGB4444	twiddled	8336	1	not-on-route	
+b3485f01-8e4d0aaa	pak:PS2 r105 texture 142	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB1555	twiddled	16528	1	not-on-route	
+b3a20cff-3f30290e	pak:PS2 r104 texture 50	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+b3bf42e9-6e3151ed	pak:PS2 r106 texture 30	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+b4737b6b-532f149b	pak:PS2 items b4737b6b-532f149b | resident:r104	r104	item	convert-blocked	rectangular 128x64: needs a rect21 square scoped representation	128	64	RGB565	vq	4240	1	not-on-route	texclass22 not-on-route but statically bound on route
+b480bce7-973fc521	pak:PS2 r102 texture 31	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+b54e484b-71e28307	pak:PS2 r105 texture 148	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+b599db1a-5dde24e8	pak:PS2 r109 texture 17	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+b5e532cd-52659af6	pak:PS2 r117 texture 41	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	ARGB4444	twiddled	32912	1	not-on-route	
+b6159881-019f72f6	pak:PS2 r104 texture 37	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+b627530b-9a0b6350	pak:leon4k	global	character	mip-chain	minified 3D surface (character)	512	512	RGB565	twiddled	524432	0	not-on-route	texclass22 not-on-route but statically bound on route
+b6481ecb-a4279763	pak:PS2 r107 texture 18	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+b6adce75-f6a6f4bf	pak:PS2 r10d texture 13	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+b8646b80-7b876fd9	pak:PS2 r109 texture 17	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+b86e1262-6d7941c0	pak:PS2 r118 texture 28	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+b8788a5b-e80ad715	pak:PS2 r108 texture 29	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	16	ARGB4444	twiddled	1168	1	not-on-route	
+b8e57810-0b2ae17f	pak:PS2 r117 texture 44	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+b929ae73-cf5e23b2	pak:cast_human	global	character	convert-blocked	rectangular 1024x512: needs a rect21 square scoped representation	1024	512	RGB565	vq	133264	0	not-on-route	texclass22 not-on-route but statically bound on route
+ba3fa262-77c634c0	pak:PS2 r104 texture 26	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+ba43685a-c256c8a1	pak:PS2 r103 texture 51	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+ba6d6623-49377dc1	pak:PS2 r105 texture 38	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+ba764ef6-4a4821ff	pak:PS2 r102 texture 51	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+baab35e5-94757ee8	pak:PS2 r118 texture 50	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+bac49bc9-c03484f4	pak:PS2 r117 texture 49	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+bb0beabc-ee58edf8	pak:PS2 r11a texture 9	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+bbebdf18-7071092d	pak:PS2 r118 texture 41	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+bc1a9802-181dea09	pak:ps2mask_zealot_em11_07p	-	enemy	not-reachable	no shipped package, room archive or resident list binds it	64	64	ARGB4444	twiddled	8336	0	not-on-route	
+bc4eaf04-9922af23	pak:PS2 r117 texture 26	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+bc50bbd0-f71a19e4	pak:PS2 r118 texture 52	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+bc5bb46e-c514110b	pak:ps2mask_conv4_h3 | resident:r111 | resident:r112 | resident:r113 | resident:r117 | resident:r118 | resident:r11c	r111,r112,r113,r117,r118,r11c	enemy	mip-chain	minified 3D surface (enemy)	64	64	ARGB4444	twiddled	8336	6	not-worth	
+bc7a7778-1cd1b9c4	pak:PS2 r109 texture 19	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+bc9fd9f9-2c361431	pak:PS2 r10b texture 47	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+bccfa7b9-0a6b6810	pak:PS2 r10a texture 0	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+bceb1927-62ba93d2	pak:PS2 r108 texture 26	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+bd8b09c9-ea3f6b58	pak:PS2 r119 texture 12	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+bd94f4bc-5ab147c8	pak:PS2 r104 texture 40	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+bdc6a416-33f3d198	pak:PS2 r118 texture 21	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+be369981-d0fe7bc6	pak:cast_animal_58ece9691aab7f027d689d9e	-	enemy	not-reachable	no shipped package, room archive or resident list binds it	256	256	RGB565	vq	18576	0	not-on-route	
+be757c7b-9fe6599b	gc:em/em10.drs:em/em10.drs:0#542 | gc:em/em1b.drs:em/em1b.drs:0#542 | gc:em/em1c.drs:em/em1c.drs:0#542 | gc:em/em4c.drs:em/em4c.drs:0#542 | gc:em/em5c.drs:em/em5c.drs:0#542 | gc:em/em6c.drs:em/em6c.drs:0#542 | pak:source	global	enemy	mip-chain	minified 3D surface (enemy)	256	256	RGB565	vq	18576	0	not-on-route	texclass22 not-on-route but statically bound on route
+bec1eb1c-743ef629	pak:PS2 r108 texture 19	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+bf51b23b-b5bd8fb3	pak:PS2 r119 texture 22	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	ARGB4444	twiddled	8336	1	not-on-route	
+bf581be8-05093e53	pak:PS2 r103 texture 16	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+bfaee857-1dfa8c9c	pak:PS2 r105 texture 121	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+bfead6fb-fe677fb5	pak:PS2 r105 texture 109	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+bff3d03d-968a274a	pak:PS2 r109 texture 28	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	ARGB4444	twiddled	4240	1	not-on-route	
+c0066f03-a08bbd99	pak:PS2 r106 texture 25	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+c06bb229-f63a2220	pak:PS2 r105 texture 87	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+c07bca5c-6b7a4fd8	pak:PS2 r103 texture 28	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+c089b782-2594b9a5	pak:PS2 r11b texture 50	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+c0b55095-0d22e82a	pak:PS2 r117 texture 37	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+c10c2781-f929ab3d	pak:PS2 r104 texture 6	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+c110ca72-e04576fa	pak:PS2 r10d texture 16	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	16	RGB565	twiddled	2192	1	not-on-route	
+c1252513-66d5dd4e	pak:PS2 r103 texture 31	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+c228c89d-e9e5fd1c	gc:em/em10.drs:em/em10.drs:0#542 | gc:em/em1b.drs:em/em1b.drs:0#542 | gc:em/em1c.drs:em/em1c.drs:0#542 | gc:em/em4c.drs:em/em4c.drs:0#542 | gc:em/em5c.drs:em/em5c.drs:0#542 | gc:em/em6c.drs:em/em6c.drs:0#542 | pak:source	global	enemy	mip-chain	minified 3D surface (enemy)	256	256	RGB565	vq	18576	0	not-on-route	texclass22 not-on-route but statically bound on route
+c25664d9-ba563c17	pak:PS2 r119 texture 32	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	ARGB4444	twiddled	8336	1	not-on-route	
+c27d5a9f-656e910a	pak:PS2 r10d texture 50	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+c292dfd0-57cb4fc9	pak:PS2 r11b texture 51	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+c2a68cb0-5766889e	pak:PS2 r10d texture 8	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+c2b5771c-5c9aae27	pak:PS2 r106 texture 30	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+c30db0b7-438f51e3	pak:PS2 r118 texture 68	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+c33d2ae9-7abbdeef	pak:PS2 r109 texture 20	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+c34d4a45-ec4452a1	pak:PS2 r11a texture 26	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+c36c1ee0-b9f7173b	pak:PS2 r108 texture 54	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+c38c4e9f-b73b28a1	pak:PS2 r104 texture 15	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+c3a01d0b-8515e862	pak:PS2 r104 texture 53	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+c4295655-f8f8a084	pak:PS2 r10b texture 32	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+c42f6ae9-52e5ccda	pak:PS2 r104 texture 12	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+c4537acb-34421461	pak:PS2 r117 texture 23	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+c4614b9c-028f267d	pak:PS2 r10c texture 27	r10c	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+c4a43579-3b5e7424	pak:PS2 r103 texture 23	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+c4b696c2-7799ec06	pak:PS2 r118 texture 18	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+c58fcd8e-6f08a2b7	pak:PS2 r108 texture 27	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	ARGB4444	twiddled	4240	1	not-on-route	
+c5dff938-c1d24a38	pak:PS2 r105 texture 40	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+c61f5b23-d8d32e30	gc:evd/r101s00.evd:evd/r101s00.evd#20 | gc:evd/r10bs00.evd:brute | gc:evd/r214s00.evd:brute | gc:evd/s214s00.evd:brute | pak:source	r101,r10b,r214,global	cutscene	mip-chain	minified 3D surface (cutscene)	128	128	RGB565	twiddled	32912	3	not-on-route	texclass22 not-on-route but statically bound on route
+c67d7698-349b0f16	pak:PS2 r117 texture 29	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+c6b0479a-540e550d	pak:PS2 r105 texture 63	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+c6d8f6e0-cf96dec8	pak:PS2 r103 texture 5	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+c758e58b-063da172	pak:PS2 r102 texture 31	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+c75908f4-60723ce5	pak:PS2 r119 texture 3	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	ARGB4444	twiddled	4240	1	not-on-route	
+c853494e-21aad710	pak:PS2 r103 texture 31	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+c8630b48-364afc6f	pak:PS2 items c8630b48-364afc6f	-	item	not-reachable	no shipped package, room archive or resident list binds it	64	64	RGB565	vq	3216	0	not-on-route	
+c869d36e-bf59146f	pak:source-pair	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	64	128	ARGB4444	twiddled	16528	0	not-on-route	
+c89de712-6c39ac23	pak:PS2 r107 texture 41	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+c8a2d541-d5f463d7	pak:PS2 r109 texture 29	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+c8ae3efc-09e927b2	pak:PS2 r118 texture 20	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+c8b602c8-633b846d	gc:etc/core.das:etc/core.das:0#1/efm4/tpl | pak:source	global	other	mip-chain	minified 3D surface (other)	64	64	ARGB4444	twiddled	8336	0	not-on-route	texclass22 not-on-route but statically bound on route
+c8c24227-f6bb43fe	pak:PS2 r117 texture 2	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+c8c431e5-b313191c	gc:em/em10.drs:em/em10.drs:0#542 | gc:em/em1b.drs:em/em1b.drs:0#542 | gc:em/em1c.drs:em/em1c.drs:0#542 | gc:em/em4c.drs:em/em4c.drs:0#542 | gc:em/em5c.drs:em/em5c.drs:0#542 | gc:em/em6c.drs:em/em6c.drs:0#542 | pak:source	global	enemy	mip-chain	minified 3D surface (enemy)	128	128	ARGB4444	twiddled	32912	0	not-on-route	texclass22 not-on-route but statically bound on route
+c8d0db2f-3126bc5d	pak:PS2 r103 object et1a00.bin image 0 | resident:r103 | resident:r108 | resident:r118	r103,r108,r118	world	mip-chain	minified 3D surface (world)	128	128	RGB565	vq	6288	3	not-on-route	texclass22 not-on-route but statically bound on route
+c9465e4d-a1735f59	pak:PS2 r10e texture 23	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+c9b6c7f4-e5b1bbb8	pak:PS2 r10d texture 56	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+ca83fd4f-fc27e8e6	pak:PS2 r105 texture 125	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+caa07c71-01bd98ed	pak:PS2 r11a texture 5	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+cbddfda9-f2c96a97	pak:PS2 r117 texture 38	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+cc2d86e6-58745e32	pak:PS2 r10a texture 33	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+ccd89ca4-9a8ee8f5	pak:ps2cast_dellago_em2f_00	-	enemy	not-reachable	no shipped package, room archive or resident list binds it	512	512	RGB565	vq	67728	0	not-on-route	
+cd55f78b-c303aa31	pak:PS2 r108 texture 27	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	ARGB4444	twiddled	4240	1	not-on-route	
+cdacb9ff-e9ca0de4	pak:PS2 r104 texture 38	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	ARGB4444	twiddled	8336	1	not-on-route	
+cdf160dd-45d0befa	pak:PS2 r105 texture 131	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+ce04612d-5b7e7f82	pak:PS2 r10a texture 34	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+ce0a6448-c4f7e4d8	pak:PS2 breakables ce0a6448-c4f7e4d8	-	world-object	not-reachable	no shipped package, room archive or resident list binds it	16	16	RGB565	twiddled	656	0	not-on-route	
+ce201f14-1cfe2b74	pak:PS2 r105 texture 86	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+ce8efb1e-2be55997	pak:PS2 r105 texture 26	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+cecc1f83-9f7f6c2e	pak:PS2 r109 texture 13	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+cedaba42-86354924	pak:PS2 r117 texture 14	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+ceededd3-5d02b914	pak:PS2 r106 texture 42	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+cef6e2ec-87d6a289	pak:PS2 r108 texture 19	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+cf2208cd-a6bfb2ef	pak:source | resident:r100 | resident:r102 | resident:r103 | resident:r104 | resident:r105 | resident:r106 | resident:r107	r100,r102,r103,r104,r105,r106,r107,r108,r109,r10a,r10b,r10f,r111,r112,r113,r117,r118,r119,r11b,r11c,r11d,r11e,r11f,r200,r201,r202,r203,r204,r205,r206,r207,r208,r209,r20a,r20b,r20c,r20d,r20e,r20f,r210,r211,r212,r213,r214,r215,r216,r217,r218,r219,r21b,r21d,r220,r222,r223,r224,r225,r226,r227,r229,r22b,r300,r301,r303,r304,r305,r306,r307,r308,r309,r30a,r30b,r30c,r30d,r30e,r30f,r310,r311,r312,r315,r316,r317,r318,r31a,r31b,r31c,r31d,r320,r321,r325,r326,r327,r329,r330,r331,r332,r333	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	128	16	ARGB4444	twiddled	4240	60	never	
+cf4b9aaf-589562a3	pak:PS2 r100 texture 17	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+cf536438-b7be55dc	pak:PS2 r10e texture 50	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+cf75d9e9-6f88fe2b	pak:PS2 r102 texture 57	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+cf831f1d-a20fd901	pak:PS2 r105 texture 110	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+cf95be2f-dfdd581d	pak:ps2cast_ganado_em17_0c | resident:r108	r108	enemy	mip-chain	minified 3D surface (enemy)	512	512	RGB565	vq	67728	1	not-on-route	texclass22 not-on-route but statically bound on route
+cfbfd531-306fa3e0	pak:PS2 r104 texture 28	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+d06267fe-fa61f8f2	pak:PS2 r105 texture 123	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+d0dfd0ac-0522b13a	pak:PS2 r104 texture 23	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+d1169767-942ee2a5	pak:PS2 r106 texture 1	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+d1476916-59c5b2b9	pak:PS2 r105 texture 37	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	64	RGB565	vq	10384	1	not-on-route	
+d1e67905-fe8c6f18	pak:PS2 r11b texture 14	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+d1fb3f8f-75221422	pak:PS2 r103 texture 46	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+d24dd497-db86b95f	pak:PS2 r106 texture 13	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	ARGB4444	twiddled	8336	1	not-on-route	
+d2b1f763-6ffbdeef	pak:PS2 r117 texture 51	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+d2c00e80-6d029d7a	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	32	256	ARGB4444	vq	4240	0	not-on-route	
+d39c6e27-1676aa40	pak:PS2 r10b texture 30	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+d3e2afa0-8efa23c2	pak:PS2 r118 texture 17	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+d3ed6068-08da01b6	pak:PS2 r10e texture 19	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+d40dcadf-f1c4be93	pak:cast_animal_119fb70b30995a66b4ac8f38	-	enemy	not-reachable	no shipped package, room archive or resident list binds it	128	128	RGB565	vq	6288	0	not-on-route	
+d495267b-a2c721b0	pak:PS2 r105 texture 118	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+d4f16551-88bc05ad	pak:PS2 r10d texture 31	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+d505c15d-401cc80d	pak:PS2 r109 texture 26	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+d544d956-ca980339	pak:PS2 r105 texture 126	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+d548cdab-dca2a89a	pak:PS2 r102 texture 15	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	ARGB4444	twiddled	2192	1	not-on-route	
+d59fa627-7d5aa21e	pak:PS2 r103 texture 41	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+d5d17552-69ccb788	pak:PS2 r117 texture 31	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	16	RGB565	vq	2704	1	not-on-route	
+d68fc081-1997ac0a	gc:ss/cmn/itm1a.tpl:ss/cmn/itm1a.tpl | pak:source	global	hud	exclude	screen-space HUD/UI (1:1)	256	128	RGB565	vq	10384	0	not-on-route	
+d6a5de24-f5e97f84	pak:source-pair | resident:r101 | resident:r30d | resident:r331	r101,r30d,r331	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	64	64	ARGB4444	vq	3216	1	not-on-route	
+d6aaba11-c460cd2e	pak:PS2 r105 texture 77	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+d6fc4f67-7ba58948	pak:PS2 r10d texture 36	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+d8237215-60e9651f	pak:PS2 r103 texture 45	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB4444	twiddled	65680	1	not-on-route	
+d837d491-bdff152d	pak:PS2 r106 texture 21	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+d8ba2d6e-cba5a166	gc:em/em10.drs:em/em10.drs:0#544 | gc:em/em1c.drs:em/em1c.drs:0#544 | gc:em/em4c.drs:em/em4c.drs:0#544 | gc:em/em5c.drs:em/em5c.drs:0#544 | gc:em/em6c.drs:em/em6c.drs:0#544 | pak:source	global	enemy	mip-chain	minified 3D surface (enemy)	256	256	RGB565	twiddled	131216	0	not-on-route	texclass22 not-on-route but statically bound on route
+d8f02d20-b342ae45	pak:PS2 r103 texture 23	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+d8f17a9a-b84026d4	pak:PS2 r100 texture 31	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+d9c1e0b2-aa497682	pak:PS2 r119 texture 13	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+da341786-be875de0	gc:em/em10.drs:em/em10.drs:0#570 | gc:em/em1d.drs:em/em1d.drs:0#570 | gc:em/em20.drs:em/em20.drs:0#570 | gc:em/em4d.drs:em/em4d.drs:0#570 | gc:em/em50.drs:em/em50.drs:0#570 | gc:em/em5d.drs:em/em5d.drs:0#570 | gc:em/em60.drs:em/em60.drs:0#570 | gc:em/em6d.drs:em/em6d.drs:0#570	global	enemy	mip-chain	minified 3D surface (enemy)	128	128	RGB565	twiddled	32912	0	not-on-route	texclass22 not-on-route but statically bound on route
+da42873d-262700e6	pak:PS2 r117 texture 26	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+da99fe17-28fa018a	pak:PS2 r105 texture 24	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+daa3d452-b10799f3	pak:PS2 r10b object 0x1e pair 0+1 | resident:r10b | resident:r11b	r10b,r11b	world	mip-chain	minified 3D surface (world)	256	256	ARGB4444	twiddled	131216	2	not-on-route	texclass22 not-on-route but statically bound on route
+db086a36-bade26ab	pak:PS2 r108 texture 16	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+db8716ce-a3a7ba01	pak:PS2 r11b texture 12	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+dc0981f8-d7eaf16e	pak:PS2 r100 texture 28	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+dc0c17c7-30be61d0	pak:PS2 r104 texture 29	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+dc210de5-90620c29	gc:em/em10.drs:em/em10.drs:0#546 | gc:em/em1b.drs:em/em1b.drs:0#546 | gc:em/em1c.drs:em/em1c.drs:0#546 | gc:em/em4c.drs:em/em4c.drs:0#546 | gc:em/em5c.drs:em/em5c.drs:0#546 | gc:em/em6c.drs:em/em6c.drs:0#546 | pak:source	global	enemy	convert-blocked	rectangular 64x128: needs a rect21 square scoped representation	64	128	RGB565	twiddled	16528	0	not-on-route	texclass22 not-on-route but statically bound on route
+dc363980-b5147ee2	pak:source | resident:r100	r100	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	128	128	ARGB4444	vq	6288	1	not-worth	texclass22 saw it drawn but no static binding found
+dc4cb1a4-9f83042e	pak:PS2 r107 texture 16	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+dc4d7fe4-a633906a	pak:PS2 r11b texture 19	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+dc5c654b-8a06cd0f	pak:PS2 r118 texture 15	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+dd1f9b24-1e04b5e2	pak:PS2 r11a texture 14	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+dd8e819b-6155cab2	pak:PS2 r11b texture 3	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+ddc24440-be5d3505	pak:PS2 items ddc24440-be5d3505	-	item	not-reachable	no shipped package, room archive or resident list binds it	128	64	RGB565	vq	4240	0	not-on-route	
+de020f0a-cc184ee1	pak:PS2 r104 object 0x20 image 0 | resident:r106 | resident:r10a	r104,r106,r10a	world	mip-chain	minified 3D surface (world)	256	256	RGB565	vq	18576	3	not-on-route	texclass22 not-on-route but statically bound on route
+de63deaa-e979cd50	pak:PS2 r106 texture 16	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+de8bfeb8-97fea0df	pak:PS2 items de8bfeb8-97fea0df	-	item	not-reachable	no shipped package, room archive or resident list binds it	128	64	RGB565	vq	4240	0	not-on-route	
+de8d16f5-8d4036de	pak:PS2 r105 texture 65	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+dead7d94-c4d74872	pak:PS2 r104 texture 21	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	16	RGB565	twiddled	2192	1	not-on-route	
+ded04d98-82ec70ab	pak:PS2 items ded04d98-82ec70ab | resident:r101	r101	item	mip-chain	minified 3D surface (item)	64	64	ARGB4444	twiddled	8336	1	not-on-route	texclass22 not-on-route but statically bound on route
+df487025-03c3d05d	pak:PS2 r107 texture 19	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+df502e73-df1e12b8	pak:PS2 r11b texture 12	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+df55506b-c3b9fc38	pak:PS2 r10a texture 28	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+dfb309b8-6dbeb0de	gc:em/em10.drs:em/em10.drs:0#548 | gc:em/em1b.drs:em/em1b.drs:0#548 | gc:em/em1c.drs:em/em1c.drs:0#548 | gc:em/em4c.drs:em/em4c.drs:0#548 | gc:em/em5c.drs:em/em5c.drs:0#548 | gc:em/em6c.drs:em/em6c.drs:0#548 | pak:source | resident:r201	r201,global	enemy	convert-blocked	rectangular 256x128: needs a rect21 square scoped representation	256	128	RGB565	vq	10384	1	not-on-route	texclass22 not-on-route but statically bound on route
+dfb37be7-481dca50	pak:ps2_luis_source_diffuse_alpha	global	character	convert-blocked	rectangular 128x64: needs a rect21 square scoped representation	128	64	ARGB4444	twiddled	16528	0	not-on-route	texclass22 not-on-route but statically bound on route
+e017c4ab-624cb3ed	pak:PS2 r118 texture 14	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+e099941c-1d72e26c	pak:PS2 r118 texture 61	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+e0a67083-590c7c1b	pak:PS2 r105 texture 34	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+e1059473-50dd5bb9	pak:PS2 r107 texture 32	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+e18a663b-9d0825e8	pak:PS2 r107 texture 10	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+e224e969-04254881	pak:PS2 items e224e969-04254881 | resident:r101 | resident:r109 | resident:r10a | resident:r119	r101,r109,r10a,r119	item	mip-chain	minified 3D surface (item)	64	64	ARGB4444	vq	3216	4	not-on-route	texclass22 not-on-route but statically bound on route
+e2fb1c14-30b0a2b1	pak:PS2 r119 texture 14	r119	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+e3157313-f78a6791	pak:PS2 r108 texture 21	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+e33fbc2b-0bee703c	pak:PS2 r105 texture 119	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+e3b981c8-03e6605d	pak:PS2 r117 texture 39	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+e401bddc-a220b727	pak:PS2 r106 texture 41	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+e4d6dd9c-649c4a1e	pak:PS2 r105 texture 0	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+e5a32fcc-dd842ab3	gc:em/em10.drs:em/em10.drs:0#544 | gc:em/em1c.drs:em/em1c.drs:0#544 | gc:em/em4c.drs:em/em4c.drs:0#544 | gc:em/em5c.drs:em/em5c.drs:0#544 | gc:em/em6c.drs:em/em6c.drs:0#544 | pak:source	global	enemy	mip-chain	minified 3D surface (enemy)	256	256	RGB565	twiddled	131216	0	not-on-route	texclass22 not-on-route but statically bound on route
+e5aaf143-59722a32	gc:em/em10.drs:em/em10.drs:0#552 | gc:em/em1d.drs:em/em1d.drs:0#552 | gc:em/em4d.drs:em/em4d.drs:0#552 | gc:em/em5d.drs:em/em5d.drs:0#552 | gc:em/em6d.drs:em/em6d.drs:0#552 | pak:source	global	enemy	convert-blocked	rectangular 256x128: needs a rect21 square scoped representation	256	128	RGB565	twiddled	65680	0	not-on-route	texclass22 not-on-route but statically bound on route
+e5c198d1-37a5cdb1	pak:PS2 r10a texture 0	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+e618ef45-7c120979	pak:PS2 r103 texture 18	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+e703d692-22b0804b	pak:PS2 r10b texture 8	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+e7a6c2a0-037ff955	pak:PS2 r100 texture 21	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+e7bc0e71-18e43cf1	pak:PS2 r104 texture 16	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+e7e2f9b3-8837095d	pak:PS2 items e7e2f9b3-8837095d	-	item	not-reachable	no shipped package, room archive or resident list binds it	64	64	RGB565	vq	3216	0	not-on-route	
+e8490a29-d057d3df	pak:PS2 items e8490a29-d057d3df	-	item	not-reachable	no shipped package, room archive or resident list binds it	64	64	RGB565	vq	3216	0	not-on-route	
+e892768a-65b77c5e	pak:PS2 r10a texture 20	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+e8bd6745-d24e00d4	pak:PS2 r108 texture 15	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+e8c2d372-8e06ef62	pak:cast_animal_6c398e6aa05416fffa92f3d7	-	enemy	not-reachable	no shipped package, room archive or resident list binds it	128	128	RGB565	vq	6288	0	not-on-route	
+e8cbe6d0-4c6a62ca	pak:PS2 r108 texture 1	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+e93140ac-1186d3ff	pak:PS2 r109 texture 14	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	ARGB4444	twiddled	4240	1	not-on-route	
+e98e7f86-915278cb	pak:PS2 r10b texture 27	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+e9bc0caf-10834e70	pak:PS2 r100 texture 5	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB4444	twiddled	16528	1	not-on-route	
+ea27ef9a-96765d38	gc:em/em10.drs:em/em10.drs:0#580 | gc:em/em1d.drs:em/em1d.drs:0#580 | gc:em/em20.drs:em/em20.drs:0#580 | gc:em/em4d.drs:em/em4d.drs:0#580 | gc:em/em50.drs:em/em50.drs:0#580 | gc:em/em5d.drs:em/em5d.drs:0#580 | gc:em/em60.drs:em/em60.drs:0#580 | gc:em/em6d.drs:em/em6d.drs:0#580	global	enemy	mip-chain	minified 3D surface (enemy)	256	256	RGB565	twiddled	131216	0	not-on-route	texclass22 not-on-route but statically bound on route
+ea306099-feef111f	pak:PS2 r108 texture 36	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+ea4b435b-7a783549	pak:PS2 r105 texture 112	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+eaa908bc-855bd5e6	pak:PS2 r106 texture 23	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+eade8ec3-88b33f41	pak:PS2 r106 texture 38	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+eb27f548-5cb3b19e	pak:PS2 r100 texture 6	r100	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+eb6903aa-d1123344	pak:PS2 r11b texture 24	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+eb8f38f7-e9e42040	pak:PS2 r118 texture 13	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	ARGB4444	twiddled	8336	1	not-on-route	
+ebe5d811-ab65da8c	pak:PS2 r109 texture 11	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+ec019721-7ba38fd5	pak:PS2 r102 texture 60	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+ec255e66-76812316	pak:leon4k | resident:r100 | resident:r101 | resident:r103 | resident:r106	r100,r101,r103,r106,global	character	mip-chain	minified 3D surface (character)	512	512	RGB565	vq	67728	4	not-worth	
+ec300fff-76769cc8	pak:PS2 r105 texture 111	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+ec7b1745-32ce202e	pak:ps2mask_zealot_em11_07p	-	enemy	not-reachable	no shipped package, room archive or resident list binds it	64	128	ARGB4444	twiddled	16528	0	not-on-route	
+ec7f7338-f36477c0	pak:PS2 items ec7f7338-f36477c0 | resident:r103	r103	item	convert-blocked	rectangular 128x64: needs a rect21 square scoped representation	128	64	RGB565	vq	4240	1	not-on-route	texclass22 not-on-route but statically bound on route
+eceb869e-a1de2b07	pak:PS2 r108 texture 31	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+ed42dfa3-ad6663ff	pak:PS2 r11b texture 28	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+ed6edc19-97708d02	pak:PS2 r117 texture 43	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+edefecf6-60045e28	gc:em/em10.drs:em/em10.drs:0#556 | gc:em/em1d.drs:em/em1d.drs:0#556 | gc:em/em20.drs:em/em20.drs:0#556 | gc:em/em4d.drs:em/em4d.drs:0#556 | gc:em/em50.drs:em/em50.drs:0#556 | gc:em/em5d.drs:em/em5d.drs:0#556 | gc:em/em60.drs:em/em60.drs:0#556 | gc:em/em6d.drs:em/em6d.drs:0#556	global	enemy	mip-chain	minified 3D surface (enemy)	256	256	RGB565	twiddled	131216	0	not-on-route	texclass22 not-on-route but statically bound on route
+ee124a44-23ac5946	pak:PS2 r104 texture 42	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	64	RGB565	vq	6288	1	not-on-route	
+ee454c94-dcdf9321	pak:PS2 r103 texture 20	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+eed41ffb-2ce27c64	pak:PS2 r10a texture 40	r10a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+eeead3be-22c30597	pak:PS2 r102 texture 49	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	512	256	RGB565	vq	34960	1	not-on-route	
+eeffb6bd-c84d94ed	pak:PS2 r104 texture 9	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB1555	twiddled	16528	1	not-on-route	
+ef051984-093dda1c	gc:etc/core.das:etc/core.das:0#1/efm0/tpl | pak:source	global	other	convert-blocked	rectangular 32x16: needs a rect21 square scoped representation	32	16	RGB565	twiddled	1168	0	not-on-route	texclass22 not-on-route but statically bound on route
+ef0db666-e3cc066f	pak:PS2 r108 texture 44	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+ef16ceb1-850c186e	pak:PS2 r107 texture 16	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+efe07d64-0549cc20	pak:PS2 r108 texture 11	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+efec7c96-30e756d6	pak:PS2 r105 texture 67	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	ARGB4444	twiddled	4240	1	not-on-route	
+f00821f0-7cea865f	pak:PS2 r103 texture 49	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+f0c3ab1d-a6d96f4f	pak:PS2 r117 texture 16	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+f14e99d0-50d922ac	pak:PS2 r105 texture 42	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	ARGB4444	twiddled	4240	1	not-on-route	
+f1553274-b54db89b	pak:PS2 r108 texture 24	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+f17007cb-4e80b928	pak:PS2 r10b texture 28	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+f19f0e19-b030ca4e	pak:PS2 r104 texture 45	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+f1daae0e-eade9211	pak:PS2 r105 object et2200.bin image 0 | resident:r105	r105	world	convert-blocked	rectangular 128x256: needs a rect21 square scoped representation	128	256	RGB565	vq	10384	1	not-on-route	texclass22 not-on-route but statically bound on route
+f1efad56-a78d4003	pak:PS2 r117 texture 13	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+f208fe4f-de5fa3df	pak:PS2 r118 texture 49	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+f259dfc6-2c69e7b2	pak:PS2 r11a texture 2	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+f29c5250-b932f2f2	pak:source	-	unreferenced	not-reachable	no shipped package, room archive or resident list binds it	128	256	ARGB4444	vq	10384	0	not-on-route	
+f300787b-be4eb747	pak:PS2 r10e texture 16	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+f33b021e-6b55de88	pak:PS2 r11b texture 2	r11b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	ARGB1555	twiddled	16528	1	not-on-route	
+f344fc99-8b566d7f	gc:evd/r101s21.evd:evd/r101s21.evd#44 | gc:evd/r101s30.evd:evd/r101s30.evd#39 | gc:evd/r106s00.evd:evd/r106s00.evd#36 | gc:evd/r10bs00.evd:brute | gc:evd/r10bs00.evd:brute | gc:evd/r119s00.evd:evd/r119s00.evd#41 | gc:evd/r11cs00.evd:brute | gc:evd/r11cs00.evd:brute	r101,r106,r10b,r119,r11c,r200,global	cutscene	mip-chain	minified 3D surface (cutscene)	32	32	RGB565	twiddled	2192	6	not-on-route	texclass22 not-on-route but statically bound on route
+f37359c0-ab627cb7	pak:PS2 items f37359c0-ab627cb7	-	item	not-reachable	no shipped package, room archive or resident list binds it	64	64	ARGB4444	twiddled	8336	0	not-on-route	
+f3e70571-834b08a3	pak:PS2 r11a texture 21	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+f3f3bb74-b7628710	pak:PS2 r108 texture 32	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+f3f589d9-33d52bae	pak:PS2 r105 texture 89	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+f4696eb3-b58fed93	pak:PS2 r10e texture 51	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+f48c4237-4f1e64db	pak:PS2 r107 texture 22	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+f4a2e7ab-30212f55	pak:PS2 r118 texture 46	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	ARGB4444	twiddled	32912	1	not-on-route	
+f50952fb-d1cd3bfc	pak:PS2 r108 texture 51	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	ARGB1555	twiddled	65680	1	not-on-route	
+f52df17e-83f5bb15	pak:PS2 items f52df17e-83f5bb15 | resident:r101 | resident:r102 | resident:r103 | resident:r107 | resident:r10a | resident:r10b | resident:r118	r101,r102,r103,r107,r10a,r10b,r118,r119,r11b	item	mip-chain	minified 3D surface (item)	64	64	ARGB4444	vq	3216	9	not-on-route	texclass22 not-on-route but statically bound on route
+f56596f9-c3b192f2	pak:PS2 r10b object 0x1e image 5 | resident:r10b	r10b	world	mip-chain	minified 3D surface (world)	64	64	RGB565	vq	3216	1	not-on-route	texclass22 not-on-route but statically bound on route
+f5b08417-4d772a8d	pak:PS2 r103 texture 20	r103	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+f5db4cb6-cfee5b64	pak:PS2 r108 texture 32	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+f60a72bb-72f25dd2	pak:PS2 r117 texture 9	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+f619c158-87696bca	pak:PS2 r10d texture 41	r10d	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+f649a848-eb89c3f9	pak:PS2 r102 texture 14	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	32	32	RGB565	twiddled	2192	1	not-on-route	
+f67dfffc-4712ecbb	gc:em/em10.drs:em/em10.drs:0#552 | gc:em/em1d.drs:em/em1d.drs:0#552 | gc:em/em4d.drs:em/em4d.drs:0#552 | gc:em/em5d.drs:em/em5d.drs:0#552 | gc:em/em6d.drs:em/em6d.drs:0#552 | pak:source	global	enemy	convert-blocked	rectangular 64x128: needs a rect21 square scoped representation	64	128	RGB565	twiddled	16528	0	not-on-route	texclass22 not-on-route but statically bound on route
+f6936f42-b7509619	pak:PS2 r105 texture 108	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	ARGB4444	twiddled	16528	1	not-on-route	
+f6c0ea12-67c15cd2	pak:PS2 r109 texture 14	r109	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	ARGB4444	twiddled	4240	1	not-on-route	
+f6e119fd-882824e5	pak:PS2 r104 texture 34	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+f71cf306-d39f7fa4	pak:PS2 r105 texture 7	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+f7204aab-cce044ba	pak:PS2 items f7204aab-cce044ba | resident:r100 | resident:r101 | resident:r103 | resident:r104 | resident:r107	r100,r101,r103,r104,r107	item	convert-blocked	rectangular 128x64: needs a rect21 square scoped representation	128	64	RGB565	vq	4240	5	not-on-route	texclass22 not-on-route but statically bound on route
+f774194c-40ac099a	pak:PS2 r117 texture 23	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+f871f20a-d387d8fb	pak:PS2 r107 texture 24	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+f87567f6-f5c6154e	pak:PS2 r10b texture 52	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+f9282a10-6ed63371	pak:PS2 items f9282a10-6ed63371 | resident:r101 | resident:r109 | resident:r119	r101,r109,r119	item	mip-chain	minified 3D surface (item)	64	64	RGB565	vq	3216	3	not-on-route	texclass22 not-on-route but statically bound on route
+f937f7da-e62a3b53	pak:PS2 r11a texture 0	r11a	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+f96eeb57-4ef0860a	pak:PS2 r102 texture 41	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+f9b5df1f-e687362c	pak:PS2 r10e texture 24	r10e	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+f9baa255-b586d6c8	pak:PS2 r102 texture 61	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+f9fe5989-9b0f36af	pak:PS2 r10b texture 20	r10b	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	128	RGB565	vq	6288	1	not-on-route	
+fa051f98-b2839860	pak:PS2 r107 texture 7	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+fa5cce43-d9ebb64b	pak:PS2 r102 texture 67	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+fb20634c-b6a9091b	pak:PS2 r107 texture 6	r107	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+fb5fb8aa-5e38b640	pak:ps2cast_luis_actor	global	character	mip-chain	minified 3D surface (character)	512	512	RGB565	vq	67728	0	not-on-route	texclass22 not-on-route but statically bound on route
+fbb2c9a4-4e3e345f	pak:PS2 r118 texture 67	r118	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	32	RGB565	vq	2704	1	not-on-route	
+fc32b6d1-6b58785f	pak:PS2 r104 texture 49	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	16	RGB565	vq	2704	1	not-on-route	
+fc75dd46-779f14bd	pak:ps2mask_merchant18_c0 | resident:r10f | resident:r112 | resident:r305 | resident:r30a | resident:r312 | resident:r315 | resident:r31a	r10f,r112,r305,r30a,r312,r315,r31a,r31d,r329,r331	enemy	convert-blocked	rectangular 256x128: needs a rect21 square scoped representation	256	128	ARGB4444	vq	10384	2	not-worth	
+fc7cc625-7192ae15	pak:PS2 items fc7cc625-7192ae15	-	item	not-reachable	no shipped package, room archive or resident list binds it	64	64	ARGB4444	twiddled	8336	0	not-on-route	
+fcaa7430-3ea2e161	pak:PS2 r108 texture 68	r108	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	64	RGB565	vq	4240	1	not-on-route	
+fcb60a5d-e940e957	pak:PS2 r106 object 0x32 image 0	r106	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+fcc27c50-ef806bf5	pak:PS2 r105 texture 137	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	128	RGB565	vq	10384	1	not-on-route	
+fcfe7e11-06b9461e	pak:PS2 r11b object et0300.bin image 0 | resident:r11b	r11b	world	convert-blocked	rectangular 128x256: needs a rect21 square scoped representation	128	256	RGB565	vq	10384	1	not-worth	
+fd774035-1a9ac9e3	pak:PS2 r105 texture 32	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+fdb79120-f3f8ce57	pak:PS2 items fdb79120-f3f8ce57 | resident:r101 | resident:r103 | resident:r108	r101,r103,r108	item	mip-chain	minified 3D surface (item)	64	64	RGB565	vq	3216	3	not-on-route	texclass22 not-on-route but statically bound on route
+fdedd754-b5674a7e	pak:ps2mask_mendez35_full	-	enemy	not-reachable	no shipped package, room archive or resident list binds it	128	128	ARGB4444	twiddled	32912	0	not-on-route	
+fe086902-695810f1	pak:PS2 r102 texture 42	r102	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	ARGB4444	twiddled	8336	1	not-on-route	
+fe1bf3d9-bfb2981b	pak:PS2 r105 texture 115	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	
+fe321b5f-74342156	pak:PS2 r104 texture 46	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	128	32	RGB565	vq	3216	1	not-on-route	
+fe58ea1c-af66f3b7	pak:PS2 r10b object 0x1e pair 2+3 | resident:r10b | resident:r11b	r10b,r11b	world	convert-blocked	rectangular 64x128: needs a rect21 square scoped representation	64	128	ARGB1555	twiddled	16528	2	not-on-route	texclass22 not-on-route but statically bound on route
+fefe358a-c99f9406	pak:PS2 r104 texture 35	r104	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	64	64	RGB565	vq	3216	1	not-on-route	
+ff48e387-8514d24e	pak:PS2 r117 texture 9	r117	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	32	RGB565	vq	4240	1	not-on-route	
+ff78bbc5-c486ecfe	pak:PS2 r105 texture 116	r105	world	not-reachable	PS2 world texture not bound by its room R4PW (orphan in pack)	256	256	RGB565	vq	18576	1	not-on-route	

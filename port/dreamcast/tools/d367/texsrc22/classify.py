@@ -60,7 +60,9 @@ def gc_class(file, ctx):
         base = os.path.basename(f)
         if base.startswith(('pl', 'emwp', 'wep')) or 'wep' in base:
             return ('weapon' if 'wep' in base or base.startswith('emwp') else 'character'), ['global']
-        return 'enemy', ['global']
+        return 'enemy', ['global:' + base.split('.')[0]]
+    if f.startswith('etc/') and ('efm' in ctx.lower() or 'eff' in ctx.lower()):
+        return 'effect', ['global']
     if f.startswith(('ss/', 'fnt/', 'font', 'etc/title', 'title', 'mes/', 'file/')):
         return 'hud', ['global']
     if f.startswith('etc/') and f.endswith(('.eff', '.esp')):
@@ -162,6 +164,8 @@ def main():
         sq = im['w'] == im['h'] and im['w'] & (im['w'] - 1) == 0
         gen = (im['fmt'] in ('RGB565', 'ARGB1555', 'ARGB4444') and im['layout'] in ('twiddled', 'vq')) or \
               (im['fmt'] == 'PAL4' and im['layout'] == 'twiddled')
+        if any(r.startswith('global:') for r in rooms):
+            rooms.add('global')
         on_route = [r for r in rooms if route_room(r)]
         offroute = [r for r in rooms if r.startswith('r') and not route_room(r)]
         if len(imgs) > 1:
