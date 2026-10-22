@@ -1,0 +1,11 @@
+name tu22-r101-cross-fight
+# lane texusage22: r101 square from the burning cross (benchmark-r101 view), crowd alerted at room frame 30 and
+# converging on Leon (release cap 4 alive), god, no pad input.
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alert 30
+alivelog 150

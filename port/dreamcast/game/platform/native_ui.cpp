@@ -1646,6 +1646,9 @@ struct Scope { unsigned saved; explicit Scope(unsigned s):saved(source){source=s
 void header(unsigned list,const std::uint32_t* q){
     const unsigned old=census.count;
     const unsigned i=census.select(list,source,q[2],q[3],(q[0]&8)!=0);
+#if RE4DC_TEX_USAGE
+    if(i!=re4dc_tamat::None)++census.rows[i].hdrs;
+#endif
     if(i==re4dc_tamat::None || i<old)return;
     auto& row=census.rows[i];
     if(!row.textured){row.resolved=1;return;}
@@ -1660,6 +1663,30 @@ void header(unsigned list,const std::uint32_t* q){
         }
     }
 }
+#if RE4DC_TEX_USAGE
+// TEX_USAGE_LOG (lane texusage22): one window = 120 scenes or a room change; rows are dumped once at its end.
+unsigned win_scenes,win_present,win_room=~0u,win_no,win_first;
+void usage_dump(unsigned frame,unsigned room){
+    re4dc_log("texuse win: v=1 w=%u room=%03x f=%u..%u scenes=%u present=%u rows=%u overflow=%u invalid=%u orphan=%u\n",
+        win_no,room,win_first,frame,win_scenes,win_present,census.count,census.overflow,census.invalid,census.orphans);
+    for(unsigned i=0;i<census.count;++i){const auto& r=census.rows[i];if(!r.tris)continue;
+        re4dc_log("texuse: w=%u l=%u s=%u k=%08x-%08x tcw=%08x tsp=%08x h=%u t=%u a=%u b=%u/%u/%u/%u/%u x=%u r=%u\n",
+            win_no,r.list,r.source,r.crc,r.fnv,r.tcw,r.tsp,r.hdrs,r.tris,unsigned(r.fill),
+            unsigned(r.bin[0]),unsigned(r.bin[1]),unsigned(r.bin[2]),unsigned(r.bin[3]),unsigned(r.bin[4]),
+            unsigned(r.texels),r.resolved);
+    }
+    ++win_no;win_scenes=win_present=0;census.clear();
+}
+void report(unsigned frame,bool present){
+    const unsigned room=render_source_begin.room;
+    if(win_room!=~0u && room!=win_room && win_scenes)usage_dump(frame,win_room);
+    if(!win_scenes)win_first=frame;
+    win_room=room;++win_scenes;if(present)++win_present;
+    for(auto& c:census.current)c=re4dc_tamat::None;   // a new scene re-selects by header
+    if(win_scenes>=120)usage_dump(frame,room);
+    ++scene;
+}
+#else
 void report(unsigned frame,bool present){
     // Read the snapshot already taken at this render's begin. Native frame
     // numbers can skip source ticks under PACE_FAST, so they cannot align views.
@@ -1689,6 +1716,7 @@ void report(unsigned frame,bool present){
         census.tris[0],census.tris[2],census.tris[4],areas[0],areas[2],areas[4]);
     ++scene;census.clear();
 }
+#endif
 }
 #endif
 namespace tabin {
@@ -1697,7 +1725,11 @@ unsigned short ent[5][kTiles];
 unsigned short trtri[kTiles];
 unsigned stamp[kTiles],objid;
 struct L{ unsigned hdr_words,vtx_words,param_words; bool sprite,vtx64,half,hdr64_pending,tex,uv16,offset,vol; unsigned nv,tri_in_obj;
-          float x[2],y[2]; unsigned objs,tris,verts,short_strips,orphans; };
+          float x[2],y[2]; unsigned objs,tris,verts,short_strips,orphans;
+#if RE4DC_TEX_USAGE
+          float u[2],v[2];
+#endif
+};
 L ls[5];
 unsigned scene_param,scene_wild,scene_mismatch,scene_lists_seen;
 unsigned max_pool,max_param,max_trtile,scenes;
@@ -1827,17 +1859,32 @@ void feed_block(unsigned list,const std::uint32_t* q){
     if(s.vtx64)s.half=true;
     ++s.verts;
     const float x=f[1],y=f[2];
+#if RE4DC_TEX_USAGE
+    float tu=0,tv=0;
+    if(s.tex){
+        if(s.uv16){const std::uint32_t hu=q[4]&0xffff0000u,hv=q[4]<<16;std::memcpy(&tu,&hu,4);std::memcpy(&tv,&hv,4);}
+        else{tu=f[4];tv=f[5];}
+    }
+#endif
     if(s.nv>=2){
         if(s.tri_in_obj==0||s.tri_in_obj==6){ obj_begin(s); scene_param+=2*s.vtx_words; }
         ++s.tri_in_obj; ++s.tris; scene_param+=s.vtx_words;
         add_box(list,std::min({x,s.x[0],s.x[1]}),std::max({x,s.x[0],s.x[1]}),std::min({y,s.y[0],s.y[1]}),std::max({y,s.y[0],s.y[1]}),1);
         #if RE4DC_TA_MATERIAL_DIAG
+#if RE4DC_TEX_USAGE
+        {const float tx[3]={s.x[0],s.x[1],x},ty[3]={s.y[0],s.y[1],y},uu[3]={s.u[0],s.u[1],tu},vv[3]={s.v[0],s.v[1],tv};
+         tamat::census.add(list,tx,ty,3,1,s.tex?uu:nullptr,s.tex?vv:nullptr);}
+#else
         {const float tx[3]={s.x[0],s.x[1],x},ty[3]={s.y[0],s.y[1],y};tamat::census.add(list,tx,ty,3,1);}
+#endif
 #endif
         if(list==2 && !skip_fill){const float tx[3]={s.x[0],s.x[1],x},ty[3]={s.y[0],s.y[1],y};
                      if(x==x&&y==y&&s.x[0]==s.x[0]&&s.x[1]==s.x[1])fill_tr+=clip_area(tx,ty,3);}
     }
     s.x[0]=s.x[1];s.y[0]=s.y[1];s.x[1]=x;s.y[1]=y;++s.nv;
+#if RE4DC_TEX_USAGE
+    s.u[0]=s.u[1];s.v[0]=s.v[1];s.u[1]=tu;s.v[1]=tv;
+#endif
     if(pcw&(1u<<28)){ if(s.nv<3)++s.short_strips; s.nv=0; s.tri_in_obj=0; }
 }
 void feed(unsigned list,const void* data,unsigned bytes){
@@ -1911,10 +1958,12 @@ void scene_end(unsigned fr,bool present){
     std::memset(hot,0,sizeof(hot));std::memset(hot_op,0,sizeof(hot_op));
     ++scenes;
     max_pool=std::max(max_pool,pool);max_param=std::max(max_param,param);max_trtile=std::max(max_trtile,maxtr);
+#if !RE4DC_TEX_USAGE
     re4dc_log("tabin: f=%u p=%d obj=%u/%u/%u ent=%u/%u/%u deep=%u/%u/%u pool=%u/%u param=%u/%u trtile=%u tris=%u short=%u orphan=%u wild=%u mism=%u%s\n",
         fr,present?1:0,objs[0],objs[2],objs[4],total[0],total[2],total[4],maxent[0],maxent[2],maxent[4],pool,limit,param,
         unsigned(RE4DC_TA_VERTEX_BYTES),maxtr,tris,shorts,orph,scene_wild,scene_mismatch,peak?" PEAK":"");
     re4dc_log("tabin fill: f=%u poly=%u haze=%u mist=%u fx=%u\n",fr,unsigned(fill_tr),unsigned(fill_haze),unsigned(fill_mist),unsigned(fill_fx));
+#endif
     fill_tr=fill_haze=fill_mist=fill_fx=0;
 #if RE4DC_TA_MATERIAL_DIAG
     for(const auto& state:ls)tamat::census.incomplete(state.half || state.hdr64_pending);
@@ -5186,7 +5235,8 @@ extern "C" void re4dc_ui_glyph_fonts_changed(){
 #error PVR_MID_FENCE waits in present_fence: needs PVR_PIPELINE
 #endif
 #if RE4DC_RES_MODES
-#if RE4DC_TA_BIN_DIAG || !RE4DC_PVR_STREAM || RE4DC_PVR_PIPELINE!=2 || !RE4DC_TA_HEADROOM
+// TEX_USAGE_LOG twins run the boot mode 0 (640x480, the 20x15 tile replay holds); the other modes are not measured.
+#if (RE4DC_TA_BIN_DIAG && !RE4DC_TEX_USAGE) || !RE4DC_PVR_STREAM || RE4DC_PVR_PIPELINE!=2 || !RE4DC_TA_HEADROOM
 #error RES_MODES needs PVR_STREAM=1, PVR_PIPELINE=2, TA_HEADROOM>=1 (ta_vertex_bytes) and TA_BIN_DIAG=0 (its 20x15 tile replay)
 #endif
 extern "C" unsigned re4dc_res_params(pvr_init_params_t* p);
