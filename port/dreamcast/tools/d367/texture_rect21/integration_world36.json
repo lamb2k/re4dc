@@ -1,0 +1,52 @@
+{
+  "state": "NEXT_1004_SOURCE_HOST_ONLY",
+  "parent": "845abb1f4ad3a2721d17f64899b6dc59d4bce66c",
+  "delta_source": "61717e5cf0c299d48fb3fbf71b7f1ef76253434f",
+  "before": {
+    "world_rect_bind.h": "8feabe767fbf77428e0f414a22150c4dfa582cba5221a418aa6a80fd174cd072",
+    "world_rect_provenance.h": "8cb7c4209b1ee0cd4d001c04b04364c4e9c8823c88072a1aad1fa6cd7155e6f2",
+    "scoped_representations.inc": "3fb4c49068ee7deb04c124bc02d80100e7bb6b59ac12215ff13db0b0d968d49e",
+    "provenance_certificates.inc": "a6b1f5d498adc22e16948955cc19d649f7601edfe055f566369acf93b2010a97"
+  },
+  "after": {
+    "world_rect_bind.h": "8feabe767fbf77428e0f414a22150c4dfa582cba5221a418aa6a80fd174cd072",
+    "world_rect_provenance.h": "8a5f866395189640442fef84aee0703151fa91aede72c451b5d94074d8e203df",
+    "scoped_representations.inc": "e11601a9ae21230693319cd787a38a7112d6f6d9f28e7c06903f0fda2d35ca63",
+    "provenance_certificates.inc": "f9e57bfa446ca92a0ede4a89b216bd6270f5359a2027e54c18bc9eb0ba203ed0"
+  },
+  "representations": 36,
+  "physical_certificates": 4,
+  "source_rooms": 3,
+  "prior_r103_certificate_retained": true,
+  "host_checks": 556,
+  "host_command": [
+    "g++",
+    "-std=c++17",
+    "-O1",
+    "-g0",
+    "-fsanitize=undefined",
+    "-fno-sanitize-recover=all",
+    "-I/root/probe/codex-mipmap21-integration/port/dreamcast/tools/d367/texture_rect21",
+    "/root/probe/mipmap21-integration-world36-20261021/probe.cpp",
+    "-o",
+    "/root/probe/mipmap21-integration-world36-20261021/probe"
+  ],
+  "probe_source_sha256": "a8f8c39600c64eafb61dd3b87fdf4cc91703f6ef7f18bd92fbf48180b9d421fd",
+  "probe_sha256": "2fd6b477877ce3fd2cc796dcfc80025646d39f63a98d6de939e032f48666844b",
+  "worlds": {
+    "/root/re4data/private/texture-rect21-current948-scoped17-20261021/dc/native/r100/ps2-world.r4pw": "f2f155a53dcac2e1e4e817b3db7b05b14aeea552ebc130f21fb4d984ad2d9b2b",
+    "/root/re4data/private/texture-rect21-current948-scoped17-20261021/dc/native/r103/ps2-world.r4pw": "465add59c7d55805fbdb112add6273531c8209e3d1b5c37f66c7f136bcf26fee",
+    "/root/re4data/private/texture-world-next21-r101-scoped9-v2-20261021/dc/native/r101/ps2-world.r4pw": "8935a0c8b33affebbfb4d44e1b66eef90bf6fc8ba68e2a0abc4244275ee8343d",
+    "/root/re4data/private/texture-world-next21-r103-scoped10-20261021/dc/native/r103/ps2-world.r4pw": "53e7ed1d818ac669469dbc2d0adf10ecf508f11a896ef9ecbefca818426081f9"
+  },
+  "delta_receipt_sha256": "ad19a67f24081ecfcf85cd2ccab7e4d3a4cb37989c445a1da30bcb9583797e62",
+  "delta_seal_sha256": "39fdb2de8ae00aebf6b488e6c14e0b1122150cbab4dded41270716dc5775ed13",
+  "frozen_994_program_source": "845abb1f4ad3a2721d17f64899b6dc59d4bce66c",
+  "frozen_994_program": "4ef617a1888ec2fb48c45aae789b8cb21c2c6086f36b1a5d2efe56ceebadb4f9",
+  "virtual_1004_pack": "9e5a069e6978e00eb61325c935dfd952f01f97036407041063d685da82fdf9c7",
+  "limits": [
+    "No1004pack or programme written",
+    "Frozen994pack/programme preserved",
+    "Look/resources/performance/Flycast/release/hardware unaccepted"
+  ]
+}
