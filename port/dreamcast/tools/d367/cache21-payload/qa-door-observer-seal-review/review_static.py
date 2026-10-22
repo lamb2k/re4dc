@@ -1,0 +1,38 @@
+"""Source/hash/AST-only fixed-output review; no candidate imports or tests."""
+import ast,copy,datetime,hashlib,json,pathlib
+Q=pathlib.Path(r'\\wsl.localhost\Ubuntu-24.04\root\probe\codex-qa21-death-repair\port\dreamcast\tools\d367');P=Q/'qa21_nontrace_return_door_observer_v1';B=Q/'qa21_nontrace_observer_lifecycle_v1';OUT=pathlib.Path(__file__).parent
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();dump=lambda n:ast.dump(n,include_attributes=False)
+fns=lambda p:{n.name:n for n in ast.parse(p.read_text()).body if isinstance(n,ast.FunctionDef)}
+manifest=json.loads((P/'source-manifest.json').read_text());assert sha(P/'source-manifest.json')=='10223e4f0802f8ee8c0140c573bb66185a3f333d7e977cdf13119b7de88db4c0';pins=[]
+for name,row in manifest['files'].items():
+ p=P/name;assert p.stat().st_size==row['bytes'] and sha(p)==row['sha256'],name;pins.append(dict(path=name,bytes=p.stat().st_size,sha256=sha(p),absolute=pathlib.PureWindowsPath(name).is_absolute()))
+assert len(pins)==165 and sum(r['absolute'] for r in pins)==139
+runtime=['outer-driver.py','inner-adapter.py','windows-backend.py','guest-supervisor-core.py','input-deadlines.py','controller-core.py','policies.py','observe.py','observer-v2.py','layout-contract.py','capture-budget.py'];identities={n:dict(old=sha(B/n),new=sha(P/n),same=(B/n).read_bytes()==(P/n).read_bytes()) for n in runtime};assert [n for n,r in identities.items() if not r['same']]==['outer-driver.py','inner-adapter.py']
+assert (P/'guest-profile-v2.json').read_bytes()==(B/'guest-profile-v2.json').read_bytes();assert (P/'exact-log-symbols.json').read_bytes()==(B/'exact-log-symbols.json').read_bytes()
+oldouter=fns(B/'outer-driver.py');newouter=fns(P/'outer-driver.py');samefn=[]
+for n in oldouter:
+ if n not in ['output_paths','parse_args','main']:assert dump(oldouter[n])==dump(newouter[n]),n;samefn.append(n)
+oldinner=fns(B/'inner-adapter.py');newinner=fns(P/'inner-adapter.py')
+for n in oldinner:
+ if n not in ['validate_role','main']:assert dump(oldinner[n])==dump(newinner[n]),n;samefn.append('inner:'+n)
+expected=(B/'inner-adapter.py').read_text().replace("def validate_role(profile,mode,seed):\n roles=","def validate_role(profile,mode,seed):\n if mode!='return-door01':raise ValueError('this child seal allows only return-door01')\n roles=").replace(" profile=json.loads(a.profile.read_text());role=validate_role(profile,a.mode,a.seed);cap=a.cap\n"," profile=json.loads(a.profile.read_text());role=validate_role(profile,a.mode,a.seed);cap=a.cap\n if cap!=pathlib.Path(profile['evidence_root'])/'return-door-observer01':raise RuntimeError('wrong fixed child output contract')\n")
+assert (P/'inner-adapter.py').read_text()==expected
+expectedouter=(B/'outer-driver.py').read_text().replace("root=no_alias(profile['evidence_root']);cap=no_alias(root/mode);control=no_alias(root/(mode+'-control'))","root=no_alias(profile['evidence_root']);cap=no_alias(root/'return-door-observer01');control=no_alias(root/'return-door-observer01-control')").replace("def output_paths(profile,mode):\n","def output_paths(profile,mode):\n if mode!='return-door01':raise RuntimeError('this child seal allows only return-door01')\n").replace("choices=['cold-shoot01','return-door01','cinematic01']","choices=['return-door01']").replace("provisionalcap=root/a.mode;provisionalcontrol=root/(a.mode+'-control')","provisionalcap=root/'return-door-observer01';provisionalcontrol=root/'return-door-observer01-control'").replace("mode=a.mode,profile_sha256=","mode=a.mode,output_name='return-door-observer01',profile_sha256=")
+# Module docstring differs only in human description; all executable AST must match.
+assert dump(ast.Module(body=ast.parse(expectedouter).body[1:],type_ignores=[]))==dump(ast.Module(body=ast.parse((P/'outer-driver.py').read_text()).body[1:],type_ignores=[]))
+deps=[]
+for name in runtime:
+ for n in ast.walk(ast.parse((P/name).read_text())):
+  target=n.right.value if isinstance(n,ast.BinOp) and isinstance(n.op,ast.Div) and isinstance(n.left,ast.Name) and n.left.id=='P' and isinstance(n.right,ast.Constant) else n.args[0].value if isinstance(n,ast.Call) and isinstance(n.func,ast.Attribute) and n.func.attr=='with_name' and len(n.args)==1 and isinstance(n.args[0],ast.Constant) else None
+  if isinstance(target,str):assert (P/target).is_file() and (target=='source-manifest.json' or target in manifest['files']);deps.append(dict(module=name,line=n.lineno,target=target,sha256=sha(P/target)))
+profile=json.loads((P/'guest-profile-v2.json').read_text());reqpath=Q/'qa21_nontrace_run_preparation/return-door-observer-v1/LAUNCH-REQUEST.json';req=json.loads(reqpath.read_text());assert sha(reqpath)=='df3a3c17aff5e547ff532bf3b71012683040be1b68e2be9b25ac6ba2336254ef'
+assert req['argv'][-4:]==['--mode','return-door01','--seed',req['seed']['path']];assert req['argv'][1]==str(P/'outer-driver.py') and req['argv'][3]==str(P/'guest-profile-v2.json');assert req['argv'][5]==sha(P/'guest-profile-v2.json') and req['argv'][7]==sha(P/'source-manifest.json');assert req['automatic_retry'] is False
+root=pathlib.Path(profile['evidence_root']);cp=json.loads((root/'cold-shoot01/checkpoint.json').read_text());qual=json.loads((root/'cold-shoot01-control/qualification.json').read_text());failed=json.loads((root/'return-door01-control/qualification.json').read_text());assert qual['qualified'] is True and qual['profile_sha256']==sha(P/'guest-profile-v2.json') and failed['qualified'] is False;assert cp['audit']['state_sha256']==req['seed']['state_sha256'] and cp['audit']['frame']==533
+qualification=json.loads((P/'source-qualification.json').read_text());coverage=[]
+for platform,pin in qualification['new_contract_tests'].items():
+ path=P/pin['path'];assert sha(path)==pin['sha256'];r=json.loads(path.read_text());assert r['returncode']==0
+ for name,h in r['sources'].items():assert sha(P/name)==h,(platform,name)
+ coverage.append(dict(platform=platform,path=pin['path'],sha256=sha(path),retained_tests=8,current_source_hashes=True,rerun=False))
+pre=Q/'qa21_nontrace_run_preparation/return-door-observer-v1/readonly-preflight.json';assert sha(pre)=='a81cfa78a96f86e860db0ea9d4119168e5cda434013cb0e6e14538d2a865bf3e'
+report=dict(scope='Independent source/AST/hash review only; no candidate imports/tests/nativechildren/preflight/build/image/guest/reseal',utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),candidate='13bf23e9194a3b697a40245fbd5aa1f8fcec53c3',disposition='CLEAR bounded immutable fixed-output source seal; main allocation separate',tools=sha(P/'source-manifest.json'),profile=sha(P/'guest-profile-v2.json'),request=sha(reqpath),pins=pins,runtime=identities,unchanged_AST_functions=samefn,outer_executable_AST_exact_after_only_declared_changes=True,inner_text_exact_after_two_added_checks=True,literal_local_dependencies=deps,retained_coverage=coverage,retained_preflight=sha(pre),preflight_rerun=False,parent=dict(state=cp['audit']['state_sha256'],frame=533,qualified=True,same_profile=True),prior_door_qualified=False,output_contract=json.loads((P/'output-contract.json').read_text()),limits=profile['limits'],limitations=['No new guest/door/manual acceptance from source review','Original failedreturn-door01 remains false; new fixedoutput is distinct and existingtarget refuses','Lostfailinglivepointer unknown; reviewedlifecycle source exact, no failure replay','Main owns fresh source/native/global/resource checks and one explicit allocation'])
+(OUT/'review.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(dict(disposition=report['disposition'],pins=len(pins),unchanged_runtime=9,unchanged_AST_functions=len(samefn),literal_local_dependencies=len(deps))))
