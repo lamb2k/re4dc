@@ -3,12 +3,17 @@
 
 This is source/host/object evidence, NOT SH4 hardware or Flycast execution.
 Unknown opcodes, out-of-range reads, incomplete SQ bursts and write overruns
-fail. Oracle is the real backface_emit.hpp compiled without fast math/FMA.
+fail. Oracle preserves the original strip routine while lowering its single
+determinant expression to the actual CPU1 SH4 FMAC order. See build_oracle.py.
 """
-import argparse, collections, ctypes, hashlib, itertools, json, math, random, struct
+import argparse, collections, ctypes, ctypes.util, hashlib, itertools, json, math, random, struct
 from pathlib import Path
 
 U32=0xffffffff
+_libm=ctypes.CDLL(ctypes.util.find_library("m"))
+_fmaf=_libm.fmaf
+_fmaf.argtypes=[ctypes.c_float]*3
+_fmaf.restype=ctypes.c_float
 def signed(x,b=32):
     return x-(1<<b) if x&(1<<(b-1)) else x
 def f32(x):
@@ -135,6 +140,7 @@ class Machine:
         elif w&0xff00==0xc800: self.t=int(R[0]&(w&255)==0)
         elif w&0xff00==0x8800: self.t=int(R[0]==signed(w&255,8)&U32)
         elif w&0xf00f==0x3002: self.t=int(R[n]>=R[m])
+        elif w&0xf00f==0x3006: self.t=int(R[n]>R[m])
         elif w&0xf00f==0x3000: self.t=int(R[n]==R[m])
         elif w&0xf0ff==0x4011: self.t=int(signed(R[n])>=0)
         elif w&0xf0ff in (0x4008,0x4018,0x4028): R[n]=(R[n]<<{0x4008:2,0x4018:8,0x4028:16}[w&0xf0ff])&U32
@@ -159,6 +165,13 @@ class Machine:
             assert not self.fpscr&(1<<20),('unexpected double register move',hex(w))
             self.sf(n,self.f(m))
         elif w&0xf00f in (0xf001,0xf002): self.sf(n,self.arithmetic(w&15,self.f(n),self.f(m)))
+        elif w&0xf0ff==0xf04d: self.sf(n,self.f(n)^0x80000000)
+        elif w&0xf00f==0xf00e:
+            values=[self.f(0),self.f(m),self.f(n)]
+            if self.fpscr&(1<<18): values=[v&0x80000000 if v&0x7f800000==0 else v for v in values]
+            out=fbits(_fmaf(*[asfloat(v) for v in values]))
+            if self.fpscr&(1<<18) and out&0x7f800000==0: out&=0x80000000
+            self.sf(n,out)
         elif w&0xf00f==0xf005: self.t=int(asfloat(self.f(n))>asfloat(self.f(m)))
         elif w&0xf00f in (0xf008,0xf009):
             size=8 if self.fpscr&(1<<20) else 4
@@ -232,7 +245,9 @@ def main():
             for i,b in enumerate(bits):
                 want=(-1.0 if b else 1.0)*(-1.0 if i&1 else 1.0)
                 ys.append(2*ys[-1]-ys[-2]+want)
-            cases.append((generated_cache(list(enumerate(ys))),bytes(range(t+2)),255,2,'runs'))
+            for mask in (127,255):
+                cases.append((generated_cache(list(enumerate(ys))),bytes(range(t+2)),mask,2,'runs'))
+    cases.append((generated_cache([(0,0),(570.0137939453125,438.41583251953125),(1140.027587890625,876.8316650390625)]),bytes([0,1,2]),255,2,'FMAC-cancellation-witness'))
     rng=random.Random(0xbacface)
     for length in (0,1,2,3,4,7,31,64,127,255,256):
         for cull in (1,2):
@@ -240,6 +255,12 @@ def main():
             ix=bytes(rng.randrange(128) for _ in range(length))
             cases.append((generated_cache(pts),ix,127,cull,'random'))
     special=[0.0,-0.0,2**-126,2**-149,1.0,-1.0,3.4028234663852886e38,math.inf,-math.inf,math.nan]
+    for length in (16,64,127,255,256):
+        for cull in (1,2):
+            for mask in (127,255):
+                count=min(length,128) if mask==127 else length
+                pts=[(float(i),float((i&1)*2-1)) for i in range(count)]
+                cases.append((generated_cache(pts),bytes(range(count)),mask,cull,'long-zigzag'))
     for v in special:
         for cull in (1,2):
             cases.append((generated_cache([(0,0),(v,1),(1,v),(1,1),(2,2)]),bytes(range(5)),255,cull,'nonfinite/edge'))
@@ -265,14 +286,21 @@ def main():
     cache=generated_cache([(i,float(i%3)) for i in range(32)])
     ix=bytes([0,1,2,3,4,133,6,7,8,9,10,139])
     modecases=0
-    for fr,sz,pr,trace in itertools.product((0,1),repeat=4):
-        fpscr=(fr<<21)|(sz<<20)|(pr<<19)
+    for fr,sz,pr,dn,trace in itertools.product((0,1),repeat=5):
+        fpscr=(fr<<21)|(sz<<20)|(pr<<19)|(dn<<18)
         machine=Machine(texts[trace],cache,ix,383,2,fpscr,trace=bool(trace))
         assert machine.run()==oracle(cache,ix,383,2)
         modecases+=1
-    result=dict(scope='host interpretation of actual SH4 object opcodes plus actual C template oracle; no guest/hardware',
+    ax,ay=0.0,0.0
+    bx,by=570.0137939453125,438.41583251953125
+    cx,cy=1140.027587890625,876.8316650390625
+    product2=f32(f32(by-ay)*f32(cx-ax))
+    strict=f32(f32(f32(bx-ax)*f32(cy-ay))-product2)
+    fused=_fmaf(f32(bx-ax),f32(cy-ay),-product2)
+    assert fbits(strict)==0 and fbits(fused)==0xbc480b30
+    result=dict(arithmetic_witness=dict(strict_bits='00000000',target_fmac_bits='bc480b30',scope='host libm fmaf plus matching target-opcode execution'),scope='host interpretation of actual SH4 object opcodes plus original C template with target FMAC determinant lowering; no guest/hardware',
         cases=len(cases),per_case_trace_variants=2,comparisons=passed,case_groups=counts,
-        fpscr_fr_sz_pr_combinations=modecases,all_16_xf_sentinels_preserved=True,
+        fpscr_fr_sz_pr_dn_combinations=modecases,all_16_xf_sentinels_preserved=True,
         callee_registers_preserved=True,trace_hook_clobbers_checked=True,
         sq_bursts_complete=True,exact_emitted_words=True,max_interpreted_instructions=maxsteps,
         object_sha256={p.name:sha(p.read_bytes()) for p in args.objects.glob('*.o')},
