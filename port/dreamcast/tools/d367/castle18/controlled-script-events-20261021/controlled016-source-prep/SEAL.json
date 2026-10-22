@@ -1,0 +1,74 @@
+{
+  "controlled016-source-gates.json": {
+    "bytes": 1114,
+    "sha256": "cd0b72c7dcba3e666a27bf83f10e4f1aeb52a3578dd3a6818334c93e3d064be7"
+  },
+  "DOOR016-SOURCE-QUALIFIED-HANDBACK.json": {
+    "bytes": 4632,
+    "sha256": "7fd00559661bfe7c3d7fce4d9a5fe5e3ebc3823fdc11a6e6868ca5bcd0a3c31c"
+  },
+  "controlled016-native-door-DWARF.json": {
+    "bytes": 3778,
+    "sha256": "d2c7256bfabd385e081e1d2585a379fa7880a9419cde972a5966e3cb2e4e7912"
+  },
+  "INDEPENDENT-IMPLEMENTATION-REVIEW.json": {
+    "bytes": 3041,
+    "sha256": "eb1c06bd81c1bc1917f5b5c06b21eb1ca47e68c47e86a8d9df6c555b7ed249d8"
+  },
+  ".gitattributes": {
+    "bytes": 8,
+    "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+  },
+  "controlled016-ABI-WRITE-ALLOWLIST.json": {
+    "bytes": 5834,
+    "sha256": "c63c8ac0f3ab8ee4810fb3776286570631f2cd6126e454f01635b9e30e15dbaf"
+  },
+  "controlled-ch32-door016-pins.json": {
+    "bytes": 4627,
+    "sha256": "03f30e8c5e0bdc4ff8e9a58726c5e8b10ef3691b76c3dc83d0b7e020454de87d"
+  },
+  "INDEPENDENT-IMPLEMENTATION-SHA256SUMS": {
+    "bytes": 329,
+    "sha256": "6bdb49eef0c9bfaf88093e39634429f19215176e1c5d7dcf7568e5025b116984"
+  },
+  "observe-controlled-ch32-door016.py": {
+    "bytes": 18604,
+    "sha256": "718e1c2e2ede7ded9f2de6d74970447c94f2820e56c0f77e98d3f8709d7405cd"
+  },
+  "test-controlled016-source-gates.py": {
+    "bytes": 4634,
+    "sha256": "a2c9cc379fb6058eca2612c81cfb2ba4e5793de2eb22827853144d6483ba2783"
+  },
+  "extract-controlled016-native-door-DWARF.py": {
+    "bytes": 2736,
+    "sha256": "be4f9f65176e0f8cf4bb15da7bf4ddbd27f7873a8539caa57927c38e6d94063b"
+  },
+  "CONTROLLED016-SOURCE-LAUNCH-PROPOSAL.json": {
+    "bytes": 6169,
+    "sha256": "508bc5e6dc7f44a72668eee4729c769c9e9fa3ebfdb72220460f6291cb48a23c"
+  },
+  "controlled016-Warp-DWARF-redundant-original.json.gz": {
+    "bytes": 197332,
+    "sha256": "8e8169e550fa3ef27d642ae050260e40bb8ffa4586fa60b504257ead86205c9d"
+  },
+  "extract-controlled016-Warp-DWARF.py": {
+    "bytes": 2006,
+    "sha256": "3e9cab4d74469fbde926009db77e1e3a0e4f0d4b43b9d89c2803e458ea0d46ce"
+  },
+  "controlled016-frozen-Warp-DWARF.json": {
+    "bytes": 15004,
+    "sha256": "2aadd9424935d2cbe5e76d468d0a03d6ec25e0e6e319db1296a40b7e4c080b79"
+  },
+  "run-controlled-ch32-door016.py": {
+    "bytes": 8389,
+    "sha256": "41984c58a9b9160f826a33f7ae7575caa22fd295744c054f2c26b53878b860b8"
+  },
+  "README.md": {
+    "bytes": 647,
+    "sha256": "d8963f8701ba5ef4f9d537019c3336afa831a3a544f5171c34c61d2d45e77d9d"
+  },
+  "run-controlled-ch32-door016.sh": {
+    "bytes": 352,
+    "sha256": "155a7f6325a8d7bac65da90e040e5af9f1dc8916c27d459c9fb73b142ac64128"
+  }
+}

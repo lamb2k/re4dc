@@ -1,0 +1,97 @@
+{
+  "scope": "FINAL016 SOURCE QUALIFIED ONLY; root owns any exact ONE guest allocation/launch.",
+  "utc": "2026-10-22T06:22:33.611042+00:00",
+  "proposal_sha256": "508bc5e6dc7f44a72668eee4729c769c9e9fa3ebfdb72220460f6291cb48a23c",
+  "frozen_inputs": {
+    "observe-controlled-ch32-door016.py": "718e1c2e2ede7ded9f2de6d74970447c94f2820e56c0f77e98d3f8709d7405cd",
+    "run-controlled-ch32-door016.py": "41984c58a9b9160f826a33f7ae7575caa22fd295744c054f2c26b53878b860b8",
+    "run-controlled-ch32-door016.sh": "155a7f6325a8d7bac65da90e040e5af9f1dc8916c27d459c9fb73b142ac64128",
+    "controlled-ch32-door016-pins.json": "03f30e8c5e0bdc4ff8e9a58726c5e8b10ef3691b76c3dc83d0b7e020454de87d",
+    "controlled016-ABI-WRITE-ALLOWLIST.json": "c63c8ac0f3ab8ee4810fb3776286570631f2cd6126e454f01635b9e30e15dbaf",
+    "controlled016-frozen-Warp-DWARF.json": "2aadd9424935d2cbe5e76d468d0a03d6ec25e0e6e319db1296a40b7e4c080b79",
+    "controlled016-native-door-DWARF.json": "d2c7256bfabd385e081e1d2585a379fa7880a9419cde972a5966e3cb2e4e7912",
+    "controlled016-source-gates.json": "cd0b72c7dcba3e666a27bf83f10e4f1aeb52a3578dd3a6818334c93e3d064be7"
+  },
+  "independent_implementation_review": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle016-implementation-review21-20261022\\REVIEW.json",
+    "sha256": "eb1c06bd81c1bc1917f5b5c06b21eb1ca47e68c47e86a8d9df6c555b7ed249d8",
+    "seal_sha256": "6bdb49eef0c9bfaf88093e39634429f19215176e1c5d7dcf7568e5025b116984",
+    "existing_pure_cases": 24,
+    "narrow_checks": 25,
+    "default_pins": 26
+  },
+  "independent_route_review": {
+    "commit": "202fed03bd101fdd1769786a040e7b3d6edea98e",
+    "sha256": "2e7fe3a5ada2451f396746f25d781cb812910ed1938f85c7215ed8faa746e527",
+    "checks": 27
+  },
+  "seed_sha256": "2236156faabd0def3e9f38d708dbe983d2632441cd3fba521ef8fab634eb5237",
+  "allocation_gate": {
+    "file": "DOOR016-ROOT-ALLOCATION.json",
+    "allocated016": true,
+    "allow_debug_goto_command_writes": true,
+    "observer_sha256": "718e1c2e2ede7ded9f2de6d74970447c94f2820e56c0f77e98d3f8709d7405cd",
+    "wrapper_sha256": "41984c58a9b9160f826a33f7ae7575caa22fd295744c054f2c26b53878b860b8",
+    "pins_sha256": "03f30e8c5e0bdc4ff8e9a58726c5e8b10ef3691b76c3dc83d0b7e020454de87d",
+    "write_allowlist": [
+      {
+        "address": "0x8c47ff30",
+        "bytes": 24
+      },
+      {
+        "address": "0x8c47fff0",
+        "bytes": 4
+      }
+    ]
+  },
+  "root_argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-door016.sh",
+    "--execute-allocated016"
+  ],
+  "resources": {
+    "start_free_bytes": 20342374400,
+    "runtime_free_bytes": 19394461696,
+    "raw_seconds": 41,
+    "normalclose_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_cap_bytes": 62914560,
+    "global16": true,
+    "castle2": true,
+    "fresh_parent_peer_charges_required": true
+  },
+  "descriptor": {
+    "hex": "00000000a894e4454f331c46025e27470000000001000001",
+    "unpacked_binary32": [
+      0,
+      7314.58203125,
+      9996.8271484375,
+      42846.0078125,
+      0.0,
+      1,
+      0,
+      0,
+      1
+    ],
+    "scope": "SETUP ONLY existingdebugcommand. Engine done alone is consumption witness, not placement proof. Use actualpose/sourcehit/correctnativeaction at finalA recheck plus nativeexit/actual204Part1."
+  },
+  "limitations": [
+    "Source and mock tests do not establish actual command consumption, relocation, native Door0 execution, 204Part1 entry or cut completion.",
+    "Frame/phase/room brackets are consistency filters, not atomic runtime snapshots.",
+    "A native registered Door0 action plus clipped-front hit gates input; reported pose remains evidence to audit, not a chosen LOD/performance result.",
+    "Engine marks done before setPos; done alone is not placement acceptance.",
+    "Root must provide exact one-run write consent and fresh resource/process admission; no entry2/209 command is included.",
+    "Partial publication/write failures are retained without rollback; watcher owns bounded guest cleanup."
+  ],
+  "no_016_guest_started": true,
+  "no_build_or_image": true,
+  "source_budget": "Measured C source/metadata about305KB + mirror about280KB, below1MiB including exact lossless archive of redundantinitialDWARF. No protected game evidence removed.",
+  "frozen_guard_sha256": "7aa4113d44b5bab5b1010649a432ed1d50e34aaf4de7fb4899aaf692055b0ba0",
+  "additional_trace_lock_pin": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688"
+}

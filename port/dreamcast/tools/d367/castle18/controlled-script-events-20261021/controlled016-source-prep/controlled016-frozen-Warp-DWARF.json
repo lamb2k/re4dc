@@ -1,0 +1,558 @@
+{
+  "scope": "Exact frozen Warp/Goto only. Redundant GlobalWork declarations remain losslessly preserved in referenced gzip; native-door-DWARF separately proves selected GlobalWork offsets.",
+  "ELF_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "types": {
+    "Warp": [
+      {
+        "name": "Warp",
+        "depth": 2,
+        "die": "c877c4",
+        "size": 1836,
+        "members": {
+          "loaded": {
+            "offset": "0",
+            "type_die": "<0xc7fa5d>"
+          },
+          "active": {
+            "offset": "1",
+            "type_die": "<0xc7fa5d>"
+          },
+          "placed_logged": {
+            "offset": "2",
+            "type_die": "<0xc7fa5d>"
+          },
+          "applied": {
+            "offset": "3",
+            "type_die": "<0xc7fa5d>"
+          },
+          "dump": {
+            "offset": "4",
+            "type_die": "<0xc7fa5d>"
+          },
+          "name": {
+            "offset": "5",
+            "type_die": "<0xc880b3>"
+          },
+          "room": {
+            "offset": "38",
+            "type_die": "<0xc7e780>"
+          },
+          "jp": {
+            "offset": "40",
+            "type_die": "<0xc7e7e5>"
+          },
+          "has_pos": {
+            "offset": "44",
+            "type_die": "<0xc7fa5d>"
+          },
+          "has_dir": {
+            "offset": "45",
+            "type_die": "<0xc7fa5d>"
+          },
+          "has_area": {
+            "offset": "46",
+            "type_die": "<0xc7fa5d>"
+          },
+          "pos": {
+            "offset": "48",
+            "type_die": "<0xc840c0>"
+          },
+          "dir": {
+            "offset": "60",
+            "type_die": "<0xc7e7bc>"
+          },
+          "area_no": {
+            "offset": "64",
+            "type_die": "<0xc7e7e5>"
+          },
+          "area_dx": {
+            "offset": "68",
+            "type_die": "<0xc7e7bc>"
+          },
+          "area_dz": {
+            "offset": "72",
+            "type_die": "<0xc7e7bc>"
+          },
+          "rsf": {
+            "offset": "76",
+            "type_die": "<0xc880c3>"
+          },
+          "n_rsf": {
+            "offset": "204",
+            "type_die": "<0xc7e719>"
+          },
+          "scenario": {
+            "offset": "208",
+            "type_die": "<0xc80eea>"
+          },
+          "find": {
+            "offset": "216",
+            "type_die": "<0xc7e798>"
+          },
+          "unlock": {
+            "offset": "220",
+            "type_die": "<0xc80eea>"
+          },
+          "items": {
+            "offset": "228",
+            "type_die": "<0xc80eea>"
+          },
+          "status": {
+            "offset": "236",
+            "type_die": "<0xc80e57>"
+          },
+          "chapter": {
+            "offset": "252",
+            "type_die": "<0xc7e7e5>"
+          },
+          "dead": {
+            "offset": "256",
+            "type_die": "<0xc81caa>"
+          },
+          "n_dead": {
+            "offset": "320",
+            "type_die": "<0xc7e719>"
+          },
+          "act": {
+            "offset": "324",
+            "type_die": "<0xc880d3>"
+          },
+          "n_act": {
+            "offset": "836",
+            "type_die": "<0xc7e719>"
+          },
+          "has_trg": {
+            "offset": "840",
+            "type_die": "<0xc7fa5d>"
+          },
+          "trg_fired": {
+            "offset": "841",
+            "type_die": "<0xc7fa5d>"
+          },
+          "trg_no": {
+            "offset": "844",
+            "type_die": "<0xc7e7e5>"
+          },
+          "trg_frame": {
+            "offset": "848",
+            "type_die": "<0xc7e798>"
+          },
+          "trg_room": {
+            "offset": "852",
+            "type_die": "<0xc7e780>"
+          },
+          "has_kill": {
+            "offset": "854",
+            "type_die": "<0xc7fa5d>"
+          },
+          "kill_done": {
+            "offset": "855",
+            "type_die": "<0xc7fa5d>"
+          },
+          "kill_id": {
+            "offset": "856",
+            "type_die": "<0xc7e7e5>"
+          },
+          "kill_frame": {
+            "offset": "860",
+            "type_die": "<0xc7e798>"
+          },
+          "kill_hits": {
+            "offset": "864",
+            "type_die": "<0xc7e798>"
+          },
+          "kill_room": {
+            "offset": "868",
+            "type_die": "<0xc7e780>"
+          },
+          "kill_kind": {
+            "offset": "870",
+            "type_die": "<0xc7e764>"
+          },
+          "kill_em": {
+            "offset": "872",
+            "type_die": "<0xc81ce0>"
+          },
+          "kill_cur": {
+            "offset": "876",
+            "type_die": "<0xc7e7e5>"
+          },
+          "kill_watch": {
+            "offset": "880",
+            "type_die": "<0xc7e798>"
+          },
+          "away_from": {
+            "offset": "884",
+            "type_die": "<0xc7e798>"
+          },
+          "away_to": {
+            "offset": "888",
+            "type_die": "<0xc7e798>"
+          },
+          "away_pos": {
+            "offset": "892",
+            "type_die": "<0xc840c0>"
+          },
+          "atf_frame": {
+            "offset": "904",
+            "type_die": "<0xc7e798>"
+          },
+          "atf_no": {
+            "offset": "908",
+            "type_die": "<0xc7e7e5>"
+          },
+          "atf_done": {
+            "offset": "912",
+            "type_die": "<0xc7fa5d>"
+          },
+          "etd_frame": {
+            "offset": "916",
+            "type_die": "<0xc7e798>"
+          },
+          "etd_no": {
+            "offset": "920",
+            "type_die": "<0xc7e7e5>"
+          },
+          "etd_or": {
+            "offset": "924",
+            "type_die": "<0xc7e798>"
+          },
+          "etd_done": {
+            "offset": "928",
+            "type_die": "<0xc7fa5d>"
+          },
+          "kill_rep": {
+            "offset": "932",
+            "type_die": "<0xc7e798>"
+          },
+          "kill_gap": {
+            "offset": "936",
+            "type_die": "<0xc7e798>"
+          },
+          "kill_part": {
+            "offset": "940",
+            "type_die": "<0xc7e732>"
+          },
+          "kill_near": {
+            "offset": "942",
+            "type_die": "<0xc7fa5d>"
+          },
+          "has_hand": {
+            "offset": "943",
+            "type_die": "<0xc7fa5d>"
+          },
+          "hand_done": {
+            "offset": "944",
+            "type_die": "<0xc7fa5d>"
+          },
+          "bring": {
+            "offset": "948",
+            "type_die": "<0xc7e798>"
+          },
+          "bring_side": {
+            "offset": "952",
+            "type_die": "<0xc7e745>"
+          },
+          "hand_frame": {
+            "offset": "956",
+            "type_die": "<0xc7e798>"
+          },
+          "hand_type": {
+            "offset": "960",
+            "type_die": "<0xc7e7e5>"
+          },
+          "hand_id": {
+            "offset": "964",
+            "type_die": "<0xc7e7e5>"
+          },
+          "alive_period": {
+            "offset": "968",
+            "type_die": "<0xc7e798>"
+          },
+          "alive_last": {
+            "offset": "972",
+            "type_die": "<0xc7e798>"
+          },
+          "has_drop": {
+            "offset": "976",
+            "type_die": "<0xc7fa5d>"
+          },
+          "drop_id": {
+            "offset": "978",
+            "type_die": "<0xc7e780>"
+          },
+          "drop_num": {
+            "offset": "980",
+            "type_die": "<0xc7e7e5>"
+          },
+          "go": {
+            "offset": "984",
+            "type_die": "<0xc880e3>"
+          },
+          "n_go": {
+            "offset": "1176",
+            "type_die": "<0xc7e719>"
+          },
+          "arm": {
+            "offset": "1180",
+            "type_die": "<0xc880f3>"
+          },
+          "n_arm": {
+            "offset": "1244",
+            "type_die": "<0xc7e719>"
+          },
+          "has_radio": {
+            "offset": "1248",
+            "type_die": "<0xc7fa5d>"
+          },
+          "radio_done": {
+            "offset": "1249",
+            "type_die": "<0xc7fa5d>"
+          },
+          "radio_frame": {
+            "offset": "1252",
+            "type_die": "<0xc7e798>"
+          },
+          "radio_no": {
+            "offset": "1256",
+            "type_die": "<0xc7e7e5>"
+          },
+          "census": {
+            "offset": "1260",
+            "type_die": "<0xc865eb>"
+          },
+          "census_done": {
+            "offset": "1284",
+            "type_die": "<0xc88103>"
+          },
+          "n_census": {
+            "offset": "1292",
+            "type_die": "<0xc7e719>"
+          },
+          "lodat": {
+            "offset": "1296",
+            "type_die": "<0xc88113>"
+          },
+          "n_lodat": {
+            "offset": "1424",
+            "type_die": "<0xc7e719>"
+          },
+          "charbake_at": {
+            "offset": "1428",
+            "type_die": "<0xc88123>"
+          },
+          "n_charbake_at": {
+            "offset": "1492",
+            "type_die": "<0xc7e719>"
+          },
+          "lookstep": {
+            "offset": "1496",
+            "type_die": "<0xc88133>"
+          },
+          "n_lookstep": {
+            "offset": "1624",
+            "type_die": "<0xc7e719>"
+          },
+          "act_source_clock": {
+            "offset": "1628",
+            "type_die": "<0xc7fa5d>"
+          },
+          "parse_entry": {
+            "offset": "1629",
+            "type_die": "<0xc7e764>"
+          },
+          "max_entry": {
+            "offset": "1630",
+            "type_die": "<0xc7e764>"
+          },
+          "room_frames": {
+            "offset": "1632",
+            "type_die": "<0xc7e798>"
+          },
+          "first_room_gen": {
+            "offset": "1636",
+            "type_die": "<0xc7e798>"
+          },
+          "rooms": {
+            "offset": "1640",
+            "type_die": "<0xc7e798>"
+          },
+          "pad_frames": {
+            "offset": "1644",
+            "type_die": "<0xc7e798>"
+          },
+          "cur_act": {
+            "offset": "1648",
+            "type_die": "<0xc7e7e5>"
+          },
+          "cur_until": {
+            "offset": "1652",
+            "type_die": "<0xc7e798>"
+          },
+          "next_act": {
+            "offset": "1656",
+            "type_die": "<0xc7e719>"
+          },
+          "boot_us": {
+            "offset": "1660",
+            "type_die": "<0xc7e712>"
+          },
+          "card_frames": {
+            "offset": "1668",
+            "type_die": "<0xc7e798>"
+          },
+          "last_pad_vbl": {
+            "offset": "1672",
+            "type_die": "<0xc7e798>"
+          },
+          "has_late": {
+            "offset": "1676",
+            "type_die": "<0xc7fa5d>"
+          },
+          "late_logged": {
+            "offset": "1677",
+            "type_die": "<0xc7fa5d>"
+          },
+          "late_mask": {
+            "offset": "1680",
+            "type_die": "<0xc7e798>"
+          },
+          "late_tick": {
+            "offset": "1684",
+            "type_die": "<0xc7e798>"
+          },
+          "late_room": {
+            "offset": "1688",
+            "type_die": "<0xc7e780>"
+          },
+          "god": {
+            "offset": "1690",
+            "type_die": "<0xc7fa5d>"
+          },
+          "has_alert": {
+            "offset": "1691",
+            "type_die": "<0xc7fa5d>"
+          },
+          "alert_done": {
+            "offset": "1692",
+            "type_die": "<0xc7fa5d>"
+          },
+          "face_mode": {
+            "offset": "1693",
+            "type_die": "<0xc7e764>"
+          },
+          "face_n": {
+            "offset": "1694",
+            "type_die": "<0xc7e764>"
+          },
+          "face_ring": {
+            "offset": "1696",
+            "type_die": "<0xc88143>"
+          },
+          "face_id": {
+            "offset": "1728",
+            "type_die": "<0xc80efa>"
+          },
+          "alert_frame": {
+            "offset": "1736",
+            "type_die": "<0xc7e798>"
+          },
+          "b108_frame": {
+            "offset": "1740",
+            "type_die": "<0xc7e798>"
+          },
+          "b108_n": {
+            "offset": "1744",
+            "type_die": "<0xc7e798>"
+          },
+          "b108_gap": {
+            "offset": "1748",
+            "type_die": "<0xc7e798>"
+          },
+          "alert_entry": {
+            "offset": "1752",
+            "type_die": "<0xc7e764>"
+          },
+          "has_freeze": {
+            "offset": "1753",
+            "type_die": "<0xc7fa5d>"
+          },
+          "freeze_tick": {
+            "offset": "1756",
+            "type_die": "<0xc7e798>"
+          },
+          "still_tick": {
+            "offset": "1760",
+            "type_die": "<0xc80eda>"
+          },
+          "still_ms": {
+            "offset": "1792",
+            "type_die": "<0xc80eda>"
+          },
+          "n_still": {
+            "offset": "1824",
+            "type_die": "<0xc7e719>"
+          },
+          "still_next": {
+            "offset": "1828",
+            "type_die": "<0xc7e719>"
+          },
+          "observe_ready": {
+            "offset": "1832",
+            "type_die": "<0xc7fa5d>"
+          },
+          "observe_room": {
+            "offset": "1834",
+            "type_die": "<0xc7e780>"
+          }
+        }
+      }
+    ],
+    "Goto": [
+      {
+        "name": "Goto",
+        "depth": 3,
+        "die": "c877d2",
+        "size": 24,
+        "members": {
+          "frame": {
+            "offset": "0",
+            "type_die": "<0xc7e798>"
+          },
+          "pos": {
+            "offset": "4",
+            "type_die": "<0xc840c0>"
+          },
+          "ang": {
+            "offset": "16",
+            "type_die": "<0xc7e7bc>"
+          },
+          "has_ang": {
+            "offset": "20",
+            "type_die": "<0xc7fa5d>"
+          },
+          "done": {
+            "offset": "21",
+            "type_die": "<0xc7fa5d>"
+          },
+          "sub": {
+            "offset": "22",
+            "type_die": "<0xc7fa5d>"
+          },
+          "entry": {
+            "offset": "23",
+            "type_die": "<0xc7e764>"
+          }
+        }
+      }
+    ]
+  },
+  "variables": [],
+  "preserved_original": {
+    "path": "controlled016-Warp-DWARF-redundant-original.json.gz",
+    "uncompressed_sha256": "60e444e63acdf5788bfa14b8ca0a08bf93ea120bfd4c3c667ee155245c0e5dd5",
+    "uncompressed_bytes": 4119868,
+    "gzip_sha256": "8e8169e550fa3ef27d642ae050260e40bb8ffa4586fa60b504257ead86205c9d",
+    "gzip_bytes": 197332
+  }
+}
