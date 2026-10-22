@@ -646,6 +646,12 @@ DATA['res18f'] = {'dc/resident.bin': RES18FD + '/resident.bin'}
 # in-play uploads of 13 rooms; 5,502 records, sha256 8fb526cc (= vram/resident/RELEASE.sha256). Last: replaces res18f's.
 RES22D = os.environ.get('RES22D', '/root/re4data/private/res22-20261022')
 DATA['res22'] = {'dc/resident.bin': RES22D + '/resident.bin'}
+# Lane codex22 (10-22, Codex audit unit, data only, no knob): lake22 = the lake trees' bark fix (Codex issue52-visuals
+# a8bd34686, repair_lake_bark.py): PS2 image 2 (bark) is GC image 4, so 406 bark triangles drew under the alpha-masked
+# branch material and the trees looked fragmented. st1/r10b.dar 39bd07e1 -> 8c84649b (same 5,808,128 B; 5,079 bytes of
+# BIN 0x1e change; all 529 PS2 triangles kept). Input = the release disc's r10b.dar (checked on cand-d3733810).
+LAKE22D = os.environ.get('LAKE22D', '/root/re4data/private/lake22-20261022')
+DATA['lake22'] = {'st1/r10b.dar': LAKE22D + '/r10b.dar'}
 # Release lane rel18 (10-19, Test 18 item 10): garr18h = the LEON_HEADLESS v2 archives of data set garr18-head-20261019
 # (tools/d367/ps2leon/build_head.py): em/pl00.drs and em/pl08.drs with GC arc 0xC stubbed and the PS2 severed head as
 # its payload. Built from the payload disc's pl00 (1fdb5378) / pl08 (f4acbfad); no set on the Test 18 line stages either.
