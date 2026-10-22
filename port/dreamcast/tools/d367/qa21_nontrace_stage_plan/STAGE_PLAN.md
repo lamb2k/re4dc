@@ -1,6 +1,6 @@
-# Corrected-reader standalone stage: final review plan only
+# Corrected-reader standalone stage qualification
 
-No image/copy/stage/guest has started. Main must review this exact plan and allocate the stage after fresh resource checks. This source-only unit stays within the existing20MiB metadata/tools allocation. Claude retains production merge/release; no default, recipe, SD, publication or third-party work.
+Latest: main approved exactly one attempt from6fd506a79/config4c912017. Standalone stage-001 and independent full readback now PASS, expected image da10104f...8bde7f. No guest has run or been allocated. The historical reviewed plan follows; completed evidence is sealed in stage-001-qualification.json. This source-only unit stays within the existing20MiB metadata/tools allocation. Claude retains production merge/release; no default, recipe, SD, publication or third-party work.
 
 ## Fixed inputs and prospective result
 
@@ -46,3 +46,14 @@ Future invocation, only after explicit main review/allocation, is stage-supervis
 
 
 Main source review follow-up: original16-pass writer/supervisor/config/review/diffs are preserved exactly in review-prior-16pass/ and are not approved for execution. The revised supervisor catches/records pipe close errors while unconditional outer finally still stops/waits the owned group; a real child close(0)+ready+sleep test forces both release and close BrokenPipe and proves no orphan. Root/ancestor alias rejection occurs before supervisor mkdir/lock/marker. Writer source identity must equal the reviewed virtual plan device/inode/mtime/size/linkcount, not merely a fresh pre/post self-comparison; same-byte+mtime replacement is rejected. Current source stat matches reviewed device64/inode9851624185038722/mtime1792623951191148500/size1032499200/link1. Nineteen host tests pass. Revised exact hashes/config and diffs are in writer-review.json; no actual stage main/image creation is authorized or performed.
+
+
+## Completed one-attempt stage and independent readback
+
+Reviewed source6fd506a79/config4c912017 was executed once after fresh C20973142016B exceeded admission20825558220B and no Flycast was active. Writer PID/PGID992823/procstart3910895 exited0, supervisor qualifiedtrue in70.6162515s; minimumC19936587776B, peak charged1035678270B<cap1288490188B. No retry or partial abandoned image. All image writes were by the exact reviewed supervisor/writer.
+
+Result track03 SHA da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f, raw52190ed2 and ELF248dd4aa. New native fileID000000000000000000030000004cbccd/link1 differs from unchanged sourceID00000000000000000023000000028780/link1. Independent separate readback PID993288/procstart3925126 exited0 after115.8085502s, minC19935387648B: full target/sourceSHA,1743files,1728unrelated extent/size/hash,14newELF image/relocation/main-text bindings, primary-only ISO root, fixedIP and source KEEP/evidence identities pass. No source mutation, ELFcopy, extraction, shared image identity or oldstate transfer occurred.
+
+Exact candidate recipe matches main recipe725a3728... and resolved-knobs SHA b9892753...; private recipe copies preserve full text. GANADO_ROUTINE_BYTES1/GAME_SH4ZAM1/render-only1/SKIN_SH4ZAM0/QA_MENU1/CABIN_SOURCE0; all15 main cache guards0, DEATH_TRACE absent and no trace helpers/text. Trace-only observer fields remain unavailable. Main's separate cache/index successor is not part of this image.
+
+Private disc: C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu. Full actual manifest, writer/supervisor/independent receipts, resource closeout, native IDs, source identities, KEEP, recipe and logs are retained in that attempt. stage-001-qualification.json and copied receipts pin exact artifacts. All writer/readback handles are closed. These are stage/readback results only, separate from Flycast functional results, release checks and physical Dreamcast acceptance. No screenshot or new gameplay evidence exists yet. Main must allocate any new cold guest separately; no automatic execution follows.

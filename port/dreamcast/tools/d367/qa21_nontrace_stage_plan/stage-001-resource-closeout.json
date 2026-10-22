@@ -1,0 +1,118 @@
+{
+  "scope": "Resource closeout after stage qualification/recipe/native receipts; no guest",
+  "utc": "2026-10-22T00:34:22.137920+00:00",
+  "cumulative_before_this_closeout": {
+    "bytes": 1035425214,
+    "entries": [
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/budget-identity.json",
+        "logical": 307,
+        "allocated": 0,
+        "charged": 307
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/writer.log",
+        "logical": 557,
+        "allocated": 0,
+        "charged": 557
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/supervisor-receipt.json",
+        "logical": 2875,
+        "allocated": 4096,
+        "charged": 4096
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/stage-receipt.json",
+        "logical": 6203,
+        "allocated": 8192,
+        "charged": 8192
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/recipe/resolved-knobs.txt",
+        "logical": 233203,
+        "allocated": 233472,
+        "charged": 233472
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/recipe/candidate.txt",
+        "logical": 5152,
+        "allocated": 8192,
+        "charged": 8192
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/qualification.json",
+        "logical": 6252,
+        "allocated": 8192,
+        "charged": 8192
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/owned-process.json",
+        "logical": 64,
+        "allocated": 0,
+        "charged": 64
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/native-image-identity.json",
+        "logical": 294,
+        "allocated": 0,
+        "charged": 294
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/KEEP.txt",
+        "logical": 165,
+        "allocated": 0,
+        "charged": 165
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/track03.iso",
+        "logical": 1032499200,
+        "allocated": 1032499200,
+        "charged": 1032499200
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/track02.raw",
+        "logical": 1237152,
+        "allocated": 1241088,
+        "charged": 1241088
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/track01.bin",
+        "logical": 1058400,
+        "allocated": 1060864,
+        "charged": 1060864
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/disc.gdi",
+        "logical": 83,
+        "allocated": 0,
+        "charged": 83
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/independent-readback.json",
+        "logical": 6017,
+        "allocated": 8192,
+        "charged": 8192
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/file-manifest.json",
+        "logical": 327006,
+        "allocated": 327680,
+        "charged": 327680
+      },
+      {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/.supervisor.lock",
+        "logical": 0,
+        "allocated": 0,
+        "charged": 0
+      }
+    ]
+  },
+  "cap_bytes": 1288490188,
+  "runtime_floor": 19394461696,
+  "fresh_C_bytes": 19910471680,
+  "owned_processes_gone": true,
+  "output_files_retained": true,
+  "automatic_retry": false,
+  "guest_run": false
+}
