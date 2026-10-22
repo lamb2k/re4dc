@@ -1973,6 +1973,11 @@ int re4dc_warp_late_set(void) { return wp.has_late ? 1 : 0; }
 // WORLD_METER (game30.mk): the room the VRAMFAIL lines name (tick_log.cpp, once per tick).
 unsigned re4dc_wm_room(void) { return pG ? (unsigned) pG->room_id : 0u; }
 #endif
+// Read-only activation query, including mask0 OFF controls; does not log or arm.
+int re4dc_warp_late_open(void)
+{
+    return wp.has_late && pG && pG->room_id == wp.late_room && pG->Frame_cnt >= wp.late_tick ? 1 : 0;
+}
 
 }  // extern "C"
 #endif  // RE4DC_DBG_WARP
