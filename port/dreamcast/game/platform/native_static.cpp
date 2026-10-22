@@ -20,8 +20,8 @@
 #define RE4DC_WORLD_RECT21 0
 #endif
 #if RE4DC_WORLD_RECT21
-#if !RE4DC_PS2_WORLD_DRAW || !RE4DC_PS2_WORLD_MESH || !RE4DC_MESH_DIRECT
-#error WORLD_RECT21 requires the qualified PS2 world mesh direct consumer
+#if !RE4DC_PS2_WORLD_DRAW || !RE4DC_PS2_WORLD_MESH
+#error WORLD_RECT21 provenance requires the PS2 world mesh consumer
 #endif
 #include "../../tools/d367/texture_rect21/world_rect_provenance.h"
 #endif
