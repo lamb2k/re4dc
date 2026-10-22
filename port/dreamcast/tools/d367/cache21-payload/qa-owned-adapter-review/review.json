@@ -1,0 +1,447 @@
+{
+  "scope": "SOURCE/hash/AST/retained receipts only; no imports/tests/nativequery/image/state/preflight/Flycast/allocation/reseal",
+  "utc": "2026-10-22T07:42:02.463153+00:00",
+  "candidate": "1cb552bbe4d9f734ba2962b22307eb118bbfa297",
+  "disposition": "CLEAR bounded source-only adapter wiring; not adoption/nativeinterop or execution permission",
+  "pins": {
+    "integrity": [
+      {
+        "path": ".gitattributes",
+        "bytes": 93,
+        "sha256": "fe5bc4af5132485cecbdabe96ef5a97e610451db0221188911d0f3afe3959284"
+      },
+      {
+        "path": "ADAPTER_WORKFLOW.md",
+        "bytes": 7133,
+        "sha256": "6ccb673044b499d743540f8336cbeaa8127ab0f1c57596e9e0e5083cae431fd4"
+      },
+      {
+        "path": "CLAIM.md",
+        "bytes": 350,
+        "sha256": "b6636e169406853637dd34bfb555ce8faddb9b11cb395fca2031f3c52e4ad9b8"
+      },
+      {
+        "path": "DEVELOPMENT.json",
+        "bytes": 693,
+        "sha256": "c221ed9091e9d2fb0be3592b6eb894a342fbe9e4a066b9fd10abd89959c32d0d"
+      },
+      {
+        "path": "EXTRA_REFERENCE_RECEIPT.json",
+        "bytes": 719,
+        "sha256": "1488c51fff53a60d72fd9e1addcb2f88a5996f187ff110f3207a90aeebda894c"
+      },
+      {
+        "path": "FUTURE_ROOT_ALLOCATION_BYTES.json",
+        "bytes": 930,
+        "sha256": "b3d6d2cb9669de8ddb51967d2168b699f54aa3cce783678d75cd4dd9c1e3dc41"
+      },
+      {
+        "path": "LAUNCH_REQUEST.json",
+        "bytes": 3458,
+        "sha256": "59ce668eff65fe289e14d6360d98d5766e505b42335c606d565c78ca0cea9ed6"
+      },
+      {
+        "path": "NATIVE_INTEROP_PLAN.json",
+        "bytes": 1903,
+        "sha256": "5ffa31d022201819cecf4a5fae94b8bb8202dcd1650d30617b172fdd3a831564"
+      },
+      {
+        "path": "REVIEWED_COMPONENTS.json",
+        "bytes": 1203,
+        "sha256": "0152755ba96fcf62b86b2876565bafa297ad48d30c03bc43941394ae33a853ac"
+      },
+      {
+        "path": "SEED_CONTRACT.json",
+        "bytes": 380,
+        "sha256": "2d8c4a5f9c3812ec1c746c0c3ce5c031029ed471cd752885c307564ba00093eb"
+      },
+      {
+        "path": "WIRING_DELTA_PROOF.json",
+        "bytes": 5406,
+        "sha256": "a532414c7a27d569c0d7c24f310092eadce9a5190808e0102d96c67eb1f30153"
+      },
+      {
+        "path": "adapter-source.diff",
+        "bytes": 15749,
+        "sha256": "858b54091cf1865598249a3e70ba46ac27a9ba06f177d73d12324be18d676640"
+      },
+      {
+        "path": "capture-budget.py",
+        "bytes": 712,
+        "sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda"
+      },
+      {
+        "path": "controller-core.py",
+        "bytes": 7468,
+        "sha256": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b"
+      },
+      {
+        "path": "exact-log-symbols.json",
+        "bytes": 634,
+        "sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29"
+      },
+      {
+        "path": "global-ui-ABI-supplement.json",
+        "bytes": 1860,
+        "sha256": "44a0a870112b16bca38bda2a06e5e325d39bd17a57aae82c1ab302c1639aa2dc"
+      },
+      {
+        "path": "guest-profile-v2.json",
+        "bytes": 13113,
+        "sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b"
+      },
+      {
+        "path": "guest-supervisor-core.py",
+        "bytes": 5185,
+        "sha256": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb"
+      },
+      {
+        "path": "inner-adapter.py",
+        "bytes": 15902,
+        "sha256": "3f576be885b7f165f9d3a40ef6fd75292114db881754c620f159417223452758"
+      },
+      {
+        "path": "input-deadlines.py",
+        "bytes": 3728,
+        "sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9"
+      },
+      {
+        "path": "layout-contract.py",
+        "bytes": 4606,
+        "sha256": "74754ec6977299b1268bc8c1a48423e42bed9e3b236d96e84cec36e255667b2e"
+      },
+      {
+        "path": "observe.py",
+        "bytes": 8571,
+        "sha256": "ab9f4d942bb2fac633ad16ba4ed81d8ee8f0e38e69cd0fbd3f906ce9b333d6dc"
+      },
+      {
+        "path": "observer-v2.py",
+        "bytes": 11338,
+        "sha256": "b4ce92c72aba84010a4b22db372622415433c3ad531adae26bc17eed5dc7194c"
+      },
+      {
+        "path": "outer-driver.py",
+        "bytes": 16339,
+        "sha256": "aff7a57f9e6c69b7043d1e11a655879bb29d0a506a30e84941c61838d8c5cfbe"
+      },
+      {
+        "path": "policies.py",
+        "bytes": 4231,
+        "sha256": "f1f23f2ae281f9e35410d2a51fee6de13dc18d1643501644955fc0d40b92e899"
+      },
+      {
+        "path": "receipt-initial20-linux.json",
+        "bytes": 5805,
+        "sha256": "1ac8d7eb7217391beadf4056ec83cd755118eec6e34bcb518e2e297ad1d5e771"
+      },
+      {
+        "path": "receipt-initial20-windows.json",
+        "bytes": 5850,
+        "sha256": "d9797ed3d69957f09e1b3a247e47f3c547d17b89f8a60048e3cf4e7180b210b5"
+      },
+      {
+        "path": "receipt-linux.json",
+        "bytes": 6141,
+        "sha256": "96a039b6e09cdf4c3663e75d3d4e1efcdd1ef598872a33c2cc6b4f9ef0164ec7"
+      },
+      {
+        "path": "receipt-windows.json",
+        "bytes": 6186,
+        "sha256": "78fa0c6e218e16e996a8fd3a0b81a8f201b987a88c074350123e0f396f1712a8"
+      },
+      {
+        "path": "reference-hooks/COLLECTOR_CONTRACT.json",
+        "bytes": 5411,
+        "sha256": "ff15e0f1ae5dd059a01f71bd25245b16c977f576ece6f8c0d07ff6b30a4546b1"
+      },
+      {
+        "path": "reference-hooks/checkpoint_runner18.child.py",
+        "bytes": 18115,
+        "sha256": "b9229b91c96c4b8bbc0417e9a0822e419c3eda04f64506f50e32b3d5349584e6"
+      },
+      {
+        "path": "reference-hooks/child_reference_proxy.py",
+        "bytes": 5369,
+        "sha256": "35fd3ab48a43f7a0604770b8b2b1708d0eb546371bd2101eb21ae3e022b6af19"
+      },
+      {
+        "path": "reference-hooks/native_reference_api.py",
+        "bytes": 9151,
+        "sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255"
+      },
+      {
+        "path": "reference-hooks/parent_reference_broker.py",
+        "bytes": 16780,
+        "sha256": "4d77a1871d197a91c4cdf8321afbcd44dc929ee7118fefaa5691b499024df75f"
+      },
+      {
+        "path": "reference-hooks/reference_collector.py",
+        "bytes": 6856,
+        "sha256": "fb86ea60f8d39f61aa25e6a5facc5c3eafa11a695f2bf3ee40211243be17165d"
+      },
+      {
+        "path": "reference-hooks/retained-all-track-declarations.json",
+        "bytes": 4295,
+        "sha256": "dc7e2d19fce835f3d68cde66ae1a15afd3705dabb982921730fdd43cc92a0af0"
+      },
+      {
+        "path": "run_wiring_tests.py",
+        "bytes": 1485,
+        "sha256": "50dc6a42f5080d5b927d67e40bd23b0dbfb2f6dfbbb772edeb0ea8091b23ec8e"
+      },
+      {
+        "path": "source-manifest.json",
+        "bytes": 4419,
+        "sha256": "8eac4789a775333c218ede0292569e88cb54971ec295da9552d38b6332e956f1"
+      },
+      {
+        "path": "test_wiring.py",
+        "bytes": 19194,
+        "sha256": "4e192b44ec5a950845dfd5a3088a8ad27d27e7d8352222bfadc0be9387f18429"
+      },
+      {
+        "path": "windows-backend.py",
+        "bytes": 16010,
+        "sha256": "0b0646c7d2d704707922ee671fafea5edeb97d7d160fa4a6f698f97555702a55"
+      },
+      {
+        "path": "wiring-backend.py",
+        "bytes": 4334,
+        "sha256": "69b4a350882d0b65f50fdec0ce8545822853bf6d911b261c6a5332c123d1ba9c"
+      }
+    ],
+    "runtime": [
+      {
+        "path": "EXTRA_REFERENCE_RECEIPT.json",
+        "bytes": 719,
+        "sha256": "1488c51fff53a60d72fd9e1addcb2f88a5996f187ff110f3207a90aeebda894c"
+      },
+      {
+        "path": "REVIEWED_COMPONENTS.json",
+        "bytes": 1203,
+        "sha256": "0152755ba96fcf62b86b2876565bafa297ad48d30c03bc43941394ae33a853ac"
+      },
+      {
+        "path": "SEED_CONTRACT.json",
+        "bytes": 380,
+        "sha256": "2d8c4a5f9c3812ec1c746c0c3ce5c031029ed471cd752885c307564ba00093eb"
+      },
+      {
+        "path": "capture-budget.py",
+        "bytes": 712,
+        "sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda"
+      },
+      {
+        "path": "controller-core.py",
+        "bytes": 7468,
+        "sha256": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b"
+      },
+      {
+        "path": "exact-log-symbols.json",
+        "bytes": 634,
+        "sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29"
+      },
+      {
+        "path": "global-ui-ABI-supplement.json",
+        "bytes": 1860,
+        "sha256": "44a0a870112b16bca38bda2a06e5e325d39bd17a57aae82c1ab302c1639aa2dc"
+      },
+      {
+        "path": "guest-profile-v2.json",
+        "bytes": 13113,
+        "sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b"
+      },
+      {
+        "path": "guest-supervisor-core.py",
+        "bytes": 5185,
+        "sha256": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb"
+      },
+      {
+        "path": "inner-adapter.py",
+        "bytes": 15902,
+        "sha256": "3f576be885b7f165f9d3a40ef6fd75292114db881754c620f159417223452758"
+      },
+      {
+        "path": "input-deadlines.py",
+        "bytes": 3728,
+        "sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9"
+      },
+      {
+        "path": "layout-contract.py",
+        "bytes": 4606,
+        "sha256": "74754ec6977299b1268bc8c1a48423e42bed9e3b236d96e84cec36e255667b2e"
+      },
+      {
+        "path": "observe.py",
+        "bytes": 8571,
+        "sha256": "ab9f4d942bb2fac633ad16ba4ed81d8ee8f0e38e69cd0fbd3f906ce9b333d6dc"
+      },
+      {
+        "path": "observer-v2.py",
+        "bytes": 11338,
+        "sha256": "b4ce92c72aba84010a4b22db372622415433c3ad531adae26bc17eed5dc7194c"
+      },
+      {
+        "path": "outer-driver.py",
+        "bytes": 16339,
+        "sha256": "aff7a57f9e6c69b7043d1e11a655879bb29d0a506a30e84941c61838d8c5cfbe"
+      },
+      {
+        "path": "policies.py",
+        "bytes": 4231,
+        "sha256": "f1f23f2ae281f9e35410d2a51fee6de13dc18d1643501644955fc0d40b92e899"
+      },
+      {
+        "path": "reference-hooks/COLLECTOR_CONTRACT.json",
+        "bytes": 5411,
+        "sha256": "ff15e0f1ae5dd059a01f71bd25245b16c977f576ece6f8c0d07ff6b30a4546b1"
+      },
+      {
+        "path": "reference-hooks/checkpoint_runner18.child.py",
+        "bytes": 18115,
+        "sha256": "b9229b91c96c4b8bbc0417e9a0822e419c3eda04f64506f50e32b3d5349584e6"
+      },
+      {
+        "path": "reference-hooks/child_reference_proxy.py",
+        "bytes": 5369,
+        "sha256": "35fd3ab48a43f7a0604770b8b2b1708d0eb546371bd2101eb21ae3e022b6af19"
+      },
+      {
+        "path": "reference-hooks/native_reference_api.py",
+        "bytes": 9151,
+        "sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255"
+      },
+      {
+        "path": "reference-hooks/parent_reference_broker.py",
+        "bytes": 16780,
+        "sha256": "4d77a1871d197a91c4cdf8321afbcd44dc929ee7118fefaa5691b499024df75f"
+      },
+      {
+        "path": "reference-hooks/reference_collector.py",
+        "bytes": 6856,
+        "sha256": "fb86ea60f8d39f61aa25e6a5facc5c3eafa11a695f2bf3ee40211243be17165d"
+      },
+      {
+        "path": "reference-hooks/retained-all-track-declarations.json",
+        "bytes": 4295,
+        "sha256": "dc7e2d19fce835f3d68cde66ae1a15afd3705dabb982921730fdd43cc92a0af0"
+      },
+      {
+        "path": "run_wiring_tests.py",
+        "bytes": 1485,
+        "sha256": "50dc6a42f5080d5b927d67e40bd23b0dbfb2f6dfbbb772edeb0ea8091b23ec8e"
+      },
+      {
+        "path": "test_wiring.py",
+        "bytes": 19194,
+        "sha256": "4e192b44ec5a950845dfd5a3088a8ad27d27e7d8352222bfadc0be9387f18429"
+      },
+      {
+        "path": "windows-backend.py",
+        "bytes": 16010,
+        "sha256": "0b0646c7d2d704707922ee671fafea5edeb97d7d160fa4a6f698f97555702a55"
+      },
+      {
+        "path": "wiring-backend.py",
+        "bytes": 4334,
+        "sha256": "69b4a350882d0b65f50fdec0ce8545822853bf6d911b261c6a5332c123d1ba9c"
+      }
+    ]
+  },
+  "source_manifest": "15f215e3f784e0bf0e3b695e159b5399bf0327964142dfb45003743499cdbbb8",
+  "runtime_manifest": "8eac4789a775333c218ede0292569e88cb54971ec295da9552d38b6332e956f1",
+  "frozen505f": [
+    "capture-budget.py",
+    "controller-core.py",
+    "exact-log-symbols.json",
+    "global-ui-ABI-supplement.json",
+    "guest-profile-v2.json",
+    "guest-supervisor-core.py",
+    "input-deadlines.py",
+    "layout-contract.py",
+    "observe.py",
+    "observer-v2.py",
+    "policies.py",
+    "windows-backend.py"
+  ],
+  "exact_v2_mirrors": {
+    "COLLECTOR_CONTRACT.json": "ff15e0f1ae5dd059a01f71bd25245b16c977f576ece6f8c0d07ff6b30a4546b1",
+    "checkpoint_runner18.child.py": "b9229b91c96c4b8bbc0417e9a0822e419c3eda04f64506f50e32b3d5349584e6",
+    "child_reference_proxy.py": "35fd3ab48a43f7a0604770b8b2b1708d0eb546371bd2101eb21ae3e022b6af19",
+    "native_reference_api.py": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255",
+    "parent_reference_broker.py": "4d77a1871d197a91c4cdf8321afbcd44dc929ee7118fefaa5691b499024df75f",
+    "reference_collector.py": "fb86ea60f8d39f61aa25e6a5facc5c3eafa11a695f2bf3ee40211243be17165d",
+    "retained-all-track-declarations.json": "dc7e2d19fce835f3d68cde66ae1a15afd3705dabb982921730fdd43cc92a0af0"
+  },
+  "unchanged_inner_AST": [
+    "load",
+    "validate_role",
+    "input_allowed",
+    "publish_input_failure",
+    "elapsed",
+    "native_post",
+    "input_failure",
+    "synchronize",
+    "post",
+    "release_all",
+    "qa_press",
+    "capture_work",
+    "capture",
+    "watch"
+  ],
+  "unchanged_outer_AST": [
+    "load",
+    "no_alias",
+    "hash_file",
+    "fixed_profile",
+    "native_file_id",
+    "postflight",
+    "guard"
+  ],
+  "default_execute_off_before_hash_import": true,
+  "root_authority_checked_before_native_constructor": true,
+  "broker_join_before_deadline_and_handle_close": true,
+  "failed_join_HOLD_no_baseclose": true,
+  "early_backend_guest_closed_even_core_none": true,
+  "inner_bounded_context_parser_and_thread_cleanup": true,
+  "retained_coverage": [
+    {
+      "platform": "linux",
+      "sha256": "96a039b6e09cdf4c3663e75d3d4e1efcdd1ef598872a33c2cc6b4f9ef0164ec7",
+      "retained_tests": 22,
+      "current_source_pins": true,
+      "rerun": false
+    },
+    {
+      "platform": "windows",
+      "sha256": "78fa0c6e218e16e996a8fd3a0b81a8f201b987a88c074350123e0f396f1712a8",
+      "retained_tests": 22,
+      "current_source_pins": true,
+      "rerun": false
+    }
+  ],
+  "future_request": "59ce668eff65fe289e14d6360d98d5766e505b42335c606d565c78ca0cea9ed6",
+  "future_allocation_template": "b3d6d2cb9669de8ddb51967d2168b699f54aa3cce783678d75cd4dd9c1e3dc41",
+  "literal_ROOT_destination_queried": false,
+  "limits": {
+    "inner_seconds": 41,
+    "input_cutoff_seconds": 40.75,
+    "private_job_seconds": 47.0,
+    "absolute_actual_seconds": 47.5,
+    "evidence_cap_bytes": 60000000,
+    "admission_bytes": 19461570560,
+    "runtime_floor_bytes": 19394461696,
+    "max_png": 8,
+    "global_limit": 16,
+    "per_lane_limit": 2
+  },
+  "limitations": [
+    "Runtime extension is defaultoff gated by exactseparateROOTfile/explicitflag; templateownpathcannotauthorize",
+    "No actualROOTfileabsence/currentnativefacts/image/state checked here",
+    "NativeWindows sharing/disposition/processduplication/IPC/timing interoperability remainsopen",
+    "NATIVE_INTEROP_PLAN is description only with no fixturehelper allocated",
+    "Cleanup namespace is nonatomic and anylatefailuredisqualifies/preservesremainingrefs",
+    "Original13bf observer01 staysFALSE; no manual/gameplay/performance/release/physicalacceptance follows"
+  ]
+}
