@@ -901,11 +901,11 @@ if os.path.isdir(MIP22BD):
 # (13 added: r000 HUD digits 2-9 + muzzle flash 148d2ff5 / 3a866b91; r100 983d1064 96f42df9; r101 cf2208cd), sha256 b81231ff.
 RES22CD = os.environ.get('RES22CD', '/root/re4data/private/res22c-20261022')
 DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
-
-
-if __name__ == '__main__':
-    main()
 # res22nm (lane codex22, 10-22, QA22-NoMips disc only): res22's pre-mipmap resident.bin extended with the current
 # resident lists' keys (resident_keys.py extend, no remap). Replaces res22c on a disc without mip22 / mip22b.
 RES22NMD = os.environ.get('RES22NMD', '/root/re4data/private/res22nm-20261022')
 DATA['res22nm'] = {'dc/resident.bin': RES22NMD + '/resident.bin'}
+
+
+if __name__ == '__main__':
+    main()
