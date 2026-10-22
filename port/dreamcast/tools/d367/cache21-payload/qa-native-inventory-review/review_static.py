@@ -1,0 +1,30 @@
+"""Static-only startup-inventory source review; no imports/test/native/process actions."""
+import ast,datetime,hashlib,json,pathlib
+Q=pathlib.Path(r'\\wsl.localhost\Ubuntu-24.04\root\probe\codex-qa21-death-repair\port\dreamcast\tools\d367');P=Q/'qa21_native_job_inventory_v1';OUT=pathlib.Path(__file__).parent
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+assert sha(P/'manifest.json')=='96b6796fd6cc198907820d3914559ab083e9049e2271306f28390f6007a2f564';assert sha(P/'SOURCE_MANIFEST.json')=='b529132ee46c7a9c49623bd8b8441810831654e6693f6e30eaba22f75dda953e';assert sha(P/'LAUNCH_REQUEST.json')=='3ba4463eb41c6c045dec27bd5863f55c3c984d19604e81422d6100e82abd78f3'
+pins={}
+for label,file in [('integrity','SOURCE_MANIFEST.json'),('runtime','manifest.json')]:
+ rows=[]
+ for row in json.loads((P/file).read_text())['files']:
+  p=pathlib.Path(row['path']) if row.get('absolute') else P/row['path'];assert sha(p)==row['sha256'],row['path']
+  if 'bytes' in row:assert p.stat().st_size==row['bytes']
+  rows.append(dict(path=row['path'],sha256=sha(p),bytes=p.stat().st_size))
+ pins[label]=rows
+fn=lambda path,name:next(n for n in ast.walk(ast.parse(path.read_text())) if isinstance(n,ast.FunctionDef) and n.name==name)
+capture=fn(P/'inventory.py','capture');inspect=fn(P/'coordinator.py','inspect');coord=fn(P/'coordinator.py','main');supervisor=fn(P/'supervisor.py','main')
+assert "item.get('identity')" in ast.unparse(inspect)
+assert "pids == [expected['pid']]" in ast.unparse(capture)
+assert not any(isinstance(n,ast.Subscript) and isinstance(n.value,ast.Name) and n.value.id=='expected' and isinstance(n.slice,ast.Constant) and n.slice.value in ['start_filetime','path'] for n in ast.walk(capture))
+cleanup=next(n for n in coord.body if isinstance(n,ast.Try) and n.finalbody).finalbody
+stoptry=next(n for n in cleanup if isinstance(n,ast.Try) and any(isinstance(x,ast.Expr) and isinstance(x.value,ast.Call) and isinstance(x.value.func,ast.Attribute) and x.value.func.attr=='stop_private_job' for x in n.body))
+assert any('wait_private_job_empty' in ast.unparse(n) for n in stoptry.body) and 'done.set()' in ast.unparse(stoptry.finalbody[0])
+killcalls=[n for n in ast.walk(supervisor) if isinstance(n,ast.Expr) and isinstance(n.value,ast.Call) and isinstance(n.value.func,ast.Attribute) and n.value.func.attr=='TerminateProcess'];assert len(killcalls)==2
+text=(P/'supervisor.py').read_text();assert 'done.set()' in text and 'proc._handle.Close()' in text and 'absolute_done.set()' in text
+receipts=[]
+for platform in ['linux','windows']:
+ p=P/('receipt-'+platform+'.json');r=json.loads(p.read_text());assert r['test_count']==8 and r['status']=='PASS' and r['tests_sha256']==sha(P/'test_inventory.py') and r['runtime_manifest_sha256']==sha(P/'manifest.json')
+ receipts.append(dict(platform=platform,sha256=sha(p),retained_tests=8,current_test_and_manifest_pins=True,rerun=False))
+findings=[dict(id='expected-retained-member-binding',file='coordinator.py',line=inspect.lineno,proof='Member identity is freshly read and passed back as its own api.process pin; capture compares only PID list and never expected birth/path. Expected original lineage not enforced.',required='Preserve raw list/member diagnostics but compare expected member native PID/birth/path to original retained expected identity before qualification; add birth/path mismatch negatives'),dict(id='coordinator-cleanup-guardian',file='coordinator.py',line=stoptry.lineno,proof='Stop/wait/retainedtelemetry/jobempty share one try; early failure skips later attempts, finally unconditionally cancels guardian without empty proof.',required='Independent cleanup attempts, captured exact-job fallback as appropriate; keep guardian until proven empty/safeclosure and test stop/wait/pipe/empty failures'),dict(id='supervisor-finalization-before-disarm',file='supervisor.py',line=killcalls[-1].lineno,proof='TerminateProcess returns unchecked; if wait raises, nestedfinally still cancels deadline, closes retainedhandle and cancels absolute guard without finalizedexit proof.',required='Record termination/refusal and require signaled/finalized retained exit before guard disarm/HANDLEclosure; preserve captured-handle guards on failure with focused mocks')]
+report=dict(scope='SOURCE/hash/AST/retainedreceipt only; no imports/tests/nativequeries/launch/image/state/preflight/allocation',utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),candidate='10c6036a8afed988110fa344c5bfea042739deaa',disposition='BLOCK: expected-lineage and cleanup/deadline failure gaps; no native occurrence claimed',pins=pins,retained_receipts=receipts,findings=findings,capture_source=ast.get_source_segment((P/'inventory.py').read_text(),capture),coordinator_inspect_source=ast.get_source_segment((P/'coordinator.py').read_text(),inspect),coordinator_cleanup_source=[ast.unparse(n) for n in cleanup],supervisor_finally_source=[ast.unparse(n) for n in next(n for n in supervisor.body if isinstance(n,ast.Try) and n.finalbody).finalbody],otherwise_reviewed=['rawmembership+expected identity persisted before memberqueries','queryerrors preserve existing fields,extra/missing neverwaived','frozeninner waits beforeprofile/seed/output/runner/input and receives no release','no tasklist/global helper or Flycast/image/state path used byfixture','onecoordinator+oneinner;5s/10s/4MiB/floors proposed/defaultoffallocation gate'],limitations=['Old55368 membershipcause remainsunknown; findings do not explain that nativefailure','Retained8tests cover helperlogic/staticcalls, not cleanup failureexecution','No actual native API failure/orphan/PIDreplacement observed byreviewer','Root alone owns correctedsource review/nativefixture/allocation'])
+(OUT/'review-10c603.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(dict(disposition=report['disposition'],runtime_pins=len(pins['runtime']),integrity_pins=len(pins['integrity']),findings=3)))

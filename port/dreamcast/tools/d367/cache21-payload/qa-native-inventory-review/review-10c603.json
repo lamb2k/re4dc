@@ -1,0 +1,191 @@
+{
+  "scope": "SOURCE/hash/AST/retainedreceipt only; no imports/tests/nativequeries/launch/image/state/preflight/allocation",
+  "utc": "2026-10-22T08:15:26.017417+00:00",
+  "candidate": "10c6036a8afed988110fa344c5bfea042739deaa",
+  "disposition": "BLOCK: expected-lineage and cleanup/deadline failure gaps; no native occurrence claimed",
+  "pins": {
+    "integrity": [
+      {
+        "path": ".gitattributes",
+        "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+        "bytes": 8
+      },
+      {
+        "path": "FUTURE_ROOT_ALLOCATION_BYTES.json",
+        "sha256": "23392643240c32412e90f0fad4d49fde157264269ac23f8938c4687a42d66737",
+        "bytes": 342
+      },
+      {
+        "path": "LAUNCH_REQUEST.json",
+        "sha256": "3ba4463eb41c6c045dec27bd5863f55c3c984d19604e81422d6100e82abd78f3",
+        "bytes": 746
+      },
+      {
+        "path": "NATIVE_INVENTORY_PLAN.md",
+        "sha256": "5bca3610c32c0aa3567e618b8f7e2a6f398fd33a8235e228d388fb9a6917dd72",
+        "bytes": 3716
+      },
+      {
+        "path": "README.md",
+        "sha256": "d0a57067622e46da55438db8ce9870fb8cf39ff5808f127fa56e187a969725f1",
+        "bytes": 475
+      },
+      {
+        "path": "config.json",
+        "sha256": "54924a6f67833ea621f10d54c28291f48c836ce006f37e318b6d6d6d3c34eae2",
+        "bytes": 940
+      },
+      {
+        "path": "coordinator.py",
+        "sha256": "0125df51b242eeb7611dba790c5cb44292451927568012f3dc46aa9267c70c94",
+        "bytes": 4415
+      },
+      {
+        "path": "frozen-native-reference-api.py",
+        "sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255",
+        "bytes": 9151
+      },
+      {
+        "path": "frozen-windows-backend.py",
+        "sha256": "0b0646c7d2d704707922ee671fafea5edeb97d7d160fa4a6f698f97555702a55",
+        "bytes": 16010
+      },
+      {
+        "path": "inventory.py",
+        "sha256": "8a893aed5683e13fd1b996a08ca126e86c6f73fd8e72ac84f88ef5e12f050532",
+        "bytes": 1104
+      },
+      {
+        "path": "manifest.json",
+        "sha256": "96b6796fd6cc198907820d3914559ab083e9049e2271306f28390f6007a2f564",
+        "bytes": 1488
+      },
+      {
+        "path": "receipt-linux.json",
+        "sha256": "4c3198c40ac7e90f6b34cbd2ac0bd663c3f245449db67a1381a9b0466d0013ca",
+        "bytes": 468
+      },
+      {
+        "path": "receipt-windows.json",
+        "sha256": "04a66b8de3ce5142be6fea9d088d9de1e67919b53acf0557838003dda6b8965f",
+        "bytes": 471
+      },
+      {
+        "path": "supervisor.py",
+        "sha256": "67c168c7a95a460261221a97d7421050ba3599a1f65dd32c5b503a0f68965850",
+        "bytes": 6440
+      },
+      {
+        "path": "test_inventory.py",
+        "sha256": "eed2239ee3e3b416f492b475332c9465bbb8e2814d96057610fe21e4898acf80",
+        "bytes": 3228
+      }
+    ],
+    "runtime": [
+      {
+        "path": "supervisor.py",
+        "sha256": "67c168c7a95a460261221a97d7421050ba3599a1f65dd32c5b503a0f68965850",
+        "bytes": 6440
+      },
+      {
+        "path": "coordinator.py",
+        "sha256": "0125df51b242eeb7611dba790c5cb44292451927568012f3dc46aa9267c70c94",
+        "bytes": 4415
+      },
+      {
+        "path": "inventory.py",
+        "sha256": "8a893aed5683e13fd1b996a08ca126e86c6f73fd8e72ac84f88ef5e12f050532",
+        "bytes": 1104
+      },
+      {
+        "path": "frozen-windows-backend.py",
+        "sha256": "0b0646c7d2d704707922ee671fafea5edeb97d7d160fa4a6f698f97555702a55",
+        "bytes": 16010
+      },
+      {
+        "path": "frozen-native-reference-api.py",
+        "sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255",
+        "bytes": 9151
+      },
+      {
+        "path": "config.json",
+        "sha256": "54924a6f67833ea621f10d54c28291f48c836ce006f37e318b6d6d6d3c34eae2",
+        "bytes": 940
+      },
+      {
+        "path": "FUTURE_ROOT_ALLOCATION_BYTES.json",
+        "sha256": "23392643240c32412e90f0fad4d49fde157264269ac23f8938c4687a42d66737",
+        "bytes": 342
+      },
+      {
+        "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_owned_adapter_v1\\inner-adapter.py",
+        "sha256": "3f576be885b7f165f9d3a40ef6fd75292114db881754c620f159417223452758",
+        "bytes": 15902
+      }
+    ]
+  },
+  "retained_receipts": [
+    {
+      "platform": "linux",
+      "sha256": "4c3198c40ac7e90f6b34cbd2ac0bd663c3f245449db67a1381a9b0466d0013ca",
+      "retained_tests": 8,
+      "current_test_and_manifest_pins": true,
+      "rerun": false
+    },
+    {
+      "platform": "windows",
+      "sha256": "04a66b8de3ce5142be6fea9d088d9de1e67919b53acf0557838003dda6b8965f",
+      "retained_tests": 8,
+      "current_test_and_manifest_pins": true,
+      "rerun": false
+    }
+  ],
+  "findings": [
+    {
+      "id": "expected-retained-member-binding",
+      "file": "coordinator.py",
+      "line": 27,
+      "proof": "Member identity is freshly read and passed back as its own api.process pin; capture compares only PID list and never expected birth/path. Expected original lineage not enforced.",
+      "required": "Preserve raw list/member diagnostics but compare expected member native PID/birth/path to original retained expected identity before qualification; add birth/path mismatch negatives"
+    },
+    {
+      "id": "coordinator-cleanup-guardian",
+      "file": "coordinator.py",
+      "line": 57,
+      "proof": "Stop/wait/retainedtelemetry/jobempty share one try; early failure skips later attempts, finally unconditionally cancels guardian without empty proof.",
+      "required": "Independent cleanup attempts, captured exact-job fallback as appropriate; keep guardian until proven empty/safeclosure and test stop/wait/pipe/empty failures"
+    },
+    {
+      "id": "supervisor-finalization-before-disarm",
+      "file": "supervisor.py",
+      "line": 63,
+      "proof": "TerminateProcess returns unchecked; if wait raises, nestedfinally still cancels deadline, closes retainedhandle and cancels absolute guard without finalizedexit proof.",
+      "required": "Record termination/refusal and require signaled/finalized retained exit before guard disarm/HANDLEclosure; preserve captured-handle guards on failure with focused mocks"
+    }
+  ],
+  "capture_source": "def capture(api,job,expected,inspect,publish):\n    # Persist raw list and expected identity BEFORE any per-member native query.\n    pids=api.job_pids(job)\n    row={'expected_inner':dict(expected),'member_pids':pids,\n         'added':sorted(set(pids)-{expected['pid']}),'missing':sorted({expected['pid']}-set(pids)),\n         'members':[],'strict_membership':pids==[expected['pid']]}\n    publish(row)\n    for pid in pids:\n        member={'pid':pid}\n        try:member['proof']=inspect(pid)\n        except Exception as exc:member['query_error']=error(exc)\n        row['members'].append(member);publish(row)\n    if not row['strict_membership']:raise RuntimeError('unexpected/missing private job member; inventory preserved')\n    if any('query_error' in m or 'query_error' in m.get('proof',{}) for m in row['members']):raise RuntimeError('member identity query failed; inventory preserved')\n    return row",
+  "coordinator_inspect_source": "def inspect(pid):\n        h=backend.checked(backend.k.OpenProcess(0x101000,False,pid));item={'pid':pid};errors=[]\n        try:\n            # Field queries are independent: a path failure does not erase birth.\n            try:item['retained_times']=backend.times(h)\n            except Exception as exc:errors.append({'field':'retained_times',**inventory.error(exc)})\n            try:item['identity']=backend.info(pid,h)\n            except Exception as exc:errors.append({'field':'path_birth',**inventory.error(exc)})\n            try:item['native']=api.process(h,job,item.get('identity'),require_live=True)\n            except Exception as exc:errors.append({'field':'native_exact_membership',**inventory.error(exc)})\n            if errors:item['query_error']=errors\n            return item\n        finally:api.close(h)",
+  "coordinator_cleanup_source": [
+    "try:\n    if inner is not None:\n        backend.close_release_pipe(inner)\nexcept BaseException as exc:\n    result['cleanup_errors'].append(inventory.error(exc))",
+    "try:\n    backend.stop_private_job(job)\n    if inner is not None:\n        backend.wait(inner)\n        result['inner_exit'] = {'identity': backend.inner_identity, 'times': backend.times(int(inner._handle)), 'exit_code': inner.returncode, 'wait_status': backend.k.WaitForSingleObject(int(inner._handle), 0)}\n    backend.wait_private_job_empty(job)\n    result['private_job_empty'] = True\nexcept BaseException as exc:\n    result['cleanup_errors'].append(inventory.error(exc))\nfinally:\n    done.set()\n    timer.join(timeout=0.2)\n    if timer.is_alive():\n        raise RuntimeError('refuse closing live guardian handles')\n    backend.close_owned_handles(job, inner, None)",
+    "result['hardstop_fired'] = fired.is_set()",
+    "result['qualified'] = result['qualified'] and (not result['cleanup_errors']) and (not fired.is_set())",
+    "(root / 'coordinator-result.json').write_text(json.dumps(result, indent=2))"
+  ],
+  "supervisor_finally_source": [
+    "try:\n    if proc is not None:\n        if proc.poll() is None:\n            k.TerminateProcess(int(proc._handle), 125)\n        proc.wait(timeout=0.5)\n        ts = [ctypes.c_ulonglong() for _ in range(4)]\n        if not k.GetProcessTimes(int(proc._handle), *[ctypes.byref(x) for x in ts]):\n            raise ctypes.WinError(ctypes.get_last_error())\n        result['retained_times'] = [x.value for x in ts]\n        result['actual_seconds'] = (ts[1].value - ts[0].value) / 10000000.0\n        if not ts[1].value or result['actual_seconds'] > 5:\n            raise RuntimeError('child bound/finalized exit failed')\n    result['charged_bytes'] = usage()\n    result['free_bytes'] = shutil.disk_usage('C:/').free\n    if result['charged_bytes'] + 131072 >= 4194304 or result['free_bytes'] < 19394461696:\n        raise RuntimeError('final resource gate')\n    result['parent_seconds'] = time.monotonic() - origin\n    (root / 'supervisor-result.json').write_text(json.dumps(result, indent=2))\n    if usage() >= 4194304 or shutil.disk_usage('C:/').free < 19394461696:\n        raise RuntimeError('postwrite resource gate')\nfinally:\n    done.set()\n    if guard is not None:\n        guard.join(timeout=0.2)\n        if guard.is_alive():\n            raise RuntimeError('retained deadline did not join; keep handle')\n    if proc is not None:\n        proc._handle.Close()\n    absolute_done.set()\n    absolute_guard.join(timeout=0.2)\n    if absolute_guard.is_alive():\n        raise RuntimeError('absolute guard failed to join')"
+  ],
+  "otherwise_reviewed": [
+    "rawmembership+expected identity persisted before memberqueries",
+    "queryerrors preserve existing fields,extra/missing neverwaived",
+    "frozeninner waits beforeprofile/seed/output/runner/input and receives no release",
+    "no tasklist/global helper or Flycast/image/state path used byfixture",
+    "onecoordinator+oneinner;5s/10s/4MiB/floors proposed/defaultoffallocation gate"
+  ],
+  "limitations": [
+    "Old55368 membershipcause remainsunknown; findings do not explain that nativefailure",
+    "Retained8tests cover helperlogic/staticcalls, not cleanup failureexecution",
+    "No actual native API failure/orphan/PIDreplacement observed byreviewer",
+    "Root alone owns correctedsource review/nativefixture/allocation"
+  ]
+}

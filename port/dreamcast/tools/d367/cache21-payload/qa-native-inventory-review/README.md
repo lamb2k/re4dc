@@ -1,0 +1,11 @@
+# Independent startup inventory fixture source review
+
+BLOCK source-only candidate10c6036a8afed988110fa344c5bfea042739deaa pending3narrow corrections.15integrity/8runtimepins and retained8fakecase currenttest/manifest receipts perplatform verify. No imports/tests/nativequeries/processlaunch/image/state/preflight/allocation occurred. Original55368membershipcause remainsunknown; these findings do not explain or reconstruct its vanishedjob.
+
+1. Expectedretainedlineage not enforced: coordinator.inspect reads newbackend.info identity and passes that as its own api.process pin. inventory.capture verifies PIDlist only; it never compares memberbirth/path with originalexpected_inner. Persist rawdiagnostics first, then compare expectedmember PID/birth/path against originalretainedidentity and add mismatchcontrols. No actualPIDreuse/replacement is claimed.
+2. Coordinatorcleanup puts stop_private_job/wait/innertelemetry/jobempty in one try. An earlystop failure skips remainingattempts; finally unconditionallydone.set disarms capturedjobguardian beforeemptyproof. Make cleanup attempts independent and keepguardian untilactualempty/safeclosedproof; coverstop/pipe/wait/empty failures. Noobservedorphan isclaimed.
+3. Supervisor TerminateProcess returnvalues areunchecked. If killfails and wait(.5) raises, nestedfinally stilldone.set/HANDLEclose/absolute_done.set withoutsignaled/finalizedexitproof. Capturekill failure and retain guards/handle untilverifiedtermination/safeownedboundary; add failurecontrols. Existing source-only8tests exercisehelper/staticcall paths rather thantheseactualcleanupbranches.
+
+Positiveboundedstructure: rawmembership/expectedidentity are persisted beforememberqueries; queryfailures preserveexistingfields; extra/missing membersrefuse; immutable1cbinnerblocksfirstrelease beforeprofile/seed/output/runner/input; no release/tasklist/globalhelper/Flycast/image/state used. Onecoordinator+oneinner withproposed5s/10s/4MiB/floors anddefaultoffrootallocation gate remains sourceintent, not nativequalification. Main owns correctedsource/nativefixture/allocation. Preserveoldfailed13bf/55368 andallreferences.
+
+`review_static.py` uses standard-library hash/AST/JSON only; `review-10c603.json` records exactpins/source/controlflowfindings. Await narrowcorrectedsuccessor; no genericinfrastructureexpansion isrequested.
