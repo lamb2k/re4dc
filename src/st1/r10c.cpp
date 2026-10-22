@@ -37,6 +37,12 @@
 #include "rnd.h"
 #include "debug.h"
 #include "db_log.h"
+#if defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+#include "issue52_actor_diag.h"
+#define ISSUE52_NOTE(phase, actor) re4dc_issue52_actor_note(phase, pG->Frame_cnt, G_ROOM_ID, (unsigned long) (actor))
+#else
+#define ISSUE52_NOTE(phase, actor) ((void) 0)
+#endif
 
 // Room 1-0C (D:/Bio4/Prog/r10c.cpp): the dam and the water wheel; the two gates opened by the
 // switch, the hanging crates (hit boxes on ropes) that fall into the water, the ambush after the
@@ -368,6 +374,7 @@ static inline void r10c_setAngXYZ(cModel* m, f32 x, f32 y, f32 z) { Vec v; v.x =
 // foot and clears Room_flg[0] 0x08000000.
 static void r10c_EmEvent_exit()
 {
+    ISSUE52_NOTE(6, r10c_work.p->em);
     EmMgr.destroy(r10c_work.p->em);
     pPL->setNoSuspend(0);
     EffectEspDelete(1, 2, 0, 0);
@@ -388,6 +395,7 @@ static void r10c_EmEvent_exit()
     r10c_setPosXYZ(pPL, 6609.0f, 0.0f, 17172.0f);
     r10c_setAngXYZ(pPL, 0.0f, 0.56f, 0.0f);
     pG->Room_flg[0] &= ~0x08000000;
+    ISSUE52_NOTE(7, 0);
 }
 
 // Area 1: the Ganado on the far bank throws its axe (camera cuts 0x11..0x13).
@@ -398,19 +406,24 @@ static void r10c_EmEvent()
     if (RsfCheck(G_ROOM_ID, 1) == 0) {
         cEm* em;
 
+        ISSUE52_NOTE(1, 0);
         RsfSet(G_ROOM_ID, 1);
         BitOff(pG->Room_flg[0], 0x04000000);
         {
             EmListData* l = EM_LIST(2);
 
+            ISSUE52_NOTE(2, 0);
             em = EmSetFromList2(2, 1);
+            ISSUE52_NOTE(3, em);
             l->set = 0;
         }
         em->setNoSuspend(1);
+        ISSUE52_NOTE(4, em);
         r10c_work.p->em = em;
         EstSet((int) em, -1, 0, 0, 1, 0x1F, 1, 2, 0, 0);
         BitOn(em->flag, 1);
         MotionSetCore(em, &em->Motion, ROOM_ARC_PTR(pG->pRoom, 0x26), 0, 0, 1, 0);
+        ISSUE52_NOTE(5, em);
         SndStrReq(1, 0x23, 0x80000003, 0, 0, 0.0f);
         SceEventStart(0);
         pG->Status_flg[2] |= 0x02000000;

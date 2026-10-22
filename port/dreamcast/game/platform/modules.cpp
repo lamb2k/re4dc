@@ -511,6 +511,19 @@ u32 ovlHash(const void* p, u32 bytes)
 // tools/ovl_id_patch.py over the "RID1" mark. Initialised data, so it lands in .data and the patch leaves .text alone.
 extern "C" { volatile u32 re4dc_image_id[2] = {0x31444952U, 0x31444952U}; }
 #endif
+#if defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+extern "C" unsigned long re4dc_issue52_stage_base()
+{
+    // Registry metadata is already published by the successful overlay load.
+    // Do not inspect a header, image or candidate actor during a fault.
+#if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
+    const RouteOverlay& o = g_stage_ovl[2];  // trusted st1_2 slot (module id 78)
+    return o.block ? u32(o.block) + sizeof(RouteOverlayHeader) : 0;
+#else
+    return 0;
+#endif
+}
+#endif
 // src/game/main_mem.cpp (C++ linkage, include/main_mem.h).
 void* mem_alloc(u32 size, const char* file, int line, int flag, int heap);
 void Mem_free_h(void* p, int heap);

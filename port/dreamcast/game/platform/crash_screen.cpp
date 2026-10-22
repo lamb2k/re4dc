@@ -17,6 +17,9 @@
 #include <string.h>
 
 #include "re4dc_platform.h"
+#if defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+#include "issue52_actor_diag.h"
+#endif
 #if RE4DC_CRASH_FAULT_DETAIL
 #include "fault_trace.hpp"
 #endif
@@ -39,6 +42,42 @@ extern "C" int pvr_present_pending(void) __attribute__((weak));
 extern "C" int re4dc_pvr_latch_line(unsigned which, char* out, unsigned size) __attribute__((weak));  /* native_ui.cpp */ extern "C" void re4dc_pvr_ready_test_arm(int slices) __attribute__((weak));  // PVR_READY_STRICT; one line: keeps __LINE__
 #endif
 static const unsigned kLogSize = 0x10000;  // mem.cpp RE4DC_LOG_SIZE
+
+#if defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+struct Issue52ActorSnapshot {
+    unsigned phase, frame, room;
+    unsigned long base, actor;
+};
+static volatile Issue52ActorSnapshot g_issue52_actor{};
+
+extern "C" void re4dc_issue52_actor_note(unsigned phase, unsigned frame,
+                                         unsigned room, unsigned long actor)
+{
+    const unsigned long base = re4dc_issue52_stage_base();
+    const int old = irq_disable();
+    g_issue52_actor.phase = 0;
+    g_issue52_actor.frame = frame;
+    g_issue52_actor.room = room;
+    g_issue52_actor.base = base;
+    g_issue52_actor.actor = actor;
+    g_issue52_actor.phase = phase;
+    irq_restore(old);
+}
+
+static bool issue52_actor_line(char* out, unsigned size)
+{
+    // The crash path reads copied integers only, never source lists/actors or
+    // the overlay's storage. Retain the original register/stack snapshot.
+    const int old = irq_disable();
+    const Issue52ActorSnapshot s{g_issue52_actor.phase, g_issue52_actor.frame,
+        g_issue52_actor.room, g_issue52_actor.base, g_issue52_actor.actor};
+    irq_restore(old);
+    if (!s.phase) return false;
+    snprintf(out, size, "I52 %u r%03x b%08lx a%08lx f%u",
+             s.phase, s.room, s.base, s.actor, s.frame);
+    return true;
+}
+#endif
 
 namespace {
 constexpr int kGW = 12, kGH = 24;              // BIOS thin font
@@ -311,6 +350,9 @@ void show(const char* kind, const char* detail, bool wait_render)
     put_text(0, row++, line, 0xF800);
     snprintf(line, sizeof(line), "stage %08lx  ui frame %u" RE4DC_GD_FMT, re4dc_stage, re4dc_ui_frame() RE4DC_GD_ARGS);
     put_text(0, row++, line, 0xFFFF);
+#if defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+    if (issue52_actor_line(line, sizeof(line))) put_text(0, row++, line, 0xFFE0);
+#endif
 #if RE4DC_CRASH_FAULT_DETAIL
     fault_detail(row);
 #endif

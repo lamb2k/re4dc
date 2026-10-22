@@ -3759,6 +3759,25 @@ $(OBJDIR)/sh4zam-inline.ok: $(SH4ZAM_OBJS)
 	@if sh-elf-nm -u $^ | grep ' _shz_' >&2; then echo "$^: undefined SH4ZAM symbols above (out-of-line SH4ZAM calls need libsh4zam.a: make sh4zam-lib, and link it)" >&2; exit 1; fi
 	@touch $@
 endif
+# ISSUE52_ACTOR_DIAG=1: copy the dam event's source phase, returned actor address
+# and trusted st1_2 overlay base into one early crash-screen row. No actor reads.
+ISSUE52_ACTOR_DIAG ?= 0
+ifneq ($(filter-out 0 1,$(ISSUE52_ACTOR_DIAG)),)
+$(error ISSUE52_ACTOR_DIAG must be 0 or 1)
+endif
+ifeq ($(ISSUE52_ACTOR_DIAG),1)
+ifneq ($(CRASH_SCREEN),1)
+$(error ISSUE52_ACTOR_DIAG needs CRASH_SCREEN=1)
+endif
+ifneq ($(STAGE_OVL),1)
+$(error ISSUE52_ACTOR_DIAG needs STAGE_OVL=1)
+endif
+ifneq ($(ROUTE_OVL),1)
+$(error ISSUE52_ACTOR_DIAG needs ROUTE_OVL=1 via ROUTE_CH13=1)
+endif
+$(OBJDIR)/mod/st1_2/src/st1/r10c.o: GAME_CPPFLAGS += -DRE4DC_ISSUE52_ACTOR_DIAG=1
+$(OBJDIR)/platform/modules.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_ISSUE52_ACTOR_DIAG=1
+endif
 # MOTION_MISS_LOG=1 (castle lane 2026-10-15; diagnostic, log only, default 0): "motion miss" lines (clip, wait, slab).
 MOTION_MISS_LOG ?= 0
 ifeq ($(filter $(MOTION_MISS_LOG),0 1),)
