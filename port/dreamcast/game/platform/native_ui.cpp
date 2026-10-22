@@ -480,16 +480,16 @@ unsigned movie_window_release(unsigned bytes,bool pinned_ok,unsigned& released_b
 #if RE4DC_UI_VRAM && RE4DC_TEX_RESIDENT && RE4DC_UI_OVERLAY_SLAB_KB
 constexpr unsigned kOverlaySlabBytes=RE4DC_UI_OVERLAY_SLAB_KB*1024U;
 pvr_ptr_t overlay_slab; const Entry* overlay_owner; unsigned overlay_uses;
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
 void overlay_slab_take(){
     if(overlay_slab || overlay_owner)return;
-#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
-    re4dc_vram_arena_class=2;
-#endif
+    re4dc_vram_arena_class=2;   // VRAM_ROOM_ARENA: long-lived, from the top
     overlay_slab=pvr_mem_malloc(kOverlaySlabBytes);
-#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
     re4dc_vram_arena_class=0;
-#endif
 }
+#else
+void overlay_slab_take(){ if(!overlay_slab && !overlay_owner)overlay_slab=pvr_mem_malloc(kOverlaySlabBytes); }
+#endif
 #endif
 #if RE4DC_TEX_RESIDENT
 bool preload_pending; unsigned preload_loads,preload_skipped,preload_runs;
@@ -4966,15 +4966,13 @@ void glyph_init(){
         glyph_twx[i]=(unsigned short)x;glyph_twy[i]=(unsigned short)y;
     }
     const unsigned before=pvr_mem_available();
-    {
-#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
-        re4dc_vram_arena_class=2;
+    #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+    re4dc_vram_arena_class=2;   // VRAM_ROOM_ARENA: long-lived, from the top
 #endif
-        glyph_atlas=pvr_mem_malloc(kGlyphAtlasBytes);
+    glyph_atlas=pvr_mem_malloc(kGlyphAtlasBytes);
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
-        re4dc_vram_arena_class=0;
+    re4dc_vram_arena_class=0;
 #endif
-    }
     if(!glyph_atlas){re4dc_log("native mes: glyph atlas allocation FAILED (free=%u); message text off\n",before);return;}
     alignas(32) static const unsigned char zero[512]={};
     for(unsigned n=0;n<kGlyphAtlasBytes;n+=sizeof(zero))pvr_txr_load(zero,(char*)glyph_atlas+n,sizeof(zero));
