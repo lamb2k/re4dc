@@ -1,0 +1,50 @@
+{
+ "by_class": {
+  "character": 14,
+  "cutscene": 13,
+  "enemy": 69,
+  "hud": 6,
+  "item": 35,
+  "other": 5,
+  "unreferenced": 27,
+  "world": 844,
+  "world-object": 22
+ },
+ "by_decision": {
+  "already-mipped": 2,
+  "convert-blocked": 57,
+  "exclude": 8,
+  "mip-chain": 70,
+  "not-reachable": 898
+ },
+ "class_decision": {
+  "character/already-mipped": 2,
+  "character/convert-blocked": 6,
+  "character/mip-chain": 6,
+  "cutscene/convert-blocked": 1,
+  "cutscene/mip-chain": 12,
+  "enemy/convert-blocked": 22,
+  "enemy/mip-chain": 31,
+  "enemy/not-reachable": 16,
+  "hud/exclude": 6,
+  "item/convert-blocked": 6,
+  "item/mip-chain": 10,
+  "item/not-reachable": 19,
+  "other/convert-blocked": 1,
+  "other/exclude": 1,
+  "other/mip-chain": 3,
+  "unreferenced/not-reachable": 27,
+  "world-object/convert-blocked": 7,
+  "world-object/exclude": 1,
+  "world-object/mip-chain": 1,
+  "world-object/not-reachable": 13,
+  "world/convert-blocked": 14,
+  "world/mip-chain": 7,
+  "world/not-reachable": 823
+ },
+ "contradictions": {
+  "texclass22 not-on-route but statically bound on route": 117,
+  "texclass22 saw it drawn but no static binding found": 2
+ },
+ "keys": 1035
+}
