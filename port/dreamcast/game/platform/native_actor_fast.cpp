@@ -27,6 +27,9 @@
 //     that palette. Anything that needs pPosBuf/pNrmBuf (the generic path)
 //     first materializes them with the source's own CalcSk1_x.
 #include "include/bfc_class.h"
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+#include "../../room/backface_emit.hpp"  // CPU_BACKFACE (backface.mk)
+#endif
 #include "re4dc_screen.h"
 #include "native_actor.hpp"
 #ifndef RE4DC_ACTOR_SKIN_OWNER_POOL
@@ -2995,10 +2998,21 @@ struct Part {
 #if RE4DC_COARSE_ONE_SUBMIT == 2
         if (direct) one_tap_strip(cache.v, index, n);
 #endif
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+        if (direct && (p.cull == 1 || p.cull == 2)) { bf_send(index, n); return; }
+#endif
         if (direct) { sq = emit_sq(sq, cache.v, index, n); slots += n; return; }
 #endif
         emit(at(), cache.v, index, n); used += n;
     }
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE && RE4DC_ACTOR_DIRECT
+    // CPU_BACKFACE (lane backface22): only the triangles the ISP keeps (room/backface_emit.hpp); cull-none parts never
+    // come here.
+    void bf_send(const u8* index, unsigned n) {
+        slots += re4dc::bf::strip(cache.v, index, n, 127u, p.cull,
+                                  [&](const std::uint8_t* i, unsigned c) { sq = emit_sq(sq, cache.v, i, c); });
+    }
+#endif
     // A meshlet with no corner outside, beyond far or in front of near.
     bool fits(unsigned n) const {
 #if RE4DC_ACTOR_DIRECT
@@ -3012,6 +3026,17 @@ struct Part {
         if (direct) {
 #if RE4DC_COARSE_ONE_SUBMIT == 2
             one_tap_meshlet(cache.v, index, count);
+#endif
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+            if (p.cull == 1 || p.cull == 2) {
+                // the meshlet's strips (bit 7 = the strip's last index), each through the back-face split
+                unsigned a = 0;
+                for (unsigned k = 0; k < count; ++k)
+                    if (index[k] & 128u) { bf_send(index + a, k + 1 - a); a = k + 1; }
+                if (a < count) bf_send(index + a, count - a);
+                input += triangles; output += triangles;
+                return true;
+            }
 #endif
             sq = static_cast<std::uint32_t*>(emit_meshlet<true>(sq, cache.v, index, count)); slots += count;
         } else

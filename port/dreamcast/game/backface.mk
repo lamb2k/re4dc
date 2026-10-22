@@ -15,3 +15,16 @@ endif
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o $(OBJDIR)/platform/backface_census.o: PLATFORM_CPPFLAGS += -DRE4DC_BACKFACE_CENSUS=1
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_BACKFACE_CENSUS=1
 endif
+# CPU_BACKFACE=1 (render only; room/backface_emit.hpp): world meshlets (native_static.cpp, direct store-queue sink) and
+#   actor parts (native_actor_fast.cpp, ACTOR_DIRECT) whose PVR header culls (CCW / CW) send only the triangles the ISP
+#   would keep: back runs at a strip end, and inner back runs of >= 3 triangles, are not written to the TA. Front faces go
+#   out with the same vertex words and winding parity. Cull-none (double-sided) parts are unchanged: today that is every
+#   owned actor except the registry bosses NMR_SOURCE_CULL selects (Del Lago 0x2F, ...). The lean strip walk
+#   (MESH_STRIP_LEAN) is replaced by a C walk for culling parts. Default 0: no code.
+CPU_BACKFACE ?= 0
+ifneq ($(filter $(CPU_BACKFACE),0 1),$(CPU_BACKFACE))
+$(error CPU_BACKFACE must be 0 or 1)
+endif
+ifeq ($(CPU_BACKFACE),1)
+$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_CPU_BACKFACE=1
+endif
