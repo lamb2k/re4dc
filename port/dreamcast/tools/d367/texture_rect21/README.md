@@ -156,3 +156,29 @@ boundaries do not replace the rejected comparison. No speedup or paired timing
 delta is reported. Sampled disc counters stay constant240→360 in each arm,
 but source-frame coherence is not a completed-state phase latch. The benchmark
 lane owns that next source-only audit. Both staged image hashes are unchanged.
+
+`woods-functional-qualification.json` closes the allocated cold C house check:
+all8 r100 scoped candidates are admitted on8 distinct owned known bases, in87
+coherent tables. Together with farm C03, all17 selected candidates now have
+actual admission evidence across two distinct scenes, not all-key final draw
+acceptance. Active HOUSE AFTERS20 gameplay is confirmed by full gameMainLoop
+PT windows,367 active-camera samples and the inspected interior screenshot.
+The historical natural-start woods1801–1920 benchmark is a different scene.
+
+Four original r100 keys remain co-resident:1170b2b5-9710ab82,
+1ab5c10f-d8d37c49,24b92cf4-ddafaf29,5cbedd66-ce488718. Their actual C-pack
+CRC/material/offset/descriptors match, each128x64/no-mip/VQ4096. All8 candidates
+plus4 originals occupy12 known owned bases in87 coherent tables.43,696 payload
+bytes and43,776 rounded-request bytes are lower bounds, not full allocator
+extents, high water or net savings. Generic alias/preload provenance remains
+open; no originals are removed and WORLD_RECT21 remains default0.
+
+Eight stable minimum SQ-header events cover only3 unique candidates. Their
+64square/VQ/mip headers bind to the observed known bases; vertex/raster/pixel
+use for all8 is unproven. Source ticks equal observed UI frames+5 in these
+events; both clocks are retained, and the old observer did not read the actual
+skip counter or a completed-state latch. Two cross-tick table rows and4 torn
+selected entries are excluded. An initial postprocessor field-name error
+(reserved versus actual reserved_0) is preserved with its corrected analysis;
+the frozen observer, program and raw guest are unchanged. No additional guest,
+traversal extension, timing gain, release or physical Dreamcast acceptance.
