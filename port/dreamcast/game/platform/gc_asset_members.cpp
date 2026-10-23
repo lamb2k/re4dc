@@ -118,13 +118,13 @@ bool member_adopt(const void* owner,void* archive,unsigned bytes,bool transient)
         }
         if(!archives[i].owner && free==ArchiveCount)free=i;
     }
-    if(free==ArchiveCount) { unresolved(SourceGeometry,"member-owner-capacity");return false; }
     bool conflict=false;
     for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner) {
         const auto a=reinterpret_cast<std::uintptr_t>(archive),b=reinterpret_cast<std::uintptr_t>(archives[i].base);
         if(a<=b ? b-a<bytes : a-b<archives[i].bytes) { revoke(i);conflict=true; }
     }
     if(conflict) { unresolved(SourceGeometry,"member-owner-overlap");return false; }
+    if(free==ArchiveCount) { unresolved(SourceGeometry,"member-owner-capacity");return false; }
     Archive candidate{owner,static_cast<unsigned char*>(archive),bytes,++generation,transient};unsigned count;
     if(!table(candidate,count)) { unresolved(SourceGeometry,"member-directory");return false; }
     archives[free]=candidate;return true;

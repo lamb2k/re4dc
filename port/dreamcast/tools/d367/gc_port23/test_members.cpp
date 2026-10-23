@@ -75,6 +75,10 @@ int main() {
     for(unsigned i=0;i<17;++i)many_archives.push_back(indexed());
     for(unsigned i=0;i<16;++i)assert(member_adopt(&owners[i],many_archives[i].data(),many_archives[i].size(),true));
     assert(!member_adopt(&owners[16],many_archives[16].data(),many_archives[16].size(),true));
+    assert(member_capture(many_archives[0].data()+64));
+    assert(!member_adopt(&owners[16],many_archives[0].data(),many_archives[0].size(),true));
+    assert(!member_lookup(many_archives[0].data()+64,&later)); // overlap revokes even at full capacity
+    assert(!member_capture(many_archives[0].data()+64));
     member_retire_transient();
     constexpr unsigned count=130,directory=16+8*count;
     std::vector<unsigned char> many_members(directory+count*64,0);word(many_members,0,count);
