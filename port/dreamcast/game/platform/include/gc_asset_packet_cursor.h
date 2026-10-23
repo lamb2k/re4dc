@@ -6,7 +6,7 @@ namespace re4dc_gcasset {
 struct PacketCursor {
     unsigned address=0;
     bool textured=false, first=false, continuation=false, vertex64=false, header=false;
-    bool feed(const std::uint32_t* words) {
+    bool feed(const std::uint32_t* words,bool every_textured_vertex=false) {
         if(continuation) { continuation=false;return false; }
         const unsigned pcw=words[0],type=pcw>>29;
         if(type==4 || type==5) {
@@ -19,7 +19,7 @@ struct PacketCursor {
         }
         if(type!=7 || !header)return false;
         continuation=vertex64;
-        if(!first || !textured)return false;
+        if(!textured || (!first && !every_textured_vertex))return false;
         first=false;return true;
     }
 };

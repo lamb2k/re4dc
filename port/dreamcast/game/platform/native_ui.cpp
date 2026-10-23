@@ -428,8 +428,20 @@ void gcasset_texture_flush(Entry& entry) {
         re4dc_gcasset::emitted_checked(re4dc_gcasset::Consumer(i),entry.asset);
 }
 using GcAssetPacketState=re4dc_gcasset::PacketCursor;
-GcAssetPacketState gcasset_packet_states[5];
 re4dc_gcasset::Consumer gcasset_packet_consumer=re4dc_gcasset::Texture;
+struct GcAssetGeneratedPacket {
+    const void* packet;unsigned bytes,address;re4dc_gcasset::Consumer consumer;bool verified,accepted=false;
+};
+GcAssetGeneratedPacket* gcasset_generated_packet;
+struct GcAssetGeneratedScope {
+    GcAssetGeneratedPacket* previous;re4dc_gcasset::Consumer old_consumer;
+    GcAssetGeneratedScope(GcAssetGeneratedPacket& packet):previous(gcasset_generated_packet),old_consumer(gcasset_packet_consumer){
+        if(previous){packet.verified=false;re4dc_gcasset::unresolved(packet.consumer,"nested-generated-packet");}
+        gcasset_generated_packet=&packet;gcasset_packet_consumer=packet.consumer;
+    }
+    ~GcAssetGeneratedScope(){gcasset_generated_packet=previous;gcasset_packet_consumer=old_consumer;}
+};
+GcAssetPacketState gcasset_packet_states[5];
 re4dc_gcasset::SourceUse gcasset_model_pending;
 void gcasset_model_prepare(const Re4dcModelPart* p) {
     gcasset_model_pending={};const auto& source=re4dc_gcasset::source_use;
@@ -451,7 +463,7 @@ void gcasset_packet_emitted(const void* packet,unsigned bytes,unsigned list,re4d
     const auto* words=static_cast<const std::uint32_t*>(packet);
     for(unsigned offset=0;offset<bytes;offset+=32) {
         const auto* q=words+offset/4;
-        if(!state.feed(q))continue;
+        if(!state.feed(q,gcasset_generated_packet!=nullptr))continue;
         unsigned matches=0;
         for(auto& e:entries)if(e.valid && e.package.upload_complete()) {
             const unsigned n=e.package.header().texture_count;
@@ -459,7 +471,12 @@ void gcasset_packet_emitted(const void* packet,unsigned bytes,unsigned list,re4d
                 gcasset_texture_emitted(&e,consumer);++matches;break;
             }
         }
-        if(matches!=1)re4dc_gcasset::unresolved(consumer,matches?"ambiguous-texture-address":"unmapped-texture-address");
+        if(matches!=1){
+            auto* generated=gcasset_generated_packet;
+            if(!matches && generated && generated->verified && generated->packet==packet && generated->bytes==bytes &&
+                generated->address==state.address && generated->consumer==consumer)generated->accepted=true;
+            else re4dc_gcasset::unresolved(consumer,matches?"ambiguous-texture-address":"unmapped-texture-address");
+        }
     }
 }
 #define RE4DC_GCA_TEXTURE(...) gcasset_texture_emitted(__VA_ARGS__)
@@ -5171,10 +5188,37 @@ namespace {
 static_assert(RE4DC_NATIVE_MES_CELLS==64 || RE4DC_NATIVE_MES_CELLS==128,"NATIVE_MES_CELLS: 64 (256x256) or 128 (256x512)");
 // A 256x512 twiddled texture is two 256x256 squares one after the other; cell c: square c/64, cell c%64 in it.
 constexpr unsigned kGlyphCells=RE4DC_NATIVE_MES_CELLS,kGlyphCapacity=384,kGlyphBanks=8,kGlyphAtlasH=kGlyphCells/8*32,kGlyphAtlasBytes=256*kGlyphAtlasH/2;
-struct GlyphCell { const void* sheet; const void* clut; short u,v; unsigned char cw,ch,bank; bool valid; unsigned frame; };
-struct GlyphQuad { short x0,y0,x1,y1; unsigned char cell,cw,ch,bank; unsigned argb; }; // x/y in 1/4 px
+struct GlyphCell { const void* sheet; const void* clut; short u,v; unsigned char cw,ch,bank; bool valid; unsigned frame;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::CheckedAsset asset{};unsigned serial=0,palette_serial=0;
+#endif
+};
+struct GlyphQuad { short x0,y0,x1,y1; unsigned char cell,cw,ch,bank; unsigned argb;
+#if RE4DC_GC_ASSET_GATE
+    unsigned serial=0,palette_serial=0;
+#endif
+}; // x/y in 1/4 px
+#if !RE4DC_GC_ASSET_GATE
 static_assert(sizeof(GlyphQuad)==16);
-struct GlyphBank { const void* clut; unsigned sum; bool valid; };
+#endif
+struct GlyphBank { const void* clut; unsigned sum; bool valid;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::CheckedAsset asset{};unsigned serial=0;
+#endif
+};
+#if RE4DC_GC_ASSET_GATE
+unsigned glyph_asset_serial;
+re4dc_gcasset::CheckedAsset gcasset_glyph_payload(const char* kind,const void* payload,unsigned bytes){
+    if(!re4dc_gcasset::ensure_disc_catalog())return {};
+    const auto digest=re4dc_gcasset::fingerprint(payload,bytes);char id[41];
+    for(unsigned i=0;i<20;++i)snprintf(id+2*i,3,"%02x",digest.bytes[i]);
+    return re4dc_gcasset::bind_checked(kind,id,digest);
+}
+unsigned gcasset_glyph_version(){
+    if(glyph_asset_serial==0xffffffffU){re4dc_gcasset::unresolved(re4dc_gcasset::Font,"glyph-version-overflow");return 0;}
+    return ++glyph_asset_serial;
+}
+#endif
 pvr_ptr_t glyph_atlas;
 GlyphCell glyph_cells[kGlyphCells];
 GlyphQuad glyph_quads[kGlyphCapacity];
@@ -5235,8 +5279,17 @@ int glyph_bank(const void* clut,unsigned format,unsigned entries){
 #if RE4DC_PVR_MID_FENCE
     present_fence();   // PVR_MID_FENCE: no palette RAM write while a queued render runs
 #endif
+#if RE4DC_GC_ASSET_GATE
+    unsigned palette[16];for(unsigned i=0;i<16;++i)palette[i]=glyph_color((p[2*i]<<8)|p[2*i+1],format);
+    for(unsigned i=0;i<16;++i)pvr_set_pal_entry(unsigned(free_bank)*16+i,palette[i]);
+#else
     for(unsigned i=0;i<16;++i)pvr_set_pal_entry(unsigned(free_bank)*16+i,glyph_color((p[2*i]<<8)|p[2*i+1],format));
+#endif
     glyph_banks[free_bank]={clut,sum,true};
+#if RE4DC_GC_ASSET_GATE
+    glyph_banks[free_bank].asset=gcasset_glyph_payload("font-palette",palette,sizeof palette);
+    glyph_banks[free_bank].serial=gcasset_glyph_version();
+#endif
     re4dc_log("native mes: palette bank %d <- tlut %p format %u\n",free_bank,clut,format);
     return free_bank;
 }
@@ -5291,6 +5344,9 @@ int glyph_cell(const Re4dcUiGlyph& g){
 #endif
     pvr_txr_load(cell,(char*)glyph_atlas+square*32768U+((glyph_twx[cx]|glyph_twy[cy])<<9),sizeof(cell));
     c={g.sheet,g.clut,(short)g.u,(short)g.v,(unsigned char)g.cw,(unsigned char)g.ch,(unsigned char)bank,true,frame};
+#if RE4DC_GC_ASSET_GATE
+    c.asset=gcasset_glyph_payload("font-glyph",cell,sizeof cell);c.serial=gcasset_glyph_version();c.palette_serial=glyph_banks[bank].serial;
+#endif
     glyph_hint[h]=(unsigned char)(victim+1);
     return victim;
 }
@@ -5304,6 +5360,28 @@ const pvr_poly_hdr_t& glyph_header(unsigned bank){
     }
     return glyph_headers[bank];
 }
+#if RE4DC_GC_ASSET_GATE
+bool gcasset_glyph_matches(const GlyphQuad& glyph){
+#if RE4DC_TREE_IMPOSTOR && !RE4DC_TEX_PAL4_ALPHA
+    // Legacy package palettes do not reserve the glyph banks. That profile
+    // needs an actual shared-palette ownership bridge before it can qualify.
+    (void)glyph;return false;
+#else
+    if(glyph.cell>=kGlyphCells || glyph.bank>=kGlyphBanks)return false;
+    const auto& cell=glyph_cells[glyph.cell];const auto& bank=glyph_banks[glyph.bank];
+    return glyph.serial && glyph.palette_serial && cell.serial==glyph.serial && cell.bank==glyph.bank &&
+        cell.palette_serial==glyph.palette_serial && bank.serial==glyph.palette_serial;
+#endif
+}
+void gcasset_glyph_emitted(const GlyphQuad& glyph){
+    if(!gcasset_glyph_matches(glyph)){re4dc_gcasset::unresolved(re4dc_gcasset::Font,"glyph-cell-version");return;}
+    const auto tile=glyph_cells[glyph.cell].asset,palette=glyph_banks[glyph.bank].asset;
+    const re4dc_gcasset::Consumer consumers[]={re4dc_gcasset::Font,re4dc_gcasset::Texture,re4dc_gcasset::Ui};
+    for(const auto consumer:consumers){
+        re4dc_gcasset::emitted_checked(consumer,tile);re4dc_gcasset::emitted_checked(consumer,palette);
+    }
+}
+#endif
 // One run: a header when the palette bank changes, then a 4-vertex strip per glyph (a strip
 // after an end-of-strip vertex reuses the last header).
 void glyph_draw_run(unsigned first,unsigned count){
@@ -5312,12 +5390,27 @@ void glyph_draw_run(unsigned first,unsigned count){
 #endif
     alignas(32) pvr_vertex_t buf[1+4*16];
     unsigned n=0;int bank=-1;
+#if RE4DC_GC_ASSET_GATE
+    const GlyphQuad* asset_quads[16];unsigned asset_count=0;
+#endif
     auto flush=[&]{
         if(!n)return;
+#if RE4DC_GC_ASSET_GATE
+        bool verified=asset_count!=0;
+        for(unsigned i=0;i<asset_count;++i)verified=verified && gcasset_glyph_matches(*asset_quads[i]);
+        GcAssetGeneratedPacket packet{buf,unsigned(n*sizeof(pvr_vertex_t)),unsigned(reinterpret_cast<std::uintptr_t>(glyph_atlas))&0x007fffffU,re4dc_gcasset::Font,verified};
+        {GcAssetGeneratedScope asset_scope(packet);
+#endif
 #if RE4DC_PVR_STREAM
         stream_send(buf,n*sizeof(pvr_vertex_t));
 #else
         re4dc::render::submit_pvr(buf,n*sizeof(pvr_vertex_t));
+#endif
+#if RE4DC_GC_ASSET_GATE
+        }
+        if(packet.accepted && verified){for(unsigned i=0;i<asset_count;++i)gcasset_glyph_emitted(*asset_quads[i]);}
+        else re4dc_gcasset::unresolved(re4dc_gcasset::Font,"unqualified-glyph-packet");
+        asset_count=0;
 #endif
         n=0;
     };
@@ -5335,6 +5428,9 @@ void glyph_draw_run(unsigned first,unsigned count){
             p.flags=k==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;p.x=RE4DC_UI_X(x[k]);p.y=RE4DC_UI_Y(y[k]);p.z=layer;p.u=u[k];p.v=v[k];p.argb=g.argb;p.oargb=0;
         }
         ++glyph_drawn;
+#if RE4DC_GC_ASSET_GATE
+        asset_quads[asset_count++]=&g;
+#endif
     }
     flush();
 }
@@ -5368,6 +5464,9 @@ extern "C" void re4dc_ui_glyph(const Re4dcUiGlyph* g){
             g->u,g->v,g->cw,g->ch,int(g->x0),int(g->y0),int(g->x1),int(g->y1),g->argb);}
     glyph_quads[nglyph]={glyph_quarter(g->x0),glyph_quarter(g->y0),glyph_quarter(g->x1),glyph_quarter(g->y1),(unsigned char)cell,
         (unsigned char)g->cw,(unsigned char)g->ch,glyph_cells[cell].bank,g->argb};
+#if RE4DC_GC_ASSET_GATE
+    glyph_quads[nglyph].serial=glyph_cells[cell].serial;glyph_quads[nglyph].palette_serial=glyph_cells[cell].palette_serial;
+#endif
     if(extend)++quads[nquad-1].image.height;
     else {
         Re4dcUiQuad* q=new(quads+nquad) Re4dcUiQuad{};
