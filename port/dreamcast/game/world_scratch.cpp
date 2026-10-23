@@ -237,10 +237,13 @@ void publish(){
     }
     if(meter_complete_published && !meter_logged){
         meter_logged=true;const auto t=frame_meter.totals();
-        re4dc_log("WS23 wall serial=1 completed_arm=%u room=%x periods=%u drawn=%u skip=%u wall_us=%llu draw_us=%llu skip_us=%llu max_us=%llu entries=%u exits=%u borrows=%u faults=%u ccr=%x restored=%u transitions_already_in_wall=1\n",
+        // mem.cpp re4dc_log uses char line[256]. Even UINT_MAX / ULLONG_MAX
+        // fields fit these two complete lines (252 / 170 bytes incl newline).
+        re4dc_log("WS23 wall-time serial=1 completed_arm=%u room=%x periods=%u drawn=%u skip=%u wall_us=%llu draw_us=%llu skip_us=%llu max_us=%llu transitions_in_wall=1\n",
             selected_arm,selected_room,t.periods,t.drawn,t.skipped,(unsigned long long)t.wall_us,
-            (unsigned long long)t.draw_us,(unsigned long long)t.skip_us,(unsigned long long)t.max_us,
-            st.entries,st.exits,st.borrows,value.faults,mode,value.restored);
+            (unsigned long long)t.draw_us,(unsigned long long)t.skip_us,(unsigned long long)t.max_us);
+        re4dc_log("WS23 wall-state serial=1 completed_arm=%u room=%x entries=%u exits=%u borrows=%u faults=%u ccr=%x restored=%u\n",
+            selected_arm,selected_room,st.entries,st.exits,st.borrows,value.faults,mode,value.restored);
     }
 }
 void select_once(unsigned room){

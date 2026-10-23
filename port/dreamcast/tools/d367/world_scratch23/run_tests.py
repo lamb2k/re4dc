@@ -47,6 +47,13 @@ def main():
   while depth:depth+=(qa[right]=='{')-(qa[right]=='}');right+=1
   formatter='#include "world_scratch.h"\n#include <cassert>\n#include <cstdarg>\n#include <cstdio>\n#include <cstring>\nchar text[2048]{};\nint addf(int at,const char* f,...){va_list a;va_start(a,f);const int n=vsnprintf(text+at,sizeof(text)-at,f,a);va_end(a);return at+n;}\nextern "C" int re4dc_world_scratch_meter_read(re4dc::world_scratch::MeterSnapshot* s){*s={};s->version=1;s->kind=1;s->target=600;s->phase=3;s->complete=1;s->arm=2;s->window_serial=1;s->periods=600;s->drawn=300;s->skipped=300;s->ccr=0x105;s->restored=1;s->wall_us_lo=600000;s->max_us_lo=1000;return 1;}\n'+qa[start:right]+'\nint main(){scratch_rows(0);assert(strstr(text,"COMPLETE C"));assert(strstr(text,"avg=1.000 ms"));assert(strstr(text,"CCR=105 restored=1"));assert(strstr(text,"INCLUDED IN WALL"));assert(!strstr(text,"ACTIVE C"));}\n'
   (o/'format.cpp').write_text(formatter);run(['g++','-std=c++17','-O2','-DRE4DC_WORLD_SCRATCH=1','-I'+str(G),o/'format.cpp','-o',o/'format']);run([o/'format'])
+  # Exercise BOTH actual production completion-log calls with UINT_MAX/u64max
+  # through mem.cpp's real256-byte vsnprintf contract, not the QA formatter.
+  cpp=(G/'world_scratch.cpp').read_text();start=cpp.index('if(meter_complete_published && !meter_logged)')
+  calls=cpp[cpp.index('re4dc_log(',start):cpp.index('\n    }',start)]
+  assert calls.count('re4dc_log(')==2 and calls.count('serial=1 completed_arm=%u room=%x')==2
+  width_test='#include "world_scratch.h"\n#include <cassert>\n#include <cstdarg>\n#include <cstdio>\n#include <cstring>\n#include <climits>\nusing namespace re4dc::world_scratch;\nunsigned nlog=0;\nvoid re4dc_log(const char* fmt,...) __attribute__((format(printf,1,2)));\nvoid re4dc_log(const char* fmt,...){char line[256];va_list args;va_start(args,fmt);const int n=vsnprintf(line,sizeof(line),fmt,args);va_end(args);assert(n>0 && n<256 && std::strlen(line)==unsigned(n) && line[n-1]==char(10));assert(std::strstr(line,"serial=1 completed_arm=4294967295 room=ffffffff"));assert(std::strstr(line,nlog?"WS23 wall-state ":"WS23 wall-time "));assert(n==int(nlog?170:252));++nlog;}\nint main(){const unsigned selected_arm=UINT_MAX,selected_room=UINT_MAX,mode=UINT_MAX;MeterTotals t{};t.periods=t.drawn=t.skipped=UINT_MAX;t.wall_us=t.draw_us=t.skip_us=t.max_us=ULLONG_MAX;Stats st{};st.entries=st.exits=st.borrows=UINT_MAX;Snapshot value{};value.faults=value.restored=UINT_MAX;\n'+calls+'\nassert(nlog==2);}\n'
+  (o/'log_width.cpp').write_text(width_test);run(['g++','-std=c++17','-O2','-Wall','-Wextra','-Werror','-DRE4DC_WORLD_SCRATCH=1','-I'+str(G),o/'log_width.cpp','-o',o/'log_width']);run([o/'log_width'])
   # Actual old/new Diagnostics preprocessing is identical with scratch off;
   # the empty KOS/QR declarations are sufficient for preprocessing only.
   for name in ('kos.h','dc/maple.h','dc/maple/controller.h','dc/video.h','arch/timer.h','third_party/qrcodegen/qrcodegen.h'):
@@ -81,5 +88,5 @@ def main():
   assert '-DRE4DC_WORLD_SCRATCH=1' in run(qa_cmd+cfg,cwd=G)
   for bad in [['WORLD_SCRATCH=2'],cfg+['CPU_BACKFACE=1'],cfg+['MESH_FASTPATH=0']]:
    assert subprocess.run(base+bad,stdout=subprocess.PIPE,stderr=subprocess.PIPE).returncode!=0
- print('PASS: exact A/B/C whole wall periods, tail/restore included once, draw/skip and invalidation controls; original100B ABI, default-off object identity, Diagnostics and Make admission')
+ print('PASS: exact A/B/C whole wall periods, tail/restore included once, draw/skip and invalidation controls; original100B ABI, default-off object identity, Diagnostics, actual completion logs252/170bytes and Make admission')
 if __name__=='__main__':main()

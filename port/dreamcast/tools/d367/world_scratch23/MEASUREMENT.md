@@ -69,3 +69,11 @@ WORLD_METER0 and1; Make verifies the QA flag appears only when scratch is enable
 These are focused HOST/source checks, not a target/full-programme identity,
 linked ownership/memory, guest/image or physical Dreamcast speed result. Main
 owns those gates and integration, including any future combined actor image.
+
+The completed-only log uses two lines: WS23 wall-time and WS23 wall-state.
+Both repeat serial, completed arm and room so a retained line cannot silently
+inherit another context. The real logger has a256-byte vsnprintf buffer. Actual
+production format/argument expressions are tested through that exact buffer
+contract with every unsigned at UINT_MAX and every timing at ULLONG_MAX:252 and
+170 bytes including newline (plus NUL), so neither line truncates. No per-frame
+logs were added; both completion lines are emitted after the measured window.
