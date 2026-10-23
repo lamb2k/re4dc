@@ -544,7 +544,7 @@ public:
         if (!parse()) return false;
 #if RE4DC_ACTOR_BACKFACE_CONE
         ++abc_conv; if (p.blend == 0) ++abc_conv_op; if (abc_class_of(p.model)) ++abc_conv_mk;
-        if (p.blend == 0 && (abc_force || abc_class_of(p.model))) abc_split();
+        if (p.blend == 0) abc_split();  // every opaque actor part (the cone is used only where the draw culls)
 #endif
         rs = 3U + (constant_color ? 0U : 1U);
         infos = arena.take<MeshletInfo>(strip_count);
