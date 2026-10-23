@@ -70,3 +70,42 @@ listed preset directory into that arm's dc/qa before mastering and preserve
 README/program/data/source pins with each private package after safety gates.
 Unmodified rr-qa.sh hardcodes rr<sha7>qrW, and rr-cycle/rr-jobs assume shared rr
 labels; invoking them for these custom same-source arms would risk output reuse.
+## Existing bounded s30 fragment
+
+The optional `--s30-fixture` pins this existing file without copying or editing it:
+
+```text
+/mnt/c/Game Dev/Emulators/codex-lanes/world-scratch23/native-memory813/fixtures/s30-only.txt
+```
+
+Source:222 bytes, SHA2569883b78b34beed91ea6fe03a19e3e79cbb5e903dd173d1fb13c83a2e9534d110.
+The stock runner removes only CR bytes:221-byte wire SHA256a5dc391e780a97f6759f223753f2caeabd90eec55e5853514d0f9d054d3d1d36.
+It declares a post-ambush r100 start, RSF3/10/13 and scenario0x10, then presses A at
+room frame60 to invoke the original area callback. It does not force movie
+completion, alter required movie frames or bypass the movie's own loan/return.
+
+Its actual source2158baff console-proxy run is preserved at:
+
+```text
+C:/Flycast-Evidence/re4-dreamcast/pvs23-20261022/scratch-memory2158-2158baff82e0812e5cf9ed3186e27e22d753d045-s30-only-01/
+```
+
+The captured run-result.json sets seconds54, goal at34.9s and elapsed37.0s;
+controller-result.json records actual root37.270s and closure37.296s. The log and
+memory-result.json show MOVIEARENA borrow token1, return restored1,340/340 frames
+uploaded/presented, full movie11.922s, heap_before163328 and resumed world draw.
+This demonstrates how the original complete movie fits a one-minute fragment:
+it starts after the earlier house/ambush movies and their waiting actions.
+No historical symbol addresses or acceptance results transfer to a new candidate.
+
+Use the current main arm's own base, symbol triple and new evidence path with the
+plan's seconds54/stop-retired/grace2 arguments, console proxy and trace lock. It
+still needs a new Off/On result. Timeout is INCOMPLETE. On must show fresh SDO3
+adoption after reload and world rendering resumption, with the current source/data
+pins. This checks the declared-state movie/heap/loan/reload fragment only. It does
+not reproduce full H2's tight94KB heap state or satisfy that full route gate.
+
+The later Claude world-scratch23 h2C pass used a300-second cap and168.8 seconds
+elapsed; fix-r200-gears23 h2 similarly took168.3 seconds. Neither is one-minute
+proof. Keep the full H2 floor requirement pending under a60-second-only contract;
+never substitute the higher163328-byte fragment heap or extend a timeout silently.

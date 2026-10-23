@@ -55,6 +55,7 @@ def main():
     ap.add_argument('--work',type=Path,required=True)
     ap.add_argument('--off-label',required=True);ap.add_argument('--on-label',required=True)
     ap.add_argument('--off-out',type=Path);ap.add_argument('--on-out',type=Path)
+    ap.add_argument('--s30-fixture',type=Path,help='Exact existing world-scratch23 bounded post-ambush fixture; no copy or edit')
     ap.add_argument('--output',type=Path)
     a=ap.parse_args()
     for label in (a.off_label,a.on_label):
@@ -95,10 +96,22 @@ def main():
         arms[name]=dict(label=label,expected_knob=f'SCENERY_DEDUP={mode}',program=program(out,source,mode,label),
                         stage=dict(environment={'RE4DC_RESIDENT_STRICT':'1'},argv=argv),fixture=str(fixture),
                         pkgtree=dict(environment={'PKG_K':str(a.work/name)},argv=['python3',tools['test8/t8-pkgtree.py'],label,str(fixture)]))
+    fragment=dict(status='PENDING: supply --s30-fixture to pin the existing bounded fragment')
+    if a.s30_fixture:
+        fragment=pin(a.s30_fixture);raw=a.s30_fixture.read_bytes();wire=raw.replace(b'\r',b'')
+        if fragment['sha256']!='9883b78b34beed91ea6fe03a19e3e79cbb5e903dd173d1fb13c83a2e9534d110':raise ValueError('Not the authenticated existing s30 fragment')
+        fragment.update(status='FIXTURE PINNED; new target result PENDING',wire_bytes=len(wire),
+                        wire_sha256=hashlib.sha256(wire).hexdigest(),transformation='stock fp_run CR removal only',
+                        scope='Declared post-ambush original-area callback fragment; not full H2 or its tight heap floor')
     gates=[
+      dict(name='r100 s30 movie loan/reload fragment',fixture=fragment,tool=tools['fullplay/fp_run.py'],
+           environment={'RE4DC_EMU':'console','FP_NOLIMIT':'1','RE4DC_MAX_FLYCASTS':'3'},
+           arguments=['--seconds','54','--period','0','--stop',r'(?m)^route movie retired: id=10030\b[^\r\n]*\r?$','--grace','2'],
+           accept='340/340 uploaded/presented; MOVIEARENA borrow and return restored1; no faults; matched Off fragment heap_before; On SDO3 adopted again after loan and world draw resumes',
+           prior_scope='The existing source2158baff run took37.0s with full11.922s movie. This is historical fixture evidence, not a new target PASS. A54s timeout remains INCOMPLETE; no extension or movie shortening.'),
       dict(name='knob0 image identity',accept='objcopy -R .stack SHA256 equals same-recipe pre-change control; ordinary ELF/file SHA is insufficient'),
       dict(name='KOS48KiB',requires_resolved_knobs={'KOS_WATCH':'1','KOS_SQUEEZE':'1','W11_FIXTURE':'1'},tool=tools['fullplay/kos_squeeze.sh'],levels='49152:0 49152:1',scenes='fight call leave100 leave103',accept='0 OOM/HALT/MISSING; held49152; headroom>=4096; every scene endpoint',seconds=60),
-      dict(name='r100 s30',fixture=tools['fullplay/segments/h2-warp.txt'],pad=tools['fullplay/segments/h2-pad.txt'],accept='340/340 plus heap_before >= matched Off; no allocation faults',seconds=60,note='Existing rr h2 uses300s and named full gate420s. Do not silently invoke those under a60s contract. Main must supply a qualified bounded s30 fixture or deliberately use its already authorized named exception; a60s timeout is INCOMPLETE.'),
+      dict(name='r100 fullH2 s30 memory floor',fixture=tools['fullplay/segments/h2-warp.txt'],pad=tools['fullplay/segments/h2-pad.txt'],accept='340/340 plus heap_before >= matched Off; no allocation faults',seconds=60,note='Existing rr h2 uses300s and named full gate420s. Do not silently invoke those under a60s contract. Main must supply a qualified bounded s30 fixture or deliberately use its already authorized named exception; a60s timeout is INCOMPLETE.'),
       dict(name='census',requires_resolved_knobs={'TEX_CHECK':'1 or2','MCHECK_LEONGC':'1'},note='A TEX_CHECK0/MCHECK0 rW program cannot establish these gates; require a diagnostic build/twin and pin it separately.',rooms=['r100','r101','r103'],accept='TEXCHK fails0; VRAM no-contiguous/refusals/rereads0; CAST-GC/LEON-GC unlisted0; alive characters still drawn',seconds=60),
       dict(name='look pairs',fixtures={'cross':pin(d/'scenery19/k/still-r101-warp.txt'),'farm':pin(d/'scenery19/k/still-r103-warp.txt')},tool=tools['fullplay/fp_run.py'],arguments=['--seconds','60','--period','5'],compare_tool=tools['scenery19/pix.py'],accept='Off/On share source/fixture/data and logged freeze700; compare only matched post-freeze captures. Use cross-k/cross-p and farm-k/farm-p names for existing pix.py.'),
       dict(name='GDEMU race',tool=tools['fullplay/gdemu_gate.sh'],fixture=tools['fullplay/segments/door103-warp.txt'],environment={'MAXP':'1','SECS':'60','RE4DC_EMU':'console','RE4DC_GD_PROFILE':'gdemu'},seeds=list(range(1,11)),accept='Every seed reaches r103; bad reads0 and stop faults0; proxy correctness, not console timing'),
