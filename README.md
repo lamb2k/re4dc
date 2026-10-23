@@ -155,6 +155,10 @@ Planned, with no date yet. Ticked items have passed our checks and will be in Te
 - [ ] **Less scenery drawn when it can't be seen.**
 - [ ] **Faster inventory:** it reads only the item you open.
 - [ ] **A better-looking El Gigante up close.**
+- [x] **River water:** the cave river, the dam river by the water wheel and the merchant cave pool now draw their PS2 water ([#55](https://github.com/lamb2k/re4dc/issues/55)).
+- [x] **Trap explosions:** tree and door traps now explode with fire ([#55](https://github.com/lamb2k/re4dc/issues/55)).
+- [x] **Missing gears:** the lever gears stay drawn and turn ([#52](https://github.com/lamb2k/re4dc/issues/52)).
+- [x] **Castle gate texture:** the one picture at the castle gate that failed its check now loads.
 
 ## What's new in Test 17.1
 
