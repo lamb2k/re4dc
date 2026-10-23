@@ -20,10 +20,20 @@ def main():
     ap.add_argument('--stage',type=Path,required=True)
     ap.add_argument('--private',type=Path,required=True)
     ap.add_argument('--out',type=Path,required=True)
+    ap.add_argument('--rect21',action='store_true',help='match complete immutable descriptors, as qualified opaque_ready does')
     ap.add_argument('--rooms',nargs='+',default=['r10d','r102','r109','r112','r111','r113'])
     a=ap.parse_args()
     header_path=Path(__file__).resolve().parents[3]/'room/texture_package.hpp'
     header=header_path.read_text()
+    adapter=Path(__file__).resolve().parent.parent/'texture_rect21'
+    table=(adapter/'scoped_representations.inc').read_text()
+    representations={}
+    for line in table.splitlines():
+        if not line.startswith('{'):continue
+        fields=[int(x,0) for x in re.findall(r'(0x[0-9a-f]+|[0-9]+)U',line)]
+        assert len(fields)==11
+        representations[tuple(fields[:4])]=tuple(fields[4:])
+    assert len(representations)==798
     def bit(name):
         return 1<<int(re.search(name+r'\s*=\s*1U\s*<<\s*(\d+)U',header)[1])
     flags={name:bit(name) for name in ('kAlpha','kBinaryAlpha','kMipmap','kTopDrop')}
@@ -44,7 +54,7 @@ def main():
             th=struct.unpack('<8s10I',head)
             assert th[0]==b'RE4DCTX\0' and th[4]==1
             f.seek(off+th[5]);t=struct.unpack('<64s8I',f.read(96))
-            result=dict(width=t[1],height=t[2],format=t[3],flags=t[6],payload=t[7])
+            result=dict(width=t[1],height=t[2],format=t[3],flags=t[6],payload=t[7],data_size=t[5],payload_crc32=th[8])
             textures[key]=result;return result
         reports=[]
         for name in a.rooms:
@@ -65,7 +75,10 @@ def main():
                 if tex is None:reason='not in pack; loose residency must be inspected'
                 elif tex['format']!=0:reason='not intrinsic RGB565'
                 elif tex['flags']&forbidden_flags:reason='alpha, binary-alpha or top-drop flags'
-                elif (tex['width'],tex['height'])!=(meta['w'],meta['h']):reason='dimension mismatch'
+                elif (tex['width'],tex['height'])!=(meta['w'],meta['h']):
+                    descriptor=tuple(tex[k] for k in ('width','height','format','flags','payload','data_size','payload_crc32'))
+                    logical=(*key,meta['w'],meta['h'])
+                    if not a.rect21 or representations.get(logical)!=descriptor:reason='dimension mismatch without authenticated rect21 descriptor'
                 # table_guard also requires the source part reserved-bit0 clear.
                 policy_reserved=policy[32+16*part+15]
                 if policy_reserved&1:reason='source material animation/reserved bit'
@@ -86,7 +99,8 @@ def main():
                             conditional=conditional,key=f'{key[0]:08x}-{key[1]:08x}',texture=tex))
             reports.append(report)
     out=dict(kind='actual package prerequisite census; no runtime cuts or predicted ms',
-             actual_texture_flag_constants=flags,
+             actual_texture_flag_constants=flags,rect21_enabled=a.rect21,
+             rect21_inputs={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (adapter/'world_rect_bind.h',adapter/'scoped_representations.inc')},
              texture_header_sha256=hashlib.sha256(header_path.read_bytes()).hexdigest(),rooms=reports)
     a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(out,indent=1)+'\n')
     print(json.dumps(out))

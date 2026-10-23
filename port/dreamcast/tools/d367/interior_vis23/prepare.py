@@ -46,6 +46,7 @@ def main():
     ap.add_argument('--ids', required=True, type=Path)
     ap.add_argument('--base-report', required=True, type=Path)
     ap.add_argument('--log', action='append', type=Path, required=True)
+    ap.add_argument('--strip-groups',type=Path,help='bind the actual staged optional r4sg; required before SG-aware pricing')
     ap.add_argument('--room', default='10d')
     ap.add_argument('--cell', type=float, default=2000)
     ap.add_argument('--vertical-pad', type=float, default=250)
@@ -75,6 +76,9 @@ def main():
                                            (a.original_policy,pkg/'original.r4pw'),
                                            (a.ids,pkg/'ps2-world.ids'),
                                            (a.base_report,pkg/'base-report.json'))}
+    if a.strip_groups:
+        target=pkg/'ps2-world.r4sg';shutil.copyfile(a.strip_groups,target)
+        receipt['inputs'][target.name]={'source':str(a.strip_groups),'sha256':sha(target),'bytes':target.stat().st_size}
     subprocess.run([sys.executable, str(helpers/'pvs'/'pvs_prep.py'), str(pkg),
                     a.room, str(work), '--original-policy', str(pkg/'original.r4pw')], check=True)
     meta = json.loads((work/'meta.json').read_text())

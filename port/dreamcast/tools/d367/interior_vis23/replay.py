@@ -77,11 +77,12 @@ def main():
     ap.add_argument('private',type=Path);ap.add_argument('--log',required=True,type=Path)
     ap.add_argument('--first',type=int,default=500);ap.add_argument('--last',type=int,default=794)
     ap.add_argument('--stride',type=int,default=7);ap.add_argument('--lod-px',type=float,default=5.)
-    ap.add_argument('--far-lod',type=float,default=4.);ap.add_argument('--name',required=True)
+    ap.add_argument('--far-lod',type=float,default=4.);ap.add_argument('--pre-strip-groups',action='store_true',help='conservative selected work ceiling before SG selection');ap.add_argument('--name',required=True)
     a=ap.parse_args();r=a.private
     sys.path.insert(0,str(r/'helpers'/'interior'));from r4im import Pkg
     pkg=Pkg(r/'inputs/ps2-world.re4mesh',r/'inputs/ps2-world.r4pw')
-    assert not (r/'inputs/ps2-world.r4sg').exists(),'SG replay unsupported'
+    sg=(r/'inputs/ps2-world.r4sg').exists()
+    assert not sg or a.pre_strip_groups,'SG replay unsupported; explicit --pre-strip-groups required for upper-bound pricing'
     chosen=cameras(a.log,a.first,a.last,a.stride);assert chosen,'no selected exact cameras'
     summaries=[];rows=[]
     for frame,cam in chosen:
@@ -90,9 +91,9 @@ def main():
         summaries.append(dict(frame=frame,corners=sum(c['corners'] for c in counts),
                               meshlets=sum(c['meshlets'] for c in counts),
                               clusters=sum(c['corners']>0 for c in counts)))
-    report=dict(kind='offline baked-pose opaque selection replay',actual_runtime_counters=False,
+    report=dict(kind='offline baked-pose pre-strip-group work ceiling' if sg else 'offline baked-pose opaque selection replay',actual_runtime_counters=False,strip_group_sidecar_bound=sg,
                 assumptions=['baked placement poses; no source hierarchy/hide/AREA change',
-                             'current r10d has no strip-group sidecar',
+                             'strip-group selection omitted; selected work is an upper bound' if sg else 'bound inputs have no strip-group sidecar',
                              'host double arithmetic; boundary cases require target count comparison'],
                 log=str(a.log),frames=[s['frame'] for s in summaries],lod_px=a.lod_px,far_lod=a.far_lod,
                 selected_corners_mean=float(np.mean([s['corners'] for s in summaries])),
