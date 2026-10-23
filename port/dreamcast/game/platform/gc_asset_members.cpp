@@ -8,7 +8,7 @@ ReplayUse replay_use;
 namespace {
 constexpr unsigned ArchiveCount=16, MemberCount=128;
 struct Archive {
-    const void* owner;const unsigned char* base;unsigned bytes,generation;bool transient;
+    const void* owner;const unsigned char* base;unsigned bytes,generation;bool transient;OwnerFamily family;
 } archives[ArchiveCount];
 struct Member {
     const unsigned char* base;const char* name;Digest digest;
@@ -112,12 +112,15 @@ void revoke(unsigned owner) {
     archives[owner]={};
 }
 }
-bool member_adopt(const void* owner,void* archive,unsigned bytes,bool transient) {
+bool member_adopt(const void* owner,void* archive,unsigned bytes,bool transient,OwnerFamily family) {
     if(!owner || !archive || bytes<16 || generation==0xffffffffU) { unresolved(SourceGeometry,"member-adopt");return false; }
     unsigned free=ArchiveCount;
     for(unsigned i=0;i<ArchiveCount;++i) {
         if(archives[i].owner==owner) {
-            if(archives[i].base==archive && archives[i].bytes==bytes)return true;
+            if(archives[i].base==archive && archives[i].bytes==bytes) {
+                if(archives[i].family==family)return true;
+                revoke(i);unresolved(SourceGeometry,"member-owner-family");return false;
+            }
             revoke(i);free=i;break;
         }
         if(!archives[i].owner && free==ArchiveCount)free=i;
@@ -129,7 +132,7 @@ bool member_adopt(const void* owner,void* archive,unsigned bytes,bool transient)
     }
     if(conflict) { unresolved(SourceGeometry,"member-owner-overlap");return false; }
     if(free==ArchiveCount) { unresolved(SourceGeometry,"member-owner-capacity");return false; }
-    Archive candidate{owner,static_cast<unsigned char*>(archive),bytes,++generation,transient};unsigned count;
+    Archive candidate{owner,static_cast<unsigned char*>(archive),bytes,++generation,transient,family};unsigned count;
     if(!table(candidate,count)) { unresolved(SourceGeometry,"member-directory");return false; }
     archives[free]=candidate;return true;
 }
@@ -155,6 +158,7 @@ bool member_lookup(const void* data,ModelMember* out) {
     if(!out)return false;
     for(const auto& member:members)if(current(member) && contains(member.base,member.bytes,data,64)) {
         *out={member.digest,member.serial,member.arc,unsigned(static_cast<const unsigned char*>(data)-member.base),{}};
+        out->family=archives[member.owner].family;
         if(member.name)for(unsigned i=0;i<31 && member.name[i];++i) {
             const unsigned char c=member.name[i];out->name[i]=c>='A'&&c<='Z'?c+32:c;
         }

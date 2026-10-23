@@ -5,6 +5,7 @@
 #include "include/gc_asset_members.h"
 #if RE4DC_GC_ASSET_GATE
 extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**);
+extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned);
 #endif
 #include "native_render_profile.hpp"
 #include "native_reuse_audit.hpp"
@@ -774,8 +775,11 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
         if(re4dc_gcasset::replay_use.serial!=0xffffffffU)
             re4dc_gcasset::source_use={re4dc_gcasset::replay_use.serial,re4dc_gcasset::replay_use.mask,p->model,p->info};
         else if(re4dc_gcasset_model_identity(p->model,p->info,&data)!=0xffffffffU &&
-           re4dc_gcasset::member_lookup(data,&member))
-            re4dc_gcasset::source_use={member.serial,1U<<re4dc_gcasset::SourceGeometry,p->model,p->info};
+           re4dc_gcasset::member_lookup(data,&member)) {
+            const unsigned mask=(1U<<re4dc_gcasset::SourceGeometry)|
+                (re4dc_gcasset_weapon_consumer(p->model,p->info,member.arc,member.family)?1U<<re4dc_gcasset::Weapon:0U);
+            re4dc_gcasset::source_use={member.serial,mask,p->model,p->info};
+        }
     }
 #endif
 #if RE4DC_NATIVE_ACTOR

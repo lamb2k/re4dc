@@ -20,11 +20,48 @@ def function(source, marker):
 
 
 class RuntimeTextureTests(unittest.TestCase):
+    def test_actual_weapon_consumer_roles(self):
+        classifier = function((GAME / 'model_bridge.cpp').read_text(), 'extern "C" unsigned re4dc_gcasset_weapon_consumer(')
+        fixture = r'''
+#include "gc_asset_members.h"
+#include <cassert>
+struct cModel{unsigned kindid,id;};struct Body{const void* pRight;const void* pLeft;};
+struct cPlayer:cModel{::Body* Body;};cPlayer* pPL;
+''' + classifier + r'''
+int main(){using namespace re4dc_gcasset;int info,other;cModel model{1,0};
+  const unsigned ids[]={0x21,0x23,0x24,0x25,0x27,0x28,0x2b,0x2c,0x2d,0x2e,0x2f,0x30,0x31,0x32,0x33,0x34,0x36,0x3c,0x3d,0x1a,0x22,0x29,0x2a,0x3a};
+  for(unsigned id:ids){model.id=id;assert(re4dc_gcasset_weapon_consumer(&model,&info,4,OtherOwner));}
+  model.id=0x0a;assert(!re4dc_gcasset_weapon_consumer(&model,&info,0x7a,OtherOwner));
+  assert(!re4dc_gcasset_weapon_consumer(&model,&info,0x2d,OtherOwner)); // enemy debris counterexample
+  assert(re4dc_gcasset_weapon_consumer(&model,&info,0x7a,PlayerOwner));
+  assert(!re4dc_gcasset_weapon_consumer(&model,&info,0x79,PlayerOwner));
+  assert(re4dc_gcasset_weapon_consumer(&model,&info,4,WeaponOwner));
+  model={0,0x4f};assert(re4dc_gcasset_weapon_consumer(&model,&info,0x72,PlayerOwner));
+  assert(!re4dc_gcasset_weapon_consumer(&model,&info,0x72,OtherOwner));
+  assert(!re4dc_gcasset_weapon_consumer(&model,&info,0x73,PlayerOwner));
+  Body body{&info,nullptr};cPlayer player{{0,0},&body};pPL=&player;
+  assert(re4dc_gcasset_weapon_consumer(pPL,&info,0x12,PlayerOwner));
+  assert(!re4dc_gcasset_weapon_consumer(pPL,&other,0x12,PlayerOwner)); // whole-player is not a weapon
+  body.pRight=nullptr;body.pLeft=&info;assert(re4dc_gcasset_weapon_consumer(pPL,&info,0x14,PlayerOwner));
+  assert(!re4dc_gcasset_weapon_consumer(nullptr,&info,4,WeaponOwner));
+  pPL=nullptr;
+}
+'''
+        with tempfile.TemporaryDirectory(prefix='gc-port23-weapon-', dir='/dev/shm') as temporary:
+            root = Path(temporary)
+            (root / 'fixture.cpp').write_text(fixture)
+            executable = root / 'fixture'
+            subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
+                            '-DRE4DC_GC_ASSET_GATE=1', '-I', str(GAME / 'platform/include'),
+                            str(root / 'fixture.cpp'), '-o', str(executable)], check=True)
+            subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
+
     def test_integrated_replay_keeps_original_or_fails_retired(self):
         model = (GAME / 'platform/native_model.cpp').read_text()
         start = model.index('extern "C" void re4dc_model_submit(const Re4dcModelPart* p){')
         gateway = model[start:model.index('#if RE4DC_NATIVE_ACTOR\n', start)]+'observe_selected(p);\n}\n'
         bridge = function((GAME / 'model_bridge.cpp').read_text(), 'extern "C" unsigned re4dc_gcasset_model_identity(')
+        classifier = function((GAME / 'model_bridge.cpp').read_text(), 'extern "C" unsigned re4dc_gcasset_weapon_consumer(')
         ui = (GAME / 'platform/native_ui.cpp').read_text()
         helpers = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
         fixture = r'''
@@ -36,6 +73,7 @@ class RuntimeTextureTests(unittest.TestCase):
 #include <string>
 #include <vector>
 struct cModel{unsigned kindid,id,type,nParts;};struct cModelInfo{const void* pData;};
+struct Body{const void* pRight;const void* pLeft;};struct cPlayer:cModel{::Body* Body;};cPlayer* pPL;
 struct Re4dcModelPart{const void* model;const void* info;unsigned serial;const void* world;const void* view;unsigned source_key[3];const void* stream;};
 std::string logs;bool sq_held;
 extern "C" void re4dc_log(const char* fmt,...){assert(!sq_held);char text[256];va_list ap;va_start(ap,fmt);vsnprintf(text,sizeof text,fmt,ap);va_end(ap);logs+=text;}
@@ -43,7 +81,7 @@ extern "C" void re4dc_log(const char* fmt,...){assert(!sq_held);char text[256];v
 #define RE4DC_MODEL_DIAG() true
 #define PP_PATH(...) ((void)0)
 bool re4dc_static_submit(const Re4dcModelPart*){return false;}
-''' + bridge + '\n' + helpers + r'''
+''' + bridge + '\n' + classifier + '\n' + helpers + r'''
 void observe_selected(const Re4dcModelPart* p){gcasset_model_prepare(p);sq_held=true;gcasset_model_accept();sq_held=false;}
 ''' + gateway + r'''
 std::vector<unsigned char> blob(unsigned byte){std::vector<unsigned char>b(128);unsigned one=1,off=32;std::memcpy(b.data(),&one,4);std::memcpy(b.data()+16,&off,4);std::memcpy(b.data()+20,"BIN",3);b[40]=byte;return b;}
@@ -91,6 +129,7 @@ unsigned a,b,lookups,selections,expected=77,calls;bool replace;
 #define PP_PATH(...) ((void)0)
 int re4dc_static_submit(const Re4dcModelPart*){assert(!re4dc_gcasset::source_use.serial);++calls;return replace;}
 extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void* info,const void** data){*data=static_cast<const Info*>(info)->data;return 0;}
+extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned){return 0;}
 bool re4dc_gcasset::member_lookup(const void* data,ModelMember* out){++lookups;out->serial=data==&a?77:88;return true;}
 void observe_selected(const Re4dcModelPart*){++selections;assert(re4dc_gcasset::source_use.serial==expected);}
 ''' + gateway + r'''
@@ -159,6 +198,7 @@ unsigned char model_packets[1024];
 void stream_send(const void*,unsigned){}
 void re4dc_missing(const char*){assert(false);}
 #define RE4DC_GCA_TEXTURE(...) ((void)0)
+#define RE4DC_GCA_MODEL_TEXTURE(...) ((void)0)
 ''' + helpers + r'''
 #define RE4DC_GCA_MODEL_ACCEPT() gcasset_model_accept()
 ''' + commit + '\n' + direct + '\nvoid switch_account(unsigned vertices){\n' + switch[start:finish] + r'''
@@ -258,6 +298,8 @@ int main(){
     assert(re4dc_ui_bind_weapon(weapon.data(),128));assert(re4dc_ui_bind_enemy(enemy.data(),128));
     table_count=0;assert(re4dc_ui_bind_enemy(plain.data(),128)); // ordinary archive early return
     ModelMember m;
+    assert(member_lookup(player.data()+32,&m) && m.family==PlayerOwner);
+    assert(member_lookup(weapon.data()+32,&m) && m.family==WeaponOwner);
     re4dc_ui_unbind_player();assert(!member_lookup(player.data()+32,&m));
     re4dc_ui_unbind_weapon();assert(!member_lookup(weapon.data()+32,&m));
     re4dc_ui_unbind_option();assert(!member_lookup(option.data()+32,&m));
@@ -300,6 +342,7 @@ unsigned notices;void* model_handle;
 void sq_unlock(){assert(sq_held);sq_held=false;}
 void re4dc_missing(const char*){std::abort();}
 #define RE4DC_GCA_TEXTURE(...) (++notices)
+#define RE4DC_GCA_MODEL_TEXTURE(...) (++notices)
 #define RE4DC_GCA_MODEL_ACCEPT() ((void)0)
 '''
         for batch in (0, 1):
@@ -350,6 +393,7 @@ int main(){
         packet = function(ui, 'void gcasset_packet_emitted(')
         state = ui[ui.index('using GcAssetPacketState='):ui.index('void gcasset_packet_emitted(')]
         effect_send = function(ui, 'void gcasset_fx_stream_send(')
+        model_texture = next(line for line in ui.splitlines() if line.startswith('#define RE4DC_GCA_MODEL_TEXTURE(entry)'))
         fixture = r'''
 #include "gc_asset_gate.h"
 #include "gc_asset_packet_cursor.h"
@@ -376,7 +420,7 @@ std::string logs;
 extern "C" void re4dc_log(const char* fmt,...) {
   assert(!sq_held);char buf[2048];va_list ap;va_start(ap,fmt);vsnprintf(buf,sizeof buf,fmt,ap);va_end(ap);logs+=buf;
 }
-''' + emitted + '\n' + flush + '\n' + state + '\n' + packet + r'''
+''' + emitted + '\n' + flush + '\n' + state + '\n' + model_texture + '\n' + packet + r'''
 void stream_send(const void* packet,unsigned bytes){gcasset_packet_emitted(packet,bytes,2,gcasset_packet_consumer);}
 ''' + effect_send + r'''
 int main() {
@@ -435,8 +479,9 @@ int main() {
   gcasset_packet_emitted(vertex,32,2,Texture);assert(!entries[0].asset_consumers);
   gcasset_packet_emitted(vertex,32,2,Texture);gcasset_packet_emitted(tail,32,2,Texture);
   assert(entries[0].asset_consumers==(1U<<Texture));
-  sq_held=true;gcasset_texture_emitted(&entries[1]);sq_held=false;
-  assert(entries[1].asset_consumers==(1U<<Texture)); // direct/batched path only latches
+  gcasset_model_pending.mask=1U<<Weapon;
+  sq_held=true;RE4DC_GCA_MODEL_TEXTURE(&entries[1]);sq_held=false;
+  assert(entries[1].asset_consumers==((1U<<Texture)|(1U<<Weapon))); // weapon texture also keeps generic texture acknowledgement
   gcasset_texture_flush(entries[0]);gcasset_texture_flush(entries[1]);
   for(unsigned i=0;i<ConsumerCount;++i) { checked(Consumer(i)); }
   end(1);

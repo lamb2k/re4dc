@@ -56,6 +56,11 @@ int main() {
     assert(!member_adopt(&alias_owner,archive.data()+64,archive.size()-64,true));
     assert(!member_capture(archive.data()+64));
     assert(logs.find("member-owner-overlap")!=std::string::npos);
+    assert(member_adopt(&owner,archive.data(),archive.size(),true,PlayerOwner));
+    assert(member_capture(archive.data()+64));assert(member_lookup(archive.data()+64,&later));assert(later.family==PlayerOwner);
+    assert(member_adopt(&owner,archive.data(),archive.size(),true,PlayerOwner));
+    assert(!member_adopt(&owner,archive.data(),archive.size(),true,WeaponOwner));
+    assert(!member_lookup(archive.data()+64,&later)); // family changes cannot re-certify relocated current bytes
     auto empty=indexed(true);assert(member_adopt(&owner,empty.data(),empty.size(),true));
     assert(member_capture(empty.data()+64));assert(member_lookup(empty.data()+64,&later));assert(later.arc==5);member_retire(&owner);
     auto duplicate=indexed(false,true);assert(member_adopt(&owner,duplicate.data(),duplicate.size(),true));

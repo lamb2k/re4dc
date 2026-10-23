@@ -460,11 +460,13 @@ void gcasset_packet_emitted(const void* packet,unsigned bytes,unsigned list,re4d
 #define RE4DC_GCA_PACKET(...) gcasset_packet_emitted(__VA_ARGS__)
 #define RE4DC_GCA_MODEL_PREPARE(...) gcasset_model_prepare(__VA_ARGS__)
 #define RE4DC_GCA_MODEL_ACCEPT() gcasset_model_accept()
+#define RE4DC_GCA_MODEL_TEXTURE(entry) do { gcasset_texture_emitted(entry);if(gcasset_model_pending.mask&(1U<<re4dc_gcasset::Weapon))gcasset_texture_emitted(entry,re4dc_gcasset::Weapon); } while(0)
 #else
 #define RE4DC_GCA_TEXTURE(...) ((void)0)
 #define RE4DC_GCA_PACKET(...) ((void)0)
 #define RE4DC_GCA_MODEL_PREPARE(...) ((void)0)
 #define RE4DC_GCA_MODEL_ACCEPT() ((void)0)
+#define RE4DC_GCA_MODEL_TEXTURE(...) ((void)0)
 #endif
 #if defined(RE4DC_FX_PS2_PACK) && RE4DC_FX_PS2_PACK
 // FX_PS2_PACK=1 (effects30.mk, test 12 fx lane; render only): a package that fx_ps2_pack.py built from the PS2 picture of
@@ -4970,7 +4972,7 @@ extern "C" void re4dc_ui_unbind_option(){RE4DC_GCA_RETIRE(&option_identities);re
 // Player and weapon regions persist across room retirement when the source
 // retains them. Their explicit source release/overwrite boundaries clear views.
 extern "C" int re4dc_ui_bind_player(void* archive,unsigned bytes){
-    RE4DC_GCA_ADOPT(&player_identities,archive,bytes,false);
+    RE4DC_GCA_ADOPT(&player_identities,archive,bytes,false,re4dc_gcasset::PlayerOwner);
     sources_reset();bool ok=player_identities.adopt(archive,bytes);
     if(ok)re4dc_actor_archive_adopt(&player_identities,archive,bytes,1);
     else re4dc_actor_archive_retire(&player_identities);
@@ -4982,7 +4984,7 @@ extern "C" int re4dc_ui_bind_player(void* archive,unsigned bytes){
     re4dc_log("native player identities: %s count=%u archive=%u\n",ok?"ok":"REJECTED",player_identities.count(),bytes);return ok;
 }
 extern "C" int re4dc_ui_bind_weapon(void* archive,unsigned bytes){
-    RE4DC_GCA_ADOPT(&weapon_identities,archive,bytes,false);
+    RE4DC_GCA_ADOPT(&weapon_identities,archive,bytes,false,re4dc_gcasset::WeaponOwner);
     sources_reset();bool ok=weapon_identities.adopt(archive,bytes);
     if(ok)re4dc_actor_archive_adopt(&weapon_identities,archive,bytes,3);
     else re4dc_actor_archive_retire(&weapon_identities);
@@ -6810,7 +6812,7 @@ extern "C" void re4dc_model_packet_commit(unsigned count){
     // A loaded but wholly clipped/rolled-back part owns no submitted packets.
     // Keep its upload cached; pin only when this part actually commits a draw.
     if(count){
-        RE4DC_GCA_TEXTURE(model_handle);
+        RE4DC_GCA_MODEL_TEXTURE(model_handle);
         RE4DC_GCA_MODEL_ACCEPT();
         model_handle->frame=frame;model_used=model_pending+count;
         if(model_used*32>model_peak)model_peak=model_used*32;
@@ -6949,7 +6951,7 @@ extern "C" void re4dc_model_direct_end(unsigned vertices){
     sq_unlock();direct_open=false;
 #endif
     if(vertices>32767)re4dc_missing("native direct part exceeded the store-queue window");
-    if(vertices) { RE4DC_GCA_TEXTURE(model_handle);RE4DC_GCA_MODEL_ACCEPT(); }
+    if(vertices) { RE4DC_GCA_MODEL_TEXTURE(model_handle);RE4DC_GCA_MODEL_ACCEPT(); }
     ++direct_parts;direct_slots+=vertices;
 #if RE4DC_TA_GUARD
     guard_account(1,vertices);
@@ -7077,7 +7079,7 @@ extern "C" std::uint32_t* re4dc_leon_direct_switch(const Re4dcModelPart* p,const
        unsigned(stream_list)!=h->list || select_model_pass(p)!=stream_list || leon_header_key(p,h->list)!=h->key ||
        handle->model_header_key!=h->key || std::memcmp(h->words,&handle->model_header,32))return nullptr;
     // re4dc_model_direct_end(vertices)
-    if(vertices) { RE4DC_GCA_TEXTURE(model_handle);RE4DC_GCA_MODEL_ACCEPT(); }
+    if(vertices) { RE4DC_GCA_MODEL_TEXTURE(model_handle);RE4DC_GCA_MODEL_ACCEPT(); }
     ++direct_parts;direct_slots+=vertices;
     frame_pvr_bytes+=vertices*32;stream_model_bytes+=vertices*32;
     if(stream_model_bytes>stream_peak_bytes)stream_peak_bytes=stream_model_bytes;

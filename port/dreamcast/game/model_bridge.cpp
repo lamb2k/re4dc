@@ -6,6 +6,10 @@
 #include "model.h"
 #include "gx.h"
 #include "native_model.h"
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+#include "gc_asset_members.h"
+#include "player.h"
+#endif
 #if RE4DC_NATIVE_FOG
 #include "view.h"
 extern "C" unsigned re4dc_fog_enabled();
@@ -1024,6 +1028,20 @@ extern "C" unsigned re4dc_gcasset_model_identity(const void* model,const void* i
     *data=static_cast<const cModelInfo*>(info)->pData;
     return (unsigned(m->kindid)&255U)<<24 | (unsigned(m->id)&255U)<<16 | (unsigned(m->type)&255U)<<8 |
         (unsigned(m->nParts)&255U);
+}
+// Class/role selects a diagnostic consumer only; member SHA determines origin.
+extern "C" unsigned re4dc_gcasset_weapon_consumer(const void* model,const void* info,unsigned arc,unsigned family) {
+    if(!model || !info)return 0;
+    const auto* m=static_cast<const cModel*>(model);
+    if(family==re4dc_gcasset::WeaponOwner)return 1;
+    if(m->kindid==1)switch(m->id) {
+        case 0x21:case 0x23:case 0x24:case 0x25:case 0x27:case 0x28:case 0x2b:case 0x2c:
+        case 0x2d:case 0x2e:case 0x2f:case 0x30:case 0x31:case 0x32:case 0x33:case 0x34:
+        case 0x36:case 0x3c:case 0x3d:case 0x1a:case 0x22:case 0x29:case 0x2a:case 0x3a:return 1;
+    }
+    if(family==re4dc_gcasset::PlayerOwner &&
+       ((m->kindid==1 && m->id==0x0a && arc==0x7a) || (m->kindid==0 && m->id==0x4f && arc==0x72)))return 1;
+    return pPL && model==pPL && pPL->Body && (info==pPL->Body->pRight || info==pPL->Body->pLeft);
 }
 #endif
 #if defined(RE4DC_MODEL_DROP_LOG) && RE4DC_MODEL_DROP_LOG

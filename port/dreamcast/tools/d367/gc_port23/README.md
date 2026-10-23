@@ -48,8 +48,15 @@ and consumer mask (8 diagnostic bytes per node, at most 32 bytes extra after
 queue alignment). Replay uses this saved serial and verifies it at accepted
 use; rebinding the same cModelInfo to a different live BIN cannot relabel queued
 old geometry. A retired original remains an explicit accepted-use error.
-Weapon consumer classification and independent static-package payload capture
-remain open; an unresolved replacement cannot inherit its source caller's BIN.
+Weapon consumer classification follows the source audit of all 23 shipped
+archives: 24 explicit held/secondary cObj IDs, weapon owner family, exact live
+player hand infos, and the player-member roles for ambiguous casing/mine
+classes. Generic enemy debris and unrelated player face/body parts remain
+outside Weapon. Archive family occupies existing owner padding; it does not
+change origin. The accepted geometry and its model texture acknowledge Weapon
+as well as their generic counters, and deferred queues retain the selected mask.
+Independent static-package payload capture remains open; an unresolved
+replacement cannot inherit its source caller's BIN.
 
 `gc_asset_packet_cursor.h` supplies the UI observer's format-aware 32/64-byte
 TA continuation handling. The actual observer controls include a real 96-byte
@@ -91,7 +98,7 @@ open and Entry retirement; only a same-scene header/vertex split can join.
 | Consumer | Actual call graph and required accepted boundary | Remaining work |
 |---|---|---|
 | Source props / source actors without NMRS | `src/game/trans.cpp` source object loop -> model bridge -> `native_model.cpp::re4dc_model_submit` -> native actor or generic builder -> packet commit / direct end / Leon inline switch | Original BIN and lifetime are wired; accepted serial latches have source-extracted packet/direct/switch controls. Actual complete runtime/room qualification remains. Do not use SOURCE_OBJECTS calls as draws. |
-| Weapons | Same model emission graph, with weapon archive ownership from `native_ui.cpp::re4dc_ui_bind_weapon` | Carry that owner through fast/direct, fallback and deferred paths; hash authored payload at load, not transformed pose arrays. |
+| Weapons | Same model emission graph; explicit source class/exact hand info/player-member role plus weapon owner family | Classification and accepted model/texture masks are wired and host-controlled; actual complete runtime/room qualification remains. Hash immutable payload at load, not transformed pose arrays. |
 | Texture keys | `native_ui.cpp::load` opens exact loose or tex.pak member; accepted model/effect/UI emission uses its Entry | Hash exact member at immutable load, carry Entry identity through eviction/reuse; binding/load alone is not use. No disk access per draw. |
 | Effect pictures | `re4dc_effect_sprite`, strip/mesh, haze/stage1 batch -> immediate sends or copied deferred tags -> `re4dc_model_finish_source_draws` | Store copied picture identity with deferred packets; report only the final send; discarded queue is not an emission. |
 | Fonts | Source glyph -> glyph cache cell -> `glyph_draw_run` -> final strip flush | Carry immutable sheet/palette identity through cached cells; key/font filename alone is insufficient. |
