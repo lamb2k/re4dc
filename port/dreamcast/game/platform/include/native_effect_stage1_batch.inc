@@ -68,7 +68,7 @@ extern "C" int re4dc_effect_stage1_batch(Re4dcEffectSprite* sprites,unsigned cou
         ++fx_capped;return prior_count>RE4DC_EFFECT_SPRITE_MAX?stage1_batch_refuse(20,count,prior_count,RE4DC_EFFECT_SPRITE_MAX):
             stage1_batch_refuse(21,count,visible,RE4DC_EFFECT_SPRITE_MAX-prior_count);
     }
-    const unsigned stride=kSpriteNode+kSpritePacket,required=visible*stride,margin=8192;
+    const unsigned stride=kSpriteNode+kSpritePacket,required=visible*stride,margin=RE4DC_FX_QUEUE_MARGIN;
     unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         // Borrow an already-existing spill tail only; the candidate adds no allocator.
