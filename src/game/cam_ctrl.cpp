@@ -25,6 +25,9 @@
 #include "dbmodule.h"
 #include "at_mod.h"
 #include "joy.h"
+#if defined(RE4DC_LIGHT_CUT_LOG) && RE4DC_LIGHT_CUT_LOG
+extern "C" void re4dc_log(const char* fmt, ...);
+#endif
 
 extern "C" {
 int strncmp(const char* a, const char* b, unsigned int n);
@@ -632,6 +635,28 @@ void CameraControl::switchCamera(CameraAreaRec* rec)
         }
     }
 
+#if defined(RE4DC_LIGHT_CUT_LOG) && RE4DC_LIGHT_CUT_LOG
+    {
+        static CameraDataHeader* dumped;
+        if (dumped != data) {
+            dumped = data;
+            CameraAreaRec* q = (CameraAreaRec*) (data + 1);
+            for (int k = 0; k < data->numArea; k++, q++) {
+                CameraAreaInfo* a = q->area;
+                re4dc_log("camarea: room=%03x #%d area=%d cam=%d attr=%02x attr2=%02x attr3=%02x cut=%d type=%u num=%d p0=%d,%d\n",
+                          (unsigned) G_ROOM_ID, k, a->area_no, a->camera_no, a->attr, a->attr2, a->attr3, q->cut->camera_no,
+                          q->type, (int) a->num, a->num > 0 ? (int) a->points[0].x : 0, a->num > 0 ? (int) a->points[0].z : 0);
+                if (a->num >= 4)
+                    re4dc_log("camarea:  y=%d h=%d pts %d,%d %d,%d %d,%d %d,%d\n", (int) a->base_y, (int) a->height,
+                              (int) a->points[0].x, (int) a->points[0].z, (int) a->points[1].x, (int) a->points[1].z,
+                              (int) a->points[2].x, (int) a->points[2].z, (int) a->points[3].x, (int) a->points[3].z);
+            }
+        }
+        re4dc_log("camswitch: f=%u area=%d cam=%d attr=%02x sys=%02x cut=%d pl=%d,%d,%d\n", (unsigned) pG->Frame_cnt,
+                  area->area_no, area->camera_no, area->attr, (unsigned) m_system_flag, cut->camera_no,
+                  pPL ? (int) pPL->pos.x : 0, pPL ? (int) pPL->pos.y : 0, pPL ? (int) pPL->pos.z : 0);
+    }
+#endif
     areaNo = area->area_no;
     areaSuffix = area->camera_no;
     cameraNo = cut->camera_no;
