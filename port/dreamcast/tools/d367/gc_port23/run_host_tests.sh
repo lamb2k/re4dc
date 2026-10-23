@@ -14,6 +14,11 @@ if test -x /lib64/ld-linux-x86-64.so.2; then
 else
     "$SCRATCH/test_gate"
 fi
+g++ -std=c++17 -O2 -Wall -Wextra -Werror "$HERE/test_packet_cursor.cpp" -o "$SCRATCH/test_packet_cursor"
+/lib64/ld-linux-x86-64.so.2 "$SCRATCH/test_packet_cursor"
+g++ -std=c++17 -O2 -Wall -Wextra -Werror -DRE4DC_GC_ASSET_GATE=1 \
+    "$HERE/test_members.cpp" "$GAME/platform/gc_asset_members.cpp" "$GAME/platform/gc_asset_gate.cpp" -o "$SCRATCH/test_members"
+/lib64/ld-linux-x86-64.so.2 "$SCRATCH/test_members"
 g++ -std=c++17 -Os -Wall -Wextra -Werror -c "$GAME/platform/gc_asset_gate.cpp" -o "$SCRATCH/off.o"
 if nm --defined-only "$SCRATCH/off.o" | grep -q .; then
     printf 'Default-off gate contains linked symbols\n' >&2
@@ -21,4 +26,8 @@ if nm --defined-only "$SCRATCH/off.o" | grep -q .; then
 fi
 g++ -std=c++17 -Os -DRE4DC_GC_ASSET_GATE=1 -c "$GAME/platform/gc_asset_gate.cpp" -o "$SCRATCH/on.o"
 size "$SCRATCH/off.o" "$SCRATCH/on.o"
+g++ -std=c++17 -Os -Wall -Wextra -Werror -c "$GAME/platform/gc_asset_members.cpp" -o "$SCRATCH/members-off.o"
+if nm --defined-only "$SCRATCH/members-off.o" | grep -q .; then exit 1; fi
+g++ -std=c++17 -Os -Wall -Wextra -Werror -DRE4DC_GC_ASSET_GATE=1 -c "$GAME/platform/gc_asset_members.cpp" -o "$SCRATCH/members-on.o"
+size "$SCRATCH/members-off.o" "$SCRATCH/members-on.o"
 printf 'GC-ASSET host core and judge tests PASS; target and runtime gates not run.\n'

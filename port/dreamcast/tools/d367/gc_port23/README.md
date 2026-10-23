@@ -16,6 +16,23 @@ An accepted textured packet without exactly one cache Entry fails explicitly.
 Font/movie/native generated atlases need their own complete payload hooks before
 they can qualify such a non-Entry texture; an API/address is not origin proof.
 
+The new source-member helper is a separate incomplete capture unit: sixteen
+live archive bounds and128 selected BIN digest records, with actual source
+`calcModelAddr` capture before mutation. It hashes only complete, bounded BINs
+selected for model construction, preserving the digest through relocation/FE.
+Named ETM records and indexed ARC members use the existing source format and
+actor-lifetime alias/REL bounds. Duplicate current adoption preserves saved
+bytes; retirement revokes the owner generation. Unknown/ambiguous/out-of-bounds
+members and capacity failures are coverage errors. Bind/retire and accepted
+emitter wiring await the UI file handoff, so this is not source draw coverage.
+Host fixtures include normal TPL records among named BINs and assert preparation
+never emits a GC-ASSET use row.
+
+`gc_asset_packet_cursor.h` plus its standalone controls prepare format-aware
+32/64-byte TA continuation handling. This is not yet substituted into the UI
+observer while the interior lane holds that file. Controls include a real96B
+sprite with cy=-0.5f, split64B vertices and64B headers whose tails resemble PCWs.
+
 `run_host_tests.sh` builds only small host fixtures in `/dev/shm`, deletes its
 own outputs and prints the core's text/data/BSS. `GC_ASSET_GATE=0` defaults to
 an empty translation unit and argument-free diagnostic macros. The `.mk`

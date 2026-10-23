@@ -1013,6 +1013,19 @@ extern "C" void re4dc_actor_census_describe(const void* model, unsigned verts) {
               w ? int(w[3]) : 0, w ? int(w[7]) : 0, w ? int(w[11]) : 0);
 }
 #endif
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+// Use the source declarations here; platform diagnostics never duplicate the
+// cModel/cModelInfo layout. The data pointer remains subject to member bounds
+// and owner-generation validation in gc_asset_members before any byte read.
+extern "C" unsigned re4dc_gcasset_model_identity(const void* model,const void* info,const void** data) {
+    if(data)*data=nullptr;
+    if(!model || !info || !data)return 0xffffffffU;
+    const auto* m=static_cast<const cModel*>(model);
+    *data=static_cast<const cModelInfo*>(info)->pData;
+    return (unsigned(m->kindid)&255U)<<24 | (unsigned(m->id)&255U)<<16 | (unsigned(m->type)&255U)<<8 |
+        (unsigned(m->nParts)&255U);
+}
+#endif
 #if defined(RE4DC_MODEL_DROP_LOG) && RE4DC_MODEL_DROP_LOG
 // MODEL_DROP_LOG (native_ui.cpp): a refused part's model as kind<<24 | id<<16 | type<<8 | nParts (low byte), or
 // 0xffffffff when the part has no model pointer in main RAM.
