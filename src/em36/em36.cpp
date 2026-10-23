@@ -1626,7 +1626,7 @@ static void em36_R1_br_Catch(cEm36* em)
 {
     if (em->hp > 0 && (em->seFlags28B & 2) && em36CatchCk(em)) {
         VibSetData(VIB_TBL, 7, 1);
-        em->stat = 0x010B0000;
+        em->stat = STAT_BE(0x010B0000);
     }
 }
 
@@ -1700,7 +1700,7 @@ static void em36_R1_Catch(cEm36* em)
 }
 
 
-#define EM_RTN(em, fc, fd) (((em)->stat & 0xFFFF0000) == (u32) (((fc) << 24) | ((fd) << 16)))
+#define EM_RTN(em, fc, fd) (((em)->stat & STAT_BE(0xFFFF0000)) == STAT_BE((u32) (((fc) << 24) | ((fd) << 16))))
 
 // The effects of the appearance are removed when the player is caught.
 // (a macro: through an inline the kind array's address becomes a pseudo, the loads must reload
@@ -1919,7 +1919,7 @@ static void em36_R1_br_LongCatch(cEm36* em)
 {
     if (em->hp > 0 && (em->seFlags28B & 2) && em36LongCatchCk(em)) {
         VibSetData(VIB_TBL, 7, 1);
-        em->stat = 0x010D0000;
+        em->stat = STAT_BE(0x010D0000);
     }
 }
 
@@ -2008,11 +2008,11 @@ static void em36_R1_LongCatchHit(cEm36* em)
             case 0:
             case 1:
             default:
-                em->stat = 0x010B0000;
+                em->stat = STAT_BE(0x010B0000);
                 break;
             case 2:
             case 3:
-                em->stat = 0x010E0000;
+                em->stat = STAT_BE(0x010E0000);
                 break;
             }
         }
@@ -2176,7 +2176,7 @@ static void em36_R1_br_LostCatch(cEm36* em)
 {
     if (em->hp > 0 && (em->seFlags28B & 2) && em36BiteCk(em)) {
         VibSetData(VIB_TBL, 7, 1);
-        em->stat = 0x01150000;
+        em->stat = STAT_BE(0x01150000);
     }
 }
 
@@ -2621,7 +2621,7 @@ static void em36_R1_br_D_Catch(cEm36* em)
 {
     if (em->hp > 0 && (em->seFlags28B & 2) && em36BiteCk(em)) {
         VibSetData(VIB_TBL, 7, 1);
-        em->stat = 0x01150000;
+        em->stat = STAT_BE(0x01150000);
     }
 }
 
