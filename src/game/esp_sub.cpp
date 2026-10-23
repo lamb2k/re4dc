@@ -1059,6 +1059,7 @@ static const FxTrim kFxTrim[3] = {
 static u32 s_ftl_frame0, s_ftl_frames, s_ftl_seen[4], s_ftl_drawn[4], s_ftl_drop[5];
 static f32 s_ftl_area_seen, s_ftl_area_drawn;
 static u32 s_ftl_unk[64];   // owner << 16 | id << 8 | tex (key 0: owner 0 id 0 tex 0 never logged)
+static u32 s_ftl_kind[64];  // the same key | 1 << 24 when not drawn: non-room sprite kinds ("fx ess kinds:")
 #endif
 static unsigned FxTrimOwnerClass(unsigned owner)
 {
@@ -1081,7 +1082,7 @@ static f32 FxTrimArea(const Re4dcEffectSprite* s)
 // Classes by effect texture id: the core EFF ids (etc/core.das EFF#1) and the room EFF ids are one global id space and
 // keep their meaning across rooms (sheets in the lane evidence, texsheets/). Unknown ids: drawn (capped) for enemies,
 // objects and weapons, cut for the room's own ambient tables (owners 0x01 / 0xd0).
-enum { ESS_KEEP = 1, ESS_LAYER = 2, ESS_CUT = 3 };
+enum { ESS_KEEP = 1, ESS_LAYER = 2, ESS_CUT = 3, ESS_GLOW = 4 };
 static u8 s_ess_class[256];
 static void FxEssInit()
 {
@@ -1096,10 +1097,12 @@ static void FxEssInit()
                                0x36, 0x38, 0x39, 0x3a, 0x3d, 0x3e, 0x40, 0x41, 0x4c, 0x4d, 0x4e, 0x4f, 0x93, 0x95, 0x98, 0x9f,
                                0xa4};
     static const u8 cut[] = {0x5f, 0x6f, 0x72, 0x79, 0xe9, 0x9d,          // dust
-                             0x08, 0x0b, 0x13, 0x17, 0x1c, 0xf7, 0xc1};   // glows, light shafts, flares, glare
+                             0xc1};                                       // light shafts, glare
+    static const u8 glow[] = {0x08, 0x0b, 0x13, 0x17, 0x1c, 0xf7};       // glows, flares: cut, except owner 0x00's
     for (unsigned i = 0; i < sizeof(keep); ++i) s_ess_class[keep[i]] = ESS_KEEP;
     for (unsigned i = 0; i < sizeof(layer); ++i) s_ess_class[layer[i]] = ESS_LAYER;
     for (unsigned i = 0; i < sizeof(cut); ++i) s_ess_class[cut[i]] = ESS_CUT;
+    for (unsigned i = 0; i < sizeof(glow); ++i) s_ess_class[glow[i]] = ESS_GLOW;
 }
 enum { kEssLayer = 2 };
 extern "C" {
@@ -1123,6 +1126,9 @@ static int FxEssentialCut(const cEsp* esp, int screen)
     const int room = owner == 0x01 || owner == 0xD0;
     if (c == ESS_KEEP) return 0;
     if (c == ESS_CUT) return 1;
+    // Owner 0x00 (core / weapon effects: the hand, incendiary and flash grenade blasts, the laser sight's glint;
+    // lane fx-trim23 grenade check 10-23, FX_TRIM_LOG "fx ess kinds") keeps its glows and flares.
+    if (c == ESS_GLOW) return owner != 0x00;
     if (room) return 1;                                            // the room's ambient smoke / sparks / leaves / dust
     u8* n = &s_layer[(owner * 31U + esp->m_Tex_id) & 0xFF];          // layers and unknown ids: one thin layer each
     return (*n)++ >= kEssLayer;
@@ -1198,6 +1204,15 @@ static int FxLevelSprite(const cEsp* esp, Re4dcEffectSprite* s)
                 }
                 for (int i = 0; i < 64; ++i) s_ftl_unk[i] = 0;
                 if (k) re4dc_log("fx ess unknown: room=%03x%s\n", (unsigned) G_ROOM_ID, buf);
+                k = 0;   // every non-room sprite kind met this window: owner.tex.id + d (drawn) / c (cut)
+                for (int i = 0; i < 64 && s_ftl_kind[i]; ++i) {
+                    if (k < 180)
+                        k += __builtin_snprintf(buf + k, sizeof(buf) - k, " %02x.%02x.%02x%c",
+                                                (unsigned) ((s_ftl_kind[i] >> 16) & 0xff), (unsigned) (s_ftl_kind[i] & 0xff),
+                                                (unsigned) ((s_ftl_kind[i] >> 8) & 0xff), (s_ftl_kind[i] >> 24) ? 'c' : 'd');
+                    s_ftl_kind[i] = 0;
+                }
+                if (k) re4dc_log("fx ess kinds: room=%03x%s\n", (unsigned) G_ROOM_ID, buf);
             }
             for (int i = 0; i < 4; ++i) s_ftl_seen[i] = s_ftl_drawn[i] = 0;
             for (int i = 0; i < 5; ++i) s_ftl_drop[i] = 0;
@@ -1213,6 +1228,13 @@ static int FxLevelSprite(const cEsp* esp, Re4dcEffectSprite* s)
             for (int i = 0; i < 64; ++i) {
                 if (s_ftl_unk[i] == key) break;
                 if (!s_ftl_unk[i]) { s_ftl_unk[i] = key; break; }
+            }
+        }
+        if (c != 0) {
+            const u32 key = ((u32) esp->info.owner << 16) | ((u32) esp->m_Id << 8) | esp->m_Tex_id | (drawn ? 0U : 1U << 24);
+            for (int i = 0; i < 64; ++i) {
+                if (s_ftl_kind[i] == key) break;
+                if (!s_ftl_kind[i]) { s_ftl_kind[i] = key; break; }
             }
         }
         ++s_ftl_seen[c];

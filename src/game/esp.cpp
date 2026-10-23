@@ -395,6 +395,12 @@ loop2:
 loop4:
             esp = (cEsp*) (sys->pEspBuf + ofs);
             if ((esp->m_Be_flg & 1) && (esp->m_Tool_flg & 0x40000)) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ESP_POOL_RECYCLE) && RE4DC_ESP_POOL_RECYCLE
+                // Match the forward steal: retire the old owner/resources before
+                // clearing its slot. Free-slot searches jump directly to found.
+                ESPD_STEAL();
+                PushEsp(esp);
+#endif
 found:
 #if defined(RE4DC_ESP_POOL_DIAG) && RE4DC_ESP_POOL_DIAG
                 if (esp->m_Be_flg & 1) ESPD_STEAL();

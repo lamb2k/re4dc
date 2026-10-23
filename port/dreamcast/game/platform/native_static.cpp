@@ -60,6 +60,15 @@
 #if RE4DC_SCENERY_SUBMIT_BATCH && (RE4DC_PS2_PVS || RE4DC_WORLD_SCRATCH || RE4DC_TA_GUARD)
 #error SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_GUARD
 #endif
+#ifndef RE4DC_SCENERY_EMIT_PREFETCH
+#define RE4DC_SCENERY_EMIT_PREFETCH 0
+#endif
+#if RE4DC_SCENERY_EMIT_PREFETCH != 0 && RE4DC_SCENERY_EMIT_PREFETCH != 1
+#error SCENERY_EMIT_PREFETCH must be 0 or 1
+#endif
+#if RE4DC_SCENERY_EMIT_PREFETCH && (!RE4DC_SCENERY_CHUNK || !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH)
+#error SCENERY_EMIT_PREFETCH needs the direct PS2 scenery chunk path
+#endif
 #ifndef RE4DC_WORLD_RECT21
 #define RE4DC_WORLD_RECT21 0
 #endif
@@ -3080,6 +3089,64 @@ struct MeshDraw : Emitter {
         std::uint8_t pad[2];
     };
 #include "include/scenery_chunk_select.inc"
+#if RE4DC_SCENERY_EMIT_PREFETCH
+    // SCENERY_EMIT_PREFETCH_MEMBERS_BEGIN
+    // Only immutable package input is hinted. No binding, matrix, material or
+    // scratch ownership is carried across the next part's bind (which may yield).
+    static void emit_prefetch_span(const void* ptr,unsigned bytes){
+        const auto* p=static_cast<const std::uint8_t*>(ptr);
+        __builtin_prefetch(p);
+        if((reinterpret_cast<std::uintptr_t>(p)&31U)+bytes>32U)
+            __builtin_prefetch(p+bytes-1U);
+    }
+    void prefetch_emit_header(const Pick& pk)const{
+        // Meshlet has a 28-byte stride; only the first 16 bytes feed emission.
+        emit_prefetch_span(package.meshlets()+pk.let,16U);
+    }
+    void prefetch_emit_payload(const Pick& pk)const{
+        if(!pk.nr)return;
+        const auto& l=package.meshlets()[pk.let];
+        const auto* base=package.vertices()+l.first_vertex;
+        const auto* raw=package.strips()+l.first_strip;
+        if(package.indexed(l)){
+            const auto* offsets=reinterpret_cast<const std::uint16_t*>(raw);
+            __builtin_prefetch(offsets);
+            // The pool base need not be referenced by this meshlet. Warm the
+            // first corner actually gathered, not vertex zero of the part pool.
+            emit_prefetch_span(base+offsets[0],sizeof(*base));
+            raw+=2U*l.vertex_count;
+        }else{
+            // The transform already streams three vertices ahead. Seed only
+            // its first (at most) three inputs, including a partial pick's lo.
+            const unsigned first=pk.nr==0xffU?0U:pk.lo;
+            const unsigned count=pk.nr==0xffU?l.vertex_count:unsigned(pk.hi-pk.lo)+1U;
+            if(first>=l.vertex_count || count>l.vertex_count-first)return;
+            emit_prefetch_span(base+first,(count<3U?count:3U)*sizeof(*base));
+        }
+        if(pk.nr==0xffU)__builtin_prefetch(raw);
+        else if(sg)__builtin_prefetch(sg+16U*sg_groups*pk.let);
+    }
+    const re4dc::room::CompactVertex12* emit_corners(const re4dc::room::Meshlet& l,const Pick& pk){
+        const auto* base=package.vertices()+l.first_vertex;
+        if(!package.indexed(l))return base;
+        if(!pk.nr)return gathered; // bind/borrow/prime still run; no consumer for this pick
+        // Keep the full gather for nonempty partial picks: the runtime R4SG
+        // reader has not proved that group lo/hi encloses every clipper input,
+        // and DEDUP's fill can read corners outside that interval. Hoist the
+        // immutable count before may-alias stores instead of rereading it.
+        const unsigned count=l.vertex_count;
+        typedef std::uint32_t __attribute__((may_alias)) Word;
+        const std::uint16_t* offsets=package.pool_offsets(l);
+        const Word* in=reinterpret_cast<const Word*>(base);
+        Word* out=reinterpret_cast<Word*>(gathered);
+        for(unsigned k=0;k<count;++k,out+=3){
+            const Word* c=in+3U*offsets[k];
+            out[0]=c[0];out[1]=c[1];out[2]=c[2];
+        }
+        return gathered;
+    }
+    // SCENERY_EMIT_PREFETCH_MEMBERS_END
+#endif
     int emit_pick(const Pick& pk){
         namespace vp=re4dc::vp;
         ++stats.groups_visible;
@@ -3098,7 +3165,11 @@ struct MeshDraw : Emitter {
             }
         } cen{this,l.vertex_count,stats.strips,stats.strips_culled,output,0};
 #endif
+#if RE4DC_SCENERY_EMIT_PREFETCH
+        const auto* base=emit_corners(l,pk);
+#else
         const auto* base=corners(l);
+#endif
         const auto* in=reinterpret_cast<const vp::Vertex12*>(base);
         if(l.vertex_count>primed){vp::prime(cache+primed,l.vertex_count-primed);primed=l.vertex_count;
             if(lean_part){lean::prime_at=cache;lean::primed=primed;}
@@ -3171,7 +3242,15 @@ struct MeshDraw : Emitter {
     }
     // CHUNK_REPLAY_RESTART_END
 #endif
+#if RE4DC_SCENERY_EMIT_PREFETCH
+    __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n,const Pick* following=nullptr){
+#else
     __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n){
+#endif
+#if RE4DC_SCENERY_EMIT_PREFETCH
+        if(n>1U)prefetch_emit_header(pk[1]);
+        else if(n && following)prefetch_emit_header(*following);
+#endif
 #if !RE4DC_SCENERY_REPLAY_LEAN
         streaming=re4dc_model_packet_streaming()!=0;
         set_clip();
@@ -3180,7 +3259,15 @@ struct MeshDraw : Emitter {
         batch.uv_bias[0]=part.uv_bias[0];batch.uv_bias[1]=part.uv_bias[1];
         batch.uv_scale[0]=part.uv_scale[0];batch.uv_scale[1]=part.uv_scale[1];
         for(unsigned i=0;i<n;++i){
-#if defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK
+#if RE4DC_SCENERY_EMIT_PREFETCH
+            // Two selected headers ahead; one payload ahead. The current
+            // transform plus its strips supplies the lead time. following is
+            // the next queued part's first pick, still in this package/run.
+            if(i+2U<n)prefetch_emit_header(pk[i+2U]);
+            else if(i+2U==n && following)prefetch_emit_header(*following);
+            if(i+1U<n)prefetch_emit_payload(pk[i+1U]);
+            else if(following)prefetch_emit_payload(*following);
+#elif defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK
             // PREF_WALK (cache20.h): the next pick's corners and first strip bytes while this one is transformed / sent
             if(i+1<n && RE4DC_C20_PREF_ON()){
                 const auto& nl=package.meshlets()[pk[i+1].let];
@@ -6379,7 +6466,14 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_SCENERY_PIECE_STATE
             e.piece_slot=piece::pkg==static_cast<const void*>(&cpkg)?piece::table+x.index:nullptr;
 #endif
+#if RE4DC_SCENERY_EMIT_PREFETCH
+            // Picks are packed even when an intervening part has no picks.
+            // Never look beyond this flush or change the selected draw order.
+            const unsigned next=x.first+x.count;
+            const int result=e.chunk_emit(cpk+x.first,x.count,next<npk?cpk+next:nullptr);
+#else
             const int result=e.chunk_emit(cpk+x.first,x.count);
+#endif
             e.end_direct();
 #if RE4DC_SCENERY_SUBMIT_BATCH
             if(result<=0)re4dc_ps2_world_batch_close(&submit_scope.batch);

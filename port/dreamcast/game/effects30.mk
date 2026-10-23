@@ -284,7 +284,7 @@ endif
 #                    FX_LEVEL=3 (with FX_TRIM=1; user 10-23 "Essential only"): the room dial at 0 plus the Essential filter
 #                    (esp_sub.cpp FxEssentialCut): gameplay effects kept (Leon's own effects, hit blood, explosions, fire and
 #                    flames, blob shadows), atmosphere cut (mist / haze, dust, ambient smoke and sparks, glows, shafts, glare,
-#                    FX_STRIP21 trails / ribbons), at most 2 sprites a frame per owner of one smoke / spark layer or unknown
+#                    FX_STRIP21 trails / ribbons; owner 0x00 keeps its glows: grenade blasts, laser glint), at most 2 sprites a frame per owner of one smoke / spark layer or unknown
 #                    id. Runtime re4dc_fx_essential; FX_LEVEL_TOGGLE steps 0 -> 1 -> 2 -> Essential -> 0.
 FX_TRIM ?= 0
 FX_TRIM_LOG ?= 0

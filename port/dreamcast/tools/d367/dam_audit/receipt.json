@@ -1,0 +1,1587 @@
+{
+  "baseline": "ea969bb241f77291d2ca43d706c9dc2d1226ee76",
+  "scope": "Code-only source/host/current-SH4-object audit; no original public binary, full link, game data, real I/O, Flycast or console run",
+  "source_sha256": {
+    "src/st1/r10c.cpp": "86608234203aa49e8d036508af64c2fb472c1a25c4df3c635fa226b3c6ad0ecf",
+    "port/dreamcast/game/game30.mk": "592c5feee4c5e2818747c7d17f45dfdf3ae799df18c98a471c9ebc3c0fba00de",
+    "port/dreamcast/tools/d367/dam_audit/check_missing_actor.py": "dca96992f70af8e6587ba3dfcf6349b7c6ee8c99deece33701c8192e5cef0802",
+    "port/dreamcast/tools/d367/dam_audit/missing_actor_fixture.cpp.in": "ca0558c140d5cad89782b22baea0f962e7889932703eff7a5d37658ca11b3c99",
+    "port/dreamcast/tools/d367/dam_audit/build_controls.py": "52fee6c2dad4d3af21de34e64f8f452c4fabbd85d95a41598b208c160ae9aa99"
+  },
+  "host": {
+    "status": "PASS",
+    "controls_per_arm": 10,
+    "off_behavior_identical": true,
+    "successful_and_existing_missing_actions_identical": true,
+    "sanitizers": "UBSan; passing host controls only",
+    "extracted": {
+      "spawn_sha256": "05d6c66d37e907858ff0b22225cef9431d6065ef0b0547973e25e6017e52eed5",
+      "init_failure_prefix_sha256": "9c25cb24b6ee9ee8e5d3fc88b8e44b8e14ea77a6ee61f04a4b0028b0337fd6f3",
+      "move_destroy_branch_sha256": "d8f737cdd4777f96e068c5e8fe072213ec6e4eabe9657e0eac6041f67d9a0d9d",
+      "destroy_sha256": "3b95e37480f6c70c5125b7bd0e66c115c98facd5f305f13b7af7c4982cdbe5ee"
+    },
+    "reports": {
+      "baseline": {
+        "success": {
+          "attempts": 1,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 224,
+          "sequence": 491184767,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "one_missing_then_success": {
+          "attempts": 2,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 254,
+          "sequence": 1503245918,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "two_missing_then_success": {
+          "attempts": 3,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 284,
+          "sequence": 1165373151,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "all_missing": {
+          "attempts": 3,
+          "initial_moves": 0,
+          "retired_uses": 0,
+          "event_starts": 0,
+          "motion_sets": 0,
+          "effect_sets": 0,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 60,
+          "sequence": 1565373075,
+          "list2_flags": 1,
+          "list2_set": 0
+        },
+        "first_move_failure": {
+          "attempts": 1,
+          "initial_moves": 1,
+          "retired_uses": 2,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 224,
+          "sequence": 3284503626,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "retry_move_failure": {
+          "attempts": 2,
+          "initial_moves": 1,
+          "retired_uses": 2,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 254,
+          "sequence": 3874601419,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "last_retry_move_failure": {
+          "attempts": 3,
+          "initial_moves": 1,
+          "retired_uses": 2,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 284,
+          "sequence": 2723258282,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "missing_initializer": {
+          "attempts": 1,
+          "initial_moves": 1,
+          "retired_uses": 2,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 224,
+          "sequence": 1652100920,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "already_seen": {
+          "attempts": 0,
+          "initial_moves": 0,
+          "retired_uses": 0,
+          "event_starts": 0,
+          "motion_sets": 0,
+          "effect_sets": 0,
+          "bank_3": 0,
+          "bank_4": 0,
+          "sleep_frames": 0,
+          "sequence": 2166136261,
+          "list2_flags": 1,
+          "list2_set": 7
+        },
+        "live_other_flags": {
+          "attempts": 1,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 224,
+          "sequence": 1384638435,
+          "list2_flags": 7,
+          "list2_set": 0
+        }
+      },
+      "absent": {
+        "success": {
+          "attempts": 1,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 224,
+          "sequence": 491184767,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "one_missing_then_success": {
+          "attempts": 2,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 254,
+          "sequence": 1503245918,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "two_missing_then_success": {
+          "attempts": 3,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 284,
+          "sequence": 1165373151,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "all_missing": {
+          "attempts": 3,
+          "initial_moves": 0,
+          "retired_uses": 0,
+          "event_starts": 0,
+          "motion_sets": 0,
+          "effect_sets": 0,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 60,
+          "sequence": 1565373075,
+          "list2_flags": 1,
+          "list2_set": 0
+        },
+        "first_move_failure": {
+          "attempts": 1,
+          "initial_moves": 1,
+          "retired_uses": 2,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 224,
+          "sequence": 3284503626,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "retry_move_failure": {
+          "attempts": 2,
+          "initial_moves": 1,
+          "retired_uses": 2,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 254,
+          "sequence": 3874601419,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "last_retry_move_failure": {
+          "attempts": 3,
+          "initial_moves": 1,
+          "retired_uses": 2,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 284,
+          "sequence": 2723258282,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "missing_initializer": {
+          "attempts": 1,
+          "initial_moves": 1,
+          "retired_uses": 2,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 224,
+          "sequence": 1652100920,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "already_seen": {
+          "attempts": 0,
+          "initial_moves": 0,
+          "retired_uses": 0,
+          "event_starts": 0,
+          "motion_sets": 0,
+          "effect_sets": 0,
+          "bank_3": 0,
+          "bank_4": 0,
+          "sleep_frames": 0,
+          "sequence": 2166136261,
+          "list2_flags": 1,
+          "list2_set": 7
+        },
+        "live_other_flags": {
+          "attempts": 1,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 224,
+          "sequence": 1384638435,
+          "list2_flags": 7,
+          "list2_set": 0
+        }
+      },
+      "zero": {
+        "success": {
+          "attempts": 1,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 224,
+          "sequence": 491184767,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "one_missing_then_success": {
+          "attempts": 2,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 254,
+          "sequence": 1503245918,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "two_missing_then_success": {
+          "attempts": 3,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 284,
+          "sequence": 1165373151,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "all_missing": {
+          "attempts": 3,
+          "initial_moves": 0,
+          "retired_uses": 0,
+          "event_starts": 0,
+          "motion_sets": 0,
+          "effect_sets": 0,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 60,
+          "sequence": 1565373075,
+          "list2_flags": 1,
+          "list2_set": 0
+        },
+        "first_move_failure": {
+          "attempts": 1,
+          "initial_moves": 1,
+          "retired_uses": 2,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 224,
+          "sequence": 3284503626,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "retry_move_failure": {
+          "attempts": 2,
+          "initial_moves": 1,
+          "retired_uses": 2,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 254,
+          "sequence": 3874601419,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "last_retry_move_failure": {
+          "attempts": 3,
+          "initial_moves": 1,
+          "retired_uses": 2,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 284,
+          "sequence": 2723258282,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "missing_initializer": {
+          "attempts": 1,
+          "initial_moves": 1,
+          "retired_uses": 2,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 224,
+          "sequence": 1652100920,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "already_seen": {
+          "attempts": 0,
+          "initial_moves": 0,
+          "retired_uses": 0,
+          "event_starts": 0,
+          "motion_sets": 0,
+          "effect_sets": 0,
+          "bank_3": 0,
+          "bank_4": 0,
+          "sleep_frames": 0,
+          "sequence": 2166136261,
+          "list2_flags": 1,
+          "list2_set": 7
+        },
+        "live_other_flags": {
+          "attempts": 1,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 224,
+          "sequence": 1384638435,
+          "list2_flags": 7,
+          "list2_set": 0
+        }
+      },
+      "on": {
+        "success": {
+          "attempts": 1,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 224,
+          "sequence": 491184767,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "one_missing_then_success": {
+          "attempts": 2,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 254,
+          "sequence": 1503245918,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "two_missing_then_success": {
+          "attempts": 3,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 284,
+          "sequence": 1165373151,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "all_missing": {
+          "attempts": 3,
+          "initial_moves": 0,
+          "retired_uses": 0,
+          "event_starts": 0,
+          "motion_sets": 0,
+          "effect_sets": 0,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 60,
+          "sequence": 1565373075,
+          "list2_flags": 1,
+          "list2_set": 0
+        },
+        "first_move_failure": {
+          "attempts": 3,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 0,
+          "motion_sets": 0,
+          "effect_sets": 0,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 60,
+          "sequence": 3279835804,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "retry_move_failure": {
+          "attempts": 3,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 0,
+          "motion_sets": 0,
+          "effect_sets": 0,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 60,
+          "sequence": 910431304,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "last_retry_move_failure": {
+          "attempts": 3,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 0,
+          "motion_sets": 0,
+          "effect_sets": 0,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 60,
+          "sequence": 3474675440,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "missing_initializer": {
+          "attempts": 3,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 0,
+          "motion_sets": 0,
+          "effect_sets": 0,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 60,
+          "sequence": 2702563538,
+          "list2_flags": 7,
+          "list2_set": 0
+        },
+        "already_seen": {
+          "attempts": 0,
+          "initial_moves": 0,
+          "retired_uses": 0,
+          "event_starts": 0,
+          "motion_sets": 0,
+          "effect_sets": 0,
+          "bank_3": 0,
+          "bank_4": 0,
+          "sleep_frames": 0,
+          "sequence": 2166136261,
+          "list2_flags": 1,
+          "list2_set": 7
+        },
+        "live_other_flags": {
+          "attempts": 1,
+          "initial_moves": 1,
+          "retired_uses": 0,
+          "event_starts": 1,
+          "motion_sets": 1,
+          "effect_sets": 1,
+          "bank_3": 1,
+          "bank_4": 1,
+          "sleep_frames": 224,
+          "sequence": 1384638435,
+          "list2_flags": 7,
+          "list2_set": 0
+        }
+      }
+    }
+  },
+  "target": {
+    "status": "PASS",
+    "compiler_version": "sh-elf-g++ (GCC) 15.2.0",
+    "builds": {
+      "baseline-diag0": {
+        "ii": {
+          "sha256": "2f6753a58c534e5afaa069d687386aadd4a0f4c7ec8e54c701a1a457b46927f0",
+          "bytes": 228636
+        },
+        "o": {
+          "sha256": "0b8da63b5b77dace8f481cd85a0d21b05935c15a6c943969ed9660623cfed851",
+          "bytes": 27648,
+          "executable_bytes": 14560,
+          "allocated_bytes": 14801,
+          "zero_fill_bytes": 36,
+          "stack": [
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:483:13:void r10c_ThunderFlagOn()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:488:13:void r10c_ThunderFlagOff()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:730:13:void r10c_EmSet_exit()",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:464:13:void r10c_StrCheck()",
+              "bytes": 28,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:493:13:void r10c_ThunderMove()",
+              "bytes": 52,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1196:13:void hako_down(cObj*)",
+              "bytes": 92,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1286:13:void r10c_ItemGet()",
+              "bytes": 76,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:757:13:void r10c_EmSet()",
+              "bytes": 24,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:219:6:void R10cMain()",
+              "bytes": 24,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:530:17:void setTexRender()",
+              "bytes": 60,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:562:16:int SwitchExec(cObj*, f32*, int, f32, f32)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:949:17:void EmHitUpdate(cEm*)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:959:13:void SetEmHitAtari()",
+              "bytes": 180,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:361:13:void r10c_EmEvent_exit()",
+              "bytes": 36,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:388:13:void r10c_EmEvent()",
+              "bytes": 60,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:231:13:void r10c_TestPosMove(int)",
+              "bytes": 136,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1336:17:void eat_swap()",
+              "bytes": 28,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:124:6:void R10cInit()",
+              "bytes": 80,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:589:13:void chkSwitchA_exit()",
+              "bytes": 40,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:645:13:void chkSwitchA()",
+              "bytes": 44,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:802:13:void moveWheel()",
+              "bytes": 108,
+              "kind": "static"
+            }
+          ]
+        }
+      },
+      "absent-diag0": {
+        "ii": {
+          "sha256": "2f6753a58c534e5afaa069d687386aadd4a0f4c7ec8e54c701a1a457b46927f0",
+          "bytes": 228636
+        },
+        "o": {
+          "sha256": "0b8da63b5b77dace8f481cd85a0d21b05935c15a6c943969ed9660623cfed851",
+          "bytes": 27648,
+          "executable_bytes": 14560,
+          "allocated_bytes": 14801,
+          "zero_fill_bytes": 36,
+          "stack": [
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:492:13:void r10c_ThunderFlagOn()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:497:13:void r10c_ThunderFlagOff()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:739:13:void r10c_EmSet_exit()",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:473:13:void r10c_StrCheck()",
+              "bytes": 28,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:502:13:void r10c_ThunderMove()",
+              "bytes": 52,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1205:13:void hako_down(cObj*)",
+              "bytes": 92,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1295:13:void r10c_ItemGet()",
+              "bytes": 76,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:766:13:void r10c_EmSet()",
+              "bytes": 24,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:219:6:void R10cMain()",
+              "bytes": 24,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:539:17:void setTexRender()",
+              "bytes": 60,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:571:16:int SwitchExec(cObj*, f32*, int, f32, f32)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:958:17:void EmHitUpdate(cEm*)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:968:13:void SetEmHitAtari()",
+              "bytes": 180,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:361:13:void r10c_EmEvent_exit()",
+              "bytes": 36,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:388:13:void r10c_EmEvent()",
+              "bytes": 60,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:231:13:void r10c_TestPosMove(int)",
+              "bytes": 136,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1345:17:void eat_swap()",
+              "bytes": 28,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:124:6:void R10cInit()",
+              "bytes": 80,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:598:13:void chkSwitchA_exit()",
+              "bytes": 40,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:654:13:void chkSwitchA()",
+              "bytes": 44,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:811:13:void moveWheel()",
+              "bytes": 108,
+              "kind": "static"
+            }
+          ]
+        }
+      },
+      "zero-diag0": {
+        "ii": {
+          "sha256": "2f6753a58c534e5afaa069d687386aadd4a0f4c7ec8e54c701a1a457b46927f0",
+          "bytes": 228636
+        },
+        "o": {
+          "sha256": "0b8da63b5b77dace8f481cd85a0d21b05935c15a6c943969ed9660623cfed851",
+          "bytes": 27648,
+          "executable_bytes": 14560,
+          "allocated_bytes": 14801,
+          "zero_fill_bytes": 36,
+          "stack": [
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:492:13:void r10c_ThunderFlagOn()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:497:13:void r10c_ThunderFlagOff()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:739:13:void r10c_EmSet_exit()",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:473:13:void r10c_StrCheck()",
+              "bytes": 28,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:502:13:void r10c_ThunderMove()",
+              "bytes": 52,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1205:13:void hako_down(cObj*)",
+              "bytes": 92,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1295:13:void r10c_ItemGet()",
+              "bytes": 76,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:766:13:void r10c_EmSet()",
+              "bytes": 24,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:219:6:void R10cMain()",
+              "bytes": 24,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:539:17:void setTexRender()",
+              "bytes": 60,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:571:16:int SwitchExec(cObj*, f32*, int, f32, f32)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:958:17:void EmHitUpdate(cEm*)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:968:13:void SetEmHitAtari()",
+              "bytes": 180,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:361:13:void r10c_EmEvent_exit()",
+              "bytes": 36,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:388:13:void r10c_EmEvent()",
+              "bytes": 60,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:231:13:void r10c_TestPosMove(int)",
+              "bytes": 136,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1345:17:void eat_swap()",
+              "bytes": 28,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:124:6:void R10cInit()",
+              "bytes": 80,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:598:13:void chkSwitchA_exit()",
+              "bytes": 40,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:654:13:void chkSwitchA()",
+              "bytes": 44,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:811:13:void moveWheel()",
+              "bytes": 108,
+              "kind": "static"
+            }
+          ]
+        }
+      },
+      "on-diag0": {
+        "ii": {
+          "sha256": "79050872861f44fd7018e9a715cd85d544f7f87ed8e6d375a8930802b335e0c1",
+          "bytes": 228766
+        },
+        "o": {
+          "sha256": "52cf2394df843fbc94805230a19d3a145738207d91d92196e95e87304d88ff78",
+          "bytes": 27704,
+          "executable_bytes": 14592,
+          "allocated_bytes": 14833,
+          "zero_fill_bytes": 36,
+          "stack": [
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:492:13:void r10c_ThunderFlagOn()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:497:13:void r10c_ThunderFlagOff()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:739:13:void r10c_EmSet_exit()",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:473:13:void r10c_StrCheck()",
+              "bytes": 28,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:502:13:void r10c_ThunderMove()",
+              "bytes": 52,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1205:13:void hako_down(cObj*)",
+              "bytes": 92,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1295:13:void r10c_ItemGet()",
+              "bytes": 76,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:766:13:void r10c_EmSet()",
+              "bytes": 24,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:219:6:void R10cMain()",
+              "bytes": 24,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:539:17:void setTexRender()",
+              "bytes": 60,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:571:16:int SwitchExec(cObj*, f32*, int, f32, f32)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:958:17:void EmHitUpdate(cEm*)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:968:13:void SetEmHitAtari()",
+              "bytes": 180,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:361:13:void r10c_EmEvent_exit()",
+              "bytes": 36,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:388:13:void r10c_EmEvent()",
+              "bytes": 64,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:231:13:void r10c_TestPosMove(int)",
+              "bytes": 136,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1345:17:void eat_swap()",
+              "bytes": 28,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:124:6:void R10cInit()",
+              "bytes": 80,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:598:13:void chkSwitchA_exit()",
+              "bytes": 40,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:654:13:void chkSwitchA()",
+              "bytes": 44,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:811:13:void moveWheel()",
+              "bytes": 108,
+              "kind": "static"
+            }
+          ]
+        }
+      },
+      "baseline-diag1": {
+        "ii": {
+          "sha256": "04f03dd96d684cef17ca3cac07840620cde17a192709ac5dbb7ec4d2f4f678cc",
+          "bytes": 232937
+        },
+        "o": {
+          "sha256": "4f471c8c8219c40ba8fd20aa6945376f2617a298d2f92d193c2924b8e2e21ab4",
+          "bytes": 27980,
+          "executable_bytes": 14792,
+          "allocated_bytes": 15033,
+          "zero_fill_bytes": 36,
+          "stack": [
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:483:13:void r10c_ThunderFlagOn()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:488:13:void r10c_ThunderFlagOff()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:730:13:void r10c_EmSet_exit()",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:464:13:void r10c_StrCheck()",
+              "bytes": 28,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:493:13:void r10c_ThunderMove()",
+              "bytes": 52,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1196:13:void hako_down(cObj*)",
+              "bytes": 92,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1286:13:void r10c_ItemGet()",
+              "bytes": 76,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:757:13:void r10c_EmSet()",
+              "bytes": 24,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:219:6:void R10cMain()",
+              "bytes": 24,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:530:17:void setTexRender()",
+              "bytes": 60,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:562:16:int SwitchExec(cObj*, f32*, int, f32, f32)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:949:17:void EmHitUpdate(cEm*)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:959:13:void SetEmHitAtari()",
+              "bytes": 180,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:361:13:void r10c_EmEvent_exit()",
+              "bytes": 40,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:388:13:void r10c_EmEvent()",
+              "bytes": 64,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:231:13:void r10c_TestPosMove(int)",
+              "bytes": 136,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1336:17:void eat_swap()",
+              "bytes": 28,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:124:6:void R10cInit()",
+              "bytes": 80,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:589:13:void chkSwitchA_exit()",
+              "bytes": 40,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:645:13:void chkSwitchA()",
+              "bytes": 44,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:802:13:void moveWheel()",
+              "bytes": 108,
+              "kind": "static"
+            }
+          ]
+        }
+      },
+      "absent-diag1": {
+        "ii": {
+          "sha256": "04f03dd96d684cef17ca3cac07840620cde17a192709ac5dbb7ec4d2f4f678cc",
+          "bytes": 232937
+        },
+        "o": {
+          "sha256": "4f471c8c8219c40ba8fd20aa6945376f2617a298d2f92d193c2924b8e2e21ab4",
+          "bytes": 27980,
+          "executable_bytes": 14792,
+          "allocated_bytes": 15033,
+          "zero_fill_bytes": 36,
+          "stack": [
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:492:13:void r10c_ThunderFlagOn()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:497:13:void r10c_ThunderFlagOff()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:739:13:void r10c_EmSet_exit()",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:473:13:void r10c_StrCheck()",
+              "bytes": 28,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:502:13:void r10c_ThunderMove()",
+              "bytes": 52,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1205:13:void hako_down(cObj*)",
+              "bytes": 92,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1295:13:void r10c_ItemGet()",
+              "bytes": 76,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:766:13:void r10c_EmSet()",
+              "bytes": 24,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:219:6:void R10cMain()",
+              "bytes": 24,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:539:17:void setTexRender()",
+              "bytes": 60,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:571:16:int SwitchExec(cObj*, f32*, int, f32, f32)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:958:17:void EmHitUpdate(cEm*)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:968:13:void SetEmHitAtari()",
+              "bytes": 180,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:361:13:void r10c_EmEvent_exit()",
+              "bytes": 40,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:388:13:void r10c_EmEvent()",
+              "bytes": 64,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:231:13:void r10c_TestPosMove(int)",
+              "bytes": 136,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1345:17:void eat_swap()",
+              "bytes": 28,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:124:6:void R10cInit()",
+              "bytes": 80,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:598:13:void chkSwitchA_exit()",
+              "bytes": 40,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:654:13:void chkSwitchA()",
+              "bytes": 44,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:811:13:void moveWheel()",
+              "bytes": 108,
+              "kind": "static"
+            }
+          ]
+        }
+      },
+      "zero-diag1": {
+        "ii": {
+          "sha256": "04f03dd96d684cef17ca3cac07840620cde17a192709ac5dbb7ec4d2f4f678cc",
+          "bytes": 232937
+        },
+        "o": {
+          "sha256": "4f471c8c8219c40ba8fd20aa6945376f2617a298d2f92d193c2924b8e2e21ab4",
+          "bytes": 27980,
+          "executable_bytes": 14792,
+          "allocated_bytes": 15033,
+          "zero_fill_bytes": 36,
+          "stack": [
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:492:13:void r10c_ThunderFlagOn()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:497:13:void r10c_ThunderFlagOff()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:739:13:void r10c_EmSet_exit()",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:473:13:void r10c_StrCheck()",
+              "bytes": 28,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:502:13:void r10c_ThunderMove()",
+              "bytes": 52,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1205:13:void hako_down(cObj*)",
+              "bytes": 92,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1295:13:void r10c_ItemGet()",
+              "bytes": 76,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:766:13:void r10c_EmSet()",
+              "bytes": 24,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:219:6:void R10cMain()",
+              "bytes": 24,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:539:17:void setTexRender()",
+              "bytes": 60,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:571:16:int SwitchExec(cObj*, f32*, int, f32, f32)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:958:17:void EmHitUpdate(cEm*)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:968:13:void SetEmHitAtari()",
+              "bytes": 180,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:361:13:void r10c_EmEvent_exit()",
+              "bytes": 40,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:388:13:void r10c_EmEvent()",
+              "bytes": 64,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:231:13:void r10c_TestPosMove(int)",
+              "bytes": 136,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1345:17:void eat_swap()",
+              "bytes": 28,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:124:6:void R10cInit()",
+              "bytes": 80,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:598:13:void chkSwitchA_exit()",
+              "bytes": 40,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:654:13:void chkSwitchA()",
+              "bytes": 44,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:811:13:void moveWheel()",
+              "bytes": 108,
+              "kind": "static"
+            }
+          ]
+        }
+      },
+      "on-diag1": {
+        "ii": {
+          "sha256": "4d1ef7c05c4a35420b2ec96b7bd5f3a9b955dcdc63c6ed0afdada07f1604038b",
+          "bytes": 233067
+        },
+        "o": {
+          "sha256": "f0503c930b23c9c5afbc0e2e58cd79f95c29e0cdc3fa53fc730d8065e640b9a0",
+          "bytes": 27984,
+          "executable_bytes": 14832,
+          "allocated_bytes": 15073,
+          "zero_fill_bytes": 36,
+          "stack": [
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:492:13:void r10c_ThunderFlagOn()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:497:13:void r10c_ThunderFlagOff()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:739:13:void r10c_EmSet_exit()",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:473:13:void r10c_StrCheck()",
+              "bytes": 28,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:502:13:void r10c_ThunderMove()",
+              "bytes": 52,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1205:13:void hako_down(cObj*)",
+              "bytes": 92,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1295:13:void r10c_ItemGet()",
+              "bytes": 76,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:766:13:void r10c_EmSet()",
+              "bytes": 24,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:219:6:void R10cMain()",
+              "bytes": 24,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:539:17:void setTexRender()",
+              "bytes": 60,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:571:16:int SwitchExec(cObj*, f32*, int, f32, f32)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:958:17:void EmHitUpdate(cEm*)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:968:13:void SetEmHitAtari()",
+              "bytes": 180,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:361:13:void r10c_EmEvent_exit()",
+              "bytes": 40,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:388:13:void r10c_EmEvent()",
+              "bytes": 64,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:231:13:void r10c_TestPosMove(int)",
+              "bytes": 136,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:1345:17:void eat_swap()",
+              "bytes": 28,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:124:6:void R10cInit()",
+              "bytes": 80,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:598:13:void chkSwitchA_exit()",
+              "bytes": 40,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:654:13:void chkSwitchA()",
+              "bytes": 44,
+              "kind": "static"
+            },
+            {
+              "function": "D:/Bio4/Prog/r10c.cpp:811:13:void moveWheel()",
+              "bytes": 108,
+              "kind": "static"
+            }
+          ]
+        }
+      }
+    },
+    "off_full_tu_preprocessed_and_objects_identical": true,
+    "diagnostics_variants": [
+      0,
+      1
+    ],
+    "new_define_room_only": true,
+    "retry_zero_rejected": true,
+    "census_object_define": true,
+    "invalid_knob_rejected": true,
+    "dispatch_probe": {
+      "sha256": "6f76dbb8bc2cdc517edea590d7b0d1a22eb556b4f8397f149f2f452d72f44dd3",
+      "disassembly": "\n/dispatch-probe.o:     file format elf32-shl\n\n\nDisassembly of section .text.dam_dispatch_probe:\n\n00000000 <_dam_dispatch_probe>:\n   0:\t22 4f       \tsts.l\tpr,@-r15\n   2:\t42 61       \tmov.l\t@r4,r1\n   4:\t16 51       \tmov.l\t@(24,r1),r1\n   6:\t0b 41       \tjsr\t@r1\n   8:\t01 e5       \tmov\t#1,r5\n   a:\t26 4f       \tlds.l\t@r15+,pr\n   c:\t0b 00       \trts\t\n   e:\t09 00       \tnop\t\n",
+      "provenance": "Fresh current-source SH4 object; not public Test21 ELF/overlay"
+    }
+  },
+  "bios_observation": {
+    "source": "https://github.com/ElectronAsh/DC_MiSTer/blob/50d619cb98025ee7b753ab1ab491910eb6fb25dc/S32X.sv",
+    "mapping_source": "https://github.com/mamedev/mame/blob/mame0249/src/mame/sega/dccons.cpp",
+    "offset": "0",
+    "word": "4328e3ff",
+    "dispatch_offset": 24,
+    "conditional_fault_address": "4328e417",
+    "reporter_rom_or_null_pointer_observed": false
+  },
+  "full_receipt_sha256": {
+    "dam-audit-host02/host-receipt.json": "1ee1eead7358672116b57bdbda1e8eb0df55bc9b082a9de39f5b68f03322a021",
+    "dam-audit-target02/target-receipt.json": "ef844431b7d106e03c1dcc89e47a6fe4f298ff3f443c57c8b726e8151bf190b7"
+  }
+}
