@@ -913,7 +913,16 @@ DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
 # byte-identical), so mip22b's rekeyed r4pw still applies. After mip22b. Hut view MODELLED: TA params 1.69 -> 1.06 MB,
 # triangles 37.5k -> 21.7k. Private store copy: re4-assets-private/r10dlod23-20261023 (RECIPE.txt, SHA256SUMS).
 R10DLOD23D = os.environ.get('R10DLOD23D', '/root/re4data/private/r10dlod23-20261023')
-DATA['r10dlod23'] = {'dc/native/r10d/ps2-world.re4mesh': R10DLOD23D + '/dc/native/r10d/ps2-world.re4mesh'}
+# Its ps2-world.ids carries mip22b's physical r4pw crc: a mesh outside the rect21 provenance certificates keeps that crc,
+# and without the file PS2DYN logs "ids=header" (the 61 dynamic placements stop following their objects).
+DATA['r10dlod23'] = {'dc/native/r10d/ps2-world.%s' % x: R10DLOD23D + '/dc/native/r10d/ps2-world.%s' % x for x in ('re4mesh', 'ids')}
+# r10dbake23 (same lane, step 2 "mostly static and pregenerated"): r10dlod23's recipe + ps2_room_r4im.py --bake-static: the
+# 167 static placements (scroll id 254) as one world-space mesh, parts by material and 3 m clusters; the 61 placements with
+# an id < 250 stay their own. 228 -> 62 placements, 285 -> 155 parts. r4pw rekeyed to mip22b's texture keys
+# (tools/d367/ps2world/r4pw_rekey.py) and its ids. Replaces r10dlod23 in the data line (use one of the two).
+R10DBAKE23D = os.environ.get('R10DBAKE23D', '/root/re4data/private/r10dbake23-20261023')
+DATA['r10dbake23'] = {'dc/native/r10d/ps2-world.%s' % x: R10DBAKE23D + '/dc/native/r10d/ps2-world.%s' % x
+                      for x in ('re4mesh', 'r4pw', 'ids')}
 
 
 if __name__ == '__main__':
