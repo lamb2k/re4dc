@@ -37,6 +37,10 @@ def sha(path):
 def stamp(s):
  return s.st_dev,s.st_ino,s.st_size,s.st_mode,s.st_mtime_ns,s.st_ctime_ns
 
+def content_stamp(s):
+ # Hardlink publication changes ctime/link count, but must not change content.
+ return s.st_dev,s.st_ino,s.st_size,s.st_mtime_ns
+
 def absent(path):
  require(not os.path.lexists(path), 'Owned output already exists; preserve/diagnose, never retry or replace: '+str(path))
 
@@ -107,23 +111,47 @@ def copy_patch(source, writer, plan, guard=lambda:None, event=lambda _:None):
  for p in plan['point_patches']:
   writer.seek(p['offset']);raw=bytes.fromhex(p['after_hex']);require(writer.write(raw)==len(raw),'Short point write')
  writer.truncate(plan['target']['size']);writer.flush();os.fsync(writer.fileno());guard();event('PATCHES_APPLIED')
- writer.seek(0);actual=hashlib.file_digest(writer,'sha256').hexdigest()
- require(actual==plan['target']['sha256'],'Restored full target SHA256 differs; keep unpublished candidate');event('TARGET_FULL_HASH_VERIFIED');return actual
+ writer.seek(0);verified=content_stamp(os.fstat(writer.fileno()));actual=hashlib.file_digest(writer,'sha256').hexdigest()
+ require(content_stamp(os.fstat(writer.fileno()))==verified,'Candidate content changed during target hash')
+ require(actual==plan['target']['sha256'],'Restored full target SHA256 differs; keep unpublished candidate');event('TARGET_FULL_HASH_VERIFIED');return actual,verified
 
-def publish(temp,target,writer,dfd):
- # Atomic exclusive publication, one inode/allocation. Never os.replace an
- # existing target. The only unlink is our just-created temporary name.
- absent(target);before=stamp(os.fstat(writer.fileno()));require(stamp(temp.stat())==before,'Temporary image replaced')
+def held_parent(parent,dfd):
+ held=os.fstat(dfd);named=os.stat(parent,follow_symlinks=False)
+ require(stat.S_ISDIR(held.st_mode) and stat.S_ISDIR(named.st_mode) and
+         (held.st_dev,held.st_ino)==(named.st_dev,named.st_ino), 'Literal parent differs from held directory')
+ canonical(parent)
+
+def owned_temp(temp,writer,dfd,verified):
+ held=os.stat(temp.name,dir_fd=dfd,follow_symlinks=False);current=os.fstat(writer.fileno())
+ require(stat.S_ISREG(held.st_mode) and stat.S_ISREG(current.st_mode) and
+         content_stamp(held)==content_stamp(current)==verified,'Owned temporary inode/content changed')
+
+def literal_target(target,dfd,verified):
+ held_parent(target.parent,dfd)
+ literal=os.stat(target,follow_symlinks=False)
+ held=os.stat(target.name,dir_fd=dfd,follow_symlinks=False)
+ require(stat.S_ISREG(literal.st_mode) and stat.S_ISREG(held.st_mode) and
+         content_stamp(literal)==content_stamp(held)==verified,'Literal target differs from verified writer')
+
+def publish(temp,target,writer,dfd,verified,expected_size):
+ # Exclusive link publication keeps one allocation. Namespace changes refuse
+ # before unlink; never use a literal path to unlink a replacement directory.
+ require(temp.parent==target.parent and verified[2]==expected_size,'Publication size/parent proof differs')
+ held_parent(target.parent,dfd);owned_temp(temp,writer,dfd,verified);absent(target)
  os.link(temp.name,target.name,src_dir_fd=dfd,dst_dir_fd=dfd,follow_symlinks=False)
- require(os.stat(target.name,dir_fd=dfd,follow_symlinks=False).st_ino==before[1],'Published inode differs')
- os.fsync(dfd);os.unlink(temp.name,dir_fd=dfd);os.fsync(dfd)
+ literal_target(target,dfd,verified);owned_temp(temp,writer,dfd,verified)
+ os.fsync(dfd)
+ # Recheck both literal names immediately before removing our exclusive name.
+ literal_target(target,dfd,verified);owned_temp(temp,writer,dfd,verified)
+ os.unlink(temp.name,dir_fd=dfd);os.fsync(dfd)
+ literal_target(target,dfd,verified)
 
 
 def admission(row):
  age=(datetime.datetime.now(datetime.timezone.utc)-datetime.datetime.fromisoformat(row['utc'].replace('Z','+00:00'))).total_seconds()
  require(0<=age<=60 and row.get('admitted') is True and not row.get('errors'),'Fresh successful root admission required')
  require(row['root_cap']==ROOT_CAP and row['package_cap']==PACKAGE_CAP and row['floor']==FLOOR and row['guest_peak']==GUEST,'Root capacity contract differs')
- require(row['projected_peak']+SIZE+META<=ROOT_CAP and row['package_current_bytes']+SIZE+META<=PACKAGE_CAP,'One ISO+metadata root/package reservation refused')
+ require(row['projected_peak']+SIZE+META<=ROOT_CAP and row['package_current_bytes']+SIZE+META+GUEST<=PACKAGE_CAP,'One ISO+metadata root/package reservation refused')
  require(row['c_free']>=FLOOR+GUEST+SIZE+META,'C floor/guest/one-ISO reservation refused')
  require(any(CROOT.is_relative_to(Path(x['path'])) for x in row['roots']),'Root receipt does not cover evidence tree')
 
@@ -166,12 +194,13 @@ def main():
     source_before=stamp(os.fstat(reader.fileno()))
     fd=os.open(temp,os.O_RDWR|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)
     with os.fdopen(fd,'w+b') as writer:
-     actual=copy_patch(reader,writer,plan,guard,event)
+     actual,verified=copy_patch(reader,writer,plan,guard,event)
      for row in plan['metadata']:pin_small(row)
      require(sha(a.root_admission)==a.root_admission_sha256,'Admission receipt changed');guard()
      # Revalidate source identity while its original read-only descriptor is held.
      require(stamp(INPUT.stat())==stamp(os.fstat(reader.fileno()))==source_before,'Retained bea identity changed')
-     publish(temp,TARGET,writer,dfd);record['published']=True
+     publish(temp,TARGET,writer,dfd,verified,plan['target']['size']);record['published']=True
+   literal_target(TARGET,dfd,verified)
    record.update(status='EXACT_CE034_RECOVERED',restored_sha256=actual,source_input_sha256=INPUT_SHA,full_target_readback=True,elapsed_seconds=time.monotonic()-start);save();print(json.dumps(record))
   except BaseException as exc:
    record.update(status='FAILED_PRESERVED_NO_ACCEPTANCE',error=repr(exc),target_exists=os.path.lexists(TARGET),temporary_exists=os.path.lexists(temp),elapsed_seconds=time.monotonic()-start);save();raise

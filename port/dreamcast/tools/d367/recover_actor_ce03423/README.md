@@ -13,11 +13,13 @@ Run the miniature controls in WSL using `python3 -B test_recover.py`. They alloc
 Default `python3 -B recover.py` prints the source plan identity and performs no recovery. Main's later admitted invocation is:
 
 ```
-python3 -B /mnt/c/Game\ Dev/Emulators/codex-lanes/world-scratch23/recovery-actor-ce034/recover.py --execute \
-  --plan /mnt/c/Game\ Dev/Emulators/codex-lanes/world-scratch23/recovery-actor-ce034/PLAN.json \
+python3 -B /mnt/c/Game\ Dev/Emulators/codex-lanes/world-scratch23/recovery-actor-ce034-r2/recover.py --execute \
+  --plan /mnt/c/Game\ Dev/Emulators/codex-lanes/world-scratch23/recovery-actor-ce034-r2/PLAN.json \
   --source-seal-sha256 SEALED_UNIT_SHA \
   --review REVIEW_JSON --review-sha256 REVIEW_SHA \
   --root-admission FRESH_ROOT_JSON --root-admission-sha256 ROOT_SHA
 ```
 
 Review must contain `status:"CLEAR"` and `recovery_source_seal_sha256` equal to the exact local SOURCE-SEAL.json SHA. Executor validates all sealed files before image access. Admission must be<=60s old, cover the evidence tree, and reserve exactly oneISO+256KiB metadata under16GiB root/3,758,096,384B package caps,20,468,203,520B Cfloor plus60MiB guest reserve. Current free disk and remaining copy reserve are guarded during I/O. No internal census is performed. Both original actor tree lease and shared package lease are acquired nonblocking before validation/copy. Main owns concurrent resource admission and any later disposition of a failed candidate. Recovery receipt is new `oldactor/base/recovery-ce034-result.json`; no old receipt is overwritten.
+
+Successor r2 preserves old seal a224 untouched. Publication now binds the physical-hash writer content stamp (device/inode/size/mtime), checks canonical literal-parent device/inode against the held directory before/after link, checks both literal TARGET and fd-relative TARGET against that verified writer, and stats the owned temporary via dirfd before its only unlink. Parent/target/temp substitution fails while preserving all names; a final literal check also precedes EXACT success. Hardlink ctime/link-count changes are expected, so content stamp excludes those fields. Package admission now also reserves the standing60MiB future guest, in addition to the root/Cfloor reserve. Exact current example2,662,713,861+1,028,911,104+262,144+62,914,560=3,754,801,669 fits package cap by3,294,715B.
