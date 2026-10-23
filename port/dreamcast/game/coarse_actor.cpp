@@ -55,7 +55,7 @@
 #endif
 
 #if defined(RE4DC_ACTOR_BACKFACE_CONE) && RE4DC_ACTOR_BACKFACE_CONE
-extern "C" { extern const void* re4dc_abc_model; extern unsigned re4dc_abc_class; }  // native_actor_fast.cpp
+extern "C" void re4dc_abc_mark(const void* model,unsigned cls);  // native_actor_fast.cpp
 #endif
 extern "C" void re4dc_log(const char*, ...);
 extern "C" void GXGetProjectionv(float*);

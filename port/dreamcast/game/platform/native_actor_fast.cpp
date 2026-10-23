@@ -33,7 +33,7 @@
 #include "re4dc_screen.h"
 #include "native_actor.hpp"
 // ACTOR_BACKFACE_CONE (backface.mk, lane backface-cone23; render only; default 0: no code). For the models
-// coarse_actor_transaction.inc marks (Leon, Ganados, El Gigante, Ashley: re4dc_abc_model), the converter splits each
+// coarse_actor_transaction.inc marks (Leon, Ganados, El Gigante, Ashley: re4dc_abc_mark), the converter splits each
 // opaque part's strips by (palette entry, facing) before clustering, so a meshlet's triangles share one skinning matrix
 // and face one way; after conversion each meshlet gets a normal cone in that matrix's input space (abc_build, stored
 // in the stream's unused tail). At draw a meshlet whose every triangle faces the side the part's cull removes is
@@ -45,9 +45,16 @@
 #endif
 #if RE4DC_ACTOR_BACKFACE_CONE
 extern "C" void re4dc_log(const char* fmt, ...);
-extern "C" {
-const void* re4dc_abc_model = nullptr;  // set by coarse_actor_transaction.inc for a model the split applies to
-unsigned re4dc_abc_class = 0;           // its class: 1 Leon, 2 Ganado, 3 El Gigante, 4 Ashley
+// The models the split applies to, marked by coarse_actor_transaction.inc (model -> class 1 Leon, 2 Ganado,
+// 3 El Gigante, 4 Ashley); a part is split when it is converted while its model is marked.
+namespace { struct AbcMark { const void* model; unsigned cls; }; AbcMark abc_marks[64]; unsigned abc_mark_next = 0; }
+extern "C" void re4dc_abc_mark(const void* model, unsigned cls) {
+    for (AbcMark& m : abc_marks) if (m.model == model) { m.cls = cls; return; }
+    abc_marks[abc_mark_next] = {model, cls}; abc_mark_next = (abc_mark_next + 1U) & 63U;
+}
+static unsigned abc_class_of(const void* model) {
+    if (model) for (const AbcMark& m : abc_marks) if (m.model == model) return m.cls;
+    return 0U;
 }
 #endif
 #ifndef RE4DC_ACTOR_SKIN_OWNER_POOL
@@ -534,7 +541,7 @@ public:
         if (capacity < sizeof(BlobHeader) + 32 || p.stream_bytes > 0x3FFFCU) ACTOR_REJECT();
         if (!parse()) return false;
 #if RE4DC_ACTOR_BACKFACE_CONE
-        if (p.blend == 0 && (abc_force || (p.model && p.model == re4dc_abc_model))) abc_split();
+        if (p.blend == 0 && (abc_force || abc_class_of(p.model))) abc_split();
 #endif
         rs = 3U + (constant_color ? 0U : 1U);
         infos = arena.take<MeshletInfo>(strip_count);
@@ -4697,7 +4704,7 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
             Re4dcActorStreamMutation mutation(p.stream,p.stream_bytes);
             std::memcpy(const_cast<u8*>(p.stream), out, size);
 #if RE4DC_ACTOR_BACKFACE_CONE
-            if (c.split()) abc_build(p, size, re4dc_abc_class);
+            if (c.split()) abc_build(p, size, abc_class_of(p.model));
 #endif
             ++stats.conversions;
             if (c.level_count()) ++stats.lod_parts;
@@ -4809,7 +4816,7 @@ void relod(const Re4dcModelPart& p, bool crowd_part) {
     level_ladder = crowd_part ? lod_fractions_crowd : lod_fractions;
     Converter c(q, sort, out, p.stream_bytes, Arena{work, room}, true);
 #if RE4DC_ACTOR_BACKFACE_CONE
-    unsigned abc_cls = re4dc_abc_class;
+    unsigned abc_cls = abc_class_of(p.model);
     c.abc_force = abc_table(stream, p.stream_bytes, &abc_cls) != nullptr;
 #endif
     const bool built = c.run() && c.level_count();
