@@ -172,8 +172,14 @@ extern "C" int re4dc_esp_strip21_eligible(cEsp* esp){
         !(esp->m_Tool_flg&(0x10000|0x40|0x4000)) && !(esp->m_Flg&0x10) && esp->xA4==1;
 }
 extern "C" void re4dc_esp_strip21_color(GXColor color){s_effect_col=color;}
+#if defined(RE4DC_FX_TRIM) && RE4DC_FX_TRIM
+extern "C" int re4dc_fx_essential_strip_cut(const cEsp* esp);   // FX_TRIM Essential: trails / ribbons not drawn
+#endif
 extern "C" int re4dc_esp_strip21_draw(cEsp* esp,int no,Vec* corners,u8 repeat,int direction){
     if(!re4dc_esp_strip21_eligible(esp))return 0;
+#if defined(RE4DC_FX_TRIM) && RE4DC_FX_TRIM
+    if(re4dc_fx_essential_strip_cut(esp))return 1;
+#endif
     EspTexWk* work=&g_pEspSys->Esp_tex_tbl[esp->m_Tex_id];
     if(work->Owner==0xD2 || !work->pTpl || esp->m_Ptn_no>=work->pTpl->numDescriptors)return 0;
     // EspTexSet's matrix is source state. Only its proven identity registration
@@ -1050,8 +1056,9 @@ static const FxTrim kFxTrim[3] = {
 // FX_TRIM_LOG (test only): "fx trim:" every 120 frames, per-frame means: sprites seen / drawn by owner class (r room
 // 0x01 / 0xd0, l Leon 0x03, e enemies / animals / objects 0x10..0xcf, o other), drops by reason, and the drawn and seen
 // translucent screen area in 1/100 screens (640x480).
-static u32 s_ftl_frame0, s_ftl_frames, s_ftl_seen[4], s_ftl_drawn[4], s_ftl_drop[4];
+static u32 s_ftl_frame0, s_ftl_frames, s_ftl_seen[4], s_ftl_drawn[4], s_ftl_drop[5];
 static f32 s_ftl_area_seen, s_ftl_area_drawn;
+static u32 s_ftl_unk[64];   // owner << 16 | id << 8 | tex (key 0: owner 0 id 0 tex 0 never logged)
 #endif
 static unsigned FxTrimOwnerClass(unsigned owner)
 {
@@ -1066,7 +1073,60 @@ static f32 FxTrimArea(const Re4dcEffectSprite* s)
     }
     return a < 0.0f ? -a * 0.5f : a * 0.5f;
 }
-// 0: not drawn. reason: 0 drawn, 1 thinned, 2 far, 3 small, 4 budget.
+// "Essential only" (user 10-23; FX_LEVEL=3 = the level-2 room dial + this filter; runtime re4dc_fx_essential): keep the
+// effects that carry gameplay (muzzle flash, hit blood, explosions and fire incl. grenades / traps / burning hazards,
+// blob shadows; Leon's own effects whole), cut the atmosphere (mist / haze sheets, dust, ambient smoke and sparks,
+// glows, light shafts, glare, trails / ribbons) and stack at most kEssLayer sprites of one smoke / spark layer per owner.
+// Classes by effect texture id: the core EFF ids (etc/core.das EFF#1) and the room EFF ids are one global id space and
+// keep their meaning across rooms (sheets in the lane evidence, texsheets/). Unknown ids: drawn (capped) for enemies,
+// objects and weapons, cut for the room's own ambient tables (owners 0x01 / 0xd0).
+enum { ESS_KEEP = 1, ESS_LAYER = 2, ESS_CUT = 3 };
+static u8 s_ess_class[256];
+static void FxEssInit()
+{
+    static const u8 keep[] = {0x00, 0x01, 0x03, 0x04, 0x06, 0x07, 0x09, 0x0c, 0x0e, 0x0f, 0x10, 0x16, 0x18, 0x19, 0xce,   // blood
+                              0x23, 0x1b, 0x26, 0x28, 0x2c, 0x2e, 0xcd, 0x29, 0x85, 0x86,   // explosion, blast ring, fire, flames
+                              0xb2};                                                          // blob shadow disc
+    static const u8 layer[] = {0x12, 0x1d, 0x1e, 0x1f, 0x24, 0x51, 0x52, 0x53, 0xff, 0xca, 0xc3,   // smoke
+                               0x56, 0x57, 0x58, 0x5a, 0xe2, 0xe3};                             // sparks, debris, embers
+    static const u8 cut[] = {0x5f, 0x6f, 0x72, 0x79, 0xe9, 0x9d,          // dust
+                             0x08, 0x0b, 0x13, 0x17, 0x1c, 0xf7, 0xc1};   // glows, light shafts, flares, glare
+    for (unsigned i = 0; i < sizeof(keep); ++i) s_ess_class[keep[i]] = ESS_KEEP;
+    for (unsigned i = 0; i < sizeof(layer); ++i) s_ess_class[layer[i]] = ESS_LAYER;
+    for (unsigned i = 0; i < sizeof(cut); ++i) s_ess_class[cut[i]] = ESS_CUT;
+}
+enum { kEssLayer = 2 };
+extern "C" {
+u8 re4dc_fx_essential = RE4DC_FX_ESSENTIAL_BOOT;
+}
+// 1: not drawn under Essential.
+static int FxEssentialCut(const cEsp* esp, int screen)
+{
+    static u32 s_frame = ~0U;
+    static u8 s_layer[256];   // (owner ^ tex) buckets: sprites of one layer this frame
+    if (!s_ess_class[0x00]) FxEssInit();
+    if (s_frame != pG->Frame_cnt) {
+        s_frame = pG->Frame_cnt;
+        for (int i = 0; i < 256; ++i) s_layer[i] = 0;
+    }
+    const unsigned owner = esp->info.owner;
+    if (owner == 0x03) return 0;                                   // Leon: muzzle flash, his blood, his grenades
+    if (esp->m_Id == 0x0e || esp->m_Id == 0x15 || esp->m_Id == 0x48) return 1;   // glows, haze, mist sheets
+    if (screen) return 0;
+    const unsigned c = s_ess_class[esp->m_Tex_id & 0xFF];
+    const int room = owner == 0x01 || owner == 0xD0;
+    if (c == ESS_KEEP) return 0;
+    if (c == ESS_CUT) return 1;
+    if (room) return 1;                                            // the room's ambient smoke / sparks / leaves / dust
+    u8* n = &s_layer[(owner * 31U + esp->m_Tex_id) & 0xFF];          // layers and unknown ids: one thin layer each
+    return (*n)++ >= kEssLayer;
+}
+// FX_STRIP21 strips (Esp01 / Esp02 trails, ribbons): not drawn under Essential except Leon's.
+extern "C" int re4dc_fx_essential_strip_cut(const cEsp* esp)
+{
+    return re4dc_fx_essential && esp->info.owner != 0x03;
+}
+// 0: not drawn. reason: 0 drawn, 1 thinned, 2 far, 3 small, 4 budget, 5 essential.
 static int FxTrimSprite(const cEsp* esp, const Re4dcEffectSprite* s, f32 area)
 {
     static u32 s_frame = ~0U, s_used;
@@ -1075,6 +1135,9 @@ static int FxTrimSprite(const cEsp* esp, const Re4dcEffectSprite* s, f32 area)
         s_frame = pG->Frame_cnt;
         s_used = 0;
         for (int i = 0; i < 256; ++i) s_per_id[i] = 0;
+    }
+    if (re4dc_fx_essential) {
+        return FxEssentialCut(esp, s->screen) ? 5 : 0;   // Essential: kinds only (no thinning of what it keeps)
     }
     if (s->screen || esp->info.owner == 0x03) {
         return 0;
@@ -1112,18 +1175,40 @@ static int FxLevelSprite(const cEsp* esp, Re4dcEffectSprite* s)
         if (++s_ftl_frames == 120) {
             const u32 F = 120;
             re4dc_log("fx trim: f=%u room=%03x lvl=%u seen r%u l%u e%u o%u drawn r%u l%u e%u o%u drop thin%u far%u small%u budget%u "
-                      "area seen=%u drawn=%u\n", (unsigned) s_ftl_frame0, (unsigned) G_ROOM_ID, (unsigned) re4dc_fx_level,
+                      "ess%u area seen=%u drawn=%u\n", (unsigned) s_ftl_frame0, (unsigned) G_ROOM_ID,
+                      (unsigned) re4dc_fx_level + re4dc_fx_essential,
                       s_ftl_seen[0] / F, s_ftl_seen[1] / F, s_ftl_seen[2] / F, s_ftl_seen[3] / F, s_ftl_drawn[0] / F,
                       s_ftl_drawn[1] / F, s_ftl_drawn[2] / F, s_ftl_drawn[3] / F, s_ftl_drop[0] / F, s_ftl_drop[1] / F,
-                      s_ftl_drop[2] / F, s_ftl_drop[3] / F, (unsigned) (s_ftl_area_seen / (F * 3072.0f)),
+                      s_ftl_drop[2] / F, s_ftl_drop[3] / F, s_ftl_drop[4] / F, (unsigned) (s_ftl_area_seen / (F * 3072.0f)),
                       (unsigned) (s_ftl_area_drawn / (F * 3072.0f)));
-            for (int i = 0; i < 4; ++i) s_ftl_seen[i] = s_ftl_drawn[i] = s_ftl_drop[i] = 0;
+            {   // unclassified texture ids met this window (owner.tex.id), for the Essential table
+                char buf[200];
+                int k = 0;
+                for (int i = 0; i < 64 && s_ftl_unk[i]; ++i) {
+                    k += snprintf(buf + k, sizeof(buf) - k, " %02x.%02x.%02x", (unsigned) (s_ftl_unk[i] >> 16),
+                                  (unsigned) (s_ftl_unk[i] & 0xff), (unsigned) ((s_ftl_unk[i] >> 8) & 0xff));
+                    s_ftl_unk[i] = 0;
+                    if (k > 180) break;
+                }
+                for (int i = 0; i < 64; ++i) s_ftl_unk[i] = 0;
+                if (k) re4dc_log("fx ess unknown: room=%03x%s\n", (unsigned) G_ROOM_ID, buf);
+            }
+            for (int i = 0; i < 4; ++i) s_ftl_seen[i] = s_ftl_drawn[i] = 0;
+            for (int i = 0; i < 5; ++i) s_ftl_drop[i] = 0;
             s_ftl_area_seen = s_ftl_area_drawn = 0.0f;
             s_ftl_frames = 0;
         }
     }
     {
         const unsigned c = FxTrimOwnerClass(esp->info.owner);
+        if (!s_ess_class[0x00]) FxEssInit();
+        if (!s_ess_class[esp->m_Tex_id & 0xFF] && esp->info.owner != 0x03) {
+            const u32 key = ((u32) esp->info.owner << 16) | ((u32) esp->m_Id << 8) | esp->m_Tex_id;
+            for (int i = 0; i < 64; ++i) {
+                if (s_ftl_unk[i] == key) break;
+                if (!s_ftl_unk[i]) { s_ftl_unk[i] = key; break; }
+            }
+        }
         ++s_ftl_seen[c];
         s_ftl_area_seen += area;
         if (drawn) {
@@ -4592,14 +4677,35 @@ extern "C" void re4dc_log(const char* fmt, ...);
 static u32 s_fx_level_osd_until;
 static const char* const kFxLevelText[3] = {"FX level 0: PS2 effects as-is", "FX level 1: medium effects",
                                             "FX level 2: low effects"};
+#if defined(RE4DC_FX_TRIM) && RE4DC_FX_TRIM
+extern "C" u8 re4dc_fx_essential;
+#endif
 extern "C" void re4dc_fx_level_toggle(void)
 {
+#if defined(RE4DC_FX_TRIM) && RE4DC_FX_TRIM
+    // FX_TRIM: 0 -> 1 -> 2 -> Essential (level 2 + the Essential filter) -> 0
+    if (re4dc_fx_essential) {
+        re4dc_fx_essential = 0;
+        re4dc_fx_level_set(0);
+    } else if (re4dc_fx_level >= 2) {
+        re4dc_fx_essential = 1;
+    } else {
+        re4dc_fx_level_cycle();
+    }
+    s_fx_level_osd_until = re4dc_vi_retrace_count() + 180U;
+    re4dc_log("fx level: %u essential=%u frame=%u\n", (unsigned) re4dc_fx_level, (unsigned) re4dc_fx_essential,
+              pG ? (unsigned) pG->Frame_cnt : 0u);
+    return;
+#endif
     re4dc_fx_level_cycle();
     s_fx_level_osd_until = re4dc_vi_retrace_count() + 180U;
     re4dc_log("fx level: %u frame=%u\n", (unsigned) re4dc_fx_level, pG ? (unsigned) pG->Frame_cnt : 0u);
 }
 extern "C" const char* re4dc_fx_level_osd_text(void)
 {
+#if defined(RE4DC_FX_TRIM) && RE4DC_FX_TRIM
+    if (re4dc_fx_essential && (int) (s_fx_level_osd_until - re4dc_vi_retrace_count()) > 0) return "FX level 3: essential only";
+#endif
     return (int) (s_fx_level_osd_until - re4dc_vi_retrace_count()) > 0 ? kFxLevelText[re4dc_fx_level % 3] : 0;
 }
 #endif

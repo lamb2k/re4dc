@@ -247,8 +247,8 @@ FX_LEVEL ?= 0
 endif
 FX_LEVEL ?=
 ifneq ($(FX_LEVEL),)
-ifneq ($(filter $(FX_LEVEL),0 1 2)$(PS2_FX_ROOMS),$(FX_LEVEL)1)
-$(error FX_LEVEL must be 0, 1 or 2 and needs PS2_FX_ROOMS=1)
+ifneq ($(filter $(FX_LEVEL),0 1 2 $(if $(filter 1,$(FX_TRIM)),3))$(PS2_FX_ROOMS),$(FX_LEVEL)1)
+$(error FX_LEVEL must be 0, 1 or 2 (3 = Essential, with FX_TRIM=1) and needs PS2_FX_ROOMS=1)
 endif
 endif
 # EFFECT_OWNERS_ALL=1 (test 11 lane fx 2026-10-14, parity census; needs EFFECT_SPRITES=1 and EFFECT_ROOM; render only, default
@@ -281,8 +281,16 @@ endif
 #                    30 / 20 m or under 24 / 48 screen pixels are not drawn; at most 48 / 32 such sprites a frame. Draw time
 #                    only (effects still spawn, move and draw their Rnd()); Leon's own effects and screen sprites are never
 #                    trimmed. Level 0 draws as without it. esp_sub.cpp kFxTrim. FX_TRIM_LOG=1 (test only): "fx trim:" lines.
+#                    FX_LEVEL=3 (with FX_TRIM=1; user 10-23 "Essential only"): the level-2 room dial plus the Essential filter
+#                    (esp_sub.cpp FxEssentialCut): gameplay effects kept (Leon's own effects, hit blood, explosions, fire and
+#                    flames, blob shadows), atmosphere cut (mist / haze, dust, ambient smoke and sparks, glows, shafts, glare,
+#                    FX_STRIP21 trails / ribbons), at most 2 sprites a frame per owner of one smoke / spark layer or unknown
+#                    id. Runtime re4dc_fx_essential; FX_LEVEL_TOGGLE steps 0 -> 1 -> 2 -> Essential -> 0.
 FX_TRIM ?= 0
 FX_TRIM_LOG ?= 0
+ifeq ($(FX_LEVEL)$(FX_TRIM),30)
+$(error FX_LEVEL=3 needs FX_TRIM=1)
+endif
 ifneq ($(filter-out 0 1,$(FX_TRIM) $(FX_TRIM_LOG)),)
 $(error FX_TRIM and FX_TRIM_LOG are 0 or 1)
 endif
@@ -532,13 +540,13 @@ ifneq ($(EFFECT_OWNERS_ALL),0)
 	@printf '#define RE4DC_EFFECT_OWNERS_ALL %s\n' '$(EFFECT_OWNERS_ALL)' >> $@.tmp
 endif
 ifneq ($(FX_LEVEL),)
-	@printf '#define RE4DC_FX_LEVEL %s\n' '$(FX_LEVEL)' >> $@.tmp
+	@printf '#define RE4DC_FX_LEVEL %s\n' '$(if $(filter 3,$(FX_LEVEL)),2,$(FX_LEVEL))' >> $@.tmp
 endif
 ifneq ($(SHORE_FX_LEVEL),)
 	@printf '#define RE4DC_SHORE_FX_LEVEL %s\n' '$(SHORE_FX_LEVEL)' >> $@.tmp
 endif
 ifneq ($(FX_TRIM),0)
-	@printf '#define RE4DC_FX_TRIM 1\n' >> $@.tmp
+	@printf '#define RE4DC_FX_TRIM 1\n#define RE4DC_FX_ESSENTIAL_BOOT %s\n' '$(if $(filter 3,$(FX_LEVEL)),1,0)' >> $@.tmp
 endif
 ifneq ($(FX_TRIM_LOG),0)
 	@printf '#define RE4DC_FX_TRIM_LOG 1\n' >> $@.tmp
