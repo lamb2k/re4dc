@@ -73,3 +73,12 @@ The shadow test leaves its generated source fixture in RAM for independent
 review. A future KOS, material-context, post-header, cache, or receiver-mode change
 requires repeating this qualification. Neither tool admits a visibility table or
 claims target cuts, milliseconds, pixel equality, or physical console behavior.
+
+
+`enclosure_probe.py <package-dir> --eye X Y Z [--target X Y Z]
+--opaque-only --out <private.json>` pins cardinal rays and one optional sight line
+onto actual L0 mesh triangles. Use it to authenticate a camera fixture's floor,
+roof, nearby walls and source window anchor. It records part/pass/cull and input
+hashes and does not require numpy. Rays ignore face culling; selected poses,
+LOD, material residency, holes between sampled directions and continuous portal
+coverage are unqualified. It is never a visibility certificate or a cut table.
