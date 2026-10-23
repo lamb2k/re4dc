@@ -58,6 +58,17 @@ $(error ESP_POOL_ROOM_LIST must list hex room ids, e.g. 11f)
 endif
 $(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_ESP_POOL_ROOM_MIN=$(ESP_POOL_ROOM_MIN) '-DRE4DC_ESP_POOL_ROOM_LIST=$(ESP_POOL_ROOM_IDS)'
 endif
+# FX_ROOM_SPILL_KB=<n> (render only; 0 = off): the frame queue's spill, asked for only when the 26 KiB frame_storage is
+#   full, becomes an <n> KiB heap-4 room cell (native-static reserve rule, allocated on the room's first overflow, freed at
+#   room leave) instead of the 8 KiB model-slab tail. Measured need (FRAME_QUEUE_DIAG): r200 truck 8 + 14.8 KiB (#41),
+#   r113 kill rig 8 + 47 KiB of which the effect-sprite cap admits ~2 KiB more. 0 KOS bytes; heap 4 only in rooms that overflow.
+FX_ROOM_SPILL_KB ?= 0
+ifneq ($(shell echo '$(FX_ROOM_SPILL_KB)' | grep -Ex '[0-9]+'),$(FX_ROOM_SPILL_KB))
+$(error FX_ROOM_SPILL_KB must be a KiB count)
+endif
+ifneq ($(FX_ROOM_SPILL_KB),0)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FX_ROOM_SPILL_KB=$(FX_ROOM_SPILL_KB)
+endif
 FX_QUEUE_MARGIN ?= 0
 ifneq ($(shell echo '$(FX_QUEUE_MARGIN)' | grep -Ex '[0-9]+'),$(FX_QUEUE_MARGIN))
 $(error FX_QUEUE_MARGIN must be a byte count)

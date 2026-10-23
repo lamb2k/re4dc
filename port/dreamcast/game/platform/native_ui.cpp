@@ -8901,7 +8901,35 @@ extern "C" void* re4dc_model_static_lighting_storage(unsigned* bytes){
 
 extern "C" const Re4dcNativeFrameStats* re4dc_native_frame_stats(){return &completed_frame;}
 
+#if defined(RE4DC_FX_ROOM_SPILL_KB) && RE4DC_FX_ROOM_SPILL_KB
+// FX_ROOM_SPILL_KB=<n> (mendezfx.mk; render only, #41 / #55): the frame queue's spill (asked for only once frame_storage is
+// full) becomes an <n> KiB heap-4 room cell instead of the 8 KiB model-slab tail. It is allocated on the room's first
+// overflow (rooms that never overflow pay nothing) under the native-static reserve rule, kept for the room and freed
+// with the room's cells at room leave; a refused allocation falls back to the slab tail.
+extern "C" void* re4dc_static_alloc(unsigned bytes);
+extern "C" int re4dc_room4_state(unsigned* generation,unsigned* cells,unsigned* bytes,unsigned* stale,unsigned* refused);
+namespace fxroomspill {
+unsigned char* cell=nullptr;unsigned generation=~0U;bool tried=false;unsigned allocs=0,refusals=0;
+}
+#endif
 extern "C" void* re4dc_model_deferred_storage(unsigned* bytes){
+#if defined(RE4DC_FX_ROOM_SPILL_KB) && RE4DC_FX_ROOM_SPILL_KB
+    {
+        unsigned g,c,b,st,rf;
+        if(re4dc_room4_state(&g,&c,&b,&st,&rf)){
+            if(fxroomspill::generation!=g){fxroomspill::generation=g;fxroomspill::cell=nullptr;fxroomspill::tried=false;}
+            if(!fxroomspill::cell && !fxroomspill::tried){
+                fxroomspill::tried=true;
+                auto* p=static_cast<unsigned char*>(re4dc_static_alloc(RE4DC_FX_ROOM_SPILL_KB*1024U+32U));
+                if(p){fxroomspill::cell=reinterpret_cast<unsigned char*>((reinterpret_cast<std::uintptr_t>(p)+31U)&~std::uintptr_t(31));++fxroomspill::allocs;}
+                else ++fxroomspill::refusals;
+                re4dc_log("fx room spill: room=%03x generation=%u kib=%u %s allocs=%u refusals=%u\n",unsigned(re4dc_ps2_mesh_room()),g,
+                    unsigned(RE4DC_FX_ROOM_SPILL_KB),p?"ok":"refused",fxroomspill::allocs,fxroomspill::refusals);
+            }
+            if(fxroomspill::cell){*bytes=RE4DC_FX_ROOM_SPILL_KB*1024U;return fxroomspill::cell;}
+        }
+    }
+#endif
     *bytes=model_packets?kModelDeferredSpillBytes:0;
     return *bytes?reinterpret_cast<unsigned char*>(model_packets)+kModelPacketBytes+kModelPreparationBytes+kModelStaticLightBytes:nullptr;
 }
