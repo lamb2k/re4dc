@@ -24,11 +24,11 @@ Applied after kos-804b319-cdrom-dma-done.patch.
 +    return true;
 +}
 +#endif
-+static int re4dc_dma_wait(size_t bytes) {
++static int re4dc_dma_wait(size_t bytes, bool drop) {
 +    unsigned ms = 5000u + 8u * (unsigned)((bytes + 2047) / 2048);
 +    uint64_t t0 = timer_us_gettime64();
 +#ifdef RE4DC_DISC_DMA_DROP_TEST
-+    if(re4dc_drop_first()) {   /* the completion never arrives: none signalled later, any already signalled taken back */
++    if(drop) {   /* the completion never arrives: none signalled later, any already signalled taken back */
 +        int o = irq_disable();
 +        dma_blocking = false;
 +        while(sem_trywait(&dma_done) == 0) {}
@@ -51,24 +51,36 @@ Applied after kos-804b319-cdrom-dma-done.patch.
  static asic_evt_handler_entry_t old_dma_irq = {NULL, NULL};
  static int vblank_hnd = -1;
  
-@@ -421,7 +461,10 @@
+@@ -419,9 +459,17 @@
+     /* Start the process of executing the command. */
+     cdrom_poll(&cmd_hnd, 0, cdrom_check_ready);
  
-     if(cmd_response == CD_CMD_PROCESSING) {
+-    if(cmd_response == CD_CMD_PROCESSING) {
++#ifdef RE4DC_DISC_DMA_DROP_TEST
++    bool drop = re4dc_drop_first();   /* as a loader whose DMA read stays in progress */
++#else
++    bool drop = false;
++#endif
++    if(cmd_response == CD_CMD_PROCESSING || drop) {
          /* Wait DMA is finished or command failed. */
 -        sem_wait(&dma_done);
-+        if(re4dc_dma_wait(params->num_sec * 2048) < 0) {
++        if(re4dc_dma_wait(params->num_sec * 2048, drop) < 0) {
 +            cmd_hnd = 0;
 +            return ERR_TIMEOUT;
 +        }
  
          /* Just to make sure the command is finished properly.
             Usually we are already done here. */
-@@ -614,7 +657,10 @@
+@@ -614,7 +662,14 @@
          if(!block) {
              return ERR_OK;
          }
 -        sem_wait(&dma_done);
-+        if(re4dc_dma_wait(size) < 0) {
++#ifdef RE4DC_DISC_DMA_DROP_TEST
++        if(re4dc_dma_wait(size, re4dc_drop_first()) < 0) {
++#else
++        if(re4dc_dma_wait(size, false) < 0) {
++#endif
 +            sem_signal(&_g1_ata_sem);
 +            return ERR_TIMEOUT;
 +        }
