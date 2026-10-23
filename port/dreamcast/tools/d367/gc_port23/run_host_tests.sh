@@ -16,7 +16,7 @@ else
 fi
 g++ -std=c++17 -O2 -Wall -Wextra -Werror "$HERE/test_packet_cursor.cpp" -o "$SCRATCH/test_packet_cursor"
 /lib64/ld-linux-x86-64.so.2 "$SCRATCH/test_packet_cursor"
-g++ -std=c++17 -O2 -Wall -Wextra -Werror -DRE4DC_GC_ASSET_GATE=1 \
+g++ -std=c++17 -O2 -Wall -Wextra -Werror -DRE4DC_GC_ASSET_GATE=1 -DRE4DC_GC_ASSET_TEST=1 \
     "$HERE/test_members.cpp" "$GAME/platform/gc_asset_members.cpp" "$GAME/platform/gc_asset_gate.cpp" -o "$SCRATCH/test_members"
 /lib64/ld-linux-x86-64.so.2 "$SCRATCH/test_members"
 g++ -std=c++17 -Os -Wall -Wextra -Werror -c "$GAME/platform/gc_asset_gate.cpp" -o "$SCRATCH/off.o"

@@ -144,7 +144,7 @@ bool member_capture(const void* data) {
         owner=i;
     }
     if(owner==ArchiveCount) { unresolved(SourceGeometry,"member-unbound");return false; }
-    if(span.bytes<64 || !contains(span.base,span.bytes,data,64) || serial==0xffffffffU) { unresolved(SourceGeometry,"member-model-bounds");return false; }
+    if(span.bytes<64 || !contains(span.base,span.bytes,data,64) || serial>=0xfffffffeU) { unresolved(SourceGeometry,"member-model-bounds");return false; }
     for(auto& member:members)if(!member.base) {
         member={span.base,span.name,fingerprint(span.base,span.bytes),span.bytes,owner,archives[owner].generation,++serial,span.arc,0};
         return true;
@@ -181,6 +181,9 @@ void member_flush() {
         for(unsigned i=0;i<ConsumerCount;++i)if(mask&(1U<<i))emitted(Consumer(i),"model",id,member.digest);
     }
 }
+#if defined(RE4DC_GC_ASSET_TEST) && RE4DC_GC_ASSET_TEST
+void member_test_serial(unsigned value){serial=value;}
+#endif
 }
 extern "C" void re4dc_gcasset_capture_model(const void* data) { re4dc_gcasset::member_capture(data); }
 extern "C" void re4dc_gcasset_retire_archive(const void* base) { re4dc_gcasset::member_retire_archive(base); }

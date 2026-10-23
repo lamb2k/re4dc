@@ -21,6 +21,9 @@ bool member_lookup(const void* data, ModelMember*);
 // Flush at an unlocked frame/retirement boundary, never inside an emitter.
 void member_accept(unsigned serial,unsigned consumer_mask);
 void member_flush();
+#if defined(RE4DC_GC_ASSET_TEST) && RE4DC_GC_ASSET_TEST
+void member_test_serial(unsigned);
+#endif
 struct SourceUse { unsigned serial=0,mask=0;const void* model=nullptr;const void* info=nullptr; };
 extern SourceUse source_use;
 struct ReplayUse {unsigned serial=0xffffffffU,mask=0;};

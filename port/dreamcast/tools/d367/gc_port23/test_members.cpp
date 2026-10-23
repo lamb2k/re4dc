@@ -105,5 +105,11 @@ int main() {
     source_use={99,1U<<SourceGeometry,&owner,&alias_owner};
     {SourceScope scope;assert(!source_use.serial);source_use.serial=42;}
     assert(source_use.serial==99);source_use={};
+    // Replay reserves UINT_MAX as "not replaying"; it can never be a live
+    // member serial, even at exhaustion immediately before integer wrap.
+    auto edge=indexed();member_test_serial(0xfffffffdU);
+    assert(member_adopt(&owner,edge.data(),edge.size(),true));assert(member_capture(edge.data()+64));
+    assert(member_lookup(edge.data()+64,&later));assert(later.serial==0xfffffffeU);
+    assert(!member_capture(edge.data()+128));member_retire(&owner);
     end(1);assert(logs.find("GC-ASSET-ERROR")!=std::string::npos); // all failed coverage persists
 }
