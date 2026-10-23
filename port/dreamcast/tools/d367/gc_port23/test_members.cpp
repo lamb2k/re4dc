@@ -41,6 +41,19 @@ int main() {
     assert(member_adopt(&owner,archive.data(),archive.size(),true));assert(member_capture(archive.data()+64));
     assert(member_lookup(archive.data()+64,&later));assert(!same(original.digest,later.digest));assert(original.serial!=later.serial);
     member_retire_transient();assert(!member_lookup(archive.data()+64,&later));
+    // Another owner cannot alias cached/mutated bytes and later hash them as
+    // a fresh original payload after the first owner's retirement.
+    int alias_owner=1;
+    assert(member_adopt(&owner,archive.data(),archive.size(),true));assert(member_capture(archive.data()+64));
+    assert(!member_adopt(&alias_owner,archive.data(),archive.size(),true));
+    assert(!member_lookup(archive.data()+64,&later));member_retire(&owner);
+    assert(!member_capture(archive.data()+64)); // rejected alias never becomes an owner
+    // Partial overlaps also revoke both views; reject before inspecting a
+    // candidate directory inside an existing archive's payload.
+    assert(member_adopt(&owner,archive.data(),archive.size(),true));
+    assert(!member_adopt(&alias_owner,archive.data()+64,archive.size()-64,true));
+    assert(!member_capture(archive.data()+64));
+    assert(logs.find("member-owner-overlap")!=std::string::npos);
     auto empty=indexed(true);assert(member_adopt(&owner,empty.data(),empty.size(),true));
     assert(member_capture(empty.data()+64));assert(member_lookup(empty.data()+64,&later));assert(later.arc==5);member_retire(&owner);
     auto duplicate=indexed(false,true);assert(member_adopt(&owner,duplicate.data(),duplicate.size(),true));

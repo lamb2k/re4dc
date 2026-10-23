@@ -20,6 +20,76 @@ def function(source, marker):
 
 
 class RuntimeTextureTests(unittest.TestCase):
+    def test_actual_archive_bind_and_retire_bodies(self):
+        ui = (GAME / 'platform/native_ui.cpp').read_text()
+        bodies = '\n'.join(function(ui, 'extern "C" '+signature) for signature in (
+            'int re4dc_ui_bind_core(', 'int re4dc_ui_bind_room(', 'int re4dc_ui_bind_option(',
+            'int re4dc_ui_bind_player(', 'int re4dc_ui_bind_weapon(', 'int re4dc_ui_bind_enemy(',
+            'void re4dc_ui_unbind_option(', 'void re4dc_ui_unbind_player(',
+            'void re4dc_ui_unbind_weapon(', 'void re4dc_ui_unbind_enemy('))
+        fixture = r'''
+#include "gc_asset_members.h"
+#include <cassert>
+#include <cstdint>
+#include <cstring>
+#include <vector>
+using namespace re4dc_gcasset;
+#define RE4DC_GCA_ADOPT(...) ((void)member_adopt(__VA_ARGS__))
+#define RE4DC_GCA_RETIRE(...) member_retire(__VA_ARGS__)
+extern "C" void re4dc_log(const char*,...){}
+unsigned table_count=1,identity_hits;
+namespace re4dc { namespace texture {
+struct SourceIdentityTable { bool adopt(void*,unsigned){return true;}unsigned count()const{return table_count;}void clear(){} };
+}}
+using Table=re4dc::texture::SourceIdentityTable;
+Table core_identities,room_identities,option_identities,player_identities,weapon_identities;
+struct EnemyIdentity{void* archive=nullptr;Table table;};EnemyIdentity enemy_identities[8];
+void sources_reset(){}
+Digest original;
+void check_prepared(void* blob){
+    auto* data=static_cast<unsigned char*>(blob)+32;
+    assert(member_capture(data));ModelMember m;assert(member_lookup(data,&m));
+    assert(!std::memcmp(m.digest.bytes,original.bytes,32));
+}
+void re4dc_actor_archive_adopt(const void*,void* blob,unsigned,unsigned){
+    check_prepared(blob);static_cast<unsigned char*>(blob)[32]^=1; // simulated relocation/FE mutation
+}
+void re4dc_actor_archive_retire(const void*){}
+void re4dc_model_bind_draw_owner(const void*,void* blob,unsigned,unsigned){check_prepared(blob);}
+void re4dc_model_unbind_draw_owner(const void*){}
+''' + bodies + r'''
+std::vector<unsigned char> archive(){
+    std::vector<unsigned char> bytes(128);unsigned count=1,offset=32;
+    std::memcpy(bytes.data(),&count,4);std::memcpy(bytes.data()+16,&offset,4);
+    std::memcpy(bytes.data()+20,"BIN",3);return bytes;
+}
+int main(){
+    auto core=archive(),room=archive(),option=archive(),player=archive(),weapon=archive(),enemy=archive(),plain=archive();
+    original=fingerprint(core.data()+32,96);
+    assert(re4dc_ui_bind_core(core.data(),128));assert(re4dc_ui_bind_room(room.data(),128));
+    assert(re4dc_ui_bind_option(option.data(),128));assert(re4dc_ui_bind_player(player.data(),128));
+    assert(re4dc_ui_bind_weapon(weapon.data(),128));assert(re4dc_ui_bind_enemy(enemy.data(),128));
+    table_count=0;assert(re4dc_ui_bind_enemy(plain.data(),128)); // ordinary archive early return
+    ModelMember m;
+    re4dc_ui_unbind_player();assert(!member_lookup(player.data()+32,&m));
+    re4dc_ui_unbind_weapon();assert(!member_lookup(weapon.data()+32,&m));
+    re4dc_ui_unbind_option();assert(!member_lookup(option.data()+32,&m));
+    re4dc_ui_unbind_enemy(enemy.data());assert(!member_lookup(enemy.data()+32,&m));
+    re4dc_ui_unbind_enemy(plain.data());assert(!member_lookup(plain.data()+32,&m));
+    member_retire_transient();assert(!member_lookup(room.data()+32,&m));
+    assert(member_lookup(core.data()+32,&m)); // resident core survives room retirement
+}
+'''
+        with tempfile.TemporaryDirectory(prefix='gc-port23-bind-', dir='/dev/shm') as temporary:
+            root = Path(temporary)
+            (root / 'fixture.cpp').write_text(fixture)
+            executable = root / 'fixture'
+            subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
+                            '-DRE4DC_GC_ASSET_GATE=1', '-I', str(GAME / 'platform/include'),
+                            str(root / 'fixture.cpp'), str(GAME / 'platform/gc_asset_members.cpp'),
+                            str(GAME / 'platform/gc_asset_gate.cpp'), '-o', str(executable)], check=True)
+            subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
+
     def test_actual_direct_and_batched_end_bodies(self):
         ui = (GAME / 'platform/native_ui.cpp').read_text()
         static = (GAME / 'platform/native_static.cpp').read_text()

@@ -27,6 +27,11 @@ members and capacity failures are coverage errors. Bind/retire and accepted
 emitter wiring await the UI file handoff, so this is not source draw coverage.
 Host fixtures include normal TPL records among named BINs and assert preparation
 never emits a GC-ASSET use row.
+Actual UI core/room/option/player/weapon/enemy bind and retire bodies now register
+the archive before actor adoption can mutate it. Ordinary enemy archives with
+no texture table are covered too. Conflicting owner spans are revoked and the
+new overlapping view rejected; a cached original cannot survive as an alias of
+already relocated bytes. Accepted source/weapon use remains to be connected.
 
 `gc_asset_packet_cursor.h` supplies the UI observer's format-aware 32/64-byte
 TA continuation handling. The actual observer controls include a real 96-byte
