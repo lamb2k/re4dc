@@ -274,6 +274,28 @@ PLATFORM_CPPFLAGS += -DRE4DC_FX_LEVEL_TOGGLE=1
 else ifneq ($(FX_LEVEL_TOGGLE),0)
 $(error FX_LEVEL_TOGGLE is 0 or 1)
 endif
+# FX_TRIM=1 (lane fx-trim23 2026-10-23, user "the goal is to have fewer effects"; render only, default 0; needs FX_LEVEL):
+#                    the FX_LEVEL dial over every effect sprite game-wide (fire, smoke, dust, sparks, blood, glows of enemies,
+#                    objects, weapons and rooms), not only the PS2 room recipes. At levels 1 / 2: an effect id keeps its first
+#                    6 / 4 sprites a frame and a fixed pool-slot hash keeps 4 / 3 of 8 beyond them; sprites deeper than
+#                    30 / 20 m or under 24 / 48 screen pixels are not drawn; at most 48 / 32 such sprites a frame. Draw time
+#                    only (effects still spawn, move and draw their Rnd()); Leon's own effects and screen sprites are never
+#                    trimmed. Level 0 draws as without it. esp_sub.cpp kFxTrim. FX_TRIM_LOG=1 (test only): "fx trim:" lines.
+FX_TRIM ?= 0
+FX_TRIM_LOG ?= 0
+ifneq ($(filter-out 0 1,$(FX_TRIM) $(FX_TRIM_LOG)),)
+$(error FX_TRIM and FX_TRIM_LOG are 0 or 1)
+endif
+ifneq ($(FX_TRIM)$(FX_TRIM_LOG),00)
+ifeq ($(FX_LEVEL),)
+$(error FX_TRIM / FX_TRIM_LOG need FX_LEVEL)
+endif
+endif
+ifeq ($(FX_TRIM_LOG),1)
+ifneq ($(FX_TRIM),1)
+$(error FX_TRIM_LOG=1 needs FX_TRIM=1)
+endif
+endif
 # FX_FLIPBOOK=N (test 12 fx lane, render only, default 0): an effect flipbook (a TPL of >= FX_FLIPBOOK_MIN pictures: the
 #                    r101 pyre fire, smoke) draws every Nth picture only (picture p - p % N), so N times fewer distinct
 #                    textures and the animation's working set can fit VRAM (benchmark-r101: the fire's ~90 pictures
@@ -514,6 +536,12 @@ ifneq ($(FX_LEVEL),)
 endif
 ifneq ($(SHORE_FX_LEVEL),)
 	@printf '#define RE4DC_SHORE_FX_LEVEL %s\n' '$(SHORE_FX_LEVEL)' >> $@.tmp
+endif
+ifneq ($(FX_TRIM),0)
+	@printf '#define RE4DC_FX_TRIM 1\n' >> $@.tmp
+endif
+ifneq ($(FX_TRIM_LOG),0)
+	@printf '#define RE4DC_FX_TRIM_LOG 1\n' >> $@.tmp
 endif
 ifneq ($(EFFECT_TORCH),0)
 	@printf '#define RE4DC_EFFECT_TORCH %s\n' '$(EFFECT_TORCH)' >> $@.tmp

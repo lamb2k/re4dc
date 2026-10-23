@@ -1033,8 +1033,116 @@ static void FxLevelScale(Re4dcEffectSprite* s, f32 size, f32 alpha)
         s->color = (s->color & 0xffffffU) | ((a >= 255.0f ? 255U : (u32) a) << 24);
     }
 }
+#if defined(RE4DC_FX_TRIM) && RE4DC_FX_TRIM
+// FX_TRIM (effects30.mk, lane fx-trim23; render only): the FX_LEVEL dial over EVERY effect sprite, not only the PS2
+// room recipes: fire, smoke, dust, sparks, blood, glows of enemies, objects, weapons and rooms. At the emit, after the
+// effect has moved, lived and drawn its Rnd(): nothing the game reads changes. Per frame, an effect id keeps its first
+// `free` sprites; past them a fixed hash of the pool slot keeps keep_of_8 (the same particles stay: no flicker). Sprites
+// deeper than `far` mm or smaller than `min_px` screen pixels are not drawn, and at most `budget` trimmed-class sprites
+// a frame. Leon's own effects (owner 0x03: muzzle flash, his blood) and screen-space sprites are never trimmed.
+struct FxTrim { u8 free, keep_of_8; f32 far, min_px; u16 budget; };
+static const FxTrim kFxTrim[3] = {
+    {255, 8, 0.0f, 0.0f, 0},                 // 0: as-is (FX_TRIM_LOG counts only)
+    {6, 4, 30000.0f, 24.0f, 48},             // 1: reduced
+    {4, 3, 20000.0f, 48.0f, 32},             // 2: low
+};
+#if defined(RE4DC_FX_TRIM_LOG) && RE4DC_FX_TRIM_LOG
+// FX_TRIM_LOG (test only): "fx trim:" every 120 frames, per-frame means: sprites seen / drawn by owner class (r room
+// 0x01 / 0xd0, l Leon 0x03, e enemies / animals / objects 0x10..0xcf, o other), drops by reason, and the drawn and seen
+// translucent screen area in 1/100 screens (640x480).
+static u32 s_ftl_frame0, s_ftl_frames, s_ftl_seen[4], s_ftl_drawn[4], s_ftl_drop[4];
+static f32 s_ftl_area_seen, s_ftl_area_drawn;
+#endif
+static unsigned FxTrimOwnerClass(unsigned owner)
+{
+    return owner == 0x01 || owner == 0xD0 ? 0 : owner == 0x03 ? 1 : owner >= 0x10 && owner < 0xD0 ? 2 : 3;
+}
+static f32 FxTrimArea(const Re4dcEffectSprite* s)
+{
+    f32 a = 0.0f;
+    for (int i = 0; i < 4; ++i) {
+        const int j = (i + 1) & 3;
+        a += s->x[i] * s->y[j] - s->x[j] * s->y[i];
+    }
+    return a < 0.0f ? -a * 0.5f : a * 0.5f;
+}
+// 0: not drawn. reason: 0 drawn, 1 thinned, 2 far, 3 small, 4 budget.
+static int FxTrimSprite(const cEsp* esp, const Re4dcEffectSprite* s, f32 area)
+{
+    static u32 s_frame = ~0U, s_used;
+    static u8 s_per_id[256];
+    if (s_frame != pG->Frame_cnt) {
+        s_frame = pG->Frame_cnt;
+        s_used = 0;
+        for (int i = 0; i < 256; ++i) s_per_id[i] = 0;
+    }
+    if (s->screen || esp->info.owner == 0x03) {
+        return 0;
+    }
+    const FxTrim& T = kFxTrim[re4dc_fx_level];
+    if (T.keep_of_8 < 8) {
+        u8* n = &s_per_id[esp->m_Id & 0xFF];
+        if (*n < 255) ++*n;
+        if (*n > T.free) {
+            const u32 slot = (u32) ((const u8*) esp - (const u8*) g_pEspSys->pEspBuf) / 0x150;
+            if (((slot * 2654435761U) >> 29) >= T.keep_of_8) return 1;
+        }
+    }
+    if (T.far > 0.0f && s->z[0] > 0.0f && 1.0f / s->z[0] > T.far && esp->m_Id != 0x0e) {   // Esp0e: torch glows stay
+        return 2;
+    }
+    if (T.min_px > 0.0f && area < T.min_px) {
+        return 3;
+    }
+    if (T.budget && s_used >= T.budget) {
+        return 4;
+    }
+    ++s_used;
+    return 0;
+}
+static int FxLevelSpriteBase(const cEsp* esp, Re4dcEffectSprite* s);
+static int FxLevelSprite(const cEsp* esp, Re4dcEffectSprite* s)
+{
+    const f32 area = FxTrimArea(s);
+    const int why = FxTrimSprite(esp, s, area);
+    const int drawn = !why && FxLevelSpriteBase(esp, s);
+#if defined(RE4DC_FX_TRIM_LOG) && RE4DC_FX_TRIM_LOG
+    if (s_ftl_frame0 != pG->Frame_cnt) {
+        s_ftl_frame0 = pG->Frame_cnt;
+        if (++s_ftl_frames == 120) {
+            const u32 F = 120;
+            re4dc_log("fx trim: f=%u room=%03x lvl=%u seen r%u l%u e%u o%u drawn r%u l%u e%u o%u drop thin%u far%u small%u budget%u "
+                      "area seen=%u drawn=%u\n", (unsigned) s_ftl_frame0, (unsigned) G_ROOM_ID, (unsigned) re4dc_fx_level,
+                      s_ftl_seen[0] / F, s_ftl_seen[1] / F, s_ftl_seen[2] / F, s_ftl_seen[3] / F, s_ftl_drawn[0] / F,
+                      s_ftl_drawn[1] / F, s_ftl_drawn[2] / F, s_ftl_drawn[3] / F, s_ftl_drop[0] / F, s_ftl_drop[1] / F,
+                      s_ftl_drop[2] / F, s_ftl_drop[3] / F, (unsigned) (s_ftl_area_seen / (F * 3072.0f)),
+                      (unsigned) (s_ftl_area_drawn / (F * 3072.0f)));
+            for (int i = 0; i < 4; ++i) s_ftl_seen[i] = s_ftl_drawn[i] = s_ftl_drop[i] = 0;
+            s_ftl_area_seen = s_ftl_area_drawn = 0.0f;
+            s_ftl_frames = 0;
+        }
+    }
+    {
+        const unsigned c = FxTrimOwnerClass(esp->info.owner);
+        ++s_ftl_seen[c];
+        s_ftl_area_seen += area;
+        if (drawn) {
+            ++s_ftl_drawn[c];
+            s_ftl_area_drawn += FxTrimArea(s);
+        } else if (why) {
+            ++s_ftl_drop[why - 1];
+        }
+    }
+#else
+    (void) FxTrimOwnerClass;
+#endif
+    return drawn;
+}
+static int FxLevelSpriteBase(const cEsp* esp, Re4dcEffectSprite* s)
+#else
 // EspSpriteEmit: depth cap, per-frame budget, size and alpha (0: not drawn).
 static int FxLevelSprite(const cEsp* esp, Re4dcEffectSprite* s)
+#endif
 {
 #if defined(RE4DC_EFFECT_OWNERS_ALL) && RE4DC_EFFECT_OWNERS_ALL
     if (EspOwnerAdmitted(esp->info.owner)) { if (esp->info.owner == 0x03 || !kFxLevel[re4dc_fx_level].owners) return 1;   // PL00 opt-out
