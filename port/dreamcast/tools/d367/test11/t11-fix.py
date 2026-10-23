@@ -912,7 +912,8 @@ DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
 # 4abfcc88 and r117.dar cf667833 equal the Test 21 DARs those tools pin). st1/r100.dar: the r100 car officers' face
 # materials (repair_officer_heads.py) + body TPL 0x25 with the three PS2 body pictures (emit_officer_body.py, 256 B at
 # DAR offset 5023744); st1/r117.dar: the church swinging chandelier atlas (repair_chandelier_atlas.py). dc/tex.pak =
-# mip22b's pack + the 6 new keys (ch2rooms/pack_add.py; pak-derived.json). After mip22b in the data line (replaces its
+# mip22b's pack + the 6 new keys (ch2rooms/pack_add.py; pak-derived.json), the 3 body keys then re-encoded as VQ (vram/vq_pak.py,
+# psnr >= 42.7 dB, 212,992 -> 32,768 B: r100 in-play largest free block 112,640, 0 evictions). After mip22b in the data line (replaces its
 # dc/tex.pak). Private store copy: re4-assets-private/look23-20261023 (RECIPE.txt, SHA256SUMS).
 LOOK23D = os.environ.get('LOOK23D', '/root/re4data/private/look23-20261023')
 DATA['look23'] = {'st1/r100.dar': LOOK23D + '/st1/r100.dar', 'st1/r117.dar': LOOK23D + '/st1/r117.dar',
