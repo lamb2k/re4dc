@@ -146,3 +146,12 @@ explicit divisor 20 (quality 5 times SCENERY_FAR_LOD 4), with the stable correct
 selection helper at world-merge23 commit 4cf3b40d2353076bbf7487da00b6614a07683b7d.
 All source geometry, coordinates, camera records and results remain private.
 Actors, outdoor occlusion policy and shared runtime/builders are untouched.
+
+`component_recut_price.py` also prices a dedicated retained-remainder alternative
+for each component. It removes only that component's complete strips, retains
+all other source strips in their original order, compacts their exact corner
+bytes, and verifies the retained ordered triangle stream again. One such variant
+at a time needs at most one remaining draw per original meshlet. This is distinct
+from the generic component atlas's extra-draw estimate. See
+`PORTAL-RESEARCH-PLAN.md` for the source-only review boundary and unqualified
+cell closure, all-LOD membership, runtime/metadata and pixel requirements.

@@ -72,12 +72,12 @@ def main():
                         nb=b''.join(child[j].astype('<u2').tobytes() for j in new)
                         if ob!=nb:raise ValueError('Recut changed ordered triangle/corner attributes')
                         restored.append((si,k,nb))
-                children.append(dict(component=name,nv=len(used),strips=[si for si,_ in ss],
+                children.append(dict(component=name,nv=len(used),strips=[si for si,_ in ss],corner_indices=used,
                                      strip_bytes=sum(1+len(ix) for _,ix in ss)))
             restored.sort();digest=lambda seq:hashlib.sha256(b''.join(seq)).hexdigest()
             if digest(canonical)!=digest([v for _,_,v in restored]):raise ValueError('Recut reordered or lost triangle')
             models[(pi,li)]=dict(children=children,original_nv=len(corners),ordered_triangle_sha256=digest(canonical),
-                                 corner_duplication=sum(c['nv'] for c in children)-len(corners))
+                                 corner_duplication=sum(c['nv'] for c in children)-len(corners),original_strips=[ix for ix,_ in strips])
     cams=est.cameras(a.camera);stats={name:[] for name in groups};base_rows=[]
     for frame,cam in cams:
         V=np.array(cam[:12]).reshape(3,4);P=cam[12:19];near=P[6]/(P[5]-1);far=cam[19]
@@ -101,8 +101,33 @@ def main():
     for name,r in groups.items():
         r['mean']={k:float(np.mean([v[k] for v in stats[name]])) for k in stats[name][0] if k!='frame'}
         r['rows']=stats[name]
+        variants=[]
+        for (pi,li),m in models.items():
+            hidden={si for c in m['children'] if c['component']==name for si in c['strips']}
+            if not hidden:continue
+            retained=[(si,ix) for si,ix in enumerate(m['original_strips']) if si not in hidden]
+            used=sorted({j for _,ix in retained for j in ix})
+            corners,_=p.let_tris(li);child=corners[used];remap={j:i for i,j in enumerate(used)}
+            original_bytes=[];child_bytes=[]
+            for si,ix in retained:
+                rr=[remap[j] for j in ix]
+                for k in range(len(ix)-2):
+                    old=(ix[k],ix[k+1],ix[k+2]) if k%2==0 else (ix[k+2],ix[k+1],ix[k])
+                    new=(rr[k],rr[k+1],rr[k+2]) if k%2==0 else (rr[k+2],rr[k+1],rr[k])
+                    original_bytes.append(b''.join(corners[j].astype('<u2').tobytes() for j in old))
+                    child_bytes.append(b''.join(child[j].astype('<u2').tobytes() for j in new))
+            if original_bytes!=child_bytes:raise ValueError('Dedicated variant changed retained ordered triangle stream')
+            retained_digest=hashlib.sha256(b''.join(original_bytes)).hexdigest()
+            # One compact retained child stores remaining complete strips in original order.
+            # It is used only after this one component is proven hidden; otherwise draw original.
+            variants.append(dict(placement=pi,meshlet=li,retained_strips=[si for si,_ in retained],
+                                 corner_count=len(used),strip_bytes=sum(1+len(ix) for _,ix in retained),
+                                 source_strip_order_retained=True,ordered_retained_triangle_sha256=retained_digest))
+        r['two_way_variant_geometry_bytes']=sum(v['corner_count']*12+v['strip_bytes']+28 for v in variants if v['retained_strips'])
+        r['two_way_variant_SG_bytes']=sum(16*D['G'] for v in variants if v['retained_strips']) if D['SG'] is not None else 0
+        r['two_way_variant_children']=variants
         r['two_way_variant_extra_draw_upper_bound']=0
-        r['two_way_variant_note']='A dedicated hide-this-component/rest split needs at most one retained child per original draw; memory and emission order require separate qualification.'
+        r['two_way_variant_note']='One dedicated hide-this-component variant emits remaining complete strips in source order with at most one retained child per original draw. Other LODs/mixed strips stay fallback; runtime, memory and pixels are unqualified.'
     children=[c for m in models.values() for c in m['children']]
     added=sum(c['nv']*12+c['strip_bytes']+28 for c in children)
     sg_added=sum(16*D['G'] for _ in children) if D['SG'] is not None else 0
