@@ -567,3 +567,21 @@ $(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_FX_STRIP21=1 -DRE4DC_CLOTH_
 $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_NATIVE=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_NATIVE=1
 endif
+# FLASHLIGHT_POOL=1 (lane fix-fx-missing23 2026-10-23, issue #55 item 3 "missing flashlight", user option B; render only,
+#   approximation; default 0 = no code, identical image): in a room whose light data attach a spot light to Leon (the
+#   night rooms: r11d / r11e chest spot + ~4 m point), trans.cpp draws one additive radial pool quad ahead of him with the
+#   depth test inverted (native_flashlight_pool.inc), so the world in front of him brightens like the GameCube's spot.
+#   Generated texture (no GameCube asset). Log: `flashlight pool:` once per room. Needs FX_STRIP21=1 (shares its quad path).
+#   Tuning (test arms): FLASHLIGHT_POOL_DIST (3500), FLASHLIGHT_POOL_SIZE (1800), FLASHLIGHT_POOL_GAIN (percent, 150). Torch = player-attached spot, radius <= 4000.
+FLASHLIGHT_POOL ?= 0
+ifneq ($(filter-out 0 1,$(FLASHLIGHT_POOL)),)
+$(error FLASHLIGHT_POOL is 0 or 1)
+endif
+ifeq ($(FLASHLIGHT_POOL),1)
+ifneq ($(FX_STRIP21),1)
+$(error FLASHLIGHT_POOL needs FX_STRIP21=1)
+endif
+FLASHLIGHT_POOL_TUNE := $(if $(FLASHLIGHT_POOL_DIST),-DRE4DC_FLASHLIGHT_POOL_DIST=$(FLASHLIGHT_POOL_DIST)) $(if $(FLASHLIGHT_POOL_SIZE),-DRE4DC_FLASHLIGHT_POOL_SIZE=$(FLASHLIGHT_POOL_SIZE)) $(if $(FLASHLIGHT_POOL_GAIN),-DRE4DC_FLASHLIGHT_POOL_GAIN=$(FLASHLIGHT_POOL_GAIN))
+$(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_FX_STRIP21=1 -DRE4DC_FLASHLIGHT_POOL=1 $(FLASHLIGHT_POOL_TUNE)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FLASHLIGHT_POOL=1
+endif

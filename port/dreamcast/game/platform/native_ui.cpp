@@ -7686,6 +7686,9 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
 #if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
 #include "include/native_effect_strip21.inc"
 #endif
+#if defined(RE4DC_FLASHLIGHT_POOL) && RE4DC_FLASHLIGHT_POOL
+#include "include/native_flashlight_pool.inc"
+#endif
 #if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
 // Esp19's source line becomes one untextured, colour-interpolated strip in
 // the same bounded OT queue as effect sprites. All packet bytes are copied
