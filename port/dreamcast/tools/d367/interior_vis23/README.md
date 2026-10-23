@@ -26,3 +26,17 @@ replay is not actual runtime admission, selected transformed vertices, timing,
 pixel correctness or console acceptance. Current runtime source, opacity,
 numeric and emitted-prefix guards remain mandatory. No shared runtime or
 recipe file is changed by these tools.
+
+`replay.py` reads exact captured PS2CAM matrices and replays opaque baked-pose
+placement/cluster/meshlet selection and the current LOD policy. Its output is
+explicitly a host replay, with source-state and boundary limitations. It must
+not be described as an instrumented target transformed-corner count. The
+initial r10d capture uses source e9bf7e323 and programme label iv23e9bf7camrW;
+later runtime repairs or integration changes do not retroactively qualify it.
+
+Conditional source/target and single-triangle switches are research cohorts.
+They retain the authenticated dynamic classification and record unsupported
+runtime assumptions. In particular, original fresh-state liveness checks can
+disagree with an already cached moved affine in the same UI frame; conditional
+research output stays unadmitted until the reviewed runtime repair, exact
+geometry coverage, real emitted receipts and target pixels pass together.
