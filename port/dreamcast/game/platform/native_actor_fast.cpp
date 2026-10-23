@@ -519,7 +519,7 @@ unsigned stripify(const u8* tri, unsigned count, u8* out, unsigned cap, u8* used
 //  4. Whole-part opaque windows: LOD levels (see the blob format).
 // The triangle set and each triangle's winding are the GX list's.
 #if RE4DC_ACTOR_BACKFACE_CONE
-// ACTOR_BACKFACE_CONE counters (logged as "ABFC" every 600 frames); per class 0 other, 1 Leon, 2 Ganado, 3 El Gigante,
+// ACTOR_BACKFACE_CONE counters (logged as "ABFC" every 150 frames); per class 0 other, 1 Leon, 2 Ganado, 3 El Gigante,
 // 4 Ashley: meshlets tested / rejected, vertices / triangles skipped, vertices of the tested parts' meshlets.
 unsigned abc_splits = 0, abc_built = 0, abc_noroom = 0, abc_cones = 0, abc_nocone = 0, abc_bad = 0, abc_log = 0;
 unsigned abc_tests[5], abc_rej[5], abc_vskip[5], abc_tskip[5], abc_verts[5];
@@ -4854,9 +4854,9 @@ extern "C" void re4dc_actor_frame(void* memory, unsigned bytes) {
 #endif
     lod_wanted_last = lod_wanted; lod_wanted = false;
 #if RE4DC_ACTOR_BACKFACE_CONE
-    if (frame_serial - abc_log >= 600U) {
+    if (frame_serial - abc_log >= 150U) {
         // per class (other, Leon, Ganado, El Gigante, Ashley): meshlets tested/rejected, vertices skipped/of tested parts,
-        // triangles skipped; totals over the 600 frames
+        // triangles skipped; totals over the 150 frames
         abc_log = frame_serial;
         re4dc_log("ABFC frame=%u splits=%u built=%u noroom=%u cones=%u nocone=%u bad=%u\n", frame_serial, abc_splits, abc_built,
                   abc_noroom, abc_cones, abc_nocone, abc_bad);
