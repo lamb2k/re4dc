@@ -70,6 +70,13 @@ HEADER = r'''
 using std::uint8_t;
 static unsigned log_calls;
 template<class... T> void re4dc_log(const char*,T...){++log_calls;}
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+#define RE4DC_BACKFACE_ROOM_LIST 0x10d
+extern "C" { unsigned char re4dc_bf_room_on; }
+static unsigned room_id_now;
+extern "C" unsigned re4dc_room_id_now(){return room_id_now;}
+@ROOM_UPDATE@
+#endif
 namespace re4dc::room {
 struct CompactVertex12 {std::uint16_t x,y,z,u,v,color;};
 struct CompactBatch {float uv_bias[2],uv_scale[2];};
@@ -249,6 +256,9 @@ struct Fixture {
  Fixture(unsigned count=4,unsigned strips=repeats,unsigned strip_length=3,unsigned range=3):draw{part,package}{
   assert(count*range<=256U&&strip_length<=255U);
   stats={};lean::st={};walk_calls.clear();transformed=0;result_calls=0;log_calls=0;
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+  re4dc_bf_room_on=1;
+#endif
   std::fill(std::begin(loaded_matrix),std::end(loaded_matrix),0.0f);
   cert::prepares=cert::classifies=cert::scans=cert::strict_calls=0;cert::prepare_ok=cert::projection_ok=cert::strict_ok=true;
   cert::scan_records.clear();
@@ -284,6 +294,54 @@ Result execute(Fixture& f,const Draw::Pick& pk,bool proof){
  return {{f.draw.buffer,f.draw.sq},f.draw.counts(),f.draw.clips,result};
 }
 void equal(const Result& a,const Result& b){assert(a.words==b.words);assert(a.counts==b.counts);assert(a.clips==b.clips);assert(a.result==b.result);}
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+void room_tests(){
+ // Exercise the actual upstream scene-update body, including on/off transitions.
+ re4dc_bf_room_on=0;
+ for(unsigned room:{0U,0x10dU,0x102U,0x10dU,0U}){
+  room_id_now=room;re4dc_bf_room_update();assert(re4dc_bf_room_on==(room==0x10dU));
+ }
+ auto setup=[](Fixture& f,unsigned cull,unsigned room){
+  f.part.cull=cull;
+  if(cull==2U)for(unsigned q=0;q<4;++q)std::swap(re4dc::vp::projected[3*q+1],re4dc::vp::projected[3*q+2]);
+  room_id_now=room;re4dc_bf_room_update();
+  assert(f.draw.bf_on()==(room==0x10dU));
+ };
+ unsigned cases=0;
+ for(unsigned cull:{1U,2U})for(unsigned room:{0U,0x10dU,0U}){
+  Fixture reference;setup(reference,cull,room);const auto expected=execute(reference,reference.whole(),false);
+  Fixture candidate;setup(candidate,cull,room);const auto actual=execute(candidate,candidate.whole(),true);
+  equal(expected,actual);
+#if RE4DC_BACKFACE_CONE_FRONT
+  if(room==0x10dU){assert(cert::prepares==1&&cert::classifies==4&&cert::scans==4&&cone::front_groups==4);}
+  else
+#endif
+  {
+   assert(cert::prepares==0&&cert::classifies==0&&cert::scans==0&&cert::strict_calls==0);
+   assert(cone::front_tests==0&&cone::front_candidates==0&&cone::front_groups==0&&cone::front_vertices==0&&cone::front_bad==0);
+  }
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+  if(room!=0x10dU){assert(cone::front_gate.picks==1&&cone::front_gate.material==1&&cone::front_gate.groups==0);}
+#endif
+  ++cases;
+ }
+ // Outside listed rooms preserve the unculled packet, including genuine back
+ // triangles. Compare with cull-none independently of the room-aware branch.
+ for(unsigned cull:{1U,2U})for(bool partial:{false,true}){
+  const Draw::Pick pick=partial?Draw::Pick{0,2,5,0,8,{0,0}}:Draw::Pick{0,255,0,0,0,{0,0}};
+  Fixture reference;reference.part.cull=0;
+  std::swap(re4dc::vp::projected[1],re4dc::vp::projected[2]);
+  const auto expected=execute(reference,pick,false);
+  Fixture candidate;candidate.part.cull=cull;
+  std::swap(re4dc::vp::projected[1],re4dc::vp::projected[2]);
+  room_id_now=0x102U;re4dc_bf_room_update();const auto actual=execute(candidate,pick,true);
+  equal(expected,actual);assert(cert::prepares==0&&cert::classifies==0&&cert::scans==0);
+  assert(!walk_calls.empty());for(const auto& call:walk_calls)assert(std::get<0>(call));
+  ++cases;
+ }
+ std::cout<<"room off/on/off proof gates and unculled packets PASS cases="<<cases<<"\n";
+}
+#endif
 #if RE4DC_BACKFACE_CONE_FRONT
 using Setup=void(*)(Fixture&);
 void compare(const char* label,Setup setup,Draw::Pick pick={0,255,0,0,0,{0,0}},int expected=1){
@@ -533,6 +591,9 @@ void check(const char* lane){
 }
 }
 int main(int argc,char** argv){
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+ room_tests();
+#endif
 #if RE4DC_BACKFACE_CONE_FRONT
  output_tests();metadata_tests();admission_tests();
 #if RE4DC_BACKFACE_CONE_FRONT == 2
@@ -555,13 +616,19 @@ def host_fixture(output, source, cull_only=False):
     helper_header = (DC / "room/backface_certificate.hpp").read_text()
     dispatch_start = source.index("#if RE4DC_SCENERY_CHUNK\n            // SCENERY_CHUNK: select now")
     dispatch_end = source.index("#if RE4DC_PS2_PVS\n            d.pvs_finish(result>0);", dispatch_start)
+    # The upstream room policy wraps two definitions in #if/#else. Preserve
+    # that complete conditional instead of silently extracting its first arm.
+    bf_start = source.index("#if defined(RE4DC_BACKFACE_ROOMS)",
+                            source.index("    // The caller's source material still owns cull/depth/alpha."))
+    bf_end = source.index("    void bf_send(", bf_start)
     replacements = {
         "WORTH_FRONT": "" if cull_only else "\n".join(function(helper_header, name) for name in
                                                      ("inline bool cost_counts(", "inline bool worth_front_world(")),
         "FRONT_GATES": function(source, "struct FrontGates {"),
         "TRAILER": function(source, "bool front_trailer("),
         "PICK": function(source, "struct Pick {"),
-        "BF_ON": function(source, "bool bf_on()const"),
+        "BF_ON": source[bf_start:bf_end],
+        "ROOM_UPDATE": function(source, 'extern "C" void re4dc_bf_room_update()'),
         "BF_SQ": function(source, "const std::uint8_t* strips_bf_sq("),
         "LEAN_FLUSH": function(source, "void lean_flush("),
         "STRIPS_LEAN": source[start:end],
@@ -579,14 +646,16 @@ def host_fixture(output, source, cull_only=False):
     path = out / "world.cpp"
     path.write_text(text)
     results = []
-    for mode in ((0,) if cull_only else (0, 1, 2)):
-        binary = out / ("world-mode%d" % mode)
-        cmd = ["g++", "-std=c++20", "-O2", "-fno-fast-math", "-ffp-contract=off", "-Wall", "-Wextra",
-               "-DRE4DC_BACKFACE_CONE_FRONT=%d" % mode, "-I" + str(out), "-I" + str(DC / "room"),
-               str(path), "-o", str(binary)]
-        run(cmd, ROOT, out / ("compile%d.log" % mode))
-        result = run([str(binary)], ROOT, out / ("mode%d.log" % mode))
-        results.append(dict(mode=mode, result=result.strip().splitlines()))
+    for rooms in (0, 1):
+        for mode in ((0,) if cull_only else (0, 1, 2)):
+            label = "rooms%d-mode%d" % (rooms, mode)
+            binary = out / ("world-" + label)
+            cmd = ["g++", "-std=c++20", "-O2", "-fno-fast-math", "-ffp-contract=off", "-Wall", "-Wextra",
+                   "-DRE4DC_BACKFACE_CONE_FRONT=%d" % mode, "-DRE4DC_BACKFACE_ROOMS=%d" % rooms,
+                   "-I" + str(out), "-I" + str(DC / "room"), str(path), "-o", str(binary)]
+            run(cmd, ROOT, out / ("compile-" + label + ".log"))
+            result = run([str(binary)], ROOT, out / (label + ".log"))
+            results.append(dict(mode=mode, rooms=rooms, result=result.strip().splitlines()))
     # Prove that this regression detects the real pre-fix flush, rather than
     # merely asserting an invariant that also held before the correction.
     old = subprocess.check_output(["git", "show", "56dc28d5:port/dreamcast/game/platform/native_static.cpp"], cwd=ROOT, text=True)
@@ -725,31 +794,37 @@ def target_fixture(args, output):
     old = subprocess.check_output(["git", "show", args.baseline + ":" + str(SOURCE.relative_to(ROOT))], cwd=ROOT)
     current = SOURCE.read_bytes()
     receipts = {}
-    for label, source, extra in (("base", old, []), ("absent", current, []),
-                                 ("zero", current, ["-DRE4DC_BACKFACE_CONE_FRONT=0"]),
-                                 ("on1", current, ["-DRE4DC_BACKFACE_CONE_FRONT=1"]),
-                                 ("on2", current, ["-DRE4DC_BACKFACE_CONE_FRONT=2"])):
-        for extension, phase in (("ii", ["-E", "-P"]), ("o", ["-c"])):
-            if label.startswith("on") and extension == "ii":
-                continue
-            destination = out / (label + "." + extension)
-            command = [str(args.sh4_cxx.resolve()), *flags, *extra, "-x", "c++", "-", *phase, "-o", str(destination)]
-            run(command, SOURCE.parent, out / (label + "-" + extension + ".log"), source)
-            receipts[label + "." + extension] = dict(bytes=destination.stat().st_size,
-                                                      sha256=hashlib.sha256(destination.read_bytes()).hexdigest())
-    for extension in ("ii", "o"):
-        for label in ("absent", "zero"):
-            assert (out / ("base." + extension)).read_bytes() == (out / (label + "." + extension)).read_bytes()
-    recipe = dict(compiler=str(args.sh4_cxx.resolve()), flags=flags, cwd=str(SOURCE.parent), baseline=args.baseline)
+    room_flags = {0: [], 1: ["-DRE4DC_BACKFACE_ROOMS=1", "-DRE4DC_BACKFACE_ROOM_LIST=0x10d"]}
+    for rooms, extra_rooms in room_flags.items():
+        prefix = "rooms1-" if rooms else ""
+        for variant, source, extra in (("base", old, []), ("absent", current, []),
+                                       ("zero", current, ["-DRE4DC_BACKFACE_CONE_FRONT=0"]),
+                                       ("on1", current, ["-DRE4DC_BACKFACE_CONE_FRONT=1"]),
+                                       ("on2", current, ["-DRE4DC_BACKFACE_CONE_FRONT=2"])):
+            label = prefix + variant
+            for extension, phase in (("ii", ["-E", "-P"]), ("o", ["-c"])):
+                if variant.startswith("on") and extension == "ii":
+                    continue
+                destination = out / (label + "." + extension)
+                command = [str(args.sh4_cxx.resolve()), *flags, *extra_rooms, *extra,
+                           "-x", "c++", "-", *phase, "-o", str(destination)]
+                run(command, SOURCE.parent, out / (label + "-" + extension + ".log"), source)
+                receipts[label + "." + extension] = dict(bytes=destination.stat().st_size,
+                                                          sha256=hashlib.sha256(destination.read_bytes()).hexdigest())
+        for extension in ("ii", "o"):
+            for variant in ("absent", "zero"):
+                assert (out / (prefix + "base." + extension)).read_bytes() == (out / (prefix + variant + "." + extension)).read_bytes()
+    recipe = dict(compiler=str(args.sh4_cxx.resolve()), flags=flags, room_flags=room_flags,
+                  cwd=str(SOURCE.parent), baseline=args.baseline)
     (out / "recipe.json").write_text(json.dumps(recipe, indent=2) + "\n")
-    return dict(status="PASS", receipts=receipts, scope="Complete native_static.cpp target translation unit, real KOS/SDK headers, no debug records; no renderer link or execution.")
+    return dict(status="PASS", receipts=receipts, scope="Complete native_static.cpp target translation unit with BACKFACE_ROOMS absent/1 and FRONT absent/0/1/2, real KOS/SDK headers, no debug records; no renderer link or execution.")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--cull-only", action="store_true", help="Run FRONT=0 shared-cull lifetime regression independently of the certificate helper")
-    parser.add_argument("--baseline", default="f3fef82cf212bb379e5cf3119daee0d7a8db7e58")
+    parser.add_argument("--baseline", default="dd8981e8de6dadb94997795867c85e8ede9a876f")
     parser.add_argument("--sh4-cxx", type=Path)
     parser.add_argument("--kos-root", type=Path)
     parser.add_argument("--sdk-root", type=Path)

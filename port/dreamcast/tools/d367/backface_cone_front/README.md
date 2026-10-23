@@ -12,9 +12,11 @@ This extends the existing actor and scenery cone paths with a third outcome:
 after a second check proves that the *actual projected cache* has the same
 strict facing sign as `CPU_BACKFACE=2` for every triangle in the group.
 
-The integration base is `d1bc83cff32217a659f93acd5837a1ecc96ff6c3`
-(`t15/int`), including PR54 and its enabled CPU2 early-clip default. The separate
-unconditional cull fix is `f3fef82cf212bb379e5cf3119daee0d7a8db7e58`.
+The updated integration base is `261c2e3bb098d830107766640fe2fedbd006ff98`
+(`t15/int`), including PR54, its enabled CPU2 early-clip default, and the merged
+`BACKFACE_ROOMS` hideout fix. The independent cull-only checkpoint is
+`dd8981e8de6dadb94997795867c85e8ede9a876f`, directly atop that base without the
+front-certificate experiment.
 Feature-OFF identity is checked against that corrected baseline: the complete
 PR deliberately changes the pre-fix world object even with the switch off. Existing
 all-back cone rejection already precedes vertex work;
@@ -216,7 +218,11 @@ scalar `FSQRT`, avoiding a software-library square root under strict flags.
 
 ## Dispatch and fallback
 
-Both actor draw loops clear their shortcut state for every meshlet. A
+Both actor draw loops clear their shortcut state for every meshlet and consult
+the existing `bf_on()` room/material policy before preparing a front context.
+With `BACKFACE_ROOMS=1`, room-off draws perform no front proof or acceptance work;
+check-mode admission counters still record the declined gate. The merged
+scene-open room update and configured room list remain authoritative. A
 successful certificate affects the CPU2 facing dispatch only after the
 ordinary near and screen eligibility checks. The PVR header, vertex words,
 strip parity, EOL bits, and existing lean copy implementation are retained.
@@ -238,7 +244,7 @@ result. It is explicitly not an authorization for a new target-FMAC rejection.
 The original `ABFCF` and `SCN21 front` attempt/candidate/accepted/bad counters
 remain. Mode 2 adds gate counters, with no counter work in modes 0/1:
 
-- Actor: seen groups, material/direct eligibility, missing ABC1/ABC2, cost,
+- Actor: seen groups, room/material/direct eligibility, missing ABC1/ABC2, cost,
   context, projected numerical failure and near/screen clipping. Geometric
   declines are the difference between attempts and candidates.
 - World: pick-level material/metadata/context gates; retained-group denominator;
@@ -251,25 +257,25 @@ overhead: failed attempts still execute work.
 
 ## Qualification results
 
-The final qualification uses the corrected cull-state baseline `f3fef82c`.
+The final qualification uses the corrected cull-state baseline `dd8981e8`.
 The compact [evidence receipt](evidence.json) records source identities, stage
 results, selected target costs, cache sensitivity and the negative asset checks.
 
 | Gate | Result |
 | --- | --- |
-| Make configuration | 30 controls; strict helper flags and OFF object inventory |
+| Make configuration | 63 controls; strict helper flags, OFF inventory and room-policy coexistence |
 | Numerical helper | 988 cases; 607 independent exact-rational depth, area and span checks |
 | Accepted host certificates | 102 complete packet comparisons, all identical |
 | Count admission | 82 actor/world assertions, including equality, overflow and measured marginal cases |
 | RN/RZ scalar envelopes | 4,884 preparation intervals, 1,907 residual bounds, 2,618 cone dots and 610 perpendicular bounds **per rounding mode** |
 | Scenery producer | 9 fixtures; default byte identity, optional counts, empty groups and LOD degeneracy |
-| Actor caller | 131 scenarios / 1,300 assertions; ABC1 capacity preservation, both draw loops and rejection counters |
-| Scenery caller | 42 metadata controls; routing, packets, counters, clipping and fallback |
-| Cull-state lifetime | 147 production-body scenarios in each mode 0/1/2; both pre-fix negative controls fail as required |
-| Compiled actor instructions | 172 complete packet comparisons, 28 FPSCR/admission controls and four raw-layout controls |
+| Actor caller | 290 scenarios / 2,818 assertions; ABC1 capacity preservation, both draw loops, room transitions and rejection counters |
+| Scenery caller | 42 metadata controls; routing, packets, counters, clipping, room transitions and fallback |
+| Cull-state lifetime | 147 production-body scenarios per front/room configuration, 882 total; both pre-fix negative controls fail as required |
+| Compiled actor instructions | 172 complete packet comparisons, including four raw layouts; 28 FPSCR/admission controls |
 | Compiled world instructions | 152 complete packet comparisons; all 30 rejected gated scenarios execute no proof arithmetic |
 | Integer interpreter support | 264 unsigned multiply cases, 64 MACH-preservation cases and 94 compiler division-by-three cases |
-| Full target translation units | Both renderers compile in modes 1/2; absent/0 preprocessing and non-debug objects match the corrected baseline |
+| Full target translation units | Both renderers compile in modes 1/2 with room selection absent/on; absent/0 preprocessing and objects match the corrected baseline in both configurations |
 
 The scalar envelope experiment uses exact rational arithmetic with RN/RZ and
 DN flushing. It supplements the C++ tests; it is not exhaustive proof or target

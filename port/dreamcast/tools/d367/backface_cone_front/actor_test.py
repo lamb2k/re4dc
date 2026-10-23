@@ -67,30 +67,33 @@ def target_controls(args, out, baseline):
     flags += [f"-DRE4DC_{name}={value}" for name, value in macros.items()]
     current = NATIVE.read_text()
     receipts = []
-    for cones in (0, 1):
-        variants = [("base", baseline, []), ("absent", current, []),
-                    ("zero", current, ["-DRE4DC_BACKFACE_CONE_FRONT=0"])]
-        if cones:
-            variants += [("on1", current, ["-DRE4DC_BACKFACE_CONE_FRONT=1"]),
-                         ("on2", current, ["-DRE4DC_BACKFACE_CONE_FRONT=2"])]
-        for label, source, extra in variants:
-            stem = f"cones{cones}-{label}"
-            for suffix, phase in (("ii", ["-E", "-P"]), ("o", ["-c"])):
-                if label.startswith("on") and suffix == "ii":
-                    continue
-                destination = target / (stem + "." + suffix)
-                command = [str(args.sh4_cxx.resolve()), *flags, f"-DRE4DC_ACTOR_BACKFACE_CONE={cones}",
-                           *extra, "-x", "c++", "-", *phase, "-o", str(destination)]
-                run(command, target, stem + "-" + suffix, input_text=source, cwd=NATIVE.parent)
-                receipts.append({"actor_cones": cones, "variant": label, "artifact": destination.name,
-                                 "bytes": destination.stat().st_size, "sha256": sha(destination), "command": command})
-        for suffix in ("ii", "o"):
-            original = (target / f"cones{cones}-base.{suffix}").read_bytes()
-            for label in ("absent", "zero"):
-                assert original == (target / f"cones{cones}-{label}.{suffix}").read_bytes(), \
-                    f"Target OFF identity failed: actor_cones={cones}, variant={label}, artifact={suffix}"
+    for rooms in (0, 1):
+        for cones in (0, 1):
+            variants = [("base", baseline, []), ("absent", current, []),
+                        ("zero", current, ["-DRE4DC_BACKFACE_CONE_FRONT=0"])]
+            if cones:
+                variants += [("on1", current, ["-DRE4DC_BACKFACE_CONE_FRONT=1"]),
+                             ("on2", current, ["-DRE4DC_BACKFACE_CONE_FRONT=2"])]
+            for label, source, extra in variants:
+                stem = f"rooms{rooms}-cones{cones}-{label}"
+                for suffix, phase in (("ii", ["-E", "-P"]), ("o", ["-c"])):
+                    if label.startswith("on") and suffix == "ii":
+                        continue
+                    destination = target / (stem + "." + suffix)
+                    command = [str(args.sh4_cxx.resolve()), *flags, f"-DRE4DC_ACTOR_BACKFACE_CONE={cones}",
+                               f"-DRE4DC_BACKFACE_ROOMS={rooms}", *extra, "-x", "c++", "-",
+                               *phase, "-o", str(destination)]
+                    run(command, target, stem + "-" + suffix, input_text=source, cwd=NATIVE.parent)
+                    receipts.append({"backface_rooms": rooms, "actor_cones": cones, "variant": label,
+                                     "artifact": destination.name, "bytes": destination.stat().st_size,
+                                     "sha256": sha(destination), "command": command})
+            for suffix in ("ii", "o"):
+                original = (target / f"rooms{rooms}-cones{cones}-base.{suffix}").read_bytes()
+                for label in ("absent", "zero"):
+                    assert original == (target / f"rooms{rooms}-cones{cones}-{label}.{suffix}").read_bytes(), \
+                        f"Target OFF identity failed: rooms={rooms}, actor_cones={cones}, variant={label}, artifact={suffix}"
     return {"status": "passed", "receipts": receipts,
-            "scope": "Complete production native_actor_fast.cpp target TU, real KOS/SDK headers, DIRECT1 and COARSE_ONE_SUBMIT1; no renderer link or execution."}
+            "scope": "Complete production native_actor_fast.cpp target TU, real KOS/SDK headers, DIRECT1, COARSE_ONE_SUBMIT1 and BACKFACE_ROOMS=0/1; no renderer link or execution."}
 
 
 def suite(args):
@@ -120,9 +123,11 @@ def suite(args):
         assert method(tail, back_marker) == original_back, "Legacy back test must remain byte-identical"
         assert tail.index(back_marker) < tail.index("abc_front_prepare(") < start
         assert tail.index("abc_front_worth(") < tail.index("abc_front_prepare(")
-        gate = tail[tail.index("            if (!(e.direct && p.blend == 0"):tail.index("abc_front_prepare(")]
-        for guard in ("!(p.material_flags & 4u)", "p.depth_mode == 0", "abc_front[mi].min_normal > 0.0f"):
+        gate = tail[tail.index("            if (!(e.direct && e.bf_on() && p.blend == 0"):tail.index("abc_front_prepare(")]
+        for guard in ("e.bf_on()", "abc_front[mi].min_normal > 0.0f"):
             assert guard in gate
+        for guard in ("re4dc_bf_room_on &&", "!(p.material_flags & 4u)", "p.depth_mode == 0"):
+            assert guard in extractions["BF_ON"]
         gate_start = tail.index("#if RE4DC_BACKFACE_CONE_FRONT && RE4DC_ACTOR_DIRECT")
         gate_end = tail.index("\n#endif\n        }", gate_start) + len("\n#endif")
         extractions["GATE_" + name] = tail[gate_start:gate_end]
@@ -164,21 +169,24 @@ def suite(args):
                          "No game assets, emulator run, hardware timing or gameplay/visual acceptance is asserted."]}
     try:
         tails = []
-        for mode in (0, 1, 2):
-            name = f"actor-front{mode}"
-            command = common + [f"-DRE4DC_BACKFACE_CONE_FRONT={mode}", "-fsanitize=undefined", "-fno-sanitize-recover=all",
-                                "-Wl,--gc-sections", str(out / "fixture.cpp"), str(HELPER), "-o", str(out / name)]
-            run(command, out, name + "-compile")
-            stdout = run([str(out / name)], out, name + "-run")
-            match = re.search(r"PASS mode=(\d+) cases=(\d+) checks=(\d+)", stdout)
-            assert match, name + " has no PASS receipt"
-            tails.append(re.findall(r"ABC1 capacity=(\d+) hash=([0-9a-f]+)", stdout))
-            report["arms"].append({"mode": mode, "command": command, "cases": int(match[2]), "checks": int(match[3]),
-                                   "perspective_acceptances": [dict(gathered=bool(int(g)), yaw=float(yaw), pitch=float(pitch),
-                                                                    wlo=float(lo), whi=float(hi))
-                                       for g, yaw, pitch, lo, hi in re.findall(r"PERSPECTIVE gathered=(\d+) yaw=(-?\d+) pitch=(-?\d+) wlo=([\d.]+) whi=([\d.]+) accepted=1", stdout)],
-                                   "binary_sha256": sha(out / name)})
-        assert tails[0] == tails[1] == tails[2], "Optional front proof changed the legacy ABC1 tail"
+        for rooms in (0, 1):
+            for mode in (0, 1, 2):
+                name = f"actor-front{mode}-rooms{rooms}"
+                command = common + [f"-DRE4DC_BACKFACE_CONE_FRONT={mode}", f"-DRE4DC_BACKFACE_ROOMS={rooms}",
+                                    "-fsanitize=undefined", "-fno-sanitize-recover=all", "-Wl,--gc-sections",
+                                    str(out / "fixture.cpp"), str(HELPER), "-o", str(out / name)]
+                run(command, out, name + "-compile")
+                stdout = run([str(out / name)], out, name + "-run")
+                match = re.search(r"PASS mode=(\d+) cases=(\d+) checks=(\d+)", stdout)
+                assert match, name + " has no PASS receipt"
+                tails.append(re.findall(r"ABC1 capacity=(\d+) hash=([0-9a-f]+)", stdout))
+                report["arms"].append({"mode": mode, "backface_rooms": rooms, "command": command,
+                                       "cases": int(match[2]), "checks": int(match[3]),
+                                       "perspective_acceptances": [dict(gathered=bool(int(g)), yaw=float(yaw), pitch=float(pitch),
+                                                                        wlo=float(lo), whi=float(hi))
+                                           for g, yaw, pitch, lo, hi in re.findall(r"PERSPECTIVE gathered=(\d+) yaw=(-?\d+) pitch=(-?\d+) wlo=([\d.]+) whi=([\d.]+) accepted=1", stdout)],
+                                       "binary_sha256": sha(out / name)})
+        assert all(tail == tails[0] for tail in tails), "Optional front proof changed the legacy ABC1 tail"
         report["abc1_tails_identical"] = tails[0]
         # Relative production includes resolve through a small symlink mirror.
         base_dir = out / "baseline/game/platform"
@@ -187,22 +195,24 @@ def suite(args):
         base_source.write_text(baseline)
         (base_dir / "include").symlink_to(DC / "game/platform/include", target_is_directory=True)
         (out / "baseline/room").symlink_to(DC / "room", target_is_directory=True)
-        for cones in (0, 1):
+        for rooms, cones in ((0, 0), (0, 1), (1, 0), (1, 1)):
             # ACTOR_TEST intentionally embeds __LINE__ in converter failure
             # diagnostics. Compare the production TU, without that test-only
             # counter, so newly inserted guarded lines are not binary data.
             flags = [x for x in common if x not in ("-DRE4DC_ACTOR_BACKFACE_CONE=1", "-DRE4DC_ACTOR_TEST=1")]
-            flags += ["-DRE4DC_BACKFACE_CONE_FRONT=0", f"-DRE4DC_ACTOR_BACKFACE_CONE={cones}"]
+            flags += ["-DRE4DC_BACKFACE_CONE_FRONT=0", f"-DRE4DC_ACTOR_BACKFACE_CONE={cones}",
+                      f"-DRE4DC_BACKFACE_ROOMS={rooms}"]
             objects, preprocess = [], []
             for label, source in (("base", base_source), ("current", NATIVE)):
-                stem = f"off-cones{cones}-{label}"
+                stem = f"off-rooms{rooms}-cones{cones}-{label}"
                 obj = out / (stem + ".o")
                 run(flags + ["-c", str(source), "-o", str(obj)], out, stem + "-compile")
                 pp = run(flags + ["-E", "-P", str(source)], out, stem + "-preprocess")
                 objects.append(sha(obj)); preprocess.append(hashlib.sha256(pp.encode()).hexdigest())
-            assert objects[0] == objects[1], f"front=0 cones={cones}: host object bytes changed"
-            assert preprocess[0] == preprocess[1], f"front=0 cones={cones}: preprocessed TU changed"
-            report["off_identity"].append({"actor_cones": cones, "object_sha256": objects[0], "preprocessed_sha256": preprocess[0]})
+            assert objects[0] == objects[1], f"front=0 rooms={rooms} cones={cones}: host object bytes changed"
+            assert preprocess[0] == preprocess[1], f"front=0 rooms={rooms} cones={cones}: preprocessed TU changed"
+            report["off_identity"].append({"backface_rooms": rooms, "actor_cones": cones,
+                                           "object_sha256": objects[0], "preprocessed_sha256": preprocess[0]})
         report["target"] = target_controls(args, out, baseline)
         report["status"] = "passed"
     except BaseException as error:
@@ -217,7 +227,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, required=True, help="new evidence directory")
     parser.add_argument("--sdk", type=Path, required=True, help="materialized pinned SH4ZAM SDK")
-    parser.add_argument("--baseline", default="f3fef82cf212bb379e5cf3119daee0d7a8db7e58")
+    parser.add_argument("--baseline", default="dd8981e8de6dadb94997795867c85e8ede9a876f")
     parser.add_argument("--cxx", default=shutil.which("g++") or "g++")
     parser.add_argument("--sh4-cxx", type=Path, help="optional official target C++ compiler")
     parser.add_argument("--kos-root", type=Path, help="real KOS source tree for full target TU controls")

@@ -1953,7 +1953,13 @@ void stream_send(const void* data,unsigned bytes);
 #if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
 unsigned pvs23_scene_epoch=0; // observation identity only; no renderer ownership
 #endif
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+extern "C" void re4dc_bf_room_update();   // native_static.cpp (BACKFACE_ROOMS, lane fix-hideout23)
+#endif
 void stream_open() { RE4DC_TAIL_GPU_SCOPE(open);
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+    re4dc_bf_room_update();
+#endif
 #if RE4DC_PACE_CATCHUP
     // A movie presents its own picture (re4dc_ui_movie_present_now) even inside a skipped tick.
 #if RE4DC_ROUTE_MOVIES

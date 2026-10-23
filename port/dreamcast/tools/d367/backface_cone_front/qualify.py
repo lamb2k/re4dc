@@ -36,7 +36,7 @@ def main():
     parser.add_argument("--kos-root", type=Path)
     # The unconditional queue-flush cull fix intentionally changes OFF code.
     # Feature identity is checked after that separate correctness commit.
-    parser.add_argument("--baseline", default="f3fef82cf212bb379e5cf3119daee0d7a8db7e58")
+    parser.add_argument("--baseline", default="dd8981e8de6dadb94997795867c85e8ede9a876f")
     parser.add_argument("--compare-helper-o1", action="store_true")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)

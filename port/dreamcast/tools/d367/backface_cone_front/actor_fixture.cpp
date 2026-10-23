@@ -19,6 +19,11 @@ extern "C" int re4dc_actor_model_source(const void*, Re4dcActorSource* out) {
     *out = fixture_source; return 1;
 }
 extern "C" void re4dc_log(const char*, ...) { ++log_calls; }
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+// The production owner updates this at scene open. The fixture controls only
+// the observed room state, then executes the exact actor gate and emit routes.
+extern "C" { unsigned char re4dc_bf_room_on = 1; }
+#endif
 
 struct BlobFixture {
     alignas(32) std::array<u8, 1024> bytes{};
@@ -422,14 +427,46 @@ static void tests() {
     CHECK(d.whole(index, 3, 1)); CHECK(ram_whole == 1);
     d.room_available = false; CHECK(!d.whole(index, 3, 1));
 }
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+static void room_tests() {
+    for (unsigned front : {0U, 1U}) {
+        Re4dcModelPart p{}; p.cull = 2;
+        Part d{p}; const u8 index[3] = {0, 1, 130};
+        d.cone_front = front != 0;
+        for (unsigned enabled : {0U, 1U, 0U, 1U}) {
+            test_case("actual-part-room-transition-copy-or-facing-route");
+            re4dc_bf_room_on = enabled;
+            const bool exact = enabled && !(RE4DC_BACKFACE_CONE_FRONT && front);
+            CHECK(d.bf_on() == exact);
+            const unsigned es = exact_strip, ew = exact_whole;
+            const unsigned ls = lean_strip, lw = lean_whole, slots = d.slots;
+            d.strip(index, 3); CHECK(d.whole(index, 3, 1));
+            CHECK(exact_strip == es + unsigned(exact));
+            CHECK(exact_whole == ew + unsigned(exact));
+            CHECK(lean_strip == ls + unsigned(!exact));
+            CHECK(lean_whole == lw + unsigned(!exact));
+            CHECK(d.slots == slots + 6);
+        }
+    }
+    re4dc_bf_room_on = 1;
+}
+#endif
 }
 
 #if RE4DC_BACKFACE_CONE_FRONT
 // Gate chains are exact production extracts after the legacy back-cone test.
 // Observe each early-decline reason without substituting a helper predicate.
 static void gate_tests() {
-    for (bool chunk : {false, true}) for (unsigned fault = 0; fault < 12; ++fault) {
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+    constexpr unsigned fault_count = 13;
+#else
+    constexpr unsigned fault_count = 12;
+#endif
+    for (bool chunk : {false, true}) for (unsigned fault = 0; fault < fault_count; ++fault) {
         test_case(chunk ? "one-chunk-actual-gate-reason" : "regular-actual-gate-reason");
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+        re4dc_bf_room_on = fault == 12 ? 0 : 1;
+#endif
         DenseFixture source; const auto* built = source.build(); CHECK(built && source.front());
         AbcCone cone = *built; AbcFrontRecord front = *source.front();
         const AbcCone* abc = fault == 1 ? nullptr : &cone;
@@ -470,23 +507,26 @@ static void gate_tests() {
 @FINISH_REGULAR@
         }
         accepted_vertices[0].z = inverse;
-        const bool tested = fault == 0 || fault >= 9;
+        const bool tested = fault == 0 || fault == 9 || fault == 10;
         const bool candidate = fault == 0 || fault == 9 || fault == 10;
         CHECK(abc_front_tests == tests+unsigned(tested));
         CHECK(abc_front_candidates == candidates+unsigned(candidate));
         CHECK(abc_candidate == candidate); CHECK(e.cone_front == (fault == 0));
         CHECK(abc_front_accept == accepts+unsigned(fault == 0));
-        if (fault >= 1 && fault <= 8) CHECK(abc_context.pal == ~0U);
+        if ((fault >= 1 && fault <= 8) || fault >= 11) CHECK(abc_context.pal == ~0U);
 #if RE4DC_BACKFACE_CONE_FRONT == 2
         CHECK(abc_front_seen == seen+1);
         CHECK(abc_front_metadata == metadata+unsigned(fault == 1 || fault == 2));
-        CHECK(abc_front_material == material+unsigned(fault >= 3 && fault <= 6));
+        CHECK(abc_front_material == material+unsigned((fault >= 3 && fault <= 6) || fault >= 11));
         CHECK(abc_front_cost == cost+unsigned(fault == 7));
         CHECK(abc_front_context_reject == context+unsigned(fault == 8));
         CHECK(abc_front_clipped == clipped+unsigned(fault == 9));
         CHECK(abc_front_projection == projection+unsigned(fault == 10));
 #endif
     }
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+    re4dc_bf_room_on = 1;
+#endif
 }
 
 // Both draw-loop reset and completion statements are exact source extracts.
@@ -522,6 +562,9 @@ static void reset_chunk() {
 
 int main() {
     producer_tests(); dispatch_fixture::tests();
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+    dispatch_fixture::room_tests();
+#endif
 #if RE4DC_BACKFACE_CONE_FRONT
     context_tests(); finish_tests(); perspective_tests(); gate_tests(); reset_regular(); reset_chunk();
 #endif

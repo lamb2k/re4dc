@@ -28,6 +28,10 @@ report:
 \t@echo OBJECTS=$(PLATFORM_OBJS)
 cone-test.elf:
 \t@echo LINK $^
+cone-test-objects/platform/native_static.o cone-test-objects/platform/native_actor_fast.o cone-test-objects/platform/native_ui.o:
+\t@echo FLAGS=$(PLATFORM_CPPFLAGS)
+cone-test-objects/ui_bridge.o:
+\t@echo FLAGS=$(GAME_CPPFLAGS)
 """ % include)
     command = ["make", "--no-print-directory", "-n", "-f", str(fixture), target]
     command.extend("%s=%s" % pair for pair in sorted(definitions.items()))
@@ -42,7 +46,7 @@ run.number = 0
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--baseline", default="d1bc83cff32217a659f93acd5837a1ecc96ff6c3")
+    parser.add_argument("--baseline", default="dd8981e8de6dadb94997795867c85e8ede9a876f")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     output = args.output.resolve()
@@ -93,6 +97,50 @@ def main():
             assert line.rindex("-ffp-contract=off") > line.rindex("-ffp-contract=fast"), line
             assert [word for word in line.split() if word.startswith("-O")][-1] == "-O2", line
             rows.append(dict(kind="strict-flags-last", result=compile_row))
+    # The hideout fix owns the room selector and scene-open update. Both knobs
+    # must coexist without leaking the front helper definition into UI code.
+    for mode in (0, 1, 2):
+        for room_list in (None, "0x10d,0x10c"):
+            settings = dict(CPU_BACKFACE=2, GAME_SH4ZAM=1,
+                            ACTOR_BACKFACE_CONE=1, BACKFACE_CONE_FRONT=mode,
+                            BACKFACE_ROOMS=1)
+            if room_list is not None:
+                settings["BACKFACE_ROOM_LIST"] = room_list
+            for name in ("platform/native_static.o", "platform/native_actor_fast.o",
+                         "platform/native_ui.o", "ui_bridge.o"):
+                row = run(output, current, settings, "cone-test-objects/" + name)
+                assert row["status"] == 0, row
+                flags = next(line for line in row["output"].splitlines() if line.startswith("echo FLAGS="))
+                assert flags.count("-DRE4DC_BACKFACE_ROOMS=1") == 1, row
+                if name.startswith("platform/"):
+                    assert "-DRE4DC_BACKFACE_ROOM_LIST=" + (room_list or "0x10d") in flags, row
+                expected = mode and name in ("platform/native_static.o", "platform/native_actor_fast.o")
+                assert ("-DRE4DC_BACKFACE_CONE_FRONT=" in flags) == bool(expected), row
+                if mode == 0:
+                    before = run(output, baseline, settings, "cone-test-objects/" + name)
+                    assert before["status"] == 0 and before["output"] == row["output"], (before, row)
+                rows.append(dict(kind="room-selector-coexistence", settings=settings, target=name, result=row))
+    for cpu in (0, 1):
+        row = run(output, current, dict(CPU_BACKFACE=cpu, BACKFACE_ROOMS=1))
+        assert row["status"] and "BACKFACE_ROOMS=1 needs CPU_BACKFACE=2" in row["output"], row
+        rows.append(dict(kind="room-selector-invalid-cpu", result=row))
+    for value in (-1, 2, "invalid"):
+        row = run(output, current, dict(CPU_BACKFACE=2, GAME_SH4ZAM=1, BACKFACE_ROOMS=value))
+        assert row["status"] and "BACKFACE_ROOMS must be 0 or 1" in row["output"], row
+        rows.append(dict(kind="room-selector-invalid-knob", result=row))
+    for mode in (1, 2):
+        settings = dict(CPU_BACKFACE=2, GAME_SH4ZAM=1, ACTOR_BACKFACE_CONE=1,
+                        BACKFACE_ROOMS=1, BACKFACE_CONE_FRONT=mode)
+        row = run(output, current, settings)
+        assert row["status"] == 0 and row["output"].count("cone-test-objects/platform/backface_certificate.o") == 1, row
+        rows.append(dict(kind="room-selector-front-object-once", result=row))
+        row = run(output, current, settings, "cone-test-objects/platform/backface_certificate.o")
+        assert row["status"] == 0, row
+        line = next(x for x in row["output"].splitlines() if x.startswith("kos-c++ "))
+        assert line.rindex("-fno-fast-math") > line.rindex("-ffast-math"), line
+        assert line.rindex("-ffp-contract=off") > line.rindex("-ffp-contract=fast"), line
+        assert [word for word in line.split() if word.startswith("-O")][-1] == "-O2", line
+        rows.append(dict(kind="room-selector-strict-flags-last", result=row))
     makefile = (GAME / "Makefile").read_text()
     inventory = next(x for x in makefile.splitlines() if x.startswith("PLATFORM_SRCS ="))
     assert "$(filter-out" in inventory and "platform/backface_certificate.cpp" in inventory, inventory

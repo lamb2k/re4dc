@@ -3,41 +3,45 @@
   "status": "PASS synthetic correctness qualification; game speedup NOT demonstrated",
   "date": "2026-10-23",
   "feature_default": 0,
-  "integration_base": "d1bc83cff32217a659f93acd5837a1ecc96ff6c3",
+  "integration_base": "261c2e3bb098d830107766640fe2fedbd006ff98",
+  "original_integration_base": "d1bc83cff32217a659f93acd5837a1ecc96ff6c3",
   "original_pr_head": "56dc28d5cbec03b6467c3fea68ba6d687644df9e",
-  "corrected_off_identity_baseline": "f3fef82cf212bb379e5cf3119daee0d7a8db7e58",
+  "corrected_off_identity_baseline": "dd8981e8de6dadb94997795867c85e8ede9a876f",
   "off_identity_scope": "Cull restoration is unconditional. Feature absent/0 matches the separate corrected baseline, not the pre-fix integration world object.",
   "source_sha256": {
     "port/dreamcast/game/platform/backface_certificate.cpp": "ecc33eee3dd91a3eacb0734213716a223ba1b51b36c5cad7cb951c61406c7d76",
     "port/dreamcast/room/backface_certificate.hpp": "c2590fd2c21ab0312fe86d4ba3b43498458fba7f16a194686b9db5698469c5b3",
     "port/dreamcast/tools/d367/backface_cone_front/helper_fixture.cpp": "eab1a1d3e25638c7514ce582964d44f16ee1de494de474dd92af4512d7159600",
     "port/dreamcast/tools/d367/backface_cone_front/helper_test.py": "5a7e3c988409f5e9edaa8498bed74a6fa4bdebd2e38a46356db99ef539116888",
-    "port/dreamcast/game/platform/native_actor_fast.cpp": "6275140a72510b6d6fd22746d820f313876de2aa237fba2d9d4e0d880de87686",
-    "port/dreamcast/tools/d367/backface_cone_front/actor_fixture.cpp": "63251b2c702cef3423ba6fc9162e62597b5425cb41623d8d88ecac7554c89980",
-    "port/dreamcast/tools/d367/backface_cone_front/actor_test.py": "d076e05c4b5f3ed8d52192ff7958804d9b8ca10cdcf0fbe648dad8bafc5cf2b7",
-    "port/dreamcast/game/platform/native_static.cpp": "f5d8a318126b880c956b71c676733907141fc4e0f165ad670c108609298ae376",
+    "port/dreamcast/game/platform/native_actor_fast.cpp": "ab4a0311783fecbd8c7e69195857d5979df74d34f4b49395960604f32898be99",
+    "port/dreamcast/tools/d367/backface_cone_front/actor_fixture.cpp": "5a8ef4134994f44a355c84ffb26b5a1c1ccae3422ee2f2c939f676c7207a7f26",
+    "port/dreamcast/tools/d367/backface_cone_front/actor_test.py": "191ad4e34ee246863a942d60051eff38a74628d2caf4306f381598396fde9954",
+    "port/dreamcast/game/platform/native_static.cpp": "0ce6023f11445ec9c6dc5e2e075ec0738d755fc83cda48c0862523df3ad509bc",
     "port/dreamcast/tools/d367/scenery21/scn21_build.py": "1ff089c452997836192890aeead28a6bb5ecf61da2a70aa3e6c0d92e184bc86c",
     "port/dreamcast/game/Makefile": "ea4c8ddf4ad034ffe246bd221ed92149ccdf0e2803a82559f57ebe6b5dc445c7",
+    "port/dreamcast/game/backface.mk": "a3b2d6c09036f1589e7ab1242c0a7d9af5dcb97b0109521e019eb102ddb01138",
+    "port/dreamcast/game/platform/native_ui.cpp": "ec85d220c0cba2bbcafcf5b9b712aac319c585f0496553180faf766dd3166937",
+    "port/dreamcast/game/ui_bridge.cpp": "efded7a1466c00c99b4ca35b8979170188b5613d5bb978fc89dee4a6290eec1d",
     "port/dreamcast/tools/d367/backface_cone_front/admission_study.py": "a711dfffb68f6bbe2fe804cb646d27452c305d5dd454c2cf0c982b14e200c2ba",
     "port/dreamcast/tools/d367/backface_cone_front/asset_census.py": "226bacaac31e8daea99255bd00240076b1dca852395b20a82a2fc01280195aae",
     "port/dreamcast/tools/d367/backface_cone_front/asset_pose_study.py": "fba2d1d6fbada402fdb59c6dcfcab877c5e5ba6d0d9edbc68da7fa1f998eb0d4",
     "port/dreamcast/tools/d367/backface_cone_front/icache_replay.py": "f0c968398a44f7204f0640660160b2674d75161b2202986c6fb32aba70fe4705",
-    "port/dreamcast/tools/d367/backface_cone_front/make_test.py": "c651d724cbbd3b1e80373ac070c5fa7fbdb2ee004e7793645915e7bbea65fdce",
+    "port/dreamcast/tools/d367/backface_cone_front/make_test.py": "a77db99dbfb20823a14bb96756f509399594f2d84a6fa54605c3c33b7a61d8b8",
     "port/dreamcast/tools/d367/backface_cone_front/pipeline_cost.py": "d0b214bcea20b63bc24f301a92fd051ff66fb9fb99f6d6bae1f4226caa1cc798",
-    "port/dreamcast/tools/d367/backface_cone_front/qualify.py": "f2c49e88fd236d00bf487283acd17a87828ba7d726261e4518eacbe0ebc0f667",
+    "port/dreamcast/tools/d367/backface_cone_front/qualify.py": "fbd91f0a10d33e5e844fbb44300993a87515c3d5b64fdaa1eff0489e4748d5be",
     "port/dreamcast/tools/d367/backface_cone_front/rounding_test.py": "a1beb12ebb84b28f6419097760a97a5c7126f5be8f111b7343f98c5ab02c73f1",
     "port/dreamcast/tools/d367/backface_cone_front/sh4_machine.py": "300f9d3896caba09a78cec9fd1bfa887b0fc784aacbb3e82655c5b93521a7bbd",
     "port/dreamcast/tools/d367/backface_cone_front/target_fixture.cpp.in": "33ebe6e9b16f65954000c1cc2b9dfcb5e75c40e831854a26d9db11f61fcc0242",
     "port/dreamcast/tools/d367/backface_cone_front/target_test.py": "f7fc6235454967429a28b2d5e9554ba60c344809398fbe2c239a6734fb72e4ad",
-    "port/dreamcast/tools/d367/backface_cone_front/world_runtime_test.py": "164c1f3b3a3b21989d187ada2b4fc702d02d6eb8c45107ef741da784d0e795be",
+    "port/dreamcast/tools/d367/backface_cone_front/world_runtime_test.py": "4541983b3219dc883d87fb94e5761d99d86e11923e3024b922c120fced29cdc8",
     "port/dreamcast/tools/d367/backface_cone_front/world_target_fixture.cpp.in": "6d5665194948cc5d33d9b2493461b1505c9c4312db10c4a4f03cf91a2e54e85e",
     "port/dreamcast/tools/d367/backface_cone_front/world_target_test.py": "303e4fc1c12d7c2a98a8d5867802822b19ac0a8f8921a203b5613ec32d7e83e8",
     "port/dreamcast/tools/d367/backface_cone_front/world_test.py": "9b6e4c75015941c941cae014bf115b861b1552e708d6006c7b536ed048dcba71"
   },
   "qualification": {
     "receipt": {
-      "path": "cone-pr56-final-qualified/qualification.json",
-      "sha256": "662acf57f5886b9b010bd6a92b303419a4b9c4db37497e309508bde5be6da740"
+      "path": "cone-pr56-rooms-qualified/qualification.json",
+      "sha256": "8c8e19c322b30f702b15a1c535f4a513ad4bebc525a6cab7fc7b5cbd5e39fd0d"
     },
     "stages": [
       {
@@ -46,12 +50,12 @@
           "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
           "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_sh4zam_fused/materialize.py",
           "--output",
-          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-final-qualified/sdk",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/sdk",
           "--receipt",
-          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-final-qualified/sdk-receipt.json"
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/sdk-receipt.json"
         ],
         "receipt": "sdk-receipt.json",
-        "receipt_sha256": "ec924feef25be74ec159b36514d77f709a4742340ec3b28ac2e3894914386f5e",
+        "receipt_sha256": "464183e39fca6e6e98cfdd37a0d856fd31041e95d79888ac57dcc43efb3184c6",
         "status": "PASS"
       },
       {
@@ -60,12 +64,12 @@
           "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
           "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_cone_front/make_test.py",
           "--output",
-          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-final-qualified/make",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/make",
           "--baseline",
-          "f3fef82cf212bb379e5cf3119daee0d7a8db7e58"
+          "dd8981e8de6dadb94997795867c85e8ede9a876f"
         ],
         "receipt": "make/make-controls.json",
-        "receipt_sha256": "90e2c2da6bb2c71b907404e1a3dbfe1ec0415ea40799a6e7fc7c998185f86bcf",
+        "receipt_sha256": "5d6266b8832d6e1b66276490b9b6a148fab0dd5cdabf4ae494503c1bcd47a3f5",
         "status": "PASS"
       },
       {
@@ -74,10 +78,10 @@
           "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
           "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_cone_front/helper_test.py",
           "--output",
-          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-final-qualified/helper"
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/helper"
         ],
         "receipt": "helper/helper-controls.json",
-        "receipt_sha256": "08092b9a47521e847b914e1390f70e06e00100c75365f1c85c849d3379342d82",
+        "receipt_sha256": "38cc75b447c8e95613675927602860038b077dd6ea8689e9cd72245b683a0dd3",
         "status": "PASS"
       },
       {
@@ -86,7 +90,7 @@
           "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
           "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_cone_front/rounding_test.py",
           "--output",
-          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-final-qualified/rounding-controls.json"
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/rounding-controls.json"
         ],
         "receipt": "rounding-controls.json",
         "receipt_sha256": "d1fcc79d3840a47ca23e2171efce8aa8ae934cae6c5bfac7d32dac4500f6e535",
@@ -98,12 +102,12 @@
           "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
           "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_cone_front/world_test.py",
           "--output",
-          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-final-qualified/world-producer",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/world-producer",
           "--baseline",
-          "f3fef82cf212bb379e5cf3119daee0d7a8db7e58"
+          "dd8981e8de6dadb94997795867c85e8ede9a876f"
         ],
         "receipt": "world-producer/world-producer-controls.json",
-        "receipt_sha256": "e7b94a94b8b93a0b48cf56b133ac3fe745e80e14116da8e8b71048f8ef7e56b6",
+        "receipt_sha256": "bdbc790aa06994c688d7469fcc6048518b03af4c91cec68140a614fa8a5163e4",
         "status": "PASS"
       },
       {
@@ -112,18 +116,18 @@
           "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
           "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_cone_front/actor_test.py",
           "--out",
-          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-final-qualified/actor",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/actor",
           "--sdk",
-          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-final-qualified/sdk",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/sdk",
           "--baseline",
-          "f3fef82cf212bb379e5cf3119daee0d7a8db7e58",
+          "dd8981e8de6dadb94997795867c85e8ede9a876f",
           "--sh4-cxx",
           "/workspace/scratch/c4e1a2818fde/backface-tools/toolchain-root/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
           "--kos-root",
           "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source"
         ],
         "receipt": "actor/actor-controls.json",
-        "receipt_sha256": "f83ca34ae839b16f7daca75eb6be15c01a13a76ca09628344ddce4605ee8fd35",
+        "receipt_sha256": "e0045d4783fd45187c3646b51e964566caa994e0ee399ade55154f6b3d6a7e6b",
         "status": "PASS"
       },
       {
@@ -132,18 +136,18 @@
           "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
           "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_cone_front/world_runtime_test.py",
           "--output",
-          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-final-qualified/world-runtime",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/world-runtime",
           "--baseline",
-          "f3fef82cf212bb379e5cf3119daee0d7a8db7e58",
+          "dd8981e8de6dadb94997795867c85e8ede9a876f",
           "--sh4-cxx",
           "/workspace/scratch/c4e1a2818fde/backface-tools/toolchain-root/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
           "--kos-root",
           "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source",
           "--sdk-root",
-          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-final-qualified/sdk"
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/sdk"
         ],
         "receipt": "world-runtime/world-runtime-controls.json",
-        "receipt_sha256": "458ec869a848c677f9499a41557f465cc21d9da0bc2c8d477aca196a44e24719",
+        "receipt_sha256": "c2823d0f04389a05efaca5b565f1108e603f2e52454fd159328f6fae12002302",
         "status": "PASS"
       },
       {
@@ -152,14 +156,14 @@
           "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
           "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_cone_front/target_test.py",
           "--output",
-          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-final-qualified/target",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/target",
           "--sh4-cxx",
           "/workspace/scratch/c4e1a2818fde/backface-tools/toolchain-root/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
           "--optimization=-O1",
           "--helper-optimization=-O2"
         ],
         "receipt": "target/target-controls.json",
-        "receipt_sha256": "e5905e5be18916bd9650a0915a8d4e9ba356841b977004be95f1c41b78a692a2",
+        "receipt_sha256": "b671330045ace10e251adbc1f5f1f99b7d0491202f82295f67699fed9ce8a3e1",
         "status": "PASS"
       },
       {
@@ -168,16 +172,16 @@
           "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
           "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_cone_front/world_target_test.py",
           "--output",
-          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-final-qualified/world-target",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/world-target",
           "--sh4-cxx",
           "/workspace/scratch/c4e1a2818fde/backface-tools/toolchain-root/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
           "--kos-root",
           "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source",
           "--sdk-root",
-          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-final-qualified/sdk"
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/sdk"
         ],
         "receipt": "world-target/world-target-controls.json",
-        "receipt_sha256": "8eb34304fe4d7c4e32d3ee04400600f63fd95046821a9faf01f24cd01b511737",
+        "receipt_sha256": "8cf093a7abb89c9a882ec072ef8a15bdd5ffba0bd2bc0a5887a1e44869918097",
         "status": "PASS"
       }
     ],
@@ -195,7 +199,7 @@
       "full_world_target_requested": true,
       "world_target_packet_comparisons": 152
     },
-    "make_controls": 30,
+    "make_controls": 63,
     "helper": {
       "cases": 988,
       "prepared": 939,
@@ -225,8 +229,8 @@
       }
     },
     "world_producer_cases": 9,
-    "actor_scenarios": 131,
-    "actor_assertions": 1300,
+    "actor_scenarios": 290,
+    "actor_assertions": 2818,
     "world_metadata_controls": 42,
     "cull_lifetime_cases_per_mode": 147,
     "cull_modes": [
@@ -238,6 +242,14 @@
       "capacity",
       "ordinary"
     ],
+    "room_selection": {
+      "actor_host_arms": 6,
+      "world_host_arms": 6,
+      "world_room_cases": 30,
+      "cull_lifetime_cases_total": 882,
+      "actor_target_artifacts": 28,
+      "world_target_artifacts": 16
+    },
     "actor_target_comparisons": 172,
     "fpscr_controls": 28,
     "raw_layout_controls": 4,
@@ -262,102 +274,228 @@
   "full_target_translation_units": {
     "actor": [
       {
+        "backface_rooms": 0,
         "actor_cones": 0,
         "variant": "base",
-        "artifact": "cones0-base.ii",
+        "artifact": "rooms0-cones0-base.ii",
         "bytes": 1134895,
         "sha256": "2d27439628bb02c12190ef465c9a92b49e6b8ff08e1186dc7f5a0095feaed19d"
       },
       {
+        "backface_rooms": 0,
         "actor_cones": 0,
         "variant": "base",
-        "artifact": "cones0-base.o",
+        "artifact": "rooms0-cones0-base.o",
         "bytes": 65224,
         "sha256": "832eab00c1b6983803d1c450d0d991c441af59f32d54ca9a5b1d8dce474128dc"
       },
       {
+        "backface_rooms": 0,
         "actor_cones": 0,
         "variant": "absent",
-        "artifact": "cones0-absent.ii",
+        "artifact": "rooms0-cones0-absent.ii",
         "bytes": 1134895,
         "sha256": "2d27439628bb02c12190ef465c9a92b49e6b8ff08e1186dc7f5a0095feaed19d"
       },
       {
+        "backface_rooms": 0,
         "actor_cones": 0,
         "variant": "absent",
-        "artifact": "cones0-absent.o",
+        "artifact": "rooms0-cones0-absent.o",
         "bytes": 65224,
         "sha256": "832eab00c1b6983803d1c450d0d991c441af59f32d54ca9a5b1d8dce474128dc"
       },
       {
+        "backface_rooms": 0,
         "actor_cones": 0,
         "variant": "zero",
-        "artifact": "cones0-zero.ii",
+        "artifact": "rooms0-cones0-zero.ii",
         "bytes": 1134895,
         "sha256": "2d27439628bb02c12190ef465c9a92b49e6b8ff08e1186dc7f5a0095feaed19d"
       },
       {
+        "backface_rooms": 0,
         "actor_cones": 0,
         "variant": "zero",
-        "artifact": "cones0-zero.o",
+        "artifact": "rooms0-cones0-zero.o",
         "bytes": 65224,
         "sha256": "832eab00c1b6983803d1c450d0d991c441af59f32d54ca9a5b1d8dce474128dc"
       },
       {
+        "backface_rooms": 0,
         "actor_cones": 1,
         "variant": "base",
-        "artifact": "cones1-base.ii",
+        "artifact": "rooms0-cones1-base.ii",
         "bytes": 1153708,
         "sha256": "1d074edec4fafc3b6723d7ea390500f8dc1a64082b76a25f1c3c934eb4713a8b"
       },
       {
+        "backface_rooms": 0,
         "actor_cones": 1,
         "variant": "base",
-        "artifact": "cones1-base.o",
+        "artifact": "rooms0-cones1-base.o",
         "bytes": 78656,
         "sha256": "6a42125201f82d4b41868ce8e2e305b5dee2376dd1f53e03f03472cf78fa16f9"
       },
       {
+        "backface_rooms": 0,
         "actor_cones": 1,
         "variant": "absent",
-        "artifact": "cones1-absent.ii",
+        "artifact": "rooms0-cones1-absent.ii",
         "bytes": 1153708,
         "sha256": "1d074edec4fafc3b6723d7ea390500f8dc1a64082b76a25f1c3c934eb4713a8b"
       },
       {
+        "backface_rooms": 0,
         "actor_cones": 1,
         "variant": "absent",
-        "artifact": "cones1-absent.o",
+        "artifact": "rooms0-cones1-absent.o",
         "bytes": 78656,
         "sha256": "6a42125201f82d4b41868ce8e2e305b5dee2376dd1f53e03f03472cf78fa16f9"
       },
       {
+        "backface_rooms": 0,
         "actor_cones": 1,
         "variant": "zero",
-        "artifact": "cones1-zero.ii",
+        "artifact": "rooms0-cones1-zero.ii",
         "bytes": 1153708,
         "sha256": "1d074edec4fafc3b6723d7ea390500f8dc1a64082b76a25f1c3c934eb4713a8b"
       },
       {
+        "backface_rooms": 0,
         "actor_cones": 1,
         "variant": "zero",
-        "artifact": "cones1-zero.o",
+        "artifact": "rooms0-cones1-zero.o",
         "bytes": 78656,
         "sha256": "6a42125201f82d4b41868ce8e2e305b5dee2376dd1f53e03f03472cf78fa16f9"
       },
       {
+        "backface_rooms": 0,
         "actor_cones": 1,
         "variant": "on1",
-        "artifact": "cones1-on1.o",
-        "bytes": 85092,
-        "sha256": "7420e31d0cf68e3ebbe290dda696aadca9735ca3a7bac66ed3f59e87dea9cbdb"
+        "artifact": "rooms0-cones1-on1.o",
+        "bytes": 85120,
+        "sha256": "c78e28ddd9941456a9fef4dce1c43afdd90d9c3201568d8c934e81647fe452e0"
       },
       {
+        "backface_rooms": 0,
         "actor_cones": 1,
         "variant": "on2",
-        "artifact": "cones1-on2.o",
-        "bytes": 87840,
-        "sha256": "3fdff20a577e9200f78c450e91b284e3485388c133f90b182154f92ba7c1ad3a"
+        "artifact": "rooms0-cones1-on2.o",
+        "bytes": 87872,
+        "sha256": "d588bb78872c039a8b17b007896f434f6c873007ddc19a2f411f9ac6bcaa3316"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 0,
+        "variant": "base",
+        "artifact": "rooms1-cones0-base.ii",
+        "bytes": 1134958,
+        "sha256": "09bb3969d0d393e1e1957fe5c5b78ad62619128f4119a6ff5b453c879c5b1a98"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 0,
+        "variant": "base",
+        "artifact": "rooms1-cones0-base.o",
+        "bytes": 65324,
+        "sha256": "53e304ca36c1160a8e33fdca2d694ec978c9318ad4d9e10671581994d449953a"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 0,
+        "variant": "absent",
+        "artifact": "rooms1-cones0-absent.ii",
+        "bytes": 1134958,
+        "sha256": "09bb3969d0d393e1e1957fe5c5b78ad62619128f4119a6ff5b453c879c5b1a98"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 0,
+        "variant": "absent",
+        "artifact": "rooms1-cones0-absent.o",
+        "bytes": 65324,
+        "sha256": "53e304ca36c1160a8e33fdca2d694ec978c9318ad4d9e10671581994d449953a"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 0,
+        "variant": "zero",
+        "artifact": "rooms1-cones0-zero.ii",
+        "bytes": 1134958,
+        "sha256": "09bb3969d0d393e1e1957fe5c5b78ad62619128f4119a6ff5b453c879c5b1a98"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 0,
+        "variant": "zero",
+        "artifact": "rooms1-cones0-zero.o",
+        "bytes": 65324,
+        "sha256": "53e304ca36c1160a8e33fdca2d694ec978c9318ad4d9e10671581994d449953a"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 1,
+        "variant": "base",
+        "artifact": "rooms1-cones1-base.ii",
+        "bytes": 1153771,
+        "sha256": "4003b1ac43ec45774b0f54d49105475325a5fef8d55f343ec3a8268b52921216"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 1,
+        "variant": "base",
+        "artifact": "rooms1-cones1-base.o",
+        "bytes": 78756,
+        "sha256": "29d09d913b889be61e325f5246c9e073eb5c5e8ca2f257f80b65db968b304715"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 1,
+        "variant": "absent",
+        "artifact": "rooms1-cones1-absent.ii",
+        "bytes": 1153771,
+        "sha256": "4003b1ac43ec45774b0f54d49105475325a5fef8d55f343ec3a8268b52921216"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 1,
+        "variant": "absent",
+        "artifact": "rooms1-cones1-absent.o",
+        "bytes": 78756,
+        "sha256": "29d09d913b889be61e325f5246c9e073eb5c5e8ca2f257f80b65db968b304715"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 1,
+        "variant": "zero",
+        "artifact": "rooms1-cones1-zero.ii",
+        "bytes": 1153771,
+        "sha256": "4003b1ac43ec45774b0f54d49105475325a5fef8d55f343ec3a8268b52921216"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 1,
+        "variant": "zero",
+        "artifact": "rooms1-cones1-zero.o",
+        "bytes": 78756,
+        "sha256": "29d09d913b889be61e325f5246c9e073eb5c5e8ca2f257f80b65db968b304715"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 1,
+        "variant": "on1",
+        "artifact": "rooms1-cones1-on1.o",
+        "bytes": 85228,
+        "sha256": "2bd6ddd4dd0d51f5e6d683d940154759851b5ba0b59f67dd4fb96dab088afd31"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 1,
+        "variant": "on2",
+        "artifact": "rooms1-cones1-on2.o",
+        "bytes": 87972,
+        "sha256": "cc609de892e61155b86ed8ddc730adb7d425857fd191c04f767e65e71218f08f"
       }
     ],
     "world": {
@@ -392,6 +530,38 @@
       "on2.o": {
         "bytes": 53136,
         "sha256": "0c3744902b6be541918f7e11500f0ef87cc890bf27ad8a7afc90b9244607a37a"
+      },
+      "rooms1-base.ii": {
+        "bytes": 857467,
+        "sha256": "ade5dd47d3316c264ee0c5df2f1e70de3f69de05004166c3ff9092ed9a1c82c0"
+      },
+      "rooms1-base.o": {
+        "bytes": 47336,
+        "sha256": "9b2542b9ee26428c70182ea95f9134a8b728f5f5d28b58ec93ca9b3efd6268da"
+      },
+      "rooms1-absent.ii": {
+        "bytes": 857467,
+        "sha256": "ade5dd47d3316c264ee0c5df2f1e70de3f69de05004166c3ff9092ed9a1c82c0"
+      },
+      "rooms1-absent.o": {
+        "bytes": 47336,
+        "sha256": "9b2542b9ee26428c70182ea95f9134a8b728f5f5d28b58ec93ca9b3efd6268da"
+      },
+      "rooms1-zero.ii": {
+        "bytes": 857467,
+        "sha256": "ade5dd47d3316c264ee0c5df2f1e70de3f69de05004166c3ff9092ed9a1c82c0"
+      },
+      "rooms1-zero.o": {
+        "bytes": 47336,
+        "sha256": "9b2542b9ee26428c70182ea95f9134a8b728f5f5d28b58ec93ca9b3efd6268da"
+      },
+      "rooms1-on1.o": {
+        "bytes": 52556,
+        "sha256": "06a9d0b2afc02babdad3efd98159f12f74e118adbf889d5e4d7af7982f366c43"
+      },
+      "rooms1-on2.o": {
+        "bytes": 53848,
+        "sha256": "5b9bc9efbd52ca8017c2aa0606dfeee7d0f58adca96d4b83bc1aa27b276f2e62"
       }
     }
   },
@@ -1008,12 +1178,12 @@
       }
     ],
     "actor_receipt": {
-      "path": "cone-pr56-final-qualified/target/target-controls.json",
-      "sha256": "e5905e5be18916bd9650a0915a8d4e9ba356841b977004be95f1c41b78a692a2"
+      "path": "cone-pr56-rooms-qualified/target/target-controls.json",
+      "sha256": "b671330045ace10e251adbc1f5f1f99b7d0491202f82295f67699fed9ce8a3e1"
     },
     "world_receipt": {
-      "path": "cone-pr56-final-qualified/world-target/world-target-controls.json",
-      "sha256": "8eb34304fe4d7c4e32d3ee04400600f63fd95046821a9faf01f24cd01b511737"
+      "path": "cone-pr56-rooms-qualified/world-target/world-target-controls.json",
+      "sha256": "8cf093a7abb89c9a882ec072ef8a15bdd5ffba0bd2bc0a5887a1e44869918097"
     }
   },
   "instruction_cache": {
@@ -1817,12 +1987,12 @@
     "original_pr_helper_executable_bytes": 14340,
     "whole_game_ram_qualified": false,
     "room_trailer_format_unchanged": true,
-    "limitation": "Object text and per-room trailer counts do not establish a final linked-game RAM delta or solve reported roughly1.3KiB r100 headroom."
+    "limitation": "Object text and per-room trailer counts do not establish a final linked-game RAM delta or solve reported roughly 1.3 KiB r100 headroom."
   },
   "limitations": [
     "No representative scene hit, game frame-time improvement, Flycast run, physical console or full-game RAM qualification.",
     "The public world census has zero cost-eligible groups and the supplied actor groups have zero acceptance even with cost admission bypassed.",
-    "The6x6 actor case saves modeled cycles with perfect caches but loses in the standalone cold instruction-cache replay.",
+    "The 6x6 actor case saves modeled cycles with perfect caches but loses in the standalone cold instruction-cache replay.",
     "Late numerical declines retain exact CPU2 output but can substantially increase cost.",
     "Camera poses and caches are synthetic; no target FTRV/FSRRA or animation execution is claimed.",
     "Target arithmetic execution is RN with DN=1. RZ is checked through analytic envelopes and exact-rational experiments, not hardware execution.",
