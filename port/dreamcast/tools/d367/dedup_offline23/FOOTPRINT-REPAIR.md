@@ -103,3 +103,9 @@ the actual standard542 original object byte-for-byte after debug stripping:
 See `footprint-unit-cf-3467.json` for exact commands, generated-header pins,
 source hashes, sizes and object hashes. SH4 FTRV/FSRRA, optimized target clipping, timings,
 full image identity and memory gates remain root's qualification work.
+
+Later actual5be qualification still measured ON93920 versus OFF98016. The
+absolute-end projection above was insufficient: mem.cpp rounds available KOS
+room minus its reserve, not absolute `_end`. See STRIP-SHARE.md for the current
+exact-data repair and actual arena explanation; the562-byte unit result remains
+valid, but it did not establish the required memory floor.

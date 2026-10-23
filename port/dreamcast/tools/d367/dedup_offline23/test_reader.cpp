@@ -37,6 +37,7 @@ int main(int argc,char** argv){
     if(!adopt(pa,a)){std::cerr<<"base "<<pa.error()<<'\n';return 3;}
 #if RE4DC_SCENERY_DEDUP==3
     if(!adopt(pb,b)){std::cerr<<"encoded "<<pb.error()<<'\n';return 4;}
+    if(pb.source_crc()!=pa.header().crc || pb.source_bytes()!=pa.header().bytes)return 18;
     const auto sa=stream(pa),sb=stream(pb);
     if(sa.size()!=sb.size() || std::memcmp(sa.data(),sb.data(),sa.size()*sizeof(sa[0])))return 5;
     if(argc==4){
@@ -51,19 +52,20 @@ int main(int argc,char** argv){
         }
         if(pb.offline_groups(g.data()+32,g.size()-32,groups))return 10;
     }
-    const auto source_crc=pb.source_crc();pb.close();
-    if(!pb.offline_dedup() || pb.source_crc()!=source_crc || pb.valid())return 11;
+    const auto source_crc=pb.source_crc(),source_bytes=pb.source_bytes();pb.close();
+    if(!pb.offline_dedup() || pb.source_crc()!=source_crc || pb.source_bytes()!=source_bytes || pb.valid())return 11;
     if(!adopt(pb,b))return 12; // close -> reread -> adopt keeps the exact stored layout
     if(!adopt(pb,a) || pb.offline_dedup())return 13; // next ordinary room clears the old marker
     if(!adopt(pb,b))return 14;
     unsigned chosen=0;while(chosen<pb.header().meshlet_count && !pb.repeat_count(pb.meshlets()[chosen]))++chosen;
     if(chosen==pb.header().meshlet_count)return 6;
     const auto l=pb.meshlets()[chosen];const auto off=pb.header().vertex_offset+12*(l.first_vertex+l.vertex_count-pb.repeat_count(l));
-    for(unsigned kind=0;kind<4;++kind){auto bad=b;
+    for(unsigned kind=0;kind<5;++kind){auto bad=b;
         if(kind==0)bad[76]^=1; // unknown marker
         if(kind==1){const std::uint16_t chain=l.vertex_count-pb.repeat_count(l);std::memcpy(bad.data()+off,&chain,2);}
         if(kind==2)bad[off+2]^=1; // broken repeat tag
         if(kind==3){const std::uint16_t wrong=std::uint16_t((l.vertex_count<<7)|pb.strip_total(l));std::memcpy(bad.data()+pb.header().meshlet_offset+28*chosen+14,&wrong,2);}
+        if(kind==4){const std::uint32_t short_extent=std::uint32_t(b.size()-1);std::memcpy(bad.data()+68,&short_extent,4);}
         // A rejected replacement must unpublish an earlier successful bind.
         MeshPackage reject;if(!adopt(reject,b))return 16;
         if(adopt(reject,bad) || reject.valid()){std::cerr<<"accepted/stale malformed "<<kind<<'\n';return 7;}
