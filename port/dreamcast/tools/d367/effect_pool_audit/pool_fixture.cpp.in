@@ -1,0 +1,135 @@
+// Source bodies are extracted at run time; dependencies below are instrumented.
+#include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+using u8 = uint8_t; using u32 = uint32_t;
+static unsigned checks, destructs, steals, owned;
+#define CHECK(x) do { ++checks; assert(x); } while (0)
+#define BitSet(x, y) ((x) = (y))
+#define ESPD_STEAL() (++steals)
+static void memclr_asm(void* p, unsigned n) { std::memset(p, 0, n); }
+struct Log {
+    void err(int, int, const char*, ...) {}
+    void warn(int, int, const char*, ...) {}
+};
+static Log log_object; static Log* pLog = &log_object;
+struct EspInfo { u32 Core_pEm; };
+// A fixed 0x150-byte slot preserves the allocator's real stride on the host.
+// These tests execute the allocator and lifecycle bodies, not virtual dispatch.
+struct cEsp {
+    u32 m_Be_flg, m_Tool_flg;
+    EspInfo info;
+    u32 m_Id, resource;
+    u8 padding[0x150 - 20];
+    void Destruct();
+};
+static_assert(sizeof(cEsp) == 0x150);
+struct cEspSystem {
+    u8* pEspBuf; cEsp* pDmyEsp; u32 nEsp; u32 ActiveEspNum;
+};
+static cEsp slots[4], dummy;
+static cEspSystem state{reinterpret_cast<u8*>(slots), &dummy, 4, 0};
+static cEspSystem* g_pEspSys = &state;
+static unsigned short re4dc_esp_own[64];
+static unsigned long re4dc_esp_own_valid = 1, re4dc_fx_esp_ok = 1;
+#define RE4DC_FX_ESP_WORDS 32
+static unsigned long re4dc_fx_esp_live[RE4DC_FX_ESP_WORDS];
+static unsigned long re4dc_fx_esp_ownmap[64][RE4DC_FX_ESP_WORDS];
+static unsigned long re4dcEspOwnB(unsigned long p) { return ((p >> 4) ^ (p >> 10)) & 63; }
+static unsigned espd_peak, espd_logged, espd_refuse;
+static void espd_report(const char*) {}
+void PushEsp(cEsp*);
+void* allocate_slot(unsigned int);
+static cEsp* factory() { return static_cast<cEsp*>(allocate_slot(0x150)); }
+using EspCreateFunc = cEsp* (*)();
+static EspCreateFunc EspCreateTbl[256];
+struct Esp3fWork { u8 nBuf, nElem; cEsp* pBuf[18]; };
+struct cEsp3f { u8 m_Rno0; Esp3fWork m_Free; void Destruct(); };
+static cEsp3f buffer_owner;
+
+@OWNER_BODIES@
+
+@BUFFER_DESTRUCTOR@
+
+void cEsp::Destruct() {
+    ++destructs;
+    if (resource == 2) buffer_owner.Destruct();
+    if (resource) { CHECK(owned); --owned; }
+}
+
+@SOURCE_BODIES@
+
+static void tag(cEsp* p, u32 owner) {
+#if RE4DC_ESP_OWNER
+    const EspInfo info{owner}; re4dc_esp_info_set(p, &info);
+#else
+    p->info.Core_pEm = owner;
+#endif
+}
+static void owner_count(u32 owner, unsigned expected) {
+#if RE4DC_ESP_OWNER
+    CHECK(re4dc_esp_own[re4dcEspOwnB(owner)] == expected);
+#else
+    (void) owner; (void) expected;
+#endif
+}
+int main(int argc, char** argv) {
+    CHECK(argc == 2);
+    EspCreateTbl[1] = factory;
+    cEsp* p;
+    for (unsigned i = 0; i < 4; ++i) {
+        CHECK(PullEsp(&p, 1) == 1); CHECK(p == &slots[i]);
+        CHECK(state.ActiveEspNum == i + 1);
+        tag(p, 0x10 + 0x10 * i);
+    }
+    owner_count(0, 0);
+    // Move old_hit to 2 while returning to a completely occupied pool.
+    PushEsp(&slots[1]); CHECK(state.ActiveEspNum == 3);
+    CHECK(PullEsp(&p, 1) == 1); CHECK(p == &slots[1]); tag(p, 0x20);
+    destructs = steals = 0;
+    if (std::strcmp(argv[1], "refuse") == 0) {
+        CHECK(PullEsp(&p, 1) == 0); CHECK(p == &dummy);
+        CHECK(state.ActiveEspNum == 4); CHECK(destructs == 0); CHECK(steals == 0);
+        CHECK(PullEsp(&p, 2) == 0); CHECK(p == &dummy);
+    } else if (std::strcmp(argv[1], "free") == 0) {
+        PushEsp(&slots[3]); CHECK(state.ActiveEspNum == 3);
+        CHECK(PullEsp(&p, 1) == 1); CHECK(p == &slots[3]);
+        CHECK(state.ActiveEspNum == 4); CHECK(destructs == 1); CHECK(steals == 0);
+        owner_count(0x40, 0); owner_count(0, 1);
+    } else {
+        const bool wrap = std::strncmp(argv[1], "wrap", 4) == 0;
+        const bool children = std::strstr(argv[1], "children") != nullptr;
+        CHECK(wrap || std::strncmp(argv[1], "forward", 7) == 0);
+        const unsigned victim = wrap ? 0 : 3;
+        slots[victim].m_Tool_flg = 0x40000;
+        slots[victim].resource = children ? 2 : 1; owned = 1;
+        if (children) {
+            buffer_owner.m_Free.nBuf = 2;
+            buffer_owner.m_Free.pBuf[0] = &slots[2];
+            buffer_owner.m_Free.pBuf[1] = &slots[wrap ? 3 : 0];
+        }
+        CHECK(PullEsp(&p, 1) == 1); CHECK(p == &slots[victim]);
+        CHECK(p->m_Be_flg == 1); CHECK(p->m_Id == 1); CHECK(p->resource == 0);
+        if (wrap && !RE4DC_ESP_POOL_RECYCLE) {
+            CHECK(state.ActiveEspNum == 5); CHECK(destructs == 0); CHECK(owned == 1);
+            owner_count(0x10, 1); owner_count(0, 1);
+        } else {
+            CHECK(state.ActiveEspNum == (children ? 2u : 4u));
+            CHECK(destructs == (children ? 3u : 1u)); CHECK(owned == 0);
+            owner_count(0x10 + 0x10 * victim, 0); owner_count(0, 1);
+        }
+#if RE4DC_ESP_OWNER && RE4DC_FX_SCAN
+        const auto old_row = re4dc_fx_esp_ownmap[re4dcEspOwnB(0x10 + 0x10 * victim)][0];
+        CHECK(old_row == (wrap && !RE4DC_ESP_POOL_RECYCLE ? 1ul << victim : 0ul));
+        if (children && (!wrap || RE4DC_ESP_POOL_RECYCLE))
+            CHECK(re4dc_fx_esp_live[0] == ((1ul << victim) | (1ul << 1)));
+        else CHECK(re4dc_fx_esp_live[0] == 15);
+#endif
+        CHECK(steals == (wrap && !RE4DC_ESP_POOL_RECYCLE && !RE4DC_ESP_POOL_DIAG ? 0u : 1u));
+    }
+    // Print semantic state so ordinary successes/refusal can compare byte-for-byte.
+    std::printf("%s live=%u destructs=%u owned=%u steals=%u bitmap=%lu\n",
+                argv[1], state.ActiveEspNum, destructs, owned, steals, re4dc_fx_esp_live[0]);
+}

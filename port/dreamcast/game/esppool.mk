@@ -21,3 +21,25 @@ endif
 ifneq ($(ESP_POOL_CAP),0)
 GAME_CPPFLAGS += -DRE4DC_ESP_POOL_CAP=$(ESP_POOL_CAP)
 endif
+
+# Source failure-path fixes (2026-10-23), independently selectable and default off.
+# ESP_POOL_RECYCLE retires a low-priority effect in the wrapped full-pool search,
+# matching the forward search's destructor and active/owner accounting.
+# R117_EFFECT_FAILURE_SAFE tolerates a missing puzzle beam: no beam wait or
+# beam-field access; the light objects still rotate with the original timing.
+# Neither option changes pool capacity, rendering caps, or successful free-slot
+# allocation. See docs/D367_EFFECT_POOL_FAILURE_AUDIT_20261023.md.
+ESP_POOL_RECYCLE ?= 0
+R117_EFFECT_FAILURE_SAFE ?= 0
+ifeq ($(filter $(ESP_POOL_RECYCLE),0 1),)
+$(error ESP_POOL_RECYCLE must be 0 or 1)
+endif
+ifeq ($(filter $(R117_EFFECT_FAILURE_SAFE),0 1),)
+$(error R117_EFFECT_FAILURE_SAFE must be 0 or 1)
+endif
+ifeq ($(ESP_POOL_RECYCLE),1)
+GAME_CPPFLAGS += -DRE4DC_ESP_POOL_RECYCLE=1
+endif
+ifeq ($(R117_EFFECT_FAILURE_SAFE),1)
+GAME_CPPFLAGS += -DRE4DC_R117_EFFECT_FAILURE_SAFE=1
+endif
