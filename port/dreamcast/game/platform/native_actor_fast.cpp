@@ -48,7 +48,9 @@ extern "C" void re4dc_log(const char* fmt, ...);
 // The models the split applies to, marked by coarse_actor_transaction.inc (model -> class 1 Leon, 2 Ganado,
 // 3 El Gigante, 4 Ashley); a part is split when it is converted while its model is marked.
 namespace { struct AbcMark { const void* model; unsigned cls; }; AbcMark abc_marks[64]; unsigned abc_mark_next = 0; }
+unsigned abc_nmarks = 0, abc_conv = 0, abc_conv_op = 0, abc_conv_mk = 0, abc_part_calls = 0, abc_part_cull = 0;
 extern "C" void re4dc_abc_mark(const void* model, unsigned cls) {
+    ++abc_nmarks;
     for (AbcMark& m : abc_marks) if (m.model == model) { m.cls = cls; return; }
     abc_marks[abc_mark_next] = {model, cls}; abc_mark_next = (abc_mark_next + 1U) & 63U;
 }
@@ -541,6 +543,7 @@ public:
         if (capacity < sizeof(BlobHeader) + 32 || p.stream_bytes > 0x3FFFCU) ACTOR_REJECT();
         if (!parse()) return false;
 #if RE4DC_ACTOR_BACKFACE_CONE
+        ++abc_conv; if (p.blend == 0) ++abc_conv_op; if (abc_class_of(p.model)) ++abc_conv_mk;
         if (p.blend == 0 && (abc_force || abc_class_of(p.model))) abc_split();
 #endif
         rs = 3U + (constant_color ? 0U : 1U);
@@ -3272,7 +3275,7 @@ inline bool abc_reject(const AbcCone& c, const AbcEye& eye) {
 }
 // The part's cone table when this draw can use it (culling part, skinned or rigid frame, converted in place).
 const AbcCone* abc_part(const Re4dcModelPart& p, const u8* base, const Frame& f, unsigned& cls) {
-    cls = 0;
+    cls = 0; ++abc_part_calls; if (p.cull == 1 || p.cull == 2) ++abc_part_cull;
     if ((p.cull != 1 && p.cull != 2) || base != p.stream || (f.mode != kSkin && f.mode != kRigid)) return nullptr;
     if (!abc_tab_ready) {
         for (unsigned k = 0; k < 64; ++k) {
@@ -5261,8 +5264,9 @@ void abc_census() {
         // per class (other, Leon, Ganado, El Gigante, Ashley): meshlets tested/rejected, vertices skipped/of tested parts,
         // triangles skipped; totals since the last line
         abc_log = frame_serial;
-        re4dc_log("ABFC frame=%u splits=%u built=%u noroom=%u cones=%u nocone=%u bad=%u\n", frame_serial, abc_splits, abc_built,
-                  abc_noroom, abc_cones, abc_nocone, abc_bad);
+        re4dc_log("ABFC frame=%u splits=%u built=%u noroom=%u cones=%u nocone=%u bad=%u marks=%u conv=%u/%u/%u parts=%u/%u\n",
+                  frame_serial, abc_splits, abc_built, abc_noroom, abc_cones, abc_nocone, abc_bad, abc_nmarks, abc_conv,
+                  abc_conv_op, abc_conv_mk, abc_part_calls, abc_part_cull);
         re4dc_log("ABFC2 frame=%u other=%u/%u/%u/%u/%u leon=%u/%u/%u/%u/%u ganado=%u/%u/%u/%u/%u gigante=%u/%u/%u/%u/%u "
                   "ashley=%u/%u/%u/%u/%u\n", frame_serial,
                   abc_tests[0], abc_rej[0], abc_vskip[0], abc_verts[0], abc_tskip[0],
