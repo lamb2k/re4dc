@@ -1,0 +1,74 @@
+// Appended to the source-extracted selector fixture. All renderer layout,
+// replay, reset, clipping setup and logical-accounting bodies remain real.
+// Only emit_pick's geometry body is replaced by an observed external edge.
+@CHUNK_PART@;
+extern "C" {
+ChunkPart fixture_contexts[48];
+MeshDraw::Pick fixture_replay_picks[320];
+unsigned fixture_replay_count,fixture_replay_shape;
+unsigned fixture_replay_result[8];
+}
+
+extern "C" void fixture_prepare_replay(unsigned count) {
+    fixture_replay_count=count;
+    for(unsigned j=0;j<count;++j){
+        auto& x=fixture_contexts[j];
+        std::memcpy(x.mvq,fixture_input.mvq,sizeof(x.mvq));
+        x.key[0]=0x12345678U+j;x.key[1]=0x87654321U+j;
+        x.key[2]=32;x.key[3]=32;x.key[4]=j%3;x.key[5]=j%3;
+        x.index=fixture_input.part_index;x.first=j;
+        x.count=fixture_replay_shape==1?0U:fixture_replay_shape==2&&j%3==1?0U:1U;
+        x.cull=j%3;x.marked=(j&1)!=0;x.sky=j%2;
+        x.cull_far=fixture_input.cull_far;x.lod_scale=fixture_input.lod_scale;
+        fixture_replay_picks[j]={0,255,0,0,0,{0,0}};
+    }
+    std::memset(fixture_replay_result,0,sizeof(fixture_replay_result));
+    fixture_part.cull=fixture_input.cull;
+#if RE4DC_SKY_ANY
+    re4dc_ps2_sky_header=7;
+#endif
+}
+
+extern "C" __attribute__((noinline)) int fixture_replay() {
+    auto& part=fixture_part;
+    const float near=fixture_input.near_distance,far=fixture_input.far_distance;
+    const unsigned pass=fixture_input.pass;
+    auto* cctx=fixture_contexts;auto* cpk=fixture_replay_picks;
+    unsigned nctx=fixture_replay_count,npk=fixture_replay_count;
+    const auto& cpkg=fixture_package;
+    struct {unsigned native=0,fallback=0,aborts=0;}c;
+@CHUNK_FLUSH@;
+    const int result=chunk_flush();
+    fixture_replay_result[0]=result;fixture_replay_result[1]=c.native;
+    fixture_replay_result[2]=c.fallback;fixture_replay_result[3]=c.aborts;
+    fixture_replay_result[4]=nctx;fixture_replay_result[5]=npk;
+    fixture_replay_result[6]=part.cull;
+#if RE4DC_SKY_ANY
+    fixture_replay_result[7]=re4dc_ps2_sky_header;
+#endif
+    return result;
+}
+
+extern "C" __attribute__((noinline)) void fixture_screen() {
+    load_screen(fixture_input.mvq,fixture_input.projection,fixture_input.viewport);
+}
+
+// Each offset is read from the actual SH4 C++ layout, not guessed by Python.
+extern "C" const std::uintptr_t fixture_replay_layout[]={
+    1,sizeof(MeshDraw),sizeof(ChunkPart),
+    reinterpret_cast<std::uintptr_t>(&fixture_replay_count),
+    reinterpret_cast<std::uintptr_t>(&fixture_replay_shape),
+    reinterpret_cast<std::uintptr_t>(fixture_replay_result),
+    offsetof(MeshDraw,mvq),offsetof(MeshDraw,used),offsetof(MeshDraw,input),
+    offsetof(MeshDraw,output),offsetof(MeshDraw,slots),offsetof(MeshDraw,sq),
+    offsetof(MeshDraw,bound),offsetof(MeshDraw,submitted),offsetof(MeshDraw,cache),
+    offsetof(MeshDraw,primed),offsetof(MeshDraw,palette),offsetof(MeshDraw,ps2),
+    offsetof(MeshDraw,vertex_alpha),offsetof(MeshDraw,c4444),offsetof(MeshDraw,alpha),
+    offsetof(MeshDraw,streaming),offsetof(MeshDraw,direct),offsetof(MeshDraw,lean_part),
+    offsetof(MeshDraw,batch)+offsetof(re4dc::room::CompactBatch,uv_bias),
+    offsetof(MeshDraw,batch)+offsetof(re4dc::room::CompactBatch,uv_scale),
+    offsetof(MeshDraw,proj_bx),offsetof(MeshDraw,proj_by),offsetof(MeshDraw,clip),
+    sizeof(re4dc::render::ClipParameters),offsetof(MeshDraw,part_index),
+    reinterpret_cast<std::uintptr_t>(&fixture_part),offsetof(Re4dcModelPart,cull),
+    offsetof(Re4dcModelPart,uv_offset),offsetof(MeshDraw,near),offsetof(MeshDraw,far)
+};
