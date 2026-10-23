@@ -1659,7 +1659,19 @@ static bool section_wall23(const Re4dcModelPart& p,Frame& f,const BlobHeader* bl
     // one-sided body/head parts only. Alpha, masks and attachments draw.
     if(p.blend || (p.material_flags&4U) || p.alpha_state!=255 || p.mask.pixels || p.mask_ref!=256 || (p.cull!=1&&p.cull!=2) ||
        reinterpret_cast<const void*>(blob)!=p.stream || f.mode!=kSkin || !owned_submission || f.position_stride!=8 || !f.palette ||
-       p.depth_mode!=0) {++st.material_draw;return false;}
+       p.depth_mode!=0) {
+        ++st.material_draw;
+#if defined(RE4DC_ACTOR_VISIBILITY23_WHY) && RE4DC_ACTOR_VISIBILITY23_WHY
+        // Diagnostic (lane actor-vis23): which cohort condition refuses each part.
+        static unsigned why23[13];
+        const bool c[13]={p.blend!=0,(p.material_flags&4U)!=0,p.alpha_state!=255,p.mask.pixels!=0,p.mask_ref!=256,
+            (p.cull!=1&&p.cull!=2),reinterpret_cast<const void*>(blob)!=p.stream,f.mode!=kSkin,!owned_submission,
+            f.position_stride!=8,!f.palette,p.depth_mode!=0,true};
+        for(unsigned i=0;i<13;i++)if(c[i])++why23[i];
+        if(!(why23[12]&4095))re4dc_log("AV23WHY n=%u blend=%u flags4=%u alpha=%u mask=%u mref=%u cull=%u stream=%u mode=%u owned=%u stride=%u palette=%u depth=%u fmode=%u cullv=%u\n",
+            why23[12],why23[0],why23[1],why23[2],why23[3],why23[4],why23[5],why23[6],why23[7],why23[8],why23[9],why23[10],why23[11],unsigned(f.mode),unsigned(p.cull));
+#endif
+        return false;}
     float view[12];const unsigned epoch=re4dc_actor_visibility23_view(view,p.model,p.info);
     if(!epoch){++st.identity_draw;return false;}
     actor_visibility23::Key key{f.positions,blob,records.r,epoch,f.position_count,p.stream_bytes,
