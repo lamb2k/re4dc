@@ -1796,7 +1796,7 @@ endif
 # plain-read fallback could run. kos-804b319-cdrom-dma-wait-timeout.patch bounds each wait (5 s + 8 ms a sector, the v2
 # command bound); a timeout closes the DMA state and returns ERR_TIMEOUT, and dvd_read_safe.cpp logs
 # "disc dma wait timeout" and falls back (stream: PIO/plain fill + session latch; sector read: latch + plain read).
-# DISC_DMA_DROP_TEST=1 (test discs only): the first blocking DMA after 1 s of uptime never gets its completion.
+# DISC_DMA_DROP_TEST=1 (test discs only): the first DMA read never gets its completion (as DreamShell).
 DISC_DMA_WAIT_TIMEOUT ?= 0
 DISC_DMA_DROP_TEST ?= 0
 ifneq ($(filter $(DISC_DMA_WAIT_TIMEOUT),0 1),$(DISC_DMA_WAIT_TIMEOUT))
