@@ -37,9 +37,9 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 |---|---|---|
 | 1 | SCENERY_REPLAY_LEAN | landed 28da0980 |
 | 2 | ACTOR_SETUP_LEAN + SCENERY_UV_SNAPSHOT | landed 75229c8f |
-| 3 | SCENERY_SELECT_LEAN2 | landed ea969bb2, measuring |
-| 4 | Bug audits: effect-pool full assumption, KOS dcache_wback_range, dam fault #52 | in flight |
-| 5 | World emit: data-cache order | queued |
+| 3 | SCENERY_SELECT_LEAN2 | landed ea969bb2; measurement paused. Builds 1 to 3 world knobs SELECT_ONLY, REPLAY_LEAN, SUBMIT_BATCH now ON in the recipe (e452afec): world 7.42 -> 6.88 ms MODELLED at r101 |
+| 4 | Bug audits: ESP_POOL_RECYCLE, R117_EFFECT_FAILURE_SAFE, KOS_CACHE_P2, R10C_SPAWN_LIVE_GUARD | landed 377569a3, default 0; gating with local Codex |
+| 5 | World emit: data-cache order | next |
 | 6 | Effects per-sprite setup | queued |
 | 7 | Character vertex and palette bytes | queued |
 | 8 | Animation sampling | queued |
