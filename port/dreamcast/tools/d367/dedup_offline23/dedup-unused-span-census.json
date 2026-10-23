@@ -1,0 +1,412 @@
+[
+  {
+    "room": "r100",
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r100-linear/ps2-dd3.re4mesh",
+    "sha256": "19548f9d6b473b65ff634caefa45cdc907b86ec5a6f767357062c91ff2bd607b",
+    "file_bytes": 1537920,
+    "header": [
+      3,
+      1537920,
+      3706631084,
+      179,
+      304,
+      1967,
+      107354,
+      153683,
+      1,
+      128,
+      12320,
+      23264,
+      78368,
+      1366624,
+      1520320,
+      2,
+      0,
+      4214614684,
+      860832851
+    ],
+    "lod_header": [
+      449,
+      511,
+      1520352,
+      1522784,
+      1531776,
+      0,
+      0,
+      0
+    ],
+    "vertices": 107354,
+    "all_meshlet_vertex_slots": 108869,
+    "plain_slots": 106960,
+    "indexed_slots": 1909,
+    "unique_referenced_global_vertices": 107354,
+    "unreferenced_global_vertices": 0,
+    "unreferenced_vertex_bytes": 0,
+    "unused_runs": 0,
+    "largest_unused_runs": [],
+    "section_gap_bytes": 137,
+    "section_gaps": [
+      [
+        112,
+        128
+      ],
+      [
+        12300,
+        12320
+      ],
+      [
+        78340,
+        78368
+      ],
+      [
+        1366616,
+        1366624
+      ],
+      [
+        1520307,
+        1520320
+      ],
+      [
+        1520324,
+        1520352
+      ],
+      [
+        1531764,
+        1531776
+      ],
+      [
+        1537908,
+        1537920
+      ]
+    ],
+    "sections": [
+      [
+        "headers",
+        0,
+        112
+      ],
+      [
+        "meshes",
+        128,
+        12172
+      ],
+      [
+        "parts",
+        12320,
+        10944
+      ],
+      [
+        "meshlets",
+        23264,
+        55076
+      ],
+      [
+        "vertices",
+        78368,
+        1288248
+      ],
+      [
+        "strips",
+        1366624,
+        153683
+      ],
+      [
+        "palette",
+        1520320,
+        4
+      ],
+      [
+        "partlod",
+        1520352,
+        2432
+      ],
+      [
+        "clusters",
+        1522784,
+        8980
+      ],
+      [
+        "levels",
+        1531776,
+        6132
+      ]
+    ],
+    "can_classify_all_sections": true
+  },
+  {
+    "room": "r101",
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r101-linear/ps2-dd3.re4mesh",
+    "sha256": "19c227e5215fcdf8935d24c091c16be4d7767a0b30beaeace2122b04d777bef5",
+    "file_bytes": 1283520,
+    "header": [
+      3,
+      1283520,
+      1869563390,
+      204,
+      342,
+      1830,
+      86592,
+      144779,
+      1,
+      128,
+      14016,
+      26336,
+      77600,
+      1116704,
+      1261504,
+      2,
+      0,
+      3076285401,
+      860832851
+    ],
+    "lod_header": [
+      535,
+      707,
+      1261536,
+      1264288,
+      1275008,
+      0,
+      0,
+      0
+    ],
+    "vertices": 86592,
+    "all_meshlet_vertex_slots": 93576,
+    "plain_slots": 84595,
+    "indexed_slots": 8981,
+    "unique_referenced_global_vertices": 86592,
+    "unreferenced_global_vertices": 0,
+    "unreferenced_vertex_bytes": 0,
+    "unused_runs": 0,
+    "largest_unused_runs": [],
+    "section_gap_bytes": 177,
+    "section_gaps": [
+      [
+        112,
+        128
+      ],
+      [
+        14000,
+        14016
+      ],
+      [
+        26328,
+        26336
+      ],
+      [
+        77576,
+        77600
+      ],
+      [
+        1261483,
+        1261504
+      ],
+      [
+        1261508,
+        1261536
+      ],
+      [
+        1264272,
+        1264288
+      ],
+      [
+        1274988,
+        1275008
+      ],
+      [
+        1283492,
+        1283520
+      ]
+    ],
+    "sections": [
+      [
+        "headers",
+        0,
+        112
+      ],
+      [
+        "meshes",
+        128,
+        13872
+      ],
+      [
+        "parts",
+        14016,
+        12312
+      ],
+      [
+        "meshlets",
+        26336,
+        51240
+      ],
+      [
+        "vertices",
+        77600,
+        1039104
+      ],
+      [
+        "strips",
+        1116704,
+        144779
+      ],
+      [
+        "palette",
+        1261504,
+        4
+      ],
+      [
+        "partlod",
+        1261536,
+        2736
+      ],
+      [
+        "clusters",
+        1264288,
+        10700
+      ],
+      [
+        "levels",
+        1275008,
+        8484
+      ]
+    ],
+    "can_classify_all_sections": true
+  },
+  {
+    "room": "r103",
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r103-linear/ps2-dd3.re4mesh",
+    "sha256": "7785ad48983c33f0da8195453be0ba923acc5a1061036fce2d0bc3d11e241365",
+    "file_bytes": 1074688,
+    "header": [
+      3,
+      1074688,
+      1739154248,
+      134,
+      267,
+      1448,
+      73605,
+      118843,
+      1,
+      128,
+      9248,
+      18880,
+      59424,
+      942688,
+      1061536,
+      2,
+      0,
+      2368803173,
+      860832851
+    ],
+    "lod_header": [
+      308,
+      398,
+      1061568,
+      1063712,
+      1069888,
+      0,
+      0,
+      0
+    ],
+    "vertices": 73605,
+    "all_meshlet_vertex_slots": 79169,
+    "plain_slots": 72231,
+    "indexed_slots": 6938,
+    "unique_referenced_global_vertices": 73605,
+    "unreferenced_global_vertices": 0,
+    "unreferenced_vertex_bytes": 0,
+    "unused_runs": 0,
+    "largest_unused_runs": [],
+    "section_gap_bytes": 129,
+    "section_gaps": [
+      [
+        112,
+        128
+      ],
+      [
+        9240,
+        9248
+      ],
+      [
+        18860,
+        18880
+      ],
+      [
+        942684,
+        942688
+      ],
+      [
+        1061531,
+        1061536
+      ],
+      [
+        1061540,
+        1061568
+      ],
+      [
+        1063704,
+        1063712
+      ],
+      [
+        1069872,
+        1069888
+      ],
+      [
+        1074664,
+        1074688
+      ]
+    ],
+    "sections": [
+      [
+        "headers",
+        0,
+        112
+      ],
+      [
+        "meshes",
+        128,
+        9112
+      ],
+      [
+        "parts",
+        9248,
+        9612
+      ],
+      [
+        "meshlets",
+        18880,
+        40544
+      ],
+      [
+        "vertices",
+        59424,
+        883260
+      ],
+      [
+        "strips",
+        942688,
+        118843
+      ],
+      [
+        "palette",
+        1061536,
+        4
+      ],
+      [
+        "partlod",
+        1061568,
+        2136
+      ],
+      [
+        "clusters",
+        1063712,
+        6160
+      ],
+      [
+        "levels",
+        1069888,
+        4776
+      ]
+    ],
+    "can_classify_all_sections": true
+  }
+]

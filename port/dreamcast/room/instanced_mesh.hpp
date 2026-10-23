@@ -178,6 +178,7 @@ public:
 #if defined(RE4DC_SCENERY_DEDUP) && RE4DC_SCENERY_DEDUP==3
         if(h_.reserved[3] && h_.reserved[3]!=kOfflineDedupMarker)return fail("offline marker");
         if(offline_dedup() && (!prelit || h_.version!=3))return fail("offline encoding");
+        if(offline_dedup() && h_.reserved[1] && h_.reserved[1]<h_.bytes)return fail("offline source extent");
 #endif
         if(!prelit)for(unsigned i=0;i<h_.vertex_count;++i)if((vertices()[i].color>>12)>=h_.palette_count)return fail("color");
         for(unsigned i=0;i<h_.part_count;++i)if(parts()[i].reserved)return fail("part state");
@@ -348,6 +349,8 @@ public:
         return l.strip_count&(offline_dedup() && !indexed(l)?127U:unsigned(kIndexedMeshlet-1U));
     }
     std::uint32_t source_crc()const{return offline_dedup()?h_.reserved[2]:h_.crc;}
+    // SDO3 word17 records original extent after exact strip-block sharing; zero is legacy byte-neutral.
+    std::uint32_t source_bytes()const{return offline_dedup() && h_.reserved[1]?h_.reserved[1]:h_.bytes;}
     // Authenticate every selected group source range before publishing an SDO3 SG borrow.
     bool offline_groups(const std::uint8_t* data,unsigned bytes,unsigned groups)const{
         if(!groups || groups>8U || bytes%(16U*groups) || bytes/(16U*groups)!=h_.meshlet_count)return false;

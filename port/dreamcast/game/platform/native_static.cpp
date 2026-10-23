@@ -4449,6 +4449,13 @@ bool ps2_movie_layout(unsigned room){
     if(room==0x11f)return f.mesh==797056 && f.side==9076 && ps2_movie.capacity==811264;
 #if RE4DC_MOVIE_WORLD_ARENA_S30
     // The current r100 SMX/TR4 package, with its LUT and gather storage.
+#if RE4DC_SCENERY_DEDUP==3
+    // Exact compact SDO3 lineage: fresh open authenticated its original extent/CRC.
+    // h_ remains retained while the movie borrows this captured physical block.
+    if(room==0x100 && ps2w.package.offline_dedup() && ps2w.package.source_bytes()==1537920 &&
+       ps2w.package.header().bytes==1488192)
+        return f.mesh==1488192 && f.side==19612 && ps2_movie.capacity==1512928;
+#endif
     if(room==0x100)return f.mesh==1537920 && f.side==19612 && ps2_movie.capacity==1562656;
 #endif
     return false;
@@ -5487,17 +5494,17 @@ bool ps2_open(){
     const file_t fm=fs_open(mpath,O_RDONLY);
 #endif
 #if RE4DC_SCENERY_DEDUP==3
-    // A byte-neutral alternate only: bind its source certificate to the standard file header.
-    unsigned dd_base_crc=0;bool dd_alternate=false;
+    // Bind alternate source CRC/extent to the freshly read standard file header.
+    unsigned dd_base_crc=0,dd_base_bytes=0;bool dd_alternate=false;
     if(fm!=FILEHND_INVALID){
         char dpath[48];snprintf(dpath,sizeof(dpath),"/cd/dc/native/r%03x/ps2-dd3.re4mesh",ps2w.room);
         const file_t fd=fs_open(dpath,O_RDONLY);
         if(fd!=FILEHND_INVALID){
             alignas(32) std::uint32_t head[24];
             const auto base_bytes=fs_total(fm);
-            if(fs_total(fd)==base_bytes && read_package(fm,reinterpret_cast<unsigned char*>(head),80U,0) &&
-               head[0]==0x4d493452U && head[1]==3U && head[2]==unsigned(base_bytes) && !head[18] && !head[19]){
-                dd_base_crc=head[3];dd_alternate=true;fs_close(fm);fm=fd;
+            if(fs_total(fd)>=112 && fs_total(fd)<=base_bytes && read_package(fm,reinterpret_cast<unsigned char*>(head),80U,0) &&
+               head[0]==0x4d493452U && head[1]==3U && head[2]==unsigned(base_bytes) && head[16]==re4dc::room::kColorArgb1555 && !head[17] && !head[18] && !head[19]){
+                dd_base_crc=head[3];dd_base_bytes=head[2];dd_alternate=true;fs_close(fm);fm=fd;
             }else{fs_close(fd);fs_seek(fm,0,SEEK_SET);}
         }
     }
@@ -5568,8 +5575,8 @@ bool ps2_open(){
     const char* why=ok?nullptr:s?"read":"missing or no heap";
 #if RE4DC_SCENERY_DEDUP==3
     if(ok && msize>=80U){
-        std::uint32_t marker=0,crc=0,source=0;std::memcpy(&marker,s+76,4);std::memcpy(&crc,s+12,4);std::memcpy(&source,s+72,4);
-        if(dd_alternate && (marker!=re4dc::room::kOfflineDedupMarker || source!=dd_base_crc)){why="offline source identity";ok=false;}
+        std::uint32_t marker=0,crc=0,source=0,extent=0;std::memcpy(&marker,s+76,4);std::memcpy(&crc,s+12,4);std::memcpy(&source,s+72,4);std::memcpy(&extent,s+68,4);
+        if(dd_alternate && (marker!=re4dc::room::kOfflineDedupMarker || source!=dd_base_crc || (extent?extent:msize)!=dd_base_bytes)){why="offline source identity";ok=false;}
         else if(!dd_alternate && marker){why="offline filename";ok=false;}
         else if(dd_alternate && ps2_crc32(s+80,msize-80U)!=crc){why="offline crc";ok=false;}
     }
@@ -5615,7 +5622,7 @@ bool ps2_open(){
 #if RE4DC_WORLD_RECT21 && RE4DC_PS2_WORLD_ROOMS
         re4dc::rect21::provenance::policy_source_crc(ps2w.room,s+mbytes,psize,
 #if RE4DC_SCENERY_DEDUP==3
-            ps2w.package.source_crc(),ps2w.package.header().bytes,
+            ps2w.package.source_crc(),ps2w.package.source_bytes(),
 #else
             ps2w.package.header().crc,ps2w.package.header().bytes,
 #endif
@@ -5708,7 +5715,7 @@ bool ps2_open(){
     // baked AREA/IDs/SG metadata which uses the provenance-mapped source CRC.
 #if RE4DC_SCENERY_DEDUP==3
     // SDO3 certifies this exact source package's bounds, placements, meshlets and strip geometry.
-    pvs::open(ps2w.room,ps2w.package.source_crc(),ps2w.package.header().bytes,h.crc);
+    pvs::open(ps2w.room,ps2w.package.source_crc(),ps2w.package.source_bytes(),h.crc);
 #else
     pvs::open(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes,h.crc);
 #endif
@@ -5721,7 +5728,7 @@ bool ps2_open(){
 #if RE4DC_PS2_INTERIOR_CULL
     // The cell's portals hold for the package it was built from only.
 #if RE4DC_SCENERY_DEDUP==3
-    pc::st.ok=ps2w.room==pc::kPcRoom && ps2w.package.source_crc()==pc::kPcMeshUse && policySourceCrc==pc::kPcSidecarUse && mh.bytes==pc::kPcMeshBytesUse;
+    pc::st.ok=ps2w.room==pc::kPcRoom && ps2w.package.source_crc()==pc::kPcMeshUse && policySourceCrc==pc::kPcSidecarUse && ps2w.package.source_bytes()==pc::kPcMeshBytesUse;
 #else
     pc::st.ok=ps2w.room==pc::kPcRoom && mh.crc==pc::kPcMeshUse && policySourceCrc==pc::kPcSidecarUse && mh.bytes==pc::kPcMeshBytesUse;
 #endif
