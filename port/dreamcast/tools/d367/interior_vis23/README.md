@@ -48,3 +48,28 @@ not a ranking of actual PVS yield. It does not classify every room as indoor
 or authorize generic outdoor PVS. Current area::kRooms covers r107; r109's
 intact/broken hut setup and r111's camera-dependent house toggle already use
 source dynamic bindings and must be checked before adding another table.
+
+
+Material qualification controls (host only):
+
+- `material_checks.py --evidence <private-dir>` extracts the actual `opaque_ready`
+  body, actual texture constants/format conversion, the immutable rect21 adapter,
+  real pinned KOS context/compiler/enum/bitfield definitions, and the actual
+  TEX_MIP_DADJ wrapper. It runs the existing state negatives plus the authenticated
+  r10d descriptor positive and every descriptor/key/alpha/top-drop/cache negative
+  across eight rect21/cache/shadow configurations. Eight full translation-unit
+  PVS0 preprocessing comparisons must equal the pre-patch source. The existing
+  synthetic host stubs remain useful state controls, not real header-bit proof.
+- `shadow_checks.py` extracts the actual cold material context and both final
+  direct hot/cold modifier blocks with the real KOS compiler/context and mip
+  wrapper. The 96 checks establish that each optional receiver mutation is
+  exactly command bit7; bit6 remains clear and every ISP/depth/blend/sampler word
+  stays equal. This qualifies cheap-shadow color scaling in the current source
+  path without disabling ordinary MV_SHADOWS. It does not claim base headers
+  equal final receiver headers or supply target/pixel acceptance.
+
+Both tools compile temporary fixtures in `/dev/shm`; no game assets are in Git.
+The shadow test leaves its generated source fixture in RAM for independent
+review. A future KOS, material-context, post-header, cache, or receiver-mode change
+requires repeating this qualification. Neither tool admits a visibility table or
+claims target cuts, milliseconds, pixel equality, or physical console behavior.
