@@ -65,7 +65,9 @@ extern "C" void re4dc_vmu_snapshot() {
     s.call=radio>=0&&SubScreenWk.type==SS_OPEN_TERM&&!SubScreenWk.cancel;
     unsigned weapon=WeaponId2WeaponNo(ItemMgr.m_wep_id);
     s.ammo_kind=re4vmu::Hidden;
-    if(re4vmu::ammo_visible(pG->pl_type,pPL->stat,weapon)){
+    // The portable VMU helper takes the original big-endian routine word.
+    // Normalize the native four-byte union under the same audit switch as the HUD.
+    if(re4vmu::ammo_visible(pG->pl_type,STAT_BE(pPL->stat),weapon)){
         // Match ItemMgr's explicit debug infinite mode without showing its sentinel 100.
         bool infinite=(s32)pG->Debug_flg[3]>=0&&(pG->Debug_flg[2]&0x00400000);
         s.ammo_kind=infinite?re4vmu::Infinite:re4vmu::Finite;
