@@ -1,0 +1,77 @@
+--- a/port/dreamcast/game/platform/native_static.cpp
++++ b/port/dreamcast/game/platform/native_static.cpp
+@@ -6283,7 +6283,7 @@
+ #endif
+     const auto& pk=ps2w.package;
+     for(unsigned i=0;i<ps2w.nplacements;++i){
+-#if RE4DC_PS2_PVS
++#if RE4DC_PS2_PVS && !RE4DC_PS2_PVS_SELECTED_TARGETS
+         const std::uint8_t* const pvs_cur=pvs::can_cut(i)?pvs::cur:nullptr;
+ #endif
+ #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+@@ -6317,7 +6317,7 @@
+ #endif
+ #endif
+         const auto& pl=ps2w.placements[i];const auto& mesh=pk.meshes()[pl.mesh];
+-#if RE4DC_PS2_PVS
++#if RE4DC_PS2_PVS && !RE4DC_PS2_PVS_SELECTED_TARGETS
+         if(pvs_cur && pvs::hidden(i))continue;
+ #endif
+ #if RE4DC_PS2_AREA_HIDE
+@@ -6381,6 +6381,12 @@
+         // A receipt must describe the immutable baked geometry actually selected.
+         // Capture this with mvq; fresh source state can change before queued replay.
+         const unsigned pvs_source_placement=(RE4DC_PS2_AFFINE==pl.affine)?i:~0U;
++#endif
++#if RE4DC_PS2_PVS && RE4DC_PS2_PVS_SELECTED_TARGETS
++        // Target certificates cover baked geometry. Query may retain a moved
++        // delta after a fresh-rest check, so qualify only the selected affine.
++        const std::uint8_t* const pvs_cur=pvs_source_placement==i && pvs::can_cut(i)?pvs::cur:nullptr;
++        if(pvs_cur && pvs::hidden(i))continue;
+ #endif
+ #if RE4DC_PS2_WORLD_LEAN
+ #if RE4DC_SKY_ANY
+--- a/port/dreamcast/game/t2exact.mk
++++ b/port/dreamcast/game/t2exact.mk
+@@ -48,6 +48,17 @@
+ # PS2_PVS_DEFAULT, 1), warp line "pvs 0|1", re4dc_ps2_pvs_set() for a benchmark sweep row.
+ PS2_PVS ?= 0
+ PS2_PVS_DEFAULT ?= 1
++# Qualify conditional target tables only after the actual dynamic affine choice.
++# Default 0 keeps the previously qualified static-target path unchanged.
++PS2_PVS_SELECTED_TARGETS ?= 0
++ifneq ($(PS2_PVS_SELECTED_TARGETS),0)
++ifneq ($(PS2_PVS_SELECTED_TARGETS),1)
++$(error PS2_PVS_SELECTED_TARGETS must be 0 or 1)
++endif
++ifneq ($(PS2_PVS),1)
++$(error PS2_PVS_SELECTED_TARGETS needs PS2_PVS=1)
++endif
++endif
+ ifneq ($(PS2_PVS),0)
+ ifneq ($(PS2_PVS),1)
+ $(error PS2_PVS must be 0 or 1)
+@@ -55,7 +66,7 @@
+ ifeq ($(PS2_WORLD_ROOMS),0)
+ $(error PS2_PVS needs PS2_WORLD_ROOMS=1 or 2)
+ endif
+-$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_PVS=1 -DRE4DC_PS2_PVS_DEFAULT=$(PS2_PVS_DEFAULT)
++$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_PVS=1 -DRE4DC_PS2_PVS_DEFAULT=$(PS2_PVS_DEFAULT) -DRE4DC_PS2_PVS_SELECTED_TARGETS=$(PS2_PVS_SELECTED_TARGETS)
+ $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_PVS=1
+ ifneq ($(strip $(PVS23_CERTIFICATES)),)
+ # Private generated descriptor; its absolute path and SHA belong in the QA manifest.
+--- a/port/dreamcast/tools/d367/interior_vis23/certify.py
++++ b/port/dreamcast/tools/d367/interior_vis23/certify.py
+@@ -157,6 +157,12 @@
+         lines.append('    {%d,%d,%d,%d,%d, {%s}},'%(pi,field,part,cl,ml,','.join(map(str,corners))))
+     lines+=['};','constexpr Certificate certificates[] = {',
+             '    {%dU,%dU,%dU,%dU,%dU,%dU,%dU,%dU,32U,room_panels, {%s}},'%(int(a.room,16),p.mesh_crc,p.mesh_bytes,p.sidecar_crc,len(body),zlib.crc32(body),max(prefix,0),len(panels),','.join(str(math.ceil(x))+'.0' for x in envelope)), '};']
++    if a.conditional_targets:
++        # This exact table/descriptor pair must never run the earlier target
++        # gate. Research status and all geometric/runtime gates still apply.
++        lines=['#if !defined(RE4DC_PS2_PVS_SELECTED_TARGETS) || RE4DC_PS2_PVS_SELECTED_TARGETS != 1',
++               '#error "conditional-target PVS descriptor requires PS2_PVS_SELECTED_TARGETS=1"',
++               '#endif']+lines
+     if panels:(root/'pvs23_certificates.inc').write_text('\n'.join(lines)+'\n')
+     summaries=[]
+     for cell in np.flatnonzero(C['has']):
