@@ -2306,7 +2306,8 @@ __attribute__((noinline)) void fill(const re4dc::vp::Vertex12* in,pvr_vertex_t* 
     const std::uint32_t* lut=k.lut;const std::uint32_t andm=k.and_mask,orb=k.or_bits;
     for(unsigned j=u;j<n;++j){
 #if RE4DC_SCENERY_DEDUP==3
-        const unsigned q=*s;s+=sizeof(re4dc::vp::Vertex12);
+        const unsigned q=in[j].x; // validated SDO3 refs are this repeat vertex's x word
+        (void)s;
         if(q<clo || q>chi)continue; // an unselected repeat never reads an unprimed first
 #else
         const unsigned q=*s++;
@@ -2454,17 +2455,35 @@ struct MeshDraw : Emitter {
         return gathered;
     }
 #if RE4DC_SCENERY_DEDUP
-    // SCENERY_DEDUP: the meshlet's repeat word (src offset | repeats << 24); 0 for other packages
+    // These getters follow corners(l), which refreshes the current meshlet's decoder
+    // even for plain/indexed geometry. Reuse that context rather than decode it twice.
+    // Modes 1/2 retain their external table word (src offset | repeats << 24).
     std::uint32_t dd_word(const re4dc::room::Meshlet& l)const{
 #if RE4DC_SCENERY_DEDUP==3
-        return package.repeat_count(l)<<24;
+        (void)l;
+        return (dd_count-dd_unique)<<24;
 #else
         return dedup::pkg==static_cast<const void*>(&package)?dedup::lets[&l-package.meshlets()]:0U;
 #endif
     }
+    bool dd_active(std::uint32_t dw)const{
+#if RE4DC_SCENERY_DEDUP==3
+        (void)dw;return dd_base!=nullptr;
+#else
+        return dw>>24;
+#endif
+    }
+    unsigned dd_unique_count(const re4dc::room::Meshlet& l,std::uint32_t dw)const{
+#if RE4DC_SCENERY_DEDUP==3
+        (void)l;(void)dw;return dd_unique;
+#else
+        return l.vertex_count-(dw>>24);
+#endif
+    }
     const std::uint8_t* dd_source(const re4dc::room::Meshlet& l,std::uint32_t dw)const{
 #if RE4DC_SCENERY_DEDUP==3
-        return reinterpret_cast<const std::uint8_t*>(package.vertices()+l.first_vertex+l.vertex_count-(dw>>24));
+        (void)l;(void)dw;
+        return reinterpret_cast<const std::uint8_t*>(dd_base+dd_unique);
 #else
         (void)l;return dedup::src+(dw&0xffffffU);
 #endif
@@ -2613,8 +2632,8 @@ struct MeshDraw : Emitter {
 #if RE4DC_MESH_VP_SCHED==1
                 vp::transform_sched<vp::kChecksAll>(in+lo,vn,cache+lo,outcodes+lo,k);
 #if RE4DC_SCENERY_DEDUP
-                if(const std::uint32_t dw=dd_word(l);dw>>24)
-                    dedup::fill(in,cache,outcodes,l.vertex_count-(dw>>24),l.vertex_count,dd_source(l,dw),k,lo,hi);
+                if(const std::uint32_t dw=dd_word(l);dd_active(dw))
+                    dedup::fill(in,cache,outcodes,dd_unique_count(l,dw),l.vertex_count,dd_source(l,dw),k,lo,hi);
 #endif
 #else
                 vp::transform<vp::kChecksAll>(in+lo,vn,cache+lo,outcodes+lo,k);
@@ -2633,8 +2652,8 @@ struct MeshDraw : Emitter {
         }
 #endif
 #if RE4DC_SCENERY_DEDUP==3
-        if(const std::uint32_t dw=dd_word(l);dw>>24 && checks!=vp::kChecksAll){
-            const unsigned u=l.vertex_count-(dw>>24);
+        if(const std::uint32_t dw=dd_word(l);dd_active(dw) && checks!=vp::kChecksAll){
+            const unsigned u=dd_unique_count(l,dw);
             if(checks==vp::kChecksNone)vp::transform<vp::kChecksNone>(in,u,cache,outcodes,k);
             else vp::transform<vp::kChecksScreen>(in,u,cache,outcodes,k);
             dedup::fill(in,cache,outcodes,u,l.vertex_count,dd_source(l,dw),k);
@@ -2643,8 +2662,8 @@ struct MeshDraw : Emitter {
         if(checks==vp::kChecksNone)vp::transform<vp::kChecksNone>(in,l.vertex_count,cache,outcodes,k);
         else if(checks==vp::kChecksScreen)vp::transform<vp::kChecksScreen>(in,l.vertex_count,cache,outcodes,k);
 #if RE4DC_MESH_VP_SCHED==1 && RE4DC_SCENERY_DEDUP
-        else if(const std::uint32_t dw=dd_word(l);dw>>24){
-            const unsigned u=l.vertex_count-(dw>>24);
+        else if(const std::uint32_t dw=dd_word(l);dd_active(dw)){
+            const unsigned u=dd_unique_count(l,dw);
             vp::transform_sched<vp::kChecksAll>(in,u,cache,outcodes,k);
             dedup::fill(in,cache,outcodes,u,l.vertex_count,dd_source(l,dw),k);
         }
@@ -3093,8 +3112,8 @@ struct MeshDraw : Emitter {
             if(ps2)re4dc_wm_corners(outcodes+pk.lo,vn,0x3fU);
 #endif
 #if RE4DC_SCENERY_DEDUP
-            if(const std::uint32_t dw=dd_word(l);dw>>24)
-                dedup::fill(in,cache,outcodes,l.vertex_count-(dw>>24),l.vertex_count,dd_source(l,dw),k,pk.lo,pk.hi);
+            if(const std::uint32_t dw=dd_word(l);dd_active(dw))
+                dedup::fill(in,cache,outcodes,dd_unique_count(l,dw),l.vertex_count,dd_source(l,dw),k,pk.lo,pk.hi);
 #endif
             const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*pk.let);
             unsigned prev=0;
@@ -3111,8 +3130,8 @@ struct MeshDraw : Emitter {
             return 1;
         }
 #if RE4DC_SCENERY_DEDUP
-        if(const std::uint32_t dw=dd_word(l);dw>>24){
-            const unsigned u=l.vertex_count-(dw>>24);
+        if(const std::uint32_t dw=dd_word(l);dd_active(dw)){
+            const unsigned u=dd_unique_count(l,dw);
             vp::transform_sched<vp::kChecksAll>(in,u,cache,outcodes,k);
             dedup::fill(in,cache,outcodes,u,l.vertex_count,dd_source(l,dw),k);
         }else
@@ -5474,9 +5493,10 @@ bool ps2_open(){
         char dpath[48];snprintf(dpath,sizeof(dpath),"/cd/dc/native/r%03x/ps2-dd3.re4mesh",ps2w.room);
         const file_t fd=fs_open(dpath,O_RDONLY);
         if(fd!=FILEHND_INVALID){
-            alignas(32) std::uint32_t head[24]={};
-            if(fs_total(fd)==fs_total(fm) && read_package(fm,reinterpret_cast<unsigned char*>(head),80U,0) &&
-               head[0]==0x4d493452U && head[1]==3U && head[2]==unsigned(fs_total(fm)) && !head[18] && !head[19]){
+            alignas(32) std::uint32_t head[24];
+            const auto base_bytes=fs_total(fm);
+            if(fs_total(fd)==base_bytes && read_package(fm,reinterpret_cast<unsigned char*>(head),80U,0) &&
+               head[0]==0x4d493452U && head[1]==3U && head[2]==unsigned(base_bytes) && !head[18] && !head[19]){
                 dd_base_crc=head[3];dd_alternate=true;fs_close(fm);fm=fd;
             }else{fs_close(fd);fs_seek(fm,0,SEEK_SET);}
         }

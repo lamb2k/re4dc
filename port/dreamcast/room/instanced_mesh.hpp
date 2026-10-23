@@ -484,6 +484,9 @@ private:
         return offset>=head && offset<=size && (offset&3U)==0 &&
                std::uint64_t(count)*stride<=std::uint64_t(size-offset);
     }
+#if defined(RE4DC_SCENERY_DEDUP) && RE4DC_SCENERY_DEDUP==3
+    __attribute__((noinline,optimize("Os")))
+#endif
     bool fail(const char* why){data_=nullptr;error_=why;return false;}
     MeshHeader h_{};
     MeshLodHeader l_{};

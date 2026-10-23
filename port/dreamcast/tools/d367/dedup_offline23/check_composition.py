@@ -40,6 +40,8 @@ def generate(tree):
            'ALPHA_LUT':'const std::uint32_t* ps2_vertex_alpha_lut(){',
            'DD_WORD':'std::uint32_t dd_word(','DD_SOURCE':'const std::uint8_t* dd_source('}
     for name,signature in names.items():values[name]=function(raw,signature)
+    for name,signature in (('DD_ACTIVE','bool dd_active('),('DD_UNIQUE','unsigned dd_unique_count(')):
+        values[name]=function(raw,signature) if signature in raw else ''
     values['LOAD_SCREEN']=function(raw,'void load_screen(')
     values['REPLAY_RESTART']='#if RE4DC_SCENERY_REPLAY_LEAN\n'+function(raw,'[[gnu::always_inline]] void chunk_restart()')+'\n#endif'
     fill=function(raw,'__attribute__((noinline)) void fill(')
@@ -76,7 +78,7 @@ if(geometry_low_at&&acquired==geometry_low_at)model_pending=kModelPacketBytes/32
     geometry=(tools/'world_replay_lean/fixture_geometry.cpp.in').read_text()
     old_case=function(geometry,'static void queue_case(')
     geometry=geometry.replace(old_case,(HERE/'fixture_composition.cpp.in').read_text())
-    geometry=geometry.replace('@BORROW@','@BORROW@\n@DD_WORD@\n@DD_SOURCE@')
+    geometry=geometry.replace('@BORROW@','@BORROW@\n@DD_WORD@\n@DD_SOURCE@\n@DD_ACTIVE@\n@DD_UNIQUE@')
     geometry=geometry.replace('@EMITTER@;','namespace dedup {\n@DEDUP_FILL@\n}\n@EMITTER@;')
     template='#define RE4DC_SCENERY_DEDUP 3\n'+template.replace('@QUEUE_FIXTURE@',geometry)
     for name,value in values.items():template=template.replace('@'+name+'@',value)
