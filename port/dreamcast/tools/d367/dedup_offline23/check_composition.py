@@ -119,7 +119,7 @@ def main():
         cmd=['g++','-std=c++20','-O2','-ffp-contract=off','-Wall','-Wextra',
              '-DRE4DC_SCENERY_SELECT_ONLY=1',f'-DRE4DC_SCENERY_SUBMIT_BATCH={batch}',
              f'-DRE4DC_SCENERY_REPLAY_LEAN={replay}',f'-DCOMPOSITION_DECODED={decoded}',
-             '-DCHECK_DIAGNOSTICS=0','-I'+str(output/'shim'),
+             '-DCHECK_DIAGNOSTICS=0','-DRE4DC_SCENERY_SELECT_LEAN2=0','-I'+str(output/'shim'),
              '-I'+str(tree/'port/dreamcast/game/platform/include'),str(source_path),'-o',str(binary)]
         run=subprocess.run(cmd,cwd=output,capture_output=True,env=env)
         (output/(label+'.compile.log')).write_bytes(run.stdout+run.stderr)
@@ -160,7 +160,7 @@ def main():
                 source_snapshot_manifest_sha256=digest(tree/'source-pins.json') if (tree/'source-pins.json').is_file() else None,
                 compiler=subprocess.check_output(['g++','--version'],text=True).splitlines()[0],
                 mutation_returncode=run.returncode,mutation_stdout_sha256=hashlib.sha256(run.stdout).hexdigest(),
-                knobs={'SCENERY_DEDUP':3,'SCENERY_REPLAY_LEAN':[0,1],'SCENERY_SUBMIT_BATCH':[0,1],'SCENERY_SELECT_ONLY':1},
+                knobs={'SCENERY_DEDUP':3,'SCENERY_REPLAY_LEAN':[0,1],'SCENERY_SUBMIT_BATCH':[0,1],'SCENERY_SELECT_ONLY':1,'SCENERY_SELECT_LEAN2':0},
                 cases=counts,source_sha256={str(f.relative_to(tree)):digest(f) for f in files},
                 extracted_sha256={n:hashlib.sha256(v.encode()).hexdigest() for n,v in values.items()},
                 original_dedup_fill_sha256=fill_sha,output_sha256=results,missing_cache_reset_mutation_detected=True,

@@ -91,6 +91,15 @@ and refuses each actual encoded alternate. These are host source semantics.
 
 The source-extraction control is extended only to extract the two new actual
 context getters (older snapshots without them remain supported). Final clean
-source96 comparisons, mutation sensitivity and OFF object identity are pending
-in the follow-up receipt. SH4 FTRV/FSRRA, optimized target clipping, timings,
+source96 comparisons across8 configurations pass at runtime-source commit
+`3467e45c6ea8c94a4a7cc26f4cc2623197330ee6`; the stale-cache mutation is detected.
+See `composition-controls-footprint-3467-host.json`. The reader check additionally
+replaces an earlier successful alternate bind with each malformed package,
+requires the publication to become invalid, then rebinds an ordinary base.
+
+The final frozen-source ON unit reproduces the562-byte reduction. OFF matches
+the actual standard542 original object byte-for-byte after debug stripping:
+`ee7f36bb77c14e5eec26f594f3f6136708a4ac3d0c15ea4a0e88d44f39e1b909`.
+See `footprint-unit-cf-3467.json` for exact commands, generated-header pins,
+source hashes, sizes and object hashes. SH4 FTRV/FSRRA, optimized target clipping, timings,
 full image identity and memory gates remain root's qualification work.
