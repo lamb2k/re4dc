@@ -774,7 +774,11 @@ private:
     // (optional) receives each strip's meshlet serial.
     template <class Emit>
     bool cluster(unsigned count, const u16* n, const u16* scid, const u16* cid, unsigned tuples, unsigned corners,
-                 bool keep_order, u16* strip_meshlet, Emit&& emit, const u16* key = nullptr) {
+                 bool keep_order, u16* strip_meshlet, Emit&& emit
+#if RE4DC_ACTOR_BACKFACE_CONE
+                 , const u16* key = nullptr
+#endif
+                 ) {
         u16* occ_start = arena.take<u16>(tuples + 1);  // tuple -> strips (distinct), CSR
         u16* occ = arena.take<u16>(corners);
         u16* stamp = arena.take<u16>(tuples);
@@ -815,7 +819,9 @@ private:
             ++serial;
             while (done[next]) ++next;
             unsigned pick = next;
+#if RE4DC_ACTOR_BACKFACE_CONE
             const unsigned seed_key = key ? key[pick] : 0U;  // ACTOR_BACKFACE_CONE: one key per meshlet
+#endif
             for (;;) {
                 done[pick] = 1; --remaining;
                 if (strip_meshlet) strip_meshlet[pick] = u16(produced);
@@ -840,7 +846,9 @@ private:
                 for (unsigned q = 0; q < ncand; ++q) {
                     const unsigned j = candidates[q];
                     if (done[j]) continue;
+#if RE4DC_ACTOR_BACKFACE_CONE
                     if (key && key[j] != seed_key) continue;
+#endif
                     if (nrec + distinct[j] - score[j] > kMaxVertices || nidx + n[j] > kMaxIndices) continue;
                     if (score[j] > best_score || (score[j] == best_score && j < best)) { best = j; best_score = score[j]; }
                 }
@@ -848,7 +856,11 @@ private:
                     // Nothing adjacent fits (always, in keep_order mode): the
                     // first unused strip in order, if it fits.
                     while (next < count && done[next]) ++next;
+#if RE4DC_ACTOR_BACKFACE_CONE
                     if (next < count && (!key || key[next] == seed_key)) {
+#else
+                    if (next < count) {
+#endif
                         unsigned fresh = 0;
                         for (unsigned k = 0; k < n[next]; ++k) {
                             const unsigned tu = cid[scid[next] + k];
@@ -4747,9 +4759,12 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
         const double t0 = test_now_us();
 #endif
         Converter c(p, sort, out, p.stream_bytes, Arena{work, room}, false);
+#if !RE4DC_ACTOR_BACKFACE_CONE
+        const bool ok = c.run();
+        Converter* const cp = &c;
+#else
         bool ok = c.run();
         Converter* cp = &c;
-#if RE4DC_ACTOR_BACKFACE_CONE
         // ACTOR_BACKFACE_CONE: a split blob that no longer fits in place is built again unsplit (no cones).
         Converter c2(p, sort, out, p.stream_bytes, Arena{work, room}, false);
         if (!ok && c.split()) { c2.abc_no_split = true; ok = c2.run(); cp = &c2; ++abc_unsplit; }
