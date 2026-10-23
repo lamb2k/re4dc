@@ -30,7 +30,8 @@ The plan contains exact `t11-fix.py --set` argument arrays for both arm labels a
 separate `PKG_K` paths for t8-pkgtree. Apply the same four alternates to both arms;
 standard ps2-world filenames remain in both data trees. This keeps alternate data
 and disc layout equal while knob0 ignores the alternate filenames. Keep the exact
-recipe's RC19D and other exported dataset paths when executing the printed arrays.
+recipe's literal exported dataset paths are included in each stage environment;
+nonliteral shell expansions are refused rather than evaluated.
 No DATA registration, production recipe, watcher, release or SD change is needed.
 
 The gate plan reuses existing tools directly:

@@ -9,6 +9,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import shlex
 import subprocess
 import struct
 
@@ -69,7 +70,12 @@ def main():
     if not match:raise ValueError('No exact DATA assignment')
     data=match[1];chapter=re.search(r'^CH2="([^"]*)"$',text,re.M)
     if not chapter:raise ValueError('No exact CH2 assignment')
-    ch2=chapter[1];alternates=[];sets=[];base_pins={}
+    ch2=chapter[1];exports={}
+    for name,value in re.findall(r'^export ([A-Z][A-Z0-9_]*)=(.+)$',text,re.M):
+        words=shlex.split(value,comments=True)
+        if len(words)!=1 or any(c in words[0] for c in '$`'):raise ValueError('Recipe export requires explicit handling: '+name)
+        exports[name]=words[0]
+    alternates=[];sets=[];base_pins={}
     for room,ext,size,digest in FILES:
         p=a.alternates/(room+'-linear')/('ps2-dd3.'+ext);actual=pin(p)
         if actual['bytes']!=size or actual['sha256']!=digest:raise ValueError('Frozen alternate pin mismatch: '+str(p))
@@ -94,7 +100,7 @@ def main():
         fixture=a.work/'fix'/('pkg-'+label+'.json')
         argv=['python3',tools['test11/t11-fix.py'],label,str(fixture),'--base','payload','--data',data,*sets]
         arms[name]=dict(label=label,expected_knob=f'SCENERY_DEDUP={mode}',program=program(out,source,mode,label),
-                        stage=dict(environment={'RE4DC_RESIDENT_STRICT':'1'},argv=argv),fixture=str(fixture),
+                        stage=dict(environment={**exports,'RE4DC_RESIDENT_STRICT':'1'},argv=argv),fixture=str(fixture),
                         pkgtree=dict(environment={'PKG_K':str(a.work/name)},argv=['python3',tools['test8/t8-pkgtree.py'],label,str(fixture)]))
     fragment=dict(status='PENDING: supply --s30-fixture to pin the existing bounded fragment')
     if a.s30_fixture:
@@ -121,18 +127,18 @@ def main():
         prefix='dd23'+source[:8]+name+'q';label=prefix+'rW';work=a.work/'qa'/name
         elf='/root/probe/lanes/route/out-'+label+'/re4dc-game.elf';fixture=work/'fix'/('pkg-'+label+'.json')
         qa_arms[name]=dict(status='PENDING: program/data/disc pins and safety gates',label=label,
-            build=dict(environment={'T':str(a.tree),'K':str(work/'logs'),'LP':prefix,'CH2':ch2,
+            build=dict(environment={**exports,'T':str(a.tree),'K':str(work/'logs'),'LP':prefix,'CH2':ch2,
                                      'XON':f'SCENERY_DEDUP={mode} QA_MENU=1 WARP_AFTER_RESET=1 GAME_TICK_LOG=60 PHASE_METER=1 DISC_READ_METER=1 QA_TEST=23 QA_SRC='+source[:8]},
                        argv=['bash',tools['ch2/ch2-build.sh'],'rW']),
-            stage=dict(environment={'RE4DC_RESIDENT_STRICT':'1'},argv=['python3',tools['test11/t11-fix.py'],label,str(fixture),'--base','payload','--data',data,*sets]),
+            stage=dict(environment={**exports,'RE4DC_RESIDENT_STRICT':'1'},argv=['python3',tools['test11/t11-fix.py'],label,str(fixture),'--base','payload','--data',data,*sets]),
             pkgtree=dict(environment={'PKG_K':str(work)},argv=['python3',tools['test8/t8-pkgtree.py'],label,str(fixture)]),
             presets=[['python3',tools['stage_route.py'],'--stage','1','--json',str(work/'sr1.json')],
                      ['python3',tools['qa20/mkqa.py'],str(work/'presets'),'--sr1',str(work/'sr1.json')]],
             preset_copy=dict(source=str(work/'presets'),destination=str(work/'pkgtree/dc/qa')),
             master=dict(cwd=str(d),environment={'LAYOUT':'standard'},argv=['bash',tools['mkgdi.sh'],elf,str(work/'pkgtree'),str(work/'gdemu')]),
             lint=[['python3',tools['disc_lint.py'],'--profile',profile,str(work/'gdemu/disc.gdi')] for profile in ('loader','standard')])
-    plan=dict(kind='PREFLIGHT ONLY; nothing built, staged or run',source=source,tree=str(a.tree),recipe=pin(recipe),
-              data_sets=data,alternates=alternates,baseline_packages=base_pins,arms=arms,tools=tools,gates=gates,
+    plan=dict(kind='PREFLIGHT ONLY; this tool executes no build, staging or guest',source=source,tree=str(a.tree),recipe=pin(recipe),
+              data_sets=data,recipe_exports=exports,alternates=alternates,baseline_packages=base_pins,arms=arms,tools=tools,gates=gates,
               execution=dict(owner='main lane',trace_lock=tools['trace_lock.sh'],max_lane_flycasts=3,normal_run_seconds=60,layout='standard',global_input=False),
               qa=dict(status='PENDING: separate QA_MENU=1 Off/On programs and their pins required',arms=qa_arms,
                       steps=['Build each arm through ch2-build.sh with unique LP and exact recipe; SCENERY_DEDUP0/3 plus QA_MENU1, WARP_AFTER_RESET1 and matching QA_SRC.',
