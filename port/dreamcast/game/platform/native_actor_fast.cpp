@@ -526,7 +526,7 @@ unsigned stripify(const u8* tri, unsigned count, u8* out, unsigned cap, u8* used
 //  4. Whole-part opaque windows: LOD levels (see the blob format).
 // The triangle set and each triangle's winding are the GX list's.
 #if RE4DC_ACTOR_BACKFACE_CONE
-// ACTOR_BACKFACE_CONE counters (logged as "ABFC" every 150 frames); per class 0 other, 1 Leon, 2 Ganado, 3 El Gigante,
+// ACTOR_BACKFACE_CONE counters (logged as "ABFC" every 300 vblanks); per class 0 other, 1 Leon, 2 Ganado, 3 El Gigante,
 // 4 Ashley: meshlets tested / rejected, vertices / triangles skipped, vertices of the tested parts' meshlets.
 unsigned abc_splits = 0, abc_built = 0, abc_noroom = 0, abc_cones = 0, abc_nocone = 0, abc_bad = 0, abc_log = 0;
 unsigned abc_tests[5], abc_rej[5], abc_vskip[5], abc_tskip[5], abc_verts[5];
@@ -5252,14 +5252,14 @@ void re4dc_rigid_census_note(const void* model, unsigned ml, unsigned nv, unsign
 }
 #endif
 #if RE4DC_ACTOR_BACKFACE_CONE
-extern "C" unsigned re4dc_ui_frame();
+extern "C" unsigned re4dc_vi_retrace_count(void);
 namespace {
-// The census lines, every 150 UI frames (called per part draw).
+// The census lines, every 300 vertical blanks (called per part draw; logic ticks stop under the warp's freeze).
 void abc_census() {
-    const unsigned frame_serial = re4dc_ui_frame();
-    if (frame_serial - abc_log >= 150U) {
+    const unsigned frame_serial = re4dc_vi_retrace_count();
+    if (frame_serial - abc_log >= 300U) {
         // per class (other, Leon, Ganado, El Gigante, Ashley): meshlets tested/rejected, vertices skipped/of tested parts,
-        // triangles skipped; totals over the 150 frames
+        // triangles skipped; totals since the last line
         abc_log = frame_serial;
         re4dc_log("ABFC frame=%u splits=%u built=%u noroom=%u cones=%u nocone=%u bad=%u\n", frame_serial, abc_splits, abc_built,
                   abc_noroom, abc_cones, abc_nocone, abc_bad);
