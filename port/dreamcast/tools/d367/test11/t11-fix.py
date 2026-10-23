@@ -907,6 +907,13 @@ if os.path.isdir(MIP22BD):
 # (13 added: r000 HUD digits 2-9 + muzzle flash 148d2ff5 / 3a866b91; r100 983d1064 96f42df9; r101 cf2208cd), sha256 b81231ff.
 RES22CD = os.environ.get('RES22CD', '/root/re4data/private/res22c-20261022')
 DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
+# Lane fix-r10d-speed23 (10-23, #55 r10d merchant cave, approximation): r10dlod23 = r10d's PS2 world mesh rebuilt with
+# offline LOD for the clusters that had none and 3 m clusters (ps2_room_r4im.py, ch21l inputs and light, + --lod-cluster
+# 3000 --lod-min-gain 0.8 --lod-uv-guard 0.05 --lod-floor 60). Same parts and placements as ch21l (ps2-world.r4pw
+# byte-identical), so mip22b's rekeyed r4pw still applies. After mip22b. Hut view MODELLED: TA params 1.69 -> 1.06 MB,
+# triangles 37.5k -> 21.7k. Private store copy: re4-assets-private/r10dlod23-20261023 (RECIPE.txt, SHA256SUMS).
+R10DLOD23D = os.environ.get('R10DLOD23D', '/root/re4data/private/r10dlod23-20261023')
+DATA['r10dlod23'] = {'dc/native/r10d/ps2-world.re4mesh': R10DLOD23D + '/dc/native/r10d/ps2-world.re4mesh'}
 
 
 if __name__ == '__main__':
