@@ -139,6 +139,13 @@ int main() {
   for(unsigned i=0;i<ConsumerCount;++i) { checked(Consumer(i)); }
   end(1);
   assert(logs.find("unique=2 overflow=0 errors=0")!=std::string::npos);
+  logs.clear();begin(0x111,2,Required);
+  picture[3]=0x3000/8;gcasset_packet_emitted(picture,sizeof picture,2,Texture);end(1);
+  assert(logs.find("unmapped-texture-address")!=std::string::npos);
+  logs.clear();begin(0x111,3,Required);
+  entries[1].package.address=0x1000;picture[3]=0x1000/8;
+  gcasset_packet_emitted(picture,sizeof picture,2,Texture);end(1);
+  assert(logs.find("ambiguous-texture-address")!=std::string::npos);
 }
 '''
         with tempfile.TemporaryDirectory(prefix='gc-port23-runtime-', dir='/dev/shm') as temporary:

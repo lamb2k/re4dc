@@ -10,6 +10,11 @@ Source-extracted controls exercise actual MeshDraw end/direct/batched methods,
 header-only versus split vertex packets, effects, and loaded-but-unused keys.
 Source geometry, weapon, font, audio/movie and room-close hooks remain incomplete.
 No complete consumer wired mask is declared by this checkpoint.
+The diagnostic currently requires `PVR_STREAM=1`; an unqualified buffered
+nonstream build fails configuration instead of counting a reservation as use.
+An accepted textured packet without exactly one cache Entry fails explicitly.
+Font/movie/native generated atlases need their own complete payload hooks before
+they can qualify such a non-Entry texture; an API/address is not origin proof.
 
 `run_host_tests.sh` builds only small host fixtures in `/dev/shm`, deletes its
 own outputs and prints the core's text/data/BSS. `GC_ASSET_GATE=0` defaults to

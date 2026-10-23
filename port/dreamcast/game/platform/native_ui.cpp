@@ -414,7 +414,8 @@ struct GcAssetPacketState { unsigned address=0, textured=0, first=0; };
 GcAssetPacketState gcasset_packet_states[5];
 void gcasset_packet_reset(){for(auto& state:gcasset_packet_states)state={};}
 void gcasset_packet_emitted(const void* packet,unsigned bytes,unsigned list,re4dc_gcasset::Consumer consumer) {
-    if(list>=5 || !packet || bytes%32)return;
+    if(!bytes)return;
+    if(list>=5 || !packet || bytes%32){re4dc_gcasset::unresolved(consumer,"packet-shape");return;}
     auto& state=gcasset_packet_states[list];
     const auto* words=static_cast<const std::uint32_t*>(packet);
     for(unsigned offset=0;offset<bytes;offset+=32) {
@@ -422,12 +423,14 @@ void gcasset_packet_emitted(const void* packet,unsigned bytes,unsigned list,re4d
         if(type==4 || type==5) { state={(q[3]&0x001fffffU)<<3,(q[0]&8)!=0,1};continue; }
         if(type!=7 || !state.first || !state.textured)continue;
         state.first=0;
+        unsigned matches=0;
         for(auto& e:entries)if(e.valid && e.package.upload_complete()) {
             const unsigned n=e.package.header().texture_count;
             for(unsigned t=0;t<n;++t)if((unsigned(reinterpret_cast<std::uintptr_t>(e.package.pvr_texture(t)))&0x007fffffU)==state.address) {
-                gcasset_texture_emitted(&e,consumer);break;
+                gcasset_texture_emitted(&e,consumer);++matches;break;
             }
         }
+        if(matches!=1)re4dc_gcasset::unresolved(consumer,matches?"ambiguous-texture-address":"unmapped-texture-address");
     }
 }
 #define RE4DC_GCA_TEXTURE(...) gcasset_texture_emitted(__VA_ARGS__)

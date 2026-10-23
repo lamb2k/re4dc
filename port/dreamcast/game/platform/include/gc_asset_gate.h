@@ -43,6 +43,7 @@ void pump();
 // For a compiled-out consumer, the integrator explicitly checks its disabled
 // branch. Merely installing a catalog or beginning a room does not check hooks.
 void checked(Consumer);
+void unresolved(Consumer, const char* reason);
 void end(unsigned frame);
 #if defined(RE4DC_GC_ASSET_TEST)
 void test_queue_lock(bool held);

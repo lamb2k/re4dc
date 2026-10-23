@@ -132,6 +132,10 @@ void checked(Consumer consumer) {
     if(unsigned(consumer)>=ConsumerCount) { ++errors;return; }
     checked_mask |= 1U << consumer;
 }
+void unresolved(Consumer consumer, const char* reason) {
+    if(active)++errors;
+    re4dc_log("GC-ASSET-ERROR v=1 why=%s consumer=%u\n",reason?reason:"missing-identity",unsigned(consumer));
+}
 void emitted(Consumer consumer, const char* kind, const char* id, const Digest& digest) {
     if(!active) { re4dc_log("GC-ASSET-ERROR v=1 why=no-room\n");return; }
     if(unsigned(consumer)>=ConsumerCount || !token(kind,KindBytes) || !token(id,IdBytes)) { ++errors;return; }
