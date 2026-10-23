@@ -3881,6 +3881,22 @@ $(OBJDIR)/mod/st1_2/src/st1/r10c.o: GAME_CPPFLAGS += -DRE4DC_ISSUE52_ACTOR_DIAG=
 $(OBJDIR)/src/game/em_set.o $(OBJDIR)/src/game/em.o $(OBJDIR)/src/game/read.o: GAME_CPPFLAGS += -DRE4DC_ISSUE52_ACTOR_DIAG=1
 $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_ISSUE52_ACTOR_DIAG=1
 endif
+# EM35_DIAG=1 (lane fix-mendez-freeze23 2026-10-23; diagnostic for test / QA discs, default 0 = image unchanged):
+# Mendez (em35) routine, motion and timers copied after each move() (reads only): "EM35" log lines on every routine
+# step change, "EM35 STUCK" when one step holds a still motion frame 3 s (or one routine 30 s) with Leon alive,
+# "EM35 NOMOVE" when a live half is not moved for 60 game frames, and two rows left of the speed counter
+# (platform/include/em35_diag.h) so a console freeze can be photographed. Needs ROUTE_CH23=1 (em35 overlay).
+EM35_DIAG ?= 0
+ifeq ($(filter $(EM35_DIAG),0 1),)
+$(error EM35_DIAG must be 0 or 1)
+endif
+ifeq ($(EM35_DIAG),1)
+ifneq ($(ROUTE_CH23),1)
+$(error EM35_DIAG needs ROUTE_CH23=1)
+endif
+$(OBJDIR)/mod/em35/src/em35/em35.o $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_EM35_DIAG=1
+$(OBJDIR)/ui_bridge.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_EM35_DIAG=1
+endif
 # MOTION_MISS_LOG=1 (castle lane 2026-10-15; diagnostic, log only, default 0): "motion miss" lines (clip, wait, slab).
 MOTION_MISS_LOG ?= 0
 ifeq ($(filter $(MOTION_MISS_LOG),0 1),)
