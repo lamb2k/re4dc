@@ -44,6 +44,11 @@ inline unsigned strip(const pvr_vertex_t* __restrict cache, const std::uint8_t* 
             ax = bx; ay = by; bx = cx; by = cy;
         }
     }
+#if defined(RE4DC_BACKFACE_KEEP_ALL) && RE4DC_BACKFACE_KEEP_ALL
+    // BACKFACE_KEEP_ALL (test only, backface.mk): the facing test runs, but every triangle is kept, so the strip goes out
+    // whole through this C walk. Isolates the cost of the walk change from the drop.
+    for (unsigned i = 0; i < t; ++i) { asm volatile("" : : "r"(keep[i])); keep[i] = 1; }
+#endif
     // Back runs that stay: inner runs of 1 or 2 triangles.
     for (unsigned i = 0; i < t;) {
         if (keep[i] == 1) { ++i; continue; }
