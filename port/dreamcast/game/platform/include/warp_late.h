@@ -22,6 +22,10 @@
 #define RE4DC_LATE_NODRAW 0x04u
 #define RE4DC_LATE_ACT_CAP 0x08u
 #define RE4DC_LATE_LEON_SOURCE 0x10u
+// Private scratch QA only: exactly one bit; requires reviewed final-image admission.
+#define RE4DC_LATE_SCRATCH_A 0x80u
+#define RE4DC_LATE_SCRATCH_B 0x100u
+#define RE4DC_LATE_SCRATCH_C 0x200u
 
 #if defined(RE4DC_DBG_WARP) && RE4DC_DBG_WARP
 #ifdef __cplusplus

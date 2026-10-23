@@ -8,6 +8,26 @@
 namespace re4dc { namespace world_scratch {
 constexpr unsigned kVertexBytes=8192,kOutcodeBytes=256,kReservedBytes=8448,kMaxWindow=600;
 enum Arm : unsigned { A=0,B=1,C=2 };
+// Single use per boot, including rejected/OFF fixtures. No reopening after cancel.
+struct LateChoice {
+    bool consumed=false;
+    int take(bool open,unsigned mask){
+        if(!open || consumed)return -1;
+        consumed=true;
+        return mask==0x80U?int(A):mask==0x100U?int(B):mask==0x200U?int(C):mask==0U?-2:-3;
+    }
+};
+// Fixed 25-word little-endian regular-RAM ABI. seq odd while publishing.
+// phase:0 dormant/OFF,1 selected,2 active,3 ended,4 refused/fault.
+struct Snapshot {
+    unsigned seq,version,phase,window_serial,mask,room,selected,requested,actual;
+    unsigned remaining,frames,borrows,entries,exits,faults,last_fault,epoch;
+    unsigned ccr,completed,restored,enter_us_lo,enter_us_hi,exit_us_lo,exit_us_hi,iterations;
+};
+static_assert(sizeof(Snapshot)==100,"scratch snapshot ABI");
+inline void snapshot_write_begin(volatile Snapshot& s){++s.seq;asm volatile("" ::: "memory");}
+inline void snapshot_write_end(volatile Snapshot& s){asm volatile("" ::: "memory");++s.seq;}
+
 enum Fault : unsigned { None,NotAdmitted,BadRequest,WrongOwner,BadMode,BadLayout,LiveConsumer,StaleRoom,BadFrame };
 // Hardware operations are injected into the exact same engine in the host tests.
 struct Ops {
@@ -49,6 +69,7 @@ public:
     Stats stats() const { return st; }
 };
 }}
+extern "C" volatile re4dc::world_scratch::Snapshot re4dc_world_scratch_snapshot;
 extern "C" int re4dc_world_scratch_admit(unsigned receipt_version);
 extern "C" int re4dc_world_scratch_request(unsigned arm,unsigned iterations,unsigned room);
 extern "C" void re4dc_world_scratch_begin(unsigned room);

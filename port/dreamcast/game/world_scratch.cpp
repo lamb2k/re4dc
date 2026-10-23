@@ -88,30 +88,139 @@ void Engine::release(){
 }
 }}
 #ifndef RE4DC_WORLD_SCRATCH_HOST
+#if !defined(RE4DC_WORLD_SCRATCH_RUNTIME_TEST)
 #include <kos/thread.h>
 #include <kos/irq.h>
 #include <dc/cache.h>
 #include <arch/timer.h>
+#else
+#define __ocram
+extern "C" std::uintptr_t ws_test_owner();
+extern "C" unsigned ws_test_ccr();
+extern "C" void ws_test_toggle(bool);
+extern "C" std::uint64_t ws_test_clock();
+#endif
+#include "platform/include/warp_late.h"
+extern "C" void re4dc_log(const char*,...);
 extern "C" void re4dc_world_scratch_prime_reset();
 namespace {
 // Occupy the complete KOS section. Another linked OCRAM allocation overflows
 // its 8192-byte linker bound instead of silently sharing this array.
 __ocram alignas(32) unsigned char projected_records[re4dc::world_scratch::kVertexBytes];
+#if !defined(RE4DC_WORLD_SCRATCH_RUNTIME_TEST)
 std::uintptr_t owner(){return irq_inside_int()?0:reinterpret_cast<std::uintptr_t>(thd_get_current());}
 unsigned ccr(){return *reinterpret_cast<volatile unsigned*>(0xff00001cU);}
 void toggle(bool on){dcache_toggle_ocram(on);}
 std::uint64_t clock_us(){return timer_us_gettime64();}
+#else
+std::uintptr_t owner(){return ws_test_owner();}
+unsigned ccr(){return ws_test_ccr();}
+void toggle(bool on){ws_test_toggle(on);}
+std::uint64_t clock_us(){return ws_test_clock();}
+#endif
 re4dc::world_scratch::Engine engine({owner,ccr,toggle,clock_us,re4dc_world_scratch_prime_reset,projected_records,
-    reinterpret_cast<std::uintptr_t>(projected_records)==0x7c001000U && sizeof(projected_records)==8192});
+#if !defined(RE4DC_WORLD_SCRATCH_RUNTIME_TEST)
+    reinterpret_cast<std::uintptr_t>(projected_records)==0x7c001000U && sizeof(projected_records)==8192
+#else
+    true
+#endif
+});
 }
-extern "C" int re4dc_world_scratch_admit(unsigned v){return engine.admit(v);}
-extern "C" int re4dc_world_scratch_request(unsigned a,unsigned n,unsigned r){return engine.request(a,n,r);}
-extern "C" void re4dc_world_scratch_begin(unsigned r){engine.begin(r);}
-extern "C" unsigned re4dc_world_scratch_frame_token(){return engine.token();}
-extern "C" void re4dc_world_scratch_end(unsigned token,int aborted){if(token)engine.end(token,aborted!=0);}
-extern "C" void re4dc_world_scratch_cancel(){engine.cancel();}
-extern "C" int re4dc_world_scratch_acquire(void* ram,void** out){return engine.acquire(ram,*out);}
-extern "C" void re4dc_world_scratch_release(){engine.release();}
+extern "C" { volatile re4dc::world_scratch::Snapshot re4dc_world_scratch_snapshot{}; }
+namespace {
+using namespace re4dc::world_scratch;
+LateChoice late_choice;
+std::uintptr_t snapshot_owner=0;
+bool writer_active=false,writer_cancelled=false;
+volatile unsigned deferred_cancel=0;
+// Only the renderer owner writes the sequence/engine. Foreign, IRQ or nested
+// callers can request cancellation but cannot turn an odd writer even.
+bool begin_write(bool claim=false){
+    const auto current=owner();
+    if(claim && !snapshot_owner && current)snapshot_owner=current;
+    if(!current || current!=snapshot_owner || writer_active){deferred_cancel=1;return false;}
+    writer_active=true;snapshot_write_begin(re4dc_world_scratch_snapshot);
+    writer_cancelled=false;
+    if(deferred_cancel){deferred_cancel=0;engine.cancel();writer_cancelled=true;}
+    return true;
+}
+void end_write(){snapshot_write_end(re4dc_world_scratch_snapshot);writer_active=false;}
+
+unsigned selected_mask=0,selected_room=0,selected_arm=0;
+bool selected=false,started=false,terminal_logged=false,refused=false;
+constexpr unsigned iterations=600;
+void publish(){
+    const auto st=engine.stats();const unsigned mode=ccr();
+    Snapshot value{};
+    value.version=1;value.window_serial=selected?1U:0U;value.mask=selected_mask;
+    value.room=selected_room;value.selected=selected_arm;value.requested=st.requested;
+    value.actual=st.actual;value.remaining=st.remaining;value.frames=st.frames;
+    value.borrows=st.borrows;value.entries=st.entries;value.exits=st.exits;
+    value.faults=st.faults+(refused?1U:0U);value.last_fault=refused?BadRequest:st.last_fault;
+    value.epoch=st.epoch;value.ccr=mode;value.iterations=iterations;
+    value.completed=started && !st.remaining && st.frames==iterations && !value.faults;
+    value.restored=(mode&kStable)==kNormal && st.actual==A && st.entries==st.exits;
+    value.phase=value.faults?4U:st.remaining?2U:started?3U:selected?1U:0U;
+    value.enter_us_lo=unsigned(st.enter_us);value.enter_us_hi=unsigned(st.enter_us>>32);
+    value.exit_us_lo=unsigned(st.exit_us);value.exit_us_hi=unsigned(st.exit_us>>32);
+    auto& dst=re4dc_world_scratch_snapshot;
+    // Caller marked odd BEFORE any engine/CCR mutation.
+    dst.version=value.version;
+    dst.phase=value.phase;
+    dst.window_serial=value.window_serial;
+    dst.mask=value.mask;
+    dst.room=value.room;
+    dst.selected=value.selected;
+    dst.requested=value.requested;
+    dst.actual=value.actual;
+    dst.remaining=value.remaining;
+    dst.frames=value.frames;
+    dst.borrows=value.borrows;
+    dst.entries=value.entries;
+    dst.exits=value.exits;
+    dst.faults=value.faults;
+    dst.last_fault=value.last_fault;
+    dst.epoch=value.epoch;
+    dst.ccr=value.ccr;
+    dst.completed=value.completed;
+    dst.restored=value.restored;
+    dst.enter_us_lo=value.enter_us_lo;
+    dst.enter_us_hi=value.enter_us_hi;
+    dst.exit_us_lo=value.exit_us_lo;
+    dst.exit_us_hi=value.exit_us_hi;
+    dst.iterations=value.iterations;
+    end_write();
+    if(started && !st.remaining && !terminal_logged){
+        terminal_logged=true;
+        re4dc_log("WS23 end serial=1 selected=%u actual=%u frames=%u borrows=%u entries=%u exits=%u faults=%u ccr=%x complete=%u restored=%u enter_us=%u exit_us=%u\n",
+            selected_arm,st.actual,st.frames,st.borrows,st.entries,st.exits,value.faults,mode,value.completed,value.restored,value.enter_us_lo,value.exit_us_lo);
+    }
+}
+void select_once(unsigned room){
+    const int choice=late_choice.take(RE4DC_WARP_LATE_OPEN()!=0,RE4DC_WARP_LATE(~0U));
+    if(choice==-1 || choice==-2)return;
+    selected_mask=RE4DC_WARP_LATE(~0U);selected_room=room;
+    if(choice<0){refused=true;re4dc_log("WS23 refused mask=%x room=%x\n",selected_mask,room);return;}
+    selected=true;selected_arm=unsigned(choice);
+    // Deliberate reviewed fixture is the authority; bits/version do not certify
+    // this image. Main MUST audit exact main+all modules+KOS before launching it.
+    const bool ok=engine.admit(1) && engine.request(selected_arm,iterations,room);
+    re4dc_log("WS23 request serial=1 mask=%x arm=%u iterations=%u room=%x accepted=%u\n",selected_mask,selected_arm,iterations,room,unsigned(ok));
+}
+}
+extern "C" int re4dc_world_scratch_admit(unsigned v){if(!begin_write())return 0;const int ok=engine.admit(v);publish();return ok;}
+extern "C" int re4dc_world_scratch_request(unsigned a,unsigned n,unsigned r){if(!begin_write())return 0;const int ok=engine.request(a,n,r);publish();return ok;}
+extern "C" void re4dc_world_scratch_begin(unsigned r){
+    if(!begin_write(true))return;
+    select_once(r);const bool was=started;
+    engine.begin(r);if(engine.token())started=true;publish();
+    if(started && !was){const auto s=engine.stats();re4dc_log("WS23 active serial=1 arm=%u remaining=%u ccr=%x\n",s.actual,s.remaining,ccr());}
+}
+extern "C" unsigned re4dc_world_scratch_frame_token(){return owner()==snapshot_owner?engine.token():0;}
+extern "C" void re4dc_world_scratch_end(unsigned token,int aborted){if(!begin_write())return;if(token)engine.end(token,aborted!=0);publish();}
+extern "C" void re4dc_world_scratch_cancel(){if(!begin_write())return;engine.cancel();publish();}
+extern "C" int re4dc_world_scratch_acquire(void* ram,void** out){*out=ram;if(!begin_write())return -1;const int ok=engine.acquire(ram,*out);if(ok<0 || writer_cancelled)publish();else end_write();return ok;}
+extern "C" void re4dc_world_scratch_release(){if(!begin_write())return;const auto before=engine.stats();engine.release();const auto after=engine.stats();if(writer_cancelled || before.faults!=after.faults || before.actual!=after.actual || before.remaining!=after.remaining)publish();else end_write();}
 extern "C" re4dc::world_scratch::Stats re4dc_world_scratch_stats(){return engine.stats();}
 #endif
 #endif

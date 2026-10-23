@@ -17,7 +17,8 @@ PLATFORM_OBJS += $(OBJDIR)/world_scratch.o
 $(TARGET): $(OBJDIR)/world_scratch.o
 $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/world_scratch.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_SCRATCH=1
 $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o: world_scratch.h
-$(OBJDIR)/world_scratch.o: world_scratch.cpp world_scratch.h
+$(OBJDIR)/world_scratch.o: PLATFORM_CPPFLAGS += -include $(OBJDIR)/dbgwarp.h
+$(OBJDIR)/world_scratch.o: world_scratch.cpp world_scratch.h $(OBJDIR)/dbgwarp.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(KOS_CFLAGS) $(PLATFORM_CPPFLAGS) -MMD -MP -c $< -o $@
 -include $(OBJDIR)/world_scratch.d
