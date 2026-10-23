@@ -12,6 +12,19 @@ def main():
   runtime_flags=[x for x in flags if x!='-DRE4DC_WORLD_SCRATCH_HOST=1']+['-DRE4DC_WORLD_SCRATCH_RUNTIME_TEST=1','-DRE4DC_DBG_WARP=1']
   run(['g++',*runtime_flags,G/'world_scratch.cpp',T/'test_runtime.cpp','-o',o/'runtime']);run([o/'runtime'])
   for arm in range(5):run([o/'runtime',arm])
+  run([o/'runtime','stale']);run([o/'runtime','admit'])
+  # Compile actual neutral getter bodies, including the current-room/tick predicate.
+  bridge=(G/'dbgwarp_bridge.cpp').read_text()
+  def body(name):
+   start=bridge.index(name);left=bridge.index('{',start);depth=1;right=left+1
+   while depth:
+    depth += (bridge[right]=='{')-(bridge[right]=='}');right+=1
+   return bridge[start:right]
+  getter='#include <cassert>\nstruct Game {unsigned room_id,Frame_cnt;};\nstruct Warp {bool has_late;unsigned late_room,late_tick;};\nGame game{},*pG=nullptr;Warp wp{true,0x109,166};\n'+body('int re4dc_warp_late_open(void)')+'\n'+body('unsigned re4dc_warp_late_room(void)')+'\nint main(){assert(re4dc_warp_late_room()==0);pG=&game;game={0x109,165};assert(!re4dc_warp_late_room());game.Frame_cnt=166;assert(re4dc_warp_late_room()==0x109);game.room_id=0x101;assert(!re4dc_warp_late_room());game.room_id=0x109;wp.has_late=false;assert(!re4dc_warp_late_room());wp.has_late=true;assert(re4dc_warp_late_room()==0x109);}\n'
+  (o/'getter.cpp').write_text(getter);run(['g++','-std=c++17','-O2',o/'getter.cpp','-o',o/'getter']);run([o/'getter'])
+  (o/'getter-off.cpp').write_text('#include "warp_late.h"\nstatic_assert(RE4DC_WARP_LATE_ROOM()==0u);\n')
+  run(['g++','-std=c++17','-O2','-I'+str(G/'platform/include'),'-c',o/'getter-off.cpp','-o',o/'getter-off.o'])
+  assert not run(['nm',o/'getter-off.o']).strip()
   for define,name in [([], 'default'),(['-DRE4DC_WORLD_SCRATCH=0'],'zero')]:
    run(['g++','-std=c++17','-O2',*define,'-c',G/'world_scratch.cpp','-o',o/(name+'.o')])
   assert (o/'default.o').read_bytes()==(o/'zero.o').read_bytes()

@@ -197,7 +197,12 @@ void publish(){
     }
 }
 void select_once(unsigned room){
-    const int choice=late_choice.take(RE4DC_WARP_LATE_OPEN()!=0,RE4DC_WARP_LATE(~0U));
+    // Room initialization may open the late rig before its world mesh loads,
+    // or leave a nonzero mesh from the previous room. Readiness must precede
+    // consuming the one-shot, admission and any mask refusal.
+    const unsigned target_room=RE4DC_WARP_LATE_ROOM();
+    if(!room || room!=target_room)return;
+    const int choice=late_choice.take(true,RE4DC_WARP_LATE(~0U));
     if(choice==-1 || choice==-2)return;
     selected_mask=RE4DC_WARP_LATE(~0U);selected_room=room;
     if(choice<0){refused=true;re4dc_log("WS23 refused mask=%x room=%x\n",selected_mask,room);return;}

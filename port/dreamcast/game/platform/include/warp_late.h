@@ -37,14 +37,18 @@ unsigned re4dc_warp_late(void);
 int re4dc_warp_late_set(void);
 // 1 only inside the configured room/tick window, even when the mask is0. No side effects.
 int re4dc_warp_late_open(void);
+// Validated target/current room while open, else0; independent of the mask.
+unsigned re4dc_warp_late_room(void);
 #ifdef __cplusplus
 }
 #endif
 #define RE4DC_WARP_LATE(bits) (re4dc_warp_late() & (bits))
 #define RE4DC_WARP_LATE_SET() (re4dc_warp_late_set())
 #define RE4DC_WARP_LATE_OPEN() (re4dc_warp_late_open())
+#define RE4DC_WARP_LATE_ROOM() (re4dc_warp_late_room())
 #else
 #define RE4DC_WARP_LATE(bits) 0u
 #define RE4DC_WARP_LATE_SET() 0
 #define RE4DC_WARP_LATE_OPEN() 0
+#define RE4DC_WARP_LATE_ROOM() 0u
 #endif
