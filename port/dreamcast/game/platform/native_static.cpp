@@ -27,6 +27,18 @@
 #if RE4DC_SCENERY_SELECT_ONLY && !RE4DC_SCENERY_CHUNK
 #error SCENERY_SELECT_ONLY needs SCENERY_CHUNK
 #endif
+#ifndef RE4DC_SCENERY_SUBMIT_BATCH
+#define RE4DC_SCENERY_SUBMIT_BATCH 0
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH != 0 && RE4DC_SCENERY_SUBMIT_BATCH != 1
+#error SCENERY_SUBMIT_BATCH must be 0 or 1
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH && (!RE4DC_SCENERY_CHUNK || !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH)
+#error SCENERY_SUBMIT_BATCH needs the direct PS2 scenery chunk path
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH && (RE4DC_PS2_PVS || RE4DC_WORLD_SCRATCH || RE4DC_TA_GUARD)
+#error SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_GUARD
+#endif
 #ifndef RE4DC_WORLD_RECT21
 #define RE4DC_WORLD_RECT21 0
 #endif
@@ -87,6 +99,9 @@ extern "C" volatile unsigned re4dc_rigid_hide;   // native_actor_fast.cpp (RIGID
 #include "quality.h"
 #endif
 #include "native_model.h"
+#if RE4DC_SCENERY_SUBMIT_BATCH
+#include "include/scenery_submit_batch.h"
+#endif
 #include "re4dc_platform.h"
 #include "../../room/room_package.hpp"
 #include "../../room/static_room_prepare.hpp"
@@ -979,12 +994,33 @@ struct Emitter {
     // clipper and the transform cache only. Nothing can be rolled back once
     // bound, so later failures abort the frame (submitted).
     bool direct=false; std::uint32_t* sq=nullptr; unsigned slots=0;
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    Re4dcWorldSubmitBatch* submit_batch=nullptr; // borrowed only inside chunk_flush
+    void end_direct(){if(sq){
+        if(submit_batch)re4dc_ps2_world_direct_end_batch(slots,submit_batch);
+        else re4dc_model_direct_end(slots);
+        sq=nullptr;
+    }}
+#else
     void end_direct(){if(sq){re4dc_model_direct_end(slots);sq=nullptr;}}
+#endif
     void put(unsigned n){sq=re4dc_ta_put(sq,dst+used,n);slots+=n;}
 #endif
     bool bind(){
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        // Claimed transition groups may log from the validity walk itself.
+        if(submit_batch && !sq && re4dc_source_world_group_claimed())
+            re4dc_ps2_world_batch_close(submit_batch);
+        if(!re4dc_source_world_binding_valid()){
+            // A new part has not bound yet; release the previous part's idle
+            // lock before the existing owner-failure/abort callback.
+            if(submit_batch && !sq)re4dc_ps2_world_batch_close(submit_batch);
+            re4dc_source_world_binding_failed();return false;
+        }
+#else
         if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return false;}
+#endif
 #endif
         if(bound)return true;
 #if RE4DC_MV_SHADOWS
@@ -1008,11 +1044,21 @@ struct Emitter {
 #if RE4DC_PS2_WORLD_MESH
 #if RE4DC_SCENERY_PIECE_STATE
             re4dc_ps2_piece_slot=ps2?piece_slot:nullptr;
+#if RE4DC_SCENERY_SUBMIT_BATCH
+            const int begun=ps2?(submit_batch?re4dc_ps2_world_direct_begin_batch(ps2,&out,submit_batch):
+                                re4dc_ps2_world_direct_begin(ps2,&out)):re4dc_model_direct_begin(&p,&out);
+#else
             const int begun=ps2?re4dc_ps2_world_direct_begin(ps2,&out):re4dc_model_direct_begin(&p,&out);
+#endif
             re4dc_ps2_piece_slot=nullptr;
             if(!begun)return false;
 #else
+#if RE4DC_SCENERY_SUBMIT_BATCH
+            if(!(ps2?(submit_batch?re4dc_ps2_world_direct_begin_batch(ps2,&out,submit_batch):
+                                  re4dc_ps2_world_direct_begin(ps2,&out)):re4dc_model_direct_begin(&p,&out)))return false;
+#else
             if(!(ps2?re4dc_ps2_world_direct_begin(ps2,&out):re4dc_model_direct_begin(&p,&out)))return false;
+#endif
 #endif
 #else
             if(!re4dc_model_direct_begin(&p,&out))return false;
@@ -1020,12 +1066,24 @@ struct Emitter {
             sq=out.sq;submitted=true;
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
             if(!re4dc_source_world_binding_valid()){
+#if RE4DC_SCENERY_SUBMIT_BATCH
+                end_direct();
+                if(submit_batch)re4dc_ps2_world_batch_close(submit_batch);
+                re4dc_source_world_binding_failed();return false;
+#else
                 end_direct();re4dc_source_world_binding_failed();return false;
+#endif
             }
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
             if(!re4dc_r11f_binding_valid()) {
+#if RE4DC_SCENERY_SUBMIT_BATCH
+                end_direct();
+                if(submit_batch)re4dc_ps2_world_batch_close(submit_batch);
+                re4dc_r11f_binding_failed();return false;
+#else
                 end_direct();re4dc_r11f_binding_failed();return false;
+#endif
             }
 #endif
             packet.vertices=out.scratch;packet.capacity=out.scratch_capacity;
@@ -6329,6 +6387,14 @@ int ps2_pass(unsigned pass,float zfar){
             unsigned& value;unsigned saved;
             ~CullScope(){value=saved;}
         } cull_scope{part.cull,part.cull};
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        // Only this synchronous replay owns the borrowed lock. Selection,
+        // ordinary draws, aborts and returning to the source never retain it.
+        struct SubmitScope {
+            Re4dcWorldSubmitBatch batch{};
+            ~SubmitScope(){re4dc_ps2_world_batch_close(&batch);}
+        } submit_scope;
+#endif
 #if RE4DC_SKY_ANY
         const unsigned sky_now=re4dc_ps2_sky_header; // the placement being selected keeps its own after the run
 #endif
@@ -6346,6 +6412,9 @@ int ps2_pass(unsigned pass,float zfar){
             e.alpha=0xff000000U;e.vertex_alpha=false;e.cull_far=x.cull_far;e.direct=true;
 #endif
             e.part_index=x.index;e.lod_scale=x.lod_scale;e.lean_part=true;
+#if RE4DC_SCENERY_SUBMIT_BATCH
+            e.submit_batch=&submit_scope.batch;
+#endif
 #if RE4DC_PS2_PVS
             e.pvs_placement=x.placement;
 #endif
@@ -6356,6 +6425,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
             const int result=e.chunk_emit(cpk+x.first,x.count);
             e.end_direct();
+#if RE4DC_SCENERY_SUBMIT_BATCH
+            if(result<=0)re4dc_ps2_world_batch_close(&submit_scope.batch);
+#endif
 #if RE4DC_PS2_PVS
             e.pvs_finish(result>0);
 #endif

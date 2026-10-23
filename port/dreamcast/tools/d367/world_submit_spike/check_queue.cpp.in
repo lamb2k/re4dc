@@ -1,0 +1,101 @@
+// Actual emitter bind/end, chunk_emit and chunk_flush. Geometry emission is a
+// controlled edge; these cases exercise the batching lifecycle at real replay
+// boundaries without pretending to execute the full renderer.
+#define RE4DC_SCENERY_CHUNK 1
+#define RE4DC_MESH_DIRECT 1
+#define RE4DC_PS2_WORLD_MESH 1
+#define RE4DC_PS2_VERTEX_ALPHA 1
+#define RE4DC_PS2_PVS 0
+#define RE4DC_SKY_ANY 1
+#define RE4DC_BACKFACE_CONE_FRONT 0
+struct QueuePart {unsigned cull=1;float uv_offset[2]{.125f,-.25f};float projection[7]{},viewport[6]{};};
+struct QueueMeshPart {float uv_bias[2]{.125f,.25f},uv_scale[2]{.5f,.25f};};
+struct QueuePackage {QueueMeshPart rows[8];const QueueMeshPart* parts()const{return rows;}};
+struct QueueBegin {QueuePart& p;float mv[12],near,far;};
+struct Re4dcModelPacket {void* vertices;unsigned capacity;float u_scale,v_scale;};
+using pvr_vertex_t=Packet;
+static unsigned model_parts,model_empty_parts,model_input,model_output,packet_aborts;
+static unsigned pick_calls,fail_at=~0U,fail_mode,lut_calls,screen_loads,queue_native,queue_fallback,queue_aborts;
+static unsigned re4dc_mv_camera_frame=~0U;
+static float re4dc_mv_projection[7],re4dc_mv_viewport[6];
+static std::vector<unsigned> queue_events;
+static unsigned lut[512];
+namespace piece {static const void* pkg;static unsigned* table;}
+namespace whd {static void note(unsigned,const unsigned*){assert(!locked);}}
+static unsigned re4dc_ui_frame(){return frame;}
+static const unsigned* ps2_vertex_alpha_lut(){++lut_calls;return lut;}
+static int re4dc_model_packet_streaming(){return 1;}
+static void re4dc_model_packet_commit(unsigned){assert(false);}
+static void re4dc_model_result(unsigned reason,unsigned input,unsigned output){
+    assert(reason==0);++model_parts;if(!output)++model_empty_parts;model_input+=input;model_output+=output;
+    queue_events.insert(queue_events.end(),{8,reason,input,output});
+}
+static void re4dc_model_packet_abort(){assert(!locked);++packet_aborts;stream_aborted=true;model_used=0;model_handle=nullptr;}
+static int re4dc_model_direct_begin(const QueuePart*,Re4dcModelDirect*){assert(false);return 0;}
+static int re4dc_model_packet_begin(const QueuePart*,Re4dcModelPacket*){assert(false);return 0;}
+static void load_screen(const float*,const float*,const float*){++screen_loads;}
+@PICK_DEFINITION@;
+struct MeshDraw {
+    using Pick=::Pick;
+    QueuePart& p;const QueuePackage& package;const QueueMeshPart& part;
+    float mv[12]{},mvq[12]{},near,far,cull_far=0,lod_scale=0;
+    const unsigned* ps2=nullptr;unsigned* piece_slot=nullptr;const std::uint8_t* sg=nullptr;
+    unsigned sg_groups=0,part_index=0,alpha=0,used=0,input=0,output=0,slots=0,limit=0;
+    bool direct=false,vertex_alpha=false,c4444=false,lean_part=false,streaming=false,bound=false,submitted=false;
+    std::uint32_t* sq=nullptr;const unsigned* palette=nullptr;pvr_vertex_t* dst=nullptr;
+    Re4dcModelPacket packet{};
+    struct {float uv_bias[2],uv_scale[2];}batch{};
+    MeshDraw(QueueBegin b,const QueuePackage& pkg,const QueueMeshPart& mp,const unsigned*,void*):p(b.p),package(pkg),part(mp),near(b.near),far(b.far){}
+    @EMITTER_END@
+    @EMITTER_BIND@
+    void set_clip(){queue_events.insert(queue_events.end(),{2,p.cull,re4dc_ps2_sky_header,unsigned(vertex_alpha)});}
+    int emit_pick(const Pick& pick){
+        const unsigned call=pick_calls++;
+        if(call==fail_at&&fail_mode==1)return 0;
+        if(call==fail_at&&fail_mode==3)source_valid=false;
+        if(!bind())return submitted?-1:0;
+        queue_events.insert(queue_events.end(),{3,p.cull,re4dc_ps2_sky_header,unsigned(vertex_alpha),
+            bits(packet.u_scale),bits(packet.v_scale),bits(p.uv_offset[0]),bits(p.uv_offset[1]),
+            bits(cull_far),bits(lod_scale),bits(batch.uv_bias[0]),bits(batch.uv_scale[1]),unsigned(pick.nr)});
+        if(call==fail_at&&fail_mode==2)return -1;
+        const unsigned n=pick.nr?3U:0U;
+        sq=emit(sq,n,part_index);slots+=n;
+        if(n){++input;++output;}
+        return 1;
+    }
+    @CHUNK_EMIT@
+};
+static void queue_case(unsigned id){
+    const unsigned variant=id>=340?4U:id-100;
+    const unsigned sizes[]={0,1,2,7,48};
+    const unsigned count=sizes[variant%5],shape=(variant/5)%6,fail=(variant/30)%4,late=(variant/120)%2;
+    fail_mode=fail;fail_at=fail?(late?(count?count-1:0):0):~0U;
+    if(id>=340&&id<=343){acquire_invalid_at=(id&1U)?5U:1U;acquire_invalid_kind=id<342?1U:2U;}
+    if(id==344){source_group_claimed=true;fail_mode=3;fail_at=4;}
+    QueuePart part;part.cull=1;
+    const float near=1,far=1000;
+    QueuePackage package;const QueuePackage& cpkg=package;
+    struct {const unsigned* lut;void* gather;const std::uint8_t* sg;unsigned sg_groups;} ps2w{::lut,nullptr,nullptr,4};
+    struct {unsigned native=0,fallback=0,aborts=0;}c;
+    @CHUNK_PART@;
+    static constexpr unsigned kChunkParts=48,kChunkPicks=320;
+    ChunkPart cctx[kChunkParts]{};MeshDraw::Pick cpk[kChunkPicks]{};
+    unsigned nctx=count,npk=0;const unsigned pass=0;
+    piece::pkg=&cpkg;piece::table=piece_words;
+    for(unsigned j=0;j<count;++j){
+        auto& x=cctx[j];x.index=j%8;x.cull=2;x.sky=j&1U;x.marked=(j&1U)!=0;
+        key_for(x.index,0,x.cull,x.key);x.cull_far=1000;x.lod_scale=2;x.first=npk;
+        const bool empty=shape==4||(shape==1&&j==0)||(shape==2&&j==count/2)||(shape==3&&j+1==count);
+        x.count=empty?0U:1U;
+        if(x.count)cpk[npk++]={0,std::uint8_t(shape==5?0:255),0,0,0,{0,0}};
+        for(unsigned k=0;k<12;++k)x.mvq[k]=float(k+j);
+    }
+    re4dc_ps2_sky_header=7;
+    @CHUNK_FLUSH@;
+    const int result=chunk_flush();
+    assert(!locked&&!direct_open);assert(part.cull==1);
+    if(result>0)assert(re4dc_ps2_sky_header==7);
+    assert(nctx==0&&npk==0);
+    returns.push_back(unsigned(result));
+    queue_native=c.native;queue_fallback=c.fallback;queue_aborts=c.aborts;
+}
