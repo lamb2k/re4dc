@@ -3520,6 +3520,20 @@ EM_READ_RETRY ?= 1
 ifeq ($(EM_READ_RETRY),1)
 GAME_CPPFLAGS += -DRE4DC_EM_READ_RETRY=1
 endif
+# R10C_SPAWN_LIVE_GUARD=1 (issue #52 follow-up, default 0): a first move can retire a Ganado after
+#   successful construction. Treat that returned, no-longer-live work as a missing event actor before
+#   r10c dispatches setNoSuspend or installs its motion/effect. Reuses EM_READ_RETRY's bounded retry/skip;
+#   leaves list admission flags and the manager's deferred cleanup untouched. No malformed-pointer test.
+R10C_SPAWN_LIVE_GUARD ?= 0
+ifeq ($(filter $(R10C_SPAWN_LIVE_GUARD),0 1),)
+$(error R10C_SPAWN_LIVE_GUARD must be 0 or 1)
+endif
+ifeq ($(R10C_SPAWN_LIVE_GUARD),1)
+ifneq ($(EM_READ_RETRY),1)
+$(error R10C_SPAWN_LIVE_GUARD=1 requires EM_READ_RETRY=1)
+endif
+$(OBJDIR)/mod/st1_2/src/st1/r10c.o $(OBJDIR)/src/st1/r10c.o: GAME_CPPFLAGS += -DRE4DC_R10C_SPAWN_LIVE_GUARD=1
+endif
 # EM_READ_FAIL_INJECT=N (test only, default 0 = no code): enemy module reads in room EM_READ_FAIL_INJECT_ROOM (default 0x10C) fail N times (>= 99: always), the
 #   issue #52 console failure on Flycast.
 EM_READ_FAIL_INJECT ?= 0
