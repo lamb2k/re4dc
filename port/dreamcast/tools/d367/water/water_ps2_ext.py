@@ -69,7 +69,7 @@ def rows_for(room, blob):
             out.append(dict(room=int(room[1:], 16), area=r['area'], pos=r['position'], sx=r['size_x'], sy=r['size_y'],
                             ax=[m[i][0] for i in range(3)], bz=[m[i][1] for i in range(3)], ang=r['angle'],
                             tex=r['tex'], blend=r['blend'], tf=r['tool_flags'], rgba=r['rgba'], w8=r['work8'],
-                            spd=spd, rate=rate + 0x20, ptn0=data[o + 0xBC],
+                            spd=spd, rate=rate + 0x20, ptn0=data[o + 0xBC], disp=r['no'] if r['no'] < 32 else 0xff,
                             src='%s.dat eff%d %s %d rec %d' % (room, k, r['table'], r['no'], r['index'])))
     # bottom-up; a base (0xf7) on the same height as its layers draws first
     out.sort(key=lambda x: (round(x['pos'][1]), x['tex'] != 0xf7, x['src']))
@@ -99,11 +99,11 @@ def c_row(x):
     if x['tf'] & 0x20000:
         a = min(255, 4 * a)
     return ('    {0x%03x, %5d, {%9.1ff, %8.1ff, %9.1ff}, {%8.5ff, %8.5ff, %8.5ff}, {%8.5ff, %8.5ff, %8.5ff}, %8.1ff, %8.1ff, '
-            '%8.6ff, %8.6ff, %6.4ff, %6.4ff, 0x%02x%02x%02x%02x, 0x%02x, %d, %d, %d, %3d, %d},   // %s ang %s tf %x' % (
+            '%8.6ff, %8.6ff, %6.4ff, %6.4ff, 0x%02x%02x%02x%02x, 0x%02x, %d, %d, %d, %3d, %d, %d},   // %s ang %s tf %x' % (
                 x['room'], x['area'] if x['area'] != 0xffff else -1, x['pos'][0], x['pos'][1], x['pos'][2],
                 x['ax'][0], x['ax'][1], x['ax'][2], x['bz'][0], x['bz'][1], x['bz'][2], x['sx'] * 0.5, x['sy'] * 0.5,
                 div_x / x['sx'], div_y / x['sy'], x['spd'][0] * 0.001, x['spd'][1] * 0.001, a, r, g, b, x['tex'],
-                src, dst, x['level'], x['rate'], x['ptn0'], x['src'], [round(v) for v in x['ang']], x['tf']))
+                src, dst, x['level'], x['rate'], x['ptn0'], x['disp'], x['src'], [round(v) for v in x['ang']], x['tf']))
 
 
 def main():
@@ -124,7 +124,7 @@ def main():
              '// world planes): do not edit. WATER_PS2_EXT (espgen45.cpp): the r10c / r10d / r10e rivers and the r10c',
              '// waterfall, bottom-up per room. room, area (-1: always), centre (mm), plane axis x and axis y (unit, world),',
              '// half size x y (mm), texture repeats per mm u v, scroll per tick u v (repeats), ARGB (TEV x4 scales applied),',
-             '// texture id, PVR blend src dst, dial level, animation rate (x32), first pattern.',
+             '// texture id, PVR blend src dst, dial level, animation rate (x32), first pattern, SST display flag (0xff: none).',
              'static const WaterPs2ExtRow kWaterPs2Ext[] = {']
     lines += [c_row(x) for x in allrows]
     lines += ['};', '']

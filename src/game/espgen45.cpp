@@ -651,7 +651,8 @@ static int WaterPs2RoomOn(u32 room)
 // r10d / r10e and the r10c waterfall curtains as the PS2 draws them (SST Esp08 world planes of the room EFF, generated
 // into water_ps2_ext.inc by tools/d367/water/water_ps2_ext.py). Same native layer as the rows above; each row carries
 // its plane axes, so tilted and vertical planes (the waterfall) draw too. Rows with an area draw while that effect area
-// is on (EffGetAreaState, read only); the others always (these rooms have no water generator). No effect slot,
+// is on (EffGetAreaState, read only), the others always (these rooms have no water generator), and only while the SST
+// entry's display flag is on (GetSstDispFlag: r10c switches its pools when the dam is drained). No effect slot,
 // generator, area or Rnd() state is touched. WATER_PS2_EXT_ROOMS: bit 0 r10c, 1 r10d, 2 r10e (default 7).
 extern "C" void re4dc_log(const char* fmt, ...);
 struct WaterPs2ExtRow {
@@ -660,8 +661,9 @@ struct WaterPs2ExtRow {
     f32 p[3], ax[3], az[3];   // centre, plane axis x (sprite x), plane axis z (sprite y), world
     f32 hx, hz, ru, rv, su, sv;
     u32 argb;
-    u8 tex, src, dst, level, rate, ptn0;
+    u8 tex, src, dst, level, rate, ptn0, disp;   // disp: the SST entry's display flag (GetSstDispFlag); 0xff none
 };
+extern "C" int GetSstDispFlag(u32 id);   // est.cpp (read only)
 #include "water_ps2_ext.inc"
 #ifndef RE4DC_WATER_PS2_EXT_ROOMS
 #define RE4DC_WATER_PS2_EXT_ROOMS 7
@@ -821,7 +823,7 @@ extern "C" void re4dc_water_ps2_draw(void*)
         if (r.room != G_ROOM_ID || level > r.level) {
             continue;
         }
-        if (r.area >= 0 && !EffGetAreaState(r.area)) {
+        if ((r.area >= 0 && !EffGetAreaState(r.area)) || (r.disp != 0xFF && !GetSstDispFlag(r.disp))) {
             continue;
         }
         memset(&L.image, 0, sizeof(L.image));

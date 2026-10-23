@@ -311,6 +311,18 @@ ifeq ($(FX_LEVEL),)
 $(error EFFECT_OWNERS_ALL=1 needs FX_LEVEL (the admitted-owner budget))
 endif
 endif
+# TRAP_FX=1 (lane fix-water-traps23 2026-10-23, GitHub #55 item 8; needs EFFECT_SPRITES=1; render only, default 0): the
+#                    tripwire bombs' effects (em2a's EFF, effect owner 0x22: the blast of em2aTrap2Bomb, EstSet 0x22 0 / 4 /
+#                    6, and the armed trap's sprites) are drawn as native sprites; they were off the owner whitelist, so
+#                    the bombs on doors and trees went off with no explosion. Mask / render-target / non-blend sprites
+#                    stay out. Log: one "trap fx:" line per room at its first owner-0x22 sprite. No effect state or Rnd().
+TRAP_FX ?= 0
+ifneq ($(TRAP_FX),0)
+ifneq ($(TRAP_FX)$(EFFECT_SPRITES),11)
+$(error TRAP_FX must be 0 or 1 and needs EFFECT_SPRITES=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_TRAP_FX=1
+endif
 # EFFECT_TORCH=1 (issue #30, test 11 lane fx 2026-10-14; needs EFFECT_SPRITES=1 ESP_SPRITE_FAST=1; render only, default 0):
 #                    the Esp0e glows (torch / lamp flames) of the torch objects et0b / et0c / et10 / et14 / et19 / et1c / et38
 #                    (owners 0x5f 0x60 0x64 0x68 0x6d 0x70 0x8c; r11b's nine cEmTorch are et14) are drawn as native
