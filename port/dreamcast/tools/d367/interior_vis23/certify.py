@@ -36,6 +36,8 @@ def main():
                     help='research only: unique-ID target poses also require cached-delta-safe runtime qualification')
     ap.add_argument('--clearance',type=float,default=2000.,
                     help='continuous eye-to-plane clearance; frame receipts still independently reject clipping')
+    ap.add_argument('--source-roster',type=Path,
+                    help='restrict source instances to this authenticated package prerequisite census')
     a=ap.parse_args(); root=a.private; work=root/'work'; pkg=root/'inputs'
     assert a.clearance>=64., 'must exceed the 32 mm per-operand geometric budget'
     sys.path[:0]=[str(root/'helpers'/'pvs'),str(root/'helpers'/'interior')]
@@ -47,6 +49,17 @@ def main():
     new="for name in ('ps2-world.re4mesh','ps2-world.r4pw','original.r4pw','ps2-world.ids','ps2-world.r4tc') if (pkgdir/name).exists()}"
     assert source.count(old)==1
     adapted=source.replace(old,new)
+    roster=None;source_keys=None
+    if a.source_roster:
+        census=json.loads(a.source_roster.read_text())
+        roster=next(x for x in census['rooms'] if int(x['room'][1:],16)==int(a.room,16))
+        from r4im import Pkg
+        pinned=Pkg(pkg/'ps2-world.re4mesh',pkg/'ps2-world.r4pw')
+        assert roster['mesh_crc']==f'{pinned.mesh_crc:08x}' and roster['physical_policy_crc']==f'{pinned.sidecar_crc:08x}'
+        source_keys={(x['placement'],x['part'],x['cluster']) for x in roster['eligible_sources']}
+    marker='        for ti,t in enumerate(levels[0]):'
+    assert adapted.count(marker)==1
+    adapted=adapted.replace(marker,"        if SOURCE_KEYS is not None and (pi,part,cl) not in SOURCE_KEYS:continue\n"+marker)
     adapted=adapted.replace('clearance=2000.',f'clearance={a.clearance!r}')
     adapted=adapted.replace('clearance_mm=2000,',f'clearance_mm={a.clearance!r},')
     if a.conditional_sources:
@@ -60,6 +73,7 @@ def main():
     module=type(sys)('interior_vis23_certifier')
     module.__file__=str(root/'helpers'/'pvs'/'pvs_certify.py')
     exec(compile(adapted,module.__file__,'exec'),module.__dict__)
+    module.SOURCE_KEYS=source_keys
     pairs=module.pairs
     # Current pvs23_runtime.inc accepts source panels from one-level clusters.
     def single_level_pairs(p,pi,cl,level=0):
@@ -68,6 +82,8 @@ def main():
     module.pairs=single_level_pairs
     module.certify(pkg,work,int(a.room,16),limit=a.limit,margin=32.,pairs_only=not a.single_triangles)
     report=json.loads((work/'proof.json').read_text())
+    if source_keys is not None:
+        assert all((d['placement_index'],d['part'],d['cluster']) in source_keys for d in report['used_occluders'].values())
     C,I=importlib.import_module('pvs_emit').load_cells(work),importlib.import_module('pvs_emit').load_inst(work)
     # Admit at most sixteen panels and retain every earlier placement. Dropped
     # dependencies become all-visible, which can only reduce the candidate cut.
@@ -162,9 +178,10 @@ def main():
     result['single_triangle_receipts_research']=a.single_triangles
     result['conditional_targets_research']=a.conditional_targets
     result['eye_to_plane_clearance_mm']=a.clearance
+    result['source_roster']=None if a.source_roster is None else dict(path=str(a.source_roster),sha256=sha(a.source_roster))
     result['conditional_source_fields']=[d['placement_field'] for d in used.values() if I['dyn'][d['instance']]]
     if a.conditional_sources:
-        result['limitations'].append('conditional source liveness is unqualified: fresh rest-state predicate may disagree with same-frame dyn::query cached moved state/delta')
+        result['limitations'].append('conditional source liveness requires target qualification of the reviewed affine-selection receipt; earlier captured e9bf7 camera binary predates that repair')
     (root/'qualification.json').write_text(json.dumps(result,indent=1)+'\n')
     print(json.dumps(result))
 
