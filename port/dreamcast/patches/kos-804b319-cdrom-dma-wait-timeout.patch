@@ -4,7 +4,7 @@ Applied after kos-804b319-cdrom-dma-done.patch.
 
 --- a/kernel/arch/dreamcast/hardware/cdrom.c
 +++ b/kernel/arch/dreamcast/hardware/cdrom.c
-@@ -99,6 +99,40 @@
+@@ -99,6 +99,38 @@
      irq_restore(old);
      re4dc_dma_drain();
  }
@@ -17,18 +17,16 @@ Applied after kos-804b319-cdrom-dma-done.patch.
 +unsigned re4dc_cdrom_wait_timeouts, re4dc_cdrom_wait_max_us, re4dc_cdrom_wait_last_ms;
 +#ifdef RE4DC_DISC_DMA_DROP_TEST
 +static int re4dc_drop_done;
++/* Called with the DMA state set, before the transfer starts: true once, for the first blocking DMA after 1 s. */
++static bool re4dc_drop_first(void) {
++    if(re4dc_drop_done || timer_ms_gettime64() < 1000) return false;
++    re4dc_drop_done = 1;
++    return true;
++}
 +#endif
 +static int re4dc_dma_wait(size_t bytes) {
 +    unsigned ms = 5000u + 8u * (unsigned)((bytes + 2047) / 2048);
 +    uint64_t t0 = timer_us_gettime64();
-+#ifdef RE4DC_DISC_DMA_DROP_TEST
-+    if(!re4dc_drop_done && timer_ms_gettime64() >= 1000) {
-+        int o = irq_disable();
-+        re4dc_drop_done = 1;
-+        dma_blocking = false;      /* neither handler signals dma_done: the completion never arrives */
-+        irq_restore(o);
-+    }
-+#endif
 +    int rv = sem_wait_timed(&dma_done, ms);
 +    unsigned us = (unsigned)(timer_us_gettime64() - t0);
 +    if(us > re4dc_cdrom_wait_max_us) re4dc_cdrom_wait_max_us = us;
@@ -45,7 +43,16 @@ Applied after kos-804b319-cdrom-dma-done.patch.
  static asic_evt_handler_entry_t old_dma_irq = {NULL, NULL};
  static int vblank_hnd = -1;
  
-@@ -421,7 +455,10 @@
+@@ -415,13 +447,19 @@
+     }
+     dma_in_progress = true;
+     dma_blocking = true;
++#ifdef RE4DC_DISC_DMA_DROP_TEST
++    if(re4dc_drop_first()) dma_blocking = false;   /* neither handler signals dma_done: no completion arrives */
++#endif
+ 
+     /* Start the process of executing the command. */
+     cdrom_poll(&cmd_hnd, 0, cdrom_check_ready);
  
      if(cmd_response == CD_CMD_PROCESSING) {
          /* Wait DMA is finished or command failed. */
@@ -57,7 +64,17 @@ Applied after kos-804b319-cdrom-dma-done.patch.
  
          /* Just to make sure the command is finished properly.
             Usually we are already done here. */
-@@ -614,7 +651,10 @@
+@@ -601,6 +639,9 @@
+         dma_in_progress = true;
+         dma_blocking = block;
+         dma_auto_unlock = !block;
++#ifdef RE4DC_DISC_DMA_DROP_TEST
++        if(block && re4dc_drop_first()) dma_blocking = false;   /* no completion arrives */
++#endif
+ 
+         rs = syscall_gdrom_dma_transfer(cmd_hnd, &params);
+ 
+@@ -614,7 +655,10 @@
          if(!block) {
              return ERR_OK;
          }
