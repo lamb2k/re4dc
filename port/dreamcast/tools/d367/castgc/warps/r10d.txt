@@ -1,0 +1,14 @@
+# lane fix-hideout23 (issue #55 item 1) r10d merchant cave census / TA view warp (<= 60 s): the r11b ladder arrival, then a walk
+# into the cave that puts the whole hut in view (the TA peak: 1.76 MB of parameters MODELLED without BACKFACE_ROOMS).
+name cg-r10d
+room 0x10d
+pos 160 -2490 -2100
+ang 3.094
+inv default
+god
+alivelog 150
+act 120 b+fwd 300
+act 430 left 120
+act 560 b+fwd 300
+act 870 right 240
+act 1120 b+fwd 300

@@ -32,6 +32,9 @@ extern "C" unsigned re4dc_backface_model_tag(const void* model);
 #endif
 #if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
 #include "../../room/backface_sh4.hpp"  // CPU_BACKFACE=2: common SH-4 SQ ABI
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+extern "C" unsigned char re4dc_bf_room_on;  // native_static.cpp (BACKFACE_ROOMS)
+#endif
 #elif defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
 #include "../../room/backface_emit.hpp"  // CPU_BACKFACE=1: unchanged C reference
 #endif
@@ -3378,7 +3381,11 @@ struct Part {
     bool bf_on() const {
         // Generic/source submissions need the same material exclusions as
         // owned runs. Preserve their original copy/header for these parts.
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+        return re4dc_bf_room_on && (p.cull == 1 || p.cull == 2) && !(p.material_flags & 4u) && p.depth_mode == 0;
+#else
         return (p.cull == 1 || p.cull == 2) && !(p.material_flags & 4u) && p.depth_mode == 0;
+#endif
     }
 #endif
     // CPU_BACKFACE (lane backface22): only the triangles the ISP keeps (room/backface_emit.hpp); cull-none parts never

@@ -187,6 +187,17 @@ static volatile unsigned ps2_mask_select=1U+RE4DC_PS2_PASS_MASK_SELECT;
 #if RE4DC_NATIVE_MESH && RE4DC_MESH_FASTPATH
 #include "../../room/mesh_fastpath.hpp"
 #if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+// BACKFACE_ROOMS (backface.mk, lane fix-hideout23): the cull only in BACKFACE_ROOM_LIST; the flag is set per scene open.
+extern "C" { unsigned char re4dc_bf_room_on; }
+extern "C" unsigned re4dc_room_id_now();
+extern "C" void re4dc_bf_room_update(){
+    static const unsigned short rooms[]={RE4DC_BACKFACE_ROOM_LIST};
+    const unsigned r=re4dc_room_id_now();unsigned char on=0;
+    for(unsigned short x:rooms)if(x==r)on=1;
+    if(on!=re4dc_bf_room_on){re4dc_bf_room_on=on;re4dc_log("backface rooms: room %03x cpu back-face %s\n",r,on?"on":"off");}
+}
+#endif
 #include "../../room/backface_sh4.hpp"  // common SH-4 SQ ABI, owned by the main lane
 #elif defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
 #include "../../room/backface_emit.hpp"  // CPU_BACKFACE (backface.mk, lane backface22)
@@ -2568,7 +2579,11 @@ struct MeshDraw : Emitter {
     // The caller's source material still owns cull/depth/alpha. Two-sided cards and
     // no-depth-write runs keep their original walk; accepted opaque strips use
     // only the common assembly emitter for facing, run splitting and SQ writes.
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+    bool bf_on()const{return re4dc_bf_room_on && (p.cull==1U || p.cull==2U) && !(p.material_flags&4U) && p.depth_mode==0U;}
+#else
     bool bf_on()const{return (p.cull==1U || p.cull==2U) && !(p.material_flags&4U) && p.depth_mode==0U;}
+#endif
     void bf_send(const std::uint8_t* s,unsigned n){
         slots+=re4dc::bf::strip_sq(cache,s,n,0xffU,p.cull,sq);
     }
