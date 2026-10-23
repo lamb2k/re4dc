@@ -40,10 +40,16 @@ unlocked pump. Key-off, readiness, mapping, silent unmapped voices and mix-only
 updates do not count as key-on. Existing per-room admission/outstanding-ticket
 race handling remains mandatory for final room checkpoints.
 
-The production queue now retains compact checked tokens. The old string/digest
-queue adapter exists only in host test builds; production key-on cannot invoke
-catalog lookup through that adapter. This reduces queue storage while keeping
-the same fail-closed overflow and terminal accounting.
+The production queue normally retains compact checked tokens. The independent
+5ms audio thread can key on after a source hash completes but before the next
+main-frame catalog publication. That case copies the completed immutable
+digest and a fixed sound-constituent tag into its event under a nonblocking
+metadata try-lock. The unlocked pump resolves it afterward. A load that is
+incomplete, stale or contended still fails; there is no lookup/hash/I/O or wait
+under G2. The old arbitrary string/digest adapter remains test-only.
+This fallback adds36 bytes per bounded queue entry (1152 B for32 entries) over
+the checked-only queue, plus bounded AudioUse stack copies. It remains smaller
+than the original identity-string queue. Actual target repricing remains open.
 
 Disc streaming uses one conservative exact full aica_str.dat container SHA,
 including AIS1 metadata and all intro/loop payloads. The reader computes it

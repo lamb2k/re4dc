@@ -52,6 +52,9 @@ struct AudioTicket { unsigned slot, serial; };
 AudioTicket audio_ticket();
 void close_audio_admission();
 void queued_checked(AudioTicket, Consumer, CheckedAsset);
+enum PendingSound : unsigned { SoundMram=1,SoundAram=2,StreamContainer=3 };
+// Copies an already completed source digest, never hashes or reads a catalog.
+void queued_pending(AudioTicket,Consumer,PendingSound,const Digest&);
 #if defined(RE4DC_GC_ASSET_TEST) && RE4DC_GC_ASSET_TEST
 void queued(AudioTicket, Consumer, const char* kind, const char* id, const Digest&);
 #endif

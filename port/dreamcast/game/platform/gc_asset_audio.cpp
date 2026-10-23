@@ -111,19 +111,35 @@ AudioUse play_ticket(Consumer consumer,CheckedAsset asset){
 AudioUse bank_ticket(unsigned bank,unsigned generation){
     if(bank>=14 || !generation)return play_ticket(SoundBank,{});
     const auto& b=banks[bank];
-    if(b.generation.load(std::memory_order_acquire)!=generation || b.bound.load(std::memory_order_acquire)!=generation)return play_ticket(SoundBank,{});
+    if(b.generation.load(std::memory_order_acquire)!=generation)return play_ticket(SoundBank,{});
+    if(b.bound.load(std::memory_order_acquire)!=generation){
+        if(records.test_and_set(std::memory_order_acquire)){faults.fetch_add(1);return play_ticket(SoundBank,{});}
+        const bool ready=b.generation.load()==generation && b.ready==3;
+        Digest m{},a{};if(ready){m=b.pending[0];a=b.pending[1];}records.clear(std::memory_order_release);
+        if(!ready)return play_ticket(SoundBank,{});
+        AudioUse use=play_ticket(SoundBank,{});use.count=2;use.pending[0]=m;use.pending[1]=a;use.kinds[0]=SoundMram;use.kinds[1]=SoundAram;use.tickets[1]=audio_ticket();return use;
+    }
     const CheckedAsset m{b.mram.load()},a{b.aram.load()};
     if(b.generation.load(std::memory_order_acquire)!=generation || b.bound.load(std::memory_order_acquire)!=generation)return play_ticket(SoundBank,{});
     AudioUse use=play_ticket(SoundBank,m);use.count=2;use.assets[1]=a;use.tickets[1]=audio_ticket();return use;
 }
 AudioUse stream_ticket(unsigned generation){
-    if(!generation || stream.generation.load(std::memory_order_acquire)!=generation || stream.bound.load(std::memory_order_acquire)!=generation)return play_ticket(SoundStream,{});
+    if(!generation || stream.generation.load(std::memory_order_acquire)!=generation)return play_ticket(SoundStream,{});
+    if(stream.bound.load(std::memory_order_acquire)!=generation){
+        if(records.test_and_set(std::memory_order_acquire)){faults.fetch_add(1);return play_ticket(SoundStream,{});}
+        const bool ready=stream.generation.load()==generation;Digest digest{};if(ready)digest=stream.digest;records.clear(std::memory_order_release);
+        if(!ready)return play_ticket(SoundStream,{});
+        AudioUse use=play_ticket(SoundStream,{});use.pending[0]=digest;use.kinds[0]=StreamContainer;return use;
+    }
     const CheckedAsset asset{stream.asset.load()};
     if(stream.generation.load(std::memory_order_acquire)!=generation || stream.bound.load(std::memory_order_acquire)!=generation)return play_ticket(SoundStream,{});
     return play_ticket(SoundStream,asset);
 }
 void played(const AudioUse& use){
-    for(unsigned i=0;i<use.count && i<2;++i)queued_checked(use.tickets[i],use.consumer,use.assets[i]);
+    for(unsigned i=0;i<use.count && i<2;++i){
+        if(use.kinds[i])queued_pending(use.tickets[i],use.consumer,PendingSound(use.kinds[i]),use.pending[i]);
+        else queued_checked(use.tickets[i],use.consumer,use.assets[i]);
+    }
 }
 #if defined(RE4DC_GC_ASSET_TEST) && RE4DC_GC_ASSET_TEST
 void audio_test_records_lock(bool held){if(held)records.test_and_set();else records.clear();}

@@ -24,7 +24,12 @@ int main(){
     unsigned magic=0x31434941,total=32;memcpy(aram,&magic,4);memcpy(aram+8,&total,4);aram[96]=2;
     const Digest md=fingerprint(mram,sizeof mram),ad=fingerprint(aram,128);char mi[41],ai[41];id(md,mi);id(ad,ai);
     CatalogRow catalog[]={{"sound-mram",mi,md,Unknown},{"sound-aram",ai,ad,GameCube}};assert(install(catalog,2));
-    load();const unsigned gen=bank_generation(0);assert(gen);bank_pump();
+    load();const unsigned gen=bank_generation(0);assert(gen);
+    // The independent audio thread may key on before main-thread catalog
+    // publication. Its completed immutable digests are copied, never resolved
+    // under G2, and remain exact even if the bank reloads before queue drain.
+    begin(0x111,0,Required);play(0,gen);end(1);assert(rows()==2 && logs.find("errors=0")!=std::string::npos);
+    logs.clear();bank_pump();
     assert(rows()==0);begin(0x111,1,Required);play(0,gen);end(1);
     assert(rows()==2 && logs.find("sound_bank=2")!=std::string::npos && logs.find("errors=0")!=std::string::npos);
     // SND_PAD_SKIP's stale tail never enters the exact AIC1 identity above.
@@ -56,10 +61,11 @@ int main(){
     assert(logs.find("catalog-token")!=std::string::npos);
     // Whole-container stream proof is still exact bytes, never the filename.
     const Digest container=fingerprint("AIS1 metadata + intro + loop",28);
-    stream_source(container);const unsigned stream_gen=stream_generation();bank_pump();
+    stream_source(container);const unsigned stream_gen=stream_generation();
     logs.clear();begin(0x111,10,Required);sq_held=true;const auto stream_use=stream_ticket(stream_gen);played(stream_use);sq_held=false;pump();end(1);
     assert(rows()==1 && logs.find("kind=sound-stream id=aica-str-dat")!=std::string::npos);
     assert(logs.find("sound_stream=1")!=std::string::npos);
+    bank_pump();
     stream_source(fingerprint("changed source",14));bank_pump();
     logs.clear();begin(0x111,11,Required);sq_held=true;played(stream_ticket(stream_gen));sq_held=false;pump();end(1);
     assert(rows()==0 && logs.find("catalog-token")!=std::string::npos);

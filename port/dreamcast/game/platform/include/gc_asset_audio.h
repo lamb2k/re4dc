@@ -12,7 +12,7 @@ void bank_pump(); // main-thread unlocked boundary; may read pinned catalog
 void stream_source(const Digest&); // complete immutable AIS1 container, reader outside locks
 void stream_source_failed();
 unsigned stream_generation();
-struct AudioUse {AudioTicket tickets[2]{};CheckedAsset assets[2]{};unsigned count=0;Consumer consumer=SoundBank;};
+struct AudioUse {AudioTicket tickets[2]{};CheckedAsset assets[2]{};Digest pending[2]{};unsigned kinds[2]{};unsigned count=0;Consumer consumer=SoundBank;};
 // Capture before key-on and finish after the actual accepted key-on, within
 // the same existing g_lock/G2 critical section. Both operations copy only.
 AudioUse bank_ticket(unsigned bank,unsigned generation);
