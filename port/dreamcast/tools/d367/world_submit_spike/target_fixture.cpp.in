@@ -1,0 +1,145 @@
+// Target-only qualification source. Production UI types and implementation are
+// included below. The generator replaces only cold texture loading and opening
+// a scene with controlled edges. Hot cache lookup, packet/header construction,
+// direct ownership/accounting and actual KOS SQ locking remain production code.
+#include <kos.h>
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
+#define private public
+#include "@TEXTURE_HEADER@"
+#undef private
+extern "C" {
+unsigned fixture_load_calls,fixture_stream_open_calls;
+unsigned fixture_fog_value;
+void* fixture_load_control(const void*,bool,const void*);
+void fixture_scene_open_control();
+}
+@NATIVE_UI_SOURCE@
+
+namespace {
+struct FixtureTexture { re4dc::texture::Header header; re4dc::texture::Texture texture; };
+FixtureTexture fixture_textures[48];
+pvr_ptr_t fixture_vram[48];
+alignas(32) pvr_vertex_t fixture_packets[kModelPacketBytes/32];
+unsigned fixture_keys[48][6];
+unsigned fixture_kind,fixture_parts,fixture_vertices;
+}
+extern "C" {
+struct FixtureResult {
+    unsigned begun,rejected,headers,parts,slots,bytes,stream_bytes,peak_bytes;
+    unsigned header_hits,cache_hits,cache_fills,texture_rejects,loads,opened;
+    unsigned model_used_now,model_pending_now,direct_now,acquired;
+    float u_scale,v_scale;
+};
+FixtureResult fixture_result;
+}
+
+extern "C" void fixture_configure(unsigned kind,unsigned parts,unsigned vertices) {
+    fixture_kind=kind;fixture_parts=parts;fixture_vertices=vertices;
+    frame=100;frame_ready=true;stream_scene=true;stream_aborted=false;
+    desired_list=stream_list=PVR_LIST_OP_POLY;stream_closed_lists=0;
+    direct_open=false;draining_parts=false;
+    model_packets=fixture_packets;model_used=model_pending=0;model_handle=nullptr;
+    direct_parts=direct_slots=frame_pvr_calls=frame_pvr_bytes=stream_model_bytes=stream_peak_bytes=0;
+    model_header_hits=model_header_builds=model_texture_rejects=0;
+    ps2_hdr_hits=ps2_hdr_fills=0;ps2_hdr_log=frame;
+    fixture_load_calls=fixture_stream_open_calls=fixture_fog_value=0;
+    fixture_result={};
+    std::memset(ps2_hdr,0,sizeof(ps2_hdr));
+    std::memset(ps2_hdr_next,0,sizeof(ps2_hdr_next));
+#if RE4DC_WORLD_AUTOSORT
+    world_autosort=true;
+#endif
+#if RE4DC_PS2_WORLD_SOURCE_TEX_PREP
+    sourceWorldPreparedFrame=0;sourceWorldPreparedKey={};sourceWorldAcquired=0;
+#endif
+    for(unsigned i=0;i<48;++i) {
+        auto& entry=entries[i];auto& data=fixture_textures[i];
+        data={};data.header.texture_count=1;data.header.texture_offset=sizeof(data.header);
+        data.texture.width=data.texture.height=32;
+        data.texture.format=re4dc::texture::kRgb565;
+        data.texture.payload=re4dc::texture::kPayloadTwiddled;
+        data.texture.data_size=2048;
+        fixture_vram[i]=reinterpret_cast<pvr_ptr_t>(0xa4000000U+i*2048U);
+        entry.package.data_=reinterpret_cast<const std::uint8_t*>(&data);
+        entry.package.header_=&data.header;
+        entry.package.pvr_textures_=fixture_vram+i;
+        entry.package.upload_complete_=true;
+        entry.key={i+1U,0x12340000U};entry.valid=true;entry.frame=frame-1U;
+        unsigned* key=fixture_keys[i];
+        key[0]=entry.key.crc;key[1]=entry.key.fnv;key[2]=key[3]=32;key[4]=0;key[5]=2;
+        const unsigned set=(key[0]^(key[1]>>7)^(key[1]<<3)^(key[4]*0x9e5U)^(key[5]*0x3c1U))&(kPs2HdrSets-1U);
+        auto& slot=ps2_hdr[set][0];
+        slot.crc=key[0];slot.fnv=key[1];slot.size=32U|(32U<<16);slot.mode=0x108U;
+        slot.entry=&entry;slot.texture=fixture_vram[i];
+        // Complete synthetic cached header. TSP width/height are exactly 32x32.
+        // All 32 output bytes are compared between arms; no geometry is drawn.
+        slot.words[0]=0x8084000aU;slot.words[1]=0xe8000000U;
+        slot.words[2]=0x00000012U;slot.words[3]=0x08000000U+i*256U;
+    }
+    if(kind==1)std::memset(ps2_hdr,0,sizeof(ps2_hdr));
+    if(kind==2) {
+        for(unsigned i=1;i<48;i+=2) {
+            const auto* key=fixture_keys[i];
+            const unsigned set=(key[0]^(key[1]>>7)^(key[1]<<3)^(key[5]*0x3c1U))&(kPs2HdrSets-1U);
+            ps2_hdr[set][0].mode=0;
+        }
+    }
+    if(kind==4)frame_ready=false;
+}
+
+extern "C" __attribute__((noinline)) void fixture_submit() {
+    unsigned begun=0,rejected=0;
+    float u=0,v=0;
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    Re4dcWorldSubmitBatch batch{};
+#endif
+    for(unsigned i=0;i<fixture_parts;++i) {
+        const auto* key=fixture_keys[fixture_kind==0?0:i];
+        Re4dcModelDirect out{};
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        const int ok=re4dc_ps2_world_direct_begin_batch(key,&out,&batch);
+#else
+        const int ok=re4dc_ps2_world_direct_begin(key,&out);
+#endif
+        if(ok) {
+            ++begun;u=out.u_scale;v=out.v_scale;
+#if RE4DC_SCENERY_SUBMIT_BATCH
+            re4dc_ps2_world_direct_end_batch(fixture_vertices,&batch);
+#else
+            re4dc_model_direct_end(fixture_vertices);
+#endif
+        } else ++rejected;
+    }
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    re4dc_ps2_world_batch_close(&batch);
+#endif
+    fixture_result.begun=begun;fixture_result.rejected=rejected;
+    fixture_result.u_scale=u;fixture_result.v_scale=v;
+}
+
+extern "C" void fixture_snapshot() {
+    auto& out=fixture_result;
+    out.headers=frame_pvr_calls;out.parts=direct_parts;out.slots=direct_slots;
+    out.bytes=frame_pvr_bytes;out.stream_bytes=stream_model_bytes;out.peak_bytes=stream_peak_bytes;
+    out.header_hits=model_header_hits;out.cache_hits=ps2_hdr_hits;out.cache_fills=ps2_hdr_fills;
+    out.texture_rejects=model_texture_rejects;out.loads=fixture_load_calls;out.opened=fixture_stream_open_calls;
+    out.model_used_now=model_used;out.model_pending_now=model_pending;out.direct_now=direct_open;
+#if RE4DC_PS2_WORLD_SOURCE_TEX_PREP
+    out.acquired=sourceWorldAcquired;
+#endif
+}
+
+extern "C" void fixture_prepare_normal_end() {
+    Re4dcModelDirect out{};
+    if(!re4dc_ps2_world_direct_begin(fixture_keys[0],&out))__builtin_trap();
+}
+extern "C" __attribute__((noinline)) void fixture_normal_end() {
+    re4dc_model_direct_end(fixture_vertices);
+}
+extern "C" const std::uintptr_t fixture_layout[] = {
+    1,sizeof(FixtureResult),reinterpret_cast<std::uintptr_t>(&fixture_result),
+    sizeof(Entry),sizeof(re4dc::texture::Package),kPs2HdrSets,kPs2HdrWays,
+    sizeof(fixture_packets)
+};

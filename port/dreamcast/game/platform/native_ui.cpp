@@ -124,6 +124,21 @@ void re4dc_kos_heap_state_cpp(unsigned* a, unsigned* b, unsigned* c) { re4dc_kos
 #ifndef RE4DC_TA_GUARD
 #define RE4DC_TA_GUARD 0
 #endif
+#ifndef RE4DC_SCENERY_SUBMIT_BATCH
+#define RE4DC_SCENERY_SUBMIT_BATCH 0
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH != 0 && RE4DC_SCENERY_SUBMIT_BATCH != 1
+#error SCENERY_SUBMIT_BATCH must be 0 or 1
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH
+#if !RE4DC_TA_DIRECT || RE4DC_PS2_WORLD_HDR_CACHE != 1
+#error SCENERY_SUBMIT_BATCH needs TA_DIRECT=1 and PS2_WORLD_HDR_CACHE=1
+#endif
+#if RE4DC_PS2_PVS || RE4DC_WORLD_SCRATCH || RE4DC_TA_GUARD
+#error SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_GUARD
+#endif
+#include "include/scenery_submit_batch.h"
+#endif
 #ifndef RE4DC_PERF_HUD
 #define RE4DC_PERF_HUD 0
 #endif
@@ -6750,10 +6765,19 @@ extern "C" int re4dc_model_direct_begin(const Re4dcModelPart* p,Re4dcModelDirect
     (void)p;(void)out;return 0;
 #endif
 }
+// WORLD_SUBMIT_END_IMPLEMENTATION
+#if RE4DC_SCENERY_SUBMIT_BATCH
+// The same logical end for ordinary and batched world parts. Only the caller
+// decides whether to release the physical SQ mutex before this accounting.
+static void model_direct_account(unsigned vertices){
+#else
 extern "C" void re4dc_model_direct_end(unsigned vertices){
+#endif
 #if RE4DC_TA_DIRECT
+#if !RE4DC_SCENERY_SUBMIT_BATCH
     if(!direct_open)return;
     sq_unlock();direct_open=false;
+#endif
     if(vertices>32767)re4dc_missing("native direct part exceeded the store-queue window");
     ++direct_parts;direct_slots+=vertices;
 #if RE4DC_TA_GUARD
@@ -6766,6 +6790,26 @@ extern "C" void re4dc_model_direct_end(unsigned vertices){
     (void)vertices;
 #endif
 }
+#if RE4DC_SCENERY_SUBMIT_BATCH
+extern "C" void re4dc_model_direct_end(unsigned vertices){
+    if(!direct_open)return;
+    sq_unlock();direct_open=false;
+    model_direct_account(vertices);
+}
+extern "C" void re4dc_ps2_world_batch_close(Re4dcWorldSubmitBatch* batch){
+    // A nested-begin refusal does not revoke the current part's ownership.
+    if(batch && batch->sq && !direct_open){sq_unlock();batch->sq=nullptr;}
+}
+extern "C" void re4dc_ps2_world_direct_end_batch(unsigned vertices,Re4dcWorldSubmitBatch* batch){
+    if(!batch || !batch->sq){re4dc_model_direct_end(vertices);return;}
+    if(!direct_open)return;
+    direct_open=false;
+    // The original end reports overflow after unlocking. Keep that boundary.
+    if(vertices>32767U)re4dc_ps2_world_batch_close(batch);
+    model_direct_account(vertices);
+}
+#endif
+// WORLD_SUBMIT_END_IMPLEMENTATION_END
 #if RE4DC_MV_SHADOWS
 // mv_shadow.cpp, inside stream_close only: one caster's volume (headers and 64-byte triangles, 32-byte multiples).
 extern "C" int re4dc_ui_mv_send(const void* data,unsigned bytes){
@@ -8380,15 +8424,40 @@ extern "C" int re4dc_pvs23_opaque_ready(const unsigned k[6],unsigned minimum_scr
 }
 #endif
 
+// WORLD_SUBMIT_BEGIN_IMPLEMENTATION
+#if RE4DC_SCENERY_SUBMIT_BATCH
+// One implementation for the ordinary and batched entry points: the cache,
+// material gates, header modifiers and accounting below remain shared.
+extern "C" __attribute__((noinline,noclone)) int re4dc_ps2_world_direct_begin_batch(const unsigned* k,Re4dcModelDirect* out,Re4dcWorldSubmitBatch* batch){
+    struct FailedBegin {
+        Re4dcWorldSubmitBatch* batch;bool accepted=false;
+        ~FailedBegin(){if(!accepted)re4dc_ps2_world_batch_close(batch);}
+    } failed_begin{batch};
+#else
 extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* out){
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    re4dc_ps2_world_batch_close(batch);
+#endif
     tamat::Scope source_scope(1);
 #endif
 #if RE4DC_TA_DIRECT
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    // A claimed group's validity walk can log and mutate failure state itself.
+    // Its ordinary unlocked entry boundary must precede the predicate too.
+    if(batch && batch->sq && re4dc_source_world_group_claimed())re4dc_ps2_world_batch_close(batch);
+    if(!re4dc_source_world_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_source_world_binding_failed();return 0;}
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return 0;}
 #endif
+#endif
     if(direct_open){RE4DC_WHD(1);re4dc_missing("native direct part nested");return 0;}
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    // ensure_model_storage may allocate and log only when the slab is absent.
+    if(!model_packets)re4dc_ps2_world_batch_close(batch);
+#endif
 #if RE4DC_WORLD_HOLE_DIAG
     whd_why=(!k || !out || k[4]>2 || k[5]>2)?10U:!frame_ready?2U:stream_aborted?3U:!ensure_model_storage()?4U:
             model_used+32>kModelPacketBytes/32?5U:0U;
@@ -8398,11 +8467,19 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
        !ensure_model_storage() || model_used+32>kModelPacketBytes/32)return 0;
 #endif
 #if RE4DC_UI_POLY_ORDER && RE4DC_SS_UI_ORDER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(ui_order && quads_flushed<nquad){re4dc_ps2_world_batch_close(batch);ui_order_flush();}
+#else
     if(ui_order && quads_flushed<nquad)ui_order_flush();
+#endif
     if(stream_aborted)return 0;
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_r11f_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_r11f_binding_failed();return 0;}
+#else
     if(!re4dc_r11f_binding_valid()){re4dc_r11f_binding_failed();return 0;}
+#endif
 #endif
     const Key key{k[0],k[1]};
 #if RE4DC_WORLD_RECT21
@@ -8419,6 +8496,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
     };
 #endif
 #if RE4DC_PS2_WORLD_PREFLIGHT_DIAG
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    re4dc_ps2_world_batch_close(batch);
+#endif
     sourceWorldDiagBind(key); // before a cache hit or a load, and before SQ lock
 #endif
 #if RE4DC_PS2_WORLD_HDR_CACHE
@@ -8434,6 +8514,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         hdr_size=k[2]|k[3]<<16;hdr_mode=k[4]|k[5]<<2|hdr_fog<<4|0x100U;
         hdr_set=(k[0]^(k[1]>>7)^(k[1]<<3)^(k[4]*0x9e5U)^(k[5]*0x3c1U))&(kPs2HdrSets-1U);
         if(frame-ps2_hdr_log>=600U){
+#if RE4DC_SCENERY_SUBMIT_BATCH
+            re4dc_ps2_world_batch_close(batch);
+#endif
             ps2_hdr_log=frame;
 #if RE4DC_PS2_WORLD_HDR_CACHE==2
             re4dc_log("PS2HDR frame=%u hits=%u fills=%u checked=%u mismatched=%u\n",frame,ps2_hdr_hits,ps2_hdr_fills,ps2_hdr_checked,ps2_hdr_bad);
@@ -8475,15 +8558,33 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         {constexpr bool pin=false;RE4DC_TOUCH(*handle);} // load()'s hit bookkeeping (pin=false)
         const unsigned pass=k[4];
         const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        if(!stream_scene || stream_list!=list
+#if RE4DC_UI_POLY_ORDER
+           || ui_order
+#endif
+        )re4dc_ps2_world_batch_close(batch);
+#endif
         stream_select(list);
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_source_world_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_source_world_binding_failed();return 0;}
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return 0;}
+#endif
 #endif
 
 #if RE4DC_PS2_WORLD_R11F_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        if(!re4dc_r11f_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_r11f_binding_failed();return 0;}
+#else
         if(!re4dc_r11f_binding_valid()){re4dc_r11f_binding_failed();return 0;}
 #endif
+#endif
 #if RE4DC_WORLD_AUTOSORT
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        if(!world_autosort)re4dc_ps2_world_batch_close(batch);
+#endif
         world_sort_begin();
 #endif
         if(stream_aborted){RE4DC_WHD(8);return 0;}
@@ -8497,11 +8598,19 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
             const Re4dcUiImage image{&key,nullptr,k[2],k[3],5,0,0};
             Entry* const ref_handle=load(image,false,&key);
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_source_world_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_source_world_binding_failed();return 0;}
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return 0;}
+#endif
 #endif
 
 #if RE4DC_PS2_WORLD_R11F_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+            if(!re4dc_r11f_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_r11f_binding_failed();return 0;}
+#else
             if(!re4dc_r11f_binding_valid()){re4dc_r11f_binding_failed();return 0;}
+#endif
 #endif
             bool bad=ref_handle!=handle;
             if(!bad){
@@ -8549,15 +8658,32 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
         RE4DC_GAD_HIT(handle->key);
     model_pending=model_used+count;model_handle=handle;
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        if(!stream_scene){re4dc_ps2_world_batch_close(batch);stream_open();}
+#else
         if(!stream_scene)stream_open();
+#endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_source_world_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_source_world_binding_failed();return 0;}
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return 0;}
+#endif
 #endif
 
 #if RE4DC_PS2_WORLD_R11F_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        if(!re4dc_r11f_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_r11f_binding_failed();return 0;}
+#else
         if(!re4dc_r11f_binding_valid()){re4dc_r11f_binding_failed();return 0;}
 #endif
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        auto* sq=batch && batch->sq?batch->sq:static_cast<std::uint32_t*>(static_cast<void*>(sq_lock((void*)PVR_TA_INPUT)));
+        if(batch)batch->sq=sq;
+#else
         auto* sq=static_cast<std::uint32_t*>(static_cast<void*>(sq_lock((void*)PVR_TA_INPUT)));
+#endif
         const auto* words=reinterpret_cast<const std::uint32_t*>(model_packets+model_used);
         for(unsigned i=0;i<8;++i)sq[i]=words[i];
 #if RE4DC_TA_HASH
@@ -8576,6 +8702,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #else
         out->u_scale=out->v_scale=1;
 #endif
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        failed_begin.accepted=true;
+#endif
         return 1;
     }
 #endif
@@ -8583,13 +8712,24 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #if RE4DC_WORLD_HOLE_DIAG
     whd_load_why="other";
 #endif
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    re4dc_ps2_world_batch_close(batch);
+#endif
     Entry* handle=load(image,false,&key);
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_source_world_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_source_world_binding_failed();return 0;}
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return 0;}
+#endif
 #endif
 
 #if RE4DC_PS2_WORLD_R11F_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_r11f_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_r11f_binding_failed();return 0;}
+#else
     if(!re4dc_r11f_binding_valid()){re4dc_r11f_binding_failed();return 0;}
+#endif
 #endif
     if(!handle || !frame_ready || stream_aborted || direct_open){RE4DC_WHD(!handle?6U:!frame_ready?2U:stream_aborted?3U:1U);++model_texture_rejects;return 0;}
     const auto& t=handle->package.textures()[0];
@@ -8600,15 +8740,33 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #endif
     const unsigned pass=k[4];
     const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!stream_scene || stream_list!=list
+#if RE4DC_UI_POLY_ORDER
+       || ui_order
+#endif
+    )re4dc_ps2_world_batch_close(batch);
+#endif
     stream_select(list);
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_source_world_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_source_world_binding_failed();return 0;}
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return 0;}
+#endif
 #endif
 
 #if RE4DC_PS2_WORLD_R11F_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_r11f_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_r11f_binding_failed();return 0;}
+#else
     if(!re4dc_r11f_binding_valid()){re4dc_r11f_binding_failed();return 0;}
 #endif
+#endif
 #if RE4DC_WORLD_AUTOSORT
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!world_autosort)re4dc_ps2_world_batch_close(batch);
+#endif
     world_sort_begin();
 #endif
     if(stream_aborted){RE4DC_WHD(8);return 0;}
@@ -8663,15 +8821,32 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
     RE4DC_GAD_HIT(handle->key);
     model_pending=model_used+count;model_handle=handle;
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!stream_scene){re4dc_ps2_world_batch_close(batch);stream_open();}
+#else
     if(!stream_scene)stream_open();
+#endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_source_world_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_source_world_binding_failed();return 0;}
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return 0;}
+#endif
 #endif
 
 #if RE4DC_PS2_WORLD_R11F_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_r11f_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_r11f_binding_failed();return 0;}
+#else
     if(!re4dc_r11f_binding_valid()){re4dc_r11f_binding_failed();return 0;}
 #endif
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    auto* sq=batch && batch->sq?batch->sq:static_cast<std::uint32_t*>(static_cast<void*>(sq_lock((void*)PVR_TA_INPUT)));
+    if(batch)batch->sq=sq;
+#else
     auto* sq=static_cast<std::uint32_t*>(static_cast<void*>(sq_lock((void*)PVR_TA_INPUT)));
+#endif
     const auto* words=reinterpret_cast<const std::uint32_t*>(model_packets+model_used);
     for(unsigned i=0;i<8;++i)sq[i]=words[i];
 #if RE4DC_TA_HASH
@@ -8690,11 +8865,20 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #else
     out->u_scale=out->v_scale=1;
 #endif
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    failed_begin.accepted=true;
+#endif
     return 1;
 #else
     (void)k;(void)out;return 0;
 #endif
 }
+#if RE4DC_SCENERY_SUBMIT_BATCH
+extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* out){
+    return re4dc_ps2_world_direct_begin_batch(k,out,nullptr);
+}
+#endif
+// WORLD_SUBMIT_BEGIN_IMPLEMENTATION_END
 #if RE4DC_WORLD_HOLE_DIAG
 // WORLD_HOLE_DIAG: the last refusal of re4dc_ps2_world_direct_begin (0 none) and load()'s reason text; cleared.
 extern "C" unsigned re4dc_whd_abort(void** ra,unsigned* q){

@@ -1,0 +1,5224 @@
+{
+  "schema": 1,
+  "baseline": "86c1b91a72a8d6d419cf9c5fa0c335ff3f552a9d",
+  "knob": "SCENERY_SUBMIT_BATCH=1",
+  "default": 0,
+  "decision": "Keep as an incremental optimization candidate; measured warm ownership-boundary benefit, net r101 frame gain not measured.",
+  "evidence_receipts": {
+    "production": {
+      "path": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/build-controls.json",
+      "sha256": "e7ae60f449da60325dd22b214afd3c0156c685928b43fd030b3c8da5d60c7caf"
+    },
+    "host": {
+      "path": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-check-01/check-controls.json",
+      "sha256": "2a0e4a1cb3c3217a97d4b3a0e0952b18acf7152401c13f99e2c6bb27d49891ad"
+    },
+    "target_build": {
+      "path": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-target-04/target-build-controls.json",
+      "sha256": "5c02e689e0cce70b4e407e5ec49e031a3ad6181f66d740d1800b247015376ff4"
+    },
+    "target": {
+      "path": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-run-02/target-controls.json",
+      "sha256": "b465a86debe3515c7433041743aba791cca0c5f5ae0c511bd7fd1eb97932f5c4"
+    },
+    "caller": {
+      "path": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-static-01/static-review.json",
+      "sha256": "35225e26a0c608cbf3a545042124a5530ef00095c580b168e39b1fabd072e62f"
+    },
+    "knobs": {
+      "path": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-knobs-02/knob-controls.json",
+      "sha256": "2315b3fa4e8952095d40bb0bd3e9b75dab3b260777c5d33d076056c09ea67a2d"
+    },
+    "prior_queue": {
+      "path": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-prior-queue-01/queue-controls.json",
+      "sha256": "81c1f23dc42f406fa278b9206225cc6e8184bc85831e6ef9362b6a42b4a3e61c"
+    },
+    "target_body_identity": {
+      "path": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-code-identity-01.json",
+      "sha256": "da7e7b77430ffa56e476d6a186be5114376d6723defc652fbc14ffe25329f07a"
+    }
+  },
+  "production": {
+    "status": "PASS",
+    "baseline": "86c1b91a72a8d6d419cf9c5fa0c335ff3f552a9d",
+    "knob": "RE4DC_SCENERY_SUBMIT_BATCH",
+    "scope": "Two complete production TU compilation and OFF identity; no linked game, frame or hardware timing",
+    "compiler": "sh-elf-g++ (GCC) 15.2.0",
+    "source_sha256": {
+      "port/dreamcast/game/platform/native_static.cpp": "205ef1c488b0080ef27ee1c95fb801cb6fc1795101471b292378108812770a48",
+      "port/dreamcast/game/platform/native_ui.cpp": "af8c5a111a948702f7a164e5209e53de48452fa93f2180f56bf33bb3b366e256"
+    },
+    "translation_units": {
+      "native_static": {
+        "baseline.ii": {
+          "bytes": 1042718,
+          "sha256": "881e1e5b22981832fe3e10e528192ad8a99308659126506e9ae45b1e2af9a481"
+        },
+        "baseline.o": {
+          "bytes": 174744,
+          "sha256": "dd20d9ab5592c097567ebffb4f101edf4848c2768b232d06d37ba6a63681c865",
+          "executable_bytes": 67040,
+          "allocated_bytes": 110627,
+          "zero_fill_bytes": 17212,
+          "selected_static_stack_frames": [
+            {
+              "function": "<stdin>:6325:22:{anonymous}::ps2_pass(unsigned int, float)::<lambda()>",
+              "bytes": 848,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6130:5:int {anonymous}::ps2_pass(unsigned int, float)",
+              "bytes": 8988,
+              "kind": "static"
+            }
+          ]
+        },
+        "absent.ii": {
+          "bytes": 1042718,
+          "sha256": "881e1e5b22981832fe3e10e528192ad8a99308659126506e9ae45b1e2af9a481"
+        },
+        "absent.o": {
+          "bytes": 174744,
+          "sha256": "dd20d9ab5592c097567ebffb4f101edf4848c2768b232d06d37ba6a63681c865",
+          "executable_bytes": 67040,
+          "allocated_bytes": 110627,
+          "zero_fill_bytes": 17212,
+          "selected_static_stack_frames": [
+            {
+              "function": "<stdin>:6383:22:{anonymous}::ps2_pass(unsigned int, float)::<lambda()>",
+              "bytes": 848,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6188:5:int {anonymous}::ps2_pass(unsigned int, float)",
+              "bytes": 8988,
+              "kind": "static"
+            }
+          ]
+        },
+        "zero.ii": {
+          "bytes": 1042718,
+          "sha256": "881e1e5b22981832fe3e10e528192ad8a99308659126506e9ae45b1e2af9a481"
+        },
+        "zero.o": {
+          "bytes": 174744,
+          "sha256": "dd20d9ab5592c097567ebffb4f101edf4848c2768b232d06d37ba6a63681c865",
+          "executable_bytes": 67040,
+          "allocated_bytes": 110627,
+          "zero_fill_bytes": 17212,
+          "selected_static_stack_frames": [
+            {
+              "function": "<stdin>:6383:22:{anonymous}::ps2_pass(unsigned int, float)::<lambda()>",
+              "bytes": 848,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6188:5:int {anonymous}::ps2_pass(unsigned int, float)",
+              "bytes": 8988,
+              "kind": "static"
+            }
+          ]
+        },
+        "on.ii": {
+          "bytes": 1043620,
+          "sha256": "65e1bfd36bc9e3047a9042280cec638bb42d031f74725410280c3988fe7de0bf"
+        },
+        "on.o": {
+          "bytes": 175172,
+          "sha256": "2580fc14e8bff8d745f55aa9679dd050ccb4e991beae13445eb3e412fd1b5da6",
+          "executable_bytes": 67068,
+          "allocated_bytes": 110655,
+          "zero_fill_bytes": 17212,
+          "selected_static_stack_frames": [
+            {
+              "function": "<stdin>:6383:22:{anonymous}::ps2_pass(unsigned int, float)::<lambda()>",
+              "bytes": 852,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6188:5:int {anonymous}::ps2_pass(unsigned int, float)",
+              "bytes": 8988,
+              "kind": "static"
+            }
+          ]
+        }
+      },
+      "native_ui": {
+        "baseline.ii": {
+          "bytes": 1455199,
+          "sha256": "4c39d1a385020807ad07b9163baca6c9884cd14b637dda3cc936ae0c6fae9462"
+        },
+        "baseline.o": {
+          "bytes": 399556,
+          "sha256": "e91c92158bfadb9aa472660fc32e0c38fe5cce3d69067558bdd8a936f743bca3",
+          "executable_bytes": 76614,
+          "allocated_bytes": 386140,
+          "zero_fill_bytes": 152378,
+          "selected_static_stack_frames": [
+            {
+              "function": "<stdin>:8413:27:re4dc_ps2_world_direct_begin(const unsigned int*, Re4dcModelDirect*)::<lambda(const {anonymous}::Entry&)>",
+              "bytes": 36,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6753:17:void re4dc_model_direct_end(unsigned int)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6718:16:int re4dc_model_direct_begin(const Re4dcModelPart*, Re4dcModelDirect*)",
+              "bytes": 48,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6798:16:int re4dc_model_direct_begin_reserved(const Re4dcModelPart*, const Re4dcModelPacket*, Re4dcModelDirect*)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:8383:16:int re4dc_ps2_world_direct_begin(const unsigned int*, Re4dcModelDirect*)",
+              "bytes": 384,
+              "kind": "static"
+            }
+          ]
+        },
+        "absent.ii": {
+          "bytes": 1455199,
+          "sha256": "4c39d1a385020807ad07b9163baca6c9884cd14b637dda3cc936ae0c6fae9462"
+        },
+        "absent.o": {
+          "bytes": 399556,
+          "sha256": "e91c92158bfadb9aa472660fc32e0c38fe5cce3d69067558bdd8a936f743bca3",
+          "executable_bytes": 76614,
+          "allocated_bytes": 386140,
+          "zero_fill_bytes": 152378,
+          "selected_static_stack_frames": [
+            {
+              "function": "<stdin>:8490:27:re4dc_ps2_world_direct_begin(const unsigned int*, Re4dcModelDirect*)::<lambda(const {anonymous}::Entry&)>",
+              "bytes": 36,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6774:17:void re4dc_model_direct_end(unsigned int)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6733:16:int re4dc_model_direct_begin(const Re4dcModelPart*, Re4dcModelDirect*)",
+              "bytes": 48,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6842:16:int re4dc_model_direct_begin_reserved(const Re4dcModelPart*, const Re4dcModelPacket*, Re4dcModelDirect*)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:8437:16:int re4dc_ps2_world_direct_begin(const unsigned int*, Re4dcModelDirect*)",
+              "bytes": 384,
+              "kind": "static"
+            }
+          ]
+        },
+        "zero.ii": {
+          "bytes": 1455199,
+          "sha256": "4c39d1a385020807ad07b9163baca6c9884cd14b637dda3cc936ae0c6fae9462"
+        },
+        "zero.o": {
+          "bytes": 399556,
+          "sha256": "e91c92158bfadb9aa472660fc32e0c38fe5cce3d69067558bdd8a936f743bca3",
+          "executable_bytes": 76614,
+          "allocated_bytes": 386140,
+          "zero_fill_bytes": 152378,
+          "selected_static_stack_frames": [
+            {
+              "function": "<stdin>:8490:27:re4dc_ps2_world_direct_begin(const unsigned int*, Re4dcModelDirect*)::<lambda(const {anonymous}::Entry&)>",
+              "bytes": 36,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6774:17:void re4dc_model_direct_end(unsigned int)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6733:16:int re4dc_model_direct_begin(const Re4dcModelPart*, Re4dcModelDirect*)",
+              "bytes": 48,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6842:16:int re4dc_model_direct_begin_reserved(const Re4dcModelPart*, const Re4dcModelPacket*, Re4dcModelDirect*)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:8437:16:int re4dc_ps2_world_direct_begin(const unsigned int*, Re4dcModelDirect*)",
+              "bytes": 384,
+              "kind": "static"
+            }
+          ]
+        },
+        "on.ii": {
+          "bytes": 1457216,
+          "sha256": "0cc782bfbfb87edcbc4e0a4200d95de9b36221113070809cf2c30497962a04e3"
+        },
+        "on.o": {
+          "bytes": 400920,
+          "sha256": "44a3dc0778da20078fee1eb674c89d5c594c89e6d9a742c3b4b6479169fb4ea2",
+          "executable_bytes": 76986,
+          "allocated_bytes": 386512,
+          "zero_fill_bytes": 152378,
+          "selected_static_stack_frames": [
+            {
+              "function": "<stdin>:6772:13:void model_direct_account(unsigned int)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:8490:27:re4dc_ps2_world_direct_begin_batch(const unsigned int*, Re4dcModelDirect*, Re4dcWorldSubmitBatch*)::<lambda(const {anonymous}::Entry&)>",
+              "bytes": 36,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6794:17:void re4dc_model_direct_end(unsigned int)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6799:17:void re4dc_ps2_world_batch_close(Re4dcWorldSubmitBatch*)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6803:17:void re4dc_ps2_world_direct_end_batch(unsigned int, Re4dcWorldSubmitBatch*)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6733:16:int re4dc_model_direct_begin(const Re4dcModelPart*, Re4dcModelDirect*)",
+              "bytes": 48,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6842:16:int re4dc_model_direct_begin_reserved(const Re4dcModelPart*, const Re4dcModelPacket*, Re4dcModelDirect*)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:8431:50:int re4dc_ps2_world_direct_begin_batch(const unsigned int*, Re4dcModelDirect*, Re4dcWorldSubmitBatch*)",
+              "bytes": 388,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:8877:16:int re4dc_ps2_world_direct_begin(const unsigned int*, Re4dcModelDirect*)",
+              "bytes": 0,
+              "kind": "static"
+            }
+          ]
+        }
+      }
+    },
+    "profile": {
+      "native_static": {
+        "flags": [
+          "-O2",
+          "-fno-PIC",
+          "-fno-PIE",
+          "-fomit-frame-pointer",
+          "-m4-single",
+          "-ml",
+          "-mfsrra",
+          "-mfsca",
+          "-ffunction-sections",
+          "-fdata-sections",
+          "-matomic-model=soft-gusa",
+          "-ftls-model=local-exec",
+          "-D__DREAMCAST__",
+          "-isystem",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/include",
+          "-isystem",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/kernel/arch/dreamcast/include",
+          "-isystem",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/addons/include",
+          "-D_arch_dreamcast=1",
+          "-D_arch_sub_pristine=1",
+          "-Wall",
+          "-std=gnu++20",
+          "-Wall",
+          "-Wextra",
+          "-O1",
+          "-I/workspace/scratch/c4e1a2818fde/re4dc-submit-spike/port/dreamcast/game/platform/include",
+          "-DRE4DC_GAME",
+          "-fno-exceptions",
+          "-fno-unwind-tables",
+          "-fno-asynchronous-unwind-tables",
+          "-fno-threadsafe-statics",
+          "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+          "-DRE4DC_RENDER_FSAA=1",
+          "-DRE4DC_RENDER_OPTION=1",
+          "-DRE4DC_VIEW_DIST_OPTION=1",
+          "-DRE4DC_FAR_SHELL=1",
+          "-DRE4DC_FOLIAGE_OPTION=1",
+          "-DRE4DC_RES_ALTERNATE=1",
+          "-DRE4DC_RES_MODES=9",
+          "-DRE4DC_RES_MODE=0",
+          "-DRE4DC_RES_CYCLE_FRAMES=0",
+          "-DRE4DC_MV_SHADOWS=1",
+          "-DRE4DC_MV_OPB_BINS=8",
+          "-DRE4DC_MV_SCALE=50",
+          "-DRE4DC_MV_SIDES=8",
+          "-DRE4DC_MV_RADIUS=420",
+          "-DRE4DC_MV_TOP=250",
+          "-DRE4DC_MV_DEPTH=1200",
+          "-DRE4DC_MV_RANGE_M=15",
+          "-DRE4DC_MV_MAX=12",
+          "-DRE4DC_MV_BODY=1700",
+          "-DRE4DC_MV_LEN_MAX=1800",
+          "-DRE4DC_ATCHK_LIST=1",
+          "-DRE4DC_ATCHK_CACHE=1",
+          "-DRE4DC_WORKAT_INLINE=1",
+          "-DRE4DC_FX_SCAN=1",
+          "-DRE4DC_FX_MOVE=1",
+          "-DRE4DC_OT_MASK=1",
+          "-DRE4DC_MANUAL_PACK_PROBE=1",
+          "-DRE4DC_PAD_PROMPTS=1",
+          "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+          "-DRE4DC_SH4ZAM_RENDER=1",
+          "-DRE4DC_ACTOR_TRANSACTION=1",
+          "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+          "-DRE4DC_VMU_DIALOG=1",
+          "-DRE4DC_ACTOR_PL08=1",
+          "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+          "-DRE4DC_NMR_POOL=1",
+          "-DRE4DC_ACTOR_MATERIALS=4",
+          "-DRE4DC_ACTOR_MATERIALS=4",
+          "-DRE4DC_TEX_PKG_SKIP=1",
+          "-DRE4DC_GC_CENSUS_TRIM=1",
+          "-DRE4DC_GXF_JITTER=1",
+          "-DRE4DC_WATER45_NATIVE=1",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/motion-read.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/quality-knobs.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/cabin-source.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/re4dc-submit-spike/port/dreamcast/game/platform/include/native_event_file.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/movie-world-arena.h",
+          "-DRE4DC_PS2_WORLD_DRAW=1",
+          "-DRE4DC_PS2_PRELOAD_LEAN=1",
+          "-DRE4DC_PS2_WORLD_MESH=1",
+          "-DRE4DC_WORLD_RECT21=1",
+          "-DRE4DC_PS2_PASS_MASK=1",
+          "-DRE4DC_PS2_VERTEX_ALPHA=1",
+          "-DRE4DC_PS2_PT_CUTOUT=1",
+          "-DRE4DC_PS2_R100_SMX=1",
+          "-DRE4DC_PS2_R100_TR4=1",
+          "-DRE4DC_PS2_INTERIOR_CULL=1",
+          "-DRE4DC_PS2_INTERIOR_ACTORS=1",
+          "-DRE4DC_PS2_INTERIOR_OWNER=1",
+          "-DRE4DC_PS2_WORLD_ROOMS=2",
+          "-DRE4DC_PS2_WORLD_DYNAMIC=1",
+          "-DRE4DC_PS2_WORLD_PARTS=1",
+          "-DRE4DC_PS2_WORLD_NONEMPTY_LOD=1",
+          "-DRE4DC_PS2_WORLD_SOURCE_OWNER=1",
+          "-DRE4DC_PS2_WORLD_SOURCE_TEX_PREP=1",
+          "-DRE4DC_PS2_WORLD_REGISTRY=1",
+          "-DRE4DC_PS2_OPEN_READ=1",
+          "-DRE4DC_SCENERY_ENCODING=1",
+          "-DRE4DC_PS2_WORLD_LEAN=23",
+          "-DRE4DC_PS2_PLACE_GATE=1",
+          "-DRE4DC_PS2_AREA_HIDE=1",
+          "-DRE4DC_PS2_ROOM_PIN=1",
+          "-DRE4DC_PS2_STRIP_GROUPS=1",
+          "-DRE4DC_MESH_VP_SCHED=1",
+          "-DRE4DC_MESH_STRIP_LEAN=1",
+          "-DRE4DC_MESH_PRIME_LAZY=1",
+          "-DRE4DC_MESH_CLIP_LEAN=1",
+          "-DRE4DC_MESH_CLIP_ACCEPT=1",
+          "-DRE4DC_ENEMY_VIS_CULL=1",
+          "-Os",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/native-static.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/d349-stack.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/frontend30.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/subscreen.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/effects30.h",
+          "-DRE4DC_HW_FOG_HAZE=1",
+          "-DRE4DC_FOLIAGE_TRIM=2",
+          "-DRE4DC_FOLIAGE_NEAR_MM=12000",
+          "-DRE4DC_TRANS_POLICY=3",
+          "-DRE4DC_FOLIAGE_NEAR_FIX=1",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/scenery30.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/blender30.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/tahash.h",
+          "-DRE4DC_EFFECT_PS2_TOGGLE=1",
+          "-I/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/kernel/arch/dreamcast/hardware/pvr",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/post30.h",
+          "-DRE4DC_OWNER_SETUP_LEAN=1",
+          "-DRE4DC_CHARBAKE_TOGGLE=1",
+          "-DRE4DC_SG_SELECT_LEAN=1",
+          "-DRE4DC_SCENERY_CHUNK=1",
+          "-DRE4DC_SCENERY_UNIT_CONCAT=1",
+          "-DRE4DC_SCENERY_SCREEN_MEMO=1",
+          "-DRE4DC_SCENERY_FAR_LOD=4",
+          "-I/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/sdk/include",
+          "-I/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/kos-overlay"
+        ],
+        "generated_headers": {
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/motion-read.h": "727772dd760f5f035a4c96bd769924d42a32e08881df1bd11e27a4be87a47103",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/quality-knobs.h": "2609cb756a614a964d3360770cf65e2dffb836f18e6e11b30540331f5885a2e4",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/cabin-source.h": "dc9518c0eac2c04a10c86e2d02cb40ceb78eda41493d352a94d8520aac12f862",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/movie-world-arena.h": "7a4343f7ed32aaa45014973a4a0c78a6a1879cb211efb72b3966fabafdd6913f",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/native-static.h": "60ce29f015392507f11f6e1e14a61952d5680c193ca3804205e114fd9eccf53c",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/d349-stack.h": "c76096ae0722f473c62a1f9e916f5f8f2ee92d497982887faec8c0ebd435679a",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/frontend30.h": "6a91cd626e2110951a1370eb058b3f3aa3ba3a395cc754f20607836cf708b34e",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/subscreen.h": "e1859086e91b60235c8b9eee3b22f1b0e12dc911ee8866aeeccc61d406892505",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/effects30.h": "e512bd60f12c51a3638211faafb89136026acb8f70c1b7350cc6548ffaff1c0a",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/scenery30.h": "af1859d4f6346b00615c64776b1b6f60dfddece35e4f94e342fbd0d76cf3ee2c",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/blender30.h": "a30c3e86b1310b781408a53ed95da327b1e4eb5eba89a6daad9c9124603bbfc9",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/tahash.h": "d8c463d1534f7fdd66a8677bc25332396dbbd8a1c9100f744a15fd66bac61515",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/post30.h": "c7e8b8d3f3261369b695ef74fe5c043ba2b9a7cae93dcf1bb90859179a0637cf"
+        },
+        "source_sha256": {
+          "port/dreamcast/tools/d367/build-r21.sh": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93",
+          "port/dreamcast/tools/d367/test22/release-knobs.txt": "b67978e9d50cfae966d91bdd771e242ba12f4d899b539db0dbf6982e5e91a46c",
+          "port/dreamcast/build-public.sh": "7eaba2006802a1dc5a10ff0602d316cc86b09f32535edfa66412ce2564ca0d9f",
+          "port/dreamcast/kos-env.sh": "d776b3b236236bc5f91500ae5e469c140b41f94e44ec72165efd556afd7aebb8",
+          "port/dreamcast/game/Makefile": "ea4c8ddf4ad034ffe246bd221ed92149ccdf0e2803a82559f57ebe6b5dc445c7",
+          "port/dreamcast/game/actor_ganado_ps2_stump.mk": "4e405949406531d8435bf7a292d9da8ccf1d3ea0d259c6f463e9e029827ffbf2",
+          "port/dreamcast/game/actorplan.mk": "d256e5c6abbcbc2301a83753017c6d0f466b215f301d847f26c7ff5aaa4ff4ce",
+          "port/dreamcast/game/backface.mk": "a3b2d6c09036f1589e7ab1242c0a7d9af5dcb97b0109521e019eb102ddb01138",
+          "port/dreamcast/game/bench.mk": "7c6eca2f116b6fabe4799d33e79a44ac52e775462658124d6833fbd7eba3854d",
+          "port/dreamcast/game/blender30.mk": "9769d1141e1ca47e10ff94fa67f7a7799ec33c3fade565ada37b641e9186537d",
+          "port/dreamcast/game/bodysvc20.mk": "df456c8a62b5e3d58bc4b6f3c11ead1365d3f0ed75a53a0dc0ad2a8460135453",
+          "port/dreamcast/game/cache20.mk": "b88f46b5b4494d5a830d2c01e850fd75e64af66a063025e5568b2ce29100381c",
+          "port/dreamcast/game/charbake.mk": "b6e58694cab718df70b31915ada82417fc32b0ab7517ff6e85eedb5b6570d2d3",
+          "port/dreamcast/game/chardraw19.mk": "0a9db853a9432df007421d5a6e7ca8c90c2aa770fa46a30ed72a321f2f87403f",
+          "port/dreamcast/game/crowd.mk": "3b41a6951044114518ec24ad74da2d91cf8c333ae2a7e1c0d2d2f4c553875fca",
+          "port/dreamcast/game/dbgwarp.mk": "e0530c3591858f3c2ee5227e06571f0375f50831df1b80bf8b08a475062e83f0",
+          "port/dreamcast/game/demo_candidate.mk": "548266bfcb134492aed006771600fda3c2b3d5b046596a1fc2f7d074520912d4",
+          "port/dreamcast/game/effects30.mk": "66ba70dc9c8f92a87b75aae884da838ac0be23693aba326d7700c05dbe97e5a5",
+          "port/dreamcast/game/engine_preview.mk": "6ad87f53c5f2c4f164b9c8229cdc077a895111057b4a17c6294e9eac38454e18",
+          "port/dreamcast/game/esppool.mk": "46639be5e6eee89cc53dfbf43f1439a20bb898ffd131cd9b06cfb82abe961d0a",
+          "port/dreamcast/game/frontend30.mk": "c6ac0510ca94d30dbb41a36afd5e45e84555c49511f7003dde1f4c6511064614",
+          "port/dreamcast/game/fxtrim.mk": "40e2d18ee46a8284a1fb5773c46c60d73e970bc851c2be494e4f503616abb0d4",
+          "port/dreamcast/game/g1parts.mk": "f5ffeb4594647e7c239fac40a038f77ff43ebe2c4ed4f503af1436058c5c3a50",
+          "port/dreamcast/game/game30.mk": "47efa510d5f6ec32e73f6c442278411cc7e87738ec8cd656f1ec0753e50b60ce",
+          "port/dreamcast/game/hwfog.mk": "95d43fd37359ebd11e8d8f11efe678d479b69b3f648440440c24c595adefae25",
+          "port/dreamcast/game/knobs.mk": "8be88086cfa0e7f23b87ae1cdb4d09c0924ea783cea45009747b722383d59863",
+          "port/dreamcast/game/logiclod20.mk": "d90740b778194734e335421da72b3593849e9d75f372c155a2cc56e40b0bd969",
+          "port/dreamcast/game/mcheck.mk": "988282bed93d335a6a1dae07cd74c8c85abf71f47e49847fd68ee28dc2bd94ba",
+          "port/dreamcast/game/native_model_registry.mk": "bb8f9338a6a29674c248d9103f0a73e19118ff1f95548e91599abf27b2583f46",
+          "port/dreamcast/game/pace.mk": "78fef47bf1ec90662be905d449bb4ef139105e4d74c4fac6848f51ce3bf43710",
+          "port/dreamcast/game/post30.mk": "c9e7a3ff79f1a8d59a1adabbead4a269eda26a467185597bf96f3ab1542ac8d5",
+          "port/dreamcast/game/ps2leon.mk": "afacaa37db731ab421916f9a84b1fddd71bb036c7a5ef9a7a0e536d652fdd916",
+          "port/dreamcast/game/pvr_rtt.mk": "4b34e026faf4835b7339ee9eac9dd3ddcc8020153885f0acb1ed32bee175c2c3",
+          "port/dreamcast/game/qamenu.mk": "9f4f57e42c0e3f2fb21df320e4badb9295b375cf856a5d44410203a11b607558",
+          "port/dreamcast/game/quickweapon.mk": "6329640761dbc5802c32fd4272d90347b64807a0995c888098d7237ecd27abf0",
+          "port/dreamcast/game/records30.mk": "132df68c9fdd14efb107fcf921183b7519e430d82c6b87bc026108f50eba515c",
+          "port/dreamcast/game/rigid20.mk": "3608f11dd5572b98692db3839a8c92189cc09009eb11350a311949d644e07b63",
+          "port/dreamcast/game/safecuts.mk": "da6ba39b803e76b1f97e34688ae05bbc7baff5f5f47a9f0ff2efdbdea7d80afe",
+          "port/dreamcast/game/scenery19.mk": "7c8e6a65342517b2751887733c467f8cbfd3824e606076954335c4ac73e37411",
+          "port/dreamcast/game/scenery30.mk": "46acf4cb67022b9d4f820bf887075143e951b1895e3e1cb95e9e2335105411ec",
+          "port/dreamcast/game/shotfx20.mk": "dc5be227dcf55f1a28eeb68dfb58589cc929bc04fdb2e473a7efb8ac62e946a6",
+          "port/dreamcast/game/subscreen.mk": "326f2a516ee9b52dbc43ad32b3b2ec93a597265e4184811a52c6919643f2c95c",
+          "port/dreamcast/game/t2exact.mk": "1e0e369e489ff81f3dc4f7cbd1839e89f6313fe6c5e097a891198a62d2a4c175",
+          "port/dreamcast/game/tahash.mk": "c32223ced5323b52388ed5b282e223495a9dc89f927bfcc947d6f0423a00f184",
+          "port/dreamcast/game/vmu_context.mk": "c2f3714f6f86f7c96d7c8697498e7679bf5b1ae33820cba059a610772a0502e4",
+          "port/dreamcast/game/vmusave.mk": "c99a41216906a2b9d3c1c55be2a826cf0fba4eecb0d71d3b0c50c14ed885e5eb",
+          "port/dreamcast/game/worldhole.mk": "fc39dd79c316360601ad59b1805662864fdd9a5c9a42542193513fc167fc3f2c",
+          "port/dreamcast/game/worldscratch.mk": "7a71efa755f0c1984df3eef28ff07122459b90ca86bf596872f7b8b5b013f057"
+        },
+        "missing_asset_overrides": [
+          "PS2_LEON=0",
+          "LEON_HAND_PACK=0",
+          "PS2_GANADO=0",
+          "PS2_GANADO_LIT=0",
+          "GANADO_LOD=0",
+          "GANADO_EVENT_KEEP_LOD=0",
+          "ACTOR_PROBE_LIGHT=1",
+          "GANADO_LIT=0",
+          "NATIVE_MODEL_REGISTRY_DYING=0",
+          "LEON_HEADLESS=0",
+          "PS2_CH2_ENEMY=0",
+          "ACTOR_GANADO_PS2_STUMP=0"
+        ]
+      },
+      "native_ui": {
+        "flags": [
+          "-O2",
+          "-fno-PIC",
+          "-fno-PIE",
+          "-fomit-frame-pointer",
+          "-m4-single",
+          "-ml",
+          "-mfsrra",
+          "-mfsca",
+          "-ffunction-sections",
+          "-fdata-sections",
+          "-matomic-model=soft-gusa",
+          "-ftls-model=local-exec",
+          "-D__DREAMCAST__",
+          "-isystem",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/include",
+          "-isystem",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/kernel/arch/dreamcast/include",
+          "-isystem",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/addons/include",
+          "-D_arch_dreamcast=1",
+          "-D_arch_sub_pristine=1",
+          "-Wall",
+          "-std=gnu++20",
+          "-Wall",
+          "-Wextra",
+          "-O1",
+          "-I/workspace/scratch/c4e1a2818fde/re4dc-submit-spike/port/dreamcast/game/platform/include",
+          "-DRE4DC_GAME",
+          "-fno-exceptions",
+          "-fno-unwind-tables",
+          "-fno-asynchronous-unwind-tables",
+          "-fno-threadsafe-statics",
+          "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+          "-DRE4DC_RENDER_FSAA=1",
+          "-DRE4DC_RENDER_OPTION=1",
+          "-DRE4DC_VIEW_DIST_OPTION=1",
+          "-DRE4DC_FAR_SHELL=1",
+          "-DRE4DC_FOLIAGE_OPTION=1",
+          "-DRE4DC_RES_ALTERNATE=1",
+          "-DRE4DC_RES_MODES=9",
+          "-DRE4DC_RES_MODE=0",
+          "-DRE4DC_RES_CYCLE_FRAMES=0",
+          "-DRE4DC_MV_SHADOWS=1",
+          "-DRE4DC_MV_OPB_BINS=8",
+          "-DRE4DC_MV_SCALE=50",
+          "-DRE4DC_MV_SIDES=8",
+          "-DRE4DC_MV_RADIUS=420",
+          "-DRE4DC_MV_TOP=250",
+          "-DRE4DC_MV_DEPTH=1200",
+          "-DRE4DC_MV_RANGE_M=15",
+          "-DRE4DC_MV_MAX=12",
+          "-DRE4DC_MV_BODY=1700",
+          "-DRE4DC_MV_LEN_MAX=1800",
+          "-DRE4DC_ATCHK_LIST=1",
+          "-DRE4DC_ATCHK_CACHE=1",
+          "-DRE4DC_WORKAT_INLINE=1",
+          "-DRE4DC_FX_SCAN=1",
+          "-DRE4DC_FX_MOVE=1",
+          "-DRE4DC_OT_MASK=1",
+          "-DRE4DC_MANUAL_PACK_PROBE=1",
+          "-DRE4DC_PAD_PROMPTS=1",
+          "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+          "-DRE4DC_SH4ZAM_RENDER=1",
+          "-DRE4DC_ACTOR_TRANSACTION=1",
+          "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+          "-DRE4DC_VMU_DIALOG=1",
+          "-DRE4DC_ACTOR_PL08=1",
+          "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+          "-DRE4DC_NMR_POOL=1",
+          "-DRE4DC_ACTOR_MATERIALS=4",
+          "-DRE4DC_ACTOR_MATERIALS=4",
+          "-DRE4DC_TEX_PKG_SKIP=1",
+          "-DRE4DC_GC_CENSUS_TRIM=1",
+          "-DRE4DC_GXF_JITTER=1",
+          "-DRE4DC_UI_POLY_ORDER=0",
+          "-DRE4DC_WATER45_NATIVE=1",
+          "-DRE4DC_LAKE_RIPPLES=1",
+          "-DRE4DC_LAKE_TILE=2800.0f",
+          "-DRE4DC_LAKE_ALPHA=0.35f",
+          "-DRE4DC_WATER_PS2=1",
+          "-DRE4DC_VGA_SOFT=1",
+          "-DRE4DC_LETTERBOX_CLIP=1",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/poison.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/io-probe.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/native-mes.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/quality-knobs.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/cabin-source.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/re4dc-submit-spike/port/dreamcast/game/platform/include/native_event_file.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/movie-world-arena.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/route-movies.h",
+          "-DRE4DC_UI_HEAP_LAZY=30",
+          "-DRE4DC_UI_PALETTE_SLOTS=32",
+          "-DRE4DC_UI_QUAD_LEAN=1",
+          "-DRE4DC_COARSE_LEON=1",
+          "-DRE4DC_COARSE_ONE_SUBMIT=1",
+          "-DRE4DC_COARSE=1",
+          "-DRE4DC_COARSE_SCENERY_FALLBACK=1",
+          "-DRE4DC_PS2_WORLD_DRAW=1",
+          "-DRE4DC_WORLD_AUTOSORT=1",
+          "-DRE4DC_PS2_PRELOAD_LEAN=1",
+          "-DRE4DC_TEX_PACK=1",
+          "-DRE4DC_TEX_PAYLOAD_RETRY=1",
+          "-DRE4DC_GANADO_ATLAS_DROP=3",
+          "-DRE4DC_GANADO_ATLAS_DROP_ROOMS=0x101",
+          "-DRE4DC_CLOSED_PASS_KEEP=1",
+          "-DRE4DC_UI_HUD_MASK=1",
+          "-DRE4DC_PS2_WORLD_MESH=1",
+          "-DRE4DC_WORLD_RECT21=1",
+          "-DRE4DC_PS2_WORLD_HDR_CACHE=1",
+          "-DRE4DC_PS2_HDR_SETS=128",
+          "-DRE4DC_PS2_WORLD_SOURCE_OWNER=1",
+          "-DRE4DC_PS2_WORLD_SOURCE_TEX_PREP=1",
+          "-DRE4DC_PS2_WORLD_SOURCE_TEX_VQ=1",
+          "-DRE4DC_ITEM_UI_ORDER=1",
+          "-DRE4DC_PS2_WORLD_FOG_SOURCE=1",
+          "-DRE4DC_PS2_PLACE_GATE=1",
+          "-DRE4DC_PS2_ROOM_PIN=1",
+          "-DRE4DC_UI_HUD_LENS_ALPHA=230",
+          "-DRE4DC_TEX_WRAP_SAFE=1",
+          "-DRE4DC_MODEL_DROP_LOG=0",
+          "-DRE4DC_TEX_PAL4_ALPHA=1",
+          "-DRE4DC_TEX_MIP_DADJ=3",
+          "-DRE4DC_MOVIE_FENCE_RETRY=1",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/pvr-stream.h",
+          "-DRE4DC_RETIRE_KOS_FLOOR=65536U",
+          "-DRE4DC_ROOM_CHANGE_EVICT=60U",
+          "-DRE4DC_ROOM_LEFTOVER_FIT=1",
+          "-DRE4DC_ROOM_REENTRY_EVICT=1",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/pipeline30.h",
+          "-I/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/kernel/arch/dreamcast/hardware/pvr",
+          "-Os",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/d349-stack.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/native-profile.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/pc-sampler.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/model-draw-plan.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/native-static.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/native-actor.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/frontend30.h",
+          "-DRE4DC_CORE_PIN=2",
+          "-DRE4DC_SS_HOLD_RESTORE=1",
+          "-DRE4DC_SS11_PRELOAD=1",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/subscreen.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/vmusave.h",
+          "-DRE4DC_NATIVE_LASER=1",
+          "-DRE4DC_ESP_SPRITE_FAST=1",
+          "-DRE4DC_PS2_FX_ADDITIONS=1",
+          "-DRE4DC_RAIN_DC=1",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/effects30.h",
+          "-DRE4DC_FX_STRIP21=1",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/scenery30.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/blender30.h",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/tahash.h",
+          "-DRE4DC_WORLD_HOLE_FIX=1",
+          "-DRE4DC_FX_SPRITE_TRIM=2",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/pace.h",
+          "-DRE4DC_PACE_STEADY=1",
+          "-DRE4DC_PACE_HOLD_LOG=0",
+          "-DRE4DC_ACTOR_TRANSACTION_DIAG=0",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/post30.h",
+          "-DRE4DC_LEON_LIGHT_HEADROOM=1",
+          "-DRE4DC_UI_SOURCE_LRU=1",
+          "-DRE4DC_G1_DIAG_INLINE=1",
+          "-DRE4DC_G1_FP_UNSIGNED=1",
+          "-DRE4DC_G1_PRESORT_LAZY=1",
+          "-include",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/vmu-context-options.h",
+          "-I/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/sdk/include",
+          "-I/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/kos-overlay"
+        ],
+        "generated_headers": {
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/poison.h": "0df7ad970003913cd79558e88601d5b0a9f64b89cdd5cc957cd5bd14e35652cb",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/io-probe.h": "617620cd946566af2f7b024c112c66557988071ac5c0cf7e7aaf1c77c0757b75",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/native-mes.h": "f99333ac52dcd9ccf2f09c6e77647f4ebd6995844b2a5f5212b0235668b2a099",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/quality-knobs.h": "2609cb756a614a964d3360770cf65e2dffb836f18e6e11b30540331f5885a2e4",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/cabin-source.h": "dc9518c0eac2c04a10c86e2d02cb40ceb78eda41493d352a94d8520aac12f862",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/movie-world-arena.h": "7a4343f7ed32aaa45014973a4a0c78a6a1879cb211efb72b3966fabafdd6913f",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/route-movies.h": "d0f3b3b4a1ff466964b772874fbe95af30e23f2cf151a87955ea6b047e9e961b",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/pvr-stream.h": "ba49adda68ec87161b0afd4b84f528d1f0bb16d5fbd9177bec7cb1e0570aef6e",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/pipeline30.h": "9c69b5cce7f1a792ee44c6c64d57387c8da36c8467c9805af78d748974c77739",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/d349-stack.h": "c76096ae0722f473c62a1f9e916f5f8f2ee92d497982887faec8c0ebd435679a",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/native-profile.h": "3b38efc681b58bf2d7a6b00e29f497f70dfff8007c246cf044f8cc087ec888bf",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/pc-sampler.h": "a4803ff49ac30b0032845225a8b2a78fdc2e2362970bafefe6d51aa382220d64",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/model-draw-plan.h": "50089b28dda897abb168e5f9686e411b6385efee3bb7cab2496c168b18f209e7",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/native-static.h": "60ce29f015392507f11f6e1e14a61952d5680c193ca3804205e114fd9eccf53c",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/native-actor.h": "4a74d88e3310a5e866d4fb6fd439c7931e11ffb3a9fdf665f591e4650dc95361",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/frontend30.h": "6a91cd626e2110951a1370eb058b3f3aa3ba3a395cc754f20607836cf708b34e",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/subscreen.h": "e1859086e91b60235c8b9eee3b22f1b0e12dc911ee8866aeeccc61d406892505",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/vmusave.h": "fe4b66e8056db1c595e8cfcdf66bcd322ec3844aaadb3012009b8f4b2c040758",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/effects30.h": "e512bd60f12c51a3638211faafb89136026acb8f70c1b7350cc6548ffaff1c0a",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/scenery30.h": "af1859d4f6346b00615c64776b1b6f60dfddece35e4f94e342fbd0d76cf3ee2c",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/blender30.h": "a30c3e86b1310b781408a53ed95da327b1e4eb5eba89a6daad9c9124603bbfc9",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/tahash.h": "d8c463d1534f7fdd66a8677bc25332396dbbd8a1c9100f744a15fd66bac61515",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/pace.h": "79af66a5060a5603df58a8db1dd5937384929028037195d45dcbaa362d1d5ca7",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/post30.h": "c7e8b8d3f3261369b695ef74fe5c043ba2b9a7cae93dcf1bb90859179a0637cf",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/obj/vmu-context-options.h": "ebe223687629759367416237eaaa19d866986ef4d138d874d3e3bd291f6807fc"
+        },
+        "source_sha256": {
+          "port/dreamcast/tools/d367/build-r21.sh": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93",
+          "port/dreamcast/tools/d367/test22/release-knobs.txt": "b67978e9d50cfae966d91bdd771e242ba12f4d899b539db0dbf6982e5e91a46c",
+          "port/dreamcast/build-public.sh": "7eaba2006802a1dc5a10ff0602d316cc86b09f32535edfa66412ce2564ca0d9f",
+          "port/dreamcast/kos-env.sh": "d776b3b236236bc5f91500ae5e469c140b41f94e44ec72165efd556afd7aebb8",
+          "port/dreamcast/game/Makefile": "ea4c8ddf4ad034ffe246bd221ed92149ccdf0e2803a82559f57ebe6b5dc445c7",
+          "port/dreamcast/game/actor_ganado_ps2_stump.mk": "4e405949406531d8435bf7a292d9da8ccf1d3ea0d259c6f463e9e029827ffbf2",
+          "port/dreamcast/game/actorplan.mk": "d256e5c6abbcbc2301a83753017c6d0f466b215f301d847f26c7ff5aaa4ff4ce",
+          "port/dreamcast/game/backface.mk": "a3b2d6c09036f1589e7ab1242c0a7d9af5dcb97b0109521e019eb102ddb01138",
+          "port/dreamcast/game/bench.mk": "7c6eca2f116b6fabe4799d33e79a44ac52e775462658124d6833fbd7eba3854d",
+          "port/dreamcast/game/blender30.mk": "9769d1141e1ca47e10ff94fa67f7a7799ec33c3fade565ada37b641e9186537d",
+          "port/dreamcast/game/bodysvc20.mk": "df456c8a62b5e3d58bc4b6f3c11ead1365d3f0ed75a53a0dc0ad2a8460135453",
+          "port/dreamcast/game/cache20.mk": "b88f46b5b4494d5a830d2c01e850fd75e64af66a063025e5568b2ce29100381c",
+          "port/dreamcast/game/charbake.mk": "b6e58694cab718df70b31915ada82417fc32b0ab7517ff6e85eedb5b6570d2d3",
+          "port/dreamcast/game/chardraw19.mk": "0a9db853a9432df007421d5a6e7ca8c90c2aa770fa46a30ed72a321f2f87403f",
+          "port/dreamcast/game/crowd.mk": "3b41a6951044114518ec24ad74da2d91cf8c333ae2a7e1c0d2d2f4c553875fca",
+          "port/dreamcast/game/dbgwarp.mk": "e0530c3591858f3c2ee5227e06571f0375f50831df1b80bf8b08a475062e83f0",
+          "port/dreamcast/game/demo_candidate.mk": "548266bfcb134492aed006771600fda3c2b3d5b046596a1fc2f7d074520912d4",
+          "port/dreamcast/game/effects30.mk": "66ba70dc9c8f92a87b75aae884da838ac0be23693aba326d7700c05dbe97e5a5",
+          "port/dreamcast/game/engine_preview.mk": "6ad87f53c5f2c4f164b9c8229cdc077a895111057b4a17c6294e9eac38454e18",
+          "port/dreamcast/game/esppool.mk": "46639be5e6eee89cc53dfbf43f1439a20bb898ffd131cd9b06cfb82abe961d0a",
+          "port/dreamcast/game/frontend30.mk": "c6ac0510ca94d30dbb41a36afd5e45e84555c49511f7003dde1f4c6511064614",
+          "port/dreamcast/game/fxtrim.mk": "40e2d18ee46a8284a1fb5773c46c60d73e970bc851c2be494e4f503616abb0d4",
+          "port/dreamcast/game/g1parts.mk": "f5ffeb4594647e7c239fac40a038f77ff43ebe2c4ed4f503af1436058c5c3a50",
+          "port/dreamcast/game/game30.mk": "47efa510d5f6ec32e73f6c442278411cc7e87738ec8cd656f1ec0753e50b60ce",
+          "port/dreamcast/game/hwfog.mk": "95d43fd37359ebd11e8d8f11efe678d479b69b3f648440440c24c595adefae25",
+          "port/dreamcast/game/knobs.mk": "8be88086cfa0e7f23b87ae1cdb4d09c0924ea783cea45009747b722383d59863",
+          "port/dreamcast/game/logiclod20.mk": "d90740b778194734e335421da72b3593849e9d75f372c155a2cc56e40b0bd969",
+          "port/dreamcast/game/mcheck.mk": "988282bed93d335a6a1dae07cd74c8c85abf71f47e49847fd68ee28dc2bd94ba",
+          "port/dreamcast/game/native_model_registry.mk": "bb8f9338a6a29674c248d9103f0a73e19118ff1f95548e91599abf27b2583f46",
+          "port/dreamcast/game/pace.mk": "78fef47bf1ec90662be905d449bb4ef139105e4d74c4fac6848f51ce3bf43710",
+          "port/dreamcast/game/post30.mk": "c9e7a3ff79f1a8d59a1adabbead4a269eda26a467185597bf96f3ab1542ac8d5",
+          "port/dreamcast/game/ps2leon.mk": "afacaa37db731ab421916f9a84b1fddd71bb036c7a5ef9a7a0e536d652fdd916",
+          "port/dreamcast/game/pvr_rtt.mk": "4b34e026faf4835b7339ee9eac9dd3ddcc8020153885f0acb1ed32bee175c2c3",
+          "port/dreamcast/game/qamenu.mk": "9f4f57e42c0e3f2fb21df320e4badb9295b375cf856a5d44410203a11b607558",
+          "port/dreamcast/game/quickweapon.mk": "6329640761dbc5802c32fd4272d90347b64807a0995c888098d7237ecd27abf0",
+          "port/dreamcast/game/records30.mk": "132df68c9fdd14efb107fcf921183b7519e430d82c6b87bc026108f50eba515c",
+          "port/dreamcast/game/rigid20.mk": "3608f11dd5572b98692db3839a8c92189cc09009eb11350a311949d644e07b63",
+          "port/dreamcast/game/safecuts.mk": "da6ba39b803e76b1f97e34688ae05bbc7baff5f5f47a9f0ff2efdbdea7d80afe",
+          "port/dreamcast/game/scenery19.mk": "7c8e6a65342517b2751887733c467f8cbfd3824e606076954335c4ac73e37411",
+          "port/dreamcast/game/scenery30.mk": "46acf4cb67022b9d4f820bf887075143e951b1895e3e1cb95e9e2335105411ec",
+          "port/dreamcast/game/shotfx20.mk": "dc5be227dcf55f1a28eeb68dfb58589cc929bc04fdb2e473a7efb8ac62e946a6",
+          "port/dreamcast/game/subscreen.mk": "326f2a516ee9b52dbc43ad32b3b2ec93a597265e4184811a52c6919643f2c95c",
+          "port/dreamcast/game/t2exact.mk": "1e0e369e489ff81f3dc4f7cbd1839e89f6313fe6c5e097a891198a62d2a4c175",
+          "port/dreamcast/game/tahash.mk": "c32223ced5323b52388ed5b282e223495a9dc89f927bfcc947d6f0423a00f184",
+          "port/dreamcast/game/vmu_context.mk": "c2f3714f6f86f7c96d7c8697498e7679bf5b1ae33820cba059a610772a0502e4",
+          "port/dreamcast/game/vmusave.mk": "c99a41216906a2b9d3c1c55be2a826cf0fba4eecb0d71d3b0c50c14ed885e5eb",
+          "port/dreamcast/game/worldhole.mk": "fc39dd79c316360601ad59b1805662864fdd9a5c9a42542193513fc167fc3f2c",
+          "port/dreamcast/game/worldscratch.mk": "7a71efa755f0c1984df3eef28ff07122459b90ca86bf596872f7b8b5b013f057"
+        },
+        "missing_asset_overrides": [
+          "PS2_LEON=0",
+          "LEON_HAND_PACK=0",
+          "PS2_GANADO=0",
+          "PS2_GANADO_LIT=0",
+          "GANADO_LOD=0",
+          "GANADO_EVENT_KEEP_LOD=0",
+          "ACTOR_PROBE_LIGHT=1",
+          "GANADO_LIT=0",
+          "NATIVE_MODEL_REGISTRY_DYING=0",
+          "LEON_HEADLESS=0",
+          "PS2_CH2_ENEMY=0",
+          "ACTOR_GANADO_PS2_STUMP=0"
+        ]
+      }
+    },
+    "pvr_header_overlay": {
+      "source": "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/kernel/arch/dreamcast/include/dc/pvr.h",
+      "source_sha256": "280551012a9d631e88e4058141fd803c55c1968cdd3d76bb0979116ed6191eb4",
+      "patched_sha256": "55a2abc199af2f48b7c713e3975777150da567ea0216fae32cbd7c8f0d9dfa1f",
+      "patches": [
+        {
+          "path": "port/dreamcast/patches/kos-804b319-manual-flip.patch",
+          "sha256": "c8bd2883f9422e78da250e1b26a5bbc97c3f363cd98a6be242bd9cecf239f4df",
+          "applied_header_hunk_sha256": "70645175039038250cec56655841b85fa60c3cd00f7af4dbca26aa10662f4ee7",
+          "output": "patching file /workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/kos-overlay/dc/pvr.h\n"
+        },
+        {
+          "path": "port/dreamcast/patches/kos-804b319-async-present.patch",
+          "sha256": "d3fc98e7dbd78efe58f8d32592147d44d96030037a83358039629aa624b4d442",
+          "applied_header_hunk_sha256": "d3610193be03965021f8eea0ff60c1f086ab418056ab1fbce5d2f07c15fb79e6",
+          "output": "patching file /workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/kos-overlay/dc/pvr.h\n"
+        },
+        {
+          "path": "port/dreamcast/patches/kos-804b319-vbuf-switch.patch",
+          "sha256": "52f99b1fb5b0dd9391a193381434c808737302d4f8121747e6d0b4201963f4a7",
+          "applied_header_hunk_sha256": "9557be2aa8b7ba94240a505249573e2249f16ec86e6d1251909969d2ba417279",
+          "output": "patching file /workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/release-profile/kos-overlay/dc/pvr.h\npatch unexpectedly ends in middle of line\nHunk #1 succeeded at 1089 with fuzz 1.\n"
+        }
+      ],
+      "scope": "Only declarations patched; KOS source/library unchanged and link guards not run"
+    }
+  },
+  "host_boundary_controls": {
+    "status": "PASS",
+    "cases": 572,
+    "source_sha256": "af8c5a111a948702f7a164e5209e53de48452fa93f2180f56bf33bb3b366e256",
+    "world_source_sha256": "205ef1c488b0080ef27ee1c95fb801cb6fc1795101471b292378108812770a48",
+    "extracted_sha256": {
+      "BATCH_HEADER": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106",
+      "DIRECT_BEGIN": "e82470291bd27f6a304ea6359915e956bff8d0fafd29a3f2d024077dc51993d9",
+      "DIRECT_END": "54850be8ae9a3ac45bc3d745530d0b0937941f5e03e3a50d0c9155f873bc451d",
+      "PICK_DEFINITION": "1a77c26bb2e6a94ddb5539e2966cbda484da6bc6f9d1f4d780a9ee66cf3e2e73",
+      "EMITTER_END": "d5c9eb25651c2b21f169ad4a13c187959450156a77cb91ad2ec3ca2794d05d79",
+      "EMITTER_BIND": "b24a4060c80735b28117fc2ebcd07a41db2330f813f2992858ff2003b66cefd2",
+      "CHUNK_EMIT": "6e18029b92df76d5cda5dc040362e77e73c005e7a3371d34fd8f73cab2cc1ab1",
+      "CHUNK_PART": "a14ea703c0b8d1dd0b226e8c29e0e4f65211e3b8beb55e532d65170ba550f773",
+      "CHUNK_FLUSH": "51863171523e02d6ad1f1e2f05c579380bc144c3a0265e8e2cf06dd5e5415530"
+    },
+    "scope": "Actual source bodies; controlled texture/owner/stream/SQ edges. No hardware timing or full-game visual claim.",
+    "selected_lock_counts": {
+      "d0-m0": [
+        {
+          "case": 0,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 1,
+          "locks": 1,
+          "unlocks": 1
+        },
+        {
+          "case": 2,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 3,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 4,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 19,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 21,
+          "locks": 3,
+          "unlocks": 3
+        },
+        {
+          "case": 34,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 104,
+          "locks": 48,
+          "unlocks": 48
+        },
+        {
+          "case": 124,
+          "locks": 0,
+          "unlocks": 0
+        },
+        {
+          "case": 129,
+          "locks": 48,
+          "unlocks": 48
+        }
+      ],
+      "d0-m1": [
+        {
+          "case": 0,
+          "locks": 1,
+          "unlocks": 1
+        },
+        {
+          "case": 1,
+          "locks": 1,
+          "unlocks": 1
+        },
+        {
+          "case": 2,
+          "locks": 1,
+          "unlocks": 1
+        },
+        {
+          "case": 3,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 4,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 19,
+          "locks": 1,
+          "unlocks": 1
+        },
+        {
+          "case": 21,
+          "locks": 1,
+          "unlocks": 1
+        },
+        {
+          "case": 34,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 104,
+          "locks": 1,
+          "unlocks": 1
+        },
+        {
+          "case": 124,
+          "locks": 0,
+          "unlocks": 0
+        },
+        {
+          "case": 129,
+          "locks": 1,
+          "unlocks": 1
+        }
+      ],
+      "d1-m0": [
+        {
+          "case": 0,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 1,
+          "locks": 1,
+          "unlocks": 1
+        },
+        {
+          "case": 2,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 3,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 4,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 19,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 21,
+          "locks": 3,
+          "unlocks": 3
+        },
+        {
+          "case": 34,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 104,
+          "locks": 48,
+          "unlocks": 48
+        },
+        {
+          "case": 124,
+          "locks": 0,
+          "unlocks": 0
+        },
+        {
+          "case": 129,
+          "locks": 48,
+          "unlocks": 48
+        }
+      ],
+      "d1-m1": [
+        {
+          "case": 0,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 1,
+          "locks": 1,
+          "unlocks": 1
+        },
+        {
+          "case": 2,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 3,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 4,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 19,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 21,
+          "locks": 3,
+          "unlocks": 3
+        },
+        {
+          "case": 34,
+          "locks": 8,
+          "unlocks": 8
+        },
+        {
+          "case": 104,
+          "locks": 48,
+          "unlocks": 48
+        },
+        {
+          "case": 124,
+          "locks": 0,
+          "unlocks": 0
+        },
+        {
+          "case": 129,
+          "locks": 48,
+          "unlocks": 48
+        }
+      ]
+    }
+  },
+  "target_build": {
+    "status": "PASS",
+    "scope": "Build isolated real SH4 world direct-boundary + uncontended KOS fixtures.\n\nThe complete native_ui TU is compiled after replacing only load() and\nstream_open() with explicit controlled cold edges. Hot renderer/cache/packet\ncode and actual KOS sq/mutex/genwait/MMU functions are retained. No vertex\ntransform/emission, game frame, storage I/O, scheduler contention or PVR wait\nis priced by this fixture.\n",
+    "baseline": "86c1b91a72a8d6d419cf9c5fa0c335ff3f552a9d",
+    "kos_flags": [
+      "/workspace/scratch/c4e1a2818fde/backface-tools/toolchain-root/opt/toolchains/dc/sh-elf/bin/sh-elf-gcc",
+      "-std=gnu17",
+      "-O2",
+      "-fno-PIC",
+      "-fno-PIE",
+      "-fomit-frame-pointer",
+      "-m4-single",
+      "-ml",
+      "-mfsrra",
+      "-mfsca",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-matomic-model=soft-gusa",
+      "-ftls-model=local-exec",
+      "-D__DREAMCAST__",
+      "-D_arch_dreamcast=1",
+      "-D_arch_sub_pristine=1",
+      "-Wall",
+      "-isystem",
+      "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/include",
+      "-isystem",
+      "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/kernel/arch/dreamcast/include",
+      "-isystem",
+      "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/addons/include"
+    ],
+    "forbidden_call_edges": [
+      "__assert",
+      "__dreamcast_get_ticks",
+      "abort",
+      "memalign",
+      "puts",
+      "pvr_list_begin",
+      "pvr_list_finish",
+      "pvr_prim",
+      "pvr_set_presort_mode",
+      "re4dc_lbx_open",
+      "re4dc_log",
+      "re4dc_missing",
+      "re4dc_ui_heap_free",
+      "thd_add_to_runnable",
+      "thd_block_now",
+      "thd_get_errno",
+      "thd_remove_from_runnable"
+    ],
+    "controlled_zero_globals": [
+      "dbglog_level",
+      "hardware_sys_mode",
+      "re4dc_mv_receiver",
+      "re4dc_ps2_sky_header"
+    ],
+    "input_sha256": {
+      "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/kernel/arch/dreamcast/hardware/sq.c": "3226231dd376fab728e02b7c6a3637b85b7f30a8810ad7a02bb066bcfbdce08f",
+      "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/kernel/thread/mutex.c": "c11e2a4e255632d1a3f998bbe6a0319a6dc097d5bbf3b4b23b30eeb38a00153c",
+      "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/kernel/thread/genwait.c": "d1fcd39ab147d14f6c207aceee0de5e6d512bc729a0391c8a0222896e971dbbd",
+      "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/kernel/arch/dreamcast/kernel/mmu.c": "e1da88847f84ca6e5a5ccc6068676484563564f5e361b5ad4fdbe0e361db1ee1",
+      "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/kernel/arch/dreamcast/hardware/pvr/pvr_prim.c": "0738a23157c6633350d3905a34844da1905a74033ce3e822869180357181b667",
+      "port/dreamcast/tools/d367/world_submit_spike/target_kos_state.c": "cc3d7853cd4d85b2fbd87ca45e25c366598f7352682d12618a0f2413db61198d",
+      "port/dreamcast/room/texture_package.cpp": "e0c0c2fa606e117c87f19142095b5953ef5d1fbad9cb1215566e6d1995618fe5",
+      "port/dreamcast/room/pvr_geometry.cpp": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136",
+      "port/dreamcast/game/platform/native_ui.cpp": "af8c5a111a948702f7a164e5209e53de48452fa93f2180f56bf33bb3b366e256",
+      "port/dreamcast/tools/d367/world_submit_spike/target_fixture.cpp.in": "6f3b15dfe95263327e8e597fbff828833e916151c8d0067b2dbeb863deb19fe8"
+    },
+    "arms": {
+      "baseline": {
+        "elf": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-target-04/baseline.elf",
+        "sha256": "e7333fb39db37a4067f7c5b6bf7dfacb36595c320f9172149206bcfade8be69b",
+        "fixture_sha256": "fa87b3799ff8685fdefa662955ea445d00694e55cde25d93187fe71d7c44d076",
+        "sections": {
+          "executable_bytes": 7748,
+          "allocated_bytes": 196036,
+          "zero_fill_bytes": 43972
+        }
+      },
+      "batch": {
+        "elf": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-target-04/batch.elf",
+        "sha256": "0b0adb68a8cf1a6b3e06d9054d47b9b13e82a75fa93e73bfc070eb11d3a39ffe",
+        "fixture_sha256": "21c6eb296fe5aa21cafa58e88f12a5222bf2249aef00bd0298760a57d66226c9",
+        "sections": {
+          "executable_bytes": 8164,
+          "allocated_bytes": 196452,
+          "zero_fill_bytes": 43972
+        }
+      }
+    }
+  },
+  "target_cost": {
+    "status": "PASS",
+    "scope": "Execute real compiled world direct boundaries and uncontended KOS locks.\n\nThese are synthetic instruction traces, not a game frame or console result.\nThe modeled CPU cost includes actual SQ/mutex/empty-wait-queue/MMU code, with\nperfect data cache and no bus, DMA, SQ backpressure, IRQ or scheduling events.\nOnly the direct boundary is measured: static-world replay/emission is excluded.\n",
+    "checks": 21,
+    "source_sha256": {
+      "/workspace/scratch/c4e1a2818fde/re4dc-submit-spike/port/dreamcast/tools/d367/world_submit_spike/target_run.py": "745c57c54b24fc00a1daabb63b6395d62177786988d3dc787ba369954399ccf9",
+      "/workspace/scratch/c4e1a2818fde/re4dc-submit-spike/port/dreamcast/tools/d367/world_setup_spike/run_target.py": "046dee986ad7cda1f6b8792488c67ef3dfb16fcb88644afa1a0c1929b4a850ad"
+    },
+    "target_build_sha256": "5c02e689e0cce70b4e407e5ec49e031a3ad6181f66d740d1800b247015376ff4",
+    "sr_controls": {
+      "status": "PASS",
+      "controls": 45,
+      "immediate_or_controls": 24,
+      "scope": "STC SR/Rn and LDC Rm/SR state/mask only, no interrupts or bank switch",
+      "manual": "https://www.renesas.com/en/document/mas/sh-4-software-manual"
+    },
+    "address_controls": {
+      "status": "PASS",
+      "indexed_address_opcodes": 2,
+      "indexed_signed_load_controls": 10,
+      "unsigned_word_multiply_controls": 64,
+      "subtract_borrow_controls": 128,
+      "scope": "32-bit indexed effective-address wrap, MULU.W and SUBC for actual compiler/newlib operations",
+      "manual": "https://www.renesas.com/en/document/mas/sh-4-software-manual"
+    },
+    "model": {
+      "baseline": {
+        "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+        "source": "/workspace/scratch/c4e1a2818fde/re4dc-submit-spike/port/dreamcast/tools/hwmodel/hwsim.c",
+        "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+        "compile_command": [
+          "gcc",
+          "-O2",
+          "-o",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-run-02/model-baseline/hwsim",
+          "/workspace/scratch/c4e1a2818fde/re4dc-submit-spike/port/dreamcast/tools/hwmodel/hwsim.c",
+          "-lm"
+        ],
+        "flags": [
+          "--perfect-ic",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0"
+        ],
+        "exact_dynamic_instruction_and_delay_slot_counts": true,
+        "no_hardware_time_or_frame_speedup_claim": true
+      },
+      "batch": {
+        "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+        "source": "/workspace/scratch/c4e1a2818fde/re4dc-submit-spike/port/dreamcast/tools/hwmodel/hwsim.c",
+        "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+        "compile_command": [
+          "gcc",
+          "-O2",
+          "-o",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-run-02/model-batch/hwsim",
+          "/workspace/scratch/c4e1a2818fde/re4dc-submit-spike/port/dreamcast/tools/hwmodel/hwsim.c",
+          "-lm"
+        ],
+        "flags": [
+          "--perfect-ic",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0"
+        ],
+        "exact_dynamic_instruction_and_delay_slot_counts": true,
+        "no_hardware_time_or_frame_speedup_claim": true
+      }
+    },
+    "no_real_scene_or_frame_time_claim": true,
+    "cases": [
+      {
+        "name": "same-material-1",
+        "parts": 1,
+        "kind": 0,
+        "calls": 1,
+        "baseline": {
+          "instructions": 1016,
+          "final_observed_store_bytes": 546,
+          "peak_stack_bytes": 496,
+          "output_sha256": "9d219be1cd3b4c40edf330ac1a6f00049646ce21dd86ea03a21292b9c005ed7f",
+          "output_bytes": 32,
+          "result_sha256": "54e7f4deb364619e96efb607f9ce7d6395a598ca76339457d5a5b1e578e99028",
+          "counters": [
+            1,
+            0,
+            1,
+            1,
+            25,
+            832,
+            832,
+            832,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 1,
+          "unlock_calls": 1,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 424,
+            "_fixture_submit": 73,
+            "_re4dc_model_direct_end": 46,
+            "_memset": 45,
+            "_mutex_unlock": 43,
+            "_memcpy": 42,
+            "_genwait_wake_thd_cnt": 42,
+            "_sq_lock": 40,
+            "___ctzsi2": 38,
+            "__ZZ28re4dc_ps2_world_direct_beginENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 38,
+            "_mutex_lock_timed": 37,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 24,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 22,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 19,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 18,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 14,
+            "__ZNK5re4dc7texture7Package8texturesEv": 10,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 10,
+            "_sq_unlock": 10,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 9,
+            "_genwait_wake_one": 5,
+            "_mmu_enabled": 4,
+            "_re4dc_ps2_world_fog": 3
+          },
+          "model_cycles": 1078,
+          "instruction_runs": 97,
+          "categories": {
+            "base": 895.0,
+            "dep_load": 134.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 12.0,
+            "flock": 0.0,
+            "branch": 37.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "5651d0fb5deb8d2f2632c710c66a04ba0652253a867a178584a4c124a050202e",
+          "icache": {
+            "model_cycles": 2154,
+            "instruction_fills": 89.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 1086,
+          "final_observed_store_bytes": 578,
+          "peak_stack_bytes": 504,
+          "output_sha256": "9d219be1cd3b4c40edf330ac1a6f00049646ce21dd86ea03a21292b9c005ed7f",
+          "output_bytes": 32,
+          "result_sha256": "54e7f4deb364619e96efb607f9ce7d6395a598ca76339457d5a5b1e578e99028",
+          "counters": [
+            1,
+            0,
+            1,
+            1,
+            25,
+            832,
+            832,
+            832,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 1,
+          "unlock_calls": 1,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 451,
+            "_fixture_submit": 82,
+            "_memset": 45,
+            "_mutex_unlock": 43,
+            "_memcpy": 42,
+            "_genwait_wake_thd_cnt": 42,
+            "_sq_lock": 40,
+            "___ctzsi2": 38,
+            "__ZZ34re4dc_ps2_world_direct_begin_batchENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 38,
+            "_mutex_lock_timed": 37,
+            "__ZL20model_direct_accountj": 35,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 24,
+            "_re4dc_ps2_world_direct_end_batch": 23,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 22,
+            "_re4dc_ps2_world_batch_close": 22,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 19,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 18,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 14,
+            "__ZNK5re4dc7texture7Package8texturesEv": 10,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 10,
+            "_sq_unlock": 10,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 9,
+            "_genwait_wake_one": 5,
+            "_mmu_enabled": 4,
+            "_re4dc_ps2_world_fog": 3
+          },
+          "model_cycles": 1158,
+          "instruction_runs": 106,
+          "categories": {
+            "base": 955.0,
+            "dep_load": 152.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 10.0,
+            "flock": 0.0,
+            "branch": 41.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "aefa3e8bb5fb7178519dbdb4320959b8a823840ec0c2555018f2ab8810c87c28",
+          "icache": {
+            "model_cycles": 2362,
+            "instruction_fills": 99.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "same-material-2",
+        "parts": 2,
+        "kind": 0,
+        "calls": 1,
+        "baseline": {
+          "instructions": 1993,
+          "final_observed_store_bytes": 1040,
+          "peak_stack_bytes": 496,
+          "output_sha256": "d4c9a95b32773b61852b4c6709c5fe0944a355168d78b367b543b23fd48d760e",
+          "output_bytes": 64,
+          "result_sha256": "9fcdfcfc359c490cc7f5e31fa8352818c515a8d46deb909211fe3e9d1750b0a0",
+          "counters": [
+            2,
+            0,
+            2,
+            2,
+            50,
+            1664,
+            1664,
+            1664,
+            2,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 2,
+          "unlock_calls": 2,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 848,
+            "_fixture_submit": 107,
+            "_re4dc_model_direct_end": 92,
+            "_memset": 90,
+            "_mutex_unlock": 86,
+            "_memcpy": 84,
+            "_genwait_wake_thd_cnt": 84,
+            "_sq_lock": 80,
+            "___ctzsi2": 76,
+            "__ZZ28re4dc_ps2_world_direct_beginENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 76,
+            "_mutex_lock_timed": 74,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 48,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 44,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 38,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 36,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 28,
+            "__ZNK5re4dc7texture7Package8texturesEv": 20,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 20,
+            "_sq_unlock": 20,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 18,
+            "_genwait_wake_one": 10,
+            "_mmu_enabled": 8,
+            "_re4dc_ps2_world_fog": 6
+          },
+          "model_cycles": 2121,
+          "instruction_runs": 193,
+          "categories": {
+            "base": 1757.0,
+            "dep_load": 266.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 24.0,
+            "flock": 0.0,
+            "branch": 74.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "b855b785f9a890ccbfafdfeeb6f4e1348b688a27d033dbee8ecdcd8c66eac24a",
+          "icache": {
+            "model_cycles": 3197,
+            "instruction_fills": 89.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 1918,
+          "final_observed_store_bytes": 976,
+          "peak_stack_bytes": 504,
+          "output_sha256": "d4c9a95b32773b61852b4c6709c5fe0944a355168d78b367b543b23fd48d760e",
+          "output_bytes": 64,
+          "result_sha256": "9fcdfcfc359c490cc7f5e31fa8352818c515a8d46deb909211fe3e9d1750b0a0",
+          "counters": [
+            2,
+            0,
+            2,
+            2,
+            50,
+            1664,
+            1664,
+            1664,
+            2,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 1,
+          "unlock_calls": 1,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 895,
+            "_fixture_submit": 120,
+            "_memset": 90,
+            "_memcpy": 84,
+            "___ctzsi2": 76,
+            "__ZZ34re4dc_ps2_world_direct_begin_batchENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 76,
+            "__ZL20model_direct_accountj": 70,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 48,
+            "_re4dc_ps2_world_direct_end_batch": 46,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 44,
+            "_mutex_unlock": 43,
+            "_genwait_wake_thd_cnt": 42,
+            "_sq_lock": 40,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 38,
+            "_mutex_lock_timed": 37,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 36,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 28,
+            "_re4dc_ps2_world_batch_close": 22,
+            "__ZNK5re4dc7texture7Package8texturesEv": 20,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 20,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 18,
+            "_sq_unlock": 10,
+            "_re4dc_ps2_world_fog": 6,
+            "_genwait_wake_one": 5,
+            "_mmu_enabled": 4
+          },
+          "model_cycles": 2050,
+          "instruction_runs": 194,
+          "categories": {
+            "base": 1675.0,
+            "dep_load": 276.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 20.0,
+            "flock": 0.0,
+            "branch": 79.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "ee4a0230fbd5d867c0b6ac00e3d5b7a131afc2d2ea812b9646391d940448e104",
+          "icache": {
+            "model_cycles": 3254,
+            "instruction_fills": 99.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "same-material-8",
+        "parts": 8,
+        "kind": 0,
+        "calls": 1,
+        "baseline": {
+          "instructions": 7855,
+          "final_observed_store_bytes": 4004,
+          "peak_stack_bytes": 496,
+          "output_sha256": "5431bbec4f02f1c9623a34a4480d540aec4beb4a804a5a089d38e0928705b5d6",
+          "output_bytes": 256,
+          "result_sha256": "938f33d892e6b9980f5ccfc37afc2c918062184df474eaa38764334c0b175c29",
+          "counters": [
+            8,
+            0,
+            8,
+            8,
+            200,
+            6656,
+            6656,
+            6656,
+            8,
+            8,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 8,
+          "unlock_calls": 8,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 3392,
+            "_re4dc_model_direct_end": 368,
+            "_memset": 360,
+            "_mutex_unlock": 344,
+            "_memcpy": 336,
+            "_genwait_wake_thd_cnt": 336,
+            "_sq_lock": 320,
+            "_fixture_submit": 311,
+            "___ctzsi2": 304,
+            "__ZZ28re4dc_ps2_world_direct_beginENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 304,
+            "_mutex_lock_timed": 296,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 192,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 176,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 152,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 144,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 112,
+            "__ZNK5re4dc7texture7Package8texturesEv": 80,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 80,
+            "_sq_unlock": 80,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 72,
+            "_genwait_wake_one": 40,
+            "_mmu_enabled": 32,
+            "_re4dc_ps2_world_fog": 24
+          },
+          "model_cycles": 8379,
+          "instruction_runs": 769,
+          "categories": {
+            "base": 6929.0,
+            "dep_load": 1058.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 96.0,
+            "flock": 0.0,
+            "branch": 296.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "e7d8c60697d67ec478f9810fce14e90a2d35faa2b0262cb2fc382cb1b485a600",
+          "icache": {
+            "model_cycles": 9455,
+            "instruction_fills": 89.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 6910,
+          "final_observed_store_bytes": 3364,
+          "peak_stack_bytes": 504,
+          "output_sha256": "5431bbec4f02f1c9623a34a4480d540aec4beb4a804a5a089d38e0928705b5d6",
+          "output_bytes": 256,
+          "result_sha256": "938f33d892e6b9980f5ccfc37afc2c918062184df474eaa38764334c0b175c29",
+          "counters": [
+            8,
+            0,
+            8,
+            8,
+            200,
+            6656,
+            6656,
+            6656,
+            8,
+            8,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 1,
+          "unlock_calls": 1,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 3559,
+            "_memset": 360,
+            "_fixture_submit": 348,
+            "_memcpy": 336,
+            "___ctzsi2": 304,
+            "__ZZ34re4dc_ps2_world_direct_begin_batchENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 304,
+            "__ZL20model_direct_accountj": 280,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 192,
+            "_re4dc_ps2_world_direct_end_batch": 184,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 176,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 152,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 144,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 112,
+            "__ZNK5re4dc7texture7Package8texturesEv": 80,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 80,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 72,
+            "_mutex_unlock": 43,
+            "_genwait_wake_thd_cnt": 42,
+            "_sq_lock": 40,
+            "_mutex_lock_timed": 37,
+            "_re4dc_ps2_world_fog": 24,
+            "_re4dc_ps2_world_batch_close": 22,
+            "_sq_unlock": 10,
+            "_genwait_wake_one": 5,
+            "_mmu_enabled": 4
+          },
+          "model_cycles": 7402,
+          "instruction_runs": 722,
+          "categories": {
+            "base": 5995.0,
+            "dep_load": 1020.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 80.0,
+            "flock": 0.0,
+            "branch": 307.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "ad36246ea0cbab4299164bd7f5254a9e17b875cc4f4f23ada02efc30137fcb45",
+          "icache": {
+            "model_cycles": 8606,
+            "instruction_fills": 99.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "same-material-48",
+        "parts": 48,
+        "kind": 0,
+        "calls": 1,
+        "baseline": {
+          "instructions": 46935,
+          "final_observed_store_bytes": 23764,
+          "peak_stack_bytes": 496,
+          "output_sha256": "011737e924096d7d1c9f52ebc8db223810773db766ecc5bd97993ec18724d64c",
+          "output_bytes": 1536,
+          "result_sha256": "311f3ffebea84fa22dfa1b7de7545398bfd22af85f00f407d1b5f91f87aead70",
+          "counters": [
+            48,
+            0,
+            48,
+            48,
+            1200,
+            39936,
+            39936,
+            39936,
+            48,
+            48,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 48,
+          "unlock_calls": 48,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 20352,
+            "_re4dc_model_direct_end": 2208,
+            "_memset": 2160,
+            "_mutex_unlock": 2064,
+            "_memcpy": 2016,
+            "_genwait_wake_thd_cnt": 2016,
+            "_sq_lock": 1920,
+            "___ctzsi2": 1824,
+            "__ZZ28re4dc_ps2_world_direct_beginENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 1824,
+            "_mutex_lock_timed": 1776,
+            "_fixture_submit": 1671,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 1152,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 1056,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 912,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 864,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 672,
+            "__ZNK5re4dc7texture7Package8texturesEv": 480,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 480,
+            "_sq_unlock": 480,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 432,
+            "_genwait_wake_one": 240,
+            "_mmu_enabled": 192,
+            "_re4dc_ps2_world_fog": 144
+          },
+          "model_cycles": 50099,
+          "instruction_runs": 4609,
+          "categories": {
+            "base": 41409.0,
+            "dep_load": 6338.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 576.0,
+            "flock": 0.0,
+            "branch": 1776.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "0ebedb80bc6fc89f655b9ce529fd241fbd0e56262ced32fe0d269f44f21b49ab",
+          "icache": {
+            "model_cycles": 51175,
+            "instruction_fills": 89.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 40190,
+          "final_observed_store_bytes": 19284,
+          "peak_stack_bytes": 504,
+          "output_sha256": "011737e924096d7d1c9f52ebc8db223810773db766ecc5bd97993ec18724d64c",
+          "output_bytes": 1536,
+          "result_sha256": "311f3ffebea84fa22dfa1b7de7545398bfd22af85f00f407d1b5f91f87aead70",
+          "counters": [
+            48,
+            0,
+            48,
+            48,
+            1200,
+            39936,
+            39936,
+            39936,
+            48,
+            48,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 1,
+          "unlock_calls": 1,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 21319,
+            "_memset": 2160,
+            "_memcpy": 2016,
+            "_fixture_submit": 1868,
+            "___ctzsi2": 1824,
+            "__ZZ34re4dc_ps2_world_direct_begin_batchENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 1824,
+            "__ZL20model_direct_accountj": 1680,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 1152,
+            "_re4dc_ps2_world_direct_end_batch": 1104,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 1056,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 912,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 864,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 672,
+            "__ZNK5re4dc7texture7Package8texturesEv": 480,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 480,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 432,
+            "_re4dc_ps2_world_fog": 144,
+            "_mutex_unlock": 43,
+            "_genwait_wake_thd_cnt": 42,
+            "_sq_lock": 40,
+            "_mutex_lock_timed": 37,
+            "_re4dc_ps2_world_batch_close": 22,
+            "_sq_unlock": 10,
+            "_genwait_wake_one": 5,
+            "_mmu_enabled": 4
+          },
+          "model_cycles": 43082,
+          "instruction_runs": 4242,
+          "categories": {
+            "base": 34795.0,
+            "dep_load": 5980.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 480.0,
+            "flock": 0.0,
+            "branch": 1827.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "e5b78ca93dc65aa15d4fe834ff072b9637bc1a36fb4b90e11ea9d50743a6024a",
+          "icache": {
+            "model_cycles": 44286,
+            "instruction_fills": 99.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "changing-material-1",
+        "parts": 1,
+        "kind": 3,
+        "calls": 1,
+        "baseline": {
+          "instructions": 1017,
+          "final_observed_store_bytes": 546,
+          "peak_stack_bytes": 496,
+          "output_sha256": "9d219be1cd3b4c40edf330ac1a6f00049646ce21dd86ea03a21292b9c005ed7f",
+          "output_bytes": 32,
+          "result_sha256": "54e7f4deb364619e96efb607f9ce7d6395a598ca76339457d5a5b1e578e99028",
+          "counters": [
+            1,
+            0,
+            1,
+            1,
+            25,
+            832,
+            832,
+            832,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 1,
+          "unlock_calls": 1,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 424,
+            "_fixture_submit": 74,
+            "_re4dc_model_direct_end": 46,
+            "_memset": 45,
+            "_mutex_unlock": 43,
+            "_memcpy": 42,
+            "_genwait_wake_thd_cnt": 42,
+            "_sq_lock": 40,
+            "___ctzsi2": 38,
+            "__ZZ28re4dc_ps2_world_direct_beginENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 38,
+            "_mutex_lock_timed": 37,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 24,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 22,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 19,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 18,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 14,
+            "__ZNK5re4dc7texture7Package8texturesEv": 10,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 10,
+            "_sq_unlock": 10,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 9,
+            "_genwait_wake_one": 5,
+            "_mmu_enabled": 4,
+            "_re4dc_ps2_world_fog": 3
+          },
+          "model_cycles": 1077,
+          "instruction_runs": 96,
+          "categories": {
+            "base": 895.0,
+            "dep_load": 134.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 12.0,
+            "flock": 0.0,
+            "branch": 36.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "7aaea22834c183883a9d69ecd7d57470335aeee5cf0e46ad4a3152e2e3b759a1",
+          "icache": {
+            "model_cycles": 2153,
+            "instruction_fills": 89.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 1087,
+          "final_observed_store_bytes": 578,
+          "peak_stack_bytes": 504,
+          "output_sha256": "9d219be1cd3b4c40edf330ac1a6f00049646ce21dd86ea03a21292b9c005ed7f",
+          "output_bytes": 32,
+          "result_sha256": "54e7f4deb364619e96efb607f9ce7d6395a598ca76339457d5a5b1e578e99028",
+          "counters": [
+            1,
+            0,
+            1,
+            1,
+            25,
+            832,
+            832,
+            832,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 1,
+          "unlock_calls": 1,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 451,
+            "_fixture_submit": 83,
+            "_memset": 45,
+            "_mutex_unlock": 43,
+            "_memcpy": 42,
+            "_genwait_wake_thd_cnt": 42,
+            "_sq_lock": 40,
+            "___ctzsi2": 38,
+            "__ZZ34re4dc_ps2_world_direct_begin_batchENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 38,
+            "_mutex_lock_timed": 37,
+            "__ZL20model_direct_accountj": 35,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 24,
+            "_re4dc_ps2_world_direct_end_batch": 23,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 22,
+            "_re4dc_ps2_world_batch_close": 22,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 19,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 18,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 14,
+            "__ZNK5re4dc7texture7Package8texturesEv": 10,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 10,
+            "_sq_unlock": 10,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 9,
+            "_genwait_wake_one": 5,
+            "_mmu_enabled": 4,
+            "_re4dc_ps2_world_fog": 3
+          },
+          "model_cycles": 1157,
+          "instruction_runs": 105,
+          "categories": {
+            "base": 955.0,
+            "dep_load": 152.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 10.0,
+            "flock": 0.0,
+            "branch": 40.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "79de9ac1f207702a9a2f0511d5c78a04b730209a7bf6e737573a119480ce5172",
+          "icache": {
+            "model_cycles": 2361,
+            "instruction_fills": 99.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "changing-material-2",
+        "parts": 2,
+        "kind": 3,
+        "calls": 1,
+        "baseline": {
+          "instructions": 1995,
+          "final_observed_store_bytes": 1040,
+          "peak_stack_bytes": 496,
+          "output_sha256": "60f0ff07e0c4d94ca7c3f998192b513e215b1f1adbc14808148d2caf529999ad",
+          "output_bytes": 64,
+          "result_sha256": "9fcdfcfc359c490cc7f5e31fa8352818c515a8d46deb909211fe3e9d1750b0a0",
+          "counters": [
+            2,
+            0,
+            2,
+            2,
+            50,
+            1664,
+            1664,
+            1664,
+            2,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 2,
+          "unlock_calls": 2,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 848,
+            "_fixture_submit": 109,
+            "_re4dc_model_direct_end": 92,
+            "_memset": 90,
+            "_mutex_unlock": 86,
+            "_memcpy": 84,
+            "_genwait_wake_thd_cnt": 84,
+            "_sq_lock": 80,
+            "___ctzsi2": 76,
+            "__ZZ28re4dc_ps2_world_direct_beginENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 76,
+            "_mutex_lock_timed": 74,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 48,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 44,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 38,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 36,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 28,
+            "__ZNK5re4dc7texture7Package8texturesEv": 20,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 20,
+            "_sq_unlock": 20,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 18,
+            "_genwait_wake_one": 10,
+            "_mmu_enabled": 8,
+            "_re4dc_ps2_world_fog": 6
+          },
+          "model_cycles": 2119,
+          "instruction_runs": 191,
+          "categories": {
+            "base": 1757.0,
+            "dep_load": 266.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 24.0,
+            "flock": 0.0,
+            "branch": 72.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "2f1948758c85a5d85a30f494dd32fdd574cd24c5465caa78ecd8108908623f6d",
+          "icache": {
+            "model_cycles": 3195,
+            "instruction_fills": 89.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 1920,
+          "final_observed_store_bytes": 976,
+          "peak_stack_bytes": 504,
+          "output_sha256": "60f0ff07e0c4d94ca7c3f998192b513e215b1f1adbc14808148d2caf529999ad",
+          "output_bytes": 64,
+          "result_sha256": "9fcdfcfc359c490cc7f5e31fa8352818c515a8d46deb909211fe3e9d1750b0a0",
+          "counters": [
+            2,
+            0,
+            2,
+            2,
+            50,
+            1664,
+            1664,
+            1664,
+            2,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 1,
+          "unlock_calls": 1,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 895,
+            "_fixture_submit": 122,
+            "_memset": 90,
+            "_memcpy": 84,
+            "___ctzsi2": 76,
+            "__ZZ34re4dc_ps2_world_direct_begin_batchENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 76,
+            "__ZL20model_direct_accountj": 70,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 48,
+            "_re4dc_ps2_world_direct_end_batch": 46,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 44,
+            "_mutex_unlock": 43,
+            "_genwait_wake_thd_cnt": 42,
+            "_sq_lock": 40,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 38,
+            "_mutex_lock_timed": 37,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 36,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 28,
+            "_re4dc_ps2_world_batch_close": 22,
+            "__ZNK5re4dc7texture7Package8texturesEv": 20,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 20,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 18,
+            "_sq_unlock": 10,
+            "_re4dc_ps2_world_fog": 6,
+            "_genwait_wake_one": 5,
+            "_mmu_enabled": 4
+          },
+          "model_cycles": 2048,
+          "instruction_runs": 192,
+          "categories": {
+            "base": 1675.0,
+            "dep_load": 276.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 20.0,
+            "flock": 0.0,
+            "branch": 77.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "d294b59cd1db433d714e76508873cd459c83984916543723d60e69e04ad440d6",
+          "icache": {
+            "model_cycles": 3252,
+            "instruction_fills": 99.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "changing-material-8",
+        "parts": 8,
+        "kind": 3,
+        "calls": 1,
+        "baseline": {
+          "instructions": 7863,
+          "final_observed_store_bytes": 4004,
+          "peak_stack_bytes": 496,
+          "output_sha256": "7ab645cf38420a5807ecd8f22cbb763f4d3a4c61c2afc269a35723d59d1c8dff",
+          "output_bytes": 256,
+          "result_sha256": "938f33d892e6b9980f5ccfc37afc2c918062184df474eaa38764334c0b175c29",
+          "counters": [
+            8,
+            0,
+            8,
+            8,
+            200,
+            6656,
+            6656,
+            6656,
+            8,
+            8,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 8,
+          "unlock_calls": 8,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 3392,
+            "_re4dc_model_direct_end": 368,
+            "_memset": 360,
+            "_mutex_unlock": 344,
+            "_memcpy": 336,
+            "_genwait_wake_thd_cnt": 336,
+            "_sq_lock": 320,
+            "_fixture_submit": 319,
+            "___ctzsi2": 304,
+            "__ZZ28re4dc_ps2_world_direct_beginENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 304,
+            "_mutex_lock_timed": 296,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 192,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 176,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 152,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 144,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 112,
+            "__ZNK5re4dc7texture7Package8texturesEv": 80,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 80,
+            "_sq_unlock": 80,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 72,
+            "_genwait_wake_one": 40,
+            "_mmu_enabled": 32,
+            "_re4dc_ps2_world_fog": 24
+          },
+          "model_cycles": 8371,
+          "instruction_runs": 761,
+          "categories": {
+            "base": 6929.0,
+            "dep_load": 1058.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 96.0,
+            "flock": 0.0,
+            "branch": 288.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "fd87888a98ae516e1d29804caa80a33c971f5f2db0781c89a7b6de1ec5ceb391",
+          "icache": {
+            "model_cycles": 9447,
+            "instruction_fills": 89.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 6918,
+          "final_observed_store_bytes": 3364,
+          "peak_stack_bytes": 504,
+          "output_sha256": "7ab645cf38420a5807ecd8f22cbb763f4d3a4c61c2afc269a35723d59d1c8dff",
+          "output_bytes": 256,
+          "result_sha256": "938f33d892e6b9980f5ccfc37afc2c918062184df474eaa38764334c0b175c29",
+          "counters": [
+            8,
+            0,
+            8,
+            8,
+            200,
+            6656,
+            6656,
+            6656,
+            8,
+            8,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 1,
+          "unlock_calls": 1,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 3559,
+            "_memset": 360,
+            "_fixture_submit": 356,
+            "_memcpy": 336,
+            "___ctzsi2": 304,
+            "__ZZ34re4dc_ps2_world_direct_begin_batchENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 304,
+            "__ZL20model_direct_accountj": 280,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 192,
+            "_re4dc_ps2_world_direct_end_batch": 184,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 176,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 152,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 144,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 112,
+            "__ZNK5re4dc7texture7Package8texturesEv": 80,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 80,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 72,
+            "_mutex_unlock": 43,
+            "_genwait_wake_thd_cnt": 42,
+            "_sq_lock": 40,
+            "_mutex_lock_timed": 37,
+            "_re4dc_ps2_world_fog": 24,
+            "_re4dc_ps2_world_batch_close": 22,
+            "_sq_unlock": 10,
+            "_genwait_wake_one": 5,
+            "_mmu_enabled": 4
+          },
+          "model_cycles": 7394,
+          "instruction_runs": 714,
+          "categories": {
+            "base": 5995.0,
+            "dep_load": 1020.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 80.0,
+            "flock": 0.0,
+            "branch": 299.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "006133ed1bd6acbf84187a43bd3d5fa1aa5910f94f9f3a89c87c0e913ead5118",
+          "icache": {
+            "model_cycles": 8598,
+            "instruction_fills": 99.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "changing-material-48",
+        "parts": 48,
+        "kind": 3,
+        "calls": 1,
+        "baseline": {
+          "instructions": 46983,
+          "final_observed_store_bytes": 23764,
+          "peak_stack_bytes": 496,
+          "output_sha256": "945f89d42cfd4d0defb4186139d1ea8aa118e2cf55012cc804caa7364815db79",
+          "output_bytes": 1536,
+          "result_sha256": "311f3ffebea84fa22dfa1b7de7545398bfd22af85f00f407d1b5f91f87aead70",
+          "counters": [
+            48,
+            0,
+            48,
+            48,
+            1200,
+            39936,
+            39936,
+            39936,
+            48,
+            48,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 48,
+          "unlock_calls": 48,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 20352,
+            "_re4dc_model_direct_end": 2208,
+            "_memset": 2160,
+            "_mutex_unlock": 2064,
+            "_memcpy": 2016,
+            "_genwait_wake_thd_cnt": 2016,
+            "_sq_lock": 1920,
+            "___ctzsi2": 1824,
+            "__ZZ28re4dc_ps2_world_direct_beginENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 1824,
+            "_mutex_lock_timed": 1776,
+            "_fixture_submit": 1719,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 1152,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 1056,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 912,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 864,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 672,
+            "__ZNK5re4dc7texture7Package8texturesEv": 480,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 480,
+            "_sq_unlock": 480,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 432,
+            "_genwait_wake_one": 240,
+            "_mmu_enabled": 192,
+            "_re4dc_ps2_world_fog": 144
+          },
+          "model_cycles": 50051,
+          "instruction_runs": 4561,
+          "categories": {
+            "base": 41409.0,
+            "dep_load": 6338.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 576.0,
+            "flock": 0.0,
+            "branch": 1728.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "b81ffe12f1ed31509548b03e376e219575de76011eb9d3021622a4a79595f571",
+          "icache": {
+            "model_cycles": 51127,
+            "instruction_fills": 89.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 40238,
+          "final_observed_store_bytes": 19284,
+          "peak_stack_bytes": 504,
+          "output_sha256": "945f89d42cfd4d0defb4186139d1ea8aa118e2cf55012cc804caa7364815db79",
+          "output_bytes": 1536,
+          "result_sha256": "311f3ffebea84fa22dfa1b7de7545398bfd22af85f00f407d1b5f91f87aead70",
+          "counters": [
+            48,
+            0,
+            48,
+            48,
+            1200,
+            39936,
+            39936,
+            39936,
+            48,
+            48,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 1,
+          "unlock_calls": 1,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 21319,
+            "_memset": 2160,
+            "_memcpy": 2016,
+            "_fixture_submit": 1916,
+            "___ctzsi2": 1824,
+            "__ZZ34re4dc_ps2_world_direct_begin_batchENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 1824,
+            "__ZL20model_direct_accountj": 1680,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 1152,
+            "_re4dc_ps2_world_direct_end_batch": 1104,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 1056,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 912,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 864,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 672,
+            "__ZNK5re4dc7texture7Package8texturesEv": 480,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 480,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 432,
+            "_re4dc_ps2_world_fog": 144,
+            "_mutex_unlock": 43,
+            "_genwait_wake_thd_cnt": 42,
+            "_sq_lock": 40,
+            "_mutex_lock_timed": 37,
+            "_re4dc_ps2_world_batch_close": 22,
+            "_sq_unlock": 10,
+            "_genwait_wake_one": 5,
+            "_mmu_enabled": 4
+          },
+          "model_cycles": 43034,
+          "instruction_runs": 4194,
+          "categories": {
+            "base": 34795.0,
+            "dep_load": 5980.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 480.0,
+            "flock": 0.0,
+            "branch": 1779.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "e58835a85fa40c0acdbb0ad3d9f64db57ad12e0164fa9739cc77d2b6385255c0",
+          "icache": {
+            "model_cycles": 44238,
+            "instruction_fills": 99.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "all-miss-refusal-1",
+        "parts": 1,
+        "kind": 1,
+        "calls": 1,
+        "baseline": {
+          "instructions": 412,
+          "final_observed_store_bytes": 220,
+          "peak_stack_bytes": 460,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "d4718b91f48a8970bef10a6e8be1b2b38ef28939ddf8053828872f7cb1535779",
+          "counters": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 0,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 210,
+            "_memset": 106,
+            "_fixture_submit": 66,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 18,
+            "_fixture_load_control": 6,
+            "_re4dc_ps2_world_fog": 3,
+            "__ZN12_GLOBAL__N_1L4loadERK12Re4dcUiImagebPKNS_3KeyE": 3
+          },
+          "model_cycles": 407,
+          "instruction_runs": 48,
+          "categories": {
+            "base": 331.0,
+            "dep_load": 33.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 12.0,
+            "flock": 0.0,
+            "branch": 31.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "cfdca9dbfb7121123c95ac932cf58b7b6022313f029a3b9172cc74da51cdd4f5",
+          "icache": {
+            "model_cycles": 805,
+            "instruction_fills": 30.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 468,
+          "final_observed_store_bytes": 252,
+          "peak_stack_bytes": 468,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "d4718b91f48a8970bef10a6e8be1b2b38ef28939ddf8053828872f7cb1535779",
+          "counters": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 0,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 222,
+            "_memset": 106,
+            "_fixture_submit": 74,
+            "_re4dc_ps2_world_batch_close": 36,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 18,
+            "_fixture_load_control": 6,
+            "_re4dc_ps2_world_fog": 3,
+            "__ZN12_GLOBAL__N_1L4loadERK12Re4dcUiImagebPKNS_3KeyE": 3
+          },
+          "model_cycles": 480,
+          "instruction_runs": 58,
+          "categories": {
+            "base": 389.0,
+            "dep_load": 46.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 10.0,
+            "flock": 0.0,
+            "branch": 35.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "ff337157f7ce719a76d3fc38105608d524c00a454123028c38a1e1c5ade60d8d",
+          "icache": {
+            "model_cycles": 923,
+            "instruction_fills": 34.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "all-miss-refusal-2",
+        "parts": 2,
+        "kind": 1,
+        "calls": 1,
+        "baseline": {
+          "instructions": 785,
+          "final_observed_store_bytes": 388,
+          "peak_stack_bytes": 460,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "2bc8bb8d690273d5da0c07e0c30798d409ece74f8630af58708c34877d999fb4",
+          "counters": [
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            2,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 0,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 420,
+            "_memset": 212,
+            "_fixture_submit": 93,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 36,
+            "_fixture_load_control": 12,
+            "_re4dc_ps2_world_fog": 6,
+            "__ZN12_GLOBAL__N_1L4loadERK12Re4dcUiImagebPKNS_3KeyE": 6
+          },
+          "model_cycles": 779,
+          "instruction_runs": 95,
+          "categories": {
+            "base": 629.0,
+            "dep_load": 64.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 24.0,
+            "flock": 0.0,
+            "branch": 62.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "8ef290b025ca4d7605298e33e203f551cb373cb7560688ff1bc1a452bb897d83",
+          "icache": {
+            "model_cycles": 1177,
+            "instruction_fills": 30.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 880,
+          "final_observed_store_bytes": 440,
+          "peak_stack_bytes": 468,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "2bc8bb8d690273d5da0c07e0c30798d409ece74f8630af58708c34877d999fb4",
+          "counters": [
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            2,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 0,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 444,
+            "_memset": 212,
+            "_fixture_submit": 104,
+            "_re4dc_ps2_world_batch_close": 60,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 36,
+            "_fixture_load_control": 12,
+            "_re4dc_ps2_world_fog": 6,
+            "__ZN12_GLOBAL__N_1L4loadERK12Re4dcUiImagebPKNS_3KeyE": 6
+          },
+          "model_cycles": 903,
+          "instruction_runs": 112,
+          "categories": {
+            "base": 727.0,
+            "dep_load": 87.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 20.0,
+            "flock": 0.0,
+            "branch": 69.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "bff7d4c755f3955129e1be8d539fcdd2822955a009a324287b70123e6f0f7720",
+          "icache": {
+            "model_cycles": 1346,
+            "instruction_fills": 34.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "all-miss-refusal-8",
+        "parts": 8,
+        "kind": 1,
+        "calls": 1,
+        "baseline": {
+          "instructions": 3023,
+          "final_observed_store_bytes": 1396,
+          "peak_stack_bytes": 460,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "5dab6997a0b3245341ff05207bb54e9c7f8ae7ede75ccb63f125634a31063041",
+          "counters": [
+            0,
+            8,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            8,
+            8,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 0,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 1680,
+            "_memset": 848,
+            "_fixture_submit": 255,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 144,
+            "_fixture_load_control": 48,
+            "_re4dc_ps2_world_fog": 24,
+            "__ZN12_GLOBAL__N_1L4loadERK12Re4dcUiImagebPKNS_3KeyE": 24
+          },
+          "model_cycles": 3011,
+          "instruction_runs": 377,
+          "categories": {
+            "base": 2417.0,
+            "dep_load": 250.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 96.0,
+            "flock": 0.0,
+            "branch": 248.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "898bbba04cdc8d02e2ba3e1ec8a8d08cab3f94917de58b657fd54de8650de67e",
+          "icache": {
+            "model_cycles": 3409,
+            "instruction_fills": 30.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 3352,
+          "final_observed_store_bytes": 1568,
+          "peak_stack_bytes": 468,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "5dab6997a0b3245341ff05207bb54e9c7f8ae7ede75ccb63f125634a31063041",
+          "counters": [
+            0,
+            8,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            8,
+            8,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 0,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 1776,
+            "_memset": 848,
+            "_fixture_submit": 284,
+            "_re4dc_ps2_world_batch_close": 204,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 144,
+            "_fixture_load_control": 48,
+            "_re4dc_ps2_world_fog": 24,
+            "__ZN12_GLOBAL__N_1L4loadERK12Re4dcUiImagebPKNS_3KeyE": 24
+          },
+          "model_cycles": 3441,
+          "instruction_runs": 436,
+          "categories": {
+            "base": 2755.0,
+            "dep_load": 333.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 80.0,
+            "flock": 0.0,
+            "branch": 273.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "31f5684f35e3df5ff39f69058b6f75b3013631f1a55ab82632a25405f7915429",
+          "icache": {
+            "model_cycles": 3884,
+            "instruction_fills": 34.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "all-miss-refusal-48",
+        "parts": 48,
+        "kind": 1,
+        "calls": 1,
+        "baseline": {
+          "instructions": 17943,
+          "final_observed_store_bytes": 8116,
+          "peak_stack_bytes": 460,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "7c05b3239c7d074ca93f18de272a25d4b019516e40e9bdb2a9a4a184e185493e",
+          "counters": [
+            0,
+            48,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            48,
+            48,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 0,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 10080,
+            "_memset": 5088,
+            "_fixture_submit": 1335,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 864,
+            "_fixture_load_control": 288,
+            "_re4dc_ps2_world_fog": 144,
+            "__ZN12_GLOBAL__N_1L4loadERK12Re4dcUiImagebPKNS_3KeyE": 144
+          },
+          "model_cycles": 17891,
+          "instruction_runs": 2257,
+          "categories": {
+            "base": 14337.0,
+            "dep_load": 1490.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 576.0,
+            "flock": 0.0,
+            "branch": 1488.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "971b0dfe75bf8cb748f78c3334fb5a91e6cac1c5cc7598da3da2ce99d4ec2163",
+          "icache": {
+            "model_cycles": 18289,
+            "instruction_fills": 30.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 19832,
+          "final_observed_store_bytes": 9088,
+          "peak_stack_bytes": 468,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "7c05b3239c7d074ca93f18de272a25d4b019516e40e9bdb2a9a4a184e185493e",
+          "counters": [
+            0,
+            48,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            48,
+            48,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 0,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 10656,
+            "_memset": 5088,
+            "_fixture_submit": 1484,
+            "_re4dc_ps2_world_batch_close": 1164,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 864,
+            "_fixture_load_control": 288,
+            "_re4dc_ps2_world_fog": 144,
+            "__ZN12_GLOBAL__N_1L4loadERK12Re4dcUiImagebPKNS_3KeyE": 144
+          },
+          "model_cycles": 20361,
+          "instruction_runs": 2596,
+          "categories": {
+            "base": 16275.0,
+            "dep_load": 1973.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 480.0,
+            "flock": 0.0,
+            "branch": 1633.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "48d3b8adc801fa3520d55ec435dbe5484cd36cbc1e09ea31f7d6d39f4032f803",
+          "icache": {
+            "model_cycles": 20804,
+            "instruction_fills": 34.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "alternating-hit-refusal-1",
+        "parts": 1,
+        "kind": 2,
+        "calls": 1,
+        "baseline": {
+          "instructions": 1017,
+          "final_observed_store_bytes": 546,
+          "peak_stack_bytes": 496,
+          "output_sha256": "9d219be1cd3b4c40edf330ac1a6f00049646ce21dd86ea03a21292b9c005ed7f",
+          "output_bytes": 32,
+          "result_sha256": "54e7f4deb364619e96efb607f9ce7d6395a598ca76339457d5a5b1e578e99028",
+          "counters": [
+            1,
+            0,
+            1,
+            1,
+            25,
+            832,
+            832,
+            832,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 1,
+          "unlock_calls": 1,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 424,
+            "_fixture_submit": 74,
+            "_re4dc_model_direct_end": 46,
+            "_memset": 45,
+            "_mutex_unlock": 43,
+            "_memcpy": 42,
+            "_genwait_wake_thd_cnt": 42,
+            "_sq_lock": 40,
+            "___ctzsi2": 38,
+            "__ZZ28re4dc_ps2_world_direct_beginENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 38,
+            "_mutex_lock_timed": 37,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 24,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 22,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 19,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 18,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 14,
+            "__ZNK5re4dc7texture7Package8texturesEv": 10,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 10,
+            "_sq_unlock": 10,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 9,
+            "_genwait_wake_one": 5,
+            "_mmu_enabled": 4,
+            "_re4dc_ps2_world_fog": 3
+          },
+          "model_cycles": 1077,
+          "instruction_runs": 96,
+          "categories": {
+            "base": 895.0,
+            "dep_load": 134.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 12.0,
+            "flock": 0.0,
+            "branch": 36.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "7aaea22834c183883a9d69ecd7d57470335aeee5cf0e46ad4a3152e2e3b759a1",
+          "icache": {
+            "model_cycles": 2153,
+            "instruction_fills": 89.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 1087,
+          "final_observed_store_bytes": 578,
+          "peak_stack_bytes": 504,
+          "output_sha256": "9d219be1cd3b4c40edf330ac1a6f00049646ce21dd86ea03a21292b9c005ed7f",
+          "output_bytes": 32,
+          "result_sha256": "54e7f4deb364619e96efb607f9ce7d6395a598ca76339457d5a5b1e578e99028",
+          "counters": [
+            1,
+            0,
+            1,
+            1,
+            25,
+            832,
+            832,
+            832,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 1,
+          "unlock_calls": 1,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 451,
+            "_fixture_submit": 83,
+            "_memset": 45,
+            "_mutex_unlock": 43,
+            "_memcpy": 42,
+            "_genwait_wake_thd_cnt": 42,
+            "_sq_lock": 40,
+            "___ctzsi2": 38,
+            "__ZZ34re4dc_ps2_world_direct_begin_batchENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 38,
+            "_mutex_lock_timed": 37,
+            "__ZL20model_direct_accountj": 35,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 24,
+            "_re4dc_ps2_world_direct_end_batch": 23,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 22,
+            "_re4dc_ps2_world_batch_close": 22,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 19,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 18,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 14,
+            "__ZNK5re4dc7texture7Package8texturesEv": 10,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 10,
+            "_sq_unlock": 10,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 9,
+            "_genwait_wake_one": 5,
+            "_mmu_enabled": 4,
+            "_re4dc_ps2_world_fog": 3
+          },
+          "model_cycles": 1157,
+          "instruction_runs": 105,
+          "categories": {
+            "base": 955.0,
+            "dep_load": 152.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 10.0,
+            "flock": 0.0,
+            "branch": 40.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "79de9ac1f207702a9a2f0511d5c78a04b730209a7bf6e737573a119480ce5172",
+          "icache": {
+            "model_cycles": 2361,
+            "instruction_fills": 99.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "alternating-hit-refusal-2",
+        "parts": 2,
+        "kind": 2,
+        "calls": 1,
+        "baseline": {
+          "instructions": 1390,
+          "final_observed_store_bytes": 714,
+          "peak_stack_bytes": 496,
+          "output_sha256": "9d219be1cd3b4c40edf330ac1a6f00049646ce21dd86ea03a21292b9c005ed7f",
+          "output_bytes": 32,
+          "result_sha256": "ea9b0a1c2f0a13b71650aa3418d4126131f880e14ce1f43e0e090c53c5e28121",
+          "counters": [
+            1,
+            1,
+            1,
+            1,
+            25,
+            832,
+            832,
+            832,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 1,
+          "unlock_calls": 1,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 634,
+            "_memset": 151,
+            "_fixture_submit": 101,
+            "_re4dc_model_direct_end": 46,
+            "_mutex_unlock": 43,
+            "_memcpy": 42,
+            "_genwait_wake_thd_cnt": 42,
+            "_sq_lock": 40,
+            "___ctzsi2": 38,
+            "__ZZ28re4dc_ps2_world_direct_beginENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 38,
+            "_mutex_lock_timed": 37,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 36,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 24,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 22,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 19,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 14,
+            "__ZNK5re4dc7texture7Package8texturesEv": 10,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 10,
+            "_sq_unlock": 10,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 9,
+            "_re4dc_ps2_world_fog": 6,
+            "_fixture_load_control": 6,
+            "_genwait_wake_one": 5,
+            "_mmu_enabled": 4,
+            "__ZN12_GLOBAL__N_1L4loadERK12Re4dcUiImagebPKNS_3KeyE": 3
+          },
+          "model_cycles": 1449,
+          "instruction_runs": 143,
+          "categories": {
+            "base": 1193.0,
+            "dep_load": 165.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 24.0,
+            "flock": 0.0,
+            "branch": 67.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "bf2568416ceb20372fc0361df26c0c42e329bdded0d8727b8e68a76eb520a9d3",
+          "icache": {
+            "model_cycles": 2560,
+            "instruction_fills": 92.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 1499,
+          "final_observed_store_bytes": 766,
+          "peak_stack_bytes": 516,
+          "output_sha256": "9d219be1cd3b4c40edf330ac1a6f00049646ce21dd86ea03a21292b9c005ed7f",
+          "output_bytes": 32,
+          "result_sha256": "ea9b0a1c2f0a13b71650aa3418d4126131f880e14ce1f43e0e090c53c5e28121",
+          "counters": [
+            1,
+            1,
+            1,
+            1,
+            25,
+            832,
+            832,
+            832,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 1,
+          "unlock_calls": 1,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 673,
+            "_memset": 151,
+            "_fixture_submit": 113,
+            "_re4dc_ps2_world_batch_close": 46,
+            "_mutex_unlock": 43,
+            "_memcpy": 42,
+            "_genwait_wake_thd_cnt": 42,
+            "_sq_lock": 40,
+            "___ctzsi2": 38,
+            "__ZZ34re4dc_ps2_world_direct_begin_batchENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 38,
+            "_mutex_lock_timed": 37,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 36,
+            "__ZL20model_direct_accountj": 35,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 24,
+            "_re4dc_ps2_world_direct_end_batch": 23,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 22,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 19,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 14,
+            "__ZNK5re4dc7texture7Package8texturesEv": 10,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 10,
+            "_sq_unlock": 10,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 9,
+            "_re4dc_ps2_world_fog": 6,
+            "_fixture_load_control": 6,
+            "_genwait_wake_one": 5,
+            "_mmu_enabled": 4,
+            "__ZN12_GLOBAL__N_1L4loadERK12Re4dcUiImagebPKNS_3KeyE": 3
+          },
+          "model_cycles": 1580,
+          "instruction_runs": 159,
+          "categories": {
+            "base": 1293.0,
+            "dep_load": 193.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 20.0,
+            "flock": 0.0,
+            "branch": 74.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "69b7203de3d4c30781208f0d34dbf8eda3c8844416cf9b2d71dd1cf067843b22",
+          "icache": {
+            "model_cycles": 2812,
+            "instruction_fills": 102.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "alternating-hit-refusal-8",
+        "parts": 8,
+        "kind": 2,
+        "calls": 1,
+        "baseline": {
+          "instructions": 5443,
+          "final_observed_store_bytes": 2700,
+          "peak_stack_bytes": 496,
+          "output_sha256": "9efd22d1462fdb6d1a9ae12dfa8043fed5366ac51d907a303b8e362626d32d6c",
+          "output_bytes": 128,
+          "result_sha256": "79eef6cecd5679f8910579ee5a7dd458cdca5a060d0738b9517422aaf2f2920c",
+          "counters": [
+            4,
+            4,
+            4,
+            4,
+            100,
+            3328,
+            3328,
+            3328,
+            4,
+            4,
+            0,
+            4,
+            4,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 4,
+          "unlock_calls": 4,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 2536,
+            "_memset": 604,
+            "_fixture_submit": 287,
+            "_re4dc_model_direct_end": 184,
+            "_mutex_unlock": 172,
+            "_memcpy": 168,
+            "_genwait_wake_thd_cnt": 168,
+            "_sq_lock": 160,
+            "___ctzsi2": 152,
+            "__ZZ28re4dc_ps2_world_direct_beginENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 152,
+            "_mutex_lock_timed": 148,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 144,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 96,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 88,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 76,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 56,
+            "__ZNK5re4dc7texture7Package8texturesEv": 40,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 40,
+            "_sq_unlock": 40,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 36,
+            "_re4dc_ps2_world_fog": 24,
+            "_fixture_load_control": 24,
+            "_genwait_wake_one": 20,
+            "_mmu_enabled": 16,
+            "__ZN12_GLOBAL__N_1L4loadERK12Re4dcUiImagebPKNS_3KeyE": 12
+          },
+          "model_cycles": 5691,
+          "instruction_runs": 569,
+          "categories": {
+            "base": 4673.0,
+            "dep_load": 654.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 96.0,
+            "flock": 0.0,
+            "branch": 268.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "de791c0e52b02491435ae06222c4ba4a83075cdffe5ec6846a66ac32adefcc3d",
+          "icache": {
+            "model_cycles": 6802,
+            "instruction_fills": 92.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 5828,
+          "final_observed_store_bytes": 2872,
+          "peak_stack_bytes": 516,
+          "output_sha256": "9efd22d1462fdb6d1a9ae12dfa8043fed5366ac51d907a303b8e362626d32d6c",
+          "output_bytes": 128,
+          "result_sha256": "79eef6cecd5679f8910579ee5a7dd458cdca5a060d0738b9517422aaf2f2920c",
+          "counters": [
+            4,
+            4,
+            4,
+            4,
+            100,
+            3328,
+            3328,
+            3328,
+            4,
+            4,
+            0,
+            4,
+            4,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 4,
+          "unlock_calls": 4,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 2692,
+            "_memset": 604,
+            "_fixture_submit": 320,
+            "_mutex_unlock": 172,
+            "_memcpy": 168,
+            "_genwait_wake_thd_cnt": 168,
+            "_sq_lock": 160,
+            "___ctzsi2": 152,
+            "__ZZ34re4dc_ps2_world_direct_begin_batchENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 152,
+            "_mutex_lock_timed": 148,
+            "_re4dc_ps2_world_batch_close": 148,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 144,
+            "__ZL20model_direct_accountj": 140,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 96,
+            "_re4dc_ps2_world_direct_end_batch": 92,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 88,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 76,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 56,
+            "__ZNK5re4dc7texture7Package8texturesEv": 40,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 40,
+            "_sq_unlock": 40,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 36,
+            "_re4dc_ps2_world_fog": 24,
+            "_fixture_load_control": 24,
+            "_genwait_wake_one": 20,
+            "_mmu_enabled": 16,
+            "__ZN12_GLOBAL__N_1L4loadERK12Re4dcUiImagebPKNS_3KeyE": 12
+          },
+          "model_cycles": 6149,
+          "instruction_runs": 624,
+          "categories": {
+            "base": 5019.0,
+            "dep_load": 757.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 80.0,
+            "flock": 0.0,
+            "branch": 293.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "abcc17d422a4fbf0f8668b57ec515e4bba4b4c4f3de42ca3773bbd97c29a7084",
+          "icache": {
+            "model_cycles": 7381,
+            "instruction_fills": 102.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "alternating-hit-refusal-48",
+        "parts": 48,
+        "kind": 2,
+        "calls": 1,
+        "baseline": {
+          "instructions": 32463,
+          "final_observed_store_bytes": 15940,
+          "peak_stack_bytes": 496,
+          "output_sha256": "3ff1c99bfe107bebcc690fe8bc4aa2300da463f7c13fd1b0a505de94e14bb386",
+          "output_bytes": 768,
+          "result_sha256": "8021f654613af358065e050f97ffcda2a2135195b2bd2ae11e113dbb387bd21a",
+          "counters": [
+            24,
+            24,
+            24,
+            24,
+            600,
+            19968,
+            19968,
+            19968,
+            24,
+            24,
+            0,
+            24,
+            24,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 24,
+          "unlock_calls": 24,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 15216,
+            "_memset": 3624,
+            "_fixture_submit": 1527,
+            "_re4dc_model_direct_end": 1104,
+            "_mutex_unlock": 1032,
+            "_memcpy": 1008,
+            "_genwait_wake_thd_cnt": 1008,
+            "_sq_lock": 960,
+            "___ctzsi2": 912,
+            "__ZZ28re4dc_ps2_world_direct_beginENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 912,
+            "_mutex_lock_timed": 888,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 864,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 576,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 528,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 456,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 336,
+            "__ZNK5re4dc7texture7Package8texturesEv": 240,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 240,
+            "_sq_unlock": 240,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 216,
+            "_re4dc_ps2_world_fog": 144,
+            "_fixture_load_control": 144,
+            "_genwait_wake_one": 120,
+            "_mmu_enabled": 96,
+            "__ZN12_GLOBAL__N_1L4loadERK12Re4dcUiImagebPKNS_3KeyE": 72
+          },
+          "model_cycles": 33971,
+          "instruction_runs": 3409,
+          "categories": {
+            "base": 27873.0,
+            "dep_load": 3914.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 576.0,
+            "flock": 0.0,
+            "branch": 1608.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "24b35eeaa6da29c956deba70d771e59f3578e5d7fcf6135267917df40b4cb616",
+          "icache": {
+            "model_cycles": 35082,
+            "instruction_fills": 92.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 34688,
+          "final_observed_store_bytes": 16912,
+          "peak_stack_bytes": 516,
+          "output_sha256": "3ff1c99bfe107bebcc690fe8bc4aa2300da463f7c13fd1b0a505de94e14bb386",
+          "output_bytes": 768,
+          "result_sha256": "8021f654613af358065e050f97ffcda2a2135195b2bd2ae11e113dbb387bd21a",
+          "counters": [
+            24,
+            24,
+            24,
+            24,
+            600,
+            19968,
+            19968,
+            19968,
+            24,
+            24,
+            0,
+            24,
+            24,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            1.0,
+            1.0
+          ],
+          "lock_calls": 24,
+          "unlock_calls": 24,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 16152,
+            "_memset": 3624,
+            "_fixture_submit": 1700,
+            "_mutex_unlock": 1032,
+            "_memcpy": 1008,
+            "_genwait_wake_thd_cnt": 1008,
+            "_sq_lock": 960,
+            "___ctzsi2": 912,
+            "__ZZ34re4dc_ps2_world_direct_begin_batchENKUlRKN12_GLOBAL__N_15EntryEE_clES2_": 912,
+            "_mutex_lock_timed": 888,
+            "__ZN12_GLOBAL__N_1L20ensure_model_storageEv": 864,
+            "__ZL20model_direct_accountj": 840,
+            "_re4dc_ps2_world_batch_close": 828,
+            "__ZN12_GLOBAL__N_1L13stream_selectE13pvr_list_type": 576,
+            "_re4dc_ps2_world_direct_end_batch": 552,
+            "__ZNK12_GLOBAL__N_13KeyeqERKS0_": 528,
+            "__ZN5re4dc6render16begin_pvr_packetEP10pvr_vertexRmRK12pvr_poly_hdr": 456,
+            "__ZN12_GLOBAL__N_1L26sourceWorldTextureAcquiredERKNS_3KeyE": 336,
+            "__ZNK5re4dc7texture7Package8texturesEv": 240,
+            "__ZNK5re4dc7texture7Package11pvr_textureEm": 240,
+            "_sq_unlock": 240,
+            "__ZN12_GLOBAL__N_1L16world_sort_beginEv": 216,
+            "_re4dc_ps2_world_fog": 144,
+            "_fixture_load_control": 144,
+            "_genwait_wake_one": 120,
+            "_mmu_enabled": 96,
+            "__ZN12_GLOBAL__N_1L4loadERK12Re4dcUiImagebPKNS_3KeyE": 72
+          },
+          "model_cycles": 36609,
+          "instruction_runs": 3724,
+          "categories": {
+            "base": 29859.0,
+            "dep_load": 4517.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 480.0,
+            "flock": 0.0,
+            "branch": 1753.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "43ee37c9ee9ff5ab8f654eaefd76d7d153fe8133c1d3dca92b740058ad6d9200",
+          "icache": {
+            "model_cycles": 37841,
+            "instruction_fills": 102.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "frame-not-ready-1",
+        "parts": 1,
+        "kind": 4,
+        "calls": 1,
+        "baseline": {
+          "instructions": 161,
+          "final_observed_store_bytes": 108,
+          "peak_stack_bytes": 440,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "026080ddfca735d5a649951c8a84b5112b0466a0a03b01e015bd6f3a67014fb5",
+          "counters": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 0,
+          "symbol_instructions": {
+            "_fixture_submit": 66,
+            "_re4dc_ps2_world_direct_begin": 50,
+            "_memset": 45
+          },
+          "model_cycles": 155,
+          "instruction_runs": 16,
+          "categories": {
+            "base": 133.0,
+            "dep_load": 11.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 1.0,
+            "flock": 0.0,
+            "branch": 10.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "5b6058bb6c2b64b513b2492ebabfd4a5b36df2ec29b19b0936385e3f2a3650a8",
+          "icache": {
+            "model_cycles": 363,
+            "instruction_fills": 14.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 203,
+          "final_observed_store_bytes": 132,
+          "peak_stack_bytes": 460,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "026080ddfca735d5a649951c8a84b5112b0466a0a03b01e015bd6f3a67014fb5",
+          "counters": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 0,
+          "symbol_instructions": {
+            "_fixture_submit": 74,
+            "_re4dc_ps2_world_direct_begin_batch": 60,
+            "_memset": 45,
+            "_re4dc_ps2_world_batch_close": 24
+          },
+          "model_cycles": 208,
+          "instruction_runs": 23,
+          "categories": {
+            "base": 174.0,
+            "dep_load": 21.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 0.0,
+            "flock": 0.0,
+            "branch": 13.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "b524edaf4b4bd04c601b52d9d51ef3207bfed2fccbd12972e866687132b7fa8a",
+          "icache": {
+            "model_cycles": 429,
+            "instruction_fills": 16.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "frame-not-ready-2",
+        "parts": 2,
+        "kind": 4,
+        "calls": 1,
+        "baseline": {
+          "instructions": 283,
+          "final_observed_store_bytes": 164,
+          "peak_stack_bytes": 440,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "f41214d8906faa395a97087586bf19a95109cca2fa656086ef04841c50a74afc",
+          "counters": [
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 0,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 100,
+            "_fixture_submit": 93,
+            "_memset": 90
+          },
+          "model_cycles": 275,
+          "instruction_runs": 31,
+          "categories": {
+            "base": 233.0,
+            "dep_load": 20.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 2.0,
+            "flock": 0.0,
+            "branch": 20.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "0e1484ba78aade86960e64f6eac0478d4cb62b84ac26ad0c3d51787d7a82e9ea",
+          "icache": {
+            "model_cycles": 483,
+            "instruction_fills": 14.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 350,
+          "final_observed_store_bytes": 200,
+          "peak_stack_bytes": 460,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "f41214d8906faa395a97087586bf19a95109cca2fa656086ef04841c50a74afc",
+          "counters": [
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 0,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 120,
+            "_fixture_submit": 104,
+            "_memset": 90,
+            "_re4dc_ps2_world_batch_close": 36
+          },
+          "model_cycles": 359,
+          "instruction_runs": 42,
+          "categories": {
+            "base": 297.0,
+            "dep_load": 37.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 0.0,
+            "flock": 0.0,
+            "branch": 25.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "d12b9719c2b5da7d838b20b51d51d83640969490a5684aba375b007ea1750b47",
+          "icache": {
+            "model_cycles": 580,
+            "instruction_fills": 16.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "frame-not-ready-8",
+        "parts": 8,
+        "kind": 4,
+        "calls": 1,
+        "baseline": {
+          "instructions": 1015,
+          "final_observed_store_bytes": 500,
+          "peak_stack_bytes": 440,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "3373b1c62fe3f075ee02f2f5eb4980a5cc869cd91308d1db95da9e189c7acb62",
+          "counters": [
+            0,
+            8,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 0,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 400,
+            "_memset": 360,
+            "_fixture_submit": 255
+          },
+          "model_cycles": 995,
+          "instruction_runs": 121,
+          "categories": {
+            "base": 833.0,
+            "dep_load": 74.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 8.0,
+            "flock": 0.0,
+            "branch": 80.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "488803d1a585c9abab061f1eaabfc6cedb72e0c7aeb09bb8a93c4cbf8559e337",
+          "icache": {
+            "model_cycles": 1203,
+            "instruction_fills": 14.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 1232,
+          "final_observed_store_bytes": 608,
+          "peak_stack_bytes": 460,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "3373b1c62fe3f075ee02f2f5eb4980a5cc869cd91308d1db95da9e189c7acb62",
+          "counters": [
+            0,
+            8,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 0,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 480,
+            "_memset": 360,
+            "_fixture_submit": 284,
+            "_re4dc_ps2_world_batch_close": 108
+          },
+          "model_cycles": 1265,
+          "instruction_runs": 156,
+          "categories": {
+            "base": 1035.0,
+            "dep_load": 133.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 0.0,
+            "flock": 0.0,
+            "branch": 97.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "1a10ba4ab04bd94d38d15cd862d3a542677b33851e73ee7759c7d7cd7e9a4617",
+          "icache": {
+            "model_cycles": 1486,
+            "instruction_fills": 16.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "frame-not-ready-48",
+        "parts": 48,
+        "kind": 4,
+        "calls": 1,
+        "baseline": {
+          "instructions": 5895,
+          "final_observed_store_bytes": 2740,
+          "peak_stack_bytes": 440,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "4c6a614205a46370ebc29ecd814225fbe92c79aa2064db77ec134fe5bde7eb43",
+          "counters": [
+            0,
+            48,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 0,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin": 2400,
+            "_memset": 2160,
+            "_fixture_submit": 1335
+          },
+          "model_cycles": 5795,
+          "instruction_runs": 721,
+          "categories": {
+            "base": 4833.0,
+            "dep_load": 434.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 48.0,
+            "flock": 0.0,
+            "branch": 480.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "3ad681372da34aed0ed90402ce44573ae742afc66b7e4d9bd97c3b3ea24f069f",
+          "icache": {
+            "model_cycles": 6003,
+            "instruction_fills": 14.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 7112,
+          "final_observed_store_bytes": 3328,
+          "peak_stack_bytes": 460,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "4c6a614205a46370ebc29ecd814225fbe92c79aa2064db77ec134fe5bde7eb43",
+          "counters": [
+            0,
+            48,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 0,
+          "symbol_instructions": {
+            "_re4dc_ps2_world_direct_begin_batch": 2880,
+            "_memset": 2160,
+            "_fixture_submit": 1484,
+            "_re4dc_ps2_world_batch_close": 588
+          },
+          "model_cycles": 7305,
+          "instruction_runs": 916,
+          "categories": {
+            "base": 5955.0,
+            "dep_load": 773.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 0.0,
+            "flock": 0.0,
+            "branch": 577.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "39de808b4063e411f098dd7181455156aed17a8899e8ba5f3be48b8dcc078da3",
+          "icache": {
+            "model_cycles": 7526,
+            "instruction_fills": 16.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      },
+      {
+        "name": "ordinary-direct-end",
+        "parts": 1,
+        "kind": 0,
+        "calls": 1,
+        "baseline": {
+          "instructions": 151,
+          "final_observed_store_bytes": 97,
+          "peak_stack_bytes": 68,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "50c200355bca98c4716455ce012f009d339065fc4e5ab138cb0d67709479993f",
+          "counters": [
+            0,
+            0,
+            1,
+            1,
+            25,
+            832,
+            832,
+            832,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 1,
+          "symbol_instructions": {
+            "_re4dc_model_direct_end": 46,
+            "_mutex_unlock": 43,
+            "_genwait_wake_thd_cnt": 42,
+            "_sq_unlock": 10,
+            "_fixture_normal_end": 5,
+            "_genwait_wake_one": 5
+          },
+          "model_cycles": 184,
+          "instruction_runs": 13,
+          "categories": {
+            "base": 151.0,
+            "dep_load": 28.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 0.0,
+            "flock": 0.0,
+            "branch": 5.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "faefc2ce6ae8d743e5f2a557bbb6769dcc60dcfa18d9f38a60ffa9bbdc9baaca",
+          "icache": {
+            "model_cycles": 414,
+            "instruction_fills": 17.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        },
+        "batch": {
+          "instructions": 158,
+          "final_observed_store_bytes": 105,
+          "peak_stack_bytes": 68,
+          "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output_bytes": 0,
+          "result_sha256": "50c200355bca98c4716455ce012f009d339065fc4e5ab138cb0d67709479993f",
+          "counters": [
+            0,
+            0,
+            1,
+            1,
+            25,
+            832,
+            832,
+            832,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "scales": [
+            0.0,
+            0.0
+          ],
+          "lock_calls": 0,
+          "unlock_calls": 1,
+          "symbol_instructions": {
+            "_mutex_unlock": 43,
+            "_genwait_wake_thd_cnt": 42,
+            "__ZL20model_direct_accountj": 35,
+            "_re4dc_model_direct_end": 18,
+            "_sq_unlock": 10,
+            "_fixture_normal_end": 5,
+            "_genwait_wake_one": 5
+          },
+          "model_cycles": 190,
+          "instruction_runs": 14,
+          "categories": {
+            "base": 158.0,
+            "dep_load": 28.0,
+            "dep_fpu": 0.0,
+            "dep_fdiv": 0.0,
+            "dep_other": 0.0,
+            "flock": 0.0,
+            "branch": 4.0,
+            "imiss": 0.0,
+            "dmiss": 0.0,
+            "pfwait": 0.0,
+            "sq": 0.0,
+            "uncached": 0.0
+          },
+          "trace_sha256": "04bc568e51b99c6a9c821db8786dd57fefb95ff73a64f7738f941c9f2ec4ecbc",
+          "icache": {
+            "model_cycles": 463,
+            "instruction_fills": 20.0,
+            "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+          }
+        }
+      }
+    ]
+  },
+  "compiled_caller_review": {
+    "status": "PASS bounded disassembly path review",
+    "method": "Static instruction counts from hashed full-TU production objects; not an execution or cycle benchmark.",
+    "build_controls": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/build-controls.json",
+    "objects": {
+      "baseline": {
+        "object": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/native_static-baseline.o",
+        "sha256": "dd20d9ab5592c097567ebffb4f101edf4848c2768b232d06d37ba6a63681c865",
+        "sections": {
+          "bind": {
+            "section": ".text._ZN12_GLOBAL__N_17Emitter4bindEv.part.0",
+            "bytes": 360,
+            "sha256": "b684e7f96c85ac40bfc2db7300ad0260b47f9fb1eb77c459bbbb104c2e3ad0b7",
+            "disassembly": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-static-01/native_static-baseline-bind.disasm.txt"
+          },
+          "emit": {
+            "section": ".text._ZN12_GLOBAL__N_18MeshDraw10chunk_emitEPKNS0_4PickEj",
+            "bytes": 2024,
+            "sha256": "f5253200b9ce1ccdbe95d3a245173f8f7ebd1765f54c3333181733af507c0f18",
+            "disassembly": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-static-01/native_static-baseline-emit.disasm.txt"
+          },
+          "flush": {
+            "section": ".text._ZZN12_GLOBAL__N_1L8ps2_passEjfENKUlvE_clEv",
+            "bytes": 620,
+            "sha256": "7891a1d896b599189384bd00fde79f6cce2032b239a7dbae7f1e6dae63e1e7f7",
+            "disassembly": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-static-01/native_static-baseline-flush.disasm.txt"
+          }
+        }
+      },
+      "on": {
+        "object": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-build-01/native_static-on.o",
+        "sha256": "2580fc14e8bff8d745f55aa9679dd050ccb4e991beae13445eb3e412fd1b5da6",
+        "sections": {
+          "bind": {
+            "section": ".text._ZN12_GLOBAL__N_17Emitter4bindEv.part.0",
+            "bytes": 388,
+            "sha256": "b451ffaaf5e1cc253da7ac7f216293739a4e5d62df2bff8ee6032f3c674ab1e8",
+            "disassembly": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-static-01/native_static-on-bind.disasm.txt"
+          },
+          "emit": {
+            "section": ".text._ZN12_GLOBAL__N_18MeshDraw10chunk_emitEPKNS0_4PickEj",
+            "bytes": 2024,
+            "sha256": "429b3efa3ef65fe44fa8e5a66acf90bc420df37b034fed9ea1c6dd6d761f3da4",
+            "disassembly": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-static-01/native_static-on-emit.disasm.txt"
+          },
+          "flush": {
+            "section": ".text._ZZN12_GLOBAL__N_1L8ps2_passEjfENKUlvE_clEv",
+            "bytes": 640,
+            "sha256": "b66a7bedab2de5689d370f2edab21fdc3516b6c3fe7af9c726ac36b9caea1e28",
+            "disassembly": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-static-01/native_static-on-flush.disasm.txt"
+          },
+          "end": {
+            "section": ".text._ZN12_GLOBAL__N_17Emitter10end_directEv",
+            "bytes": 60,
+            "sha256": "6104c4476b46620d4618226d4d78b68c518fd7aa2d83e08c9a2e9b9bc8a31721",
+            "disassembly": "/workspace/scratch/c4e1a2818fde/backface-tools/world-submit-static-01/native_static-on-end.disasm.txt"
+          }
+        }
+      }
+    },
+    "paths": {
+      "first_bind": {
+        "baseline": {
+          "instructions": 86,
+          "section": ".text._ZN12_GLOBAL__N_17Emitter4bindEv.part.0",
+          "inclusive_hex_spans": [
+            [
+              "0x0",
+              "0x22"
+            ],
+            [
+              "0x64",
+              "0x86"
+            ],
+            [
+              "0x8c",
+              "0xee"
+            ]
+          ]
+        },
+        "on": {
+          "instructions": 91,
+          "section": ".text._ZN12_GLOBAL__N_17Emitter4bindEv.part.0",
+          "inclusive_hex_spans": [
+            [
+              "0x0",
+              "0x22"
+            ],
+            [
+              "0x64",
+              "0xf4"
+            ]
+          ]
+        }
+      },
+      "row_setup": {
+        "baseline": {
+          "instructions": 151,
+          "section": ".text._ZZN12_GLOBAL__N_1L8ps2_passEjfENKUlvE_clEv",
+          "inclusive_hex_spans": [
+            [
+              "0x62",
+              "0xea"
+            ],
+            [
+              "0x106",
+              "0x1a8"
+            ]
+          ]
+        },
+        "on": {
+          "instructions": 154,
+          "section": ".text._ZZN12_GLOBAL__N_1L8ps2_passEjfENKUlvE_clEv",
+          "inclusive_hex_spans": [
+            [
+              "0x66",
+              "0xee"
+            ],
+            [
+              "0x10a",
+              "0x1b2"
+            ]
+          ]
+        }
+      },
+      "nonempty_logical_end": {
+        "baseline": [
+          {
+            "instructions": 9,
+            "section": ".text._ZZN12_GLOBAL__N_1L8ps2_passEjfENKUlvE_clEv",
+            "inclusive_hex_spans": [
+              [
+                "0x1aa",
+                "0x1ba"
+              ]
+            ]
+          }
+        ],
+        "on": [
+          {
+            "instructions": 4,
+            "section": ".text._ZZN12_GLOBAL__N_1L8ps2_passEjfENKUlvE_clEv",
+            "inclusive_hex_spans": [
+              [
+                "0x1b4",
+                "0x1ba"
+              ]
+            ]
+          },
+          {
+            "instructions": 19,
+            "section": ".text._ZN12_GLOBAL__N_17Emitter10end_directEv",
+            "inclusive_hex_spans": [
+              [
+                "0x0",
+                "0x24"
+              ]
+            ]
+          }
+        ]
+      },
+      "empty_logical_end": {
+        "baseline": [
+          {
+            "instructions": 4,
+            "section": ".text._ZZN12_GLOBAL__N_1L8ps2_passEjfENKUlvE_clEv",
+            "inclusive_hex_spans": [
+              [
+                "0x1aa",
+                "0x1b0"
+              ]
+            ]
+          }
+        ],
+        "on": [
+          {
+            "instructions": 4,
+            "section": ".text._ZZN12_GLOBAL__N_1L8ps2_passEjfENKUlvE_clEv",
+            "inclusive_hex_spans": [
+              [
+                "0x1b4",
+                "0x1ba"
+              ]
+            ]
+          },
+          {
+            "instructions": 10,
+            "section": ".text._ZN12_GLOBAL__N_17Emitter10end_directEv",
+            "inclusive_hex_spans": [
+              [
+                "0x0",
+                "0xc"
+              ],
+              [
+                "0x20",
+                "0x24"
+              ]
+            ]
+          }
+        ]
+      },
+      "fixed_flush": {
+        "baseline": {
+          "instructions": 63,
+          "section": ".text._ZZN12_GLOBAL__N_1L8ps2_passEjfENKUlvE_clEv",
+          "inclusive_hex_spans": [
+            [
+              "0x0",
+              "0x60"
+            ],
+            [
+              "0x23e",
+              "0x258"
+            ]
+          ]
+        },
+        "on": {
+          "instructions": 70,
+          "section": ".text._ZZN12_GLOBAL__N_1L8ps2_passEjfENKUlvE_clEv",
+          "inclusive_hex_spans": [
+            [
+              "0x0",
+              "0x64"
+            ],
+            [
+              "0x244",
+              "0x268"
+            ]
+          ]
+        }
+      }
+    },
+    "added_instructions": {
+      "first_bind": 5,
+      "row_setup": 3,
+      "nonempty_logical_end": 14,
+      "empty_logical_end": 10,
+      "fixed_flush": 7,
+      "successful_nonempty_row_including_first_bind": 22
+    },
+    "memory": {
+      "whole_meshdraw_clear_bytes": [
+        776,
+        776
+      ],
+      "emitter_member_clear_bytes": [
+        209,
+        213
+      ],
+      "flush_stack_allocation_bytes": [
+        816,
+        820
+      ],
+      "new_end_wrapper_saved_register_bytes": 8
+    },
+    "chunk_emit": {
+      "section_bytes": [
+        2024,
+        2024
+      ],
+      "already_bound_guard_identical": true,
+      "changed_load_displacements_hex": [
+        "0xb0",
+        "0x14c",
+        "0x158",
+        "0x15c",
+        "0x266",
+        "0x270",
+        "0x2e2",
+        "0x2f4",
+        "0x338",
+        "0x492",
+        "0x4fe",
+        "0x516"
+      ]
+    },
+    "limits": [
+      "No cycles assigned to instruction deltas or four additional cleared bytes per row.",
+      "UI, KOS, libc, geometry and real PVR scheduling/contended mutex costs are outside this review.",
+      "Counts apply to the reviewed primary production configuration and successful normal replay path.",
+      "This cannot be subtracted directly from a cycle benchmark or establish net r101 frame time."
+    ]
+  },
+  "make_controls": {
+    "status": "PASS",
+    "cases": [
+      {
+        "name": "absent",
+        "extra": [],
+        "expected_accept": true,
+        "native_static": {
+          "exit": 0,
+          "diagnostic": []
+        },
+        "native_ui": {
+          "exit": 0,
+          "diagnostic": []
+        }
+      },
+      {
+        "name": "off",
+        "extra": [
+          "SCENERY_SUBMIT_BATCH=0"
+        ],
+        "expected_accept": true,
+        "native_static": {
+          "exit": 0,
+          "diagnostic": []
+        },
+        "native_ui": {
+          "exit": 0,
+          "diagnostic": []
+        }
+      },
+      {
+        "name": "on",
+        "extra": [
+          "SCENERY_SUBMIT_BATCH=1"
+        ],
+        "expected_accept": true,
+        "native_static": {
+          "exit": 0,
+          "diagnostic": []
+        },
+        "native_ui": {
+          "exit": 0,
+          "diagnostic": []
+        }
+      },
+      {
+        "name": "invalid",
+        "extra": [
+          "SCENERY_SUBMIT_BATCH=2"
+        ],
+        "expected_accept": false,
+        "native_static": {
+          "exit": 2,
+          "diagnostic": [
+            "scenery19.mk:36: *** SCENERY_SUBMIT_BATCH must be 0 or 1.  Stop."
+          ]
+        },
+        "native_ui": {
+          "exit": 2,
+          "diagnostic": [
+            "scenery19.mk:36: *** SCENERY_SUBMIT_BATCH must be 0 or 1.  Stop."
+          ]
+        }
+      },
+      {
+        "name": "no_chunk",
+        "extra": [
+          "SCENERY_SUBMIT_BATCH=1",
+          "SCENERY_CHUNK=0"
+        ],
+        "expected_accept": false,
+        "native_static": {
+          "exit": 2,
+          "diagnostic": [
+            "scenery19.mk:39: *** SCENERY_SUBMIT_BATCH needs SCENERY_CHUNK.  Stop."
+          ]
+        },
+        "native_ui": {
+          "exit": 2,
+          "diagnostic": [
+            "scenery19.mk:39: *** SCENERY_SUBMIT_BATCH needs SCENERY_CHUNK.  Stop."
+          ]
+        }
+      },
+      {
+        "name": "no_direct",
+        "extra": [
+          "SCENERY_SUBMIT_BATCH=1",
+          "TA_DIRECT=0"
+        ],
+        "expected_accept": false,
+        "native_static": {
+          "exit": 2,
+          "diagnostic": [
+            "game30.mk:2638: *** PS2_WORLD_MESH needs NATIVE_MESH=1 MESH_LOD=1 MESH_DIRECT=1 TA_DIRECT=1.  Stop."
+          ]
+        },
+        "native_ui": {
+          "exit": 2,
+          "diagnostic": [
+            "game30.mk:2638: *** PS2_WORLD_MESH needs NATIVE_MESH=1 MESH_LOD=1 MESH_DIRECT=1 TA_DIRECT=1.  Stop."
+          ]
+        }
+      },
+      {
+        "name": "no_mesh_direct",
+        "extra": [
+          "SCENERY_SUBMIT_BATCH=1",
+          "MESH_DIRECT=0"
+        ],
+        "expected_accept": false,
+        "native_static": {
+          "exit": 2,
+          "diagnostic": [
+            "game30.mk:2638: *** PS2_WORLD_MESH needs NATIVE_MESH=1 MESH_LOD=1 MESH_DIRECT=1 TA_DIRECT=1.  Stop."
+          ]
+        },
+        "native_ui": {
+          "exit": 2,
+          "diagnostic": [
+            "game30.mk:2638: *** PS2_WORLD_MESH needs NATIVE_MESH=1 MESH_LOD=1 MESH_DIRECT=1 TA_DIRECT=1.  Stop."
+          ]
+        }
+      },
+      {
+        "name": "no_world_mesh",
+        "extra": [
+          "SCENERY_SUBMIT_BATCH=1",
+          "PS2_WORLD_MESH=0"
+        ],
+        "expected_accept": false,
+        "native_static": {
+          "exit": 2,
+          "diagnostic": [
+            "game30.mk:2659: *** WORLD_RECT21=1 requires PS2_WORLD_MESH=1.  Stop."
+          ]
+        },
+        "native_ui": {
+          "exit": 2,
+          "diagnostic": [
+            "game30.mk:2659: *** WORLD_RECT21=1 requires PS2_WORLD_MESH=1.  Stop."
+          ]
+        }
+      },
+      {
+        "name": "no_hdr_cache",
+        "extra": [
+          "SCENERY_SUBMIT_BATCH=1",
+          "PS2_WORLD_HDR_CACHE=0"
+        ],
+        "expected_accept": false,
+        "native_static": {
+          "exit": 2,
+          "diagnostic": [
+            "scenery19.mk:42: *** SCENERY_SUBMIT_BATCH needs TA_DIRECT=1 MESH_DIRECT=1 PS2_WORLD_MESH=1 PS2_WORLD_HDR_CACHE=1.  Stop."
+          ]
+        },
+        "native_ui": {
+          "exit": 2,
+          "diagnostic": [
+            "scenery19.mk:42: *** SCENERY_SUBMIT_BATCH needs TA_DIRECT=1 MESH_DIRECT=1 PS2_WORLD_MESH=1 PS2_WORLD_HDR_CACHE=1.  Stop."
+          ]
+        }
+      },
+      {
+        "name": "hdr_check",
+        "extra": [
+          "SCENERY_SUBMIT_BATCH=1",
+          "PS2_WORLD_HDR_CACHE=2"
+        ],
+        "expected_accept": false,
+        "native_static": {
+          "exit": 2,
+          "diagnostic": [
+            "scenery19.mk:42: *** SCENERY_SUBMIT_BATCH needs TA_DIRECT=1 MESH_DIRECT=1 PS2_WORLD_MESH=1 PS2_WORLD_HDR_CACHE=1.  Stop."
+          ]
+        },
+        "native_ui": {
+          "exit": 2,
+          "diagnostic": [
+            "scenery19.mk:42: *** SCENERY_SUBMIT_BATCH needs TA_DIRECT=1 MESH_DIRECT=1 PS2_WORLD_MESH=1 PS2_WORLD_HDR_CACHE=1.  Stop."
+          ]
+        }
+      },
+      {
+        "name": "pvs",
+        "extra": [
+          "SCENERY_SUBMIT_BATCH=1",
+          "PS2_PVS=1"
+        ],
+        "expected_accept": false,
+        "native_static": {
+          "exit": 2,
+          "diagnostic": [
+            "scenery19.mk:45: *** SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_GUARD.  Stop."
+          ]
+        },
+        "native_ui": {
+          "exit": 2,
+          "diagnostic": [
+            "scenery19.mk:45: *** SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_GUARD.  Stop."
+          ]
+        }
+      },
+      {
+        "name": "scratch",
+        "extra": [
+          "SCENERY_SUBMIT_BATCH=1",
+          "WORLD_SCRATCH=1"
+        ],
+        "expected_accept": false,
+        "native_static": {
+          "exit": 2,
+          "diagnostic": [
+            "scenery19.mk:45: *** SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_GUARD.  Stop."
+          ]
+        },
+        "native_ui": {
+          "exit": 2,
+          "diagnostic": [
+            "scenery19.mk:45: *** SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_GUARD.  Stop."
+          ]
+        }
+      },
+      {
+        "name": "guard",
+        "extra": [
+          "SCENERY_SUBMIT_BATCH=1",
+          "TA_GUARD=1"
+        ],
+        "expected_accept": false,
+        "native_static": {
+          "exit": 2,
+          "diagnostic": [
+            "scenery19.mk:45: *** SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_GUARD.  Stop."
+          ]
+        },
+        "native_ui": {
+          "exit": 2,
+          "diagnostic": [
+            "scenery19.mk:45: *** SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_GUARD.  Stop."
+          ]
+        }
+      }
+    ],
+    "source_sha256": "7c8e6a65342517b2751887733c467f8cbfd3824e606076954335c4ac73e37411",
+    "scope": "Actual Make dry-runs for both affected translation units; no shell recipes executed"
+  },
+  "prior_queue_regression": {
+    "status": "PASS",
+    "cases": 3564,
+    "source_sha256": "892f0051ff215acdf775e382f57bb5ae3ae51fe5fdc1d8fef6a453a2cf00e653",
+    "extracted_sha256": {
+      "PICK_DEFINITION": "798589d65fec848b5cfc2f496583eb9ffda68813cad7cda73d05bf630294efe6",
+      "CHUNK_OK": "c644732131b1749aa137cf2d3a0ab1d6f2c8d7fc3c8c54fca5ec79091cf5635a",
+      "CHUNK_EMIT": "6e18029b92df76d5cda5dc040362e77e73c005e7a3371d34fd8f73cab2cc1ab1",
+      "CHUNK_PART": "a14ea703c0b8d1dd0b226e8c29e0e4f65211e3b8beb55e532d65170ba550f773",
+      "CHUNK_FLUSH": "51863171523e02d6ad1f1e2f05c579380bc144c3a0265e8e2cf06dd5e5415530",
+      "EARLY_BRANCH": "aa9835fe5ced67be515d0645744e8097f8a1571cb32c51a07b79684fc2f33e03",
+      "FULL_SETUP": "1a2d18ef7a4569e05bae8dda4ca5bbbabd71ff12cf9dda08b08a58e1f6205571",
+      "CHUNK_DISPATCH": "9f7dc6e41929089a4a385d7b38af10abe761794e397e724f67c6e613e8dea268"
+    },
+    "scope": "Actual new/old admission, full setup assignments, queue records, chunk_flush and chunk_emit control flow with controlled chunk_select/emit_pick edges; no target object layout, renderer output or timing claim."
+  },
+  "illustration": {
+    "marginal_model_cycles_saved_per_reused_boundary": 151,
+    "assumed_parts": 616,
+    "assumed_cpu_hz": 200000000,
+    "optimistic_model_ms_before_caller_and_finite_batch_cost": 0.46508,
+    "real_r101_measurement": false,
+    "hardware_upper_bound": false
+  },
+  "target_production_body_identity": {
+    "status": "PASS",
+    "scope": "Tie the isolated UI cost bodies to the complete production TU objects.\n\nNo executable instruction difference is accepted. A moved literal pointer to\nthe identical three-value PVR cull table may differ because the fixture removes\ncold loading code. That relocation and all twelve table bytes are checked.\n",
+    "arms": {
+      "baseline": [
+        {
+          "section": ".text.re4dc_ps2_world_direct_begin",
+          "bytes": 1872,
+          "raw_equal": false,
+          "production_sha256": "0854473bc0899a114c2ac1d46d1071016099b87bf38bce60ef6b615abd395fa5",
+          "fixture_sha256": "b926459bba8c4f49e8ee914bf783587ce3c9e0c51397eaf1dc0eb06f97284232",
+          "normalized_sha256": "c3f130c00b4d68d0ec122e293c9dbd91a9165465511ca0f85807ae1ba5b8b209",
+          "moved_cull_literals": [
+            {
+              "offset": 1112,
+              "kind": "R_SH_DIR32",
+              "target": ".rodata",
+              "production_offset": 324,
+              "fixture_offset": 268,
+              "identical_cull_table": [
+                0,
+                2,
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "section": ".text.re4dc_model_direct_end",
+          "bytes": 144,
+          "raw_equal": true,
+          "production_sha256": "bdf4f260877149d1af65924cfdb4ad2ae7a5cc6821143fac6f53b343a1f2ad6c",
+          "fixture_sha256": "bdf4f260877149d1af65924cfdb4ad2ae7a5cc6821143fac6f53b343a1f2ad6c",
+          "normalized_sha256": "bdf4f260877149d1af65924cfdb4ad2ae7a5cc6821143fac6f53b343a1f2ad6c",
+          "moved_cull_literals": []
+        }
+      ],
+      "batch": [
+        {
+          "section": ".text.re4dc_ps2_world_direct_begin_batch",
+          "bytes": 2076,
+          "raw_equal": false,
+          "production_sha256": "ee52fec9945ada507648c26ddec9ba76c8c1f6da47c08e4093158bfee14e2cc7",
+          "fixture_sha256": "98cd2120a705d56350ab722e62e30ee141d2fe3540223980fc7c69f508032eba",
+          "normalized_sha256": "ca451475d85cd7a482f0703bcb6fa8c472b59c2589058a3088b6abb636c7bab7",
+          "moved_cull_literals": [
+            {
+              "offset": 1240,
+              "kind": "R_SH_DIR32",
+              "target": ".rodata",
+              "production_offset": 324,
+              "fixture_offset": 268,
+              "identical_cull_table": [
+                0,
+                2,
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "section": ".text.re4dc_ps2_world_direct_begin",
+          "bytes": 12,
+          "raw_equal": true,
+          "production_sha256": "02c8458a31804e6bf38a1f7902b17dab9606b6d332b4b44300825a15424de0d9",
+          "fixture_sha256": "02c8458a31804e6bf38a1f7902b17dab9606b6d332b4b44300825a15424de0d9",
+          "normalized_sha256": "02c8458a31804e6bf38a1f7902b17dab9606b6d332b4b44300825a15424de0d9",
+          "moved_cull_literals": []
+        },
+        {
+          "section": ".text.re4dc_ps2_world_direct_end_batch",
+          "bytes": 80,
+          "raw_equal": true,
+          "production_sha256": "5b5f57e632aeec720a5e069b8abe81d397783e92a6493b9467c365edf40adfff",
+          "fixture_sha256": "5b5f57e632aeec720a5e069b8abe81d397783e92a6493b9467c365edf40adfff",
+          "normalized_sha256": "5b5f57e632aeec720a5e069b8abe81d397783e92a6493b9467c365edf40adfff",
+          "moved_cull_literals": []
+        },
+        {
+          "section": ".text.re4dc_ps2_world_batch_close",
+          "bytes": 52,
+          "raw_equal": true,
+          "production_sha256": "d6719c7c8b29348d2dc9c09796538e8b705e60e7e30dd8a6dd22bc563b56044a",
+          "fixture_sha256": "d6719c7c8b29348d2dc9c09796538e8b705e60e7e30dd8a6dd22bc563b56044a",
+          "normalized_sha256": "d6719c7c8b29348d2dc9c09796538e8b705e60e7e30dd8a6dd22bc563b56044a",
+          "moved_cull_literals": []
+        },
+        {
+          "section": ".text.re4dc_model_direct_end",
+          "bytes": 56,
+          "raw_equal": true,
+          "production_sha256": "b2164848a1c11648c1544bd2aa5e33fe2a3862368dfe136b839bb2b78dd3b2f0",
+          "fixture_sha256": "b2164848a1c11648c1544bd2aa5e33fe2a3862368dfe136b839bb2b78dd3b2f0",
+          "normalized_sha256": "b2164848a1c11648c1544bd2aa5e33fe2a3862368dfe136b839bb2b78dd3b2f0",
+          "moved_cull_literals": []
+        },
+        {
+          "section": ".text._ZL20model_direct_accountj",
+          "bytes": 112,
+          "raw_equal": true,
+          "production_sha256": "0c8405175770fcf1adafaa73b8e167ec1541b01cec54aed5ef50cc6263f41e2b",
+          "fixture_sha256": "0c8405175770fcf1adafaa73b8e167ec1541b01cec54aed5ef50cc6263f41e2b",
+          "normalized_sha256": "0c8405175770fcf1adafaa73b8e167ec1541b01cec54aed5ef50cc6263f41e2b",
+          "moved_cull_literals": []
+        }
+      ]
+    },
+    "checked_current_runtime_sha256": {
+      "port/dreamcast/game/platform/native_static.cpp": "205ef1c488b0080ef27ee1c95fb801cb6fc1795101471b292378108812770a48",
+      "port/dreamcast/game/platform/native_ui.cpp": "af8c5a111a948702f7a164e5209e53de48452fa93f2180f56bf33bb3b366e256",
+      "port/dreamcast/game/platform/include/scenery_submit_batch.h": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106",
+      "port/dreamcast/game/scenery19.mk": "7c8e6a65342517b2751887733c467f8cbfd3824e606076954335c4ac73e37411"
+    },
+    "production_receipt_sha256": "e7ae60f449da60325dd22b214afd3c0156c685928b43fd030b3c8da5d60c7caf",
+    "target_receipt_sha256": "5c02e689e0cce70b4e407e5ec49e031a3ad6181f66d740d1800b247015376ff4",
+    "source_sha256": "6a88eb790b9f781b1d74680a5186929d63cf25c781ef63ecc906f2434796ad8f",
+    "sr_model_audit": {
+      "stc_sr": {
+        "issue": 2,
+        "latency": 2
+      },
+      "ldc_sr": {
+        "issue": 4,
+        "latency": 4
+      },
+      "group": "CO, no pairing",
+      "manual": "SH7091 Programming Manual, Figure 8.2, pages 152-153",
+      "source": "port/dreamcast/tools/hwmodel/hwsim.c",
+      "external_bus_latency_modeled": false
+    }
+  }
+}

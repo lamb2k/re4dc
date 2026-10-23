@@ -1,0 +1,299 @@
+// Production source bodies are substituted by check_runtime.py. External
+// renderer edges below are controlled, instrumented fixtures, not replacements
+// intended for the game or for performance pricing.
+#include <algorithm>
+#include <array>
+#include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <vector>
+
+#define RE4DC_TA_DIRECT 1
+#define RE4DC_TA_MATERIAL_DIAG 0
+#define RE4DC_PS2_WORLD_TRANSITION_OWNER 1
+#define RE4DC_PS2_WORLD_R11F_OWNER 1
+#define RE4DC_WORLD_HOLE_DIAG 1
+#define RE4DC_UI_POLY_ORDER 1
+#define RE4DC_SS_UI_ORDER 1
+#define RE4DC_WORLD_RECT21 1
+#define RE4DC_PS2_WORLD_PREFLIGHT_DIAG CHECK_DIAGNOSTICS
+#define RE4DC_PS2_WORLD_HDR_CACHE 1
+#define RE4DC_PS2_HDR_ON true
+#define RE4DC_NATIVE_FOG 1
+#define RE4DC_PS2_WORLD_FOG_SOURCE 1
+#define RE4DC_SCENERY_PIECE_STATE 1
+#define RE4DC_WORLD_AUTOSORT 1
+#define RE4DC_PS2_INTERIOR_CULL 2
+#define RE4DC_SKY_FAR 2
+#define RE4DC_MV_SHADOWS 1
+#define RE4DC_TA_HASH 1
+#define RE4DC_PS2_WORLD_SOURCE_TEX_PREP 1
+#define RE4DC_PT_BLEND_FIX 1
+#define RE4DC_TA_GUARD 0
+#define RE4DC_D349_RENDERER_STACK 1
+#define RE4DC_PVR_STREAM 1
+
+using pvr_list_t = unsigned;
+using pvr_ptr_t = void*;
+using pvr_cull_mode_t = unsigned;
+constexpr unsigned PVR_LIST_OP_POLY=0, PVR_LIST_PT_POLY=4, PVR_LIST_TR_POLY=2;
+constexpr unsigned PVR_CULLING_NONE=0,PVR_CULLING_CCW=1,PVR_CULLING_CW=2;
+constexpr unsigned PVR_FILTER_BILINEAR=1,PVR_DEPTHCMP_GEQUAL=6,PVR_DEPTHWRITE_DISABLE=0,PVR_DEPTHWRITE_ENABLE=1;
+constexpr unsigned PVR_BLEND_SRCALPHA=4,PVR_BLEND_ONE=1,PVR_BLEND_INVSRCALPHA=5,PVR_BLEND_ZERO=0;
+constexpr unsigned PVR_TXRENV_MODULATEALPHA=3,PVR_TXRALPHA_ENABLE=1,PVR_TXRALPHA_DISABLE=0,PVR_UVCLAMP_NONE=0;
+constexpr unsigned PVR_FOG_TABLE=0,PVR_FOG_DISABLE=2,PVR_TA_CMD_MODIFIER=0x80;
+constexpr uintptr_t PVR_TA_INPUT=0x10000000;
+struct Key { unsigned crc,fnv; bool operator==(const Key& b)const{return crc==b.crc&&fnv==b.fnv;} };
+struct Texture { unsigned width=64,height=64,format=0,flags=0,payload=0,data_size=4096; };
+struct PackageHeader { unsigned payload_crc32=0,texture_count=1; };
+struct Package {
+    Texture texture;PackageHeader h;unsigned address=1;
+    const Texture* textures()const{return &texture;}
+    const PackageHeader& header()const{return h;}
+    pvr_ptr_t pvr_texture(unsigned)const{return reinterpret_cast<void*>(uintptr_t(address));}
+    bool upload_complete()const{return true;}
+};
+struct Entry { bool valid=false;Key key{};unsigned frame=0;Package package; };
+struct pvr_poly_hdr_t { unsigned cmd,words[7]; };
+struct pvr_poly_cxt_t {
+    struct {unsigned culling=0,fog_type=0;} gen;
+    struct {unsigned comparison=0,write=0;} depth;
+    struct {unsigned src=0,dst=0;} blend;
+    struct {unsigned env=0,alpha=0,uv_clamp=0;} txr;
+    unsigned list=0,format=0,width=0,height=0,address=0;
+};
+struct Packet { std::uint32_t word[8]; };
+struct Re4dcModelDirect { std::uint32_t* sq;void* scratch;unsigned scratch_capacity;float u_scale,v_scale; };
+struct Re4dcUiImage { const void* data;const void* palette;unsigned width,height,format,flags,unused; };
+constexpr unsigned kModelPacketBytes=65536,kPs2HdrSets=16,kPs2HdrWays=4;
+struct Ps2HdrSlot { unsigned crc,fnv,size,mode;Entry* entry;pvr_ptr_t texture;std::uint32_t words[4]; };
+static Entry entries[12];
+static Ps2HdrSlot ps2_hdr[kPs2HdrSets][kPs2HdrWays];
+static unsigned char ps2_hdr_next[kPs2HdrSets];
+static unsigned ps2_hdr_hits,ps2_hdr_fills,ps2_hdr_log,ps2_piece_hits;
+static Packet storage[kModelPacketBytes/32];
+static Packet* model_packets=storage;
+static unsigned model_used,model_pending,frame=100,frame_pvr_calls,frame_pvr_bytes,stream_model_bytes,stream_peak_bytes;
+static unsigned direct_parts,direct_slots,model_header_hits,model_header_builds,model_texture_rejects;
+static unsigned stream_closed_lists,quads_flushed,nquad,mv_receivers;
+static unsigned re4dc_ps2_check_header,re4dc_ps2_sky_header,re4dc_mv_receiver;
+static unsigned* re4dc_ps2_piece_slot;
+static unsigned piece_words[12];
+static Entry* model_handle;
+static bool direct_open,frame_ready=true,stream_aborted,stream_scene=true,ui_order,world_autosort=true;
+static bool draining_parts,source_draws_finished;
+static unsigned desired_list,stream_list;
+static unsigned whd_why;
+static const char* whd_load_why;
+static bool source_valid=true,r11f_valid=true,storage_ok=true,load_ok=true,rect_ok=true,header_dims_ok=true,fog=true;
+static bool source_group_claimed;
+static unsigned acquire_invalid_at,acquire_invalid_kind;
+static unsigned source_failures,r11f_failures,loads,logs,missing,acquired,diagbind,hash_calls,ui_flushes;
+static unsigned owner_cut_stage,owner_stage,abort_on_select;
+static unsigned lock_calls,unlock_calls,unsafe_calls;
+static bool locked;
+alignas(32) static std::uint32_t sq_storage[1024*1024];
+static std::vector<std::uint32_t> sent;
+static std::vector<unsigned> returns,capacities,u_bits,v_bits;
+
+static bool re4dc_source_world_group_claimed(){return source_group_claimed;}
+static bool re4dc_source_world_binding_valid(){
+    // A claimed walk may diagnose failure inside the predicate. The old
+    // renderer already calls this during an active part; the new idle retained
+    // lock must be released before entering this potentially logging edge.
+    if(source_group_claimed){if(locked&&!direct_open)++unsafe_calls;if(!source_valid)++logs;}
+    return source_valid;
+}
+static void re4dc_source_world_binding_failed(){if(locked)++unsafe_calls;++source_failures;}
+static bool re4dc_r11f_binding_valid(){return r11f_valid;}
+static void re4dc_r11f_binding_failed(){if(locked)++unsafe_calls;++r11f_failures;}
+static void boundary(){if(owner_cut_stage&&++owner_stage==owner_cut_stage)source_valid=false;}
+static bool ensure_model_storage(){if(!model_packets){if(locked)++unsafe_calls;if(storage_ok)model_packets=storage;}return model_packets!=nullptr;}
+static void re4dc_missing(const char*){++missing;}
+static void re4dc_log(const char*,...){if(locked)++unsafe_calls;++logs;}
+static void sourceWorldDiagBind(Key){if(locked)++unsafe_calls;++diagbind;}
+static void sourceWorldTextureAcquired(Key){++acquired;if(acquire_invalid_at&&acquired==acquire_invalid_at){if(acquire_invalid_kind==1)source_valid=false;else r11f_valid=false;}}
+static bool re4dc_ps2_world_fog(){return fog;}
+static void ui_order_flush(){if(locked)++unsafe_calls;++ui_flushes;quads_flushed=nquad;boundary();}
+static void stream_open(){if(locked)++unsafe_calls;stream_scene=true;stream_list=desired_list;boundary();}
+static void stream_select(pvr_list_t list){
+    desired_list=list;
+    if(!stream_scene)stream_open();
+    else if(stream_list!=list){if(locked)++unsafe_calls;stream_closed_lists|=1U<<stream_list;stream_list=list;boundary();}
+    if(abort_on_select)stream_aborted=true;
+}
+static void world_sort_begin(){if(!world_autosort&&!ui_order){if(locked)++unsafe_calls;world_autosort=true;}}
+static void ui_order_polygon_header(pvr_poly_hdr_t& h){if(ui_order)h.cmd=(h.cmd&~(7U<<24))|(PVR_LIST_TR_POLY<<24);}
+static void ps2_check_header(pvr_poly_hdr_t& h){h.words[0]^=0x1000U;h.words[1]^=0x80000000U;}
+static void ps2_sky_header(pvr_poly_hdr_t& h){h.words[1]^=0x00400000U;}
+static std::uint32_t* sq_lock(void*){assert(!locked);locked=true;++lock_calls;return sq_storage;}
+static void sq_unlock(){assert(locked);locked=false;++unlock_calls;}
+static void sq_flush(std::uint32_t* p){assert(locked);assert(p>=sq_storage&&p+8<=sq_storage+1024*1024);sent.insert(sent.end(),p,p+8);}
+static void re4dc_ta_hash(const void*,unsigned){++hash_calls;}
+#define RE4DC_WHD(x) (whd_why=(x))
+#define RE4DC_GAD_HIT(x) do{}while(0)
+#define RE4DC_TOUCH(e) do{if(pin)(e).frame=frame;else if(frame&&(e).frame+1<frame)(e).frame=frame-1;}while(0)
+#define RE4DC_TSP_W(t) ((t).width)
+#define RE4DC_TSP_H(t) ((t).height)
+namespace re4dc::texture { static unsigned pvr_format(const Texture& t){return t.format;} }
+namespace re4dc::render {
+static void begin_pvr_packet(Packet* p,std::uint32_t& n,const pvr_poly_hdr_t& h){std::memcpy(p,&h,32);n=1;}
+}
+namespace re4dc::rect21 {
+struct Descriptor { unsigned width,height,format,flags,payload,data_size,crc; };
+static bool header_dimensions(unsigned,unsigned,unsigned){return header_dims_ok;}
+static bool adapt(unsigned,unsigned,unsigned w,unsigned h,Descriptor d,float& u,float& v,bool){
+    if(!rect_ok)return false;
+    u=float(d.width)/float(w);v=float(d.height)/float(h);return true;
+}
+}
+static Entry* load(const Re4dcUiImage&,bool,const Key* key){
+    if(locked)++unsafe_calls;
+    ++loads;boundary();
+    if(!load_ok)return nullptr;
+    for(auto& e:entries)if(e.valid&&e.key==*key){constexpr bool pin=false;RE4DC_TOUCH(e);return &e;}
+    return nullptr;
+}
+static void pvr_poly_cxt_txr(pvr_poly_cxt_t* c,unsigned list,unsigned fmt,unsigned w,unsigned h,void* addr,unsigned){
+    *c={};c->list=list;c->format=fmt;c->width=w;c->height=h;c->address=unsigned(uintptr_t(addr));
+}
+static void pvr_poly_compile(pvr_poly_hdr_t* h,const pvr_poly_cxt_t* c){
+    h->cmd=0x80840000U|(c->list<<24);
+    h->words[0]=(c->gen.culling<<24)|(c->depth.comparison<<16)|(c->depth.write<<8)|c->txr.alpha;
+    h->words[1]=(c->gen.fog_type<<28)|(c->blend.src<<24)|(c->blend.dst<<20)|(c->width<<8)|c->height;
+    h->words[2]=c->address;
+    std::fill(h->words+3,h->words+7,0U);
+}
+
+@BATCH_HEADER@
+@DIRECT_END@
+@DIRECT_BEGIN@
+#if RE4DC_SCENERY_SUBMIT_BATCH
+static Re4dcWorldSubmitBatch batch;
+#endif
+
+static unsigned bits(float f){unsigned result;std::memcpy(&result,&f,4);return result;}
+static std::uint32_t* emit(std::uint32_t* sq,unsigned n,unsigned id){
+    for(unsigned j=0;j<n;++j){for(unsigned w=0;w<8;++w)sq[w]=0xf0000000U|(id<<16)|(j<<3)|w;sq_flush(sq);sq+=8;}
+    return sq;
+}
+static void key_for(unsigned index,unsigned pass,unsigned cull,unsigned out[6]){
+    out[0]=0x11000001U+index*17U;out[1]=0x22000103U+index*31U;out[2]=64;out[3]=64;out[4]=pass;out[5]=cull;
+}
+static void seed(unsigned index,unsigned pass=0,unsigned cull=2){
+    unsigned k[6];key_for(index,pass,cull,k);Entry& e=entries[index];e.valid=true;e.key={k[0],k[1]};e.frame=10;e.package={};e.package.address=0x8000U+index*4096U;
+    const unsigned size=k[2]|k[3]<<16,mode=pass|cull<<2|unsigned(fog)<<4|0x100U;
+    const unsigned set=(k[0]^(k[1]>>7)^(k[1]<<3)^(pass*0x9e5U)^(cull*0x3c1U))&(kPs2HdrSets-1U);
+    auto& slot=ps2_hdr[set][ps2_hdr_next[set]++%kPs2HdrWays];slot.crc=k[0];slot.fnv=k[1];slot.size=size;slot.mode=mode;slot.entry=&e;slot.texture=e.package.pvr_texture(0);
+    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY,0,64,64,slot.texture,1);
+    c.gen.culling=cull;c.depth.comparison=PVR_DEPTHCMP_GEQUAL;c.depth.write=pass==2?PVR_DEPTHWRITE_DISABLE:PVR_DEPTHWRITE_ENABLE;
+    c.blend.src=pass?PVR_BLEND_SRCALPHA:PVR_BLEND_ONE;c.blend.dst=pass?PVR_BLEND_INVSRCALPHA:PVR_BLEND_ZERO;
+    c.txr.alpha=pass?PVR_TXRALPHA_ENABLE:PVR_TXRALPHA_DISABLE;c.gen.fog_type=fog?PVR_FOG_TABLE:PVR_FOG_DISABLE;
+    pvr_poly_hdr_t h;pvr_poly_compile(&h,&c);std::memcpy(slot.words,&h,16);
+    piece_words[index]=unsigned(&slot-&ps2_hdr[0][0])+1U;
+}
+static void normal_part(unsigned index,unsigned pass,unsigned cull,unsigned n,unsigned style=0){
+    unsigned k[6];key_for(index,pass,cull,k);re4dc_ps2_piece_slot=piece_words+index;
+    Re4dcModelDirect out{};
+    const unsigned* key=style==1?nullptr:k;
+    Re4dcModelDirect* dest=style==2?nullptr:&out;
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    const int result=style==3?re4dc_ps2_world_direct_begin(key,dest):
+        re4dc_ps2_world_direct_begin_batch(key,dest,style==4?nullptr:&batch);
+#else
+    const int result=re4dc_ps2_world_direct_begin(key,dest);
+#endif
+    returns.push_back(result);
+    if(result){
+        capacities.push_back(out.scratch_capacity);u_bits.push_back(bits(out.u_scale));v_bits.push_back(bits(out.v_scale));
+        assert(out.scratch==model_packets+model_pending);emit(out.sq,n,index);
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        if(style==3)re4dc_model_direct_end(n);
+        else re4dc_ps2_world_direct_end_batch(n,style==4?nullptr:&batch);
+#else
+        re4dc_model_direct_end(n);
+#endif
+    }
+    re4dc_ps2_piece_slot=nullptr;
+}
+@QUEUE_FIXTURE@
+static std::uint64_t digest(const std::vector<std::uint32_t>& words){std::uint64_t h=1469598103934665603ULL;for(auto v:words){h^=v;h*=1099511628211ULL;}return h;}
+static void report(unsigned id){
+    assert(!locked&&!direct_open);assert(unsafe_calls==0);
+    std::vector<unsigned> state={model_used,model_pending,frame_pvr_calls,frame_pvr_bytes,stream_model_bytes,stream_peak_bytes,direct_parts,direct_slots,
+        model_header_hits,model_header_builds,model_texture_rejects,ps2_hdr_hits,ps2_hdr_fills,ps2_piece_hits,stream_closed_lists,quads_flushed,nquad,mv_receivers,
+        source_failures,r11f_failures,loads,logs,missing,acquired,diagbind,hash_calls,ui_flushes,desired_list,stream_list,whd_why,
+        unsigned(frame_ready),unsigned(stream_aborted),unsigned(stream_scene),unsigned(world_autosort),unsigned(source_valid),unsigned(r11f_valid),
+        model_handle?unsigned(model_handle-entries)+1U:0U};
+    for(auto& e:entries)state.push_back(e.frame);
+    for(auto v:piece_words)state.push_back(v);
+    state.insert(state.end(),returns.begin(),returns.end());state.insert(state.end(),capacities.begin(),capacities.end());
+    state.insert(state.end(),u_bits.begin(),u_bits.end());state.insert(state.end(),v_bits.begin(),v_bits.end());
+    state.insert(state.end(),queue_events.begin(),queue_events.end());
+    state.insert(state.end(),{model_parts,model_empty_parts,model_input,model_output,packet_aborts,pick_calls,lut_calls,screen_loads,
+                            queue_native,queue_fallback,queue_aborts,re4dc_ps2_sky_header});
+    std::printf("%u words=%zu data=%016llx state=%016llx\n",id,sent.size(),(unsigned long long)digest(sent),(unsigned long long)digest(state));
+    std::fprintf(stderr,"%u lock=%u unlock=%u\n",id,lock_calls,unlock_calls);
+}
+int main(int argc,char** argv){
+    const unsigned id=argc>1?unsigned(std::strtoul(argv[1],nullptr,10)):0;
+    for(unsigned i=0;i<8;++i)seed(i);
+    ps2_hdr_log=frame;
+    if(id>=100){queue_case(id);report(id);return 0;}
+    unsigned count=8;
+    if(id==1)count=1;
+    if(id==4)for(auto& set:ps2_hdr)for(auto& slot:set)slot.mode=0;
+    if(id==20||id==21||id==22)count=3;
+    if(id==28)stream_scene=false;
+    if(id==29)world_autosort=false;
+    if(id==33)model_used=kModelPacketBytes/32-16;
+    if(id==34)source_group_claimed=true;
+    for(unsigned i=0;i<count;++i){
+        unsigned index=id==2?0:i,pass=0,cull=2,n=6+i,style=0;
+        if(id==37)style=3;
+        if(id==38)style=4;
+        if(id==3)pass=i%3;
+        if(id==13)re4dc_ps2_sky_header=i&1;
+        if(id==14)re4dc_mv_receiver=i&1;
+        if(id==15)cull=i%3;
+        if(id==16)fog=(i&1)!=0;
+        if(id==19)n=0;
+        if(id==20)n=32767;
+        if(id==21)n=i==0?32760:16;
+        if(id==22)n=i==0?32768:16;
+        if(i==4){
+            switch(id){
+            case 5:entries[index].package.address+=0x100000;break;
+            case 6:entries[index].key.crc^=1;break;
+            case 7:entries[index].valid=false;break;
+            case 8:frame_ready=false;break;
+            case 9:stream_aborted=true;break;
+            case 10:source_valid=false;break;
+            case 11:r11f_valid=false;break;
+            case 12:ui_order=true;nquad=8;break;
+            case 17:entries[index].package.texture.width=32;break;
+            case 18:entries[index].package.texture.width=32;rect_ok=false;break;
+            case 23:frame+=600;break;
+            case 24:piece_words[index]=777;break;
+            case 25:cull=3;break;
+            case 26:pass=3;break;
+            case 27:model_packets=nullptr;storage_ok=false;break;
+            case 30:owner_cut_stage=1;for(auto& set:ps2_hdr)for(auto& slot:set)slot.mode=0;break;
+            case 31:abort_on_select=1;break;
+            case 32:stream_list=PVR_LIST_TR_POLY;break;
+            case 35:style=1;break;
+            case 36:style=2;break;
+            case 39:header_dims_ok=false;break;
+            case 40:model_packets=nullptr;storage_ok=true;break;
+            default:break;
+            }
+        }
+        normal_part(index,pass,cull,n,style);
+    }
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    re4dc_ps2_world_batch_close(&batch);
+#endif
+    report(id);
+}

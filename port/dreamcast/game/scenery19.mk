@@ -26,6 +26,26 @@ $(error SCENERY_SELECT_ONLY needs SCENERY_CHUNK)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_SELECT_ONLY=1
 endif
+# SCENERY_SUBMIT_BATCH=1 (spike, exact rendering): keep the TA store-queue
+# mutex across compatible resident parts within one synchronous chunk replay.
+# Every part still sends its own header and starts at the original SQ address.
+# No texture load, pass transition or source-task boundary retains the mutex.
+SCENERY_SUBMIT_BATCH ?= 0
+ifneq ($(SCENERY_SUBMIT_BATCH),0)
+ifneq ($(SCENERY_SUBMIT_BATCH),1)
+$(error SCENERY_SUBMIT_BATCH must be 0 or 1)
+endif
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_SUBMIT_BATCH needs SCENERY_CHUNK)
+endif
+ifneq ($(TA_DIRECT)$(MESH_DIRECT)$(PS2_WORLD_MESH)$(PS2_WORLD_HDR_CACHE),1111)
+$(error SCENERY_SUBMIT_BATCH needs TA_DIRECT=1 MESH_DIRECT=1 PS2_WORLD_MESH=1 PS2_WORLD_HDR_CACHE=1)
+endif
+ifneq ($(filter-out 0,$(PS2_PVS) $(WORLD_SCRATCH) $(TA_GUARD)),)
+$(error SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_GUARD)
+endif
+$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_SUBMIT_BATCH=1
+endif
 # SCENERY_DEDUP=1 (exact, render only; needs SCENERY_CHUNK, MESH_VP_SCHED=1, HW_LEAN): each PS2 world meshlet's corners
 # are reordered at room load (repeated grid positions last), and a draw transforms each position once and builds the
 # repeats from it. Heap 4: 4 bytes per meshlet + 1 per repeat (r101 ~33 KB), freed with the room's world.
