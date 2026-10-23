@@ -1975,6 +1975,12 @@ int re4dc_warp_late_open(void)
     return wp.has_late && pG && pG->room_id == wp.late_room && pG->Frame_cnt >= wp.late_tick ? 1 : 0;
 }
 
+// The validated late target/current game room, only while its window is open.
+unsigned re4dc_warp_late_room(void)
+{
+    return re4dc_warp_late_open() ? wp.late_room : 0u;
+}
+
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
 // WORLD_METER (game30.mk): the room the VRAMFAIL lines name (tick_log.cpp, once per tick).
 unsigned re4dc_wm_room(void) { return pG ? (unsigned) pG->room_id : 0u; }

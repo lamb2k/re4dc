@@ -3,6 +3,7 @@
 #include <cstring>
 #include <cstdint>
 #include "include/actor_visibility23_window.h"
+#include "include/warp_late.h"
 extern "C" void re4dc_log(const char*,...);
 extern "C" {unsigned re4dc_actor_visibility23_mode=0;}
 namespace {
@@ -17,6 +18,7 @@ bool equal(const Key&a,const Key&b) {
  a.vertices==b.vertices&&a.stride==b.stride&&a.record_words==b.record_words;
 }
 }
+extern "C" void re4dc_actor_visibility23_metadata_check(unsigned bytes){++stats.metadata_checks;stats.metadata_bytes+=bytes;}
 extern "C" int re4dc_actor_visibility23_receipt(int ready){if(ready)++stats.world_receipt_ready;else ++stats.world_receipt_draw;return ready;}
 extern "C" const Re4dcActorVisibility23Stats* re4dc_actor_visibility23_stats(){return &stats;}
 extern "C" int re4dc_actor_visibility23_set(unsigned mode){if(mode>2)return 0;re4dc_actor_visibility23_reset();re4dc_actor_visibility23_mode=mode;return 1;}
@@ -198,6 +200,7 @@ bool pending23;
 extern "C" void re4dc_actor_visibility23_frame(unsigned render,unsigned open,unsigned mask,unsigned transformed) {
  if(fixture23.seen&&fixture23.last==render)return;
  // No live source actor consumer exists at this workspace-rebind boundary.
+ // Workspace binds include crowd Trans notes; they are not drawn-frame counts.
  // Counters are actual pass_positions work (chunk repeats already compacted),
  // including diagnostic reference work if a check kernel is explicitly used.
  if(pending23) {
@@ -206,22 +209,39 @@ extern "C" void re4dc_actor_visibility23_frame(unsigned render,unsigned open,uns
     previous_render23,previous_mode23,previous_n23,now.queries-old.queries,now.bounded_sections-old.bounded_sections,now.wall_tests-old.wall_tests,now.hidden_sections-old.hidden_sections,now.bounded_records-old.bounded_records,
     now.potential_records-old.potential_records,now.positions_avoided-old.positions_avoided,
     now.triangles_avoided-old.triangles_avoided,transformed-previous_xf23);
-  re4dc_log("AV23WORK frame=%u groups=%u hit=%u miss=%u scan=%u material=%u identity=%u numeric=%u capacity=%u reset=%u world_ok=%u world_draw=%u\n",
+  re4dc_log("AV23WORK frame=%u groups=%u hit=%u miss=%u scan=%u material=%u identity=%u numeric=%u capacity=%u reset=%u world_ok=%u world_draw=%u metadata_checks=%u metadata_bytes=%u\n",
     previous_render23,now.bound_groups-old.bound_groups,now.cache_hits-old.cache_hits,now.cache_misses-old.cache_misses,
     now.source_records-old.source_records,now.material_draw-old.material_draw,now.identity_draw-old.identity_draw,
-    now.numeric_draw-old.numeric_draw,now.capacity_draw-old.capacity_draw,now.resets-old.resets,now.world_receipt_ready-old.world_receipt_ready,now.world_receipt_draw-old.world_receipt_draw);
+    now.numeric_draw-old.numeric_draw,now.capacity_draw-old.capacity_draw,now.resets-old.resets,now.world_receipt_ready-old.world_receipt_ready,now.world_receipt_draw-old.world_receipt_draw,now.metadata_checks-old.metadata_checks,now.metadata_bytes-old.metadata_bytes);
   pending23=false;
  }
  const auto event=fixture23.begin(render,open!=0,mask);
  if(event==actor_visibility23::Window::Start || event==actor_visibility23::Window::Complete ||
     event==actor_visibility23::Window::Cancel || event==actor_visibility23::Window::Invalid) {
   re4dc_actor_visibility23_set(fixture23.active?fixture23.mode:0);
-  re4dc_log("AV23WINDOW event=%u frame=%u mode=%u mask=%x left=%u once=1\n",
-    unsigned(event),render,re4dc_actor_visibility23_mode,mask,fixture23.left);
+  re4dc_log("AV23WINDOW event=%u frame=%u mode=%u mask=%x left=%u once=1 metadata_checks=%u metadata_bytes=%u\n",
+    unsigned(event),render,re4dc_actor_visibility23_mode,mask,fixture23.left,stats.metadata_checks,stats.metadata_bytes);
  }
  if(fixture23.active){
   previous23=*re4dc_actor_visibility23_stats();previous_xf23=transformed;
   previous_render23=render;previous_mode23=fixture23.mode;previous_n23=fixture23.frames;pending23=true;
  }
+}
+#endif
+
+#if RE4DC_ACTOR_VISIBILITY23
+extern "C" void re4dc_actor_visibility23_bind(unsigned render,unsigned funded,unsigned transformed){
+ if(fixture23.seen&&fixture23.last==render)return;
+ // Retired source consumers: no mode change during a live actor lease.
+ // Do not rescan admission after completion/cancel/invalid has spent the arm.
+ unsigned open=0,mask=0;
+ if(!fixture23.spent||fixture23.active){
+  const unsigned room=RE4DC_WARP_LATE_ROOM();
+  if(room){
+   mask=RE4DC_WARP_LATE(~0U);
+   open=funded&&re4dc_actor_world23_context(room);
+  }
+ }
+ re4dc_actor_visibility23_frame(render,open,mask,transformed);
 }
 #endif

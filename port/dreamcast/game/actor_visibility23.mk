@@ -38,7 +38,7 @@ endif
 ACTOR_VISIBILITY23_SDK ?= $(CURDIR)/.actor-visibility23-sdk
 $(OBJDIR)/platform/native_actor_fast.o $(OBJDIR)/platform/actor_visibility23.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_VISIBILITY23=1 -I$(ACTOR_VISIBILITY23_SDK)/include -I$(ACTOR_VISIBILITY23_CERT)
 $(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_VISIBILITY23=1 -I$(ACTOR_VISIBILITY23_SDK)/include
-$(OBJDIR)/platform/actor_visibility23.o: PLATFORM_CPPFLAGS += -O2 -fno-fast-math -ffp-contract=off
+$(OBJDIR)/platform/actor_visibility23.o: PLATFORM_CPPFLAGS += -DRE4DC_DBG_WARP=1 -O2 -fno-fast-math -ffp-contract=off
 OBJS += $(OBJDIR)/platform/actor_visibility23.o $(OBJDIR)/shz_bounds23.o
 $(TARGET): $(OBJDIR)/platform/actor_visibility23.o $(OBJDIR)/shz_bounds23.o
 $(OBJDIR)/platform/actor_visibility23.o: platform/actor_visibility23.cc platform/include/actor_visibility23.h platform/include/actor_visibility23_window.h $(ACTOR_VISIBILITY23_SDK)/include/sh4zam/shz_bounds.h
