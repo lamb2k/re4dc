@@ -256,6 +256,9 @@ void cEm21::move()
         return;
     }
     em21NeckMove(this);
+#if defined(RE4DC_STAT_DIAG) && RE4DC_STAT_DIAG
+    { extern void re4dc_stat_diag_em21(cEm21*); re4dc_stat_diag_em21(this); }
+#endif
     partsWorldCalc();
     d = SQRTF((pos.x - pos_old.x) * (pos.x - pos_old.x) + (pos.z - pos_old.z) * (pos.z - pos_old.z));
     EmAtCheck(this);
@@ -1422,3 +1425,24 @@ int em21GetBarkPos(cEm21* em)
     w->barkPos = e->pos;
     return 1;
 }
+#if defined(RE4DC_STAT_DIAG) && RE4DC_STAT_DIAG
+// STAT_DIAG=1 (lane stat-bytes23): log each routine change of the dog and of its bear trap (em2a).
+extern "C" void re4dc_log(const char* fmt, ...);
+static u32 s_em21DiagLast[8], s_em21DiagTrap[8];
+void re4dc_stat_diag_em21(cEm21* em)
+{
+    Em21Work* w = EM21_WK(em);
+    const unsigned k = em->id & 7;
+    const u32 r = (u32) em->r_no_0 << 24 | (u32) em->r_no_1 << 16 | (u32) em->r_no_2 << 8 | em->r_no_3;
+    const cModel* t = w->pTrap;
+    const u32 tr = t ? ((u32) t->r_no_0 << 24 | (u32) t->r_no_1 << 16 | (u32) t->r_no_2 << 8 | t->r_no_3) : 0xFFFFFFFFu;
+    if ((r & 0xFFFF0000u) != (s_em21DiagLast[k] & 0xFFFF0000u) || tr != s_em21DiagTrap[k]) {
+        re4dc_log("STATDIAG em21 f=%u room=%x id=%u set=%u r=%02x.%02x.%02x.%02x trap=%08x hp=%d pos=%d,%d\n",
+                  (unsigned) pG->Frame_cnt, (unsigned) pG->room_id, (unsigned) em->id, (unsigned) em->set, r >> 24,
+                  (r >> 16) & 0xFF, (r >> 8) & 0xFF, r & 0xFF, (unsigned) tr, (int) em->hp, (int) em->pos.x,
+                  (int) em->pos.z);
+    }
+    s_em21DiagLast[k] = r;
+    s_em21DiagTrap[k] = tr;
+}
+#endif

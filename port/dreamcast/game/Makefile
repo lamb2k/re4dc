@@ -2297,6 +2297,12 @@ $(error STAT_ROUTINE_BYTES must be 0 or 1)
 endif
 GAME_CPPFLAGS += -DRE4DC_STAT_ROUTINE_BYTES=1
 endif
+# STAT_DIAG=1 (test / QA discs only; default 0): STATDIAG log lines (player / partner routine-word tests where the
+# GameCube meaning and the raw word compare disagree, the r100 trap dog and its trap's routine changes, a self test).
+STAT_DIAG ?= 0
+ifneq ($(STAT_DIAG),0)
+GAME_CPPFLAGS += -DRE4DC_STAT_DIAG=1
+endif
 PLATFORM_CPPFLAGS = -std=gnu++20 -Wall -Wextra $(GAME_OPT) \
 	-Iplatform/include -DRE4DC_GAME
 
