@@ -1,0 +1,2 @@
+# Movie fixture publishes the low16 id6400 for route id0x11900. Normal START only in that movie.
++1 1000 1 movie=1/6400 200000

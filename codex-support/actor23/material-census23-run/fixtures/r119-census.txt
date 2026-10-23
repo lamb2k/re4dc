@@ -1,0 +1,11 @@
+name bf-r119-gigante
+room 0x119
+pos 128000 2251 10888
+ang -1.571
+inv default
+god
+act_clock source
+alivelog 60
+act 200 fwd 90
+goto 300 112950 2298.247 19750 3.14159265
+late 0x20 539 0x119

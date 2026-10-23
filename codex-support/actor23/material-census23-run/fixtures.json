@@ -1,0 +1,12 @@
+{
+  "r119-census": {
+    "path": "C:\\Game Dev\\Emulators\\codex-lanes\\actor-visibility23\\material-census23-run\\fixtures\\r119-census.txt",
+    "sha256": "6b28db8cdec172110720ab105fd9c3ce68b15f10d4607eb207dc19829d43cbe3",
+    "basis_path": "C:\\Game Dev\\Emulators\\codex-lanes\\backface-sh4zam\\claude-scripts\\scenes\\g8.txt",
+    "basis_sha256": "9bb15f9878843c6fdad1783afa0aef297ce63a4a3be0710302c110a63376c76c",
+    "pad_path": "C:\\Game Dev\\Emulators\\codex-lanes\\actor-visibility23\\material-census23-run\\fixtures\\r119-movie-pad.txt",
+    "pad_sha256": "073552789fad65c4057fa83303f10ac18ff9bc00ae48f195762be982c3222ff9",
+    "pad_basis_path": "C:\\Flycast-Evidence\\re4-dreamcast\\boss18-20261018\\warps\\r119-skip-intro-pad-6400.txt",
+    "pad_basis_sha256": "073552789fad65c4057fa83303f10ac18ff9bc00ae48f195762be982c3222ff9"
+  }
+}

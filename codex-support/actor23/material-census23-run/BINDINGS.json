@@ -1,0 +1,31 @@
+{
+  "source": "f2405bb06ebaff6e2a7681479d5308ec5d3b988a",
+  "runtime_admitted": false,
+  "stage": "PENDING_ACTUAL_FRESH_STAGE",
+  "programme": {
+    "path": "C:/Game Dev/Emulators/codex-lanes/actor-visibility23/native-normalize-f240r1/bound/on/programme.json",
+    "sha256": "41beee7f50af4ff50c49b03a7cfa53d794086646322c5ebe7a85ffc7805a883d"
+  },
+  "ownership_audit": {
+    "path": "PENDING",
+    "sha256": "PENDING"
+  },
+  "normalization_review": {
+    "path": "PENDING",
+    "sha256": "PENDING"
+  },
+  "normalization_source_seal": {
+    "path": "C:/Game Dev/Emulators/codex-lanes/actor-visibility23/native-normalize-f240r1/SOURCE-SEAL.json",
+    "sha256": "4b92505d6ba41438829f3af1e1bf8286c1e824c27dd756f6f96203c64ed6c5a7"
+  },
+  "kos_receipt": {
+    "bytes": 2613,
+    "path": "C:\\Game Dev\\Emulators\\codex-lanes\\actor-visibility23\\native-normalize-f240r1\\bound\\on\\kos.json",
+    "sha256": "cd6339b317b424c8777cebd093d3bcbef38a169f701b2a5f253ed55104892eb1"
+  },
+  "module_roster": {
+    "bytes": 15079,
+    "path": "C:\\Game Dev\\Emulators\\codex-lanes\\actor-visibility23\\native-normalize-f240r1\\bound\\on\\modules.json",
+    "sha256": "12d50f35a1682812ef28d1b7233b59370cd29855003df4704911b587310fd4e2"
+  }
+}
