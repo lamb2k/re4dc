@@ -1,0 +1,79 @@
+// Synthetic public-input caller. The certificate, copy loop and fallback
+// emitter below all come from production; only the workload driver is a fixture.
+#include <cstdint>
+#include <cstddef>
+#include "backface_certificate.hpp"
+#include "backface_sh4.hpp"
+#include <dc/pvr.h>
+using u8 = std::uint8_t;
+using u32 = std::uint32_t;
+namespace cert = re4dc::bf::certificate;
+#ifndef RE4DC_AVK
+#define RE4DC_AVK 0
+#endif
+constexpr bool avk_emit_ref = false;
+#define RE4DC_ACTOR_ASM 1
+#define RE4DC_TA_HASH 0
+
+@ACTUAL_EMIT_MESHLET@
+
+struct Scenario {
+    const float* matrix;
+    const cert::Cone* cone;
+    const void* cache;
+    const u8* indices;
+    unsigned vertices, count, cull, batch, mode;
+    float near_distance;
+    u32* sq;
+    unsigned sent, accepted, outcome, ready;
+    unsigned strips;
+    cert::RawPositions raw;
+    cert::Context context;
+    cert::Proof proof;
+};
+static_assert(offsetof(Scenario, context) == 84);
+extern "C" const unsigned fixture_layout[] = {
+    sizeof(Scenario), sizeof(cert::Context), sizeof(cert::Proof),
+    offsetof(Scenario, context), offsetof(Scenario, proof)
+};
+
+extern "C" void measure_prepare(Scenario* s) {
+    s->ready = cert::prepare(s->context, s->matrix, s->near_distance);
+}
+extern "C" void measure_classify(Scenario* s) {
+    s->outcome = cert::classify(s->context, *s->cone, s->cull, s->proof);
+}
+extern "C" void measure_scan(Scenario* s) {
+    s->accepted = cert::projected_front(s->context, s->proof, s->cache, s->vertices, s->raw);
+}
+extern "C" void measure_strict(Scenario* s) {
+    s->accepted = cert::strict_front(s->cache, s->indices, s->count, 127, s->cull, true);
+}
+extern "C" void measure_eligibility(Scenario* s) {
+    s->outcome = cert::worth_front(s->vertices, s->count, s->strips);
+}
+extern "C" void measure_caller(Scenario* s) {
+    // Mode 4 is an explicitly ungated diagnostic; production modes are 1/2.
+    const bool eligible = s->mode == 4 || (s->mode && s->mode != 3 &&
+        cert::worth_front(s->vertices, s->count, s->strips));
+    if (eligible)
+        s->ready = cert::prepare(s->context, s->matrix, s->near_distance);
+    for (unsigned i = 0; i < s->batch; ++i) {
+        bool front = s->mode == 3;
+        if (eligible && s->ready) {
+            s->outcome = cert::classify(s->context, *s->cone, s->cull, s->proof);
+            front = s->outcome == cert::FrontCandidate &&
+                    cert::projected_front(s->context, s->proof, s->cache, s->vertices, s->raw);
+            if (front && s->mode == 2)
+                front = cert::strict_front(s->cache, s->indices, s->count, 127, s->cull, true);
+        }
+        if (front) {
+            s->sq = static_cast<u32*>(emit_meshlet<true>(s->sq,
+                        static_cast<const pvr_vertex_t*>(s->cache), s->indices, s->count));
+            s->sent += s->count;
+            ++s->accepted;
+        } else {
+            s->sent += re4dc::bf::stream_sq(s->cache, s->indices, s->count, s->cull, s->sq);
+        }
+    }
+}

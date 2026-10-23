@@ -1,0 +1,104 @@
+// World-path microbenchmark. The two walkers and the certificate are copied
+// unchanged from production headers/sources. Projection is supplied by the
+// synthetic workload; this driver does not model the renderer around them.
+#include <cstdint>
+#include <cstddef>
+#include "backface_certificate.hpp"
+#define RE4DC_CPU_BACKFACE 2
+#define RE4DC_TA_HASH 0
+#include "mesh_strip_lean.hpp"
+
+namespace cert = re4dc::bf::certificate;
+using u8 = std::uint8_t;
+using u32 = std::uint32_t;
+
+struct Scenario {
+    const float* matrix;
+    const cert::Cone* cone;
+    const pvr_vertex_t* cache;
+    const u8* stream;
+    const u8* outcodes;
+    unsigned vertices, bytes, indices, strips, cull, batch, mode;
+    float near_distance;
+    u32* sq;
+    const u8* cursor;
+    unsigned culled, emitted, triangles, accepted, outcome, ready, limit;
+    cert::RawPositions raw;
+    cert::Context context;
+    cert::Proof proof;
+};
+static_assert(offsetof(Scenario, context) == 108);
+extern "C" const unsigned fixture_layout[] = {
+    sizeof(Scenario), sizeof(cert::Context), sizeof(cert::Proof),
+    offsetof(Scenario, context), offsetof(Scenario, proof)
+};
+
+extern "C" void measure_prepare(Scenario* s) {
+    s->ready = cert::prepare(s->context, s->matrix, s->near_distance);
+}
+extern "C" void measure_classify(Scenario* s) {
+    s->outcome = cert::classify(s->context, *s->cone, s->cull, s->proof);
+}
+extern "C" void measure_scan(Scenario* s) {
+    s->accepted = cert::projected_front(s->context, s->proof, s->cache, s->vertices, s->raw);
+}
+extern "C" void measure_caller(Scenario* s) {
+    // 0: CPU2; 1: ungated certificate; 2: lean without proof (cost floor).
+    // Preparation is shared by the requested number of group draws, while
+    // classification and the correlated reciprocal scan run for each group.
+    if(s->mode == 1)
+        s->ready = cert::prepare(s->context, s->matrix, s->near_distance);
+    for(unsigned i=0; i<s->batch; ++i) {
+        bool front = s->mode == 2;
+        if(s->mode == 1 && s->ready) {
+            s->outcome = cert::classify(s->context, *s->cone, s->cull, s->proof);
+            front = s->outcome == cert::FrontCandidate &&
+                    cert::projected_front(s->context, s->proof, s->cache, s->vertices, s->raw);
+        }
+        unsigned culled=0, emitted=0, triangles=0;
+        u32* q=s->sq;
+        if(front) {
+            s->cursor = re4dc::vp::walk_lean(s->stream, s->stream+s->bytes,
+                s->outcodes, s->cache, s->limit, q, culled, emitted);
+            // Same output accounting as production lean_flush().
+            triangles = unsigned(q-s->sq)/8U - 2U*emitted;
+            ++s->accepted;
+        } else {
+            s->cursor = re4dc::vp::walk_lean_sq(s->stream, s->stream+s->bytes,
+                s->outcodes, s->cache, s->limit, s->cull, q, culled, emitted, triangles);
+        }
+        s->sq=q; s->culled+=culled; s->emitted+=emitted; s->triangles+=triangles;
+    }
+}
+
+// Keep the original diagnostic entry unchanged so its 0/1/2 cost arms remain
+// comparable. Mode 3 executes production cost admission before any proof work.
+extern "C" void measure_gated_caller(Scenario* s) {
+    bool prepared = false;
+    for(unsigned i=0; i<s->batch; ++i) {
+        bool front = false;
+        if(cert::worth_front_world(s->vertices, s->indices, s->strips)) {
+            if(!prepared) {
+                prepared = true;
+                s->ready = cert::prepare(s->context, s->matrix, s->near_distance);
+            }
+            if(s->ready) {
+                s->outcome = cert::classify(s->context, *s->cone, s->cull, s->proof);
+                front = s->outcome == cert::FrontCandidate &&
+                        cert::projected_front(s->context, s->proof, s->cache, s->vertices, s->raw);
+            }
+        }
+        unsigned culled=0, emitted=0, triangles=0;
+        u32* q=s->sq;
+        if(front) {
+            s->cursor = re4dc::vp::walk_lean(s->stream, s->stream+s->bytes,
+                s->outcodes, s->cache, s->limit, q, culled, emitted);
+            triangles = unsigned(q-s->sq)/8U - 2U*emitted;
+            ++s->accepted;
+        } else {
+            s->cursor = re4dc::vp::walk_lean_sq(s->stream, s->stream+s->bytes,
+                s->outcodes, s->cache, s->limit, s->cull, q, culled, emitted, triangles);
+        }
+        s->sq=q; s->culled+=culled; s->emitted+=emitted; s->triangles+=triangles;
+    }
+}

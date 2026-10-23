@@ -51,6 +51,15 @@ extern "C" unsigned char re4dc_bf_room_on;  // native_static.cpp (BACKFACE_ROOMS
 #ifndef RE4DC_ACTOR_BACKFACE_CONE
 #define RE4DC_ACTOR_BACKFACE_CONE 0
 #endif
+#ifndef RE4DC_BACKFACE_CONE_FRONT
+#define RE4DC_BACKFACE_CONE_FRONT 0
+#endif
+#if RE4DC_BACKFACE_CONE_FRONT && RE4DC_ACTOR_BACKFACE_CONE
+#if !defined(RE4DC_CPU_BACKFACE) || RE4DC_CPU_BACKFACE != 2
+#error "BACKFACE_CONE_FRONT requires CPU_BACKFACE=2"
+#endif
+#include "../../room/backface_certificate.hpp"
+#endif
 #if RE4DC_ACTOR_BACKFACE_CONE
 extern "C" void re4dc_log(const char* fmt, ...);
 // The models the split applies to, marked by coarse_actor_transaction.inc (model -> class 1 Leon, 2 Ganado,
@@ -1542,6 +1551,25 @@ static_assert(sizeof(AbcCone) == 16, "abc cone");
 struct AbcTail { u32 tag, meshlets, check, bytes; };  // bytes: stream bytes | class << 24
 constexpr u32 kAbcTag = 0x31434241U;  // "ABC1"
 constexpr float kAbcStep = 1.5707963f / 63.0f;
+#if RE4DC_BACKFACE_CONE_FRONT
+namespace abc_cert = re4dc::bf::certificate;
+// Optional proof data precedes, and never reduces space available to, ABC1.
+// When it does not fit, every legacy back cone remains available.
+struct AbcFrontRecord { float min_normal; u16 extent[3], reserved; };
+static_assert(sizeof(AbcFrontRecord) == 12, "abc front record");
+constexpr u32 kAbcFrontTag = 0x32434241U;  // "ABC2" optional proof block
+unsigned abc_front_tests = 0, abc_front_candidates = 0, abc_front_accept = 0, abc_front_bad = 0;
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+// Cumulative gate counts. A zero tests/accepted count can now be distinguished
+// from missing metadata, sparse strips, unsupported contexts or clipped draws.
+unsigned abc_front_seen = 0, abc_front_material = 0, abc_front_metadata = 0;
+unsigned abc_front_cost = 0, abc_front_context_reject = 0, abc_front_projection = 0, abc_front_clipped = 0;
+#endif
+unsigned abc_front_noroom = 0, abc_front_nocert = 0;
+void abc_front_tables();
+float abc_front_cosine(unsigned k);
+float abc_front_sine(unsigned k);
+#endif
 u32 abc_check(const u8* stream, unsigned bytes) {
     u32 h = 2166136261U ^ bytes;
     for (unsigned i = 0; i < sizeof(BlobHeader); ++i) h = (h ^ (i == 2 ? stream[i] & 0x7FU : stream[i])) * 16777619U;
@@ -1561,6 +1589,73 @@ const AbcCone* abc_table(const u8* stream, unsigned bytes, unsigned* cls = nullp
     if (cls) *cls = t.bytes >> 24;
     return reinterpret_cast<const AbcCone*>(stream + at + sizeof(AbcTail));
 }
+#if RE4DC_BACKFACE_CONE_FRONT
+unsigned abc_front_at(unsigned bytes, unsigned meshlets) {
+    const unsigned back = abc_tail_at(bytes, meshlets);
+    const unsigned need = sizeof(AbcTail) + meshlets * sizeof(AbcFrontRecord);
+    return back >= need ? (back - need) & ~3U : 0U;
+}
+const AbcFrontRecord* abc_front_table(const u8* stream, unsigned bytes) {
+    const BlobHeader& h = *reinterpret_cast<const BlobHeader*>(stream);
+    const unsigned at = abc_front_at(bytes, h.meshlets);
+    if (!at || !abc_table(stream, bytes)) return nullptr;
+    const AbcTail& t = *reinterpret_cast<const AbcTail*>(stream + at);
+    if (t.tag != kAbcFrontTag || t.meshlets != h.meshlets || t.bytes != bytes || t.check != abc_check(stream, bytes))
+        return nullptr;
+    return reinterpret_cast<const AbcFrontRecord*>(stream + at + sizeof(AbcTail));
+}
+
+// Validate every actual strip at every LOD against the same quantized axis
+// and cosine used at draw. Integer crosses preserve cancellation witnesses;
+// a short/malformed/degenerate strip invalidates the whole front certificate.
+float abc_front_normal(const u8* stream, const BlobHeader& h, const MeshletInfo& m, unsigned mi,
+                       const u16* records, unsigned rs, const u8* positions, unsigned position_count,
+                       const AbcCone& cone) {
+    if (!cone.k || cone.k > 56U) return 0.0f;
+    const float axis[3] = {float(cone.a[0]) * (1.0f / 32768.0f), float(cone.a[1]) * (1.0f / 32768.0f),
+                           float(cone.a[2]) * (1.0f / 32768.0f)};
+    const float cosine = abc_front_cosine(cone.k);
+    const LevelInfo* lv = h.levels && h.lod4 ? reinterpret_cast<const LevelInfo*>(stream + h.lod4 * 4U) : nullptr;
+    const unsigned nv = m.n.vertices();
+    float lower = 0.0f;
+    for (unsigned l = 0; l <= (lv ? h.levels : 0U); ++l) {
+        const u8* idx; unsigned ni, drawn_vertices = nv;
+        if (!l) { idx = stream + h.idx4 * 4U + m.index; ni = m.n.indices(); }
+        else {
+            const MeshletLevel& ml = reinterpret_cast<const MeshletLevel*>(stream + lv[l - 1].table4 * 4U)[mi];
+            idx = stream + lv[l - 1].lists4 * 4U + ml.index; ni = ml.n.indices();
+            drawn_vertices = ml.n.vertices();
+            if (drawn_vertices > nv) return 0.0f;
+        }
+        for (unsigned first = 0; first < ni;) {
+            unsigned last = first;
+            while (last < ni && !(idx[last] & 128U)) ++last;
+            if (last == ni || last - first + 1U < 3U) return 0.0f;
+            for (unsigned j = first; j + 2 <= last; ++j) {
+                unsigned ii[3] = {unsigned(idx[j] & 127U), unsigned(idx[j + 1] & 127U), unsigned(idx[j + 2] & 127U)};
+                if ((j - first) & 1U) std::swap(ii[0], ii[1]);
+                std::int64_t v[3][3];
+                for (unsigned k = 0; k < 3; ++k) {
+                    if (ii[k] >= drawn_vertices) return 0.0f;
+                    const unsigned vi = records[ii[k] * rs];
+                    if (vi >= position_count) return 0.0f;
+                    const short* q = reinterpret_cast<const short*>(positions + vi * 8U);
+                    for (unsigned a = 0; a < 3; ++a) v[k][a] = q[a];
+                }
+                std::int64_t e1[3], e2[3];
+                for (unsigned a = 0; a < 3; ++a) { e1[a] = v[1][a] - v[0][a]; e2[a] = v[2][a] - v[0][a]; }
+                const std::int64_t n[3] = {e1[1] * e2[2] - e1[2] * e2[1], e1[2] * e2[0] - e1[0] * e2[2],
+                                          e1[0] * e2[1] - e1[1] * e2[0]};
+                const float bound = abc_cert::normal_lower_bound(axis, cosine, n);
+                if (!(bound > 0.0f)) return 0.0f;
+                lower = lower > 0.0f ? std::min(lower, bound) : bound;
+            }
+            first = last + 1U;
+        }
+    }
+    return lower;
+}
+#endif
 // After a conversion (or a LOD rebuild) in place: size = the blob's bytes. Builds the cones of a split part.
 void abc_build(const Re4dcModelPart& p, unsigned size, unsigned cls) {
     u8* stream = const_cast<u8*>(p.stream);
@@ -1579,6 +1674,16 @@ void abc_build(const Re4dcModelPart& p, unsigned size, unsigned cls) {
     const u16* records = reinterpret_cast<const u16*>(stream + h.rec4 * 4U);
     const LevelInfo* lv = h.levels && h.lod4 ? reinterpret_cast<const LevelInfo*>(stream + h.lod4 * 4U) : nullptr;
     AbcCone* out = reinterpret_cast<AbcCone*>(stream + at + sizeof(AbcTail));
+#if RE4DC_BACKFACE_CONE_FRONT
+    const unsigned front_at = abc_front_at(p.stream_bytes, h.meshlets);
+    AbcFrontRecord* front = front_at && front_at >= ((size + 3U) & ~3U)
+        ? reinterpret_cast<AbcFrontRecord*>(stream + front_at + sizeof(AbcTail)) : nullptr;
+    if (front) {
+        std::memset(front, 0, h.meshlets * sizeof(AbcFrontRecord));
+        reinterpret_cast<AbcTail*>(stream + front_at)->tag = 0;
+        abc_front_tables();
+    } else ++abc_front_noroom;
+#endif
     for (unsigned mi = 0; mi < h.meshlets; ++mi) {
         AbcCone& cone = out[mi];
         cone = AbcCone{};
@@ -1653,10 +1758,22 @@ void abc_build(const Re4dcModelPart& p, unsigned size, unsigned cls) {
         }
         cone.r = u16(std::min(65535.0f, std::ceil(std::sqrt(r2)) + 2.0f));
         cone.k = u8(k); cone.pal = u8(pal);
+#if RE4DC_BACKFACE_CONE_FRONT
+        if (front) {
+            for (unsigned a = 0; a < 3; ++a)
+                front[mi].extent[a] = u16(std::max(hi[a] - float(cone.c[a]), float(cone.c[a]) - lo[a]));
+            front[mi].min_normal = abc_front_normal(stream, h, m, mi, r, rs, pos, count, cone);
+            if (!(front[mi].min_normal > 0.0f)) ++abc_front_nocert;
+        }
+#endif
         ++abc_cones;
     }
     AbcTail& t = *reinterpret_cast<AbcTail*>(stream + at);
     t = {kAbcTag, h.meshlets, abc_check(stream, p.stream_bytes), p.stream_bytes | (std::min(cls, 4U) << 24)};
+#if RE4DC_BACKFACE_CONE_FRONT
+    if (front) *reinterpret_cast<AbcTail*>(stream + front_at) =
+        {kAbcFrontTag, h.meshlets, abc_check(stream, p.stream_bytes), p.stream_bytes};
+#endif
     ++abc_built;
 }
 #endif
@@ -3258,6 +3375,75 @@ void one_tap_put(const pvr_vertex_t* cache, const pvr_vertex_t* v, unsigned n) {
 struct AbcEye { unsigned pal = ~0U; bool ok = false; float e[3] = {0, 0, 0}, s = 0.0f; };
 float abc_tab[128];  // cos(theta_k), sin^2(theta_k)
 bool abc_tab_ready = false;
+#if RE4DC_BACKFACE_CONE_FRONT
+float abc_front_cosines[64], abc_front_sines[64];
+bool abc_front_tab_ready = false;
+void abc_front_tables() {
+    if (abc_front_tab_ready) return;
+    for (unsigned k = 0; k < 64; ++k) {
+        abc_front_cosines[k] = std::cos(float(k) * kAbcStep);
+        abc_front_sines[k] = abc_cert::sine_upper(abc_front_cosines[k]);
+    }
+    abc_front_tab_ready = true;
+}
+float abc_front_cosine(unsigned k) { return abc_front_cosines[k]; }
+float abc_front_sine(unsigned k) { return abc_front_sines[k]; }
+
+struct AbcFrontContext { unsigned pal = ~0U; bool ok = false; abc_cert::Context value; };
+bool abc_front_worth(unsigned nv, unsigned ni, unsigned nt) {
+    // A valid strip contributes n-2 triangles. The measured shortcut needs
+    // enough short strips and vertex reuse to amortize its proof work.
+    return ni >= nt && !((ni - nt) & 1U) && abc_cert::worth_front(nv, ni, (ni - nt) / 2U);
+}
+bool abc_front_prepare(Frame& f, unsigned pal, AbcFrontContext& out) {
+    if (out.pal == pal) return out.ok;
+    alignas(8) float fallback[16];
+    const float* matrix = f.screen;
+    if (f.mode == kSkin) {
+        if (!f.palette || pal >= f.palette_entries) return false;
+        matrix = position_matrix(f, pal, fallback);
+    } else if (f.mode != kRigid) return false;
+    out.pal = pal; out.ok = false;
+    out.ok = abc_cert::prepare(out.value, matrix, f.near_distance);
+    return out.ok;
+}
+abc_cert::Cone abc_front_cone(const AbcCone& c, const AbcFrontRecord* p) {
+    abc_cert::Cone out{};
+    for (unsigned i = 0; i < 3; ++i) {
+        out.center[i] = float(c.c[i]);
+        out.extent[i] = float(p ? p->extent[i] : c.r);
+        out.axis[i] = float(c.a[i]) * (1.0f / 32768.0f);
+    }
+    out.radius = float(c.r); out.cos_lower = abc_front_cosine(c.k); out.sin_upper = abc_front_sine(c.k);
+    out.min_normal = p ? p->min_normal : 0.0f;
+    return out;
+}
+bool abc_front_finish(const AbcFrontContext& context, const abc_cert::Proof& proof,
+                      const Frame& frame, const Records& records, const pvr_vertex_t* cache,
+                      unsigned nv, const u8* index, unsigned ni, unsigned cull) {
+    // Use the same source position and record order as pass_positions(). The
+    // cone builder already requires one palette for every record in every LOD.
+    const abc_cert::RawPositions raw{frame.positions, frame.position_stride,
+                                    records.r, records.stride * 2U, false};
+    if (!abc_cert::projected_front(context.value, proof, cache, nv, raw)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+        ++abc_front_projection;
+#endif
+        return false;
+    }
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+    if (!abc_cert::strict_front(cache, index, ni, 127U, cull, true)) {
+        ++abc_front_bad;
+        if (abc_front_bad <= 8U) re4dc_log("ABFCF mismatch=%u nv=%u ni=%u cull=%u\n", abc_front_bad, nv, ni, cull);
+        return false;
+    }
+#else
+    (void)index; (void)ni; (void)cull;
+#endif
+    ++abc_front_accept;
+    return true;
+}
+#endif
 bool abc_eye(const Frame& f, unsigned cull, unsigned pal, AbcEye& out) {
     if (out.pal == pal) return out.ok;
     out.pal = pal; out.ok = false;
@@ -3314,6 +3500,9 @@ const AbcCone* abc_part(const Re4dcModelPart& p, const u8* base, const Frame& f,
         }
         abc_tab_ready = true;
     }
+#if RE4DC_BACKFACE_CONE_FRONT
+    abc_front_tables();
+#endif
     return abc_table(base, p.stream_bytes, &cls);
 }
 #endif
@@ -3326,6 +3515,9 @@ struct Part {
     Cache cache{};
     unsigned used = 0, input = 0, output = 0, primed = 0;
     bool streaming = false, committed = false;
+#if RE4DC_BACKFACE_CONE_FRONT && RE4DC_ACTOR_BACKFACE_CONE
+    bool cone_front = false;  // valid only for the current projected meshlet
+#endif
 #if RE4DC_ACTOR_DIRECT
     bool direct = false;
     std::uint32_t* sq = nullptr;
@@ -3381,6 +3573,9 @@ struct Part {
     bool bf_on() const {
         // Generic/source submissions need the same material exclusions as
         // owned runs. Preserve their original copy/header for these parts.
+#if RE4DC_BACKFACE_CONE_FRONT && RE4DC_ACTOR_BACKFACE_CONE
+        if (cone_front) return false;
+#endif
 #if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
         return re4dc_bf_room_on && (p.cull == 1 || p.cull == 2) && !(p.material_flags & 4u) && p.depth_mode == 0;
 #else
@@ -5369,6 +5564,16 @@ void abc_census() {
                   abc_tests[2], abc_rej[2], abc_vskip[2], abc_verts[2], abc_tskip[2],
                   abc_tests[3], abc_rej[3], abc_vskip[3], abc_verts[3], abc_tskip[3],
                   abc_tests[4], abc_rej[4], abc_vskip[4], abc_verts[4], abc_tskip[4]);
+#if RE4DC_BACKFACE_CONE_FRONT
+        re4dc_log("ABFCF frame=%u tests=%u candidates=%u accepted=%u bad=%u noroom=%u nocert=%u\n",
+                  frame_serial, abc_front_tests, abc_front_candidates, abc_front_accept, abc_front_bad,
+                  abc_front_noroom, abc_front_nocert);
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+        re4dc_log("ABFCF gates frame=%u seen=%u material=%u metadata=%u cost=%u context=%u projection=%u clipped=%u\n",
+                  frame_serial, abc_front_seen, abc_front_material, abc_front_metadata, abc_front_cost,
+                  abc_front_context_reject, abc_front_projection, abc_front_clipped);
+#endif
+#endif
         for (unsigned c = 0; c < 5; ++c) abc_tests[c] = abc_rej[c] = abc_vskip[c] = abc_verts[c] = abc_tskip[c] = 0;
     }
 }
@@ -5808,8 +6013,17 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     const AbcCone* abc = abc_part(p, base, f, abc_cls);
     abc_census();
     AbcEye abc_e;
+#if RE4DC_BACKFACE_CONE_FRONT
+    const AbcFrontRecord* abc_front = abc ? abc_front_table(base, p.stream_bytes) : nullptr;
+    AbcFrontContext abc_context;
+#endif
 #endif
     for (unsigned mi = 0; ok && mi < blob->meshlets; ++mi) {
+#if RE4DC_BACKFACE_CONE_FRONT && RE4DC_ACTOR_BACKFACE_CONE
+        e.cone_front = false;
+        abc_cert::Proof abc_proof;
+        bool abc_candidate = false;
+#endif
         const MeshletInfo& m = table[mi];
         const Counts c = lt ? lt[mi].n : m.n;
         const unsigned nv = c.vertices(), ni = c.indices(), nt = c.triangles();
@@ -5830,7 +6044,41 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
                 e.input += nt;
                 continue;
             }
+#if RE4DC_BACKFACE_CONE_FRONT && RE4DC_ACTOR_DIRECT
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+            ++abc_front_seen;
+#endif
+            if (!(e.direct && e.bf_on() && p.blend == 0)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++abc_front_material;
+#endif
+            } else if (!(abc_front && abc_front[mi].min_normal > 0.0f && cn.k && cn.k <= 56U)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++abc_front_metadata;
+#endif
+            } else if (!abc_front_worth(nv, ni, nt)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++abc_front_cost;
+#endif
+            } else if (!abc_front_prepare(f, cn.pal, abc_context)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++abc_front_context_reject;
+#endif
+            } else {
+                const abc_cert::Cone proof_cone = abc_front_cone(cn, abc_front + mi);
+                ++abc_front_tests;
+                abc_candidate = abc_cert::classify(abc_context.value, proof_cone, p.cull, abc_proof) ==
+                                abc_cert::FrontCandidate;
+                if (abc_candidate) ++abc_front_candidates;
+            }
+#endif
         }
+#if RE4DC_BACKFACE_CONE_FRONT == 2 && RE4DC_ACTOR_DIRECT
+        else {
+            ++abc_front_seen;
+            ++abc_front_metadata;
+        }
+#endif
 #endif
 #if RE4DC_ACTOR_CENSUS
         if (census_cur) { census_cur->nv += nv; census_cur->nt += nt; census_cur->lvl += level; }
@@ -5844,6 +6092,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
         if (pxf::Row* pr = pxf::row()) { pr->ml++; if (all & kOcCull) pr->mlc++; }
 #endif
+#if RE4DC_BACKFACE_CONE_FRONT == 2 && RE4DC_ACTOR_BACKFACE_CONE
+        if (abc_candidate && (any & (kOcCull | kOcNear))) ++abc_front_clipped;
+#endif
         if (all & kOcCull) {
 #if RE4DC_ACTOR_CENSUS
             if (census_cur) census_cur->culled += nv;
@@ -5852,6 +6103,12 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
             e.input += nt;
             continue;
         }
+#if RE4DC_BACKFACE_CONE_FRONT && RE4DC_ACTOR_BACKFACE_CONE
+        // The existing full meshlet/outcode path remains authoritative. Only
+        // a wholly unclipped meshlet may consume its completed front proof.
+        if (abc_candidate && !(any & (kOcCull | kOcNear)))
+            e.cone_front = abc_front_finish(abc_context, abc_proof, f, r, e.cache.v, nv, index, ni, p.cull);
+#endif
         e.prime(nv);
         if (e.uv16) pack_uv16(e.cache.v, nv, true);
         if (lights.constant) {
@@ -6441,6 +6698,10 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     const AbcCone* abc = abc_part(p, base, f, abc_cls);
     abc_census();
     AbcEye abc_e;
+#if RE4DC_BACKFACE_CONE_FRONT
+    const AbcFrontRecord* abc_front = abc ? abc_front_table(base, p.stream_bytes) : nullptr;
+    AbcFrontContext abc_context;
+#endif
 #endif
 #if defined(RE4DC_ACTOR_PROF) && RE4DC_ACTOR_PROF
     {   // census only: distinct position / normal indices of the records this chunk draws at its level
@@ -6463,6 +6724,11 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     }
 #endif
     for (unsigned mi = 0; ok && mi < blob->meshlets; ++mi) {
+#if RE4DC_BACKFACE_CONE_FRONT && RE4DC_ACTOR_BACKFACE_CONE
+        e.cone_front = false;
+        abc_cert::Proof abc_proof;
+        bool abc_candidate = false;
+#endif
         const MeshletInfo& m = table[mi];
         const Counts c = lt ? lt[mi].n : m.n;
         const unsigned nv = c.vertices(), ni = c.indices(), nt = c.triangles();
@@ -6483,7 +6749,41 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
                 e.input += nt;
                 continue;
             }
+#if RE4DC_BACKFACE_CONE_FRONT && RE4DC_ACTOR_DIRECT
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+            ++abc_front_seen;
+#endif
+            if (!(e.direct && e.bf_on() && p.blend == 0)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++abc_front_material;
+#endif
+            } else if (!(abc_front && abc_front[mi].min_normal > 0.0f && cn.k && cn.k <= 56U)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++abc_front_metadata;
+#endif
+            } else if (!abc_front_worth(nv, ni, nt)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++abc_front_cost;
+#endif
+            } else if (!abc_front_prepare(f, cn.pal, abc_context)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++abc_front_context_reject;
+#endif
+            } else {
+                const abc_cert::Cone proof_cone = abc_front_cone(cn, abc_front + mi);
+                ++abc_front_tests;
+                abc_candidate = abc_cert::classify(abc_context.value, proof_cone, p.cull, abc_proof) ==
+                                abc_cert::FrontCandidate;
+                if (abc_candidate) ++abc_front_candidates;
+            }
+#endif
         }
+#if RE4DC_BACKFACE_CONE_FRONT == 2 && RE4DC_ACTOR_DIRECT
+        else {
+            ++abc_front_seen;
+            ++abc_front_metadata;
+        }
+#endif
 #endif
         unsigned all, any;
         APROF_COUNT(APROF_N_VERTS, nv); APROF_COUNT(APROF_N_MESHLETS, 1);
@@ -6494,11 +6794,20 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         pass_positions(e, r, nv, k, s16_uv, all, any);
 #endif
         APROF_STOP(aprof_pos);
+#if RE4DC_BACKFACE_CONE_FRONT == 2 && RE4DC_ACTOR_BACKFACE_CONE
+        if (abc_candidate && (any & (kOcCull | kOcNear))) ++abc_front_clipped;
+#endif
         if (all & kOcCull) {
             ++stats.meshlets_culled;
             e.input += nt;
             continue;
         }
+#if RE4DC_BACKFACE_CONE_FRONT && RE4DC_ACTOR_BACKFACE_CONE
+        // The existing full meshlet/outcode path remains authoritative. Only
+        // a wholly unclipped meshlet may consume its completed front proof.
+        if (abc_candidate && !(any & (kOcCull | kOcNear)))
+            e.cone_front = abc_front_finish(abc_context, abc_proof, f, r, e.cache.v, nv, index, ni, p.cull);
+#endif
         e.prime(nv);
         APROF_SPAN(aprof_lit, APROF_LIT);
         if (lights.constant) {

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """scn21_build.py: the scenery-pieces data set (lane scenery21, P2 second half) for every PS2 world room.
 
-Usage: scn21_build.py <native in dir> <out dir> [--groups 4] [--facing] [--sim room:x,y,z ...] [rooms...]
+Usage: scn21_build.py <native in dir> <out dir> [--groups 4] [--facing] [--front-proof] [--sim room:x,y,z ...] [rooms...]
 
 Per room with dc/native/<room>/ps2-world.re4mesh + ps2-world.r4pw in <native in dir> (a release disc tree):
   1. Strip groups (tools/ps2_strip_groups.py layout, R4SG v1, same runtime reader): up to G groups per meshlet.
@@ -19,6 +19,12 @@ Per room with dc/native/<room>/ps2-world.re4mesh + ps2-world.r4pw in <native in 
      axis and a triangle normal), R = |axis| (r / cos(theta_k) + 1), r the box half diagonal + 0.5. Orientation is
      affine invariant, so the runtime tests the cone or its negation by the part's cull mode and the sign of det(mvq).
      Body: head 16 B (u32 mesh crc, u32 mesh bytes, u32 meshlet count, u32 groups), f32 TAB2[64], records; pad 16.
+     --front-proof appends an optional SCCF v1 trailer after that padding; the SCCN v1 prefix is unchanged.
+     Header <4s7I: magic SCCF, version 1, trailer bytes, R4SG record crc, mesh crc, mesh bytes, meshlets, groups.
+     Then 64 pairs of f32 (cos lower bound, sin upper bound), one f32 normal-magnitude lower bound per group,
+     one pair of u16 (index count, strip count) per group, and padding to 16 B. A zero lower bound refuses the
+     front shortcut. Counts permit cost admission without scanning the strips. Every triangle, including degenerates,
+     is checked with exact integer cross products. Old readers ignore the trailer; old data cannot certify front.
   3. R4RC section 'SCPS' v1 (SCENERY_PIECE_STATE=1): head 16 B (u32 mesh crc, u32 mesh bytes, u32 part count, 0) +
      u32[part count] zero: one header-slot word per piece, written by the runtime at the first bind in the room
      (the texture's VRAM address is known only after it loads) and checked at every bind.
@@ -76,6 +82,76 @@ TAB2 = [0.0] + [(128.0 * math.tan(k * KSTEP)) ** 2 for k in range(1, 64)]
 NOCONE = struct.pack('<3bBf', 0, 0, 0, 0, 0.0)
 
 
+def f32_bound(value, upper):
+    """Round a nonnegative finite value outward to binary32."""
+    out = struct.unpack('<f', struct.pack('<f', value))[0]
+    bits = struct.unpack('<I', struct.pack('<f', out))[0]
+    if (upper and out < value) or (not upper and out > value):
+        bits += 1 if upper else -1
+        out = struct.unpack('<f', struct.pack('<I', bits))[0]
+    return out
+
+
+def adjacent_f32(value, upper):
+    bits = struct.unpack('<I', struct.pack('<f', value))[0]
+    return struct.unpack('<f', struct.pack('<I', bits + (1 if upper else -1)))[0]
+
+
+def front_angle_bounds(k):
+    co = f32_bound(math.cos(k * KSTEP), False)
+    # Enclose certificate::sine_upper(co) in either target rounding mode.
+    # The exact triangle membership check below does not depend on libm's trig accuracy.
+    square_lo = adjacent_f32(f32_bound(co * co, False), False)
+    residual_hi = adjacent_f32(f32_bound(1.0 - square_lo, True), True)
+    si = adjacent_f32(f32_bound(math.sqrt(residual_hi), True), True)
+    return co, si
+
+
+FRONT_ANGLES = [front_angle_bounds(k) for k in range(64)]
+
+
+def front_normal_lower(strips, pos, record):
+    """Power-of-two lower bound of EVERY triangle normal, or zero on uncertainty.
+
+    Cross products use exact integer grid coordinates (signed 64-bit components suffice for uint16 positions).
+    Cone membership is checked with integer/rational inequalities against the serialized binary32 bounds,
+    not against the normalized float normals used by the legacy cone builder. Thus rounding in acos/sin/cos
+    cannot enlarge the accepted set. Degenerate triangles, even strip connectors, make the group ineligible.
+    """
+    ax, ay, az, k, _ = struct.unpack('<3bBf', record)
+    if not 0 < k < 64:
+        return 0.0
+    axis = (ax, ay, az)
+    a2 = dot(axis, axis)
+    if not 0 < a2 <= 128 * 128:
+        return 0.0
+    co, si = FRONT_ANGLES[k]
+    cn, cd = co.as_integer_ratio()
+    sn, sd = si.as_integer_ratio()
+    cn2, cd2, sn2, sd2 = cn * cn, cd * cd, sn * sn, sd * sd
+    smallest = None
+    for st in strips:
+        if len(st) < 3:
+            return 0.0
+        for a, b, c in strip_tris(st):
+            if any(not isinstance(i, int) or not 0 <= i < len(pos) for i in (a, b, c)):
+                return 0.0
+            pa, pb, pc = pos[a], pos[b], pos[c]
+            if any(not isinstance(v, int) or not 0 <= v <= 65535 for p in (pa, pb, pc) for v in p):
+                return 0.0
+            n = cross(sub(pb, pa), sub(pc, pa))
+            mag = max(abs(v) for v in n)
+            if not mag:
+                return 0.0
+            d = dot(n, axis)
+            n2a2 = dot(n, n) * a2
+            d2 = d * d
+            if d <= 0 or d2 * cd2 < cn2 * n2a2 or (n2a2 - d2) * sd2 > sn2 * n2a2:
+                return 0.0
+            smallest = mag if smallest is None else min(smallest, mag)
+    return float(1 << (smallest.bit_length() - 1)) if smallest else 0.0
+
+
 def cone(strips, pos, lo, hi):
     """8 B record: s8 axis[3] (quantised; theta measured against it), u8 k, f32 R. Runtime rejects when
     d = dot(axis, c - e) > R and (d - R)^2 > TAB2[k] |c - e|^2, i.e. d > 128 tan(theta_k) |v| + R >= |axis| tan|v| + R."""
@@ -105,7 +181,7 @@ def cone(strips, pos, lo, hi):
     return struct.pack('<3bBf', aq[0], aq[1], aq[2], k, R), (aq, 128.0 * math.tan(thk), R, lo, hi)
 
 
-def build_room(mesh_path, side_path, G, facing):
+def build_room(mesh_path, side_path, G, facing, front_proof=False):
     m = bytearray(Path(mesh_path).read_bytes())
     side = Path(side_path).read_bytes()
     h = struct.unpack_from('<4s15I4I', m, 0)
@@ -147,6 +223,8 @@ def build_room(mesh_path, side_path, G, facing):
                 owner[v] = li
     vmap = {}
     recs, cones, geo = {}, {}, {}
+    front_records = {} if front_proof else None
+    front_counts = {} if front_proof else None
     st = dict(meshlets=nlet, groups=G, facing=bool(facing), cones=0, cone_corners=0, corners=0, nonempty=0)
 
     def process(li, L):
@@ -245,6 +323,8 @@ def build_room(mesh_path, side_path, G, facing):
         groups = [[[new_of[k] for k in s_] for s_ in g] for g in groups]
         pos = [pos[old_of[nk]] for nk in range(vc)]
         out = bytearray(); rl = bytearray(); cl = bytearray(); gl = []
+        fl = bytearray() if front_proof else None
+        fc = bytearray() if front_proof else None
         for g in groups:
             for s_ in g:
                 out.append(len(s_)); out.extend(s_)
@@ -253,6 +333,9 @@ def build_room(mesh_path, side_path, G, facing):
             rl += struct.pack('<6HHBB', *lo, *hi, len(out), min(ks), max(ks))
             rec_c, info = cone(g, pos, lo, hi)
             cl += rec_c
+            if front_proof:
+                fl += struct.pack('<f', front_normal_lower(g, pos, rec_c))
+                fc += struct.pack('<HH', len(ks), len(g))
             gl.append((info, max(ks) - min(ks) + 1))
             st['nonempty'] += 1
             if info:
@@ -262,7 +345,13 @@ def build_room(mesh_path, side_path, G, facing):
         for _ in range(G - len(groups)):
             rl += struct.pack('<6HHBB', 0, 0, 0, 0, 0, 0, len(out), 1, 0)
             cl += NOCONE
+            if front_proof:
+                fl += struct.pack('<f', 0.0)
+                fc += struct.pack('<HH', 0, 0)
         recs[li] = bytes(rl); cones[li] = bytes(cl); geo[li] = (gl, vc)
+        if front_proof:
+            front_records[li] = bytes(fl)
+            front_counts[li] = bytes(fc)
         st['corners'] += vc
     for li, L in enumerate(lets):
         if not L['sc'] & 0x8000:
@@ -277,6 +366,16 @@ def build_room(mesh_path, side_path, G, facing):
     r4sg = struct.pack('<4s7I', b'R4SG', 1, nlet, G, new_crc, len(m), side_crc, zlib.crc32(bytes(rb)) & 0xffffffff) + rb
     sccn = struct.pack('<4I', new_crc, len(m), nlet, G) + struct.pack('<64f', *TAB2) + cb
     sccn += bytes(-len(sccn) % 16)
+    if front_proof:
+        normals = b''.join(front_records[li] for li in range(nlet))
+        counts = b''.join(front_counts[li] for li in range(nlet))
+        angles = b''.join(struct.pack('<2f', *pair) for pair in FRONT_ANGLES)
+        trailer_bytes = (32 + len(angles) + len(normals) + len(counts) + 15) & ~15
+        trailer = struct.pack('<4s7I', b'SCCF', 1, trailer_bytes, zlib.crc32(rb) & 0xffffffff,
+                              new_crc, len(m), nlet, G) + angles + normals + counts
+        sccn += trailer + bytes(trailer_bytes - len(trailer))
+        st.update(front_groups=sum(v > 0 for (v,) in struct.iter_unpack('<f', normals)),
+                  front_trailer_bytes=trailer_bytes)
     scps = struct.pack('<4I', new_crc, len(m), npart, 0) + bytes(4 * npart)
     scps += bytes(-len(scps) % 16)
     st.update(mesh_crc_in='%08x' % crc, mesh_crc_out='%08x' % new_crc, r4sg_bytes=len(r4sg), sccn_bytes=len(sccn),
@@ -341,6 +440,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('native'); ap.add_argument('out')
     ap.add_argument('--groups', type=int, default=4); ap.add_argument('--facing', action='store_true')
+    ap.add_argument('--front-proof', action='store_true', help='append optional exact front-eligibility metadata to SCCN')
     ap.add_argument('--sim', action='append', default=[])
     ap.add_argument('--no-write', action='store_true')
     ap.add_argument('rooms', nargs='*')
@@ -354,7 +454,8 @@ def main():
     rows, sums = [], []
     for r in rooms:
         d = nat / r
-        mesh, r4sg, sccn, scps, st, geo = build_room(d / 'ps2-world.re4mesh', d / 'ps2-world.r4pw', a.groups, a.facing)
+        mesh, r4sg, sccn, scps, st, geo = build_room(d / 'ps2-world.re4mesh', d / 'ps2-world.r4pw', a.groups, a.facing,
+                                                a.front_proof)
         for eye in sims.get(r, []):
             tot, rej, rejn = sim(d, mesh, geo, eye)
             print('SIM %s eye=%s corners=%d one-sided +n %d (%.1f%%) -n %d (%.1f%%)' % (r, eye, tot, rej, 100.0 * rej / max(tot, 1),

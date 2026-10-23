@@ -1,0 +1,2002 @@
+{
+  "schema_version": 2,
+  "status": "PASS synthetic correctness qualification; game speedup NOT demonstrated",
+  "date": "2026-10-23",
+  "feature_default": 0,
+  "integration_base": "261c2e3bb098d830107766640fe2fedbd006ff98",
+  "original_integration_base": "d1bc83cff32217a659f93acd5837a1ecc96ff6c3",
+  "original_pr_head": "56dc28d5cbec03b6467c3fea68ba6d687644df9e",
+  "corrected_off_identity_baseline": "dd8981e8de6dadb94997795867c85e8ede9a876f",
+  "off_identity_scope": "Cull restoration is unconditional. Feature absent/0 matches the separate corrected baseline, not the pre-fix integration world object.",
+  "source_sha256": {
+    "port/dreamcast/game/platform/backface_certificate.cpp": "ecc33eee3dd91a3eacb0734213716a223ba1b51b36c5cad7cb951c61406c7d76",
+    "port/dreamcast/room/backface_certificate.hpp": "c2590fd2c21ab0312fe86d4ba3b43498458fba7f16a194686b9db5698469c5b3",
+    "port/dreamcast/tools/d367/backface_cone_front/helper_fixture.cpp": "eab1a1d3e25638c7514ce582964d44f16ee1de494de474dd92af4512d7159600",
+    "port/dreamcast/tools/d367/backface_cone_front/helper_test.py": "5a7e3c988409f5e9edaa8498bed74a6fa4bdebd2e38a46356db99ef539116888",
+    "port/dreamcast/game/platform/native_actor_fast.cpp": "ab4a0311783fecbd8c7e69195857d5979df74d34f4b49395960604f32898be99",
+    "port/dreamcast/tools/d367/backface_cone_front/actor_fixture.cpp": "5a8ef4134994f44a355c84ffb26b5a1c1ccae3422ee2f2c939f676c7207a7f26",
+    "port/dreamcast/tools/d367/backface_cone_front/actor_test.py": "191ad4e34ee246863a942d60051eff38a74628d2caf4306f381598396fde9954",
+    "port/dreamcast/game/platform/native_static.cpp": "0ce6023f11445ec9c6dc5e2e075ec0738d755fc83cda48c0862523df3ad509bc",
+    "port/dreamcast/tools/d367/scenery21/scn21_build.py": "1ff089c452997836192890aeead28a6bb5ecf61da2a70aa3e6c0d92e184bc86c",
+    "port/dreamcast/game/Makefile": "ea4c8ddf4ad034ffe246bd221ed92149ccdf0e2803a82559f57ebe6b5dc445c7",
+    "port/dreamcast/game/backface.mk": "a3b2d6c09036f1589e7ab1242c0a7d9af5dcb97b0109521e019eb102ddb01138",
+    "port/dreamcast/game/platform/native_ui.cpp": "ec85d220c0cba2bbcafcf5b9b712aac319c585f0496553180faf766dd3166937",
+    "port/dreamcast/game/ui_bridge.cpp": "efded7a1466c00c99b4ca35b8979170188b5613d5bb978fc89dee4a6290eec1d",
+    "port/dreamcast/tools/d367/backface_cone_front/admission_study.py": "a711dfffb68f6bbe2fe804cb646d27452c305d5dd454c2cf0c982b14e200c2ba",
+    "port/dreamcast/tools/d367/backface_cone_front/asset_census.py": "226bacaac31e8daea99255bd00240076b1dca852395b20a82a2fc01280195aae",
+    "port/dreamcast/tools/d367/backface_cone_front/asset_pose_study.py": "fba2d1d6fbada402fdb59c6dcfcab877c5e5ba6d0d9edbc68da7fa1f998eb0d4",
+    "port/dreamcast/tools/d367/backface_cone_front/icache_replay.py": "f0c968398a44f7204f0640660160b2674d75161b2202986c6fb32aba70fe4705",
+    "port/dreamcast/tools/d367/backface_cone_front/make_test.py": "a77db99dbfb20823a14bb96756f509399594f2d84a6fa54605c3c33b7a61d8b8",
+    "port/dreamcast/tools/d367/backface_cone_front/pipeline_cost.py": "d0b214bcea20b63bc24f301a92fd051ff66fb9fb99f6d6bae1f4226caa1cc798",
+    "port/dreamcast/tools/d367/backface_cone_front/qualify.py": "fbd91f0a10d33e5e844fbb44300993a87515c3d5b64fdaa1eff0489e4748d5be",
+    "port/dreamcast/tools/d367/backface_cone_front/rounding_test.py": "a1beb12ebb84b28f6419097760a97a5c7126f5be8f111b7343f98c5ab02c73f1",
+    "port/dreamcast/tools/d367/backface_cone_front/sh4_machine.py": "300f9d3896caba09a78cec9fd1bfa887b0fc784aacbb3e82655c5b93521a7bbd",
+    "port/dreamcast/tools/d367/backface_cone_front/target_fixture.cpp.in": "33ebe6e9b16f65954000c1cc2b9dfcb5e75c40e831854a26d9db11f61fcc0242",
+    "port/dreamcast/tools/d367/backface_cone_front/target_test.py": "f7fc6235454967429a28b2d5e9554ba60c344809398fbe2c239a6734fb72e4ad",
+    "port/dreamcast/tools/d367/backface_cone_front/world_runtime_test.py": "4541983b3219dc883d87fb94e5761d99d86e11923e3024b922c120fced29cdc8",
+    "port/dreamcast/tools/d367/backface_cone_front/world_target_fixture.cpp.in": "6d5665194948cc5d33d9b2493461b1505c9c4312db10c4a4f03cf91a2e54e85e",
+    "port/dreamcast/tools/d367/backface_cone_front/world_target_test.py": "303e4fc1c12d7c2a98a8d5867802822b19ac0a8f8921a203b5613ec32d7e83e8",
+    "port/dreamcast/tools/d367/backface_cone_front/world_test.py": "9b6e4c75015941c941cae014bf115b861b1552e708d6006c7b536ed048dcba71"
+  },
+  "qualification": {
+    "receipt": {
+      "path": "cone-pr56-rooms-qualified/qualification.json",
+      "sha256": "8c8e19c322b30f702b15a1c535f4a513ad4bebc525a6cab7fc7b5cbd5e39fd0d"
+    },
+    "stages": [
+      {
+        "stage": "sdk",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_sh4zam_fused/materialize.py",
+          "--output",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/sdk",
+          "--receipt",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/sdk-receipt.json"
+        ],
+        "receipt": "sdk-receipt.json",
+        "receipt_sha256": "464183e39fca6e6e98cfdd37a0d856fd31041e95d79888ac57dcc43efb3184c6",
+        "status": "PASS"
+      },
+      {
+        "stage": "make",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_cone_front/make_test.py",
+          "--output",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/make",
+          "--baseline",
+          "dd8981e8de6dadb94997795867c85e8ede9a876f"
+        ],
+        "receipt": "make/make-controls.json",
+        "receipt_sha256": "5d6266b8832d6e1b66276490b9b6a148fab0dd5cdabf4ae494503c1bcd47a3f5",
+        "status": "PASS"
+      },
+      {
+        "stage": "helper",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_cone_front/helper_test.py",
+          "--output",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/helper"
+        ],
+        "receipt": "helper/helper-controls.json",
+        "receipt_sha256": "38cc75b447c8e95613675927602860038b077dd6ea8689e9cd72245b683a0dd3",
+        "status": "PASS"
+      },
+      {
+        "stage": "rounding",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_cone_front/rounding_test.py",
+          "--output",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/rounding-controls.json"
+        ],
+        "receipt": "rounding-controls.json",
+        "receipt_sha256": "d1fcc79d3840a47ca23e2171efce8aa8ae934cae6c5bfac7d32dac4500f6e535",
+        "status": "PASS"
+      },
+      {
+        "stage": "world-producer",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_cone_front/world_test.py",
+          "--output",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/world-producer",
+          "--baseline",
+          "dd8981e8de6dadb94997795867c85e8ede9a876f"
+        ],
+        "receipt": "world-producer/world-producer-controls.json",
+        "receipt_sha256": "bdbc790aa06994c688d7469fcc6048518b03af4c91cec68140a614fa8a5163e4",
+        "status": "PASS"
+      },
+      {
+        "stage": "actor",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_cone_front/actor_test.py",
+          "--out",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/actor",
+          "--sdk",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/sdk",
+          "--baseline",
+          "dd8981e8de6dadb94997795867c85e8ede9a876f",
+          "--sh4-cxx",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/toolchain-root/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
+          "--kos-root",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source"
+        ],
+        "receipt": "actor/actor-controls.json",
+        "receipt_sha256": "e0045d4783fd45187c3646b51e964566caa994e0ee399ade55154f6b3d6a7e6b",
+        "status": "PASS"
+      },
+      {
+        "stage": "world-runtime",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_cone_front/world_runtime_test.py",
+          "--output",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/world-runtime",
+          "--baseline",
+          "dd8981e8de6dadb94997795867c85e8ede9a876f",
+          "--sh4-cxx",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/toolchain-root/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
+          "--kos-root",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source",
+          "--sdk-root",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/sdk"
+        ],
+        "receipt": "world-runtime/world-runtime-controls.json",
+        "receipt_sha256": "c2823d0f04389a05efaca5b565f1108e603f2e52454fd159328f6fae12002302",
+        "status": "PASS"
+      },
+      {
+        "stage": "target",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_cone_front/target_test.py",
+          "--output",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/target",
+          "--sh4-cxx",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/toolchain-root/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
+          "--optimization=-O1",
+          "--helper-optimization=-O2"
+        ],
+        "receipt": "target/target-controls.json",
+        "receipt_sha256": "b671330045ace10e251adbc1f5f1f99b7d0491202f82295f67699fed9ce8a3e1",
+        "status": "PASS"
+      },
+      {
+        "stage": "world-target",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/tools/d367/backface_cone_front/world_target_test.py",
+          "--output",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/world-target",
+          "--sh4-cxx",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/toolchain-root/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
+          "--kos-root",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source",
+          "--sdk-root",
+          "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/sdk"
+        ],
+        "receipt": "world-target/world-target-controls.json",
+        "receipt_sha256": "8cf093a7abb89c9a882ec072ef8a15bdd5ffba0bd2bc0a5887a1e44869918097",
+        "status": "PASS"
+      }
+    ],
+    "summary": {
+      "helper": {
+        "cases": 988,
+        "prepared": 939,
+        "front_candidate": 607,
+        "front_accepted": 102,
+        "back_suggestion": 2,
+        "complete_packet_comparisons": 102,
+        "ideal_bound_checks": 607
+      },
+      "target_comparisons": 172,
+      "full_world_target_requested": true,
+      "world_target_packet_comparisons": 152
+    },
+    "make_controls": 63,
+    "helper": {
+      "cases": 988,
+      "prepared": 939,
+      "front_candidate": 607,
+      "front_accepted": 102,
+      "back_suggestion": 2,
+      "complete_packet_comparisons": 102,
+      "ideal_bound_checks": 607
+    },
+    "admission_assertions": 82,
+    "rounding_counts": {
+      "RN": {
+        "prepare_matrices": 1221,
+        "prepare_intervals": 4884,
+        "scalar_residual_bounds": 1907,
+        "nonfinite_declines": 0,
+        "cone_dot_enclosures": 2618,
+        "perpendicular_square_enclosures": 610
+      },
+      "RZ": {
+        "prepare_matrices": 1221,
+        "prepare_intervals": 4884,
+        "scalar_residual_bounds": 1907,
+        "nonfinite_declines": 0,
+        "cone_dot_enclosures": 2618,
+        "perpendicular_square_enclosures": 610
+      }
+    },
+    "world_producer_cases": 9,
+    "actor_scenarios": 290,
+    "actor_assertions": 2818,
+    "world_metadata_controls": 42,
+    "cull_lifetime_cases_per_mode": 147,
+    "cull_modes": [
+      0,
+      1,
+      2
+    ],
+    "cull_negative_controls": [
+      "capacity",
+      "ordinary"
+    ],
+    "room_selection": {
+      "actor_host_arms": 6,
+      "world_host_arms": 6,
+      "world_room_cases": 30,
+      "cull_lifetime_cases_total": 882,
+      "actor_target_artifacts": 28,
+      "world_target_artifacts": 16
+    },
+    "actor_target_comparisons": 172,
+    "fpscr_controls": 28,
+    "raw_layout_controls": 4,
+    "integer_instruction_controls": {
+      "status": "PASS",
+      "unsigned_multiply_cases": 264,
+      "low_only_multiply_cases": 64,
+      "unsigned_divide_three_cases": 94,
+      "scope": "Bounded actual-opcode arithmetic and trace controls; no timing or hardware claim",
+      "manual": "https://www.renesas.com/en/document/mas/sh-4-software-manual"
+    },
+    "world_target_comparisons": 152,
+    "world_admission": {
+      "scenarios": 38,
+      "admitted_scenarios": 8,
+      "rejected_scenarios": 30,
+      "rejected_proof_instructions": 0,
+      "groups": 133,
+      "accepted_groups": 28
+    }
+  },
+  "full_target_translation_units": {
+    "actor": [
+      {
+        "backface_rooms": 0,
+        "actor_cones": 0,
+        "variant": "base",
+        "artifact": "rooms0-cones0-base.ii",
+        "bytes": 1134895,
+        "sha256": "2d27439628bb02c12190ef465c9a92b49e6b8ff08e1186dc7f5a0095feaed19d"
+      },
+      {
+        "backface_rooms": 0,
+        "actor_cones": 0,
+        "variant": "base",
+        "artifact": "rooms0-cones0-base.o",
+        "bytes": 65224,
+        "sha256": "832eab00c1b6983803d1c450d0d991c441af59f32d54ca9a5b1d8dce474128dc"
+      },
+      {
+        "backface_rooms": 0,
+        "actor_cones": 0,
+        "variant": "absent",
+        "artifact": "rooms0-cones0-absent.ii",
+        "bytes": 1134895,
+        "sha256": "2d27439628bb02c12190ef465c9a92b49e6b8ff08e1186dc7f5a0095feaed19d"
+      },
+      {
+        "backface_rooms": 0,
+        "actor_cones": 0,
+        "variant": "absent",
+        "artifact": "rooms0-cones0-absent.o",
+        "bytes": 65224,
+        "sha256": "832eab00c1b6983803d1c450d0d991c441af59f32d54ca9a5b1d8dce474128dc"
+      },
+      {
+        "backface_rooms": 0,
+        "actor_cones": 0,
+        "variant": "zero",
+        "artifact": "rooms0-cones0-zero.ii",
+        "bytes": 1134895,
+        "sha256": "2d27439628bb02c12190ef465c9a92b49e6b8ff08e1186dc7f5a0095feaed19d"
+      },
+      {
+        "backface_rooms": 0,
+        "actor_cones": 0,
+        "variant": "zero",
+        "artifact": "rooms0-cones0-zero.o",
+        "bytes": 65224,
+        "sha256": "832eab00c1b6983803d1c450d0d991c441af59f32d54ca9a5b1d8dce474128dc"
+      },
+      {
+        "backface_rooms": 0,
+        "actor_cones": 1,
+        "variant": "base",
+        "artifact": "rooms0-cones1-base.ii",
+        "bytes": 1153708,
+        "sha256": "1d074edec4fafc3b6723d7ea390500f8dc1a64082b76a25f1c3c934eb4713a8b"
+      },
+      {
+        "backface_rooms": 0,
+        "actor_cones": 1,
+        "variant": "base",
+        "artifact": "rooms0-cones1-base.o",
+        "bytes": 78656,
+        "sha256": "6a42125201f82d4b41868ce8e2e305b5dee2376dd1f53e03f03472cf78fa16f9"
+      },
+      {
+        "backface_rooms": 0,
+        "actor_cones": 1,
+        "variant": "absent",
+        "artifact": "rooms0-cones1-absent.ii",
+        "bytes": 1153708,
+        "sha256": "1d074edec4fafc3b6723d7ea390500f8dc1a64082b76a25f1c3c934eb4713a8b"
+      },
+      {
+        "backface_rooms": 0,
+        "actor_cones": 1,
+        "variant": "absent",
+        "artifact": "rooms0-cones1-absent.o",
+        "bytes": 78656,
+        "sha256": "6a42125201f82d4b41868ce8e2e305b5dee2376dd1f53e03f03472cf78fa16f9"
+      },
+      {
+        "backface_rooms": 0,
+        "actor_cones": 1,
+        "variant": "zero",
+        "artifact": "rooms0-cones1-zero.ii",
+        "bytes": 1153708,
+        "sha256": "1d074edec4fafc3b6723d7ea390500f8dc1a64082b76a25f1c3c934eb4713a8b"
+      },
+      {
+        "backface_rooms": 0,
+        "actor_cones": 1,
+        "variant": "zero",
+        "artifact": "rooms0-cones1-zero.o",
+        "bytes": 78656,
+        "sha256": "6a42125201f82d4b41868ce8e2e305b5dee2376dd1f53e03f03472cf78fa16f9"
+      },
+      {
+        "backface_rooms": 0,
+        "actor_cones": 1,
+        "variant": "on1",
+        "artifact": "rooms0-cones1-on1.o",
+        "bytes": 85120,
+        "sha256": "c78e28ddd9941456a9fef4dce1c43afdd90d9c3201568d8c934e81647fe452e0"
+      },
+      {
+        "backface_rooms": 0,
+        "actor_cones": 1,
+        "variant": "on2",
+        "artifact": "rooms0-cones1-on2.o",
+        "bytes": 87872,
+        "sha256": "d588bb78872c039a8b17b007896f434f6c873007ddc19a2f411f9ac6bcaa3316"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 0,
+        "variant": "base",
+        "artifact": "rooms1-cones0-base.ii",
+        "bytes": 1134958,
+        "sha256": "09bb3969d0d393e1e1957fe5c5b78ad62619128f4119a6ff5b453c879c5b1a98"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 0,
+        "variant": "base",
+        "artifact": "rooms1-cones0-base.o",
+        "bytes": 65324,
+        "sha256": "53e304ca36c1160a8e33fdca2d694ec978c9318ad4d9e10671581994d449953a"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 0,
+        "variant": "absent",
+        "artifact": "rooms1-cones0-absent.ii",
+        "bytes": 1134958,
+        "sha256": "09bb3969d0d393e1e1957fe5c5b78ad62619128f4119a6ff5b453c879c5b1a98"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 0,
+        "variant": "absent",
+        "artifact": "rooms1-cones0-absent.o",
+        "bytes": 65324,
+        "sha256": "53e304ca36c1160a8e33fdca2d694ec978c9318ad4d9e10671581994d449953a"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 0,
+        "variant": "zero",
+        "artifact": "rooms1-cones0-zero.ii",
+        "bytes": 1134958,
+        "sha256": "09bb3969d0d393e1e1957fe5c5b78ad62619128f4119a6ff5b453c879c5b1a98"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 0,
+        "variant": "zero",
+        "artifact": "rooms1-cones0-zero.o",
+        "bytes": 65324,
+        "sha256": "53e304ca36c1160a8e33fdca2d694ec978c9318ad4d9e10671581994d449953a"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 1,
+        "variant": "base",
+        "artifact": "rooms1-cones1-base.ii",
+        "bytes": 1153771,
+        "sha256": "4003b1ac43ec45774b0f54d49105475325a5fef8d55f343ec3a8268b52921216"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 1,
+        "variant": "base",
+        "artifact": "rooms1-cones1-base.o",
+        "bytes": 78756,
+        "sha256": "29d09d913b889be61e325f5246c9e073eb5c5e8ca2f257f80b65db968b304715"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 1,
+        "variant": "absent",
+        "artifact": "rooms1-cones1-absent.ii",
+        "bytes": 1153771,
+        "sha256": "4003b1ac43ec45774b0f54d49105475325a5fef8d55f343ec3a8268b52921216"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 1,
+        "variant": "absent",
+        "artifact": "rooms1-cones1-absent.o",
+        "bytes": 78756,
+        "sha256": "29d09d913b889be61e325f5246c9e073eb5c5e8ca2f257f80b65db968b304715"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 1,
+        "variant": "zero",
+        "artifact": "rooms1-cones1-zero.ii",
+        "bytes": 1153771,
+        "sha256": "4003b1ac43ec45774b0f54d49105475325a5fef8d55f343ec3a8268b52921216"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 1,
+        "variant": "zero",
+        "artifact": "rooms1-cones1-zero.o",
+        "bytes": 78756,
+        "sha256": "29d09d913b889be61e325f5246c9e073eb5c5e8ca2f257f80b65db968b304715"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 1,
+        "variant": "on1",
+        "artifact": "rooms1-cones1-on1.o",
+        "bytes": 85228,
+        "sha256": "2bd6ddd4dd0d51f5e6d683d940154759851b5ba0b59f67dd4fb96dab088afd31"
+      },
+      {
+        "backface_rooms": 1,
+        "actor_cones": 1,
+        "variant": "on2",
+        "artifact": "rooms1-cones1-on2.o",
+        "bytes": 87972,
+        "sha256": "cc609de892e61155b86ed8ddc730adb7d425857fd191c04f767e65e71218f08f"
+      }
+    ],
+    "world": {
+      "base.ii": {
+        "bytes": 857037,
+        "sha256": "9796afc3e76137023512a0c744ecd396d096d3ad8683b151423061cf7589ba50"
+      },
+      "base.o": {
+        "bytes": 46688,
+        "sha256": "6a727942e973a557a9fd9b90a366f2c7aedbd994eaae43ad8093ad9c93094fda"
+      },
+      "absent.ii": {
+        "bytes": 857037,
+        "sha256": "9796afc3e76137023512a0c744ecd396d096d3ad8683b151423061cf7589ba50"
+      },
+      "absent.o": {
+        "bytes": 46688,
+        "sha256": "6a727942e973a557a9fd9b90a366f2c7aedbd994eaae43ad8093ad9c93094fda"
+      },
+      "zero.ii": {
+        "bytes": 857037,
+        "sha256": "9796afc3e76137023512a0c744ecd396d096d3ad8683b151423061cf7589ba50"
+      },
+      "zero.o": {
+        "bytes": 46688,
+        "sha256": "6a727942e973a557a9fd9b90a366f2c7aedbd994eaae43ad8093ad9c93094fda"
+      },
+      "on1.o": {
+        "bytes": 51868,
+        "sha256": "dc57a7cad125eab757014fa0c74619e2f1589d2aa48228abebc4224d1e605e02"
+      },
+      "on2.o": {
+        "bytes": 53136,
+        "sha256": "0c3744902b6be541918f7e11500f0ef87cc890bf27ad8a7afc90b9244607a37a"
+      },
+      "rooms1-base.ii": {
+        "bytes": 857467,
+        "sha256": "ade5dd47d3316c264ee0c5df2f1e70de3f69de05004166c3ff9092ed9a1c82c0"
+      },
+      "rooms1-base.o": {
+        "bytes": 47336,
+        "sha256": "9b2542b9ee26428c70182ea95f9134a8b728f5f5d28b58ec93ca9b3efd6268da"
+      },
+      "rooms1-absent.ii": {
+        "bytes": 857467,
+        "sha256": "ade5dd47d3316c264ee0c5df2f1e70de3f69de05004166c3ff9092ed9a1c82c0"
+      },
+      "rooms1-absent.o": {
+        "bytes": 47336,
+        "sha256": "9b2542b9ee26428c70182ea95f9134a8b728f5f5d28b58ec93ca9b3efd6268da"
+      },
+      "rooms1-zero.ii": {
+        "bytes": 857467,
+        "sha256": "ade5dd47d3316c264ee0c5df2f1e70de3f69de05004166c3ff9092ed9a1c82c0"
+      },
+      "rooms1-zero.o": {
+        "bytes": 47336,
+        "sha256": "9b2542b9ee26428c70182ea95f9134a8b728f5f5d28b58ec93ca9b3efd6268da"
+      },
+      "rooms1-on1.o": {
+        "bytes": 52556,
+        "sha256": "06a9d0b2afc02babdad3efd98159f12f74e118adbf889d5e4d7af7982f366c43"
+      },
+      "rooms1-on2.o": {
+        "bytes": 53848,
+        "sha256": "5b9bc9efbd52ca8017c2aa0606dfeee7d0f58adca96d4b83bc1aa27b276f2e62"
+      }
+    }
+  },
+  "synthetic_pipeline": {
+    "scope": "Compiled SH4 scalar/copy/classifier opcodes on synthetic caches, perfect I/D caches, no DMA, SQ bus or PVR timing; no FPS claim.",
+    "compiler": "SH4 GCC 15.2.0",
+    "kos_pin": "804b3195ebd1a06a27cc2b3a5eacf7a2429040a3",
+    "sh4zam_pin": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+    "model_source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+    "actor_elf_sha256": "385b598f1d4365f18b33aa84de9881ee42e3cb9c3c1684c790cab89959e6e277",
+    "world_elf_sha256": "3a44f43c7f780fc6530387f2ff50d7759243695abf204a338f5890d9f49a9c06",
+    "actor_selected_cases": [
+      {
+        "case": "front-grid64-294indices",
+        "batch": 1,
+        "mode": 0,
+        "policy": "production",
+        "accepted": 0,
+        "admitted": true,
+        "outcome": 0,
+        "instructions": 22653,
+        "output_sha256": "4a8fc006dd27dd0ff5808de5bf4b93b009068fd17629d94bff7cfefe2d123838",
+        "model_cycles": 22171,
+        "trace_sha256": "89aebc0859c91b6563f058939553022e12f320167b4bee5916cbf1c79cab59fa"
+      },
+      {
+        "case": "front-grid64-294indices",
+        "batch": 1,
+        "mode": 1,
+        "policy": "production",
+        "accepted": 1,
+        "admitted": true,
+        "outcome": 2,
+        "instructions": 15403,
+        "output_sha256": "4a8fc006dd27dd0ff5808de5bf4b93b009068fd17629d94bff7cfefe2d123838",
+        "model_cycles": 13227,
+        "trace_sha256": "c4d2955f9c93385ea01326adcb71a04ef2a7cf41b1cae9f296903917857b2853"
+      },
+      {
+        "case": "front-grid64-294indices",
+        "batch": 6,
+        "mode": 0,
+        "policy": "production",
+        "accepted": 0,
+        "admitted": true,
+        "outcome": 0,
+        "instructions": 135678,
+        "output_sha256": "201ead783d1ab880902e1365a59a26b2e580414491a0be5dd5fd9a36df376d46",
+        "model_cycles": 132766,
+        "trace_sha256": "f3e7ca7015a2e1e122db699eb63b0325ca1cbcec069f3b7de4acb384faa73712"
+      },
+      {
+        "case": "front-grid64-294indices",
+        "batch": 6,
+        "mode": 1,
+        "policy": "production",
+        "accepted": 6,
+        "admitted": true,
+        "outcome": 2,
+        "instructions": 85438,
+        "output_sha256": "201ead783d1ab880902e1365a59a26b2e580414491a0be5dd5fd9a36df376d46",
+        "model_cycles": 73252,
+        "trace_sha256": "1e76f13757d21b40b23a24069dffd6a7eaefd8c29cc6c651de74a28a4265f754"
+      },
+      {
+        "case": "off-axis-grid64",
+        "batch": 1,
+        "mode": 0,
+        "policy": "production",
+        "accepted": 0,
+        "admitted": true,
+        "outcome": 0,
+        "instructions": 22653,
+        "output_sha256": "61cdfc208d549f42a327ca72e6e7ed3c3b9cfed8437f6bdbdf402cb23d08b863",
+        "model_cycles": 22171,
+        "trace_sha256": "89aebc0859c91b6563f058939553022e12f320167b4bee5916cbf1c79cab59fa"
+      },
+      {
+        "case": "off-axis-grid64",
+        "batch": 1,
+        "mode": 1,
+        "policy": "production",
+        "accepted": 1,
+        "admitted": true,
+        "outcome": 2,
+        "instructions": 15421,
+        "output_sha256": "61cdfc208d549f42a327ca72e6e7ed3c3b9cfed8437f6bdbdf402cb23d08b863",
+        "model_cycles": 13233,
+        "trace_sha256": "22f3a8f891e031bfa316c2c3f558f55e161c47263a45e2a4584d627b483f1429"
+      },
+      {
+        "case": "off-axis-grid64",
+        "batch": 6,
+        "mode": 0,
+        "policy": "production",
+        "accepted": 0,
+        "admitted": true,
+        "outcome": 0,
+        "instructions": 135678,
+        "output_sha256": "99f89b6b759be591cbd0790705fd810a45ca06d1c1bb026938ef336539ad99bd",
+        "model_cycles": 132766,
+        "trace_sha256": "f3e7ca7015a2e1e122db699eb63b0325ca1cbcec069f3b7de4acb384faa73712"
+      },
+      {
+        "case": "off-axis-grid64",
+        "batch": 6,
+        "mode": 1,
+        "policy": "production",
+        "accepted": 6,
+        "admitted": true,
+        "outcome": 2,
+        "instructions": 85506,
+        "output_sha256": "99f89b6b759be591cbd0790705fd810a45ca06d1c1bb026938ef336539ad99bd",
+        "model_cycles": 73258,
+        "trace_sha256": "2e31e1eef2f844496ed2520206ea7caa85e446f599e74f9d0958f6b7c609a07c"
+      },
+      {
+        "case": "uncertain-grid64",
+        "batch": 1,
+        "mode": 0,
+        "policy": "production",
+        "accepted": 0,
+        "admitted": true,
+        "outcome": 0,
+        "instructions": 17915,
+        "output_sha256": "72388eac1f81c9fa4e69d8b057aea87556526c975cb0866e531a959cb610af0e",
+        "model_cycles": 18445,
+        "trace_sha256": "a038dba5c90705c61888682809b328a0973d9b878a0cac77bab5a25d98ae802a"
+      },
+      {
+        "case": "uncertain-grid64",
+        "batch": 1,
+        "mode": 1,
+        "policy": "production",
+        "accepted": 0,
+        "admitted": true,
+        "outcome": 2,
+        "instructions": 26469,
+        "output_sha256": "72388eac1f81c9fa4e69d8b057aea87556526c975cb0866e531a959cb610af0e",
+        "model_cycles": 27743,
+        "trace_sha256": "b55b81da0a03ae81cd3c30ddf059ee6ad44e1634cd9e5920eaabac3efe029c68"
+      },
+      {
+        "case": "uncertain-grid64",
+        "batch": 13,
+        "mode": 0,
+        "policy": "production",
+        "accepted": 0,
+        "admitted": true,
+        "outcome": 0,
+        "instructions": 232319,
+        "output_sha256": "e5fd397834d65ed4e4d6b1f0b54998e9705b79e8d3b75f57ec15d89503ede6a0",
+        "model_cycles": 239161,
+        "trace_sha256": "a46fe3752f4ed31db3503bf8345c441a155e26eff184e920c103fbd3a8af3307"
+      },
+      {
+        "case": "uncertain-grid64",
+        "batch": 13,
+        "mode": 1,
+        "policy": "production",
+        "accepted": 0,
+        "admitted": true,
+        "outcome": 2,
+        "instructions": 327345,
+        "output_sha256": "e5fd397834d65ed4e4d6b1f0b54998e9705b79e8d3b75f57ec15d89503ede6a0",
+        "model_cycles": 345995,
+        "trace_sha256": "cc906bf07b4ee5482495b14f0e16a2977472ce72d93e7226c7f1fe85f1cd9bd0"
+      },
+      {
+        "case": "front-nonplanar-rotated-grid64",
+        "batch": 1,
+        "mode": 0,
+        "policy": "production",
+        "accepted": 0,
+        "admitted": true,
+        "outcome": 0,
+        "instructions": 22653,
+        "output_sha256": "0180cd13f42aab353778e17e3275831d05399a74983748df05d6f3a0ed1f379e",
+        "model_cycles": 22171,
+        "trace_sha256": "89aebc0859c91b6563f058939553022e12f320167b4bee5916cbf1c79cab59fa"
+      },
+      {
+        "case": "front-nonplanar-rotated-grid64",
+        "batch": 1,
+        "mode": 1,
+        "policy": "production",
+        "accepted": 1,
+        "admitted": true,
+        "outcome": 2,
+        "instructions": 15438,
+        "output_sha256": "0180cd13f42aab353778e17e3275831d05399a74983748df05d6f3a0ed1f379e",
+        "model_cycles": 13217,
+        "trace_sha256": "3962b4af1f95e1135e91b5520016b1e53ab4638b41bad9b44cd196bf41a3426c"
+      },
+      {
+        "case": "front-nonplanar-rotated-grid64",
+        "batch": 6,
+        "mode": 0,
+        "policy": "production",
+        "accepted": 0,
+        "admitted": true,
+        "outcome": 0,
+        "instructions": 135678,
+        "output_sha256": "e968a77992bcdbffb47b4f6d84eceb2310c9378bd140753528306a1240dc7254",
+        "model_cycles": 132766,
+        "trace_sha256": "f3e7ca7015a2e1e122db699eb63b0325ca1cbcec069f3b7de4acb384faa73712"
+      },
+      {
+        "case": "front-nonplanar-rotated-grid64",
+        "batch": 6,
+        "mode": 1,
+        "policy": "production",
+        "accepted": 6,
+        "admitted": true,
+        "outcome": 2,
+        "instructions": 85593,
+        "output_sha256": "e968a77992bcdbffb47b4f6d84eceb2310c9378bd140753528306a1240dc7254",
+        "model_cycles": 73182,
+        "trace_sha256": "83fe9a7b6228b8e1534728bec4207083f87855abed865cae10fff026feb7f8a5"
+      },
+      {
+        "case": "front-nonplanar-rotated-grid36",
+        "batch": 1,
+        "mode": 0,
+        "policy": "production",
+        "accepted": 0,
+        "admitted": true,
+        "outcome": 0,
+        "instructions": 11613,
+        "output_sha256": "3e952f2f44dc103143cd9aa56911ad794e598f0d11245c292210102f1b45a340",
+        "model_cycles": 11371,
+        "trace_sha256": "afca22b9cad3dad79fda527f6dd7dc2ae50ee3bb8039969900d88b1be01f2f79"
+      },
+      {
+        "case": "front-nonplanar-rotated-grid36",
+        "batch": 1,
+        "mode": 1,
+        "policy": "production",
+        "accepted": 1,
+        "admitted": true,
+        "outcome": 2,
+        "instructions": 10491,
+        "output_sha256": "3e952f2f44dc103143cd9aa56911ad794e598f0d11245c292210102f1b45a340",
+        "model_cycles": 9328,
+        "trace_sha256": "98c2c1331db9fac7aa5ae3fa477349012a10234365e75a15cad350c4fd208ad0"
+      },
+      {
+        "case": "front-nonplanar-rotated-grid36",
+        "batch": 13,
+        "mode": 0,
+        "policy": "production",
+        "accepted": 0,
+        "admitted": true,
+        "outcome": 0,
+        "instructions": 150393,
+        "output_sha256": "1382691c1a67e2d3439d6321c6c88257e0a9fc0545c9787ea5ff1ad4644f157f",
+        "model_cycles": 147199,
+        "trace_sha256": "c1c991afdedb46e7bf873173badf45bd1f2080085764c4c96b19b3ad55072927"
+      },
+      {
+        "case": "front-nonplanar-rotated-grid36",
+        "batch": 13,
+        "mode": 1,
+        "policy": "production",
+        "accepted": 13,
+        "admitted": true,
+        "outcome": 2,
+        "instructions": 119499,
+        "output_sha256": "1382691c1a67e2d3439d6321c6c88257e0a9fc0545c9787ea5ff1ad4644f157f",
+        "model_cycles": 106576,
+        "trace_sha256": "9f1039f6a555d4f02ca37f52a0f86a33153ae0621e518cc2d0aa74d95432288e"
+      }
+    ],
+    "world_selected_cases": [
+      {
+        "case": "3x3-rows",
+        "batch": 1,
+        "mode": 0,
+        "policy": "cpu2",
+        "vertices": 9,
+        "indices": 12,
+        "strips": 2,
+        "accepted": 0,
+        "instructions": 998,
+        "packet_sha256": "75d912c8ec849a51bbab98f5ac92c382bea23d416cd6457e5947abd1041601ef",
+        "model_cycles": 930,
+        "trace_sha256": "59025111f6913ee578b68a73f3bf43e2af7ffd516b68928815446f83a40a9a10"
+      },
+      {
+        "case": "3x3-rows",
+        "batch": 1,
+        "mode": 3,
+        "policy": "production-admission",
+        "vertices": 9,
+        "indices": 12,
+        "strips": 2,
+        "accepted": 0,
+        "admitted": false,
+        "instructions": 1024,
+        "proof_instructions": {
+          "prepare": 0,
+          "classify": 0,
+          "scan": 0
+        },
+        "packet_sha256": "75d912c8ec849a51bbab98f5ac92c382bea23d416cd6457e5947abd1041601ef",
+        "model_cycles": 966,
+        "trace_sha256": "ffcd13e2c1075cd6c8d3c420b33d9319b640868b12193878bda198cce962f912"
+      },
+      {
+        "case": "3x3-rows",
+        "batch": 6,
+        "mode": 0,
+        "policy": "cpu2",
+        "vertices": 9,
+        "indices": 12,
+        "strips": 2,
+        "accepted": 0,
+        "instructions": 5803,
+        "packet_sha256": "984a9d98a80208cdf5a237a43d7ef54e170a21d8cac53830fe06c1b74efe7e2f",
+        "model_cycles": 5415,
+        "trace_sha256": "22cdc79d1fa352f4942d1b988bcb3842b11f7c50b7b9ced8db6143f2cb7a9a85"
+      },
+      {
+        "case": "3x3-rows",
+        "batch": 6,
+        "mode": 3,
+        "policy": "production-admission",
+        "vertices": 9,
+        "indices": 12,
+        "strips": 2,
+        "accepted": 0,
+        "admitted": false,
+        "instructions": 5974,
+        "proof_instructions": {
+          "prepare": 0,
+          "classify": 0,
+          "scan": 0
+        },
+        "packet_sha256": "984a9d98a80208cdf5a237a43d7ef54e170a21d8cac53830fe06c1b74efe7e2f",
+        "model_cycles": 5651,
+        "trace_sha256": "a0f595a5ff0fe5ec049f16b84c93ffd4f588ab19d8b52ef05ef9e644152986fb"
+      },
+      {
+        "case": "6x6-triangles",
+        "batch": 1,
+        "mode": 0,
+        "policy": "cpu2",
+        "vertices": 36,
+        "indices": 150,
+        "strips": 50,
+        "accepted": 0,
+        "instructions": 13598,
+        "packet_sha256": "0bbbd421a5f44892acc99b15d3547316e405f7b032676b8910e111fb18c8bb99",
+        "model_cycles": 13899,
+        "trace_sha256": "34a791dfd333ac03ad9d13e2ac8c3bb2d4fa7f85929f61e5c2c2801f5c3a4f3a"
+      },
+      {
+        "case": "6x6-triangles",
+        "batch": 1,
+        "mode": 3,
+        "policy": "production-admission",
+        "vertices": 36,
+        "indices": 150,
+        "strips": 50,
+        "accepted": 1,
+        "admitted": true,
+        "instructions": 12169,
+        "proof_instructions": {
+          "prepare": 1313,
+          "classify": 1658,
+          "scan": 754
+        },
+        "packet_sha256": "0bbbd421a5f44892acc99b15d3547316e405f7b032676b8910e111fb18c8bb99",
+        "model_cycles": 10738,
+        "trace_sha256": "a07980bdad23b032f6ce8b1fbb4f2745654bce73e9a2a81d158df78a1df2280c"
+      },
+      {
+        "case": "6x6-triangles",
+        "batch": 6,
+        "mode": 0,
+        "policy": "cpu2",
+        "vertices": 36,
+        "indices": 150,
+        "strips": 50,
+        "accepted": 0,
+        "instructions": 81403,
+        "packet_sha256": "230d16827f5dbe136735cae1f3b7ef6a62b1a641c949bee1f2ce18705856e33e",
+        "model_cycles": 83229,
+        "trace_sha256": "cf5fd3a5289f6cc5370c1e5ea8a9b1a528dda9b06e5082e5c6f15dd04811959c"
+      },
+      {
+        "case": "6x6-triangles",
+        "batch": 6,
+        "mode": 3,
+        "policy": "production-admission",
+        "vertices": 36,
+        "indices": 150,
+        "strips": 50,
+        "accepted": 6,
+        "admitted": true,
+        "instructions": 66229,
+        "proof_instructions": {
+          "prepare": 1313,
+          "classify": 9948,
+          "scan": 4524
+        },
+        "packet_sha256": "230d16827f5dbe136735cae1f3b7ef6a62b1a641c949bee1f2ce18705856e33e",
+        "model_cycles": 58633,
+        "trace_sha256": "657f020d560f78fe0fab5fbaddc0df2e26eed800a8f0c19058f92e931c8be740"
+      },
+      {
+        "case": "7x7-triangles",
+        "batch": 1,
+        "mode": 0,
+        "policy": "cpu2",
+        "vertices": 49,
+        "indices": 216,
+        "strips": 72,
+        "accepted": 0,
+        "instructions": 19494,
+        "packet_sha256": "5ab2c35e1a9d1e0ceb8d79a0a6e4327071bb00b5e5989cc49ff4d7397a06fe35",
+        "model_cycles": 19927,
+        "trace_sha256": "1b9c78b7abd8223b7fe439010f6b489e06f3cec9824520dc6913e543f0714f4f"
+      },
+      {
+        "case": "7x7-triangles",
+        "batch": 1,
+        "mode": 3,
+        "policy": "production-admission",
+        "vertices": 49,
+        "indices": 216,
+        "strips": 72,
+        "accepted": 1,
+        "admitted": true,
+        "instructions": 15166,
+        "proof_instructions": {
+          "prepare": 1313,
+          "classify": 1658,
+          "scan": 754
+        },
+        "packet_sha256": "5ab2c35e1a9d1e0ceb8d79a0a6e4327071bb00b5e5989cc49ff4d7397a06fe35",
+        "model_cycles": 13142,
+        "trace_sha256": "5651fefc88413fe5632b99e21cb393a8e4428a6e474bac7433b8a1fb4074ea50"
+      },
+      {
+        "case": "7x7-triangles",
+        "batch": 6,
+        "mode": 0,
+        "policy": "cpu2",
+        "vertices": 49,
+        "indices": 216,
+        "strips": 72,
+        "accepted": 0,
+        "instructions": 116779,
+        "packet_sha256": "916a019b7fb24d22dbf2f7ef95779475b8bd9ae78538624c819985aceebd41da",
+        "model_cycles": 119397,
+        "trace_sha256": "7022545f6a71e924405b04c9d618574e8a307fc74811a614b567a09f4b12e510"
+      },
+      {
+        "case": "7x7-triangles",
+        "batch": 6,
+        "mode": 3,
+        "policy": "production-admission",
+        "vertices": 49,
+        "indices": 216,
+        "strips": 72,
+        "accepted": 6,
+        "admitted": true,
+        "instructions": 84211,
+        "proof_instructions": {
+          "prepare": 1313,
+          "classify": 9948,
+          "scan": 4524
+        },
+        "packet_sha256": "916a019b7fb24d22dbf2f7ef95779475b8bd9ae78538624c819985aceebd41da",
+        "model_cycles": 73057,
+        "trace_sha256": "3ac6336965cdab89611f8b8e8d858d89954b5fe264b535a7f957d930bd317d99"
+      },
+      {
+        "case": "8x8-triangles",
+        "batch": 1,
+        "mode": 0,
+        "policy": "cpu2",
+        "vertices": 64,
+        "indices": 294,
+        "strips": 98,
+        "accepted": 0,
+        "instructions": 26462,
+        "packet_sha256": "d234e7e0f76c6c29d20d8ffe665606c4ff9c225207745a37870efb5bdf516f3f",
+        "model_cycles": 27051,
+        "trace_sha256": "0e07abdcce0c1533e53c4b932829d4f3e535ca9443f80f3ef57793d6bee61cc6"
+      },
+      {
+        "case": "8x8-triangles",
+        "batch": 1,
+        "mode": 3,
+        "policy": "production-admission",
+        "vertices": 64,
+        "indices": 294,
+        "strips": 98,
+        "accepted": 1,
+        "admitted": true,
+        "instructions": 18685,
+        "proof_instructions": {
+          "prepare": 1313,
+          "classify": 1658,
+          "scan": 754
+        },
+        "packet_sha256": "d234e7e0f76c6c29d20d8ffe665606c4ff9c225207745a37870efb5bdf516f3f",
+        "model_cycles": 15962,
+        "trace_sha256": "5c34d191231f2316e90623e44f82bc86afda51dd33c5b30f9a96cdb67683b6a6"
+      },
+      {
+        "case": "8x8-triangles",
+        "batch": 6,
+        "mode": 0,
+        "policy": "cpu2",
+        "vertices": 64,
+        "indices": 294,
+        "strips": 98,
+        "accepted": 0,
+        "instructions": 158587,
+        "packet_sha256": "52bf9b5e065ef1a098a200d748a6705a72c6ac2e34b06ff4e95de996943b331c",
+        "model_cycles": 162141,
+        "trace_sha256": "86047c8c388caf3a05f68d3aa54bba09e3d28653aa4586d942d89433855b6101"
+      },
+      {
+        "case": "8x8-triangles",
+        "batch": 6,
+        "mode": 3,
+        "policy": "production-admission",
+        "vertices": 64,
+        "indices": 294,
+        "strips": 98,
+        "accepted": 6,
+        "admitted": true,
+        "instructions": 105325,
+        "proof_instructions": {
+          "prepare": 1313,
+          "classify": 9948,
+          "scan": 4524
+        },
+        "packet_sha256": "52bf9b5e065ef1a098a200d748a6705a72c6ac2e34b06ff4e95de996943b331c",
+        "model_cycles": 89977,
+        "trace_sha256": "f6a89e4b7a79cadfdadda63de7e91f4c70bef4be0c41e711e4205213160a87c8"
+      },
+      {
+        "case": "8x8-quads",
+        "batch": 1,
+        "mode": 0,
+        "policy": "cpu2",
+        "vertices": 64,
+        "indices": 196,
+        "strips": 49,
+        "accepted": 0,
+        "instructions": 15437,
+        "packet_sha256": "ef35c6a010b800e1dc1a51a78d1ba4daa30461d847a0a3fe5bb48ce0bcf2f61a",
+        "model_cycles": 15095,
+        "trace_sha256": "bad039e349ddc29c05071f38104aeb8c39013002e355c57f1c4c665d0b151367"
+      },
+      {
+        "case": "8x8-quads",
+        "batch": 1,
+        "mode": 3,
+        "policy": "production-admission",
+        "vertices": 64,
+        "indices": 196,
+        "strips": 49,
+        "accepted": 1,
+        "admitted": true,
+        "instructions": 14863,
+        "proof_instructions": {
+          "prepare": 1313,
+          "classify": 1658,
+          "scan": 754
+        },
+        "packet_sha256": "ef35c6a010b800e1dc1a51a78d1ba4daa30461d847a0a3fe5bb48ce0bcf2f61a",
+        "model_cycles": 13316,
+        "trace_sha256": "8bed880b16b2c7ceadd2eb516a2204305bae4e9382114a971fb75287a1e8c957"
+      },
+      {
+        "case": "8x8-quads",
+        "batch": 6,
+        "mode": 0,
+        "policy": "cpu2",
+        "vertices": 64,
+        "indices": 196,
+        "strips": 49,
+        "accepted": 0,
+        "instructions": 92437,
+        "packet_sha256": "fdcd5b311dfecd5c05ea7d2c6763754594fad4ed45d5037e8f222c638df6e2e2",
+        "model_cycles": 90405,
+        "trace_sha256": "15f7732d25306472ced36ed26852c1cdba9366291b8fcc2a6b6c343155491a4f"
+      },
+      {
+        "case": "8x8-quads",
+        "batch": 6,
+        "mode": 3,
+        "policy": "production-admission",
+        "vertices": 64,
+        "indices": 196,
+        "strips": 49,
+        "accepted": 6,
+        "admitted": true,
+        "instructions": 82393,
+        "proof_instructions": {
+          "prepare": 1313,
+          "classify": 9948,
+          "scan": 4524
+        },
+        "packet_sha256": "fdcd5b311dfecd5c05ea7d2c6763754594fad4ed45d5037e8f222c638df6e2e2",
+        "model_cycles": 74101,
+        "trace_sha256": "0a9fd58fd378d6698a4277f4c7cc4ebee58b234c679830b18099d2b8354e777c"
+      }
+    ],
+    "actor_receipt": {
+      "path": "cone-pr56-rooms-qualified/target/target-controls.json",
+      "sha256": "b671330045ace10e251adbc1f5f1f99b7d0491202f82295f67699fed9ce8a3e1"
+    },
+    "world_receipt": {
+      "path": "cone-pr56-rooms-qualified/world-target/world-target-controls.json",
+      "sha256": "8cf093a7abb89c9a882ec072ef8a15bdd5ffba0bd2bc0a5887a1e44869918097"
+    }
+  },
+  "instruction_cache": {
+    "receipt": {
+      "path": "cone-pr56-final-icache/icache-sensitivity.json",
+      "sha256": "2ed442b78218ffd207e860e4d0dc4d5492997444f7eabe575273e2ce4977ab4c"
+    },
+    "configuration": "hwsim default cold 8 KiB direct mapped, 32-byte lines, IIX=0",
+    "flags": [
+      "--perfect-dc",
+      "--no-dma",
+      "--sq-cost",
+      "0"
+    ],
+    "limits": "Only these synthetic instruction traces and their standalone link layout. No other renderer code or data traffic; no warmed scene cache, PVR, DMA, hardware time, or FPS claim.",
+    "cases": [
+      {
+        "case": "front-grid64-294indices",
+        "batch": 1,
+        "mode": 0,
+        "instructions": 22653,
+        "accepted": 0,
+        "perfect_ic_cycles": 22171,
+        "default_ic_cycles": 22739,
+        "instruction_line_fills": 43,
+        "trace_sha256": "89aebc0859c91b6563f058939553022e12f320167b4bee5916cbf1c79cab59fa"
+      },
+      {
+        "case": "front-grid64-294indices",
+        "batch": 1,
+        "mode": 1,
+        "instructions": 15403,
+        "accepted": 1,
+        "perfect_ic_cycles": 13227,
+        "default_ic_cycles": 16416,
+        "instruction_line_fills": 268,
+        "trace_sha256": "c4d2955f9c93385ea01326adcb71a04ef2a7cf41b1cae9f296903917857b2853"
+      },
+      {
+        "case": "front-grid64-294indices",
+        "batch": 6,
+        "mode": 0,
+        "instructions": 135678,
+        "accepted": 0,
+        "perfect_ic_cycles": 132766,
+        "default_ic_cycles": 133769,
+        "instruction_line_fills": 73,
+        "trace_sha256": "f3e7ca7015a2e1e122db699eb63b0325ca1cbcec069f3b7de4acb384faa73712"
+      },
+      {
+        "case": "front-grid64-294indices",
+        "batch": 6,
+        "mode": 1,
+        "instructions": 85438,
+        "accepted": 6,
+        "perfect_ic_cycles": 73252,
+        "default_ic_cycles": 80036,
+        "instruction_line_fills": 578,
+        "trace_sha256": "1e76f13757d21b40b23a24069dffd6a7eaefd8c29cc6c651de74a28a4265f754"
+      },
+      {
+        "case": "off-axis-grid64",
+        "batch": 1,
+        "mode": 0,
+        "instructions": 22653,
+        "accepted": 0,
+        "perfect_ic_cycles": 22171,
+        "default_ic_cycles": 22739,
+        "instruction_line_fills": 43,
+        "trace_sha256": "89aebc0859c91b6563f058939553022e12f320167b4bee5916cbf1c79cab59fa"
+      },
+      {
+        "case": "off-axis-grid64",
+        "batch": 1,
+        "mode": 1,
+        "instructions": 15421,
+        "accepted": 1,
+        "perfect_ic_cycles": 13233,
+        "default_ic_cycles": 16432,
+        "instruction_line_fills": 269,
+        "trace_sha256": "22f3a8f891e031bfa316c2c3f558f55e161c47263a45e2a4584d627b483f1429"
+      },
+      {
+        "case": "front-nonplanar-rotated-grid64",
+        "batch": 1,
+        "mode": 0,
+        "instructions": 22653,
+        "accepted": 0,
+        "perfect_ic_cycles": 22171,
+        "default_ic_cycles": 22739,
+        "instruction_line_fills": 43,
+        "trace_sha256": "89aebc0859c91b6563f058939553022e12f320167b4bee5916cbf1c79cab59fa"
+      },
+      {
+        "case": "front-nonplanar-rotated-grid64",
+        "batch": 1,
+        "mode": 1,
+        "instructions": 15438,
+        "accepted": 1,
+        "perfect_ic_cycles": 13217,
+        "default_ic_cycles": 16398,
+        "instruction_line_fills": 268,
+        "trace_sha256": "3962b4af1f95e1135e91b5520016b1e53ab4638b41bad9b44cd196bf41a3426c"
+      },
+      {
+        "case": "front-nonplanar-rotated-grid36",
+        "batch": 1,
+        "mode": 0,
+        "instructions": 11613,
+        "accepted": 0,
+        "perfect_ic_cycles": 11371,
+        "default_ic_cycles": 11939,
+        "instruction_line_fills": 43,
+        "trace_sha256": "afca22b9cad3dad79fda527f6dd7dc2ae50ee3bb8039969900d88b1be01f2f79"
+      },
+      {
+        "case": "front-nonplanar-rotated-grid36",
+        "batch": 1,
+        "mode": 1,
+        "instructions": 10491,
+        "accepted": 1,
+        "perfect_ic_cycles": 9328,
+        "default_ic_cycles": 12509,
+        "instruction_line_fills": 268,
+        "trace_sha256": "98c2c1331db9fac7aa5ae3fa477349012a10234365e75a15cad350c4fd208ad0"
+      }
+    ]
+  },
+  "public_world_census": {
+    "receipt": {
+      "path": "cone-world-asset-census-final/asset-census.json",
+      "sha256": "c7a78fc078baa212ba27e5934bda05ed0cb47b289b5c61e96aaef3b8f6fa4c9c"
+    },
+    "source": "https://github.com/lamb2k/re4dc/releases/tag/test-a2477bd2-20261022",
+    "scope": "Count scenery proof/admission coverage without running or republishing assets.\n\nRun the actual scenery producer in memory and the actual C++ cost predicate.\nThe receipt contains counts and source hashes only. It is not a camera hit\nrate, numerical acceptance rate, emulator measurement, or frame-rate result.\n",
+    "archive": {
+      "source": "https://github.com/lamb2k/re4dc/releases/download/test-a2477bd2-20261022/RE4DC-Test22-a2477bd2-Build-Assets.zip",
+      "archive_bytes": 264524914,
+      "release_advertised_sha256": "850d8d22375962839b366a623e2782ab49772e266b11d5ac716f8a01742815c5",
+      "complete_archive_sha256_verified": false,
+      "downloaded_bytes": 2296368
+    },
+    "source_sha256": {
+      "scn21_build.py": "1ff089c452997836192890aeead28a6bb5ecf61da2a70aa3e6c0d92e184bc86c",
+      "backface_certificate.hpp": "c2590fd2c21ab0312fe86d4ba3b43498458fba7f16a194686b9db5698469c5b3",
+      "asset_census.py": "226bacaac31e8daea99255bd00240076b1dca852395b20a82a2fc01280195aae"
+    },
+    "rooms": [
+      {
+        "room": "r10c",
+        "groups_per_meshlet": 1,
+        "meshlets": 1144,
+        "nonempty_groups": 1144,
+        "valid_proof_groups": 195,
+        "cost_eligible_groups": 0,
+        "valid_and_cost_eligible": 0,
+        "original_cost_eligible": 0,
+        "max_vertices": 64,
+        "max_indices": 119,
+        "max_strips": 28,
+        "front_trailer_bytes": 9696,
+        "source_sha256": {
+          "ps2-world.re4mesh": "6902b02cab0bf924c9efe128a1cfec29b3ccbd3b1367cad4f89dbffa20d2db7f",
+          "ps2-world.r4pw": "83d90b577e4664109ca75f00f8bfd5606c0a5d6ecb4efe7e61ad89a4d7f90685"
+        }
+      },
+      {
+        "room": "r10c",
+        "groups_per_meshlet": 4,
+        "meshlets": 1144,
+        "nonempty_groups": 4230,
+        "valid_proof_groups": 3412,
+        "cost_eligible_groups": 0,
+        "valid_and_cost_eligible": 0,
+        "original_cost_eligible": 0,
+        "max_vertices": 64,
+        "max_indices": 103,
+        "max_strips": 18,
+        "front_trailer_bytes": 37152,
+        "source_sha256": {
+          "ps2-world.re4mesh": "6902b02cab0bf924c9efe128a1cfec29b3ccbd3b1367cad4f89dbffa20d2db7f",
+          "ps2-world.r4pw": "83d90b577e4664109ca75f00f8bfd5606c0a5d6ecb4efe7e61ad89a4d7f90685"
+        }
+      },
+      {
+        "room": "r111",
+        "groups_per_meshlet": 1,
+        "meshlets": 1657,
+        "nonempty_groups": 1657,
+        "valid_proof_groups": 208,
+        "cost_eligible_groups": 0,
+        "valid_and_cost_eligible": 0,
+        "original_cost_eligible": 0,
+        "max_vertices": 64,
+        "max_indices": 121,
+        "max_strips": 25,
+        "front_trailer_bytes": 13808,
+        "source_sha256": {
+          "ps2-world.re4mesh": "bf552dcf8a561e5f94f0d5bebbcc344fdc5bf63e3f5e1c2b617d4f5341bc08d9",
+          "ps2-world.r4pw": "e64301ebc3f212a47257b18da246ddbac317f0b82f039943cb9c22f86c74760d"
+        }
+      },
+      {
+        "room": "r111",
+        "groups_per_meshlet": 4,
+        "meshlets": 1657,
+        "nonempty_groups": 6116,
+        "valid_proof_groups": 5282,
+        "cost_eligible_groups": 0,
+        "valid_and_cost_eligible": 0,
+        "original_cost_eligible": 0,
+        "max_vertices": 64,
+        "max_indices": 72,
+        "max_strips": 15,
+        "front_trailer_bytes": 53568,
+        "source_sha256": {
+          "ps2-world.re4mesh": "bf552dcf8a561e5f94f0d5bebbcc344fdc5bf63e3f5e1c2b617d4f5341bc08d9",
+          "ps2-world.r4pw": "e64301ebc3f212a47257b18da246ddbac317f0b82f039943cb9c22f86c74760d"
+        }
+      },
+      {
+        "room": "r200",
+        "groups_per_meshlet": 1,
+        "meshlets": 691,
+        "nonempty_groups": 691,
+        "valid_proof_groups": 166,
+        "cost_eligible_groups": 0,
+        "valid_and_cost_eligible": 0,
+        "original_cost_eligible": 0,
+        "max_vertices": 64,
+        "max_indices": 129,
+        "max_strips": 26,
+        "front_trailer_bytes": 6080,
+        "source_sha256": {
+          "ps2-world.re4mesh": "623cd7ecd037fc50c6c483e96e5505093d9b92df72f691e8a047d931f0eb06f6",
+          "ps2-world.r4pw": "308d4ae13296d43300a1c6a2204a3faa6e662cb3d2eed684881f07617eed3d30"
+        }
+      },
+      {
+        "room": "r200",
+        "groups_per_meshlet": 4,
+        "meshlets": 691,
+        "nonempty_groups": 2551,
+        "valid_proof_groups": 1822,
+        "cost_eligible_groups": 0,
+        "valid_and_cost_eligible": 0,
+        "original_cost_eligible": 0,
+        "max_vertices": 64,
+        "max_indices": 90,
+        "max_strips": 20,
+        "front_trailer_bytes": 22656,
+        "source_sha256": {
+          "ps2-world.re4mesh": "623cd7ecd037fc50c6c483e96e5505093d9b92df72f691e8a047d931f0eb06f6",
+          "ps2-world.r4pw": "308d4ae13296d43300a1c6a2204a3faa6e662cb3d2eed684881f07617eed3d30"
+        }
+      }
+    ],
+    "four_group_totals": {
+      "nonempty_groups": 12897,
+      "valid_proof_groups": 10516,
+      "cost_eligible_groups": 0
+    }
+  },
+  "public_actor_synthetic_poses": {
+    "receipt": {
+      "path": "cone-pr56-final-asset-poses/asset-pose-study.json",
+      "sha256": "6b332fe744ea8dbb2b038353d52c3828ccf2e69d59c4c7d75cdf76a17773879c"
+    },
+    "input_scope": "Private raw geometry export from a hypothetical enlarged-capacity cone-enabled conversion of public release FE03 tuples. This is solely for synthetic-camera compiled-helper correctness/cost experiments, not a scene/current-pose/FPS claim. Keep outside Git.",
+    "limits": "Synthetic aligned/tilted cameras and host-generated projected caches on actual supplied converted index/position groups. Mode4 deliberately bypasses production cost admission. No game animation, camera trace, rendering, hardware or frame-rate measurement.",
+    "input_sha256": "b87c8dab1e636f9594718f376e00b5126d53f4bf6e7289ce224d75165eaf4620",
+    "input_source_sha256": {
+      "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/game/platform/native_actor_fast.cpp": "6275140a72510b6d6fd22746d820f313876de2aa237fba2d9d4e0d880de87686",
+      "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/game/platform/backface_certificate.cpp": "7e0800ea04c5304ca1231c8ad5181d3b096cce1de4449bf3ee2f99f3cdde9cac",
+      "/workspace/scratch/c4e1a2818fde/re4dc-cone/port/dreamcast/room/backface_certificate.hpp": "c58939149dbe7573b1a5934f60fab57114f219c75a7a20d2f98ce95c2a1c86e5",
+      "/workspace/scratch/c4e1a2818fde/backface-tools/public-actor-census-01/reconverted.cpp": "84f443514987eb7fee4a60e164d98a573b5055afc8a68cc184c7138af8e374bd",
+      "/workspace/scratch/c4e1a2818fde/backface-tools/public-test22-selected/re4dc-assets/ps2leon/ps2leon_runtime.h": "4bc27368debda1009875c0d69e9fa15da4589f7825385eb9179ca3360a219d22",
+      "/workspace/scratch/c4e1a2818fde/backface-tools/public-test22-selected/re4dc-assets/ps2ganado/ganado874_runtime.h": "344b25a04fb9ae2f15fff679148d56689c9b647fc7e542328ac18dda8fbfb996"
+    },
+    "certificate_source_sha256": {
+      "port/dreamcast/game/platform/backface_certificate.cpp": "ecc33eee3dd91a3eacb0734213716a223ba1b51b36c5cad7cb951c61406c7d76",
+      "port/dreamcast/room/backface_certificate.hpp": "c2590fd2c21ab0312fe86d4ba3b43498458fba7f16a194686b9db5698469c5b3",
+      "port/dreamcast/room/backface_sh4.hpp": "1774570b3f36ac41e8e021d35c592af9b78198659952eb704068dd7abdf5ddd2"
+    },
+    "groups": 4,
+    "poses": 36,
+    "complete_packet_comparisons": 72,
+    "all_front_poses": 36,
+    "accepted_poses": 0,
+    "geometric_declines": 8,
+    "projected_bound_declines": 28,
+    "cases": [
+      {
+        "group": "ps2leon-3-4",
+        "angle_degrees": -15,
+        "distance_factor": 1.25,
+        "vertices": 125,
+        "indices": 276,
+        "strips": 59,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 0,
+        "cpu2_cycles": 16687,
+        "ungated_proof_cycles": 19338,
+        "packet_sha256": "58085ac0192e7bfd256e63953cd49381790f231d52a5926c34ea7bcb17128a73"
+      },
+      {
+        "group": "ps2leon-3-4",
+        "angle_degrees": -15,
+        "distance_factor": 2,
+        "vertices": 125,
+        "indices": 276,
+        "strips": 59,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 16687,
+        "ungated_proof_cycles": 30387,
+        "packet_sha256": "e608e91283f3c1d488d8f4d462a537a653a7fc23a42e0b2de257938d07ab8635"
+      },
+      {
+        "group": "ps2leon-3-4",
+        "angle_degrees": -15,
+        "distance_factor": 4,
+        "vertices": 125,
+        "indices": 276,
+        "strips": 59,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 16687,
+        "ungated_proof_cycles": 30387,
+        "packet_sha256": "408c059a1ff0d647caa35b6be4a31d2786b9e69d6ceaa4d01c79968770a75553"
+      },
+      {
+        "group": "ps2leon-3-4",
+        "angle_degrees": 0,
+        "distance_factor": 1.25,
+        "vertices": 125,
+        "indices": 276,
+        "strips": 59,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 16687,
+        "ungated_proof_cycles": 30383,
+        "packet_sha256": "89ec5ca386fdf9c21f58a1e99e8c4ae699e7d96a34030df667c260a336d5f132"
+      },
+      {
+        "group": "ps2leon-3-4",
+        "angle_degrees": 0,
+        "distance_factor": 2,
+        "vertices": 125,
+        "indices": 276,
+        "strips": 59,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 16687,
+        "ungated_proof_cycles": 30383,
+        "packet_sha256": "2b412d5f67282c2fdc2fbf512a5a3c1f6835a42afd52a2f82315e87d46c475d5"
+      },
+      {
+        "group": "ps2leon-3-4",
+        "angle_degrees": 0,
+        "distance_factor": 4,
+        "vertices": 125,
+        "indices": 276,
+        "strips": 59,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 16687,
+        "ungated_proof_cycles": 30383,
+        "packet_sha256": "488982e9acf32e9895fb0baec65cb4d55bc1987f60bd25089124f7bbe2801c01"
+      },
+      {
+        "group": "ps2leon-3-4",
+        "angle_degrees": 15,
+        "distance_factor": 1.25,
+        "vertices": 125,
+        "indices": 276,
+        "strips": 59,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 0,
+        "cpu2_cycles": 16687,
+        "ungated_proof_cycles": 19334,
+        "packet_sha256": "44e1d8685451bca4f41644f09a08a1eb8464717af4ecd8270c1e04728e6ce759"
+      },
+      {
+        "group": "ps2leon-3-4",
+        "angle_degrees": 15,
+        "distance_factor": 2,
+        "vertices": 125,
+        "indices": 276,
+        "strips": 59,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 16687,
+        "ungated_proof_cycles": 30378,
+        "packet_sha256": "33c1fc669e6df1ff6d68845d25a8da6f50bb11c294ac1fb1ca05fec36934d48d"
+      },
+      {
+        "group": "ps2leon-3-4",
+        "angle_degrees": 15,
+        "distance_factor": 4,
+        "vertices": 125,
+        "indices": 276,
+        "strips": 59,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 16687,
+        "ungated_proof_cycles": 30378,
+        "packet_sha256": "87d5a91e436b37da8562f428cbb2f19233e6934e5c801e746641cfbc364f63a6"
+      },
+      {
+        "group": "ps2leon-3-13",
+        "angle_degrees": -15,
+        "distance_factor": 1.25,
+        "vertices": 33,
+        "indices": 68,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 0,
+        "cpu2_cycles": 4165,
+        "ungated_proof_cycles": 6816,
+        "packet_sha256": "8eee53609cced4c7e69de82970551620191259bffe721e9661b46ad8cec7ef1d"
+      },
+      {
+        "group": "ps2leon-3-13",
+        "angle_degrees": -15,
+        "distance_factor": 2,
+        "vertices": 33,
+        "indices": 68,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 4165,
+        "ungated_proof_cycles": 11243,
+        "packet_sha256": "7b967851864822d3a903b2d575f4c3098c2384e936c8b8e45ad9bfb87117c9e9"
+      },
+      {
+        "group": "ps2leon-3-13",
+        "angle_degrees": -15,
+        "distance_factor": 4,
+        "vertices": 33,
+        "indices": 68,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 4165,
+        "ungated_proof_cycles": 11243,
+        "packet_sha256": "e1aa54199d928ac2dbfcac3c65e416546690691e289c244b5bd1a7387f9665d1"
+      },
+      {
+        "group": "ps2leon-3-13",
+        "angle_degrees": 0,
+        "distance_factor": 1.25,
+        "vertices": 33,
+        "indices": 68,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 4165,
+        "ungated_proof_cycles": 11239,
+        "packet_sha256": "5aff7c4afdbe53c3c0f8f2df28a28c45cfb93733a0de601b10645998a7580bed"
+      },
+      {
+        "group": "ps2leon-3-13",
+        "angle_degrees": 0,
+        "distance_factor": 2,
+        "vertices": 33,
+        "indices": 68,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 4165,
+        "ungated_proof_cycles": 11238,
+        "packet_sha256": "7f4331d6d7292c2d92e287f45e1cae334ba061420daf3f771366c1903483645f"
+      },
+      {
+        "group": "ps2leon-3-13",
+        "angle_degrees": 0,
+        "distance_factor": 4,
+        "vertices": 33,
+        "indices": 68,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 4165,
+        "ungated_proof_cycles": 11240,
+        "packet_sha256": "1aeca2a70234aca0d90af3e1f2a26d317d64189a6035a1a85cb677412da0dc71"
+      },
+      {
+        "group": "ps2leon-3-13",
+        "angle_degrees": 15,
+        "distance_factor": 1.25,
+        "vertices": 33,
+        "indices": 68,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 0,
+        "cpu2_cycles": 4165,
+        "ungated_proof_cycles": 6812,
+        "packet_sha256": "a52d04518f593eedd4bb7e26d52be4b5060284cb99eb4dee0a9873133a59a307"
+      },
+      {
+        "group": "ps2leon-3-13",
+        "angle_degrees": 15,
+        "distance_factor": 2,
+        "vertices": 33,
+        "indices": 68,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 4165,
+        "ungated_proof_cycles": 11237,
+        "packet_sha256": "f79fbbe26be63ee40dc612721dbd04cd10b49181385e4e030d6f9602790e4774"
+      },
+      {
+        "group": "ps2leon-3-13",
+        "angle_degrees": 15,
+        "distance_factor": 4,
+        "vertices": 33,
+        "indices": 68,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 4165,
+        "ungated_proof_cycles": 11240,
+        "packet_sha256": "743f3a4e0cda216f27d6b9c2fb27c5d83de199eed950c58a65af15f16f8b0f59"
+      },
+      {
+        "group": "ps2leon-4-1",
+        "angle_degrees": -15,
+        "distance_factor": 1.25,
+        "vertices": 89,
+        "indices": 159,
+        "strips": 38,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 0,
+        "cpu2_cycles": 10176,
+        "ungated_proof_cycles": 12833,
+        "packet_sha256": "5c56bfadc3e5f0ca81f0892aca05f89430f36e6960a13a95fc938daa6cba7e51"
+      },
+      {
+        "group": "ps2leon-4-1",
+        "angle_degrees": -15,
+        "distance_factor": 2,
+        "vertices": 89,
+        "indices": 159,
+        "strips": 38,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 10176,
+        "ungated_proof_cycles": 21292,
+        "packet_sha256": "73d6c9964c1401549c7039d3da906af79a74730b9fa6cd62d8e9e3f81d994205"
+      },
+      {
+        "group": "ps2leon-4-1",
+        "angle_degrees": -15,
+        "distance_factor": 4,
+        "vertices": 89,
+        "indices": 159,
+        "strips": 38,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 10176,
+        "ungated_proof_cycles": 21292,
+        "packet_sha256": "5178acb1720001d27b0c49ea072d5e85e1701503a516f532bd73a18186394a04"
+      },
+      {
+        "group": "ps2leon-4-1",
+        "angle_degrees": 0,
+        "distance_factor": 1.25,
+        "vertices": 89,
+        "indices": 159,
+        "strips": 38,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 10176,
+        "ungated_proof_cycles": 21288,
+        "packet_sha256": "932350561a5c31f0c06ee2453414d62f43f8b3ca63f0f29a5ebc05dbe77f4677"
+      },
+      {
+        "group": "ps2leon-4-1",
+        "angle_degrees": 0,
+        "distance_factor": 2,
+        "vertices": 89,
+        "indices": 159,
+        "strips": 38,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 10176,
+        "ungated_proof_cycles": 21288,
+        "packet_sha256": "9b45ef2cc513d6a4817418cc0f02e8d9d965afd908fdce8eda3c0605f9697700"
+      },
+      {
+        "group": "ps2leon-4-1",
+        "angle_degrees": 0,
+        "distance_factor": 4,
+        "vertices": 89,
+        "indices": 159,
+        "strips": 38,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 10176,
+        "ungated_proof_cycles": 21288,
+        "packet_sha256": "e32757215a08523a811247ea0ff062d1e090188e0922935f6fa0569863589412"
+      },
+      {
+        "group": "ps2leon-4-1",
+        "angle_degrees": 15,
+        "distance_factor": 1.25,
+        "vertices": 89,
+        "indices": 159,
+        "strips": 38,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 0,
+        "cpu2_cycles": 10176,
+        "ungated_proof_cycles": 12829,
+        "packet_sha256": "eec0814007025b5cdc7b5eb89ee2c94ed18f6102cffee2eaac42eca3b25a8ae7"
+      },
+      {
+        "group": "ps2leon-4-1",
+        "angle_degrees": 15,
+        "distance_factor": 2,
+        "vertices": 89,
+        "indices": 159,
+        "strips": 38,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 10176,
+        "ungated_proof_cycles": 21289,
+        "packet_sha256": "23052cad4f576f9406450298ca7da91bc8384d3d77c7e8bdc2a99e8803f35f2f"
+      },
+      {
+        "group": "ps2leon-4-1",
+        "angle_degrees": 15,
+        "distance_factor": 4,
+        "vertices": 89,
+        "indices": 159,
+        "strips": 38,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 10176,
+        "ungated_proof_cycles": 21289,
+        "packet_sha256": "afdee1074998c814dbec80e34c89303052b9262605a0fc586dd41eb673c0046c"
+      },
+      {
+        "group": "ganado874-1-9",
+        "angle_degrees": -15,
+        "distance_factor": 1.25,
+        "vertices": 41,
+        "indices": 60,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 0,
+        "cpu2_cycles": 3893,
+        "ungated_proof_cycles": 6546,
+        "packet_sha256": "b50c71dba9afca074a75108facfa290e01baa8d2201694777736d87dab409770"
+      },
+      {
+        "group": "ganado874-1-9",
+        "angle_degrees": -15,
+        "distance_factor": 2,
+        "vertices": 41,
+        "indices": 60,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 3893,
+        "ungated_proof_cycles": 11551,
+        "packet_sha256": "bcf093ccf072fd9f0e755f9ad246e7d0c54d1354c9350f13a29352fcaa45d1ae"
+      },
+      {
+        "group": "ganado874-1-9",
+        "angle_degrees": -15,
+        "distance_factor": 4,
+        "vertices": 41,
+        "indices": 60,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 3893,
+        "ungated_proof_cycles": 11554,
+        "packet_sha256": "c354f3c71d984656ee48244b02c1ce97160bba7f43d0102c58811950eacb422b"
+      },
+      {
+        "group": "ganado874-1-9",
+        "angle_degrees": 0,
+        "distance_factor": 1.25,
+        "vertices": 41,
+        "indices": 60,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 3893,
+        "ungated_proof_cycles": 11550,
+        "packet_sha256": "f586a28540e8d1ee21d2138861be75571790b58afb28c591e8c08907d61db184"
+      },
+      {
+        "group": "ganado874-1-9",
+        "angle_degrees": 0,
+        "distance_factor": 2,
+        "vertices": 41,
+        "indices": 60,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 3893,
+        "ungated_proof_cycles": 11551,
+        "packet_sha256": "f2aac7a196a1c8938514dc217397e34f49a077a4b6f3f42836b5cc4303179faa"
+      },
+      {
+        "group": "ganado874-1-9",
+        "angle_degrees": 0,
+        "distance_factor": 4,
+        "vertices": 41,
+        "indices": 60,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 3893,
+        "ungated_proof_cycles": 11553,
+        "packet_sha256": "291d9e26f39f216b57070e6bcf0d33c14f6485c8e0bd44fb202b59c3d30683f5"
+      },
+      {
+        "group": "ganado874-1-9",
+        "angle_degrees": 15,
+        "distance_factor": 1.25,
+        "vertices": 41,
+        "indices": 60,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 0,
+        "cpu2_cycles": 3893,
+        "ungated_proof_cycles": 6542,
+        "packet_sha256": "e4c2cf62efcbf9909dcf73b89df7ed3e6484f838fe32613c0c9124cf9ae0a4ca"
+      },
+      {
+        "group": "ganado874-1-9",
+        "angle_degrees": 15,
+        "distance_factor": 2,
+        "vertices": 41,
+        "indices": 60,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 3893,
+        "ungated_proof_cycles": 11548,
+        "packet_sha256": "518a8d39f04cfc14a58e9b0f668eb30f4219cd3e97b4f84919eae77b7215b8ba"
+      },
+      {
+        "group": "ganado874-1-9",
+        "angle_degrees": 15,
+        "distance_factor": 4,
+        "vertices": 41,
+        "indices": 60,
+        "strips": 14,
+        "all_front": true,
+        "accepted": 0,
+        "outcome": 2,
+        "cpu2_cycles": 3893,
+        "ungated_proof_cycles": 11549,
+        "packet_sha256": "c9f407b1b15326db3966d2fd2b99034b00dba584d69e31ad9818b4cd760b7efd"
+      }
+    ]
+  },
+  "memory": {
+    "helper_executable_bytes": 12456,
+    "original_pr_helper_executable_bytes": 14340,
+    "whole_game_ram_qualified": false,
+    "room_trailer_format_unchanged": true,
+    "limitation": "Object text and per-room trailer counts do not establish a final linked-game RAM delta or solve reported roughly 1.3 KiB r100 headroom."
+  },
+  "limitations": [
+    "No representative scene hit, game frame-time improvement, Flycast run, physical console or full-game RAM qualification.",
+    "The public world census has zero cost-eligible groups and the supplied actor groups have zero acceptance even with cost admission bypassed.",
+    "The 6x6 actor case saves modeled cycles with perfect caches but loses in the standalone cold instruction-cache replay.",
+    "Late numerical declines retain exact CPU2 output but can substantially increase cost.",
+    "Camera poses and caches are synthetic; no target FTRV/FSRRA or animation execution is claimed.",
+    "Target arithmetic execution is RN with DN=1. RZ is checked through analytic envelopes and exact-rational experiments, not hardware execution.",
+    "The selected build-assets members were CRC/hash checked; the complete release archive SHA was not verified.",
+    "No game geometry, asset archive, executable or disc is included in this change."
+  ]
+}
