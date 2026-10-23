@@ -31,9 +31,11 @@ def pairs(p,pi,cl,level=0):
                 key=tuple(sorted((a,b)))
                 for tj,old in edge_map.get(key,[]):
                     if len(set(tri)|set(old))!=4:continue
-                    # Exact source-grid coplanarity, not a floating tolerance.
+                    # The continuous pair predicate checks both actual planes.
+                    # Quantized source walls need not be exactly coplanar: their
+                    # identical cached diagonal still closes the real surface.
                     xyz=gc[list(set(tri)|set(old))]
-                    if int(np.dot(np.cross(xyz[1]-xyz[0],xyz[2]-xyz[0]),xyz[3]-xyz[0]))!=0:continue
+                    coplanar=int(np.dot(np.cross(xyz[1]-xyz[0],xyz[2]-xyz[0]),xyz[3]-xyz[0]))==0
                     edges={}
                     for it in (old,tri):
                         for u,v in zip(it,it[1:]+it[:1]):
@@ -48,7 +50,7 @@ def pairs(p,pi,cl,level=0):
                     if len(set(order))!=4 or (order[-1],order[0]) not in edges:continue
                     boundary=world[order]
                     ts=world[np.array([old,tri])]
-                    yield boundary,ts,dict(level=level,meshlet=li,triangle_indices=[tj,ti],corner_indices=[list(old),list(tri)],boundary_corner_indices=order,exact_shared_corner_cache=True,exact_grid_coplanar=True)
+                    yield boundary,ts,dict(level=level,meshlet=li,triangle_indices=[tj,ti],corner_indices=[list(old),list(tri)],boundary_corner_indices=order,exact_shared_corner_cache=True,exact_grid_coplanar=coplanar)
                 edge_map.setdefault(key,[]).append((ti,tri))
 
 

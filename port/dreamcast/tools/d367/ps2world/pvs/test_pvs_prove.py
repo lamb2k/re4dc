@@ -62,4 +62,34 @@ class QuadTests(unittest.TestCase):
     def test_large_uncertainty(self):self.assertFalse(self.hide(vertex_error=10000.))
     def test_near_ambiguity(self):self.assertFalse(self.hide(clearance=5000.))
 
+
+class SourcePairTests(unittest.TestCase):
+    """Exercise quantized source selection, not only a hand-built predicate."""
+    def source(self, warp=10, split_cache=False):
+        from types import SimpleNamespace
+        gc=np.array([[0,0,0],[40000,0,0],[40000,40000,warp],[0,40000,0]],dtype=np.int64)
+        indices=[(0,1,2),(0,2,3)]
+        if split_cache:
+            gc=np.vstack((gc,gc[[0,2]]));indices=[(0,1,2),(4,5,3)]
+        return SimpleNamespace(clusters=[dict(first_level=0)],levels=[(0,1,0)],placements=[None],
+            wq=lambda _:np.array([[1.,0,0,-20000],[0,1.,0,-20000],[0,0,1.,0]]),
+            let_tris=lambda _:(gc,indices))
+    def test_actual_quantized_warp_is_proved(self):
+        from pvs_certify import pairs
+        selected=list(pairs(self.source(),0,0))
+        self.assertEqual(len(selected),1)
+        boundary,triangles,identity=selected[0]
+        self.assertFalse(identity['exact_grid_coplanar'])
+        self.assertEqual(identity['corner_indices'],[[0,1,2],[0,2,3]])
+        self.assertTrue(quad_hides(triangles,boundary,[-100,-100,4000],[100,100,4100],
+                                  [-100,-100,-4100],[100,100,-4000]))
+    def test_equal_coordinates_are_not_shared_cache_identity(self):
+        from pvs_certify import pairs
+        self.assertEqual(list(pairs(self.source(split_cache=True),0,0)),[])
+    def test_selected_pair_still_rejects_large_actual_warp(self):
+        from pvs_certify import pairs
+        boundary,triangles,_=next(pairs(self.source(warp=45000),0,0))
+        self.assertFalse(quad_hides(triangles,boundary,[-100,-100,4000],[100,100,4100],
+                                   [-100,-100,-4100],[100,100,-4000]))
+
 if __name__=='__main__':unittest.main()

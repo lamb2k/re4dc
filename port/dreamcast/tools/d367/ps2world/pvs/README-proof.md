@@ -23,7 +23,10 @@ opaque, non-sky, non-dynamic, non-appended source placements. A single triangle
 comes only from a single-level cluster. A paired panel must exist with exactly
 the same directed world boundary at every actual LOD. Each pair is in one
 actual meshlet with identical shared corner-cache indices, and its source
-integer grid is exactly coplanar. Every used pair/LOD is checked separately.
+integer-grid coplanarity is recorded as evidence but is not required. Quantized
+walls can be slightly warped. Both actual triangle planes, the projected
+convex boundary and diagonal separation must still prove the whole eye/target
+volumes; no planar replacement is substituted. Every used pair/LOD is checked separately.
 All proposed occluder clusters are pinned visible. Unsupported cases stay
 visible. Source geometry and material/state dependencies are recorded in
 `proof.json`; no source game coordinates belong in public source commits.
@@ -41,7 +44,14 @@ sample bits are ignored by certification. Ground samples merely choose which
 closed camera volumes receive a candidate; they do not infer invisibility.
 Certification covers the actual stored f32 grid and the int16 decimetre Y
 volumes, including emitter Y expansion and an additional eye error budget.
-Out-of-domain cameras draw everything.
+Out-of-domain cameras draw everything. This legacy ground selector considers
+only eligible static opaque occluders: it is not a walkable-floor query. A
+dynamic or translucent source floor can be skipped in favor of a roof or wall,
+leaving a real gameplay camera outside the accepted Y domain. Treat those
+domains as coverage proposals, inspect actual camera eyes, and establish a
+new explicit domain from authenticated camera/collision evidence before
+expecting useful cuts. Expanding or replacing a domain requires a fresh proof
+of the entire newly serialized volume; it cannot reuse old cleared bits.
 
 For scoped texture policies, run preparation with `--original-policy FILE`.
 The ids must authenticate that original policy; both policy payload CRCs must
