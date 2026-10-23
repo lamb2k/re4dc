@@ -395,6 +395,13 @@ int EtcModelListSet(EtcList* list)
     }
     d = list->data;
     for (i = 0; i < list->num; i++) {
+#if defined(RE4DC_PS2_ETS_MATCH) && RE4DC_PS2_ETS_MATCH
+        // PS2_ETS_MATCH (game30.mk, lane fix-r10d-speed23): etc entries the PS2 room lists (r10d.dat ETS) dropped.
+        // r10d: the three et1400 torches (ids 2/4/5 of GC's 16 entries; the PS2 ETS has the other 13 and no et1400).
+        if (pG->room_id == 0x10D && d[i].id == 0x14) {
+            continue;
+        }
+#endif
         if (EtcModelSet(&d[i]) == 1) {
             if (g_LastNo < d[i].no) {
                 g_LastNo = d[i].no;
