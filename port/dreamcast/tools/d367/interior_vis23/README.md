@@ -114,3 +114,35 @@ vertices; generated descriptors fail compilation without a separately reviewed
 runtime capability. Current runtime still refuses multi-LOD source clusters.
 The r111 house cohort produced no additional cuts from this experiment, so no
 runtime guard extension is proposed. This research option never claims admission.
+
+I-003 house-interior research (no runtime or data admission):
+
+- `portal_inventory.py` prices exact owner/placement/part/meshlet cohorts on
+  requested recorded cameras. The effective LOD divisor and resolved profile
+  receipt are required; each view agrees with the separate SG count selector.
+  Per-part bounds include all source LODs. Owner IDs may span several buildings,
+  exterior skins or moving parts; no interior/static classification is inferred.
+- `surface_components.py` inspects one placement and explicit source LOD using
+  exact grid-edge connectivity. It never welds nearly equal seam positions.
+  Nonmanifold edges, winding conflicts and open boundaries remain visible
+  diagnostics. A component or closed edge graph does not establish a cell.
+- `component_recut_price.py` prices complete-strip component children while
+  retaining every original twelve-byte corner attribute and winding. It verifies
+  the original ordered triangle stream after reconstruction. Grouped child draw
+  order, coplanar tie behavior, all-LOD house membership, portal visibility and
+  target pixels remain unqualified. Cross-component strips stay fallback. The
+  hypothetical hide-every-view price includes full retained child corner work,
+  extra meshlet draws and retained-original room geometry/SG storage. It must
+  never be reported as actual hidden work or measured time.
+- `boundary_portal_price.py` treats every unresolved boundary cycle as an opening
+  enclosed by its padded world AABB, including floor, roof and seam cycles. Bad
+  edge degree, nonmanifold topology or inconsistent winding fails open. Camera
+  all-openings-out is only a prerequisite; exact shell closure/orientation,
+  material/source state, all-LOD target membership and numeric receipts remain
+  required before any runtime cull proposal.
+
+The current r101 cross study uses 43 historical t2exact camera matrices and
+explicit divisor 20 (quality 5 times SCENERY_FAR_LOD 4), with the stable corrected
+selection helper at world-merge23 commit 4cf3b40d2353076bbf7487da00b6614a07683b7d.
+All source geometry, coordinates, camera records and results remain private.
+Actors, outdoor occlusion policy and shared runtime/builders are untouched.
