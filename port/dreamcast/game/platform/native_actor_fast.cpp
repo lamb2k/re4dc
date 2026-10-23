@@ -4853,23 +4853,6 @@ extern "C" void re4dc_actor_frame(void* memory, unsigned bytes) {
     }
 #endif
     lod_wanted_last = lod_wanted; lod_wanted = false;
-#if RE4DC_ACTOR_BACKFACE_CONE
-    if (frame_serial - abc_log >= 150U) {
-        // per class (other, Leon, Ganado, El Gigante, Ashley): meshlets tested/rejected, vertices skipped/of tested parts,
-        // triangles skipped; totals over the 150 frames
-        abc_log = frame_serial;
-        re4dc_log("ABFC frame=%u splits=%u built=%u noroom=%u cones=%u nocone=%u bad=%u\n", frame_serial, abc_splits, abc_built,
-                  abc_noroom, abc_cones, abc_nocone, abc_bad);
-        re4dc_log("ABFC2 frame=%u other=%u/%u/%u/%u/%u leon=%u/%u/%u/%u/%u ganado=%u/%u/%u/%u/%u gigante=%u/%u/%u/%u/%u "
-                  "ashley=%u/%u/%u/%u/%u\n", frame_serial,
-                  abc_tests[0], abc_rej[0], abc_vskip[0], abc_verts[0], abc_tskip[0],
-                  abc_tests[1], abc_rej[1], abc_vskip[1], abc_verts[1], abc_tskip[1],
-                  abc_tests[2], abc_rej[2], abc_vskip[2], abc_verts[2], abc_tskip[2],
-                  abc_tests[3], abc_rej[3], abc_vskip[3], abc_verts[3], abc_tskip[3],
-                  abc_tests[4], abc_rej[4], abc_vskip[4], abc_verts[4], abc_tskip[4]);
-        for (unsigned c = 0; c < 5; ++c) abc_tests[c] = abc_rej[c] = abc_vskip[c] = abc_verts[c] = abc_tskip[c] = 0;
-    }
-#endif
     if constexpr (kCrowd) crowd_rank();
 #if RE4DC_GIGANTE_LIGHTS
     if (!(frame_serial % 600U) && gigante_folds) {
@@ -5260,6 +5243,30 @@ void re4dc_rigid_census_note(const void* model, unsigned ml, unsigned nv, unsign
     if (nv > re4dc_rigid_census[3]) { re4dc_rigid_census[3] = nv; re4dc_rigid_census[4] = ml; re4dc_rigid_census[5] = levels; re4dc_rigid_census_big = model; }
 }
 }
+#endif
+#if RE4DC_ACTOR_BACKFACE_CONE
+extern "C" unsigned re4dc_ui_frame();
+namespace {
+// The census lines, every 150 UI frames (called per part draw).
+void abc_census() {
+    const unsigned frame_serial = re4dc_ui_frame();
+    if (frame_serial - abc_log >= 150U) {
+        // per class (other, Leon, Ganado, El Gigante, Ashley): meshlets tested/rejected, vertices skipped/of tested parts,
+        // triangles skipped; totals over the 150 frames
+        abc_log = frame_serial;
+        re4dc_log("ABFC frame=%u splits=%u built=%u noroom=%u cones=%u nocone=%u bad=%u\n", frame_serial, abc_splits, abc_built,
+                  abc_noroom, abc_cones, abc_nocone, abc_bad);
+        re4dc_log("ABFC2 frame=%u other=%u/%u/%u/%u/%u leon=%u/%u/%u/%u/%u ganado=%u/%u/%u/%u/%u gigante=%u/%u/%u/%u/%u "
+                  "ashley=%u/%u/%u/%u/%u\n", frame_serial,
+                  abc_tests[0], abc_rej[0], abc_vskip[0], abc_verts[0], abc_tskip[0],
+                  abc_tests[1], abc_rej[1], abc_vskip[1], abc_verts[1], abc_tskip[1],
+                  abc_tests[2], abc_rej[2], abc_vskip[2], abc_verts[2], abc_tskip[2],
+                  abc_tests[3], abc_rej[3], abc_vskip[3], abc_verts[3], abc_tskip[3],
+                  abc_tests[4], abc_rej[4], abc_vskip[4], abc_verts[4], abc_tskip[4]);
+        for (unsigned c = 0; c < 5; ++c) abc_tests[c] = abc_rej[c] = abc_vskip[c] = abc_verts[c] = abc_tskip[c] = 0;
+    }
+}
+}  // namespace
 #endif
 #if RE4DC_ACTOR_BACKFACE_CONE == 2
 namespace {
@@ -5687,6 +5694,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #if RE4DC_ACTOR_BACKFACE_CONE
     unsigned abc_cls;
     const AbcCone* abc = abc_part(p, base, f, abc_cls);
+    abc_census();
     AbcEye abc_e;
 #endif
     for (unsigned mi = 0; ok && mi < blob->meshlets; ++mi) {
@@ -6319,6 +6327,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
 #if RE4DC_ACTOR_BACKFACE_CONE
     unsigned abc_cls;
     const AbcCone* abc = abc_part(p, base, f, abc_cls);
+    abc_census();
     AbcEye abc_e;
 #endif
 #if defined(RE4DC_ACTOR_PROF) && RE4DC_ACTOR_PROF
