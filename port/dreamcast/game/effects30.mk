@@ -281,7 +281,7 @@ endif
 #                    30 / 20 m or under 24 / 48 screen pixels are not drawn; at most 48 / 32 such sprites a frame. Draw time
 #                    only (effects still spawn, move and draw their Rnd()); Leon's own effects and screen sprites are never
 #                    trimmed. Level 0 draws as without it. esp_sub.cpp kFxTrim. FX_TRIM_LOG=1 (test only): "fx trim:" lines.
-#                    FX_LEVEL=3 (with FX_TRIM=1; user 10-23 "Essential only"): the level-2 room dial plus the Essential filter
+#                    FX_LEVEL=3 (with FX_TRIM=1; user 10-23 "Essential only"): the room dial at 0 plus the Essential filter
 #                    (esp_sub.cpp FxEssentialCut): gameplay effects kept (Leon's own effects, hit blood, explosions, fire and
 #                    flames, blob shadows), atmosphere cut (mist / haze, dust, ambient smoke and sparks, glows, shafts, glare,
 #                    FX_STRIP21 trails / ribbons), at most 2 sprites a frame per owner of one smoke / spark layer or unknown
@@ -540,7 +540,7 @@ ifneq ($(EFFECT_OWNERS_ALL),0)
 	@printf '#define RE4DC_EFFECT_OWNERS_ALL %s\n' '$(EFFECT_OWNERS_ALL)' >> $@.tmp
 endif
 ifneq ($(FX_LEVEL),)
-	@printf '#define RE4DC_FX_LEVEL %s\n' '$(if $(filter 3,$(FX_LEVEL)),2,$(FX_LEVEL))' >> $@.tmp
+	@printf '#define RE4DC_FX_LEVEL %s\n' '$(if $(filter 3,$(FX_LEVEL)),0,$(FX_LEVEL))' >> $@.tmp
 endif
 ifneq ($(SHORE_FX_LEVEL),)
 	@printf '#define RE4DC_SHORE_FX_LEVEL %s\n' '$(SHORE_FX_LEVEL)' >> $@.tmp

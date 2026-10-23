@@ -1073,7 +1073,8 @@ static f32 FxTrimArea(const Re4dcEffectSprite* s)
     }
     return a < 0.0f ? -a * 0.5f : a * 0.5f;
 }
-// "Essential only" (user 10-23; FX_LEVEL=3 = the level-2 room dial + this filter; runtime re4dc_fx_essential): keep the
+// "Essential only" (user 10-23; FX_LEVEL=3 = the room dial at 0 + this filter, so the PS2 room-effect
+// thinning (Ps2fxClass, which LOGIC_WASTE's effect skip reads) stays as at level 0 and only the emit decides; runtime re4dc_fx_essential): keep the
 // effects that carry gameplay (muzzle flash, hit blood, explosions and fire incl. grenades / traps / burning hazards,
 // blob shadows; Leon's own effects whole), cut the atmosphere (mist / haze sheets, dust, ambient smoke and sparks,
 // glows, light shafts, glare, trails / ribbons) and stack at most kEssLayer sprites of one smoke / spark layer per owner.
@@ -1181,7 +1182,7 @@ static int FxLevelSprite(const cEsp* esp, Re4dcEffectSprite* s)
             const u32 F = 120;
             re4dc_log("fx trim: f=%u room=%03x lvl=%u seen r%u l%u e%u o%u drawn r%u l%u e%u o%u drop thin%u far%u small%u budget%u "
                       "ess%u area seen=%u drawn=%u\n", (unsigned) s_ftl_frame0, (unsigned) G_ROOM_ID,
-                      (unsigned) re4dc_fx_level + re4dc_fx_essential,
+                      (unsigned) re4dc_fx_level + 3U * re4dc_fx_essential,
                       s_ftl_seen[0] / F, s_ftl_seen[1] / F, s_ftl_seen[2] / F, s_ftl_seen[3] / F, s_ftl_drawn[0] / F,
                       s_ftl_drawn[1] / F, s_ftl_drawn[2] / F, s_ftl_drawn[3] / F, s_ftl_drop[0] / F, s_ftl_drop[1] / F,
                       s_ftl_drop[2] / F, s_ftl_drop[3] / F, s_ftl_drop[4] / F, (unsigned) (s_ftl_area_seen / (F * 3072.0f)),
@@ -4688,12 +4689,13 @@ extern "C" u8 re4dc_fx_essential;
 extern "C" void re4dc_fx_level_toggle(void)
 {
 #if defined(RE4DC_FX_TRIM) && RE4DC_FX_TRIM
-    // FX_TRIM: 0 -> 1 -> 2 -> Essential (level 2 + the Essential filter) -> 0
+    // FX_TRIM: 0 -> 1 -> 2 -> Essential (room dial 0 + the Essential filter) -> 0
     if (re4dc_fx_essential) {
         re4dc_fx_essential = 0;
         re4dc_fx_level_set(0);
     } else if (re4dc_fx_level >= 2) {
         re4dc_fx_essential = 1;
+        re4dc_fx_level_set(0);
     } else {
         re4dc_fx_level_cycle();
     }
