@@ -17,6 +17,7 @@ extern "C" unsigned re4dc_ui_frame();
 extern "C" void re4dc_actor_immutable_chunk_reset(unsigned asset_id);  // coarse_actor_geometry_once.inc
 #endif
 #if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+#include "actor_visibility23.h"
 namespace re4dc_material { namespace life {extern unsigned epoch;extern bool exhausted;} }
 extern "C" unsigned re4dc_actor_visibility23_epoch(){return re4dc_material::life::exhausted?0:re4dc_material::life::epoch;}
 #endif
@@ -937,6 +938,7 @@ static inline bool invis_wall_hidden(const float*, const float*) { return false;
 // Same current opaque static-world proof as the whole-actor path. These
 // functions borrow the source owner/view synchronously; no queued pointer.
 extern "C" unsigned re4dc_actor_visibility23_epoch();
+extern "C" int re4dc_actor_world23_ready(const float*,const float*,const float*,float,float);
 extern "C" unsigned re4dc_actor_visibility23_view(float view[12],const void* owner,const void* info) {
 #if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
     const auto* m=static_cast<const cModel*>(owner);
@@ -967,6 +969,10 @@ extern "C" int re4dc_actor_visibility23_wall(const void* owner,const float view[
     // predictor. A boss-only room must not need a Ganado to warm its view.
     float actualP[7],actualV[6];GXGetProjectionv(actualP);GXGetViewportv(actualV);
     if(std::memcmp(actualP,P,sizeof(actualP))||std::memcmp(actualV,V,sizeof(actualV))||P[0]!=0)return 0;
+    // OCCL front-side certificates assume the native right-handed perspective.
+    const float det=view[0]*(view[5]*view[10]-view[6]*view[9])-
+        view[1]*(view[4]*view[10]-view[6]*view[8])+view[2]*(view[4]*view[9]-view[5]*view[8]);
+    if(!(P[1]>0)||!(P[3]>0)||!(V[2]>0)||!(V[3]>0)||!(det>0))return 0;
     for(unsigned i=0;i<7;i++)if(!coarse_finite(P[i]))return 0;
     const float near=P[6]/(P[5]-1.0f),proj_far=P[6]/P[5];
     const float fog=re4dc_fog_gate_far();
@@ -975,6 +981,16 @@ extern "C" int re4dc_actor_visibility23_wall(const void* owner,const float view[
     float far=fog>near&&fog<proj_far?fog:proj_far;
     if(far>25000)far=25000;
     if(!(far>near)||invis_near_actor(re4dc_vis_pl,lo,hi)||invis_near_actor(re4dc_vis_sub,lo,hi))return 0;
+    if(pG->room_id==0x119) {
+        if(!re4dc_actor_visibility23_receipt(re4dc_actor_world23_ready(view,P,V,near,far)))return 0;
+        // Exact selected r119 package/cottage fields5/7: rounded-up absolute
+        // placement/grid operands over every u16 input. prepare_r119.py binds
+        // these to immutable physical hashes. At most50mm/component effective
+        // wall displacement must fit the100mm protected patch-boundary inset.
+        // Source winding fronts retain>126mm, normal slabs include this error.
+        static const float absolute_world_operands[3]={118646,6015,19630};
+        if(!actor_visibility23::opaque_world_error(view,P,V,near,absolute_world_operands,50))return 0;
+    }
     return re4dc_room_vis_hidden(view,near,far,lo,hi)!=0;
 #else
     (void)owner;(void)view;(void)P;(void)V;(void)lo;(void)hi;return 0;

@@ -2215,6 +2215,18 @@ namespace piece { std::uint32_t* table=nullptr; const void* pkg=nullptr; }
 #pragma GCC push_options
 #pragma GCC optimize("O2")
 #endif
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+#include "include/actor_visibility23_world.h"
+#include "include/room_file.h"
+actor_visibility23::WorldReceipt actor_world23;
+extern "C" unsigned re4dc_actor_world23_scene();
+struct ActorWorld23Meshlet {
+ unsigned field,part,let;const unsigned char* strips;unsigned bytes,vertices,limit;
+ const unsigned char* codes;float near,far;bool full=false;
+ ~ActorWorld23Meshlet(){if(full)actor_world23.emit(field,part,let,strips,bytes,codes,vertices,limit,
+     re4dc::vp::depth_mask(re4dc::vp::kChecksAll),re4dc::vp::screen_mask(re4dc::vp::kChecksAll),near,far,re4dc_actor_world23_scene());}
+};
+#endif
 struct MeshDraw : Emitter {
     const re4dc::room::MeshPackage& package; const re4dc::room::MeshPart& part;
     const std::uint32_t* lut; // mesh view's colour LUT (nullptr: per-corner path)
@@ -2249,6 +2261,9 @@ struct MeshDraw : Emitter {
     // against the projection far, so a straddling strip is drawn whole (fully
     // fogged past the View far) instead of going through the clipper.
     float cull_far=0;
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+    unsigned actor_world_field23=~0U;
+#endif
     unsigned part_index=0; // v2: index into the package's part LOD table
 #if RE4DC_QUALITY_ASSETS
     std::uint64_t skip_clusters=0; // Standard impt: clusters (bit = index in the part) drawn as tree quads
@@ -2431,6 +2446,11 @@ struct MeshDraw : Emitter {
 #endif
 #if RE4DC_MESH_VP_SCHED==2
         if(checks==vp::kChecksAll)vp_sched_compare(in,l.vertex_count,cache,outcodes,k);
+#endif
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+        ActorWorld23Meshlet receipt23{actor_world_field23,part_index,unsigned(&l-package.meshlets()),
+            package.strip_begin(l),l.strip_bytes,l.vertex_count,limit,outcodes,near,cull_far};
+        receipt23.full=checks==vp::kChecksAll && sq && p.cull==2 && ps2 && !vertex_alpha;
 #endif
         const unsigned screen=vp::screen_mask(checks),depth=vp::depth_mask(checks);
 #if RE4DC_MESH_STRIP_LEAN==2
@@ -2996,6 +3016,11 @@ struct MeshDraw : Emitter {
         }else
 #endif
         vp::transform_sched<vp::kChecksAll>(in,l.vertex_count,cache,outcodes,k);
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+        ActorWorld23Meshlet receipt23{actor_world_field23,part_index,pk.let,sb,l.strip_bytes,
+            l.vertex_count,limit,outcodes,near,cull_far};
+        receipt23.full=sq && p.cull==2 && ps2 && !vertex_alpha;
+#endif
         int result=1;
         strips_lean(sb,sb+l.strip_bytes,base,batch,result);
         return result;
@@ -4571,6 +4596,28 @@ unsigned query(unsigned id){
 // PS2_PLACE_GATE: not an owned placement the world skips; PS2_AREA_HIDE: not in a hidden group). Mirrors dyn::query /
 // gate::skip / area::hide without touching their per-frame state.
 std::uint32_t enemyVisSidecarCrc=0;
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+extern "C" unsigned re4dc_actor_world23_scene();
+extern "C" int re4dc_ps2_placements_intact(unsigned,const unsigned char*,unsigned);
+extern "C" int re4dc_actor_world23_ready(const float* view,const float* P,const float* V,float near,float far){
+    const unsigned scene=re4dc_actor_world23_scene();
+    if(!scene || ps2w.room!=0x119 || !ps2w.storage ||
+       enemyVisSidecarCrc!=0xfb5072f8U)return 0;
+    const float ex=-(view[0]*view[3]+view[4]*view[7]+view[8]*view[11]);
+    const float ez=-(view[2]*view[3]+view[6]*view[7]+view[10]*view[11]);
+    const float fx=(ex+2000.0f)*(1.0f/4000.0f),fz=(ez+10000.0f)*(1.0f/4000.0f);
+    if(!(fx>=28&&fx<30&&fz>=7&&fz<8))return 0;
+    const unsigned k=unsigned(fx)-28;
+    if(!actor_world23.ready(re4dc_ui_frame(),ps2w.storage,view,P,V,k,near,far,scene))return 0;
+    // Same immutable room metadata used at this actual world submission.
+    unsigned bytes=0,version=0,flags=0;const re4dc_room_header* header=nullptr;
+    const void* current=re4dc_room_section("OCCL",&bytes,&version,&flags,&header);
+    if(current!=actor_world23.metadata || bytes!=1376 || version!=2)return 0;
+    const unsigned char field[2]={static_cast<unsigned char>(k?7:5),0};
+    return re4dc_ps2_placements_intact(0x119,field,1);
+}
+#endif
+
 extern "C" int re4dc_ps2_world_intact(unsigned room,std::uint32_t crc){
 #if RE4DC_PS2_WORLD_ROOMS
     if(ps2w.room!=room)return 0;
@@ -5330,6 +5377,14 @@ bool ps2_open(){
 #endif
 #if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
     enemyVisSidecarCrc=policySourceCrc;
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+    // Genuine header/CRC validation and semantic provenance have already run.
+    actor_world23.bind(ps2w.storage,ps2w.room==0x119 && policySourceCrc==0xfb5072f8U &&
+        h.crc==0xa79895c4U && h.placements==95 && h.parts==153 && h.meshes==95 &&
+        mbytes==1058272 && psize==7420 && ps2w.package.header().crc==0x1349cce3U &&
+        re4dc::rect21::provenance::fnv(s+mbytes,psize)==0xd52dfbbfU);
+#endif
+
 #endif
 #if RE4DC_PS2_WORLD_DYNAMIC && RE4DC_PS2_WORLD_ROOMS
     {
@@ -5763,6 +5818,23 @@ static void note(unsigned pass,unsigned drawn_pass){
 }
 #endif
 int ps2_pass(unsigned pass,float zfar){
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+    struct ReceiptPass23 {
+        bool owns,success=false;
+        ReceiptPass23(unsigned p):owns(p==0){
+            if(!owns)return;
+            actor_world23.begin(re4dc_ui_frame(),ps2w.view,ps2w.projection,ps2w.viewport);
+            unsigned bytes=0,version=0,flags=0;const re4dc_room_header* h=nullptr;
+            const auto* oc=static_cast<const unsigned char*>(re4dc_room_section("OCCL",&bytes,&version,&flags,&h));
+            actor_world23.metadata=oc;
+            if(!oc || bytes!=1376 || version!=2 || !h || h->w!=136 || h->h!=33 ||
+               h->cell_mm!=1000 || h->x0!=-2000 || h->z0!=-10000 ||
+               ps2_crc32(oc,bytes)!=ACTOR_VISIBILITY23_OCCL_CRC)actor_world23.active=false;
+        }
+        ~ReceiptPass23(){if(owns)actor_world23.end(success);}
+    } receiptPass23(pass);
+#endif
+
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return -1;}
 #endif
@@ -5940,7 +6012,11 @@ int ps2_pass(unsigned pass,float zfar){
     // SCENERY_CHUNK: the selected parts of this run (ChunkPart) and their picks, emitted in order by chunk_flush()
     // before any part that takes the ordinary path, when either list is full, and at the end of the pass.
     struct ChunkPart { float mvq[12]; unsigned key[6]; float cull_far,lod_scale; unsigned index,first,count;
-                       std::uint8_t cull; bool marked; std::uint8_t sky; };
+                       std::uint8_t cull; bool marked; std::uint8_t sky;
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+                       unsigned actor_world_field23;
+#endif
+    };
     static constexpr unsigned kChunkParts=48,kChunkPicks=320;
     ChunkPart cctx[kChunkParts];MeshDraw::Pick cpk[kChunkPicks];unsigned nctx=0,npk=0;
     const auto& cpkg=ps2w.package;
@@ -5962,6 +6038,10 @@ int ps2_pass(unsigned pass,float zfar){
             e.alpha=0xff000000U;e.vertex_alpha=false;e.cull_far=x.cull_far;e.direct=true;
 #endif
             e.part_index=x.index;e.lod_scale=x.lod_scale;e.lean_part=true;
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+            e.actor_world_field23=x.actor_world_field23;
+#endif
+
             e.sg=ps2w.sg;e.sg_groups=ps2w.sg_groups;
             std::memcpy(e.mvq,x.mvq,sizeof(x.mvq));std::memcpy(e.mv,x.mvq,sizeof(x.mvq));e.ps2=x.key;
 #if RE4DC_SCENERY_PIECE_STATE
@@ -6218,6 +6298,10 @@ int ps2_pass(unsigned pass,float zfar){
             d.alpha=0xff000000U;d.vertex_alpha=false;d.cull_far=cull_far;d.direct=true;
 #endif
             d.part_index=index;d.lod_scale=lod_scale;
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+            d.actor_world_field23=pl.placement;
+#endif
+
 #if defined(RE4DC_FOLIAGE_TRIM)
             const bool foliage_near=foliage_pass!=meta.pass && foliage::kNear<cull_far;
 #endif
@@ -6267,6 +6351,10 @@ int ps2_pass(unsigned pass,float zfar){
                 ChunkPart& x=cctx[nctx++];
                 std::memcpy(x.mvq,mvq,sizeof(mvq));std::memcpy(x.key,key,sizeof(key));
                 x.cull_far=d.cull_far;x.lod_scale=lod_scale;x.index=index;x.cull=meta.cull;
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+                x.actor_world_field23=pl.placement;
+#endif
+
                 x.marked=d.vertex_alpha;x.first=npk;
 #if RE4DC_SKY_ANY
                 x.sky=std::uint8_t(re4dc_ps2_sky_header);
@@ -6373,6 +6461,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #if RE4DC_WORLD_HOLE_DIAG
     whd::end_pass(pass,c.parts,re4dc_ui_frame(),ps2w.room);
+#endif
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+    receiptPass23.success=!c.fallback&&!c.aborts;
 #endif
     return c.fallback?0:1;
 }
@@ -6628,6 +6719,10 @@ extern "C" void re4dc_ps2_mesh_log(unsigned frame){
 #endif
 }
 extern "C" void re4dc_ps2_mesh_retire(){
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+    actor_world23.close();
+#endif
+
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie.readers || ps2_movie.unavailable()){
         re4dc_missing("movie world arena retired before borrower cleanup");return;
@@ -6776,7 +6871,11 @@ extern "C" int re4dc_ps2_dyn_source(unsigned room,const void* object,unsigned se
 #endif
 #endif
 #if RE4DC_PS2_WORLD_ROOMS
-namespace { void ps2_free(){re4dc_ps2_mesh_retire();} }
+namespace { void ps2_free(){
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+    actor_world23.close();
+#endif
+re4dc_ps2_mesh_retire();} }
 // The rooms that have a PS2 world package (tools/ps2_room_r4im.py, dc/native/r%03x/ps2-world.*): the one list
 // native_ps2_world.cpp (re4dc_ps2_world_covers) and the =2 preload share. r106: the route lane (stage 1-1 end);
 // r104 / r105 / r107 (chapter 1-2, route lane): their GC scenery is released like r106's.

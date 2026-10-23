@@ -7,3 +7,12 @@ extern "C" int host_bounds(const void* pos,const void* rec,unsigned nv,unsigned 
  actor_visibility23::Key k{pos,pos,rec,1,count,65535,0,(unsigned short)nv,8,3};unsigned n=0;
  const auto* g=actor_visibility23::acquire(k,&n);return g&&actor_visibility23::camera_bounds(g,n,palette,entries,q,mv,view,proj,viewport,1,25000,lo,hi);
 }
+
+extern "C" int host_bounds_at_near(const void* pos,const void* rec,unsigned nv,unsigned count,const float* palette,unsigned entries,float q,const float* mv,const float* view,const float* proj,const float* viewport,float* lo,float* hi,float near){
+ actor_visibility23::Key k{pos,pos,rec,1,count,65535,0,(unsigned short)nv,8,3};unsigned n=0;
+ const auto* g=actor_visibility23::acquire(k,&n);return g&&actor_visibility23::camera_bounds(g,n,palette,entries,q,mv,view,proj,viewport,near,25000,lo,hi);
+}
+
+extern "C" int host_world_error(const float* view,const float* P,const float* V,float near,const float* operands,float maximum){
+ return actor_visibility23::opaque_world_error(view,P,V,near,operands,maximum);
+}

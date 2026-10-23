@@ -236,7 +236,12 @@ struct NopStat {
 };
 struct LeanStats {
     NopStat parts, handled, declined, deferred, culled_infos, culled_parts;
+#if RE4DC_ACTOR_VISIBILITY23
+    NopStat info_preparations, light_sets, normals_lit;
+    unsigned position_transforms=0; // actual work counter even with ACTOR_STATS_LEAN
+#else
     NopStat info_preparations, position_transforms, light_sets, normals_lit;
+#endif
     NopStat corners, runs, fallback_runs, fallback_triangles, flushes;
     NopStat workspace_misses, attenuated_lights, near_vertices;
     NopStat conversions, conversion_rejects, meshlets, meshlets_culled, meshlets_clipped;

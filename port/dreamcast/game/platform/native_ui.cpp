@@ -1563,6 +1563,10 @@ constexpr float overlay_depth(){return 1.0f;}
 // One serial PVR owner, no extra framebuffer or whole-scene packet copy.
 // KOS's opt-in manual flip preserves the source's late presentation decision.
 bool stream_scene,stream_aborted,stream_retire;
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+unsigned actor_world_scene23_epoch=1; // saturated value is permanently refused
+#endif
+
 #if RE4DC_WORLD_AUTOSORT
 bool world_autosort;
 unsigned overlay_layer;
@@ -2003,6 +2007,10 @@ void stream_open() { RE4DC_TAIL_GPU_SCOPE(open);
     // Do not retain the main thread's SQ mutex across source task dispatch or
     // file/audio services. Each synchronous packet transfer reacquires it.
     sq_unlock();stream_scene=true;
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+    if(actor_world_scene23_epoch!=~0U)++actor_world_scene23_epoch;
+#endif
+
 #if defined(RE4DC_LETTERBOX_CLIP) && RE4DC_LETTERBOX_CLIP
 #if RE4DC_TA_MATERIAL_DIAG
     { tamat::Scope source_scope(3); re4dc_lbx_open(int(stream_list),stream_send); }
@@ -6595,6 +6603,16 @@ extern "C" unsigned re4dc_model_input_count(){return model_input;}  // ENC_CENSU
 #endif
 #endif
 
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+extern "C" unsigned re4dc_actor_world23_scene(){
+#if RE4DC_PVR_STREAM
+    return frame_ready && stream_scene && !stream_aborted && actor_world_scene23_epoch!=~0U?
+        actor_world_scene23_epoch:0U;
+#else
+    return 0;
+#endif
+}
+#endif
 extern "C" int re4dc_model_packet_streaming(){return RE4DC_PVR_STREAM;}
 extern "C" void re4dc_model_packet_abort(){
 #if RE4DC_PVR_STREAM

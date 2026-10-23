@@ -7,11 +7,12 @@
 extern "C" {
 struct Re4dcActorVisibility23Stats {
  unsigned queries,material_draw,identity_draw,cache_hits,cache_misses,source_records,capacity_draw,
- numeric_draw,bounded_sections,bounded_records,wall_tests,hidden_sections,potential_records,positions_avoided,triangles_avoided,bound_groups,resets;
+ numeric_draw,bounded_sections,bounded_records,wall_tests,hidden_sections,potential_records,positions_avoided,triangles_avoided,bound_groups,resets,world_receipt_ready,world_receipt_draw;
 };
 extern unsigned re4dc_actor_visibility23_mode; // 0=off,1=census,2=reject; boot0
 const Re4dcActorVisibility23Stats* re4dc_actor_visibility23_stats();
 void re4dc_actor_visibility23_reset();
+int re4dc_actor_visibility23_receipt(int ready);
 int re4dc_actor_visibility23_set(unsigned mode);
 // Real source-Render workspace boundary; reports the preceding Render.
 void re4dc_actor_visibility23_frame(unsigned render,unsigned open,unsigned mask,unsigned transformed);
@@ -25,6 +26,7 @@ struct Key {
  unsigned short meshlet,vertices;unsigned char stride,record_words;
 };
 const Group* acquire(const Key&,unsigned* count);
+bool opaque_world_error(const float view[12],const float projection[7],const float viewport[6],float near,const float absolute_operands[3],float maximum);
 bool camera_bounds(const Group*,unsigned,const float* palette,unsigned entries,float q,const float modelview[12],const float view[12],const float projection[7],const float viewport[6],float near,float far,float lo[3],float hi[3]);
 }
 #endif

@@ -17,6 +17,7 @@ bool equal(const Key&a,const Key&b) {
  a.vertices==b.vertices&&a.stride==b.stride&&a.record_words==b.record_words;
 }
 }
+extern "C" int re4dc_actor_visibility23_receipt(int ready){if(ready)++stats.world_receipt_ready;else ++stats.world_receipt_draw;return ready;}
 extern "C" const Re4dcActorVisibility23Stats* re4dc_actor_visibility23_stats(){return &stats;}
 extern "C" int re4dc_actor_visibility23_set(unsigned mode){if(mode>2)return 0;re4dc_actor_visibility23_reset();re4dc_actor_visibility23_mode=mode;return 1;}
 extern "C" void re4dc_actor_visibility23_reset(){std::memset(cache,0,sizeof(cache));view23={};cache_epoch23=0;++stats.resets;}
@@ -48,7 +49,7 @@ const Group* acquire(const Key& key,unsigned* count) {
 // See actor_visibility23/README.md for actual research/manual conditions.
 static bool numeric_pad(const shz_interval_t pm[12],const shz_interval_t mv[12],
                         const shz_interval_t src[3],const float* p,const float* v,
-                        const shz_interval_t world[3],float near,shz_interval_t padded[3]) {
+                        const shz_interval_t world[3],float near,shz_interval_t padded[3],bool add_eye_lever=true) {
  using I=shz_interval_t;
  auto point=[](float x){return I{x,x};};
  auto absolute=[](I x){float a=__builtin_fabsf(x.lo),b=__builtin_fabsf(x.hi);return I{0,a>b?a:b};};
@@ -94,11 +95,35 @@ static bool numeric_pad(const shz_interval_t pm[12],const shz_interval_t mv[12],
   // 25050 includes the <=50mm effective-depth envelope below. Thus test
   // the WHOLE enlarged box; no unqualified rigidity epsilon substitutes.
   I lever;
-  if(!shz_bounds_div(point(25050),point(near),&lever)||!shz_bounds_add(lever,one,&lever)||
-     !shz_bounds_mul(view23.eye_error[j],lever,&a)||!shz_bounds_add(total,a,&total))return false;
-  if(!(total.hi>=0 && total.hi<=50))return false;
+  if(add_eye_lever && (!shz_bounds_div(point(25050),point(near),&lever)||!shz_bounds_add(lever,one,&lever)||
+     !shz_bounds_mul(view23.eye_error[j],lever,&a)||!shz_bounds_add(total,a,&total)))return false;
+  // Coverage/cost cap only: a larger tested box is more conservative.
+  // EW<=50, eye L1<=1 and actual target depth<=25050 stay unchanged.
+  if(!(total.hi>=0 && total.hi<=512))return false;
   c={-total.hi,total.hi};if(!shz_bounds_add(world[j],c,padded+j))return false;
  }return true;
+}
+// Wall coordinates use the same gamma/rho envelope, but the target box has
+// already paid the eye-lever uncertainty. This bounds each opaque vertex's
+// effective world displacement, not its location or an occlusion decision.
+bool opaque_world_error(const float view[12],const float P[7],const float V[6],
+                        float near,const float operands[3],float maximum) {
+ struct Cached {float words[30];bool seen,ok;};static Cached cached{};
+ if(!view23.ok||std::memcmp(view23.words,view,48)||!(maximum>0&&maximum<=50))return false;
+ float words[30];std::memcpy(words,view,48);std::memcpy(words+12,P,28);std::memcpy(words+19,V,24);
+ std::memcpy(words+25,operands,12);words[28]=near;words[29]=maximum;
+ if(cached.seen&&!std::memcmp(cached.words,words,sizeof(words)))return cached.ok;
+ std::memcpy(cached.words,words,sizeof(words));cached.seen=true;cached.ok=false;
+ shz_interval_t pm[12]{},mv[12],src[3],world[3]{},padded[3];
+ pm[0]=pm[5]=pm[10]={1,1};
+ for(unsigned i=0;i<12;i++)if(!shz_bounds_point(view[i],mv+i))return false;
+ for(unsigned a=0;a<3;a++){
+  shz_interval_t k;if(!shz_bounds_point(operands[a],&k)||!(operands[a]>0))return false;
+  src[a]={-operands[a],operands[a]};
+ }
+ if(!numeric_pad(pm,mv,src,P,V,world,near,padded,false))return false;
+ for(unsigned a=0;a<3;a++)if(padded[a].lo< -maximum||padded[a].hi>maximum)return false;
+ cached.ok=true;return true;
 }
 bool camera_bounds(const Group* groups,unsigned count,const float* palette,unsigned entries,float q,const float modelview[12],const float view[12],const float projection[7],const float viewport[6],float near,float far,float lo[3],float hi[3]) {
  unsigned fpscr=0;
@@ -181,10 +206,10 @@ extern "C" void re4dc_actor_visibility23_frame(unsigned render,unsigned open,uns
     previous_render23,previous_mode23,previous_n23,now.queries-old.queries,now.bounded_sections-old.bounded_sections,now.wall_tests-old.wall_tests,now.hidden_sections-old.hidden_sections,now.bounded_records-old.bounded_records,
     now.potential_records-old.potential_records,now.positions_avoided-old.positions_avoided,
     now.triangles_avoided-old.triangles_avoided,transformed-previous_xf23);
-  re4dc_log("AV23WORK frame=%u groups=%u hit=%u miss=%u scan=%u material=%u identity=%u numeric=%u capacity=%u reset=%u\n",
+  re4dc_log("AV23WORK frame=%u groups=%u hit=%u miss=%u scan=%u material=%u identity=%u numeric=%u capacity=%u reset=%u world_ok=%u world_draw=%u\n",
     previous_render23,now.bound_groups-old.bound_groups,now.cache_hits-old.cache_hits,now.cache_misses-old.cache_misses,
     now.source_records-old.source_records,now.material_draw-old.material_draw,now.identity_draw-old.identity_draw,
-    now.numeric_draw-old.numeric_draw,now.capacity_draw-old.capacity_draw,now.resets-old.resets);
+    now.numeric_draw-old.numeric_draw,now.capacity_draw-old.capacity_draw,now.resets-old.resets,now.world_receipt_ready-old.world_receipt_ready,now.world_receipt_draw-old.world_receipt_draw);
   pending23=false;
  }
  const auto event=fixture23.begin(render,open!=0,mask);
