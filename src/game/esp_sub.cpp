@@ -1082,7 +1082,7 @@ static f32 FxTrimArea(const Re4dcEffectSprite* s)
 // Classes by effect texture id: the core EFF ids (etc/core.das EFF#1) and the room EFF ids are one global id space and
 // keep their meaning across rooms (sheets in the lane evidence, texsheets/). Unknown ids: drawn (capped) for enemies,
 // objects and weapons, cut for the room's own ambient tables (owners 0x01 / 0xd0).
-enum { ESS_KEEP = 1, ESS_LAYER = 2, ESS_CUT = 3 };
+enum { ESS_KEEP = 1, ESS_LAYER = 2, ESS_CUT = 3, ESS_GLOW = 4 };
 static u8 s_ess_class[256];
 static void FxEssInit()
 {
@@ -1097,10 +1097,12 @@ static void FxEssInit()
                                0x36, 0x38, 0x39, 0x3a, 0x3d, 0x3e, 0x40, 0x41, 0x4c, 0x4d, 0x4e, 0x4f, 0x93, 0x95, 0x98, 0x9f,
                                0xa4};
     static const u8 cut[] = {0x5f, 0x6f, 0x72, 0x79, 0xe9, 0x9d,          // dust
-                             0x08, 0x0b, 0x13, 0x17, 0x1c, 0xf7, 0xc1};   // glows, light shafts, flares, glare
+                             0xc1};                                       // light shafts, glare
+    static const u8 glow[] = {0x08, 0x0b, 0x13, 0x17, 0x1c, 0xf7};       // glows, flares: cut, except owner 0x00's
     for (unsigned i = 0; i < sizeof(keep); ++i) s_ess_class[keep[i]] = ESS_KEEP;
     for (unsigned i = 0; i < sizeof(layer); ++i) s_ess_class[layer[i]] = ESS_LAYER;
     for (unsigned i = 0; i < sizeof(cut); ++i) s_ess_class[cut[i]] = ESS_CUT;
+    for (unsigned i = 0; i < sizeof(glow); ++i) s_ess_class[glow[i]] = ESS_GLOW;
 }
 enum { kEssLayer = 2 };
 extern "C" {
@@ -1124,6 +1126,9 @@ static int FxEssentialCut(const cEsp* esp, int screen)
     const int room = owner == 0x01 || owner == 0xD0;
     if (c == ESS_KEEP) return 0;
     if (c == ESS_CUT) return 1;
+    // Owner 0x00 (core / weapon effects: the hand, incendiary and flash grenade blasts, the laser sight's glint;
+    // lane fx-trim23 grenade check 10-23, FX_TRIM_LOG "fx ess kinds") keeps its glows and flares.
+    if (c == ESS_GLOW) return owner != 0x00;
     if (room) return 1;                                            // the room's ambient smoke / sparks / leaves / dust
     u8* n = &s_layer[(owner * 31U + esp->m_Tex_id) & 0xFF];          // layers and unknown ids: one thin layer each
     return (*n)++ >= kEssLayer;
