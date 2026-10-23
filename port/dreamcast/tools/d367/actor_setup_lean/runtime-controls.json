@@ -1,0 +1,143 @@
+{
+  "status": "PASS",
+  "base": "28da09802ed9ff6756529bab02978230983453be",
+  "source_sha256": "3771b1dfd9024768597b01fa593e480e89abd78423060d42e1b4c183a0384f65",
+  "fixture_sha256": "39af845a9578aebc6a599e6f3417ba8ffe5ab0c6b7d80e889951e98c61661246",
+  "driver_sha256": "f6f8000e7a879bfc5eb646af3858309c62dff1f8f5831c8f9d2d292da1e7b9ff",
+  "geometry_sources_sha256": {
+    "port/dreamcast/room/pvr_geometry.cpp": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136",
+    "port/dreamcast/room/source_lighting.cpp": "456cf98468febc9a3b0d1803546957af93de9fa9c5cda9d7bd5bcd63c72a868c"
+  },
+  "comparison": "Direct binary byte comparison of complete framed output; every emitted eight-word vertex/header in order, owner/result state, AVK call order, diagnostic counters and separately tagged cache/bake memory snapshots.",
+  "paired_scenarios": 1176,
+  "ta_words_compared": 3434688,
+  "controlled_state_words_compared": 120129,
+  "matrix": [
+    {
+      "actor_direct": 0,
+      "actor_backface_cone": 0,
+      "actor_vtx_kernel": 1,
+      "actor_light_n16": 1,
+      "actor_no_clear": 1,
+      "paired_scenarios": 142,
+      "ta_words_compared": 505536,
+      "controlled_state_words_compared": 12513,
+      "owner_api_events_compared": 1648,
+      "exact_serialized_output_sha256": "f1533d92d72eefc6ea77e0e5ab01274689d2a2ee8fd8b2e854f98fdaa290e1b2"
+    },
+    {
+      "actor_direct": 0,
+      "actor_backface_cone": 1,
+      "actor_vtx_kernel": 1,
+      "actor_light_n16": 1,
+      "actor_no_clear": 1,
+      "paired_scenarios": 142,
+      "ta_words_compared": 504768,
+      "controlled_state_words_compared": 12513,
+      "owner_api_events_compared": 1648,
+      "exact_serialized_output_sha256": "9a508a063bb402c12d3137493dab6039ce55bcf913ca8ba5bf6397ef27bec512"
+    },
+    {
+      "actor_direct": 0,
+      "actor_backface_cone": 2,
+      "actor_vtx_kernel": 1,
+      "actor_light_n16": 1,
+      "actor_no_clear": 1,
+      "paired_scenarios": 142,
+      "ta_words_compared": 504768,
+      "controlled_state_words_compared": 12513,
+      "owner_api_events_compared": 1648,
+      "exact_serialized_output_sha256": "e3bb8b03acd9025709193a9a5bbe7cc6a4894198421e03316599fd5567276eef"
+    },
+    {
+      "actor_direct": 1,
+      "actor_backface_cone": 0,
+      "actor_vtx_kernel": 1,
+      "actor_light_n16": 1,
+      "actor_no_clear": 1,
+      "paired_scenarios": 150,
+      "ta_words_compared": 384384,
+      "controlled_state_words_compared": 11748,
+      "owner_api_events_compared": 1385,
+      "exact_serialized_output_sha256": "0b17ec2a59c7f2d824abfcba4ca85994ad4748113144e772d997278a369e5897"
+    },
+    {
+      "actor_direct": 1,
+      "actor_backface_cone": 1,
+      "actor_vtx_kernel": 1,
+      "actor_light_n16": 1,
+      "actor_no_clear": 1,
+      "paired_scenarios": 150,
+      "ta_words_compared": 383616,
+      "controlled_state_words_compared": 11748,
+      "owner_api_events_compared": 1385,
+      "exact_serialized_output_sha256": "c8b14d35a1a3a61442f791a0296ab5ae2951f4a71c7d599f2fe3d50d711ebe0d"
+    },
+    {
+      "actor_direct": 1,
+      "actor_backface_cone": 2,
+      "actor_vtx_kernel": 1,
+      "actor_light_n16": 1,
+      "actor_no_clear": 1,
+      "paired_scenarios": 150,
+      "ta_words_compared": 383616,
+      "controlled_state_words_compared": 11748,
+      "owner_api_events_compared": 1385,
+      "exact_serialized_output_sha256": "664178d5d21f86677674717775728d093a2c2d4992ea1b20df7ec24b4dad28a9"
+    },
+    {
+      "actor_direct": 1,
+      "actor_backface_cone": 2,
+      "actor_vtx_kernel": 2,
+      "actor_light_n16": 2,
+      "actor_no_clear": 1,
+      "paired_scenarios": 150,
+      "ta_words_compared": 383616,
+      "controlled_state_words_compared": 35598,
+      "owner_api_events_compared": 1385,
+      "exact_serialized_output_sha256": "e3baf85d233a8378420c89b96d99560a69a013a9eba118b070750e7f7206af97"
+    },
+    {
+      "actor_direct": 1,
+      "actor_backface_cone": 0,
+      "actor_vtx_kernel": 1,
+      "actor_light_n16": 1,
+      "actor_no_clear": 0,
+      "paired_scenarios": 150,
+      "ta_words_compared": 384384,
+      "controlled_state_words_compared": 11748,
+      "owner_api_events_compared": 1385,
+      "exact_serialized_output_sha256": "0b17ec2a59c7f2d824abfcba4ca85994ad4748113144e772d997278a369e5897"
+    }
+  ],
+  "coverage": [
+    "Actual complete production native_actor_fast.cpp submission and one_chunk loops with production clipping and source lighting.",
+    "Rigid8, rigid6/source, lazy skin, s8, s16, normal stride fallback, over32768 index-range guards and unavailable palette workspace.",
+    "Fast, constant, exact, probe, probe-decline, singular-normal, headroom and per-vertex-alpha lighting; dynamic UV offsets and native texture scales.",
+    "Repeated parts, multiple meshlets, frame-cache eviction, changed part/frame light folds, packet and shared direct windows.",
+    "Initial n=0 calls, no-index meshes, all-cone-rejected meshes, cone=2 validation, LOD vertex prefixes and one collapsed meshlet.",
+    "Cache and Records-stride redirects within a Part; dirty storage before placement construction of Part and Lights.",
+    "Real s8 and s16 kernel partial-return/resume from missing palette directions; bake_prepare calls light setup before position setup.",
+    "Reserve/begin rejection, short scratch, packet nonstream capacity failure, streaming flush, direct32767 capacity abort and matched end/abort/result counts.",
+    "AVK=2 / N16=2 diagnostic reference destinations and counters; separate NO_CLEAR=0 compatibility pair."
+  ],
+  "sanitizer": {
+    "status": "PASS",
+    "checks": "address,undefined; detect_leaks=0 (runner /proc limitation)",
+    "paired_scenarios": 150,
+    "output_identical_to_noninstrumented": true,
+    "exact_serialized_output_sha256": "e3baf85d233a8378420c89b96d99560a69a013a9eba118b070750e7f7206af97"
+  },
+  "limits": [
+    "Host scalar adapters replace only SH-4 AVK kernel execution and SQ transport; this is not SH-4 floating-point arithmetic or real game TA capture.",
+    "The native UI packet/direct owner is a controlled boundary; header inputs and output ordering are compared with a deterministic synthetic header.",
+    "The production compiled Make-derived profile/object identity and SH-4 ABI/cycle/traffic evidence are separate controls.",
+    "No game assets, Flycast gameplay, physical-console timing, STRICT gameplay trace or whole-frame timing is claimed."
+  ],
+  "reproduce": [
+    "python3 port/dreamcast/tools/d367/actor_setup_lean/check_runtime.py --output /tmp/new-actor-setup-controls",
+    "python3 port/dreamcast/tools/d367/actor_setup_lean/check_runtime.py --sanitizer --output /tmp/new-actor-setup-sanitizer"
+  ],
+  "full_runtime_receipt_sha256": "31288f8022c65b42fa6f91bb551d6524a3dcc953889f4b05da4de072baebe809",
+  "sanitizer_receipt_sha256": "c6cc9f353cf7156f02d7745b18d5d842c14aa6bb469bc90a61372c08de1ff1f8"
+}

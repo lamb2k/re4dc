@@ -2028,6 +2028,17 @@ $(OBJDIR)/platform/avk_sh4.o: platform/avk_sh4.S
 	kos-cc $(KOS_CFLAGS) $(AVK_SFLAGS) -c $< -o $@
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_VTX_KERNEL=$(ACTOR_VTX_KERNEL)
 endif
+# ACTOR_SETUP_LEAN=1 (render only; default 0): retain invariant AVK argument words, eligibility and kernel choice
+#              for the current Part instead of rebuilding them for every meshlet. Records, cache destinations and
+#              palette readiness remain live. With ACTOR_NO_CLEAR, also drop the Lights constructor's duplicate
+#              initialization: every light fold calls lights_reset first. No persistent frame/model cache is added.
+ACTOR_SETUP_LEAN ?= 0
+ifneq ($(ACTOR_SETUP_LEAN),0)
+ifneq ($(ACTOR_SETUP_LEAN),1)
+$(error ACTOR_SETUP_LEAN must be 0 or 1)
+endif
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_SETUP_LEAN=1
+endif
 # AVK_RIGID6=1 (needs ACTOR_VTX_KERNEL; render only, exact): rigid parts with stride 6 positions (props, weapons,
 #              attachments: positions_asm<kPos6>, ~65% of pass_positions at the r101 entry) take the pipelined
 #              rigid6 kernels (mkavk.py @p6: the index x 6 through r14) instead of the one-vertex loop.
