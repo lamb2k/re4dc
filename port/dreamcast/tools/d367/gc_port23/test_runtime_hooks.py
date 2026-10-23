@@ -27,6 +27,9 @@ class RuntimeTextureTests(unittest.TestCase):
             'int re4dc_ui_bind_player(', 'int re4dc_ui_bind_weapon(', 'int re4dc_ui_bind_enemy(',
             'void re4dc_ui_unbind_option(', 'void re4dc_ui_unbind_player(',
             'void re4dc_ui_unbind_weapon(', 'void re4dc_ui_unbind_enemy('))
+        loader = (GAME.parents[2] / 'src/game/read.cpp').read_text()
+        reload = function(loader, 'void CoreDataRead()\n{')
+        retire = reload[reload.index('#if defined(RE4DC_GAME)'):reload.index('    pG->pArc =')]
         fixture = r'''
 #include "gc_asset_members.h"
 #include <cassert>
@@ -57,7 +60,14 @@ void re4dc_actor_archive_adopt(const void*,void* blob,unsigned,unsigned){
 void re4dc_actor_archive_retire(const void*){}
 void re4dc_model_bind_draw_owner(const void*,void* blob,unsigned,unsigned){check_prepared(blob);}
 void re4dc_model_unbind_draw_owner(const void*){}
+extern "C" void re4dc_gcasset_retire_archive(const void*);
+void* core_reload_base;
+#define CORE_DATA_ADDR core_reload_base
+void re4dc_effect_unbind(void*){}
 ''' + bodies + r'''
+void actual_core_pre_overwrite(){
+''' + retire + r'''
+}
 std::vector<unsigned char> archive(){
     std::vector<unsigned char> bytes(128);unsigned count=1,offset=32;
     std::memcpy(bytes.data(),&count,4);std::memcpy(bytes.data()+16,&offset,4);
@@ -78,6 +88,11 @@ int main(){
     re4dc_ui_unbind_enemy(plain.data());assert(!member_lookup(plain.data()+32,&m));
     member_retire_transient();assert(!member_lookup(room.data()+32,&m));
     assert(member_lookup(core.data()+32,&m)); // resident core survives room retirement
+    const unsigned before=m.serial;core_reload_base=core.data();actual_core_pre_overwrite();
+    assert(!member_lookup(core.data()+32,&m)); // actual loader retires before DVD overwrite
+    core[40]=99;original=fingerprint(core.data()+32,96);
+    assert(re4dc_ui_bind_core(core.data(),128));assert(member_lookup(core.data()+32,&m));
+    assert(m.serial!=before && !std::memcmp(m.digest.bytes,original.bytes,32));
 }
 '''
         with tempfile.TemporaryDirectory(prefix='gc-port23-bind-', dir='/dev/shm') as temporary:
@@ -85,7 +100,7 @@ int main(){
             (root / 'fixture.cpp').write_text(fixture)
             executable = root / 'fixture'
             subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
-                            '-DRE4DC_GC_ASSET_GATE=1', '-I', str(GAME / 'platform/include'),
+                            '-DRE4DC_GC_ASSET_GATE=1', '-DRE4DC_GAME=1', '-I', str(GAME / 'platform/include'),
                             str(root / 'fixture.cpp'), str(GAME / 'platform/gc_asset_members.cpp'),
                             str(GAME / 'platform/gc_asset_gate.cpp'), '-o', str(executable)], check=True)
             subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)

@@ -130,6 +130,7 @@ bool member_adopt(const void* owner,void* archive,unsigned bytes,bool transient)
     archives[free]=candidate;return true;
 }
 void member_retire(const void* owner) { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner==owner)revoke(i); }
+void member_retire_archive(const void* base) { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && archives[i].base==base)revoke(i); }
 void member_retire_transient() { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && archives[i].transient)revoke(i); }
 bool member_capture(const void* data) {
     for(const auto& member:members)if(current(member) && contains(member.base,member.bytes,data,1))return true;
@@ -159,4 +160,5 @@ bool member_lookup(const void* data,ModelMember* out) {
 }
 }
 extern "C" void re4dc_gcasset_capture_model(const void* data) { re4dc_gcasset::member_capture(data); }
+extern "C" void re4dc_gcasset_retire_archive(const void* base) { re4dc_gcasset::member_retire_archive(base); }
 #endif
