@@ -107,3 +107,21 @@ performance estimate: its script calls `est.selection` without lod_px, inheritin
 5.0, while the release uses20. Those selected/savings counts must not be reused
 as current. All exact strip-sharing/reader evidence above covers every retained
 meshlet/LOD and does not depend on that camera model or claim timing gains.
+
+Frozen source control11109 completed: see strip-share-host-11109.json,
+strip-binding-controls-11109-host.json and
+composition-controls-stripshare-11109-host.json. Exact96 composition comparisons
+across8 configurations plus the stale-reset mutation pass, including the
+SELECT_ONLY1/REPLAY_LEAN1/SUBMIT_BATCH1 combination. These source controls remain
+pinned to11109; later origin82d/current recipe target qualification is separate.
+
+Reproduce binding/layout (same pinned compact bytes also exist in the RAM map):
+
+```text
+TMPDIR=/dev/shm PYTHONDONTWRITEBYTECODE=1 python3 port/dreamcast/tools/d367/dedup_offline23/check_strip_binding.py --source-tree /root/work/lanes/dedup-offline23 --expected-source 11109d046d42c352c801c6c1a8e5a701de9bfe52 --baseline-native /root/re4payload/t164-20261018/tree/dc/native --legacy /mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023 --compact /dev/shm/dedup-stripshare-host --output /dev/shm/CHOOSE-FRESH-OUTPUT
+```
+
+For an immutable or detached11109 source tree, pass its actual path above.
+The checker requires exact HEAD and tracked-clean source. RAM map r100/r101/r103
+files hash exactly to the private r100-stripshare-v1/r101-stripshare-v1/
+r103-stripshare-v1 variants. No existing variant may be overwritten.
