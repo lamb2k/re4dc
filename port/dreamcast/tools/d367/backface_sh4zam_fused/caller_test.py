@@ -55,7 +55,7 @@ def expected(oracle,cache,stream,oc,limit,cull):
             out+=oracle(cache,ix,255,cull)[0];emitted+=1;tri+=max(0,n-2)
         s+=n+1
     return out,s,culled,emitted,tri
-p=argparse.ArgumentParser(description=__doc__);p.add_argument('--objects',type=Path,required=True);p.add_argument('--report',type=Path,required=True);a=p.parse_args();assert not a.report.exists()
+p=argparse.ArgumentParser(description=__doc__);p.add_argument('--objects',type=Path,required=True);p.add_argument('--report',type=Path,required=True);p.add_argument('--early-clip',action='store_true',help='Require the opt-in early depth exit instead of the original full scan');a=p.parse_args();assert not a.report.exists()
 oracle=base.oracle_load(a.objects/'oracle.so');rng=random.Random(0x5d6c0de)
 cache=base.generated_cache([(rng.uniform(-640,640),rng.uniform(-480,480)) for i in range(256)])
 cases=[]
@@ -97,7 +97,10 @@ for stream,oc,limit,kind in cases:
         except AssertionError as error:raise AssertionError((kind,len(stream),limit,cull,trace,str(error),list(m.ring))) from error
         want=expected(oracle,cache,stream,oc,limit,cull)
         if kind.startswith('gate-'):assert m.area_ops==0,(kind,m.area_ops)
-        if kind in ('interior-first-zero-depth','prepassed-eligible-first-screen','eligible-first-zero-later-screen'):assert m.area_ops==62*7,(kind,m.area_ops)
+        if kind=='interior-first-zero-depth':
+            if a.early_clip:assert m.area_ops<62*7,(kind,m.area_ops)
+            else:assert m.area_ops==62*7,(kind,m.area_ops)
+        if kind in ('prepassed-eligible-first-screen','eligible-first-zero-later-screen'):assert m.area_ops==62*7,(kind,m.area_ops)
         assert got==want,(kind,len(stream),limit,cull,trace,len(got[0]),len(want[0]),got[1:],want[1:]);passed+=1
 for bits in range(16):
     fpscr=((bits&1)<<21)|((bits&2)<<19)|((bits&4)<<17)|((bits&8)<<15)
@@ -105,5 +108,5 @@ for bits in range(16):
     for trace in (0,1):
         text=base.text_section(a.objects/('walk-trace%d.elf'%trace));m=WalkMachine(text,cache,stream,oc,255,2,fpscr,trace=bool(trace));m.pc=struct.unpack_from('<I',(a.objects/('walk-trace%d.elf'%trace)).read_bytes(),24)[0]
         assert m.run()==expected(oracle,cache,stream,oc,255,2)
-result=dict(scope=__doc__,comparisons=passed,mode_controls=32,cases=len(cases),groups=groups,exact_words=True,clip_stop_pointer=True,all_any_order=True,counts=True,callee_fpscr_xf=True,no_hardware_claim=True,conservative_rejects_skip_all_area=True,interior_crossing_cost_explicit=True,files={p.name:base.sha(p.read_bytes()) for p in a.objects.glob('walk-trace*.elf')})
+result=dict(scope=__doc__,comparisons=passed,mode_controls=32,cases=len(cases),groups=groups,exact_words=True,clip_stop_pointer=True,all_any_order=True,counts=True,callee_fpscr_xf=True,no_hardware_claim=True,conservative_rejects_skip_all_area=True,interior_crossing_cost_explicit=True,early_clip=a.early_clip,files={p.name:base.sha(p.read_bytes()) for p in a.objects.glob('walk-trace*.elf')})
 a.report.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))

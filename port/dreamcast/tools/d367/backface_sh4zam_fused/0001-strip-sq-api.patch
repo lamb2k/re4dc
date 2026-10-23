@@ -64,7 +64,7 @@ diff --git a/source/shz_strip.S b/source/shz_strip.S
 new file mode 100644
 --- /dev/null
 +++ b/source/shz_strip.S
-@@ -0,0 +1,665 @@
+@@ -0,0 +1,668 @@
 +#include "shz_strip_area.inc"
 +/* Common CPU_BACKFACE=2 strip classifier and store-queue emitter.
 + * shz_strip_sq_t: cache,indices,n,mask,cull,q,sent,pieces at 0,4,...28.
@@ -99,6 +99,9 @@ new file mode 100644
 +#endif
 +#ifndef SHZ_STRIP_FAST
 +#define SHZ_STRIP_FAST 1
++#endif
++#ifndef SHZ_STRIP_EARLY_CLIP
++#define SHZ_STRIP_EARLY_CLIP 0
 +#endif
 +
 +        .macro SHZ_JUMP target
@@ -791,7 +794,7 @@ diff --git a/source/shz_strip_fused.inc b/source/shz_strip_fused.inc
 new file mode 100644
 --- /dev/null
 +++ b/source/shz_strip_fused.inc
-@@ -0,0 +1,673 @@
+@@ -0,0 +1,745 @@
 +/* Short-strip fused scan and world batch continuation. No SDK caller returns
 + * between world strips; the public prologue owns one FPU/register lease.
 + * F bit(t-1-i) is original triangle i. No SQ store precedes the clip decision.
@@ -815,8 +818,15 @@ new file mode 100644
 +        .endif
 +        .if \codes
 +        mov.b @(r0,r7),r1
++#if SHZ_STRIP_EARLY_CLIP
++        /* Only the first-outcode-zero world specialization uses codes=1.
++         * all&63 is already zero: any depth bit requires clipping now. */
++        tst r2,r1
++        bf 994f
++#else
 +        and r1,r2
 +        or r1,r3
++#endif
 +        .endif
 +        .if \codes
 +        shld r11,r0
@@ -828,7 +838,11 @@ new file mode 100644
 +        fmov.s @r0+,fr\x
 +        fmov.s @r0,fr\y
 +        .endm
++#if SHZ_STRIP_EARLY_CLIP
++        .macro SHZ_FULL_PHASE label,ax,ay,bx,by,cx,cy,positive,codes,abort=0
++#else
 +        .macro SHZ_FULL_PHASE label,ax,ay,bx,by,cx,cy,positive,codes
++#endif
 +\label:
 +        fsub fr\ay,fr2
 +        mov.b @r4+,r0
@@ -843,8 +857,13 @@ new file mode 100644
 +        .if \codes
 +        mov.b @(r0,r7),r1
 +        shld r11,r0
++#if SHZ_STRIP_EARLY_CLIP
++        tst r2,r1
++        bf \abort
++#else
 +        and r1,r2
 +        or r1,r3
++#endif
 +        .else
 +        shld r3,r0
 +        .endif
@@ -896,8 +915,13 @@ new file mode 100644
 +        .if \codes
 +        mov.b @(r0,r7),r1
 +        shld r11,r0
++#if SHZ_STRIP_EARLY_CLIP
++        tst r2,r1
++        bf .Lphase_depth_clip\@
++#else
 +        and r1,r2
 +        or r1,r3
++#endif
 +        .else
 +        shld r3,r0
 +        .endif
@@ -932,6 +956,12 @@ new file mode 100644
 +        rotcl r5
 +        rotcl r6
 +        SHZ_JUMP .Lfused_scan_end
++#if SHZ_STRIP_EARLY_CLIP
++        .if \codes
++.Lphase_depth_clip\@:
++        SHZ_JUMP .Lfinish
++        .endif
++#endif
 +        .endm
 +        .macro SHZ_START label,codes,stream
 +\label:
@@ -975,6 +1005,12 @@ new file mode 100644
 +        bra \label\()n0
 +        nop
 +        .endif
++#if SHZ_STRIP_EARLY_CLIP
++        .if \codes
++994:
++        SHZ_JUMP .Lfinish
++        .endif
++#endif
 +        .if \stream == 0
 +\label\()p_dispatch:
 +        mov #6,r0
@@ -982,12 +1018,27 @@ new file mode 100644
 +        bt \label\()p_full0
 +        bra \label\()p0
 +        nop
++#if SHZ_STRIP_EARLY_CLIP
++        SHZ_FULL_PHASE \label\()p_full0,8,9,10,11,12,13,1,\codes,\label\()p_depth_clip
++        SHZ_FULL_PHASE \label\()p_full1,10,11,12,13,8,9,0,\codes,\label\()p_depth_clip
++        SHZ_FULL_PHASE \label\()p_full2,12,13,8,9,10,11,1,\codes,\label\()p_depth_clip
++        .if \codes
++        bra \label\()p_full3
++        nop
++\label\()p_depth_clip:
++        SHZ_JUMP .Lfinish
++        .endif
++        SHZ_FULL_PHASE \label\()p_full3,8,9,10,11,12,13,0,\codes,\label\()p_depth_clip
++        SHZ_FULL_PHASE \label\()p_full4,10,11,12,13,8,9,1,\codes,\label\()p_depth_clip
++        SHZ_FULL_PHASE \label\()p_full5,12,13,8,9,10,11,0,\codes,\label\()p_depth_clip
++#else
 +        SHZ_FULL_PHASE \label\()p_full0,8,9,10,11,12,13,1,\codes
 +        SHZ_FULL_PHASE \label\()p_full1,10,11,12,13,8,9,0,\codes
 +        SHZ_FULL_PHASE \label\()p_full2,12,13,8,9,10,11,1,\codes
 +        SHZ_FULL_PHASE \label\()p_full3,8,9,10,11,12,13,0,\codes
 +        SHZ_FULL_PHASE \label\()p_full4,10,11,12,13,8,9,1,\codes
 +        SHZ_FULL_PHASE \label\()p_full5,12,13,8,9,10,11,0,\codes
++#endif
 +        add #-6,r13
 +        mov #6,r0
 +        cmp/hi r0,r13
@@ -1008,12 +1059,27 @@ new file mode 100644
 +        bt \label\()n_full0
 +        bra \label\()n0
 +        nop
++#if SHZ_STRIP_EARLY_CLIP
++        SHZ_FULL_PHASE \label\()n_full0,8,9,10,11,12,13,0,\codes,\label\()n_depth_clip
++        SHZ_FULL_PHASE \label\()n_full1,10,11,12,13,8,9,1,\codes,\label\()n_depth_clip
++        SHZ_FULL_PHASE \label\()n_full2,12,13,8,9,10,11,0,\codes,\label\()n_depth_clip
++        .if \codes
++        bra \label\()n_full3
++        nop
++\label\()n_depth_clip:
++        SHZ_JUMP .Lfinish
++        .endif
++        SHZ_FULL_PHASE \label\()n_full3,8,9,10,11,12,13,1,\codes,\label\()n_depth_clip
++        SHZ_FULL_PHASE \label\()n_full4,10,11,12,13,8,9,0,\codes,\label\()n_depth_clip
++        SHZ_FULL_PHASE \label\()n_full5,12,13,8,9,10,11,1,\codes,\label\()n_depth_clip
++#else
 +        SHZ_FULL_PHASE \label\()n_full0,8,9,10,11,12,13,0,\codes
 +        SHZ_FULL_PHASE \label\()n_full1,10,11,12,13,8,9,1,\codes
 +        SHZ_FULL_PHASE \label\()n_full2,12,13,8,9,10,11,0,\codes
 +        SHZ_FULL_PHASE \label\()n_full3,8,9,10,11,12,13,1,\codes
 +        SHZ_FULL_PHASE \label\()n_full4,10,11,12,13,8,9,0,\codes
 +        SHZ_FULL_PHASE \label\()n_full5,12,13,8,9,10,11,1,\codes
++#endif
 +        add #-6,r13
 +        mov #6,r0
 +        cmp/hi r0,r13
@@ -1116,8 +1182,15 @@ new file mode 100644
 +        mov r9,r4
 +        mov #0,r5
 +        mov #0,r6
++#if SHZ_STRIP_EARLY_CLIP
++        /* codes=1 needs only the depth mask. codes=0 does not consume r2
++         * before mask/emission scratch assigns it; the long gate has its
++         * own all=255 initialization. */
++        mov #3,r2
++#else
 +        mov #-1,r2
 +        extu.b r2,r2
++#endif
 +        mov #0,r3
 +        fldi0 fr14
 +        mov.l @(20,r15),r0
@@ -1162,9 +1235,11 @@ new file mode 100644
 +        bt .Lfused_mask
 +        mov #-1,r11
 +        extu.b r11,r11
++#if !SHZ_STRIP_EARLY_CLIP
 +        mov.l @(12,r15),r0
 +        cmp/eq #2,r0
 +        bf .Lfused_world_decide
++#endif
 +        bra .Lfused_mask
 +        nop
 +.Lfused_world_decide:

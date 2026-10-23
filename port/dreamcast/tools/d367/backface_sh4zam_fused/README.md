@@ -1,5 +1,10 @@
 # Patched SH4ZAM fused strip submission
 
+Follow-up: [EARLY-CLIP.md](EARLY-CLIP.md) documents the default-off
+`BACKFACE_EARLY_CLIP=1` optimization, exact object controls, executed-instruction
+benchmarks, and remaining scene/console gates. The modeled CPU2-versus-OFF
+numbers below are the original candidate's evidence, not new measurements.
+
 The complete outcode, exact-facing, run/parity selection and SQ emitter live
 inside a reproducible patch against clean SDK pin33fa4850. RE4 contains thin
 material/model/clip adapters. CPU0/C1 add no SDK object or include path.

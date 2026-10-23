@@ -25,6 +25,20 @@ CPU_BACKFACE ?= 0
 ifneq ($(filter $(CPU_BACKFACE),0 1 2),$(CPU_BACKFACE))
 $(error CPU_BACKFACE must be 0, 1 or 2)
 endif
+# BACKFACE_EARLY_CLIP=1 (render only, needs CPU_BACKFACE=2): once the
+# first world outcode proves that all-depth/screen rejection is impossible,
+# stop at the first later depth crossing before doing more facing work.
+# Default 0 preserves the original kernel. Use a fresh OBJDIR for each arm.
+BACKFACE_EARLY_CLIP ?= 0
+ifneq ($(filter $(BACKFACE_EARLY_CLIP),0 1),$(BACKFACE_EARLY_CLIP))
+$(error BACKFACE_EARLY_CLIP must be 0 or 1)
+endif
+ifeq ($(BACKFACE_EARLY_CLIP),1)
+ifneq ($(CPU_BACKFACE),2)
+$(error BACKFACE_EARLY_CLIP=1 needs CPU_BACKFACE=2)
+endif
+$(OBJDIR)/platform/backface_sh4.o: KOS_CFLAGS += -DSHZ_STRIP_EARLY_CLIP=1
+endif
 ifneq ($(CPU_BACKFACE),0)
 $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_CPU_BACKFACE=$(CPU_BACKFACE)
 endif
