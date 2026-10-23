@@ -2266,6 +2266,10 @@ SDK_CFLAGS += -fno-unwind-tables -fno-asynchronous-unwind-tables
 endif
 # Opt-in game-side CPU knobs and the determinism trace (default off: no effect).
 include game30.mk
+# BACKFACE_CONE=1 (backface.mk, lane backface-cone23): the world back-face cone is SCENERY_CONE=1 (scenery19.mk).
+ifeq ($(BACKFACE_CONE),1)
+override SCENERY_CONE := 1
+endif
 # behave18 native actor runtime preview (ENGINE_PREVIEW; default off: nothing built).
 include engine_preview.mk
 

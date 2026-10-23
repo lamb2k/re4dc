@@ -32,6 +32,24 @@
 #endif
 #include "re4dc_screen.h"
 #include "native_actor.hpp"
+// ACTOR_BACKFACE_CONE (backface.mk, lane backface-cone23; render only; default 0: no code). For the models
+// coarse_actor_transaction.inc marks (Leon, Ganados, El Gigante, Ashley: re4dc_abc_model), the converter splits each
+// opaque part's strips by (palette entry, facing) before clustering, so a meshlet's triangles share one skinning matrix
+// and face one way; after conversion each meshlet gets a normal cone in that matrix's input space (abc_build, stored
+// in the stream's unused tail). At draw a meshlet whose every triangle faces the side the part's cull removes is
+// skipped before its transform, lighting and store-queue writes; every other meshlet draws unchanged.
+// =2 (check build): rejected meshlets are transformed anyway and every triangle is checked with the TA's screen-area
+// rule (room/backface_emit.hpp); "bad" counts triangles a rejected meshlet would have drawn (must stay 0).
+#ifndef RE4DC_ACTOR_BACKFACE_CONE
+#define RE4DC_ACTOR_BACKFACE_CONE 0
+#endif
+#if RE4DC_ACTOR_BACKFACE_CONE
+extern "C" void re4dc_log(const char* fmt, ...);
+extern "C" {
+const void* re4dc_abc_model = nullptr;  // set by coarse_actor_transaction.inc for a model the split applies to
+unsigned re4dc_abc_class = 0;           // its class: 1 Leon, 2 Ganado, 3 El Gigante, 4 Ashley
+}
+#endif
 #ifndef RE4DC_ACTOR_SKIN_OWNER_POOL
 #define RE4DC_ACTOR_SKIN_OWNER_POOL 0
 #endif
@@ -500,6 +518,12 @@ unsigned stripify(const u8* tri, unsigned count, u8* out, unsigned cap, u8* used
 //     palette, vi) so draw-time skinning reloads matrices once per run.
 //  4. Whole-part opaque windows: LOD levels (see the blob format).
 // The triangle set and each triangle's winding are the GX list's.
+#if RE4DC_ACTOR_BACKFACE_CONE
+// ACTOR_BACKFACE_CONE counters (logged as "ABFC" every 600 frames); per class 0 other, 1 Leon, 2 Ganado, 3 El Gigante,
+// 4 Ashley: meshlets tested / rejected, vertices / triangles skipped, vertices of the tested parts' meshlets.
+unsigned abc_splits = 0, abc_built = 0, abc_noroom = 0, abc_cones = 0, abc_nocone = 0, abc_bad = 0, abc_log = 0;
+unsigned abc_tests[5], abc_rej[5], abc_vskip[5], abc_tskip[5], abc_verts[5];
+#endif
 class Converter {
 public:
     Converter(const Re4dcModelPart& part, const SortSource& sort, u8* out, unsigned out_bytes, Arena scratch, bool lod)
@@ -509,6 +533,9 @@ public:
     bool run() {
         if (capacity < sizeof(BlobHeader) + 32 || p.stream_bytes > 0x3FFFCU) ACTOR_REJECT();
         if (!parse()) return false;
+#if RE4DC_ACTOR_BACKFACE_CONE
+        if (p.blend == 0 && (abc_force || (p.model && p.model == re4dc_abc_model))) abc_split();
+#endif
         rs = 3U + (constant_color ? 0U : 1U);
         infos = arena.take<MeshletInfo>(strip_count);
         idx_all = arena.take<u8>(corner_total);
@@ -532,9 +559,13 @@ public:
     }
     unsigned bytes() const { return size; }
     unsigned level_count() const { return levels; }
+#if RE4DC_ACTOR_BACKFACE_CONE
+    bool split() const { return skey != nullptr; }
+    bool abc_force = false;  // relod: the part was split before (its cone table is valid)
+#endif
 
 private:
-    struct Strip { u32 a, b; u16 n; u8 mode, pad; };  // mode 0 run, 1 quad (1,2,0,3), 2 fan triangle
+    struct Strip { u32 a, b; u16 n; u8 mode, pad; };  // mode 0 run, 1 quad (1,2,0,3), 2 fan triangle, 3 reversed run
     const Re4dcModelPart& p;
     const SortSource& s;
     u8* out;
@@ -563,8 +594,100 @@ private:
         static constexpr u8 quad[4] = {1, 2, 0, 3};
         if (t.mode == 0) return p.stream + t.a + k * stride;
         if (t.mode == 1) return p.stream + t.a + quad[k] * stride;
+#if RE4DC_ACTOR_BACKFACE_CONE
+        if (t.mode == 3) return p.stream + t.a - k * stride;
+#endif
         return k == 0 ? p.stream + t.a : p.stream + t.b + (k - 1) * stride;
     }
+#if RE4DC_ACTOR_BACKFACE_CONE
+    // ACTOR_BACKFACE_CONE: per strip piece key = palette entry << 3 | facing (0..5: the normal's dominant axis and sign,
+    // 7: corners on different palette entries); the clustering keeps one key per meshlet.
+    const u16* skey = nullptr;
+    bool abc_pos(unsigned vi, float v[3], unsigned& pal) const {
+        const u8* base; unsigned count;
+        if (p.position_stride == 6) { if (!s.positions) return false; base = s.positions; count = s.position_count; }
+        else if (p.position_stride == 8 && p.positions) { base = p.positions; count = p.position_count; }
+        else return false;
+        if (vi >= count) return false;
+        const short* q = reinterpret_cast<const short*>(base + vi * 8U);
+        v[0] = float(q[0]); v[1] = float(q[1]); v[2] = float(q[2]);
+        pal = p.position_stride == 6 ? unsigned(u16(q[3])) : 0U;
+        return true;
+    }
+    // Key of the triangle (a, b, c) in drawn winding; ~0 when degenerate or unreadable (takes a neighbour's key).
+    unsigned abc_key(const u8* a, const u8* b, const u8* c) const {
+        float pa[3], pb[3], pc[3]; unsigned qa, qb, qc;
+        if (!abc_pos(be16(a), pa, qa) || !abc_pos(be16(b), pb, qb) || !abc_pos(be16(c), pc, qc) || qa > 0x1FFFU) return ~0U;
+        if (qa != qb || qa != qc) return (qa << 3) | 7U;
+        float n[3];
+        if (!normal_of(pa, pb, pc, n)) return ~0U;
+        unsigned ax = 0; float m = std::fabs(n[0]);
+        if (std::fabs(n[1]) > m) { ax = 1; m = std::fabs(n[1]); }
+        if (std::fabs(n[2]) > m) ax = 2;
+        return (qa << 3) | (ax * 2U + (n[ax] < 0.0f ? 1U : 0U));
+    }
+    // Cut every strip where its triangles' key changes (a piece starting on an odd triangle is written reversed, which
+    // keeps every triangle's winding; quads with two keys become two triangles), then order the pieces by key.
+    // Nothing changes if anything is missing (positions, arena).
+    void abc_split() {
+        u16 tk[kMaxStrip];
+        Strip* ns = nullptr; u16* nk = nullptr;
+        unsigned count = 0, corners = 0;
+        auto put = [&](u32 a, u32 b, unsigned n, u8 mode, unsigned key) {
+            if (ns) { ns[count] = {a, b, u16(n), mode, 0}; nk[count] = u16(key); }
+            ++count; corners += n;
+        };
+        for (unsigned pass = 0; pass < 2; ++pass) {
+            count = 0; corners = 0;
+            for (unsigned i = 0; i < strip_count; ++i) {
+                const Strip& t = strips[i];
+                const unsigned tris = t.mode == 1 ? 2U : t.n - 2U;
+                unsigned last = ~0U;
+                for (unsigned j = 0; j < tris; ++j) {
+                    unsigned key;
+                    if (j & 1) key = abc_key(corner(t, j + 1), corner(t, j), corner(t, j + 2));
+                    else key = abc_key(corner(t, j), corner(t, j + 1), corner(t, j + 2));
+                    tk[j] = u16(key == ~0U ? 0xFFFFU : key);
+                    if (key != ~0U && last == ~0U) last = key;
+                }
+                if (last == ~0U) { put(t.a, t.b, t.n, t.mode, 0xFFFFU); continue; }  // nothing readable: one piece
+                for (unsigned j = 0; j < tris; ++j) { if (tk[j] == 0xFFFFU) tk[j] = u16(last); else last = tk[j]; }
+                if (t.mode == 1) {
+                    if (tk[0] == tk[1]) put(t.a, t.b, t.n, 1, tk[0]);
+                    else { put(t.a, 0, 3, 0, tk[0]); put(t.a, t.a + 2U * stride, 3, 2, tk[1]); }  // (q0,q1,q2), fan (q0,q2,q3)
+                    continue;
+                }
+                if (t.mode != 0) { put(t.a, t.b, t.n, t.mode, tk[0]); continue; }
+                for (unsigned u0 = 0; u0 < tris;) {
+                    unsigned u1 = u0;
+                    while (u1 + 1 < tris && tk[u1 + 1] == tk[u0]) ++u1;
+                    const unsigned key = tk[u0];
+                    if (!(u0 & 1U)) put(t.a + u0 * stride, 0, u1 - u0 + 3U, 0, key);
+                    else if (u1 & 1U) put(t.a + (u1 + 2U) * stride, 0, u1 - u0 + 3U, 3, key);
+                    else {
+                        if (u1 > u0) put(t.a + (u1 + 1U) * stride, 0, u1 - u0 + 2U, 3, key);
+                        put(t.a + u1 * stride, 0, 3, 0, key);
+                    }
+                    u0 = u1 + 1;
+                }
+            }
+            if (pass) break;
+            if (corners >= 0xFFF0U) return;
+            ns = arena.take<Strip>(count); nk = arena.take<u16>(count);
+            if (!ns || !nk) return;
+        }
+        // Shell sort by key (the order inside a key is not significant).
+        for (unsigned gap = count / 2U; gap; gap = gap == 2U ? 1U : gap * 5U / 11U)
+            for (unsigned i = gap; i < count; ++i) {
+                const Strip sv = ns[i]; const u16 kv = nk[i];
+                unsigned j = i;
+                while (j >= gap && nk[j - gap] > kv) { ns[j] = ns[j - gap]; nk[j] = nk[j - gap]; j -= gap; }
+                ns[j] = sv; nk[j] = kv;
+            }
+        strips = ns; skey = nk; strip_count = count; corner_total = corners;
+        ++abc_splits;
+    }
+#endif
     unsigned ci_of(const u8* c) const { return stride == 8 ? be16(c + 4) : 0U; }
     bool same_tuple(const u8* x, const u8* y) const {
         return be16(x) == be16(y) && be16(x + 2) == be16(y + 2) && be16(x + stride - 2) == be16(y + stride - 2) &&
@@ -632,7 +755,7 @@ private:
     // (optional) receives each strip's meshlet serial.
     template <class Emit>
     bool cluster(unsigned count, const u16* n, const u16* scid, const u16* cid, unsigned tuples, unsigned corners,
-                 bool keep_order, u16* strip_meshlet, Emit&& emit) {
+                 bool keep_order, u16* strip_meshlet, Emit&& emit, const u16* key = nullptr) {
         u16* occ_start = arena.take<u16>(tuples + 1);  // tuple -> strips (distinct), CSR
         u16* occ = arena.take<u16>(corners);
         u16* stamp = arena.take<u16>(tuples);
@@ -673,6 +796,7 @@ private:
             ++serial;
             while (done[next]) ++next;
             unsigned pick = next;
+            const unsigned seed_key = key ? key[pick] : 0U;  // ACTOR_BACKFACE_CONE: one key per meshlet
             for (;;) {
                 done[pick] = 1; --remaining;
                 if (strip_meshlet) strip_meshlet[pick] = u16(produced);
@@ -697,6 +821,7 @@ private:
                 for (unsigned q = 0; q < ncand; ++q) {
                     const unsigned j = candidates[q];
                     if (done[j]) continue;
+                    if (key && key[j] != seed_key) continue;
                     if (nrec + distinct[j] - score[j] > kMaxVertices || nidx + n[j] > kMaxIndices) continue;
                     if (score[j] > best_score || (score[j] == best_score && j < best)) { best = j; best_score = score[j]; }
                 }
@@ -704,7 +829,7 @@ private:
                     // Nothing adjacent fits (always, in keep_order mode): the
                     // first unused strip in order, if it fits.
                     while (next < count && done[next]) ++next;
-                    if (next < count) {
+                    if (next < count && (!key || key[next] == seed_key)) {
                         unsigned fresh = 0;
                         for (unsigned k = 0; k < n[next]; ++k) {
                             const unsigned tu = cid[scid[next] + k];
@@ -759,7 +884,11 @@ private:
         if (!cluster(count, n, strip_cid, cid, tuples, corners, keep_order, strip_meshlet,
                      [&](const u16* rec, unsigned nrec, const u8* idx, unsigned nidx, unsigned ntri) {
                          return finish(rec, nrec, idx, nidx, ntri, tuple_corner);
-                     }))
+                     }
+#if RE4DC_ACTOR_BACKFACE_CONE
+                     , skey ? skey + first : nullptr
+#endif
+                     ))
             return false;
         arena = keep;
         if (kLodBuild && rec_tuple && meshlet0 == 0) build_levels(count, n, strip_cid, cid, tuples, tuple_corner, strip_meshlet);
@@ -1368,6 +1497,135 @@ private:
         return true;
     }
 };
+
+#if RE4DC_ACTOR_BACKFACE_CONE
+// ACTOR_BACKFACE_CONE cone table, in the stream's tail past the blob (the GX list bytes the blob no longer uses):
+// AbcTail, then one AbcCone per level-0 meshlet. Valid while the tail's check word matches the blob header.
+// A cone bounds every triangle the meshlet draws at any LOD level: all corners on palette entry `pal` (rigid parts: 0),
+// raw positions within r of c, and every drawn-winding normal within theta_k = k * 90/63 deg of the unit axis a/32767.
+struct AbcCone { short c[3]; u16 r; short a[3]; u8 k, pal; };
+static_assert(sizeof(AbcCone) == 16, "abc cone");
+struct AbcTail { u32 tag, meshlets, check, bytes; };  // bytes: stream bytes | class << 24
+constexpr u32 kAbcTag = 0x31434241U;  // "ABC1"
+constexpr float kAbcStep = 1.5707963f / 63.0f;
+u32 abc_check(const u8* stream, unsigned bytes) {
+    u32 h = 2166136261U ^ bytes;
+    for (unsigned i = 0; i < sizeof(BlobHeader); ++i) h = (h ^ (i == 2 ? stream[i] & 0x7FU : stream[i])) * 16777619U;
+    return h;
+}
+unsigned abc_tail_at(unsigned bytes, unsigned meshlets) {
+    const unsigned need = sizeof(AbcTail) + meshlets * sizeof(AbcCone);
+    return bytes >= need ? (bytes - need) & ~3U : 0U;
+}
+const AbcCone* abc_table(const u8* stream, unsigned bytes, unsigned* cls = nullptr) {
+    const BlobHeader& h = *reinterpret_cast<const BlobHeader*>(stream);
+    const unsigned at = abc_tail_at(bytes, h.meshlets);
+    if (!at) return nullptr;
+    const AbcTail& t = *reinterpret_cast<const AbcTail*>(stream + at);
+    if (t.tag != kAbcTag || t.meshlets != h.meshlets || (t.bytes & 0xFFFFFFU) != bytes || t.check != abc_check(stream, bytes))
+        return nullptr;
+    if (cls) *cls = t.bytes >> 24;
+    return reinterpret_cast<const AbcCone*>(stream + at + sizeof(AbcTail));
+}
+// After a conversion (or a LOD rebuild) in place: size = the blob's bytes. Builds the cones of a split part.
+void abc_build(const Re4dcModelPart& p, unsigned size, unsigned cls) {
+    u8* stream = const_cast<u8*>(p.stream);
+    const BlobHeader& h = *reinterpret_cast<const BlobHeader*>(stream);
+    const unsigned at = abc_tail_at(p.stream_bytes, h.meshlets);
+    if (!at || at < ((size + 3U) & ~3U)) { ++abc_noroom; return; }
+    const u8* pos = nullptr; unsigned count = 0; bool skinned = false;
+    if (p.position_stride == 6) {
+        Re4dcActorSource src{};
+        if (!re4dc_actor_model_source(p.info, &src) || !src.positions || src.position_count != p.position_count) return;
+        pos = src.positions; count = src.position_count; skinned = true;
+    } else if (p.position_stride == 8 && p.positions) { pos = p.positions; count = p.position_count; }
+    else return;
+    const unsigned rs = 3U + ((h.flags & kHasCi) ? 1U : 0U) + ((h.flags & kHasBake) ? 1U : 0U);
+    const auto* table = reinterpret_cast<const MeshletInfo*>(stream + sizeof(BlobHeader));
+    const u16* records = reinterpret_cast<const u16*>(stream + h.rec4 * 4U);
+    const LevelInfo* lv = h.levels && h.lod4 ? reinterpret_cast<const LevelInfo*>(stream + h.lod4 * 4U) : nullptr;
+    AbcCone* out = reinterpret_cast<AbcCone*>(stream + at + sizeof(AbcTail));
+    for (unsigned mi = 0; mi < h.meshlets; ++mi) {
+        AbcCone& cone = out[mi];
+        cone = AbcCone{};
+        const MeshletInfo& m = table[mi];
+        const unsigned nv = m.n.vertices();
+        const u16* r = records + m.first * rs;
+        float lo[3] = {1e30f, 1e30f, 1e30f}, hi[3] = {-1e30f, -1e30f, -1e30f};
+        unsigned pal = ~0U; bool ok = nv > 0;
+        for (unsigned i = 0; i < nv && ok; ++i) {
+            const unsigned vi = r[i * rs];
+            if (vi >= count) { ok = false; break; }
+            const short* q = reinterpret_cast<const short*>(pos + vi * 8U);
+            const unsigned qp = skinned ? unsigned(u16(q[3])) : 0U;
+            if (pal == ~0U) pal = qp; else if (qp != pal) ok = false;
+            for (unsigned a = 0; a < 3; ++a) { lo[a] = std::min(lo[a], float(q[a])); hi[a] = std::max(hi[a], float(q[a])); }
+        }
+        if (!ok || pal > 255U) { ++abc_nocone; continue; }
+        // Every triangle drawn at level 0 and at each LOD level (pass 0: axis = sum of unit normals; pass 1: widest angle).
+        float axis[3] = {0, 0, 0}, mincos = 1.0f;
+        for (unsigned pass = 0; pass < 2; ++pass) {
+            for (unsigned l = 0; l <= (lv ? h.levels : 0U); ++l) {
+                const u8* idx; unsigned ni;
+                if (!l) { idx = stream + h.idx4 * 4U + m.index; ni = m.n.indices(); }
+                else {
+                    const MeshletLevel& ml = reinterpret_cast<const MeshletLevel*>(stream + lv[l - 1].table4 * 4U)[mi];
+                    idx = stream + lv[l - 1].lists4 * 4U + ml.index; ni = ml.n.indices();
+                }
+                for (unsigned s0 = 0; s0 < ni;) {
+                    unsigned s1 = s0;
+                    while (s1 < ni && !(idx[s1] & 128U)) ++s1;
+                    for (unsigned j = s0; j + 2 <= s1; ++j) {
+                        unsigned ia = idx[j] & 127U, ib = idx[j + 1] & 127U;
+                        const unsigned ic = idx[j + 2] & 127U;
+                        if ((j - s0) & 1U) std::swap(ia, ib);
+                        float v[3][3];
+                        const unsigned ii[3] = {ia, ib, ic};
+                        for (unsigned k = 0; k < 3; ++k) {
+                            const short* q = reinterpret_cast<const short*>(pos + r[(ii[k] < nv ? ii[k] : 0U) * rs] * 8U);
+                            v[k][0] = float(q[0]); v[k][1] = float(q[1]); v[k][2] = float(q[2]);
+                        }
+                        const float e1[3] = {v[1][0] - v[0][0], v[1][1] - v[0][1], v[1][2] - v[0][2]};
+                        const float e2[3] = {v[2][0] - v[0][0], v[2][1] - v[0][1], v[2][2] - v[0][2]};
+                        float n[3] = {e1[1] * e2[2] - e1[2] * e2[1], e1[2] * e2[0] - e1[0] * e2[2], e1[0] * e2[1] - e1[1] * e2[0]};
+                        const float ln = std::sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]);
+                        if (!(ln > 1e-6f)) continue;  // zero area: drawn as nothing either way
+                        n[0] /= ln; n[1] /= ln; n[2] /= ln;
+                        if (!pass) { axis[0] += n[0]; axis[1] += n[1]; axis[2] += n[2]; }
+                        else mincos = std::min(mincos, n[0] * axis[0] + n[1] * axis[1] + n[2] * axis[2]);
+                    }
+                    s0 = s1 + 1;
+                }
+            }
+            if (!pass) {
+                const float la = std::sqrt(axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2]);
+                if (!(la > 1e-6f)) { ok = false; break; }
+                // quantised first: the angle is measured against the axis the runtime reads
+                for (unsigned a = 0; a < 3; ++a) cone.a[a] = short(std::lrint(axis[a] / la * 32767.0f));
+                const float lq = std::sqrt(float(cone.a[0]) * cone.a[0] + float(cone.a[1]) * cone.a[1] + float(cone.a[2]) * cone.a[2]);
+                for (unsigned a = 0; a < 3; ++a) axis[a] = float(cone.a[a]) / lq;
+            }
+        }
+        // theta + 1 degree (rounding of the runtime's float maths and the 1/32767 axis scale), < 80 degrees
+        const float theta = std::acos(std::max(-1.0f, std::min(1.0f, mincos))) + 0.01745f;
+        const unsigned k = unsigned(std::ceil(theta / kAbcStep));
+        if (!ok || k < 1U || k > 56U) { cone = AbcCone{}; ++abc_nocone; continue; }
+        float r2 = 0.0f;
+        for (unsigned a = 0; a < 3; ++a) {
+            const float c = std::floor((lo[a] + hi[a]) * 0.5f);
+            cone.c[a] = short(c);
+            const float e = std::max(hi[a] - c, c - lo[a]);
+            r2 += e * e;
+        }
+        cone.r = u16(std::min(65535.0f, std::ceil(std::sqrt(r2)) + 2.0f));
+        cone.k = u8(k); cone.pal = u8(pal);
+        ++abc_cones;
+    }
+    AbcTail& t = *reinterpret_cast<AbcTail*>(stream + at);
+    t = {kAbcTag, h.meshlets, abc_check(stream, p.stream_bytes), p.stream_bytes | (std::min(cls, 4U) << 24)};
+    ++abc_built;
+}
+#endif
 
 // ----------------------------------------------------------- skin registry --
 struct SkinEntry { const void* info; const void* positions; const float* palette; unsigned entries, materialized; };
@@ -2950,6 +3208,75 @@ void one_tap_put(const pvr_vertex_t* cache, const pvr_vertex_t* v, unsigned n) {
 }
 #endif
 
+#if RE4DC_ACTOR_BACKFACE_CONE
+// ACTOR_BACKFACE_CONE at draw. With [X' Y' W] = A x + t the matrix a meshlet's raw positions go through (skinned:
+// screen x [R_i q | t_i] of its palette entry; rigid: the part's screen rows), the PVR's screen area of an even strip
+// triangle is det(A) dot(n, a - e) / (W_a W_b W_c), e = -A^-1 t the eye in that space and n the drawn-winding normal.
+// The TA rejects area >= 0 for cull 2 (CW) and <= 0 for cull 1, so with s = (cull 2 ? 1 : -1) sign(det A) a meshlet is
+// rejected when s dot(n, p - e) > 0 for every normal n of its cone and every point p of its sphere: with w = c - e and
+// dw = s dot(axis, w), dw cos(theta) - r > sin(theta) sqrt(|w|^2 - dw^2).
+struct AbcEye { unsigned pal = ~0U; bool ok = false; float e[3] = {0, 0, 0}, s = 0.0f; };
+float abc_tab[128];  // cos(theta_k), sin^2(theta_k)
+bool abc_tab_ready = false;
+bool abc_eye(const Frame& f, unsigned cull, unsigned pal, AbcEye& out) {
+    if (out.pal == pal) return out.ok;
+    out.pal = pal; out.ok = false;
+    const float* S = f.screen;
+    float A[3][3], t[3];
+    if (f.mode == kSkin) {
+        if (pal >= f.palette_entries || !f.palette) return false;
+        const float* P = f.palette + pal * 12U;
+        const float q = f.q;
+        for (unsigned r = 0; r < 3; ++r) {
+            for (unsigned c = 0; c < 3; ++c)
+                A[r][c] = (S[r] * P[c * 3] + S[4 + r] * P[c * 3 + 1] + S[8 + r] * P[c * 3 + 2]) * q;
+            t[r] = S[r] * P[9] + S[4 + r] * P[10] + S[8 + r] * P[11] + S[12 + r];
+        }
+    } else if (f.mode == kRigid) {
+        for (unsigned r = 0; r < 3; ++r) { for (unsigned c = 0; c < 3; ++c) A[r][c] = S[c * 4 + r]; t[r] = S[12 + r]; }
+    } else {
+        return false;
+    }
+    const float c00 = A[1][1] * A[2][2] - A[1][2] * A[2][1], c01 = A[0][2] * A[2][1] - A[0][1] * A[2][2],
+                c02 = A[0][1] * A[1][2] - A[0][2] * A[1][1];
+    const float c10 = A[1][2] * A[2][0] - A[1][0] * A[2][2], c11 = A[0][0] * A[2][2] - A[0][2] * A[2][0],
+                c12 = A[0][2] * A[1][0] - A[0][0] * A[1][2];
+    const float c20 = A[1][0] * A[2][1] - A[1][1] * A[2][0], c21 = A[0][1] * A[2][0] - A[0][0] * A[2][1],
+                c22 = A[0][0] * A[1][1] - A[0][1] * A[1][0];
+    const float det = A[0][0] * c00 + A[0][1] * c10 + A[0][2] * c20;
+    if (!(std::fabs(det) > 1e-20f) || !re4dc::render::is_finite(det)) return false;
+    const float id = -1.0f / det;
+    out.e[0] = (c00 * t[0] + c01 * t[1] + c02 * t[2]) * id;
+    out.e[1] = (c10 * t[0] + c11 * t[1] + c12 * t[2]) * id;
+    out.e[2] = (c20 * t[0] + c21 * t[1] + c22 * t[2]) * id;
+    if (!re4dc::render::is_finite(out.e[0]) || !re4dc::render::is_finite(out.e[1]) || !re4dc::render::is_finite(out.e[2]))
+        return false;
+    out.s = ((cull == 2U) == (det > 0.0f)) ? 1.0f : -1.0f;
+    out.ok = true;
+    return true;
+}
+inline bool abc_reject(const AbcCone& c, const AbcEye& eye) {
+    const float wx = float(c.c[0]) - eye.e[0], wy = float(c.c[1]) - eye.e[1], wz = float(c.c[2]) - eye.e[2];
+    const float dw = eye.s * (float(c.a[0]) * wx + float(c.a[1]) * wy + float(c.a[2]) * wz) * (1.0f / 32767.0f);
+    const float t = dw * abc_tab[c.k] - float(c.r);
+    if (!(t > 0.0f)) return false;
+    const float rest = wx * wx + wy * wy + wz * wz - dw * dw;
+    return t * t > abc_tab[64 + c.k] * (rest > 0.0f ? rest : 0.0f);
+}
+// The part's cone table when this draw can use it (culling part, skinned or rigid frame, converted in place).
+const AbcCone* abc_part(const Re4dcModelPart& p, const u8* base, const Frame& f, unsigned& cls) {
+    cls = 0;
+    if ((p.cull != 1 && p.cull != 2) || base != p.stream || (f.mode != kSkin && f.mode != kRigid)) return nullptr;
+    if (!abc_tab_ready) {
+        for (unsigned k = 0; k < 64; ++k) {
+            const float th = float(k) * kAbcStep;
+            abc_tab[k] = std::cos(th); abc_tab[64 + k] = std::sin(th) * std::sin(th);
+        }
+        abc_tab_ready = true;
+    }
+    return abc_table(base, p.stream_bytes, &cls);
+}
+#endif
 struct Part {
     const Re4dcModelPart& p;
     Frame& f;
@@ -4369,6 +4696,9 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
             if (prelit_candidate(p)) size = add_bake_field(out, size, p.stream_bytes);
             Re4dcActorStreamMutation mutation(p.stream,p.stream_bytes);
             std::memcpy(const_cast<u8*>(p.stream), out, size);
+#if RE4DC_ACTOR_BACKFACE_CONE
+            if (c.split()) abc_build(p, size, re4dc_abc_class);
+#endif
             ++stats.conversions;
             if (c.level_count()) ++stats.lod_parts;
             return reinterpret_cast<const BlobHeader*>(p.stream);
@@ -4478,12 +4808,19 @@ void relod(const Re4dcModelPart& p, bool crowd_part) {
     }
     level_ladder = crowd_part ? lod_fractions_crowd : lod_fractions;
     Converter c(q, sort, out, p.stream_bytes, Arena{work, room}, true);
+#if RE4DC_ACTOR_BACKFACE_CONE
+    unsigned abc_cls = re4dc_abc_class;
+    c.abc_force = abc_table(stream, p.stream_bytes, &abc_cls) != nullptr;
+#endif
     const bool built = c.run() && c.level_count();
     level_ladder = lod_fractions;
     if (built) {
         unsigned size = c.bytes();
         if (b.flags & kHasBake) size = add_bake_field(out, size, p.stream_bytes);  // rebaked on the next draw
         std::memcpy(stream, out, size);
+#if RE4DC_ACTOR_BACKFACE_CONE
+        if (c.split()) abc_build(p, size, abc_cls);
+#endif
         ++stats.lod_parts; ++stats.lod_rebuilds;
     }
     workspace_top = mark;
@@ -4516,6 +4853,23 @@ extern "C" void re4dc_actor_frame(void* memory, unsigned bytes) {
     }
 #endif
     lod_wanted_last = lod_wanted; lod_wanted = false;
+#if RE4DC_ACTOR_BACKFACE_CONE
+    if (frame_serial - abc_log >= 600U) {
+        // per class (other, Leon, Ganado, El Gigante, Ashley): meshlets tested/rejected, vertices skipped/of tested parts,
+        // triangles skipped; totals over the 600 frames
+        abc_log = frame_serial;
+        re4dc_log("ABFC frame=%u splits=%u built=%u noroom=%u cones=%u nocone=%u bad=%u\n", frame_serial, abc_splits, abc_built,
+                  abc_noroom, abc_cones, abc_nocone, abc_bad);
+        re4dc_log("ABFC2 frame=%u other=%u/%u/%u/%u/%u leon=%u/%u/%u/%u/%u ganado=%u/%u/%u/%u/%u gigante=%u/%u/%u/%u/%u "
+                  "ashley=%u/%u/%u/%u/%u\n", frame_serial,
+                  abc_tests[0], abc_rej[0], abc_vskip[0], abc_verts[0], abc_tskip[0],
+                  abc_tests[1], abc_rej[1], abc_vskip[1], abc_verts[1], abc_tskip[1],
+                  abc_tests[2], abc_rej[2], abc_vskip[2], abc_verts[2], abc_tskip[2],
+                  abc_tests[3], abc_rej[3], abc_vskip[3], abc_verts[3], abc_tskip[3],
+                  abc_tests[4], abc_rej[4], abc_vskip[4], abc_verts[4], abc_tskip[4]);
+        for (unsigned c = 0; c < 5; ++c) abc_tests[c] = abc_rej[c] = abc_vskip[c] = abc_verts[c] = abc_tskip[c] = 0;
+    }
+#endif
     if constexpr (kCrowd) crowd_rank();
 #if RE4DC_GIGANTE_LIGHTS
     if (!(frame_serial % 600U) && gigante_folds) {
@@ -4906,6 +5260,32 @@ void re4dc_rigid_census_note(const void* model, unsigned ml, unsigned nv, unsign
     if (nv > re4dc_rigid_census[3]) { re4dc_rigid_census[3] = nv; re4dc_rigid_census[4] = ml; re4dc_rigid_census[5] = levels; re4dc_rigid_census_big = model; }
 }
 }
+#endif
+#if RE4DC_ACTOR_BACKFACE_CONE == 2
+namespace {
+// Check build: a rejected meshlet is transformed anyway (nothing is sent) and each triangle with every corner past near
+// is tested with the TA's rule (room/backface_emit.hpp: area negated on odd strip triangles; cull 2 rejects >= 0,
+// cull 1 <= 0). A triangle the ISP would draw counts in abc_bad.
+void abc_verify(Part& e, const Records& r, unsigned nv, const PosConst& k, bool s16_uv, const u8* index, unsigned ni) {
+    unsigned all, any;
+    pass_positions(e, r, nv, k, s16_uv, all, any);
+    if (all & kOcCull) return;
+    const float sign = e.p.cull == 2 ? 1.0f : -1.0f;
+    for (unsigned s0 = 0; s0 < ni;) {
+        unsigned s1 = s0;
+        while (s1 < ni && !(index[s1] & 128U)) ++s1;
+        for (unsigned j = s0; j + 2 <= s1; ++j) {
+            const unsigned a = index[j] & 127U, b = index[j + 1] & 127U, c = index[j + 2] & 127U;
+            if ((e.cache.oc[a] | e.cache.oc[b] | e.cache.oc[c]) & kOcNear) continue;
+            const pvr_vertex_t& A = e.cache.v[a]; const pvr_vertex_t& B = e.cache.v[b]; const pvr_vertex_t& C = e.cache.v[c];
+            float area = (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x);
+            if ((j - s0) & 1U) area = -area;
+            if (sign * area < 0.0f) ++abc_bad;
+        }
+        s0 = s1 + 1;
+    }
+}
+}  // namespace
 #endif
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     ++stats.parts;
@@ -5304,6 +5684,11 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     ++stats.lod_draws[level];
     if (kCrowd) ++stats.crowd_parts[tier];
     bool ok = true;
+#if RE4DC_ACTOR_BACKFACE_CONE
+    unsigned abc_cls;
+    const AbcCone* abc = abc_part(p, base, f, abc_cls);
+    AbcEye abc_e;
+#endif
     for (unsigned mi = 0; ok && mi < blob->meshlets; ++mi) {
         const MeshletInfo& m = table[mi];
         const Counts c = lt ? lt[mi].n : m.n;
@@ -5313,6 +5698,20 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         const u8* index = lists + (lt ? lt[mi].index : m.index);
         ++stats.meshlets; stats.vertices += nv; stats.corners += ni; stats.triangles += nt;
         if (kCrowd) stats.crowd_triangles[tier] += nt;
+#if RE4DC_ACTOR_BACKFACE_CONE
+        if (abc) {
+            ++abc_tests[abc_cls]; abc_verts[abc_cls] += nv;
+            const AbcCone& cn = abc[mi];
+            if (cn.k && abc_eye(f, p.cull, cn.pal, abc_e) && abc_reject(cn, abc_e)) {
+                ++abc_rej[abc_cls]; abc_vskip[abc_cls] += nv; abc_tskip[abc_cls] += nt;
+#if RE4DC_ACTOR_BACKFACE_CONE == 2
+                abc_verify(e, r, nv, k, s16_uv, index, ni);
+#endif
+                e.input += nt;
+                continue;
+            }
+        }
+#endif
 #if RE4DC_ACTOR_CENSUS
         if (census_cur) { census_cur->nv += nv; census_cur->nt += nt; census_cur->lvl += level; }
 #endif
@@ -5917,6 +6316,11 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     ++stats.lod_draws[level];
     if (kCrowd) ++stats.crowd_parts[tier];
     bool ok = true;
+#if RE4DC_ACTOR_BACKFACE_CONE
+    unsigned abc_cls;
+    const AbcCone* abc = abc_part(p, base, f, abc_cls);
+    AbcEye abc_e;
+#endif
 #if defined(RE4DC_ACTOR_PROF) && RE4DC_ACTOR_PROF
     {   // census only: distinct position / normal indices of the records this chunk draws at its level
         static u16 seen_v[16384], seen_n[16384], seen_m[16384], last_n[16384], last_t[16384]; static u16 stamp, mstamp;
@@ -5946,6 +6350,20 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         const u8* index = lists + (lt ? lt[mi].index : m.index);
         ++stats.meshlets; stats.vertices += nv; stats.corners += ni; stats.triangles += nt;
         if (kCrowd) stats.crowd_triangles[tier] += nt;
+#if RE4DC_ACTOR_BACKFACE_CONE
+        if (abc) {
+            ++abc_tests[abc_cls]; abc_verts[abc_cls] += nv;
+            const AbcCone& cn = abc[mi];
+            if (cn.k && abc_eye(f, p.cull, cn.pal, abc_e) && abc_reject(cn, abc_e)) {
+                ++abc_rej[abc_cls]; abc_vskip[abc_cls] += nv; abc_tskip[abc_cls] += nt;
+#if RE4DC_ACTOR_BACKFACE_CONE == 2
+                abc_verify(e, r, nv, k, s16_uv, index, ni);
+#endif
+                e.input += nt;
+                continue;
+            }
+        }
+#endif
         unsigned all, any;
         APROF_COUNT(APROF_N_VERTS, nv); APROF_COUNT(APROF_N_MESHLETS, 1);
         APROF_SPAN(aprof_pos, APROF_POS);

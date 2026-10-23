@@ -42,3 +42,29 @@ endif
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_BACKFACE=1
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_BACKFACE=1
 endif
+# ACTOR_BACKFACE_CONE=1 (lane backface-cone23, 2026-10-23; render only, look change as ACTOR_BACKFACE): Leon, the Ganados,
+#   El Gigante and Ashley take the source model's cull (alpha-mask / no-depth-write materials stay double-sided, as
+#   ACTOR_BACKFACE), so the ISP drops their back faces; their opaque parts are converted with strips split by
+#   (skinning palette entry, facing) and each meshlet gets a normal cone in its palette entry's space. A meshlet whose
+#   whole cone faces away from the camera is skipped before its skinning transform, lighting and TA writes; the rest draw
+#   through the unchanged paths (no per-triangle CPU test). =2: check build (rejected meshlets are transformed and
+#   every triangle checked with the TA's area rule; "ABFC ... bad=" must stay 0). Census: "ABFC"/"ABFC2" log lines.
+#   Not with ACTOR_BACKFACE=1 (it is a superset of its cull choice). Default 0: no code.
+ACTOR_BACKFACE_CONE ?= 0
+ifneq ($(filter $(ACTOR_BACKFACE_CONE),0 1 2),$(ACTOR_BACKFACE_CONE))
+$(error ACTOR_BACKFACE_CONE must be 0, 1 or 2)
+endif
+ifneq ($(ACTOR_BACKFACE_CONE),0)
+ifeq ($(ACTOR_BACKFACE),1)
+$(error ACTOR_BACKFACE_CONE replaces ACTOR_BACKFACE=1; set only one)
+endif
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_BACKFACE=1 -DRE4DC_ACTOR_BACKFACE_CONE=$(ACTOR_BACKFACE_CONE)
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_BACKFACE=1 -DRE4DC_ACTOR_BACKFACE_CONE=1
+endif
+# BACKFACE_CONE=1 (world; lane backface-cone23): the world half of the cone pair is lane scenery21's SCENERY_CONE (per PS2
+#   strip group back-face cone, chunk_select; needs SCENERY_CHUNK=1 PS2_STRIP_GROUPS=1 and the sc21 data set). This alias
+#   sets SCENERY_CONE=1 (Makefile, before engine_preview.mk reads it). Default 0: no code.
+BACKFACE_CONE ?= 0
+ifneq ($(filter $(BACKFACE_CONE),0 1),$(BACKFACE_CONE))
+$(error BACKFACE_CONE must be 0 or 1)
+endif
