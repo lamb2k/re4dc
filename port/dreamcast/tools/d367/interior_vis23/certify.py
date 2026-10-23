@@ -28,6 +28,8 @@ def main():
     ap.add_argument('private',type=Path)
     ap.add_argument('--room',default='10d')
     ap.add_argument('--limit',type=int,default=128)
+    ap.add_argument('--conditional-sources',action='store_true',
+                    help='research geometry only: unique-ID source poses require additional runtime qualification')
     a=ap.parse_args(); root=a.private; work=root/'work'; pkg=root/'inputs'
     sys.path[:0]=[str(root/'helpers'/'pvs'),str(root/'helpers'/'interior')]
     # The historical helper assumed every package had r4tc. r10d does not.
@@ -37,9 +39,14 @@ def main():
     old="for name in ('ps2-world.re4mesh','ps2-world.r4pw','original.r4pw','ps2-world.ids','ps2-world.r4tc')}"
     new="for name in ('ps2-world.re4mesh','ps2-world.r4pw','original.r4pw','ps2-world.ids','ps2-world.r4tc') if (pkgdir/name).exists()}"
     assert source.count(old)==1
+    adapted=source.replace(old,new)
+    if a.conditional_sources:
+        predicate="if I['dyn'][instance] or pas!=0 or cull not in (0,2):continue"
+        assert adapted.count(predicate)==1
+        adapted=adapted.replace(predicate,"if pas!=0 or cull not in (0,2):continue")
     module=type(sys)('interior_vis23_certifier')
     module.__file__=str(root/'helpers'/'pvs'/'pvs_certify.py')
-    exec(compile(source.replace(old,new),module.__file__,'exec'),module.__dict__)
+    exec(compile(adapted,module.__file__,'exec'),module.__dict__)
     pairs=module.pairs
     # Current pvs23_runtime.inc accepts source panels from one-level clusters.
     def single_level_pairs(p,pi,cl,level=0):
@@ -68,7 +75,17 @@ def main():
                   cleared_bits=len(proofs),cells_with_cuts=int((~S[C['has']]).any(1).sum()))
     report['hashes']['proof-bits.bin']=sha(work/'proof-bits.bin')
     (work/'proof.json').write_text(json.dumps(report,indent=1)+'\n')
-    importlib.import_module('pvs_verify').verify(pkg,work,int(a.room,16))
+    verifier=importlib.import_module('pvs_verify')
+    if a.conditional_sources:
+        verify_source=(root/'helpers'/'pvs'/'pvs_verify.py').read_text()
+        predicate="assert pas==0 and cull==D['cull'] and not I['dyn'][D['instance']]"
+        assert verify_source.count(predicate)==1
+        verify_source=verify_source.replace(predicate,"assert pas==0 and cull==D['cull']")
+        conditional_verifier=type(sys)('interior_vis23_verifier')
+        conditional_verifier.__file__=verifier.__file__
+        exec(compile(verify_source,verifier.__file__,'exec'),conditional_verifier.__dict__)
+        verifier=conditional_verifier
+    verifier.verify(pkg,work,int(a.room,16))
     emitter=importlib.import_module('pvs_emit')
     # CLI selects geometric-candidate mode in the pinned emitter.
     argv=sys.argv[:];sys.argv=['pvs_emit.py','emit',str(work),str(root/'ps2-world.pvs'),'--geometric-candidate','--dilate','0','--near','0']
@@ -105,8 +122,12 @@ def main():
                              'zero runtime cut claim until source/material/numeric/prefix guards actually admit'],
                 certifier_adaptation='optional absent r4tc hash only; source panels restricted to one-level clusters; max16 dependencies; discarded proofs retained visible',
                 pinned_certifier_sha256=sha(root/'helpers'/'pvs'/'pvs_certify.py'),
-                adapted_certifier_sha256=hashlib.sha256(source.replace(old,new).encode()).hexdigest(),
+                adapted_certifier_sha256=hashlib.sha256(adapted.encode()).hexdigest(),
                 output_hashes={f.name:sha(f) for f in (root/'ps2-world.pvs',work/'proof.json',work/'replay.json')})
+    result['conditional_sources_research']=a.conditional_sources
+    result['conditional_source_fields']=[d['placement_field'] for d in used.values() if I['dyn'][d['instance']]]
+    if a.conditional_sources:
+        result['limitations'].append('conditional source liveness is unqualified: fresh rest-state predicate may disagree with same-frame dyn::query cached moved state/delta')
     (root/'qualification.json').write_text(json.dumps(result,indent=1)+'\n')
     print(json.dumps(result))
 
