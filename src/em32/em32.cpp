@@ -1913,7 +1913,7 @@ static void em32_R1_br_Catch(cEm32* em)
             fabsf(Muku2(pPL->ang.y, ang, 3.14159274f));
             EM32_CLAW_ATK(em, 1);
             if (w->Atk_ck) {
-                em->stat = 0x01110000;
+                em->stat = STAT_BE(0x01110000);
             }
         }
     }
@@ -2078,7 +2078,7 @@ static void plem32_CatchHit(cPlayer* pl)
         pl->r_no_2++;
     case 1:
         EmCatchMotionMove(pl, 1.0f, 1.0f);
-        if ((((cEm32*) pPL->dmgType)->stat & 0xFFFF0000) == 0x01110000) {
+        if ((((cEm32*) pPL->dmgType)->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01110000)) {
             break;
         }
         goto end;
@@ -2923,7 +2923,7 @@ static void em32_R1_br_C_Atk(cEm32* em)
             EM32_CLAW_ATK(em, 3);
         }
         if (w->Atk_ck) {
-            em->stat = 0x011B0000;
+            em->stat = STAT_BE(0x011B0000);
         }
     }
 }
@@ -3208,7 +3208,7 @@ static void em32_R1_br_P_Catch(cEm32* em)
             fabsf(Muku2(pPL->ang.y, ang, 3.14159274f));
             EM32_CLAW_ATK(em, 1);
             if (w->Atk_ck) {
-                em->stat = 0x011E0000;
+                em->stat = STAT_BE(0x011E0000);
             }
         }
     }
@@ -3379,7 +3379,7 @@ static void plem32_P_CatchHit(cPlayer* pl)
             em32PlDivideSet2(PL_EM(pl));
             pl->be_flag &= ~2;
         }
-        if ((((cEm32*) pPL->dmgType)->stat & 0xFFFF0000) != 0x011E0000) {
+        if ((((cEm32*) pPL->dmgType)->stat & STAT_BE(0xFFFF0000)) != STAT_BE(0x011E0000)) {
             EndPlDamage();
             pl->dmg.set(0, 30);
         }

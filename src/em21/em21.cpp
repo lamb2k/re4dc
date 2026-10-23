@@ -146,7 +146,7 @@ void em21DmCk(cEm21* em)
                 em->dmg.m_Timer = c;
             }
             if (mode != 2) {
-                if ((em->stat & 0xFFFF0000) == 0x01050000 && w->pTrap) {
+                if ((em->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01050000) && w->pTrap) {
                     w->pTrap->r_no_0 = 1;
                     w->pTrap->r_no_1 = 4;
                     w->pTrap->r_no_2 = 0;
@@ -170,7 +170,7 @@ void em21DmCk(cEm21* em)
     if (em->set == 2) {
         return;
     }
-    if ((em->stat & 0xFFFF0000) == 0x01050000 && w->pTrap) {
+    if ((em->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01050000) && w->pTrap) {
         w->pTrap->r_no_0 = 1;
         w->pTrap->r_no_1 = 4;
         w->pTrap->r_no_2 = 0;
@@ -630,7 +630,7 @@ static void em21_R1_R100TrapWait(cEm21* em)
         }
         MotionMoveF(em, 0);
         em21TrapSearch(em);
-        if (w->pTrap && (w->pTrap->stat & 0xFFFF0000) == 0x01040000) {
+        if (w->pTrap && (w->pTrap->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01040000)) {
             em->dmg.m_Timer = 0x3C;
             EmRoutineSet(em, 1, 7, 0, 1);
             return;
