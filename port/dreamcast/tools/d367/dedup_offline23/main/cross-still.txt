@@ -1,0 +1,9 @@
+name dedup23-cross-still
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+freeze 3 30
+alivelog 150
