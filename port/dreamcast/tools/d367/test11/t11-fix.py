@@ -907,6 +907,17 @@ if os.path.isdir(MIP22BD):
 # (13 added: r000 HUD digits 2-9 + muzzle flash 148d2ff5 / 3a866b91; r100 983d1064 96f42df9; r101 cf2208cd), sha256 b81231ff.
 RES22CD = os.environ.get('RES22CD', '/root/re4data/private/res22c-20261022')
 DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
+# look23 (lane issue52-looks23 10-23, GitHub #52 broken textures; data only, no program knob): the Codex issue52-visuals
+# candidates (origin/codex/issue52-visuals 4746b6c7, tools/d367/issue52_visuals) on the Test 22 disc's own inputs (r100.dar
+# 4abfcc88 and r117.dar cf667833 equal the Test 21 DARs those tools pin). st1/r100.dar: the r100 car officers' face
+# materials (repair_officer_heads.py) + body TPL 0x25 with the three PS2 body pictures (emit_officer_body.py, 256 B at
+# DAR offset 5023744); st1/r117.dar: the church swinging chandelier atlas (repair_chandelier_atlas.py). dc/tex.pak =
+# mip22b's pack + the 6 new keys (ch2rooms/pack_add.py; pak-derived.json). After mip22b in the data line (replaces its
+# dc/tex.pak). Private store copy: re4-assets-private/look23-20261023 (RECIPE.txt, SHA256SUMS).
+LOOK23D = os.environ.get('LOOK23D', '/root/re4data/private/look23-20261023')
+DATA['look23'] = {'st1/r100.dar': LOOK23D + '/st1/r100.dar', 'st1/r117.dar': LOOK23D + '/st1/r117.dar',
+                  'dc/tex.pak': LOOK23D + '/dc/tex.pak'}
+PAK_DERIVED['look23'] = LOOK23D + '/pak-derived.json'
 
 
 if __name__ == '__main__':
