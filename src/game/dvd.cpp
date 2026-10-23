@@ -16,6 +16,13 @@
 //    the r9 anti-dependence and its load ranked first).
 #include "types.h"
 #include "dvd.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+#include "gc_asset_audio.h"
+#else
+#define RE4DC_GCA_BANK_BEGIN(...) ((void)0)
+#define RE4DC_GCA_BANK_PIECE(...) ((void)0)
+#define RE4DC_GCA_BANK_END(...) ((void)0)
+#endif
 #if defined(RE4DC_GAME)
 #include "native_event_file.h"
 #if !defined(__PPC__)
@@ -890,6 +897,7 @@ void cDvdQueue::readMain()
             m_Offset = m_BaseOffset[m_NestDepth] + (*ph)->ofs;
             step++;
             OSReport("DVD: Trans MRAM Snddata  addr: %08x size: %08x %s\n", m_TransAddr, m_LeftSize, blk_tbl[t]);
+            RE4DC_GCA_BANK_BEGIN(this,t,1,(*ph)->size);
             break;
         case 2:
             t = (*ph)->sndType;
@@ -925,6 +933,7 @@ void cDvdQueue::readMain()
             step++;
             OSReport("DVD: Trans ARAM Snddata  addr: %08x size: %08x %s\n", m_TransAddr, m_LeftSize, blk_tbl[t]);
             UseAramSize[t] = (m_LeftSize + 0x1F) / 0x20 * 0x20;
+            RE4DC_GCA_BANK_BEGIN(this,t,2,(*ph)->size);
             break;
         }
         break;
@@ -950,6 +959,7 @@ void cDvdQueue::readMain()
             step--;
             break;
         }
+        RE4DC_GCA_BANK_PIECE(this,(*ph)->type,(*ph)->size-m_LeftSize,DVD_BUFF,m_DivReadSize);
         (this->*trans_proc_tbl[(*ph)->type])(DVD_BUFF, m_TransAddr, m_DivReadSize);
         step++;
         m_be_flag &= ~0x20;
@@ -962,6 +972,7 @@ void cDvdQueue::readMain()
         m_Offset += m_DivReadSize;
         m_TransAddr += m_DivReadSize;
         if (m_LeftSize <= 0) {
+            RE4DC_GCA_BANK_END(this,(*ph)->type);
             switch ((*ph)->type) {
             case 2:
                 SndBlkInit((*ph)->sndType, (*ph)->sndArg, (*ph)->sndNo);

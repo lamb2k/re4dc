@@ -2,6 +2,7 @@
 #include "include/gc_asset_packet_cursor.h"
 #include "include/gc_asset_members.h"
 #include "include/gc_asset_payloads.h"
+#include "include/gc_asset_audio.h"
 #if RE4DC_GC_ASSET_GATE
 #define RE4DC_GCA_ADOPT(...) ((void)(re4dc_gcasset::ensure_disc_catalog() && re4dc_gcasset::member_adopt(__VA_ARGS__)))
 #define RE4DC_GCA_RETIRE(...) re4dc_gcasset::member_retire(__VA_ARGS__)
@@ -6268,7 +6269,7 @@ extern "C" void re4dc_ui_present(){
 extern "C" void re4dc_ui_end_frame(int present){
 #if RE4DC_GC_ASSET_GATE
     struct GcAssetFrameFlush {
-        ~GcAssetFrameFlush(){for(auto& entry:entries)gcasset_texture_flush(entry);re4dc_gcasset::member_flush();re4dc_gcasset::payload_flush_all();re4dc_gcasset::pump();}
+        ~GcAssetFrameFlush(){for(auto& entry:entries)gcasset_texture_flush(entry);re4dc_gcasset::member_flush();re4dc_gcasset::payload_flush_all();re4dc_gcasset::bank_pump();re4dc_gcasset::pump();}
     } gcasset_frame_flush;
 #endif
 #if RE4DC_WORLD_SCRATCH

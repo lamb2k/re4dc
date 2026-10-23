@@ -51,7 +51,10 @@ struct AudioTicket { unsigned slot, serial; };
 // mutex, then prints its checkpoint after releasing the mutex and G2 lock.
 AudioTicket audio_ticket();
 void close_audio_admission();
+void queued_checked(AudioTicket, Consumer, CheckedAsset);
+#if defined(RE4DC_GC_ASSET_TEST) && RE4DC_GC_ASSET_TEST
 void queued(AudioTicket, Consumer, const char* kind, const char* id, const Digest&);
+#endif
 void pump();
 // An active consumer must call checked() even in a room where it emits nothing.
 // For a compiled-out consumer, the integrator explicitly checks its disabled
@@ -67,7 +70,7 @@ constexpr unsigned Required = (1U << ConsumerCount) - 1;
 }
 #define RE4DC_GCA_EMITTED(...) ::re4dc_gcasset::emitted(__VA_ARGS__)
 #define RE4DC_GCA_CHECKED(...) ::re4dc_gcasset::checked(__VA_ARGS__)
-#define RE4DC_GCA_QUEUED(...) ::re4dc_gcasset::queued(__VA_ARGS__)
+#define RE4DC_GCA_QUEUED(...) ::re4dc_gcasset::queued_checked(__VA_ARGS__)
 #else
 #define RE4DC_GCA_EMITTED(...) ((void)0)
 #define RE4DC_GCA_CHECKED(...) ((void)0)

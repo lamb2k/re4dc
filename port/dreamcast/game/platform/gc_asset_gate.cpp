@@ -15,7 +15,7 @@ const CatalogRow* catalog;
 unsigned catalog_rows, room, visit, wired, checked_mask, used, overflow, errors;
 unsigned emissions[ConsumerCount];
 bool active,catalog_ok;
-struct Queued { Consumer consumer; char kind[KindBytes], id[IdBytes]; Digest digest; unsigned room, visit; };
+struct Queued { Consumer consumer; CheckedAsset asset; unsigned room, visit; };
 Queued queue[32];
 std::atomic_flag queue_lock = ATOMIC_FLAG_INIT;
 std::atomic<unsigned> queue_faults{0}, queue_active{0};
@@ -154,18 +154,18 @@ AudioTicket audio_ticket() {
     queue_lock.clear(std::memory_order_release);return ticket;
 }
 void close_audio_admission() { queue_active.store(0); }
-void queued(AudioTicket ticket, Consumer consumer, const char* kind, const char* id, const Digest& digest) {
+void queued_checked(AudioTicket ticket, Consumer consumer, CheckedAsset asset) {
     if(queue_lock.test_and_set(std::memory_order_acquire)) { ++queue_faults;return; }
     if(ticket.slot>=32 || !ticket.serial || tickets[ticket.slot].serial!=ticket.serial) {
         ++queue_faults;queue_lock.clear(std::memory_order_release);return;
     }
     const TicketSlot captured=tickets[ticket.slot];tickets[ticket.slot].serial=0;--ticket_count;
-    if(unsigned(consumer)>=ConsumerCount || !token(kind,KindBytes) || !token(id,IdBytes)) {
+    if(unsigned(consumer)>=ConsumerCount) {
         ++queue_faults;queue_lock.clear(std::memory_order_release);return;
     }
     const unsigned next=(queue_tail+1)%32;
     if(next==queue_head) { ++queue_faults;queue_lock.clear(std::memory_order_release);return; }
-    Queued& q=queue[queue_tail];q.consumer=consumer;std::strcpy(q.kind,kind);std::strcpy(q.id,id);q.digest=digest;
+    Queued& q=queue[queue_tail];q.consumer=consumer;q.asset=asset;
     q.room=captured.room;q.visit=captured.visit;queue_tail=next;
     queue_lock.clear(std::memory_order_release);
 }
@@ -176,7 +176,7 @@ void pump() {
         const Queued q=queue[queue_head];queue_head=(queue_head+1)%32;queue_lock.clear(std::memory_order_release);
         if(!active || q.room!=room || q.visit!=visit) {
             if(active)++errors;else re4dc_log("GC-ASSET-ERROR v=1 why=audio-room-lifetime\n");
-        } else emitted(q.consumer,q.kind,q.id,q.digest);
+        } else emitted_checked(q.consumer,q.asset);
     }
     const unsigned faults=queue_faults.exchange(0);
     if(active)errors+=faults;
@@ -231,6 +231,9 @@ void end(unsigned frame) {
     active=false;
 }
 #if defined(RE4DC_GC_ASSET_TEST)
+void queued(AudioTicket ticket, Consumer consumer, const char* kind, const char* id, const Digest& digest) {
+    queued_checked(ticket,consumer,bind_checked(kind,id,digest));
+}
 void test_queue_lock(bool held) {
     if(held)queue_lock.test_and_set(std::memory_order_acquire);else queue_lock.clear(std::memory_order_release);
 }

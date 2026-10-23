@@ -6,6 +6,7 @@ PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/gc_asset_gate.o,$(PLATFORM_OBJS
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/gc_asset_members.o,$(PLATFORM_OBJS))
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/gc_asset_disc.o,$(PLATFORM_OBJS))
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/gc_asset_payloads.o,$(PLATFORM_OBJS))
+PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/gc_asset_audio.o,$(PLATFORM_OBJS))
 ifeq ($(filter $(GC_ASSET_GATE),0 1),)
 $(error GC_ASSET_GATE must be 0 or 1)
 endif
@@ -20,4 +21,5 @@ PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_gate.o
 PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_members.o
 PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_disc.o
 PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_payloads.o
+PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_audio.o
 endif

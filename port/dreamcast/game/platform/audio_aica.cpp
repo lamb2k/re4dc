@@ -42,6 +42,7 @@
 #include <string.h>
 
 #include "re4dc_platform.h"
+#include "include/gc_asset_audio.h"
 #if defined(RE4DC_LEON_HAND_PACK) && RE4DC_LEON_HAND_PACK
 extern "C" void re4dc_leon_hands_yield();  // coarse_actor_leon_hands.inc: Leon's AICA hand cache gives way to sound
 #endif
@@ -232,6 +233,9 @@ u16 dipan(u32 pan)
 // Converted sample banks.
 struct MapEnt { u32 gc_nib; u32 len; u32 aica; };  // aica: addr | shift << 24 | ok << 31
 struct Blk {
+#if RE4DC_GC_ASSET_GATE
+    unsigned asset_generation;
+#endif
     u32 gc_base, gc_size;        // GC ARAM bytes
     u32 aica, aica_size;         // AICA allocation
     u16 first, count;            // map entries (sample index order)
@@ -1302,7 +1306,13 @@ void flush()
         u16 pan = dipan(v.mix.pan);
         u16 freq = (v.dirty & 5) ? aica_freq_reg((u32) (v.ratio * 32000.0f) >> v.shift) : v.sent_freq;
         if (v.dirty & 1) {
+#if RE4DC_GC_ASSET_GATE
+            const auto asset_use=re4dc_gcasset::bank_ticket(v.blk<0 || v.blk>=14?14:unsigned(v.blk),v.blk<0 || v.blk>=14?0:g_blk[v.blk].asset_generation);
+#endif
             ch_start(w, v.ch, v.aica, v.len, v.loop, v.loop_start, freq, tl, pan, 31, 0, 0, 31, v.play_cont);
+#if RE4DC_GC_ASSET_GATE
+            re4dc_gcasset::played(asset_use);
+#endif
             v.sent_tl = tl; v.sent_pan = pan; v.sent_freq = freq;
         } else {
             if (tl != v.sent_tl) { w.w(v.ch, 0x28, ((u32) tl << 8) | 0x24); v.sent_tl = tl; }
@@ -1317,11 +1327,18 @@ void flush()
         if (!n.used) continue;
         Synth* s = n.synth ? as_synth(n.synth) : nullptr;
         if ((n.dirty & 1) && s) {
+#if RE4DC_GC_ASSET_GATE
+            const int asset_bank=s->blk>=0?s->blk:synth_block(s);
+            const auto asset_use=re4dc_gcasset::bank_ticket(asset_bank<0 || asset_bank>=14?14:unsigned(asset_bank),asset_bank<0 || asset_bank>=14?0:g_blk[asset_bank].asset_generation);
+#endif
             n.sent_tl = note_tl(n, s);
             n.sent_freq = note_freq(n, s);
             n.seen_gen = s->gen;
             ch_start(w, n.ch, n.aica, n.len, n.loop, n.lsa, n.sent_freq, n.sent_tl,
                      dipan(n.ch_midi == 9 ? 64 : s->ch[n.ch_midi].pan), n.ar, n.d1r, n.dl, n.rr, n.play_cont);
+#if RE4DC_GC_ASSET_GATE
+            re4dc_gcasset::played(asset_use);
+#endif
             n.dirty &= ~1;
             if (n.released) n.dirty |= 8;   // released before it sounded
         }
@@ -2124,6 +2141,9 @@ void re4dc_audio_arq(u32 src, u32 dst, u32 len)
                 bool pre = len >= sizeof(AicaBankHeader) && h->magic == kBankMagic;
                 mutex_lock(&g_lock);
                 bool ok = pre ? blk_begin_prebuilt(t, dst, *h) : blk_begin(t, dst);
+#if RE4DC_GC_ASSET_GATE
+                if(ok)g_blk[t].asset_generation=re4dc_gcasset::bank_generation(t);
+#endif
                 mutex_unlock(&g_lock);
                 if (!ok) return;
                 break;
