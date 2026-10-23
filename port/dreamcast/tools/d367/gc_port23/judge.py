@@ -76,7 +76,7 @@ def judge(logs, allowlist, requested):
             try:
                 if 'GC-ASSET-ERROR' in line:
                     raise ValueError('runtime diagnostic error: ' + line.strip())
-                prefix = next((p for p in ('GC-ASSET-BEGIN ', 'GC-ASSET-END ', 'GC-ASSET ') if p in line), None)
+                prefix = next((p for p in ('GC-ASSET-BEGIN ', 'GC-ASSET-COUNTS ', 'GC-ASSET-END ', 'GC-ASSET ') if p in line), None)
                 if not prefix:
                     raise ValueError('unrecognized GC-ASSET diagnostic')
                 r = fields(line, prefix)
@@ -91,7 +91,7 @@ def judge(logs, allowlist, requested):
                         raise ValueError('missing diagnostic consumer wiring')
                     if r['catalog_ok'] != '1' or not r['catalog'].isdigit():
                         raise ValueError('invalid provenance catalog')
-                    visits[key] = {'rows': set(), 'first_consumers': {c: 0 for c in CONSUMERS}, 'ended': False, 'room': r['room']}
+                    visits[key] = {'rows': set(), 'first_consumers': {c: 0 for c in CONSUMERS}, 'counts': None, 'ended': False, 'room': r['room']}
                     file_visits += 1
                     active = key
                     observed.add(r['room'])
@@ -113,10 +113,16 @@ def judge(logs, allowlist, requested):
                     visits[key]['first_consumers'][r['consumer']] += 1
                     if asset not in allowlist:
                         raise ValueError('unreviewed draw/play asset: ' + str(asset))
+                elif prefix == 'GC-ASSET-COUNTS ':
+                    if active != key or visits[key]['counts'] is not None:
+                        raise ValueError('duplicate/out-of-visit consumer counts')
+                    if set(r) != {'v', 'room', 'visit', *CONSUMERS}:
+                        raise ValueError('consumer counter fields differ from schema')
+                    visits[key]['counts'] = {c: int(r[c]) for c in CONSUMERS}
                 else:
                     if active != key:
                         raise ValueError('end checkpoint without matching begin')
-                    required = {'v', 'room', 'visit', 'frame', 'wired', 'checked', 'required', 'unique', 'overflow', 'errors', 'catalog_ok', *CONSUMERS}
+                    required = {'v', 'room', 'visit', 'frame', 'wired', 'checked', 'required', 'unique', 'overflow', 'errors', 'catalog_ok'}
                     if set(r) != required:
                         raise ValueError('end checkpoint fields differ from schema')
                     if any(int(r[k], 16) != REQUIRED for k in ('wired', 'checked', 'required')):
@@ -125,11 +131,14 @@ def judge(logs, allowlist, requested):
                         raise ValueError('runtime overflow/error/catalog failure')
                     if int(r['unique']) != len(visits[key]['rows']):
                         raise ValueError('asset summary does not match emitted rows')
-                    if sum(int(r[c]) for c in CONSUMERS) < len(visits[key]['rows']):
+                    counts = visits[key]['counts']
+                    if counts is None:
+                        raise ValueError('missing consumer counter checkpoint')
+                    if sum(counts.values()) < len(visits[key]['rows']):
                         raise ValueError('consumer emission counts cannot explain asset rows')
-                    if any(int(r[c]) < visits[key]['first_consumers'][c] for c in CONSUMERS):
+                    if any(counts[c] < visits[key]['first_consumers'][c] for c in CONSUMERS):
                         raise ValueError('per-consumer count cannot explain its logged first-use rows')
-                    if any(int(r[c]) < 0 for c in CONSUMERS) or int(r['frame']) < 0:
+                    if any(counts[c] < 0 for c in CONSUMERS) or int(r['frame']) < 0:
                         raise ValueError('negative counter/frame')
                     visits[key]['ended'] = True
                     active = None

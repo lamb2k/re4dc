@@ -3414,3 +3414,6 @@ include qamenu.mk
 
 # Isolated bounded A/B/C memory experiment; default 0.
 include worldscratch.mk
+
+# GC-ASSET diagnostics: default 0, no linked object/flags when off.
+include gc_asset_gate.mk

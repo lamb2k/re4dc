@@ -5,7 +5,8 @@
 #include <string>
 std::string output;
 extern "C" void re4dc_log(const char* fmt, ...) {
-    char line[2048];va_list args;va_start(args,fmt);vsnprintf(line,sizeof line,fmt,args);va_end(args);output+=line;
+    char line[256];va_list args;va_start(args,fmt);const int written=vsnprintf(line,sizeof line,fmt,args);va_end(args);
+    assert(written>=0 && unsigned(written)<sizeof line);output+=line;
 }
 using namespace re4dc_gcasset;
 unsigned rows() {
@@ -62,4 +63,8 @@ int main() {
     assert(output.find("errors=2")!=std::string::npos); // lock contention cannot print errors=0
     output.clear();queued(audio_ticket(),SoundBank,"sample","core:1",gc);pump();
     assert(output.find("GC-ASSET-ERROR")!=std::string::npos); // after END stays an explicit error
+    output.clear();begin(0xffffffffU,0xffffffffU,0xffffffffU);
+    test_max_counters();
+    emitted(SourceGeometry,"abcdefghijklmno","abcdefghijklmnopqrstuvwxyz012345678901234567890",gc);
+    end(0xffffffffU); // all production formatter rows must fit the real 256-byte logger
 }

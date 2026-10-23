@@ -1,3 +1,4 @@
+#include "include/gc_asset_gate.h"
 #include "../world_scratch.h"
 #if RE4DC_WORLD_SCRATCH
 extern "C" unsigned re4dc_ps2_mesh_room();
@@ -365,6 +366,10 @@ static_assert(texpack_payload_retry::kMembers==texpack::kMaxCount,"payload retry
 #endif
 #endif
 struct Entry { re4dc::texture::Package package; Key key{}; unsigned frame=0; bool valid=false;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::Digest asset_digest{};
+    unsigned asset_consumers=0;
+#endif
 #if RE4DC_D349_RENDERER_STACK
     pvr_poly_hdr_t model_header{};unsigned model_header_key=~0U;
 #endif
@@ -377,6 +382,59 @@ struct Source { Re4dcUiImage image{}; Key key{}; };
 // bytes from the optional source-key lookup cache, not the game heap/queue.
 // An uncached source descriptor still resolves through its existing owner table.
 Entry entries[kTextureCount]; Source sources[kSourceCount]; unsigned nsource;
+#if RE4DC_GC_ASSET_GATE
+bool gcasset_texture_fingerprint(Entry& entry,const char* path,unsigned offset,unsigned bytes) {
+    entry.asset_digest={};
+    const file_t file=fs_open(path,O_RDONLY);
+    if(file==FILEHND_INVALID)return false;
+    bool okay=true;
+    if(!bytes) { const auto length=fs_total(file);okay=length>=0;bytes=okay?unsigned(length):0; }
+    if(okay)okay=fs_seek(file,offset,SEEK_SET)==off_t(offset);
+    const auto reader=[](void* context,void* target,unsigned count)->unsigned {
+        const file_t fd=*static_cast<const file_t*>(context);const ssize_t got=fs_read(fd,target,count);
+        return got<0?0:unsigned(got);
+    };
+    if(okay)okay=re4dc_gcasset::fingerprint_read(entry.asset_digest,reader,const_cast<file_t*>(&file),bytes);
+    fs_close(file);return okay;
+}
+void gcasset_texture_emitted(Entry* entry,re4dc_gcasset::Consumer consumer=re4dc_gcasset::Texture) {
+    if(!entry || !entry->valid)return;
+    // Some direct world ends retain the SQ lock across parts. Latch only;
+    // formatting/hashing/logging happens later, after submission releases it.
+    entry->asset_consumers |= (1U<<consumer)|(1U<<re4dc_gcasset::Texture);
+}
+void gcasset_texture_flush(Entry& entry) {
+    const unsigned mask=entry.asset_consumers;entry.asset_consumers=0;
+    if(!mask)return;
+    char id[24];std::snprintf(id,sizeof id,"%08x-%08x",entry.key.crc,entry.key.fnv);
+    for(unsigned i=0;i<re4dc_gcasset::ConsumerCount;++i)if(mask&(1U<<i))
+        re4dc_gcasset::emitted(re4dc_gcasset::Consumer(i),"texture",id,entry.asset_digest);
+}
+struct GcAssetPacketState { unsigned address=0, textured=0, first=0; };
+GcAssetPacketState gcasset_packet_states[5];
+void gcasset_packet_emitted(const void* packet,unsigned bytes,unsigned list,re4dc_gcasset::Consumer consumer) {
+    if(list>=5 || !packet || bytes%32)return;
+    auto& state=gcasset_packet_states[list];
+    const auto* words=static_cast<const std::uint32_t*>(packet);
+    for(unsigned offset=0;offset<bytes;offset+=32) {
+        const auto* q=words+offset/4;const unsigned type=q[0]>>29;
+        if(type==4 || type==5) { state={(q[3]&0x001fffffU)<<3,(q[0]&8)!=0,1};continue; }
+        if(type!=7 || !state.first || !state.textured)continue;
+        state.first=0;
+        for(auto& e:entries)if(e.valid && e.package.upload_complete()) {
+            const unsigned n=e.package.header().texture_count;
+            for(unsigned t=0;t<n;++t)if((unsigned(reinterpret_cast<std::uintptr_t>(e.package.pvr_texture(t)))&0x007fffffU)==state.address) {
+                gcasset_texture_emitted(&e,consumer);break;
+            }
+        }
+    }
+}
+#define RE4DC_GCA_TEXTURE(...) gcasset_texture_emitted(__VA_ARGS__)
+#define RE4DC_GCA_PACKET(...) gcasset_packet_emitted(__VA_ARGS__)
+#else
+#define RE4DC_GCA_TEXTURE(...) ((void)0)
+#define RE4DC_GCA_PACKET(...) ((void)0)
+#endif
 #if defined(RE4DC_FX_PS2_PACK) && RE4DC_FX_PS2_PACK
 // FX_PS2_PACK=1 (effects30.mk, test 12 fx lane; render only): a package that fx_ps2_pack.py built from the PS2 picture of
 // a GameCube effect texture (smaller than the source TPL image) says in its header flags how many of its texels the
@@ -2163,6 +2221,7 @@ void stream_send(const void* data,unsigned bytes) {
 #endif
     re4dc::render::submit_pvr(data,bytes);
     sq_unlock();
+    RE4DC_GCA_PACKET(data,bytes,unsigned(stream_list),re4dc_gcasset::Texture);
 #if RE4DC_TA_GUARD
     guard_account(1,bytes/32-1); // every call is one header + its vertices
 #endif
@@ -3213,6 +3272,9 @@ void vram_room_frame(){
 }
 #endif
 void close_entry(Entry& entry) {
+#if RE4DC_GC_ASSET_GATE
+    gcasset_texture_flush(entry);
+#endif
     struct OvlwAfter{~OvlwAfter(){OVLW("close");OVLG("close");}} ovlw_after;
 #if RE4DC_TEX_CHECK
     if(entry.valid)texchk::verify(entry,"close",true);
@@ -3452,6 +3514,19 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #define RE4DC_OPEN_PACKAGE() RE4DC_OPEN_PACKAGE_RAW()
 #endif
     bool ok=RE4DC_OPEN_PACKAGE();
+#if RE4DC_GC_ASSET_GATE
+    // Hash only the accepted member at immutable load. This is preparation,
+    // not an emission; cached/culled/preloaded Entries produce no GC-ASSET row.
+    if(ok) {
+#if RE4DC_TEX_PACK
+        const bool fingerprint_ok=gcasset_texture_fingerprint(*slot,in_pack?texpack::kPath:path,
+            in_pack?pack_offset:0,in_pack?pack_size:0);
+#else
+        const bool fingerprint_ok=gcasset_texture_fingerprint(*slot,path,0,0);
+#endif
+        if(!fingerprint_ok)re4dc_log("GC-ASSET-ERROR v=1 why=texture-fingerprint key=%08x-%08x\n",key.crc,key.fnv);
+    }
+#endif
     if(!ok) {RE4DC_PROFILE_COUNT(TextureOpenFailures,1);re4dc_log("native UI: package rejected: %s\n",slot->package.error());}
 #if RE4DC_UI_FRAG_RESERVE
     if(frag_held && key==frag_key){
@@ -5849,7 +5924,7 @@ static void ui_draw_quad(unsigned i){
 #else
         re4dc::render::submit_pvr(commands,sizeof(commands));
 #endif
-        ++drawn;
+        RE4DC_GCA_TEXTURE(handles[i],re4dc_gcasset::Ui);++drawn;
 
 }
 static void ui_order_flush(){
@@ -5939,7 +6014,7 @@ extern "C" void re4dc_ui_present(){
 #else
         re4dc::render::submit_pvr(commands,sizeof(commands));
 #endif
-        ++drawn;
+        RE4DC_GCA_TEXTURE(handles[i],re4dc_gcasset::Ui);++drawn;
     }
 #endif
 #if RE4DC_DOOR_FREEZE && RE4DC_PVR_STREAM
@@ -6116,6 +6191,11 @@ extern "C" void re4dc_ui_present(){
 }
 
 extern "C" void re4dc_ui_end_frame(int present){
+#if RE4DC_GC_ASSET_GATE
+    struct GcAssetFrameFlush {
+        ~GcAssetFrameFlush(){for(auto& entry:entries)gcasset_texture_flush(entry);re4dc_gcasset::pump();}
+    } gcasset_frame_flush;
+#endif
 #if RE4DC_WORLD_SCRATCH
     Re4dcWorldScratchFrameEnd scratch_frame_end{&stream_aborted};
 #endif
@@ -6662,6 +6742,7 @@ extern "C" void re4dc_model_packet_commit(unsigned count){
     // A loaded but wholly clipped/rolled-back part owns no submitted packets.
     // Keep its upload cached; pin only when this part actually commits a draw.
     if(count){
+        RE4DC_GCA_TEXTURE(model_handle);
         model_handle->frame=frame;model_used=model_pending+count;
         if(model_used*32>model_peak)model_peak=model_used*32;
 #if RE4DC_PVR_STREAM
@@ -6799,6 +6880,7 @@ extern "C" void re4dc_model_direct_end(unsigned vertices){
     sq_unlock();direct_open=false;
 #endif
     if(vertices>32767)re4dc_missing("native direct part exceeded the store-queue window");
+    if(vertices) { RE4DC_GCA_TEXTURE(model_handle); }
     ++direct_parts;direct_slots+=vertices;
 #if RE4DC_TA_GUARD
     guard_account(1,vertices);
@@ -7379,6 +7461,14 @@ struct FxHeaderKey{unsigned fmt,w,h;const void* txr;unsigned char src,dst,screen
 FxHeaderKey fx_hdr_key{~0U,0,0,nullptr,0,0,0};
 alignas(32) pvr_poly_hdr_t fx_hdr_cache;
 #endif
+#if RE4DC_GC_ASSET_GATE
+void gcasset_fx_stream_send(const void* packet,unsigned bytes){
+    stream_send(packet,bytes);
+    RE4DC_GCA_PACKET(packet,bytes,unsigned(stream_list),re4dc_gcasset::EffectPicture);
+}
+#else
+#define gcasset_fx_stream_send stream_send
+#endif
 void fx_send(unsigned char* packet,bool screen){
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(4);
@@ -7391,7 +7481,7 @@ void fx_send(unsigned char* packet,bool screen){
 #else
     (void)screen;
 #endif
-    stream_send(packet,kSpritePacket);
+    gcasset_fx_stream_send(packet,kSpritePacket);
 }
 #if defined(RE4DC_EFFECT_HAZE_LEAN) && (RE4DC_EFFECT_HAZE_LEAN & 4)
 // EFFECT_HAZE_LEAN bit 4 (STUDY2 M2): a PS2 haze sprite (esp_sub.cpp sets pad 1) as a regular octagon inscribed in
@@ -7488,6 +7578,9 @@ extern "C" float re4dc_fog_gate_far() __attribute__((weak)); // ACTOR_FOG_GATE b
 #endif
 // EFFECT_SPRITES (effects30.mk): one effect sprite from EspCommonTrans. Never aborts the
 // frame: without texture, over the per-frame cap or without queue room the sprite is dropped.
+#if RE4DC_GC_ASSET_GATE
+#define stream_send gcasset_fx_stream_send
+#endif
 extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(4);
@@ -7691,6 +7784,9 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
 #endif
 #if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
 #include "include/native_effect_strip21.inc"
+#endif
+#if RE4DC_GC_ASSET_GATE
+#undef stream_send
 #endif
 #if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
 // Esp19's source line becomes one untextured, colour-interpolated strip in
@@ -8984,7 +9080,7 @@ extern "C" void re4dc_model_finish_source_draws(){
         if(deferred_first->lighting==kEffectQuad21Tag){
             const auto* packet=reinterpret_cast<const unsigned char*>(deferred_first)+kEffectQuad21Node;
             const unsigned bytes=deferred_first->changed[0];
-            deferred_first=deferred_first->next;stream_send(packet,bytes);continue;
+            deferred_first=deferred_first->next;gcasset_fx_stream_send(packet,bytes);continue;
         }
 #endif
         if(deferred_first->lighting==kSpriteTag){
@@ -9001,7 +9097,7 @@ extern "C" void re4dc_model_finish_source_draws(){
 #if RE4DC_TA_BIN_DIAG
             tabin::skip_fill=true;
 #endif
-            deferred_first=deferred_first->next;stream_send(packet,kFxOctPacket);
+            deferred_first=deferred_first->next;gcasset_fx_stream_send(packet,kFxOctPacket);
 #if RE4DC_TA_BIN_DIAG
             tabin::skip_fill=false;
 #endif
@@ -9017,7 +9113,7 @@ extern "C" void re4dc_model_finish_source_draws(){
 #if RE4DC_TA_BIN_DIAG
             tabin::skip_fill=true;
 #endif
-            deferred_first=deferred_first->next;stream_send(packet,kOctPacket);
+            deferred_first=deferred_first->next;gcasset_fx_stream_send(packet,kOctPacket);
 #if RE4DC_TA_BIN_DIAG
             tabin::skip_fill=false;
 #endif

@@ -14,8 +14,9 @@ ROW = dict(room='0111', kind='model', id='em2a/trap', sha256=DIGEST, provenance=
            evidence='GC-ASSETS-INVENTORY-20261023.md row 3')
 BEGIN = 'GC-ASSET-BEGIN v=1 room=0111 visit=1 wired=1ff required=1ff catalog=1 catalog_ok=1'
 EVENT = f'GC-ASSET v=1 room=0111 visit=1 kind=model id=em2a/trap sha256={DIGEST} provenance=gc consumer=source_geometry action=emit'
-END = ('GC-ASSET-END v=1 room=0111 visit=1 frame=2 wired=1ff checked=1ff required=1ff unique=1 overflow=0 errors=0 catalog_ok=1 '
-       + ' '.join(f'{c}={1 if c == "source_geometry" else 0}' for c in j.CONSUMERS))
+END = ('GC-ASSET-COUNTS v=1 room=0111 visit=1 '
+       + ' '.join(f'{c}={1 if c == "source_geometry" else 0}' for c in j.CONSUMERS)
+       + '\nGC-ASSET-END v=1 room=0111 visit=1 frame=2 wired=1ff checked=1ff required=1ff unique=1 overflow=0 errors=0 catalog_ok=1')
 
 
 class JudgeTests(unittest.TestCase):

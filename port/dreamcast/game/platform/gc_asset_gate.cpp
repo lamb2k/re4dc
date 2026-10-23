@@ -6,7 +6,7 @@
 extern "C" void re4dc_log(const char*, ...);
 namespace re4dc_gcasset {
 namespace {
-constexpr unsigned Capacity = 1024, KindBytes = 24, IdBytes = 80;
+constexpr unsigned Capacity = 1024, KindBytes = 16, IdBytes = 48;
 #include "include/gc_asset_sha.inc"
 struct Seen { unsigned char signature[16]; };
 static_assert(sizeof(Seen)==16,"GC asset seen-table budget");
@@ -52,6 +52,15 @@ Digest fingerprint(const void* data, unsigned count) {
     IdentitySha hash;Digest result{};
     if(!data && count) { ++queue_faults;return result; }
     hash.update(data,count);hash.finish(result.bytes);return result;
+}
+bool fingerprint_read(Digest& out, Read read, void* context, unsigned count) {
+    IdentitySha hash;unsigned char buffer[512];out={};
+    while(count) {
+        const unsigned take=count<sizeof buffer?count:sizeof buffer;
+        if(!read || read(context,buffer,take)!=take) { ++queue_faults;return false; }
+        hash.update(buffer,take);count-=take;
+    }
+    hash.finish(out.bytes);return true;
 }
 bool install(const CatalogRow* rows, unsigned count) {
     if(active) { ++errors;return false; }
@@ -150,15 +159,20 @@ void end(unsigned frame) {
         queue_lock.clear(std::memory_order_release);
     }
     errors+=queue_faults.exchange(0);
-    re4dc_log("GC-ASSET-END v=1 room=%04x visit=%u frame=%u wired=%03x checked=%03x required=%03x unique=%u overflow=%u errors=%u catalog_ok=%u source_geometry=%u texture=%u effect_picture=%u weapon=%u font=%u ui=%u sound_bank=%u sound_stream=%u movie=%u\n",
-        room,visit,frame,wired,checked_mask,Required,used,overflow,errors,unsigned(catalog_ok),
+    // re4dc_log has a 256-byte buffer. Both maximum-width rows fit, including
+    // 32-bit counters; one long END row would silently truncate the gate.
+    re4dc_log("GC-ASSET-COUNTS v=1 room=%04x visit=%u source_geometry=%u texture=%u effect_picture=%u weapon=%u font=%u ui=%u sound_bank=%u sound_stream=%u movie=%u\n",
+        room,visit,
         emissions[0],emissions[1],emissions[2],emissions[3],emissions[4],emissions[5],emissions[6],emissions[7],emissions[8]);
+    re4dc_log("GC-ASSET-END v=1 room=%04x visit=%u frame=%u wired=%03x checked=%03x required=%03x unique=%u overflow=%u errors=%u catalog_ok=%u\n",
+        room,visit,frame,wired,checked_mask,Required,used,overflow,errors,unsigned(catalog_ok));
     active=false;
 }
 #if defined(RE4DC_GC_ASSET_TEST)
 void test_queue_lock(bool held) {
     if(held)queue_lock.test_and_set(std::memory_order_acquire);else queue_lock.clear(std::memory_order_release);
 }
+void test_max_counters() { for(auto& value:emissions)value=0xffffffffU;overflow=errors=0xffffffffU; }
 #endif
 }
 #endif

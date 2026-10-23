@@ -4,6 +4,13 @@ This is an incomplete integration checkpoint. Host fixtures pass; no target,
 room, release-ready or image-identity gate has run. Do not add this to the
 release recipe until the consumer integration and room proof below pass.
 
+The texture hook unit now hashes each successful immutable loose/packed member,
+latches accepted UI/effect/model texture use, and flushes outside the SQ lock.
+Source-extracted controls exercise actual MeshDraw end/direct/batched methods,
+header-only versus split vertex packets, effects, and loaded-but-unused keys.
+Source geometry, weapon, font, audio/movie and room-close hooks remain incomplete.
+No complete consumer wired mask is declared by this checkpoint.
+
 `run_host_tests.sh` builds only small host fixtures in `/dev/shm`, deletes its
 own outputs and prints the core's text/data/BSS. `GC_ASSET_GATE=0` defaults to
 an empty translation unit and argument-free diagnostic macros. The `.mk`
@@ -88,6 +95,9 @@ or unchecked consumers, malformed/duplicate rows, overflow/errors, mismatched
 summary/consumer counts, unreviewed bytes, and requested rooms without coverage.
 Per-room zero draws are allowed only with complete checked coverage from the
 actual active/compiled-out consumer paths.
+Consumer counts and END are separate mandatory rows to fit the production
+256-byte logger. Host fixtures use that same limit and test maximum-width
+numeric fields plus the longest accepted kind/id/consumer combination.
 
 ## Qualification still required
 

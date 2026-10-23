@@ -14,6 +14,8 @@ enum Provenance : unsigned { Unknown, GameCube, PS2, Authored };
 struct Digest { unsigned char bytes[32]; };
 // Immutable-load boundary only; never call while the G2/store-queue lock is held.
 Digest fingerprint(const void* bytes, unsigned count);
+using Read = unsigned (*)(void* context, void* destination, unsigned bytes);
+bool fingerprint_read(Digest&, Read, void* context, unsigned bytes);
 struct CatalogRow {
     const char* kind; const char* id; Digest digest; Provenance provenance;
 };
@@ -44,6 +46,7 @@ void checked(Consumer);
 void end(unsigned frame);
 #if defined(RE4DC_GC_ASSET_TEST)
 void test_queue_lock(bool held);
+void test_max_counters();
 #endif
 constexpr unsigned Required = (1U << ConsumerCount) - 1;
 }
