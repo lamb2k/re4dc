@@ -8514,11 +8514,20 @@ extern "C" int re4dc_pvs23_opaque_ready(const unsigned k[6],unsigned minimum_scr
        resident->package.header().texture_count!=1U)return 0;
     const auto& texture=resident->package.textures()[0];
     const auto address=resident->package.pvr_texture(0);
-    // Exact dimensions only: padded, dropped or adapted representations need
-    // their own qualification. RGB565 is intrinsically opaque.
-    if(!address || texture.width!=k[2] || texture.height!=k[3] ||
-       texture.format!=re4dc::texture::kRgb565 ||
+    // RGB565 is intrinsically opaque. Only the same authenticated rect21
+    // representation accepted by direct_begin may bridge logical dimensions.
+    if(!address || texture.format!=re4dc::texture::kRgb565 ||
        (texture.flags&(re4dc::texture::kAlpha|re4dc::texture::kBinaryAlpha|re4dc::texture::kTopDrop)))return 0;
+    if(texture.width!=k[2] || texture.height!=k[3]){
+#if RE4DC_WORLD_RECT21
+        float u=1.0f,v=1.0f;
+        if(!re4dc::rect21::adapt(k[0],k[1],k[2],k[3],
+            {texture.width,texture.height,texture.format,texture.flags,texture.payload,texture.data_size,
+             resident->package.header().payload_crc32},u,v,true))return 0;
+#else
+        return 0;
+#endif
+    }
     pvr_poly_cxt_t c;
     pvr_poly_cxt_txr(&c,PVR_LIST_OP_POLY,re4dc::texture::pvr_format(texture),
         RE4DC_TSP_W(texture),RE4DC_TSP_H(texture),address,PVR_FILTER_BILINEAR);
