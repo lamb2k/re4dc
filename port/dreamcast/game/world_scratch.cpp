@@ -268,7 +268,7 @@ void select_once(unsigned room){
 // 2 C scratch. While set, each 600-iteration window is requested again at the next frame begin, and after a room
 // change, movie or cancel, so the arm stays on through normal play. Fixture (late-mask) runs keep their single window.
 namespace {
-bool live_admitted=false;unsigned live_logged=~0U;
+bool live_admitted=false;unsigned live_logged=~0U,live_windows=0;
 void live_rearm(unsigned room){
     if(selected || refused)return;
     const unsigned want=re4dc_world_scratch_live;
@@ -278,9 +278,12 @@ void live_rearm(unsigned room){
     if(!room)return;
     if(st.remaining){if(st.actual!=want)engine.cancel();return;} // arm change: restore first, re-request next begin
     if(!live_admitted)live_admitted=engine.admit(1);
-    if(live_admitted && engine.request(want,kMaxWindow,room))return;
-    live_admitted=engine.admit(1); // admission revoked (foreign CCR change): one retry
-    if(live_admitted && engine.request(want,kMaxWindow,room))return;
+    bool ok=live_admitted && engine.request(want,kMaxWindow,room);
+    if(!ok){live_admitted=engine.admit(1);ok=live_admitted && engine.request(want,kMaxWindow,room);} // one retry
+    if(ok){ // one line per 600-iteration window (~20 s): proves the arm stays on
+        re4dc_log("WS23 live window n=%u arm=%u room=%x frames=%u borrows=%u faults=%u\n",++live_windows,want,room,st.frames,st.borrows,st.faults);
+        return;
+    }
     const auto s=engine.stats();
     re4dc_log("WS23 live refused arm=%u room=%x faults=%u last=%u\n",want,room,s.faults,s.last_fault);
     re4dc_world_scratch_live=0;
