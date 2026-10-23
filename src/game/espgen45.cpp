@@ -812,11 +812,13 @@ extern "C" void re4dc_water_ps2_draw(void*)
     if (!WaterPs2ExtRoomOn(G_ROOM_ID)) {
         return;
     }
-    static u32 s_ext_room = 0, s_ext_missing = 0;   // missing picture ids logged once per room
+    static u32 s_ext_room = 0, s_ext_missing = 0, s_ext_on = ~0U;   // missing pictures once per room; drawn-row mask
     if (s_ext_room != G_ROOM_ID) {
         s_ext_room = G_ROOM_ID;
         s_ext_missing = 0;
+        s_ext_on = ~0U;
     }
+    u32 on_mask = 0;
     const f32 ey = vi[1][3];
     for (u32 i = 0; i < sizeof(kWaterPs2Ext) / sizeof(kWaterPs2Ext[0]); ++i) {
         const WaterPs2ExtRow& r = kWaterPs2Ext[i];
@@ -826,6 +828,7 @@ extern "C" void re4dc_water_ps2_draw(void*)
         if ((r.area >= 0 && !EffGetAreaState(r.area)) || (r.disp != 0xFF && !GetSstDispFlag(r.disp))) {
             continue;
         }
+        on_mask |= 1u << (i & 31);
         memset(&L.image, 0, sizeof(L.image));
         if (r.tex != 0xF7) {
             const EspTexWk* tw = &g_pEspSys->Esp_tex_tbl[r.tex];
@@ -882,6 +885,10 @@ extern "C" void re4dc_water_ps2_draw(void*)
         L.src = r.src;
         L.dst = r.dst;
         re4dc_water_layer(&L);
+    }
+    if (on_mask != s_ext_on) {   // the rows whose area / display flag is on (table index bits), on each change
+        s_ext_on = on_mask;
+        re4dc_log("water ext: room=%03x rows on %08x\n", (unsigned) G_ROOM_ID, (unsigned) on_mask);
     }
 #endif
 }
