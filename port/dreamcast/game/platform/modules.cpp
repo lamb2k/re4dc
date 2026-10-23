@@ -409,6 +409,7 @@ static void freshState(unsigned i)
 #include <stdint.h>
 #include <kos/fs.h>
 #include <arch/cache.h>
+#include "cache_lines.h"
 typedef unsigned char u8;
 extern "C" void re4dc_module_overlay(u32 id, void (*prolog)(void), void (*epilog)(void), char* data, char* data_end,
                                      char* bss, char* bss_end, char* pristine);
@@ -612,7 +613,7 @@ static void routeOverlayLoad(unsigned index)
         if (at + 4 > h.image_bytes || (at & 3)) re4dc_missing("route overlay relocation out of range");
         *reinterpret_cast<u32*>(image + at) += delta;
     }
-    dcache_flush_range(reinterpret_cast<uintptr_t>(image), h.image_bytes);
+    RE4DC_DCACHE_WBACK(reinterpret_cast<uintptr_t>(image), h.image_bytes);
     icache_flush_range(reinterpret_cast<uintptr_t>(image), h.image_bytes);
     o.block = block;
     o.image_bytes = h.image_bytes;
@@ -811,7 +812,7 @@ static void routeOverlayRelease(unsigned index, const char* why)
     ovlGuardDropAll();
 #endif
     for (u32 i = 0; i + 2 <= o.image_bytes; i += 2) *reinterpret_cast<unsigned short*>(image + i) = 0xC3FF;
-    dcache_flush_range(reinterpret_cast<uintptr_t>(image), o.image_bytes);
+    RE4DC_DCACHE_WBACK(reinterpret_cast<uintptr_t>(image), o.image_bytes);
     icache_flush_range(reinterpret_cast<uintptr_t>(image), o.image_bytes);
     Mem_free_h(o.block, 4);
     o.block = 0;

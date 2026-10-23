@@ -2734,6 +2734,13 @@ VRAM_ROOM_ARENA ?= 0
 # class 2 allocations use best fit below a47f2000 instead of top placement. The
 # final 56 KiB stays available to room/dynamic allocations. Room residency stays on.
 VRAM_ROOM_ARENA_NO_TOP ?= 0
+# CACHE_LINEWISE=1 (lane arena23, default 0 = image unchanged): DC* data-cache ops, route overlay load/release and the
+# sub screen code sync write back line by line (ocbwb) instead of KOS's whole-cache address-array path for ranges
+# >= 65560 bytes (platform/cache_lines.h). Cause candidate for the console-only 0x0c8a8001 st1_1 overlay fault.
+CACHE_LINEWISE ?= 0
+ifneq ($(CACHE_LINEWISE),0)
+$(OBJDIR)/platform/misc.o $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/subscreen_backing.o: PLATFORM_CPPFLAGS += -DRE4DC_CACHE_LINEWISE=1
+endif
 ifneq ($(filter-out 0 1,$(VRAM_ROOM_ARENA_NO_TOP)),)
 $(error VRAM_ROOM_ARENA_NO_TOP must be 0 or 1)
 endif
