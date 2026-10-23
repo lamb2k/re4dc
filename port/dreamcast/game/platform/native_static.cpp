@@ -2257,6 +2257,9 @@ inline int box_mask_lean(const float lo[3],const float hi[3],const float* m,cons
 }
 struct LeanSgStats { unsigned calls,bm,sel_bad,coef_bad,bm_bad; } lst;
 #endif
+#if defined(RE4DC_SCENERY_SELECT_LEAN2) && RE4DC_SCENERY_SELECT_LEAN2
+#include "include/scenery_select_lean2.inc"
+#endif
 #endif
 }
 #pragma GCC pop_options

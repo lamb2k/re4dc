@@ -64,6 +64,18 @@ endif
 $(OBJDIR)/mod/em10g/shared/src/em10/em10.o: GAME_CPPFLAGS += -DRE4DC_GANADO_ROUTINE_BYTES=1
 endif
 
+# EM35_ROUTINE_BYTES=1 (lane fix-mendez-freeze23 2026-10-23, #55 item 5; default 0 = image unchanged): Mendez's
+# routine-byte repair, as GANADO_ROUTINE_BYTES. The catch hit stored the GC big-endian word 0x010D000n, which on the
+# Dreamcast set routine 1/0 step 0xD (no such Wait step): Mendez froze for the rest of the fight. The bear hug / catch
+# player callbacks' word test (EM_RTN) also read the wrong bytes and released Leon at once.
+EM35_ROUTINE_BYTES ?= 0
+ifneq ($(EM35_ROUTINE_BYTES),0)
+ifneq ($(EM35_ROUTINE_BYTES),1)
+$(error EM35_ROUTINE_BYTES must be 0 or 1)
+endif
+$(OBJDIR)/mod/em35/src/em35/em35.o: GAME_CPPFLAGS += -DRE4DC_EM35_ROUTINE_BYTES=1
+endif
+
 # EM_ADMISSION_DISP_FIX=1 (default 0): restore the caller's display flags when
 # readEm cannot find a free module slot, as on its transport-failure return.
 EM_ADMISSION_DISP_FIX ?= 1
