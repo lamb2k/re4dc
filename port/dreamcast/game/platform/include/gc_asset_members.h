@@ -23,6 +23,13 @@ void member_accept(unsigned serial,unsigned consumer_mask);
 void member_flush();
 struct SourceUse { unsigned serial=0,mask=0;const void* model=nullptr;const void* info=nullptr; };
 extern SourceUse source_use;
+struct ReplayUse {unsigned serial=0xffffffffU,mask=0;};
+extern ReplayUse replay_use;
+struct ReplayScope {
+    ReplayUse previous;
+    ReplayScope(unsigned serial,unsigned mask):previous(replay_use){replay_use={serial,mask};}
+    ~ReplayScope(){replay_use=previous;}
+};
 struct SourceScope {
     SourceUse previous;
     SourceScope():previous(source_use){source_use={};}

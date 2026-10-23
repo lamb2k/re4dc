@@ -415,7 +415,7 @@ void gcasset_texture_emitted(Entry* entry,re4dc_gcasset::Consumer consumer=re4dc
 void gcasset_texture_flush(Entry& entry) {
     const unsigned mask=entry.asset_consumers;entry.asset_consumers=0;
     if(!mask)return;
-    char id[24];std::snprintf(id,sizeof id,"%08x-%08x",entry.key.crc,entry.key.fnv);
+    char id[24];snprintf(id,sizeof id,"%08x-%08x",entry.key.crc,entry.key.fnv);
     for(unsigned i=0;i<re4dc_gcasset::ConsumerCount;++i)if(mask&(1U<<i))
         re4dc_gcasset::emitted(re4dc_gcasset::Consumer(i),"texture",id,entry.asset_digest);
 }
@@ -714,7 +714,11 @@ struct DeferredLighting { DeferredLighting* next;const DeferredLightSet* lights;
 constexpr unsigned kViewWords=sizeof(Re4dcModelPart)/sizeof(unsigned);
 constexpr unsigned kViewMasks=(kViewWords+31)/32;
 static_assert(sizeof(Re4dcModelPart)%sizeof(unsigned)==0);
-struct DeferredPart { DeferredPart* next;DeferredLighting* lighting;unsigned changed[kViewMasks]; };
+struct DeferredPart { DeferredPart* next;DeferredLighting* lighting;unsigned changed[kViewMasks];
+#if RE4DC_GC_ASSET_GATE
+    unsigned asset_serial=0,asset_mask=0;
+#endif
+};
 Re4dcModelPart* deferred_basis=nullptr;
 #if RE4DC_BRIDGE_LEAN
 // Same word-difference encoding. The 4-byte memcpy()s above were libcalls on
@@ -7391,6 +7395,10 @@ int defer_part(const Re4dcModelPart* p,const SourceLighting* source){
         for(unsigned i=0;i<words;++i)out[i]=values[i];
     } // else: the basis is this view, no differing words (changed[] stays zero)
     node->lighting=lighting;
+#if RE4DC_GC_ASSET_GATE
+    const auto& proof=re4dc_gcasset::source_use;
+    if(proof.model==view.model && proof.info==view.info){node->asset_serial=proof.serial;node->asset_mask=proof.mask;}
+#endif
     if(deferred_last)deferred_last->next=node;else deferred_first=node;
     deferred_last=node;++deferred_count;
     AVD_EVENT(Enqueue,node,&view,unsigned(uintptr_t(node->lighting)));
@@ -7467,6 +7475,10 @@ extern "C" int re4dc_model_defer_part(const Re4dcModelPart* p){
     auto* node=new(storage+*top) DeferredPart{};
     view_words(view,*deferred_basis,node->changed,reinterpret_cast<unsigned*>(node+1));
     node->lighting=lighting;
+#if RE4DC_GC_ASSET_GATE
+    const auto& proof=re4dc_gcasset::source_use;
+    if(proof.model==view.model && proof.info==view.info){node->asset_serial=proof.serial;node->asset_mask=proof.mask;}
+#endif
     if(deferred_last)deferred_last->next=node;else deferred_first=node;
     deferred_last=node;++deferred_count;
     AVD_EVENT(Enqueue,node,&view,unsigned(uintptr_t(node->lighting)));
@@ -9208,6 +9220,9 @@ extern "C" void re4dc_model_finish_source_draws(){
         // Copy the small view before I/O can yield. Retirement clears the queue
         // and aborts this same frame; it never frees an in-flight PVR texture.
         Re4dcModelPart view=restore_view(deferred_first);
+#if RE4DC_GC_ASSET_GATE
+        re4dc_gcasset::ReplayScope gcasset_replay_scope(deferred_first->asset_serial,deferred_first->asset_mask);
+#endif
         AVD_EVENT(DrainModel,deferred_first,&view,0);
 #if RE4DC_ACTOR_GANADO_DEATH_FADE && RE4DC_ACTOR_TRANSACTION_DIAG
         if(actor_fade_queue_seen)re4dc_log("AFD_FIFO model ep=%u node=%p m=%p info=%p part=%p alpha=%08x\n",

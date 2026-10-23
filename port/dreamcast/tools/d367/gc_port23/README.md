@@ -43,6 +43,11 @@ use; frame/retirement flushes format and log outside SQ. Stale serials, missing
 proof and unqualified replacement payloads fail explicitly. Model IDs are the
 first 40 hex digits of the immutable BIN SHA256; full SHA256 remains authoritative.
 Source counters coalesce per member/consumer/flush, as texture counters do.
+Both deferred model enqueue implementations snapshot the original member serial
+and consumer mask (8 diagnostic bytes per node, at most 32 bytes extra after
+queue alignment). Replay uses this saved serial and verifies it at accepted
+use; rebinding the same cModelInfo to a different live BIN cannot relabel queued
+old geometry. A retired original remains an explicit accepted-use error.
 Weapon consumer classification and independent static-package payload capture
 remain open; an unresolved replacement cannot inherit its source caller's BIN.
 

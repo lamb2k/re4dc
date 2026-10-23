@@ -4,6 +4,7 @@
 #include <cstring>
 namespace re4dc_gcasset {
 SourceUse source_use;
+ReplayUse replay_use;
 namespace {
 constexpr unsigned ArchiveCount=16, MemberCount=128;
 struct Archive {

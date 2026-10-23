@@ -20,6 +20,64 @@ def function(source, marker):
 
 
 class RuntimeTextureTests(unittest.TestCase):
+    def test_actual_source_gateway_and_deferred_serial(self):
+        source = (GAME / 'platform/native_model.cpp').read_text()
+        start = source.index('extern "C" void re4dc_model_submit(const Re4dcModelPart* p){')
+        finish = source.index('#if RE4DC_NATIVE_ACTOR\n', start)
+        gateway = source[start:finish]+'observe_selected(p);\n}\n'
+        ui = (GAME / 'platform/native_ui.cpp').read_text()
+        start = ui.index('#if RE4DC_GC_ASSET_GATE', ui.index('    node->lighting=lighting;', ui.index('int defer_part(')))
+        finish = ui.index('#endif', start)+len('#endif')
+        enqueue = ui[start:finish]
+        replay = next(line.strip() for line in ui.splitlines() if 'ReplayScope gcasset_replay_scope(' in line)
+        fixture = r'''
+#include "gc_asset_members.h"
+#include <cassert>
+namespace re4dc_gcasset {SourceUse source_use;ReplayUse replay_use;}
+struct Re4dcModelPart {const void* model;const void* info;unsigned serial;const void* world;const void* view;unsigned source_key[3];const void* stream;};
+struct Info {const void* data;};
+unsigned a,b,lookups,selections,expected=77,calls;bool replace;
+#define RE4DC_PROFILE_SCOPE(...) ((void)0)
+#define RE4DC_MODEL_DIAG() true
+#define PP_PATH(...) ((void)0)
+int re4dc_static_submit(const Re4dcModelPart*){assert(!re4dc_gcasset::source_use.serial);++calls;return replace;}
+extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void* info,const void** data){*data=static_cast<const Info*>(info)->data;return 0;}
+bool re4dc_gcasset::member_lookup(const void* data,ModelMember* out){++lookups;out->serial=data==&a?77:88;return true;}
+void observe_selected(const Re4dcModelPart*){++selections;assert(re4dc_gcasset::source_use.serial==expected);}
+''' + gateway + r'''
+struct DeferredPart{unsigned asset_serial=0,asset_mask=0;};
+void freeze(DeferredPart* node,const Re4dcModelPart& view){
+''' + enqueue + r'''
+}
+void replay(DeferredPart* deferred_first,const Re4dcModelPart& view){
+''' + replay + r'''
+  re4dc_model_submit(&view);
+}
+int main(){
+  using namespace re4dc_gcasset;
+  int model;Info info{&a};Re4dcModelPart p{&model,&info,0,&a,&a,{1,2,3},&a};
+  source_use.serial=99;replace=true;re4dc_model_submit(&p);assert(calls==1&&!selections&&source_use.serial==99);
+  replace=false;re4dc_model_submit(&p);assert(calls==2&&selections==1&&lookups==1&&source_use.serial==99);
+  source_use={77,1U<<SourceGeometry,p.model,p.info};DeferredPart node;freeze(&node,p);
+  assert(node.asset_serial==77);
+  info.data=&b;source_use.serial=99;expected=77;replay(&node,p);
+  assert(p.stream==&a && info.data==&b && lookups==1 && source_use.serial==99);
+  assert(replay_use.serial==0xffffffffU); // replay cannot relabel old A geometry using current B info
+  expected=88;re4dc_model_submit(&p);assert(lookups==2);
+  // An unqualified/static enqueue carries explicit zero, never a fresh lookup.
+  source_use={};DeferredPart unknown;freeze(&unknown,p);expected=0;replay(&unknown,p);assert(lookups==2);
+}
+'''
+        with tempfile.TemporaryDirectory(prefix='gc-port23-gateway-', dir='/dev/shm') as temporary:
+            root = Path(temporary)
+            (root / 'fixture.cpp').write_text(fixture)
+            executable = root / 'fixture'
+            subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
+                            '-DRE4DC_GC_ASSET_GATE=1', '-DRE4DC_NATIVE_STATIC=1',
+                            '-I', str(GAME / 'platform/include'), str(root / 'fixture.cpp'),
+                            '-o', str(executable)], check=True)
+            subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
+
     def test_actual_source_latch_packet_direct_and_switch(self):
         ui = (GAME / 'platform/native_ui.cpp').read_text()
         helpers = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
