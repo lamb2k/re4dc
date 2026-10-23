@@ -76,3 +76,9 @@ endif
 ifneq ($(FX_QUEUE_MARGIN),0)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FX_QUEUE_MARGIN=$(FX_QUEUE_MARGIN)U
 endif
+# FX_ROOM_SPILL_FORCE=1 (test only, needs FX_ROOM_SPILL_KB): allocate the spill cell at each room's first frame, the
+#   earliest an overflow could ask for it (the heap-4 worst case for the room's movies and loads).
+FX_ROOM_SPILL_FORCE ?= 0
+ifeq ($(FX_ROOM_SPILL_FORCE),1)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FX_ROOM_SPILL_FORCE=1
+endif
