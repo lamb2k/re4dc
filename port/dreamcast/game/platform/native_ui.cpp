@@ -43,6 +43,11 @@ extern "C" unsigned re4dc_lbx_rows_last;  // letterbox_clip.cpp (MCHECK_SAFE, mc
 #if defined(RE4DC_MCHECK_PT) && RE4DC_MCHECK_PT
 #include "include/ta_pt_audit.h"
 #endif
+// FX_QUEUE_MARGIN=<bytes> (mendezfx.mk; render only, default 8192 = unchanged; #41 / #55): the frame-queue bytes an
+// effect sprite leaves free for the world's translucent parts that come after it (on top of the UI reserve).
+#ifndef RE4DC_FX_QUEUE_MARGIN
+#define RE4DC_FX_QUEUE_MARGIN 8192U
+#endif
 #ifndef RE4DC_WORLD_AUTOSORT
 #define RE4DC_WORLD_AUTOSORT 0
 #endif
@@ -5633,6 +5638,15 @@ extern "C" void re4dc_ui_begin(){
 #endif
     if(model_diagnostic==1 && frame%120==0)
         re4dc_log("native model DIAGNOSTIC boundary: frame=%u previous_bytes=%u committed_parts=%u invalid=%u resource=%u overflow=%u presented=%u\n",frame,model_used*32,model_parts,model_invalid,model_resource,model_overflow,model_presented);
+#if defined(RE4DC_FX_QUEUE_LOG) && RE4DC_FX_QUEUE_LOG
+    {   // FX_QUEUE_LOG (mendezfx.mk, log only): per 120 frames the peak UI quads of a frame and the peak sprites.
+        static unsigned fql_quads,fql_fx,fql_used;
+        fql_quads=std::max(fql_quads,nquad);fql_fx=std::max(fql_fx,fx_count);
+        fql_used=std::max(fql_used,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
+        if(frame%120==0){re4dc_log("fxqueue: frame=%u ui_quads_peak=%u quad_bytes=%u storage=%u fx_peak=%u queue_used_peak=%u dropped=%u\n",
+            frame,fql_quads,unsigned(sizeof(Re4dcUiQuad)),unsigned(sizeof(frame_storage)),fql_fx,fql_used,fx_dropped);fql_quads=fql_fx=fql_used=0;}
+    }
+#endif
     nquad=0;model_used=0;++frame;
 #if RE4DC_WORLD_SCRATCH
     re4dc_world_scratch_begin(re4dc_ps2_mesh_room());
@@ -7578,7 +7592,7 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
 #endif
             ++fx_direct;++fx_count;return 1;
         }
-        const unsigned required=kSpriteNode+kFxOctPacket,margin=8192;
+        const unsigned required=kSpriteNode+kFxOctPacket,margin=RE4DC_FX_QUEUE_MARGIN;
         unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
         if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
             if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
@@ -7619,7 +7633,7 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
 #endif
             ++fx_direct;++fx_count;return 1;
         }
-        const unsigned required=kSpriteNode+kOctPacket,margin=8192;
+        const unsigned required=kSpriteNode+kOctPacket,margin=RE4DC_FX_QUEUE_MARGIN;
         unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
         if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
             if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
@@ -7644,7 +7658,7 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
         stream_select(PVR_LIST_TR_POLY);fx_send(packet,s->screen);
         ++fx_direct;++fx_count;return 1;
     }
-    const unsigned required=kSpriteNode+kSpritePacket,margin=8192;
+    const unsigned required=kSpriteNode+kSpritePacket,margin=RE4DC_FX_QUEUE_MARGIN;
     unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
@@ -7711,7 +7725,7 @@ extern "C" int re4dc_effect_line(const Re4dcEffectLine* s){
         AVD_EVENT(Direct,nullptr,nullptr,3);
         stream_select(PVR_LIST_TR_POLY);stream_send(packet,kLinePacket);++fx_direct;return 1;
     }
-    const unsigned required=kSpriteNode+kLinePacket,margin=8192;
+    const unsigned required=kSpriteNode+kLinePacket,margin=RE4DC_FX_QUEUE_MARGIN;
     unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
@@ -9071,7 +9085,35 @@ extern "C" void* re4dc_model_static_lighting_storage(unsigned* bytes){
 
 extern "C" const Re4dcNativeFrameStats* re4dc_native_frame_stats(){return &completed_frame;}
 
+#if defined(RE4DC_FX_ROOM_SPILL_KB) && RE4DC_FX_ROOM_SPILL_KB
+// FX_ROOM_SPILL_KB=<n> (mendezfx.mk; render only, #41 / #55): the frame queue's spill (asked for only once frame_storage is
+// full) becomes an <n> KiB heap-4 room cell instead of the 8 KiB model-slab tail. It is allocated on the room's first
+// overflow (rooms that never overflow pay nothing) under the native-static reserve rule, kept for the room and freed
+// with the room's cells at room leave; a refused allocation falls back to the slab tail.
+extern "C" void* re4dc_static_alloc(unsigned bytes);
+extern "C" int re4dc_room4_state(unsigned* generation,unsigned* cells,unsigned* bytes,unsigned* stale,unsigned* refused);
+namespace fxroomspill {
+unsigned char* cell=nullptr;unsigned generation=~0U;bool tried=false;unsigned allocs=0,refusals=0;
+}
+#endif
 extern "C" void* re4dc_model_deferred_storage(unsigned* bytes){
+#if defined(RE4DC_FX_ROOM_SPILL_KB) && RE4DC_FX_ROOM_SPILL_KB
+    {
+        unsigned g,c,b,st,rf;
+        if(re4dc_room4_state(&g,&c,&b,&st,&rf)){
+            if(fxroomspill::generation!=g){fxroomspill::generation=g;fxroomspill::cell=nullptr;fxroomspill::tried=false;}
+            if(!fxroomspill::cell && !fxroomspill::tried){
+                fxroomspill::tried=true;
+                auto* p=static_cast<unsigned char*>(re4dc_static_alloc(RE4DC_FX_ROOM_SPILL_KB*1024U+32U));
+                if(p){fxroomspill::cell=reinterpret_cast<unsigned char*>((reinterpret_cast<std::uintptr_t>(p)+31U)&~std::uintptr_t(31));++fxroomspill::allocs;}
+                else ++fxroomspill::refusals;
+                re4dc_log("fx room spill: room=%03x generation=%u kib=%u %s allocs=%u refusals=%u\n",unsigned(re4dc_ps2_mesh_room()),g,
+                    unsigned(RE4DC_FX_ROOM_SPILL_KB),p?"ok":"refused",fxroomspill::allocs,fxroomspill::refusals);
+            }
+            if(fxroomspill::cell){*bytes=RE4DC_FX_ROOM_SPILL_KB*1024U;return fxroomspill::cell;}
+        }
+    }
+#endif
     *bytes=model_packets?kModelDeferredSpillBytes:0;
     return *bytes?reinterpret_cast<unsigned char*>(model_packets)+kModelPacketBytes+kModelPreparationBytes+kModelStaticLightBytes:nullptr;
 }

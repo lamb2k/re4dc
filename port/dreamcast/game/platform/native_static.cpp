@@ -27,6 +27,18 @@
 #if RE4DC_SCENERY_SELECT_ONLY && !RE4DC_SCENERY_CHUNK
 #error SCENERY_SELECT_ONLY needs SCENERY_CHUNK
 #endif
+#ifndef RE4DC_SCENERY_REPLAY_LEAN
+#define RE4DC_SCENERY_REPLAY_LEAN 0
+#endif
+#if RE4DC_SCENERY_REPLAY_LEAN != 0 && RE4DC_SCENERY_REPLAY_LEAN != 1
+#error SCENERY_REPLAY_LEAN must be 0 or 1
+#endif
+#if RE4DC_SCENERY_REPLAY_LEAN && (!RE4DC_SCENERY_CHUNK || !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH)
+#error SCENERY_REPLAY_LEAN needs the direct PS2 scenery chunk path
+#endif
+#if RE4DC_SCENERY_REPLAY_LEAN && RE4DC_WORLD_SCRATCH
+#error SCENERY_REPLAY_LEAN needs WORLD_SCRATCH=0 (ordinary per-part scratch lifetime)
+#endif
 #ifndef RE4DC_SCENERY_SUBMIT_BATCH
 #define RE4DC_SCENERY_SUBMIT_BATCH 0
 #endif
@@ -859,13 +871,24 @@ bool inverse(const float* m,float* out){
 // Combined screen matrix whose W is view depth: the same mapping as
 // native_model.cpp project() applied to modelview-space positions.
 void load_screen(const float* mv,const float* p,const float* v){
+#if RE4DC_SCENERY_REPLAY_LEAN && RE4DC_SCENERY_SCREEN_MEMO
+    alignas(32) static matrix_t screen;
+    static float last[20]; static bool have=false;
+    // Compare the existing bitwise key in place. A memo hit needs no 80-byte
+    // temporary input copy, and still reloads the matrix after a yielding bind.
+    if(have && !std::memcmp(mv,last,48) && !std::memcmp(p+1,last+12,16) &&
+       !std::memcmp(v,last+16,16)){mat_load(&screen);return;}
+    std::memcpy(last,mv,48);std::memcpy(last+12,p+1,16);std::memcpy(last+16,v,16);have=true;
+#endif
     const float sx=RE4DC_SCREEN_WF/v[2],sy=RE4DC_SCREEN_HF/v[3];
     const float row0[4]={RE4DC_SCREEN_HALF_WF*p[1],0,RE4DC_SCREEN_HALF_WF*p[2]-sx*(v[0]+v[2]*.5f),0};
     const float row1[4]={0,-RE4DC_SCREEN_HALF_HF*p[3],-RE4DC_SCREEN_HALF_HF*p[4]-sy*(v[1]+v[3]*.5f),0};
     const float row2[4]={0,0,1,0},row3[4]={0,0,-1,0};
     const float* rows[4]={row0,row1,row2,row3};
+#if !(RE4DC_SCENERY_REPLAY_LEAN && RE4DC_SCENERY_SCREEN_MEMO)
     alignas(32) static matrix_t screen;
-#if RE4DC_SCENERY_SCREEN_MEMO
+#endif
+#if RE4DC_SCENERY_SCREEN_MEMO && !RE4DC_SCENERY_REPLAY_LEAN
     // SCENERY_SCREEN_MEMO (scenery19): parts of one placement bind with the same inputs; the same inputs give the
     // same matrix (identical arithmetic), so reload the last one. Exact.
     static float last[20]; static bool have=false;
@@ -3102,10 +3125,27 @@ struct MeshDraw : Emitter {
 #endif
         return result;
     }
+#if RE4DC_SCENERY_REPLAY_LEAN
+    // CHUNK_REPLAY_RESTART: a replay never calls selection/run on this object.
+    // bind overwrites packet/dst/limit; borrow overwrites outcodes and all of k.
+    // The gather buffer and clip setup belong to this unchanged package/pass.
+    // Reset the logical part and force borrow to validate each newly bound slab.
+    [[gnu::always_inline]] void chunk_restart(){
+        used=input=output=slots=0;
+        bound=submitted=false;
+        cache=nullptr;primed=0;
+#if RE4DC_PS2_PVS
+        pvs_pending[0]=pvs_pending[1]=~0U;pvs_pending[2]=0;
+#endif
+    }
+    // CHUNK_REPLAY_RESTART_END
+#endif
     __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n){
+#if !RE4DC_SCENERY_REPLAY_LEAN
         streaming=re4dc_model_packet_streaming()!=0;
         set_clip();
         palette=nullptr;
+#endif
         batch.uv_bias[0]=part.uv_bias[0];batch.uv_bias[1]=part.uv_bias[1];
         batch.uv_scale[0]=part.uv_scale[0];batch.uv_scale[1]=part.uv_scale[1];
         for(unsigned i=0;i<n;++i){
@@ -6214,6 +6254,9 @@ int ps2_pass(unsigned pass,float zfar){
     ChunkPart cctx[kChunkParts];MeshDraw::Pick cpk[kChunkPicks];unsigned nctx=0,npk=0;
     const auto& cpkg=ps2w.package;
     auto chunk_flush=[&]()->int{
+#if RE4DC_SCENERY_REPLAY_LEAN
+        if(!nctx){npk=0;return 1;}
+#endif
         // The pending selection/ordinary draw references this shared record.
         // Queued emitters borrow its cull; restore the pending part on every exit.
         struct CullScope {
@@ -6231,12 +6274,37 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_SKY_ANY
         const unsigned sky_now=re4dc_ps2_sky_header; // the placement being selected keeps its own after the run
 #endif
+#if RE4DC_SCENERY_REPLAY_LEAN
+        // One full context per synchronous replay. Only UV fields of MeshPart
+        // are read by chunk_emit/borrow; selection/run still use their own part.
+        // Keep a stable reference to these four current-part values without
+        // changing the shared renderer's part-reference layout or hot methods.
+        re4dc::room::MeshPart replay_part{};
+        MeshDraw e{{part,{},near,far},cpkg,replay_part,ps2w.lut,ps2w.gather};
+        e.alpha=0xff000000U;e.direct=true;e.lean_part=true;
+        e.sg=ps2w.sg;e.sg_groups=ps2w.sg_groups;
+        e.streaming=re4dc_model_packet_streaming()!=0;e.set_clip();
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        e.submit_batch=&submit_scope.batch;
+#endif
+#endif
         for(unsigned j=0;j<nctx;++j){
             const ChunkPart& x=cctx[j];
             part.cull=x.cull;
 #if RE4DC_SKY_ANY
             re4dc_ps2_sky_header=x.sky;
 #endif
+#if RE4DC_SCENERY_REPLAY_LEAN
+            const auto& active_part=cpkg.parts()[x.index];
+            replay_part.uv_bias[0]=active_part.uv_bias[0];replay_part.uv_bias[1]=active_part.uv_bias[1];
+            replay_part.uv_scale[0]=active_part.uv_scale[0];replay_part.uv_scale[1]=active_part.uv_scale[1];
+            e.chunk_restart();
+#if RE4DC_PS2_VERTEX_ALPHA
+            e.lut=x.marked&&ps2w.lut?ps2_vertex_alpha_lut():ps2w.lut;
+            e.vertex_alpha=x.marked;e.c4444=x.marked;
+#endif
+            e.part_index=x.index;
+#else
 #if RE4DC_PS2_VERTEX_ALPHA
             MeshDraw e{{part,{},near,far},cpkg,cpkg.parts()[x.index],x.marked&&ps2w.lut?ps2_vertex_alpha_lut():ps2w.lut,ps2w.gather};
             e.alpha=0xff000000U;e.vertex_alpha=x.marked;e.c4444=x.marked;e.cull_far=x.cull_far;e.direct=true;
@@ -6245,14 +6313,21 @@ int ps2_pass(unsigned pass,float zfar){
             e.alpha=0xff000000U;e.vertex_alpha=false;e.cull_far=x.cull_far;e.direct=true;
 #endif
             e.part_index=x.index;e.lod_scale=x.lod_scale;e.lean_part=true;
-#if RE4DC_SCENERY_SUBMIT_BATCH
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH && !RE4DC_SCENERY_REPLAY_LEAN
             e.submit_batch=&submit_scope.batch;
 #endif
 #if RE4DC_PS2_PVS
             e.pvs_placement=x.placement;
 #endif
+#if !RE4DC_SCENERY_REPLAY_LEAN
             e.sg=ps2w.sg;e.sg_groups=ps2w.sg_groups;
             std::memcpy(e.mvq,x.mvq,sizeof(x.mvq));std::memcpy(e.mv,x.mvq,sizeof(x.mvq));e.ps2=x.key;
+#else
+            // mv is used by bounds/selection only; emit_pick and the clipper
+            // consume mvq. The queued snapshot remains owned by this flush.
+            std::memcpy(e.mvq,x.mvq,sizeof(x.mvq));e.ps2=x.key;
+#endif
 #if RE4DC_SCENERY_PIECE_STATE
             e.piece_slot=piece::pkg==static_cast<const void*>(&cpkg)?piece::table+x.index:nullptr;
 #endif

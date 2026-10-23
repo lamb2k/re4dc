@@ -46,6 +46,25 @@ $(error SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_G
 endif
 $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_SUBMIT_BATCH=1
 endif
+# SCENERY_REPLAY_LEAN=1 (exact, render only): reuse one emitter per chunk replay,
+# retain the existing inside-cluster decisions and avoid screen-memo key copies.
+# Composes independently with SCENERY_SELECT_ONLY and SCENERY_SUBMIT_BATCH.
+SCENERY_REPLAY_LEAN ?= 0
+ifneq ($(SCENERY_REPLAY_LEAN),0)
+ifneq ($(SCENERY_REPLAY_LEAN),1)
+$(error SCENERY_REPLAY_LEAN must be 0 or 1)
+endif
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_REPLAY_LEAN needs SCENERY_CHUNK)
+endif
+ifneq ($(TA_DIRECT)$(MESH_DIRECT)$(PS2_WORLD_MESH),111)
+$(error SCENERY_REPLAY_LEAN needs TA_DIRECT=1 MESH_DIRECT=1 PS2_WORLD_MESH=1)
+endif
+ifneq ($(filter-out 0,$(WORLD_SCRATCH)),)
+$(error SCENERY_REPLAY_LEAN needs WORLD_SCRATCH=0 (ordinary per-part scratch lifetime))
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_REPLAY_LEAN=1
+endif
 # SCENERY_DEDUP=1 (exact, render only; needs SCENERY_CHUNK, MESH_VP_SCHED=1, HW_LEAN): each PS2 world meshlet's corners
 # are reordered at room load (repeated grid positions last), and a draw transforms each position once and builds the
 # repeats from it. Heap 4: 4 bytes per meshlet + 1 per repeat (r101 ~33 KB), freed with the room's world.

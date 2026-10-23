@@ -1201,6 +1201,13 @@ void Trans()
     }
     ProcessTickGet(5, "ShadowTrans");
     ProcessTickGet(5, "MirrorTrans");
+#if defined(RE4DC_CLOTH_NATIVE) && RE4DC_CLOTH_NATIVE && RE4DC_COARSE
+    // CLOTH_NATIVE: a drawn coarse image runs no world OT, so its cloth sheets go to the native effect FIFO now
+    // (PACE_TRANS_SKIP bit 16 skipped them on every coarse image; dropped images still skip).
+    if (!(pG->Disp_flg & 0x00020000) && PTS(16) && coarseTick && !re4dc_pace_drop_models) {
+        ClothDrawNow();
+    } else
+#endif
     if (!(pG->Disp_flg & 0x00020000) && !PTS(16)) {
         ClothDraw();
     }

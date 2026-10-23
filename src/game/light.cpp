@@ -20,6 +20,10 @@
 #include "math_sub.h"
 #include "cam_ctrl.h"
 #include "pendulum.h"
+#if defined(RE4DC_LIGHT_CUT_LOG) && RE4DC_LIGHT_CUT_LOG
+#include "player.h"
+extern "C" void re4dc_log(const char* fmt, ...);
+#endif
 
 // game/trans.cpp texture LOD / TEV scale settings
 extern u8 gxCsScale[];
@@ -750,6 +754,28 @@ int cLightMgr::update(int cut_no, int hokan)
     deleteScr();
     cut_no = pLitHeader->getSafeCutNo(cut_no);
     cut = pLitHeader->getCut(cut_no);
+#if defined(RE4DC_LIGHT_CUT_LOG) && RE4DC_LIGHT_CUT_LOG
+    {
+        static cLightEnv* last_cut;
+        if (cut != last_cut) {
+            last_cut = cut;
+            const Vec* p = pPL ? &pPL->pos : 0;
+            re4dc_log("lightcut: f=%u room=%03x cut=%d hokan=%d n=%u amb=%02x%02x%02x amb_em=%02x%02x%02x tev=%u/%u blur=%u/%u/%d con=%d/%d/%d tune=%u pl=%d,%d,%d\n",
+                      (unsigned) pG->Frame_cnt, (unsigned) G_ROOM_ID, cut_no, hokan, (unsigned) cut->nLight,
+                      cut->AmbientScr.r, cut->AmbientScr.g, cut->AmbientScr.b, cut->AmbientEm.r, cut->AmbientEm.g,
+                      cut->AmbientEm.b, cut->tev_scale[0], cut->tev_scale[1], cut->blur_rate, cut->blur_type,
+                      cut->blur_power, cut->contrast[0], cut->contrast[1], cut->contrast[2], cut->tuneOn,
+                      p ? (int) p->x : 0, p ? (int) p->y : 0, p ? (int) p->z : 0);
+            for (u32 k = 0; k < cut->nLight && k < 16; k++) {
+                cLightWork* w = cut->getLightWork(k);
+                re4dc_log("lightcut:  %u type=%u be=%02x kind=%u pos=%d,%d,%d r=%d col=%02x%02x%02x i=%d k=%d/%d/%d\n", k,
+                          w->Type, w->BeFlag, w->Kind, (int) w->Pos.x, (int) w->Pos.y, (int) w->Pos.z, (int) w->Radius,
+                          w->Col.r, w->Col.g, w->Col.b, (int) (w->Intensity * 1000.0f), (int) (w->spot.K0 * 1000.0f),
+                          (int) (w->spot.K1 * 1000000.0f), (int) (w->spot.K2 * 1000000000.0f));
+            }
+        }
+    }
+#endif
     registCut(cut, hokan);
     if (pLitHeader->nMaxLight >= nArray) {
         int max;

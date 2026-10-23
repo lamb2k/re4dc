@@ -1,0 +1,67 @@
+// Source-extracted load_screen with a controlled mat_load. The hardware matrix
+// is overwritten before every call to prove a memo hit still reloads it.
+#include <cassert>
+#include <cmath>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#define RE4DC_SCREEN_WF 640.0f
+#define RE4DC_SCREEN_HF 480.0f
+#define RE4DC_SCREEN_HALF_WF 320.0f
+#define RE4DC_SCREEN_HALF_HF 240.0f
+#define RE4DC_SCENERY_SCREEN_MEMO 1
+using matrix_t=float[4][4];
+static matrix_t hardware;
+static unsigned loads,compare_calls,copy_calls,copy_bytes;
+static int fixture_memcmp(const void* a,const void* b,std::size_t n){
+    ++compare_calls;return std::memcmp(a,b,n);
+}
+static void* fixture_memcpy(void* a,const void* b,std::size_t n){
+    ++copy_calls;copy_bytes+=unsigned(n);return std::memcpy(a,b,n);
+}
+static void mat_load(const matrix_t* value){++loads;std::memcpy(hardware,*value,sizeof(hardware));}
+@LOAD_SCREEN@
+static void expected(const float* mv,const float* p,const float* v,matrix_t& result){
+    const float sx=640.0f/v[2],sy=480.0f/v[3];
+    const float rows[4][4]={{320.0f*p[1],0,320.0f*p[2]-sx*(v[0]+v[2]*.5f),0},
+        {0,-240.0f*p[3],-240.0f*p[4]-sy*(v[1]+v[3]*.5f),0},{0,0,1,0},{0,0,-1,0}};
+    for(unsigned r=0;r<4;++r)for(unsigned c=0;c<4;++c){
+        float value=c==3?rows[r][3]:0.0f;
+        for(unsigned k=0;k<3;++k)value+=rows[r][k]*mv[4*k+c];
+        result[c][r]=value;
+    }
+}
+int main(){
+    float mv[12]={1,0,0,3,0,1,0,-2,0,0,1,-40};
+    float p[7]={0,1,0,1,0,-.001f,-1.001f},v[6]={0,0,640,480,0,1};
+    float last_key[20]{};bool have=false;
+    unsigned cases=0,hits=0,misses=0;
+    auto call=[&](){
+        float key[20];std::memcpy(key,mv,48);std::memcpy(key+12,p+1,16);std::memcpy(key+16,v,16);
+        const bool hit=have&&!std::memcmp(key,last_key,sizeof(key));
+        if(hit)++hits;else ++misses;
+        std::memcpy(last_key,key,sizeof(key));have=true;
+        std::memset(hardware,0xa5,sizeof(hardware));
+        const unsigned old_loads=loads;copy_calls=copy_bytes=compare_calls=0;
+        load_screen(mv,p,v);assert(loads==old_loads+1);
+        matrix_t result;expected(mv,p,v,result);assert(!std::memcmp(result,hardware,sizeof(result)));
+#if RE4DC_SCENERY_REPLAY_LEAN
+        assert(copy_bytes==(hit?0U:80U));assert(copy_calls==(hit?0U:3U));
+#else
+        assert(copy_bytes==(hit?64U:144U));assert(copy_calls==(hit?2U:3U));
+#endif
+        std::fwrite(hardware,sizeof(hardware),1,stdout);
+        ++cases;
+    };
+    call();for(unsigned i=0;i<8;++i)call();
+    for(unsigned i=0;i<12;++i){mv[i]+=.125f;call();call();}
+    for(unsigned i=1;i<5;++i){p[i]+=.03125f;call();call();}
+    for(unsigned i=0;i<4;++i){v[i]+=i<2?1.f:16.f;call();call();}
+    // Bitwise keys must distinguish signed zero even where the result is equal.
+    mv[1]=0.f;call();mv[1]=-0.f;call();call();mv[1]=0.f;call();
+    p[2]=0.f;call();p[2]=-0.f;call();call();
+    v[0]=0.f;call();v[0]=-0.f;call();call();
+    // Inputs not used to form the screen matrix remain outside the key.
+    p[0]=1;p[5]=2;p[6]=3;v[4]=4;v[5]=5;call();call();
+    std::fprintf(stderr,"cases=%u hits=%u misses=%u loads=%u\n",cases,hits,misses,loads);
+}
