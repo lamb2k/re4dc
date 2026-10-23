@@ -1,0 +1,142 @@
+// Real R117 bodies are inserted below. Allocation and platform calls are stubs.
+#include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+using u8 = uint8_t; using s8 = int8_t; using u16 = uint16_t; using u32 = uint32_t;
+using f32 = float; using Mtx = f32[3][4]; using TaskFunc = void (*)();
+struct Vec { f32 x, y, z; };
+struct cEsp { Vec m_Pos, m_Ang; u8 padding[0x150 - 2 * sizeof(Vec)]; };
+static_assert(sizeof(cEsp) == 0x150);
+static unsigned checks, sleeps, updates, orientation_calls, requests, releases, sounds;
+static unsigned fail_mask;
+static u32 event_flags;
+static std::string trace;
+static void action(const char* name, int value = 0) { trace += std::string(name) + ':' + std::to_string(value) + ';'; }
+static cEsp sprites[64], dummy;
+static bool live[64];
+struct cObj {
+    Vec pos, ang;
+    void matUpdate() { ++updates; action("mat"); }
+};
+static cObj objects[64];
+struct R117Work {
+    u8 step, mode; s8 sel, cur[3], tgt[3];
+    cEsp* esp[3]; cObj* light[3]; u32 se;
+};
+static R117Work work;
+#define W (&work)
+#define CHECK(x) do { ++checks; assert(x); } while (0)
+#define G_ROOM_ID 0x117
+static cObj* SmdGetObjPtr(unsigned n) { CHECK(n < 64); return &objects[n]; }
+static void PSVECSubtract(const Vec* a, const Vec* b, Vec* o) {
+    o->x = a->x - b->x; o->y = a->y - b->y; o->z = a->z - b->z;
+}
+static void SetOrientationZX(const Vec* v, const Vec*, Mtx m) {
+    ++orientation_calls; m[0][0] = v->x; m[1][0] = v->y; m[2][0] = v->z;
+}
+static void Matrix2AxisAngle(Mtx m, Vec* v) { *v = {m[0][0], m[1][0], m[2][0]}; }
+static u32 RoomSeCall(int sound, int, int, int, int) { ++sounds; action("sound", sound); return 1; }
+static void PushEsp(cEsp* p) {
+    CHECK(p != &dummy); CHECK(p >= sprites && p < sprites + 64);
+    live[p - sprites] = false; ++releases; action("release", int(p - sprites));
+}
+static int EspEstSetSelect(int, int id, int, cEsp** out, int) {
+    const unsigned at = requests++;
+    action("request", id);
+    CHECK(at < 64);
+    if (fail_mask & (1u << (at % 3))) { *out = &dummy; return 0; }
+    *out = &sprites[at]; live[at] = true;
+    (*out)->m_Pos = {f32(id), f32(at), 17.0f};
+    return 1;
+}
+static void SceSleep(int ticks) {
+    action("sleep", ticks);
+    sleeps += unsigned(ticks); CHECK(sleeps < 1000);
+    // The synthetic successful beam animation completes at the next tick.
+    for (unsigned i = 0; i < 64; ++i) if (live[i]) reinterpret_cast<u8*>(&sprites[i])[0xF9] |= 4;
+}
+struct MesWork { int lineSpace, m_font_h; };
+struct Mes { MesWork data{}; template<class... A> void MesSet(A...) { action("menu"); } MesWork* getWork() { return &data; } };
+static Mes cMes;
+struct Camera { void CutCall(int n) { action("cut", n); } int IsMotionEnd() { action("cameraend"); return 1; } };
+static Camera CamCtrl;
+static int SceMesGetSelection() { return 1; }
+static void SceExit() { action("exit"); }
+static void r117_LightMechanismEndProc(int n) { action("end", n); }
+static void RsfClear(int, int bit) { event_flags &= ~(1u << bit); action("flagclear", bit); }
+static void RsfSet(int, int bit) { event_flags |= 1u << bit; action("flagset", bit); }
+static void EffectEspDelete(int, int, int, int) { action("deletesprites"); }
+static void EffectEspgenDelete(int, int, int) { action("deletegenerators"); }
+static void EffectEfmDelete(int, int, int) { action("deletemodels"); }
+static void EstSet(int, int, void*, void*, int, int id, int, int, u32, void*) { action("est", id); }
+static void SceMesSet(int n, int, int, int, int) { action("message", n); }
+static void SceAtDataReset(int n) { action("atreset", n); }
+static void SceSetEventCancel(int n, TaskFunc, int, int, int) { action("cancel", n); }
+extern "C" void r117_LightSet(int);
+extern "C" void r117_LightDirCalc(int);
+extern "C" void r117_LightRotate(int, f32);
+
+@SOURCE_BODIES@
+
+static void setup() {
+    for (unsigned i = 0; i < 3; ++i) {
+        work.cur[i] = s8(i + 1); work.tgt[i] = s8(i); work.light[i] = &objects[i];
+    }
+}
+static void normal() {
+    setup();
+    // All 256 possible completion bytes preserve the old test exactly.
+    cEsp probe{};
+    for (unsigned byte = 0; byte < 256; ++byte) {
+        reinterpret_cast<u8*>(&probe)[0xF9] = u8(byte);
+        CHECK(r117_espEnd(&probe) == int((byte & 4) != 0));
+    }
+    for (int n = 1; n <= 4; ++n) r117_LightSet(n);
+    for (int n = 0; n < 3; ++n) r117_LightDirCalc(n);
+    r117_LightDirCalc(-1); r117_LightDirCalc(3);
+    for (int n = 0; n < 3; ++n) r117_LightRotate(n, -1.0f);
+    CHECK(sleeps == 30); CHECK(orientation_calls == 3);
+    work.mode = 2; r117_LightMechanismMove(); CHECK(work.mode == 0);
+    work.cur[0] = work.cur[1] = work.cur[2] = 0;
+    work.mode = 2; r117_LightMechanismMove(); CHECK(work.mode == 3);
+    std::printf("normal sleeps=%u updates=%u requests=%u releases=%u sounds=%u mode=%u flags=%u\n",
+                sleeps, updates, requests, releases, sounds, work.mode, event_flags);
+    // Compare every fixture-owned mutable output byte, not pointer values.
+    for (const cEsp& p : sprites) {
+        for (u8 b : reinterpret_cast<const u8(&)[sizeof(cEsp)]>(p)) std::printf("%02x", b);
+    }
+    for (const cObj& o : objects) {
+        for (u8 b : reinterpret_cast<const u8(&)[sizeof(cObj)]>(o)) std::printf("%02x", b);
+    }
+    std::putchar('\n');
+    std::puts(trace.c_str());
+}
+int main(int argc, char** argv) {
+    CHECK(argc >= 2); setup();
+    const std::string scenario = argv[1];
+    if (scenario == "normal") { normal(); return 0; }
+    fail_mask = argc > 2 ? unsigned(std::strtoul(argv[2], nullptr, 0)) : 7u;
+    if (scenario == "wait") {
+        r117_LightSet(2); CHECK(work.esp[0] == nullptr);
+        CHECK(r117_espEnd(work.esp[0]) == 1);
+    } else if (scenario == "direction") {
+        r117_LightSet(1);
+        for (int i = 0; i < 3; ++i) r117_LightDirCalc(i);
+        CHECK(orientation_calls == 3u - unsigned(__builtin_popcount(fail_mask & 7)));
+    } else if (scenario == "rotate") {
+        r117_LightSet(1);
+        for (int i = 0; i < 3; ++i) r117_LightRotate(i, -1.0f);
+        CHECK(sleeps == 30); CHECK(updates == 33); CHECK(sounds == 3);
+        for (int i = 0; i < 3; ++i) CHECK(work.light[i]->ang.z == f32(work.tgt[i]) * 1.5707964f);
+    } else if (scenario == "wrong" || scenario == "solved") {
+        if (scenario == "solved") work.cur[0] = work.cur[1] = work.cur[2] = 0;
+        work.mode = 2; r117_LightMechanismMove();
+        CHECK(work.mode == (scenario == "solved" ? 3 : 0));
+    } else { CHECK(false); }
+    std::printf("%s mask=%u mode=%u sleeps=%u requests=%u updates=%u checks=%u\n",
+                scenario.c_str(), fail_mask, work.mode, sleeps, requests, updates, checks);
+    std::puts(trace.c_str());
+}
