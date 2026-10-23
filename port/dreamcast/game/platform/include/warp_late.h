@@ -13,6 +13,8 @@
 //   0x08  ACT_CAP only after activation (act_cap.cpp; ACT_CAP builds only; a gameplay change)
 //   0x10  Leon keeps the per-part source path (coarse_actor_owner_leon.inc: no native plan), the old-path arm of
 //         the WP2 Leon pair
+//   0x20  ACTOR_VISIBILITY23 census (private fixture; up to600 Render calls once)
+//   0x40  ACTOR_VISIBILITY23 reject (same bounded window); both bits invalid/OFF
 //
 // With DBG_WARP=0 the macro is the constant 0 and every hook compiles out (knob-off identity).
 #pragma once
@@ -22,6 +24,8 @@
 #define RE4DC_LATE_NODRAW 0x04u
 #define RE4DC_LATE_ACT_CAP 0x08u
 #define RE4DC_LATE_LEON_SOURCE 0x10u
+#define RE4DC_LATE_ACTOR_VIS_CENSUS 0x20u
+#define RE4DC_LATE_ACTOR_VIS_REJECT 0x40u
 
 #if defined(RE4DC_DBG_WARP) && RE4DC_DBG_WARP
 #ifdef __cplusplus

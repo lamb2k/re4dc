@@ -2,6 +2,8 @@
 #if RE4DC_ACTOR_VISIBILITY23
 #include <cstring>
 #include <cstdint>
+#include "include/actor_visibility23_window.h"
+extern "C" void re4dc_log(const char*,...);
 extern "C" {unsigned re4dc_actor_visibility23_mode=0;}
 namespace {
 Re4dcActorVisibility23Stats stats{};
@@ -158,5 +160,43 @@ bool camera_bounds(const Group* groups,unsigned count,const float* palette,unsig
   ++stats.bound_groups;
  }return true;
 }
+}
+#endif
+
+#if RE4DC_ACTOR_VISIBILITY23
+namespace {
+actor_visibility23::Window fixture23;
+Re4dcActorVisibility23Stats previous23{};
+unsigned previous_xf23,previous_render23,previous_mode23,previous_n23;
+bool pending23;
+}
+extern "C" void re4dc_actor_visibility23_frame(unsigned render,unsigned open,unsigned mask,unsigned transformed) {
+ if(fixture23.seen&&fixture23.last==render)return;
+ // No live source actor consumer exists at this workspace-rebind boundary.
+ // Counters are actual pass_positions work (chunk repeats already compacted),
+ // including diagnostic reference work if a check kernel is explicitly used.
+ if(pending23) {
+  const auto& now=*re4dc_actor_visibility23_stats();const auto& old=previous23;
+  re4dc_log("AV23 frame=%u mode=%u n=%u query=%u sections=%u wall=%u hidden=%u bound=%u would=%u skip=%u tri=%u xf=%u\n",
+    previous_render23,previous_mode23,previous_n23,now.queries-old.queries,now.bounded_sections-old.bounded_sections,now.wall_tests-old.wall_tests,now.hidden_sections-old.hidden_sections,now.bounded_records-old.bounded_records,
+    now.potential_records-old.potential_records,now.positions_avoided-old.positions_avoided,
+    now.triangles_avoided-old.triangles_avoided,transformed-previous_xf23);
+  re4dc_log("AV23WORK frame=%u groups=%u hit=%u miss=%u scan=%u material=%u identity=%u numeric=%u capacity=%u reset=%u\n",
+    previous_render23,now.bound_groups-old.bound_groups,now.cache_hits-old.cache_hits,now.cache_misses-old.cache_misses,
+    now.source_records-old.source_records,now.material_draw-old.material_draw,now.identity_draw-old.identity_draw,
+    now.numeric_draw-old.numeric_draw,now.capacity_draw-old.capacity_draw,now.resets-old.resets);
+  pending23=false;
+ }
+ const auto event=fixture23.begin(render,open!=0,mask);
+ if(event==actor_visibility23::Window::Start || event==actor_visibility23::Window::Complete ||
+    event==actor_visibility23::Window::Cancel || event==actor_visibility23::Window::Invalid) {
+  re4dc_actor_visibility23_set(fixture23.active?fixture23.mode:0);
+  re4dc_log("AV23WINDOW event=%u frame=%u mode=%u mask=%x left=%u once=1\n",
+    unsigned(event),render,re4dc_actor_visibility23_mode,mask,fixture23.left);
+ }
+ if(fixture23.active){
+  previous23=*re4dc_actor_visibility23_stats();previous_xf23=transformed;
+  previous_render23=render;previous_mode23=fixture23.mode;previous_n23=fixture23.frames;pending23=true;
+ }
 }
 #endif

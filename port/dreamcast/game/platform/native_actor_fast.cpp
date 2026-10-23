@@ -4560,6 +4560,12 @@ extern "C" void re4dc_actor_frame(void* memory, unsigned bytes) {
     re4dc_actor_owner_retire(); // before workspace rebinding
 #endif
 
+#if RE4DC_ACTOR_VISIBILITY23
+    const unsigned av23_open=RE4DC_WARP_LATE_OPEN();
+    re4dc_actor_visibility23_frame(frame_serial+1U,av23_open,
+        av23_open?RE4DC_WARP_LATE(~0U):0U,stats.position_transforms);
+#endif
+
     workspace = static_cast<unsigned char*>(memory);
     workspace_bytes = memory ? bytes & ~31U : 0;
     workspace_top = 0; workspace_end = workspace_bytes;

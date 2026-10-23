@@ -13,6 +13,8 @@ extern unsigned re4dc_actor_visibility23_mode; // 0=off,1=census,2=reject; boot0
 const Re4dcActorVisibility23Stats* re4dc_actor_visibility23_stats();
 void re4dc_actor_visibility23_reset();
 int re4dc_actor_visibility23_set(unsigned mode);
+// Real source-Render workspace boundary; reports the preceding Render.
+void re4dc_actor_visibility23_frame(unsigned render,unsigned open,unsigned mask,unsigned transformed);
 unsigned re4dc_actor_visibility23_view(float view[12],const void* model,const void* info);
 int re4dc_actor_visibility23_wall(const void* model,const float view[12],const float projection[7],const float viewport[6],const float lo[3],const float hi[3]);
 }
