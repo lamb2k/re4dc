@@ -807,7 +807,23 @@ bool inverse(const float* m,float* out){
 
 // Combined screen matrix whose W is view depth: the same mapping as
 // native_model.cpp project() applied to modelview-space positions.
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+#include "include/actor_visibility23_world.h"
+inline unsigned actor_world23_mode(){
+    unsigned fpscr=0;
+#if defined(__sh__)
+    __asm__ volatile("sts fpscr,%0":"=r"(fpscr)::"memory");
+#endif
+    return fpscr&actor_visibility23::kWorldFpscr23;
+}
+unsigned actor_world23_loaded_mode=~0U;
+#endif
 void load_screen(const float* mv,const float* p,const float* v){
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+    const unsigned constructed_mode23=actor_world23_mode();
+    static unsigned cached_mode23=~0U;
+#endif
+
     const float sx=RE4DC_SCREEN_WF/v[2],sy=RE4DC_SCREEN_HF/v[3];
     const float row0[4]={RE4DC_SCREEN_HALF_WF*p[1],0,RE4DC_SCREEN_HALF_WF*p[2]-sx*(v[0]+v[2]*.5f),0};
     const float row1[4]={0,-RE4DC_SCREEN_HALF_HF*p[3],-RE4DC_SCREEN_HALF_HF*p[4]-sy*(v[1]+v[3]*.5f),0};
@@ -820,7 +836,12 @@ void load_screen(const float* mv,const float* p,const float* v){
     static float last[20]; static bool have=false;
     float in[20];
     std::memcpy(in,mv,48);in[12]=p[1];in[13]=p[2];in[14]=p[3];in[15]=p[4];std::memcpy(in+16,v,16);
-    if(have && !std::memcmp(in,last,sizeof(in))){mat_load(&screen);return;}
+    if(have && !std::memcmp(in,last,sizeof(in))){
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+        actor_world23_loaded_mode=cached_mode23;
+#endif
+        mat_load(&screen);return;
+    }
     std::memcpy(last,in,sizeof(in));have=true;
 #endif
     for(unsigned r=0;r<4;++r)for(unsigned c=0;c<4;++c){
@@ -828,6 +849,11 @@ void load_screen(const float* mv,const float* p,const float* v){
         for(unsigned k=0;k<3;++k)value+=rows[r][k]*mv[4*k+c];
         screen[c][r]=value; // KOS matrix_t is column-major for ftrv
     }
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+    cached_mode23=constructed_mode23;
+    actor_world23_loaded_mode=cached_mode23;
+    if(actor_world23_mode()!=constructed_mode23)actor_world23_loaded_mode=~0U;
+#endif
     mat_load(&screen);
 }
 
@@ -2222,9 +2248,9 @@ actor_visibility23::WorldReceipt actor_world23;
 extern "C" unsigned re4dc_actor_world23_scene();
 struct ActorWorld23Meshlet {
  unsigned field,part,let;const unsigned char* strips;unsigned bytes,vertices,limit;
- const unsigned char* codes;float near,far;bool full=false;
- ~ActorWorld23Meshlet(){if(full)actor_world23.emit(field,part,let,strips,bytes,codes,vertices,limit,
-     re4dc::vp::depth_mask(re4dc::vp::kChecksAll),re4dc::vp::screen_mask(re4dc::vp::kChecksAll),near,far,re4dc_actor_world23_scene());}
+ const unsigned char* codes;float near,far;unsigned mode;bool full=false;
+ ~ActorWorld23Meshlet(){if(full&&mode==actor_world23_mode()&&mode==actor_world23_loaded_mode)actor_world23.emit(field,part,let,strips,bytes,codes,vertices,limit,
+     re4dc::vp::depth_mask(re4dc::vp::kChecksAll),re4dc::vp::screen_mask(re4dc::vp::kChecksAll),near,far,re4dc_actor_world23_scene(),mode);}
 };
 #endif
 struct MeshDraw : Emitter {
@@ -2427,6 +2453,9 @@ struct MeshDraw : Emitter {
             }
         }
 #endif
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+        const unsigned transform_mode23=actor_world23_mode();
+#endif
         if(checks==vp::kChecksNone)vp::transform<vp::kChecksNone>(in,l.vertex_count,cache,outcodes,k);
         else if(checks==vp::kChecksScreen)vp::transform<vp::kChecksScreen>(in,l.vertex_count,cache,outcodes,k);
 #if RE4DC_MESH_VP_SCHED==1 && RE4DC_SCENERY_DEDUP
@@ -2449,7 +2478,7 @@ struct MeshDraw : Emitter {
 #endif
 #if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
         ActorWorld23Meshlet receipt23{actor_world_field23,part_index,unsigned(&l-package.meshlets()),
-            package.strip_begin(l),l.strip_bytes,l.vertex_count,limit,outcodes,near,cull_far};
+            package.strip_begin(l),l.strip_bytes,l.vertex_count,limit,outcodes,near,cull_far,transform_mode23};
         receipt23.full=checks==vp::kChecksAll && sq && p.cull==2 && ps2 && !vertex_alpha;
 #endif
         const unsigned screen=vp::screen_mask(checks),depth=vp::depth_mask(checks);
@@ -3008,6 +3037,9 @@ struct MeshDraw : Emitter {
             }
             return 1;
         }
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+        const unsigned transform_mode23=actor_world23_mode();
+#endif
 #if RE4DC_SCENERY_DEDUP
         if(const std::uint32_t dw=dd_word(l);dw>>24){
             const unsigned u=l.vertex_count-(dw>>24);
@@ -3018,7 +3050,7 @@ struct MeshDraw : Emitter {
         vp::transform_sched<vp::kChecksAll>(in,l.vertex_count,cache,outcodes,k);
 #if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
         ActorWorld23Meshlet receipt23{actor_world_field23,part_index,pk.let,sb,l.strip_bytes,
-            l.vertex_count,limit,outcodes,near,cull_far};
+            l.vertex_count,limit,outcodes,near,cull_far,transform_mode23};
         receipt23.full=sq && p.cull==2 && ps2 && !vertex_alpha;
 #endif
         int result=1;
@@ -4608,7 +4640,7 @@ extern "C" int re4dc_actor_world23_ready(const float* view,const float* P,const 
     const float fx=(ex+2000.0f)*(1.0f/4000.0f),fz=(ez+10000.0f)*(1.0f/4000.0f);
     if(!(fx>=28&&fx<30&&fz>=7&&fz<8))return 0;
     const unsigned k=unsigned(fx)-28;
-    if(!actor_world23.ready(re4dc_ui_frame(),ps2w.storage,view,P,V,k,near,far,scene))return 0;
+    if(!actor_world23.ready(re4dc_ui_frame(),ps2w.storage,view,P,V,k,near,far,scene,actor_world23_mode()))return 0;
     // Same immutable room metadata used at this actual world submission.
     unsigned bytes=0,version=0,flags=0;const re4dc_room_header* header=nullptr;
     const void* current=re4dc_room_section("OCCL",&bytes,&version,&flags,&header);

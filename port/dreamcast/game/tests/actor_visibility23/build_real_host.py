@@ -17,7 +17,7 @@ def function(text,signature):
   depth+=(text[b]=='{')-(text[b]=='}');b+=1
  return text[start:b]+'\n'
 static=(g/'platform/native_static.cpp').read_text();ui=(g/'platform/native_ui.cpp').read_text()
-for filename,source,signature in [('placements_actual.inc',static,'extern "C" int re4dc_ps2_placements_intact('),('world_ready_actual.inc',static,'extern "C" int re4dc_actor_world23_ready('),('ui_ready_actual.inc',ui,'extern "C" unsigned re4dc_actor_world23_scene(')]:
+for filename,source,signature in [('placements_actual.inc',static,'extern "C" int re4dc_ps2_placements_intact('),('world_ready_actual.inc',static,'extern "C" int re4dc_actor_world23_ready('),('ui_ready_actual.inc',ui,'extern "C" unsigned re4dc_actor_world23_scene('),('screen_actual.inc',static,'void load_screen(')]:
  (o/filename).write_text(function(source,signature))
 commands=[]
 def run(cmd,name):
@@ -28,6 +28,7 @@ for source,name in [(sdk/'source/shz_bounds.c','sdk'),(g/'platform/room_occl.c',
 for source,name in [(t/'host_placement_state.cpp','placement'),(t/'host_receipt_bridge.cpp','receipt')]:run(['g++','-std=c++17',*base,'-c',str(source),'-o',str(o/(name+'.o'))],name+'.log')
 run(['g++','-std=c++17',*base,'-shared','-DRE4DC_ACTOR_VISIBILITY23=1',str(g/'platform/actor_visibility23.cc'),str(t/'host_bridge.cpp'),*[str(o/(name+'.o')) for name in ['sdk','occl','room','placement','receipt']],'-o',str(o/'host.so')],'shared.log')
 run(['g++','-std=c++17',*base,str(t/'test_receipt.cpp'),'-o',str(o/'receipt')],'unit-build.log');run([str(o/'receipt')],'unit.log')
+run(['g++','-std=c++17',*base,str(t/'host_screen_mode.cpp'),'-o',str(o/'screen')],'screen-build.log');run([str(o/'screen')],'screen-mode.log')
 assets=sys.argv[5:]
 run(['python3',str(t/'test_real_cottage.py'),str(o/'host.so'),str(cert/'OCCL.bin'),*assets],'real-cottage.log')
 run(['python3',str(t/'test_actual_receipt.py'),str(o/'host.so'),str(cert),str(inp)],'actual-getter.log')

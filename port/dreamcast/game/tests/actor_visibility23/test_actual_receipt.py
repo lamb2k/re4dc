@@ -42,6 +42,12 @@ for field,x in [(5,112950),(7,117050)]:
   L.host_receipt_frame_state(live,abort);assert not ready(v);cases+=1
  L.host_receipt_frame_state(1,0);assert ready(v)
  changed=arr(list(v));changed[3]+=1;assert not ready(changed);cases+=1
+ for mode in [1,1<<18,1<<19,1<<7]:
+  L.host_receipt_mode(mode);assert not ready(v);cases+=1
+ L.host_receipt_mode(0);assert ready(v)
+ for mode in [1,1<<18,(1<<18)|1]:
+  L.host_receipt_mode(mode);L.host_receipt_begin(v,P,V);fill(field);L.host_receipt_end(1);assert ready(v);cases+=1
+ L.host_receipt_mode(0);L.host_receipt_begin(v,P,V);fill(field);L.host_receipt_end(1);assert ready(v)
  L.host_receipt_scene_state(0,42);assert not ready(v);cases+=1
  L.host_receipt_scene_state(1,43);assert not ready(v);cases+=1
  L.host_receipt_begin(v,P,V);fill(field);L.host_receipt_end(1);assert ready(v);cases+=1

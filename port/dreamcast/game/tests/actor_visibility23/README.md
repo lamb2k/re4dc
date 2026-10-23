@@ -23,3 +23,5 @@ Host tests do not execute actual cModel/GX/material section admission. Target co
 For repeatable host verification, materialize the SDK with sdk-patches/actor_visibility23/materialize.py CLEAN_PINNED_SDK OWN_NEW_SDK_DIR, then call tests/actor_visibility23/build_host.py OWN_NEW_SDK_DIR OWN_NEW_OUTPUT_DIR EXISTING_G50_HEADER EXISTING_FULL_HEADER EXISTING_LEGACY_HEADER under the approved build-slot/tree lease. No private input bytes are emitted or committed. The generic CMake overlay adds strict arithmetic flags for the new SDK source only.
 
 Current follow-up: see REAL-COTTAGE-PROOF.md and RUNTIME-FIXTURE.md. Target tested-box cap512mm only enlarges containment; source wall displacement cap50mm, EW50mm/eyeL1=1mm/depth25050mm remain separate. Actual stream-epoch contributor receipt is required for r119; source resident is insufficient. No live scene/guest/hardware performance has been accepted.
+
+Shared-seam receipt now explicitly binds actual supported FPSCR construction/transform/current mode, including screen-memo reuse; a mode mismatch draws. See REAL-COTTAGE-PROOF.md.
