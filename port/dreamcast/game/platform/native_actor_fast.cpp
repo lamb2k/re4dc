@@ -48,7 +48,7 @@ extern "C" void re4dc_log(const char* fmt, ...);
 // The models the split applies to, marked by coarse_actor_transaction.inc (model -> class 1 Leon, 2 Ganado,
 // 3 El Gigante, 4 Ashley); a part is split when it is converted while its model is marked.
 namespace { struct AbcMark { const void* model; unsigned cls; }; AbcMark abc_marks[64]; unsigned abc_mark_next = 0; }
-unsigned abc_unsplit = 0;
+unsigned abc_unsplit = 0, abc_rec_split = 0, abc_rec_plain = 0, abc_ml_split = 0, abc_ml_plain = 0;
 unsigned abc_nmarks = 0, abc_conv = 0, abc_conv_op = 0, abc_conv_mk = 0, abc_part_calls = 0, abc_part_cull = 0;
 extern "C" void re4dc_abc_mark(const void* model, unsigned cls) {
     ++abc_nmarks;
@@ -572,6 +572,8 @@ public:
     unsigned level_count() const { return levels; }
 #if RE4DC_ACTOR_BACKFACE_CONE
     bool split() const { return skey != nullptr; }
+    unsigned record_count() const { return records; }
+    unsigned meshlet_count() const { return meshlets; }
     bool abc_force = false;  // relod: the part was split before (its cone table is valid)
     bool abc_no_split = false;  // the split blob does not fit in place (convert's retry) or a per-submit transient
 #endif
@@ -4716,6 +4718,16 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
             std::memcpy(const_cast<u8*>(p.stream), out, size);
 #if RE4DC_ACTOR_BACKFACE_CONE
             if (cp->split()) abc_build(p, size, abc_class_of(p.model));
+#if RE4DC_ACTOR_BACKFACE_CONE == 2
+            if (cp->split()) {  // check build: the same part unsplit, for the record / meshlet growth
+                Converter c3(p, sort, out, p.stream_bytes, Arena{work, room}, false);
+                c3.abc_no_split = true;
+                if (c3.run()) {
+                    abc_rec_split += cp->record_count(); abc_rec_plain += c3.record_count();
+                    abc_ml_split += cp->meshlet_count(); abc_ml_plain += c3.meshlet_count();
+                }
+            }
+#endif
 #endif
             ++stats.conversions;
             if (cp->level_count()) ++stats.lod_parts;
@@ -5275,10 +5287,10 @@ void abc_census() {
         // per class (other, Leon, Ganado, El Gigante, Ashley): meshlets tested/rejected, vertices skipped/of tested parts,
         // triangles skipped; totals since the last line
         abc_log = frame_serial;
-        re4dc_log("ABFC frame=%u splits=%u built=%u noroom=%u cones=%u nocone=%u bad=%u marks=%u conv=%u/%u/%u parts=%u/%u unsplit=%u transient=%u\n",
+        re4dc_log("ABFC frame=%u splits=%u built=%u noroom=%u cones=%u nocone=%u bad=%u marks=%u conv=%u/%u/%u parts=%u/%u unsplit=%u rec=%u/%u ml=%u/%u\n",
                   frame_serial, abc_splits, abc_built, abc_noroom, abc_cones, abc_nocone, abc_bad, abc_nmarks, abc_conv,
                   abc_conv_op, abc_conv_mk, abc_part_calls, abc_part_cull, abc_unsplit,
-                  stats.transient_conversions);
+                  abc_rec_split, abc_rec_plain, abc_ml_split, abc_ml_plain);
         re4dc_log("ABFC2 frame=%u other=%u/%u/%u/%u/%u leon=%u/%u/%u/%u/%u ganado=%u/%u/%u/%u/%u gigante=%u/%u/%u/%u/%u "
                   "ashley=%u/%u/%u/%u/%u\n", frame_serial,
                   abc_tests[0], abc_rej[0], abc_vskip[0], abc_verts[0], abc_tskip[0],
