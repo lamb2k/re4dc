@@ -1,0 +1,184 @@
+// Derived from world_setup_spike/queue_fixture.cpp.in at 451bed6f. Actual
+// SELECT_ONLY admission, full setup, queue snapshot/drain and chunk_emit bodies;
+// visibility and geometry remain controlled edges. The separate geometry test
+// compares actual submitted TA words. This fixture compares full event words.
+#include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <vector>
+
+#define RE4DC_SCENERY_CHUNK 1
+#define RE4DC_PS2_VERTEX_ALPHA 1
+#define RE4DC_PS2_WORLD_LEAN 23
+#define RE4DC_PS2_STRIP_GROUPS 1
+#ifndef RE4DC_PS2_PVS
+#define RE4DC_PS2_PVS 0
+#endif
+#define RE4DC_PS2_INTERIOR_CULL 1
+#define RE4DC_QUALITY_ASSETS 1
+#define RE4DC_SKY_ANY 1
+#define RE4DC_FOLIAGE_TRIM 2
+#define RE4DC_TRANS_POLICY 3
+#define RE4DC_NATIVE_FOG 1
+#define RE4DC_BACKFACE_CONE_FRONT 0
+namespace lean {constexpr unsigned kMode=23;}
+namespace foliage {constexpr float kNear=25;}
+namespace pvs {unsigned base[1]{},poff[1]{};}
+static float policy_far;
+static unsigned policy_calls;
+namespace trans {template<class T> float far_of(const T&,unsigned,unsigned){++policy_calls;return policy_far;}}
+struct Part {unsigned cull;float uv_offset[2];};
+struct MeshPart {unsigned meshlet_count=1;float uv_bias[2]{.125f,.25f},uv_scale[2]{.5f,.25f};};
+namespace re4dc::room {using MeshPart=::MeshPart;}
+struct Package {MeshPart entry;bool lod_on=true;bool lod()const{return lod_on;}const MeshPart* parts()const{return &entry;}};
+struct Begin {Part& p;float mv[12],near,far;};
+struct Meta {unsigned crc,fnv,width,height,pass,cull,reserved;};
+static unsigned re4dc_ps2_sky_header,selected_nr,selected_count,select_calls,lut_calls;
+static unsigned pick_calls,fail_at,binds,ends,runs,aborts,result_calls;
+static int fail_result;
+static std::vector<unsigned> events;
+static unsigned word(float f){unsigned w;std::memcpy(&w,&f,4);return w;}
+static void event(unsigned kind,unsigned a=0,unsigned b=0,unsigned c=0){events.insert(events.end(),{kind,a,b,c});}
+static unsigned lut[512];
+static const unsigned* ps2_vertex_alpha_lut(){++lut_calls;return lut;}
+static int re4dc_model_packet_streaming(){return 1;}
+static void re4dc_model_packet_commit(unsigned n){event(7,n);}
+static void re4dc_model_result(unsigned reason,unsigned input,unsigned output){++result_calls;event(8,reason,input,output);}
+static void re4dc_model_packet_abort(){++aborts;event(9);}
+#if RE4DC_SCENERY_SUBMIT_BATCH
+struct Re4dcWorldSubmitBatch {std::uint32_t* sq=nullptr;};
+static void re4dc_ps2_world_batch_close(Re4dcWorldSubmitBatch* batch){batch->sq=nullptr;}
+#endif
+@PICK_DEFINITION@
+static unsigned choose(Pick* out,const Part& p,const unsigned* key,const float* matrix,float far,bool inside){
+ ++select_calls;assert(key&&key[5]==p.cull);event(1,p.cull,word(far),inside);
+ for(unsigned k=0;k<12;++k)events.push_back(word(matrix[k]));
+ for(unsigned k=0;k<6;++k)events.push_back(key[k]);
+ for(unsigned j=0;j<selected_count;++j)out[j]={std::uint16_t(j),std::uint8_t(selected_nr),3,0,5,{0,0}};
+ return selected_count;
+}
+struct DrawFields {
+ Part& p;const Package& package;
+ const unsigned* ps2=nullptr;const std::uint8_t* sg=nullptr;unsigned sg_groups=0;
+ float near,cull_far,lod_scale=0;unsigned part_index=0;
+ bool lean_inside=false;const float* lean_am=nullptr;
+ const std::uint8_t* pvs_set=nullptr;unsigned pc_mode=0;std::uint64_t skip_clusters=0;
+ DrawFields(Part& p,const Package& pk,float n,float f):p(p),package(pk),near(n),cull_far(f){}
+ @CHUNK_OK@
+};
+struct ScenerySelector:DrawFields {
+ const float* mvq;
+ ScenerySelector(Part& p,const Package& pk,const float* m,float n,float f):DrawFields(p,pk,n,f),mvq(m){}
+ unsigned chunk_select(Pick* out){return choose(out,p,ps2,mvq,cull_far,lean_inside);}
+};
+struct MeshDraw:DrawFields {
+ using Pick=::Pick;const MeshPart& part;
+ float mvq[12]{},mv[12]{};const float* pc_wq=nullptr;
+ unsigned alpha=0,pvs_placement=~0U,pvs_first=0,pvs_pending[3]{~0U,~0U,0},used=0,input=0,output=0,slots=0,primed=0;
+ bool vertex_alpha=false,c4444=false,direct=false,lean_part=false,streaming=false,bound=false,submitted=false;
+ const void* palette=nullptr;void* cache=nullptr;const unsigned* lut;float far;
+#if RE4DC_SCENERY_SUBMIT_BATCH
+ Re4dcWorldSubmitBatch* submit_batch=nullptr;
+#endif
+ struct {float uv_bias[2]{},uv_scale[2]{};}batch;
+ MeshDraw(Begin b,const Package& pkg,const MeshPart& mp,const unsigned* table,void*):DrawFields(b.p,pkg,b.near,0),part(mp),lut(table),far(b.far){}
+ unsigned chunk_select(Pick* out){return choose(out,p,ps2,mvq,cull_far,lean_inside);}
+ void set_clip(){assert(near>0&&far>near);}
+ int emit_pick(const Pick& pick){
+  const unsigned call=pick_calls++;++binds;
+  assert(ps2&&p.cull==ps2[5]);event(3,p.cull,re4dc_ps2_sky_header,vertex_alpha);
+  for(unsigned k=0;k<6;++k)events.push_back(ps2[k]);
+  events.insert(events.end(),{word(p.uv_offset[0]),word(p.uv_offset[1]),word(near),word(far),
+                            word(batch.uv_bias[0]),word(batch.uv_bias[1]),word(batch.uv_scale[0]),word(batch.uv_scale[1]),
+                            unsigned(pick.let),unsigned(pick.nr),unsigned(c4444),unsigned(lut==::lut)});
+  if(call==fail_at)return fail_result;
+  if(pick.nr){++input;++output;
+#if RE4DC_PS2_PVS
+   assert(pvs_pending[0]==~0U&&pvs_pending[1]==~0U&&pvs_pending[2]==0);
+   pvs_pending[0]=pick.let;pvs_pending[1]=p.cull;pvs_pending[2]=1;
+#endif
+  }
+  return 1;
+ }
+ @REPLAY_RESTART@
+ @CHUNK_EMIT@
+ void end_direct(){++ends;event(4,p.cull,re4dc_ps2_sky_header);}
+ void pvs_finish(bool good){event(5,pvs_placement,good);
+  events.insert(events.end(),{pvs_pending[0],pvs_pending[1],pvs_pending[2]});pvs_pending[2]=0;}
+ int run(){++runs;Pick p{0,255,0,0,0,{0,0}};return chunk_emit(&p,1);}
+};
+struct Case {unsigned path,current,previous,sky,marked,select_count,select_nr,policy,stop;int fail;};
+enum {Room=0,PartFull,PickFull,Ordinary,Oversize,NoGroups,NoLod,Pvs,Interior,ZeroPicks,ZeroGroups};
+static int execute(const Case& test){
+ events.clear();select_calls=lut_calls=pick_calls=binds=ends=runs=aborts=result_calls=policy_calls=0;
+ selected_count=test.select_count;selected_nr=test.select_nr;fail_at=test.fail==-2?~0U:test.stop;fail_result=test.fail;
+ policy_far=test.policy==2?20.0f:1000.0f;
+ Part part{test.current,{.125f,-.25f}};
+ struct SharedStateOnExit {Part& part;~SharedStateOnExit(){event(13,part.cull,re4dc_ps2_sky_header,word(part.uv_offset[0]));}} state_on_exit{part};
+ const float near=1,far=1000,cull_far=1000,lod_scale=2;
+ Package pk;if(test.path==Oversize)pk.entry.meshlet_count=321;if(test.path==NoLod)pk.lod_on=false;
+ const Package& cpkg=pk;
+ unsigned char group_data[128]{};
+ struct {const unsigned* lut;void* gather;const std::uint8_t* sg;unsigned sg_groups;} ps2w{::lut,nullptr,group_data,test.path==NoGroups?9U:4U};
+ struct {unsigned native=0,fallback=0,aborts=0;}c;
+ @CHUNK_PART@;
+ static constexpr unsigned kChunkParts=48,kChunkPicks=320;
+ ChunkPart cctx[kChunkParts]{};MeshDraw::Pick cpk[kChunkPicks]{};
+ unsigned nctx=test.path==PartFull?48U:test.path==Room?0U:2U,npk=test.path==PickFull?320U:nctx;
+ float mvq[12]={1,.125f,0,3,0,2,.25f,4,.5f,0,1,5};float amq[9]{};
+ for(unsigned j=0;j<nctx;++j){auto& x=cctx[j];std::memcpy(x.mvq,mvq,sizeof(mvq));
+  x.cull=j+1==nctx?test.previous:j%3U;x.key[0]=j+1;x.key[5]=x.cull;x.sky=j&1U;x.marked=(j&1U)!=0;
+  x.cull_far=1000;x.lod_scale=2;x.index=0;x.first=j;x.count=1;
+#if RE4DC_PS2_PVS
+  x.placement=j;
+#endif
+  cpk[j]={0,255,0,0,0,{0,0}};}
+ @CHUNK_FLUSH@;
+ re4dc_ps2_sky_header=test.sky;
+ const unsigned index=0,pass=1,i=0,lean_in=2,pc_state=test.path==Interior?1U:0U;
+ const std::uint8_t* pvs_cur=test.path==Pvs?group_data:nullptr;const float* pc_wq=mvq;
+ const unsigned foliage_pass=test.policy==1?0U:pass,trans_pass=pass;
+ Meta meta{0x1234,0x5678,32,64,pass,test.current,test.marked};
+ // The ordinary case bypasses the selection recipe via the same package gate.
+ if(test.path==Ordinary)pk.lod_on=false;
+ for(unsigned once=0;once<1;++once){
+ @EARLY_BRANCH@
+ @FULL_SETUP@
+ @CHUNK_DISPATCH@
+#if RE4DC_PS2_PVS
+  d.pvs_finish(result>0);
+#endif
+  if(result>0)++c.native;
+  else if(result<0){re4dc_model_packet_abort();++c.aborts;return -1;}
+  else ++c.fallback;
+ }
+ // Capture queue state before final replay. Empty selections remain records;
+ // zero-retained-group picks remain picks and still reach emit_pick/bind.
+ event(10,nctx,npk,part.cull);
+ for(unsigned j=0;j<nctx;++j){const auto& x=cctx[j];event(11,x.count,x.cull,x.sky);
+  events.insert(events.end(),{word(x.cull_far),word(x.lod_scale),x.index,x.first,x.marked});
+  for(unsigned k=0;k<12;++k)events.push_back(word(x.mvq[k]));
+  for(unsigned k=0;k<6;++k)events.push_back(x.key[k]);}
+ if(chunk_flush()<0)return -1;
+ assert(part.cull==test.current&&re4dc_ps2_sky_header==test.sky);
+ if(test.fail==-2 && (test.path==ZeroPicks||test.path==ZeroGroups))assert(binds==2+test.select_count);
+ event(12,c.native,c.fallback,c.aborts);
+ return 1;
+}
+int main(){
+ unsigned cases=0;
+ for(unsigned path=0;path<=ZeroGroups;++path)for(unsigned current=0;current<3;++current)
+ for(unsigned previous=0;previous<3;++previous)for(unsigned sky=0;sky<2;++sky)
+ for(unsigned policy=0;policy<3;++policy)for(int failure:{-2,-1,0})for(unsigned late:{0U,1U}){
+  const unsigned stop=late?(path==PartFull?47U:1U):0U;
+  Case test{path,current,previous,sky,current&1U,path==ZeroPicks?0U:1U,path==ZeroGroups?0U:255U,policy,stop,failure};
+  const int result=execute(test);std::uint64_t hash=1469598103934665603ULL;
+  for(unsigned value:events){hash^=value;hash*=1099511628211ULL;}
+  std::printf("%u %u %u %u %u %u %d %d %u %u %u %u %u %u %u %u %u %u %llu\n",path,current,previous,sky,policy,stop,failure,result,
+   select_calls,lut_calls,pick_calls,binds,ends,runs,aborts,result_calls,policy_calls,re4dc_ps2_sky_header,(unsigned long long)hash);
+  std::printf("EVENTS");for(unsigned value:events)std::printf(" %08x",value);std::printf("\n");
+  ++cases;
+ }
+ std::fprintf(stderr,"PASS actual queue/dispatch controls cases=%u\n",cases);
+}
