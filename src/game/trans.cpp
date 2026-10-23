@@ -1107,6 +1107,99 @@ static int invisSkip(cModel* m, int ot, int ret)
 #if defined(RE4DC_OTHER_PROFILE) && RE4DC_OTHER_PROFILE
 #include "other_profile_trans.inc"
 #endif
+#if defined(RE4DC_FLASHLIGHT_POOL) && RE4DC_FLASHLIGHT_POOL
+// FLASHLIGHT_POOL=1 (effects30.mk; #55 item 3, user option B; render only, approximation): the night rooms' room
+// light data attach a spot light (xD 3 / 6) and a point light to Leon (r11e: chest spot + ~4 m point). The GameCube
+// lights the world with them; our PS2 world is pre-lit and reads no game light. Here, in a room where such a spot is
+// alive on the player, an additive light pool (a 12-triangle Gouraud fan, no texture, no GameCube asset) is laid on
+// the ground RE4DC_FLASHLIGHT_POOL_DIST ahead of Leon along his facing, with the spot's + half the point's colour,
+// fading to nothing at its rim; the normal depth test hides it behind nearer walls (native_flashlight_pool.inc).
+// The translucent list's auto-sort forces GEQUAL on the PVR, so the pool lights the floor, not wall faces.
+// Reads game state only (light list, player pose, camera).
+#include "native_ui.h"
+#ifndef RE4DC_FLASHLIGHT_POOL_DIST
+#define RE4DC_FLASHLIGHT_POOL_DIST 3500
+#endif
+#ifndef RE4DC_FLASHLIGHT_POOL_SIZE
+#define RE4DC_FLASHLIGHT_POOL_SIZE 1800
+#endif
+#ifndef RE4DC_FLASHLIGHT_POOL_GAIN
+#define RE4DC_FLASHLIGHT_POOL_GAIN 150
+#endif
+extern "C" void re4dc_log(const char* fmt, ...);
+static void re4dc_flashlight_pool()
+{
+    static u16 s_room = 0xFFFF;
+    cLight* spot = 0;
+    cLight* point = 0;
+    if (pPL == 0) {
+        return;
+    }
+    for (cLight* l = LightMgr.pAlive; l; l = (cLight*) l->pNext) {
+        if (l->pParent != (cModel*) pPL || !LightMgr.checkKind(l->Kind)) {
+            continue;
+        }
+        if ((l->xD == 3 || l->xD == 6) && l->Radius > 0.0f && l->Radius <= 4000.0f && !spot) {   // a hand-held torch; r11d's r=18673 room spot is not one
+            spot = l;
+        } else if (l->xD <= 2 && l->Radius > 0.0f && !point) {
+            point = l;
+        }
+    }
+    if (spot == 0) {
+        return;
+    }
+    f32 rgb[3];
+    const GXColor sc = spot->DispCol;
+    const f32 ks = (f32) (int) sc.a * 0.0078125f;
+    rgb[0] = sc.r * ks;
+    rgb[1] = sc.g * ks;
+    rgb[2] = sc.b * ks;
+    if (point) {
+        const GXColor pc = point->DispCol;
+        const f32 kp = (f32) (int) pc.a * 0.0078125f * 0.5f;
+        rgb[0] += pc.r * kp;
+        rgb[1] += pc.g * kp;
+        rgb[2] += pc.b * kp;
+    }
+    u32 argb = 0xFF000000U;
+    for (int c = 0; c < 3; c++) {
+        f32 v = rgb[c] * (RE4DC_FLASHLIGHT_POOL_GAIN / 100.0f);
+        argb |= (u32) (v > 255.0f ? 255.0f : v) << (16 - 8 * c);
+    }
+    const f32 a = pPL->ang.y, s = sinf(a), co = cosf(a);
+    Vec c0 = pPL->pos;
+    c0.x += s * RE4DC_FLASHLIGHT_POOL_DIST;
+    c0.z += co * RE4DC_FLASHLIGHT_POOL_DIST;
+    c0.y += 20.0f;
+    Re4dcEffectFan f;
+    memset(&f, 0, sizeof(f));
+    f.n = 12;
+    Vec v;
+    PSMTXMultVec(pG->Cam.v_mat, &c0, &v);
+    f.centre[0] = v.x;
+    f.centre[1] = v.y;
+    f.centre[2] = v.z;
+    for (u32 i = 0; i < f.n; i++) {
+        const f32 t = (f32) i * (6.2831855f / 12.0f);
+        const f32 along = cosf(t) * RE4DC_FLASHLIGHT_POOL_SIZE * 1.3f, across = sinf(t) * RE4DC_FLASHLIGHT_POOL_SIZE;
+        Vec w = {c0.x + s * along + co * across, c0.y, c0.z + co * along - s * across};
+        PSMTXMultVec(pG->Cam.v_mat, &w, &v);
+        f.ring[i][0] = v.x;
+        f.ring[i][1] = v.y;
+        f.ring[i][2] = v.z;
+    }
+    f.centre_argb = argb;
+    CameraSetProjection(1);
+    RE4DC_GXF_GET_PROJECTION(f.projection);
+    RE4DC_GXF_GET_VIEWPORT(f.viewport);
+    if (s_room != G_ROOM_ID) {
+        s_room = G_ROOM_ID;
+        re4dc_log("flashlight pool: room=%03x spot xD=%u r=%d disp=%08x point=%s argb=%08x\n", (unsigned) G_ROOM_ID,
+                  (unsigned) spot->xD, (int) spot->Radius, *(const u32*) &spot->DispCol, point ? "yes" : "no", argb);
+    }
+    re4dc_effect_fan(&f);
+}
+#endif
 void Trans()
 {
     u8* primStart = (u8*) pG->prim_base;
@@ -1212,6 +1305,14 @@ void Trans()
         ClothDraw();
     }
     ProcessTickGet(5, "ClothTrans");
+#if defined(RE4DC_FLASHLIGHT_POOL) && RE4DC_FLASHLIGHT_POOL
+#if RE4DC_COARSE
+    if (!re4dc_pace_drop_models)
+#endif
+    {
+        re4dc_flashlight_pool();
+    }
+#endif
     if (!(pG->Disp_flg & 0x00100000) && !PTS(32)) {
         FilterTrans();
     }
