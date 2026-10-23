@@ -538,3 +538,20 @@ endif
 $(OBJDIR)/src/game/esp.o $(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/esp01.o $(OBJDIR)/src/game/esp02.o: GAME_CPPFLAGS += -DRE4DC_FX_STRIP21=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FX_STRIP21=1
 endif
+# CLOTH_NATIVE=1 (lane fix-fx-missing23 2026-10-23, issue #55 "missing cloth/flags/hanging fabrics"; render only,
+#   approximation; default 0 = no code, identical image): the esp4e cloth sheets (cloth.cpp clothTrans, immediate GX that
+#   gx_stub sinks) are drawn through the native effect FIFO as view-space strips (native_effect_strip21.inc
+#   re4dc_effect_mesh21), one colour per sheet (material x scenery ambient + picked lights). The simulation was always
+#   running (its ~1 ms at the r101 cross); only the draw is new. Log: `cloth native:` every 600 frames. Needs FX_STRIP21=1.
+CLOTH_NATIVE ?= 0
+ifneq ($(filter-out 0 1,$(CLOTH_NATIVE)),)
+$(error CLOTH_NATIVE is 0 or 1)
+endif
+ifeq ($(CLOTH_NATIVE),1)
+ifneq ($(FX_STRIP21),1)
+$(error CLOTH_NATIVE needs FX_STRIP21=1)
+endif
+$(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_FX_STRIP21=1 -DRE4DC_CLOTH_NATIVE=1
+$(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_NATIVE=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_NATIVE=1
+endif

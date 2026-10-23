@@ -24,6 +24,122 @@ void OSReport(const char* fmt, ...);
 
 Cloth ClothWk[8];
 
+#if defined(RE4DC_CLOTH_NATIVE) && RE4DC_CLOTH_NATIVE
+// CLOTH_NATIVE=1 (effects30.mk; render only, approximation): clothTrans draws through immediate GX, which the Dreamcast
+// build sinks, so the esp4e cloth sheets (hanging fabric, flags, sacking) were simulated every frame but never drawn.
+// Here each sheet goes to the native effect FIFO (native_effect_strip21.inc re4dc_effect_mesh21) as view-space strips,
+// two rows at a time from the stack. Lighting approximation: one colour per sheet, the material colour times (the
+// scenery ambient + half of each picked light's colour with its range falloff), standing in for GX per-vertex lighting.
+// Reads game state only; the simulation and its RNG run as before. A sheet wholly off the view skips its draw-side
+// light pick (re4dc_cloth_visible). On a drawn coarse image the sheets are drawn from Trans (trans.cpp ClothDrawNow).
+#include <string.h>
+extern "C" void re4dc_log(const char* fmt, ...);
+#include "native_ui.h"
+// Conservative view test of a sheet's bounding sphere (top-row centre, width + hanging height) in view space:
+// behind the camera, beyond 40 m, or outside a 1.6 / 1.3 slope frustum (wider than the game's 4:3 view).
+static int re4dc_cloth_visible(const Cloth* pCL)
+{
+    Vec v;
+    PSMTXMultVec(pG->Cam.v_mat, (Vec*) &pCL->center, &v);
+    const f32 R = pCL->radius * 2.0f + pCL->Hgap * pCL->divV * pCL->Scale;
+    const f32 depth = -v.z;
+    if (depth < -R || depth - R > 40000.0f) {
+        return 0;
+    }
+    const f32 d = depth > 0.0f ? depth : 0.0f;
+    const f32 ax = v.x < 0.0f ? -v.x : v.x, ay = v.y < 0.0f ? -v.y : v.y;
+    if (ax - R > d * 1.6f + R || ay - R > d * 1.3f + R) {
+        return 0;
+    }
+    return 1;
+}
+static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
+{
+    const u32* to = (const u32*) pCL->tex;   // gx_stub.cpp GXTexObj: w[0] image, w[1] w<<16|h, w[2] format, w[3] wrap
+    if (to == 0 || to[0] == 0 || pCL->pTobjA != 0 || pCL->divH < 2 || pCL->divV < 2 || pCL->divH > 100) {
+        return 0;
+    }
+    Re4dcEffectMesh21 m;
+    memset(&m, 0, sizeof(m));
+    m.image.pixels = (const void*) to[0];
+    m.image.width = to[1] >> 16;
+    m.image.height = to[1] & 0xFFFF;
+    m.image.format = to[2];
+    m.image.palette_format = 0xFFFFFFFFU;
+    if (pCL->tlut != 0 && (m.image.format == 8 || m.image.format == 9)) {
+        const u32* tl = (const u32*) pCL->tlut;   // GXTlutObj: w[0] lut, w[1] format, w[2] entries
+        m.image.palette = (const void*) tl[0];
+        m.image.palette_format = tl[1];
+        m.image.palette_bytes = tl[2] * 2;
+    }
+    m.wrap_s = ((to[3] >> 8) & 0xFF) == 1;
+    m.wrap_t = (to[3] & 0xFF) == 1;
+    if (pCL->x74 == 0) {
+        m.src = 4;   // GX SRCALPHA / INVSRCALPHA = PVR 4 / 5
+        m.dst = 5;
+    } else {
+        m.src = 1;   // additive
+        m.dst = 1;
+    }
+    f32 lr = LightMgr.getEnvPtr()->AmbientScr.r, lg = LightMgr.getEnvPtr()->AmbientScr.g,
+        lb = LightMgr.getEnvPtr()->AmbientScr.b;
+    for (int i = 0; i < 8; i++) {
+        cLight* l = list[i];
+        if (l == 0) {
+            continue;
+        }
+        f32 k = (f32) (int) l->DispCol.a * 0.0078125f;
+        if (l->xD != 7) {
+            k *= 0.5f;
+        }
+        if (l->Radius > 0.0f) {
+            Vec p = l->World;
+            f32 d = GetDistance3(pos, &p) - size;
+            f32 f = d <= 0.0f ? 1.0f : (l->Radius - d) / l->Radius;
+            if (f <= 0.0f) {
+                continue;
+            }
+            k *= f > 1.0f ? 1.0f : f;
+        }
+        lr += k * l->DispCol.r;
+        lg += k * l->DispCol.g;
+        lb += k * l->DispCol.b;
+    }
+    const f32 cr = pCL->color.r * (lr > 255.0f ? 255.0f : lr) * (1.0f / 255.0f);
+    const f32 cg = pCL->color.g * (lg > 255.0f ? 255.0f : lg) * (1.0f / 255.0f);
+    const f32 cb = pCL->color.b * (lb > 255.0f ? 255.0f : lb) * (1.0f / 255.0f);
+    m.color = ((u32) pCL->color.a << 24) | ((u32) cr << 16) | ((u32) cg << 8) | (u32) cb;
+    RE4DC_GXF_GET_PROJECTION(m.projection);
+    RE4DC_GXF_GET_VIEWPORT(m.viewport);
+    Mtx sc, tmp, mv;
+    PSMTXScale(sc, pCL->Scale, pCL->Scale, pCL->Scale);
+    PSMTXConcat(pCL->mat, sc, tmp);
+    PSMTXConcat(pG->Cam.v_mat, tmp, mv);
+    const u32 cols = pCL->divH;
+    f32 band[2 * 100 * 3];
+    m.positions = band;
+    m.cols = cols;
+    m.rows = 2;
+    m.v_step = 1.0f / (f32) (pCL->divV - 1);
+    for (int row = 0; row + 1 < pCL->divV; row++) {
+        for (u32 s = 0; s < 2; s++) {
+            const Vec* src = &pCL->pVer[(row + s) * cols];
+            f32* dst = band + s * cols * 3;
+            for (u32 i = 0; i < cols; i++, src++, dst += 3) {
+                Vec v;
+                PSMTXMultVec(mv, src, &v);
+                dst[0] = v.x;
+                dst[1] = v.y;
+                dst[2] = v.z;
+            }
+        }
+        m.v_top = row * m.v_step;
+        re4dc_effect_mesh21(&m);
+    }
+    return 1;
+}
+#endif
+
 // clothTrans builds a temporary cModel for the light setup. The real cModel is 0x320 bytes
 // (see the KNOWN DEBT note in docs/matching.md: motion/atari fields still live in cEm/cObj), so an
 // unused pad local follows it to keep the original frame layout until cModel carries them itself.
@@ -471,18 +587,62 @@ void Cloth::disturbance(f32 power, u32 x, u32 y)
     pSpd[idx].y += power * 0.5f;
 }
 
+#if defined(RE4DC_CLOTH_NATIVE) && RE4DC_CLOTH_NATIVE
+static void ClothDraw_log_room()
+{
+    int i;
+    {   // CLOTH_NATIVE: one line per room with live cloth sheets (proof of coverage)
+        static u16 s_room = 0xFFFF;
+        int n = 0;
+        for (i = 0; i < 8; i++) {
+            n += ClothWk[i].m_pMem != 0;
+        }
+        if (n && s_room != G_ROOM_ID) {
+            s_room = G_ROOM_ID;
+            re4dc_log("cloth native: room=%03x sheets=%d grid0=%ux%u tex=%08x\n", (unsigned) G_ROOM_ID, n,
+                      (unsigned) ClothWk[0].divH, (unsigned) ClothWk[0].divV,
+                      ClothWk[0].tex ? (unsigned) ((const u32*) ClothWk[0].tex)[0] : 0U);
+            for (i = 0; i < 8; i++) {
+                if (ClothWk[i].m_pMem) {
+                    re4dc_log("cloth native: sheet %d be=%02x grid=%ux%u center=%d,%d,%d\n", i,
+                              (unsigned) ClothWk[i].be_flag, (unsigned) ClothWk[i].divH,
+                              (unsigned) ClothWk[i].divV, (int) ClothWk[i].center.x, (int) ClothWk[i].center.y,
+                              (int) ClothWk[i].center.z);
+                }
+            }
+        }
+    }
+}
+#endif
+
 // Draw registration: queues clothTrans in OT 13 for every cloth flagged drawn (be_flag 0x20).
 void ClothDraw()
 {
     Cloth* c = ClothWk;
     int i;
 
+#if defined(RE4DC_CLOTH_NATIVE) && RE4DC_CLOTH_NATIVE
+    ClothDraw_log_room();
+#endif
     for (i = 0; i < 8; i++, c++) {
         if (c->be_flag & 0x20) {
             AddOtDirect(0xD, c, (void (*)()) clothTrans, 0, 0x1000, 0, 0.0f);
         }
     }
 }
+
+#if defined(RE4DC_CLOTH_NATIVE) && RE4DC_CLOTH_NATIVE
+// CLOTH_NATIVE on a drawn coarse image (trans.cpp): no world OT runs, so every drawn sheet is queued now.
+void ClothDrawNow()
+{
+    ClothDraw_log_room();
+    for (int i = 0; i < 8; i++) {
+        if (ClothWk[i].be_flag & 0x20) {
+            clothTrans(&ClothWk[i]);
+        }
+    }
+}
+#endif
 
 // Draws the cloth: a temporary cModel picks up the room lights (commonClothLightSet), then one
 // two-sided textured triangle strip per row with the vertex normals.
@@ -492,6 +652,11 @@ void clothTrans(Cloth* pCL)
     GXTexObj* tex = pCL->tex;
     void* tex2 = pCL->pTobjA;
     GXTlutObj* tlut = pCL->tlut;
+#if defined(RE4DC_CLOTH_NATIVE) && RE4DC_CLOTH_NATIVE
+    if (!re4dc_cloth_visible(pCL)) {
+        return;   // CLOTH_NATIVE: a sheet wholly off the view (draw only)
+    }
+#endif
     int nStages;
     int i;
     int j;
@@ -530,6 +695,11 @@ void clothTrans(Cloth* pCL)
     commonClothLightSet(model.LightInfo.pLight, 8, model.pos, r);
 #endif
     GXSetChanMatColor(4, pCL->color);
+#if defined(RE4DC_CLOTH_NATIVE) && RE4DC_CLOTH_NATIVE
+    if (re4dc_cloth_native(pCL, model.LightInfo.pLight, &model.pos, r)) {
+        return;
+    }
+#endif
     GXSetNumTexGens(1);
     GXLoadTexObj(tex, 0);
     if (tlut != 0) {
