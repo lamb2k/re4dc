@@ -1,0 +1,145 @@
+// Compiled after the complete production native_actor_fast.cpp. The scalar
+// setup functions and all target layouts remain real. AVK entry points are
+// observed return edges: their unchanged geometry work is outside this price.
+extern "C" void fixture_part_edge(const void*);
+extern "C" void fixture_lights_edge(const void*);
+extern "C" {
+Re4dcModelPart fixture_part;
+Frame fixture_frame;
+Lights fixture_lights;
+SourceLighting fixture_source;
+alignas(32) pvr_vertex_t fixture_vertices[kMaxVertices];
+alignas(32) u8 fixture_outcodes[kMaxVertices];
+alignas(32) u8 fixture_positions[kMaxVertices * 8];
+alignas(32) u8 fixture_normals[kMaxVertices * 8];
+alignas(32) u8 fixture_uv[kMaxVertices * 4];
+alignas(32) u16 fixture_records[64 * 4];
+alignas(32) float fixture_matrices[16 * 4];
+alignas(32) float fixture_directions[12 * 4];
+alignas(32) u8 fixture_position_ready[4], fixture_direction_ready[4];
+unsigned fixture_kind, fixture_vertices_count, fixture_signed_uv, fixture_call_mask;
+unsigned fixture_result;
+}
+
+extern "C" void fixture_prepare(unsigned kind) {
+    fixture_kind = kind;
+    fixture_vertices_count = 32;
+    fixture_signed_uv = 1;
+    fixture_call_mask = 3;
+    fixture_part = Re4dcModelPart{};
+    fixture_frame = Frame{};
+    fixture_part.uv = fixture_uv;
+    fixture_part.uv_offset[0] = 0.125f;
+    fixture_part.uv_offset[1] = -0.25f;
+    fixture_part.lighting = &fixture_source;
+    fixture_source = SourceLighting{};
+    fixture_frame.mode = kind == 0 || kind == 3 ? kSkin : kRigid;
+    fixture_frame.positions = fixture_positions;
+    fixture_frame.normals = fixture_normals;
+    fixture_frame.position_stride = kind == 2 ? 6 : 8;
+    fixture_frame.normal_stride = kind == 0 || kind == 1 ? 8 : kind == 2 ? 6 : 4;
+    fixture_frame.position_count = fixture_frame.normal_count = 128;
+    fixture_frame.small_normals = kind == 3;
+    fixture_frame.palette_entries = 4;
+    fixture_frame.skin_positions = fixture_matrices;
+    fixture_frame.skin_dirs = fixture_directions;
+    fixture_frame.skin_ready = fixture_position_ready;
+    fixture_frame.dirs_ready = fixture_direction_ready;
+    fixture_frame.avk_all = true;
+    for (unsigned i = 0; i < 4; ++i) fixture_position_ready[i] = fixture_direction_ready[i] = 1;
+    for (unsigned i = 0; i < 64; ++i) {
+        fixture_records[4*i] = fixture_records[4*i+1] = fixture_records[4*i+2] = i;
+        fixture_records[4*i+3] = 0;
+    }
+    lights_reset(fixture_lights);
+    fixture_lights.fast = true;
+    fixture_lights.color[0] = 0.5f;
+    fixture_lights.color[15] = 255.0f;
+    fixture_frame.screen[0] = fixture_frame.screen[5] = fixture_frame.screen[10] = fixture_frame.screen[15] = 1;
+    fixture_result = 0;
+}
+
+extern "C" __attribute__((noinline)) unsigned fixture_run(unsigned meshlets) {
+    const auto& p = fixture_part;
+    auto& f = fixture_frame;
+    const float near_distance = 0.1f, far_distance = 1000.0f;
+    Part e{p, f, {p.projection, p.viewport},
+        {near_distance, far_distance, 640.0f, 480.0f, project, nullptr}};
+    e.clip.context = &e.projection;
+    e.streaming = true;
+    e.packet.vertices = fixture_vertices;
+    e.packet.capacity = kMaxVertices;
+    e.packet.u_scale = e.packet.v_scale = 1.0f;
+    e.cache.v = fixture_vertices;
+    e.cache.oc = fixture_outcodes;
+    e.alpha = 0xff000000U;
+    const PosConst k{0, 0.000030517578125f, p.uv_offset[0], 0.000030517578125f,
+                     p.uv_offset[1], 640.0f, 480.0f, near_distance, far_distance};
+    const Records r{fixture_records, 4, 0, false};
+    // A read-only observed edge keeps the complete Part construction live;
+    // no geometry arithmetic, source callback or material work is invented.
+    fixture_part_edge(&e);
+    unsigned done = 0;
+    for (unsigned i = 0; i < meshlets; ++i) {
+        if (fixture_call_mask & 1U)
+            done += avk_positions(e, r, fixture_vertices_count, k, fixture_signed_uv);
+        if (fixture_call_mask & 2U)
+            done += avk_lights(e, fixture_lights, r, fixture_vertices_count);
+    }
+    fixture_result = done;
+    return done;
+}
+
+extern "C" __attribute__((noinline)) void fixture_reset_lights() {
+    lights_reset(fixture_lights);
+}
+
+extern "C" __attribute__((noinline)) unsigned fixture_constant_lights() {
+    const float center[3] = {0, 0, 0};
+    Lights lights;
+    const unsigned result = build_lights(fixture_part, fixture_frame, center, lights);
+    fixture_lights_edge(&lights);
+    return result;
+}
+
+extern "C" void fixture_prepare_lights(unsigned enable) { fixture_source.enable = enable; }
+
+extern "C" __attribute__((noinline)) const float* fixture_palette_hit(unsigned index) {
+    alignas(8) float fallback[16];
+    return position_matrix(fixture_frame, index, fallback);
+}
+
+extern "C" __attribute__((noinline)) unsigned fixture_prime(unsigned n) {
+    Part e{fixture_part, fixture_frame, {fixture_part.projection, fixture_part.viewport},
+           {0.1f, 1000.0f, 640.0f, 480.0f, project, nullptr}};
+    e.cache.v = fixture_vertices;
+    e.prime(n);
+    fixture_part_edge(&e);
+    return e.primed;
+}
+
+extern "C" const std::uintptr_t fixture_layout[] = {
+    1, sizeof(Part), sizeof(Frame), sizeof(Lights), sizeof(AvkPos), sizeof(AvkLight),
+    reinterpret_cast<std::uintptr_t>(&fixture_part),
+    reinterpret_cast<std::uintptr_t>(&fixture_frame),
+    reinterpret_cast<std::uintptr_t>(&fixture_lights),
+    reinterpret_cast<std::uintptr_t>(fixture_vertices),
+    reinterpret_cast<std::uintptr_t>(fixture_outcodes),
+    reinterpret_cast<std::uintptr_t>(fixture_positions),
+    reinterpret_cast<std::uintptr_t>(fixture_normals),
+    reinterpret_cast<std::uintptr_t>(fixture_uv),
+    reinterpret_cast<std::uintptr_t>(fixture_records),
+    reinterpret_cast<std::uintptr_t>(fixture_matrices),
+    reinterpret_cast<std::uintptr_t>(fixture_directions),
+    reinterpret_cast<std::uintptr_t>(fixture_position_ready),
+    reinterpret_cast<std::uintptr_t>(fixture_direction_ready),
+    reinterpret_cast<std::uintptr_t>(&fixture_vertices_count),
+    reinterpret_cast<std::uintptr_t>(&fixture_signed_uv),
+    reinterpret_cast<std::uintptr_t>(&fixture_call_mask),
+    offsetof(Frame,screen), offsetof(Lights,dir), offsetof(Lights,color),
+    offsetof(Part,used), offsetof(Part,input), offsetof(Part,output), offsetof(Part,primed),
+    offsetof(Part,streaming), offsetof(Part,committed), offsetof(Part,cache),
+    offsetof(Part,clip), offsetof(Part,projection), sizeof(Re4dcModelPart),
+    offsetof(Lights,fast), offsetof(Lights,constant), offsetof(Lights,count),
+    offsetof(Lights,constant_rgb), offsetof(Lights,source), offsetof(Lights,view_dot)
+};

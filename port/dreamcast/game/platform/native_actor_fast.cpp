@@ -136,6 +136,11 @@ void re4dc_ganlit_fill_set(unsigned percent) {
 #ifndef RE4DC_ACTOR_NO_CLEAR
 #define RE4DC_ACTOR_NO_CLEAR 0
 #endif
+// ACTOR_SETUP_LEAN (game30.mk; default 0): keep kernel arguments and dispatch in the current Part. A new Part
+// always starts unprepared; palette readiness and each call's records/output pointers are still read live.
+#ifndef RE4DC_ACTOR_SETUP_LEAN
+#define RE4DC_ACTOR_SETUP_LEAN 0
+#endif
 // ACTOR_MOVCA (game30.mk; render only, default 0): the position kernels allocate each meshlet cache entry's line
 // with movca.l (no fill from RAM: the line is written before it is read); emit / emit_sq write the flags word.
 #ifndef RE4DC_ACTOR_MOVCA
@@ -1936,6 +1941,16 @@ const float* position_matrix(Frame& f, unsigned i, float* fallback) {
 // in columns 0..2 and ambient x scale in column 3. Same per-object
 // approximation (evaluated at the part centre) as native_actor.cpp.
 struct Lights {
+#if RE4DC_ACTOR_SETUP_LEAN && RE4DC_ACTOR_NO_CLEAR
+    // Every successful fold (including the constant/probe paths) calls lights_reset before reading these.
+    // Probe declines fall through to build_lights, which also resets. Keep the fields not reset below initialized.
+    bool fast, constant;
+    unsigned count;
+    u32 constant_rgb;
+    float dir[3][4];
+    alignas(8) float color[16];
+    const SourceLighting* source;
+#else
     bool fast = false;       // directional fold valid: diffuse clamp, <=3 lights, caps 255
     bool constant = false;   // lighting disabled: one colour for every vertex
     unsigned count = 0;
@@ -1943,6 +1958,7 @@ struct Lights {
     float dir[3][4]{};       // normal space, x nq (w = 0)
     alignas(8) float color[16]{};
     const SourceLighting* source = nullptr;
+#endif
 #if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS && !RE4DC_ACTOR_EXACT_FAST
 #error STATUE_LIGHTS=2 needs ACTOR_EXACT_FAST (the exact evaluator adds the ambient share)
 #endif
@@ -1957,6 +1973,15 @@ struct Lights {
 #else
     re4dc::render::PreparedSourceLights prepared;
 #endif
+#if RE4DC_ACTOR_SETUP_LEAN && RE4DC_ACTOR_NO_CLEAR
+    float view_dot[3];
+#if RE4DC_ACTOR_PROBE_LIGHT
+    bool probe;
+#endif
+#if defined(RE4DC_LEON_LIGHT_HEADROOM) && RE4DC_LEON_LIGHT_HEADROOM
+    bool half_post;
+#endif
+#else
     float view_dot[3]{};     // light . direction from the part centre to the camera (view space)
 #if RE4DC_ACTOR_PROBE_LIGHT
     bool probe = false;      // ACTOR_PROBE_LIGHT: the actor's probe (ambient + one direction)
@@ -1964,6 +1989,7 @@ struct Lights {
 #if defined(RE4DC_LEON_LIGHT_HEADROOM) && RE4DC_LEON_LIGHT_HEADROOM
     bool half_post = false;  // LEON_LIGHT_HEADROOM: a 2x-texture part outside the owner path, folded at full scale and
                              // halved per vertex after the pass (the 1x look: the fast kernel's cap stays 1.0x)
+#endif
 #endif
 };
 // The fold's start state. MEMSET_LEAN=1 (crowd.mk; render only): every field but `prepared` is reset; prepared is
@@ -3317,6 +3343,16 @@ const AbcCone* abc_part(const Re4dcModelPart& p, const u8* base, const Frame& f,
     return abc_table(base, p.stream_bytes, &cls);
 }
 #endif
+#if RE4DC_ACTOR_SETUP_LEAN && RE4DC_AVK
+template<class Args> struct AvkSetup {
+    Args args;
+    unsigned (*kernel)(const Args*);
+    unsigned state;  // 0: not prepared; light setup uses 1 + its cached eligibility reason
+    // Deliberately leave the argument block untouched: its first eligible use writes every field. An aggregate
+    // default initializer here would clear the same 112 bytes that this option is intended to stop rewriting.
+    AvkSetup() : state(0) {}
+};
+#endif
 struct Part {
     const Re4dcModelPart& p;
     Frame& f;
@@ -3337,6 +3373,10 @@ struct Part {
     unsigned rs = 6, color_index = 0;
     const u8* colors = nullptr;
     u32 alpha = 0;
+#if RE4DC_ACTOR_SETUP_LEAN && RE4DC_AVK
+    AvkSetup<AvkPos> position_setup;
+    AvkSetup<AvkLight> light_setup;
+#endif
 
     bool flush() {
         if (!streaming) return false;
@@ -3795,6 +3835,12 @@ void avk_build_dirs(Frame& f, const Lights& L, const Records& r, unsigned i, uns
 unsigned avk_positions(Part& e, const Records& r, unsigned n, const PosConst& k, bool s16_uv) {
     Frame& f = e.f;
     const bool skin = f.mode == kSkin;
+#if RE4DC_ACTOR_SETUP_LEAN
+    if (!n) return 0;
+    auto& setup = e.position_setup;
+    if (!setup.state) {
+        setup.state = 1; setup.kernel = nullptr;
+#endif
     // The kernels sign-extend the u16 record fields (mov.w), as ACTOR_POS_ASM does.
 #if RE4DC_AVK_RIGID6
     // AVK_RIGID6 (game30.mk): rigid parts with stride 6 positions (kPos6) take the pipelined rigid6 kernels.
@@ -3803,8 +3849,13 @@ unsigned avk_positions(Part& e, const Records& r, unsigned n, const PosConst& k,
 #else
     if (!n || f.position_stride != 8 || f.position_count > 32768U || (skin && !f.skin_positions)) return 0;
 #endif
+#if RE4DC_ACTOR_SETUP_LEAN
+    AvkPos& a = setup.args;
+    a.pos = f.positions; a.uv = e.p.uv;
+#else
     AvkPos a;
     a.pos = f.positions; a.uv = e.p.uv; a.rs = r.stride * 2U;
+#endif
     a.matrix = skin ? f.skin_positions : f.screen; a.ready = f.skin_ready; a.entries = f.palette_entries;
     a.width = k.width; a.height = k.height; a.near_distance = k.near_distance; a.far_distance = k.far_distance;
     a.au = k.au; a.bu = k.bu; a.av = k.av; a.bv = k.bv;
@@ -3824,6 +3875,14 @@ unsigned avk_positions(Part& e, const Records& r, unsigned n, const PosConst& k,
 #if defined(RE4DC_SKIN_SH4ZAM) && RE4DC_SKIN_SH4ZAM
 #undef re4dc_avk_pos_skin_s16
 #undef re4dc_avk_pos_skin_u16
+#endif
+#if RE4DC_ACTOR_SETUP_LEAN
+        setup.kernel = kernel;
+    }
+    if (!setup.kernel) return 0;
+    AvkPos& a = setup.args;
+    const auto kernel = setup.kernel;
+    a.rs = r.stride * 2U;
 #endif
     const u8* rec = reinterpret_cast<const u8*>(r.r);
     if (skin && !f.avk_all) avk_build_all(f);
@@ -3874,6 +3933,28 @@ unsigned avk_lights_n16(Part& e, const Lights& L, const Records& r, unsigned n) 
     Frame& f = e.f;
     const bool skin = f.mode == kSkin;
     const unsigned ns = f.normal_stride;
+#if RE4DC_ACTOR_SETUP_LEAN
+    auto& setup = e.light_setup;
+    if (!setup.state) {
+        const unsigned why = e.colors ? unsigned(kN16Colors)
+            : (skin ? ns != 8U : (ns != 8U && ns != 6U)) ? unsigned(kN16Stride)
+            : f.normal_count > 32768U ? unsigned(kN16Count)
+            : (skin && !f.skin_dirs) ? unsigned(kN16NoTable) : unsigned(kN16Kernel);
+        setup.state = 1U + why; setup.kernel = nullptr;
+        if (why == kN16Kernel) {
+            AvkLight& a = setup.args;
+            a.nrm = f.normals; a.color = L.color; a.alpha = e.alpha;
+            a.dirs = skin ? f.skin_dirs : &L.dir[0][0]; a.ready = f.dirs_ready; a.entries = f.palette_entries;
+            setup.kernel = skin ? re4dc_avk_light_skin_n16
+                           : ns == 6U ? re4dc_avk_light_rigid_n16s6 : re4dc_avk_light_rigid_n16;
+        }
+    }
+    const unsigned why =
+#if RE4DC_ACTOR_LIGHT_N16 == 2
+        n16_ref ? unsigned(kN16Ref) :
+#endif
+        setup.state - 1U;
+#else
     const unsigned why =
 #if RE4DC_ACTOR_LIGHT_N16 == 2
         n16_ref ? unsigned(kN16Ref) :
@@ -3882,16 +3963,23 @@ unsigned avk_lights_n16(Part& e, const Lights& L, const Records& r, unsigned n) 
         : (skin ? ns != 8U : (ns != 8U && ns != 6U)) ? unsigned(kN16Stride)
         : f.normal_count > 32768U ? unsigned(kN16Count)
         : (skin && !f.skin_dirs) ? unsigned(kN16NoTable) : unsigned(kN16Kernel);
+#endif
 #if RE4DC_ACTOR_LIGHT_N16 == 2
     ++n16_meshlets[why]; n16_vertices[why] += n;
     if (why == kN16Kernel) n16_kind_vertices[skin ? 0 : ns == 6U ? 2 : 1] += n;
 #endif
     if (why != kN16Kernel || !n) return 0;
+#if RE4DC_ACTOR_SETUP_LEAN
+    AvkLight& a = setup.args;
+    const auto kernel = setup.kernel;
+    a.rs = r.stride * 2U;
+#else
     AvkLight a;
     a.nrm = f.normals; a.rs = r.stride * 2U; a.color = L.color; a.alpha = e.alpha;
     a.dirs = skin ? f.skin_dirs : &L.dir[0][0]; a.ready = f.dirs_ready; a.entries = f.palette_entries;
     unsigned (*const kernel)(const AvkLight*) = skin ? re4dc_avk_light_skin_n16
                                               : ns == 6U ? re4dc_avk_light_rigid_n16s6 : re4dc_avk_light_rigid_n16;
+#endif
     const u8* rec = reinterpret_cast<const u8*>(r.r);
     if (skin) {
         const unsigned palette = n16_palette(f, r.ni(0));
@@ -3951,6 +4039,12 @@ unsigned avk_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
 #if RE4DC_ACTOR_LIGHT_N16
     if (!f.small_normals) return avk_lights_n16(e, L, r, n);
 #endif
+#if RE4DC_ACTOR_SETUP_LEAN
+    if (!n) return 0;
+    auto& setup = e.light_setup;
+    if (!setup.state) {
+        setup.state = 1; setup.kernel = nullptr;
+#endif
 #if RE4DC_AVK_RIGID6
     const bool three = !skin && f.normal_stride == 3;  // AVK_RIGID6: rigid stride-3 normals (kNrm3)
     if (!n || !f.small_normals || e.colors || (f.normal_stride != 4 && !three) || f.normal_count > 32768U ||
@@ -3960,14 +4054,27 @@ unsigned avk_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
     if (!n || !f.small_normals || e.colors || f.normal_stride != 4 || f.normal_count > 32768U || (skin && !f.skin_dirs))
         return 0;
 #endif
+#if RE4DC_ACTOR_SETUP_LEAN
+    AvkLight& a = setup.args;
+    a.nrm = f.normals; a.color = L.color; a.alpha = e.alpha;
+#else
     AvkLight a;
     a.nrm = f.normals; a.rs = r.stride * 2U; a.color = L.color; a.alpha = e.alpha;
+#endif
     a.dirs = skin ? f.skin_dirs : &L.dir[0][0]; a.ready = f.dirs_ready; a.entries = f.palette_entries;
 #if RE4DC_AVK_RIGID6
     unsigned (*const kernel)(const AvkLight*) = skin ? re4dc_avk_light_skin
                                               : three ? re4dc_avk_light_rigid3 : re4dc_avk_light_rigid;
 #else
     unsigned (*const kernel)(const AvkLight*) = skin ? re4dc_avk_light_skin : re4dc_avk_light_rigid;
+#endif
+#if RE4DC_ACTOR_SETUP_LEAN
+        setup.kernel = kernel;
+    }
+    if (!setup.kernel) return 0;
+    AvkLight& a = setup.args;
+    const auto kernel = setup.kernel;
+    a.rs = r.stride * 2U;
 #endif
     const u8* rec = reinterpret_cast<const u8*>(r.r);
     if (skin) {
@@ -5743,7 +5850,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         if (!lights.exact_ready)
 #endif
         RE4DC_PREPARED(lights) = re4dc::render::prepare_actor_lights(*p.lighting);
+#if !RE4DC_ACTOR_SETUP_LEAN
     lights.source = p.lighting;
+#endif
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
     if (pxf::Row* r = pxf::row()) r->lit_us += unsigned(re4dc_otp_now_us() - pxf_l0);
 #endif
@@ -6378,7 +6487,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         if (!lp->exact_ready)
 #endif
         RE4DC_PREPARED(*lp) = re4dc::render::prepare_actor_lights(*p.lighting);
+#if !RE4DC_ACTOR_SETUP_LEAN
         lp->source = p.lighting;
+#endif
         w.lights_ready = constant_source;
     }
     Lights& lights = *lp;
