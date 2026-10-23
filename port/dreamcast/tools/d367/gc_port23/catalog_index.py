@@ -16,7 +16,7 @@ def sha(data):
 def text(value, limit):
     if not isinstance(value, str) or not value or len(value) >= limit:
         raise ValueError('invalid catalog identity')
-    if any(not (c.isascii() and (c.isalnum() or c in '._-')) for c in value):
+    if any(c not in 'abcdefghijklmnopqrstuvwxyz0123456789/._:-' for c in value):
         raise ValueError('invalid catalog identity')
     return value.encode('ascii')
 
@@ -81,6 +81,12 @@ class Reader:
             size != offset+count*record_bytes):
             raise ValueError('invalid catalog bounds/schema')
         self.count, self.offset = count, offset
+        previous = None
+        for index in range(count):
+            current = self.record(index)[:3]
+            if previous is not None and previous >= current:
+                raise ValueError('unsorted or duplicate catalog identity')
+            previous = current
 
     def record(self, index):
         if not 0 <= index < self.count:

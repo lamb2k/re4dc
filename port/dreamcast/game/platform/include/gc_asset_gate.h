@@ -19,6 +19,16 @@ bool fingerprint_read(Digest&, Read, void* context, unsigned bytes);
 struct CatalogRow {
     const char* kind; const char* id; Digest digest; Provenance provenance;
 };
+struct CheckedAsset { unsigned value=0; };
+struct AssetDescription { char kind[16],id[48];Digest digest;Provenance provenance; };
+using CatalogReadAt = unsigned (*)(void* context,unsigned offset,void* destination,unsigned bytes);
+// One immutable read-only CD catalog per disc/source epoch. Room changes reset
+// observations; persistent owners retain tokens only while their serial lives.
+bool install_index(CatalogReadAt,void* context,unsigned bytes,const Digest& expected_sha);
+void retire_catalog();
+CheckedAsset bind_checked(const char* kind,const char* id,const Digest& actual_sha);
+bool describe_checked(CheckedAsset,AssetDescription*); // safe boundaries only: may read the catalog
+void emitted_checked(Consumer,CheckedAsset); // unlocked flush: first room use may read a record
 // Catalog rows must be generated from reviewed payload hashes, never path names.
 // The caller owns this immutable table until the next install(). Null is valid:
 // every emission then has Unknown provenance, rather than silently becoming PS2.

@@ -44,11 +44,12 @@ int main() {
     end(1);
     assert(output.find("errors=9")!=std::string::npos); // bounded handoff cannot silently drop events
     output.clear();
+    assert(install(catalog,2)); // resets the bounded unknown quarantine
     begin(0x111,4,Required);
-    for(unsigned i=0;i<1025;++i) {
+    for(unsigned i=0;i<9;++i) {
         char id[40];snprintf(id,sizeof id,"model-%u",i);emitted(SourceGeometry,"model",id,gc);
     }
-    end(1);assert(output.find("unique=1024 overflow=1")!=std::string::npos);
+    end(1);assert(output.find("unique=8 overflow=1")!=std::string::npos);
     assert(!install(catalog,0xffffffffU)); // invalid table count must be rejected before walking
     assert(install(catalog,2));
     output.clear();begin(0x111,5,Required);

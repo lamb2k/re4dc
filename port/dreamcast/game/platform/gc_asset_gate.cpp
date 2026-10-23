@@ -6,15 +6,15 @@
 extern "C" void re4dc_log(const char*, ...);
 namespace re4dc_gcasset {
 namespace {
-constexpr unsigned Capacity = 1024, KindBytes = 16, IdBytes = 48;
+constexpr unsigned CatalogLimit=16376,KindBytes=16,IdBytes=48,UnknownLimit=8;
 #include "include/gc_asset_sha.inc"
-struct Seen { unsigned char signature[16]; };
-static_assert(sizeof(Seen)==16,"GC asset seen-table budget");
-Seen seen[Capacity];
+unsigned char seen[2048];
+AssetDescription unknown_assets[UnknownLimit];unsigned unknown_count,catalog_epoch;
+CatalogReadAt catalog_read;void* catalog_context;unsigned catalog_bytes;
 const CatalogRow* catalog;
 unsigned catalog_rows, room, visit, wired, checked_mask, used, overflow, errors;
 unsigned emissions[ConsumerCount];
-bool active, catalog_ok = true;
+bool active,catalog_ok;
 struct Queued { Consumer consumer; char kind[KindBytes], id[IdBytes]; Digest digest; unsigned room, visit; };
 Queued queue[32];
 std::atomic_flag queue_lock = ATOMIC_FLAG_INIT;
@@ -39,14 +39,7 @@ void hex(const Digest& digest, char out[65]) {
     for(unsigned i=0;i<32;++i) { out[2*i]=alphabet[digest.bytes[i]>>4];out[2*i+1]=alphabet[digest.bytes[i]&15]; }
     out[64]=0;
 }
-Provenance resolve(const char* kind, const char* id, const Digest& digest) {
-    if(!catalog_ok)return Unknown;
-    for(unsigned i=0;i<catalog_rows;++i) {
-        const CatalogRow& c=catalog[i];
-        if(!std::strcmp(c.kind,kind) && !std::strcmp(c.id,id) && !std::memcmp(c.digest.bytes,digest.bytes,32))return c.provenance;
-    }
-    return Unknown;
-}
+#include "include/gc_asset_index.inc"
 }
 Digest fingerprint(const void* data, unsigned count) {
     IdentitySha hash;Digest result{};
@@ -64,8 +57,8 @@ bool fingerprint_read(Digest& out, Read read, void* context, unsigned count) {
 }
 bool install(const CatalogRow* rows, unsigned count) {
     if(active) { ++errors;return false; }
-    catalog=nullptr;catalog_rows=0;catalog_ok=false;
-    if(count>65536 || (count && !rows))return false;
+    if(!new_catalog_epoch())return false;
+    if(count>CatalogLimit || (count && !rows))return false;
     for(unsigned i=0;i<count;++i) {
         const CatalogRow& c=rows[i];
         if(!token(c.kind,KindBytes) || !token(c.id,IdBytes) || unsigned(c.provenance)>Authored)return false;
@@ -74,10 +67,72 @@ bool install(const CatalogRow* rows, unsigned count) {
     }
     catalog=rows;catalog_rows=count;catalog_ok=true;return true;
 }
+bool install_index(CatalogReadAt read,void* context,unsigned bytes,const Digest& expected) {
+    if(active){++errors;return false;}
+    if(!new_catalog_epoch())return false;
+    if(!read || bytes<128 || bytes>128+CatalogLimit*112)return false;
+    IndexStream stream{read,context,0};Digest actual;
+    if(!fingerprint_read(actual,index_stream_read,&stream,bytes) || std::memcmp(actual.bytes,expected.bytes,32))return false;
+    unsigned char header[128];
+    if(read(context,0,header,sizeof header)!=sizeof header || std::memcmp(header,"GCIDX001",8) ||
+       index_word(header+8)!=1 || !index_word(header+12) || index_word(header+12)>CatalogLimit ||
+       index_word(header+16)!=112 || index_word(header+20)!=128 ||
+       bytes!=128+index_word(header+12)*112)return false;
+    for(unsigned i=24;i<128;++i)if(header[i])return false;
+    catalog_read=read;catalog_context=context;catalog_bytes=bytes;catalog_rows=index_word(header+12);
+    AssetDescription previous{},current;
+    for(unsigned i=0;i<catalog_rows;++i){
+        if(!index_row(i,current) || (i && index_compare(previous,current.kind,current.id,current.digest)>=0)){
+            catalog_read=nullptr;catalog_rows=catalog_bytes=0;return false;
+        }
+        previous=current;
+    }
+    catalog_ok=true;return true;
+}
+void retire_catalog(){
+    if(active)unresolved(SourceGeometry,"catalog-retired-during-room");
+    catalog_ok=false;catalog=nullptr;catalog_read=nullptr;catalog_rows=catalog_bytes=unknown_count=0;
+}
+CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) {
+    if(!catalog_ok || !token(kind,KindBytes) || !token(id,IdBytes))return {};
+    unsigned index=catalog_rows;AssetDescription row;
+    if(catalog_read) {
+        unsigned lower=0,upper=catalog_rows;
+        while(lower<upper) {
+            const unsigned middle=(lower+upper)/2;
+            if(!index_row(middle,row)){unresolved(SourceGeometry,"catalog-read");return {};}
+            if(index_compare(row,kind,id,digest)<0)lower=middle+1;else upper=middle;
+        }
+        if(lower<catalog_rows) {
+            if(!index_row(lower,row)){unresolved(SourceGeometry,"catalog-read");return {};}
+            if(!index_compare(row,kind,id,digest))index=lower;
+        }
+    } else for(unsigned i=0;i<catalog_rows;++i)if(!std::strcmp(catalog[i].kind,kind) && !std::strcmp(catalog[i].id,id) &&
+        !std::memcmp(catalog[i].digest.bytes,digest.bytes,32)){index=i;break;}
+    if(index==catalog_rows) {
+        unsigned i=0;
+        for(;i<unknown_count;++i)if(!index_compare(unknown_assets[i],kind,id,digest))break;
+        if(i==unknown_count) {
+            if(unknown_count==UnknownLimit){++overflow;unresolved(SourceGeometry,"unknown-capacity");return {};}
+            auto& unknown=unknown_assets[unknown_count++];unknown={};
+            std::strcpy(unknown.kind,kind);std::strcpy(unknown.id,id);unknown.digest=digest;unknown.provenance=Unknown;
+        }
+        index=catalog_rows+i;
+    }
+    return {catalog_epoch<<14|index};
+}
+bool describe_checked(CheckedAsset asset,AssetDescription* out) {
+    if(!out || !catalog_ok || asset.value>>14!=catalog_epoch || !catalog_epoch)return false;
+    const unsigned index=asset.value&16383U;
+    if(index<catalog_rows)return index_row(index,*out);
+    if(index-catalog_rows>=unknown_count)return false;
+    *out=unknown_assets[index-catalog_rows];return true;
+}
 void begin(unsigned r, unsigned v, unsigned mask) {
     if(active) { ++errors;end(0); }
     room=r;visit=v;wired=mask;checked_mask=used=overflow=errors=0;
     std::memset(emissions,0,sizeof emissions);active=true;
+    std::memset(seen,0,sizeof seen);
     errors=queue_faults.exchange(0);
     if(queue_lock.test_and_set(std::memory_order_acquire)) { ++errors;queue_active.store(0); }
     else {
@@ -137,22 +192,25 @@ void unresolved(Consumer consumer, const char* reason) {
     re4dc_log("GC-ASSET-ERROR v=1 why=%s consumer=%u\n",reason?reason:"missing-identity",unsigned(consumer));
 }
 void emitted(Consumer consumer, const char* kind, const char* id, const Digest& digest) {
+    if(!active){re4dc_log("GC-ASSET-ERROR v=1 why=no-room\n");return;}
+    emitted_checked(consumer,bind_checked(kind,id,digest));
+}
+void emitted_checked(Consumer consumer,CheckedAsset asset) {
     if(!active) { re4dc_log("GC-ASSET-ERROR v=1 why=no-room\n");return; }
-    if(unsigned(consumer)>=ConsumerCount || !token(kind,KindBytes) || !token(id,IdBytes)) { ++errors;return; }
+    if(unsigned(consumer)>=ConsumerCount) { ++errors;return; }
     ++emissions[consumer];checked(consumer);
-    const Provenance p=resolve(kind,id,digest);
-    // Even PS2 emissions contribute consumer liveness. Their payload verdict
-    // comes only from the exact catalog match above, never the exception list.
-    if(p==PS2 || p==Authored)return;
-    IdentitySha hash;hash.update(kind,std::strlen(kind)+1);hash.update(id,std::strlen(id)+1);hash.update(digest.bytes,32);
-    unsigned char signature[32];hash.finish(signature);
-    unsigned i=0;for(;i<used;++i)if(!std::memcmp(seen[i].signature,signature,16))break;
-    if(i<used)return;
-    if(used==Capacity) { ++overflow;return; }
-    std::memcpy(seen[used++].signature,signature,16);
-    char sha[65];hex(digest,sha);
+    const unsigned index=asset.value&16383U;
+    if(!catalog_ok || !catalog_epoch || asset.value>>14!=catalog_epoch || index>=catalog_rows+unknown_count) {
+        unresolved(consumer,"catalog-token");return;
+    }
+    if(seen[index/8]&(1U<<(index%8)))return;
+    AssetDescription row;
+    if(!describe_checked(asset,&row)){unresolved(consumer,"catalog-read");return;}
+    seen[index/8]|=1U<<(index%8);
+    if(row.provenance==PS2 || row.provenance==Authored)return;
+    ++used;char sha[65];hex(row.digest,sha);
     re4dc_log("GC-ASSET v=1 room=%04x visit=%u kind=%s id=%s sha256=%s provenance=%s consumer=%s action=emit\n",
-        room,visit,kind,id,sha,provenances[p],names[consumer]);
+        room,visit,row.kind,row.id,sha,provenances[row.provenance],names[consumer]);
 }
 void end(unsigned frame) {
     if(!active) { re4dc_log("GC-ASSET-ERROR v=1 why=no-room-end\n");return; }

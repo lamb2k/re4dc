@@ -1,8 +1,8 @@
-# Bounded indexed provenance contract (source design, not runtime integration)
+# Bounded indexed provenance contract
 
 Frozen baseline: selected target objects at 304eef6b9 add 54,444 B before link.
-Actual linked image, heap and complete I-001 gates remain open. The prototype
-in catalog_index.py does not replace the current runtime borrowed catalog yet.
+Actual linked image, heap and complete I-001 gates remain open. The C++ core
+now supports the file index; texture/BIN load hook conversion is in progress.
 
 The disc catalog is an immutable, read-only CD input. Install streams its whole
 SHA256 with 512-byte scratch and compares the independently reviewed release
@@ -28,14 +28,13 @@ There is no wildcard, auto-learning or name/API-based PS2 fallback. A changed
 payload under an existing key gets a different unknown identity. Quarantine
 overflow is a terminal diagnostic failure, not permission to drop observations.
 
-Proposed target API, all behind GC_ASSET_GATE=1:
+Core API, all behind GC_ASSET_GATE=1:
 
 ```cpp
-bool catalog_install(ReadAt, void* context, unsigned bytes, Digest expected_sha);
-CheckedAsset catalog_bind(const char* kind, const char* id, Digest actual_sha);
-void catalog_retire();
-void accepted(CheckedAsset, Consumer); // bounded latch only, no I/O/hash/log
-void flush_accepted();                // unlocked safe boundary
+bool install_index(CatalogReadAt, void* context, unsigned bytes, Digest expected_sha);
+CheckedAsset bind_checked(const char* kind, const char* id, Digest actual_sha);
+void retire_catalog();
+void emitted_checked(Consumer, CheckedAsset); // unlocked flush only
 ```
 
 Install owns a borrowed read handle until catalog retirement. Bind is an
@@ -46,13 +45,15 @@ bitset. Further accepted acknowledgements increment counters without record
 I/O. No per-draw disk read or hashing enters SQ/G2. Audio uses its existing
 ticket plus a copied checked token; pump/first-use I/O runs after releasing G2.
 
-Disc/room catalog retirement invalidates tokens before a new epoch is admitted.
+One pinned immutable catalog remains installed for the disc/source epoch.
+Room retirement resets observations and retires transient owners; persistent
+owners keep their tokens only while the same captured owner serial is live.
+Disc/catalog replacement invalidates every token before a new epoch is admitted.
 Asset owner serial/generation remains independently mandatory: a valid catalog
 index cannot resurrect a retired texture, BIN, static package or sound bank.
-Persistent resident assets need an explicit renewed immutable-owner proof on
-new catalog installation; copying an old numeric index into the new epoch is
-forbidden. This owner renewal remains runtime integration work, not a behavior
-implemented by the prototype. Deferred queues retain the original token/owner
+Existing resident assets fail after replacement until safely rebound from an
+immutable source boundary; rehashing relocated BIN bytes or copying an old
+numeric index into a new epoch is forbidden. Deferred queues retain the original token/owner
 serial and consumer mask, never resolve a new identity through a rebound info.
 
 The expected savings are provisional: Entry index+mask can replace 32-byte
