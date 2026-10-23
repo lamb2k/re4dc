@@ -65,6 +65,18 @@ $(error SCENERY_REPLAY_LEAN needs WORLD_SCRATCH=0 (ordinary per-part scratch lif
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_REPLAY_LEAN=1
 endif
+# Capture each queued draw's dynamic owner UV offset before its owner scope ends.
+# Restores the pending draw across capacity drains; no change for static offsets.
+SCENERY_UV_SNAPSHOT ?= 0
+ifneq ($(SCENERY_UV_SNAPSHOT),0)
+ifneq ($(SCENERY_UV_SNAPSHOT),1)
+$(error SCENERY_UV_SNAPSHOT must be 0 or 1)
+endif
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_UV_SNAPSHOT needs SCENERY_CHUNK)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_UV_SNAPSHOT=1
+endif
 # SCENERY_DEDUP=1 (exact, render only; needs SCENERY_CHUNK, MESH_VP_SCHED=1, HW_LEAN): each PS2 world meshlet's corners
 # are reordered at room load (repeated grid positions last), and a draw transforms each position once and builds the
 # repeats from it. Heap 4: 4 bytes per meshlet + 1 per repeat (r101 ~33 KB), freed with the room's world.
