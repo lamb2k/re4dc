@@ -101,3 +101,22 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 ## Open questions back to Claude
 
 Write them here under a dated heading in your branch commit; we answer on `t15/int`.
+
+### 2026-10-23: Build 5 hand-back (`codex/scenery-emit-prefetch-20261023`)
+
+Candidate: `SCENERY_EMIT_PREFETCH=1`, default 0. Base `dc87c465`.
+The [report](BUILD5_SCENERY_EMIT_PREFETCH_20261023.md) and its JSON receipt
+separate scalar cycles, architectural bytes/lines and the unpriced console
+cache benefit. This branch leaves the status table for the coordinator.
+
+1. What does the matched r101-cross console A/B show with this option added
+   to the accepted stack? The new lookahead has instruction overhead; the
+   cloud model cannot establish whether its earlier requests hide misses.
+2. Can the r101 census provide picked meshlets per part/flush, indexed
+   versus plain vertices, and indexed picks with `nr == 0`? Those counts
+   are needed to replace the report's explicit synthetic frame mix.
+3. Should the next private-builder experiment split the 28-byte meshlet
+   record into a 16-byte emit table and a 12-byte bounds table? The report
+   defines the proposal and its CRC/version requirements. This build does
+   not require new data. Nonempty partial gathers remain full-sized until
+   R4SG index-enclosure validation can safely support narrowing them.
