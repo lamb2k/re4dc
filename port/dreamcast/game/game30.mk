@@ -2983,6 +2983,20 @@ $(error PS2_WORLD_SOURCE_TEX_VQ needs PS2_WORLD_SOURCE_TEX_PREP=1)
 endif
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_SOURCE_TEX_VQ=1
 endif
+# PS2_WORLD_SOURCE_TEX_MIP=1 (lane fix-r200-gears23 from Codex mipmap23 8075a7c4; bug fix, default 0 = image unchanged;
+# needs PS2_WORLD_SOURCE_TEX_VQ=1 CAST_MIPMAP=1): since the mip22 data the r200 late-pass descriptor fa6fe38c-1a02365f is a
+# mipmapped full-codebook VQ package (23,894 B), which the VQ size check above refuses (ready=0, TEXCHK fail at r200). With
+# it the prep checks the package's exact current layout and size (raw16, base VQ or VQ mip chain) instead.
+PS2_WORLD_SOURCE_TEX_MIP ?= 0
+ifneq ($(filter-out 0 1,$(PS2_WORLD_SOURCE_TEX_MIP)),)
+$(error PS2_WORLD_SOURCE_TEX_MIP must be 0 or 1)
+endif
+ifeq ($(PS2_WORLD_SOURCE_TEX_MIP),1)
+ifneq ($(PS2_WORLD_SOURCE_TEX_VQ)$(CAST_MIPMAP),11)
+$(error PS2_WORLD_SOURCE_TEX_MIP needs PS2_WORLD_SOURCE_TEX_VQ=1 CAST_MIPMAP=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_SOURCE_TEX_MIP=1
+endif
 # Original r11f authored-group owner. Host qualification precedes runtime use.
 PS2_WORLD_R11F_OWNER ?= 0
 ifneq ($(filter-out 0 1,$(PS2_WORLD_R11F_OWNER)),)
