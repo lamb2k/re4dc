@@ -82,3 +82,24 @@ roof, nearby walls and source window anchor. It records part/pass/cull and input
 hashes and does not require numpy. Rays ignore face culling; selected poses,
 LOD, material residency, holes between sampled directions and continuous portal
 coverage are unqualified. It is never a visibility certificate or a cut table.
+
+
+The r111 `policy_migration.py` verifier admits exactly one pinned provenance
+transition for offline preparation. It preserves the original conversion report,
+proves identical mesh/material/source-owner identities, lists every changed byte
+and coefficient, and bounds the three changed affine matrices over the complete
+uint16 quantization cube using exact fractions. Later proofs always use the exact
+current policy. The historical ISO membership receipt is indirect evidence; the
+raw ISO is absent and is not re-read. No tolerance replaces any equality guard.
+
+`prepare.py --policy-migration-iso-receipt <historical-receipt>` re-verifies the
+final copied mesh/policy/IDs, copied original policy, copied conversion report and
+room identity. It refuses stale append metadata. Only the pinned helper's exact
+report-policy assertion and provenance metadata are adapted for this known pair;
+all placement, part, key-chain and geometric checks remain. Both original and
+adapted helper hashes and the complete attestation enter private receipts/meta.
+`policy_migration_checks.py` exercises 11 unknown-input negatives;
+`prepare_migration_checks.py` runs the real bridge baseline plus copied-report,
+copied-original, wrong-room, stale-append and ordinary-no-migration negatives.
+This bridge establishes input provenance only; every geometric, runtime, material,
+source-state, pixel and target-image qualification remains independently required.

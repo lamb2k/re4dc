@@ -47,6 +47,7 @@ def main():
     ap.add_argument('--base-report', required=True, type=Path)
     ap.add_argument('--log', action='append', type=Path, required=True)
     ap.add_argument('--strip-groups',type=Path,help='bind the actual staged optional r4sg; required before SG-aware pricing')
+    ap.add_argument('--policy-migration-iso-receipt',type=Path,help='reverify the one independently reviewed exact r111 policy migration')
     ap.add_argument('--room', default='10d')
     ap.add_argument('--cell', type=float, default=2000)
     ap.add_argument('--vertical-pad', type=float, default=250)
@@ -79,6 +80,33 @@ def main():
     if a.strip_groups:
         target=pkg/'ps2-world.r4sg';shutil.copyfile(a.strip_groups,target)
         receipt['inputs'][target.name]={'source':str(a.strip_groups),'sha256':sha(target),'bytes':target.stat().st_size}
+    if a.policy_migration_iso_receipt:
+        from policy_migration import verify,EXPECTED
+        # Re-read final copied inputs, not an externally supplied attestation.
+        assert int(a.room,16)==0x111,'policy migration is r111 only'
+        assert not (pkg/'append.json').exists(),'policy migration refuses stale append metadata'
+        assert sha(pkg/'base-report.json')==EXPECTED['report'],'unreviewed copied conversion report'
+        assert sha(pkg/'original.r4pw')==EXPECTED['original_policy'],'unreviewed copied original policy'
+        migration=verify(a.base_report.parent,a.original_policy.parent,pkg,a.policy_migration_iso_receipt)
+        migration_path=pkg/'policy-migration.json'
+        migration_path.write_text(json.dumps(migration,indent=2)+'\n')
+        receipt['inputs'][migration_path.name]={'source':'fresh exact verification of preserved inputs',
+            'sha256':sha(migration_path),'bytes':migration_path.stat().st_size}
+        prep=helpers/'pvs'/'pvs_prep.py';text=prep.read_text()
+        before="assert report['re4mesh_sha256']==hashlib.sha256(p.m).hexdigest() and report['r4pw_sha256']==state_policy_sha, 'base report package mismatch'"
+        after="assert report['re4mesh_sha256']==hashlib.sha256(p.m).hexdigest() and report['r4pw_sha256']=="+repr(EXPECTED['old_policy'])+" and state_policy_sha=="+repr(EXPECTED['original_policy'])+", 'base report migration mismatch'"
+        assert text.count(before)==1;text=text.replace(before,after)
+        before="static_provenance=dict(kind='base-conversion-report',name='base-report.json',base_placements=base_places)"
+        after="static_provenance=dict(kind='exact-reviewed-policy-migration',name='base-report.json',base_placements=base_places,migration='policy-migration.json',raw_iso_reread=False)"
+        assert text.count(before)==1;text=text.replace(before,after)
+        before="('ps2-world.re4mesh','ps2-world.r4pw','ps2-world.ids','append.json','base-report.json')"
+        after="('ps2-world.re4mesh','ps2-world.r4pw','ps2-world.ids','append.json','base-report.json','policy-migration.json')"
+        assert text.count(before)==1;text=text.replace(before,after)
+        receipt['pinned_tool_hashes']={'pvs_prep.py':sha(prep)}
+        prep.write_text(text);receipt['tool_hashes']['pvs_prep.py']=sha(prep)
+        receipt['policy_migration']={'verifier_sha256':sha(Path(__file__).with_name('policy_migration.py')),
+            'attestation_sha256':sha(migration_path),'historical_iso_receipt_sha256':sha(a.policy_migration_iso_receipt),
+            'old_report_unchanged':sha(pkg/'base-report.json')==EXPECTED['report'],'raw_iso_reread':False}
     subprocess.run([sys.executable, str(helpers/'pvs'/'pvs_prep.py'), str(pkg),
                     a.room, str(work), '--original-policy', str(pkg/'original.r4pw')], check=True)
     meta = json.loads((work/'meta.json').read_text())
