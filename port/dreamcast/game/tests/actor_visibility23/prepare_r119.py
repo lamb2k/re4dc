@@ -5,6 +5,7 @@ private geometry proof and must never be committed or published.
 from pathlib import Path
 import importlib.util,json,math,struct,hashlib,zlib,argparse,collections
 from fractions import Fraction as F
+from coverage_select import select_dependencies,check_frontside_and_slab,bind_quantized_identity,validate_lod_coverage
 ap=argparse.ArgumentParser();ap.add_argument('--input',required=True);ap.add_argument('--output',required=True);ap.add_argument('--world-tris',required=True);args=ap.parse_args()
 inp=Path(args.input);out=Path(args.output);decoder=Path(args.world_tris)
 expected={
@@ -124,6 +125,16 @@ for row in rows:
    mesh=pkg.meshes[mi]
    operand=[math.ceil(abs(A[a][3])+sum(abs(A[a][c])*(abs(mesh['origin'][c])+abs(mesh['step'][c])*65535) for c in range(3))) for a in range(3)]
    row['absolute_world_operand_bound']=operand
+# Keep the complete authored candidate roster/panels as immutable audit data.
+# Runtime dependencies need only an exact covering subset, with the same100mm
+# expanded-panel and unmatched-edge guard. Preserve original IDs in every mask.
+for row in rows:
+ selection=select_dependencies(row['source_common_triangles'],row['panels'],100)
+ row['selected_dependency_ids']=selection['selected_dependency_ids']
+ row['required_coverage_mask']=selection['required_coverage_mask']
+ row['dependency_selection_proof']=selection
+ row['selected_frontside_and_slab_proof']=check_frontside_and_slab(row['source_common_triangles'],row['selected_dependency_ids'],row['panels'],100)
+
 # Bind every certificate edge to the SAME quantized position/grid/placement.
 # Retain actual source part/meshlet/triangle alternatives for each selected LOD.
 assert [len(row["source_common_triangles"]) for row in rows]==[20,19]
@@ -134,7 +145,7 @@ for row in rows:
  mi,A=matches[0];mesh=pkg.meshes[mi]
  G=[[mesh['step'][0],0,0,mesh['origin'][0]],[0,mesh['step'][1],0,mesh['origin'][1]],[0,0,mesh['step'][2],mesh['origin'][2]]];M=w._mul(A,G)
  vertex_sources={};need={};sources=[]
- wanted={tuple(map(tuple,vs)):i for i,vs in enumerate(row['source_common_triangles'])}
+ wanted={tuple(map(tuple,row['source_common_triangles'][i])):i for i in row['selected_dependency_ids']}
  for level in range(3):
   covered=0
   for part in range(mesh['first_part'],mesh['first_part']+mesh['part_count']):
@@ -158,9 +169,9 @@ for row in rows:
       sources.append({'level':level,'cluster':cluster,'part':part,'meshlet':li,'triangle':ti,'strip_byte_offset':offset,'coverage_bit':wanted[vs]})
       for index in [a,b,c]:
        point=tuple(world[index]);identity=(mi,tuple(corners[index]))
-       if point in vertex_sources:assert vertex_sources[point]==identity
-       else:vertex_sources[point]=identity
-  assert covered==(1<<len(wanted))-1
+       bind_quantized_identity(vertex_sources,point,identity)
+  assert covered==row['required_coverage_mask']
+ validate_lod_coverage(sources,row['required_coverage_mask'])
  row['source_identity']={'mesh':mi,'one_placement':True,'one_grid':True,'world_vertex_to_quantized_identity_bijective':True,'unique_vertices':len(vertex_sources)}
  row['source_triangles_by_lod']=sources
  row['required_meshlet_alternatives']=[{'part':part,'meshlet':li,'strip':offset,'mask':mask} for (part,li,offset),mask in sorted(need.items())]
@@ -168,7 +179,7 @@ for row in rows:
  operand=[sum(abs(F(A[a][c]))*(abs(F(mesh['origin'][c]))+abs(F(mesh['step'][c]))*65535) for c in range(3))+abs(F(A[a][3])) for a in range(3)]
  row['absolute_world_operand_bound']=[(x.numerator+x.denominator-1)//x.denominator for x in operand]
 assert [r['absolute_world_operand_bound'] for r in rows]==[[114546,6015,19155],[118646,6015,19630]]
-header='\n'.join(['#pragma once','#include <cstdint>','namespace actor_visibility23::r119 {','struct Need {unsigned short field,part,meshlet,strip;std::uint32_t mask;};','inline constexpr Need needs[]={']+['{%d,%d,%d,%d,0x%xU},'%x for x in certificate]+['};','inline constexpr unsigned full[]={0xfffffU,0x7ffffU};','inline constexpr float operands[]={118646,6015,19630};','}'])+'\n'
+header='\n'.join(['#pragma once','#include <cstdint>','namespace actor_visibility23::r119 {','struct Need {unsigned short field,part,meshlet,strip;std::uint32_t mask;};','inline constexpr Need needs[]={']+['{%d,%d,%d,%d,0x%xU},'%x for x in certificate]+['};','inline constexpr unsigned full[]={'+','.join('0x%xU'%row['required_coverage_mask']for row in rows)+'};','inline constexpr float operands[]={118646,6015,19630};','}'])+'\n'
 (out/'actor_visibility23_r119_certificate.h').write_text(header)
 
 p.write_text(json.dumps(rows,indent=2)+'\n')
