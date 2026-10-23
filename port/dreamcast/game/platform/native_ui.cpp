@@ -1,5 +1,12 @@
+#include "../world_scratch.h"
+#if RE4DC_WORLD_SCRATCH
+extern "C" unsigned re4dc_ps2_mesh_room();
+#endif
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
 extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_ROOM_ARENA)
+#endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+extern "C" volatile unsigned re4dc_vram_key_crc,re4dc_vram_key_fnv;   // vram_pages.cpp (WORLD_METER VRAMFAIL lines)
 #endif
 #if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
 #include "include/resident_list_cache.h"
@@ -408,6 +415,9 @@ extern "C" void re4dc_ovl_watch(const char* where);
 #define OVLW(x) re4dc_ovl_watch(x)
 #else
 #define OVLW(x) ((void)0)
+#endif
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+extern "C" void re4dc_vram_ring_upload(std::uint32_t crc, std::uint32_t bytes, const void* package);
 #endif
 #if defined(RE4DC_OVL_GUARD) && RE4DC_OVL_GUARD
 extern "C" void re4dc_ovl_guard(const char* where);
@@ -1940,6 +1950,9 @@ bool ta_double=true,ta_double_wanted=false;
 #if defined(RE4DC_LETTERBOX_CLIP) && RE4DC_LETTERBOX_CLIP
 void stream_send(const void* data,unsigned bytes);
 #endif
+#if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
+unsigned pvs23_scene_epoch=0; // observation identity only; no renderer ownership
+#endif
 void stream_open() { RE4DC_TAIL_GPU_SCOPE(open);
 #if RE4DC_PACE_CATCHUP
     // A movie presents its own picture (re4dc_ui_movie_present_now) even inside a skipped tick.
@@ -2003,6 +2016,9 @@ void stream_open() { RE4DC_TAIL_GPU_SCOPE(open);
     // Do not retain the main thread's SQ mutex across source task dispatch or
     // file/audio services. Each synchronous packet transfer reacquires it.
     sq_unlock();stream_scene=true;
+#if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
+    if(!++pvs23_scene_epoch)++pvs23_scene_epoch;
+#endif
 #if defined(RE4DC_LETTERBOX_CLIP) && RE4DC_LETTERBOX_CLIP
 #if RE4DC_TA_MATERIAL_DIAG
     { tamat::Scope source_scope(3); re4dc_lbx_open(int(stream_list),stream_send); }
@@ -3304,6 +3320,11 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #else
     for(auto& e:entries) if(e.valid && e.key==key) {RE4DC_TOUCH(e);RE4DC_GAD_HIT(e.key);RE4DC_PROFILE_COUNT(TextureHits,1);RE4DC_TEXCHK_BIND(e);return &e;}
 #endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    // WORLD_METER: a failed texture-RAM allocation from here on names this key in its VRAMFAIL log line (vram_pages.cpp).
+    struct VramKeyScope{VramKeyScope(const Key& k){re4dc_vram_key_crc=k.crc;re4dc_vram_key_fnv=k.fnv;}
+                        ~VramKeyScope(){re4dc_vram_key_crc=0;re4dc_vram_key_fnv=0;}} vram_key_scope(key);
+#endif
 #if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
     if(fx_resident_only){++fx_resident_skips;
 #if RE4DC_VRAM_ROOM_LOG
@@ -3613,6 +3634,9 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #endif
     re4dc_log("native UI: upload %s vram=%u\n",ok?"ok":"FAILED",slot->package.vram_bytes());
     OVLW("upload");
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+    re4dc_vram_ring_upload(slot->key.crc, ok ? slot->package.vram_bytes() : 0xFFFFFFFFU, &slot->package);
+#endif
     OVLG("upload");
 #if RE4DC_TEX_CHECK
     const char* const texchk_why=slot->package.error()?slot->package.error():"upload";
@@ -4880,6 +4904,10 @@ void room_change_retire(){
 }  // namespace
 #endif
 extern "C" void re4dc_ui_retire_room(){
+#if RE4DC_WORLD_SCRATCH
+    // Close admission immediately; the final synchronous borrower restores mode.
+    re4dc_world_scratch_cancel();
+#endif
 #if defined(RE4DC_FX_TEX_POOL) && RE4DC_FX_TEX_POOL
     for(unsigned i=0;i<kTextureCount;++i)fx_pool_pin[i]=false;   // FX_TEX_POOL: the next room fills its own pool
     fx_pool_bytes=0;fx_pool_full=0;
@@ -5333,6 +5361,9 @@ unsigned pace_skipped_frames;   // skipped iterations: frame + this = iterations
 // re4dc_ui_begin; the frame is not begun (frame_ready=false: every emission entry returns before
 // any work, no texture is resolved or uploaded, no preload, no fog), `frame` does not advance.
 extern "C" void re4dc_ui_begin_skip(){
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_boundary(1,re4dc_ps2_mesh_room());
+#endif
 #if RE4DC_SS_UI_ORDER
     ui_order=false;quads_flushed=0;
 #endif
@@ -5346,10 +5377,16 @@ extern "C" void re4dc_ui_begin_skip(){
     stream_aborted=false;stream_model_bytes=0;
 #endif
     nquad=0;model_used=0;frame_ready=false;pace_skip_frame=true;++pace_skipped_frames;
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_begin(re4dc_ps2_mesh_room());
+#endif
     re4dc_prepare_model_assets();
 }
 // Skipped iteration: nothing to present; the previous picture stays. Frame boundary only.
 extern "C" void re4dc_ui_end_frame_skip(){
+#if RE4DC_WORLD_SCRATCH
+    Re4dcWorldScratchFrameEnd scratch_frame_end{&stream_aborted};
+#endif
     re4dc_pcs_frame(frame+pace_skipped_frames);
 }
 #endif
@@ -5514,6 +5551,9 @@ extern "C" void re4dc_ui_door_mark(){if(door_ui_mark==~0U)door_ui_mark=nquad;doo
 #include "include/native_ui_source_world.inc"
 #endif
 extern "C" void re4dc_ui_begin(){
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_boundary(0,re4dc_ps2_mesh_room());
+#endif
 #if RE4DC_KOS_HEAP_CHECK
     re4dc_heap_check();
 #endif
@@ -5573,6 +5613,9 @@ extern "C" void re4dc_ui_begin(){
     if(model_diagnostic==1 && frame%120==0)
         re4dc_log("native model DIAGNOSTIC boundary: frame=%u previous_bytes=%u committed_parts=%u invalid=%u resource=%u overflow=%u presented=%u\n",frame,model_used*32,model_parts,model_invalid,model_resource,model_overflow,model_presented);
     nquad=0;model_used=0;++frame;
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_begin(re4dc_ps2_mesh_room());
+#endif
 #if RE4DC_TEX_CHECK
     texchk::frame_sweep();
 #endif
@@ -6032,6 +6075,9 @@ extern "C" void re4dc_ui_present(){
 }
 
 extern "C" void re4dc_ui_end_frame(int present){
+#if RE4DC_WORLD_SCRATCH
+    Re4dcWorldScratchFrameEnd scratch_frame_end{&stream_aborted};
+#endif
 #if defined(RE4DC_FX_CORE_TEX_PREP) && RE4DC_FX_CORE_TEX_PREP
     fxCoreFinish();
 #endif
@@ -6044,6 +6090,9 @@ extern "C" void re4dc_ui_end_frame(int present){
 #endif
     re4dc_model_draw_plan_frame(frame);
 #if RE4DC_PVR_STREAM
+#if RE4DC_WORLD_SCRATCH
+    if(!frame_ready || stream_aborted)re4dc_world_scratch_cancel();
+#endif
     if(!frame_ready)return;
 #if RE4DC_ROUTE_MOVIES
     const bool movie_shown=movie_texture && movie_picture;
@@ -6597,6 +6646,10 @@ extern "C" unsigned re4dc_model_input_count(){return model_input;}  // ENC_CENSU
 
 extern "C" int re4dc_model_packet_streaming(){return RE4DC_PVR_STREAM;}
 extern "C" void re4dc_model_packet_abort(){
+#if RE4DC_WORLD_SCRATCH
+    // Close admission immediately; the final synchronous borrower restores mode.
+    re4dc_world_scratch_cancel();
+#endif
 #if RE4DC_PVR_STREAM
     RE4DC_WHD_ABORT(2,__builtin_return_address(0),0);
     // Previous chunks may already be in TA. Never present an incomplete model:
@@ -8235,6 +8288,92 @@ extern "C" int re4dc_ui_texture_resident(unsigned crc,unsigned fnv){
 #if RE4DC_SCENERY_PIECE_STATE
 extern "C" { std::uint32_t* re4dc_ps2_piece_slot=nullptr; } // native_static.cpp sets it around a PS2 part's bind
 #endif
+#if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
+// A refused/closed/discarded image supplies no usable receipt identity.
+extern "C" int re4dc_pvs23_scene(unsigned out[2]){
+#if RE4DC_TA_DIRECT && RE4DC_D349_RENDERER_STACK && RE4DC_PVR_STREAM
+    if(!out || !frame_ready || stream_aborted || !stream_scene)return 0;
+    out[0]=frame;out[1]=pvs23_scene_epoch;return pvs23_scene_epoch!=0;
+#else
+    (void)out;return 0;
+#endif
+}
+// Read-only proof prerequisite. Never loads, pins, allocates, evicts, updates
+// header slots, selects a list or publishes packets. False means draw normally.
+// True is only current material eligibility, never proof of eventual submission.
+// The proof caller must separately establish source/LOD/clip eligibility and
+// successful covering geometry submission before using any dependent cut.
+extern "C" int re4dc_pvs23_opaque_ready(const unsigned k[6],unsigned minimum_scratch){
+#if RE4DC_TA_DIRECT && RE4DC_D349_RENDERER_STACK && RE4DC_PVR_STREAM && !RE4DC_SCENERY_PIECE_STATE
+    if(!k || k[4]!=0U || (k[5]!=0U && k[5]!=2U) || !minimum_scratch ||
+       !frame_ready || stream_aborted || direct_open || draining_parts || source_draws_finished || !model_packets)return 0;
+    const unsigned slots=kModelPacketBytes/32U;
+    if(model_used>=slots || minimum_scratch>slots-model_used-1U)return 0;
+#if RE4DC_PS2_INTERIOR_CULL==2
+    if(re4dc_ps2_check_header)return 0;
+#endif
+#if defined(RE4DC_SKY_FAR) || defined(RE4DC_LOOK_TOGGLE)
+    if(re4dc_ps2_sky_header)return 0;
+#endif
+    if(stream_scene){
+        if(stream_list!=PVR_LIST_OP_POLY || (stream_closed_lists&(1U<<unsigned(PVR_LIST_OP_POLY))))return 0;
+    }else if(desired_list!=PVR_LIST_OP_POLY)return 0;
+#if RE4DC_UI_POLY_ORDER
+    if(ui_order)return 0;
+#endif
+#if RE4DC_PS2_WORLD_TRANSITION_OWNER
+    if(!re4dc_source_world_binding_valid())return 0;
+#endif
+#if RE4DC_PS2_WORLD_R11F_OWNER
+    if(!re4dc_r11f_binding_valid())return 0;
+#endif
+    const Key key{k[0],k[1]};const Entry* resident=nullptr;
+    for(const auto& entry:entries)if(entry.valid && entry.key==key){
+        if(resident)return 0; // ambiguous cache identity is not a proof
+        resident=&entry;
+    }
+    if(!resident || resident->frame!=frame || !resident->package.upload_complete() ||
+       resident->package.header().texture_count!=1U)return 0;
+    const auto& texture=resident->package.textures()[0];
+    const auto address=resident->package.pvr_texture(0);
+    // Exact dimensions only: padded, dropped or adapted representations need
+    // their own qualification. RGB565 is intrinsically opaque.
+    if(!address || texture.width!=k[2] || texture.height!=k[3] ||
+       texture.format!=re4dc::texture::kRgb565 ||
+       (texture.flags&(re4dc::texture::kAlpha|re4dc::texture::kBinaryAlpha|re4dc::texture::kTopDrop)))return 0;
+    pvr_poly_cxt_t c;
+    pvr_poly_cxt_txr(&c,PVR_LIST_OP_POLY,re4dc::texture::pvr_format(texture),
+        RE4DC_TSP_W(texture),RE4DC_TSP_H(texture),address,PVR_FILTER_BILINEAR);
+    c.gen.culling=k[5]==2U?PVR_CULLING_CW:PVR_CULLING_NONE;
+    c.depth.comparison=PVR_DEPTHCMP_GEQUAL;c.depth.write=PVR_DEPTHWRITE_ENABLE;
+    c.blend.src=PVR_BLEND_ONE;c.blend.dst=PVR_BLEND_ZERO;
+    c.txr.env=PVR_TXRENV_MODULATEALPHA;c.txr.alpha=PVR_TXRALPHA_DISABLE;c.txr.uv_clamp=PVR_UVCLAMP_NONE;
+#if RE4DC_NATIVE_FOG && RE4DC_PS2_WORLD_FOG_SOURCE
+    const unsigned fog=re4dc_ps2_world_fog()?1U:0U;
+    c.gen.fog_type=fog?PVR_FOG_TABLE:PVR_FOG_DISABLE;
+#else
+    const unsigned fog=0;
+#if RE4DC_NATIVE_FOG
+    c.gen.fog_type=PVR_FOG_TABLE;
+#endif
+#endif
+    pvr_poly_hdr_t expected;pvr_poly_compile(&expected,&c);
+#if RE4DC_PS2_WORLD_HDR_CACHE
+    if(RE4DC_PS2_HDR_ON){
+        const unsigned size=k[2]|k[3]<<16,mode=k[5]<<2|fog<<4|0x100U;
+        const unsigned set=(k[0]^(k[1]>>7)^(k[1]<<3)^(k[5]*0x3c1U))&(kPs2HdrSets-1U);
+        for(const auto& slot:ps2_hdr[set])if(slot.mode==mode && slot.crc==k[0] && slot.fnv==k[1] && slot.size==size){
+            if(slot.entry!=resident || slot.texture!=address || std::memcmp(slot.words,&expected,16))return 0;
+        }
+    }
+#endif
+    return 1;
+#else
+    (void)k;(void)minimum_scratch;return 0;
+#endif
+}
+#endif
+
 extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* out){
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(1);
@@ -8817,6 +8956,9 @@ extern "C" int re4dc_ui_movie_cabin_complete(unsigned generation,const void* tex
     if(draining_parts)return 0;
     reset_deferred();source_draws_finished=true;
 #endif
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_cancel();
+#endif
     re4dc_ps2_world_movie_discard();stream_aborted=true;
 #if RE4DC_PVR_STREAM
     if(stream_scene)stream_close(false);
@@ -8854,6 +8996,9 @@ extern "C" int re4dc_ui_movie_handoff_ready(){
     if(draining_parts)return 0; // executing readers cannot be discarded
     reset_deferred();source_draws_finished=true;
 #endif
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_cancel();
+#endif
     re4dc_ps2_world_movie_discard();stream_aborted=true;
 #if RE4DC_PVR_STREAM
     if(stream_scene)stream_close(false);
@@ -8878,6 +9023,10 @@ extern "C" int re4dc_ui_movie_handoff_ready(){
 #endif
 #if RE4DC_ROUTE_MOVIES
 extern "C" int re4dc_ui_movie_open(unsigned width,unsigned height){
+#if RE4DC_WORLD_SCRATCH
+    // Close admission immediately; the final synchronous borrower restores mode.
+    re4dc_world_scratch_cancel();
+#endif
 #if RE4DC_CABIN_SOURCE
     MovieCabinUiScope owner;if(!owner.held || movie_cabin_ui_epoch==~0u)return 0;
 #endif
@@ -8914,6 +9063,10 @@ extern "C" int re4dc_ui_movie_open(unsigned width,unsigned height){
 }
 // The previous scene must have finished sampling the texture before rows change.
 extern "C" int re4dc_ui_movie_upload_begin(){
+#if RE4DC_WORLD_SCRATCH
+    // Close admission immediately; the final synchronous borrower restores mode.
+    re4dc_world_scratch_cancel();
+#endif
     if(!movie_texture)return 0;
 #if RE4DC_PVR_STREAM
     // A movie-owned presentation interrupts a source frame: its open (hidden
@@ -8991,6 +9144,10 @@ extern "C" int re4dc_ui_movie_present_now(){
 // own frames, under their UI quads (the action prompt), until switched off.
 extern "C" void re4dc_ui_movie_background(int on){movie_background=on!=0;}
 extern "C" int re4dc_ui_movie_close(){
+#if RE4DC_WORLD_SCRATCH
+    // Close admission immediately; the final synchronous borrower restores mode.
+    re4dc_world_scratch_cancel();
+#endif
 #if RE4DC_CABIN_SOURCE
     MovieCabinUiScope owner;if(!owner.held)return 0;
 #endif
@@ -9101,17 +9258,35 @@ extern "C" int re4dc_ui_part_key(const Re4dcModelPart* p,unsigned* crc,unsigned*
 extern "C" void __real_pvr_poly_compile(pvr_poly_hdr_t* dst,const pvr_poly_cxt_t* src);
 extern "C" void __real_pvr_sprite_compile(pvr_sprite_hdr_t* dst,const pvr_sprite_cxt_t* src);
 extern "C" void __real_pvr_poly_mod_compile(pvr_poly_mod_hdr_t* dst,const pvr_poly_cxt_t* src);
+#if defined(RE4DC_HDR_ALIGN_PROBE) && RE4DC_HDR_ALIGN_PROBE
+// HDR_ALIGN_PROBE (lane mipfault22, diagnostic): KOS compiles headers with movca.l, which allocates the whole
+// 32-byte line without reading it; a header dst that is not 32-byte aligned leaves stale bytes in the line on
+// console (emulators zero/keep memory). Logs each distinct caller once.
+static void hdr_align_probe(const void* dst,const char* kind,void* pr) {
+    static void* seen[16];static unsigned n;
+    if((reinterpret_cast<std::uintptr_t>(dst)&31U)==0)return;
+    for(unsigned i=0;i<n;++i)if(seen[i]==pr)return;
+    if(n<16)seen[n++]=pr;
+    std::printf("re4dc-hdr-misaligned: %s dst=%p pr=%p\n",kind,dst,pr);
+}
+#define RE4DC_HDR_PROBE(d,k) hdr_align_probe(d,k,__builtin_return_address(0))
+#else
+#define RE4DC_HDR_PROBE(d,k) ((void)0)
+#endif
 extern "C" void __wrap_pvr_poly_compile(pvr_poly_hdr_t* dst,const pvr_poly_cxt_t* src) {
+    RE4DC_HDR_PROBE(dst,"poly");
     pvr_poly_cxt_t c=*src;
     if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
     __real_pvr_poly_compile(dst,&c);
 }
 extern "C" void __wrap_pvr_sprite_compile(pvr_sprite_hdr_t* dst,const pvr_sprite_cxt_t* src) {
+    RE4DC_HDR_PROBE(dst,"sprite");
     pvr_sprite_cxt_t c=*src;
     if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
     __real_pvr_sprite_compile(dst,&c);
 }
 extern "C" void __wrap_pvr_poly_mod_compile(pvr_poly_mod_hdr_t* dst,const pvr_poly_cxt_t* src) {
+    RE4DC_HDR_PROBE(dst,"mod");
     pvr_poly_cxt_t c=*src;
     if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
     if(c.txr2.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr2.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;

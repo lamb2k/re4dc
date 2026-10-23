@@ -2730,6 +2730,26 @@ VRAM_PAGES_VQ_ONLY ?= 0
 # room change every unpinned, non-core texture of the old room closes (the listed keys of the new room are pinned),
 # so the new room's preload fills one hole-free region (r101 -> r100 x3 had 14 KB largest blocks and 82 evictions).
 VRAM_ROOM_ARENA ?= 0
+# VRAM_ROOM_ARENA_NO_TOP=1 (arena23 console experiment, default 0): long-lived
+# class 2 allocations use best fit below a47f2000 instead of top placement. The
+# final 56 KiB stays available to room/dynamic allocations. Room residency stays on.
+VRAM_ROOM_ARENA_NO_TOP ?= 0
+# CACHE_LINEWISE=1 (lane arena23, default 0 = image unchanged): DC* data-cache ops, route overlay load/release and the
+# sub screen code sync write back line by line (ocbwb) instead of KOS's whole-cache address-array path for ranges
+# >= 65560 bytes (platform/cache_lines.h). Cause candidate for the console-only 0x0c8a8001 st1_1 overlay fault.
+CACHE_LINEWISE ?= 0
+ifneq ($(CACHE_LINEWISE),0)
+$(OBJDIR)/platform/misc.o $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/subscreen_backing.o: PLATFORM_CPPFLAGS += -DRE4DC_CACHE_LINEWISE=1
+endif
+ifneq ($(filter-out 0 1,$(VRAM_ROOM_ARENA_NO_TOP)),)
+$(error VRAM_ROOM_ARENA_NO_TOP must be 0 or 1)
+endif
+ifeq ($(VRAM_ROOM_ARENA_NO_TOP),1)
+ifneq ($(VRAM_ROOM_ARENA)$(VRAM_PAGES)$(UI_VRAM),111)
+$(error VRAM_ROOM_ARENA_NO_TOP=1 needs VRAM_ROOM_ARENA=1 VRAM_PAGES=1 UI_VRAM=1)
+endif
+$(OBJDIR)/platform/vram_pages.o: PLATFORM_CPPFLAGS += -DRE4DC_VRAM_ROOM_ARENA_NO_TOP=1
+endif
 # CRASH_OVL_LINE=1 (lane mipfault22, diagnostic, default 0 = image unchanged): the crash screen lists each loaded
 # route overlay as name@image+bytes, so a console fault pc / pr in an overlay can be symbolized.
 CRASH_OVL_LINE ?= 0
@@ -2737,10 +2757,31 @@ CRASH_OVL_LINE ?= 0
 # texture upload and close, and at release).
 OVL_WATCH ?= 0
 # OVL_GUARD=1 (lane mipfault22, console diagnostic only): stop on the first changed word of a loaded route overlay's
-# code (checked per UI frame and texture upload / close) and arm the SH-4 UBC on st1_1 (see platform/modules.cpp).
+# code (checked per UI frame and texture upload / close); =2: instead, the SH-4 UBC on the st1_1 literal word that the
+# console fault read (st1_1+0x6114), reported from the next UI frame (see platform/modules.cpp).
 OVL_GUARD ?= 0
+# =3 (D4): both checks, plus a ring of the last 12 texture-RAM operations (alloc / free / upload) shown on the crash screen.
+# LOG_TRIM=N (diagnostic, default 0): the RAM boot log is N bytes shorter (mem.cpp / crash_screen.cpp), so a
+# diagnostic build can keep the reference image's _end (with IMAGE_PAD_BYTES) and so its heap and overlay addresses.
+# ARENA_RING=1 (lane mipfault22, diagnostic, default 0): the ring of the last 12 texture-RAM operations (A alloc / F free:
+# VRAM offset, bytes, arena class, caller; U upload: key crc, VRAM bytes, main-RAM package) on the crash screen.
+# OVL_GUARD=3 turns it on too.
+ARENA_RING ?= 0
+ifneq ($(filter 3,$(OVL_GUARD))$(filter-out 0,$(ARENA_RING)),)
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/vram_pages.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_ARENA_RING=1
+endif
+LOG_TRIM ?= 0
+ifneq ($(LOG_TRIM),0)
+$(OBJDIR)/platform/mem.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_TRIM=$(LOG_TRIM)
+endif
 ifneq ($(OVL_GUARD),0)
-$(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_GUARD=1
+$(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/vram_pages.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_GUARD=$(OVL_GUARD)
+endif
+# HDR_ALIGN_PROBE=1 (lane mipfault22, diagnostic, default 0): log each caller that compiles a PVR header into a dst that is
+# not 32-byte aligned (KOS compiles with movca.l). Needs TEX_MIP_DADJ (the wrapper it lives in).
+HDR_ALIGN_PROBE ?= 0
+ifneq ($(HDR_ALIGN_PROBE),0)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_HDR_ALIGN_PROBE=1
 endif
 ifneq ($(OVL_WATCH),0)
 $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_WATCH=1
@@ -3319,3 +3360,6 @@ endif
 include bench.mk
 # QA_MENU=1: the tester QA disc menu (qamenu.mk; default 0: nothing compiled, image unchanged)
 include qamenu.mk
+
+# Isolated bounded A/B/C memory experiment; default 0.
+include worldscratch.mk

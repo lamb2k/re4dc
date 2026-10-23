@@ -35,13 +35,25 @@
 // Optional counters of other game30 knobs (weak: absent unless that knob is built in).
 extern "C" unsigned long re4dc_rot_cache_hits __attribute__((weak));
 extern "C" unsigned long re4dc_rot_cache_misses __attribute__((weak));
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+#include <arch/timer.h>
+#include "platform/include/pvs23_meter.hpp"
+extern "C" void re4dc_world_meter_identity(unsigned out[7]);
+extern "C" void re4dc_world_meter_take(unsigned* us_out, unsigned* vtx_out,unsigned* geom,unsigned* identity);   // platform/native_static.cpp
+extern "C" void re4dc_vram_fail_drain(unsigned room);   // platform/vram_pages.cpp
+extern "C" unsigned re4dc_wm_room(void);                  // dbgwarp_bridge.cpp
+#endif
 #if RE4DC_PWC_DIAG_LOG   // GAME_PWC_DIAG=2 check builds only
 extern "C" unsigned long re4dc_pwc_diag_checks __attribute__((weak));
 extern "C" unsigned long re4dc_pwc_diag_mismatch __attribute__((weak));
 #endif
 
 namespace {
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+constexpr int kSlots = 48;   // WORLD_METER: 7 more slots
+#else
 constexpr int kSlots = 32;
+#endif
 constexpr unsigned kTicksPerUs10 = 405;   // 40.5 ticks per microsecond, x10
 struct Slot { const char* name; unsigned long long sum; unsigned max; unsigned n; };
 Slot g_slots[kSlots];
@@ -52,6 +64,11 @@ const char* g_snapName[kSlots];
 unsigned g_snapAvg[kSlots], g_snapMax[kSlots];
 int g_snapCount;
 unsigned g_snapSeq;
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+unsigned g_wmKey[7]{},g_wmSnapKey[7]{},g_wmSnapFirst,g_wmSnapLast,g_wmSnapTicks;
+bool g_wmHaveKey=false;
+bool wm_current(){unsigned key[7];re4dc_world_meter_identity(key);return g_snapCount && re4dc::pvs23::same(key,g_wmSnapKey);}
+#endif
 
 unsigned us(unsigned ticks) { return (unsigned) ((unsigned long long) ticks * 10u / kTicksPerUs10); }
 
@@ -68,6 +85,20 @@ void add(const char* name, unsigned ticks)
     if (v > s.max) s.max = v;
     s.n++;
 }
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+void add_us(const char* name, unsigned v)   // a value already in us (or a count)
+{
+    int i;
+    for (i = 0; i < kSlots && g_slots[i].name; i++)
+        if (g_slots[i].name == name) break;
+    if (i == kSlots) return;
+    Slot& s = g_slots[i];
+    s.name = name;
+    s.sum += v;
+    if (v > s.max) s.max = v;
+    s.n++;
+}
+#endif
 
 // Appends one field; flushes the current line first when it would pass the line budget.
 struct Line {
@@ -96,6 +127,33 @@ extern "C" __attribute__((section(".text.re4dc_tick_log"))) void re4dc_tick_log_
 {
     static const char kTotal[] = "total", kSetup[] = "setup", kCpu[] = "cpu", kEnd[] = "end", kRemain[] = "remain";
     if (g_frames == 0) g_first = frame;
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    // WORLD_METER (game30.mk): the PS2 world passes this tick (us, vertices; native_static.cpp) and the wall time since the
+    // previous tick's log call (the whole iteration, pacing wait and Render_before included), as raw us slots.
+    {
+        static const char kWopq[] = "wopq", kWxlu[] = "wxlu", kWshell[] = "wshell", kWall[] = "wall", kVopq[] = "vopq",
+                          kVxlu[] = "vxlu", kVshell[] = "vshell";
+        static unsigned long long last_us;
+        unsigned u[3], v[3],geom[6],key[7];
+        re4dc_world_meter_take(u, v,geom,key);
+        if(!g_wmHaveKey || !re4dc::pvs23::same(key,g_wmKey)){
+            std::memcpy(g_wmKey,key,sizeof(key));g_wmHaveKey=true;
+            for(auto& slot:g_slots)slot=Slot{};
+            g_frames=0;g_first=frame;g_snapCount=0;last_us=0;
+        }
+        const unsigned long long now = timer_us_gettime64();
+        // The identity boundary has no wall interval from the new epoch.
+        // Discard that whole sample; never average an invented zero wall time.
+        if(!last_us){last_us=now;return;}
+        const unsigned wall = unsigned(now - last_us);
+        last_us = now;
+        add_us(kWopq, u[0]); add_us(kWxlu, u[1]); add_us(kWshell, u[2]); add_us(kWall, wall);
+        add_us(kVopq, v[0]); add_us(kVxlu, v[1]); add_us(kVshell, v[2]);
+        static const char* const names[6]={"topq","tpt","ttr","iopq","ipt","itr"};
+        for(unsigned k=0;k<6;++k)add_us(names[k],geom[k]);
+        re4dc_vram_fail_drain(re4dc_wm_room());
+    }
+#endif
     add(kTotal, ticks[0]);
     add(kSetup, ticks[4]);
     unsigned prev = ticks[4];
@@ -143,6 +201,10 @@ extern "C" __attribute__((section(".text.re4dc_tick_log"))) void re4dc_tick_log_
     }
     g_snapCount = c;
     g_snapSeq++;
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    std::memcpy(g_wmSnapKey,g_wmKey,sizeof(g_wmKey));
+    g_wmSnapFirst=g_first;g_wmSnapLast=frame;g_wmSnapTicks=g_frames;
+#endif
     if (&re4dc_rot_cache_hits && &re4dc_rot_cache_misses) {
         static unsigned long lastHits, lastMisses;
         char text[48];
@@ -172,6 +234,9 @@ extern "C" __attribute__((section(".text.re4dc_tick_log"))) void re4dc_tick_log_
 // GAME_TICK_LOG is on and a weak reference finds it).
 extern "C" __attribute__((section(".text.re4dc_tick_log"))) int re4dc_tick_log_snapshot(const char** name, unsigned* avg_us, unsigned* max_us, int max, unsigned* seq)
 {
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    if(!wm_current()){if(seq)*seq=0;return 0;}
+#endif
     const int n = g_snapCount < max ? g_snapCount : max;
     for (int i = 0; i < n; i++) {
         if (name) name[i] = g_snapName[i];
@@ -181,3 +246,12 @@ extern "C" __attribute__((section(".text.re4dc_tick_log"))) int re4dc_tick_log_s
     if (seq) *seq = g_snapSeq;
     return n;
 }
+
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+extern "C" int re4dc_world_meter_window(unsigned out[11]){
+    if(!wm_current())return 0;
+    std::memcpy(out,g_wmSnapKey,sizeof(g_wmSnapKey));
+    out[7]=g_wmSnapFirst;out[8]=g_wmSnapLast;out[9]=g_wmSnapTicks;out[10]=g_snapSeq;
+    return 1;
+}
+#endif
