@@ -9,7 +9,7 @@ import argparse, collections, json, struct
 from pathlib import Path
 import numpy as np
 from estimate import cameras,load,excluded_placements,selection,strips_emitted,sg
-from inputs import identity, validate_ownership
+from inputs import identity, validate_ownership, lod_policy
 
 
 def candidates(D,files,room,full_detail,bake_uv=False):
@@ -82,13 +82,13 @@ def source_part_map(D):
     return result
 
 
-def price(D,parts,groups,cams):
+def price(D,parts,groups,cams,lod_px):
     mapping=source_part_map(D);replaced={x for g in groups for x in g['source_parts']};rows=[]
     for frame,cam in cams:
         V=np.array(cam[:12]).reshape(3,4);P=cam[12:19];near=P[6]/(P[5]-1);far=cam[19]
-        pairs,mv,tv=selection(D,V,P,near,far)
+        pairs,mv,tv=selection(D,V,P,near,far,lod_px)
         base_vertices=sum(x['nv'] for x in pairs.values())
-        ref=sg.view_counts(D,V,P,near,far,5.0)
+        ref=sg.view_counts(D,V,P,near,far,lod_px)
         assert base_vertices==ref['T1' if D['SG'] is not None else 'T0']
         tri={k:strips_emitted(D,*k,mv,tv,V,P,near,x['walk']) for k,x in pairs.items()}
         remaining={k:x for k,x in pairs.items() if mapping[k] not in replaced}
@@ -133,12 +133,15 @@ def main():
     ap.add_argument('--camera',required=True,type=Path);ap.add_argument('--output',required=True,type=Path)
     ap.add_argument('--cells',default='2000,4000,8000,16000');ap.add_argument('--full-detail',action='store_true')
     ap.add_argument('--bake-uv',action='store_true',help='Estimate final float UV baking rather than retaining per-part quantization')
-    args=ap.parse_args();src=json.loads(args.inputs.read_text())[args.room];D,files=load(src)
+    ap.add_argument('--lod-px',required=True,type=float,help='Effective runtime LOD divisor: quality lod_px times SCENERY_FAR_LOD when enabled')
+    ap.add_argument('--profile-receipt',required=True,type=Path,help='Resolved runtime knobs or an explicit scenario receipt to hash into this report')
+    args=ap.parse_args();policy=lod_policy(args.lod_px,args.profile_receipt)
+    src=json.loads(args.inputs.read_text())[args.room];D,files=load(src)
     source_pin={n:identity(Path(__file__).parent/n) for n in ('placement_estimate.py','estimate.py','inputs.py')}
     parts,pieces,reasons=candidates(D,files,args.room,args.full_detail,args.bake_uv);cams=cameras(args.camera)
     results=[]
     for cell in map(int,args.cells.split(',')):
-        groups=group_parts(parts,pieces,cell);mean,rows=price(D,parts,groups,cams)
+        groups=group_parts(parts,pieces,cell);mean,rows=price(D,parts,groups,cams,args.lod_px)
         keys={k for g in groups for b in g['batches'] for k in b['members']}
         corners=sum(pieces[k]['nv'] for k in keys);strip_bytes=sum(D['p'].lets[k[1]]['strip_bytes'] for k in keys)
         result=dict(cell_mm=cell,merged_contexts=len(groups),
@@ -151,7 +154,7 @@ def main():
         results.append(result);print(json.dumps({k:v for k,v in result.items() if k!='rows'}),flush=True)
     report=dict(kind='OFFLINE STATIC GEOMETRY ESTIMATE; not runtime timings',room=args.room,
                 source=src,source_tools=source_pin,ownership_binding=validate_ownership(files,src['provenance']),
-                camera=identity(args.camera),frames=[f for f,_ in cams],full_detail=args.full_detail,bake_uv=args.bake_uv,
+                camera=identity(args.camera),frames=[f for f,_ in cams],selection_policy=policy,full_detail=args.full_detail,bake_uv=args.bake_uv,
                 eligible_parts=len(parts),eligible_placements=len({pi for pi,_ in parts}),excluded=reasons,
                 r100_data_delta_bytes=0,results=results,
                 limitations=['Source full-detail geometry replaces LOD choice only in the explicit full-detail arm.',

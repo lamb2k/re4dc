@@ -9,7 +9,7 @@ does not perform facing/occlusion rejection or redesign gameplay.
 import argparse, collections, hashlib, json, re, struct, sys
 from pathlib import Path
 import numpy as np
-from inputs import hostpath, identity, validate_ownership
+from inputs import hostpath, identity, validate_ownership, lod_policy
 sys.path.insert(0,str(Path(__file__).resolve().parent.parent/'worldlean'))
 import sgprice as sg
 
@@ -105,7 +105,8 @@ def batches(rec,cell,max_vertices):
                  hi=np.max([rec[k]['hi'] for k in keys],0),nv=sum(rec[k]['nv'] for k in keys)) for bucket,keys in output]
 
 
-def selection(D,V,P,near,far,lod_px=5.0):
+def selection(D,V,P,near,far,lod_px):
+    if not np.isfinite(lod_px) or lod_px<=0:raise ValueError("LOD divisor must be finite and positive")
     a,c=sg.side_coefs(P);pl=D['ci_pl']
     mv=np.einsum('ij,njk->nik',V[:,:3],D['WQ'][:,:,:3])
     tv=np.einsum('ij,nj->ni',V[:,:3],D['WQ'][:,:,3])+V[:,3]
@@ -166,7 +167,7 @@ def strips_emitted(D,pi,li,mv,tv,V,P,near,walk=None):
     return tri
 
 
-def price(D,rec,bs,cams):
+def price(D,rec,bs,cams,lod_px):
     merged={k for b in bs for k in b['members']};rows=[]
     source_parts={}
     for pi,part in zip(D['ci_pl'],D['ci_part']):
@@ -178,8 +179,8 @@ def price(D,rec,bs,cams):
                 for li in range(fm,fm+mc):source_parts[(int(pi),li)]=(int(pi),int(part))
     for frame,cam in cams:
         V=np.array(cam[:12]).reshape(3,4);P=cam[12:19];near=P[6]/(P[5]-1);far=cam[19]
-        pairs,mv,tv=selection(D,V,P,near,far)
-        ref=sg.view_counts(D,V,P,near,far,5.0)
+        pairs,mv,tv=selection(D,V,P,near,far,lod_px)
+        ref=sg.view_counts(D,V,P,near,far,lod_px)
         vertices=sum(x['nv'] for x in pairs.values())
         assert vertices==ref['T1' if D['SG'] is not None else 'T0'],(frame,vertices,ref)
         base_tri=sum(strips_emitted(D,pi,li,mv,tv,V,P,near,x['walk']) for (pi,li),x in pairs.items())
@@ -219,11 +220,14 @@ def main():
     ap.add_argument('--inputs',required=True,type=Path);ap.add_argument('--room',choices=('r101','r103'),required=True)
     ap.add_argument('--camera',required=True,type=Path);ap.add_argument('--output',required=True,type=Path)
     ap.add_argument('--cells',default='2000,4000,8000,16000');ap.add_argument('--max-vertices',type=int,default=256)
+    ap.add_argument('--lod-px',required=True,type=float,help='Effective runtime LOD divisor: quality lod_px times SCENERY_FAR_LOD when enabled')
+    ap.add_argument('--profile-receipt',required=True,type=Path,help='Resolved runtime knobs or an explicit scenario receipt to hash into this report')
     args=ap.parse_args();source=json.loads(args.inputs.read_text())[args.room]
+    policy=lod_policy(args.lod_px,args.profile_receipt)
     D,files=load(source);rec,reasons=records(D,files,args.room);cams=cameras(args.camera)
     results=[]
     for cell in [int(x) for x in args.cells.split(',')]:
-        bs=batches(rec,cell,args.max_vertices);mean,rows=price(D,rec,bs,cams)
+        bs=batches(rec,cell,args.max_vertices);mean,rows=price(D,rec,bs,cams,args.lod_px)
         keys={k for b in bs for k in b['members']};corners=sum(rec[k]['nv'] for k in keys)
         # Conservative storage bound: retained originals PLUS copied float world xyz,
         # original u16 UV/color, copied strip bytes and 32-byte batch descriptors.
@@ -237,7 +241,7 @@ def main():
                             memory_gate='PENDING: replacement-pool layout and room free heap required'))
         print(json.dumps({k:v for k,v in results[-1].items() if k!='rows'}),flush=True)
     report=dict(kind='OFFLINE GEOMETRY ESTIMATE; not measured milliseconds or runtime acceptance',room=args.room,
-                inputs=source,camera=identity(args.camera),frames=[f for f,_ in cams],
+                inputs=source,camera=identity(args.camera),frames=[f for f,_ in cams],selection_policy=policy,
                 eligible_meshlets=len(rec),excluded_meshlets=reasons,results=results,
                 assumptions=['fixed camera-independent batches','same material and UV contract',
                              'single-level static one-off source BIN only','repeated instances untouched',

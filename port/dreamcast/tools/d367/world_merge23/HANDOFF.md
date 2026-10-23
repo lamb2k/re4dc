@@ -1,3 +1,77 @@
+# world-merge23 corrected LOD policy, 2026-10-23
+
+The previous `516bfe3b8` estimate used effective LOD divisor 5, while the release
+selector uses 20. Its receipts and table are preserved below as historical LOD5
+evidence. Both estimators now require `--lod-px` and `--profile-receipt`, record
+the effective divisor and receipt hash, and pass the same divisor to selection
+and independent SG reference costing. Future profiles have no implicit default.
+
+## Corrected decision
+
+**NO-GO for the tested ownership-safe fixed-cell whole-part policy remains.**
+The generous full-detail + baked-UV arm was rerun on the same pinned assets and
+43 exact cross/farm views (frames 500..794, stride 7), at effective divisor 20.
+The gate requires >=40% fewer selected part contexts and <=10% vertex growth.
+
+| Cell | Cross context reduction | Cross vertex growth | Farm context reduction | Farm vertex growth |
+|---|---:|---:|---:|---:|
+| 2 m | 0.0000% | 0.4331% | 0.0000% | 0.0000% |
+| 4 m | 1.0947% | 37.6650% | 0.0000% | 0.0000% |
+| 8 m | 5.0105% | 74.1350% | 0.0000% | 0.0000% |
+| 16 m | 3.2000% | 81.0244% | 0.0000% | 0.0000% |
+
+Cross baseline means: 460.9302 selected meshlets, 390.6047 nonzero-transform
+meshlets, 356.1860 emitting meshlets, 110.4651 part contexts, 85.2558 placements
+and 17059.3488 transformed vertices. At 8 m, the result is 104.9302 contexts and
+29706.3023 vertices. Farm baseline: 406 selected meshlets, 129 part contexts,
+74 placements and 22111 vertices. These are offline model units, not measured
+runtime draws or timings. The 8 m cross conservative added geometry storage is
+still 1,119,876 bytes; reader/layout and memory acceptance remain unbuilt.
+
+Deleting every eligible context at zero replacement cost gives an optimistic
+farm ceiling of 7.75194%, below the gate. The cross ceiling is 64.98947%, so this
+decision does not rule out all cross placement merges. The tested fixed cells
+and material grouping fail; no new partition design or runtime was introduced.
+
+## Policy and evidence
+
+- At frozen `516bfe3b8`, `native_static.cpp:6173-6180` multiplies quality lod_px
+  by SCENERY_FAR_LOD; `quality.cpp:50` supplies Standard 5. Original and current
+  release `test15/t15-build.sh:165` set SCENERY_FAR_LOD=4. Effective divisor: 20.
+- The exact camera programme receipt also records 4:
+  `/root/probe/lanes/route/out-iv23e9bf7camrW/resolved-knobs.txt`, SHA256
+  `047029285b5b2e48b33446604555cf8c722af9f0b2eb6271a00db02622da49a9`.
+  Its camera-only overrides do not establish a runtime performance result.
+- Resolved inputs remain SHA256
+  `2eb567e74aa1c529ac820b0fef78faf8574a7f9b66777691a8ea4205b05771e0`.
+  Mesh, policy, strip groups, IDs and camera pins are unchanged.
+- Corrected full-row reports remain in RAM only:
+  `/dev/shm/world-merge23-lod20-f2r0002d`.
+  Cross SHA256 `ea9f9a9b397450bcb9507b528a4095e1a64179c4027d67a8c49ec286b61ad78b`;
+  farm SHA256 `651e4c7a6432265556760e7d00ec9a2d4eaef32e68db81353c2004c241e28515`;
+  eligibility ceiling SHA256 `23bf660d5d776acd0dc02ae800bd123a4d2e29aab93949410f3aac9b213a9820`.
+  Tiny durable summaries live in the lane HANDBACK and correction review.
+  Original private receipts are unchanged; private input data is not committed.
+
+## Checks and reproduction
+
+Eight controls pass: five grouping cases; a two-level sensitivity case selecting
+six corners at 5 versus three at 20 while checking independent SG reference
+agreement; and zero-group identity on all 43 views in each room at 20. Historical
+cross 8 m LOD5 means were independently reproduced exactly before comparison.
+
+```
+python placement_estimate.py --inputs INPUTS.json --room r101 --camera CROSS.log \
+  --full-detail --bake-uv --lod-px 20 --profile-receipt RESOLVED.txt --output NEW.json
+python test_placement_estimate.py --inputs INPUTS.json --cross-camera CROSS.log \
+  --farm-camera FARM.log --lod-px 20
+```
+
+No runtime/game-data change, build, staging, emulator/camera replay or production
+recipe edit occurred. All prior model omissions and hardware limits still apply.
+
+## Historical LOD5 receipt preserved
+
 # world-merge23 offline milestone, 2026-10-23
 
 Branch: `wip/world-merge23-20261023`. Pushed source: `e371b16c2`.

@@ -1,6 +1,6 @@
 """Resolve real room inputs through the existing release dataset precedence."""
 from pathlib import Path
-import argparse, collections, hashlib, importlib.util, json, os, re, struct, sys, zlib
+import argparse, collections, hashlib, importlib.util, json, math, os, re, struct, sys, zlib
 
 HERE=Path(__file__).resolve().parent
 TOOLS=HERE.parents[1]
@@ -17,6 +17,12 @@ def hostpath(path):
 def identity(path):
     path=Path(path)
     return dict(path=str(path),bytes=path.stat().st_size,sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+
+def lod_policy(lod_px,profile_receipt):
+    """Pin the explicitly supplied effective selector divisor and its scenario."""
+    if not math.isfinite(lod_px) or lod_px<=0:raise ValueError('LOD divisor must be finite and positive')
+    return dict(effective_lod_divisor=float(lod_px),profile_receipt=identity(profile_receipt),
+                meaning='Runtime quality lod_px multiplied by SCENERY_FAR_LOD when enabled; not raw quality lod_px')
 
 def validate_ownership(files,provenance):
     """Bind placement IDs to their original policy despite texture rekeying."""
