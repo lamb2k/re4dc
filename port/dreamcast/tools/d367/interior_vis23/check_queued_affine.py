@@ -102,6 +102,10 @@ def main():
         raise AssertionError('unexpanded fixture placeholder')
     base = subprocess.check_output(['git', 'show', args.base+':port/dreamcast/game/platform/native_static.cpp'], cwd=repo, text=True)
     results = {'native_sha256': hashlib.sha256(native.encode()).hexdigest(),
+               'runtime_sha256': hashlib.sha256(runtime.encode()).hexdigest(),
+               'proof_header_sha256': hashlib.sha256(header.encode()).hexdigest(),
+               'fixture_sha256': hashlib.sha256(generated.encode()).hexdigest(),
+               'compiler': subprocess.check_output(['g++', '--version'], text=True).splitlines()[0],
                'base': args.base, 'host_only': True, 'runs': []}
     with tempfile.TemporaryDirectory(prefix='queued-affine-', dir='/dev/shm') as tmp:
         work = Path(tmp)
