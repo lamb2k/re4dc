@@ -4,7 +4,7 @@ Applied after kos-804b319-cdrom-dma-done.patch.
 
 --- a/kernel/arch/dreamcast/hardware/cdrom.c
 +++ b/kernel/arch/dreamcast/hardware/cdrom.c
-@@ -99,6 +99,46 @@
+@@ -99,6 +99,44 @@
      irq_restore(old);
      re4dc_dma_drain();
  }
@@ -24,6 +24,8 @@ Applied after kos-804b319-cdrom-dma-done.patch.
 +    return true;
 +}
 +#endif
++unsigned re4dc_cdrom_wait_hw_busy, re4dc_cdrom_wait_abort_reset;
++static void re4dc_dma_abort(void);
 +static int re4dc_dma_wait(size_t bytes, bool drop) {
 +    unsigned ms = 5000u + 8u * (unsigned)((bytes + 2047) / 2048);
 +    uint64_t t0 = timer_us_gettime64();
@@ -39,11 +41,7 @@ Applied after kos-804b319-cdrom-dma-done.patch.
 +    unsigned us = (unsigned)(timer_us_gettime64() - t0);
 +    if(us > re4dc_cdrom_wait_max_us) re4dc_cdrom_wait_max_us = us;
 +    if(rv == 0) return 0;
-+    int old = irq_disable();
-+    dma_in_progress = false;
-+    dma_blocking = false;
-+    dma_auto_unlock = false;
-+    irq_restore(old);
++    re4dc_dma_abort();
 +    ++re4dc_cdrom_wait_timeouts;
 +    re4dc_cdrom_wait_last_ms = ms;
 +    return -1;
@@ -51,7 +49,48 @@ Applied after kos-804b319-cdrom-dma-done.patch.
  static asic_evt_handler_entry_t old_dma_irq = {NULL, NULL};
  static int vblank_hnd = -1;
  
-@@ -419,9 +459,17 @@
+@@ -175,6 +213,40 @@
+     return cmd_response == CD_CMD_NOT_FOUND || cmd_response == CD_CMD_COMPLETED;
+ }
+ 
++/* RE4DC DISC_DMA_WAIT_TIMEOUT: a DMA wait gave up. Stop the G1 GD-DMA in hardware first (SB_GDEN 0xA05F7414 = 0 aborts
++   a transfer in progress; SB_GDST 0xA05F7418 reads 1 while one runs), so a loader that completes late cannot write
++   into a buffer the caller has moved on from. Then close KOS's DMA state with interrupts off: both completion paths
++   (g1_dma_irq_hnd, cdrom_vblank) act only while dma_in_progress, so a late completion is passed on, not counted.
++   Abort the BIOS command (1 s bound; drive reset + init + settle on timeout, as cdrom_abort_cmd), take back any
++   completion already signalled, and re-enable the engine for the next command (it starts only on SB_GDST). The
++   caller holds _g1_ata_sem and releases it. */
++static void re4dc_dma_abort(void) {
++    int old = irq_disable();
++    if(*(volatile uint32_t *)0xa05f7418 & 1)
++        ++re4dc_cdrom_wait_hw_busy;
++    *(volatile uint32_t *)0xa05f7414 = 0;
++    dma_in_progress = false;
++    dma_blocking = false;
++    dma_auto_unlock = false;
++    irq_restore(old);
++    if(cmd_hnd > 0) {
++        syscall_gdrom_abort_command(cmd_hnd);
++        if(cdrom_poll(&cmd_hnd, 1000, cdrom_check_abort_done) == ERR_TIMEOUT) {
++            ++re4dc_cdrom_wait_abort_reset;
++            syscall_gdrom_reset();
++            syscall_gdrom_init();
++            thd_sleep(100);
++        }
++    }
++    cmd_hnd = 0;
++    stream_enabled = false;
++    stream_cb = NULL;
++    old = irq_disable();
++    while(sem_trywait(&dma_done) == 0) {}
++    *(volatile uint32_t *)0xa05f7414 = 1;
++    irq_restore(old);
++}
++
+ static int cdrom_check_abort_streaming(void *d) {
+     syscall_gdrom_exec_server();
+ 
+@@ -419,9 +491,17 @@
      /* Start the process of executing the command. */
      cdrom_poll(&cmd_hnd, 0, cdrom_check_ready);
  
@@ -71,7 +110,7 @@ Applied after kos-804b319-cdrom-dma-done.patch.
  
          /* Just to make sure the command is finished properly.
             Usually we are already done here. */
-@@ -614,7 +662,14 @@
+@@ -614,7 +694,14 @@
          if(!block) {
              return ERR_OK;
          }
