@@ -4630,7 +4630,23 @@ unsigned query(unsigned id){
 std::uint32_t enemyVisSidecarCrc=0;
 #if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
 extern "C" unsigned re4dc_actor_world23_scene();
+extern "C" void re4dc_actor_visibility23_metadata_check(unsigned);
+std::uint32_t ps2_crc32(const unsigned char*,unsigned);
 extern "C" int re4dc_ps2_placements_intact(unsigned,const unsigned char*,unsigned);
+// Admission only: successful emission/camera coverage is deliberately not required.
+// Room sections are immutable until leave but expose no lifetime generation;
+// hash exactly1376 metadata bytes per applicable bind instead of pointer memo.
+extern "C" int re4dc_actor_world23_context(unsigned room){
+    if(room!=0x119 || ps2w.room!=room || !ps2w.storage || !ps2w.parts ||
+       !actor_world23.owner || actor_world23.storage!=ps2w.storage ||
+       enemyVisSidecarCrc!=0xfb5072f8U || re4dc_room_file_room()!=room)return 0;
+    unsigned bytes=0,version=0,flags=0;const re4dc_room_header* h=nullptr;
+    const auto* oc=static_cast<const unsigned char*>(re4dc_room_section("OCCL",&bytes,&version,&flags,&h));
+    if(!oc || bytes!=1376 || version!=2 || !h || h->w!=136 || h->h!=33 ||
+       h->cell_mm!=1000 || h->x0!=-2000 || h->z0!=-10000)return 0;
+    re4dc_actor_visibility23_metadata_check(bytes);
+    return ps2_crc32(oc,bytes)==ACTOR_VISIBILITY23_OCCL_CRC;
+}
 extern "C" int re4dc_actor_world23_ready(const float* view,const float* P,const float* V,float near,float far){
     const unsigned scene=re4dc_actor_world23_scene();
     if(!scene || ps2w.room!=0x119 || !ps2w.storage ||
@@ -5860,8 +5876,11 @@ int ps2_pass(unsigned pass,float zfar){
             const auto* oc=static_cast<const unsigned char*>(re4dc_room_section("OCCL",&bytes,&version,&flags,&h));
             actor_world23.metadata=oc;
             if(!oc || bytes!=1376 || version!=2 || !h || h->w!=136 || h->h!=33 ||
-               h->cell_mm!=1000 || h->x0!=-2000 || h->z0!=-10000 ||
-               ps2_crc32(oc,bytes)!=ACTOR_VISIBILITY23_OCCL_CRC)actor_world23.active=false;
+               h->cell_mm!=1000 || h->x0!=-2000 || h->z0!=-10000)actor_world23.active=false;
+            else {
+                re4dc_actor_visibility23_metadata_check(bytes);
+                if(ps2_crc32(oc,bytes)!=ACTOR_VISIBILITY23_OCCL_CRC)actor_world23.active=false;
+            }
         }
         ~ReceiptPass23(){if(owns)actor_world23.end(success);}
     } receiptPass23(pass);

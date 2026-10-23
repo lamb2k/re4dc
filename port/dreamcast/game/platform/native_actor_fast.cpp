@@ -4566,9 +4566,7 @@ extern "C" void re4dc_actor_frame(void* memory, unsigned bytes) {
 #endif
 
 #if RE4DC_ACTOR_VISIBILITY23
-    const unsigned av23_open=RE4DC_WARP_LATE_OPEN();
-    re4dc_actor_visibility23_frame(frame_serial+1U,av23_open,
-        av23_open?RE4DC_WARP_LATE(~0U):0U,stats.position_transforms);
+    re4dc_actor_visibility23_bind(frame_serial+1U,memory && (bytes & ~31U),stats.position_transforms);
 #endif
 
     workspace = static_cast<unsigned char*>(memory);
