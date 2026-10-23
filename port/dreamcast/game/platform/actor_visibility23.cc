@@ -3,6 +3,7 @@
 #include <cstring>
 #include <cstdint>
 #include "include/actor_visibility23_window.h"
+#include "include/actor_visibility23_material.h"
 #include "include/warp_late.h"
 extern "C" void re4dc_log(const char*,...);
 extern "C" {unsigned re4dc_actor_visibility23_mode=0;}
@@ -16,8 +17,8 @@ void witness_report23(){
  re4dc_log("AV23OWNER complete=%u qualified=%u fail=%x mode=%u binds=%u owner=%p id=%x serial=%u epoch=%u life=%u unattributed=%u samples=4 maxlines=39\n",
   unsigned(w.complete),unsigned(w.qualified()),w.failures,w.mode,w.binds,reinterpret_cast<void*>(w.owner.owner),w.owner.id,w.owner.serial,w.owner.epoch,w.owner.life,w.unattributed);
  for(unsigned role=0;role<2;++role){const auto& c=w.parts[role];
-  re4dc_log("AV23OWNER_PART role=%u info=%p query=%u bound=%u potential=%u would=%u skip=%u positions=%u triangles=%u\n",
-   role,reinterpret_cast<void*>(w.infos[role]),c.query,c.bound,c.potential,c.would,c.skip,c.positions,c.triangles);
+  re4dc_log("AV23OWNER_PART role=%u info=%p query=%u bound=%u potential=%u would=%u skip=%u positions=%u triangles=%u refused=%u refuse=%x\n",
+   role,reinterpret_cast<void*>(w.infos[role]),c.query,c.bound,c.potential,c.would,c.skip,c.positions,c.triangles,w.refused[role],w.refuse[role]);
  }
  for(unsigned i=0;i<4;++i){const auto& sample=w.samples[i];if(!sample.present)continue;const auto& q=sample.query;const auto& s=q.source;const auto& o=q.owner;const auto& r=q.world;
   re4dc_log("AV23OWNER_SAMPLE slot=%u token=%u workspace=%u mode=%u owner=%p id=%x serial=%u epoch=%u life=%u role=%u info=%p\n",
@@ -63,6 +64,24 @@ extern "C" void re4dc_actor_visibility23_witness_begin(const actor_visibility23:
 extern "C" void re4dc_actor_visibility23_witness_identity(int status,const actor_visibility23::witness::Owner* value){if(value)owner_witness23.identify(status,*value);}
 extern "C" void re4dc_actor_visibility23_witness_bounds(const float* lo,const float* hi,const float* view,const float* P,const float* V){owner_witness23.bounds(lo,hi,view,P,V);}
 extern "C" void re4dc_actor_visibility23_witness_world(const actor_visibility23::witness::World* value){if(value)owner_witness23.world(*value);}
+extern "C" void re4dc_actor_visibility23_witness_material(unsigned reason){
+ // Refusals before the normal view check get attribution only after exactly
+ // that same current view/epoch/near admission; no aggregate boss inference.
+ if(!owner_witness23.pending.live)return;
+ const auto& provenance=owner_witness23.pending.source;
+ if(!actor_visibility23::material23::diagnostic_provenance(reason,bool(provenance.owner),bool(provenance.info)))return;
+ if(!owner_witness23.pending.tracked){
+  const auto& q=owner_witness23.pending;float view[12];
+  const auto* owner=reinterpret_cast<const void*>(q.source.owner);
+  const auto* info=reinterpret_cast<const void*>(q.source.info);
+  const unsigned epoch=re4dc_actor_visibility23_view(view,owner,info);
+  if(!epoch)return;
+  actor_visibility23::witness::Owner identity{};
+  if(re4dc_actor_visibility23_witness_owner(owner,info,epoch,&identity)!=1)return;
+  owner_witness23.identify(1,identity);
+ }
+ owner_witness23.material(reason);
+}
 extern "C" void re4dc_actor_visibility23_witness_potential(){owner_witness23.potential();}
 extern "C" void re4dc_actor_visibility23_witness_end(int result){
  if(owner_witness23.pending.tracked){const auto& q=owner_witness23.pending;actor_visibility23::witness::Owner after{};

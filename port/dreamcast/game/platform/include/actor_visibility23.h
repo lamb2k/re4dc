@@ -40,3 +40,7 @@ bool opaque_world_error(const float view[12],const float projection[7],const flo
 bool camera_bounds(const Group*,unsigned,const float* palette,unsigned entries,float q,const float modelview[12],const float view[12],const float projection[7],const float viewport[6],float near,float far,float lo[3],float hi[3]);
 }
 #endif
+
+#if RE4DC_ACTOR_VISIBILITY23
+extern "C" unsigned re4dc_actor_visibility23_source_cull(const void*,const void*,unsigned);
+#endif

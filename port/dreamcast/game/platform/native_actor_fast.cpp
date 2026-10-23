@@ -89,6 +89,9 @@ void re4dc_ganlit_fill_set(unsigned percent) {
 
 #include "actor_lifetime.h"
 #include "include/actor_visibility23.h"
+#if RE4DC_ACTOR_VISIBILITY23
+#include "include/actor_visibility23_material.h"
+#endif
 #ifndef RE4DC_ACTOR_LOG
 #define RE4DC_ACTOR_LOG 0
 #endif
@@ -1657,11 +1660,31 @@ static bool section_wall23(const Re4dcModelPart& p,Frame& f,const BlobHeader* bl
     if(!shz_bounds_mode_supported(fpscr)){++st.numeric_draw;return false;}
     // First cohort: owned immutable skeletal positions, opaque depth-writing,
     // one-sided body/head parts only. Alpha, masks and attachments draw.
-    if(p.blend || (p.material_flags&4U) || p.alpha_state!=255 || p.mask.pixels || p.mask_ref!=256 || (p.cull!=1&&p.cull!=2) ||
-       reinterpret_cast<const void*>(blob)!=p.stream || f.mode!=kSkin || !owned_submission || f.position_stride!=8 || !f.palette ||
-       p.depth_mode!=0) {++st.material_draw;return false;}
+    const unsigned material_reason=actor_visibility23::material23::refusal({p.blend,p.material_flags,p.alpha_state,
+       p.mask_ref,p.cull,p.depth_mode,f.position_stride,bool(p.mask.pixels),reinterpret_cast<const void*>(blob)==p.stream,
+       f.mode==kSkin,bool(owned_submission),bool(f.palette)});
+    if(material_reason){
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+        if(actor_visibility23::material23::diagnostic_provenance(material_reason,bool(p.model),bool(p.info)))
+            re4dc_actor_visibility23_witness_material(material_reason);
+#endif
+        ++st.material_draw;return false;
+    }
     float view[12];const unsigned epoch=re4dc_actor_visibility23_view(view,p.model,p.info);
     if(!epoch){++st.identity_draw;return false;}
+    // cull0 is the benchmark backend's disabled face rejection, not proof of
+    // source two-sidedness. Only current owned2b first-two source infos may
+    // supply that missing one-sided certificate; all actual run guards above
+    // still apply. Existing cull1/2 eligibility and Ganado behavior are unchanged.
+    if(!p.cull){
+        const unsigned source_cull=re4dc_actor_visibility23_source_cull(p.model,p.info,epoch);
+        if(source_cull!=1&&source_cull!=2){
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+            re4dc_actor_visibility23_witness_material(actor_visibility23::material23::SourceCull);
+#endif
+            ++st.material_draw;return false;
+        }
+    }
 #if RE4DC_ACTOR_VISIBILITY23_WITNESS
     actor_visibility23::witness::Owner identity{};
     const int identity_status=re4dc_actor_visibility23_witness_owner(p.model,p.info,epoch,&identity);

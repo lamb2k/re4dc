@@ -29,7 +29,7 @@ struct Sample {Query query{};bool present=false;};
 struct State {
  bool active=false,sealed=false,complete=false,owner_seen=false,await_skip=false,ignore_skip=false;
  unsigned mode=0,binds=0,last=0,failures=0,unattributed=0,tokens=0;
- Owner owner{};std::uintptr_t infos[2]{};Counts parts[2]{};Sample samples[4]{};Query pending{};
+ Owner owner{};std::uintptr_t infos[2]{};Counts parts[2]{};unsigned refused[2]{},refuse[2]{};Sample samples[4]{};Query pending{};
  void add(unsigned& value,unsigned n){if(n>~0U-value){value=~0U;failures|=Overflow;}else value+=n;}
  void window(unsigned event,unsigned serial,unsigned selected,unsigned count){
   // Window::Event values are checked by host controls against the actual header.
@@ -83,6 +83,7 @@ struct State {
      value.epoch!=old.epoch||value.life!=old.life||value.role!=old.role||value.flags!=old.flags||value.room!=old.room)failures|=Identity;
   if(value.game!=old.game||value.ui!=old.ui)failures|=Context;
  }
+ void material(unsigned reason){if(pending.live&&pending.tracked){add(refused[pending.owner.role],1);refuse[pending.owner.role]|=reason;}}
  void potential(){
   if(!pending.live||!pending.tracked)return;
   pending.potential=true;const auto& w=pending.world;
@@ -123,6 +124,7 @@ void re4dc_actor_visibility23_witness_begin(const actor_visibility23::witness::S
 void re4dc_actor_visibility23_witness_identity(int,const actor_visibility23::witness::Owner*);
 void re4dc_actor_visibility23_witness_bounds(const float*,const float*,const float*,const float*,const float*);
 void re4dc_actor_visibility23_witness_world(const actor_visibility23::witness::World*);
+void re4dc_actor_visibility23_witness_material(unsigned);
 void re4dc_actor_visibility23_witness_potential();
 void re4dc_actor_visibility23_witness_end(int);
 void re4dc_actor_visibility23_witness_skip(unsigned,unsigned,unsigned,unsigned,unsigned);

@@ -962,6 +962,21 @@ extern "C" unsigned re4dc_actor_visibility23_view(float view[12],const void* own
     (void)view;(void)owner;(void)info;return 0;
 #endif
 }
+#include "actor_visibility23_material.h"
+// A fresh source-only certificate at the admitted synchronous query. Never
+// change b.cull/p.cull or retain an owner pointer beyond this call.
+extern "C" unsigned re4dc_actor_visibility23_source_cull(const void* owner,const void* info,unsigned epoch){
+ const auto* m=static_cast<const cModel*>(owner);
+ if(!m)return 0;
+ const auto* first=m->pModelInfo;
+ const bool current=epoch&&epoch==re4dc_actor_visibility23_epoch();
+ const bool first_two=first&&info&&(info==first||info==first->pList);
+ if(!first_two)return 0;
+ const auto* selected=static_cast<const cModelInfo*>(info);
+ const unsigned mapped=re4dc_model_cull(m->CullMode,(pG->Debug_flg[0]&0x20000000)!=0);
+ return actor_visibility23::material23::source_one_sided(m->id,first_two,current,m->be_flag,
+          m->CullMode,mapped,m->z_mode,selected->blend_mode)?mapped:0U;
+}
 #if RE4DC_ACTOR_VISIBILITY23_WITNESS
 // Called only after the original synchronous owner/view admission succeeded.
 // Copy actual cModel lifetime values; diagnostic status never controls drawing.
