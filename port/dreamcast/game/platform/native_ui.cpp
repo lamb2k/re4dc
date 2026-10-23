@@ -422,6 +422,15 @@ void gcasset_texture_flush(Entry& entry) {
 using GcAssetPacketState=re4dc_gcasset::PacketCursor;
 GcAssetPacketState gcasset_packet_states[5];
 re4dc_gcasset::Consumer gcasset_packet_consumer=re4dc_gcasset::Texture;
+re4dc_gcasset::SourceUse gcasset_model_pending;
+void gcasset_model_prepare(const Re4dcModelPart* p) {
+    gcasset_model_pending={};const auto& source=re4dc_gcasset::source_use;
+    if(p && p->model==source.model && p->info==source.info)gcasset_model_pending=source;
+}
+void gcasset_model_accept() {
+    re4dc_gcasset::member_accept(gcasset_model_pending.serial,gcasset_model_pending.mask?
+        gcasset_model_pending.mask:1U<<re4dc_gcasset::SourceGeometry);
+}
 void gcasset_packet_reset(){for(auto& state:gcasset_packet_states){
     if(state.continuation)re4dc_gcasset::unresolved(re4dc_gcasset::Texture,"incomplete-packet-continuation");
     state={};
@@ -446,9 +455,13 @@ void gcasset_packet_emitted(const void* packet,unsigned bytes,unsigned list,re4d
 }
 #define RE4DC_GCA_TEXTURE(...) gcasset_texture_emitted(__VA_ARGS__)
 #define RE4DC_GCA_PACKET(...) gcasset_packet_emitted(__VA_ARGS__)
+#define RE4DC_GCA_MODEL_PREPARE(...) gcasset_model_prepare(__VA_ARGS__)
+#define RE4DC_GCA_MODEL_ACCEPT() gcasset_model_accept()
 #else
 #define RE4DC_GCA_TEXTURE(...) ((void)0)
 #define RE4DC_GCA_PACKET(...) ((void)0)
+#define RE4DC_GCA_MODEL_PREPARE(...) ((void)0)
+#define RE4DC_GCA_MODEL_ACCEPT() ((void)0)
 #endif
 #if defined(RE4DC_FX_PS2_PACK) && RE4DC_FX_PS2_PACK
 // FX_PS2_PACK=1 (effects30.mk, test 12 fx lane; render only): a package that fx_ps2_pack.py built from the PS2 picture of
@@ -6223,7 +6236,7 @@ extern "C" void re4dc_ui_present(){
 extern "C" void re4dc_ui_end_frame(int present){
 #if RE4DC_GC_ASSET_GATE
     struct GcAssetFrameFlush {
-        ~GcAssetFrameFlush(){for(auto& entry:entries)gcasset_texture_flush(entry);re4dc_gcasset::pump();}
+        ~GcAssetFrameFlush(){for(auto& entry:entries)gcasset_texture_flush(entry);re4dc_gcasset::member_flush();re4dc_gcasset::pump();}
     } gcasset_frame_flush;
 #endif
 #if RE4DC_WORLD_SCRATCH
@@ -6738,7 +6751,7 @@ if(!handle){
     if(re4dc_mv_receiver && list==PVR_LIST_OP_POLY){model_packets[model_used].flags|=PVR_TA_CMD_MODIFIER;++mv_receivers;}
 #endif
     RE4DC_GAD_HIT(handle->key);
-    model_pending=model_used+count;model_handle=handle;
+    RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
 #if RE4DC_MESH_TEXTURES
     if(model_texture){out->u_scale=1.0f;out->v_scale=1.0f;}
@@ -6763,6 +6776,7 @@ if(!handle){
     if(p->alpha_state&256)++model_alpha_vertex;else ++model_alpha_material;
     if(!(p->alpha_state&256) && (p->alpha_state&255)<255)++model_alpha_faded;
     if(model_parts<6)re4dc_log("native model DIAGNOSTIC source=%08x info=%08x part=%08x positions=%u stride=%u stream=%u flags=%08x material=%02x cull=%u\n",(unsigned)p->model,(unsigned)p->info,(unsigned)p->part,p->position_count,p->position_stride,p->stream_bytes,p->flags,p->material_flags,p->cull);
+    RE4DC_GCA_MODEL_PREPARE(p);
     return 1;
 }
 extern "C" void re4dc_model_packet_commit(unsigned count){
@@ -6773,6 +6787,7 @@ extern "C" void re4dc_model_packet_commit(unsigned count){
     // Keep its upload cached; pin only when this part actually commits a draw.
     if(count){
         RE4DC_GCA_TEXTURE(model_handle);
+        RE4DC_GCA_MODEL_ACCEPT();
         model_handle->frame=frame;model_used=model_pending+count;
         if(model_used*32>model_peak)model_peak=model_used*32;
 #if RE4DC_PVR_STREAM
@@ -6910,7 +6925,7 @@ extern "C" void re4dc_model_direct_end(unsigned vertices){
     sq_unlock();direct_open=false;
 #endif
     if(vertices>32767)re4dc_missing("native direct part exceeded the store-queue window");
-    if(vertices) { RE4DC_GCA_TEXTURE(model_handle); }
+    if(vertices) { RE4DC_GCA_TEXTURE(model_handle);RE4DC_GCA_MODEL_ACCEPT(); }
     ++direct_parts;direct_slots+=vertices;
 #if RE4DC_TA_GUARD
     guard_account(1,vertices);
@@ -7038,6 +7053,7 @@ extern "C" std::uint32_t* re4dc_leon_direct_switch(const Re4dcModelPart* p,const
        unsigned(stream_list)!=h->list || select_model_pass(p)!=stream_list || leon_header_key(p,h->list)!=h->key ||
        handle->model_header_key!=h->key || std::memcmp(h->words,&handle->model_header,32))return nullptr;
     // re4dc_model_direct_end(vertices)
+    if(vertices) { RE4DC_GCA_TEXTURE(model_handle);RE4DC_GCA_MODEL_ACCEPT(); }
     ++direct_parts;direct_slots+=vertices;
     frame_pvr_bytes+=vertices*32;stream_model_bytes+=vertices*32;
     if(stream_model_bytes>stream_peak_bytes)stream_peak_bytes=stream_model_bytes;
@@ -7056,11 +7072,12 @@ extern "C" std::uint32_t* re4dc_leon_direct_switch(const Re4dcModelPart* p,const
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
     RE4DC_GAD_HIT(handle->key);
-    model_pending=model_used+count;model_handle=handle;
+    RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
     if(h->scale_rebuild)++model_scale_rebuilds;
     if(p->alpha_state&256)++model_alpha_vertex;else ++model_alpha_material;
     if(!(p->alpha_state&256) && (p->alpha_state&255)<255)++model_alpha_faded;
     if(model_parts<6)re4dc_log("native model DIAGNOSTIC source=%08x info=%08x part=%08x positions=%u stride=%u stream=%u flags=%08x material=%02x cull=%u\n",(unsigned)p->model,(unsigned)p->info,(unsigned)p->part,p->position_count,p->position_stride,p->stream_bytes,p->flags,p->material_flags,p->cull);
+    RE4DC_GCA_MODEL_PREPARE(p);
     const auto* words=reinterpret_cast<const std::uint32_t*>(model_packets+model_used);
     for(unsigned i=0;i<8;++i)sq[i]=words[i];
 #if RE4DC_TA_HASH
@@ -7301,7 +7318,7 @@ extern "C" int re4dc_model_pt_begin(unsigned crc,unsigned fnv,unsigned width,uns
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
     RE4DC_GAD_HIT(handle->key);
-    model_pending=model_used+count;model_handle=handle;
+    RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
     out->u_scale=1.0f;out->v_scale=1.0f;
     return 1;
@@ -8352,7 +8369,7 @@ extern "C" int re4dc_ps2_world_packet(unsigned crc,unsigned fnv,unsigned width,u
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
     RE4DC_GAD_HIT(handle->key);
-    model_pending=model_used+count;model_handle=handle;
+    RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
     out->u_scale=out->v_scale=1;
     return 1;
@@ -8402,7 +8419,7 @@ extern "C" int re4dc_ps2_world_packet_cull(unsigned crc,unsigned fnv,unsigned wi
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
     RE4DC_GAD_HIT(handle->key);
-    model_pending=model_used+count;model_handle=handle;
+    RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
     out->u_scale=out->v_scale=1;
     return 1;
@@ -8814,7 +8831,7 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #endif
         std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
         RE4DC_GAD_HIT(handle->key);
-    model_pending=model_used+count;model_handle=handle;
+    RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
 #if RE4DC_SCENERY_SUBMIT_BATCH
         if(!stream_scene){re4dc_ps2_world_batch_close(batch);stream_open();}
 #else
@@ -8977,7 +8994,7 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
     RE4DC_GAD_HIT(handle->key);
-    model_pending=model_used+count;model_handle=handle;
+    RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
 #if RE4DC_SCENERY_SUBMIT_BATCH
     if(!stream_scene){re4dc_ps2_world_batch_close(batch);stream_open();}
 #else

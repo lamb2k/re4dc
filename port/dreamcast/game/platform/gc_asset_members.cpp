@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstring>
 namespace re4dc_gcasset {
+SourceUse source_use;
 namespace {
 constexpr unsigned ArchiveCount=16, MemberCount=128;
 struct Archive {
@@ -10,10 +11,11 @@ struct Archive {
 } archives[ArchiveCount];
 struct Member {
     const unsigned char* base;const char* name;Digest digest;
-    unsigned bytes,owner,generation,serial,arc;
+    unsigned bytes,owner,generation,serial,arc,uses;
 } members[MemberCount];
 unsigned generation=1,serial=1;
-static_assert(sizeof(void*)!=4 || (sizeof(Archive)<=24 && sizeof(Member)<=60),"bounded member metadata budget");
+unsigned use_faults;
+static_assert(sizeof(void*)!=4 || (sizeof(Archive)<=24 && sizeof(Member)<=64),"bounded member metadata budget");
 struct Span { const unsigned char* base=nullptr;const char* name=nullptr;unsigned bytes=0,arc=0; };
 bool contains(const void* base,unsigned bytes,const void* pointer,unsigned count) {
     const auto a=reinterpret_cast<std::uintptr_t>(base),b=reinterpret_cast<std::uintptr_t>(pointer);
@@ -104,6 +106,7 @@ bool current(const Member& member) {
         contains(archives[member.owner].base,archives[member.owner].bytes,member.base,member.bytes);
 }
 void revoke(unsigned owner) {
+    member_flush();
     for(auto& member:members)if(member.base && member.owner==owner)member={};
     archives[owner]={};
 }
@@ -142,7 +145,7 @@ bool member_capture(const void* data) {
     if(owner==ArchiveCount) { unresolved(SourceGeometry,"member-unbound");return false; }
     if(span.bytes<64 || !contains(span.base,span.bytes,data,64) || serial==0xffffffffU) { unresolved(SourceGeometry,"member-model-bounds");return false; }
     for(auto& member:members)if(!member.base) {
-        member={span.base,span.name,fingerprint(span.base,span.bytes),span.bytes,owner,archives[owner].generation,++serial,span.arc};
+        member={span.base,span.name,fingerprint(span.base,span.bytes),span.bytes,owner,archives[owner].generation,++serial,span.arc,0};
         return true;
     }
     unresolved(SourceGeometry,"member-capacity");return false;
@@ -157,6 +160,25 @@ bool member_lookup(const void* data,ModelMember* out) {
         return true;
     }
     return false;
+}
+void member_accept(unsigned serial,unsigned mask) {
+    const unsigned allowed=(1U<<SourceGeometry)|(1U<<Weapon);
+    if(!serial || !mask || (mask&~allowed)) { use_faults|=mask&allowed?mask&allowed:1U<<SourceGeometry;return; }
+    for(auto& member:members)if(current(member) && member.serial==serial) {member.uses|=mask;return;}
+    use_faults|=mask;
+}
+void member_flush() {
+    const unsigned faults=use_faults;use_faults=0;
+    for(unsigned i=0;i<ConsumerCount;++i)if(faults&(1U<<i))unresolved(Consumer(i),"unbound-accepted-model");
+    constexpr char hex[]="0123456789abcdef";
+    for(auto& member:members)if(member.uses) {
+        const unsigned mask=member.uses;member.uses=0;
+        if(!current(member)) {unresolved(SourceGeometry,"retired-accepted-model");continue;}
+        char id[41];
+        for(unsigned i=0;i<20;++i) {id[2*i]=hex[member.digest.bytes[i]>>4];id[2*i+1]=hex[member.digest.bytes[i]&15];}
+        id[40]=0; // content ID prefix; full SHA256 remains authoritative in emitted()
+        for(unsigned i=0;i<ConsumerCount;++i)if(mask&(1U<<i))emitted(Consumer(i),"model",id,member.digest);
+    }
 }
 }
 extern "C" void re4dc_gcasset_capture_model(const void* data) { re4dc_gcasset::member_capture(data); }

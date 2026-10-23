@@ -7,7 +7,9 @@
 #include <vector>
 using namespace re4dc_gcasset;
 std::string logs;
+bool sq_held;
 extern "C" void re4dc_log(const char* fmt,...) {
+    assert(!sq_held);
     char line[256];va_list ap;va_start(ap,fmt);const int length=vsnprintf(line,sizeof line,fmt,ap);va_end(ap);
     assert(length>=0 && unsigned(length)<sizeof line);logs+=line;
 }
@@ -87,5 +89,21 @@ int main() {
     for(unsigned i=0;i<128;++i)assert(member_capture(many_members.data()+directory+64*i));
     assert(!member_capture(many_members.data()+directory+64*128));member_retire(&owner);
     assert(logs.find("GC-ASSET v=")==std::string::npos); // binding/preparation is not drawing
+    auto accepted=indexed();assert(member_adopt(&owner,accepted.data(),accepted.size(),true));
+    assert(member_capture(accepted.data()+64));assert(member_lookup(accepted.data()+64,&original));
+    accepted[72]=12;const auto before=logs.size();
+    sq_held=true;member_accept(original.serial,(1U<<SourceGeometry)|(1U<<Weapon));sq_held=false;
+    assert(logs.size()==before);member_flush();
+    assert(logs.find("kind=model")!=std::string::npos); // original captured bytes at accepted emission
+    assert(logs.find("consumer=source_geometry")!=std::string::npos);
+    const auto after=logs.size();
+    sq_held=true;member_accept(original.serial,1U<<Weapon);sq_held=false;
+    member_retire(&owner);assert(!member_lookup(accepted.data()+64,&later));
+    assert(logs.size()==after); // same identity across consumers logs once
+    sq_held=true;member_accept(original.serial,1U<<SourceGeometry);sq_held=false;
+    member_flush();assert(logs.find("unbound-accepted-model")!=std::string::npos);
+    source_use={99,1U<<SourceGeometry,&owner,&alias_owner};
+    {SourceScope scope;assert(!source_use.serial);source_use.serial=42;}
+    assert(source_use.serial==99);source_use={};
     end(1);assert(logs.find("GC-ASSET-ERROR")!=std::string::npos); // all failed coverage persists
 }

@@ -23,15 +23,28 @@ selected for model construction, preserving the digest through relocation/FE.
 Named ETM records and indexed ARC members use the existing source format and
 actor-lifetime alias/REL bounds. Duplicate current adoption preserves saved
 bytes; retirement revokes the owner generation. Unknown/ambiguous/out-of-bounds
-members and capacity failures are coverage errors. Bind/retire and accepted
-emitter wiring await the UI file handoff, so this is not source draw coverage.
+members and capacity failures are coverage errors. Actual UI ownership and
+accepted source emitter latches are wired, with full runtime qualification open.
 Host fixtures include normal TPL records among named BINs and assert preparation
 never emits a GC-ASSET use row.
 Actual UI core/room/option/player/weapon/enemy bind and retire bodies now register
 the archive before actor adoption can mutate it. Ordinary enemy archives with
 no texture table are covered too. Conflicting owner spans are revoked and the
 new overlapping view rejected; a cached original cannot survive as an alias of
-already relocated bytes. Accepted source/weapon use remains to be connected.
+already relocated bytes. CoreDataRead retires the exact core archive before
+the fixed region is overwritten; duplicate adoption after relocation still
+preserves the original bytes.
+
+`native_model.cpp` clears caller proof before replacement/static submission and
+selects an original BIN only after that path declines. Normal packet binding
+snapshots the matching source model/info and captured member serial. Nonzero
+packet commit, direct accounting and Leon's inline direct switch latch accepted
+use; frame/retirement flushes format and log outside SQ. Stale serials, missing
+proof and unqualified replacement payloads fail explicitly. Model IDs are the
+first 40 hex digits of the immutable BIN SHA256; full SHA256 remains authoritative.
+Source counters coalesce per member/consumer/flush, as texture counters do.
+Weapon consumer classification and independent static-package payload capture
+remain open; an unresolved replacement cannot inherit its source caller's BIN.
 
 `gc_asset_packet_cursor.h` supplies the UI observer's format-aware 32/64-byte
 TA continuation handling. The actual observer controls include a real 96-byte
@@ -72,7 +85,7 @@ open and Entry retirement; only a same-scene header/vertex split can join.
 
 | Consumer | Actual call graph and required accepted boundary | Remaining work |
 |---|---|---|
-| Source props / source actors without NMRS | `src/game/trans.cpp` source object loop -> model bridge -> `native_model.cpp::re4dc_model_submit` -> native actor or generic builder -> packet commit / direct end | Bind immutable source BIN identity before preparation; count only output. Do not use SOURCE_OBJECTS calls as draws. |
+| Source props / source actors without NMRS | `src/game/trans.cpp` source object loop -> model bridge -> `native_model.cpp::re4dc_model_submit` -> native actor or generic builder -> packet commit / direct end / Leon inline switch | Original BIN and lifetime are wired; accepted serial latches have source-extracted packet/direct/switch controls. Actual complete runtime/room qualification remains. Do not use SOURCE_OBJECTS calls as draws. |
 | Weapons | Same model emission graph, with weapon archive ownership from `native_ui.cpp::re4dc_ui_bind_weapon` | Carry that owner through fast/direct, fallback and deferred paths; hash authored payload at load, not transformed pose arrays. |
 | Texture keys | `native_ui.cpp::load` opens exact loose or tex.pak member; accepted model/effect/UI emission uses its Entry | Hash exact member at immutable load, carry Entry identity through eviction/reuse; binding/load alone is not use. No disk access per draw. |
 | Effect pictures | `re4dc_effect_sprite`, strip/mesh, haze/stage1 batch -> immediate sends or copied deferred tags -> `re4dc_model_finish_source_draws` | Store copied picture identity with deferred packets; report only the final send; discarded queue is not an emission. |

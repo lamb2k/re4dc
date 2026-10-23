@@ -17,5 +17,16 @@ void member_retire_transient();
 // pointer until a live, bounded complete BIN member has been located.
 bool member_capture(const void* data);
 bool member_lookup(const void* data, ModelMember*);
+// Accepted geometry latches only bounded metadata while SQ may be held.
+// Flush at an unlocked frame/retirement boundary, never inside an emitter.
+void member_accept(unsigned serial,unsigned consumer_mask);
+void member_flush();
+struct SourceUse { unsigned serial=0,mask=0;const void* model=nullptr;const void* info=nullptr; };
+extern SourceUse source_use;
+struct SourceScope {
+    SourceUse previous;
+    SourceScope():previous(source_use){source_use={};}
+    ~SourceScope(){source_use=previous;}
+};
 }
 #endif

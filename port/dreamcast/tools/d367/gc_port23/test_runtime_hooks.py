@@ -20,6 +20,76 @@ def function(source, marker):
 
 
 class RuntimeTextureTests(unittest.TestCase):
+    def test_actual_source_latch_packet_direct_and_switch(self):
+        ui = (GAME / 'platform/native_ui.cpp').read_text()
+        helpers = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
+        commit = function(ui, 'extern "C" void re4dc_model_packet_commit(')
+        marker = ui.index('// WORLD_SUBMIT_END_IMPLEMENTATION')
+        start = ui.index('#if RE4DC_TA_DIRECT', marker)
+        finish = ui.index('\n}\n#if RE4DC_SCENERY_SUBMIT_BATCH', start)+2
+        direct = 'void direct_account(unsigned vertices){\n'+ui[start:finish]
+        switch = function(ui, 'extern "C" std::uint32_t* re4dc_leon_direct_switch(')
+        start = switch.index('    // re4dc_model_direct_end(vertices)')
+        finish = switch.index('    model_used=0;', start)+len('    model_used=0;')
+        fixture = r'''
+#include "gc_asset_members.h"
+#include <cassert>
+#include <cstdarg>
+#include <cstdio>
+#include <cstring>
+#include <string>
+#include <vector>
+using namespace re4dc_gcasset;
+struct Re4dcModelPart {const void* model;const void* info;};
+bool sq_held;
+std::string logs;
+extern "C" void re4dc_log(const char* fmt,...){
+  assert(!sq_held);char buf[256];va_list ap;va_start(ap,fmt);vsnprintf(buf,sizeof buf,fmt,ap);va_end(ap);logs+=buf;
+}
+struct Handle{unsigned frame;};Handle handle;Handle* model_handle=&handle;
+unsigned model_used,model_pending,model_peak,frame,direct_parts,direct_slots,frame_pvr_bytes,stream_model_bytes,stream_peak_bytes;
+unsigned char model_packets[1024];
+void stream_send(const void*,unsigned){}
+void re4dc_missing(const char*){assert(false);}
+#define RE4DC_GCA_TEXTURE(...) ((void)0)
+''' + helpers + r'''
+#define RE4DC_GCA_MODEL_ACCEPT() gcasset_model_accept()
+''' + commit + '\n' + direct + '\nvoid switch_account(unsigned vertices){\n' + switch[start:finish] + r'''
+}
+int main(){
+  std::vector<unsigned char> blob(128);unsigned one=1,offset=32;int owner,model,info;
+  std::memcpy(blob.data(),&one,4);std::memcpy(blob.data()+16,&offset,4);std::memcpy(blob.data()+20,"BIN",3);
+  install(nullptr,0);begin(0x111,1,Required);
+  assert(member_adopt(&owner,blob.data(),128,true));assert(member_capture(blob.data()+32));
+  ModelMember m;assert(member_lookup(blob.data()+32,&m));
+  Re4dcModelPart p{&model,&info};source_use={m.serial,1U<<SourceGeometry,p.model,p.info};
+  gcasset_model_prepare(&p);re4dc_model_packet_commit(0);member_flush();
+  assert(logs.find("GC-ASSET v=")==std::string::npos); // prepared/clipped source emits nothing
+  re4dc_model_packet_commit(3);member_flush();assert(logs.find("consumer=source_geometry")!=std::string::npos);
+  logs.clear();sq_held=true;direct_account(3);assert(logs.empty());sq_held=false;member_flush();
+  sq_held=true;switch_account(3);assert(logs.empty());sq_held=false;member_flush();
+  // A replacement/static path runs inside a cleared SourceScope, and cannot
+  // inherit even the exact same source caller's identity merely by API/name.
+  {SourceScope replacement;gcasset_model_prepare(&p);}
+  sq_held=true;direct_account(3);assert(logs.empty());sq_held=false;member_flush();
+  assert(logs.find("unbound-accepted-model")!=std::string::npos);
+  logs.clear();gcasset_model_prepare(&p);member_retire(&owner);
+  sq_held=true;switch_account(3);assert(logs.empty());sq_held=false;member_flush();
+  assert(logs.find("unbound-accepted-model")!=std::string::npos); // late retained snapshot cannot survive retire
+}
+'''
+        with tempfile.TemporaryDirectory(prefix='gc-port23-source-', dir='/dev/shm') as temporary:
+            root = Path(temporary)
+            (root / 'fixture.cpp').write_text(fixture)
+            executable = root / 'fixture'
+            subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
+                            '-DRE4DC_GC_ASSET_GATE=1', '-DRE4DC_PVR_STREAM=1',
+                            '-DRE4DC_TA_DIRECT=1', '-DRE4DC_SCENERY_SUBMIT_BATCH=1',
+                            '-I', str(GAME / 'platform/include'), str(root / 'fixture.cpp'),
+                            str(GAME / 'platform/gc_asset_gate.cpp'), str(GAME / 'platform/gc_asset_members.cpp'),
+                            '-o', str(executable)], check=True)
+            subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
+
     def test_actual_archive_bind_and_retire_bodies(self):
         ui = (GAME / 'platform/native_ui.cpp').read_text()
         bodies = '\n'.join(function(ui, 'extern "C" '+signature) for signature in (
@@ -123,6 +193,7 @@ unsigned notices;void* model_handle;
 void sq_unlock(){assert(sq_held);sq_held=false;}
 void re4dc_missing(const char*){std::abort();}
 #define RE4DC_GCA_TEXTURE(...) (++notices)
+#define RE4DC_GCA_MODEL_ACCEPT() ((void)0)
 '''
         for batch in (0, 1):
             if batch:
@@ -175,6 +246,7 @@ int main(){
         fixture = r'''
 #include "gc_asset_gate.h"
 #include "gc_asset_packet_cursor.h"
+#include "gc_asset_members.h"
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
@@ -190,6 +262,7 @@ struct Package {
 struct Entry { Package package;struct Key { unsigned crc,fnv; } key;bool valid;
   re4dc_gcasset::Digest asset_digest{};unsigned asset_consumers=0;
 };
+struct Re4dcModelPart {const void* model;const void* info;};
 Entry entries[2];
 bool sq_held;
 std::string logs;
@@ -280,6 +353,7 @@ int main() {
             subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
                             '-DRE4DC_GC_ASSET_GATE=1', '-I', str(GAME / 'platform/include'),
                             str(root / 'fixture.cpp'), str(GAME / 'platform/gc_asset_gate.cpp'),
+                            str(GAME / 'platform/gc_asset_members.cpp'),
                             '-o', str(executable)], check=True)
             subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
 

@@ -2,6 +2,10 @@
 // Only an explicitly enabled base-texture diagnostic currently uses this path.
 #include "re4dc_screen.h"
 #include "native_model.h"
+#include "include/gc_asset_members.h"
+#if RE4DC_GC_ASSET_GATE
+extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**);
+#endif
 #include "native_render_profile.hpp"
 #include "native_reuse_audit.hpp"
 #if RE4DC_NATIVE_RENDER_PROFILE && defined(__sh__)
@@ -705,6 +709,11 @@ extern "C" void re4dc_pprof_add(const void* model, unsigned pth, unsigned us, un
 #define PP_PATH(x) ((void) 0)
 #endif
 extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
+#if RE4DC_GC_ASSET_GATE
+    // Replacement/static paths must supply their own immutable asset proof.
+    // A source caller's BIN cannot certify the bytes their emitter consumes.
+    re4dc_gcasset::SourceScope gcasset_source_scope;
+#endif
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
     pprof::Scope pprof_scope(p);
 #endif
@@ -758,6 +767,14 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     if(p && p->world){plain=*p;plain.serial=0;plain.world=plain.view=nullptr;
         plain.source_key[0]=0;plain.source_key[1]=0xff;p=&plain;}
 #endif
+#endif
+#if RE4DC_GC_ASSET_GATE
+    if(p) {
+        const void* data=nullptr;re4dc_gcasset::ModelMember member;
+        if(re4dc_gcasset_model_identity(p->model,p->info,&data)!=0xffffffffU &&
+           re4dc_gcasset::member_lookup(data,&member))
+            re4dc_gcasset::source_use={member.serial,1U<<re4dc_gcasset::SourceGeometry,p->model,p->info};
+    }
 #endif
 #if RE4DC_NATIVE_ACTOR
     // Non-scenery parts (actors, weapons, room SMD objects): dense per-info
