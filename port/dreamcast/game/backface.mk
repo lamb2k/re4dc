@@ -133,3 +133,22 @@ BACKFACE_CONE ?= 0
 ifneq ($(filter $(BACKFACE_CONE),0 1),$(BACKFACE_CONE))
 $(error BACKFACE_CONE must be 0 or 1)
 endif
+# BACKFACE_ROOMS=1 (lane fix-hideout23, issue #55 item 1; render only; needs CPU_BACKFACE=2): the CPU back-face cull runs
+#   only in the rooms of BACKFACE_ROOM_LIST (pG->room_id values, comma separated; default 0x10d, the chapter 2-1 merchant
+#   cave); in every other room the world and actor emitters send the TA what CPU_BACKFACE=0 sends. Why: the r10d cave draws
+#   its whole world from the ladder arrival, 1.76 MB of TA parameters per scene MODELLED (TA_BIN_DIAG) against a
+#   2,000,896 B bank (about 1.81 MB in FSAA) and 162 KB of the 230 KB OPB pool; the issue #55 console video shows a
+#   multi-second frozen picture with a broken triangle there. With the cull the r10d peak is 1.13 MB / 99 KB (-36% / -39%).
+#   The flag follows the room at each scene open (native_ui.cpp stream_open). Default 0: no code.
+BACKFACE_ROOMS ?= 0
+BACKFACE_ROOM_LIST ?= 0x10d
+ifneq ($(filter $(BACKFACE_ROOMS),0 1),$(BACKFACE_ROOMS))
+$(error BACKFACE_ROOMS must be 0 or 1)
+endif
+ifeq ($(BACKFACE_ROOMS),1)
+ifneq ($(CPU_BACKFACE),2)
+$(error BACKFACE_ROOMS=1 needs CPU_BACKFACE=2)
+endif
+$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_BACKFACE_ROOMS=1 -DRE4DC_BACKFACE_ROOM_LIST=$(BACKFACE_ROOM_LIST)
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_BACKFACE_ROOMS=1
+endif
