@@ -25,6 +25,16 @@ ROOT = DC.parents[1]
 SOURCE = DC / "game/platform/native_static.cpp"
 
 
+def expand_selector_include(source):
+    # SCENERY_SELECT_ONLY shares the existing selector verbatim with its small
+    # context. Expand only this exact repository include for body extraction;
+    # compile-only gates continue to use the original production source.
+    name = '#include "include/scenery_chunk_select.inc"'
+    if name in source:
+        source = source.replace(name, (SOURCE.parent / "include/scenery_chunk_select.inc").read_text())
+    return source
+
+
 def function(text, signature):
     start = text.index(signature)
     begin = text.index("{", start)
@@ -831,13 +841,14 @@ def main():
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     output = args.output.resolve()
-    source = SOURCE.read_text()
+    raw_source = SOURCE.read_text()
+    source = expand_selector_include(raw_source)
     shared, host, identities = host_fixture(output, source, args.cull_only)
     metadata = [] if args.cull_only else trailer_fixture(shared, output)
     if args.cull_only and any((args.sh4_cxx, args.kos_root, args.sdk_root)):
         raise ValueError("--cull-only runs the host lifetime regression; target identity uses the separate bug-fix baseline")
     target = dict(status="not requested") if args.cull_only else target_fixture(args, output)
-    report = dict(source_sha256=hashlib.sha256(source.encode()).hexdigest(), extracted_sha256=identities,
+    report = dict(source_sha256=hashlib.sha256(raw_source.encode()).hexdigest(), extracted_sha256=identities,
                   host=host, metadata=metadata, target=target,
                   limits="Host boundary-controlled production caller bodies and actual metadata reader; math helper and SH4 SQ implementation have separate gates. Full TU compile is optional, no whole-renderer execution or timing.")
     (output / "world-runtime-controls.json").write_text(json.dumps(report, indent=2) + "\n")

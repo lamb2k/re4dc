@@ -18,6 +18,15 @@
 #ifndef RE4DC_PS2_WORLD_MESH
 #define RE4DC_PS2_WORLD_MESH 0
 #endif
+#ifndef RE4DC_SCENERY_SELECT_ONLY
+#define RE4DC_SCENERY_SELECT_ONLY 0
+#endif
+#if RE4DC_SCENERY_SELECT_ONLY != 0 && RE4DC_SCENERY_SELECT_ONLY != 1
+#error SCENERY_SELECT_ONLY must be 0 or 1
+#endif
+#if RE4DC_SCENERY_SELECT_ONLY && !RE4DC_SCENERY_CHUNK
+#error SCENERY_SELECT_ONLY needs SCENERY_CHUNK
+#endif
 #ifndef RE4DC_WORLD_RECT21
 #define RE4DC_WORLD_RECT21 0
 #endif
@@ -2987,172 +2996,7 @@ struct MeshDraw : Emitter {
         std::uint8_t nr,gmask,lo,hi;  // nr 0xff: the whole meshlet; else the strip groups left (gmask: group bits)
         std::uint8_t pad[2];
     };
-    bool chunk_ok()const{
-        return package.lod() && !(lean::kMode&8U) && sg_groups<=8U
-#if RE4DC_PS2_PVS
-            && !pvs_set
-#endif
-#if RE4DC_PS2_INTERIOR_CULL
-            && !pc_mode
-#endif
-#if RE4DC_QUALITY_ASSETS
-            && !skip_clusters
-#endif
-            ;
-    }
-    // Picks appended at out (room for part.meshlet_count); returns how many.
-    __attribute__((noinline)) unsigned chunk_select(Pick* out){
-        const auto& lod=package.part_lods()[part_index];
-        const auto* clusters=package.clusters();const auto* levels=package.levels();const auto* all=package.meshlets();
-        const bool groups=sg && lean_am;
-        unsigned np=0;
-#if RE4DC_SCENERY_CONE
-        // SCENERY_CONE: the eye in grid coordinates (view = M g + t: e = -M^-1 t) and the culled side's sign (part cull
-        // 1 CCW / 2 CW, det(M), and the projection's fixed handedness RE4DC_SCENERY_CONE_SIGN).
-        bool cone_on=sg && cone::pkg==static_cast<const void*>(&package) && p.cull>0U && p.cull<=2U;
-        float ex=0,ey=0,ez=0,csgn=1;
-        if(cone_on){
-            const float* m=mvq;
-            const float c0=m[5]*m[10]-m[6]*m[9],c1=m[6]*m[8]-m[4]*m[10],c2=m[4]*m[9]-m[5]*m[8];
-            const float det=m[0]*c0+m[1]*c1+m[2]*c2;
-            if(!(std::fabs(det)>1e-20f))cone_on=false;
-            else{
-                const float id=-1.0f/det,tx=m[3],ty=m[7],tz=m[11];
-                // e = -adj(M) t / det
-                ex=id*(c0*tx+(m[2]*m[9]-m[1]*m[10])*ty+(m[1]*m[6]-m[2]*m[5])*tz);
-                ey=id*(c1*tx+(m[0]*m[10]-m[2]*m[8])*ty+(m[2]*m[4]-m[0]*m[6])*tz);
-                ez=id*(c2*tx+(m[1]*m[8]-m[0]*m[9])*ty+(m[0]*m[5]-m[1]*m[4])*tz);
-                csgn=float(RE4DC_SCENERY_CONE_SIGN)*(p.cull==1U?1.0f:-1.0f)*(det>0.0f?1.0f:-1.0f);
-            }
-        }
-#endif
-        for(unsigned c=lod.first_cluster;c<lod.first_cluster+lod.cluster_count;++c){
-            const auto& cl=clusters[c];
-            float lo[3],hi[3];
-            for(unsigned a=0;a<3;++a){lo[a]=float(cl.bounds_min[a]);hi[a]=float(cl.bounds_max[a]);}
-            unsigned cin;
-            if(lean_inside){cin=2;++lean::st.skipped;}
-            else if((lean::kMode&2U) && lean_am)cin=lean::box_class(lo,hi,mvq,lean_am,near,cull_far,nullptr);
-            else {
-                const re4dc::render::DrawBounds bounds{{lo[0],lo[1],lo[2]},{hi[0],hi[1],hi[2]}};
-                cin=re4dc::render::group_visible(bounds,mvq,p.projection,p.viewport,near,cull_far,0)?1U:0U;
-            }
-            if(!cin){++stats.clusters_culled;continue;}
-            if(cin==2)++lean::st.cl_inside;
-            ++stats.clusters_visible;
-            float depth=-mvq[11],radius=0;
-            for(unsigned a=0;a<3;++a){
-                depth-=mvq[8+a]*(lo[a]+hi[a])*0.5f;
-                radius+=std::fabs(mvq[8+a])*(hi[a]-lo[a])*0.5f;
-            }
-            depth-=radius;
-            if(depth<near)depth=near;
-            unsigned level=cl.level_count-1;
-            while(level && levels[cl.first_level+level].error*lod_scale>depth)--level;
-#if RE4DC_PS2_WORLD_NONEMPTY_LOD
-            if(ps2)level=re4dc::room::nonempty_lod(levels+cl.first_level,cl.level_count,level);
-#endif
-            ++stats.lod_draws[level<3?level:3];
-            const auto& lv=levels[cl.first_level+level];
-            for(unsigned i=0;i<lv.meshlet_count;++i){
-                const unsigned li=lv.first_meshlet+i;
-                const auto& l=all[li];
-#if defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK
-                if(RE4DC_C20_PREF_ON())RE4DC_C20_PREF(&all[li+1]);   // PREF_WALK: the next meshlet header (bounds)
-#endif
-                unsigned mask=0;
-                if(cin==2)++lean::st.skipped;
-                else if(groups){
-                    const float blo[3]={float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])};
-                    const float bhi[3]={float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])};
-#if RE4DC_SG_SELECT_LEAN
-                    const int mk=re4dc_sg_lean_on?lean::box_mask_lean(blo,bhi,mvq,lean_am,near,cull_far)
-                                                 :lean::box_mask(blo,bhi,mvq,lean_am,near,cull_far);
-#else
-                    const int mk=lean::box_mask(blo,bhi,mvq,lean_am,near,cull_far);
-#endif
-                    if(mk<0){++stats.groups_culled;continue;}
-                    mask=unsigned(mk);
-                }else{
-                    const re4dc::render::DrawBounds bounds{
-                        {float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])},
-                        {float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])}};
-                    if(!re4dc::render::group_visible(bounds,mvq,p.projection,p.viewport,near,cull_far,0)){++stats.groups_culled;continue;}
-                }
-                Pick& pk=out[np++];
-                pk.let=std::uint16_t(li);pk.nr=0xffU;
-                if(groups && mask){
-                    const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*li);
-                    unsigned glo,ghi,culled,nr;std::uint16_t r0[8],r1[8];
-#if RE4DC_SG_SELECT_LEAN
-                    if(re4dc_sg_lean_on){
-                        if(!sg_lp_ok){lean::sg_coef_lean(mvq,near,sg_lp);sg_lp_ok=true;}
-                        nr=lean::sg_select_lean(g,sg_groups,sg_lp,mask,r0,r1,glo,ghi,culled);
-                        ++lean::lst.calls;
-                    }else{
-                        if(!sg_coef_ok){lean::sg_coef(mvq,near,sg_coef);sg_coef_ok=true;}
-                        nr=lean::sg_select(g,sg_groups,sg_coef,mask,r0,r1,glo,ghi,culled);
-                    }
-#else
-                    if(!sg_coef_ok){lean::sg_coef(mvq,near,sg_coef);sg_coef_ok=true;}
-                    nr=lean::sg_select(g,sg_groups,sg_coef,mask,r0,r1,glo,ghi,culled);
-#endif
-                    ++lean::st.sg_tests;
-                    if(culled){
-                        lean::st.sg_culled+=culled;++lean::st.sg_meshlets;
-                        lean::st.sg_vskip+=nr?l.vertex_count-(ghi-glo+1U):l.vertex_count;
-                        // the visible groups as bits: group k (a record whose strip end moves) is kept when its range
-                        // is the next one sg_select returned
-                        unsigned bits=0,prev=0,j=0;
-                        for(unsigned k=0;k<sg_groups && j<nr;++k){
-                            const unsigned gend=g[8*k+6];
-                            if(gend==prev)continue;
-                            if(r0[j]==prev && r1[j]==gend){bits|=1U<<k;++j;}
-                            prev=gend;
-                        }
-                        pk.nr=std::uint8_t(nr);pk.gmask=std::uint8_t(bits);pk.lo=std::uint8_t(glo);pk.hi=std::uint8_t(ghi);
-                    }
-                }
-#if RE4DC_SCENERY_CONE
-                if(cone_on && pk.nr){
-                    // the groups still drawn (all non-empty ones for a whole pick), then each one's cone
-                    const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*li);
-                    const std::uint8_t* cr=cone::rec+8U*sg_groups*li;
-                    unsigned keep=0,prev=0;
-                    for(unsigned q=0;q<sg_groups;++q){const unsigned gend=g[8*q+6];if(gend!=prev)keep|=1U<<q;prev=gend;}
-                    if(pk.nr!=0xffU)keep&=pk.gmask;
-                    unsigned rej=0;
-                    for(unsigned q=0;q<sg_groups;++q){
-                        const std::uint8_t* r=cr+8U*q;
-                        if(!((keep>>q)&1U) || !r[3])continue;
-                        const std::uint16_t* b=g+8*q;
-                        const float vx=0.5f*(float(b[0])+float(b[3]))-ex,vy=0.5f*(float(b[1])+float(b[4]))-ey,
-                                    vz=0.5f*(float(b[2])+float(b[5]))-ez;
-                        const float d=csgn*(float(std::int8_t(r[0]))*vx+float(std::int8_t(r[1]))*vy+float(std::int8_t(r[2]))*vz);
-                        float R;std::memcpy(&R,r+4,4);
-                        ++cone::tests;
-                        if(d>R){const float e=d-R;if(e*e>cone::tab2[r[3]]*(vx*vx+vy*vy+vz*vz))rej|=1U<<q;}
-                    }
-                    if(rej){
-                        keep&=~rej;
-                        unsigned nr=0,vlo=255,vhi=0;
-                        const unsigned was=pk.nr==0xffU?l.vertex_count:unsigned(pk.hi-pk.lo+1U);
-                        for(unsigned q=0;q<sg_groups;++q)if((keep>>q)&1U){
-                            ++nr;const unsigned v0=g[8*q+7]&255U,v1=g[8*q+7]>>8;
-                            if(v0<vlo)vlo=v0;
-                            if(v1>vhi)vhi=v1;
-                        }
-                        cone::rejects+=__builtin_popcount(rej);
-                        if(!nr){--np;++cone::picks_dropped;cone::vskip+=was;continue;}
-                        cone::vskip+=was-(vhi-vlo+1U);
-                        pk.nr=std::uint8_t(nr);pk.gmask=std::uint8_t(keep);pk.lo=std::uint8_t(vlo);pk.hi=std::uint8_t(vhi);
-                    }
-                }
-#endif
-            }
-        }
-        return np;
-    }
+#include "include/scenery_chunk_select.inc"
 #if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT && RE4DC_SCENERY_CONE
     // Called only after this pick's vertices were projected. A geometric front
     // candidate must also survive a bound using the actual cache reciprocals.
@@ -3459,6 +3303,43 @@ struct MeshDraw : Emitter {
     }
 };
 #if RE4DC_SCENERY_CHUNK
+#if RE4DC_SCENERY_SELECT_ONLY
+// Selection borrows placement inputs only for this synchronous call. Replay
+// still owns the existing ChunkPart snapshot and constructs its full emitter.
+// The user-provided constructor deliberately leaves the lazy coefficient
+// arrays uninitialized; their guards are false until chunk_select fills them.
+struct ScenerySelector {
+    using Pick=MeshDraw::Pick;
+    const re4dc::room::MeshPackage& package;
+    const Re4dcModelPart& p;
+    const float* mvq;
+    float near,cull_far,lod_scale=0;
+    unsigned part_index=0;
+    const float* lean_am=nullptr;
+    const std::uint8_t* sg=nullptr;
+    unsigned sg_groups=0;
+    const unsigned* ps2=nullptr;
+#if RE4DC_PS2_PVS
+    const std::uint8_t* pvs_set=nullptr;
+#endif
+#if RE4DC_PS2_INTERIOR_CULL
+    unsigned pc_mode=0;
+#endif
+#if RE4DC_QUALITY_ASSETS
+    std::uint64_t skip_clusters=0;
+#endif
+    bool lean_inside=false,sg_coef_ok=false;
+    float sg_coef[40] __attribute__((aligned(8)));
+#if RE4DC_SG_SELECT_LEAN
+    bool sg_lp_ok=false;
+    lean::SgPlane sg_lp[5];
+#endif
+    ScenerySelector(const Re4dcModelPart& source,const re4dc::room::MeshPackage& mesh,
+                    const float* matrix,float clip_near,float reject_far)
+        :package(mesh),p(source),mvq(matrix),near(clip_near),cull_far(reject_far){}
+#include "include/scenery_chunk_select.inc"
+};
+#endif
 #pragma GCC pop_options
 #endif
 #endif
@@ -6720,6 +6601,52 @@ int ps2_pass(unsigned pass,float zfar){
                 re4dc_source_world_binding_failed();++c.aborts;return -1;
             }
 #endif
+#if RE4DC_SCENERY_SELECT_ONLY
+            {
+                ScenerySelector d{part,pk,mvq,near,cull_far};
+                d.part_index=index;d.lod_scale=lod_scale;
+                d.lean_inside=lean_in==2;d.lean_am=(lean::kMode&2U)?amq:nullptr;
+                d.sg=ps2w.sg;d.sg_groups=ps2w.sg_groups;
+#if RE4DC_PS2_PVS
+                d.pvs_set=pvs_cur;
+#endif
+#if RE4DC_PS2_INTERIOR_CULL
+                d.pc_mode=pc_state?1U:0U;
+#endif
+                const auto& selected_part=pk.parts()[index];
+                if(d.chunk_ok() && selected_part.meshlet_count<=kChunkPicks){
+#if RE4DC_PS2_VERTEX_ALPHA
+                    const bool marked=(meta.reserved&1U)!=0;
+                    // Keep the original lazy LUT preparation at selection.
+                    if(marked && ps2w.lut)(void)ps2_vertex_alpha_lut();
+#else
+                    const bool marked=false;
+#endif
+#if defined(RE4DC_FOLIAGE_TRIM)
+                    const bool foliage_near=foliage_pass!=meta.pass && foliage::kNear<cull_far;
+#endif
+#include "include/scenery_part_far.inc"
+                    const unsigned key[6]={meta.crc,meta.fnv,meta.width,meta.height,pass,meta.cull};d.ps2=key;
+#if RE4DC_PS2_INTERIOR_ACTORS && RE4DC_PS2_INTERIOR_CULL==2
+                    if(!pass && !pcact::have_key){std::memcpy(pcact::key,key,sizeof(key));pcact::key[5]=0;pcact::have_key=true;}
+#endif
+                    // Preserve the original capacity flush and queue snapshot.
+                    if(nctx==kChunkParts || npk+selected_part.meshlet_count>kChunkPicks){if(chunk_flush()<0)return -1;}
+                    ChunkPart& x=cctx[nctx++];
+                    std::memcpy(x.mvq,mvq,sizeof(mvq));std::memcpy(x.key,key,sizeof(key));
+                    x.cull_far=d.cull_far;x.lod_scale=lod_scale;x.index=index;x.cull=meta.cull;
+#if RE4DC_PS2_PVS
+                    x.placement=i;
+#endif
+                    x.marked=marked;x.first=npk;
+#if RE4DC_SKY_ANY
+                    x.sky=std::uint8_t(re4dc_ps2_sky_header);
+#endif
+                    x.count=d.chunk_select(cpk+npk);npk+=x.count;
+                    continue;
+                }
+            }
+#endif
 #if RE4DC_PS2_VERTEX_ALPHA
             const bool marked=(meta.reserved&1U)!=0; // a --vertex-alpha tr4 part: ARGB4444 corners, alpha kept
             MeshDraw d{{part,{},near,far},pk,pk.parts()[index],
@@ -6745,25 +6672,7 @@ int ps2_pass(unsigned pass,float zfar){
             d.sg=ps2w.sg;d.sg_groups=ps2w.sg_groups;
 #endif
 #endif
-#if defined(RE4DC_FOLIAGE_TRIM)
-            if(foliage_near){
-                d.cull_far=foliage::kNear; // the placement's inside test was against the pass far: test its clusters
-#if RE4DC_PS2_WORLD_LEAN
-                d.lean_inside=false;
-#endif
-            }
-#endif
-#if defined(RE4DC_TRANS_POLICY) && RE4DC_NATIVE_FOG
-            {   // TRANS_POLICY FAR: clusters past the room fog's threshold depth for this part's class are not drawn
-                const float tf=trans::far_of(meta,index,trans_pass);
-                if(tf>near && tf<d.cull_far){
-                    d.cull_far=tf;
-#if RE4DC_PS2_WORLD_LEAN
-                    d.lean_inside=false;
-#endif
-                }
-            }
-#endif
+#include "include/scenery_part_far.inc"
             std::memcpy(d.mvq,mvq,sizeof(mvq));std::memcpy(d.mv,mvq,sizeof(mvq));
             const unsigned key[6]={meta.crc,meta.fnv,meta.width,meta.height,pass,meta.cull};d.ps2=key;
 #if RE4DC_SCENERY_PIECE_STATE
@@ -6777,6 +6686,7 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #if RE4DC_SCENERY_CHUNK
             // SCENERY_CHUNK: select now, emit with the run (chunk_flush), in order.
+#if !RE4DC_SCENERY_SELECT_ONLY
             if(d.chunk_ok() && d.part.meshlet_count<=kChunkPicks){
                 if(nctx==kChunkParts || npk+d.part.meshlet_count>kChunkPicks){if(chunk_flush()<0)return -1;}
                 ChunkPart& x=cctx[nctx++];
@@ -6792,6 +6702,7 @@ int ps2_pass(unsigned pass,float zfar){
                 x.count=d.chunk_select(cpk+npk);npk+=x.count;
                 continue;
             }
+#endif
             if(chunk_flush()<0)return -1;
 #endif
 #if RE4DC_PS2_INTERIOR_CULL
