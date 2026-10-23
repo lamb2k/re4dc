@@ -183,6 +183,20 @@ $(OBJDIR)/src/game/espgen45.o: GAME_CPPFLAGS += -DRE4DC_WATER_PS2=1 -DRE4DC_WATE
 $(OBJDIR)/src/game/Espgen42.o $(OBJDIR)/src/game/espgen.o: GAME_CPPFLAGS += -DRE4DC_WATER_PS2=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_WATER_PS2=1
 endif
+# WATER_PS2_EXT=1 (lane fix-water-traps23 2026-10-23, GitHub #55 item 2; render only, default 0; needs WATER_PS2=1): the
+# rivers of r10c / r10d / r10e and the r10c waterfall curtains as the PS2 draws them (SST Esp08 world planes of the room
+# EFF: dark base 0xf7, noise 0xfe / 0xef, water 0xf2, falling-water streaks 0xc5), from src/game/water_ps2_ext.inc
+# (tools/d367/water/water_ps2_ext.py, read from the PS2 disc). Same native water layer as WATER_PS2, rows carry their
+# plane axes (vertical / tilted waterfall planes). WATER_PS2_EXT_ROOMS: bit 0 r10c, 1 r10d, 2 r10e (default 7).
+# Effect slots, generators, areas and Rnd() untouched (logic STRICT). Log: "water ext: ... not loaded" once per row.
+WATER_PS2_EXT ?= 0
+WATER_PS2_EXT_ROOMS ?= 7
+ifneq ($(WATER_PS2_EXT),0)
+ifneq ($(WATER_PS2_EXT)$(WATER_PS2),11)
+$(error WATER_PS2_EXT must be 0 or 1 and needs WATER_PS2=1)
+endif
+$(OBJDIR)/src/game/espgen45.o: GAME_CPPFLAGS += -DRE4DC_WATER_PS2_EXT=1 -DRE4DC_WATER_PS2_EXT_ROOMS=$(WATER_PS2_EXT_ROOMS)
+endif
 # PS2_CH1_ENEMY=1 (lane alivecap 2026-10-15, user 10-15 "the PS2 logic holistically for enemy spawns in chapter 1, with
 #   our game cutting out more when it hits our threshold"; CHANGES GAMEPLAY by design; default 0 = off): one umbrella
 #   for every PS2 enemy-spawn rule of the stage 1 route (1-1 .. 2-1: r100-r10e, r117-r119, r11a, r11b; table in

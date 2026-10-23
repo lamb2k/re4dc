@@ -244,6 +244,9 @@ static int EspLakeNightOwner(u32 owner)
 #if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
 extern "C" int re4dc_rtt_capturing();
 #endif
+#if defined(RE4DC_TRAP_FX) && RE4DC_TRAP_FX
+extern "C" void re4dc_log(const char* fmt, ...);
+#endif
 static int EspSpriteEligible(cEsp* esp)
 {
 #if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
@@ -262,6 +265,22 @@ static int EspSpriteEligible(cEsp* esp)
         if ((re4dc_lake_fx_seen++ & 0x3FF) == 0) {
             re4dc_lake_fx_log("lake fx: frame=%u room=%x seen=%u id=%x ok=%d\n", (unsigned) pG->Frame_cnt,
                               (unsigned) G_ROOM_ID, (unsigned) re4dc_lake_fx_seen, (unsigned) esp->m_Id, ok);
+        }
+        return ok;
+    }
+#endif
+#if defined(RE4DC_TRAP_FX) && RE4DC_TRAP_FX
+    // TRAP_FX (effects30.mk; lane fix-water-traps23, GitHub #55 item 8): the tripwire bombs' effects (em2a's EFF, effect
+    // owner 0x22: the blast em2aTrap2Bomb starts with EstSet 0x22 0 / 4 / 6, and the armed trap's own sprites) were not
+    // on the owner whitelist, so the bombs on doors and trees went off with no explosion. Admitted here with the same
+    // mask / render-target / blend checks. Draw time only: no effect state, spawn or Rnd() change.
+    if (owner == 0x22) {
+        static u32 s_trap_room = ~0U;
+        const int ok = !((esp->m_Tool_flg & (0x4000 | 0x10000)) || (esp->m_Flg & 0x10) || esp->xA4 != 1);
+        if (s_trap_room != G_ROOM_ID) {
+            s_trap_room = G_ROOM_ID;
+            re4dc_log("trap fx: room=%03x first owner-22 sprite id=%02x tex=%02x ok=%d\n", (unsigned) G_ROOM_ID,
+                      (unsigned) esp->m_Id, (unsigned) esp->m_Tex_id, ok);
         }
         return ok;
     }

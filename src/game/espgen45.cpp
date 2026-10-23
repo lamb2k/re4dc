@@ -646,9 +646,42 @@ static int WaterPs2RoomOn(u32 room)
     return 0;
 }
 
+#if defined(RE4DC_WATER_PS2_EXT) && RE4DC_WATER_PS2_EXT
+// WATER_PS2_EXT (lane fix-water-traps23, 2026-10-23, GitHub #55 item 2; render only, default 0): the rivers of r10c /
+// r10d / r10e and the r10c waterfall curtains as the PS2 draws them (SST Esp08 world planes of the room EFF, generated
+// into water_ps2_ext.inc by tools/d367/water/water_ps2_ext.py). Same native layer as the rows above; each row carries
+// its plane axes, so tilted and vertical planes (the waterfall) draw too. Rows with an area draw while that effect area
+// is on (EffGetAreaState, read only), the others always (these rooms have no water generator), and only while the SST
+// entry's display flag is on (GetSstDispFlag: r10c switches its pools when the dam is drained). No effect slot,
+// generator, area or Rnd() state is touched. WATER_PS2_EXT_ROOMS: bit 0 r10c, 1 r10d, 2 r10e (default 7).
+extern "C" void re4dc_log(const char* fmt, ...);
+struct WaterPs2ExtRow {
+    u16 room;
+    s16 area;
+    f32 p[3], ax[3], az[3];   // centre, plane axis x (sprite x), plane axis z (sprite y), world
+    f32 hx, hz, ru, rv, su, sv;
+    u32 argb;
+    u8 tex, src, dst, level, rate, ptn0, disp;   // disp: the SST entry's display flag (GetSstDispFlag); 0xff none
+};
+extern "C" int GetSstDispFlag(u32 id);   // est.cpp (read only)
+#include "water_ps2_ext.inc"
+#ifndef RE4DC_WATER_PS2_EXT_ROOMS
+#define RE4DC_WATER_PS2_EXT_ROOMS 7
+#endif
+static int WaterPs2ExtRoomOn(u32 room)
+{
+    return room >= 0x10c && room <= 0x10e && ((RE4DC_WATER_PS2_EXT_ROOMS >> (room - 0x10c)) & 1);
+}
+#endif
+
 // 1 when the current room has PS2 water rows (and is in WATER_PS2_ROOMS).
 extern "C" int re4dc_water_ps2_rows(void)
 {
+#if defined(RE4DC_WATER_PS2_EXT) && RE4DC_WATER_PS2_EXT
+    if (WaterPs2ExtRoomOn(G_ROOM_ID)) {
+        return 1;
+    }
+#endif
     if (!WaterPs2RoomOn(G_ROOM_ID)) {
         return 0;
     }
@@ -775,6 +808,89 @@ extern "C" void re4dc_water_ps2_draw(void*)
         L.dst = r.dst;
         re4dc_water_layer(&L);
     }
+#if defined(RE4DC_WATER_PS2_EXT) && RE4DC_WATER_PS2_EXT
+    if (!WaterPs2ExtRoomOn(G_ROOM_ID)) {
+        return;
+    }
+    static u32 s_ext_room = 0, s_ext_missing = 0, s_ext_on = ~0U;   // missing pictures once per room; drawn-row mask
+    if (s_ext_room != G_ROOM_ID) {
+        s_ext_room = G_ROOM_ID;
+        s_ext_missing = 0;
+        s_ext_on = ~0U;
+    }
+    u32 on_mask = 0;
+    const f32 ey = vi[1][3];
+    for (u32 i = 0; i < sizeof(kWaterPs2Ext) / sizeof(kWaterPs2Ext[0]); ++i) {
+        const WaterPs2ExtRow& r = kWaterPs2Ext[i];
+        if (r.room != G_ROOM_ID || level > r.level) {
+            continue;
+        }
+        if ((r.area >= 0 && !EffGetAreaState(r.area)) || (r.disp != 0xFF && !GetSstDispFlag(r.disp))) {
+            continue;
+        }
+        on_mask |= 1u << (i & 31);
+        memset(&L.image, 0, sizeof(L.image));
+        if (r.tex != 0xF7) {
+            const EspTexWk* tw = &g_pEspSys->Esp_tex_tbl[r.tex];
+            if (tw->Owner == 0xD2 || tw->pTpl == NULL || tw->pTpl->numDescriptors == 0) {
+                if (!(s_ext_missing & (1u << (i & 31)))) {
+                    s_ext_missing |= 1u << (i & 31);
+                    re4dc_log("water ext: room=%03x row %u texture %02x not loaded (row skipped)\n", (unsigned) G_ROOM_ID,
+                              (unsigned) i, (unsigned) r.tex);
+                }
+                continue;
+            }
+            WaterPs2Row pr;
+            memset(&pr, 0, sizeof(pr));
+            pr.rate = r.rate;
+            pr.ptn0 = r.ptn0;
+            const TEXDescriptor* td = TEXGet(tw->pTpl, WaterPs2Pattern(pr, tw, tw->pTpl->numDescriptors, tick));
+            const TEXHeader* th = td->textureHeader;
+            L.image.pixels = th->data;
+            L.image.width = th->width;
+            L.image.height = th->height;
+            L.image.format = th->format;
+            L.image.palette_format = 0xffffffffU;
+            if (td->CLUTHeader) {
+                L.image.palette = td->CLUTHeader->data;
+                L.image.palette_format = td->CLUTHeader->format;
+                L.image.palette_bytes = td->CLUTHeader->numEntries * 2;
+            }
+        }
+        const f32 ny[3] = {r.az[1] * r.ax[2] - r.az[2] * r.ax[1], r.az[2] * r.ax[0] - r.az[0] * r.ax[2],
+                           r.az[0] * r.ax[1] - r.az[1] * r.ax[0]};
+        Mtx m = {{r.ax[0], ny[0], r.az[0], r.p[0]}, {r.ax[1], ny[1], r.az[1], r.p[1]}, {r.ax[2], ny[2], r.az[2], r.p[2]}};
+        Mtx mv;
+        PSMTXConcat(vm, m, mv);
+        memcpy(L.mv, mv, sizeof(L.mv));
+        const f32 dx = ex - r.p[0], dy = ey - r.p[1], dz = ez - r.p[2];
+        L.eye_x = dx * r.ax[0] + dy * r.ax[1] + dz * r.ax[2];
+        L.eye_z = dx * r.az[0] + dy * r.az[1] + dz * r.az[2];
+        L.half_x = r.hx;
+        L.half_z = r.hz;
+        L.u_per_mm = r.ru;
+        L.v_per_mm = r.rv;
+        L.u0 = r.su * (f32) tick;
+        L.u0 -= (f32) (s32) L.u0;
+        L.v0 = r.sv * (f32) tick;
+        L.v0 -= (f32) (s32) L.v0;
+        u32 a = r.argb >> 24, cr = (r.argb >> 16) & 0xFF, cg = (r.argb >> 8) & 0xFF, cb = r.argb & 0xFF;
+        if (fin_on) {
+            cr = cr * fin.r >> 8;
+            cg = cg * fin.g >> 8;
+            cb = cb * fin.b >> 8;
+            a = a * fin.a >> 8;
+        }
+        L.argb = a << 24 | cr << 16 | cg << 8 | cb;
+        L.src = r.src;
+        L.dst = r.dst;
+        re4dc_water_layer(&L);
+    }
+    if (on_mask != s_ext_on) {   // the rows whose area / display flag is on (table index bits), on each change
+        s_ext_on = on_mask;
+        re4dc_log("water ext: room=%03x rows on %08x\n", (unsigned) G_ROOM_ID, (unsigned) on_mask);
+    }
+#endif
 }
 
 // EspgenTrans (espgen.cpp), once per drawn image: the room's PS2 water as one OT entry (layer 0x10, the GameCube water
