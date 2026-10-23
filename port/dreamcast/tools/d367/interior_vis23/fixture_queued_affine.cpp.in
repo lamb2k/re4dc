@@ -1,0 +1,219 @@
+// Generated from current production bodies by check_queued_affine.py.
+// Synthetic storage, affine arithmetic, scene and material API boundaries only.
+#include <cstddef>
+#include <cstdio>
+#include <cstdlib>
+#include <cstdarg>
+#include <limits>
+@PROOF_HEADER@
+#define RE4DC_PS2_PVS 1
+#define RE4DC_PS2_WORLD_DYNAMIC 1
+#define RE4DC_PS2_WORLD_PARTS 1
+#define RE4DC_PS2_WORLD_ROOMS 1
+#define RE4DC_PS2_WORLD_TRANSITION_OWNER 0
+#define RE4DC_PS2_WORLD_R11F_OWNER 0
+#define RE4DC_PS2_PLACE_GATE 1
+#define RE4DC_PS2_AREA_HIDE 1
+#define RE4DC_MESH_DIRECT 1
+
+unsigned ui_frame=11,scene_id=7;
+bool scene_ok=true,opaque_ok=true,inverse_ok=true;
+unsigned re4dc_ui_frame(){return ui_frame;}
+void re4dc_log(const char*,...){}
+void re4dc_static_free(void*){}
+void identity(float* a){std::memset(a,0,48);a[0]=a[5]=a[10]=1;}
+// Arithmetic boundary mocks are intentionally limited to rigid translations.
+void concat(const float* a,const float* b,float* out){
+    float q[12];
+    for(unsigned r=0;r<3;++r){
+        for(unsigned c=0;c<3;++c)q[4*r+c]=a[4*r]*b[c]+a[4*r+1]*b[4+c]+a[4*r+2]*b[8+c];
+        q[4*r+3]=a[4*r]*b[3]+a[4*r+1]*b[7]+a[4*r+2]*b[11]+a[4*r+3];
+    }
+    std::memcpy(out,q,48);
+}
+bool inverse(const float* a,float* b){identity(b);b[3]=-a[3];b[7]=-a[7];b[11]=-a[11];return inverse_ok;}
+namespace gate { unsigned room=0x10d;constexpr unsigned kMax=32;unsigned owned[1]{},cur[1]{},want[1]{}; }
+namespace area {bool cur=false,hidden=false;bool hide(unsigned){return hidden;} }
+struct Placement {float affine[12];unsigned placement=0;};
+struct World {void* storage;void* parts;unsigned room,nplacements;Placement placements[2];float view[12];} ps2w;
+@DYN@
+@INTACT@
+namespace re4dc::vp {constexpr unsigned kCacheSlots=256;}
+struct pvr_vertex_t {float x,y,z;};
+namespace pvs {unsigned generation=3;const unsigned char* cur=nullptr;bool can_cut(unsigned);}
+unsigned re4dc_ps2_pvs_on=1;
+extern "C" int re4dc_pvs23_scene(unsigned out[2]){out[0]=ui_frame;out[1]=scene_id;return scene_ok;}
+extern "C" int re4dc_pvs23_opaque_ready(const unsigned*,unsigned){return opaque_ok;}
+namespace proof23 {
+using re4dc::pvsproof::Panel;using re4dc::pvsproof::Certificate;
+const Certificate* cert=nullptr;
+re4dc::pvsproof::Receipts receipts;
+float key[27]{};
+unsigned checked_frame=~0U,checked_generation=~0U,commits=0;
+bool valid=false;
+@SOURCES@
+@SYNC@
+}
+@OBSERVE@
+@COMMIT@
+@CUT@
+
+namespace re4dc::room {struct Meshlet {unsigned vertex_count=4,strip_bytes=5;};}
+const std::uint8_t healthy_strips[5]={4,0,1,2,3};
+std::uint8_t strip_data[5];
+re4dc::room::Meshlet meshlets[1];
+struct Package {
+    const re4dc::room::Meshlet* meshlets()const{return ::meshlets;}
+    const std::uint8_t* strip_begin(const re4dc::room::Meshlet&)const{return strip_data;}
+};
+struct MeshDraw {
+    const unsigned* ps2=nullptr;bool direct=true;void* sq=reinterpret_cast<void*>(1);
+    unsigned part_index=0,pvs_placement=~0U,pvs_pending[3]={~0U,~0U,0},limit=256;
+    pvr_vertex_t* cache=nullptr;std::uint8_t* outcodes=nullptr;
+    Package package;struct {unsigned cull=0;} p;
+    unsigned used=0,input=0,output=0,slots=0,primed=0;bool bound=false,submitted=false;
+    float mvq[12]{};
+    @FINISH@
+    @OBSERVED@
+    @RESTART@
+};
+struct ChunkPart {unsigned placement=~0U;float mvq[12]{};};
+struct Capture {unsigned placement=~0U;bool drawn=false;float mvq[12]{};};
+Capture capture(unsigned path){
+    const unsigned i=0;const auto& pl=ps2w.placements[i];
+    struct {unsigned placements=0;} c;
+    Capture result;
+    do {
+@SELECT@
+        float mvq[12];concat(ps2w.view,RE4DC_PS2_AFFINE,mvq);
+        ChunkPart x;MeshDraw d;
+        if(path==0){@QUEUE_SELECT@ result.placement=x.placement;}
+        else if(path==1){@QUEUE_LEGACY@ result.placement=x.placement;}
+        else {@DIRECT@ result.placement=d.pvs_placement;}
+        std::memcpy(result.mvq,mvq,sizeof(mvq));result.drawn=true;
+    } while(false);
+#undef RE4DC_PS2_AFFINE
+    return result;
+}
+
+unsigned checks=0;
+void require(bool condition,const char* what){++checks;if(!condition){std::fprintf(stderr,"FAIL: %s\n",what);std::exit(1);}}
+struct Object {std::uint32_t flag=3,serial=19;float mat[12]{};} object;
+struct Part {float pose[9]{};float root[12]{};} part;
+struct RootCell {dyn::PartPose part;float rest[12];float inv[12];} rootcell;
+dyn::Slot slot;
+std::uint8_t ids[2]={0,255};
+std::uint8_t pvs_set=1,codes[4]{};
+pvr_vertex_t vertices[4]={{0,0,1},{100,0,1},{0,100,1},{100,100,1}};
+const unsigned material[6]={1,2,64,64,0,0};
+const re4dc::pvsproof::Panel panel={0,0,0,0,0,{0,1,2,3,2,1}};
+const re4dc::pvsproof::Certificate certificate={0x10d,1,2,3,4,5,0,1,4,&panel,{1000,1000,1000}};
+void reset(bool root=false){
+    ++ui_frame;scene_ok=opaque_ok=inverse_ok=true;
+    gate::owned[0]=gate::cur[0]=gate::want[0]=0;area::cur=area::hidden=false;
+    ps2w.storage=ps2w.parts=&object;ps2w.room=0x10d;ps2w.nplacements=2;
+    identity(ps2w.view);for(auto& p:ps2w.placements)identity(p.affine);
+    ps2w.placements[0].placement=0;ps2w.placements[1].placement=1;
+    object={};object.flag=root?7:3;object.serial=19;identity(object.mat);
+    part={};identity(part.root);rootcell={};rootcell.part.part=reinterpret_cast<unsigned char*>(&part);
+    identity(rootcell.rest);identity(rootcell.inv);
+    slot={};slot.obj=reinterpret_cast<unsigned char*>(&object);slot.serial=19;identity(slot.rest);
+    slot.parts=&rootcell.part;slot.nparts=1;slot.pose_offset=offsetof(Part,pose);
+#if RE4DC_PS2_WORLD_ROOT_POSE
+    slot.root_matrix_offset=root?offsetof(Part,root)+1:0;
+#else
+    (void)root;
+#endif
+    dyn::ids=ids;dyn::nids=2;dyn::slots=&slot;dyn::nslots=1;
+    std::memset(dyn::slot_of,dyn::kNone,sizeof(dyn::slot_of));dyn::slot_of[0]=0;
+    dyn::off_flag=offsetof(Object,flag);dyn::off_serial=offsetof(Object,serial);dyn::off_mat=offsetof(Object,mat);
+    dyn::frame=~0U;dyn::nmoved=0;std::memset(dyn::state,0,sizeof(dyn::state));
+    pvs::cur=&pvs_set;proof23::cert=&certificate;proof23::valid=true;
+    proof23::checked_frame=ui_frame;proof23::checked_generation=pvs::generation;proof23::receipts.clear();
+    std::memset(codes,0,sizeof(codes));std::memcpy(strip_data,healthy_strips,5);meshlets[0]={};
+}
+bool intact(){const unsigned char field[2]={0,0};return re4dc_ps2_placements_intact(0x10d,field,1);}
+bool healthy(){return re4dc::pvsproof::panel_sent(panel,vertices,codes,4,strip_data,5,0,256);}
+void move(bool root,float x){if(root)part.root[3]=x;else object.mat[3]=x;}
+// Same-ID rebinding/reset is an explicit mocked ownership boundary. We reset
+// the real query's slot/cache inputs; captured draw data is left untouched.
+void rebind(){dyn::state[0]=0;slot.source=false;identity(slot.rest);identity(object.mat);identity(part.root);}
+bool emit(const Capture& x,MeshDraw& e,bool success=true){
+    e.chunk_restart();
+    @REPLAY@
+    // Replay uses x.placement and the captured matrix together.
+    e.part_index=0;e.ps2=material;e.cache=vertices;e.outcodes=codes;
+    std::memcpy(e.mvq,x.mvq,48);
+    if(x.drawn)e.pvs_observed(meshlets[0]);
+    e.pvs_finish(success);
+    return pvs::can_cut(1);
+}
+void moved_controls(bool root,unsigned path){
+    reset(root);move(root,2);require(dyn::query(0)==2,"moved query");
+    move(root,0);require(intact(),"fresh restore passes actual intact");
+    require(dyn::query(0)==2,"same-frame query retains moved affine");
+    require(healthy(),"healthy moved panel passes actual panel_sent");
+    auto queued=capture(path);require(queued.drawn && queued.mvq[3]==2,"geometry selected cached movement");
+    MeshDraw e;
+    auto old=queued;old.placement=0;
+    require(emit(old,e),"old-index control can observe commit and cut");
+    proof23::receipts.clear();
+    require(!emit(queued,e),"moved queue cannot observe or cut after fresh restore");
+    require(queued.placement==~0U,"selected moved affine has sentinel on every path");
+    rebind();require(intact() && dyn::state[0]==0,"same-id rebind restored and cache unknown");
+    require(!emit(queued,e),"rebound slot cannot rehabilitate moved queue");
+    auto baked=capture(path);require(baked.placement==0 && baked.mvq[3]==0,"fresh baked capture retains source index");
+    move(root,7);rebind();require(emit(baked,e),"baked capture remains safe through later rebind");
+    // Reuse transitions moved-sentinel -> baked-index -> empty, and aborted
+    // submission. Actual restart/finish bodies clear pending witnesses.
+    proof23::receipts.clear();e.pvs_pending[2]=1;
+    require(!emit(queued,e) && !e.pvs_pending[2],"reused moved emitter clears pending");
+    require(emit(baked,e),"reused baked emitter observes");
+    proof23::receipts.clear();auto empty=baked;empty.drawn=false;
+    require(!emit(empty,e) && !e.pvs_pending[2],"reused empty emitter has no receipt");
+    require(!emit(baked,e,false),"aborted submission never commits");
+}
+void other_controls(){
+    reset();MeshDraw e;auto baked=capture(0);
+    require(emit(baked,e),"stable rest positive");require(emit(baked,e),"stable rest repeated positive");
+    reset();slot.obj=nullptr;baked=capture(0);require(emit(baked,e),"unbound baked positive");
+    reset();object.serial++;baked=capture(0);require(emit(baked,e),"serial reuse selects baked positive");
+    reset();object.flag=1;require(dyn::query(0)==1 && !intact() && !capture(0).drawn,"hidden source refuses");
+    object.flag=3;require(intact() && !capture(0).drawn,"cached hidden remains skipped after restore");
+    reset();part.pose[0]=1;require(dyn::query(0)==3 && !intact() && !capture(0).drawn,"changed part source hierarchy refuses");
+    part.pose[0]=0;require(!intact() && !capture(0).drawn,"cached source hierarchy refuses after part restore");
+    reset();baked=capture(0);require(emit(baked,e),"source receipt before failure");
+    object.flag=1;require(!pvs::can_cut(1) && !proof23::receipts.committed,"source failure clears receipt");
+    reset();gate::owned[0]=1;require(!intact(),"gate source refuses");
+    reset();area::cur=area::hidden=true;require(!intact(),"area source refuses");
+    reset();ps2w.storage=nullptr;require(!intact(),"absent package refuses");
+    reset();baked=capture(0);opaque_ok=false;require(!emit(baked,e),"material refusal cannot commit");
+    reset();baked=capture(0);scene_ok=false;require(!emit(baked,e),"closed scene cannot commit");
+    reset();baked=capture(0);require(emit(baked,e),"receipt before next-frame reset");
+    ++ui_frame;require(!pvs::can_cut(1) && !proof23::receipts.committed,"next frame invalidates");
+    reset();baked=capture(0);require(emit(baked,e),"receipt before scene change");
+    ++scene_id;require(!pvs::can_cut(1),"scene transition invalidates");
+    reset();baked=capture(0);require(emit(baked,e),"receipt before generation change");
+    ++pvs::generation;require(!pvs::can_cut(1),"package generation invalidates");
+    reset();baked=capture(0);require(emit(baked,e),"receipt before key change");
+    proof23::key[0]=1;require(!pvs::can_cut(1),"view key invalidates");
+    reset();codes[0]=0x10;require(!healthy(),"clipped panel rejected");
+    reset();strip_data[0]=3;meshlets[0].strip_bytes=4;require(!re4dc::pvsproof::panel_sent(panel,vertices,codes,4,strip_data,4,0,256),"missing triangle rejected");
+    reset();require(!re4dc::pvsproof::panel_sent(panel,vertices,codes,4,strip_data,5,0,3),"oversized strip rejected");
+    reset();require(!re4dc::pvsproof::panel_sent(panel,vertices,codes,4,strip_data,5,2,256),"reversed culled panel rejected");
+#if RE4DC_PS2_WORLD_ROOT_POSE
+    reset(true);slot.root_matrix_offset=~0U;require(dyn::query(0)==1 && !intact(),"refused root witness");
+    reset(true);slot.parts=nullptr;require(dyn::query(0)==1 && !intact(),"absent root witness");
+    reset(true);++object.serial;require(dyn::query(0)==1 && !intact(),"root serial reuse refuses");
+    reset(true);part.root[0]=std::numeric_limits<float>::quiet_NaN();require(dyn::query(0)==1,"invalid root matrix refuses");
+#endif
+}
+int main(){
+    for(unsigned path=0;path<3;++path){moved_controls(false,path);
+#if RE4DC_PS2_WORLD_ROOT_POSE
+        moved_controls(true,path);
+#endif
+    }
+    other_controls();
+    std::printf("PASS: %u source-extracted assertions; lean=%u root=%u; host boundaries only\n",checks,RE4DC_PS2_WORLD_LEAN,RE4DC_PS2_WORLD_ROOT_POSE);
+}
