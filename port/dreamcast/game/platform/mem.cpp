@@ -157,7 +157,10 @@ void* re4dc_gx_fifo(void)
 // The boot log also lives in RAM (a ring the capture tooling reads out of the
 // emulator process: evidence read_log.py), because the serial console is not
 // captured by the Flycast launcher used here.
-#define RE4DC_LOG_SIZE 0x10000
+#ifndef RE4DC_LOG_TRIM
+#define RE4DC_LOG_TRIM 0
+#endif
+#define RE4DC_LOG_SIZE (0x10000 - RE4DC_LOG_TRIM)
 volatile unsigned long re4dc_log_magic __attribute__((aligned(32))) = 0x52453444;  // "RE4D"
 volatile unsigned long re4dc_log_head;   // bytes written so far (wraps in the ring)
 volatile unsigned long re4dc_stage;      // last platform stage reached (re4dc_set_stage)

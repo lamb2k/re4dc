@@ -19,6 +19,7 @@
 #include <dc/pvr.h>
 #include <cstdint>
 #include <cstring>
+#include <cstdio>
 #include "re4dc_platform.h"
 
 namespace {
@@ -32,10 +33,20 @@ std::uintptr_t base; std::uint32_t pool, free_bytes;
 bool free_place;   // set only inside re4dc_vram_pages_malloc_any: this request needs no page
 #endif
 unsigned fails, peak_alloc, peak_free;
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+// OVL_GUARD=3 (lane mipfault22, console diagnostic): the last 12 texture-RAM operations for the crash screen.
+// op: A alloc / F free (VRAM offset, bytes, arena class, caller), U upload (key crc, VRAM bytes, main-RAM package).
+struct RingOp { char op; std::uint8_t cls; std::uint32_t a, b, c; };
+RingOp g_ring[12]; unsigned g_ring_n;
+inline void ring(char op, unsigned cls, std::uint32_t a, std::uint32_t b, std::uint32_t c) {
+    RingOp& r = g_ring[g_ring_n++ % 12]; r.op = op; r.cls = std::uint8_t(cls); r.a = a; r.b = b; r.c = c;
+}
+#endif
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
 // VRAM_ROOM_ARENA (Makefile; lane mipmap22): two-ended placement. Class 2 (long-lived: core keys, glyph atlas, overlay
 // slab) takes the highest place that fits, class 1 (room-lifetime textures) the lowest; class 0 (dynamic: movie, door,
 // lake, probes) keeps best fit in between. native_ui.cpp sets re4dc_vram_arena_class around its allocations.
+#if !defined(RE4DC_VRAM_ROOM_ARENA_NO_TOP) || !RE4DC_VRAM_ROOM_ARENA_NO_TOP
 // Highest page-rule placement of `len` bytes in extent e, or ~0 if it does not fit.
 std::uint32_t place_high(const Extent& e, std::uint32_t len) {
     if(len > e.len) return ~0U;
@@ -49,6 +60,7 @@ std::uint32_t place_high(const Extent& e, std::uint32_t len) {
     if(at < base + e.off) return ~0U;
     return std::uint32_t(at - base);
 }
+#endif
 #endif
 #if defined(RE4DC_TEX_CHECK) && RE4DC_TEX_CHECK == 2
 // TEX_CHECK=2 (test only): free texture RAM reads magenta (RGB565 0xF81F), so a draw from never-written or
@@ -118,6 +130,16 @@ extern "C" {
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
 volatile unsigned re4dc_vram_arena_class;
 #endif
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+void re4dc_vram_ring_upload(std::uint32_t crc, std::uint32_t bytes, const void* package) {
+    irq_disable_scoped(); ring('U', 0, crc, bytes, std::uint32_t(reinterpret_cast<std::uintptr_t>(package)));
+}
+int re4dc_vram_ring_line(unsigned age, char* out, unsigned size) {
+    if(age >= 12 || age >= g_ring_n) return 0;
+    const RingOp& r = g_ring[(g_ring_n - 1 - age) % 12];
+    return snprintf(out, size, "%c%u %08lx %08lx %08lx", r.op, unsigned(r.cls), (unsigned long) r.a, (unsigned long) r.b, (unsigned long) r.c);
+}
+#endif
 #if defined(RE4DC_VRAM_PAGES_VQ_ONLY) && RE4DC_VRAM_PAGES_VQ_ONLY
 // VRAM_PAGES_VQ_ONLY (Makefile): texture_package.cpp allocate_texture allocates a non-VQ texture of more than one
 // page here; it may start anywhere (32-byte granularity). Every other request keeps the page rule. The flag is set
@@ -153,17 +175,40 @@ pvr_ptr_t pvr_mem_malloc(size_t size) {
             const std::uint32_t at = place(free_list[i], len);
             if(at != ~0U) { best = i; best_at = at; }
         }
+#if !defined(RE4DC_VRAM_ROOM_ARENA_NO_TOP) || !RE4DC_VRAM_ROOM_ARENA_NO_TOP
     } else if(cls == 2) {   // long-lived: highest address that fits
         for(unsigned i = nfree; i-- > 0 && best == ~0U;) {
             const std::uint32_t at = place_high(free_list[i], len);
             if(at != ~0U) { best = i; best_at = at; }
         }
+#endif
     } else
 #endif
     for(unsigned i = 0; i < nfree; ++i) {
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA && \
+    defined(RE4DC_VRAM_ROOM_ARENA_NO_TOP) && RE4DC_VRAM_ROOM_ARENA_NO_TOP
+        Extent candidate = free_list[i];
+        // Console experiment: keep glyphs, the overlay slab and core keys below
+        // a47f2000. Class 1 room placement/retirement and dynamic use are unchanged.
+        // Clip only the candidate, never the real free list: other classes may
+        // still use the final 56 KiB. Do not fall back into that range on failure.
+        if(cls == 2) {
+            constexpr std::uintptr_t kLongLivedEnd = 0xa47f2000U;
+            const std::uintptr_t start = base + candidate.off;
+            if(start >= kLongLivedEnd) continue;
+            const std::uintptr_t available = kLongLivedEnd - start;
+            if(candidate.len > available) candidate.len = std::uint32_t(available);
+        }
+        const std::uint32_t at = place(candidate, len);
+        if(at == ~0U) continue;
+        const std::uint32_t left = candidate.len - len;
+#else
+        // Keep the original expression with the experiment off: at the release
+        // recipe's -O1, even an equivalent local extent copy changes code size.
         const std::uint32_t at = place(free_list[i], len);
         if(at == ~0U) continue;
         const std::uint32_t left = free_list[i].len - len;
+#endif
         if(left < best_left) { best = i; best_at = at; best_left = left; if(!left) break; }
     }
     if(best == ~0U || nalloc >= kMaxAlloc) { RE4DC_VRAM_FAIL(size); return nullptr; }
@@ -179,6 +224,14 @@ pvr_ptr_t pvr_mem_malloc(size_t size) {
     else erase_at(free_list, nfree, best);
     insert_at(alloc_list, nalloc, kMaxAlloc, lower_bound(alloc_list, nalloc, best_at), Extent{best_at, len});
     free_bytes -= len;
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+    const unsigned ring_class = re4dc_vram_arena_class;
+#else
+    const unsigned ring_class = 0;
+#endif
+    ring('A', ring_class, best_at, len, std::uint32_t(reinterpret_cast<std::uintptr_t>(__builtin_return_address(0))));
+#endif
     if(nalloc > peak_alloc) peak_alloc = nalloc;
     if(nfree > peak_free) peak_free = nfree;
     return reinterpret_cast<pvr_ptr_t>(base + best_at);
@@ -193,6 +246,9 @@ void pvr_mem_free(pvr_ptr_t chunk) {
         return;
     }
     Extent e = alloc_list[a]; erase_at(alloc_list, nalloc, a);
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+    ring('F', 0, e.off, e.len, std::uint32_t(reinterpret_cast<std::uintptr_t>(__builtin_return_address(0))));
+#endif
     RE4DC_VRAM_POISON(e.off, e.len);
     free_bytes += e.len;
     unsigned i = lower_bound(free_list, nfree, e.off);
