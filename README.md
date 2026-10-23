@@ -1,0 +1,25 @@
+Fresh actor material/owner-witness full programme, source-only preparation.
+
+Exact source: f2405bb06ebaff6e2a7681479d5308ec5d3b988a, origin/codex/actor-material-route23. It descends from owner witness18a9 and runtime fixf1a6807c. Main owns exact source review and allocation. Existing bea2 tree/output and eight-object work are preserved and never reused as programme inputs.
+
+Scripts are narrow adaptations of the retained bea2 build.sh, run.py, receipt.py and compile_evidence.py; baseline hashes are in BASIS.json. Fresh tree /root/probe/codex-actor-visibility23-eligibility-witness-integration; fresh work /root/probe/lanes/actor-visibility23-eligibility-witness-integration; branch codex/actor-visibility23-eligibility-witness-integration. Canonical lease is work/tree.lock. Two existing shared slots, nonblocking, jobs1; main explicitly confirms release priority before launch.
+
+Main preparation after fresh736MiB resource admission, under the new canonical tree lease:
+
+    mkdir /root/probe/lanes/actor-visibility23-eligibility-witness-integration
+    git -C /root/probe/codex-actor-visibility23-integration worktree add --no-checkout -b codex/actor-visibility23-eligibility-witness-integration /root/probe/codex-actor-visibility23-eligibility-witness-integration f2405bb06ebaff6e2a7681479d5308ec5d3b988a
+    git -C /root/probe/codex-actor-visibility23-eligibility-witness-integration sparse-checkout set --no-cone --stdin < /root/work/re4-dreamcast/.git/worktrees/codex-actor-visibility23-integration/info/sparse-checkout
+
+Use the exact retained sparse specification, with normal worktree Git metadata and no old object links. Main checks source64MiB before/after checkout and preserves a failed preparation rather than deleting it. The scripts do not create this source tree or fetch/push/modify any branch or recipe.
+
+After a fresh root-native-resources-material23.py receipt, main launches ON once:
+
+    python3 '/mnt/c/Game Dev/Emulators/codex-lanes/actor-visibility23/build-eligibility-witness23/run.py' on --resources <actual-new-resource-json> --resources-sha256 <actual-hash> --release-priority-clear --execute
+
+Omit --execute for read-only preflight. OFF later uses the same command with off and another fresh resource receipt. Each arm must be absent. The resource receipt is validated at launch and immediately before first allocation; it is not rerun inside the build. Existing reserved funding covers growth while the runner monitors only these owned roots and the C floor. One shared slot and the canonical tree lease cover the build, module/raw/scrambled receipts and actual preprocessing. On failure it closes the entire process group before releasing leases and preserves every output, log and generated marker. No automatic retry. Successful completion unlinks only the exact owned game/obj symlink and retains its arm/link-scratch target; the source returns literally clean.
+
+Exact profile remains the known QA22/ws23 full recipe with PHASE/WORLD/DISC meters, CPU_BACKFACE=0, ACTOR_BACKFACE=0, WORLD_SCRATCH=0 and VRAM_ROOM_ARENA=0. ON adds ACTOR_VISIBILITY23=1 plus ACTOR_VISIBILITY23_WITNESS=1. OFF sets both0 and omits the actor helper/SDK objects. Actual preprocessing proves visibility in five relevant units and witness in the four owner units. An absent zero macro is recorded as absent; it is not fabricated as an explicit definition. All required compile commands, dependencies, source files, final ELF, UNSCRAMBLED prog.bin, separate scrambled1ST_READ,14 fresh overlay files,14 derived module ELFs and14 relocation validation rows are bound to the final source. OFF is only a newly built control; byte identity is not claimed by this launcher.
+
+Private inputs are reused by reference and rehashed, never regenerated/copied: certificate header416B SHA f9512e2395118fee167cc01032742f38a353b6776b29f2343bbd4808e2a006e9, room40080B SHA9338bd8530b4f45b3c6e891e584f37cc81e93242c4eaec9a0a6bfd7abeb3d22c, OCCL1376B SHAea2ceae5920f388efab7aa00510c161414a077bf228536a40b913d43e1997cf8. SDK/private authority stays at the retained paths in BASIS.json. Shared assets/KOS/compiler inputs are read-only; all generated main/link/module work goes into the fresh arm, including its own link-scratch and copied link-inputs. Main must review exact final image/all14/KOS/private ownership before any stage or guest.
+
+Storage: aggregate736MiB=771751936B, source+normal Git metadata64MiB, ON320MiB, later OFF320MiB, common/evidence/tmp32MiB. These are requested ceilings, not measured successor sizes or a cap increase. Retained bea2 basis: object/link-scratch manifest113689631B, immediate programme/receipts38323401B, module files3814820B, compile evidence1334102B; additional retained link-input copies remain charged inside each320MiB arm. Same sparse18a9 source selected3854blobs54660791logicalB/63320064roundedB plus408directories1671168B; old normal index901473B. Final source checkout is rechecked by main. Current root resource helper reserves only the unused portion of736MiB while counting actual roots and prior outputs. The package cap is unchanged and has no space for another image. No media/staging/guest is allocated here.

@@ -1,0 +1,49 @@
+{
+  "source": "f2405bb06ebaff6e2a7681479d5308ec5d3b988a",
+  "parent": "18a9db3b400721c00ab5aa3a912cbd5681547919",
+  "source_ref": "refs/heads/codex/actor-material-route23",
+  "tree": "/root/probe/codex-actor-visibility23-eligibility-witness-integration",
+  "work": "/root/probe/lanes/actor-visibility23-eligibility-witness-integration",
+  "branch": "codex/actor-visibility23-eligibility-witness-integration",
+  "baseline_scripts": [
+    {
+      "path": "/root/probe/lanes/actor-visibility23-coverage-integration/build.sh",
+      "bytes": 1842,
+      "sha256": "2cf3813824bcde0b20201f434bf9a12b28a428cd71a04d35aa37f67d476555e0"
+    },
+    {
+      "path": "/root/probe/lanes/actor-visibility23-coverage-integration/run.py",
+      "bytes": 940,
+      "sha256": "2f8d346ddaaa65dda3bf0e4267fb9bbc81387ebea60ef76793ab807e52c0fa85"
+    },
+    {
+      "path": "/root/probe/lanes/actor-visibility23-coverage-integration/receipt.py",
+      "bytes": 3485,
+      "sha256": "e4fea0d32dcc5eb576a275f08176c7e71363b40b738da32115d0402524cbb2bd"
+    },
+    {
+      "path": "/root/probe/lanes/actor-visibility23-coverage-integration/compile_evidence.py",
+      "bytes": 6573,
+      "sha256": "4490b37dea6d034e02b118936ed5c9843460efcdc641d8dc18454bae6e5dde8f"
+    }
+  ],
+  "private_allocation": "/root/probe/lanes/actor-visibility23-coverage-integration/ALLOCATION-INPUTS.json",
+  "private_readback": "/root/probe/lanes/actor-visibility23-coverage-integration/PRIVATE-INPUTS-READBACK.json",
+  "private_certificate": "/root/probe/lanes/actor-visibility23-coverage-integration/certificate",
+  "aggregate_cap": 771751936,
+  "source_cap": 67108864,
+  "arm_cap": 335544320,
+  "common_tmp_cap": 33554432,
+  "private_authority": [
+    {
+      "path": "/root/probe/lanes/actor-visibility23-coverage-integration/ALLOCATION-INPUTS.json",
+      "bytes": 2691,
+      "sha256": "0ec6baa7a07075e6abbf7b17789796e7c3812ca5a798f238f0e608b7baf15627"
+    },
+    {
+      "path": "/root/probe/lanes/actor-visibility23-coverage-integration/PRIVATE-INPUTS-READBACK.json",
+      "bytes": 56388,
+      "sha256": "3b6d907eda7c1df2fee8455b6696a7a62200da900e7e4f93754f4539dbb8828d"
+    }
+  ]
+}
