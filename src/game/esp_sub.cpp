@@ -1190,7 +1190,7 @@ static int FxLevelSprite(const cEsp* esp, Re4dcEffectSprite* s)
                 char buf[200];
                 int k = 0;
                 for (int i = 0; i < 64 && s_ftl_unk[i]; ++i) {
-                    k += snprintf(buf + k, sizeof(buf) - k, " %02x.%02x.%02x", (unsigned) (s_ftl_unk[i] >> 16),
+                    k += __builtin_snprintf(buf + k, sizeof(buf) - k, " %02x.%02x.%02x", (unsigned) (s_ftl_unk[i] >> 16),
                                   (unsigned) (s_ftl_unk[i] & 0xff), (unsigned) ((s_ftl_unk[i] >> 8) & 0xff));
                     s_ftl_unk[i] = 0;
                     if (k > 180) break;
