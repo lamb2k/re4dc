@@ -5576,6 +5576,9 @@ extern "C" void re4dc_ui_door_mark(){if(door_ui_mark==~0U)door_ui_mark=nquad;doo
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
 #include "include/native_ui_source_world.inc"
 #endif
+#if defined(RE4DC_FX_ROOM_SPILL_FORCE) && RE4DC_FX_ROOM_SPILL_FORCE
+extern "C" void* re4dc_model_deferred_storage(unsigned* bytes);
+#endif
 extern "C" void re4dc_ui_begin(){
 #if RE4DC_WORLD_SCRATCH
     re4dc_world_scratch_boundary(0,re4dc_ps2_mesh_room());
@@ -5616,6 +5619,9 @@ extern "C" void re4dc_ui_begin(){
     hud_begin_prev=hud_begin;hud_begin=timer_us_gettime64();
 #endif
     re4dc_model_preparation_frame();
+#if defined(RE4DC_FX_ROOM_SPILL_FORCE) && RE4DC_FX_ROOM_SPILL_FORCE
+    {unsigned force_bytes=0;(void)re4dc_model_deferred_storage(&force_bytes);}   // FX_ROOM_SPILL_FORCE (test only): spill cell at the room's first frame
+#endif
 #if RE4DC_D349_RENDERER_STACK
     if(deferred_first)re4dc_missing("source pose queue crossed frame reset");
     reset_deferred();source_draws_finished=false;desired_list=PVR_LIST_OP_POLY;
