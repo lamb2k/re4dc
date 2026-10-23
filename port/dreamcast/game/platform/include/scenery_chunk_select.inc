@@ -76,6 +76,14 @@
                 unsigned mask=0;
                 if(cin==2)++lean::st.skipped;
                 else if(groups){
+#if defined(RE4DC_SCENERY_SELECT_LEAN2) && RE4DC_SCENERY_SELECT_LEAN2
+#if RE4DC_SG_SELECT_LEAN
+                    const int mk=re4dc_sg_lean_on?lean::box_mask_grid_lean(l,mvq,lean_am,near,cull_far)
+                                                 :lean::box_mask_grid(l,mvq,lean_am,near,cull_far);
+#else
+                    const int mk=lean::box_mask_grid(l,mvq,lean_am,near,cull_far);
+#endif
+#else
                     const float blo[3]={float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])};
                     const float bhi[3]={float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])};
 #if RE4DC_SG_SELECT_LEAN
@@ -83,6 +91,7 @@
                                                  :lean::box_mask(blo,bhi,mvq,lean_am,near,cull_far);
 #else
                     const int mk=lean::box_mask(blo,bhi,mvq,lean_am,near,cull_far);
+#endif
 #endif
                     if(mk<0){++stats.groups_culled;continue;}
                     mask=unsigned(mk);
@@ -96,6 +105,44 @@
                 pk.let=std::uint16_t(li);pk.nr=0xffU;
                 if(groups && mask){
                     const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*li);
+#if defined(RE4DC_SCENERY_SELECT_LEAN2) && RE4DC_SCENERY_SELECT_LEAN2
+#if RE4DC_SG_SELECT_LEAN
+                    if(re4dc_sg_lean_on){
+                        if(!sg_lp_ok){lean::sg_coef_lean(mvq,near,sg_lp);sg_lp_ok=true;}
+                        const unsigned selected=lean::sg_pick_lean(g,sg_groups,sg_lp,mask);
+                        ++lean::lst.calls;++lean::st.sg_tests;
+                        const unsigned culled=(selected>>24)&15U;
+                        if(culled){
+                            const unsigned nr=selected>>28,glo=(selected>>8)&255U,ghi=(selected>>16)&255U;
+                            lean::st.sg_culled+=culled;++lean::st.sg_meshlets;
+                            lean::st.sg_vskip+=nr?l.vertex_count-(ghi-glo+1U):l.vertex_count;
+                            pk.nr=std::uint8_t(nr);pk.gmask=std::uint8_t(selected);
+                            pk.lo=std::uint8_t(glo);pk.hi=std::uint8_t(ghi);
+                        }
+                    }else{
+#endif
+                    unsigned glo,ghi,culled;std::uint16_t r0[8],r1[8];
+                    if(!sg_coef_ok){lean::sg_coef(mvq,near,sg_coef);sg_coef_ok=true;}
+                    const unsigned nr=lean::sg_select(g,sg_groups,sg_coef,mask,r0,r1,glo,ghi,culled);
+                    ++lean::st.sg_tests;
+                    if(culled){
+                        lean::st.sg_culled+=culled;++lean::st.sg_meshlets;
+                        lean::st.sg_vskip+=nr?l.vertex_count-(ghi-glo+1U):l.vertex_count;
+                        // the visible groups as bits: group k (a record whose strip end moves) is kept when its range
+                        // is the next one sg_select returned
+                        unsigned bits=0,prev=0,j=0;
+                        for(unsigned k=0;k<sg_groups && j<nr;++k){
+                            const unsigned gend=g[8*k+6];
+                            if(gend==prev)continue;
+                            if(r0[j]==prev && r1[j]==gend){bits|=1U<<k;++j;}
+                            prev=gend;
+                        }
+                        pk.nr=std::uint8_t(nr);pk.gmask=std::uint8_t(bits);pk.lo=std::uint8_t(glo);pk.hi=std::uint8_t(ghi);
+                    }
+#if RE4DC_SG_SELECT_LEAN
+                    }
+#endif
+#else
                     unsigned glo,ghi,culled,nr;std::uint16_t r0[8],r1[8];
 #if RE4DC_SG_SELECT_LEAN
                     if(re4dc_sg_lean_on){
@@ -125,6 +172,7 @@
                         }
                         pk.nr=std::uint8_t(nr);pk.gmask=std::uint8_t(bits);pk.lo=std::uint8_t(glo);pk.hi=std::uint8_t(ghi);
                     }
+#endif
                 }
 #if RE4DC_SCENERY_CONE
                 if(cone_on && pk.nr){
