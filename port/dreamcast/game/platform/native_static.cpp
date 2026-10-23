@@ -4529,6 +4529,15 @@ constexpr unsigned kIds=250,kMoved=16,kNone=0xFF;
 struct Head { char magic[4]; std::uint32_t version,count,crc; };
 #if RE4DC_PS2_WORLD_PARTS
 struct PartPose { const unsigned char* part; float pose[9]; };
+constexpr unsigned part_cell_bytes(unsigned count){
+    // Single-root witnesses append bind-root and inverse matrices to this cell.
+    // Room4 validates exact payload size, including a refused root witness.
+    return count*sizeof(PartPose)
+#if RE4DC_PS2_WORLD_ROOT_POSE
+        +(count==1?24U*sizeof(float):0U)
+#endif
+        ;
+}
 #endif
 struct Slot {
     const unsigned char* obj; std::uint32_t serial; float rest[12];
@@ -5737,7 +5746,7 @@ bool ps2_movie_dyn_valid(){
     if(dyn::slots && !re4dc_room4_cell_valid(dyn::slots,dyn::nslots*sizeof(dyn::Slot),ps2_movie.generation))return false;
 #if RE4DC_PS2_WORLD_PARTS
     if(dyn::slots)for(unsigned i=0;i<dyn::nslots;++i)if(dyn::slots[i].parts &&
-        !re4dc_room4_cell_valid(dyn::slots[i].parts,dyn::slots[i].nparts*sizeof(dyn::PartPose),ps2_movie.generation))return false;
+        !re4dc_room4_cell_valid(dyn::slots[i].parts,dyn::part_cell_bytes(dyn::slots[i].nparts),ps2_movie.generation))return false;
 #endif
 #endif
     return true;
@@ -6964,11 +6973,9 @@ extern "C" void re4dc_ps2_dyn_parts(unsigned room,unsigned id,const void* object
     if(s.obj!=object || s.parts)return;
 #if RE4DC_PS2_WORLD_ROOT_POSE
     if(count==1)s.root_matrix_offset=matrix_offset+1U;
-    const unsigned root_bytes=count==1?24U*sizeof(float):0U;
-#else
-    const unsigned root_bytes=0;
 #endif
-    auto* poses=static_cast<dyn::PartPose*>(re4dc_static_alloc(count*sizeof(dyn::PartPose)+root_bytes));
+    const unsigned part_bytes=dyn::part_cell_bytes(count);
+    auto* poses=static_cast<dyn::PartPose*>(re4dc_static_alloc(part_bytes));
     if(!poses){re4dc_log("PS2PART no heap id=%02x parts=%u\n",id,count);return;}
     const auto* p=static_cast<const unsigned char*>(first);
     for(unsigned i=0;i<count;++i){
@@ -6986,7 +6993,7 @@ extern "C" void re4dc_ps2_dyn_parts(unsigned room,unsigned id,const void* object
     }
 #endif
     s.parts=poses;s.nparts=count;s.pose_offset=pose_offset;
-    re4dc_log("PS2PART bind id=%02x parts=%u bytes=%u heap=%d\n",id,count,unsigned(count*sizeof(dyn::PartPose)+root_bytes),re4dc_static_heap_free());
+    re4dc_log("PS2PART bind id=%02x parts=%u bytes=%u heap=%d\n",id,count,part_bytes,re4dc_static_heap_free());
 }
 extern "C" int re4dc_ps2_dyn_source(unsigned room,const void* object,unsigned serial){
     if(!dyn::ids || ps2w.room!=room)return 0;

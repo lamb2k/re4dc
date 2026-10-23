@@ -56,6 +56,11 @@ def extract():
     pins['platform/include/movie_world_arena_lifecycle.inc']=hashlib.sha256((G/'platform/include/movie_world_arena_lifecycle.inc').read_bytes()).hexdigest()
     return '\n'.join(parts),pins
 
+def extract_dynamic_types():
+    # Use the production layouts so ROOT_POSE's Slot extension is exercised.
+    return '\n'.join(function('platform/native_static.cpp',signature).rstrip()+';'
+                     for signature in ['struct PartPose {','struct Slot {'])+'\n'+function('platform/native_static.cpp','constexpr unsigned part_cell_bytes(')
+
 def extract_player():
     path='platform/native_movie.cpp'
     parts=[function(path,'struct Movie {').rstrip()+' m;\n']
@@ -103,22 +108,29 @@ def contracts():
     assert alloc.index('if(movie_world_token)return')<alloc.index('re4dc_ui_stage_alloc')
     until=function('platform/native_movie.cpp','extern "C" int re4dc_movie_play_until(')
     assert 'MovieReader reader;st=start(id,mask)' in until and 'MovieReader reader;st=iterate(tick,false)' in until
-    return 25
+    alloc=function('platform/native_static.cpp','extern "C" void re4dc_ps2_dyn_parts(')
+    valid=function('platform/native_static.cpp','bool ps2_movie_dyn_valid(')
+    assert 'part_cell_bytes(count)' in alloc and 're4dc_static_alloc(part_bytes)' in alloc
+    assert 'part_cell_bytes(dyn::slots[i].nparts)' in valid
+    return 27
 
 def main():
-    a=argparse.ArgumentParser();a.add_argument('--output');args=a.parse_args()
-    source,pins=extract();player=extract_player();heap=extract_heap();checks=contracts()
+    a=argparse.ArgumentParser();a.add_argument('--output');a.add_argument('--root-pose',choices=['0','1','both'],default='both');args=a.parse_args()
+    source,pins=extract();dynamic=extract_dynamic_types();player=extract_player();heap=extract_heap();checks=contracts()
     pins['../../../src/game/main_mem.cpp']=hashlib.sha256((G/'../../../src/game/main_mem.cpp').read_bytes()).hexdigest()
     pins['platform/native_movie.cpp']=hashlib.sha256((G/'platform/native_movie.cpp').read_bytes()).hexdigest()
     with tempfile.TemporaryDirectory(prefix='re4dc-movie-world-')as temp:
-        out=Path(temp);(out/'production_helpers.inc').write_text(source);(out/'production_player.inc').write_text(player);(out/'production_heap.inc').write_text(heap)
+        out=Path(temp);(out/'production_dynamic_types.inc').write_text(dynamic);(out/'production_helpers.inc').write_text(source);(out/'production_player.inc').write_text(player);(out/'production_heap.inc').write_text(heap)
         exe=out/'test';cmd=['g++','-std=c++20','-O1','-g','-Wall','-Wextra','-Werror','-Wno-misleading-indentation','-fsanitize=undefined','-fno-sanitize-recover=all','-I'+str(out),'-I'+str(G/'platform/include'),str(Path(__file__).with_name('movie_world_arena_test.cpp')),'-o',str(exe)]
-        subprocess.run(cmd,check=True)
-        result=subprocess.run([str(exe)],text=True,capture_output=True)
-        if result.returncode:
-            print(result.stdout+result.stderr,flush=True)
+        arms=[]
+        for mode in (['0','1'] if args.root_pose=='both' else [args.root_pose]):
+            actual=cmd[:1]+['-DRE4DC_PS2_WORLD_ROOT_POSE='+mode]+cmd[1:]
+            subprocess.run(actual,check=True)
+            result=subprocess.run([str(exe)],text=True,capture_output=True)
+            print('ROOT_POSE='+mode+': '+result.stdout+result.stderr,flush=True)
             result.check_returncode()
-    report={'status':'PASS','production_source_pins':pins,'extracted_helpers_sha256':hashlib.sha256(source.encode()).hexdigest(),'extracted_player_sha256':hashlib.sha256(player.encode()).hexdigest(),'extracted_heap_sha256':hashlib.sha256(heap.encode()).hexdigest(),'source_contract_checks':checks,'compiler_argv':cmd,'stdout':result.stdout,'stderr':result.stderr,'limits':'Host device/filesystem/package-validator adapters; no linked target or game execution.'}
+            arms.append(dict(root_pose=int(mode),compiler_argv=actual,stdout=result.stdout,stderr=result.stderr))
+    report={'status':'PASS','production_source_pins':pins,'extracted_helpers_sha256':hashlib.sha256(source.encode()).hexdigest(),'extracted_player_sha256':hashlib.sha256(player.encode()).hexdigest(),'extracted_heap_sha256':hashlib.sha256(heap.encode()).hexdigest(),'source_contract_checks':checks,'dynamic_types_sha256':hashlib.sha256(dynamic.encode()).hexdigest(),'arms':arms,'limits':'Host device/filesystem/package-validator adapters; no linked target or game execution.'}
     if args.output:Path(args.output).write_text(json.dumps(report,indent=2)+'\n')
     print(result.stdout,end='');print('source integration contracts:',checks)
 if __name__=='__main__':main()

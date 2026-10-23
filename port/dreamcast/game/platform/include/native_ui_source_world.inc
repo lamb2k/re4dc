@@ -89,12 +89,54 @@ void sourceWorldTextureAcquired(const Key& key) {
     re4dc_log("PS2SOURCE_TEX_ACQUIRE f=%u key=%08x-%08x\n",frame,key.crc,key.fnv);
 }
 #endif
+#if (defined(RE4DC_PS2_WORLD_SOURCE_TEX_MIP) && RE4DC_PS2_WORLD_SOURCE_TEX_MIP) || defined(RE4DC_CAST_MIPMAP) // host fixture (mipmap23 test)
+#define RE4DC_SOURCE_TEX_MIP_PREP 1
+// Source-world identity and ownership are checked by the caller. Match its
+// resident representation, not just the pre-mip source byte count. Package
+// validation has no exported layout-size helper: keep its bounded full-codebook
+// VQ index sum here rather than widening the texture loader's shared API.
+bool sourceWorldTextureBytesOk(const Entry& entry,const Re4dcSourceWorldTexture& pick) {
+    namespace tx=re4dc::texture;
+    const auto& package=entry.package;
+    const auto& t=package.textures()[0];
+    if(t.width!=pick.width || t.height!=pick.height ||
+       t.width<8U || t.width>1024U || t.height<8U || t.height>1024U ||
+       (t.width&(t.width-1U)) || (t.height&(t.height-1U)) ||
+       t.format>tx::kArgb4444 || t.reserved_0 ||
+       (t.flags&~(tx::kAlpha|tx::kBinaryAlpha|tx::kMipmap)))return false;
+    const std::uint64_t pixels=std::uint64_t(t.width)*t.height;
+    std::uint64_t expected=pick.bytes;
+    if(t.flags&tx::kMipmap) {
+#if defined(RE4DC_PS2_WORLD_SOURCE_TEX_VQ) && RE4DC_PS2_WORLD_SOURCE_TEX_VQ && ((defined(RE4DC_CAST_MIPMAP) && RE4DC_CAST_MIPMAP) || (defined(RE4DC_PS2_WORLD_SOURCE_TEX_MIP) && RE4DC_PS2_WORLD_SOURCE_TEX_MIP))
+        if(t.payload!=tx::kPayloadVq || t.width!=t.height)return false;
+        // Package::validate: one 1x1 index, then one index for each 2x2
+        // block at every level through the base, after the 2048-byte book.
+        std::uint64_t indices=1U;
+        for(unsigned side=2U;side<=t.width;side<<=1U)
+            indices+=std::uint64_t(side/2U)*(side/2U);
+        expected=2048U+indices;
+#else
+        return false;
+#endif
+    } else if(t.payload==tx::kPayloadVq) {
 #if defined(RE4DC_PS2_WORLD_SOURCE_TEX_VQ) && RE4DC_PS2_WORLD_SOURCE_TEX_VQ
-// PS2_WORLD_SOURCE_TEX_VQ (game30.mk; lane fix18 #39): the descriptor's 16-bit size, or the same picture as
-// full-codebook VQ (the disc's package since vq16w / pak17: 18,432 B for 256x256).
+        expected=2048U+pixels/4U;
+#else
+        return false;
+#endif
+    } else if((t.payload!=tx::kPayloadLinear && t.payload!=tx::kPayloadTwiddled) ||
+              expected!=pixels*2U)return false;
+    return t.data_size==expected && package.vram_bytes()==expected;
+}
+#define RE4DC_SOURCE_TEX_OK(e,p) sourceWorldTextureBytesOk((e),(p))
+#else
+// Knob off (PS2_WORLD_SOURCE_TEX_MIP=0): the Test 22 size check, unchanged.
+#if defined(RE4DC_PS2_WORLD_SOURCE_TEX_VQ) && RE4DC_PS2_WORLD_SOURCE_TEX_VQ
 #define RE4DC_SOURCE_TEX_BYTES_OK(v,p) ((v)==(p).bytes || (v)==2048U+(p).width*(p).height/4U)
 #else
 #define RE4DC_SOURCE_TEX_BYTES_OK(v,p) ((v)==(p).bytes)
+#endif
+#define RE4DC_SOURCE_TEX_OK(e,p) RE4DC_SOURCE_TEX_BYTES_OK((e).package.vram_bytes(),(p))
 #endif
 #if RE4DC_PS2_WORLD_TRANSITION_PIN
 void sourceWorldTransitionPin() {
@@ -109,7 +151,7 @@ void sourceWorldTransitionPin() {
     for(auto& e:entries)if(e.valid && e.key==key){if(selected)return;selected=&e;}
     if(!selected || !selected->package.upload_complete() ||
        selected->package.header().texture_count!=1 || !selected->package.pvr_texture(0) ||
-       !RE4DC_SOURCE_TEX_BYTES_OK(selected->package.vram_bytes(),pick) ||
+       !RE4DC_SOURCE_TEX_OK(*selected,pick) ||
        selected->package.textures()[0].width!=pick.width || selected->package.textures()[0].height!=pick.height)return;
     unsigned current=0;
     if(!re4dc_ps2_source_package(&current) || current!=generation || !re4dc_source_world_transition(frame,current))return;
@@ -167,7 +209,7 @@ void sourceWorldTexturePrepare() {
     const bool valid=re4dc_ps2_source_package(&current) && current==generation &&
         entry && entry->valid && entry->key==key && entry->frame==frame &&
         entry->package.upload_complete() && entry->package.header().texture_count==1 &&
-        entry->package.pvr_texture(0) && RE4DC_SOURCE_TEX_BYTES_OK(entry->package.vram_bytes(),pick) &&
+        entry->package.pvr_texture(0) && RE4DC_SOURCE_TEX_OK(*entry,pick) &&
         entry->package.textures()[0].width==pick.width && entry->package.textures()[0].height==pick.height;
     re4dc_source_world_prepared(frame,generation,valid);
     const bool ready=valid && re4dc_source_world_current(frame,generation);
