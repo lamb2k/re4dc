@@ -29,7 +29,12 @@ endif
 # first world outcode proves that all-depth/screen rejection is impossible,
 # stop at the first later depth crossing before doing more facing work.
 # Default 0 preserves the original kernel. Use a fresh OBJDIR for each arm.
+# 2026-10-23 (user): exact shortcut, so it is part of CPU_BACKFACE=2 by default; =0 only for A/B.
+ifeq ($(CPU_BACKFACE),2)
+BACKFACE_EARLY_CLIP ?= 1
+else
 BACKFACE_EARLY_CLIP ?= 0
+endif
 ifneq ($(filter $(BACKFACE_EARLY_CLIP),0 1),$(BACKFACE_EARLY_CLIP))
 $(error BACKFACE_EARLY_CLIP must be 0 or 1)
 endif
