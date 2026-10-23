@@ -1,0 +1,6 @@
+FINAL_SOURCE='f2405bb06ebaff6e2a7681479d5308ec5d3b988a'
+SOURCE_HEAD='bea2d402ba06d41fb7b39946b5a9431a72f5b52a'
+EVIDENCE_ROOT='/root/probe/lanes/actor-visibility23-eligibility-witness-integration'
+ACTOR_SOURCE='7997bc3312e02e4c6c6849a8b7c7f8a5fd928ac5'
+INTEGRATION='0b4beb704902a1dc6b2aace056be344863b4a0c1'
+class PendingBinding(ValueError):pass
