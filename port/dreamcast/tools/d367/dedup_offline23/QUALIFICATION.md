@@ -47,7 +47,7 @@ The gate plan reuses existing tools directly:
  bounded s30 fixture or deliberately use the already authorized named exception.
  A60-second timeout that misses s30 is INCOMPLETE, never a passing gate.
 - Census: use the existing r100/r101/r103 CAST-GC fixtures and a properly pinned
- census twin with TEX_CHECK/MCHECK_LEONGC enabled. Require0 texture failures,
+ census twin with TEX_CHECK/MCHECK_LEONGC/NATIVE_MODEL_REGISTRY_CENSUS and VRAM_ROOM_LOG enabled. Require0 texture failures,
  no-contiguous/refusal/reread counts0 and unlisted CAST-GC/LEON-GC0. Verify live
  characters are drawn and On logs show the expected SDO3 package adoption.
 - Look: existing still-r101/still-r103 fixtures freeze at room frame700. Use
@@ -110,3 +110,74 @@ The later Claude world-scratch23 h2C pass used a300-second cap and168.8 seconds
 elapsed; fix-r200-gears23 h2 similarly took168.3 seconds. Neither is one-minute
 proof. Keep the full H2 floor requirement pending under a60-second-only contract;
 never substitute the higher163328-byte fragment heap or extend a timeout silently.
+
+## Evidence auditor
+
+`audit_evidence.py` only reads explicit files and writes a new JSON receipt. It
+never stages, builds, launches a guest or compares screenshot pixels. Give it an
+existing preflight plan containing the five programme file pins, or a smaller
+JSON with `arms.on.program.files` / `arms.off.program.files` using the same
+`{path, bytes, sha256}` entries. Each arm needs re4dc-game.elf, candidate.txt,
+stack.txt, resolved-knobs.txt and syms.txt. The actual resolved SCENERY_DEDUP must
+match the selected arm. Preserve the plan and its source revision separately.
+
+Example from WSL, using the completed console On s30 capture:
+
+```sh
+python3 port/dreamcast/tools/d367/dedup_offline23/audit_evidence.py \
+  --capture /mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/s30-on-console-r2 \
+  --program-plan /mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/programme-pins-af09-offon-r2.json \
+  --arm on \
+  --fixture '/mnt/c/Game Dev/Emulators/codex-lanes/world-scratch23/native-memory813/fixtures/s30-only.txt' \
+  --fixture-sha256 9883b78b34beed91ea6fe03a19e3e79cbb5e903dd173d1fb13c83a2e9534d110 \
+  --base-json /mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/base-on/base.json \
+  --track-sha256 d1ba7ae9754e12d1ae45c72d41f6a518ce48df8514451435bb0d6658c12e7eef \
+  --output /mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/my-new-audit.json
+```
+
+Windows paths are also accepted. Output creation is exclusive: use a new filename
+for each revision, preserving earlier reports. The literal historical r1 capture
+is `C:/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023$CASE-on-r1`; quote it
+with single quotes in shells so `$CASE` is preserved. That run reports
+`emu=harness`. It cannot establish console-proxy acceptance. The default expected
+emulator is `console`; a mismatch is explicitly reported as a warning.
+
+The receipt hashes the auditor, plan, five current programme files, source/wire
+fixture, captured fixture, run-result/log and every image in that capture's
+`shots/` directory. It does not search other capture directories. Base JSON checks
+bind the capture's disc path to the named base directory and its ELF path to the
+verified programme. The explicit track SHA is checked against run-result's
+reported track hash. These are metadata bindings; this auditor does not read back
+the disc bytes or certify what the emulator executed.
+
+Movie observations retain numbered raw rows and terminal frame/upload/present
+counts, heap_before/heap_active, movie/media durations, matched borrow/return token,
+restored flag, SCNDEDUP3 rows during the loan and cadence. Equal340 counts describe
+what the log reports; the auditor does not upgrade them into a complete route
+pass. KOS observations include exact held amounts and minimum headroom/top block.
+They do not decide whether every required scene endpoint was reached.
+
+Diagnostics have separate `FLAG_ABSENT`, `NOT_INSTRUMENTED`,
+`INSTRUMENTED_NO_TELEMETRY`, `INSTRUMENTED_OBSERVATIONS_ONLY`, or
+`UNVERIFIED_PROGRAMME` states. TEX_CHECK controls TEXCHK, MCHECK_LEONGC controls
+Leon-GC, and **NATIVE_MODEL_REGISTRY_CENSUS controls CAST-GC census**. VRAM_ROOM_LOG
+and KOS_WATCH/KOS_SQUEEZE are tracked separately. Zero ordinary VRAM counters or
+absent texture/GC rows do not substitute for a pinned diagnostic twin. The auditor
+retains NMRS/context/alivelist rows and fallback candidates; run the existing
+cast_gc.py with the correct not-drawn source allowlists for the official check.
+Zero fault counters and crash-screen readiness are separated from actual fault
+candidates. Missing fault text remains an observation, not a passing gate.
+
+Every `gate_verdict` is `NOT_EVALUATED`. Exit0 means the requested file/fixture pins
+matched; it does not mean emulator mode, RUN_COMPLETE, diagnostics or safety gates
+passed. Exit1 indicates pin/identity mismatches; malformed or unavailable required
+inputs also stop the script. Main owns gate decisions and must inspect warnings,
+run-result errors/status, telemetry and coverage. Screenshot inventory proves
+file identity only. Arbitrary wall-time shots do not prove matched-frame pixels.
+
+The authored smoke receipts use programmes from integration
+af09f0a2bfd32f2ecc29bda6a71a1de42bcf2b34. Both completed console s30 r2 logs report
+340/340 uploaded/presented, restored1 and heap_before140448; On reports fresh SDO3
+adoption during the loan. This remains the declared-state fragment, with full H2
+heap-floor coverage pending. Ordinary programmes have texture/census/KOS checks
+disabled. No physical-console timing or pixel-identity claim follows.

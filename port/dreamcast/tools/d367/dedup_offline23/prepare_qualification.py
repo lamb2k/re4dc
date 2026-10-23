@@ -46,7 +46,7 @@ def program(out,source,mode,label):
     knobs=dict(line.split('=',1) for line in (out/'resolved-knobs.txt').read_text().splitlines() if '=' in line)
     if knobs.get('SCENERY_DEDUP')!=str(mode):raise ValueError('Program mode is not verified: '+str(out))
     if (out/'missing.txt').is_file() and (out/'missing.txt').stat().st_size:raise ValueError('Nonempty missing.txt: '+str(out))
-    return dict(status='PINNED; target gates still pending',resolved={k:knobs.get(k,'not recorded') for k in ('SCENERY_DEDUP','TEX_CHECK','MCHECK_LEONGC','KOS_WATCH','KOS_SQUEEZE','W11_FIXTURE','QA_MENU')},files={n:pin(out/n) for n in names})
+    return dict(status='PINNED; target gates still pending',resolved={k:knobs.get(k,'not recorded') for k in ('SCENERY_DEDUP','TEX_CHECK','MCHECK_LEONGC','NATIVE_MODEL_REGISTRY_CENSUS','VRAM_ROOM_LOG','KOS_WATCH','KOS_SQUEEZE','W11_FIXTURE','QA_MENU')},files={n:pin(out/n) for n in names})
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
@@ -118,7 +118,7 @@ def main():
       dict(name='knob0 image identity',accept='objcopy -R .stack SHA256 equals same-recipe pre-change control; ordinary ELF/file SHA is insufficient'),
       dict(name='KOS48KiB',requires_resolved_knobs={'KOS_WATCH':'1','KOS_SQUEEZE':'1','W11_FIXTURE':'1'},tool=tools['fullplay/kos_squeeze.sh'],levels='49152:0 49152:1',scenes='fight call leave100 leave103',accept='0 OOM/HALT/MISSING; held49152; headroom>=4096; every scene endpoint',seconds=60),
       dict(name='r100 fullH2 s30 memory floor',fixture=tools['fullplay/segments/h2-warp.txt'],pad=tools['fullplay/segments/h2-pad.txt'],accept='340/340 plus heap_before >= matched Off; no allocation faults',seconds=60,note='Existing rr h2 uses300s and named full gate420s. Do not silently invoke those under a60s contract. Main must supply a qualified bounded s30 fixture or deliberately use its already authorized named exception; a60s timeout is INCOMPLETE.'),
-      dict(name='census',requires_resolved_knobs={'TEX_CHECK':'1 or2','MCHECK_LEONGC':'1'},note='A TEX_CHECK0/MCHECK0 rW program cannot establish these gates; require a diagnostic build/twin and pin it separately.',rooms=['r100','r101','r103'],accept='TEXCHK fails0; VRAM no-contiguous/refusals/rereads0; CAST-GC/LEON-GC unlisted0; alive characters still drawn',seconds=60),
+      dict(name='census',requires_resolved_knobs={'TEX_CHECK':'1 or2','MCHECK_LEONGC':'1','NATIVE_MODEL_REGISTRY_CENSUS':'1','VRAM_ROOM_LOG':'1'},note='A TEX_CHECK0/MCHECK0/census0 rW program cannot establish these gates; require a diagnostic build/twin and pin it separately.',rooms=['r100','r101','r103'],accept='TEXCHK fails0; VRAM no-contiguous/refusals/rereads0; CAST-GC/LEON-GC unlisted0; alive characters still drawn',seconds=60),
       dict(name='look pairs',fixtures={'cross':pin(d/'scenery19/k/still-r101-warp.txt'),'farm':pin(d/'scenery19/k/still-r103-warp.txt')},tool=tools['fullplay/fp_run.py'],arguments=['--seconds','60','--period','5'],compare_tool=tools['scenery19/pix.py'],accept='Off/On share source/fixture/data and logged freeze700; compare only matched post-freeze captures. Use cross-k/cross-p and farm-k/farm-p names for existing pix.py.'),
       dict(name='GDEMU race',tool=tools['fullplay/gdemu_gate.sh'],fixture=tools['fullplay/segments/door103-warp.txt'],environment={'MAXP':'1','SECS':'60','RE4DC_EMU':'console','RE4DC_GD_PROFILE':'gdemu'},seeds=list(range(1,11)),accept='Every seed reaches r103; bad reads0 and stop faults0; proxy correctness, not console timing'),
     ]
