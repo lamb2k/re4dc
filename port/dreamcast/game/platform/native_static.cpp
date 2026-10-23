@@ -2988,14 +2988,7 @@ struct MeshDraw : Emitter {
 #if RE4DC_SCENERY_CONE
         // SCENERY_CONE: the eye in grid coordinates (view = M g + t: e = -M^-1 t) and the culled side's sign (part cull
         // 1 CCW / 2 CW, det(M), and the projection's fixed handedness RE4DC_SCENERY_CONE_SIGN).
-#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT
-        // A full chunk flush changes the shared Re4dcModelPart while emitting
-        // old parts. The selected part's key remains authoritative afterwards.
-        const unsigned cone_cull=ps2?ps2[5]:p.cull;
-        bool cone_on=sg && cone::pkg==static_cast<const void*>(&package) && cone_cull>0U && cone_cull<=2U;
-#else
         bool cone_on=sg && cone::pkg==static_cast<const void*>(&package) && p.cull>0U && p.cull<=2U;
-#endif
         float ex=0,ey=0,ez=0,csgn=1;
         if(cone_on){
             const float* m=mvq;
@@ -3008,11 +3001,7 @@ struct MeshDraw : Emitter {
                 ex=id*(c0*tx+(m[2]*m[9]-m[1]*m[10])*ty+(m[1]*m[6]-m[2]*m[5])*tz);
                 ey=id*(c1*tx+(m[0]*m[10]-m[2]*m[8])*ty+(m[2]*m[4]-m[0]*m[6])*tz);
                 ez=id*(c2*tx+(m[1]*m[8]-m[0]*m[9])*ty+(m[0]*m[5]-m[1]*m[4])*tz);
-#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT
-                csgn=float(RE4DC_SCENERY_CONE_SIGN)*(cone_cull==1U?1.0f:-1.0f)*(det>0.0f?1.0f:-1.0f);
-#else
                 csgn=float(RE4DC_SCENERY_CONE_SIGN)*(p.cull==1U?1.0f:-1.0f)*(det>0.0f?1.0f:-1.0f);
-#endif
             }
         }
 #endif
@@ -6370,6 +6359,12 @@ int ps2_pass(unsigned pass,float zfar){
     ChunkPart cctx[kChunkParts];MeshDraw::Pick cpk[kChunkPicks];unsigned nctx=0,npk=0;
     const auto& cpkg=ps2w.package;
     auto chunk_flush=[&]()->int{
+        // The pending selection/ordinary draw references this shared record.
+        // Queued emitters borrow its cull; restore the pending part on every exit.
+        struct CullScope {
+            unsigned& value;unsigned saved;
+            ~CullScope(){value=saved;}
+        } cull_scope{part.cull,part.cull};
 #if RE4DC_SKY_ANY
         const unsigned sky_now=re4dc_ps2_sky_header; // the placement being selected keeps its own after the run
 #endif

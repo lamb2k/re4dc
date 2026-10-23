@@ -12,6 +12,7 @@ import hashlib
 import importlib.util
 import json
 import re
+import resource
 import struct
 import subprocess
 import sys
@@ -65,6 +66,7 @@ HEADER = r'''
 #define RE4DC_CPU_BACKFACE 2
 #define RE4DC_SCENERY_CONE 1
 #define RE4DC_SCENERY_CONE_SIGN 1
+#define RE4DC_SCENERY_CHUNK 1
 using std::uint8_t;
 static unsigned log_calls;
 template<class... T> void re4dc_log(const char*,T...){++log_calls;}
@@ -222,7 +224,9 @@ struct Draw {
  @LEAN_FLUSH@
  @STRIPS_LEAN@
  @SELECT@
+#if RE4DC_BACKFACE_CONE_FRONT
  @FRONT_MASK@
+#endif
  @EMIT_PICK@
  @CHUNK_EMIT@
 };
@@ -269,6 +273,7 @@ Result execute(Fixture& f,const Draw::Pick& pk,bool proof){
  return {{f.draw.buffer,f.draw.sq},f.draw.counts(),f.draw.clips,result};
 }
 void equal(const Result& a,const Result& b){assert(a.words==b.words);assert(a.counts==b.counts);assert(a.clips==b.clips);assert(a.result==b.result);}
+#if RE4DC_BACKFACE_CONE_FRONT
 using Setup=void(*)(Fixture&);
 void compare(const char* label,Setup setup,Draw::Pick pick={0,255,0,0,0,{0,0}},int expected=1){
  Fixture baseline;setup(baseline);const auto old=execute(baseline,pick,false);
@@ -390,25 +395,110 @@ void admission_tests(){
  }
  std::cout<<"count reuse and flat-depth admission before lazy prepare PASS\n";
 }
-void cull_after_flush(){
- // Execute the production flush assignment for a full 48-entry queue, then
- // the complete production selector with the current key and stale record.
- for(unsigned current:{1U,2U}){
-  Fixture f(1);unsigned key[6]={0,0,0,0,0,current};f.draw.ps2=key;
-  for(unsigned j=0;j<48;++j){struct {unsigned cull;}x{j==47?3U-current:current};auto& part=f.part;@FLUSH_CULL@}
-  assert(f.part.cull==3U-current);Draw::Pick selected[2]{};
-  const unsigned count=f.draw.chunk_select(selected);
-  assert(count==(current==1?0U:1U));
-  // Non-PS2 callers continue to read their own part cull.
-  f.draw.ps2=nullptr;f.part.cull=current;assert(f.draw.chunk_select(selected)==count);
+#endif
+namespace cull_lifetime {
+// Execute the actual queue-drain lambda and both actual caller branches. Only
+// the queued draw boundary is controlled; selection and ordinary strip output
+// use the production bodies already extracted into Draw above.
+struct QueuedPart {unsigned meshlet_count=1;};
+struct QueuePackage {QueuedPart entry;const QueuedPart* parts()const{return &entry;}};
+struct Begin {Part& p;float mv[12],near,far;};
+enum Path {PartLimit,PickLimit,Ordinary,Oversize,Empty};
+static Draw* active;
+static bool chunks;
+static unsigned emitted,ended,aborted,runs,run_cull,run_key,selected_count,saved_cull;
+static int fail_at,emit_result;
+void re4dc_model_packet_abort(){++aborted;}
+struct MeshDraw {
+ using Pick=Draw::Pick;
+ Part& p;const QueuedPart& part;
+ float mvq[12]{},mv[12]{},cull_far=1000,lod_scale=1;
+ unsigned alpha=0,part_index=0,sg_groups=0;
+ bool vertex_alpha=false,direct=false,lean_part=false;
+ const unsigned* ps2=nullptr;const std::uint8_t* sg=nullptr;
+ MeshDraw(Begin init,const QueuePackage&,const QueuedPart& q,const void*,void*):p(init.p),part(q){}
+ bool chunk_ok()const{return chunks;}
+ int chunk_emit(const Pick*,unsigned){
+  assert(ps2&&p.cull==ps2[5]); // each queued emitter gets its own saved cull
+  const unsigned call=emitted++;return int(call)==fail_at?-1:emit_result;
  }
- std::cout<<"alternating cull across full shared-record flush PASS\n";
+ void end_direct(){++ended;}
+ unsigned chunk_select(Pick* picks){active->ps2=ps2;return active->chunk_select(picks);}
+ int run(){
+  ++runs;run_cull=p.cull;run_key=ps2[5];active->ps2=ps2;
+  return active->emit_pick({0,255,0,0,0,{0,0}});
+ }
+};
+int dispatch(Fixture& f,unsigned current,unsigned previous,Path path,int stop,int status){
+ active=&f.draw;chunks=path!=Ordinary&&path!=Empty;fail_at=stop;emit_result=status;
+ emitted=ended=aborted=runs=0;run_cull=run_key=selected_count=saved_cull=~0U;
+ auto& part=f.part;part.cull=current;const float near=1,far=1000,lod_scale=1;
+ QueuePackage cpkg;if(path==Oversize)cpkg.entry.meshlet_count=321;
+ struct {const void* lut=nullptr;void* gather=nullptr;const std::uint8_t* sg;unsigned sg_groups;}ps2w{nullptr,nullptr,f.draw.sg,f.draw.sg_groups};
+ struct {unsigned native=0,fallback=0,aborts=0;}c;
+ @CHUNK_PART@;
+ static constexpr unsigned kChunkParts=48,kChunkPicks=320;
+ ChunkPart cctx[kChunkParts]{};MeshDraw::Pick cpk[kChunkPicks]{};
+ unsigned nctx=path==Empty?0U:path==PartLimit?48U:2U;
+ unsigned npk=path==PickLimit?320U:nctx;
+ for(unsigned j=0;j<nctx;++j){auto& x=cctx[j];x.cull=j+1==nctx?previous:j%3U;
+  x.key[5]=x.cull;x.first=j;x.count=1;std::memcpy(x.mvq,f.draw.mvq,sizeof(x.mvq));}
+ @CHUNK_FLUSH@;
+ // The pending object is made before the drain, exactly as in ps2_pass.
+ MeshDraw d{{part,{},near,far},cpkg,cpkg.parts()[0],nullptr,nullptr};
+ const unsigned index=0,key[6]={0,0,0,0,0,current};d.ps2=key;
+ struct {unsigned cull;}meta{current};float mvq[12];std::memcpy(mvq,f.draw.mvq,sizeof(mvq));
+ for(unsigned once=0;once<1;++once){
+ @CHUNK_DISPATCH@
+  assert(result==1);
+ }
+ if(nctx){assert(nctx==1);selected_count=cctx[0].count;saved_cull=cctx[0].cull;assert(cctx[0].key[5]==current);}
+ assert(nctx==(path==PartLimit||path==PickLimit?1U:0U));
+ return 1;
 }
-int main(){output_tests();metadata_tests();admission_tests();cull_after_flush();std::cout<<"world production-body host fixture PASS\n";}
+void check(const char* lane){
+ unsigned cases=0;
+ for(unsigned current=0;current<3;++current)for(unsigned previous=0;previous<3;++previous){
+  Fixture reference(1);reference.part.cull=current;Draw::Pick picks[2]{};
+  const unsigned expected_select=reference.draw.chunk_select(picks);
+  const auto expected=execute(reference,reference.whole(),false);
+  for(Path path:{PartLimit,PickLimit,Ordinary,Oversize}){
+   if(lane&&std::strcmp(lane,"capacity")==0&&path!=PartLimit&&path!=PickLimit)continue;
+   if(lane&&std::strcmp(lane,"ordinary")==0&&path!=Ordinary&&path!=Oversize)continue;
+   for(int status:{0,1}){
+    Fixture f(1);assert(dispatch(f,current,previous,path,-1,status)==1);
+    assert(f.part.cull==current&&emitted==(path==PartLimit?48U:2U)&&ended==emitted+runs&&!aborted);
+    if(path==PartLimit||path==PickLimit){assert(!runs&&selected_count==expected_select&&saved_cull==current);}
+    else{
+     assert(runs==1&&run_cull==current&&run_key==current);
+     Result now{{f.draw.buffer,f.draw.sq},f.draw.counts(),f.draw.clips,1};equal(expected,now);
+    }
+    ++cases;
+   }
+   for(int stop:{0,path==PartLimit?47:1}){
+    Fixture f(1);assert(dispatch(f,current,previous,path,stop,1)==-1);
+    assert(f.part.cull==current&&emitted==unsigned(stop+1)&&ended==emitted&&aborted==1&&!runs);
+    ++cases;
+   }
+  }
+ }
+ for(unsigned current=0;current<3;++current){
+  Fixture f(1);assert(dispatch(f,current,2,Empty,-1,1)==1);
+  assert(f.part.cull==current&&!emitted&&ended==1&&!aborted&&runs==1&&run_cull==current&&run_key==current);++cases;
+ }
+ std::cout<<"production flush and capacity/ordinary caller cull lifetime PASS cases="<<cases<<"\n";
+}
+}
+int main(int argc,char** argv){
+#if RE4DC_BACKFACE_CONE_FRONT
+ output_tests();metadata_tests();admission_tests();
+#endif
+ cull_lifetime::check(argc>1?argv[1]:nullptr);std::cout<<"world production-body host fixture PASS\n";
+}
 '''
 
 
-def host_fixture(output, source):
+def host_fixture(output, source, cull_only=False):
     out = output / "host"
     out.mkdir()
     (out / "dc").mkdir()
@@ -417,10 +507,12 @@ def host_fixture(output, source):
     start = source.rfind("#if defined(RE4DC_BACKFACE_CONE_FRONT)", 0, start)
     end = source.index("\n#endif\n#if RE4DC_MESH_STRIP_LEAN==2", start)
     helper_header = (DC / "room/backface_certificate.hpp").read_text()
+    dispatch_start = source.index("#if RE4DC_SCENERY_CHUNK\n            // SCENERY_CHUNK: select now")
+    dispatch_end = source.index("#if RE4DC_PS2_PVS\n            d.pvs_finish(result>0);", dispatch_start)
     replacements = {
-        "WORTH_FRONT": function(helper_header, "inline bool worth_front("),
-        "EXACT_ZERO": function(helper_header, "inline bool exact_zero("),
-        "FLAT_DEPTH": function(helper_header, "inline bool flat_depth("),
+        "WORTH_FRONT": "" if cull_only else function(helper_header, "inline bool worth_front("),
+        "EXACT_ZERO": "" if cull_only else function(helper_header, "inline bool exact_zero("),
+        "FLAT_DEPTH": "" if cull_only else function(helper_header, "inline bool flat_depth("),
         "TRAILER": function(source, "bool front_trailer("),
         "PICK": function(source, "struct Pick {"),
         "BF_ON": function(source, "bool bf_on()const"),
@@ -431,7 +523,9 @@ def host_fixture(output, source):
         "FRONT_MASK": function(source, "unsigned front_mask("),
         "EMIT_PICK": function(source, "int emit_pick("),
         "CHUNK_EMIT": function(source, "__attribute__((noinline)) int chunk_emit("),
-        "FLUSH_CULL": re.search(r"part\.cull=x\.cull;", source).group(),
+        "CHUNK_PART": function(source, "struct ChunkPart {"),
+        "CHUNK_FLUSH": function(source, "auto chunk_flush=[&]()->int"),
+        "CHUNK_DISPATCH": source[dispatch_start:dispatch_end],
     }
     text = HEADER + TESTS
     for name, value in replacements.items():
@@ -439,7 +533,7 @@ def host_fixture(output, source):
     path = out / "world.cpp"
     path.write_text(text)
     results = []
-    for mode in (1, 2):
+    for mode in ((0,) if cull_only else (0, 1, 2)):
         binary = out / ("world-mode%d" % mode)
         cmd = ["g++", "-std=c++20", "-O2", "-fno-fast-math", "-ffp-contract=off", "-Wall", "-Wextra",
                "-DRE4DC_BACKFACE_CONE_FRONT=%d" % mode, "-I" + str(out), "-I" + str(DC / "room"),
@@ -447,9 +541,27 @@ def host_fixture(output, source):
         run(cmd, ROOT, out / ("compile%d.log" % mode))
         result = run([str(binary)], ROOT, out / ("mode%d.log" % mode))
         results.append(dict(mode=mode, result=result.strip().splitlines()))
-    shared = out / "world.so"
-    run(["g++", "-std=c++20", "-O2", "-fPIC", "-shared", "-DRE4DC_BACKFACE_CONE_FRONT=1",
-         "-I" + str(out), "-I" + str(DC / "room"), str(path), "-o", str(shared)], ROOT, out / "shared.log")
+    # Prove that this regression detects the real pre-fix flush, rather than
+    # merely asserting an invariant that also held before the correction.
+    old = subprocess.check_output(["git", "show", "56dc28d5:port/dreamcast/game/platform/native_static.cpp"], cwd=ROOT, text=True)
+    legacy = text.replace(replacements["CHUNK_FLUSH"], function(old, "auto chunk_flush=[&]()->int"))
+    legacy = legacy.replace(replacements["SELECT"], function(old, "__attribute__((noinline)) unsigned chunk_select("))
+    legacy_path, legacy_binary = out / "world-pre-fix.cpp", out / "world-pre-fix"
+    legacy_path.write_text(legacy)
+    run(["g++", "-std=c++20", "-O2", "-fno-fast-math", "-ffp-contract=off", "-DRE4DC_BACKFACE_CONE_FRONT=0",
+         "-I" + str(out), "-I" + str(DC / "room"), str(legacy_path), "-o", str(legacy_binary)], ROOT, out / "compile-pre-fix.log")
+    for lane in ("capacity", "ordinary"):
+        failed = subprocess.run([str(legacy_binary), lane], cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                preexec_fn=lambda: resource.setrlimit(resource.RLIMIT_CORE, (0, 0)))
+        (out / ("pre-fix-" + lane + ".log")).write_bytes(failed.stdout)
+        assert failed.returncode != 0 and b"Assertion" in failed.stdout, failed.stdout.decode()
+        results.append(dict(mode=0, kind="pre-fix production flush must fail", lane=lane, baseline="56dc28d5",
+                            status="PASS", rejected_returncode=failed.returncode))
+    shared = None
+    if not cull_only:
+        shared = out / "world.so"
+        run(["g++", "-std=c++20", "-O2", "-fPIC", "-shared", "-DRE4DC_BACKFACE_CONE_FRONT=1",
+             "-I" + str(out), "-I" + str(DC / "room"), str(path), "-o", str(shared)], ROOT, out / "shared.log")
     return shared, results, {key: hashlib.sha256(value.encode()).hexdigest() for key, value in replacements.items()}
 
 
@@ -590,6 +702,7 @@ def target_fixture(args, output):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--cull-only", action="store_true", help="Run FRONT=0 shared-cull lifetime regression independently of the certificate helper")
     parser.add_argument("--baseline", default="d1bc83cff32217a659f93acd5837a1ecc96ff6c3")
     parser.add_argument("--sh4-cxx", type=Path)
     parser.add_argument("--kos-root", type=Path)
@@ -598,14 +711,17 @@ def main():
     args.output.mkdir(parents=True, exist_ok=False)
     output = args.output.resolve()
     source = SOURCE.read_text()
-    shared, host, identities = host_fixture(output, source)
-    metadata = trailer_fixture(shared, output)
-    target = target_fixture(args, output)
+    shared, host, identities = host_fixture(output, source, args.cull_only)
+    metadata = [] if args.cull_only else trailer_fixture(shared, output)
+    if args.cull_only and any((args.sh4_cxx, args.kos_root, args.sdk_root)):
+        raise ValueError("--cull-only runs the host lifetime regression; target identity uses the separate bug-fix baseline")
+    target = dict(status="not requested") if args.cull_only else target_fixture(args, output)
     report = dict(source_sha256=hashlib.sha256(source.encode()).hexdigest(), extracted_sha256=identities,
                   host=host, metadata=metadata, target=target,
                   limits="Host boundary-controlled production caller bodies and actual metadata reader; math helper and SH4 SQ implementation have separate gates. Full TU compile is optional, no whole-renderer execution or timing.")
     (output / "world-runtime-controls.json").write_text(json.dumps(report, indent=2) + "\n")
-    print("PASS world runtime: modes 1/2 caller routing, counters, clipping, cull-after-flush; %d metadata cases; target %s" % (len(metadata), target["status"]))
+    print("PASS world runtime: %s; %d metadata cases; target %s" %
+          ("FRONT=0 cull lifetime and pre-fix negative control" if args.cull_only else "modes 0/1/2 caller routing, counters, clipping, cull lifetime", len(metadata), target["status"]))
 
 
 if __name__ == "__main__":
