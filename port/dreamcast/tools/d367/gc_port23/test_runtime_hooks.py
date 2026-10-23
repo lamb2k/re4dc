@@ -126,6 +126,10 @@ int main() {
   assert(logs.find("id=00000001-00000002")!=std::string::npos);
   assert(logs.find("id=00000003-00000004")==std::string::npos); // loaded never emitted
   entries[0].asset_consumers=0;
+  gcasset_packet_emitted(header,sizeof header,0,Texture);
+  gcasset_packet_reset(); // real scene-open/retirement boundary must clear prior header
+  gcasset_packet_emitted(vertex,sizeof vertex,0,Texture);
+  assert(entries[0].asset_consumers==0);
   std::uint32_t picture[16]={0x80000008,0,0,0x1000/8};picture[8]=0xe0000000;
   gcasset_packet_emitted(picture,sizeof picture,2,EffectPicture);
   assert(entries[0].asset_consumers& (1U<<EffectPicture));

@@ -35,6 +35,10 @@ for compact per-room de-duplication; provenance compares the full digest.
 Overflow is a failed checkpoint. Repeated consumers of one asset still each
 increment their own counter. Load, ready, reservation and wholly culled work
 are not emissions. Bind/reuse pointers cannot survive source retirement.
+Texture consumer counts acknowledge accepted use once per Entry/consumer/flush;
+multiple draws before that safe flush coalesce. They establish asset use, not
+physical draw-call totals or performance. Packet header state resets on scene
+open and Entry retirement; only a same-scene header/vertex split can join.
 
 ## Shared-file integration audit (claims cleared by root)
 

@@ -412,6 +412,7 @@ void gcasset_texture_flush(Entry& entry) {
 }
 struct GcAssetPacketState { unsigned address=0, textured=0, first=0; };
 GcAssetPacketState gcasset_packet_states[5];
+void gcasset_packet_reset(){for(auto& state:gcasset_packet_states)state={};}
 void gcasset_packet_emitted(const void* packet,unsigned bytes,unsigned list,re4dc_gcasset::Consumer consumer) {
     if(list>=5 || !packet || bytes%32)return;
     auto& state=gcasset_packet_states[list];
@@ -2035,6 +2036,9 @@ unsigned pvs23_scene_epoch=0; // observation identity only; no renderer ownershi
 extern "C" void re4dc_bf_room_update();   // native_static.cpp (BACKFACE_ROOMS, lane fix-hideout23)
 #endif
 void stream_open() { RE4DC_TAIL_GPU_SCOPE(open);
+#if RE4DC_GC_ASSET_GATE
+    gcasset_packet_reset();
+#endif
 #if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
     re4dc_bf_room_update();
 #endif
@@ -3274,6 +3278,8 @@ void vram_room_frame(){
 void close_entry(Entry& entry) {
 #if RE4DC_GC_ASSET_GATE
     gcasset_texture_flush(entry);
+    // A pending header cannot survive retirement/reuse of any texture entry.
+    gcasset_packet_reset();
 #endif
     struct OvlwAfter{~OvlwAfter(){OVLW("close");OVLG("close");}} ovlw_after;
 #if RE4DC_TEX_CHECK
