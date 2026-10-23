@@ -82,7 +82,7 @@ extern "C" int re4dc_effect_quad(const Re4dcEffectQuad* q){
         stream_select(PVR_LIST_TR_POLY);if(stream_aborted)return 0;
         e->frame=frame;stream_send(packet,bytes);++fx_direct;++fx_count;return 1;
     }
-    const unsigned required=kEffectQuad21Node+bytes,margin=8192;
+    const unsigned required=kEffectQuad21Node+bytes,margin=RE4DC_FX_QUEUE_MARGIN;
     unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}

@@ -917,6 +917,25 @@ int area_hit_pN(Vec* pos, CameraAreaInfo* area)
 // current area finds the first enabled area (normal 0x20 first, then the attribute-specific
 // ones) containing the player and switches to it; with no area the shoulder camera (0xA) with
 // the default offsets takes over.
+#if defined(RE4DC_LIGHT_CUT_HOLD) && RE4DC_LIGHT_CUT_HOLD
+// LIGHT_CUT_HOLD (mendezfx.mk, render only): leaving every camera area of a listed room keeps the last area's light
+// cut instead of the room's cut 0 (r11f: the outdoor cut lit the barn when Leon stood on the front loft in phase 2).
+static int re4dcLightCutHold(int old_area)
+{
+    static const u16 rooms[] = {RE4DC_LIGHT_CUT_HOLD_ROOMS};
+    if (old_area == -1) {
+        return 0;
+    }
+    for (u32 i = 0; i < sizeof(rooms) / sizeof(rooms[0]); i++) {
+        if (rooms[i] == (u16) G_ROOM_ID) {
+            return 1;
+        }
+    }
+    return 0;
+}
+#else
+#define re4dcLightCutHold(old_area) 0
+#endif
 void CameraControl::areaHitCheck()
 {
     static u8 blink = 0;
@@ -1057,7 +1076,9 @@ void CameraControl::areaHitCheck()
         m_QuasiFPS.bindDefaultCamera();
         m_QuasiFPS.init();
         r1 = 0;
-        LightMgr.update(0, -1);
+        if (!re4dcLightCutHold(old_area)) {
+            LightMgr.update(0, -1);
+        }
     } else if (old_area != -1) {
         CameraQuasiFPS* q = &m_QuasiFPS;
         if (prev_state == 0xA) {
@@ -1067,7 +1088,9 @@ void CameraControl::areaHitCheck()
             q->setBlendCount(10);
         }
         q->bindDefaultCamera();
-        LightMgr.update(0, -1);
+        if (!re4dcLightCutHold(old_area)) {
+            LightMgr.update(0, -1);
+        }
     }
 }
 
