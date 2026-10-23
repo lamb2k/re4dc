@@ -1,8 +1,10 @@
 # Bounded indexed provenance contract
 
 Frozen baseline: selected target objects at 304eef6b9 add 54,444 B before link.
-Actual linked image, heap and complete I-001 gates remain open. The C++ core
-now supports the file index; texture/BIN load hook conversion is in progress.
+Actual linked image, heap and complete I-001 gates remain open. The C++ core,
+actual texture Entry load/flush and original BIN capture/flush now use the
+file index and checked tokens. Accepted SQ paths still latch owner serials and
+consumer masks only. No record read or hash was added to those emitters.
 
 The disc catalog is an immutable, read-only CD input. Install streams its whole
 SHA256 with 512-byte scratch and compares the independently reviewed release
@@ -49,6 +51,13 @@ One pinned immutable catalog remains installed for the disc/source epoch.
 Room retirement resets observations and retires transient owners; persistent
 owners keep their tokens only while the same captured owner serial is live.
 Disc/catalog replacement invalidates every token before a new epoch is admitted.
+The actual CD adapter lazily installs /cd/dc/gc-assets.idx at the first immutable
+archive/texture load boundary. GC_ASSET_CATALOG_SHA256 defaults to 0; its exact
+64-character reviewed pin is required for installation. Missing pin/file,
+wrong hash/schema, short reads and failed installation remain explicit errors.
+One read-only handle remains owned until retire_disc_catalog; all callback
+reads occur on the main thread outside SQ/G2. The adapter makes no retry or
+auto-learning path after failure until explicit source/disc retirement.
 Asset owner serial/generation remains independently mandatory: a valid catalog
 index cannot resurrect a retired texture, BIN, static package or sound bank.
 Existing resident assets fail after replacement until safely rebound from an
@@ -56,9 +65,10 @@ immutable source boundary; rehashing relocated BIN bytes or copying an old
 numeric index into a new epoch is forbidden. Deferred queues retain the original token/owner
 serial and consumer mask, never resolve a new identity through a rebound info.
 
-The expected savings are provisional: Entry index+mask can replace 32-byte
-digests; indexed Seen replaces the 16 KiB digest-prefix array. Model and audio
-records may use the same checked identity. Price the actual representation and
+The target savings are provisional: Entry token+mask replaces its 32-byte
+digest; BIN records replace each digest with a four-byte token; indexed Seen
+replaces the 16 KiB digest-prefix array. Audio can use the same checked identity.
+Price the actual representation and
 linked sections before choosing capacity or borrowed storage. No coverage may
 be removed to fit a memory target.
 

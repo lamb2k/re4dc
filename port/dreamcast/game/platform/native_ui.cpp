@@ -2,7 +2,7 @@
 #include "include/gc_asset_packet_cursor.h"
 #include "include/gc_asset_members.h"
 #if RE4DC_GC_ASSET_GATE
-#define RE4DC_GCA_ADOPT(...) ((void)re4dc_gcasset::member_adopt(__VA_ARGS__))
+#define RE4DC_GCA_ADOPT(...) ((void)(re4dc_gcasset::ensure_disc_catalog() && re4dc_gcasset::member_adopt(__VA_ARGS__)))
 #define RE4DC_GCA_RETIRE(...) re4dc_gcasset::member_retire(__VA_ARGS__)
 #else
 #define RE4DC_GCA_ADOPT(...) ((void)0)
@@ -379,7 +379,7 @@ static_assert(texpack_payload_retry::kMembers==texpack::kMaxCount,"payload retry
 #endif
 struct Entry { re4dc::texture::Package package; Key key{}; unsigned frame=0; bool valid=false;
 #if RE4DC_GC_ASSET_GATE
-    re4dc_gcasset::Digest asset_digest{};
+    re4dc_gcasset::CheckedAsset asset{};
     unsigned asset_consumers=0;
 #endif
 #if RE4DC_D349_RENDERER_STACK
@@ -395,8 +395,9 @@ struct Source { Re4dcUiImage image{}; Key key{}; };
 // An uncached source descriptor still resolves through its existing owner table.
 Entry entries[kTextureCount]; Source sources[kSourceCount]; unsigned nsource;
 #if RE4DC_GC_ASSET_GATE
-bool gcasset_texture_fingerprint(Entry& entry,const char* path,unsigned offset,unsigned bytes) {
-    entry.asset_digest={};
+bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,unsigned offset,unsigned bytes) {
+    entry.asset={};
+    if(!re4dc_gcasset::ensure_disc_catalog())return false;
     const file_t file=fs_open(path,O_RDONLY);
     if(file==FILEHND_INVALID)return false;
     bool okay=true;
@@ -406,8 +407,11 @@ bool gcasset_texture_fingerprint(Entry& entry,const char* path,unsigned offset,u
         const file_t fd=*static_cast<const file_t*>(context);const ssize_t got=fs_read(fd,target,count);
         return got<0?0:unsigned(got);
     };
-    if(okay)okay=re4dc_gcasset::fingerprint_read(entry.asset_digest,reader,const_cast<file_t*>(&file),bytes);
-    fs_close(file);return okay;
+    re4dc_gcasset::Digest digest{};
+    if(okay)okay=re4dc_gcasset::fingerprint_read(digest,reader,const_cast<file_t*>(&file),bytes);
+    fs_close(file);
+    if(okay){char id[24];snprintf(id,sizeof id,"%08x-%08x",key.crc,key.fnv);entry.asset=re4dc_gcasset::bind_checked("texture",id,digest);okay=entry.asset.value!=0;}
+    return okay;
 }
 void gcasset_texture_emitted(Entry* entry,re4dc_gcasset::Consumer consumer=re4dc_gcasset::Texture) {
     if(!entry || !entry->valid)return;
@@ -418,9 +422,8 @@ void gcasset_texture_emitted(Entry* entry,re4dc_gcasset::Consumer consumer=re4dc
 void gcasset_texture_flush(Entry& entry) {
     const unsigned mask=entry.asset_consumers;entry.asset_consumers=0;
     if(!mask)return;
-    char id[24];snprintf(id,sizeof id,"%08x-%08x",entry.key.crc,entry.key.fnv);
     for(unsigned i=0;i<re4dc_gcasset::ConsumerCount;++i)if(mask&(1U<<i))
-        re4dc_gcasset::emitted(re4dc_gcasset::Consumer(i),"texture",id,entry.asset_digest);
+        re4dc_gcasset::emitted_checked(re4dc_gcasset::Consumer(i),entry.asset);
 }
 using GcAssetPacketState=re4dc_gcasset::PacketCursor;
 GcAssetPacketState gcasset_packet_states[5];
@@ -3578,10 +3581,10 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     // not an emission; cached/culled/preloaded Entries produce no GC-ASSET row.
     if(ok) {
 #if RE4DC_TEX_PACK
-        const bool fingerprint_ok=gcasset_texture_fingerprint(*slot,in_pack?texpack::kPath:path,
+        const bool fingerprint_ok=gcasset_texture_fingerprint(*slot,key,in_pack?texpack::kPath:path,
             in_pack?pack_offset:0,in_pack?pack_size:0);
 #else
-        const bool fingerprint_ok=gcasset_texture_fingerprint(*slot,path,0,0);
+        const bool fingerprint_ok=gcasset_texture_fingerprint(*slot,key,path,0,0);
 #endif
         if(!fingerprint_ok)re4dc_log("GC-ASSET-ERROR v=1 why=texture-fingerprint key=%08x-%08x\n",key.crc,key.fnv);
     }

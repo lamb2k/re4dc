@@ -26,6 +26,10 @@ using CatalogReadAt = unsigned (*)(void* context,unsigned offset,void* destinati
 // observations; persistent owners retain tokens only while their serial lives.
 bool install_index(CatalogReadAt,void* context,unsigned bytes,const Digest& expected_sha);
 void retire_catalog();
+// Main-thread immutable load boundaries only. Default pin "0" fails closed.
+// Room changes do not close the handle; disc/source replacement must retire.
+bool ensure_disc_catalog();
+void retire_disc_catalog();
 CheckedAsset bind_checked(const char* kind,const char* id,const Digest& actual_sha);
 bool describe_checked(CheckedAsset,AssetDescription*); // safe boundaries only: may read the catalog
 void emitted_checked(Consumer,CheckedAsset); // unlocked flush: first room use may read a record

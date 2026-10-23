@@ -30,18 +30,20 @@ std::vector<unsigned char> named(bool duplicate=false,bool malformed=false) {
     return bytes;
 }
 bool same(const Digest& a,const Digest& b) { return !std::memcmp(a.bytes,b.bytes,32); }
+Digest digest(const ModelMember& member){AssetDescription row;assert(describe_checked(member.asset,&row));return row.digest;}
 int main() {
     install(nullptr,0);begin(0x111,1,Required);
     auto archive=indexed();int owner=0;ModelMember original{},later{};
     assert(member_adopt(&owner,archive.data(),archive.size(),true));
     assert(member_capture(archive.data()+64));assert(member_lookup(archive.data()+64,&original));assert(original.arc==4);
-    assert(same(original.digest,fingerprint(archive.data()+64,64)));
+    const Digest original_digest=digest(original);
+    assert(same(original_digest,fingerprint(archive.data()+64,64)));
     archive[72]=99; // pointer relocation / in-place FE mutation must not change bound digest
     assert(member_adopt(&owner,archive.data(),archive.size(),true));assert(member_capture(archive.data()+64));
-    assert(member_lookup(archive.data()+64,&later));assert(same(original.digest,later.digest));assert(original.serial==later.serial);
+    assert(member_lookup(archive.data()+64,&later));assert(same(original_digest,digest(later)));assert(original.serial==later.serial);
     member_retire(&owner);assert(!member_lookup(archive.data()+64,&later));
     assert(member_adopt(&owner,archive.data(),archive.size(),true));assert(member_capture(archive.data()+64));
-    assert(member_lookup(archive.data()+64,&later));assert(!same(original.digest,later.digest));assert(original.serial!=later.serial);
+    assert(member_lookup(archive.data()+64,&later));assert(!same(original_digest,digest(later)));assert(original.serial!=later.serial);
     member_retire_transient();assert(!member_lookup(archive.data()+64,&later));
     // Another owner cannot alias cached/mutated bytes and later hash them as
     // a fresh original payload after the first owner's retirement.
@@ -67,7 +69,7 @@ int main() {
     assert(!member_capture(duplicate.data()+64));member_retire(&owner);
     auto props=named();assert(member_adopt(&owner,props.data(),props.size(),true));
     assert(member_capture(props.data()+128));assert(member_lookup(props.data()+128,&later));
-    assert(!std::strcmp(later.name,"et0100.bin"));assert(later.arc==0);assert(same(later.digest,fingerprint(props.data()+128,128)));
+    assert(!std::strcmp(later.name,"et0100.bin"));assert(later.arc==0);assert(same(digest(later),fingerprint(props.data()+128,128)));
     assert(!member_capture(props.data()+510));member_retire(&owner);
     auto mixed=named();std::strcpy(reinterpret_cast<char*>(mixed.data()+288),"et0200.tpl");
     assert(member_adopt(&owner,mixed.data(),mixed.size(),true));assert(member_capture(mixed.data()+128));

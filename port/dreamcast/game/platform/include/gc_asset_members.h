@@ -4,7 +4,7 @@
 namespace re4dc_gcasset {
 enum OwnerFamily : unsigned char { OtherOwner,PlayerOwner,WeaponOwner };
 struct ModelMember {
-    Digest digest;
+    CheckedAsset asset;
     unsigned serial, arc, offset;
     char name[32];
     OwnerFamily family=OtherOwner;

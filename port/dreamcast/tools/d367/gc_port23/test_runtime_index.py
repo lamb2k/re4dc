@@ -4,12 +4,76 @@ import subprocess
 import tempfile
 import unittest
 from catalog_index import build, sha
+from test_runtime_hooks import function
 
 HERE = Path(__file__).resolve().parent
 GAME = HERE.parents[2] / 'game'
 
 
 class RuntimeIndexTests(unittest.TestCase):
+    def test_actual_disc_loader_and_texture_load_boundary(self):
+        payload = b'immutable full RE4TEX member'
+        blob, pin = build([dict(kind='texture', id='00000001-00000002', sha256=sha(payload).hex(), provenance='unknown', evidence='exact unproved bytes')])
+        ui = (GAME / 'platform/native_ui.cpp').read_text()
+        capture = function(ui, 'bool gcasset_texture_fingerprint(')
+        fixture = r'''
+#include "gc_asset_gate.h"
+#include <kos/fs.h>
+#include <fcntl.h>
+#include <cassert>
+#include <cstdarg>
+#include <cstdio>
+#include <cstring>
+#include <string>
+#include <vector>
+using namespace re4dc_gcasset;
+std::vector<unsigned char> catalog={BLOB},texture={PAYLOAD};
+unsigned offsets[3],opens,closes;bool missing;std::string logs;
+extern "C" void re4dc_log(const char* fmt,...){char line[256];va_list ap;va_start(ap,fmt);vsnprintf(line,sizeof line,fmt,ap);va_end(ap);logs+=line;}
+file_t fs_open(const char* path,int){++opens;if(missing)return FILEHND_INVALID;return !std::strcmp(path,"/cd/dc/gc-assets.idx")?1:2;}
+int fs_close(file_t){++closes;return 0;}
+off_t fs_total(file_t fd){return fd==1?catalog.size():texture.size();}
+off_t fs_seek(file_t fd,off_t at,int){offsets[fd]=unsigned(at);return at;}
+ssize_t fs_read(file_t fd,void* target,unsigned bytes){auto& source=fd==1?catalog:texture;unsigned& at=offsets[fd];if(at>source.size() || bytes>source.size()-at)return 0;memcpy(target,source.data()+at,bytes);at+=bytes;return bytes;}
+struct Key{unsigned crc,fnv;};struct Entry{CheckedAsset asset;Key key;};
+''' + capture + r'''
+int main(){
+    if(!std::strcmp(RE4DC_GC_ASSET_CATALOG_SHA256,"0")){
+        assert(!ensure_disc_catalog());assert(!ensure_disc_catalog());assert(!opens);
+        assert(logs.find("catalog-pin-missing")!=std::string::npos);return 0;
+    }
+    Entry entry{};entry.key={99,99};const Key key{1,2};
+    assert(gcasset_texture_fingerprint(entry,key,"/cd/member.tex",0,0));
+    AssetDescription row;assert(describe_checked(entry.asset,&row));assert(!std::strcmp(row.id,"00000001-00000002"));
+    assert(!memcmp(row.digest.bytes,fingerprint(texture.data(),texture.size()).bytes,32));
+    // The source key comes from the actual successful request, never a stale
+    // slot key assigned later by the production cache's publish operation.
+    const unsigned opened=opens;assert(opened==2 && closes==1);
+    begin(0x111,1,Required);emitted_checked(Texture,entry.asset);end(1);
+    begin(0x113,2,Required);assert(ensure_disc_catalog());emitted_checked(Texture,entry.asset);end(1);
+    assert(opens==opened);const CheckedAsset old=entry.asset;
+    retire_disc_catalog();assert(closes==2);assert(!describe_checked(old,&row));
+    assert(ensure_disc_catalog());assert(opens==opened+1);assert(!describe_checked(old,&row));
+    logs.clear();begin(0x111,3,Required);emitted_checked(Texture,old);end(1);assert(logs.find("catalog-token")!=std::string::npos);
+    retire_disc_catalog();missing=true;assert(!ensure_disc_catalog());const unsigned failed_opens=opens;
+    assert(!ensure_disc_catalog() && opens==failed_opens); // failure is not an auto-learning/retry path
+}
+'''
+        fixture = fixture.replace('BLOB', ','.join(map(str, blob))).replace('PAYLOAD', ','.join(map(str, payload)))
+        with tempfile.TemporaryDirectory(prefix='gc-port23-disc-', dir='/dev/shm') as temporary:
+            root = Path(temporary)
+            (root / 'kos').mkdir()
+            (root / 'kos/fs.h').write_text('#pragma once\n#include <sys/types.h>\nusing file_t=int;\nconstexpr file_t FILEHND_INVALID=-1;\nfile_t fs_open(const char*,int);int fs_close(file_t);off_t fs_total(file_t);off_t fs_seek(file_t,off_t,int);ssize_t fs_read(file_t,void*,unsigned);\n')
+            (root / 'fixture.cpp').write_text(fixture)
+            for configured in ('0', pin.hex()):
+                executable = root / ('fixture-' + configured[:8])
+                subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
+                                '-DRE4DC_GC_ASSET_GATE=1', '-DRE4DC_GC_ASSET_CATALOG_SHA256="'+configured+'"',
+                                '-I', str(root), '-I', str(GAME / 'platform/include'),
+                                str(root / 'fixture.cpp'), str(GAME / 'platform/gc_asset_disc.cpp'),
+                                str(GAME / 'platform/gc_asset_gate.cpp'), '-o', str(executable)], check=True)
+                subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
+
     def test_actual_reader_tokens_and_disc_room_lifetimes(self):
         blob, pin = build([
             dict(kind='texture', id='gc-key', sha256=sha(b'PS2 pixels').hex(), provenance='ps2', evidence='exact proof'),

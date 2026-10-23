@@ -85,15 +85,15 @@ bool re4dc_static_submit(const Re4dcModelPart*){return false;}
 void observe_selected(const Re4dcModelPart* p){gcasset_model_prepare(p);sq_held=true;gcasset_model_accept();sq_held=false;}
 ''' + gateway + r'''
 std::vector<unsigned char> blob(unsigned byte){std::vector<unsigned char>b(128);unsigned one=1,off=32;std::memcpy(b.data(),&one,4);std::memcpy(b.data()+16,&off,4);std::memcpy(b.data()+20,"BIN",3);b[40]=byte;return b;}
-std::string id(const re4dc_gcasset::Digest&d){std::string r;char buf[3];for(unsigned i=0;i<20;++i){snprintf(buf,sizeof buf,"%02x",d.bytes[i]);r+=buf;}return r;}
+std::string id(const re4dc_gcasset::ModelMember&m){re4dc_gcasset::AssetDescription row;assert(re4dc_gcasset::describe_checked(m.asset,&row));return row.id;}
 int main(){using namespace re4dc_gcasset;int ownerA,ownerB;cModel model{};auto a=blob(1),b=blob(2);ModelMember ma,mb;
  install(nullptr,0);begin(0x111,1,Required);assert(member_adopt(&ownerA,a.data(),128,true)&&member_capture(a.data()+32));assert(member_adopt(&ownerB,b.data(),128,true)&&member_capture(b.data()+32));assert(member_lookup(a.data()+32,&ma)&&member_lookup(b.data()+32,&mb));
  cModelInfo info{b.data()+32};Re4dcModelPart queued{&model,&info,0,nullptr,nullptr,{0,0,0},a.data()+32};
  {ReplayScope replay(ma.serial,1U<<SourceGeometry);re4dc_model_submit(&queued);}member_flush();
- assert(logs.find("id="+id(ma.digest))!=std::string::npos);assert(logs.find("id="+id(mb.digest))==std::string::npos);
+ assert(logs.find("id="+id(ma))!=std::string::npos);assert(logs.find("id="+id(mb))==std::string::npos);
  logs.clear();member_retire(&ownerA);
  {ReplayScope replay(ma.serial,1U<<SourceGeometry);re4dc_model_submit(&queued);}member_flush();
- assert(logs.find("unbound-accepted-model")!=std::string::npos);assert(logs.find("id="+id(mb.digest))==std::string::npos);
+ assert(logs.find("unbound-accepted-model")!=std::string::npos);assert(logs.find("id="+id(mb))==std::string::npos);
 }
 '''
         with tempfile.TemporaryDirectory(prefix='gc-port23-replay-', dir='/dev/shm') as temporary:
@@ -269,7 +269,7 @@ Digest original;
 void check_prepared(void* blob){
     auto* data=static_cast<unsigned char*>(blob)+32;
     assert(member_capture(data));ModelMember m;assert(member_lookup(data,&m));
-    assert(!std::memcmp(m.digest.bytes,original.bytes,32));
+    AssetDescription row;assert(describe_checked(m.asset,&row));assert(!std::memcmp(row.digest.bytes,original.bytes,32));
 }
 void re4dc_actor_archive_adopt(const void*,void* blob,unsigned,unsigned){
     check_prepared(blob);static_cast<unsigned char*>(blob)[32]^=1; // simulated relocation/FE mutation
@@ -292,6 +292,7 @@ std::vector<unsigned char> archive(){
 }
 int main(){
     auto core=archive(),room=archive(),option=archive(),player=archive(),weapon=archive(),enemy=archive(),plain=archive();
+    assert(install(nullptr,0));
     original=fingerprint(core.data()+32,96);
     assert(re4dc_ui_bind_core(core.data(),128));assert(re4dc_ui_bind_room(room.data(),128));
     assert(re4dc_ui_bind_option(option.data(),128));assert(re4dc_ui_bind_player(player.data(),128));
@@ -311,7 +312,7 @@ int main(){
     assert(!member_lookup(core.data()+32,&m)); // actual loader retires before DVD overwrite
     core[40]=99;original=fingerprint(core.data()+32,96);
     assert(re4dc_ui_bind_core(core.data(),128));assert(member_lookup(core.data()+32,&m));
-    assert(m.serial!=before && !std::memcmp(m.digest.bytes,original.bytes,32));
+    AssetDescription row;assert(describe_checked(m.asset,&row));assert(m.serial!=before && !std::memcmp(row.digest.bytes,original.bytes,32));
 }
 '''
         with tempfile.TemporaryDirectory(prefix='gc-port23-bind-', dir='/dev/shm') as temporary:
@@ -411,7 +412,7 @@ struct Package {
   void* pvr_texture(unsigned) const { return reinterpret_cast<void*>(std::uintptr_t(address)); }
 };
 struct Entry { Package package;struct Key { unsigned crc,fnv; } key;bool valid;
-  re4dc_gcasset::Digest asset_digest{};unsigned asset_consumers=0;
+  re4dc_gcasset::CheckedAsset asset{};unsigned asset_consumers=0;
 };
 struct Re4dcModelPart {const void* model;const void* info;};
 Entry entries[2];
@@ -427,7 +428,8 @@ int main() {
   using namespace re4dc_gcasset;
   entries[0].valid=true;entries[0].package.address=0x1000;entries[0].key={1,2};
   entries[1].valid=true;entries[1].package.address=0x2000;entries[1].key={3,4};
-  install(nullptr,0);begin(0x111,1,Required);
+  install(nullptr,0);entries[0].asset=bind_checked("texture","00000001-00000002",Digest{});
+  entries[1].asset=bind_checked("texture","00000003-00000004",Digest{});begin(0x111,1,Required);
   std::uint32_t header[8]={0x80000008,0,0,0x1000/8};
   std::uint32_t vertex[8]={0xe0000000};
   gcasset_packet_emitted(header,sizeof header,0,Texture);
