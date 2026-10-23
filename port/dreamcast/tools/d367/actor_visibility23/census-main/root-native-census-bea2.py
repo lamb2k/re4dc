@@ -15,7 +15,7 @@ def held_trace():
  root=Path(r'\\wsl.localhost\Ubuntu-24.04\root\probe');found=[]
  for path in root.glob('.trace.holder*'):
   text=path.read_text(errors='strict')
-  if 'actor23-root-census-bea2r2' in text and 'root-native-census-bea2.py' in text:found.append(path)
+  if 'actor23-root-census-bea2r3' in text and 'root-native-census-bea2.py' in text:found.append(path)
  if len(found)!=1:raise ValueError('exact single census trace holder required')
  suffix=found[0].name.removeprefix('.trace.holder')
  if suffix not in ('',*(f'.{i}'for i in range(1,16))):raise ValueError('trace slot outside global16')
@@ -32,6 +32,7 @@ def review_record(stage,programme,stage_pin,processes,paths,resources_path,resou
  return r
 def execute(a,resources,stage):
  if os.name!='nt':raise ValueError('Windows native controller required')
+ c.validate_native_stage(stage)
  sys.path.insert(0,str(c.ADAPTER));sys.path.insert(0,str(c.LANE.parent/'world-scratch23'))
  from contain import all_guest_count
  from binding_helpers import native_path
@@ -50,7 +51,7 @@ def execute(a,resources,stage):
   if hashlib.sha256(blob).hexdigest()!=pin:raise ValueError('stock/trace differs in exact source')
  programme=c.checked(native_path(stage['programme_receipt']),c.PROGRAMME_SHA)
  processes=c.require_no_guests(census(all_guest_count))
- run=Path(a.stage).absolute().parent/'root-runs/census-bea2r2';prefix=run/c.CASE
+ run=Path(a.stage).absolute().parent/'root-runs/census-bea2r3';prefix=run/c.CASE
  paths={name:prefix.with_suffix('.'+name+'.json')for name in ('profile','allocation','review','environment','processes','final-admission')}
  if any(p.exists()for p in paths.values()):raise FileExistsError('preserve previous attempt; no retry')
  # All writes and native execution are behind explicit --execute, exact stage,
@@ -70,6 +71,7 @@ def execute(a,resources,stage):
  c.validate_resources(c.checked(a.resources,a.resources_sha256));source_clean();held_trace()
  final=c.require_no_guests(census(all_guest_count));save(paths['final-admission'],final)
  if shutil.disk_usage('C:/').free<c.FLOOR+resources['guest_peak']:raise ValueError('C floor changed before one guest')
+ c.validate_native_stage(stage)
  save(paths['allocation'],dict(allocated=True,profile_sha256=c.sha(paths['profile']),controller_sha256=c.sha(c.ADAPTER/'contain.py'),attempt_limit=1,guard_seconds=59,closure_seconds=59.5))
  subprocess.run([sys.executable,'-B',str(c.ADAPTER/'launch.py'),'--profile',str(paths['profile']),'--profile-sha256',c.sha(paths['profile']),'--allocation',str(paths['allocation']),'--allocation-sha256',c.sha(paths['allocation']),'--execute'],check=True)
 def main():

@@ -5,6 +5,7 @@ P = Path(__file__).resolve().parent
 log = subprocess.run([sys.executable, '-B', str(P/'test_runner.py'), '-v'], capture_output=True, text=True)
 if log.returncode: raise RuntimeError(log.stdout+log.stderr)
 checks = []
+c.validate_native_stage(json.loads(Path('C:/Flycast-Evidence/re4-dreamcast/pvs23-20261022/actor23-bea2d402-on-q01/stage-receipt-native-paths.json').read_bytes()))
 stage = json.loads(Path('C:/Flycast-Evidence/re4-dreamcast/pvs23-20261022/actor23-bea2d402-on-q01/stage-receipt.json').read_bytes())
 bind = json.loads((P.parent/'native-census-bea2r2/BINDINGS.json').read_bytes())
 for key in ('ownership_audit','kos_receipt','module_roster'):

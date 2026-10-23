@@ -43,6 +43,6 @@ class RunnerTests(unittest.TestCase):
    path=Path(folder)/'input.json';path.write_text('{}')
    with self.assertRaises(ValueError):c.checked(path,'a'*64)
  def test_shell_explicit_execute_trace_and_no_game_hooks(self):
-  text=(P/'root-native-census-bea2.sh').read_text();self.assertIn('TRACE_SLOTS=16',text);self.assertIn('TRACE_LOCK_OWNER=actor23-root-census-bea2r2',text);self.assertIn('execute=0',text);self.assertIn('[ "$arg" != --execute ]',text);self.assertIn('if [ "$execute" -eq 0 ]',text)
+  text=(P/'root-native-census-bea2.sh').read_text();self.assertIn('TRACE_SLOTS=16',text);self.assertIn('TRACE_LOCK_OWNER=actor23-root-census-bea2r3',text);self.assertIn('execute=0',text);self.assertIn('[ "$arg" != --execute ]',text);self.assertIn('if [ "$execute" -eq 0 ]',text)
   code=(P/'root-native-census-bea2.py').read_text();self.assertNotIn('WriteProcessMemory',code);self.assertNotIn('capture_ui_vram(',code);self.assertIn("source_clean();held_trace()",code);self.assertIn('census(all_guest_count)',code)
 if __name__=='__main__':unittest.main()

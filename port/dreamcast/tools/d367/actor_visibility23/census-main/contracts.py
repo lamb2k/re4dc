@@ -56,3 +56,22 @@ def require_bound_receipt(actual, expected, native_path):
   raise ValueError('bound receipt path identity differs')
  if actual.get('sha256') != expected['sha256'] or sha(left) != expected['sha256']:
   raise ValueError('bound receipt content identity differs')
+def validate_native_stage(stage):
+ original_path = Path('C:/Flycast-Evidence/re4-dreamcast/pvs23-20261022/actor23-bea2d402-on-q01/stage-receipt.json')
+ derivative_path = original_path.with_name('stage-receipt-native-paths.json')
+ original = checked(original_path, '0dd7482f61af065e66edae065cd165b983eeaf5833503262a18ec3389ef58430')
+ derivative = checked(derivative_path, '379a745f37b1c2d26f6e6335df50376cbb26e35248432b7e77b0cf6a83d35f00')
+ if stage != derivative: raise ValueError('Exact path-only derivative required')
+ provenance = derivative['native_path_provenance']
+ if provenance['original'] != dict(path=str(original_path), sha256='0dd7482f61af065e66edae065cd165b983eeaf5833503262a18ec3389ef58430'): raise ValueError('Original stage provenance differs')
+ expected = json.loads(json.dumps(original))
+ changes = {}
+ binding = json.loads((ADAPTER/'BINDINGS.json').read_bytes())
+ for key in ('ownership_audit','kos_receipt','module_roster'):
+  require_bound_receipt(original[key],binding[key],Path)
+  if original[key]['path'] != binding[key]['path']:
+   changes[key] = dict(before=original[key]['path'],after=binding[key]['path'])
+  expected[key]['path'] = binding[key]['path']
+ expected['native_path_provenance'] = dict(original=provenance['original'], changes=changes, scope='Receipt path spelling only; original staged programme, assets, members and fixture unchanged.')
+ if derivative != expected: raise ValueError('Non-path stage change refused')
+ return derivative
