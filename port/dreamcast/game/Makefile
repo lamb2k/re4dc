@@ -1790,6 +1790,28 @@ KOS_DISC_FIX ?= 0
 ifneq ($(filter $(KOS_DISC_FIX),0 1),$(KOS_DISC_FIX))
 $(error KOS_DISC_FIX must be 0 or 1)
 endif
+# DISC_DMA_WAIT_TIMEOUT=1 (issue #28 DreamShell, lane fix-dreamshell23 2026-10-23, default 0 = image unchanged; needs
+# KOS_DISC_FIX=1): KOS waited on a GD DMA completion with no limit (sector reads and stream requests), so a loader that
+# never completes a DMA (DreamShell's ISO loader, first read bgm/bio4str.hed) hung the boot before DISC_READ_FALLBACK=3's
+# plain-read fallback could run. kos-804b319-cdrom-dma-wait-timeout.patch bounds each wait (5 s + 8 ms a sector, the v2
+# command bound); a timeout closes the DMA state and returns ERR_TIMEOUT, and dvd_read_safe.cpp logs
+# "disc dma wait timeout" and falls back (stream: PIO/plain fill + session latch; sector read: latch + plain read).
+# DISC_DMA_DROP_TEST=1 (test discs only): the first blocking DMA after 1 s of uptime never gets its completion.
+DISC_DMA_WAIT_TIMEOUT ?= 0
+DISC_DMA_DROP_TEST ?= 0
+ifneq ($(filter $(DISC_DMA_WAIT_TIMEOUT),0 1),$(DISC_DMA_WAIT_TIMEOUT))
+$(error DISC_DMA_WAIT_TIMEOUT must be 0 or 1)
+endif
+ifeq ($(DISC_DMA_WAIT_TIMEOUT),1)
+ifneq ($(KOS_DISC_FIX),1)
+$(error DISC_DMA_WAIT_TIMEOUT=1 needs KOS_DISC_FIX=1 (DISC_COMPAT=1))
+endif
+endif
+ifeq ($(DISC_DMA_DROP_TEST),1)
+ifneq ($(DISC_DMA_WAIT_TIMEOUT),1)
+$(error DISC_DMA_DROP_TEST=1 needs DISC_DMA_WAIT_TIMEOUT=1)
+endif
+endif
 ifeq ($(KOS_DISC_FIX),1)
 KOSFIX := $(OBJDIR)/kosfix
 KOS_PATCHES := $(CURDIR)/../patches
@@ -1808,7 +1830,17 @@ $(KOSFIX)/cdrom.c: $(KOS_BASE)/kernel/arch/dreamcast/hardware/cdrom.c $(KOS_PATC
 	cp $< $(KOSFIX)/p-cd/kernel/arch/dreamcast/hardware/
 	patch --fuzz=0 -s -p1 -d $(KOSFIX)/p-cd < $(KOS_PATCHES)/kos-804b319-cdrom-hang-fixes.patch
 	patch --fuzz=0 -s -p1 -d $(KOSFIX)/p-cd < $(KOS_PATCHES)/kos-804b319-cdrom-dma-done.patch
+ifeq ($(DISC_DMA_WAIT_TIMEOUT),1)
+	patch --fuzz=0 -s -p1 -d $(KOSFIX)/p-cd < $(KOS_PATCHES)/kos-804b319-cdrom-dma-wait-timeout.patch
+endif
 	cp $(KOSFIX)/p-cd/kernel/arch/dreamcast/hardware/cdrom.c $@
+ifeq ($(DISC_DMA_WAIT_TIMEOUT),1)
+$(KOSFIX)/cdrom.c: $(KOS_PATCHES)/kos-804b319-cdrom-dma-wait-timeout.patch
+$(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_DMA_WAIT_TIMEOUT=1
+ifeq ($(DISC_DMA_DROP_TEST),1)
+$(KOSFIX)/cdrom.o: KOS_CFLAGS += -DRE4DC_DISC_DMA_DROP_TEST=1
+endif
+endif
 $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_KOS_DMA_COUNTERS=1
 endif
 # The stage row's GD DMA counters (platform/kos_dma_counters.h: empty unless KOS_DISC_FIX=1).

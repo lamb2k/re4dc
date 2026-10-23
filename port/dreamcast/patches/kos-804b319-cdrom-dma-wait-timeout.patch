@@ -1,0 +1,71 @@
+RE4DC (issue #28, lane fix-dreamshell23 2026-10-23; DISC_DMA_WAIT_TIMEOUT=1): bound the blocking GD DMA waits
+(sector read, stream request) so a loader that never completes a DMA (DreamShell) falls back to plain reads.
+Applied after kos-804b319-cdrom-dma-done.patch.
+
+--- a/kernel/arch/dreamcast/hardware/cdrom.c
++++ b/kernel/arch/dreamcast/hardware/cdrom.c
+@@ -99,6 +99,40 @@
+     irq_restore(old);
+     re4dc_dma_drain();
+ }
++/* RE4DC DISC_DMA_WAIT_TIMEOUT (issue #28, lane fix-dreamshell23 10-23): a blocking GD DMA wait (sector read or stream
++   request) is bounded. DreamShell's ISO loader never completed the first DMA read (bgm/bio4str.hed) and KOS waited on
++   dma_done with no limit, so the game's plain-read fallback (DISC_READ_FALLBACK=3) never ran. The bound is 5 s + 8 ms
++   a sector (dvd_read_safe.cpp v2's command timeout). On a timeout the DMA state is closed here and ERR_TIMEOUT
++   returned; the caller falls back. re4dc_cdrom_wait_max_us is the longest wait seen (measurement). With
++   DISC_DMA_DROP_TEST=1 (test discs only) the first blocking DMA after 1 s of uptime gets no completion signal. */
++unsigned re4dc_cdrom_wait_timeouts, re4dc_cdrom_wait_max_us, re4dc_cdrom_wait_last_ms;
++#ifdef RE4DC_DISC_DMA_DROP_TEST
++static int re4dc_drop_done;
++#endif
++static int re4dc_dma_wait(size_t bytes) {
++    unsigned ms = 5000u + 8u * (unsigned)((bytes + 2047) / 2048);
++    uint64_t t0 = timer_us_gettime64();
++#ifdef RE4DC_DISC_DMA_DROP_TEST
++    if(!re4dc_drop_done && timer_ms_gettime64() >= 1000) {
++        int o = irq_disable();
++        re4dc_drop_done = 1;
++        dma_blocking = false;      /* neither handler signals dma_done: the completion never arrives */
++        irq_restore(o);
++    }
++#endif
++    int rv = sem_wait_timed(&dma_done, ms);
++    unsigned us = (unsigned)(timer_us_gettime64() - t0);
++    if(us > re4dc_cdrom_wait_max_us) re4dc_cdrom_wait_max_us = us;
++    if(rv == 0) return 0;
++    int old = irq_disable();
++    dma_in_progress = false;
++    dma_blocking = false;
++    dma_auto_unlock = false;
++    irq_restore(old);
++    ++re4dc_cdrom_wait_timeouts;
++    re4dc_cdrom_wait_last_ms = ms;
++    return -1;
++}
+ static asic_evt_handler_entry_t old_dma_irq = {NULL, NULL};
+ static int vblank_hnd = -1;
+ 
+@@ -421,7 +455,10 @@
+ 
+     if(cmd_response == CD_CMD_PROCESSING) {
+         /* Wait DMA is finished or command failed. */
+-        sem_wait(&dma_done);
++        if(re4dc_dma_wait(params->num_sec * 2048) < 0) {
++            cmd_hnd = 0;
++            return ERR_TIMEOUT;
++        }
+ 
+         /* Just to make sure the command is finished properly.
+            Usually we are already done here. */
+@@ -614,7 +651,10 @@
+         if(!block) {
+             return ERR_OK;
+         }
+-        sem_wait(&dma_done);
++        if(re4dc_dma_wait(size) < 0) {
++            sem_signal(&_g1_ata_sem);
++            return ERR_TIMEOUT;
++        }
+         re4dc_dma_settle();
+     }
+     else {
