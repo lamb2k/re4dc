@@ -3426,3 +3426,6 @@ include qamenu.mk
 
 # Isolated bounded A/B/C memory experiment; default 0.
 include worldscratch.mk
+
+# Pinned KOS whole-cache writeback repair; default 0, shared KOS untouched.
+include kos_cache_p2.mk

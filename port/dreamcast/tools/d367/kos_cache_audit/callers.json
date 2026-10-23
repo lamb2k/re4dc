@@ -1,0 +1,1315 @@
+{
+  "scope": "Source token census, not runtime reachability or a linked-program call graph.",
+  "base": "ea969bb241f77291d2ca43d706c9dc2d1226ee76",
+  "kos_inline_callers": {
+    "kernel/arch/dreamcast/hardware/network/broadband_adapter.c": [
+      628
+    ],
+    "kernel/arch/dreamcast/hardware/dmac.c": [
+      86
+    ],
+    "kernel/arch/dreamcast/hardware/g1ata.c": [
+      895
+    ],
+    "kernel/arch/dreamcast/kernel/exec.c": [
+      45,
+      58
+    ]
+  },
+  "repository": {
+    "references": [
+      {
+        "path": "include/dolphin/os/OSCache.h",
+        "line": 11,
+        "symbol": "DCFlushRange",
+        "role": "definition or declaration",
+        "source": "void DCFlushRange(void* addr, u32 nBytes);"
+      },
+      {
+        "path": "include/dolphin/os/OSCache.h",
+        "line": 12,
+        "symbol": "DCStoreRange",
+        "role": "definition or declaration",
+        "source": "void DCStoreRange(void* addr, u32 nBytes);"
+      },
+      {
+        "path": "include/dolphin/os/OSCache.h",
+        "line": 13,
+        "symbol": "DCFlushRangeNoSync",
+        "role": "definition or declaration",
+        "source": "void DCFlushRangeNoSync(void* addr, u32 nBytes);"
+      },
+      {
+        "path": "include/dolphin/os/OSCache.h",
+        "line": 14,
+        "symbol": "DCStoreRangeNoSync",
+        "role": "definition or declaration",
+        "source": "void DCStoreRangeNoSync(void* addr, u32 nBytes);"
+      },
+      {
+        "path": "include/os_vi.h",
+        "line": 17,
+        "symbol": "DCStoreRange",
+        "role": "definition or declaration",
+        "source": "void DCStoreRange(void* addr, u32 nBytes);"
+      },
+      {
+        "path": "include/snd_sdk.h",
+        "line": 37,
+        "symbol": "DCFlushRange",
+        "role": "definition or declaration",
+        "source": "void DCFlushRange(void* addr, u32 nBytes);"
+      },
+      {
+        "path": "include/snd_sdk.h",
+        "line": 38,
+        "symbol": "DCStoreRange",
+        "role": "definition or declaration",
+        "source": "void DCStoreRange(void* addr, u32 nBytes);"
+      },
+      {
+        "path": "port/dreamcast/game/platform/cache_lines.h",
+        "line": 16,
+        "symbol": "RE4DC_DCACHE_WBACK",
+        "role": "macro definition",
+        "source": "#define RE4DC_DCACHE_WBACK(a, n) re4dc_dcache_wback_lines((a), (n))"
+      },
+      {
+        "path": "port/dreamcast/game/platform/cache_lines.h",
+        "line": 18,
+        "symbol": "RE4DC_DCACHE_WBACK",
+        "role": "macro definition",
+        "source": "#define RE4DC_DCACHE_WBACK(a, n) dcache_wback_range((a), (n))"
+      },
+      {
+        "path": "port/dreamcast/game/platform/cache_lines.h",
+        "line": 18,
+        "symbol": "dcache_wback_range",
+        "role": "macro definition",
+        "source": "#define RE4DC_DCACHE_WBACK(a, n) dcache_wback_range((a), (n))"
+      },
+      {
+        "path": "port/dreamcast/game/platform/misc.cpp",
+        "line": 19,
+        "symbol": "DCFlushRange",
+        "role": "definition or declaration",
+        "source": "void DCFlushRange(void* addr, u32 n) { RE4DC_DCACHE_WBACK((uintptr_t) addr, n); }"
+      },
+      {
+        "path": "port/dreamcast/game/platform/misc.cpp",
+        "line": 19,
+        "symbol": "RE4DC_DCACHE_WBACK",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "void DCFlushRange(void* addr, u32 n) { RE4DC_DCACHE_WBACK((uintptr_t) addr, n); }"
+      },
+      {
+        "path": "port/dreamcast/game/platform/misc.cpp",
+        "line": 20,
+        "symbol": "DCFlushRangeNoSync",
+        "role": "definition or declaration",
+        "source": "void DCFlushRangeNoSync(void* addr, u32 n) { RE4DC_DCACHE_WBACK((uintptr_t) addr, n); }"
+      },
+      {
+        "path": "port/dreamcast/game/platform/misc.cpp",
+        "line": 20,
+        "symbol": "RE4DC_DCACHE_WBACK",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "void DCFlushRangeNoSync(void* addr, u32 n) { RE4DC_DCACHE_WBACK((uintptr_t) addr, n); }"
+      },
+      {
+        "path": "port/dreamcast/game/platform/misc.cpp",
+        "line": 21,
+        "symbol": "DCStoreRange",
+        "role": "definition or declaration",
+        "source": "void DCStoreRange(void* addr, u32 n) { RE4DC_DCACHE_WBACK((uintptr_t) addr, n); }"
+      },
+      {
+        "path": "port/dreamcast/game/platform/misc.cpp",
+        "line": 21,
+        "symbol": "RE4DC_DCACHE_WBACK",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "void DCStoreRange(void* addr, u32 n) { RE4DC_DCACHE_WBACK((uintptr_t) addr, n); }"
+      },
+      {
+        "path": "port/dreamcast/game/platform/misc.cpp",
+        "line": 22,
+        "symbol": "DCStoreRangeNoSync",
+        "role": "definition or declaration",
+        "source": "void DCStoreRangeNoSync(void* addr, u32 n) { RE4DC_DCACHE_WBACK((uintptr_t) addr, n); }"
+      },
+      {
+        "path": "port/dreamcast/game/platform/misc.cpp",
+        "line": 22,
+        "symbol": "RE4DC_DCACHE_WBACK",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "void DCStoreRangeNoSync(void* addr, u32 n) { RE4DC_DCACHE_WBACK((uintptr_t) addr, n); }"
+      },
+      {
+        "path": "port/dreamcast/game/platform/modules.cpp",
+        "line": 616,
+        "symbol": "RE4DC_DCACHE_WBACK",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "RE4DC_DCACHE_WBACK(reinterpret_cast<uintptr_t>(image), h.image_bytes);"
+      },
+      {
+        "path": "port/dreamcast/game/platform/modules.cpp",
+        "line": 815,
+        "symbol": "RE4DC_DCACHE_WBACK",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "RE4DC_DCACHE_WBACK(reinterpret_cast<uintptr_t>(image), o.image_bytes);"
+      },
+      {
+        "path": "port/dreamcast/game/platform/subscreen_backing.cpp",
+        "line": 743,
+        "symbol": "RE4DC_DCACHE_WBACK",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "RE4DC_DCACHE_WBACK(reinterpret_cast<uintptr_t>(p), bytes);"
+      },
+      {
+        "path": "src/game/Espgen42.cpp",
+        "line": 730,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->pos, n);"
+      },
+      {
+        "path": "src/game/Espgen42.cpp",
+        "line": 731,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->nrm, n);"
+      },
+      {
+        "path": "src/game/Espgen42.cpp",
+        "line": 732,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->bump, sizeof(Vec) * (p->nx + 1) * (p->ny + 1));"
+      },
+      {
+        "path": "src/game/Espgen42.cpp",
+        "line": 1172,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->pos, n2);"
+      },
+      {
+        "path": "src/game/Espgen42.cpp",
+        "line": 1173,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->nrm, n2);"
+      },
+      {
+        "path": "src/game/Espgen42.cpp",
+        "line": 1175,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->bump, sizeof(Vec) * (p->nx + 1) * (p->ny + 1));"
+      },
+      {
+        "path": "src/game/Espgen42.cpp",
+        "line": 1178,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->hA, n3);"
+      },
+      {
+        "path": "src/game/Espgen42.cpp",
+        "line": 1179,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->hB, n3);"
+      },
+      {
+        "path": "src/game/Espgen42.cpp",
+        "line": 1181,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->dl, p->dlSize);"
+      },
+      {
+        "path": "src/game/Espgen43.cpp",
+        "line": 235,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->pHeightBuf, n);"
+      },
+      {
+        "path": "src/game/Espgen43.cpp",
+        "line": 236,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->pNorBuf, n);"
+      },
+      {
+        "path": "src/game/Espgen43.cpp",
+        "line": 536,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->pHeightBuf, n2);"
+      },
+      {
+        "path": "src/game/Espgen43.cpp",
+        "line": 537,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->pNorBuf, n2);"
+      },
+      {
+        "path": "src/game/Espgen43.cpp",
+        "line": 539,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->pDisplayList, p->Dpl_size);"
+      },
+      {
+        "path": "src/game/block.cpp",
+        "line": 27,
+        "symbol": "DCFlushRange",
+        "role": "definition or declaration",
+        "source": "void DCFlushRange(void* addr, u32 nBytes);"
+      },
+      {
+        "path": "src/game/block.cpp",
+        "line": 686,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(dst, pData->m_size);"
+      },
+      {
+        "path": "src/game/card.cpp",
+        "line": 63,
+        "symbol": "DCFlushRange",
+        "role": "definition or declaration",
+        "source": "void DCFlushRange(void* addr, u32 nBytes);"
+      },
+      {
+        "path": "src/game/card.cpp",
+        "line": 861,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(pSaveBuf, SAVE_SIZE);"
+      },
+      {
+        "path": "src/game/card.cpp",
+        "line": 898,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(pSaveBuf, SYS_SIZE);"
+      },
+      {
+        "path": "src/game/card.cpp",
+        "line": 2001,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(&s->stat, sizeof(CardStat));"
+      },
+      {
+        "path": "src/game/card.cpp",
+        "line": 2801,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(buf, len);"
+      },
+      {
+        "path": "src/game/datactrl.cpp",
+        "line": 31,
+        "symbol": "DCFlushRange",
+        "role": "definition or declaration",
+        "source": "void DCFlushRange(void* addr, u32 nBytes);"
+      },
+      {
+        "path": "src/game/datactrl.cpp",
+        "line": 304,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange((void*) arg, m_size);"
+      },
+      {
+        "path": "src/game/datactrl.cpp",
+        "line": 310,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange((void*) arg, m_size);"
+      },
+      {
+        "path": "src/game/datactrl.cpp",
+        "line": 371,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange((void*) dest, m_size);"
+      },
+      {
+        "path": "src/game/dbmodule.cpp",
+        "line": 22,
+        "symbol": "DCFlushRange",
+        "role": "definition or declaration",
+        "source": "void DCFlushRange(void* addr, u32 nBytes);"
+      },
+      {
+        "path": "src/game/dbmodule.cpp",
+        "line": 60,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(sphere_buff, 0x3040);"
+      },
+      {
+        "path": "src/game/dbmodule.cpp",
+        "line": 61,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(circle_buff, 0x4C0);"
+      },
+      {
+        "path": "src/game/dbmodule.cpp",
+        "line": 62,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(cylinder_buff, 0x4C0);"
+      },
+      {
+        "path": "src/game/dbmodule.cpp",
+        "line": 63,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(corn_buff, 0x3040);"
+      },
+      {
+        "path": "src/game/dvd.cpp",
+        "line": 311,
+        "symbol": "DCFlushRange",
+        "role": "definition or declaration",
+        "source": "void DCFlushRange(void* addr, u32 nBytes);"
+      },
+      {
+        "path": "src/game/dvd.cpp",
+        "line": 563,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(mram, size);"
+      },
+      {
+        "path": "src/game/dvd.cpp",
+        "line": 595,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(mram, size);"
+      },
+      {
+        "path": "src/game/dvd.cpp",
+        "line": 607,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange((void*) addr, size);"
+      },
+      {
+        "path": "src/game/dvd.cpp",
+        "line": 625,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(buf, n);"
+      },
+      {
+        "path": "src/game/dvd.cpp",
+        "line": 1310,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange((void*) (r->type == 0 ? r->src : r->dst), r->len);"
+      },
+      {
+        "path": "src/game/eff_sys.cpp",
+        "line": 314,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(g_EspCommonDisplayList, sizeof(g_EspCommonDisplayList));"
+      },
+      {
+        "path": "src/game/espgen45.cpp",
+        "line": 440,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->pos, n);"
+      },
+      {
+        "path": "src/game/espgen45.cpp",
+        "line": 442,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->nrm, n);"
+      },
+      {
+        "path": "src/game/espgen45.cpp",
+        "line": 443,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->bump, sizeof(Vec) * (p->nx + 1) * (p->ny + 1));"
+      },
+      {
+        "path": "src/game/espgen45.cpp",
+        "line": 1552,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->pos, n2);"
+      },
+      {
+        "path": "src/game/espgen45.cpp",
+        "line": 1554,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->nrm, n2);"
+      },
+      {
+        "path": "src/game/espgen45.cpp",
+        "line": 1558,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->bump, sizeof(Vec) * (p->nx + 1) * (p->ny + 1));"
+      },
+      {
+        "path": "src/game/espgen45.cpp",
+        "line": 1562,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->hA, n3);"
+      },
+      {
+        "path": "src/game/espgen45.cpp",
+        "line": 1563,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->hB, n3);"
+      },
+      {
+        "path": "src/game/espgen45.cpp",
+        "line": 1566,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p->dl, p->dlSize);"
+      },
+      {
+        "path": "src/game/main_sub.cpp",
+        "line": 68,
+        "symbol": "DCFlushRange",
+        "role": "definition or declaration",
+        "source": "void DCFlushRange(void* addr, u32 nBytes);"
+      },
+      {
+        "path": "src/game/main_sub.cpp",
+        "line": 390,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(pFrame_buff[0], 0x8C000);"
+      },
+      {
+        "path": "src/game/main_sub.cpp",
+        "line": 391,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(pFrame_buff[1], 0x8C000);"
+      },
+      {
+        "path": "src/game/snd_main.cpp",
+        "line": 64,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(zero_tbl, sizeof(zero_tbl));"
+      },
+      {
+        "path": "src/game/sofdec.cpp",
+        "line": 19,
+        "symbol": "DCFlushRangeNoSync",
+        "role": "definition or declaration",
+        "source": "void DCFlushRangeNoSync(void* addr, u32 nBytes);"
+      },
+      {
+        "path": "src/game/sofdec.cpp",
+        "line": 286,
+        "symbol": "DCFlushRangeNoSync",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRangeNoSync(tex->yuv.bufY, tex->yuv.sizeY);"
+      },
+      {
+        "path": "src/game/sofdec.cpp",
+        "line": 287,
+        "symbol": "DCFlushRangeNoSync",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRangeNoSync(tex->yuv.bufUV, tex->yuv.sizeUV);"
+      },
+      {
+        "path": "src/game/sofdec.cpp",
+        "line": 295,
+        "symbol": "DCFlushRangeNoSync",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRangeNoSync(tex->argb.buf, tex->argb.size);"
+      },
+      {
+        "path": "src/game/trans.cpp",
+        "line": 144,
+        "symbol": "DCStoreRangeNoSync",
+        "role": "definition or declaration",
+        "source": "void DCStoreRangeNoSync(void* addr, u32 nBytes);"
+      },
+      {
+        "path": "src/game/trans.cpp",
+        "line": 1434,
+        "symbol": "DCStoreRangeNoSync",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRangeNoSync(primStart, (u8*) pG->prim_base - primStart);"
+      },
+      {
+        "path": "src/game/trans.cpp",
+        "line": 2177,
+        "symbol": "DCStoreRangeNoSync",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRangeNoSync(info->pPosBuf[pG->vtx_buf_no], d->nVtx * 6);"
+      },
+      {
+        "path": "src/game/trans.cpp",
+        "line": 2203,
+        "symbol": "DCStoreRangeNoSync",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRangeNoSync(info->pNrmBuf[pG->vtx_buf_no], d->nNrm * 6);"
+      },
+      {
+        "path": "src/game/trans.cpp",
+        "line": 6041,
+        "symbol": "DCStoreRangeNoSync",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRangeNoSync(info->pPosBuf[pG->vtx_buf_no], d->nVtx * 6);"
+      },
+      {
+        "path": "src/game/trans.cpp",
+        "line": 6051,
+        "symbol": "DCStoreRangeNoSync",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRangeNoSync(info->pNrmBuf[pG->vtx_buf_no], d->nNrm * 6);"
+      },
+      {
+        "path": "src/lib/AXAux.c",
+        "line": 122,
+        "symbol": "DCFlushRangeNoSync",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRangeNoSync(auxData.l, 0x780);"
+      },
+      {
+        "path": "src/lib/AXAux.c",
+        "line": 123,
+        "symbol": "DCFlushRangeNoSync",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRangeNoSync(auxData.rs, 0x280);"
+      },
+      {
+        "path": "src/lib/AXAux.c",
+        "line": 131,
+        "symbol": "DCFlushRangeNoSync",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRangeNoSync(auxData.l, 0x780);"
+      },
+      {
+        "path": "src/lib/AXAux.c",
+        "line": 142,
+        "symbol": "DCFlushRangeNoSync",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRangeNoSync(auxData.l, 0x780);"
+      },
+      {
+        "path": "src/lib/AXCL.c",
+        "line": 143,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(pCommandList, 0x300);"
+      },
+      {
+        "path": "src/lib/AXOut.c",
+        "line": 187,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(__AXOutBuffer, sizeof(__AXOutBuffer));"
+      },
+      {
+        "path": "src/lib/AXOut.c",
+        "line": 190,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(__AXOutSBuffer, sizeof(__AXOutSBuffer));"
+      },
+      {
+        "path": "src/lib/AXSPB.c",
+        "line": 57,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(&__AXStudio, sizeof(__AXStudio));"
+      },
+      {
+        "path": "src/lib/AXVPB.c",
+        "line": 448,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(__AXPB, sizeof(__AXPB));"
+      },
+      {
+        "path": "src/lib/AXVPB.c",
+        "line": 449,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(__AXITD, sizeof(__AXITD));"
+      },
+      {
+        "path": "src/lib/AXVPB.c",
+        "line": 450,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(__AXUpdates, sizeof(__AXUpdates));"
+      },
+      {
+        "path": "src/lib/AXVPB.c",
+        "line": 535,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(__AXPB, sizeof(__AXPB));"
+      },
+      {
+        "path": "src/lib/CARDBlock.c",
+        "line": 156,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(fat, 0x2000);"
+      },
+      {
+        "path": "src/lib/CARDDir.c",
+        "line": 84,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(dir, 0x2000);"
+      },
+      {
+        "path": "src/lib/CARDFormat.c",
+        "line": 108,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(card->workArea, CARD_WORKAREA_SIZE);"
+      },
+      {
+        "path": "src/lib/CARDUnlock.c",
+        "line": 286,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(input, 8);"
+      },
+      {
+        "path": "src/lib/CARDUnlock.c",
+        "line": 288,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(param, sizeof(CARDDecParam));"
+      },
+      {
+        "path": "src/lib/CARDWrite.c",
+        "line": 106,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange((void*)buf, (u32)length);"
+      },
+      {
+        "path": "src/lib/OS.c",
+        "line": 412,
+        "symbol": "DCFlushRangeNoSync",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRangeNoSync(destAddr, (u32)__OSDBINTEND - (u32)__OSDBINTSTART);"
+      },
+      {
+        "path": "src/lib/OS.c",
+        "line": 446,
+        "symbol": "DCFlushRangeNoSync",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRangeNoSync(destAddr, handlerSize);"
+      },
+      {
+        "path": "src/lib/OSAudioSystem.c",
+        "line": 26,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(__DSPWorkBuffer, sizeof(DSPInitCode));"
+      },
+      {
+        "path": "src/lib/OSCache.c",
+        "line": 103,
+        "symbol": "DCFlushRange",
+        "role": "definition or declaration",
+        "source": "asm void DCFlushRange(register void* addr, register u32 nBytes) {"
+      },
+      {
+        "path": "src/lib/OSCache.c",
+        "line": 121,
+        "symbol": "DCStoreRange",
+        "role": "definition or declaration",
+        "source": "asm void DCStoreRange(register void* addr, register u32 nBytes) {"
+      },
+      {
+        "path": "src/lib/OSCache.c",
+        "line": 140,
+        "symbol": "DCFlushRangeNoSync",
+        "role": "definition or declaration",
+        "source": "asm void DCFlushRangeNoSync(register void* addr, register u32 nBytes) {"
+      },
+      {
+        "path": "src/lib/OSCache.c",
+        "line": 157,
+        "symbol": "DCStoreRangeNoSync",
+        "role": "definition or declaration",
+        "source": "asm void DCStoreRangeNoSync(register void* addr, register u32 nBytes) {"
+      },
+      {
+        "path": "src/lib/OSFatal.c",
+        "line": 236,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(xfb, 0x96000);"
+      },
+      {
+        "path": "src/lib/OSFont.c",
+        "line": 636,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(dst, font->sheetFullSize);"
+      },
+      {
+        "path": "src/lib/OSLink.c",
+        "line": 207,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange((void*)offset, siFlush->size);"
+      },
+      {
+        "path": "src/lib/OSLink.c",
+        "line": 220,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange((void*)offset, siFlush->size);"
+      },
+      {
+        "path": "src/lib/OSLink.c",
+        "line": 408,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange((void*)offset, siFlush->size);"
+      },
+      {
+        "path": "src/lib/OSLink.c",
+        "line": 421,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange((void*)offset, siFlush->size);"
+      },
+      {
+        "path": "src/lib/OSMemory.c",
+        "line": 84,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange((void*)start, end - start);"
+      },
+      {
+        "path": "src/lib/OSSync.c",
+        "line": 30,
+        "symbol": "DCFlushRangeNoSync",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRangeNoSync(addr, 0x100);"
+      },
+      {
+        "path": "src/lib/ar.c",
+        "line": 289,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange((void*)test_data, 0x20);"
+      },
+      {
+        "path": "src/lib/ar.c",
+        "line": 290,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange((void*)dummy_data, 0x20);"
+      },
+      {
+        "path": "src/lib/ar.c",
+        "line": 301,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange((void*)buffer, 0x20);"
+      },
+      {
+        "path": "src/lib/ar.c",
+        "line": 327,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange((void*)buffer, 0x20);"
+      },
+      {
+        "path": "src/lib/ar.c",
+        "line": 343,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange((void*)buffer, 0x20);"
+      },
+      {
+        "path": "src/lib/ar.c",
+        "line": 360,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange((void*)buffer, 0x20);"
+      },
+      {
+        "path": "src/lib/ar.c",
+        "line": 379,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange((void*)buffer, 0x20);"
+      },
+      {
+        "path": "src/lib/ar.c",
+        "line": 434,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(ptr, 0x800);"
+      },
+      {
+        "path": "src/lib/ax_rna.c",
+        "line": 333,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(rna->trans_ck[i].data, rna->trans_ck[i].len);"
+      },
+      {
+        "path": "src/lib/ax_rna.c",
+        "line": 365,
+        "symbol": "DCFlushRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCFlushRange(axrna_zero_dat, AXRNA_BUF_NSMPL);"
+      },
+      {
+        "path": "src/lib/gcci.c",
+        "line": 287,
+        "symbol": "DCStoreRange",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "DCStoreRange(p, over);"
+      }
+    ],
+    "source_sha256": {
+      "include/dolphin/os/OSCache.h": "abac39323db5b11ac27051ed88ac83680ab821c066a79ac746c9603aafe31ebc",
+      "include/os_vi.h": "f57d34dab8ab4614e26d48fb28af8f4d7ff4b582c9dc7c72b4d13bd7705cb170",
+      "include/snd_sdk.h": "149db584fe32e3777761d884853d93773f9004f1559f41981799e515fdd2dec5",
+      "port/dreamcast/game/platform/cache_lines.h": "f14d1f4ef1e248375fb66c12679e1ac96fb94cf1cc135b2ecaf15cba184d3fed",
+      "port/dreamcast/game/platform/misc.cpp": "a3b02bf83573dec4d2f2f2152cc018541f8d586c47cb397200daf374449ba4a5",
+      "port/dreamcast/game/platform/modules.cpp": "1b321bcd29d7ed64065aef053b40e99d47b028f0f421efdd9d112f89646a0374",
+      "port/dreamcast/game/platform/subscreen_backing.cpp": "b2c672347d37a8eb02758e1d3ad2e23e703ff116306dcc86ac70d90b3ecc0f4c",
+      "src/game/Espgen42.cpp": "62f9538df629fc58285c9115a535b4350ad1f92dc91a0003031401345335d836",
+      "src/game/Espgen43.cpp": "c5c97819ec65560a598116333f0f38b02f58e123b5653b787d951b8362eaa548",
+      "src/game/block.cpp": "55db4fcb0425bc0dd4f687065da38213c95295398344a219d4212fd7fe5046fe",
+      "src/game/card.cpp": "541c21d1ec6ebd74078203f54dc32c41a71ef02c22e5efb4efceaeac7667ceab",
+      "src/game/datactrl.cpp": "31d38c14806250cdf1d7ad58a7dd742641bc2fbe6e3af5cf5c0f361163277216",
+      "src/game/dbmodule.cpp": "13fd02ebdfa26373a18505337d28e886468608e3fe560aecb6912502d12d1e6f",
+      "src/game/dvd.cpp": "eef52f4007e7351c2574ee29a69d707f46bafa71e4cbf8380ba92fb431b16343",
+      "src/game/eff_sys.cpp": "713537960250b079a8eac6ce7c85d5af0d9b8af68ad2ca714553c29bb7eec937",
+      "src/game/espgen45.cpp": "b663cc8d926267c4bcb7860403389f58234a30518733af73b766a9ce6f130ffb",
+      "src/game/main_sub.cpp": "67483158e94c5fb54d50bb6fd4cdc4a1988d3db073d9fdccbd573e77128cfc29",
+      "src/game/snd_main.cpp": "96a5feace79ffddfb02ab4e69e58219582f5cb9b82b89b113b3e3a4bf4c2bbc0",
+      "src/game/sofdec.cpp": "7bb6e379b9b304388be4d999a38541f6d630241b7d218d17d97c1892760768be",
+      "src/game/trans.cpp": "a83e4235dff43faa39ae46118ca644316a6c1733eaf75c2e726426205e29f91a",
+      "src/lib/AXAux.c": "1f8e7a82c9687a78ec4406fc4a13ce63d5e7c5f9ca030bb18b274e54a9a45477",
+      "src/lib/AXCL.c": "d88935540247eb1512da7d03e5c4b7d2dd86d4686cd372ed06029af8ed7d95f0",
+      "src/lib/AXOut.c": "1a22da20faf7d1d6827b619c04a2835c87892e9e9b18abed5baa6bd47a540487",
+      "src/lib/AXSPB.c": "862d267d0bb4458a09b25eb81399d273cf83628521970bc781002ca4241d72f6",
+      "src/lib/AXVPB.c": "25f5d05d947d5dbccb3d4946f0461760b678e4d25ad1d6f34d4ab73e64214cb5",
+      "src/lib/CARDBlock.c": "af6009b5e8adbbc7ca67669ac860d04f99cc7cf98138d48ce9bfea20dc96c340",
+      "src/lib/CARDDir.c": "7bc7f6cec27df1d343f43232be84675c763bf913ccdc6597a8cfd56a4b3d98a9",
+      "src/lib/CARDFormat.c": "2e1a72b6bb5713b1237171262791f01f1f838d50c256f638ca7d711aa2965748",
+      "src/lib/CARDUnlock.c": "a1463f934bcab1b024e306875ff63e1176c48398d991b4ef2e2ca1095aa21815",
+      "src/lib/CARDWrite.c": "b8a307f52d8dd379d8853046dd1ad393075a7729d1f70d942a4502b59a46ac80",
+      "src/lib/OS.c": "6947478948831f23881fe744bd3a6850a37b09677ab8f0dc601d58512a2a8caf",
+      "src/lib/OSAudioSystem.c": "8825adcdecc52c81582f148ce7dbf654352dad4e0a7fcfd90c3adeebe0d86de3",
+      "src/lib/OSCache.c": "9734dc9af6a81ab358e257313479b84cae4db8c0468c9e7cf62c6b7ea00c89ed",
+      "src/lib/OSFatal.c": "f52fe14069dcc30ff0381added62772a93089b8abe2a4d323db664f458977e74",
+      "src/lib/OSFont.c": "f8a42d0a2bb9aaa058c425f21907b5c0fdbb932b747a82ab6c1e9f38ba57938b",
+      "src/lib/OSLink.c": "d16d1bb119b4f64183077edaaf849555e275e5152bf59ffc36ee7e9f94e14da8",
+      "src/lib/OSMemory.c": "abe9a81ecc79c247b734ec2340414ade53ee74b70ee3834bdad4a6d566c7705e",
+      "src/lib/OSSync.c": "cc7d830686769f32bebb0e15a12e1a47a0743e9534ab3921bd6203aefd4021e6",
+      "src/lib/ar.c": "07f26a8963731250d1968dcefe704a3165f6f1cceeea95538140364ce6196e39",
+      "src/lib/ax_rna.c": "44b0704740577e4b4ed2a882386630fd7aa6d7ff20b948cb023faef84049d2e0",
+      "src/lib/gcci.c": "28613996da6298d9f9e6cc1767a30677c16858cb798f9afd114de648857029be"
+    }
+  },
+  "kos": {
+    "references": [
+      {
+        "path": "include/kos/cache.h",
+        "line": 155,
+        "symbol": "dcache_wback_range",
+        "role": "definition or declaration",
+        "source": "static inline void dcache_wback_range(uintptr_t start, size_t count) {"
+      },
+      {
+        "path": "include/kos/cache.h",
+        "line": 156,
+        "symbol": "arch_dcache_wback_range",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "arch_dcache_wback_range(start, count);"
+      },
+      {
+        "path": "include/kos/cache.h",
+        "line": 164,
+        "symbol": "dcache_wback_all",
+        "role": "definition or declaration",
+        "source": "static inline void dcache_wback_all(void) {"
+      },
+      {
+        "path": "include/kos/cache.h",
+        "line": 165,
+        "symbol": "arch_dcache_wback_all",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "arch_dcache_wback_all();"
+      },
+      {
+        "path": "include/kos/cache.h",
+        "line": 279,
+        "symbol": "dcache_flush_range",
+        "role": "definition or declaration",
+        "source": "static inline void dcache_flush_range(uintptr_t start, size_t count) {"
+      },
+      {
+        "path": "include/kos/cache.h",
+        "line": 280,
+        "symbol": "dcache_wback_range",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "dcache_wback_range(start, count);"
+      },
+      {
+        "path": "include/kos/cache.h",
+        "line": 284,
+        "symbol": "dcache_flush_all",
+        "role": "definition or declaration",
+        "source": "static inline void dcache_flush_all(void) {"
+      },
+      {
+        "path": "include/kos/cache.h",
+        "line": 285,
+        "symbol": "dcache_wback_all",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "dcache_wback_all();"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/dmac.c",
+        "line": 86,
+        "symbol": "dcache_wback_range",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "dcache_wback_range(addr, len);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/dmac.c",
+        "line": 97,
+        "symbol": "dma_map_src",
+        "role": "definition or declaration",
+        "source": "dma_addr_t dma_map_src(const void *ptr, size_t len) {"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/g1ata.c",
+        "line": 835,
+        "symbol": "g1_ata_write_lba_dma",
+        "role": "definition or declaration",
+        "source": "int g1_ata_write_lba_dma(uint64_t sector, size_t count, const void *buf,"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/g1ata.c",
+        "line": 895,
+        "symbol": "dcache_wback_range",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "dcache_wback_range(addr, count * 512);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/g1ata.c",
+        "line": 1191,
+        "symbol": "g1_ata_write_lba_dma",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "return g1_ata_write_lba_dma(block + data->start_block, count, buf, 1);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/network/broadband_adapter.c",
+        "line": 628,
+        "symbol": "dcache_wback_range",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "dcache_wback_range((uintptr_t)pkt, aligned);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/network/w5500_adapter.c",
+        "line": 158,
+        "symbol": "sci_spi_dma_write_data",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "int result = sci_spi_dma_write_data(data, write_len, NULL, NULL);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/pvr/pvr_dma.c",
+        "line": 105,
+        "symbol": "pvr_dma_transfer",
+        "role": "definition or declaration",
+        "source": "int pvr_dma_transfer(const void *src, uintptr_t dest, size_t count,"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/pvr/pvr_dma.c",
+        "line": 108,
+        "symbol": "dma_map_src",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "dma_addr_t src_addr = dma_map_src(src, count);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/pvr/pvr_dma.c",
+        "line": 144,
+        "symbol": "pvr_txr_load_dma",
+        "role": "definition or declaration",
+        "source": "int pvr_txr_load_dma(const void *src, pvr_ptr_t dest, size_t count, bool block,"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/pvr/pvr_dma.c",
+        "line": 146,
+        "symbol": "pvr_dma_transfer",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "return pvr_dma_transfer(src, (uintptr_t)dest, count, PVR_DMA_VRAM64, block,"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/pvr/pvr_dma.c",
+        "line": 150,
+        "symbol": "pvr_dma_load_ta",
+        "role": "definition or declaration",
+        "source": "int pvr_dma_load_ta(const void *src, size_t count, bool block,"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/pvr/pvr_dma.c",
+        "line": 152,
+        "symbol": "pvr_dma_transfer",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "return pvr_dma_transfer(src, (uintptr_t)0, count, PVR_DMA_TA, block, callback, cbdata);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/pvr/pvr_dma.c",
+        "line": 155,
+        "symbol": "pvr_dma_yuv_conv",
+        "role": "definition or declaration",
+        "source": "int pvr_dma_yuv_conv(const void *src, size_t count, bool block,"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/pvr/pvr_dma.c",
+        "line": 157,
+        "symbol": "pvr_dma_transfer",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "return pvr_dma_transfer(src, (uintptr_t)0, count, PVR_DMA_YUV, block, callback, cbdata);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/pvr/pvr_irq.c",
+        "line": 54,
+        "symbol": "pvr_dma_load_ta",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "pvr_dma_load_ta(b->base[i], b->ptr[i], 0, dma_next_list, thread);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/pvr/pvr_texture.c",
+        "line": 166,
+        "symbol": "pvr_txr_load_kimg",
+        "role": "definition or declaration",
+        "source": "void pvr_txr_load_kimg(const kos_img_t *img, pvr_ptr_t dst, uint32_t flags) {"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/pvr/pvr_texture.c",
+        "line": 213,
+        "symbol": "pvr_txr_load_dma",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "pvr_txr_load_dma(img->data, dst, img->byte_count,"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/sci.c",
+        "line": 649,
+        "symbol": "sci_dma_write_data",
+        "role": "definition or declaration",
+        "source": "sci_result_t sci_dma_write_data(const uint8_t *data, size_t len, dma_callback_t callback, void *cb_data) {"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/sci.c",
+        "line": 663,
+        "symbol": "dma_map_src",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "dma_addr_t src = dma_map_src(data, len);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/sci.c",
+        "line": 1043,
+        "symbol": "sci_spi_dma_write_data",
+        "role": "definition or declaration",
+        "source": "sci_result_t sci_spi_dma_write_data(const uint8_t *data, size_t len, dma_callback_t callback, void *cb_data) {"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/sci.c",
+        "line": 1066,
+        "symbol": "dma_map_src",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "dma_addr_t src = dma_map_src(spi_dma_buffer, len);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/hardware/sd.c",
+        "line": 159,
+        "symbol": "sci_spi_dma_write_data",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "return sci_spi_dma_write_data(data, len, NULL, NULL);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/include/arch/cache.h",
+        "line": 164,
+        "symbol": "arch_dcache_wback_all",
+        "role": "definition or declaration",
+        "source": "static inline void arch_dcache_wback_all(void) {"
+      },
+      {
+        "path": "kernel/arch/dreamcast/include/arch/cache.h",
+        "line": 172,
+        "symbol": "arch_dcache_wback_range",
+        "role": "definition or declaration",
+        "source": "static inline void arch_dcache_wback_range(uintptr_t start, size_t count) {"
+      },
+      {
+        "path": "kernel/arch/dreamcast/include/arch/cache.h",
+        "line": 177,
+        "symbol": "arch_dcache_wback_all",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "arch_dcache_wback_all();"
+      },
+      {
+        "path": "kernel/arch/dreamcast/include/arch/dmac.h",
+        "line": 178,
+        "symbol": "dma_map_src",
+        "role": "definition or declaration",
+        "source": "dma_addr_t dma_map_src(const void *ptr, size_t len);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/include/arch/exec.h",
+        "line": 42,
+        "symbol": "arch_exec_at",
+        "role": "definition or declaration",
+        "source": "void arch_exec_at(const void *image, uint32_t length, uint32_t address) __noreturn;"
+      },
+      {
+        "path": "kernel/arch/dreamcast/include/arch/exec.h",
+        "line": 53,
+        "symbol": "arch_exec",
+        "role": "definition or declaration",
+        "source": "void arch_exec(const void *image, uint32_t length) __noreturn;"
+      },
+      {
+        "path": "kernel/arch/dreamcast/include/dc/g1ata.h",
+        "line": 417,
+        "symbol": "g1_ata_write_lba_dma",
+        "role": "definition or declaration",
+        "source": "int g1_ata_write_lba_dma(uint64_t sector, size_t count, const void *buf,"
+      },
+      {
+        "path": "kernel/arch/dreamcast/include/dc/pvr/pvr_dma.h",
+        "line": 94,
+        "symbol": "pvr_dma_transfer",
+        "role": "definition or declaration",
+        "source": "int pvr_dma_transfer(const void *src, uintptr_t dest, size_t count,"
+      },
+      {
+        "path": "kernel/arch/dreamcast/include/dc/pvr/pvr_dma.h",
+        "line": 121,
+        "symbol": "pvr_txr_load_dma",
+        "role": "definition or declaration",
+        "source": "int pvr_txr_load_dma(const void *src, pvr_ptr_t dest, size_t count, bool block,"
+      },
+      {
+        "path": "kernel/arch/dreamcast/include/dc/pvr/pvr_dma.h",
+        "line": 145,
+        "symbol": "pvr_dma_load_ta",
+        "role": "definition or declaration",
+        "source": "int pvr_dma_load_ta(const void *src, size_t count, bool block,"
+      },
+      {
+        "path": "kernel/arch/dreamcast/include/dc/pvr/pvr_dma.h",
+        "line": 169,
+        "symbol": "pvr_dma_yuv_conv",
+        "role": "definition or declaration",
+        "source": "int pvr_dma_yuv_conv(const void *src, size_t count, bool block,"
+      },
+      {
+        "path": "kernel/arch/dreamcast/include/dc/pvr/pvr_txr.h",
+        "line": 175,
+        "symbol": "pvr_txr_load_kimg",
+        "role": "definition or declaration",
+        "source": "void pvr_txr_load_kimg(const kos_img_t *img, pvr_ptr_t dst, uint32_t flags);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/include/dc/sci.h",
+        "line": 189,
+        "symbol": "sci_dma_write_data",
+        "role": "definition or declaration",
+        "source": "sci_result_t sci_dma_write_data(const uint8_t *data, size_t len, dma_callback_t callback, void *cb_data);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/include/dc/sci.h",
+        "line": 262,
+        "symbol": "sci_spi_dma_write_data",
+        "role": "definition or declaration",
+        "source": "sci_result_t sci_spi_dma_write_data(const uint8_t *tx_data, size_t len, dma_callback_t callback, void *cb_data);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/kernel/exec.c",
+        "line": 28,
+        "symbol": "arch_exec_at",
+        "role": "definition or declaration",
+        "source": "void arch_exec_at(const void *image, uint32_t length, uint32_t address) {"
+      },
+      {
+        "path": "kernel/arch/dreamcast/kernel/exec.c",
+        "line": 45,
+        "symbol": "dcache_wback_range",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "dcache_wback_range((uintptr_t)image, length);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/kernel/exec.c",
+        "line": 58,
+        "symbol": "dcache_wback_range",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "dcache_wback_range((uintptr_t)buffer, tcount * 4);"
+      },
+      {
+        "path": "kernel/arch/dreamcast/kernel/exec.c",
+        "line": 87,
+        "symbol": "arch_exec",
+        "role": "definition or declaration",
+        "source": "void arch_exec(const void *image, uint32_t length) {"
+      },
+      {
+        "path": "kernel/arch/dreamcast/kernel/exec.c",
+        "line": 88,
+        "symbol": "arch_exec_at",
+        "role": "reference (call, macro alias or address-taking)",
+        "source": "arch_exec_at(image, length, MEM_AREA_P2_BASE | 0x0c010000);"
+      }
+    ],
+    "source_sha256": {
+      "include/kos/cache.h": "cb65548d09447e45329be136666bbb1d22f3f1448b7f7a4f1ad09fb600372c02",
+      "kernel/arch/dreamcast/hardware/dmac.c": "fa5ebdd2ebb734d8953b1ab1d4cf1d8ada252d74333b6dad8a7c211eca18d236",
+      "kernel/arch/dreamcast/hardware/g1ata.c": "cff571846082795163ac77a61d7819ac43207aea01f09b6c936fa95418c166b1",
+      "kernel/arch/dreamcast/hardware/network/broadband_adapter.c": "8bdb117e3b5400959a59c85dc8727b2ee8f14af7c5d36aeb70097f5641dc7a56",
+      "kernel/arch/dreamcast/hardware/network/w5500_adapter.c": "522365285fa690a845b6f8dd1ec3f32117f8f60d73c191f8f6dcfc2282bd6a04",
+      "kernel/arch/dreamcast/hardware/pvr/pvr_dma.c": "93001f6fd3ccad44e11407cca27a6cc9e135d5b39c2aa96db6f42a6f30c0948c",
+      "kernel/arch/dreamcast/hardware/pvr/pvr_irq.c": "85f74c1bf7d3cbb85ef489807b0175df5074c2355fde2115b23953b9d939afa6",
+      "kernel/arch/dreamcast/hardware/pvr/pvr_texture.c": "4c4415d92b0086985b146670e6516c34b59a1a3b1fe6af8808d7a4b0286ff6b6",
+      "kernel/arch/dreamcast/hardware/sci.c": "8a1d926b7ebbd5bc680bb8830e338f0f8b995cfe188eab2907a0cf087dfa9066",
+      "kernel/arch/dreamcast/hardware/sd.c": "c6dd4e01887a06684a5373fbeaae83c1eca44ef096b76266cfeb681e4082cec7",
+      "kernel/arch/dreamcast/include/arch/cache.h": "d5ca901258bc9ec3f3f4f92c4fbfef97ee15bf61c9b02486de173bf1f93b8295",
+      "kernel/arch/dreamcast/include/arch/dmac.h": "6afdd0685386468dbd5c28730b7c0324a543d603aeb660c43a8369ef0e803b72",
+      "kernel/arch/dreamcast/include/arch/exec.h": "3b64a50506259f85fdcc70ad8dc0f2fb0a3ed54b5dd8e66fd28cedfd6fd909df",
+      "kernel/arch/dreamcast/include/dc/g1ata.h": "1cf9e832aa0538ab60d9a1c80d5e29e9758383759a33b0590e7e914552552e9c",
+      "kernel/arch/dreamcast/include/dc/pvr/pvr_dma.h": "5cffc2cf54e4e2d711e994e834b926cc20c1a073b32b4aae540856542408e4bb",
+      "kernel/arch/dreamcast/include/dc/pvr/pvr_txr.h": "b82c4889258083af128af356974ca5b1b673c860cd74dbe30525d6f83c8f17ef",
+      "kernel/arch/dreamcast/include/dc/sci.h": "4b34215ef608adb3eb7935bd52c99b1035a7c9c56688d2c81f0355eabae03c39",
+      "kernel/arch/dreamcast/kernel/exec.c": "f87de9ba11e38fb13159a87123126426fda39c0b770483c0018a516b5f8bdc76"
+    }
+  }
+}

@@ -77,3 +77,24 @@ endless `cdrom_reinit_ex` retry, a settle delay after a drive reset) are NOT app
 of `tools/setup-toolchain.sh`. With `KOS_DISC_FIX=1` (set by `DISC_COMPAT=1`) game/Makefile copies the two KOS files
 into the build's object directory, applies these patches (`patch --fuzz=0`) and links the results in place of
 libkallisti's `fs_iso9660.o` and `cdrom.o`. Both files are identical in the d336 and d367 worktrees.
+
+## Whole-cache writeback in P2 (KOS_CACHE_P2, default 0)
+
+`kos-804b319-cache-p2.patch` repairs the pinned SDK's SH7750 whole-data-cache
+writeback. It leaves the 65560-byte range threshold and short per-line path
+unchanged. The new assembly leaf executes cache-array accesses in P2, preserves
+SR, excludes interrupts, handles OC RAM mode, and zeroes reserved tag bits.
+
+The game option `KOS_CACHE_P2=1` uses a build-local header/helper and recompiles
+all four pinned KOS inline caller files, as well as the three port wrapper users.
+It never edits KOS_BASE. Commit/source hashes and an API-token census are checked
+before linking; use a fresh OBJDIR for each option combination. This composes
+with the existing `CACHE_LINEWISE` port workaround.
+
+The patch can alternatively be applied to a separate SDK worktree and built
+with `make KOS_CACHE_P2=1`; consumers must also compile with
+`-DKOS_CACHE_P2=1`. Do not combine an already patched SDK with the game-local
+overlay. See [the audit and reproducible checks](../docs/KOS_CACHE_AUDIT_20261023.md)
+for the complete isolated rebuild steps, caller inventory, off-identity proof,
+compiled-code measurements and remaining hardware/link validation limits.
+The architectural defect is confirmed; arena crash causation is not.
