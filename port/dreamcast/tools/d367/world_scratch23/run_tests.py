@@ -58,7 +58,7 @@ def main():
   # the empty KOS/QR declarations are sufficient for preprocessing only.
   for name in ('kos.h','dc/maple.h','dc/maple/controller.h','dc/video.h','arch/timer.h','third_party/qrcodegen/qrcodegen.h'):
    stub=o/'preprocess-stubs'/name;stub.parent.mkdir(parents=True,exist_ok=True);stub.write_text('')
-  old_qa=run(['git','-C',G.parents[2],'show','2158baff82e0812e5cf9ed3186e27e22d753d045:port/dreamcast/game/qa_menu.cpp'])
+  old_qa=run(['git','-C',G.parents[2],'show','bb41fe683:port/dreamcast/game/qa_menu.cpp'])
   (o/'qa_menu.cpp').write_text(old_qa)
   for world_meter in (0,1):
    pp=['g++','-E','-P','-I'+str(o/'preprocess-stubs'),'-DRE4DC_WORLD_METER='+str(world_meter),'-DRE4DC_QA_NAME="QA"']
