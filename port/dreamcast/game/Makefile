@@ -34,7 +34,7 @@ GAME_SRCS = $(filter-out $(addprefix $(ROOT)/,$(GAME_EXCLUDE)), \
 
 CENSUS_SRCS = $(filter-out $(addprefix $(ROOT)/,$(GAME_EXCLUDE)), \
 	$(foreach d,$(CENSUS_DIRS),$(wildcard $(ROOT)/$(d)/*.cpp)))
-PLATFORM_SRCS = $(filter-out platform/backface_sh4_trace.cpp,$(wildcard platform/*.cpp))
+PLATFORM_SRCS = $(filter-out platform/backface_sh4_trace.cpp platform/backface_certificate.cpp,$(wildcard platform/*.cpp))
 ifneq ($(VMU_CONTEXT),1)
 PLATFORM_SRCS := $(filter-out platform/vmu_lcd.cpp,$(PLATFORM_SRCS))
 endif

@@ -82,6 +82,12 @@ extern "C" volatile unsigned re4dc_rigid_hide;   // native_actor_fast.cpp (RIGID
 #include "../../room/room_package.hpp"
 #include "../../room/static_room_prepare.hpp"
 #include "../../room/pvr_geometry.hpp"
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT && RE4DC_SCENERY_CONE
+#include "../../room/backface_certificate.hpp"
+#if !defined(RE4DC_CPU_BACKFACE) || RE4DC_CPU_BACKFACE != 2
+#error BACKFACE_CONE_FRONT requires CPU_BACKFACE=2
+#endif
+#endif
 #if RE4DC_PS2_WORLD_NONEMPTY_LOD
 #include "../../room/nonempty_lod.hpp"
 #endif
@@ -821,6 +827,11 @@ bool inverse(const float* m,float* out){
     return true;
 }
 
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT && RE4DC_SCENERY_CONE
+// The exact rounded matrix load_screen() puts in XMTRX. Front certification
+// snapshots it after bind(), which may yield, instead of recomposing a matrix.
+const float* bf_loaded_screen=nullptr;
+#endif
 // Combined screen matrix whose W is view depth: the same mapping as
 // native_model.cpp project() applied to modelview-space positions.
 void load_screen(const float* mv,const float* p,const float* v){
@@ -830,6 +841,9 @@ void load_screen(const float* mv,const float* p,const float* v){
     const float row2[4]={0,0,1,0},row3[4]={0,0,-1,0};
     const float* rows[4]={row0,row1,row2,row3};
     alignas(32) static matrix_t screen;
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT && RE4DC_SCENERY_CONE
+    bf_loaded_screen=&screen[0][0];
+#endif
 #if RE4DC_SCENERY_SCREEN_MEMO
     // SCENERY_SCREEN_MEMO (scenery19): parts of one placement bind with the same inputs; the same inputs give the
     // same matrix (identical arithmetic), so reload the last one. Exact.
@@ -2217,6 +2231,50 @@ const std::uint8_t* rec=nullptr;  // meshlet x groups x 8 B
 const float* tab2=nullptr;        // 64 squared slopes (T_k^2)
 const void* pkg=nullptr;          // the package the section matches
 unsigned tests=0,rejects=0,vskip=0,picks_dropped=0,logged=0;
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT
+const float* front_angles=nullptr; // SCCF: 64 (cos lower, sin upper) pairs
+const float* front_normals=nullptr; // SCCF: power-of-two minimum normal per group
+const std::uint16_t* front_counts=nullptr; // SCCF: exact (indices, strips) per group
+unsigned front_tests=0,front_candidates=0,front_groups=0,front_vertices=0,front_bad=0;
+
+// Optional SCCF trailer; the unchanged SCCN v1 prefix remains usable by old
+// readers. Reject a stale/truncated extension independently of legacy culling.
+bool front_trailer(const std::uint8_t* sec,unsigned len,unsigned mesh_crc,unsigned mesh_bytes,
+                   unsigned meshlets,unsigned groups,unsigned sg_crc,const std::uint8_t* group_records,
+                   const float*& angles,const float*& normals,const std::uint16_t*& counts){
+    angles=nullptr;normals=nullptr;counts=nullptr;
+    if(!sec || !group_records || !groups || groups>8U || meshlets>(0xffffffffU-559U)/(8U*groups))return false;
+    const unsigned count=meshlets*groups,base=(272U+8U*count+15U)&~15U;
+    if(base>len || len-base<32U)return false;
+    std::uint32_t prefix[4],w[8];
+    std::memcpy(prefix,sec,16);std::memcpy(w,sec+base,32);
+    const unsigned expected=(544U+8U*count+15U)&~15U;
+    if(prefix[0]!=mesh_crc || prefix[1]!=mesh_bytes || prefix[2]!=meshlets || prefix[3]!=groups ||
+       std::memcmp(sec+base,"SCCF",4) || w[1]!=1U || w[2]!=expected || w[2]!=len-base || w[3]!=sg_crc ||
+       w[4]!=mesh_crc || w[5]!=mesh_bytes || w[6]!=meshlets || w[7]!=groups)return false;
+    const auto* at=sec+base+32U;const auto* nt=at+512U;const auto* ct=nt+4U*count;
+    for(unsigned k=0;k<64U;++k){
+        std::uint32_t co,si;std::memcpy(&co,at+8U*k,4);std::memcpy(&si,at+8U*k+4U,4);
+        // Positive normal binary32 values in [0,1]; k=0 is never used by a cone.
+        if(co>0x3f800000U || si>0x3f800000U || (k && (co<0x00800000U || co>=0x3f800000U)))return false;
+    }
+    unsigned prev=0;
+    for(unsigned i=0;i<count;++i){
+        std::uint32_t n;std::memcpy(&n,nt+4U*i,4);
+        if(n && ((n&0x807fffffU) || n<0x3f800000U || n>0x4f800000U))return false;
+        if(i%groups==0U)prev=0;
+        std::uint16_t end,ns[2];std::memcpy(&end,group_records+16U*i+12U,2);std::memcpy(ns,ct+4U*i,4);
+        const unsigned indices=ns[0],strips=ns[1];
+        if(end<prev || indices+strips!=unsigned(end)-prev ||
+           (strips?indices<strips || indices>255U*strips:indices!=0U) ||
+           (n && (!strips || indices<3U*strips)))return false;
+        prev=end;
+    }
+    angles=reinterpret_cast<const float*>(at);normals=reinterpret_cast<const float*>(nt);
+    counts=reinterpret_cast<const std::uint16_t*>(ct);
+    return true;
+}
+#endif
 }
 #endif
 #if RE4DC_SCENERY_PIECE_STATE
@@ -2247,6 +2305,12 @@ struct MeshDraw : Emitter {
     const re4dc::room::MeshPackage& package; const re4dc::room::MeshPart& part;
     const std::uint32_t* lut; // mesh view's colour LUT (nullptr: per-corner path)
     re4dc::room::CompactVertex12* gather_pool; // mesh view's v3 gather buffer (nullptr: v1/v2)
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT && RE4DC_SCENERY_CONE
+    // Storage belongs to chunk_emit(), so selection-only MeshDraw instances do
+    // not allocate or initialize a numeric context. Prepared after the first bind.
+    re4dc::bf::certificate::Context* front_context=nullptr;
+    bool front_prepared=false,front_valid=false;
+#endif
 #if RE4DC_PS2_PVS
     // (after the four members MeshDraw{...} initializes by position) PS2_PVS: this frame's visible set (nullptr: no
     // set) and the instance number of this part's first cluster in it (pvs::base + pvs::poff)
@@ -2644,10 +2708,19 @@ struct MeshDraw : Emitter {
         input+=sum-2U*strips;stats.vertices+=sum;stats.strips_culled+=culled;stats.strips+=emitted;
         slots+=v;output+=v-2U*emitted;sq=q;
     }
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT && RE4DC_SCENERY_CONE
+    const std::uint8_t* strips_lean(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
+                                    const re4dc::room::CompactBatch& batch,int& result,bool certified_front=false){
+#else
     const std::uint8_t* strips_lean(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
                                     const re4dc::room::CompactBatch& batch,int& result){
+#endif
 #if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT && RE4DC_SCENERY_CONE
+        if(!certified_front && bf_on())return strips_bf_sq(s,end,base,batch,result);
+#else
         if(bf_on())return strips_bf_sq(s,end,base,batch,result);
+#endif
 #elif defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
         if(bf_on())return strips_bf(s,end,base,batch,result);
 #endif
@@ -2915,7 +2988,14 @@ struct MeshDraw : Emitter {
 #if RE4DC_SCENERY_CONE
         // SCENERY_CONE: the eye in grid coordinates (view = M g + t: e = -M^-1 t) and the culled side's sign (part cull
         // 1 CCW / 2 CW, det(M), and the projection's fixed handedness RE4DC_SCENERY_CONE_SIGN).
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT
+        // A full chunk flush changes the shared Re4dcModelPart while emitting
+        // old parts. The selected part's key remains authoritative afterwards.
+        const unsigned cone_cull=ps2?ps2[5]:p.cull;
+        bool cone_on=sg && cone::pkg==static_cast<const void*>(&package) && cone_cull>0U && cone_cull<=2U;
+#else
         bool cone_on=sg && cone::pkg==static_cast<const void*>(&package) && p.cull>0U && p.cull<=2U;
+#endif
         float ex=0,ey=0,ez=0,csgn=1;
         if(cone_on){
             const float* m=mvq;
@@ -2928,7 +3008,11 @@ struct MeshDraw : Emitter {
                 ex=id*(c0*tx+(m[2]*m[9]-m[1]*m[10])*ty+(m[1]*m[6]-m[2]*m[5])*tz);
                 ey=id*(c1*tx+(m[0]*m[10]-m[2]*m[8])*ty+(m[2]*m[4]-m[0]*m[6])*tz);
                 ez=id*(c2*tx+(m[1]*m[8]-m[0]*m[9])*ty+(m[0]*m[5]-m[1]*m[4])*tz);
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT
+                csgn=float(RE4DC_SCENERY_CONE_SIGN)*(cone_cull==1U?1.0f:-1.0f)*(det>0.0f?1.0f:-1.0f);
+#else
                 csgn=float(RE4DC_SCENERY_CONE_SIGN)*(p.cull==1U?1.0f:-1.0f)*(det>0.0f?1.0f:-1.0f);
+#endif
             }
         }
 #endif
@@ -3059,6 +3143,84 @@ struct MeshDraw : Emitter {
         }
         return np;
     }
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT && RE4DC_SCENERY_CONE
+    // Called only after this pick's vertices were projected. A geometric front
+    // candidate must also survive a bound using the actual cache reciprocals.
+    // No per-triangle confirmation occurs in the production (=1) path.
+    unsigned front_mask(const Pick& pk,const re4dc::room::Meshlet& l,const std::uint8_t* sb,unsigned& keep){
+        namespace cert=re4dc::bf::certificate;
+        keep=0;
+        if(!front_context || !bf_loaded_screen || !bf_on() || !sg || !sg_groups || sg_groups>8U ||
+           cone::pkg!=static_cast<const void*>(&package) || !cone::front_angles || !cone::front_normals ||
+           !cone::front_counts)return 0;
+        const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*pk.let);
+        const std::uint8_t* records=cone::rec+8U*sg_groups*pk.let;
+        const float* minimum=cone::front_normals+sg_groups*pk.let;
+        const std::uint16_t* counts=cone::front_counts+2U*sg_groups*pk.let;
+        unsigned front=0,prev=0;
+        for(unsigned q=0;q<sg_groups;++q){
+            const unsigned end=g[8U*q+6U];
+            if(end<prev || end>l.strip_bytes)return 0;
+            if(end==prev)continue;
+            const unsigned begin=prev;prev=end;
+            if(pk.nr!=0xffU && !((pk.gmask>>q)&1U))continue;
+            keep|=1U<<q;
+            const std::uint8_t* r=records+8U*q;
+            const auto* b=g+8U*q;
+            const unsigned lo=b[7]&255U,hi=b[7]>>8;
+            if(!r[3] || r[3]>=64U || !(minimum[q]>0.0f) || lo>hi || hi>=l.vertex_count ||
+               (pk.nr!=0xffU && (lo<pk.lo || hi>pk.hi)))continue;
+            if(!cert::worth_front(hi-lo+1U,counts[2U*q],counts[2U*q+1U]))continue;
+            cert::Cone bound{};
+            bool ordered=true;
+            for(unsigned a=0;a<3U;++a){
+                if(b[a]>b[a+3U])ordered=false;
+                bound.center[a]=0.5f*(float(b[a])+float(b[a+3U]));
+                bound.extent[a]=0.5f*(float(b[a+3U])-float(b[a]));
+                bound.axis[a]=float(std::int8_t(r[a]))*(1.0f/128.0f);
+            }
+            if(!ordered || !cert::flat_depth(bf_loaded_screen,bound.extent))continue;
+            if(!front_prepared){
+                front_prepared=true;
+                front_valid=cert::prepare(*front_context,bf_loaded_screen,near);
+            }
+            if(!front_valid)continue;
+            // The L1 half diagonal encloses the box without an approximate sqrt.
+            bound.radius=bound.extent[0]+bound.extent[1]+bound.extent[2];
+            bound.cos_lower=cone::front_angles[2U*r[3]];
+            bound.sin_upper=cone::front_angles[2U*r[3]+1U];
+            bound.min_normal=minimum[q];
+            cert::Proof proof;
+            ++cone::front_tests;
+            if(cert::classify(*front_context,bound,p.cull,proof)!=cert::FrontCandidate)continue;
+            ++cone::front_candidates;
+            if(!cert::projected_front(proof,cache+lo,hi-lo+1U))continue;
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+            bool exact=true;
+            for(const std::uint8_t* s=sb+begin;s<sb+end;){
+                const unsigned n=*s++;
+                if(n<3U || n>unsigned(sb+end-s)){exact=false;break;}
+                const auto codes=re4dc::vp::codes(outcodes,s,n);
+                // Validate only the strips whose fine classifier is bypassed;
+                // the ordinary walker still owns all clipping/culling decisions.
+                if(!(codes.all&3U) && !(codes.any&3U) && n<=limit && !(codes.all&0x3cU) &&
+                   !cert::strict_front(cache,s,n,0xffU,p.cull)){exact=false;break;}
+                s+=n;
+            }
+            if(!exact){
+                if(++cone::front_bad<=8U)re4dc_log("SCN21 front mismatch meshlet=%u group=%u cull=%u\n",
+                                                 unsigned(pk.let),q,unsigned(p.cull));
+                continue;
+            }
+#else
+            (void)sb;(void)begin;
+#endif
+            front|=1U<<q;
+            ++cone::front_groups;cone::front_vertices+=hi-lo+1U;
+        }
+        return prev==l.strip_bytes?front:0U;
+    }
+#endif
     int emit_pick(const Pick& pk){
         namespace vp=re4dc::vp;
         ++stats.groups_visible;
@@ -3097,6 +3259,10 @@ struct MeshDraw : Emitter {
             if(const std::uint32_t dw=dd_word(l);dw>>24)
                 dedup::fill(in,cache,outcodes,l.vertex_count-(dw>>24),l.vertex_count,dedup::src+(dw&0xffffffU),k,pk.lo,pk.hi);
 #endif
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT && RE4DC_SCENERY_CONE
+            unsigned front_keep=0;
+            const unsigned certified=front_mask(pk,l,sb,front_keep);
+#endif
             const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*pk.let);
             unsigned prev=0;
             for(unsigned q=0;q<sg_groups;++q){
@@ -3104,7 +3270,11 @@ struct MeshDraw : Emitter {
                 if(gend==prev)continue;
                 if((pk.gmask>>q)&1U){
                     int result=1;
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT && RE4DC_SCENERY_CONE
+                    strips_lean(sb+prev,sb+gend,base,batch,result,((certified>>q)&1U)!=0U);
+#else
                     strips_lean(sb+prev,sb+gend,base,batch,result);
+#endif
                     if(result<=0)return result;
                 }
                 prev=gend;
@@ -3129,6 +3299,30 @@ struct MeshDraw : Emitter {
         }
 #endif
         int result=1;
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT && RE4DC_SCENERY_CONE
+        unsigned front_keep=0;
+        const unsigned certified=front_mask(pk,l,sb,front_keep);
+        if(certified && certified==front_keep){
+            strips_lean(sb,sb+l.strip_bytes,base,batch,result,true);
+        }else if(certified){
+            // Preserve complete original strips; merge adjacent groups using
+            // the same walker to avoid introducing a call per strip group.
+            const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*pk.let);
+            unsigned prev=0,begin=0;bool have=false,front_run=false;
+            for(unsigned q=0;q<sg_groups;++q){
+                const unsigned end=g[8U*q+6U];
+                if(end==prev)continue;
+                const bool next=((certified>>q)&1U)!=0U;
+                if(have && next!=front_run){
+                    strips_lean(sb+begin,sb+prev,base,batch,result,front_run);
+                    if(result<=0)break;
+                    begin=prev;
+                }
+                have=true;front_run=next;prev=end;
+            }
+            if(result>0 && have)strips_lean(sb+begin,sb+prev,base,batch,result,front_run);
+        }else
+#endif
         strips_lean(sb,sb+l.strip_bytes,base,batch,result);
 #if RE4DC_PS2_PVS
         if(result>0)pvs_observed(l);
@@ -3141,6 +3335,12 @@ struct MeshDraw : Emitter {
         palette=nullptr;
         batch.uv_bias[0]=part.uv_bias[0];batch.uv_bias[1]=part.uv_bias[1];
         batch.uv_scale[0]=part.uv_scale[0];batch.uv_scale[1]=part.uv_scale[1];
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT && RE4DC_SCENERY_CONE
+        re4dc::bf::certificate::Context front_storage;
+        front_context=bf_on() && sg && cone::pkg==static_cast<const void*>(&package) && cone::front_normals && cone::front_counts?
+                      &front_storage:nullptr;
+        front_prepared=false;front_valid=false;
+#endif
         for(unsigned i=0;i<n;++i){
 #if defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK
             // PREF_WALK (cache20.h): the next pick's corners and first strip bytes while this one is transformed / sent
@@ -5123,6 +5323,9 @@ void scn21_open(){
     if(!ps2w.alt){   // arm A (or no sc21 package for this room): both paths stay off
 #if RE4DC_SCENERY_CONE
         cone::pkg=nullptr;cone::rec=nullptr;cone::tab2=nullptr;
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT
+        cone::front_angles=nullptr;cone::front_normals=nullptr;cone::front_counts=nullptr;
+#endif
 #endif
 #if RE4DC_SCENERY_PIECE_STATE
         piece::pkg=nullptr;piece::table=nullptr;
@@ -5134,9 +5337,15 @@ void scn21_open(){
 #if RE4DC_SCENERY_CONE
     {
         cone::pkg=nullptr;cone::rec=nullptr;cone::tab2=nullptr;
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT
+        cone::front_angles=nullptr;cone::front_normals=nullptr;cone::front_counts=nullptr;
+#endif
         const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCCN",&len,&ver,&fl,nullptr));
         const char* why=nullptr;std::uint32_t w[4]={};
         if(!sec)why="no section";
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT
+        else if(len<16U)why="section";
+#endif
         else if(re4dc_room_file_room()!=ps2w.room)why="room";
         else if(!ps2w.sg)why="no strip groups";
         else{
@@ -5146,6 +5355,15 @@ void scn21_open(){
         }
         if(!why){cone::tab2=reinterpret_cast<const float*>(sec+16);cone::rec=sec+16+256;cone::pkg=&pk;}
         re4dc_log("SCN21 cone room=%03x %s groups=%u bytes=%u\n",ps2w.room,why?why:"on",unsigned(w[3]),len);
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT
+        if(!why && ps2w.sg_block){
+            std::uint32_t sg_crc;std::memcpy(&sg_crc,ps2w.sg_block+28U,4);
+            cone::front_trailer(sec,len,h.crc,h.bytes,h.meshlet_count,ps2w.sg_groups,sg_crc,ps2w.sg,
+                                cone::front_angles,cone::front_normals,cone::front_counts);
+        }
+        re4dc_log("SCN21 front room=%03x mode=%u metadata=%s\n",ps2w.room,unsigned(RE4DC_BACKFACE_CONE_FRONT),
+                  cone::front_normals?"on":"absent/stale");
+#endif
     }
 #endif
 #if RE4DC_SCENERY_PIECE_STATE
@@ -6130,6 +6348,10 @@ int ps2_pass(unsigned pass,float zfar){
             cone::logged=f;
             re4dc_log("SCN21 cone frame=%u room=%03x on=%u tests=%u rejects=%u picks_dropped=%u vskip=%u\n",f,ps2w.room,
                       cone::pkg?1U:0U,cone::tests,cone::rejects,cone::picks_dropped,cone::vskip);
+#if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT
+            re4dc_log("SCN21 front frame=%u tests=%u candidates=%u groups=%u range_vertices=%u bad=%u\n",f,
+                      cone::front_tests,cone::front_candidates,cone::front_groups,cone::front_vertices,cone::front_bad);
+#endif
         }
     }
 #endif

@@ -1,0 +1,52 @@
+// A C ABI around the actual production certificate; no decision logic is copied.
+#include "backface_certificate.hpp"
+
+namespace cert = re4dc::bf::certificate;
+
+extern "C" {
+unsigned cone_probe(const float matrix[16], float near_distance,
+                    const cert::Cone* cone, unsigned cull,
+                    const void* cache, unsigned vertices, cert::Proof* proof) {
+    cert::Context context;
+    *proof = {};
+    if (!cert::prepare(context, matrix, near_distance)) return 0;
+    const cert::Outcome outcome = cert::classify(context, *cone, cull, *proof);
+    unsigned result = 1U | (unsigned(outcome) << 1);
+    if (cert::positive_depth(context, *cone)) result |= 8;
+    if (outcome == cert::FrontCandidate && cert::projected_front(*proof, cache, vertices)) result |= 16;
+    return result;
+}
+
+unsigned cone_strict(const void* cache, const std::uint8_t* index,
+                     unsigned count, unsigned cull, unsigned actor_eol) {
+    return cert::strict_front(cache, index, count, 127, cull, actor_eol != 0);
+}
+
+unsigned cone_projected(const cert::Proof* proof, const void* cache,
+                        unsigned vertices, unsigned stride) {
+    return cert::projected_front(*proof, cache, vertices, stride);
+}
+
+unsigned cone_strict_layout(const void* cache, const std::uint8_t* index,
+                            unsigned count, unsigned stride) {
+    return cert::strict_front(cache, index, count, 127, 1, true, stride);
+}
+
+float cone_normal(const float axis[3], float cosine, const std::int64_t normal[3]) {
+    return cert::normal_lower_bound(axis, cosine, normal);
+}
+
+float cone_sine(float cosine) { return cert::sine_upper(cosine); }
+
+unsigned cone_worth(unsigned vertices, unsigned indices, unsigned strips) {
+    return cert::worth_front(vertices, indices, strips);
+}
+
+unsigned cone_flat(const float matrix[16], const float extent[3]) {
+    return cert::flat_depth(matrix, extent);
+}
+
+unsigned cone_sizes(unsigned which) {
+    return which == 0 ? sizeof(cert::Context) : which == 1 ? sizeof(cert::Cone) : sizeof(cert::Proof);
+}
+}

@@ -133,3 +133,30 @@ BACKFACE_CONE ?= 0
 ifneq ($(filter $(BACKFACE_CONE),0 1),$(BACKFACE_CONE))
 $(error BACKFACE_CONE must be 0 or 1)
 endif
+
+# BACKFACE_CONE_FRONT=1 (render only): extend the enabled actor/world cone path
+# with a conservative all-front certificate. Certified groups use the existing
+# lean emitter; uncertain groups keep CPU_BACKFACE=2's exact facing classifier.
+# =2 also checks every proposed shortcut against the target FMAC facing rule,
+# and falls back on a mismatch. Requires the corresponding cone data/path.
+# Default 0: no definitions, certificate object, or asset-format change.
+BACKFACE_CONE_FRONT ?= 0
+ifneq ($(filter $(BACKFACE_CONE_FRONT),0 1 2),$(BACKFACE_CONE_FRONT))
+$(error BACKFACE_CONE_FRONT must be 0, 1 or 2)
+endif
+ifneq ($(BACKFACE_CONE_FRONT),0)
+ifneq ($(CPU_BACKFACE),2)
+$(error BACKFACE_CONE_FRONT needs CPU_BACKFACE=2)
+endif
+ifeq ($(filter-out 0,$(ACTOR_BACKFACE_CONE) $(SCENERY_CONE) $(BACKFACE_CONE)),)
+$(error BACKFACE_CONE_FRONT needs ACTOR_BACKFACE_CONE, SCENERY_CONE or BACKFACE_CONE)
+endif
+$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_BACKFACE_CONE_FRONT=$(BACKFACE_CONE_FRONT)
+PLATFORM_OBJS += $(OBJDIR)/platform/backface_certificate.o
+$(TARGET): $(OBJDIR)/platform/backface_certificate.o
+# Outward bounds rely on separate IEEE operations. Keep these overrides after
+# both global flag sets; fast-math or contraction would invalidate the proof.
+$(OBJDIR)/platform/backface_certificate.o: platform/backface_certificate.cpp ../room/backface_certificate.hpp
+	@mkdir -p $(dir $@)
+	kos-c++ $(KOS_CFLAGS) $(PLATFORM_CPPFLAGS) -O2 -fno-fast-math -ffp-contract=off -MMD -MP -c $< -o $@
+endif
