@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 arm=${1:?off/on}; case "$arm" in on|off) ;; *) exit 2;; esac; T=/root/probe/codex-actor-visibility23-eligibility-witness-integration
-E=/root/probe/lanes/actor-visibility23-eligibility-witness-integration; O=$E/$arm
+E=/root/probe/lanes/actor-visibility23-eligibility-witness-integration; O=$E/${ACTOR23_ARM_OUTPUT:-$arm}
 [ ! -e "$O/re4dc-game.elf" ] || { echo sealed-output-exists; exit 1; }
 mkdir -p "$O"
 export T K=$E/controls SOURCE_DATE_EPOCH=1760000000 JOBS=1

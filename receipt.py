@@ -3,7 +3,7 @@ from pathlib import Path
 import os
 BASIS=Path('/root/probe/lanes/actor-visibility23-coverage-integration')
 R=Path('/root/probe/lanes/actor-visibility23-eligibility-witness-integration');T=Path('/root/probe/codex-actor-visibility23-eligibility-witness-integration');G=T/'port/dreamcast/game';P='/opt/toolchains/dc/sh-elf/bin/sh-elf-'
-arm=sys.argv[1];assert arm in ('off','on');O=R/arm;assert not (O/'LINK-RECEIPT.json').exists(),'Immutable receipt exists; use fresh output/version';assert O.is_dir() and (O/'re4dc-game.elf').is_file()
+arm=sys.argv[1];assert arm in ('off','on');O=R/os.environ.get('ACTOR23_ARM_OUTPUT',arm);assert not (O/'LINK-RECEIPT.json').exists(),'Immutable receipt exists; use fresh output/version';assert O.is_dir() and (O/'re4dc-game.elf').is_file()
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def info(p):return {'path':str(p),'bytes':p.stat().st_size,'sha256':sha(p)}
 def dump(args,path,compress=False):

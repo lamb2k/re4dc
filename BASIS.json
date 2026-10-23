@@ -45,5 +45,10 @@
       "bytes": 56388,
       "sha256": "3b6d907eda7c1df2fee8455b6696a7a62200da900e7e4f93754f4539dbb8828d"
     }
-  ]
+  ],
+  "predecessor_source_seal": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/actor-visibility23/build-eligibility-witness23/SOURCE-SEAL.json",
+    "sha256": "8621210fd676ca81f6cb4e3f81560d027c98dbcbcdf6896956d552aaadd613fd"
+  },
+  "on_output_label": "on2"
 }

@@ -35,11 +35,18 @@ def main():
    for row in bucket:
     if isinstance(row,dict)and {'path','bytes','sha256'}.issubset(row):
      p=Path(row['path']);assert p.stat().st_size==row['bytes']and sha(p)==row['sha256']
- O=R/a.arm;marker=T/'port/dreamcast/game/obj';log=R/(a.arm+'-build.log')
+ label=os.environ.get('ACTOR23_ARM_OUTPUT',a.arm)
+ assert (a.arm,label)in (('on','on2'),('off','off')), 'ON successor must use ACTOR23_ARM_OUTPUT=on2'
+ sdk_receipt=R/'SDK-COPY-READBACK.json'
+ assert sdk_receipt.is_file(), 'Main must admit and verify retained SDK subset copy first'
+ sdk=json.loads(sdk_receipt.read_bytes());assert sdk['status']=='RETAINED_SDK54_COPY_VERIFIED_SOURCE_ONLY' and sdk['source']==SOURCE
+ for row in json.loads((P/'SDK-COPY-MANIFEST.json').read_bytes())['files']:
+  q=T/'port/dreamcast/game/third_party/sh4zam'/row['relative'];assert q.stat().st_size==row['bytes']and sha(q)==row['sha256']
+ O=R/label;marker=T/'port/dreamcast/game/obj';log=R/(label+'-build.log')
  assert not O.exists()and not marker.exists()and not marker.is_symlink()and not log.exists(), 'Preserve prior outputs; no automatic retry'
  metadata=Path(git('rev-parse','--absolute-git-dir'))
  def guard():
-  src=charge(T)+charge(metadata);on=charge(R/'on');off=charge(R/'off');work=charge(R);tmp=sum(charge(R/x/'temp')for x in ('on','off'));common=work-on-off+tmp
+  src=charge(T)+charge(metadata);on=charge(R/'on')+charge(R/'on2');off=charge(R/'off');work=charge(R);tmp=sum(charge(R/x/'temp')for x in ('on','on2','off'));common=work-on-off+tmp
   assert src<=64*MiB and on<=320*MiB and off<=320*MiB and common<=32*MiB,(src,on,off,common)
   assert src+work<=736*MiB,(src,work)
   assert __import__('shutil').disk_usage('/mnt/c').free>=admission['floor']+admission['guest_peak']
@@ -57,7 +64,7 @@ def main():
   assert not O.exists()and not marker.exists()and not marker.is_symlink()and git('rev-parse','HEAD')==SOURCE and not git('status','--porcelain')
   assert (datetime.datetime.now(datetime.timezone.utc)-datetime.datetime.fromisoformat(admission['utc'].replace('Z','+00:00'))).total_seconds()<=60, 'Refresh admission before allocation'
   O.mkdir();(O/'temp').mkdir();(O/'link-scratch').mkdir();marker.symlink_to(O/'link-scratch',target_is_directory=True)
-  env=dict(os.environ,D367_SLOT_HELD='1',ACTOR23_SCRIPTS=str(P),TMPDIR=str(O/'temp'),JOBS='1')
+  env=dict(os.environ,D367_SLOT_HELD='1',ACTOR23_SCRIPTS=str(P),ACTOR23_ARM_OUTPUT=label,TMPDIR=str(O/'temp'),JOBS='1')
   failure=None;proc=None
   try:
    with log.open('xb')as output:
@@ -84,7 +91,7 @@ def main():
      time.sleep(.1)
    raise
   finally:
-   (O/'RUN-RESULT.json').write_text(json.dumps(dict(source=SOURCE,arm=a.arm,exit_code=proc.returncode if proc else None,error=failure,build_log=str(log),runtime_admitted=False,stage=False,guest=False),indent=2)+'\n')
+   (O/'RUN-RESULT.json').write_text(json.dumps(dict(source=SOURCE,arm=a.arm,output_label=label,exit_code=proc.returncode if proc else None,error=failure,build_log=str(log),runtime_admitted=False,stage=False,guest=False),indent=2)+'\n')
  finally:
   for f in reversed(locks):f.close()
 if __name__=='__main__':main()

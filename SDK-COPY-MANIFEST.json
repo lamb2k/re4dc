@@ -1,0 +1,295 @@
+{
+  "source_root": "/root/probe/codex-actor-visibility23-integration/port/dreamcast/game/third_party/sh4zam",
+  "destination_root": "/root/probe/codex-actor-visibility23-eligibility-witness-integration/port/dreamcast/game/third_party/sh4zam",
+  "gitlink": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+  "retained_bea2_source": "bea2d402ba06d41fb7b39946b5a9431a72f5b52a",
+  "files": [
+    {
+      "relative": "include/sh4zam/inline/sh4/shz_matrix_sh4.inl.h",
+      "bytes": 13809,
+      "sha256": "8eb874dbc230fef74883f2aec9c53813cb1cba98f5c4e6edd3e17ef8ae8132bd"
+    },
+    {
+      "relative": "include/sh4zam/inline/sh4/shz_mem_sh4.inl.h",
+      "bytes": 23574,
+      "sha256": "f1b40c951bc00989496708ae76de2d747109841e04716d992514a1c8dc180774"
+    },
+    {
+      "relative": "include/sh4zam/inline/sh4/shz_quat_sh4.inl.h",
+      "bytes": 5679,
+      "sha256": "2f162fa7db1e98dff1a4db1ee0e100b5f5773771bb99ca767f9e36e9ed32898d"
+    },
+    {
+      "relative": "include/sh4zam/inline/sh4/shz_scalar_sh4.inl.h",
+      "bytes": 4637,
+      "sha256": "b0c1d4cf98b44d5ecb137ef2d5f195f433a824d2f4d8c751a5c826aa692a37cb"
+    },
+    {
+      "relative": "include/sh4zam/inline/sh4/shz_trig_sh4.inl.h",
+      "bytes": 2321,
+      "sha256": "4e62d63a6c49c97f44dfa6c6de8265f66a1fcd0c0cdb1372680a88db205de18b"
+    },
+    {
+      "relative": "include/sh4zam/inline/sh4/shz_vector_sh4.inl.h",
+      "bytes": 13029,
+      "sha256": "87dc6091a8f270e3800ec08c6ea44178417daed93a65f4e4210aed5fa590dd34"
+    },
+    {
+      "relative": "include/sh4zam/inline/sh4/shz_xmtrx_sh4.inl.h",
+      "bytes": 96931,
+      "sha256": "5ba4a0295ebc422764e829c84d5640ed06a75affcdbde6fff1c1bc98b34e3138"
+    },
+    {
+      "relative": "include/sh4zam/inline/shz_complex.inl.h",
+      "bytes": 9790,
+      "sha256": "189314670a9b910d54c7f3941a347f0fabb4c466b91305510d6b452dac4f139b"
+    },
+    {
+      "relative": "include/sh4zam/inline/shz_matrix.inl.h",
+      "bytes": 28563,
+      "sha256": "43edccaf2794ce70d846e8f301508392e9d3e968e16e44b1961dcf26ea10eea8"
+    },
+    {
+      "relative": "include/sh4zam/inline/shz_mem.inl.h",
+      "bytes": 6911,
+      "sha256": "abe2b45892f22b5dcd6c20f3730a859f8f806b4fc7f31cee6935912ec001f7a2"
+    },
+    {
+      "relative": "include/sh4zam/inline/shz_quat.inl.h",
+      "bytes": 10015,
+      "sha256": "930ffbc64e7d286f048cad38b82dda97aad9efce63f7c0f9d34198d3f9c18a89"
+    },
+    {
+      "relative": "include/sh4zam/inline/shz_scalar.inl.h",
+      "bytes": 15541,
+      "sha256": "fc699674f5abf5a929d0ff2fbe02da03c4a183b55c273f59cb7d0937d35e8857"
+    },
+    {
+      "relative": "include/sh4zam/inline/shz_trig.inl.h",
+      "bytes": 9042,
+      "sha256": "ffa679b6d97faff8031e41d471008ffa2a8e19d9995066108537941fc0283966"
+    },
+    {
+      "relative": "include/sh4zam/inline/shz_vector.inl.h",
+      "bytes": 34891,
+      "sha256": "6011b3b0f5de566f5245d2f216eedfa0649d62b0cab44fd1e9b45af3100ea323"
+    },
+    {
+      "relative": "include/sh4zam/inline/shz_xmtrx.inl.h",
+      "bytes": 32627,
+      "sha256": "90d14ec7870529f613f08165f2f52d99bd008f6273144c716298f8545d0f216e"
+    },
+    {
+      "relative": "include/sh4zam/inline/spu/shz_vector_spu.inl.h",
+      "bytes": 1351,
+      "sha256": "be444f8072b0d2308109675d09483c0ba5a04fc51dae67764833b57c93065bc7"
+    },
+    {
+      "relative": "include/sh4zam/inline/sw/shz_matrix_sw.inl.h",
+      "bytes": 2950,
+      "sha256": "cf82a20611f39bbfaedc22a307e465677d90427206671dc983ee38d8076b009e"
+    },
+    {
+      "relative": "include/sh4zam/inline/sw/shz_mem_sw.inl.h",
+      "bytes": 6312,
+      "sha256": "c37e1e2d30c78712eab17045b9647108edc6bf6e7e1c56cebc1e557cdd8533a9"
+    },
+    {
+      "relative": "include/sh4zam/inline/sw/shz_quat_sw.inl.h",
+      "bytes": 1456,
+      "sha256": "e9c4f9aeb50ce806cd74626b9c6542aa7ffac405d8322abce9e82f62de822574"
+    },
+    {
+      "relative": "include/sh4zam/inline/sw/shz_scalar_sw.inl.h",
+      "bytes": 2114,
+      "sha256": "67b99cebd707217664165070d6675343aa850301498b1360bfb46ad7e67f9f17"
+    },
+    {
+      "relative": "include/sh4zam/inline/sw/shz_trig_sw.inl.h",
+      "bytes": 1027,
+      "sha256": "e5f0bc71b6a2355dea3a550dd391bf964c6dad02668c18907a075e131cac58e6"
+    },
+    {
+      "relative": "include/sh4zam/inline/sw/shz_vector_sw.inl.h",
+      "bytes": 3845,
+      "sha256": "9364e039f4523831506d1fd5ac95fef393b823424fc7d6cdb6d040e4b8c4de0a"
+    },
+    {
+      "relative": "include/sh4zam/inline/sw/shz_xmtrx_sw.inl.h",
+      "bytes": 50186,
+      "sha256": "59c2ca091388e1439dc3a91f9748f1b7b379a276f1a37a5e10a099571a794c07"
+    },
+    {
+      "relative": "include/sh4zam/shz_cdefs.h",
+      "bytes": 18144,
+      "sha256": "48138da62e45d103861241923331192f5bc67de3b0cfe8db64ab049ba31ed3c2"
+    },
+    {
+      "relative": "include/sh4zam/shz_cdefs.hpp",
+      "bytes": 1601,
+      "sha256": "ab6579e934e167ca141a0745e50aa4b02ac289b4e812f6a4bd8ede3aacf83c60"
+    },
+    {
+      "relative": "include/sh4zam/shz_complex.h",
+      "bytes": 9250,
+      "sha256": "c7a9dcff2eb30050879a61996a8452da4e0fe817f88766452b01b716d1074e12"
+    },
+    {
+      "relative": "include/sh4zam/shz_complex.hpp",
+      "bytes": 15428,
+      "sha256": "6ea78dc5c19821244931f362a000b8f582c51747dc1b49aed9582452c4e31e4a"
+    },
+    {
+      "relative": "include/sh4zam/shz_matrix.h",
+      "bytes": 39154,
+      "sha256": "460d73a41b0ced91a2bb76d264d41dd9bf21f1ed8839e248b2b9ec4152acdc01"
+    },
+    {
+      "relative": "include/sh4zam/shz_matrix.hpp",
+      "bytes": 23697,
+      "sha256": "c5716f6aa271210956a791264642ea9c3af582ae652c5391cbc6e0f5af4d2f5c"
+    },
+    {
+      "relative": "include/sh4zam/shz_mem.h",
+      "bytes": 12226,
+      "sha256": "89cd76be2d07566f2f104560a3bb16fbebad2d23f8013b774c96c66ce72ce062"
+    },
+    {
+      "relative": "include/sh4zam/shz_mem.hpp",
+      "bytes": 1659,
+      "sha256": "197eabbe44bd25cd80a0048ddd92299d806f63e3ca2b3e636ecbed38fa5250b2"
+    },
+    {
+      "relative": "include/sh4zam/shz_quat.h",
+      "bytes": 9294,
+      "sha256": "236c57697e14fa7c3d3b8388508be7539a05368f52ec9d518fe90425dcbb4414"
+    },
+    {
+      "relative": "include/sh4zam/shz_quat.hpp",
+      "bytes": 16973,
+      "sha256": "627fca9913a7a3267702bf6c076ce7e6a68c4fa7b420c617bd66ea08f500f030"
+    },
+    {
+      "relative": "include/sh4zam/shz_scalar.h",
+      "bytes": 12814,
+      "sha256": "fc3e4b2195bf55a76795eedd5910cd52b4248a6454763ea909011da63ea7b6fc"
+    },
+    {
+      "relative": "include/sh4zam/shz_scalar.hpp",
+      "bytes": 6074,
+      "sha256": "e51e043db461766c55df24b3320b83ae296d63435be068f19223b4a683884191"
+    },
+    {
+      "relative": "include/sh4zam/shz_sh4zam.h",
+      "bytes": 564,
+      "sha256": "207159b59032b4a33de7c4b152fb180ed93914db5da744f7cbe96ac648ef0929"
+    },
+    {
+      "relative": "include/sh4zam/shz_sh4zam.hpp",
+      "bytes": 592,
+      "sha256": "ecae29daec2b5c2d6735127764391f7cc6bbf1697c42bc06a64a85c3eba10eea"
+    },
+    {
+      "relative": "include/sh4zam/shz_trig.h",
+      "bytes": 7926,
+      "sha256": "5f6c20c555a3d4f5a9d10efc653d63d098f327f25e1fae71d6a262285cec9e68"
+    },
+    {
+      "relative": "include/sh4zam/shz_trig.hpp",
+      "bytes": 7945,
+      "sha256": "25016b4d64316e27b6e0b7065c1c25a4615f71c83ded1b2622502a4b377aa19e"
+    },
+    {
+      "relative": "include/sh4zam/shz_vector.h",
+      "bytes": 68087,
+      "sha256": "844bae12ab9ca484135b03e58050b1308da31c21e5a2c7862c09c98ded29626d"
+    },
+    {
+      "relative": "include/sh4zam/shz_vector.hpp",
+      "bytes": 28530,
+      "sha256": "a7c1ca9221eb7aa54cc67f8df98917e5835b03605e27dc1783d8e2304c2313d8"
+    },
+    {
+      "relative": "include/sh4zam/shz_version.h",
+      "bytes": 2223,
+      "sha256": "a55211678e9542c12bb41ce0275293039309920ed93d1b967c093b812a5b9c7f"
+    },
+    {
+      "relative": "include/sh4zam/shz_version.hpp",
+      "bytes": 2129,
+      "sha256": "095fec8d1d190571967e21e1472446b9c9d30e9098866d06277d5d566943c7e6"
+    },
+    {
+      "relative": "include/sh4zam/shz_xmtrx.h",
+      "bytes": 38211,
+      "sha256": "d3d8e8eb4a3e77f3e8c12df6dabb8804fa444ce67085dbd1af37630dacaab085"
+    },
+    {
+      "relative": "include/sh4zam/shz_xmtrx.hpp",
+      "bytes": 34753,
+      "sha256": "28de84880358eb38ba821c9039ae03a07912c0194514264bab307cfff7e24d78"
+    },
+    {
+      "relative": "source/sh4/shz_complex_sh4.c",
+      "bytes": 11501,
+      "sha256": "3ae5ca18e127473e955842380cc528afa5b1b67da652371c2feeef07bb54a7dc"
+    },
+    {
+      "relative": "source/sh4/shz_mem_sh4.s",
+      "bytes": 6567,
+      "sha256": "bf1ff962534f073592e265673defcf6c7fcf7bf9ef6cd0d94ef6adc7ce28f971"
+    },
+    {
+      "relative": "source/sh4/shz_xmtrx_sh4.s",
+      "bytes": 10085,
+      "sha256": "ea7042a33c5a01c0c48a69f2880dd14f6e44269dcb04efcc3cf9a1732dd8a98f"
+    },
+    {
+      "relative": "source/shz_matrix.c",
+      "bytes": 7262,
+      "sha256": "9afb47ab08b4329933750c419a94127ce491476b5b387f8246582658c868c550"
+    },
+    {
+      "relative": "source/shz_quat.c",
+      "bytes": 714,
+      "sha256": "3d410a9ea5503740d459d41682da672dd246581e68707e30387fe9fb32ef6883"
+    },
+    {
+      "relative": "source/shz_version.c",
+      "bytes": 406,
+      "sha256": "4ca27ca9804577fd1b91f883f12a17fd93368ef9b4ff17da52ad1a068fe95913"
+    },
+    {
+      "relative": "source/shz_xmtrx.c",
+      "bytes": 870,
+      "sha256": "9d08a8f70af02fc5ba959c305bd51cd872be57a8a9d2637386fcae2fb2b5edb6"
+    },
+    {
+      "relative": "source/sw/shz_complex_sw.c",
+      "bytes": 2273,
+      "sha256": "8d601e2dadd8cace42610c0a53ca8edb65201df491e8a9ca2ab2c67969c45dd4"
+    },
+    {
+      "relative": "source/sw/shz_xmtrx_sw.c",
+      "bytes": 1863,
+      "sha256": "bff2262fd415df404ae0123c2a3dcb77810599c8738385b9108ad1d588c81e7a"
+    }
+  ],
+  "directories": [
+    "include",
+    "include/sh4zam",
+    "include/sh4zam/inline",
+    "include/sh4zam/inline/sh4",
+    "include/sh4zam/inline/spu",
+    "include/sh4zam/inline/sw",
+    "source",
+    "source/sh4",
+    "source/sw"
+  ],
+  "file_count": 54,
+  "logical_bytes": 775416,
+  "page_plus_dir_charge": 921600,
+  "retained_dependency_rows_verified": 19,
+  "source_cap": 67108864,
+  "old_dependencies_authority": "/root/probe/lanes/actor-visibility23-coverage-integration/source-compile/DEPENDENCY-INPUTS.json"
+}

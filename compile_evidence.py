@@ -2,7 +2,7 @@ import json,hashlib,subprocess,shlex,gzip,fcntl,os,sys
 from pathlib import Path
 import os
 BASIS=Path('/root/probe/lanes/actor-visibility23-coverage-integration')
-R=Path('/root/probe/lanes/actor-visibility23-eligibility-witness-integration');T=Path('/root/probe/codex-actor-visibility23-eligibility-witness-integration');G=T/'port/dreamcast/game';arm=sys.argv[1] if len(sys.argv)>1 else 'on';assert arm in ('on','off');O=R/arm;E=O/'source-compile';E.mkdir(exist_ok=True)
+R=Path('/root/probe/lanes/actor-visibility23-eligibility-witness-integration');T=Path('/root/probe/codex-actor-visibility23-eligibility-witness-integration');G=T/'port/dreamcast/game';arm=sys.argv[1] if len(sys.argv)>1 else 'on';assert arm in ('on','off');O=R/os.environ.get('ACTOR23_ARM_OUTPUT',arm);E=O/'source-compile';E.mkdir(exist_ok=True)
 assert not (E/'compile.json').exists(),'Immutable compile receipt exists; use fresh output/version'
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 def info(p):return {'path':str(p),'bytes':p.stat().st_size,'sha256':sha(p)}
@@ -26,7 +26,7 @@ for p in (O/'obj').rglob('*.d'):
 required=[O/'obj/platform/native_actor_fast.o',O/'obj/platform/native_static.o',O/'obj/platform/native_ui.o',O/'obj/platform/actor_visibility23.o',O/'obj/coarse_ganado.o',O/'obj/shz_bounds23.o',O/'obj/qa_menu.o',O/'obj/tick_log.o',O/'obj/dbgwarp_bridge.o']
 if arm=='off':required=[p for p in required if p.name not in ('actor_visibility23.o','shz_bounds23.o')]
 assert all(p.is_file() for p in required)
-lines=(R/(arm+'-build.log')).read_text().splitlines();commands=[]
+lines=(R/(os.environ.get('ACTOR23_ARM_OUTPUT',arm)+'-build.log')).read_text().splitlines();commands=[]
 for p in required:
  found=[line for line in lines if line.startswith(('kos-c++ ','kos-cc ')) and line.endswith(' -o '+str(p))]
  assert len(found)==1,(str(p),len(found));commands.append({'object':info(p),'command':found[0]})
@@ -65,5 +65,5 @@ reloc=[line for line in lines if line.startswith('gen_overlay: ')];assert len(re
 (E/'RELOCATION-VALIDATION.txt').write_text('\n'.join(reloc)+'\n')
 link=[line for line in lines if line.startswith('RE4DC_LINK_OVL_HELPERS=') and 'bash tools/link.sh' in line];assert len(link)==1
 (E/'LINK-COMMAND.txt').write_text(link[0]+'\n')
-j=json.loads((O/'LINK-RECEIPT.json').read_text());compile={'source':head,'integration':source['integration'],'elf_sha256':j['main']['sha256'],'raw_sha256':j['raw']['sha256'],'scrambled_sha256':j['scrambled']['sha256'],'image_format':'unscrambled-gdrom','resolved_sha256':j['resolved']['sha256'],'source_seal_sha256':sha(E/'source-seal.json'),'overlays':{'dc/'+p.name:sha(p) for p in sorted(O.glob('*.ovl'))},'required_objects':[info(p) for p in required],'objects_manifest':info(O/'OBJECTS.json'),'dependency_inputs':info(E/'DEPENDENCY-INPUTS.json'),'commands':info(E/'TOUCHED-COMPILE-COMMANDS.json'),'preprocessing':info(E/'PREPROCESS.json'),'build_log':info(R/(arm+'-build.log')),'link_command':info(E/'LINK-COMMAND.txt'),'relocation_validation':info(E/'RELOCATION-VALIDATION.txt'),'module_derivation_script':info(Path('/root/probe/lanes/world-scratch23-integration/toolchain/bin/sh-elf-objcopy')),'module_roster':info(O/'modules/roster.json'),'link_input_mapping':info(O/'LINK-INPUT-MAPPING.json'),'private_inputs_receipt':info(BASIS/'ALLOCATION-INPUTS.json'),'private_inputs_readback':info(BASIS/'PRIVATE-INPUTS-READBACK.json'),'runtime_admitted':False}
+j=json.loads((O/'LINK-RECEIPT.json').read_text());compile={'source':head,'integration':source['integration'],'elf_sha256':j['main']['sha256'],'raw_sha256':j['raw']['sha256'],'scrambled_sha256':j['scrambled']['sha256'],'image_format':'unscrambled-gdrom','resolved_sha256':j['resolved']['sha256'],'source_seal_sha256':sha(E/'source-seal.json'),'overlays':{'dc/'+p.name:sha(p) for p in sorted(O.glob('*.ovl'))},'required_objects':[info(p) for p in required],'objects_manifest':info(O/'OBJECTS.json'),'dependency_inputs':info(E/'DEPENDENCY-INPUTS.json'),'commands':info(E/'TOUCHED-COMPILE-COMMANDS.json'),'preprocessing':info(E/'PREPROCESS.json'),'build_log':info(R/(os.environ.get('ACTOR23_ARM_OUTPUT',arm)+'-build.log')),'link_command':info(E/'LINK-COMMAND.txt'),'relocation_validation':info(E/'RELOCATION-VALIDATION.txt'),'module_derivation_script':info(Path('/root/probe/lanes/world-scratch23-integration/toolchain/bin/sh-elf-objcopy')),'module_roster':info(O/'modules/roster.json'),'link_input_mapping':info(O/'LINK-INPUT-MAPPING.json'),'private_inputs_receipt':info(BASIS/'ALLOCATION-INPUTS.json'),'private_inputs_readback':info(BASIS/'PRIVATE-INPUTS-READBACK.json'),'runtime_admitted':False}
 (E/'compile.json').write_text(json.dumps(compile,indent=2)+'\n');print('SOURCE_COMPILE_READY',info(E/'source-seal.json'),info(E/'compile.json'))
