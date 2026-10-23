@@ -30,7 +30,14 @@ def main():
     ap.add_argument('--limit',type=int,default=128)
     ap.add_argument('--conditional-sources',action='store_true',
                     help='research geometry only: unique-ID source poses require additional runtime qualification')
+    ap.add_argument('--single-triangles',action='store_true',
+                    help='research single-triangle witnesses as duplicate exact receipt triangles')
+    ap.add_argument('--conditional-targets',action='store_true',
+                    help='research only: unique-ID target poses also require cached-delta-safe runtime qualification')
+    ap.add_argument('--clearance',type=float,default=2000.,
+                    help='continuous eye-to-plane clearance; frame receipts still independently reject clipping')
     a=ap.parse_args(); root=a.private; work=root/'work'; pkg=root/'inputs'
+    assert a.clearance>=64., 'must exceed the 32 mm per-operand geometric budget'
     sys.path[:0]=[str(root/'helpers'/'pvs'),str(root/'helpers'/'interior')]
     # The historical helper assumed every package had r4tc. r10d does not.
     # Bind every present input, without manufacturing a descriptor or weakening
@@ -40,10 +47,16 @@ def main():
     new="for name in ('ps2-world.re4mesh','ps2-world.r4pw','original.r4pw','ps2-world.ids','ps2-world.r4tc') if (pkgdir/name).exists()}"
     assert source.count(old)==1
     adapted=source.replace(old,new)
+    adapted=adapted.replace('clearance=2000.',f'clearance={a.clearance!r}')
+    adapted=adapted.replace('clearance_mm=2000,',f'clearance_mm={a.clearance!r},')
     if a.conditional_sources:
         predicate="if I['dyn'][instance] or pas!=0 or cull not in (0,2):continue"
         assert adapted.count(predicate)==1
         adapted=adapted.replace(predicate,"if pas!=0 or cull not in (0,2):continue")
+    if a.conditional_targets:
+        predicate="target_ok=~I['dyn'] & (I['pas']==0)"
+        assert adapted.count(predicate)==1
+        adapted=adapted.replace(predicate,"target_ok=(I['pas']==0)")
     module=type(sys)('interior_vis23_certifier')
     module.__file__=str(root/'helpers'/'pvs'/'pvs_certify.py')
     exec(compile(adapted,module.__file__,'exec'),module.__dict__)
@@ -53,7 +66,7 @@ def main():
         if p.clusters[cl]['level_count']==1:
             yield from pairs(p,pi,cl,level)
     module.pairs=single_level_pairs
-    module.certify(pkg,work,int(a.room,16),limit=a.limit,margin=32.,pairs_only=True)
+    module.certify(pkg,work,int(a.room,16),limit=a.limit,margin=32.,pairs_only=not a.single_triangles)
     report=json.loads((work/'proof.json').read_text())
     C,I=importlib.import_module('pvs_emit').load_cells(work),importlib.import_module('pvs_emit').load_inst(work)
     # Admit at most sixteen panels and retain every earlier placement. Dropped
@@ -76,11 +89,17 @@ def main():
     report['hashes']['proof-bits.bin']=sha(work/'proof-bits.bin')
     (work/'proof.json').write_text(json.dumps(report,indent=1)+'\n')
     verifier=importlib.import_module('pvs_verify')
-    if a.conditional_sources:
+    if a.conditional_sources or a.conditional_targets or a.clearance!=2000.:
         verify_source=(root/'helpers'/'pvs'/'pvs_verify.py').read_text()
+        verify_source=verify_source.replace('clearance=2000.',f'clearance={a.clearance!r}')
         predicate="assert pas==0 and cull==D['cull'] and not I['dyn'][D['instance']]"
-        assert verify_source.count(predicate)==1
-        verify_source=verify_source.replace(predicate,"assert pas==0 and cull==D['cull']")
+        if a.conditional_sources:
+            assert verify_source.count(predicate)==1
+            verify_source=verify_source.replace(predicate,"assert pas==0 and cull==D['cull']")
+        if a.conditional_targets:
+            predicate="assert C['has'][cell] and not I['dyn'][target] and I['pas'][target]==0"
+            assert verify_source.count(predicate)==1
+            verify_source=verify_source.replace(predicate,"assert C['has'][cell] and I['pas'][target]==0")
         conditional_verifier=type(sys)('interior_vis23_verifier')
         conditional_verifier.__file__=verifier.__file__
         exec(compile(verify_source,verifier.__file__,'exec'),conditional_verifier.__dict__)
@@ -100,8 +119,23 @@ def main():
     body=(root/'ps2-world.pvs').read_bytes()
     panels=[]
     for key,D in sorted(used.items(),key=lambda kv:int(kv[0])):
-        Q=D['pair']['all_lod_panels'][0]
-        panels.append([D['placement_index'],D['placement_field'],D['part'],D['cluster'],Q['meshlet'],sum(Q['corner_indices'],[])])
+        if 'pair' in D:
+            Q=D['pair']['all_lod_panels'][0]
+            meshlet=Q['meshlet'];corners=sum(Q['corner_indices'],[])
+        else:
+            # One opaque triangle is a complete covering witness on its own.
+            # Duplicate its exact oriented index triple for the existing two-
+            # triangle receipt representation. This remains a research cohort
+            # until root reviews that runtime interpretation and liveness.
+            cl=p.clusters[D['cluster']];first,count,_=p.levels[cl['first_level']]
+            target=D['triangle_index'];meshlet=None
+            for ml in range(first,first+count):
+                _,indices=p.let_tris(ml)
+                if target<len(indices):
+                    meshlet=ml;corners=list(indices[target])*2;break
+                target-=len(indices)
+            assert meshlet is not None
+        panels.append([D['placement_index'],D['placement_field'],D['part'],D['cluster'],meshlet,corners])
     lines=['// Private generated descriptor; no public asset data.','constexpr Panel room_panels[] = {']
     for pi,field,part,cl,ml,corners in panels:
         lines.append('    {%d,%d,%d,%d,%d, {%s}},'%(pi,field,part,cl,ml,','.join(map(str,corners))))
@@ -125,6 +159,9 @@ def main():
                 adapted_certifier_sha256=hashlib.sha256(adapted.encode()).hexdigest(),
                 output_hashes={f.name:sha(f) for f in (root/'ps2-world.pvs',work/'proof.json',work/'replay.json')})
     result['conditional_sources_research']=a.conditional_sources
+    result['single_triangle_receipts_research']=a.single_triangles
+    result['conditional_targets_research']=a.conditional_targets
+    result['eye_to_plane_clearance_mm']=a.clearance
     result['conditional_source_fields']=[d['placement_field'] for d in used.values() if I['dyn'][d['instance']]]
     if a.conditional_sources:
         result['limitations'].append('conditional source liveness is unqualified: fresh rest-state predicate may disagree with same-frame dyn::query cached moved state/delta')
