@@ -36,6 +36,7 @@ def main():
                     help='research only: unique-ID target poses also require cached-delta-safe runtime qualification')
     ap.add_argument('--clearance',type=float,default=2000.,
                     help='continuous eye-to-plane clearance; frame receipts still independently reject clipping')
+    ap.add_argument('--selected-source-lod-witnesses',action='store_true',help='RESEARCH ONLY: exact meshlet witness from one actually selected source LOD; unsupported by current runtime')
     ap.add_argument('--source-roster',type=Path,
                     help='restrict source instances to this authenticated package prerequisite census')
     a=ap.parse_args(); root=a.private; work=root/'work'; pkg=root/'inputs'
@@ -49,7 +50,7 @@ def main():
     new="for name in ('ps2-world.re4mesh','ps2-world.r4pw','original.r4pw','ps2-world.ids','ps2-world.r4tc') if (pkgdir/name).exists()}"
     assert source.count(old)==1
     adapted=source.replace(old,new)
-    roster=None;source_keys=None
+    roster=None;source_keys=None;source_levels={}
     if a.source_roster:
         census=json.loads(a.source_roster.read_text())
         roster=next(x for x in census['rooms'] if int(x['room'][1:],16)==int(a.room,16))
@@ -57,9 +58,17 @@ def main():
         pinned=Pkg(pkg/'ps2-world.re4mesh',pkg/'ps2-world.r4pw')
         assert roster['mesh_crc']==f'{pinned.mesh_crc:08x}' and roster['physical_policy_crc']==f'{pinned.sidecar_crc:08x}'
         source_keys={(x['placement'],x['part'],x['cluster']) for x in roster['eligible_sources']}
+        source_levels={(x['placement'],x['part'],x['cluster']):x.get('source_level',0) for x in roster['eligible_sources']}
     marker='        for ti,t in enumerate(levels[0]):'
     assert adapted.count(marker)==1
     adapted=adapted.replace(marker,"        if SOURCE_KEYS is not None and (pi,part,cl) not in SOURCE_KEYS:continue\n"+marker)
+    if a.selected_source_lod_witnesses:
+        assert source_keys is not None and census['selected_source_lods_research'] and not a.single_triangles
+        before="        panel_levels=[]\n        for level in range(cluster['level_count']):"
+        after="        panel_levels=[]\n        for level in (SOURCE_LEVELS[(pi,part,cl)],):"
+        assert adapted.count(before)==1;adapted=adapted.replace(before,after)
+        before='level=0,triangle_index=int(ti)'
+        assert adapted.count(before)==1;adapted=adapted.replace(before,'level=SOURCE_LEVELS[(pi,part,cl)],triangle_index=int(ti)')
     adapted=adapted.replace('clearance=2000.',f'clearance={a.clearance!r}')
     adapted=adapted.replace('clearance_mm=2000,',f'clearance_mm={a.clearance!r},')
     if a.conditional_sources:
@@ -73,11 +82,11 @@ def main():
     module=type(sys)('interior_vis23_certifier')
     module.__file__=str(root/'helpers'/'pvs'/'pvs_certify.py')
     exec(compile(adapted,module.__file__,'exec'),module.__dict__)
-    module.SOURCE_KEYS=source_keys
+    module.SOURCE_KEYS=source_keys;module.SOURCE_LEVELS=source_levels
     pairs=module.pairs
     # Current pvs23_runtime.inc accepts source panels from one-level clusters.
     def single_level_pairs(p,pi,cl,level=0):
-        if p.clusters[cl]['level_count']==1:
+        if a.selected_source_lod_witnesses or p.clusters[cl]['level_count']==1:
             yield from pairs(p,pi,cl,level)
     module.pairs=single_level_pairs
     module.certify(pkg,work,int(a.room,16),limit=a.limit,margin=32.,pairs_only=not a.single_triangles)
@@ -105,7 +114,7 @@ def main():
     report['hashes']['proof-bits.bin']=sha(work/'proof-bits.bin')
     (work/'proof.json').write_text(json.dumps(report,indent=1)+'\n')
     verifier=importlib.import_module('pvs_verify')
-    if a.conditional_sources or a.conditional_targets or a.clearance!=2000.:
+    if a.conditional_sources or a.conditional_targets or a.clearance!=2000. or a.selected_source_lod_witnesses:
         verify_source=(root/'helpers'/'pvs'/'pvs_verify.py').read_text()
         verify_source=verify_source.replace('clearance=2000.',f'clearance={a.clearance!r}')
         predicate="assert pas==0 and cull==D['cull'] and not I['dyn'][D['instance']]"
@@ -116,6 +125,13 @@ def main():
             predicate="assert C['has'][cell] and not I['dyn'][target] and I['pas'][target]==0"
             assert verify_source.count(predicate)==1
             verify_source=verify_source.replace(predicate,"assert C['has'][cell] and I['pas'][target]==0")
+        if a.selected_source_lod_witnesses:
+            before="assert len(panels)==p.clusters[cl]['level_count']"
+            assert verify_source.count(before)==1
+            verify_source=verify_source.replace(before,"assert len(panels)==1 and panels[0]['level']==D['level']")
+            before="for level,Q in enumerate(panels):\n                assert Q['level']==level"
+            after="for Q in panels:\n                level=Q['level'];assert 0<=level<p.clusters[cl]['level_count']"
+            assert verify_source.count(before)==1;verify_source=verify_source.replace(before,after)
         conditional_verifier=type(sys)('interior_vis23_verifier')
         conditional_verifier.__file__=verifier.__file__
         exec(compile(verify_source,verifier.__file__,'exec'),conditional_verifier.__dict__)
@@ -152,7 +168,11 @@ def main():
                 target-=len(indices)
             assert meshlet is not None
         panels.append([D['placement_index'],D['placement_field'],D['part'],D['cluster'],meshlet,corners])
-    lines=['// Private generated descriptor; no public asset data.','constexpr Panel room_panels[] = {']
+    lines=['// Private generated descriptor; no public asset data.']
+    if a.selected_source_lod_witnesses:
+        lines+=['#if !defined(RE4DC_PS2_PVS_SELECTED_SOURCE_LODS) || !RE4DC_PS2_PVS_SELECTED_SOURCE_LODS',
+                '#error Selected-LOD source witnesses require reviewed runtime admission support', '#endif']
+    lines+=['constexpr Panel room_panels[] = {']
     for pi,field,part,cl,ml,corners in panels:
         lines.append('    {%d,%d,%d,%d,%d, {%s}},'%(pi,field,part,cl,ml,','.join(map(str,corners))))
     lines+=['};','constexpr Certificate certificates[] = {',
@@ -177,6 +197,12 @@ def main():
     result['conditional_sources_research']=a.conditional_sources
     result['single_triangle_receipts_research']=a.single_triangles
     result['conditional_targets_research']=a.conditional_targets
+    result['selected_source_lod_witnesses_research']=a.selected_source_lod_witnesses
+    if a.selected_source_lod_witnesses:
+        result['certifier_adaptation']='selected actual source LOD meshlet witness research only; targets retain all-LOD bounds; max16 dependencies; no current runtime support'
+    if a.selected_source_lod_witnesses:
+        result['limitations'].append('selected-LOD source meshlet witnesses are rejected by current one-LOD runtime guard; descriptor requires new reviewed capability')
+        result['used_source_levels']=[d['level'] for d in used.values()]
     result['eye_to_plane_clearance_mm']=a.clearance
     result['source_roster']=None if a.source_roster is None else dict(path=str(a.source_roster),sha256=sha(a.source_roster))
     result['conditional_source_fields']=[d['placement_field'] for d in used.values() if I['dyn'][d['instance']]]

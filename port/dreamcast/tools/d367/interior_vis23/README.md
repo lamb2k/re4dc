@@ -103,3 +103,14 @@ adapted helper hashes and the complete attestation enter private receipts/meta.
 copied-original, wrong-room, stale-append and ordinary-no-migration negatives.
 This bridge establishes input provenance only; every geometric, runtime, material,
 source-state, pixel and target-image qualification remains independently required.
+
+
+Bounded source-LOD research: `eligibility.py --selected-source-lods <replay.json>`
+can select each source cluster's most frequent actually selected level and retain
+its full material prerequisites. `certify.py --selected-source-lod-witnesses`
+uses that exact source meshlet geometry while retaining target bounds over every
+LOD. Its independent replay checks the chosen source level and exact meshlet
+vertices; generated descriptors fail compilation without a separately reviewed
+runtime capability. Current runtime still refuses multi-LOD source clusters.
+The r111 house cohort produced no additional cuts from this experiment, so no
+runtime guard extension is proposed. This research option never claims admission.

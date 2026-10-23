@@ -20,9 +20,12 @@ def main():
     ap.add_argument('--stage',type=Path,required=True)
     ap.add_argument('--private',type=Path,required=True)
     ap.add_argument('--out',type=Path,required=True)
+    ap.add_argument('--selected-source-lods',type=Path,help='RESEARCH ONLY: price actual selected source levels from replay rows')
     ap.add_argument('--rect21',action='store_true',help='match complete immutable descriptors, as qualified opaque_ready does')
     ap.add_argument('--rooms',nargs='+',default=['r10d','r102','r109','r112','r111','r113'])
     a=ap.parse_args()
+    selections=None if a.selected_source_lods is None else json.loads(a.selected_source_lods.read_text())
+    assert selections is None or len(a.rooms)==1,'selected level replay must name one authenticated room'
     header_path=Path(__file__).resolve().parents[3]/'room/texture_package.hpp'
     header=header_path.read_text()
     adapter=Path(__file__).resolve().parent.parent/'texture_rect21'
@@ -63,13 +66,28 @@ def main():
             b=(d/'ps2-world.ids').read_bytes();count=struct.unpack_from('<I',b,8)[0];ids=b[16:16+count]
             unique={i for i,v in enumerate(ids) if v<250 and ids.count(v)==1}
             report=dict(room=name,mesh_crc=f'{p.mesh_crc:08x}',physical_policy_crc=f'{p.sidecar_crc:08x}',
-                        single_lod_opaque_instances=0,large_vertical_pairs=0,
+                        single_lod_opaque_instances=0,multiple_lod_opaque_instances=0,large_vertical_pairs=0,
                         material_shape_eligible_pairs=0,static_source_pairs=0,
                         conditional_source_pairs=0,material_rejections={},eligible_sources=[])
+            histogram={}
+            if selections is not None:
+                actual=list(p.iter_clusters())
+                for view in selections:
+                    assert len(view['instances'])==len(actual)
+                    for row,instance in zip(view['instances'],actual):
+                        assert (row['placement'],row['part'],row['cluster'])==instance[:3]
+                        if row['corners'] and row['level']>=0:
+                            k=tuple(instance[:3]);h=histogram.setdefault(k,{})
+                            h[row['level']]=h.get(row['level'],0)+1
             seen=set()
             for instance,(pi,part,cl,pas,cull,*_) in enumerate(p.iter_clusters()):
-                if pas or cull not in (0,2) or p.clusters[cl]['level_count']!=1:continue
-                report['single_lod_opaque_instances']+=1
+                if pas or cull not in (0,2):continue
+                level_count=p.clusters[cl]['level_count']
+                if level_count!=1 and selections is None:continue
+                if selections is not None and (pi,part,cl) not in histogram:continue
+                level=0 if selections is None else max(histogram[(pi,part,cl)],key=lambda k:(histogram[(pi,part,cl)][k],-k))
+                assert 0<=level<level_count
+                report['single_lod_opaque_instances' if level_count==1 else 'multiple_lod_opaque_instances']+=1
                 meta=p.pmeta[part];key=(meta['crc'],meta['fnv']);tex=texture(key)
                 reason=None
                 if tex is None:reason='not in pack; loose residency must be inspected'
@@ -82,7 +100,7 @@ def main():
                 # table_guard also requires the source part reserved-bit0 clear.
                 policy_reserved=policy[32+16*part+15]
                 if policy_reserved&1:reason='source material animation/reserved bit'
-                for boundary,ts,identity in pairs(p,pi,cl):
+                for boundary,ts,identity in pairs(p,pi,cl,level):
                     nrm=np.cross(ts[0,1]-ts[0,0],ts[0,2]-ts[0,0])
                     area=sum(np.linalg.norm(np.cross(t[1]-t[0],t[2]-t[0])) for t in ts)
                     if area<=2e6 or abs(nrm[1])>=.5*np.linalg.norm(nrm):continue
@@ -96,10 +114,11 @@ def main():
                     source=(pi,part,cl)
                     if source not in seen:
                         seen.add(source);report['eligible_sources'].append(dict(placement=pi,field=field,part=part,cluster=cl,
-                            conditional=conditional,key=f'{key[0]:08x}-{key[1]:08x}',texture=tex))
+                            conditional=conditional,source_level=level,source_level_count=level_count,selected_level_view_counts=None if selections is None else histogram[(pi,part,cl)],key=f'{key[0]:08x}-{key[1]:08x}',texture=tex))
             reports.append(report)
     out=dict(kind='actual package prerequisite census; no runtime cuts or predicted ms',
-             actual_texture_flag_constants=flags,rect21_enabled=a.rect21,
+             actual_texture_flag_constants=flags,rect21_enabled=a.rect21,selected_source_lods_research=selections is not None,
+             selected_source_lods_sha256=None if selections is None else hashlib.sha256(a.selected_source_lods.read_bytes()).hexdigest(),
              rect21_inputs={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (adapter/'world_rect_bind.h',adapter/'scoped_representations.inc')},
              texture_header_sha256=hashlib.sha256(header_path.read_bytes()).hexdigest(),rooms=reports)
     a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(out,indent=1)+'\n')
