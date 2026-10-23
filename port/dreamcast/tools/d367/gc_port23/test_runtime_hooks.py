@@ -85,10 +85,11 @@ int main(){
         emitted = function(ui, 'void gcasset_texture_emitted(')
         flush = function(ui, 'void gcasset_texture_flush(')
         packet = function(ui, 'void gcasset_packet_emitted(')
-        state = ui[ui.index('struct GcAssetPacketState '):ui.index('void gcasset_packet_emitted(')]
+        state = ui[ui.index('using GcAssetPacketState='):ui.index('void gcasset_packet_emitted(')]
         effect_send = function(ui, 'void gcasset_fx_stream_send(')
         fixture = r'''
 #include "gc_asset_gate.h"
+#include "gc_asset_packet_cursor.h"
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
@@ -141,6 +142,34 @@ int main() {
   std::uint32_t picture[16]={0x80000008,0,0,0x1000/8};picture[8]=0xe0000000;
   gcasset_packet_emitted(picture,sizeof picture,2,EffectPicture);
   assert(entries[0].asset_consumers& (1U<<EffectPicture));
+  entries[0].asset_consumers=0;gcasset_packet_reset();
+  std::uint32_t sprite[24]={0xa0000008,0,0,0x1000/8};
+  sprite[8]=0xf0000000;sprite[16]=0xbf000000; // cy=-0.5f is payload, never a PCW
+  gcasset_fx_stream_send(sprite,sizeof sprite);
+  assert(entries[0].asset_consumers& (1U<<EffectPicture));
+  assert(gcasset_packet_states[2].textured && !gcasset_packet_states[2].continuation);
+  assert(gcasset_packet_states[2].address==0x1000);
+  entries[0].asset_consumers=0;gcasset_packet_reset();
+  gcasset_fx_stream_send(sprite,32);gcasset_fx_stream_send(sprite+8,32);
+  assert(gcasset_packet_states[2].continuation);
+  gcasset_fx_stream_send(sprite+16,32);
+  assert(entries[0].asset_consumers& (1U<<EffectPicture));
+  assert(!gcasset_packet_states[2].continuation);
+  // Floating-colour textured polygons also use64-byte vertices. Their tails
+  // can resemble another header without changing accepted texture identity.
+  entries[0].asset_consumers=0;gcasset_packet_reset();
+  std::uint32_t wide[8]={0x80000018,0,0,0x1000/8};
+  std::uint32_t tail[8]={0x80000008,0,0,0x2000/8};
+  gcasset_packet_emitted(wide,32,2,Texture);gcasset_packet_emitted(vertex,32,2,Texture);
+  gcasset_packet_emitted(tail,32,2,Texture);
+  assert(gcasset_packet_states[2].address==0x1000 && !gcasset_packet_states[2].continuation);
+  assert(entries[0].asset_consumers==(1U<<Texture));
+  // A64-byte two-volume header tail resembling a vertex emits no asset.
+  entries[0].asset_consumers=0;gcasset_packet_reset();
+  wide[0]=0x80000068;gcasset_packet_emitted(wide,32,2,Texture);
+  gcasset_packet_emitted(vertex,32,2,Texture);assert(!entries[0].asset_consumers);
+  gcasset_packet_emitted(vertex,32,2,Texture);gcasset_packet_emitted(tail,32,2,Texture);
+  assert(entries[0].asset_consumers==(1U<<Texture));
   sq_held=true;gcasset_texture_emitted(&entries[1]);sq_held=false;
   assert(entries[1].asset_consumers==(1U<<Texture)); // direct/batched path only latches
   gcasset_texture_flush(entries[0]);gcasset_texture_flush(entries[1]);
@@ -154,6 +183,9 @@ int main() {
   entries[1].package.address=0x1000;picture[3]=0x1000/8;
   gcasset_packet_emitted(picture,sizeof picture,2,Texture);end(1);
   assert(logs.find("ambiguous-texture-address")!=std::string::npos);
+  logs.clear();begin(0x111,4,Required);gcasset_packet_reset();
+  gcasset_packet_emitted(sprite,64,2,Texture);gcasset_packet_reset();end(1);
+  assert(logs.find("incomplete-packet-continuation")!=std::string::npos);
 }
 '''
         with tempfile.TemporaryDirectory(prefix='gc-port23-runtime-', dir='/dev/shm') as temporary:

@@ -1,4 +1,5 @@
 #include "include/gc_asset_gate.h"
+#include "include/gc_asset_packet_cursor.h"
 #include "../world_scratch.h"
 #if RE4DC_WORLD_SCRATCH
 extern "C" unsigned re4dc_ps2_mesh_room();
@@ -410,20 +411,21 @@ void gcasset_texture_flush(Entry& entry) {
     for(unsigned i=0;i<re4dc_gcasset::ConsumerCount;++i)if(mask&(1U<<i))
         re4dc_gcasset::emitted(re4dc_gcasset::Consumer(i),"texture",id,entry.asset_digest);
 }
-struct GcAssetPacketState { unsigned address=0, textured=0, first=0; };
+using GcAssetPacketState=re4dc_gcasset::PacketCursor;
 GcAssetPacketState gcasset_packet_states[5];
 re4dc_gcasset::Consumer gcasset_packet_consumer=re4dc_gcasset::Texture;
-void gcasset_packet_reset(){for(auto& state:gcasset_packet_states)state={};}
+void gcasset_packet_reset(){for(auto& state:gcasset_packet_states){
+    if(state.continuation)re4dc_gcasset::unresolved(re4dc_gcasset::Texture,"incomplete-packet-continuation");
+    state={};
+}}
 void gcasset_packet_emitted(const void* packet,unsigned bytes,unsigned list,re4dc_gcasset::Consumer consumer) {
     if(!bytes)return;
     if(list>=5 || !packet || bytes%32){re4dc_gcasset::unresolved(consumer,"packet-shape");return;}
     auto& state=gcasset_packet_states[list];
     const auto* words=static_cast<const std::uint32_t*>(packet);
     for(unsigned offset=0;offset<bytes;offset+=32) {
-        const auto* q=words+offset/4;const unsigned type=q[0]>>29;
-        if(type==4 || type==5) { state={(q[3]&0x001fffffU)<<3,(q[0]&8)!=0,1};continue; }
-        if(type!=7 || !state.first || !state.textured)continue;
-        state.first=0;
+        const auto* q=words+offset/4;
+        if(!state.feed(q))continue;
         unsigned matches=0;
         for(auto& e:entries)if(e.valid && e.package.upload_complete()) {
             const unsigned n=e.package.header().texture_count;
