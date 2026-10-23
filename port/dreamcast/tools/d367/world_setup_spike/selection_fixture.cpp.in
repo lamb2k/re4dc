@@ -1,0 +1,147 @@
+// Qualification fixture. The complete production translation unit is included;
+// the linker keeps the actual selector and its dependencies. No visibility,
+// LOD, strip-group or cone arithmetic is replaced by fixture implementations.
+#include "@NATIVE_SOURCE@"
+
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
+#ifndef FIXTURE_SG_LEAN
+#define FIXTURE_SG_LEAN 1
+#endif
+
+struct SetupInput {
+    unsigned part_index,cull,inside,use_abs,groups,use_groups,cone_on,marked,pass,sky;
+    float near_distance,far_distance,cull_far,lod_scale;
+    float mvq[12],projection[7],viewport[6],uv_offset[2];
+};
+static_assert(sizeof(SetupInput)==164);
+struct SetupResult {
+    unsigned count,eligible;
+    Re4dcStaticStats stat;
+    lean::Stats lean_stat;
+    unsigned sg_stat[5],cone_stat[4];
+};
+extern "C" {
+alignas(32) unsigned char fixture_package_data[2*1024*1024];
+alignas(32) unsigned char fixture_group_data[1024*1024];
+alignas(32) unsigned char fixture_cone_data[512*1024];
+SetupInput fixture_input;
+MeshDraw::Pick fixture_picks[320];
+SetupResult fixture_result;
+}
+static re4dc::room::MeshPackage fixture_package;
+static Re4dcModelPart fixture_part;
+static float fixture_abs[9],fixture_cone_table[64];
+static std::uint32_t fixture_lut[512];
+static re4dc::room::CompactVertex12 fixture_gather[256];
+
+extern "C" int fixture_adopt(unsigned bytes) {
+    return fixture_package.adopt(fixture_package_data,bytes,true,true);
+}
+// Setup not included in the timed selector entrypoints: this is equivalent to
+// frame/placement inputs that ps2_pass already prepared before its part loop.
+extern "C" void fixture_configure() {
+    fixture_part={};
+    fixture_part.cull=fixture_input.cull;
+    fixture_part.alpha_state=255;
+    fixture_part.source_key[2]=1;
+    std::memcpy(fixture_part.projection,fixture_input.projection,sizeof(fixture_input.projection));
+    std::memcpy(fixture_part.viewport,fixture_input.viewport,sizeof(fixture_input.viewport));
+    std::memcpy(fixture_part.uv_offset,fixture_input.uv_offset,sizeof(fixture_input.uv_offset));
+    lean::side_setup(fixture_input.projection,fixture_input.viewport);
+    lean::abs9(fixture_input.mvq,fixture_abs);
+    ps2w.lut=fixture_lut;ps2w.gather=fixture_gather;
+#if RE4DC_PS2_VERTEX_ALPHA
+    // Price the already resident palette for both arms. Its one-time fill is
+    // unchanged by this spike and must not be charged only to the first arm.
+    (void)ps2_vertex_alpha_lut();
+#endif
+    ps2w.sg=fixture_input.use_groups?fixture_group_data:nullptr;
+    ps2w.sg_groups=fixture_input.groups;
+#if RE4DC_SG_SELECT_LEAN
+    re4dc_sg_lean_on=FIXTURE_SG_LEAN;
+#endif
+#if RE4DC_SCENERY_CONE
+    cone::pkg=fixture_input.cone_on?static_cast<const void*>(&fixture_package):nullptr;
+    cone::rec=fixture_cone_data;cone::tab2=fixture_cone_table;
+    for(unsigned i=0;i<64;++i)fixture_cone_table[i]=float(i)*0.01f;
+#endif
+}
+extern "C" void fixture_reset() {
+    stats={};lean::st={};fixture_result={};
+    // Check only fields initialized by production. The sentinel also catches
+    // writes beyond the returned pick count; pad/whole-pick unused bytes are
+    // intentionally not part of semantic equality.
+    std::memset(fixture_picks,0xa5,sizeof(fixture_picks));
+#if RE4DC_SG_SELECT_LEAN
+    lean::lst={};
+#endif
+#if RE4DC_SCENERY_CONE
+    cone::tests=cone::rejects=cone::vskip=cone::picks_dropped=0;
+#endif
+}
+extern "C" void fixture_snapshot(unsigned count,unsigned eligible) {
+    fixture_result.count=count;fixture_result.eligible=eligible;
+    fixture_result.stat=stats;fixture_result.lean_stat=lean::st;
+#if RE4DC_SG_SELECT_LEAN
+    static_assert(sizeof(lean::lst)==sizeof(fixture_result.sg_stat));
+    std::memcpy(fixture_result.sg_stat,&lean::lst,sizeof(lean::lst));
+#endif
+#if RE4DC_SCENERY_CONE
+    fixture_result.cone_stat[0]=cone::tests;fixture_result.cone_stat[1]=cone::rejects;
+    fixture_result.cone_stat[2]=cone::vskip;fixture_result.cone_stat[3]=cone::picks_dropped;
+#endif
+}
+
+// Both wrappers have the same linkage/noinline attributes. The full wrapper's
+// initialization below is extracted byte-for-byte from the real part loop.
+// The selector initialization is the exact production early-branch setup.
+extern "C" __attribute__((noinline)) unsigned fixture_select_full() {
+    auto& part=fixture_part;const auto& pk=fixture_package;
+    const unsigned index=fixture_input.part_index,pass=fixture_input.pass;
+    const float near=fixture_input.near_distance,far=fixture_input.far_distance;
+    const float cull_far=fixture_input.cull_far,lod_scale=fixture_input.lod_scale;
+    const auto& mvq=fixture_input.mvq;const float* amq=fixture_input.use_abs?fixture_abs:nullptr;
+    const unsigned lean_in=fixture_input.inside?2U:1U;
+    Ps2Part meta{0x12345678U,0x87654321U,32,32,std::uint8_t(pass),std::uint8_t(part.cull),0,std::uint8_t(fixture_input.marked)};
+    const unsigned i=0,pc_state=0,foliage_pass=pass,trans_pass=pass;
+    const std::uint8_t* pvs_cur=nullptr;const float* pc_wq=fixture_input.mvq;
+@FULL_SETUP@
+    fixture_result.eligible=d.chunk_ok();
+    return d.chunk_select(fixture_picks);
+}
+#if defined(RE4DC_SCENERY_SELECT_ONLY) && RE4DC_SCENERY_SELECT_ONLY
+extern "C" __attribute__((noinline)) unsigned fixture_select_light() {
+    auto& part=fixture_part;const auto& pk=fixture_package;
+    const unsigned index=fixture_input.part_index,pass=fixture_input.pass;
+    const float near=fixture_input.near_distance,far=fixture_input.far_distance;
+    const float cull_far=fixture_input.cull_far,lod_scale=fixture_input.lod_scale;
+    const auto& mvq=fixture_input.mvq;const float* amq=fixture_input.use_abs?fixture_abs:nullptr;
+    const unsigned lean_in=fixture_input.inside?2U:1U;
+    Ps2Part meta{0x12345678U,0x87654321U,32,32,std::uint8_t(pass),std::uint8_t(part.cull),0,std::uint8_t(fixture_input.marked)};
+    const unsigned i=0,pc_state=0,foliage_pass=pass,trans_pass=pass;
+    const std::uint8_t* pvs_cur=nullptr;const float* pc_wq=fixture_input.mvq;
+@LIGHT_SETUP@
+    fixture_result.eligible=d.chunk_ok();
+    return d.chunk_select(fixture_picks);
+}
+#endif
+
+extern "C" const std::uintptr_t fixture_layout[] = {
+    1,sizeof(SetupInput),sizeof(SetupResult),sizeof(MeshDraw::Pick),sizeof(MeshDraw),
+#if defined(RE4DC_SCENERY_SELECT_ONLY) && RE4DC_SCENERY_SELECT_ONLY
+    sizeof(ScenerySelector),
+#else
+    0,
+#endif
+    reinterpret_cast<std::uintptr_t>(&fixture_input),
+    reinterpret_cast<std::uintptr_t>(fixture_package_data),sizeof(fixture_package_data),
+    reinterpret_cast<std::uintptr_t>(fixture_group_data),sizeof(fixture_group_data),
+    reinterpret_cast<std::uintptr_t>(fixture_cone_data),sizeof(fixture_cone_data),
+    reinterpret_cast<std::uintptr_t>(fixture_picks),sizeof(fixture_picks),
+    reinterpret_cast<std::uintptr_t>(&fixture_result),
+    offsetof(SetupResult,stat),sizeof(Re4dcStaticStats),
+    offsetof(SetupResult,lean_stat),sizeof(lean::Stats),
+    offsetof(SetupResult,sg_stat),offsetof(SetupResult,cone_stat)
+};
