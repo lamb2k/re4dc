@@ -14,10 +14,12 @@ def fixture():
     strips=bytes([3,0,1,2,3,2,3,4]);n=len(c)
     let=struct.pack('<IIIHH6H',0,0,len(strips),n,2,10,20,30,70,80,90)
     vert=b''.join(struct.pack('<6H',*v) for v in c)
-    lod=struct.pack('<8I',0,0,112,112,112,0,0,0)
-    body=lod+let+vert+strips+bytes(4)
-    h=struct.pack('<4s19I',b'R4IM',3,80+len(body),zlib.crc32(body),0,0,1,n,len(strips),1,
-                  112,112,112,140,140+12*n,140+12*n+len(strips),2,0,0,0)
+    part=struct.pack('<IIBBBBII4f',0,0,0,255,0,0,0,1,0,0,1,1)
+    plod=176+12*n+len(strips)+4
+    lod=struct.pack('<8I',0,0,plod,plod+8,plod+8,0,0,0)
+    body=lod+part+let+vert+strips+bytes(4)+bytes(8)
+    h=struct.pack('<4s19I',b'R4IM',3,80+len(body),zlib.crc32(body),0,1,1,n,len(strips),1,
+                  112,112,148,176,176+12*n,176+12*n+len(strips),2,0,0,0)
     mesh=h+body
     recs=struct.pack('<8H',10,20,30,40,50,60,4,0|(2<<8))+struct.pack('<8H',10,20,30,70,80,90,8,2|(4<<8))
     sg=struct.pack('<4s7I',b'R4SG',1,1,2,zlib.crc32(body),len(mesh),123,zlib.crc32(recs))+recs
@@ -58,6 +60,12 @@ class OfflineTests(unittest.TestCase):
         with self.assertRaises(ValueError):convert(d,sg)
         d=bytearray(sg);d[16]^=1
         with self.assertRaises(ValueError):convert(a,d)
+
+    def test_equal_size_foreign_source_refused(self):
+        a,sg=fixture();b,_,_=convert(a,sg);p=Package(a)
+        wrong=bytearray(a);wrong[p.h[13]]^=1;wrong=repair_crc(wrong)
+        self.assertEqual(len(wrong),len(a))
+        with self.assertRaises(ValueError):validate_pair(wrong,b)
 
     def test_source_chains_cannot_be_encoded(self):
         a,sg=fixture();b,_,_=convert(a,sg);p=Package(b,True)

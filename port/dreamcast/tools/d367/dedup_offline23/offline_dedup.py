@@ -104,13 +104,28 @@ def convert(mesh, sg=None):
         groups = w[3]
         if not 1 <= groups <= 8 or len(g) != 32+16*groups*p.h[6] or zlib.crc32(g[32:]) != w[7]:
             raise ValueError('SG section')
+    # Match the no-allocation runtime's conservative, linear ownership proof.
+    alias=set();covered=0;plain_end=0
+    for pi in range(p.h[5]):
+        part=struct.unpack_from('<IIBBBBII4f',p.data,p.h[11]+36*pi)
+        first,count=part[6:8]
+        if first!=covered:raise ValueError('part partition')
+        covered+=count;lets=p.lets[first:covered]
+        pool=[l['fv']+k for l in lets if l['ix'] for k in l['indices']]
+        lo,hi=(min(pool),max(pool)+1) if pool else (0,0)
+        for li,l in enumerate(lets,first):
+            if not l['ix']:
+                if l['fv']<plain_end:raise ValueError('plain vertex alias')
+                plain_end=l['fv']+l['n']
+                if pool and l['fv']<hi and l['fv']+l['n']>lo:alias.add(li)
+    if covered!=p.h[6]:raise ValueError('part coverage')
     st = Counter(meshlets=p.h[6], corners=0, repeats=0, eligible_meshlets=0,
                  skipped_indexed=0, skipped_alias=0, skipped_strip_count=0)
     if any(not l['ix'] and l['sc'] > 127 for l in p.lets):
         raise ValueError('plain strip count exceeds SDO3 format')
     for li,l in enumerate(p.lets):
         n,c = l['n'],l['corners'];st['corners']+=n
-        reason = 'indexed' if l['ix'] else 'alias' if any(p.refs[l['fv']+k] != 1 for k in range(n)) else 'strip_count' if l['sc'] > 127 else None
+        reason = 'indexed' if l['ix'] else 'alias' if li in alias else 'strip_count' if l['sc'] > 127 else None
         if reason:
             st['skipped_'+reason]+=1;continue
         seen = {};first = [seen.setdefault(v[:3],k) for k,v in enumerate(c)]
