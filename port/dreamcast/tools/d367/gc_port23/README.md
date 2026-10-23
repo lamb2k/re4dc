@@ -1,170 +1,148 @@
 # GC-ASSET diagnostic gate (I-001, gc-port23)
 
-This is an incomplete integration checkpoint. Host fixtures pass; no target,
-room, release-ready or image-identity gate has run. Do not add this to the
-release recipe until the consumer integration and room proof below pass.
+Incomplete integration checkpoint through88e9ac342. Host controls pass; no
+complete consumer mask, room gate, same-profile image identity, linked heap or
+guest acceptance is claimed. The selected SH4 object receipts at842b7d842 are
+syntax/size evidence for that frozen source and old standard542 profile only.
+Root owns local integration under CODEX-TAKEOVER-20261023.md. No recipe/rr,
+asset swaps, pruning, release or media changes belong to this checkpoint.
 
-The texture hook unit now hashes each successful immutable loose/packed member,
-latches accepted UI/effect/model texture use, and flushes outside the SQ lock.
-Source-extracted controls exercise actual MeshDraw end/direct/batched methods,
-header-only versus split vertex packets, effects, and loaded-but-unused keys.
-Source geometry, weapon, font, audio/movie and room-close hooks remain incomplete.
-No complete consumer wired mask is declared by this checkpoint.
-The diagnostic currently requires `PVR_STREAM=1`; an unqualified buffered
-nonstream build fails configuration instead of counting a reservation as use.
-An accepted textured packet without exactly one cache Entry fails explicitly.
-Font/movie/native generated atlases need their own complete payload hooks before
-they can qualify such a non-Entry texture; an API/address is not origin proof.
+GC_ASSET_GATE defaults0. Its macros evaluate no arguments, its new translation
+units are empty and excluded from the OFF object list. Full image identity
+still needs qualification. ON requires PVR_STREAM=1: buffered nonstream
+acceptance is unqualified and fails configuration. GC_ASSET_CATALOG_SHA256
+also defaults0; an exact independently reviewed64hex pin is required at runtime.
+Default0 does not constitute a catalog or gate pass.
 
-The new source-member helper is a separate incomplete capture unit: sixteen
-live archive bounds and128 selected BIN digest records, with actual source
-`calcModelAddr` capture before mutation. It hashes only complete, bounded BINs
-selected for model construction, preserving the digest through relocation/FE.
-Named ETM records and indexed ARC members use the existing source format and
-actor-lifetime alias/REL bounds. Duplicate current adoption preserves saved
-bytes; retirement revokes the owner generation. Unknown/ambiguous/out-of-bounds
-members and capacity failures are coverage errors. Actual UI ownership and
-accepted source emitter latches are wired, with full runtime qualification open.
-Host fixtures include normal TPL records among named BINs and assert preparation
-never emits a GC-ASSET use row.
-Actual UI core/room/option/player/weapon/enemy bind and retire bodies now register
-the archive before actor adoption can mutate it. Ordinary enemy archives with
-no texture table are covered too. Conflicting owner spans are revoked and the
-new overlapping view rejected; a cached original cannot survive as an alias of
-already relocated bytes. CoreDataRead retires the exact core archive before
-the fixed region is overwritten; duplicate adoption after relocation still
-preserves the original bytes.
+## Identity and memory contract
 
-`native_model.cpp` clears caller proof before replacement/static submission and
-selects an original BIN only after that path declines. Normal packet binding
-snapshots the matching source model/info and captured member serial. Nonzero
-packet commit, direct accounting and Leon's inline direct switch latch accepted
-use; frame/retirement flushes format and log outside SQ. Stale serials, missing
-proof and unqualified replacement payloads fail explicitly. Model IDs are the
-first 40 hex digits of the immutable BIN SHA256; full SHA256 remains authoritative.
-Source counters coalesce per member/consumer/flush, as texture counters do.
-Both deferred model enqueue implementations snapshot the original member serial
-and consumer mask (8 diagnostic bytes per node, at most 32 bytes extra after
-queue alignment). Replay uses this saved serial and verifies it at accepted
-use; rebinding the same cModelInfo to a different live BIN cannot relabel queued
-old geometry. A retired original remains an explicit accepted-use error.
-Weapon consumer classification follows the source audit of all 23 shipped
-archives: 24 explicit held/secondary cObj IDs, weapon owner family, exact live
-player hand infos, and the player-member roles for ambiguous casing/mine
-classes. Generic enemy debris and unrelated player face/body parts remain
-outside Weapon. Archive family occupies existing owner padding; it does not
-change origin. The accepted geometry and its model texture acknowledge Weapon
-as well as their generic counters, and deferred queues retain the selected mask.
-Independent static-package payload capture remains open; an unresolved
-replacement cannot inherit its source caller's BIN.
+The actual immutable payload SHA256 supplies identity. Names, keys, containers,
+APIs and local VQ/mipmap/mesh/audio conversion do not establish PS2 or original
+Dreamcast artwork. PS2 bytes may live under GC keys. Unknown stays unknown even
+when an exact reviewed exception permits it. Ambiguous/mixed source aliases
+must not inherit a PS2 verdict from equivalent locally converted bytes.
 
-`gc_asset_packet_cursor.h` supplies the UI observer's format-aware 32/64-byte
-TA continuation handling. The actual observer controls include a real 96-byte
-sprite with cy=-0.5f, split 64-byte vertices and 64-byte headers whose tails
-resemble PCWs. Reset with an unfinished continuation fails diagnostics rather
-than silently accepting an incomplete stream.
+The runtime streams the whole immutable CD catalog hash at installation using
+512B scratch, validates its fixed records/order/bounds, and retains a read-only
+handle instead of a resident whole-disc array. Load/capture matches exact
+kind/id/full SHA and stores a4B epoch+index token. One catalog survives room
+changes; room observations reset independently. Disc/source replacement
+invalidates every token. Existing relocated BINs are never rehashed to renew
+an old token in a new epoch. See PROVENANCE-INDEX.md.
 
-`run_host_tests.sh` builds only small host fixtures in `/dev/shm`, deletes its
-own outputs and prints the core's text/data/BSS. `GC_ASSET_GATE=0` defaults to
-an empty translation unit and argument-free diagnostic macros. The `.mk`
-filters that empty object out when included, but full target identity still
-needs proof. No asset swap, data prune, recipe or rr production edit is made.
+Seen is a2KiB record bitset. Eight exact full-identity unknown slots quarantine
+unreviewed bytes; overflow is failure. No wildcard or runtime learning expands
+the catalog/allowlist. First room-use flush may read one fixed record; accepted
+SQ/G2 latches perform no hashing, logging, allocation or file I/O. Repeated
+asset consumers each increment their own counter, but only one non-PS2 asset
+row appears per room visit. Counts coalesce per asset/consumer/flush, not
+physical draw calls. Load, ready, reservation and culled work never count.
 
-## Provenance and identities
+## Actual coverage and open boundaries
 
-`CatalogRow` matches all of kind, stable id and the **actual immutable payload
-SHA256**. A key/path/container/API is a locator and cannot determine origin.
-Unknown stays unknown even if its exact exception is allowed. PS2 content
-under a GC texture key is PS2 only after matching the reviewed payload digest.
-`Authored` means documented original Dreamcast artwork; converting GC pictures
-to VQ/PAL/mips does not make them authored. The caller lends a bounded catalog;
-the gate does not compile or retain a whole-disc catalog. Its resident bytes
-and the emitted lookup/digest metadata must be included in final memory costs.
-
-The core logs one non-PS2/unknown row per kind/id/digest per room visit. It
-counts accepted emissions separately for all consumer classes. Its Seen table
-uses the first 128 bits of SHA256(kind NUL, id NUL, full payload SHA256) solely
-for compact per-room de-duplication; provenance compares the full digest.
-Overflow is a failed checkpoint. Repeated consumers of one asset still each
-increment their own counter. Load, ready, reservation and wholly culled work
-are not emissions. Bind/reuse pointers cannot survive source retirement.
-Texture consumer counts acknowledge accepted use once per Entry/consumer/flush;
-multiple draws before that safe flush coalesce. They establish asset use, not
-physical draw-call totals or performance. Packet header state resets on scene
-open and Entry retirement; only a same-scene header/vertex split can join.
-
-## Shared-file integration audit (claims cleared by root)
-
-| Consumer | Actual call graph and required accepted boundary | Remaining work |
+| Consumer | Implemented accepted path | Remaining proof |
 |---|---|---|
-| Source props / source actors without NMRS | `src/game/trans.cpp` source object loop -> model bridge -> `native_model.cpp::re4dc_model_submit` -> native actor or generic builder -> packet commit / direct end / Leon inline switch | Original BIN and lifetime are wired; accepted serial latches have source-extracted packet/direct/switch controls. Actual complete runtime/room qualification remains. Do not use SOURCE_OBJECTS calls as draws. |
-| Weapons | Same model emission graph; explicit source class/exact hand info/player-member role plus weapon owner family | Classification and accepted model/texture masks are wired and host-controlled; actual complete runtime/room qualification remains. Hash immutable payload at load, not transformed pose arrays. |
-| Texture keys | `native_ui.cpp::load` opens exact loose or tex.pak member; accepted model/effect/UI emission uses its Entry | Hash exact member at immutable load, carry Entry identity through eviction/reuse; binding/load alone is not use. No disk access per draw. |
-| Effect pictures | `re4dc_effect_sprite`, strip/mesh, haze/stage1 batch -> immediate sends or copied deferred tags -> `re4dc_model_finish_source_draws` | Store copied picture identity with deferred packets; report only the final send; discarded queue is not an emission. |
-| Fonts | Source glyph -> glyph cache cell -> `glyph_draw_run` -> final strip flush | Carry immutable sheet/palette identity through cached cells; key/font filename alone is insufficient. |
-| UI pictures | `re4dc_ui_submit` -> quad handles -> `ui_draw_quad`; source subscreen/tr packet alternatives | Report textured quad only at accepted final send. Untextured native geometry is not GC picture use. |
-| Sample banks | `AXSetVoiceState` resolves voice -> `flush` AX key-on; SYN note -> `flush` note key-on | Capture immutable bank/sample identity before G2. Include both AX and SYN. A mapped/ready voice is not playback. |
-| Streams | stream claim -> prep/ready -> `str_flush` actual AICA ring key-on | Identity includes stream entry and actual converted content. Ready or refill alone is not playback. |
-| Movies | PS2 seq and movie audio -> picture/key-on emission | Verify PS2 sequence/audio provenance; do not mark clean solely because movie API is used. |
+| Original source props/actors without NMRS | Bounded original BIN capture before calcModelAddr relocation/FE, actual model gateway, packet/direct/Leon-switch acceptance | Complete runtime/room qualification and specialized replacement consumers |
+| Weapons | All23 source archive audit: explicit held/secondary classes, exact hand infos, owner family and ambiguous casing/mine member roles; geometry and texture masks | Actual complete runtime/room qualification |
+| Texture and UI pictures | Exact successful loose/tex.pak full member at load, accepted Entry latch and safe flush, both UI draw paths | Complete runtime/room qualification and qualified generated atlases |
+| Effect pictures | Single format-aware accepted packet observer with FX context and carried header; discard/retire reset | Complete runtime/room qualification |
+| Static replacement packages | Embedded PayloadProof helper and actual UI/deferred pointer+serial bridge | Shared native_static patch is a partial unapplied proposal; mixed-owner impostors, r11f/far-shell, extra R4SG interpretation and movie reload error exits remain open |
+| Font glyphs | Actual glyph call graph and immutable local upload boundaries audited | Tile/palette tokens plus exact accepted cache-cell version bridge in progress; generic atlas address alone is not a proof |
+| Sound banks | Exact MRAM/ARAM source parts before original transfer; actual AX/SYN ticket before key-on and queued proof after | Actual room admission close/open, shutdown, target and runtime gates |
+| Disc sound streams | Exact full immutable aica_str.dat proof, source generation through deferred claim/prefill, actual channel-pair key-on | Actual room admission close/open, shutdown, target and runtime gates |
+| Movie picture/audio | Exact container and texture pointer/extent/version boundary audited | Capture and actual accepted picture/audio bridge in progress |
 
-`native_static.cpp` remains root-owned. Its replacement package can draw PS2
-geometry under source object ownership; the diagnostic must use the payload
-that reached the emitter, not label it GC because the source caller was GC.
-Direct, batched SQ, ordinary packet and deferred paths need separate exercise.
-Static callsite existence and a declared wired mask are not coverage proof.
+No complete wired mask is declared. Every active/compiled-out consumer branch
+needs independent actual-path and negative controls. Missing diagnostics are
+failure. A static callsite or self-reported mask is not coverage evidence.
 
-## Audio lock / room lifecycle contract
+## Original BIN and deferred ownership
 
-Audio must never log, hash, open files, allocate or spin while holding G2. Copy
-an `audio_ticket()` before accepted key-on, and complete `queued(ticket,...)`
-inside that same existing audio mutex critical section. The ticket captures
-the admitted room/visit; a late delivery cannot read and adopt a newer room.
-The bounded queue uses try-lock only, and any contention/drop is a gate error.
-The main thread pumps/logs outside the audio/G2 locks. Close admission while
-holding the existing audio mutex during a room transition, then release it
-before draining/logging END. A crossing outstanding ticket fails END. New room
-publication must likewise be serialized against audio key-on. Drain unowned
-faults after stopping audio, including shutdown; never kill the producer and
-claim a final clean audio checkpoint from an earlier interval.
+Sixteen archive bounds and128 selected BIN records retain compact tokens plus
+owner generations. Indexed ARC and named ETM spans use validated complete
+member bounds, nearest later member/REL ends and strict empty-alias rules.
+Original bytes are hashed before modelInit/calcModelAddr or fast encoding.
+Duplicate current adoption preserves the captured identity after mutation.
+Conflicting overlaps revoke old proofs before failure, including capacity
+failure. UI core/room/option/player/weapon/enemy bind/retire paths are wired;
+ordinary enemy early returns are included. CoreDataRead retires fixed core
+storage before overwrite. A retired/ambiguous/unbounded source cannot pass.
 
-Host tests deterministically pause a ticket over END/new BEGIN, hold the queue
-lock during END, overrun the queue and deliver after END. These are synthetic
-contract tests; source integration still needs real room-transition negatives.
+The model gateway clears caller proof before static replacement and selects an
+original BIN only after replacement declines. Both deferred queues freeze its
+original serial, mask and optional replacement proof pointer. Replay never
+resolves current cModelInfo into a different live BIN. The integrated actual
+bridge/gateway/UI controls prove old A cannot be relabeled current B; retired A
+fails. Reserved serial exhaustion fails before the replay sentinel can alias.
 
-## Judge and only-shrinking exceptions
+Static PayloadProof embeds checked geometry and interpretation-sidecar tokens
+in stable owner objects. The capped intrusive list adds no separately allocated
+table. Accepted latches and replay verify original pointer+serial; catalog
+replacement also invalidates tokens. See STATIC-PAYLOAD-BRIDGE.md and its
+source-only patch; native_static.cpp itself remains root-owned and unchanged.
+
+## Packet formats and generated textures
+
+The accepted observer shares the TA format rules for32/64B headers/vertices,
+including a real96B sprite whose cy=-0.5f tail resembles a new PCW. Carried state
+persists only within the same scene; scene/retire reset rejects incomplete
+continuations. One FX observer pass preserves split-header EffectPicture use.
+Zero or ambiguous Entry matches fail explicitly until an exact qualified
+non-Entry payload path is supplied. Filename/API/address-range exemptions are
+forbidden for font/movie/native generated textures.
+
+## Audio source and lock contract
+
+See AUDIO-GATE.md. MRAM hashes bounded interpretation metadata; ARAM hashes
+source bytes or exact AIC1 header+consumed image. SND_PAD_SKIP stale padding is
+excluded. Original DVD transfers/callbacks/sizes are unchanged. Source walking
+is serialized by existing DVD-step ownership, never performs catalog I/O, and
+changes generation before overwrite. Main pump binds completed source digests.
+
+The independent5ms audio thread can key on before that main publication. A
+bounded fallback copies an already completed immutable digest and fixed sound
+constituent tag under a metadata try-lock. The event pump resolves it outside
+all audio/G2/SQ locks. No waiting/hash/log/IO occurs at key-on. Generation,
+request owner, exact offsets, readiness, contention and capacity fail closed.
+Disc streams add one full container read+SHA at startup, with512B scratch and
+an explicit0x1fffffff byte bound; this diagnostic cost is not free or measured.
+
+Audio tickets capture room/visit before accepted key-on and complete in the
+same existing audio mutex critical section. Room transitions must close/open
+admission under that mutex, then drain/log END outside it. Late/pending/contended
+queues fail END. Shutdown must pump unowned faults after stopping producers.
+These real lifecycle hooks remain in progress; core race controls alone do not
+complete integration.
+
+## Judge, exceptions and qualification
 
 ```
 python3 judge.py run-output.txt --room 0111 --room 0113 \
   --allowlist reviewed-current.json --baseline last-accepted.json --json result.json
 ```
 
-The baseline must be the **last accepted** list. An original forever ceiling
-would allow previously removed exceptions to return and is invalid policy.
-The release integrator owns that pinned previous-list input and should compare
-the proposed list with the last accepted Git/release revision. Do not generate
-new exceptions from a failing run. Every exact room/kind/id/digest/provenance
-entry needs reason, owner and evidence; patterns are rejected. Removing a row
-is allowed. Changing a payload/id or restoring a previously removed row fails.
-The list does not classify content as PS2 and never suppresses diagnostic rows.
+The baseline must be the last accepted list, never an original forever ceiling.
+Each exact room/kind/id/full-SHA/provenance exception needs reason, owner and
+evidence. Removing exceptions is allowed; readding a removed row, changing its
+payload/id, or adding one from a new guest failure fails. The list grants no
+PS2 classification and never suppresses diagnostic rows.
 
-The judge rejects absent begin/end checkpoints in **each** input log, unwired
-or unchecked consumers, malformed/duplicate rows, overflow/errors, mismatched
-summary/consumer counts, unreviewed bytes, and requested rooms without coverage.
-Per-room zero draws are allowed only with complete checked coverage from the
-actual active/compiled-out consumer paths.
-Consumer counts and END are separate mandatory rows to fit the production
-256-byte logger. Host fixtures use that same limit and test maximum-width
-numeric fields plus the longest accepted kind/id/consumer combination.
+BEGIN, separate COUNTS, and END are mandatory and fit the actual256B logger.
+The judge rejects missing requested rooms/checkpoints, incomplete wiring or
+checks, malformed/duplicate rows, errors/overflow, unreviewed bytes, and first
+consumer rows that exceed their matching accepted counters. Explicitly empty
+rooms pass only with independent complete consumer coverage.
 
-## Qualification still required
+run_host_tests.sh uses only bounded RAM host fixtures and tests OFF emptiness.
+Current51 tests:50 pass and one historical private-pack opt-in skips (that real
+case passed independently in seed/helper review); C++ core/member/cursor pass.
+The historical seed contains2324 unknown textures and5763 exact historical-load
+exceptions across26 rooms. It is not current emission evidence, and other
+consumer classes still need pinned reviewed catalog/allowlist seed identities.
 
-1. Finish every runtime hook and exact audit seed. Confirm current room/source
-   hashes, rather than treating the audit's load census as new draw evidence.
-2. Exercise actual consumer branches, plus targeted negative payload/unknown,
-   missing hook and final-checkpoint tests. r111/r113 traps must be observed.
-3. Clean checkpoint, merge current integration, then obtain root's build slot.
-4. Same-profile knob-off image identity, KOS 48 KiB squeeze, r100 s30 340/340
-   with heap_before, TEXCHK, CAST-GC, VRAM contiguous refusals 0, GDEMU seed 1.
-5. Hand back the patch and evidence. Claude owns production rr/recipe wiring.
-
-I-002, I-003 and I-004 stay behind this gate. No Later items are authorized here.
+Still required: finish consumers/lifecycles and actual negatives, merge current
+integration at a clean boundary, root-scheduled target/link checks, same-profile
+OFF image identity, KOS48KiB squeeze, h2 s30 340/340 with heap_before, TEXCHK,
+CAST-GC, VRAM contiguous refusals0 and GDEMU seed1 (disc/DMA changes require10
+per takeover). Keep measured MODELLED and CONSOLE evidence distinct. I-002,
+I-003 and I-004 stay behind I-001; Later items need separate authorization.
