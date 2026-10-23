@@ -5,7 +5,12 @@
 #include "include/actor_visibility23_window.h"
 #include "include/warp_late.h"
 extern "C" void re4dc_log(const char*,...);
-extern "C" {unsigned re4dc_actor_visibility23_mode=0;}
+#ifndef RE4DC_ACTOR_VISIBILITY23_BOOT
+#define RE4DC_ACTOR_VISIBILITY23_BOOT 0
+#endif
+// BOOT (lane actor-vis23): 0 = Codex's bounded fixture window only; 1/2 = census/reject from boot in normal play
+// (no fixture), switchable at run time with re4dc_actor_visibility23_set (QA menu row).
+extern "C" {unsigned re4dc_actor_visibility23_mode=RE4DC_ACTOR_VISIBILITY23_BOOT;}
 namespace {
 Re4dcActorVisibility23Stats stats{};
 using namespace actor_visibility23;
@@ -231,6 +236,22 @@ extern "C" void re4dc_actor_visibility23_frame(unsigned render,unsigned open,uns
 
 #if RE4DC_ACTOR_VISIBILITY23
 extern "C" void re4dc_actor_visibility23_bind(unsigned render,unsigned funded,unsigned transformed){
+#if RE4DC_ACTOR_VISIBILITY23_BOOT
+ // Normal-play form: no fixture window. One AV23 line per 120 owner binds (deltas), mode as set.
+ (void)funded;
+ static unsigned last_render,binds;static Re4dcActorVisibility23Stats old{};static unsigned old_xf;
+ if(render==last_render)return;
+ last_render=render;
+ if(++binds<120)return;
+ const auto& now=stats;
+ re4dc_log("AV23 frame=%u mode=%u n=%u query=%u sections=%u wall=%u hidden=%u bound=%u would=%u skip=%u tri=%u xf=%u material=%u identity=%u numeric=%u capacity=%u groups=%u\n",
+   render,re4dc_actor_visibility23_mode,binds,now.queries-old.queries,now.bounded_sections-old.bounded_sections,now.wall_tests-old.wall_tests,
+   now.hidden_sections-old.hidden_sections,now.bounded_records-old.bounded_records,now.potential_records-old.potential_records,
+   now.positions_avoided-old.positions_avoided,now.triangles_avoided-old.triangles_avoided,transformed-old_xf,
+   now.material_draw-old.material_draw,now.identity_draw-old.identity_draw,now.numeric_draw-old.numeric_draw,
+   now.capacity_draw-old.capacity_draw,now.bound_groups-old.bound_groups);
+ old=now;old_xf=transformed;binds=0;return;
+#endif
  if(fixture23.seen&&fixture23.last==render)return;
  // Retired source consumers: no mode change during a live actor lease.
  // Do not rescan admission after completion/cancel/invalid has spent the arm.

@@ -41,6 +41,10 @@ extern volatile unsigned re4dc_qa_wopq_mm, re4dc_qa_wxlu_mm, re4dc_qa_wshell;   
 unsigned re4dc_vram_fail_rooms(unsigned* last_room, unsigned* last_n, unsigned* rooms, unsigned* counts, unsigned max);
 int re4dc_view_dist_get(void) __attribute__((weak));                                         // option_rows.cpp
 #endif
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+extern unsigned re4dc_actor_visibility23_mode;                                                 // platform/actor_visibility23.cc
+int re4dc_actor_visibility23_set(unsigned mode);
+#endif
 extern volatile unsigned long re4dc_log_head;                                                  // platform/mem.cpp
 extern char re4dc_logbuf[0x10000];
 }
@@ -398,7 +402,7 @@ void draw_diag(const Fb& fb) {
 
 // ---------------------------------------------------------------- menu
 enum { M_MAIN, M_CHAP, M_PRE, M_DIAG, M_QR };
-enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_TITLE, A_NORMAL, A_DIAG, A_SHORE, A_WOPQ, A_WXLU, A_WSHELL };
+enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_TITLE, A_NORMAL, A_DIAG, A_SHORE, A_WOPQ, A_WXLU, A_WSHELL, A_AV23 };
 struct Menu {
     bool boot;
     int screen, sel[5], chap, qr_page;
@@ -422,6 +426,9 @@ void item_text(int a, char* out, unsigned n) {
     case A_SPEED: snprintf(out, n, "SPEED DISPLAY: %s", speed_name()); break;
     case A_TITLE: snprintf(out, n, "QUIT TO THE TITLE SCREEN"); break;
     case A_DIAG: snprintf(out, n, "DIAGNOSTICS"); break;
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+    case A_AV23: snprintf(out, n, "ACTOR WALL CUT: %s", re4dc_actor_visibility23_mode == 2 ? "ON" : re4dc_actor_visibility23_mode == 1 ? "COUNT" : "OFF"); break;
+#endif
     case A_SHORE: snprintf(out, n, "LAKE SHORE VIEW: %s", &re4dc_qa_shore_far_mm && re4dc_qa_shore_far_mm ? "30 M" : "45 M"); break;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     case A_WOPQ: snprintf(out, n, "OPAQUE WORLD CUT: %s", wm_opq_name()); break;
@@ -557,6 +564,12 @@ int run(Menu& m, bool boot) {
                     for (int k = 0; k < 4 && (re4dc_quality_speed() & 2) == was; ++k) re4dc_speed_cycle();
                 }
                 else if (a == A_DIAG) { snap_diag(); m.screen = M_DIAG; }
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+                else if (a == A_AV23) {
+                    re4dc_actor_visibility23_set(re4dc_actor_visibility23_mode == 2 ? 0u : 2u);
+                    re4dc_log("qa: actor wall cut mode=%u\n", re4dc_actor_visibility23_mode);
+                }
+#endif
                 else if (a == A_SHORE) { if (&re4dc_qa_shore_far_mm) re4dc_qa_shore_far_mm = re4dc_qa_shore_far_mm ? 0u : 30000u; }
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
                 else if (a == A_WOPQ || a == A_WXLU || a == A_WSHELL) {
@@ -645,9 +658,17 @@ int re4dc_qa_menu(const char** path) {
     if (m.screen != M_MAIN) m.screen = M_MAIN;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
-                         A_WOPQ, A_WXLU, A_WSHELL, A_TITLE};
+                         A_WOPQ, A_WXLU, A_WSHELL,
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+                         A_AV23,
+#endif
+                         A_TITLE};
 #else
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, A_TITLE};
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+                         A_AV23,
+#endif
+                         A_TITLE};
 #endif
     m.nitems = (int) (sizeof(items) / sizeof(items[0]));
     memcpy(m.items, items, sizeof(items));

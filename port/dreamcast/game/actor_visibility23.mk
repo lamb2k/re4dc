@@ -33,11 +33,14 @@ $(error Actor cottage receipt currently requires CPU_BACKFACE=0)
 endif
 ACTOR_VISIBILITY23_CERT ?=
 ACTOR_VISIBILITY23_WHY ?= 0
+ACTOR_VISIBILITY23_WIDE ?= 0
+ACTOR_VISIBILITY23_BOOT ?= 0
 ifeq ($(ACTOR_VISIBILITY23_CERT),)
 $(error ACTOR_VISIBILITY23_CERT must name the private prepare_r119.py certificate directory)
 endif
 ACTOR_VISIBILITY23_SDK ?= $(CURDIR)/.actor-visibility23-sdk
-$(OBJDIR)/platform/native_actor_fast.o $(OBJDIR)/platform/actor_visibility23.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_VISIBILITY23=1 -I$(ACTOR_VISIBILITY23_SDK)/include -I$(ACTOR_VISIBILITY23_CERT) -DRE4DC_ACTOR_VISIBILITY23_WHY=$(ACTOR_VISIBILITY23_WHY)
+$(OBJDIR)/platform/native_actor_fast.o $(OBJDIR)/platform/actor_visibility23.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_VISIBILITY23=1 -I$(ACTOR_VISIBILITY23_SDK)/include -I$(ACTOR_VISIBILITY23_CERT) -DRE4DC_ACTOR_VISIBILITY23_WHY=$(ACTOR_VISIBILITY23_WHY) -DRE4DC_ACTOR_VISIBILITY23_WIDE=$(ACTOR_VISIBILITY23_WIDE) -DRE4DC_ACTOR_VISIBILITY23_BOOT=$(ACTOR_VISIBILITY23_BOOT)
+$(OBJDIR)/qa_menu.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_VISIBILITY23=1
 $(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_VISIBILITY23=1 -I$(ACTOR_VISIBILITY23_SDK)/include
 $(OBJDIR)/platform/actor_visibility23.o: PLATFORM_CPPFLAGS += -DRE4DC_DBG_WARP=1 -O2 -fno-fast-math -ffp-contract=off
 OBJS += $(OBJDIR)/platform/actor_visibility23.o $(OBJDIR)/shz_bounds23.o

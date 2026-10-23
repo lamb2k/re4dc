@@ -1657,8 +1657,17 @@ static bool section_wall23(const Re4dcModelPart& p,Frame& f,const BlobHeader* bl
     if(!shz_bounds_mode_supported(fpscr)){++st.numeric_draw;return false;}
     // First cohort: owned immutable skeletal positions, opaque depth-writing,
     // one-sided body/head parts only. Alpha, masks and attachments draw.
-    if(p.blend || (p.material_flags&4U) || p.alpha_state!=255 || p.mask.pixels || p.mask_ref!=256 || (p.cull!=1&&p.cull!=2) ||
-       reinterpret_cast<const void*>(blob)!=p.stream || f.mode!=kSkin || !owned_submission || f.position_stride!=8 || !f.palette ||
+#if defined(RE4DC_ACTOR_VISIBILITY23_WIDE) && RE4DC_ACTOR_VISIBILITY23_WIDE
+    // WIDE (lane actor-vis23): per-part (non-owner) draws and two-sided parts are eligible too. A section wholly
+    // behind an opaque occluder is hidden whichever side faces the camera; the wall test needs no depth write
+    // from the actor, but opaque depth-writing actor materials are still required below.
+    const bool wide23=true;
+#else
+    const bool wide23=false;
+#endif
+    if(p.blend || (p.material_flags&4U) || p.alpha_state!=255 || p.mask.pixels || p.mask_ref!=256 ||
+       (!wide23&&p.cull!=1&&p.cull!=2) ||
+       reinterpret_cast<const void*>(blob)!=p.stream || f.mode!=kSkin || (!wide23&&!owned_submission) || f.position_stride!=8 || !f.palette ||
        p.depth_mode!=0) {
         ++st.material_draw;
 #if defined(RE4DC_ACTOR_VISIBILITY23_WHY) && RE4DC_ACTOR_VISIBILITY23_WHY
