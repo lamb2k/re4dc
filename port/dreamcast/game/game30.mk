@@ -455,6 +455,28 @@ endif
 GAME_CPPFLAGS += -DRE4DC_FAR_SHELL=1
 PLATFORM_CPPFLAGS += -DRE4DC_FAR_SHELL=1
 endif
+# WORLD_METER=1 (lane worlddraw23, Test 23 groundwork; QA disc only; default 0 = no code; render / display only): meters
+#   the PS2 world draw, which runs inside Render() (the "setup" ProcessTick phase the QA Diagnostics page never showed):
+#   WORLD OPQ (pass 0, the opaque world inside the cut), WORLD XLU (passes 1 + 2, punch-through and translucent, at
+#   whatever far they draw), SHELL (far shell): us and vertices per tick, plus the tick's wall time, in the GAME_TICK_LOG
+#   window (PT line fields wopq / wxlu / wshell / wall / vopq / vxlu / vshell). The Diagnostics page shows them with
+#   RENDER (setup minus the world) and OTHER (wall minus every shown part), so the shown parts add up to the frame.
+#   VRAM: every failed texture-RAM allocation is logged (VRAMFAIL size, caller, texture key, room) and counted per room.
+#   QA menu rows (this boot only; default GAME = the Options View distance as built): opaque world cut 12.5 / 10 / 8 m,
+#   translucent world far Full / 12.5 / 8 m, far shell On / Off; each changes only its own pass (the fog follows the
+#   Options View distance as before). DBG_WARP builds: warp line `wmeter <opaque mm> <translucent mm, 1 = full> <shell 0
+#   game, 1 on, 2 off>`. Needs QA_MENU=1, GAME_TICK_LOG, FAR_SHELL=1, VRAM_PAGES=1 (the QA disc recipe).
+WORLD_METER ?= 0
+ifneq ($(filter-out 0 1,$(WORLD_METER)),)
+$(error WORLD_METER must be 0 or 1)
+endif
+ifeq ($(WORLD_METER),1)
+ifneq ($(FAR_SHELL),1)
+$(error WORLD_METER needs FAR_SHELL=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_WORLD_METER=1
+PLATFORM_CPPFLAGS += -DRE4DC_WORLD_METER=1
+endif
 # FOLIAGE_OPTION=1 (test 15, user 10-16 "ship with full near and off"; default 0 = no code; render only): a fourth Options
 #   row below View distance, "Foliage  Full / Near / Off" (option_rows.cpp), setting the FOLIAGE_TRIM level (hwfog.mk:
 #   0 full = every translucent world part as the PS2 draws it, 1 near = cut-out brush / leaf cards in the punch-through
@@ -2983,6 +3005,20 @@ $(error PS2_WORLD_SOURCE_TEX_VQ needs PS2_WORLD_SOURCE_TEX_PREP=1)
 endif
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_SOURCE_TEX_VQ=1
 endif
+# PS2_WORLD_SOURCE_TEX_MIP=1 (lane fix-r200-gears23 from Codex mipmap23 8075a7c4; bug fix, default 0 = image unchanged;
+# needs PS2_WORLD_SOURCE_TEX_VQ=1 CAST_MIPMAP=1): since the mip22 data the r200 late-pass descriptor fa6fe38c-1a02365f is a
+# mipmapped full-codebook VQ package (23,894 B), which the VQ size check above refuses (ready=0, TEXCHK fail at r200). With
+# it the prep checks the package's exact current layout and size (raw16, base VQ or VQ mip chain) instead.
+PS2_WORLD_SOURCE_TEX_MIP ?= 0
+ifneq ($(filter-out 0 1,$(PS2_WORLD_SOURCE_TEX_MIP)),)
+$(error PS2_WORLD_SOURCE_TEX_MIP must be 0 or 1)
+endif
+ifeq ($(PS2_WORLD_SOURCE_TEX_MIP),1)
+ifneq ($(PS2_WORLD_SOURCE_TEX_VQ)$(CAST_MIPMAP),11)
+$(error PS2_WORLD_SOURCE_TEX_MIP needs PS2_WORLD_SOURCE_TEX_VQ=1 CAST_MIPMAP=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_SOURCE_TEX_MIP=1
+endif
 # Original r11f authored-group owner. Host qualification precedes runtime use.
 PS2_WORLD_R11F_OWNER ?= 0
 ifneq ($(filter-out 0 1,$(PS2_WORLD_R11F_OWNER)),)
@@ -3831,6 +3867,7 @@ ifneq ($(ROUTE_OVL),1)
 $(error ISSUE52_ACTOR_DIAG needs ROUTE_OVL=1 via ROUTE_CH13=1)
 endif
 $(OBJDIR)/mod/st1_2/src/st1/r10c.o: GAME_CPPFLAGS += -DRE4DC_ISSUE52_ACTOR_DIAG=1
+$(OBJDIR)/src/game/em_set.o $(OBJDIR)/src/game/em.o $(OBJDIR)/src/game/read.o: GAME_CPPFLAGS += -DRE4DC_ISSUE52_ACTOR_DIAG=1
 $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_ISSUE52_ACTOR_DIAG=1
 endif
 # MOTION_MISS_LOG=1 (castle lane 2026-10-15; diagnostic, log only, default 0): "motion miss" lines (clip, wait, slab).

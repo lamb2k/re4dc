@@ -23,6 +23,7 @@
 //  - a microsecond clock for the open/close cost lines.
 #if RE4DC_SUBSCREEN || RE4DC_W11_FIXTURE  // (subscreen.mk; empty in the default image)
 #include <kos.h>
+#include "cache_lines.h"
 #include <fcntl.h>
 #include <cctype>
 #include <cstdio>
@@ -739,7 +740,7 @@ long re4dc_ssb_overlay_read(void* dst, unsigned capacity)
 // Code just written through the operand cache: write it back and drop stale instruction lines.
 void re4dc_ssb_code_sync(void* p, unsigned bytes)
 {
-    dcache_wback_range(reinterpret_cast<uintptr_t>(p), bytes);
+    RE4DC_DCACHE_WBACK(reinterpret_cast<uintptr_t>(p), bytes);
     icache_flush_range(reinterpret_cast<uintptr_t>(p), bytes);
 }
 #endif

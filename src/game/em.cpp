@@ -25,6 +25,9 @@
 #include "global.h"
 #include "db_log.h"
 #include "va_ppc.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+#include "issue52_actor_diag.h"
+#endif
 #if defined(RE4DC_EL_CENSUS) && RE4DC_EL_CENSUS
 #include "el_census.h"   // EL_CENSUS (game30.mk; lane el): the running enemy and its skeleton census
 #endif
@@ -84,6 +87,12 @@ void cEmMgr::log(const char* fmt, ...)
 // 0x02000000, emset_no 0xFF and stores the read table entry.
 int cEmMgr::construct(cEm* p, u32 id)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+    const unsigned issue52_token = id == 0x12 ?
+        re4dc_issue52_current(re4dc_issue52_source_task(), id) : 0;
+    if (issue52_token) re4dc_issue52_detail(issue52_token,
+        re4dc_issue52_source_task(), I52_CONSTRUCT_BEGIN, 0, 0);
+#endif
     switch (id) {
     case 0:
         switch (pG->pl_type) {
@@ -178,8 +187,17 @@ int cEmMgr::construct(cEm* p, u32 id)
     default:
         p->subArc = (PlArc*)EmReadSearch(id, 0, 0);
         if (p->subArc == 0) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+            if (issue52_token) re4dc_issue52_detail(issue52_token,
+                re4dc_issue52_source_task(), I52_CONSTRUCT_NO_ARC, 0, 0);
+#endif
             return 0;
         }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+        // Close read attribution before the initializer can start nested work.
+        if (issue52_token) re4dc_issue52_detail(issue52_token,
+            re4dc_issue52_source_task(), I52_CONSTRUCT_INIT, 0, 0);
+#endif
         EmInitFunc(p);
         break;
     }

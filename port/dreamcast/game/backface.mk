@@ -13,7 +13,7 @@ ifneq ($(TA_HASH),1)
 $(error BACKFACE_CENSUS=1 needs TA_HASH=1)
 endif
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o $(OBJDIR)/platform/backface_census.o: PLATFORM_CPPFLAGS += -DRE4DC_BACKFACE_CENSUS=1
-$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_BACKFACE_CENSUS=1
+$(OBJDIR)/coarse_actor.o $(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_BACKFACE_CENSUS=1
 endif
 # CPU_BACKFACE=1 (render only; room/backface_emit.hpp): world meshlets (native_static.cpp, direct store-queue sink) and
 #   actor parts (native_actor_fast.cpp, ACTOR_DIRECT) whose PVR header culls (CCW / CW) send only the triangles the ISP
@@ -22,22 +22,68 @@ endif
 #   owned actor except the registry bosses NMR_SOURCE_CULL selects (Del Lago 0x2F, ...). The lean strip walk
 #   (MESH_STRIP_LEAN) is replaced by a C walk for culling parts. Default 0: no code.
 CPU_BACKFACE ?= 0
-ifneq ($(filter $(CPU_BACKFACE),0 1),$(CPU_BACKFACE))
-$(error CPU_BACKFACE must be 0 or 1)
+ifneq ($(filter $(CPU_BACKFACE),0 1 2),$(CPU_BACKFACE))
+$(error CPU_BACKFACE must be 0, 1 or 2)
 endif
-ifeq ($(CPU_BACKFACE),1)
-$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_CPU_BACKFACE=1
+ifneq ($(CPU_BACKFACE),0)
+$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_CPU_BACKFACE=$(CPU_BACKFACE)
 endif
-# ACTOR_BACKFACE=1 (render, look change; needs CPU_BACKFACE=1): Leon, the Ganados and El Gigante (owned path) use the source model's cull
+# CPU_BACKFACE=2 keeps facing/run rejection in the SH-4 strip emitter. The
+# assembly is linked only for this arm; OFF and the C reference gain no object.
+ifeq ($(CPU_BACKFACE),2)
+ifneq ($(GAME_SH4ZAM),1)
+$(error CPU_BACKFACE=2 needs GAME_SH4ZAM=1)
+endif
+PLATFORM_OBJS += $(OBJDIR)/platform/backface_sh4.o
+# This file is included after the main link target's prerequisites were expanded.
+$(TARGET): $(OBJDIR)/platform/backface_sh4.o
+ifneq ($(filter-out 0 4,$(TA_HASH)),)
+PLATFORM_OBJS += $(OBJDIR)/platform/backface_sh4_trace.o
+$(TARGET): $(OBJDIR)/platform/backface_sh4_trace.o
+$(OBJDIR)/platform/backface_sh4.o: KOS_CFLAGS += -DSHZ_STRIP_TRACE=1 -DSHZ_STRIP_TRACE_CALLBACK=_re4dc_backface_sh4_trace
+endif
+# The complete classifier/run/copy implementation is a reproducible patch to
+# the fetchable clean SDK pin. CPU0/C1 acquire no SDK overlay or extra object.
+BACKFACE_SDK_OVERLAY := $(OBJDIR)/sh4zam-strip-sdk
+BACKFACE_SDK_TOOLS := ../tools/d367/backface_sh4zam_fused
+BACKFACE_SDK_MANIFEST := $(BACKFACE_SDK_TOOLS)/manifest.json
+BACKFACE_SDK_CPPFLAGS := -I$(BACKFACE_SDK_OVERLAY)/include
+$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += $(BACKFACE_SDK_CPPFLAGS)
+PLATFORM_OBJS += $(OBJDIR)/platform/backface_sh4_walk.o
+$(TARGET): $(OBJDIR)/platform/backface_sh4_walk.o
+.PHONY: backface-sh4zam-verify
+backface-sh4zam-verify:
+	python3 ../tools/d367/backface_sh4zam_sdk/generate.py --check
+	python3 $(BACKFACE_SDK_TOOLS)/materialize.py --output $(BACKFACE_SDK_OVERLAY)
+	python3 $(BACKFACE_SDK_TOOLS)/check_area.py --overlay $(BACKFACE_SDK_OVERLAY)
+$(OBJDIR)/platform/backface_sh4.o $(OBJDIR)/platform/backface_sh4_walk.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o: | backface-sh4zam-verify
+$(OBJDIR)/platform/backface_sh4.o: $(BACKFACE_SDK_MANIFEST) $(BACKFACE_SDK_TOOLS)/0001-strip-sq-api.patch $(BACKFACE_SDK_TOOLS)/materialize.py $(BACKFACE_SDK_TOOLS)/check_area.py
+	@mkdir -p $(dir $@)
+	kos-cc $(KOS_CFLAGS) $(BACKFACE_SDK_CPPFLAGS) -c $(BACKFACE_SDK_OVERLAY)/source/shz_strip.S -o $@
+$(OBJDIR)/platform/backface_sh4_walk.o: $(BACKFACE_SDK_MANIFEST) $(BACKFACE_SDK_TOOLS)/0001-strip-sq-api.patch $(BACKFACE_SDK_TOOLS)/materialize.py $(BACKFACE_SDK_TOOLS)/check_area.py
+	@mkdir -p $(dir $@)
+	kos-c++ $(KOS_CFLAGS) $(BACKFACE_SDK_CPPFLAGS) -fno-fast-math -ffp-contract=fast -c $(BACKFACE_SDK_OVERLAY)/source/shz_strip.cpp -o $@
+
+endif
+# ACTOR_BACKFACE=1 (render, look change; needs CPU_BACKFACE=1 or 2): Leon, the Ganados and El Gigante (owned path) use the source model's cull
 #   mode instead of cull none, so CPU_BACKFACE drops their back faces too; alpha-mask and no-depth-write materials stay
 #   double-sided. Default 0: no code.
+# BACKFACE_KEEP_ALL=1 (test only, needs CPU_BACKFACE=1): the C walk runs its facing test but keeps every triangle, to
+#   separate the walk change's cost from the drop (lane backface-sh4zam23 census). Default 0: no code.
+BACKFACE_KEEP_ALL ?= 0
+ifeq ($(BACKFACE_KEEP_ALL),1)
+ifneq ($(CPU_BACKFACE),1)
+$(error BACKFACE_KEEP_ALL=1 needs CPU_BACKFACE=1)
+endif
+$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_BACKFACE_KEEP_ALL=1
+endif
 ACTOR_BACKFACE ?= 0
 ifneq ($(filter $(ACTOR_BACKFACE),0 1),$(ACTOR_BACKFACE))
 $(error ACTOR_BACKFACE must be 0 or 1)
 endif
 ifeq ($(ACTOR_BACKFACE),1)
-ifneq ($(CPU_BACKFACE),1)
-$(error ACTOR_BACKFACE=1 needs CPU_BACKFACE=1)
+ifeq ($(filter $(CPU_BACKFACE),1 2),)
+$(error ACTOR_BACKFACE=1 needs CPU_BACKFACE=1 or 2)
 endif
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_BACKFACE=1
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_BACKFACE=1

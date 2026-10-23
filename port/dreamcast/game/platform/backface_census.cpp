@@ -19,7 +19,7 @@ extern "C" void re4dc_log(const char* fmt, ...);
 extern "C" { volatile unsigned re4dc_bfc_class; volatile unsigned re4dc_bfc_id; }
 namespace {
 constexpr unsigned kClasses = 8;
-struct Sum { unsigned v, cv, t, b[2], r[2], s[2], id; };
+struct Sum { unsigned v, cv, t, b[2], r[2], s[2], id, st, cst; };  // st/cst: strips (EOS) all / culling
 Sum win[kClasses];
 unsigned win_scenes, win_first;
 struct List {
@@ -64,6 +64,8 @@ void vertex(List& L, const std::uint32_t* q) {
     }
     ++L.n;
     if (eos) {
+        ++S.st;
+        if (L.vsz == 32 && (L.cull == 2 || L.cull == 3)) ++S.cst;
         if (L.vsz == 32 && (L.cull == 2 || L.cull == 3))
             for (unsigned h = 0; h < 2; ++h) close_run(S, h, L.k[h], L.front[h], false);
         L.open = false;
@@ -101,8 +103,8 @@ extern "C" void re4dc_bfc_scene(unsigned frame, int present) {
     for (unsigned c = 0; c < kClasses; ++c) {
         const Sum& s = win[c];
         if (!s.v) continue;
-        re4dc_log("bfc: frame=%u..%u scenes=%u cls=%u v=%u cv=%u t=%u b=%u/%u r=%u/%u s=%u/%u id=%02x\n", win_first, frame,
-                  win_scenes, c, s.v, s.cv, s.t, s.b[0], s.b[1], s.r[0], s.r[1], s.s[0], s.s[1], s.id);
+        re4dc_log("bfc: frame=%u..%u scenes=%u cls=%u v=%u cv=%u t=%u b=%u/%u r=%u/%u s=%u/%u id=%02x st=%u cst=%u\n", win_first, frame,
+                  win_scenes, c, s.v, s.cv, s.t, s.b[0], s.b[1], s.r[0], s.r[1], s.s[0], s.s[1], s.id, s.st, s.cst);
     }
     std::memset(win, 0, sizeof win);
     win_scenes = 0;
