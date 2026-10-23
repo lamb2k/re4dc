@@ -40,3 +40,11 @@ runtime assumptions. In particular, original fresh-state liveness checks can
 disagree with an already cached moved affine in the same UI frame; conditional
 research output stays unadmitted until the reviewed runtime repair, exact
 geometry coverage, real emitted receipts and target pixels pass together.
+
+`inventory.py` performs the I-002 AREA-first package census. It records current
+mesh/policy identities, full-detail opaque workload, dynamic-ID counts and
+existing recovered-source visibility actions. This is a workload ordering,
+not a ranking of actual PVS yield. It does not classify every room as indoor
+or authorize generic outdoor PVS. Current area::kRooms covers r107; r109's
+intact/broken hut setup and r111's camera-dependent house toggle already use
+source dynamic bindings and must be checked before adding another table.
