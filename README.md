@@ -159,6 +159,10 @@ Planned, with no date yet. Ticked items have passed our checks and will be in Te
 - [x] **Trap explosions:** tree and door traps now explode with fire ([#55](https://github.com/lamb2k/re4dc/issues/55)).
 - [x] **Missing gears:** the lever gears stay drawn and turn ([#52](https://github.com/lamb2k/re4dc/issues/52)).
 - [x] **Castle gate texture:** the one picture at the castle gate that failed its check now loads.
+- [x] **Mendez keeps fighting:** he no longer freezes after grabbing Leon, and his bear hug holds ([#55](https://github.com/lamb2k/re4dc/issues/55)).
+- [x] **Steady barn lights:** the light in Mendez's barn no longer flickers, and effects in busy rooms stop dropping out ([#55](https://github.com/lamb2k/re4dc/issues/55), [#41](https://github.com/lamb2k/re4dc/issues/41)).
+- [x] **No hang on slow disc reads:** a disc read that never finishes now gives up and reads again, for DreamShell and similar loaders ([#28](https://github.com/lamb2k/re4dc/issues/28)).
+- [x] **Fewer see-through effects:** mist, glows and dust are cut. Blood, fire, explosions, grenades and the laser sight stay.
 
 ## What's new in Test 17.1
 
