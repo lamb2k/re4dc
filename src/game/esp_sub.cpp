@@ -1059,6 +1059,7 @@ static const FxTrim kFxTrim[3] = {
 static u32 s_ftl_frame0, s_ftl_frames, s_ftl_seen[4], s_ftl_drawn[4], s_ftl_drop[5];
 static f32 s_ftl_area_seen, s_ftl_area_drawn;
 static u32 s_ftl_unk[64];   // owner << 16 | id << 8 | tex (key 0: owner 0 id 0 tex 0 never logged)
+static u32 s_ftl_kind[64];  // the same key | 1 << 24 when not drawn: non-room sprite kinds ("fx ess kinds:")
 #endif
 static unsigned FxTrimOwnerClass(unsigned owner)
 {
@@ -1198,6 +1199,15 @@ static int FxLevelSprite(const cEsp* esp, Re4dcEffectSprite* s)
                 }
                 for (int i = 0; i < 64; ++i) s_ftl_unk[i] = 0;
                 if (k) re4dc_log("fx ess unknown: room=%03x%s\n", (unsigned) G_ROOM_ID, buf);
+                k = 0;   // every non-room sprite kind met this window: owner.tex.id + d (drawn) / c (cut)
+                for (int i = 0; i < 64 && s_ftl_kind[i]; ++i) {
+                    if (k < 180)
+                        k += __builtin_snprintf(buf + k, sizeof(buf) - k, " %02x.%02x.%02x%c",
+                                                (unsigned) ((s_ftl_kind[i] >> 16) & 0xff), (unsigned) (s_ftl_kind[i] & 0xff),
+                                                (unsigned) ((s_ftl_kind[i] >> 8) & 0xff), (s_ftl_kind[i] >> 24) ? 'c' : 'd');
+                    s_ftl_kind[i] = 0;
+                }
+                if (k) re4dc_log("fx ess kinds: room=%03x%s\n", (unsigned) G_ROOM_ID, buf);
             }
             for (int i = 0; i < 4; ++i) s_ftl_seen[i] = s_ftl_drawn[i] = 0;
             for (int i = 0; i < 5; ++i) s_ftl_drop[i] = 0;
@@ -1213,6 +1223,13 @@ static int FxLevelSprite(const cEsp* esp, Re4dcEffectSprite* s)
             for (int i = 0; i < 64; ++i) {
                 if (s_ftl_unk[i] == key) break;
                 if (!s_ftl_unk[i]) { s_ftl_unk[i] = key; break; }
+            }
+        }
+        if (c != 0) {
+            const u32 key = ((u32) esp->info.owner << 16) | ((u32) esp->m_Id << 8) | esp->m_Tex_id | (drawn ? 0U : 1U << 24);
+            for (int i = 0; i < 64; ++i) {
+                if (s_ftl_kind[i] == key) break;
+                if (!s_ftl_kind[i]) { s_ftl_kind[i] = key; break; }
             }
         }
         ++s_ftl_seen[c];
