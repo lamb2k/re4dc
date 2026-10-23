@@ -86,6 +86,7 @@ int main(){
         flush = function(ui, 'void gcasset_texture_flush(')
         packet = function(ui, 'void gcasset_packet_emitted(')
         state = ui[ui.index('struct GcAssetPacketState '):ui.index('void gcasset_packet_emitted(')]
+        effect_send = function(ui, 'void gcasset_fx_stream_send(')
         fixture = r'''
 #include "gc_asset_gate.h"
 #include <cassert>
@@ -110,6 +111,8 @@ extern "C" void re4dc_log(const char* fmt,...) {
   assert(!sq_held);char buf[2048];va_list ap;va_start(ap,fmt);vsnprintf(buf,sizeof buf,fmt,ap);va_end(ap);logs+=buf;
 }
 ''' + emitted + '\n' + flush + '\n' + state + '\n' + packet + r'''
+void stream_send(const void* packet,unsigned bytes){gcasset_packet_emitted(packet,bytes,2,gcasset_packet_consumer);}
+''' + effect_send + r'''
 int main() {
   using namespace re4dc_gcasset;
   entries[0].valid=true;entries[0].package.address=0x1000;entries[0].key={1,2};
@@ -130,6 +133,11 @@ int main() {
   gcasset_packet_reset(); // real scene-open/retirement boundary must clear prior header
   gcasset_packet_emitted(vertex,sizeof vertex,0,Texture);
   assert(entries[0].asset_consumers==0);
+  gcasset_fx_stream_send(header,sizeof header);
+  assert(entries[0].asset_consumers==0);
+  gcasset_fx_stream_send(vertex,sizeof vertex);
+  assert(entries[0].asset_consumers&(1U<<EffectPicture)); // actual wrapper preserves carried header identity
+  entries[0].asset_consumers=0;gcasset_packet_reset();
   std::uint32_t picture[16]={0x80000008,0,0,0x1000/8};picture[8]=0xe0000000;
   gcasset_packet_emitted(picture,sizeof picture,2,EffectPicture);
   assert(entries[0].asset_consumers& (1U<<EffectPicture));

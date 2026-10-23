@@ -412,6 +412,7 @@ void gcasset_texture_flush(Entry& entry) {
 }
 struct GcAssetPacketState { unsigned address=0, textured=0, first=0; };
 GcAssetPacketState gcasset_packet_states[5];
+re4dc_gcasset::Consumer gcasset_packet_consumer=re4dc_gcasset::Texture;
 void gcasset_packet_reset(){for(auto& state:gcasset_packet_states)state={};}
 void gcasset_packet_emitted(const void* packet,unsigned bytes,unsigned list,re4dc_gcasset::Consumer consumer) {
     if(!bytes)return;
@@ -2228,7 +2229,7 @@ void stream_send(const void* data,unsigned bytes) {
 #endif
     re4dc::render::submit_pvr(data,bytes);
     sq_unlock();
-    RE4DC_GCA_PACKET(data,bytes,unsigned(stream_list),re4dc_gcasset::Texture);
+    RE4DC_GCA_PACKET(data,bytes,unsigned(stream_list),gcasset_packet_consumer);
 #if RE4DC_TA_GUARD
     guard_account(1,bytes/32-1); // every call is one header + its vertices
 #endif
@@ -7472,8 +7473,10 @@ alignas(32) pvr_poly_hdr_t fx_hdr_cache;
 #endif
 #if RE4DC_GC_ASSET_GATE
 void gcasset_fx_stream_send(const void* packet,unsigned bytes){
+    const auto previous=gcasset_packet_consumer;
+    gcasset_packet_consumer=re4dc_gcasset::EffectPicture;
     stream_send(packet,bytes);
-    RE4DC_GCA_PACKET(packet,bytes,unsigned(stream_list),re4dc_gcasset::EffectPicture);
+    gcasset_packet_consumer=previous;
 }
 #else
 #define gcasset_fx_stream_send stream_send
