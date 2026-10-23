@@ -62,7 +62,8 @@ def main():
   (o/'qa_menu.cpp').write_text(old_qa)
   for world_meter in (0,1):
    pp=['g++','-E','-P','-I'+str(o/'preprocess-stubs'),'-DRE4DC_WORLD_METER='+str(world_meter),'-DRE4DC_QA_NAME="QA"']
-   assert run(pp+[o/'qa_menu.cpp'])==run(pp+[G/'qa_menu.cpp'])
+   (o/'qa_menu_new.cpp').write_text((G/'qa_menu.cpp').read_text())  # same directory: same relative include lookup
+   assert run(pp+[o/'qa_menu.cpp']).split()==run(pp+[o/'qa_menu_new.cpp']).split()  # tokens (live-arm macros expand empty)
  spec=importlib.util.spec_from_file_location('audit_image',T/'audit_image.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
  assert m.section(' 28 .ocram 00002000 7c001000 7c001000 00000964 2**5')['bytes']==8192
  for size,address,align in [('00002100','7c001000','5'),('00002000','7dfff000','5'),('00002000','7c001000','2')]:

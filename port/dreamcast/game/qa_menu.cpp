@@ -422,7 +422,14 @@ void draw_diag(const Fb& fb) {
 
 // ---------------------------------------------------------------- menu
 enum { M_MAIN, M_CHAP, M_PRE, M_DIAG, M_QR };
-enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_TITLE, A_NORMAL, A_DIAG, A_SHORE, A_WOPQ, A_WXLU, A_WSHELL };
+#if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
+#define QA_WS_ROW A_WSCR,
+#define QA_WS_ENUM , A_WSCR
+#else
+#define QA_WS_ROW
+#define QA_WS_ENUM
+#endif
+enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_TITLE, A_NORMAL, A_DIAG, A_SHORE, A_WOPQ, A_WXLU, A_WSHELL QA_WS_ENUM };
 struct Menu {
     bool boot;
     int screen, sel[5], chap, qr_page;
@@ -451,6 +458,10 @@ void item_text(int a, char* out, unsigned n) {
     case A_WOPQ: snprintf(out, n, "OPAQUE WORLD CUT: %s", wm_opq_name()); break;
     case A_WXLU: snprintf(out, n, "TRANSLUCENT WORLD: %s", wm_xlu_name()); break;
     case A_WSHELL: snprintf(out, n, "FAR SHELL: %s", wm_shell_name()); break;
+#endif
+#if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
+    case A_WSCR: snprintf(out, n, "WORLD SCRATCH: %s", re4dc_world_scratch_live == 2 ? "C SCRATCH" :
+                          re4dc_world_scratch_live == 1 ? "B HALF CACHE" : "A NORMAL"); break;
 #endif
     default: out[0] = 0;
     }
@@ -582,6 +593,12 @@ int run(Menu& m, bool boot) {
                 }
                 else if (a == A_DIAG) { snap_diag(); m.screen = M_DIAG; }
                 else if (a == A_SHORE) { if (&re4dc_qa_shore_far_mm) re4dc_qa_shore_far_mm = re4dc_qa_shore_far_mm ? 0u : 30000u; }
+#if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
+                else if (a == A_WSCR) {   // live arm, this boot only: A -> B -> C -> A
+                    re4dc_world_scratch_live = (re4dc_world_scratch_live + 1) % 3;
+                    re4dc_log("qa: world scratch arm=%u\n", (unsigned) re4dc_world_scratch_live);
+                }
+#endif
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
                 else if (a == A_WOPQ || a == A_WXLU || a == A_WSHELL) {
                     if (a == A_WOPQ) re4dc_qa_wopq_mm = next_of(kOpq, re4dc_qa_wopq_mm);
@@ -632,9 +649,9 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
     static Menu m;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
-                         A_WOPQ, A_WXLU, A_WSHELL, A_TITLE};
+                         A_WOPQ, A_WXLU, A_WSHELL, QA_WS_ROW A_TITLE};
 #else
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, A_TITLE};
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_WS_ROW A_TITLE};
 #endif
     m.nitems = (int) (sizeof(items) / sizeof(items[0]));
     memcpy(m.items, items, sizeof(items));
@@ -669,9 +686,9 @@ int re4dc_qa_menu(const char** path) {
     if (m.screen != M_MAIN) m.screen = M_MAIN;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
-                         A_WOPQ, A_WXLU, A_WSHELL, A_TITLE};
+                         A_WOPQ, A_WXLU, A_WSHELL, QA_WS_ROW A_TITLE};
 #else
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, A_TITLE};
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_WS_ROW A_TITLE};
 #endif
     m.nitems = (int) (sizeof(items) / sizeof(items[0]));
     memcpy(m.items, items, sizeof(items));

@@ -136,6 +136,8 @@ extern "C" void re4dc_world_scratch_begin(unsigned room);
 extern "C" unsigned re4dc_world_scratch_frame_token();
 extern "C" void re4dc_world_scratch_end(unsigned token,int aborted);
 extern "C" void re4dc_world_scratch_cancel();
+// Live arm for play (QA row / warp line `wscratch`): 0 A, 1 B, 2 C; held across rooms and windows.
+extern "C" volatile unsigned re4dc_world_scratch_live;
 extern "C" int re4dc_world_scratch_acquire(void* ram,void** projected);
 extern "C" void re4dc_world_scratch_release();
 extern "C" re4dc::world_scratch::Stats re4dc_world_scratch_stats();

@@ -129,6 +129,7 @@ re4dc::world_scratch::Engine engine({owner,ccr,toggle,clock_us,re4dc_world_scrat
 extern "C" {
 volatile re4dc::world_scratch::Snapshot re4dc_world_scratch_snapshot{};
 volatile re4dc::world_scratch::MeterSnapshot re4dc_world_scratch_meter_snapshot{};
+volatile unsigned re4dc_world_scratch_live;
 }
 namespace {
 using namespace re4dc::world_scratch;
@@ -263,11 +264,33 @@ void select_once(unsigned room){
     re4dc_log("WS23 request serial=1 mask=%x arm=%u iterations=%u room=%x accepted=%u\n",selected_mask,selected_arm,iterations,room,unsigned(ok));
 }
 }
+// Live arm (QA disc row / warp line `wscratch <arm>`): 0 A normal (no request: the ordinary path), 1 B half cache,
+// 2 C scratch. While set, each 600-iteration window is requested again at the next frame begin, and after a room
+// change, movie or cancel, so the arm stays on through normal play. Fixture (late-mask) runs keep their single window.
+namespace {
+bool live_admitted=false;unsigned live_logged=~0U;
+void live_rearm(unsigned room){
+    if(selected || refused)return;
+    const unsigned want=re4dc_world_scratch_live;
+    const auto st=engine.stats();
+    if(want!=live_logged){live_logged=want;re4dc_log("WS23 live arm=%u room=%x\n",want,room);}
+    if(!want || want>C){if(st.remaining && st.actual!=A)engine.cancel();return;}
+    if(!room)return;
+    if(st.remaining){if(st.actual!=want)engine.cancel();return;} // arm change: restore first, re-request next begin
+    if(!live_admitted)live_admitted=engine.admit(1);
+    if(live_admitted && engine.request(want,kMaxWindow,room))return;
+    live_admitted=engine.admit(1); // admission revoked (foreign CCR change): one retry
+    if(live_admitted && engine.request(want,kMaxWindow,room))return;
+    const auto s=engine.stats();
+    re4dc_log("WS23 live refused arm=%u room=%x faults=%u last=%u\n",want,room,s.faults,s.last_fault);
+    re4dc_world_scratch_live=0;
+}
+}
 extern "C" int re4dc_world_scratch_admit(unsigned v){if(!begin_write())return 0;const int ok=engine.admit(v);publish();return ok;}
 extern "C" int re4dc_world_scratch_request(unsigned a,unsigned n,unsigned r){if(!begin_write())return 0;const int ok=engine.request(a,n,r);publish();return ok;}
 extern "C" void re4dc_world_scratch_begin(unsigned r){
     if(!begin_write(true))return;
-    select_once(r);const bool was=started;
+    select_once(r);live_rearm(r);const bool was=started;
     engine.begin(r);if(engine.token())started=true;
     if(selected)frame_meter.attach(engine.token(),selected_arm,selected_room,engine.stats());
     publish();

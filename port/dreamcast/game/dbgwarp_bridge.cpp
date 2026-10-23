@@ -77,6 +77,9 @@ static u32 farshell_probe_frame;   // warp line farshellprobe (test only)
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
 extern "C" volatile unsigned re4dc_qa_wopq_mm, re4dc_qa_wxlu_mm, re4dc_qa_wshell;   // native_static.cpp (WORLD_METER)
 #endif
+#if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
+extern "C" volatile unsigned re4dc_world_scratch_live;   // world_scratch.cpp (live arm)
+#endif
 #if defined(RE4DC_FOLIAGE_OPTION) && RE4DC_FOLIAGE_OPTION
 extern "C" unsigned re4dc_foliage;   // platform/native_static.cpp (FOLIAGE_TRIM level; the Options Foliage row)
 #endif
@@ -734,6 +737,12 @@ void load()
             re4dc_qa_wopq_mm = (unsigned) num(tok[1]); re4dc_qa_wxlu_mm = (unsigned) num(tok[2]);
             re4dc_qa_wshell = (unsigned) num(tok[3]);
             re4dc_log("warp: wmeter opq=%u xlu=%u shell=%u\n", re4dc_qa_wopq_mm, re4dc_qa_wxlu_mm, re4dc_qa_wshell);
+#endif
+#if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
+        } else if (!strcmp(k, "wscratch") && n >= 2) {
+            // WORLD_SCRATCH: `wscratch <arm>` the live arm from boot, 0 A normal / 1 B half cache / 2 C scratch
+            re4dc_world_scratch_live = (unsigned) num(tok[1]) % 3;
+            re4dc_log("warp: wscratch arm=%u\n", re4dc_world_scratch_live);
 #endif
 #if defined(RE4DC_FOLIAGE_OPTION) && RE4DC_FOLIAGE_OPTION
         } else if (!strcmp(k, "foliage") && n >= 2) {

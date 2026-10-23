@@ -17,6 +17,7 @@ PLATFORM_OBJS += $(OBJDIR)/world_scratch.o
 $(TARGET): $(OBJDIR)/world_scratch.o
 $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/world_scratch.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_SCRATCH=1
 $(OBJDIR)/qa_menu.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_SCRATCH=1
+$(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_WORLD_SCRATCH=1
 $(OBJDIR)/qa_menu.o: world_scratch.h
 $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o: world_scratch.h
 $(OBJDIR)/world_scratch.o: PLATFORM_CPPFLAGS += -include $(OBJDIR)/dbgwarp.h
