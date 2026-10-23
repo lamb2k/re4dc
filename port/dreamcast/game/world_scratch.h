@@ -44,6 +44,63 @@ struct Stats {
     unsigned faults=0,last_fault=None,epoch=0;
     std::uint64_t enter_us=0,exit_us=0;
 };
+// Separate ABI: the original 25-word Snapshot above remains unchanged.
+// phase:0 dormant,1 measuring,2 final period awaits next begin,3 complete,4 invalid.
+// kind=1: whole UI-begin-to-next-UI-begin WALL periods, INCLUDING waits.
+struct MeterSnapshot {
+    unsigned seq,version,phase,window_serial,arm,room,periods,drawn,skipped;
+    unsigned engine_frames,borrows,entries,exits,faults,last_fault,ccr,restored;
+    unsigned wall_us_lo,wall_us_hi,draw_us_lo,draw_us_hi,skip_us_lo,skip_us_hi;
+    unsigned max_us_lo,max_us_hi,enter_us_lo,enter_us_hi,exit_us_lo,exit_us_hi;
+    unsigned target,kind,complete;
+};
+static_assert(sizeof(MeterSnapshot)==128,"separate whole-period measurement ABI");
+struct MeterTotals {
+    unsigned phase=0,arm=A,room=0,periods=0,drawn=0,skipped=0;
+    std::uint64_t wall_us=0,draw_us=0,skip_us=0,max_us=0;
+};
+class FrameMeter {
+    MeterTotals out{};
+    std::uint64_t candidate_us=0,start_us=0;
+    unsigned candidate_room=0,last_token=0;
+    bool candidate=false,open=false,candidate_skip=false,skip=false;
+public:
+    MeterTotals totals() const {return out;}
+    void invalidate(){if(out.phase!=3){out.phase=4;open=false;candidate=false;}}
+    void cancel(){if(out.phase==1 || out.phase==2)invalidate();}
+    void boundary(std::uint64_t now,bool skipped,unsigned room,const Stats& st,unsigned token,bool restored){
+        if(out.phase>=3)return; // completed results are immutable, invalid never rearms
+        if(open){
+            if(token || room!=out.room || st.faults || st.frames!=out.periods+1 || now<start_us){invalidate();return;}
+            const auto elapsed=now-start_us;
+            if(elapsed>~std::uint64_t(0)-out.wall_us){invalidate();return;}
+            out.wall_us+=elapsed;
+            if(skip){++out.skipped;out.skip_us+=elapsed;}else{++out.drawn;out.draw_us+=elapsed;}
+            if(elapsed>out.max_us)out.max_us=elapsed;
+            ++out.periods;open=false;
+            if(out.periods==kMaxWindow){
+                if(st.remaining || !restored)invalidate();else out.phase=3;
+                return;
+            }
+            if(st.remaining!=kMaxWindow-out.periods || st.actual!=out.arm){invalidate();return;}
+        }else if(out.phase){invalidate();return;} // a begin/end pair was missing
+        candidate=true;candidate_us=now;candidate_skip=skipped;candidate_room=room;
+    }
+    void attach(unsigned token,unsigned arm,unsigned room,const Stats& st){
+        if(!token || out.phase>=3)return;
+        if(!candidate || open || arm>C || room!=candidate_room || !room || token==last_token || st.faults ||
+           st.frames!=out.periods || st.remaining!=kMaxWindow-out.periods || st.actual!=arm){invalidate();return;}
+        if(out.phase && (out.arm!=arm || out.room!=room)){invalidate();return;}
+        out.arm=arm;out.room=room;out.phase=1;last_token=token;
+        start_us=candidate_us;skip=candidate_skip;candidate=false;open=true;
+    }
+    void observe(const Stats& st){
+        if(out.phase==1 || out.phase==2){
+            if(st.faults || (!st.remaining && st.frames!=kMaxWindow))invalidate();
+            else if(!st.remaining)out.phase=2; // restore is not the end of the whole period
+        }
+    }
+};
 class Engine {
     Ops op;
     Stats st{};
@@ -70,6 +127,9 @@ public:
 };
 }}
 extern "C" volatile re4dc::world_scratch::Snapshot re4dc_world_scratch_snapshot;
+extern "C" volatile re4dc::world_scratch::MeterSnapshot re4dc_world_scratch_meter_snapshot;
+extern "C" int re4dc_world_scratch_meter_read(re4dc::world_scratch::MeterSnapshot* out);
+extern "C" void re4dc_world_scratch_boundary(int skipped,unsigned room);
 extern "C" int re4dc_world_scratch_admit(unsigned receipt_version);
 extern "C" int re4dc_world_scratch_request(unsigned arm,unsigned iterations,unsigned room);
 extern "C" void re4dc_world_scratch_begin(unsigned room);

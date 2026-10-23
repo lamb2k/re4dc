@@ -126,10 +126,15 @@ re4dc::world_scratch::Engine engine({owner,ccr,toggle,clock_us,re4dc_world_scrat
 #endif
 });
 }
-extern "C" { volatile re4dc::world_scratch::Snapshot re4dc_world_scratch_snapshot{}; }
+extern "C" {
+volatile re4dc::world_scratch::Snapshot re4dc_world_scratch_snapshot{};
+volatile re4dc::world_scratch::MeterSnapshot re4dc_world_scratch_meter_snapshot{};
+}
 namespace {
 using namespace re4dc::world_scratch;
 LateChoice late_choice;
+FrameMeter frame_meter;
+bool meter_complete_published=false,meter_logged=false;
 std::uintptr_t snapshot_owner=0;
 bool writer_active=false,writer_cancelled=false;
 volatile unsigned deferred_cancel=0;
@@ -141,7 +146,7 @@ bool begin_write(bool claim=false){
     if(!current || current!=snapshot_owner || writer_active){deferred_cancel=1;return false;}
     writer_active=true;snapshot_write_begin(re4dc_world_scratch_snapshot);
     writer_cancelled=false;
-    if(deferred_cancel){deferred_cancel=0;engine.cancel();writer_cancelled=true;}
+    if(deferred_cancel){deferred_cancel=0;frame_meter.cancel();engine.cancel();writer_cancelled=true;}
     return true;
 }
 void end_write(){snapshot_write_end(re4dc_world_scratch_snapshot);writer_active=false;}
@@ -149,6 +154,40 @@ void end_write(){snapshot_write_end(re4dc_world_scratch_snapshot);writer_active=
 unsigned selected_mask=0,selected_room=0,selected_arm=0;
 bool selected=false,started=false,terminal_logged=false,refused=false;
 constexpr unsigned iterations=600;
+void publish_meter(const Stats& st,const Snapshot& state){
+    if(meter_complete_published)return;
+    if(state.faults && (selected || refused))frame_meter.invalidate();
+    frame_meter.observe(st);const auto totals=frame_meter.totals();
+    MeterSnapshot value{};
+    value.version=1;value.phase=totals.phase;value.window_serial=selected?1U:0U;
+    value.arm=selected_arm;value.room=selected_room;value.periods=totals.periods;
+    value.drawn=totals.drawn;value.skipped=totals.skipped;value.engine_frames=st.frames;
+    value.borrows=st.borrows;value.entries=st.entries;value.exits=st.exits;
+    value.faults=state.faults;value.last_fault=state.last_fault;value.ccr=state.ccr;value.restored=state.restored;
+    value.wall_us_lo=unsigned(totals.wall_us);value.wall_us_hi=unsigned(totals.wall_us>>32);
+    value.draw_us_lo=unsigned(totals.draw_us);value.draw_us_hi=unsigned(totals.draw_us>>32);
+    value.skip_us_lo=unsigned(totals.skip_us);value.skip_us_hi=unsigned(totals.skip_us>>32);
+    value.max_us_lo=unsigned(totals.max_us);value.max_us_hi=unsigned(totals.max_us>>32);
+    value.enter_us_lo=state.enter_us_lo;value.enter_us_hi=state.enter_us_hi;
+    value.exit_us_lo=state.exit_us_lo;value.exit_us_hi=state.exit_us_hi;
+    value.target=iterations;value.kind=1;
+    value.complete=totals.phase==3 && totals.periods==iterations && state.completed && state.restored;
+    auto& dst=re4dc_world_scratch_meter_snapshot;
+    ++dst.seq;asm volatile("" ::: "memory");
+#define WS23_METER_STORE(name) dst.name=value.name
+    WS23_METER_STORE(version);WS23_METER_STORE(phase);WS23_METER_STORE(window_serial);
+    WS23_METER_STORE(arm);WS23_METER_STORE(room);WS23_METER_STORE(periods);
+    WS23_METER_STORE(drawn);WS23_METER_STORE(skipped);WS23_METER_STORE(engine_frames);
+    WS23_METER_STORE(borrows);WS23_METER_STORE(entries);WS23_METER_STORE(exits);
+    WS23_METER_STORE(faults);WS23_METER_STORE(last_fault);WS23_METER_STORE(ccr);WS23_METER_STORE(restored);
+    WS23_METER_STORE(wall_us_lo);WS23_METER_STORE(wall_us_hi);WS23_METER_STORE(draw_us_lo);WS23_METER_STORE(draw_us_hi);
+    WS23_METER_STORE(skip_us_lo);WS23_METER_STORE(skip_us_hi);WS23_METER_STORE(max_us_lo);WS23_METER_STORE(max_us_hi);
+    WS23_METER_STORE(enter_us_lo);WS23_METER_STORE(enter_us_hi);WS23_METER_STORE(exit_us_lo);WS23_METER_STORE(exit_us_hi);
+    WS23_METER_STORE(target);WS23_METER_STORE(kind);WS23_METER_STORE(complete);
+#undef WS23_METER_STORE
+    asm volatile("" ::: "memory");++dst.seq;
+    meter_complete_published=value.complete;
+}
 void publish(){
     const auto st=engine.stats();const unsigned mode=ccr();
     Snapshot value{};
@@ -189,11 +228,19 @@ void publish(){
     dst.exit_us_lo=value.exit_us_lo;
     dst.exit_us_hi=value.exit_us_hi;
     dst.iterations=value.iterations;
+    publish_meter(st,value);
     end_write();
     if(started && !st.remaining && !terminal_logged){
         terminal_logged=true;
         re4dc_log("WS23 end serial=1 selected=%u actual=%u frames=%u borrows=%u entries=%u exits=%u faults=%u ccr=%x complete=%u restored=%u enter_us=%u exit_us=%u\n",
             selected_arm,st.actual,st.frames,st.borrows,st.entries,st.exits,value.faults,mode,value.completed,value.restored,value.enter_us_lo,value.exit_us_lo);
+    }
+    if(meter_complete_published && !meter_logged){
+        meter_logged=true;const auto t=frame_meter.totals();
+        re4dc_log("WS23 wall serial=1 completed_arm=%u room=%x periods=%u drawn=%u skip=%u wall_us=%llu draw_us=%llu skip_us=%llu max_us=%llu entries=%u exits=%u borrows=%u faults=%u ccr=%x restored=%u transitions_already_in_wall=1\n",
+            selected_arm,selected_room,t.periods,t.drawn,t.skipped,(unsigned long long)t.wall_us,
+            (unsigned long long)t.draw_us,(unsigned long long)t.skip_us,(unsigned long long)t.max_us,
+            st.entries,st.exits,st.borrows,value.faults,mode,value.restored);
     }
 }
 void select_once(unsigned room){
@@ -218,14 +265,37 @@ extern "C" int re4dc_world_scratch_request(unsigned a,unsigned n,unsigned r){if(
 extern "C" void re4dc_world_scratch_begin(unsigned r){
     if(!begin_write(true))return;
     select_once(r);const bool was=started;
-    engine.begin(r);if(engine.token())started=true;publish();
+    engine.begin(r);if(engine.token())started=true;
+    if(selected)frame_meter.attach(engine.token(),selected_arm,selected_room,engine.stats());
+    publish();
     if(started && !was){const auto s=engine.stats();re4dc_log("WS23 active serial=1 arm=%u remaining=%u ccr=%x\n",s.actual,s.remaining,ccr());}
 }
 extern "C" unsigned re4dc_world_scratch_frame_token(){return owner()==snapshot_owner?engine.token():0;}
 extern "C" void re4dc_world_scratch_end(unsigned token,int aborted){if(!begin_write())return;if(token)engine.end(token,aborted!=0);publish();}
-extern "C" void re4dc_world_scratch_cancel(){if(!begin_write())return;engine.cancel();publish();}
+extern "C" void re4dc_world_scratch_cancel(){if(!begin_write())return;frame_meter.cancel();engine.cancel();publish();}
 extern "C" int re4dc_world_scratch_acquire(void* ram,void** out){*out=ram;if(!begin_write())return -1;const int ok=engine.acquire(ram,*out);if(ok<0 || writer_cancelled)publish();else end_write();return ok;}
 extern "C" void re4dc_world_scratch_release(){if(!begin_write())return;const auto before=engine.stats();engine.release();const auto after=engine.stats();if(writer_cancelled || before.faults!=after.faults || before.actual!=after.actual || before.remaining!=after.remaining)publish();else end_write();}
 extern "C" re4dc::world_scratch::Stats re4dc_world_scratch_stats(){return engine.stats();}
+extern "C" void re4dc_world_scratch_boundary(int skipped,unsigned room){
+    const auto now=clock_us();
+    if(!begin_write(true))return;
+    const auto st=engine.stats();
+    const bool restored=(ccr()&kStable)==kNormal && st.actual==A && st.entries==st.exits;
+    frame_meter.boundary(now,skipped!=0,room,st,engine.token(),restored);publish();
+}
+extern "C" int re4dc_world_scratch_meter_read(re4dc::world_scratch::MeterSnapshot* out){
+    if(!out)return 0;
+    const auto& source=re4dc_world_scratch_meter_snapshot;
+    for(unsigned tries=0;tries<3;++tries){
+        const unsigned seq=source.seq;if(seq&1U)continue;
+        asm volatile("" ::: "memory");
+        const auto* bytes=reinterpret_cast<const volatile unsigned char*>(&source);
+        auto* dest=reinterpret_cast<unsigned char*>(out);
+        for(unsigned i=0;i<sizeof(*out);++i)dest[i]=bytes[i];
+        asm volatile("" ::: "memory");
+        if(seq==source.seq && !(seq&1U))return out->version==1 && out->phase!=0;
+    }
+    return 0;
+}
 #endif
 #endif

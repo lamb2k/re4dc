@@ -18,6 +18,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
+#if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
+#include "world_scratch.h"
+#endif
 
 extern "C" {
 void re4dc_log(const char* fmt, ...);
@@ -258,10 +261,31 @@ int addf(int at, const char* fmt, ...) {
     return k < 0 ? at : (at + k >= (int) sizeof(g_diag) ? (int) sizeof(g_diag) - 1 : at + k);
 }
 
+#if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
+int scratch_rows(int at) {
+    re4dc::world_scratch::MeterSnapshot s{};
+    if (!re4dc_world_scratch_meter_read(&s)) return addf(at, "scratch no measured window\n");
+    if (s.kind != 1 || s.target != 600) return addf(at, "scratch unsupported measurement\n");
+    const char* phase = s.phase == 3 && s.complete ? "COMPLETE" : s.phase == 4 || s.phase == 3 ? "INVALID" :
+                        s.phase == 2 ? "PENDING BOUNDARY" : "ACTIVE";
+    const char arm = s.window_serial && s.arm <= 2 ? char('A' + s.arm) : '?';
+    at = addf(at, "scratch %s %c room=%03x n=%u/%u draw=%u skip=%u\n", phase, arm, s.room, s.periods, s.target, s.drawn, s.skipped);
+    auto us = [](unsigned lo, unsigned hi) { return (static_cast<unsigned long long>(hi) << 32) | lo; };
+    const auto total = us(s.wall_us_lo, s.wall_us_hi), maximum = us(s.max_us_lo, s.max_us_hi);
+    const auto mean = s.periods ? total / s.periods : 0;
+    at = addf(at, "scratch wall+wait avg=%llu.%03llu ms max=%llu.%03llu ms\n", mean / 1000, mean % 1000, maximum / 1000, maximum % 1000);
+    at = addf(at, "scratch borrows=%u faults=%u CCR=%x restored=%u\n", s.borrows, s.faults, s.ccr, s.restored);
+    return addf(at, "scratch entry=%lluus exit=%lluus INCLUDED IN WALL\n", us(s.enter_us_lo, s.enter_us_hi), us(s.exit_us_lo, s.exit_us_hi));
+}
+#endif
+
 void snap_diag() {
     int a = 0;
     a = addf(a, "RE4DCQA1\nbuild=%s\nroom=%03x preset=%s\n", RE4DC_QA_NAME, g_game.room,
              g_game.preset[0] ? g_game.preset : "-");
+#if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
+    a = scratch_rows(a); // separate completed arm/window, not the restored mode's live FPS
+#endif
     unsigned v[3];
     if (re4dc_qa_speed && re4dc_qa_speed(v)) a = addf(a, "fps=%u.%u speed=%u cpu=%u\n", v[0] / 10, v[0] % 10, v[1], v[2]);
     else a = addf(a, "fps=NA\n");

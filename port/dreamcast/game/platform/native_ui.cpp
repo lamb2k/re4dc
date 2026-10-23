@@ -5349,6 +5349,9 @@ unsigned pace_skipped_frames;   // skipped iterations: frame + this = iterations
 // re4dc_ui_begin; the frame is not begun (frame_ready=false: every emission entry returns before
 // any work, no texture is resolved or uploaded, no preload, no fog), `frame` does not advance.
 extern "C" void re4dc_ui_begin_skip(){
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_boundary(1,re4dc_ps2_mesh_room());
+#endif
 #if RE4DC_SS_UI_ORDER
     ui_order=false;quads_flushed=0;
 #endif
@@ -5536,6 +5539,9 @@ extern "C" void re4dc_ui_door_mark(){if(door_ui_mark==~0U)door_ui_mark=nquad;doo
 #include "include/native_ui_source_world.inc"
 #endif
 extern "C" void re4dc_ui_begin(){
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_boundary(0,re4dc_ps2_mesh_room());
+#endif
 #if RE4DC_KOS_HEAP_CHECK
     re4dc_heap_check();
 #endif
