@@ -64,7 +64,10 @@ int main(int argc,char** argv){
         if(kind==1){const std::uint16_t chain=l.vertex_count-pb.repeat_count(l);std::memcpy(bad.data()+off,&chain,2);}
         if(kind==2)bad[off+2]^=1; // broken repeat tag
         if(kind==3){const std::uint16_t wrong=std::uint16_t((l.vertex_count<<7)|pb.strip_total(l));std::memcpy(bad.data()+pb.header().meshlet_offset+28*chosen+14,&wrong,2);}
-        MeshPackage reject;if(adopt(reject,bad)){std::cerr<<"accepted malformed "<<kind<<'\n';return 7;}
+        // A rejected replacement must unpublish an earlier successful bind.
+        MeshPackage reject;if(!adopt(reject,b))return 16;
+        if(adopt(reject,bad) || reject.valid()){std::cerr<<"accepted/stale malformed "<<kind<<'\n';return 7;}
+        if(!adopt(reject,a) || reject.offline_dedup())return 17;
     }
     std::cout<<"PASS ordered corners="<<sa.size()<<" no reader allocations; malformed marker/source/tag/count refused\n";
 #else
