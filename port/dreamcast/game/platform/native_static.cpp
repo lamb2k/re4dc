@@ -6163,6 +6163,12 @@ int ps2_pass(unsigned pass,float zfar){
     ChunkPart cctx[kChunkParts];MeshDraw::Pick cpk[kChunkPicks];unsigned nctx=0,npk=0;
     const auto& cpkg=ps2w.package;
     auto chunk_flush=[&]()->int{
+        // The pending selection/ordinary draw references this shared record.
+        // Queued emitters borrow its cull; restore the pending part on every exit.
+        struct CullScope {
+            unsigned& value;unsigned saved;
+            ~CullScope(){value=saved;}
+        } cull_scope{part.cull,part.cull};
 #if RE4DC_SKY_ANY
         const unsigned sky_now=re4dc_ps2_sky_header; // the placement being selected keeps its own after the run
 #endif
