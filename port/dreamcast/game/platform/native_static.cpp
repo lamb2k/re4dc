@@ -2236,6 +2236,12 @@ const float* front_angles=nullptr; // SCCF: 64 (cos lower, sin upper) pairs
 const float* front_normals=nullptr; // SCCF: power-of-two minimum normal per group
 const std::uint16_t* front_counts=nullptr; // SCCF: exact (indices, strips) per group
 unsigned front_tests=0,front_candidates=0,front_groups=0,front_vertices=0,front_bad=0;
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+struct FrontGates {
+    unsigned picks=0,material=0,metadata=0,context=0;
+    unsigned groups=0,invalid=0,cost=0,prepare=0,facing_depth=0,projected=0;
+} front_gate;
+#endif
 
 // Optional SCCF trailer; the unchanged SCCN v1 prefix remains usable by old
 // readers. Reject a stale/truncated extension independently of legacy culling.
@@ -3136,12 +3142,34 @@ struct MeshDraw : Emitter {
     // Called only after this pick's vertices were projected. A geometric front
     // candidate must also survive a bound using the actual cache reciprocals.
     // No per-triangle confirmation occurs in the production (=1) path.
-    unsigned front_mask(const Pick& pk,const re4dc::room::Meshlet& l,const std::uint8_t* sb,unsigned& keep){
+    unsigned front_mask(const Pick& pk,const re4dc::room::Meshlet& l,const std::uint8_t* sb,
+                        const re4dc::room::CompactVertex12* base,unsigned& keep){
         namespace cert=re4dc::bf::certificate;
         keep=0;
-        if(!front_context || !bf_loaded_screen || !bf_on() || !sg || !sg_groups || sg_groups>8U ||
-           cone::pkg!=static_cast<const void*>(&package) || !cone::front_angles || !cone::front_normals ||
-           !cone::front_counts)return 0;
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+        ++cone::front_gate.picks;
+#else
+        if(!front_context || !bf_loaded_screen)return 0;
+#endif
+        if(!bf_on()){
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+            ++cone::front_gate.material;
+#endif
+            return 0;
+        }
+        if(!sg || !sg_groups || sg_groups>8U || cone::pkg!=static_cast<const void*>(&package) ||
+           !cone::rec || !cone::front_angles || !cone::front_normals || !cone::front_counts){
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+            ++cone::front_gate.metadata;
+#endif
+            return 0;
+        }
+        if(!front_context || !bf_loaded_screen || !base){
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+            ++cone::front_gate.context;
+#endif
+            return 0;
+        }
         const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*pk.let);
         const std::uint8_t* records=cone::rec+8U*sg_groups*pk.let;
         const float* minimum=cone::front_normals+sg_groups*pk.let;
@@ -3154,12 +3182,25 @@ struct MeshDraw : Emitter {
             const unsigned begin=prev;prev=end;
             if(pk.nr!=0xffU && !((pk.gmask>>q)&1U))continue;
             keep|=1U<<q;
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+            ++cone::front_gate.groups;
+#endif
             const std::uint8_t* r=records+8U*q;
             const auto* b=g+8U*q;
             const unsigned lo=b[7]&255U,hi=b[7]>>8;
             if(!r[3] || r[3]>=64U || !(minimum[q]>0.0f) || lo>hi || hi>=l.vertex_count ||
-               (pk.nr!=0xffU && (lo<pk.lo || hi>pk.hi)))continue;
-            if(!cert::worth_front(hi-lo+1U,counts[2U*q],counts[2U*q+1U]))continue;
+               (pk.nr!=0xffU && (lo<pk.lo || hi>pk.hi))){
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++cone::front_gate.invalid;
+#endif
+                continue;
+            }
+            if(!cert::worth_front_world(hi-lo+1U,counts[2U*q],counts[2U*q+1U])){
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++cone::front_gate.cost;
+#endif
+                continue;
+            }
             cert::Cone bound{};
             bool ordered=true;
             for(unsigned a=0;a<3U;++a){
@@ -3168,12 +3209,22 @@ struct MeshDraw : Emitter {
                 bound.extent[a]=0.5f*(float(b[a+3U])-float(b[a]));
                 bound.axis[a]=float(std::int8_t(r[a]))*(1.0f/128.0f);
             }
-            if(!ordered || !cert::flat_depth(bf_loaded_screen,bound.extent))continue;
+            if(!ordered){
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++cone::front_gate.invalid;
+#endif
+                continue;
+            }
             if(!front_prepared){
                 front_prepared=true;
                 front_valid=cert::prepare(*front_context,bf_loaded_screen,near);
             }
-            if(!front_valid)continue;
+            if(!front_valid){
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++cone::front_gate.prepare;
+#endif
+                continue;
+            }
             // The L1 half diagonal encloses the box without an approximate sqrt.
             bound.radius=bound.extent[0]+bound.extent[1]+bound.extent[2];
             bound.cos_lower=cone::front_angles[2U*r[3]];
@@ -3181,9 +3232,20 @@ struct MeshDraw : Emitter {
             bound.min_normal=minimum[q];
             cert::Proof proof;
             ++cone::front_tests;
-            if(cert::classify(*front_context,bound,p.cull,proof)!=cert::FrontCandidate)continue;
+            if(cert::classify(*front_context,bound,p.cull,proof)!=cert::FrontCandidate){
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++cone::front_gate.facing_depth;
+#endif
+                continue;
+            }
             ++cone::front_candidates;
-            if(!cert::projected_front(proof,cache+lo,hi-lo+1U))continue;
+            const cert::RawPositions raw{base+lo,sizeof(*base),nullptr,0,true};
+            if(!cert::projected_front(*front_context,proof,cache+lo,hi-lo+1U,raw)){
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++cone::front_gate.projected;
+#endif
+                continue;
+            }
 #if RE4DC_BACKFACE_CONE_FRONT == 2
             bool exact=true;
             for(const std::uint8_t* s=sb+begin;s<sb+end;){
@@ -3250,7 +3312,7 @@ struct MeshDraw : Emitter {
 #endif
 #if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT && RE4DC_SCENERY_CONE
             unsigned front_keep=0;
-            const unsigned certified=front_mask(pk,l,sb,front_keep);
+            const unsigned certified=front_mask(pk,l,sb,base,front_keep);
 #endif
             const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*pk.let);
             unsigned prev=0;
@@ -3290,7 +3352,7 @@ struct MeshDraw : Emitter {
         int result=1;
 #if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT && RE4DC_SCENERY_CONE
         unsigned front_keep=0;
-        const unsigned certified=front_mask(pk,l,sb,front_keep);
+        const unsigned certified=front_mask(pk,l,sb,base,front_keep);
         if(certified && certified==front_keep){
             strips_lean(sb,sb+l.strip_bytes,base,batch,result,true);
         }else if(certified){
@@ -6340,6 +6402,12 @@ int ps2_pass(unsigned pass,float zfar){
 #if defined(RE4DC_BACKFACE_CONE_FRONT) && RE4DC_BACKFACE_CONE_FRONT
             re4dc_log("SCN21 front frame=%u tests=%u candidates=%u groups=%u range_vertices=%u bad=%u\n",f,
                       cone::front_tests,cone::front_candidates,cone::front_groups,cone::front_vertices,cone::front_bad);
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+            re4dc_log("SCN21 front gates frame=%u picks=%u material_picks=%u metadata_picks=%u context_picks=%u retained_groups=%u invalid_groups=%u cost_groups=%u prepare_groups=%u facing_depth_groups=%u projected_groups=%u\n",f,
+                      cone::front_gate.picks,cone::front_gate.material,cone::front_gate.metadata,cone::front_gate.context,
+                      cone::front_gate.groups,cone::front_gate.invalid,cone::front_gate.cost,cone::front_gate.prepare,
+                      cone::front_gate.facing_depth,cone::front_gate.projected);
+#endif
 #endif
         }
     }

@@ -69,13 +69,14 @@ struct BlobFixture {
 };
 
 #if RE4DC_BACKFACE_CONE_FRONT
-// A nonoverlapping 8x8 planar grid: 64 transformed vertices, 98 independent
-// triangle strips, 294 indices. It meets the measured dense-strip policy.
+// A nonoverlapping 8x8 grid: 64 transformed vertices, 98 independent triangle
+// strips, 294 indices. The optional curved surface has nonzero XYZ bounds;
+// gathered records deliberately differ from physical position-pool order.
 struct DenseFixture {
     alignas(32) std::array<u8, 2048> bytes{};
     alignas(8) short positions[64][4]{};
     Re4dcModelPart p{};
-    DenseFixture() {
+    DenseFixture(bool curved = false, bool gathered = false) {
         auto& h = *reinterpret_cast<BlobHeader*>(bytes.data());
         h.magic = kMagic; h.version = kVersion; h.meshlets = 1; h.rec4 = 16; h.idx4 = 128;
         auto& m = *reinterpret_cast<MeshletInfo*>(bytes.data() + sizeof(BlobHeader));
@@ -83,8 +84,11 @@ struct DenseFixture {
         auto* records = reinterpret_cast<u16*>(bytes.data() + 64);
         for (unsigned y = 0; y < 8; ++y) for (unsigned x = 0; x < 8; ++x) {
             const unsigned i = y * 8 + x;
-            positions[i][0] = short(x * 512); positions[i][1] = short(y * 512);
-            records[i * 3] = u16(i);
+            const unsigned slot = gathered ? 63-i : i;
+            positions[slot][0] = curved ? short((int(x)*2-7)*32) : short(x * 512);
+            positions[slot][1] = curved ? short((int(y)*2-7)*32) : short(y * 512);
+            positions[slot][2] = curved ? short(2*(int(x)-3)*(int(y)-3)+6*int(x)-4*int(y)) : 0;
+            records[i * 3] = u16(slot);
         }
         auto* index = bytes.data() + 512; unsigned n = 0;
         for (unsigned y = 0; y < 7; ++y) for (unsigned x = 0; x < 7; ++x) {
@@ -211,31 +215,28 @@ static void matrix_matches(const abc_cert::Context& context, const float* matrix
 static void context_tests() {
     test_case("rigid-context-actual-screen-matrix");
     Frame f; f.near_distance = 1.0f; screen_matrix(f.screen);
-    const u16 flat[3] = {500, 500, 0}, volume[3] = {500, 500, 1};
-    AbcFrontContext rigid; CHECK(abc_front_prepare(f, 0, flat, rigid)); matrix_matches(rigid.value, f.screen);
-    CHECK(abc_front_prepare(f, 0, flat, rigid));
-    test_case("depth-flatness-before-prepare-does-not-poison-palette-cache");
-    AbcFrontContext first_nonflat; CHECK(!abc_front_prepare(f, 0, volume, first_nonflat));
-    CHECK(first_nonflat.pal == ~0U && !first_nonflat.ok);
-    CHECK(abc_front_prepare(f, 0, flat, first_nonflat)); CHECK(first_nonflat.ok);
-    CHECK(!abc_front_prepare(f, 0, volume, first_nonflat)); CHECK(first_nonflat.ok);
-    CHECK(abc_front_prepare(f, 0, flat, first_nonflat));
+    AbcFrontContext rigid; CHECK(abc_front_prepare(f, 0, rigid)); matrix_matches(rigid.value, f.screen);
+    CHECK(abc_front_prepare(f, 0, rigid));
+    test_case("depth-varying-context-is-supported");
+    f.screen[3] = 0.015625f; f.screen[7] = -0.03125f;
+    AbcFrontContext volume; CHECK(abc_front_prepare(f, 0, volume));
+    CHECK(volume.pal == 0 && volume.ok); matrix_matches(volume.value, f.screen);
+    CHECK(abc_front_prepare(f, 0, volume));
     test_case("skin-context-actual-position-matrix-and-palette-cache");
     float palette[24]{}; palette[0] = palette[4] = palette[8] = 1.0f;
     palette[12] = -1.0f; palette[16] = palette[20] = 1.0f; palette[21] = 50.0f;
     alignas(8) float prepared[32]{}; u8 ready[2]{};
     f.mode = kSkin; f.palette = palette; f.palette_entries = 2; f.q = 0.25f;
     f.skin_positions = prepared; f.skin_ready = ready;
-    AbcFrontContext skin; CHECK(abc_front_prepare(f, 0, flat, skin)); CHECK(ready[0] && !ready[1]); matrix_matches(skin.value, prepared);
-    CHECK(!abc_front_prepare(f, 1, volume, skin)); CHECK(skin.pal == 0 && skin.ok);
-    CHECK(abc_front_prepare(f, 1, flat, skin)); CHECK(ready[1]); matrix_matches(skin.value, prepared + 16);
-    CHECK(abc_front_prepare(f, 1, flat, skin)); CHECK(skin.pal == 1);
-    CHECK(!abc_front_prepare(f, 2, flat, skin)); CHECK(skin.pal == 1 && skin.ok);
-    f.palette = nullptr; CHECK(!abc_front_prepare(f, 0, flat, skin));
-    f.mode = kSource; AbcFrontContext unsupported; CHECK(!abc_front_prepare(f, 0, flat, unsupported));
+    AbcFrontContext skin; CHECK(abc_front_prepare(f, 0, skin)); CHECK(ready[0] && !ready[1]); matrix_matches(skin.value, prepared);
+    CHECK(abc_front_prepare(f, 1, skin)); CHECK(ready[1]); matrix_matches(skin.value, prepared + 16);
+    CHECK(abc_front_prepare(f, 1, skin)); CHECK(skin.pal == 1);
+    CHECK(!abc_front_prepare(f, 2, skin)); CHECK(skin.pal == 1 && skin.ok);
+    f.palette = nullptr; CHECK(!abc_front_prepare(f, 0, skin));
+    f.mode = kSource; AbcFrontContext unsupported; CHECK(!abc_front_prepare(f, 0, unsupported));
     test_case("skin-context-fallback-matrix-when-cache-absent");
     f.mode = kSkin; f.palette = palette; f.skin_positions = nullptr;
-    AbcFrontContext fallback; CHECK(abc_front_prepare(f, 1, flat, fallback));
+    AbcFrontContext fallback; CHECK(abc_front_prepare(f, 1, fallback));
     float expected[16]; skin_position_matrix(f, 1, expected); matrix_matches(fallback.value, expected);
 }
 
@@ -243,47 +244,129 @@ static abc_cert::Proof accepted_proof;
 static constexpr unsigned accepted_nv = 64, accepted_ni = 294;
 static pvr_vertex_t accepted_vertices[accepted_nv]{};
 static u8 accepted_indices[accepted_ni]{};
-static void finish_tests() {
-    test_case("complete-front-proof-from-produced-dense-abc2");
-    DenseFixture f; const auto* cone = f.build(); CHECK(cone && f.front());
-    CHECK(abc_front_worth(*f.front(), accepted_nv, accepted_ni, 98));
-    std::memcpy(accepted_indices, f.bytes.data() + 512, accepted_ni);
-    Frame frame; frame.near_distance = 1.0f; screen_matrix(frame.screen);
-    AbcFrontContext context; CHECK(abc_front_prepare(frame, 0, f.front()->extent, context));
-    auto geometry = abc_front_cone(*cone, f.front());
-    CHECK(abc_cert::classify(context.value, geometry, 2, accepted_proof) == abc_cert::FrontCandidate);
-    for (unsigned i = 0; i < accepted_nv; ++i) {
-        const auto* p = f.positions[i]; double h[3]{};
+static Frame accepted_frame;
+static Records accepted_records{};
+static AbcFrontContext accepted_context;
+static void fill_cache(const Frame& frame, const Records& records, const float* matrix,
+                       pvr_vertex_t* cache, unsigned n) {
+    for (unsigned i = 0; i < n; ++i) {
+        const auto* p = reinterpret_cast<const short*>(frame.positions + records.vi(i)*frame.position_stride);
+        float h[3]{};
         for (unsigned r = 0; r < 3; ++r) {
             const unsigned row = r == 2 ? 3 : r;
-            h[r] = frame.screen[12 + row];
-            for (unsigned c = 0; c < 3; ++c) h[r] += double(frame.screen[c * 4 + row]) * p[c];
+            double sum = matrix[12+row];
+            for (unsigned c = 0; c < 3; ++c) sum += double(matrix[c*4+row])*p[c];
+            h[r] = float(sum);
         }
-        accepted_vertices[i].x = float(h[0] / h[2]); accepted_vertices[i].y = float(h[1] / h[2]);
-        accepted_vertices[i].z = float(1.0 / h[2]);
+        cache[i].z = 1.0f/h[2]; cache[i].x = h[0]*cache[i].z; cache[i].y = h[1]*cache[i].z;
     }
-    CHECK(abc_cert::projected_front(accepted_proof, accepted_vertices, accepted_nv));
+}
+static void perspective_matrix(float* m, float yaw, float pitch, float skew) {
+    constexpr float pi = 3.14159265358979323846f;
+    yaw *= pi/180.0f; pitch *= pi/180.0f;
+    const float right[3] = {std::cos(yaw), 0, -std::sin(yaw)};
+    const float up[3] = {std::sin(yaw)*std::sin(pitch), std::cos(pitch), std::cos(yaw)*std::sin(pitch)};
+    const float w[3] = {-std::sin(yaw)*std::cos(pitch), std::sin(pitch), -std::cos(yaw)*std::cos(pitch)};
+    for (unsigned i = 0; i < 3; ++i) {
+        m[4*i] = 320*w[i]+512*right[i]+skew*512*up[i];
+        m[4*i+1] = 240*w[i]-384*up[i]; m[4*i+2] = m[4*i+3] = w[i];
+    }
+    m[12] = 320*2048; m[13] = 240*2048; m[14] = m[15] = 2048;
+}
+static void perspective_tests() {
+    for (bool gathered : {false, true}) {
+        DenseFixture f(true, gathered); const auto* cone = f.build(); CHECK(cone && f.front());
+        CHECK(f.front()->min_normal > 0);
+        for (unsigned axis = 0; axis < 3; ++axis) CHECK(f.front()->extent[axis] > 0);
+        const Records records{reinterpret_cast<const u16*>(f.bytes.data()+64), 3, 0, false};
+        const u8* index = f.bytes.data()+512;
+        auto geometry = abc_front_cone(*cone, f.front());
+        struct View { float yaw, pitch, skew; };
+        for (const View view : {View{0, 0, 0}, View{10, 5, 0}, View{25, 10, 0}, View{-20, 12, .2f}}) {
+            test_case("produced-full3d-abc2-rotated-perspective");
+            Frame frame; frame.near_distance = 1; frame.positions = f.p.positions;
+            frame.position_stride = f.p.position_stride; frame.position_count = 64;
+            perspective_matrix(frame.screen, view.yaw, view.pitch, view.skew);
+            AbcFrontContext context; CHECK(abc_front_prepare(frame, 0, context));
+            abc_cert::Proof proof; CHECK(abc_cert::classify(context.value, geometry, 2, proof) == abc_cert::FrontCandidate);
+            CHECK(proof.wlo < proof.whi);
+            pvr_vertex_t cache[64]{}; fill_cache(frame, records, frame.screen, cache, 64);
+            CHECK(abc_cert::strict_front(cache, index, 294, 127, 2, true));
+            CHECK(abc_front_finish(context, proof, frame, records, cache, 64, index, 294, 2));
+            std::printf("PERSPECTIVE gathered=%u yaw=%.0f pitch=%.0f wlo=%.5f whi=%.5f accepted=1\n",
+                        unsigned(gathered), view.yaw, view.pitch, proof.wlo, proof.whi);
+            if (view.yaw == 25) {
+                test_case("actor-reciprocal-pairing-mismatch-declines");
+                const float inverse = cache[0].z; cache[0].z = cache[63].z; cache[63].z = inverse;
+                CHECK(!abc_front_finish(context, proof, frame, records, cache, 64, index, 294, 2));
+            }
+        }
+        for (unsigned pose = 0; pose < 3; ++pose) {
+            test_case("produced-full3d-abc2-current-skin-affine");
+            Frame frame; frame.near_distance = 1; frame.positions = f.p.positions;
+            frame.position_stride = f.p.position_stride; frame.position_count = 64;
+            frame.mode = kSkin; frame.q = 1;
+            perspective_matrix(frame.screen, 8+5*pose, 4-3*int(pose), .05f);
+            float palette[12] = {1+.04f*pose, -.02f, .01f*pose,
+                                 .025f*pose, .95f+.02f*pose, -.01f,
+                                 .01f, .015f*pose, 1, 5.0f*pose, -3.0f*pose, 10.0f+2*pose};
+            float prepared[16]{}; u8 ready[1]{};
+            frame.palette = palette; frame.palette_entries = 1;
+            frame.skin_positions = prepared; frame.skin_ready = ready;
+            AbcFrontContext context; CHECK(abc_front_prepare(frame, 0, context));
+            CHECK(ready[0]); matrix_matches(context.value, prepared);
+            abc_cert::Proof proof; CHECK(abc_cert::classify(context.value, geometry, 2, proof) == abc_cert::FrontCandidate);
+            pvr_vertex_t cache[64]{}; fill_cache(frame, records, prepared, cache, 64);
+            CHECK(abc_cert::strict_front(cache, index, 294, 127, 2, true));
+            CHECK(abc_front_finish(context, proof, frame, records, cache, 64, index, 294, 2));
+        }
+    }
+}
+static void finish_tests() {
+    test_case("complete-front-proof-from-produced-dense-abc2");
+    static DenseFixture f; const auto* cone = f.build(); CHECK(cone && f.front());
+    CHECK(abc_front_worth(accepted_nv, accepted_ni, 98));
+    std::memcpy(accepted_indices, f.bytes.data() + 512, accepted_ni);
+    Frame& frame = accepted_frame; frame.near_distance = 1.0f; screen_matrix(frame.screen);
+    frame.positions = f.p.positions; frame.position_stride = f.p.position_stride; frame.position_count = 64;
+    accepted_records = {reinterpret_cast<const u16*>(f.bytes.data()+64), 3, 0, false};
+    const auto& records = accepted_records;
+    AbcFrontContext& context = accepted_context; CHECK(abc_front_prepare(frame, 0, context));
+    auto geometry = abc_front_cone(*cone, f.front());
+    CHECK(abc_cert::classify(context.value, geometry, 2, accepted_proof) == abc_cert::FrontCandidate);
+    fill_cache(frame, records, frame.screen, accepted_vertices, accepted_nv);
+    const abc_cert::RawPositions raw{frame.positions, frame.position_stride, records.r, records.stride*2, false};
+    CHECK(abc_cert::projected_front(context.value, accepted_proof, accepted_vertices, accepted_nv, raw));
     CHECK(abc_cert::strict_front(accepted_vertices, accepted_indices, accepted_ni, 127, 2, true));
-    CHECK(abc_front_finish(accepted_proof, accepted_vertices, accepted_nv, accepted_indices, accepted_ni, 2));
-    test_case("dense-strip-policy-declines-small-long-quad-and-volumetric-groups");
-    CHECK(!abc_front_worth(*f.front(), 3, 3, 1));
-    CHECK(!abc_front_worth(*f.front(), 64, 126, 98));
-    CHECK(!abc_front_worth(*f.front(), 64, 196, 98));
-    CHECK(!abc_front_worth(*f.front(), 128, 294, 98));
-    CHECK(!abc_front_worth(*f.front(), 64, 294, 99));
-    CHECK(!abc_front_worth(*f.front(), 64, 294, 295));
-    auto volume = *f.front(); volume.extent[2] = 1; CHECK(!abc_front_worth(volume, 64, 294, 98));
-    CHECK(abc_front_worth(*f.front(), 64, 256, 128));
+    CHECK(abc_front_finish(context, accepted_proof, frame, records, accepted_vertices, accepted_nv, accepted_indices, accepted_ni, 2));
+    test_case("cost-score-boundaries-and-malformed-counts");
+    CHECK(!abc_front_worth(3, 3, 1));
+    CHECK(!abc_front_worth(64, 126, 98));
+    CHECK(!abc_front_worth(64, 196, 98));
+    CHECK(abc_front_worth(128, 294, 98));
+    CHECK(!abc_front_worth(64, 294, 99));
+    CHECK(!abc_front_worth(64, 294, 295));
+    CHECK(abc_front_worth(64, 294, 98));
+    CHECK(abc_front_worth(64, 256, 128));
+    CHECK(!abc_front_worth(25, 96, 32));
+    CHECK(abc_front_worth(36, 150, 50));
+    CHECK(!abc_front_worth(64, 288, 208));
+    CHECK(abc_front_worth(64, 289, 209));
+    CHECK(!abc_front_worth(64, 294, 0));
+    CHECK(!abc_front_worth(257, 65535, 21845));
+    CHECK(abc_front_worth(256, 65535, 21845));
+    CHECK(!abc_front_worth(256, 65536, 21846));
+    CHECK(!abc_front_worth(~0U, ~0U, 1));
     test_case("final-check-rejects-bad-reciprocal-and-invalid-proof");
     auto invalid = accepted_proof; invalid.valid = false;
-    CHECK(!abc_front_finish(invalid, accepted_vertices, accepted_nv, accepted_indices, accepted_ni, 2));
+    CHECK(!abc_front_finish(context, invalid, frame, records, accepted_vertices, accepted_nv, accepted_indices, accepted_ni, 2));
     accepted_vertices[0].z = 0;
-    CHECK(!abc_front_finish(accepted_proof, accepted_vertices, accepted_nv, accepted_indices, accepted_ni, 2));
+    CHECK(!abc_front_finish(context, accepted_proof, frame, records, accepted_vertices, accepted_nv, accepted_indices, accepted_ni, 2));
     accepted_vertices[0].z = 1.0f / 1024.0f;
     test_case("check-mode-fault-injection-falls-back-and-logs");
     const u8 reversed[3] = {accepted_indices[1], accepted_indices[0], accepted_indices[2]};
     const unsigned prior_bad = abc_front_bad, prior_logs = log_calls;
-    const bool fault_result = abc_front_finish(accepted_proof, accepted_vertices, accepted_nv, reversed, 3, 2);
+    const bool fault_result = abc_front_finish(context, accepted_proof, frame, records, accepted_vertices, accepted_nv, reversed, 3, 2);
 #if RE4DC_BACKFACE_CONE_FRONT == 2
     CHECK(!fault_result); CHECK(abc_front_bad == prior_bad + 1 && log_calls == prior_logs + 1);
 #else
@@ -342,6 +425,70 @@ static void tests() {
 }
 
 #if RE4DC_BACKFACE_CONE_FRONT
+// Gate chains are exact production extracts after the legacy back-cone test.
+// Observe each early-decline reason without substituting a helper predicate.
+static void gate_tests() {
+    for (bool chunk : {false, true}) for (unsigned fault = 0; fault < 12; ++fault) {
+        test_case(chunk ? "one-chunk-actual-gate-reason" : "regular-actual-gate-reason");
+        DenseFixture source; const auto* built = source.build(); CHECK(built && source.front());
+        AbcCone cone = *built; AbcFrontRecord front = *source.front();
+        const AbcCone* abc = fault == 1 ? nullptr : &cone;
+        const AbcFrontRecord* abc_front = fault == 2 ? nullptr : &front;
+        Re4dcModelPart p{}; p.cull = fault == 11 ? 0 : 2;
+        dispatch_fixture::Part e{p}; e.cache.v = accepted_vertices;
+        if (fault == 3) e.direct = false;
+        if (fault == 4) p.blend = 1;
+        if (fault == 5) p.material_flags = 4;
+        if (fault == 6) p.depth_mode = 1;
+        Frame f = accepted_frame; if (fault == 8) f.mode = kSource;
+        const Records& r = accepted_records; AbcFrontContext abc_context;
+        const unsigned mi = 0, nv = fault == 7 ? 3 : accepted_nv;
+        const unsigned ni = fault == 7 ? 3 : accepted_ni, nt = fault == 7 ? 1 : 98;
+        const u8* index = accepted_indices; const unsigned any = fault == 9 ? kOcNear : 0;
+        bool abc_candidate = false; abc_cert::Proof abc_proof;
+        const unsigned tests = abc_front_tests, candidates = abc_front_candidates, accepts = abc_front_accept;
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+        const unsigned seen = abc_front_seen, metadata = abc_front_metadata, material = abc_front_material;
+        const unsigned cost = abc_front_cost, context = abc_front_context_reject;
+        const unsigned clipped = abc_front_clipped, projection = abc_front_projection;
+#endif
+        const float inverse = accepted_vertices[0].z;
+        if (fault == 10) accepted_vertices[0].z = 0;
+        if (chunk) {
+            if (abc) { const AbcCone& cn = abc[mi];
+@GATE_CHUNK@
+            }
+@MISSING_CHUNK@
+@CLIPPED_CHUNK@
+@FINISH_CHUNK@
+        } else {
+            if (abc) { const AbcCone& cn = abc[mi];
+@GATE_REGULAR@
+            }
+@MISSING_REGULAR@
+@CLIPPED_REGULAR@
+@FINISH_REGULAR@
+        }
+        accepted_vertices[0].z = inverse;
+        const bool tested = fault == 0 || fault >= 9;
+        const bool candidate = fault == 0 || fault == 9 || fault == 10;
+        CHECK(abc_front_tests == tests+unsigned(tested));
+        CHECK(abc_front_candidates == candidates+unsigned(candidate));
+        CHECK(abc_candidate == candidate); CHECK(e.cone_front == (fault == 0));
+        CHECK(abc_front_accept == accepts+unsigned(fault == 0));
+        if (fault >= 1 && fault <= 8) CHECK(abc_context.pal == ~0U);
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+        CHECK(abc_front_seen == seen+1);
+        CHECK(abc_front_metadata == metadata+unsigned(fault == 1 || fault == 2));
+        CHECK(abc_front_material == material+unsigned(fault >= 3 && fault <= 6));
+        CHECK(abc_front_cost == cost+unsigned(fault == 7));
+        CHECK(abc_front_context_reject == context+unsigned(fault == 8));
+        CHECK(abc_front_clipped == clipped+unsigned(fault == 9));
+        CHECK(abc_front_projection == projection+unsigned(fault == 10));
+#endif
+    }
+}
+
 // Both draw-loop reset and completion statements are exact source extracts.
 // Positions have already been supplied; no transform or lighting is mocked
 // as proof of a full draw. These isolate stale-state and clipping decisions.
@@ -349,6 +496,7 @@ static void reset_regular() {
     test_case("regular-draw-reset-and-outcode-gate");
     Re4dcModelPart p{}; p.cull = 2; dispatch_fixture::Part e{p}; e.cache.v = accepted_vertices;
     const unsigned nv = accepted_nv, ni = accepted_ni; const u8* index = accepted_indices;
+    Frame& f = accepted_frame; const Records& r = accepted_records; const AbcFrontContext& abc_context = accepted_context;
     for (unsigned any : {0U, unsigned(kOcNear), unsigned(kOcFar), unsigned(kOcLeft), 0U}) {
         e.cone_front = true;
 @RESET_REGULAR@
@@ -361,6 +509,7 @@ static void reset_chunk() {
     test_case("one-chunk-draw-reset-and-outcode-gate");
     Re4dcModelPart p{}; p.cull = 2; dispatch_fixture::Part e{p}; e.cache.v = accepted_vertices;
     const unsigned nv = accepted_nv, ni = accepted_ni; const u8* index = accepted_indices;
+    Frame& f = accepted_frame; const Records& r = accepted_records; const AbcFrontContext& abc_context = accepted_context;
     for (unsigned any : {0U, unsigned(kOcNear), unsigned(kOcFar), unsigned(kOcRight), 0U}) {
         e.cone_front = true;
 @RESET_CHUNK@
@@ -374,7 +523,7 @@ static void reset_chunk() {
 int main() {
     producer_tests(); dispatch_fixture::tests();
 #if RE4DC_BACKFACE_CONE_FRONT
-    context_tests(); finish_tests(); reset_regular(); reset_chunk();
+    context_tests(); finish_tests(); perspective_tests(); gate_tests(); reset_regular(); reset_chunk();
 #endif
     std::printf("PASS mode=%u cases=%u checks=%u\n", unsigned(RE4DC_BACKFACE_CONE_FRONT), cases, checks);
 }

@@ -34,7 +34,9 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--sh4-cxx", default=os.getenv("SH4_CXX", "/opt/toolchains/dc/sh-elf/bin/sh-elf-g++"))
     parser.add_argument("--kos-root", type=Path)
-    parser.add_argument("--baseline", default="d1bc83cff32217a659f93acd5837a1ecc96ff6c3")
+    # The unconditional queue-flush cull fix intentionally changes OFF code.
+    # Feature identity is checked after that separate correctness commit.
+    parser.add_argument("--baseline", default="f3fef82cf212bb379e5cf3119daee0d7a8db7e58")
     parser.add_argument("--compare-helper-o1", action="store_true")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
@@ -72,6 +74,8 @@ def main():
                  "make/make-controls.json")
     helper = stage("helper", ["helper_test.py", "--output", output / "helper"],
                    "helper/helper-controls.json")
+    rounding = stage("rounding", ["rounding_test.py", "--output", output / "rounding-controls.json"],
+                     "rounding-controls.json")
     world = stage("world-producer", ["world_test.py", "--output", output / "world-producer", "--baseline", args.baseline],
                   "world-producer/world-producer-controls.json")
     actor_args = ["actor_test.py", "--out", output / "actor", "--sdk", sdk, "--baseline", args.baseline]
@@ -84,13 +88,19 @@ def main():
     runtime = stage("world-runtime", world_args, "world-runtime/world-runtime-controls.json")
     target = stage("target", ["target_test.py", "--output", output / "target", "--sh4-cxx", args.sh4_cxx,
                               "--optimization=-O1", "--helper-optimization=-O2"], "target/target-controls.json")
+    world_target = None
+    if args.kos_root:
+        world_target = stage("world-target", ["world_target_test.py", "--output", output / "world-target",
+                             "--sh4-cxx", args.sh4_cxx, "--kos-root", args.kos_root.resolve(),
+                             "--sdk-root", sdk], "world-target/world-target-controls.json")
     if args.compare_helper_o1:
         stage("target-helper-o1", ["target_test.py", "--output", output / "target-helper-o1", "--sh4-cxx", args.sh4_cxx,
                                     "--optimization=-O1", "--helper-optimization=-O1"], "target-helper-o1/target-controls.json")
     report = dict(status="PASS", scope=__doc__, baseline=args.baseline, stages=stages,
                   test_dependencies_source="2249d3cfa203a7bc679739379cb6d5668edb7ecc", dependencies=recovered,
                   summary=dict(helper=helper["counts"], target_comparisons=target["comparisons"],
-                               full_world_target_requested=bool(args.kos_root)),
+                               full_world_target_requested=bool(args.kos_root),
+                               world_target_packet_comparisons=len(world_target["cases"]) if world_target else None),
                   test_source_sha256={p.name: sha(p) for p in sorted(HERE.iterdir()) if p.is_file() and p.suffix in (".py", ".cpp", ".in")},
                   limits="Public synthetic source/host/target-opcode evidence only. hwsim uses perfect caches and no memory/PVR/DMA events. No scene, emulator, hardware, wall-time, millisecond or FPS acceptance.")
     (output / "qualification.json").write_text(json.dumps(report, indent=2) + "\n")

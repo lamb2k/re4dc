@@ -18,6 +18,7 @@ class Machine(base.Machine):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fpul = 0
+        self.mach = 0
         self.macl = 0
         self.instruction_pcs = []
 
@@ -102,6 +103,11 @@ class Machine(base.Machine):
             self.write(r[0] + r[n], r[m], 2)
         elif w & 0xF00F == 0x0007:
             self.macl = r[n] * r[m] & base.U32
+        elif w & 0xF00F == 0x3005:
+            product = (r[n] & base.U32) * (r[m] & base.U32)
+            self.mach, self.macl = product >> 32, product & base.U32
+        elif w & 0xF0FF == 0x000A:
+            r[n] = self.mach
         elif w & 0xF0FF == 0x001A:
             r[n] = self.macl
         elif w & 0xF000 == 0xB000:
@@ -208,3 +214,85 @@ def load_elf(path):
             if index:
                 symbols[strings[name:].split(b"\0", 1)[0].decode()] = (value, size, info)
     return segments, symbols
+
+
+def unsigned_multiply_controls():
+    """Check the compiler's unsigned /3 sequence and both multiply results.
+
+    SH-4 Software Manual, DMULU.L and STS: DMULU.L writes the full unsigned
+    product to MACH:MACL; STS copies the selected register. Neither changes T.
+    MUL.L writes only MACL. These are bounded opcode checks, not timing claims.
+    """
+    import random
+
+    values = (0, 1, 2, 0x5555, 0x7FFFFFFF, 0x80000000, 0xFFFFFFFE, base.U32)
+    rng = random.Random(0xD367)
+    pairs = [(a, b) for a in values for b in values]
+    pairs += [(rng.getrandbits(32), rng.getrandbits(32)) for _ in range(64)]
+    # dmulu.l r7,r2; sts mach,r4; sts macl,r5
+    machine = Machine(struct.pack("<3H", 0x3275, 0x040A, 0x051A), b"", b"", 255, 2)
+    assert machine.mach == machine.macl == 0
+    entry = 0x100000
+    multiply_cases = 0
+
+    def run_three(opcodes):
+        machine.map(entry, struct.pack("<3H", *opcodes))
+        machine.steps = 0
+        machine.instruction_pcs = []
+        pc = entry
+        for _ in range(3):
+            pc = machine.step(pc)
+        assert pc == entry + 6
+        assert machine.steps == len(machine.instruction_pcs) == 3
+        assert machine.instruction_pcs == [entry, entry + 2, entry + 4]
+
+    for a, b in pairs:
+        for t in (0, 1):
+            machine.reg[2], machine.reg[7], machine.t = a, b, t
+            machine.mach, machine.macl = 0x12345678, 0x87654321
+            before = list(machine.reg)
+            run_three((0x3275, 0x040A, 0x051A))
+            expected = a * b
+            assert (machine.mach, machine.macl) == (expected >> 32, expected & base.U32)
+            assert (machine.reg[4], machine.reg[5]) == (machine.mach, machine.macl)
+            assert machine.t == t
+            assert all(machine.reg[i] == before[i] for i in range(16) if i not in (4, 5))
+            multiply_cases += 1
+
+    # Same-register source decoding, including the unsigned high-bit cases.
+    for a in values:
+        machine.reg[2], machine.t = a, 1
+        run_three((0x3225, 0x040A, 0x051A))
+        assert (machine.reg[4], machine.reg[5]) == (a * a >> 32, a * a & base.U32)
+        assert machine.reg[2] == a and machine.t == 1
+        multiply_cases += 1
+
+    low_only_cases = 0
+    for a, b in pairs[:64]:
+        machine.reg[2], machine.reg[7], machine.t = a, b, 1
+        machine.mach = 0x89ABCDEF
+        run_three((0x0277, 0x040A, 0x051A))  # mul.l r7,r2; sts mach,r4; sts macl,r5
+        assert machine.reg[4] == machine.mach == 0x89ABCDEF
+        assert machine.reg[5] == machine.macl == a * b & base.U32
+        assert (machine.reg[2], machine.reg[7], machine.t) == (a, b, 1)
+        low_only_cases += 1
+
+    # This exact DMULU.L / STS MACH / SHLR sequence implements unsigned /3.
+    divide_values = list(range(20)) + [255, 256, 65534, 65535, 65536,
+                                    0x7FFFFFFF, 0x80000000, 0xFFFFFFFD,
+                                    0xFFFFFFFE, base.U32]
+    divide_values += [rng.getrandbits(32) for _ in range(64)]
+    for a in divide_values:
+        machine.reg[2], machine.reg[7], machine.t = a, 0xAAAAAAAB, 1
+        run_three((0x3275, 0x070A, 0x4701))
+        assert machine.reg[7] == a // 3
+        assert machine.reg[2] == a
+        assert (machine.mach, machine.macl) == (a * 0xAAAAAAAB >> 32,
+                                               a * 0xAAAAAAAB & base.U32)
+        assert machine.t == machine.mach & 1  # SHLR alone changes T.
+
+    return {"status": "PASS", "unsigned_multiply_cases": multiply_cases,
+            "low_only_multiply_cases": low_only_cases,
+            "unsigned_divide_three_cases": len(divide_values),
+            "scope": "Bounded actual-opcode arithmetic and trace controls; no timing or hardware claim",
+            "manual": "https://www.renesas.com/en/document/mas/sh-4-software-manual"}

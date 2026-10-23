@@ -27,34 +27,44 @@ struct Cone {
 
 struct DepthBounds { float lo, hi, transform_error; };
 struct Proof {
-    float wlo, whi, x_bound, y_bound, x_error, y_error, area_lower;
+    float wlo, whi, x_bound, y_bound, x_error, y_error, w_error, area_lower;
     float x_span, y_span;             // ideal projected coordinate ranges
     bool valid;
 };
 
+// XYZ are exact signed or unsigned 16-bit coordinates at byte offsets 0,2,4.
+// Optional indices select raw records in cache-vertex order; both strides are
+// bytes. The caller supplies valid records from the same geometry and matrix
+// that produced this draw's cache. Extra scanned vertices are conservative.
+struct RawPositions {
+    const void* data;
+    unsigned stride;
+    const std::uint16_t* indices;
+    unsigned index_stride;
+    bool unsigned_values;
+};
+
 enum Outcome { Uncertain, Back, FrontCandidate };
 
-// Cost admission, not a facing proof. Target measurements show that setup is
-// repaid by dense reuse across many short strips; small/long-strip groups keep
-// the existing classifier. Integer division avoids an overflowing product.
+// Empirical cold-cost admission, not a facing proof or a speedup guarantee.
+// Counts come from validated byte-indexed groups; reject unsupported ranges
+// before the bounded integer scores below. Count ALL scanned cache vertices.
+inline bool cost_counts(unsigned vertices, unsigned indices, unsigned strips) {
+    return vertices >= 3U && vertices <= 256U && indices <= 65535U &&
+           strips != 0U && strips <= indices / 3U;
+}
+// Actor model: potential saved work 16*I+128*S must exceed 4608+80*V.
+// Dividing both sides by 16 makes this a few integer shifts/adds. This admits
+// profitable smaller groups without a fixed 256-index/64-strip/4x-reuse rule.
 inline bool worth_front(unsigned vertices, unsigned indices, unsigned strips) {
-    return vertices >= 3U && indices >= 256U && indices / 4U >= vertices && strips >= 64U;
+    return cost_counts(vertices, indices, strips) &&
+           indices + 8U * strips > 288U + 5U * vertices;
 }
-
-// The global W/I enclosure is useful when this box has constant ideal W.
-// Decline depth-varying boxes before paying for cofactor preparation. This is
-// only a cost policy: the full certificate still checks the actual projection.
-inline bool exact_zero(float value) {
-    std::uint32_t word;
-    std::memcpy(&word, &value, sizeof(word));
-    return (word & 0x7fffffffU) == 0U;
-}
-inline bool flat_depth(const float matrix[16], const float extent[3]) {
-    // Bit tests also work before the supported-FPSCR guard: comparing a
-    // denormal float with zero could itself trap with DN=0.
-    return (exact_zero(extent[0]) || exact_zero(matrix[3])) &&
-           (exact_zero(extent[1]) || exact_zero(matrix[7])) &&
-           (exact_zero(extent[2]) || exact_zero(matrix[11]));
+// World's count-prefixed walker has different per-strip overhead. These
+// coefficients are qualified separately in world_target_test.py.
+inline bool worth_front_world(unsigned vertices, unsigned indices, unsigned strips) {
+    return cost_counts(vertices, indices, strips) &&
+           10U * indices + 168U * strips > 4800U + 65U * vertices;
 }
 
 // matrix is exactly the column-major 4x4 loaded into XMTRX. Rows 0,1,3
@@ -69,9 +79,12 @@ bool positive_depth(const Context&, const Cone&, DepthBounds* = nullptr);
 // as an additional guard. FrontCandidate needs projected_front() below.
 Outcome classify(const Context&, const Cone&, unsigned cull, Proof&);
 
-// PVR entries have x,y,reciprocal at byte offsets 4,8,12. Actual reciprocal
-// extrema bound projection error without an FSRRA accuracy assumption.
-bool projected_front(const Proof&, const void* cache, unsigned vertices, unsigned stride = 32);
+// PVR entries have x,y,reciprocal at byte offsets 4,8,12. Pair each cached
+// reciprocal with its own raw-position W dot product, so depth variation does
+// not masquerade as reciprocal error. No FSRRA accuracy assumption is used.
+// context/proof/raw/cache must describe this same draw and vertex ordering.
+bool projected_front(const Context&, const Proof&, const void* cache, unsigned vertices,
+                     const RawPositions&, unsigned cache_stride = 32);
 
 // Producer/check-build utilities. Zero means degenerate, outside the supplied
 // cone, or unsupported. A positive return is a power-of-two lower bound on

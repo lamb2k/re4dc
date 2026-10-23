@@ -120,9 +120,18 @@ def suite(args):
         assert method(tail, back_marker) == original_back, "Legacy back test must remain byte-identical"
         assert tail.index(back_marker) < tail.index("abc_front_prepare(") < start
         assert tail.index("abc_front_worth(") < tail.index("abc_front_prepare(")
-        gate = tail[tail.index("            if (e.direct && p.blend == 0"):tail.index("abc_front_prepare(")]
+        gate = tail[tail.index("            if (!(e.direct && p.blend == 0"):tail.index("abc_front_prepare(")]
         for guard in ("!(p.material_flags & 4u)", "p.depth_mode == 0", "abc_front[mi].min_normal > 0.0f"):
             assert guard in gate
+        gate_start = tail.index("#if RE4DC_BACKFACE_CONE_FRONT && RE4DC_ACTOR_DIRECT")
+        gate_end = tail.index("\n#endif\n        }", gate_start) + len("\n#endif")
+        extractions["GATE_" + name] = tail[gate_start:gate_end]
+        missing_start = tail.index("#if RE4DC_BACKFACE_CONE_FRONT == 2 && RE4DC_ACTOR_DIRECT", gate_end)
+        missing_end = tail.index("\n#endif", missing_start) + len("\n#endif")
+        extractions["MISSING_" + name] = tail[missing_start:missing_end]
+        clipped_start = tail.index("#if RE4DC_BACKFACE_CONE_FRONT == 2 && RE4DC_ACTOR_BACKFACE_CONE", gate_end)
+        clipped_end = tail.index("\n#endif", clipped_start) + len("\n#endif")
+        extractions["CLIPPED_" + name] = tail[clipped_start:clipped_end]
     fixture = (HERE / "actor_fixture.cpp").read_text().replace("@NATIVE_SOURCE@", NATIVE.as_posix())
     for key, value in extractions.items():
         fixture = fixture.replace("@" + key + "@", value)
@@ -147,7 +156,7 @@ def suite(args):
               "-I" + str(DC / "game"), "-I" + str(sdk / "include")]
     report = {"status": "running", "baseline": args.baseline, "arms": [], "off_identity": [],
               "extractions": {key: hashlib.sha256(value.encode()).hexdigest() for key, value in extractions.items()},
-              "source_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (NATIVE, HELPER, HERE / "actor_fixture.cpp", HERE / "actor_test.py")},
+              "source_sha256": {str(p.relative_to(ROOT)): sha(p) for p in (NATIVE, HELPER, DC / "room/backface_certificate.hpp", HERE / "actor_fixture.cpp", HERE / "actor_test.py")},
               "limits": ["The complete production TU is compiled for its existing portable host branches.",
                          "Model-source lookup and hardware emitter calls are explicit fixture boundaries.",
                          "Both draw-loop state blocks and direct Part methods are exact production extracts; full draw execution is not claimed.",
@@ -165,6 +174,9 @@ def suite(args):
             assert match, name + " has no PASS receipt"
             tails.append(re.findall(r"ABC1 capacity=(\d+) hash=([0-9a-f]+)", stdout))
             report["arms"].append({"mode": mode, "command": command, "cases": int(match[2]), "checks": int(match[3]),
+                                   "perspective_acceptances": [dict(gathered=bool(int(g)), yaw=float(yaw), pitch=float(pitch),
+                                                                    wlo=float(lo), whi=float(hi))
+                                       for g, yaw, pitch, lo, hi in re.findall(r"PERSPECTIVE gathered=(\d+) yaw=(-?\d+) pitch=(-?\d+) wlo=([\d.]+) whi=([\d.]+) accepted=1", stdout)],
                                    "binary_sha256": sha(out / name)})
         assert tails[0] == tails[1] == tails[2], "Optional front proof changed the legacy ABC1 tail"
         report["abc1_tails_identical"] = tails[0]
@@ -205,7 +217,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, required=True, help="new evidence directory")
     parser.add_argument("--sdk", type=Path, required=True, help="materialized pinned SH4ZAM SDK")
-    parser.add_argument("--baseline", default="d1bc83cff32217a659f93acd5837a1ecc96ff6c3")
+    parser.add_argument("--baseline", default="f3fef82cf212bb379e5cf3119daee0d7a8db7e58")
     parser.add_argument("--cxx", default=shutil.which("g++") or "g++")
     parser.add_argument("--sh4-cxx", type=Path, help="optional official target C++ compiler")
     parser.add_argument("--kos-root", type=Path, help="real KOS source tree for full target TU controls")

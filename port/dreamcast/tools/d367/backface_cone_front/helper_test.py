@@ -39,8 +39,33 @@ class Cone(ctypes.Structure):
 
 class Proof(ctypes.Structure):
     _fields_ = [(name, ctypes.c_float) for name in (
-        "wlo", "whi", "x_bound", "y_bound", "x_error", "y_error", "area_lower", "x_span", "y_span")]
+        "wlo", "whi", "x_bound", "y_bound", "x_error", "y_error", "w_error", "area_lower", "x_span", "y_span")]
     _fields_.append(("valid", ctypes.c_bool))
+
+
+class RawPositions(ctypes.Structure):
+    _fields_ = [("data", ctypes.c_void_p), ("stride", ctypes.c_uint),
+                ("indices", ctypes.c_void_p), ("index_stride", ctypes.c_uint),
+                ("unsigned_values", ctypes.c_bool)]
+
+
+class RawBuffer:
+    """Own a raw XYZ pool and optional reordered index records for the API."""
+    def __init__(self, points, unsigned=False, indexed=False, stride=8,
+                 index_stride=2, data_offset=0, index_offset=0):
+        n = len(points)
+        self.data = ctypes.create_string_buffer(max(8, stride) * n + data_offset + 16)
+        self.indices = ctypes.create_string_buffer(max(2, index_stride) * n + index_offset + 4) if indexed else None
+        data_address = ctypes.addressof(self.data) + data_offset
+        index_address = ctypes.addressof(self.indices) + index_offset if indexed else None
+        for i, point in enumerate(points):
+            assert all(int(x) == x for x in point), point
+            slot = n - 1 - i if indexed else i
+            ctypes.memmove(data_address + slot * stride,
+                           struct.pack("<3H" if unsigned else "<3h", *map(int, point)), 6)
+            if indexed:
+                ctypes.memmove(index_address + i * index_stride, struct.pack("<H", slot), 2)
+        self.layout = RawPositions(data_address, stride, index_address, index_stride, unsigned)
 
 
 def f32(value):
@@ -68,7 +93,7 @@ def cross(a, b, c):
             u[0] * v[1] - u[1] * v[0])
 
 
-def cone_for(points, indices, cosine=0.9995):
+def cone_for(points, indices, cosine=0.9995, axis_length=0.5):
     lo = [min(p[a] for p in points) for a in range(3)]
     hi = [max(p[a] for p in points) for a in range(3)]
     center = [(a + b) / 2 for a, b in zip(lo, hi)]
@@ -88,9 +113,15 @@ def cone_for(points, indices, cosine=0.9995):
     axis = [sum(n[a] for n in normals) for a in range(3)]
     length = math.sqrt(sum(a * a for a in axis))
     if length:
-        axis = [a / (2 * length) for a in axis]
+        axis = [axis_length * a / length for a in axis]
     else:
         axis = [0.0, 0.0, 0.0]
+    if valid and length:
+        # Curved fixtures use a cone that includes every exact integer normal;
+        # the small downward margin covers construction rounding here.
+        cosine = min(cosine, min(sum(axis[a] * n[a] for a in range(3)) /
+                                (math.sqrt(sum(q*q for q in axis)) * math.sqrt(sum(q*q for q in n)))
+                                for n in normals) - 1e-5)
     cosine = adjacent(cosine, False)
     sine = adjacent(math.sqrt(1 - cosine * cosine) + 1e-5, True)
     minimum = min((max(map(abs, n)) for n in normals), default=0)
@@ -99,7 +130,8 @@ def cone_for(points, indices, cosine=0.9995):
                 (ctypes.c_float * 3)(*extent), (ctypes.c_float * 3)(*axis), cosine, sine, lower)
 
 
-def projected_cache(matrix, points, inverse_bias=0.0, ftrv_signs=(0, 0, 0), rng=None):
+def projected_cache(matrix, points, inverse_bias=0.0, ftrv_signs=(0, 0, 0), rng=None,
+                    inverse_values=None):
     output = bytearray()
     for i, point in enumerate(points):
         h = []
@@ -114,12 +146,44 @@ def projected_cache(matrix, points, inverse_bias=0.0, ftrv_signs=(0, 0, 0), rng=
             assert abs(value - exact) <= bound + 2**-149, (value, exact, bound)
             h.append(value)
         multiplier = 1.0 + inverse_bias * (rng.uniform(-1, 1) if rng else 1)
-        inv = f32((1.0 / abs(h[2])) * multiplier) if h[2] else math.inf
+        inv = (f32(inverse_values[i]) if inverse_values is not None else
+               f32((1.0 / abs(h[2])) * multiplier) if h[2] else math.inf)
         x, y = f32(h[0] * inv), f32(h[1] * inv)
         words = [0xDEADBEEF, original.fbits(x), original.fbits(y), original.fbits(inv),
                  0x3F000000 + i * 13, 0x3E800000 + i * 29, 0xFF123400 + i, 0x3D800000 + i * 19]
         output += struct.pack("<8I", *words)
     return bytes(output)
+
+
+def camera_matrix(yaw=0, pitch=0, skew=0, distance=2048, reflect=False):
+    """Rotated pinhole camera; stored coefficients are the actual float matrix."""
+    yaw, pitch = math.radians(yaw), math.radians(pitch)
+    right = (math.cos(yaw), 0, -math.sin(yaw))
+    up = (math.sin(yaw)*math.sin(pitch), math.cos(pitch), math.cos(yaw)*math.sin(pitch))
+    depth = (-math.sin(yaw)*math.cos(pitch), math.sin(pitch), -math.cos(yaw)*math.cos(pitch))
+    horizontal = -512 if reflect else 512
+    return column_matrix(tuple(320*depth[a] + horizontal*right[a] + skew*512*up[a] for a in range(3)) + (320*distance,),
+                         tuple(240*depth[a] - 384*up[a] for a in range(3)) + (240*distance,),
+                         depth + (distance,))
+
+
+def shifted_matrix(matrix, shift):
+    """Keep geometry in view after translating its raw integer coordinate space."""
+    result = list(matrix)
+    for row in range(4):
+        result[12+row] = f32(matrix[12+row] - math.fsum(matrix[4*a+row]*shift[a] for a in range(3)))
+    return result
+
+
+def curved_grid():
+    points = [((2*x-7)*32, (2*y-7)*32, 2*(x-3)*(y-3)+6*x-4*y)
+              for y in range(8) for x in range(8)]
+    indices = []
+    for y in range(7):
+        for x in range(7):
+            a = 8*y+x
+            indices.extend((a, a+1, (a+8)|128, a+1, a+9, (a+8)|128))
+    return points, bytes(indices)
 
 
 def plain_output(cache, indices):
@@ -145,6 +209,10 @@ def check_ideal_bounds(name, proof, matrix, points, indices):
                             for r in (0, 1, 3)])
     assert all(Fraction(proof.wlo) <= p[2] <= Fraction(proof.whi) for p in homogeneous), (name, "W bounds")
     assert min(p[2] for p in homogeneous) > 0
+    for point, h in zip(points, homogeneous):
+        products = [Fraction(matrix[4*c+3]) * Fraction((*point, 1)[c]) for c in range(4)]
+        ftrv_error = max(map(abs, products)) / 2**23 + max(abs(h[2]) / 2**23, Fraction(1, 2**149))
+        assert Fraction(proof.w_error) >= ftrv_error, (name, "homogeneous W error bound")
     screen = [(p[0]/p[2], p[1]/p[2]) for p in homogeneous]
     for axis, absolute, span in ((0, proof.x_bound, proof.x_span), (1, proof.y_bound, proof.y_span)):
         coordinates = [p[axis] for p in screen]
@@ -164,27 +232,33 @@ def check_ideal_bounds(name, proof, matrix, points, indices):
 def load_library(path):
     lib = ctypes.CDLL(str(path))
     lib.cone_probe.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.c_float, ctypes.POINTER(Cone),
-                              ctypes.c_uint, ctypes.c_void_p, ctypes.c_uint, ctypes.POINTER(Proof)]
+                              ctypes.c_uint, ctypes.c_void_p, ctypes.c_uint,
+                              ctypes.POINTER(RawPositions), ctypes.POINTER(Proof)]
     lib.cone_probe.restype = ctypes.c_uint
     lib.cone_strict.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_uint, ctypes.c_uint, ctypes.c_uint]
     lib.cone_strict.restype = ctypes.c_uint
     lib.cone_normal.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.c_float, ctypes.POINTER(ctypes.c_int64)]
     lib.cone_normal.restype = ctypes.c_float
-    lib.cone_projected.argtypes = [ctypes.POINTER(Proof), ctypes.c_void_p, ctypes.c_uint, ctypes.c_uint]
+    lib.cone_projected.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.c_float,
+                                  ctypes.POINTER(Proof), ctypes.c_void_p, ctypes.c_uint,
+                                  ctypes.POINTER(RawPositions), ctypes.c_uint]
     lib.cone_projected.restype = ctypes.c_uint
     lib.cone_strict_layout.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_uint, ctypes.c_uint]
     lib.cone_strict_layout.restype = ctypes.c_uint
     lib.cone_worth.argtypes = [ctypes.c_uint, ctypes.c_uint, ctypes.c_uint]
     lib.cone_worth.restype = ctypes.c_uint
-    lib.cone_flat.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float)]
-    lib.cone_flat.restype = ctypes.c_uint
+    lib.cone_worth_world.argtypes = [ctypes.c_uint, ctypes.c_uint, ctypes.c_uint]
+    lib.cone_worth_world.restype = ctypes.c_uint
     return lib
 
 
-def probe(lib, matrix, cone, cache, cull=1, near=1):
+def probe(lib, matrix, cone, cache, cull=1, near=1, points=None, raw=None):
     proof = Proof()
+    assert points is not None or raw is not None, "Correlated projection requires matching raw positions"
+    storage = RawBuffer(points) if raw is None else None
+    raw = storage.layout if storage is not None else raw
     result = lib.cone_probe((ctypes.c_float * 16)(*matrix), near, ctypes.byref(cone),
-                           cull, cache, len(cache) // 32, ctypes.byref(proof))
+                           cull, cache, len(cache) // 32, ctypes.byref(raw), ctypes.byref(proof))
     return result, proof
 
 
@@ -210,36 +284,45 @@ def main():
     oracle = original.oracle_load(oracle_directory / "oracle.so")
     lib = load_library(output / "helper.so")
     assert lib.cone_sizes(1) == ctypes.sizeof(Cone) == 52
-    assert lib.cone_sizes(2) == ctypes.sizeof(Proof) == 40
+    assert lib.cone_sizes(2) == ctypes.sizeof(Proof) == 44
+    assert lib.cone_sizes(3) == ctypes.sizeof(RawPositions)
     admission_controls = []
-    for vertices, indices, strips, expected in (
-            (0, 256, 64, 0), (2, 256, 64, 0), (3, 255, 64, 0),
-            (3, 256, 63, 0), (3, 256, 64, 1), (64, 256, 64, 1),
-            (65, 256, 64, 0), (65, 260, 64, 1), (64, 294, 98, 1),
-            (64, 196, 49, 0), (64, 112, 7, 0), (128, 128, 1, 0),
-            (3, 256, 0, 0), (3, 256, 0xFFFFFFFF, 1),
-            (0x3FFFFFFF, 0xFFFFFFFF, 64, 1), (0x40000000, 0xFFFFFFFF, 64, 0),
-            (0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0)):
-        assert lib.cone_worth(vertices, indices, strips) == expected
-        admission_controls.append(dict(vertices=vertices, indices=indices, strips=strips, admitted=bool(expected)))
-    for wrow, extent, expected in (((0, 0, -1, 8192), (1, 1, 0), 1),
-                                   ((0, 0, -1, 8192), (1, 1, 1), 0),
-                                   ((0.25, 0, -1, 8192), (1, 1, 0), 0),
-                                   ((0.25, 0, -1, 8192), (0, 1, 0), 1),
-                                   ((0, -0.0, -1, 8192), (1, 1, 0), 1)):
-        m = column_matrix((1, 0, 0, 0), (0, 1, 0, 0), wrow)
-        assert lib.cone_flat((ctypes.c_float * 16)(*m), (ctypes.c_float * 3)(*extent)) == expected
-        admission_controls.append(dict(wrow=wrow, extent=extent, flat=bool(expected)))
+    # Independent count contracts and measured crossover fixtures. Equality
+    # declines; actor and world deliberately have different cost boundaries.
+    # Explicit upper-range controls ensure bad counts cannot wrap either score.
+    for vertices, indices, strips, actor_expected, world_expected in (
+            (0, 65535, 21845, 0, 0), (2, 65535, 21845, 0, 0),
+            (3, 0, 1, 0, 0), (3, 1, 1, 0, 0), (3, 2, 1, 0, 0), (3, 3, 1, 0, 0),
+            (25, 96, 32, 0, 0), (36, 150, 50, 1, 1),
+            (64, 294, 98, 1, 1), (64, 196, 49, 0, 1),
+            (64, 112, 7, 0, 0), (128, 128, 1, 0, 0), (128, 294, 98, 1, 1),
+            (125, 276, 59, 0, 0), (89, 159, 38, 0, 0),
+            (33, 68, 14, 0, 0), (41, 60, 14, 0, 0),
+            (64, 287, 40, 0, 1), (64, 288, 40, 0, 1), (64, 289, 40, 1, 1),
+            (64, 296, 38, 0, 1), (64, 296, 39, 0, 1), (64, 296, 40, 1, 1),
+            (64, 223, 40, 0, 0), (64, 224, 40, 0, 0), (64, 225, 40, 0, 1),
+            (3, 300, 5, 1, 0),
+            (3, 303, 101, 1, 1), (3, 303, 102, 0, 0), (3, 302, 101, 0, 0),
+            (3, 65535, 1, 1, 1), (3, 65535, 0, 0, 0),
+            (256, 65535, 21845, 1, 1), (257, 65535, 21845, 0, 0),
+            (256, 65536, 21845, 0, 0), (256, 65535, 21846, 0, 0),
+            (256, 65535, 0xFFFFFFFF, 0, 0), (3, 0xFFFFFFFF, 1, 0, 0),
+            (0x3FFFFFFF, 0xFFFFFFFF, 64, 0, 0), (0x40000000, 0xFFFFFFFF, 64, 0, 0),
+            (0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0, 0)):
+        assert lib.cone_worth(vertices, indices, strips) == actor_expected, (vertices, indices, strips, "actor")
+        assert lib.cone_worth_world(vertices, indices, strips) == world_expected, (vertices, indices, strips, "world")
+        admission_controls.append(dict(vertices=vertices, indices=indices, strips=strips,
+                                       admitted=bool(actor_expected), world_admitted=bool(world_expected)))
     rng = random.Random(0xC023F012)
     counts = dict(cases=0, prepared=0, front_candidate=0, front_accepted=0,
                   back_suggestion=0, complete_packet_comparisons=0, ideal_bound_checks=0)
     fixtures = []
 
     def check(name, points, indices, matrix, cone=None, cache=None, cull=1, near=1,
-              require=None, record=False):
+              require=None, record=False, raw=None):
         cone = cone or cone_for(points, indices)
         cache = cache if cache is not None else projected_cache(matrix, points)
-        flags, proof = probe(lib, matrix, cone, cache, cull, near)
+        flags, proof = probe(lib, matrix, cone, cache, cull, near, points=points, raw=raw)
         candidate = bool(flags & 4)
         accepted = bool(flags & 16)
         counts["cases"] += 1
@@ -280,6 +363,12 @@ def main():
     _, ordinary_proof = check("ordinary-front", points, indices, matrix, require="front", record=True)
     alignment_controls = []
     ordinary_cache = projected_cache(matrix, points)
+    ordinary_raw = RawBuffer(points)
+    ordinary_matrix = (ctypes.c_float * 16)(*matrix)
+
+    def projected(proof, cache, vertices, stride=32, raw=ordinary_raw.layout, transform=ordinary_matrix):
+        return lib.cone_projected(transform, 1, ctypes.byref(proof), cache, vertices, ctypes.byref(raw), stride)
+
     for stride in (12, 16, 17, 20, 32, 33, 36):
         for misalignment in range(4):
             backing = ctypes.create_string_buffer(stride*3 + 16)
@@ -288,13 +377,34 @@ def main():
             for i in range(3):
                 ctypes.memmove(pointer+i*stride, ordinary_cache[i*32:i*32+16], 16)
             expected = int(stride >= 16 and stride % 4 == 0 and misalignment == 0)
-            projected = lib.cone_projected(ctypes.byref(ordinary_proof), pointer, 3, stride)
+            projected_result = projected(ordinary_proof, pointer, 3, stride)
             strict = lib.cone_strict_layout(pointer, indices, 3, stride)
-            assert projected == strict == expected, (stride, misalignment, projected, strict)
+            assert projected_result == strict == expected, (stride, misalignment, projected_result, strict)
             alignment_controls.append(dict(stride=stride, misalignment=misalignment, accepted=bool(expected)))
     for vertices in (0, 1, 2):
-        assert not lib.cone_projected(ctypes.byref(ordinary_proof), ordinary_cache, vertices, 32)
-    assert not lib.cone_projected(ctypes.byref(ordinary_proof), None, 3, 32)
+        assert not projected(ordinary_proof, ordinary_cache, vertices)
+    assert not projected(ordinary_proof, None, 3)
+    null_raw = RawPositions(None, 8, None, 2, False)
+    assert not projected(ordinary_proof, ordinary_cache, 3, raw=null_raw)
+    raw_layout_controls = []
+    for unsigned, indexed in itertools.product((False, True), repeat=2):
+        raw_points = [tuple(v+256 for v in point) for point in points] if unsigned else points
+        raw_matrix = shifted_matrix(matrix, (256, 256, 256)) if unsigned else matrix
+        for raw_stride, data_offset, index_stride, index_offset in (
+                (4, 0, 2, 0), (5, 0, 2, 0), (6, 0, 2, 0),
+                (7, 0, 2, 0), (8, 0, 2, 0), (12, 0, 4, 0),
+                (14, 0, 6, 0), (8, 1, 2, 0), (8, 2, 2, 0),
+                (8, 0, 1, 0), (8, 0, 3, 0), (8, 0, 2, 1),
+                (8, 0, 4, 2)):
+            raw = RawBuffer(raw_points, unsigned, indexed, raw_stride, index_stride,
+                            data_offset, index_offset)
+            expected = raw_stride >= 6 and raw_stride % 2 == 0 and data_offset % 2 == 0
+            expected &= not indexed or (index_stride >= 2 and index_stride % 2 == 0 and index_offset % 2 == 0)
+            flags, _ = check("raw-layout", raw_points, indices, raw_matrix,
+                             raw=raw.layout, require="front" if expected else "uncertain")
+            raw_layout_controls.append(dict(unsigned=unsigned, indexed=indexed, raw_stride=raw_stride,
+                                            data_offset=data_offset, index_stride=index_stride,
+                                            index_offset=index_offset, accepted=bool(flags & 16)))
     check("opposite-cull", points, indices, matrix, cull=2, require="back", record=True)
     for field in (0, 1, 3, 4, 7, 11, 12, 13, 15):
         for invalid in (math.nan, math.inf, -math.inf, 2**-149, 2**50):
@@ -316,7 +426,7 @@ def main():
         short = bytes([0, 129])
         check("short-strip", points[:2], short, matrix, cull=cull, require="uncertain")
     for offset in (4, 8, 12):
-        invalids = (math.nan, math.inf, 2**-149) + ((0.0, -1.0) if offset == 12 else ())
+        invalids = (math.nan, math.inf, 2**-149) + ((0.0, -1.0, 2**-126, f32(0xFFFFFF*2**104)) if offset == 12 else ())
         for invalid in invalids:
             cache = bytearray(projected_cache(matrix, points))
             struct.pack_into("<f", cache, offset, invalid)
@@ -335,11 +445,114 @@ def main():
     assert oracle(cache, indices, 0x17F, 1)[0] == b""
     assert oracle(cache, indices, 0x17F, 2)[0] == plain_output(cache, indices)
 
+    # Actual three-dimensional raw bounds, not an axis-aligned zero-thickness
+    # wall. Camera rotation and shear vary W across a dense, reused curved grid.
+    # Every accepted arm is checked against the complete original packet stream.
+    grid, grid_indices = curved_grid()
+    assert all(x > 0 for x in cone_for(grid, grid_indices).extent)
+    perspective_controls = []
+    for yaw, pitch, skew, reflect in ((0, 0, 0, False), (10, 5, 0, False),
+                                      (25, 10, 0, False), (-20, 12, .2, False),
+                                      (10, 5, -.15, True), (-15, -8, .1, True)):
+        transform = camera_matrix(yaw, pitch, skew, reflect=reflect)
+        flags, proof = check("curved-grid-camera", grid, grid_indices, transform,
+                             cull=1 if reflect else 2, require="front", record=True)
+        perspective_controls.append(dict(yaw=yaw, pitch=pitch, skew=skew, reflect=reflect,
+                                         vertices=len(grid), indices=len(grid_indices), strips=98,
+                                         extent=list(cone_for(grid, grid_indices).extent),
+                                         wlo=proof.wlo, whi=proof.whi, accepted=bool(flags & 16)))
+    for animation in range(3):
+        source = camera_matrix(8+animation*5, 4-animation*3, .05)
+        model = ((1+.04*animation, .025*animation, .01),
+                 (-.02, .95+.02*animation, .015*animation),
+                 (.01*animation, -.01, 1.0))
+        translation = (5*animation, -3*animation, 10+animation*2)
+        transform = [f32(math.fsum(source[4*k+r]*model[k][c] for k in range(3)))
+                     for c in range(3) for r in range(4)]
+        transform += [f32(source[12+r]+math.fsum(source[4*k+r]*translation[k] for k in range(3)))
+                      for r in range(4)]
+        flags, proof = check("curved-grid-current-affine-animation", grid, grid_indices, transform,
+                             cull=2, require="front", record=True)
+        perspective_controls.append(dict(animation=animation, vertices=len(grid), indices=len(grid_indices),
+                                         strips=98, wlo=proof.wlo, whi=proof.whi, accepted=bool(flags & 16)))
+
+    # All four template arms must accept real perspective, including gathered
+    # indices with padded records. Unsigned coordinates above 32767 are separately
+    # tested so an accidental signed load cannot be hidden by small fixtures.
+    for unsigned, indexed in itertools.product((False, True), repeat=2):
+        offset = (256, 256, 256) if unsigned else (0, 0, 0)
+        raw_points = [tuple(point[a]+offset[a] for a in range(3)) for point in grid]
+        transform = shifted_matrix(camera_matrix(10, 5), offset)
+        raw = RawBuffer(raw_points, unsigned, indexed, stride=12, index_stride=6)
+        check("curved-grid-raw-format", raw_points, grid_indices, transform, cull=2,
+              raw=raw.layout, require="front", record=True)
+    high_points = [tuple(point[a]+(40000, 42000, 36000)[a] for a in range(3)) for point in grid]
+    high_matrix = shifted_matrix(camera_matrix(10, 5), (40000, 42000, 36000))
+    for indexed in (False, True):
+        raw = RawBuffer(high_points, unsigned=True, indexed=indexed, stride=12, index_stride=4)
+        check("unsigned-coordinates-above-signed-range", high_points, grid_indices, high_matrix,
+              cull=2, raw=raw.layout, record=True)
+
+    transform = camera_matrix(25, 10)
+    correct = projected_cache(transform, grid)
+    reciprocal = [struct.unpack_from("<f", correct, i*32+12)[0] for i in range(len(grid))]
+    wrong = projected_cache(transform, grid, inverse_values=list(reversed(reciprocal)))
+    check("reciprocals-paired-to-wrong-vertices", grid, grid_indices, transform,
+          cache=wrong, cull=2, require="uncertain", record=True)
+    for bias in (.001, .01, .1):
+        observed = projected_cache(transform, grid, inverse_bias=bias, rng=rng)
+        check("depth-varying-reciprocal-perturbations", grid, grid_indices, transform,
+              cache=observed, cull=2, require="uncertain", record=True)
+    cancellation_points = [(30000, 30000, 0), (30200, 30000, 16), (30000, 30200, -16)]
+    cancellation_matrix = column_matrix((832, -320, -320, -15040000),
+                                        (240, -624, -240, 11760000),
+                                        (1, -1, -1, 1000))
+    for signs in itertools.product((-1, 1), repeat=3):
+        check("cancellation-heavy-homogeneous-depth", cancellation_points, indices, cancellation_matrix,
+              cache=projected_cache(cancellation_matrix, cancellation_points, ftrv_signs=signs), cull=2)
+
+    # A pyramid fan supplies four different actual triangle-normal directions
+    # at the stated half-angle. A nearly unit axis matches the production
+    # quantized axes. These wide cones require the perpendicular-eye bound;
+    # subtracting sin(theta)*|q| would categorically miss their along-axis views.
+    wide_cone_controls = []
+    fan_indices = bytes((0, 1, 132, 1, 2, 132, 2, 3, 132, 3, 0, 132))
+    for height in (64, 96, 128, 192, 320, 363):
+        fan = [(-64, -64, 0), (64, -64, 0), (64, 64, 0), (-64, 64, 0), (0, 0, height)]
+        half_angle = math.degrees(math.atan(height/64))
+        fan_cone = cone_for(fan, fan_indices, axis_length=32767/32768)
+        tilted = (10, 5) if height <= 128 else (5, 3) if height <= 192 else (2, 1)
+        for yaw, pitch in ((0, 0), tilted):
+            transform = camera_matrix(yaw, pitch)
+            flags, proof = check("wide-cone-axis-and-tilted-view", fan, fan_indices, transform,
+                                 cone=fan_cone, cull=2, require="front", record=True)
+            wide_cone_controls.append(dict(half_angle_degrees=half_angle, yaw=yaw, pitch=pitch,
+                                           accepted=bool(flags & 16), area_lower=proof.area_lower))
+        yaw = math.ceil(95-half_angle)
+        flags, _ = check("wide-cone-crosses-facing-boundary", fan, fan_indices, camera_matrix(yaw),
+                         cone=fan_cone, cull=2, require="uncertain", record=True)
+        wide_cone_controls.append(dict(half_angle_degrees=half_angle, yaw=yaw, pitch=0,
+                                       accepted=bool(flags & 16), boundary_decline=True))
+    for invalid_kind in ("zero-cosine", "unit-cosine", "insufficient-sine", "oversized-axis"):
+        invalid = Cone.from_buffer_copy(bytes(fan_cone))
+        if invalid_kind == "zero-cosine":
+            invalid.cos_lower = 0
+        elif invalid_kind == "unit-cosine":
+            invalid.cos_lower = 1
+        elif invalid_kind == "insufficient-sine":
+            invalid.sin_upper = .5
+        else:
+            invalid.axis[2] = 1.01
+        check("wide-cone-invalid-bound-"+invalid_kind, fan, fan_indices, camera_matrix(),
+              cone=invalid, cull=2, require="uncertain")
+
     # Same real geometry, changing animation/model matrices, reflections,
     # shears, perspective slopes and deliberately nonuniform reciprocal error.
     for case in range(800):
         size = rng.choice((16, 64, 128, 256, 512))
-        pts = [(-size, -size, 0), (size, -size, 0), (-size, size, 0)]
+        pts = [(-size, -size, rng.randrange(-size//8, size//8+1)),
+               (size, -size, rng.randrange(-size//8, size//8+1)),
+               (-size, size, rng.randrange(-size//8, size//8+1))]
         reflect = rng.choice((-1, 1))
         scale = rng.choice((0.125, 0.5, 1, 2, 4))
         shear = rng.choice((0, -0.25, 0.25, 1))
@@ -374,6 +587,9 @@ def main():
     assert counts["front_accepted"] < counts["front_candidate"], counts
     report = dict(scope=__doc__, counts=counts, fixtures=fixtures, commands=commands,
                   alignment_controls=alignment_controls,
+                  raw_layout_controls=raw_layout_controls,
+                  perspective_controls=perspective_controls,
+                  wide_cone_controls=wide_cone_controls,
                   admission_controls=admission_controls,
                   source_sha256={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                                  for p in (SOURCE, HEADER, HERE / "helper_fixture.cpp", Path(__file__))},

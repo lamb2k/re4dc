@@ -1,12 +1,22 @@
 # Conservative all-front cone shortcut
 
+**Status: disabled experiment; no game-speed improvement demonstrated.** The
+revision removes the constant-depth restriction and an overly loose angular
+bound, fixes queued cull-state lifetime independently of this switch, and adds
+real asset-count and synthetic-camera checks. Those checks still find zero
+useful shortcuts in the sampled assets. The grid cost results below are not
+evidence of a frame-rate gain.
+
 This extends the existing actor and scenery cone paths with a third outcome:
 **front candidate**. A candidate is only sent to the existing lean emitter
 after a second check proves that the *actual projected cache* has the same
 strict facing sign as `CPU_BACKFACE=2` for every triangle in the group.
 
 The integration base is `d1bc83cff32217a659f93acd5837a1ecc96ff6c3`
-(`t15/int`), including PR54 and its enabled CPU2 early-clip default. Existing
+(`t15/int`), including PR54 and its enabled CPU2 early-clip default. The separate
+unconditional cull fix is `f3fef82cf212bb379e5cf3119daee0d7a8db7e58`.
+Feature-OFF identity is checked against that corrected baseline: the complete
+PR deliberately changes the pre-fix world object even with the switch off. Existing
 all-back cone rejection already precedes vertex work;
 this change adds the missing all-front shortcut. It does not replace the
 skinning, transform, lighting, clipper, or store-queue implementations.
@@ -67,27 +77,32 @@ producer's existing outputs are unchanged.
 
 ### Cost admission
 
-A proof can cost more than the classifier work it saves. The initial version
-did exactly that on small groups and long strips. The production admission
-policy therefore requires all of the following before preparing cofactors:
+The fixed 256-index/64-strip/four-times-reuse rule is replaced by separate
+empirical cost filters for the actor and world emitters. Let `V` be **all
+scanned cache vertices**, `I` index references, and `S` complete strips:
 
-- At least 256 index references and 64 complete strips.
-- At least four index references per scanned cache vertex.
-- Constant ideal W across the group's raw AABB: for each axis, the box extent
-  or the actual transform's W coefficient must be zero.
+| Path | Admit when |
+| --- | --- |
+| Actor | `16*I + 128*S > 4608 + 80*V` |
+| World | `10*I + 168*S > 4800 + 65*V` |
 
-These are performance filters, not replacements for either stage of the
-certificate. They select the dense short-strip workloads with a useful margin
-in the target model, and keep the measured unprofitable cases on CPU2. The W
-filter deliberately restricts rotated and nonplanar geometry. It avoids paying
-for a loose reciprocal bound when depth varies across a group.
+The actor expression is divided by 16 in code. Both filters first require
+`3 <= V <= 256`, `I <= 65535`, and `1 <= S <= I/3`, preventing overflow and
+unsupported counts. They execute before lazy context preparation. There is
+**no constant-depth or zero-extent gate**.
 
-Admission does not guarantee a certificate or a speedup. For example, a large
-perturbation of actual reciprocals can still fail the second stage after the
-proof work has been paid. Real asset hit rates, full caller costs, and scene
-performance remain qualification requirements. More strip groups in the
-producer can leave each group below the count threshold; the producer's counts
-make that visible without changing the default grouping choice.
+These filters select potential savings in the compiled target cost corpus.
+For example, the new actor rule admits 36 vertices/150 indices/50 strips,
+which the old rule excluded, while retaining the 25-vertex marginal case on
+CPU2. The world coefficients come from its actual count-prefixed walkers,
+not from the actor emitter. The extra four world index bits and holes in a
+scanned vertex span are covered explicitly.
+
+Neither rule guarantees a certificate or a speedup. A late numerical decline
+pays for the proof and then CPU2. Acceptance fraction, adapter costs, memory
+traffic and scene frame time still require measurement. The public room
+census below remains **zero eligible groups under the revised policy**; the
+filter is not loosened until known losing cases run merely to raise a counter.
 
 ## Why an ordinary cone test is insufficient
 
@@ -125,17 +140,34 @@ n · (det(A)*p + adj(A)*t).
 ```
 
 The implementation bounds `q = det(A)*c + adj(A)*t` with outward floating-point
-intervals. Cone membership, the sphere radius, and the stored minimum normal
+intervals. For a signed lower axis projection `d`, it bounds the perpendicular
+component by `sqrt_upper(norm2_upper(q) - square_lower(d))`. The stored axis
+has length at most one, so `d` also underestimates projection onto its unit
+direction; the subtraction therefore remains conservative. The angular
+margin is `cos_lower*d - sin_upper*perpendicular_upper - |det(A)|*radius`.
+Replacing the old `sin_upper*L1(q)` term removes its inherent 45-degree limit.
+Tests require actual 45–80-degree cone geometry to pass along-axis and tilted
+views, and require boundary cases to fall back.
+
+Cone membership, the sphere radius, and the stored minimum normal
 magnitude give a lower bound on the ideal projected area. Positive depth is
 required for the entire raw-space box, including the transform error bound.
 Uncertain determinant, sign, depth, or numerical range returns no certificate.
 
-The second stage reads the actual cached reciprocals. With ideal depth in
-`[Wlo, Whi]` and observed reciprocal in `[Imin, Imax]`, it bounds
+The second stage pairs each actual cached reciprocal `I_i` with its own raw
+vertex. From the same rounded matrix used for that draw, it computes the
+scalar approximation `d_i` to ideal depth `W_i` and observes
 
 ```
-R = max(|Wlo*Imin - 1|, |Whi*Imax - 1|).
+s_i = fl(fl(d_i * I_i) - 1)
+R = upper(max_i |s_i| * (1 + 4*eps) + w_error*Imax + 4*eps + F).
 ```
+
+Here `eps=2^-23`, `F=2^-120`, and `w_error` covers the scalar W dot. This
+preserves the `W_i/I_i` correlation: ordinary depth variation no longer looks
+like reciprocal approximation error. Direct unsigned world XYZ and indexed
+signed actor XYZ both use the existing gathered/projected vertex order.
+Incorrect reciprocal pairing is a required rejection control.
 
 This requires no accuracy assumption for `FSRRA`. Bounds on X/Y transform
 error, the reciprocal residual, and multiplication rounding give a coordinate
@@ -144,9 +176,11 @@ adding the coordinate errors bounds the actual edge spans. The determinant
 bound includes the target FSUB/FMUL/FMAC operations. The shortcut is allowed only when the
 ideal area lower bound is strictly larger than the complete error bound.
 
-The cache scan uses integer ordering of positive reciprocal words and integer
-X/Y validity checks. It performs no floating-point work per vertex and retains
-word-aligned, alias-safe loads. Context preparation caches `adj(A)*t` once per
+The scan uses exact integer-to-float coordinate conversion, a scalar W dot,
+and the observed residual per vertex; integer extrema accumulate reciprocal,
+coordinate-validity and residual bounds. Four outlined scan variants avoid
+per-vertex layout branches and reduce register spills. Loads remain aligned
+and alias-safe. Context preparation caches `adj(A)*t` once per
 world chunk and reuses it while the current actor palette remains unchanged,
 instead of rebuilding it for each group.
 
@@ -170,6 +204,16 @@ uses `32*eps*H + F` before final outward rounding. The FTRV allowance is
 `8*eps*H + F`. The axis-norm bound uses `1+16*eps` and `F`. These deliberately
 loose envelopes avoid an interval adjustment after every elementary operation.
 
+Preparation evaluates scalar cofactors and encloses each determinant or
+adjugate-translation sum by `64*eps*absolute_expanded_sum + F`, followed by
+outward endpoints. Nonzero matrix coefficients must lie in `[2^-40,2^40]`.
+This guard ensures that the inner products and cofactor differences cannot
+flush before a later large multiplication; only the final products/sums need
+the fixed flush allowance. Cone dot endpoints likewise use their uncancelled
+absolute-sum bound. The supplementary exact-rational test evaluates these
+envelopes in RN and RZ with DN flushing. On SH4, square roots explicitly use
+scalar `FSQRT`, avoiding a software-library square root under strict flags.
+
 ## Dispatch and fallback
 
 Both actor draw loops clear their shortcut state for every meshlet. A
@@ -179,69 +223,155 @@ strip parity, EOL bits, and existing lean copy implementation are retained.
 
 Scenery prepares a context lazily, after cost admission, from the matrix
 actually loaded after binding the part. Certified groups use the existing lean strip walker, retaining depth,
-screen, capacity, clipping, counter, and store-queue handling. Selection reads
-the current part's authoritative cull key across a queued chunk flush; the
-shared mutable part record may describe an older emitted part at that point.
+screen, capacity, clipping, counter, and store-queue handling. The queue-drain
+scope now restores the pending part's `cull` on every exit, including aborts.
+This fixes both capacity-triggered selection and ordinary/oversize fallthrough
+for the existing backface path, regardless of the front switch. The regression
+executes the actual production flush lambda and caller branches, and proves
+that the original production bodies fail in both paths.
 
 Existing all-back tests are not broadened by the helper's geometric `Back`
 result. It is explicitly not an authorization for a new target-FMAC rejection.
 
+### Diagnostics
+
+The original `ABFCF` and `SCN21 front` attempt/candidate/accepted/bad counters
+remain. Mode 2 adds gate counters, with no counter work in modes 0/1:
+
+- Actor: seen groups, material/direct eligibility, missing ABC1/ABC2, cost,
+  context, projected numerical failure and near/screen clipping. Geometric
+  declines are the difference between attempts and candidates.
+- World: pick-level material/metadata/context gates; retained-group denominator;
+  invalid record, cost, prepare, facing/depth and projected numerical declines.
+
+Counters are cumulative. Actor logs follow the existing 300-frame cadence;
+world logs follow the 600-frame cadence. `bad=0` is meaningful validation only
+when accepted groups are positive. Zero accepted groups also do not imply zero
+overhead: failed attempts still execute work.
+
 ## Qualification results
 
-The final run against `d1bc83cf` passed all seven stages. The compact
-[evidence receipt](evidence.json) records source identities, build artifacts,
-all 38 production-mode cost comparisons, and the separate cache replay.
+The final qualification uses the corrected cull-state baseline `f3fef82c`.
+The compact [evidence receipt](evidence.json) records source identities, stage
+results, selected target costs, cache sensitivity and the negative asset checks.
 
 | Gate | Result |
 | --- | --- |
 | Make configuration | 30 controls; strict helper flags and OFF object inventory |
-| Numerical helper | 885 cases; 595 independent exact-rational depth, area and span checks |
-| Accepted host certificates | 84 complete packet comparisons, all identical |
+| Numerical helper | 988 cases; 607 independent exact-rational depth, area and span checks |
+| Accepted host certificates | 102 complete packet comparisons, all identical |
+| Count admission | 82 actor/world assertions, including equality, overflow and measured marginal cases |
+| RN/RZ scalar envelopes | 4,884 preparation intervals, 1,907 residual bounds, 2,618 cone dots and 610 perpendicular bounds **per rounding mode** |
 | Scenery producer | 9 fixtures; default byte identity, optional counts, empty groups and LOD degeneracy |
-| Actor caller | 51 scenarios / 460 assertions; ABC1 capacity preservation and both draw loops |
-| Scenery caller | 42 metadata-reader controls; routing, packets, counters, clipping and fallback |
-| Actual compiled SH4 instructions | 133 complete packet comparisons and 28 FPSCR/admission controls |
-| Full target translation units | Both renderers compile in modes 1/2; absent/0 preprocessing and non-debug objects match the base byte for byte |
+| Actor caller | 131 scenarios / 1,300 assertions; ABC1 capacity preservation, both draw loops and rejection counters |
+| Scenery caller | 42 metadata controls; routing, packets, counters, clipping and fallback |
+| Cull-state lifetime | 147 production-body scenarios in each mode 0/1/2; both pre-fix negative controls fail as required |
+| Compiled actor instructions | 172 complete packet comparisons, 28 FPSCR/admission controls and four raw-layout controls |
+| Compiled world instructions | 152 complete packet comparisons; all 30 rejected gated scenarios execute no proof arithmetic |
+| Integer interpreter support | 264 unsigned multiply cases, 64 MACH-preservation cases and 94 compiler division-by-three cases |
+| Full target translation units | Both renderers compile in modes 1/2; absent/0 preprocessing and non-debug objects match the corrected baseline |
 
-### Measured cost and limits
+The scalar envelope experiment uses exact rational arithmetic with RN/RZ and
+DN flushing. It supplements the C++ tests; it is not exhaustive proof or target
+execution in RZ. Actual compiled scalar opcode execution uses RN with DN=1.
 
-The accepted workload is a real tessellated 8x8 grid: 64 cached vertices,
-98 nonoverlapping triangles, and 294 references in 98 short strips. The cost
-fixture includes one context preparation, admission, each proof and cache scan,
-dispatch, the actual actor SQ copy, and the exact CPU2 fallback. The six-group
-case reuses its context. These are compiled-code scheduling measurements, not
-game, world-renderer, frame-time or console measurements.
+### Modeled cost and limits
 
-| Workload | CPU2 cycles, perfect caches | Front mode cycles, perfect caches | Reduction | Reduction with modeled instruction cache |
+The newer accepted workloads are rotated, nonplanar grids with all three depth
+coefficients nonzero. They exercise varying depth and actual geometric cones.
+The actor fixture uses its existing lean copy and CPU2 assembly fallback. The
+world fixture separately uses the actual count-prefixed world walkers, including
+full 8-bit indices and scanned ranges containing unused vertices. Both include
+admission, context preparation, proof construction, scanning, dispatch and copying.
+
+| Path / rotated nonplanar workload | Groups | CPU2 cycles | Front cycles | Fewer modeled cycles |
 | --- | ---: | ---: | ---: | ---: |
-| Eligible grid, one group | 22,171 | 13,637 | 38.5% | 23.3% (22,698 to 17,418) |
-| Eligible grid, six groups | 132,766 | 62,992 | 52.6% | 45.3% (133,728 to 73,193) |
-| Sheared/translated grid, one group | 22,171 | 13,749 | 38.0% | 22.9% (22,698 to 17,490) |
+| Actor, 6×6 triangles | 1 | 11,371 | 9,328 | 18.0% |
+| Actor, 8×8 triangles | 1 | 22,171 | 13,217 | 40.4% |
+| Actor, 8×8 triangles | 6 | 132,766 | 73,182 | 44.9% |
+| World, 6×6 triangles | 1 | 13,899 | 10,738 | 22.7% |
+| World, 8×8 triangles | 1 | 27,051 | 15,962 | 41.0% |
+| World, 8×8 triangles | 6 | 162,141 | 89,977 | 44.5% |
+| World, 8×8 quad strips | 1 | 15,095 | 13,316 | 11.8% |
 
-The second cache model replays the same final instruction traces and ELF with
-the repository model's cold 8 KiB direct-mapped instruction cache enabled.
-Data-cache traffic, DMA and SQ bus costs remain excluded. The gain survives
-this standalone link layout, but other renderer code can add cache pressure.
-The strict helper object contains **14,340 executable bytes**; that footprint
-is material. This replay does not establish full-game instruction-cache behavior.
+These are compiled-code pipeline estimates with perfect caches, no DMA, and no
+SQ/bus/PVR timing. The six-group case repeats a group and amortizes preparation;
+it is not a six-meshlet game capture. Metadata adaptation, matrix formation,
+skinning, lighting and FTRV/FSRRA execution are outside these fixtures.
 
-The cost admission rule declines the small, long-strip, quad-strip and
-depth-varying fixtures before preparing cofactors or scanning the cache.
-In this driver, admission adds 11 modeled cycles for the small/long-strip cases
-and 30 for the depth-varying grid. Those figures exclude native metadata adapter
-work and must not be read as the entire renderer's rejection cost.
+The separate cold 8 KiB direct-mapped instruction-cache replay exposes an
+important limit: the rotated 6×6 actor case rises from 11,939 to 12,509 cycles
+(**4.8% worse**) despite its perfect-cache saving. The rotated 8×8 actor case
+falls from 22,739 to 16,398 cycles (27.9% fewer). The admission model therefore
+does not guarantee a gain under cache pressure. These are the same sealed
+instruction traces in one standalone ELF layout, with data traffic still
+excluded; they do not establish full-game cache behavior.
 
-A deliberately perturbed reciprocal case passes admission but fails the
-certificate: **18,445 to 28,159 cycles, a 52.7% increase**, with no bypass and
-exact baseline output. The policy cannot guarantee a gain for every admitted
-group. Representative asset hit rates and end-to-end scene measurements are
-required before enabling the feature in a play recipe. The new knob remains
-off by default.
+Late numerical rejection remains expensive. The admitted, perturbed-reciprocal
+64-vertex case increases from 18,445 to 27,743 modeled cycles (**50.4% more**)
+while accepting no shortcut. The exact
+baseline packets are retained, but failed proofs still cost time. This is why
+lowering the cost gate solely to admit the sampled assets would not establish
+an optimization. In the separate world fixture, rejected admission alone adds
+36 modeled cycles for one group or 236 for six; native adapter work is excluded.
+
+### Public asset checks: no useful hit demonstrated
+
+The selected inputs come from the project's public
+[Test22 build assets](https://github.com/lamb2k/re4dc/releases/tag/test-a2477bd2-20261022).
+Only selected ZIP members were downloaded; their ZIP CRCs and individual SHA256
+hashes were checked. The complete archive was not downloaded or hash-verified.
+Geometry stays outside Git. The evidence receipt contains aggregate counts,
+input hashes and outcomes.
+
+The scenery census runs the actual producer and compiled `worth_front_world`
+predicate. With four groups per meshlet:
+
+| Room | Nonempty groups | Valid proof records | Cost-eligible groups | Added SCCF bytes |
+| --- | ---: | ---: | ---: | ---: |
+| r10c | 4,230 | 3,412 | 0 | 37,152 |
+| r111 | 6,116 | 5,282 | 0 | 53,568 |
+| r200 | 2,551 | 1,822 | 0 | 22,656 |
+| **Total** | **12,897** | **10,516** | **0** | — |
+
+A one-group-per-meshlet conversion also produces zero cost-eligible groups in
+all three rooms. This is an asset/count census, not a camera acceptance or
+frame-time measurement. The selected package does not supply the requested
+r101-cross world input, so it does not replace that gameplay check.
+
+Four actor groups from Leon and Ganado were also checked under nine synthetic
+camera poses each. Their positions, indices and proof metadata came from the
+actual converter and proof builder, using a **hypothetical enlarged conversion
+buffer** to allow cone splitting. These are not claimed to be the assets or
+poses active in a running game. The original public FE03 streams contain no
+ABC1 tails; the original-capacity reconversion also did not produce them.
+
+All 36 poses are strictly front according to the exact oracle. Even with cost
+admission deliberately bypassed, **none receives a projected certificate**:
+eight fail the geometric test and 28 fail the final numerical bound. All 72
+baseline/diagnostic packet comparisons pass. The synthetic camera construction
+and observed reciprocal cache do not model animation or target FTRV/FSRRA.
+The experiment shows that removing constant depth alone has not solved the
+practical acceptance problem.
+
+### Memory and release status
+
+The strict helper contains **12,456 executable bytes**, down from 14,340 in the
+original PR. This is an object-text measurement, not a linked-game RAM delta.
+The world front trailer format is unchanged and still has the room costs shown
+above. The helper reduction does not resolve the reported approximately 1.3 KiB
+headroom in the r100 cliff cutscene build.
+
+No full-game link, Flycast scene, physical console, frame-time or r100 RAM gate
+passed in this revision. The feature remains off by default and is not enabled
+in a play recipe. The cull-state lifetime fix is independently useful; the
+all-front experiment still needs a cheaper, less conservative proof that works
+on representative game assets before release use can be justified.
 
 ## Reproduce qualification
 
-Use a new output directory. The tests generate synthetic geometry and packets;
-they do not need or include game data.
+Use a new output directory. The main tests generate synthetic geometry and
+packets; they do not need or include game data.
 
 ```sh
 python3 port/dreamcast/tools/d367/backface_cone_front/qualify.py \
@@ -250,7 +380,7 @@ python3 port/dreamcast/tools/d367/backface_cone_front/qualify.py \
   --kos-root /path/to/KallistiOS
 ```
 
-To reproduce the separate instruction-cache sensitivity from that run:
+To reproduce instruction-cache sensitivity from that run:
 
 ```sh
 python3 port/dreamcast/tools/d367/backface_cone_front/icache_replay.py \
@@ -261,36 +391,25 @@ python3 port/dreamcast/tools/d367/backface_cone_front/icache_replay.py \
 The qualified compiler is SH4 GCC 15.2.0, with KOS pinned at
 `804b3195ebd1a06a27cc2b3a5eacf7a2429040a3` and the repository's pinned SH4ZAM
 submodule initialized. Supplying `--kos-root` enables complete target
-translation-unit builds for both renderers, including byte-for-byte OFF
-comparisons against the integration base. Omitting it skips those full-TU
-gates; it does not turn a host fixture into a renderer build.
+translation-unit builds for both renderers and the separate world target cost
+fixture. Omitting it skips those gates. OFF identity uses the unconditional
+cull-fix checkpoint; it does not assert that the complete PR leaves the old,
+incorrect world object unchanged.
 
-Individual entry points cover the helper, scenery producer, actor caller,
-scenery caller, Make rules, and compiled target opcodes. The overall receipt
-records exact commands, source identities, stage results, and evidence limits.
-The five public test prerequisites restored upstream by PR54 originate from
-`2249d3cfa203a7bc679739379cb6d5668edb7ecc`; `qualify.py` verifies their hashes.
+Individual entry points cover Make rules, numerical bounds, the RN/RZ scalar
+envelopes, scenery production, actor integration, world integration and compiled
+actor/world opcodes. `admission_study.py` explores triangle/quad/row strip costs;
+`asset_census.py` accepts an external native room directory and publishes counts;
+`asset_pose_study.py` accepts an external converted-group JSON file and publishes
+synthetic-camera outcomes. Use each script's `--help` for its inputs. Asset files
+and exported raw geometry should remain outside the repository.
 
-The target cost fixture combines the production certificate, the actual actor
-lean-copy body, and the original CPU2 assembly fallback. It includes admission,
-context preparation, proof construction, cache scanning, dispatch, and emitted
-packet copying. It does not include native metadata adapters, matrix formation,
-skinning, lighting, FTRV/FSRRA execution, or whole renderer execution. Synthetic
-projected caches exercise observed reciprocals without inventing an FSRRA law.
-The unchanged repository pipeline model uses perfect caches and no memory,
-store-queue bus, PVR, or DMA events.
-
-The primary target build enables `SHZ_STRIP_EARLY_CLIP=1`, matching the updated
-CPU2 default. The new front shortcut remains off by default. The scalar opcode
-fixtures execute RN with DN=1; RZ is covered by the analytic envelope and mode
-admission controls, not by arithmetic emulation. FPU exception-status changes
-and traps are not emulated. Invalid PR/SZ mode bits are tested on the production
-integer mode predicate, without pretending an invalid FPU C ABI is usable.
-
-Host arithmetic fixtures, execution of compiled target opcodes, pipeline
-estimates, Flycast runs, and physical-console measurements are distinct gates.
-This candidate must be measured in representative scenes before enabling it
-in a play recipe. In particular, global reciprocal extrema lose correlation
-when depth varies across a group, and proof overhead can exceed the classifier
-work saved on small groups. Performance qualification must include context
-preparation, the certificate, cache scanning, dispatch, and vertex copying.
+The overall receipt records exact commands, source identities, stage results,
+and evidence limits. The five public test prerequisites restored upstream by
+PR54 originate from `2249d3cfa203a7bc679739379cb6d5668edb7ecc`;
+`qualify.py` verifies their hashes. The primary target build enables
+`SHZ_STRIP_EARLY_CLIP=1`, matching the updated CPU2 default. FPU exception-status
+changes and traps are not emulated. Invalid PR/SZ bits are tested through the
+production integer mode predicate without pretending an invalid FPU C ABI is
+usable. Host fixtures, compiled-opcode execution, pipeline estimates, emulator
+runs and physical-console measurements remain distinct evidence.

@@ -49,12 +49,19 @@ float up(float x) {
     return from_bits(v + ((v >> 31) ? std::uint32_t(-1) : 1U));
 }
 float down(float x) { return -up(-x); }
-float add_up(float a, float b) { return up(a + b); }
-float mul_up(float a, float b) { return up(a * b); }
-float div_up(float a, float b) { return up(a / b); }
+// The magnitude/error helpers below only consume nonnegative bounds. Their
+// adjacent upper float needs no signed-endpoint cases. Preserve nonfinite
+// values for the caller's decline check, and account for DN-flushed zero.
+float up_positive(float x) {
+    const std::uint32_t v = bits(x);
+    if ((v & 0x7fffffffU) < 0x00800000U) return from_bits(0x00800000U);
+    return from_bits(v + std::uint32_t(v < 0x7f800000U));
+}
+float add_up(float a, float b) { return up_positive(a + b); }
+float mul_up(float a, float b) { return up_positive(a * b); }
+float div_up(float a, float b) { return up_positive(a / b); }
 Interval point(float x) { return {x, x}; }
 Interval add(Interval a, Interval b) { return {down(a.lo + b.lo), up(a.hi + b.hi)}; }
-Interval sub(Interval a, Interval b) { return {down(a.lo - b.hi), up(a.hi - b.lo)}; }
 Interval mul(Interval a, Interval b) {
     const float p0 = a.lo * b.lo, p1 = a.lo * b.hi, p2 = a.hi * b.lo, p3 = a.hi * b.hi;
     return {down(minimum(minimum(p0, p1), minimum(p2, p3))),
@@ -74,7 +81,17 @@ float magnitude(Interval a) { return maximum(absolute(a.lo), absolute(a.hi)); }
 bool bounded(Interval a) { return ordinary(a.lo) && ordinary(a.hi) && a.lo <= a.hi; }
 bool bounded(float x) { return finite(x) && x >= 0.0f && x < kLimit; }
 Interval square(float x) { return product(x, x); }
-float sqrt_up(float x) { return up(std::sqrt(x)); }
+float sqrt_up(float x) {
+#if defined(__sh__)
+    // Callers supply nonnegative bounds under the supported FPSCR guard.
+    // Use the scalar instruction directly: newlib's generic sqrtf otherwise
+    // adds a software path and errno handling to this geometric bound.
+    asm("fsqrt %0" : "+f"(x));
+#else
+    x = std::sqrt(x);
+#endif
+    return up_positive(x);
+}
 
 bool sphere_ok(const Cone& c) {
     if (!ordinary(c.radius) || c.radius < 0.0f || c.radius > 0x1p23f) return false;
@@ -98,7 +115,7 @@ bool axis_within_unit(const float axis[3]) {
         if (!ordinary(axis[i]) || absolute(axis[i]) > 1.0f) return false;
     const float sum = (axis[0] * axis[0] + axis[1] * axis[1]) + axis[2] * axis[2];
     // Five separate operations, with a generous RN/RZ/flush envelope.
-    const float upper = up(sum * (1.0f + 16.0f * kEpsilon) + kFloor);
+    const float upper = up_positive(sum * (1.0f + 16.0f * kEpsilon) + kFloor);
     return sum > kFloor && upper <= 1.0f;
 }
 
@@ -114,13 +131,13 @@ float row_sum(const Context& x, const Cone& c, unsigned r) {
     // Every nonnegative contribution traverses at most five roundings. With
     // eps covering RN and RZ, H <= (s+3*FLT_MIN)/(1-eps)^5. The two roundings
     // below retain ample slack in 128 eps and kFloor=64*FLT_MIN, also with DN.
-    return up(s * (1.0f + 128.0f * kEpsilon) + kFloor);
+    return up_positive(s * (1.0f + 128.0f * kEpsilon) + kFloor);
 }
 float row_spread(const Context& x, const Cone& c, unsigned r) {
     const float* m = x.matrix + 4U * r;
     const float s = (absolute(m[0]) * c.extent[0] + absolute(m[1]) * c.extent[1]) +
                     absolute(m[2]) * c.extent[2];
-    return up(s * (1.0f + 16.0f * kEpsilon) + kFloor);
+    return up_positive(s * (1.0f + 16.0f * kEpsilon) + kFloor);
 }
 float read_float(const void* p, unsigned offset) {
     // Both public cache entry points reject non-word-aligned inputs. Retain
@@ -132,6 +149,57 @@ float read_float(const void* p, unsigned offset) {
 inline std::uint32_t read_word(const void* p, unsigned offset) {
     const void* source = __builtin_assume_aligned(static_cast<const std::uint8_t*>(p) + offset, 4);
     std::uint32_t word; std::memcpy(&word, source, 4); return word;
+}
+
+template<class Coordinate>
+inline Coordinate read_coordinate(const void* p, unsigned offset) {
+    const void* source = __builtin_assume_aligned(static_cast<const std::uint8_t*>(p) + offset, 2);
+    Coordinate value; std::memcpy(&value, source, 2); return value;
+}
+
+struct ProjectionScan {
+    std::uint32_t imin, imax, xy, subnormal, residual;
+};
+
+template<class Coordinate, bool Indexed>
+__attribute__((noinline)) void scan_projection(const Context& context, const void* cache, unsigned vertices,
+                     const RawPositions& raw, unsigned cache_stride, ProjectionScan& out) {
+    std::uint32_t imin = ~0U, imax = 0, xy = 0, subnormal = 0, residual = 0;
+    const float* w = context.matrix + 8;
+    const auto* v = static_cast<const std::uint8_t*>(cache);
+    const auto* position = static_cast<const std::uint8_t*>(raw.data);
+    const auto* index = reinterpret_cast<const std::uint8_t*>(raw.indices);
+    for (unsigned i = 0; i < vertices; ++i, v += cache_stride) {
+        const std::uint8_t* xyz;
+        if (Indexed) {
+            xyz = position + unsigned(read_coordinate<std::uint16_t>(index, 0)) * raw.stride;
+            index += raw.index_stride;
+        } else {
+            xyz = position;
+            position += raw.stride;
+        }
+        const float x = float(read_coordinate<Coordinate>(xyz, 0));
+        const float y = float(read_coordinate<Coordinate>(xyz, 2));
+        const float z = float(read_coordinate<Coordinate>(xyz, 4));
+        // Integer coordinates convert exactly. Three products and three adds
+        // have error <= gamma_4*H_W; Proof::w_error's 8 eps*H_W + floor also
+        // covers this scalar dot, with ample RN/RZ/DN allowance.
+        const float depth = ((w[0] * x + w[1] * y) + w[2] * z) + w[3];
+        const std::uint32_t xb = read_word(v, 4) & 0x7fffffffU;
+        const std::uint32_t yb = read_word(v, 8) & 0x7fffffffU;
+        const std::uint32_t ib = read_word(v, 12);
+        const float observed = depth * from_bits(ib) - 1.0f;
+        const std::uint32_t rb = bits(observed) & 0x7fffffffU;
+        // Integer extrema preserve nonfinite/sign failures until validation.
+        // Floating exceptions are masked by the public entry guard, so bad
+        // cache data can only decline this proof, never become an acceptance.
+        imin = ib < imin ? ib : imin;
+        imax = ib > imax ? ib : imax;
+        residual = rb > residual ? rb : residual;
+        xy |= xb | yb;
+        subnormal |= (xb - 1U < 0x007fffffU) | (yb - 1U < 0x007fffffU);
+    }
+    out = {imin, imax, xy, subnormal, residual};
 }
 
 float target_area(float ax, float ay, float bx, float by, float cx, float cy) {
@@ -172,18 +240,34 @@ bool prepare(Context& out, const float matrix[16], float near_distance) {
         out.matrix[4U * r + c] = a;
     }
     const float* a = out.matrix;
+    struct Cofactor { float value, sum; };
     const auto cross = [&](unsigned p, unsigned q, unsigned r, unsigned s) {
-        return sub(product(a[p], a[q]), product(a[r], a[s]));
+        const float left = a[p] * a[q], right = a[r] * a[s];
+        return Cofactor{left - right, absolute(left) + absolute(right)};
     };
-    Interval c[9];
+    Cofactor c[9];
     c[0] = cross(5,10,6,9); c[1] = cross(2,9,1,10); c[2] = cross(1,6,2,5);
     c[3] = cross(6,8,4,10); c[4] = cross(0,10,2,8); c[5] = cross(2,4,0,6);
     c[6] = cross(4,9,5,8); c[7] = cross(1,8,0,9); c[8] = cross(0,5,1,4);
-    out.determinant = add(add(scale(c[0], a[0]), scale(c[3], a[1])), scale(c[6], a[2]));
-    for (unsigned i = 0; i < 9; ++i) if (!bounded(c[i])) return false;
+    // Expanded determinant/adjugate terms traverse at most five roundings.
+    // sum approximates their absolute sum from below by at worst (1-eps)^5.
+    // A 64 eps envelope therefore exceeds gamma_5 by a generous margin even
+    // after its own rounding. The input coefficient guard is material: inner
+    // products are zero or >=2^-80, and rounded cofactor differences are zero
+    // or >=2^-103. They cannot flush before the final coefficient multiplies.
+    // Those three final products and two sums may flush; 64*FLT_MIN covers
+    // their total error. No small error is subsequently scaled in this DAG.
+    const auto enclose = [&](const Cofactor& x, const Cofactor& y, const Cofactor& z,
+                             float u, float v, float w) {
+        const float value = (x.value * u + y.value * v) + z.value * w;
+        const float sum = (x.sum * absolute(u) + y.sum * absolute(v)) + z.sum * absolute(w);
+        const float error = 64.0f * kEpsilon * sum + kFloor;
+        return Interval{down(value - error), up(value + error)};
+    };
+    out.determinant = enclose(c[0], c[3], c[6], a[0], a[1], a[2]);
     if (!bounded(out.determinant) || (out.determinant.lo <= 0.0f && out.determinant.hi >= 0.0f)) return false;
     for (unsigned r = 0; r < 3; ++r) {
-        out.translation[r] = add(add(scale(c[3U*r], a[3]), scale(c[3U*r+1U], a[7])), scale(c[3U*r+2U], a[11]));
+        out.translation[r] = enclose(c[3U*r], c[3U*r+1U], c[3U*r+2U], a[3], a[7], a[11]);
         if (!bounded(out.translation[r])) return false;
     }
     out.valid = true;
@@ -217,7 +301,7 @@ bool positive_depth(const Context& x, const Cone& c, DepthBounds* out) {
 
 float sine_upper(float cos_lower) {
     if (!arithmetic_supported() || !ordinary(cos_lower) || !(cos_lower > 0.0f) || !(cos_lower < 1.0f)) return 1.0f;
-    return sqrt_up(up(1.0f - down(cos_lower * cos_lower)));
+    return sqrt_up(up_positive(1.0f - down(cos_lower * cos_lower)));
 }
 
 Outcome classify(const Context& x, const Cone& c, unsigned cull, Proof& proof) {
@@ -227,20 +311,40 @@ Outcome classify(const Context& x, const Cone& c, unsigned cull, Proof& proof) {
         !ordinary(c.sin_upper) || !(c.sin_upper >= sine_upper(c.cos_lower)) ||
         !ordinary(c.min_normal) || !(c.min_normal > 0.0f)) return Uncertain;
     Interval q[3];
-    Interval dot = point(0.0f);
+    float dot_lo = 0.0f, dot_hi = 0.0f;
     float qnorm = 0.0f;
     for (unsigned r = 0; r < 3; ++r) {
         q[r] = add(scale(x.determinant, c.center[r]), x.translation[r]);
         if (!bounded(q[r])) return Uncertain;
-        dot = add(dot, scale(q[r], c.axis[r]));
+        const bool negative = c.axis[r] < 0.0f;
+        dot_lo += (negative ? q[r].hi : q[r].lo) * c.axis[r];
+        dot_hi += (negative ? q[r].lo : q[r].hi) * c.axis[r];
         qnorm = add_up(qnorm, magnitude(q[r]));
     }
-    if (!bounded(dot) || !bounded(qnorm)) return Uncertain;
+    if (!bounded(qnorm)) return Uncertain;
+    // Each three-term endpoint dot has at most three effective roundings
+    // along a term's path. Since |axis[i]|<=1, qnorm bounds the absolute
+    // contribution sum. Eight eps plus 64 minimum-normal units cover RN/RZ,
+    // this enclosure's evaluation, and DN-flushed products/sums at once.
+    const float dot_error = 8.0f * kEpsilon * qnorm + kFloor;
+    const Interval dot = {down(dot_lo - dot_error), up(dot_hi + dot_error)};
+    if (!bounded(dot)) return Uncertain;
     const bool positive = dot.lo > 0.0f;
     const float d = positive ? dot.lo : -dot.hi;
     if (!(d > 0.0f)) return Uncertain;
+    float norm2 = 0.0f;
+    for (unsigned r = 0; r < 3; ++r) {
+        const float component = magnitude(q[r]);
+        norm2 = add_up(norm2, mul_up(component, component));
+    }
+    // The stored axis has length <=1, so d underestimates the projection on
+    // its UNIT direction. Subtracting that lower square from an upper |q|^2
+    // therefore overestimates the perpendicular component. The earlier
+    // qnorm<2^60 guard keeps both squared terms finite. Unlike an L1(q)
+    // replacement, this bound remains useful for wide cones viewed on axis.
+    const float perpendicular = sqrt_up(up_positive(norm2 - down(d * d)));
     const float margin = down(down(c.cos_lower * d) -
-        add_up(mul_up(c.sin_upper, qnorm), mul_up(magnitude(x.determinant), c.radius)));
+        add_up(mul_up(c.sin_upper, perpendicular), mul_up(magnitude(x.determinant), c.radius)));
     if (!(margin > 0.0f) || !finite(margin)) return Uncertain;
     DepthBounds depth;
     if (!depth_bounds(x, c, &depth)) return Uncertain;
@@ -252,8 +356,9 @@ Outcome classify(const Context& x, const Cone& c, unsigned cull, Proof& proof) {
     proof.wlo = depth.lo; proof.whi = depth.hi;
     proof.x_bound = div_up(h_x, depth.lo); proof.y_bound = div_up(h_y, depth.lo);
     proof.x_error = transform_error(h_x); proof.y_error = transform_error(h_y);
+    proof.w_error = depth.transform_error;
     proof.area_lower = area;
-    const float wrange = up(depth.hi - depth.lo);
+    const float wrange = up_positive(depth.hi - depth.lo);
     // |Xa/Wa-Xb/Wb| <= |Xa-Xb|/Wlo + (H_X/Wlo)*|Wa-Wb|/Wlo.
     // These tight ideal spans let the cache pass skip per-vertex XY extrema.
     proof.x_span = div_up(add_up(mul_up(2.0f, row_spread(x, c, 0)), mul_up(proof.x_bound, wrange)), depth.lo);
@@ -263,32 +368,36 @@ Outcome classify(const Context& x, const Cone& c, unsigned cull, Proof& proof) {
     return FrontCandidate;
 }
 
-bool projected_front(const Proof& p, const void* cache, unsigned vertices, unsigned stride) {
-    if (!arithmetic_supported() || !p.valid || !cache || vertices < 3 || stride < 16 ||
-        ((reinterpret_cast<std::uintptr_t>(cache) | stride) & 3U)) return false;
-    std::uint32_t imin_bits = ~0U, imax_bits = 0, xy_bits = 0, subnormal = 0;
-    const auto* v = static_cast<const std::uint8_t*>(cache);
-    for (unsigned i = 0; i < vertices; ++i, v += stride) {
-        const std::uint32_t xb = read_word(v, 4) & 0x7fffffffU;
-        const std::uint32_t yb = read_word(v, 8) & 0x7fffffffU;
-        const std::uint32_t ib = read_word(v, 12);
-        // Positive finite float words have the same ordering as unsigned
-        // integers. Validate the extrema once after scanning. For XY, the
-        // combined word is >= either magnitude: its upper-bound check may
-        // conservatively decline a group but cannot admit an invalid value.
-        imin_bits = ib < imin_bits ? ib : imin_bits;
-        imax_bits = ib > imax_bits ? ib : imax_bits;
-        xy_bits |= xb | yb;
-        subnormal |= (xb - 1U < 0x007fffffU) | (yb - 1U < 0x007fffffU);
+bool projected_front(const Context& context, const Proof& p, const void* cache, unsigned vertices,
+                     const RawPositions& raw, unsigned cache_stride) {
+    if (!arithmetic_supported() || !context.valid || !p.valid || !cache || vertices < 3 || cache_stride < 16 ||
+        ((reinterpret_cast<std::uintptr_t>(cache) | cache_stride) & 3U) || !raw.data || raw.stride < 6 ||
+        ((reinterpret_cast<std::uintptr_t>(raw.data) | raw.stride) & 1U) ||
+        (raw.indices && (raw.index_stride < 2 ||
+          ((reinterpret_cast<std::uintptr_t>(raw.indices) | raw.index_stride) & 1U)))) return false;
+    ProjectionScan scan;
+    if (raw.unsigned_values) {
+        if (raw.indices) scan_projection<std::uint16_t, true>(context, cache, vertices, raw, cache_stride, scan);
+        else scan_projection<std::uint16_t, false>(context, cache, vertices, raw, cache_stride, scan);
+    } else {
+        if (raw.indices) scan_projection<std::int16_t, true>(context, cache, vertices, raw, cache_stride, scan);
+        else scan_projection<std::int16_t, false>(context, cache, vertices, raw, cache_stride, scan);
     }
-    if (imin_bits < 0x00800000U || imax_bits >= 0x7f800000U ||
-        subnormal || xy_bits > 0x4e800000U) return false;
-    const float imin = from_bits(imin_bits), imax = from_bits(imax_bits);
-    // Stage one guarantees positive W; the scan guarantees positive I.
-    // Only the lower/lower and upper/upper products can be extrema.
-    const Interval wi = {down(p.wlo * imin), up(p.whi * imax)};
-    if (!bounded(wi)) return false;
-    const float relative = magnitude(sub(wi, point(1.0f)));
+    // The combined XY word is >= either magnitude. Its cap can conservatively
+    // decline a group, but cannot admit a nonfinite or out-of-range coordinate.
+    if (scan.imin < 0x00800000U || scan.imax >= 0x7f800000U || scan.residual >= 0x7f800000U ||
+        scan.subnormal || scan.xy > 0x4e800000U) return false;
+    const float imax = from_bits(scan.imax), residual = from_bits(scan.residual);
+    // Let d be the scalar W dot, t=fl(d*I), s=fl(t-1), e=2^-23 and N=FLT_MIN.
+    // For RN/RZ with DN, |d*I-1| <= |s|/(1-e)^2 + e/(1-e)
+    //                                  + N*((1-e)^-2+(1-e)^-1).
+    // The outward 1+4e / 4e / 64N envelope below dominates that expression.
+    // Add the separately bounded dot error times the observed I maximum.
+    // Pairing W_i and I_i removes the spurious depth-range error of Wlo*Imin
+    // and Whi*Imax, without assuming anything about FSRRA's approximation.
+    const float relative = add_up(add_up(add_up(mul_up(residual, 1.0f + 4.0f * kEpsilon),
+        mul_up(p.w_error, imax)), 4.0f * kEpsilon), kFloor);
+    if (!bounded(relative)) return false;
     // Reconstruct an upper bound on the actual projected magnitude from the
     // ideal |X/W| bound and the actual reciprocal. The two-epsilon inflation
     // covers target FMUL rounding; kFloor covers a flushed tiny result. The

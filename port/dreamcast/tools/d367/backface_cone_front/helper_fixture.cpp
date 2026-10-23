@@ -6,14 +6,15 @@ namespace cert = re4dc::bf::certificate;
 extern "C" {
 unsigned cone_probe(const float matrix[16], float near_distance,
                     const cert::Cone* cone, unsigned cull,
-                    const void* cache, unsigned vertices, cert::Proof* proof) {
+                    const void* cache, unsigned vertices,
+                    const cert::RawPositions* raw, cert::Proof* proof) {
     cert::Context context;
     *proof = {};
     if (!cert::prepare(context, matrix, near_distance)) return 0;
     const cert::Outcome outcome = cert::classify(context, *cone, cull, *proof);
     unsigned result = 1U | (unsigned(outcome) << 1);
     if (cert::positive_depth(context, *cone)) result |= 8;
-    if (outcome == cert::FrontCandidate && cert::projected_front(*proof, cache, vertices)) result |= 16;
+    if (outcome == cert::FrontCandidate && cert::projected_front(context, *proof, cache, vertices, *raw)) result |= 16;
     return result;
 }
 
@@ -22,9 +23,13 @@ unsigned cone_strict(const void* cache, const std::uint8_t* index,
     return cert::strict_front(cache, index, count, 127, cull, actor_eol != 0);
 }
 
-unsigned cone_projected(const cert::Proof* proof, const void* cache,
-                        unsigned vertices, unsigned stride) {
-    return cert::projected_front(*proof, cache, vertices, stride);
+unsigned cone_projected(const float matrix[16], float near_distance,
+                        const cert::Proof* proof, const void* cache,
+                        unsigned vertices, const cert::RawPositions* raw,
+                        unsigned stride) {
+    cert::Context context;
+    return cert::prepare(context, matrix, near_distance) &&
+           cert::projected_front(context, *proof, cache, vertices, *raw, stride);
 }
 
 unsigned cone_strict_layout(const void* cache, const std::uint8_t* index,
@@ -42,11 +47,12 @@ unsigned cone_worth(unsigned vertices, unsigned indices, unsigned strips) {
     return cert::worth_front(vertices, indices, strips);
 }
 
-unsigned cone_flat(const float matrix[16], const float extent[3]) {
-    return cert::flat_depth(matrix, extent);
+unsigned cone_worth_world(unsigned vertices, unsigned indices, unsigned strips) {
+    return cert::worth_front_world(vertices, indices, strips);
 }
 
 unsigned cone_sizes(unsigned which) {
-    return which == 0 ? sizeof(cert::Context) : which == 1 ? sizeof(cert::Cone) : sizeof(cert::Proof);
+    return which == 0 ? sizeof(cert::Context) : which == 1 ? sizeof(cert::Cone) :
+           which == 2 ? sizeof(cert::Proof) : sizeof(cert::RawPositions);
 }
 }

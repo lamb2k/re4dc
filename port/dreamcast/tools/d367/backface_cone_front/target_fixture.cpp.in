@@ -27,10 +27,11 @@ struct Scenario {
     u32* sq;
     unsigned sent, accepted, outcome, ready;
     unsigned strips;
+    cert::RawPositions raw;
     cert::Context context;
     cert::Proof proof;
 };
-static_assert(offsetof(Scenario, context) == 64);
+static_assert(offsetof(Scenario, context) == 84);
 extern "C" const unsigned fixture_layout[] = {
     sizeof(Scenario), sizeof(cert::Context), sizeof(cert::Proof),
     offsetof(Scenario, context), offsetof(Scenario, proof)
@@ -43,20 +44,18 @@ extern "C" void measure_classify(Scenario* s) {
     s->outcome = cert::classify(s->context, *s->cone, s->cull, s->proof);
 }
 extern "C" void measure_scan(Scenario* s) {
-    s->accepted = cert::projected_front(s->proof, s->cache, s->vertices);
+    s->accepted = cert::projected_front(s->context, s->proof, s->cache, s->vertices, s->raw);
 }
 extern "C" void measure_strict(Scenario* s) {
     s->accepted = cert::strict_front(s->cache, s->indices, s->count, 127, s->cull, true);
 }
 extern "C" void measure_eligibility(Scenario* s) {
-    s->outcome = cert::worth_front(s->vertices, s->count, s->strips) &&
-                 cert::flat_depth(s->matrix, s->cone->extent);
+    s->outcome = cert::worth_front(s->vertices, s->count, s->strips);
 }
 extern "C" void measure_caller(Scenario* s) {
     // Mode 4 is an explicitly ungated diagnostic; production modes are 1/2.
     const bool eligible = s->mode == 4 || (s->mode && s->mode != 3 &&
-        cert::worth_front(s->vertices, s->count, s->strips) &&
-        cert::flat_depth(s->matrix, s->cone->extent));
+        cert::worth_front(s->vertices, s->count, s->strips));
     if (eligible)
         s->ready = cert::prepare(s->context, s->matrix, s->near_distance);
     for (unsigned i = 0; i < s->batch; ++i) {
@@ -64,7 +63,7 @@ extern "C" void measure_caller(Scenario* s) {
         if (eligible && s->ready) {
             s->outcome = cert::classify(s->context, *s->cone, s->cull, s->proof);
             front = s->outcome == cert::FrontCandidate &&
-                    cert::projected_front(s->proof, s->cache, s->vertices);
+                    cert::projected_front(s->context, s->proof, s->cache, s->vertices, s->raw);
             if (front && s->mode == 2)
                 front = cert::strict_front(s->cache, s->indices, s->count, 127, s->cull, true);
         }

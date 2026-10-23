@@ -30,7 +30,8 @@ def main():
         if row.get("mode") not in (0, 1):
             continue
         if not ((row["case"] == "front-grid64-294indices" and row["batch"] in (1, 6))
-                or (row["case"] == "off-axis-grid64" and row["batch"] == 1)):
+                or (row["case"] in ("off-axis-grid64", "front-nonplanar-rotated-grid36",
+                                    "front-nonplanar-rotated-grid64") and row["batch"] == 1)):
             continue
         old_command = row["pipeline"]["command"]
         trace = Path(old_command[-1])
@@ -64,7 +65,7 @@ def main():
                          instruction_line_fills=int(float(totals["ifills_per_frame"])),
                          categories=categories, command=command,
                          trace_sha256=sha(trace)))
-    assert len(rows) == 6
+    assert len(rows) == 10
     report = dict(status="PASS", scope=__doc__, cases=rows,
                   primary_receipt=str(source), primary_receipt_sha256=sha(source),
                   model_source_sha256=original["pipeline_model"]["source_sha256"],

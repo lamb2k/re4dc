@@ -1556,6 +1556,12 @@ struct AbcFrontRecord { float min_normal; u16 extent[3], reserved; };
 static_assert(sizeof(AbcFrontRecord) == 12, "abc front record");
 constexpr u32 kAbcFrontTag = 0x32434241U;  // "ABC2" optional proof block
 unsigned abc_front_tests = 0, abc_front_candidates = 0, abc_front_accept = 0, abc_front_bad = 0;
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+// Cumulative gate counts. A zero tests/accepted count can now be distinguished
+// from missing metadata, sparse strips, unsupported contexts or clipped draws.
+unsigned abc_front_seen = 0, abc_front_material = 0, abc_front_metadata = 0;
+unsigned abc_front_cost = 0, abc_front_context_reject = 0, abc_front_projection = 0, abc_front_clipped = 0;
+#endif
 unsigned abc_front_noroom = 0, abc_front_nocert = 0;
 void abc_front_tables();
 float abc_front_cosine(unsigned k);
@@ -3381,29 +3387,19 @@ float abc_front_cosine(unsigned k) { return abc_front_cosines[k]; }
 float abc_front_sine(unsigned k) { return abc_front_sines[k]; }
 
 struct AbcFrontContext { unsigned pal = ~0U; bool ok = false; abc_cert::Context value; };
-bool abc_front_worth(const AbcFrontRecord& proof, unsigned nv, unsigned ni, unsigned nt) {
+bool abc_front_worth(unsigned nv, unsigned ni, unsigned nt) {
     // A valid strip contributes n-2 triangles. The measured shortcut needs
     // enough short strips and vertex reuse to amortize its proof work.
-    return ni >= nt && !((ni - nt) & 1U) && abc_cert::worth_front(nv, ni, (ni - nt) / 2U) &&
-           (!proof.extent[0] || !proof.extent[1] || !proof.extent[2]);
+    return ni >= nt && !((ni - nt) & 1U) && abc_cert::worth_front(nv, ni, (ni - nt) / 2U);
 }
-bool abc_front_prepare(Frame& f, unsigned pal, const u16 extent[3], AbcFrontContext& out) {
-    if (out.pal == pal) {
-        const float* w = out.value.matrix + 8;
-        return out.ok && (!extent[0] || abc_cert::exact_zero(w[0])) &&
-               (!extent[1] || abc_cert::exact_zero(w[1])) &&
-               (!extent[2] || abc_cert::exact_zero(w[2]));
-    }
+bool abc_front_prepare(Frame& f, unsigned pal, AbcFrontContext& out) {
+    if (out.pal == pal) return out.ok;
     alignas(8) float fallback[16];
     const float* matrix = f.screen;
     if (f.mode == kSkin) {
         if (!f.palette || pal >= f.palette_entries) return false;
         matrix = position_matrix(f, pal, fallback);
     } else if (f.mode != kRigid) return false;
-    const float box[3] = {float(extent[0]), float(extent[1]), float(extent[2])};
-    // A different meshlet on this palette may have different zero extents.
-    // A nonflat group must not poison the palette's prepared-context cache.
-    if (!abc_cert::flat_depth(matrix, box)) return false;
     out.pal = pal; out.ok = false;
     out.ok = abc_cert::prepare(out.value, matrix, f.near_distance);
     return out.ok;
@@ -3419,9 +3415,19 @@ abc_cert::Cone abc_front_cone(const AbcCone& c, const AbcFrontRecord* p) {
     out.min_normal = p ? p->min_normal : 0.0f;
     return out;
 }
-bool abc_front_finish(const abc_cert::Proof& proof, const pvr_vertex_t* cache, unsigned nv,
-                      const u8* index, unsigned ni, unsigned cull) {
-    if (!abc_cert::projected_front(proof, cache, nv)) return false;
+bool abc_front_finish(const AbcFrontContext& context, const abc_cert::Proof& proof,
+                      const Frame& frame, const Records& records, const pvr_vertex_t* cache,
+                      unsigned nv, const u8* index, unsigned ni, unsigned cull) {
+    // Use the same source position and record order as pass_positions(). The
+    // cone builder already requires one palette for every record in every LOD.
+    const abc_cert::RawPositions raw{frame.positions, frame.position_stride,
+                                    records.r, records.stride * 2U, false};
+    if (!abc_cert::projected_front(context.value, proof, cache, nv, raw)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+        ++abc_front_projection;
+#endif
+        return false;
+    }
 #if RE4DC_BACKFACE_CONE_FRONT == 2
     if (!abc_cert::strict_front(cache, index, ni, 127U, cull, true)) {
         ++abc_front_bad;
@@ -5555,6 +5561,11 @@ void abc_census() {
         re4dc_log("ABFCF frame=%u tests=%u candidates=%u accepted=%u bad=%u noroom=%u nocert=%u\n",
                   frame_serial, abc_front_tests, abc_front_candidates, abc_front_accept, abc_front_bad,
                   abc_front_noroom, abc_front_nocert);
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+        re4dc_log("ABFCF gates frame=%u seen=%u material=%u metadata=%u cost=%u context=%u projection=%u clipped=%u\n",
+                  frame_serial, abc_front_seen, abc_front_material, abc_front_metadata, abc_front_cost,
+                  abc_front_context_reject, abc_front_projection, abc_front_clipped);
+#endif
 #endif
         for (unsigned c = 0; c < 5; ++c) abc_tests[c] = abc_rej[c] = abc_vskip[c] = abc_verts[c] = abc_tskip[c] = 0;
     }
@@ -6027,10 +6038,26 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
                 continue;
             }
 #if RE4DC_BACKFACE_CONE_FRONT && RE4DC_ACTOR_DIRECT
-            if (e.direct && p.blend == 0 && !(p.material_flags & 4u) && p.depth_mode == 0 &&
-                abc_front && abc_front[mi].min_normal > 0.0f && cn.k && cn.k <= 56U &&
-                abc_front_worth(abc_front[mi], nv, ni, nt) &&
-                abc_front_prepare(f, cn.pal, abc_front[mi].extent, abc_context)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+            ++abc_front_seen;
+#endif
+            if (!(e.direct && p.blend == 0 && !(p.material_flags & 4u) && p.depth_mode == 0)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++abc_front_material;
+#endif
+            } else if (!(abc_front && abc_front[mi].min_normal > 0.0f && cn.k && cn.k <= 56U)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++abc_front_metadata;
+#endif
+            } else if (!abc_front_worth(nv, ni, nt)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++abc_front_cost;
+#endif
+            } else if (!abc_front_prepare(f, cn.pal, abc_context)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++abc_front_context_reject;
+#endif
+            } else {
                 const abc_cert::Cone proof_cone = abc_front_cone(cn, abc_front + mi);
                 ++abc_front_tests;
                 abc_candidate = abc_cert::classify(abc_context.value, proof_cone, p.cull, abc_proof) ==
@@ -6039,6 +6066,12 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
             }
 #endif
         }
+#if RE4DC_BACKFACE_CONE_FRONT == 2 && RE4DC_ACTOR_DIRECT
+        else {
+            ++abc_front_seen;
+            ++abc_front_metadata;
+        }
+#endif
 #endif
 #if RE4DC_ACTOR_CENSUS
         if (census_cur) { census_cur->nv += nv; census_cur->nt += nt; census_cur->lvl += level; }
@@ -6052,6 +6085,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
         if (pxf::Row* pr = pxf::row()) { pr->ml++; if (all & kOcCull) pr->mlc++; }
 #endif
+#if RE4DC_BACKFACE_CONE_FRONT == 2 && RE4DC_ACTOR_BACKFACE_CONE
+        if (abc_candidate && (any & (kOcCull | kOcNear))) ++abc_front_clipped;
+#endif
         if (all & kOcCull) {
 #if RE4DC_ACTOR_CENSUS
             if (census_cur) census_cur->culled += nv;
@@ -6064,7 +6100,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         // The existing full meshlet/outcode path remains authoritative. Only
         // a wholly unclipped meshlet may consume its completed front proof.
         if (abc_candidate && !(any & (kOcCull | kOcNear)))
-            e.cone_front = abc_front_finish(abc_proof, e.cache.v, nv, index, ni, p.cull);
+            e.cone_front = abc_front_finish(abc_context, abc_proof, f, r, e.cache.v, nv, index, ni, p.cull);
 #endif
         e.prime(nv);
         if (e.uv16) pack_uv16(e.cache.v, nv, true);
@@ -6707,10 +6743,26 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
                 continue;
             }
 #if RE4DC_BACKFACE_CONE_FRONT && RE4DC_ACTOR_DIRECT
-            if (e.direct && p.blend == 0 && !(p.material_flags & 4u) && p.depth_mode == 0 &&
-                abc_front && abc_front[mi].min_normal > 0.0f && cn.k && cn.k <= 56U &&
-                abc_front_worth(abc_front[mi], nv, ni, nt) &&
-                abc_front_prepare(f, cn.pal, abc_front[mi].extent, abc_context)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+            ++abc_front_seen;
+#endif
+            if (!(e.direct && p.blend == 0 && !(p.material_flags & 4u) && p.depth_mode == 0)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++abc_front_material;
+#endif
+            } else if (!(abc_front && abc_front[mi].min_normal > 0.0f && cn.k && cn.k <= 56U)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++abc_front_metadata;
+#endif
+            } else if (!abc_front_worth(nv, ni, nt)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++abc_front_cost;
+#endif
+            } else if (!abc_front_prepare(f, cn.pal, abc_context)) {
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+                ++abc_front_context_reject;
+#endif
+            } else {
                 const abc_cert::Cone proof_cone = abc_front_cone(cn, abc_front + mi);
                 ++abc_front_tests;
                 abc_candidate = abc_cert::classify(abc_context.value, proof_cone, p.cull, abc_proof) ==
@@ -6719,6 +6771,12 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
             }
 #endif
         }
+#if RE4DC_BACKFACE_CONE_FRONT == 2 && RE4DC_ACTOR_DIRECT
+        else {
+            ++abc_front_seen;
+            ++abc_front_metadata;
+        }
+#endif
 #endif
         unsigned all, any;
         APROF_COUNT(APROF_N_VERTS, nv); APROF_COUNT(APROF_N_MESHLETS, 1);
@@ -6729,6 +6787,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         pass_positions(e, r, nv, k, s16_uv, all, any);
 #endif
         APROF_STOP(aprof_pos);
+#if RE4DC_BACKFACE_CONE_FRONT == 2 && RE4DC_ACTOR_BACKFACE_CONE
+        if (abc_candidate && (any & (kOcCull | kOcNear))) ++abc_front_clipped;
+#endif
         if (all & kOcCull) {
             ++stats.meshlets_culled;
             e.input += nt;
@@ -6738,7 +6799,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         // The existing full meshlet/outcode path remains authoritative. Only
         // a wholly unclipped meshlet may consume its completed front proof.
         if (abc_candidate && !(any & (kOcCull | kOcNear)))
-            e.cone_front = abc_front_finish(abc_proof, e.cache.v, nv, index, ni, p.cull);
+            e.cone_front = abc_front_finish(abc_context, abc_proof, f, r, e.cache.v, nv, index, ni, p.cull);
 #endif
         e.prime(nv);
         APROF_SPAN(aprof_lit, APROF_LIT);

@@ -103,16 +103,20 @@ namespace re4dc::bf::certificate {
 struct Context {bool valid;};
 struct Cone {float center[3],radius,extent[3],axis[3],cos_lower,sin_upper,min_normal;};
 struct Proof {bool valid;};
+struct RawPositions {const void* data;unsigned stride;const std::uint16_t* indices;unsigned index_stride;bool unsigned_values;};
 enum Outcome {Uncertain,Back,FrontCandidate};
 @WORTH_FRONT@
-@EXACT_ZERO@
-@FLAT_DEPTH@
 static unsigned prepares=0,classifies=0,scans=0,strict_calls=0;
 static bool prepare_ok=true,projection_ok=true,strict_ok=true;
 static const float* matrix_seen=nullptr;
+struct Scan {const void* raw;const void* cache;unsigned vertices;};
+static std::vector<Scan> scan_records;
 bool prepare(Context& c,const float* m,float n){++prepares;matrix_seen=m;return c.valid=prepare_ok&&m&&n>0;}
 Outcome classify(const Context&,const Cone& c,unsigned,Proof& p){++classifies;p.valid=true;return c.min_normal==1.0f?FrontCandidate:Uncertain;}
-bool projected_front(const Proof&,const void*,unsigned){++scans;return projection_ok;}
+bool projected_front(const Context& c,const Proof& p,const void* cache,unsigned n,const RawPositions& raw,unsigned stride=32){
+ assert(c.valid&&p.valid&&raw.data&&raw.stride==12&&raw.unsigned_values&&!raw.indices&&!raw.index_stride&&stride==32);
+ ++scans;scan_records.push_back({raw.data,cache,n});return projection_ok;
+}
 bool strict_front(const void* c,const std::uint8_t* ix,unsigned n,unsigned mask,unsigned cull){
  ++strict_calls;if(!strict_ok)return false;
  auto* v=static_cast<const pvr_vertex_t*>(c);
@@ -171,6 +175,9 @@ static const float* front_angles=nullptr;static const float* front_normals=nullp
 static const std::uint16_t* front_counts=nullptr;
 static unsigned tests=0,rejects=0,vskip=0,picks_dropped=0;
 static unsigned front_tests=0,front_candidates=0,front_groups=0,front_vertices=0,front_bad=0;
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+@FRONT_GATES@ front_gate;
+#endif
 @TRAILER@
 }
 extern "C" bool test_trailer(const std::uint8_t* sec,unsigned len,unsigned crc,unsigned bytes,unsigned lets,unsigned groups,unsigned sg,
@@ -244,7 +251,11 @@ struct Fixture {
   stats={};lean::st={};walk_calls.clear();transformed=0;result_calls=0;log_calls=0;
   std::fill(std::begin(loaded_matrix),std::end(loaded_matrix),0.0f);
   cert::prepares=cert::classifies=cert::scans=cert::strict_calls=0;cert::prepare_ok=cert::projection_ok=cert::strict_ok=true;
+  cert::scan_records.clear();
   cone::front_tests=cone::front_candidates=cone::front_groups=cone::front_vertices=cone::front_bad=0;
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+  cone::front_gate={};
+#endif
   for(unsigned q=0;q<count;++q){
    const unsigned v=q*range;
    for(unsigned r=0;r<strips;++r){package.stream.push_back(strip_length);
@@ -309,12 +320,21 @@ void output_tests(){
   const std::vector<std::tuple<bool,unsigned,unsigned>> expected={{true,0,B},{false,B,3*B},{true,3*B,4*B}};
   assert(walk_calls==expected);assert(cert::prepares==1&&cert::matrix_seen==loaded_matrix);assert(transformed==12);
   assert(cone::front_groups==2&&cone::front_tests==4&&cone::front_candidates==2&&cone::front_vertices==6);
+  assert(cert::scan_records.size()==2);
+  for(unsigned q=0;q<2;++q){const auto& scan=cert::scan_records[q];
+   assert(scan.raw==f.package.raw+9*q&&scan.cache==f.draw.cache+9*q&&scan.vertices==3);}
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+  assert(cone::front_gate.picks==1&&cone::front_gate.groups==4&&cone::front_gate.facing_depth==2);
+#endif
  }
  {
   Fixture f;execute(f,{0,2,5,0,8,{0,0}},true);
   constexpr unsigned B=Fixture::group_bytes;
   const std::vector<std::tuple<bool,unsigned,unsigned>> expected={{true,0,B},{true,2*B,3*B}};
   assert(walk_calls==expected);assert(transformed==9&&cone::front_groups==2&&cone::front_vertices==6);
+  assert(cert::scan_records.size()==2);
+  for(unsigned q=0;q<2;++q){const auto& scan=cert::scan_records[q];
+   assert(scan.raw==f.package.raw+6*q&&scan.cache==f.draw.cache+6*q&&scan.vertices==3);}
  }
  {
   Fixture f;Draw::Pick picks[]={f.whole(),f.whole()};assert(f.draw.chunk_emit(picks,2)==1);
@@ -338,7 +358,7 @@ void output_tests(){
 void metadata_tests(){
  auto rejected=[](Setup mutate){Fixture f;mutate(f);re4dc::bf::certificate::Context context{true};
   f.draw.front_context=&context;f.draw.front_valid=true;unsigned keep=0;
-  assert(f.draw.front_mask(f.whole(),f.package.ml[0],f.package.stream.data(),keep)==0);};
+  assert(f.draw.front_mask(f.whole(),f.package.ml[0],f.package.stream.data(),f.package.raw,keep)==0);};
  rejected([](Fixture&){cone::front_normals=nullptr;});
  rejected([](Fixture&){cone::front_angles=nullptr;});
  rejected([](Fixture&){cone::front_counts=nullptr;});
@@ -358,21 +378,25 @@ void metadata_tests(){
 void admission_tests(){
  // These gates execute the shared header helpers and real production routing,
  // while certificate arithmetic remains a controlled boundary in this test.
- assert(cert::worth_front(64,256,64));
- assert(!cert::worth_front(2,256,64));assert(!cert::worth_front(64,255,64));
- assert(!cert::worth_front(65,256,64));assert(!cert::worth_front(64,256,63));
+ assert(cert::worth_front_world(36,150,50));assert(cert::worth_front_world(64,196,49));
+ assert(!cert::worth_front_world(25,96,32));assert(!cert::worth_front_world(49,144,36));
+ assert(!cert::worth_front_world(64,112,7));assert(!cert::worth_front_world(256,294,98));
+ assert(!cert::worth_front_world(2,65535,21845));assert(!cert::worth_front_world(257,65535,21845));
+ assert(!cert::worth_front_world(3,65536,21845));assert(!cert::worth_front_world(3,65535,0));
+ assert(!cert::worth_front_world(3,65535,21846));
  auto rejected=[](unsigned strips,unsigned length,unsigned range){
   Fixture old(1,strips,length,range);const auto baseline=execute(old,old.whole(),false);
   Fixture now(1,strips,length,range);const auto candidate=execute(now,now.whole(),true);
   equal(baseline,candidate);assert(cert::prepares==0&&cert::classifies==0&&cert::scans==0);
  };
- rejected(85,3,3);    // 255 indices: insufficient work to repay setup
- rejected(63,5,3);    // 315 indices, but too few strips
- rejected(96,3,128);  // 288 indices, but cache span has insufficient reuse
+ rejected(32,3,25);   // 5x5 triangles: too little measured margin
+ rejected(36,4,49);   // 7x7 quads: preparation still outweighs the saved scan
+ rejected(7,16,64);   // 8x8 rows: low per-strip overhead in the baseline
+ rejected(98,3,256);  // include every scanned vertex, including unused holes
  rejected(1,240,240); // a long low-reuse strip stays on the original walker
  {
   Fixture f;loaded_matrix[3]=0.1f;execute(f,f.whole(),true);
-  assert(cert::prepares==0&&cert::classifies==0&&cert::scans==0);
+  assert(cert::prepares==1&&cert::classifies==4&&cert::scans==4&&cone::front_groups==4);
  }
  {
   Fixture f;loaded_matrix[11]=1.0f;execute(f,f.whole(),true);
@@ -383,18 +407,37 @@ void admission_tests(){
   assert(cert::prepares==1&&cone::front_groups==4);
  }
  {
-  Fixture f;const std::uint32_t subnormal=1;std::memcpy(loaded_matrix+3,&subnormal,4);
-  execute(f,f.whole(),true);assert(cert::prepares==0&&cert::classifies==0);
- }
- {
   Fixture f;for(unsigned q=0;q<4;++q)f.minima[q]=0;
   execute(f,f.whole(),true);assert(cert::prepares==0);
  }
  {
   Fixture f;f.draw.borrow_ok=false;execute(f,f.whole(),true);assert(cert::prepares==0);
  }
- std::cout<<"count reuse and flat-depth admission before lazy prepare PASS\n";
+ std::cout<<"world cost admission, varying-depth projection and lazy prepare PASS\n";
 }
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+void gate_tests(){
+ auto check=[](Setup setup,unsigned material,unsigned metadata,unsigned context,unsigned invalid,
+              unsigned cost,unsigned prepare,unsigned facing,unsigned projected,unsigned accepted){
+  Fixture f;setup(f);execute(f,f.whole(),true);
+  const auto& g=cone::front_gate;
+  assert(g.picks==1&&g.material==material&&g.metadata==metadata&&g.context==context);
+  assert(g.groups==((material||metadata||context)?0U:4U));
+  assert(g.invalid==invalid&&g.cost==cost&&g.prepare==prepare&&g.facing_depth==facing&&g.projected==projected);
+  assert(cone::front_groups==accepted);
+ };
+ check(none,0,0,0,0,0,0,0,0,4);
+ check([](Fixture& f){f.part.cull=0;},1,0,0,0,0,0,0,0,0);
+ check([](Fixture&){cone::front_normals=nullptr;},0,1,0,0,0,0,0,0,0);
+ check([](Fixture&){bf_loaded_screen=nullptr;},0,0,1,0,0,0,0,0,0);
+ check([](Fixture& f){for(auto& n:f.minima)n=0;},0,0,0,4,0,0,0,0,0);
+ check([](Fixture& f){f.package.ml[0].vertex_count=256;for(unsigned q=0;q<4;++q)f.groups[8*q+7]=0xff00;},0,0,0,0,4,0,0,0,0);
+ check([](Fixture&){cert::prepare_ok=false;},0,0,0,0,0,4,0,0,0);
+ check([](Fixture& f){for(auto& n:f.minima)n=2;},0,0,0,0,0,0,4,0,0);
+ check([](Fixture&){cert::projection_ok=false;},0,0,0,0,0,0,0,4,0);
+ std::cout<<"mode2 pick/group rejection counters PASS\n";
+}
+#endif
 #endif
 namespace cull_lifetime {
 // Execute the actual queue-drain lambda and both actual caller branches. Only
@@ -492,6 +535,9 @@ void check(const char* lane){
 int main(int argc,char** argv){
 #if RE4DC_BACKFACE_CONE_FRONT
  output_tests();metadata_tests();admission_tests();
+#if RE4DC_BACKFACE_CONE_FRONT == 2
+ gate_tests();
+#endif
 #endif
  cull_lifetime::check(argc>1?argv[1]:nullptr);std::cout<<"world production-body host fixture PASS\n";
 }
@@ -510,9 +556,9 @@ def host_fixture(output, source, cull_only=False):
     dispatch_start = source.index("#if RE4DC_SCENERY_CHUNK\n            // SCENERY_CHUNK: select now")
     dispatch_end = source.index("#if RE4DC_PS2_PVS\n            d.pvs_finish(result>0);", dispatch_start)
     replacements = {
-        "WORTH_FRONT": "" if cull_only else function(helper_header, "inline bool worth_front("),
-        "EXACT_ZERO": "" if cull_only else function(helper_header, "inline bool exact_zero("),
-        "FLAT_DEPTH": "" if cull_only else function(helper_header, "inline bool flat_depth("),
+        "WORTH_FRONT": "" if cull_only else "\n".join(function(helper_header, name) for name in
+                                                     ("inline bool cost_counts(", "inline bool worth_front_world(")),
+        "FRONT_GATES": function(source, "struct FrontGates {"),
         "TRAILER": function(source, "bool front_trailer("),
         "PICK": function(source, "struct Pick {"),
         "BF_ON": function(source, "bool bf_on()const"),
@@ -703,7 +749,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--cull-only", action="store_true", help="Run FRONT=0 shared-cull lifetime regression independently of the certificate helper")
-    parser.add_argument("--baseline", default="d1bc83cff32217a659f93acd5837a1ecc96ff6c3")
+    parser.add_argument("--baseline", default="f3fef82cf212bb379e5cf3119daee0d7a8db7e58")
     parser.add_argument("--sh4-cxx", type=Path)
     parser.add_argument("--kos-root", type=Path)
     parser.add_argument("--sdk-root", type=Path)
