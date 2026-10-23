@@ -39,6 +39,15 @@
 #if RE4DC_SCENERY_REPLAY_LEAN && RE4DC_WORLD_SCRATCH
 #error SCENERY_REPLAY_LEAN needs WORLD_SCRATCH=0 (ordinary per-part scratch lifetime)
 #endif
+#ifndef RE4DC_SCENERY_UV_SNAPSHOT
+#define RE4DC_SCENERY_UV_SNAPSHOT 0
+#endif
+#if RE4DC_SCENERY_UV_SNAPSHOT != 0 && RE4DC_SCENERY_UV_SNAPSHOT != 1
+#error SCENERY_UV_SNAPSHOT must be 0 or 1
+#endif
+#if RE4DC_SCENERY_UV_SNAPSHOT && !RE4DC_SCENERY_CHUNK
+#error SCENERY_UV_SNAPSHOT needs SCENERY_CHUNK
+#endif
 #ifndef RE4DC_SCENERY_SUBMIT_BATCH
 #define RE4DC_SCENERY_SUBMIT_BATCH 0
 #endif
@@ -6246,6 +6255,9 @@ int ps2_pass(unsigned pass,float zfar){
     // SCENERY_CHUNK: the selected parts of this run (ChunkPart) and their picks, emitted in order by chunk_flush()
     // before any part that takes the ordinary path, when either list is full, and at the end of the pass.
     struct ChunkPart { float mvq[12]; unsigned key[6]; float cull_far,lod_scale; unsigned index,first,count;
+#if RE4DC_SCENERY_UV_SNAPSHOT
+                       float uv_offset[2];
+#endif
 #if RE4DC_PS2_PVS
                        unsigned placement;
 #endif
@@ -6263,6 +6275,16 @@ int ps2_pass(unsigned pass,float zfar){
             unsigned& value;unsigned saved;
             ~CullScope(){value=saved;}
         } cull_scope{part.cull,part.cull};
+#if RE4DC_SCENERY_UV_SNAPSHOT
+        // A capacity drain may run after the next owner's UV was prepared.
+        // Restore that pending draw's bits on normal and abort exits alike.
+        // Component copies are plain SH4 moves; -Os calls memcpy even for 8 B.
+        struct UvScope {
+            float* value;float saved[2];
+            explicit UvScope(float* p):value(p),saved{p[0],p[1]}{}
+            ~UvScope(){value[0]=saved[0];value[1]=saved[1];}
+        } uv_scope(part.uv_offset);
+#endif
 #if RE4DC_SCENERY_SUBMIT_BATCH
         // Only this synchronous replay owns the borrowed lock. Selection,
         // ordinary draws, aborts and returning to the source never retain it.
@@ -6291,6 +6313,9 @@ int ps2_pass(unsigned pass,float zfar){
         for(unsigned j=0;j<nctx;++j){
             const ChunkPart& x=cctx[j];
             part.cull=x.cull;
+#if RE4DC_SCENERY_UV_SNAPSHOT
+            part.uv_offset[0]=x.uv_offset[0];part.uv_offset[1]=x.uv_offset[1];
+#endif
 #if RE4DC_SKY_ANY
             re4dc_ps2_sky_header=x.sky;
 #endif
@@ -6614,6 +6639,9 @@ int ps2_pass(unsigned pass,float zfar){
                     if(nctx==kChunkParts || npk+selected_part.meshlet_count>kChunkPicks){if(chunk_flush()<0)return -1;}
                     ChunkPart& x=cctx[nctx++];
                     std::memcpy(x.mvq,mvq,sizeof(mvq));std::memcpy(x.key,key,sizeof(key));
+#if RE4DC_SCENERY_UV_SNAPSHOT
+                    x.uv_offset[0]=part.uv_offset[0];x.uv_offset[1]=part.uv_offset[1];
+#endif
                     x.cull_far=d.cull_far;x.lod_scale=lod_scale;x.index=index;x.cull=meta.cull;
 #if RE4DC_PS2_PVS
                     x.placement=i;
@@ -6671,6 +6699,9 @@ int ps2_pass(unsigned pass,float zfar){
                 if(nctx==kChunkParts || npk+d.part.meshlet_count>kChunkPicks){if(chunk_flush()<0)return -1;}
                 ChunkPart& x=cctx[nctx++];
                 std::memcpy(x.mvq,mvq,sizeof(mvq));std::memcpy(x.key,key,sizeof(key));
+#if RE4DC_SCENERY_UV_SNAPSHOT
+                x.uv_offset[0]=part.uv_offset[0];x.uv_offset[1]=part.uv_offset[1];
+#endif
                 x.cull_far=d.cull_far;x.lod_scale=lod_scale;x.index=index;x.cull=meta.cull;
 #if RE4DC_PS2_PVS
                 x.placement=i;
