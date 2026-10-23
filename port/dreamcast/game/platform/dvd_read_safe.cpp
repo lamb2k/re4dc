@@ -108,10 +108,12 @@ extern "C" int __real_cdrom_stream_stop(bool abort_dma);
 // DISC_DMA_WAIT_TIMEOUT=1 (issue #28): KOS's DMA wait gave up (kos-804b319-cdrom-dma-wait-timeout.patch); the caller below
 // falls back to plain reads. Counters are KOS's.
 extern "C" unsigned re4dc_cdrom_wait_timeouts, re4dc_cdrom_wait_max_us, re4dc_cdrom_wait_last_ms;
+extern "C" unsigned re4dc_cdrom_wait_hw_busy, re4dc_cdrom_wait_abort_reset;
 static void dma_wait_timeout_log(const char* what, uint32_t at, size_t bytes)
 {
-    re4dc_log("disc dma wait timeout: %s (%u bytes at %u) got no completion in %u ms; falling back to plain reads "
-              "(timeouts %u)\n", what, (unsigned) bytes, (unsigned) at, re4dc_cdrom_wait_last_ms, re4dc_cdrom_wait_timeouts);
+    re4dc_log("disc dma wait timeout: %s (%u bytes at %u) got no completion in %u ms; GD DMA stopped (engine was busy "
+              "%u, drive reset %u); falling back to plain reads (timeouts %u)\n", what, (unsigned) bytes, (unsigned) at,
+              re4dc_cdrom_wait_last_ms, re4dc_cdrom_wait_hw_busy, re4dc_cdrom_wait_abort_reset, re4dc_cdrom_wait_timeouts);
 }
 // The longest completed DMA wait so far, logged when it grows by a quarter (how far normal reads stay from the bound).
 static unsigned s_wait_max_logged;
