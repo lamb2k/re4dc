@@ -13,7 +13,7 @@ RECEIPT = Path('/root/probe/lanes/route/out-dd23stdoff542rP')
 EXPECTED = os.environ['GCGATE_SOURCE']
 SOURCES = ['platform/native_ui.cpp', 'platform/native_model.cpp', 'model_bridge.cpp',
            '../../../src/game/model.cpp', '../../../src/game/read.cpp']
-EXTRA = ['platform/gc_asset_gate.cpp', 'platform/gc_asset_members.cpp', 'platform/gc_asset_disc.cpp']
+EXTRA = ['platform/gc_asset_gate.cpp', 'platform/gc_asset_members.cpp', 'platform/gc_asset_disc.cpp', 'platform/gc_asset_payloads.cpp']
 
 
 def digest(path):

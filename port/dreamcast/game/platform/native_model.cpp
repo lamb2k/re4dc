@@ -773,7 +773,7 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     if(p) {
         const void* data=nullptr;re4dc_gcasset::ModelMember member;
         if(re4dc_gcasset::replay_use.serial!=0xffffffffU)
-            re4dc_gcasset::source_use={re4dc_gcasset::replay_use.serial,re4dc_gcasset::replay_use.mask,p->model,p->info};
+            re4dc_gcasset::source_use={re4dc_gcasset::replay_use.serial,re4dc_gcasset::replay_use.mask,p->model,p->info,re4dc_gcasset::replay_use.payload};
         else if(re4dc_gcasset_model_identity(p->model,p->info,&data)!=0xffffffffU &&
            re4dc_gcasset::member_lookup(data,&member)) {
             const unsigned mask=(1U<<re4dc_gcasset::SourceGeometry)|

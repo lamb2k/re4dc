@@ -1,6 +1,7 @@
 #include "include/gc_asset_gate.h"
 #include "include/gc_asset_packet_cursor.h"
 #include "include/gc_asset_members.h"
+#include "include/gc_asset_payloads.h"
 #if RE4DC_GC_ASSET_GATE
 #define RE4DC_GCA_ADOPT(...) ((void)(re4dc_gcasset::ensure_disc_catalog() && re4dc_gcasset::member_adopt(__VA_ARGS__)))
 #define RE4DC_GCA_RETIRE(...) re4dc_gcasset::member_retire(__VA_ARGS__)
@@ -431,11 +432,12 @@ re4dc_gcasset::Consumer gcasset_packet_consumer=re4dc_gcasset::Texture;
 re4dc_gcasset::SourceUse gcasset_model_pending;
 void gcasset_model_prepare(const Re4dcModelPart* p) {
     gcasset_model_pending={};const auto& source=re4dc_gcasset::source_use;
-    if(p && p->model==source.model && p->info==source.info)gcasset_model_pending=source;
+    if(source.payload || (p && p->model==source.model && p->info==source.info))gcasset_model_pending=source;
 }
 void gcasset_model_accept() {
-    re4dc_gcasset::member_accept(gcasset_model_pending.serial,gcasset_model_pending.mask?
-        gcasset_model_pending.mask:1U<<re4dc_gcasset::SourceGeometry);
+    const unsigned mask=gcasset_model_pending.mask?gcasset_model_pending.mask:1U<<re4dc_gcasset::SourceGeometry;
+    if(gcasset_model_pending.payload)re4dc_gcasset::payload_accept(gcasset_model_pending.payload,gcasset_model_pending.serial,mask);
+    else re4dc_gcasset::member_accept(gcasset_model_pending.serial,mask);
 }
 void gcasset_packet_reset(){for(auto& state:gcasset_packet_states){
     if(state.continuation)re4dc_gcasset::unresolved(re4dc_gcasset::Texture,"incomplete-packet-continuation");
@@ -725,6 +727,7 @@ static_assert(sizeof(Re4dcModelPart)%sizeof(unsigned)==0);
 struct DeferredPart { DeferredPart* next;DeferredLighting* lighting;unsigned changed[kViewMasks];
 #if RE4DC_GC_ASSET_GATE
     unsigned asset_serial=0,asset_mask=0;
+    re4dc_gcasset::PayloadProof* asset_payload=nullptr;
 #endif
 };
 Re4dcModelPart* deferred_basis=nullptr;
@@ -6265,7 +6268,7 @@ extern "C" void re4dc_ui_present(){
 extern "C" void re4dc_ui_end_frame(int present){
 #if RE4DC_GC_ASSET_GATE
     struct GcAssetFrameFlush {
-        ~GcAssetFrameFlush(){for(auto& entry:entries)gcasset_texture_flush(entry);re4dc_gcasset::member_flush();re4dc_gcasset::pump();}
+        ~GcAssetFrameFlush(){for(auto& entry:entries)gcasset_texture_flush(entry);re4dc_gcasset::member_flush();re4dc_gcasset::payload_flush_all();re4dc_gcasset::pump();}
     } gcasset_frame_flush;
 #endif
 #if RE4DC_WORLD_SCRATCH
@@ -7422,7 +7425,7 @@ int defer_part(const Re4dcModelPart* p,const SourceLighting* source){
     node->lighting=lighting;
 #if RE4DC_GC_ASSET_GATE
     const auto& proof=re4dc_gcasset::source_use;
-    if(proof.model==view.model && proof.info==view.info){node->asset_serial=proof.serial;node->asset_mask=proof.mask;}
+    if(proof.model==view.model && proof.info==view.info){node->asset_serial=proof.serial;node->asset_mask=proof.mask;node->asset_payload=proof.payload;}
 #endif
     if(deferred_last)deferred_last->next=node;else deferred_first=node;
     deferred_last=node;++deferred_count;
@@ -7502,7 +7505,7 @@ extern "C" int re4dc_model_defer_part(const Re4dcModelPart* p){
     node->lighting=lighting;
 #if RE4DC_GC_ASSET_GATE
     const auto& proof=re4dc_gcasset::source_use;
-    if(proof.model==view.model && proof.info==view.info){node->asset_serial=proof.serial;node->asset_mask=proof.mask;}
+    if(proof.model==view.model && proof.info==view.info){node->asset_serial=proof.serial;node->asset_mask=proof.mask;node->asset_payload=proof.payload;}
 #endif
     if(deferred_last)deferred_last->next=node;else deferred_first=node;
     deferred_last=node;++deferred_count;
@@ -9249,7 +9252,7 @@ extern "C" void re4dc_model_finish_source_draws(){
         // and aborts this same frame; it never frees an in-flight PVR texture.
         Re4dcModelPart view=restore_view(deferred_first);
 #if RE4DC_GC_ASSET_GATE
-        re4dc_gcasset::ReplayScope gcasset_replay_scope(deferred_first->asset_serial,deferred_first->asset_mask);
+        re4dc_gcasset::ReplayScope gcasset_replay_scope(deferred_first->asset_serial,deferred_first->asset_mask,deferred_first->asset_payload);
 #endif
         AVD_EVENT(DrainModel,deferred_first,&view,0);
 #if RE4DC_ACTOR_GANADO_DEATH_FADE && RE4DC_ACTOR_TRANSACTION_DIAG

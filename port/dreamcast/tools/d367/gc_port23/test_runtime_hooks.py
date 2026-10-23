@@ -20,10 +20,26 @@ def function(source, marker):
 
 
 class RuntimeTextureTests(unittest.TestCase):
+    def test_actual_payload_scope_latch_and_retirement(self):
+        ui = (GAME / 'platform/native_ui.cpp').read_text()
+        helpers = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
+        fixture = (HERE / 'test_payloads.cpp').read_text().replace('// ACTUAL_UI_HELPERS', helpers)
+        with tempfile.TemporaryDirectory(prefix='gc-port23-payload-', dir='/dev/shm') as temporary:
+            root = Path(temporary)
+            (root / 'fixture.cpp').write_text(fixture)
+            executable = root / 'fixture'
+            subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
+                            '-DRE4DC_GC_ASSET_GATE=1', '-I', str(GAME / 'platform/include'),
+                            str(root / 'fixture.cpp'), str(GAME / 'platform/gc_asset_members.cpp'),
+                            str(GAME / 'platform/gc_asset_payloads.cpp'), str(GAME / 'platform/gc_asset_gate.cpp'),
+                            '-o', str(executable)], check=True)
+            subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
+
     def test_actual_weapon_consumer_roles(self):
         classifier = function((GAME / 'model_bridge.cpp').read_text(), 'extern "C" unsigned re4dc_gcasset_weapon_consumer(')
         fixture = r'''
 #include "gc_asset_members.h"
+#include "gc_asset_payloads.h"
 #include <cassert>
 struct cModel{unsigned kindid,id;};struct Body{const void* pRight;const void* pLeft;};
 struct cPlayer:cModel{::Body* Body;};cPlayer* pPL;
@@ -66,6 +82,7 @@ int main(){using namespace re4dc_gcasset;int info,other;cModel model{1,0};
         helpers = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
         fixture = r'''
 #include "gc_asset_members.h"
+#include "gc_asset_payloads.h"
 #include <cassert>
 #include <cstdio>
 #include <cstdarg>
@@ -103,7 +120,7 @@ int main(){using namespace re4dc_gcasset;int ownerA,ownerB;cModel model{};auto a
             subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
                             '-DRE4DC_GC_ASSET_GATE=1', '-DRE4DC_NATIVE_STATIC=1',
                             '-I', str(GAME / 'platform/include'), str(root / 'fixture.cpp'),
-                            str(GAME / 'platform/gc_asset_members.cpp'), str(GAME / 'platform/gc_asset_gate.cpp'),
+                            str(GAME / 'platform/gc_asset_members.cpp'), str(GAME / 'platform/gc_asset_payloads.cpp'), str(GAME / 'platform/gc_asset_gate.cpp'),
                             '-o', str(executable)], check=True)
             subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
 
@@ -119,6 +136,7 @@ int main(){using namespace re4dc_gcasset;int ownerA,ownerB;cModel model{};auto a
         replay = next(line.strip() for line in ui.splitlines() if 'ReplayScope gcasset_replay_scope(' in line)
         fixture = r'''
 #include "gc_asset_members.h"
+#include "gc_asset_payloads.h"
 #include <cassert>
 namespace re4dc_gcasset {SourceUse source_use;ReplayUse replay_use;}
 struct Re4dcModelPart {const void* model;const void* info;unsigned serial;const void* world;const void* view;unsigned source_key[3];const void* stream;};
@@ -133,7 +151,7 @@ extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsign
 bool re4dc_gcasset::member_lookup(const void* data,ModelMember* out){++lookups;out->serial=data==&a?77:88;return true;}
 void observe_selected(const Re4dcModelPart*){++selections;assert(re4dc_gcasset::source_use.serial==expected);}
 ''' + gateway + r'''
-struct DeferredPart{unsigned asset_serial=0,asset_mask=0;};
+struct DeferredPart{unsigned asset_serial=0,asset_mask=0;re4dc_gcasset::PayloadProof* asset_payload=nullptr;};
 void freeze(DeferredPart* node,const Re4dcModelPart& view){
 ''' + enqueue + r'''
 }
@@ -179,6 +197,7 @@ int main(){
         finish = switch.index('    model_used=0;', start)+len('    model_used=0;')
         fixture = r'''
 #include "gc_asset_members.h"
+#include "gc_asset_payloads.h"
 #include <cassert>
 #include <cstdarg>
 #include <cstdio>
@@ -233,7 +252,7 @@ int main(){
                             '-DRE4DC_GC_ASSET_GATE=1', '-DRE4DC_PVR_STREAM=1',
                             '-DRE4DC_TA_DIRECT=1', '-DRE4DC_SCENERY_SUBMIT_BATCH=1',
                             '-I', str(GAME / 'platform/include'), str(root / 'fixture.cpp'),
-                            str(GAME / 'platform/gc_asset_gate.cpp'), str(GAME / 'platform/gc_asset_members.cpp'),
+                            str(GAME / 'platform/gc_asset_gate.cpp'), str(GAME / 'platform/gc_asset_members.cpp'), str(GAME / 'platform/gc_asset_payloads.cpp'),
                             '-o', str(executable)], check=True)
             subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
 
@@ -249,6 +268,7 @@ int main(){
         retire = reload[reload.index('#if defined(RE4DC_GAME)'):reload.index('    pG->pArc =')]
         fixture = r'''
 #include "gc_asset_members.h"
+#include "gc_asset_payloads.h"
 #include <cassert>
 #include <cstdint>
 #include <cstring>
@@ -321,7 +341,7 @@ int main(){
             executable = root / 'fixture'
             subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
                             '-DRE4DC_GC_ASSET_GATE=1', '-DRE4DC_GAME=1', '-I', str(GAME / 'platform/include'),
-                            str(root / 'fixture.cpp'), str(GAME / 'platform/gc_asset_members.cpp'),
+                            str(root / 'fixture.cpp'), str(GAME / 'platform/gc_asset_members.cpp'), str(GAME / 'platform/gc_asset_payloads.cpp'),
                             str(GAME / 'platform/gc_asset_gate.cpp'), '-o', str(executable)], check=True)
             subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
 
@@ -399,6 +419,7 @@ int main(){
 #include "gc_asset_gate.h"
 #include "gc_asset_packet_cursor.h"
 #include "gc_asset_members.h"
+#include "gc_asset_payloads.h"
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
@@ -507,7 +528,7 @@ int main() {
             subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
                             '-DRE4DC_GC_ASSET_GATE=1', '-I', str(GAME / 'platform/include'),
                             str(root / 'fixture.cpp'), str(GAME / 'platform/gc_asset_gate.cpp'),
-                            str(GAME / 'platform/gc_asset_members.cpp'),
+                            str(GAME / 'platform/gc_asset_members.cpp'), str(GAME / 'platform/gc_asset_payloads.cpp'),
                             '-o', str(executable)], check=True)
             subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
 

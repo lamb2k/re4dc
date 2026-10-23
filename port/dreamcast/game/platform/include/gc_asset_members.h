@@ -26,13 +26,14 @@ void member_flush();
 #if defined(RE4DC_GC_ASSET_TEST) && RE4DC_GC_ASSET_TEST
 void member_test_serial(unsigned);
 #endif
-struct SourceUse { unsigned serial=0,mask=0;const void* model=nullptr;const void* info=nullptr; };
+struct PayloadProof;
+struct SourceUse { unsigned serial=0,mask=0;const void* model=nullptr;const void* info=nullptr;PayloadProof* payload=nullptr; };
 extern SourceUse source_use;
-struct ReplayUse {unsigned serial=0xffffffffU,mask=0;};
+struct ReplayUse {unsigned serial=0xffffffffU,mask=0;PayloadProof* payload=nullptr;};
 extern ReplayUse replay_use;
 struct ReplayScope {
     ReplayUse previous;
-    ReplayScope(unsigned serial,unsigned mask):previous(replay_use){replay_use={serial,mask};}
+    ReplayScope(unsigned serial,unsigned mask,PayloadProof* payload=nullptr):previous(replay_use){replay_use={serial,mask,payload};}
     ~ReplayScope(){replay_use=previous;}
 };
 struct SourceScope {

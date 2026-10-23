@@ -32,4 +32,8 @@ g++ -std=c++17 -Os -Wall -Wextra -Werror -DRE4DC_GC_ASSET_GATE=1 -c "$GAME/platf
 size "$SCRATCH/members-off.o" "$SCRATCH/members-on.o"
 g++ -std=c++17 -Os -Wall -Wextra -Werror -c "$GAME/platform/gc_asset_disc.cpp" -o "$SCRATCH/disc-off.o"
 if nm --defined-only "$SCRATCH/disc-off.o" | grep -q .; then exit 1; fi
+g++ -std=c++17 -Os -Wall -Wextra -Werror -c "$GAME/platform/gc_asset_payloads.cpp" -o "$SCRATCH/payloads-off.o"
+if nm --defined-only "$SCRATCH/payloads-off.o" | grep -q .; then exit 1; fi
+g++ -std=c++17 -Os -Wall -Wextra -Werror -DRE4DC_GC_ASSET_GATE=1 -c "$GAME/platform/gc_asset_payloads.cpp" -o "$SCRATCH/payloads-on.o"
+size "$SCRATCH/payloads-off.o" "$SCRATCH/payloads-on.o"
 printf 'GC-ASSET host core and judge tests PASS; target and runtime gates not run.\n'
