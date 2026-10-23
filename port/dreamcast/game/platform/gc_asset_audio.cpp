@@ -9,6 +9,9 @@ struct Bank {
     std::atomic<unsigned> generation{0},bound{0},mram{0},aram{0};
     Digest pending[2]{};unsigned ready=0;
 } banks[14];
+struct StreamSource {
+    std::atomic<unsigned> generation{0},bound{0},asset{0};Digest digest{};
+} stream;
 std::atomic_flag records=ATOMIC_FLAG_INIT;
 std::atomic<unsigned> faults{0};unsigned serial;
 #if defined(RE4DC_GC_ASSET_TEST) && RE4DC_GC_ASSET_TEST
@@ -83,7 +86,25 @@ void bank_pump(){
         }
         records.clear(std::memory_order_release);
     }
+    if(records.test_and_set(std::memory_order_acquire)){faults.fetch_add(1);return;}
+    const unsigned generation=stream.generation.load();const bool ready=generation && stream.bound.load()!=generation;
+    Digest digest{};if(ready)digest=stream.digest;records.clear(std::memory_order_release);
+    if(ready){
+        const CheckedAsset asset=bind_checked("sound-stream","aica-str-dat",digest);
+        if(records.test_and_set(std::memory_order_acquire)){faults.fetch_add(1);return;}
+        if(stream.generation.load()==generation){stream.asset.store(asset.value);stream.bound.store(generation,std::memory_order_release);}
+        records.clear(std::memory_order_release);
+    }
 }
+void stream_source_failed(){stream.bound.store(0);stream.generation.store(0);faults.fetch_add(1);}
+void stream_source(const Digest& digest){
+    stream.bound.store(0);
+    if(records.test_and_set(std::memory_order_acquire)){stream_source_failed();return;}
+    if(serial==0xffffffffU){records.clear(std::memory_order_release);stream_source_failed();return;}
+    stream.generation.store(++serial,std::memory_order_release);stream.digest=digest;
+    records.clear(std::memory_order_release);
+}
+unsigned stream_generation(){return stream.generation.load(std::memory_order_acquire);}
 AudioUse play_ticket(Consumer consumer,CheckedAsset asset){
     AudioUse use;use.consumer=consumer;use.count=1;use.assets[0]=asset;use.tickets[0]=audio_ticket();return use;
 }
@@ -94,6 +115,12 @@ AudioUse bank_ticket(unsigned bank,unsigned generation){
     const CheckedAsset m{b.mram.load()},a{b.aram.load()};
     if(b.generation.load(std::memory_order_acquire)!=generation || b.bound.load(std::memory_order_acquire)!=generation)return play_ticket(SoundBank,{});
     AudioUse use=play_ticket(SoundBank,m);use.count=2;use.assets[1]=a;use.tickets[1]=audio_ticket();return use;
+}
+AudioUse stream_ticket(unsigned generation){
+    if(!generation || stream.generation.load(std::memory_order_acquire)!=generation || stream.bound.load(std::memory_order_acquire)!=generation)return play_ticket(SoundStream,{});
+    const CheckedAsset asset{stream.asset.load()};
+    if(stream.generation.load(std::memory_order_acquire)!=generation || stream.bound.load(std::memory_order_acquire)!=generation)return play_ticket(SoundStream,{});
+    return play_ticket(SoundStream,asset);
 }
 void played(const AudioUse& use){
     for(unsigned i=0;i<use.count && i<2;++i)queued_checked(use.tickets[i],use.consumer,use.assets[i]);

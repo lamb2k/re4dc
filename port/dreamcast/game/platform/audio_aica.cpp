@@ -1192,6 +1192,9 @@ u32 g_strEntN;
 
 enum { kStrIdle, kStrPrep, kStrReady, kStrPlaying };
 struct Stream {
+#if RE4DC_GC_ASSET_GATE
+    unsigned asset_generation;
+#endif
     volatile u8 state;           // kStr*; prep: the reader fills the ring from the start
     volatile u8 want;            // the driver's voice L is running
     volatile u8 dead;            // the driver freed the voices
@@ -1262,12 +1265,18 @@ void str_flush(RegWriter& w)
         if (oct & 8) oct -= 16;
         u64 r = 44100ull * (1024 + (freq & 1023));
         s.rate_q10 = oct >= 0 ? r << oct : r >> -oct;
+#if RE4DC_GC_ASSET_GATE
+        const auto asset_use=re4dc_gcasset::stream_ticket(s.asset_generation);
+#endif
         for (int c = 0; c < s.nch; c++) {
             u16 pan = s.nch == 1 ? dipan(s.v[0]->vs.mix.pan) : dipan(c ? 127 : 0);
             s.sent_tl[c] = str_tl(c);
             ch_start(w, s.ch[c], g_strRing + c * kStrChBytes, 2 * kStrHalfSamples, 1, 0, freq, s.sent_tl[c], pan,
                      31, 0, 0, 28, s.play_cont[c], 3);
         }
+#if RE4DC_GC_ASSET_GATE
+        re4dc_gcasset::played(asset_use);
+#endif
         s.t0 = timer_us_gettime64();
         s.state = kStrPlaying;
         ++S.str_starts;
@@ -1629,6 +1638,22 @@ bool str_index_load()
 #endif
     g_strEntN = h[1];
     memcpy(g_strEnt, h + 4, g_strEntN * sizeof(StrEnt));
+#if RE4DC_GC_ASSET_GATE
+    // Conservative whole-container proof: AIS1 metadata + all intro/loop
+    // payloads stay one immutable source identity. This adds one full file
+    // read in diagnostic builds, before any ring claim or audio lock.
+    {
+        const file_t asset_file=fs_open("/cd/bgm/aica_str.dat",O_RDONLY);
+        const auto asset_bytes=asset_file<0?-1:fs_total(asset_file);
+        re4dc_gcasset::Digest digest{};
+        const auto read=[](void* context,void* target,unsigned bytes)->unsigned {
+            const ssize_t count=fs_read(*static_cast<const file_t*>(context),target,bytes);return count<0?0:unsigned(count);
+        };
+        const bool bound=asset_bytes>0 && asset_bytes<=0x1fffffff && re4dc_gcasset::fingerprint_read(digest,read,const_cast<file_t*>(&asset_file),unsigned(asset_bytes));
+        if(asset_file>=0)fs_close(asset_file);
+        if(bound)re4dc_gcasset::stream_source(digest);else re4dc_gcasset::stream_source_failed();
+    }
+#endif
     for (u32 i = 0; i < g_strEntN; i++) {
         const StrEnt& e = g_strEnt[i];
         re4dc_log("aica: stream %u:%u sbb=%06x %u Hz ch=%u intro=%u loop=%u samples\n", (unsigned) (e.flags >> 8 & 255),
@@ -1692,6 +1717,9 @@ void str_scan()
 #endif
         if (Snd_str_work[i].voiceL == (void*) vl && vl->vs.strm == 1 && vr->vs.strm == 1) {
             Stream& s = g_str;
+#if RE4DC_GC_ASSET_GATE
+            s.asset_generation=re4dc_gcasset::stream_generation();
+#endif
             s.slot = i;
             s.e = e;
             s.nch = (u8) nch;

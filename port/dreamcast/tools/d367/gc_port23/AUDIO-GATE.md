@@ -45,7 +45,23 @@ queue adapter exists only in host test builds; production key-on cannot invoke
 catalog lookup through that adapter. This reduces queue storage while keeping
 the same fail-closed overflow and terminal accounting.
 
-Current evidence is bounded host source/helper controls. Complete streaming
-playback, movie audio, audio admission close/open under actual g_lock, shutdown
+Disc streaming uses one conservative exact full aica_str.dat container SHA,
+including AIS1 metadata and all intro/loop payloads. The reader computes it
+once before any stream claim or g_lock; main bank_pump binds its checked token.
+The claimed stream saves that source generation through existing s.gen prefill
+checks. Actual ready+want playback captures one ticket only after all required
+channels have been acquired, then completes it after the accepted key-ons.
+Ready-only, stopped/missing work and a rejected channel pair do not emit.
+Reread/source replacement changes generation and rejects stale prepared work;
+catalog replacement also invalidates every old checked token. A mixed-source
+container must remain unknown until its complete exact contents are proved.
+
+Cost is explicit: diagnostic builds add one full file read and SHA256 pass at
+stream-reader startup, with512-byte scratch; files above0x1fffffff bytes are
+rejected by this bounded identity helper. Stream pending metadata adds64 host
+BSS bytes and the live Stream gains one gated generation word. No runtime
+timing or actual SH4/link/memory gate is claimed for that additional load cost.
+
+Current evidence is bounded host source/helper controls. Movie audio, audio admission close/open under actual g_lock, shutdown
 pump, room BEGIN/END, target syntax/size, full image and guest gates remain open.
 No complete I-001 pass follows from these bank controls.
