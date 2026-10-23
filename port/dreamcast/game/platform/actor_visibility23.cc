@@ -8,6 +8,43 @@ extern "C" void re4dc_log(const char*,...);
 extern "C" {unsigned re4dc_actor_visibility23_mode=0;}
 namespace {
 Re4dcActorVisibility23Stats stats{};
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+actor_visibility23::witness::State owner_witness23;
+unsigned witness_word23(float value){unsigned word;std::memcpy(&word,&value,4);return word;}
+void witness_report23(){
+ const auto& w=owner_witness23;
+ re4dc_log("AV23OWNER complete=%u qualified=%u fail=%x mode=%u binds=%u owner=%p id=%x serial=%u epoch=%u life=%u unattributed=%u samples=4 maxlines=39\n",
+  unsigned(w.complete),unsigned(w.qualified()),w.failures,w.mode,w.binds,reinterpret_cast<void*>(w.owner.owner),w.owner.id,w.owner.serial,w.owner.epoch,w.owner.life,w.unattributed);
+ for(unsigned role=0;role<2;++role){const auto& c=w.parts[role];
+  re4dc_log("AV23OWNER_PART role=%u info=%p query=%u bound=%u potential=%u would=%u skip=%u positions=%u triangles=%u\n",
+   role,reinterpret_cast<void*>(w.infos[role]),c.query,c.bound,c.potential,c.would,c.skip,c.positions,c.triangles);
+ }
+ for(unsigned i=0;i<4;++i){const auto& sample=w.samples[i];if(!sample.present)continue;const auto& q=sample.query;const auto& s=q.source;const auto& o=q.owner;const auto& r=q.world;
+  re4dc_log("AV23OWNER_SAMPLE slot=%u token=%u workspace=%u mode=%u owner=%p id=%x serial=%u epoch=%u life=%u role=%u info=%p\n",
+   i,q.token,s.workspace,s.mode,reinterpret_cast<void*>(o.owner),o.id,o.serial,o.epoch,o.life,o.role,reinterpret_cast<void*>(o.info));
+  re4dc_log("AV23OWNER_SOURCE slot=%u flags=%x room=%x game=%u ui=%u lod=%u meshlet=%u path=%u nv=%u nt=%u potential=%u committed=%u\n",
+   i,o.flags,o.room,o.game,o.ui,s.lod,s.meshlet,s.path,s.nv,s.nt,unsigned(q.potential),unsigned(q.committed));
+  re4dc_log("AV23OWNER_ADDR slot=%u positions=%p blob=%p records=%p\n",i,reinterpret_cast<void*>(s.positions),reinterpret_cast<void*>(s.blob),reinterpret_cast<void*>(s.records));
+  re4dc_log("AV23OWNER_BOX slot=%u words=%08x,%08x,%08x,%08x,%08x,%08x\n",i,
+   witness_word23(q.box[0]),witness_word23(q.box[1]),witness_word23(q.box[2]),witness_word23(q.box[3]),witness_word23(q.box[4]),witness_word23(q.box[5]));
+  re4dc_log("AV23OWNER_VIEW slot=%u words=%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x\n",i,
+   witness_word23(q.words[0]),witness_word23(q.words[1]),witness_word23(q.words[2]),witness_word23(q.words[3]),witness_word23(q.words[4]),witness_word23(q.words[5]),witness_word23(q.words[6]),witness_word23(q.words[7]),witness_word23(q.words[8]),witness_word23(q.words[9]),witness_word23(q.words[10]),witness_word23(q.words[11]),witness_word23(q.words[12]),witness_word23(q.words[13]),witness_word23(q.words[14]),witness_word23(q.words[15]),witness_word23(q.words[16]),witness_word23(q.words[17]),witness_word23(q.words[18]),witness_word23(q.words[19]),witness_word23(q.words[20]),witness_word23(q.words[21]),witness_word23(q.words[22]),witness_word23(q.words[23]),witness_word23(q.words[24]));
+  re4dc_log("AV23OWNER_WORLD slot=%u stage=%u field=%u result=%u storage=%p current_storage=%p metadata=%p current_metadata=%p\n",
+   i,r.stage,r.field,r.result,reinterpret_cast<void*>(r.storage),reinterpret_cast<void*>(r.current_storage),reinterpret_cast<void*>(r.metadata),reinterpret_cast<void*>(r.current_metadata));
+  re4dc_log("AV23OWNER_RECEIPT slot=%u owner=%u active=%u complete=%u epoch=%u stamp=%u frame=%u current_frame=%u scene=%u current_scene=%u\n",
+   i,r.owner,r.active,r.complete,r.epoch,r.stamp,r.frame,r.current_frame,r.scene,r.current_scene);
+  re4dc_log("AV23OWNER_COVER slot=%u fpscr=%x current_fpscr=%x coverage=%x required=%x room=%x bytes=%u version=%u\n",
+   i,r.fpscr,r.current_fpscr,r.coverage,r.required,r.room,r.metadata_bytes,r.metadata_version);
+  re4dc_log("AV23OWNER_RANGE slot=%u near=%08x far=%08x current_near=%08x current_far=%08x\n",
+   i,witness_word23(r.near),witness_word23(r.far),witness_word23(r.current_near),witness_word23(r.current_far));
+ }
+}
+void witness_window23(unsigned event,unsigned serial,unsigned mode,unsigned count){
+ const bool sealed=owner_witness23.sealed;
+ owner_witness23.window(event,serial,mode,count);
+ if(!sealed&&owner_witness23.sealed)witness_report23();
+}
+#endif
 using namespace actor_visibility23;
 struct Entry {Key key;Group group[8];unsigned stamp;unsigned char groups;};
 Entry cache[32]{};unsigned cache_epoch23;
@@ -21,6 +58,21 @@ bool equal(const Key&a,const Key&b) {
 extern "C" void re4dc_actor_visibility23_metadata_check(unsigned bytes){++stats.metadata_checks;stats.metadata_bytes+=bytes;}
 extern "C" int re4dc_actor_visibility23_receipt(int ready){if(ready)++stats.world_receipt_ready;else ++stats.world_receipt_draw;return ready;}
 extern "C" const Re4dcActorVisibility23Stats* re4dc_actor_visibility23_stats(){return &stats;}
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+extern "C" void re4dc_actor_visibility23_witness_begin(const actor_visibility23::witness::Source* value){if(value)owner_witness23.begin(*value);}
+extern "C" void re4dc_actor_visibility23_witness_identity(int status,const actor_visibility23::witness::Owner* value){if(value)owner_witness23.identify(status,*value);}
+extern "C" void re4dc_actor_visibility23_witness_bounds(const float* lo,const float* hi,const float* view,const float* P,const float* V){owner_witness23.bounds(lo,hi,view,P,V);}
+extern "C" void re4dc_actor_visibility23_witness_world(const actor_visibility23::witness::World* value){if(value)owner_witness23.world(*value);}
+extern "C" void re4dc_actor_visibility23_witness_potential(){owner_witness23.potential();}
+extern "C" void re4dc_actor_visibility23_witness_end(int result){
+ if(owner_witness23.pending.tracked){const auto& q=owner_witness23.pending;actor_visibility23::witness::Owner after{};
+  const int status=re4dc_actor_visibility23_witness_owner(reinterpret_cast<const void*>(q.source.owner),reinterpret_cast<const void*>(q.source.info),q.owner.epoch,&after);
+  owner_witness23.revalidate(status,after);
+ }
+ owner_witness23.end(result!=0);
+}
+extern "C" void re4dc_actor_visibility23_witness_skip(unsigned path,unsigned lod,unsigned mi,unsigned nv,unsigned nt){owner_witness23.skip(path,lod,mi,nv,nt);}
+#endif
 extern "C" int re4dc_actor_visibility23_set(unsigned mode){if(mode>2)return 0;re4dc_actor_visibility23_reset();re4dc_actor_visibility23_mode=mode;return 1;}
 extern "C" void re4dc_actor_visibility23_reset(){std::memset(cache,0,sizeof(cache));view23={};cache_epoch23=0;++stats.resets;}
 namespace actor_visibility23 {
@@ -222,6 +274,9 @@ extern "C" void re4dc_actor_visibility23_frame(unsigned render,unsigned open,uns
   re4dc_log("AV23WINDOW event=%u frame=%u mode=%u mask=%x left=%u once=1 metadata_checks=%u metadata_bytes=%u\n",
     unsigned(event),render,re4dc_actor_visibility23_mode,mask,fixture23.left,stats.metadata_checks,stats.metadata_bytes);
  }
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+ witness_window23(unsigned(event),render,fixture23.mode,fixture23.frames);
+#endif
  if(fixture23.active){
   previous23=*re4dc_actor_visibility23_stats();previous_xf23=transformed;
   previous_render23=render;previous_mode23=fixture23.mode;previous_n23=fixture23.frames;pending23=true;

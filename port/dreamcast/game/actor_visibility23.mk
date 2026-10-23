@@ -1,5 +1,18 @@
 # Actor section world-wall experiment; default0 adds no code/data/objects.
 ACTOR_VISIBILITY23 ?= 0
+ACTOR_VISIBILITY23_WITNESS ?= 0
+ifneq ($(ACTOR_VISIBILITY23_WITNESS),0)
+ifneq ($(ACTOR_VISIBILITY23_WITNESS),1)
+$(error ACTOR_VISIBILITY23_WITNESS must be 0 or 1)
+endif
+endif
+ifeq ($(ACTOR_VISIBILITY23_WITNESS),1)
+ifneq ($(ACTOR_VISIBILITY23),1)
+$(error ACTOR_VISIBILITY23_WITNESS needs ACTOR_VISIBILITY23=1)
+endif
+$(OBJDIR)/platform/native_actor_fast.o $(OBJDIR)/platform/actor_visibility23.o $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_VISIBILITY23_WITNESS=1
+$(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_VISIBILITY23_WITNESS=1
+endif
 ifneq ($(ACTOR_VISIBILITY23),0)
 ifneq ($(ACTOR_VISIBILITY23),1)
 $(error ACTOR_VISIBILITY23 must be 0 or 1; runtime mode boots0)
@@ -41,7 +54,7 @@ $(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_VISIBILITY23=1 -I$(ACT
 $(OBJDIR)/platform/actor_visibility23.o: PLATFORM_CPPFLAGS += -DRE4DC_DBG_WARP=1 -O2 -fno-fast-math -ffp-contract=off
 OBJS += $(OBJDIR)/platform/actor_visibility23.o $(OBJDIR)/shz_bounds23.o
 $(TARGET): $(OBJDIR)/platform/actor_visibility23.o $(OBJDIR)/shz_bounds23.o
-$(OBJDIR)/platform/actor_visibility23.o: platform/actor_visibility23.cc platform/include/actor_visibility23.h platform/include/actor_visibility23_window.h $(ACTOR_VISIBILITY23_SDK)/include/sh4zam/shz_bounds.h
+$(OBJDIR)/platform/actor_visibility23.o: platform/actor_visibility23.cc platform/include/actor_visibility23.h platform/include/actor_visibility23_window.h platform/include/actor_visibility23_witness.h $(ACTOR_VISIBILITY23_SDK)/include/sh4zam/shz_bounds.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(KOS_CFLAGS) $(PLATFORM_CPPFLAGS) -MMD -MP -c $< -o $@
 $(OBJDIR)/platform/native_static.o: platform/include/actor_visibility23_world.h $(ACTOR_VISIBILITY23_CERT)/actor_visibility23_r119_certificate.h

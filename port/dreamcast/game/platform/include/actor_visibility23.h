@@ -2,7 +2,13 @@
 #ifndef RE4DC_ACTOR_VISIBILITY23
 #define RE4DC_ACTOR_VISIBILITY23 0
 #endif
+#ifndef RE4DC_ACTOR_VISIBILITY23_WITNESS
+#define RE4DC_ACTOR_VISIBILITY23_WITNESS 0
+#endif
 #if RE4DC_ACTOR_VISIBILITY23
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+#include "actor_visibility23_witness.h"
+#endif
 #include <sh4zam/shz_bounds.h>
 extern "C" {
 struct Re4dcActorVisibility23Stats {

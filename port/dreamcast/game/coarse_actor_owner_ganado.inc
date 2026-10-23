@@ -20,6 +20,10 @@ extern "C" void re4dc_actor_immutable_chunk_reset(unsigned asset_id);  // coarse
 #include "actor_visibility23.h"
 namespace re4dc_material { namespace life {extern unsigned epoch;extern bool exhausted;} }
 extern "C" unsigned re4dc_actor_visibility23_epoch(){return re4dc_material::life::exhausted?0:re4dc_material::life::epoch;}
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+namespace re4dc_material { namespace life {extern unsigned serial;} }
+extern "C" unsigned re4dc_ui_frame();
+#endif
 #endif
 namespace {
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
@@ -958,6 +962,21 @@ extern "C" unsigned re4dc_actor_visibility23_view(float view[12],const void* own
     (void)view;(void)owner;(void)info;return 0;
 #endif
 }
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+// Called only after the original synchronous owner/view admission succeeded.
+// Copy actual cModel lifetime values; diagnostic status never controls drawing.
+extern "C" int re4dc_actor_visibility23_witness_owner(const void* owner,const void* info,unsigned epoch,
+ actor_visibility23::witness::Owner* out){
+ const auto* m=static_cast<const cModel*>(owner);
+ if(!m||!out)return -1;
+ if(m->id!=0x2b)return 0;
+ const auto* first=m->pModelInfo;
+ if(!first||!info||(info!=first&&info!=first->pList)||!epoch||epoch!=re4dc_actor_visibility23_epoch())return -1;
+ *out={reinterpret_cast<std::uintptr_t>(m),reinterpret_cast<std::uintptr_t>(info),unsigned(m->id),unsigned(m->serial),epoch,
+       re4dc_material::life::serial,unsigned(info!=first),unsigned(m->be_flag),unsigned(pG->room_id),unsigned(pG->Frame_cnt),re4dc_ui_frame()};
+ return 1;
+}
+#endif
 extern "C" int re4dc_actor_visibility23_wall(const void* owner,const float view[12],
                                              const float P[7],const float V[6],
                                              const float lo[3],const float hi[3]) {

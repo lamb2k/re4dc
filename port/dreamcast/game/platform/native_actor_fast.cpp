@@ -1662,6 +1662,11 @@ static bool section_wall23(const Re4dcModelPart& p,Frame& f,const BlobHeader* bl
        p.depth_mode!=0) {++st.material_draw;return false;}
     float view[12];const unsigned epoch=re4dc_actor_visibility23_view(view,p.model,p.info);
     if(!epoch){++st.identity_draw;return false;}
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+    actor_visibility23::witness::Owner identity{};
+    const int identity_status=re4dc_actor_visibility23_witness_owner(p.model,p.info,epoch,&identity);
+    re4dc_actor_visibility23_witness_identity(identity_status,&identity);
+#endif
     actor_visibility23::Key key{f.positions,blob,records.r,epoch,f.position_count,p.stream_bytes,
                                (unsigned short)mi,(unsigned short)m.n.vertices(),
                                (unsigned char)f.position_stride,(unsigned char)records.stride};
@@ -1677,12 +1682,35 @@ static bool section_wall23(const Re4dcModelPart& p,Frame& f,const BlobHeader* bl
         ++st.numeric_draw;return false;
     }
     ++st.bounded_sections;st.bounded_records+=nv;
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+    re4dc_actor_visibility23_witness_bounds(lo,hi,view,p.projection,p.viewport);
+#endif
     ++st.wall_tests;
     if(!re4dc_actor_visibility23_wall(p.model,view,p.projection,p.viewport,lo,hi))return false;
     ++st.hidden_sections;st.potential_records+=nv;
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+    re4dc_actor_visibility23_witness_potential();
+#endif
     if(re4dc_actor_visibility23_mode!=2)return false;
     st.positions_avoided+=nv;st.triangles_avoided+=nt;return true;
 }
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+static bool observed_section_wall23(const Re4dcModelPart& p,Frame& f,const BlobHeader* blob,
+ const MeshletInfo& m,const Records& records,unsigned mi,unsigned nv,unsigned nt,unsigned level,unsigned path){
+ const actor_visibility23::witness::Source source{reinterpret_cast<std::uintptr_t>(p.model),reinterpret_cast<std::uintptr_t>(p.info),
+  reinterpret_cast<std::uintptr_t>(f.positions),reinterpret_cast<std::uintptr_t>(blob),reinterpret_cast<std::uintptr_t>(records.r),
+  frame_serial,re4dc_actor_visibility23_mode,level,mi,nv,nt,path};
+ re4dc_actor_visibility23_witness_begin(&source);
+ const bool result=section_wall23(p,f,blob,m,records,mi,nv,nt);
+ re4dc_actor_visibility23_witness_end(result);
+ return result;
+}
+#define AV23_SECTION23 observed_section_wall23
+#define AV23_WITNESS_ARGS(level,path) ,level,path
+#else
+#define AV23_SECTION23 section_wall23
+#define AV23_WITNESS_ARGS(level,path)
+#endif
 #endif
 
 // ---------------------------------------------------------------- lights --
@@ -5387,7 +5415,11 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         if (census_cur) { census_cur->nv += nv; census_cur->nt += nt; census_cur->lvl += level; }
 #endif
 #if RE4DC_ACTOR_VISIBILITY23
-        if(section_wall23(p,f,blob,m,r,mi,nv,nt)){++stats.meshlets_culled;e.input+=nt;continue;}
+        if(AV23_SECTION23(p,f,blob,m,r,mi,nv,nt AV23_WITNESS_ARGS(level,0))){
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+            re4dc_actor_visibility23_witness_skip(0,level,mi,nv,nt);
+#endif
+            ++stats.meshlets_culled;e.input+=nt;continue;}
 #endif
         unsigned all, any;
 #if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
@@ -6020,7 +6052,11 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         ++stats.meshlets; stats.vertices += nv; stats.corners += ni; stats.triangles += nt;
         if (kCrowd) stats.crowd_triangles[tier] += nt;
 #if RE4DC_ACTOR_VISIBILITY23
-        if(section_wall23(p,f,blob,m,r,mi,nv,nt)){++stats.meshlets_culled;e.input+=nt;continue;}
+        if(AV23_SECTION23(p,f,blob,m,r,mi,nv,nt AV23_WITNESS_ARGS(level,1))){
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+            re4dc_actor_visibility23_witness_skip(1,level,mi,nv,nt);
+#endif
+            ++stats.meshlets_culled;e.input+=nt;continue;}
 #endif
         unsigned all, any;
         APROF_COUNT(APROF_N_VERTS, nv); APROF_COUNT(APROF_N_MESHLETS, 1);

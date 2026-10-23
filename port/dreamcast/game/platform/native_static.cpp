@@ -813,6 +813,9 @@ bool inverse(const float* m,float* out){
 // native_model.cpp project() applied to modelview-space positions.
 #if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
 #include "include/actor_visibility23_world.h"
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+#include "include/actor_visibility23_witness.h"
+#endif
 inline unsigned actor_world23_mode(){
     unsigned fpscr=0;
 #if defined(__sh__)
@@ -4652,21 +4655,59 @@ extern "C" int re4dc_actor_world23_context(unsigned room){
     return ps2_crc32(oc,bytes)==ACTOR_VISIBILITY23_OCCL_CRC;
 }
 extern "C" int re4dc_actor_world23_ready(const float* view,const float* P,const float* V,float near,float far){
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+    actor_visibility23::witness::World witness{};
+    // Scope is entirely synchronous. Only copied numeric values leave this call.
+    struct Publish {actor_visibility23::witness::World& value;
+        ~Publish(){re4dc_actor_visibility23_witness_world(&value);}} publish{witness};
+    witness.storage=reinterpret_cast<std::uintptr_t>(actor_world23.storage);
+    witness.metadata=reinterpret_cast<std::uintptr_t>(actor_world23.metadata);
+    witness.current_storage=reinterpret_cast<std::uintptr_t>(ps2w.storage);
+    witness.owner=actor_world23.owner;witness.active=actor_world23.active;witness.complete=actor_world23.complete;
+    witness.epoch=actor_world23.epoch;witness.stamp=actor_world23.stamp;witness.frame=actor_world23.frame;
+    witness.scene=actor_world23.scene;witness.fpscr=actor_world23.mode;witness.room=ps2w.room;
+    witness.stage=actor_visibility23::witness::Scene;
+#endif
     const unsigned scene=re4dc_actor_world23_scene();
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+    witness.current_scene=scene;
+#endif
     if(!scene || ps2w.room!=0x119 || !ps2w.storage ||
        enemyVisSidecarCrc!=0xfb5072f8U)return 0;
     const float ex=-(view[0]*view[3]+view[4]*view[7]+view[8]*view[11]);
     const float ez=-(view[2]*view[3]+view[6]*view[7]+view[10]*view[11]);
     const float fx=(ex+2000.0f)*(1.0f/4000.0f),fz=(ez+10000.0f)*(1.0f/4000.0f);
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+    witness.stage=actor_visibility23::witness::Cell;
+#endif
     if(!(fx>=28&&fx<30&&fz>=7&&fz<8))return 0;
     const unsigned k=unsigned(fx)-28;
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+    witness.field=k?7U:5U;witness.coverage=actor_world23.coverage[k];witness.required=actor_visibility23::r119::full[k];
+    witness.near=actor_world23.near;witness.far=actor_world23.far[k];witness.current_near=near;witness.current_far=far;
+    const unsigned witness_frame=re4dc_ui_frame(),witness_mode=actor_world23_mode();
+    witness.current_frame=witness_frame;witness.current_fpscr=witness_mode;witness.stage=actor_visibility23::witness::Receipt;
+    if(!actor_world23.ready(witness_frame,ps2w.storage,view,P,V,k,near,far,scene,witness_mode))return 0;
+#else
     if(!actor_world23.ready(re4dc_ui_frame(),ps2w.storage,view,P,V,k,near,far,scene,actor_world23_mode()))return 0;
+#endif
     // Same immutable room metadata used at this actual world submission.
     unsigned bytes=0,version=0,flags=0;const re4dc_room_header* header=nullptr;
     const void* current=re4dc_room_section("OCCL",&bytes,&version,&flags,&header);
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+    witness.stage=actor_visibility23::witness::Metadata;
+    witness.current_metadata=reinterpret_cast<std::uintptr_t>(current);witness.metadata_bytes=bytes;witness.metadata_version=version;
+#endif
     if(current!=actor_world23.metadata || bytes!=1376 || version!=2)return 0;
     const unsigned char field[2]={static_cast<unsigned char>(k?7:5),0};
+#if RE4DC_ACTOR_VISIBILITY23_WITNESS
+    witness.stage=actor_visibility23::witness::Placement;
+    const int intact=re4dc_ps2_placements_intact(0x119,field,1);
+    witness.result=intact?1U:0U;
+    return intact;
+#else
     return re4dc_ps2_placements_intact(0x119,field,1);
+#endif
 }
 #endif
 
