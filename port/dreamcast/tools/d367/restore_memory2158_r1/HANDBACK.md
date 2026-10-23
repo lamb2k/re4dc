@@ -1,0 +1,5 @@
+Source-only implementation checkpoint. No actual restoration, image hashing, resource census, profile or guest has occurred. Actual ce034 restoration and later e086 restoration are main-owned.
+
+Resume in this folder: README.md describes the deliberate executor; restore.py uses the immutable original memory archive stream with retained source/parent DFDs and full written target readback. test_restore.py exercises only tiny temporary files;13 methods passed before the latest additional lease-identity control. Rerun all controls before sealing. INPUTS.json contains retained local small-receipt pins, stays private and is not committed. No image or actual evidence payload is committed.
+
+Remaining: run the new lease control, seal source/host evidence, obtain independent review with restore_source_seal_sha256, then return exact invocation to main. Do not execute production --execute or create actual media/census. Preserve all old seals/stage fade/delta/case results. Source checkpoint and remote proof are in CHECKPOINT.json after checkpoint.py completes.
