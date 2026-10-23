@@ -20,6 +20,55 @@ def function(source, marker):
 
 
 class RuntimeTextureTests(unittest.TestCase):
+    def test_integrated_replay_keeps_original_or_fails_retired(self):
+        model = (GAME / 'platform/native_model.cpp').read_text()
+        start = model.index('extern "C" void re4dc_model_submit(const Re4dcModelPart* p){')
+        gateway = model[start:model.index('#if RE4DC_NATIVE_ACTOR\n', start)]+'observe_selected(p);\n}\n'
+        bridge = function((GAME / 'model_bridge.cpp').read_text(), 'extern "C" unsigned re4dc_gcasset_model_identity(')
+        ui = (GAME / 'platform/native_ui.cpp').read_text()
+        helpers = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
+        fixture = r'''
+#include "gc_asset_members.h"
+#include <cassert>
+#include <cstdio>
+#include <cstdarg>
+#include <cstring>
+#include <string>
+#include <vector>
+struct cModel{unsigned kindid,id,type,nParts;};struct cModelInfo{const void* pData;};
+struct Re4dcModelPart{const void* model;const void* info;unsigned serial;const void* world;const void* view;unsigned source_key[3];const void* stream;};
+std::string logs;bool sq_held;
+extern "C" void re4dc_log(const char* fmt,...){assert(!sq_held);char text[256];va_list ap;va_start(ap,fmt);vsnprintf(text,sizeof text,fmt,ap);va_end(ap);logs+=text;}
+#define RE4DC_PROFILE_SCOPE(...) ((void)0)
+#define RE4DC_MODEL_DIAG() true
+#define PP_PATH(...) ((void)0)
+bool re4dc_static_submit(const Re4dcModelPart*){return false;}
+''' + bridge + '\n' + helpers + r'''
+void observe_selected(const Re4dcModelPart* p){gcasset_model_prepare(p);sq_held=true;gcasset_model_accept();sq_held=false;}
+''' + gateway + r'''
+std::vector<unsigned char> blob(unsigned byte){std::vector<unsigned char>b(128);unsigned one=1,off=32;std::memcpy(b.data(),&one,4);std::memcpy(b.data()+16,&off,4);std::memcpy(b.data()+20,"BIN",3);b[40]=byte;return b;}
+std::string id(const re4dc_gcasset::Digest&d){std::string r;char buf[3];for(unsigned i=0;i<20;++i){snprintf(buf,sizeof buf,"%02x",d.bytes[i]);r+=buf;}return r;}
+int main(){using namespace re4dc_gcasset;int ownerA,ownerB;cModel model{};auto a=blob(1),b=blob(2);ModelMember ma,mb;
+ install(nullptr,0);begin(0x111,1,Required);assert(member_adopt(&ownerA,a.data(),128,true)&&member_capture(a.data()+32));assert(member_adopt(&ownerB,b.data(),128,true)&&member_capture(b.data()+32));assert(member_lookup(a.data()+32,&ma)&&member_lookup(b.data()+32,&mb));
+ cModelInfo info{b.data()+32};Re4dcModelPart queued{&model,&info,0,nullptr,nullptr,{0,0,0},a.data()+32};
+ {ReplayScope replay(ma.serial,1U<<SourceGeometry);re4dc_model_submit(&queued);}member_flush();
+ assert(logs.find("id="+id(ma.digest))!=std::string::npos);assert(logs.find("id="+id(mb.digest))==std::string::npos);
+ logs.clear();member_retire(&ownerA);
+ {ReplayScope replay(ma.serial,1U<<SourceGeometry);re4dc_model_submit(&queued);}member_flush();
+ assert(logs.find("unbound-accepted-model")!=std::string::npos);assert(logs.find("id="+id(mb.digest))==std::string::npos);
+}
+'''
+        with tempfile.TemporaryDirectory(prefix='gc-port23-replay-', dir='/dev/shm') as temporary:
+            root = Path(temporary)
+            (root / 'fixture.cpp').write_text(fixture)
+            executable = root / 'fixture'
+            subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
+                            '-DRE4DC_GC_ASSET_GATE=1', '-DRE4DC_NATIVE_STATIC=1',
+                            '-I', str(GAME / 'platform/include'), str(root / 'fixture.cpp'),
+                            str(GAME / 'platform/gc_asset_members.cpp'), str(GAME / 'platform/gc_asset_gate.cpp'),
+                            '-o', str(executable)], check=True)
+            subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
+
     def test_actual_source_gateway_and_deferred_serial(self):
         source = (GAME / 'platform/native_model.cpp').read_text()
         start = source.index('extern "C" void re4dc_model_submit(const Re4dcModelPart* p){')
