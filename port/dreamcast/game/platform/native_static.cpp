@@ -1801,8 +1801,8 @@ void light_part(MeshView& v,const re4dc::room::MeshRecord& mesh,re4dc::room::Mes
     // A first-light rewrite outlives this caller and later deferred lighting
     // snapshots. Unknown derivation must revoke the stable owner as well as
     // this draw's selected use; a later flag-free caller cannot promote it.
-    if(!re4dc_gcasset::source_use.serial || re4dc_gcasset::source_use.payload!=&v.asset_proof ||
-       re4dc_gcasset::source_use.serial!=v.asset_proof.serial)
+    if(v.asset_proof.owner && (!re4dc_gcasset::source_use.serial || re4dc_gcasset::source_use.payload!=&v.asset_proof ||
+       re4dc_gcasset::source_use.serial!=v.asset_proof.serial))
         re4dc_gcasset::payload_invalidate(v.asset_proof,&v);
 #endif
     auto* vertices=reinterpret_cast<re4dc::room::CompactVertex12*>(v.storage+v.package.header().vertex_offset);
@@ -2160,7 +2160,9 @@ void gcasset_static_policy(re4dc_gcasset::StaticManifest& source,unsigned room){
 #if RE4DC_PS2_INTERIOR_CULL
     if(room!=pc::kPcRoom)static_manifest_note(source,PCL1_CELL,NotApplicable);
     else if(pc::data.block)static_manifest_receipt(source,PCL1_CELL,pc::data.asset_proof,&pc::data,1);
-    else static_manifest_note(source,PCL1_CELL,Absent);
+    // A null block also follows rejected/short/failed reads or an unqualified
+    // package. No durable original absence receipt exists for those cases.
+    else static_manifest_note(source,PCL1_CELL,Unproven);
 #else
     (void)room;static_manifest_note(source,PCL1_CELL,Disabled);
 #endif

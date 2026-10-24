@@ -270,7 +270,11 @@ unsigned writes;
 unsigned char geometry[128]{};MeshView view,second;re4dc::room::MeshRecord mesh;re4dc::room::MeshPart part;Re4dcModelPart p;
 StaticManifest build(){StaticManifest m;assert(static_manifest_begin(m,StaticMesh,0x111,7,geometry,sizeof geometry));for(unsigned i=0;i<StaticRoleCount;++i)assert(static_manifest_note(m,StaticRole(i),NotApplicable));return m;}
 void capture(){auto m=build();assert(payload_capture_composite(view.asset_proof,&view,geometry,sizeof geometry,nullptr,0,m));}
-int main(){assert(install(nullptr,0));begin(0x111,1,Required);capture();const unsigned serial=view.asset_proof.serial;
+int main(){assert(install(nullptr,0));begin(0x111,1,Required);
+ // No source was ever published and this first light is subsequently culled:
+ // a memory-only write guard must not invent an accepted-use error.
+ logs.clear();sq=true;light_part(view,mesh,part,p);sq=false;payload_flush_all();assert(logs.empty() && !view.asset_proof.serial);writes=0;
+ capture();const unsigned serial=view.asset_proof.serial;
  {PayloadScope selected(view.asset_proof,&view);sq=true;light_part(view,mesh,part,p);sq=false;}assert(view.asset_proof.serial==serial);
  {PayloadScope selected(view.asset_proof,&view);source_use.serial=0;sq=true;light_part(view,mesh,part,p);sq=false;}assert(!view.asset_proof.serial && writes==2);
  {PayloadScope later(view.asset_proof,&view,nullptr,nullptr,(1U<<SourceGeometry)|(1U<<Weapon));assert(!source_use.serial);sq=true;payload_accept(source_use.payload,source_use.serial,source_use.mask);sq=false;}payload_flush_all();assert(logs.find("consumer=3")!=std::string::npos && logs.find("GC-ASSET v=")==std::string::npos);payload_retire(view.asset_proof);
@@ -282,9 +286,10 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);capture();const un
 }
 '''
         self.run_cpp(fixture)
-        old='if(!re4dc_gcasset::source_use.serial || re4dc_gcasset::source_use.payload!=&v.asset_proof ||'
+        old='if(v.asset_proof.owner && (!re4dc_gcasset::source_use.serial ||'
         self.assertEqual(fixture.count(old),1)
-        self.run_cpp(fixture.replace(old,'if(false && (!re4dc_gcasset::source_use.serial || re4dc_gcasset::source_use.payload!=&v.asset_proof ||').replace('re4dc_gcasset::source_use.serial!=v.asset_proof.serial)','re4dc_gcasset::source_use.serial!=v.asset_proof.serial))'),reject=True)
+        self.run_cpp(fixture.replace(old,'if(false && (!re4dc_gcasset::source_use.serial ||'),reject=True)
+        self.run_cpp(fixture.replace(old,'if(true && (!re4dc_gcasset::source_use.serial ||'),reject=True)
 
     def test_actual_pcl_load_captures_file_not_generated_suffix_and_revokes_before_free(self):
         source=(GAME/'platform/native_static.cpp').read_text()
@@ -309,12 +314,18 @@ std::vector<unsigned char> file(kPcFileBytes,0);bool short_read=false,missing=fa
 file_t fs_open(const char*,int){return missing?-1:1;}unsigned fs_total(file_t){return file.size();}void fs_close(file_t){}ssize_t fs_read(file_t,void*p,unsigned n){assert(!data.asset_proof.serial);if(short_read)return -1;memcpy(p,file.data(),n);return n;}
 void*re4dc_static_alloc(unsigned n){return new unsigned char[n];}void re4dc_static_free(void*p){assert(!data.asset_proof.serial);delete[]static_cast<unsigned char*>(p);}int re4dc_static_heap_free(){return 100000;}
 '''+function(source,'inline unsigned unload(){')+'\n'+function(source,'inline bool load(){')+r'''
-int main(){assert(install(nullptr,0));unsigned h[]={0,0x100,1,2,512,1,1,0};memcpy(file.data(),h,sizeof h);memcpy(file.data(),"PCL1",4);Cell c{0,1};memcpy(file.data()+32,&c,sizeof c);const Digest original=fingerprint(file.data(),file.size());assert(load());assert(data.asset_proof.serial && data.asset_proof.bytes==file.size() && !data.asset_proof.base);AssetDescription desc;assert(describe_checked(data.asset_proof.asset,&desc));assert(!memcmp(original.bytes,desc.digest.bytes,32));memset(st.fr,99,kFrBytes);assert(load() && data.loads==1);assert(describe_checked(data.asset_proof.asset,&desc) && !memcmp(original.bytes,desc.digest.bytes,32));assert(unload()==kPcFileBytes+2*kFrBytes);assert(!data.asset_proof.serial && !data.block && !st.fr && !trans.fr);short_read=true;assert(!load() && !data.asset_proof.serial);short_read=false;file[0]='X';assert(!load() && !data.asset_proof.serial);assert(data.fails==2 && invalidations>=2);payload_retire(data.asset_proof);
+namespace pc{constexpr unsigned kPcRoom=::kPcRoom;auto&data=::data;}
+'''+function(source[source.rindex('void gcasset_static_policy('):],'void gcasset_static_policy(re4dc_gcasset::StaticManifest& source,unsigned room){')+r'''
+unsigned char geometry[128]{};
+bool seal(){StaticManifest m;assert(static_manifest_begin(m,StaticView,0x100,7,geometry,sizeof geometry));for(unsigned i=0;i<StaticRoleCount;++i)if(i!=STD_INDEX && i!=PCL1_CELL)assert(static_manifest_note(m,StaticRole(i),NotApplicable));gcasset_static_policy(m,0x100);Digest d;return static_manifest_seal(m,d);}
+int main(){assert(install(nullptr,0));unsigned h[]={0,0x100,1,2,512,1,1,0};memcpy(file.data(),h,sizeof h);memcpy(file.data(),"PCL1",4);Cell c{0,1};memcpy(file.data()+32,&c,sizeof c);const Digest original=fingerprint(file.data(),file.size());assert(load());assert(seal());assert(data.asset_proof.serial && data.asset_proof.bytes==file.size() && !data.asset_proof.base);AssetDescription desc;assert(describe_checked(data.asset_proof.asset,&desc));assert(!memcmp(original.bytes,desc.digest.bytes,32));memset(st.fr,99,kFrBytes);assert(load() && data.loads==1);assert(describe_checked(data.asset_proof.asset,&desc) && !memcmp(original.bytes,desc.digest.bytes,32));assert(unload()==kPcFileBytes+2*kFrBytes);assert(!data.asset_proof.serial && !data.block && !st.fr && !trans.fr && !seal());short_read=true;assert(!load() && !data.asset_proof.serial && !seal());short_read=false;file[0]='X';assert(!load() && !data.asset_proof.serial && !seal());missing=true;assert(!load() && !seal());st.ok=false;assert(!load() && !seal());assert(data.fails==3 && invalidations>=2);payload_retire(data.asset_proof);
 }
 '''
-        self.run_cpp(fixture)
+        self.run_cpp(fixture,['RE4DC_PS2_INTERIOR_CULL=1'])
         old='if(data.asset_proof.owner)re4dc_gcasset::payload_invalidate(data.asset_proof,&data);'
-        self.assertEqual(fixture.count(old),1);self.run_cpp(fixture.replace(old,'if(false)re4dc_gcasset::payload_invalidate(data.asset_proof,&data);'),reject=True)
+        self.assertEqual(fixture.count(old),1);self.run_cpp(fixture.replace(old,'if(false)re4dc_gcasset::payload_invalidate(data.asset_proof,&data);'),['RE4DC_PS2_INTERIOR_CULL=1'],reject=True)
+
+        self.run_cpp(fixture.replace('PCL1_CELL,Unproven','PCL1_CELL,Absent'),['RE4DC_PS2_INTERIOR_CULL=1'],reject=True)
 
     def test_actual_pvs_captures_original_file_with_generated_offsets_excluded(self):
         source=(GAME/'platform/native_static.cpp').read_text();pvs=source[source.index('namespace pvs {\nstruct Head'):]
