@@ -1,0 +1,2 @@
+# Preserve the reviewed source-document bytes, including original line endings.
+* -text
