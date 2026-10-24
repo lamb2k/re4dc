@@ -1,0 +1,24 @@
+{
+ "status": "ROOT_REVIEWED_OFF_STATIC_REFERENCE_NOT_LOCAL_BINDING",
+ "references": {
+  "ACTUAL-READBACK.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review-qa-media-ext4-v5-off-actual-v1/ACTUAL-READBACK.json",
+   "identity": {
+    "size": 19390,
+    "sha256": "0c5601ca579b65dad85d5dd25c65de87262d405da832cabd374f304fe93028cd"
+   }
+  },
+  "BINDER-SUMMARY.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review-qa-media-ext4-v5-off-actual-v1/BINDER-SUMMARY.json",
+   "identity": {
+    "size": 5716,
+    "sha256": "e569bebbca680ba92a28a4411b92af00509b5f190067b2e21c993bf7e5763927"
+   }
+  }
+ },
+ "track03_sha256": "e9cb88f5000c8fec83fc9d92715ffef164a4941153887b0444527308c998840e",
+ "actual_producer_source": "8ce5ee2d00027268c3e69c9c300b819c1b14c63f",
+ "producer_tool_source": "c3dd19b999d3c36e76318a4d3825f8d1ca7310ec",
+ "payload_comparison_source": "427784b1f48aa30742850bb5025925ab619b740e",
+ "local_media_readback_or_baseline": false
+}

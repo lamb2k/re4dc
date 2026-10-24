@@ -1,0 +1,16 @@
+{
+ "status": "EXECUTABLE_SOURCE_HOST_READY_FOR_REVIEW_PENDING_ROOT_OFF_HANDOFF",
+ "utc": "2026-10-24T14:49:57.058384+00:00",
+ "public_tests": 87,
+ "public_pass": 87,
+ "actual_poststage_and_resources": "PENDING_NOT_PASS",
+ "original_six_controller_files_exact": true,
+ "new_actual_baseline": false,
+ "new_OFF_identity": "UNKNOWN",
+ "SDK": 0,
+ "stage": 0,
+ "guest": 0,
+ "production_locks": 0,
+ "runtime_edits": 0,
+ "scope": "Reviewable executable plus strict binding/finalization code; root must hand back actual media before baseline is created"
+}

@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "/usr/bin/python3",
+    "-I",
+    "-S",
+    "-B",
+    "-X",
+    "pycache_prefix=/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/fresh-host-cache",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/run_review_controls.py",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/HOST-RESULTS.json"
+  ],
+  "returncode": 1,
+  "seconds": 0.030569252965506166,
+  "log_sha256": "7f0c2afb147fbb8d539ae4d58407bdf9f61b1b96d14849947c16d636c3f3655a"
+}

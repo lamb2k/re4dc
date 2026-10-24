@@ -1,0 +1,127 @@
+test_KOS_HALT (prior_protocol_tests.Host.test_KOS_HALT) ... ok
+test_KOS_exact4K (prior_protocol_tests.Host.test_KOS_exact4K) ... ok
+test_KOS_incompleteframe (prior_protocol_tests.Host.test_KOS_incompleteframe) ... ok
+test_KOS_malformed (prior_protocol_tests.Host.test_KOS_malformed) ... ok
+test_KOS_missinggoal (prior_protocol_tests.Host.test_KOS_missinggoal) ... ok
+test_KOS_under4K (prior_protocol_tests.Host.test_KOS_under4K) ... ok
+test_KOS_wrongfrag (prior_protocol_tests.Host.test_KOS_wrongfrag) ... ok
+test_actual_helpers (prior_protocol_tests.Host.test_actual_helpers) ... ok
+test_actual_kernel_locks_not_env (prior_protocol_tests.Host.test_actual_kernel_locks_not_env) ... ok
+test_actual_original_failures_preserved (prior_protocol_tests.Host.test_actual_original_failures_preserved) ... ok
+test_atomic_handshake (prior_protocol_tests.Host.test_atomic_handshake) ... ok
+test_case_bounds (prior_protocol_tests.Host.test_case_bounds) ... ok
+test_duplicateFPS (prior_protocol_tests.Host.test_duplicateFPS) ... ok
+test_exactFPS (prior_protocol_tests.Host.test_exactFPS) ... ok
+test_existing_cache (prior_protocol_tests.Host.test_existing_cache) ... ok
+test_grant_H2 (prior_protocol_tests.Host.test_grant_H2) ... ok
+test_grant_admission (prior_protocol_tests.Host.test_grant_admission) ... ok
+test_grant_aggregate_raise (prior_protocol_tests.Host.test_grant_aggregate_raise) ... ok
+test_grant_cap_raise (prior_protocol_tests.Host.test_grant_cap_raise) ... ok
+test_grant_case_expansion (prior_protocol_tests.Host.test_grant_case_expansion) ... ok
+test_grant_exact (prior_protocol_tests.Host.test_grant_exact) ... ok
+test_grant_overall (prior_protocol_tests.Host.test_grant_overall) ... ok
+test_grant_parent (prior_protocol_tests.Host.test_grant_parent) ... ok
+test_grant_subsets (prior_protocol_tests.Host.test_grant_subsets) ... ok
+test_grant_timer (prior_protocol_tests.Host.test_grant_timer) ... ok
+test_grant_unapproved (prior_protocol_tests.Host.test_grant_unapproved) ... ok
+test_grant_wrong_source (prior_protocol_tests.Host.test_grant_wrong_source) ... ok
+test_handshake_exact (prior_protocol_tests.Host.test_handshake_exact) ... ok
+test_handshake_existingcache (prior_protocol_tests.Host.test_handshake_existingcache) ... ok
+test_handshake_forgednonce (prior_protocol_tests.Host.test_handshake_forgednonce) ... ok
+test_handshake_future (prior_protocol_tests.Host.test_handshake_future) ... ok
+test_handshake_late (prior_protocol_tests.Host.test_handshake_late) ... ok
+test_handshake_missing (prior_protocol_tests.Host.test_handshake_missing) ... ok
+test_handshake_missinglock (prior_protocol_tests.Host.test_handshake_missinglock) ... ok
+test_handshake_preexisting (prior_protocol_tests.Host.test_handshake_preexisting) ... ok
+test_handshake_wrong_processgroup (prior_protocol_tests.Host.test_handshake_wrong_processgroup) ... ok
+test_handshake_wrongargv (prior_protocol_tests.Host.test_handshake_wrongargv) ... ok
+test_handshake_wrongcase (prior_protocol_tests.Host.test_handshake_wrongcase) ... ok
+test_handshake_wronggrant (prior_protocol_tests.Host.test_handshake_wronggrant) ... ok
+test_handshake_wrongkit (prior_protocol_tests.Host.test_handshake_wrongkit) ... ok
+test_metadata_member_escape (prior_protocol_tests.Host.test_metadata_member_escape) ... ok
+test_metadata_root_escape (prior_protocol_tests.Host.test_metadata_root_escape) ... ok
+test_missingFPS (prior_protocol_tests.Host.test_missingFPS) ... ok
+test_optimized_entry_refused (prior_protocol_tests.Host.test_optimized_entry_refused) ... ok
+test_owned_PID_reuse (prior_protocol_tests.Host.test_owned_PID_reuse) ... ok
+test_owned_deadline_cleanup (prior_protocol_tests.Host.test_owned_deadline_cleanup) ... ok
+test_release_is_mocked_no_process (prior_protocol_tests.Host.test_release_is_mocked_no_process) ... ok
+test_sealed_unknownfile (prior_protocol_tests.Host.test_sealed_unknownfile) ... ok
+test_syntax (prior_protocol_tests.Host.test_syntax) ... ok
+test_wrongFPS (prior_protocol_tests.Host.test_wrongFPS) ... ok
+test_C_floor (review_controls.Recovery.test_C_floor) ... ok
+test_C_start (review_controls.Recovery.test_C_start) ... ok
+test_GDI_outside_track_refused (review_controls.Recovery.test_GDI_outside_track_refused) ... ok
+test_RAM_actual_host_metadata_and_wrong_hash (review_controls.Recovery.test_RAM_actual_host_metadata_and_wrong_hash) ... ok
+test_V4_producer_refused (review_controls.Recovery.test_V4_producer_refused) ... ok
+test_V5_producer_schema_only (review_controls.Recovery.test_V5_producer_schema_only) ... ok
+test_account_overlapping_path_inode_race (review_controls.Recovery.test_account_overlapping_path_inode_race) ... ok
+test_actual_RAM_inodes_hash_and_symlink (review_controls.Recovery.test_actual_RAM_inodes_hash_and_symlink) ... ok
+test_actual_baseline_absent (review_controls.Recovery.test_actual_baseline_absent) ... ok
+test_actual_binding_absent (review_controls.Recovery.test_actual_binding_absent) ... ok
+test_aggregate (review_controls.Recovery.test_aggregate) ... ok
+test_bool_base_LBA_refused (review_controls.Recovery.test_bool_base_LBA_refused) ... ok
+test_cap_exact_boundary (review_controls.Recovery.test_cap_exact_boundary) ... ok
+test_changed_baseline_inode (review_controls.Recovery.test_changed_baseline_inode) ... ok
+test_changed_baseline_sha (review_controls.Recovery.test_changed_baseline_sha) ... ok
+test_conflicting_shared_inode_size (review_controls.Recovery.test_conflicting_shared_inode_size) ... ok
+test_controller_six_exact (review_controls.Recovery.test_controller_six_exact) ... ok
+test_delta (review_controls.Recovery.test_delta) ... ok
+test_duplicate_base_json_field_refused (review_controls.Recovery.test_duplicate_base_json_field_refused) ... ok
+test_equal_sha_distinct_inode_twice (review_controls.Recovery.test_equal_sha_distinct_inode_twice) ... ok
+test_exact_base_metadata_layout (review_controls.Recovery.test_exact_base_metadata_layout) ... ok
+test_full_current_baseline_membership_required (review_controls.Recovery.test_full_current_baseline_membership_required) ... ok
+test_future_absence_is_charged_when_created (review_controls.Recovery.test_future_absence_is_charged_when_created) ... ok
+test_link_increase_only (review_controls.Recovery.test_link_increase_only) ... ok
+test_missing_baseline_root_refused (review_controls.Recovery.test_missing_baseline_root_refused) ... ok
+test_no_root_omission (review_controls.Recovery.test_no_root_omission) ... ok
+test_original_failure_readbacks_unchanged (review_controls.Recovery.test_original_failure_readbacks_unchanged) ... ok
+test_pending_binding_refused (review_controls.Recovery.test_pending_binding_refused) ... ok
+test_recovery_context_required_in_grant (review_controls.Recovery.test_recovery_context_required_in_grant) ... ok
+test_shared_inode_once (review_controls.Recovery.test_shared_inode_once) ... ok
+test_syntax (review_controls.Recovery.test_syntax) ... ok
+test_unknown_base_metadata_field (review_controls.Recovery.test_unknown_base_metadata_field) ... ok
+test_wrong_OFF_complete_path (review_controls.Recovery.test_wrong_OFF_complete_path) ... ok
+test_wrong_base_redirect_LBA (review_controls.Recovery.test_wrong_base_redirect_LBA) ... ok
+test_wrong_fixture_extent (review_controls.Recovery.test_wrong_fixture_extent) ... ok
+test_wrong_producer_seal (review_controls.Recovery.test_wrong_producer_seal) ... ok
+test_wrong_recovery_context (review_controls.Recovery.test_wrong_recovery_context) ... ok
+
+----------------------------------------------------------------------
+Ran 87 tests in 8.481s
+
+OK
+test_duplicate_raw_JSON_even_equal_value_refuses (__main__.Extra.test_duplicate_raw_JSON_even_equal_value_refuses) ... ok
+test_numeric_layout_wrong_but_valid_JSON_refuses (__main__.Extra.test_numeric_layout_wrong_but_valid_JSON_refuses) ... ok
+test_outside_track_GDI_refuses (__main__.Extra.test_outside_track_GDI_refuses) ... ok
+test_sidecar_sha_substitution_refuses (__main__.Extra.test_sidecar_sha_substitution_refuses) ... ok
+test_symlink_host_file_refuses (__main__.Extra.test_symlink_host_file_refuses) ... ok
+test_valid_changed_provenance_is_a_different_pin (__main__.Extra.test_valid_changed_provenance_is_a_different_pin) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.004s
+
+OK
+PASS87+6 controls and4 semantic mutants; no actual binding
+	Command being timed: "/usr/bin/python3 -I -S -B -X pycache_prefix=/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/fresh-host-cache-r2 /mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/run_review_controls.py /mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/HOST-RESULTS.json"
+	User time (seconds): 2.11
+	System time (seconds): 0.47
+	Percent of CPU this job got: 28%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:09.13
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 29496
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 8370
+	Voluntary context switches: 43214
+	Involuntary context switches: 8
+	Swaps: 0
+	File system inputs: 24
+	File system outputs: 200
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

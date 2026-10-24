@@ -1,0 +1,33 @@
+{
+  "author_public_controls": 87,
+  "extra_controls": 6,
+  "mutants": [
+    {
+      "name": "sidecar",
+      "caught": true,
+      "output": "F\n======================================================================\nFAIL: test_sidecar_sha_substitution_refuses (__main__.Extra.test_sidecar_sha_substitution_refuses)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/run_review_controls.py\", line 37, in test_sidecar_sha_substitution_refuses\n    with self.assertRaisesRegex(RuntimeError,'hash sidecar'):C.host_metadata(root,'a'*64)\nAssertionError: RuntimeError not raised\n\n----------------------------------------------------------------------\nRan 1 test in 0.006s\n\nFAILED (failures=1)\n"
+    },
+    {
+      "name": "symlink",
+      "caught": true,
+      "output": "F\n======================================================================\nFAIL: test_symlink_host_file_refuses (__main__.Extra.test_symlink_host_file_refuses)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/run_review_controls.py\", line 33, in test_symlink_host_file_refuses\n    with self.assertRaisesRegex(RuntimeError,'nonregular'):C.host_metadata(root,'a'*64)\nAssertionError: RuntimeError not raised\n\n----------------------------------------------------------------------\nRan 1 test in 0.003s\n\nFAILED (failures=1)\n"
+    },
+    {
+      "name": "duplicate",
+      "caught": true,
+      "output": "F\n======================================================================\nFAIL: test_duplicate_raw_JSON_even_equal_value_refuses (__main__.Extra.test_duplicate_raw_JSON_even_equal_value_refuses)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/run_review_controls.py\", line 24, in test_duplicate_raw_JSON_even_equal_value_refuses\n    with self.assertRaisesRegex(RuntimeError,'Duplicate'):C.host_metadata(root,'a'*64)\nAssertionError: RuntimeError not raised\n\n----------------------------------------------------------------------\nRan 1 test in 0.003s\n\nFAILED (failures=1)\n"
+    },
+    {
+      "name": "numeric",
+      "caught": true,
+      "output": "F\n======================================================================\nFAIL: test_numeric_layout_wrong_but_valid_JSON_refuses (__main__.Extra.test_numeric_layout_wrong_but_valid_JSON_refuses)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/run_review_controls.py\", line 45, in test_numeric_layout_wrong_but_valid_JSON_refuses\n    with self.assertRaisesRegex(RuntimeError,'fixture layout'):C.host_metadata(root,'a'*64)\nAssertionError: RuntimeError not raised\n\n----------------------------------------------------------------------\nRan 1 test in 0.003s\n\nFAILED (failures=1)\n"
+    }
+  ],
+  "private_binding": false,
+  "SDK_stage_guest": false,
+  "pending_actual": [
+    "test_actual_poststage",
+    "test_actual_resources_union",
+    "test_extra_roots_hardlink_counted_once"
+  ]
+}

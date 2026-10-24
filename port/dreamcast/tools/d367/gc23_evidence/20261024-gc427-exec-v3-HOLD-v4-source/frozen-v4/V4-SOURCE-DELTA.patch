@@ -1,0 +1,66 @@
+--- 0296/bind_recovery.py
++++ exec-v4/bind_recovery.py
+@@ -63,7 +63,7 @@
+  baseline=r.inventory(r.BASELINE_ROOTS,hashes=True)
+  old=c.read(c.MEDIA/'BASELINE.json');prior={p:v for p,v in baseline['members'].items() if any(Path(p).is_relative_to(Path(root)) for root in old['roots'])}
+  drift=actual_drift(old,dict(members=prior))
+- encoded=(json.dumps(drift,indent=1)+'\n').encode();drift_identity=dict(size=len(encoded),sha256=hashlib.sha256(encoded).hexdigest())
++ drift_bytes=(json.dumps(drift,indent=1)+'\n').encode();drift_identity=dict(size=len(drift_bytes),sha256=hashlib.sha256(drift_bytes).hexdigest())
+  if h['approved_old_to_current_drift_identity']!=drift_identity:
+   fresh('OLD-TO-CURRENT-DRIFT-CANDIDATE.json',drift)
+   raise SystemExit('Current drift differs from root acknowledgement; candidate preserved, no baseline bound')
+--- 0296/recovery_context.py
++++ exec-v4/recovery_context.py
+@@ -21,7 +21,7 @@
+  '/root/probe/gc-motion24-kos-budget-retest-media-v2',
+  '/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-budget-retest-media-v2',
+  *[str(HERE.parent/n) for n in ['kos-budget-retest-guest-prep-v1','kos-budget-retest-guest-prep-v2','kos-budget-retest-stage-root-v1','review-kos-budget-retest-media-poststage-v1']],
+- str(HERE.parent/'kos-budget-retest-guest-exec-v2'),str(OFF)]
++ str(HERE.parent/'kos-budget-retest-guest-exec-v2'),str(HERE.parent/'kos-budget-retest-guest-exec-v3'),str(OFF)]
+ 
+ def need(ok,why):
+  if not ok:raise RuntimeError(why)
+--- 0296/host_controls.py
++++ exec-v4/host_controls.py
+@@ -74,7 +74,7 @@
+  def test_future_absence_is_charged_when_created(self):
+   with tempfile.TemporaryDirectory(dir='/dev/shm') as d:
+    p=Path(d)/'future';self.assertEqual(r.inventory([str(p)],allow_absent=True)['unique_bytes'],0);p.mkdir();(p/'meta').write_bytes(b'12345');self.assertEqual(r.inventory([str(p)],allow_absent=True)['unique_bytes'],5)
+- def test_no_root_omission(self):self.assertEqual(len(r.BASELINE_ROOTS),16);self.assertIn(str(r.OFF),r.BASELINE_ROOTS);self.assertIn(str(HERE.parent/'kos-budget-retest-guest-exec-v2'),r.BASELINE_ROOTS)
++ def test_no_root_omission(self):self.assertEqual(len(r.BASELINE_ROOTS),17);self.assertIn(str(r.OFF),r.BASELINE_ROOTS);self.assertIn(str(HERE.parent/'kos-budget-retest-guest-exec-v2'),r.BASELINE_ROOTS)
+  def test_recovery_context_required_in_grant(self):
+   g=prior.Host().grant();g.pop('recovery_context')
+   with self.assertRaises(KeyError):c.grant_guard(g,'test',base)
+@@ -120,6 +120,32 @@
+  def test_unknown_base_metadata_field(self):
+   j=self.meta();j['alternate_disc']='evil'
+   with self.assertRaisesRegex(RuntimeError,'fields'):r.metadata_semantics(j)
++ def binder_serialization(self,path):
++  # Execute the actual successful top-level metadata-binding statements,
++  # including the drift guard, baseline serialization, binding validation and
++  # outputs construction. Only filesystem facts/identities are RAM fixtures.
++  import datetime
++  tree=ast.parse(Path(path).read_bytes());main=tree.body[-1];self.assertIsInstance(main,ast.If)
++  def target(node,name):return isinstance(node,ast.Assign) and any(isinstance(t,ast.Name) and t.id==name for t in node.targets)
++  start=next(i for i,n in enumerate(main.body) if target(n,'drift'));end=next(i for i,n in enumerate(main.body) if target(n,'outputs'))
++  definitions=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in ['encoded','actual_drift']]
++  with tempfile.TemporaryDirectory(dir='/dev/shm') as d:
++   here=Path(d)/'source';here.mkdir();root=here.parent/'review-kos-budget-retest-media-poststage-v2';root.mkdir()
++   drift_bytes=(json.dumps([],indent=1)+'\n').encode();baseline=dict(roots=[str(Path(d)/'retained')],members={},unique_bytes=0)
++   def fake_row(p):return dict(size=1641,sha256='9409bd8b090ec545cf7e927fc68ac63266b558c4907493deabee91a0836aef85') if Path(p).name=='BASELINE-DRIFT.json' else dict(size=1,sha256='a'*64)
++   def forbidden_fresh(*args):raise AssertionError('Unexpected drift/refusal write on successful statement path')
++   ns=dict(Path=Path,json=json,hashlib=hashlib,datetime=datetime,HERE=here,HANDOFF=root/'ROOT-RECOVERY-HANDOFF.json',final=root/'FINAL-READBACK.json',r=r,row=fake_row,fresh=forbidden_fresh,old=dict(members={}),prior={},baseline=baseline,h=dict(approved_old_to_current_drift_identity=dict(size=len(drift_bytes),sha256=hashlib.sha256(drift_bytes).hexdigest())),actual={a:dict(tracks={'track03.iso':dict(size=10,sha256='e'*64)}) for a in ['off','on']})
++   with patch.object(r,'HERE',here),patch.object(os,'statvfs',return_value=types.SimpleNamespace(f_bavail=40*1024**3,f_frsize=1)):
++    exec(compile(ast.Module(body=definitions,type_ignores=[]),str(path),'exec',dont_inherit=True),ns)
++    exec(compile(ast.Module(body=main.body[start:end+1],type_ignores=[]),str(path),'exec',dont_inherit=True),ns)
++   return ns
++ def test_actual_successful_binder_statement_serialization(self):
++  ns=self.binder_serialization(HERE/'bind_recovery.py')
++  self.assertTrue(callable(ns['encoded']));self.assertEqual(json.loads(ns['baseline_bytes'])['status'],'EXPLICIT_CURRENT_RETAINED_BASELINE_AFTER_VERIFIED_FRESH_OFF')
++  self.assertEqual(ns['binding']['baseline_identity'],dict(size=len(ns['baseline_bytes']),sha256=hashlib.sha256(ns['baseline_bytes']).hexdigest()))
++  self.assertIs(ns['outputs']['CURRENT-BASELINE.json'],ns['baseline']);self.assertIn('RECOVERY-BINDING.json',ns['outputs'])
++ def test_preserved_V3_shadowing_fails_actual_statements(self):
++  with self.assertRaises(TypeError):self.binder_serialization(HERE.parent/'kos-budget-retest-guest-exec-v3/bind_recovery.py')
+ 
+ if __name__=='__main__':
+  assert __debug__ and sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode

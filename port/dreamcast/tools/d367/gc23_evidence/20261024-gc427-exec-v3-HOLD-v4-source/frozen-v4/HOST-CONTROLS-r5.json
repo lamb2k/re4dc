@@ -1,0 +1,18 @@
+{
+ "status": "SOURCE_HOST_PENDING_OFF_PASS",
+ "tests": 89,
+ "failures": 0,
+ "errors": 0,
+ "pending_actual_environment_tests": [
+  "test_actual_poststage",
+  "test_actual_resources_union",
+  "test_extra_roots_hardlink_counted_once"
+ ],
+ "actual_baseline": false,
+ "actual_OFF_identity": false,
+ "SDK": 0,
+ "stage": 0,
+ "guest": 0,
+ "production_locks": 0,
+ "fake_release_processes": 0
+}

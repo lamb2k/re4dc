@@ -1,0 +1,37 @@
+{
+  "status": "UNKNOWN_NOT_A_PASS",
+  "payload_contract_source": "427784b1f48aa30742850bb5025925ab619b740e",
+  "media_producer": {
+    "tool_source": "c3dd19b999d3c36e76318a4d3825f8d1ca7310ec",
+    "seal": {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/qa-media-observer-ext4-v5/TOOLCHAIN-SEAL.json",
+      "identity": {
+        "size": 8896,
+        "sha256": "9377c8e8e06162def84513751ffe76dd78ef186bf0bef97a3ede53890eb39814"
+      }
+    },
+    "off_complete": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/rain-diag24-20261024/_qa-media-8ce-recovery-v4/base-off/COMPLETE.json",
+      "identity": null
+    }
+  },
+  "arms": {
+    "off": {
+      "base": "/mnt/c/Flycast-Evidence/re4-dreamcast/rain-diag24-20261024/_qa-media-8ce-recovery-v4/base-off",
+      "actual_producer_source": "8ce5ee2d00027268c3e69c9c300b819c1b14c63f",
+      "manifest": null,
+      "redirect_records": null,
+      "tracks": null,
+      "host_base_metadata": null
+    },
+    "on": {
+      "base": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-budget-retest-media-v2/on",
+      "actual_producer_source": "427784b1f48aa30742850bb5025925ab619b740e",
+      "manifest": null,
+      "redirect_records": null,
+      "tracks": null,
+      "host_base_metadata": null
+    }
+  },
+  "scope": "Template only. Final independent root READBACK must contain actual full manifest/redirect records/tracks, not expected placeholders. Actual producer V5 seal, OFF programme source8ce and payload comparison427 stay separate."
+}

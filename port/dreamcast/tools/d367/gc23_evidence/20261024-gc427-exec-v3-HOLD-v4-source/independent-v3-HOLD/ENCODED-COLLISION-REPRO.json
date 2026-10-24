@@ -1,0 +1,10 @@
+{
+  "status": "CONFIRMED_SOURCE_BINDER_HOLD",
+  "source_file_sha256": "3fb2907b2484aa0318a3c2fa694e5576ec25d6d8b1216fc64f500e9b1e9791bd",
+  "definition_line": 20,
+  "shadow_assignment_line": 66,
+  "first_later_call_line": 75,
+  "exception": "'bytes' object is not callable",
+  "executed": "Exact original AST statements on public empty drift/synthetic baseline only; no binder/io/main execution",
+  "SDK_stage_guest_baseline_allocation": false
+}

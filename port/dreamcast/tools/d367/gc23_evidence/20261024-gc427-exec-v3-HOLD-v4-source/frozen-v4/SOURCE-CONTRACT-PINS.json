@@ -1,0 +1,211 @@
+{
+ "source_pins": {
+  "427784b1f48aa30742850bb5025925ab619b740e": {
+   "port/dreamcast/game/gc_asset_gate.mk": {
+    "git_blob": "d13e7fd71630c57ef2c200bc4a07d6bfe54956a2",
+    "size": 2731,
+    "sha256": "4e34c10a9a44aa749ce2182e3756eb94f96495942f9a13f9d518b3c9265546a2"
+   },
+   "port/dreamcast/game/platform/include/gc_asset_gate.h": {
+    "git_blob": "cca5758f07abfd9e9626e7e5cbd3eca18624e37e",
+    "size": 5972,
+    "sha256": "c8fb4b2435a46487ecec8b03f1c5a4176f429cdfbafbb8e0dbb5930100d74517"
+   },
+   "port/dreamcast/game/platform/gc_asset_gate.cpp": {
+    "git_blob": "36fd501da8e06dc14610f46762868434c7bd7740",
+    "size": 19622,
+    "sha256": "8e271fbe41023a5dd1e2e0d2d4163e6cacc8389b830ecd7a10848f680ac783d9"
+   },
+   "port/dreamcast/game/platform/gc_asset_disc.cpp": {
+    "git_blob": "d88e16abf592de4fe05bf9d75c82e7c98ebad790",
+    "size": 3922,
+    "sha256": "ecd578a098bc2cc9739bd2f1e537b80c46883f0a9f2fa3b1e7294709a5bd2dde"
+   },
+   "port/dreamcast/game/platform/gc_asset_motion_unknown.cpp": {
+    "git_blob": "97dff10d1925c3eece88d4de2959ca33ae2e3fe6",
+    "size": 2265,
+    "sha256": "961c6a3c42319fdc1cd86536482e051111f6cfefc64b3ce590d0a6f98efae48a"
+   },
+   "port/dreamcast/game/platform/native_ui.cpp": {
+    "git_blob": "1c03c7a57b5c16dd4fa6afd8926b6eefe42e9a9b",
+    "size": 532136,
+    "sha256": "df4157517b49e5ae6ea0f352863a576d58deb16f5c2fe9cabbab3c5552ec0f85"
+   },
+   "port/dreamcast/game/platform/audio_aica.cpp": {
+    "git_blob": "1e0ee1891ea7b35bd5174e9182f5d81dec1c2753",
+    "size": 105603,
+    "sha256": "3bb6f94415627fb741c87fb9458420fd96c0dab137edc3d26b692d6391412056"
+   },
+   "port/dreamcast/tools/d367/gc_port23/REMAINING-COVERAGE.md": {
+    "git_blob": "911df71b5bf11024fb3a757ddbc070ba8dcdfc4c",
+    "size": 9001,
+    "sha256": "c2c2b1dd4a3d29616e51238a5b70ba6f303dc1cc58ec08af3b171d6cee9c2e17"
+   },
+   "port/dreamcast/tools/d367/gc_port23/MOTION-UNKNOWN24.md": {
+    "git_blob": "99283cc1bdada8261bff0500a1f03f8859be0ba8",
+    "size": 5496,
+    "sha256": "fb0f5c196554368b4a1f7f792eba01f1c45be13f6f354f3eb5359d3dac83cbd9"
+   },
+   "port/dreamcast/tools/d367/gc_port23/LIFECYCLE.md": {
+    "git_blob": "011e164ae3ae55130c1b64f60532b5f0ccc7272f",
+    "size": 6354,
+    "sha256": "0e6285c5e4c0ee4e01c0ff5dac72976ffc7004d0a43a49765d7157a4d7aa9a67"
+   },
+   "port/dreamcast/tools/d367/gc_port23/judge.py": {
+    "git_blob": "a8212868ef54f29845d9ea3fcc35976de1c91085",
+    "size": 14750,
+    "sha256": "d09053653b29e7133f954ec9a80cbf4865fd65425f647366b1815dbae4b0675e"
+   }
+  },
+  "c2f9ba8cbcebe30a218fe4fb6cf9ecd2305d853e": {
+   "port/dreamcast/game/gc_asset_gate.mk": {
+    "git_blob": "d13e7fd71630c57ef2c200bc4a07d6bfe54956a2",
+    "size": 2731,
+    "sha256": "4e34c10a9a44aa749ce2182e3756eb94f96495942f9a13f9d518b3c9265546a2"
+   },
+   "port/dreamcast/game/platform/include/gc_asset_gate.h": {
+    "git_blob": "cca5758f07abfd9e9626e7e5cbd3eca18624e37e",
+    "size": 5972,
+    "sha256": "c8fb4b2435a46487ecec8b03f1c5a4176f429cdfbafbb8e0dbb5930100d74517"
+   },
+   "port/dreamcast/game/platform/gc_asset_gate.cpp": {
+    "git_blob": "36fd501da8e06dc14610f46762868434c7bd7740",
+    "size": 19622,
+    "sha256": "8e271fbe41023a5dd1e2e0d2d4163e6cacc8389b830ecd7a10848f680ac783d9"
+   },
+   "port/dreamcast/game/platform/gc_asset_disc.cpp": {
+    "git_blob": "d88e16abf592de4fe05bf9d75c82e7c98ebad790",
+    "size": 3922,
+    "sha256": "ecd578a098bc2cc9739bd2f1e537b80c46883f0a9f2fa3b1e7294709a5bd2dde"
+   },
+   "port/dreamcast/game/platform/gc_asset_motion_unknown.cpp": {
+    "git_blob": "97dff10d1925c3eece88d4de2959ca33ae2e3fe6",
+    "size": 2265,
+    "sha256": "961c6a3c42319fdc1cd86536482e051111f6cfefc64b3ce590d0a6f98efae48a"
+   },
+   "port/dreamcast/game/platform/native_ui.cpp": {
+    "git_blob": "6f42344a139e158fc1fb56f199bf372ee2980da1",
+    "size": 534098,
+    "sha256": "e54f5c7dad91fb13b93f03ae7db6c6a65c462939db864e3085bf909866eb6258"
+   },
+   "port/dreamcast/game/platform/audio_aica.cpp": {
+    "git_blob": "1e0ee1891ea7b35bd5174e9182f5d81dec1c2753",
+    "size": 105603,
+    "sha256": "3bb6f94415627fb741c87fb9458420fd96c0dab137edc3d26b692d6391412056"
+   },
+   "port/dreamcast/tools/d367/gc_port23/REMAINING-COVERAGE.md": {
+    "git_blob": "911df71b5bf11024fb3a757ddbc070ba8dcdfc4c",
+    "size": 9001,
+    "sha256": "c2c2b1dd4a3d29616e51238a5b70ba6f303dc1cc58ec08af3b171d6cee9c2e17"
+   },
+   "port/dreamcast/tools/d367/gc_port23/MOTION-UNKNOWN24.md": {
+    "git_blob": "99283cc1bdada8261bff0500a1f03f8859be0ba8",
+    "size": 5496,
+    "sha256": "fb0f5c196554368b4a1f7f792eba01f1c45be13f6f354f3eb5359d3dac83cbd9"
+   },
+   "port/dreamcast/tools/d367/gc_port23/LIFECYCLE.md": {
+    "git_blob": "011e164ae3ae55130c1b64f60532b5f0ccc7272f",
+    "size": 6354,
+    "sha256": "0e6285c5e4c0ee4e01c0ff5dac72976ffc7004d0a43a49765d7157a4d7aa9a67"
+   },
+   "port/dreamcast/tools/d367/gc_port23/judge.py": {
+    "git_blob": "a8212868ef54f29845d9ea3fcc35976de1c91085",
+    "size": 14750,
+    "sha256": "d09053653b29e7133f954ec9a80cbf4865fd65425f647366b1815dbae4b0675e"
+   }
+  }
+ },
+ "original_I001_brief": {
+  "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/INBOX.md",
+  "identity": {
+   "size": 2805,
+   "sha256": "d005a52909385164cc8fed60092b78c1c0f8b9078dd2d37bc86979e76d9ff5d8"
+  }
+ },
+ "root_status_at_read": {
+  "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+  "identity": {
+   "size": 1839,
+   "sha256": "911be04053849d6e117fd12e36e09d4f421b2807c47b2ac8eb2971ee276d3bd3"
+  }
+ },
+ "V5_producer": {
+  "tool_source": "c3dd19b999d3c36e76318a4d3825f8d1ca7310ec",
+  "seal": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/qa-media-observer-ext4-v5/TOOLCHAIN-SEAL.json",
+   "identity": {
+    "size": 8896,
+    "sha256": "9377c8e8e06162def84513751ffe76dd78ef186bf0bef97a3ede53890eb39814"
+   }
+  }
+ },
+ "unchanged_runtime_files": {
+  "controller.py": {
+   "predecessor": {
+    "size": 7272,
+    "sha256": "29b68123eb5c0171ac221c89347219767158921f0a0c56e4bac6f70a902b4711"
+   },
+   "successor": {
+    "size": 7272,
+    "sha256": "29b68123eb5c0171ac221c89347219767158921f0a0c56e4bac6f70a902b4711"
+   }
+  },
+  "post_slot.py": {
+   "predecessor": {
+    "size": 2347,
+    "sha256": "e0f43cd7e852f797687867177a42c99ce4e72a34108e9ee7d66b707201108d71"
+   },
+   "successor": {
+    "size": 2347,
+    "sha256": "e0f43cd7e852f797687867177a42c99ce4e72a34108e9ee7d66b707201108d71"
+   }
+  },
+  "launch.py": {
+   "predecessor": {
+    "size": 1146,
+    "sha256": "75df762663e334f2b80261546c8b3a36a7fa43c10b190a49cc2aa87cce12a276"
+   },
+   "successor": {
+    "size": 1146,
+    "sha256": "75df762663e334f2b80261546c8b3a36a7fa43c10b190a49cc2aa87cce12a276"
+   }
+  },
+  "windows_entry.py": {
+   "predecessor": {
+    "size": 5389,
+    "sha256": "8fb96ed116a2412f4455ff0a9598df5b200122e25615439702d0020a8a58b209"
+   },
+   "successor": {
+    "size": 5389,
+    "sha256": "8fb96ed116a2412f4455ff0a9598df5b200122e25615439702d0020a8a58b209"
+   }
+  },
+  "owned_process.py": {
+   "predecessor": {
+    "size": 2552,
+    "sha256": "812b39c00151bad4ec2d888b36e5cf74407ce6b5234c219a675ffd04757a4ae7"
+   },
+   "successor": {
+    "size": 2552,
+    "sha256": "812b39c00151bad4ec2d888b36e5cf74407ce6b5234c219a675ffd04757a4ae7"
+   }
+  },
+  "judge.py": {
+   "predecessor": {
+    "size": 1634,
+    "sha256": "f110a07b17a1758e4aa08a6a3201ec9f9423a78489c71975e70e5d7a15571836"
+   },
+   "successor": {
+    "size": 1634,
+    "sha256": "f110a07b17a1758e4aa08a6a3201ec9f9423a78489c71975e70e5d7a15571836"
+   }
+  }
+ },
+ "finish_callsite_receipt": [
+  "427784b1f48aa30742850bb5025925ab619b740e:port/dreamcast/game/platform/include/gc_asset_lifecycle.h:6:extern \"C\" void re4dc_gcasset_finish();",
+  "427784b1f48aa30742850bb5025925ab619b740e:port/dreamcast/game/platform/native_ui.cpp:5577:extern \"C\" void re4dc_gcasset_finish(){",
+  "427784b1f48aa30742850bb5025925ab619b740e:port/dreamcast/game/platform/native_ui.cpp:5584:    if(gcasset_visit_serial==~0U){re4dc_gcasset::unresolved(re4dc_gcasset::Ui,\"visit-serial-exhausted\");re4dc_gcasset_finish();return;}",
+  "427784b1f48aa30742850bb5025925ab619b740e:port/dreamcast/game/platform/native_ui.cpp:5594:    if(gcasset_visit_serial==~0U){re4dc_gcasset::unresolved(re4dc_gcasset::Ui,\"visit-serial-exhausted\");re4dc_gcasset_finish();return;}"
+ ],
+ "limits": "Source-only plan; no new runtime, catalogue, allowance, SDK or guest authority"
+}

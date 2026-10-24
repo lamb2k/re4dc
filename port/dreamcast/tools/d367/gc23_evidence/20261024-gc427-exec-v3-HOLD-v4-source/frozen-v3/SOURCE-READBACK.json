@@ -1,0 +1,10 @@
+{
+ "status": "EXACT_SOURCE_HOST_READBACK_PENDING_ACTUAL_OFF",
+ "seal": {
+  "size": 5442,
+  "sha256": "0296f5782e8c94ccc65a46cfcd5171fdf5d6c3348914b6af80190245961c4dbc"
+ },
+ "members": 41,
+ "bytes": 149656,
+ "guest_permission": false
+}

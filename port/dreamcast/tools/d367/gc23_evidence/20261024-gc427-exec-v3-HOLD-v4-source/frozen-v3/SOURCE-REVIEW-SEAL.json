@@ -1,0 +1,170 @@
+{
+ "status": "SOURCE_HOST_EXECUTABLE_REVIEW_CANDIDATE_UNBOUND_NO_GUEST",
+ "source": "427784b1f48aa30742850bb5025925ab619b740e",
+ "members": {
+  "bind_recovery.py": {
+   "size": 7387,
+   "sha256": "3fb2907b2484aa0318a3c2fa694e5576ec25d6d8b1216fc64f500e9b1e9791bd"
+  },
+  "COMMON-SOURCE-DELTA.patch": {
+   "size": 5992,
+   "sha256": "d752e19447997abf3a735ce8efc71b6762d79638b4a346cdf7923a3480ba6373"
+  },
+  "common.py": {
+   "size": 9915,
+   "sha256": "db6a096a7403e634fd8d54691f7f17cbb72bf9c873647b4dbc613f555bc9142c"
+  },
+  "controller.py": {
+   "size": 7272,
+   "sha256": "29b68123eb5c0171ac221c89347219767158921f0a0c56e4bac6f70a902b4711"
+  },
+  "HOST-CONTROLS-r1.json": {
+   "size": 385,
+   "sha256": "38cdf6b1331a12342ea003a2464ceaafdb250a83312a5f1406494cb45ef5d8dd"
+  },
+  "HOST-CONTROLS-r2.json": {
+   "size": 385,
+   "sha256": "38cdf6b1331a12342ea003a2464ceaafdb250a83312a5f1406494cb45ef5d8dd"
+  },
+  "HOST-CONTROLS-r3.json": {
+   "size": 385,
+   "sha256": "efde0919f0453d607f40980065c450d071ce9b353ad264b7cf52f68b7f4b18b8"
+  },
+  "HOST-CONTROLS-r4.json": {
+   "size": 385,
+   "sha256": "c5ae95139e72e3d11ceb1e66ddd1ae2fc314a34e6a0fee50dcb0eed95fbd9c11"
+  },
+  "HOST-CONTROLS.json": {
+   "size": 385,
+   "sha256": "c5ae95139e72e3d11ceb1e66ddd1ae2fc314a34e6a0fee50dcb0eed95fbd9c11"
+  },
+  "host_controls.py": {
+   "size": 10215,
+   "sha256": "54cf8ceec902a5c8f82c6e7631c31e0466175da2bb5274f0008605673fd312cd"
+  },
+  "I001-COMPLETION-PLAN.md": {
+   "size": 7700,
+   "sha256": "927976c1a98e4760dedcaf8c855ae971c82380ff4931a71e0b52f78b5fc7ff43"
+  },
+  "INPUT-PINS.json": {
+   "size": 5272,
+   "sha256": "664d5ac37ff93aa41f7cad1213f4ae7d07b6b1ca46285df1adf6e7c5119b483e"
+  },
+  "judge.py": {
+   "size": 1634,
+   "sha256": "f110a07b17a1758e4aa08a6a3201ec9f9423a78489c71975e70e5d7a15571836"
+  },
+  "launch.py": {
+   "size": 1146,
+   "sha256": "75df762663e334f2b80261546c8b3a36a7fa43c10b190a49cc2aa87cce12a276"
+  },
+  "owned_process.py": {
+   "size": 2552,
+   "sha256": "812b39c00151bad4ec2d888b36e5cf74407ce6b5234c219a675ffd04757a4ae7"
+  },
+  "PARENT-COMMON-SOURCE-DELTA.patch": {
+   "size": 5992,
+   "sha256": "c45453154861a3128fdbaf8e33c53084663765183e144537c868c8163d938829"
+  },
+  "PARENT-HOST-CONTROLS.json": {
+   "size": 385,
+   "sha256": "efde0919f0453d607f40980065c450d071ce9b353ad264b7cf52f68b7f4b18b8"
+  },
+  "PARENT-SOURCE-READBACK.json": {
+   "size": 235,
+   "sha256": "6170491b73831094cb960afe41d0ccae650913810fb0a39ef8a9ba31808fbe45"
+  },
+  "PARENT-SOURCE-REVIEW-SEAL.json": {
+   "size": 4112,
+   "sha256": "533ef84d9edf445047fbc9bac6ebebba8ce93e937787a3360176499eaf2512f4"
+  },
+  "PARENT-SOURCE-STATUS.json": {
+   "size": 547,
+   "sha256": "806cb3aa09a68ee78bfe5d8bb9ad98093e049ac9290958922853ce8071dabe0a"
+  },
+  "pin_contracts.py": {
+   "size": 2479,
+   "sha256": "25a3a18992810adcdee08599d02f12526e694e7f26fb66d3a635d296fd50bc18"
+  },
+  "PLAN.json": {
+   "size": 10994,
+   "sha256": "06249b51986bd10ede8450f2ab3f876797860c0bb1db2fe6684e8980c61e7c9c"
+  },
+  "POSTSTAGE-READBACK-TEMPLATE.json": {
+   "size": 1564,
+   "sha256": "47e4579c73547187ee9ab90d96e6ebf86e5372dbb268dd1d02ecff6fc552bc0c"
+  },
+  "post_slot.py": {
+   "size": 2347,
+   "sha256": "e0f43cd7e852f797687867177a42c99ce4e72a34108e9ee7d66b707201108d71"
+  },
+  "prepare_common.py": {
+   "size": 2239,
+   "sha256": "9839ad26b6c24b8252d81b8d532c80c803da30e4a2ba23fafe70bdeede029123"
+  },
+  "prepare_handoff_templates.py": {
+   "size": 1963,
+   "sha256": "d736d09aa3d752ff70621154a2f04da9223cf9ad23c2c1b7096c85eeb9618ac4"
+  },
+  "prepare_source.py": {
+   "size": 3708,
+   "sha256": "c3db168f5b09b7ec3c3eac4969ce3a1b3d29c86cfdee8f7fbb493e64ed5b880a"
+  },
+  "README.md": {
+   "size": 4728,
+   "sha256": "2cf86b0ecbe1d298bb355b657e6629aa5dd5b605b4b1cbf41cdcc13d67d44e60"
+  },
+  "record_v3_delta.py": {
+   "size": 1818,
+   "sha256": "a61d291399e1f7e9c3e9691b1911838c539133ba69d39329a6aa4e2ec2bc3524"
+  },
+  "recovery_context.py": {
+   "size": 12838,
+   "sha256": "bfee5ad4f49a7c5e7d6fc24a98b833015e2ffa6597e85a7b928ca2f9d48aa557"
+  },
+  "ROOT-GUEST-GRANT-TEMPLATE.json": {
+   "size": 1170,
+   "sha256": "078a31fffa729cd6b5af29bb632eb79acbadfd6693ad62fd209dec451ed89755"
+  },
+  "ROOT-RECOVERY-HANDOFF-TEMPLATE.json": {
+   "size": 650,
+   "sha256": "29685d8c5a70c949f78857485440b93e8d5e6f825e5a11b73edfe78a69a1c651"
+  },
+  "seal_bound.py": {
+   "size": 3035,
+   "sha256": "0ea34815d2db2cd46e701fa6c19aaad67a517814d9840c2106c0ea7daebee40a"
+  },
+  "seal_source.py": {
+   "size": 2608,
+   "sha256": "5ef2d66531d7f21cdfbc31886ddf82334e3324e99950c732e8f0d48badd42ce6"
+  },
+  "SOURCE-CONTRACT-PINS.json": {
+   "size": 8329,
+   "sha256": "f57d2f4f006ccb0ede17e2d7110b2874269cbf490289dab6f710f2fca44bd2a7"
+  },
+  "SOURCE-LINEAGE.json": {
+   "size": 1273,
+   "sha256": "4d5d0b128918fa203a75f9c2549de038e21e26a7d40a77d63451e4a1f3ee4788"
+  },
+  "SOURCE-STATUS.json": {
+   "size": 547,
+   "sha256": "5f99f965e4a3422170836620baebce58be5de1c7937b83c4a20774e70aa658ab"
+  },
+  "V3-BINDING-DELTA.patch": {
+   "size": 4779,
+   "sha256": "7f87a83bce40013bd65c1568bd07bf4aa790ba31275f3e50506dec88826f3c8f"
+  },
+  "V3-DELTA.json": {
+   "size": 3643,
+   "sha256": "7a98cac58824aeb6c85a245cc0df2af1d0966680771044f00e2e69278a6aaee4"
+  },
+  "V3-ROOT-DECISIONS.md": {
+   "size": 1274,
+   "sha256": "44d25025ef34480cd0ecfb217363781206c6584b44ed02761903eb41b51c84e3"
+  },
+  "windows_entry.py": {
+   "size": 5389,
+   "sha256": "8fb96ed116a2412f4455ff0a9598df5b200122e25615439702d0020a8a58b209"
+  }
+ }
+}

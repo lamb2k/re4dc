@@ -1,0 +1,81 @@
+--- 7b512/common.py
++++ exec-v2/common.py
+@@ -6,7 +6,7 @@
+ MEDIA=HERE.parent/'kos-budget-retest-media-prep-v2'
+ MEDIA_SEAL='2301e39cfb166ee25bab261f0323d1df27331155148b67453bc527ce7330bee1'
+ SOURCE='427784b1f48aa30742850bb5025925ab619b740e'
+-META_ROOTS=[HERE.parent/n for n in ['kos-budget-retest-stage-root-v1','review-kos-budget-retest-media-poststage-v1','kos-budget-retest-guest-root-review-v1']]
++META_ROOTS=[HERE.parent/n for n in ['kos-budget-retest-stage-root-v1','review-kos-budget-retest-media-poststage-v2','kos-budget-retest-guest-root-review-v2']]
+ BOOTSTRAP="""import hashlib,pathlib,sys,types
+ path=pathlib.Path(sys.argv.pop(1));expected=sys.argv.pop(1);raw=path.read_bytes()
+ if hashlib.sha256(raw).hexdigest()!=expected:raise SystemExit('Entry source changed')
+@@ -30,7 +30,11 @@
+  assert sha(MEDIA/'TOOLCHAIN-SEAL.json')==MEDIA_SEAL
+  pins=read(MEDIA/'TOOLCHAIN-SEAL.json')['members']
+  for n,p in pins.items():verify(MEDIA/n,p)
+- return module('retest_stage_core',MEDIA/'core.py',pins['core.py']['sha256'])
++ base=module('retest_stage_core',MEDIA/'core.py',pins['core.py']['sha256'])
++ pin=read(HERE/'TOOLCHAIN-SEAL.json')['members']['recovery_context.py']
++ recovery=module('recovery_context',HERE/'recovery_context.py',pin['sha256'])
++ return recovery.adapt(base,sys.modules[__name__])
++
+ def sealed(expected):
+  assert sha(HERE/'TOOLCHAIN-SEAL.json')==expected
+  for n,v in read(HERE/'TOOLCHAIN-SEAL.json')['members'].items():verify(HERE/n,v)
+@@ -43,13 +47,10 @@
+    assert p.name in allowed or (p.name.startswith('RESULT-') and p.name.endswith('.json') and len(p.name)==76 and all(x in '0123456789abcdef' for x in p.name[7:-5])),'Unexpected guest-kit output'
+   else:
+    assert len(rel.parts)==2 and rel.parts[0]=='attempts'
+-   assert rel.parts[1] in {c['name']+suffix for c in read(MEDIA/'GUEST-PROPOSAL.json')['cases'] for suffix in ['-CONTROLLER.log','-ADMISSION.json','-ADMISSION-PREPARED.json','-PROCESS.json','-CLEANUP.log']},'Unexpected case output'
++   assert rel.parts[1] in {c['name']+suffix for c in read(HERE/'PLAN.json')['cases'] for suffix in ['-CONTROLLER.log','-ADMISSION.json','-ADMISSION-PREPARED.json','-PROCESS.json','-CLEANUP.log']},'Unexpected case output'
+ def capacity(k,required=None):
+- v=k.capacity(k.FLOOR if required is None else required)
+- roots=[*k.read(MEDIA/'BASELINE.json')['roots'],k.HERE,k.WORK,k.FINAL,HERE,*META_ROOTS]
+- aggregate,_,_=k.scan(roots);v['aggregate_bytes']=aggregate;v['new_unique_bytes']=aggregate-v['prior_unique_bytes'];v['guest_and_root_metadata_roots']=[str(HERE),*map(str,META_ROOTS)]
+- assert v['new_unique_bytes']<=k.DELTA and v['aggregate_bytes']<=k.AGG
+- return v
++ return k.capacity(k.FLOOR if required is None else required)
++
+ def metadata_guard(g,k):
+  allowed=g['metadata_allowlists'];assert set(allowed)==set(map(str,META_ROOTS))
+  for root in META_ROOTS:
+@@ -62,7 +63,7 @@
+  return 'C:\\'+s[7:].replace('/','\\') if s.startswith('/mnt/c/') else '\\\\wsl.localhost\\Ubuntu-24.04'+s.replace('/','\\')
+ def case(index,k):
+  assert type(index) is int and 0<=index<4,'Only the four fixed cases'
+- c=read(MEDIA/'GUEST-PROPOSAL.json')['cases'][index]
++ c=read(HERE/'PLAN.json')['cases'][index]
+  assert (c['arm'],c['fragment'])==[('off',0),('on',0),('off',1),('on',1)][index]
+  assert (c['held'],c['harness_seconds'],c['exact_child_seconds'])==(49152,45,55)
+  cap=Path(c['cap_WSL']);cache=Path(c['cache_WSL'])
+@@ -78,6 +79,7 @@
+ def grant_guard(g,seal,k):
+  assert g.get('approved') is True and g['source']==SOURCE and g['authorization']=='FOUR_KOS48_CORRECTED427_CONSOLE_ONLY'
+  assert g['kit_sha256']==seal and g['media_kit_sha256']==MEDIA_SEAL
++ assert g['recovery_context']=='EXPLICIT_NEW_CURRENT_BASELINE_NO_OLD_HASH_RESTORATION'
+  assert g['case_order'] in [[0,1],[2,3],[0,1,2,3]] and g['seconds']==45 and g['exact_child_seconds']==55 and g['parent_seconds']==95 and g['admission_seconds']==180 and g['overall_seconds']==1300
+  assert all(type(i) is int for i in g['case_order'])
+  assert g['new_delta_cap']==k.DELTA and g['aggregate_cap']==k.AGG and g['root_slots']==3 and g['global_slots']==16
+@@ -98,20 +100,8 @@
+  assert not any(os.environ.get(n) for n in ['BASH_ENV','ENV','LD_PRELOAD','LD_LIBRARY_PATH','PYTHONPATH','PYTHONHOME','PYTHONPYCACHEPREFIX'])
+  return g,path,seal
+ def check_poststage(g,k,arm,hash_tracks=True):
+- pin=g['poststage'];verify(pin['path'],pin['identity']);s=read(pin['path'])
+- root=META_ROOTS[1];assert Path(pin['path'])==root/'FINAL-READBACK.json' and pin['identity']['sha256']=='4dd7b532825d198b4f35f7f2cea576638e37339fc9e5e04cb5a4b4dd5fd7bb49'
+- assert sha(root/'REVIEW-SEAL.json')=='1715b3b8f5514c3c2eeb7a5c1c3a0e8adde0174c7738589add3e5328642cf3c1'
+- for n,v in read(root/'REVIEW-SEAL.json')['files'].items():verify(root/n,v)
+- assert s['decision']=='CLEAR_COMPLETED_GC_STAGE_STATIC_MEDIA_READBACK_ONLY_NO_GUEST_PERMISSION' and s['source']==SOURCE and s['toolchain']['sha256']==MEDIA_SEAL
+- verify(k.FINAL/'PAIR-STAGE-COMPLETE.json',s['pair_stage']);assert read(k.FINAL/'PAIR-STAGE-COMPLETE.json')['status']=='STAGE_ALL_FILES_COMPLETE_NO_GUEST'
+- r=read(root/(arm.upper()+'-INDEPENDENT.json'))
+- assert r['status']=='STAGE_ALL_FILE_READBACK_PASS_GUEST_NOT_RUN' and r['source']==SOURCE and r['arm']==arm
+- assert r['binding_sha256']==sha(MEDIA/'BINDING.json') and r['manifest']==read(MEDIA/(arm.upper()+'-EXPECTED-MANIFEST.json')) and len(r['redirect_records'])==6
+- base=k.OFF if arm=='off' else k.FINAL/'on'
+- complete=k.FINAL/'REUSED-OFF.json' if arm=='off' else base/'COMPLETE.json';verify(complete,s['OFF_reuse' if arm=='off' else 'ON_complete'])
+- if hash_tracks:
+-  for n,v in r['tracks'].items():assert n in ['track03.iso','track01-template.iso','track02.raw'];verify(base/n,v)
+- return r
++ return k.check_poststage(g,arm,hash_tracks)
++
+ def check_inputs(g,k):
+  for pin in read(HERE/'INPUT-PINS.json')['helpers'].values():verify(pin['path'],pin['identity'])
+  for pin in read(HERE/'INPUT-PINS.json')['template'].values():verify(pin['path'],pin['identity'])

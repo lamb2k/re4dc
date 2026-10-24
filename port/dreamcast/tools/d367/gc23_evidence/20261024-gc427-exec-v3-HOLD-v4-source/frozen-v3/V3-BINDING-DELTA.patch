@@ -1,0 +1,62 @@
+--- 533ef/recovery_context.py
++++ exec-v3/recovery_context.py
+@@ -21,7 +21,7 @@
+  '/root/probe/gc-motion24-kos-budget-retest-media-v2',
+  '/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-budget-retest-media-v2',
+  *[str(HERE.parent/n) for n in ['kos-budget-retest-guest-prep-v1','kos-budget-retest-guest-prep-v2','kos-budget-retest-stage-root-v1','review-kos-budget-retest-media-poststage-v1']],
+- str(OFF)]
++ str(HERE.parent/'kos-budget-retest-guest-exec-v2'),str(OFF)]
+ 
+ def need(ok,why):
+  if not ok:raise RuntimeError(why)
+@@ -106,6 +106,32 @@
+   need(complete['assets_exact'] is True and complete['all14_exact'] is True and complete['redirect_records']==6,'Incomplete producer payload readback')
+   need(complete['tracks']==report['arms']['off']['tracks'],'Actual OFF completion track pins differ')
+ 
++GDI='3\n1 0 4 2048 track01.iso 0\n2 756 0 2352 track02.raw 0\n3 45000 4 2048 track03.iso 0\n'
++def metadata_semantics(meta):
++ need(set(meta)=={'kind','tree','elf','warp_lba','pad_lba','w11_lba','fixture_bytes','gdi'},'Unexpected host base metadata fields')
++ for name,value in [('warp_lba',400),('pad_lba',420),('w11_lba',440),('fixture_bytes',8192)]:need(type(meta[name]) is int and meta[name]==value,'Wrong host base fixture layout')
++ need(meta['gdi']==GDI,'Wrong host base GDI/track identities')
++ for name in ['kind','tree','elf']:need(isinstance(meta[name],str) and 0<len(meta[name])<=4096 and not any(c in meta[name] for c in '\0\r\n'),'Invalid host base provenance metadata')
++
++def unique_json_pairs(pairs):
++ result={}
++ for key,value in pairs:need(key not in result,'Duplicate host base JSON field');result[key]=value
++ return result
++
++def host_metadata(path,track_sha256):
++ """Authenticate all host fields fp_run consumes, not only the ISO payload."""
++ path=Path(path);pins={}
++ need(isinstance(track_sha256,str) and len(track_sha256)==64 and all(c in '0123456789abcdef' for c in track_sha256),'Missing actual track hash for host metadata')
++ raw_files={}
++ for name in ['base.json','track03.sha256']:
++  p=path/name;need(p.is_file() and not p.is_symlink(),'Missing/nonregular host base metadata')
++  before=p.stat();need(0<before.st_size<=16384,'Host base metadata length outside bound');raw=p.read_bytes();after=p.stat()
++  need((before.st_dev,before.st_ino,before.st_size,before.st_mtime_ns)==(after.st_dev,after.st_ino,after.st_size,after.st_mtime_ns),'Host metadata changed while reading')
++  pins[name]=dict(size=len(raw),sha256=hashlib.sha256(raw).hexdigest());raw_files[name]=raw
++ metadata_semantics(json.loads(raw_files['base.json'],object_pairs_hook=unique_json_pairs))
++ need(raw_files['track03.sha256'] in [track_sha256.encode(),(track_sha256+'\n').encode(),(track_sha256+'\r\n').encode()],'Wrong host base track hash sidecar')
++ return pins
++
+ def adapt(base,c):
+  j=read(HERE/'RECOVERY-BINDING.json');binding_guard(j)
+  verify(j['baseline_path'],j['baseline_identity']);verify(j['old_disappearance']['path'],j['old_disappearance']['identity']);verify(j['poststage']['path'],j['poststage']['identity'])
+@@ -134,6 +160,7 @@
+   expected=base.read(c.MEDIA/(arm.upper()+'-EXPECTED-MANIFEST.json'))
+   need(r['manifest']==expected and len(r['redirect_records'])==6,'Incomplete actual payload/redirect identity')
+   need(r['tracks']['track03.iso']['sha256']==('86d1f4107417912abc74af0e2005a3bbd79a2eed03e543721db6e022dd815dfa' if arm=='on' else j['off_actual_track_sha256']),'Wrong actual track identity')
++  need(host_metadata(OFF if arm=='off' else ON,r['tracks']['track03.iso']['sha256'])==r['host_base_metadata'],'Host metadata differs from independent current readback')
+   if hash_tracks:
+    actual=media_readback(base,c,arm,OFF if arm=='off' else ON)
+    need(all(actual[key]==r[key] for key in ['manifest','redirect_records','tracks']),'Fresh actual ISO/file/IP/redirect readback changed')
+--- 533ef/bind_recovery.py
++++ exec-v3/bind_recovery.py
+@@ -55,6 +55,7 @@
+   got=r.media_readback(base,c,arm,path);expected=report['arms'][arm]
+   if expected['base']!=str(path) or expected['actual_producer_source']!=(r.PRODUCER_OFF if arm=='off' else r.SOURCE):raise SystemExit('Actual producer/source root rebound')
+   if any(got[k]!=expected[k] for k in ['manifest','redirect_records','tracks']):raise SystemExit('Fresh actual payload/IP/redirect/track differs from independent readback')
++  if r.host_metadata(path,got['tracks']['track03.iso']['sha256'])!=expected['host_base_metadata']:raise SystemExit('Fresh host base metadata differs from independent readback')
+   actual[arm]=got
+  if actual['on']['tracks']['track03.iso']['sha256']!='86d1f4107417912abc74af0e2005a3bbd79a2eed03e543721db6e022dd815dfa':raise SystemExit('Corrected ON image changed')
+  # Explicit old->current differences are root-approved by their exact JSON

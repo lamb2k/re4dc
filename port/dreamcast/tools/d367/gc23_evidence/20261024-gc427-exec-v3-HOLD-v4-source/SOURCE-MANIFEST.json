@@ -1,0 +1,563 @@
+{
+ "utc": "2026-10-24T15:02:59.367630+00:00",
+ "parent": "ae52e91a5bfef7f17ceaec1a8f4dcc959cf62e63",
+ "source_members": {
+  "frozen-v3/bind_recovery.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/bind_recovery.py",
+   "size": 7387,
+   "sha256": "3fb2907b2484aa0318a3c2fa694e5576ec25d6d8b1216fc64f500e9b1e9791bd"
+  },
+  "frozen-v3/COMMON-SOURCE-DELTA.patch": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/COMMON-SOURCE-DELTA.patch",
+   "size": 5992,
+   "sha256": "d752e19447997abf3a735ce8efc71b6762d79638b4a346cdf7923a3480ba6373"
+  },
+  "frozen-v3/common.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/common.py",
+   "size": 9915,
+   "sha256": "db6a096a7403e634fd8d54691f7f17cbb72bf9c873647b4dbc613f555bc9142c"
+  },
+  "frozen-v3/controller.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/controller.py",
+   "size": 7272,
+   "sha256": "29b68123eb5c0171ac221c89347219767158921f0a0c56e4bac6f70a902b4711"
+  },
+  "frozen-v3/HOST-CONTROLS-r1.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/HOST-CONTROLS-r1.json",
+   "size": 385,
+   "sha256": "38cdf6b1331a12342ea003a2464ceaafdb250a83312a5f1406494cb45ef5d8dd"
+  },
+  "frozen-v3/HOST-CONTROLS-r2.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/HOST-CONTROLS-r2.json",
+   "size": 385,
+   "sha256": "38cdf6b1331a12342ea003a2464ceaafdb250a83312a5f1406494cb45ef5d8dd"
+  },
+  "frozen-v3/HOST-CONTROLS-r3.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/HOST-CONTROLS-r3.json",
+   "size": 385,
+   "sha256": "efde0919f0453d607f40980065c450d071ce9b353ad264b7cf52f68b7f4b18b8"
+  },
+  "frozen-v3/HOST-CONTROLS-r4.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/HOST-CONTROLS-r4.json",
+   "size": 385,
+   "sha256": "c5ae95139e72e3d11ceb1e66ddd1ae2fc314a34e6a0fee50dcb0eed95fbd9c11"
+  },
+  "frozen-v3/HOST-CONTROLS.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/HOST-CONTROLS.json",
+   "size": 385,
+   "sha256": "c5ae95139e72e3d11ceb1e66ddd1ae2fc314a34e6a0fee50dcb0eed95fbd9c11"
+  },
+  "frozen-v3/host_controls.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/host_controls.py",
+   "size": 10215,
+   "sha256": "54cf8ceec902a5c8f82c6e7631c31e0466175da2bb5274f0008605673fd312cd"
+  },
+  "frozen-v3/I001-COMPLETION-PLAN.md": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/I001-COMPLETION-PLAN.md",
+   "size": 7700,
+   "sha256": "927976c1a98e4760dedcaf8c855ae971c82380ff4931a71e0b52f78b5fc7ff43"
+  },
+  "frozen-v3/INPUT-PINS.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/INPUT-PINS.json",
+   "size": 5272,
+   "sha256": "664d5ac37ff93aa41f7cad1213f4ae7d07b6b1ca46285df1adf6e7c5119b483e"
+  },
+  "frozen-v3/judge.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/judge.py",
+   "size": 1634,
+   "sha256": "f110a07b17a1758e4aa08a6a3201ec9f9423a78489c71975e70e5d7a15571836"
+  },
+  "frozen-v3/launch.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/launch.py",
+   "size": 1146,
+   "sha256": "75df762663e334f2b80261546c8b3a36a7fa43c10b190a49cc2aa87cce12a276"
+  },
+  "frozen-v3/owned_process.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/owned_process.py",
+   "size": 2552,
+   "sha256": "812b39c00151bad4ec2d888b36e5cf74407ce6b5234c219a675ffd04757a4ae7"
+  },
+  "frozen-v3/PARENT-COMMON-SOURCE-DELTA.patch": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/PARENT-COMMON-SOURCE-DELTA.patch",
+   "size": 5992,
+   "sha256": "c45453154861a3128fdbaf8e33c53084663765183e144537c868c8163d938829"
+  },
+  "frozen-v3/PARENT-HOST-CONTROLS.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/PARENT-HOST-CONTROLS.json",
+   "size": 385,
+   "sha256": "efde0919f0453d607f40980065c450d071ce9b353ad264b7cf52f68b7f4b18b8"
+  },
+  "frozen-v3/PARENT-SOURCE-READBACK.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/PARENT-SOURCE-READBACK.json",
+   "size": 235,
+   "sha256": "6170491b73831094cb960afe41d0ccae650913810fb0a39ef8a9ba31808fbe45"
+  },
+  "frozen-v3/PARENT-SOURCE-REVIEW-SEAL.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/PARENT-SOURCE-REVIEW-SEAL.json",
+   "size": 4112,
+   "sha256": "533ef84d9edf445047fbc9bac6ebebba8ce93e937787a3360176499eaf2512f4"
+  },
+  "frozen-v3/PARENT-SOURCE-STATUS.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/PARENT-SOURCE-STATUS.json",
+   "size": 547,
+   "sha256": "806cb3aa09a68ee78bfe5d8bb9ad98093e049ac9290958922853ce8071dabe0a"
+  },
+  "frozen-v3/pin_contracts.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/pin_contracts.py",
+   "size": 2479,
+   "sha256": "25a3a18992810adcdee08599d02f12526e694e7f26fb66d3a635d296fd50bc18"
+  },
+  "frozen-v3/PLAN.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/PLAN.json",
+   "size": 10994,
+   "sha256": "06249b51986bd10ede8450f2ab3f876797860c0bb1db2fe6684e8980c61e7c9c"
+  },
+  "frozen-v3/POSTSTAGE-READBACK-TEMPLATE.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/POSTSTAGE-READBACK-TEMPLATE.json",
+   "size": 1564,
+   "sha256": "47e4579c73547187ee9ab90d96e6ebf86e5372dbb268dd1d02ecff6fc552bc0c"
+  },
+  "frozen-v3/post_slot.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/post_slot.py",
+   "size": 2347,
+   "sha256": "e0f43cd7e852f797687867177a42c99ce4e72a34108e9ee7d66b707201108d71"
+  },
+  "frozen-v3/prepare_common.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/prepare_common.py",
+   "size": 2239,
+   "sha256": "9839ad26b6c24b8252d81b8d532c80c803da30e4a2ba23fafe70bdeede029123"
+  },
+  "frozen-v3/prepare_handoff_templates.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/prepare_handoff_templates.py",
+   "size": 1963,
+   "sha256": "d736d09aa3d752ff70621154a2f04da9223cf9ad23c2c1b7096c85eeb9618ac4"
+  },
+  "frozen-v3/prepare_source.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/prepare_source.py",
+   "size": 3708,
+   "sha256": "c3db168f5b09b7ec3c3eac4969ce3a1b3d29c86cfdee8f7fbb493e64ed5b880a"
+  },
+  "frozen-v3/README.md": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/README.md",
+   "size": 4728,
+   "sha256": "2cf86b0ecbe1d298bb355b657e6629aa5dd5b605b4b1cbf41cdcc13d67d44e60"
+  },
+  "frozen-v3/record_v3_delta.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/record_v3_delta.py",
+   "size": 1818,
+   "sha256": "a61d291399e1f7e9c3e9691b1911838c539133ba69d39329a6aa4e2ec2bc3524"
+  },
+  "frozen-v3/recovery_context.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/recovery_context.py",
+   "size": 12838,
+   "sha256": "bfee5ad4f49a7c5e7d6fc24a98b833015e2ffa6597e85a7b928ca2f9d48aa557"
+  },
+  "frozen-v3/ROOT-GUEST-GRANT-TEMPLATE.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/ROOT-GUEST-GRANT-TEMPLATE.json",
+   "size": 1170,
+   "sha256": "078a31fffa729cd6b5af29bb632eb79acbadfd6693ad62fd209dec451ed89755"
+  },
+  "frozen-v3/ROOT-RECOVERY-HANDOFF-TEMPLATE.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/ROOT-RECOVERY-HANDOFF-TEMPLATE.json",
+   "size": 650,
+   "sha256": "29685d8c5a70c949f78857485440b93e8d5e6f825e5a11b73edfe78a69a1c651"
+  },
+  "frozen-v3/seal_bound.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/seal_bound.py",
+   "size": 3035,
+   "sha256": "0ea34815d2db2cd46e701fa6c19aaad67a517814d9840c2106c0ea7daebee40a"
+  },
+  "frozen-v3/seal_source.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/seal_source.py",
+   "size": 2608,
+   "sha256": "5ef2d66531d7f21cdfbc31886ddf82334e3324e99950c732e8f0d48badd42ce6"
+  },
+  "frozen-v3/SOURCE-CONTRACT-PINS.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/SOURCE-CONTRACT-PINS.json",
+   "size": 8329,
+   "sha256": "f57d2f4f006ccb0ede17e2d7110b2874269cbf490289dab6f710f2fca44bd2a7"
+  },
+  "frozen-v3/SOURCE-LINEAGE.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/SOURCE-LINEAGE.json",
+   "size": 1273,
+   "sha256": "4d5d0b128918fa203a75f9c2549de038e21e26a7d40a77d63451e4a1f3ee4788"
+  },
+  "frozen-v3/SOURCE-READBACK.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/SOURCE-READBACK.json",
+   "size": 235,
+   "sha256": "08a8f2ae87a21caac8c08daa12e19884b00606208d9afb4bd245cad07fc93b55"
+  },
+  "frozen-v3/SOURCE-REVIEW-SEAL.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/SOURCE-REVIEW-SEAL.json",
+   "size": 5442,
+   "sha256": "0296f5782e8c94ccc65a46cfcd5171fdf5d6c3348914b6af80190245961c4dbc"
+  },
+  "frozen-v3/SOURCE-STATUS.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/SOURCE-STATUS.json",
+   "size": 547,
+   "sha256": "5f99f965e4a3422170836620baebce58be5de1c7937b83c4a20774e70aa658ab"
+  },
+  "frozen-v3/V3-BINDING-DELTA.patch": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/V3-BINDING-DELTA.patch",
+   "size": 4779,
+   "sha256": "7f87a83bce40013bd65c1568bd07bf4aa790ba31275f3e50506dec88826f3c8f"
+  },
+  "frozen-v3/V3-DELTA.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/V3-DELTA.json",
+   "size": 3643,
+   "sha256": "7a98cac58824aeb6c85a245cc0df2af1d0966680771044f00e2e69278a6aaee4"
+  },
+  "frozen-v3/V3-ROOT-DECISIONS.md": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/V3-ROOT-DECISIONS.md",
+   "size": 1274,
+   "sha256": "44d25025ef34480cd0ecfb217363781206c6584b44ed02761903eb41b51c84e3"
+  },
+  "frozen-v3/windows_entry.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v3/windows_entry.py",
+   "size": 5389,
+   "sha256": "8fb96ed116a2412f4455ff0a9598df5b200122e25615439702d0020a8a58b209"
+  },
+  "frozen-v4/bind_recovery.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/bind_recovery.py",
+   "size": 7399,
+   "sha256": "5129b4b031e101ea2b1b1c1aafa5d6c42892c45a43af6ddfe2215ff9f68fec3b"
+  },
+  "frozen-v4/COMMON-SOURCE-DELTA.patch": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/COMMON-SOURCE-DELTA.patch",
+   "size": 5992,
+   "sha256": "afd2d5a6df964daea26d885d996de5098c5966619d49c3a0136cba5e8d751a2b"
+  },
+  "frozen-v4/common.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/common.py",
+   "size": 9915,
+   "sha256": "db6a096a7403e634fd8d54691f7f17cbb72bf9c873647b4dbc613f555bc9142c"
+  },
+  "frozen-v4/controller.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/controller.py",
+   "size": 7272,
+   "sha256": "29b68123eb5c0171ac221c89347219767158921f0a0c56e4bac6f70a902b4711"
+  },
+  "frozen-v4/HOST-CONTROLS-r1.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/HOST-CONTROLS-r1.json",
+   "size": 385,
+   "sha256": "38cdf6b1331a12342ea003a2464ceaafdb250a83312a5f1406494cb45ef5d8dd"
+  },
+  "frozen-v4/HOST-CONTROLS-r2.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/HOST-CONTROLS-r2.json",
+   "size": 385,
+   "sha256": "38cdf6b1331a12342ea003a2464ceaafdb250a83312a5f1406494cb45ef5d8dd"
+  },
+  "frozen-v4/HOST-CONTROLS-r3.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/HOST-CONTROLS-r3.json",
+   "size": 385,
+   "sha256": "efde0919f0453d607f40980065c450d071ce9b353ad264b7cf52f68b7f4b18b8"
+  },
+  "frozen-v4/HOST-CONTROLS-r4.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/HOST-CONTROLS-r4.json",
+   "size": 385,
+   "sha256": "c5ae95139e72e3d11ceb1e66ddd1ae2fc314a34e6a0fee50dcb0eed95fbd9c11"
+  },
+  "frozen-v4/HOST-CONTROLS-r5.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/HOST-CONTROLS-r5.json",
+   "size": 385,
+   "sha256": "e13d7c7d4f87421fd3fbfe1d51cc67609490010c0a950f8f54eeaf1e9212dcbf"
+  },
+  "frozen-v4/HOST-CONTROLS.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/HOST-CONTROLS.json",
+   "size": 385,
+   "sha256": "e13d7c7d4f87421fd3fbfe1d51cc67609490010c0a950f8f54eeaf1e9212dcbf"
+  },
+  "frozen-v4/host_controls.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/host_controls.py",
+   "size": 13129,
+   "sha256": "38b4c7609bbcbf08d658fea395f2cb8f479973d9fa5939c5f302507780a91dc7"
+  },
+  "frozen-v4/I001-COMPLETION-PLAN.md": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/I001-COMPLETION-PLAN.md",
+   "size": 7700,
+   "sha256": "927976c1a98e4760dedcaf8c855ae971c82380ff4931a71e0b52f78b5fc7ff43"
+  },
+  "frozen-v4/INPUT-PINS.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/INPUT-PINS.json",
+   "size": 5272,
+   "sha256": "664d5ac37ff93aa41f7cad1213f4ae7d07b6b1ca46285df1adf6e7c5119b483e"
+  },
+  "frozen-v4/judge.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/judge.py",
+   "size": 1634,
+   "sha256": "f110a07b17a1758e4aa08a6a3201ec9f9423a78489c71975e70e5d7a15571836"
+  },
+  "frozen-v4/launch.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/launch.py",
+   "size": 1146,
+   "sha256": "75df762663e334f2b80261546c8b3a36a7fa43c10b190a49cc2aa87cce12a276"
+  },
+  "frozen-v4/owned_process.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/owned_process.py",
+   "size": 2552,
+   "sha256": "812b39c00151bad4ec2d888b36e5cf74407ce6b5234c219a675ffd04757a4ae7"
+  },
+  "frozen-v4/PARENT-COMMON-SOURCE-DELTA.patch": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/PARENT-COMMON-SOURCE-DELTA.patch",
+   "size": 5992,
+   "sha256": "c45453154861a3128fdbaf8e33c53084663765183e144537c868c8163d938829"
+  },
+  "frozen-v4/PARENT-HOST-CONTROLS.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/PARENT-HOST-CONTROLS.json",
+   "size": 385,
+   "sha256": "efde0919f0453d607f40980065c450d071ce9b353ad264b7cf52f68b7f4b18b8"
+  },
+  "frozen-v4/PARENT-SOURCE-READBACK.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/PARENT-SOURCE-READBACK.json",
+   "size": 235,
+   "sha256": "6170491b73831094cb960afe41d0ccae650913810fb0a39ef8a9ba31808fbe45"
+  },
+  "frozen-v4/PARENT-SOURCE-REVIEW-SEAL.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/PARENT-SOURCE-REVIEW-SEAL.json",
+   "size": 4112,
+   "sha256": "533ef84d9edf445047fbc9bac6ebebba8ce93e937787a3360176499eaf2512f4"
+  },
+  "frozen-v4/PARENT-SOURCE-STATUS.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/PARENT-SOURCE-STATUS.json",
+   "size": 547,
+   "sha256": "806cb3aa09a68ee78bfe5d8bb9ad98093e049ac9290958922853ce8071dabe0a"
+  },
+  "frozen-v4/PARENT-V3-COMMON-SOURCE-DELTA.patch": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/PARENT-V3-COMMON-SOURCE-DELTA.patch",
+   "size": 5992,
+   "sha256": "d752e19447997abf3a735ce8efc71b6762d79638b4a346cdf7923a3480ba6373"
+  },
+  "frozen-v4/PARENT-V3-HOST-CONTROLS.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/PARENT-V3-HOST-CONTROLS.json",
+   "size": 385,
+   "sha256": "c5ae95139e72e3d11ceb1e66ddd1ae2fc314a34e6a0fee50dcb0eed95fbd9c11"
+  },
+  "frozen-v4/PARENT-V3-SOURCE-READBACK.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/PARENT-V3-SOURCE-READBACK.json",
+   "size": 235,
+   "sha256": "08a8f2ae87a21caac8c08daa12e19884b00606208d9afb4bd245cad07fc93b55"
+  },
+  "frozen-v4/PARENT-V3-SOURCE-REVIEW-SEAL.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/PARENT-V3-SOURCE-REVIEW-SEAL.json",
+   "size": 5442,
+   "sha256": "0296f5782e8c94ccc65a46cfcd5171fdf5d6c3348914b6af80190245961c4dbc"
+  },
+  "frozen-v4/PARENT-V3-SOURCE-STATUS.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/PARENT-V3-SOURCE-STATUS.json",
+   "size": 547,
+   "sha256": "5f99f965e4a3422170836620baebce58be5de1c7937b83c4a20774e70aa658ab"
+  },
+  "frozen-v4/pin_contracts.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/pin_contracts.py",
+   "size": 2479,
+   "sha256": "25a3a18992810adcdee08599d02f12526e694e7f26fb66d3a635d296fd50bc18"
+  },
+  "frozen-v4/PLAN.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/PLAN.json",
+   "size": 10994,
+   "sha256": "06249b51986bd10ede8450f2ab3f876797860c0bb1db2fe6684e8980c61e7c9c"
+  },
+  "frozen-v4/POSTSTAGE-READBACK-TEMPLATE.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/POSTSTAGE-READBACK-TEMPLATE.json",
+   "size": 1564,
+   "sha256": "47e4579c73547187ee9ab90d96e6ebf86e5372dbb268dd1d02ecff6fc552bc0c"
+  },
+  "frozen-v4/post_slot.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/post_slot.py",
+   "size": 2347,
+   "sha256": "e0f43cd7e852f797687867177a42c99ce4e72a34108e9ee7d66b707201108d71"
+  },
+  "frozen-v4/prepare_common.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/prepare_common.py",
+   "size": 2239,
+   "sha256": "9839ad26b6c24b8252d81b8d532c80c803da30e4a2ba23fafe70bdeede029123"
+  },
+  "frozen-v4/prepare_handoff_templates.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/prepare_handoff_templates.py",
+   "size": 1963,
+   "sha256": "d736d09aa3d752ff70621154a2f04da9223cf9ad23c2c1b7096c85eeb9618ac4"
+  },
+  "frozen-v4/prepare_source.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/prepare_source.py",
+   "size": 3708,
+   "sha256": "c3db168f5b09b7ec3c3eac4969ce3a1b3d29c86cfdee8f7fbb493e64ed5b880a"
+  },
+  "frozen-v4/README.md": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/README.md",
+   "size": 5166,
+   "sha256": "3a64be745b251150925867dcab6496c88964b23d6df1feaa5a947945fd3078db"
+  },
+  "frozen-v4/record_v3_delta.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/record_v3_delta.py",
+   "size": 1818,
+   "sha256": "a61d291399e1f7e9c3e9691b1911838c539133ba69d39329a6aa4e2ec2bc3524"
+  },
+  "frozen-v4/record_v4_delta.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/record_v4_delta.py",
+   "size": 3035,
+   "sha256": "767fc7c5fecda110bc3a73161e1e1e4fa03d4701aab16e35698134c85a47a8f6"
+  },
+  "frozen-v4/recovery_context.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/recovery_context.py",
+   "size": 12889,
+   "sha256": "6ff1203714406c98cb2df31c3fc3bc51c84139bb928bff6b4581862bef994f4a"
+  },
+  "frozen-v4/ROOT-ACTUAL-OFF-REFERENCE.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/ROOT-ACTUAL-OFF-REFERENCE.json",
+   "size": 988,
+   "sha256": "757f15240fe13f891913fb0c38b63ff73080a9038797f4b11dc198b36c1f35de"
+  },
+  "frozen-v4/ROOT-GUEST-GRANT-TEMPLATE.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/ROOT-GUEST-GRANT-TEMPLATE.json",
+   "size": 1170,
+   "sha256": "078a31fffa729cd6b5af29bb632eb79acbadfd6693ad62fd209dec451ed89755"
+  },
+  "frozen-v4/ROOT-RECOVERY-HANDOFF-TEMPLATE.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/ROOT-RECOVERY-HANDOFF-TEMPLATE.json",
+   "size": 650,
+   "sha256": "29685d8c5a70c949f78857485440b93e8d5e6f825e5a11b73edfe78a69a1c651"
+  },
+  "frozen-v4/seal_bound.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/seal_bound.py",
+   "size": 3035,
+   "sha256": "0ea34815d2db2cd46e701fa6c19aaad67a517814d9840c2106c0ea7daebee40a"
+  },
+  "frozen-v4/seal_source.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/seal_source.py",
+   "size": 2646,
+   "sha256": "0882957d12f8f76eab9b7cec91cc86a3b617ea3d880a5e69f7caf0672591c181"
+  },
+  "frozen-v4/SOURCE-CONTRACT-PINS.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/SOURCE-CONTRACT-PINS.json",
+   "size": 8329,
+   "sha256": "f57d2f4f006ccb0ede17e2d7110b2874269cbf490289dab6f710f2fca44bd2a7"
+  },
+  "frozen-v4/SOURCE-LINEAGE.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/SOURCE-LINEAGE.json",
+   "size": 1273,
+   "sha256": "4d5d0b128918fa203a75f9c2549de038e21e26a7d40a77d63451e4a1f3ee4788"
+  },
+  "frozen-v4/SOURCE-READBACK.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/SOURCE-READBACK.json",
+   "size": 235,
+   "sha256": "e9ff7a5e35dd3e3147bab297f173cd7b9552755127928ae26f894dc7f99c384e"
+  },
+  "frozen-v4/SOURCE-REVIEW-SEAL.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/SOURCE-REVIEW-SEAL.json",
+   "size": 6794,
+   "sha256": "71e2937661a3a47556a2cb375c70c4ad51ddfae18ef26aac1d233dc6963a8424"
+  },
+  "frozen-v4/SOURCE-STATUS.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/SOURCE-STATUS.json",
+   "size": 585,
+   "sha256": "5390e208abf8e6b85296dc3889e0b7fc9dd9c0cb902ec5508d5191be13165f1d"
+  },
+  "frozen-v4/V3-BINDING-DELTA.patch": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/V3-BINDING-DELTA.patch",
+   "size": 4779,
+   "sha256": "7f87a83bce40013bd65c1568bd07bf4aa790ba31275f3e50506dec88826f3c8f"
+  },
+  "frozen-v4/V3-DELTA.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/V3-DELTA.json",
+   "size": 3643,
+   "sha256": "7a98cac58824aeb6c85a245cc0df2af1d0966680771044f00e2e69278a6aaee4"
+  },
+  "frozen-v4/V3-ROOT-DECISIONS.md": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/V3-ROOT-DECISIONS.md",
+   "size": 1274,
+   "sha256": "44d25025ef34480cd0ecfb217363781206c6584b44ed02761903eb41b51c84e3"
+  },
+  "frozen-v4/V4-DELTA.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/V4-DELTA.json",
+   "size": 4381,
+   "sha256": "9226682df8987139a2a1104852b5c0fce5f2f4b49d6461303e432a4ca0603e32"
+  },
+  "frozen-v4/V4-SOURCE-DELTA.patch": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/V4-SOURCE-DELTA.patch",
+   "size": 5717,
+   "sha256": "6f195083fda48d1e923602706de6c24612f8eea50247c222bd717edfbed587fe"
+  },
+  "frozen-v4/windows_entry.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-exec-v4/windows_entry.py",
+   "size": 5389,
+   "sha256": "8fb96ed116a2412f4455ff0a9598df5b200122e25615439702d0020a8a58b209"
+  },
+  "independent-v3-HOLD/ENCODED-COLLISION-REPRO.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/ENCODED-COLLISION-REPRO.json",
+   "size": 446,
+   "sha256": "cef3c7dba213a842b0ba7f9c4cd77c4986c7fa9ba3d15eaaa44f5d449ec810c7"
+  },
+  "independent-v3-HOLD/ENCODED-COLLISION-REPRO.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/ENCODED-COLLISION-REPRO.py",
+   "size": 205,
+   "sha256": "cf14c2299e4c177345bd0bf5333c7aa74821719efef28b1ad56c820f3f567bf1"
+  },
+  "independent-v3-HOLD/HOST-EXECUTION.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/HOST-EXECUTION.json",
+   "size": 649,
+   "sha256": "166a8be4a5e8a97260d7a125f00f7509a1b52d17a80357c0e366ff9626fd2972"
+  },
+  "independent-v3-HOLD/HOST-RESULTS.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/HOST-RESULTS.json",
+   "size": 3509,
+   "sha256": "a7a8fd332206837511fca45cd27538d13f04e6a0fdf18651c0899922ddac0b29"
+  },
+  "independent-v3-HOLD/HOST.log": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/HOST.log",
+   "size": 9432,
+   "sha256": "7d50088e10a73b87527d90353e85e2d8c5c3c1f6d8728eb976cfd13409b5dcfc"
+  },
+  "independent-v3-HOLD/INITIAL-REVIEW-QUOTE-CONTROL.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/INITIAL-REVIEW-QUOTE-CONTROL.py",
+   "size": 4461,
+   "sha256": "a2376200e508388281361990d6a58f8d067e559028746d56ba35ba1ae0735426"
+  },
+  "independent-v3-HOLD/INITIAL-REVIEW-QUOTE-HOST-EXECUTION.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/INITIAL-REVIEW-QUOTE-HOST-EXECUTION.json",
+   "size": 649,
+   "sha256": "9680bbd17ce330c3ab79ffebc4e905fce3cbde1b68c550baa94e6c4094114a35"
+  },
+  "independent-v3-HOLD/INITIAL-REVIEW-QUOTE-HOST.log": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/INITIAL-REVIEW-QUOTE-HOST.log",
+   "size": 1580,
+   "sha256": "7f0c2afb147fbb8d539ae4d58407bdf9f61b1b96d14849947c16d636c3f3655a"
+  },
+  "independent-v3-HOLD/INPUT-READBACK.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/INPUT-READBACK.json",
+   "size": 6394,
+   "sha256": "d2dd34386ee7866c9b89951487e51c38893480df05a14a3492bd718da39c9498"
+  },
+  "independent-v3-HOLD/REVIEW-HOLD.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/REVIEW-HOLD.json",
+   "size": 668,
+   "sha256": "d6002af58bff6f68c3ab85edf9743a4328968809e5c8a9bb26c39839a2961edb"
+  },
+  "independent-v3-HOLD/REVIEW.md": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/REVIEW.md",
+   "size": 2842,
+   "sha256": "486e7f0d4e3983b7aef56e5721110ef8e14134e4fc5e9fd8ad365987fdd53017"
+  },
+  "independent-v3-HOLD/run_review_controls.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/run_review_controls.py",
+   "size": 4461,
+   "sha256": "6a254f225fb36b5a44d92f3be97ffd954c79a85d56639ed731e8b53960eb8125"
+  },
+  "independent-v3-HOLD/UNCHANGED-CONTROLLER-READBACK.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/UNCHANGED-CONTROLLER-READBACK.json",
+   "size": 870,
+   "sha256": "00c189ab5032d0d518d9536222c5abc2dbc75e53cb50d7282ab13a212229a1cc"
+  },
+  "independent-v3-HOLD/REVIEW-SEAL.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/REVIEW-SEAL.json",
+   "size": 1973,
+   "sha256": "9e27c773fecb47b37ba6472481f62f104b0ff6417bda1881647ee8353ecd8578"
+  },
+  "archive_source.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/archive-recovery-exec-v3-v4.py",
+   "size": 4953,
+   "sha256": "807d6360290330e300cc7c3c5e5a19930ee3caa3aebea6acec3817e07bda9642"
+  }
+ },
+ "bytes": 385708,
+ "normalization": "none; originals preserved including line endings"
+}

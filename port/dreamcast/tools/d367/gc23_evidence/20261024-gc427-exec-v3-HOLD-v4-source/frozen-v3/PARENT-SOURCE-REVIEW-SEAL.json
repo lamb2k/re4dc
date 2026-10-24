@@ -1,0 +1,130 @@
+{
+ "status": "SOURCE_HOST_EXECUTABLE_REVIEW_CANDIDATE_UNBOUND_NO_GUEST",
+ "source": "427784b1f48aa30742850bb5025925ab619b740e",
+ "members": {
+  "bind_recovery.py": {
+   "size": 7210,
+   "sha256": "c6fd16a84a5b9f727a2a3b9a6bebda3721208f0d0967cec2ffd378a3482830ee"
+  },
+  "COMMON-SOURCE-DELTA.patch": {
+   "size": 5992,
+   "sha256": "c45453154861a3128fdbaf8e33c53084663765183e144537c868c8163d938829"
+  },
+  "common.py": {
+   "size": 9915,
+   "sha256": "db6a096a7403e634fd8d54691f7f17cbb72bf9c873647b4dbc613f555bc9142c"
+  },
+  "controller.py": {
+   "size": 7272,
+   "sha256": "29b68123eb5c0171ac221c89347219767158921f0a0c56e4bac6f70a902b4711"
+  },
+  "HOST-CONTROLS-r1.json": {
+   "size": 385,
+   "sha256": "38cdf6b1331a12342ea003a2464ceaafdb250a83312a5f1406494cb45ef5d8dd"
+  },
+  "HOST-CONTROLS-r2.json": {
+   "size": 385,
+   "sha256": "38cdf6b1331a12342ea003a2464ceaafdb250a83312a5f1406494cb45ef5d8dd"
+  },
+  "HOST-CONTROLS-r3.json": {
+   "size": 385,
+   "sha256": "efde0919f0453d607f40980065c450d071ce9b353ad264b7cf52f68b7f4b18b8"
+  },
+  "HOST-CONTROLS.json": {
+   "size": 385,
+   "sha256": "efde0919f0453d607f40980065c450d071ce9b353ad264b7cf52f68b7f4b18b8"
+  },
+  "host_controls.py": {
+   "size": 8438,
+   "sha256": "fd527764cfeb7922fb90208175f26ddb632f5bc7cae5cda3075aee6caf5dab87"
+  },
+  "I001-COMPLETION-PLAN.md": {
+   "size": 7577,
+   "sha256": "34d4e7342778f722a9026e0f804a2976c543822d2e89ed813217b2a0afb99602"
+  },
+  "INPUT-PINS.json": {
+   "size": 5272,
+   "sha256": "664d5ac37ff93aa41f7cad1213f4ae7d07b6b1ca46285df1adf6e7c5119b483e"
+  },
+  "judge.py": {
+   "size": 1634,
+   "sha256": "f110a07b17a1758e4aa08a6a3201ec9f9423a78489c71975e70e5d7a15571836"
+  },
+  "launch.py": {
+   "size": 1146,
+   "sha256": "75df762663e334f2b80261546c8b3a36a7fa43c10b190a49cc2aa87cce12a276"
+  },
+  "owned_process.py": {
+   "size": 2552,
+   "sha256": "812b39c00151bad4ec2d888b36e5cf74407ce6b5234c219a675ffd04757a4ae7"
+  },
+  "pin_contracts.py": {
+   "size": 2479,
+   "sha256": "25a3a18992810adcdee08599d02f12526e694e7f26fb66d3a635d296fd50bc18"
+  },
+  "PLAN.json": {
+   "size": 10994,
+   "sha256": "06249b51986bd10ede8450f2ab3f876797860c0bb1db2fe6684e8980c61e7c9c"
+  },
+  "POSTSTAGE-READBACK-TEMPLATE.json": {
+   "size": 1382,
+   "sha256": "5cbc811900771fe20d7da2fc31170ef1b1052581a3ece0a1c531da6263c2d0cf"
+  },
+  "post_slot.py": {
+   "size": 2347,
+   "sha256": "e0f43cd7e852f797687867177a42c99ce4e72a34108e9ee7d66b707201108d71"
+  },
+  "prepare_common.py": {
+   "size": 2239,
+   "sha256": "9839ad26b6c24b8252d81b8d532c80c803da30e4a2ba23fafe70bdeede029123"
+  },
+  "prepare_handoff_templates.py": {
+   "size": 1939,
+   "sha256": "8352c1b1b1e5eb832845c55d4455b7e6cf06ee4709ecb84424d954f8fdd28449"
+  },
+  "prepare_source.py": {
+   "size": 3708,
+   "sha256": "c3db168f5b09b7ec3c3eac4969ce3a1b3d29c86cfdee8f7fbb493e64ed5b880a"
+  },
+  "README.md": {
+   "size": 4034,
+   "sha256": "c605ad2e1ad3c197c7951e2ae2bd18484e29f1c84b1e24411025be9c3444c626"
+  },
+  "recovery_context.py": {
+   "size": 10670,
+   "sha256": "7bac051afa77fa41bb1b7bc49727cfa00d2d4a8a431602588d207d461a118a97"
+  },
+  "ROOT-GUEST-GRANT-TEMPLATE.json": {
+   "size": 1170,
+   "sha256": "078a31fffa729cd6b5af29bb632eb79acbadfd6693ad62fd209dec451ed89755"
+  },
+  "ROOT-RECOVERY-HANDOFF-TEMPLATE.json": {
+   "size": 650,
+   "sha256": "29685d8c5a70c949f78857485440b93e8d5e6f825e5a11b73edfe78a69a1c651"
+  },
+  "seal_bound.py": {
+   "size": 3035,
+   "sha256": "0ea34815d2db2cd46e701fa6c19aaad67a517814d9840c2106c0ea7daebee40a"
+  },
+  "seal_source.py": {
+   "size": 2608,
+   "sha256": "7a7b9e898f6d0ccb19ad2a00d704aa65fd9c9dd2cf1c7b66a7361463cdaaf1cb"
+  },
+  "SOURCE-CONTRACT-PINS.json": {
+   "size": 8329,
+   "sha256": "f57d2f4f006ccb0ede17e2d7110b2874269cbf490289dab6f710f2fca44bd2a7"
+  },
+  "SOURCE-LINEAGE.json": {
+   "size": 1273,
+   "sha256": "4d5d0b128918fa203a75f9c2549de038e21e26a7d40a77d63451e4a1f3ee4788"
+  },
+  "SOURCE-STATUS.json": {
+   "size": 547,
+   "sha256": "806cb3aa09a68ee78bfe5d8bb9ad98093e049ac9290958922853ce8071dabe0a"
+  },
+  "windows_entry.py": {
+   "size": 5389,
+   "sha256": "8fb96ed116a2412f4455ff0a9598df5b200122e25615439702d0020a8a58b209"
+  }
+ }
+}

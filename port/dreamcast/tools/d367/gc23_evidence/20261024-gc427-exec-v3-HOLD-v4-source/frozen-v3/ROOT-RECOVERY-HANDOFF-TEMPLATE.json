@@ -1,0 +1,10 @@
+{
+ "approved_readonly_binding": false,
+ "scope": "FULL_MEDIA_READBACK_AND_EXPLICIT_CURRENT_BASELINE_ONLY_NO_GUEST",
+ "source": "427784b1f48aa30742850bb5025925ab619b740e",
+ "off_base": "/mnt/c/Flycast-Evidence/re4-dreamcast/rain-diag24-20261024/_qa-media-8ce-recovery-v4/base-off",
+ "on_base": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-budget-retest-media-v2/on",
+ "poststage_identity": null,
+ "approved_old_to_current_drift_identity": null,
+ "explanation": "Root verifies real fresh OFF first; ROOT-RECOVERY-HANDOFF.json at the fixed V2 independent review root binds actual READBACK and exact drift identity. No guest grant."
+}

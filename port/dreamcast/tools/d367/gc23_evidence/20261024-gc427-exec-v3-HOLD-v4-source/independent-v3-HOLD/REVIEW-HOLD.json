@@ -1,0 +1,17 @@
+{
+  "status": "HOLD",
+  "scope": "SOURCE_HOST_ONLY",
+  "source_review_seal_sha256": "0296f5782e8c94ccc65a46cfcd5171fdf5d6c3348914b6af80190245961c4dbc",
+  "finding": "BIND_RECOVERY_ENCODED_FUNCTION_SHADOWED_BY_BYTES",
+  "source_file": "bind_recovery.py",
+  "shadow_line": 66,
+  "first_failed_call_line": 75,
+  "repro_sha256": "cef3c7dba213a842b0ba7f9c4cd77c4986c7fa9ba3d15eaaa44f5d449ec810c7",
+  "review_sha256": "486e7f0d4e3983b7aef56e5721110ef8e14134e4fc5e9fd8ad365987fdd53017",
+  "author_controls": 87,
+  "extra_controls": 6,
+  "semantic_mutants_caught": 4,
+  "actual_binding": false,
+  "SDK_stage_guest": false,
+  "closed_utc": "2026-10-24T14:56:02.248721+00:00"
+}

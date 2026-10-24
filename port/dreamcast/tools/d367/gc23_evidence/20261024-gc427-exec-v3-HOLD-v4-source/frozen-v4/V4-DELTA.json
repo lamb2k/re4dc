@@ -1,0 +1,143 @@
+{
+ "status": "NARROW_V4_CALLABLE_SHADOWING_REPAIR_SOURCE_ONLY",
+ "parent_source_seal": {
+  "size": 5442,
+  "sha256": "0296f5782e8c94ccc65a46cfcd5171fdf5d6c3348914b6af80190245961c4dbc"
+ },
+ "changed": {
+  "bind_recovery.py": {
+   "before": {
+    "size": 7387,
+    "sha256": "3fb2907b2484aa0318a3c2fa694e5576ec25d6d8b1216fc64f500e9b1e9791bd"
+   },
+   "after": {
+    "size": 7399,
+    "sha256": "5129b4b031e101ea2b1b1c1aafa5d6c42892c45a43af6ddfe2215ff9f68fec3b"
+   }
+  },
+  "recovery_context.py": {
+   "before": {
+    "size": 12838,
+    "sha256": "bfee5ad4f49a7c5e7d6fc24a98b833015e2ffa6597e85a7b928ca2f9d48aa557"
+   },
+   "after": {
+    "size": 12889,
+    "sha256": "6ff1203714406c98cb2df31c3fc3bc51c84139bb928bff6b4581862bef994f4a"
+   }
+  },
+  "host_controls.py": {
+   "before": {
+    "size": 10215,
+    "sha256": "54cf8ceec902a5c8f82c6e7631c31e0466175da2bb5274f0008605673fd312cd"
+   },
+   "after": {
+    "size": 13129,
+    "sha256": "38b4c7609bbcbf08d658fea395f2cb8f479973d9fa5939c5f302507780a91dc7"
+   }
+  },
+  "README.md": {
+   "before": {
+    "size": 4728,
+    "sha256": "2cf86b0ecbe1d298bb355b657e6629aa5dd5b605b4b1cbf41cdcc13d67d44e60"
+   },
+   "after": {
+    "size": 5166,
+    "sha256": "3a64be745b251150925867dcab6496c88964b23d6df1feaa5a947945fd3078db"
+   }
+  },
+  "seal_source.py": {
+   "before": {
+    "size": 2608,
+    "sha256": "5ef2d66531d7f21cdfbc31886ddf82334e3324e99950c732e8f0d48badd42ce6"
+   },
+   "after": {
+    "size": 2646,
+    "sha256": "0882957d12f8f76eab9b7cec91cc86a3b617ea3d880a5e69f7caf0672591c181"
+   }
+  }
+ },
+ "unchanged": {
+  "common.py": {
+   "size": 9915,
+   "sha256": "db6a096a7403e634fd8d54691f7f17cbb72bf9c873647b4dbc613f555bc9142c"
+  },
+  "controller.py": {
+   "size": 7272,
+   "sha256": "29b68123eb5c0171ac221c89347219767158921f0a0c56e4bac6f70a902b4711"
+  },
+  "post_slot.py": {
+   "size": 2347,
+   "sha256": "e0f43cd7e852f797687867177a42c99ce4e72a34108e9ee7d66b707201108d71"
+  },
+  "launch.py": {
+   "size": 1146,
+   "sha256": "75df762663e334f2b80261546c8b3a36a7fa43c10b190a49cc2aa87cce12a276"
+  },
+  "windows_entry.py": {
+   "size": 5389,
+   "sha256": "8fb96ed116a2412f4455ff0a9598df5b200122e25615439702d0020a8a58b209"
+  },
+  "owned_process.py": {
+   "size": 2552,
+   "sha256": "812b39c00151bad4ec2d888b36e5cf74407ce6b5234c219a675ffd04757a4ae7"
+  },
+  "judge.py": {
+   "size": 1634,
+   "sha256": "f110a07b17a1758e4aa08a6a3201ec9f9423a78489c71975e70e5d7a15571836"
+  },
+  "PLAN.json": {
+   "size": 10994,
+   "sha256": "06249b51986bd10ede8450f2ab3f876797860c0bb1db2fe6684e8980c61e7c9c"
+  },
+  "INPUT-PINS.json": {
+   "size": 5272,
+   "sha256": "664d5ac37ff93aa41f7cad1213f4ae7d07b6b1ca46285df1adf6e7c5119b483e"
+  },
+  "POSTSTAGE-READBACK-TEMPLATE.json": {
+   "size": 1564,
+   "sha256": "47e4579c73547187ee9ab90d96e6ebf86e5372dbb268dd1d02ecff6fc552bc0c"
+  },
+  "ROOT-RECOVERY-HANDOFF-TEMPLATE.json": {
+   "size": 650,
+   "sha256": "29685d8c5a70c949f78857485440b93e8d5e6f825e5a11b73edfe78a69a1c651"
+  }
+ },
+ "retained_roots": 17,
+ "preserved_execV3_metadata_charged": true,
+ "independent_V3_HOLD": {
+  "REVIEW-HOLD.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/REVIEW-HOLD.json",
+   "identity": {
+    "size": 668,
+    "sha256": "d6002af58bff6f68c3ab85edf9743a4328968809e5c8a9bb26c39839a2961edb"
+   }
+  },
+  "REVIEW.md": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/REVIEW.md",
+   "identity": {
+    "size": 2842,
+    "sha256": "486e7f0d4e3983b7aef56e5721110ef8e14134e4fc5e9fd8ad365987fdd53017"
+   }
+  },
+  "REVIEW-SEAL.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/REVIEW-SEAL.json",
+   "identity": {
+    "size": 1973,
+    "sha256": "9e27c773fecb47b37ba6472481f62f104b0ff6417bda1881647ee8353ecd8578"
+   }
+  },
+  "ENCODED-COLLISION-REPRO.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-guest-exec-v3-worldmeter/ENCODED-COLLISION-REPRO.json",
+   "identity": {
+    "size": 446,
+    "sha256": "cef3c7dba213a842b0ba7f9c4cd77c4986c7fa9ba3d15eaaa44f5d449ec810c7"
+   }
+  }
+ },
+ "regression": "Actual binder statements drift through outputs execute successfully; same V3 statements raiseTypeError",
+ "actual_baseline": false,
+ "actual_binding": false,
+ "SDK": 0,
+ "stage": 0,
+ "guest": 0
+}
