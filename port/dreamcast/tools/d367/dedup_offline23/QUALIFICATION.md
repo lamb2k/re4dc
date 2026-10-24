@@ -181,3 +181,26 @@ af09f0a2bfd32f2ecc29bda6a71a1de42bcf2b34. Both completed console s30 r2 logs rep
 adoption during the loan. This remains the declared-state fragment, with full H2
 heap-floor coverage pending. Ordinary programmes have texture/census/KOS checks
 disabled. No physical-console timing or pixel-identity claim follows.
+
+## Compact strip-share input option
+
+`prepare_qualification.py --strip-share` selects only the reviewed four files
+from the committed `strip-share-private-pins.json` (manifest SHA256
+`af246116c7d408c9b44b52a9400e1255122b62502ae0018b2808fcc4d47a5b10`).
+Pass the existing alternate root
+`/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023`; compact paths
+are exactly r100/r101/r103-stripshare-v1. Without the switch, the same original
+*-linear four files remain the default. No original package is replaced.
+
+The emitted source_identities keep original baseline size/bodyCRC/source extent
+separate from alternate physical size/bodyCRC. Both modes retain the original
+BASE hash/size pins. Compact physical sizes are1488192/1243808/1047968; original
+sizes remain1537920/1283520/1074688. Fresh SG header CRC/size binds the actual
+compact r101 package; its original metadata policy remains unchanged.
+
+Both ordinary stage and QA stage command arrays apply the same four --set
+alternates to Off and On. The existing QA primitive XON now explicitly includes
+PC_SAMPLER0, preventing rW's inherited sampler1. The planner still executes no
+build/stage/master/guest action and leaves actual programme/gate pins pending.
+Wrong source extent/sourceCRC and a modified declared manifest pin are negative
+controls. `--output` writes only one small new plan into an existing directory.

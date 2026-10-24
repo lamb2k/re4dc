@@ -31,7 +31,23 @@ def generate(tree):
     """Reuse the existing replay geometry harness; replace only synthetic cases."""
     d=tree/'port/dreamcast';tools=d/'tools/d367'
     controls=load(tools/'world_replay_lean/check_runtime.py','sdo3_boundary')
-    original=controls.original;function=original.function
+    original=controls.original;unadapted_function=original.function
+    # New production prefetch has two conditional signatures sharing one body.
+    # The brace extractor sees both opening braces unless this exact signature
+    # seam is resolved. This control explicitly qualifies PREFETCH=0 only.
+    signature='__attribute__((noinline)) int chunk_emit('
+    prefetch_head=('#if RE4DC_SCENERY_EMIT_PREFETCH\n'
+        '    __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n,const Pick* following=nullptr){\n'
+        '#else\n'
+        '    __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n){\n'
+        '#endif\n')
+    def function(source,wanted):
+        if wanted==signature and prefetch_head in source:
+            assert source.count(prefetch_head)==1,'Ambiguous prefetch signature seam'
+            source=source.replace(prefetch_head,
+                '    __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n){\n')
+        return unadapted_function(source,wanted)
+    original.function=function
     values=original.extract();raw=original.STATIC.read_text()
     names={'EMITTER':'struct Emitter {','BORROW_GATHER':'bool borrow_gather(){',
            'CORNERS':'const re4dc::room::CompactVertex12* corners(',
@@ -90,6 +106,19 @@ if(geometry_low_at&&acquired==geometry_low_at)model_pending=kModelPacketBytes/32
     return template,values,hashlib.sha256(original_fill.encode()).hexdigest()
 
 
+def authenticate_source(tree,expected_source):
+    if (tree/'source-pins.json').is_file():
+        pins=json.loads((tree/'source-pins.json').read_text())
+        if pins['source']!=expected_source:raise ValueError('Snapshot source mismatch')
+        for name,sha in pins['files'].items():
+            if digest(tree/name)!=sha:raise ValueError('Snapshot input changed: '+name)
+    else:
+        head=subprocess.check_output(['git','-C',str(tree),'rev-parse','HEAD'],text=True).strip()
+        if head!=expected_source:raise ValueError('Source HEAD mismatch')
+        dirty=subprocess.check_output(['git','-C',str(tree),'status','--porcelain','--untracked-files=no'],text=True)
+        if dirty:raise ValueError('Tracked source tree is dirty; extraction refused')
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--source-tree',type=Path,required=True)
@@ -98,12 +127,7 @@ def main():
     a=p.parse_args();tree=a.source_tree.resolve();output=a.output.resolve()
     resource.setrlimit(resource.RLIMIT_CORE,(0,0))
     if not output.is_relative_to(Path('/dev/shm')):raise ValueError('Generated outputs must remain in /dev/shm')
-    if (tree/'source-pins.json').is_file():
-        pins=json.loads((tree/'source-pins.json').read_text())
-        assert pins['source']==a.expected_source
-        for name,sha in pins['files'].items():assert digest(tree/name)==sha,name
-    else:
-        assert subprocess.check_output(['git','-C',str(tree),'rev-parse','HEAD'],text=True).strip()==a.expected_source
+    authenticate_source(tree,a.expected_source)
     output.mkdir(parents=True,exist_ok=False)
     for name,text in {
         'dc/pvr.h':'#pragma once\n',
@@ -119,7 +143,7 @@ def main():
         cmd=['g++','-std=c++20','-O2','-ffp-contract=off','-Wall','-Wextra',
              '-DRE4DC_SCENERY_SELECT_ONLY=1',f'-DRE4DC_SCENERY_SUBMIT_BATCH={batch}',
              f'-DRE4DC_SCENERY_REPLAY_LEAN={replay}',f'-DCOMPOSITION_DECODED={decoded}',
-             '-DCHECK_DIAGNOSTICS=0','-DRE4DC_SCENERY_SELECT_LEAN2=0','-I'+str(output/'shim'),
+             '-DCHECK_DIAGNOSTICS=0','-DRE4DC_SCENERY_SELECT_LEAN2=0','-DRE4DC_SCENERY_EMIT_PREFETCH=0','-I'+str(output/'shim'),
              '-I'+str(tree/'port/dreamcast/game/platform/include'),str(source_path),'-o',str(binary)]
         run=subprocess.run(cmd,cwd=output,capture_output=True,env=env)
         (output/(label+'.compile.log')).write_bytes(run.stdout+run.stderr)
@@ -160,12 +184,12 @@ def main():
                 source_snapshot_manifest_sha256=digest(tree/'source-pins.json') if (tree/'source-pins.json').is_file() else None,
                 compiler=subprocess.check_output(['g++','--version'],text=True).splitlines()[0],
                 mutation_returncode=run.returncode,mutation_stdout_sha256=hashlib.sha256(run.stdout).hexdigest(),
-                knobs={'SCENERY_DEDUP':3,'SCENERY_REPLAY_LEAN':[0,1],'SCENERY_SUBMIT_BATCH':[0,1],'SCENERY_SELECT_ONLY':1,'SCENERY_SELECT_LEAN2':0},
+                knobs={'SCENERY_DEDUP':3,'SCENERY_REPLAY_LEAN':[0,1],'SCENERY_SUBMIT_BATCH':[0,1],'SCENERY_SELECT_ONLY':1,'SCENERY_SELECT_LEAN2':0,'SCENERY_EMIT_PREFETCH':0},
                 cases=counts,source_sha256={str(f.relative_to(tree)):digest(f) for f in files},
                 extracted_sha256={n:hashlib.sha256(v.encode()).hexdigest() for n,v in values.items()},
                 original_dedup_fill_sha256=fill_sha,output_sha256=results,missing_cache_reset_mutation_detected=True,
                 target_gate_verdict='NOT_EVALUATED',
-                scope='Actual extracted Emitter, MeshDraw corner/borrow/dedup/emit/restart, chunk replay and portable clipper; source admission of synthetic R4IM; controlled SQ/texture/owner edges. Only two SH4 FMAC instructions adapted to host arithmetic. No SH4 optimized clipping/FTRV/FSRRA, real room/frame, performance or target acceptance.')
+                scope='Actual extracted Emitter, MeshDraw corner/borrow/dedup/emit/restart, chunk replay and portable clipper; source admission of synthetic R4IM; controlled SQ/texture/owner edges. PREFETCH0 conditional signature seam resolved before brace extraction; only two SH4 FMAC instructions adapted to host arithmetic. No SH4 optimized clipping/FTRV/FSRRA, real room/frame, performance or target acceptance.')
     (output/'composition-controls.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps({k:report[k] for k in ('status','source','comparisons','configurations','missing_cache_reset_mutation_detected')}))
 
