@@ -1,0 +1,37 @@
+{
+  "scope": "revised source/design proposal and model controls only; no runtime implementation, SDK, stage or guest",
+  "source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "supersedes_design_commit": "22fcd79e1d23d99cdb12309532eb399d5993284d",
+  "original_preserved_unchanged": true,
+  "persistent_proposed_bytes": 128,
+  "native_sample_valid_bit": 13,
+  "queue_key_valid_bit": 14,
+  "checks": 82,
+  "source_files_pinned": 28,
+  "files": {
+    "RAIN-DIAG-NEXT-PLAN-v2.md": {
+      "bytes": 24037,
+      "sha256": "96a1ccccc323f1bb1f1c236d66ba237c36b526e43b770446515274e12f1bb8bc"
+    },
+    "check_rain_diag_design.py": {
+      "bytes": 15529,
+      "sha256": "f72f2c778eaee847550a4aae0b2130bb8d1bcd78d3b8a6d208a37ed146768755"
+    },
+    "SOURCE-PINS-AND-DESIGN-CONTROLS.json": {
+      "bytes": 14664,
+      "sha256": "2272a129ea6f5c7620c81a2e9b2885c21b8d556178581090bd91d89b59b1d6ec"
+    }
+  },
+  "repairs": [
+    "ABI must equal1 (old model accepted ABI0)",
+    "reserve final even0xfffffffe, never oddmax/wrap",
+    "explicit native-return sample validity and generation/callback/queue/event frame+room/sequence join",
+    "clear native validity on every non-return publication",
+    "retain captured consumed queue key with pending0",
+    "outer trans Disp_flg/PTS/PTSK history unobserved",
+    "native API-reported count, no independent PVR acknowledgement",
+    "minimal32B planned flush scalar locals; Python tuple not stack proof"
+  ],
+  "independent_review": "PENDING frozen successor",
+  "no_more_guests": true
+}
