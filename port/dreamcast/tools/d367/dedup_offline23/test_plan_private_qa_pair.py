@@ -1,4 +1,8 @@
 import unittest
+import json
+from pathlib import Path
+import tempfile
+from unittest.mock import patch
 import plan_private_qa_pair as q
 
 
@@ -34,3 +38,35 @@ class PrivateQaPlanTests(unittest.TestCase):
         self.assertTrue(q.resolved_qa(good,3,source))
         with self.assertRaisesRegex(ValueError,'QA_SRC'):
             q.resolved_qa({**good,'QA_SRC':q.SOURCE[:8]},3,source)
+
+    def test_private_programs_match_actual_payload_overlay_lookup(self):
+        # Execute the actual t11 payload_base body with controlled files; the
+        # private stage must choose this programme rather than baseline ovl.
+        import importlib.util
+        src=Path(q.__file__).resolve().parents[1]/'test11/t11-fix.py'
+        spec=importlib.util.spec_from_file_location('private_t11',src)
+        t11=importlib.util.module_from_spec(spec);spec.loader.exec_module(t11)
+        with tempfile.TemporaryDirectory(dir='/dev/shm') as tmp:
+            root=Path(tmp);work=root/'private';payload=root/'payload';payload.mkdir()
+            label='new-current-on';private=work/'programs'/('candidate-route'+label);private.mkdir(parents=True)
+            (private/'sscrn.ovl').write_bytes(b'current programme')
+            (payload/'tree/dc').mkdir(parents=True);(payload/'tree/dc/sscrn.ovl').write_bytes(b'old baseline')
+            (payload/'MANIFEST-disc.json').write_text(json.dumps({'dc/sscrn.ovl':dict(sha256='baseline',size=12)}))
+            p=dict(source=q.SOURCE,tree='/frozen',recipe=dict(sha256=q.sha(b'recipe')),data_sets='unchanged',
+                alternates=[],baseline_packages={},qa=dict(arms={}))
+            for arm in ('off','on'):
+                p['qa']['arms'][arm]=dict(label=label,pkgtree=dict(environment={'PKG_K':'/oldwork'}),
+                    build=dict(environment={},argv=['build']),stage=dict(environment={}))
+            with patch.object(q,'validate_plan'),patch.object(q,'git',return_value=b'recipe'):
+                planned=q.make_plan(p,root,root/'buildtree',work)
+            stage=planned['arms']['on']['stage']['environment']
+            self.assertEqual(stage['RE4DC_HARNESS']+'/programs',
+                planned['arms']['on']['build']['environment']['ROUTE_PROGRAMS_DIR'])
+            t11.PAYLOAD_ROOT=str(payload);t11.STAGE_BASE=str(root/'absent')
+            t11.HARNESS=stage['RE4DC_HARNESS']
+            current=t11.payload_base(label)['replace']['dc/sscrn.ovl']
+            self.assertEqual(Path(current),private/'sscrn.ovl')
+            t11.HARNESS=str(root/'wrong-harness')
+            wrong=t11.payload_base(label)['replace']['dc/sscrn.ovl']
+            self.assertEqual(Path(wrong),payload/'tree/dc/sscrn.ovl')
+            self.assertNotEqual(Path(current).read_bytes(),Path(wrong).read_bytes())

@@ -81,7 +81,7 @@ def make_plan(p,repo,tree,work,source=SOURCE):
         env.update(ROUTE_PROGRAMS_DIR=str(work/'programs'),ROUTE_PROGRAMS_JSON='',ROUTE_REGISTRY_LOCK=str(work/'programs.lock'))
         x['build']['argv']=['bash','/root/probe/d367-buildslot.sh',*x['build']['argv']]
         x['required_resolved_knobs']={**QA,'QA_SRC':source[:8],'SCENERY_DEDUP':str(mode),**{k:'0' for k in DIAGNOSTIC_ZERO}}
-        x['stage']['environment'].update(RE4DC_PAYLOAD_ROOT='/root/re4payload/t164-20261018',PKG_SRC='/root/re4payload/t164-20261018/tree')
+        x['stage']['environment'].update(RE4DC_HARNESS=str(work),RE4DC_PAYLOAD_ROOT='/root/re4payload/t164-20261018',PKG_SRC='/root/re4payload/t164-20261018/tree')
         x['pkgtree']['environment'].update(RE4DC_PAYLOAD_ROOT='/root/re4payload/t164-20261018',PKG_SRC='/root/re4payload/t164-20261018/tree')
         x['program_out']='/root/probe/lanes/route/out-'+x['label']
         x['post_build_requirements']=['stack.txt is exactly source40 plus newline; missing.txt empty; all14 overlays present',
