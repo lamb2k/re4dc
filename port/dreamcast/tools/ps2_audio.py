@@ -24,7 +24,8 @@ reported (GC-in-use count).
 usage:
   ps2_audio.py banks --tree DISCTREE --ps2 DIR --out OVERLAY [--files spec,...] [--json MAP] [--level gc|ps2] [--jobs N]
   ps2_audio.py streams --tree DISCTREE --ps2 DIR --out OVERLAY [--json MAP]
-  ps2_audio.py survey --tree DISCTREE [--files spec,...]     (GC vs PS2 per bank: samples, mapped, kept GC)
+  ps2_audio.py afs --iso PS2ISO --out DIR [patterns]        (BIO4DAT.AFS entries, default *.snd *.adx)
+  tools/d367/ps2snd24-regen.sh rebuilds the whole data set from a final disc in one command
 
 Game data never enters the repository: the tree, the PS2 directory and the overlay are private.
 """
@@ -791,6 +792,39 @@ def _blen(looplen, nch):
     return ab.STR_BLOCK * ((looplen // 2 + ab.STR_BLOCK - 1) // ab.STR_BLOCK) * nch
 
 
+def cmd_afs(a):
+    """Extract BIO4DAT.AFS entries matching the patterns from the PS2 ISO (isoinfo finds the AFS extent)."""
+    import fnmatch
+    import re
+    import subprocess
+    lst = subprocess.run(['isoinfo', '-l', '-i', a.iso], capture_output=True, text=True).stdout
+    m = re.search(r'\s(\d+)\s+\[\s*(\d+)\s+\d+\]\s+BIO4DAT\.AFS', lst, re.I)
+    base = int(m.group(2)) * 2048
+    with open(a.iso, 'rb') as f:
+        f.seek(base)
+        hdr = f.read(8)
+        assert hdr[:3] == b'AFS'
+        n = struct.unpack('<I', hdr[4:8])[0]
+        tab = struct.unpack('<%dI' % (2 * n + 2), f.read(8 * n + 8))
+        ents = [(tab[2 * i], tab[2 * i + 1]) for i in range(n)]
+        noff = tab[2 * n]
+        if noff == 0:
+            f.seek(base + ents[0][0] - 8)
+            noff = struct.unpack('<I', f.read(4))[0]
+        f.seek(base + noff)
+        names = f.read(48 * n)
+        os.makedirs(a.out, exist_ok=True)
+        k = 0
+        for i, (o, sz) in enumerate(ents):
+            nm = names[48 * i:48 * i + 32].split(bytes(1))[0].decode('latin1')
+            if any(fnmatch.fnmatch(nm.lower(), p) for p in a.patterns):
+                f.seek(base + o)
+                with open(os.path.join(a.out, nm), 'wb') as g:
+                    g.write(f.read(sz))
+                k += 1
+    print('afs: %d of %d entries' % (k, n))
+
+
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest='cmd', required=True)
@@ -810,8 +844,12 @@ def main():
     s.add_argument('--jobs', type=int, default=4)
     s.add_argument('--min-xcorr', type=float, default=0.5)
     s.add_argument('--ps2-length', action='store_true')
+    x = sub.add_parser('afs')
+    x.add_argument('--iso', required=True)
+    x.add_argument('--out', required=True)
+    x.add_argument('patterns', nargs='*', default=['*.snd', '*.adx'])
     a = ap.parse_args()
-    {'banks': cmd_banks, 'streams': cmd_streams}[a.cmd](a)
+    {'banks': cmd_banks, 'streams': cmd_streams, 'afs': cmd_afs}[a.cmd](a)
 
 
 if __name__ == '__main__':
