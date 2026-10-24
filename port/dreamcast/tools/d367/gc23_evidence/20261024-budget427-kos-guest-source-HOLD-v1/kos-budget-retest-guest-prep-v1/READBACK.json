@@ -1,0 +1,17 @@
+{
+ "status": "SOURCE_HOST_CANDIDATE_HOLD_BASELINE_DRIFT_NO_GUEST",
+ "seal": {
+  "size": 3857,
+  "sha256": "7b5120956b13f1d25f50280120686a8efe45ed70f09ca14042722cb4eaa9997e"
+ },
+ "files": 29,
+ "public_tests": 53,
+ "public_pass": 51,
+ "environment_guard_refusals": 2,
+ "Windows_actual_owned_benign_controls": 8,
+ "current_media_HOLD": true,
+ "root_grant": false,
+ "SDK": 0,
+ "stage": 0,
+ "guest": 0
+}

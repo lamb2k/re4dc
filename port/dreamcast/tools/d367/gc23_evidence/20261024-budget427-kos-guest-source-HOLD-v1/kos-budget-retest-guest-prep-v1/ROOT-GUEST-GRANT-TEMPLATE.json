@@ -1,0 +1,61 @@
+{
+ "approved": false,
+ "authorization": "FOUR_KOS48_CORRECTED427_CONSOLE_ONLY",
+ "scope": "CAPTURES_AND_BOUNDED_KOS_JUDGEMENT_ONLY",
+ "source": "427784b1f48aa30742850bb5025925ab619b740e",
+ "kit_sha256": "ROOT_PIN_FINAL_SEAL",
+ "media_kit_sha256": "2301e39cfb166ee25bab261f0323d1df27331155148b67453bc527ce7330bee1",
+ "case_order": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "seconds": 45,
+ "exact_child_seconds": 55,
+ "parent_seconds": 95,
+ "admission_seconds": 180,
+ "overall_seconds": 1300,
+ "new_delta_cap": 1342177280,
+ "aggregate_cap": 6979321856,
+ "root_slots": 3,
+ "global_slots": 16,
+ "H2": false,
+ "poststage": {
+  "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-media-poststage-v1/FINAL-READBACK.json",
+  "identity": {
+   "size": 25805,
+   "sha256": "4dd7b532825d198b4f35f7f2cea576638e37339fc9e5e04cb5a4b4dd5fd7bb49"
+  }
+ },
+ "metadata_allowlists": {
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-stage-root-v1": [
+   "CONTROLLER.log",
+   "GRANT-IDENTITY.json",
+   "root-stage-observer.py",
+   "PROCESS.json"
+  ],
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-media-poststage-v1": [
+   "BASELINE-INDEPENDENT.json",
+   "FINAL-READBACK.json",
+   "HANDBACK.md",
+   "OFF-INDEPENDENT.json",
+   "OFF-RESOURCE.json",
+   "ON-INDEPENDENT.json",
+   "ON-RESOURCE.json",
+   "REPORT.md",
+   "REVIEW-SEAL.json",
+   "STATUS.md",
+   "baseline_readback.py",
+   "finalize.py",
+   "media_readback.py",
+   "seal.py"
+  ],
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-root-review-v1": [
+   "ROOT-GUEST-GRANT.json",
+   "root-guest-observer.py",
+   "CONTROLLER.log",
+   "PROCESS.json"
+  ]
+ }
+}

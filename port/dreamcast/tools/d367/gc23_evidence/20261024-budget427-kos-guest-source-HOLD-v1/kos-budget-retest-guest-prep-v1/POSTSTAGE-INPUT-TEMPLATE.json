@@ -1,0 +1,20 @@
+{
+ "status": "UNKNOWN_NOT_A_PASS",
+ "source": "427784b1f48aa30742850bb5025925ab619b740e",
+ "media_kit_sha256": "2301e39cfb166ee25bab261f0323d1df27331155148b67453bc527ce7330bee1",
+ "pair_complete_identity": "UNKNOWN",
+ "arms": {
+  "off": {
+   "base": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-media-aab-v1/base-off",
+   "readback_path": "ROOT_FRESH_INDEPENDENT_READBACK_off",
+   "readback_identity": "UNKNOWN",
+   "complete_identity": "UNKNOWN"
+  },
+  "on": {
+   "base": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-budget-retest-media-v2/on",
+   "readback_path": "ROOT_FRESH_INDEPENDENT_READBACK_on",
+   "readback_identity": "UNKNOWN",
+   "complete_identity": "UNKNOWN"
+  }
+ }
+}

@@ -1,0 +1,11 @@
+{
+ "tests": 50,
+ "success": true,
+ "failures": 0,
+ "errors": 0,
+ "production_locks": 0,
+ "SDK": 0,
+ "stage": 0,
+ "guests": 0,
+ "fake_release_processes": 0
+}

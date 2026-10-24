@@ -1,0 +1,56 @@
+{
+ "status": "SOURCE_HOST_CANDIDATE_HOLD_BASELINE_DRIFT_NO_GUEST",
+ "timestamp_UTC": "2026-10-24T13:18:30.143981+00:00",
+ "source": "427784b1f48aa30742850bb5025925ab619b740e",
+ "media_kit_sha256": "2301e39cfb166ee25bab261f0323d1df27331155148b67453bc527ce7330bee1",
+ "actual_poststage_historical": {
+  "actual_final": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-media-poststage-v1/FINAL-READBACK.json",
+   "identity": {
+    "size": 25805,
+    "sha256": "4dd7b532825d198b4f35f7f2cea576638e37339fc9e5e04cb5a4b4dd5fd7bb49"
+   }
+  },
+  "seal": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-media-poststage-v1/REVIEW-SEAL.json",
+   "identity": {
+    "size": 2096,
+    "sha256": "1715b3b8f5514c3c2eeb7a5c1c3a0e8adde0174c7738589add3e5328642cf3c1"
+   }
+  },
+  "static_only": true,
+  "guest_permission": false
+ },
+ "public_controls": {
+  "tests": 53,
+  "success": false,
+  "failures": 2,
+  "errors": 0,
+  "production_locks": 0,
+  "SDK": 0,
+  "stage": 0,
+  "guests": 0,
+  "fake_release_processes": 0
+ },
+ "Windows_controls": [
+  "actual_owned_handle_identity",
+  "wrong_creation_FILETIME_refused_without_termination",
+  "wrong_path_refused_without_termination",
+  "wrong_sha256_refused_without_termination",
+  "actual_exact_instance_terminated_and_exit_observed",
+  "already_exited_safe",
+  "actual_pre_timer_identity_fault_exact_object_terminated",
+  "actual_pre_timer_write_fault_exact_object_terminated"
+ ],
+ "current_resource_guard_refusal": "Historical baseline byte total changed",
+ "drift_receipt": {
+  "size": 1641,
+  "sha256": "9409bd8b090ec545cf7e927fc68ac63266b558c4907493deabee91a0836aef85"
+ },
+ "SDK": 0,
+ "stage": 0,
+ "production_locks": 0,
+ "guest": 0,
+ "H2": "HELD",
+ "limits": "No source/runtime acceptance or memory pass. Root explicit successor media/baseline decision required; no rebase/restore/substitution was performed."
+}

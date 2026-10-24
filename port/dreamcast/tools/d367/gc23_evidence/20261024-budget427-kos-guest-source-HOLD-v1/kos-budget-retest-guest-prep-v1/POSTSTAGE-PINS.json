@@ -1,0 +1,18 @@
+{
+ "actual_final": {
+  "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-media-poststage-v1/FINAL-READBACK.json",
+  "identity": {
+   "size": 25805,
+   "sha256": "4dd7b532825d198b4f35f7f2cea576638e37339fc9e5e04cb5a4b4dd5fd7bb49"
+  }
+ },
+ "seal": {
+  "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-media-poststage-v1/REVIEW-SEAL.json",
+  "identity": {
+   "size": 2096,
+   "sha256": "1715b3b8f5514c3c2eeb7a5c1c3a0e8adde0174c7738589add3e5328642cf3c1"
+  }
+ },
+ "static_only": true,
+ "guest_permission": false
+}
