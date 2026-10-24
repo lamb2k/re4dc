@@ -4,7 +4,7 @@ import hashlib,json,shutil
 E=Path('/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01')
 T=Path('/root/work/lanes/dedup-offline23-qa-4be08e01/port/dreamcast/tools/d367')
 sha=lambda p:hashlib.file_digest(p.open('rb'),'sha256').hexdigest()
-m=json.loads((E/'qa-media-r1/pair-media-identity.json').read_text());report={}
+m=json.loads((E/'qa-media-r1/pair-media-identity.json').read_text());plan=json.loads((E/'private-qa-plan-prelink.json').read_text());report={}
 for arm,mode in [('off',0),('on',3)]:
  x=m['arms'][arm];d=Path(x['path']);gates={}
  for kind in ('boot','warp','h2'):
@@ -73,7 +73,7 @@ report all materials correct from these bounded tests. No hardware FPS claim.
  (d/'README.txt').write_text(readme);(d/'STEPS.txt').write_text(steps)
  shutil.copyfile(T/'qa20/README-package.txt',d/'README-tooling.txt')
  (d/'QUALIFICATION-PENDING.txt').write_text('Local normal QA checks pass. Root review/integration and physical acceptance remain pending; no SD/publication.\n')
- identity=dict(status='LOCAL_NORMAL_QA_PAIR_GATES_PASS_ROOT_REVIEW_PENDING',source=m['source'],baseline_source='d5c1ceab9e06461462669b3ce1d28a379747a74a',arm=arm,scenery_dedup=mode,programme=x['programme'],tracks=x['tracks'],final_manifest_sha256=x['manifest_sha256'],post_final_manifest_sha256=rr['final_post_manifest_sha256'],only_programme_differences=m['only_programme_differences'],original_assets_and_exact4_alternates_common=True,normal_qa_gates=gates,proxy_retirement_receipt_sha256=sha(retirement),gdemu10_gates_sha256=sha(E/'gdemu10-gates-r1.json'),known_limitations=['Physical-console acceptance pending','No hardware performance claim','Known baseline Mendez late-pair material issue retained; separate unproven-visible PS2 private repair not included','Scoped observed diagnostics, not all-material completeness','Root integration/recipe decision pending'])
+ identity=dict(status='LOCAL_NORMAL_QA_PAIR_GATES_PASS_ROOT_REVIEW_PENDING',source=m['source'],baseline_source='d5c1ceab9e06461462669b3ce1d28a379747a74a',arm=arm,scenery_dedup=mode,programme=x['programme'],tracks=x['tracks'],final_manifest_sha256=x['manifest_sha256'],post_final_manifest_sha256=rr['final_post_manifest_sha256'],only_programme_differences=m['only_programme_differences'],original_assets_and_exact4_alternates_common=True,baseline_packages=plan['baseline_packages'],compact_alternates=plan['alternates'],normal_qa_gates=gates,proxy_retirement_receipt_sha256=sha(retirement),gdemu10_gates_sha256=sha(E/'gdemu10-gates-r1.json'),known_limitations=['Physical-console acceptance pending','No hardware performance claim','Known baseline Mendez late-pair material issue retained; separate unproven-visible PS2 private repair not included','Scoped observed diagnostics, not all-material completeness','Root integration/recipe decision pending'])
  (d/'IDENTITY.json').write_text(json.dumps(identity,indent=2)+'\n')
  sums=[]
  for f in sorted(d.rglob('*')):
