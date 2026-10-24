@@ -2,6 +2,7 @@
 set -euo pipefail
 TREE=/root/work/lanes/gc-port23
 export GCGATE_SOURCE=${1:?Pass root-approved immutable source SHA}
+if test "$#" -gt 1; then export GCGATE_PRIOR_REPORT=$2; fi
 exec 7>"/tmp/d367-build-$(printf %s "$TREE" | md5sum | cut -c1-12).lock"
 flock -n 7 || { printf 'Tree build lease busy\n' >&2; exit 1; }
 cd "$TREE"
