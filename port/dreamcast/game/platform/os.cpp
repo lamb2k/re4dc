@@ -391,6 +391,11 @@ int OSCreateThread(OSThread* thread, void* (*func)(void*), void* param, void* st
             if (g_reapPendingCount < sizeof(g_reapPending) / sizeof(g_reapPending[0])) {
                 g_reapPending[g_reapPendingCount++] = previous;
             } else {
+#if RE4DC_GC_ASSET_GATE
+                // A dropped prior record has unknown future work. This fault
+                // is permanent: a later empty reap list cannot repair proof.
+                gcasset_os_late=1;
+#endif
                 re4dc_log("OSCreateThread: reap list full; KOS thread record %p leaks\n", (void*) previous);
             }
         }

@@ -16,6 +16,11 @@ class TerminalOs(unittest.TestCase):
         resume=function(text,'s32 OSResumeThread(')
         check=function(text,'static void checkGate(')
         creation=function(text,'struct GcAssetOsCreation')+';'
+        create=function(text,'int OSCreateThread(')
+        end=create.index('                re4dc_log("OSCreateThread: reap list full;')
+        start=create.rfind('#if RE4DC_GC_ASSET_GATE',0,end)
+        overflow=create[start:end]
+
         code=r"""
 #include <cassert>
 #include <cstring>
@@ -36,11 +41,14 @@ int unpark(OSThread*){++unparks;return 1;}
 void thd_pass(){}
 void parkSelf(OSThread*){++parks;}
 void genwait_wait(void*,const char*,int){++waits;throw 7;}
-"""+creation+'\n'+quiesce+'\n'+resume+'\n'+check+r"""
+"""+creation+'\n'+quiesce+'\n'+resume+'\n'+check+'\nvoid actual_tracking_overflow(){\n'+overflow+'\n}\n'+r"""
 int main(){
  kthread_t main{STATE_READY,nullptr,nullptr},task{STATE_WAIT,&g_gate,"os-suspend"};
  OSThread t{&task,0,1,0,nullptr};g_mainThread.kt=&main;thd_current=&main;g_threads[0]=&t;g_threadCount=1;
  unsigned blocked=99;
+ actual_tracking_overflow();
+ assert(!re4dc_gcasset_os_quiesce(&blocked) && !gcasset_os_terminal);
+ gcasset_os_late=0;
  // Reused source slot: its replacement is idle, but the prior KOS task is not.
  kthread_t prior{STATE_READY,nullptr,nullptr};g_reapPending[0]=&prior;g_reapPendingCount=1;
  assert(!re4dc_gcasset_os_quiesce(&blocked) && !gcasset_os_terminal);
