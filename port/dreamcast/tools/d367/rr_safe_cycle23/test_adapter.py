@@ -179,8 +179,11 @@ class CapsuleTests(unittest.TestCase):
         for bad in [dict(row,stopped='reader'),dict(row,elapsed_s=7),dict(row,stop_matched_s=float('nan')),
                     dict(row,errors=['failed']),dict(row,emu='harness'),dict(row,early_emulator_exit=0)]:
             self.assertEqual(capsule.boot_semantics('state title=1\n',bad)['status'],'FAIL')
-        for text in ('no title','state title=1\nFAULT','state title=1\nopen failed'):
+        for text in ('no title','state title=1\nFAULT','state title=1\nopen failed',
+                     'state title=1\nBAD-READ','state title=1\nDISCNOTE: disc: DMA late',
+                     'state title=1\nDISCNOTE: snd: stream table still busy'):
             self.assertEqual(capsule.boot_semantics(text,row)['status'],'FAIL')
+        self.assertEqual(capsule.boot_semantics('state title=1\nDISCNOTE: disc: init ok\n',row)['status'],'BOOT_TITLE_GOAL_PASS')
 
     def test_incomplete_whole_cycle_phase_refuses_before_lock(self):
         cfg=self.root/'whole-cycle-refuse.json'

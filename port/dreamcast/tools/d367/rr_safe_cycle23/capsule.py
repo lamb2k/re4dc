@@ -205,7 +205,8 @@ def boot_semantics(text, actual):
     matched = actual.get('stop_matched_s')
     elapsed = actual.get('elapsed_s')
     finite = lambda x: isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x)
-    bad = r'HALT|FAULT|MISSING|Out of memory|DISC READ FAILED|short read|open failed|read failed|upload FAILED|LOG OVERRUN'
+    bad = (r'HALT|FAULT|MISSING|Out of memory|DISC READ FAILED|short read|open failed|read failed|upload FAILED|LOG OVERRUN|BAD-READ'
+           r'|DISCNOTE: (disc: .*(busy|timeout|abort|not accepted|late|did not land|failed|reinit|pio)|snd: stream table (bad|still))')
     checks = dict(title_marker='state title=' in text, no_error_rows=re.search(bad, text) is None,
                   complete=actual.get('status') == 'RUN_COMPLETE' and actual.get('errors') == [],
                   console=actual.get('emu') == 'console', observation45=actual.get('seconds') == 45,
