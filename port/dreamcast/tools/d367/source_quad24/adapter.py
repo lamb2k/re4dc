@@ -13,7 +13,22 @@ import sys
 import tempfile
 import time
 import types
-import source_quad as q
+
+# -B suppresses cache WRITES, not imports from an unchecked-hash .pyc.
+# Authenticate and execute the SAME source bytes; never consult helper bytecache.
+def _frozen_generic():
+    path=Path(__file__).resolve().with_name('source_quad.py')
+    raw=path.read_bytes()
+    if hashlib.sha256(raw).hexdigest()!='2221649a8e347e567b4bf05d612ced71007db60a5678b01c95fc60ec61c4227f':
+        raise ValueError('Frozen generic helper source hash changed')
+    module=types.ModuleType('source_quad')
+    module.__file__=str(path)
+    sys.modules[module.__name__]=module # dataclass module identity before exec
+    exec(compile(raw,module.__file__,'exec'),module.__dict__)
+    return module
+
+q=_frozen_generic()
+
 
 GENERIC_SOURCE='975a976eb8888ee7ddc8a58c69e7b0907c89ea80'
 GENERIC_REVIEW='8e4584e3a3a811b4d74f924529a299e3b2695d48d86135f0008b8762126e5cae'

@@ -13,8 +13,9 @@ import types
 import unittest
 from unittest.mock import patch
 import adapter as a
-import source_quad as q
+q=a.q
 import test_source_quad as public
+public.q=q # public fixtures use the authenticated direct-source module identity
 
 class AdapterControls(unittest.TestCase):
     @classmethod
@@ -188,5 +189,31 @@ class AdapterControls(unittest.TestCase):
         mock=types.SimpleNamespace(bind=lambda *args:({},(self.oldcase(),),self.old,{}),prep=types.SimpleNamespace(token=a.token))
         with patch.object(a,'load_reader',return_value=(mock,{})),patch.object(a,'convert_case',side_effect=AssertionError('universe changed')):
             with self.assertRaisesRegex(ValueError,'authenticated75'):a.bind_cases(Path('/PUBLIC'),Path('/PUBLIC'),Path('/PUBLIC'))
+
+
+    def test_actual_help_ignores_poisoned_unchecked_hash_cache_and_mutation_refuses(self):
+        import importlib._bootstrap_external as bootstrap
+        import importlib.util
+        import os
+        with tempfile.TemporaryDirectory(dir='/dev/shm') as temp:
+            root=Path(temp);helper=root/'source_quad.py';wrapper=root/'adapter.py'
+            raw=Path(a.__file__).with_name('source_quad.py').read_bytes()
+            helper.write_bytes(raw);wrapper.write_bytes(Path(a.__file__).read_bytes())
+            sentinel='PUBLIC_BYTECACHE_SENTINEL'
+            poison=compile('raise RuntimeError("'+sentinel+'")',str(helper),'exec')
+            cache=root/'__pycache__'/('source_quad.'+sys.implementation.cache_tag+'.pyc');cache.parent.mkdir()
+            cache.write_bytes(bootstrap._code_to_hash_pyc(poison,importlib.util.source_hash(raw),checked=False))
+            frozen=hashlib.sha256(cache.read_bytes()).hexdigest()
+            env=dict(os.environ);env.pop('PYTHONPYCACHEPREFIX',None)
+            ordinary=subprocess.run([sys.executable,'-B','-c','import source_quad'],cwd=root,env=env,capture_output=True,text=True,timeout=10)
+            self.assertNotEqual(ordinary.returncode,0);self.assertIn(sentinel,ordinary.stderr) # actual live poison control
+            good=subprocess.run([sys.executable,'-B',str(wrapper),'--help'],cwd=root,env=env,capture_output=True,text=True,timeout=10)
+            self.assertEqual(good.returncode,0,good.stderr);self.assertIn('--reader-repo',good.stdout);self.assertNotIn(sentinel,good.stderr)
+            self.assertEqual(hashlib.sha256(helper.read_bytes()).hexdigest(),a.GENERIC_PINS['source_quad.py'])
+            self.assertEqual(hashlib.sha256(cache.read_bytes()).hexdigest(),frozen)
+            helper.write_bytes(raw+b'\n# PUBLIC changed source; original poison cache stays intact.\n')
+            changed=subprocess.run([sys.executable,'-B',str(wrapper),'--help'],cwd=root,env=env,capture_output=True,text=True,timeout=10)
+            self.assertNotEqual(changed.returncode,0);self.assertIn('Frozen generic helper source hash changed',changed.stderr);self.assertNotIn(sentinel,changed.stderr)
+            self.assertEqual(hashlib.sha256(cache.read_bytes()).hexdigest(),frozen)
 
 if __name__=='__main__':unittest.main()

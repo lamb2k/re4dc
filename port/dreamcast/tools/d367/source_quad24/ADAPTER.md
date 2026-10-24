@@ -2,6 +2,8 @@
 
 Implementation only, pending independent source review and a NEW root execution grant. No actual private input authentication, scene predicate, scan, preparation rerun, ray/ledger, SDK or guest has been performed for this adapter. The exact nominal helper and its three files remain frozen at `975a976eb8888ee7ddc8a58c69e7b0907c89ea80`; its independent source-review seal is `8e4584e3a3a811b4d74f924529a299e3b2695d48d86135f0008b8762126e5cae`. Numeric/raster/current source receipts and runtime admission stay UNQUALIFIED.
 
+The adapter authenticates the frozen helper's raw source SHA before executing those SAME bytes with direct compile/exec, a valid __file__, and its canonical ModuleType/sys.modules identity installed before dataclasses execute. It does not normally import source_quad or consult its adjacent bytecache. `-B` alone blocks cache writes, not unchecked-hash cache reads. A public actual-subprocess control installs a matching-source poison cache, proves an ordinary -B import executes its sentinel, proves adapter -B --help ignores it, and proves changed helper source refuses by raw hash while the cache remains unchanged. No private binder is reached by these help controls.
+
 This adds only adapter.py, test_adapter.py and this document. It reuses the frozen reader and generic proof; it is not another data-reader or preparation framework. The default command verifies public source bytes and emits a HELD source-only report/grant template. It does NOT load the reader, authenticate private inputs, form a geometric certificate, or call coverage. Default metadata is not evidence of private input closure.
 
 ## Fixed universe and fresh authentication
