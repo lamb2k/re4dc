@@ -15,6 +15,7 @@ const CatalogRow* catalog;
 unsigned catalog_rows, room, visit, wired, checked_mask, used, overflow, errors;
 char scope_text[24];
 unsigned emissions[ConsumerCount];
+unsigned catalog_faults; // bounded reason/owned-or-unowned bits; never a row cache
 bool active,catalog_ok;
 struct Queued { Consumer consumer; CheckedAsset asset;unsigned kind;Digest digest;unsigned room, visit; };
 static_assert(sizeof(Queued)==52,"tenth consumer must not grow audio queue events");
@@ -42,6 +43,19 @@ void hex(const Digest& digest, char out[65]) {
     const char* alphabet = "0123456789abcdef";
     for(unsigned i=0;i<32;++i) { out[2*i]=alphabet[digest.bytes[i]>>4];out[2*i+1]=alphabet[digest.bytes[i]&15]; }
     out[64]=0;
+}
+enum CatalogFault : unsigned { CatalogRetired=1, CatalogRead=2, CatalogCapacity=4 };
+void catalog_fault(unsigned reason){
+    if(active){++errors;catalog_faults|=reason;}
+    else catalog_faults|=reason<<8;
+}
+void catalog_fault_flush(){
+    const unsigned pending=catalog_faults;catalog_faults=0;
+    const char* reasons[]={"catalog-retired-during-room","catalog-read","unknown-capacity"};
+    for(unsigned i=0;i<3;++i){
+        if(pending&(1U<<i))re4dc_log("GC-ASSET-ERROR v=2 why=%s consumer=%u %s visit=%u\n",reasons[i],unsigned(SourceGeometry),scope_text,visit);
+        if(pending&(1U<<(i+8)))re4dc_log("GC-ASSET-ERROR v=2 why=%s consumer=%u unowned=1\n",reasons[i],unsigned(SourceGeometry));
+    }
 }
 #include "include/gc_asset_index.inc"
 }
@@ -111,7 +125,7 @@ void retire_catalog(){
     // Invalidate before diagnostics/callbacks; a returned old row cannot become
     // current again, even if a callback installs a fresh catalog immediately.
     (void)new_catalog_epoch();
-    if(active)unresolved(SourceGeometry,"catalog-retired-during-room");
+    if(active)catalog_fault(CatalogRetired);
 }
 CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) {
     if(!catalog_ok || !token(kind,KindBytes) || !token(id,IdBytes))return {};
@@ -121,12 +135,12 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
         unsigned lower=0,upper=rows;
         while(lower<upper) {
             const unsigned middle=(lower+upper)/2;
-            if(!index_row(middle,row)){unresolved(SourceGeometry,"catalog-read");return {};}
+            if(!index_row(middle,row)){catalog_fault(CatalogRead);return {};}
             if(!catalog_ok || !index_generation(epoch))return {};
             if(index_compare(row,kind,id,digest)<0)lower=middle+1;else upper=middle;
         }
         if(lower<rows) {
-            if(!index_row(lower,row)){unresolved(SourceGeometry,"catalog-read");return {};}
+            if(!index_row(lower,row)){catalog_fault(CatalogRead);return {};}
             if(!catalog_ok || !index_generation(epoch))return {};
             if(!index_compare(row,kind,id,digest))index=lower;
         }
@@ -137,7 +151,7 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
         unsigned i=0;
         for(;i<unknown_count;++i)if(!index_compare(unknown_assets[i],kind,id,digest))break;
         if(i==unknown_count) {
-            if(unknown_count==UnknownLimit){++overflow;unresolved(SourceGeometry,"unknown-capacity");return {};}
+            if(unknown_count==UnknownLimit){++overflow;catalog_fault(CatalogCapacity);return {};}
             auto& unknown=unknown_assets[unknown_count++];unknown={};
             std::strcpy(unknown.kind,kind);std::strcpy(unknown.id,id);unknown.digest=digest;unknown.provenance=Unknown;
         }
@@ -168,6 +182,7 @@ static bool future_event(unsigned r,unsigned v){return admission_handoff && r==a
 static void begin_at(unsigned r,unsigned v,unsigned mask,bool startup,bool admit,bool handoff=false,bool transition=false,unsigned from=FromStartup,TransitionReason why=InitialRoom) {
     if(!handoff)queue_active.store(0);
     if(active) { ++errors;end(0); }
+    catalog_fault_flush(); // before old visit/scope fields can be reset
     room=r;visit=v;wired=mask;checked_mask=used=overflow=errors=0;
     std::memset(emissions,0,sizeof emissions);active=true;
     std::memset(seen,0,sizeof seen);
@@ -270,6 +285,7 @@ void pump() {
     const unsigned faults=queue_faults.exchange(0);
     if(active)errors+=faults;
     else if(faults)re4dc_log("GC-ASSET-ERROR v=2 why=unowned-audio count=%u\n",faults);
+    catalog_fault_flush();
 }
 void checked(Consumer consumer) {
     if(!active)return;

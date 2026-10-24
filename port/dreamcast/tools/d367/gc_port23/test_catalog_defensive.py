@@ -27,9 +27,9 @@ using namespace re4dc_gcasset;
 unsigned char initial_file[]={@FILE@};
 std::vector<unsigned char> file(initial_file,initial_file+sizeof initial_file);
 std::string logs;unsigned cursor,io_depth,opens,closes,seeks,reads;int live_fd;
-bool short_read,close_failure,nested_failed;CheckedAsset other;
-enum Hook{NoHook,Interleave,RetireDiscSeek,RetireDiscRead,RetireCoreRead,EnsureOpen,RetireOpen,RetireTotal};Hook hook=NoHook;
-extern "C" void re4dc_log(const char* fmt,...){char s[256];va_list a;va_start(a,fmt);vsnprintf(s,sizeof s,fmt,a);va_end(a);logs+=s;}
+bool short_read,close_failure,nested_failed;CheckedAsset other;Digest other_digest;
+enum Hook{NoHook,Interleave,RetireDiscSeek,RetireDiscRead,RetireCoreRead,EnsureOpen,RetireOpen,RetireTotal,InterleaveBind};Hook hook=NoHook;
+extern "C" void re4dc_log(const char* fmt,...){assert(!io_depth);char s[256];va_list a;va_start(a,fmt);vsnprintf(s,sizeof s,fmt,a);va_end(a);logs+=s;}
 extern "C" void* re4dc_io_begin(){++io_depth;return &io_depth;}
 extern "C" void re4dc_io_end(void* p){assert(p==&io_depth&&io_depth);--io_depth;}
 int fs_open(const char*,int){assert(!live_fd);live_fd=100+int(++opens);cursor=0;
@@ -40,6 +40,7 @@ int fs_close(int fd){assert(fd==live_fd);++closes;if(close_failure)return -1;liv
 off_t fs_total(int fd){assert(fd==live_fd);if(hook==RetireTotal){hook=NoHook;retire_disc_catalog();}return file.size();}
 off_t fs_seek(int fd,off_t at,int){assert(fd==live_fd);++seeks;cursor=unsigned(at);
  if(hook==Interleave){hook=NoHook;AssetDescription d;memset(&d,0xff,sizeof d);nested_failed=!describe_checked(other,&d);assert(nested_failed&&!d.kind[0]&&!d.id[0]);}
+ if(hook==InterleaveBind){hook=NoHook;nested_failed=!bind_checked("geometry","b",other_digest).value;assert(nested_failed);}
  if(hook==RetireDiscSeek){hook=NoHook;retire_disc_catalog();assert(closes==0&&live_fd==fd);}
  return at;}
 ssize_t fs_read(int fd,void* p,unsigned n){assert(fd==live_fd);++reads;if(cursor+n>file.size())return 0;memcpy(p,file.data()+cursor,n);cursor+=n;
@@ -82,6 +83,17 @@ void core_case(unsigned phase,unsigned action,bool binding,bool describing){
  else{const auto token=bind_a();AssetDescription desc;assert(token.value&&describe_checked(token,&desc));assert(desc.provenance==(action==2?PS2:GameCube));}
 }
 int main(int argc,char**argv){assert(argc==2);const unsigned test=unsigned(std::stoi(argv[1]));
+ if(test==35){disc_setup();const auto a=bind_a();other_digest=digest(1);begin(0x211,7,Required);logs.clear();hook=InterleaveBind;emitted_checked(SourceGeometry,a);end(1);assert(nested_failed&&logs.find("errors=3")!=std::string::npos&&logs.find("why=catalog-read consumer=0 room=0211 visit=7")!=std::string::npos);return 0;}
+ if(test==36){replacement={"geometry","a",digest(0),PS2};assert(install(&replacement,1));begin(0x211,7,Required);logs.clear();for(unsigned i=0;i<8;++i){char id[8];snprintf(id,sizeof id,"id%u",i);assert(bind_checked("geometry",id,digest(i)).value);}io_depth=1;assert(!bind_checked("geometry","overflow",digest(9)).value);assert(logs.empty());io_depth=0;end(1);assert(logs.find("why=unknown-capacity consumer=0 room=0211 visit=7")!=std::string::npos&&logs.find("errors=1")!=std::string::npos);return 0;}
+ if(test>=30 && test<=34){
+  if(test==34){Reader r;const auto pin=fingerprint(file.data(),file.size());assert(install_index(independent_read,&r,file.size(),pin));r.phase=4;r.action=1;assert(!bind_a().value);assert(logs.empty());Reader fresh;assert(install_index(independent_read,&fresh,file.size(),pin));pump();assert(logs.find("why=catalog-read consumer=0 unowned=1")!=std::string::npos);return 0;}
+  disc_setup();const auto old=bind_a();begin(0x211,7,Required);logs.clear();hook=RetireDiscRead;AssetDescription d;assert(!describe_checked(old,&d));assert(!io_depth&&logs.empty());
+  if(test==30){pump();assert(logs.find("why=catalog-retired-during-room consumer=0 room=0211 visit=7")!=std::string::npos);end(1);assert(logs.find("errors=1")!=std::string::npos);}
+  if(test==31){end(1);assert(logs.find("why=catalog-retired-during-room consumer=0 room=0211 visit=7")!=std::string::npos&&logs.find("errors=1")!=std::string::npos);}
+  if(test==32){begin(0x212,8,Required);assert(logs.find("why=catalog-retired-during-room consumer=0 room=0211 visit=7")!=std::string::npos&&logs.find("errors=2")!=std::string::npos);const auto at=logs.find("room=0212 visit=8");assert(at!=std::string::npos&&logs.find("why=catalog-retired-during-room",at)==std::string::npos);end(1);}
+  if(test==33){end(1);const auto first=logs;explicit_reinstall(old);assert(logs==first);begin(0x212,8,Required);end(1);assert(logs.find("why=catalog-retired-during-room consumer=0 room=0211 visit=7")!=std::string::npos&&logs.find("errors=1")!=std::string::npos);}
+  return 0;
+ }
  if(test>=20){unsigned x=test-20;const unsigned action=x%3+1,phase=x/3+1;core_case(phase,action,false,false);return 0;}
  if(test>=14){unsigned x=test-14;core_case(4,x%3+1,x<3,x>=3);return 0;}
  if(test==8){hook=EnsureOpen;assert(ensure_disc_catalog());assert(nested_failed&&opens==1&&disc_state.load()==Ready);return 0;}
@@ -169,8 +181,15 @@ class DefensiveCatalogTests(unittest.TestCase):
         old_gate=subprocess.check_output(['git','-C',str(ROOT.parent.parent),'show',BASE+':port/dreamcast/game/platform/gc_asset_gate.cpp'],text=True)
         old_index=subprocess.check_output(['git','-C',str(ROOT.parent.parent),'show',BASE+':port/dreamcast/game/platform/include/gc_asset_index.inc'],text=True)
         mutations.append(('old_epoch_bodies',old_gate,old_index,None,4))
+        mutations.append(('retire_formats_inside_io',gate.replace('if(active)catalog_fault(CatalogRetired);','if(active)unresolved(SourceGeometry,"catalog-retired-during-room");'),None,None,30))
+        mutations.append(('replacement_drops_pending_fault',None,index.replace('catalog_ok=false;catalog=nullptr;','catalog_faults=0;catalog_ok=false;catalog=nullptr;'),None,34))
+        mutations.append(('begin_drops_pending_fault',gate.replace('if(!handoff)queue_active.store(0);','catalog_faults=0;if(!handoff)queue_active.store(0);'),None,None,32))
         for name,g,i,d,case in mutations:
             with self.subTest(mutant=name):self.run_case(case,self.compile(name,g,i,d),success=False)
+
+    def test_deferred_faults_keep_visit_attribution_and_survive_replacement(self):
+        for case in range(30,37):
+            with self.subTest(case=case):self.run_case(case)
 
     def test_retirement_at_epoch_exhaustion_never_publishes(self):
         private=self.work/'private_epoch.cpp';exe=self.work/'private_epoch'

@@ -52,18 +52,19 @@ bool ensure_disc_catalog(){
     if(state!=Initial && state!=FreshInstall)return false;
     disc_state.store(Installing);Digest expected{};
     if(!disc_pin(expected)){disc_failed();unresolved(SourceGeometry,"catalog-pin-missing");return false;}
-    off_t bytes;
+    off_t bytes=-1;
     {
         DiscGuard guard;
         if(!guard.held){disc_failed();return false;}
         // Only Initial or an explicit safe-owner retirement can reach here.
         if(disc_catalog!=FILEHND_INVALID){disc_failed();return false;}
-        Re4dcIoScope io;
-        disc_catalog=fs_open("/cd/dc/gc-assets.idx",O_RDONLY);
+        {
+            Re4dcIoScope io;
+            disc_catalog=fs_open("/cd/dc/gc-assets.idx",O_RDONLY);
+            if(disc_state.load()==Installing && disc_catalog!=FILEHND_INVALID)bytes=fs_total(disc_catalog);
+        }
         if(disc_state.load()!=Installing)return false;
         if(disc_catalog==FILEHND_INVALID){disc_failed();unresolved(SourceGeometry,"catalog-file-missing");return false;}
-        bytes=fs_total(disc_catalog);
-        if(disc_state.load()!=Installing)return false;
     }
     if(bytes<128 || bytes>128+16376*112 || !install_index(disc_read,nullptr,unsigned(bytes),expected)){
         // Retain the exact fd, even after failure. Never close a busy reader or
