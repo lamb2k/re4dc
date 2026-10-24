@@ -256,3 +256,20 @@ recipe and coordinator status table are unchanged.
 3. Do the local appearance, STRICT gameplay and retirement/transition gates
    remain unchanged, with actual-flip cadence consistent with the serial
    and QA census rows?
+
+### 2026-10-24: Build 11 hand-back (`codex/world-blender-roundtrip-20261024`)
+
+Explicitly invoked tools only; no runtime/default pipeline integration. Base
+`057e00a2`. The [report](BUILD11_WORLD_BLENDER_ROUNDTRIP_20261024.md) and pinned
+Blender 4.4.3 receipt establish three real save/reopen byte-identical bundles,
+43 rejected scene mutations and regeneration of every registered companion.
+The release recipe and coordinator status table are unchanged.
+
+1. Does the accepted private R4IM v3/R4PW bundle pass the same strict identity
+   inventory and Blender round trip? An unknown companion requires a reviewed
+   adapter; it must not be dropped to pass the gate.
+2. What are full-room Blender import/export time and peak memory with repeated
+   placements? Public fixtures establish correctness, not private-room scale.
+3. Before intentional reconstruction, which source features and dependent
+   proofs define the replacement acceptance? This identity-only bridge issues
+   no lost-part, visibility or new-geometry certificate.
