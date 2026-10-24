@@ -2039,6 +2039,16 @@ $(error ACTOR_SETUP_LEAN must be 0 or 1)
 endif
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_SETUP_LEAN=1
 endif
+# ACTOR_BYTES_LEAN=1 (render only; default 0): retain constant ARGB in the current Part's meshlet
+#              cache instead of rewriting every slot for every meshlet. Per-vertex alpha and MOVCA
+#              position allocation keep the original path. No source records or palettes change.
+ACTOR_BYTES_LEAN ?= 0
+ifneq ($(ACTOR_BYTES_LEAN),0)
+ifneq ($(ACTOR_BYTES_LEAN),1)
+$(error ACTOR_BYTES_LEAN must be 0 or 1)
+endif
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_BYTES_LEAN=1
+endif
 # AVK_RIGID6=1 (needs ACTOR_VTX_KERNEL; render only, exact): rigid parts with stride 6 positions (props, weapons,
 #              attachments: positions_asm<kPos6>, ~65% of pass_positions at the r101 entry) take the pipelined
 #              rigid6 kernels (mkavk.py @p6: the index x 6 through r14) instead of the one-vertex loop.

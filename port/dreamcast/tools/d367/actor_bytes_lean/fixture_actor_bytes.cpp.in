@@ -1,0 +1,207 @@
+// Added to the existing production-TU actor fixture by check_runtime.py.
+// All source arrays are synthetic. Native blob records use production layout
+// types; no GameCube, PS2 or Dreamcast game data is used.
+extern "C" {
+float re4dc_screen_wf = 640.0f, re4dc_screen_hf = 480.0f;
+float re4dc_screen_half_wf = 320.0f, re4dc_screen_half_hf = 240.0f;
+void re4dc_skin_palette_resolve(const float*) {}  // fixture palette is already materialized
+float re4dc_fog_gate_far() { return 0.0f; }       // use the part's production projection far
+#if RE4DC_ACTOR_TRANSACTION
+unsigned re4dc_actor_stream_begin(const void*, unsigned) { return 0; }  // unregistered synthetic scratch stream
+void re4dc_actor_stream_end(unsigned, const void*, unsigned) {}
+#endif
+}
+namespace check {
+
+void prefix_counts(Asset& a) {
+    const unsigned counts[] = {3, 17, 6, 31, 9, 128, 3, 0, 24, 12, 127, 9};
+    auto* b = reinterpret_cast<unsigned char*>(a.stream.data());
+    const auto& h = *reinterpret_cast<const BlobHeader*>(b);
+    auto* table = reinterpret_cast<MeshletInfo*>(b + sizeof(BlobHeader));
+    auto* indices = b + h.idx4 * 4u;
+    assert(a.meshlets == sizeof(counts) / sizeof(counts[0]));
+    for (unsigned m = 0; m < a.meshlets; ++m) {
+        const unsigned nv = counts[m], ni = nv - nv % 3u;
+        table[m].n = Counts::of(nv, ni, ni / 3u);
+        // The last triangle reaches the final cache slot even when nv is not
+        // divisible by three: this exercises every high-water tail write.
+        for (unsigned j = 0; j < ni; ++j) {
+            const unsigned v = j + (j + 3u >= ni ? nv - ni : 0u);
+            indices[table[m].index + j] = static_cast<unsigned char>(v | (j % 3u == 2u ? 128u : 0u));
+        }
+    }
+}
+
+unsigned first_argb(unsigned begin, unsigned end) {
+    for (unsigned i = begin; i + 7u < end; i += 8u)
+        if ((ta[i] & 0xe0000000u) == 0xe0000000u) return ta[i + 6u];
+    assert(false && "expected an emitted vertex");
+    return 0;
+}
+
+void constant_prefixes(unsigned id, unsigned kind, unsigned style) {
+    start();
+    const unsigned geometry = style == 1 ? 1u : style == 2 ? 5u : style == 7 ? 4u : 0u;
+    Asset a(kind, 12, 128, 0, geometry, style == 3);
+    prefix_counts(a);
+    if (style == 7) {
+        auto* b = reinterpret_cast<unsigned char*>(a.stream.data());
+        const auto& h = *reinterpret_cast<const BlobHeader*>(b);
+        auto* r = reinterpret_cast<std::uint16_t*>(b + h.rec4 * 4u);
+        for (unsigned i = 1; i < 12u * 128u; i += 2u) r[i * 3u] = r[(i - 1u) * 3u];
+    }
+    a.lighting.enable = 0;
+    if (style == 3) a.p.alpha_state |= 256u;  // per-vertex alpha must decline colour reuse
+    if (style == 4 || style == 5) {
+        a.lighting.enable = 1;
+        model_class = 1;                     // production crowd tier folds to a part colour
+#if RE4DC_LEON_LIGHT_HEADROOM
+        if (style == 5) {
+            a.lighting.normal_matrix[7] = 1.0e30f;
+            a.lighting.tev_scale = 0.5f;     // half_post must be applied once to the retained word
+        }
+#endif
+    }
+    if (style == 6) {
+        a.p.flags = 0;
+        a.p.uv_offset[0] = 0.125f;
+        a.p.uv_offset[1] = -0.25f;
+        us = 0.75f; vs = 0.5f;
+    }
+    a.bind();
+    const unsigned before = ta.size();
+    assert(re4dc_actor_submit(&a.p) == 1);
+    assert(ta.size() > before + 8u);
+    if (style == 4 || style == 5) {
+        // Make the corner case an admission assertion, not just a matching
+        // off/on test that could silently stop reaching constant lighting.
+        const float near = a.p.projection[6] / (a.p.projection[5] - 1.0f);
+        const float far = a.p.projection[6] / a.p.projection[5];
+        Frame& f = *prepare_frame(a.p, near, far);
+        Lights l;
+        const auto* h = reinterpret_cast<const BlobHeader*>(a.p.stream);
+        const bool folded = build_lights(a.p, f, h->center, l);
+        if (!(folded && l.fast && !l.constant))
+            std::fprintf(stderr, "constant admission id=%u style=%u folded=%u fast=%u constant=%u enable=%u material=%u/%u/%u tev=%g\n", id, style, folded, l.fast, l.constant, a.lighting.enable, a.lighting.material[0], a.lighting.material[1], a.lighting.material[2], a.lighting.tev_scale);
+        assert(folded && l.fast && !l.constant);
+        assert(kCrowd && kCrowdFlat);
+        u32 expected = (u32(a.p.alpha_state & 255) << 24) | part_colour(l);
+#if RE4DC_LEON_LIGHT_HEADROOM
+        assert(l.half_post == (style == 5));
+        if (l.half_post) expected = (expected & 0xff000000u) | ((expected >> 1) & 0x007f7f7fu);
+#endif
+        unsigned checked = 0;
+        for (unsigned i = before; i + 7u < ta.size(); i += 8u)
+            if ((ta[i] & 0xe0000000u) == 0xe0000000u) {
+                assert(ta[i + 6u] == expected);
+                ++checked;
+            }
+        assert(checked);
+#if RE4DC_LEON_LIGHT_HEADROOM
+        if (l.half_post) event(103, 1, checked);
+#endif
+    }
+    const unsigned first_end = ta.size();
+    // A new Part and a new frame must start a fresh colour prefix, even when
+    // they reuse the same packet/scratch addresses and identical geometry.
+    a.p.alpha_state = style == 3 ? 256u | 113u : 113u;
+    a.lighting.enable = 0;
+    a.lighting.material[0] = 53;
+    a.lighting.material[1] = 117;
+    a.lighting.material[2] = 191;
+    assert(re4dc_actor_submit(&a.p) == 1);
+    const unsigned second_end = ta.size();
+    const unsigned first_color = first_argb(before, first_end), second_color = first_argb(first_end, second_end);
+    assert(first_color != second_color);
+    event(100, first_color, second_color);
+    ++serial;
+    re4dc_actor_frame(work, sizeof work);
+    a.bind();
+    a.p.alpha_state = style == 3 ? 256u | 247u : 247u;
+    a.lighting.material[2] = 23;
+    assert(re4dc_actor_submit(&a.p) == 1);
+    const unsigned third_color = first_argb(second_end, ta.size());
+    assert(second_color != third_color);
+    event(101, second_color, third_color);
+    event(104, 128, 12);  // 12 meshlets: growing, shrinking, collapsed and rejected-prefix variants
+    finish(id);
+}
+
+#if RE4DC_COARSE_ONE_SUBMIT
+void constant_window(unsigned id, unsigned style) {
+    start();
+    std::array<std::unique_ptr<Asset>, 5> a;
+    std::array<Re4dcActorChunk, 5> c;
+    for (unsigned i = 0; i < a.size(); ++i) {
+        a[i] = std::make_unique<Asset>(style % 2u ? 3u : 1u, 4u + i, 6u + i * 9u);
+        a[i]->p.modelview[3] = float(i * 120u);
+        a[i]->p.modelview[7] = float(i * 70u);
+        a[i]->bind();
+        c[i] = {a[i].get(), a[i]->p.stream, a[i]->p.uv, a[i]->p.modelview,
+                a[i]->p.stream_bytes, a[i]->p.position_count, a[i]->p.normal_count};
+    }
+    Re4dcModelPart p = a[0]->p;
+    if (style == 0) a[0]->lighting.enable = 0;
+    else {
+        model_class = 1;
+        if (style == 2) {
+            a[0]->lighting.normal_matrix[7] = 1.0e30f;
+            a[0]->lighting.tev_scale = 0.5f;
+        }
+    }
+    // All chunks share the material/header/record required by the production
+    // one-submit API. Their modelview/centre-dependent folded colours differ.
+    assert(re4dc_actor_submit_chunks(&p, c.data(), c.size()) == (1u << c.size()) - 1u);
+    assert(locks == 1 && unlocks == 1);
+    if (style) {
+        unsigned at = 8u;
+        std::vector<u32> colours;
+        const float near = p.projection[6] / (p.projection[5] - 1.0f);
+        const float far = p.projection[6] / p.projection[5];
+        for (unsigned i = 0; i < a.size(); ++i) {
+            Re4dcModelPart cp = p;
+            cp.info = a[i].get(); cp.part = a[i].get();
+            cp.stream = c[i].stream; cp.stream_bytes = c[i].stream_bytes; cp.uv = c[i].uv;
+            cp.position_count = c[i].position_count; cp.normal_count = c[i].normal_count;
+            std::memcpy(cp.modelview, a[i]->p.modelview, sizeof(cp.modelview));
+            Frame& f = *prepare_frame(cp, near, far);
+            Lights l;
+            const auto* h = reinterpret_cast<const BlobHeader*>(cp.stream);
+            assert(build_lights(cp, f, h->center, l) && l.fast && !l.constant);
+            u32 expected = (u32(cp.alpha_state & 255) << 24) | part_colour(l);
+#if RE4DC_LEON_LIGHT_HEADROOM
+            assert(l.half_post == (style == 2));
+            if (l.half_post) expected = (expected & 0xff000000u) | ((expected >> 1) & 0x007f7f7fu);
+#endif
+            const unsigned vertices = (4u + i) * (6u + i * 9u);
+            for (unsigned j = 0; j < vertices; ++j) {
+                assert(at + 7u < ta.size() && (ta[at] & 0xe0000000u) == 0xe0000000u);
+                assert(ta[at + 6u] == expected);
+                at += 8u;
+            }
+#if RE4DC_LEON_LIGHT_HEADROOM
+            if (l.half_post) event(103, 1, vertices);
+#endif
+            if (std::find(colours.begin(), colours.end(), expected) == colours.end()) colours.push_back(expected);
+        }
+        assert(at == ta.size() && colours.size() > 1);
+        event(102, colours.size(), style);
+    }
+    p.alpha_state = 99;
+    a[0]->lighting.enable = 0;
+    a[0]->lighting.material[1] = 91;
+    assert(re4dc_actor_submit_chunks(&p, c.data(), c.size()) == (1u << c.size()) - 1u);
+    assert(locks == 2 && unlocks == 2);
+    finish(id);
+}
+#endif
+
+void bytes_cases() {
+    for (unsigned kind : {0u, 1u, 3u, 4u})
+        for (unsigned style = 0; style < 8; ++style)
+            constant_prefixes(300u + kind * 10u + style, kind, style);
+#if RE4DC_COARSE_ONE_SUBMIT
+    for (unsigned style = 0; style < 3; ++style) constant_window(360u + style, style);
+#endif
+}
+}  // namespace check
