@@ -1,0 +1,186 @@
+{
+ "complete": true,
+ "source": "8ce5ee2d00027268c3e69c9c300b819c1b14c63f",
+ "authorization": {
+  "path": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/qa-on-continuation-root-review-v1/ROOT-GRANT.json",
+  "identity": {
+   "bytes": 1171,
+   "sha256": "25ae3aeba4e5c139b5d67397238d91f622b9b93c5d3f3e53ca53442ee0a1649a"
+  },
+  "contract_sha256": "456ff60734a645223d9e9f7e910df06005c77fdbfb10fe29263008af25328ce9",
+  "controller_sha256": "7acb2ba8cb63e31b22abc5efc76462d65bfffb5d50617aa9409df9c4c42e908b"
+ },
+ "canonical_lease": "/tmp/d367-build-7d1f56a1729c.lock",
+ "slot": "/root/probe/d367-build.lock",
+ "reused_OFF": {
+  "original_receipt_sha256": "e0356a185a2dafe1368b66c5b6dedfa7b2bbd664f24c8f342019a081ca5dcf55",
+  "postbuild_sha256": "e21a8e47184b30a0dcbed1380e6a17c64c6fec3119b663e4254af5882289b3b4",
+  "complete": true,
+  "files": {
+   "re4dc-game.elf": {
+    "bytes": 28751468,
+    "sha256": "270be61f74ea99b039c474860dcc612ff52fc1ac1fe8a1c0060c1a9b13a82397"
+   },
+   "program.bin": {
+    "bytes": 3409924,
+    "sha256": "e0168b780b102356c9bc3ee785753a659be6a020b1d1d3f8db92f14a90c16de5"
+   },
+   "sscrn.ovl": {
+    "bytes": 134372,
+    "sha256": "6fd916c22cbddbf668703d024873913d0b9c8487d733fb2af7602d62eef85329"
+   },
+   "st2_0.ovl": {
+    "bytes": 96788,
+    "sha256": "1850182d70cff004aa9f35f0609bfd97ea26f95be93f02483b9294da50f844a5"
+   },
+   "st1_3.ovl": {
+    "bytes": 88748,
+    "sha256": "ffb4b18ab0ec4f9cf0967c45915834b4eb2c2721c9ddbdf99fb780365c7d299b"
+   },
+   "st1_2.ovl": {
+    "bytes": 50076,
+    "sha256": "1296503e39c3caca4511f98582f3e9005a64de759c78f38ad4e422d79f4151a0"
+   },
+   "st1_1.ovl": {
+    "bytes": 81572,
+    "sha256": "08435b560d442b215e700f58ded185886da49440ea370f555ef48e0d0033ffca"
+   },
+   "st1_0.ovl": {
+    "bytes": 36228,
+    "sha256": "820ecc0530f2605412638e3a40d77171340c769370f2835d7e1021eba45e5aab"
+   },
+   "em35.ovl": {
+    "bytes": 52392,
+    "sha256": "67824586c651ca5707f9a886a767d43b7ee94eecbad8dffbdf083b78509fa46b"
+   },
+   "em3b.ovl": {
+    "bytes": 7568,
+    "sha256": "b1f23f87568fbbc747228ffdd214c66161e637f381632a945ce61f2a03d02946"
+   },
+   "pl14.ovl": {
+    "bytes": 18832,
+    "sha256": "53669f8bb59b8ba8e346e721509b0f8930ff5c682ab3d1f9ff3934bc12e1f87b"
+   },
+   "pl11.ovl": {
+    "bytes": 35592,
+    "sha256": "233467137e10acd10fbc5895489fe792e3ade9a4b6a5e3d3d294d450d1991354"
+   },
+   "em2b.ovl": {
+    "bytes": 67900,
+    "sha256": "d0b133fa37502e6dc1fb5a3233eb30cfedc1eabb6d1b8f3dcbb8f9ded895ce5b"
+   },
+   "em22.ovl": {
+    "bytes": 27236,
+    "sha256": "f2959048e4a54d74443841bfdda188cdd2fa4bee16f3dd091380028f755b9c1e"
+   },
+   "em2f.ovl": {
+    "bytes": 16800,
+    "sha256": "3ec53d1677846cec454fd4527bef791491fc4eeee4e3ebba996a2bf454d539c6"
+   },
+   "pl0f.ovl": {
+    "bytes": 45608,
+    "sha256": "77d62f86eedaada02b1d9dae2f70ada76e0b833c475cfc5bee48fb6e2928c8e5"
+   }
+  },
+  "addresses": {
+   "_edata": 2352285700,
+   "_etext": 2351328706,
+   "_end": 2353271156,
+   "__bss_start": 2352285704
+  },
+  "sizes": {
+   "text": 2732904,
+   "data": 675908,
+   "bss": 985428
+  },
+  "original_seconds": 131.66698386499775
+ },
+ "fresh_ON": {
+  "complete": true,
+  "files": {
+   "re4dc-game.elf": {
+    "bytes": 28771768,
+    "sha256": "ba407db1c1f1cd428480e9eddb505a6eb5db405fbe1b0890cc83329cbd000e06"
+   },
+   "program.bin": {
+    "bytes": 3413348,
+    "sha256": "77dcbf2a619db123ded7388e0e86266e3cb8184bf95cea4cab962593cac34d09"
+   },
+   "sscrn.ovl": {
+    "bytes": 134372,
+    "sha256": "83c2d580b142094a655c4ecc36fa97497ee1e4f73d047a8d91408c2095205f9c"
+   },
+   "st2_0.ovl": {
+    "bytes": 96788,
+    "sha256": "d6174baf2373ad0060e7cdfcd18a0eb55a10d1c44d54225bc0360c63758d6e0b"
+   },
+   "st1_3.ovl": {
+    "bytes": 88748,
+    "sha256": "0ae8ef4175c4eaa7c412d97b4f0c46d8a77d63e927226b7da7ee63ecc92b4bbb"
+   },
+   "st1_2.ovl": {
+    "bytes": 50076,
+    "sha256": "7ece289a045d87b92faab6bfa3ef6ac4b0f094a9eba2dfeb034473b2763e5541"
+   },
+   "st1_1.ovl": {
+    "bytes": 81572,
+    "sha256": "8d0ceac7457096071da2dd92f3b706078f9daa7e0126d02c20608aac9a03ac8d"
+   },
+   "st1_0.ovl": {
+    "bytes": 36228,
+    "sha256": "fbabab71f992ec212328a08a01f63f0e89e14b4157fa44f3aeb6a50fb0ae183b"
+   },
+   "em35.ovl": {
+    "bytes": 52392,
+    "sha256": "805c1fd8597602f0a089bb37faa4219db61a47a0cf6ac571b52405aef6a9d16d"
+   },
+   "em3b.ovl": {
+    "bytes": 7568,
+    "sha256": "375ea2d785d42730614a0ad206ee48d97ac6c32b1a8190019a1e5ebb5a53af91"
+   },
+   "pl14.ovl": {
+    "bytes": 18832,
+    "sha256": "76079f279dafa2124f566c0f1296266d4fd1722494ed33dbe265995ef040d1e1"
+   },
+   "pl11.ovl": {
+    "bytes": 35592,
+    "sha256": "c08f870f5d290093c43576cf2d472055bf2f36c72f584799931b92e1d92d2959"
+   },
+   "em2b.ovl": {
+    "bytes": 67900,
+    "sha256": "bcaeea0ffd1a82664bcff60f195555e5163dd271d9ebc14f4cde829f528434c9"
+   },
+   "em22.ovl": {
+    "bytes": 27236,
+    "sha256": "d7e805a5cf39f6b3dc5aee46b0489d5cde0204e18d5e18778308637691b43854"
+   },
+   "em2f.ovl": {
+    "bytes": 16800,
+    "sha256": "e04cd59d4d170aa6b89ee0a4b90637e6bbd782a9d8d4d9605f630af992adfbcc"
+   },
+   "pl0f.ovl": {
+    "bytes": 45608,
+    "sha256": "40da05f3e2f10d52930f786337d2e802c052126d74b17bdfd182dbe4cd2b4dd8"
+   }
+  },
+  "addresses": {
+   "_edata": 2352289124,
+   "_etext": 2351332130,
+   "_end": 2353274740,
+   "__bss_start": 2352289128
+  },
+  "sizes": {
+   "text": 2736328,
+   "data": 675908,
+   "bss": 985588
+  },
+  "seconds": 134.42073586100014
+ },
+ "scope": "Reused fully authenticated OFF plus one entirely fresh ON; static programme identity only",
+ "delta": {
+  "text": 3424,
+  "data": 0,
+  "bss": 160
+ },
+ "linked_end_delta": 3584
+}

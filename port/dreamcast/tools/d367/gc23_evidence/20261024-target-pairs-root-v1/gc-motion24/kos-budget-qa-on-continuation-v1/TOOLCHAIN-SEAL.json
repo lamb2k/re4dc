@@ -1,0 +1,48 @@
+{
+ "schema": 1,
+ "source": "427784b1f48aa30742850bb5025925ab619b740e",
+ "parent_seal_sha256": "3833d51023b218cb1f58a74c3a5531cfc0a7e6fc275f91720588f5ac081524cc",
+ "scope": "ON-only source/host preparation; no SDK/stage/guest",
+ "members": {
+  "controller.py": {
+   "bytes": 8830,
+   "sha256": "d6e880e77369c67b2783785826fda13b44b1f88dabe477507420bd59062793b1"
+  },
+  "prepare.py": {
+   "bytes": 2271,
+   "sha256": "1b41ac753a611e65b4fc5cf00bb3f5448da2566b95442a5ce3a36ad11d0750c4"
+  },
+  "launch.py": {
+   "bytes": 733,
+   "sha256": "0dd96d8d2442db72cf063cacc2d193d85f03ee6dbf4012fc1b65ad9e0f7f2663"
+  },
+  "run.sh": {
+   "bytes": 2068,
+   "sha256": "73537dae2939af79e28deb8aa31cb198eebfb60e3dfa63e9c0f9579b6912d749"
+  },
+  "host_controls.py": {
+   "bytes": 7930,
+   "sha256": "ad15726c6f00b2315a9e9e5d1a13d090b6a028644b86b9c6aa3a60303d64c1c5"
+  },
+  "seal.py": {
+   "bytes": 1751,
+   "sha256": "52624251747befbfe4f992b8cff6c7fca04a20753c2fb1a41385451705cac3ca"
+  },
+  "README.md": {
+   "bytes": 4190,
+   "sha256": "7d445c847b33e666d0b3dcd51c1da1cbba099b0f68b2505cdce1f7772221e029"
+  },
+  "CONTRACT.json": {
+   "bytes": 3051593,
+   "sha256": "55a0a49e471021c5d90e06a86748321e367ab162ff3a4c250692f6a1b1f68b44"
+  },
+  "OFF-REUSE-PREPARATION.json": {
+   "bytes": 2792,
+   "sha256": "9111a994791b0880e197e4f821103544a90156f898d2d83f4512af1c45a795c5"
+  },
+  "HOST-CONTROLS.json": {
+   "bytes": 170,
+   "sha256": "69347f3290307aa4dd0d550b372b53ab09a5d911833a9451c418e8bf49289451"
+  }
+ }
+}

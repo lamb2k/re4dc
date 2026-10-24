@@ -1,0 +1,53 @@
+{
+ "scope": "SOURCE_HOST_ONLY_NO_SDK_OR_QUERY_STAGE_GUEST",
+ "kit_seal_sha256": "e1dd6f8994390766462b37ee99525697d218709090d6c45df2a07ceb257b59e2",
+ "contract_sha256": "55a0a49e471021c5d90e06a86748321e367ab162ff3a4c250692f6a1b1f68b44",
+ "retained_tests": 36,
+ "retained_failures": 0,
+ "retained_errors": 0,
+ "independent": [
+  {
+   "name": "old-overlay-byte-drift",
+   "refused": true
+  },
+  {
+   "name": "old-partial-ON-byte-drift",
+   "refused": true
+  },
+  {
+   "name": "actual-old-plus-new-cap-observation",
+   "observed": {
+    "C_free": 41344294912,
+    "RAM_free": 10454401024,
+    "tmpfs_available_bytes": 10454401024,
+    "MemAvailable_bytes": 25108881408,
+    "owned_bytes": 697015557,
+    "old_root_bytes": 378771684,
+    "new_root_bytes": 99693460,
+    "continuation_kit_bytes": 3084721
+   }
+  },
+  {
+   "name": "actual-launch-wrong-seal-before-controller",
+   "refused": true
+  }
+ ],
+ "old_root_files": 17443,
+ "new_source_files": 7644,
+ "source": "427784b1f48aa30742850bb5025925ab619b740e",
+ "sealed_kit_unchanged": true,
+ "verdict": "CLEAR_SOURCE_HOST_CONTINUATION_ONLY",
+ "SDK_commands": 0,
+ "Make_queries": 0,
+ "bootstrap": 0,
+ "production_locks": 0,
+ "stage": 0,
+ "guests": 0,
+ "review": {
+  "bytes": 3123,
+  "sha256": "fb78a41ad29703247c8d3acbe98ef6728a16d81978a48a80d0db9639ba33e08b"
+ },
+ "first_capped_git_refusal_preserved": true,
+ "reviewer_only_Git_serialization": true,
+ "source_427_and_sealed_members_unchanged": true
+}

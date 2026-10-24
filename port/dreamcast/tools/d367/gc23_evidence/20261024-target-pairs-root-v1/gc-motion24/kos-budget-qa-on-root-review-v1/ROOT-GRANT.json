@@ -1,0 +1,15 @@
+{
+  "scope": "One fresh ON QA target link plus exact reused OFF readback only; no stage/guest/H2/memory/performance acceptance",
+  "source": "427784b1f48aa30742850bb5025925ab619b740e",
+  "plan_sha256": "55a0a49e471021c5d90e06a86748321e367ab162ff3a4c250692f6a1b1f68b44",
+  "toolchain_sha256": "e1dd6f8994390766462b37ee99525697d218709090d6c45df2a07ceb257b59e2",
+  "source_host_review": {
+    "sha256": "8092e76cf181d6cc2d85f3f83a507c60958ddef18b50922f646a29a91337c903",
+    "controls": 40
+  },
+  "canonical_entry": "env-i /usr/bin/bash-p run.sh",
+  "limits": "One canonical lease and exactly one sharedSDKslot,jobs1,600s including readback,2GiB inclpreserved,C26/24GiB,minRAM3GiB/512MiB,releasepriority unchanged",
+  "OFF_expected": "e0168b780b102356c9bc3ee785753a659be6a020b1d1d3f8db92f14a90c16de5 andall14",
+  "no_automatic_retry": true,
+  "created_utc": "2026-10-24T12:11:44.226370+00:00"
+}

@@ -1,0 +1,108 @@
+{
+  "scope": "Source tools and qualification metadata only; no asset, geometry or programme bytes",
+  "rows": [
+    {
+      "file": "CODEX-TAKEOVER-STATUS.md",
+      "bytes": 16335,
+      "sha256": "a00d81c728f353abdfc5ab91953df9a53bf8eae6d37e1effe61c1158c9d2894d"
+    },
+    {
+      "file": "takeover-refresh-20261024.py",
+      "bytes": 16574,
+      "sha256": "f659c6fa636bb96155bba29ad9907e9223871424cd0d9dc607031ee04287dbb3"
+    },
+    {
+      "file": "gc-motion24/kos-budget-qa-on-root-review-v1/ROOT-GRANT.json",
+      "bytes": 892,
+      "sha256": "d8bbe8511554d2ddf9ee1af0667e7227fd21fbc8f4f057e78abef88d22ed6f36"
+    },
+    {
+      "file": "gc-motion24/kos-budget-qa-on-root-review-v1/root-sdk-observer.py",
+      "bytes": 2940,
+      "sha256": "d3d5cab9dda2c12289de9ed869c908f177c1e04c4351338a05001dc996405954"
+    },
+    {
+      "file": "gc-motion24/kos-budget-qa-on-root-review-v1/SDK-PROCESS.json",
+      "bytes": 839,
+      "sha256": "b775aabd02cdaa57d9ee0ee350939a0f36228c7979dc48f430ae4edb34bf15e0"
+    },
+    {
+      "file": "gc-motion24/kos-budget-qa-on-continuation-v1/run.sh",
+      "bytes": 2068,
+      "sha256": "73537dae2939af79e28deb8aa31cb198eebfb60e3dfa63e9c0f9579b6912d749"
+    },
+    {
+      "file": "gc-motion24/kos-budget-qa-on-continuation-v1/launch.py",
+      "bytes": 733,
+      "sha256": "0dd96d8d2442db72cf063cacc2d193d85f03ee6dbf4012fc1b65ad9e0f7f2663"
+    },
+    {
+      "file": "gc-motion24/kos-budget-qa-on-continuation-v1/TOOLCHAIN-SEAL.json",
+      "bytes": 1483,
+      "sha256": "e1dd6f8994390766462b37ee99525697d218709090d6c45df2a07ceb257b59e2"
+    },
+    {
+      "file": "gc-motion24/review-budget-qa-on-continuation-v1/REVIEW.json",
+      "bytes": 1446,
+      "sha256": "8092e76cf181d6cc2d85f3f83a507c60958ddef18b50922f646a29a91337c903"
+    },
+    {
+      "file": "gc-motion24/review-budget-qa-on-continuation-v1/REVIEW.md",
+      "bytes": 3123,
+      "sha256": "fb78a41ad29703247c8d3acbe98ef6728a16d81978a48a80d0db9639ba33e08b"
+    },
+    {
+      "file": "gc-motion24/kos-budget-retest-media-prep-v1/CAPACITY-HOLD.json",
+      "bytes": 11448,
+      "sha256": "71d456cc4abe3f4fa668d6fe2c8e9b222d76bb4f21042abb8ba83b5db554feeb"
+    },
+    {
+      "file": "gc-motion24/kos-budget-retest-media-prep-v1/capacity.py",
+      "bytes": 1418,
+      "sha256": "1cdddd7d0ddd54e685cac85c6b68863a2476ca18218ee807b5ee3ced0cbece49"
+    },
+    {
+      "file": "gc-motion24/kos-budget-retest-media-prep-v1/record_hold.py",
+      "bytes": 2598,
+      "sha256": "eb565a803c9e5b9ba1b21168f5f32007e92c09526ef334af789f7fc80a6f1233"
+    },
+    {
+      "file": "rain-diag24/qa-final-8ce-independent-readback-v1/HANDBACK.md",
+      "bytes": 754,
+      "sha256": "ff6fbfa8da62ade4a0835f6fed4f220a244bb53d0fab44664fe08eecc1e3f43d"
+    },
+    {
+      "file": "gc-continuation-receipt.json",
+      "original": "/dev/shm/gc-motion24-budget-on-cont-v1-2e6wsv2a/continuation-receipt.json",
+      "bytes": 7099,
+      "sha256": "4cccda258c4db04e5be740be727cf9b7af20e94a289df5401ee8bd916470e0b9"
+    },
+    {
+      "file": "rain-continuation-receipt.json",
+      "original": "/dev/shm/rain8ce-qa-on-cont-v1-eyihqhpk/continuation-result-v1/receipt.json",
+      "bytes": 5575,
+      "sha256": "8372befcc71fc1f7f3c0e25974886709b4bb1c2e6cbb9db39547c18fa89c3288"
+    },
+    {
+      "hash_only": "gc-motion24/kos-budget-qa-on-continuation-v1/CONTRACT.json",
+      "bytes": 3051593,
+      "sha256": "55a0a49e471021c5d90e06a86748321e367ab162ff3a4c250692f6a1b1f68b44"
+    },
+    {
+      "hash_only": "rain-diag24/qa-final-8ce-independent-readback-v1/READBACK.json",
+      "bytes": 98115,
+      "sha256": "f04bc877e439d07e79f3db1d425a71858f9d9004527ab1a8f59ff9cfbf7cc734"
+    },
+    {
+      "hash_only": "rain-diag24/qa-final-8ce-independent-readback-v1/CANARY-BINDING.json",
+      "bytes": 12075,
+      "sha256": "20036ec10222b8112c9273ccb2fa99fcb0f7f066e66f604c264d6ee1f25b23bc"
+    },
+    {
+      "hash_only_private_geometry_report": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/source-quad24-private-original75-root-r1/report.json",
+      "bytes": 601917,
+      "sha256": "078c8de6593c1ea28509c038bf3f360d4d326c3cb6ee33ab9f2280f3f4f0edfa",
+      "outcome": "75 UNKNOWN_NO_FIXED_PANEL; no certified cut or gain"
+    }
+  ]
+}

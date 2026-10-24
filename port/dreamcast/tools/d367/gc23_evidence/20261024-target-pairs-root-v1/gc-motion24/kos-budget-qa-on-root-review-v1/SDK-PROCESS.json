@@ -1,0 +1,22 @@
+{
+  "scope": "One fresh ON QA target link plus exact reused OFF readback only; no stage/guest/H2/memory/performance acceptance",
+  "argv": [
+    "/usr/bin/bash",
+    "-p",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-qa-on-continuation-v1/run.sh"
+  ],
+  "environment": {
+    "PATH": "/usr/bin:/bin",
+    "HOME": "/root",
+    "USER": "root",
+    "LOGNAME": "root",
+    "LANG": "C.UTF-8",
+    "GC_BUDGET_QA_SOURCE": "427784b1f48aa30742850bb5025925ab619b740e",
+    "GC_BUDGET_QA_PLAN": "55a0a49e471021c5d90e06a86748321e367ab162ff3a4c250692f6a1b1f68b44",
+    "GC_BUDGET_QA_TOOLS": "e1dd6f8994390766462b37ee99525697d218709090d6c45df2a07ceb257b59e2"
+  },
+  "grant_sha256": "d8bbe8511554d2ddf9ee1af0667e7227fd21fbc8f4f057e78abef88d22ed6f36",
+  "returncode": 0,
+  "seconds": 130.83191772099235,
+  "release_observations": []
+}

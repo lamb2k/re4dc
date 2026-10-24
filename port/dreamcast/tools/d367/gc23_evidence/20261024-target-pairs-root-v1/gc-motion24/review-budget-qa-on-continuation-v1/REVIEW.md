@@ -1,0 +1,15 @@
+# Independent GC budget QA ON continuation review
+
+CLEAR for the source/host continuation kit at TOOLCHAIN-SEAL SHA256 `e1dd6f8994390766462b37ee99525697d218709090d6c45df2a07ceb257b59e2`, CONTRACT SHA256 `55a0a49e471021c5d90e06a86748321e367ab162ff3a4c250692f6a1b1f68b44`. This is readiness for separately authorized SDK execution, not a new ON programme, memory or guest acceptance.
+
+The exact sealed members were rehashed before and after review. The source loader verifies the unchanged reviewed V3 seal and executes authenticated helper source directly; no adjacent bytecode loader is introduced. The launch boundary verifies the root-pinned continuation seal. The privileged Bash wrapper retains source/plan/tools admission, injection refusal, the canonical source427 lease, and the shared-slot recursive call. The actual inherited FD7 and exactly one FD8/9 are independently verified by the unchanged V3 code rather than inferred from labels.
+
+OFF reuse was independently read back using the reviewed postcheck. It matches the original completed QA OFF receipt/postcheck, raw e0168b78 and all14 expected overlays, resolved map, actual449-object graph, disabled-helper and dependency contracts. Its116.366240666 seconds are historical. The original incomplete pair and interrupted ON remain immutable: all17,443 original root files are pinned, including the old partial ON. The new ON root contains exactly7,644 fresh source files and no generated outputs; its command/profile changes only owned ON paths. No old ON object is reused and no OFF build command is issued.
+
+Single ON supervision retains jobs1 and600seconds, including OFF reauthentication/final work. The unchanged resource code sums preserved roots and prior kits, old root, new root and continuation kit under2GiB. Physical/tmpfs minimum RAM admission/floors and C26/24 limits remain enforced. Each build/analysis child uses the reviewed owned-session monitor and whole process-group cleanup even after leader exit. Detection of release work still stops the arm; this review does not reinterpret cron quiet time or authorize bypass.
+
+All36 retained host controls pass. Four additional independent controls check OFF-overlay byte drift and old partial-ON byte drift rejection against the actual manifest, actual combined old/new ownership observations, and an actual isolated launch rejecting a wrong seal before controller code runs. No production lock or SDK command was acquired/run.
+
+The first256MiB review attempt preserved35passes and one Git threaded-lstat resource refusal during OFF authentication. The repeated capped run used reviewer-only Git `index.threads=1` and `core.preloadIndex=false`, without changing kit files, canonical configuration, predicates, commands or source. It passed36/36. Both logs and both reviewer scripts are retained. This is a host-review adaptation, not a build wrapper change.
+
+No SDK, Make query, environment bootstrap, staging or guest ran. No new ON programme bytes, KOS squeeze recovery, H2, heap, visual, performance or physical acceptance is claimed. Root retains separate allocation and final gate decisions.

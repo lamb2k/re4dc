@@ -1,0 +1,345 @@
+{
+ "status": "CAPACITY_HOLD_NO_STAGE_NO_GUEST",
+ "timestamp_UTC": "2026-10-24T12:14:54.028854+00:00",
+ "capacity": {
+  "roots": [
+   {
+    "root": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-media-aab-v1",
+    "exists": true,
+    "files": 108,
+    "logical_bytes": 2165197279,
+    "new_unique_bytes": 2121948127,
+    "large": [
+     {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-media-aab-v1/base-off/track03.iso",
+      "bytes": 1024573440,
+      "dev": 64,
+      "ino": 281474981912325,
+      "nlink": 1,
+      "first": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-media-aab-v1/base-off/track03.iso"
+     },
+     {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-media-aab-v1/base-on/track03.iso",
+      "bytes": 1024618496,
+      "dev": 64,
+      "ino": 281474981912362,
+      "nlink": 1,
+      "first": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-media-aab-v1/base-on/track03.iso"
+     }
+    ]
+   },
+   {
+    "root": "/root/probe/gc-motion24-qa-media-v1",
+    "exists": true,
+    "files": 3432,
+    "logical_bytes": 2042917194,
+    "new_unique_bytes": 1025675928,
+    "large": [
+     {
+      "path": "/root/probe/gc-motion24-qa-media-v1/off/cdroot/dc/tex.pak",
+      "bytes": 162154496,
+      "dev": 2080,
+      "ino": 2236248,
+      "nlink": 5,
+      "first": "/root/probe/gc-motion24-qa-media-v1/off/cdroot/dc/tex.pak"
+     },
+     {
+      "path": "/root/probe/gc-motion24-qa-media-v1/on/cdroot/dc/tex.pak",
+      "bytes": 162154496,
+      "dev": 2080,
+      "ino": 2236248,
+      "nlink": 5,
+      "first": "/root/probe/gc-motion24-qa-media-v1/off/cdroot/dc/tex.pak"
+     }
+    ]
+   },
+   {
+    "root": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1",
+    "exists": true,
+    "files": 76,
+    "logical_bytes": 2108451286,
+    "new_unique_bytes": 2108451286,
+    "large": [
+     {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/off/track03.iso",
+      "bytes": 1024573440,
+      "dev": 64,
+      "ino": 562949957893234,
+      "nlink": 1,
+      "first": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/off/track03.iso"
+     },
+     {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/on/track03.iso",
+      "bytes": 1024620544,
+      "dev": 64,
+      "ino": 562949957893289,
+      "nlink": 1,
+      "first": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/on/track03.iso"
+     }
+    ]
+   },
+   {
+    "root": "/root/probe/gc-motion24-kos-census-media-v1",
+    "exists": true,
+    "files": 3432,
+    "logical_bytes": 2042920042,
+    "new_unique_bytes": 8437510,
+    "large": [
+     {
+      "path": "/root/probe/gc-motion24-kos-census-media-v1/off/cdroot/dc/tex.pak",
+      "bytes": 162154496,
+      "dev": 2080,
+      "ino": 2236248,
+      "nlink": 5,
+      "first": "/root/probe/gc-motion24-qa-media-v1/off/cdroot/dc/tex.pak"
+     },
+     {
+      "path": "/root/probe/gc-motion24-kos-census-media-v1/on/cdroot/dc/tex.pak",
+      "bytes": 162154496,
+      "dev": 2080,
+      "ino": 2236248,
+      "nlink": 5,
+      "first": "/root/probe/gc-motion24-qa-media-v1/off/cdroot/dc/tex.pak"
+     }
+    ]
+   },
+   {
+    "root": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep",
+    "exists": true,
+    "files": 37,
+    "logical_bytes": 11119783,
+    "new_unique_bytes": 11119783,
+    "large": []
+   },
+   {
+    "root": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1",
+    "exists": true,
+    "files": 32,
+    "logical_bytes": 879780,
+    "new_unique_bytes": 879780,
+    "large": []
+   },
+   {
+    "root": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v1",
+    "exists": true,
+    "files": 2,
+    "logical_bytes": 4016,
+    "new_unique_bytes": 4016,
+    "large": []
+   }
+  ],
+  "unique_bytes": 5276516430,
+  "cap_bytes": 4294967296,
+  "remaining": -981549134,
+  "within_cap": false
+ },
+ "original_contract_pins": [
+  {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/MEDIA-PLAN.json",
+   "bytes": 4971,
+   "sha256": "9498983b83812968280627ee2442ff16da61724b681c4ce6c70ead1e09f5ba94"
+  },
+  {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/FUTURE-GUEST-COMMANDS.json",
+   "bytes": 13102,
+   "sha256": "8cc78216993e479161842a4971e8ee77026470764deb1de15dc292cc85d71574"
+  },
+  {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/CURRENT-CANDIDATE-MANIFEST.json",
+   "bytes": 231281,
+   "sha256": "4d07e720300fcd72ae1081a00fe6a702331983ed2e8af4fdfadb0346691a726a"
+  },
+  {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/SOURCE-IP.BIN",
+   "bytes": 32768,
+   "sha256": "0e4e13d0b8df6477d9e43370591fd1a580c54b4df2209b944610d2a0b6b0062c"
+  },
+  {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/fixtures/kos-fight-49152-0.txt",
+   "bytes": 770,
+   "sha256": "246778ae0af43bf62e1bb43098316187b0772781c70c75f87dbca52773bd4128"
+  },
+  {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/fixtures/kos-fight-49152-1.txt",
+   "bytes": 770,
+   "sha256": "e4220c13c7b4e6e7890ad5c5bf084ecac63e6c80016dad79856d6df9cf7e1a7b"
+  },
+  {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-failure-audit-v1/CAPTURE-ARITHMETIC.json",
+   "bytes": 12231,
+   "sha256": "2b6a0058364a4fc91da36a4c0334ac5879d86bc177605cfd2c8cd089ff067204"
+  },
+  {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-failure-audit-v1/SOURCE-BINARY-READBACK.json",
+   "bytes": 19125,
+   "sha256": "f2f47f07d644855741ba7f793b9666c94db436ee350b1f7d3725074145f00889"
+  },
+  {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-failure-audit-v1/NEXT-DIAGNOSTIC-PAIR.json",
+   "bytes": 22053,
+   "sha256": "31ea39e2b7d99a51fff081ea2fcc69637c360a88d544bd3cf8ffb249e155611c"
+  },
+  {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/pillow-isolated-prep-v1/SOURCE-SEAL.json",
+   "bytes": 2490,
+   "sha256": "3bcff1c5a4eb7f5823296be065c097a246251ffd3c3d3d42ecf11073eeb7add2"
+  },
+  {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/pillow-isolated-prep-v1/PILLOW-PINS.json",
+   "bytes": 17990,
+   "sha256": "e7027f68abb393a897c405c95465cc2a701a948f8ec4b990da460a18b9a492d4"
+  },
+  {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/pillow-isolated-prep-v1/pillow_launcher.py",
+   "bytes": 5077,
+   "sha256": "42cdc98cb3f2611a02afb6b0d8dc00cc5df5c6ee0450168558fd0feceab39e78"
+  }
+ ],
+ "corrected_terminal": {
+  "path": "/dev/shm/gc-motion24-budget-on-cont-v1-2e6wsv2a/continuation-receipt.json",
+  "bytes": 7099,
+  "sha256": "4cccda258c4db04e5be740be727cf9b7af20e94a289df5401ee8bd916470e0b9"
+ },
+ "target_files": {
+  "off": {
+   "re4dc-game.elf": {
+    "bytes": 28751936,
+    "sha256": "b286a1354b2b0ff56cd495c225a7540ee1b2fcb254bd311578eabe93270edf68"
+   },
+   "program.bin": {
+    "bytes": 3409924,
+    "sha256": "e0168b780b102356c9bc3ee785753a659be6a020b1d1d3f8db92f14a90c16de5"
+   },
+   "em22.ovl": {
+    "bytes": 27236,
+    "sha256": "f2959048e4a54d74443841bfdda188cdd2fa4bee16f3dd091380028f755b9c1e"
+   },
+   "em2b.ovl": {
+    "bytes": 67900,
+    "sha256": "d0b133fa37502e6dc1fb5a3233eb30cfedc1eabb6d1b8f3dcbb8f9ded895ce5b"
+   },
+   "em2f.ovl": {
+    "bytes": 16800,
+    "sha256": "3ec53d1677846cec454fd4527bef791491fc4eeee4e3ebba996a2bf454d539c6"
+   },
+   "em35.ovl": {
+    "bytes": 52392,
+    "sha256": "67824586c651ca5707f9a886a767d43b7ee94eecbad8dffbdf083b78509fa46b"
+   },
+   "em3b.ovl": {
+    "bytes": 7568,
+    "sha256": "b1f23f87568fbbc747228ffdd214c66161e637f381632a945ce61f2a03d02946"
+   },
+   "pl0f.ovl": {
+    "bytes": 45608,
+    "sha256": "77d62f86eedaada02b1d9dae2f70ada76e0b833c475cfc5bee48fb6e2928c8e5"
+   },
+   "pl11.ovl": {
+    "bytes": 35592,
+    "sha256": "233467137e10acd10fbc5895489fe792e3ade9a4b6a5e3d3d294d450d1991354"
+   },
+   "pl14.ovl": {
+    "bytes": 18832,
+    "sha256": "53669f8bb59b8ba8e346e721509b0f8930ff5c682ab3d1f9ff3934bc12e1f87b"
+   },
+   "sscrn.ovl": {
+    "bytes": 134372,
+    "sha256": "6fd916c22cbddbf668703d024873913d0b9c8487d733fb2af7602d62eef85329"
+   },
+   "st1_0.ovl": {
+    "bytes": 36228,
+    "sha256": "820ecc0530f2605412638e3a40d77171340c769370f2835d7e1021eba45e5aab"
+   },
+   "st1_1.ovl": {
+    "bytes": 81572,
+    "sha256": "08435b560d442b215e700f58ded185886da49440ea370f555ef48e0d0033ffca"
+   },
+   "st1_2.ovl": {
+    "bytes": 50076,
+    "sha256": "1296503e39c3caca4511f98582f3e9005a64de759c78f38ad4e422d79f4151a0"
+   },
+   "st1_3.ovl": {
+    "bytes": 88748,
+    "sha256": "ffb4b18ab0ec4f9cf0967c45915834b4eb2c2721c9ddbdf99fb780365c7d299b"
+   },
+   "st2_0.ovl": {
+    "bytes": 96788,
+    "sha256": "1850182d70cff004aa9f35f0609bfd97ea26f95be93f02483b9294da50f844a5"
+   }
+  },
+  "on": {
+   "re4dc-game.elf": {
+    "bytes": 29132536,
+    "sha256": "972ae22c49230765d077449c2bcff4bc6ddbb22d439d373fdddd22d434898160"
+   },
+   "program.bin": {
+    "bytes": 3456120,
+    "sha256": "9e3758b23940ab1ce88fcd37eae3dff28efb19086bd044f8552ff81350e33876"
+   },
+   "em22.ovl": {
+    "bytes": 27236,
+    "sha256": "0d4d9e63d9014d9d1e294089364fac0fe3ae6d37d3d1442627c0c489a078e1ff"
+   },
+   "em2b.ovl": {
+    "bytes": 67900,
+    "sha256": "2e47701aba5218acea6e69f3c69d9b8c446296121eb882ec53b6d206d467a377"
+   },
+   "em2f.ovl": {
+    "bytes": 16800,
+    "sha256": "f991ced46c4c634dffd26ffe55d57d43a4878dc3d192ad83d39ee055216d04ac"
+   },
+   "em35.ovl": {
+    "bytes": 52392,
+    "sha256": "32fbca45e9b90b0db355e6826afee8fb79fa5f46f47402730ca9a2c7ad250aa4"
+   },
+   "em3b.ovl": {
+    "bytes": 7568,
+    "sha256": "4cb15b9e90cb9ee9e36d923838d31fd6a13739d497e5b28f59fd2cff716ec0a6"
+   },
+   "pl0f.ovl": {
+    "bytes": 45608,
+    "sha256": "1eda69b6e6619bbe6fbad9e6ba5470e1a33b1f4b4460339fd4410e0c6d308ed6"
+   },
+   "pl11.ovl": {
+    "bytes": 35592,
+    "sha256": "f005b908b140715ec25185b537c399ed8902d08e397844475c9bc4c086a75b32"
+   },
+   "pl14.ovl": {
+    "bytes": 18832,
+    "sha256": "2dd13552a5aa1153d249636e2e781072fb67692d778f7100b56a94c27f379a93"
+   },
+   "sscrn.ovl": {
+    "bytes": 134372,
+    "sha256": "19f61d58f399fde99fac38ce093497ad5f694fea605c745b68d7033dad7a4db3"
+   },
+   "st1_0.ovl": {
+    "bytes": 36228,
+    "sha256": "2c63328acb7e773e6a47d765711d7a1b6bee6d1ec6f981c56080b6c793b47768"
+   },
+   "st1_1.ovl": {
+    "bytes": 81572,
+    "sha256": "6b7e7f6201ec8a78b8ba5e73c96af8a142e0f3332bcb194938e42e893f4dbc83"
+   },
+   "st1_2.ovl": {
+    "bytes": 50076,
+    "sha256": "69c4cf67ff6eea1ab2c8a112c83532dbd3ad09fe08d1a12cdd1dbb93cb80f747"
+   },
+   "st1_3.ovl": {
+    "bytes": 88748,
+    "sha256": "d301004e1efc0a9630343532718f2ccfc1c3008bdc09301da653c76d3b1a9e7c"
+   },
+   "st2_0.ovl": {
+    "bytes": 96788,
+    "sha256": "1fe63e280bec91b740d5c4524baa5706fb593cf0e4433c4f99bd17fe536c92ab"
+   }
+  }
+ },
+ "target_independent_readback": "PENDING_ROOT_PROVIDED_SEAL",
+ "durable_programmes": "PENDING_ROOT_EXPORT",
+ "no_media_or_asset_payload_copies": true,
+ "cleanup": 0,
+ "stage": 0,
+ "SDK": 0,
+ "guest": 0,
+ "limits": "Unchanged cumulative4GiB fails before stage. No reinterpretation, weaker cap, deletion, new image, H2 or memory acceptance. Root must inspect separately approved reclaim/reuse before a stage contract can be finalized."
+}
