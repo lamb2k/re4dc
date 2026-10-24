@@ -78,7 +78,12 @@ namespace {
 // movie-suppressed synthetic success cannot certify a cheap complete world.
 struct Wc24WorldResult {
     bool complete=false;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    re4dc::wc24::ErrorDetail why;
+    ~Wc24WorldResult(){if(!complete)why.report();}
+#else
     ~Wc24WorldResult(){if(!complete)re4dc::wc24::fault();}
+#endif
 };
 #endif
 #include "include/ps2_world_data.inc"
@@ -690,9 +695,16 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     const re4dc::wc24::Scope wc_world(re4dc::wc24::NearOP,re4dc::wc24::Other);
     re4dc::room::ps2::Wc24WorldResult wc_result;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.why.tag(re4dc::wc24::ErrorWorldDraw,re4dc::wc24::ErrorEntryRejected,room);
+#endif
 #endif
 #if RE4DC_MOVIE_WORLD_ARENA
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(re4dc_ps2_mesh_movie_blocked()){wc_result.why.first(re4dc::wc24::ErrorMovieSuppressed,room);return 1;}
+#else
     if(re4dc_ps2_mesh_movie_blocked())return 1;
+#endif
 #endif
     using namespace re4dc::room::ps2;
     RE4DC_PS2_WORLD_FOG_LATCH();
@@ -705,7 +717,13 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
 #else
     if(room!=0x101){re4dc_ps2_mesh_retire();return 0;}
 #endif
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!finite_word(far) || far<=40){
+        uint32_t bits;std::memcpy(&bits,&far,4);wc_result.why.first(re4dc::wc24::ErrorFarInvalid,bits,room);return fallback(3);
+    }
+#else
     if(!finite_word(far) || far<=40)return fallback(3);
+#endif
     state.frame=re4dc_ui_frame();state.flushed=~0u;state.far=far<RE4DC_PS2_FAR?far:RE4DC_PS2_FAR;
     const bool drawn=re4dc_ps2_mesh_draw(0,state.far)!=0;state.pending=true;
 #if RE4DC_FAR_SHELL
@@ -728,6 +746,9 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
 #endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     wc_result.complete=drawn;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!wc_result.complete)wc_result.why.first(re4dc::wc24::ErrorPassIncomplete,unsigned(drawn),room);
+#endif
 #endif
     return drawn?1:fallback(4);
 #endif
@@ -763,9 +784,16 @@ extern "C" int re4dc_ps2_world_source_draw(){
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     const re4dc::wc24::Scope wc_world(re4dc::wc24::NearOP,re4dc::wc24::Other);
     re4dc::room::ps2::Wc24WorldResult wc_result;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.why.tag(re4dc::wc24::ErrorWorldSource,re4dc::wc24::ErrorPassIncomplete);
+#endif
 #endif
 #if RE4DC_MOVIE_WORLD_ARENA
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(re4dc_ps2_mesh_movie_blocked()){wc_result.why.first(re4dc::wc24::ErrorMovieSuppressed);return 1;}
+#else
     if(re4dc_ps2_mesh_movie_blocked())return 1;
+#endif
 #endif
     using namespace re4dc::room::ps2;
     RE4DC_PS2_WORLD_FOG_LATCH();
@@ -780,12 +808,18 @@ extern "C" int re4dc_ps2_world_source_draw(){
     re4dc_ps2_source_pass_result(0,drawn);state.pending=true;
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     wc_result.complete=drawn==1;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!wc_result.complete)wc_result.why.first(drawn<0?re4dc::wc24::ErrorPassAbort:re4dc::wc24::ErrorPassIncomplete,uint32_t(drawn));
+#endif
 #endif
     return drawn;
 #else
     const bool drawn=re4dc_ps2_mesh_draw(0,state.far)!=0;state.pending=true;
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     wc_result.complete=drawn;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!wc_result.complete)wc_result.why.first(re4dc::wc24::ErrorPassIncomplete,unsigned(drawn));
+#endif
 #endif
     return drawn;
 #endif
@@ -809,12 +843,28 @@ extern "C" void re4dc_ps2_world_flush(){
     re4dc::room::ps2::Wc24WorldResult wc_result;
     wc_result.complete=!re4dc::room::ps2::state.pending;
     bool wc_receipt=true;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.why.tag(re4dc::wc24::ErrorWorldFlush,re4dc::wc24::ErrorDeferredStale,
+        re4dc::room::ps2::state.frame,re4dc::room::ps2::state.flushed);
+#endif
 #endif
 #if RE4DC_MOVIE_WORLD_ARENA
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(re4dc_ps2_mesh_movie_blocked()){wc_result.why.first(re4dc::wc24::ErrorMovieSuppressed);return;}
+#else
     if(re4dc_ps2_mesh_movie_blocked())return;
 #endif
+#endif
     using namespace re4dc::room::ps2;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!state.pending)return;
+    const unsigned wc_now=re4dc_ui_frame();
+    if(state.frame!=wc_now || state.flushed==state.frame){
+        wc_result.why.first(re4dc::wc24::ErrorDeferredStale,state.frame,wc_now);return;
+    }
+#else
     if(!state.pending || state.frame!=re4dc_ui_frame() || state.flushed==state.frame)return;
+#endif
     state.flushed=state.frame;state.pending=false;
 #if defined(RE4DC_MEMPROF) && RE4DC_MEMPROF
     if(!(state.frame%120))re4dc_memprof_log(state.frame,120);
@@ -858,6 +908,10 @@ extern "C" void re4dc_ps2_world_flush(){
 #endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         wc_result.complete=pt==1 && tr==1 && wc_receipt;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+        if(!wc_result.complete)wc_result.why.first(pt==1 && tr==1?re4dc::wc24::ErrorReceiptIncomplete:
+            pt<0 || tr<0?re4dc::wc24::ErrorPassAbort:re4dc::wc24::ErrorPassIncomplete,uint32_t(pt),uint32_t(tr));
+#endif
 #endif
         return;
     }

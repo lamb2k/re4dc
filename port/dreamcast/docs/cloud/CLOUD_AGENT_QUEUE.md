@@ -499,3 +499,50 @@ fixed builds/runs. The recipe and coordinator status table are unchanged.
    hooks cost about 1 ms on the cross even before the counter runs; the play build's deadline must come from the
    observer-off build (as the report says), and any console miss attribution carries a perturbation of at least
    this size.
+
+### 2026-10-24: policy/census error follow-up (`codex/world-policy-census-fix-20261024`)
+
+Publication base `8c992120`, validation base `dd6b66b9` (the intervening change
+adds only the owner's queue answers), including the qualified `ctl-olddata` reply. The
+[report](WORLD_POLICY_CENSUS_FIX_20261024.md) preserves that result: SLI1 is a
+wash (−0.046 ms for 52,832 B); SDS1 is rejected (+1.422 ms for 129,184 B),
+Flycast MODELLED. Both remain off and neither is proposed for console A/B.
+The valid owner table has 11,328 / 11,328 / 12,406 transformed inputs per drawn
+tick for base / SLI1 / SDS1. Earlier `err=1200` windows remain unqualified.
+
+- `world_policy_provenance.py` defaults to read-only inspection. Explicit
+  `--prepare-original-policy=1` produces a separately named original-policy
+  control only after the current committed certificate, genuine CRC/FNV,
+  unchanged mesh and inverse material-key map agree. It requires the
+  calculated original CRC and matching historical SHA pins where available.
+  r101's missing archive SHA is reported explicitly. Source-bound R4SG bytes
+  must validate and remain exact; physical-only groups refuse. No table,
+  runtime proof, R4ID/R4TC or sidecar binding is rewritten. Original textures
+  and the complete matching DATA/pack/resident stack remain owner checks.
+- The ordinary Build12 converter retains strict admission and gains only
+  default-off `--policy-diagnostics [0|1]` field diagnostics. Its successful
+  files are identical with the option absent, zero and one. The policy gate
+  records 146 checks, including actual C++ helper/map comparisons, without
+  claiming a private recovery PASS.
+- `WORLD_CENSUS24_ERRORS=0` adds optional bounded cause/site/path/phase/wait
+  bins, first scalar evidence and visible spill/wrap to the existing WC24
+  count. It requires the census and preserves original aggregate semantics,
+  including multiple existing wrapper faults for one failed operation.
+  `WC24E` logs only at seal and the QA rows paginate before PM14. Generic
+  pass fallback context is pass-level; specifically tagged branches preserve
+  their first failure context. Original `Snapshot` ABI and counter ownership
+  are unchanged. The target gate records 44 OFF byte comparisons and three
+  enabled compositions; traffic, cycles, stack and host controls are in the
+  linked report/receipts.
+
+The weighted core-only 1,000-scope, one-drawn-tick, no-skips scenario adds
+0.110066 ms with no faults, or 0.117197 ms for four last-bin faults, at 200 MHz
+with a seal every 300 draws: **MODELLED**, perfect D-cache. Renderer tags,
+formatting/serial, hardware timer/IRQ costs and memory waits are unpriced.
+This is diagnostic overhead, not a world speedup or a portable subtraction.
+
+For any future invalid census, collect matching `WC24`/`WC24E` sequence and QA
+rows from the same bundle to identify the actual refusal. The qualified
+old-data control has already resolved the immediate Build12 baseline. This
+follow-up does not reopen its performance decision, repair Build11's separate
+noncanonical-index-placement issue, or claim the 2 ms world target.

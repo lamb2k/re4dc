@@ -66,9 +66,16 @@ unsigned phase_word() { return (state >> 3) & 7u; }
 unsigned wait_word() { return (state >> 6) & 3u; }
 unsigned depth() { return (state >> 8) & 63u; }
 void bump_epoch() { epoch = (epoch + 1u) & 65535u; if (!epoch) epoch = 1; }
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+#include "platform/include/world_census24_errors.inc"
+#endif
 
 void charge(uint64_t now) {
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if (now < current.last) { errors_current(ErrorClockReversed,ErrorCoreCharge,uint32_t(current.last),uint32_t(now)); current.last = now; return; }
+#else
     if (now < current.last) { ++current.errors; current.last = now; return; }
+#endif
     const uint64_t delta = now - current.last;
     current.last = now;
     const unsigned wait = wait_word(), path = path_word();
@@ -84,6 +91,9 @@ void clear_gpu(bool boundary) {
 }
 
 void clear_collection(bool clear_snapshot) {
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    errors_clear(clear_snapshot);
+#endif
 #if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
     ppm14::abandon(clear_snapshot);
 #endif
@@ -126,9 +136,17 @@ void finish_tick(uint64_t now) {
     ppm14::finish_tick(now);
 #endif
     charge(now);
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if (depth()) errors_current(ErrorUnclosedScope,ErrorCoreFinish,depth(),state);
+#else
     if (depth()) ++current.errors;
+#endif
     const uint64_t wall = now >= current.begin ? now - current.begin : 0;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if (now < current.begin) errors_current(ErrorTickReversed,ErrorCoreFinish,uint32_t(current.begin),uint32_t(now));
+#else
     if (now < current.begin) ++current.errors;
+#endif
     if (!window.ticks) window.first_tick = current.tick;
     window.last_tick = current.tick;
     ++window.ticks;
@@ -156,7 +174,11 @@ void finish_tick(uint64_t now) {
     }
     // Signed residual: a broken partition must remain visible, never clamped.
     window.residual_us += int64_t(wall) - int64_t(named);
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if (named > wall) { ++window.errors; errors_record(ErrorPhaseOverrun,ErrorCoreFinish,uint32_t(named),uint32_t(wall)); }
+#else
     if (named > wall) ++window.errors;
+#endif
     current.active = false;
     if (window.drawn < RE4DC_WORLD_CENSUS24_WINDOW) return;
     window.sequence = ++sequence;
@@ -166,6 +188,9 @@ void finish_tick(uint64_t now) {
     gpu = Presentation{}; // intervals belong to the window in which they end
     unlock_irq(irq);
     sealed = window;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    errors_seal();
+#endif
 #if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
     ppm14::seal(sealed);
 #endif
@@ -174,11 +199,18 @@ void finish_tick(uint64_t now) {
     char line[240];
     summary(line, sizeof(line));
     print_line(line); // once/window; this cost belongs to the next tick
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    errors_log();
+#endif
 }
 
 uint32_t enter_state(unsigned next) {
     if (!ours()) return NoToken;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if (depth() == 63) { errors_current(ErrorScopeDepth,ErrorCoreScope,state,next); return NoToken; }
+#else
     if (depth() == 63) { ++current.errors; return NoToken; }
+#endif
 #if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
     const uint64_t now = clock_us();
     ppm14::transition(next,now);
@@ -225,7 +257,37 @@ void scene_finished() { if (ours()) { current.finished = true; ++current.scenes;
 void decision_posted(bool present) {
     if (ours()) { if (present) ++current.present; else ++current.discard; }
 }
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+void fault() { if (ours()) errors_current(ErrorUnspecified,ErrorSiteUnspecified); }
+void fault(ErrorReason reason,ErrorSite site,uint32_t a,uint32_t b,uint32_t context) {
+    if(!ours())return;
+    ++current.errors;errors_record(reason,site,a,b,context);
+}
+uint32_t error_context() { return state&255u; }
+int errors_snapshot(ErrorSnapshot* out) {
+    if(!have_sealed)return 0;
+    if(out)*out=errors_sealed;
+    return 1;
+}
+unsigned errors_line_count() { return have_sealed?2U+3U*errors_sealed.used:2U; }
+int errors_format_line(unsigned row,char* out,unsigned capacity) {
+    if(!capacity)return 0;
+    out[0]=0;
+    if(!have_sealed)return row?0:snprintf(out,capacity,"WC24 errors: collecting first complete window");
+    const auto& s=errors_sealed;
+    if(!row)return snprintf(out,capacity,"WC24E #%u room=%03x total=%u bins=%u spill=%u wrap=%u",
+        s.sequence,s.room,s.total,s.used,s.spill,s.wrapped);
+    if(row==1)return snprintf(out,capacity,"Counts+spill=%u aggregate=%u; first evidence per bin",errors_total(s),s.total);
+    row-=2;const unsigned i=row/3;if(i>=s.used)return 0;
+    const auto& b=s.bins[i];
+    if(row%3==0)return snprintf(out,capacity,"E%u %s @%s count=%u",i,errors_reason(b.key),errors_site(b.key),b.count);
+    if(row%3==1)return snprintf(out,capacity,"  path=%s phase=%s wait=%u first tick=%u",
+        errors_path(b.key),errors_phase(b.key),(b.key>>22)&3u,b.first_tick);
+    return snprintf(out,capacity,"  key=%08x a=%08x b=%08x",b.key,b.detail0,b.detail1);
+}
+#else
 void fault() { if (ours()) ++current.errors; }
+#endif
 void pause() { paused = true; clear_collection(false); }
 void resume() { clear_collection(false); paused = false; }
 void reset() { clear_collection(true); have_key = false; paused = false; }
@@ -245,7 +307,11 @@ uint32_t enter_wait(Wait wait) {
 void leave(uint32_t token) {
     if (token == NoToken || !ours() || (token >> 16) != epoch) return;
     const unsigned previous = token & 65535u;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if (((previous >> 8) & 63u) + 1u != depth()) { errors_current(ErrorScopeOrder,ErrorCoreScope,token,state); return; }
+#else
     if (((previous >> 8) & 63u) + 1u != depth()) { ++current.errors; return; }
+#endif
 #if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
     const uint64_t now = clock_us();
     ppm14::transition(previous,now);
@@ -269,7 +335,11 @@ void set_phase(Phase phase) {
 void count(Counter counter, uint32_t amount) {
     if (!ours() || !path_word() || unsigned(counter) >= CounterCount) return;
     uint32_t& value = current.counters[path_word() - 1][counter];
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if (amount > UINT32_MAX - value) { errors_current(ErrorCounterSaturated,ErrorCoreCount,unsigned(counter),amount); value = UINT32_MAX; }
+#else
     if (amount > UINT32_MAX - value) { ++current.errors; value = UINT32_MAX; }
+#endif
     else value += amount;
 }
 void submitted_header(const uint32_t words[4]) {
@@ -334,13 +404,32 @@ int summary(char* out, unsigned capacity) {
         "WC24 q=%u t=%u d=%u summary_overflow=1 full=QA", s.sequence,s.ticks,s.drawn);
     return n;
 }
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+unsigned line_count() {
+    return 25 + errors_line_count()
 #if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+        + ppm14::line_count()
+#endif
+        ;
+}
+#elif defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
 unsigned line_count() { return 25 + ppm14::line_count(); }
 #else
 unsigned line_count() { return 25; }
 #endif
 int format_line(unsigned row, char* out, unsigned capacity) {
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(row>=25){
+        row-=25;const unsigned n=errors_line_count();
+        if(row<n)return errors_format_line(row,out,capacity);
 #if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+        return ppm14::format_line(row-n,out,capacity);
+#else
+        if(capacity)out[0]=0;
+        return 0;
+#endif
+    }
+#elif defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
     if (row >= 25) return ppm14::format_line(row-25,out,capacity);
 #endif
     if (!capacity) return 0;

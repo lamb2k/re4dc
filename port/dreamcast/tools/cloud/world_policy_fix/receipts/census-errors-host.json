@@ -1,0 +1,684 @@
+{
+  "format": "RE4DC_COMPACT_RECEIPT1",
+  "full_receipt": {
+    "path": "/tmp/wce24-host-accepted/host-controls.json",
+    "bytes": 36110,
+    "sha256": "6ec23893c310128b0abc0945bbc9c7c6b12586c0b1f304a751f582fc9f868924"
+  },
+  "encoding": "Lossless repeated-subtree interning; $ref names pool entries. Every original metric and command is retained.",
+  "value": {
+    "status": "PASS",
+    "scope": "Actual WC24 core error accounting/lifecycle, OFF/ON and ASan/UBSan pairs.\n\nThe unchanged core is included by the fixture; synthetic boundary injection\nexercises count wrap without billions of calls. A fixed mutable clock and\nthread edge permit exact original Snapshot comparisons. PM14 composition\nuses its actual core and synthetic PRFC1 responses (SIMULATED, never hardware\nqualification). No renderer, console timing or gameplay acceptance is claimed.\n",
+    "source_sha256": {
+      "port/dreamcast/game/world_census24.cpp": "65d1d9bbab76d69d0276a88607a04ecda60654e37f496178445830ff2ccf7cdc",
+      "port/dreamcast/game/platform/include/world_census24.h": "2838a3c27f49b695eaf33152e3923f340ba386b1664184efce7f29bc55bc95e7",
+      "port/dreamcast/game/platform/include/world_census24_errors.inc": "88493067e04e255035de4f8f461c460393ba1fbf689a1c460b4c6105f3b21373",
+      "port/dreamcast/game/perf_phase_miss.cpp": "3a2752829ed570ea672e79babd9a3376a6df376df13401193c45c65d46ea7c0d",
+      "port/dreamcast/game/platform/include/perf_phase_miss.h": "34c91fa99fd9da826285397bf4191d80d106f845862e44b1d3e3f3d91a4d2192",
+      "port/dreamcast/game/platform/include/perf_phase_accounting.hpp": "95bd9c90c31959c7677f818fa6182b60cd4140609fd76b6f95ba291e75557144",
+      "port/dreamcast/tools/cloud/world_policy_fix/census_errors_check.cpp": "f195ff01f75804e2bb82c194e0d68d0bd4e1915f4dbdcdff3568d31684835d0b",
+      "port/dreamcast/tools/cloud/world_policy_fix/census_errors_controls.py": "e2c4a5c1e1f142c6af22efa678dc5841b61dc0d66b80621d930810516a9fff6c"
+    },
+    "paired_cases": 58,
+    "core_cases": [
+      "empty",
+      "unspecified",
+      "typed-wait",
+      "repeat",
+      "different-contexts",
+      "spill",
+      "spill-sum-wrap",
+      "formatter",
+      "clock-reverse",
+      "tick-reverse",
+      "phase-overrun",
+      "scope-depth",
+      "scope-order",
+      "scope-unclosed",
+      "counter-overflow",
+      "foreign-owner",
+      "inactive",
+      "partial-restart",
+      "pause-before-seal",
+      "pause-keep",
+      "resume-fresh",
+      "identity-change",
+      "window-continuity",
+      "first-evidence",
+      "bin-wrap",
+      "unknown-reason"
+    ],
+    "pmu_cases": [
+      "pmu-composition",
+      "pause-before-seal",
+      "first-evidence"
+    ],
+    "asan": true,
+    "ubsan": true,
+    "leak_detection": false,
+    "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+    "commands": {
+      "normal-pmu0-errors0": [
+        "g++",
+        "-std=c++20",
+        "-O2",
+        "-ffp-contract=off",
+        "-Wall",
+        "-Wextra",
+        "-DRE4DC_WORLD_CENSUS24=1",
+        "-DRE4DC_WORLD_CENSUS24_HOST=1",
+        "-DRE4DC_WORLD_CENSUS24_ERRORS=0",
+        "-DRE4DC_PERF_PHASE_MISS=0",
+        "-DRE4DC_PERF_PHASE_MISS_HOST=1",
+        {
+          "$ref": "r0000"
+        },
+        {
+          "$ref": "r0001"
+        },
+        {
+          "$ref": "r0002"
+        },
+        "-o",
+        "/tmp/wce24-host-accepted/normal-pmu0-errors0"
+      ],
+      "normal-pmu0-errors1": [
+        "g++",
+        "-std=c++20",
+        "-O2",
+        "-ffp-contract=off",
+        "-Wall",
+        "-Wextra",
+        "-DRE4DC_WORLD_CENSUS24=1",
+        "-DRE4DC_WORLD_CENSUS24_HOST=1",
+        "-DRE4DC_WORLD_CENSUS24_ERRORS=1",
+        "-DRE4DC_PERF_PHASE_MISS=0",
+        "-DRE4DC_PERF_PHASE_MISS_HOST=1",
+        {
+          "$ref": "r0000"
+        },
+        {
+          "$ref": "r0001"
+        },
+        {
+          "$ref": "r0002"
+        },
+        "-o",
+        "/tmp/wce24-host-accepted/normal-pmu0-errors1"
+      ],
+      "normal-pmu1-errors0": [
+        "g++",
+        "-std=c++20",
+        "-O2",
+        "-ffp-contract=off",
+        "-Wall",
+        "-Wextra",
+        "-DRE4DC_WORLD_CENSUS24=1",
+        "-DRE4DC_WORLD_CENSUS24_HOST=1",
+        "-DRE4DC_WORLD_CENSUS24_ERRORS=0",
+        "-DRE4DC_PERF_PHASE_MISS=1",
+        "-DRE4DC_PERF_PHASE_MISS_HOST=1",
+        {
+          "$ref": "r0000"
+        },
+        {
+          "$ref": "r0001"
+        },
+        {
+          "$ref": "r0002"
+        },
+        {
+          "$ref": "r0003"
+        },
+        "-o",
+        "/tmp/wce24-host-accepted/normal-pmu1-errors0"
+      ],
+      "normal-pmu1-errors1": [
+        "g++",
+        "-std=c++20",
+        "-O2",
+        "-ffp-contract=off",
+        "-Wall",
+        "-Wextra",
+        "-DRE4DC_WORLD_CENSUS24=1",
+        "-DRE4DC_WORLD_CENSUS24_HOST=1",
+        "-DRE4DC_WORLD_CENSUS24_ERRORS=1",
+        "-DRE4DC_PERF_PHASE_MISS=1",
+        "-DRE4DC_PERF_PHASE_MISS_HOST=1",
+        {
+          "$ref": "r0000"
+        },
+        {
+          "$ref": "r0001"
+        },
+        {
+          "$ref": "r0002"
+        },
+        {
+          "$ref": "r0003"
+        },
+        "-o",
+        "/tmp/wce24-host-accepted/normal-pmu1-errors1"
+      ],
+      "asan-ubsan-pmu0-errors0": [
+        "g++",
+        "-std=c++20",
+        "-O2",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-fno-pie",
+        "-no-pie",
+        "-ffp-contract=off",
+        "-Wall",
+        "-Wextra",
+        "-DRE4DC_WORLD_CENSUS24=1",
+        "-DRE4DC_WORLD_CENSUS24_HOST=1",
+        "-DRE4DC_WORLD_CENSUS24_ERRORS=0",
+        "-DRE4DC_PERF_PHASE_MISS=0",
+        "-DRE4DC_PERF_PHASE_MISS_HOST=1",
+        {
+          "$ref": "r0000"
+        },
+        {
+          "$ref": "r0001"
+        },
+        {
+          "$ref": "r0002"
+        },
+        "-o",
+        "/tmp/wce24-host-accepted/asan-ubsan-pmu0-errors0"
+      ],
+      "asan-ubsan-pmu0-errors1": [
+        "g++",
+        "-std=c++20",
+        "-O2",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-fno-pie",
+        "-no-pie",
+        "-ffp-contract=off",
+        "-Wall",
+        "-Wextra",
+        "-DRE4DC_WORLD_CENSUS24=1",
+        "-DRE4DC_WORLD_CENSUS24_HOST=1",
+        "-DRE4DC_WORLD_CENSUS24_ERRORS=1",
+        "-DRE4DC_PERF_PHASE_MISS=0",
+        "-DRE4DC_PERF_PHASE_MISS_HOST=1",
+        {
+          "$ref": "r0000"
+        },
+        {
+          "$ref": "r0001"
+        },
+        {
+          "$ref": "r0002"
+        },
+        "-o",
+        "/tmp/wce24-host-accepted/asan-ubsan-pmu0-errors1"
+      ],
+      "asan-ubsan-pmu1-errors0": [
+        "g++",
+        "-std=c++20",
+        "-O2",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-fno-pie",
+        "-no-pie",
+        "-ffp-contract=off",
+        "-Wall",
+        "-Wextra",
+        "-DRE4DC_WORLD_CENSUS24=1",
+        "-DRE4DC_WORLD_CENSUS24_HOST=1",
+        "-DRE4DC_WORLD_CENSUS24_ERRORS=0",
+        "-DRE4DC_PERF_PHASE_MISS=1",
+        "-DRE4DC_PERF_PHASE_MISS_HOST=1",
+        {
+          "$ref": "r0000"
+        },
+        {
+          "$ref": "r0001"
+        },
+        {
+          "$ref": "r0002"
+        },
+        {
+          "$ref": "r0003"
+        },
+        "-o",
+        "/tmp/wce24-host-accepted/asan-ubsan-pmu1-errors0"
+      ],
+      "asan-ubsan-pmu1-errors1": [
+        "g++",
+        "-std=c++20",
+        "-O2",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-fno-pie",
+        "-no-pie",
+        "-ffp-contract=off",
+        "-Wall",
+        "-Wextra",
+        "-DRE4DC_WORLD_CENSUS24=1",
+        "-DRE4DC_WORLD_CENSUS24_HOST=1",
+        "-DRE4DC_WORLD_CENSUS24_ERRORS=1",
+        "-DRE4DC_PERF_PHASE_MISS=1",
+        "-DRE4DC_PERF_PHASE_MISS_HOST=1",
+        {
+          "$ref": "r0000"
+        },
+        {
+          "$ref": "r0001"
+        },
+        {
+          "$ref": "r0002"
+        },
+        {
+          "$ref": "r0003"
+        },
+        "-o",
+        "/tmp/wce24-host-accepted/asan-ubsan-pmu1-errors1"
+      ]
+    },
+    "observations": {
+      "normal-pmu0-errors0": {
+        "$ref": "r0004"
+      },
+      "normal-pmu0-errors1": {
+        "$ref": "r0004"
+      },
+      "normal-pmu1-errors0": {
+        "$ref": "r0019"
+      },
+      "normal-pmu1-errors1": {
+        "$ref": "r0019"
+      },
+      "asan-ubsan-pmu0-errors0": {
+        "$ref": "r0004"
+      },
+      "asan-ubsan-pmu0-errors1": {
+        "$ref": "r0004"
+      },
+      "asan-ubsan-pmu1-errors0": {
+        "$ref": "r0019"
+      },
+      "asan-ubsan-pmu1-errors1": {
+        "$ref": "r0019"
+      }
+    },
+    "diagnostics": {
+      "normal-pmu0-errors0-empty": "",
+      "normal-pmu0-errors0-unspecified": "",
+      "normal-pmu0-errors0-typed-wait": "",
+      "normal-pmu0-errors0-repeat": "",
+      "normal-pmu0-errors0-different-contexts": "",
+      "normal-pmu0-errors0-spill": "",
+      "normal-pmu0-errors0-spill-sum-wrap": "",
+      "normal-pmu0-errors0-formatter": "",
+      "normal-pmu0-errors0-clock-reverse": "",
+      "normal-pmu0-errors0-tick-reverse": "",
+      "normal-pmu0-errors0-phase-overrun": "",
+      "normal-pmu0-errors0-scope-depth": "",
+      "normal-pmu0-errors0-scope-order": "",
+      "normal-pmu0-errors0-scope-unclosed": "",
+      "normal-pmu0-errors0-counter-overflow": "",
+      "normal-pmu0-errors0-foreign-owner": "",
+      "normal-pmu0-errors0-inactive": "",
+      "normal-pmu0-errors0-partial-restart": "",
+      "normal-pmu0-errors0-pause-before-seal": "",
+      "normal-pmu0-errors0-pause-keep": "",
+      "normal-pmu0-errors0-resume-fresh": "",
+      "normal-pmu0-errors0-identity-change": "",
+      "normal-pmu0-errors0-window-continuity": "",
+      "normal-pmu0-errors0-first-evidence": "",
+      "normal-pmu0-errors0-bin-wrap": "",
+      "normal-pmu0-errors0-unknown-reason": "",
+      "normal-pmu0-errors1-empty": "DIAG used=0 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-unspecified": "DIAG used=1 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-typed-wait": "DIAG used=1 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-repeat": "DIAG used=1 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-different-contexts": "DIAG used=4 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-spill": "DIAG used=32 spill=4 wrapped=0\n",
+      "normal-pmu0-errors1-spill-sum-wrap": "DIAG used=32 spill=4294967264 wrapped=1\n",
+      "normal-pmu0-errors1-formatter": "DIAG used=32 spill=0 wrapped=1\n",
+      "normal-pmu0-errors1-clock-reverse": "DIAG used=1 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-tick-reverse": "DIAG used=2 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-phase-overrun": "DIAG used=2 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-scope-depth": "DIAG used=1 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-scope-order": "DIAG used=1 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-scope-unclosed": "DIAG used=1 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-counter-overflow": "DIAG used=1 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-foreign-owner": "DIAG used=1 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-inactive": "DIAG used=0 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-partial-restart": "DIAG used=0 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-pause-before-seal": "DIAG used=0 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-pause-keep": "DIAG used=1 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-resume-fresh": "DIAG used=0 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-identity-change": "DIAG used=0 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-window-continuity": "DIAG used=1 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-first-evidence": "DIAG used=1 spill=0 wrapped=0\n",
+      "normal-pmu0-errors1-bin-wrap": "DIAG used=1 spill=0 wrapped=1\n",
+      "normal-pmu0-errors1-unknown-reason": "DIAG used=1 spill=0 wrapped=0\n",
+      "normal-pmu1-errors0-pmu-composition": "PMU simulated total=30030 reads=335 config=340 starts=2 stops=1\n",
+      "normal-pmu1-errors0-pause-before-seal": "",
+      "normal-pmu1-errors0-first-evidence": "",
+      "normal-pmu1-errors1-pmu-composition": {
+        "$ref": "r0021"
+      },
+      "normal-pmu1-errors1-pause-before-seal": "DIAG used=0 spill=0 wrapped=0\n",
+      "normal-pmu1-errors1-first-evidence": "DIAG used=1 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors0-empty": "",
+      "asan-ubsan-pmu0-errors0-unspecified": "",
+      "asan-ubsan-pmu0-errors0-typed-wait": "",
+      "asan-ubsan-pmu0-errors0-repeat": "",
+      "asan-ubsan-pmu0-errors0-different-contexts": "",
+      "asan-ubsan-pmu0-errors0-spill": "",
+      "asan-ubsan-pmu0-errors0-spill-sum-wrap": "",
+      "asan-ubsan-pmu0-errors0-formatter": "",
+      "asan-ubsan-pmu0-errors0-clock-reverse": "",
+      "asan-ubsan-pmu0-errors0-tick-reverse": "",
+      "asan-ubsan-pmu0-errors0-phase-overrun": "",
+      "asan-ubsan-pmu0-errors0-scope-depth": "",
+      "asan-ubsan-pmu0-errors0-scope-order": "",
+      "asan-ubsan-pmu0-errors0-scope-unclosed": "",
+      "asan-ubsan-pmu0-errors0-counter-overflow": "",
+      "asan-ubsan-pmu0-errors0-foreign-owner": "",
+      "asan-ubsan-pmu0-errors0-inactive": "",
+      "asan-ubsan-pmu0-errors0-partial-restart": "",
+      "asan-ubsan-pmu0-errors0-pause-before-seal": "",
+      "asan-ubsan-pmu0-errors0-pause-keep": "",
+      "asan-ubsan-pmu0-errors0-resume-fresh": "",
+      "asan-ubsan-pmu0-errors0-identity-change": "",
+      "asan-ubsan-pmu0-errors0-window-continuity": "",
+      "asan-ubsan-pmu0-errors0-first-evidence": "",
+      "asan-ubsan-pmu0-errors0-bin-wrap": "",
+      "asan-ubsan-pmu0-errors0-unknown-reason": "",
+      "asan-ubsan-pmu0-errors1-empty": "DIAG used=0 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-unspecified": "DIAG used=1 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-typed-wait": "DIAG used=1 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-repeat": "DIAG used=1 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-different-contexts": "DIAG used=4 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-spill": "DIAG used=32 spill=4 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-spill-sum-wrap": "DIAG used=32 spill=4294967264 wrapped=1\n",
+      "asan-ubsan-pmu0-errors1-formatter": "DIAG used=32 spill=0 wrapped=1\n",
+      "asan-ubsan-pmu0-errors1-clock-reverse": "DIAG used=1 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-tick-reverse": "DIAG used=2 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-phase-overrun": "DIAG used=2 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-scope-depth": "DIAG used=1 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-scope-order": "DIAG used=1 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-scope-unclosed": "DIAG used=1 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-counter-overflow": "DIAG used=1 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-foreign-owner": "DIAG used=1 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-inactive": "DIAG used=0 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-partial-restart": "DIAG used=0 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-pause-before-seal": "DIAG used=0 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-pause-keep": "DIAG used=1 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-resume-fresh": "DIAG used=0 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-identity-change": "DIAG used=0 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-window-continuity": "DIAG used=1 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-first-evidence": "DIAG used=1 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu0-errors1-bin-wrap": "DIAG used=1 spill=0 wrapped=1\n",
+      "asan-ubsan-pmu0-errors1-unknown-reason": "DIAG used=1 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu1-errors0-pmu-composition": "PMU simulated total=30030 reads=335 config=340 starts=2 stops=1\n",
+      "asan-ubsan-pmu1-errors0-pause-before-seal": "",
+      "asan-ubsan-pmu1-errors0-first-evidence": "",
+      "asan-ubsan-pmu1-errors1-pmu-composition": {
+        "$ref": "r0021"
+      },
+      "asan-ubsan-pmu1-errors1-pause-before-seal": "DIAG used=0 spill=0 wrapped=0\n",
+      "asan-ubsan-pmu1-errors1-first-evidence": "DIAG used=1 spill=0 wrapped=0\n"
+    },
+    "original_snapshot_fields_equal": true,
+    "pmu_qualification": "SIMULATED synthetic responses only"
+  },
+  "pool": {
+    "r0000": "-DRE4DC_WORLD_CENSUS24_SOURCE=\"/workspace/scratch/794179ef02a4/work/re4dc-world-fix-20261024/port/dreamcast/game/world_census24.cpp\"",
+    "r0001": "-I/workspace/scratch/794179ef02a4/work/re4dc-world-fix-20261024/port/dreamcast/game/platform/include",
+    "r0002": "/workspace/scratch/794179ef02a4/work/re4dc-world-fix-20261024/port/dreamcast/tools/cloud/world_policy_fix/census_errors_check.cpp",
+    "r0003": "/workspace/scratch/794179ef02a4/work/re4dc-world-fix-20261024/port/dreamcast/game/perf_phase_miss.cpp",
+    "r0005": {
+      "case": "different-contexts",
+      "errors": 4,
+      "ticks": 300,
+      "drawn": 300,
+      "snapshot_digest": "fec0de381408ef82"
+    },
+    "r0006": {
+      "case": "spill-sum-wrap",
+      "errors": 0,
+      "ticks": 300,
+      "drawn": 300,
+      "snapshot_digest": "a7ba54c570107846"
+    },
+    "r0007": {
+      "case": "formatter",
+      "errors": 4294967264,
+      "ticks": 300,
+      "drawn": 300,
+      "snapshot_digest": "a66b192979fe5566"
+    },
+    "r0008": {
+      "case": "clock-reverse",
+      "errors": 1,
+      "ticks": 300,
+      "drawn": 300,
+      "snapshot_digest": "e4a32ad014354a87"
+    },
+    "r0009": {
+      "case": "phase-overrun",
+      "errors": 2,
+      "ticks": 300,
+      "drawn": 300,
+      "snapshot_digest": "fddfb438192f2ea8"
+    },
+    "r0010": {
+      "case": "scope-unclosed",
+      "errors": 1,
+      "ticks": 300,
+      "drawn": 300,
+      "snapshot_digest": "59657a2509b45a3f"
+    },
+    "r0011": {
+      "case": "counter-overflow",
+      "errors": 2,
+      "ticks": 300,
+      "drawn": 300,
+      "snapshot_digest": "cf94fdb6731a9f0b"
+    },
+    "r0012": {
+      "case": "foreign-owner",
+      "errors": 1,
+      "ticks": 300,
+      "drawn": 300,
+      "snapshot_digest": "a2ef52074f993697"
+    },
+    "r0013": {
+      "case": "partial-restart",
+      "errors": 0,
+      "ticks": 300,
+      "drawn": 300,
+      "snapshot_digest": "fae6621e1946caf6"
+    },
+    "r0014": {
+      "case": "pause-before-seal",
+      "errors": 0,
+      "ticks": 300,
+      "drawn": 300,
+      "snapshot_digest": "fae6621e1946caf6"
+    },
+    "r0015": {
+      "case": "identity-change",
+      "errors": 0,
+      "ticks": 300,
+      "drawn": 300,
+      "snapshot_digest": "7c2f4188c6f4f106"
+    },
+    "r0016": {
+      "case": "window-continuity",
+      "errors": 2,
+      "ticks": 300,
+      "drawn": 300,
+      "snapshot_digest": "8ad6234c20fec8df"
+    },
+    "r0017": {
+      "case": "first-evidence",
+      "errors": 1,
+      "ticks": 300,
+      "drawn": 300,
+      "snapshot_digest": "a2ef52074f993697"
+    },
+    "r0018": {
+      "case": "unknown-reason",
+      "errors": 1,
+      "ticks": 300,
+      "drawn": 300,
+      "snapshot_digest": "a2ef52074f993697"
+    },
+    "r0004": [
+      {
+        "case": "empty",
+        "errors": 0,
+        "ticks": 300,
+        "drawn": 300,
+        "snapshot_digest": "a7ba54c570107846"
+      },
+      {
+        "case": "unspecified",
+        "errors": 1,
+        "ticks": 300,
+        "drawn": 300,
+        "snapshot_digest": "a2ef52074f993697"
+      },
+      {
+        "case": "typed-wait",
+        "errors": 1,
+        "ticks": 300,
+        "drawn": 300,
+        "snapshot_digest": "a2ef52074f993697"
+      },
+      {
+        "case": "repeat",
+        "errors": 2,
+        "ticks": 300,
+        "drawn": 300,
+        "snapshot_digest": "c39d818bb2dd2ea4"
+      },
+      {
+        "$ref": "r0005"
+      },
+      {
+        "case": "spill",
+        "errors": 37,
+        "ticks": 300,
+        "drawn": 300,
+        "snapshot_digest": "448f37d5bf40b9b3"
+      },
+      {
+        "$ref": "r0006"
+      },
+      {
+        "$ref": "r0007"
+      },
+      {
+        "$ref": "r0008"
+      },
+      {
+        "case": "tick-reverse",
+        "errors": 2,
+        "ticks": 300,
+        "drawn": 300,
+        "snapshot_digest": "d679c0cfd8abcea4"
+      },
+      {
+        "$ref": "r0009"
+      },
+      {
+        "case": "scope-depth",
+        "errors": 1,
+        "ticks": 300,
+        "drawn": 300,
+        "snapshot_digest": "a2ef52074f993697"
+      },
+      {
+        "case": "scope-order",
+        "errors": 1,
+        "ticks": 300,
+        "drawn": 300,
+        "snapshot_digest": "a2ef52074f993697"
+      },
+      {
+        "$ref": "r0010"
+      },
+      {
+        "$ref": "r0011"
+      },
+      {
+        "$ref": "r0012"
+      },
+      {
+        "case": "inactive",
+        "errors": 0,
+        "ticks": 300,
+        "drawn": 300,
+        "snapshot_digest": "a7ba54c570107846"
+      },
+      {
+        "$ref": "r0013"
+      },
+      {
+        "$ref": "r0014"
+      },
+      {
+        "case": "pause-keep",
+        "errors": 1,
+        "ticks": 300,
+        "drawn": 300,
+        "snapshot_digest": "a2ef52074f993697"
+      },
+      {
+        "case": "resume-fresh",
+        "errors": 0,
+        "ticks": 300,
+        "drawn": 300,
+        "snapshot_digest": "4d225d45ac16fa47"
+      },
+      {
+        "$ref": "r0015"
+      },
+      {
+        "$ref": "r0016"
+      },
+      {
+        "$ref": "r0017"
+      },
+      {
+        "case": "bin-wrap",
+        "errors": 0,
+        "ticks": 300,
+        "drawn": 300,
+        "snapshot_digest": "a7ba54c570107846"
+      },
+      {
+        "$ref": "r0018"
+      }
+    ],
+    "r0020": {
+      "case": "pmu-composition",
+      "errors": 1,
+      "ticks": 300,
+      "drawn": 300,
+      "snapshot_digest": "14b3d0f7be30efab"
+    },
+    "r0019": [
+      {
+        "$ref": "r0020"
+      },
+      {
+        "$ref": "r0014"
+      },
+      {
+        "$ref": "r0017"
+      }
+    ],
+    "r0021": "PMU simulated total=30030 reads=335 config=340 starts=2 stops=1\nDIAG used=1 spill=0 wrapped=0\n"
+  }
+}

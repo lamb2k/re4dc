@@ -1,0 +1,64 @@
+// Actual census implementation; deterministic clock/thread/log adapters only.
+// The host adapter selection removes hardware timer/IRQ timing from this model.
+#define RE4DC_WORLD_CENSUS24_HOST 1
+#include "@DC@/game/world_census24.cpp"
+
+extern "C" {
+uint64_t fixture_clock=1000;
+uintptr_t fixture_thread=1;
+__attribute__((noinline)) uint64_t re4dc_wc24_test_clock(){return fixture_clock;}
+__attribute__((noinline)) uintptr_t re4dc_wc24_test_thread(){return fixture_thread;}
+__attribute__((noinline)) void re4dc_wc24_test_log(const char*){}
+// Formatting is excluded, not assigned a fictitious zero cost. Any accidental
+// model path through this symbol is rejected by the instruction runner.
+int __wrap_snprintf(char*,size_t,const char*,...){return -1;}
+void re4dc_wc24_identity(unsigned out[7]){
+    for(unsigned i=0;i<7;++i)out[i]=0;
+}
+struct Arguments {uint64_t now;uint32_t a,b,clear;};
+__attribute__((noinline)) void fixture_phase(const Arguments*){
+    using namespace re4dc::wc24;
+    const uint32_t token=enter(NearOP,Transform);
+    count(Transformed,6);
+    leave(token);
+}
+__attribute__((noinline)) void fixture_fault(const Arguments* a){
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    re4dc::wc24::fault(re4dc::wc24::ErrorPassAbort,re4dc::wc24::ErrorPs2Pass,a->a,a->b);
+#else
+    (void)a;
+    re4dc::wc24::fault();
+#endif
+}
+__attribute__((noinline)) void fixture_untyped(const Arguments*){re4dc::wc24::fault();}
+__attribute__((noinline)) void fixture_finish(const Arguments* a){re4dc::wc24::finish_tick(a->now);}
+__attribute__((noinline)) void fixture_clear(const Arguments* a){re4dc::wc24::clear_collection(a->clear);}
+// Isolate bookkeeping at the rare window boundary; snprintf and serial output
+// are deliberately outside the cost model and must be budgeted separately.
+__attribute__((noinline)) void fixture_seal(const Arguments*){
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    re4dc::wc24::errors_seal();
+#endif
+}
+#define WC re4dc::wc24
+#define A(name) uintptr_t(&WC::name)
+#define F(name) offsetof(WC::Frame,name)
+#define S(name) offsetof(WC::Snapshot,name)
+__attribute__((used)) extern const uintptr_t fixture_layout[]={
+    sizeof(Arguments),sizeof(WC::Frame),sizeof(WC::Snapshot),
+    A(current),A(window),A(sealed),A(owner),A(state),A(paused),A(have_sealed),
+    F(begin),F(last),F(tick),F(errors),F(active),F(complete),F(attempt),F(finished),
+    F(phase_us),F(counters),S(errors),S(sequence),S(identity),S(first_tick),S(last_tick),
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    A(errors_live),A(errors_sealed),sizeof(WC::ErrorCounts),sizeof(WC::ErrorSnapshot),
+    offsetof(WC::ErrorCounts,bins),offsetof(WC::ErrorSnapshot,bins),
+    WC::ErrorPassAbort|(WC::ErrorPs2Pass<<8),WC::ErrorUnspecified,
+#else
+    0,0,0,0,0,0,0,0,
+#endif
+};
+#undef A
+#undef F
+#undef S
+#undef WC
+}

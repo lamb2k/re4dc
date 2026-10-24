@@ -238,19 +238,41 @@ extern "C" int re4dc_far_shell_draw(float cut, float full) {
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::Scope wc_phase(re4dc::wc24::FarOP,re4dc::wc24::Other);
     Wc24PassResult wc_result;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.why.tag(re4dc::wc24::ErrorFarShell,re4dc::wc24::ErrorShellUnavailable,farshell::st.room,ps2w.room);
+#endif
     wc_result.complete=far_shell_mode!=1; // an explicitly disabled shell is an option, not a failed draw
     const unsigned wc_refused=farshell::st.refused;
 #endif
     using namespace farshell;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(far_shell_mode!=1)return 0;
+    if(!st.h || st.room!=ps2w.room){wc_result.why.first(re4dc::wc24::ErrorShellUnavailable,st.room,ps2w.room);return 0;}
+    if(!ps2w.camera){wc_result.why.first(re4dc::wc24::ErrorCameraUnavailable,st.room);return 0;}
+#else
     if (far_shell_mode != 1 || !st.h || st.room != ps2w.room || !ps2w.camera) return 0;
+#endif
     const float* P = ps2w.projection;
     const float* V = ps2w.viewport;
     const float* v = ps2w.view;
     float vw[12];
     for (unsigned k = 0; k < 12; ++k) vw[k] = v[k];
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(P[0]!=0 || V[2]<=0 || V[3]<=0){
+        wc_result.why.first(re4dc::wc24::ErrorProjection,0,unsigned(P[0]!=0)|(unsigned(V[2]<=0)<<1)|(unsigned(V[3]<=0)<<2));return 0;
+    }
+#else
     if (P[0] != 0 || V[2] <= 0 || V[3] <= 0) return 0;
+#endif
     const float near = P[6] / (P[5] - 1);
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!re4dc::render::is_finite(near) || near<=0 || !(full>cut)){
+        uint32_t bits;std::memcpy(&bits,&near,4);
+        wc_result.why.first(re4dc::wc24::ErrorDepth,bits,unsigned(!re4dc::render::is_finite(near))|(unsigned(near<=0)<<1)|(unsigned(!(full>cut))<<2));return 0;
+    }
+#else
     if (!re4dc::render::is_finite(near) || near <= 0 || !(full > cut)) return 0;
+#endif
     const float near_w = near * 1.01f;
     const float sx = V[2] * .5f * RE4DC_SCREEN_WF / V[2], sy = -V[3] * .5f * RE4DC_SCREEN_HF / V[3];
     const float ox = (V[0] + V[2] * .5f) * RE4DC_SCREEN_WF / V[2], oy = (V[1] + V[3] * .5f) * RE4DC_SCREEN_HF / V[3];
@@ -300,10 +322,22 @@ extern "C" int re4dc_far_shell_draw(float cut, float full) {
             const Mat& m = st.mats[mat];
             const unsigned key[6] = {m.crc, m.fnv, m.w, m.h, 0U, 0U};
             open_mat = mat;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+            if(!re4dc_ps2_world_direct_begin(key,&out)){
+                wc_result.why.first(re4dc::wc24::ErrorShellBindRefusal,gi,mat);++st.refused;continue;
+            }
+#else
             if (!re4dc_ps2_world_direct_begin(key, &out)) { ++st.refused; continue; }
+#endif
             sq = out.sq; slots = 0; us = out.u_scale; vs = out.v_scale; ++st.headers;
         }
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+        if(!sq || out.scratch_capacity<g.vcount){
+            wc_result.why.first(re4dc::wc24::ErrorShellScratchRefusal,out.scratch_capacity,g.vcount);++st.refused;continue;
+        }
+#else
         if (!sq || out.scratch_capacity < g.vcount) { ++st.refused; continue; }
+#endif
         ++drawn;
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         wc_phase.phase(re4dc::wc24::Transform);

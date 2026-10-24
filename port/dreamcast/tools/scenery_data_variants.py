@@ -166,12 +166,31 @@ class Package:
         require(covered == h[5], "mesh part coverage")
 
 
-def policy_header(side, package):
+def _identity_checks(message, checks, diagnostics):
+    """Keep legacy errors by default; diagnostics never change admission."""
+    failed = [row for row in checks if not row[0]]
+    if failed and diagnostics:
+        message += ": " + "; ".join(
+            f"{field} actual={actual!r} expected={expected!r}"
+            for _, field, actual, expected in failed)
+    require(not failed, message)
+
+
+def policy_header(side, package, *, policy_diagnostics=False):
     require(len(side) >= 32, "short R4PW")
     p = struct.unpack_from("<4s7I", side)
-    require(p[:2] == (b"R4PW", 1) and p[3:5] == (package.h[5], package.h[4])
-            and p[6:8] == (0, 0), "R4PW identity/counts/reserved")
-    require(len(side) == 32+16*p[3]+52*p[2] and p[5] == crc(side[32:]), "R4PW size/CRC")
+    _identity_checks("R4PW identity/counts/reserved", (
+        (p[0] == b"R4PW", "magic@0", p[0], b"R4PW"),
+        (p[1] == 1, "version@4", p[1], 1),
+        (p[3] == package.h[5], "part_count@12", p[3], package.h[5]),
+        (p[4] == package.h[4], "mesh_count@16", p[4], package.h[4]),
+        (p[6] == 0, "reserved@24", p[6], 0),
+        (p[7] == 0, "reserved@28", p[7], 0)), policy_diagnostics)
+    actual_crc = crc(side[32:])
+    _identity_checks("R4PW size/CRC", (
+        (len(side) == 32+16*p[3]+52*p[2], "file_bytes", len(side), 32+16*p[3]+52*p[2]),
+        (p[5] == actual_crc, "body_crc@20", f"{p[5]:08x}", f"{actual_crc:08x}")),
+        policy_diagnostics)
     for row in struct.iter_unpack("<IIHHBBBB", side[32:32+16*p[3]]):
         require(0 < row[2] <= 1024 and 0 < row[3] <= 1024 and row[4] <= 2 and row[5] <= 2,
                 "R4PW material")
@@ -180,13 +199,22 @@ def policy_header(side, package):
     return p
 
 
-def parse_groups(data, package, side):
-    policy = policy_header(side, package)
+def parse_groups(data, package, side, *, policy_diagnostics=False):
+    policy = policy_header(side, package, policy_diagnostics=policy_diagnostics)
     require(len(data) >= 32, "short R4SG")
     w = struct.unpack_from("<4s7I", data)
-    require(w[:3] == (b"R4SG", 1, package.h[6]) and 1 <= w[3] <= 8
-            and w[4:7] == (package.h[3], package.h[2], policy[5])
-            and len(data) == 32+16*w[2]*w[3] and w[7] == crc(data[32:]), "R4SG identity/CRC")
+    actual_crc = crc(data[32:])
+    _identity_checks("R4SG identity/CRC", (
+        (w[0] == b"R4SG", "magic@0", w[0], b"R4SG"),
+        (w[1] == 1, "version@4", w[1], 1),
+        (w[2] == package.h[6], "meshlet_count@8", w[2], package.h[6]),
+        (1 <= w[3] <= 8, "groups_per_meshlet@12", w[3], "1..8"),
+        (w[4] == package.h[3], "mesh_body_crc@16", f"{w[4]:08x}", f"{package.h[3]:08x}"),
+        (w[5] == package.h[2], "mesh_file_bytes@20", w[5], package.h[2]),
+        (w[6] == policy[5], "physical_policy_crc@24", f"{w[6]:08x}", f"{policy[5]:08x}"),
+        (len(data) == 32+16*w[2]*w[3], "file_bytes", len(data), 32+16*w[2]*w[3]),
+        (w[7] == actual_crc, "record_crc@28", f"{w[7]:08x}", f"{actual_crc:08x}")),
+        policy_diagnostics)
     result = []
     for li, meshlet in enumerate(package.lets):
         cursor, strip_first, groups = 0, 0, []
@@ -232,13 +260,13 @@ def pack(source, sections, counts):
     return h, body
 
 
-def convert(mesh, variant, side=None, groups=None):
+def convert(mesh, variant, side=None, groups=None, *, policy_diagnostics=False):
     require(variant in MARKERS, "unknown variant")
     source = Package(mesh)
     if side is not None:
-        policy_header(side, source)
+        policy_header(side, source, policy_diagnostics=policy_diagnostics)
     require(groups is None or side is not None, "R4SG conversion needs its exact R4PW")
-    old_groups = parse_groups(groups, source, side) if groups is not None else None
+    old_groups = parse_groups(groups, source, side, policy_diagnostics=policy_diagnostics) if groups is not None else None
     vertices, strips, meshlets, children, prefix = bytearray(), bytearray(), [], [], [0]
     for li, old in enumerate(source.lets):
         chunks, first, used = [], 0, 0
@@ -296,7 +324,7 @@ def convert(mesh, variant, side=None, groups=None):
         p = policy_header(side, source)
         new_groups = struct.pack("<4s7I", b"R4SG", 1, len(meshlets), count, h[3], len(result), p[5], crc(out))+out
         require(len(new_groups) <= 262144, "candidate R4SG exceeds runtime size limit")
-    validate_pair(mesh, result, variant, side, groups, new_groups)
+    validate_pair(mesh, result, variant, side, groups, new_groups, policy_diagnostics=policy_diagnostics)
     stats = dict(variant=variant, marker=struct.pack("<I", MARKERS[variant]).decode(),
         source_bytes=len(mesh), source_crc=source.h[3], source_sha256=sha(mesh),
         candidate_bytes=len(result), candidate_crc=h[3], candidate_sha256=sha(result),
@@ -313,11 +341,12 @@ def convert(mesh, variant, side=None, groups=None):
     return bytes(result), new_groups, stats
 
 
-def validate_pair(before, after, variant, side=None, before_groups=None, after_groups=None):
+def validate_pair(before, after, variant, side=None, before_groups=None, after_groups=None, *, policy_diagnostics=False):
     a, b = Package(before), Package(after, variant)
     require((b.h[17], b.h[18]) == (len(before), a.h[3]), "source provenance mismatch")
     if side is not None:
-        policy_header(side, a); policy_header(side, b)
+        policy_header(side, a, policy_diagnostics=policy_diagnostics)
+        policy_header(side, b, policy_diagnostics=policy_diagnostics)
     for name in ("mesh", "palette", "part_lod", "cluster", "class", "rule"):
         require(a.sections.get(name) == b.sections.get(name), "identity table changed: "+name)
     require(len(a.parts) == len(b.parts) and len(a.levels) == len(b.levels), "part/level identity")
@@ -335,7 +364,8 @@ def validate_pair(before, after, variant, side=None, before_groups=None, after_g
         require(old == new, "ordered part strip corners changed")
     if before_groups is not None:
         require(after_groups is not None, "missing mapped R4SG")
-        parse_groups(before_groups, a, side); parse_groups(after_groups, b, side)
+        parse_groups(before_groups, a, side, policy_diagnostics=policy_diagnostics)
+        parse_groups(after_groups, b, side, policy_diagnostics=policy_diagnostics)
     else:
         require(after_groups is None, "unexpected R4SG")
 
@@ -347,11 +377,14 @@ def main():
     choice.add_argument("--scenery-local-indexed", action="store_true")
     choice.add_argument("--scenery-direct-strips", action="store_true")
     ap.add_argument("--source-groups", type=Path)
+    ap.add_argument("--policy-diagnostics", type=int, choices=(0, 1), nargs="?", const=1, default=0,
+                    help="include exact policy/group header fields in refusals; admission is unchanged")
     ap.add_argument("--out", type=Path, required=True, help="new output directory; source files stay unchanged")
     args = ap.parse_args()
     variant = "local-indexed" if args.scenery_local_indexed else "direct-strips"
     m, g, report = convert(args.mesh.read_bytes(), variant, args.policy.read_bytes(),
-                           args.source_groups.read_bytes() if args.source_groups else None)
+                           args.source_groups.read_bytes() if args.source_groups else None,
+                           policy_diagnostics=bool(args.policy_diagnostics))
     args.out.mkdir(parents=True, exist_ok=False)
     files = {STEMS[variant]+".re4mesh": m}
     if g is not None:
