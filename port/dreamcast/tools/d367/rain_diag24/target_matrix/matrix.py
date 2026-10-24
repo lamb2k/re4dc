@@ -212,7 +212,7 @@ def execute(p,pins_path,g,output):
  return result
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('mode',choices=('seal','check','plan','reserve','run'));ap.add_argument('--pins',default=str(HERE/'PINS-ROOT-FIX-V1.json'));ap.add_argument('--out');ap.add_argument('--grant');args=ap.parse_args()
+ ap=argparse.ArgumentParser();ap.add_argument('mode',choices=('seal','check','plan','reserve','run'));ap.add_argument('--pins',default=str(HERE/'PINS-ROOT-FIX-V2.json'));ap.add_argument('--out');ap.add_argument('--grant');args=ap.parse_args()
  if args.mode=='seal':print(json.dumps({'pins':str(pathlib.Path(args.pins)),'cases':seal(pathlib.Path(args.pins).parent)['case_names']}));return
  p=json.loads(pathlib.Path(args.pins).read_text());validate(p)
  if args.mode=='check':

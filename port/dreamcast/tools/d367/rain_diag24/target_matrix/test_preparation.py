@@ -44,6 +44,11 @@ def main():
   for name,change in [('value',{'symval':2}),('binding',{'symbind':2}),('visibility',{'symvisibility':2}),('type',{'symtype':1}),('size',{'symsize':2}),('address',{'textaddress':16})]:
    elf(root/('abi-'+name),**dict(stable,**change))
    reject(lambda name=name:readback.require_identity(abi,readback.Elf(root/('abi-'+name))))
+  elf(root/'abi-unique-base',**dict(stable,symbind=10,symtype=1))
+  elf(root/'abi-unique-value',**dict(stable,symbind=10,symtype=1,symval=2))
+  unique=readback.Elf(root/'abi-unique-base')
+  reject(lambda:readback.require_identity(unique,unique))
+  reject(lambda:readback.require_identity(unique,readback.Elf(root/'abi-unique-value')))
   elf(root/'abi-debug',**dict(stable,debug=b'unrelated debug bytes'))
   readback.require_identity(abi,readback.Elf(root/'abi-debug'));yes(True)
   yes('cc1' in matrix.TOOLS)

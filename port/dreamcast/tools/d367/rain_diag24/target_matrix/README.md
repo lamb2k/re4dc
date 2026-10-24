@@ -3,7 +3,7 @@ Preparation only: selected SH4 rain diagnostic matrix
 
 Frozen source is da413ff058f88fa136375ecff629610fc59c0e51, with runtime blobs from fdb5ed4212fc78823f625ab75b78cc237cfd181a. Baseline is bca44d58a1fa0a51fd87ba94deba8cba925c8998. The source edit claim is released. This directory changes no runtime, recipe, assets or original evidence. No SDK command was used to prepare or test these helpers.
 
-`PINS-ROOT-FIX-V1.json` binds both actual normal rP Make log command lines, their original non-system dependency and complete resolved-knob files, frozen source/header blobs, the normal provider ELF, wrappers/compiler/assembler/binutils byte hashes, environment scripts and these helper bytes. Primary exports are generated from those immutable Git objects only inside a fresh owned RAM root. Headers consumed by the prior normal build must be identical between the frozen commits. Newly discovered full dependencies must remain inside that export or the admitted KOS/ports/toolchain roots. A new repository header fails closed until preparation is explicitly amended.
+`PINS-ROOT-FIX-V2.json` binds both actual normal rP Make log command lines, their original non-system dependency and complete resolved-knob files, frozen source/header blobs, the normal provider ELF, wrappers/compiler/assembler/binutils byte hashes, environment scripts and these helper bytes. Primary exports are generated from those immutable Git objects only inside a fresh owned RAM root. Headers consumed by the prior normal build must be identical between the frozen commits. Newly discovered full dependencies must remain inside that export or the admitted KOS/ports/toolchain roots. A new repository header fails closed until preparation is explicitly amended.
 
 The matrix has eight cases, two selected objects each: baseline feature0/1, then new diagnostic absent/0/1 crossed with feature0/1. Feature0 uses actual OFF normal argv; feature1 uses actual ON normal argv. Only filter06 receives the normal `RE4DC_RAIN_R10C_DC=1` macro; espgen44 receives neither feature macro in normal Make. For diagnostic absent and 0 the actual Make default is absent; explicit0 is an additional synthetic compiler control. ON adds exactly `-DRE4DC_RAIN_R10C_DIAG=1` to both selected units, matching reviewed Make wiring. The script retains the original flag order: filter06's effective optimization is O1, espgen44's later override is O2.
 
@@ -15,8 +15,8 @@ Host preparation checks (no SDK):
 
 ```
 PYTHONDONTWRITEBYTECODE=1 python3 test_preparation.py
-python3 matrix.py check --pins PINS-ROOT-FIX-V1.json
-python3 matrix.py plan --pins PINS-ROOT-FIX-V1.json
+python3 matrix.py check --pins PINS-ROOT-FIX-V2.json
+python3 matrix.py plan --pins PINS-ROOT-FIX-V2.json
 bash -n run-matrix.sh
 ```
 
@@ -44,6 +44,8 @@ ON readback requires exactly one filter06 global128-byte NOBITS record, section 
 
 Full per-object disassembly and relocations are retained. Structural OCBWB/OCBI/OCBP counts and an A0000000 literal observation are explicitly insufficient to prove cache semantics. Root must inspect the actual Filter06Init body, range-loop immediate128/start alignment/step32/termination (four lines), its cold-only control flow, record relocation/P1 location and every P2 accessor in selected target output. Verify no hot helper cache maintenance or hidden fallback, and inspect any newly referenced actual provider opcodes. No independent PVR packet acceptance, cache execution/coherence, physical duration, controller/archive ancestry, guest scene, appearance or pixel gate follows from this matrix.
 
-PINS-PREP-V* files are preserved intermediate preparation seals only. They predate final helper changes, are intentionally invalid for current launch and never authorized or ran SDK work. PINS.json at84648350 is preserved as the superseded HOLD seal. Only PINS-ROOT-FIX-V1.json is the successor candidate seal, pending independent review and allocation.
+PINS-PREP-V* files are preserved intermediate preparation seals only. They predate final helper changes, are intentionally invalid for current launch and never authorized or ran SDK work. PINS.json at84648350 is preserved as the superseded HOLD seal. PINS-ROOT-FIX-V1.json is preserved after independent da4 review. Only PINS-ROOT-FIX-V2.json is the successor candidate seal, pending independent review and allocation.
 
 Root repair after independent846 HOLD: bootstrap C backend cc1 is now pinned and required in the exact tool closure. All109 host controls pass, including valid-extent standalone function value/binding/visibility/type/size and allocated-address mutations, plus missing/wrong cc1. Runtime blobs remain da413/fdb5; no SDK ran. The original98-control receipt and846 seal remain unchanged.
+
+V2 fails closed for unsupported nonlocal ELF symbol bindings, including GNU_UNIQUE, instead of silently omitting them from disabled ABI identity. Both unchanged unsupported format and valid-extent unreferenced GNU-unique value changes are rejected. Current actual selected normal units have bindings0/1 only; no generated game defect is inferred. All111 host controls pass; no SDK invocation.

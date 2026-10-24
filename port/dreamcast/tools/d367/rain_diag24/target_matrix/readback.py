@@ -62,6 +62,7 @@ class Elf:
   # Keep a multiset: duplicate symbols must not disappear through dict collapse.
   result=[]
   for s in self.symbols:
+   if s['bind'] not in (0,1,2):raise ValueError('unsupported nonlocal ELF symbol binding')
    if not s['name'] or s['bind'] not in (1,2):continue
    section=s['section']
    if section>=len(self.sections) and section<0xff00:raise ValueError('external symbol section extent')
