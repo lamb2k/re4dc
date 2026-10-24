@@ -1,0 +1,19 @@
+{
+  "critical": [
+    "native UI: package rejected: open failed",
+    "native UI: upload FAILED vram=0"
+  ],
+  "bounded_complete": true,
+  "observed": {
+    "goal_stop": true,
+    "source_event_markers": true,
+    "comparison": null
+  },
+  "pass": false,
+  "evidence_kind": "Flycast console current-profile regression; not hardware/performance acceptance",
+  "run_output_sha256": "bbb3d00ebe7791be3d9fc174ff47ff1c60f55830b16b34b4d5eb8738adec6524",
+  "current_launch_sha256": "9ab1a1ff4c0abb7a579a6d3a0f90d934b93aae6cd87928aec8302bad24f75402",
+  "exact_console_image_verified": true,
+  "exact_harness_verified": true,
+  "launcher_rc": 0
+}

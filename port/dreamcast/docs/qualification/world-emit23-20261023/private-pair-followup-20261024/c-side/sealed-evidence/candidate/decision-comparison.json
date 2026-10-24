@@ -1,0 +1,161 @@
+{
+ "ref": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/captures/B-mendez-ps2hair-control-r1/run-output.txt",
+ "test": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/captures/B-mendez-ps2hair-candidate-r1/run-output.txt",
+ "align": "frame",
+ "ref_records": 2773,
+ "test_records": 2769,
+ "compared": 2769,
+ "window": [
+  0,
+  2768
+ ],
+ "rows": {
+  "r": {
+   "differ": 0,
+   "first": null
+  },
+  "sy": {
+   "differ": 0,
+   "first": null
+  },
+  "sp": {
+   "differ": 0,
+   "first": null
+  },
+  "st": {
+   "differ": 0,
+   "first": null
+  },
+  "rf": {
+   "differ": 0,
+   "first": null
+  },
+  "sc": {
+   "differ": 0,
+   "first": null
+  },
+  "rm": {
+   "differ": 0,
+   "first": null
+  },
+  "ms": {
+   "differ": 0,
+   "first": null
+  },
+  "ps": {
+   "differ": 0,
+   "first": null
+  },
+  "e": {
+   "differ": 0,
+   "first": null
+  },
+  "es": {
+   "differ": 0,
+   "first": null
+  },
+  "o": {
+   "differ": 0,
+   "first": null
+  },
+  "os": {
+   "differ": 0,
+   "first": null
+  },
+  "ec": {
+   "differ": 0,
+   "first": null
+  },
+  "sa": {
+   "differ": 0,
+   "first": null
+  },
+  "dm": {
+   "differ": 0,
+   "first": null
+  },
+  "lq": {
+   "differ": 0,
+   "first": null
+  },
+  "ep": {
+   "differ": 0,
+   "first": null
+  },
+  "eg": {
+   "differ": 0,
+   "first": null
+  },
+  "af": {
+   "differ": 0,
+   "first": null
+  },
+  "sl": {
+   "differ": 0,
+   "first": null
+  },
+  "lp": {
+   "differ": 0,
+   "first": null
+  },
+  "sq": {
+   "differ": 0,
+   "first": null
+  },
+  "p": {
+   "differ": 0,
+   "first": null
+  },
+  "a": {
+   "differ": 0,
+   "first": null
+  },
+  "mf": {
+   "differ": 0,
+   "first": null
+  },
+  "pf": {
+   "differ": 0,
+   "first": null
+  },
+  "pm": {
+   "differ": 0,
+   "first": null
+  },
+  "ef": {
+   "differ": 0,
+   "first": null
+  },
+  "em": {
+   "differ": 0,
+   "first": null
+  },
+  "of": {
+   "differ": 0,
+   "first": null
+  },
+  "om": {
+   "differ": 0,
+   "first": null
+  },
+  "c": {
+   "differ": 0,
+   "first": null
+  }
+ },
+ "decisions": {
+  "em_em": 26494,
+  "line_queries": 51292,
+  "line_candidate_tests": 24866,
+  "area_checks": 4650,
+  "damage_tests": 27652
+ },
+ "drift": {
+  "player_max": 0.0,
+  "enemy_samples": 10064,
+  "enemy_max": 0.0,
+  "enemy_worst": null,
+  "slot_id_mismatches": 0
+ },
+ "verdict": "MUST-IDENTICAL"
+}

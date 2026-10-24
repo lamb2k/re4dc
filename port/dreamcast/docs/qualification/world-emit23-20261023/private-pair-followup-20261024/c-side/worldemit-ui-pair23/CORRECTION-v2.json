@@ -1,0 +1,30 @@
+{
+  "schema": "MENDEZ_PAIR_STAGING_DOC_CORRECTION_V2",
+  "correction": "B-mendez-r1 actual frozen programme is B-t trace, not B-m meter; stage candidate and fresh matched control with exact B-t unit/main/all14 overlays.",
+  "superseded": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/STAGING-v1-B-m-SUPERSEDED.md",
+    "sha256": "53ae85bf6889962a9e6e866bb7eb9274f298ec86f00b6ca77f993a5800346a5e"
+  },
+  "corrected": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/STAGING.md",
+    "sha256": "df9fc4d757b43ee659c8cb3854886ad2cafbeb205ebd3273bcc6b50608644197"
+  },
+  "actual_control_binding": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/CONTROL-B-t-BINDING.json",
+    "sha256": "00aeadba354a82c7428d5770acbbdab36674fceb04a05325d518319e833d797f"
+  },
+  "pack_absence": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/PACK-ABSENCE.json",
+    "sha256": "3c6d25c05314e584a57d01d53be6ab6209c2514803c8178c33b410a713a9a6fe"
+  },
+  "prior_candidate_receipt": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/RECEIPT.json",
+    "sha256": "ded2ff09fe37fe1f986df92e7b1a7179eedc9f61e326e852f249781a1b4e1a6b",
+    "unchanged": true
+  },
+  "source_commit": "67474ea4b1dd01b0d47e2f80c0e9b58103a7f86d",
+  "source_and_private_candidate_unchanged": true,
+  "obsolete_plan_executed": false,
+  "execution_statement_source": "Parent root explicitly confirmed no execution of bad plan",
+  "actual_stage_or_guest": false
+}

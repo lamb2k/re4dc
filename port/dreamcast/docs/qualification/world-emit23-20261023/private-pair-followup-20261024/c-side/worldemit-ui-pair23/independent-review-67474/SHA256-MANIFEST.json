@@ -1,0 +1,22 @@
+[
+  {
+    "path": "REVIEW-PS2-PAIR.md",
+    "bytes": 7110,
+    "sha256": "b9a34e90f5ff4d663f769781195d7459007cfd0f370bd22ff451f644bfb82b77"
+  },
+  {
+    "path": "independent-controls.json",
+    "bytes": 4275,
+    "sha256": "928e99e417d60f11d4f5a3b42a061e299112bbaf4392d520434f710dba35bdb0"
+  },
+  {
+    "path": "review_actual_pair.py",
+    "bytes": 4952,
+    "sha256": "1524602734cda477f2d92825a173beca5124ba04e9c2e570b505dd641e0c99cf"
+  },
+  {
+    "path": "source-and-control-pins.json",
+    "bytes": 3824,
+    "sha256": "962fd3a53555c346c4cde2ef878c30c42a27190969f269740c03bb9d39a7baed"
+  }
+]

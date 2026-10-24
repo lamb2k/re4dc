@@ -1,0 +1,20 @@
+{
+  "critical": [],
+  "bounded_complete": true,
+  "observed": {
+    "goal_stop": true,
+    "source_event_markers": true,
+    "comparison": {
+      "rc": 0,
+      "sha256": "c4732746fd0321388af6e094be203f0d790d59bfcbf115c1e98083a800dc465b",
+      "reference_log_sha256": "bbb3d00ebe7791be3d9fc174ff47ff1c60f55830b16b34b4d5eb8738adec6524"
+    }
+  },
+  "pass": true,
+  "evidence_kind": "Flycast console current-profile regression; not hardware/performance acceptance",
+  "run_output_sha256": "7889fafba5d63a457525709a7e39052d9bc833daef5052c1e39b72cb7104872f",
+  "current_launch_sha256": "0f9fa55f7d12e2e7706a5daad4e79e381d8297f2db1ab0d30fc52861ed676410",
+  "exact_console_image_verified": true,
+  "exact_harness_verified": true,
+  "launcher_rc": 0
+}

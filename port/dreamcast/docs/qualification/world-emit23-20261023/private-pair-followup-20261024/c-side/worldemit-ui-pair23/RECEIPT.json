@@ -1,0 +1,60 @@
+{
+  "schema": "WORLDEMIT_UI_PAIR23_SOURCE_PRIVATE_CANDIDATE_RECEIPT_V1",
+  "source_commit": "67474ea4b1dd01b0d47e2f80c0e9b58103a7f86d",
+  "source_parent": "d5c1ceab9e06461462669b3ce1d28a379747a74a",
+  "branch": "wip/worldemit-ui-pair23-20261023",
+  "source": {
+    "port/dreamcast/tools/d367/worldemit_ui_pair23/README.md": {
+      "bytes": 3134,
+      "sha256": "26b7eff2814176b7ec28993932fe566f7cfcad47c87ee48fab2e6893f48f31c2"
+    },
+    "port/dreamcast/tools/d367/worldemit_ui_pair23/prepare_pair.py": {
+      "bytes": 6888,
+      "sha256": "e7e5611529b4054b2a415a62e6965f4dfba33fc9cd188645c1305c08c7894ca4"
+    },
+    "port/dreamcast/tools/d367/worldemit_ui_pair23/test_prepare_pair.py": {
+      "bytes": 3485,
+      "sha256": "eab1b8d25222ec5a769056aa2bef2d67aee4254c8d9c01b10f3cfec08ed43f02"
+    }
+  },
+  "candidate": "/mnt/c/Game Dev/Emulators/re4-assets-private/worldemit-ui-pair23-20261023-v2",
+  "candidate_files": {
+    "candidate.json": {
+      "bytes": 3540,
+      "sha256": "a481406e549c605de24fcf7ba9084399c9c964d6a8588b75ae0d8991c229402c"
+    },
+    "local-pack.json": {
+      "bytes": 361,
+      "sha256": "06d07cc7dceedd84fbcf30e7d496f4e487551e59efce109f6f3da2550fbb3825"
+    },
+    "ps2-colour.png": {
+      "bytes": 21240,
+      "sha256": "a11f703d705291a0f5050ef366aec26378c938350a5aed60e53f54433dd19524"
+    },
+    "ps2-opacity.png": {
+      "bytes": 4737,
+      "sha256": "fc6806557fb29039ca70c32b128ab14c8b16d6d7dda8e8ce04e04c63b2d09b23"
+    },
+    "ps2-pair.png": {
+      "bytes": 23022,
+      "sha256": "366a8f6e61b17bbc92d7a48728ca912f8c368d82287a3e78c67810bd4308c56a"
+    },
+    "files/dc/tex/7/7d4e1e92-052bdc2e.re4tex": {
+      "bytes": 32912,
+      "sha256": "18978dc1b97247dcd5fda5f5f1744b74e9d1b97c34dc5779977525b0a2dc477e"
+    }
+  },
+  "candidate_bytes": 85812,
+  "host_controls": {
+    "tests": 9,
+    "passed": 9,
+    "seconds": 0.021,
+    "command": "python3 -B -m unittest -v test_prepare_pair",
+    "actual_member_audit": "PASS: exact em35.dat/TPL5/materials and both GS/JL decoders"
+  },
+  "runtime_or_gate_acceptance": false,
+  "production_enabled": false,
+  "look_approved": false,
+  "preserved": "v1 preliminary CRLF-working-source candidate remains unchanged; v2 binds exact committed LF source and reproduces identical package",
+  "scope": "No SDK/guest/production data option or recipe change; native_ui read-only; original B gate remains FAIL"
+}

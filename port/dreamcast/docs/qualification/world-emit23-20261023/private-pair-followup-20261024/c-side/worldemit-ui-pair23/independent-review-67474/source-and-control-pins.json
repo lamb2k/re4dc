@@ -1,0 +1,100 @@
+{
+  "source": "67474ea4b1dd01b0d47e2f80c0e9b58103a7f86d",
+  "source_status": "",
+  "files": [
+    {
+      "path": "port/dreamcast/tools/d367/worldemit_ui_pair23/prepare_pair.py",
+      "bytes": 6888,
+      "sha256": "e7e5611529b4054b2a415a62e6965f4dfba33fc9cd188645c1305c08c7894ca4"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/worldemit_ui_pair23/test_prepare_pair.py",
+      "bytes": 3485,
+      "sha256": "eab1b8d25222ec5a769056aa2bef2d67aee4254c8d9c01b10f3cfec08ed43f02"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/worldemit_ui_pair23/README.md",
+      "bytes": 3134,
+      "sha256": "26b7eff2814176b7ec28993932fe566f7cfcad47c87ee48fab2e6893f48f31c2"
+    },
+    {
+      "path": "port/dreamcast/tools/ps2_bin.py",
+      "bytes": 9524,
+      "sha256": "a9aef9f92f8c7c89c7539ef171d51be92e132090397a4405d0ea3e2a09c7d9a1"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/test12fx/ps2_tpl_decode.py",
+      "bytes": 25816,
+      "sha256": "19592a896163d12a3ba321be1a57a8dc46edd15bdcecd0fb9ce17fd63ecf80f7"
+    },
+    {
+      "path": "port/dreamcast/tools/convert_tpl.py",
+      "bytes": 33531,
+      "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+    },
+    {
+      "path": "port/dreamcast/tools/prepare_native_ui.py",
+      "bytes": 57905,
+      "sha256": "6577b1fc81cf4ef033ab81234842d0ee5cb0be694f00d1829251691242f30ecb"
+    },
+    {
+      "path": "port/dreamcast/tools/ps2_objects_tex.py",
+      "bytes": 34178,
+      "sha256": "0136a8b16b323ff83fdd9a2502c67a31cf6c96ceed2cd72f4852f5240bd5b769"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "bytes": 510195,
+      "sha256": "607fc67cd72f5c6acc2a7a1c2aecf651b78c2ca9e847c562171f820f9f12ea4a"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/captures/B-mendez-r1/current-gate-launch.json",
+      "bytes": 6029,
+      "sha256": "41a45bd36a778414938c0b43b373a140ee2862833b8c27751edc6dd62be435c1"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/identities/B-t.json",
+      "bytes": 3630,
+      "sha256": "9751128036ad8b58a1942704cd838debbffb5ff8092464499ed6d049ca673969"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/identities/B-t-programmes.sha256",
+      "bytes": 1737,
+      "sha256": "d118b3b8903f1dbb301b14c7a6ec248b5dbca17f537ea0eb99245f866f758897"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-gates-helper-b/B-MENDEZ-UI-ERROR-CONTROL.json",
+      "bytes": 4151,
+      "sha256": "7d0860c27756e7a7ce01c52dd49437977b482a5c6e9862902ad4347706f0d5a0"
+    }
+  ],
+  "corrected_staging_proof": [
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/PACK-ABSENCE.json",
+      "bytes": 2855,
+      "sha256": "3c6d25c05314e584a57d01d53be6ab6209c2514803c8178c33b410a713a9a6fe"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/CORRECTION-v2.json",
+      "bytes": 1528,
+      "sha256": "ddf4fb711d425a561db1d5e1f3477167fbc34026591c3c81a33dbe94adac4a46"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/CONTROL-B-t-BINDING.json",
+      "bytes": 4910,
+      "sha256": "00aeadba354a82c7428d5770acbbdab36674fceb04a05325d518319e833d797f"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/STAGING.md",
+      "bytes": 5199,
+      "sha256": "df9fc4d757b43ee659c8cb3854886ad2cafbeb205ebd3273bcc6b50608644197"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/STAGING-v1-B-m-SUPERSEDED.md",
+      "bytes": 3621,
+      "sha256": "53ae85bf6889962a9e6e866bb7eb9274f298ec86f00b6ca77f993a5800346a5e"
+    }
+  ]
+}

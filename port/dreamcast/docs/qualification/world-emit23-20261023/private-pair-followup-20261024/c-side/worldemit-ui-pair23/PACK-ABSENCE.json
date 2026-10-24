@@ -1,0 +1,85 @@
+{
+  "schema": "MENDEZ_PAIR_ACTUAL_PACK_ABSENCE_V1",
+  "status": "ABSENT_VALIDATED_INDEX_NO_SHADOW",
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "lookup_sources": {
+    "port/dreamcast/game/platform/include/texpack_index.inc": {
+      "sha256": "bf95fea5f7bc4881fe438b7c57baea7dc086b34a059573185d6fea8170e02c1d"
+    },
+    "port/dreamcast/game/platform/native_ui.cpp": {
+      "sha256": "607fc67cd72f5c6acc2a7a1c2aecf651b78c2ca9e847c562171f820f9f12ea4a"
+    }
+  },
+  "pack": {
+    "path": "/root/work/lanes/stat-bytes23-takeover-scratch/release/tree/dc/tex.pak",
+    "bytes": 162154496,
+    "sha256": "5bba464a1175d8ebe153d5aecb629ea9637807c2bf4fc438a32c17148d0729da",
+    "count": 7299,
+    "index_sectors": 58,
+    "index_crc32": "ad7384c4",
+    "index_sha256": "74ebaee4b029891068f5ea7734437d197adf97e9061759f8066ab96cef2443f2",
+    "stat_before": [
+      2080,
+      1279059,
+      162154496,
+      1792798348068303100,
+      1792807899540551429
+    ],
+    "stat_after": [
+      2080,
+      1279059,
+      162154496,
+      1792798348068303100,
+      1792807899540551429
+    ]
+  },
+  "query": "7d4e1e92-052bdc2e",
+  "found": false,
+  "sector": 27,
+  "sector_first": "79622678-1aa63a02",
+  "search_trace": [
+    {
+      "local_index": 64,
+      "key": "7ba8cc8c-6d5563fd"
+    },
+    {
+      "local_index": 96,
+      "key": "7c86c725-a706445e"
+    },
+    {
+      "local_index": 112,
+      "key": "7d1869cf-d4253cdd"
+    },
+    {
+      "local_index": 120,
+      "key": "7d4bcf93-d7a6405c"
+    },
+    {
+      "local_index": 124,
+      "key": "7d5e717c-dae69246"
+    },
+    {
+      "local_index": 122,
+      "key": "7d576fa4-b4f02945"
+    },
+    {
+      "local_index": 121,
+      "key": "7d518154-a0838d51"
+    }
+  ],
+  "adjacent": {
+    "previous": "7d4bcf93-d7a6405c",
+    "next": "7d518154-a0838d51"
+  },
+  "binding": {
+    "launch": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/captures/B-mendez-r1/current-gate-launch.json",
+    "launch_sha256": "41a45bd36a778414938c0b43b373a140ee2862833b8c27751edc6dd62be435c1",
+    "release_manifest": "/root/work/lanes/stat-bytes23-takeover-scratch/release/manifest.json",
+    "release_manifest_sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+    "B_t_base_manifest": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/_discs/B-t/base-manifest.json",
+    "B_t_base_manifest_sha256": "5f4d0a521d60794ea0d7604b7da2baad136a6f1e4aa060e597b16e58c9bea328"
+  },
+  "algorithm": "Frozen49ad texpack::find chooses greatest first-sector key <= query, then binary-searches <=128 sorted CRC/FNV pairs. kNotInPack reaches loose path; kFound shadows loose; kError refuses.",
+  "seconds": 0.1003303519973997,
+  "scope": "Read-only actual pack header/index and one full streamed SHA256; no payload copies, stage, SDK, guest or gate acceptance"
+}

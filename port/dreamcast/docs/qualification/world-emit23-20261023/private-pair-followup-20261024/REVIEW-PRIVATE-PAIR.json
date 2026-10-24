@@ -1,0 +1,220 @@
+{
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "converter_source_separate": "67474ea4b1dd01b0d47e2f80c0e9b58103a7f86d",
+  "review": "BOUNDED CLEAR for actual private staging/launch identity and matched control; no look/production/ready claim",
+  "sole_asset_delta": "dc/tex/7/7d4e1e92-052bdc2e.re4tex",
+  "unchanged_texpack_manifest_identity": {
+    "sha256": "5bba464a1175d8ebe153d5aecb629ea9637807c2bf4fc438a32c17148d0729da",
+    "size": 162154496
+  },
+  "source_helper_hashes": {
+    "root-validation/stage-private-v1.py": "a5ba7b1163b5d4482d2e9acd4901e675e50eff03c50ffa70f611ba859a5a44d4",
+    "root-validation/run-private-pair-v1.py": "1578756eeeddf9f97dbfa30cd397a04c1216e7e95f483fc4540aa0e1a47a4481"
+  },
+  "public_iso_reader": {
+    "path": "/root/work/lanes/world-emit23-current-B/port/dreamcast/tools/d367/fullplay/fp_iso.py",
+    "sha256": "e473a3493aa97ba63391cb507b2263935b8904153adddd99c421b689810f54da",
+    "tracked_source_exact": true
+  },
+  "independent_small_iso_readback": {
+    "control": {
+      "readback_programmes": {
+        "1ST_READ.BIN": {
+          "size": 3407568,
+          "sha256": "ab03d9d75d4e60e2dacdec6dbef3ac41fe15691784ab2281c238692a6d0425d9"
+        },
+        "dc/em22.ovl": {
+          "size": 27236,
+          "sha256": "204d5b33f7cdb0b99902180fcfee514527de8e94f83db0d1f3cba2e8331f2e45"
+        },
+        "dc/em2b.ovl": {
+          "size": 67900,
+          "sha256": "4a0697d6e9719a0eed7c94e1fe87fc413277f0ed9c76d0915fe301a6e3395001"
+        },
+        "dc/em2f.ovl": {
+          "size": 16800,
+          "sha256": "33d32ef714a89ce8420a597a8b85020f375b64955fcb9dfa6b46eab8fade3f72"
+        },
+        "dc/em35.ovl": {
+          "size": 52392,
+          "sha256": "0cb973d7d04b6cbaff486c0cebd5169201a11715917e88fe2a34e50fba7177c9"
+        },
+        "dc/em3b.ovl": {
+          "size": 7568,
+          "sha256": "9ad7416905c420b1aa164e48e6ae0345e9fa612390c5a8a269bfeba6af763448"
+        },
+        "dc/pl0f.ovl": {
+          "size": 45608,
+          "sha256": "f055d020744ec5873fd4ff504014fc7efa73139b3f7167a69e93f02629656ddb"
+        },
+        "dc/pl11.ovl": {
+          "size": 35592,
+          "sha256": "331d44b00b195ac105a2fc27f945692e4a760e7e3e15dc2bb7f155598fcc40fd"
+        },
+        "dc/pl14.ovl": {
+          "size": 18832,
+          "sha256": "e7ecbc88bbf6991431951b493978bd101559fa66a1ba3c22ff9b5f980bc7e1b5"
+        },
+        "dc/sscrn.ovl": {
+          "size": 134404,
+          "sha256": "2d50c1a20e89b093d2c8a07ad6802f6fe6fe44d9239048743ea51a60b20cbebb"
+        },
+        "dc/st1_0.ovl": {
+          "size": 36340,
+          "sha256": "d2fbedaefe3b0e08eafd19d9d2afb45b127320efefd9ad94e38d7513f25148ae"
+        },
+        "dc/st1_1.ovl": {
+          "size": 81572,
+          "sha256": "3a7e506a9913926e7f7721dc41a518713426b23f8830a5fe1ae4af495acf975c"
+        },
+        "dc/st1_2.ovl": {
+          "size": 50076,
+          "sha256": "320de3dabfbf18b8c5e62009a5fc699986f14ba8f1b2185f3ddc783b3ee3860e"
+        },
+        "dc/st1_3.ovl": {
+          "size": 88748,
+          "sha256": "577fca98aff03def36dd5fc540ef715e573c78b37fbc854715612205fc82b20f"
+        },
+        "dc/st2_0.ovl": {
+          "size": 96788,
+          "sha256": "3b18409446607dae5ad7ec2ee9ce3386d3f7f506a35a5360e461de570295a096"
+        }
+      },
+      "main_plus14_exact": true,
+      "private_texture_readback_exact": null,
+      "control_texture_absent": true
+    },
+    "candidate": {
+      "readback_programmes": {
+        "1ST_READ.BIN": {
+          "size": 3407568,
+          "sha256": "ab03d9d75d4e60e2dacdec6dbef3ac41fe15691784ab2281c238692a6d0425d9"
+        },
+        "dc/em22.ovl": {
+          "size": 27236,
+          "sha256": "204d5b33f7cdb0b99902180fcfee514527de8e94f83db0d1f3cba2e8331f2e45"
+        },
+        "dc/em2b.ovl": {
+          "size": 67900,
+          "sha256": "4a0697d6e9719a0eed7c94e1fe87fc413277f0ed9c76d0915fe301a6e3395001"
+        },
+        "dc/em2f.ovl": {
+          "size": 16800,
+          "sha256": "33d32ef714a89ce8420a597a8b85020f375b64955fcb9dfa6b46eab8fade3f72"
+        },
+        "dc/em35.ovl": {
+          "size": 52392,
+          "sha256": "0cb973d7d04b6cbaff486c0cebd5169201a11715917e88fe2a34e50fba7177c9"
+        },
+        "dc/em3b.ovl": {
+          "size": 7568,
+          "sha256": "9ad7416905c420b1aa164e48e6ae0345e9fa612390c5a8a269bfeba6af763448"
+        },
+        "dc/pl0f.ovl": {
+          "size": 45608,
+          "sha256": "f055d020744ec5873fd4ff504014fc7efa73139b3f7167a69e93f02629656ddb"
+        },
+        "dc/pl11.ovl": {
+          "size": 35592,
+          "sha256": "331d44b00b195ac105a2fc27f945692e4a760e7e3e15dc2bb7f155598fcc40fd"
+        },
+        "dc/pl14.ovl": {
+          "size": 18832,
+          "sha256": "e7ecbc88bbf6991431951b493978bd101559fa66a1ba3c22ff9b5f980bc7e1b5"
+        },
+        "dc/sscrn.ovl": {
+          "size": 134404,
+          "sha256": "2d50c1a20e89b093d2c8a07ad6802f6fe6fe44d9239048743ea51a60b20cbebb"
+        },
+        "dc/st1_0.ovl": {
+          "size": 36340,
+          "sha256": "d2fbedaefe3b0e08eafd19d9d2afb45b127320efefd9ad94e38d7513f25148ae"
+        },
+        "dc/st1_1.ovl": {
+          "size": 81572,
+          "sha256": "3a7e506a9913926e7f7721dc41a518713426b23f8830a5fe1ae4af495acf975c"
+        },
+        "dc/st1_2.ovl": {
+          "size": 50076,
+          "sha256": "320de3dabfbf18b8c5e62009a5fc699986f14ba8f1b2185f3ddc783b3ee3860e"
+        },
+        "dc/st1_3.ovl": {
+          "size": 88748,
+          "sha256": "577fca98aff03def36dd5fc540ef715e573c78b37fbc854715612205fc82b20f"
+        },
+        "dc/st2_0.ovl": {
+          "size": 96788,
+          "sha256": "3b18409446607dae5ad7ec2ee9ce3386d3f7f506a35a5360e461de570295a096"
+        }
+      },
+      "main_plus14_exact": true,
+      "private_texture_readback_exact": true,
+      "control_texture_absent": null
+    }
+  },
+  "actual_runs": {
+    "control": {
+      "strict_pass": false,
+      "actual_config_nolimit": true,
+      "config_sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "same_source_profile_programme": true,
+      "fixture_hashes": {
+        "warp": "3a2744d800341d2d539596e63dc39a061c5da4e6cf5bbeb47bfa469cafe8e41e",
+        "pad": "d5f6af787212d6f242adf1e881c37768f5bfdd7b52245a405e3cbbb94af8fb58"
+      },
+      "deadline_seconds": 55,
+      "deadline_fired": false,
+      "elapsed_s": 44.1,
+      "input_receipt_hashes": {
+        "current-gate-launch.json": "9ab1a1ff4c0abb7a579a6d3a0f90d934b93aae6cd87928aec8302bad24f75402",
+        "run-result.json": "51325125173d416e311cec82b287bd727660496948e19c27268ff461922351ba",
+        "bounded-launch.json": "d88d66c18a4567d744af1e9ff89e18a14d2678ce55241492653e317f0d5ea4cf",
+        "current-gate-result.json": "a41caccb9dba93c4d6d8dab86ad302e61dd8c456456ab72496a858d7ff90a9ed"
+      }
+    },
+    "candidate": {
+      "strict_pass": true,
+      "actual_config_nolimit": true,
+      "config_sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "same_source_profile_programme": true,
+      "fixture_hashes": {
+        "warp": "3a2744d800341d2d539596e63dc39a061c5da4e6cf5bbeb47bfa469cafe8e41e",
+        "pad": "d5f6af787212d6f242adf1e881c37768f5bfdd7b52245a405e3cbbb94af8fb58"
+      },
+      "deadline_seconds": 55,
+      "deadline_fired": false,
+      "elapsed_s": 44.3,
+      "input_receipt_hashes": {
+        "current-gate-launch.json": "0f9fa55f7d12e2e7706a5daad4e79e381d8297f2db1ab0d30fc52861ed676410",
+        "run-result.json": "25e11ef1f79fbcde6adb24dddda1f6212954515315589f8129ef63547e60b5e6",
+        "bounded-launch.json": "adcdc5701c11b8365344708f03642f6559c011e4dca40e99c0e616bfa4b6387c",
+        "current-gate-result.json": "c291dbf0e56f11626e30793208c6a427e7634108276474d1360711a0c7b99d92"
+      }
+    }
+  },
+  "decision_comparison": {
+    "verdict": "MUST-IDENTICAL",
+    "compared": 2769,
+    "window": [
+      0,
+      2768
+    ],
+    "sha256": "8120ca16d293fbcc2c49b6f5e18972ad0dca0864b911b58a9d250110781dee1d"
+  },
+  "limitations": [
+    "No guest/build/SDK run by reviewer.",
+    "No PS2 asset/source container/image/pixel bytes stored.",
+    "Full1GB track hashing not rerun; existing stage/run track identity receipts retained; selected programme and candidate package extents independently read.",
+    "No physical, performance, look, production or world/private-pair readiness acceptance.",
+    "Historical failures preserved."
+  ],
+  "existing_pins_contract_tool_and_host_guards_independently_checked": true,
+  "source_guard_hashes": {
+    "host_tools": {
+      "stat-guest-slot.sh": "452123f936d4764244244f17d51d22299fdbd17eb0aada1de1991a4782d74549",
+      "census-bound-run.py": "e3f31e4a797b934543ac9e598a0e6350965533bdfe12299771200d11f183629c"
+    },
+    "trace_lock.sh": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688",
+    "fullplay/fp_run.py": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747"
+  }
+}

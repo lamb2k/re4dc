@@ -1,0 +1,2 @@
+# Preserve exact C-side originals including CRLF.
+c-side/** -text whitespace=cr-at-eol

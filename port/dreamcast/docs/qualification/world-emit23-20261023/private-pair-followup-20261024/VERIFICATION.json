@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "files": 28,
+  "archive_bytes": 97349,
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "live_source_compared": true,
+  "syntax_only": true,
+  "archived_helpers_executed": false,
+  "private_fixtures_opened": false,
+  "verifier_controls": {
+    "positive": 1,
+    "negative": 5
+  },
+  "checked_utc": "2026-10-24T02:36:56.795664+00:00",
+  "manifest_sha256": "c90b51ad076e9bca7033ad559474ab596cf9276dc060185cfddc156c99f1fadb",
+  "verifier_sha256": "573e28729de1f76e404f640ee06c2f0d5d77cf6a128e11895423c0c1d8a1f1ee",
+  "scope": "source/receipt preservation and syntax only, independent bounded private identity review; no look/production/readiness acceptance",
+  "git_index_original_blobs_verified": 28
+}

@@ -1,0 +1,243 @@
+{
+  "schema": "world-emit23-private-pair-source-preservation-v1",
+  "created_utc": "2026-10-24T02:36:22.961276+00:00",
+  "base_source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "preservation_parent": "59b26ab43baeea6d4ab10406b0e351d6fd1129ef",
+  "converter_source_separate": "67474ea4b1dd01b0d47e2f80c0e9b58103a7f86d",
+  "copied": [
+    {
+      "path": "c-side/sealed-evidence/candidate/bounded-launch.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/captures/B-mendez-ps2hair-candidate-r1/bounded-launch.json",
+      "bytes": 641,
+      "sha256": "adcdc5701c11b8365344708f03642f6559c011e4dca40e99c0e616bfa4b6387c",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/sealed-evidence/candidate/current-gate-launch.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/captures/B-mendez-ps2hair-candidate-r1/current-gate-launch.json",
+      "bytes": 5773,
+      "sha256": "0f9fa55f7d12e2e7706a5daad4e79e381d8297f2db1ab0d30fc52861ed676410",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/sealed-evidence/candidate/current-gate-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/captures/B-mendez-ps2hair-candidate-r1/current-gate-result.json",
+      "bytes": 747,
+      "sha256": "c291dbf0e56f11626e30793208c6a427e7634108276474d1360711a0c7b99d92",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/sealed-evidence/candidate/decision-comparison.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/captures/B-mendez-ps2hair-candidate-r1/decision-comparison.json",
+      "bytes": 2278,
+      "sha256": "8120ca16d293fbcc2c49b6f5e18972ad0dca0864b911b58a9d250110781dee1d",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/sealed-evidence/candidate/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/captures/B-mendez-ps2hair-candidate-r1/run-result.json",
+      "bytes": 1519,
+      "sha256": "25e11ef1f79fbcde6adb24dddda1f6212954515315589f8129ef63547e60b5e6",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/sealed-evidence/control/bounded-launch.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/captures/B-mendez-ps2hair-control-r1/bounded-launch.json",
+      "bytes": 641,
+      "sha256": "d88d66c18a4567d744af1e9ff89e18a14d2678ce55241492653e317f0d5ea4cf",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/sealed-evidence/control/current-gate-launch.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/captures/B-mendez-ps2hair-control-r1/current-gate-launch.json",
+      "bytes": 6042,
+      "sha256": "9ab1a1ff4c0abb7a579a6d3a0f90d934b93aae6cd87928aec8302bad24f75402",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/sealed-evidence/control/current-gate-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/captures/B-mendez-ps2hair-control-r1/current-gate-result.json",
+      "bytes": 638,
+      "sha256": "a41caccb9dba93c4d6d8dab86ad302e61dd8c456456ab72496a858d7ff90a9ed",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/sealed-evidence/control/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/captures/B-mendez-ps2hair-control-r1/run-result.json",
+      "bytes": 1495,
+      "sha256": "51325125173d416e311cec82b287bd727660496948e19c27268ff461922351ba",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/sealed-evidence/private-ps2-hair-matched-trace-r1.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/private-ps2-hair-matched-trace-r1.json",
+      "bytes": 4581,
+      "sha256": "a36f688a2da78112f3b9dc9809ed38fed7a33e3eb5bd885db119119f18fbda6c",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/sealed-evidence/private-ps2-hair-v1-stage.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/private-ps2-hair-v1-stage.json",
+      "bytes": 5118,
+      "sha256": "cb159c087b047157557784a2f5cc7427b1ea047c214470ae12d8c53abfca4189",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/worldemit-ui-pair23/CONTROL-B-t-BINDING.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/CONTROL-B-t-BINDING.json",
+      "bytes": 4910,
+      "sha256": "00aeadba354a82c7428d5770acbbdab36674fceb04a05325d518319e833d797f",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/worldemit-ui-pair23/CORRECTION-v2.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/CORRECTION-v2.json",
+      "bytes": 1528,
+      "sha256": "ddf4fb711d425a561db1d5e1f3477167fbc34026591c3c81a33dbe94adac4a46",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/worldemit-ui-pair23/HANDBACK.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/HANDBACK.md",
+      "bytes": 5778,
+      "sha256": "78c2fe7c3779b843b3262c8bbe921d40c9437361b8c74301c47a2aec2a2689b5",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/worldemit-ui-pair23/PACK-ABSENCE.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/PACK-ABSENCE.json",
+      "bytes": 2855,
+      "sha256": "3c6d25c05314e584a57d01d53be6ab6209c2514803c8178c33b410a713a9a6fe",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/worldemit-ui-pair23/README.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/README.md",
+      "bytes": 3135,
+      "sha256": "a23656de4cb5376e0772f13b3208b4a7ea122ba2b08c0c77678615f55e04d41d",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/worldemit-ui-pair23/RECEIPT.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/RECEIPT.json",
+      "bytes": 2394,
+      "sha256": "ded2ff09fe37fe1f986df92e7b1a7179eedc9f61e326e852f249781a1b4e1a6b",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/worldemit-ui-pair23/STAGING-v1-B-m-SUPERSEDED.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/STAGING-v1-B-m-SUPERSEDED.md",
+      "bytes": 3621,
+      "sha256": "53ae85bf6889962a9e6e866bb7eb9274f298ec86f00b6ca77f993a5800346a5e",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/worldemit-ui-pair23/STAGING.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/STAGING.md",
+      "bytes": 5199,
+      "sha256": "df9fc4d757b43ee659c8cb3854886ad2cafbeb205ebd3273bcc6b50608644197",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/worldemit-ui-pair23/check_actual_pack.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/check_actual_pack.py",
+      "bytes": 4269,
+      "sha256": "3ac80a9e4901b08495455da38be05b11c5cf36d85fdfb2d28dd7df1c13132054",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/worldemit-ui-pair23/correct_staging_v2.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/correct_staging_v2.py",
+      "bytes": 4603,
+      "sha256": "3237f301f7969bfa7d8c086fd7e81135be5bcd9d214da642d2938e5d79f8e29c",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/worldemit-ui-pair23/independent-review-67474/REVIEW-PS2-PAIR.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/independent-review-67474/REVIEW-PS2-PAIR.md",
+      "bytes": 7110,
+      "sha256": "b9a34e90f5ff4d663f769781195d7459007cfd0f370bd22ff451f644bfb82b77",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/worldemit-ui-pair23/independent-review-67474/SHA256-MANIFEST.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/independent-review-67474/SHA256-MANIFEST.json",
+      "bytes": 595,
+      "sha256": "ab4756efaa6bf1d1c6ee89f73ea15da4816d06f9ae8d08d9b183077b07ff8f43",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/worldemit-ui-pair23/independent-review-67474/independent-controls.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/independent-review-67474/independent-controls.json",
+      "bytes": 4275,
+      "sha256": "928e99e417d60f11d4f5a3b42a061e299112bbaf4392d520434f710dba35bdb0",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/worldemit-ui-pair23/independent-review-67474/review_actual_pair.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/independent-review-67474/review_actual_pair.py",
+      "bytes": 4952,
+      "sha256": "1524602734cda477f2d92825a173beca5124ba04e9c2e570b505dd641e0c99cf",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/worldemit-ui-pair23/independent-review-67474/source-and-control-pins.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/independent-review-67474/source-and-control-pins.json",
+      "bytes": 3824,
+      "sha256": "962fd3a53555c346c4cde2ef878c30c42a27190969f269740c03bb9d39a7baed",
+      "classification": "sealed-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/worldemit-ui-pair23/root-validation/run-private-pair-v1.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/root-validation/run-private-pair-v1.py",
+      "bytes": 3828,
+      "sha256": "1578756eeeddf9f97dbfa30cd397a04c1216e7e95f483fc4540aa0e1a47a4481",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/worldemit-ui-pair23/root-validation/stage-private-v1.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/worldemit-ui-pair23/root-validation/stage-private-v1.py",
+      "bytes": 5000,
+      "sha256": "a5ba7b1163b5d4482d2e9acd4901e675e50eff03c50ffa70f611ba859a5a44d4",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    }
+  ],
+  "private_assets_copied": false,
+  "rawlogs_images_containers_source_private_bytes_copied": false,
+  "source_runtime_recipe_or_disc_changes": false,
+  "qualification": "Bounded actual staging/launcher identity CLEAR; no look, hardware, production or readiness claim; old failures preserved",
+  "omitted": [
+    "Private candidate PNGs/re4tex/local-pack/PS2member/TPL/ISO/container/source bytes",
+    "Rawguest logs/images/screenshots/VMUdata/fixturebodies",
+    "LiveSTATUS and any later unsealed outputs",
+    "Existing converter67474source is a separate branch and not merged into49ad programme"
+  ]
+}

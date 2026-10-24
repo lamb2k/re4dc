@@ -1,0 +1,121 @@
+{
+  "schema": "MENDEZ_PRIVATE_PAIR_CONTROL_BINDING_V2",
+  "launch_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/captures/B-mendez-r1/current-gate-launch.json",
+  "launch_sha256": "41a45bd36a778414938c0b43b373a140ee2862833b8c27751edc6dd62be435c1",
+  "unit": {
+    "schema": 1,
+    "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+    "arm": "B",
+    "profile": "t",
+    "output": "/root/probe/lanes/route/out-we23B49adrT",
+    "programme": {
+      "elf": {
+        "sha256": "da9d6a2ab97bc0850e25b3ee3c3cd27d7f69ed24a39f824211033705cb5e1965",
+        "size": 28800320
+      },
+      "main": {
+        "sha256": "ab03d9d75d4e60e2dacdec6dbef3ac41fe15691784ab2281c238692a6d0425d9",
+        "size": 3407568
+      },
+      "overlays": {
+        "em22.ovl": {
+          "sha256": "204d5b33f7cdb0b99902180fcfee514527de8e94f83db0d1f3cba2e8331f2e45",
+          "size": 27236
+        },
+        "em2b.ovl": {
+          "sha256": "4a0697d6e9719a0eed7c94e1fe87fc413277f0ed9c76d0915fe301a6e3395001",
+          "size": 67900
+        },
+        "em2f.ovl": {
+          "sha256": "33d32ef714a89ce8420a597a8b85020f375b64955fcb9dfa6b46eab8fade3f72",
+          "size": 16800
+        },
+        "em35.ovl": {
+          "sha256": "0cb973d7d04b6cbaff486c0cebd5169201a11715917e88fe2a34e50fba7177c9",
+          "size": 52392
+        },
+        "em3b.ovl": {
+          "sha256": "9ad7416905c420b1aa164e48e6ae0345e9fa612390c5a8a269bfeba6af763448",
+          "size": 7568
+        },
+        "pl0f.ovl": {
+          "sha256": "f055d020744ec5873fd4ff504014fc7efa73139b3f7167a69e93f02629656ddb",
+          "size": 45608
+        },
+        "pl11.ovl": {
+          "sha256": "331d44b00b195ac105a2fc27f945692e4a760e7e3e15dc2bb7f155598fcc40fd",
+          "size": 35592
+        },
+        "pl14.ovl": {
+          "sha256": "e7ecbc88bbf6991431951b493978bd101559fa66a1ba3c22ff9b5f980bc7e1b5",
+          "size": 18832
+        },
+        "sscrn.ovl": {
+          "sha256": "2d50c1a20e89b093d2c8a07ad6802f6fe6fe44d9239048743ea51a60b20cbebb",
+          "size": 134404
+        },
+        "st1_0.ovl": {
+          "sha256": "d2fbedaefe3b0e08eafd19d9d2afb45b127320efefd9ad94e38d7513f25148ae",
+          "size": 36340
+        },
+        "st1_1.ovl": {
+          "sha256": "3a7e506a9913926e7f7721dc41a518713426b23f8830a5fe1ae4af495acf975c",
+          "size": 81572
+        },
+        "st1_2.ovl": {
+          "sha256": "320de3dabfbf18b8c5e62009a5fc699986f14ba8f1b2185f3ddc783b3ee3860e",
+          "size": 50076
+        },
+        "st1_3.ovl": {
+          "sha256": "577fca98aff03def36dd5fc540ef715e573c78b37fbc854715612205fc82b20f",
+          "size": 88748
+        },
+        "st2_0.ovl": {
+          "sha256": "3b18409446607dae5ad7ec2ee9ce3386d3f7f506a35a5360e461de570295a096",
+          "size": 96788
+        }
+      }
+    },
+    "syms": "0x3ea620 0x3fa624 0x3fa620",
+    "resolved_knobs_sha256": "4e5f7f77c8d7f0f506e7015ad90b2c5c0919592d53a4b2561adf9fb974600b34",
+    "stack_sha256": "e5c00eda3397a81df4a839dea81eb839e6a3e10dc856c7b89f455be260da2e1a",
+    "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+    "release_manifest_sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+    "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+    "script_sha256": "f8d81e3884ef7197834259fef72cb25152770d857ad697e8c325ddca438049bb"
+  },
+  "staged": {
+    "base": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/_discs/B-t",
+    "base_json_sha256": "aa535688a2ea7d694b2404c9ff08c3ba054e5e8641a19064fa14c39163ce48c1",
+    "base_manifest_sha256": "5f4d0a521d60794ea0d7604b7da2baad136a6f1e4aa060e597b16e58c9bea328",
+    "track03_sha256": "32a3616818c863270fbc86a0bc544b0696f905b0c01603c8ebaa035e728b3807",
+    "track01_template": {
+      "sha256": "770282d97d6451a94c8db3071efdfa23d0db58dcc1e7253fc891b6d08c8122c3",
+      "size": 1241088
+    },
+    "track02": {
+      "sha256": "9c97e0db4fd5cd70156208d1c921beaaa831f6f5ca5672cf6517d68a1e68f744",
+      "size": 710304
+    }
+  },
+  "fixtures": {
+    "warp": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/stat-bytes23-20261023/mendez-bounded-itemack-r3/mendez-bounded-warp.txt",
+      "sha256": "3a2744d800341d2d539596e63dc39a061c5da4e6cf5bbeb47bfa469cafe8e41e",
+      "size": 988
+    },
+    "pad": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/stat-bytes23-20261023/mendez-bounded-itemack-r3/mendez-bounded-pad.txt",
+      "sha256": "d5f6af787212d6f242adf1e881c37768f5bfdd7b52245a405e3cbbb94af8fb58",
+      "size": 846
+    },
+    "stop": "phase=enter room=10f",
+    "seconds": 53,
+    "grace": 2,
+    "period": 0
+  },
+  "gate": "mendez",
+  "tag": "B-mendez-r1",
+  "fresh_matched_control_required": true,
+  "notes": "Preserved failing B-mendez-r1 uses B-t trace programme. B-m meter is a different programme and is not a matching control."
+}

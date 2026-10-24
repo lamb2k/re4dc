@@ -1,0 +1,152 @@
+{
+  "source": "67474ea4b1dd01b0d47e2f80c0e9b58103a7f86d",
+  "actual_member": {
+    "offset": 1425610752,
+    "bytes": 3727616,
+    "sha256": "97535f18b388066dc9bb876f421d64c83d18710592617f7fa70a7d40456370d3"
+  },
+  "materials": {
+    "4": {
+      "bin_sha256": "91c5f2be25872cbc5723b5c841e24935a5d6b8ec797becdc4d27fd59c195df36",
+      "material_count": 14,
+      "masked_indices": [
+        13
+      ]
+    },
+    "6": {
+      "bin_sha256": "2ffd0770c0abc484a4ae66be9ed8188f1eae107db64a00d00dfdb74edd4483a8",
+      "material_count": 7,
+      "masked_indices": []
+    },
+    "7": {
+      "bin_sha256": "ede1670c7da6585708b67d97eaf85e97504449c3e8dedce2f76d4fd219a6c450",
+      "material_count": 14,
+      "masked_indices": [
+        13
+      ]
+    },
+    "8": {
+      "bin_sha256": "49c8e7081080b0de6498d0fb0e6c818a3c0e38d1c3522afdb95379c3f1d076ff",
+      "material_count": 6,
+      "masked_indices": []
+    }
+  },
+  "package": {
+    "bytes": 32912,
+    "sha256": "18978dc1b97247dcd5fda5f5f1744b74e9d1b97c34dc5779977525b0a2dc477e"
+  },
+  "independent_twiddle_argb4444_texels": 16384,
+  "alpha_nibbles": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "negatives": [
+    {
+      "name": "actual member one-byte mutation",
+      "refused": "PS2 em35.dat exact member identity mismatch"
+    },
+    {
+      "name": "actual mask JL disagreement",
+      "refused": "independent PS2 unswizzle disagreement"
+    },
+    {
+      "name": "wrong runtime pair key",
+      "refused": "runtime pair key mismatch"
+    },
+    {
+      "name": "wrong exact TPL bytes",
+      "refused": "PS2 TPL5 identity mismatch"
+    }
+  ],
+  "gx_decoder_forbidden_actual_audit": true,
+  "exactly_one_manifest_replacement": true,
+  "all_candidate_receipt_files_verified": true,
+  "no_disk_asset_generation": true,
+  "private_preview_only": true,
+  "pack_independently_verified": {
+    "bytes": 162154496,
+    "sha256": "5bba464a1175d8ebe153d5aecb629ea9637807c2bf4fc438a32c17148d0729da",
+    "count": 7299,
+    "index_crc32": "0xad7384c4",
+    "strict_order_extents": true,
+    "requested_key_absent": true
+  },
+  "B_t_control_binding_matches_actual_launch": true,
+  "actual_ELF_and14overlays_hashes_verified": {
+    "re4dc-game.elf": {
+      "sha256": "da9d6a2ab97bc0850e25b3ee3c3cd27d7f69ed24a39f824211033705cb5e1965",
+      "size": 28800320
+    },
+    "em22.ovl": {
+      "sha256": "204d5b33f7cdb0b99902180fcfee514527de8e94f83db0d1f3cba2e8331f2e45",
+      "size": 27236
+    },
+    "em2b.ovl": {
+      "sha256": "4a0697d6e9719a0eed7c94e1fe87fc413277f0ed9c76d0915fe301a6e3395001",
+      "size": 67900
+    },
+    "em2f.ovl": {
+      "sha256": "33d32ef714a89ce8420a597a8b85020f375b64955fcb9dfa6b46eab8fade3f72",
+      "size": 16800
+    },
+    "em35.ovl": {
+      "sha256": "0cb973d7d04b6cbaff486c0cebd5169201a11715917e88fe2a34e50fba7177c9",
+      "size": 52392
+    },
+    "em3b.ovl": {
+      "sha256": "9ad7416905c420b1aa164e48e6ae0345e9fa612390c5a8a269bfeba6af763448",
+      "size": 7568
+    },
+    "pl0f.ovl": {
+      "sha256": "f055d020744ec5873fd4ff504014fc7efa73139b3f7167a69e93f02629656ddb",
+      "size": 45608
+    },
+    "pl11.ovl": {
+      "sha256": "331d44b00b195ac105a2fc27f945692e4a760e7e3e15dc2bb7f155598fcc40fd",
+      "size": 35592
+    },
+    "pl14.ovl": {
+      "sha256": "e7ecbc88bbf6991431951b493978bd101559fa66a1ba3c22ff9b5f980bc7e1b5",
+      "size": 18832
+    },
+    "sscrn.ovl": {
+      "sha256": "2d50c1a20e89b093d2c8a07ad6802f6fe6fe44d9239048743ea51a60b20cbebb",
+      "size": 134404
+    },
+    "st1_0.ovl": {
+      "sha256": "d2fbedaefe3b0e08eafd19d9d2afb45b127320efefd9ad94e38d7513f25148ae",
+      "size": 36340
+    },
+    "st1_1.ovl": {
+      "sha256": "3a7e506a9913926e7f7721dc41a518713426b23f8830a5fe1ae4af495acf975c",
+      "size": 81572
+    },
+    "st1_2.ovl": {
+      "sha256": "320de3dabfbf18b8c5e62009a5fc699986f14ba8f1b2185f3ddc783b3ee3860e",
+      "size": 50076
+    },
+    "st1_3.ovl": {
+      "sha256": "577fca98aff03def36dd5fc540ef715e573c78b37fbc854715612205fc82b20f",
+      "size": 88748
+    },
+    "st2_0.ovl": {
+      "sha256": "3b18409446607dae5ad7ec2ee9ce3386d3f7f506a35a5360e461de570295a096",
+      "size": 96788
+    }
+  },
+  "corrected_and_superseded_staging_receipts_hash_verified": true
+}

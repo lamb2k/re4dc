@@ -1,0 +1,125 @@
+{
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "programme": {
+    "elf": {
+      "sha256": "da9d6a2ab97bc0850e25b3ee3c3cd27d7f69ed24a39f824211033705cb5e1965",
+      "size": 28800320
+    },
+    "main": {
+      "sha256": "ab03d9d75d4e60e2dacdec6dbef3ac41fe15691784ab2281c238692a6d0425d9",
+      "size": 3407568
+    },
+    "overlays": {
+      "em22.ovl": {
+        "sha256": "204d5b33f7cdb0b99902180fcfee514527de8e94f83db0d1f3cba2e8331f2e45",
+        "size": 27236
+      },
+      "em2b.ovl": {
+        "sha256": "4a0697d6e9719a0eed7c94e1fe87fc413277f0ed9c76d0915fe301a6e3395001",
+        "size": 67900
+      },
+      "em2f.ovl": {
+        "sha256": "33d32ef714a89ce8420a597a8b85020f375b64955fcb9dfa6b46eab8fade3f72",
+        "size": 16800
+      },
+      "em35.ovl": {
+        "sha256": "0cb973d7d04b6cbaff486c0cebd5169201a11715917e88fe2a34e50fba7177c9",
+        "size": 52392
+      },
+      "em3b.ovl": {
+        "sha256": "9ad7416905c420b1aa164e48e6ae0345e9fa612390c5a8a269bfeba6af763448",
+        "size": 7568
+      },
+      "pl0f.ovl": {
+        "sha256": "f055d020744ec5873fd4ff504014fc7efa73139b3f7167a69e93f02629656ddb",
+        "size": 45608
+      },
+      "pl11.ovl": {
+        "sha256": "331d44b00b195ac105a2fc27f945692e4a760e7e3e15dc2bb7f155598fcc40fd",
+        "size": 35592
+      },
+      "pl14.ovl": {
+        "sha256": "e7ecbc88bbf6991431951b493978bd101559fa66a1ba3c22ff9b5f980bc7e1b5",
+        "size": 18832
+      },
+      "sscrn.ovl": {
+        "sha256": "2d50c1a20e89b093d2c8a07ad6802f6fe6fe44d9239048743ea51a60b20cbebb",
+        "size": 134404
+      },
+      "st1_0.ovl": {
+        "sha256": "d2fbedaefe3b0e08eafd19d9d2afb45b127320efefd9ad94e38d7513f25148ae",
+        "size": 36340
+      },
+      "st1_1.ovl": {
+        "sha256": "3a7e506a9913926e7f7721dc41a518713426b23f8830a5fe1ae4af495acf975c",
+        "size": 81572
+      },
+      "st1_2.ovl": {
+        "sha256": "320de3dabfbf18b8c5e62009a5fc699986f14ba8f1b2185f3ddc783b3ee3860e",
+        "size": 50076
+      },
+      "st1_3.ovl": {
+        "sha256": "577fca98aff03def36dd5fc540ef715e573c78b37fbc854715612205fc82b20f",
+        "size": 88748
+      },
+      "st2_0.ovl": {
+        "sha256": "3b18409446607dae5ad7ec2ee9ce3386d3f7f506a35a5360e461de570295a096",
+        "size": 96788
+      }
+    }
+  },
+  "arms": [
+    {
+      "arm": "control",
+      "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/captures/B-mendez-ps2hair-control-r1",
+      "result": {
+        "critical": [
+          "native UI: package rejected: open failed",
+          "native UI: upload FAILED vram=0"
+        ],
+        "bounded_complete": true,
+        "observed": {
+          "goal_stop": true,
+          "source_event_markers": true,
+          "comparison": null
+        },
+        "pass": false,
+        "evidence_kind": "Flycast console current-profile regression; not hardware/performance acceptance",
+        "run_output_sha256": "bbb3d00ebe7791be3d9fc174ff47ff1c60f55830b16b34b4d5eb8738adec6524",
+        "current_launch_sha256": "9ab1a1ff4c0abb7a579a6d3a0f90d934b93aae6cd87928aec8302bad24f75402",
+        "exact_console_image_verified": true,
+        "exact_harness_verified": true,
+        "launcher_rc": 0
+      },
+      "elapsed_s": 44.1,
+      "actual_media_verified": true
+    },
+    {
+      "arm": "candidate",
+      "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/captures/B-mendez-ps2hair-candidate-r1",
+      "result": {
+        "critical": [],
+        "bounded_complete": true,
+        "observed": {
+          "goal_stop": true,
+          "source_event_markers": true,
+          "comparison": {
+            "rc": 0,
+            "sha256": "c4732746fd0321388af6e094be203f0d790d59bfcbf115c1e98083a800dc465b",
+            "reference_log_sha256": "bbb3d00ebe7791be3d9fc174ff47ff1c60f55830b16b34b4d5eb8738adec6524"
+          }
+        },
+        "pass": true,
+        "evidence_kind": "Flycast console current-profile regression; not hardware/performance acceptance",
+        "run_output_sha256": "7889fafba5d63a457525709a7e39052d9bc833daef5052c1e39b72cb7104872f",
+        "current_launch_sha256": "0f9fa55f7d12e2e7706a5daad4e79e381d8297f2db1ab0d30fc52861ed676410",
+        "exact_console_image_verified": true,
+        "exact_harness_verified": true,
+        "launcher_rc": 0
+      },
+      "elapsed_s": 44.3,
+      "actual_media_verified": true
+    }
+  ],
+  "scope": "Private one-file PS2 material candidate. Strict route checks, bounded console emulator only; snapshots not yet matched or reviewed. No hardware, production or look acceptance."
+}

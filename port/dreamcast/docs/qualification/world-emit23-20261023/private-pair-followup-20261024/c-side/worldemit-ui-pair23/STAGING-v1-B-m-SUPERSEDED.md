@@ -1,0 +1,18 @@
+# Root-only private staging instructions (not executed)
+
+Use frozen current49ad B-m source/programme and the exact preserved B-mendez-r1 fixture. No rebuild is needed: this is one new offline texture package, with no runtime change. Keep the original failing B-mendez-r1 control and every old disc/result unchanged. The source-only helper commit does not need to enter the programme to use its privately generated candidate.
+
+Candidate manifest: C:/Game Dev/Emulators/re4-assets-private/worldemit-ui-pair23-20261023-v2/local-pack.json.
+Source on WSL: /mnt/c/Game Dev/Emulators/re4-assets-private/worldemit-ui-pair23-20261023-v2/files/dc/tex/7/7d4e1e92-052bdc2e.re4tex.
+Only target: dc/tex/7/7d4e1e92-052bdc2e.re4tex.
+Exact size32912; SHA25618978dc1b97247dcd5fda5f5f1744b74e9d1b97c34dc5779977525b0a2dc477e.
+
+After independent source review and fresh root admission (C floor24GiB for staging), choose a NEW private stage/output path and acquire the ordinary stage/trace leases. No output path or allocation is pre-authorized by this note.
+
+1. Make a separately owned release-tree overlay from the same immutable release used by takeover-stage-current-v1.sh. Preserve all original bytes, including tex.pak, IP.BIN, programme and overlays. This operation belongs to root allocation; the worker has not made or copied a disc tree. Add only the exact candidate loose file above under its target pathname. Do not edit the shared release tree or any cached existing image.
+2. Derive a new private release manifest from the existing release manifest by adding that one pathname with its exact size/SHA. Assert original has no such loose pathname and that the unchanged tex.pak does not already supply this pair; the original open-failed log is the known absent-path observation, but recheck the actual staging pack index. Do not let a stale pack shadow the candidate.
+3. Run the existing unchanged fp_master.sh with NEWTREE/NEWMANIFEST, the same IP.BIN and the same current49ad B-m twin-output directory. Set PRUNE_AUTO=0 and retain all normal programme/overlay/directory-readback checks. This keeps the original fp_master diff policy intact; no new allowed runtime errors or production recipe changes are involved.
+4. Independently compare the new manifest/media against the original current B-m base: the sole asset difference must be the new32912B texture at the exact pathname; all unrelated media assets and programme/overlays must match. Read back that file from the staged ISO and require the full exact SHA, and verify unchanged tex.pak. Record the new image full hash under a new identity. A missing, shadowed or different package fails preparation.
+5. When root separately allocates a guest, run the exact same Mendez fixture on baseline and private candidate, binding programme/media/fixture identities and matched frame windows. Require actual successful package upload, zero pair/open/upload errors, no new texture/VRAM refusal or gameplay failure, and unchanged world knobs. Capture matched stills around Mendez hair-card visibility. The preserved old failure stays FAIL; only a new independently passing candidate run may clear that candidate gate.
+
+The explicit local option MENDEZ_PS2_PAIR23_PRIVATE defaults0 and has no existing DATA/stager registration. Root enables it only by choosing this private manifest. Target texture payload is32768B; no actual VRAM/KOS/performance result is claimed. User look approval is required before production enrollment. PS2 pixel ancestry for this pair does not qualify every geometry, animation or other asset in the requesting source path. GC-ASSET remains a separate gate.

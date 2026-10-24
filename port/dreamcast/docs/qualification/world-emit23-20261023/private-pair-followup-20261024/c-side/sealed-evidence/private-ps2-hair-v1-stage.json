@@ -1,0 +1,137 @@
+{
+  "unit": {
+    "schema": 1,
+    "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+    "arm": "B",
+    "profile": "t",
+    "output": "/root/probe/lanes/route/out-we23B49adrT",
+    "programme": {
+      "elf": {
+        "sha256": "da9d6a2ab97bc0850e25b3ee3c3cd27d7f69ed24a39f824211033705cb5e1965",
+        "size": 28800320
+      },
+      "main": {
+        "sha256": "ab03d9d75d4e60e2dacdec6dbef3ac41fe15691784ab2281c238692a6d0425d9",
+        "size": 3407568
+      },
+      "overlays": {
+        "em22.ovl": {
+          "sha256": "204d5b33f7cdb0b99902180fcfee514527de8e94f83db0d1f3cba2e8331f2e45",
+          "size": 27236
+        },
+        "em2b.ovl": {
+          "sha256": "4a0697d6e9719a0eed7c94e1fe87fc413277f0ed9c76d0915fe301a6e3395001",
+          "size": 67900
+        },
+        "em2f.ovl": {
+          "sha256": "33d32ef714a89ce8420a597a8b85020f375b64955fcb9dfa6b46eab8fade3f72",
+          "size": 16800
+        },
+        "em35.ovl": {
+          "sha256": "0cb973d7d04b6cbaff486c0cebd5169201a11715917e88fe2a34e50fba7177c9",
+          "size": 52392
+        },
+        "em3b.ovl": {
+          "sha256": "9ad7416905c420b1aa164e48e6ae0345e9fa612390c5a8a269bfeba6af763448",
+          "size": 7568
+        },
+        "pl0f.ovl": {
+          "sha256": "f055d020744ec5873fd4ff504014fc7efa73139b3f7167a69e93f02629656ddb",
+          "size": 45608
+        },
+        "pl11.ovl": {
+          "sha256": "331d44b00b195ac105a2fc27f945692e4a760e7e3e15dc2bb7f155598fcc40fd",
+          "size": 35592
+        },
+        "pl14.ovl": {
+          "sha256": "e7ecbc88bbf6991431951b493978bd101559fa66a1ba3c22ff9b5f980bc7e1b5",
+          "size": 18832
+        },
+        "sscrn.ovl": {
+          "sha256": "2d50c1a20e89b093d2c8a07ad6802f6fe6fe44d9239048743ea51a60b20cbebb",
+          "size": 134404
+        },
+        "st1_0.ovl": {
+          "sha256": "d2fbedaefe3b0e08eafd19d9d2afb45b127320efefd9ad94e38d7513f25148ae",
+          "size": 36340
+        },
+        "st1_1.ovl": {
+          "sha256": "3a7e506a9913926e7f7721dc41a518713426b23f8830a5fe1ae4af495acf975c",
+          "size": 81572
+        },
+        "st1_2.ovl": {
+          "sha256": "320de3dabfbf18b8c5e62009a5fc699986f14ba8f1b2185f3ddc783b3ee3860e",
+          "size": 50076
+        },
+        "st1_3.ovl": {
+          "sha256": "577fca98aff03def36dd5fc540ef715e573c78b37fbc854715612205fc82b20f",
+          "size": 88748
+        },
+        "st2_0.ovl": {
+          "sha256": "3b18409446607dae5ad7ec2ee9ce3386d3f7f506a35a5360e461de570295a096",
+          "size": 96788
+        }
+      }
+    },
+    "syms": "0x3ea620 0x3fa624 0x3fa620",
+    "resolved_knobs_sha256": "4e5f7f77c8d7f0f506e7015ad90b2c5c0919592d53a4b2561adf9fb974600b34",
+    "stack_sha256": "e5c00eda3397a81df4a839dea81eb839e6a3e10dc856c7b89f455be260da2e1a",
+    "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+    "release_manifest_sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+    "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+    "script_sha256": "1861ed9e055c6d6c2a356360257775a51b22800e22a1562d36d4f5c5c93515ae"
+  },
+  "control": {
+    "base": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/_discs/B-t",
+    "base_json_sha256": "aa535688a2ea7d694b2404c9ff08c3ba054e5e8641a19064fa14c39163ce48c1",
+    "base_manifest_sha256": "5f4d0a521d60794ea0d7604b7da2baad136a6f1e4aa060e597b16e58c9bea328",
+    "track03_sha256": "32a3616818c863270fbc86a0bc544b0696f905b0c01603c8ebaa035e728b3807",
+    "track01_template": {
+      "sha256": "770282d97d6451a94c8db3071efdfa23d0db58dcc1e7253fc891b6d08c8122c3",
+      "size": 1241088
+    },
+    "track02": {
+      "sha256": "9c97e0db4fd5cd70156208d1c921beaaa831f6f5ca5672cf6517d68a1e68f744",
+      "size": 710304
+    }
+  },
+  "candidate": {
+    "size": 32912,
+    "sha256": "18978dc1b97247dcd5fda5f5f1744b74e9d1b97c34dc5779977525b0a2dc477e"
+  },
+  "new_manifest": {
+    "size": 231427,
+    "sha256": "ef1609ca0987903151533f60edda99b419dfab57f17cd4d6f5c686b2f3408495"
+  },
+  "original_manifest": {
+    "size": 210736,
+    "sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547"
+  },
+  "stage_helper": {
+    "size": 6937,
+    "sha256": "f1f341e94c29d50f64afa229ce305d9a60f50f4eafb3c7d9fe9a9c06844e457f"
+  },
+  "root_helper": {
+    "size": 5000,
+    "sha256": "a5ba7b1163b5d4482d2e9acd4901e675e50eff03c50ffa70f611ba859a5a44d4"
+  },
+  "pack_absence_proof": {
+    "size": 2855,
+    "sha256": "3c6d25c05314e584a57d01d53be6ab6209c2514803c8178c33b410a713a9a6fe"
+  },
+  "private_only": true,
+  "look_approved": false,
+  "staged_manifest": {
+    "size": 211207,
+    "sha256": "b3e3380959cb07d4d5a5a78fece6e2f8f88c053b205e89ab7ec75f95801d8048"
+  },
+  "track03": {
+    "size": 1024608256,
+    "sha256": "ec5c020dfce8b6be4c508cce42d8f437037714d483c69d3d4c0023df215dd369"
+  },
+  "readback_sha256": "18978dc1b97247dcd5fda5f5f1744b74e9d1b97c34dc5779977525b0a2dc477e",
+  "sole_asset_change": "dc/tex/7/7d4e1e92-052bdc2e.re4tex",
+  "source_or_programme_changes": false,
+  "stage_success": true,
+  "guest_or_look_acceptance": false
+}

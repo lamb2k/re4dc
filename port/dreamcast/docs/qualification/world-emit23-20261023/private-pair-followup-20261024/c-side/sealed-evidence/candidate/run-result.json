@@ -1,0 +1,43 @@
+{
+  "name": "world-current-B-mendez-ps2hair-candidate-r1",
+  "status": "RUN_COMPLETE",
+  "start_utc": "2026-10-24T02:30:37.713181+00:00",
+  "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\_discs\\B-t-ps2hair-v1",
+  "tracks": {
+    "base": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\_discs\\B-t-ps2hair-v1",
+    "kind": "twin",
+    "track03_sha256": "ec5c020dfce8b6be4c508cce42d8f437037714d483c69d3d4c0023df215dd369"
+  },
+  "seconds": 53,
+  "vmu": null,
+  "keys": null,
+  "stop": "phase=enter room=10f",
+  "fixtures": {
+    "warp": {
+      "src": "C:\\Flycast-Evidence\\re4-dreamcast\\stat-bytes23-20261023\\mendez-bounded-itemack-r3\\mendez-bounded-warp.txt",
+      "bytes": 988,
+      "sha256": "3a2744d800341d2d539596e63dc39a061c5da4e6cf5bbeb47bfa469cafe8e41e"
+    },
+    "pad": {
+      "src": "C:\\Flycast-Evidence\\re4-dreamcast\\stat-bytes23-20261023\\mendez-bounded-itemack-r3\\mendez-bounded-pad.txt",
+      "bytes": 846,
+      "sha256": "d5f6af787212d6f242adf1e881c37768f5bfdd7b52245a405e3cbbb94af8fb58"
+    },
+    "w11": {
+      "src": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "errors": [],
+  "key_log": [],
+  "align": false,
+  "emu": "console",
+  "emu_env": {},
+  "stop_matched_s": 41.5,
+  "stopped": "goal",
+  "log_idle_s": 0.1,
+  "end_utc": "2026-10-24T02:31:22.075757+00:00",
+  "elapsed_s": 44.3,
+  "emulator_exited": true
+}

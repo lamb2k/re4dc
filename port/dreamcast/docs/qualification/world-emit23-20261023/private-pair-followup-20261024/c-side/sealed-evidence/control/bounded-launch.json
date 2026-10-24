@@ -1,0 +1,13 @@
+{
+  "harness": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\work\\lanes\\world-emit23-current-B\\port\\dreamcast\\tools\\d367\\fullplay\\fp_run.py",
+  "harness_sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747",
+  "deadline_seconds": 55,
+  "deadline_fired": false,
+  "expected_executable": "C:\\Flycast-Evidence\\re4-dreamcast\\flycast-console-bin\\flycast-console.exe",
+  "expected_executable_sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a",
+  "pid": 60208,
+  "guest_started_monotonic": 558250.828,
+  "guest_exited": true,
+  "guest_observed_elapsed_s": 44.078,
+  "guest_rc": 1
+}
