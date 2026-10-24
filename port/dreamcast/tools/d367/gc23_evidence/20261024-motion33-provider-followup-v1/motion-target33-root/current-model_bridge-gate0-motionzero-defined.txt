@@ -1,0 +1,48 @@
+00000000 n ZN3sob4sameERK14Re4dcModelPartS2_
+00000000 d (anonymous namespace)::actor_frame
+00000000 b (anonymous namespace)::mask_same_uv
+00000000 b (anonymous namespace)::actor_frame_live
+00000000 t (anonymous namespace)::bind_actor_frame()
+00000000 b (anonymous namespace)::mask
+00000000 b (anonymous namespace)::wrap_s
+00000000 b (anonymous namespace)::wrap_t
+00000000 d (anonymous namespace)::mask_ref
+00000000 b (anonymous namespace)::scroll_u
+00000000 b (anonymous namespace)::scroll_v
+00000000 b (anonymous namespace)::selected
+00000000 B sob::generation
+00000000 D sob::seen_frame
+00000000 B sob::S
+00000000 B sob::st
+00000000 T sob::find(sob::Pending const&)
+00000000 B sob::live
+00000000 W sob::same(Re4dcModelPart const&, Re4dcModelPart const&)
+00000000 T sob::take(cModel const*, cModelInfo const*, ModelData const*, ModelPart const*, Re4dcModelPart const&)
+00000000 T sob::build(sob::Pending const&)
+00000000 T sob::flush()
+00000000 B sob::cur_idx
+00000000 B sob::cur_info
+00000000 B sob::cur_model
+00000000 T sob::new_frame()
+00000000 B sobake::S
+00000000 T sobake::fnv(unsigned int const*, unsigned int)
+00000000 T sobake::bind(cModel const*)
+00000000 T sobake::fill(cModel const*, unsigned int*)
+00000000 T sobake::same(cModel const*, unsigned int const*)
+00000000 T sobake::decide(unsigned int)
+00000000 T sobake::words_of(cModel const*)
+00000000 r sobake::kTable
+00000000 T re4dc_actor_model_buffers
+00000000 T re4dc_actor_model_class
+00000000 T re4dc_actor_model_frame_retire
+00000000 T re4dc_actor_model_id
+00000000 T re4dc_actor_model_prelit
+00000000 T re4dc_actor_model_source
+00000000 T re4dc_bind_actor_frame
+00000000 T re4dc_draw_model_part
+00000000 T re4dc_model_alpha_material
+00000000 T re4dc_model_material
+00000000 T re4dc_sob_bake_frame
+00000000 T re4dc_sob_bake_room_leave
+00000000 T re4dc_sob_bake_skip
+00000000 T re4dc_sob_room_leave

@@ -1,0 +1,18 @@
+{
+  "host.log": {
+    "bytes": 18084,
+    "sha256": "9b6a2ca9f12673be68b767a3ac01ed0882943c46ee79e2c6e669250382bc83e9"
+  },
+  "result.json": {
+    "bytes": 161,
+    "sha256": "4b9db3061287088dd67773c0fa80db4a59af9b833e519b0c5c089f11d153f1f9"
+  },
+  "source-pins.json": {
+    "bytes": 2231,
+    "sha256": "0e84ab7e5cefd694a6b5ce74faeed8522d7323aff2644e44cfb2603641ca0876"
+  },
+  "SUMMARY.md": {
+    "bytes": 439,
+    "sha256": "686a8104dd3c703aa7178606fcad71f5f46ce24aa5b4064119db293c0dd06ec9"
+  }
+}

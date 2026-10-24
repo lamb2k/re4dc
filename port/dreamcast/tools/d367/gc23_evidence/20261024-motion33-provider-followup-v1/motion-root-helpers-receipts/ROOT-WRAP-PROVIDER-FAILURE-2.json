@@ -1,0 +1,1 @@
+{"scope":"Synthetic linker control and provider analysis only","out":"/dev/shm/gc-motion24-wrap-check-s102iehk","reason":"Demangled -C logs omit the SH ABI leading underscore; raw-symbol baseline/current comparison must use raw nm output","wrap_controls_already_passed":true,"preserved":true}

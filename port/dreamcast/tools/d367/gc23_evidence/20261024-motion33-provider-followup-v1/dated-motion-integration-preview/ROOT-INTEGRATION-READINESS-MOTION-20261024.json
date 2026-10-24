@@ -1,0 +1,40 @@
+{
+  "status": "CURRENT_MOTION_CATALOG_RAIN_TEXTUAL_PREVIEW_CLEAR",
+  "utc": "2026-10-24T07:16:58.308581+00:00",
+  "scope": "Writes only unreachable Git merge-tree objects and this receipt. No branch/worktree/recipe/SDK/guest mutation; not integrated qualification or landing.",
+  "integration": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "gc_metadata_head": "aab201ceac0e18107f64a3212398afe916793327",
+  "gc_runtime": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+  "rain_runtime": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "preview_tree": "61ff5777d4d80e6e8f5fd543d35952eb3cef484d",
+  "rain_delta": [
+    "M\tport/dreamcast/game/effects30.mk",
+    "A\tport/dreamcast/tools/d367/water_rain24/RAIN-R10C-EXPERIMENT.md",
+    "A\tport/dreamcast/tools/d367/water_rain24/README.md",
+    "A\tport/dreamcast/tools/d367/water_rain24/audit.py",
+    "A\tport/dreamcast/tools/d367/water_rain24/fixture_rain_r10c.cpp.in",
+    "A\tport/dreamcast/tools/d367/water_rain24/test_audit.py",
+    "A\tport/dreamcast/tools/d367/water_rain24/test_rain_r10c.py",
+    "M\tsrc/game/filter06.cpp"
+  ],
+  "runtime_whitespace": {
+    "current-gc": 0,
+    "rain": 0
+  },
+  "heads_unchanged": {
+    "/root/work/lanes/gc-motion24": "aab201ceac0e18107f64a3212398afe916793327",
+    "/root/work/lanes/water-rain24": "bca44d58a1fa0a51fd87ba94deba8cba925c8998"
+  },
+  "recipe_unchanged": true,
+  "listed_asset_roots_unchanged": true,
+  "motion_review_sha256": "f3010b1e70ab7d55f4ecdbee57ead05357411fb951f5f464720940fcaaef811c",
+  "remaining": [
+    "Successor full programme/overlay OFF identity and ON pricing",
+    "Configured catalog and required consumer coverage",
+    "Both memory and runtime/census/gameplay gates",
+    "Producer terminal acknowledgements",
+    "Rain source/lifecycle/appearance acceptance",
+    "Physical acceptance"
+  ],
+  "prior_preview_preserved": true
+}

@@ -1,0 +1,120 @@
+00000000 t owned_submit_runs(Re4dcModelPart*, Re4dcActorDrawRun const*, unsigned int, Re4dcActorOwnedMaterial const*, unsigned int, Re4dcActorWorkspaceLease const*, Re4dcActorSkinLease const*, Re4dcActorTextureLease const*, bool)
+00000000 t (anonymous namespace)::Part::clip_strip((anonymous namespace)::Records const&, unsigned char const*, unsigned int)
+00000000 t (anonymous namespace)::Part::whole(unsigned char const*, unsigned int, unsigned int)
+00000000 t (anonymous namespace)::Part::strips((anonymous namespace)::Records const&, unsigned char const*, unsigned int)
+00000000 t (anonymous namespace)::Converter::levels_impl(unsigned int, unsigned short const*, unsigned short const*, unsigned short const*, unsigned int, unsigned long const*, unsigned short const*)
+00000000 t (anonymous namespace)::Converter::collapse_map((anonymous namespace)::Converter::Lod const&, unsigned int, unsigned int, unsigned short*, unsigned short*, unsigned int&)
+00000000 t (anonymous namespace)::Converter::pack(unsigned int, unsigned int, unsigned int, bool)
+00000000 t (anonymous namespace)::Converter::parse()
+00000000 t (anonymous namespace)::Converter::finish(unsigned short const*, unsigned int, unsigned char const*, unsigned int, unsigned int, unsigned long const*)
+00000000 t (anonymous namespace)::Converter::compute((anonymous namespace)::Converter::Lod&, unsigned int, bool)
+00000000 t (anonymous namespace)::Converter::assemble()
+00000000 b (anonymous namespace)::aplan_hits
+00000000 d (anonymous namespace)::crowd_near
+00000000 t (anonymous namespace)::crowd_tier(Re4dcModelPart const&, int)
+00000000 d (anonymous namespace)::lod_budget
+00000000 b (anonymous namespace)::lod_wanted
+00000000 t (anonymous namespace)::pass_baked((anonymous namespace)::Part&, (anonymous namespace)::Records const&, unsigned int, unsigned int const*) [clone .isra.0]
+00000000 b (anonymous namespace)::probe_next
+00000000 t (anonymous namespace)::rigid_clip(void*, unsigned char const*, unsigned int, unsigned int)
+00000000 b (anonymous namespace)::skin_count
+00000000 d (anonymous namespace)::skin_frame
+00000000 b (anonymous namespace)::stats_live
+00000000 b (anonymous namespace)::crowd_count
+00000000 r (anonymous namespace)::kAplanNames
+00000000 b (anonymous namespace)::owned_skins
+00000000 t (anonymous namespace)::part_colour((anonymous namespace)::Lights const&) [clone .constprop.0]
+00000000 t (anonymous namespace)::pass_lights((anonymous namespace)::Part&, (anonymous namespace)::Lights const&, (anonymous namespace)::Records const&, unsigned int)
+00000000 b (anonymous namespace)::probe_cache
+00000000 b (anonymous namespace)::probe_stats
+00000000 b (anonymous namespace)::rigid_stats
+00000000 t (anonymous namespace)::screen_rows(Re4dcModelPart const&, float (*) [4])
+00000000 b (anonymous namespace)::aplan_checks
+00000000 t (anonymous namespace)::bake_prepare((anonymous namespace)::Part&, (anonymous namespace)::Lights const&, (anonymous namespace)::BlobHeader const&, unsigned int, unsigned int*)
+00000000 t (anonymous namespace)::build_lights(Re4dcModelPart const&, (anonymous namespace)::Frame const&, float const*, (anonymous namespace)::Lights&)
+00000000 b (anonymous namespace)::fog_gate_log
+00000000 b (anonymous namespace)::frame_serial
+00000000 b (anonymous namespace)::frame_victim
+00000000 d (anonymous namespace)::level_ladder
+00000000 t (anonymous namespace)::probe_lights(Re4dcModelPart const&, (anonymous namespace)::Frame const&, (anonymous namespace)::Lights&)
+00000000 t (anonymous namespace)::select_level(Re4dcModelPart const&, (anonymous namespace)::BlobHeader const&, float, float)
+00000000 d (anonymous namespace)::crowd_mid_tau
+00000000 b (anonymous namespace)::gigante_folds
+00000000 d (anonymous namespace)::lod_fractions
+00000000 t (anonymous namespace)::one_qualifies(Re4dcModelPart const&, (anonymous namespace)::SkinEntry const*&, Re4dcActorSource&)
+00000000 b (anonymous namespace)::workspace_end
+00000000 b (anonymous namespace)::workspace_top
+00000000 t (anonymous namespace)::add_bake_field(unsigned char*, unsigned int, unsigned int)
+00000000 t (anonymous namespace)::avk_build_dirs((anonymous namespace)::Frame&, (anonymous namespace)::Lights const&, (anonymous namespace)::Records const&, unsigned int, unsigned int)
+00000000 b (anonymous namespace)::fog_gate_tests
+00000000 t (anonymous namespace)::owned_run_load(Re4dcModelPart&, Re4dcActorDrawRun const&, Re4dcActorOwnedMaterial const&)
+00000000 t (anonymous namespace)::pass_positions((anonymous namespace)::Part&, (anonymous namespace)::Records const&, unsigned int, (anonymous namespace)::PosConst const&, bool, unsigned int&, unsigned int&)
+00000000 t (anonymous namespace)::probe_dirs_all((anonymous namespace)::Frame&, (anonymous namespace)::Lights const&)
+00000000 b (anonymous namespace)::aplan_log_frame
+00000000 b (anonymous namespace)::fog_gate_culled
+00000000 b (anonymous namespace)::lod_wanted_last
+00000000 b (anonymous namespace)::owned_workspace
+00000000 b (anonymous namespace)::rigid_stats_log
+00000000 t (anonymous namespace)::skin_light_dirs((anonymous namespace)::Frame&, (anonymous namespace)::Lights const&, unsigned int, float*)
+00000000 b (anonymous namespace)::workspace_bytes
+00000000 d (anonymous namespace)::crowd_near_count
+00000000 t (anonymous namespace)::leon_part_normal(float const*, float*)
+00000000 d (anonymous namespace)::lod_budget_frame
+00000000 t (anonymous namespace)::owned_skin_clear()
+00000000 b (anonymous namespace)::owned_submission
+00000000 b (anonymous namespace)::owned_skin_serial
+00000000 t (anonymous namespace)::pass_lights_exact((anonymous namespace)::Part&, (anonymous namespace)::Lights const&, (anonymous namespace)::Records const&, unsigned int)
+00000000 t (anonymous namespace)::avk_build_dirs_n16((anonymous namespace)::Frame&, (anonymous namespace)::Lights const&, (anonymous namespace)::Records const&, unsigned int, unsigned int)
+00000000 d (anonymous namespace)::lod_fractions_crowd
+00000000 t (anonymous namespace)::skin_position_matrix((anonymous namespace)::Frame const&, unsigned int, float*)
+00000000 b (anonymous namespace)::crowd
+00000000 t (anonymous namespace)::relod(Re4dcModelPart const&, bool)
+00000000 b (anonymous namespace)::skins
+00000000 d (anonymous namespace)::frames
+00000000 t (anonymous namespace)::convert(Re4dcModelPart const&)
+00000000 d (anonymous namespace)::lod_tau
+00000000 t (anonymous namespace)::project(float&, float&, float&, void*)
+00000000 t (anonymous namespace)::scratch(unsigned int)
+00000000 t (anonymous namespace)::stripify(unsigned char const*, unsigned int, unsigned char*, unsigned int, unsigned char*, unsigned short*, unsigned short*) [clone .constprop.0]
+00000000 t (anonymous namespace)::world_of((anonymous namespace)::Frame const&, Re4dcModelPart const&, (anonymous namespace)::Records const&, unsigned int, float*, float*, float const*) [clone .isra.0]
+00000000 b (anonymous namespace)::aplan_bad
+00000000 t (anonymous namespace)::crowd_lit(void const*)
+00000000 d (anonymous namespace)::crowd_mid
+00000000 t (anonymous namespace)::one_chunk(Re4dcModelPart&, (anonymous namespace)::OneWindow&) [clone .part.0]
+00000000 b (anonymous namespace)::workspace
+00000000 t (anonymous namespace)::Converter::levels_impl(unsigned int, unsigned short const*, unsigned short const*, unsigned short const*, unsigned int, unsigned long const*, unsigned short const*)::{lambda(unsigned int, unsigned int)#1}::operator()(unsigned int, unsigned int) const
+00000000 r (anonymous namespace)::pass_lights_exact((anonymous namespace)::Part&, (anonymous namespace)::Lights const&, (anonymous namespace)::Records const&, unsigned int)::white
+00000000 r (anonymous namespace)::Converter::corner((anonymous namespace)::Converter::Strip const&, unsigned int) const::quad_t
+00000000 T re4dc_actor_crowd
+00000000 T re4dc_actor_crowd_note
+00000000 T re4dc_actor_frame
+00000000 T re4dc_actor_light_probe
+00000000 T re4dc_actor_lod
+00000000 T re4dc_actor_materialize
+00000000 T re4dc_actor_materialize_lazy
+00000000 T re4dc_actor_owned_crowd_replay
+00000000 T re4dc_actor_owned_source
+00000000 T re4dc_actor_owner_retire
+00000000 T re4dc_actor_part_settled
+00000000 T re4dc_actor_plan_note
+00000000 D re4dc_actor_plan_on
+00000000 B re4dc_actor_plan_store
+00000000 T re4dc_actor_preflight_owned
+00000000 T re4dc_actor_preflight_owned_runs
+00000000 T re4dc_actor_skin_acquire
+00000000 T re4dc_actor_skin_lazy_known
+00000000 T re4dc_actor_skin_palette
+00000000 T re4dc_actor_skin_register
+00000000 T re4dc_actor_skin_release
+00000000 T re4dc_actor_skin_validate
+00000000 T re4dc_actor_stats
+00000000 T re4dc_actor_stream_encoded
+00000000 T re4dc_actor_submit
+00000000 T re4dc_actor_submit_chunks
+00000000 T re4dc_actor_submit_owned
+00000000 T re4dc_actor_submit_owned_runs
+00000000 T re4dc_actor_submit_preflighted_runs
+00000000 T re4dc_actor_workspace_acquire
+00000000 T re4dc_actor_workspace_release
+00000000 T re4dc_actor_workspace_validate
+00000000 T re4dc_actor_workspace_want

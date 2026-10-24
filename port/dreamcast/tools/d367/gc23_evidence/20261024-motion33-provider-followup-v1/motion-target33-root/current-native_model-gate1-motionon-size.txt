@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+  14744	      0	    192	  14936	   3a58	/dev/shm/gc-motion24-target-run-0mftarg0/current-native_model-gate1-motionon.o

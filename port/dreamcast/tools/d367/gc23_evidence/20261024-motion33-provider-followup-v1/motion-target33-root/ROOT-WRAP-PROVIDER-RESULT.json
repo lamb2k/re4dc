@@ -1,0 +1,139 @@
+{
+  "status": "EXACT_EXISTING_LINK_WRAP_AND_REAL_PROVIDER_REWRITE_VERIFIED",
+  "failed_run_report_sha256": "ac55f77721f954d1fbfdf9d36fafcf231d5f3a6e4630e8da1c0e43d4c9891124",
+  "existing_link_log_sha256": "2a2637f7d751372e3219753014c039b60bfd598eadf3bb910e329418b20078bb",
+  "SDK_archive_sha256": "5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf",
+  "rewrites": [
+    {
+      "reference": "___real_pvr_list_begin",
+      "existing_link_wrap": "pvr_list_begin",
+      "real_SDK_definition": "_pvr_list_begin"
+    },
+    {
+      "reference": "___real_pvr_poly_compile",
+      "existing_link_wrap": "pvr_poly_compile",
+      "real_SDK_definition": "_pvr_poly_compile"
+    },
+    {
+      "reference": "___real_pvr_poly_mod_compile",
+      "existing_link_wrap": "pvr_poly_mod_compile",
+      "real_SDK_definition": "_pvr_poly_mod_compile"
+    },
+    {
+      "reference": "___real_pvr_scene_finish",
+      "existing_link_wrap": "pvr_scene_finish",
+      "real_SDK_definition": "_pvr_scene_finish"
+    },
+    {
+      "reference": "___real_pvr_set_presort_mode",
+      "existing_link_wrap": "pvr_set_presort_mode",
+      "real_SDK_definition": "_pvr_set_presort_mode"
+    },
+    {
+      "reference": "___real_pvr_sprite_compile",
+      "existing_link_wrap": "pvr_sprite_compile",
+      "real_SDK_definition": "_pvr_sprite_compile"
+    }
+  ],
+  "synthetic_controls": {
+    "unwrapped_has_all_six": true,
+    "exact_wraps_resolve_all": true,
+    "omitted_one_keeps_one_unresolved": true
+  },
+  "baseline_references_unchanged": true,
+  "actual_game_aliases_or_stubs_added": false,
+  "recompiled_game_objects": 0,
+  "tools": {
+    "/opt/toolchains/dc/sh-elf/bin/sh-elf-as": "f531978403ce0506056434ca83954df83d5b78347205680997d8a79258a4004d",
+    "/opt/toolchains/dc/sh-elf/bin/sh-elf-ld": "a9a91daa2613b683a33babf37d24db8923ff1015b2de979e44bc275ce2af27aa",
+    "/opt/toolchains/dc/sh-elf/bin/sh-elf-nm": "387845d7aa216b1d75a0874bafbb33189ce25b514626b5042d90f9d109b3533c"
+  },
+  "commands": [
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-as",
+      "-little",
+      "-o",
+      "/dev/shm/gc-motion24-wrap-check-f114ko1y/refs.o",
+      "/dev/shm/gc-motion24-wrap-check-f114ko1y/refs.s"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-as",
+      "-little",
+      "-o",
+      "/dev/shm/gc-motion24-wrap-check-f114ko1y/defs.o",
+      "/dev/shm/gc-motion24-wrap-check-f114ko1y/defs.s"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-ld",
+      "-m",
+      "shlelf",
+      "-r",
+      "-o",
+      "/dev/shm/gc-motion24-wrap-check-f114ko1y/unwrapped.o",
+      "/dev/shm/gc-motion24-wrap-check-f114ko1y/refs.o",
+      "/dev/shm/gc-motion24-wrap-check-f114ko1y/defs.o"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-nm",
+      "-u",
+      "/dev/shm/gc-motion24-wrap-check-f114ko1y/unwrapped.o"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-ld",
+      "-m",
+      "shlelf",
+      "-r",
+      "--wrap=pvr_list_begin",
+      "--wrap=pvr_poly_compile",
+      "--wrap=pvr_poly_mod_compile",
+      "--wrap=pvr_scene_finish",
+      "--wrap=pvr_set_presort_mode",
+      "--wrap=pvr_sprite_compile",
+      "-o",
+      "/dev/shm/gc-motion24-wrap-check-f114ko1y/wrapped.o",
+      "/dev/shm/gc-motion24-wrap-check-f114ko1y/refs.o",
+      "/dev/shm/gc-motion24-wrap-check-f114ko1y/defs.o"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-nm",
+      "-u",
+      "/dev/shm/gc-motion24-wrap-check-f114ko1y/wrapped.o"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-ld",
+      "-m",
+      "shlelf",
+      "-r",
+      "--wrap=pvr_poly_compile",
+      "--wrap=pvr_poly_mod_compile",
+      "--wrap=pvr_scene_finish",
+      "--wrap=pvr_set_presort_mode",
+      "--wrap=pvr_sprite_compile",
+      "-o",
+      "/dev/shm/gc-motion24-wrap-check-f114ko1y/missing-one-wrap.o",
+      "/dev/shm/gc-motion24-wrap-check-f114ko1y/refs.o",
+      "/dev/shm/gc-motion24-wrap-check-f114ko1y/defs.o"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-nm",
+      "-u",
+      "/dev/shm/gc-motion24-wrap-check-f114ko1y/missing-one-wrap.o"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-nm",
+      "--defined-only",
+      "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-nm",
+      "-u",
+      "/dev/shm/gc-motion24-target-run-0mftarg0/parent-native_ui-gate1-motionabsent.o"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-nm",
+      "-u",
+      "/dev/shm/gc-motion24-target-run-0mftarg0/current-native_ui-gate1-motionon.o"
+    ]
+  ],
+  "scope": "Read-only existing provider query and isolated synthetic SH linker semantic control only. Not a new complete programme/map, heap or runtime check. Initial incomplete provider report remains immutable."
+}

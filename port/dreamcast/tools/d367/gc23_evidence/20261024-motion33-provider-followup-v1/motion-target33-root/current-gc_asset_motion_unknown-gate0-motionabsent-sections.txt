@@ -1,0 +1,12 @@
+/dev/shm/gc-motion24-target-run-0mftarg0/current-gc_asset_motion_unknown-gate0-motionabsent.o  :
+section           size   addr
+.text                0      0
+.data                0      0
+.bss                 0      0
+.debug_line         68      0
+.debug_str         378      0
+.debug_line_str    144      0
+.comment            19      0
+Total              609
+
+

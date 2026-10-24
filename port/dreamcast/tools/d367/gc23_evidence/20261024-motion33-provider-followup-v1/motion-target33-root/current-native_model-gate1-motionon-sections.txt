@@ -1,0 +1,39 @@
+/dev/shm/gc-motion24-target-run-0mftarg0/current-native_model-gate1-motionon.o  :
+section                                                                                  size   addr
+.text                                                                                       0      0
+.data                                                                                       0      0
+.bss                                                                                        0      0
+.text._ZN12_GLOBAL__N_1L7projectERfS0_S0_Pv                                               140      0
+.text._ZN12_GLOBAL__N_17Builder14vertex_indicesEjjjjRN5re4dc6render12RenderVertexERf     3512      0
+.text._ZN12_GLOBAL__N_17Builder8triangleIhEEbPKT_S4_S4_                                  1128      0
+.text._ZN12_GLOBAL__N_17Builder9primitiveIhEEbPKT_jN5re4dc6render12DrawTopologyE         1488      0
+.text._ZZ18re4dc_model_submitENKUlvE_clEv.isra.0                                         1608      0
+.rodata.re4dc_model_submit.str1.4                                                          44      0
+.text.re4dc_model_submit                                                                 6240      0
+.text.re4dc_model_work_stats                                                               12      0
+.text.re4dc_model_detach_retained_storage                                                  36      0
+.text.re4dc_model_preparation_frame                                                        36      0
+.text.re4dc_model_preparation_stats                                                        12      0
+.rodata                                                                                     4      0
+.text.re4dc_model_invalidate_static_lighting                                              304      0
+.text.re4dc_model_source_stamp                                                             60      0
+.text.re4dc_model_source_span                                                             104      0
+.text.re4dc_model_skipped_writeback                                                        16      0
+.bss.leon_hr_parts                                                                          4      0
+.bss._ZN12_GLOBAL__N_1L14prepared_batchE                                                    4      0
+.bss._ZN12_GLOBAL__N_1L17preparation_statsE                                                60      0
+.bss._ZN12_GLOBAL__N_1L15static_lightingE                                                   4      0
+.bss._ZN12_GLOBAL__N_1L10work_statsE                                                      120      0
+.debug_info                                                                             31882      0
+.debug_abbrev                                                                            3153      0
+.debug_loclists                                                                         24318      0
+.debug_aranges                                                                            136      0
+.debug_rnglists                                                                          3687      0
+.debug_line                                                                             34499      0
+.debug_str                                                                              11042      0
+.debug_line_str                                                                          1442      0
+.comment                                                                                   19      0
+.debug_frame                                                                              852      0
+Total                                                                                  125966
+
+

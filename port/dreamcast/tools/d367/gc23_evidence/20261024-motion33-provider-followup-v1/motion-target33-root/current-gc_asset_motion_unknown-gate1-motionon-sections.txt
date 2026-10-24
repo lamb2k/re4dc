@@ -1,0 +1,29 @@
+/dev/shm/gc-motion24-target-run-0mftarg0/current-gc_asset_motion_unknown-gate1-motionon.o  :
+section                                                     size   addr
+.text                                                          0      0
+.data                                                          0      0
+.bss                                                           0      0
+.text._ZN13re4dc_gcasset12_GLOBAL__N_1L6acceptEjj             84      0
+.text._ZN13re4dc_gcasset19motion_model_reasonEv               16      0
+.text._ZN13re4dc_gcasset12motion_enterEj                      28      0
+.text._ZN13re4dc_gcasset12motion_leaveEj                      12      0
+.text._ZN13re4dc_gcasset14motion_prepareEv                    36      0
+.text._ZN13re4dc_gcasset21motion_accept_pendingEj             56      0
+.text._ZN13re4dc_gcasset21motion_accept_currentEj             28      0
+.text._ZN13re4dc_gcasset24motion_pending_accountedEv          16      0
+.rodata._ZN13re4dc_gcasset20motion_unknown_flushEv.str1.4    106      0
+.text._ZN13re4dc_gcasset20motion_unknown_flushEv              84      0
+.bss._ZN13re4dc_gcasset12_GLOBAL__N_1L6motionE                24      0
+.debug_info                                                 2127      0
+.debug_abbrev                                                745      0
+.debug_loclists                                              409      0
+.debug_aranges                                                96      0
+.debug_rnglists                                               91      0
+.debug_line                                                 1032      0
+.debug_str                                                  2052      0
+.debug_line_str                                              510      0
+.comment                                                      19      0
+.debug_frame                                                 208      0
+Total                                                       7779
+
+

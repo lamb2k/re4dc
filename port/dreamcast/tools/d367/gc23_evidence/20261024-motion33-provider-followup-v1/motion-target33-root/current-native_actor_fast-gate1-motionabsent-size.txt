@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+  61759	   1312	  13231	  76302	  12a0e	/dev/shm/gc-motion24-target-run-0mftarg0/current-native_actor_fast-gate1-motionabsent.o

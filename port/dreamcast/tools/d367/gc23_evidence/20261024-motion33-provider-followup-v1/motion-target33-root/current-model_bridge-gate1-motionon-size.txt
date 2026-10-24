@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+   7415	     12	    138	   7565	   1d8d	/dev/shm/gc-motion24-target-run-0mftarg0/current-model_bridge-gate1-motionon.o

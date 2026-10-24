@@ -1,0 +1,72 @@
+         U re4dc_gcasset::source_use
+         U re4dc_gcasset::motion_enter(unsigned int)
+         U re4dc_gcasset::motion_leave(unsigned int)
+         U re4dc_gcasset::payload_accept(re4dc_gcasset::PayloadProof*, unsigned int, unsigned int)
+         U re4dc_gcasset::motion_model_reason()
+         U re4dc_gcasset::motion_accept_current(unsigned int)
+         U re4dc_gcasset::motion_pending_accounted()
+         U re4dc::render::prepare_actor_lights(re4dc::render::SourceLighting const&)
+         U re4dc::render::clip_projected_triangle(re4dc::render::RenderVertex const*, pvr_vertex*, unsigned char, re4dc::render::ClipParameters const&, re4dc::render::ClipStats*, float const*)
+         U __movmem_i4_even
+         U __movmem_i4_odd
+         U __udivsi3_i4i
+         U __unordsf2
+         U mat_load
+         U memcpy
+         U memmove
+         U memset
+         U re4dc_actor_model_buffers
+         U re4dc_actor_model_class
+         U re4dc_actor_model_id
+         U re4dc_actor_model_prelit
+         U re4dc_actor_model_source
+         U re4dc_actor_stream_begin
+         U re4dc_actor_stream_end
+         U re4dc_actor_stream_state
+         U re4dc_actor_texture_commit
+         U re4dc_actor_texture_material_validate
+         U re4dc_actor_texture_validate
+         U re4dc_avk_light_rigid
+         U re4dc_avk_light_rigid3
+         U re4dc_avk_light_rigid_n16
+         U re4dc_avk_light_rigid_n16s6
+         U re4dc_avk_light_skin
+         U re4dc_avk_light_skin_n16
+         U re4dc_avk_pos_rigid6_s16
+         U re4dc_avk_pos_rigid6_u16
+         U re4dc_avk_pos_rigid_s16
+         U re4dc_avk_pos_rigid_u16
+         U re4dc_avk_pos_skin_s16
+         U re4dc_avk_pos_skin_u16
+         U re4dc_chunk_sq
+         U re4dc_chunk_strips
+         U re4dc_chunk_vertices_direct
+         U re4dc_chunk_window_begin
+         U re4dc_chunk_window_end
+         U re4dc_fog_gate_far
+         U re4dc_gcasset_actor_main_select
+         U re4dc_gcasset_actor_select
+         U re4dc_gcasset_hand_derive_begin
+         U re4dc_gcasset_hand_derive_end
+         U re4dc_log
+         U re4dc_model_defer_part
+         U re4dc_model_direct_begin
+         U re4dc_model_direct_begin_reserved
+         U re4dc_model_direct_enabled
+         U re4dc_model_direct_end
+         U re4dc_model_packet_abort
+         U re4dc_model_packet_begin
+         U re4dc_model_packet_commit
+         U re4dc_model_packet_reserve
+         U re4dc_model_packet_streaming
+         U re4dc_model_result
+         U re4dc_ps2_world_before_owned_tr
+         U re4dc_screen_half_hf
+         U re4dc_screen_half_wf
+         U re4dc_screen_hf
+         U re4dc_screen_wf
+         U re4dc_skin_materialize
+         U re4dc_skin_palette_resolve
+         U snprintf
+         U sq_fast_cpy
+         U sqrtf

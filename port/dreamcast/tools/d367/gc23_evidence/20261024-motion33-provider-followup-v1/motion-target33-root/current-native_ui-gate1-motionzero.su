@@ -1,0 +1,261 @@
+/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include/arch/irq.h:244:26:irq_mask_t arch_irq_disable()	0	static
+platform/native_ui.cpp:370:37:bool {anonymous}::Key::operator==(const {anonymous}::Key&) const	0	static
+platform/include/texpack_index.inc:69:6:bool {anonymous}::texpack::payload_current(unsigned int, unsigned int)	0	static
+platform/include/texpack_index.inc:81:10:unsigned int {anonymous}::texpack::word(const unsigned char*)	0	static
+platform/native_ui.cpp:454:6:void {anonymous}::gcasset_model_prepare(const Re4dcModelPart*)	8	static
+platform/native_ui.cpp:623:13:void {anonymous}::sources_reset()	0	static
+platform/native_ui.cpp:690:13:bool {anonymous}::core_pinned(const Entry&)	24	static
+platform/native_ui.cpp:833:13:void {anonymous}::copy_words(void*, const void*, unsigned int)	0	static
+platform/native_ui.cpp:837:6:bool {anonymous}::same_light_set(const DeferredLightSet*, const SourceLighting&)	8	static
+platform/native_ui.cpp:947:6:void {anonymous}::gcasset_movie_forget()	4	static
+platform/native_ui.cpp:1178:6:void {anonymous}::latch::put(char)	12	static
+platform/native_ui.cpp:1191:6:void {anonymous}::latch::bump(unsigned int)	8	static
+platform/native_ui.cpp:1223:6:void {anonymous}::latch::vblank(uint32_t, void*)	4	static
+platform/native_ui.cpp:1339:6:void {anonymous}::pvr_recover::err_chain(uint32_t, void*)	8	static
+platform/native_ui.cpp:1413:6:void {anonymous}::pvr_ready::note(char, volatile unsigned int&)	0	static
+platform/native_ui.cpp:2772:10:unsigned int {anonymous}::image_size(const Re4dcUiImage&)	8	static
+platform/native_ui.cpp:2788:6:void {anonymous}::hash_bytes(Key&, const void*, unsigned int)	0	static
+platform/native_ui.cpp:2806:6:bool {anonymous}::same_image(const Re4dcUiImage&, const Re4dcUiImage&)	0	static
+platform/native_ui.cpp:2893:17:unsigned int {anonymous}::palette_fnv(const Re4dcUiImage&)	0	static
+platform/native_ui.cpp:2907:12:int {anonymous}::source_hit(unsigned int, const Re4dcUiImage&)	8	static
+platform/native_ui.cpp:2921:13:void {anonymous}::source_put(const Re4dcUiImage&, const Key&, unsigned int, unsigned char)	64	static
+platform/native_ui.cpp:3926:21:{anonymous}::PaletteCopy* {anonymous}::palette_copy(unsigned int)	0	static
+platform/native_ui.cpp:3931:13:bool {anonymous}::handle_shape(const Re4dcUiImage&, unsigned int&, bool)	0	static
+platform/native_ui.cpp:4031:23:{anonymous}::resolve(const Re4dcUiImage&, const Re4dcModelPart*, bool)::<lambda(const {anonymous}::Handle&)>	0	static
+platform/native_ui.cpp:4072:10:unsigned int {anonymous}::preload_least(unsigned int, unsigned int)	0	static
+platform/native_ui.cpp:5115:6:void {anonymous}::room_change_retire()	0	static
+platform/native_ui.cpp:5391:6:bool {anonymous}::gcasset_glyph_matches(const GlyphQuad&)	0	static
+platform/native_ui.cpp:5464:7:short int {anonymous}::glyph_quarter(float)	0	static
+platform/include/native_ui_actor_fade.inc:28:6:bool {anonymous}::actor_fade_reservation_current(const Re4dcActorFadeReservation&)	0	static
+platform/include/effect_strip_geometry21.hpp:6:13:void re4dc::effect_strip21::project(float&, float&, float&, void*)	0	static
+platform/include/subscreen_quad_geometry.hpp:7:13:void re4dc::subscreen::project(float&, float&, float&, void*)	0	static
+platform/include/native_effect_stage1_prepare.inc:6:13:void {anonymous}::stage1_prepare_report(unsigned int, const Key&, unsigned int, unsigned int)	40	static
+platform/include/native_ui_source_world.inc:86:6:void {anonymous}::sourceWorldTextureAcquired(const Key&)	12	static
+/root/work/kos-re4dc-d367/include/kos/timer.h:64:24:uint64_t timer_us_gettime64()	4	static
+platform/native_ui.cpp:1379:6:bool {anonymous}::pvr_recover::on_slice(char)	52	static
+platform/native_ui.cpp:1423:6:bool {anonymous}::pvr_ready::wait_clear(volatile int&, const char*, char, volatile unsigned int&)	36	static
+platform/native_ui.cpp:637:6:void {anonymous}::frag_release(const char*)	12	static
+platform/native_ui.cpp:4851:15:{anonymous}::vram_claim(unsigned int, bool)::<lambda()>	8	static
+platform/native_ui.cpp:8916:27:re4dc_ps2_world_direct_begin_batch(const unsigned int*, Re4dcModelDirect*, Re4dcWorldSubmitBatch*)::<lambda(const {anonymous}::Entry&)>	36	static
+platform/native_ui.cpp:432:6:void {anonymous}::gcasset_texture_flush(Entry&)	20	static
+platform/native_ui.cpp:470:6:void {anonymous}::gcasset_packet_reset()	16	static
+platform/native_ui.cpp:3430:6:bool {anonymous}::gad_wanted(const Key&)	132	static
+platform/native_ui.cpp:367:10:unsigned int {anonymous}::kos_headroom()	16	static
+platform/native_ui.cpp:5545:6:void {anonymous}::gcasset_flush()	16	static
+platform/native_ui.cpp:5563:6:void {anonymous}::gcasset_close_visit(unsigned int)	20	static
+platform/native_ui.cpp:5794:6:bool {anonymous}::door_hold_now()	4	static
+platform/native_ui.cpp:6599:6:bool {anonymous}::ensure_model_storage()	20	static
+platform/native_ui.cpp:4112:6:void {anonymous}::preload_select(const re4dc::texture::SourceIdentityTable&, unsigned int&, unsigned int&, unsigned int&, unsigned int, unsigned int, bool)	92	static
+platform/native_ui.cpp:3273:6:void {anonymous}::vram_room_counters(unsigned int*)	8	static
+platform/native_ui.cpp:8436:6:void {anonymous}::grade_packet(unsigned char*, uint32_t)	220	static
+platform/include/fx_sprite_trim.inc:191:6:void {anonymous}::fx_trim_oct_packet(const Re4dcEffectSprite&, Entry*, const float*, const float*, unsigned char*)	256	static
+platform/include/fx_sprite_trim.inc:42:13:bool {anonymous}::fx_trim_fit(float, float, float&)	28	static
+platform/native_ui.cpp:7830:6:void {anonymous}::fx_packet(const Re4dcEffectSprite&, Entry*, unsigned char*)	148	static
+platform/native_ui.cpp:8475:6:void {anonymous}::osd_packet(unsigned char*)	272	static
+platform/native_ui.cpp:403:7:void __tcf_ZN12_GLOBAL__N_1L7entriesE(void*)	16	static
+platform/native_ui.cpp:426:6:void {anonymous}::gcasset_texture_emitted(Entry*, re4dc_gcasset::Consumer)	0	static
+platform/native_ui.cpp:923:12:pvr_list_t {anonymous}::select_model_pass(const Re4dcModelPart*)	0	static
+platform/native_ui.cpp:1192:6:void {anonymous}::latch::event(uint32_t, void*)	12	static
+platform/native_ui.cpp:1484:6:void {anonymous}::presort_lazy::flush()	12	static
+platform/native_ui.cpp:1744:7:float {anonymous}::overlay_depth()	0	static
+platform/native_ui.cpp:1605:6:void {anonymous}::present_report()	8	static
+platform/native_ui.cpp:1623:6:void {anonymous}::present_fence()	40	static
+platform/native_ui.cpp:2122:6:void {anonymous}::stream_open()	28	static
+platform/native_ui.cpp:2223:6:void {anonymous}::stream_select(pvr_list_t)	32	static
+platform/native_ui.cpp:2298:6:void {anonymous}::stream_send(const void*, unsigned int)	48	static
+platform/native_ui.cpp:5829:6:void {anonymous}::door_fade(unsigned int, float, float)	452	static
+platform/native_ui.cpp:5843:6:void {anonymous}::door_draw()	616	static
+platform/native_ui.cpp:7761:6:void {anonymous}::gcasset_fx_stream_send(const void*, unsigned int)	12	static
+platform/include/native_water_ps2.inc:37:10:void {anonymous}::WaterOut::flush()	8	static
+platform/native_ui.cpp:8348:6:void {anonymous}::post_send(unsigned char*, unsigned int)	20	static
+platform/native_ui.cpp:1441:6:0()	12	static
+platform/native_ui.cpp:1317:6:void {anonymous}::pvr_recover::note_render_state()	8	static
+platform/native_ui.cpp:1332:6:void {anonymous}::pvr_recover::list_chain(uint32_t, void*)	4	static
+platform/native_ui.cpp:1322:6:void {anonymous}::pvr_recover::done_chain(uint32_t, void*)	8	static
+platform/native_ui.cpp:1344:6:void {anonymous}::pvr_recover::vblank(uint32_t, void*)	36	static
+platform/native_ui.cpp:2845:5:int {anonymous}::external_image_key(const Re4dcUiImage&, Key&)	80	static
+platform/native_ui.cpp:2931:6:bool {anonymous}::image_key(const Re4dcUiImage&, Key&)	112	static
+platform/native_ui.cpp:3012:6:bool {anonymous}::model_mask_key(const Re4dcModelPart*, Key&)	60	static
+platform/native_ui.cpp:668:6:void {anonymous}::overlay_slab_take()	8	static
+platform/include/texpack_index.inc:60:6:void {anonymous}::texpack::payload_reset_locked()	8	static
+platform/include/texpack_payload_retry.inc:10:6:void {anonymous}::texpack_payload_retry::advance(unsigned int)	20	static
+platform/native_ui.cpp:5244:10:unsigned int {anonymous}::gcasset_glyph_version()	4	static
+platform/native_ui.cpp:2277:6:void {anonymous}::world_sort_begin()	8	static
+platform/native_ui.cpp:5238:29:re4dc_gcasset::CheckedAsset {anonymous}::gcasset_glyph_payload(const char*, const void*, unsigned int)	100	static
+platform/native_ui.cpp:5553:6:0()	12	static
+platform/native_ui.cpp:1031:6:void {anonymous}::vblank_wake(uint32_t, void*)	0	static
+platform/native_ui.cpp:1026:6:void {anonymous}::render_done_chain(uint32_t, void*)	4	static
+platform/native_ui.cpp:461:6:void {anonymous}::gcasset_model_accept(const void*, unsigned int)	4	static
+platform/native_ui.cpp:7153:13:void model_direct_account(unsigned int)	16	static
+platform/include/native_water_ps2.inc:21:7:float {anonymous}::water_reach()	28	static
+platform/native_ui.cpp:3379:6:void {anonymous}::close_entry(Entry&)	16	static
+platform/native_ui.cpp:8357:6:void {anonymous}::post_packet(unsigned char*)	220	static
+platform/native_ui.cpp:2454:6:void {anonymous}::hud_rect(HudBatch&, float, float, float, float, uint32_t)	68	static
+platform/native_ui.cpp:2464:6:void {anonymous}::hud_number(HudBatch&, float, float, unsigned int, bool, uint32_t)	40	static
+platform/native_ui.cpp:415:23:static constexpr unsigned int {anonymous}::gcasset_texture_fingerprint(Entry&, const Key&, const char*, unsigned int, unsigned int)::<lambda(void*, void*, unsigned int)>::_FUN(void*, void*, unsigned int)	20	static
+platform/include/texpack_index.inc:84:10:unsigned int {anonymous}::texpack::crc_update(unsigned int, const unsigned char*, unsigned int)	0	static
+/root/work/kos-re4dc-d367/include/kos/mutex.h:188:19:constprop(mutex_t*)	0	static
+platform/include/native_effect_stage1_batch.inc:7:12:int stage1_batch_refuse(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)	36	static
+platform/native_ui.cpp:5325:16:{anonymous}::glyph_cell(const Re4dcUiGlyph&)::<lambda(const {anonymous}::GlyphCell&)>	0	static
+platform/native_ui.cpp:5323:5:int {anonymous}::glyph_cell(const Re4dcUiGlyph&)	672	static
+platform/native_ui.cpp:4800:19:{anonymous}::movie_window_release(unsigned int, bool, unsigned int&)::<lambda(unsigned int)>	4	static
+platform/native_ui.cpp:4819:16:{anonymous}::movie_window_release(unsigned int, bool, unsigned int&)::<lambda(unsigned int)>	32	static
+platform/native_ui.cpp:3440:6:bool {anonymous}::gad_apply(re4dc::texture::Package&, const Key&)	24	static
+platform/include/texpack_index.inc:101:6:bool {anonymous}::texpack::read_failed(const char*, unsigned int, unsigned int)	16	static
+platform/include/texpack_index.inc:97:6:bool {anonymous}::texpack::invalid(const char*, unsigned int, unsigned int)	8	static
+platform/native_ui.cpp:9889:6:void {anonymous}::movie_draw()	496	static
+platform/include/native_water_ps2.inc:40:6:void {anonymous}::water_emit(const WaterNode&)	2948	static
+platform/native_ui.cpp:5423:16:{anonymous}::glyph_draw_run(unsigned int, unsigned int)::<lambda()>	76	static
+platform/native_ui.cpp:6163:13:void ui_draw_quad(unsigned int)	2540	static
+platform/native_ui.cpp:2335:6:void {anonymous}::stream_close(bool)	28	static
+platform/include/texpack_index.inc:112:6:bool {anonymous}::texpack::open_locked(unsigned int)	868	static
+platform/include/texpack_index.inc:183:8:constprop(const {anonymous}::Key&, unsigned int&, unsigned int&, unsigned int, unsigned int*, unsigned int*)	80	static
+platform/include/manual_pages_native.inc:7:12:int manual_pack_size(const {anonymous}::Key&)	20	static
+platform/native_ui.cpp:1466:17:void {anonymous}::re4dc_pvr_ready_test_arm(int)	0	static
+platform/native_ui.cpp:1468:16:int {anonymous}::__wrap_pvr_list_begin(pvr_list_t)	8	static
+platform/native_ui.cpp:1496:16:int {anonymous}::__wrap_pvr_scene_finish()	8	static
+platform/native_ui.cpp:1502:17:void {anonymous}::__wrap_pvr_set_presort_mode(bool)	20	static
+platform/native_ui.cpp:1519:16:int {anonymous}::re4dc_pvr_latch_line(unsigned int, char*, unsigned int)	728	static
+platform/native_ui.cpp:4705:17:void re4dc_pvr_vram_fence()	0	static
+platform/include/manual_pages_native.inc:2:42:const Re4dcManualPageContext* re4dc_ui_manual_page(unsigned int)	0	static
+platform/include/manual_pages_native.inc:12:16:int re4dc_ui_manual_page_available(unsigned int)	112	static
+platform/include/manual_pages_native.inc:24:21:unsigned int re4dc_ui_manual_page_identify(unsigned int, const Re4dcUiImage*)	52	static
+platform/include/manual_pages_native.inc:58:16:int re4dc_ui_manual_generic_identify(const Re4dcUiImage*)	140	static
+platform/native_ui.cpp:4724:17:void re4dc_ui_invalidate_sources()	4	static
+platform/native_ui.cpp:4729:17:void re4dc_ui_ta_single_bank()	32	static
+platform/native_ui.cpp:4746:17:void re4dc_ui_ta_double_bank_later()	0	static
+platform/native_ui.cpp:4926:17:void re4dc_ui_vram_hold()	8	static
+platform/native_ui.cpp:4934:17:void re4dc_ui_vram_unclaim()	20	static
+platform/native_ui.cpp:4956:17:void re4dc_ui_room_preload_again()	4	static
+platform/native_ui.cpp:4986:16:int re4dc_ui_bind_core(void*, unsigned int)	24	static
+platform/native_ui.cpp:4995:16:int re4dc_ui_bind_room(void*, unsigned int)	20	static
+platform/native_ui.cpp:5012:16:int re4dc_ui_bind_option(void*, unsigned int)	24	static
+platform/native_ui.cpp:5019:17:void re4dc_ui_unbind_option()	8	static
+platform/native_ui.cpp:5022:16:int re4dc_ui_bind_player(void*, unsigned int)	24	static
+platform/native_ui.cpp:5034:16:int re4dc_ui_bind_weapon(void*, unsigned int)	24	static
+platform/native_ui.cpp:5046:17:void re4dc_ui_unbind_player()	8	static
+platform/native_ui.cpp:5047:17:void re4dc_ui_unbind_weapon()	8	static
+platform/native_ui.cpp:5052:16:int re4dc_ui_bind_enemy(void*, unsigned int)	32	static
+platform/native_ui.cpp:5199:21:unsigned int re4dc_ui_frame()	0	static
+platform/native_ui.cpp:5466:17:void re4dc_ui_glyph(const Re4dcUiGlyph*)	76	static
+platform/native_ui.cpp:5506:17:void re4dc_ui_glyph_fonts_changed()	4	static
+platform/native_ui.cpp:5577:17:void re4dc_gcasset_finish()	4	static
+platform/native_ui.cpp:5581:17:void re4dc_gcasset_retire()	28	static
+platform/native_ui.cpp:5592:17:void re4dc_gcasset_room_enter(unsigned int)	28	static
+platform/native_ui.cpp:5604:17:void re4dc_ui_init()	152	static
+platform/native_ui.cpp:5765:17:void re4dc_ui_end_frame_skip()	0	static
+platform/native_ui.cpp:5885:16:int re4dc_ui_door_capture()	748	static
+platform/native_ui.cpp:5919:17:void re4dc_ui_door_queue(unsigned int)	0	static
+platform/native_ui.cpp:5921:17:void re4dc_ui_door_mark()	0	static
+platform/native_ui.cpp:6144:6:void pace_note_draw(int)	720	static
+platform/native_ui.cpp:6587:16:int re4dc_model_diagnostic_enabled()	16	static
+platform/native_ui.cpp:6668:16:int re4dc_model_packet_reserve(const Re4dcModelPart*, Re4dcModelPacket*)	84	static
+platform/native_ui.cpp:6720:18:void* re4dc_model_preparation_storage(unsigned int*)	0	static
+platform/native_ui.cpp:6724:18:void* re4dc_model_metadata_storage(unsigned int*)	8	static
+platform/native_ui.cpp:6793:17:void re4dc_model_texture(const unsigned int*)	0	static
+platform/native_ui.cpp:7017:17:void re4dc_model_packet_commit(unsigned int)	20	static
+platform/native_ui.cpp:7036:17:void re4dc_model_result(unsigned int, unsigned int, unsigned int)	0	static
+platform/native_ui.cpp:7049:16:int re4dc_model_packet_streaming()	0	static
+platform/native_ui.cpp:7050:17:void re4dc_model_packet_abort()	0	static
+platform/native_ui.cpp:914:6:void {anonymous}::reset_deferred()	8	static
+platform/native_ui.cpp:5073:17:void re4dc_ui_unbind_enemy(void*)	8	static
+platform/native_ui.cpp:5742:17:void re4dc_ui_begin_skip()	4	static
+platform/native_ui.cpp:7063:16:int re4dc_model_direct_enabled()	0	static
+platform/native_ui.cpp:7179:17:void re4dc_model_direct_end(unsigned int)	12	static
+platform/native_ui.cpp:7184:17:void re4dc_ps2_world_batch_close(Re4dcWorldSubmitBatch*)	12	static
+platform/native_ui.cpp:7188:17:void re4dc_ps2_world_direct_end_batch(unsigned int, Re4dcWorldSubmitBatch*)	8	static
+platform/native_ui.cpp:7200:16:int re4dc_ui_mv_send(const void*, unsigned int)	20	static
+platform/native_ui.cpp:7207:17:void re4dc_ui_mv_stats(unsigned int*, unsigned int*, unsigned int*, unsigned int*)	0	static
+platform/native_ui.cpp:7377:17:void re4dc_actor_texture_release(Re4dcActorTextureLease*)	0	static
+platform/native_ui.cpp:7397:16:int re4dc_actor_stream_state(Re4dcActorStreamState*)	0	static
+platform/native_ui.cpp:7423:27:uint32_t* re4dc_coarse_begin(int)	204	static
+platform/native_ui.cpp:7510:17:void re4dc_coarse_end(unsigned int)	12	static
+platform/include/native_ui_actor_fade.inc:76:16:int re4dc_model_actor_fade_cancel(Re4dcActorFadeReservation*)	8	static
+platform/include/native_ui_actor_fade.inc:81:16:int re4dc_model_actor_fade_commit(Re4dcActorFadeReservation*, const Re4dcActorFadeTicket*)	16	static
+platform/include/native_effect_stage1_batch.inc:16:16:int re4dc_effect_stage1_batch(Re4dcEffectSprite*, unsigned int, unsigned int, unsigned int*)	152	static
+platform/include/effect_strip_geometry21.hpp:12:17:unsigned int re4dc::effect_strip21::vertices(const Re4dcEffectQuad&, pvr_vertex_t (&)[12])	472	static
+platform/native_ui.cpp:8153:21:unsigned int re4dc_rain_dc_streaks(const Re4dcRainStreak*, unsigned int)	1296	static
+platform/include/subscreen_quad_geometry.hpp:15:17:unsigned int re4dc::subscreen::vertices(const Re4dcSubscreenQuad&, pvr_vertex_t (&)[12])	464	static
+platform/include/subscreen_quad_geometry.hpp:43:17:unsigned int re4dc::subscreen::line_vertices(const Re4dcSubscreenQuad&, unsigned int, pvr_vertex_t (&)[12])	92	static
+platform/native_ui.cpp:8295:16:int re4dc_ui_tr_packet(const void*, unsigned int)	24	static
+platform/native_ui.cpp:8530:16:int re4dc_ps2_world_before_owned_tr(const Re4dcModelPart*)	20	static
+platform/native_ui.cpp:8749:16:int re4dc_ui_texture_resident(unsigned int, unsigned int)	24	static
+platform/native_ui.cpp:9340:17:void re4dc_model_finish_source_draws()	896	static
+platform/native_ui.cpp:9492:17:void re4dc_model_invalidate_pending()	4	static
+platform/native_ui.cpp:9499:18:void* re4dc_model_static_lighting_storage(unsigned int*)	0	static
+platform/native_ui.cpp:9504:41:const Re4dcNativeFrameStats* re4dc_native_frame_stats()	0	static
+platform/native_ui.cpp:9517:18:void* re4dc_model_deferred_storage(unsigned int*)	56	static
+platform/native_ui.cpp:7575:5:0(const Re4dcModelPart*, const SourceLighting*)	660	static
+platform/native_ui.cpp:7575:5:int {anonymous}::defer_part(const Re4dcModelPart*, const SourceLighting*)	12	static
+platform/native_ui.cpp:7649:16:int re4dc_model_defer_part_unlit(const Re4dcModelPart*)	0	static
+platform/native_ui.cpp:7653:16:int re4dc_model_defer_part(const Re4dcModelPart*)	0	static
+platform/include/native_ui_actor_fade.inc:57:16:int re4dc_model_actor_fade_reserve(Re4dcActorFadeReservation*)	28	static
+platform/native_ui.cpp:8096:16:int re4dc_effect_line(const Re4dcEffectLine*)	456	static
+platform/native_ui.cpp:8190:12:int subscreen_submit(const Re4dcSubscreenQuad*, const pvr_vertex_t*, unsigned int)	688	static
+platform/native_ui.cpp:8220:16:int re4dc_subscreen_quad(const Re4dcSubscreenQuad*)	424	static
+platform/native_ui.cpp:8225:16:int re4dc_subscreen_line(const Re4dcSubscreenQuad*, unsigned int)	424	static
+platform/native_ui.cpp:8236:16:int re4dc_water45_quad(const float (*)[3], const float (*)[3], const float*, const float*)	1044	static
+platform/native_ui.cpp:8491:17:void re4dc_look_grade_post()	400	static
+platform/native_ui.cpp:8383:17:void re4dc_post_filter00(unsigned char, unsigned char, signed char, unsigned char, unsigned char, unsigned char, int)	272	static
+platform/native_ui.cpp:9543:16:int re4dc_ui_movie_try_close()	16	static
+platform/native_ui.cpp:9647:16:int re4dc_ui_movie_handoff_ready()	20	static
+platform/native_ui.cpp:9719:16:int re4dc_ui_movie_upload_begin()	8	static
+platform/native_ui.cpp:9758:17:void re4dc_ui_movie_upload_rows(const void*, unsigned int, unsigned int)	28	static
+platform/native_ui.cpp:9762:17:void re4dc_ui_movie_upload_end()	0	static
+platform/native_ui.cpp:9763:21:unsigned int re4dc_ui_movie_presented()	0	static
+platform/native_ui.cpp:9766:21:unsigned int re4dc_gcasset_movie_bind(const void*, unsigned int, unsigned int, unsigned int)	20	static
+platform/native_ui.cpp:9775:17:void re4dc_gcasset_movie_begin_upload(unsigned int, const void*)	0	static
+platform/native_ui.cpp:9783:17:void re4dc_gcasset_movie_uploaded(unsigned int, const void*, unsigned int, unsigned int, unsigned int)	0	static
+platform/native_ui.cpp:9794:21:uint64_t re4dc_ui_movie_first_picture_us()	0	static
+platform/native_ui.cpp:9796:18:void* re4dc_ui_movie_texture()	0	static
+platform/native_ui.cpp:9797:16:int re4dc_ui_movie_last_presented()	0	static
+platform/native_ui.cpp:9802:16:int re4dc_ui_movie_present_now()	16	static
+platform/native_ui.cpp:9829:17:void re4dc_ui_movie_background(int)	0	static
+platform/native_ui.cpp:9830:16:int re4dc_ui_movie_close()	12	static
+platform/native_ui.cpp:9928:16:int re4dc_leon_hr_image(const Re4dcUiImage*)	12	static
+platform/native_ui.cpp:9977:17:void __wrap_pvr_poly_compile(pvr_poly_hdr_t*, const pvr_poly_cxt_t*)	180	static
+platform/native_ui.cpp:9983:17:void __wrap_pvr_sprite_compile(pvr_sprite_hdr_t*, const pvr_sprite_cxt_t*)	104	static
+platform/native_ui.cpp:9989:17:void __wrap_pvr_poly_mod_compile(pvr_poly_mod_hdr_t*, const pvr_poly_cxt_t*)	180	static
+platform/include/actor_resource_lease.h:27:10:bool re4dc_actor::TextureLeases<Entries, Capacity>::pinned(unsigned int) const [with unsigned int Entries = 448; unsigned int Capacity = 64]	0	static
+platform/native_ui.cpp:3319:6:void {anonymous}::vram_room_sample(const char*)	196	static
+platform/native_ui.cpp:3352:6:void {anonymous}::vram_room_track()	120	static
+platform/native_ui.cpp:6214:17:void re4dc_ui_present()	384	static
+platform/native_ui.cpp:4752:21:unsigned int re4dc_ui_reclaim_one()	40	static
+platform/native_ui.cpp:5091:6:void {anonymous}::retire_kos_floor()	44	static
+platform/native_ui.cpp:6471:17:void re4dc_ui_end_frame(int)	516	static
+platform/native_ui.cpp:5121:17:void re4dc_ui_retire_room()	8	static
+platform/native_ui.cpp:4795:10:constprop(unsigned int, bool, unsigned int&)	108	static
+platform/native_ui.cpp:4847:5:int {anonymous}::vram_claim(unsigned int, bool)	108	static
+platform/native_ui.cpp:4922:16:int re4dc_ui_vram_claim(unsigned int)	0	static
+platform/native_ui.cpp:9679:16:int re4dc_ui_movie_open(unsigned int, unsigned int)	24	static
+platform/native_ui.cpp:3663:16:{anonymous}::load(const Re4dcUiImage&, bool, const Key*)::<lambda()>	44	static
+platform/native_ui.cpp:3495:8:{anonymous}::Entry* {anonymous}::load(const Re4dcUiImage&, bool, const Key*)	268	static
+platform/native_ui.cpp:4709:16:int re4dc_ui_binocular_prompt(const Re4dcUiImage*, unsigned int, Re4dcUiImage*)	56	static
+platform/include/manual_pages_native.inc:79:16:int re4dc_ui_manual_generic_image(Re4dcUiImage*)	52	static
+platform/include/manual_pages_native.inc:42:13:bool manual_page_load(unsigned int, unsigned int, Re4dcUiImage&)	36	static
+platform/include/manual_pages_native.inc:91:16:int re4dc_ui_manual_page_image(unsigned int, unsigned int, int, Re4dcUiImage*)	48	static
+platform/native_ui.cpp:3979:8:{anonymous}::Entry* {anonymous}::resolve_full(const Re4dcUiImage&, const Re4dcModelPart*, bool)	76	static
+platform/native_ui.cpp:3987:8:{anonymous}::Entry* {anonymous}::resolve(const Re4dcUiImage&, const Re4dcModelPart*, bool)	120	static
+platform/native_ui.cpp:6082:17:void re4dc_ui_submit(const Re4dcUiQuad*)	20	static
+platform/include/hud_source_mask_native.inc:2:16:int re4dc_ui_hud_mask_submit(const Re4dcUiQuad*, const Re4dcUiImage*)	164	static
+platform/include/native_effect_strip21.inc:13:16:int re4dc_effect_quad(const Re4dcEffectQuad*)	1060	static
+platform/include/native_water_ps2.inc:149:16:int re4dc_water_layer(const Re4dcWaterLayer*)	504	static
+platform/native_ui.cpp:7882:16:int re4dc_effect_sprite(const Re4dcEffectSprite*)	788	static
+platform/native_ui.cpp:6802:16:int re4dc_model_packet_begin(const Re4dcModelPart*, Re4dcModelPacket*)	368	static
+platform/native_ui.cpp:7114:16:int re4dc_model_direct_begin(const Re4dcModelPart*, Re4dcModelDirect*)	48	static
+platform/native_ui.cpp:7227:16:int re4dc_model_direct_begin_reserved(const Re4dcModelPart*, const Re4dcModelPacket*, Re4dcModelDirect*)	8	static
+platform/native_ui.cpp:7418:16:int re4dc_coarse_leon_texture_ready(const Re4dcUiImage*, unsigned int, unsigned int)	12	static
+platform/native_ui.cpp:7530:16:int re4dc_model_pt_begin(unsigned int, unsigned int, unsigned int, unsigned int, int, Re4dcModelPacket*)	320	static
+platform/native_ui.cpp:8581:16:int re4dc_ps2_world_packet(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, Re4dcModelPacket*)	340	static
+platform/native_ui.cpp:8857:50:int re4dc_ps2_world_direct_begin_batch(const unsigned int*, Re4dcModelDirect*, Re4dcWorldSubmitBatch*)	388	static
+platform/native_ui.cpp:9303:16:int re4dc_ps2_world_direct_begin(const unsigned int*, Re4dcModelDirect*)	0	static
+platform/include/actor_resource_lease.h:70:10:void re4dc_actor::TextureLeases<Entries, Capacity>::retire_frame() [with unsigned int Entries = 448; unsigned int Capacity = 64]	0	static
+platform/native_ui.cpp:5935:17:void re4dc_ui_begin()	816	static
+platform/native_ui.cpp:7380:17:void re4dc_actor_texture_retire_all()	0	static
+platform/include/actor_resource_lease.h:28:10:bool re4dc_actor::TextureLeases<Entries, Capacity>::available() const [with unsigned int Entries = 448; unsigned int Capacity = 64]	0	static
+platform/native_ui.cpp:7336:16:int re4dc_actor_texture_acquire(const Re4dcUiImage*, unsigned int, unsigned int, Re4dcActorTextureLease*)	32	static
+platform/include/actor_resource_lease.h:42:10:bool re4dc_actor::TextureLeases<Entries, Capacity>::resolve(const Re4dcActorTextureLease&, unsigned int, unsigned int&) const [with unsigned int Entries = 448; unsigned int Capacity = 64]	0	static
+platform/native_ui.cpp:7365:16:int re4dc_actor_texture_validate(const Re4dcActorTextureLease*)	8	static
+platform/native_ui.cpp:7370:16:int re4dc_actor_texture_commit(const Re4dcActorTextureLease*)	20	static
+platform/include/native_ui_actor_material.inc:3:16:int re4dc_actor_texture_material_validate(const Re4dcModelPart*, const Re4dcActorTextureLease*)	40	static
+platform/native_ui.cpp:9995:1:cpp)	4	static

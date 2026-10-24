@@ -1,0 +1,9 @@
+platform/gc_asset_motion_unknown.cpp:16:6:void re4dc_gcasset::{anonymous}::accept(unsigned int, unsigned int)	0	static
+platform/gc_asset_motion_unknown.cpp:21:10:unsigned int re4dc_gcasset::motion_model_reason()	0	static
+platform/gc_asset_motion_unknown.cpp:22:10:unsigned int re4dc_gcasset::motion_enter(unsigned int)	0	static
+platform/gc_asset_motion_unknown.cpp:23:6:void re4dc_gcasset::motion_leave(unsigned int)	0	static
+platform/gc_asset_motion_unknown.cpp:24:6:void re4dc_gcasset::motion_prepare()	0	static
+platform/gc_asset_motion_unknown.cpp:29:6:void re4dc_gcasset::motion_accept_pending(unsigned int)	4	static
+platform/gc_asset_motion_unknown.cpp:34:6:void re4dc_gcasset::motion_accept_current(unsigned int)	4	static
+platform/gc_asset_motion_unknown.cpp:35:6:void re4dc_gcasset::motion_pending_accounted()	0	static
+platform/gc_asset_motion_unknown.cpp:36:6:void re4dc_gcasset::motion_unknown_flush()	12	static

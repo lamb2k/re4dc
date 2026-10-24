@@ -1,0 +1,10 @@
+00000000 t re4dc_gcasset::(anonymous namespace)::accept(unsigned int, unsigned int)
+00000000 b re4dc_gcasset::(anonymous namespace)::motion
+00000000 T re4dc_gcasset::motion_enter(unsigned int)
+00000000 T re4dc_gcasset::motion_leave(unsigned int)
+00000000 T re4dc_gcasset::motion_prepare()
+00000000 T re4dc_gcasset::motion_model_reason()
+00000000 T re4dc_gcasset::motion_unknown_flush()
+00000000 T re4dc_gcasset::motion_accept_current(unsigned int)
+00000000 T re4dc_gcasset::motion_accept_pending(unsigned int)
+00000000 T re4dc_gcasset::motion_pending_accounted()

@@ -1,0 +1,17 @@
+{
+  "status": "PREPARATION_READBACK_PASS",
+  "arm_count": 33,
+  "ON_count": 5,
+  "source_export_pins": 242,
+  "input_pins": 299,
+  "rejected_metadata_mutants": [
+    "missing-arm",
+    "wrong-GAME-pin",
+    "missing-motion-flag",
+    "wrong-source",
+    "helper-parent",
+    "extra-optimization"
+  ],
+  "sdk_commands": 0,
+  "scope": "Byte/argv/export preparation only. No compiler, wrapper, version, dependency-generation, object, target or runtime execution."
+}

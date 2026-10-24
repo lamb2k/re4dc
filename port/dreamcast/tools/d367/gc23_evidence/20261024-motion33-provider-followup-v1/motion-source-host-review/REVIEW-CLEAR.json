@@ -1,0 +1,69 @@
+{
+  "status": "CLEAR",
+  "scope": "Bounded source/host UNKNOWN-only partial detector",
+  "reviewed_source": "5e6b7d8c0f76e7431f1a7787459faa41fb0b507c",
+  "runtime_source": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+  "base": "870789095c4c14fbdbf22043447b249063d2ec3a",
+  "observed_metadata_only_head": "aab201ceac0e18107f64a3212398afe916793327",
+  "independent_focused_methods": 10,
+  "independent_focused_seconds": 10.298,
+  "additional_extracted_schedules": 8,
+  "additional_make_cases": 11,
+  "additional_compiling_mutants_rejected": 1,
+  "author_broad_discovered": 118,
+  "author_broad_passed": 117,
+  "author_broad_skipped": 1,
+  "author_broad_independently_rerun": false,
+  "resident_raw_host_bytes": 24,
+  "Motion_wired": false,
+  "Motion_positive": false,
+  "SDK": false,
+  "guest": false,
+  "target_object_or_programme_identity": false,
+  "runtime_approval": false,
+  "review_files": [
+    {
+      "path": "INITIAL-PLAN-REVIEW.md",
+      "bytes": 2293,
+      "sha256": "5b2ae669a4c2471edec2590dbac964e8f0c9923f7964cd532e3e35fcfbbcd31c"
+    },
+    {
+      "path": "independent_controls.py",
+      "bytes": 8337,
+      "sha256": "f91a4ebf4827f94a604e0246bd04796f882f677675d16dea087a841a62a4855f"
+    },
+    {
+      "path": "INDEPENDENT-CONTROLS.json",
+      "bytes": 4082,
+      "sha256": "644d08367dd2ac1a76e400f1b24c59fd7e7746ca1cffd3e7b72d7feaff16e199"
+    },
+    {
+      "path": "REVIEW.md",
+      "bytes": 7909,
+      "sha256": "a4aebc007d5b172a895f78071a1ef511a57d04d7a0edd04d4ba7972f14cd2664"
+    }
+  ],
+  "author_evidence": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\source-5e6b7d8c0\\host.log",
+      "bytes": 18084,
+      "sha256": "9b6a2ca9f12673be68b767a3ac01ed0882943c46ee79e2c6e669250382bc83e9"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\source-5e6b7d8c0\\result.json",
+      "bytes": 161,
+      "sha256": "4b9db3061287088dd67773c0fa80db4a59af9b833e519b0c5c089f11d153f1f9"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\source-5e6b7d8c0\\source-pins.json",
+      "bytes": 2231,
+      "sha256": "0e84ab7e5cefd694a6b5ce74faeed8522d7323aff2644e44cfb2603641ca0876"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\source-5e6b7d8c0\\SUMMARY.md",
+      "bytes": 439,
+      "sha256": "686a8104dd3c703aa7178606fcad71f5f46ce24aa5b4064119db293c0dd06ec9"
+    }
+  ],
+  "author_manifest_sha256": "a0fed4eae71756fba7c59f1e7b0ccaca8dac6bb6167ce219fa363fffa4584687"
+}

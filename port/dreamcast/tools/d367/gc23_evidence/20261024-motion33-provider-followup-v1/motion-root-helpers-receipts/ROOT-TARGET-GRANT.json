@@ -1,0 +1,15 @@
+{
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "runtime": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+  "preparation_sha256": "59dafff7cfe11206238e66ab5b0a56c5c9f985c1303e3591fc051f944ea2db4b",
+  "runner_sha256": "0e7bfc7821905c19316d5dc2f0bca43e0b483f8f94d8f35b8c8ac95ea72cd08e",
+  "wrapper_sha256": "b5c68aa2867d498f8ccf2ecb126cf4758f05c04128823b2788b501590994e97d",
+  "source_review_sha256": "f3010b1e70ab7d55f4ecdbee57ead05357411fb951f5f464720940fcaaef811c",
+  "allocation": "One canonical gc-motion24 lease, one shared SDK slot, jobs1, 33 selected compile arms and full dependency passes",
+  "ram_and_output_cap_bytes": 268435456,
+  "c_floor_bytes": 25769803776,
+  "guests": 0,
+  "programme_or_recipe_changes": 0,
+  "root_approved": true,
+  "utc": "2026-10-24T07:23:35.1802894Z"
+}

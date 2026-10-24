@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+    466	      0	     24	    490	    1ea	/dev/shm/gc-motion24-target-run-0mftarg0/current-gc_asset_motion_unknown-gate1-motionon.o

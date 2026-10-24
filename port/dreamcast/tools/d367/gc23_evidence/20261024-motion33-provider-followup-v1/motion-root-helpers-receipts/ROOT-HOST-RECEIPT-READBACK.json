@@ -1,0 +1,22 @@
+{
+  "status": "ROOT_FROZEN_HOST_RECEIPT_READBACK_PASS",
+  "utc": "2026-10-24T07:09:53.270571+00:00",
+  "source": "5e6b7d8c0f76e7431f1a7787459faa41fb0b507c",
+  "runtime": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+  "source_pins_checked": 11,
+  "current_head": "aab201ceac0e18107f64a3212398afe916793327",
+  "metadata_successor_runtime_identity": true,
+  "first_readback_refusal": "Frozen Motion document changed in metadata-only successor; historical receipt now checked against exact Git source bytes, runtime and tests also checked live",
+  "receipt_members_checked": 4,
+  "receipt_manifest_sha256": "a0fed4eae71756fba7c59f1e7b0ccaca8dac6bb6167ce219fa363fffa4584687",
+  "author_host_tests": {
+    "discovered": 118,
+    "passed": 117,
+    "skipped": 1,
+    "wrapper_exit": 0
+  },
+  "root_test_rerun": false,
+  "independent_review": "pending",
+  "SDK_or_guest": false,
+  "I001_or_Motion_provenance_pass": false
+}

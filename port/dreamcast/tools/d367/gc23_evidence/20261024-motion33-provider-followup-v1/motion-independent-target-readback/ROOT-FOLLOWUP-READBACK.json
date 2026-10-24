@@ -1,0 +1,10 @@
+{
+  "status": "ROOT_FINAL_TARGET_RECEIPT_AND_WRAP_FOLLOWUP_BYTES_VERIFIED",
+  "root_manifest_sha256": "e1e870f6b9fd07f1bad4ad6840eb7ffbf0a117cd07f546998a59290486749fa8",
+  "root_metadata_files": 405,
+  "six_wrapper_rewrites_match_independent_baseline_inventory": true,
+  "genuinely_new_unresolved_imports": 0,
+  "initial_failed_report_preserved": true,
+  "SDK_commands_by_this_readback": 0,
+  "limit": "Root performed allocated SDK provider/link semantic controls. This author readback verifies stored metadata and baseline/new-import distinction only, without repeating SDK commands or asserting full programme/runtime/stack chain."
+}

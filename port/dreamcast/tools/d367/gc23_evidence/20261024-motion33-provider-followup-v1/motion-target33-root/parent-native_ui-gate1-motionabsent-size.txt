@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+ 140045	 100513	 156453	 397011	  60ed3	/dev/shm/gc-motion24-target-run-0mftarg0/parent-native_ui-gate1-motionabsent.o

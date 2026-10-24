@@ -1,0 +1,14 @@
+platform/native_model.cpp:215:6:void {anonymous}::project(float&, float&, float&, void*)	0	static
+platform/native_model.cpp:305:10:bool {anonymous}::Builder::vertex_indices(unsigned int, unsigned int, unsigned int, unsigned int, re4dc::render::RenderVertex&, float&)	132	static
+platform/native_model.cpp:449:10:bool {anonymous}::Builder::triangle(const Corner*, const Corner*, const Corner*) [with Corner = unsigned char]	460	static
+platform/native_model.cpp:566:10:bool {anonymous}::Builder::primitive(const Corner*, unsigned int, re4dc::render::DrawTopology) [with Corner = unsigned char]	128	static
+platform/native_model.cpp:914:21:re4dc_model_submit(const Re4dcModelPart*)::<lambda()>	72	static
+platform/native_model.cpp:713:17:void re4dc_model_submit(const Re4dcModelPart*)	6168	static
+platform/native_model.cpp:931:39:const Re4dcModelWorkStats* re4dc_model_work_stats()	0	static
+platform/native_model.cpp:933:17:void re4dc_model_detach_retained_storage()	0	static
+platform/native_model.cpp:938:17:void re4dc_model_preparation_frame()	0	static
+platform/native_model.cpp:943:41:const Re4dcPreparationStats* re4dc_model_preparation_stats()	0	static
+platform/native_model.cpp:950:17:void re4dc_model_invalidate_static_lighting()	28	static
+platform/native_model.cpp:959:21:unsigned int re4dc_model_source_stamp()	4	static
+platform/native_model.cpp:960:17:void re4dc_model_source_span(unsigned int, unsigned int)	12	static
+platform/native_model.cpp:963:17:void re4dc_model_skipped_writeback(unsigned int)	0	static

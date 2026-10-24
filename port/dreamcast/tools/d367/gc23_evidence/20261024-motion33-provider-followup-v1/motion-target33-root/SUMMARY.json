@@ -1,0 +1,293 @@
+{
+  "status": "SELECTED_SH4_33_ARMS_AND_DISABLED_IDENTITY_PASS",
+  "utc": "2026-10-24T07:28:42.348866+00:00",
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "runtime": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+  "parent": "870789095c4c14fbdbf22043447b249063d2ec3a",
+  "compiled_arms": 33,
+  "disabled_identity_groups": [
+    {
+      "unit": "native_ui",
+      "gate": 0,
+      "stripped_sha256": "ac5a107b9dfe8bfbd8432862b250eba29487803d4182e92d5d5bbc5467e88cb6",
+      "arms": [
+        "parent-native_ui-gate0-motionabsent",
+        "current-native_ui-gate0-motionabsent",
+        "current-native_ui-gate0-motionzero"
+      ]
+    },
+    {
+      "unit": "native_ui",
+      "gate": 1,
+      "stripped_sha256": "89b4bb8af78252c532c21295baf5bbb314c798cfe1ed903a6ef7322e6a2ede91",
+      "arms": [
+        "parent-native_ui-gate1-motionabsent",
+        "current-native_ui-gate1-motionabsent",
+        "current-native_ui-gate1-motionzero"
+      ]
+    },
+    {
+      "unit": "native_model",
+      "gate": 0,
+      "stripped_sha256": "2eb469809fd86ecf2f47effffc8b22da6ce1da2e48f57a257805e566e6e2a53a",
+      "arms": [
+        "parent-native_model-gate0-motionabsent",
+        "current-native_model-gate0-motionabsent",
+        "current-native_model-gate0-motionzero"
+      ]
+    },
+    {
+      "unit": "native_model",
+      "gate": 1,
+      "stripped_sha256": "efe631b1add15c36539f294ac155b3edec91da416cdedb85cb8b46ea66b24e4b",
+      "arms": [
+        "parent-native_model-gate1-motionabsent",
+        "current-native_model-gate1-motionabsent",
+        "current-native_model-gate1-motionzero"
+      ]
+    },
+    {
+      "unit": "native_actor_fast",
+      "gate": 0,
+      "stripped_sha256": "481ee1b3113b8cec59e92f9e814bde79cdcfab581dd45d790b86882ac7748e9c",
+      "arms": [
+        "parent-native_actor_fast-gate0-motionabsent",
+        "current-native_actor_fast-gate0-motionabsent",
+        "current-native_actor_fast-gate0-motionzero"
+      ]
+    },
+    {
+      "unit": "native_actor_fast",
+      "gate": 1,
+      "stripped_sha256": "1e233b13e105ee2a3b5a84db16df4f1695b07d64c36526ec61318804c3f9b0d5",
+      "arms": [
+        "parent-native_actor_fast-gate1-motionabsent",
+        "current-native_actor_fast-gate1-motionabsent",
+        "current-native_actor_fast-gate1-motionzero"
+      ]
+    },
+    {
+      "unit": "model_bridge",
+      "gate": 0,
+      "stripped_sha256": "8c83a4c065b137695b095822145a719293b49aac304d92fb80dd35c7af33d43f",
+      "arms": [
+        "parent-model_bridge-gate0-motionabsent",
+        "current-model_bridge-gate0-motionabsent",
+        "current-model_bridge-gate0-motionzero"
+      ]
+    },
+    {
+      "unit": "model_bridge",
+      "gate": 1,
+      "stripped_sha256": "df72b5695e38f53167bdd945914bea2955692e538f331703f84b75f6c96158a9",
+      "arms": [
+        "parent-model_bridge-gate1-motionabsent",
+        "current-model_bridge-gate1-motionabsent",
+        "current-model_bridge-gate1-motionzero"
+      ]
+    }
+  ],
+  "empty_helper_arms": 4,
+  "selected_ON_delta": {
+    "text": 1286,
+    "data": 0,
+    "bss": 24
+  },
+  "raw_motion_state_bytes": 24,
+  "per_function_self_frame_changes": [
+    {
+      "unit": "native_ui",
+      "function": "void {anonymous}::gcasset_model_accept(const void*, unsigned int)",
+      "parent": {
+        "frame": 4,
+        "kind": "static"
+      },
+      "on": {
+        "frame": 12,
+        "kind": "static"
+      }
+    },
+    {
+      "unit": "native_model",
+      "function": "void re4dc_model_submit(const Re4dcModelPart*)",
+      "parent": {
+        "frame": 6168,
+        "kind": "static"
+      },
+      "on": {
+        "frame": 6172,
+        "kind": "static"
+      }
+    },
+    {
+      "unit": "native_actor_fast",
+      "function": "0(Re4dcModelPart&, OneWindow&)",
+      "parent": {
+        "frame": 1136,
+        "kind": "static"
+      },
+      "on": {
+        "frame": 1148,
+        "kind": "static"
+      }
+    },
+    {
+      "unit": "native_actor_fast",
+      "function": "0(const Re4dcModelPart*)",
+      "parent": {
+        "frame": 1716,
+        "kind": "static"
+      },
+      "on": null
+    },
+    {
+      "unit": "native_actor_fast",
+      "function": "bool {anonymous}::qualifies(const Re4dcModelPart&)",
+      "parent": {
+        "frame": 52,
+        "kind": "static"
+      },
+      "on": null
+    },
+    {
+      "unit": "native_actor_fast",
+      "function": "int owned_submit_runs(Re4dcModelPart*, const Re4dcActorDrawRun*, unsigned int, const Re4dcActorOwnedMaterial*, unsigned int, const Re4dcActorWorkspaceLease*, const Re4dcActorSkinLease*, const Re4dcActorTextureLease*, bool)",
+      "parent": {
+        "frame": 1456,
+        "kind": "static"
+      },
+      "on": {
+        "frame": 1468,
+        "kind": "static"
+      }
+    },
+    {
+      "unit": "native_actor_fast",
+      "function": "int re4dc_actor_submit(const Re4dcModelPart*)",
+      "parent": {
+        "frame": 8,
+        "kind": "static"
+      },
+      "on": {
+        "frame": 1740,
+        "kind": "static"
+      }
+    },
+    {
+      "unit": "native_actor_fast",
+      "function": "unsigned int re4dc_actor_submit_chunks(Re4dcModelPart*, const Re4dcActorChunk*, unsigned int)",
+      "parent": {
+        "frame": 1392,
+        "kind": "static"
+      },
+      "on": {
+        "frame": 1400,
+        "kind": "static"
+      }
+    },
+    {
+      "unit": "model_bridge",
+      "function": "void sob::flush()",
+      "parent": {
+        "frame": 308,
+        "kind": "static"
+      },
+      "on": {
+        "frame": 312,
+        "kind": "static"
+      }
+    }
+  ],
+  "helper_self_frames": {
+    "void re4dc_gcasset::{anonymous}::accept(unsigned int, unsigned int)": {
+      "frame": 0,
+      "kind": "static"
+    },
+    "unsigned int re4dc_gcasset::motion_model_reason()": {
+      "frame": 0,
+      "kind": "static"
+    },
+    "unsigned int re4dc_gcasset::motion_enter(unsigned int)": {
+      "frame": 0,
+      "kind": "static"
+    },
+    "void re4dc_gcasset::motion_leave(unsigned int)": {
+      "frame": 0,
+      "kind": "static"
+    },
+    "void re4dc_gcasset::motion_prepare()": {
+      "frame": 0,
+      "kind": "static"
+    },
+    "void re4dc_gcasset::motion_accept_pending(unsigned int)": {
+      "frame": 4,
+      "kind": "static"
+    },
+    "void re4dc_gcasset::motion_accept_current(unsigned int)": {
+      "frame": 4,
+      "kind": "static"
+    },
+    "void re4dc_gcasset::motion_pending_accounted()": {
+      "frame": 0,
+      "kind": "static"
+    },
+    "void re4dc_gcasset::motion_unknown_flush()": {
+      "frame": 12,
+      "kind": "static"
+    }
+  },
+  "provider_closure": {
+    "baseline_wraps_verified": [
+      {
+        "reference": "___real_pvr_list_begin",
+        "existing_link_wrap": "pvr_list_begin",
+        "real_SDK_definition": "_pvr_list_begin"
+      },
+      {
+        "reference": "___real_pvr_poly_compile",
+        "existing_link_wrap": "pvr_poly_compile",
+        "real_SDK_definition": "_pvr_poly_compile"
+      },
+      {
+        "reference": "___real_pvr_poly_mod_compile",
+        "existing_link_wrap": "pvr_poly_mod_compile",
+        "real_SDK_definition": "_pvr_poly_mod_compile"
+      },
+      {
+        "reference": "___real_pvr_scene_finish",
+        "existing_link_wrap": "pvr_scene_finish",
+        "real_SDK_definition": "_pvr_scene_finish"
+      },
+      {
+        "reference": "___real_pvr_set_presort_mode",
+        "existing_link_wrap": "pvr_set_presort_mode",
+        "real_SDK_definition": "_pvr_set_presort_mode"
+      },
+      {
+        "reference": "___real_pvr_sprite_compile",
+        "existing_link_wrap": "pvr_sprite_compile",
+        "real_SDK_definition": "_pvr_sprite_compile"
+      }
+    ],
+    "remaining_unresolved": [],
+    "needed_count": 311,
+    "real_provider_scope": "Candidate real providers and selected objects only; no new full programme/map, aliases or stubs"
+  },
+  "input_pins_final_verified": 299,
+  "source_export_pins_final_verified": 242,
+  "full_dependency_sets_final_verified": 33,
+  "original_incomplete_report_sha256": "ac55f77721f954d1fbfdf9d36fafcf231d5f3a6e4630e8da1c0e43d4c9891124",
+  "wrap_result_sha256": "c17164cf1170ad9308a6723af82b7f1dafd1101dd43d6db4ab428dcc8db05fb1",
+  "AS_and_owned_output_cap": 268435456,
+  "observed_RSS_peak": "not separately sampled",
+  "owned_output_bytes": 25403896,
+  "slot_released": true,
+  "SDK_compile_rerun_after_checker_failure": false,
+  "limits": [
+    "Selected object delta, not full linked section/end or measured heap",
+    "Per-function self frames, not complete nested stack/highwater",
+    "Real provider candidates plus exact existing linker wrap controls, not a new full link/map",
+    "No configured catalog, Motion provenance, complete coverage, terminal, runtime/guest or physical acceptance",
+    "Original six-wrapper checker failure and two synthetic-control harness failures preserved"
+  ]
+}

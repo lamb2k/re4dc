@@ -1,0 +1,1217 @@
+{
+  "export": "/dev/shm/gc-motion24-target-prep-vwt4_qfe",
+  "files": {
+    "PREPARATION.json": {
+      "bytes": 599179,
+      "sha256": "59dafff7cfe11206238e66ab5b0a56c5c9f985c1303e3591fc051f944ea2db4b"
+    },
+    "generated/on/dbgwarp.h": {
+      "bytes": 52,
+      "sha256": "5bd416e52e19500fcd19148b6478d17f73598e8474167c921ca8ccb8568006f1"
+    },
+    "generated/on/model-position.h": {
+      "bytes": 37,
+      "sha256": "df1447f840fc0620e4c255d8bd3f868e20708ff6e98508f59af3f89052f0ca6d"
+    },
+    "generated/on/crash-screen.h": {
+      "bytes": 155,
+      "sha256": "9e302b23a2061d1870ea01ec909449a30aaf2e1f213ea0f240593d8be5a282ef"
+    },
+    "generated/on/model-room-strips.h": {
+      "bytes": 34,
+      "sha256": "faf6f9c2ab5417cd0c81915d40235eb3a09860971dc704ba1262186825c42d29"
+    },
+    "generated/on/native-reuse-audit.h": {
+      "bytes": 35,
+      "sha256": "2e3ded5dfb4fb30fd51e571a4144ebe60ca4f5dbe087678e92ce9069c84e5a04"
+    },
+    "generated/on/vmu-context-options.h": {
+      "bytes": 78,
+      "sha256": "ebe223687629759367416237eaaa19d866986ef4d138d874d3e3bd291f6807fc"
+    },
+    "generated/on/post30.h": {
+      "bytes": 230,
+      "sha256": "c7e8b8d3f3261369b695ef74fe5c043ba2b9a7cae93dcf1bb90859179a0637cf"
+    },
+    "generated/on/pace.h": {
+      "bytes": 465,
+      "sha256": "79af66a5060a5603df58a8db1dd5937384929028037195d45dcbaa362d1d5ca7"
+    },
+    "generated/on/tahash.h": {
+      "bytes": 85,
+      "sha256": "d8c463d1534f7fdd66a8677bc25332396dbbd8a1c9100f744a15fd66bac61515"
+    },
+    "generated/on/blender30.h": {
+      "bytes": 97,
+      "sha256": "a30c3e86b1310b781408a53ed95da327b1e4eb5eba89a6daad9c9124603bbfc9"
+    },
+    "generated/on/scenery30.h": {
+      "bytes": 125,
+      "sha256": "af1859d4f6346b00615c64776b1b6f60dfddece35e4f94e342fbd0d76cf3ee2c"
+    },
+    "generated/on/effects30.h": {
+      "bytes": 653,
+      "sha256": "bf47edfaceefda6034404ebdcc433f5890747511ace921a489930148226654c5"
+    },
+    "generated/on/vmusave.h": {
+      "bytes": 147,
+      "sha256": "fe4b66e8056db1c595e8cfcdf66bcd322ec3844aaadb3012009b8f4b2c040758"
+    },
+    "generated/on/subscreen.h": {
+      "bytes": 193,
+      "sha256": "e1859086e91b60235c8b9eee3b22f1b0e12dc911ee8866aeeccc61d406892505"
+    },
+    "generated/on/frontend30.h": {
+      "bytes": 164,
+      "sha256": "6a91cd626e2110951a1370eb058b3f3aa3ba3a395cc754f20607836cf708b34e"
+    },
+    "generated/on/native-actor.h": {
+      "bytes": 588,
+      "sha256": "4a74d88e3310a5e866d4fb6fd439c7931e11ffb3a9fdf665f591e4650dc95361"
+    },
+    "generated/on/native-static.h": {
+      "bytes": 272,
+      "sha256": "60ce29f015392507f11f6e1e14a61952d5680c193ca3804205e114fd9eccf53c"
+    },
+    "generated/on/model-draw-plan.h": {
+      "bytes": 66,
+      "sha256": "50089b28dda897abb168e5f9686e411b6385efee3bb7cab2496c168b18f209e7"
+    },
+    "generated/on/pc-sampler.h": {
+      "bytes": 97,
+      "sha256": "a4803ff49ac30b0032845225a8b2a78fdc2e2362970bafefe6d51aa382220d64"
+    },
+    "generated/on/native-profile.h": {
+      "bytes": 38,
+      "sha256": "3b38efc681b58bf2d7a6b00e29f497f70dfff8007c246cf044f8cc087ec888bf"
+    },
+    "generated/on/d349-stack.h": {
+      "bytes": 36,
+      "sha256": "c76096ae0722f473c62a1f9e916f5f8f2ee92d497982887faec8c0ebd435679a"
+    },
+    "generated/on/pipeline30.h": {
+      "bytes": 1227,
+      "sha256": "9c69b5cce7f1a792ee44c6c64d57387c8da36c8467c9805af78d748974c77739"
+    },
+    "generated/on/pvr-stream.h": {
+      "bytes": 27,
+      "sha256": "ba49adda68ec87161b0afd4b84f528d1f0bb16d5fbd9177bec7cb1e0570aef6e"
+    },
+    "generated/on/route-movies.h": {
+      "bytes": 190,
+      "sha256": "d0f3b3b4a1ff466964b772874fbe95af30e23f2cf151a87955ea6b047e9e961b"
+    },
+    "generated/on/movie-world-arena.h": {
+      "bytes": 72,
+      "sha256": "7a4343f7ed32aaa45014973a4a0c78a6a1879cb211efb72b3966fabafdd6913f"
+    },
+    "generated/on/cabin-source.h": {
+      "bytes": 137,
+      "sha256": "dc9518c0eac2c04a10c86e2d02cb40ceb78eda41493d352a94d8520aac12f862"
+    },
+    "generated/on/quality-knobs.h": {
+      "bytes": 148,
+      "sha256": "2609cb756a614a964d3360770cf65e2dffb836f18e6e11b30540331f5885a2e4"
+    },
+    "generated/on/native-mes.h": {
+      "bytes": 61,
+      "sha256": "f99333ac52dcd9ccf2f09c6e77647f4ebd6995844b2a5f5212b0235668b2a099"
+    },
+    "generated/on/io-probe.h": {
+      "bytes": 25,
+      "sha256": "617620cd946566af2f7b024c112c66557988071ac5c0cf7e7aaf1c77c0757b75"
+    },
+    "generated/on/poison.h": {
+      "bytes": 27,
+      "sha256": "0df7ad970003913cd79558e88601d5b0a9f64b89cdd5cc957cd5bd14e35652cb"
+    },
+    "generated/off/dbgwarp.h": {
+      "bytes": 52,
+      "sha256": "5bd416e52e19500fcd19148b6478d17f73598e8474167c921ca8ccb8568006f1"
+    },
+    "generated/off/model-position.h": {
+      "bytes": 37,
+      "sha256": "df1447f840fc0620e4c255d8bd3f868e20708ff6e98508f59af3f89052f0ca6d"
+    },
+    "generated/off/crash-screen.h": {
+      "bytes": 155,
+      "sha256": "9e302b23a2061d1870ea01ec909449a30aaf2e1f213ea0f240593d8be5a282ef"
+    },
+    "generated/off/model-room-strips.h": {
+      "bytes": 34,
+      "sha256": "faf6f9c2ab5417cd0c81915d40235eb3a09860971dc704ba1262186825c42d29"
+    },
+    "generated/off/native-reuse-audit.h": {
+      "bytes": 35,
+      "sha256": "2e3ded5dfb4fb30fd51e571a4144ebe60ca4f5dbe087678e92ce9069c84e5a04"
+    },
+    "generated/off/vmu-context-options.h": {
+      "bytes": 78,
+      "sha256": "ebe223687629759367416237eaaa19d866986ef4d138d874d3e3bd291f6807fc"
+    },
+    "generated/off/post30.h": {
+      "bytes": 230,
+      "sha256": "c7e8b8d3f3261369b695ef74fe5c043ba2b9a7cae93dcf1bb90859179a0637cf"
+    },
+    "generated/off/pace.h": {
+      "bytes": 465,
+      "sha256": "79af66a5060a5603df58a8db1dd5937384929028037195d45dcbaa362d1d5ca7"
+    },
+    "generated/off/tahash.h": {
+      "bytes": 85,
+      "sha256": "d8c463d1534f7fdd66a8677bc25332396dbbd8a1c9100f744a15fd66bac61515"
+    },
+    "generated/off/blender30.h": {
+      "bytes": 97,
+      "sha256": "a30c3e86b1310b781408a53ed95da327b1e4eb5eba89a6daad9c9124603bbfc9"
+    },
+    "generated/off/scenery30.h": {
+      "bytes": 125,
+      "sha256": "af1859d4f6346b00615c64776b1b6f60dfddece35e4f94e342fbd0d76cf3ee2c"
+    },
+    "generated/off/effects30.h": {
+      "bytes": 653,
+      "sha256": "bf47edfaceefda6034404ebdcc433f5890747511ace921a489930148226654c5"
+    },
+    "generated/off/vmusave.h": {
+      "bytes": 147,
+      "sha256": "fe4b66e8056db1c595e8cfcdf66bcd322ec3844aaadb3012009b8f4b2c040758"
+    },
+    "generated/off/subscreen.h": {
+      "bytes": 193,
+      "sha256": "e1859086e91b60235c8b9eee3b22f1b0e12dc911ee8866aeeccc61d406892505"
+    },
+    "generated/off/frontend30.h": {
+      "bytes": 164,
+      "sha256": "6a91cd626e2110951a1370eb058b3f3aa3ba3a395cc754f20607836cf708b34e"
+    },
+    "generated/off/native-actor.h": {
+      "bytes": 588,
+      "sha256": "4a74d88e3310a5e866d4fb6fd439c7931e11ffb3a9fdf665f591e4650dc95361"
+    },
+    "generated/off/native-static.h": {
+      "bytes": 272,
+      "sha256": "60ce29f015392507f11f6e1e14a61952d5680c193ca3804205e114fd9eccf53c"
+    },
+    "generated/off/model-draw-plan.h": {
+      "bytes": 66,
+      "sha256": "50089b28dda897abb168e5f9686e411b6385efee3bb7cab2496c168b18f209e7"
+    },
+    "generated/off/pc-sampler.h": {
+      "bytes": 97,
+      "sha256": "a4803ff49ac30b0032845225a8b2a78fdc2e2362970bafefe6d51aa382220d64"
+    },
+    "generated/off/native-profile.h": {
+      "bytes": 38,
+      "sha256": "3b38efc681b58bf2d7a6b00e29f497f70dfff8007c246cf044f8cc087ec888bf"
+    },
+    "generated/off/d349-stack.h": {
+      "bytes": 36,
+      "sha256": "c76096ae0722f473c62a1f9e916f5f8f2ee92d497982887faec8c0ebd435679a"
+    },
+    "generated/off/pipeline30.h": {
+      "bytes": 1227,
+      "sha256": "9c69b5cce7f1a792ee44c6c64d57387c8da36c8467c9805af78d748974c77739"
+    },
+    "generated/off/pvr-stream.h": {
+      "bytes": 27,
+      "sha256": "ba49adda68ec87161b0afd4b84f528d1f0bb16d5fbd9177bec7cb1e0570aef6e"
+    },
+    "generated/off/route-movies.h": {
+      "bytes": 190,
+      "sha256": "d0f3b3b4a1ff466964b772874fbe95af30e23f2cf151a87955ea6b047e9e961b"
+    },
+    "generated/off/movie-world-arena.h": {
+      "bytes": 72,
+      "sha256": "7a4343f7ed32aaa45014973a4a0c78a6a1879cb211efb72b3966fabafdd6913f"
+    },
+    "generated/off/cabin-source.h": {
+      "bytes": 137,
+      "sha256": "dc9518c0eac2c04a10c86e2d02cb40ceb78eda41493d352a94d8520aac12f862"
+    },
+    "generated/off/quality-knobs.h": {
+      "bytes": 148,
+      "sha256": "2609cb756a614a964d3360770cf65e2dffb836f18e6e11b30540331f5885a2e4"
+    },
+    "generated/off/native-mes.h": {
+      "bytes": 61,
+      "sha256": "f99333ac52dcd9ccf2f09c6e77647f4ebd6995844b2a5f5212b0235668b2a099"
+    },
+    "generated/off/io-probe.h": {
+      "bytes": 25,
+      "sha256": "617620cd946566af2f7b024c112c66557988071ac5c0cf7e7aaf1c77c0757b75"
+    },
+    "generated/off/poison.h": {
+      "bytes": 27,
+      "sha256": "0df7ad970003913cd79558e88601d5b0a9f64b89cdd5cc957cd5bd14e35652cb"
+    },
+    "current/include/view.h": {
+      "bytes": 1670,
+      "sha256": "e6b81450a954e524146261cda5703302d055afd58108fd85df4c9781efdc9087"
+    },
+    "current/include/vec.h": {
+      "bytes": 7572,
+      "sha256": "7b8bc9b2715fcd8b06b9e66c92ff0164a114cd2ca64e9dd8cf6db8dab8dd1a7d"
+    },
+    "current/include/va_ppc.h": {
+      "bytes": 3470,
+      "sha256": "a141e41ab83325c63be833a59e98bc90e1be761f7753f0887469184145d94129"
+    },
+    "current/include/types.h": {
+      "bytes": 3235,
+      "sha256": "d88ba2c842abf4efdce4f3ea40f3039ff73e1196be17190508ba53e05bf6ba3d"
+    },
+    "current/include/trans_ot.h": {
+      "bytes": 2766,
+      "sha256": "10f21bdd7a8e53de6ad007f398663e99049e0a295dcc203580d199ba9f535c48"
+    },
+    "current/include/trans.h": {
+      "bytes": 2274,
+      "sha256": "f723867ba0a1a6f9fb262067bb19d087f5d5c355338e948dd6acdf6e608554b4"
+    },
+    "current/include/player.h": {
+      "bytes": 11231,
+      "sha256": "a0d87601f9db55fad40c7aa9ba6cfd4ef16c50aa43f2c84dea699a010c151e04"
+    },
+    "current/include/pl_wep.h": {
+      "bytes": 5302,
+      "sha256": "0c0bf627c4bbcccd662e1ed39937e394cb102f48855b6cfabaec0695aab42853"
+    },
+    "current/include/pl_cloth.h": {
+      "bytes": 3594,
+      "sha256": "aa9161837952c327278d158c50c412c69859c9907f973b0d96e173c692514a13"
+    },
+    "current/include/pl_body.h": {
+      "bytes": 2739,
+      "sha256": "ffe21e96fa67adc151204ce5e64c18db91ccc87ee2b3824ad69ab51543cb81d9"
+    },
+    "current/include/pendulum.h": {
+      "bytes": 4357,
+      "sha256": "a7b8552e898d051b6046774a28aec97203b0b317cd91ecc15e1e3ef7202f09a4"
+    },
+    "current/include/objBull.h": {
+      "bytes": 877,
+      "sha256": "abd19901f633c2fa837e24b9aa9af4d76944a52215331757ed49b161e474af2f"
+    },
+    "current/include/obj.h": {
+      "bytes": 35623,
+      "sha256": "f1ef75fafca7efcc3d982b5b7dc9d73ef2170364fd861a7b16b958802d417768"
+    },
+    "current/include/model.h": {
+      "bytes": 31880,
+      "sha256": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5"
+    },
+    "current/include/math_sub.h": {
+      "bytes": 4966,
+      "sha256": "b22ea560254b33002780cc9067e3065136245d731550de227b0c340e8af04507"
+    },
+    "current/include/main_mem.h": {
+      "bytes": 3872,
+      "sha256": "7d4f1e41ae696fb77c0075d1f3cd9f5db019ce42632d71dd29d949793f7ef2a7"
+    },
+    "current/include/main.h": {
+      "bytes": 3583,
+      "sha256": "515e9281589e10154f273aa82c8503f4648b489eca2933ebf22674439c2eda58"
+    },
+    "current/include/lightPath.h": {
+      "bytes": 841,
+      "sha256": "7a2db7f00ab5d9dcf42151016de26c9651ded9e5a2f863db64a61df0164e9e5d"
+    },
+    "current/include/light.h": {
+      "bytes": 14105,
+      "sha256": "17f3609a7e81275f51571497bd00624571c93e24b725713081a9237b1d10540c"
+    },
+    "current/include/gx.h": {
+      "bytes": 8362,
+      "sha256": "471d0065eb45b8de8b47289e50534778f4a83bff15bbff7eb55780f9758de4e8"
+    },
+    "current/include/global.h": {
+      "bytes": 19112,
+      "sha256": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a"
+    },
+    "current/include/emwep.h": {
+      "bytes": 6618,
+      "sha256": "9716e13bf175da777b9262ed4c66f2421f18299ffbe467e53aa6eea14632caec"
+    },
+    "current/include/emtree.h": {
+      "bytes": 3442,
+      "sha256": "b4fe2913060f107234979359bbf16ce1b010f448c91fb300409ab2a76ff88a62"
+    },
+    "current/include/emshield.h": {
+      "bytes": 3294,
+      "sha256": "0154efacf3def4cf3cbffbbcdacd51de0f0b14febd30272c28abdbde12db5a0c"
+    },
+    "current/include/emhit.h": {
+      "bytes": 3863,
+      "sha256": "c2ae8b515a9e6cec3903e75a01217f06d5501d08677fb71bc8bcdc7a6e80efe4"
+    },
+    "current/include/em10.h": {
+      "bytes": 19754,
+      "sha256": "c6ab1e95154903cf0eb007f9258266b50afd7095fc1741e597aa9f174b21fbda"
+    },
+    "current/include/em.h": {
+      "bytes": 21283,
+      "sha256": "3fde0e04cd508f086be1c193bc761b55e3ff8ee7cb08c522c344b4d14b19e74f"
+    },
+    "current/include/db_log.h": {
+      "bytes": 2704,
+      "sha256": "d3b7c882b8499bb61ec4f74efa2dd6233ca38bec31f273a95d3dbeb1a17243c1"
+    },
+    "current/include/camera.h": {
+      "bytes": 2482,
+      "sha256": "d22b4698b6f90eb4a5aab88f2d289b967c590ec409c51f9129b47829907bb33b"
+    },
+    "current/include/cManager.h": {
+      "bytes": 19670,
+      "sha256": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20"
+    },
+    "current/include/atariInfo.h": {
+      "bytes": 6210,
+      "sha256": "45bc12b409e0e28ab66b43867d4b8404502dcf0508f5b46b0c0204d6366623b8"
+    },
+    "current/port/dreamcast/room/texture_package.hpp": {
+      "bytes": 12818,
+      "sha256": "126e73c96162585d3ea74973bd0655a7d73b1a5747b646c09bcb2a3c25f27f8c"
+    },
+    "current/port/dreamcast/room/source_lighting.hpp": {
+      "bytes": 1742,
+      "sha256": "dfc9fd1e8bd4f30a11be65d59146d1d48d3dfcc0b392ed35fa18e665b3d50e45"
+    },
+    "current/port/dreamcast/room/room_storage.hpp": {
+      "bytes": 3523,
+      "sha256": "7d501f89e0d551ab17da30a432f234b7b165c5a2c5de500e7abf64c5168b24c0"
+    },
+    "current/port/dreamcast/room/pvr_geometry.hpp": {
+      "bytes": 4240,
+      "sha256": "0e7d6a83bff8a5e76794aea8e4da75a7adfc9c497f9b5ccb815a79a4e3d75d3c"
+    },
+    "current/port/dreamcast/room/native_draw_plan.hpp": {
+      "bytes": 4944,
+      "sha256": "951dffb90793f7afa8a6191720425ea14c49a65be46bb490bc288a6cf95f9405"
+    },
+    "current/port/dreamcast/room/gpu_lifecycle.hpp": {
+      "bytes": 197,
+      "sha256": "af53be33ac070625425b5afeaf56955151507e16533ee2feab294ebd4c74ed91"
+    },
+    "current/port/dreamcast/game/world_scratch.h": {
+      "bytes": 7374,
+      "sha256": "6e6b0f1f2b2d9f5762708a21a2c6c0f5ba0308c04b4332534d80b6456934d5b6"
+    },
+    "current/port/dreamcast/game/model_bridge.cpp": {
+      "bytes": 57260,
+      "sha256": "5a38b902225bd8b8fb8e8ad39bdba91dee04e123c5dde29bfc5f08178eba0c9e"
+    },
+    "current/port/dreamcast/game/gx_fast.h": {
+      "bytes": 2775,
+      "sha256": "e8e981f1afaec9a5b115e05a36f2abc6c72f41f27ac9f1ceaa18cb0c8da74959"
+    },
+    "current/port/dreamcast/game/gc_asset_gate.mk": {
+      "bytes": 2731,
+      "sha256": "4e34c10a9a44aa749ce2182e3756eb94f96495942f9a13f9d518b3c9265546a2"
+    },
+    "current/port/dreamcast/game/charbake_variants.h": {
+      "bytes": 2149,
+      "sha256": "0aecf29a5a24092f87e7c8c1971d421b0b47d09cde269858828a011b07a70b29"
+    },
+    "current/port/dreamcast/tools/d367/texture_rect21/world_rect_bind.h": {
+      "bytes": 2666,
+      "sha256": "d45021a03f771847731bbef020588030a5da2e21320760bd11eadbee0d3667b9"
+    },
+    "current/port/dreamcast/tools/d367/texture_rect21/scoped_representations.inc": {
+      "bytes": 69428,
+      "sha256": "d853037aafafd9484aceb4494ea74d08345088108e09226e76be3624c5d558f2"
+    },
+    "current/port/dreamcast/game/platform/native_ui.cpp": {
+      "bytes": 532136,
+      "sha256": "df4157517b49e5ae6ea0f352863a576d58deb16f5c2fe9cabbab3c5552ec0f85"
+    },
+    "current/port/dreamcast/game/platform/native_model.cpp": {
+      "bytes": 53911,
+      "sha256": "e2f2dfd211515a56db63f0f964dc959ad15fe20589a11dc55f89b0178148efbe"
+    },
+    "current/port/dreamcast/game/platform/native_actor_rigid.inc": {
+      "bytes": 4643,
+      "sha256": "868437ecdab75d6ed5bbf03ae363520ee2a203543920fa1f2bf6a16e48448eda"
+    },
+    "current/port/dreamcast/game/platform/native_actor_fast.cpp": {
+      "bytes": 348121,
+      "sha256": "a8c98d22da0fcd03e58b519f82ec39942d8171b71b464c7fe6322e2c3cb9e018"
+    },
+    "current/port/dreamcast/game/platform/gc_asset_motion_unknown.cpp": {
+      "bytes": 2265,
+      "sha256": "961c6a3c42319fdc1cd86536482e051111f6cfefc64b3ce590d0a6f98efae48a"
+    },
+    "current/port/dreamcast/game/platform/gc_asset_gate.cpp": {
+      "bytes": 19622,
+      "sha256": "8e271fbe41023a5dd1e2e0d2d4163e6cacc8389b830ecd7a10848f680ac783d9"
+    },
+    "current/port/dreamcast/game/platform/chunk_submit.h": {
+      "bytes": 5930,
+      "sha256": "5257805131e6b5222e002a2a72053f5c33b03ef88790d370748c08e24fd53e5a"
+    },
+    "current/port/dreamcast/game/platform/include/warp_late.h": {
+      "bytes": 2583,
+      "sha256": "b4189647177075921b64c7fd383349c7d31778292c9b21d68764441f3bf59b56"
+    },
+    "current/port/dreamcast/game/platform/include/texpack_payload_retry.inc": {
+      "bytes": 2368,
+      "sha256": "915601b92d8a9d10d763a377da6680c1579d39ad9109a1750f402fa3f8ed8f38"
+    },
+    "current/port/dreamcast/game/platform/include/texpack_index.inc": {
+      "bytes": 14013,
+      "sha256": "bf95fea5f7bc4881fe438b7c57baea7dc086b34a059573185d6fea8170e02c1d"
+    },
+    "current/port/dreamcast/game/platform/include/ta_direct.hpp": {
+      "bytes": 1300,
+      "sha256": "737faccbe29bdbd8c6a24fec0d5217f1ee992369f1405a4359ece947b8348cbe"
+    },
+    "current/port/dreamcast/game/platform/include/subscreen_quad_geometry.hpp": {
+      "bytes": 4431,
+      "sha256": "062db0e9535002d4dd7728265b88da76d537d2ce73d03414a52fbe7e4876a512"
+    },
+    "current/port/dreamcast/game/platform/include/source_actor_owner_ledger.inc": {
+      "bytes": 1350,
+      "sha256": "41daf70a383413cf1db2869f3e19d20c9a554185c64e6fedc15e544364db6d49"
+    },
+    "current/port/dreamcast/game/platform/include/scenery_submit_batch.h": {
+      "bytes": 682,
+      "sha256": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106"
+    },
+    "current/port/dreamcast/game/platform/include/re4dc_vmu.h": {
+      "bytes": 504,
+      "sha256": "ffb89121935c8eabe3ef3dbccc8fc5032ad5618a8de4cc4e6973b1e459304ebc"
+    },
+    "current/port/dreamcast/game/platform/include/re4dc_screen.h": {
+      "bytes": 2206,
+      "sha256": "34688a35cd9592ac9c77f8298ae1ba6cca1f2d51e9de30d27f8c4f532138cb8f"
+    },
+    "current/port/dreamcast/game/platform/include/re4dc_prelude.h": {
+      "bytes": 1460,
+      "sha256": "25e2e3dd536dce40dc03b5e42a26dc7149de4768a1d8ecb707c2e46474b9c50f"
+    },
+    "current/port/dreamcast/game/platform/include/re4dc_platform.h": {
+      "bytes": 3683,
+      "sha256": "c8b079f982c2db756e38ed4587f71e62a7567e060f504612e40beaf259410ddf"
+    },
+    "current/port/dreamcast/game/platform/include/re4dc_pad_prompts.h": {
+      "bytes": 924,
+      "sha256": "906323853612ac1ec2de506376ccb4f8c280b4c8f0740efcbe6b051720120b59"
+    },
+    "current/port/dreamcast/game/platform/include/re4dc_manual_pages.h": {
+      "bytes": 2115,
+      "sha256": "39a0e46e3e068b49e1d53d38f77a035db99c6c09df3976b702aaa7122cc659ee"
+    },
+    "current/port/dreamcast/game/platform/include/ps2_source_world.h": {
+      "bytes": 5041,
+      "sha256": "5881716a958f0bc6dff045e45bc660b57884c0050cdfd306b8c490528f0ca029"
+    },
+    "current/port/dreamcast/game/platform/include/pc_sampler.h": {
+      "bytes": 2818,
+      "sha256": "fd921feb0d82c2bd0d58134c85d963c7ca12646604421377a2481d85e92d85f0"
+    },
+    "current/port/dreamcast/game/platform/include/native_water_ps2.inc": {
+      "bytes": 11447,
+      "sha256": "f9bf5c6e9ac778d0a9ed7813ac4ff7f0eedf1e8150ddc3f90f37ba83081ad11a"
+    },
+    "current/port/dreamcast/game/platform/include/native_ui_source_world.inc": {
+      "bytes": 12620,
+      "sha256": "673ab4f393ee942b27700d5f8bc9337903470e98ef60b09ee2028324cdeba46e"
+    },
+    "current/port/dreamcast/game/platform/include/native_ui_actor_material.inc": {
+      "bytes": 1106,
+      "sha256": "20d37e8f49ef98289e691593061dbf53bbed7d0ad686f423fab46416d67b328b"
+    },
+    "current/port/dreamcast/game/platform/include/native_ui_actor_fade.inc": {
+      "bytes": 5788,
+      "sha256": "c5a00e676be5c00d5677a0b27186f9c8127ac4dfdb6d9c288cfe6f389aefeafc"
+    },
+    "current/port/dreamcast/game/platform/include/native_ui.h": {
+      "bytes": 7767,
+      "sha256": "7490e37bbe989399aa75108cf880027a4943da89ffa4999f272b0eccf4ffb882"
+    },
+    "current/port/dreamcast/game/platform/include/native_static.h": {
+      "bytes": 2848,
+      "sha256": "d5ab6ca8a55c124b6474b70e0f9ac5724d9aca5e77de0547009b786cbcb667ef"
+    },
+    "current/port/dreamcast/game/platform/include/native_reuse_audit.hpp": {
+      "bytes": 5085,
+      "sha256": "2153c5e10ff49e851a6d1a31e65c8fc99bf0bf3d77d73d7bd1b26306f9d0f21c"
+    },
+    "current/port/dreamcast/game/platform/include/native_render_profile.hpp": {
+      "bytes": 5469,
+      "sha256": "0776aa713d3e4e0c608b3d847e04b528a60d13005ab72966f91927560f149bf3"
+    },
+    "current/port/dreamcast/game/platform/include/native_ps2_world.h": {
+      "bytes": 726,
+      "sha256": "8ab8b3421b9ce095d86cb86f3e0e918a09ef47d0e7d6be9ef77f01950e56e411"
+    },
+    "current/port/dreamcast/game/platform/include/native_model.h": {
+      "bytes": 11451,
+      "sha256": "40b01fbcb66e8f2f89009e2532b5eb6c3db9ddcbe27c4d1a00d7682b2d6e0dde"
+    },
+    "current/port/dreamcast/game/platform/include/native_io.h": {
+      "bytes": 1504,
+      "sha256": "249cbab48d5dbc6ee48159afa26ac1d4a23d272e9c6b00a01697e89e26feec86"
+    },
+    "current/port/dreamcast/game/platform/include/native_event_file.h": {
+      "bytes": 3050,
+      "sha256": "9b03201ec028db70f1b699acaae090ca0f952038d786f81157a887d5271872fd"
+    },
+    "current/port/dreamcast/game/platform/include/native_effect_strip21.inc": {
+      "bytes": 12815,
+      "sha256": "b20bf475008727a546132ea6ea29bbcb43969afef59a0ac6c7af7321e9677992"
+    },
+    "current/port/dreamcast/game/platform/include/native_effect_stage1_prepare.inc": {
+      "bytes": 3918,
+      "sha256": "645160ffccbe0c2e5c976c96e7cc82c3f134bc5fc5ad602bdd652650a7b68d17"
+    },
+    "current/port/dreamcast/game/platform/include/native_effect_stage1_batch.inc": {
+      "bytes": 7117,
+      "sha256": "9403a42bd9b73dfcdd340c8b13f77525ced9f09e7451dc56c2eeb81a8de5bca8"
+    },
+    "current/port/dreamcast/game/platform/include/native_cabin.h": {
+      "bytes": 2847,
+      "sha256": "d47467dfb29a17dd344c03cb45f77408ba89914343499edd03646844bada5660"
+    },
+    "current/port/dreamcast/game/platform/include/native_actor_owner_workspace.inc": {
+      "bytes": 1997,
+      "sha256": "4c758d18c1641af7f2524b163f7ec1ef1e8a680e5557aa0f05ad26fcac4da035"
+    },
+    "current/port/dreamcast/game/platform/include/native_actor_owner_submit.inc": {
+      "bytes": 105,
+      "sha256": "78081db9815549382f80c1321a41b6d116c8dbff32ad36f2ecfc85b73bd2ec23"
+    },
+    "current/port/dreamcast/game/platform/include/native_actor_owner_runs.inc": {
+      "bytes": 10516,
+      "sha256": "8d84b5e1b7a653a8a6fe439cdb9800f7571b6a74d6036b61c988071ed9b7bea5"
+    },
+    "current/port/dreamcast/game/platform/include/native_actor_owner_registry.inc": {
+      "bytes": 9379,
+      "sha256": "702c915b1667de9502c298e60d08c1b3b008d31db0d71079511c92faddba068f"
+    },
+    "current/port/dreamcast/game/platform/include/native_actor_leon_pipe.inc": {
+      "bytes": 9998,
+      "sha256": "1f9229a067d5a757032af332a0dc48abfb45a10bf29a8515dab705f74c128bee"
+    },
+    "current/port/dreamcast/game/platform/include/native_actor.hpp": {
+      "bytes": 7635,
+      "sha256": "0f5a1c001c5edb53e4ce9fc9d4a6ffabc0b09ca62d2fe42b3b51559ffb871585"
+    },
+    "current/port/dreamcast/game/platform/include/movie_world_arena.h": {
+      "bytes": 1258,
+      "sha256": "8d0427cde56a4556c0a098cd17fbc9bbdcc04b475f3f6358110501b8eeaa4815"
+    },
+    "current/port/dreamcast/game/platform/include/manual_pages_native.inc": {
+      "bytes": 5913,
+      "sha256": "c30e4c36e0ea4d2caaaae7ed47b79470bc026a7f904fd7687ca629b9cc876921"
+    },
+    "current/port/dreamcast/game/platform/include/manual_pages_keys.inc": {
+      "bytes": 1924,
+      "sha256": "6aa4cef86c0ff36c322f99dc4eccb3ee42cb92b571721e7f2bc15bd1565cd6e8"
+    },
+    "current/port/dreamcast/game/platform/include/hud_source_mask_native.inc": {
+      "bytes": 2410,
+      "sha256": "ec6622706bdbee729919997756f226ad5959ddfe511fe73b02049bf9957bf755"
+    },
+    "current/port/dreamcast/game/platform/include/hud_source_mask_keys.inc": {
+      "bytes": 683,
+      "sha256": "f4bed90d8c872592adce9a34c11670868e67c58f676cd15e0d4997cbc3c1ef68"
+    },
+    "current/port/dreamcast/game/platform/include/hud_source_mask.h": {
+      "bytes": 435,
+      "sha256": "9960a824f2300100ad6ace4fe1271da552b46ff960e24c392a324ae76979fc6b"
+    },
+    "current/port/dreamcast/game/platform/include/gc_asset_sha.inc": {
+      "bytes": 2825,
+      "sha256": "f62ded088c455df1c75d9eb380db314af7b6c28344885623767c93ec69f7c019"
+    },
+    "current/port/dreamcast/game/platform/include/gc_asset_payloads.h": {
+      "bytes": 3250,
+      "sha256": "28785476705627bc9e872a3cc79c0bcddc9b699f5d4fdeedaeeed7b499855842"
+    },
+    "current/port/dreamcast/game/platform/include/gc_asset_packet_cursor.h": {
+      "bytes": 1182,
+      "sha256": "b44c680240b624492b5a62f6ff22c181b8cdac684cac8cc8300b74a0ee59cc98"
+    },
+    "current/port/dreamcast/game/platform/include/gc_asset_movie_stream.h": {
+      "bytes": 538,
+      "sha256": "ef88e8381929fcbdb9d19b067bbe12f5553372a964d76d32c3668f25671f84e0"
+    },
+    "current/port/dreamcast/game/platform/include/gc_asset_movie.h": {
+      "bytes": 433,
+      "sha256": "0755ba58aaffac5f9a563a6e2f3bb7c8f2604b965d83a2b5d822a1e50eaecf0e"
+    },
+    "current/port/dreamcast/game/platform/include/gc_asset_motion_unknown.h": {
+      "bytes": 1845,
+      "sha256": "2d61f845fed695c66f078fdb5135317c6a1c60fe5cbb18579ece0d7430f42c67"
+    },
+    "current/port/dreamcast/game/platform/include/gc_asset_members.h": {
+      "bytes": 2108,
+      "sha256": "22c174a00ce0fc98788694babdd6b1a0218d20a3ed2171442caf025801a3e637"
+    },
+    "current/port/dreamcast/game/platform/include/gc_asset_lifecycle.h": {
+      "bytes": 353,
+      "sha256": "8b986321ed5916de5aadcad4b5b24a94144294a7b71db71d5fdc77e0ca59b4ff"
+    },
+    "current/port/dreamcast/game/platform/include/gc_asset_index.inc": {
+      "bytes": 3133,
+      "sha256": "69ed9219291c0e22802852edf28ce315356860fb82e9fdb6ee590a3741c4f9ec"
+    },
+    "current/port/dreamcast/game/platform/include/gc_asset_gate.h": {
+      "bytes": 5972,
+      "sha256": "c8fb4b2435a46487ecec8b03f1c5a4176f429cdfbafbb8e0dbb5930100d74517"
+    },
+    "current/port/dreamcast/game/platform/include/gc_asset_audio.h": {
+      "bytes": 1854,
+      "sha256": "ec4f4a362715e0d721b25e9cfa3797d78407486f258e9a9d61135fbfbcc5c056"
+    },
+    "current/port/dreamcast/game/platform/include/gc_asset_actor.h": {
+      "bytes": 2202,
+      "sha256": "a43ded544b66ba81c1f6cd22c6b92453198e878b58f6e411df7d4581de1db8eb"
+    },
+    "current/port/dreamcast/game/platform/include/fx_sprite_trim_table.inc": {
+      "bytes": 4377,
+      "sha256": "9e58e010758bbbe87899931e34f8b1749cecc700c4023f2ec5a0fb768a143e93"
+    },
+    "current/port/dreamcast/game/platform/include/fx_sprite_trim.inc": {
+      "bytes": 12784,
+      "sha256": "9f74b574f55c0897849e0956688c1f3e868797a44e7d7ec432182706598fe1d2"
+    },
+    "current/port/dreamcast/game/platform/include/effect_strip_geometry21.hpp": {
+      "bytes": 2168,
+      "sha256": "c86f8f5942f18ecb53c489a6089bd30a4a96c376a120525bd15b180159990481"
+    },
+    "current/port/dreamcast/game/platform/include/coarse_source_frame.h": {
+      "bytes": 9846,
+      "sha256": "8c5c81bc00286293b3c623b1bdd0ffbb05c4881fcd0e30edc66a0d21468ca746"
+    },
+    "current/port/dreamcast/game/platform/include/binocular_art_keys.h": {
+      "bytes": 320,
+      "sha256": "3c9f896170e0c8ac034facf7aff49588e7c64ba5ceb493f185f763f9249f9206"
+    },
+    "current/port/dreamcast/game/platform/include/bfc_class.h": {
+      "bytes": 868,
+      "sha256": "cce7ba975a27c9ccc2d18ffa22548a8aee085bfd52f6933f97cf9cbea1a41107"
+    },
+    "current/port/dreamcast/game/platform/include/actor_visibility_diag.h": {
+      "bytes": 5677,
+      "sha256": "b937fc425599f981fb0155583f361007a6266122e648b5dcc95662373a3dff0d"
+    },
+    "current/port/dreamcast/game/platform/include/actor_transaction_diag.h": {
+      "bytes": 1212,
+      "sha256": "ec07e2661ad07f8fdc7049b4effea9aa224ec15bd9f0fd655d1e9ff119b828ca"
+    },
+    "current/port/dreamcast/game/platform/include/actor_resource_lease.h": {
+      "bytes": 3351,
+      "sha256": "47d2432a34b6b4e296541e6a94e87b5c71cbfc300fd3b78ee0b71ddba4d7a0e9"
+    },
+    "current/port/dreamcast/game/platform/include/actor_prof.h": {
+      "bytes": 2983,
+      "sha256": "22d0b2ddae99e16b978c5bd6049bda4dcc24d96adb3436a8eefd79a2053395bf"
+    },
+    "current/port/dreamcast/game/platform/include/actor_plan.h": {
+      "bytes": 3367,
+      "sha256": "1907a3fa4516d12c624d0d2f18ea3687106d0da3efa83b3413c2381b3d64b626"
+    },
+    "current/port/dreamcast/game/platform/include/actor_native_owner.h": {
+      "bytes": 6545,
+      "sha256": "4e1e18332fb26e1b10e44a3721e71567ee812607e9e73b0c0fcaf1c033a0fc4a"
+    },
+    "current/port/dreamcast/game/platform/include/actor_light_probe.h": {
+      "bytes": 2702,
+      "sha256": "de18656c46a5a008aec55e0d7ff48b195724076b95a5c65a3f1a48b3a724040b"
+    },
+    "current/port/dreamcast/game/platform/include/actor_lifetime.h": {
+      "bytes": 2887,
+      "sha256": "9c204cb853b3f39a97d7c785110f98994c892ae30bb42216f7ab366b9b54fdfc"
+    },
+    "current/port/dreamcast/game/platform/include/actor_ganado_ps2_stump.h": {
+      "bytes": 1122,
+      "sha256": "c6781c08e9d9a4e7b59bd0c7f5dfb94f09841a03e2ff70238a2668e60d7def9f"
+    },
+    "current/port/dreamcast/game/platform/include/actor_death_fade.h": {
+      "bytes": 2411,
+      "sha256": "81b2071235401b43aaec6fdd92d8fbb64cd8ce52f26975fbe38ce275fa3f6025"
+    },
+    "parent/include/view.h": {
+      "bytes": 1670,
+      "sha256": "e6b81450a954e524146261cda5703302d055afd58108fd85df4c9781efdc9087"
+    },
+    "parent/include/vec.h": {
+      "bytes": 7572,
+      "sha256": "7b8bc9b2715fcd8b06b9e66c92ff0164a114cd2ca64e9dd8cf6db8dab8dd1a7d"
+    },
+    "parent/include/va_ppc.h": {
+      "bytes": 3470,
+      "sha256": "a141e41ab83325c63be833a59e98bc90e1be761f7753f0887469184145d94129"
+    },
+    "parent/include/types.h": {
+      "bytes": 3235,
+      "sha256": "d88ba2c842abf4efdce4f3ea40f3039ff73e1196be17190508ba53e05bf6ba3d"
+    },
+    "parent/include/trans_ot.h": {
+      "bytes": 2766,
+      "sha256": "10f21bdd7a8e53de6ad007f398663e99049e0a295dcc203580d199ba9f535c48"
+    },
+    "parent/include/trans.h": {
+      "bytes": 2274,
+      "sha256": "f723867ba0a1a6f9fb262067bb19d087f5d5c355338e948dd6acdf6e608554b4"
+    },
+    "parent/include/player.h": {
+      "bytes": 11231,
+      "sha256": "a0d87601f9db55fad40c7aa9ba6cfd4ef16c50aa43f2c84dea699a010c151e04"
+    },
+    "parent/include/pl_wep.h": {
+      "bytes": 5302,
+      "sha256": "0c0bf627c4bbcccd662e1ed39937e394cb102f48855b6cfabaec0695aab42853"
+    },
+    "parent/include/pl_cloth.h": {
+      "bytes": 3594,
+      "sha256": "aa9161837952c327278d158c50c412c69859c9907f973b0d96e173c692514a13"
+    },
+    "parent/include/pl_body.h": {
+      "bytes": 2739,
+      "sha256": "ffe21e96fa67adc151204ce5e64c18db91ccc87ee2b3824ad69ab51543cb81d9"
+    },
+    "parent/include/pendulum.h": {
+      "bytes": 4357,
+      "sha256": "a7b8552e898d051b6046774a28aec97203b0b317cd91ecc15e1e3ef7202f09a4"
+    },
+    "parent/include/objBull.h": {
+      "bytes": 877,
+      "sha256": "abd19901f633c2fa837e24b9aa9af4d76944a52215331757ed49b161e474af2f"
+    },
+    "parent/include/obj.h": {
+      "bytes": 35623,
+      "sha256": "f1ef75fafca7efcc3d982b5b7dc9d73ef2170364fd861a7b16b958802d417768"
+    },
+    "parent/include/model.h": {
+      "bytes": 31880,
+      "sha256": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5"
+    },
+    "parent/include/math_sub.h": {
+      "bytes": 4966,
+      "sha256": "b22ea560254b33002780cc9067e3065136245d731550de227b0c340e8af04507"
+    },
+    "parent/include/main_mem.h": {
+      "bytes": 3872,
+      "sha256": "7d4f1e41ae696fb77c0075d1f3cd9f5db019ce42632d71dd29d949793f7ef2a7"
+    },
+    "parent/include/main.h": {
+      "bytes": 3583,
+      "sha256": "515e9281589e10154f273aa82c8503f4648b489eca2933ebf22674439c2eda58"
+    },
+    "parent/include/lightPath.h": {
+      "bytes": 841,
+      "sha256": "7a2db7f00ab5d9dcf42151016de26c9651ded9e5a2f863db64a61df0164e9e5d"
+    },
+    "parent/include/light.h": {
+      "bytes": 14105,
+      "sha256": "17f3609a7e81275f51571497bd00624571c93e24b725713081a9237b1d10540c"
+    },
+    "parent/include/gx.h": {
+      "bytes": 8362,
+      "sha256": "471d0065eb45b8de8b47289e50534778f4a83bff15bbff7eb55780f9758de4e8"
+    },
+    "parent/include/global.h": {
+      "bytes": 19112,
+      "sha256": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a"
+    },
+    "parent/include/emwep.h": {
+      "bytes": 6618,
+      "sha256": "9716e13bf175da777b9262ed4c66f2421f18299ffbe467e53aa6eea14632caec"
+    },
+    "parent/include/emtree.h": {
+      "bytes": 3442,
+      "sha256": "b4fe2913060f107234979359bbf16ce1b010f448c91fb300409ab2a76ff88a62"
+    },
+    "parent/include/emshield.h": {
+      "bytes": 3294,
+      "sha256": "0154efacf3def4cf3cbffbbcdacd51de0f0b14febd30272c28abdbde12db5a0c"
+    },
+    "parent/include/emhit.h": {
+      "bytes": 3863,
+      "sha256": "c2ae8b515a9e6cec3903e75a01217f06d5501d08677fb71bc8bcdc7a6e80efe4"
+    },
+    "parent/include/em10.h": {
+      "bytes": 19754,
+      "sha256": "c6ab1e95154903cf0eb007f9258266b50afd7095fc1741e597aa9f174b21fbda"
+    },
+    "parent/include/em.h": {
+      "bytes": 21283,
+      "sha256": "3fde0e04cd508f086be1c193bc761b55e3ff8ee7cb08c522c344b4d14b19e74f"
+    },
+    "parent/include/db_log.h": {
+      "bytes": 2704,
+      "sha256": "d3b7c882b8499bb61ec4f74efa2dd6233ca38bec31f273a95d3dbeb1a17243c1"
+    },
+    "parent/include/camera.h": {
+      "bytes": 2482,
+      "sha256": "d22b4698b6f90eb4a5aab88f2d289b967c590ec409c51f9129b47829907bb33b"
+    },
+    "parent/include/cManager.h": {
+      "bytes": 19670,
+      "sha256": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20"
+    },
+    "parent/include/atariInfo.h": {
+      "bytes": 6210,
+      "sha256": "45bc12b409e0e28ab66b43867d4b8404502dcf0508f5b46b0c0204d6366623b8"
+    },
+    "parent/port/dreamcast/room/texture_package.hpp": {
+      "bytes": 12818,
+      "sha256": "126e73c96162585d3ea74973bd0655a7d73b1a5747b646c09bcb2a3c25f27f8c"
+    },
+    "parent/port/dreamcast/room/source_lighting.hpp": {
+      "bytes": 1742,
+      "sha256": "dfc9fd1e8bd4f30a11be65d59146d1d48d3dfcc0b392ed35fa18e665b3d50e45"
+    },
+    "parent/port/dreamcast/room/room_storage.hpp": {
+      "bytes": 3523,
+      "sha256": "7d501f89e0d551ab17da30a432f234b7b165c5a2c5de500e7abf64c5168b24c0"
+    },
+    "parent/port/dreamcast/room/pvr_geometry.hpp": {
+      "bytes": 4240,
+      "sha256": "0e7d6a83bff8a5e76794aea8e4da75a7adfc9c497f9b5ccb815a79a4e3d75d3c"
+    },
+    "parent/port/dreamcast/room/native_draw_plan.hpp": {
+      "bytes": 4944,
+      "sha256": "951dffb90793f7afa8a6191720425ea14c49a65be46bb490bc288a6cf95f9405"
+    },
+    "parent/port/dreamcast/room/gpu_lifecycle.hpp": {
+      "bytes": 197,
+      "sha256": "af53be33ac070625425b5afeaf56955151507e16533ee2feab294ebd4c74ed91"
+    },
+    "parent/port/dreamcast/game/world_scratch.h": {
+      "bytes": 7374,
+      "sha256": "6e6b0f1f2b2d9f5762708a21a2c6c0f5ba0308c04b4332534d80b6456934d5b6"
+    },
+    "parent/port/dreamcast/game/model_bridge.cpp": {
+      "bytes": 56928,
+      "sha256": "256d140f6b18d0855002ac288d8f7b3fb4d3abb38d3dc33e4d284a9a9b951165"
+    },
+    "parent/port/dreamcast/game/gx_fast.h": {
+      "bytes": 2775,
+      "sha256": "e8e981f1afaec9a5b115e05a36f2abc6c72f41f27ac9f1ceaa18cb0c8da74959"
+    },
+    "parent/port/dreamcast/game/gc_asset_gate.mk": {
+      "bytes": 1876,
+      "sha256": "1ff14740423a49a265b296e6a26a52f4e446f897226af760c8eb6ee45b496e2f"
+    },
+    "parent/port/dreamcast/game/charbake_variants.h": {
+      "bytes": 2149,
+      "sha256": "0aecf29a5a24092f87e7c8c1971d421b0b47d09cde269858828a011b07a70b29"
+    },
+    "parent/port/dreamcast/tools/d367/texture_rect21/world_rect_bind.h": {
+      "bytes": 2666,
+      "sha256": "d45021a03f771847731bbef020588030a5da2e21320760bd11eadbee0d3667b9"
+    },
+    "parent/port/dreamcast/tools/d367/texture_rect21/scoped_representations.inc": {
+      "bytes": 69428,
+      "sha256": "d853037aafafd9484aceb4494ea74d08345088108e09226e76be3624c5d558f2"
+    },
+    "parent/port/dreamcast/game/platform/native_ui.cpp": {
+      "bytes": 531438,
+      "sha256": "d3aa5b9ec587332b33d0255758c23af0ab8348de9e26e5559d828ea5aa3a6266"
+    },
+    "parent/port/dreamcast/game/platform/native_model.cpp": {
+      "bytes": 53727,
+      "sha256": "9223fce1be3fde6b632ec448d905ddf463fbcaa5e554b9900d25364dec48c686"
+    },
+    "parent/port/dreamcast/game/platform/native_actor_rigid.inc": {
+      "bytes": 4643,
+      "sha256": "868437ecdab75d6ed5bbf03ae363520ee2a203543920fa1f2bf6a16e48448eda"
+    },
+    "parent/port/dreamcast/game/platform/native_actor_fast.cpp": {
+      "bytes": 347409,
+      "sha256": "3213ca98e5a1e6f96a512cf8d3a6c773383bb0d1714d22d71d6909b0e562d318"
+    },
+    "parent/port/dreamcast/game/platform/gc_asset_gate.cpp": {
+      "bytes": 19622,
+      "sha256": "8e271fbe41023a5dd1e2e0d2d4163e6cacc8389b830ecd7a10848f680ac783d9"
+    },
+    "parent/port/dreamcast/game/platform/chunk_submit.h": {
+      "bytes": 5930,
+      "sha256": "5257805131e6b5222e002a2a72053f5c33b03ef88790d370748c08e24fd53e5a"
+    },
+    "parent/port/dreamcast/game/platform/include/warp_late.h": {
+      "bytes": 2583,
+      "sha256": "b4189647177075921b64c7fd383349c7d31778292c9b21d68764441f3bf59b56"
+    },
+    "parent/port/dreamcast/game/platform/include/texpack_payload_retry.inc": {
+      "bytes": 2368,
+      "sha256": "915601b92d8a9d10d763a377da6680c1579d39ad9109a1750f402fa3f8ed8f38"
+    },
+    "parent/port/dreamcast/game/platform/include/texpack_index.inc": {
+      "bytes": 14013,
+      "sha256": "bf95fea5f7bc4881fe438b7c57baea7dc086b34a059573185d6fea8170e02c1d"
+    },
+    "parent/port/dreamcast/game/platform/include/ta_direct.hpp": {
+      "bytes": 1300,
+      "sha256": "737faccbe29bdbd8c6a24fec0d5217f1ee992369f1405a4359ece947b8348cbe"
+    },
+    "parent/port/dreamcast/game/platform/include/subscreen_quad_geometry.hpp": {
+      "bytes": 4431,
+      "sha256": "062db0e9535002d4dd7728265b88da76d537d2ce73d03414a52fbe7e4876a512"
+    },
+    "parent/port/dreamcast/game/platform/include/source_actor_owner_ledger.inc": {
+      "bytes": 1350,
+      "sha256": "41daf70a383413cf1db2869f3e19d20c9a554185c64e6fedc15e544364db6d49"
+    },
+    "parent/port/dreamcast/game/platform/include/scenery_submit_batch.h": {
+      "bytes": 682,
+      "sha256": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106"
+    },
+    "parent/port/dreamcast/game/platform/include/re4dc_vmu.h": {
+      "bytes": 504,
+      "sha256": "ffb89121935c8eabe3ef3dbccc8fc5032ad5618a8de4cc4e6973b1e459304ebc"
+    },
+    "parent/port/dreamcast/game/platform/include/re4dc_screen.h": {
+      "bytes": 2206,
+      "sha256": "34688a35cd9592ac9c77f8298ae1ba6cca1f2d51e9de30d27f8c4f532138cb8f"
+    },
+    "parent/port/dreamcast/game/platform/include/re4dc_prelude.h": {
+      "bytes": 1460,
+      "sha256": "25e2e3dd536dce40dc03b5e42a26dc7149de4768a1d8ecb707c2e46474b9c50f"
+    },
+    "parent/port/dreamcast/game/platform/include/re4dc_platform.h": {
+      "bytes": 3683,
+      "sha256": "c8b079f982c2db756e38ed4587f71e62a7567e060f504612e40beaf259410ddf"
+    },
+    "parent/port/dreamcast/game/platform/include/re4dc_pad_prompts.h": {
+      "bytes": 924,
+      "sha256": "906323853612ac1ec2de506376ccb4f8c280b4c8f0740efcbe6b051720120b59"
+    },
+    "parent/port/dreamcast/game/platform/include/re4dc_manual_pages.h": {
+      "bytes": 2115,
+      "sha256": "39a0e46e3e068b49e1d53d38f77a035db99c6c09df3976b702aaa7122cc659ee"
+    },
+    "parent/port/dreamcast/game/platform/include/ps2_source_world.h": {
+      "bytes": 5041,
+      "sha256": "5881716a958f0bc6dff045e45bc660b57884c0050cdfd306b8c490528f0ca029"
+    },
+    "parent/port/dreamcast/game/platform/include/pc_sampler.h": {
+      "bytes": 2818,
+      "sha256": "fd921feb0d82c2bd0d58134c85d963c7ca12646604421377a2481d85e92d85f0"
+    },
+    "parent/port/dreamcast/game/platform/include/native_water_ps2.inc": {
+      "bytes": 11447,
+      "sha256": "f9bf5c6e9ac778d0a9ed7813ac4ff7f0eedf1e8150ddc3f90f37ba83081ad11a"
+    },
+    "parent/port/dreamcast/game/platform/include/native_ui_source_world.inc": {
+      "bytes": 12620,
+      "sha256": "673ab4f393ee942b27700d5f8bc9337903470e98ef60b09ee2028324cdeba46e"
+    },
+    "parent/port/dreamcast/game/platform/include/native_ui_actor_material.inc": {
+      "bytes": 1106,
+      "sha256": "20d37e8f49ef98289e691593061dbf53bbed7d0ad686f423fab46416d67b328b"
+    },
+    "parent/port/dreamcast/game/platform/include/native_ui_actor_fade.inc": {
+      "bytes": 5788,
+      "sha256": "c5a00e676be5c00d5677a0b27186f9c8127ac4dfdb6d9c288cfe6f389aefeafc"
+    },
+    "parent/port/dreamcast/game/platform/include/native_ui.h": {
+      "bytes": 7767,
+      "sha256": "7490e37bbe989399aa75108cf880027a4943da89ffa4999f272b0eccf4ffb882"
+    },
+    "parent/port/dreamcast/game/platform/include/native_static.h": {
+      "bytes": 2848,
+      "sha256": "d5ab6ca8a55c124b6474b70e0f9ac5724d9aca5e77de0547009b786cbcb667ef"
+    },
+    "parent/port/dreamcast/game/platform/include/native_reuse_audit.hpp": {
+      "bytes": 5085,
+      "sha256": "2153c5e10ff49e851a6d1a31e65c8fc99bf0bf3d77d73d7bd1b26306f9d0f21c"
+    },
+    "parent/port/dreamcast/game/platform/include/native_render_profile.hpp": {
+      "bytes": 5469,
+      "sha256": "0776aa713d3e4e0c608b3d847e04b528a60d13005ab72966f91927560f149bf3"
+    },
+    "parent/port/dreamcast/game/platform/include/native_ps2_world.h": {
+      "bytes": 726,
+      "sha256": "8ab8b3421b9ce095d86cb86f3e0e918a09ef47d0e7d6be9ef77f01950e56e411"
+    },
+    "parent/port/dreamcast/game/platform/include/native_model.h": {
+      "bytes": 11451,
+      "sha256": "40b01fbcb66e8f2f89009e2532b5eb6c3db9ddcbe27c4d1a00d7682b2d6e0dde"
+    },
+    "parent/port/dreamcast/game/platform/include/native_io.h": {
+      "bytes": 1504,
+      "sha256": "249cbab48d5dbc6ee48159afa26ac1d4a23d272e9c6b00a01697e89e26feec86"
+    },
+    "parent/port/dreamcast/game/platform/include/native_event_file.h": {
+      "bytes": 3050,
+      "sha256": "9b03201ec028db70f1b699acaae090ca0f952038d786f81157a887d5271872fd"
+    },
+    "parent/port/dreamcast/game/platform/include/native_effect_strip21.inc": {
+      "bytes": 12815,
+      "sha256": "b20bf475008727a546132ea6ea29bbcb43969afef59a0ac6c7af7321e9677992"
+    },
+    "parent/port/dreamcast/game/platform/include/native_effect_stage1_prepare.inc": {
+      "bytes": 3918,
+      "sha256": "645160ffccbe0c2e5c976c96e7cc82c3f134bc5fc5ad602bdd652650a7b68d17"
+    },
+    "parent/port/dreamcast/game/platform/include/native_effect_stage1_batch.inc": {
+      "bytes": 7117,
+      "sha256": "9403a42bd9b73dfcdd340c8b13f77525ced9f09e7451dc56c2eeb81a8de5bca8"
+    },
+    "parent/port/dreamcast/game/platform/include/native_cabin.h": {
+      "bytes": 2847,
+      "sha256": "d47467dfb29a17dd344c03cb45f77408ba89914343499edd03646844bada5660"
+    },
+    "parent/port/dreamcast/game/platform/include/native_actor_owner_workspace.inc": {
+      "bytes": 1997,
+      "sha256": "4c758d18c1641af7f2524b163f7ec1ef1e8a680e5557aa0f05ad26fcac4da035"
+    },
+    "parent/port/dreamcast/game/platform/include/native_actor_owner_submit.inc": {
+      "bytes": 105,
+      "sha256": "78081db9815549382f80c1321a41b6d116c8dbff32ad36f2ecfc85b73bd2ec23"
+    },
+    "parent/port/dreamcast/game/platform/include/native_actor_owner_runs.inc": {
+      "bytes": 10516,
+      "sha256": "8d84b5e1b7a653a8a6fe439cdb9800f7571b6a74d6036b61c988071ed9b7bea5"
+    },
+    "parent/port/dreamcast/game/platform/include/native_actor_owner_registry.inc": {
+      "bytes": 9379,
+      "sha256": "702c915b1667de9502c298e60d08c1b3b008d31db0d71079511c92faddba068f"
+    },
+    "parent/port/dreamcast/game/platform/include/native_actor_leon_pipe.inc": {
+      "bytes": 9791,
+      "sha256": "3e1ceb1c48e308e153ee99d869e8933f2ba533fa5a0dcee1c95983e212e9dff3"
+    },
+    "parent/port/dreamcast/game/platform/include/native_actor.hpp": {
+      "bytes": 7635,
+      "sha256": "0f5a1c001c5edb53e4ce9fc9d4a6ffabc0b09ca62d2fe42b3b51559ffb871585"
+    },
+    "parent/port/dreamcast/game/platform/include/movie_world_arena.h": {
+      "bytes": 1258,
+      "sha256": "8d0427cde56a4556c0a098cd17fbc9bbdcc04b475f3f6358110501b8eeaa4815"
+    },
+    "parent/port/dreamcast/game/platform/include/manual_pages_native.inc": {
+      "bytes": 5913,
+      "sha256": "c30e4c36e0ea4d2caaaae7ed47b79470bc026a7f904fd7687ca629b9cc876921"
+    },
+    "parent/port/dreamcast/game/platform/include/manual_pages_keys.inc": {
+      "bytes": 1924,
+      "sha256": "6aa4cef86c0ff36c322f99dc4eccb3ee42cb92b571721e7f2bc15bd1565cd6e8"
+    },
+    "parent/port/dreamcast/game/platform/include/hud_source_mask_native.inc": {
+      "bytes": 2410,
+      "sha256": "ec6622706bdbee729919997756f226ad5959ddfe511fe73b02049bf9957bf755"
+    },
+    "parent/port/dreamcast/game/platform/include/hud_source_mask_keys.inc": {
+      "bytes": 683,
+      "sha256": "f4bed90d8c872592adce9a34c11670868e67c58f676cd15e0d4997cbc3c1ef68"
+    },
+    "parent/port/dreamcast/game/platform/include/hud_source_mask.h": {
+      "bytes": 435,
+      "sha256": "9960a824f2300100ad6ace4fe1271da552b46ff960e24c392a324ae76979fc6b"
+    },
+    "parent/port/dreamcast/game/platform/include/gc_asset_sha.inc": {
+      "bytes": 2825,
+      "sha256": "f62ded088c455df1c75d9eb380db314af7b6c28344885623767c93ec69f7c019"
+    },
+    "parent/port/dreamcast/game/platform/include/gc_asset_payloads.h": {
+      "bytes": 3250,
+      "sha256": "28785476705627bc9e872a3cc79c0bcddc9b699f5d4fdeedaeeed7b499855842"
+    },
+    "parent/port/dreamcast/game/platform/include/gc_asset_packet_cursor.h": {
+      "bytes": 1182,
+      "sha256": "b44c680240b624492b5a62f6ff22c181b8cdac684cac8cc8300b74a0ee59cc98"
+    },
+    "parent/port/dreamcast/game/platform/include/gc_asset_movie_stream.h": {
+      "bytes": 538,
+      "sha256": "ef88e8381929fcbdb9d19b067bbe12f5553372a964d76d32c3668f25671f84e0"
+    },
+    "parent/port/dreamcast/game/platform/include/gc_asset_movie.h": {
+      "bytes": 433,
+      "sha256": "0755ba58aaffac5f9a563a6e2f3bb7c8f2604b965d83a2b5d822a1e50eaecf0e"
+    },
+    "parent/port/dreamcast/game/platform/include/gc_asset_members.h": {
+      "bytes": 2108,
+      "sha256": "22c174a00ce0fc98788694babdd6b1a0218d20a3ed2171442caf025801a3e637"
+    },
+    "parent/port/dreamcast/game/platform/include/gc_asset_lifecycle.h": {
+      "bytes": 353,
+      "sha256": "8b986321ed5916de5aadcad4b5b24a94144294a7b71db71d5fdc77e0ca59b4ff"
+    },
+    "parent/port/dreamcast/game/platform/include/gc_asset_index.inc": {
+      "bytes": 3133,
+      "sha256": "69ed9219291c0e22802852edf28ce315356860fb82e9fdb6ee590a3741c4f9ec"
+    },
+    "parent/port/dreamcast/game/platform/include/gc_asset_gate.h": {
+      "bytes": 5972,
+      "sha256": "c8fb4b2435a46487ecec8b03f1c5a4176f429cdfbafbb8e0dbb5930100d74517"
+    },
+    "parent/port/dreamcast/game/platform/include/gc_asset_audio.h": {
+      "bytes": 1854,
+      "sha256": "ec4f4a362715e0d721b25e9cfa3797d78407486f258e9a9d61135fbfbcc5c056"
+    },
+    "parent/port/dreamcast/game/platform/include/gc_asset_actor.h": {
+      "bytes": 2202,
+      "sha256": "a43ded544b66ba81c1f6cd22c6b92453198e878b58f6e411df7d4581de1db8eb"
+    },
+    "parent/port/dreamcast/game/platform/include/fx_sprite_trim_table.inc": {
+      "bytes": 4377,
+      "sha256": "9e58e010758bbbe87899931e34f8b1749cecc700c4023f2ec5a0fb768a143e93"
+    },
+    "parent/port/dreamcast/game/platform/include/fx_sprite_trim.inc": {
+      "bytes": 12784,
+      "sha256": "9f74b574f55c0897849e0956688c1f3e868797a44e7d7ec432182706598fe1d2"
+    },
+    "parent/port/dreamcast/game/platform/include/effect_strip_geometry21.hpp": {
+      "bytes": 2168,
+      "sha256": "c86f8f5942f18ecb53c489a6089bd30a4a96c376a120525bd15b180159990481"
+    },
+    "parent/port/dreamcast/game/platform/include/coarse_source_frame.h": {
+      "bytes": 9846,
+      "sha256": "8c5c81bc00286293b3c623b1bdd0ffbb05c4881fcd0e30edc66a0d21468ca746"
+    },
+    "parent/port/dreamcast/game/platform/include/binocular_art_keys.h": {
+      "bytes": 320,
+      "sha256": "3c9f896170e0c8ac034facf7aff49588e7c64ba5ceb493f185f763f9249f9206"
+    },
+    "parent/port/dreamcast/game/platform/include/bfc_class.h": {
+      "bytes": 868,
+      "sha256": "cce7ba975a27c9ccc2d18ffa22548a8aee085bfd52f6933f97cf9cbea1a41107"
+    },
+    "parent/port/dreamcast/game/platform/include/actor_visibility_diag.h": {
+      "bytes": 5677,
+      "sha256": "b937fc425599f981fb0155583f361007a6266122e648b5dcc95662373a3dff0d"
+    },
+    "parent/port/dreamcast/game/platform/include/actor_transaction_diag.h": {
+      "bytes": 1212,
+      "sha256": "ec07e2661ad07f8fdc7049b4effea9aa224ec15bd9f0fd655d1e9ff119b828ca"
+    },
+    "parent/port/dreamcast/game/platform/include/actor_resource_lease.h": {
+      "bytes": 3351,
+      "sha256": "47d2432a34b6b4e296541e6a94e87b5c71cbfc300fd3b78ee0b71ddba4d7a0e9"
+    },
+    "parent/port/dreamcast/game/platform/include/actor_prof.h": {
+      "bytes": 2983,
+      "sha256": "22d0b2ddae99e16b978c5bd6049bda4dcc24d96adb3436a8eefd79a2053395bf"
+    },
+    "parent/port/dreamcast/game/platform/include/actor_plan.h": {
+      "bytes": 3367,
+      "sha256": "1907a3fa4516d12c624d0d2f18ea3687106d0da3efa83b3413c2381b3d64b626"
+    },
+    "parent/port/dreamcast/game/platform/include/actor_native_owner.h": {
+      "bytes": 6545,
+      "sha256": "4e1e18332fb26e1b10e44a3721e71567ee812607e9e73b0c0fcaf1c033a0fc4a"
+    },
+    "parent/port/dreamcast/game/platform/include/actor_light_probe.h": {
+      "bytes": 2702,
+      "sha256": "de18656c46a5a008aec55e0d7ff48b195724076b95a5c65a3f1a48b3a724040b"
+    },
+    "parent/port/dreamcast/game/platform/include/actor_lifetime.h": {
+      "bytes": 2887,
+      "sha256": "9c204cb853b3f39a97d7c785110f98994c892ae30bb42216f7ab366b9b54fdfc"
+    },
+    "parent/port/dreamcast/game/platform/include/actor_ganado_ps2_stump.h": {
+      "bytes": 1122,
+      "sha256": "c6781c08e9d9a4e7b59bd0c7f5dfb94f09841a03e2ff70238a2668e60d7def9f"
+    },
+    "parent/port/dreamcast/game/platform/include/actor_death_fade.h": {
+      "bytes": 2411,
+      "sha256": "81b2071235401b43aaec6fdd92d8fbb64cd8ce52f26975fbe38ce275fa3f6025"
+    }
+  }
+}

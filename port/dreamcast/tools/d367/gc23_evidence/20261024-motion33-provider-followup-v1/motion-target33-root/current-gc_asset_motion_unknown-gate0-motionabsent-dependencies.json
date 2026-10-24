@@ -1,0 +1,14 @@
+{
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/current/port/dreamcast/game/platform/gc_asset_motion_unknown.cpp": {
+    "bytes": 2265,
+    "sha256": "961c6a3c42319fdc1cd86536482e051111f6cfefc64b3ce590d0a6f98efae48a"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/current/port/dreamcast/game/platform/include/gc_asset_motion_unknown.h": {
+    "bytes": 1845,
+    "sha256": "2d61f845fed695c66f078fdb5135317c6a1c60fe5cbb18579ece0d7430f42c67"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/current/port/dreamcast/game/platform/include/gc_asset_gate.h": {
+    "bytes": 5972,
+    "sha256": "c8fb4b2435a46487ecec8b03f1c5a4176f429cdfbafbb8e0dbb5930100d74517"
+  }
+}

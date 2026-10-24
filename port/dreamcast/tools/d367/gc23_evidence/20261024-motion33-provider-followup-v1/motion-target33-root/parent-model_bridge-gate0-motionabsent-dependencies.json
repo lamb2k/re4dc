@@ -1,0 +1,286 @@
+{
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/port/dreamcast/game/model_bridge.cpp": {
+    "bytes": 56928,
+    "sha256": "256d140f6b18d0855002ac288d8f7b3fb4d3abb38d3dc33e4d284a9a9b951165"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/port/dreamcast/game/platform/include/re4dc_prelude.h": {
+    "bytes": 1460,
+    "sha256": "25e2e3dd536dce40dc03b5e42a26dc7149de4768a1d8ecb707c2e46474b9c50f"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/generated/off/pipeline30.h": {
+    "bytes": 1227,
+    "sha256": "9c69b5cce7f1a792ee44c6c64d57387c8da36c8467c9805af78d748974c77739"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/generated/off/d349-stack.h": {
+    "bytes": 36,
+    "sha256": "c76096ae0722f473c62a1f9e916f5f8f2ee92d497982887faec8c0ebd435679a"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/generated/off/native-static.h": {
+    "bytes": 272,
+    "sha256": "60ce29f015392507f11f6e1e14a61952d5680c193ca3804205e114fd9eccf53c"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/generated/off/native-actor.h": {
+    "bytes": 588,
+    "sha256": "4a74d88e3310a5e866d4fb6fd439c7931e11ffb3a9fdf665f591e4650dc95361"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/generated/off/frontend30.h": {
+    "bytes": 164,
+    "sha256": "6a91cd626e2110951a1370eb058b3f3aa3ba3a395cc754f20607836cf708b34e"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/port/dreamcast/game/platform/include/actor_visibility_diag.h": {
+    "bytes": 5677,
+    "sha256": "b937fc425599f981fb0155583f361007a6266122e648b5dcc95662373a3dff0d"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/port/dreamcast/game/platform/include/actor_transaction_diag.h": {
+    "bytes": 1212,
+    "sha256": "ec07e2661ad07f8fdc7049b4effea9aa224ec15bd9f0fd655d1e9ff119b828ca"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/light.h": {
+    "bytes": 14105,
+    "sha256": "17f3609a7e81275f51571497bd00624571c93e24b725713081a9237b1d10540c"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/types.h": {
+    "bytes": 3235,
+    "sha256": "d88ba2c842abf4efdce4f3ea40f3039ff73e1196be17190508ba53e05bf6ba3d"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/vec.h": {
+    "bytes": 7572,
+    "sha256": "7b8bc9b2715fcd8b06b9e66c92ff0164a114cd2ca64e9dd8cf6db8dab8dd1a7d"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/gx.h": {
+    "bytes": 8362,
+    "sha256": "471d0065eb45b8de8b47289e50534778f4a83bff15bbff7eb55780f9758de4e8"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/port/dreamcast/game/gx_fast.h": {
+    "bytes": 2775,
+    "sha256": "e8e981f1afaec9a5b115e05a36f2abc6c72f41f27ac9f1ceaa18cb0c8da74959"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/cManager.h": {
+    "bytes": 19670,
+    "sha256": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/db_log.h": {
+    "bytes": 2704,
+    "sha256": "d3b7c882b8499bb61ec4f74efa2dd6233ca38bec31f273a95d3dbeb1a17243c1"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/va_ppc.h": {
+    "bytes": 3470,
+    "sha256": "a141e41ab83325c63be833a59e98bc90e1be761f7753f0887469184145d94129"
+  },
+  "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/include/stdarg.h": {
+    "bytes": 4310,
+    "sha256": "3014f1490722369be2ab7e10a3bd88a53435083fea5fc30fb8b6f87520684bb7"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/main_mem.h": {
+    "bytes": 3872,
+    "sha256": "7d4f1e41ae696fb77c0075d1f3cd9f5db019ce42632d71dd29d949793f7ef2a7"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/lightPath.h": {
+    "bytes": 841,
+    "sha256": "7a2db7f00ab5d9dcf42151016de26c9651ded9e5a2f863db64a61df0164e9e5d"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/global.h": {
+    "bytes": 19112,
+    "sha256": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/camera.h": {
+    "bytes": 2482,
+    "sha256": "d22b4698b6f90eb4a5aab88f2d289b967c590ec409c51f9129b47829907bb33b"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/model.h": {
+    "bytes": 31880,
+    "sha256": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/port/dreamcast/game/platform/include/actor_lifetime.h": {
+    "bytes": 2887,
+    "sha256": "9c204cb853b3f39a97d7c785110f98994c892ae30bb42216f7ab366b9b54fdfc"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/port/dreamcast/game/platform/include/actor_ganado_ps2_stump.h": {
+    "bytes": 1122,
+    "sha256": "c6781c08e9d9a4e7b59bd0c7f5dfb94f09841a03e2ff70238a2668e60d7def9f"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/atariInfo.h": {
+    "bytes": 6210,
+    "sha256": "45bc12b409e0e28ab66b43867d4b8404502dcf0508f5b46b0c0204d6366623b8"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/port/dreamcast/game/platform/include/native_model.h": {
+    "bytes": 11451,
+    "sha256": "40b01fbcb66e8f2f89009e2532b5eb6c3db9ddcbe27c4d1a00d7682b2d6e0dde"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/c++/15.2.0/cstdint": {
+    "bytes": 3871,
+    "sha256": "29263eed8b2d09b5a8c3b803da92c4ebf91d6a219a2c3fc44cac061cc2780677"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/c++/15.2.0/sh-elf/bits/c++config.h": {
+    "bytes": 60250,
+    "sha256": "606b4d77684f57d52ba99e3093e27e5956e8e311382f9af66326bcaf1eb05864"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/c++/15.2.0/sh-elf/bits/os_defines.h": {
+    "bytes": 2090,
+    "sha256": "dec18b8a95f687387f1c32e0bfa3e6b08d6c6aa384bd34ef1318735876902ce1"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/c++/15.2.0/sh-elf/bits/cpu_defines.h": {
+    "bytes": 1333,
+    "sha256": "c4145a07cbd3ab98d68021876b67afa841d8aa3bf153c30a2a554140ef3ab4eb"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/c++/15.2.0/pstl/pstl_config.h": {
+    "bytes": 7947,
+    "sha256": "66d40c2f29f0702ceb8415009cffc1437f74395b60b3ab195e154d411a4ec68a"
+  },
+  "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/include/stdint.h": {
+    "bytes": 443,
+    "sha256": "64ab730bb09eba38f01a62174fb8371ef281778ac33f141a6fa4217a9b39466a"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/stdint.h": {
+    "bytes": 12432,
+    "sha256": "99fe201684856075ccd92704f63b702f6fa882b9dab61bd7a9bcce2588275861"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/machine/_default_types.h": {
+    "bytes": 6650,
+    "sha256": "5d8f9f7ead7927e4b8b7ed00172e84f2ae82ea7f5f6ba3240ff813a9236771b3"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/sys/features.h": {
+    "bytes": 17680,
+    "sha256": "a5a354650269fde5003f824c747a56016a10738ea2aa919bf5abe786a78e4d27"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/_newlib_version.h": {
+    "bytes": 336,
+    "sha256": "be2a4d2763fd9f409369fc62a741dff6722b71ca56050b7c6469581c81fd2420"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/sys/_intsup.h": {
+    "bytes": 5741,
+    "sha256": "1af8abe244b43a3a5b5a85f6c834aa206930b6938e8109fbec430bc140b68df5"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/sys/_stdint.h": {
+    "bytes": 1824,
+    "sha256": "49f8328943afa2a83ed4a35fcb808ed08b8c9fcb55373c786fb1b1d3a21952d7"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/port/dreamcast/game/platform/include/native_ui.h": {
+    "bytes": 7767,
+    "sha256": "7490e37bbe989399aa75108cf880027a4943da89ffa4999f272b0eccf4ffb882"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/port/dreamcast/room/source_lighting.hpp": {
+    "bytes": 1742,
+    "sha256": "dfc9fd1e8bd4f30a11be65d59146d1d48d3dfcc0b392ed35fa18e665b3d50e45"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/view.h": {
+    "bytes": 1670,
+    "sha256": "e6b81450a954e524146261cda5703302d055afd58108fd85df4c9781efdc9087"
+  },
+  "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/include/stddef.h": {
+    "bytes": 14134,
+    "sha256": "472a84e536689fc48e861b2415b229742e133d09bbf1c8fd8e0fe89ab5712f04"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/string.h": {
+    "bytes": 5639,
+    "sha256": "1295b0de202192a52e600dcc4ff1d490054bc4d2820a7b6a21450f46fd324456"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/_ansi.h": {
+    "bytes": 2625,
+    "sha256": "5c6403b471ee897c9a6c12e00a58617247804eb3ee72d7baeb7c08616090dd1d"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/newlib.h": {
+    "bytes": 12029,
+    "sha256": "3b26541c29167ac00d85e0e3756f15c7b86ebf1c18ae00cd3f32e54fe8474e1b"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/sys/config.h": {
+    "bytes": 7477,
+    "sha256": "6e40b5263b35e7d685e38b7765464160d6e4f471e6d887bf7dce8a83edb6aec7"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/machine/ieeefp.h": {
+    "bytes": 11536,
+    "sha256": "26c64fcff653e1461d227e6ab5c61e30203d057bfd04956aacea2fb2a7fdcac4"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/sys/reent.h": {
+    "bytes": 30286,
+    "sha256": "44726a2edc83783ecaba3c83a6c7c71db3466ffd6d607c89b1f3ff74311510da"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/sys/cdefs.h": {
+    "bytes": 24506,
+    "sha256": "6934407e76242c86361247a6fcadf1f885985bd7cdd3652afc26d8056073f32e"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/sys/_types.h": {
+    "bytes": 5155,
+    "sha256": "da307b134f0642625f75b136ae24067aa348b959c93b8487afe3a9874e44e72e"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/machine/_types.h": {
+    "bytes": 112,
+    "sha256": "44544ecbbc10c8aa58ca2da6d0617ffeee5af847af24515ab108c8218d6d92c8"
+  },
+  "/root/work/kos-re4dc-d367/include/sys/lock.h": {
+    "bytes": 2370,
+    "sha256": "ddec1a573ccfb617043e60dee86c582975d0ad58ccd4a5d753d29da5dc6eb95a"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/sys/_locale.h": {
+    "bytes": 247,
+    "sha256": "adc8e11513e5f83a0c73ac641c256815b0aa6cc8a09a43d2c97b1ee79db9f154"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/strings.h": {
+    "bytes": 2788,
+    "sha256": "743121afb2f530045eb63bcfa3fdbc4ecf555131bd1cf7ce36a268f758bb4be5"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/sys/string.h": {
+    "bytes": 116,
+    "sha256": "b7164ee36ccb0a08bc27c7e381ea417c97d8c3fd3157de62b75d2a6bf7a0a589"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/port/dreamcast/game/platform/include/native_actor.hpp": {
+    "bytes": 7635,
+    "sha256": "0f5a1c001c5edb53e4ce9fc9d4a6ffabc0b09ca62d2fe42b3b51559ffb871585"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/port/dreamcast/game/platform/include/actor_native_owner.h": {
+    "bytes": 6545,
+    "sha256": "4e1e18332fb26e1b10e44a3721e71567ee812607e9e73b0c0fcaf1c033a0fc4a"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/port/dreamcast/game/platform/include/actor_resource_lease.h": {
+    "bytes": 3351,
+    "sha256": "47d2432a34b6b4e296541e6a94e87b5c71cbfc300fd3b78ee0b71ddba4d7a0e9"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/em10.h": {
+    "bytes": 19754,
+    "sha256": "c6ab1e95154903cf0eb007f9258266b50afd7095fc1741e597aa9f174b21fbda"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/em.h": {
+    "bytes": 21283,
+    "sha256": "3fde0e04cd508f086be1c193bc761b55e3ff8ee7cb08c522c344b4d14b19e74f"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/emhit.h": {
+    "bytes": 3863,
+    "sha256": "c2ae8b515a9e6cec3903e75a01217f06d5501d08677fb71bc8bcdc7a6e80efe4"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/emwep.h": {
+    "bytes": 6618,
+    "sha256": "9716e13bf175da777b9262ed4c66f2421f18299ffbe467e53aa6eea14632caec"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/pendulum.h": {
+    "bytes": 4357,
+    "sha256": "a7b8552e898d051b6046774a28aec97203b0b317cd91ecc15e1e3ef7202f09a4"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/emshield.h": {
+    "bytes": 3294,
+    "sha256": "0154efacf3def4cf3cbffbbcdacd51de0f0b14febd30272c28abdbde12db5a0c"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/emtree.h": {
+    "bytes": 3442,
+    "sha256": "b4fe2913060f107234979359bbf16ce1b010f448c91fb300409ab2a76ff88a62"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/pl_cloth.h": {
+    "bytes": 3594,
+    "sha256": "aa9161837952c327278d158c50c412c69859c9907f973b0d96e173c692514a13"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/obj.h": {
+    "bytes": 35623,
+    "sha256": "f1ef75fafca7efcc3d982b5b7dc9d73ef2170364fd861a7b16b958802d417768"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/objBull.h": {
+    "bytes": 877,
+    "sha256": "abd19901f633c2fa837e24b9aa9af4d76944a52215331757ed49b161e474af2f"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/trans.h": {
+    "bytes": 2274,
+    "sha256": "f723867ba0a1a6f9fb262067bb19d087f5d5c355338e948dd6acdf6e608554b4"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/parent/include/trans_ot.h": {
+    "bytes": 2766,
+    "sha256": "10f21bdd7a8e53de6ad007f398663e99049e0a295dcc203580d199ba9f535c48"
+  }
+}

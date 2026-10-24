@@ -1,0 +1,1003 @@
+{
+  "status": "SOURCE_BOUND_CAPACITY_AUDIT_ONLY",
+  "linked_baseline_source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "current_source": "aab201ceac0e18107f64a3212398afe916793327",
+  "source_comparison_to_linked_1d63": {
+    "port/dreamcast/game/platform/mem.cpp": true,
+    "port/dreamcast/game/platform/os.cpp": true,
+    "port/dreamcast/game/ui_bridge.cpp": true,
+    "src/game/main_mem.cpp": true,
+    "src/game/game.cpp": true,
+    "src/lib/OSAlloc.c": true,
+    "port/dreamcast/game/Makefile": true
+  },
+  "arms": {
+    "off": {
+      "ELF": {
+        "path": "/root/work/lanes/gc-port23-full-target2-scratch/off/out/re4dc-game.elf",
+        "bytes": 28568852,
+        "sha256": "9d199189e9326a089e61a1a76077dc98308e8f0b831694e368ef9cb51ca0de57"
+      },
+      "end": 2353209524,
+      "end_hex": "0x8c4320b4",
+      "linked_bss": 962900,
+      "entries_array": {
+        "address": 2351648256,
+        "size": 100352,
+        "section": 8,
+        "type": 1
+      },
+      "selected_knobs": {
+        "ARENA_FIT": "1",
+        "ARENA_FIT_KOS_BYTES": "196608",
+        "ARENA_KOS_BYTES": "32768",
+        "SOUND_REGION_BYTES": "0x60000",
+        "CORE_RESIDENT_BYTES": "1360608",
+        "OPTION_RESIDENT_BYTES": "149920",
+        "PLAYER_RESIDENT_BYTES": "869728",
+        "WEAPON_RESIDENT_BYTES": "275424",
+        "IMAGE_PAD_BYTES": "0",
+        "KOS_SBRK_LAST_PAGE": "1",
+        "KOS_SQUEEZE": "0",
+        "SS_FREEZE_RESERVE_BYTES": "16384",
+        "TEX_SLOTS": "448",
+        "TEX_META_EVICT": "1",
+        "LINK_TIGHT": "1",
+        "LINK_OVL_HELPERS": "1",
+        "GC_ASSET_GATE": "0",
+        "GC_ASSET_CATALOG_SHA256": "0",
+        "MOTION_CAPACITY": "1"
+      },
+      "fixed_carve_bytes": 3048896,
+      "stack_top_words": {
+        "16m": "0x8d000000",
+        "32m": "0x8e000000"
+      },
+      "normal_16MiB_sbrk_limit": "0x8cff0000",
+      "coherent_fit_upper_bound_not_measured": 12111872,
+      "gc_named_resident_objects": []
+    },
+    "on": {
+      "ELF": {
+        "path": "/root/work/lanes/gc-port23-full-target2-scratch/on/out/re4dc-game.elf",
+        "bytes": 28921888,
+        "sha256": "2f7e505e7a1002f863c5dad3864530c80a68b69c51af2b972d767ca412426d45"
+      },
+      "end": 2353269908,
+      "end_hex": "0x8c440c94",
+      "linked_bss": 979828,
+      "entries_array": {
+        "address": 2351691712,
+        "size": 100352,
+        "section": 8,
+        "type": 1
+      },
+      "selected_knobs": {
+        "ARENA_FIT": "1",
+        "ARENA_FIT_KOS_BYTES": "196608",
+        "ARENA_KOS_BYTES": "32768",
+        "SOUND_REGION_BYTES": "0x60000",
+        "CORE_RESIDENT_BYTES": "1360608",
+        "OPTION_RESIDENT_BYTES": "149920",
+        "PLAYER_RESIDENT_BYTES": "869728",
+        "WEAPON_RESIDENT_BYTES": "275424",
+        "IMAGE_PAD_BYTES": "0",
+        "KOS_SBRK_LAST_PAGE": "1",
+        "KOS_SQUEEZE": "0",
+        "SS_FREEZE_RESERVE_BYTES": "16384",
+        "TEX_SLOTS": "448",
+        "TEX_META_EVICT": "1",
+        "LINK_TIGHT": "1",
+        "LINK_OVL_HELPERS": "1",
+        "GC_ASSET_GATE": "1",
+        "GC_ASSET_CATALOG_SHA256": "0",
+        "MOTION_CAPACITY": "1"
+      },
+      "fixed_carve_bytes": 3048896,
+      "stack_top_words": {
+        "16m": "0x8d000000",
+        "32m": "0x8e000000"
+      },
+      "normal_16MiB_sbrk_limit": "0x8cff0000",
+      "coherent_fit_upper_bound_not_measured": 12054528,
+      "gc_named_resident_objects": [
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L7membersE",
+          "address": 2353243320,
+          "size": 4608,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L4seenE",
+          "address": 2353241268,
+          "size": 2048,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L5queueE",
+          "address": 2353238680,
+          "size": 1664,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L5banksE",
+          "address": 2353248488,
+          "size": 1176,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L14unknown_assetsE",
+          "address": 2353240468,
+          "size": 800,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L7ticketsE",
+          "address": 2353238264,
+          "size": 384,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L8archivesE",
+          "address": 2353247928,
+          "size": 320,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZZN13re4dc_gcasset12_GLOBAL__N_111IdentitySha9transformEvE1k",
+          "address": 2351594112,
+          "size": 256,
+          "section": 4,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L8progressE",
+          "address": 2353248292,
+          "size": 140,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN12_GLOBAL__N_1L16gcasset_registryE",
+          "address": 2351798652,
+          "size": 88,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN14leon_hand_pack17gcasset_hand_slotE",
+          "address": 2351884148,
+          "size": 88,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN12_GLOBAL__N_1L21gcasset_packet_statesE",
+          "address": 2353180236,
+          "size": 60,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "_gcasset_movie_start",
+          "address": 2353250348,
+          "size": 60,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN12_GLOBAL__N_1L18gcasset_frame_usesE",
+          "address": 2352996056,
+          "size": 48,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN12_GLOBAL__N_1L12gcasset_pl08E",
+          "address": 2351856512,
+          "size": 44,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN12_GLOBAL__N_1L22gcasset_compiled_actorE",
+          "address": 2351798604,
+          "size": 44,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L6streamE",
+          "address": 2353248444,
+          "size": 44,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN14leon_hand_pack19gcasset_hand_sourceE",
+          "address": 2351884236,
+          "size": 44,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L9emissionsE",
+          "address": 2353240348,
+          "size": 40,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L5namesE",
+          "address": 2351594072,
+          "size": 40,
+          "section": 4,
+          "type": 1
+        },
+        {
+          "name": "__ZN14leon_hand_pack16gcasset_hand_jobE",
+          "address": 2351883960,
+          "size": 36,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN14leon_hand_pack17gcasset_hand_cellE",
+          "address": 2351884028,
+          "size": 32,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN14leon_hand_pack19gcasset_hand_headerE",
+          "address": 2351884084,
+          "size": 32,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN14leon_hand_pack26gcasset_hand_directory_shaE",
+          "address": 2351884116,
+          "size": 32,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN12_GLOBAL__N_1L13gcasset_movieE",
+          "address": 2353147664,
+          "size": 28,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L10scope_textE",
+          "address": 2353240388,
+          "size": 24,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN12_GLOBAL__N_1L21gcasset_model_pendingE",
+          "address": 2353180216,
+          "size": 20,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset10source_useE",
+          "address": 2353248248,
+          "size": 20,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L11provenancesE",
+          "address": 2351594056,
+          "size": 16,
+          "section": 4,
+          "type": 1
+        },
+        {
+          "name": "__ZN14leon_hand_pack21gcasset_hand_derivingE",
+          "address": 2351884004,
+          "size": 16,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN14leon_hand_pack17gcasset_hand_copyE",
+          "address": 2351884060,
+          "size": 16,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "_gcasset_movie_armed",
+          "address": 2353250336,
+          "size": 12,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset10replay_useE",
+          "address": 2351793152,
+          "size": 12,
+          "section": 8,
+          "type": 1
+        },
+        {
+          "name": "__ZN14leon_hand_pack20gcasset_hand_scratchE",
+          "address": 2351884020,
+          "size": 8,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN12_GLOBAL__N_1L23gcasset_packet_consumerE",
+          "address": 2351691692,
+          "size": 4,
+          "section": 8,
+          "type": 1
+        },
+        {
+          "name": "__ZN12_GLOBAL__N_1L24gcasset_generated_packetE",
+          "address": 2353180296,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN12_GLOBAL__N_1L13gcasset_phaseE",
+          "address": 2353087232,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN12_GLOBAL__N_1L20gcasset_visit_serialE",
+          "address": 2353087240,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN12_GLOBAL__N_1L20gcasset_current_roomE",
+          "address": 2353087228,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN12_GLOBAL__N_1L20gcasset_movie_serialE",
+          "address": 2353147660,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN12_GLOBAL__N_1L25gcasset_audio_checkpointsE",
+          "address": 2352683944,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L7catalogE",
+          "address": 2353240444,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L12catalog_readE",
+          "address": 2353240456,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L13unknown_countE",
+          "address": 2353240464,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L13catalog_bytesE",
+          "address": 2353240448,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L12catalog_rowsE",
+          "address": 2353240440,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L13catalog_epochE",
+          "address": 2353240460,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L14admission_roomE",
+          "address": 2353238664,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L15admission_visitE",
+          "address": 2353238660,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L15catalog_contextE",
+          "address": 2353240452,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L12queue_faultsE",
+          "address": 2353238672,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L12ticket_countE",
+          "address": 2353238256,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L10queue_tailE",
+          "address": 2353238648,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L10queue_headE",
+          "address": 2353238652,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L6errorsE",
+          "address": 2353240412,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L5visitE",
+          "address": 2353240432,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L12queue_activeE",
+          "address": 2353238668,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L13ticket_serialE",
+          "address": 2353238260,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L12checked_maskE",
+          "address": 2353240424,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L8overflowE",
+          "address": 2353240416,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L4usedE",
+          "address": 2353240420,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L4roomE",
+          "address": 2353240436,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L5wiredE",
+          "address": 2353240428,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L6serialE",
+          "address": 2351793144,
+          "size": 4,
+          "section": 8,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L10use_faultsE",
+          "address": 2353243316,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L10generationE",
+          "address": 2351793148,
+          "size": 4,
+          "section": 8,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L10disc_stateE",
+          "address": 2353248268,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L14payload_faultsE",
+          "address": 2353248276,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L14payload_serialE",
+          "address": 2353248280,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L8payloadsE",
+          "address": 2353248288,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L13payload_countE",
+          "address": 2353248284,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L18payload_quad_batchE",
+          "address": 2353248272,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L6faultsE",
+          "address": 2353248436,
+          "size": 4,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN14leon_hand_pack17gcasset_hand_aicaE",
+          "address": 2351883996,
+          "size": 4,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN14leon_hand_pack18gcasset_hand_clockE",
+          "address": 2351884000,
+          "size": 4,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN14leon_hand_pack25gcasset_hand_prefix_bytesE",
+          "address": 2351884080,
+          "size": 4,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN12_GLOBAL__N_1L18gcasset_visit_liveE",
+          "address": 2353087236,
+          "size": 1,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN12_GLOBAL__N_1L15gcasset_startedE",
+          "address": 2353087237,
+          "size": 1,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN12_GLOBAL__N_1L24gcasset_compiled_startedE",
+          "address": 2351798600,
+          "size": 1,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L10catalog_okE",
+          "address": 2353240344,
+          "size": 1,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L17admission_handoffE",
+          "address": 2353238656,
+          "size": 1,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L10queue_lockE",
+          "address": 2353238676,
+          "size": 1,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L6activeE",
+          "address": 2353240345,
+          "size": 1,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN13re4dc_gcasset12_GLOBAL__N_1L7recordsE",
+          "address": 2353248440,
+          "size": 1,
+          "section": 11,
+          "type": 1
+        },
+        {
+          "name": "__ZN14leon_hand_pack20gcasset_hand_checkedE",
+          "address": 2351884077,
+          "size": 1,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN14leon_hand_pack20gcasset_hand_startedE",
+          "address": 2351884079,
+          "size": 1,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN14leon_hand_pack22gcasset_hand_candidateE",
+          "address": 2351884078,
+          "size": 1,
+          "section": 9,
+          "type": 1
+        },
+        {
+          "name": "__ZN14leon_hand_pack18gcasset_hand_readyE",
+          "address": 2351884076,
+          "size": 1,
+          "section": 9,
+          "type": 1
+        }
+      ]
+    }
+  },
+  "end_delta": 60384,
+  "conditional_same_prearena_trace_fit_reduction_bytes": [
+    57344,
+    61440
+  ],
+  "condition": "Coherent active fit clamp; identical translated pre-arena allocation trace/top-chunk state; no intervening allocator activity or extra memalign failure/retry differences.",
+  "private_mm_alloc_sections_identical": true,
+  "private_mm_alloc_section_readback": {
+    "off": {
+      ".text": {
+        "size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      ".data": {
+        "size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      ".bss": {
+        "size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      ".text.mm_init": {
+        "size": 24,
+        "sha256": "f48775846c7defa2e936544f21bef9de94e55d9b302eb7243c89ce4e5b3d7ee8"
+      },
+      ".rodata.mm_sbrk.str1.4": {
+        "size": 22,
+        "sha256": "d566598abf38205649050f38d6f3ecfe735f8846ff13ae303c05620cfc8f4d1d"
+      },
+      ".text.mm_sbrk": {
+        "size": 436,
+        "sha256": "83b89de551e9f748061cd8ceaa3e14733260298fa9813955bba2ac9d5b6cb2ea"
+      },
+      ".bss.sbrk_base": {
+        "size": 4,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "on": {
+      ".text": {
+        "size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      ".data": {
+        "size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      ".bss": {
+        "size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      ".text.mm_init": {
+        "size": 24,
+        "sha256": "f48775846c7defa2e936544f21bef9de94e55d9b302eb7243c89ce4e5b3d7ee8"
+      },
+      ".rodata.mm_sbrk.str1.4": {
+        "size": 22,
+        "sha256": "d566598abf38205649050f38d6f3ecfe735f8846ff13ae303c05620cfc8f4d1d"
+      },
+      ".text.mm_sbrk": {
+        "size": 436,
+        "sha256": "83b89de551e9f748061cd8ceaa3e14733260298fa9813955bba2ac9d5b6cb2ea"
+      },
+      ".bss.sbrk_base": {
+        "size": 4,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "measured_H2_heap_loss": null,
+  "measured_KOS_heap_loss": null,
+  "current_catalog_motion_full_link_price": null,
+  "pins": [
+    {
+      "path": "/root/work/lanes/gc-motion24/port/dreamcast/game/platform/mem.cpp",
+      "bytes": 10107,
+      "sha256": "73d90ec31286803d214b030b90db519f7c8e8534cb9d8403f797076d79f2fca6"
+    },
+    {
+      "path": "/root/work/lanes/gc-motion24/port/dreamcast/game/platform/os.cpp",
+      "bytes": 35736,
+      "sha256": "f861a5b9ebb9c6555fc642922af604674fa1acc16a90ba757f55e8ea135b7c92"
+    },
+    {
+      "path": "/root/work/lanes/gc-motion24/port/dreamcast/game/ui_bridge.cpp",
+      "bytes": 47895,
+      "sha256": "cb2bd2ca4ace0abf7cc33719ec3f4cc9b4b24ba6bca7c7ddec6d64dd3a6beeb8"
+    },
+    {
+      "path": "/root/work/lanes/gc-motion24/src/game/main_mem.cpp",
+      "bytes": 49367,
+      "sha256": "2d0951bdd8d69c4fcf332e8d0a02d8d18afeef03a4c65059e931828d20d2e372"
+    },
+    {
+      "path": "/root/work/lanes/gc-motion24/src/game/game.cpp",
+      "bytes": 69160,
+      "sha256": "810dc0bfa6042f34a5dc9cb876f2b077844a54d6c76d0f9e2a2f7e064a1e1c03"
+    },
+    {
+      "path": "/root/work/lanes/gc-motion24/src/lib/OSAlloc.c",
+      "bytes": 22894,
+      "sha256": "3d873625a9813fd5cd7d321842b31ff0abf22e20f33b5baebd02d8fee80638e8"
+    },
+    {
+      "path": "/root/work/lanes/gc-motion24/include/main_mem.h",
+      "bytes": 3872,
+      "sha256": "7d4f1e41ae696fb77c0075d1f3cd9f5db019ce42632d71dd29d949793f7ef2a7"
+    },
+    {
+      "path": "/root/work/lanes/gc-motion24/port/dreamcast/game/Makefile",
+      "bytes": 219354,
+      "sha256": "f922eb853d6f7ca5ddf30d2a1f2539035e7187f1f845fa576e0b6beffc35db34"
+    },
+    {
+      "path": "/root/work/lanes/gc-motion24/port/dreamcast/game/platform/native_movie.cpp",
+      "bytes": 70455,
+      "sha256": "276e8e6f092320f9fcaf6fa9ff27c39550ae2b30939668d3aadf4b2af464e39e"
+    },
+    {
+      "path": "/root/work/lanes/gc-motion24/port/dreamcast/game/platform/gc_asset_gate.cpp",
+      "bytes": 19622,
+      "sha256": "8e271fbe41023a5dd1e2e0d2d4163e6cacc8389b830ecd7a10848f680ac783d9"
+    },
+    {
+      "path": "/root/work/lanes/gc-motion24/port/dreamcast/game/platform/gc_asset_disc.cpp",
+      "bytes": 3922,
+      "sha256": "ecd578a098bc2cc9739bd2f1e537b80c46883f0a9f2fa3b1e7294709a5bd2dde"
+    },
+    {
+      "path": "/root/work/lanes/gc-motion24/port/dreamcast/game/platform/gc_asset_members.cpp",
+      "bytes": 10577,
+      "sha256": "3f1c768789846928c5aea662171f44fa5c07e5b5579ef93a09528407b132c12a"
+    },
+    {
+      "path": "/root/work/lanes/gc-motion24/port/dreamcast/game/platform/gc_asset_motion_unknown.cpp",
+      "bytes": 2265,
+      "sha256": "961c6a3c42319fdc1cd86536482e051111f6cfefc64b3ce590d0a6f98efae48a"
+    },
+    {
+      "path": "/root/work/lanes/gc-motion24/port/dreamcast/docs/qualification/AUDITS23_20261023.md",
+      "bytes": 4017,
+      "sha256": "0cd90cc8a95f1c799e35a70cdc2b34a3c121ae8df81a4b2615f041f0d5f84fb8"
+    },
+    {
+      "path": "/root/work/lanes/gc-motion24/port/dreamcast/game/platform/sdk/dolphin.h",
+      "bytes": 629,
+      "sha256": "a119c8eac4b6c071395a7b813f11b6f128d77caa1cd3964024ac65dfe38190be"
+    },
+    {
+      "path": "/root/work/lanes/gc-motion24/port/dreamcast/game/platform/sdk/dolphin/os.h",
+      "bytes": 857,
+      "sha256": "7efd05c13c0c12660bd256a0f9636ff7aea09308007c1b322b2e2880e1eb30a5"
+    },
+    {
+      "path": "/root/work/kos-re4dc-d367/kernel/mm/mm.c",
+      "bytes": 1822,
+      "sha256": "990a0a987c8de8c8158d8e8c2f99a809195231b3bc5cc26dd03b16d5863d063c"
+    },
+    {
+      "path": "/root/work/kos-re4dc-d367/kernel/libc/koslib/malloc.c",
+      "bytes": 183101,
+      "sha256": "c867afa4a1eaeced5182e844572d67087e9463818199d62b4f4a740ca8ba7140"
+    },
+    {
+      "path": "/root/work/kos-re4dc-d367/kernel/libc/newlib/newlib_sbrk.c",
+      "bytes": 222,
+      "sha256": "457abcfacd356a36c30afcddc74deb9040629d468ee4112371410f08a3ecb0f8"
+    },
+    {
+      "path": "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include/arch/stack.h",
+      "bytes": 4818,
+      "sha256": "c07faffec2eb300324909de683f6d7948420c6bdd661a72cfc7e6a4802b87b20"
+    },
+    {
+      "path": "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include/arch/arch.h",
+      "bytes": 9774,
+      "sha256": "aa4bce7e7498092af87498608658db67c5aa777f5df0c905fd5a115a84e9a41a"
+    },
+    {
+      "path": "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/kernel/startup.S",
+      "bytes": 3532,
+      "sha256": "1d1153c5eb15863e03da6dbba7b0b40c4bd2d8c179b76e80591540d2e904df5c"
+    },
+    {
+      "path": "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/kernel/init.c",
+      "bytes": 11988,
+      "sha256": "551208774d5a8e6a1f41cff28202607a196a93929abbeee25a3952ca18df7517"
+    },
+    {
+      "path": "/root/work/kos-re4dc-d367/utils/ldscripts/shlelf.xc",
+      "bytes": 10832,
+      "sha256": "fe2d763124ebb8616f96393c7f1d3b1f7c2aa83593e03bc8060faf28364451c2"
+    },
+    {
+      "path": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a",
+      "bytes": 5770580,
+      "sha256": "5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf"
+    },
+    {
+      "path": "/root/work/kos-re4dc-d367/kernel/fs/fs.c",
+      "bytes": 20831,
+      "sha256": "4a81efd9c3bcb13a08c802a2474eca15ea4eb6a2eec93be33ad3b0471a09ccfd"
+    },
+    {
+      "path": "/root/work/lanes/gc-port23-full-target2-scratch/off/out/obj/kosmm/mm.c",
+      "bytes": 2128,
+      "sha256": "2aa20f38a40e376d6d5bf518cb86facd63d2a32f2067f5c71c03a66f2f3f8757"
+    },
+    {
+      "path": "/root/work/lanes/gc-port23-full-target2-scratch/off/out/obj/kosmm/mm.o",
+      "bytes": 7680,
+      "sha256": "11bdb092c58f7f6bed2844f15d41b0eb1194bd65f2b8b1ac1be4763a97eaf6c6"
+    },
+    {
+      "path": "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/kosmm/mm.c",
+      "bytes": 2128,
+      "sha256": "2aa20f38a40e376d6d5bf518cb86facd63d2a32f2067f5c71c03a66f2f3f8757"
+    },
+    {
+      "path": "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/kosmm/mm.o",
+      "bytes": 7680,
+      "sha256": "8dd003c87e9f308b937a52e949af926e08381098e4c9641f3c3d9228fa92f1ba"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/receipt.json",
+      "bytes": 16832,
+      "sha256": "8103804d650a1caf469c6d2820a06aa560702acfc0404bac990f8cbde821b631"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/SUMMARY.json",
+      "bytes": 1302,
+      "sha256": "75eb5be2f1c9e51b3994fb35a969765a10530bc222c2a4a6e30c1d9a166b9b18"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/SHA256-MANIFEST.json",
+      "bytes": 3346,
+      "sha256": "76ec4448e08f4bb7c59cb17eb18344c126cdf05d802b2e2060bbe9c44e75b667"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/resolved-knobs.txt",
+      "bytes": 240397,
+      "sha256": "fcb8b1459b58f9f567c757d6cb576707708c57ed1c79fe8851091961cfd647dd"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/symbols.txt",
+      "bytes": 581672,
+      "sha256": "0f16f8c9aad30e7e4b5d224a9fb603c8301d1384b32d371c51479a9ccce523a3"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/load-segments.txt",
+      "bytes": 596,
+      "sha256": "2611bf31b952c13921a0d9cd69c63aa0f05ee0c6b1c24a8cf5e56776a2bba633"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/sections.txt",
+      "bytes": 2528,
+      "sha256": "19a1d75df98eeb2c35e0ffd4f78844455889b026ae8d01da4a65609e49708495"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/resolved-knobs.txt",
+      "bytes": 238928,
+      "sha256": "4cd0b147aa4d3ca79f47d8b3ef0e8c0d36fa74e4851550251b8608cec6e5ecb2"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/symbols.txt",
+      "bytes": 601809,
+      "sha256": "4f1c7a9026d5ef9ce508b2a46f11102d88c1297db93f39530fb9672e662b8982"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/load-segments.txt",
+      "bytes": 596,
+      "sha256": "55ab697a4cdadbde912d0c597344fba6032d22951276ed7ad447b654004e1254"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/sections.txt",
+      "bytes": 2528,
+      "sha256": "add2cb94e22a9120acaf13ec4fb64fa41212ac3adcf4d664e74aa2926faa8fbb"
+    }
+  ],
+  "scope": "No SDK/build/guest/reserve/arena/recipe changes. ELF/source/receipt reads only; arithmetic upper bounds are not runtime measurements."
+}

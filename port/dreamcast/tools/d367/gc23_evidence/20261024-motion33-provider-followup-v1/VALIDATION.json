@@ -1,0 +1,160 @@
+{
+  "status": "SOURCE_AND_METADATA_CHAIN_PRESERVATION_PASS",
+  "verified_metadata_manifests": {
+    "motion-target-preparation": {
+      "sha256": "87f70c97f87276d697813453710fac93be3c33bcf8b305b5d71378f597172db7",
+      "members": 6
+    },
+    "motion-source-host-5e6": {
+      "sha256": "a0fed4eae71756fba7c59f1e7b0ccaca8dac6bb6167ce219fa363fffa4584687",
+      "members": 4
+    },
+    "motion-target33-root": {
+      "sha256": "e1e870f6b9fd07f1bad4ad6840eb7ffbf0a117cd07f546998a59290486749fa8",
+      "members": 405
+    },
+    "motion-independent-target-readback": {
+      "sha256": "60b636176cb8b5042ea66439f0496e9022d3f7111f63b8ae550b24346d382a0e",
+      "members": 410,
+      "identical_target_members_referenced": 397,
+      "new_members_copied": 13
+    }
+  },
+  "host_source_pins_verified": [
+    {
+      "source": "5e6b7d8c0f76e7431f1a7787459faa41fb0b507c",
+      "path": "port/dreamcast/game/gc_asset_gate.mk",
+      "sha256": "4e34c10a9a44aa749ce2182e3756eb94f96495942f9a13f9d518b3c9265546a2"
+    },
+    {
+      "source": "5e6b7d8c0f76e7431f1a7787459faa41fb0b507c",
+      "path": "port/dreamcast/game/model_bridge.cpp",
+      "sha256": "5a38b902225bd8b8fb8e8ad39bdba91dee04e123c5dde29bfc5f08178eba0c9e"
+    },
+    {
+      "source": "5e6b7d8c0f76e7431f1a7787459faa41fb0b507c",
+      "path": "port/dreamcast/game/platform/gc_asset_motion_unknown.cpp",
+      "sha256": "961c6a3c42319fdc1cd86536482e051111f6cfefc64b3ce590d0a6f98efae48a"
+    },
+    {
+      "source": "5e6b7d8c0f76e7431f1a7787459faa41fb0b507c",
+      "path": "port/dreamcast/game/platform/include/gc_asset_motion_unknown.h",
+      "sha256": "2d61f845fed695c66f078fdb5135317c6a1c60fe5cbb18579ece0d7430f42c67"
+    },
+    {
+      "source": "5e6b7d8c0f76e7431f1a7787459faa41fb0b507c",
+      "path": "port/dreamcast/game/platform/include/native_actor_leon_pipe.inc",
+      "sha256": "1f9229a067d5a757032af332a0dc48abfb45a10bf29a8515dab705f74c128bee"
+    },
+    {
+      "source": "5e6b7d8c0f76e7431f1a7787459faa41fb0b507c",
+      "path": "port/dreamcast/game/platform/native_actor_fast.cpp",
+      "sha256": "a8c98d22da0fcd03e58b519f82ec39942d8171b71b464c7fe6322e2c3cb9e018"
+    },
+    {
+      "source": "5e6b7d8c0f76e7431f1a7787459faa41fb0b507c",
+      "path": "port/dreamcast/game/platform/native_model.cpp",
+      "sha256": "e2f2dfd211515a56db63f0f964dc959ad15fe20589a11dc55f89b0178148efbe"
+    },
+    {
+      "source": "5e6b7d8c0f76e7431f1a7787459faa41fb0b507c",
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "sha256": "df4157517b49e5ae6ea0f352863a576d58deb16f5c2fe9cabbab3c5552ec0f85"
+    },
+    {
+      "source": "5e6b7d8c0f76e7431f1a7787459faa41fb0b507c",
+      "path": "port/dreamcast/tools/d367/gc_port23/MOTION-UNKNOWN24.md",
+      "sha256": "c92b8aea2f806dc087fda02511e7ab38abb14d74675a93b6818e99baee3a886d"
+    },
+    {
+      "source": "5e6b7d8c0f76e7431f1a7787459faa41fb0b507c",
+      "path": "port/dreamcast/tools/d367/gc_port23/test_judge.py",
+      "sha256": "480ba61fe408d6e0a144186762c801cdad925d34a1c5a117667be149ff462c30"
+    },
+    {
+      "source": "5e6b7d8c0f76e7431f1a7787459faa41fb0b507c",
+      "path": "port/dreamcast/tools/d367/gc_port23/test_motion_unknown.py",
+      "sha256": "0287736ac68c2abd59abff262d17d4764bc3b227a5137f43983575dc02600f9e"
+    },
+    {
+      "source": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+      "path": "port/dreamcast/game/gc_asset_gate.mk",
+      "sha256": "4e34c10a9a44aa749ce2182e3756eb94f96495942f9a13f9d518b3c9265546a2"
+    },
+    {
+      "source": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+      "path": "port/dreamcast/game/model_bridge.cpp",
+      "sha256": "5a38b902225bd8b8fb8e8ad39bdba91dee04e123c5dde29bfc5f08178eba0c9e"
+    },
+    {
+      "source": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+      "path": "port/dreamcast/game/platform/gc_asset_motion_unknown.cpp",
+      "sha256": "961c6a3c42319fdc1cd86536482e051111f6cfefc64b3ce590d0a6f98efae48a"
+    },
+    {
+      "source": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+      "path": "port/dreamcast/game/platform/include/gc_asset_motion_unknown.h",
+      "sha256": "2d61f845fed695c66f078fdb5135317c6a1c60fe5cbb18579ece0d7430f42c67"
+    },
+    {
+      "source": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+      "path": "port/dreamcast/game/platform/include/native_actor_leon_pipe.inc",
+      "sha256": "1f9229a067d5a757032af332a0dc48abfb45a10bf29a8515dab705f74c128bee"
+    },
+    {
+      "source": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+      "path": "port/dreamcast/game/platform/native_actor_fast.cpp",
+      "sha256": "a8c98d22da0fcd03e58b519f82ec39942d8171b71b464c7fe6322e2c3cb9e018"
+    },
+    {
+      "source": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+      "path": "port/dreamcast/game/platform/native_model.cpp",
+      "sha256": "e2f2dfd211515a56db63f0f964dc959ad15fe20589a11dc55f89b0178148efbe"
+    },
+    {
+      "source": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "sha256": "df4157517b49e5ae6ea0f352863a576d58deb16f5c2fe9cabbab3c5552ec0f85"
+    },
+    {
+      "source": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+      "path": "port/dreamcast/tools/d367/gc_port23/MOTION-UNKNOWN24.md",
+      "sha256": "2e66122f446005a6c309c4f17a76d347b73f0b24ad6286daf1bd33b1c76eb66a"
+    },
+    {
+      "source": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+      "path": "port/dreamcast/tools/d367/gc_port23/test_motion_unknown.py",
+      "sha256": "5a937e512994a2a4a1257b428930e4d22b8aa594bacaecbf6e4b460a4895eb9f"
+    }
+  ],
+  "syntax_only_checked": [
+    "dated-20261024-root-snapshots/takeover-refresh-20261024.py",
+    "dated-motion-integration-preview/integration-readiness-motion-20261024.py",
+    "motion-root-helpers-receipts/run-target-motion24.py",
+    "motion-root-helpers-receipts/run-target-motion24.sh",
+    "motion-root-helpers-receipts/finalize-target-motion24.py",
+    "motion-root-helpers-receipts/check-wrap-providers.py",
+    "motion-root-helpers-receipts/check-wrap-providers.py.v1",
+    "motion-root-helpers-receipts/check-wrap-providers.py.v2",
+    "motion-root-helpers-receipts/check-wrap-providers.sh",
+    "motion-root-helpers-receipts/root-host-receipt-readback.py",
+    "motion-root-helpers-receipts/root-host-receipt-readback.py.v1",
+    "motion-target-preparation/prepare_motion24.py",
+    "motion-target-preparation/readback_prep.py",
+    "motion-author-readback/readback_target.py",
+    "motion-source-host-review/independent_controls.py",
+    "motion-independent-target-readback/readback_target.py",
+    "collect.py"
+  ],
+  "target_arms_recorded": 33,
+  "root405_metadata_members_verified": 405,
+  "independent410_members_verified": 410,
+  "independent_identical_metadata_references": 397,
+  "independent_new_metadata_members": 13,
+  "original_provider_incomplete_report_preserved": true,
+  "real_existing_wrap_followup_separate": true,
+  "six_rewrite_references_match_original_missing": true,
+  "SDK_or_guest_runs": 0,
+  "prior_snapshot_seal": "2266022c265062c54d044f718c094540413b59773c5ecef8fcb13db96c4fb980",
+  "scope": "Preservation checks only. No provider SDK recheck, recompilation, full-link, runtime heap/KOS/H2, stack-chain/IRQ, producer terminal, configured catalog, Motion positive provenance or full I001 acceptance."
+}

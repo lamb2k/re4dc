@@ -1,0 +1,19 @@
+00000000 t (anonymous namespace)::Builder::vertex_indices(unsigned int, unsigned int, unsigned int, unsigned int, re4dc::render::RenderVertex&, float&)
+00000000 t bool (anonymous namespace)::Builder::triangle<unsigned char>(unsigned char const*, unsigned char const*, unsigned char const*)
+00000000 t bool (anonymous namespace)::Builder::primitive<unsigned char>(unsigned char const*, unsigned int, re4dc::render::DrawTopology)
+00000000 b (anonymous namespace)::work_stats
+00000000 b (anonymous namespace)::prepared_batch
+00000000 b (anonymous namespace)::static_lighting
+00000000 b (anonymous namespace)::preparation_stats
+00000000 t (anonymous namespace)::project(float&, float&, float&, void*)
+00000000 t re4dc_model_submit::{lambda()#1}::operator()() const [clone .isra.0]
+00000000 B leon_hr_parts
+00000000 T re4dc_model_detach_retained_storage
+00000000 T re4dc_model_invalidate_static_lighting
+00000000 T re4dc_model_preparation_frame
+00000000 T re4dc_model_preparation_stats
+00000000 T re4dc_model_skipped_writeback
+00000000 T re4dc_model_source_span
+00000000 T re4dc_model_source_stamp
+00000000 T re4dc_model_submit
+00000000 T re4dc_model_work_stats

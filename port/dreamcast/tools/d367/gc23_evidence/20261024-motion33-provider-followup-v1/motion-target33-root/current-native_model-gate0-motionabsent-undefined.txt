@@ -1,0 +1,40 @@
+         U re4dc::render::group_visible(re4dc::render::DrawBounds const&, float const*, float const*, float const*, float, float, float)
+         U re4dc::render::primitive_visible(re4dc::render::PrimitiveSphere const&, float const*, float const*, float const*, float, float, float)
+         U re4dc::render::prepare_actor_lights(re4dc::render::SourceLighting const&)
+         U re4dc::render::clip_projected_triangle(re4dc::render::RenderVertex const*, pvr_vertex*, unsigned char, re4dc::render::ClipParameters const&, re4dc::render::ClipStats*, float const*)
+         U re4dc::render::evaluate_prepared_source_lighting(float, float, float, float, float, float, re4dc::render::SourceLighting const&, re4dc::render::PreparedSourceLights const&, unsigned char const*, float*)
+         U __dreamcast_get_ticks
+         U __movmem_i4_even
+         U __movmem_i4_odd
+         U __udivsi3_i4i
+         U __unordsf2
+         U abort
+         U mat_load
+         U memcmp
+         U memcpy
+         U memset
+         U re4dc_actor_materialize
+         U re4dc_actor_materialize_lazy
+         U re4dc_actor_stream_encoded
+         U re4dc_actor_submit
+         U re4dc_leon_hr_image
+         U re4dc_log
+         U re4dc_model_acquire_draw_plan
+         U re4dc_model_acquired_bounds
+         U re4dc_model_acquired_locals
+         U re4dc_model_defer_part
+         U re4dc_model_diag_latch
+         U re4dc_model_diagnostic_enabled
+         U re4dc_model_packet_abort
+         U re4dc_model_packet_begin
+         U re4dc_model_packet_commit
+         U re4dc_model_packet_reserve
+         U re4dc_model_packet_streaming
+         U re4dc_model_preparation_storage
+         U re4dc_model_release_draw_plan
+         U re4dc_model_result
+         U re4dc_model_retained_storage
+         U re4dc_model_static_lighting_storage
+         U re4dc_screen_hf
+         U re4dc_screen_wf
+         U re4dc_static_submit

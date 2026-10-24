@@ -1,0 +1,29 @@
+model_bridge.cpp:49:6:void {anonymous}::bind_actor_frame()	12	static
+model_bridge.cpp:89:17:void re4dc_bind_actor_frame()	4	static
+model_bridge.cpp:91:17:void re4dc_actor_model_frame_retire()	0	static
+model_bridge.cpp:95:16:int re4dc_actor_model_source(const void*, Re4dcActorSource*)	12	static
+model_bridge.cpp:115:16:int re4dc_actor_model_buffers(Re4dcModelPart*)	12	static
+model_bridge.cpp:127:16:int re4dc_actor_model_prelit(const void*, const void*)	36	static
+model_bridge.cpp:139:16:int re4dc_actor_model_class(const void*, const void*)	0	static
+model_bridge.cpp:148:16:int re4dc_actor_model_id(const void*)	0	static
+model_bridge.cpp:161:17:void re4dc_model_material(const void*, float, float, unsigned int)	0	static
+model_bridge.cpp:171:17:void re4dc_model_alpha_material(const void*, unsigned int, unsigned int)	0	static
+model_bridge.cpp:338:13:bool sob::same(const Re4dcModelPart&, const Re4dcModelPart&)	300	static
+model_bridge.cpp:351:6:void sob::new_frame()	68	static
+model_bridge.cpp:363:8:sob::Entry* sob::find(const Pending&)	68	static
+model_bridge.cpp:376:8:sob::Entry* sob::build(const Pending&)	60	static
+model_bridge.cpp:398:6:void sob::flush()	312	static
+model_bridge.cpp:425:6:bool sob::take(const cModel*, const cModelInfo*, const ModelData*, const ModelPart*, const Re4dcModelPart&)	36	static
+model_bridge.cpp:456:17:void re4dc_sob_room_leave()	20	static
+model_bridge.cpp:663:10:unsigned int sobake::words_of(const cModel*)	0	static
+model_bridge.cpp:669:6:void sobake::fill(const cModel*, unsigned int*)	24	static
+model_bridge.cpp:674:6:bool sobake::same(const cModel*, const unsigned int*)	8	static
+model_bridge.cpp:686:10:unsigned int sobake::fnv(const unsigned int*, unsigned int)	0	static
+model_bridge.cpp:691:6:void sobake::bind(const cModel*)	60	dynamic
+model_bridge.cpp:736:6:void sobake::decide(unsigned int)	100	dynamic
+model_bridge.cpp:784:17:void re4dc_sob_bake_room_leave()	16	static
+model_bridge.cpp:717:17:void re4dc_sob_bake_frame()	48	static
+model_bridge.cpp:792:16:int re4dc_sob_bake_skip(const void*)	8	static
+model_bridge.cpp:882:17:void re4dc_draw_model_part(const void*, const void*, const void*, const float (*)[4], unsigned int)	324	static
+model_bridge.cpp:1029:21:unsigned int re4dc_gcasset_model_identity(const void*, const void*, const void**)	0	static
+model_bridge.cpp:1038:21:unsigned int re4dc_gcasset_weapon_consumer(const void*, const void*, unsigned int, unsigned int)	4	static

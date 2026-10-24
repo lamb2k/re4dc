@@ -1,0 +1,1 @@
+{"scope":"Synthetic linker control only; no game source or objects changed","out":"/dev/shm/gc-motion24-wrap-check-jqh_4971","reason":"Raw ld default was big endian; little-endian fixture requires the actual shlelf target emulation","preserved":true}

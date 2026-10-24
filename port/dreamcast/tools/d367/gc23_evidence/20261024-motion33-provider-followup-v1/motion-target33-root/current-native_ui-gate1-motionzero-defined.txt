@@ -1,0 +1,720 @@
+00000000 r C.676.0
+00000000 r C.677.1
+00000000 n ZN11re4dc_actor13TextureLeasesILj448ELj64EE12retire_frameEv
+00000000 n ZN5re4dc14effect_strip217projectERfS1_S1_Pv
+00000000 n ZN5re4dc14effect_strip218verticesERK15Re4dcEffectQuadRA12_10pvr_vertex
+00000000 n ZN5re4dc6rect219qualifiedE
+00000000 n ZN5re4dc9subscreen13line_verticesERK18Re4dcSubscreenQuadjRA12_10pvr_vertex
+00000000 n ZN5re4dc9subscreen7projectERfS1_S1_Pv
+00000000 n ZN5re4dc9subscreen8verticesERK18Re4dcSubscreenQuadRA12_10pvr_vertex
+00000000 n ZNK11re4dc_actor13TextureLeasesILj448ELj64EE6pinnedEj
+00000000 n ZNK11re4dc_actor13TextureLeasesILj448ELj64EE7resolveERK22Re4dcActorTextureLeasejRj
+00000000 n ZNK11re4dc_actor13TextureLeasesILj448ELj64EE9availableEv
+00000000 t _GLOBAL__sub_I_re4dc_pvr_ready_test_arm
+00000000 T pace_note_draw(int)
+00000000 b mv_receivers
+00000000 t ui_draw_quad(unsigned int)
+00000000 d ta_vertex_bytes
+00000000 t manual_pack_size((anonymous namespace)::Key const&)
+00000000 t manual_page_load(unsigned int, unsigned int, Re4dcUiImage&)
+00000000 t subscreen_submit(Re4dcSubscreenQuad const*, pvr_vertex const*, unsigned int)
+00000000 b manual_failed_mask
+00000000 b manual_failed_frame
+00000000 r re4dc_binocular_art
+00000000 t stage1_batch_refuse(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int) [clone .isra.0]
+00000000 t model_direct_account(unsigned int)
+00000000 b manual_generic_failed
+00000000 b manual_generic_failed_frame
+00000000 D fxroomspill::generation
+00000000 B fxroomspill::cell
+00000000 B fxroomspill::tried
+00000000 B fxroomspill::allocs
+00000000 B fxroomspill::refusals
+00000000 W re4dc_actor::TextureLeases<448u, 64u>::retire_frame()
+00000000 b (anonymous namespace)::pvr_recover::busy_since
+00000000 t (anonymous namespace)::pvr_recover::done_chain(unsigned long, void*)
+00000000 b (anonymous namespace)::pvr_recover::last_frame
+00000000 t (anonymous namespace)::pvr_recover::list_chain(unsigned long, void*)
+00000000 r (anonymous namespace)::pvr_recover::kListEvents
+00000000 b (anonymous namespace)::pvr_recover::inject_hang_left
+00000000 d (anonymous namespace)::pvr_recover::inject_hang_frame
+00000000 d (anonymous namespace)::pvr_recover::inject_list_frame
+00000000 t (anonymous namespace)::pvr_recover::note_render_state()
+00000000 b (anonymous namespace)::pvr_recover::p1
+00000000 b (anonymous namespace)::pvr_recover::p2
+00000000 b (anonymous namespace)::pvr_recover::req
+00000000 b (anonymous namespace)::pvr_recover::synth
+00000000 b (anonymous namespace)::pvr_recover::in_row
+00000000 t (anonymous namespace)::pvr_recover::vblank(unsigned long, void*)
+00000000 b (anonymous namespace)::pvr_recover::gave_up
+00000000 b (anonymous namespace)::pvr_recover::natural
+00000000 b (anonymous namespace)::pvr_recover::err_bits
+00000000 b (anonymous namespace)::pvr_recover::err_prev
+00000000 t (anonymous namespace)::pvr_recover::on_slice(char)
+00000000 b (anonymous namespace)::pvr_recover::busy_seen
+00000000 b (anonymous namespace)::pvr_recover::done_prev
+00000000 t (anonymous namespace)::pvr_recover::err_chain(unsigned long, void*)
+00000000 r (anonymous namespace)::pvr_recover::kListBits
+00000000 b (anonymous namespace)::pvr_recover::list_prev
+00000000 b (anonymous namespace)::presort_lazy::th
+00000000 b (anonymous namespace)::presort_lazy::tm
+00000000 b (anonymous namespace)::presort_lazy::tw
+00000000 b (anonymous namespace)::presort_lazy::want
+00000000 t (anonymous namespace)::presort_lazy::flush()
+00000000 b (anonymous namespace)::presort_lazy::skips
+00000000 b (anonymous namespace)::presort_lazy::writes
+00000000 b (anonymous namespace)::presort_lazy::pending
+00000000 b (anonymous namespace)::presort_lazy::requests
+00000000 b (anonymous namespace)::presort_lazy::log_frame
+00000000 b (anonymous namespace)::texpack_payload_retry::initialized
+00000000 b (anonymous namespace)::texpack_payload_retry::base
+00000000 b (anonymous namespace)::texpack_payload_retry::next
+00000000 t (anonymous namespace)::texpack_payload_retry::advance(unsigned int)
+00000000 b (anonymous namespace)::texpack_payload_retry::current
+00000000 b (anonymous namespace)::latch::last_flips
+00000000 b (anonymous namespace)::latch::ring_frame
+00000000 b (anonymous namespace)::latch::max_opb_frame
+00000000 b (anonymous namespace)::latch::max_vtx_frame
+00000000 t (anonymous namespace)::latch::put(char)
+00000000 t (anonymous namespace)::latch::bump(unsigned int)
+00000000 b (anonymous namespace)::latch::head
+00000000 b (anonymous namespace)::latch::prev
+00000000 t (anonymous namespace)::latch::event(unsigned long, void*)
+00000000 b (anonymous namespace)::latch::counts
+00000000 b (anonymous namespace)::latch::errors
+00000000 r (anonymous namespace)::latch::kCodes
+00000000 r (anonymous namespace)::latch::kCount
+00000000 t (anonymous namespace)::latch::vblank(unsigned long, void*)
+00000000 r (anonymous namespace)::latch::kEvents
+00000000 b (anonymous namespace)::latch::max_opb
+00000000 b (anonymous namespace)::latch::max_vtx
+00000000 b (anonymous namespace)::latch::ring_rep
+00000000 b (anonymous namespace)::latch::err_count
+00000000 b (anonymous namespace)::latch::err_first
+00000000 b (anonymous namespace)::latch::ring_code
+00000000 b (anonymous namespace)::latch::scene_use
+00000000 d (anonymous namespace)::texpack::bad_sector
+00000000 t (anonymous namespace)::texpack::crc_update(unsigned int, unsigned char const*, unsigned int) [clone .constprop.0]
+00000000 b (anonymous namespace)::texpack::sector_crc
+00000000 b (anonymous namespace)::texpack::attempt_gen
+00000000 t (anonymous namespace)::texpack::open_locked(unsigned int)
+00000000 t (anonymous namespace)::texpack::read_failed(char const*, unsigned int, unsigned int) [clone .isra.0]
+00000000 d (anonymous namespace)::texpack::payload_epoch
+00000000 b (anonymous namespace)::texpack::index_bad_bits
+00000000 b (anonymous namespace)::texpack::index_bad_until
+00000000 t (anonymous namespace)::texpack::payload_current(unsigned int, unsigned int)
+00000000 t (anonymous namespace)::texpack::payload_reset_locked()
+00000000 b (anonymous namespace)::texpack::payload_epoch_exhausted
+00000000 t (anonymous namespace)::texpack::find((anonymous namespace)::Key const&, unsigned int&, unsigned int&, unsigned int, unsigned int*, unsigned int*) [clone .constprop.0]
+00000000 b (anonymous namespace)::texpack::hits
+00000000 b (anonymous namespace)::texpack::lock
+00000000 t (anonymous namespace)::texpack::word(unsigned char const*)
+00000000 b (anonymous namespace)::texpack::count
+00000000 b (anonymous namespace)::texpack::first
+00000000 b (anonymous namespace)::texpack::state
+00000000 d (anonymous namespace)::texpack::cached
+00000000 b (anonymous namespace)::texpack::errors
+00000000 b (anonymous namespace)::texpack::misses
+00000000 b (anonymous namespace)::texpack::sector
+00000000 b (anonymous namespace)::texpack::streak
+00000000 t (anonymous namespace)::texpack::invalid(char const*, unsigned int, unsigned int) [clone .isra.0]
+00000000 b (anonymous namespace)::texpack::sectors
+00000000 b (anonymous namespace)::texpack::attempts
+00000000 b (anonymous namespace)::texpack::retry_at
+00000000 b (anonymous namespace)::texpack::room_gen
+00000000 t (anonymous namespace)::WaterOut::flush()
+00000000 b (anonymous namespace)::pvr_ready::last_frame
+00000000 t (anonymous namespace)::pvr_ready::wait_clear(int volatile&, char const*, char, unsigned int volatile&)
+00000000 d (anonymous namespace)::pvr_ready::first_frame
+00000000 b (anonymous namespace)::pvr_ready::ta_timeouts
+00000000 b (anonymous namespace)::pvr_ready::test_slices
+00000000 t (anonymous namespace)::pvr_ready::acquire_bank() [clone .part.0]
+00000000 b (anonymous namespace)::pvr_ready::render_timeouts
+00000000 b (anonymous namespace)::pvr_ready::present_timeouts
+00000000 t (anonymous namespace)::pvr_ready::note(char, unsigned int volatile&)
+00000000 t (anonymous namespace)::copy_words(void*, void const*, unsigned int)
+00000000 b (anonymous namespace)::core_nkeys
+00000000 b (anonymous namespace)::core_yield
+00000000 t (anonymous namespace)::defer_part(Re4dcModelPart const*, re4dc::render::SourceLighting const*)
+00000000 t (anonymous namespace)::defer_part(Re4dcModelPart const*, re4dc::render::SourceLighting const*) [clone .part.0]
+00000000 b (anonymous namespace)::door_draws
+00000000 d (anonymous namespace)::door_frame
+00000000 b (anonymous namespace)::door_steps
+00000000 b (anonymous namespace)::entry_hint
+00000000 b (anonymous namespace)::frag_frame
+00000000 b (anonymous namespace)::fx_dropped
+00000000 d (anonymous namespace)::fx_hdr_key
+00000000 b (anonymous namespace)::fx_missing
+00000000 b (anonymous namespace)::gad_closes
+00000000 t (anonymous namespace)::gad_wanted((anonymous namespace)::Key const&)
+00000000 t (anonymous namespace)::glyph_cell(Re4dcUiGlyph const&)
+00000000 b (anonymous namespace)::glyph_full
+00000000 b (anonymous namespace)::glyph_hint
+00000000 b (anonymous namespace)::glyph_hits
+00000000 b (anonymous namespace)::glyph_peak
+00000000 t (anonymous namespace)::grade_send(unsigned char*, unsigned int)
+00000000 t (anonymous namespace)::hash_bytes((anonymous namespace)::Key&, void const*, unsigned int)
+00000000 b (anonymous namespace)::hold_frame
+00000000 b (anonymous namespace)::hold_nkeys
+00000000 t (anonymous namespace)::hud_number((anonymous namespace)::HudBatch&, float, float, unsigned int, bool, unsigned long) [clone .constprop.0]
+00000000 t (anonymous namespace)::image_size(Re4dcUiImage const&)
+00000000 r (anonymous namespace)::kCrcNibble
+00000000 b (anonymous namespace)::load_opens
+00000000 b (anonymous namespace)::model_peak
+00000000 b (anonymous namespace)::model_used
+00000000 t (anonymous namespace)::movie_draw()
+00000000 b (anonymous namespace)::osd_failed
+00000000 b (anonymous namespace)::osd_loaded
+00000000 t (anonymous namespace)::osd_packet(unsigned char*)
+00000000 b (anonymous namespace)::post_calls
+00000000 t (anonymous namespace)::same_image(Re4dcUiImage const&, Re4dcUiImage const&)
+00000000 t (anonymous namespace)::source_hit(unsigned int, Re4dcUiImage const&)
+00000000 b (anonymous namespace)::source_pal
+00000000 t (anonymous namespace)::source_put(Re4dcUiImage const&, (anonymous namespace)::Key const&, unsigned int, unsigned char)
+00000000 t (anonymous namespace)::vram_claim(unsigned int, bool)
+00000000 t (anonymous namespace)::water_emit((anonymous namespace)::WaterNode const&)
+00000000 t (anonymous namespace)::close_entry((anonymous namespace)::Entry&)
+00000000 t (anonymous namespace)::core_pinned((anonymous namespace)::Entry const&)
+00000000 b (anonymous namespace)::core_yields
+00000000 b (anonymous namespace)::direct_open
+00000000 b (anonymous namespace)::frag_win_ok
+00000000 b (anonymous namespace)::frame_ready
+00000000 t (anonymous namespace)::fx_trim_fit(float, float, float&)
+00000000 b (anonymous namespace)::glyph_atlas
+00000000 b (anonymous namespace)::glyph_banks
+00000000 b (anonymous namespace)::glyph_cells
+00000000 b (anonymous namespace)::glyph_drawn
+00000000 b (anonymous namespace)::glyph_quads
+00000000 b (anonymous namespace)::glyph_total
+00000000 b (anonymous namespace)::handle_hits
+00000000 b (anonymous namespace)::model_input
+00000000 b (anonymous namespace)::model_parts
+00000000 b (anonymous namespace)::movie_width
+00000000 t (anonymous namespace)::palette_fnv(Re4dcUiImage const&)
+00000000 b (anonymous namespace)::post_direct
+00000000 t (anonymous namespace)::post_packet(unsigned char*)
+00000000 b (anonymous namespace)::post_queued
+00000000 d (anonymous namespace)::ps2_hdr_log
+00000000 b (anonymous namespace)::pvr_waiters
+00000000 b (anonymous namespace)::source_hint
+00000000 b (anonymous namespace)::source_late
+00000000 b (anonymous namespace)::source_used
+00000000 b (anonymous namespace)::speed_batch
+00000000 d (anonymous namespace)::stream_list
+00000000 t (anonymous namespace)::stream_open()
+00000000 t (anonymous namespace)::stream_send(void const*, unsigned int)
+00000000 b (anonymous namespace)::unsupported
+00000000 t (anonymous namespace)::vblank_wake(unsigned long, void*)
+00000000 b (anonymous namespace)::vram_budget
+00000000 b (anonymous namespace)::vram_claims
+00000000 b (anonymous namespace)::water_cells
+00000000 b (anonymous namespace)::water_cover
+00000000 t (anonymous namespace)::water_reach()
+00000000 b (anonymous namespace)::water_verts
+00000000 b (anonymous namespace)::whfix_bytes
+00000000 d (anonymous namespace)::whfix_frame
+00000000 b (anonymous namespace)::whfix_parts
+00000000 b (anonymous namespace)::whfix_total
+00000000 b (anonymous namespace)::core_room_on
+00000000 d (anonymous namespace)::deferred_top
+00000000 b (anonymous namespace)::desired_list
+00000000 b (anonymous namespace)::direct_parts
+00000000 b (anonymous namespace)::direct_slots
+00000000 d (anonymous namespace)::door_ui_mark
+00000000 b (anonymous namespace)::entry_closed
+00000000 b (anonymous namespace)::frag_expired
+00000000 b (anonymous namespace)::frag_latched
+00000000 b (anonymous namespace)::frag_min_age
+00000000 t (anonymous namespace)::frag_release(char const*)
+00000000 b (anonymous namespace)::fx_hdr_cache
+00000000 b (anonymous namespace)::fx_new_loads
+00000000 b (anonymous namespace)::glyph_culled
+00000000 b (anonymous namespace)::glyph_fenced
+00000000 b (anonymous namespace)::glyph_misses
+00000000 b (anonymous namespace)::grade_direct
+00000000 t (anonymous namespace)::grade_packet(unsigned char*, unsigned long)
+00000000 b (anonymous namespace)::grade_queued
+00000000 d (anonymous namespace)::handle_clock
+00000000 d (anonymous namespace)::handle_reset
+00000000 t (anonymous namespace)::handle_shape(Re4dcUiImage const&, unsigned int&, bool)
+00000000 b (anonymous namespace)::handle_table
+00000000 b (anonymous namespace)::hold_dropped
+00000000 b (anonymous namespace)::hold_restore
+00000000 t (anonymous namespace)::kos_headroom()
+00000000 r (anonymous namespace)::manual_pages
+00000000 b (anonymous namespace)::missing_keys
+00000000 b (anonymous namespace)::model_handle
+00000000 b (anonymous namespace)::model_output
+00000000 b (anonymous namespace)::movie_height
+00000000 b (anonymous namespace)::overlay_slab
+00000000 b (anonymous namespace)::overlay_uses
+00000000 t (anonymous namespace)::palette_copy(unsigned int)
+00000000 b (anonymous namespace)::palette_slot
+00000000 b (anonymous namespace)::palette_used
+00000000 b (anonymous namespace)::post_dropped
+00000000 b (anonymous namespace)::post_skipped
+00000000 b (anonymous namespace)::preload_runs
+00000000 b (anonymous namespace)::ps2_hdr_hits
+00000000 b (anonymous namespace)::ps2_hdr_next
+00000000 t (anonymous namespace)::resolve_full(Re4dcUiImage const&, Re4dcModelPart const*, bool)
+00000000 b (anonymous namespace)::room_pin_key
+00000000 b (anonymous namespace)::source_clock
+00000000 b (anonymous namespace)::source_evict
+00000000 t (anonymous namespace)::stream_close(bool)
+00000000 b (anonymous namespace)::stream_scene
+00000000 b (anonymous namespace)::vram_rejects
+00000000 b (anonymous namespace)::vram_retries
+00000000 b (anonymous namespace)::wake_renders
+00000000 b (anonymous namespace)::wake_vblanks
+00000000 b (anonymous namespace)::water_queued
+00000000 b (anonymous namespace)::whfix_frames
+00000000 b (anonymous namespace)::deferred_last
+00000000 b (anonymous namespace)::deferred_peak
+00000000 b (anonymous namespace)::door_captures
+00000000 t (anonymous namespace)::door_hold_now()
+00000000 d (anonymous namespace)::draining_list
+00000000 b (anonymous namespace)::fence_blocked
+00000000 b (anonymous namespace)::fence_wait_us
+00000000 b (anonymous namespace)::frag_handoffs
+00000000 b (anonymous namespace)::frag_reserves
+00000000 b (anonymous namespace)::frag_win_none
+00000000 b (anonymous namespace)::frame_storage
+00000000 t (anonymous namespace)::gcasset_flush()
+00000000 b (anonymous namespace)::gcasset_movie
+00000000 b (anonymous namespace)::gcasset_phase
+00000000 b (anonymous namespace)::glyph_dropped
+00000000 b (anonymous namespace)::glyph_headers
+00000000 t (anonymous namespace)::glyph_quarter(float)
+00000000 b (anonymous namespace)::grade_dropped
+00000000 b (anonymous namespace)::handle_bypass
+00000000 b (anonymous namespace)::handle_misses
+00000000 r (anonymous namespace)::hud_mask_keys
+00000000 b (anonymous namespace)::identity_hits
+00000000 b (anonymous namespace)::model_invalid
+00000000 b (anonymous namespace)::model_packets
+00000000 b (anonymous namespace)::model_pending
+00000000 b (anonymous namespace)::model_texture
+00000000 b (anonymous namespace)::movie_picture
+00000000 b (anonymous namespace)::movie_texture
+00000000 t (anonymous namespace)::overlay_depth()
+00000000 b (anonymous namespace)::overlay_layer
+00000000 b (anonymous namespace)::overlay_owner
+00000000 b (anonymous namespace)::palette_clock
+00000000 t (anonymous namespace)::preload_least(unsigned int, unsigned int)
+00000000 b (anonymous namespace)::preload_loads
+00000000 b (anonymous namespace)::preload_picks
+00000000 t (anonymous namespace)::present_fence()
+00000000 b (anonymous namespace)::ps2_hdr_fills
+00000000 b (anonymous namespace)::quads_flushed
+00000000 d (anonymous namespace)::rce_last_room
+00000000 t (anonymous namespace)::sources_reset()
+00000000 b (anonymous namespace)::stream_retire
+00000000 t (anonymous namespace)::stream_select(pvr_list_type)
+00000000 b (anonymous namespace)::vram_nocontig
+00000000 b (anonymous namespace)::water_clipped
+00000000 b (anonymous namespace)::water_dropped
+00000000 b (anonymous namespace)::water_missing
+00000000 b (anonymous namespace)::claim_released
+00000000 b (anonymous namespace)::deferred_basis
+00000000 b (anonymous namespace)::deferred_count
+00000000 b (anonymous namespace)::deferred_drops
+00000000 b (anonymous namespace)::deferred_first
+00000000 b (anonymous namespace)::deferred_spill
+00000000 b (anonymous namespace)::draining_parts
+00000000 b (anonymous namespace)::fence_timeouts
+00000000 b (anonymous namespace)::frag_win_bytes
+00000000 d (anonymous namespace)::fx_evict_frame
+00000000 t (anonymous namespace)::model_mask_key(Re4dcModelPart const*, (anonymous namespace)::Key&)
+00000000 b (anonymous namespace)::model_overflow
+00000000 b (anonymous namespace)::model_reserved
+00000000 b (anonymous namespace)::model_resource
+00000000 b (anonymous namespace)::palette_copies
+00000000 t (anonymous namespace)::preload_select(re4dc::texture::SourceIdentityTable const&, unsigned int&, unsigned int&, unsigned int&, unsigned int, unsigned int, bool)
+00000000 t (anonymous namespace)::present_report()
+00000000 t (anonymous namespace)::reset_deferred()
+00000000 t (anonymous namespace)::same_light_set((anonymous namespace)::DeferredLightSet const*, re4dc::render::SourceLighting const&)
+00000000 b (anonymous namespace)::stream_aborted
+00000000 b (anonymous namespace)::water_reach_mm
+00000000 b (anonymous namespace)::world_autosort
+00000000 b (anonymous namespace)::completed_frame
+00000000 b (anonymous namespace)::core_identities
+00000000 b (anonymous namespace)::deferred_lights
+00000000 b (anonymous namespace)::frag_held_frame
+00000000 b (anonymous namespace)::frame_pvr_bytes
+00000000 b (anonymous namespace)::frame_pvr_calls
+00000000 b (anonymous namespace)::gcasset_started
+00000000 t (anonymous namespace)::gcasset_startup() [clone .part.0]
+00000000 b (anonymous namespace)::glyph_evictions
+00000000 b (anonymous namespace)::kos_render_done
+00000000 b (anonymous namespace)::model_presented
+00000000 b (anonymous namespace)::pace_skip_frame
+00000000 b (anonymous namespace)::preload_pending
+00000000 b (anonymous namespace)::preload_skipped
+00000000 b (anonymous namespace)::resident_listed
+00000000 b (anonymous namespace)::resident_picked
+00000000 b (anonymous namespace)::room_identities
+00000000 b (anonymous namespace)::stream_discards
+00000000 t (anonymous namespace)::vram_room_track()
+00000000 b (anonymous namespace)::water_log_frame
+00000000 b (anonymous namespace)::door_held_frames
+00000000 b (anonymous namespace)::enemy_identities
+00000000 b (anonymous namespace)::frame_queue_peak
+00000000 b (anonymous namespace)::frame_work_start
+00000000 b (anonymous namespace)::fx_resident_only
+00000000 d (anonymous namespace)::model_diagnostic
+00000000 b (anonymous namespace)::model_state_bits
+00000000 b (anonymous namespace)::movie_background
+00000000 b (anonymous namespace)::pack_error_skips
+00000000 b (anonymous namespace)::present_failures
+00000000 b (anonymous namespace)::present_reported
+00000000 b (anonymous namespace)::present_resolved
+00000000 b (anonymous namespace)::rce_retire_frame
+00000000 t (anonymous namespace)::retire_kos_floor()
+00000000 b (anonymous namespace)::source_late_hits
+00000000 b (anonymous namespace)::stream_pass_logs
+00000000 b (anonymous namespace)::ta_double_wanted
+00000000 b (anonymous namespace)::vram_meta_evicts
+00000000 t (anonymous namespace)::vram_room_sample(char const*)
+00000000 t (anonymous namespace)::world_sort_begin()
+00000000 d (anonymous namespace)::door_banner_frame
+00000000 b (anonymous namespace)::frame_header_hits
+00000000 b (anonymous namespace)::frame_queue_drops
+00000000 b (anonymous namespace)::fx_resident_skips
+00000000 b (anonymous namespace)::glyph_total_first
+00000000 b (anonymous namespace)::glyph_unsupported
+00000000 b (anonymous namespace)::model_alpha_faded
+00000000 b (anonymous namespace)::model_empty_parts
+00000000 b (anonymous namespace)::model_header_hits
+00000000 b (anonymous namespace)::model_slab_failed
+00000000 b (anonymous namespace)::option_identities
+00000000 t (anonymous namespace)::overlay_slab_take()
+00000000 b (anonymous namespace)::player_identities
+00000000 b (anonymous namespace)::preload_room_pass
+00000000 b (anonymous namespace)::preparation_start
+00000000 b (anonymous namespace)::present_submitted
+00000000 t (anonymous namespace)::render_done_chain(unsigned long, void*)
+00000000 t (anonymous namespace)::select_model_pass(Re4dcModelPart const*)
+00000000 b (anonymous namespace)::stream_peak_bytes
+00000000 d (anonymous namespace)::water_reach_frame
+00000000 b (anonymous namespace)::weapon_identities
+00000000 b (anonymous namespace)::actor_fade_old_top
+00000000 b (anonymous namespace)::deferred_spill_top
+00000000 t (anonymous namespace)::external_image_key(Re4dcUiImage const&, (anonymous namespace)::Key&)
+00000000 b (anonymous namespace)::frame_render_start
+00000000 t (anonymous namespace)::fx_trim_oct_packet(Re4dcEffectSprite const&, (anonymous namespace)::Entry*, float const*, float const*, unsigned char*)
+00000000 b (anonymous namespace)::gcasset_visit_live
+00000000 b (anonymous namespace)::glyph_asset_serial
+00000000 b (anonymous namespace)::glyph_font_changes
+00000000 b (anonymous namespace)::glyph_header_ready
+00000000 b (anonymous namespace)::glyph_logged_total
+00000000 b (anonymous namespace)::manual_generic_key
+00000000 b (anonymous namespace)::model_alpha_vertex
+00000000 b (anonymous namespace)::model_wrap_rejects
+00000000 b (anonymous namespace)::movie_shown_serial
+00000000 b (anonymous namespace)::preload_after_pack
+00000000 t (anonymous namespace)::room_change_retire()
+00000000 b (anonymous namespace)::stream_model_bytes
+00000000 t (anonymous namespace)::vram_room_counters(unsigned int*)
+00000000 b (anonymous namespace)::world_barrier_logs
+00000000 b (anonymous namespace)::actor_fade_reserved
+00000000 b (anonymous namespace)::deferred_light_sets
+00000000 b (anonymous namespace)::frame_header_builds
+00000000 t (anonymous namespace)::gcasset_close_visit(unsigned int)
+00000000 b (anonymous namespace)::model_header_builds
+00000000 b (anonymous namespace)::model_slab_failures
+00000000 b (anonymous namespace)::model_state_rejects
+00000000 b (anonymous namespace)::movie_presentations
+00000000 b (anonymous namespace)::movie_upload_serial
+00000000 b (anonymous namespace)::render_source_begin
+00000000 b (anonymous namespace)::sourceWorldAcquired
+00000000 b (anonymous namespace)::stream_black_frames
+00000000 b (anonymous namespace)::stream_closed_lists
+00000000 b (anonymous namespace)::vram_guard_pressure
+00000000 b (anonymous namespace)::actor_texture_leases
+00000000 t (anonymous namespace)::ensure_model_storage()
+00000000 b (anonymous namespace)::gcasset_current_room
+00000000 t (anonymous namespace)::gcasset_model_accept(void const*, unsigned int)
+00000000 t (anonymous namespace)::gcasset_movie_forget()
+00000000 b (anonymous namespace)::gcasset_movie_serial
+00000000 t (anonymous namespace)::gcasset_packet_reset()
+00000000 b (anonymous namespace)::gcasset_visit_serial
+00000000 b (anonymous namespace)::model_alpha_material
+00000000 b (anonymous namespace)::model_scale_rebuilds
+00000000 t (anonymous namespace)::movie_window_release(unsigned int, bool, unsigned int&) [clone .constprop.0]
+00000000 b (anonymous namespace)::completed_preparation
+00000000 t (anonymous namespace)::gcasset_glyph_matches((anonymous namespace)::GlyphQuad const&)
+00000000 t (anonymous namespace)::gcasset_glyph_payload(char const*, void const*, unsigned int)
+00000000 t (anonymous namespace)::gcasset_glyph_version()
+00000000 b (anonymous namespace)::gcasset_model_pending
+00000000 t (anonymous namespace)::gcasset_model_prepare(Re4dcModelPart const*)
+00000000 b (anonymous namespace)::gcasset_packet_states
+00000000 t (anonymous namespace)::gcasset_texture_flush((anonymous namespace)::Entry&)
+00000000 b (anonymous namespace)::glyph_logged_problems
+00000000 b (anonymous namespace)::model_texture_rejects
+00000000 b (anonymous namespace)::preload_ps2_lean_runs
+00000000 b (anonymous namespace)::source_draws_finished
+00000000 t (anonymous namespace)::stage1_prepare_report(unsigned int, (anonymous namespace)::Key const&, unsigned int, unsigned int)
+00000000 d (anonymous namespace)::actor_fade_queue_epoch
+00000000 t (anonymous namespace)::gcasset_fx_stream_send(void const*, unsigned int)
+00000000 b (anonymous namespace)::model_capacity_rejects
+00000000 b (anonymous namespace)::movie_first_picture_us
+00000000 b (anonymous namespace)::sourceWorldPreparedKey
+00000000 b (anonymous namespace)::actor_fade_reserved_top
+00000000 b (anonymous namespace)::deferred_spill_capacity
+00000000 d (anonymous namespace)::gcasset_packet_consumer
+00000000 t (anonymous namespace)::gcasset_texture_emitted((anonymous namespace)::Entry*, re4dc_gcasset::Consumer)
+00000000 b (anonymous namespace)::actor_fade_queue_pending
+00000000 b (anonymous namespace)::actor_fade_reserved_tail
+00000000 b (anonymous namespace)::completed_render_profile
+00000000 b (anonymous namespace)::gcasset_generated_packet
+00000000 b (anonymous namespace)::sourceWorldPreparedFrame
+00000000 t (anonymous namespace)::sourceWorldTextureAcquired((anonymous namespace)::Key const&)
+00000000 t (anonymous namespace)::actor_fade_reservation_current(Re4dcActorFadeReservation const&)
+00000000 t (anonymous namespace)::load(Re4dcUiImage const&, bool, (anonymous namespace)::Key const*)
+00000000 b (anonymous namespace)::peak
+00000000 b (anonymous namespace)::used
+00000000 b (anonymous namespace)::drawn
+00000000 b (anonymous namespace)::frame
+00000000 b (anonymous namespace)::loads
+00000000 b (anonymous namespace)::nquad
+00000000 b (anonymous namespace)::ready
+00000000 b (anonymous namespace)::vroom
+00000000 b (anonymous namespace)::culled
+00000000 d (anonymous namespace)::door_h
+00000000 d (anonymous namespace)::door_w
+00000000 b (anonymous namespace)::gcfx_n
+00000000 b (anonymous namespace)::nglyph
+00000000 b (anonymous namespace)::post_c
+00000000 b (anonymous namespace)::post_h
+00000000 d (anonymous namespace)::door_th
+00000000 d (anonymous namespace)::door_tw
+00000000 b (anonymous namespace)::dropped
+00000000 d (anonymous namespace)::entries
+00000000 b (anonymous namespace)::fx_peak
+00000000 b (anonymous namespace)::handles
+00000000 r (anonymous namespace)::kFxTrim
+00000000 b (anonymous namespace)::missing
+00000000 b (anonymous namespace)::mv_open
+00000000 b (anonymous namespace)::nsource
+00000000 b (anonymous namespace)::ps2_hdr
+00000000 t (anonymous namespace)::resolve(Re4dcUiImage const&, Re4dcModelPart const*, bool)
+00000000 b (anonymous namespace)::sources
+00000000 b (anonymous namespace)::door_tex
+00000000 b (anonymous namespace)::frag_key
+00000000 b (anonymous namespace)::fx_count
+00000000 d (anonymous namespace)::fx_frame
+00000000 t (anonymous namespace)::hud_rect((anonymous namespace)::HudBatch&, float, float, float, float, unsigned long) [clone .constprop.0]
+00000000 r (anonymous namespace)::kGadKeys
+00000000 b (anonymous namespace)::mv_bytes
+00000000 b (anonymous namespace)::mv_sends
+00000000 b (anonymous namespace)::nmissing
+00000000 b (anonymous namespace)::osd_vram
+00000000 b (anonymous namespace)::ui_order
+00000000 b (anonymous namespace)::core_keys
+00000000 t (anonymous namespace)::door_draw()
+00000000 t (anonymous namespace)::door_fade(unsigned int, float, float)
+00000000 b (anonymous namespace)::door_held
+00000000 b (anonymous namespace)::frag_held
+00000000 b (anonymous namespace)::frag_want
+00000000 b (anonymous namespace)::fx_capped
+00000000 b (anonymous namespace)::fx_culled
+00000000 b (anonymous namespace)::fx_direct
+00000000 t (anonymous namespace)::fx_packet(Re4dcEffectSprite const&, (anonymous namespace)::Entry*, unsigned char*)
+00000000 b (anonymous namespace)::fx_queued
+00000000 t (anonymous namespace)::gad_apply(re4dc::texture::Package&, (anonymous namespace)::Key const&) [clone .isra.0]
+00000000 b (anonymous namespace)::gad_drops
+00000000 b (anonymous namespace)::gcfx_keys
+00000000 b (anonymous namespace)::gcfx_seen
+00000000 b (anonymous namespace)::glyph_twx
+00000000 b (anonymous namespace)::glyph_twy
+00000000 b (anonymous namespace)::hold_keys
+00000000 t (anonymous namespace)::image_key(Re4dcUiImage const&, (anonymous namespace)::Key&)
+00000000 r (anonymous namespace)::kRoomPins
+00000000 b (anonymous namespace)::mv_scenes
+00000000 b (anonymous namespace)::pkg_skips
+00000000 d (anonymous namespace)::post_key1
+00000000 d (anonymous namespace)::post_key2
+00000000 t (anonymous namespace)::post_send(unsigned char*, unsigned int)
+00000000 b (anonymous namespace)::rce_armed
+00000000 b (anonymous namespace)::reclaimed
+00000000 d (anonymous namespace)::ta_double
+00000000 b (anonymous namespace)::vram_gcfx
+00000000 r re4dc_charbake::variants
+00000000 W re4dc::effect_strip21::project(float&, float&, float&, void*)
+00000000 W re4dc::effect_strip21::vertices(Re4dcEffectQuad const&, pvr_vertex (&) [12])
+00000000 V re4dc::rect21::qualified
+00000000 W re4dc::subscreen::line_vertices(Re4dcSubscreenQuad const&, unsigned int, pvr_vertex (&) [12])
+00000000 W re4dc::subscreen::project(float&, float&, float&, void*)
+00000000 W re4dc::subscreen::vertices(Re4dcSubscreenQuad const&, pvr_vertex (&) [12])
+00000000 W re4dc_actor::TextureLeases<448u, 64u>::pinned(unsigned int) const
+00000000 W re4dc_actor::TextureLeases<448u, 64u>::resolve(Re4dcActorTextureLease const&, unsigned int, unsigned int&) const
+00000000 W re4dc_actor::TextureLeases<448u, 64u>::available() const
+00000000 t (anonymous namespace)::Key::operator==((anonymous namespace)::Key const&) const
+00000000 r pace_note_draw(int)::on
+00000000 b re4dc_coarse_begin::built
+00000000 b re4dc_coarse_begin::header
+00000000 b re4dc_ui_end_frame::heap_free_age
+00000000 d re4dc_ui_end_frame::heap_free_last
+00000000 r re4dc_ui_door_capture::sizes
+00000000 b re4dc_ui_hud_mask_submit::reported
+00000000 t re4dc_ps2_world_direct_begin_batch::{lambda((anonymous namespace)::Entry const&)#1}::operator()((anonymous namespace)::Entry const&) const
+00000000 b stage1_batch_refuse(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)::last_frame
+00000000 b stage1_batch_refuse(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)::reported
+00000000 d (anonymous namespace)::pvr_recover::on_slice(char)::k_frame
+00000000 b (anonymous namespace)::pvr_recover::on_slice(char)::k_slices
+00000000 r (anonymous namespace)::texpack_payload_retry::source_error(char const*)::errors
+00000000 t (anonymous namespace)::glyph_cell(Re4dcUiGlyph const&)::{lambda((anonymous namespace)::GlyphCell const&)#1}::operator()((anonymous namespace)::GlyphCell const&) const [clone .isra.0]
+00000000 r (anonymous namespace)::glyph_init()::zero
+00000000 r (anonymous namespace)::hud_number((anonymous namespace)::HudBatch&, float, float, unsigned int, bool, unsigned long)::seg
+00000000 t (anonymous namespace)::vram_claim(unsigned int, bool)::{lambda()#1}::operator()() const
+00000000 b (anonymous namespace)::osd_texture(char const*)::buf
+00000000 b (anonymous namespace)::log_pair_miss(Re4dcModelPart const*, (anonymous namespace)::Key const&)::seen
+00000000 b (anonymous namespace)::log_pair_miss(Re4dcModelPart const*, (anonymous namespace)::Key const&)::nseen
+00000000 b (anonymous namespace)::stream_select(pvr_list_type)::kept
+00000000 t (anonymous namespace)::glyph_draw_run(unsigned int, unsigned int)::{lambda()#1}::operator()() const
+00000000 r (anonymous namespace)::fx_trim_oct_packet(Re4dcEffectSprite const&, (anonymous namespace)::Entry*, float const*, float const*, unsigned char*)::order
+00000000 b (anonymous namespace)::movie_window_release(unsigned int, bool, unsigned int&)::len
+00000000 b (anonymous namespace)::movie_window_release(unsigned int, bool, unsigned int&)::off
+00000000 b (anonymous namespace)::movie_window_release(unsigned int, bool, unsigned int&)::seen
+00000000 b (anonymous namespace)::movie_window_release(unsigned int, bool, unsigned int&)::owner
+00000000 b (anonymous namespace)::movie_window_release(unsigned int, bool, unsigned int&)::stamp
+00000000 t (anonymous namespace)::movie_window_release(unsigned int, bool, unsigned int&)::{lambda(unsigned int)#2}::operator()(unsigned int) const
+00000000 t (anonymous namespace)::movie_window_release(unsigned int, bool, unsigned int&)::{lambda(unsigned int)#1}::operator()(unsigned int) const [clone .isra.0]
+00000000 b (anonymous namespace)::stage1_prepare_report(unsigned int, (anonymous namespace)::Key const&, unsigned int, unsigned int)::last_status
+00000000 b (anonymous namespace)::stage1_prepare_report(unsigned int, (anonymous namespace)::Key const&, unsigned int, unsigned int)::last_texture
+00000000 b (anonymous namespace)::stage1_prepare_report(unsigned int, (anonymous namespace)::Key const&, unsigned int, unsigned int)::last_key
+00000000 t (anonymous namespace)::gcasset_texture_fingerprint((anonymous namespace)::Entry&, (anonymous namespace)::Key const&, char const*, unsigned int, unsigned int)::{lambda(void*, void*, unsigned int)#1}::_FUN(void*, void*, unsigned int)
+00000000 t (anonymous namespace)::load(Re4dcUiImage const&, bool, (anonymous namespace)::Key const*)::{lambda()#1}::operator()() const [clone .isra.0]
+00000000 t (anonymous namespace)::resolve(Re4dcUiImage const&, Re4dcModelPart const*, bool)::{lambda((anonymous namespace)::Handle const&)#1}::operator()((anonymous namespace)::Handle const&) const
+00000000 b (anonymous namespace)::image_key(Re4dcUiImage const&, (anonymous namespace)::Key&)::selfkeys
+00000000 t __tcf_ZN12_GLOBAL__N_1L7entriesE
+00000000 T __wrap_pvr_list_begin
+00000000 T __wrap_pvr_poly_compile
+00000000 T __wrap_pvr_poly_mod_compile
+00000000 T __wrap_pvr_scene_finish
+00000000 T __wrap_pvr_set_presort_mode
+00000000 T __wrap_pvr_sprite_compile
+00000000 t arch_irq_disable
+00000000 t mutex_lock.constprop.0
+00000000 B pace_skipped_frames
+00000000 T re4dc_actor_stream_state
+00000000 T re4dc_actor_texture_acquire
+00000000 T re4dc_actor_texture_commit
+00000000 T re4dc_actor_texture_material_validate
+00000000 T re4dc_actor_texture_release
+00000000 T re4dc_actor_texture_retire_all
+00000000 T re4dc_actor_texture_validate
+00000000 T re4dc_coarse_begin
+00000000 T re4dc_coarse_end
+00000000 T re4dc_coarse_leon_texture_ready
+00000000 T re4dc_effect_line
+00000000 T re4dc_effect_quad
+00000000 T re4dc_effect_sprite
+00000000 T re4dc_effect_stage1_batch
+00000000 T re4dc_gcasset_finish
+00000000 T re4dc_gcasset_movie_begin_upload
+00000000 T re4dc_gcasset_movie_bind
+00000000 T re4dc_gcasset_movie_uploaded
+00000000 T re4dc_gcasset_retire
+00000000 T re4dc_gcasset_room_enter
+00000000 T re4dc_leon_hr_image
+00000000 T re4dc_look_grade_post
+00000000 T re4dc_model_actor_fade_cancel
+00000000 T re4dc_model_actor_fade_commit
+00000000 T re4dc_model_actor_fade_reserve
+00000000 T re4dc_model_defer_part
+00000000 T re4dc_model_defer_part_unlit
+00000000 T re4dc_model_deferred_storage
+00000000 D re4dc_model_diag_latch
+00000000 T re4dc_model_diagnostic_enabled
+00000000 T re4dc_model_direct_begin
+00000000 T re4dc_model_direct_begin_reserved
+00000000 T re4dc_model_direct_enabled
+00000000 T re4dc_model_direct_end
+00000000 T re4dc_model_finish_source_draws
+00000000 T re4dc_model_invalidate_pending
+00000000 T re4dc_model_metadata_storage
+00000000 T re4dc_model_packet_abort
+00000000 T re4dc_model_packet_begin
+00000000 T re4dc_model_packet_commit
+00000000 T re4dc_model_packet_reserve
+00000000 T re4dc_model_packet_streaming
+00000000 T re4dc_model_preparation_storage
+00000000 T re4dc_model_pt_begin
+00000000 T re4dc_model_result
+00000000 T re4dc_model_static_lighting_storage
+00000000 T re4dc_model_texture
+00000000 T re4dc_native_frame_stats
+00000000 T re4dc_post_filter00
+00000000 T re4dc_ps2_world_batch_close
+00000000 T re4dc_ps2_world_before_owned_tr
+00000000 T re4dc_ps2_world_direct_begin
+00000000 T re4dc_ps2_world_direct_begin_batch
+00000000 T re4dc_ps2_world_direct_end_batch
+00000000 T re4dc_ps2_world_packet
+00000000 T re4dc_pvr_latch_line
+00000000 T re4dc_pvr_ready_test_arm
+00000000 T re4dc_pvr_vram_fence
+00000000 T re4dc_rain_dc_streaks
+00000000 T re4dc_subscreen_line
+00000000 T re4dc_subscreen_quad
+00000000 T re4dc_ui_begin
+00000000 T re4dc_ui_begin_skip
+00000000 T re4dc_ui_bind_core
+00000000 T re4dc_ui_bind_enemy
+00000000 T re4dc_ui_bind_option
+00000000 T re4dc_ui_bind_player
+00000000 T re4dc_ui_bind_room
+00000000 T re4dc_ui_bind_weapon
+00000000 T re4dc_ui_binocular_prompt
+00000000 T re4dc_ui_door_capture
+00000000 T re4dc_ui_door_mark
+00000000 T re4dc_ui_door_queue
+00000000 T re4dc_ui_end_frame
+00000000 T re4dc_ui_end_frame_skip
+00000000 T re4dc_ui_frame
+00000000 T re4dc_ui_glyph
+00000000 T re4dc_ui_glyph_fonts_changed
+00000000 T re4dc_ui_hud_mask_submit
+00000000 T re4dc_ui_init
+00000000 T re4dc_ui_invalidate_sources
+00000000 T re4dc_ui_manual_generic_identify
+00000000 T re4dc_ui_manual_generic_image
+00000000 T re4dc_ui_manual_page
+00000000 T re4dc_ui_manual_page_available
+00000000 T re4dc_ui_manual_page_identify
+00000000 T re4dc_ui_manual_page_image
+00000000 T re4dc_ui_movie_background
+00000000 T re4dc_ui_movie_close
+00000000 T re4dc_ui_movie_first_picture_us
+00000000 T re4dc_ui_movie_handoff_ready
+00000000 T re4dc_ui_movie_last_presented
+00000000 T re4dc_ui_movie_open
+00000000 T re4dc_ui_movie_present_now
+00000000 T re4dc_ui_movie_presented
+00000000 T re4dc_ui_movie_texture
+00000000 T re4dc_ui_movie_try_close
+00000000 T re4dc_ui_movie_upload_begin
+00000000 T re4dc_ui_movie_upload_end
+00000000 T re4dc_ui_movie_upload_rows
+00000000 T re4dc_ui_mv_send
+00000000 T re4dc_ui_mv_stats
+00000000 T re4dc_ui_present
+00000000 T re4dc_ui_reclaim_one
+00000000 T re4dc_ui_retire_room
+00000000 T re4dc_ui_room_preload_again
+00000000 T re4dc_ui_submit
+00000000 T re4dc_ui_ta_double_bank_later
+00000000 T re4dc_ui_ta_single_bank
+00000000 T re4dc_ui_texture_resident
+00000000 T re4dc_ui_tr_packet
+00000000 T re4dc_ui_unbind_enemy
+00000000 T re4dc_ui_unbind_option
+00000000 T re4dc_ui_unbind_player
+00000000 T re4dc_ui_unbind_weapon
+00000000 T re4dc_ui_vram_claim
+00000000 T re4dc_ui_vram_hold
+00000000 T re4dc_ui_vram_unclaim
+00000000 T re4dc_water45_quad
+00000000 T re4dc_water_layer
+00000000 t timer_us_gettime64

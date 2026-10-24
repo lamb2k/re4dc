@@ -1,0 +1,18 @@
+from pathlib import Path
+import hashlib,json,subprocess,datetime
+base=Path('/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/source-5e6b7d8c0')
+tree=Path('/root/work/lanes/gc-motion24')
+h=lambda b:hashlib.sha256(b).hexdigest()
+manifest=json.loads((base/'SHA256-MANIFEST.json').read_text())
+for name,row in manifest.items():
+    b=(base/name).read_bytes(); assert len(b)==row['bytes'] and h(b)==row['sha256'],name
+pins=json.loads((base/'source-pins.json').read_text())
+for row in pins['files']:
+    g=subprocess.check_output(['git','-C',str(tree),'show',pins['source']+':'+row['path']]);assert len(g)==row['bytes'] and h(g)==row['sha256'],row['path']
+    if row['path'].startswith('port/dreamcast/game/') or row['path'].endswith('.py'):assert (tree/row['path']).read_bytes()==g,row['path']
+assert subprocess.check_output(['git','-C',str(tree),'status','--porcelain']).strip()==b''
+assert subprocess.check_output(['git','-C',str(tree),'diff','--name-only',pins['runtime']+'..'+pins['source'],'--','port/dreamcast/game']).strip()==b''
+assert subprocess.check_output(['git','-C',str(tree),'diff','--name-only',pins['source']+'..HEAD','--','port/dreamcast/game']).strip()==b''
+log=(base/'host.log').read_text();assert 'Ran 118 tests in 98.726s' in log and 'OK (skipped=1)' in log and 'host core and judge tests PASS' in log
+r={'status':'ROOT_FROZEN_HOST_RECEIPT_READBACK_PASS','utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'source':pins['source'],'runtime':pins['runtime'],'source_pins_checked':len(pins['files']),'current_head':subprocess.check_output(['git','-C',str(tree),'rev-parse','HEAD']).decode().strip(),'metadata_successor_runtime_identity':True,'first_readback_refusal':'Frozen Motion document changed in metadata-only successor; historical receipt now checked against exact Git source bytes, runtime and tests also checked live','receipt_members_checked':len(manifest),'receipt_manifest_sha256':h((base/'SHA256-MANIFEST.json').read_bytes()),'author_host_tests':{'discovered':118,'passed':117,'skipped':1,'wrapper_exit':0},'root_test_rerun':False,'independent_review':'pending','SDK_or_guest':False,'I001_or_Motion_provenance_pass':False}
+out=Path('/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/ROOT-HOST-RECEIPT-READBACK.json');out.write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r))

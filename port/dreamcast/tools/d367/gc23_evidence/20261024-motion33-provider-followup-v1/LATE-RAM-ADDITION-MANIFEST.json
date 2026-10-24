@@ -1,0 +1,61 @@
+{
+  "status": "LATE_ROOT_ADMITTED_FROZEN_RAM_SOURCE_ONLY_ADDITION",
+  "captured_utc": "2026-10-24T07:41:10.962334+00:00",
+  "core_seal_sha256_unchanged": "b18b3f5cde5d7ce5058f29df3bdeae12a4b9ac5a5f3d52effc0c05e42cc39404",
+  "frozen_receipt_sha256": "9e6d9516260704e5f1e2fb032688d90a08e5f24e8aac3efc1eccd8b564377ab7",
+  "sealed_audit_members": 5,
+  "sealed_audit_bytes": 53396,
+  "files": [
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/ram-budget-next-audit/audit_budget.py",
+      "destination": "late-frozen-ram-source-audit/audit_budget.py",
+      "bytes": 8816,
+      "sha256": "5ad02f361bd3f9d05fc337fbc861039af32b3ab7874e3bab7da2b8a24631acdf",
+      "lf_sha256": "5ad02f361bd3f9d05fc337fbc861039af32b3ab7874e3bab7da2b8a24631acdf",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792827011123343700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/ram-budget-next-audit/RAM-BUDGET.md",
+      "destination": "late-frozen-ram-source-audit/RAM-BUDGET.md",
+      "bytes": 10407,
+      "sha256": "ae0ff2e043acc09ac0048016724deb9b29e80eba68f3be699d833403a5e84d2c",
+      "lf_sha256": "ae0ff2e043acc09ac0048016724deb9b29e80eba68f3be699d833403a5e84d2c",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792827108037065200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/ram-budget-next-audit/READBACK.json",
+      "destination": "late-frozen-ram-source-audit/READBACK.json",
+      "bytes": 31002,
+      "sha256": "4479921b255fba2dc26f9ec890c63f57f07a82526e2bb66f798934cf6e070112",
+      "lf_sha256": "4479921b255fba2dc26f9ec890c63f57f07a82526e2bb66f798934cf6e070112",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792827011916627300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/ram-budget-next-audit/RECEIPT.json",
+      "destination": "late-frozen-ram-source-audit/RECEIPT.json",
+      "bytes": 2171,
+      "sha256": "9e6d9516260704e5f1e2fb032688d90a08e5f24e8aac3efc1eccd8b564377ab7",
+      "lf_sha256": "e0eab6ef69991f2d91a8976cfe55bbaa476661861ab791982540def480be6346",
+      "crlf_count": 57,
+      "source_mtime_ns": 1792827229118542100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/ram-budget-next-audit/STATUS.md",
+      "destination": "late-frozen-ram-source-audit/STATUS.md",
+      "bytes": 1000,
+      "sha256": "327fea938ff8b0e78ade69a155c64701d9413364e6f99be17f8627806f3e293e",
+      "lf_sha256": "327fea938ff8b0e78ade69a155c64701d9413364e6f99be17f8627806f3e293e",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792827108038064300
+    }
+  ],
+  "preservation_script_sha256": "075dbb86fa11b481008984a307acbc2fe4246b1b1b81ecfa513c70628583ff6a",
+  "root_moving_docs_refreshed": false,
+  "RAM_audit_included_in_final_archive": true,
+  "core_RAM_exclusion_statement_scope": "Core excluded the then-unfrozen audit; this later admitted five-file source addition is explicitly separate.",
+  "binary_object_SDK_bytes_read_or_copied": 0,
+  "qualification": "Source-bound arithmetic audit only; computed4KiB reserve is not a spare pool. Preserves corrected UI-array arithmetic and original26-metadata hash references. No new whole-link, measured heap/KOS loss, SDK, guest or runtime acceptance."
+}

@@ -1,0 +1,57 @@
+{
+  "status": "SOURCE_BOUND_AUDIT_COMPLETE",
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "linked_source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "known_end_growth_bytes": 60384,
+  "conditional_same_trace_coherent_fit_reduction_bytes": [
+    57344,
+    61440
+  ],
+  "fixed_carve_bytes": 3048896,
+  "measured_H2_heap_loss": null,
+  "measured_KOS_heap_loss": null,
+  "current_combined_full_link_price": null,
+  "mandatory_reduction_proven": false,
+  "next_gate": "Exact current candidate whole-link price and separately admitted matched H2/current source heap shape plus KOS accounting; preserve all reserves.",
+  "SDK": false,
+  "guest": false,
+  "source_or_recipe_edit": false,
+  "inputs": [
+    {
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\gc-catalog24\\STATUS.md",
+      "bytes": 2620,
+      "sha256": "b6ac48f5b0a921da2668db9128f42beb58fe7353cbf0960bbd6dd0e3ac47a50e"
+    },
+    {
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\gc-port23\\STATUS.md",
+      "bytes": 7569,
+      "sha256": "833f6c3ca30edc065604d9ac4e6de2c9cec4002c263eb6cc9577da2a4317474a"
+    }
+  ],
+  "full_link_metadata_members_reverified": 26,
+  "full_link_metadata_manifest_sha256": "76ec4448e08f4bb7c59cb17eb18344c126cdf05d802b2e2060bbe9c44e75b667",
+  "review_files": [
+    {
+      "path": "audit_budget.py",
+      "bytes": 8816,
+      "sha256": "5ad02f361bd3f9d05fc337fbc861039af32b3ab7874e3bab7da2b8a24631acdf"
+    },
+    {
+      "path": "READBACK.json",
+      "bytes": 31002,
+      "sha256": "4479921b255fba2dc26f9ec890c63f57f07a82526e2bb66f798934cf6e070112"
+    },
+    {
+      "path": "RAM-BUDGET.md",
+      "bytes": 10407,
+      "sha256": "ae0ff2e043acc09ac0048016724deb9b29e80eba68f3be699d833403a5e84d2c"
+    },
+    {
+      "path": "STATUS.md",
+      "bytes": 1000,
+      "sha256": "327fea938ff8b0e78ade69a155c64701d9413364e6f99be17f8627806f3e293e"
+    }
+  ],
+  "sealed_member_bytes": 51225,
+  "limits": "Coherent and same-trace arithmetic only; no source heap/KOS free-loss, provenance, GCguest or performance acceptance. Initial nominal UI field claim corrected by exact unchanged array size."
+}

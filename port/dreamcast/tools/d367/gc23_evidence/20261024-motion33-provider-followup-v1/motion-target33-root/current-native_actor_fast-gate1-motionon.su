@@ -1,0 +1,74 @@
+platform/native_actor_fast.cpp:1401:32:{anonymous}::Converter::levels_impl(unsigned int, const {anonymous}::u16*, const {anonymous}::u16*, const {anonymous}::u16*, unsigned int, const {anonymous}::u32*, const {anonymous}::u16*)::<lambda(unsigned int, unsigned int)>	16	static
+platform/include/native_actor_owner_registry.inc:7:6:void {anonymous}::owned_skin_clear()	16	static
+platform/native_actor_fast.cpp:1753:6:void {anonymous}::gcasset_frame_check(Frame&)	0	static
+platform/native_actor_fast.cpp:1773:7:void* {anonymous}::scratch(unsigned int)	0	static
+platform/native_actor_fast.cpp:1794:6:void {anonymous}::screen_rows(const Re4dcModelPart&, float (*)[4])	56	static
+platform/native_actor_fast.cpp:2108:6:bool {anonymous}::leon_part_normal(const float*, float*)	12	static
+platform/native_actor_fast.cpp:2538:14:const float* {anonymous}::skin_light_dirs(Frame&, const Lights&, unsigned int, float*)	24	static
+platform/native_actor_fast.cpp:3206:6:void {anonymous}::project(float&, float&, float&, void*)	0	static
+platform/native_actor_fast.cpp:3847:6:void {anonymous}::avk_build_dirs(Frame&, const Lights&, const Records&, unsigned int, unsigned int)	96	static
+platform/native_actor_fast.cpp:3944:6:void {anonymous}::avk_build_dirs_n16(Frame&, const Lights&, const Records&, unsigned int, unsigned int)	96	static
+platform/native_actor_fast.cpp:4740:6:bool {anonymous}::crowd_lit(const void*)	0	static
+platform/native_actor_fast.cpp:4758:10:unsigned int {anonymous}::crowd_tier(const Re4dcModelPart&, int)	4	static
+platform/native_actor_fast.cpp:4653:10:unsigned int {anonymous}::select_level(const Re4dcModelPart&, const BlobHeader&, float, float)	4	static
+platform/native_actor_fast.cpp:2554:6:void {anonymous}::probe_dirs_all(Frame&, const Lights&)	28	static
+platform/include/native_actor_owner_runs.inc:6:6:void {anonymous}::owned_run_load(Re4dcModelPart&, const Re4dcActorDrawRun&, const Re4dcActorOwnedMaterial&)	12	static
+platform/native_actor_fast.cpp:6134:6:bool {anonymous}::one_qualifies(const Re4dcModelPart&, const SkinEntry*&, Re4dcActorSource&)	28	static
+platform/native_actor_fast.cpp:4809:10:unsigned int {anonymous}::add_bake_field(u8*, unsigned int, unsigned int)	112	static
+platform/native_actor_fast.cpp:2380:6:bool {anonymous}::probe_lights(const Re4dcModelPart&, const Frame&, Lights&)	260	static
+platform/native_actor_fast.cpp:1893:6:void {anonymous}::skin_position_matrix(const Frame&, unsigned int, float*)	24	static
+platform/native_actor_fast.cpp:4793:5:constprop(const Lights&)	16	static
+platform/native_actor_fast.cpp:4259:6:void {anonymous}::pass_positions(Part&, const Records&, unsigned int, const PosConst&, bool, unsigned int&, unsigned int&)	316	static
+platform/native_actor_fast.cpp:1501:10:bool {anonymous}::Converter::assemble()	112	static
+platform/native_actor_fast.cpp:4596:6:void {anonymous}::pass_baked(Part&, const Records&, unsigned int, const unsigned int*)	24	static
+platform/native_actor_fast.cpp:3159:6:void {anonymous}::world_of(const Frame&, const Re4dcModelPart&, const Records&, unsigned int, float*, float*, const float*)	24	static
+platform/native_actor_fast.cpp:946:10:bool {anonymous}::Converter::finish(const {anonymous}::u16*, unsigned int, const {anonymous}::u8*, unsigned int, unsigned int, const {anonymous}::u32*)	2388	static
+platform/native_actor_fast.cpp:3546:10:bool {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)	556	static
+platform/native_actor_rigid.inc:45:5:int {anonymous}::rigid_clip(void*, const uint8_t*, unsigned int, unsigned int)	24	static
+platform/native_actor_fast.cpp:3486:10:bool {anonymous}::Part::whole(const {anonymous}::u8*, unsigned int, unsigned int)	88	static
+platform/native_actor_fast.cpp:4309:6:void {anonymous}::pass_lights(Part&, const Lights&, const Records&, unsigned int)	292	static
+platform/native_actor_fast.cpp:3528:10:bool {anonymous}::Part::strips(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)	40	static
+platform/native_actor_fast.cpp:475:10:unsigned int {anonymous}::stripify(const u8*, unsigned int, u8*, unsigned int, u8*, u16*, u16*)	736	static
+platform/native_actor_fast.cpp:4388:6:void {anonymous}::pass_lights_exact(Part&, const Lights&, const Records&, unsigned int)	716	static
+platform/native_actor_fast.cpp:4540:9:{anonymous}::BakeUse {anonymous}::bake_prepare(Part&, const Lights&, const BlobHeader&, unsigned int, unsigned int*)	124	static
+platform/native_actor_fast.cpp:2121:6:bool {anonymous}::build_lights(const Re4dcModelPart&, const Frame&, const float*, Lights&)	520	static
+platform/native_actor_fast.cpp:1068:17:static bool {anonymous}::Converter::collapse_map(const Lod&, unsigned int, unsigned int, {anonymous}::u16*, {anonymous}::u16*, unsigned int&)	140	static
+platform/native_actor_fast.cpp:1111:17:static void {anonymous}::Converter::compute(Lod&, unsigned int, bool)	368	static
+platform/native_actor_fast.cpp:730:10:bool {anonymous}::Converter::parse()	40	static
+platform/native_actor_fast.cpp:1221:10:bool {anonymous}::Converter::levels_impl(unsigned int, const {anonymous}::u16*, const {anonymous}::u16*, const {anonymous}::u16*, unsigned int, const {anonymous}::u32*, const {anonymous}::u16*)	2232	static
+platform/native_actor_fast.cpp:897:10:bool {anonymous}::Converter::pack(unsigned int, unsigned int, unsigned int, bool)	168	static
+platform/native_actor_fast.cpp:4983:6:void {anonymous}::relod(const Re4dcModelPart&, bool)	604	static
+platform/native_actor_fast.cpp:4877:19:const {anonymous}::BlobHeader* {anonymous}::convert(const Re4dcModelPart&)	296	static
+platform/native_actor_fast.cpp:6306:5:0(Re4dcModelPart&, OneWindow&)	1148	static
+platform/include/native_actor_owner_registry.inc:92:16:int {anonymous}::re4dc_actor_skin_acquire(unsigned int, const Re4dcActorSkinBinding*, unsigned int, Re4dcActorSkinLease*)	136	static
+platform/include/native_actor_owner_registry.inc:125:16:int {anonymous}::re4dc_actor_skin_validate(const Re4dcActorSkinLease*)	8	static
+platform/include/native_actor_owner_registry.inc:134:16:int {anonymous}::re4dc_actor_skin_release(Re4dcActorSkinLease*)	28	static
+platform/include/native_actor_owner_registry.inc:157:16:int {anonymous}::re4dc_actor_owned_source(const void*, unsigned int, Re4dcActorSource*)	0	static
+platform/include/native_actor_owner_workspace.inc:15:16:int {anonymous}::re4dc_actor_workspace_acquire(unsigned int, Re4dcActorWorkspaceLease*)	4	static
+platform/include/native_actor_owner_workspace.inc:21:16:int {anonymous}::re4dc_actor_workspace_validate(const Re4dcActorWorkspaceLease*)	0	static
+platform/include/native_actor_owner_workspace.inc:25:17:void {anonymous}::re4dc_actor_workspace_release(Re4dcActorWorkspaceLease*)	0	static
+platform/include/native_actor_owner_workspace.inc:28:17:void {anonymous}::re4dc_actor_owner_retire()	4	static
+platform/native_actor_fast.cpp:2491:16:int re4dc_actor_light_probe(const void*, Re4dcLightProbe*)	8	static
+platform/native_actor_fast.cpp:5097:17:void re4dc_actor_frame(void*, unsigned int)	64	static
+platform/native_actor_fast.cpp:5144:35:const Re4dcActorStats* re4dc_actor_stats()	0	static
+platform/native_actor_fast.cpp:5145:21:unsigned int re4dc_actor_workspace_want()	0	static
+platform/native_actor_fast.cpp:5151:17:void re4dc_actor_crowd(unsigned int, float, float, float)	0	static
+platform/native_actor_fast.cpp:5159:17:void re4dc_actor_crowd_note(const void*, const float*)	0	static
+platform/native_actor_fast.cpp:5181:16:int re4dc_actor_part_settled(const void*, unsigned int)	0	static
+platform/native_actor_fast.cpp:5212:17:void re4dc_actor_lod(float, unsigned int)	0	static
+platform/native_actor_fast.cpp:5224:16:int re4dc_actor_skin_register(unsigned int, const void*, const void*, const float*, unsigned int)	36	static
+platform/native_actor_fast.cpp:5275:25:const float* re4dc_actor_skin_palette(const void*, const void*, unsigned int*)	12	static
+platform/native_actor_fast.cpp:5291:16:int re4dc_actor_skin_lazy_known(const void*)	0	static
+platform/native_actor_fast.cpp:5299:17:void re4dc_actor_materialize(const Re4dcModelPart*)	8	static
+platform/native_actor_fast.cpp:5315:16:int re4dc_actor_materialize_lazy(Re4dcModelPart*)	12	static
+platform/native_actor_fast.cpp:5406:16:int re4dc_actor_stream_encoded(const unsigned char*, unsigned int)	0	static
+platform/native_actor_fast.cpp:5562:16:int re4dc_actor_submit(const Re4dcModelPart*)	1740	static
+platform/native_actor_fast.cpp:6804:21:unsigned int re4dc_actor_submit_chunks(Re4dcModelPart*, const Re4dcActorChunk*, unsigned int)	1400	static
+platform/include/native_actor_owner_runs.inc:19:16:int re4dc_actor_preflight_owned_runs(Re4dcModelPart*, const Re4dcActorDrawRun*, unsigned int, const Re4dcActorOwnedMaterial*, unsigned int, const Re4dcActorWorkspaceLease*, const Re4dcActorSkinLease*, const Re4dcActorTextureLease*)	108	static
+platform/include/native_actor_owner_runs.inc:153:16:int re4dc_actor_preflight_owned(Re4dcModelPart*, const Re4dcActorChunk*, unsigned int, const Re4dcActorWorkspaceLease*, const Re4dcActorSkinLease*, const Re4dcActorTextureLease*)	420	static
+platform/native_actor_fast.cpp:6880:16:int re4dc_actor_owned_crowd_replay(const Re4dcModelPart*, const Re4dcActorDrawRun*, unsigned int, const Re4dcActorOwnedMaterial*, unsigned int, int, float*)	412	static
+platform/native_actor_fast.cpp:6990:6:void re4dc_actor_plan_note(unsigned int, int, int)	444	static
+platform/include/native_actor_owner_runs.inc:64:12:int owned_submit_runs(Re4dcModelPart*, const Re4dcActorDrawRun*, unsigned int, const Re4dcActorOwnedMaterial*, unsigned int, const Re4dcActorWorkspaceLease*, const Re4dcActorSkinLease*, const Re4dcActorTextureLease*, bool)	1468	static
+platform/include/native_actor_owner_runs.inc:54:16:int re4dc_actor_submit_owned_runs(Re4dcModelPart*, const Re4dcActorDrawRun*, unsigned int, const Re4dcActorOwnedMaterial*, unsigned int, const Re4dcActorWorkspaceLease*, const Re4dcActorSkinLease*, const Re4dcActorTextureLease*)	24	static
+platform/include/native_actor_owner_runs.inc:159:16:int re4dc_actor_submit_owned(Re4dcModelPart*, const Re4dcActorChunk*, unsigned int, const Re4dcActorWorkspaceLease*, const Re4dcActorSkinLease*, const Re4dcActorTextureLease*)	424	static
+platform/include/native_actor_owner_runs.inc:59:16:int re4dc_actor_submit_preflighted_runs(Re4dcModelPart*, const Re4dcActorDrawRun*, unsigned int, const Re4dcActorOwnedMaterial*, unsigned int, const Re4dcActorWorkspaceLease*, const Re4dcActorSkinLease*, const Re4dcActorTextureLease*)	24	static

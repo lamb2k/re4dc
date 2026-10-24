@@ -1,0 +1,62 @@
+{
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/current/port/dreamcast/game/platform/gc_asset_motion_unknown.cpp": {
+    "bytes": 2265,
+    "sha256": "961c6a3c42319fdc1cd86536482e051111f6cfefc64b3ce590d0a6f98efae48a"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/current/port/dreamcast/game/platform/include/gc_asset_motion_unknown.h": {
+    "bytes": 1845,
+    "sha256": "2d61f845fed695c66f078fdb5135317c6a1c60fe5cbb18579ece0d7430f42c67"
+  },
+  "/dev/shm/gc-motion24-target-prep-vwt4_qfe/current/port/dreamcast/game/platform/include/gc_asset_gate.h": {
+    "bytes": 5972,
+    "sha256": "c8fb4b2435a46487ecec8b03f1c5a4176f429cdfbafbb8e0dbb5930100d74517"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/c++/15.2.0/cstdint": {
+    "bytes": 3871,
+    "sha256": "29263eed8b2d09b5a8c3b803da92c4ebf91d6a219a2c3fc44cac061cc2780677"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/c++/15.2.0/sh-elf/bits/c++config.h": {
+    "bytes": 60250,
+    "sha256": "606b4d77684f57d52ba99e3093e27e5956e8e311382f9af66326bcaf1eb05864"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/c++/15.2.0/sh-elf/bits/os_defines.h": {
+    "bytes": 2090,
+    "sha256": "dec18b8a95f687387f1c32e0bfa3e6b08d6c6aa384bd34ef1318735876902ce1"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/c++/15.2.0/sh-elf/bits/cpu_defines.h": {
+    "bytes": 1333,
+    "sha256": "c4145a07cbd3ab98d68021876b67afa841d8aa3bf153c30a2a554140ef3ab4eb"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/c++/15.2.0/pstl/pstl_config.h": {
+    "bytes": 7947,
+    "sha256": "66d40c2f29f0702ceb8415009cffc1437f74395b60b3ab195e154d411a4ec68a"
+  },
+  "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/include/stdint.h": {
+    "bytes": 443,
+    "sha256": "64ab730bb09eba38f01a62174fb8371ef281778ac33f141a6fa4217a9b39466a"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/stdint.h": {
+    "bytes": 12432,
+    "sha256": "99fe201684856075ccd92704f63b702f6fa882b9dab61bd7a9bcce2588275861"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/machine/_default_types.h": {
+    "bytes": 6650,
+    "sha256": "5d8f9f7ead7927e4b8b7ed00172e84f2ae82ea7f5f6ba3240ff813a9236771b3"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/sys/features.h": {
+    "bytes": 17680,
+    "sha256": "a5a354650269fde5003f824c747a56016a10738ea2aa919bf5abe786a78e4d27"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/_newlib_version.h": {
+    "bytes": 336,
+    "sha256": "be2a4d2763fd9f409369fc62a741dff6722b71ca56050b7c6469581c81fd2420"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/sys/_intsup.h": {
+    "bytes": 5741,
+    "sha256": "1af8abe244b43a3a5b5a85f6c834aa206930b6938e8109fbec430bc140b68df5"
+  },
+  "/opt/toolchains/dc/sh-elf/sh-elf/include/sys/_stdint.h": {
+    "bytes": 1824,
+    "sha256": "49f8328943afa2a83ed4a35fcb808ed08b8c9fcb55373c786fb1b1d3a21952d7"
+  }
+}

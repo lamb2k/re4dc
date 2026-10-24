@@ -1,0 +1,26 @@
+{
+  "EXPORT-MANIFEST.json": {
+    "bytes": 50790,
+    "sha256": "b4f13ac5fbe2ee78f7e6a4e8591de30b2e3ae0f6ef2b4446327aade1168fe4ca"
+  },
+  "HANDBACK.md": {
+    "bytes": 4261,
+    "sha256": "e271b521a73cfe2dc6d6272b62f207783d2ac33132fa9f518780b2f2ec3ed5e7"
+  },
+  "PREPARATION.json": {
+    "bytes": 599179,
+    "sha256": "59dafff7cfe11206238e66ab5b0a56c5c9f985c1303e3591fc051f944ea2db4b"
+  },
+  "prepare_motion24.py": {
+    "bytes": 15625,
+    "sha256": "d44f0de8ffb586c3a93d679c44e4f64d3c9265dafe3485a0cdefa9e51b0a7ebb"
+  },
+  "READBACK.json": {
+    "bytes": 463,
+    "sha256": "10d1b47a21fe89dbfb718233c3fa0c3bbf05509a2949559801b176d3929617ca"
+  },
+  "readback_prep.py": {
+    "bytes": 5752,
+    "sha256": "6100b8dd34cea7568fc321c1e713f826b4bbd256bec695ed6fba6283e4ffc6ea"
+  }
+}

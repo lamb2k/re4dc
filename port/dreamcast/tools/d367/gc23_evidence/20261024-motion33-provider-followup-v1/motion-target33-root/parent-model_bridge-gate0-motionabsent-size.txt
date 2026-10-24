@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+   7017	     12	    138	   7167	   1bff	/dev/shm/gc-motion24-target-run-0mftarg0/parent-model_bridge-gate0-motionabsent.o

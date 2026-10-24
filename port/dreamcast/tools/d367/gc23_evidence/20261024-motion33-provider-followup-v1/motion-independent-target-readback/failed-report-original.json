@@ -1,0 +1,784 @@
+{
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "runtime": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+  "parent": "870789095c4c14fbdbf22043447b249063d2ec3a",
+  "preparation_sha256": "59dafff7cfe11206238e66ab5b0a56c5c9f985c1303e3591fc051f944ea2db4b",
+  "runner_sha256": "0e7bfc7821905c19316d5dc2f0bca43e0b483f8f94d8f35b8c8ac95ea72cd08e",
+  "out": "/dev/shm/gc-motion24-target-run-0mftarg0",
+  "export": "/dev/shm/gc-motion24-target-prep-vwt4_qfe",
+  "objects": [
+    {
+      "tag": "parent-native_ui-gate0-motionabsent",
+      "unit": "platform/native_ui.cpp",
+      "label": "parent",
+      "gate": 0,
+      "motion": "absent",
+      "sections": {
+        "text": 135265,
+        "data": 100509,
+        "bss": 152415
+      },
+      "object_sha256": "dad3e9817526bde8a3d77d7e222d40062c142c558eb2affdb446161af18b432e",
+      "stripped_sha256": "ac5a107b9dfe8bfbd8432862b250eba29487803d4182e92d5d5bbc5467e88cb6",
+      "dependency_count": 329,
+      "dependencies_sha256": "a912e6d27836eadcb55cd7ead118d872262c14c4c2f2b22e7126bc1591e52bb1",
+      "seconds": 2.727084237994859,
+      "stack_usage_sha256": "af0abe915296abb9313f925859c1c9be9e692d8be5927a02b68b00427f162cae",
+      "empty_required": false
+    },
+    {
+      "tag": "parent-native_ui-gate1-motionabsent",
+      "unit": "platform/native_ui.cpp",
+      "label": "parent",
+      "gate": 1,
+      "motion": "absent",
+      "sections": {
+        "text": 140045,
+        "data": 100513,
+        "bss": 156453
+      },
+      "object_sha256": "42ffe365504bd82167da544a13b0f40e5c18e160286bbb96344a4101d923987d",
+      "stripped_sha256": "89b4bb8af78252c532c21295baf5bbb314c798cfe1ed903a6ef7322e6a2ede91",
+      "dependency_count": 330,
+      "dependencies_sha256": "a62cc35b45ee787ac3492726256956ca9618982971132c7224b8aa4ade9b63b8",
+      "seconds": 2.8906293039908633,
+      "stack_usage_sha256": "bf348e4474f67f00fe1bc9013709d9196ec83893d4fea095ee784c30ec197127",
+      "empty_required": false
+    },
+    {
+      "tag": "current-native_ui-gate0-motionabsent",
+      "unit": "platform/native_ui.cpp",
+      "label": "current",
+      "gate": 0,
+      "motion": "absent",
+      "sections": {
+        "text": 135265,
+        "data": 100509,
+        "bss": 152415
+      },
+      "object_sha256": "d7868b97dbc0d9c557581a070f7bbafe25929c1d71448aa326dfecf976695432",
+      "stripped_sha256": "ac5a107b9dfe8bfbd8432862b250eba29487803d4182e92d5d5bbc5467e88cb6",
+      "dependency_count": 330,
+      "dependencies_sha256": "b158a85d669fff94e4656efacb5211587877780e66d5c70aeaa8cabe1397e244",
+      "seconds": 2.6414397769840434,
+      "stack_usage_sha256": "bbe477fde26300616c10d08e2a415baeea9ea3f81d5dad5675662f7869aa8904",
+      "empty_required": false
+    },
+    {
+      "tag": "current-native_ui-gate0-motionzero",
+      "unit": "platform/native_ui.cpp",
+      "label": "current",
+      "gate": 0,
+      "motion": "zero",
+      "sections": {
+        "text": 135265,
+        "data": 100509,
+        "bss": 152415
+      },
+      "object_sha256": "d7868b97dbc0d9c557581a070f7bbafe25929c1d71448aa326dfecf976695432",
+      "stripped_sha256": "ac5a107b9dfe8bfbd8432862b250eba29487803d4182e92d5d5bbc5467e88cb6",
+      "dependency_count": 330,
+      "dependencies_sha256": "b158a85d669fff94e4656efacb5211587877780e66d5c70aeaa8cabe1397e244",
+      "seconds": 2.580794094974408,
+      "stack_usage_sha256": "bbe477fde26300616c10d08e2a415baeea9ea3f81d5dad5675662f7869aa8904",
+      "empty_required": false
+    },
+    {
+      "tag": "current-native_ui-gate1-motionabsent",
+      "unit": "platform/native_ui.cpp",
+      "label": "current",
+      "gate": 1,
+      "motion": "absent",
+      "sections": {
+        "text": 140045,
+        "data": 100513,
+        "bss": 156453
+      },
+      "object_sha256": "fb3415e4342af07f34dbcd6d7ab2b9c47d78ee4b1861f7512f030ae0be00b954",
+      "stripped_sha256": "89b4bb8af78252c532c21295baf5bbb314c798cfe1ed903a6ef7322e6a2ede91",
+      "dependency_count": 331,
+      "dependencies_sha256": "aaa32424be198fac395e545d7758b77b08287e68f7c35b2444632175b40e456a",
+      "seconds": 2.7200435930280946,
+      "stack_usage_sha256": "756cf847f06f50e3a924682f295fdde033a0a3796e7862aa3e47979e8bb1af7f",
+      "empty_required": false
+    },
+    {
+      "tag": "current-native_ui-gate1-motionzero",
+      "unit": "platform/native_ui.cpp",
+      "label": "current",
+      "gate": 1,
+      "motion": "zero",
+      "sections": {
+        "text": 140045,
+        "data": 100513,
+        "bss": 156453
+      },
+      "object_sha256": "fb3415e4342af07f34dbcd6d7ab2b9c47d78ee4b1861f7512f030ae0be00b954",
+      "stripped_sha256": "89b4bb8af78252c532c21295baf5bbb314c798cfe1ed903a6ef7322e6a2ede91",
+      "dependency_count": 331,
+      "dependencies_sha256": "aaa32424be198fac395e545d7758b77b08287e68f7c35b2444632175b40e456a",
+      "seconds": 2.7400459319760557,
+      "stack_usage_sha256": "756cf847f06f50e3a924682f295fdde033a0a3796e7862aa3e47979e8bb1af7f",
+      "empty_required": false
+    },
+    {
+      "tag": "current-native_ui-gate1-motionon",
+      "unit": "platform/native_ui.cpp",
+      "label": "current",
+      "gate": 1,
+      "motion": "on",
+      "sections": {
+        "text": 140117,
+        "data": 100513,
+        "bss": 156453
+      },
+      "object_sha256": "1ee40d6985252fff0b55c15a0803afcc0656995a983f87629b848acadc21dc85",
+      "stripped_sha256": "1e694a6d3f877a1ad7eec4f1160bad4bbda89cccca9bd7285d6ce55cd403c7c2",
+      "dependency_count": 331,
+      "dependencies_sha256": "aaa32424be198fac395e545d7758b77b08287e68f7c35b2444632175b40e456a",
+      "seconds": 2.7199692119902465,
+      "stack_usage_sha256": "0f47b7542ca1eb89e8545ead446d371431ae9e0fb2c736bc97ab53ac968dc312",
+      "empty_required": false
+    },
+    {
+      "tag": "parent-native_model-gate0-motionabsent",
+      "unit": "platform/native_model.cpp",
+      "label": "parent",
+      "gate": 0,
+      "motion": "absent",
+      "sections": {
+        "text": 14472,
+        "data": 0,
+        "bss": 192
+      },
+      "object_sha256": "f079fbadf4071936f54c39c561e17414a057f0873372ec8032c976d4634effd9",
+      "stripped_sha256": "2eb469809fd86ecf2f47effffc8b22da6ce1da2e48f57a257805e566e6e2a53a",
+      "dependency_count": 176,
+      "dependencies_sha256": "46d37a76c2585966a53909cb476cd6cf3c505ad2b719d00f23274acdd098de8a",
+      "seconds": 0.6200651449908037,
+      "stack_usage_sha256": "38ff7eaeb39c6c71f252c5bfcf922bc14a18b36f21cd8c1c91300b5e2aad311e",
+      "empty_required": false
+    },
+    {
+      "tag": "parent-native_model-gate1-motionabsent",
+      "unit": "platform/native_model.cpp",
+      "label": "parent",
+      "gate": 1,
+      "motion": "absent",
+      "sections": {
+        "text": 14644,
+        "data": 0,
+        "bss": 192
+      },
+      "object_sha256": "1c682f42e90d7c8c115cef6e34709e004b46c601afd1c144371281f5257ad33f",
+      "stripped_sha256": "efe631b1add15c36539f294ac155b3edec91da416cdedb85cb8b46ea66b24e4b",
+      "dependency_count": 176,
+      "dependencies_sha256": "e600d1452f5ab60617f06853787a574f6805cd350a49fd98c1e685b5e7d22de4",
+      "seconds": 0.648155303002568,
+      "stack_usage_sha256": "80840c95bf809f8adf6b7d53a48fd094b8cfb67ec4bdf96249df5b2001068c60",
+      "empty_required": false
+    },
+    {
+      "tag": "current-native_model-gate0-motionabsent",
+      "unit": "platform/native_model.cpp",
+      "label": "current",
+      "gate": 0,
+      "motion": "absent",
+      "sections": {
+        "text": 14472,
+        "data": 0,
+        "bss": 192
+      },
+      "object_sha256": "126591e74d5eeddd2add6df0108de182e1c78a3fcb0c937f293c6e43ec423deb",
+      "stripped_sha256": "2eb469809fd86ecf2f47effffc8b22da6ce1da2e48f57a257805e566e6e2a53a",
+      "dependency_count": 177,
+      "dependencies_sha256": "44d47faa2bfdd7f08d68c582713c1df787103069793c91a9d0c1a1230a17503b",
+      "seconds": 0.6378091349906754,
+      "stack_usage_sha256": "37e06094fb771de12000565541c0507f9d70d6dc5538fec8ace60d070abeb049",
+      "empty_required": false
+    },
+    {
+      "tag": "current-native_model-gate0-motionzero",
+      "unit": "platform/native_model.cpp",
+      "label": "current",
+      "gate": 0,
+      "motion": "zero",
+      "sections": {
+        "text": 14472,
+        "data": 0,
+        "bss": 192
+      },
+      "object_sha256": "126591e74d5eeddd2add6df0108de182e1c78a3fcb0c937f293c6e43ec423deb",
+      "stripped_sha256": "2eb469809fd86ecf2f47effffc8b22da6ce1da2e48f57a257805e566e6e2a53a",
+      "dependency_count": 177,
+      "dependencies_sha256": "44d47faa2bfdd7f08d68c582713c1df787103069793c91a9d0c1a1230a17503b",
+      "seconds": 0.6534492670034524,
+      "stack_usage_sha256": "37e06094fb771de12000565541c0507f9d70d6dc5538fec8ace60d070abeb049",
+      "empty_required": false
+    },
+    {
+      "tag": "current-native_model-gate1-motionabsent",
+      "unit": "platform/native_model.cpp",
+      "label": "current",
+      "gate": 1,
+      "motion": "absent",
+      "sections": {
+        "text": 14644,
+        "data": 0,
+        "bss": 192
+      },
+      "object_sha256": "57ff29ab183c0128dca54753827bd6a9962647b56b6bcf26c6614096b3a93cc0",
+      "stripped_sha256": "efe631b1add15c36539f294ac155b3edec91da416cdedb85cb8b46ea66b24e4b",
+      "dependency_count": 177,
+      "dependencies_sha256": "eecadd4fd6820c6e27d904b1d086e1af757bdc65af44bfa82ad2c8395124b7f8",
+      "seconds": 0.629345479013864,
+      "stack_usage_sha256": "f61c63b1c6ab7569ae873ce0bb45b5dc89204f14e2fde333b39c91b4b45a687b",
+      "empty_required": false
+    },
+    {
+      "tag": "current-native_model-gate1-motionzero",
+      "unit": "platform/native_model.cpp",
+      "label": "current",
+      "gate": 1,
+      "motion": "zero",
+      "sections": {
+        "text": 14644,
+        "data": 0,
+        "bss": 192
+      },
+      "object_sha256": "57ff29ab183c0128dca54753827bd6a9962647b56b6bcf26c6614096b3a93cc0",
+      "stripped_sha256": "efe631b1add15c36539f294ac155b3edec91da416cdedb85cb8b46ea66b24e4b",
+      "dependency_count": 177,
+      "dependencies_sha256": "eecadd4fd6820c6e27d904b1d086e1af757bdc65af44bfa82ad2c8395124b7f8",
+      "seconds": 0.6397700160159729,
+      "stack_usage_sha256": "f61c63b1c6ab7569ae873ce0bb45b5dc89204f14e2fde333b39c91b4b45a687b",
+      "empty_required": false
+    },
+    {
+      "tag": "current-native_model-gate1-motionon",
+      "unit": "platform/native_model.cpp",
+      "label": "current",
+      "gate": 1,
+      "motion": "on",
+      "sections": {
+        "text": 14744,
+        "data": 0,
+        "bss": 192
+      },
+      "object_sha256": "4018b31a5b4b5a608e8a55aa27654bf7083598a229c17b9dac249ba372a80101",
+      "stripped_sha256": "ca6fe376e2d54dce0aeeb8db7c9619b0ef9ce07165af76dfd050ee696c6647ea",
+      "dependency_count": 177,
+      "dependencies_sha256": "eecadd4fd6820c6e27d904b1d086e1af757bdc65af44bfa82ad2c8395124b7f8",
+      "seconds": 0.6598873100010678,
+      "stack_usage_sha256": "2fdb3589f2cdd87d016069eb18007693356935028d4bdd7bb6809b6ebe38ac4e",
+      "empty_required": false
+    },
+    {
+      "tag": "parent-native_actor_fast-gate0-motionabsent",
+      "unit": "platform/native_actor_fast.cpp",
+      "label": "parent",
+      "gate": 0,
+      "motion": "absent",
+      "sections": {
+        "text": 61171,
+        "data": 1312,
+        "bss": 13183
+      },
+      "object_sha256": "9faf80061d8c32e7e3c6df83c14af0c99366c24d416675f3007c8acc75289a2e",
+      "stripped_sha256": "481ee1b3113b8cec59e92f9e814bde79cdcfab581dd45d790b86882ac7748e9c",
+      "dependency_count": 184,
+      "dependencies_sha256": "fd24103bd373b60c16fee71d3e3aaa0672f72cca2c403624d3be0afb66769100",
+      "seconds": 2.2871670029999223,
+      "stack_usage_sha256": "76023da8365af5a50db9c213a9ff43c86c4b06800b20a96657410ed98e7a74a3",
+      "empty_required": false
+    },
+    {
+      "tag": "parent-native_actor_fast-gate1-motionabsent",
+      "unit": "platform/native_actor_fast.cpp",
+      "label": "parent",
+      "gate": 1,
+      "motion": "absent",
+      "sections": {
+        "text": 61759,
+        "data": 1312,
+        "bss": 13231
+      },
+      "object_sha256": "832b6ea254cbcc70c751a1f6fa119ae964574db15cd7ef9436f521a0dd2c1f00",
+      "stripped_sha256": "1e233b13e105ee2a3b5a84db16df4f1695b07d64c36526ec61318804c3f9b0d5",
+      "dependency_count": 184,
+      "dependencies_sha256": "2306d923502aa5021ae35258404e1537d3dd4f0cb03bca1914e77fb6b1afeb92",
+      "seconds": 2.3093265469942708,
+      "stack_usage_sha256": "fe8226f8e44aaee6b30726a577c9a1be7e4ffc9ac8d90b4049835ad4602fe99e",
+      "empty_required": false
+    },
+    {
+      "tag": "current-native_actor_fast-gate0-motionabsent",
+      "unit": "platform/native_actor_fast.cpp",
+      "label": "current",
+      "gate": 0,
+      "motion": "absent",
+      "sections": {
+        "text": 61171,
+        "data": 1312,
+        "bss": 13183
+      },
+      "object_sha256": "891bc3021e0fff3c41798ecc26a1feaa0c7c511e47733a1ea2d268851c68ef85",
+      "stripped_sha256": "481ee1b3113b8cec59e92f9e814bde79cdcfab581dd45d790b86882ac7748e9c",
+      "dependency_count": 185,
+      "dependencies_sha256": "8ad95ae195637052ee72ab934a95839a359150f1a8e4ec523d1478b17ff81f5c",
+      "seconds": 2.2615813550073653,
+      "stack_usage_sha256": "afdf5980ac35bd271d1dd61c94307d58231c44292237993e20f663aa7fab39ea",
+      "empty_required": false
+    },
+    {
+      "tag": "current-native_actor_fast-gate0-motionzero",
+      "unit": "platform/native_actor_fast.cpp",
+      "label": "current",
+      "gate": 0,
+      "motion": "zero",
+      "sections": {
+        "text": 61171,
+        "data": 1312,
+        "bss": 13183
+      },
+      "object_sha256": "891bc3021e0fff3c41798ecc26a1feaa0c7c511e47733a1ea2d268851c68ef85",
+      "stripped_sha256": "481ee1b3113b8cec59e92f9e814bde79cdcfab581dd45d790b86882ac7748e9c",
+      "dependency_count": 185,
+      "dependencies_sha256": "8ad95ae195637052ee72ab934a95839a359150f1a8e4ec523d1478b17ff81f5c",
+      "seconds": 2.2418390180100687,
+      "stack_usage_sha256": "afdf5980ac35bd271d1dd61c94307d58231c44292237993e20f663aa7fab39ea",
+      "empty_required": false
+    },
+    {
+      "tag": "current-native_actor_fast-gate1-motionabsent",
+      "unit": "platform/native_actor_fast.cpp",
+      "label": "current",
+      "gate": 1,
+      "motion": "absent",
+      "sections": {
+        "text": 61759,
+        "data": 1312,
+        "bss": 13231
+      },
+      "object_sha256": "4cdd41be6a52660997a365dd39a4b2efc8e9ad385e51a3e4594d3023b632fc94",
+      "stripped_sha256": "1e233b13e105ee2a3b5a84db16df4f1695b07d64c36526ec61318804c3f9b0d5",
+      "dependency_count": 185,
+      "dependencies_sha256": "693e1b2f1bd29fe418dac1897e970f6a4aaf0c3a82e099f7db21e92925b4a41a",
+      "seconds": 2.3388648309919517,
+      "stack_usage_sha256": "a941aa65b4d4ae8f499a67d5cc41ffe0b65ea852a1a37262ff7fe33983d837ff",
+      "empty_required": false
+    },
+    {
+      "tag": "current-native_actor_fast-gate1-motionzero",
+      "unit": "platform/native_actor_fast.cpp",
+      "label": "current",
+      "gate": 1,
+      "motion": "zero",
+      "sections": {
+        "text": 61759,
+        "data": 1312,
+        "bss": 13231
+      },
+      "object_sha256": "4cdd41be6a52660997a365dd39a4b2efc8e9ad385e51a3e4594d3023b632fc94",
+      "stripped_sha256": "1e233b13e105ee2a3b5a84db16df4f1695b07d64c36526ec61318804c3f9b0d5",
+      "dependency_count": 185,
+      "dependencies_sha256": "693e1b2f1bd29fe418dac1897e970f6a4aaf0c3a82e099f7db21e92925b4a41a",
+      "seconds": 2.3436891330056824,
+      "stack_usage_sha256": "a941aa65b4d4ae8f499a67d5cc41ffe0b65ea852a1a37262ff7fe33983d837ff",
+      "empty_required": false
+    },
+    {
+      "tag": "current-native_actor_fast-gate1-motionon",
+      "unit": "platform/native_actor_fast.cpp",
+      "label": "current",
+      "gate": 1,
+      "motion": "on",
+      "sections": {
+        "text": 62367,
+        "data": 1312,
+        "bss": 13231
+      },
+      "object_sha256": "7a2498af2ed4cc260976054f719088a02e888feaf31726ad4138e570d34bb1cb",
+      "stripped_sha256": "c89c6b45f02996f453d87b4673cc388374983af2dc4bacb97ed273f4aa711143",
+      "dependency_count": 185,
+      "dependencies_sha256": "693e1b2f1bd29fe418dac1897e970f6a4aaf0c3a82e099f7db21e92925b4a41a",
+      "seconds": 2.288464485987788,
+      "stack_usage_sha256": "7219e68aff56730a505d8e31c5125c1710c721aa8b2a7bd1a85d01a9d245b9ba",
+      "empty_required": false
+    },
+    {
+      "tag": "parent-model_bridge-gate0-motionabsent",
+      "unit": "model_bridge.cpp",
+      "label": "parent",
+      "gate": 0,
+      "motion": "absent",
+      "sections": {
+        "text": 7017,
+        "data": 12,
+        "bss": 138
+      },
+      "object_sha256": "e7f217507b7ee71973286e5615cb1e8daec92bb895191498eae59bcf98583a5c",
+      "stripped_sha256": "8c83a4c065b137695b095822145a719293b49aac304d92fb80dd35c7af33d43f",
+      "dependency_count": 71,
+      "dependencies_sha256": "418663d68bd77533152983aaf0e9e81f27008beb7275d92193db1236c04a1b28",
+      "seconds": 0.1965016219764948,
+      "stack_usage_sha256": "3666816f8849fc10a9794b1acc615c23061d059982aae3f2af6895868077dd6f",
+      "empty_required": false
+    },
+    {
+      "tag": "parent-model_bridge-gate1-motionabsent",
+      "unit": "model_bridge.cpp",
+      "label": "parent",
+      "gate": 1,
+      "motion": "absent",
+      "sections": {
+        "text": 7375,
+        "data": 12,
+        "bss": 138
+      },
+      "object_sha256": "641c81ea9af34b10f31dfdee0aebeecc3a4a76e2e0b3214bbb1dccd6d85eb6ec",
+      "stripped_sha256": "df72b5695e38f53167bdd945914bea2955692e538f331703f84b75f6c96158a9",
+      "dependency_count": 78,
+      "dependencies_sha256": "7cf573a163a269a96fbba3002e69a4e56671ea1478fdcd769567ab29957a323e",
+      "seconds": 0.2067456789955031,
+      "stack_usage_sha256": "2b31c4babbabc3a1d63670d4c7a55d9a8e4f8fec318405eaeeffd8b2ccb9ef3a",
+      "empty_required": false
+    },
+    {
+      "tag": "current-model_bridge-gate0-motionabsent",
+      "unit": "model_bridge.cpp",
+      "label": "current",
+      "gate": 0,
+      "motion": "absent",
+      "sections": {
+        "text": 7017,
+        "data": 12,
+        "bss": 138
+      },
+      "object_sha256": "c74bf2910a0eefc3ee2dc7fe03d676c0d314791de6b4de69126de4e34976fa34",
+      "stripped_sha256": "8c83a4c065b137695b095822145a719293b49aac304d92fb80dd35c7af33d43f",
+      "dependency_count": 73,
+      "dependencies_sha256": "4122d9d2e49d6f109b833581d4cc63ee8c1ce7fbe5c28e5c2b4a20136bc8ee0c",
+      "seconds": 0.1978407329879701,
+      "stack_usage_sha256": "bff278b873f6399a83f768147d0ace8f2e37a42b3d18d300866807e42bbd5469",
+      "empty_required": false
+    },
+    {
+      "tag": "current-model_bridge-gate0-motionzero",
+      "unit": "model_bridge.cpp",
+      "label": "current",
+      "gate": 0,
+      "motion": "zero",
+      "sections": {
+        "text": 7017,
+        "data": 12,
+        "bss": 138
+      },
+      "object_sha256": "c74bf2910a0eefc3ee2dc7fe03d676c0d314791de6b4de69126de4e34976fa34",
+      "stripped_sha256": "8c83a4c065b137695b095822145a719293b49aac304d92fb80dd35c7af33d43f",
+      "dependency_count": 73,
+      "dependencies_sha256": "4122d9d2e49d6f109b833581d4cc63ee8c1ce7fbe5c28e5c2b4a20136bc8ee0c",
+      "seconds": 0.19403968198457733,
+      "stack_usage_sha256": "bff278b873f6399a83f768147d0ace8f2e37a42b3d18d300866807e42bbd5469",
+      "empty_required": false
+    },
+    {
+      "tag": "current-model_bridge-gate1-motionabsent",
+      "unit": "model_bridge.cpp",
+      "label": "current",
+      "gate": 1,
+      "motion": "absent",
+      "sections": {
+        "text": 7375,
+        "data": 12,
+        "bss": 138
+      },
+      "object_sha256": "24fd13d079f8ba5a74d07545194580cebc43f6b7d3f75498671ce33c255bfac5",
+      "stripped_sha256": "df72b5695e38f53167bdd945914bea2955692e538f331703f84b75f6c96158a9",
+      "dependency_count": 79,
+      "dependencies_sha256": "fc3eb7419d5f027b757491386d07e5b697a26f17f7becea116aaf2bad7cc257c",
+      "seconds": 0.20662107699899934,
+      "stack_usage_sha256": "0ecda3c00a1eb46731c12fd5eef41a2d5313240ca8dc6cf6365cea6db5bed1a7",
+      "empty_required": false
+    },
+    {
+      "tag": "current-model_bridge-gate1-motionzero",
+      "unit": "model_bridge.cpp",
+      "label": "current",
+      "gate": 1,
+      "motion": "zero",
+      "sections": {
+        "text": 7375,
+        "data": 12,
+        "bss": 138
+      },
+      "object_sha256": "24fd13d079f8ba5a74d07545194580cebc43f6b7d3f75498671ce33c255bfac5",
+      "stripped_sha256": "df72b5695e38f53167bdd945914bea2955692e538f331703f84b75f6c96158a9",
+      "dependency_count": 79,
+      "dependencies_sha256": "fc3eb7419d5f027b757491386d07e5b697a26f17f7becea116aaf2bad7cc257c",
+      "seconds": 0.20542449498316273,
+      "stack_usage_sha256": "0ecda3c00a1eb46731c12fd5eef41a2d5313240ca8dc6cf6365cea6db5bed1a7",
+      "empty_required": false
+    },
+    {
+      "tag": "current-model_bridge-gate1-motionon",
+      "unit": "model_bridge.cpp",
+      "label": "current",
+      "gate": 1,
+      "motion": "on",
+      "sections": {
+        "text": 7415,
+        "data": 12,
+        "bss": 138
+      },
+      "object_sha256": "fd139accea4342ea51b31f1af7bce6deea8c5a64e43adb2253f94f3ca81133eb",
+      "stripped_sha256": "cbac5b6f66d3e3c0d69d2d7987571f2170f2df1e529b90eab496133dccc7eaf3",
+      "dependency_count": 79,
+      "dependencies_sha256": "fc3eb7419d5f027b757491386d07e5b697a26f17f7becea116aaf2bad7cc257c",
+      "seconds": 0.20624203598708846,
+      "stack_usage_sha256": "cc5c179cf6ac6d1f2d18067724ba098dce92ffc6283cd6f2935f0f9a002aac29",
+      "empty_required": false
+    },
+    {
+      "tag": "current-gc_asset_motion_unknown-gate0-motionabsent",
+      "unit": "platform/gc_asset_motion_unknown.cpp",
+      "label": "current",
+      "gate": 0,
+      "motion": "absent",
+      "sections": {
+        "text": 0,
+        "data": 0,
+        "bss": 0
+      },
+      "object_sha256": "cf3f066e36f8775a71dce40d6ce37c280eba308f13de5270ef82ae4e4e039d90",
+      "stripped_sha256": "aa0c75f835c1f10cfa23f0c5a26c25af875f29310a43bbd4a623b0afa13e20c5",
+      "dependency_count": 3,
+      "dependencies_sha256": "5e0978e963d3eaca16cefe7d739db57be84b1f4c57c8881e13bd859e729f66b9",
+      "seconds": 0.015142121003009379,
+      "stack_usage_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "empty_required": true
+    },
+    {
+      "tag": "current-gc_asset_motion_unknown-gate0-motionzero",
+      "unit": "platform/gc_asset_motion_unknown.cpp",
+      "label": "current",
+      "gate": 0,
+      "motion": "zero",
+      "sections": {
+        "text": 0,
+        "data": 0,
+        "bss": 0
+      },
+      "object_sha256": "cf3f066e36f8775a71dce40d6ce37c280eba308f13de5270ef82ae4e4e039d90",
+      "stripped_sha256": "aa0c75f835c1f10cfa23f0c5a26c25af875f29310a43bbd4a623b0afa13e20c5",
+      "dependency_count": 3,
+      "dependencies_sha256": "5e0978e963d3eaca16cefe7d739db57be84b1f4c57c8881e13bd859e729f66b9",
+      "seconds": 0.01438973899348639,
+      "stack_usage_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "empty_required": true
+    },
+    {
+      "tag": "current-gc_asset_motion_unknown-gate1-motionabsent",
+      "unit": "platform/gc_asset_motion_unknown.cpp",
+      "label": "current",
+      "gate": 1,
+      "motion": "absent",
+      "sections": {
+        "text": 0,
+        "data": 0,
+        "bss": 0
+      },
+      "object_sha256": "26d7fe251ade83034a91a3d4916f822659aa7b097776d25a4493e96ec85c49de",
+      "stripped_sha256": "aa0c75f835c1f10cfa23f0c5a26c25af875f29310a43bbd4a623b0afa13e20c5",
+      "dependency_count": 15,
+      "dependencies_sha256": "1431f61e2d4ff0c197e86ed67c3ccac61da68de5083e8d0170bd0b4635cc4b0a",
+      "seconds": 0.019558762985980138,
+      "stack_usage_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "empty_required": true
+    },
+    {
+      "tag": "current-gc_asset_motion_unknown-gate1-motionzero",
+      "unit": "platform/gc_asset_motion_unknown.cpp",
+      "label": "current",
+      "gate": 1,
+      "motion": "zero",
+      "sections": {
+        "text": 0,
+        "data": 0,
+        "bss": 0
+      },
+      "object_sha256": "26d7fe251ade83034a91a3d4916f822659aa7b097776d25a4493e96ec85c49de",
+      "stripped_sha256": "aa0c75f835c1f10cfa23f0c5a26c25af875f29310a43bbd4a623b0afa13e20c5",
+      "dependency_count": 15,
+      "dependencies_sha256": "1431f61e2d4ff0c197e86ed67c3ccac61da68de5083e8d0170bd0b4635cc4b0a",
+      "seconds": 0.019264314003521577,
+      "stack_usage_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "empty_required": true
+    },
+    {
+      "tag": "current-gc_asset_motion_unknown-gate1-motionon",
+      "unit": "platform/gc_asset_motion_unknown.cpp",
+      "label": "current",
+      "gate": 1,
+      "motion": "on",
+      "sections": {
+        "text": 466,
+        "data": 0,
+        "bss": 24
+      },
+      "object_sha256": "e6af5c736f50a87b66b44e8215763713b745f5813edcdee7592fd9715e96969a",
+      "stripped_sha256": "4f7a573157ad1d59b30933e8f852c9ea7a4cca5ecd46a60848efa7d6b5ab809e",
+      "dependency_count": 15,
+      "dependencies_sha256": "1431f61e2d4ff0c197e86ed67c3ccac61da68de5083e8d0170bd0b4635cc4b0a",
+      "seconds": 0.034090747009031475,
+      "stack_usage_sha256": "312b2819d03836e1c30a2f77802356e17fabf11745b48b1b922f44d56f403b0b",
+      "empty_required": false
+    }
+  ],
+  "complete": false,
+  "scope": "Fresh selected objects only; no full programme, runtime, heap, guest, coverage or provenance acceptance",
+  "disabled_identity": [
+    {
+      "unit": "native_ui",
+      "gate": 0,
+      "stripped_sha256": "ac5a107b9dfe8bfbd8432862b250eba29487803d4182e92d5d5bbc5467e88cb6",
+      "arms": [
+        "parent-native_ui-gate0-motionabsent",
+        "current-native_ui-gate0-motionabsent",
+        "current-native_ui-gate0-motionzero"
+      ]
+    },
+    {
+      "unit": "native_ui",
+      "gate": 1,
+      "stripped_sha256": "89b4bb8af78252c532c21295baf5bbb314c798cfe1ed903a6ef7322e6a2ede91",
+      "arms": [
+        "parent-native_ui-gate1-motionabsent",
+        "current-native_ui-gate1-motionabsent",
+        "current-native_ui-gate1-motionzero"
+      ]
+    },
+    {
+      "unit": "native_model",
+      "gate": 0,
+      "stripped_sha256": "2eb469809fd86ecf2f47effffc8b22da6ce1da2e48f57a257805e566e6e2a53a",
+      "arms": [
+        "parent-native_model-gate0-motionabsent",
+        "current-native_model-gate0-motionabsent",
+        "current-native_model-gate0-motionzero"
+      ]
+    },
+    {
+      "unit": "native_model",
+      "gate": 1,
+      "stripped_sha256": "efe631b1add15c36539f294ac155b3edec91da416cdedb85cb8b46ea66b24e4b",
+      "arms": [
+        "parent-native_model-gate1-motionabsent",
+        "current-native_model-gate1-motionabsent",
+        "current-native_model-gate1-motionzero"
+      ]
+    },
+    {
+      "unit": "native_actor_fast",
+      "gate": 0,
+      "stripped_sha256": "481ee1b3113b8cec59e92f9e814bde79cdcfab581dd45d790b86882ac7748e9c",
+      "arms": [
+        "parent-native_actor_fast-gate0-motionabsent",
+        "current-native_actor_fast-gate0-motionabsent",
+        "current-native_actor_fast-gate0-motionzero"
+      ]
+    },
+    {
+      "unit": "native_actor_fast",
+      "gate": 1,
+      "stripped_sha256": "1e233b13e105ee2a3b5a84db16df4f1695b07d64c36526ec61318804c3f9b0d5",
+      "arms": [
+        "parent-native_actor_fast-gate1-motionabsent",
+        "current-native_actor_fast-gate1-motionabsent",
+        "current-native_actor_fast-gate1-motionzero"
+      ]
+    },
+    {
+      "unit": "model_bridge",
+      "gate": 0,
+      "stripped_sha256": "8c83a4c065b137695b095822145a719293b49aac304d92fb80dd35c7af33d43f",
+      "arms": [
+        "parent-model_bridge-gate0-motionabsent",
+        "current-model_bridge-gate0-motionabsent",
+        "current-model_bridge-gate0-motionzero"
+      ]
+    },
+    {
+      "unit": "model_bridge",
+      "gate": 1,
+      "stripped_sha256": "df72b5695e38f53167bdd945914bea2955692e538f331703f84b75f6c96158a9",
+      "arms": [
+        "parent-model_bridge-gate1-motionabsent",
+        "current-model_bridge-gate1-motionabsent",
+        "current-model_bridge-gate1-motionzero"
+      ]
+    }
+  ],
+  "selected_ON_delta": {
+    "text": 1286,
+    "data": 0,
+    "bss": 24
+  },
+  "provider_closure": {
+    "needed": 311,
+    "missing": [
+      "___real_pvr_list_begin",
+      "___real_pvr_poly_compile",
+      "___real_pvr_poly_mod_compile",
+      "___real_pvr_scene_finish",
+      "___real_pvr_set_presort_mode",
+      "___real_pvr_sprite_compile"
+    ],
+    "providers": [
+      {
+        "path": "/root/probe/lanes/route/out-rrfb254e8rP/re4dc-game.elf",
+        "sha256": "3a110765ef415dfd4e4a00104bfc6094b393f87cb9f9f55672046f90e702ee8f"
+      },
+      {
+        "path": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a",
+        "sha256": "5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf"
+      },
+      {
+        "path": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/libgcc.a",
+        "sha256": "067eb6f92b450e6ecaf9eab5d24dbf614addfd5d3989c798f2e48e6143e2fe32"
+      },
+      {
+        "path": "/opt/toolchains/dc/sh-elf/sh-elf/lib/libc.a",
+        "sha256": "69ca0c05802a25a39e241ab90547627985c4b940369fe9acee1bd2ac1958810a"
+      },
+      {
+        "path": "/root/work/lanes/gc-port23-full-target2-scratch/on/out/re4dc-game.elf",
+        "sha256": "2f7e505e7a1002f863c5dad3864530c80a68b69c51af2b972d767ca412426d45"
+      },
+      {
+        "path": "/dev/shm/gc-motion24-target-run-0mftarg0/current-native_ui-gate1-motionon.o",
+        "sha256": "1ee40d6985252fff0b55c15a0803afcc0656995a983f87629b848acadc21dc85"
+      },
+      {
+        "path": "/dev/shm/gc-motion24-target-run-0mftarg0/current-native_model-gate1-motionon.o",
+        "sha256": "4018b31a5b4b5a608e8a55aa27654bf7083598a229c17b9dac249ba372a80101"
+      },
+      {
+        "path": "/dev/shm/gc-motion24-target-run-0mftarg0/current-native_actor_fast-gate1-motionon.o",
+        "sha256": "7a2498af2ed4cc260976054f719088a02e888feaf31726ad4138e570d34bb1cb"
+      },
+      {
+        "path": "/dev/shm/gc-motion24-target-run-0mftarg0/current-model_bridge-gate1-motionon.o",
+        "sha256": "fd139accea4342ea51b31f1af7bce6deea8c5a64e43adb2253f94f3ca81133eb"
+      },
+      {
+        "path": "/dev/shm/gc-motion24-target-run-0mftarg0/current-gc_asset_motion_unknown-gate1-motionon.o",
+        "sha256": "e6af5c736f50a87b66b44e8215763713b745f5813edcdee7592fd9715e96969a"
+      }
+    ],
+    "limit": "Candidate real providers and selected objects only; no new full programme/map, aliases or stubs"
+  },
+  "failure": "RuntimeError(\"Missing real provider ['___real_pvr_list_begin', '___real_pvr_poly_compile', '___real_pvr_poly_mod_compile', '___real_pvr_scene_finish', '___real_pvr_set_presort_mode', '___real_pvr_sprite_compile']\")",
+  "traceback": "Traceback (most recent call last):\n  File \"/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/run-target-motion24.py\", line 99, in main\n    if missing:raise RuntimeError('Missing real provider '+str(missing))\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: Missing real provider ['___real_pvr_list_begin', '___real_pvr_poly_compile', '___real_pvr_poly_mod_compile', '___real_pvr_scene_finish', '___real_pvr_set_presort_mode', '___real_pvr_sprite_compile']\n",
+  "owned_output_bytes": 25403896
+}

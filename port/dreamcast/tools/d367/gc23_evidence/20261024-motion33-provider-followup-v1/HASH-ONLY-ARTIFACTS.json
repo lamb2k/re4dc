@@ -1,0 +1,821 @@
+{
+  "scope": "Private log/runtime-diff payloads excluded; exact identities only.",
+  "files": [
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/source-5e6b7d8c0/host.log",
+      "bytes": 18084,
+      "sha256": "9b6a2ca9f12673be68b767a3ac01ed0882943c46ee79e2c6e669250382bc83e9",
+      "source_mtime_ns": 1792825659685271900,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/source-fce285ddd/host.log",
+      "bytes": 17654,
+      "sha256": "835bdf59c91f2b0593246def8626c2530d6ede812a303396a548a8fa28be809a",
+      "source_mtime_ns": 1792825478324597500,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/source-fce285ddd/source.diff",
+      "bytes": 43642,
+      "sha256": "60588d1d7f9f3ab3f48ed0819cefdd32726fac44e2c2f642a564c65cfc721849",
+      "source_mtime_ns": 1792825394880000300,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-gc_asset_motion_unknown-gate0-motionabsent-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919250503600,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-gc_asset_motion_unknown-gate0-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919280946800,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-gc_asset_motion_unknown-gate0-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919302947500,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-gc_asset_motion_unknown-gate0-motionzero-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919340619000,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-gc_asset_motion_unknown-gate0-motionzero-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919370619700,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-gc_asset_motion_unknown-gate0-motionzero-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919393620500,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-gc_asset_motion_unknown-gate1-motionabsent-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919430621600,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-gc_asset_motion_unknown-gate1-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919458688600,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-gc_asset_motion_unknown-gate1-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919480688800,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-gc_asset_motion_unknown-gate1-motionon-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919517689000,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-gc_asset_motion_unknown-gate1-motionon-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919547692800,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-gc_asset_motion_unknown-gate1-motionon-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919571205500,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-gc_asset_motion_unknown-gate1-motionzero-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919609206600,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-gc_asset_motion_unknown-gate1-motionzero-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919640212000,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-gc_asset_motion_unknown-gate1-motionzero-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919663720100,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-model_bridge-gate0-motionabsent-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919702726600,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-model_bridge-gate0-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919734770200,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-model_bridge-gate0-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919758825100,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-model_bridge-gate0-motionzero-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919799359900,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-model_bridge-gate0-motionzero-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919831408500,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-model_bridge-gate0-motionzero-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919854988300,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-model_bridge-gate1-motionabsent-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919893991100,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-model_bridge-gate1-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919923991200,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-model_bridge-gate1-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919946993900,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-model_bridge-gate1-motionon-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826919985992500,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-model_bridge-gate1-motionon-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920016993000,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-model_bridge-gate1-motionon-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920037997500,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-model_bridge-gate1-motionzero-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920076083000,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-model_bridge-gate1-motionzero-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920105597500,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-model_bridge-gate1-motionzero-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920127594400,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_actor_fast-gate0-motionabsent-compile.log",
+      "bytes": 1543,
+      "sha256": "294e9e47f1d1df54e660062b96da4db3d4df5bbaf3d09326053809ea81a4d958",
+      "source_mtime_ns": 1792826920166595300,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_actor_fast-gate0-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920195595900,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_actor_fast-gate0-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920218602200,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_actor_fast-gate0-motionzero-compile.log",
+      "bytes": 1543,
+      "sha256": "294e9e47f1d1df54e660062b96da4db3d4df5bbaf3d09326053809ea81a4d958",
+      "source_mtime_ns": 1792826920257123400,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_actor_fast-gate0-motionzero-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920286125500,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_actor_fast-gate0-motionzero-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920309590200,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_actor_fast-gate1-motionabsent-compile.log",
+      "bytes": 1543,
+      "sha256": "294e9e47f1d1df54e660062b96da4db3d4df5bbaf3d09326053809ea81a4d958",
+      "source_mtime_ns": 1792826920349595800,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_actor_fast-gate1-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920379596500,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_actor_fast-gate1-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920401597500,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_actor_fast-gate1-motionon-compile.log",
+      "bytes": 1543,
+      "sha256": "294e9e47f1d1df54e660062b96da4db3d4df5bbaf3d09326053809ea81a4d958",
+      "source_mtime_ns": 1792826920439604200,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_actor_fast-gate1-motionon-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920469273500,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_actor_fast-gate1-motionon-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920492270400,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_actor_fast-gate1-motionzero-compile.log",
+      "bytes": 1543,
+      "sha256": "294e9e47f1d1df54e660062b96da4db3d4df5bbaf3d09326053809ea81a4d958",
+      "source_mtime_ns": 1792826920530270900,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_actor_fast-gate1-motionzero-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920559272200,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_actor_fast-gate1-motionzero-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920583275000,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_model-gate0-motionabsent-compile.log",
+      "bytes": 665,
+      "sha256": "923c0f70498eedc32ec8ab44e940cb63b9774f8769c8aea8157a3ff7eb4a1efe",
+      "source_mtime_ns": 1792826920622276700,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_model-gate0-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920651281300,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_model-gate0-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920674088700,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_model-gate0-motionzero-compile.log",
+      "bytes": 665,
+      "sha256": "923c0f70498eedc32ec8ab44e940cb63b9774f8769c8aea8157a3ff7eb4a1efe",
+      "source_mtime_ns": 1792826920713159300,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_model-gate0-motionzero-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920742157200,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_model-gate0-motionzero-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920765158000,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_model-gate1-motionabsent-compile.log",
+      "bytes": 665,
+      "sha256": "923c0f70498eedc32ec8ab44e940cb63b9774f8769c8aea8157a3ff7eb4a1efe",
+      "source_mtime_ns": 1792826920803676600,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_model-gate1-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920832676900,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_model-gate1-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920853683900,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_model-gate1-motionon-compile.log",
+      "bytes": 665,
+      "sha256": "923c0f70498eedc32ec8ab44e940cb63b9774f8769c8aea8157a3ff7eb4a1efe",
+      "source_mtime_ns": 1792826920891271700,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_model-gate1-motionon-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920922272000,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_model-gate1-motionon-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826920944273500,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_model-gate1-motionzero-compile.log",
+      "bytes": 665,
+      "sha256": "923c0f70498eedc32ec8ab44e940cb63b9774f8769c8aea8157a3ff7eb4a1efe",
+      "source_mtime_ns": 1792826920983274400,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_model-gate1-motionzero-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921012412400,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_model-gate1-motionzero-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921034652300,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_ui-gate0-motionabsent-compile.log",
+      "bytes": 4150,
+      "sha256": "170865d63161c5efd8f9d1fa3d0dea9d2356538f61ba7d93a5a02649ab8bf61b",
+      "source_mtime_ns": 1792826921071799800,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_ui-gate0-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921101799500,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_ui-gate0-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921123796200,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_ui-gate0-motionzero-compile.log",
+      "bytes": 4150,
+      "sha256": "170865d63161c5efd8f9d1fa3d0dea9d2356538f61ba7d93a5a02649ab8bf61b",
+      "source_mtime_ns": 1792826921162799400,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_ui-gate0-motionzero-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921192798000,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_ui-gate0-motionzero-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921215799400,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_ui-gate1-motionabsent-compile.log",
+      "bytes": 4150,
+      "sha256": "170865d63161c5efd8f9d1fa3d0dea9d2356538f61ba7d93a5a02649ab8bf61b",
+      "source_mtime_ns": 1792826921253802700,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_ui-gate1-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921283879800,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_ui-gate1-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921305880100,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_ui-gate1-motionon-compile.log",
+      "bytes": 4150,
+      "sha256": "170865d63161c5efd8f9d1fa3d0dea9d2356538f61ba7d93a5a02649ab8bf61b",
+      "source_mtime_ns": 1792826921343942700,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_ui-gate1-motionon-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921371944000,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_ui-gate1-motionon-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921394944900,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_ui-gate1-motionzero-compile.log",
+      "bytes": 4150,
+      "sha256": "170865d63161c5efd8f9d1fa3d0dea9d2356538f61ba7d93a5a02649ab8bf61b",
+      "source_mtime_ns": 1792826921431947300,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_ui-gate1-motionzero-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921461090500,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/current-native_ui-gate1-motionzero-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921484091700,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-model_bridge-gate0-motionabsent-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921520092300,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-model_bridge-gate0-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921551095300,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-model_bridge-gate0-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921573092900,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-model_bridge-gate1-motionabsent-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921609611100,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-model_bridge-gate1-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921639613800,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-model_bridge-gate1-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921662165000,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_actor_fast-gate0-motionabsent-compile.log",
+      "bytes": 1543,
+      "sha256": "1befe0c41b4f10e2e2125b0d4eaca6b645f19c5f379170a51976c4e39b88929c",
+      "source_mtime_ns": 1792826921700677000,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_actor_fast-gate0-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921729729900,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_actor_fast-gate0-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921751729200,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_actor_fast-gate1-motionabsent-compile.log",
+      "bytes": 1543,
+      "sha256": "1befe0c41b4f10e2e2125b0d4eaca6b645f19c5f379170a51976c4e39b88929c",
+      "source_mtime_ns": 1792826921789042100,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_actor_fast-gate1-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921818050600,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_actor_fast-gate1-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921842048600,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_model-gate0-motionabsent-compile.log",
+      "bytes": 665,
+      "sha256": "cb78b5c40fd7b324f382c70ee65511ff3523b5a12b5f4a8d3fa4235ab79f5fbf",
+      "source_mtime_ns": 1792826921880139300,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_model-gate0-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921908136200,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_model-gate0-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921931328000,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_model-gate1-motionabsent-compile.log",
+      "bytes": 665,
+      "sha256": "cb78b5c40fd7b324f382c70ee65511ff3523b5a12b5f4a8d3fa4235ab79f5fbf",
+      "source_mtime_ns": 1792826921970329600,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_model-gate1-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826921998330900,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_model-gate1-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826922020338900,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_ui-gate0-motionabsent-compile.log",
+      "bytes": 4150,
+      "sha256": "490164bbe4b4a8e380646e886975d39b0e99dbfb9997fd5a7df37af7fa3b3541",
+      "source_mtime_ns": 1792826922060050000,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_ui-gate0-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826922090559800,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_ui-gate0-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826922113559800,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_ui-gate1-motionabsent-compile.log",
+      "bytes": 4150,
+      "sha256": "490164bbe4b4a8e380646e886975d39b0e99dbfb9997fd5a7df37af7fa3b3541",
+      "source_mtime_ns": 1792826922153561000,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_ui-gate1-motionabsent-dependency.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826922183562200,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/target-fce-current/parent-native_ui-gate1-motionabsent-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792826922207562800,
+      "copied": false,
+      "scope": "Private host/compiler log or already-Git-pinned runtime diff; identity only, payload excluded."
+    }
+  ]
+}

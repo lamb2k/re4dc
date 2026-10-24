@@ -1,0 +1,2 @@
+         U re4dc_gcasset::unresolved(re4dc_gcasset::Consumer, char const*)
+         U re4dc_log
