@@ -1,0 +1,31 @@
+{
+  "verdict": "CLEAR_SOURCE_HOST_ONLY",
+  "kit_seal_sha256": "3833d51023b218cb1f58a74c3a5531cfc0a7e6fc275f91720588f5ac081524cc",
+  "plan_sha256": "eacba329da248977361631453d4ba64b06c7653be1c3e1f1dff13bfd2efd875d",
+  "source": "427784b1f48aa30742850bb5025925ab619b740e",
+  "supplied_host_tests": 46,
+  "independent_checks": 9,
+  "SDK_or_actual_slots_or_stage_or_guest": false,
+  "members": {
+    "HOST-RERUN46.json": {
+      "bytes": 501,
+      "sha256": "73bfc45a0a5c9b7143a990abcf41cf7f93daf58b5f393c18e9ab46ac94e2a949"
+    },
+    "HOST-RERUN46.txt": {
+      "bytes": 3935,
+      "sha256": "d9f92cd25347b3ca541c60e176f2f437d91274a68ad01358b5776e8c0c9d5d10"
+    },
+    "NARROW-INDEPENDENT-CONTROLS.json": {
+      "bytes": 1649,
+      "sha256": "f26f42fb5eb78ce5022e8bc30b9165c37eef4b88db4244090749364a456a9d43"
+    },
+    "rerun46.py": {
+      "bytes": 478,
+      "sha256": "24433eebe31dcf5f6604fac3b388265a85097992acc01bae5207a15b570b3309"
+    },
+    "REVIEW.md": {
+      "bytes": 3097,
+      "sha256": "7b58697289f47dd57b6259f94f74bb86dafb41b2301f55dd3f84602699bc70f4"
+    }
+  }
+}
