@@ -1082,6 +1082,15 @@ extern "C" void re4dc_gcasset_shape_source(const void* info_ptr,unsigned index,c
     member_shape_source(info_ptr,member.serial,pG->Frame_cnt,index,delta,count);
 }
 
+extern "C" unsigned re4dc_gcasset_original_color_member(const Re4dcModelPart* part,unsigned bytes){
+    using namespace re4dc_gcasset;
+    if(!part || !part->colors)return 0;
+    OriginalModelInput input;ModelMember member;
+    if(!gcasset_original_input(part->info,input,member) || part->colors!=input.colors)return 0;
+    input.uses_colors=true;
+    return member_original_colors(member.serial,input,bytes)?member.serial:0;
+}
+
 // Class/role selects a diagnostic consumer only; member SHA determines origin.
 extern "C" unsigned re4dc_gcasset_weapon_consumer(const void* model,const void* info,unsigned arc,unsigned family) {
     if(!model || !info)return 0;

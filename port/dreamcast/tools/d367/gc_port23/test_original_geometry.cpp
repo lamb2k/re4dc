@@ -15,6 +15,20 @@ int main(){
  auto* stream=d+288;stream[0]=0x90;stream[2]=3;
  for(unsigned i=0;i<3;++i){auto* v=stream+3+i*8;v[1]=i;v[3]=i;v[5]=i;v[7]=i;}
  put(d+400,1);put(d+404,8);put(d+408,1);d[412]=1;
+ assert(original_color_bytes(stream,32,0x80000000U)==12);
+ assert(!original_color_bytes(stream,32,0));
+ // FE3 reader's constant/variable ci and all LOD prefix extents are bounded.
+ alignas(32) unsigned char fe[128]{};fe[0]=0xfe;fe[1]=3;fe[2]=1;fe[4]=1;fe[8]=10;fe[10]=16;
+ put(fe+32,3U|(3U<<8));for(unsigned i=0;i<3;++i)fe[40+i*8+6]=i;
+ fe[64]=0;fe[65]=1;fe[66]=0x82;assert(original_color_bytes(fe,sizeof fe,0)==12);
+ for(unsigned n=0;n<67;++n)assert(!original_color_bytes(fe,n,0));
+ fe[3]=1;fe[12]=20;fe[84]=22;fe[86]=24;put(fe+88,2U|(3U<<8));fe[96]=0;fe[97]=1;fe[98]=0x81;
+ assert(original_color_bytes(fe,sizeof fe,0)==12);
+ fe[88]=4;assert(!original_color_bytes(fe,sizeof fe,0));fe[88]=2;
+ fe[98]=0x82;assert(!original_color_bytes(fe,sizeof fe,0));fe[98]=0x81;
+ fe[8]=9;assert(!original_color_bytes(fe,sizeof fe,0));fe[8]=10;
+ fe[2]=0;fe[6]=2;assert(original_color_bytes(fe,sizeof fe,0)==12);
+ fe[1]=4;assert(!original_color_bytes(fe,sizeof fe,0));
  OriginalModelProof proof;assert(original_parse(proof,17,file,sizeof file,d));
  assert(proof.uv_bytes==12 && proof.color_bytes==12 && proof.weights && proof.shape_bytes==20);
  OriginalModelInput in;in.data=d;in.head=d+80;in.colors=d+160;in.uv=d+192;in.weights=d+208;in.parts=d+256;

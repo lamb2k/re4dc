@@ -121,6 +121,8 @@ int main(){using namespace leon_hand_pack;
  retire_catalog();assert(!gcasset_hand_chunk_current(0));
 }
 '''
+        fixture = '#include "gc_asset_members.h"\nstruct Re4dcModelPart;struct Re4dcActorSource;\nextern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_model_select(const Re4dcModelPart*);\nextern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_actor_select(const Re4dcModelPart*,const Re4dcActorSource*);\n' + fixture
+        fixture += '\nextern "C" unsigned re4dc_gcasset_original_color_member(const Re4dcModelPart*,unsigned){return 0;}\nextern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_model_select(const Re4dcModelPart*){return {};}\nextern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_actor_select(const Re4dcModelPart*,const Re4dcActorSource*){return {};}\n'
         fixture += '\nextern "C" int re4dc_actor_model_source(const void*,Re4dcActorSource*){return 0;}\n'
         with tempfile.TemporaryDirectory(prefix='gc-port23-hand-owner-', dir='/dev/shm') as temporary:
             root = Path(temporary);(root / 'fixture.cpp').write_text(fixture);executable = root / 'fixture'

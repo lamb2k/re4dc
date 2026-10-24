@@ -1,0 +1,62 @@
+{
+  "scope": "Source/host only, no SDK/target/runtime/provenance acceptance",
+  "full_suite": {
+    "methods": 131,
+    "skipped": 1,
+    "audio_fake_io_cases": 50,
+    "core_cursor_member_off_checks": "PASS",
+    "exit": 0,
+    "seconds": 126.76346212701173,
+    "log_identity": {
+      "size": 20673,
+      "sha256": "6b12e8105fe00d3f7535fd1a0d33a80fa8008d1f6eaec2757944acb755c91a41"
+    }
+  },
+  "source_inputs": {
+    "port/dreamcast/game/model_bridge.cpp": "4a17c61487212dde78b01662f69aa17fd66e2e1d061777ca244ee7ad50292d2f",
+    "port/dreamcast/game/platform/gc_asset_members.cpp": "764a65ec5389acf3cbc6e7566e6ac3de7d964b60492d50228d9bc47f521001f8",
+    "port/dreamcast/game/platform/gc_asset_payloads.cpp": "5ab0704e79288c85430ccb7d8570aadd0807d52b06bea55b8319d1bed47b7c36",
+    "port/dreamcast/game/platform/include/gc_asset_actor_original.h": "b84938a5e7f35637693433c09375ac582c7081b53c075103518c66a4b0e9e444",
+    "port/dreamcast/game/platform/include/gc_asset_actor_select.inc": "d3296679bdd8e9d7d2f8be2154545d4453473b504077bde9ebd694d54026bc0f",
+    "port/dreamcast/game/platform/include/gc_asset_members.h": "c60eb0accff85843ae982743947d1712bb29293129471ddf0347f1d4517bc949",
+    "port/dreamcast/game/platform/include/gc_asset_payloads.h": "9bd23f021e8e92680304ee8fa9dbb29fe6a610ff52bd882fc9f49abd71fc2a8e",
+    "port/dreamcast/tools/d367/gc_port23/SOURCE-WEAPON24.md": "ff08088695c50f92f55b394d7c0455bb2bf0b7d550ff3a16f059ac84cd6498cd",
+    "port/dreamcast/tools/d367/gc_port23/test_motion_unknown.py": "7366915e35d5e20f244d6094a4d801a2efd67f5604dc897a7bdc296813591fb6",
+    "port/dreamcast/tools/d367/gc_port23/test_original_bridge.cpp.in": "6af1f476fd519ca2f84d81d0c5b9527dfb83c716dac80507471fa5f02b8fcde7",
+    "port/dreamcast/tools/d367/gc_port23/test_original_geometry.cpp": "76c6ae750109cc530018ac099a0e3453d4511a1f99224fe79f11ce195d061bcd",
+    "port/dreamcast/tools/d367/gc_port23/test_original_geometry.py": "2b94331af0cf3edfccd116aa22f2f6401f4b9c8ba95e8e9765c211473fa4d631",
+    "port/dreamcast/tools/d367/gc_port23/test_runtime_actor_assets.py": "77ad1b68572d86ce2da91a59868bb77605be4e480ecb1e52c9c8805d8510497c",
+    "port/dreamcast/tools/d367/gc_port23/test_runtime_actor_main.py": "0b593ec1d373f533c94ffbc7cc57d75a7507a90bc0f80c8646568e43f41bbb6f",
+    "port/dreamcast/tools/d367/gc_port23/test_runtime_hand_owner.py": "b43d8dfe6aa8e9b91fba1a2925fbbfd055c930ff742c0ecc52dd3237891e7f4b",
+    "port/dreamcast/tools/d367/gc_port23/test_runtime_hooks.py": "075558b737ef04d0775f8ecc79c8e6c423d19109a68f0f1641407a5554af61fb"
+  },
+  "sanitizers": [
+    {
+      "case": "parser",
+      "exit": 0,
+      "stderr": "",
+      "fixture_sha256": "76c6ae750109cc530018ac099a0e3453d4511a1f99224fe79f11ce195d061bcd"
+    },
+    {
+      "case": "bridge",
+      "exit": 0,
+      "stderr": "",
+      "fixture_sha256": "0bdafe024c19814dead9f0f92e6c8335eb6fe09f23e90db73bf5417574abe926"
+    }
+  ],
+  "funding": {
+    "geometry_bytes_SH4_expected": 12288,
+    "compound_bytes_SH4_expected": 3584,
+    "compound_rows": 64,
+    "compound_row_bytes_SH4_expected": 56,
+    "compound_borrowed_pointer_BSS_SH4_expected": 4,
+    "target_compiler_run": false
+  },
+  "limits": [
+    "Missing/stale/overflow constituent proof stays unknown",
+    "Root cold slab binding and terminal integration pending",
+    "Motion helper composition separate",
+    "Actual target OFF and route capacity/resource/coverage gates pending",
+    "No wired mask advance"
+  ]
+}

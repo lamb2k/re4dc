@@ -237,6 +237,18 @@ bool member_original_source(unsigned serial,const OriginalModelInput& input){
     }
     return false;
 }
+bool member_serial_current(unsigned serial){
+    if(!serial)return false;
+    for(const auto& member:members)if(current(member) && member.serial==serial && !member.mutation && checked_current(member.asset))return true;
+    return false;
+}
+bool member_original_colors(unsigned serial,const OriginalModelInput& input,unsigned bytes){
+    if(!bytes || bytes>262144 || !input.uses_colors)return false;
+    for(const auto& member:members)if(current(member) && member.serial==serial && !member.mutation)
+        for(const auto& proof:originals)if(proof.serial==serial && proof.data==input.data &&
+            bytes<=proof.color_bytes && original_fields(proof,input))return true;
+    return false;
+}
 void member_pose_reset(const void* info){for(auto& pose:poses)if(pose.info==info)pose={};}
 bool member_pose_publish(const void* info,unsigned serial,const OriginalModelInput& input,const void* positions,const void* normals,unsigned frame,bool lazy){
     bool shape_ready=!input.uses_shape;

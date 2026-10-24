@@ -129,11 +129,11 @@ int main(){unsigned char bytes[512]={71},alien[64]={19};const auto digest=finger
 }
 '''
         self.compile_run(fixture)
-        color = 'if((part->alpha_state&256) || (part->lighting &&\n       (part->lighting->ambient_vertex || part->lighting->material_vertex)))return {};'
+        color = 'if(colors){'
         for label, old, new in [
             ('external UV', 'gcasset_actor_inside(proof,c.uv,uv_bytes)', '(uv_bytes>0)'),
             ('external weights', 'gcasset_actor_inside(proof,c.weights,c.palette_count*16)', '(c.palette_count>0)'),
-            ('external colors', color, '(void)part;'),
+            ('external colors', color, 'if(false && colors){'),
             ('foreign shape arrays', 'if(!part->positions || (part->positions==source.positions', 'if(true || (part->positions==source.positions'),
         ]:
             with self.subTest(mutant=label):
@@ -273,6 +273,7 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);int model,info;uns
         # are exercised by test_original_geometry.py instead.
         fixture = '#include "gc_asset_members.h"\nstruct Re4dcModelPart;struct Re4dcActorSource;\nextern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_model_select(const Re4dcModelPart*);\nextern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_actor_select(const Re4dcModelPart*,const Re4dcActorSource*);\n' + fixture
         fixture += '\nextern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_model_select(const Re4dcModelPart*p){if(!p)return {};const void*data=nullptr;re4dc_gcasset::ModelMember m;re4dc_gcasset_model_identity(p->model,p->info,&data);bool bound=re4dc_gcasset::member_lookup(data,&m);unsigned mask=(1U<<re4dc_gcasset::SourceGeometry)|(re4dc_gcasset_weapon_consumer(p->model,p->info,bound?m.arc:0,bound?unsigned(m.family):0)?1U<<re4dc_gcasset::Weapon:0U);return {0,mask,p->model,p->info};}\nextern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_actor_select(const Re4dcModelPart*p,const Re4dcActorSource*){return re4dc_gcasset_original_model_select(p);}\n'
+        fixture += '\nextern "C" unsigned re4dc_gcasset_original_color_member(const Re4dcModelPart*,unsigned){return 0;}\n'
         with tempfile.TemporaryDirectory(prefix='gc-port23-actor-main-', dir='/dev/shm') as temporary:
             root = Path(temporary);(root / 'fixture.cpp').write_text(fixture)
             subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',

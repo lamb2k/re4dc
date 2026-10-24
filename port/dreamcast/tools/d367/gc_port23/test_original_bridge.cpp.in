@@ -1,5 +1,6 @@
 #include "gc_asset_members.h"
 #include "gc_asset_payloads.h"
+#include "gc_asset_static.h"
 #include <cassert>
 #include <cstddef>
 #include <cstdio>
@@ -26,6 +27,15 @@ struct Re4dcActorSource{const unsigned char*positions=nullptr,*normals=nullptr;u
 Re4dcActorSource actual_source;
 extern "C" int re4dc_actor_model_source(const void*,Re4dcActorSource*out){*out=actual_source;return 1;}
 // BRIDGE_FUNCTIONS
+// Real selector bodies with synthetic package provider boundaries, not actual
+// replacement asset provenance. The package and original BIN are independent.
+#define RE4DC_NATIVE_MODEL_REGISTRY 1
+#define RE4DC_NATIVE_MODEL_REGISTRY_PACK 1
+#define RE4DC_NMR_MASK 0
+struct Chunk{unsigned position_count=3,normal_count=3,palette_count=2,uv_bytes=12,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};
+struct Registry{unsigned geometry_count=1;Chunk chunks[1];}registry;PayloadProof gcasset_registry[65];
+extern "C" unsigned re4dc_gcasset_model_identity(const void* p,const void* i,const void**data){*data=static_cast<const cModelInfo*>(i)->pData;const auto*m=static_cast<const cModel*>(p);return (m->kindid<<24)|(m->id<<16);}
+// ACTOR_SELECTION
 #define RE4DC_PROFILE_SCOPE(...)
 #define RE4DC_MODEL_DIAG() true
 #define PP_PATH(...)
@@ -82,4 +92,47 @@ int main(){
  stream[0]=0x90;assert(member_adopt(&owner,archive,sizeof archive,true,OtherOwner));assert(member_capture(d));re4dc_gcasset_pose_publish(&info,1,1);assert(re4dc_gcasset_original_model_select(&part).serial!=good.serial);
  {ReplayScope replay(saved_view.serial,saved_view.mask);re4dc_model_submit(&part);}assert(!observed.serial && observed.mask==saved_view.mask);member_flush();end(2);
  assert(logs.find("source_geometry=2")!=std::string::npos && logs.find("weapon=2")!=std::string::npos && logs.find("unbound-accepted-model")!=std::string::npos);
+ // Exact compound color ownership and frozen replay through actual selector.
+ alignas(32) unsigned char compound_metadata[8192]{},package[512]{};
+ assert(payload_compound_storage_bytes()<=sizeof compound_metadata);
+ assert(!payload_compound_storage(compound_metadata,payload_compound_storage_bytes()-1));
+ assert(payload_compound_storage(compound_metadata,payload_compound_storage_bytes()));
+ auto& c=registry.chunks[0];c.positions=package+32;c.normals=package+64;c.uv=package+96;c.stream=package+128;c.weights=package+192;
+ memcpy(const_cast<unsigned char*>(c.stream),stream,32);const_cast<unsigned char*>(c.stream)[0]=0x90;
+ assert(payload_capture(gcasset_registry[0],&registry,package,sizeof package,package+320,32));
+ part.positions=part.normals=nullptr;part.stream=c.stream;part.stream_bytes=32;part.uv=c.uv;part.colors=model_base+160;part.flags=0x80000000U;part.alpha_state=511;
+ model.id=0x21;actual_source={c.positions,c.normals,3,3,2,0};logs.clear();begin(0x111,3,Required);
+ const auto combined=re4dc_gcasset_actor_select(&part,&actual_source);assert(combined.serial && combined.payload && combined.payload!=&gcasset_registry[0]);
+ assert(re4dc_gcasset_actor_select(&part,&actual_source).serial==combined.serial);
+ const auto accept=[&](SourceUse use){source_use=use;gcasset_model_prepare(&part);sq_held=true;gcasset_model_accept();sq_held=false;};
+ accept(combined);
+ {ReplayScope replay(combined.serial,combined.mask,combined.payload);model.id=0x10;
+  const auto frozen=re4dc_gcasset_actor_select(&part,&actual_source);assert(frozen.serial==combined.serial && frozen.mask==combined.mask);}
+ part.colors=foreign;assert(!re4dc_gcasset_actor_select(&part,&actual_source).serial);part.colors=model_base+160;
+ auto* ps=const_cast<unsigned char*>(c.stream);ps[8]=7;assert(!re4dc_gcasset_actor_select(&part,&actual_source).serial);ps[8]=0;
+ // Fill all64 live parent/member combinations; no silent capacity expansion.
+ const auto digest2=fingerprint(package,sizeof package);int owners[65];
+ for(unsigned i=1;i<64;++i){assert(payload_capture_digest(gcasset_registry[i],owners+i,digest2));assert(payload_with_member(gcasset_registry[i],gcasset_registry[i].serial,re4dc_gcasset_original_color_member(&part,12)));}
+ assert(payload_capture_digest(gcasset_registry[64],owners+64,digest2));
+ const unsigned current_member=re4dc_gcasset_original_color_member(&part,12);
+ assert(current_member && !payload_with_member(gcasset_registry[64],gcasset_registry[64].serial,current_member));
+ assert(!payload_with_member(*combined.payload,combined.serial,current_member)); // no nested/cyclic parent
+ payload_invalidate(gcasset_registry[1],owners+1);
+ assert(payload_with_member(gcasset_registry[64],gcasset_registry[64].serial,current_member)); // reclaim only stale generation
+ // Parent mutation must reject a saved receipt, including same-address reuse.
+ const unsigned old_parent=gcasset_registry[0].serial;payload_invalidate(gcasset_registry[0],&registry);
+ {ReplayScope replay(combined.serial,combined.mask,combined.payload);assert(!re4dc_gcasset_actor_select(&part,&actual_source).serial);}
+ // Accepted old ancestry still emits both identities at safe retirement.
+ payload_retire(gcasset_registry[0]);
+ assert(payload_capture(gcasset_registry[0],&registry,package,sizeof package,package+320,32));
+ const auto replacement=re4dc_gcasset_actor_select(&part,&actual_source);
+ assert(replacement.serial && replacement.serial!=combined.serial);
+ {ReplayScope replay(combined.serial,combined.mask,combined.payload);assert(!re4dc_gcasset_actor_select(&part,&actual_source).serial);}
+ payload_retire(gcasset_registry[0]);member_retire(&owner);payload_flush_all();member_flush();end(3);
+ assert(logs.find("kind=geometry")!=std::string::npos && logs.find("kind=layout")!=std::string::npos && logs.find("source_geometry=3")!=std::string::npos && logs.find("weapon=3")!=std::string::npos);
+ assert(old_parent && !member_serial_current(current_member));
+ assert(payload_capture(gcasset_registry[0],&registry,package,sizeof package,package+320,32));
+ assert(!payload_with_member(gcasset_registry[0],gcasset_registry[0].serial,current_member));
+ payload_compound_storage_retire();
+
 }

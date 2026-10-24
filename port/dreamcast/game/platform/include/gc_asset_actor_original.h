@@ -84,6 +84,52 @@ inline bool original_parse(OriginalModelProof& out,unsigned serial,const void* b
     }
     out=p;return true;
 }
+// Bounds the actual native reader's color accesses. GX uses BE tuples;
+// FE3 records use native u16 ci (or the header constant), and every LOD uses
+// only a prefix of its level-0 records. Validate those prefixes too. This is
+// ownership/extent proof only, never source provenance or a new fingerprint.
+inline unsigned original_color_bytes(const unsigned char* s,unsigned bytes,unsigned flags){
+    if(!s || !bytes || bytes>1024U*1024)return 0;
+    unsigned maximum=0;bool seen=false;
+    if(s[0]==0xfe){
+        if(bytes<32 || s[1]!=3 || s[3]>3)return 0;
+        const unsigned meshlets=original_half(s+4),rec=original_half(s+8)*4U,idx=original_half(s+10)*4U;
+        const unsigned lod=original_half(s+12)*4U,stride=3U+bool(s[2]&1)+bool(s[2]&2);
+        if(!meshlets || meshlets>(bytes-32)/8 || rec<32+meshlets*8 || idx<rec || idx>bytes ||
+           (s[3] && (!lod || lod>bytes || s[3]>(bytes-lod)/8)))return 0;
+        for(unsigned m=0;m<meshlets;++m){
+            const auto* row=s+32+m*8;const unsigned count=original_word(row),nv=count&255U,ni=(count>>8)&4095U;
+            const unsigned first=original_half(row+4),index=original_half(row+6);
+            if(!nv || nv>128 || first>(idx-rec)/(stride*2) || nv>(idx-rec)/(stride*2)-first ||
+               index>bytes-idx || ni>bytes-idx-index)return 0;
+            for(unsigned j=0;j<ni;++j)if((s[idx+index+j]&127U)>=nv)return 0;
+            for(unsigned j=0;j<nv;++j){
+                const unsigned ci=(s[2]&1)?original_half(s+rec+(first+j)*stride*2+6):original_half(s+6);
+                if(!seen || ci>maximum){maximum=ci;}seen=true;
+            }
+            for(unsigned l=0;l<s[3];++l){
+                const auto* li=s+lod+l*8;const unsigned table=original_half(li+4)*4U,lists=original_half(li+6)*4U;
+                if(table>bytes || meshlets>(bytes-table)/8 || lists>bytes)return 0;
+                const auto* lr=s+table+m*8;const unsigned c=original_word(lr),v=c&255U,n=(c>>8)&4095U,x=original_half(lr+4);
+                if(v>nv || x>bytes-lists || n>bytes-lists-x || (n && !v))return 0;
+                for(unsigned j=0;j<n;++j)if((s[lists+x+j]&127U)>=v)return 0;
+            }
+        }
+    }else{
+        if(!(flags&0x80000000U))return 0;
+        unsigned at=0;
+        while(at<bytes){
+            const unsigned op=s[at++];if(!op)continue;
+            if(bytes-at<2 || (op!=0x80 && op!=0x90 && op!=0x98 && op!=0xa0))return 0;
+            const unsigned count=(unsigned(s[at])<<8)|s[at+1];at+=2;
+            if(count>(bytes-at)/8 || (op==0x80 && count%4) || (op==0x90 && count%3))return 0;
+            for(unsigned j=0;j<count;++j){const auto* v=s+at+j*8;const unsigned ci=(unsigned(v[4])<<8)|v[5];
+                if(!seen || ci>maximum){maximum=ci;}seen=true;}
+            at+=count*8;
+        }
+    }
+    return seen?(maximum+1)*4:0;
+}
 // Runtime source fields are checked against captured offsets, not a fresh hash
 // of relocated/morphed bytes. Prepared destinations need a separate derivation.
 struct OriginalModelInput {

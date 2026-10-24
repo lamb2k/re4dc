@@ -2,10 +2,30 @@
 #include "include/gc_asset_static.h"
 #if RE4DC_GC_ASSET_GATE
 #include <cstdint>
+#include <new>
 namespace re4dc_gcasset {
 namespace {
 PayloadProof* payloads;unsigned payload_count,payload_serial,payload_faults;
 const PayloadQuadBatch* payload_quad_batch;
+struct Compound {PayloadProof proof;PayloadProof* parent;unsigned parent_serial,member_serial;};
+constexpr unsigned CompoundCount=64;
+static_assert(sizeof(void*)!=4 || sizeof(Compound)==56,"price compound ancestry metadata");
+Compound* compounds;
+Compound* compound_of(const PayloadProof* p){
+    if(!compounds || !p)return nullptr;
+    const auto a=reinterpret_cast<std::uintptr_t>(compounds),b=reinterpret_cast<std::uintptr_t>(p);
+    if(b<a || b-a>=CompoundCount*sizeof(Compound) || (b-a)%sizeof(Compound))return nullptr;
+    return compounds+(b-a)/sizeof(Compound);
+}
+bool current_payload(const PayloadProof& p){
+    return !compound_of(&p) && p.registered && p.owner && p.serial && checked_current(p.asset) &&
+        (p.layout && !p.layout_bytes?payload_copy_current(p):
+         (!p.layout_asset.value || checked_current(p.layout_asset)));
+}
+bool current_compound(const Compound& c){
+    return c.proof.serial && c.parent && current_payload(*c.parent) &&
+        c.parent->serial==c.parent_serial && member_serial_current(c.member_serial);
+}
 bool overlaps(const void* a,unsigned an,const void* b,unsigned bn){
     if(!a || !b || !an || !bn)return false;
     const auto x=reinterpret_cast<std::uintptr_t>(a),y=reinterpret_cast<std::uintptr_t>(b);
@@ -230,12 +250,49 @@ bool payload_copy_publish(PayloadProof& proof,const void* owner,const PayloadPro
     proof.asset=source.asset;proof.layout=&source;proof.layout_asset.value=source_serial;
     proof.serial=++payload_serial;return true;
 }
+unsigned payload_compound_storage_bytes(){return CompoundCount*sizeof(Compound);}
+bool payload_compound_storage(void* memory,unsigned bytes){
+    if(!memory || bytes!=payload_compound_storage_bytes() || bytes>8192 ||
+       reinterpret_cast<std::uintptr_t>(memory)%alignof(Compound))return false;
+    if(compounds)return compounds==memory;
+    compounds=static_cast<Compound*>(memory);
+    for(unsigned i=0;i<CompoundCount;++i)new(compounds+i) Compound{};
+    return true;
+}
+void payload_compound_storage_retire(){
+    // Accepted acknowledgements already live in each independently owned
+    // parent/member, never in these reusable child selectors.
+    if(compounds)for(unsigned i=0;i<CompoundCount;++i)compounds[i]={};
+    compounds=nullptr;
+}
+PayloadProof* payload_with_member(PayloadProof& parent,unsigned parent_serial,unsigned member_serial){
+    if(!compounds || !parent_serial || parent.serial!=parent_serial || !current_payload(parent) ||
+       !member_serial_current(member_serial) || payload_serial>=0xfffffffeU)return nullptr;
+    Compound* available=nullptr;
+    for(unsigned i=0;i<CompoundCount;++i){auto& c=compounds[i];
+        if(current_compound(c)){
+            if(c.parent==&parent && c.parent_serial==parent_serial && c.member_serial==member_serial)return &c.proof;
+        }else if(!available)available=&c;
+    }
+    if(!available)return nullptr;
+    *available={};available->parent=&parent;available->parent_serial=parent_serial;available->member_serial=member_serial;
+    available->proof.owner=parent.owner;available->proof.serial=++payload_serial;
+    return &available->proof;
+}
 void payload_retire(PayloadProof& proof){
     flush(proof);proof.owner=proof.base=proof.layout=nullptr;proof.bytes=proof.layout_bytes=0;
     proof.asset={};proof.layout_asset={};proof.serial=proof.uses=0;
 }
 void payload_accept(PayloadProof* proof,unsigned serial,unsigned mask){
     const unsigned allowed=(1U<<SourceGeometry)|(1U<<Weapon);
+    if(auto* c=compound_of(proof)){
+        if(!serial || c->proof.serial!=serial || !mask || (mask&~allowed) || !current_compound(*c)){
+            payload_faults|=(mask&allowed)?mask&allowed:1U<<SourceGeometry;return;
+        }
+        // Latch BOTH live ancestors now. Later legitimate retirements flush
+        // their own original identities; no child reuse can relabel an ack.
+        payload_accept(c->parent,c->parent_serial,mask);member_accept(c->member_serial,mask);return;
+    }
     if(!proof || !serial || !proof->owner || proof->serial!=serial || !mask || (mask&~allowed) ||
        (proof->layout && !proof->layout_bytes && !payload_copy_current(*proof))){
         payload_faults|=(mask&allowed)?mask&allowed:1U<<SourceGeometry;return;

@@ -31,6 +31,10 @@ unsigned member_original_storage_bytes();
 bool member_original_storage(void* memory,unsigned bytes);
 void member_original_storage_retire();
 bool member_original_source(unsigned serial,const OriginalModelInput&);
+// Exact captured original color section only, with separately bounded actual
+// replacement stream's maximum consumed color index. No whole-BIN inheritance.
+bool member_original_colors(unsigned serial,const OriginalModelInput&,unsigned bytes);
+bool member_serial_current(unsigned serial);
 // Successful source skin/morph publication only. reset precedes every write
 // attempt and info reuse; a failed/partial job publishes nothing.
 void member_pose_reset(const void* info);

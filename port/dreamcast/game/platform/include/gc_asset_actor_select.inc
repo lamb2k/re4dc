@@ -4,6 +4,7 @@
 #if RE4DC_GC_ASSET_GATE
 extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**);
 extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned);
+extern "C" unsigned re4dc_gcasset_original_color_member(const Re4dcModelPart*,unsigned);
 extern "C" int re4dc_actor_model_source(const void*,Re4dcActorSource*);
 namespace {
 unsigned gcasset_actor_consumer_mask(const Re4dcModelPart& part){
@@ -47,10 +48,8 @@ namespace {
 re4dc_gcasset::SourceUse gcasset_actor_current_select(const Re4dcModelPart* part,const Re4dcActorSource* source,bool classify){
     using namespace re4dc_gcasset;
     if(!part || !source)return {};
-    // These reads are not among the selected package's proven five ranges.
-    // Never let a package/BIN token bless an external vertex color source.
-    if((part->alpha_state&256) || (part->lighting &&
-       (part->lighting->ambient_vertex || part->lighting->material_vertex)))return {};
+    const bool colors=(part->alpha_state&256) || (part->lighting &&
+       (part->lighting->ambient_vertex || part->lighting->material_vertex));
     PayloadProof* selected=nullptr;bool ambiguous=false;
     const auto accept=[&](PayloadProof& proof){if(selected && selected!=&proof)ambiguous=true;else selected=&proof;};
 #if RE4DC_ACTOR_TRANSACTION && !(defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD)
@@ -91,6 +90,13 @@ re4dc_gcasset::SourceUse gcasset_actor_current_select(const Re4dcModelPart* part
     if(!selected)return re4dc_gcasset_original_actor_select(part,source);
     const unsigned mask=classify?gcasset_actor_consumer_mask(*part):1U<<SourceGeometry;
     if(!mask)return {};
+    if(colors){
+        const unsigned bytes=original_color_bytes(part->stream,part->stream_bytes,part->flags);
+        const unsigned member=bytes?re4dc_gcasset_original_color_member(part,bytes):0;
+        auto* compound=member?payload_with_member(*selected,selected->serial,member):nullptr;
+        if(!compound)return {0,mask,part->model,part->info};
+        selected=compound;
+    }
     return {selected->serial,mask,part->model,part->info,selected};
 }
 }
