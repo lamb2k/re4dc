@@ -190,15 +190,39 @@
          ps2w.package.close();if(s)re4dc_static_free(s);ps2w.parts=nullptr;ps2w.placements=nullptr;
          re4dc_log("PS2MESH open failed: %s mesh=%u sidecar=%u heap=%d\n",why?why:"?",msize,psize,before);
          return false;
-@@ -5812,6 +5861,7 @@
+@@ -5793,6 +5842,7 @@
+     const auto& files=ps2_movie_files;
+     const unsigned mb=(files.mesh+31u)&~31u,pb=(files.side+31u)&~31u;
+     if(!ps2_movie_layout(ps2w.room) || ps2w.room!=ps2w.want || mb+pb+kLutBytes+kGatherBytes!=ps2_movie.capacity)return false;
++    RE4DC_GCAP_RETIRE(ps2w);
+     Re4dcIoScope io;
+     char mesh_path[64],side_path[64];
+     snprintf(mesh_path,sizeof(mesh_path),"/cd/dc/native/r%03x/ps2-world.re4mesh",ps2w.room);
+@@ -5812,6 +5862,13 @@
      if(!ok || !ps2_movie_current())return false;
      if(ps2_crc32(data,files.mesh)!=files.mesh_crc || movie_world::fnv(data,files.mesh)!=files.mesh_fnv ||
         ps2_crc32(data+mb,files.side)!=files.side_crc || movie_world::fnv(data+mb,files.side)!=files.side_fnv)return false;
 +    RE4DC_GCAP_CAPTURE(ps2w,data,files.mesh,data+mb,files.side);
++#if RE4DC_GC_ASSET_GATE
++    struct GcAssetReloadProof {
++        bool committed=false;
++        ~GcAssetReloadProof(){if(!committed)RE4DC_GCAP_RETIRE(ps2w);}
++    } asset_reload;
++#endif
      if(!ps2w.package.adopt(data,files.mesh,true,true))return false;
      Ps2Head h{};std::memcpy(&h,data+mb,sizeof(h));
      const auto& mh=ps2w.package.header();
-@@ -6056,6 +6106,7 @@
+@@ -5859,6 +5916,9 @@
+     // Preserve ids, slots, source flags, object/serials, original rest matrices,
+     // part witnesses and ordering. Same UI frame can contain source S11 edits.
+     dyn::frame=~0u;dyn::nmoved=0;std::memset(dyn::state,0,sizeof(dyn::state));
++#endif
++#if RE4DC_GC_ASSET_GATE
++    asset_reload.committed=true;
+ #endif
+     return true;
+ }
+@@ -6056,6 +6116,7 @@
  }
  #endif
  int ps2_pass(unsigned pass,float zfar){
@@ -206,7 +230,7 @@
  #if RE4DC_PS2_WORLD_TRANSITION_OWNER
      if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return -1;}
  #endif
-@@ -7157,6 +7208,7 @@
+@@ -7157,6 +7218,7 @@
  #if defined(RE4DC_TRANS_POLICY)
      trans::close();
  #endif

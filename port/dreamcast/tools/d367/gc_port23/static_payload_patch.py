@@ -87,7 +87,29 @@ def patched(source):
     once('    ps2w.package.close();\n    if(ps2w.storage)re4dc_static_free(ps2w.storage);',
          '    RE4DC_GCAP_RETIRE(ps2w);\n    ps2w.package.close();\n    if(ps2w.storage)re4dc_static_free(ps2w.storage);')
     once('    if(!ps2w.package.adopt(data,files.mesh,true,true))return false;',
-         '    RE4DC_GCAP_CAPTURE(ps2w,data,files.mesh,data+mb,files.side);\n    if(!ps2w.package.adopt(data,files.mesh,true,true))return false;')
+         '''    RE4DC_GCAP_CAPTURE(ps2w,data,files.mesh,data+mb,files.side);
+#if RE4DC_GC_ASSET_GATE
+    struct GcAssetReloadProof {
+        bool committed=false;
+        ~GcAssetReloadProof(){if(!committed)RE4DC_GCAP_RETIRE(ps2w);}
+    } asset_reload;
+#endif
+    if(!ps2w.package.adopt(data,files.mesh,true,true))return false;''')
+    # Cover every post-capture refusal with one local diagnostic cleanup guard.
+    # Revoke before the very first overwrite, including failed/partial reads.
+    start=source.index('bool ps2_movie_reload(){')
+    end=source.index('bool ps2_movie_dyn_valid(){',start)
+    reload=source[start:end]
+    if reload.count('    Re4dcIoScope io;')!=1 or not reload.endswith('    return true;\n}\n'):
+        raise ValueError('movie reload cleanup boundary changed')
+    reload=reload.replace('    Re4dcIoScope io;', '    RE4DC_GCAP_RETIRE(ps2w);\n    Re4dcIoScope io;',1)
+    reload=reload[:-len('    return true;\n}\n')]+'''#if RE4DC_GC_ASSET_GATE
+    asset_reload.committed=true;
+#endif
+    return true;
+}
+'''
+    source=source[:start]+reload+source[end:]
     return source
 
 

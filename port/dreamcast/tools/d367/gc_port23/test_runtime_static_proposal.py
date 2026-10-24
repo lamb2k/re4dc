@@ -11,6 +11,60 @@ GAME = HERE.parents[2] / 'game'
 
 
 class StaticProposalTests(unittest.TestCase):
+    def test_proposed_actual_movie_reload_refusals(self):
+        source = patched((GAME / 'platform/native_static.cpp').read_text())
+        fixture = r'''
+#include "gc_asset_payloads.h"
+#include <cassert>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdint>
+#include <cstring>
+#include <vector>
+using namespace re4dc_gcasset;
+extern "C" void re4dc_log(const char*,...){}
+namespace re4dc_gcasset{bool ensure_disc_catalog(){return true;}}
+#define RE4DC_GCAP_RETIRE(v) payload_retire((v).asset_proof)
+#define RE4DC_GCAP_CAPTURE(v,b,n,l,s) ((void)payload_capture((v).asset_proof,&(v),b,n,l,s))
+struct Ps2Head{char magic[4];unsigned version,parts,meshes,placements,crc;};
+struct Ps2Part{unsigned pass,cull,width,height;};struct Ps2Placement{unsigned mesh;float affine[12];};
+struct Package{struct Head{unsigned part_count=1,mesh_count=1;}head;bool fail=false,closed=true;const Head&header(){return head;}bool adopt(unsigned char*data,unsigned,bool,bool){data[0]^=0x10;closed=false;return !fail;}void close(){closed=true;}};
+struct World{unsigned room=0x111,want=0x111,nplacements=0;Package package;const Ps2Part*parts=nullptr;const Ps2Placement*placements=nullptr;void*gather=nullptr;bool camera=false;PayloadProof asset_proof;}ps2w;
+namespace re4dc{namespace render{bool is_finite(float x){return x==x;}}namespace room{struct CompactVertex12{};}}
+namespace movie_world{enum class Phase{returning};unsigned fnv(const void*,unsigned){return 1;}}
+constexpr unsigned kLutBytes=0,kGatherBytes=0;
+alignas(32) unsigned char arena[256];
+struct Movie{movie_world::Phase phase=movie_world::Phase::returning;unsigned capacity;void*base=arena;}ps2_movie;
+struct Files{unsigned mesh=32,side=sizeof(Ps2Head)+sizeof(Ps2Part)+sizeof(Ps2Placement),mesh_crc=1,mesh_fnv=1,side_crc=1,side_fnv=1;}ps2_movie_files;
+struct MovieWorldRead{~MovieWorldRead(){}};struct Re4dcIoScope{~Re4dcIoScope(){}};
+bool ps2_movie_current(){return true;}bool ps2_movie_layout(unsigned){return true;}
+using file_t=int;constexpr int O_RDONLY=0,FILEHND_INVALID=-1;
+std::vector<unsigned char> mesh(32,2),side(ps2_movie_files.side);bool short_read=false;unsigned reads;
+file_t fs_open(const char*path,int){return strstr(path,"r4pw")?2:1;}int fs_close(file_t){return 0;}
+ssize_t fs_total(file_t fd){return fd==1?mesh.size():side.size();}
+bool read_package(file_t fd,void*dest,unsigned count,unsigned){assert(!ps2w.asset_proof.serial);++reads;if(short_read)return false;const auto&bytes=fd==1?mesh:side;memcpy(dest,bytes.data(),count);return true;}
+unsigned ps2_crc32(const void*,unsigned){return 1;}
+''' + function(source, 'bool ps2_movie_reload(){') + r'''
+void prepare(){Ps2Head h{{'R','4','P','W'},1,1,1,1,1};Ps2Part p{0,0,16,16};Ps2Placement placement{};memcpy(side.data(),&h,sizeof h);memcpy(side.data()+sizeof h,&p,sizeof p);memcpy(side.data()+sizeof h+sizeof p,&placement,sizeof placement);ps2_movie.capacity=((ps2_movie_files.mesh+31)&~31U)+((ps2_movie_files.side+31)&~31U);}
+int main(){assert(install(nullptr,0));begin(0x111,1,Required);prepare();assert(ps2_movie_reload());const unsigned original=ps2w.asset_proof.serial;assert(original);
+ AssetDescription desc;assert(describe_checked(ps2w.asset_proof.asset,&desc));assert(!memcmp(desc.digest.bytes,fingerprint(mesh.data(),mesh.size()).bytes,32)); // capture before adopt mutation
+ short_read=true;assert(!ps2_movie_reload());assert(!ps2w.asset_proof.serial);short_read=false;
+ ps2w.package.fail=true;assert(!ps2_movie_reload());assert(!ps2w.asset_proof.serial);ps2w.package.fail=false;
+ reinterpret_cast<Ps2Head*>(side.data())->version=2;assert(!ps2_movie_reload());assert(!ps2w.asset_proof.serial && ps2w.package.closed);
+ prepare();reinterpret_cast<Ps2Part*>(side.data()+sizeof(Ps2Head))->pass=3;assert(!ps2_movie_reload());assert(!ps2w.asset_proof.serial);
+ prepare();reinterpret_cast<Ps2Placement*>(side.data()+sizeof(Ps2Head)+sizeof(Ps2Part))->mesh=1;assert(!ps2_movie_reload());assert(!ps2w.asset_proof.serial);
+ prepare();mesh[1]^=1;assert(ps2_movie_reload());assert(ps2w.asset_proof.serial>original);assert(describe_checked(ps2w.asset_proof.asset,&desc));assert(!memcmp(desc.digest.bytes,fingerprint(mesh.data(),mesh.size()).bytes,32));assert(reads>=10);
+}
+'''
+        with tempfile.TemporaryDirectory(prefix='gc-port23-reload-proposal-', dir='/dev/shm') as temporary:
+            root = Path(temporary);(root / 'fixture.cpp').write_text(fixture);executable = root / 'fixture'
+            subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
+                            '-DRE4DC_GC_ASSET_GATE=1', '-DRE4DC_MOVIE_WORLD_ARENA=1',
+                            '-I', str(GAME / 'platform/include'), str(root / 'fixture.cpp'),
+                            str(GAME / 'platform/gc_asset_gate.cpp'), str(GAME / 'platform/gc_asset_members.cpp'),
+                            str(GAME / 'platform/gc_asset_payloads.cpp'), '-o', str(executable)], check=True)
+            subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
+
     def test_proposed_actual_mixed_owner_impostor_flush(self):
         static = patched((GAME / 'platform/native_static.cpp').read_text())
         ui = (GAME / 'platform/native_ui.cpp').read_text()

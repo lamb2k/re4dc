@@ -53,8 +53,11 @@ Open integration boundaries, deliberately not certified by this patch:
 - R4SG or any other consumed file that changes geometry/material/source
   interpretation requires a separate/composite reviewed identity. R4PW alone
   does not qualify those additional sidecars.
-- Movie reload failure exits after the proposed capture must retire its proof;
-  the final integration owner must audit every error exit before enabling it.
+- The generated movie reload now revokes before its first read/overwrite and
+  uses a local diagnostic cleanup guard for every refusal after capture. Actual
+  reload controls cover partial reads, adopt failure, bad header/part/placement,
+  capture before package mutation and successful changed same-buffer reload.
+  Root must still qualify the whole arena borrow/return graph on integration.
 
 Until those paths are qualified, their actual generic accepted-source latch
 continues to emit explicit unbound errors. No complete coverage mask, linked
