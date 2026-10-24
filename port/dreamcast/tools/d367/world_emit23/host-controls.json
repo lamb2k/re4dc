@@ -1,9 +1,9 @@
 {
   "base": "a5e972e44096410253ad93164b84d92e3c22655a",
   "source_sha256": "e6ca3be0462af9ac8e200ffc97b28593d4b22a403931b1f6ccd4266406918af6",
-  "header_sha256": "76f1679eab457c01139707776a8bec483ed0b6be390cb1403563132b92b1cdb7",
-  "parser_sha256": "5f4b265ec45dc2e888ccd2b1612f4a85c9bafc3f51f7bf3bf569a5fa015208f7",
-  "test_sha256": "2e2a0a1c4de4ea0e54333c2f6b803bad5d48050e3d9ea0c05cb105f70de01e1c",
+  "header_sha256": "32aa4330db2faaeca3b640f2696a5dc726f4b7fbc1f16eed6b8c14de4033f999",
+  "parser_sha256": "e499edb9728cf130db071863e458175013d5b7295eec6b88c8dc7d1f187e901a",
+  "test_sha256": "ad85ebdf2cd8e0d9182ac3728bbd0ed19c2c7c09b13156f1d3992944d00f1ee5",
   "integration_review_profile": {
     "SCENERY_SUBMIT_BATCH": 1,
     "PS2_PVS": 0,
@@ -20,6 +20,7 @@
     "replay1-batch1-prefetch1": "PASS",
     "actual-log-parser-and-five-negatives": "PASS",
     "protocol-flush-after-frame-end": "REJECTED",
+    "protocol-whole-last-flush-missing": "REJECTED",
     "protocol-flush-wrong-active-pass": "REJECTED",
     "protocol-reverse-complete-records": "REJECTED",
     "protocol-future-threshold": "REJECTED",

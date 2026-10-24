@@ -3,7 +3,7 @@ from pathlib import Path
 import argparse,json
 FIELDS=("plain","indexed","pv","iv","zero","iz","zv","whole","partial","span","bad")
 SCHEMA={
- "BEGIN":{"f","room","threshold"}, "FRAME_END":{"f","room","begun","ended","complete"},
+ "BEGIN":{"f","room","threshold"}, "FRAME_END":{"f","room","begun","ended","flushes","complete"},
  "PASS_BEGIN":{"f","p","duplicate"}, "PASS_END":{"f","p","result"},
  "FLUSH_BEGIN":{"f","p","q","parts","picks","overflow"},
  "PART":{"f","p","q","s","placement","part","first","picks","tried","result","crc","fnv"},
@@ -63,6 +63,7 @@ def parse(text,room=None):
         if take("PASS_END",f=frame,p=p)["result"]!=1:raise ValueError("failed pass")
     end=take("FRAME_END",f=frame,room=begin["room"])
     if end["complete"]!=1 or end["begun"]!=7 or end["ended"]!=7:raise ValueError("incomplete frame")
+    if end["flushes"]!=next_flush-1:raise ValueError("missing flush block")
     if cursor!=len(rows):raise ValueError("census record after FRAME_END")
     return {"frame":frame,"room":begin["room"],"threshold":begin["threshold"],"complete_selected_census":True,"flushes":summaries,
             "totals":{f:sum(s["counts"][f] for s in summaries) for f in FIELDS},

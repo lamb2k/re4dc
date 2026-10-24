@@ -24,7 +24,7 @@ struct Pass {
     bool active=false;unsigned frame=0,pass=0;int result=-1;
     Pass(unsigned f,unsigned room,unsigned p):frame(f),pass(p){
         if(state.captured && !state.done && (f!=state.frame || room!=state.room)){
-            re4dc_log("WEC23 FRAME_END f=%u room=%03x begun=%x ended=%x complete=0\n",state.frame,state.room,state.begun,state.ended);
+            re4dc_log("WEC23 FRAME_END f=%u room=%03x begun=%x ended=%x flushes=%u complete=0\n",state.frame,state.room,state.begun,state.ended,state.flush);
             state.done=true;
         }
         if(!state.captured && p==0 && f>=unsigned(RE4DC_SCENERY_EMIT_CENSUS)){
@@ -42,8 +42,8 @@ struct Pass {
         state.ended|=1U<<pass;
         re4dc_log("WEC23 PASS_END f=%u p=%u result=%d\n",frame,pass,result);
         if(pass==2){
-            re4dc_log("WEC23 FRAME_END f=%u room=%03x begun=%x ended=%x complete=%u\n",
-                frame,state.room,state.begun,state.ended,unsigned(state.begun==7 && state.ended==7));
+            re4dc_log("WEC23 FRAME_END f=%u room=%03x begun=%x ended=%x flushes=%u complete=%u\n",
+                frame,state.room,state.begun,state.ended,state.flush,unsigned(state.begun==7 && state.ended==7));
             state.done=true;
         }
     }

@@ -101,9 +101,12 @@ FRAME_END in order. Flush IDs are globally contiguous from1 across passes.
 Threshold must be1..10000000 and not exceed the captured UI frame. Missing,
 unknown, duplicate and unsigned-out-of-range fields are refused.
 
-The actual generated host log supplies twelve protocol mutations, all rejected,
+The actual generated host log supplies thirteen protocol mutations, all rejected,
 and a valid cross-pass flush positive. Earlier aggregate/safety controls remain.
-Runtime/header/make files are unchanged by this repair. Source integration
+The protocol successor also adds source-authored flushes=state.flush to both
+guarded FRAME_END logs. The parser requires exactly that many global flush IDs,
+so a wholly missing final flush cannot become a complete census. Renderer state,
+structs, native callsites and make files remain unchanged by the repair. Source integration
 review is bounded to the actual SUBMIT_BATCH1/PVS0 profile; the selected-affine
 proposal is unapplied and unadmitted. No compatibility or qualification of that
 future patch follows from this census milestone. No SDK/guest gate has run.

@@ -126,7 +126,7 @@ int main(){
  {scenery_emit_census::Pass p(360,0x101,0);p.result=1;}
  {scenery_emit_census::Pass p(360,0x101,1);p.result=1;}
  {scenery_emit_census::Pass p(360,0x101,2);p.result=1;}
- assert(logs.find("begun=7 ended=7 complete=1")!=std::string::npos);
+ assert(logs.find("begun=7 ended=7 flushes=0 complete=1")!=std::string::npos);
  {scenery_emit_census::Pass p(361,0x101,0);assert(!p.active);}
  scenery_emit_census::state={};logs.clear();
  {scenery_emit_census::Pass p(360,0x100,0);}
@@ -184,6 +184,7 @@ def run(out):
         assert [x["pass"] for x in parse(log(multipass),0x101)["flushes"]]==[0,1]
         protocol={
             "flush-after-frame-end":log(remaining+q2),
+            "whole-last-flush-missing":log(remaining),
             "flush-wrong-active-pass":log([line.replace(" p=0 "," p=1 ") if " q=2" in line else line for line in lines]),
             "reverse-complete-records":log(list(reversed(lines))),
             "future-threshold":captured.replace("threshold=360","threshold=999999"),
