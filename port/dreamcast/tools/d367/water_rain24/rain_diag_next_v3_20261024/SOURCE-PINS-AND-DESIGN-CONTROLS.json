@@ -1,0 +1,505 @@
+{
+  "source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "source_files": {
+    "src/game/filter06.cpp": {
+      "bytes": 22013,
+      "sha256": "e004ee0d621850f656e8020a78533436187969d18ae2865dd18059dd631da686",
+      "blob": "8c9c5eb448c0d60f945f54adada026f62dad5e1e"
+    },
+    "src/game/espgen44.cpp": {
+      "bytes": 3382,
+      "sha256": "08aba515d56c5e530d954a4489b00ef7a257d6705ace110eea7a5aa6ca459562",
+      "blob": "a3715c8ab1ff23585723d12a138bc3a9c200e2b4"
+    },
+    "port/dreamcast/game/effects30.mk": {
+      "bytes": 39097,
+      "sha256": "3fb6de911aa2aee82bd72bb77fe8685c08f86b059556325bae2868d615de1830",
+      "blob": "4ebb7b63f5ff2a497a7e71064920de7d1ad79aae"
+    },
+    "src/game/espgen.cpp": {
+      "bytes": 28724,
+      "sha256": "43bc31c723c59f77d706864322de95d5dd4c3f29bb33bc7fb3dd64e6b1a2bb07",
+      "blob": "d97851234b93c2e94f616e54a4cc06f9dee85bb9"
+    },
+    "src/game/espgen10.cpp": {
+      "bytes": 7762,
+      "sha256": "5f2d991b2839505a66d4f3e4b0b6489da15293bf3c91f6d1d6028ce653920ef2",
+      "blob": "611abd6d9271884ee35d7c94ffe1930db30c60bd"
+    },
+    "include/esp.h": {
+      "bytes": 24972,
+      "sha256": "a02bdcd8632113b4c2e7b099ea90cfefea9c7f0f1c779b31e354dfd634e0e1ba",
+      "blob": "5e62e4eaee2a8f670f4584500ec69b7afbf99148"
+    },
+    "include/espgen.h": {
+      "bytes": 13619,
+      "sha256": "245308dc8833b1e18f71682bcf2a0564e73480eda629f076313f6c037be09757",
+      "blob": "016f2dfc60634d7c7bacc7e5b229d10cc405311f"
+    },
+    "src/game/filter.cpp": {
+      "bytes": 1913,
+      "sha256": "ff7fe4a958e6ffdbb84eb4352b9a882ca7fcb1f8f8113dc6f738543b00251d27",
+      "blob": "0bb892757fcabf38e5c7db35129d636a6e0cb522"
+    },
+    "src/game/main.cpp": {
+      "bytes": 22790,
+      "sha256": "b0956d568914717092569c137ea60eba27e557880351998d4e51105156815e35",
+      "blob": "0dbbd8616796023463347e9cba20e73317eb7bce"
+    },
+    "src/game/trans.cpp": {
+      "bytes": 233619,
+      "sha256": "a83e4235dff43faa39ae46118ca644316a6c1733eaf75c2e726426205e29f91a",
+      "blob": "78908324df429fa7e043317ff19727338ba8a4f7"
+    },
+    "src/game/main_sub.cpp": {
+      "bytes": 20545,
+      "sha256": "67483158e94c5fb54d50bb6fd4cdc4a1988d3db073d9fdccbd573e77128cfc29",
+      "blob": "4a8a610ec141569b56a8849db41d4e20afaf92f4"
+    },
+    "src/st1/r10c.cpp": {
+      "bytes": 50185,
+      "sha256": "86608234203aa49e8d036508af64c2fb472c1a25c4df3c635fa226b3c6ad0ecf",
+      "blob": "344a951e706a509b9ef4332fe48a2e5e0756b93c"
+    },
+    "src/st1/r10d.cpp": {
+      "bytes": 603,
+      "sha256": "ccbdf478d44d961e14141a0069a55bd34a17c611ee834df96c363b7d6d510c14",
+      "blob": "66f23d00f52cd4bdd0ea7050562b7ad951b3b415"
+    },
+    "src/st1/r10e.cpp": {
+      "bytes": 2328,
+      "sha256": "7938ab87019eeb07ace41da3ee44e7f4770070810e839e9b055fe5f65ffa354b",
+      "blob": "12ff5c52137576b8ccf88ec022ac843f590326ef"
+    },
+    "port/dreamcast/game/platform/gx_stub.cpp": {
+      "bytes": 17457,
+      "sha256": "9775ceea655cdeba1259b36f128f4222ea325d49b102ccdccea6efe853ca3881",
+      "blob": "69aca031da8e8e19bded6eb49506dd85ca066c12"
+    },
+    "port/dreamcast/game/platform/native_ui.cpp": {
+      "bytes": 510195,
+      "sha256": "607fc67cd72f5c6acc2a7a1c2aecf651b78c2ca9e847c562171f820f9f12ea4a",
+      "blob": "72b12339509476481c6e8f93e6f6aac9c2c0263c"
+    },
+    "port/dreamcast/room/pvr_geometry.hpp": {
+      "bytes": 4240,
+      "sha256": "0e7d6a83bff8a5e76794aea8e4da75a7adfc9c497f9b5ccb815a79a4e3d75d3c",
+      "blob": "5d6116ff08ea8c3d02b99c4b21081b320ea11b9e"
+    },
+    "port/dreamcast/room/pvr_geometry.cpp": {
+      "bytes": 9182,
+      "sha256": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136",
+      "blob": "1eeecb677848d6051185c36ac82d9ef7256c137d"
+    },
+    "port/dreamcast/game/platform/native_effect.cpp": {
+      "bytes": 11155,
+      "sha256": "e1ac17d4375424739857ae450d8b36ceced5cb8e92cc39aa358b0b1916d43d8f",
+      "blob": "2fe36f35b1de585a8592bf93f288548a7c480023"
+    },
+    "port/dreamcast/game/platform/include/native_effect_source.h": {
+      "bytes": 552,
+      "sha256": "a62dfa066c09ac09d940577a79f0f61d6c18f45cc6814b128a6da7315d0c908e",
+      "blob": "67c1b1ad8b89d69c8c02d4f801ba6fa94bc949b2"
+    },
+    "port/dreamcast/game/platform/kos_cache_p2_diag.cpp": {
+      "bytes": 3383,
+      "sha256": "dd3e3479fa911efc004102dbc0e6098da63678ff6275cc2986b4877fd311a31c",
+      "blob": "9e60336ddf98f45b1e0a519c66fea1388970db57"
+    },
+    "port/dreamcast/tools/d367/qa20/mkqa.py": {
+      "bytes": 5611,
+      "sha256": "6f3385409e8e91cf714a169190ae76c3570a306dafaac92e4bc19f2c2f6f4c50",
+      "blob": "4f8986d12f16c3d3ece9da1846eeb4b89ee527a9"
+    },
+    "port/dreamcast/tools/d367/qa20/src/lake-scene5.txt": {
+      "bytes": 162,
+      "sha256": "aacdde8a4d85950f0d763a0b5b2ce81f258241f96652e32093f7e83a31c9814c",
+      "blob": "7f49d95d3cbc604942157ad8d317fcad07dba0de"
+    },
+    "port/dreamcast/tools/d367/qa20/src/lake-scene4.txt": {
+      "bytes": 178,
+      "sha256": "a5edbd19e60b41f4d5fc7e42668adde488c6bd03294cf40b3cc46f11ffdc7b06",
+      "blob": "1ac04d570925b09c42e9ea7df12200fa3dbdb716"
+    },
+    "port/dreamcast/tools/d367/lake20/scenario/scene5-warp.txt": {
+      "bytes": 162,
+      "sha256": "aacdde8a4d85950f0d763a0b5b2ce81f258241f96652e32093f7e83a31c9814c",
+      "blob": "7f49d95d3cbc604942157ad8d317fcad07dba0de"
+    },
+    "port/dreamcast/tools/d367/castgc/warps/r10c.txt": {
+      "bytes": 353,
+      "sha256": "59dd928ed8c45e5b8a5a673f99d2127ef325dba4cd9a66e0679738832e6b4200",
+      "blob": "e143727cca060d0ea44f7f288bd644f11bdbda26"
+    },
+    "port/dreamcast/tools/d367/warp.py": {
+      "bytes": 29269,
+      "sha256": "7b4ff454774a8fbb573d4581beaf0be5be889dc1d19b3794c56fb4218f069549",
+      "blob": "09aa893de73c259f0aa47eaa1015c2281230769b"
+    },
+    "port/dreamcast/tools/d367/stage_route.py": {
+      "bytes": 10816,
+      "sha256": "710f4dfc95dfb330d95ce929e45641e286f17f8ae9122f960c0a2a57bd9f5bba",
+      "blob": "dfa4cdb26489116cf55b4dcbef7e7a6e06e2f7f5"
+    }
+  },
+  "layout": [
+    {
+      "offset": 0,
+      "bytes": 4,
+      "name": "seq"
+    },
+    {
+      "offset": 4,
+      "bytes": 4,
+      "name": "abi_flags"
+    },
+    {
+      "offset": 8,
+      "bytes": 4,
+      "name": "setter_generation"
+    },
+    {
+      "offset": 12,
+      "bytes": 4,
+      "name": "callback_generation"
+    },
+    {
+      "offset": 16,
+      "bytes": 4,
+      "name": "controller"
+    },
+    {
+      "offset": 20,
+      "bytes": 4,
+      "name": "record"
+    },
+    {
+      "offset": 24,
+      "bytes": 4,
+      "name": "head"
+    },
+    {
+      "offset": 28,
+      "bytes": 4,
+      "name": "observed_owner"
+    },
+    {
+      "offset": 32,
+      "bytes": 4,
+      "name": "setter_frame"
+    },
+    {
+      "offset": 36,
+      "bytes": 4,
+      "name": "callback_frame"
+    },
+    {
+      "offset": 40,
+      "bytes": 4,
+      "name": "queue_frame"
+    },
+    {
+      "offset": 44,
+      "bytes": 4,
+      "name": "event_frame"
+    },
+    {
+      "offset": 48,
+      "bytes": 4,
+      "name": "rooms"
+    },
+    {
+      "offset": 52,
+      "bytes": 4,
+      "name": "event_reason"
+    },
+    {
+      "offset": 56,
+      "bytes": 4,
+      "name": "state_flags"
+    },
+    {
+      "offset": 60,
+      "bytes": 4,
+      "name": "particle_count"
+    },
+    {
+      "offset": 64,
+      "bytes": 4,
+      "name": "alpha_ids"
+    },
+    {
+      "offset": 68,
+      "bytes": 4,
+      "name": "native_requested"
+    },
+    {
+      "offset": 72,
+      "bytes": 4,
+      "name": "native_accepted"
+    },
+    {
+      "offset": 76,
+      "bytes": 4,
+      "name": "accepted_total"
+    },
+    {
+      "offset": 80,
+      "bytes": 2,
+      "name": "setter_calls"
+    },
+    {
+      "offset": 82,
+      "bytes": 2,
+      "name": "causal44_set"
+    },
+    {
+      "offset": 84,
+      "bytes": 2,
+      "name": "destruct44"
+    },
+    {
+      "offset": 86,
+      "bytes": 2,
+      "name": "room_init"
+    },
+    {
+      "offset": 88,
+      "bytes": 2,
+      "name": "alloc_failure"
+    },
+    {
+      "offset": 90,
+      "bytes": 2,
+      "name": "trans_enter"
+    },
+    {
+      "offset": 92,
+      "bytes": 2,
+      "name": "trans_zero"
+    },
+    {
+      "offset": 94,
+      "bytes": 2,
+      "name": "trans_indoor"
+    },
+    {
+      "offset": 96,
+      "bytes": 2,
+      "name": "trans_stopped"
+    },
+    {
+      "offset": 98,
+      "bytes": 2,
+      "name": "callback_enter"
+    },
+    {
+      "offset": 100,
+      "bytes": 2,
+      "name": "callback_candidate"
+    },
+    {
+      "offset": 102,
+      "bytes": 2,
+      "name": "callback_wrong_signature"
+    },
+    {
+      "offset": 104,
+      "bytes": 2,
+      "name": "callback_zero_alpha"
+    },
+    {
+      "offset": 106,
+      "bytes": 2,
+      "name": "ticket_queued"
+    },
+    {
+      "offset": 108,
+      "bytes": 2,
+      "name": "cancel_setter"
+    },
+    {
+      "offset": 110,
+      "bytes": 2,
+      "name": "cancel_room_init"
+    },
+    {
+      "offset": 112,
+      "bytes": 2,
+      "name": "cancel_callback_replace"
+    },
+    {
+      "offset": 114,
+      "bytes": 2,
+      "name": "flush_stale_frame"
+    },
+    {
+      "offset": 116,
+      "bytes": 2,
+      "name": "flush_state_reject"
+    },
+    {
+      "offset": 118,
+      "bytes": 2,
+      "name": "ticket_consumed"
+    },
+    {
+      "offset": 120,
+      "bytes": 2,
+      "name": "stopped_flush"
+    },
+    {
+      "offset": 122,
+      "bytes": 2,
+      "name": "return_zero"
+    },
+    {
+      "offset": 124,
+      "bytes": 2,
+      "name": "return_positive"
+    },
+    {
+      "offset": 126,
+      "bytes": 2,
+      "name": "binding_reject"
+    }
+  ],
+  "counter_names": [
+    "setter_calls",
+    "causal44_set",
+    "destruct44",
+    "room_init",
+    "alloc_failure",
+    "trans_enter",
+    "trans_zero",
+    "trans_indoor",
+    "trans_stopped",
+    "callback_enter",
+    "callback_candidate",
+    "callback_wrong_signature",
+    "callback_zero_alpha",
+    "ticket_queued",
+    "cancel_setter",
+    "cancel_room_init",
+    "cancel_callback_replace",
+    "flush_stale_frame",
+    "flush_state_reject",
+    "ticket_consumed",
+    "stopped_flush",
+    "return_zero",
+    "return_positive",
+    "binding_reject"
+  ],
+  "persistent_bytes": 128,
+  "supersedes_design_commit": "e5f3b8faf4dfd81169de52cc2c16fc457edc92a0",
+  "native_sample_valid_bit": 13,
+  "queue_key_valid_bit": 14,
+  "terminal_even_sequence": 4294967294,
+  "proposal_only": true,
+  "actual_runtime_implemented": false,
+  "target_tested": false,
+  "source_checks_and_design_model_controls": [
+    "only-two-current-setter-call-sites",
+    "actual-44-set-and-destruct-consume-existing-call",
+    "actual-record-reference-not-assumed-contiguous",
+    "owner-copy-is-runtime-attribution",
+    "outer-gates-outside-owned-three-files",
+    "actual-stale-rejection-and-draw-stop-branch",
+    "render-before-source-frame-increment",
+    "actual-OT-before-ADEB",
+    "actual-finish-before-rain",
+    "renderer-return-not-request",
+    "qa-dam-is-existing-passage-seed",
+    "distinct-existing-lower-bank-source-seed",
+    "natural-ladder-stop-ten-source-ticks",
+    "design-stable-even-ABI1-accepted",
+    "design-ABI-rejected-0x0",
+    "design-ABI-rejected-0x2",
+    "design-ABI-rejected-0x10001",
+    "design-ABI-rejected-0x80000001",
+    "design-odd-torn-rejected",
+    "design-sequence-drift-rejected",
+    "design-reserved-terminal-even-rejected-even-without-flag",
+    "design-last-normal-publication",
+    "design-final-publication-is-exhaustion-only",
+    "design-never-publish-odd-max",
+    "design-causal-setter-bind",
+    "design-pointer-reuse-not-generation",
+    "design-wrong-controller-rejected",
+    "design-failed-setter-rejected",
+    "design-generation-wrap-rejected",
+    "design-captured-return-positive",
+    "design-captured-return-zero-is-valid-observation",
+    "design-captured-return-partial-contract-control",
+    "design-return-exceeds-request-rejected",
+    "design-return-during-key-change-rejected-setter_generation",
+    "design-return-during-key-change-rejected-callback_generation",
+    "design-return-during-key-change-rejected-callback_frame",
+    "design-return-during-key-change-rejected-queue_frame",
+    "design-return-during-key-change-rejected-event_frame",
+    "design-return-during-key-change-rejected-rooms",
+    "design-return-during-key-change-rejected-controller",
+    "design-return-during-key-change-rejected-record",
+    "design-return-during-key-change-rejected-head",
+    "design-return-during-key-change-rejected-state_flags",
+    "design-return-during-key-change-rejected-particle_count",
+    "design-return-during-key-change-rejected-alpha_ids",
+    "design-return-source-frame-changes-rejected",
+    "design-return-source-room-changes-rejected",
+    "design-same-frame-replacement-event-rejected-by-seq",
+    "design-no-new-call-generation-change-invalidates-join",
+    "design-last-native-sample-valid-before-event-1",
+    "design-old-return-new-event-no-false-join-1",
+    "design-last-native-sample-valid-before-event-2",
+    "design-old-return-new-event-no-false-join-2",
+    "design-last-native-sample-valid-before-event-3",
+    "design-old-return-new-event-no-false-join-3",
+    "design-last-native-sample-valid-before-event-4",
+    "design-old-return-new-event-no-false-join-4",
+    "design-last-native-sample-valid-before-event-5",
+    "design-old-return-new-event-no-false-join-5",
+    "design-last-native-sample-valid-before-event-6",
+    "design-old-return-new-event-no-false-join-6",
+    "design-last-native-sample-valid-before-event-7",
+    "design-old-return-new-event-no-false-join-7",
+    "design-last-native-sample-valid-before-event-9",
+    "design-old-return-new-event-no-false-join-9",
+    "design-native-sample-with-unknown-controller-cause",
+    "design-valid-bit-alone-not-return-event",
+    "design-unknown-archive-owner-explicit",
+    "actual-outer-Disp-and-PTS-suppressions-unobserved",
+    "actual-native-api-does-not-forward-PVR-ack",
+    "design-complete-actual-return-publishes-valid",
+    "design-return-after-replaced-callback-publishes-invalid",
+    "design-generation-change-with-no-new-native-call-invalid",
+    "design-return-on-terminal-transition-invalid",
+    "design-native-valid-cannot-be-feature-OFF",
+    "design-published-reported-exceeds-request-rejected",
+    "design-u16-counter-exhaustion-no-wrap",
+    "design-u32-aggregate-exhaustion-no-wrap",
+    "design-generation-reaching-maximum-rejected",
+    "design-u16-reaching-maximum-terminal",
+    "design-u32-reaching-maximum-terminal",
+    "design-terminal-record-frozen-after-exhaustion",
+    "design-counter-fault-final-coherent-at-nonterminal-seq",
+    "design-counter-fault-frozen-through-event",
+    "design-counter-fault-frozen-through-return",
+    "design-counter-fault-frozen-through-warm_init",
+    "design-generation-fault-final-coherent-at-nonterminal-seq",
+    "design-generation-fault-frozen-through-event",
+    "design-generation-fault-frozen-through-return",
+    "design-generation-fault-frozen-through-warm_init",
+    "design-aggregate-fault-final-coherent-at-nonterminal-seq",
+    "design-aggregate-fault-frozen-through-event",
+    "design-aggregate-fault-frozen-through-return",
+    "design-aggregate-fault-frozen-through-warm_init",
+    "design-unsupported-ABI-frozen-through-event",
+    "design-unsupported-ABI-frozen-through-return",
+    "design-unsupported-ABI-frozen-through-warm_init",
+    "design-actual-return-reaching-total-max-latches-fault",
+    "design-return-total-exhaustion-frozen-through-event",
+    "design-return-total-exhaustion-frozen-through-return",
+    "design-return-total-exhaustion-frozen-through-warm_init"
+  ],
+  "model_limit": "No C++ diagnostic exists; proposed publication/binding model is not source-extracted implementation proof."
+}
