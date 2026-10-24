@@ -1,0 +1,61 @@
+{
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "arm": "off",
+  "full_manifest": {
+    "size": 235669,
+    "sha256": "ace3326f983b9352739a868403e6082d4c5812e46f13d28f94506f6216bf9bd5"
+  },
+  "files": 1747,
+  "raw_main": {
+    "size": 3434532,
+    "sha256": "4fbe09e89426687c001a47f0b9e082ef380908748a583fc03d2b7a09a0779178"
+  },
+  "scrambled_readback": {
+    "size": 3434532,
+    "sha256": "bdfffb7aec508f70c47bd5dd91fb2b493cc8e3381b2b495eb8a260d2715fd381"
+  },
+  "all14_exact": true,
+  "qa_presets": 33,
+  "qa_menu_exact": true,
+  "candidate": {
+    "size": 32912,
+    "sha256": "18978dc1b97247dcd5fda5f5f1744b74e9d1b97c34dc5779977525b0a2dc477e"
+  },
+  "tex_pak": {
+    "size": 162154496,
+    "sha256": "5bba464a1175d8ebe153d5aecb629ea9637807c2bf4fc438a32c17148d0729da"
+  },
+  "all_original_assets_preserved": true,
+  "tracks": {
+    "disc.gdi": {
+      "size": 87,
+      "sha256": "025516557d49e1835e7eb8571e09244b64db190cf3981ead555c54b1924ca19f"
+    },
+    "disc_lint.txt": {
+      "size": 4159,
+      "sha256": "221355af75ae0fd0d9436454b80ebb484a27558e9b60dd9b85cd62de2b1a77ce"
+    },
+    "IP.BIN": {
+      "size": 32768,
+      "sha256": "e6f41c60c9290b99143af11031a9343f8324f0fff7ff3e7cdc5145b1eb67a88b"
+    },
+    "layout.txt": {
+      "size": 213,
+      "sha256": "e7bd35b37112dfc81095a153cf25affb0fb424b40d661fa1dc0d1651d18aa65b"
+    },
+    "track01.bin": {
+      "size": 1058400,
+      "sha256": "7ed557771952e0160c7f4f17970b8ae5d8bc546e6a394e4951da9ef0f0e0281b"
+    },
+    "track02.raw": {
+      "size": 1237152,
+      "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48"
+    },
+    "track03.bin": {
+      "size": 1185760800,
+      "sha256": "4930522dfb2dcdd68219d159c4f54d30eaf13d28c7f54cd5108447303830f987"
+    }
+  },
+  "physical_console_acceptance": false,
+  "qa_mendez_tested": false
+}

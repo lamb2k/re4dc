@@ -1,0 +1,116 @@
+{
+  "checked_utc": "2026-10-24T03:32:45.265679+00:00",
+  "recommendation": "ACCEPT private QA comparison handback within stated local scope; no defects found",
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "handback_sha256": "86609ae3b217369c7bb34dd898fd4edbc614f7a7fc0c530df9a25b15270c72f0",
+  "evidence_seal_sha256": "5ebcd7f638fc62c7ab9a0c87e98e91f45718fcad4582f2ae10007ebb20b5084f",
+  "sealed_evidence_files_checked": 197,
+  "programme_seal": "07c9bc1e180a70aa5a85fe7235a6a546881270971406d24f5ccbf9dcefc33c64",
+  "resolved_profile_only_differences": {
+    "SCENERY_SELECT_LEAN2": [
+      "0",
+      "1"
+    ],
+    "SCENERY_EMIT_PREFETCH": [
+      "0",
+      "1"
+    ]
+  },
+  "off_fresh_QA_reference_byte_reproduction": true,
+  "media": {
+    "off": {
+      "gdi": "025516557d49e1835e7eb8571e09244b64db190cf3981ead555c54b1924ca19f",
+      "track01": "7ed557771952e0160c7f4f17970b8ae5d8bc546e6a394e4951da9ef0f0e0281b",
+      "track02": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+      "track03": "4930522dfb2dcdd68219d159c4f54d30eaf13d28c7f54cd5108447303830f987",
+      "all1747files_independent_readback": true,
+      "main_all14_qa_candidate_pack_exact": true,
+      "raw_main_rescrambles_to_sealed_CD": true
+    },
+    "both": {
+      "gdi": "025516557d49e1835e7eb8571e09244b64db190cf3981ead555c54b1924ca19f",
+      "track01": "7ed557771952e0160c7f4f17970b8ae5d8bc546e6a394e4951da9ef0f0e0281b",
+      "track02": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+      "track03": "eb2c05fbe7ed104d91d8ed51048a5a0c7a0fd03b396ddb94eefa03472537647b",
+      "all1747files_independent_readback": true,
+      "main_all14_qa_candidate_pack_exact": true,
+      "raw_main_rescrambles_to_sealed_CD": true
+    }
+  },
+  "probes": {
+    "off": {
+      "boot": {
+        "accepted_receipt_sha256": "79b3c6f9b9b370357eda357828b36b0aad58567f4e1fe11447e636e689876e4d",
+        "actual_bounds_and_image_pass": true,
+        "child_seconds": 25.985,
+        "observed": {
+          "actual_final_GDI_ordinary_keys": true,
+          "menu33_room_entry": true
+        }
+      },
+      "menu-warp": {
+        "accepted_receipt_sha256": "d6373dd7a216140f5c878882beff22f096cac8a3273ec8cdf81c98a7d76662f8",
+        "actual_bounds_and_image_pass": true,
+        "child_seconds": 21.906,
+        "observed": {
+          "exact_ordered_reset_new103_generation2": true,
+          "six_negative_controls_rejected": true
+        }
+      },
+      "h2": {
+        "accepted_receipt_sha256": "49afc24c5538b8b02927bb70f9822593ebc2993ec6e364ef5c584d48986a07ae",
+        "actual_bounds_and_image_pass": true,
+        "child_seconds": 33.0,
+        "observed": {
+          "movie_full340": true,
+          "matching_arena_restored": true,
+          "heap_before": 40576
+        }
+      }
+    },
+    "both": {
+      "boot": {
+        "accepted_receipt_sha256": "ab9c0b4f634af883a2a00ddbb7bd12817395f061cf6b37029b901349145f3d7d",
+        "actual_bounds_and_image_pass": true,
+        "child_seconds": 25.984,
+        "observed": {
+          "actual_final_GDI_ordinary_keys": true,
+          "menu33_room_entry": true
+        }
+      },
+      "menu-warp": {
+        "accepted_receipt_sha256": "8ac47795313e8200388c3fd170f747c2cbb80c59701df98726b72462a3dd09b0",
+        "actual_bounds_and_image_pass": true,
+        "child_seconds": 21.906,
+        "observed": {
+          "exact_ordered_reset_new103_generation2": true,
+          "six_negative_controls_rejected": true
+        }
+      },
+      "h2": {
+        "accepted_receipt_sha256": "fcdea44aafbf24225c591467edb4f4767ca7b0d33b97eca1fd824ab1e08082d8",
+        "actual_bounds_and_image_pass": true,
+        "child_seconds": 33.016,
+        "observed": {
+          "movie_full340": true,
+          "matching_arena_restored": true,
+          "heap_before": 44448
+        }
+      }
+    }
+  },
+  "six_guests_recorded_serial": true,
+  "private_asset_only_addition": "dc/tex/7/7d4e1e92-052bdc2e.re4tex",
+  "qa_text_files": 34,
+  "original_assets_preserved": true,
+  "old_off_parser_FALSE_preserved_and_offline_corrected": true,
+  "reviewer_guests_builds_or_sealed_mutations": 0,
+  "limits": [
+    "Private QA handback only; root final acceptance still independent.",
+    "No physical console, speed gain, production recipe, full route or Mendez QA acceptance.",
+    "Only actual boot uses finalGDI; menu/H2 use authenticated now-deleted newly owned fixture proxies with complete preserved metadata.",
+    "PS2 pair load/upload repair only; visible use/look unproved; no new image review.",
+    "H2 heap40576/44448 is normalQA observation, not KOS squeeze/watch or production floor.",
+    "Source49ad programme and helperbranchbf81 remain distinct; QAOFF matches freshQA reference notproductionmain."
+  ]
+}

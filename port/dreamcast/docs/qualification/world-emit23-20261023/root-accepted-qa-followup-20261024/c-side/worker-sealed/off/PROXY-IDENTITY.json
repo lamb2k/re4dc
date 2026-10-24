@@ -1,0 +1,33 @@
+{
+  "label": "QA fixture proxy; not actual final GDI boot/physical console",
+  "delta": [
+    "dc/padscript.txt",
+    "dc/w11.txt",
+    "dc/warp.txt"
+  ],
+  "main_and14_equal": true,
+  "all_assets_equal": true,
+  "track03": {
+    "size": 1024714752,
+    "sha256": "5a122a673b90a1ae9920d4e2c3f272bdda39adf37c2cdc3cb3f56c27f9c357e1"
+  },
+  "base_json": {
+    "size": 371,
+    "sha256": "674dd4044767e26b24501a7731ae41b99a0a3f7e76c42fd683c7f280eb4b5c62"
+  },
+  "base_manifest": {
+    "size": 215041,
+    "sha256": "f994ce531eaf9b295d5689fcba601a95b352d9153c4eb34ed92dff2ddb01b4d4"
+  },
+  "ip": {
+    "size": 32768,
+    "sha256": "0e4e13d0b8df6477d9e43370591fd1a580c54b4df2209b944610d2a0b6b0062c"
+  },
+  "floor": {
+    "utc": "2026-10-24T03:09:01Z",
+    "windows_free": 31010873344,
+    "wsl_free": 31010873344,
+    "lower_free": 31010873344,
+    "required": 25769803776
+  }
+}

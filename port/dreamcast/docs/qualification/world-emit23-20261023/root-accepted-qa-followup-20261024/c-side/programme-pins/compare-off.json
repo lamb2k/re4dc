@@ -1,0 +1,27 @@
+{
+  "kind": "fresh matched QA programme reproduction",
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "left": "reference",
+  "right": "off",
+  "normalized_profile_differences": {},
+  "programme_byte_equal": {
+    "main-no-stack.bin": true,
+    "em22.ovl": true,
+    "em2b.ovl": true,
+    "em2f.ovl": true,
+    "em35.ovl": true,
+    "em3b.ovl": true,
+    "pl0f.ovl": true,
+    "pl11.ovl": true,
+    "pl14.ovl": true,
+    "sscrn.ovl": true,
+    "st1_0.ovl": true,
+    "st1_1.ovl": true,
+    "st1_2.ovl": true,
+    "st1_3.ovl": true,
+    "st2_0.ovl": true
+  },
+  "output_path_normalization_only": true,
+  "production_identity_claim": false,
+  "stage_or_guest": false
+}

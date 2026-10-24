@@ -1,0 +1,17 @@
+{
+  "root_receipt_sha256": "dd8472a431e399838ccb3ce6d92d7c0204ee0a191505f25d9707037ae1be40ba",
+  "arms": {
+    "off": {
+      "path": "C:\\Game Dev\\Emulators\\RE4DC-QA23-WorldEmit-Off-49ad20f9",
+      "identity_sha256": "6b10ee24f30f4ddfd2fc7229b50e1eee7f2ff151db2986548da97977f7a0eff9",
+      "sums_sha256": "0dc03898b44b7dae9c3a36a76ee64bebe0ad520e9347332e0c38687caccfda5e",
+      "files": 11
+    },
+    "both": {
+      "path": "C:\\Game Dev\\Emulators\\RE4DC-QA23-WorldEmit-Both-49ad20f9",
+      "identity_sha256": "e98017da13924822bd99f49e8241bc8d856451cbfc8a3e68c6cc4cf25ebb581b",
+      "sums_sha256": "0ae80ebe1ef2ad1fa3958258e660b2b0b6902f07bc6812d7367818ba42680d48",
+      "files": 11
+    }
+  }
+}

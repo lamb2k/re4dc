@@ -1,0 +1,27 @@
+{
+  "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/probe-bases/both/track03.iso",
+  "identity": {
+    "size": 1024716800,
+    "sha256": "4b3dd785bf3f3d69c8bcc09dd4afea35822326d1f5a8004b62c524b6358aba45"
+  },
+  "label": "Disposable new owned fixture ISO cache only",
+  "reason": "All three QA arm gates and final independent GDI readback passed. All old evidence and final media preserved.",
+  "retained_IP": {
+    "size": 32768,
+    "sha256": "0e4e13d0b8df6477d9e43370591fd1a580c54b4df2209b944610d2a0b6b0062c"
+  },
+  "qualifications": {
+    "boot": {
+      "size": 2377,
+      "sha256": "ab9c0b4f634af883a2a00ddbb7bd12817395f061cf6b37029b901349145f3d7d"
+    },
+    "menu-warp": {
+      "size": 2876,
+      "sha256": "8ac47795313e8200388c3fd170f747c2cbb80c59701df98726b72462a3dd09b0"
+    },
+    "h2": {
+      "size": 2732,
+      "sha256": "fcdea44aafbf24225c591467edb4f4767ca7b0d33b97eca1fd824ab1e08082d8"
+    }
+  }
+}

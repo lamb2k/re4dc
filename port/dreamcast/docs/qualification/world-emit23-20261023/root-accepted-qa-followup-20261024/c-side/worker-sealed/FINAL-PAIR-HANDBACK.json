@@ -1,0 +1,204 @@
+{
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "status": "All allocated staging and six QA probes complete; private pair pending root review",
+  "private_only": true,
+  "production_ready": false,
+  "physical_console_acceptance": false,
+  "hardware_gain_claim": false,
+  "qa_mendez_tested": false,
+  "root_review": "PENDING",
+  "original_manifest": {
+    "size": 231281,
+    "sha256": "927e564fb95821d2509cb9b2ef7f7a56ebc3164afd18c552451f509722136763"
+  },
+  "common_manifest": {
+    "size": 235669,
+    "sha256": "bfbbf87bda20501f9e1edec59bba86f306cac9bcb10e331d98dab6274ce335b2"
+  },
+  "asset_identity_equal": true,
+  "programme_differences": [
+    "1ST_READ.BIN",
+    "dc/em22.ovl",
+    "dc/em2b.ovl",
+    "dc/em2f.ovl",
+    "dc/em35.ovl",
+    "dc/em3b.ovl",
+    "dc/pl0f.ovl",
+    "dc/pl11.ovl",
+    "dc/pl14.ovl",
+    "dc/sscrn.ovl",
+    "dc/st1_0.ovl",
+    "dc/st1_1.ovl",
+    "dc/st1_2.ovl",
+    "dc/st1_3.ovl",
+    "dc/st2_0.ovl"
+  ],
+  "off_qa_reproduction": {
+    "size": 677,
+    "sha256": "ed149d0b56e38511634d23b94a22de535e0c901b554c42d1a0921825996a739a"
+  },
+  "only_two_switches": {
+    "size": 798,
+    "sha256": "bb34b41299701389fab33d5179e20366cbe327a2f6e5870add6e34f80eb943bd"
+  },
+  "gates": {
+    "off": {
+      "boot": {
+        "receipt": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/captures/off-boot/QUALIFIED.json",
+        "identity": {
+          "size": 2373,
+          "sha256": "79b3c6f9b9b370357eda357828b36b0aad58567f4e1fe11447e636e689876e4d"
+        },
+        "observed": {
+          "menu33": true,
+          "room_enter": true,
+          "all_keys": true,
+          "owned_windows": true
+        },
+        "guest_seconds": 25.985,
+        "mode": "actual final standard raw2352 GDI; ordinary keys; no warp injection"
+      },
+      "menu-warp": {
+        "receipt": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/captures/off-menu-warp/QUALIFIED-AUTOTELEPORT.json",
+        "identity": {
+          "size": 3613,
+          "sha256": "d6373dd7a216140f5c878882beff22f096cac8a3273ec8cdf81c98a7d76662f8"
+        },
+        "observed": {
+          "ordered_auto_menu_chain": true,
+          "matched_prefix": 10,
+          "positions": [
+            28779,
+            236293,
+            236407,
+            237243,
+            237392,
+            237786,
+            238790,
+            238955,
+            238997,
+            247062
+          ],
+          "label": "Automated QA menu-warp fixture; not manual human progression"
+        },
+        "guest_seconds": 21.906,
+        "mode": "fixture proxy; exact final QA programme/all14/full assets; not actual final GDI boot"
+      },
+      "h2": {
+        "receipt": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/captures/off-h2/QUALIFIED.json",
+        "identity": {
+          "size": 2728,
+          "sha256": "49afc24c5538b8b02927bb70f9822593ebc2993ec6e364ef5c584d48986a07ae"
+        },
+        "observed": {
+          "full340": true,
+          "heap_before": 40576,
+          "matching_arena_return_restored": true
+        },
+        "guest_seconds": 33.0,
+        "mode": "fixture proxy; exact final QA programme/all14/full assets; not actual final GDI boot"
+      }
+    },
+    "both": {
+      "boot": {
+        "receipt": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/captures/both-boot/QUALIFIED.json",
+        "identity": {
+          "size": 2377,
+          "sha256": "ab9c0b4f634af883a2a00ddbb7bd12817395f061cf6b37029b901349145f3d7d"
+        },
+        "observed": {
+          "menu33": true,
+          "room_enter": true,
+          "all_keys": true,
+          "owned_windows": true
+        },
+        "guest_seconds": 25.984,
+        "mode": "actual final standard raw2352 GDI; ordinary keys; no warp injection"
+      },
+      "menu-warp": {
+        "receipt": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/captures/both-menu-warp/QUALIFIED.json",
+        "identity": {
+          "size": 2876,
+          "sha256": "8ac47795313e8200388c3fd170f747c2cbb80c59701df98726b72462a3dd09b0"
+        },
+        "observed": {
+          "ordered_auto_menu_chain": true,
+          "matched_prefix": 10,
+          "positions": [
+            28793,
+            236319,
+            236433,
+            237269,
+            237418,
+            237812,
+            238816,
+            238981,
+            239023,
+            247088
+          ],
+          "label": "Automated QA menu-warp fixture; not manual human progression",
+          "negative_controls": {
+            "wrong_file": false,
+            "missing_reset_request": false,
+            "missing_reset_arm": false,
+            "old_room103_only": false,
+            "wrong_generation": false,
+            "missing_ui": false
+          }
+        },
+        "guest_seconds": 21.906,
+        "mode": "fixture proxy; exact final QA programme/all14/full assets; not actual final GDI boot"
+      },
+      "h2": {
+        "receipt": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/captures/both-h2/QUALIFIED.json",
+        "identity": {
+          "size": 2732,
+          "sha256": "fcdea44aafbf24225c591467edb4f4767ca7b0d33b97eca1fd824ab1e08082d8"
+        },
+        "observed": {
+          "full340": true,
+          "heap_before": 44448,
+          "matching_arena_return_restored": true
+        },
+        "guest_seconds": 33.016,
+        "mode": "fixture proxy; exact final QA programme/all14/full assets; not actual final GDI boot"
+      }
+    }
+  },
+  "final_paths": {
+    "off": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-WorldEmit-Off-49ad20f9",
+    "both": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-WorldEmit-Both-49ad20f9"
+  },
+  "identities": {
+    "off": {
+      "size": 5063,
+      "sha256": "19b3d6594abad8147de2706ace6719780f6ffe4c05214019fbe159b95a0fdcae"
+    },
+    "both": {
+      "size": 5314,
+      "sha256": "a816dd4f7f88a890ed551668da578be6242c802281e316b39d63e0cf63cd3ada"
+    }
+  },
+  "sha256sums": {
+    "off": {
+      "size": 812,
+      "sha256": "9c2f19c53af08c558483fd69a56f217caeb220bcfe439412bbaf423b7dbc8bf3"
+    },
+    "both": {
+      "size": 812,
+      "sha256": "43b845ab481a3ac945afc6a32c47dbb98c9a4de946804b8e227feba52b131ccb"
+    }
+  },
+  "actual_final_bytes": 2376208884,
+  "floor": {
+    "utc": "2026-10-24T03:19:39Z",
+    "windows_free": 33399541760,
+    "wsl_free": 33399541760,
+    "lower_free": 33399541760,
+    "required": 25769803776
+  },
+  "finalizer": {
+    "size": 9648,
+    "sha256": "7d810b284105f9dd99a89efc3244b8877f3f9a51407b248de1db1d8ae91b9dd6"
+  }
+}

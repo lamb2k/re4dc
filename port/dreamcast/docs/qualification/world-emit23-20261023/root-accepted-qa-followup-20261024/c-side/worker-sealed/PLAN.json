@@ -1,0 +1,245 @@
+{
+  "schema": 1,
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "programme_seal": "07c9bc1e180a70aa5a85fe7235a6a546881270971406d24f5ccbf9dcefc33c64",
+  "programme_handback": {
+    "size": 18550,
+    "sha256": "a22a4958462e6290719a2ab0f75f5623ce0d6f12152b612c26b60bfb026a5c9c"
+  },
+  "recipe": {
+    "size": 10428,
+    "sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898"
+  },
+  "admission": {
+    "utc": "2026-10-24T03:05:02Z",
+    "windows_free": 33320914944,
+    "wsl_free": 33320914944,
+    "lower_free": 33320914944,
+    "required": 30601641984
+  },
+  "admission_gib": 28.5,
+  "stage_floor_gib": 24,
+  "absolute_floor_gib": 20,
+  "reservation_bytes": 4831838208,
+  "peak_model": {
+    "final_pair_bytes": 2376122880,
+    "one_active_iso_budget": 1050000000,
+    "captures_metadata_budget": 134217728,
+    "total": 3560340608
+  },
+  "asset_change": {
+    "path": "dc/tex/7/7d4e1e92-052bdc2e.re4tex",
+    "identity": {
+      "size": 32912,
+      "sha256": "18978dc1b97247dcd5fda5f5f1744b74e9d1b97c34dc5779977525b0a2dc477e"
+    },
+    "private_default": 0,
+    "production_enabled": false,
+    "visible_use_proven": false,
+    "label": "LOAD/UPLOAD REPAIR ONLY; production look unapproved"
+  },
+  "preserved_tex_pak": {
+    "sha256": "5bba464a1175d8ebe153d5aecb629ea9637807c2bf4fc438a32c17148d0729da",
+    "size": 162154496
+  },
+  "original_files": 1712,
+  "original_bytes": 1021371878,
+  "qa_files": {
+    "menu.txt": {
+      "size": 1154,
+      "sha256": "01bc0329388b7db82a8373014757792d98c4d420cf17d0a9a1f6753ae3c54958"
+    },
+    "r100.txt": {
+      "size": 156,
+      "sha256": "cee06c88801255551bdeeed0d1430e86d78b5bbd5278ba857f0c8857bb9b4cc4"
+    },
+    "r101.txt": {
+      "size": 129,
+      "sha256": "00b7d7b775b862ac251bfc14adfeb756b0a3420fe7b9694342d0c576446a7c14"
+    },
+    "r101x.txt": {
+      "size": 131,
+      "sha256": "ecb04e792411f3c85c1c4c890c35c112238bf54943c7f07302df7d14e107a765"
+    },
+    "r102.txt": {
+      "size": 92,
+      "sha256": "05c2b573ef79de24cea6ebc06b94116281b9479cd923f293676535a55847d766"
+    },
+    "r103.txt": {
+      "size": 99,
+      "sha256": "3d0105ca3ddf9959ed3815c096507ed21986105571184f0602e5e76c1ef15bd8"
+    },
+    "r103f.txt": {
+      "size": 130,
+      "sha256": "b967d9b4def96ea1bdbf4f633178abbfcdd235385751f57a76547094df844a76"
+    },
+    "r104.txt": {
+      "size": 104,
+      "sha256": "795d99b4465a74e092a1a2a9b1b95b837ce27e23b9d114e9a653c31d75395951"
+    },
+    "r105.txt": {
+      "size": 97,
+      "sha256": "d84b0cc1ba22b8efc01813c139a64005ebfc01a72007c5add146812a3e67b361"
+    },
+    "r106.txt": {
+      "size": 93,
+      "sha256": "be0ee43f0cc8b85fe1a99c67cc358cf308b89aee5be9409a3d8bffa5c7a36fbe"
+    },
+    "r107.txt": {
+      "size": 94,
+      "sha256": "69c3cec666f1e17318bc4d1f6d64e3df6a885de912cf233b658ddc4657220f15"
+    },
+    "r108.txt": {
+      "size": 94,
+      "sha256": "886019c17e34a1a5143f5e2c8052f703bba47d69d5c0e56c21eaec2607fab4b6"
+    },
+    "r109.txt": {
+      "size": 94,
+      "sha256": "9bd7ac376d69b43d04793aa3c4c7dfc4b60265bf143e422b0d6c0fc77dda8371"
+    },
+    "r10a.txt": {
+      "size": 94,
+      "sha256": "0eab022125ac5bc22c04890541101a0acc8c55cc098f1b827f6c5a9184c337ed"
+    },
+    "r10b.txt": {
+      "size": 101,
+      "sha256": "b174ad7d799c5c3aa27af716267254d89d6a24cd98b9e89281f4ff203620d82f"
+    },
+    "r10bd.txt": {
+      "size": 181,
+      "sha256": "2d6436d0313d754532d0986fb6b788c796cb5accb4daf63618e1049734958b1f"
+    },
+    "r10c.txt": {
+      "size": 86,
+      "sha256": "0597aee9498cd8dedc3032244cee2c8ab8e5978dc23c279492838224725a534b"
+    },
+    "r10d.txt": {
+      "size": 100,
+      "sha256": "c26ccae80f96af6e10d3e91cc4e5d7972fed3ee22d5205391f4cff99f0afd837"
+    },
+    "r10e.txt": {
+      "size": 94,
+      "sha256": "cafe7062c5941047f9a6c03e0c36d7af337c4ed6b2a98ad3e54e82cc638e4a5f"
+    },
+    "r10f.txt": {
+      "size": 131,
+      "sha256": "b93543ef25723413f1a2c06a39a7b3729f116db55988672b935ebb48d40202f3"
+    },
+    "r111.txt": {
+      "size": 161,
+      "sha256": "a2a2aee4efc11fbebb1bdb7dc9834705688e9442f5e4ac7cb8e68bc95062d15e"
+    },
+    "r112.txt": {
+      "size": 132,
+      "sha256": "3985f717e905a0fc920a3ae169de48f413a00fed45e075b61cf2ff2f4bd8cb73"
+    },
+    "r113.txt": {
+      "size": 128,
+      "sha256": "1a3b0ab41d134a7074af9fd63d60907c9efb3251fd3eada8b786521cc89b3455"
+    },
+    "r117.txt": {
+      "size": 92,
+      "sha256": "1e7ec7193cb8c21ed959d66315fc8fcfbe98ec20a8b0dd0656fb3a90a7ea6378"
+    },
+    "r118.txt": {
+      "size": 95,
+      "sha256": "d40f80ecb1ea377ca1f53c8f116c0263369a0da31019a970d7c9a089eebadb42"
+    },
+    "r119.txt": {
+      "size": 120,
+      "sha256": "8a0f835361bd7df300cb2fc3276259fadb23f05b300d0a1d42af3a8fa53a9a98"
+    },
+    "r11a.txt": {
+      "size": 95,
+      "sha256": "2b777f5af613a8b5f5edc4cb38dbabbbce5929cf81cbb171e50bb1a4a286df29"
+    },
+    "r11b.txt": {
+      "size": 108,
+      "sha256": "b89392d2016d511f176cc9e77b10493c9f2b15383263f76a62f8459e60163d35"
+    },
+    "r11bn.txt": {
+      "size": 242,
+      "sha256": "a03fb0452fb004d6921f2e23f6d59f3a47be8293390a0e85c8c57d9b174f664c"
+    },
+    "r11c.txt": {
+      "size": 128,
+      "sha256": "fb4959d3b6393e50702f276ec3444dc010be3abadeb8b567786680426399d182"
+    },
+    "r11d.txt": {
+      "size": 128,
+      "sha256": "00349b88bda1ac9b0968cf7a66ba226ac6aa325d8105d0bcdee19b6a812c9df0"
+    },
+    "r11e.txt": {
+      "size": 143,
+      "sha256": "0f8212407c1bfb5e6dd385887dd51fb720a2c6524f333469e4ec619d5777317c"
+    },
+    "r11f.txt": {
+      "size": 131,
+      "sha256": "2bdb63d89d5bcbfaf5a627212a519c08923c1076cc1695eb2cb94dff2e02b007"
+    },
+    "r200.txt": {
+      "size": 130,
+      "sha256": "cac6327f1e0d474943c40b09771f8493c19e6fbba667df02244fc841538162a9"
+    }
+  },
+  "final_paths": {
+    "off": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-WorldEmit-Off-49ad20f9",
+    "both": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-WorldEmit-Both-49ad20f9"
+  },
+  "probe_bases": {
+    "off": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/probe-bases/off",
+    "both": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/probe-bases/both"
+  },
+  "programme_paths": {
+    "off": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off",
+    "both": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both"
+  },
+  "guests": {
+    "total": 6,
+    "sequential": true,
+    "console": true,
+    "exact_child_limit_s": 55,
+    "requested_s": 45,
+    "stat_slots": 3,
+    "trace_slots": 16,
+    "boot": "actual final standard raw2352 GDI, ordinary keys, no warp injection",
+    "menu_warp": "fixture proxy; full assets and14 overlays equal final media",
+    "h2": "fixture proxy; same QA programme; normal KOS no watch/squeeze"
+  },
+  "cleanup": "Only newly owned proxy track03.iso may be removed after all three arm gates pass and final independent readback. Preserve all captures, manifests, IP, programme and fixture identities. fp_run removes its own hardlinks, not the source tracks.",
+  "scope": "Private console request pending review. Both experimental performance switches OFF in production. No gain, QA Mendez or physical console acceptance implied.",
+  "tools": {
+    "mkgdi.sh": {
+      "size": 13340,
+      "sha256": "e61e5603ec273d91015b6e27d40db27b200b8b141000677a348c2f80bb3e0c81"
+    },
+    "disc_lint.py": {
+      "size": 29179,
+      "sha256": "8d9753890d665108375588cad0c4504e8bb9590ea7d2ae9a1f3e8c55e6f741cd"
+    },
+    "fullplay/fp_master.sh": {
+      "size": 6937,
+      "sha256": "f1f341e94c29d50f64afa229ce305d9a60f50f4eafb3c7d9fe9a9c06844e457f"
+    },
+    "fullplay/fp_iso.py": {
+      "size": 8006,
+      "sha256": "e473a3493aa97ba63391cb507b2263935b8904153adddd99c421b689810f54da"
+    },
+    "fullplay/fp_run.py": {
+      "size": 15608,
+      "sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747"
+    },
+    "trace_lock.sh": {
+      "size": 2169,
+      "sha256": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688"
+    }
+  },
+  "mkdcdisc": {
+    "size": 792056,
+    "sha256": "c7a837e801f797523234b2ce75bb9de0d975c3ee8eb77a38d75cf26c82208ca3"
+  },
+  "helper": {
+    "size": 13245,
+    "sha256": "231ec5e500a749b68550d723fe0dfca22158c4bdb9d75b575c03651a2bc164e5"
+  }
+}

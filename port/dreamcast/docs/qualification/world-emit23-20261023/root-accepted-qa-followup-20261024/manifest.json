@@ -1,0 +1,777 @@
+{
+  "schema": "root-accepted-world-private-QA-source-preservation-v1",
+  "snapshot_utc": "2026-10-24T03:40:26.534569+00:00",
+  "base_source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "preservation_parent": "910d6763f3df72d000a901a8ace73644ea6879bb",
+  "copied": [
+    {
+      "path": "c-side/coordination/EXECUTED-HELPERS.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/final-qa-stage/EXECUTED-HELPERS.md",
+      "bytes": 1213,
+      "sha256": "6dec341a160480f976847714aa822f8b7ec27dd5b2cce0298b58e1963782beee",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/coordination/HANDBACK.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/final-qa-stage/HANDBACK.md",
+      "bytes": 2563,
+      "sha256": "d71687afa4828954faab054c97d57b7ccb934465f15f6be9b47323ec08d3c283",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/coordination/ROOT-INDEPENDENT-REVIEW.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/final-qa-stage/ROOT-INDEPENDENT-REVIEW.json",
+      "bytes": 4770,
+      "sha256": "ed6b48696d68d7506ab99be6eb96e1ac8c556eb32bfdc72dab868bec522262b1",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/coordination/ROOT-INDEPENDENT-REVIEW.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/final-qa-stage/ROOT-INDEPENDENT-REVIEW.md",
+      "bytes": 3054,
+      "sha256": "29756c7e07d6df96293cba080a2ab4ac207d642d719c97862842a10a7cdab99b",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/coordination/STATUS.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/final-qa-stage/STATUS.md",
+      "bytes": 1479,
+      "sha256": "dabaec035b458c4babf4cc2ba3ced48901dfbcdd02555adccf3070d62336f5e3",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/coordination/auto_menu.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/final-qa-stage/auto_menu.py",
+      "bytes": 1820,
+      "sha256": "e60799a6886c67180629c1d2bbd65c2df632112c01651e1167fbd4cc181424ef",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/coordination/finalize_media.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/final-qa-stage/finalize_media.py",
+      "bytes": 9648,
+      "sha256": "7d810b284105f9dd99a89efc3244b8877f3f9a51407b248de1db1d8ae91b9dd6",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/coordination/finish_arm.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/final-qa-stage/finish_arm.py",
+      "bytes": 3513,
+      "sha256": "92a0cf89d9c01b7258e97bba2030bc64fc5858042233ae382870b2dac9e45aa4",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/coordination/media.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/final-qa-stage/media.py",
+      "bytes": 13245,
+      "sha256": "231ec5e500a749b68550d723fe0dfca22158c4bdb9d75b575c03651a2bc164e5",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/coordination/post_slot.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/final-qa-stage/post_slot.py",
+      "bytes": 1600,
+      "sha256": "f8711b47c2600b9c31918627578af801d83a8df23a696c380b8169dab0168cfe",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/coordination/probe.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/final-qa-stage/probe.py",
+      "bytes": 5467,
+      "sha256": "1dad01db8c470b9d32df75ee49362ec96daa49761b8f53f65c521db91b52c7a3",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/coordination/root-accept-private.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/final-qa-stage/root-accept-private.py",
+      "bytes": 3515,
+      "sha256": "db544befefd4f1285b9295d97c1c2185992bad970d8183713a573de2beab98c7",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/coordination/root-index-private.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/final-qa-stage/root-index-private.py",
+      "bytes": 4196,
+      "sha256": "691ec7c14b7636a3291dedeb917a29b7631d9c987cc0402a88e205027f596ac3",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/coordination/pre-root-accepted-20261024/STATUS.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/final-qa-stage/pre-root-accepted-20261024/STATUS.md",
+      "bytes": 1734,
+      "sha256": "774b065036fb6e0b483a52e334a4b53a6d8bdde2ea1d8ef76ea5dfa3bd4a2178",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/coordination/pre-root-accepted-20261024/HANDBACK.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/final-qa-stage/pre-root-accepted-20261024/HANDBACK.md",
+      "bytes": 4214,
+      "sha256": "824fa0361781e70f4c72d9b65fb4d5a3e51a82b027ac9f882b51d0e31279b55f",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/root-delivery/DELIVERY-READBACK.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/root-delivery/DELIVERY-READBACK.json",
+      "bytes": 723,
+      "sha256": "02d1a5482203df7fbf6f4a54c04f46ed476d5b0ce5606a91e2a1b6cf74849538",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/root-delivery/ROOT-ACCEPTANCE.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/root-delivery/ROOT-ACCEPTANCE.json",
+      "bytes": 893,
+      "sha256": "dd8472a431e399838ccb3ce6d92d7c0204ee0a191505f25d9707037ae1be40ba",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/root-delivery/both/IDENTITY.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/root-delivery/both/IDENTITY.json",
+      "bytes": 5314,
+      "sha256": "a816dd4f7f88a890ed551668da578be6242c802281e316b39d63e0cf63cd3ada",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/root-delivery/both/README.md",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/root-delivery/both/README.md",
+      "bytes": 3275,
+      "sha256": "df14e4475c0d9ec03bc345362202e5b67e48b29613dbfd1199158da2f164bda3",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/root-delivery/both/SHA256SUMS.txt",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/root-delivery/both/SHA256SUMS.txt",
+      "bytes": 812,
+      "sha256": "43b845ab481a3ac945afc6a32c47dbb98c9a4de946804b8e227feba52b131ccb",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/root-delivery/off/IDENTITY.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/root-delivery/off/IDENTITY.json",
+      "bytes": 5063,
+      "sha256": "19b3d6594abad8147de2706ace6719780f6ffe4c05214019fbe159b95a0fdcae",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/root-delivery/off/README.md",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/root-delivery/off/README.md",
+      "bytes": 3275,
+      "sha256": "df14e4475c0d9ec03bc345362202e5b67e48b29613dbfd1199158da2f164bda3",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/root-delivery/off/SHA256SUMS.txt",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/root-delivery/off/SHA256SUMS.txt",
+      "bytes": 812,
+      "sha256": "9c2f19c53af08c558483fd69a56f217caeb220bcfe439412bbaf423b7dbc8bf3",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/worker-sealed/FINAL-PAIR-HANDBACK.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/FINAL-PAIR-HANDBACK.json",
+      "bytes": 6671,
+      "sha256": "86609ae3b217369c7bb34dd898fd4edbc614f7a7fc0c530df9a25b15270c72f0",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/worker-sealed/EVIDENCE-SHA256-MANIFEST.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/EVIDENCE-SHA256-MANIFEST.json",
+      "bytes": 30919,
+      "sha256": "5ebcd7f638fc62c7ab9a0c87e98e91f45718fcad4582f2ae10007ebb20b5084f",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/worker-sealed/EXECUTED-HELPER-ARCHIVE.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/EXECUTED-HELPER-ARCHIVE.json",
+      "bytes": 9443,
+      "sha256": "24bce5b283e730d7f77e02d6ee0103ba5b7452749d04007ec6e24e09121b081c",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/worker-sealed/PLAN.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/PLAN.json",
+      "bytes": 8332,
+      "sha256": "c1f8b00a68b1f5149746852c05e3982d2a0aebfae85f9af49d396cd61b951baf",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/worker-sealed/PLAN-SEAL.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/PLAN-SEAL.json",
+      "bytes": 632,
+      "sha256": "aad5a62b5ab375bcad3242bfa9d43624bee48a2f4689a04b1cc2bbef48cde3e6",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/worker-sealed/original-manifest.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/original-manifest.json",
+      "bytes": 231281,
+      "sha256": "927e564fb95821d2509cb9b2ef7f7a56ebc3164afd18c552451f509722136763",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/worker-sealed/common-manifest.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/common-manifest.json",
+      "bytes": 235669,
+      "sha256": "bfbbf87bda20501f9e1edec59bba86f306cac9bcb10e331d98dab6274ce335b2",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/worker-sealed/off-expected-manifest.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/off-expected-manifest.json",
+      "bytes": 235669,
+      "sha256": "6d847864e088854e413d32edd250c3cb9ddc01684c17b89084edb662d08ead71",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/worker-sealed/both-expected-manifest.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/both-expected-manifest.json",
+      "bytes": 235669,
+      "sha256": "481a4500e7521db02d5d0690bf5a171d8d8f562fd832d7d228cf882e7e56c1dd",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/executed-helpers/auto_menu-a7f1390c383be8e6897668baae23050ee77189771e651a36276037cfff7631f1.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/auto_menu-a7f1390c383be8e6897668baae23050ee77189771e651a36276037cfff7631f1.py",
+      "bytes": 1818,
+      "sha256": "a7f1390c383be8e6897668baae23050ee77189771e651a36276037cfff7631f1",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/auto_menu-df306941091443c9d07dea517e51c4b1d5c9ca80a6b30b32f6b5d5715b981354.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/auto_menu-df306941091443c9d07dea517e51c4b1d5c9ca80a6b30b32f6b5d5715b981354.py",
+      "bytes": 1819,
+      "sha256": "df306941091443c9d07dea517e51c4b1d5c9ca80a6b30b32f6b5d5715b981354",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/auto_menu-e60799a6886c67180629c1d2bbd65c2df632112c01651e1167fbd4cc181424ef.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/auto_menu-e60799a6886c67180629c1d2bbd65c2df632112c01651e1167fbd4cc181424ef.py",
+      "bytes": 1820,
+      "sha256": "e60799a6886c67180629c1d2bbd65c2df632112c01651e1167fbd4cc181424ef",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/auto_menu-e7aef7af658bbaf27b04dfd077a609200a759c5d5cdf63a1ce6a0c95f01c007f.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/auto_menu-e7aef7af658bbaf27b04dfd077a609200a759c5d5cdf63a1ce6a0c95f01c007f.py",
+      "bytes": 1840,
+      "sha256": "e7aef7af658bbaf27b04dfd077a609200a759c5d5cdf63a1ce6a0c95f01c007f",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/finalize_media-3b67db71c3de0760f02deb4d3a5e00da88140b61fce7a338259f5ef00cca8a29.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/finalize_media-3b67db71c3de0760f02deb4d3a5e00da88140b61fce7a338259f5ef00cca8a29.py",
+      "bytes": 9647,
+      "sha256": "3b67db71c3de0760f02deb4d3a5e00da88140b61fce7a338259f5ef00cca8a29",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/finalize_media-7d810b284105f9dd99a89efc3244b8877f3f9a51407b248de1db1d8ae91b9dd6.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/finalize_media-7d810b284105f9dd99a89efc3244b8877f3f9a51407b248de1db1d8ae91b9dd6.py",
+      "bytes": 9648,
+      "sha256": "7d810b284105f9dd99a89efc3244b8877f3f9a51407b248de1db1d8ae91b9dd6",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/finalize_media-d490245ca5ab1a887e4a637eed9bfd8ccf3538ceb75ae58c31832fd3ca9ffc1a.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/finalize_media-d490245ca5ab1a887e4a637eed9bfd8ccf3538ceb75ae58c31832fd3ca9ffc1a.py",
+      "bytes": 9716,
+      "sha256": "d490245ca5ab1a887e4a637eed9bfd8ccf3538ceb75ae58c31832fd3ca9ffc1a",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/finish_arm-7c2fda8b22fdcdda0016bcf0e5abb7aa8113b99c3278f2f21eb6003b44caee73.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/finish_arm-7c2fda8b22fdcdda0016bcf0e5abb7aa8113b99c3278f2f21eb6003b44caee73.py",
+      "bytes": 3512,
+      "sha256": "7c2fda8b22fdcdda0016bcf0e5abb7aa8113b99c3278f2f21eb6003b44caee73",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/finish_arm-82eb6910235be8ae4f5f9dafb5af2fa7d785c063e073223d6367bd5cfe702c36.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/finish_arm-82eb6910235be8ae4f5f9dafb5af2fa7d785c063e073223d6367bd5cfe702c36.py",
+      "bytes": 3547,
+      "sha256": "82eb6910235be8ae4f5f9dafb5af2fa7d785c063e073223d6367bd5cfe702c36",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/finish_arm-92a0cf89d9c01b7258e97bba2030bc64fc5858042233ae382870b2dac9e45aa4.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/finish_arm-92a0cf89d9c01b7258e97bba2030bc64fc5858042233ae382870b2dac9e45aa4.py",
+      "bytes": 3513,
+      "sha256": "92a0cf89d9c01b7258e97bba2030bc64fc5858042233ae382870b2dac9e45aa4",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/media-231ec5e500a749b68550d723fe0dfca22158c4bdb9d75b575c03651a2bc164e5.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/media-231ec5e500a749b68550d723fe0dfca22158c4bdb9d75b575c03651a2bc164e5.py",
+      "bytes": 13245,
+      "sha256": "231ec5e500a749b68550d723fe0dfca22158c4bdb9d75b575c03651a2bc164e5",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/media-8ee1731727d1f913d9b8fbb43efc967e9a97548912134807edc83c5be606470f.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/media-8ee1731727d1f913d9b8fbb43efc967e9a97548912134807edc83c5be606470f.py",
+      "bytes": 13243,
+      "sha256": "8ee1731727d1f913d9b8fbb43efc967e9a97548912134807edc83c5be606470f",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/media-a2947355e5a8612440ba3b187ae084611782f523877d67ad61f981030b387c82.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/media-a2947355e5a8612440ba3b187ae084611782f523877d67ad61f981030b387c82.py",
+      "bytes": 13244,
+      "sha256": "a2947355e5a8612440ba3b187ae084611782f523877d67ad61f981030b387c82",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/media-b2f6aee2dc3744ed2285391adb57c046e895d5be1e51c3626d52fc586fe8772e.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/media-b2f6aee2dc3744ed2285391adb57c046e895d5be1e51c3626d52fc586fe8772e.py",
+      "bytes": 13403,
+      "sha256": "b2f6aee2dc3744ed2285391adb57c046e895d5be1e51c3626d52fc586fe8772e",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/post_slot-51191b29ed4053bca7b407dfe669d18e9873c4599182b81c8a7e6c27711ba62c.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/post_slot-51191b29ed4053bca7b407dfe669d18e9873c4599182b81c8a7e6c27711ba62c.py",
+      "bytes": 1599,
+      "sha256": "51191b29ed4053bca7b407dfe669d18e9873c4599182b81c8a7e6c27711ba62c",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/post_slot-7f1b7081420235f4907c95b579b90a730da8c671da1493bb9ce8dc4324ca47cc.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/post_slot-7f1b7081420235f4907c95b579b90a730da8c671da1493bb9ce8dc4324ca47cc.py",
+      "bytes": 1617,
+      "sha256": "7f1b7081420235f4907c95b579b90a730da8c671da1493bb9ce8dc4324ca47cc",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/post_slot-f8711b47c2600b9c31918627578af801d83a8df23a696c380b8169dab0168cfe.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/post_slot-f8711b47c2600b9c31918627578af801d83a8df23a696c380b8169dab0168cfe.py",
+      "bytes": 1600,
+      "sha256": "f8711b47c2600b9c31918627578af801d83a8df23a696c380b8169dab0168cfe",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/probe-1dad01db8c470b9d32df75ee49362ec96daa49761b8f53f65c521db91b52c7a3.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/probe-1dad01db8c470b9d32df75ee49362ec96daa49761b8f53f65c521db91b52c7a3.py",
+      "bytes": 5467,
+      "sha256": "1dad01db8c470b9d32df75ee49362ec96daa49761b8f53f65c521db91b52c7a3",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/probe-294381f1ddb84b04d3871b1f163a2a3dc193bf823cf2a7362da31a32bfacc1a4.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/probe-294381f1ddb84b04d3871b1f163a2a3dc193bf823cf2a7362da31a32bfacc1a4.py",
+      "bytes": 5478,
+      "sha256": "294381f1ddb84b04d3871b1f163a2a3dc193bf823cf2a7362da31a32bfacc1a4",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/probe-30092347c253da39b79562050185043aab6681968eb9565a5a1ac5d1f7162576.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/probe-30092347c253da39b79562050185043aab6681968eb9565a5a1ac5d1f7162576.py",
+      "bytes": 5479,
+      "sha256": "30092347c253da39b79562050185043aab6681968eb9565a5a1ac5d1f7162576",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/probe-96c2f51210fe5d47dd42dc9f751e72a1a79f423abddb9fa8a11b8a1e530a90d6.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/probe-96c2f51210fe5d47dd42dc9f751e72a1a79f423abddb9fa8a11b8a1e530a90d6.py",
+      "bytes": 5534,
+      "sha256": "96c2f51210fe5d47dd42dc9f751e72a1a79f423abddb9fa8a11b8a1e530a90d6",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/probe-c43217fadaca98cab9c8fc13b60f542515457a3fe329e15abd527bce82bbce5c.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/probe-c43217fadaca98cab9c8fc13b60f542515457a3fe329e15abd527bce82bbce5c.py",
+      "bytes": 5466,
+      "sha256": "c43217fadaca98cab9c8fc13b60f542515457a3fe329e15abd527bce82bbce5c",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/probe-eb4c4034a36968e6c41cfee1f42fa6580e0b16aed2f8cb312423076c4e97752a.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/probe-eb4c4034a36968e6c41cfee1f42fa6580e0b16aed2f8cb312423076c4e97752a.py",
+      "bytes": 5524,
+      "sha256": "eb4c4034a36968e6c41cfee1f42fa6580e0b16aed2f8cb312423076c4e97752a",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/executed-helpers/probe-fdd92b84df77508efa7b0d67634df659a7dc8e60c3b6ce6edfba549ba6fa563a.py",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/helpers/probe-fdd92b84df77508efa7b0d67634df659a7dc8e60c3b6ce6edfba549ba6fa563a.py",
+      "bytes": 5465,
+      "sha256": "fdd92b84df77508efa7b0d67634df659a7dc8e60c3b6ce6edfba549ba6fa563a",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "authored-helper-source"
+    },
+    {
+      "path": "c-side/accepted-delivery/off/README.md",
+      "origin": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-WorldEmit-Off-49ad20f9/README.md",
+      "bytes": 3313,
+      "sha256": "52eeb24feba08975aaf1e46678f376c95a8de0307cde411ff09a4e9f514310c9",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/accepted-delivery/off/STEPS.md",
+      "origin": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-WorldEmit-Off-49ad20f9/STEPS.md",
+      "bytes": 1587,
+      "sha256": "fa2c061e33c115d65e1efc76013706b7433aade16125eedcacf03c394c72f888",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/accepted-delivery/off/IDENTITY.json",
+      "origin": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-WorldEmit-Off-49ad20f9/IDENTITY.json",
+      "bytes": 5341,
+      "sha256": "6b10ee24f30f4ddfd2fc7229b50e1eee7f2ff151db2986548da97977f7a0eff9",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/accepted-delivery/off/SHA256SUMS.txt",
+      "origin": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-WorldEmit-Off-49ad20f9/SHA256SUMS.txt",
+      "bytes": 910,
+      "sha256": "0dc03898b44b7dae9c3a36a76ee64bebe0ad520e9347332e0c38687caccfda5e",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/accepted-delivery/off/ROOT-ACCEPTANCE.json",
+      "origin": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-WorldEmit-Off-49ad20f9/ROOT-ACCEPTANCE.json",
+      "bytes": 893,
+      "sha256": "dd8472a431e399838ccb3ce6d92d7c0204ee0a191505f25d9707037ae1be40ba",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/worker-sealed/off/FINAL-READBACK.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/off/FINAL-READBACK.json",
+      "bytes": 1837,
+      "sha256": "d5afbf62b2649020e71086af08d895666e9154d2d97b8ed45b9eddb72e113fb0",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/worker-sealed/off/PROXY-IDENTITY.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/off/PROXY-IDENTITY.json",
+      "bytes": 873,
+      "sha256": "87b6e74d2612d81fde0f86b8ab4c7e94a8edc5cd1de6b862e705034f7d5f7f46",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/worker-sealed/off/DELETED-PROXY-ISO.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/off/DELETED-PROXY-ISO.json",
+      "bytes": 962,
+      "sha256": "66045e3843960cc9f4e6000185b03347011153c9ff434d3d20380830440feac9",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/accepted-delivery/both/README.md",
+      "origin": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-WorldEmit-Both-49ad20f9/README.md",
+      "bytes": 3313,
+      "sha256": "52eeb24feba08975aaf1e46678f376c95a8de0307cde411ff09a4e9f514310c9",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/accepted-delivery/both/STEPS.md",
+      "origin": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-WorldEmit-Both-49ad20f9/STEPS.md",
+      "bytes": 1587,
+      "sha256": "fa2c061e33c115d65e1efc76013706b7433aade16125eedcacf03c394c72f888",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/accepted-delivery/both/IDENTITY.json",
+      "origin": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-WorldEmit-Both-49ad20f9/IDENTITY.json",
+      "bytes": 5600,
+      "sha256": "e98017da13924822bd99f49e8241bc8d856451cbfc8a3e68c6cc4cf25ebb581b",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/accepted-delivery/both/SHA256SUMS.txt",
+      "origin": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-WorldEmit-Both-49ad20f9/SHA256SUMS.txt",
+      "bytes": 910,
+      "sha256": "0ae80ebe1ef2ad1fa3958258e660b2b0b6902f07bc6812d7367818ba42680d48",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/accepted-delivery/both/ROOT-ACCEPTANCE.json",
+      "origin": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-WorldEmit-Both-49ad20f9/ROOT-ACCEPTANCE.json",
+      "bytes": 893,
+      "sha256": "dd8472a431e399838ccb3ce6d92d7c0204ee0a191505f25d9707037ae1be40ba",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/worker-sealed/both/FINAL-READBACK.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/both/FINAL-READBACK.json",
+      "bytes": 1838,
+      "sha256": "232f9483beb6ce8ce883ebe5ca2524853d058f5661212ddf66ebcc9dd19539cf",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/worker-sealed/both/PROXY-IDENTITY.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/both/PROXY-IDENTITY.json",
+      "bytes": 873,
+      "sha256": "f78e0fa5fd97953390988ed2f5fee5b70953c72f2aaf563f5480c9c7408c667a",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/worker-sealed/both/DELETED-PROXY-ISO.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage/both/DELETED-PROXY-ISO.json",
+      "bytes": 963,
+      "sha256": "e879c98f6f16a6c3e104a005659f2fed498056b0c2d4f691e510a49532c51c09",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/programme-pins/SHA256-MANIFEST.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/SHA256-MANIFEST.json",
+      "bytes": 38448,
+      "sha256": "07c9bc1e180a70aa5a85fe7235a6a546881270971406d24f5ccbf9dcefc33c64",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/programme-pins/PROGRAMME-HANDBACK.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/PROGRAMME-HANDBACK.json",
+      "bytes": 18550,
+      "sha256": "a22a4958462e6290719a2ab0f75f5623ce0d6f12152b612c26b60bfb026a5c9c",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/programme-pins/compare-off.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/compare-off.json",
+      "bytes": 677,
+      "sha256": "ed149d0b56e38511634d23b94a22de535e0c901b554c42d1a0921825996a739a",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/programme-pins/compare-both.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/compare-both.json",
+      "bytes": 798,
+      "sha256": "bb34b41299701389fab33d5179e20366cbe327a2f6e5870add6e34f80eb943bd",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/programme-pins/recipe.conf",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/recipe.conf",
+      "bytes": 10428,
+      "sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/programme-pins/reference-resolved-knobs.txt",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/resolved-knobs.txt",
+      "bytes": 209282,
+      "sha256": "ce5e457320da4dc0f025ccc6ecdbb49a50b6c63cf306940b3aac21550f2f6034",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/programme-pins/off-resolved-knobs.txt",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/resolved-knobs.txt",
+      "bytes": 209282,
+      "sha256": "46192407d6ddff912bcbf110114750a8f98de6b3dfb9ba7629bde6aeb6e543c0",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/programme-pins/both-resolved-knobs.txt",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/resolved-knobs.txt",
+      "bytes": 211698,
+      "sha256": "d621c8d61ee750ddc6738b889581373e07d82a1ccc3faa8d408cca47e830f9ff",
+      "dated_snapshot_only": false,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/dated-documentation/root-world-STATUS-snapshot-20261024.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/STATUS.md",
+      "bytes": 2752,
+      "sha256": "7940857f1194ffd3782c73d1f2e0d7e2e440e7ed3584e859550c5dc5084f68f8",
+      "dated_snapshot_only": true,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/dated-documentation/root-takeover-STATUS-snapshot-20261024.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+      "bytes": 8166,
+      "sha256": "9b8e88a5fb0ad48e8642a44e22d0772bc137629ff40a1676d337a09685d91bd4",
+      "dated_snapshot_only": true,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    },
+    {
+      "path": "c-side/dated-documentation/CONSOLE-DISCS-TEST23-snapshot-20261024.md",
+      "origin": "/mnt/c/Game Dev/Emulators/CONSOLE-DISCS-TEST23.md",
+      "bytes": 9081,
+      "sha256": "1d6b7d14d733e6e684256060ed893f89180de3017b7121e19a52fc764fbc2a01",
+      "dated_snapshot_only": true,
+      "input_unchanged_during_copy": true,
+      "classification": "text-document-or-hash-receipt-metadata"
+    }
+  ],
+  "root_acceptance_sha256": "dd8472a431e399838ccb3ce6d92d7c0204ee0a191505f25d9707037ae1be40ba",
+  "delivery_readback_sha256": "02d1a5482203df7fbf6f4a54c04f46ed476d5b0ce5606a91e2a1b6cf74849538",
+  "independent_review_sha256": "29756c7e07d6df96293cba080a2ab4ac207d642d719c97862842a10a7cdab99b",
+  "status": "ACCEPTED_FOR_PRIVATE_CONSOLE_FEEDBACK",
+  "source_ELF_media_changes_by_root_acceptance": false,
+  "only_metadata_refreshed": [
+    "README.md",
+    "IDENTITY.json",
+    "ROOT-ACCEPTANCE.json",
+    "SHA256SUMS.txt"
+  ],
+  "raw_private_asset_binary_image_capture_dump_or_fixturebody_copied": false,
+  "root_live_status_files_edited_by_preserver": false,
+  "own_external_finalqa_status_handback_updated": true,
+  "limited_scope": [
+    "Private console comparison accepted/indexed; production/performance/physical/look/fullroute/QA Mendez remain unaccepted.",
+    "Shared PS2 file load/upload repair only; visible use unproven.",
+    "Original sealed worker metadata and original package metadata retained separately.",
+    "Dated status/registry snapshots are historical inputs and may already be superseded; no live status overwrite.",
+    "No SDK/guest/media/source/asset/globalSDK/production changes in preservation task.",
+    "Unused4.5GiB staging reservation returned by root; final2.21GiB media retained; no new disk-space claim."
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "kind": "exact two-switch QA composition",
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "left": "off",
+  "right": "both",
+  "normalized_profile_differences": {
+    "SCENERY_EMIT_PREFETCH": [
+      "0",
+      "1"
+    ],
+    "SCENERY_SELECT_LEAN2": [
+      "0",
+      "1"
+    ]
+  },
+  "programme_byte_equal": {
+    "main-no-stack.bin": false,
+    "em22.ovl": false,
+    "em2b.ovl": false,
+    "em2f.ovl": false,
+    "em35.ovl": false,
+    "em3b.ovl": false,
+    "pl0f.ovl": false,
+    "pl11.ovl": false,
+    "pl14.ovl": false,
+    "sscrn.ovl": false,
+    "st1_0.ovl": false,
+    "st1_1.ovl": false,
+    "st1_2.ovl": false,
+    "st1_3.ovl": false,
+    "st2_0.ovl": false
+  },
+  "output_path_normalization_only": true,
+  "production_identity_claim": false,
+  "stage_or_guest": false
+}

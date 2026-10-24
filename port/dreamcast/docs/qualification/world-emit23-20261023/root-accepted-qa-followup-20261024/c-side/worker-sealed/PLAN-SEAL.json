@@ -1,0 +1,24 @@
+{
+  "plan": {
+    "size": 8332,
+    "sha256": "c1f8b00a68b1f5149746852c05e3982d2a0aebfae85f9af49d396cd61b951baf"
+  },
+  "original": {
+    "size": 231281,
+    "sha256": "927e564fb95821d2509cb9b2ef7f7a56ebc3164afd18c552451f509722136763"
+  },
+  "common": {
+    "size": 235669,
+    "sha256": "bfbbf87bda20501f9e1edec59bba86f306cac9bcb10e331d98dab6274ce335b2"
+  },
+  "expected": {
+    "off": {
+      "size": 235669,
+      "sha256": "6d847864e088854e413d32edd250c3cb9ddc01684c17b89084edb662d08ead71"
+    },
+    "both": {
+      "size": 235669,
+      "sha256": "481a4500e7521db02d5d0690bf5a171d8d8f562fd832d7d228cf882e7e56c1dd"
+    }
+  }
+}

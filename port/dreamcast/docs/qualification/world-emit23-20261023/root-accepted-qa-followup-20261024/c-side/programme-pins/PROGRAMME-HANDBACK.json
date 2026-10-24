@@ -1,0 +1,410 @@
+{
+  "kind": "WORLD49AD PRIVATE QA PROGRAMMES ONLY; NOT READY",
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "source_tree": "/root/work/lanes/interior-world49ad-qa",
+  "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+  "current_gate_source": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/current-gates-binding-source.py",
+    "bytes": 24383,
+    "sha256": "f8d81e3884ef7197834259fef72cb25152770d857ad697e8c325ddca438049bb"
+  },
+  "helper_source": {
+    "path": "/root/work/lanes/interior-vis23/port/dreamcast/tools/d367/interior_vis23/world49ad_qa/finalize.py",
+    "bytes": 4790,
+    "sha256": "4d2f1133d7f08a70b1118fa2c6e0b24cfe2fec276b54d99cfe14de4f2bcd0ceb"
+  },
+  "programmes": {
+    "reference": {
+      "elf": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/re4dc-game.elf",
+        "bytes": 28921288,
+        "sha256": "73be947705864257af537c6359321022f7d40b741efa0ef024eaf464a7571599"
+      },
+      "main": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/main-no-stack.bin",
+        "bytes": 3434532,
+        "sha256": "4fbe09e89426687c001a47f0b9e082ef380908748a583fc03d2b7a09a0779178"
+      },
+      "scrambled": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/1ST_READ.BIN",
+        "bytes": 3434532,
+        "sha256": "bdfffb7aec508f70c47bd5dd91fb2b493cc8e3381b2b495eb8a260d2715fd381"
+      },
+      "overlays": {
+        "em22.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/em22.ovl",
+          "bytes": 27236,
+          "sha256": "0da7ada75f45fe058fc9ef563e6eb6de515db6d1b2db1600538c27bf4cb35952"
+        },
+        "em2b.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/em2b.ovl",
+          "bytes": 67900,
+          "sha256": "4aabfcbb1f3dea50206f78c1812e2199b5f1e44ff915c5b78ae114d5e57ed64e"
+        },
+        "em2f.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/em2f.ovl",
+          "bytes": 16800,
+          "sha256": "d04db72b8d3ab86a6739e8213751ca47b936825db628b2f4a7557e494e1a69b1"
+        },
+        "em35.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/em35.ovl",
+          "bytes": 52392,
+          "sha256": "f500b4baaab66d43fc330ff39b44faa38a83ab745a099d755c9faab2c2809716"
+        },
+        "em3b.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/em3b.ovl",
+          "bytes": 7568,
+          "sha256": "a3ceaa2ae58ffe7b7513a18659c3942095bd28f4c927b9ee05cde73e85f82eea"
+        },
+        "pl0f.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/pl0f.ovl",
+          "bytes": 45608,
+          "sha256": "fda6dfc84c3eed9f66ae84326e6f621c072ea7b4be701d78e4d2ce638896a8dd"
+        },
+        "pl11.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/pl11.ovl",
+          "bytes": 35592,
+          "sha256": "e9984e407cacdb34d4f29ac36c8ba13f0be338969dac5fb0fd0f18caec88ff61"
+        },
+        "pl14.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/pl14.ovl",
+          "bytes": 18832,
+          "sha256": "342d0d5088294eb9b16cbe42ecce161dcd2ad378802d1d6b7fcc6a3e3588bed9"
+        },
+        "sscrn.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/sscrn.ovl",
+          "bytes": 134372,
+          "sha256": "d4b5f02093373ae55c1a7ec3185beee50e7676e8573ac521df404d777d2951c6"
+        },
+        "st1_0.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/st1_0.ovl",
+          "bytes": 36340,
+          "sha256": "81a2ba0e426694cb38656fb6e580363d49b0f2a60c399cb372dcfc58bd9103f0"
+        },
+        "st1_1.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/st1_1.ovl",
+          "bytes": 81572,
+          "sha256": "bd285b911444f7b1596c676680358cc121597f6bbb29f1afada5ccb0c957ae93"
+        },
+        "st1_2.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/st1_2.ovl",
+          "bytes": 50076,
+          "sha256": "29113dd06cf508bab7a87efb0882a2b54ec9d8c932b7030e304ea17d04c98f3b"
+        },
+        "st1_3.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/st1_3.ovl",
+          "bytes": 88748,
+          "sha256": "5a8274062ef51ab1cffbd6a4c3f55f9de2ab6487013c07a9a7a57a8741488704"
+        },
+        "st2_0.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/reference/st2_0.ovl",
+          "bytes": 96788,
+          "sha256": "51cafd0e159b5c4877ffb237093c7c1581dc9e48836f3b41ceb2031f191436e6"
+        }
+      },
+      "end_address": "0x8c44a674",
+      "base_knobs": {
+        "STAT_ROUTINE_BYTES": "1",
+        "STAT_DIAG": "0",
+        "ESP_POOL_RECYCLE": "1",
+        "R117_EFFECT_FAILURE_SAFE": "1",
+        "KOS_CACHE_P2": "1",
+        "R10C_SPAWN_LIVE_GUARD": "1",
+        "EM_READ_RETRY": "1",
+        "SCENERY_SELECT_ONLY": "1",
+        "SCENERY_REPLAY_LEAN": "1",
+        "SCENERY_SUBMIT_BATCH": "1",
+        "ACTOR_SETUP_LEAN": "0",
+        "SCENERY_UV_SNAPSHOT": "0",
+        "SCENERY_DEDUP": "0",
+        "PS2_PVS": "0",
+        "CPU_BACKFACE": "0",
+        "ACTOR_BACKFACE": "0",
+        "PC_SAMPLER": "0",
+        "VRAM_ROOM_ARENA": "0",
+        "R101_ALIVE_CAP": "4",
+        "QUALITY": "1",
+        "QUALITY_LOD_PX": "5",
+        "SCENERY_FAR_LOD": "4",
+        "ARENA_FIT_KOS_BYTES": "196608"
+      },
+      "qa_knobs": {
+        "QA_MENU": "1",
+        "QA_TEST": "23",
+        "QA_SRC": "49ad20f9",
+        "WORLD_METER": "1",
+        "GAME_TICK_LOG": "60",
+        "PHASE_METER": "1",
+        "DISC_READ_METER": "1",
+        "KOS_WATCH": "0",
+        "KOS_SQUEEZE": "0"
+      }
+    },
+    "off": {
+      "elf": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/re4dc-game.elf",
+        "bytes": 28921288,
+        "sha256": "e0b5de7b97dbd464d023721de1a59bff2435aaa76a225cbdee49ee37aa626993"
+      },
+      "main": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/main-no-stack.bin",
+        "bytes": 3434532,
+        "sha256": "4fbe09e89426687c001a47f0b9e082ef380908748a583fc03d2b7a09a0779178"
+      },
+      "scrambled": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/1ST_READ.BIN",
+        "bytes": 3434532,
+        "sha256": "bdfffb7aec508f70c47bd5dd91fb2b493cc8e3381b2b495eb8a260d2715fd381"
+      },
+      "overlays": {
+        "em22.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/em22.ovl",
+          "bytes": 27236,
+          "sha256": "0da7ada75f45fe058fc9ef563e6eb6de515db6d1b2db1600538c27bf4cb35952"
+        },
+        "em2b.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/em2b.ovl",
+          "bytes": 67900,
+          "sha256": "4aabfcbb1f3dea50206f78c1812e2199b5f1e44ff915c5b78ae114d5e57ed64e"
+        },
+        "em2f.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/em2f.ovl",
+          "bytes": 16800,
+          "sha256": "d04db72b8d3ab86a6739e8213751ca47b936825db628b2f4a7557e494e1a69b1"
+        },
+        "em35.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/em35.ovl",
+          "bytes": 52392,
+          "sha256": "f500b4baaab66d43fc330ff39b44faa38a83ab745a099d755c9faab2c2809716"
+        },
+        "em3b.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/em3b.ovl",
+          "bytes": 7568,
+          "sha256": "a3ceaa2ae58ffe7b7513a18659c3942095bd28f4c927b9ee05cde73e85f82eea"
+        },
+        "pl0f.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/pl0f.ovl",
+          "bytes": 45608,
+          "sha256": "fda6dfc84c3eed9f66ae84326e6f621c072ea7b4be701d78e4d2ce638896a8dd"
+        },
+        "pl11.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/pl11.ovl",
+          "bytes": 35592,
+          "sha256": "e9984e407cacdb34d4f29ac36c8ba13f0be338969dac5fb0fd0f18caec88ff61"
+        },
+        "pl14.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/pl14.ovl",
+          "bytes": 18832,
+          "sha256": "342d0d5088294eb9b16cbe42ecce161dcd2ad378802d1d6b7fcc6a3e3588bed9"
+        },
+        "sscrn.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/sscrn.ovl",
+          "bytes": 134372,
+          "sha256": "d4b5f02093373ae55c1a7ec3185beee50e7676e8573ac521df404d777d2951c6"
+        },
+        "st1_0.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/st1_0.ovl",
+          "bytes": 36340,
+          "sha256": "81a2ba0e426694cb38656fb6e580363d49b0f2a60c399cb372dcfc58bd9103f0"
+        },
+        "st1_1.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/st1_1.ovl",
+          "bytes": 81572,
+          "sha256": "bd285b911444f7b1596c676680358cc121597f6bbb29f1afada5ccb0c957ae93"
+        },
+        "st1_2.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/st1_2.ovl",
+          "bytes": 50076,
+          "sha256": "29113dd06cf508bab7a87efb0882a2b54ec9d8c932b7030e304ea17d04c98f3b"
+        },
+        "st1_3.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/st1_3.ovl",
+          "bytes": 88748,
+          "sha256": "5a8274062ef51ab1cffbd6a4c3f55f9de2ab6487013c07a9a7a57a8741488704"
+        },
+        "st2_0.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/off/st2_0.ovl",
+          "bytes": 96788,
+          "sha256": "51cafd0e159b5c4877ffb237093c7c1581dc9e48836f3b41ceb2031f191436e6"
+        }
+      },
+      "end_address": "0x8c44a674",
+      "base_knobs": {
+        "STAT_ROUTINE_BYTES": "1",
+        "STAT_DIAG": "0",
+        "ESP_POOL_RECYCLE": "1",
+        "R117_EFFECT_FAILURE_SAFE": "1",
+        "KOS_CACHE_P2": "1",
+        "R10C_SPAWN_LIVE_GUARD": "1",
+        "EM_READ_RETRY": "1",
+        "SCENERY_SELECT_ONLY": "1",
+        "SCENERY_REPLAY_LEAN": "1",
+        "SCENERY_SUBMIT_BATCH": "1",
+        "ACTOR_SETUP_LEAN": "0",
+        "SCENERY_UV_SNAPSHOT": "0",
+        "SCENERY_DEDUP": "0",
+        "PS2_PVS": "0",
+        "CPU_BACKFACE": "0",
+        "ACTOR_BACKFACE": "0",
+        "PC_SAMPLER": "0",
+        "VRAM_ROOM_ARENA": "0",
+        "R101_ALIVE_CAP": "4",
+        "QUALITY": "1",
+        "QUALITY_LOD_PX": "5",
+        "SCENERY_FAR_LOD": "4",
+        "ARENA_FIT_KOS_BYTES": "196608"
+      },
+      "qa_knobs": {
+        "QA_MENU": "1",
+        "QA_TEST": "23",
+        "QA_SRC": "49ad20f9",
+        "WORLD_METER": "1",
+        "GAME_TICK_LOG": "60",
+        "PHASE_METER": "1",
+        "DISC_READ_METER": "1",
+        "KOS_WATCH": "0",
+        "KOS_SQUEEZE": "0"
+      }
+    },
+    "both": {
+      "elf": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/re4dc-game.elf",
+        "bytes": 28954020,
+        "sha256": "ef7f97ecdecf0737cf8efae69aafe87885dc735414d7e31b5b0fb72e04a66b03"
+      },
+      "main": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/main-no-stack.bin",
+        "bytes": 3437124,
+        "sha256": "c2cb637932e35a063954141111057de149284ba25bfc4b97be49e50bffdafbfc"
+      },
+      "scrambled": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/1ST_READ.BIN",
+        "bytes": 3437124,
+        "sha256": "01c5fed5589ae183b83adfecb5d5210bf97c705bde310b6e64da4ecfcd0ae232"
+      },
+      "overlays": {
+        "em22.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/em22.ovl",
+          "bytes": 27236,
+          "sha256": "fc93c157b4f18046547b1d6ac2b8f6d9d37d364bff1ce68dce002fe0eb128128"
+        },
+        "em2b.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/em2b.ovl",
+          "bytes": 67900,
+          "sha256": "24ecbd28720bbb4b574982447c4910261ef672ea04f6b641f974c4e5ceaa2110"
+        },
+        "em2f.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/em2f.ovl",
+          "bytes": 16800,
+          "sha256": "e0b944f95c4b789acdd73625b43fbac03107735019cdbcb41a73e77ab9950019"
+        },
+        "em35.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/em35.ovl",
+          "bytes": 52392,
+          "sha256": "8b30726ef5828792011c8b059abfdc18ed4e62afe76d7bd6b9a41a793407d325"
+        },
+        "em3b.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/em3b.ovl",
+          "bytes": 7568,
+          "sha256": "e89346ed3df1ce3eaa1c93a2f3ec9b34659d07e40d755d741c282e9a6d60833e"
+        },
+        "pl0f.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/pl0f.ovl",
+          "bytes": 45608,
+          "sha256": "a8faa94ecdcd51c063c599527940763ccdbca6362f42ce2f978bc9c8395062f8"
+        },
+        "pl11.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/pl11.ovl",
+          "bytes": 35592,
+          "sha256": "98ddb6178516907ca955a8784dd16a78ad5cc994deb70b559a8ebeeb0a7f7f23"
+        },
+        "pl14.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/pl14.ovl",
+          "bytes": 18832,
+          "sha256": "465783988876362708585bbd46056ab982dfc5545238a4540bb6e2542bae410b"
+        },
+        "sscrn.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/sscrn.ovl",
+          "bytes": 134372,
+          "sha256": "c73334693492669d3afae70c52c1d860ebb111307cb505154e47d46c712d74af"
+        },
+        "st1_0.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/st1_0.ovl",
+          "bytes": 36340,
+          "sha256": "e41d8b47d26402d41aa5a4f58ed8c1c4050a2f5e400619223fde1575bcefe030"
+        },
+        "st1_1.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/st1_1.ovl",
+          "bytes": 81572,
+          "sha256": "37e6600b82291b6615591c17cc8ab007cc3bb8b7f6b7a9f923f2c019655e96c2"
+        },
+        "st1_2.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/st1_2.ovl",
+          "bytes": 50076,
+          "sha256": "b4e622593a0097c35125d14264d8ac1003d97987bdb264e279aa19ff8b9df383"
+        },
+        "st1_3.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/st1_3.ovl",
+          "bytes": 88748,
+          "sha256": "c8dd55d99f33bbe63e6c57b997ec93ddf39a01b5f2ffae8e133038542944e704"
+        },
+        "st2_0.ovl": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/world49ad-qa-programmes/both/st2_0.ovl",
+          "bytes": 96788,
+          "sha256": "965b2abe84d361ff37c54eb1f0a2a8ac27fb1a3c94476cd74ccdf01dc9ade2ca"
+        }
+      },
+      "end_address": "0x8c44b094",
+      "base_knobs": {
+        "STAT_ROUTINE_BYTES": "1",
+        "STAT_DIAG": "0",
+        "ESP_POOL_RECYCLE": "1",
+        "R117_EFFECT_FAILURE_SAFE": "1",
+        "KOS_CACHE_P2": "1",
+        "R10C_SPAWN_LIVE_GUARD": "1",
+        "EM_READ_RETRY": "1",
+        "SCENERY_SELECT_ONLY": "1",
+        "SCENERY_REPLAY_LEAN": "1",
+        "SCENERY_SUBMIT_BATCH": "1",
+        "ACTOR_SETUP_LEAN": "0",
+        "SCENERY_UV_SNAPSHOT": "0",
+        "SCENERY_DEDUP": "0",
+        "PS2_PVS": "0",
+        "CPU_BACKFACE": "0",
+        "ACTOR_BACKFACE": "0",
+        "PC_SAMPLER": "0",
+        "VRAM_ROOM_ARENA": "0",
+        "R101_ALIVE_CAP": "4",
+        "QUALITY": "1",
+        "QUALITY_LOD_PX": "5",
+        "SCENERY_FAR_LOD": "4",
+        "ARENA_FIT_KOS_BYTES": "196608"
+      },
+      "qa_knobs": {
+        "QA_MENU": "1",
+        "QA_TEST": "23",
+        "QA_SRC": "49ad20f9",
+        "WORLD_METER": "1",
+        "GAME_TICK_LOG": "60",
+        "PHASE_METER": "1",
+        "DISC_READ_METER": "1",
+        "KOS_WATCH": "0",
+        "KOS_SQUEEZE": "0"
+      }
+    }
+  },
+  "off_reproduces_fresh_normal_QA_reference_main_and_all14": true,
+  "both_changes_exactly": [
+    "SCENERY_SELECT_LEAN2",
+    "SCENERY_EMIT_PREFETCH"
+  ],
+  "qa_presets": 33,
+  "effective_quality_divisor": 20,
+  "static_end_delta_both_minus_off": 2592,
+  "unit_binding_scope": "Exact source ancestry, current-gate BASE_KNOBS and normal-QA overrides only; no old gate result is promoted to a new QA pass",
+  "production_switches": "OFF; no Dreamcast hardware gain established",
+  "hair_repair": "not production approved; no asset staged",
+  "stages": 0,
+  "guests": 0,
+  "root_review": "PENDING; remaining unit/image/asset/console qualification belongs to root"
+}

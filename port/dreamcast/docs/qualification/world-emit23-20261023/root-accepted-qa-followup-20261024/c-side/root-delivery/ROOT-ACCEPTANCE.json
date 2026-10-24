@@ -1,0 +1,17 @@
+{
+  "status": "ACCEPTED_FOR_PRIVATE_CONSOLE_FEEDBACK",
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "worker_handback_sha256": "86609ae3b217369c7bb34dd898fd4edbc614f7a7fc0c530df9a25b15270c72f0",
+  "independent_review_sha256": "29756c7e07d6df96293cba080a2ab4ac207d642d719c97862842a10a7cdab99b",
+  "scope": "Two private discs; actual final-GDI boot and separately identified fixture-proxy menu-warp/H2.",
+  "production_enabled": false,
+  "physical_console_acceptance": false,
+  "hardware_gain_claim": false,
+  "qa_mendez_tested": false,
+  "look_approved": false,
+  "limitations": [
+    "PS2 candidate is common to both arms and proves load/upload only; visible use unproven.",
+    "QA heap observations do not replace production-profile KOS/H2 qualification.",
+    "Earlier timing is MODELLED and from the earlier recipe; no hardware improvement established."
+  ]
+}
