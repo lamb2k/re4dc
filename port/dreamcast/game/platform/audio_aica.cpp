@@ -1385,6 +1385,9 @@ void flush()
 namespace {
 
 mutex_t g_lock = MUTEX_INITIALIZER;   // blocks (map) vs the audio step
+#if RE4DC_GC_ASSET_GATE
+unsigned gcasset_audio_checkpoints;
+#endif
 #if RE4DC_CABIN_SOURCE
 // CABIN_AUDIO_STATE_BEGIN: fixed output-only ownership; all access holds g_lock
 // (or borrows that lock from this exact audio-step thread).
@@ -1544,6 +1547,9 @@ void audio_step()
     u32 notes = 0;
     for (int i = 0; i < kNotes; i++) notes += g_notes[i].used;
     flush();
+#if RE4DC_GC_ASSET_GATE
+    gcasset_audio_checkpoints|=(1U<<re4dc_gcasset::SoundBank)|(1U<<re4dc_gcasset::SoundStream);
+#endif
 #if RE4DC_CABIN_SOURCE
     g_cabin_audio_step_thread = nullptr;
 #endif
@@ -2109,6 +2115,16 @@ void re4dc_cabin_audio_publish_end(unsigned token)
 unsigned re4dc_aica_used_bytes(void) { return g_aicaUsed; }
 // Sound bank blocks left silent so far (does not fit / rejected / layout refused): native_ui.cpp VRAM_ROOM_LOG.
 unsigned re4dc_aica_skipped_blocks(void) { return S.blocks_skipped; }
+#if RE4DC_GC_ASSET_GATE
+extern "C" unsigned re4dc_gcasset_audio_admission(unsigned open){
+    mutex_lock(&g_lock);
+    const unsigned checkpoints=gcasset_audio_checkpoints;
+    if(open){gcasset_audio_checkpoints=0;re4dc_gcasset::open_audio_admission();}
+    else re4dc_gcasset::close_audio_admission();
+    mutex_unlock(&g_lock);
+    return checkpoints;
+}
+#endif
 #if RE4DC_RADIO_SUB_RT
 // RADIO_SUB_RT (subscreen.mk): disc stream starts so far and when the last one began to sound (KOS timer us,
 // Stream::t0), for the codec call's subtitle clock (src/Sscrn/ss_term.cpp). Written by the audio thread under

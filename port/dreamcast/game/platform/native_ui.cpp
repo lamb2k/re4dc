@@ -4,6 +4,7 @@
 #include "include/gc_asset_payloads.h"
 #include "include/gc_asset_audio.h"
 #include "include/gc_asset_movie.h"
+#include "include/gc_asset_lifecycle.h"
 #if RE4DC_GC_ASSET_GATE
 #define RE4DC_GCA_ADOPT(...) ((void)(re4dc_gcasset::ensure_disc_catalog() && re4dc_gcasset::member_adopt(__VA_ARGS__)))
 #define RE4DC_GCA_RETIRE(...) re4dc_gcasset::member_retire(__VA_ARGS__)
@@ -5120,6 +5121,9 @@ extern "C" void re4dc_ui_retire_room(){
 #if RE4DC_TEX_CHECK
     texchk::room_end();
 #endif
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_finish();
+#endif
     re4dc_actor_archive_retire_transient();
 #if RE4DC_GC_ASSET_GATE
     re4dc_gcasset::member_retire_transient();
@@ -5509,6 +5513,57 @@ extern "C" void re4dc_res_apply_pending();
 #if RE4DC_VGA_SOFT
 extern "C" void re4dc_vga_soft_init(void); // vga_soft.cpp (VGA_SOFT): the vertical filter on a VGA box, once
 #endif
+#if RE4DC_GC_ASSET_GATE
+// GC_ASSET_LIFECYCLE_BEGIN
+namespace {
+unsigned gcasset_visit_serial;bool gcasset_started,gcasset_visit_live;
+constexpr unsigned gcasset_wired_mask(){
+    // Specialized static/coarse payload bridges are not integrated yet. Keep
+    // both affected consumer classes visibly incomplete, even in empty rooms.
+    unsigned mask=re4dc_gcasset::Required&~((1U<<re4dc_gcasset::SourceGeometry)|(1U<<re4dc_gcasset::Weapon));
+#if !RE4DC_NATIVE_MES
+    mask&=~(1U<<re4dc_gcasset::Font); // legacy font consumer is not qualified
+#endif
+    return mask;
+}
+void gcasset_flush(){
+    for(auto& entry:entries)gcasset_texture_flush(entry);
+    re4dc_gcasset::member_flush();re4dc_gcasset::payload_flush_all();
+    re4dc_gcasset::bank_pump();re4dc_gcasset::pump();
+}
+void gcasset_startup(){
+    if(gcasset_started)return;
+    gcasset_started=true;re4dc_gcasset_audio_admission(0);
+    re4dc_gcasset::ensure_disc_catalog();
+    re4dc_gcasset::begin_startup_closed(++gcasset_visit_serial,gcasset_wired_mask());
+    gcasset_visit_live=true;re4dc_gcasset_audio_admission(1);
+}
+}
+extern "C" void re4dc_gcasset_finish(){
+    if(!gcasset_visit_live){re4dc_gcasset::pump();return;}
+    const unsigned audio=re4dc_gcasset_audio_admission(0);
+    gcasset_flush();gcasset_packet_reset();
+    // The actual renderer observer/flush paths are source-extracted in tests.
+    // Active sound coverage additionally requires the real audio_step flush.
+    for(auto consumer:{re4dc_gcasset::Texture,re4dc_gcasset::EffectPicture,re4dc_gcasset::Ui,re4dc_gcasset::Movie})
+        re4dc_gcasset::checked(consumer);
+#if RE4DC_NATIVE_MES
+    re4dc_gcasset::checked(re4dc_gcasset::Font);
+#endif
+    for(auto consumer:{re4dc_gcasset::SoundBank,re4dc_gcasset::SoundStream})
+        if(audio&(1U<<consumer))re4dc_gcasset::checked(consumer);
+    re4dc_gcasset::end(frame);gcasset_visit_live=false;
+}
+extern "C" void re4dc_gcasset_room_enter(unsigned room){
+    if(!gcasset_started){re4dc_gcasset::unresolved(re4dc_gcasset::Ui,"room-without-startup");gcasset_startup();}
+    if(gcasset_visit_live){re4dc_gcasset::unresolved(re4dc_gcasset::Ui,"room-enter-without-retire");re4dc_gcasset_finish();}
+    re4dc_gcasset_audio_admission(0);
+    if(gcasset_visit_serial==~0U){re4dc_gcasset::unresolved(re4dc_gcasset::Ui,"visit-serial-exhausted");return;}
+    re4dc_gcasset::begin_closed(room,++gcasset_visit_serial,gcasset_wired_mask());
+    gcasset_visit_live=true;re4dc_gcasset_audio_admission(1);
+}
+// GC_ASSET_LIFECYCLE_END
+#endif
 extern "C" void re4dc_ui_init(){
     if(ready)return;
     pvr_init_params_t params=pvr_default_params;
@@ -5559,6 +5614,9 @@ extern "C" void re4dc_ui_init(){
     ta_vertex_bytes=re4dc_res_params(&params); // res_mode.cpp: the allocation for the largest available mode
 #endif
     ready=pvr_init(&params)==0;
+#if RE4DC_GC_ASSET_GATE
+    if(ready)gcasset_startup();
+#endif
 #if RE4DC_MV_SHADOWS
     if(ready)pvr_set_shadow_scale(true,float(RE4DC_MV_SCALE)/100.0f); // cheap shadow: receivers inside a volume at this intensity
 #endif
@@ -6376,7 +6434,7 @@ extern "C" void re4dc_ui_present(){
 extern "C" void re4dc_ui_end_frame(int present){
 #if RE4DC_GC_ASSET_GATE
     struct GcAssetFrameFlush {
-        ~GcAssetFrameFlush(){for(auto& entry:entries)gcasset_texture_flush(entry);re4dc_gcasset::member_flush();re4dc_gcasset::payload_flush_all();re4dc_gcasset::bank_pump();re4dc_gcasset::pump();}
+        ~GcAssetFrameFlush(){gcasset_flush();}
     } gcasset_frame_flush;
 #endif
 #if RE4DC_WORLD_SCRATCH

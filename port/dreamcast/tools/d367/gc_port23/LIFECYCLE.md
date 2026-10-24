@@ -22,7 +22,28 @@ mutex precedes unlocked flush/end. Neither admission function hashes, logs,
 allocates or performs IO. Outstanding tickets, queue contention and late
 startup-to-room completions remain fail-closed and cannot acquire a new label.
 
-This checkpoint implements the core/judge contract and negative controls only.
-Actual UI startup, successful room-retirement and shutdown hook integration is
-still pending. The ui_bridge shared-file window is temporarily returned to the
-root audits23 priority-2 diagnostic hooks; this lane has not edited that file.
+Successful native UI initialization now starts the named startup visit. Every
+accepted direct UI room retirement finalizes after the existing movie-owner
+refusal and before member/package retirement. Repeated finalization is
+idempotent but still pumps late audio errors. The actual audio_step records
+SoundBank/SoundStream checkpoints after its original flush under g_lock; the
+main finalizer only marks those bits if this visit actually observed that step.
+The gate currently requires AICA_AUDIO=1; silent-backend lifecycle qualification
+is not inferred. Admission resets the audio checkpoints at the next visit.
+
+Geometry and weapon bits intentionally remain unwired until every specialized
+static/coarse replacement carries its own complete payload proof. The current
+mask is 1f6 with the qualified native glyph path; a legacy font configuration
+also leaves Font unwired. An empty room cannot hide these outstanding bridges.
+Existing texture/effect/UI/movie observers and native glyph upload paths get
+their final checks at the unlocked finalizer, independently source-audited and
+tested for accepted/rejected packets. These declarations do not substitute for
+the remaining full callgraph audit or runtime negative controls.
+
+`re4dc_gcasset_room_enter` and `re4dc_gcasset_finish` are callable integration
+boundaries. Actual ui_bridge room-entry and rr-owned final-stop wiring is still
+pending. The ui_bridge shared-file window is temporarily returned to the root
+audits23 priority-2 diagnostic hooks; this lane has not edited that file.
+Source-extracted real UI helpers and audio-admission code exercise startup to
+room transitions, same-mutex publication, unlocked flush/logging, duplicate
+retirement, missing audio execution, omitted retirement and visit exhaustion.
