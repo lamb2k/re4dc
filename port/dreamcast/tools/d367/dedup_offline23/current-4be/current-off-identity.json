@@ -1,0 +1,57 @@
+{
+  "status": "PASS_ACTUAL_CURRENT_OFF_MAIN_AND_ALL14_IDENTITY",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "baseline_source": "d5c1ceab9e06461462669b3ce1d28a379747a74a",
+  "resolved_differences": {},
+  "programmes": {
+    "baseline": {
+      "path": "/root/probe/lanes/route/out-au23ld5c1rP",
+      "stack_sha256": "6e15af5240eecba723674c3deef787b187459589f20dc50c3d4c4429361abe95",
+      "resolved_sha256": "05ad8f1b73a8bcd21c3f0346710c295d45540f7c9fe3bb565e55554225a8b68d",
+      "elf_sha256": "c0589f70203c9cfe788cd72d76e68118ffdcc9180f9e7d622bffe6a471992673",
+      "raw_sha256": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+      "raw_bytes": 3370820,
+      "overlays": {
+        "em2f.ovl": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1",
+        "st2_0.ovl": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2",
+        "st1_2.ovl": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c",
+        "pl14.ovl": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e",
+        "st1_3.ovl": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc",
+        "em2b.ovl": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695",
+        "pl11.ovl": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e",
+        "em35.ovl": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7",
+        "pl0f.ovl": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e",
+        "em3b.ovl": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417",
+        "st1_0.ovl": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a",
+        "st1_1.ovl": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0",
+        "em22.ovl": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e",
+        "sscrn.ovl": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60"
+      }
+    },
+    "currentoff": {
+      "path": "/root/probe/lanes/route/out-dd23cur4be08e01offrP",
+      "stack_sha256": "b0cea00619414a9e0503839793e877c7ea0025ed7d938b18322b8279669aee71",
+      "resolved_sha256": "9044e767fc1dcd9d85c4ac01d6d212c4d158aed9fa67bfd0edb2b5c499adc22c",
+      "elf_sha256": "7527e7d90a76562387bdb9c57940bca1b9de3aa482eaba5e848aa41a89be1dba",
+      "raw_sha256": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+      "raw_bytes": 3370820,
+      "overlays": {
+        "em2f.ovl": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1",
+        "st2_0.ovl": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2",
+        "st1_2.ovl": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c",
+        "pl14.ovl": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e",
+        "st1_3.ovl": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc",
+        "em2b.ovl": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695",
+        "pl11.ovl": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e",
+        "em35.ovl": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7",
+        "pl0f.ovl": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e",
+        "em3b.ovl": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417",
+        "st1_0.ovl": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a",
+        "st1_1.ovl": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0",
+        "em22.ovl": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e",
+        "sscrn.ovl": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60"
+      }
+    }
+  },
+  "limits": "Actual fresh OFF link identical; prior baseline guest evidence is reusable only with exact fixture/data/programme binding, not automatically a fresh target gate."
+}
