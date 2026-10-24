@@ -20,3 +20,17 @@ class PrivateQaPlanTests(unittest.TestCase):
         before={'argv':['/live/tools/ch2.sh','dc/native/r101/ps2-dd3.re4mesh'],'env':{'T':'/live'}}
         self.assertEqual(q.remap(before,'/live','/private'),
                          {'argv':['/private/tools/ch2.sh','dc/native/r101/ps2-dd3.re4mesh'],'env':{'T':'/private'}})
+
+    def test_current_source_mismatch_refused_before_file_io(self):
+        source='a'*40
+        with self.assertRaisesRegex(ValueError,'exact frozen source'):
+            q.validate_plan({'source':'b'*40},source)
+        with self.assertRaisesRegex(ValueError,'exact frozen source'):
+            q.validate_plan({'source':source},'a'*39)
+
+    def test_current_qa_src_must_match_frozen_programme(self):
+        source='a'*40
+        good={**q.QA,'QA_SRC':source[:8],'SCENERY_DEDUP':'3',**{k:'0' for k in q.DIAGNOSTIC_ZERO}}
+        self.assertTrue(q.resolved_qa(good,3,source))
+        with self.assertRaisesRegex(ValueError,'QA_SRC'):
+            q.resolved_qa({**good,'QA_SRC':q.SOURCE[:8]},3,source)

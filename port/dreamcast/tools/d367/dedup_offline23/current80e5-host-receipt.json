@@ -1,0 +1,38 @@
+{
+  "kind": "SOURCE_AND_HOST_ONLY_NO_TARGET_QUALIFICATION",
+  "source": "80e5115c01051151dce1fb75c1095b67e105522f",
+  "origin": "a5e972e44096410253ad93164b84d92e3c22655a",
+  "compact_milestone": "712a109aab0fa400c76d2da7c32b32b985d0d0bb",
+  "tree": "/root/work/lanes/dedup-offline23-current",
+  "branch": "wip/dedup-offline23-current-20261023",
+  "integration_pushed": false,
+  "recipe_equal_to_origin": true,
+  "python_tests": 25,
+  "composition_comparisons": 96,
+  "composition_configurations": 8,
+  "stale_cache_mutation_detected": true,
+  "binding_layout_rooms": [
+    "r100",
+    "r101",
+    "r103"
+  ],
+  "reader_controls": 12,
+  "reader_mode0_preprocessed_sha256": "4a2e8885d91d8f1348db56c711b5d98d01f9114cccf926972774ef59e694355b",
+  "immutable_source_manifest_sha256": "0a457eb7bac22b3e85e5bf8eb7c5e09c92230ecbd9a48eea95040af87c81f7f8",
+  "RAM": "/dev/shm/dedup-current80e5-PRUyuW",
+  "helper_limits": [
+    "PREFETCH=0 conditional signature seam only",
+    "SELECT_LEAN2=0; no LEAN2-on proof",
+    "No target SDK/link/image/heap/guest/currentQA acceptance"
+  ],
+  "private_plans": {
+    "qualification-plan.json": {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/current80e5-qualification-plan.json",
+      "sha256": "f166459f65d51ea486beb36e0a5c3663e3f6357ba906be6ecb76fc75f4b71110"
+    },
+    "private-qa-plan.json": {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/current80e5-private-qa-plan.json",
+      "sha256": "11473e7bbeae629f4312d41fd8514e4e555799975e6e1782012a077004658926"
+    }
+  }
+}
