@@ -1,0 +1,1309 @@
+{
+  "source": "7c4dd1a8a5c829e6609478801515e915527a836f",
+  "previous_report_helper": "955ebf73d46f7d75c49d35e7a824c0c2677144bd",
+  "kind": "PARSER_SUFFIX_REPAIR_INPUT_EQUIVALENCE_ONLY",
+  "camera_helper_sha256": "b35d4b6f58b4ca37d6b5b0f8c25f8d477df756c7c97146d582076d7829318335",
+  "rooms": {
+    "r101": {
+      "log": "C:\\Flycast-Evidence\\re4-dreamcast\\t2exact-20261015\\cam-cross\\capture\\run-output.txt",
+      "sha256": "bf2fd704b00da017afc9d5f2d59b2d9852e6a4e22dea8930fa4a7ad73bdf6f1e",
+      "frames": 43,
+      "all20_consumed_float_bits_equal": true,
+      "viewport": {
+        "scope": "Only first4 viewport words authenticated for this corner/LOD model; vp4/vp5 unused, no full-camera or repaired-tail claim.",
+        "truncated_rows": 43,
+        "frames": {
+          "500": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "507": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "514": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "521": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "528": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "535": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "542": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "549": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "556": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "563": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "570": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000native",
+              "draw",
+              "plans:",
+              "frame=570",
+              "hits=208",
+              "installs=0",
+              "install_decoded=0",
+              "reference_walk=0",
+              "uncovered=30",
+              "capacity_rejects=0",
+              "owner_misses=0",
+              "invalid=0",
+              "used=31584",
+              "cap=32768",
+              "peak=32608",
+              "resets=135"
+            ],
+            "complete_6word_row": false
+          },
+          "577": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000native",
+              "local",
+              "admission:",
+              "streams=122",
+              "candidates=384",
+              "admitted_streams=109",
+              "batches=256",
+              "bytes=7104",
+              "cap=8192",
+              "source_heap=744288"
+            ],
+            "complete_6word_row": false
+          },
+          "584": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "591": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "598": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "605": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "612": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "619": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "626": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "633": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "640": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "647": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "654": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "661": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "668": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "675": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "682": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000PACE",
+              "vmu",
+              "t=682",
+              "win_vb=61",
+              "drawn=26",
+              "gpu_n=26",
+              "gpu_avg_us=7598",
+              "gpu_max_us=10004",
+              "gpu_busy=19%",
+              "wait_n=26",
+              "wait_avg_us=2",
+              "wait_max_us=2",
+              "reg_n=26",
+              "reg_avg_us=38829",
+              "page=FPS",
+              "25.5|SPD",
+              "85%|CPU",
+              "118%|GPU",
+              "8/10",
+              "A|MODE",
+              "off"
+            ],
+            "complete_6word_row": false
+          },
+          "689": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "696": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000native",
+              "fog:",
+              "type=2",
+              "start=-7074",
+              "end=175030",
+              "far=25000",
+              "colour=716c5a80",
+              "near=3%",
+              "mid=4%"
+            ],
+            "complete_6word_row": false
+          },
+          "703": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "710": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "717": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "724": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000native",
+              "fog:",
+              "type=2",
+              "start=-7074",
+              "end=175030",
+              "far=25000",
+              "colour=716c5a80",
+              "near=3%",
+              "mid=4%"
+            ],
+            "complete_6word_row": false
+          },
+          "731": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000vblank",
+              "2400"
+            ],
+            "complete_6word_row": false
+          },
+          "738": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "745": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "752": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "759": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "766": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "773": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "780": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "787": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "794": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          }
+        }
+      }
+    },
+    "r103": {
+      "log": "C:\\Flycast-Evidence\\re4-dreamcast\\t2exact-20261015\\cam-farm\\capture\\run-output.txt",
+      "sha256": "cf4ebbb1be71d9ef06c7732197cbd469ad5c620e6b0b176f4b834aa00b8c0038",
+      "frames": 43,
+      "all20_consumed_float_bits_equal": true,
+      "viewport": {
+        "scope": "Only first4 viewport words authenticated for this corner/LOD model; vp4/vp5 unused, no full-camera or repaired-tail claim.",
+        "truncated_rows": 43,
+        "frames": {
+          "500": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "507": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "514": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "521": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "528": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000PACE",
+              "vmu",
+              "t=528",
+              "win_vb=62",
+              "drawn=18",
+              "gpu_n=18",
+              "gpu_avg_us=7641",
+              "gpu_max_us=10005",
+              "gpu_busy=13%",
+              "wait_n=18",
+              "wait_avg_us=2",
+              "wait_max_us=2",
+              "reg_n=18",
+              "reg_avg_us=56589",
+              "page=FPS",
+              "17.4|SPD",
+              "58%|CPU",
+              "171%|GPU",
+              "8/10",
+              "A|MODE",
+              "off"
+            ],
+            "complete_6word_row": false
+          },
+          "535": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000aica:",
+              "str",
+              "wall=34350ms",
+              "starts=0",
+              "state=0",
+              "under=0",
+              "reads=0",
+              "0KB",
+              "io=0us",
+              "max",
+              "0us",
+              "g2=0us",
+              "gc_skip=0/0"
+            ],
+            "complete_6word_row": false
+          },
+          "542": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "549": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "556": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "563": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "570": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000native",
+              "draw",
+              "plans:",
+              "frame=570",
+              "hits=173",
+              "installs=0",
+              "install_decoded=0",
+              "reference_walk=0",
+              "uncovered=188",
+              "capacity_rejects=0",
+              "owner_misses=0",
+              "invalid=0",
+              "used=30560",
+              "cap=32768",
+              "peak=31456",
+              "resets=136"
+            ],
+            "complete_6word_row": false
+          },
+          "577": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "584": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "591": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "598": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "605": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "612": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "619": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "626": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "633": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "640": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "647": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "654": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "661": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "668": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "675": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "682": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "689": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000PACE",
+              "vmu",
+              "t=689",
+              "win_vb=62",
+              "drawn=18",
+              "gpu_n=18",
+              "gpu_avg_us=7502",
+              "gpu_max_us=7503",
+              "gpu_busy=13%",
+              "wait_n=18",
+              "wait_avg_us=2",
+              "wait_max_us=2",
+              "reg_n=18",
+              "reg_avg_us=56598",
+              "page=FPS",
+              "17.4|SPD",
+              "58%|CPU",
+              "172%|GPU",
+              "8/8",
+              "A|MODE",
+              "off"
+            ],
+            "complete_6word_row": false
+          },
+          "696": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "703": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "710": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "717": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "724": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000PACE",
+              "vmu",
+              "t=724",
+              "win_vb=60",
+              "drawn=17",
+              "gpu_n=17",
+              "gpu_avg_us=7649",
+              "gpu_max_us=10004",
+              "gpu_busy=12%",
+              "wait_n=17",
+              "wait_avg_us=2",
+              "wait_max_us=2",
+              "reg_n=17",
+              "reg_avg_us=57602",
+              "page=FPS",
+              "16.9|SPD",
+              "57%|CPU",
+              "175%|GPU",
+              "8/10",
+              "A|MODE",
+              "off"
+            ],
+            "complete_6word_row": false
+          },
+          "731": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "738": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "745": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "752": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "759": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "766": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "773": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "780": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "787": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000PROBE_LIGHT",
+              "f=601",
+              "built=601",
+              "reused=3600",
+              "parts=4201",
+              "leon=4201",
+              "ganado=0",
+              "declined=600",
+              "v=-29,89,-33",
+              "dcol=287,283,261",
+              "amb=88,87,83"
+            ],
+            "complete_6word_row": false
+          },
+          "794": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          }
+        }
+      }
+    }
+  },
+  "limits": "No full camera/viewport tail or post-clip TA proof. R3 geometry computation not rerun; actual consumed20float bits and first4 viewport words unchanged. Raw unused-tail inventory is stricter: farm535 is 3f80000 followed by aica:, old prefix scan incorrectly included a from aica as an eighth hex digit. No vp5 value is trusted."
+}

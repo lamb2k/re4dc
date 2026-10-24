@@ -56,3 +56,20 @@ new media, recipe or production change follows from this estimate checkpoint.
 Physical report byte pins refer to preserved C evidence. Git normalizes Windows
 camera JSON CRLF to LF; r3-seal.json records the separate Git canonical byte pins.
 Parsed report values are identical. No earlier physical evidence is overwritten.
+
+The independent review found and repaired one parser suffix weakness after r3:
+7c4dd1a8a5c829e6609478801515e915527a836f rejects a malformed consumed word such
+as43f00000Z. Existing r3 reports retain helper955 identity. The separate reviewed
+r4 input-equivalence receipt proves exact packed20-float equality for all86 actual
+camera frames and identical four consumed viewport words. It does not pretend
+to rerun geometry with a new helper. The stricter raw-tail inventory marks all43
+farm tails unauthenticated: frame535's old prefix scan joined3f80000 with the first
+'a' in following 'aica:', falsely resembling a complete8-digit word. No estimator
+consumed that word; no missing nibble is invented. Legacy rows cannot establish
+full camera state. Root's fresh diagnostic repairs remain separate.
+
+Independent bounded review found no graph floor/parity/multiplicity defect.
+It ran21 existing tests plus200 small deterministic cases against an exhaustive
+cyclic path-cover oracle. After the suffix repair,21 tests and16 concatenated-
+label/unused-tail controls passed independently. This is source/host review only;
+no SDK, guest, pixel or global TA bound is certified.
