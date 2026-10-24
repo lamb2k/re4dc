@@ -234,6 +234,19 @@ endif
 $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_EFM_PS2_CUT=1
 $(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_EFM_PS2_CUT=1
 endif
+# FX_PS2_NONE_CUT=1 (lane purge-fx24 2026-10-24; render only, default 0; needs FX_PS2_PACK=1): effect sprites whose
+#                    picture the PS2 dropped are not drawn. platform/fx_none_cut.inc (tools/d367/purge-fx24/
+#                    fx_none_cut.py from ps2lib effects-tex: the ps2_source=NONE rows, per room by tex.pak key; keys that
+#                    are NONE in every library row also apply in rooms the library does not cover). re4dc_effect_sprite
+#                    returns before the queue; the effect, its records, Rnd() and motion run as before. Pair with
+#                    EFM_PS2_CUT=1 (the Efm models). Log: "fx ps2 none cut:" once per key and room visit.
+FX_PS2_NONE_CUT ?= 0
+ifneq ($(FX_PS2_NONE_CUT),0)
+ifneq ($(FX_PS2_NONE_CUT)$(FX_PS2_PACK),11)
+$(error FX_PS2_NONE_CUT is 0 or 1 and needs FX_PS2_PACK=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FX_PS2_NONE_CUT=1
+endif
 # ITEMS_CENSUS=1 (lane items 2026-10-14; diagnostic, test builds only, default 0; log only): "itemcen:" lines, the
 #                    ModelData signature of every item model (cItmSys::DataLoad) and effect model (EspDataLoad) the game
 #                    registers; tools/d367/items_census.py counts the GameCube fallbacks against the PS2 library.
