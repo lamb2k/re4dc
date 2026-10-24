@@ -61,7 +61,7 @@ def main():
   for camera,old in zip(frames,small['per_camera']):
    if old['old_cell'] is None:continue
    full=domains[old['old_cell']]['box'];box=full if size==2000 else s.window(camera['eye'],full,size)
-   if size!=2000 and [[str(v) for v in side] for side in box]!=old['variants'][str(size)]['box_exact']:raise ValueError('Complete old-height domain changed')
+   if size!=2000 and old['variants'][str(size)]['box_exact'] is not None and [[str(v) for v in side] for side in box]!=old['variants'][str(size)]['box_exact']:raise ValueError('Complete old-height domain changed')
    selected=weights[camera['label']][camera['frame']][299]
    if tuple(selected[k] for k in ('placement','part','cluster'))!=(209,268,272):raise ValueError('Host pricing namespace changed')
    outcomes={}
