@@ -166,6 +166,9 @@ Planned, with no date yet. Ticked items have passed our checks and will be in Te
 
 - [x] **Boat weapon display:** boarding the boat shows the harpoon and hides handgun ammunition.
 
+- [x] **Effect and puzzle safety:** full effect-pool reuse releases old effects correctly; the church light puzzle handles a missing beam.
+- [x] **Dam encounter safety:** a villager that retires while loading is retried instead of being used by the scripted encounter.
+
 ## What's new in Test 17.1
 
 A hotfix of Test 17.
