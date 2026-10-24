@@ -69,6 +69,17 @@
 #if RE4DC_SCENERY_EMIT_PREFETCH && (!RE4DC_SCENERY_CHUNK || !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH)
 #error SCENERY_EMIT_PREFETCH needs the direct PS2 scenery chunk path
 #endif
+// SCENERY_EMIT_CENSUS_CONFIG_BEGIN
+#ifndef RE4DC_SCENERY_EMIT_CENSUS
+#define RE4DC_SCENERY_EMIT_CENSUS 0
+#endif
+#if RE4DC_SCENERY_EMIT_CENSUS < 0 || RE4DC_SCENERY_EMIT_CENSUS > 10000000
+#error SCENERY_EMIT_CENSUS must be a frame from 0 to 10000000
+#endif
+#if RE4DC_SCENERY_EMIT_CENSUS && (!RE4DC_SCENERY_CHUNK || !RE4DC_PS2_WORLD_MESH)
+#error SCENERY_EMIT_CENSUS needs the PS2 scenery chunk path
+#endif
+// SCENERY_EMIT_CENSUS_CONFIG_END
 #ifndef RE4DC_WORLD_RECT21
 #define RE4DC_WORLD_RECT21 0
 #endif
@@ -133,6 +144,9 @@ extern "C" volatile unsigned re4dc_rigid_hide;   // native_actor_fast.cpp (RIGID
 #include "include/scenery_submit_batch.h"
 #endif
 #include "re4dc_platform.h"
+#if RE4DC_SCENERY_EMIT_CENSUS
+#include "include/scenery_emit_census.hpp"
+#endif
 #include "../../room/room_package.hpp"
 #include "../../room/static_room_prepare.hpp"
 #include "../../room/pvr_geometry.hpp"
@@ -3079,6 +3093,9 @@ struct MeshDraw : Emitter {
     // SCENERY_EMIT_PREFETCH_MEMBERS_END
 #endif
     int emit_pick(const Pick& pk){
+#if RE4DC_SCENERY_EMIT_CENSUS
+        scenery_emit_census::pick_attempt();
+#endif
         namespace vp=re4dc::vp;
         ++stats.groups_visible;
         if(!bind()){++stats.bind_rejects;return submitted?-1:0;}
@@ -6060,6 +6077,9 @@ int ps2_pass(unsigned pass,float zfar){
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return -1;}
 #endif
     auto& c=ps2w.count[pass];c={};
+#if RE4DC_SCENERY_EMIT_CENSUS
+    scenery_emit_census::Pass census_pass(re4dc_ui_frame(),ps2w.room,pass);
+#endif
 #if RE4DC_PS2_AREA_HIDE
     area::update();
 #endif
@@ -6236,7 +6256,7 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_SCENERY_UV_SNAPSHOT
                        float uv_offset[2];
 #endif
-#if RE4DC_PS2_PVS
+#if RE4DC_PS2_PVS || RE4DC_SCENERY_EMIT_CENSUS
                        unsigned placement;
 #endif
                        std::uint8_t cull; bool marked; std::uint8_t sky; };
@@ -6246,6 +6266,10 @@ int ps2_pass(unsigned pass,float zfar){
     auto chunk_flush=[&]()->int{
 #if RE4DC_SCENERY_REPLAY_LEAN
         if(!nctx){npk=0;return 1;}
+#endif
+#if RE4DC_SCENERY_EMIT_CENSUS
+        // Declared before SubmitScope: diagnostics run after its SQ/batch close.
+        scenery_emit_census::Flush census_flush(census_pass,cpkg,cctx,nctx,cpk,npk);
 #endif
         // The pending selection/ordinary draw references this shared record.
         // Queued emitters borrow its cull; restore the pending part on every exit.
@@ -6290,6 +6314,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
         for(unsigned j=0;j<nctx;++j){
             const ChunkPart& x=cctx[j];
+#if RE4DC_SCENERY_EMIT_CENSUS
+            census_flush.start(j);
+#endif
             part.cull=x.cull;
 #if RE4DC_SCENERY_UV_SNAPSHOT
             part.uv_offset[0]=x.uv_offset[0];part.uv_offset[1]=x.uv_offset[1];
@@ -6343,6 +6370,9 @@ int ps2_pass(unsigned pass,float zfar){
             const int result=e.chunk_emit(cpk+x.first,x.count);
 #endif
             e.end_direct();
+#if RE4DC_SCENERY_EMIT_CENSUS
+            census_flush.finish(j,result);
+#endif
 #if RE4DC_SCENERY_SUBMIT_BATCH
             if(result<=0)re4dc_ps2_world_batch_close(&submit_scope.batch);
 #endif
@@ -6628,7 +6658,7 @@ int ps2_pass(unsigned pass,float zfar){
                     x.uv_offset[0]=part.uv_offset[0];x.uv_offset[1]=part.uv_offset[1];
 #endif
                     x.cull_far=d.cull_far;x.lod_scale=lod_scale;x.index=index;x.cull=meta.cull;
-#if RE4DC_PS2_PVS
+#if RE4DC_PS2_PVS || RE4DC_SCENERY_EMIT_CENSUS
                     x.placement=i;
 #endif
                     x.marked=marked;x.first=npk;
@@ -6688,7 +6718,7 @@ int ps2_pass(unsigned pass,float zfar){
                 x.uv_offset[0]=part.uv_offset[0];x.uv_offset[1]=part.uv_offset[1];
 #endif
                 x.cull_far=d.cull_far;x.lod_scale=lod_scale;x.index=index;x.cull=meta.cull;
-#if RE4DC_PS2_PVS
+#if RE4DC_PS2_PVS || RE4DC_SCENERY_EMIT_CENSUS
                 x.placement=i;
 #endif
                 x.marked=d.vertex_alpha;x.first=npk;
@@ -6801,6 +6831,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #if RE4DC_WORLD_HOLE_DIAG
     whd::end_pass(pass,c.parts,re4dc_ui_frame(),ps2w.room);
+#endif
+#if RE4DC_SCENERY_EMIT_CENSUS
+    census_pass.result=c.fallback?0:1;
 #endif
     return c.fallback?0:1;
 }
