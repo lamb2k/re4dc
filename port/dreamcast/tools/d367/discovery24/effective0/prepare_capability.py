@@ -58,7 +58,14 @@ def main():
         (a.out/('missing-'+missing+'.log')).write_text(result.stdout+result.stderr)
         if result.returncode==0:raise ValueError('Missing compiled capability did not refuse '+missing)
         refused.append(missing)
-    receipt=dict(status='HOST_COMPILED_CAPABILITY_ONLY',runtime_admitted=False,helper=identity(a.helper),nonempty=identity(a.nonempty),compiled_macros=MACROS,helper_block=identity(a.out/'future-helper.inc'),compiler=identity(compiler),command=command,binary=identity(a.out/'check'),harness=identity(a.out/'check.cpp'),actual_audit=identity(a.audit),actual_mesh=identity(a.mesh),actual_clusters=95,all_valid_raw_lods=sum(x['declared_level_count'] for x in rows),physical_rows=rows,missing_macro_refusals=refused,negative_controls=['empty base','positive higher','null pointer','zero count'],generic_fourlevel_control=True,ledger_reserved=token.reserved,ray_queries_used=token.used,ledger_after=json.loads(a.ledger.read_text()),peak_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
+    nonboolean=[]
+    for macro in MACROS:
+        for value in (0,2):
+            result=subprocess.run(common+['-D'+k+'='+str(value if k==macro else 1) for k in MACROS]+['-o',str(a.out/'must-not-compile')],capture_output=True,text=True)
+            (a.out/('invalid-'+macro+'-'+str(value)+'.log')).write_text(result.stdout+result.stderr)
+            if result.returncode==0:raise ValueError('Nonboolean/zero compiled capability did not refuse '+macro)
+            nonboolean.append([macro,value])
+    receipt=dict(status='HOST_COMPILED_CAPABILITY_ONLY',runtime_admitted=False,helper=identity(a.helper),nonempty=identity(a.nonempty),compiled_macros=MACROS,helper_block=identity(a.out/'future-helper.inc'),compiler=identity(compiler),command=command,binary=identity(a.out/'check'),harness=identity(a.out/'check.cpp'),actual_audit=identity(a.audit),actual_mesh=identity(a.mesh),actual_clusters=95,all_valid_raw_lods=sum(x['declared_level_count'] for x in rows),physical_rows=rows,missing_macro_refusals=refused,nonboolean_macro_refusals=nonboolean,negative_controls=['empty base','positive higher','null pointer','zero count'],generic_fourlevel_control=True,ledger_reserved=token.reserved,ray_queries_used=token.used,ledger_after=json.loads(a.ledger.read_text()),peak_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
     raw=(json.dumps(receipt,indent=2)+'\n').encode();existing=sum(p.stat().st_size for p in a.out.parent.rglob('*') if p.is_file())
     if existing+len(raw)+65536>16*1024*1024:raise ValueError('Whole evidence unit output cap')
     (a.out/'CAPABILITY.json').write_bytes(raw);print(json.dumps(identity(a.out/'CAPABILITY.json')))

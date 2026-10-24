@@ -1,8 +1,8 @@
 """Fail closed until exact reviewed future helper and host-compile pins bind."""
 import hashlib,json
 from pathlib import Path
-EXPECTED_HELPER_SHA256='4d01f2bbe696500697c793c2bd40e54be0ead4aa40d93219157e167b5bbfc1da'
-EXPECTED_RECEIPT_SHA256='62f000e90cfccb20d734d1f9a1e6d0c47b33fe039f4c4f836b40d37e09b2f06d'
+EXPECTED_HELPER_SHA256='cb5f80d121fc0fdf593b1d5a49c55697f3c95a66549dd3fa828391fb97c2983b'
+EXPECTED_RECEIPT_SHA256='4cd7f0eef390f9e80ac4e0b82b9fdd919b53e181254c0dce332042c3c7fdd4f5'
 
 def verify_capability(path):
     if EXPECTED_HELPER_SHA256.startswith('PENDING') or EXPECTED_RECEIPT_SHA256.startswith('PENDING'):raise ValueError('Future runtime helper and compiled capability are not frozen')
@@ -13,5 +13,5 @@ def verify_capability(path):
     for name in ('helper','nonempty','helper_block','compiler','binary','harness','actual_audit','actual_mesh'):
         pin=receipt[name];p=Path(pin['path']);raw=p.read_bytes()
         if len(raw)!=pin['bytes'] or hashlib.sha256(raw).hexdigest()!=pin['sha256']:raise ValueError('Actual compiled capability member changed '+name)
-    if receipt['actual_clusters']!=95 or receipt['all_valid_raw_lods']!=190 or len(receipt['missing_macro_refusals'])!=4:raise ValueError('Complete actual cluster/guard controls required')
+    if receipt['actual_clusters']!=95 or receipt['all_valid_raw_lods']!=190 or len(receipt['missing_macro_refusals'])!=4 or len(receipt['nonboolean_macro_refusals'])!=8:raise ValueError('Complete actual cluster/guard controls required')
     return dict(receipt_path=str(path),receipt_sha256=EXPECTED_RECEIPT_SHA256,helper=receipt['helper'],status='REQUIRES_FUTURE_CAPABILITY_NO_CURRENT_RUNTIME_ADMISSION')
