@@ -11,20 +11,20 @@ def reject(call):
  try:call()
  except (ValueError,FileNotFoundError,KeyError,struct.error):CHECKS+=1;return
  raise AssertionError('negative accepted')
-def elf(path, *, text=b'\x09\x00\x0b\x00', debug=b'old', record=False, align=32, record_size=128, reloc=1, symval=0, machine=42):
+def elf(path, *, text=b'\x09\x00\x0b\x00', debug=b'old', record=False, align=32, record_size=128, reloc=1, symval=0, machine=42, symbind=1, symvisibility=0, symtype=2, symsize=4, textaddress=0, reloc_symbol=1):
  # Minimal actual ELF32/SH bytes, not a fake Elf class.
  names=['','.text','.bss','.debug_info','.strtab','.symtab','.rela.text','.shstrtab'];shnames=b'\0';offsets={}
  for name in names[1:]:offsets[name]=len(shnames);shnames+=name.encode()+b'\0'
  strings=b'\0defined\0external\0re4dc_rain_r10c_diag\0'
- syms=bytes(16)+struct.pack('<IIIBBH',1,symval,4,0x12,0,1)+struct.pack('<IIIBBH',9,0,0,0x12,0,0)
+ syms=bytes(16)+struct.pack('<IIIBBH',1,symval,symsize,(symbind<<4)|symtype,symvisibility,1)+struct.pack('<IIIBBH',9,0,0,0x12,0,0)
  if record:syms+=struct.pack('<IIIBBH',18,0,record_size,0x11,0,2)
- values=[b'',text,b'',debug,strings,syms,struct.pack('<IIi',0,(1<<8)|reloc,0),shnames]
+ values=[b'',text,b'',debug,strings,syms,struct.pack('<IIi',0,(reloc_symbol<<8)|reloc,0),shnames]
  kinds=[0,1,8,1,3,2,4,3];flags=[0,6,3,0,0,0,0,0];links=[0,0,0,0,0,4,5,0];infos=[0,0,0,0,0,1,1,0];aligns=[0,2,align,1,1,4,4,1];ents=[0,0,0,0,0,16,12,0]
  blob=bytearray(bytes(52));rows=[]
  for i,data in enumerate(values):
   while len(blob)%max(1,aligns[i]):blob.append(0)
   off=len(blob);blob+=data;size=(128 if record else 0) if i==2 else len(data)
-  rows.append((offsets.get(names[i],0),kinds[i],flags[i],0,off,size,links[i],infos[i],aligns[i],ents[i]))
+  rows.append((offsets.get(names[i],0),kinds[i],flags[i],textaddress if i==1 else 0,off,size,links[i],infos[i],aligns[i],ents[i]))
  while len(blob)%4:blob.append(0)
  sho=len(blob)
  for row in rows:blob+=struct.pack('<IIIIIIIIII',*row)
@@ -37,6 +37,21 @@ def main():
  with tempfile.TemporaryDirectory(prefix='rain-diag24-prep-controls-',dir='/dev/shm') as tmp:
   root=pathlib.Path(tmp)
   for name,opts in [('a',{}),('debug',{'debug':b'changed source lines'}),('text',{'text':b'\x08\x00\x0b\x00'}),('reloc',{'reloc':2}),('symbol',{'symval':2}),('record',{'record':True}),('align',{'record':True,'align':16}),('size',{'record':True,'record_size':124}),('arch',{'machine':3})]:elf(root/name,**opts)
+  # All changed functions stay inside the eight-byte .text extent and are
+  # deliberately NOT the symbol referenced by the relocation.
+  stable=dict(text=b'\x09\x00\x0b\x00'*2,reloc_symbol=2)
+  elf(root/'abi-base',**stable);abi=readback.Elf(root/'abi-base')
+  for name,change in [('value',{'symval':2}),('binding',{'symbind':2}),('visibility',{'symvisibility':2}),('type',{'symtype':1}),('size',{'symsize':2}),('address',{'textaddress':16})]:
+   elf(root/('abi-'+name),**dict(stable,**change))
+   reject(lambda name=name:readback.require_identity(abi,readback.Elf(root/('abi-'+name))))
+  elf(root/'abi-debug',**dict(stable,debug=b'unrelated debug bytes'))
+  readback.require_identity(abi,readback.Elf(root/'abi-debug'));yes(True)
+  yes('cc1' in matrix.TOOLS)
+  toolpins={'tools':{name:matrix.pin(path) for name,path in matrix.TOOLS.items()}}
+  yes(matrix.validate_tools(toolpins))
+  missing=copy.deepcopy(toolpins);del missing['tools']['cc1'];reject(lambda:matrix.validate_tools(missing))
+  changed=copy.deepcopy(toolpins);changed['tools']['cc1']['sha256']='0'*64;reject(lambda:matrix.validate_tools(changed))
+
   a=readback.Elf(root/'a');debug=readback.Elf(root/'debug')
   yes(a.raw!=debug.raw);readback.require_identity(a,debug);yes(True)
   for name in ('text','reloc','symbol'):reject(lambda name=name:readback.require_identity(a,readback.Elf(root/name)))

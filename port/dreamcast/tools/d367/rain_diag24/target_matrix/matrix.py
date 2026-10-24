@@ -12,7 +12,7 @@ OLD=pathlib.Path('/root/work/lanes/water-rain24-full-target-scratch')
 UNITS=('filter06','espgen44')
 CAP=256*1024*1024
 LIMITS={'address_space_bytes':CAP,'owned_output_bytes':CAP,'jobs':1,'command_seconds':60,'wall_seconds':360,'C_floor_bytes':24*1024**3}
-TOOLS={'cxx':'/root/work/kos-re4dc-d367/utils/build_wrappers/kos-c++','cc_wrapper':'/root/work/kos-re4dc-d367/utils/build_wrappers/kos-cc','driver':'/opt/toolchains/dc/sh-elf/bin/sh-elf-g++','bootstrap_c_driver':'/opt/toolchains/dc/sh-elf/bin/sh-elf-gcc','cc1plus':'/opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1plus','as':'/opt/toolchains/dc/sh-elf/bin/sh-elf-as','ld':'/opt/toolchains/dc/sh-elf/bin/sh-elf-ld','objcopy':'/opt/toolchains/dc/sh-elf/bin/sh-elf-objcopy','objdump':'/opt/toolchains/dc/sh-elf/bin/sh-elf-objdump','kos_env':'/root/work/kos-re4dc-d367/environ_base.sh','kos_arch_env':'/root/work/kos-re4dc-d367/environ_dreamcast.sh','kos_version':'/root/work/kos-re4dc-d367/include/kos/version.h','cache_h':'/root/work/kos-re4dc-d367/include/kos/cache.h','arch_cache_h':'/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include/arch/cache.h','slot':'/root/probe/d367-buildslot.sh'}
+TOOLS={'cxx':'/root/work/kos-re4dc-d367/utils/build_wrappers/kos-c++','cc_wrapper':'/root/work/kos-re4dc-d367/utils/build_wrappers/kos-cc','driver':'/opt/toolchains/dc/sh-elf/bin/sh-elf-g++','bootstrap_c_driver':'/opt/toolchains/dc/sh-elf/bin/sh-elf-gcc','cc1':'/opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1','cc1plus':'/opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1plus','as':'/opt/toolchains/dc/sh-elf/bin/sh-elf-as','ld':'/opt/toolchains/dc/sh-elf/bin/sh-elf-ld','objcopy':'/opt/toolchains/dc/sh-elf/bin/sh-elf-objcopy','objdump':'/opt/toolchains/dc/sh-elf/bin/sh-elf-objdump','kos_env':'/root/work/kos-re4dc-d367/environ_base.sh','kos_arch_env':'/root/work/kos-re4dc-d367/environ_dreamcast.sh','kos_version':'/root/work/kos-re4dc-d367/include/kos/version.h','cache_h':'/root/work/kos-re4dc-d367/include/kos/cache.h','arch_cache_h':'/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include/arch/cache.h','slot':'/root/probe/d367-buildslot.sh'}
 def digest(b):return hashlib.sha256(b).hexdigest()
 def pin(p):
  p=pathlib.Path(p);return {'path':str(p),'resolved':str(p.resolve()),'bytes':p.stat().st_size,'sha256':digest(p.read_bytes())}
@@ -70,9 +70,16 @@ def seal(dest):
   p.setdefault('helpers',{})[f]={'sha256':digest((HERE/f).read_bytes()),'bytes':(HERE/f).stat().st_size}
  write_json(dest/'PINS.json',p);return p
 
+def validate_tools(p):
+ if set(p['tools'])!=set(TOOLS):raise ValueError('incomplete tool closure including bootstrap cc1')
+ for row in p['tools'].values():
+  if pin(row['path'])!=row:raise ValueError('pinned tool drift '+row['path'])
+ return True
+
 def validate(p):
+ validate_tools(p)
  if (p['base'],p['source'],p['runtime'])!=(BASE,SOURCE,RUNTIME) or p['case_names']!=[x[0] for x in case_specs()] or p.get('limits')!=LIMITS:raise ValueError('wrong source/cases')
- for row in list(p['tools'].values())+list(p['inputs'].values())+[p['provider']]:
+ for row in list(p['inputs'].values())+[p['provider']]:
   if pin(row['path'])!=row:raise ValueError('pinned input drift '+row['path'])
  for feature,arm in ((0,'off'),(1,'on')):
   lines=(OLD/arm/'build.log').read_text().splitlines()
@@ -205,7 +212,7 @@ def execute(p,pins_path,g,output):
  return result
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('mode',choices=('seal','check','plan','reserve','run'));ap.add_argument('--pins',default=str(HERE/'PINS.json'));ap.add_argument('--out');ap.add_argument('--grant');args=ap.parse_args()
+ ap=argparse.ArgumentParser();ap.add_argument('mode',choices=('seal','check','plan','reserve','run'));ap.add_argument('--pins',default=str(HERE/'PINS-ROOT-FIX-V1.json'));ap.add_argument('--out');ap.add_argument('--grant');args=ap.parse_args()
  if args.mode=='seal':print(json.dumps({'pins':str(pathlib.Path(args.pins)),'cases':seal(pathlib.Path(args.pins).parent)['case_names']}));return
  p=json.loads(pathlib.Path(args.pins).read_text());validate(p)
  if args.mode=='check':

@@ -31,7 +31,7 @@ class Elf:
    tab=self.sections[section['link']]['data'];syms=[]
    for i in range(0,len(section['data']),16):
     nm,val,size,info,other,ndx=struct.unpack_from('<IIIBBH',section['data'],i)
-    sym=dict(name=word(tab,nm),value=val,size=size,bind=info>>4,type=info&15,section=ndx)
+    sym=dict(name=word(tab,nm),value=val,size=size,bind=info>>4,type=info&15,visibility=other&3,other=other,section=ndx)
     syms.append(sym);self.symbols.append(sym)
    symtabs[section['index']]=syms
   if len([x['name'] for x in self.sections if x['flags']&2])!=len(set(x['name'] for x in self.sections if x['flags']&2)):raise ValueError('duplicate allocated section names')
@@ -52,10 +52,23 @@ class Elf:
     # Resolved symbol identity includes section/value, so a changed definition
     # cannot hide behind an unchanged relocation name/type/offset.
     target_name=self.sections[sym['section']]['name'] if sym['section']<n else 'SPECIAL:'+str(sym['section'])
-    resolved=(name,target_name,sym['value'],sym['size'],sym['bind'],sym['type'])
+    resolved=(name,target_name,sym['value'],sym['size'],sym['bind'],sym['type'],sym['other'])
     self.relocations.append((target['name'],offset,info&255,resolved,addend))
  def allocated(self):
-  return {s['name']:(s['type'],s['flags'],s['size'],s['align'],hashlib.sha256(s['data']).hexdigest()) for s in self.sections if s['flags']&2}
+  return {s['name']:(s['type'],s['flags'],s['address'],s['size'],s['align'],s['entsize'],hashlib.sha256(s['data']).hexdigest()) for s in self.sections if s['flags']&2}
+ def external_abi(self):
+  # Include definitions which no relocation happens to reference, as well as
+  # imports. Section indices may move with debug metadata, so compare names.
+  # Keep a multiset: duplicate symbols must not disappear through dict collapse.
+  result=[]
+  for s in self.symbols:
+   if not s['name'] or s['bind'] not in (1,2):continue
+   section=s['section']
+   if section>=len(self.sections) and section<0xff00:raise ValueError('external symbol section extent')
+   target=self.sections[section]['name'] if section<len(self.sections) else 'SPECIAL:'+str(section)
+   if section and section<len(self.sections) and not self.sections[section]['flags']&2:continue
+   result.append((s['name'],target,s['value'],s['size'],s['bind'],s['type'],s['other']))
+  return sorted(result)
  def alloc_relocations(self):
   names=set(self.allocated());return sorted((r for r in self.relocations if r[0] in names),key=repr)
  def undefined(self):return {s['name']:s['bind'] for s in self.symbols if s['name'] and s['section']==0 and s['bind'] in(1,2)}
@@ -75,7 +88,7 @@ class Elf:
   return {key:sum(s['size'] for s in self.sections if s['flags']&2 and predicate(s)) for key,predicate in [('text',lambda s:bool(s['flags']&4)),('data',lambda s:bool(s['flags']&1) and s['type']!=8),('bss',lambda s:s['type']==8),('rodata',lambda s:not(s['flags']&5) and s['type']!=8)]}
 
 def require_identity(a,b):
- if a.kind!=1 or b.kind!=1 or a.flags!=b.flags or a.allocated()!=b.allocated() or a.alloc_relocations()!=b.alloc_relocations():raise ValueError('disabled allocated section/relocation/ABI mismatch')
+ if a.kind!=1 or b.kind!=1 or a.flags!=b.flags or a.allocated()!=b.allocated() or a.alloc_relocations()!=b.alloc_relocations() or a.external_abi()!=b.external_abi():raise ValueError('disabled allocated section/relocation/ABI mismatch')
 
 def stacks(path):
  result=[]
