@@ -1,4 +1,7 @@
 #if defined(RE4DC_GAME) && !defined(__PPC__)
+#include "gc_asset_motion_source.h"
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__)
 #include "native_motion.h"
 #endif
 // game/shape: vertex-morph ("shape") animation of a model part — the face morphs of the player /
@@ -271,6 +274,12 @@ void CalculateShape_new(cModelInfo* info, ShapeData* data, f32 rate, u8* dst)
                     s16* src = (s16*) (e->ofs + (u32) tbl);
                     s32 num = e->num;
                     s32 n;
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+                    if (num > 0) {
+                        re4dc_gcasset::motion_source_note(info,data,re4dc_gcasset::MotionFcv);
+                        re4dc_gcasset::motion_source_note(info,info->pData,re4dc_gcasset::MotionBind);
+                    }
+#endif
 
 #if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK >= 2
                     {

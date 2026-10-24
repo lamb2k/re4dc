@@ -1,4 +1,7 @@
 #if defined(RE4DC_GAME) && !defined(__PPC__)
+#include "gc_asset_motion_source.h"
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__)
 #include "native_motion.h"
 #include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #endif
@@ -23,6 +26,9 @@ void* memset(void* dst, int c, unsigned int n);
 // key history cleared; blend frames `hokan`, flags (bit2 loop, bit3 pause) and the start frame.
 CameraMotion::CameraMotion(void* data, int hokan, int flags, f32 frame)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::motion_source_reset(this);
+#endif
     CameraMotionWork* w = &m_info;
     u32* tbl;
     int i;
@@ -62,6 +68,9 @@ CameraMotion::CameraMotion(void* data, int hokan, int flags, f32 frame)
 // Poisons the object (memset 9) so a stale pointer is caught.
 CameraMotion::~CameraMotion()
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::motion_source_view_retire(this);
+#endif
     memset(this, 9, 0x200);
 }
 
@@ -108,6 +117,11 @@ void CameraMotion::move()
             break;
         }
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+    // Evaluation records ancestry only. Selection of the actual view is a
+    // separate producer boundary; a moved hidden camera must not emit a use.
+    re4dc_gcasset::motion_source_note(this,w->data,re4dc_gcasset::MotionFcv);
+#endif
     param.pos = pos;
     param.at = at;
     param.roll = roll.y;
