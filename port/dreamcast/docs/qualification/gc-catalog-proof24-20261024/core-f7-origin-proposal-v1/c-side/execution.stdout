@@ -1,0 +1,12 @@
+{
+  "status": "MECHANICAL_CHAIN_MATCH_ROOT_ORIGIN_REVIEW_PENDING",
+  "target": {
+    "kind": "texture",
+    "id": "47a9bc5b-b0495b0f",
+    "sha256": "91ad12accc6fd1ad52b1f6289ef2ffebc1cbc31b91a964e6295498419e301900",
+    "bytes": 208
+  },
+  "checks_sha256": "a6a5fc3c301dadd67836af55a0968ce71da217bb4e0c5675ff21eeca66cb93f1",
+  "proposal_sha256": "b95ac05d9c38feb43b2e682091b42ac80a8989802f40772c68d14e9d5830b0e9",
+  "elapsed_seconds": 0.24968385003739968
+}

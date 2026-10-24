@@ -1,0 +1,29 @@
+{
+  "entries": [
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/CHECKS.json",
+          "sha256": "a6a5fc3c301dadd67836af55a0968ce71da217bb4e0c5675ff21eeca66cb93f1"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "47a9bc5b-b0495b0f",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-review-pending",
+      "provenance": "ps2",
+      "reason": "One exact PS2 Core.dat EFF1 f7 picture: original disc span, historical converter replay and selected full output match; root approval pending.",
+      "reviewed": false,
+      "sha256": "91ad12accc6fd1ad52b1f6289ef2ffebc1cbc31b91a964e6295498419e301900"
+    }
+  ],
+  "schema": 1,
+  "selection_sha256": "5f917f3521be886568e3880f63404def99a9cfaa1c0810321713f216c98d4484"
+}

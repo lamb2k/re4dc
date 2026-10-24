@@ -1,0 +1,75 @@
+{
+  "base_source": "ad6a82da2c61391b6d7c1b4786a4d7a2a9317f73",
+  "created_utc": "2026-10-24T16:13:03.683634+00:00",
+  "copied": [
+    {
+      "path": "c-side/CHECKS.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/CHECKS.json",
+      "bytes": 7140,
+      "sha256": "a6a5fc3c301dadd67836af55a0968ce71da217bb4e0c5675ff21eeca66cb93f1"
+    },
+    {
+      "path": "c-side/EXECUTION.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/EXECUTION.json",
+      "bytes": 195,
+      "sha256": "d1447eb17d45e3ab3621b65637b82ae27586988a1e0e2dac5c3ad568c0ff3a84"
+    },
+    {
+      "path": "c-side/PROPOSAL-PREFLIGHT.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/PROPOSAL-PREFLIGHT.json",
+      "bytes": 493,
+      "sha256": "60e1936ec3a6402a21fc03ab85a66b98d69c1f75be4e375ba46b56f3a4ce08f2"
+    },
+    {
+      "path": "c-side/REPORT.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/REPORT.md",
+      "bytes": 7767,
+      "sha256": "427d26bc00413f2dfc49bf0c22795cede128a9a65ab3120f79739219b12758c5"
+    },
+    {
+      "path": "c-side/SOURCE-SEAL.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/SOURCE-SEAL.json",
+      "bytes": 1967,
+      "sha256": "d85015ab7acdad1a52f978ee4c53df3ac8817eea32824f23c1434652a5ad802c"
+    },
+    {
+      "path": "c-side/attestation-proposal.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/attestation-proposal.json",
+      "bytes": 1277,
+      "sha256": "b95ac05d9c38feb43b2e682091b42ac80a8989802f40772c68d14e9d5830b0e9"
+    },
+    {
+      "path": "c-side/check_core_f7_v1.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/check_core_f7_v1.py",
+      "bytes": 12987,
+      "sha256": "d1813c40a5f27acc76f34b891cf6e38b69dec8944841a57f813386b969c6d62a"
+    },
+    {
+      "path": "c-side/execution.stderr",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/execution.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "c-side/execution.stdout",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/execution.stdout",
+      "bytes": 458,
+      "sha256": "a06e2232eb490efc7f473802e615887a33a558c4fb80f6da808aa0cf1e1929a1"
+    },
+    {
+      "path": "c-side/historical-convert_tpl-5182665f.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+      "bytes": 32480,
+      "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+    },
+    {
+      "path": "c-side/historical-fx_ps2_pack-5182665f.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+      "bytes": 16757,
+      "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+    }
+  ],
+  "scope": "One unapproved origin proposal, public historical source and hash-only checks; no asset bytes",
+  "reviewed": false,
+  "production_pin": 0
+}

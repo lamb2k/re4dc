@@ -1,0 +1,8 @@
+{
+  "returncode": 0,
+  "elapsed_seconds": 0.3719656059984118,
+  "peak_child_maxrss_KiB": 41576,
+  "max_address_space_bytes": 268435456,
+  "timeout_seconds": 120,
+  "asset_files_written": false
+}
