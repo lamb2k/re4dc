@@ -3,6 +3,7 @@
 #include "include/gc_asset_members.h"
 #include "include/gc_asset_payloads.h"
 #include "include/gc_asset_audio.h"
+#include "include/gc_asset_movie.h"
 #if RE4DC_GC_ASSET_GATE
 #define RE4DC_GCA_ADOPT(...) ((void)(re4dc_gcasset::ensure_disc_catalog() && re4dc_gcasset::member_adopt(__VA_ARGS__)))
 #define RE4DC_GCA_RETIRE(...) re4dc_gcasset::member_retire(__VA_ARGS__)
@@ -922,6 +923,13 @@ extern "C" int re4dc_vi_black();
 // it replaces the UI quads and is presented even when the source holds its
 // picture (System_flg 0x400) or requests VI black.
 pvr_ptr_t movie_texture; bool movie_picture; unsigned movie_width,movie_height;
+#if RE4DC_GC_ASSET_GATE
+struct GcAssetMovieProof {
+    const void* texture=nullptr;unsigned width=0,height=0,owner=0,upload=0,uploading=0;re4dc_gcasset::CheckedAsset asset{};
+} gcasset_movie;
+unsigned gcasset_movie_serial;
+void gcasset_movie_forget(){gcasset_movie={};}
+#endif
 bool movie_background;  // re4dc_ui_movie_background: the frame draws the picture behind its UI
 unsigned movie_upload_serial,movie_shown_serial,movie_presentations;
 #if RE4DC_CABIN_SOURCE
@@ -9464,7 +9472,11 @@ extern "C" int re4dc_ui_movie_try_close(){
     if(present_failures)return 0;
 #endif
     movie_background=false;movie_picture=false;
-    if(movie_texture){pvr_mem_free(movie_texture);movie_texture=nullptr;
+    if(movie_texture){
+#if RE4DC_GC_ASSET_GATE
+        gcasset_movie_forget();
+#endif
+        pvr_mem_free(movie_texture);movie_texture=nullptr;
 #if RE4DC_TEX_RESIDENT
         re4dc_ui_vram_unclaim();
 #endif
@@ -9645,6 +9657,36 @@ extern "C" void re4dc_ui_movie_upload_rows(const void* uyvy,unsigned y,unsigned 
 }
 extern "C" void re4dc_ui_movie_upload_end(){movie_picture=true;++movie_upload_serial;}
 extern "C" unsigned re4dc_ui_movie_presented(){return movie_presentations;}
+#if RE4DC_GC_ASSET_GATE
+// GC_ASSET_MOVIE_API_BEGIN
+extern "C" unsigned re4dc_gcasset_movie_bind(const void* texture,unsigned width,unsigned height,unsigned asset){
+    gcasset_movie_forget();
+    if(!texture || texture!=movie_texture || width!=movie_width || height!=movie_height ||
+       !width || !height || gcasset_movie_serial==~0U){
+        re4dc_gcasset::unresolved(re4dc_gcasset::Movie,"movie-bind");return 0;
+    }
+    gcasset_movie={texture,width,height,++gcasset_movie_serial,0,0,{asset}};
+    return gcasset_movie.owner;
+}
+extern "C" void re4dc_gcasset_movie_begin_upload(unsigned owner,const void* texture){
+    // Even a stale writer can overwrite the current VRAM allocation. Revoke
+    // before checking its owner, so it cannot leave a previous picture valid.
+    gcasset_movie.upload=0;gcasset_movie.uploading=0;
+    if(!owner || owner!=gcasset_movie.owner || texture!=gcasset_movie.texture)
+        re4dc_gcasset::unresolved(re4dc_gcasset::Movie,"movie-upload-owner");
+    else gcasset_movie.uploading=owner;
+}
+extern "C" void re4dc_gcasset_movie_uploaded(unsigned owner,const void* texture,unsigned width,unsigned height,unsigned asset){
+    const unsigned uploading=gcasset_movie.uploading;gcasset_movie.uploading=0;
+    if(!owner || uploading!=owner || owner!=gcasset_movie.owner || texture!=gcasset_movie.texture || texture!=movie_texture ||
+       width!=gcasset_movie.width || height!=gcasset_movie.height || width!=movie_width || height!=movie_height ||
+       asset!=gcasset_movie.asset.value || !movie_picture || !movie_upload_serial){
+        gcasset_movie.upload=0;re4dc_gcasset::unresolved(re4dc_gcasset::Movie,"movie-upload-version");return;
+    }
+    gcasset_movie.upload=movie_upload_serial;
+}
+// GC_ASSET_MOVIE_API_END
+#endif
 extern "C" uint64_t re4dc_ui_movie_first_picture_us(){return movie_first_picture_us;}
 // The PVR YUV converter writes the movie texture directly (native_movie.cpp).
 extern "C" void* re4dc_ui_movie_texture(){return movie_texture;}
@@ -9730,6 +9772,9 @@ extern "C" int re4dc_ui_movie_close(){
 #if RE4DC_MOVIE_WORLD_ARENA
     if(re4dc_movie_world_active() && (pvr_state.ta_busy || pvr_state.render_busy))return 0;
 #endif
+#if RE4DC_GC_ASSET_GATE
+    gcasset_movie_forget();
+#endif
     pvr_mem_free(movie_texture);movie_texture=nullptr;movie_picture=false;
 #if RE4DC_TEX_RESIDENT
     re4dc_ui_vram_unclaim();
@@ -9748,10 +9793,24 @@ void movie_draw(){
     const float x[]={0,640,0,640},y[]={0,0,480,480};
     for(unsigned i=0;i<4;++i){auto& v=packet[count+i];v.flags=i==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
         v.x=RE4DC_UI_X(x[i]);v.y=RE4DC_UI_Y(y[i]);v.z=1;v.u=(i&1)?(movie_width-0.5f)/512:0.5f/512;v.v=i>=2?(movie_height-0.5f)/256:0.5f/256;v.argb=0xffffffff;}
+#if RE4DC_GC_ASSET_GATE
+    const bool verified=movie_picture && gcasset_movie.owner && gcasset_movie.texture==movie_texture &&
+        gcasset_movie.width==movie_width && gcasset_movie.height==movie_height &&
+        gcasset_movie.upload && gcasset_movie.upload==movie_upload_serial;
+    GcAssetGeneratedPacket asset_packet{packet,unsigned(sizeof(packet)),unsigned(reinterpret_cast<std::uintptr_t>(movie_texture))&0x007fffffU,re4dc_gcasset::Movie,verified};
+    {GcAssetGeneratedScope asset_scope(asset_packet);
+#endif
 #if RE4DC_PVR_STREAM
     stream_send(packet,sizeof(packet));
 #else
     re4dc::render::submit_pvr(packet,sizeof(packet));
+#endif
+#if RE4DC_GC_ASSET_GATE
+    }
+    if(asset_packet.accepted && verified){
+        re4dc_gcasset::emitted_checked(re4dc_gcasset::Movie,gcasset_movie.asset);
+        re4dc_gcasset::emitted_checked(re4dc_gcasset::Texture,gcasset_movie.asset);
+    }else re4dc_gcasset::unresolved(re4dc_gcasset::Movie,"unqualified-movie-picture");
 #endif
 }
 }
