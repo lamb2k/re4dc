@@ -97,7 +97,20 @@ def sequence_records(body,off,end,index):
     return records
 
 
-def effect(body,entry,index):
+def record_reference_namespace(record):
+    """Known EspSeqSet dispatch; unknown generators retain conservative binding.
+
+    IDs FC..FF use Tex_id as an Efm/scroll model index, not the ordinary
+    Esp_tex_tbl image index. Generator00/02 spawn through the same EspSeqSet;
+    other generators must keep their nominal binding until individually traced.
+    """
+    if record['sprite_id'] < 0xfc:return 'effect-texture'
+    if record['kind']==0 or record['kind']==1 and record['generator_id'] in (0,2):
+        return 'effect-model'
+    return 'unresolved-generator-model-or-texture'
+
+
+def effect(body,entry,index,*,separate_model_namespace=False):
     start,end=entry['off'],entry['end']
     if start+48>end:raise ValueError('short EFF header')
     h=struct.unpack_from('<12I',body,start)
@@ -133,15 +146,23 @@ def effect(body,entry,index):
                     parts_no=record[7],screen_parts=0xf8<=record[7]<=0xfd,
                     tool_flags=u32(record,8),shimmer_type=record[195],mask_texture_id=record[197],
                     generator_id=record[265],size_base=struct.unpack_from('<2f',record,136)))
-    return dict(archive_entry=entry['index'],offset=start,
-        textures=[dict(texture_id=tid,tpl_offset=tpl,records=[r for r in records if r['texture_id']==tid])
+    image_records=([r for r in records if record_reference_namespace(r)!='effect-model']
+                   if separate_model_namespace else records)
+    result=dict(archive_entry=entry['index'],offset=start,
+        textures=[dict(texture_id=tid,tpl_offset=tpl,records=[r for r in image_records if r['texture_id']==tid])
                   for tid,tpl in zip(tex_ids,tpls)],records=len(records))
+    if separate_model_namespace:
+        result['effect_model_references']=[dict(r,reference_namespace='effect-model',model_index=r['texture_id'])
+                                          for r in records if record_reference_namespace(r)=='effect-model']
+        result['unresolved_reference_namespaces']=[r for r in records
+            if record_reference_namespace(r)=='unresolved-generator-model-or-texture']
+    return result
 
 
-def source_bindings(blob):
+def source_bindings(blob,*,separate_model_namespace=False):
     body,offset,entries=archive(blob);index=compact_index(body,entries)
     return dict(active_body_offset=offset,active_body_bytes=len(body),compact_sequences=len(index),
-        effects=[effect(body,e,index) for e in entries if e['tag']==b'EFF'])
+        effects=[effect(body,e,index,separate_model_namespace=separate_model_namespace) for e in entries if e['tag']==b'EFF'])
 
 
 def record_sampling(record,common_sprite_ids,*,extended=False,contract_version=None):
