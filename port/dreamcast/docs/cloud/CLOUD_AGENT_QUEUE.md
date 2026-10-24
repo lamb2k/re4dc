@@ -377,6 +377,23 @@ knob-off release image identical to Test 23 (d28b3cfc).
 3. Console A/B waits for a qualified control and the user's SD-card OK. Peak RAM: the runtime heap row after the
    farm load is 3,733,792 (base), 3,680,960 (SLI1) and 3,604,608 (SDS1) bytes free in heap 4 (more data, less free).
 
+**Claude follow-up (2026-10-24): qualified on original-policy data.** Owner control disc `ctl-olddata`: the Test 23
+program (cw14rP, 2df0e2a8) packaged with the DATA line before mip22 (no mip22 / mip22b / fol24 / sg109 / res22c;
+resident.bin falls back to res22, 1-2 keys short in r100 / r101, which load from disc). r103 SLI1 / SDS1 regenerated
+from that disc are byte-identical in size (the r103 mesh did not change with mip22, only its policy). Matched controls
+now give `err=0` and the full 11,328 transformed inputs per window in every arm; `SCNVAR` admitted both variants, no
+HALT / TEXCHK fail. r103 farm, census on, Flycast MODELLED, per drawn tick (q=2..4 mean):
+
+| arm | world us | sel / xform / clip / hdr / submit / other | v | heap 4 free |
+|---|---|---|---|---|
+| base | 9,637 | 1,733 / 2,994 / 467 / 856 / 2,457 / 1,127 | 11,328 | 3,723,520 |
+| SLI1 | 9,591 | 1,727 / 2,957 / 468 / 859 / 2,453 / 1,126 | 11,328 | 3,670,688 |
+| SDS1 | 11,059 | 2,297 / 4,389 / 458 / 850 / 1,950 / 1,113 | 12,406 | 3,594,336 |
+
+SLI1 -0.05 ms for -52,832 B of heap: a wash. SDS1 +1.42 ms (transform +1.4 ms on +9.5% inputs, submit -0.5 ms) for
+-129,184 B: rejected. Neither goes to a console A/B; both stay default off. Evidence:
+`C:\Flycast-Evidence\re4-dreamcast\world2ms\b12old-1024`.
+
 ### 2026-10-24: Build 13 hand-back (`codex/scenery-record-split-20261024`)
 
 Candidate: `SCENERY_RECORD_SPLIT=1`, default 0; publication base `fc535318`,
