@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "frozen_gate_helper_sha256": "f8d81e3884ef7197834259fef72cb25152770d857ad697e8c325ddca438049bb",
+  "force_limited_sha256": "872a4a2d30ec342cf01e15d04507269f02a713c8eccc68c3dde5320afb1eff15",
+  "freeze_capture_sha256": "66b21342983108db10a8a1a37ab41f189212faf4fe8794240912c4ad93742e93",
+  "ram_backend_sha256": "8bd179110988d1b808d8e353b182f921dc244fdae985a51995293ba570c136b0",
+  "capture_decoder_sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57",
+  "template_cfg_sha256": "e92b5817e28d4e96f4e7d038d64b365e356264d025e55b03f8184a0dd1817840",
+  "fixtures": {
+    "f1.txt": "f1dc379312ec21b2a0d3969dcb6efdacda7c09b3ee502eb1eb5de8df4c080981",
+    "f2.txt": "6d6be3796544f1dca1038fdc340cedb550897cc560480ef8164769897e9f3ff3"
+  },
+  "template_data": {
+    "T0000_vmu_save_A1.bin": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20",
+    "vmu_save_A2.bin": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+  },
+  "console_executable_sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a"
+}

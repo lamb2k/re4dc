@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "files": 23,
+  "archive_bytes": 27659992,
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "live_source_compared": true,
+  "syntax_only": true,
+  "archived_helpers_executed": false,
+  "private_fixtures_opened": false,
+  "verifier_controls": {
+    "positive": 1,
+    "negative": 5
+  },
+  "windows_host_controls_passed": 9,
+  "cleanup_journal_JSONL_rows_independently_parsed": 54368
+}

@@ -1,0 +1,1028 @@
+{
+  "schema": 1,
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "profile": "g",
+  "scope": "Scoped visible fixed-scene corresponding-buffer comparison only",
+  "result": "ALL_FOUR_CORRESPONDING_BUFFERS_MATCH",
+  "guest_attempts": 4,
+  "reruns": 0,
+  "PINS": {
+    "schema": 1,
+    "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+    "frozen_gate_helper_sha256": "f8d81e3884ef7197834259fef72cb25152770d857ad697e8c325ddca438049bb",
+    "force_limited_sha256": "872a4a2d30ec342cf01e15d04507269f02a713c8eccc68c3dde5320afb1eff15",
+    "freeze_capture_sha256": "66b21342983108db10a8a1a37ab41f189212faf4fe8794240912c4ad93742e93",
+    "ram_backend_sha256": "8bd179110988d1b808d8e353b182f921dc244fdae985a51995293ba570c136b0",
+    "capture_decoder_sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57",
+    "template_cfg_sha256": "e92b5817e28d4e96f4e7d038d64b365e356264d025e55b03f8184a0dd1817840",
+    "fixtures": {
+      "f1.txt": "f1dc379312ec21b2a0d3969dcb6efdacda7c09b3ee502eb1eb5de8df4c080981",
+      "f2.txt": "6d6be3796544f1dca1038fdc340cedb550897cc560480ef8164769897e9f3ff3"
+    },
+    "template_data": {
+      "T0000_vmu_save_A1.bin": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20",
+      "vmu_save_A2.bin": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    },
+    "console_executable_sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a"
+  },
+  "cases": [
+    {
+      "tag": "R-f1-limited-r1",
+      "arm": "R",
+      "scene": "f1",
+      "actual_room": "101",
+      "launch_sha256": "5bbcea60765b0fcb710763188ece650e487a99a08ec7173d9e52592162ec9d4f",
+      "result_sha256": "0cfe5f14b88cef57c5e716bf595254a24ed32f720d0e41c827a207e9cb962396",
+      "capture_receipt_sha256": "2b60af45a92254bac3521b222aba57d92a210961b984b9976fc5c1b7c1b94771",
+      "actual_config_sha256": "1bd32372b5ae76657caff6423dfeea3b0c1886ddd08a6f1ca711a595df54aa5e",
+      "prelaunch_sha256": "ef34b58d08519beeda65556166a6f370d9cc6ec4ac489eaf1d1c7f8187570be7",
+      "PID": 34884,
+      "guest_observed_elapsed_s": 29.782,
+      "guest_rc": 1,
+      "harness_status": "RUN_COMPLETE",
+      "marker": {
+        "line": "warp: frozen at tick 330\r",
+        "tick": 330,
+        "placed_room": "101"
+      },
+      "placed_line": "warp: placed room=101 pl=-7914,0,1999 ang=1570/1000 vbl=1218 wall_ms=20614\r",
+      "buffer_stable_between_reads": [
+        true,
+        true
+      ],
+      "reads": [
+        {
+          "index": 0,
+          "start_monotonic": 558957.89,
+          "end_monotonic": 558957.89,
+          "bytes": 8388608,
+          "seconds_after_marker": 0.0
+        },
+        {
+          "index": 1,
+          "start_monotonic": 558958.046,
+          "end_monotonic": 558958.046,
+          "bytes": 8388608,
+          "seconds_after_marker": 0.1559999999590218
+        }
+      ],
+      "images": [
+        {
+          "png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/R-f1-limited-r1/freeze330-frames/first/fb0.png",
+          "sample": 0,
+          "buffer": 0,
+          "path": "freeze330-frames\\first\\fb0.png",
+          "sha256": "a90ba2fd6c7ca7ba24e1802da485e4b0c1dd3e91830c0902f2ea513585ac4985",
+          "raw565_sha256": "1017784d16b249753f901fdb0c0326a37051f1d60e15adaec04510264eaafbfd",
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        {
+          "png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/R-f1-limited-r1/freeze330-frames/first/fb1.png",
+          "sample": 0,
+          "buffer": 1,
+          "path": "freeze330-frames\\first\\fb1.png",
+          "sha256": "3b232c20784edd7673fb9c9799000a1da4089d1ef6df8076491a26c12dfac037",
+          "raw565_sha256": "33bc16d99939bd8482b5574b8bf68200bc701326db55e20b44fd1c3f9decdc42",
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        {
+          "png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/R-f1-limited-r1/freeze330-frames/second/fb0.png",
+          "sample": 1,
+          "buffer": 0,
+          "path": "freeze330-frames\\second\\fb0.png",
+          "sha256": "a90ba2fd6c7ca7ba24e1802da485e4b0c1dd3e91830c0902f2ea513585ac4985",
+          "raw565_sha256": "1017784d16b249753f901fdb0c0326a37051f1d60e15adaec04510264eaafbfd",
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        {
+          "png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/R-f1-limited-r1/freeze330-frames/second/fb1.png",
+          "sample": 1,
+          "buffer": 1,
+          "path": "freeze330-frames\\second\\fb1.png",
+          "sha256": "3b232c20784edd7673fb9c9799000a1da4089d1ef6df8076491a26c12dfac037",
+          "raw565_sha256": "33bc16d99939bd8482b5574b8bf68200bc701326db55e20b44fd1c3f9decdc42",
+          "dimensions": [
+            640,
+            480
+          ]
+        }
+      ],
+      "unit": {
+        "schema": 1,
+        "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+        "arm": "R",
+        "profile": "g",
+        "output": "/root/probe/lanes/route/out-fpwe23R49adgW",
+        "programme": {
+          "elf": {
+            "sha256": "9f41e9b398984b1c3cdbed6d6910b032746aa6badc76dcfeda0a1fa739250e5d",
+            "size": 28720176
+          },
+          "main": {
+            "sha256": "e51c8903a17ddb5dbde303c05120e8b26b22ffc1b6b76edf98701008a6d5ea99",
+            "size": 3402532
+          },
+          "overlays": {
+            "em22.ovl": {
+              "sha256": "7813229c1b47c4ec612acfe406b6a32e68d2eea149d625748d3ac346102406c4",
+              "size": 27236
+            },
+            "em2b.ovl": {
+              "sha256": "a0ad3ac4eb2e4039da5d48bb9b85d76489746888ce96583da8cef2dbcb3f3ce4",
+              "size": 67900
+            },
+            "em2f.ovl": {
+              "sha256": "283292cb40f67e9257d3b09541f054d28ba5cb7d70e97976cae62715e49561cf",
+              "size": 16800
+            },
+            "em35.ovl": {
+              "sha256": "9000911be0c4f6e9c2242ee1efd311cc80f0fb47f7ab4674c493cb71cdfd131a",
+              "size": 52392
+            },
+            "em3b.ovl": {
+              "sha256": "949e71f7b4a856848e877c470a12fc3a28e021d734889ccc82dfe0857fb90848",
+              "size": 7568
+            },
+            "pl0f.ovl": {
+              "sha256": "56414515b01a1c782b3bc1c4064153214f1cfe0da42663f5630ebff8a67ad31c",
+              "size": 45608
+            },
+            "pl11.ovl": {
+              "sha256": "a5bff9203b3cfe40e4718dbb0667073e0cf4588552290302c45fc4bddc056b1b",
+              "size": 35592
+            },
+            "pl14.ovl": {
+              "sha256": "d85f12566a47db6967c5f735b2c2d06b1d554edf5449a64a063dc948812e6ec6",
+              "size": 18832
+            },
+            "sscrn.ovl": {
+              "sha256": "8b10cbf325a1f310ec8bf17f50149e157a2e3a012595afdcbf603300697529e7",
+              "size": 134372
+            },
+            "st1_0.ovl": {
+              "sha256": "9ed7589301227ba8b9a9869aac17bbcb9c746d70783c03ed63f5c1ccc40cb3bc",
+              "size": 36228
+            },
+            "st1_1.ovl": {
+              "sha256": "e87b1a0d193d9d034ac4d6e63e6cffd1e9ca8e7347e108e984d992f171ceaa51",
+              "size": 81572
+            },
+            "st1_2.ovl": {
+              "sha256": "5f7282d35cb2223f367beae41ca90ebaa20c63a57d2052f6cf5967e256f34286",
+              "size": 50076
+            },
+            "st1_3.ovl": {
+              "sha256": "630df0f7cb845533b9a01454d8727f6193e9ea959be3ae412f4de820d3bbb123",
+              "size": 88748
+            },
+            "st2_0.ovl": {
+              "sha256": "d57b8ac2e6673d23cdc78091e36008b91ac4132ee1036f0b017a4024d6d0c462",
+              "size": 96788
+            }
+          }
+        },
+        "syms": "0x3e9280 0x3f9284 0x3f9280",
+        "resolved_knobs_sha256": "9cb937d783cc0474d0d51afb7eda41eb86fb2c46ab665fae3eaf9a9ff9d3bc14",
+        "stack_sha256": "e5c00eda3397a81df4a839dea81eb839e6a3e10dc856c7b89f455be260da2e1a",
+        "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+        "release_manifest_sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+        "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+        "script_sha256": "f8d81e3884ef7197834259fef72cb25152770d857ad697e8c325ddca438049bb"
+      },
+      "base": {
+        "base": "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/_discs/on-g",
+        "base_json_sha256": "12c8ee58e1491061804db8927e3a83893ade587fd8032fccbc02a17b11c55b2c",
+        "base_manifest_sha256": "dc7e02fd451096fb88889e1f4b1876e7e448ef01635f7b7e47b9cd968afa36b4",
+        "track03_sha256": "d024bc2f6ac14a828a1e1835e3615f1926c95ddaaf130891be0028d199d08484"
+      },
+      "actual_build_binding": {
+        "actual_build_source": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+        "reused_old_build": true,
+        "requested_source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+        "proof": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/reuse/R-g-5e4d.json",
+        "proof_sha256": "ce9d7f750c0f11a66dfaa5b0b14b391a51e5428f4a60ad6c595e950edb7ac856",
+        "actual_old_programme": {
+          "elf": {
+            "sha256": "4f1f7c6a89aba1e72e8b121249ea9f0bd94717ce2ca5cd4eda2807c5163104b7",
+            "size": 28720240
+          },
+          "main": {
+            "sha256": "e51c8903a17ddb5dbde303c05120e8b26b22ffc1b6b76edf98701008a6d5ea99",
+            "size": 3402532
+          },
+          "overlays": {
+            "em22.ovl": {
+              "sha256": "7813229c1b47c4ec612acfe406b6a32e68d2eea149d625748d3ac346102406c4",
+              "size": 27236
+            },
+            "em2b.ovl": {
+              "sha256": "a0ad3ac4eb2e4039da5d48bb9b85d76489746888ce96583da8cef2dbcb3f3ce4",
+              "size": 67900
+            },
+            "em2f.ovl": {
+              "sha256": "283292cb40f67e9257d3b09541f054d28ba5cb7d70e97976cae62715e49561cf",
+              "size": 16800
+            },
+            "em35.ovl": {
+              "sha256": "9000911be0c4f6e9c2242ee1efd311cc80f0fb47f7ab4674c493cb71cdfd131a",
+              "size": 52392
+            },
+            "em3b.ovl": {
+              "sha256": "949e71f7b4a856848e877c470a12fc3a28e021d734889ccc82dfe0857fb90848",
+              "size": 7568
+            },
+            "pl0f.ovl": {
+              "sha256": "56414515b01a1c782b3bc1c4064153214f1cfe0da42663f5630ebff8a67ad31c",
+              "size": 45608
+            },
+            "pl11.ovl": {
+              "sha256": "a5bff9203b3cfe40e4718dbb0667073e0cf4588552290302c45fc4bddc056b1b",
+              "size": 35592
+            },
+            "pl14.ovl": {
+              "sha256": "d85f12566a47db6967c5f735b2c2d06b1d554edf5449a64a063dc948812e6ec6",
+              "size": 18832
+            },
+            "sscrn.ovl": {
+              "sha256": "8b10cbf325a1f310ec8bf17f50149e157a2e3a012595afdcbf603300697529e7",
+              "size": 134372
+            },
+            "st1_0.ovl": {
+              "sha256": "9ed7589301227ba8b9a9869aac17bbcb9c746d70783c03ed63f5c1ccc40cb3bc",
+              "size": 36228
+            },
+            "st1_1.ovl": {
+              "sha256": "e87b1a0d193d9d034ac4d6e63e6cffd1e9ca8e7347e108e984d992f171ceaa51",
+              "size": 81572
+            },
+            "st1_2.ovl": {
+              "sha256": "5f7282d35cb2223f367beae41ca90ebaa20c63a57d2052f6cf5967e256f34286",
+              "size": 50076
+            },
+            "st1_3.ovl": {
+              "sha256": "630df0f7cb845533b9a01454d8727f6193e9ea959be3ae412f4de820d3bbb123",
+              "size": 88748
+            },
+            "st2_0.ovl": {
+              "sha256": "d57b8ac2e6673d23cdc78091e36008b91ac4132ee1036f0b017a4024d6d0c462",
+              "size": 96788
+            }
+          }
+        },
+        "limitation": "Current R identity is by raw main+all14overlay byte proof; actual old5e build/ELF/base explicitly reused."
+      },
+      "fixture": {
+        "path": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/fixtures/f1.txt",
+        "sha256": "f1dc379312ec21b2a0d3969dcb6efdacda7c09b3ee502eb1eb5de8df4c080981"
+      },
+      "visual_inspection": "Both first-read buffers inspected: clean authored scene, Leon/HUD visible; no Loading/watchdog screen."
+    },
+    {
+      "tag": "B-f1-limited-r1",
+      "arm": "B",
+      "scene": "f1",
+      "actual_room": "101",
+      "launch_sha256": "852ac2f30c7832ffa8ffe79b80a78745814f4166c4b93d6aa6999faec58d6bfc",
+      "result_sha256": "88380717b0b76fb3e011d78ef1d256ccf4dd4c5286080e112c51791c7528d122",
+      "capture_receipt_sha256": "409fb4645933d4999e400786c11fd86808949874d84e66eb51305a4142729e58",
+      "actual_config_sha256": "1bd32372b5ae76657caff6423dfeea3b0c1886ddd08a6f1ca711a595df54aa5e",
+      "prelaunch_sha256": "e8e316d4ef7b3cfdcbb1ecf3e486087f43210a5003f59dd719ca35022a7e13fd",
+      "PID": 31248,
+      "guest_observed_elapsed_s": 29.859,
+      "guest_rc": 1,
+      "harness_status": "RUN_COMPLETE",
+      "marker": {
+        "line": "warp: frozen at tick 330\r",
+        "tick": 330,
+        "placed_room": "101"
+      },
+      "placed_line": "warp: placed room=101 pl=-7914,0,1999 ang=1570/1000 vbl=1218 wall_ms=20614\r",
+      "buffer_stable_between_reads": [
+        true,
+        true
+      ],
+      "reads": [
+        {
+          "index": 0,
+          "start_monotonic": 559067.093,
+          "end_monotonic": 559067.093,
+          "bytes": 8388608,
+          "seconds_after_marker": 0.015000000013969839
+        },
+        {
+          "index": 1,
+          "start_monotonic": 559067.25,
+          "end_monotonic": 559067.25,
+          "bytes": 8388608,
+          "seconds_after_marker": 0.1720000000204891
+        }
+      ],
+      "images": [
+        {
+          "png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/B-f1-limited-r1/freeze330-frames/first/fb0.png",
+          "sample": 0,
+          "buffer": 0,
+          "path": "freeze330-frames\\first\\fb0.png",
+          "sha256": "a90ba2fd6c7ca7ba24e1802da485e4b0c1dd3e91830c0902f2ea513585ac4985",
+          "raw565_sha256": "1017784d16b249753f901fdb0c0326a37051f1d60e15adaec04510264eaafbfd",
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        {
+          "png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/B-f1-limited-r1/freeze330-frames/first/fb1.png",
+          "sample": 0,
+          "buffer": 1,
+          "path": "freeze330-frames\\first\\fb1.png",
+          "sha256": "3b232c20784edd7673fb9c9799000a1da4089d1ef6df8076491a26c12dfac037",
+          "raw565_sha256": "33bc16d99939bd8482b5574b8bf68200bc701326db55e20b44fd1c3f9decdc42",
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        {
+          "png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/B-f1-limited-r1/freeze330-frames/second/fb0.png",
+          "sample": 1,
+          "buffer": 0,
+          "path": "freeze330-frames\\second\\fb0.png",
+          "sha256": "a90ba2fd6c7ca7ba24e1802da485e4b0c1dd3e91830c0902f2ea513585ac4985",
+          "raw565_sha256": "1017784d16b249753f901fdb0c0326a37051f1d60e15adaec04510264eaafbfd",
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        {
+          "png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/B-f1-limited-r1/freeze330-frames/second/fb1.png",
+          "sample": 1,
+          "buffer": 1,
+          "path": "freeze330-frames\\second\\fb1.png",
+          "sha256": "3b232c20784edd7673fb9c9799000a1da4089d1ef6df8076491a26c12dfac037",
+          "raw565_sha256": "33bc16d99939bd8482b5574b8bf68200bc701326db55e20b44fd1c3f9decdc42",
+          "dimensions": [
+            640,
+            480
+          ]
+        }
+      ],
+      "unit": {
+        "schema": 1,
+        "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+        "arm": "B",
+        "profile": "g",
+        "output": "/root/probe/lanes/route/out-fpwe23B49adgW",
+        "programme": {
+          "elf": {
+            "sha256": "60d0af6ae01a376c6828081040001224aa61b30dbb6dae38f901191bd7bd1db1",
+            "size": 28752584
+          },
+          "main": {
+            "sha256": "03bbfd28365bf837bd48d6f8ed869b5de70ae05fb0963ac18848bf9e5aa34fa4",
+            "size": 3405092
+          },
+          "overlays": {
+            "em22.ovl": {
+              "sha256": "8dd540931445fa1c347056cfd3bc0a7775cf986689a0269a970267d16856ce4d",
+              "size": 27236
+            },
+            "em2b.ovl": {
+              "sha256": "bef05e5df3e555123ff34b43d4399f577aa3359c1dde218c0c34f6ea170f6af4",
+              "size": 67900
+            },
+            "em2f.ovl": {
+              "sha256": "1cb6ad0b1864a1bfed86c3cc37949574330b743ac87e53ff92e6d5512d9242d1",
+              "size": 16800
+            },
+            "em35.ovl": {
+              "sha256": "4c497567345a9961de61dbd9eb5f94417021e2f77025b5c5242d7646a4ee8ad2",
+              "size": 52392
+            },
+            "em3b.ovl": {
+              "sha256": "ed92f906ed83a6c3217075399069a8a5e84bff421c10c66a826f9d820d25381f",
+              "size": 7568
+            },
+            "pl0f.ovl": {
+              "sha256": "f5e9203c757fcb0317baaeda4d6daa54464763a7e25b726cabdf75c945dd3621",
+              "size": 45608
+            },
+            "pl11.ovl": {
+              "sha256": "b191ee72b191d682f0094379a6403267f038d803f48eb0aa407fea37a2e9a15e",
+              "size": 35592
+            },
+            "pl14.ovl": {
+              "sha256": "e9aff9e3405e1de8c9e7ae32a591d8c92573a74fbc696bcb8e32ea3cdef3ce4f",
+              "size": 18832
+            },
+            "sscrn.ovl": {
+              "sha256": "b302208e28e2083d600555afe3ea2a0eb9a5c5a9fa82f9eac5081d99b62d9e9d",
+              "size": 134372
+            },
+            "st1_0.ovl": {
+              "sha256": "e777f7830b91ff814942530e8ba61f73cc19e32e3d64ac64c2bfb49431f6c4d1",
+              "size": 36228
+            },
+            "st1_1.ovl": {
+              "sha256": "d96948ffd9e61c09717a3a810be4b8ce7bf7ac234dddc880fe67714d443d5de8",
+              "size": 81572
+            },
+            "st1_2.ovl": {
+              "sha256": "dd746a677975479d83f9654a926ce746ad509e661217113697720bc89a08c158",
+              "size": 50076
+            },
+            "st1_3.ovl": {
+              "sha256": "ed2bdbc3b8dfe0538e2552a547da79be4d64c4bcbb6ce777d940e7ae5f55db23",
+              "size": 88748
+            },
+            "st2_0.ovl": {
+              "sha256": "ca6bf7bc8a7c0ff334a3b751fc34f26ce614334e0175305a762a7f5fe3402723",
+              "size": 96788
+            }
+          }
+        },
+        "syms": "0x3e9c80 0x3f9c84 0x3f9c80",
+        "resolved_knobs_sha256": "8e8458fd92be2527409b3318028162401206bcb4a1546723b29dac8095e492a5",
+        "stack_sha256": "e5c00eda3397a81df4a839dea81eb839e6a3e10dc856c7b89f455be260da2e1a",
+        "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+        "release_manifest_sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+        "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+        "script_sha256": "f8d81e3884ef7197834259fef72cb25152770d857ad697e8c325ddca438049bb"
+      },
+      "base": {
+        "base": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/_discs/B-g",
+        "base_json_sha256": "1632eb8fc70a4bd8cda21dc361b83a2ef24c8417f10296aebdf060075a2a7ab6",
+        "base_manifest_sha256": "76b2e6607b295a2dcebef3ce4282786ae5cc6efade265e3a93e77e3850b9aa59",
+        "track03_sha256": "a9adcc47e46bdbebd47a08cb2bebfbc65f957af384a020d08ba0b9b8afd3aa32",
+        "track01_template": {
+          "sha256": "0c8e4201e4d9b5caa40c343bf5c6488c2dd0178cd78a32b96c54af1e5378840b",
+          "size": 1241088
+        },
+        "track02": {
+          "sha256": "9c97e0db4fd5cd70156208d1c921beaaa831f6f5ca5672cf6517d68a1e68f744",
+          "size": 710304
+        }
+      },
+      "actual_build_binding": {
+        "actual_build_source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+        "reused_old_build": false
+      },
+      "fixture": {
+        "path": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/fixtures/f1.txt",
+        "sha256": "f1dc379312ec21b2a0d3969dcb6efdacda7c09b3ee502eb1eb5de8df4c080981"
+      },
+      "visual_inspection": "Both first-read buffers inspected: clean authored scene, Leon/HUD visible; no Loading/watchdog screen."
+    },
+    {
+      "tag": "R-f2-limited-r1",
+      "arm": "R",
+      "scene": "f2",
+      "actual_room": "100",
+      "launch_sha256": "c74017c769eeb59dfa89578469f2177b6525cd58c7c13893fdb7526d188d3a36",
+      "result_sha256": "944642f7616c05a8bc9a3d6622fa005cd8b9cdeb1be8eec6dfc4b44a90ef98eb",
+      "capture_receipt_sha256": "78581f0c8d63fc4f67341cfa7fbe2e59c87bad9d1e37643b1633ab037ffe20e7",
+      "actual_config_sha256": "1bd32372b5ae76657caff6423dfeea3b0c1886ddd08a6f1ca711a595df54aa5e",
+      "prelaunch_sha256": "397378361ff6a8c658e4f914e764e8fef0718f73357493b1b9181d4a6b914462",
+      "PID": 54528,
+      "guest_observed_elapsed_s": 26.734,
+      "guest_rc": 1,
+      "harness_status": "RUN_COMPLETE",
+      "marker": {
+        "line": "warp: frozen at tick 330\r",
+        "tick": 330,
+        "placed_room": "100"
+      },
+      "placed_line": "warp: placed room=100 pl=-99685,-454,-1343 ang=2246/1000 vbl=1027 wall_ms=17418\r",
+      "buffer_stable_between_reads": [
+        true,
+        true
+      ],
+      "reads": [
+        {
+          "index": 0,
+          "start_monotonic": 559175.687,
+          "end_monotonic": 559175.687,
+          "bytes": 8388608,
+          "seconds_after_marker": 0.01600000006146729
+        },
+        {
+          "index": 1,
+          "start_monotonic": 559175.843,
+          "end_monotonic": 559175.843,
+          "bytes": 8388608,
+          "seconds_after_marker": 0.1720000000204891
+        }
+      ],
+      "images": [
+        {
+          "png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/R-f2-limited-r1/freeze330-frames/first/fb0.png",
+          "sample": 0,
+          "buffer": 0,
+          "path": "freeze330-frames\\first\\fb0.png",
+          "sha256": "945a82e61b81c6f7e3b5187973323e496f4bf9c922109e92442d92418b47039c",
+          "raw565_sha256": "a870f9d651c25855a8d50ec1168aec23b7cf7618369e5a5dad63b20bbd1cd999",
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        {
+          "png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/R-f2-limited-r1/freeze330-frames/first/fb1.png",
+          "sample": 0,
+          "buffer": 1,
+          "path": "freeze330-frames\\first\\fb1.png",
+          "sha256": "f88957797b1d9e5cdab4e3758624188cc5381465849eb898362fc2b55af5a338",
+          "raw565_sha256": "7969d82a50e78bad3fcaa74331e91713ec4dfe1ccf4f21df7fa2da260b38bb89",
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        {
+          "png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/R-f2-limited-r1/freeze330-frames/second/fb0.png",
+          "sample": 1,
+          "buffer": 0,
+          "path": "freeze330-frames\\second\\fb0.png",
+          "sha256": "945a82e61b81c6f7e3b5187973323e496f4bf9c922109e92442d92418b47039c",
+          "raw565_sha256": "a870f9d651c25855a8d50ec1168aec23b7cf7618369e5a5dad63b20bbd1cd999",
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        {
+          "png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/R-f2-limited-r1/freeze330-frames/second/fb1.png",
+          "sample": 1,
+          "buffer": 1,
+          "path": "freeze330-frames\\second\\fb1.png",
+          "sha256": "f88957797b1d9e5cdab4e3758624188cc5381465849eb898362fc2b55af5a338",
+          "raw565_sha256": "7969d82a50e78bad3fcaa74331e91713ec4dfe1ccf4f21df7fa2da260b38bb89",
+          "dimensions": [
+            640,
+            480
+          ]
+        }
+      ],
+      "unit": {
+        "schema": 1,
+        "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+        "arm": "R",
+        "profile": "g",
+        "output": "/root/probe/lanes/route/out-fpwe23R49adgW",
+        "programme": {
+          "elf": {
+            "sha256": "9f41e9b398984b1c3cdbed6d6910b032746aa6badc76dcfeda0a1fa739250e5d",
+            "size": 28720176
+          },
+          "main": {
+            "sha256": "e51c8903a17ddb5dbde303c05120e8b26b22ffc1b6b76edf98701008a6d5ea99",
+            "size": 3402532
+          },
+          "overlays": {
+            "em22.ovl": {
+              "sha256": "7813229c1b47c4ec612acfe406b6a32e68d2eea149d625748d3ac346102406c4",
+              "size": 27236
+            },
+            "em2b.ovl": {
+              "sha256": "a0ad3ac4eb2e4039da5d48bb9b85d76489746888ce96583da8cef2dbcb3f3ce4",
+              "size": 67900
+            },
+            "em2f.ovl": {
+              "sha256": "283292cb40f67e9257d3b09541f054d28ba5cb7d70e97976cae62715e49561cf",
+              "size": 16800
+            },
+            "em35.ovl": {
+              "sha256": "9000911be0c4f6e9c2242ee1efd311cc80f0fb47f7ab4674c493cb71cdfd131a",
+              "size": 52392
+            },
+            "em3b.ovl": {
+              "sha256": "949e71f7b4a856848e877c470a12fc3a28e021d734889ccc82dfe0857fb90848",
+              "size": 7568
+            },
+            "pl0f.ovl": {
+              "sha256": "56414515b01a1c782b3bc1c4064153214f1cfe0da42663f5630ebff8a67ad31c",
+              "size": 45608
+            },
+            "pl11.ovl": {
+              "sha256": "a5bff9203b3cfe40e4718dbb0667073e0cf4588552290302c45fc4bddc056b1b",
+              "size": 35592
+            },
+            "pl14.ovl": {
+              "sha256": "d85f12566a47db6967c5f735b2c2d06b1d554edf5449a64a063dc948812e6ec6",
+              "size": 18832
+            },
+            "sscrn.ovl": {
+              "sha256": "8b10cbf325a1f310ec8bf17f50149e157a2e3a012595afdcbf603300697529e7",
+              "size": 134372
+            },
+            "st1_0.ovl": {
+              "sha256": "9ed7589301227ba8b9a9869aac17bbcb9c746d70783c03ed63f5c1ccc40cb3bc",
+              "size": 36228
+            },
+            "st1_1.ovl": {
+              "sha256": "e87b1a0d193d9d034ac4d6e63e6cffd1e9ca8e7347e108e984d992f171ceaa51",
+              "size": 81572
+            },
+            "st1_2.ovl": {
+              "sha256": "5f7282d35cb2223f367beae41ca90ebaa20c63a57d2052f6cf5967e256f34286",
+              "size": 50076
+            },
+            "st1_3.ovl": {
+              "sha256": "630df0f7cb845533b9a01454d8727f6193e9ea959be3ae412f4de820d3bbb123",
+              "size": 88748
+            },
+            "st2_0.ovl": {
+              "sha256": "d57b8ac2e6673d23cdc78091e36008b91ac4132ee1036f0b017a4024d6d0c462",
+              "size": 96788
+            }
+          }
+        },
+        "syms": "0x3e9280 0x3f9284 0x3f9280",
+        "resolved_knobs_sha256": "9cb937d783cc0474d0d51afb7eda41eb86fb2c46ab665fae3eaf9a9ff9d3bc14",
+        "stack_sha256": "e5c00eda3397a81df4a839dea81eb839e6a3e10dc856c7b89f455be260da2e1a",
+        "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+        "release_manifest_sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+        "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+        "script_sha256": "f8d81e3884ef7197834259fef72cb25152770d857ad697e8c325ddca438049bb"
+      },
+      "base": {
+        "base": "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/_discs/on-g",
+        "base_json_sha256": "12c8ee58e1491061804db8927e3a83893ade587fd8032fccbc02a17b11c55b2c",
+        "base_manifest_sha256": "dc7e02fd451096fb88889e1f4b1876e7e448ef01635f7b7e47b9cd968afa36b4",
+        "track03_sha256": "d024bc2f6ac14a828a1e1835e3615f1926c95ddaaf130891be0028d199d08484"
+      },
+      "actual_build_binding": {
+        "actual_build_source": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+        "reused_old_build": true,
+        "requested_source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+        "proof": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/reuse/R-g-5e4d.json",
+        "proof_sha256": "ce9d7f750c0f11a66dfaa5b0b14b391a51e5428f4a60ad6c595e950edb7ac856",
+        "actual_old_programme": {
+          "elf": {
+            "sha256": "4f1f7c6a89aba1e72e8b121249ea9f0bd94717ce2ca5cd4eda2807c5163104b7",
+            "size": 28720240
+          },
+          "main": {
+            "sha256": "e51c8903a17ddb5dbde303c05120e8b26b22ffc1b6b76edf98701008a6d5ea99",
+            "size": 3402532
+          },
+          "overlays": {
+            "em22.ovl": {
+              "sha256": "7813229c1b47c4ec612acfe406b6a32e68d2eea149d625748d3ac346102406c4",
+              "size": 27236
+            },
+            "em2b.ovl": {
+              "sha256": "a0ad3ac4eb2e4039da5d48bb9b85d76489746888ce96583da8cef2dbcb3f3ce4",
+              "size": 67900
+            },
+            "em2f.ovl": {
+              "sha256": "283292cb40f67e9257d3b09541f054d28ba5cb7d70e97976cae62715e49561cf",
+              "size": 16800
+            },
+            "em35.ovl": {
+              "sha256": "9000911be0c4f6e9c2242ee1efd311cc80f0fb47f7ab4674c493cb71cdfd131a",
+              "size": 52392
+            },
+            "em3b.ovl": {
+              "sha256": "949e71f7b4a856848e877c470a12fc3a28e021d734889ccc82dfe0857fb90848",
+              "size": 7568
+            },
+            "pl0f.ovl": {
+              "sha256": "56414515b01a1c782b3bc1c4064153214f1cfe0da42663f5630ebff8a67ad31c",
+              "size": 45608
+            },
+            "pl11.ovl": {
+              "sha256": "a5bff9203b3cfe40e4718dbb0667073e0cf4588552290302c45fc4bddc056b1b",
+              "size": 35592
+            },
+            "pl14.ovl": {
+              "sha256": "d85f12566a47db6967c5f735b2c2d06b1d554edf5449a64a063dc948812e6ec6",
+              "size": 18832
+            },
+            "sscrn.ovl": {
+              "sha256": "8b10cbf325a1f310ec8bf17f50149e157a2e3a012595afdcbf603300697529e7",
+              "size": 134372
+            },
+            "st1_0.ovl": {
+              "sha256": "9ed7589301227ba8b9a9869aac17bbcb9c746d70783c03ed63f5c1ccc40cb3bc",
+              "size": 36228
+            },
+            "st1_1.ovl": {
+              "sha256": "e87b1a0d193d9d034ac4d6e63e6cffd1e9ca8e7347e108e984d992f171ceaa51",
+              "size": 81572
+            },
+            "st1_2.ovl": {
+              "sha256": "5f7282d35cb2223f367beae41ca90ebaa20c63a57d2052f6cf5967e256f34286",
+              "size": 50076
+            },
+            "st1_3.ovl": {
+              "sha256": "630df0f7cb845533b9a01454d8727f6193e9ea959be3ae412f4de820d3bbb123",
+              "size": 88748
+            },
+            "st2_0.ovl": {
+              "sha256": "d57b8ac2e6673d23cdc78091e36008b91ac4132ee1036f0b017a4024d6d0c462",
+              "size": 96788
+            }
+          }
+        },
+        "limitation": "Current R identity is by raw main+all14overlay byte proof; actual old5e build/ELF/base explicitly reused."
+      },
+      "fixture": {
+        "path": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/fixtures/f2.txt",
+        "sha256": "6d6be3796544f1dca1038fdc340cedb550897cc560480ef8164769897e9f3ff3"
+      },
+      "visual_inspection": "Both first-read buffers inspected: clean authored scene, Leon/HUD visible; no Loading/watchdog screen."
+    },
+    {
+      "tag": "B-f2-limited-r1",
+      "arm": "B",
+      "scene": "f2",
+      "actual_room": "100",
+      "launch_sha256": "c6f0755380d505b1ccefee1f8fdf8cbf7436ce24e04c2dfc3661c94b31cbc493",
+      "result_sha256": "345da22cea9d7b37be76f9579fb5d5fd55dd302aaa60204889a9d37341f748ae",
+      "capture_receipt_sha256": "3bd7951750b505225024abc25787cdcad84471c4e0a5066dd6ca831fe9ee8890",
+      "actual_config_sha256": "1bd32372b5ae76657caff6423dfeea3b0c1886ddd08a6f1ca711a595df54aa5e",
+      "prelaunch_sha256": "d14b5179efaeffaa395bc5b733b36de0cce49c50ced782412ada61ebc3e16b2c",
+      "PID": 40860,
+      "guest_observed_elapsed_s": 26.359,
+      "guest_rc": 1,
+      "harness_status": "RUN_COMPLETE",
+      "marker": {
+        "line": "warp: frozen at tick 330\r",
+        "tick": 330,
+        "placed_room": "100"
+      },
+      "placed_line": "warp: placed room=100 pl=-99685,-454,-1343 ang=2246/1000 vbl=1027 wall_ms=17418\r",
+      "buffer_stable_between_reads": [
+        true,
+        true
+      ],
+      "reads": [
+        {
+          "index": 0,
+          "start_monotonic": 559368.078,
+          "end_monotonic": 559368.078,
+          "bytes": 8388608,
+          "seconds_after_marker": 0.015999999945051968
+        },
+        {
+          "index": 1,
+          "start_monotonic": 559368.218,
+          "end_monotonic": 559368.234,
+          "bytes": 8388608,
+          "seconds_after_marker": 0.1559999999590218
+        }
+      ],
+      "images": [
+        {
+          "png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/B-f2-limited-r1/freeze330-frames/first/fb0.png",
+          "sample": 0,
+          "buffer": 0,
+          "path": "freeze330-frames\\first\\fb0.png",
+          "sha256": "945a82e61b81c6f7e3b5187973323e496f4bf9c922109e92442d92418b47039c",
+          "raw565_sha256": "a870f9d651c25855a8d50ec1168aec23b7cf7618369e5a5dad63b20bbd1cd999",
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        {
+          "png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/B-f2-limited-r1/freeze330-frames/first/fb1.png",
+          "sample": 0,
+          "buffer": 1,
+          "path": "freeze330-frames\\first\\fb1.png",
+          "sha256": "f88957797b1d9e5cdab4e3758624188cc5381465849eb898362fc2b55af5a338",
+          "raw565_sha256": "7969d82a50e78bad3fcaa74331e91713ec4dfe1ccf4f21df7fa2da260b38bb89",
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        {
+          "png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/B-f2-limited-r1/freeze330-frames/second/fb0.png",
+          "sample": 1,
+          "buffer": 0,
+          "path": "freeze330-frames\\second\\fb0.png",
+          "sha256": "945a82e61b81c6f7e3b5187973323e496f4bf9c922109e92442d92418b47039c",
+          "raw565_sha256": "a870f9d651c25855a8d50ec1168aec23b7cf7618369e5a5dad63b20bbd1cd999",
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        {
+          "png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/B-f2-limited-r1/freeze330-frames/second/fb1.png",
+          "sample": 1,
+          "buffer": 1,
+          "path": "freeze330-frames\\second\\fb1.png",
+          "sha256": "f88957797b1d9e5cdab4e3758624188cc5381465849eb898362fc2b55af5a338",
+          "raw565_sha256": "7969d82a50e78bad3fcaa74331e91713ec4dfe1ccf4f21df7fa2da260b38bb89",
+          "dimensions": [
+            640,
+            480
+          ]
+        }
+      ],
+      "unit": {
+        "schema": 1,
+        "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+        "arm": "B",
+        "profile": "g",
+        "output": "/root/probe/lanes/route/out-fpwe23B49adgW",
+        "programme": {
+          "elf": {
+            "sha256": "60d0af6ae01a376c6828081040001224aa61b30dbb6dae38f901191bd7bd1db1",
+            "size": 28752584
+          },
+          "main": {
+            "sha256": "03bbfd28365bf837bd48d6f8ed869b5de70ae05fb0963ac18848bf9e5aa34fa4",
+            "size": 3405092
+          },
+          "overlays": {
+            "em22.ovl": {
+              "sha256": "8dd540931445fa1c347056cfd3bc0a7775cf986689a0269a970267d16856ce4d",
+              "size": 27236
+            },
+            "em2b.ovl": {
+              "sha256": "bef05e5df3e555123ff34b43d4399f577aa3359c1dde218c0c34f6ea170f6af4",
+              "size": 67900
+            },
+            "em2f.ovl": {
+              "sha256": "1cb6ad0b1864a1bfed86c3cc37949574330b743ac87e53ff92e6d5512d9242d1",
+              "size": 16800
+            },
+            "em35.ovl": {
+              "sha256": "4c497567345a9961de61dbd9eb5f94417021e2f77025b5c5242d7646a4ee8ad2",
+              "size": 52392
+            },
+            "em3b.ovl": {
+              "sha256": "ed92f906ed83a6c3217075399069a8a5e84bff421c10c66a826f9d820d25381f",
+              "size": 7568
+            },
+            "pl0f.ovl": {
+              "sha256": "f5e9203c757fcb0317baaeda4d6daa54464763a7e25b726cabdf75c945dd3621",
+              "size": 45608
+            },
+            "pl11.ovl": {
+              "sha256": "b191ee72b191d682f0094379a6403267f038d803f48eb0aa407fea37a2e9a15e",
+              "size": 35592
+            },
+            "pl14.ovl": {
+              "sha256": "e9aff9e3405e1de8c9e7ae32a591d8c92573a74fbc696bcb8e32ea3cdef3ce4f",
+              "size": 18832
+            },
+            "sscrn.ovl": {
+              "sha256": "b302208e28e2083d600555afe3ea2a0eb9a5c5a9fa82f9eac5081d99b62d9e9d",
+              "size": 134372
+            },
+            "st1_0.ovl": {
+              "sha256": "e777f7830b91ff814942530e8ba61f73cc19e32e3d64ac64c2bfb49431f6c4d1",
+              "size": 36228
+            },
+            "st1_1.ovl": {
+              "sha256": "d96948ffd9e61c09717a3a810be4b8ce7bf7ac234dddc880fe67714d443d5de8",
+              "size": 81572
+            },
+            "st1_2.ovl": {
+              "sha256": "dd746a677975479d83f9654a926ce746ad509e661217113697720bc89a08c158",
+              "size": 50076
+            },
+            "st1_3.ovl": {
+              "sha256": "ed2bdbc3b8dfe0538e2552a547da79be4d64c4bcbb6ce777d940e7ae5f55db23",
+              "size": 88748
+            },
+            "st2_0.ovl": {
+              "sha256": "ca6bf7bc8a7c0ff334a3b751fc34f26ce614334e0175305a762a7f5fe3402723",
+              "size": 96788
+            }
+          }
+        },
+        "syms": "0x3e9c80 0x3f9c84 0x3f9c80",
+        "resolved_knobs_sha256": "8e8458fd92be2527409b3318028162401206bcb4a1546723b29dac8095e492a5",
+        "stack_sha256": "e5c00eda3397a81df4a839dea81eb839e6a3e10dc856c7b89f455be260da2e1a",
+        "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+        "release_manifest_sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+        "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+        "script_sha256": "f8d81e3884ef7197834259fef72cb25152770d857ad697e8c325ddca438049bb"
+      },
+      "base": {
+        "base": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/_discs/B-g",
+        "base_json_sha256": "1632eb8fc70a4bd8cda21dc361b83a2ef24c8417f10296aebdf060075a2a7ab6",
+        "base_manifest_sha256": "76b2e6607b295a2dcebef3ce4282786ae5cc6efade265e3a93e77e3850b9aa59",
+        "track03_sha256": "a9adcc47e46bdbebd47a08cb2bebfbc65f957af384a020d08ba0b9b8afd3aa32",
+        "track01_template": {
+          "sha256": "0c8e4201e4d9b5caa40c343bf5c6488c2dd0178cd78a32b96c54af1e5378840b",
+          "size": 1241088
+        },
+        "track02": {
+          "sha256": "9c97e0db4fd5cd70156208d1c921beaaa831f6f5ca5672cf6517d68a1e68f744",
+          "size": 710304
+        }
+      },
+      "actual_build_binding": {
+        "actual_build_source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+        "reused_old_build": false
+      },
+      "fixture": {
+        "path": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/fixtures/f2.txt",
+        "sha256": "6d6be3796544f1dca1038fdc340cedb550897cc560480ef8164769897e9f3ff3"
+      },
+      "visual_inspection": "Both first-read buffers inspected: clean authored scene, Leon/HUD visible; no Loading/watchdog screen."
+    }
+  ],
+  "comparisons": [
+    {
+      "scene": "f1",
+      "buffer": 0,
+      "R_png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/R-f1-limited-r1/freeze330-frames/first/fb0.png",
+      "B_png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/B-f1-limited-r1/freeze330-frames/first/fb0.png",
+      "R_png_sha256": "a90ba2fd6c7ca7ba24e1802da485e4b0c1dd3e91830c0902f2ea513585ac4985",
+      "B_png_sha256": "a90ba2fd6c7ca7ba24e1802da485e4b0c1dd3e91830c0902f2ea513585ac4985",
+      "R_raw565_sha256": "1017784d16b249753f901fdb0c0326a37051f1d60e15adaec04510264eaafbfd",
+      "B_raw565_sha256": "1017784d16b249753f901fdb0c0326a37051f1d60e15adaec04510264eaafbfd",
+      "changed_pixels": 0,
+      "maximum_channel_difference": 0,
+      "mean_channel_difference": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "raw565_identical": true,
+      "result": "MATCH"
+    },
+    {
+      "scene": "f1",
+      "buffer": 1,
+      "R_png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/R-f1-limited-r1/freeze330-frames/first/fb1.png",
+      "B_png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/B-f1-limited-r1/freeze330-frames/first/fb1.png",
+      "R_png_sha256": "3b232c20784edd7673fb9c9799000a1da4089d1ef6df8076491a26c12dfac037",
+      "B_png_sha256": "3b232c20784edd7673fb9c9799000a1da4089d1ef6df8076491a26c12dfac037",
+      "R_raw565_sha256": "33bc16d99939bd8482b5574b8bf68200bc701326db55e20b44fd1c3f9decdc42",
+      "B_raw565_sha256": "33bc16d99939bd8482b5574b8bf68200bc701326db55e20b44fd1c3f9decdc42",
+      "changed_pixels": 0,
+      "maximum_channel_difference": 0,
+      "mean_channel_difference": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "raw565_identical": true,
+      "result": "MATCH"
+    },
+    {
+      "scene": "f2",
+      "buffer": 0,
+      "R_png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/R-f2-limited-r1/freeze330-frames/first/fb0.png",
+      "B_png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/B-f2-limited-r1/freeze330-frames/first/fb0.png",
+      "R_png_sha256": "945a82e61b81c6f7e3b5187973323e496f4bf9c922109e92442d92418b47039c",
+      "B_png_sha256": "945a82e61b81c6f7e3b5187973323e496f4bf9c922109e92442d92418b47039c",
+      "R_raw565_sha256": "a870f9d651c25855a8d50ec1168aec23b7cf7618369e5a5dad63b20bbd1cd999",
+      "B_raw565_sha256": "a870f9d651c25855a8d50ec1168aec23b7cf7618369e5a5dad63b20bbd1cd999",
+      "changed_pixels": 0,
+      "maximum_channel_difference": 0,
+      "mean_channel_difference": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "raw565_identical": true,
+      "result": "MATCH"
+    },
+    {
+      "scene": "f2",
+      "buffer": 1,
+      "R_png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/R-f2-limited-r1/freeze330-frames/first/fb1.png",
+      "B_png": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-stills/captures/B-f2-limited-r1/freeze330-frames/first/fb1.png",
+      "R_png_sha256": "f88957797b1d9e5cdab4e3758624188cc5381465849eb898362fc2b55af5a338",
+      "B_png_sha256": "f88957797b1d9e5cdab4e3758624188cc5381465849eb898362fc2b55af5a338",
+      "R_raw565_sha256": "7969d82a50e78bad3fcaa74331e91713ec4dfe1ccf4f21df7fa2da260b38bb89",
+      "B_raw565_sha256": "7969d82a50e78bad3fcaa74331e91713ec4dfe1ccf4f21df7fa2da260b38bb89",
+      "changed_pixels": 0,
+      "maximum_channel_difference": 0,
+      "mean_channel_difference": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "raw565_identical": true,
+      "result": "MATCH"
+    }
+  ],
+  "limits": [
+    "Freeze tick330 holds the game thread before frame completion; last completed world328 is a pinned source-call-order statement, not independently sampled here.",
+    "No strict completed actor/viewport/presentation/upload/full-runtime-pose proof; withdrawn current49ad observer was not used.",
+    "Each framebuffer read is separately owned-process bound; the two buffer indices are never permuted or selected to force a match.",
+    "R actual old5e build/base/ELF is explicitly reused by current49ad raw-main plus all14-overlay byte proof and common asset identity.",
+    "Guest rc1 is retained as the exact child exit after harness goal stop; RUN_COMPLETE, goal marker and no harness errors qualify these bounded captures.",
+    "This does not close strict Mendez material-pair failure, private QA, release, hardware or performance acceptance."
+  ]
+}

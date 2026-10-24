@@ -1,0 +1,14 @@
+{
+  "inventory_sha256": "b76966464b2f717567b229dbe51f9e318d5d7aa9bce868d7dd5caecf068512ae",
+  "script_sha256": "644312f722227bfc8f5fedf5672e235bac9a1ca8db906b802d04962fcdc0a2d2",
+  "journal_sha256": "9eb82b4f667c30ef8dd11c28eb8f3ea1e4301bd95c45ca5914a8f09481b42038",
+  "removed_files": 27283,
+  "old_single_link_allocations_bytes": 1552756736,
+  "retained_programme_checks": true,
+  "retained_renderer_actor_cache_objects": true,
+  "source_assets_logs_overlays_elf_untouched": true,
+  "C_free_before": 32757190656,
+  "C_free_after": 32752443392,
+  "C_delta_not_attributed_to_cleanup": -4747264,
+  "scope": "Only completed49ad .o/.d rebuildables. No current programme/source/evidence media or global SDK changes; VHD space release may lag."
+}
