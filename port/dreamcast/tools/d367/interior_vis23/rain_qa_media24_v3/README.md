@@ -1,0 +1,18 @@
+# Rain media/observer V3: exact regular host tool admission
+
+PREPARATION ONLY; no retry, stage, SDK or guest ran. V2 a198c3d5 and root qa-media-stage-root-v1 failure remain immutable. The real attempt stopped in about1.006s before WORK/final creation: common.verify correctly refused the legitimate /usr/bin/python3 symlink. Its bytes had not changed. Earlier row/hash checks established payload identity but missed this actual verifier refusal; this successor adds an actual read-only full-verifier preflight before any stage write.
+
+Only the58 declared input paths were inventoried. Sole alias: /usr/bin/python3 -> relative python3.12 -> regular /usr/bin/python3.12,8020928B SHAe50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f. There was no broader filesystem alias scan. DECLARED-INPUT-ALIAS-INVENTORY.json retains all58 facts. Current PLAN replaces this ONE input key with the regular canonical target and records its exact documented alias mapping; programmes/assets/IP/fixtures/Pillow and every other input remain unchanged.
+
+common.verify remains byte-for-byte the same strict function; it still refuses arbitrary symlinks. The new verify_inputs first restricts host mapping to this sole reviewed interpreter alias, verifies its link text/resolved regular target/payload on the Linux parent, and invokes actual strict verify on all58 current input pins. Windows consumers read the pinned canonical payload via UNC and invoke WSL helpers at the canonical path, so they never need to follow the Linux alias. Assets/output/source/link guards remain strict; no blanket symlink allowance exists. Owned Linux interpreter invocations and host-tool allowlist now use /usr/bin/python3.12, the SAME existing pinned binary. Official fp_iso/fp_master source, ISO/redirect arguments and media semantics are unchanged.
+
+Actual read-only preflight command after seal (it requires no allocation and cannot create directories, stage, acquire slots or retry):
+
+    /usr/bin/python3.12 -I -S -B <this-kit>/preflight.py --expected-seal <exact TOOLCHAIN-SEAL SHA>
+
+It authenticates sealed sources, then calls the real verify_inputs/all58 verify calls, validates the one host alias and reports all proposed stage/work/capture paths absent/canonical before any write. stdout is a receipt for root to retain separately; it creates no file itself. Stage/guest/pair still require separate exact root grants and all previous admission/containment/diagnostic gates. Root should use the same canonical regular interpreter for owned Linux launcher commands. No root stage retry is granted by passing preflight.
+
+Narrow host controls:7 alias groups exercise exact alias mapping, alias-link drift, canonical payload drift, symlink substitution at canonical target, unchanged generic asset-symlink refusal, production mapping drift and extra alias refusal. Only public owned temporary files are mutated. The full actual58-input preflight is separate; no new broad programme/target/scene test campaign was run. PARENT-V2-README.md preserves the already-reviewed three-finding unit and its scope; that implementation remains unchanged except for the canonical interpreter call sites/new verifier gate and synthetic harness adaptation.
+
+PARENT-V2 source/host CLEAR and historical controls remain evidence within their scopes; the actual stage failure and this alias correction are explicit supplements, not erased or retroactively relabelled. Metadata delta is only the host interpreter pin key/path/documented mapping. All actual media/programme/appearance/cache/memory/physical acceptance remains pending root review/allocation.
+
