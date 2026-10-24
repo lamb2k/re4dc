@@ -2,7 +2,7 @@
 
 This read-only host tool uses three authenticated frame647 camera eyes (hut,
 turn, walk), the entire eligible unconditional opaque PS2 scene at the exact
-existing R6 baked-pose host-replay selected LOD, and real parity-correct indexed
+existing R6 baked-pose host-replay selected LOD **full-authored envelope**, and real parity-correct indexed
 triangles. It does not use the old512face/20pair search cap.
 
 For each eligible selected whole-cluster target,27 lo/mid/hi box samples cast
@@ -11,6 +11,10 @@ placement/cluster. Counterfactual selected whole-meshlet boxes exclude that exac
 meshlet and are explicitly unsupported by the current cluster-PVS namespace.
 Each nearest hit retains physical placement, source field/rawowner, part/material,
 cluster, selected level, meshlet, triangle ordinal and actual corner indices.
+A separate declared second source pass repeats whole-cluster rays using only
+strictly earlier physical placements. Its rays count toward the same global110k
+cap; this reveals earlier sources hidden behind a nearer late source. Placement
+order is a prerequisite, not an actual committed renderer-prefix receipt.
 Connected patches use shared actual cache indices within one meshlet only; no
 position welding, flattening, convex hull filling or cross-LOD unions.
 
@@ -25,7 +29,12 @@ The eye is an exact rational inverse of12 recorded f32 view words, converted to
 double for approximate discovery. Complete historical projection prefix is
 retained but unused. No truncated VP/projection tail is reconstructed. Historical
 capture programme/profile and host replay are labelled separately; replay LOD is
-not observed actual played LOD or current runtime geometry emission.
+not observed actual played LOD or current runtime geometry emission. Some replay
+meshlet counts are clipped subsets; the selected LOD is directly authenticated,
+and the full authored level is used without inventing a clipped identity roster.
+The first run refused an incorrectly strict whole-level count assertion before
+ray work; its private log is retained and the assertion corrected to extent
+validation. This envelope can include clipped sources, an explicit blocker.
 
 ## Bounded invocation
 
@@ -48,7 +57,9 @@ The output is exclusive. It emits no PVS/table/assets and changes no renderer.
 No game/private geometry, cameras or payloads belong in Git.
 
 Controls: `cd port/dreamcast/tools/d367/discovery24 && python3 -B -m unittest -v test_rays`.
-Ten focused controls cover positive plane, centre/off-centre holes, false corner
+Twelve focused controls cover positive plane, centre/off-centre holes, false corner
 inference, sliver, near, self-cluster/let exclusion, nearest choice, provenance,
-unsupported LOD/namespace and hard budget/index refusals. Synthetic coordinates
+unsupported LOD/namespace, hard budget/index refusals and256BVH-versus-complete
+naive nearest-hit comparisons. Component triangle ordinals and source corner
+indices are retained, alongside actual part/material/source-cull metadata. Synthetic coordinates
 are mathematical controls, not game certification.

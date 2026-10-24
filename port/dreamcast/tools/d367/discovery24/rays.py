@@ -93,7 +93,7 @@ class Scene:
         if u < -1e-10 or w < -1e-10 or u+w>1+1e-10 or not 0<t<1:return None
         return t,min(u,w,1-u-w)<1e-9,1 if det>0 else -1
 
-    def nearest(self,eye,target,exclude_cluster=None,exclude_meshlet=None,near_mm=100.0):
+    def nearest(self,eye,target,exclude_cluster=None,exclude_meshlet=None,near_mm=100.0,source_before=None):
         self.rays+=1
         if self.rays>MAX_RAYS:raise ValueError('ray budget exceeded; never silently omit targets')
         direction=sub(target,eye);length=math.sqrt(dot(direction,direction))
@@ -105,7 +105,7 @@ class Scene:
             if left>=0:stack.extend((left,right));continue
             for index in self.order[start:start+count]:
                 offset=11*index;placement=self.meta[offset];cluster=self.meta[offset+4];meshlet=self.meta[offset+6]
-                if exclude_cluster==(placement,cluster) or exclude_meshlet==(placement,cluster,meshlet):continue
+                if exclude_cluster==(placement,cluster) or exclude_meshlet==(placement,cluster,meshlet) or (source_before is not None and placement>=source_before):continue
                 result=self.ray_triangle(index,eye,direction)
                 if result and result[0]<best:
                     best=result[0];hit=dict(triangle=index,patch=int(self.patch[index]),t=best,distance_mm=best*length,
@@ -116,10 +116,10 @@ class Scene:
     def provenance(self,index):return dict(zip(FIELDS,self.meta[11*index:11*index+11]))
 
 
-def discover(scene,eye,box,exclude_cluster=None,exclude_meshlet=None):
+def discover(scene,eye,box,exclude_cluster=None,exclude_meshlet=None,source_before=None):
     rows=[];patches={}
     for point in samples(box):
-        row=scene.nearest(eye,point,exclude_cluster,exclude_meshlet);rows.append(row)
+        row=scene.nearest(eye,point,exclude_cluster,exclude_meshlet,source_before=source_before);rows.append(row)
         if row['kind']=='prior_triangle_hit':
             pid=row['hit']['patch'];patches[pid]=patches.get(pid,0)+1
     usable=sum(patches.values());dominant=max(patches,key=patches.get) if patches else None

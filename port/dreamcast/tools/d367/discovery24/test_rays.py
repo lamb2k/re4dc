@@ -49,12 +49,33 @@ class Controls(unittest.TestCase):
     def test_nearest_not_farthest_and_provenance(self):
         s=quad(1000);s.add_let(dict(SRC,placement=2,meshlet=5),[(-1000,-1000,500),(1000,-1000,500),(0,1000,500)],[(0,1,2)]);s.nodes=[];s.order=__import__('array').array('I');s.build()
         h=s.nearest((0,0,0),(0,0,2000))['hit'];self.assertEqual(h['distance_mm'],500);self.assertEqual(s.provenance(h['triangle'])['placement'],2)
+    def test_bvh_matches_complete_naive_nearest(self):
+        import random,math
+        rng=random.Random(24647);s=Scene()
+        for i in range(40):
+            x,y,z=(rng.uniform(-600,600),rng.uniform(-600,600),rng.uniform(200,1600))
+            s.add_let(dict(SRC,placement=i+10),[(x-300,y-250,z),(x+300,y-250,z),(x,y+300,z)],[(0,1,2)])
+        s.build()
+        for _ in range(256):
+            target=(rng.uniform(-1000,1000),rng.uniform(-1000,1000),2000);length=math.sqrt(sum(v*v for v in target));best=1-1/length;expected=None
+            for i in range(len(s.patch)):
+                hit=s.ray_triangle(i,(0,0,0),target)
+                if hit and hit[0]<best:best=hit[0];expected=i
+            got=s.nearest((0,0,0),target)['hit']
+            self.assertEqual(None if got is None else got['triangle'],expected)
+    def test_prefix_pass_does_not_let_nearest_late_source_hide_earlier(self):
+        s=quad(1000,source=dict(SRC,placement=1));s.add_let(dict(SRC,placement=3),[(-1200,-1200,500),(1200,-1200,500),(0,1200,500)],[(0,1,2)])
+        s.nodes=[];s.order=__import__('array').array('I');s.build()
+        self.assertEqual(s.provenance(s.nearest((0,0,0),(0,0,2000))['hit']['triangle'])['placement'],3)
+        hit=s.nearest((0,0,0),(0,0,2000),source_before=2)['hit']
+        self.assertEqual(s.provenance(hit['triangle'])['placement'],1)
+        self.assertIsNone(s.nearest((0,0,0),(0,0,2000),source_before=1)['hit'])
     def test_source_lod_namespace_refusals(self):
         from rank import validate_selection
         class P:clusters=[dict(first_level=0)];levels=[(0,2,0)]
         t=[dict(instance=0,placement=1,part=2,cluster=0,selectable=[0])]
         r=dict(instance=0,placement=1,part=2,cluster=0,level=0,meshlets=2)
-        validate_selection(P,t,[r])
-        for bad in (dict(r,placement=3),dict(r,level=1),dict(r,meshlets=1)):
+        validate_selection(P,t,[r]);validate_selection(P,t,[dict(r,meshlets=1)])
+        for bad in (dict(r,placement=3),dict(r,level=1),dict(r,meshlets=3)):
             with self.assertRaises(ValueError):validate_selection(P,t,[bad])
 if __name__=='__main__':unittest.main()
