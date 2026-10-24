@@ -23,6 +23,16 @@ unsigned fpscr(){
     return ~0U; // host architecture cannot qualify target arithmetic state
 #endif
 }
+#if defined(RE4DC_PS2_PVS_EFFECTIVE0_SOURCES) && RE4DC_PS2_PVS_EFFECTIVE0_SOURCES && \
+    defined(RE4DC_PS2_WORLD_NONEMPTY_LOD) && RE4DC_PS2_WORLD_NONEMPTY_LOD && RE4DC_MESH_LOD && RE4DC_PS2_WORLD_MESH
+// The package loader already validates this cluster's complete level range.
+// Every possible raw LOD falls to base only when all higher levels are empty.
+template<class Level> bool effective0_source(const Level* levels,unsigned count){
+    if(!levels || !count || !levels[0].meshlet_count)return false;
+    for(unsigned level=1;level<count;++level)if(levels[level].meshlet_count)return false;
+    return true;
+}
+#endif
 bool sources(){
     if(!cert || !valid || !ps2w.storage || checked_generation!=pvs::generation ||
        cert->room!=ps2w.room || !cert->npanels || cert->npanels>re4dc::pvsproof::kMaxPanels)return false;
@@ -59,7 +69,12 @@ extern "C" int re4dc_pvs23_table_guard(unsigned room,const void* file,unsigned b
                  part.pass==0U && !(part.reserved&1U) && (part.cull==0U || part.cull==2U);
             if(!okay)break;
             const auto& cl=pk.clusters()[panel.cluster];
+#if defined(RE4DC_PS2_PVS_EFFECTIVE0_SOURCES) && RE4DC_PS2_PVS_EFFECTIVE0_SOURCES && \
+    defined(RE4DC_PS2_WORLD_NONEMPTY_LOD) && RE4DC_PS2_WORLD_NONEMPTY_LOD && RE4DC_MESH_LOD && RE4DC_PS2_WORLD_MESH
+            if(cl.level_count!=1U && !effective0_source(pk.levels()+cl.first_level,cl.level_count)){okay=false;break;}
+#else
             if(cl.level_count!=1U){okay=false;break;}
+#endif
             const auto& level=pk.levels()[cl.first_level];
             okay=panel.meshlet>=level.first_meshlet && panel.meshlet<level.first_meshlet+level.meshlet_count;
             for(unsigned corner:panel.corners)okay=okay && corner<pk.meshlets()[panel.meshlet].vertex_count;
