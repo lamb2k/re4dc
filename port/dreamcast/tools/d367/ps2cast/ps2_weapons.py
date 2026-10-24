@@ -25,6 +25,8 @@ dvd.cpp FileTbl) names em/wepNN.das (weapon-map.json in the lane evidence).
       writes <out>/files/em/wepNN.drs, <out>/weapons/<wep>/ (PNG / CMPR per swap, rebuilt BINs), manifest.json
       (ps2_items_tex.py's input), provenance.tsv (PS2 source member + sha256, output sha256 per rewritten BIN / picture)
       and report.json. Exit 1 when a requested weapon has a refused BIN.
+  ps2_weapons.py convert-ss --base <dir with the release's ss/cmn/ss_wepNN.dat> --out <dir> [--weapons ss_wep02,...]
+      the same for the sub screen's weapon models (inventory / examine): <out>/files/ss/cmn/ss_wepNN.dat.
 """
 import argparse
 import hashlib
@@ -111,28 +113,69 @@ def bone_check(gc_bin, ps2_bin):
     return True, 'match (%d bones)' % len(g)
 
 
-def convert(args):
-    out = Path(args.out)
-    (out / 'files' / 'em').mkdir(parents=True, exist_ok=True)
-    src = pi.Sources()
-    weapons = args.weapons.split(',') if args.weapons else sorted(WEAPON_PAIRS)
-    manifest, prov, report, failed = [], [], {}, []
-    prov.append('\t'.join(['weapon', 'kind', 'gc_member', 'gc_sha256', 'ps2_member', 'ps2_sha256', 'output', 'output_sha256', 'note']))
-    for w in weapons:
+def em_units(args, src):
+    """Leon's weapon archives em/wepNN.drs (DRS body; archive numbers = entry index + 4)."""
+    for w in (args.weapons.split(',') if args.weapons else sorted(WEAPON_PAIRS)):
         gcd = src.gc_file('em/%s.drs' % w)
         ps2d = src.ps2_file('%s.dat' % w)
-        base_path = Path(args.base) / ('%s.drs' % w)
-        base = bytearray(base_path.read_bytes())
         g = drs.Drs(gcd)
-        pe = {i + 4: (t, b) for i, t, b in pb.dat_entries(ps2d)}
+        yield dict(w=w, rel='em/%s.drs' % w, gc_rel='em/%s.drs' % w, ps2_name='%s.dat' % w, gcd=gcd, ps2d=ps2d,
+                   base=Path(args.base) / ('%s.drs' % w), gc_entry=lambda arc, g=g: g.entries[arc - 4],
+                   pe={i + 4: (t, b) for i, t, b in pb.dat_entries(ps2d)},
+                   span=lambda base, arc: le_span(base, arc - 4), pairs=WEAPON_PAIRS[w])
+
+
+def ss_units(args, src):
+    """The sub screen's weapon models ss/cmn/ss_wepNN.dat (inventory / examine views; tagged archive, entry index =
+    SS_ARC number). The weapon BINs are the ones whose root part attaches to 0 (the others, attach 9 / 15, are Leon's
+    hands, drawn with his own picture); every ss_wep file has one TPL, which the weapon BINs sample."""
+    import room_smd as rs
+    # Leon's sub screen weapons (ss_model.cpp ss_wep%02ld by weapon number); ss_wep28+ belong to the other players
+    names = args.weapons.split(',') if args.weapons else ['ss_wep%02d' % n for n in range(0, 20)
+                                                          if src.g.find('ss/cmn/ss_wep%02d.dat' % n)]
+    for w in names:
+        gcd = src.gc_file('ss/cmn/%s.dat' % w)
+        ps2d = src.ps2_file('%s.dat' % w)
+        if ps2d is None:
+            print('%s: no PS2 file' % w)
+            continue
+        ge = [(t, gcd[s:e]) for t, s, e in rs.tagged_entries(gcd, '>')]
+        tpls = [i for i, (t, b) in enumerate(ge) if t.rstrip(b'\0') == b'TPL']
+        pairs = {}
+        for i, (t, b) in enumerate(ge):
+            if t.rstrip(b'\0') == b'BIN' and modelbin.parse(b).parts[0].attach == 0:
+                if len(tpls) != 1:
+                    raise ValueError('%s: %d TPL entries' % (w, len(tpls)))
+                pairs[i] = tpls[0]
+        if not pairs:
+            continue
+
+        def span(base, i):
+            t, s, e = rs.tagged_entries(bytes(base), '<')[i]
+            return s, e, t
+        yield dict(w=w, rel='ss/cmn/%s.dat' % w, gc_rel='ss/cmn/%s.dat' % w, ps2_name='%s.dat' % w, gcd=gcd, ps2d=ps2d,
+                   base=Path(args.base) / ('%s.dat' % w), gc_entry=lambda i, ge=ge: ge[i],
+                   pe={i: (t, b) for i, t, b in pb.dat_entries(ps2d)}, span=span, pairs=pairs)
+
+
+def convert(args):
+    out = Path(args.out)
+    src = pi.Sources()
+    manifest, prov, report, failed = [], [], {}, []
+    prov.append('\t'.join(['weapon', 'kind', 'gc_member', 'gc_sha256', 'ps2_member', 'ps2_sha256', 'output', 'output_sha256', 'note']))
+    for u in (ss_units if args.cmd == 'convert-ss' else em_units)(args, src):
+        w, gcd, ps2d, pe = u['w'], u['gcd'], u['ps2d'], u['pe']
+        base_path = u['base']
+        base = bytearray(base_path.read_bytes())
+        le_span_ = u['span']
         wd = out / 'weapons' / w
         wd.mkdir(parents=True, exist_ok=True)
-        rep = dict(weapon=w, base=str(base_path), base_sha256=sha(bytes(base)), gc_sha256=sha(gcd), ps2_dat_sha256=sha(ps2d), bins=[], pictures=[])
+        rep = dict(weapon=w, file=u['rel'], base=str(base_path), base_sha256=sha(bytes(base)), gc_sha256=sha(gcd), ps2_dat_sha256=sha(ps2d), bins=[], pictures=[])
         used = {}  # tpl arc -> set of images
         pairs = {}
-        for arc, tarc in sorted(WEAPON_PAIRS[w].items()):
+        for arc, tarc in sorted(u['pairs'].items()):
             name = '%s_bin%02x' % (w, arc)
-            gtag, gb = g.entries[arc - 4]
+            gtag, gb = u['gc_entry'](arc)
             row = dict(arc=hex(arc), tpl=hex(tarc), name=name, gc_sha256=sha(gb))
             rep['bins'].append(row)
             if gtag.rstrip(b'\0') != b'BIN' or arc not in pe or pe[arc][0] != 'BIN':
@@ -143,7 +186,7 @@ def convert(args):
             row['bones'] = why
             if not ok:
                 row.update(status='REFUSED', reason=why); failed.append(name); continue
-            s, e, ltag = le_span(base, arc - 4)
+            s, e, ltag = le_span_(base, arc)
             gc_le = po.to_le(gb, name)
             slot = bytes(base[s:e])
             if slot.rstrip(b'\0') != gc_le.rstrip(b'\0') or len(slot) < len(gc_le.rstrip(b'\0')):
@@ -161,15 +204,15 @@ def convert(args):
             pairs.setdefault(tarc, set()).update((p['hdr'][0x0C], p['hdr'][0x0E]) for p in drawn if p['hdr'][0x0B] & 4)
             row.update(status='PS2', slot_bytes=len(slot), gc_le_bytes=len(gc_le), out_bytes=len(le), out_sha256=sha(le), ps2_sha256=sha(pbn),
                        stats=dict((k, st[k]) for k in ('gc_tris', 'ps2_tris', 'out_tris', 'no_tex_part', 'weight_mismatch', 'flipped', 'degenerate', 'appended_weights', 'shift_lowered')))
-            prov.append('\t'.join([w, 'BIN', 'em/%s.drs#%x' % (w, arc), sha(gb), 'BIO4DAT.AFS/%s.dat#%x' % (w, arc), sha(pbn), 'em/%s.drs#%x (le_mirror)' % (w, arc), sha(le), 'geometry PS2, GC joints/parts kept']))
+            prov.append('\t'.join([w, 'BIN', '%s#%x' % (u['gc_rel'], arc), sha(gb), 'BIO4DAT.AFS/%s#%x' % (u['ps2_name'], arc), sha(pbn), '%s#%x (le_mirror)' % (u['rel'], arc), sha(le), 'geometry PS2, GC joints/parts kept']))
         for tarc, imgs in sorted(used.items()):
-            gtag, gt = g.entries[tarc - 4]
+            gtag, gt = u['gc_entry'](tarc)
             if tarc not in pe or pe[tarc][0] != 'TPL':
                 rep['pictures'].append(dict(tpl=hex(tarc), status='GC', reason='no PS2 TPL at this arc')); continue
             ptp = pe[tarc][1]
             tname = '%s_tpl%02x' % (w, tarc)
             swaps, kept, pair_list = pi.convert_pictures(gt, ptp, sorted(imgs), wd, tname, sorted(pairs.get(tarc, ())))
-            ts, te, _ = le_span(base, tarc - 4)
+            ts, te, _ = le_span_(base, tarc)
             gimg = {x['j']: x for x in pi.gc_tpl_images(gt)}
             written = []
             for sw in swaps:
@@ -202,19 +245,21 @@ def convert(args):
                     how = 'texels'
                 sw = dict(sw, written=how, gc_key=gc_key)
                 written.append(sw)
-                prov.append('\t'.join([w, 'TPL', 'em/%s.drs#%x/img%d (key %s)' % (w, tarc, sw['j'], gc_key), sha(gc_texels), 'BIO4DAT.AFS/%s.dat#%x/img%d' % (w, tarc, sw['j']), sha(ptp),
+                prov.append('\t'.join([w, 'TPL', '%s#%x/img%d (key %s)' % (u['gc_rel'], tarc, sw['j'], gc_key), sha(gc_texels), 'BIO4DAT.AFS/%s#%x/img%d' % (u['ps2_name'], tarc, sw['j']), sha(ptp),
                                        'key %s (re4tex)' % sw['key'], sha(data), 'PS2 picture %dx%d CMPR identity, %s' % (sw['w'], sw['h'], how)]))
             rep['pictures'].append(dict(tpl=hex(tarc), used=sorted(imgs), swaps=written, kept=kept, pairs=pair_list))
             if written:
-                manifest.append(dict(room='common', name=tname, swaps=written, pairs=[]))
-        (out / 'files' / 'em' / ('%s.drs' % w)).write_bytes(bytes(base))
+                manifest.append(dict(room=w, name=tname, swaps=written, pairs=[]))
+        dst = out / 'files' / u['rel']
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        dst.write_bytes(bytes(base))
         rep['out_sha256'] = sha(bytes(base))
         rep['changed'] = rep['out_sha256'] != rep['base_sha256']
         report[w] = rep
         print('%s: bins %s pictures %s %s' % (w, ' '.join('%s=%s' % (r['arc'], r['status']) for r in rep['bins']),
                                               sum(len(p.get('swaps', [])) for p in rep['pictures']), 'changed' if rep['changed'] else 'UNCHANGED'))
     # ps2_items_tex.py reads <lib>/<class>/manifest.json and the PNGs under <lib>/<class>/<room>/
-    (out / 'weapons' / 'manifest.json').write_text(json.dumps(dict(tool=TOOL_VERSION, assets=[dict(a, room=a['name'].split('_')[0]) for a in manifest]), indent=1))
+    (out / 'weapons' / 'manifest.json').write_text(json.dumps(dict(tool=TOOL_VERSION, assets=manifest), indent=1))
     (out / 'provenance.tsv').write_text('\n'.join(prov) + '\n')
     (out / 'report.json').write_text(json.dumps(report, indent=1))
     if failed:
@@ -225,10 +270,11 @@ def convert(args):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest='cmd', required=True)
-    c = sp.add_parser('convert')
-    c.add_argument('--base', required=True)
-    c.add_argument('--out', required=True)
-    c.add_argument('--weapons')
+    for nm in ('convert', 'convert-ss'):
+        c = sp.add_parser(nm)
+        c.add_argument('--base', required=True)
+        c.add_argument('--out', required=True)
+        c.add_argument('--weapons')
     a = ap.parse_args()
     sys.exit(convert(a))
 

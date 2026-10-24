@@ -996,6 +996,15 @@ DATA['wep24'] = {'em/wep%s.drs' % n: WEP24D + '/em/wep%s.drs' % n
                  for n in ('01', '02', '03', '04', '06', '07', '08', '09', '10', '11', '12', '14', '15', '16', '17', '18',
                            '20', '21', '24')}
 DATA['wep24']['tex'] = WEP24D + '/tex'
+# wep24ss (same lane, added scope 10-24): the sub screen's weapon models (inventory / examine, ss/cmn/ss_wepNN.dat,
+# Leon's ss_wep00..17) rewritten the same way (ps2_weapons.py convert-ss on the release's own files): 16 files, 30 BINs,
+# 26 pictures. Leon's hand BINs (attach 9 / 15) unchanged. Use WITH wep24: its tex/ holds only the 2 keys wep24 lacks.
+# GC left: ss_wep05 / em/wep05 (Broken Butterfly), tools/d367/ps2cast/weapons-gc-allow.tsv. Store copy:
+# re4-assets-private/wep24ss-20261024 (RECIPE.txt, SHA256SUMS, provenance.tsv).
+WEP24SSD = os.environ.get('WEP24SSD', '/root/re4data/private/wep24ss-20261024')
+DATA['wep24ss'] = {'ss/cmn/ss_wep%s.dat' % n: WEP24SSD + '/ss/cmn/ss_wep%s.dat' % n
+                   for n in ('00', '01', '02', '03', '04', '06', '07', '08', '09', '10', '11', '12', '14', '15', '16', '17')}
+DATA['wep24ss']['tex'] = WEP24SSD + '/tex'
 
 
 if __name__ == '__main__':
