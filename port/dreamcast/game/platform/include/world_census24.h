@@ -40,6 +40,55 @@ void decision(bool draw_attempt);
 void scene_finished();
 void decision_posted(bool present);
 void fault(); // incomplete/unsupported world path; invalidates timing acceptance
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+#if !defined(RE4DC_WORLD_CENSUS24) || !RE4DC_WORLD_CENSUS24
+#error WORLD_CENSUS24_ERRORS requires WORLD_CENSUS24
+#endif
+// Optional explanation of the existing aggregate; no new acceptance faults.
+// A key is reason | site<<8 | original scope state (path/phase/wait)<<16.
+// Counts are the original uint32 modulo arithmetic. wrapped makes any such
+// loss of magnitude visible; bins plus spill still reconcile modulo 2^32.
+enum ErrorReason {
+    ErrorUnspecified, ErrorPassIncomplete, ErrorPassAbort, ErrorBindingLost,
+    ErrorMovieSuppressed, ErrorCameraUnavailable, ErrorProjection, ErrorDepth,
+    ErrorPackageUnavailable, ErrorInvalidPass, ErrorOwnerRejected, ErrorEntryRejected,
+    ErrorFarInvalid, ErrorDeferredStale, ErrorReceiptIncomplete, ErrorShellUnavailable,
+    ErrorShellBindRefusal, ErrorClockReversed, ErrorUnclosedScope, ErrorTickReversed,
+    ErrorPhaseOverrun, ErrorScopeDepth, ErrorScopeOrder, ErrorCounterSaturated,
+    ErrorShellScratchRefusal, ErrorReasonCount
+};
+enum ErrorSite {
+    ErrorSiteUnspecified, ErrorPs2Pass, ErrorMeshDraw, ErrorMeshCamera, ErrorMeshSource,
+    ErrorSourceDraw, ErrorR11fDraw, ErrorWorldDraw, ErrorWorldSource, ErrorWorldFlush,
+    ErrorFarShell, ErrorCoreCharge, ErrorCoreFinish, ErrorCoreScope, ErrorCoreCount, ErrorSiteCount
+};
+enum { ErrorBinCapacity = 32 };
+struct ErrorBin { uint32_t key, count, first_tick, detail0, detail1; };
+struct ErrorSnapshot {
+    uint32_t sequence, room, first_tick, last_tick, total, used, spill, wrapped;
+    ErrorBin bins[ErrorBinCapacity];
+};
+void fault(ErrorReason reason, ErrorSite site, uint32_t detail0=0, uint32_t detail1=0,
+           uint32_t context=UINT32_MAX);
+uint32_t error_context();
+int errors_snapshot(ErrorSnapshot* out);
+unsigned errors_line_count();
+int errors_format_line(unsigned row, char* out, unsigned capacity);
+// Entry tags describe the fallback if no narrower branch is reached. first()
+// freezes the first actual failure before later scope transitions can hide it.
+struct ErrorDetail {
+    ErrorReason reason=ErrorUnspecified;
+    ErrorSite site=ErrorSiteUnspecified;
+    uint32_t detail0=0,detail1=0,context=UINT32_MAX;
+    void tag(ErrorSite s,ErrorReason r,uint32_t a=0,uint32_t b=0) {
+        site=s;reason=r;detail0=a;detail1=b;
+    }
+    void first(ErrorReason r,uint32_t a=0,uint32_t b=0) {
+        if(context==UINT32_MAX){reason=r;detail0=a;detail1=b;context=error_context();}
+    }
+    void report()const { fault(reason,site,detail0,detail1,context); }
+};
+#endif
 void pause();
 void resume();
 void reset();

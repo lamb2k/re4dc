@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "repository": "lamb2k/re4dc",
+  "remote": "origin",
+  "remote_url": "https://github.com/lamb2k/re4dc.git",
+  "branch": "codex/world-policy-census-fix-20261024",
+  "validation_base": "dd6b66b9523300181df8e0af8cbe8ece3bdc4be0",
+  "publication_base": "8c9921201bcb26fb5113c2dbee54d7cdf78bdc32",
+  "base_tree": "0e84217a33fe9ddc76282e0d800fafb7e017c92c",
+  "base_ref": "origin/t15/int",
+  "scope": "One follow-up branch/commit; no integration merge or default-branch update. Complete target OFF identity compares with the validation base; runtime and tools are unchanged in the documentation-only publication advance.",
+  "publication_advance": {
+    "parent": "dd6b66b9523300181df8e0af8cbe8ece3bdc4be0",
+    "commit": "8c9921201bcb26fb5113c2dbee54d7cdf78bdc32",
+    "changed_paths": ["port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md"],
+    "added_lines": 51,
+    "deleted_lines": 0,
+    "new_owner_answers_preserved": true,
+    "runtime_tool_test_inputs_changed": false,
+    "answers": "Companion source-CRC bindings confirmed deliberate; Build13 admitted with err=0 but +0.10/+0.18 ms Flycast MODELLED cost and console pending; Build14 counter UNRUN/valid=0 and approximately +1.11/+0.63 ms hook perturbation in Flycast."
+  },
+  "owner_reply_consumed": {
+    "commit": "dd6b66b9523300181df8e0af8cbe8ece3bdc4be0",
+    "source": "port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md",
+    "control": "ctl-olddata",
+    "census_errors": 0,
+    "sli1": "wash; keep default off; no console A/B",
+    "sds1": "rejected; keep default off; no console A/B",
+    "measurement_scope": "Owner-reported Flycast MODELLED q2-4 mean, r103 farm, per drawn tick; not a cloud or console run"
+  },
+  "new_options": {
+    "WORLD_CENSUS24_ERRORS": 0,
+    "policy-diagnostics": 0,
+    "prepare-original-policy": 0
+  },
+  "provenance_tables_modified": false,
+  "game_recipe_enabled": false,
+  "new_runtime_assembly_or_game_linker_changes": false,
+  "private_assets_committed": false,
+  "hardware_qualification": "UNRUN",
+  "private_policy_recovery": "UNRUN"
+}

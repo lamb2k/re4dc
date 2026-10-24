@@ -1117,7 +1117,20 @@ struct Wc24Count {
 // census scope. Keep that window visibly invalid instead of pricing a part.
 struct Wc24PassResult {
     bool complete=false;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    re4dc::wc24::ErrorDetail why;
+    const unsigned* diag_fallback=nullptr;
+    const unsigned* diag_aborts=nullptr;
+    ~Wc24PassResult(){if(!complete){
+        if(why.context==UINT32_MAX && diag_fallback){
+            why.reason=*diag_aborts?re4dc::wc24::ErrorPassAbort:re4dc::wc24::ErrorPassIncomplete;
+            why.detail0=*diag_fallback;why.detail1=*diag_aborts;
+        }
+        why.report();
+    }}
+#else
     ~Wc24PassResult(){if(!complete)re4dc::wc24::fault();}
+#endif
 };
 #endif
 struct Emitter {
@@ -7037,14 +7050,27 @@ int ps2_pass(unsigned pass,float zfar){
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     const re4dc::wc24::Scope wc_selection(re4dc::wc24::Selection);
     Wc24PassResult wc_result;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.why.tag(re4dc::wc24::ErrorPs2Pass,re4dc::wc24::ErrorPassIncomplete,pass);
+#endif
 #endif
 #if RE4DC_GC_ASSET_GATE
     GcStaticSourceScope gcasset_source_scope(ps2w.asset_proof,&ps2w);
 #endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!re4dc_source_world_binding_valid()){
+        wc_result.why.first(re4dc::wc24::ErrorBindingLost,pass);
+        re4dc_source_world_binding_failed();return -1;
+    }
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return -1;}
 #endif
+#endif
     auto& c=ps2w.count[pass];c={};
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.diag_fallback=&c.fallback;wc_result.diag_aborts=&c.aborts;
+#endif
 #if RE4DC_PS2_AREA_HIDE
     area::update();
 #endif
@@ -7056,9 +7082,23 @@ int ps2_pass(unsigned pass,float zfar){
     re4dc_ps2_sky_header=0;
 #endif
     const float* P=ps2w.projection;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(P[0]!=0 || ps2w.viewport[2]<=0 || ps2w.viewport[3]<=0){
+        wc_result.why.first(re4dc::wc24::ErrorProjection,pass,
+            unsigned(P[0]!=0)|(unsigned(ps2w.viewport[2]<=0)<<1)|(unsigned(ps2w.viewport[3]<=0)<<2));return 0;
+    }
+#else
     if(P[0]!=0 || ps2w.viewport[2]<=0 || ps2w.viewport[3]<=0)return 0;
+#endif
     const float near=P[6]/(P[5]-1),far=P[6]/P[5];
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!re4dc::render::is_finite(near)||!re4dc::render::is_finite(far)||near<=0||far<=near){
+        uint32_t a,b;std::memcpy(&a,&near,4);std::memcpy(&b,&far,4);
+        wc_result.why.first(re4dc::wc24::ErrorDepth,a,b);return 0;
+    }
+#else
     if(!re4dc::render::is_finite(near)||!re4dc::render::is_finite(far)||near<=0||far<=near)return 0;
+#endif
     float cull_far=far;
     if(zfar>near && zfar<cull_far)cull_far=zfar;
 #ifdef RE4DC_FAR_CAP
@@ -7890,6 +7930,9 @@ extern "C" void re4dc_ps2_mesh_camera(const float* view,const float* projection,
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     const re4dc::wc24::Scope wc_world(re4dc::wc24::NearOP,re4dc::wc24::Other);
     Wc24PassResult wc_result;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.why.tag(re4dc::wc24::ErrorMeshCamera,re4dc::wc24::ErrorMovieSuppressed,ps2w.room);
+#endif
 #endif
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return;
@@ -8024,6 +8067,9 @@ extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
     const re4dc::wc24::Scope wc_world(pass<3U?static_cast<re4dc::wc24::Path>(pass):re4dc::wc24::PathCount,
                                      re4dc::wc24::Other);
     Wc24PassResult wc_result;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.why.tag(re4dc::wc24::ErrorMeshDraw,re4dc::wc24::ErrorPassIncomplete,pass,ps2w.room);
+#endif
 #endif
     RE4DC_BFC_SCOPE(1u,0u);  // BACKFACE_CENSUS
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
@@ -8031,13 +8077,20 @@ extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
     zfar=re4dc_wm_far(pass,zfar);
 #endif
 #if RE4DC_MOVIE_WORLD_ARENA
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(ps2_movie_blocked()){wc_result.why.first(re4dc::wc24::ErrorMovieSuppressed,pass,ps2w.room);return 1;}
+#else
     if(ps2_movie_blocked())return 1;
+#endif
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     if(r11fNativeClaimed()){
         const int result=r11fNativePass(pass,zfar);
         wc_result.complete=result>0;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+        if(!wc_result.complete)wc_result.why.first(re4dc::wc24::ErrorReceiptIncomplete,pass,uint32_t(result));
+#endif
         return result;
     }
 #else
@@ -8045,14 +8098,27 @@ extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
 #endif
 #endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!re4dc_source_world_binding_valid()){
+        wc_result.why.first(re4dc::wc24::ErrorBindingLost,pass,ps2w.room);
+        re4dc_source_world_binding_failed();return -1;
+    }
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return -1;}
+#endif
 #endif
 #if RE4DC_PS2_INTERIOR_CULL==2
     if(!pass)pc_scan(re4dc_ui_frame());
 #endif
 #if defined(RE4DC_FOLIAGE_TRIM)
 #endif
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(pass>2){wc_result.why.first(re4dc::wc24::ErrorInvalidPass,pass);return 0;}
+    if(!ps2w.camera){wc_result.why.first(re4dc::wc24::ErrorCameraUnavailable,pass);return 0;}
+    if(!ps2_open()){wc_result.why.first(re4dc::wc24::ErrorPackageUnavailable,ps2w.room,ps2w.want);return 0;}
+#else
     if(pass>2 || !ps2w.camera || !ps2_open())return 0;
+#endif
 #if RE4DC_MOVIE_WORLD_ARENA
     MovieWorldRead read;
 #endif
@@ -8402,6 +8468,9 @@ extern "C" void re4dc_ps2_mesh_source(unsigned room,const Re4dcModelPart& p){
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     const re4dc::wc24::Scope wc_world(re4dc::wc24::NearOP,re4dc::wc24::Other);
     Wc24PassResult wc_result;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.why.tag(re4dc::wc24::ErrorMeshSource,re4dc::wc24::ErrorMovieSuppressed,room);
+#endif
 #endif
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return;
@@ -8435,6 +8504,9 @@ extern "C" void re4dc_ps2_mesh_source(unsigned room,const Re4dcModelPart& p){
     const unsigned frame=re4dc_ui_frame();
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     wc_result.complete=frame==last;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.why.tag(re4dc::wc24::ErrorMeshSource,re4dc::wc24::ErrorPackageUnavailable,room,ps2w.room);
+#endif
 #endif
     (void)p; // an unbound scenery part carries no camera (world / view are the binding's): the game's
     if(frame==last || !ps2w.storage || ps2w.room!=room)return;
@@ -8449,7 +8521,13 @@ extern "C" void re4dc_ps2_mesh_source(unsigned room,const Re4dcModelPart& p){
 #endif
     last=frame;
     float view[12],projection[7],viewport[6];
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!re4dc_coarse_source_camera(view,projection,viewport)){
+        wc_result.why.first(re4dc::wc24::ErrorCameraUnavailable,frame,room);return;
+    }
+#else
     if(!re4dc_coarse_source_camera(view,projection,viewport))return;
+#endif
     re4dc_ps2_mesh_camera(view,projection,viewport);
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     re4dc_ps2_source_legacy_started(frame);
@@ -8460,6 +8538,9 @@ extern "C" void re4dc_ps2_mesh_source(unsigned room,const Re4dcModelPart& p){
     const int drawn=re4dc_ps2_world_source_draw();
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     wc_result.complete=drawn>0;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!wc_result.complete)wc_result.why.first(re4dc::wc24::ErrorPassIncomplete,uint32_t(drawn),frame);
+#endif
 #endif
     if(++images<=8 || !(images%120))re4dc_log("PS2MESH source image frame=%u room=%03x drawn=%d images=%u\n",frame,room,drawn,images);
 }
