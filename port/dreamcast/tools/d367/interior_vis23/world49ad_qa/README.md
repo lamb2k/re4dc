@@ -57,3 +57,13 @@ Future stage README text (no destination created):
 - Strict visual/texture unit qualification remains open. The separate hair-card
   material candidate is not production approved and this programme build does
   not stage it. No SD, publication or asset policy change is authorized here.
+
+Completed programme checkpoint (source 49ad20f9): fresh normal-QA reference, OFF
+and Both each link with zero missing symbols and all 14 overlays. OFF reproduces
+the fresh QA reference's raw main and every overlay; normalized complete profiles
+match. Both differs in exactly the two named performance switches. The static
+linked end boundary grows 2592 bytes in Both; this is not heap, KOS or runtime
+acceptance. `finalize.py` independently binds every arm to the current gate's
+BASE_KNOBS and the qualified d5c ancestry, then seals actual programme hashes.
+It does not transfer earlier guest results to the new QA programmes. Programme
+maps are nm/section maps from each actual ELF. Pair readiness remains pending.
