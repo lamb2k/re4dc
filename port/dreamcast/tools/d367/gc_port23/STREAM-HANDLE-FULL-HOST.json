@@ -1,0 +1,11 @@
+{
+  "scope": "Existing fullGC source/host suite including actualaudioSHA fixture/new50fakeIO; no SDK/guest",
+  "returncode": 0,
+  "seconds": 69.27215789299225,
+  "log_sha256": "956a5d5c7b7e27c019ff19e8a58a32c03b43265ce9382e27e0a585ec15bd18d4",
+  "source_runtime_sha256": "3bb6f94415627fb741c87fb9458420fd96c0dab137edc3d26b692d6391412056",
+  "unittest_methods": 118,
+  "actual_function_fault_cases": 50,
+  "changed_audio_contract_cases": 5,
+  "source_audio_test_sha256": "899c54517127efabb9106cce30a79f366191770996f0f84ed4f695144948dd35"
+}

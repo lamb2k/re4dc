@@ -11,27 +11,28 @@ GAME = HERE.parents[2] / 'game'
 class RuntimeAudioTests(unittest.TestCase):
     def test_actual_stream_full_container_capture_and_bounds(self):
         source = (GAME / 'platform/audio_aica.cpp').read_text()
-        capture = function(source, '{\n        const file_t asset_file=fs_open("/cd/bgm/aica_str.dat"')
+        capture = function(source, '{\n        // str_main owns this descriptor')
         fixture = r'''
 #include "gc_asset_audio.h"
 #include <cassert>
 #include <cstdio>
 #include <cstring>
 #include <sys/types.h>
-using file_t=int;constexpr int O_RDONLY=0;
+using file_t=int;file_t g_strFile=1;
 unsigned opens,closes,reads,success,failures;bool huge;unsigned offset;
-unsigned char file_bytes[1024];re4dc_gcasset::Digest received;
-file_t fs_open(const char*,int){++opens;offset=0;return 1;}off_t fs_total(file_t){return huge?0x20000000:1024;}
-ssize_t fs_read(file_t,void* out,unsigned bytes){++reads;assert(offset+bytes<=1024);memcpy(out,file_bytes+offset,bytes);offset+=bytes;return bytes;}
+unsigned char file_bytes[4096];re4dc_gcasset::Digest received;
+file_t fs_open(const char*,int){++opens;return 1;}off_t fs_total(file_t){return huge?0x20000000:4096;}
+off_t fs_seek(file_t,off_t target,int whence){if(whence==SEEK_CUR){assert(target==0);return offset;}assert(whence==SEEK_SET);offset=unsigned(target);return offset;}
+ssize_t fs_read(file_t,void* out,unsigned bytes){++reads;assert(offset+bytes<=4096);memcpy(out,file_bytes+offset,bytes);offset+=bytes;return bytes;}
 int fs_close(file_t){++closes;return 0;}
 extern "C" void re4dc_log(const char*,...){}
 namespace re4dc_gcasset{void stream_source(const Digest& d){++success;received=d;}void stream_source_failed(){++failures;}}
-void capture()
-''' + capture + r'''
-int main(){for(unsigned i=0;i<1024;++i)file_bytes[i]=i%251;
-capture();assert(opens==1 && closes==1 && reads==2 && success==1 && !failures);
-assert(!memcmp(received.bytes,re4dc_gcasset::fingerprint(file_bytes,1024).bytes,32));
-huge=true;capture();assert(opens==2 && closes==2 && reads==2 && success==1 && failures==1);
+bool capture()
+''' + '{\n' + capture + '\nreturn true;\n}' + r'''
+int main(){for(unsigned i=0;i<4096;++i)file_bytes[i]=i%251;offset=2048;
+capture();assert(opens==0 && closes==0 && reads==8 && success==1 && !failures && offset==2048);
+assert(!memcmp(received.bytes,re4dc_gcasset::fingerprint(file_bytes,4096).bytes,32));
+huge=true;capture();assert(opens==0 && closes==0 && reads==8 && success==1 && failures==1 && offset==2048);
 }
 '''
         with tempfile.TemporaryDirectory(prefix='gc-port23-stream-file-', dir='/dev/shm') as temporary:

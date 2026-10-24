@@ -1649,14 +1649,22 @@ bool str_index_load()
     // payloads stay one immutable source identity. This adds one full file
     // read in diagnostic builds, before any ring claim or audio lock.
     {
-        const file_t asset_file=fs_open("/cd/bgm/aica_str.dat",O_RDONLY);
-        const auto asset_bytes=asset_file<0?-1:fs_total(asset_file);
+        // str_main owns this descriptor and has not yet entered str_scan.
+        // Reuse it: a second ISO handle consumes KOS memory throughout the hash.
+        const auto asset_resume=fs_seek(g_strFile,0,SEEK_CUR);
+        const auto asset_bytes=fs_total(g_strFile);
         re4dc_gcasset::Digest digest{};
         const auto read=[](void* context,void* target,unsigned bytes)->unsigned {
             const ssize_t count=fs_read(*static_cast<const file_t*>(context),target,bytes);return count<0?0:unsigned(count);
         };
-        const bool bound=asset_bytes>0 && asset_bytes<=0x1fffffff && re4dc_gcasset::fingerprint_read(digest,read,const_cast<file_t*>(&asset_file),unsigned(asset_bytes));
-        if(asset_file>=0)fs_close(asset_file);
+        const bool bound=asset_resume>=0 && asset_bytes>0 && asset_bytes<=0x1fffffff &&
+            fs_seek(g_strFile,0,SEEK_SET)==0 &&
+            re4dc_gcasset::fingerprint_read(digest,read,&g_strFile,unsigned(asset_bytes));
+        if(asset_resume>=0 && fs_seek(g_strFile,asset_resume,SEEK_SET)!=asset_resume){
+            re4dc_gcasset::stream_source_failed();
+            re4dc_log("aica: diagnostic stream position restore failed, disc streams stay silent\n");
+            fs_close(g_strFile);g_strFile=-1;return false;
+        }
         if(bound)re4dc_gcasset::stream_source(digest);else re4dc_gcasset::stream_source_failed();
     }
 #endif
