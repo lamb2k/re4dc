@@ -1,0 +1,145 @@
+{
+  "status": "BOUNDED TARGET CONTRACT CLEAR",
+  "source": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+  "tree": "/root/work/lanes/audits23-codegen",
+  "utc": "2026-10-24T00:46:20.241923+00:00",
+  "ram": "/dev/shm/audits23-codegen-asn6jkbe",
+  "source_clean": true,
+  "source_sha256": {
+    "game/kos_cache_p2.mk": "0ca0b63cbfc3fe0e15a67752d86413088a867a630418782dded42539fbe9d3ae",
+    "game/ui_bridge.cpp": "18132b707f732a006f49d296ea53549e9a62e0cd22a625e6226c8ed53a178e29",
+    "tools/d367/kos_cache_audit/prepare.py": "5bebc9b4f2e4f7492d3b8394b57e51c0f2581f62217092c27223003b75b539f9",
+    "tools/d367/kos_cache_audit/cache_diag.py": "1b56cd56da2e63a13a914861f8288e25878330261c7acfd92d3044a73ca1d3c3",
+    "tools/d367/kos_cache_audit/test_cache_diag.py": "a5b0ba3fd09bb3d7bdf3874e11a6e0243001600df6cf80847752c8027b0f37a6",
+    "game/platform/include/kos_cache_p2_diag.h": "8c55e8f79652490dfcd8062f862898928c94bfd7417200c7cdafb160573ee20d",
+    "game/platform/kos_cache_p2_diag.cpp": "dd3e3479fa911efc004102dbc0e6098da63678ff6275cc2986b4877fd311a31c",
+    "docs/KOS_CACHE_P2_DIAG_20261023.md": "cee16d1de0f9303f0324d3f68d1b4867061bb77289ee8d998231b4f19ced17da"
+  },
+  "compiler_sha256": "e93807f83ebb80283de9777d006dae7f5873784032bbaa867a8f16db0e3c0053",
+  "compiler_version": "sh-elf-g++ (GCC) 15.2.0",
+  "sdk": {
+    "root": "/root/work/kos-re4dc-d367",
+    "commit": "804b3195ebd1a06a27cc2b3a5eacf7a2429040a3",
+    "library_sha256": "5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf",
+    "library_and_status_unchanged": true,
+    "pinned_cache_and_timer_inputs_revalidated": true,
+    "preexisting_dirty_status": " M kernel/arch/dreamcast/hardware/pvr/Makefile\n M kernel/arch/dreamcast/hardware/pvr/pvr_irq.c\n M kernel/arch/dreamcast/include/dc/pvr.h\n?? kernel/arch/dreamcast/hardware/pvr/pvr_vbuf.c\n"
+  },
+  "checks": {
+    "make_derived_translation_units": 7,
+    "absent_zero_preprocessor_and_object_identity": true,
+    "threshold_counts": 11,
+    "threshold_optimizations": [
+      "-O2",
+      "-Os"
+    ],
+    "original_helper_cases": 384,
+    "diagnostic_helper_cases": 384,
+    "diagnostic_bad_clock_cases": 36,
+    "diagnostic_overflow_cases": 6,
+    "diagnostic_binary_mutations": 12,
+    "linked_release_helper_cases": 128,
+    "full_cache_entries": 512,
+    "ocram_cache_entries": 256,
+    "sr_restored": true,
+    "callee_saved_gprs_and_sp_unchanged": true,
+    "p2_array_and_counter_access": true,
+    "original_eight_nops_preserved": true,
+    "no_ccr_write": true,
+    "no_helper_stack_or_call": true,
+    "max_pc_literal_displacement_bytes": 372,
+    "conditional_displacements_bytes": [
+      -14,
+      118
+    ]
+  },
+  "code_size": {
+    "original_helper": 116,
+    "diagnostic_helper": 412,
+    "helper_delta": 296,
+    "observer_text": 560,
+    "observer_rodata": 257,
+    "observer_data": 4,
+    "observer_bss": 77,
+    "observer_report_stack": 112,
+    "note": "Prelink section sizes; alignment, final DIAG image size and UI hook cost require full DIAG link"
+  },
+  "modelled_instruction_counts": {
+    "full_original": 3105,
+    "full_diagnostic": 3196,
+    "ocram_original": 1576,
+    "ocram_diagnostic": 1665,
+    "note": "Instruction counts, not SH4 cycles or console elapsed time"
+  },
+  "first_snapshot": {
+    "range_bytes": 64,
+    "alignment_bytes": 32,
+    "ocbwb_iterations": 2,
+    "report_opcode_offset": "0x126",
+    "no_whole_helper_reference": true
+  },
+  "release": {
+    "elf": "/root/probe/lanes/route/out-au23on5e4drP/re4dc-game.elf",
+    "elf_sha256": "3f1c8a552a00d9aa546bf70213827221f20b4cf680efef723c9e2c7a7c72f641",
+    "helper_address": "0x8c22df24",
+    "retained_kos_caller": "dma_map_src -> dma_map_src_dst+0x62 jsr helper",
+    "all_four_replacement_objects_reference_helper": true,
+    "old_archive_exclusion": "All complete global export sets match original4members; explicit objects precede archive; extracting originals would introduce forbidden strong duplicate definitions. No final archive-trace/map was generated.",
+    "diagnostics_absent": true,
+    "overlays_sha256": {
+      "em22.ovl": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e",
+      "em2b.ovl": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695",
+      "em2f.ovl": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1",
+      "em35.ovl": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7",
+      "em3b.ovl": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417",
+      "pl0f.ovl": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e",
+      "pl11.ovl": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e",
+      "pl14.ovl": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e",
+      "sscrn.ovl": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60",
+      "st1_0.ovl": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a",
+      "st1_1.ovl": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0",
+      "st1_2.ovl": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c",
+      "st1_3.ovl": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc",
+      "st2_0.ovl": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2"
+    }
+  },
+  "off_identity": {
+    "raw_sha256": "0745d16c39fcc08dee3afb7d0d1ce473379387190a93b395aa8c4358dad741a2",
+    "raw_bytes": 3370788,
+    "all_14_overlay_bytes_equal": true,
+    "baseline": "/root/probe/lanes/route/out-sb23on2a14rP",
+    "candidate": "/root/probe/lanes/route/out-au23off5e4drP"
+  },
+  "evidence_sha256": {
+    "verify/verification.json": "986e65a3c23a990863f595bc38c16bd5aedbdc0ae727a3c0445c847a351036f8",
+    "thresholds/thresholds.json": "162e550c905b9d60d400a42567e85f064794e237da3433eb691658fc8cf64d00",
+    "original-helper/helper-contract.json": "1d8c6a8c33dc37464776a7e730ccbbb1526d2f826eeea6b7bc5a2749fe33e1bc",
+    "diagnostic-opcode-contract.json": "6f70eda544ff0ea1985bc41a498c263f79dac6cee0a07e91c2e99e234b39d8bf",
+    "release-link-and-observer.json": "ffe82b0a60c181cfc3d18c9f0158ac79e04be3163564fb0cd43bb660d22fde6a",
+    "root-off-identity.json": "53e41082b4083024da83412f8ed91c74b2a0b7b8687032af39384ef65d6659a5",
+    "diag_opcode_model.py": "534e7d9ca9db2b21d1ad6de6cd90d2e1d4fa56e1bd33b38183bbd5bda6b9aac0",
+    "run-diag-model.py": "a292c52a5500b1c6fe9ce78e91be9ba69d710a34ddfab01fb14d03607f62d39b",
+    "run.sh": "ecf420722ce9eda6b7f823b56dfd7f1c4de847992c579bee6801222ee43ccdd7",
+    "diagnostic-build.py": "f360cb229f84633f18e021917a0faae0992c26933e3a98d6fc1d8fef831c0390",
+    "observer-compile.command.json": "8d5c51afa444c85ac2b24e8e911c6c809be1ba30051ffcd1e63a5225f0ff1cac",
+    "observer.o": "48197805d18c0c734342fc2be543f9960f6f363f77211181f4bd4c5eaca5d8f7",
+    "observer.su": "9dfcc4b0badbc1c0e538cbf6a792eebfd14e32779533bed4b6310ae0711ec593",
+    "observer-disassembly.stdout": "ffe6ffc90d1acaf2880dcf152f57078015fa5336027437faf9bdc00019950d04",
+    "observer-symbols.stdout": "e6e70a829fbcef60b4b61c3e2ee3f7819f331459a39b5f762f64eaecf4fa1866",
+    "diagnostic/cache_p2.o": "e5f34dd14ca62d1727fcf96070dbe6e9417611508185f1205ebc6705741e9af1",
+    "diagnostic/prepare.json": "7287f3d260fad1bef62b8239e7d448a27ab559321d12ddae8ba43cda6fe5ddcc",
+    "diag-8c010000-disassembly.stdout": "22a23a4280b832849b0e04ab1ad7a326a319bcf142d0e3757c629630be38da21",
+    "release-dma-path.txt": "2cf241d0bf423154f1652677ab37cbc6ba7a9425ec1430f8c094564469aeda33",
+    "release-link-record.txt": "12768f44a8010bd27ffd5508fb1f9784b6abf6073d98a22c67a8c0cc4a83fea4",
+    "sdk-before.sha256": "f87a3a4b2141063d21dfa13b844ba7dea839f9ed8240ecd2bdcb04e4f4c922d3",
+    "sdk-final.sha256": "f87a3a4b2141063d21dfa13b844ba7dea839f9ed8240ecd2bdcb04e4f4c922d3",
+    "sdk-before.status": "5c84a827cf7da6c7abaebdb99a567448eaef1fe8007c3380d3264a49a633d524",
+    "sdk-final.status": "5c84a827cf7da6c7abaebdb99a567448eaef1fe8007c3380d3264a49a633d524"
+  },
+  "not_established": [
+    "No target instructions executed by guest or hardware",
+    "No observed helper frequency, valid duration, IRQ latency or observer calibration",
+    "Full DIAG programme link/heap/runtime attribution remains open",
+    "No overall four-knob acceptance"
+  ]
+}

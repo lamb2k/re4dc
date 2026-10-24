@@ -1,0 +1,11 @@
+{
+  "status": "PASS_HOST_PARSER_CONTROLS",
+  "groups": 14,
+  "cli_positive_exit": 0,
+  "cli_negative_exit": 1,
+  "judge_sha256": "f54e13eb3f91081096ab35504da706656690dff9d102f0f060b18498f2aca2df",
+  "tests_sha256": "08d3b56dcc828d4fe25bfef64734ef510f66d46e0336cdbdee6af51e0004c28e",
+  "controls_log_sha256": "979f1c69d5af53ba9cd70d2e5f64a5b3056c37b1ed3cdec1d634f349dac8e166",
+  "ram": "/dev/shm/audits23-codegen-asn6jkbe",
+  "no_guest_result": true
+}

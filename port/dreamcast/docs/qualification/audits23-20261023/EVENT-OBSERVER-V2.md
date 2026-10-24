@@ -1,0 +1,31 @@
+# Audits23 event observer V2 — compiler-bound, host-ready
+
+2026-10-23. No guest was run for this revision. Root retains guest allocation, outer55s exact-child guard, staging identity and acceptance. V1 tools/manifests, first actual r117 observation and first496 UNKNOWN dam samples remain frozen. V2 fixes the host observer layout; it makes no claim that the first dam run failed in the game. V1 did not retain the failing raw pool header, so those old bytes cannot be reconstructed.
+
+I had used the GCC2.95 base-field source comments as native offsets. Actual GCC15.2.0 uses a leading vtable pointer. Two isolated target TUs, one per exact target below, used their retained Make-expanded em.cpp command (same target includes/defines/ABI flags, dependency output removed, RAM input/output, final -g0). The physical source-tree lease and shared d367-buildslot.sh were held. No full build/link/SDK modification occurred. libkallisti.a stayed SHA256 5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf before/after. Complete command/compiler/build-log/header/TU/object/constant-section hashes are in target-abi-{on,off}-v2.json. The preserved exact .cpp files contain only sizeof/builtin_offsetof expressions. Independent actual ON programme em.o constructor/initWork disassembly and DWARF corroboration is in target-abi-actual-em-object-v2.json.
+
+| Actual target ABI, both arms | Decimal / hex |
+|---|---|
+| cEmMgr sizeof | 56 / 0x38 |
+| pArray,nArray,stride,pAlive,Guid | 4,8,12,20,52 / 04,08,0c,14,34 |
+| cEm sizeof | 3552 / 0xde0 |
+| be_flag,pNext | 4,8 / 04,08 |
+| serial,id,type,kindid,emset_no | f8,100,101,12e,398 hex |
+| pos,stat,pMotion,motState,frame,frameMax | 94,fc,1d8,21a,290,294 hex |
+| cRoomData sizeof,num,pSaveBuf,pSave | 20,02,14,18 hex |
+| RoomSave stride | d8 hex |
+| GlobalWork SF1,Frame_cnt,room_id | 5010,51e4,4f9e hex |
+
+Use aud23-event-observer-v2.py and event-fixtures/on-5e4d-symbols-v2.json or off-control-2a-symbols-v2.json. New manifests bind exact compiler receipts and refuse V1 schema, receipt hash/source/programme mismatch and inconsistent layout. _RoomData/_EmMgr remain direct objects; pG/pPL are pointer globals. ON source5e4de9a0262d3629c9833c959557de198b2e9f0c ELF SHA2564f1f7c6a89aba1e72e8b121249ea9f0bd94717ce2ca5cd4eda2807c5163104b7. OFF control is STAT_ON source2a14662d4b025031cd93f64eed6a5d8159d473b7 ELF SHA2567a57db6b4cfabdf3730edc8ab3aa6f165a6bc72382de143bb36e7a7cc1b6c306. Exact symbols, target paths and frozen fp_run/backend hashes remain in the new manifests. Original V1 manifests are untouched.
+
+Keep the existing stat-guest-slot.sh, trace console/global16 and FP_NOLIMIT1 admission outside the wrapper. Root invocation shape:
+
+    python.exe census-bound-run.py aud23-event-observer-v2.py FP_RUN.py event-fixtures/on-5e4d-symbols-v2.json r117 --base EXACT_G_BASE --cap FRESH_CAP --syms "LOG HEAD STAGE" --warp event-fixtures/r117-light-solve-warp.txt --pad event-fixtures/r117-light-solve-pad.txt --seconds 53 --period 0 --name aud23-r117-on-v2
+
+Use mode dam, the r10c-first-villager-warp.txt and no pad for dam. OFF uses its exact g base and off-control-2a-symbols-v2.json. Windows Python must receive Windows paths. When launched from WSL, export RE4DC_EMU=console and append AUD23_CAPTURE_STILLS to existing WSLENV to pass its value to Windows Python. Do not replace other required WSLENV entries. This document does not allocate a guest.
+
+V2 requires pool count1..512 and stride exactly compiled sizeof(cEm)=0xde0; each whole snapshot remains capped4MiB and16MiB mainRAM. Two complete snapshots and owner headers before/between/after retain exact element/membership/head and serial/class/list-entry/liveness guards. No bounds were relaxed. Successful rows and UNKNOWN diagnostics now retain raw header hex plus parsed actual pArray/count/stride/head/Guid; partial already-read room/SF1/RSF context is retained on pool failure. A read failure before obtaining a header explicitly leaves no header. Actual entry2 evidence still requires kind0/id12/emset_no2, live/listed during authentic area onset+SF1 event, stable serial/current pool and nonempty identical motion-header SHA with advancing frame, then event-clear/source exit. Missing/unknown/retired/unlinked/later-entry3/4 do not substitute for2. Header hash is not full FCV provenance. Durable owner-generation proof and exact overlay work/phase remain unavailable: phase_witness_pass and acceptance_pass stay false.
+
+Optional AUD23_CAPTURE_STILLS=1 enables r117 only, maximum two phase requests: unsolved+unstarted/event-clear baseline, then solved+disarmed/event-clear at source exit pose. A separate read-only worker verifies the same owned PID/image, resamples source state before calling the preserved ram.capture_frames helper, skips changed phases/exited guest and records explicit errors. No input/write API is added. Each capture-binding.json saves requested state, actual pre-capture state, best-effort post-capture state, timestamps and whether the source phase still matches afterward. State and VRAM remain asynchronous. At the deadline, queued phases, in-progress/error/skipped status and capture_worker_still_running are explicit; incomplete captures are not visual proof. No capture request is retried or expanded beyond two, and no automatic success termination is introduced. Optional captures can be absent even when source-state sequence completes; root must inspect actual stills for a visible gate change.
+
+Host controls: python -B test-aud23-event-observer-v2.py —20 PASS. They validate both real target constant-section hashes/identical ABI and actual programme-object corroboration; then exercise bounded fabricated RAM using those compiled offsets, including old-comment layout rejection, raw UNKNOWN header preservation, count/stride/extents/cycles/membership/head/serial/liveness, direct-object roles, RoomSave uniqueness/headers, preseeded/incomplete source-state negatives, strict dam progress and two-still phase budget. They open no native process, build or guest. Actual guest observer/VRAM behavior remains for root's bounded rerun. EVENT-OBSERVER-V2-SHA256SUMS seals all new operational files; evidence mirror is C:/Flycast-Evidence/re4-dreamcast/audits23/event-observer-v2-5e4de9a0.

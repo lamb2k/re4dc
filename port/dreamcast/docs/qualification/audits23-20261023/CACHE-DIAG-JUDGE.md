@@ -1,0 +1,14 @@
+Strict cache diagnostic judge — frozen source5e4de9a
+
+Usage (no SDK/guest):
+  PYTHONDONTWRITEBYTECODE=1 python3 '/mnt/c/Game Dev/Emulators/codex-lanes/audits23/judge-cache-diag.py' CAPTURE.log --room r117 --output RESULT.json
+  PYTHONDONTWRITEBYTECODE=1 python3 '/mnt/c/Game Dev/Emulators/codex-lanes/audits23/test-judge-cache-diag.py'
+--room may repeat; every requested room must have at least one paired live interval. A guest log must start with diagnostic seq1/boot. Concatenated guests or truncated fragments fail. Ordinary non-diagnostic log text/prefixes are allowed.
+
+VALID_RECORDED_INTERVALS means only the recorded pairs have internally consistent counters. It is not complete room/guest/performance acceptance. Timed0 yields timing NODATA, never0us. Overall and each room/boot/transition bucket retain calls, timed/rejected/unavailable, exact capacity and clock coverage. MODELLED nominal microseconds convert valid rawticks at12468720Hz (~80.2ns/tick). These are observed masked-subinterval timer windows; observer work is included, the final observer/restore tail is excluded. Full IRQ-blocked duration and observer overhead are uncalibrated. Counts have no wall-clock denominator. No calls/second or FPS is inferred. Original/full diagnostic model instruction counts3105/3196 (OC-RAM1576/1665) quantify instruction overhead only, not cycles.
+
+Strict failures: malformed/unknown fields, unpaired/duplicate/out-of-order/missing sequence, room mismatch, totals inconsistent with T+R+U or full+ram, capacity mismatch, u32 overflow, nonzero overflow/hook rejection, inconsistent ticks/max/timed, mislabeled room/phase/checkpoint or phase/room change without a recorded boundary. Boot/transition must beffff/frame0; live rooms known with checkpoints150 increments or0 boundary. A boundary0 may be enter or leave; the log does not reveal its next room, so that is not invented. Fourteen host test groups plus actual CLI success/failure checks cover these negatives and partial/NODATA behavior.
+
+Every valid result preserves capture_ends_with_unreported_interval=true and interrupted_final_interval=NODATA after the last sequence. There is no terminal flush/seal in the runtime protocol. A missing last half-pair is INVALID_CAPTURE, while a complete final pair leaves a later unreported interval unknown. For reporting per-room counts, say observed paired intervals and include their seq/frame coverage; never call them complete room totals.
+
+FULL-DIAG-IMAGE.json pins the actual linked image: helper0x8c236b00, real counter0x8c441d80/P2alias0xac441d80, aligned isolated64B. It passes128 actual emitted-opcode cases plus8 bad-clock cases. Target section delta versus standardc: text+992/rodata+268/data+4/BSS+96/end+1344B; includes linked UI hooks/alignment. No SDK, source or recipe was edited by this follow-up. RAM evidence /dev/shm/audits23-codegen-asn6jkbe.

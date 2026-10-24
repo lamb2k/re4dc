@@ -1,0 +1,143 @@
+{
+  "schema": 3,
+  "source": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+  "program_elf": "/root/probe/lanes/route/out-fpau23on5e4dgW/re4dc-game.elf",
+  "program_elf_windows": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\lanes\\route\\out-fpau23on5e4dgW\\re4dc-game.elf",
+  "program_elf_sha256": "4f1f7c6a89aba1e72e8b121249ea9f0bd94717ce2ca5cd4eda2807c5163104b7",
+  "program_elf_bytes": 28720240,
+  "programme_symbols": {
+    "pG": {
+      "address": "0x8c2b289c",
+      "type": "D",
+      "storage": "pointer_global"
+    },
+    "_EmMgr": {
+      "address": "0x8c362cf8",
+      "type": "B",
+      "storage": "direct_object"
+    },
+    "pPL": {
+      "address": "0x8c363040",
+      "type": "B",
+      "storage": "pointer_global"
+    },
+    "_RoomData": {
+      "address": "0x8c37edf4",
+      "type": "B",
+      "storage": "direct_object"
+    }
+  },
+  "source_sha256": {
+    "include/cManager.h": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20",
+    "include/room_data.h": "48216d410f3e998f6709cba7cc265e83f630d9b730bd264cb9dd64fc766e6fd7",
+    "include/model.h": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5",
+    "include/em.h": "3fde0e04cd508f086be1c193bc761b55e3ff8ee7cb08c522c344b4d14b19e74f",
+    "include/global.h": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a",
+    "src/game/roomdata.cpp": "6311144a11a3fb8dba23e9e42a6f8f89dd087dda70f47a9d026ce97cb61103d2",
+    "include/flag_rsf.h": "723b8e0f4dcc5cac630c7531be754464eeaad967e7d2e20c00f635688c652852",
+    "src/st1/r117.cpp": "b1830e22c353f5c7efa669a15ab2d4aaafbff061b839688cc79a5fb30f72a9c1",
+    "src/st1/r10c.cpp": "86608234203aa49e8d036508af64c2fb472c1a25c4df3c635fa226b3c6ad0ecf",
+    "port/dreamcast/tools/d367/fullplay/fp_run.py": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747"
+  },
+  "resolved_knobs": {
+    "CACHE_LINEWISE": "0",
+    "ESP_POOL_RECYCLE": "1",
+    "ISSUE52_ACTOR_DIAG": "0",
+    "KOS_CACHE_P2": "1",
+    "R10C_SPAWN_LIVE_GUARD": "1",
+    "R117_EFFECT_FAILURE_SAFE": "1",
+    "STAT_ROUTINE_BYTES": "1",
+    "VRAM_ROOM_ARENA": "0",
+    "VRAM_ROOM_ARENA_NO_TOP": "0"
+  },
+  "ram_backend_sha256": "8bd179110988d1b808d8e353b182f921dc244fdae985a51995293ba570c136b0",
+  "overlay_work_phase_claim": "omitted: no authenticated current overlay binding supplied; all work/phase fields remain unknown",
+  "target_abi_receipt": "C:\\Game Dev\\Emulators\\codex-lanes\\audits23\\event-fixtures\\target-abi-on-v3.json",
+  "target_abi_receipt_sha256": "31e7245cc48230fd8527e445329cb7de1fe4f9510e13919260ec662ba6f3d1c8",
+  "target_layout": {
+    "magic": 860439105,
+    "schema": 3,
+    "pointer_bytes": 4,
+    "u32_bytes": 4,
+    "manager.sizeof": 56,
+    "manager.pArray": 4,
+    "manager.nArray": 8,
+    "manager.stride": 12,
+    "manager.pAlive": 20,
+    "manager.Guid": 52,
+    "manager.pArrayPush": 28,
+    "manager.pAlivePush": 24,
+    "manager.nArrayPush": 32,
+    "actor.sizeof": 3552,
+    "actor.be_flag": 4,
+    "actor.pNext": 8,
+    "actor.serial": 248,
+    "actor.id": 256,
+    "actor.type": 257,
+    "actor.kindid": 302,
+    "actor.emset_no": 920,
+    "actor.pos": 148,
+    "actor.stat": 252,
+    "actor.pMotion": 472,
+    "actor.motState": 538,
+    "actor.frame": 656,
+    "actor.frameMax": 660,
+    "roomdata.sizeof": 32,
+    "roomdata.num": 2,
+    "roomdata.pSaveBuf": 20,
+    "roomdata.pSave": 24,
+    "roomsave.sizeof": 216,
+    "global.SF1": 20496,
+    "global.Frame_cnt": 20964,
+    "global.room_id": 20382,
+    "pool.sizeof": 64,
+    "chunk.sizeof": 32,
+    "pool.chunks": 0,
+    "pool.capacity": 4,
+    "pool.bytes": 8,
+    "pool.peak": 12,
+    "pool.chunks_count": 16,
+    "pool.reclaims": 20,
+    "pool.failures": 24,
+    "pool.heap": 28,
+    "pool.handle": 32,
+    "chunk.next": 0,
+    "chunk.first": 4,
+    "chunk.count": 8,
+    "chunk.bytes": 12,
+    "target.WORKAT_INLINE": 1
+  },
+  "observer_version": 3,
+  "frozen_pools_symbol": {
+    "name": "re4dc_frozen_pools",
+    "address": "0x8c358084",
+    "storage": "direct_object",
+    "bytes": 4
+  },
+  "native_backing": {
+    "parts_bridge_sha256": "616bcfd7b1606ed0b47a36791b183e6bf1476bfe61b687f2b3652e613536d35f",
+    "parts_budget_header_sha256": "28b862356c49d8bc48d12badb0a873baa09a3127f2795739d3824e869fe4d688",
+    "parts_budget_header_text": "#define RE4DC_PARTS_DEMAND 1\n#define RE4DC_MODELINFO_DEMAND 1\n#define RE4DC_OBJECT_DEMAND 1\n#define RE4DC_ENEMY_DEMAND 1\n#define RE4DC_HEAP4_PARTS_RESERVE 1\n#define RE4DC_HEAP4_PARTS_RESERVE_ROOM 0x100\n#define RE4DC_HEAP4_PARTS_RESERVE_BYTES 73728\n"
+  },
+  "source_contract": {
+    "parts_bridge": {
+      "path": "port/dreamcast/game/parts_bridge.cpp",
+      "sha256": "616bcfd7b1606ed0b47a36791b183e6bf1476bfe61b687f2b3652e613536d35f",
+      "rules": "Pool/Chunk declarations lines14-26; sparse line39; allocation216-234; chunk page and slot binding246-300; enemy page354-364"
+    },
+    "manager": {
+      "path": "include/cManager.h",
+      "sha256": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20",
+      "rules": "workAt native slot lookup252-264"
+    },
+    "placement": {
+      "path": "port/dreamcast/game/dbgwarp_bridge.cpp",
+      "sha256": "06dcb69d8108c438ab577f6787ab3b468d2d4fed6cbe2e7c07e30873650b95a7",
+      "rules": "room_frames==1 and actual pPL position placed marker1845-1865"
+    },
+    "max_records": 512,
+    "max_read_bytes_combined": 4194304,
+    "minimum_source_frames_after_placed_sample": 30,
+    "no_frozen_or_debug_push_fallback": true
+  }
+}

@@ -1,0 +1,1081 @@
+{
+  "schema": 1,
+  "created_utc": "2026-10-24T01:26:47.322183+00:00",
+  "base_commit": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+  "branch": "wip/audits23-evidence-tools-20261023",
+  "snapshot_directory": "port/dreamcast/docs/qualification/audits23-20261023",
+  "policy": "Original bytes, no newline/BOM/Windows-1252 conversion. Partial source snapshot with explicit private exclusions; no runtime edits or acceptance claims.",
+  "included": [
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/CACHE-DIAG-JUDGE-CONTROLS.json",
+      "source_relative_path": "CACHE-DIAG-JUDGE-CONTROLS.json",
+      "sha256": "407654bf284bf48a4d6feb04b548340a58d42f2f1d25f3561b679b6c64642305",
+      "bytes": 451,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/CACHE-DIAG-JUDGE-CONTROLS.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/CACHE-DIAG-JUDGE.md",
+      "source_relative_path": "CACHE-DIAG-JUDGE.md",
+      "sha256": "2fedb6e2045477dafad7dac8c2b2e05a46200256fa990981fd34426c2dd04e71",
+      "bytes": 2871,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/CACHE-DIAG-JUDGE.md"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/EVENT-OBSERVER-SHA256SUMS",
+      "source_relative_path": "EVENT-OBSERVER-SHA256SUMS",
+      "sha256": "d5f0ceff9b3f0aca50c7948f732a624719d0fff9d8c27f2615db220d94c540b1",
+      "bytes": 682,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/EVENT-OBSERVER-SHA256SUMS"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/EVENT-OBSERVER-V2-SHA256SUMS",
+      "source_relative_path": "EVENT-OBSERVER-V2-SHA256SUMS",
+      "sha256": "210a82481d7605d10ce7fd26bf86b6af6d577d7cda94c4ba304135d0e8c8da93",
+      "bytes": 1344,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/EVENT-OBSERVER-V2-SHA256SUMS"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/EVENT-OBSERVER-V2.md",
+      "source_relative_path": "EVENT-OBSERVER-V2.md",
+      "sha256": "0ef38128dd7ddc0fdcb97da87470e913560c0ca178479a5f72da1e6c9fc2c2bf",
+      "bytes": 6280,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/EVENT-OBSERVER-V2.md"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/EVENT-OBSERVER-V3-SHA256SUMS",
+      "source_relative_path": "EVENT-OBSERVER-V3-SHA256SUMS",
+      "sha256": "e78c74d3ad749d5ecd03e033c3d3bb3400b32ebc3dda32e2980b3ff150da1ef7",
+      "bytes": 1344,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/EVENT-OBSERVER-V3-SHA256SUMS"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/EVENT-OBSERVER-V3.md",
+      "source_relative_path": "EVENT-OBSERVER-V3.md",
+      "sha256": "d62a1ea7c36a59acbea38a65610057021ef911809a79aab119670cb2f09c337f",
+      "bytes": 8778,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/EVENT-OBSERVER-V3.md"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/EVENT-OBSERVER.md",
+      "source_relative_path": "EVENT-OBSERVER.md",
+      "sha256": "5bff05cf9f9297396b23293fbd803572beacd595563c1d0380aba7989ad10255",
+      "bytes": 7516,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/EVENT-OBSERVER.md"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/FULL-DIAG-IMAGE.json",
+      "source_relative_path": "FULL-DIAG-IMAGE.json",
+      "sha256": "487e5acdadd783125042a3a61f7b04f30b493fcd7c410ae62c1e0e8e433911ec",
+      "bytes": 1249,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/FULL-DIAG-IMAGE.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/HANDBACK.md",
+      "source_relative_path": "HANDBACK.md",
+      "sha256": "7f3dbf2e16138d504901190c8cde373ca02dc382131fb0f2dea6ae52fb7ae1d5",
+      "bytes": 2207,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/HANDBACK.md"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/HOST-CONTROLS-COHERENCE.json",
+      "source_relative_path": "HOST-CONTROLS-COHERENCE.json",
+      "sha256": "06e6a9eb58e71c95b7c458deecdd2073c9e58130655c513ca7cdfb0fe62eb1d2",
+      "bytes": 1135,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/HOST-CONTROLS-COHERENCE.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/HOST-CONTROLS-FINAL.json",
+      "source_relative_path": "HOST-CONTROLS-FINAL.json",
+      "sha256": "e73870109aee7d9508dc5096b8fca4c5b176c951f99171e9fe2fb65a0001032f",
+      "bytes": 1598,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/HOST-CONTROLS-FINAL.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/HOST-CONTROLS.json",
+      "source_relative_path": "HOST-CONTROLS.json",
+      "sha256": "60f206ea283ad8bb445a3092d4a2ef0e181da04ecf9f362b4888b49858ecd014",
+      "bytes": 1572,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/HOST-CONTROLS.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/MERGE-PIN.json",
+      "source_relative_path": "MERGE-PIN.json",
+      "sha256": "67f6ebd1f6b99dd69cedf264a5ed4d6554b6b1a28b887b6035334f91572a197b",
+      "bytes": 200,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/MERGE-PIN.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/PREFLIGHT.md",
+      "source_relative_path": "PREFLIGHT.md",
+      "sha256": "1bb5a60a831c5b140c91df9a38270420bc37c1bee78b0ae0b96713bba4b1bcd8",
+      "bytes": 11204,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/PREFLIGHT.md"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/REVIEW-CACHE-DIAG.json",
+      "source_relative_path": "REVIEW-CACHE-DIAG.json",
+      "sha256": "23b3e586cadb91f07090985b8af70c964cd96e62043581df7eb81fda24c89c6a",
+      "bytes": 1612,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/REVIEW-CACHE-DIAG.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/REVIEW-CACHE-DIAG.md",
+      "source_relative_path": "REVIEW-CACHE-DIAG.md",
+      "sha256": "7d5c01f8ba0e1437d97434d013bffbf4548553975c1a446e0024deed9a402812",
+      "bytes": 7283,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/REVIEW-CACHE-DIAG.md"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/REVIEW-TARGET-CODEGEN.md",
+      "source_relative_path": "REVIEW-TARGET-CODEGEN.md",
+      "sha256": "529df4334c1aa030f1bddbcdfba384838807e350e05e2dd79867f441956c62c0",
+      "bytes": 3931,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/REVIEW-TARGET-CODEGEN.md"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/TARGET-CODEGEN.json",
+      "source_relative_path": "TARGET-CODEGEN.json",
+      "sha256": "67a0892c36309536072d8a68d90d79a3ad825efcaf4abbb0e2d6ecd98f0e37c6",
+      "bytes": 8234,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/TARGET-CODEGEN.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/aud23-event-observer-v2.py",
+      "source_relative_path": "aud23-event-observer-v2.py",
+      "sha256": "8fbcd78a8c11177742a2a775958998887117eb8990dae43aa07044c1cf1a9562",
+      "bytes": 20731,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/aud23-event-observer-v2.py"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/aud23-event-observer-v3.py",
+      "source_relative_path": "aud23-event-observer-v3.py",
+      "sha256": "a13e97b817b8b18788dcec5275be8da5baa90f660ab41ad6173b81fb03d8a2da",
+      "bytes": 29341,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/aud23-event-observer-v3.py"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/aud23-event-observer.py",
+      "source_relative_path": "aud23-event-observer.py",
+      "sha256": "69cf11cc66f66327fcf6755b27005e234e28cbb2cb27b145716c305d7f23f32a",
+      "bytes": 14090,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/aud23-event-observer.py"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/ensure-rg-host.sh",
+      "source_relative_path": "ensure-rg-host.sh",
+      "sha256": "6ea5204c9164b44e7c50b371140ad207d46af30e26a65c4a57a06daccf43979b",
+      "bytes": 187,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/ensure-rg-host.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/SHA256SUMS",
+      "source_relative_path": "event-fixtures/SHA256SUMS",
+      "sha256": "421cbe69251a815b6ba14459fb9b8544acc54df6b534ede31e43b086e9a45ab1",
+      "bytes": 728,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/SHA256SUMS"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/bind-event-symbols.py",
+      "source_relative_path": "event-fixtures/bind-event-symbols.py",
+      "sha256": "cb59ef5ce63159cf0af7b83d33566d414d02a42f969b09cb36b44da25e58f7ea",
+      "bytes": 3110,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/bind-event-symbols.py"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/judge-r117-solve.py",
+      "source_relative_path": "event-fixtures/judge-r117-solve.py",
+      "sha256": "ececba835639fd1cab57b46c2be7d8f5b27aa180118e4e50ddf1a6d59dd8daba",
+      "bytes": 1906,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/judge-r117-solve.py"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/off-control-2a-symbols-v2.json",
+      "source_relative_path": "event-fixtures/off-control-2a-symbols-v2.json",
+      "sha256": "ab08366eae98304383495ac2839b1482c69b8db98807db249d6a2b0fdf861402",
+      "bytes": 3508,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/off-control-2a-symbols-v2.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/off-control-2a-symbols-v3.json",
+      "source_relative_path": "event-fixtures/off-control-2a-symbols-v3.json",
+      "sha256": "9d7f342cc38d6240494366e92d09a5550294013936a4b756a29cfd9f6b6bcca3",
+      "bytes": 5619,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/off-control-2a-symbols-v3.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/off-control-2a-symbols.json",
+      "source_relative_path": "event-fixtures/off-control-2a-symbols.json",
+      "sha256": "27f80e034094730c151e2da7fe8cafb4981c379c2eaee2e85f75a5de7ea82901",
+      "bytes": 2356,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/off-control-2a-symbols.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/on-5e4d-symbols-v2.json",
+      "source_relative_path": "event-fixtures/on-5e4d-symbols-v2.json",
+      "sha256": "d6e2fcd4b6f334313d60556b9295c0be7b9d138e2e980b0facecd3f18fbecb28",
+      "bytes": 3507,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/on-5e4d-symbols-v2.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/on-5e4d-symbols-v3.json",
+      "source_relative_path": "event-fixtures/on-5e4d-symbols-v3.json",
+      "sha256": "910ca24a3b5aa799cb9093f476ed6e023506bbff2b6fb5bc8e3723d1391d9c65",
+      "bytes": 5618,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/on-5e4d-symbols-v3.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/on-5e4d-symbols.json",
+      "source_relative_path": "event-fixtures/on-5e4d-symbols.json",
+      "sha256": "6308ba75d6c30cc2bf9ce2361b152ec41dc86656ef6e82132ca02a9f9a09f00f",
+      "bytes": 2356,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/on-5e4d-symbols.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/prepare-observer-v2.py",
+      "source_relative_path": "event-fixtures/prepare-observer-v2.py",
+      "sha256": "ff89d7be6b846b5a8a7aec0430f427752b2d4e19db109cf92c1d5f6afe43f356",
+      "bytes": 14318,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/prepare-observer-v2.py"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/probe-target-abi-v2.py",
+      "source_relative_path": "event-fixtures/probe-target-abi-v2.py",
+      "sha256": "726cfeede26cab87ae2cf88863ac23cabce15d9c6317bc237d925ef92ec1af12",
+      "bytes": 4896,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/probe-target-abi-v2.py"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/probe-target-abi-v2.sh",
+      "source_relative_path": "event-fixtures/probe-target-abi-v2.sh",
+      "sha256": "3191359d078b568f5240903d05063a38014aa4fe9c9e268a21ded92d6ea6d9fb",
+      "bytes": 1010,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/probe-target-abi-v2.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/probe-target-abi-v3.py",
+      "source_relative_path": "event-fixtures/probe-target-abi-v3.py",
+      "sha256": "b30e8548c5053a2594b32733096e47070feee7725f922a8f4182b9b6d3f9eab4",
+      "bytes": 6119,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/probe-target-abi-v3.py"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/probe-target-abi-v3.sh",
+      "source_relative_path": "event-fixtures/probe-target-abi-v3.sh",
+      "sha256": "35d51cae3840afa1ecafd03425f9a5496a07f349e7f8d7f88136a5e6eb433972",
+      "bytes": 1010,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/probe-target-abi-v3.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/r117-light-solve-idle180-pad.txt",
+      "source_relative_path": "event-fixtures/r117-light-solve-idle180-pad.txt",
+      "sha256": "7c5e2fc8985b196102b3c64c0c86d3e917c62530bf0e718dccc24e7946468fdb",
+      "bytes": 838,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/r117-light-solve-idle180-pad.txt"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/r117-light-solve-pad.txt",
+      "source_relative_path": "event-fixtures/r117-light-solve-pad.txt",
+      "sha256": "bad5e932e0092b5b63260ad67b89e5b2199799697830c72edd5fc8b8bb269934",
+      "bytes": 837,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/r117-light-solve-pad.txt"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/stat_owned_ram.py",
+      "source_relative_path": "event-fixtures/stat_owned_ram.py",
+      "sha256": "8bd179110988d1b808d8e353b182f921dc244fdae985a51995293ba570c136b0",
+      "bytes": 5502,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/stat_owned_ram.py"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/target-abi-actual-em-object-v2.json",
+      "source_relative_path": "event-fixtures/target-abi-actual-em-object-v2.json",
+      "sha256": "e22dc4ba74a72b2aa6fb1fa20ea083177164fa4859285cf279ced37174aecbfd",
+      "bytes": 2484,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/target-abi-actual-em-object-v2.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/target-abi-off-v2.cpp",
+      "source_relative_path": "event-fixtures/target-abi-off-v2.cpp",
+      "sha256": "c7f0cda9a93baa0a20e03646d8db5463c274cd22885910c8e72324b7337d48ee",
+      "bytes": 1822,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/target-abi-off-v2.cpp"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/target-abi-off-v2.json",
+      "source_relative_path": "event-fixtures/target-abi-off-v2.json",
+      "sha256": "f8c1087528ac0682989eb6bf05747c4460340e0b381a8f2e7a600c61108ba163",
+      "bytes": 11113,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/target-abi-off-v2.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/target-abi-off-v3.cpp",
+      "source_relative_path": "event-fixtures/target-abi-off-v3.cpp",
+      "sha256": "b4a1966686c6a1c4308f5bfc93481ccef30f7b7905ef351e96018dcbabc39f76",
+      "bytes": 3298,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/target-abi-off-v3.cpp"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/target-abi-off-v3.json",
+      "source_relative_path": "event-fixtures/target-abi-off-v3.json",
+      "sha256": "fff690c1904234a86bdf643c74ae5fa4df6954e6347ca23a1f5e0adf5fcae92c",
+      "bytes": 15113,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/target-abi-off-v3.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/target-abi-on-v2.cpp",
+      "source_relative_path": "event-fixtures/target-abi-on-v2.cpp",
+      "sha256": "c7f0cda9a93baa0a20e03646d8db5463c274cd22885910c8e72324b7337d48ee",
+      "bytes": 1822,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/target-abi-on-v2.cpp"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/target-abi-on-v2.json",
+      "source_relative_path": "event-fixtures/target-abi-on-v2.json",
+      "sha256": "e52f6e5ce8f19641fdafa8c496d06518c4ced713ffff3ae9357aa35449e4c03c",
+      "bytes": 11257,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/target-abi-on-v2.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/target-abi-on-v3.cpp",
+      "source_relative_path": "event-fixtures/target-abi-on-v3.cpp",
+      "sha256": "b4a1966686c6a1c4308f5bfc93481ccef30f7b7905ef351e96018dcbabc39f76",
+      "bytes": 3298,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/target-abi-on-v3.cpp"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/target-abi-on-v3.json",
+      "source_relative_path": "event-fixtures/target-abi-on-v3.json",
+      "sha256": "31e7245cc48230fd8527e445329cb7de1fe4f9510e13919260ec662ba6f3d1c8",
+      "bytes": 15267,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/target-abi-on-v3.json"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/test-event-fixtures.py",
+      "source_relative_path": "event-fixtures/test-event-fixtures.py",
+      "sha256": "e529d260c32d72f25a384383a3512574cccb7a2930bea8184424db395ddfbde9",
+      "bytes": 1469,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/event-fixtures/test-event-fixtures.py"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/judge-cache-diag.py",
+      "source_relative_path": "judge-cache-diag.py",
+      "sha256": "f54e13eb3f91081096ab35504da706656690dff9d102f0f060b18498f2aca2df",
+      "bytes": 8725,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/judge-cache-diag.py"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/judge-census-on.py",
+      "source_relative_path": "judge-census-on.py",
+      "sha256": "551a54ef17cd416f33b0b1fa742205a5512548604fce4edf4109e34e4bfc785d",
+      "bytes": 5300,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/judge-census-on.py"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/review-cache-diag.sh",
+      "source_relative_path": "review-cache-diag.sh",
+      "sha256": "bc4369bdcf2f575df64836cf7b7364b78e3ed0417a8a6d3bff3cf0767a9e13a1",
+      "bytes": 887,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/review-cache-diag.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-build-tools-inspect.sh",
+      "source_relative_path": "takeover-build-tools-inspect.sh",
+      "sha256": "209554cc61faa7d9d8004d3bacedfa96515346342a524519d8886385ffe9ad04",
+      "bytes": 184,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-build-tools-inspect.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-build-v1.sh",
+      "source_relative_path": "takeover-build-v1.sh",
+      "sha256": "f5a4eb77e08c38b6e1984cd4056c36f8b0e68b413530bdb1b6079d2a3b105cf1",
+      "bytes": 3508,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-build-v1.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-census-on.py",
+      "source_relative_path": "takeover-census-on.py",
+      "sha256": "56a346ab94a76ff5b2e943af6ec977d083877c6f6406917cb8b6b51b08a5ffaa",
+      "bytes": 4265,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-census-on.py"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-dam-backing-inspect.sh",
+      "source_relative_path": "takeover-dam-backing-inspect.sh",
+      "sha256": "8de925f9fa6a532f49fef1f45b1022d6fe704efab583a816dbf0fc8d29aa6619",
+      "bytes": 277,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-dam-backing-inspect.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-dam-layout-inspect.sh",
+      "source_relative_path": "takeover-dam-layout-inspect.sh",
+      "sha256": "8fcc4769aaffe52f8bcf32a5c27a8de03b1f8d88b3c7dfe4829582873363fffc",
+      "bytes": 383,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-dam-layout-inspect.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-dam-observer-inspect.sh",
+      "source_relative_path": "takeover-dam-observer-inspect.sh",
+      "sha256": "8cfefff9a50d4961e8b49b6c2df0588522603f625c8b96fc8adc09e0994c4996",
+      "bytes": 401,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-dam-observer-inspect.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-dam-pool-inspect.sh",
+      "source_relative_path": "takeover-dam-pool-inspect.sh",
+      "sha256": "2dbd479a3cde3f35a399a3d6c984b60e1067dd4f18adf0590ef2307a5ee96a65",
+      "bytes": 356,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-dam-pool-inspect.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-dam-slot-find.sh",
+      "source_relative_path": "takeover-dam-slot-find.sh",
+      "sha256": "f36634aae70a3a927520d58c0f62222ee0fb316955fe3a088dd8a6649c0a105b",
+      "bytes": 135,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-dam-slot-find.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-dam-slot-source.sh",
+      "source_relative_path": "takeover-dam-slot-source.sh",
+      "sha256": "15e49caa091e8ce9d00cb4727b6d9b99a758df28140cba66728b6fbe6b6f1e3f",
+      "bytes": 213,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-dam-slot-source.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-decisions-v1.sh",
+      "source_relative_path": "takeover-decisions-v1.sh",
+      "sha256": "9b3844a50b64ff87fe1fa732ca5ddc6116f23304db13d17f531b17885956da0f",
+      "bytes": 2338,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-decisions-v1.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-diag-build-v1.sh",
+      "source_relative_path": "takeover-diag-build-v1.sh",
+      "sha256": "828fd7eb73f2bdbd244f495b4c377348446e368d4e87e7499fbca17ca080b20c",
+      "bytes": 1178,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-diag-build-v1.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-diag-chain-v1.sh",
+      "source_relative_path": "takeover-diag-chain-v1.sh",
+      "sha256": "ebfc0f8809e30c39c15f23477b63f93b1b956c013e127a3e2bf9c89457ea6f07",
+      "bytes": 148,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-diag-chain-v1.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-diag-inspect.sh",
+      "source_relative_path": "takeover-diag-inspect.sh",
+      "sha256": "68e14f73d88cf78a2e0114320b423f8e518f6222f14bbb7b7119710f51b2aef8",
+      "bytes": 320,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-diag-inspect.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-diag-judge-v1.sh",
+      "source_relative_path": "takeover-diag-judge-v1.sh",
+      "sha256": "3470300b5663ef77a7214d4c17e847cc6d6db935ae0d3224ef355973118cf3af",
+      "bytes": 560,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-diag-judge-v1.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-diag-run-v1.sh",
+      "source_relative_path": "takeover-diag-run-v1.sh",
+      "sha256": "71c9d0d570c00cc89b2be97c4d9d74afb8a89b23e3b93a6586f4083f7d1ed193",
+      "bytes": 1906,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-diag-run-v1.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-event-off-v3.sh",
+      "source_relative_path": "takeover-event-off-v3.sh",
+      "sha256": "089327f8e4789c7d4a3592354545ef0bb95288f4ff7ce784cf898a340390dce8",
+      "bytes": 2172,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-event-off-v3.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-event-v1.sh",
+      "source_relative_path": "takeover-event-v1.sh",
+      "sha256": "48bc3131b489e5264210ed54ad7735d706fc7157d2d24ea1d5344cb3a4a6198f",
+      "bytes": 2014,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-event-v1.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-event-v2.sh",
+      "source_relative_path": "takeover-event-v2.sh",
+      "sha256": "c8768a3106745822693aca1d1cb5d43ce43de0b54aa8742a034631ef75f8fa0d",
+      "bytes": 2071,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-event-v2.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-event-v3.sh",
+      "source_relative_path": "takeover-event-v3.sh",
+      "sha256": "87f54fb917baf4be4ac6520e346ac36a5a4065b99d98f6d942cc46374dca500f",
+      "bytes": 2079,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-event-v3.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-gdemu-chain-v1.sh",
+      "source_relative_path": "takeover-gdemu-chain-v1.sh",
+      "sha256": "61a8723ab809debef5ef289502b06ace97dffa6fe609935f6beab7d0fab7db74",
+      "bytes": 145,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-gdemu-chain-v1.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-gdemu-v1.sh",
+      "source_relative_path": "takeover-gdemu-v1.sh",
+      "sha256": "3c28958f46efffa745827b820466bb88c99f6f2f29fae9677e1a13c44a2d3be5",
+      "bytes": 2156,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-gdemu-v1.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-generated-review.sh",
+      "source_relative_path": "takeover-generated-review.sh",
+      "sha256": "21e1ba9d7dac9b4e821fd2b625135736b3d6678283e59bd534f5d74fec4e2646",
+      "bytes": 135,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-generated-review.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-h2-c-reference-v1.sh",
+      "source_relative_path": "takeover-h2-c-reference-v1.sh",
+      "sha256": "0a27d5b2160b3f3bcef06fbfbda09e3b3fcf8b143146ae284e95ffa150354cef",
+      "bytes": 1675,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-h2-c-reference-v1.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-h2-v1.sh",
+      "source_relative_path": "takeover-h2-v1.sh",
+      "sha256": "57c10aedbb3b7b29bfd225e7c24bab6030adbd8a8877097d3d43222353afa6fd",
+      "bytes": 1615,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-h2-v1.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-knob-dump-inspect.sh",
+      "source_relative_path": "takeover-knob-dump-inspect.sh",
+      "sha256": "4c2465b376d2c6255aa7c358d12e648293b9ed6caf1ed31abfe82c5f7bdee6ba",
+      "bytes": 108,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-knob-dump-inspect.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-knob-inspect.sh",
+      "source_relative_path": "takeover-knob-inspect.sh",
+      "sha256": "e7f6276064070effa6414eb1c96da3c5614aefd693863dfec0286c5c0534e750",
+      "bytes": 379,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-knob-inspect.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-knob-writer-inspect.sh",
+      "source_relative_path": "takeover-knob-writer-inspect.sh",
+      "sha256": "96dcbf2bfef8489da146542ff6f844bde8932fc7dab81ada2ad0ceede94874e7",
+      "bytes": 140,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-knob-writer-inspect.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-kos-v1.sh",
+      "source_relative_path": "takeover-kos-v1.sh",
+      "sha256": "e498be9e25193ef218b3af9847d1b9979c24535222dc633204a6dbaf181f08e4",
+      "bytes": 2009,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-kos-v1.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-original-host-v1.sh",
+      "source_relative_path": "takeover-original-host-v1.sh",
+      "sha256": "ffa1349aae60b457ae3df066a463c65eb5e746fade93ea5b72a7753c3bbc3fb3",
+      "bytes": 821,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-original-host-v1.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-qa-identity-v1.sh",
+      "source_relative_path": "takeover-qa-identity-v1.sh",
+      "sha256": "8c35d1da9b3e5a8e6c8abf1081937a85f8fab69ab8a1da053081367503749850",
+      "bytes": 1452,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-qa-identity-v1.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-qa-probes-v1.sh",
+      "source_relative_path": "takeover-qa-probes-v1.sh",
+      "sha256": "9e5bb5d3814f376be574025bb66cbbafea3002ab4ab4628e6849b504531e85a2",
+      "bytes": 1615,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-qa-probes-v1.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-qa-tools-inspect.sh",
+      "source_relative_path": "takeover-qa-tools-inspect.sh",
+      "sha256": "301a477112464171876aa9009300c4449620870972fba46d52b8de3b6c4a6ccd",
+      "bytes": 127,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-qa-tools-inspect.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-qa-v1.sh",
+      "source_relative_path": "takeover-qa-v1.sh",
+      "sha256": "028ca32ccac13524960613fbc50eca414d9f6fd0bf276544f108ef1e5d69b80d",
+      "bytes": 1764,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-qa-v1.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-source-watch.sh",
+      "source_relative_path": "takeover-source-watch.sh",
+      "sha256": "7e96dbff7d68f068775f5d3b538e502b9962939ccde22fc4570e07b1d7af378f",
+      "bytes": 547,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-source-watch.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-stage-v1.sh",
+      "source_relative_path": "takeover-stage-v1.sh",
+      "sha256": "20b9bccd842f49513736f8e5eef8d355bfad1965fed0a8fc2ca3cb21e1f2cf59",
+      "bytes": 1496,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/takeover-stage-v1.sh"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/test-aud23-event-observer-v2.py",
+      "source_relative_path": "test-aud23-event-observer-v2.py",
+      "sha256": "a294b75bd4761ce0ba3b4852605fd2e5de941917fb5e5cc45c17353562cd6dcd",
+      "bytes": 10702,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/test-aud23-event-observer-v2.py"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/test-aud23-event-observer-v3.py",
+      "source_relative_path": "test-aud23-event-observer-v3.py",
+      "sha256": "db0d644fc889400316ceae8a83a2e96d421980314104ae7e9f9f3b44e184038b",
+      "bytes": 17791,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/test-aud23-event-observer-v3.py"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/test-aud23-event-observer.py",
+      "source_relative_path": "test-aud23-event-observer.py",
+      "sha256": "d84ccba8b0f54e6e2ee937338d8c925397d2994cfa4cdce6902a02c588f603f8",
+      "bytes": 6785,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/test-aud23-event-observer.py"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/test-judge-cache-diag.py",
+      "source_relative_path": "test-judge-cache-diag.py",
+      "sha256": "08d3b56dcc828d4fe25bfef64734ef510f66d46e0336cdbdee6af51e0004c28e",
+      "bytes": 3927,
+      "snapshot_path": "port/dreamcast/docs/qualification/audits23-20261023/test-judge-cache-diag.py"
+    }
+  ],
+  "excluded": [
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/CODEGEN-LOCATION.txt",
+      "source_relative_path": "CODEGEN-LOCATION.txt",
+      "sha256": "162964882bf9f78fa487adccca81eb31be51b256acf04a2b9b8a34f38a99e1d0",
+      "bytes": 35,
+      "reason": "outside requested source/review/receipt formats; no logs, pointer-only text or binary payloads"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/EVENT-FIXTURES.md",
+      "source_relative_path": "EVENT-FIXTURES.md",
+      "sha256": "5646b78657c93e2ab4ecceede741a95903feb42d5a1c2894b9a3618175fa0d9b",
+      "bytes": 13649,
+      "reason": "contains package/AEV-derived trigger bounds and geometry; private only"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/INBOX.md",
+      "source_relative_path": "INBOX.md",
+      "sha256": "b9ca987a9894e32e919fe7d839b0c8672574661f3da1e99133285a66efb2cf9c",
+      "bytes": 1920,
+      "reason": "live orchestration, outside qualification snapshot"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/REVIEW-CACHE-DIAG-HOST.log",
+      "source_relative_path": "REVIEW-CACHE-DIAG-HOST.log",
+      "sha256": "e0a11536b84f14dcc994d1155fde2f8e621266d7e8ae169f868fe346cf56b393",
+      "bytes": 1057,
+      "reason": "outside requested source/review/receipt formats; no logs, pointer-only text or binary payloads"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/REVIEW-CACHE-DIAG-MAKE.log",
+      "source_relative_path": "REVIEW-CACHE-DIAG-MAKE.log",
+      "sha256": "420cdca0ba2aad684f21aa2c93faaa0da64c82262b4c848bf77c1c925a1e63fe",
+      "bytes": 200,
+      "reason": "outside requested source/review/receipt formats; no logs, pointer-only text or binary payloads"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/STATUS.md",
+      "source_relative_path": "STATUS.md",
+      "sha256": "55daa86eb62258a3b633a72bb1cf08ac85729609861f4b4b462ef79f6e63f7fe",
+      "bytes": 4042,
+      "reason": "live lane status, outside qualification snapshot"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/__pycache__/stat_owned_ram.cpython-312.pyc",
+      "source_relative_path": "event-fixtures/__pycache__/stat_owned_ram.cpython-312.pyc",
+      "sha256": "93b54f70affa7093b13c85e28499c505a26eafa114605daacaa515d958348d1c",
+      "bytes": 10998,
+      "reason": "generated Python cache/binary"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/inspect-event-fixture-areas.py",
+      "source_relative_path": "event-fixtures/inspect-event-fixture-areas.py",
+      "sha256": "94c1aa848a98a161de3e34065aa86409617da2ea1e255339435d8fb04b47f57f",
+      "bytes": 3618,
+      "reason": "asset-derived candidate coordinates and raw AEV geometry extraction; conservative exclusion"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/package-source-pins.json",
+      "source_relative_path": "event-fixtures/package-source-pins.json",
+      "sha256": "6b1868ede101ce89b2f2b04c9b94d1253b0e4603127845a4b7795d68ea086b3e",
+      "bytes": 6396,
+      "reason": "private package/AEV records and trigger geometry; explicitly excluded"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/r10c-first-villager-warp.txt",
+      "source_relative_path": "event-fixtures/r10c-first-villager-warp.txt",
+      "sha256": "11d17960f0a1efd9ed3b7ecc31de5be689e052db109e95e3d89357d86e122aca",
+      "bytes": 373,
+      "reason": "event-warp asset-derived trigger positions; conservative exclusion"
+    },
+    {
+      "source_path": "C:/Game Dev/Emulators/codex-lanes/audits23/event-fixtures/r117-light-solve-warp.txt",
+      "source_relative_path": "event-fixtures/r117-light-solve-warp.txt",
+      "sha256": "01e35405ef8dfdccad2807782b387dc5b5f4a29fb6793ea0f056a749d96b8640",
+      "bytes": 332,
+      "reason": "event-warp placement excluded as requested; private only"
+    }
+  ],
+  "source_seal_checks": [
+    {
+      "seal": "EVENT-OBSERVER-SHA256SUMS",
+      "source_relative_path": "aud23-event-observer.py",
+      "sha256": "69cf11cc66f66327fcf6755b27005e234e28cbb2cb27b145716c305d7f23f32a",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-SHA256SUMS",
+      "source_relative_path": "test-aud23-event-observer.py",
+      "sha256": "d84ccba8b0f54e6e2ee937338d8c925397d2994cfa4cdce6902a02c588f603f8",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-SHA256SUMS",
+      "source_relative_path": "EVENT-OBSERVER.md",
+      "sha256": "5bff05cf9f9297396b23293fbd803572beacd595563c1d0380aba7989ad10255",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-SHA256SUMS",
+      "source_relative_path": "event-fixtures/bind-event-symbols.py",
+      "sha256": "cb59ef5ce63159cf0af7b83d33566d414d02a42f969b09cb36b44da25e58f7ea",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-SHA256SUMS",
+      "source_relative_path": "event-fixtures/stat_owned_ram.py",
+      "sha256": "8bd179110988d1b808d8e353b182f921dc244fdae985a51995293ba570c136b0",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-SHA256SUMS",
+      "source_relative_path": "event-fixtures/on-5e4d-symbols.json",
+      "sha256": "6308ba75d6c30cc2bf9ce2361b152ec41dc86656ef6e82132ca02a9f9a09f00f",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-SHA256SUMS",
+      "source_relative_path": "event-fixtures/off-control-2a-symbols.json",
+      "sha256": "27f80e034094730c151e2da7fe8cafb4981c379c2eaee2e85f75a5de7ea82901",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V2-SHA256SUMS",
+      "source_relative_path": "aud23-event-observer-v2.py",
+      "sha256": "8fbcd78a8c11177742a2a775958998887117eb8990dae43aa07044c1cf1a9562",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V2-SHA256SUMS",
+      "source_relative_path": "test-aud23-event-observer-v2.py",
+      "sha256": "a294b75bd4761ce0ba3b4852605fd2e5de941917fb5e5cc45c17353562cd6dcd",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V2-SHA256SUMS",
+      "source_relative_path": "EVENT-OBSERVER-V2.md",
+      "sha256": "0ef38128dd7ddc0fdcb97da87470e913560c0ca178479a5f72da1e6c9fc2c2bf",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V2-SHA256SUMS",
+      "source_relative_path": "event-fixtures/stat_owned_ram.py",
+      "sha256": "8bd179110988d1b808d8e353b182f921dc244fdae985a51995293ba570c136b0",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V2-SHA256SUMS",
+      "source_relative_path": "event-fixtures/probe-target-abi-v2.py",
+      "sha256": "726cfeede26cab87ae2cf88863ac23cabce15d9c6317bc237d925ef92ec1af12",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V2-SHA256SUMS",
+      "source_relative_path": "event-fixtures/probe-target-abi-v2.sh",
+      "sha256": "3191359d078b568f5240903d05063a38014aa4fe9c9e268a21ded92d6ea6d9fb",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V2-SHA256SUMS",
+      "source_relative_path": "event-fixtures/target-abi-on-v2.json",
+      "sha256": "e52f6e5ce8f19641fdafa8c496d06518c4ced713ffff3ae9357aa35449e4c03c",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V2-SHA256SUMS",
+      "source_relative_path": "event-fixtures/target-abi-off-v2.json",
+      "sha256": "f8c1087528ac0682989eb6bf05747c4460340e0b381a8f2e7a600c61108ba163",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V2-SHA256SUMS",
+      "source_relative_path": "event-fixtures/target-abi-on-v2.cpp",
+      "sha256": "c7f0cda9a93baa0a20e03646d8db5463c274cd22885910c8e72324b7337d48ee",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V2-SHA256SUMS",
+      "source_relative_path": "event-fixtures/target-abi-off-v2.cpp",
+      "sha256": "c7f0cda9a93baa0a20e03646d8db5463c274cd22885910c8e72324b7337d48ee",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V2-SHA256SUMS",
+      "source_relative_path": "event-fixtures/target-abi-actual-em-object-v2.json",
+      "sha256": "e22dc4ba74a72b2aa6fb1fa20ea083177164fa4859285cf279ced37174aecbfd",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V2-SHA256SUMS",
+      "source_relative_path": "event-fixtures/on-5e4d-symbols-v2.json",
+      "sha256": "d6e2fcd4b6f334313d60556b9295c0be7b9d138e2e980b0facecd3f18fbecb28",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V2-SHA256SUMS",
+      "source_relative_path": "event-fixtures/off-control-2a-symbols-v2.json",
+      "sha256": "ab08366eae98304383495ac2839b1482c69b8db98807db249d6a2b0fdf861402",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V3-SHA256SUMS",
+      "source_relative_path": "aud23-event-observer-v3.py",
+      "sha256": "a13e97b817b8b18788dcec5275be8da5baa90f660ab41ad6173b81fb03d8a2da",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V3-SHA256SUMS",
+      "source_relative_path": "test-aud23-event-observer-v3.py",
+      "sha256": "db0d644fc889400316ceae8a83a2e96d421980314104ae7e9f9f3b44e184038b",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V3-SHA256SUMS",
+      "source_relative_path": "EVENT-OBSERVER-V3.md",
+      "sha256": "d62a1ea7c36a59acbea38a65610057021ef911809a79aab119670cb2f09c337f",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V3-SHA256SUMS",
+      "source_relative_path": "event-fixtures/stat_owned_ram.py",
+      "sha256": "8bd179110988d1b808d8e353b182f921dc244fdae985a51995293ba570c136b0",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V3-SHA256SUMS",
+      "source_relative_path": "event-fixtures/probe-target-abi-v3.py",
+      "sha256": "b30e8548c5053a2594b32733096e47070feee7725f922a8f4182b9b6d3f9eab4",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V3-SHA256SUMS",
+      "source_relative_path": "event-fixtures/probe-target-abi-v3.sh",
+      "sha256": "35d51cae3840afa1ecafd03425f9a5496a07f349e7f8d7f88136a5e6eb433972",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V3-SHA256SUMS",
+      "source_relative_path": "event-fixtures/target-abi-on-v3.json",
+      "sha256": "31e7245cc48230fd8527e445329cb7de1fe4f9510e13919260ec662ba6f3d1c8",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V3-SHA256SUMS",
+      "source_relative_path": "event-fixtures/target-abi-off-v3.json",
+      "sha256": "fff690c1904234a86bdf643c74ae5fa4df6954e6347ca23a1f5e0adf5fcae92c",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V3-SHA256SUMS",
+      "source_relative_path": "event-fixtures/target-abi-on-v3.cpp",
+      "sha256": "b4a1966686c6a1c4308f5bfc93481ccef30f7b7905ef351e96018dcbabc39f76",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V3-SHA256SUMS",
+      "source_relative_path": "event-fixtures/target-abi-off-v3.cpp",
+      "sha256": "b4a1966686c6a1c4308f5bfc93481ccef30f7b7905ef351e96018dcbabc39f76",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V3-SHA256SUMS",
+      "source_relative_path": "event-fixtures/target-abi-actual-em-object-v2.json",
+      "sha256": "e22dc4ba74a72b2aa6fb1fa20ea083177164fa4859285cf279ced37174aecbfd",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V3-SHA256SUMS",
+      "source_relative_path": "event-fixtures/on-5e4d-symbols-v3.json",
+      "sha256": "910ca24a3b5aa799cb9093f476ed6e023506bbff2b6fb5bc8e3723d1391d9c65",
+      "included": true
+    },
+    {
+      "seal": "EVENT-OBSERVER-V3-SHA256SUMS",
+      "source_relative_path": "event-fixtures/off-control-2a-symbols-v3.json",
+      "sha256": "9d7f342cc38d6240494366e92d09a5550294013936a4b756a29cfd9f6b6bcca3",
+      "included": true
+    },
+    {
+      "seal": "event-fixtures/SHA256SUMS",
+      "source_relative_path": "event-fixtures/inspect-event-fixture-areas.py",
+      "sha256": "94c1aa848a98a161de3e34065aa86409617da2ea1e255339435d8fb04b47f57f",
+      "included": false
+    },
+    {
+      "seal": "event-fixtures/SHA256SUMS",
+      "source_relative_path": "event-fixtures/judge-r117-solve.py",
+      "sha256": "ececba835639fd1cab57b46c2be7d8f5b27aa180118e4e50ddf1a6d59dd8daba",
+      "included": true
+    },
+    {
+      "seal": "event-fixtures/SHA256SUMS",
+      "source_relative_path": "event-fixtures/package-source-pins.json",
+      "sha256": "6b1868ede101ce89b2f2b04c9b94d1253b0e4603127845a4b7795d68ea086b3e",
+      "included": false
+    },
+    {
+      "seal": "event-fixtures/SHA256SUMS",
+      "source_relative_path": "event-fixtures/r10c-first-villager-warp.txt",
+      "sha256": "11d17960f0a1efd9ed3b7ecc31de5be689e052db109e95e3d89357d86e122aca",
+      "included": false
+    },
+    {
+      "seal": "event-fixtures/SHA256SUMS",
+      "source_relative_path": "event-fixtures/r117-light-solve-pad.txt",
+      "sha256": "bad5e932e0092b5b63260ad67b89e5b2199799697830c72edd5fc8b8bb269934",
+      "included": true
+    },
+    {
+      "seal": "event-fixtures/SHA256SUMS",
+      "source_relative_path": "event-fixtures/r117-light-solve-warp.txt",
+      "sha256": "01e35405ef8dfdccad2807782b387dc5b5f4a29fb6793ea0f056a749d96b8640",
+      "included": false
+    },
+    {
+      "seal": "event-fixtures/SHA256SUMS",
+      "source_relative_path": "event-fixtures/test-event-fixtures.py",
+      "sha256": "e529d260c32d72f25a384383a3512574cccb7a2930bea8184424db395ddfbde9",
+      "included": true
+    },
+    {
+      "seal": "event-fixtures/SHA256SUMS",
+      "source_relative_path": "EVENT-FIXTURES.md",
+      "sha256": "5646b78657c93e2ab4ecceede741a95903feb42d5a1c2894b9a3618175fa0d9b",
+      "included": false
+    }
+  ],
+  "source_text_encoding_observation": {
+    "CACHE-DIAG-JUDGE-CONTROLS.json": "utf-8-compatible; original bytes retained",
+    "CACHE-DIAG-JUDGE.md": "utf-8-compatible; original bytes retained",
+    "EVENT-OBSERVER-SHA256SUMS": "utf-8-compatible; original bytes retained",
+    "EVENT-OBSERVER-V2-SHA256SUMS": "utf-8-compatible; original bytes retained",
+    "EVENT-OBSERVER-V2.md": "utf-8-compatible; original bytes retained",
+    "EVENT-OBSERVER-V3-SHA256SUMS": "utf-8-compatible; original bytes retained",
+    "EVENT-OBSERVER-V3.md": "Windows-1252; original bytes retained without conversion",
+    "EVENT-OBSERVER.md": "utf-8-compatible; original bytes retained",
+    "FULL-DIAG-IMAGE.json": "utf-8-compatible; original bytes retained",
+    "HANDBACK.md": "utf-8-compatible; original bytes retained",
+    "HOST-CONTROLS-COHERENCE.json": "utf-8-compatible; original bytes retained",
+    "HOST-CONTROLS-FINAL.json": "utf-8-compatible; original bytes retained",
+    "HOST-CONTROLS.json": "utf-8-compatible; original bytes retained",
+    "MERGE-PIN.json": "utf-8-compatible; original bytes retained",
+    "PREFLIGHT.md": "utf-8-compatible; original bytes retained",
+    "REVIEW-CACHE-DIAG.json": "utf-8-compatible; original bytes retained",
+    "REVIEW-CACHE-DIAG.md": "utf-8-compatible; original bytes retained",
+    "REVIEW-TARGET-CODEGEN.md": "utf-8-compatible; original bytes retained",
+    "TARGET-CODEGEN.json": "utf-8-compatible; original bytes retained",
+    "aud23-event-observer-v2.py": "utf-8-compatible; original bytes retained",
+    "aud23-event-observer-v3.py": "utf-8-compatible; original bytes retained",
+    "aud23-event-observer.py": "utf-8-compatible; original bytes retained",
+    "ensure-rg-host.sh": "utf-8-compatible; original bytes retained",
+    "event-fixtures/SHA256SUMS": "utf-8-compatible; original bytes retained",
+    "event-fixtures/bind-event-symbols.py": "utf-8-compatible; original bytes retained",
+    "event-fixtures/judge-r117-solve.py": "utf-8-compatible; original bytes retained",
+    "event-fixtures/off-control-2a-symbols-v2.json": "utf-8-compatible; original bytes retained",
+    "event-fixtures/off-control-2a-symbols-v3.json": "utf-8-compatible; original bytes retained",
+    "event-fixtures/off-control-2a-symbols.json": "utf-8-compatible; original bytes retained",
+    "event-fixtures/on-5e4d-symbols-v2.json": "utf-8-compatible; original bytes retained",
+    "event-fixtures/on-5e4d-symbols-v3.json": "utf-8-compatible; original bytes retained",
+    "event-fixtures/on-5e4d-symbols.json": "utf-8-compatible; original bytes retained",
+    "event-fixtures/prepare-observer-v2.py": "utf-8-compatible; original bytes retained",
+    "event-fixtures/probe-target-abi-v2.py": "utf-8-compatible; original bytes retained",
+    "event-fixtures/probe-target-abi-v2.sh": "utf-8-compatible; original bytes retained",
+    "event-fixtures/probe-target-abi-v3.py": "utf-8-compatible; original bytes retained",
+    "event-fixtures/probe-target-abi-v3.sh": "utf-8-compatible; original bytes retained",
+    "event-fixtures/r117-light-solve-idle180-pad.txt": "utf-8-compatible; original bytes retained",
+    "event-fixtures/r117-light-solve-pad.txt": "utf-8-compatible; original bytes retained",
+    "event-fixtures/stat_owned_ram.py": "utf-8-compatible; original bytes retained",
+    "event-fixtures/target-abi-actual-em-object-v2.json": "utf-8-compatible; original bytes retained",
+    "event-fixtures/target-abi-off-v2.cpp": "utf-8-compatible; original bytes retained",
+    "event-fixtures/target-abi-off-v2.json": "utf-8-compatible; original bytes retained",
+    "event-fixtures/target-abi-off-v3.cpp": "utf-8-compatible; original bytes retained",
+    "event-fixtures/target-abi-off-v3.json": "utf-8-compatible; original bytes retained",
+    "event-fixtures/target-abi-on-v2.cpp": "utf-8-compatible; original bytes retained",
+    "event-fixtures/target-abi-on-v2.json": "utf-8-compatible; original bytes retained",
+    "event-fixtures/target-abi-on-v3.cpp": "utf-8-compatible; original bytes retained",
+    "event-fixtures/target-abi-on-v3.json": "utf-8-compatible; original bytes retained",
+    "event-fixtures/test-event-fixtures.py": "utf-8-compatible; original bytes retained",
+    "judge-cache-diag.py": "utf-8-compatible; original bytes retained",
+    "judge-census-on.py": "utf-8-compatible; original bytes retained",
+    "review-cache-diag.sh": "utf-8-compatible; original bytes retained",
+    "takeover-build-tools-inspect.sh": "utf-8-compatible; original bytes retained",
+    "takeover-build-v1.sh": "utf-8-compatible; original bytes retained",
+    "takeover-census-on.py": "utf-8-compatible; original bytes retained",
+    "takeover-dam-backing-inspect.sh": "utf-8-compatible; original bytes retained",
+    "takeover-dam-layout-inspect.sh": "utf-8-compatible; original bytes retained",
+    "takeover-dam-observer-inspect.sh": "utf-8-compatible; original bytes retained",
+    "takeover-dam-pool-inspect.sh": "utf-8-compatible; original bytes retained",
+    "takeover-dam-slot-find.sh": "utf-8-compatible; original bytes retained",
+    "takeover-dam-slot-source.sh": "utf-8-compatible; original bytes retained",
+    "takeover-decisions-v1.sh": "utf-8-compatible; original bytes retained",
+    "takeover-diag-build-v1.sh": "utf-8-compatible; original bytes retained",
+    "takeover-diag-chain-v1.sh": "utf-8-compatible; original bytes retained",
+    "takeover-diag-inspect.sh": "utf-8-compatible; original bytes retained",
+    "takeover-diag-judge-v1.sh": "utf-8-compatible; original bytes retained",
+    "takeover-diag-run-v1.sh": "utf-8-compatible; original bytes retained",
+    "takeover-event-off-v3.sh": "utf-8-compatible; original bytes retained",
+    "takeover-event-v1.sh": "utf-8-compatible; original bytes retained",
+    "takeover-event-v2.sh": "utf-8-compatible; original bytes retained",
+    "takeover-event-v3.sh": "utf-8-compatible; original bytes retained",
+    "takeover-gdemu-chain-v1.sh": "utf-8-compatible; original bytes retained",
+    "takeover-gdemu-v1.sh": "utf-8-compatible; original bytes retained",
+    "takeover-generated-review.sh": "utf-8-compatible; original bytes retained",
+    "takeover-h2-c-reference-v1.sh": "utf-8-compatible; original bytes retained",
+    "takeover-h2-v1.sh": "utf-8-compatible; original bytes retained",
+    "takeover-knob-dump-inspect.sh": "utf-8-compatible; original bytes retained",
+    "takeover-knob-inspect.sh": "utf-8-compatible; original bytes retained",
+    "takeover-knob-writer-inspect.sh": "utf-8-compatible; original bytes retained",
+    "takeover-kos-v1.sh": "utf-8-compatible; original bytes retained",
+    "takeover-original-host-v1.sh": "utf-8-compatible; original bytes retained",
+    "takeover-qa-identity-v1.sh": "utf-8-compatible; original bytes retained",
+    "takeover-qa-probes-v1.sh": "utf-8-compatible; original bytes retained",
+    "takeover-qa-tools-inspect.sh": "utf-8-compatible; original bytes retained",
+    "takeover-qa-v1.sh": "utf-8-compatible; original bytes retained",
+    "takeover-source-watch.sh": "utf-8-compatible; original bytes retained",
+    "takeover-stage-v1.sh": "utf-8-compatible; original bytes retained",
+    "test-aud23-event-observer-v2.py": "utf-8-compatible; original bytes retained",
+    "test-aud23-event-observer-v3.py": "utf-8-compatible; original bytes retained",
+    "test-aud23-event-observer.py": "utf-8-compatible; original bytes retained",
+    "test-judge-cache-diag.py": "utf-8-compatible; original bytes retained"
+  },
+  "generated_files": [
+    ".gitattributes",
+    "README.md",
+    "tools-snapshot.json",
+    "verify_snapshot.py"
+  ]
+}

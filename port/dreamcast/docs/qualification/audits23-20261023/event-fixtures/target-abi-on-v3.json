@@ -1,0 +1,518 @@
+{
+  "source": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+  "elf": "/root/probe/lanes/route/out-fpau23on5e4dgW/re4dc-game.elf",
+  "elf_sha256": "4f1f7c6a89aba1e72e8b121249ea9f0bd94717ce2ca5cd4eda2807c5163104b7",
+  "original_make_command": [
+    "kos-c++",
+    "-O2",
+    "-fno-PIC",
+    "-fno-PIE",
+    "-fomit-frame-pointer",
+    "-m4-single",
+    "-ml",
+    "-mfsrra",
+    "-mfsca",
+    "-ffunction-sections",
+    "-fdata-sections",
+    "-matomic-model=soft-gusa",
+    "-ftls-model=local-exec",
+    "-D__DREAMCAST__",
+    "-isystem",
+    "/root/work/kos-re4dc-d367/include",
+    "-isystem",
+    "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include",
+    "-isystem",
+    "/root/work/kos-re4dc-d367/addons/include/",
+    "-isystem",
+    "/root/work/kos-ports/include",
+    "-D_arch_dreamcast=1",
+    "-D_arch_sub_pristine=1",
+    "-Wall",
+    "-g",
+    "-std=gnu++20",
+    "-fpermissive",
+    "-w",
+    "-O1",
+    "-include",
+    "platform/include/re4dc_prelude.h",
+    "-I../../../include",
+    "-I../../../src",
+    "-Iplatform/include",
+    "-DRE4DC_GAME",
+    "-DRE4DC_STAT_ROUTINE_BYTES=1",
+    "-fno-exceptions",
+    "-fno-unwind-tables",
+    "-fno-asynchronous-unwind-tables",
+    "-fno-threadsafe-statics",
+    "-DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1",
+    "-DRE4DC_SS_RESTORE_VALIDATE_FIRST=1",
+    "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+    "-DRE4DC_RENDER_FSAA=1",
+    "-DRE4DC_RENDER_OPTION=1",
+    "-DRE4DC_VIEW_DIST_OPTION=1",
+    "-DRE4DC_VIEW_DIST_BOOT=1",
+    "-DRE4DC_FAR_SHELL=1",
+    "-DRE4DC_FOLIAGE_OPTION=1",
+    "-DRE4DC_RES_MODES=9",
+    "-DRE4DC_RES_MODE=0",
+    "-DRE4DC_RES_CYCLE_FRAMES=0",
+    "-DRE4DC_ATCHK_LIST=1",
+    "-DRE4DC_ATCHK_CACHE=1",
+    "-DRE4DC_WORKAT_INLINE=1",
+    "-DRE4DC_ESP_OWNER=1",
+    "-DRE4DC_FX_SCAN=1",
+    "-DRE4DC_FX_MOVE=1",
+    "-DRE4DC_OT_MASK=1",
+    "-DRE4DC_PAD_PROMPTS=1",
+    "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+    "-DRE4DC_SKEL_FTRV=1",
+    "-DRE4DC_VEC_INLINE=1",
+    "-ffp-contract=off",
+    "-O2",
+    "-fwrapv",
+    "-fno-strict-aliasing",
+    "-fno-delete-null-pointer-checks",
+    "-fno-isolate-erroneous-paths-dereference",
+    "-DRE4DC_LEON_CLOTH_DRAWN=1",
+    "-DRE4DC_LOGIC_WASTE=1",
+    "-DRE4DC_LOGIC_WASTE_MASK=0x02",
+    "-DRE4DC_LOGIC_APPROX_MASK=0x01",
+    "-DRE4DC_RESET_HEAP_FIX=1",
+    "-DRE4DC_EM_READ_RETRY=1",
+    "-DRE4DC_RESET_MEM_FIX=1",
+    "-DRE4DC_SH4ZAM_RENDER=1",
+    "-DRE4DC_ACTOR_TRANSACTION=1",
+    "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+    "-DRE4DC_VMU_DIALOG=1",
+    "-I/root/probe/lanes/play-actor-bundle",
+    "-DRE4DC_LEON_HEADLESS=1",
+    "-DRE4DC_ACTOR_PL08=1",
+    "-DRE4DC_ACTOR_PL08_PACK=1",
+    "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+    "-DRE4DC_NMR_POOL=1",
+    "-DRE4DC_ACTOR_MATERIALS=4",
+    "-DRE4DC_NMR_LOD=1",
+    "-DRE4DC_ACTOR_MATERIALS=4",
+    "-DRE4DC_TEX_PKG_SKIP=1",
+    "-DRE4DC_GC_CENSUS_TRIM=1",
+    "-DRE4DC_GXF_JITTER=1",
+    "-DRE4DC_ESP_POOL_RECYCLE=1",
+    "-DRE4DC_R117_EFFECT_FAILURE_SAFE=1",
+    "-include",
+    "/root/probe/lanes/route/out-fpau23on5e4dgW/obj/act-cap.h",
+    "-DRE4DC_LOGIC_LOD_EM=2",
+    "-DRE4DC_LOGIC_LOD_FAR=25000",
+    "-DRE4DC_LOGIC_LOD_NEAR=5000",
+    "-DRE4DC_BODY_CORPSE=1",
+    "-DRE4DC_BODY_CORPSE_TICKS=90",
+    "-MMD",
+    "-MP",
+    "-c",
+    "../../../src/game/em.cpp",
+    "-o",
+    "/root/probe/lanes/route/out-fpau23on5e4dgW/obj/src/game/em.o"
+  ],
+  "actual_probe_command": [
+    "/root/work/kos-re4dc-d367/utils/build_wrappers/kos-c++",
+    "-O2",
+    "-fno-PIC",
+    "-fno-PIE",
+    "-fomit-frame-pointer",
+    "-m4-single",
+    "-ml",
+    "-mfsrra",
+    "-mfsca",
+    "-ffunction-sections",
+    "-fdata-sections",
+    "-matomic-model=soft-gusa",
+    "-ftls-model=local-exec",
+    "-D__DREAMCAST__",
+    "-isystem",
+    "/root/work/kos-re4dc-d367/include",
+    "-isystem",
+    "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include",
+    "-isystem",
+    "/root/work/kos-re4dc-d367/addons/include/",
+    "-isystem",
+    "/root/work/kos-ports/include",
+    "-D_arch_dreamcast=1",
+    "-D_arch_sub_pristine=1",
+    "-Wall",
+    "-g",
+    "-std=gnu++20",
+    "-fpermissive",
+    "-w",
+    "-O1",
+    "-include",
+    "platform/include/re4dc_prelude.h",
+    "-I../../../include",
+    "-I../../../src",
+    "-Iplatform/include",
+    "-DRE4DC_GAME",
+    "-DRE4DC_STAT_ROUTINE_BYTES=1",
+    "-fno-exceptions",
+    "-fno-unwind-tables",
+    "-fno-asynchronous-unwind-tables",
+    "-fno-threadsafe-statics",
+    "-DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1",
+    "-DRE4DC_SS_RESTORE_VALIDATE_FIRST=1",
+    "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+    "-DRE4DC_RENDER_FSAA=1",
+    "-DRE4DC_RENDER_OPTION=1",
+    "-DRE4DC_VIEW_DIST_OPTION=1",
+    "-DRE4DC_VIEW_DIST_BOOT=1",
+    "-DRE4DC_FAR_SHELL=1",
+    "-DRE4DC_FOLIAGE_OPTION=1",
+    "-DRE4DC_RES_MODES=9",
+    "-DRE4DC_RES_MODE=0",
+    "-DRE4DC_RES_CYCLE_FRAMES=0",
+    "-DRE4DC_ATCHK_LIST=1",
+    "-DRE4DC_ATCHK_CACHE=1",
+    "-DRE4DC_WORKAT_INLINE=1",
+    "-DRE4DC_ESP_OWNER=1",
+    "-DRE4DC_FX_SCAN=1",
+    "-DRE4DC_FX_MOVE=1",
+    "-DRE4DC_OT_MASK=1",
+    "-DRE4DC_PAD_PROMPTS=1",
+    "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+    "-DRE4DC_SKEL_FTRV=1",
+    "-DRE4DC_VEC_INLINE=1",
+    "-ffp-contract=off",
+    "-O2",
+    "-fwrapv",
+    "-fno-strict-aliasing",
+    "-fno-delete-null-pointer-checks",
+    "-fno-isolate-erroneous-paths-dereference",
+    "-DRE4DC_LEON_CLOTH_DRAWN=1",
+    "-DRE4DC_LOGIC_WASTE=1",
+    "-DRE4DC_LOGIC_WASTE_MASK=0x02",
+    "-DRE4DC_LOGIC_APPROX_MASK=0x01",
+    "-DRE4DC_RESET_HEAP_FIX=1",
+    "-DRE4DC_EM_READ_RETRY=1",
+    "-DRE4DC_RESET_MEM_FIX=1",
+    "-DRE4DC_SH4ZAM_RENDER=1",
+    "-DRE4DC_ACTOR_TRANSACTION=1",
+    "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+    "-DRE4DC_VMU_DIALOG=1",
+    "-I/root/probe/lanes/play-actor-bundle",
+    "-DRE4DC_LEON_HEADLESS=1",
+    "-DRE4DC_ACTOR_PL08=1",
+    "-DRE4DC_ACTOR_PL08_PACK=1",
+    "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+    "-DRE4DC_NMR_POOL=1",
+    "-DRE4DC_ACTOR_MATERIALS=4",
+    "-DRE4DC_NMR_LOD=1",
+    "-DRE4DC_ACTOR_MATERIALS=4",
+    "-DRE4DC_TEX_PKG_SKIP=1",
+    "-DRE4DC_GC_CENSUS_TRIM=1",
+    "-DRE4DC_GXF_JITTER=1",
+    "-DRE4DC_ESP_POOL_RECYCLE=1",
+    "-DRE4DC_R117_EFFECT_FAILURE_SAFE=1",
+    "-include",
+    "/root/probe/lanes/route/out-fpau23on5e4dgW/obj/act-cap.h",
+    "-DRE4DC_LOGIC_LOD_EM=2",
+    "-DRE4DC_LOGIC_LOD_FAR=25000",
+    "-DRE4DC_LOGIC_LOD_NEAR=5000",
+    "-DRE4DC_BODY_CORPSE=1",
+    "-DRE4DC_BODY_CORPSE_TICKS=90",
+    "-g0",
+    "-c",
+    "/dev/shm/aud23-abi-v3-on/probe.cpp",
+    "-o",
+    "/dev/shm/aud23-abi-v3-on/probe.o"
+  ],
+  "make_build_log_sha256": "0c31e7d5493f0c51401ab3a33c9daace9448fafded3f893454cf3c299d1ad0be",
+  "probe_source_sha256": "b4a1966686c6a1c4308f5bfc93481ccef30f7b7905ef351e96018dcbabc39f76",
+  "probe_object_sha256": "18feb3b888a6ab82206d6e1d2e7ac6a394e2700d8cc9d7ebe6d7be2d846b2cc7",
+  "layout_bytes_sha256": "c56e76d7abdf5387730e1219d5eb8fa75e206b7859473dea7619ab10c9a9ebee",
+  "sdk_library_sha256_before": "5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf",
+  "sdk_library_sha256_after": "5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf",
+  "compiler_version": "sh-elf-g++ (GCC) 15.2.0",
+  "compiler_sha256": "e93807f83ebb80283de9777d006dae7f5873784032bbaa867a8f16db0e3c0053",
+  "layout": {
+    "magic": 860439105,
+    "schema": 3,
+    "pointer_bytes": 4,
+    "u32_bytes": 4,
+    "manager.sizeof": 56,
+    "manager.pArray": 4,
+    "manager.nArray": 8,
+    "manager.stride": 12,
+    "manager.pAlive": 20,
+    "manager.Guid": 52,
+    "manager.pArrayPush": 28,
+    "manager.pAlivePush": 24,
+    "manager.nArrayPush": 32,
+    "actor.sizeof": 3552,
+    "actor.be_flag": 4,
+    "actor.pNext": 8,
+    "actor.serial": 248,
+    "actor.id": 256,
+    "actor.type": 257,
+    "actor.kindid": 302,
+    "actor.emset_no": 920,
+    "actor.pos": 148,
+    "actor.stat": 252,
+    "actor.pMotion": 472,
+    "actor.motState": 538,
+    "actor.frame": 656,
+    "actor.frameMax": 660,
+    "roomdata.sizeof": 32,
+    "roomdata.num": 2,
+    "roomdata.pSaveBuf": 20,
+    "roomdata.pSave": 24,
+    "roomsave.sizeof": 216,
+    "global.SF1": 20496,
+    "global.Frame_cnt": 20964,
+    "global.room_id": 20382,
+    "pool.sizeof": 64,
+    "chunk.sizeof": 32,
+    "pool.chunks": 0,
+    "pool.capacity": 4,
+    "pool.bytes": 8,
+    "pool.peak": 12,
+    "pool.chunks_count": 16,
+    "pool.reclaims": 20,
+    "pool.failures": 24,
+    "pool.heap": 28,
+    "pool.handle": 32,
+    "chunk.next": 0,
+    "chunk.first": 4,
+    "chunk.count": 8,
+    "chunk.bytes": 12,
+    "target.WORKAT_INLINE": 1
+  },
+  "fields": [
+    [
+      "magic",
+      "0x33494241u"
+    ],
+    [
+      "schema",
+      "3u"
+    ],
+    [
+      "pointer_bytes",
+      "sizeof(void*)"
+    ],
+    [
+      "u32_bytes",
+      "sizeof(u32)"
+    ],
+    [
+      "manager.sizeof",
+      "sizeof(cEmMgr)"
+    ],
+    [
+      "manager.pArray",
+      "__builtin_offsetof(cEmMgr,pArray)"
+    ],
+    [
+      "manager.nArray",
+      "__builtin_offsetof(cEmMgr,nArray)"
+    ],
+    [
+      "manager.stride",
+      "__builtin_offsetof(cEmMgr,size)"
+    ],
+    [
+      "manager.pAlive",
+      "__builtin_offsetof(cEmMgr,pAlive)"
+    ],
+    [
+      "manager.Guid",
+      "__builtin_offsetof(cEmMgr,Guid)"
+    ],
+    [
+      "manager.pArrayPush",
+      "__builtin_offsetof(cEmMgr,pArrayPush)"
+    ],
+    [
+      "manager.pAlivePush",
+      "__builtin_offsetof(cEmMgr,pAlivePush)"
+    ],
+    [
+      "manager.nArrayPush",
+      "__builtin_offsetof(cEmMgr,nArrayPush)"
+    ],
+    [
+      "actor.sizeof",
+      "sizeof(cEm)"
+    ],
+    [
+      "actor.be_flag",
+      "__builtin_offsetof(cEm,be_flag)"
+    ],
+    [
+      "actor.pNext",
+      "__builtin_offsetof(cEm,pNext)"
+    ],
+    [
+      "actor.serial",
+      "__builtin_offsetof(cEm,serial)"
+    ],
+    [
+      "actor.id",
+      "__builtin_offsetof(cEm,id)"
+    ],
+    [
+      "actor.type",
+      "__builtin_offsetof(cEm,type)"
+    ],
+    [
+      "actor.kindid",
+      "__builtin_offsetof(cEm,kindid)"
+    ],
+    [
+      "actor.emset_no",
+      "__builtin_offsetof(cEm,emset_no)"
+    ],
+    [
+      "actor.pos",
+      "__builtin_offsetof(cEm,pos)"
+    ],
+    [
+      "actor.stat",
+      "__builtin_offsetof(cEm,stat)"
+    ],
+    [
+      "actor.pMotion",
+      "__builtin_offsetof(cEm,pMotion)"
+    ],
+    [
+      "actor.motState",
+      "__builtin_offsetof(cEm,motState)"
+    ],
+    [
+      "actor.frame",
+      "__builtin_offsetof(cEm,frame)"
+    ],
+    [
+      "actor.frameMax",
+      "__builtin_offsetof(cEm,frameMax)"
+    ],
+    [
+      "roomdata.sizeof",
+      "sizeof(cRoomData)"
+    ],
+    [
+      "roomdata.num",
+      "__builtin_offsetof(cRoomData,num)"
+    ],
+    [
+      "roomdata.pSaveBuf",
+      "__builtin_offsetof(cRoomData,pSaveBuf)"
+    ],
+    [
+      "roomdata.pSave",
+      "__builtin_offsetof(cRoomData,pSave)"
+    ],
+    [
+      "roomsave.sizeof",
+      "sizeof(RoomSave)"
+    ],
+    [
+      "global.SF1",
+      "__builtin_offsetof(GlobalWork,Status_flg)+sizeof(u32)"
+    ],
+    [
+      "global.Frame_cnt",
+      "__builtin_offsetof(GlobalWork,Frame_cnt)"
+    ],
+    [
+      "global.room_id",
+      "__builtin_offsetof(GlobalWork,room_id)"
+    ],
+    [
+      "pool.sizeof",
+      "sizeof(Pool<cEm>)"
+    ],
+    [
+      "chunk.sizeof",
+      "sizeof(Chunk<cEm>)"
+    ],
+    [
+      "pool.chunks",
+      "__builtin_offsetof(Pool<cEm>,chunks)"
+    ],
+    [
+      "pool.capacity",
+      "__builtin_offsetof(Pool<cEm>,capacity)"
+    ],
+    [
+      "pool.bytes",
+      "__builtin_offsetof(Pool<cEm>,bytes)"
+    ],
+    [
+      "pool.peak",
+      "__builtin_offsetof(Pool<cEm>,peak)"
+    ],
+    [
+      "pool.chunks_count",
+      "__builtin_offsetof(Pool<cEm>,chunks_count)"
+    ],
+    [
+      "pool.reclaims",
+      "__builtin_offsetof(Pool<cEm>,reclaims)"
+    ],
+    [
+      "pool.failures",
+      "__builtin_offsetof(Pool<cEm>,failures)"
+    ],
+    [
+      "pool.heap",
+      "__builtin_offsetof(Pool<cEm>,heap)"
+    ],
+    [
+      "pool.handle",
+      "__builtin_offsetof(Pool<cEm>,handle)"
+    ],
+    [
+      "chunk.next",
+      "__builtin_offsetof(Chunk<cEm>,next)"
+    ],
+    [
+      "chunk.first",
+      "__builtin_offsetof(Chunk<cEm>,first)"
+    ],
+    [
+      "chunk.count",
+      "__builtin_offsetof(Chunk<cEm>,count)"
+    ],
+    [
+      "chunk.bytes",
+      "__builtin_offsetof(Chunk<cEm>,bytes)"
+    ],
+    [
+      "target.WORKAT_INLINE",
+      "RE4DC_WORKAT_INLINE"
+    ]
+  ],
+  "parts_bridge_sha256": "616bcfd7b1606ed0b47a36791b183e6bf1476bfe61b687f2b3652e613536d35f",
+  "exact_native_declarations_sha256": "6a8d82cc01b13bc517ae6e1466e988b5f27d756cd21e8da200d46cdf760c4a83",
+  "exact_native_declarations": "template<class T> struct alignas(32) Chunk {\n    Chunk<T>* next;\n    u32 first, count, bytes;\n    u32 reserved[4];\n    T* parts() { return (T*)(this + 1); }\n};\ntemplate<class T> struct alignas(32) Pool {\n    Chunk<T>* chunks;\n    u32 capacity, bytes, peak, chunks_count, reclaims, failures;\n    int heap, handle;\n    u32 reserved[7];\n    T** slots() { return (T**)(this + 1); }\n};\n",
+  "parts_budget_header": "/root/probe/lanes/route/out-fpau23on5e4dgW/obj/parts-budget.h",
+  "parts_budget_header_sha256": "28b862356c49d8bc48d12badb0a873baa09a3127f2795739d3824e869fe4d688",
+  "parts_budget_header_text": "#define RE4DC_PARTS_DEMAND 1\n#define RE4DC_MODELINFO_DEMAND 1\n#define RE4DC_OBJECT_DEMAND 1\n#define RE4DC_ENEMY_DEMAND 1\n#define RE4DC_HEAP4_PARTS_RESERVE 1\n#define RE4DC_HEAP4_PARTS_RESERVE_ROOM 0x100\n#define RE4DC_HEAP4_PARTS_RESERVE_BYTES 73728\n",
+  "scope": "One isolated RAM TU, compile only under exact retained Make-expanded em.cpp flags; no full build/link/SDK mutation/guest.",
+  "schema": 3,
+  "derivation": "actual compiler builtin_offsetof/sizeof constant section plus exact pinned native Pool/Chunk declarations",
+  "source_headers_sha256": {
+    "include/cManager.h": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20",
+    "include/room_data.h": "48216d410f3e998f6709cba7cc265e83f630d9b730bd264cb9dd64fc766e6fd7",
+    "include/model.h": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5",
+    "include/em.h": "3fde0e04cd508f086be1c193bc761b55e3ff8ee7cb08c522c344b4d14b19e74f",
+    "include/global.h": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a",
+    "src/game/roomdata.cpp": "6311144a11a3fb8dba23e9e42a6f8f89dd087dda70f47a9d026ce97cb61103d2",
+    "include/flag_rsf.h": "723b8e0f4dcc5cac630c7531be754464eeaad967e7d2e20c00f635688c652852",
+    "src/st1/r117.cpp": "b1830e22c353f5c7efa669a15ab2d4aaafbff061b839688cc79a5fb30f72a9c1",
+    "src/st1/r10c.cpp": "86608234203aa49e8d036508af64c2fb472c1a25c4df3c635fa226b3c6ad0ecf",
+    "port/dreamcast/tools/d367/fullplay/fp_run.py": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747"
+  },
+  "frozen_pools_symbol": {
+    "name": "re4dc_frozen_pools",
+    "address": "0x8c358084",
+    "storage": "direct_object",
+    "bytes": 4
+  }
+}

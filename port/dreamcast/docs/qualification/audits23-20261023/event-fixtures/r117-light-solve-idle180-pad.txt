@@ -1,0 +1,30 @@
+# Normal controller input only. Default retrace clock, <=64 entries.
+# Zero-button entry binds delivery clock to actual warp-ready state.
++0 0000 1 warp=1 12000
+# Enter area8 normally with A; allow initial beam/camera introduction.
++180 0100 4
++420 0100 4
+# Light0: menu default choice1, rotate twice, B back to colour menu.
++90 0100 4
++90 0100 4
++90 0200 4
+# Menu resets cursor0. Down+Right advances once in either menu orientation.
++90 0006 4
++30 0100 4
+# Light1: rotate three times, B back.
++90 0100 4
++90 0100 4
++90 0100 4
++90 0200 4
+# Light2: advance twice from cursor0, select, rotate once, B back.
++90 0006 4
++30 0006 4
++30 0100 4
++90 0100 4
++90 0200 4
+# Pattern/check is selection4: advance three times, then A.
++90 0006 4
++30 0006 4
++30 0006 4
++30 0100 4
+# No further inputs: source opens gate, disarms mechanism and ends event.

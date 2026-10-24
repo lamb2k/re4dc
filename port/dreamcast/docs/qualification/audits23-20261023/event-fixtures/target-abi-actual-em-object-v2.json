@@ -1,0 +1,42 @@
+{
+  "source": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+  "actual_object": "/root/probe/lanes/route/out-fpau23on5e4dgW/obj/src/game/em.o",
+  "object_sha256": "081966b1354a54b59c641bb46029a4a4904409fc954bc85b5ca6f91f5d209502",
+  "actual_constructor_disassembly": "<cEmMgr::cEmMgr()>:\n   0:\t14 92       \tmov.w\t2c <cEmMgr::cEmMgr()+0x2c>,r2\t! de0\n   2:\t00 e1       \tmov\t#0,r1\n   4:\t11 14       \tmov.l\tr1,@(4,r4)\n   6:\t02 e3       \tmov\t#2,r3\n   8:\t23 14       \tmov.l\tr2,@(12,r4)\n   a:\t12 14       \tmov.l\tr1,@(8,r4)\n   c:\t43 62       \tmov\tr4,r2\n   e:\t10 72       \tadd\t#16,r2\n  10:\t30 22       \tmov.b\tr3,@r2\n  12:\t0a e2       \tmov\t#10,r2\n  14:\t2b 14       \tmov.l\tr2,@(44,r4)\n  16:\t06 d2       \tmov.l\t30 <cEmMgr::cEmMgr()+0x30>,r2\t! 8\n  18:\t15 14       \tmov.l\tr1,@(20,r4)\n  1a:\t22 24       \tmov.l\tr2,@r4\n  1c:\t05 d2       \tmov.l\t34 <cEmMgr::cEmMgr()+0x34>,r2\t! 0 <cEmMgr::cEmMgr()>\n  1e:\t16 14       \tmov.l\tr1,@(24,r4)\n  20:\t17 14       \tmov.l\tr1,@(28,r4)\n  22:\t18 14       \tmov.l\tr1,@(32,r4)\n  24:\t19 14       \tmov.l\tr1,@(36,r4)\n  26:\t2a 14       \tmov.l\tr2,@(40,r4)\n  28:\t0b 00       \trts\t\n  2a:\t1d 14       \tmov.l\tr1,@(52,r4)\n  2c:\te0 0d       \t.word 0x0de0\n  2e:\t09 00       \tnop\t\n  30:\t08 00       \tclrt\t\n\t\t\t30: R_SH_DIR32\tvtable for cEmMgr\n  32:\t00 00       \t.word 0x0000\n  34:\t00 00       \t.word 0x0000\n\t\t\t34: R_SH_DIR32\t.rodata._ZN6cEmMgrC2Ev.str1.4\n\t...\n",
+  "actual_initWork_disassembly": "<cEm::initWork()>:\n   0:\t21 e1       \tmov\t#33,r1\n   2:\t11 14       \tmov.l\tr1,@(4,r4)\n   4:\t00 e0       \tmov\t#0,r0\n   6:\t03 91       \tmov.w\t10 <cEm::initWork()+0x10>,r1\t! 120\n   8:\t1c 34       \tadd\tr1,r4\n   a:\t4e 80       \tmov.b\tr0,@(14,r4)\n   c:\t0b 00       \trts\t\n   e:\t01 e0       \tmov\t#1,r0\n  10:\t20 01       \t.word 0x0120\n  12:\t09 00       \tnop\t\n",
+  "actual_dwarf_members": [
+    {
+      "name": "size",
+      "offset": 24
+    },
+    {
+      "name": "size",
+      "offset": 24
+    },
+    {
+      "name": "be_flag",
+      "offset": 4
+    },
+    {
+      "name": "pNext",
+      "offset": 8
+    },
+    {
+      "name": "pArray",
+      "offset": 4
+    },
+    {
+      "name": "nArray",
+      "offset": 8
+    },
+    {
+      "name": "size",
+      "offset": 12
+    },
+    {
+      "name": "pAlive",
+      "offset": 20
+    }
+  ],
+  "scope": "Independent corroboration from the programme actual em.o, not only the separate ABI probe."
+}

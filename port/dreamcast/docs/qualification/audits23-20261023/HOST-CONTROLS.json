@@ -1,0 +1,24 @@
+{
+  "scope": "RAM-only host/source controls, no target/SDK/guest build",
+  "status": "PASS",
+  "groups": 10,
+  "tree": "/root/work/lanes/audits23",
+  "base": "933936ea7f45ba81c09277a780ed00111407aa23",
+  "command": [
+    "/usr/bin/python3",
+    "/root/work/lanes/audits23/port/dreamcast/tools/d367/kos_cache_audit/test_cache_diag.py"
+  ],
+  "host_log": "/dev/shm/audits23-diag-host-ppwpgjhs/host-controls.log",
+  "host_log_sha256": "d0f26cedc1dd4529d832954b114cf093da1b3977c35fe563e7d027b7a439e6f8",
+  "files": {
+    "port/dreamcast/game/kos_cache_p2.mk": "443404ddac7f901ff24d302c4bea2ffff237a5e52378c31bff83abd9efd84241",
+    "port/dreamcast/game/ui_bridge.cpp": "18132b707f732a006f49d296ea53549e9a62e0cd22a625e6226c8ed53a178e29",
+    "port/dreamcast/tools/d367/kos_cache_audit/prepare.py": "5bebc9b4f2e4f7492d3b8394b57e51c0f2581f62217092c27223003b75b539f9",
+    "port/dreamcast/tools/d367/kos_cache_audit/cache_diag.py": "1b56cd56da2e63a13a914861f8288e25878330261c7acfd92d3044a73ca1d3c3",
+    "port/dreamcast/tools/d367/kos_cache_audit/test_cache_diag.py": "14e5fd0679bff15d77e0dd2359938416441f00fd81343b4217e22a8c9b4d1cc3",
+    "port/dreamcast/game/platform/include/kos_cache_p2_diag.h": "8c55e8f79652490dfcd8062f862898928c94bfd7417200c7cdafb160573ee20d",
+    "port/dreamcast/game/platform/kos_cache_p2_diag.cpp": "7446d4503bc4f7d77a920d3554eaa5341f777fd407a55c80a3d0a1620b7c450c",
+    "port/dreamcast/docs/KOS_CACHE_P2_DIAG_20261023.md": "09fda312d76353fb769ce34415a507e1f1673f1d8ff46bbe966aefaa0128b845"
+  },
+  "commit": "6a3f6b60edfd4dc65e23f25ca9ee9a8edf32f6fe"
+}

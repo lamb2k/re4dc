@@ -1,0 +1,21 @@
+{
+  "verdict": "CLEAR for bounded source milestone only",
+  "frozen_commit": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+  "initial_review": "6a3f6b60edfd4dc65e23f25ca9ee9a8edf32f6fe required startup-coherence repair",
+  "substantive_successor": "59b6d8225cf49de184e33d7a70d0e1c8d239be34",
+  "independent_host_full": "10 groups PASS from frozen59 RAM mirror",
+  "final_delta": "mk and tests only; independent Make control PASS at5e",
+  "ram_mirror": "/dev/shm/audits23-review-V56hED",
+  "no_target_sdk_guest_build": true,
+  "files": {
+    "port/dreamcast/game/platform/include/kos_cache_p2_diag.h": "8c55e8f79652490dfcd8062f862898928c94bfd7417200c7cdafb160573ee20d",
+    "port/dreamcast/tools/d367/kos_cache_audit/cache_diag.py": "1b56cd56da2e63a13a914861f8288e25878330261c7acfd92d3044a73ca1d3c3",
+    "port/dreamcast/game/ui_bridge.cpp": "18132b707f732a006f49d296ea53549e9a62e0cd22a625e6226c8ed53a178e29",
+    "port/dreamcast/tools/d367/kos_cache_audit/prepare.py": "5bebc9b4f2e4f7492d3b8394b57e51c0f2581f62217092c27223003b75b539f9",
+    "port/dreamcast/game/kos_cache_p2.mk": "0ca0b63cbfc3fe0e15a67752d86413088a867a630418782dded42539fbe9d3ae",
+    "port/dreamcast/game/platform/kos_cache_p2_diag.cpp": "dd3e3479fa911efc004102dbc0e6098da63678ff6275cc2986b4877fd311a31c",
+    "port/dreamcast/tools/d367/kos_cache_audit/test_cache_diag.py": "a5b0ba3fd09bb3d7bdf3874e11a6e0243001600df6cf80847752c8027b0f37a6"
+  },
+  "full_log_sha256": "e0a11536b84f14dcc994d1155fde2f8e621266d7e8ae169f868fe346cf56b393",
+  "make_log_sha256": "420cdca0ba2aad684f21aa2c93faaa0da64c82262b4c848bf77c1c925a1e63fe"
+}

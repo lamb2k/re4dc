@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "groups": 10,
+  "source": "59b6d8225cf49de184e33d7a70d0e1c8d239be34",
+  "prior_frozen": "6a3f6b60edfd4dc65e23f25ca9ee9a8edf32f6fe",
+  "merged_before_fix": "2ea754cd22197c0c5856841a84ebfb3d6cbe8c95",
+  "scope": "RAM host/source only; cold dirty P1 zeros/stale P2, warm prior-helper P2 counts; missing-writeback mutation fails",
+  "command": [
+    "/usr/bin/python3",
+    "/root/work/lanes/audits23/port/dreamcast/tools/d367/kos_cache_audit/test_cache_diag.py"
+  ],
+  "log": "/dev/shm/audits23-coherence-vr9v4tfl/host-controls.log",
+  "log_sha256": "a720a58a7b264e8a11301b6921997a48daa8cde249d0311987f99f97728ba4a8",
+  "changed_source_sha256": {
+    "port/dreamcast/game/platform/kos_cache_p2_diag.cpp": "dd3e3479fa911efc004102dbc0e6098da63678ff6275cc2986b4877fd311a31c",
+    "port/dreamcast/tools/d367/kos_cache_audit/test_cache_diag.py": "4de6e34d1b217b777071e001a28911d75aa715092ea84182a467bb5218f7a73f",
+    "port/dreamcast/docs/KOS_CACHE_P2_DIAG_20261023.md": "cee16d1de0f9303f0324d3f68d1b4867061bb77289ee8d998231b4f19ced17da"
+  },
+  "ui_bridge_untouched_by_fix": true,
+  "no_sdk_target_guest_build": true
+}

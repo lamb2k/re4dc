@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "source": "2a14662d4b025031cd93f64eed6a5d8159d473b7",
+  "program_elf": "/root/probe/lanes/route/out-fpsb23on2a14gW/re4dc-game.elf",
+  "program_elf_windows": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\lanes\\route\\out-fpsb23on2a14gW\\re4dc-game.elf",
+  "program_elf_sha256": "7a57db6b4cfabdf3730edc8ab3aa6f165a6bc72382de143bb36e7a7cc1b6c306",
+  "program_elf_bytes": 28718748,
+  "programme_symbols": {
+    "pG": {
+      "address": "0x8c2b287c",
+      "type": "D",
+      "storage": "pointer_global"
+    },
+    "_EmMgr": {
+      "address": "0x8c362cd8",
+      "type": "B",
+      "storage": "direct_object"
+    },
+    "pPL": {
+      "address": "0x8c363020",
+      "type": "B",
+      "storage": "pointer_global"
+    },
+    "_RoomData": {
+      "address": "0x8c37edd4",
+      "type": "B",
+      "storage": "direct_object"
+    }
+  },
+  "source_sha256": {
+    "include/cManager.h": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20",
+    "include/room_data.h": "48216d410f3e998f6709cba7cc265e83f630d9b730bd264cb9dd64fc766e6fd7",
+    "include/model.h": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5",
+    "include/em.h": "3fde0e04cd508f086be1c193bc761b55e3ff8ee7cb08c522c344b4d14b19e74f",
+    "include/global.h": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a",
+    "src/game/roomdata.cpp": "6311144a11a3fb8dba23e9e42a6f8f89dd087dda70f47a9d026ce97cb61103d2",
+    "include/flag_rsf.h": "723b8e0f4dcc5cac630c7531be754464eeaad967e7d2e20c00f635688c652852",
+    "src/st1/r117.cpp": "b1830e22c353f5c7efa669a15ab2d4aaafbff061b839688cc79a5fb30f72a9c1",
+    "src/st1/r10c.cpp": "86608234203aa49e8d036508af64c2fb472c1a25c4df3c635fa226b3c6ad0ecf",
+    "port/dreamcast/tools/d367/fullplay/fp_run.py": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747"
+  },
+  "resolved_knobs": {
+    "CACHE_LINEWISE": "0",
+    "ESP_POOL_RECYCLE": "0",
+    "ISSUE52_ACTOR_DIAG": "0",
+    "KOS_CACHE_P2": "0",
+    "R10C_SPAWN_LIVE_GUARD": "0",
+    "R117_EFFECT_FAILURE_SAFE": "0",
+    "STAT_ROUTINE_BYTES": "1",
+    "VRAM_ROOM_ARENA": "0",
+    "VRAM_ROOM_ARENA_NO_TOP": "0"
+  },
+  "ram_backend_sha256": "8bd179110988d1b808d8e353b182f921dc244fdae985a51995293ba570c136b0",
+  "overlay_work_phase_claim": "omitted: no authenticated current overlay binding supplied; all work/phase fields remain unknown"
+}

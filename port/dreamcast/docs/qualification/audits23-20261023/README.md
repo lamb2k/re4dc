@@ -1,0 +1,13 @@
+# Audits23 qualification source preservation
+
+Docs/evidence branch only, based on runtime source `5e4de9a0262d3629c9833c959557de198b2e9f0c`. Never merge this preservation branch into integration or treat this docs commit as runtime acceptance. Push destination is origin/wip/audits23-evidence-tools-20261023 only.
+
+This snapshots original helper/review/receipt bytes from local codex-lanes/audits23. Directory attributes use `* -text whitespace=cr-at-eol,-blank-at-eof`, matching the stat evidence method. CRLF, BOM, trailing bytes and the original Windows-1252 V3 review document remain unconverted. tools-snapshot.json records every included/excluded original path, complete SHA256 and byte size. verify_snapshot.py checks committed Git blobs and can optionally recheck original source bytes.
+
+Included: root operational source wrappers (including V3), observer/judge source and host controls, source reviews and small JSON receipts, V1/V2/V3 seals and ABI receipts, target-ABI probe .cpp source and ordinary controller timing pads. These scripts are historical operational evidence, NOT an executable sequence. Individual wrappers may build, run guests or manipulate owned outputs; do not execute them just because they are preserved. No original helper was executed for this snapshot.
+
+Excluded: package-source-pins.json, raw AEV/geometry-derived EVENT-FIXTURES review and inspection helper, event-warp positions, live STATUS/INBOX, raw logs, pointer-only text and Python caches/binaries. No assets, packages, raw actor records, binaries, ROM/disc/program/ELF/object files, images or captures are added. Private LOCALPATH strings, source symbols/offsets, programme hashes and synthetic/source ABI constants remain source/evidence. Original seals retain references to excluded private files: this is an explicitly partial artifact snapshot, not publication of every referenced prerequisite. All 41 original seal references were checked against the untouched originals.
+
+V1/V2 historical limitations and V3 source/ABI READY state are preserved exactly. Earlier dam UNKNOWN/Loading observations remain limited evidence; no source dump or host control establishes game, visual or phase acceptance. Root owns active source/static work, qualification, recipes, SDK/Flycast admission and landing. No active runtime tree, main takeover status, asset data or shared build slot was changed.
+
+After committing, run `python3 port/dreamcast/docs/qualification/audits23-20261023/verify_snapshot.py --repo . --revision HEAD`. Optionally pass `--source-root` with the original local helper directory to check its still-current bytes. This mutable operational directory may advance later; that does not invalidate the frozen committed snapshot.
