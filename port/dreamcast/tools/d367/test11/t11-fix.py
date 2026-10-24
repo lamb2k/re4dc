@@ -930,6 +930,25 @@ DATA['r10dlod23'] = {'dc/native/r10d/ps2-world.%s' % x: R10DLOD23D + '/dc/native
 R10DBAKE23D = os.environ.get('R10DBAKE23D', '/root/re4data/private/r10dbake23-20261023')
 DATA['r10dbake23'] = {'dc/native/r10d/ps2-world.%s' % x: R10DBAKE23D + '/dc/native/r10d/ps2-world.%s' % x
                       for x in ('re4mesh', 'r4pw', 'ids')}
+# ps2snd24 (lane purge-audio24, 2026-10-24, GC asset purge; data only, no knob, no AICA layout or size change): the
+# chapter 1 + r200 sound banks (etc/core.das, em/pl00 pl08 pl0f pl11, the weapon banks, the room .dar ROOM/FOOT banks,
+# the rooms' enemy banks, ss/cmn/title.snd, bgm/bio4midi.dat) and bgm/aica_str.dat with PS2 PCM written into the
+# prebuilt AIC1 images in place (tools/ps2_audio.py; map: same cue number on both versions -> GC sample / PS2 VAG).
+# 66 files, every one the size of the release file it replaces. Made from the RELEASE disc's final files (cand-590b8f5f),
+# so it must be the LAST set touching these paths (after objs13d, snd16, ch21r, ash21, ...); regenerate if a later set
+# changes one of them. RECIPE.txt and the maps (_map/) are in the store.
+PS2SND24D = os.environ.get('PS2SND24D', '/root/re4data/private/ps2snd24-20261024')
+DATA['ps2snd24'] = {p: PS2SND24D + '/' + p for p in (
+    'bgm/aica_str.dat', 'bgm/bio4midi.dat', 'etc/core.das', 'ss/cmn/title.snd',
+    'em/em11.drs', 'em/em12.drs', 'em/em13.drs', 'em/em15.drs', 'em/em16.drs', 'em/em17.drs', 'em/em18.drs',
+    'em/em21.drs', 'em/em22.drs', 'em/em23.drs', 'em/em24.drs', 'em/em26.drs', 'em/em27.drs', 'em/em28.drs',
+    'em/em29.drs', 'em/em2b.drs', 'em/em2e.drs', 'em/em2f.drs', 'em/em35.drs',
+    'em/pl00.drs', 'em/pl08.drs', 'em/pl0f.drs', 'em/pl11.drs',
+    'em/wep01.drs', 'em/wep02.drs', 'em/wep07.drs', 'em/wep09.drs', 'em/wep11.drs', 'em/wep13.drs', 'em/wep19.drs',
+    'em/wep20.drs', 'em/wep21.drs', 'em/wep24.drs',
+    'st2/r200.dar') + tuple('st1/%s.dar' % r for r in (
+    'r100', 'r101', 'r102', 'r103', 'r104', 'r105', 'r106', 'r107', 'r108', 'r109', 'r10a', 'r10b', 'r10c', 'r10d',
+    'r10e', 'r10f', 'r111', 'r112', 'r113', 'r117', 'r118', 'r119', 'r11a', 'r11b', 'r11c', 'r11d', 'r11e', 'r11f'))}
 
 
 if __name__ == '__main__':
