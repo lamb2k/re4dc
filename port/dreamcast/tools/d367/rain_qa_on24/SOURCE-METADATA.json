@@ -1,0 +1,60 @@
+{
+ "scope": "SOURCE_ONLY_CONTINUATION_PREPARED_NOT_SDK_GRANTED",
+ "integration_base": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+ "game_source": "8ce5ee2d00027268c3e69c9c300b819c1b14c63f",
+ "parent_source_checkpoint": "b334920fbf6ac3c133bc3b3f0d70d52a7680fa84",
+ "parent_kit_seal_sha256": "dbe8377e75f6d631195883e08e2575e44dbf00969af76800294226207f5765d1",
+ "deployment": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/qa-on-continuation-v1",
+ "new_root": "/dev/shm/rain8ce-qa-on-cont-v1-eyihqhpk",
+ "source_files": {
+  "controller.py": {
+   "bytes": 11070,
+   "sha256": "7acb2ba8cb63e31b22abc5efc76462d65bfffb5d50617aa9409df9c4c42e908b"
+  },
+  "execute.sh": {
+   "bytes": 1088,
+   "sha256": "79a75d3c007f9827094c9489fd4b0d25a633d14ac1bbe03956b02c1a4e33cbb6"
+  },
+  "prepare.py": {
+   "bytes": 4135,
+   "sha256": "783eb5e46121fd0359a870c6ff7191e437b549b99ed9429a372e7c8d0a12905e"
+  },
+  "host_controls.py": {
+   "bytes": 8479,
+   "sha256": "b5f3c9063fffb4151f1a4848605318a0da8b0f4a12649ec2565191cbb8c84168"
+  },
+  "README.md": {
+   "bytes": 5979,
+   "sha256": "78110bc757bfda1f051c325ae69160302a0b204b4c52879d7fcfe3f45acc66e0"
+  },
+  "STATUS.md": {
+   "bytes": 1246,
+   "sha256": "681899c2984bec43f640115af601588155e8c21372dce4ae05a600145d54225e"
+  }
+ },
+ "private_metadata_pins": {
+  "CONTRACT.json": {
+   "bytes": 3065109,
+   "sha256": "456ff60734a645223d9e9f7e910df06005c77fdbfb10fe29263008af25328ce9"
+  },
+  "OFF-REUSE-PREPARATION.json": {
+   "bytes": 3382,
+   "sha256": "668f70fd88ec84851f8898968d4796c70a05740491f029219cdc24e964226caa"
+  },
+  "HOST-CONTROLS-FINAL.json": {
+   "bytes": 4378,
+   "sha256": "d1971b9e33a1b6de475b502f132abda17bd00e98244f8fe68203c794c6305957"
+  },
+  "ROOT-GRANT-TEMPLATE.json": {
+   "bytes": 809,
+   "sha256": "5f3681d70c4dbc04674cd7ae0cca8462f46abf75ec91c08d20101300eca24ab1"
+  }
+ },
+ "old_failed_pair_receipt_sha256": "e0356a185a2dafe1368b66c5b6dedfa7b2bbd664f24c8f342019a081ca5dcf55",
+ "host_controls": 26,
+ "SDK_commands": 0,
+ "Make_queries": 0,
+ "bootstrap": 0,
+ "stage": 0,
+ "guests": 0
+}
