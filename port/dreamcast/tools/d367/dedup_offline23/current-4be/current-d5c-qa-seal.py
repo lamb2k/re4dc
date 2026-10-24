@@ -16,7 +16,7 @@ for arm,mode in [('off',0),('on',3)]:
  for n,p in x['tracks'].items():assert (d/'gdemu'/n).stat().st_size==p['bytes'] and sha(d/'gdemu'/n)==p['sha256']
  for n in ('README.txt','STEPS.txt','IDENTITY.json','SHA256SUMS.txt','README-tooling.txt'):assert not (d/n).exists()
  other='On' if arm=='off' else 'Off'
- readme=f"""RE4DC private normal QA23 dedup {arm.upper()} - source4be08e01
+ readme=f"""RE4DC private normal QA23 dedup {arm.upper()} - source 4be08e01
 LOCAL QA GATES PASS; ROOT REVIEW / INTEGRATION / PHYSICAL ACCEPTANCE PENDING.
 This is a private QA tool, not a release. No SD copy or publication performed.
 
@@ -25,22 +25,24 @@ Baseline: d5c1ceab9e06461462669b3ce1d28a379747a74a.
 SCENERY_DEDUP={mode}; same standard DATA29 and original assets on both arms,
 plus the exact same four compact ps2-dd3 alternate files. OFF0 uses originals;
 ON3 selects the strict validated compact alternate. All original geometry,
-UV/color/LOD/source identity and all41 texture assets retained; no pruning.
+UV/color/LOD/source identity and all 41 texture assets retained; no pruning.
 Current audits four fixes ON, EM_READ_RETRY1, arena0; SELECT_ONLY/REPLAY_LEAN/
 SUBMIT_BATCH1. Normal QA1/PC0, KOS/squeeze/census/diagnostic contamination0.
-SCENERY_EMIT_PREFETCH=0 and SCENERY_SELECT_LEAN2=0 only. The separately found`nexperimental PREFETCH1 context defect is outside this qualified profile.`nProduction recipe dedup remains OFF pending root decision.
+SCENERY_EMIT_PREFETCH=0 and SCENERY_SELECT_LEAN2=0 only. The separately found
+experimental PREFETCH1 context defect is outside this qualified profile.
+Production recipe dedup remains OFF pending root decision.
 
 Programme {x['programme']['label']}
 Raw programme SHA256: {x['programme']['raw_sha256']}
 Final standard GDI track03 SHA256: {x['tracks']['track03.bin']['sha256']}
 The delivered GDI has independent full track and all-file readback, both
 loader/standard lint, actual final-GDI PID-targeted menu boot toR100 PASS.
-Separately labelled proxies (same programme/all14/data; only fixture-directory
+Separately labelled proxies (same programme/all 14/data; only fixture-directory
 redirection differs) pass QA menu->R103 and fullH2 1465/571/340 uploads/presents,
 restored1. Normal QA s30 heap_before={gates['h2']['heap_before']} bytes.
 These are bounded console-mode Flycast MODELLED safety checks, not physical
 console acceptance or hardware performance. Standard non-QA matched H2
-OFF93920/ON139552 +45632, KOS48 all8, requiredGDEMU10, scoped census/texture/
+OFF 93,920 / ON 139,552 (+45,632 bytes), KOS 48 KiB all 8, required 10 GDEMU seeds, scoped census/texture/
 VRAM checks, event common-window decisions and three held still views pass.
 No blanket all-textures-zero claim: the known baseline Mendez late-pair
 material limitation remains. Root's separate private PS2 upload repair is not
@@ -57,8 +59,8 @@ Use the same Dreamcast, display, controller and view-distance setting for both
 Off and On. Keep existing saves/media untouched; no SD/publication is performed
 by this package. Select gdemu/disc.gdi in an emulator for private inspection.
 
-1. At QA menu choose Teleport -> CHAPTER1-1: VILLAGE ->
-   R101 VILLAGE SQUARE (FIGHT START). Record which Off/On disc and source4be08e01.
+1. At QA menu choose Teleport -> CHAPTER 1-1: VILLAGE ->
+   R101 VILLAGE SQUARE (FIGHT START). Record which Off/On disc and source 4be08e01.
 2. Spend at least two minutes moving between the cross, houses and village edges.
    Turn the camera through near/far transitions, building edges and clip seams.
    Look for missing/wrong geometry, UV/color changes, flicker, corrupt strips,
