@@ -1,0 +1,44 @@
+{
+  "source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "baseline_source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "baseline_programme_sha256": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+  "pins": {
+    "/root/work/lanes/gc-port23-full-target2-scratch/off/build.log": "79f2b24570345fbdc0e337e43318c7d4e2d9136b15dcdff7d07f43d9cbccfcbc",
+    "/root/work/lanes/gc-port23-full-target2-scratch/off/out/resolved-knobs.txt": "fcb8b1459b58f9f567c757d6cb576707708c57ed1c79fe8851091961cfd647dd",
+    "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a": "5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf"
+  },
+  "objects": [
+    {
+      "arm": "baseline",
+      "sha256": "d0ecfbb4eeaaf27910b6a3f2b0aee5a4da8d40290849edb3f97dbeb092ee8fa7",
+      "nodebug_sha256": "9ec8a10ab17be823e7218a379110de7cfe29622a3ecf4dfd66297fb42c27c3c6",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   4210\t      4\t  16828\t  21042\t   5232\t/dev/shm/rain-r10c-bca44-target-1yuvytg3/baseline.o\n",
+      "inputs": 24
+    },
+    {
+      "arm": "absent",
+      "sha256": "31cf92d6bb1cb62ce742238bcae99722d1067facc74f193ae0af966cde6ef663",
+      "nodebug_sha256": "9ec8a10ab17be823e7218a379110de7cfe29622a3ecf4dfd66297fb42c27c3c6",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   4210\t      4\t  16828\t  21042\t   5232\t/dev/shm/rain-r10c-bca44-target-1yuvytg3/absent.o\n",
+      "inputs": 24
+    },
+    {
+      "arm": "zero",
+      "sha256": "31cf92d6bb1cb62ce742238bcae99722d1067facc74f193ae0af966cde6ef663",
+      "nodebug_sha256": "9ec8a10ab17be823e7218a379110de7cfe29622a3ecf4dfd66297fb42c27c3c6",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   4210\t      4\t  16828\t  21042\t   5232\t/dev/shm/rain-r10c-bca44-target-1yuvytg3/zero.o\n",
+      "inputs": 24
+    },
+    {
+      "arm": "on",
+      "sha256": "c8070bddf025208dfc9fe222f169e4b288f11432d78d054666e0a1025cd5dbe1",
+      "nodebug_sha256": "08aa48752a9f1725b3a3538503c1a828728a0d086388b0282e053dce450c4976",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   4886\t      4\t  16836\t  21726\t   54de\t/dev/shm/rain-r10c-bca44-target-1yuvytg3/on.o\n",
+      "inputs": 24
+    }
+  ],
+  "scope": "One actual current-profile SH4 translation unit, default-off identity and ON compilation only. No full rain programme/link/heap/guest/appearance/PS2 ancestry acceptance.",
+  "harness_sha256": "b358143b212d045b09cb64f40b775072bfdef4a48c8d86801e10e1404318ab0a",
+  "complete": true,
+  "baseline_absent_zero_identical": true
+}

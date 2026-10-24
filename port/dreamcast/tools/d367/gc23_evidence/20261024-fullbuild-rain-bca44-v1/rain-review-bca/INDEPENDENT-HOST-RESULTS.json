@@ -1,0 +1,44 @@
+{
+  "status": "PASS_HOST_SOURCE_ONLY",
+  "source_commit": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "elapsed_s": 1.2736810430069454,
+  "results": [
+    {
+      "kind": "independent extended source controls",
+      "returncode": 0,
+      "stdout": "PASS r10c signature/dispatcher/alloc/fade/frame+room/rebind/destruct/stop/consume/reused-night\n",
+      "controls": [
+        "18 post-callback signature losses including five NaNs",
+        "restoration cannot resurrect consumed cancellation",
+        "same-frame replacement alpha snapshot and consume-once",
+        "wrong draw-sync token",
+        "UINT_MAX-to-zero stale wrap",
+        "100-tick Stop anchor and exact one-tick unpause movement"
+      ]
+    },
+    {
+      "kind": "independent mutant defeated",
+      "name": "omit-postcallback-profile-check",
+      "returncode": -6,
+      "stderr": "host: /dev/shm/rain-bca-independent-o2vc0yz5/host.cpp:460: int main(int, char**): Assertion `sent==0&&s_raindc_pending==0' failed.\n"
+    },
+    {
+      "kind": "independent mutant defeated",
+      "name": "stop-anchor-not-updated",
+      "returncode": -6,
+      "stderr": "host: /dev/shm/rain-bca-independent-o2vc0yz5/host.cpp:492: int main(int, char**): Assertion `s_raindc[0].y==10&&s_raindc_frame==pG->Frame_cnt' failed.\n"
+    },
+    {
+      "kind": "actual Make macro scope",
+      "stdout": "FILTER -DRE4DC_RAIN_PS2=1 -DRE4DC_RAIN_DC=1 -DRE4DC_RAIN_DC_N=160 -DRE4DC_RAIN_R10C_DC=1\nUI -DRE4DC_NATIVE_LASER=1 -DRE4DC_RAIN_DC=1 -include /dev/shm/rain-bca-independent-o2vc0yz5/obj/effects30.h\n"
+    }
+  ],
+  "mutants_defeated": 2,
+  "extractor_sha256": "c86dd840b86714950c75b2dfd6a8ff60ad45be5715e98c209c67bd9c3a4841b7",
+  "fixture_sha256": "8bc4cf3a6de6618e607741409e91527938315ced9d7e4fbd7c34236c1dc1b39c",
+  "controls_sha256": "6c561561abd7feee78fd01b9e56d6213fbdbc1317ae6de502d55d7adc8020c67",
+  "SDK": false,
+  "guest": false,
+  "author_tree_edit": false,
+  "assets_read_or_written": false
+}

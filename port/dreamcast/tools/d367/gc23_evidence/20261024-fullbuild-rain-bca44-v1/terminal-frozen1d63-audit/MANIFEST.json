@@ -1,0 +1,82 @@
+{
+  "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "classification": "source-only independent terminal/cold-context schedules and proposal; no guest proof",
+  "files": [
+    {
+      "path": "REPRODUCE.md",
+      "bytes": 2451,
+      "sha256": "75abc9f2e99aff4a7fccfcf4f6b7b3b3d22d43dabddb568290aaec0b8ca97fb9"
+    },
+    {
+      "path": "REVIEW-TERMINAL.md",
+      "bytes": 17863,
+      "sha256": "6178c047ee9f030346bb4758bf0741b4fc79bf0ad693290ba72b96a713dc83d5"
+    },
+    {
+      "path": "actual-audio-completion-local-batch-counterexample.cpp",
+      "bytes": 1960,
+      "sha256": "4a64817c586b23fb0ac4bfff9ca55f718fb7c914d8c3379c690d600a5181c1df"
+    },
+    {
+      "path": "actual-gate-end-late-ticket-payload-counterexamples.cpp",
+      "bytes": 2176,
+      "sha256": "d02d439f444432a957717ce26dc2ac84fc0dc04f3c3dd7ecdf4f448e461ddbbc"
+    },
+    {
+      "path": "actual-hand-yield-reopens-queue.cpp",
+      "bytes": 1439,
+      "sha256": "694f7a6b237b0407ceeb4c80e872cde501d91b58abacafc7edbaeb9cd2e705be"
+    },
+    {
+      "path": "actual-native-DVD-cancel-is-not-a-reader-fence.cpp",
+      "bytes": 741,
+      "sha256": "c407325ebf117a24f5fbdc8d13eeeb82f459aad17ce1db168cbee6ec1f88e959"
+    },
+    {
+      "path": "actual-shared-catalog-cursor-counterexample.cpp",
+      "bytes": 2830,
+      "sha256": "b05bc3c2f3ca91722ba25eb647664e5e98d1cfce55e123e0a5a90dd253661ea8"
+    },
+    {
+      "path": "independent-catalog-counterexample.json",
+      "bytes": 556,
+      "sha256": "b4cbeb20c8a7afa40eb6241e912deec731306c37e5ee92ce8ed3fb1685e8b97c"
+    },
+    {
+      "path": "independent-completion-counterexample.json",
+      "bytes": 675,
+      "sha256": "1ff1c2e6b31b4b7ecbffd6e481226a086266ab2a64ed9f5bcb9ca06ebfae6e91"
+    },
+    {
+      "path": "independent-counterexamples.json",
+      "bytes": 914,
+      "sha256": "4c4c0228ff19ae5fda675d61cb9c3d9d72583be3e7d47c67cec133483bca87e9"
+    },
+    {
+      "path": "pin_sources.py",
+      "bytes": 2650,
+      "sha256": "a700a9b5c01cd307dbfaa0344ae3deee934c6d6388970ad88b8b3e52ac12bafd"
+    },
+    {
+      "path": "run_catalog_counterexample.py",
+      "bytes": 4403,
+      "sha256": "e390c8169be552d866da139aa89e121b6e77b0af18b845cd1952d35a5a03af1f"
+    },
+    {
+      "path": "run_completion_counterexample.py",
+      "bytes": 3069,
+      "sha256": "f3bd23e6693751c609ba40087d333b774d8dc0b6e4ddc080776c408876c2630d"
+    },
+    {
+      "path": "run_counterexamples.py",
+      "bytes": 5707,
+      "sha256": "7fd7a0d2cf981a1ac86414be4d0f00ac97d473058d06b46ac6b055035702d90f"
+    },
+    {
+      "path": "source-pins.json",
+      "bytes": 11010,
+      "sha256": "532081b2f633cb0bf81bf90691cf6ed8c120f9b29616dc05e79709043f9e23ab"
+    }
+  ],
+  "excluded": "all asset payloads, binaries, SDK/build/guest/media output; shared runtime untouched"
+}

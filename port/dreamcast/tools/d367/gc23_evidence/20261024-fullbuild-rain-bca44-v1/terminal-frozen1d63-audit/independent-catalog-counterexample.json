@@ -1,0 +1,9 @@
+{
+  "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "scope": "actual disc_read and gate/index functions; mocked shared-handle fs provider; forced nested callback is deterministic two-reader schedule, not a demonstrated reachable target overlap",
+  "normal_GC_emission_control": "pass",
+  "interleaved_seek_read_suppresses_GC_as_different_PS2_row": "reproduced",
+  "inflight_describe_returns_true_after_retire": "reproduced",
+  "fixture_sha256": "b05bc3c2f3ca91722ba25eb647664e5e98d1cfce55e123e0a5a90dd253661ea8",
+  "runtime_source_edited": false
+}

@@ -1,0 +1,18 @@
+from pathlib import Path
+own=Path(r'C:\Game Dev\Emulators\codex-lanes')
+init=(own/'gc-port23/init-pinned-sh4zam-20261024.sh').read_text().replace('TREE=/root/work/lanes/gc-port23','TREE=/root/work/lanes/water-rain24').replace('1d63cffe3a232c402418f2f2d919e7abae476957','bca44d58a1fa0a51fd87ba94deba8cba925c8998')
+(own/'water-rain24/init-pinned-sh4zam-20261024.sh').write_text(init,newline='\n')
+s=(own/'gc-port23/full-target-static1d63-r2-20261024.py').read_text()
+s=s.replace("TREE=Path('/root/work/lanes/gc-port23')","TREE=Path('/root/work/lanes/water-rain24')").replace('gc-port23-full-target2-scratch','water-rain24-full-target-scratch').replace("SOURCE='1d63cffe3a232c402418f2f2d919e7abae476957'","SOURCE='bca44d58a1fa0a51fd87ba94deba8cba925c8998'")
+s=s.replace(", 'GC_ASSET_GATE='+value,'GC_ASSET_CATALOG_SHA256=0'", ", 'RAIN_R10C_DC='+value")
+s=s.replace(",*args,'GC_ASSET_GATE='+value,'GC_ASSET_CATALOG_SHA256=0'", ",*args,'RAIN_R10C_DC='+value")
+s=s.replace("GC_ASSET_GATE=value,GC_ASSET_CATALOG_SHA256='0'", "RAIN_R10C_DC=value")
+s=s.replace("catalog_pin='0'", "rain_option=value")
+s=s.replace('Fresh actual normal full source rP builds using exact retained candidate overrides, catalog0. No media/stage/guest, installed catalog or I001 pass.', 'Fresh actual normal full source rP rain experiment OFF/ON builds with exact retained candidate overrides. No media/stage/guest, PS2 ancestry, live lifecycle, appearance or speed acceptance.')
+s=s.replace('no runtime/GC-ASSET acceptance','no rain runtime/appearance acceptance').replace('catalog0 budget only','rain default-off programme identity only')
+assert "*args,'RAIN_R10C_DC='+value" in s and 'GC_ASSET_GATE=value' not in s
+compile(s,'full-target-rain-bca-20261024.py','exec')
+(own/'water-rain24/full-target-rain-bca-20261024.py').write_text(s,newline='\n')
+sh=(own/'gc-port23/full-target-static1d63-r2-20261024.sh').read_text().replace('TREE=/root/work/lanes/gc-port23','TREE=/root/work/lanes/water-rain24').replace('1d63cffe3a232c402418f2f2d919e7abae476957','bca44d58a1fa0a51fd87ba94deba8cba925c8998').replace('gc-port23/full-target-static1d63-r2-20261024','water-rain24/full-target-rain-bca-20261024')
+(own/'water-rain24/full-target-rain-bca-20261024.sh').write_text(sh,newline='\n')
+print('Rain full-target helpers prepared, source frozen bca44; no guest/stage.')

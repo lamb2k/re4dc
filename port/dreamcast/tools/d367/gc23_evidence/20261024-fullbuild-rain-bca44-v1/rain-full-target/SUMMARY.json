@@ -1,0 +1,41 @@
+{
+  "status": "FULL_NORMAL_RAIN_R10C_OFF_ON_LINK_COMPLETE_ONLY",
+  "source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "baseline": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "time": "2026-10-24T06:07:43.905949+00:00",
+  "off_programme_and_all14_identical": true,
+  "missing_symbols_both": 0,
+  "GC_alias_or_stub": false,
+  "gc_symbol_counts": {
+    "off": 0,
+    "on": 0
+  },
+  "linked_sections": {
+    "text": 672,
+    "data": 0,
+    "bss": 0
+  },
+  "linked_section_total": 672,
+  "boundary_symbols": {
+    "off": {
+      "_edata": 2352246596,
+      "_end": 2353209524,
+      "_etext": 2351296098
+    },
+    "on": {
+      "_edata": 2352247268,
+      "_end": 2353210196,
+      "_etext": 2351296770
+    }
+  },
+  "boundary_delta": {
+    "_edata": 672,
+    "_end": 672,
+    "_etext": 672
+  },
+  "raw_hashes": {
+    "off": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+    "on": "63c4fe1f83b352e0c49d90f53d5d80e4d5ae7620037dfb6642981883551cd678"
+  },
+  "scope": "Fresh full normal source builds, exact current rP ordered args plus RAIN_R10C_DC=0/1. Real SDK/source/SH4ZAM pins before/after. No missing symbols. No runtime heap, KOS/H2, guest, live rain lifecycle, PS2 ancestry, appearance or hardware performance acceptance."
+}

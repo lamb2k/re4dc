@@ -1,0 +1,106 @@
+{
+  "receipt.json": {
+    "bytes": 17018,
+    "sha256": "0fe56bb227018ff33cb1a95076db02a6c84c04ad288910dda04d81d28f18c1ff"
+  },
+  "SUMMARY.json": {
+    "bytes": 1253,
+    "sha256": "73cd1f022bae35c3dac5db1fbbf40568051b85ff58e0f940c00d37eb8836cd8f"
+  },
+  "off/aliases-all.ld": {
+    "bytes": 4116,
+    "sha256": "5c51cd2595d407cee281c1ec9fe1f1474b80dc7e5a99a85ec5c4f78b4a299d1d"
+  },
+  "off/aliases.ld": {
+    "bytes": 2747,
+    "sha256": "c92af93af4063845767a4f189f81d5cc1a16ad396360c0b15f7125c1f9783735"
+  },
+  "off/command.json": {
+    "bytes": 7527,
+    "sha256": "749525851941370f59e894a256aa8b00a908a000fcf9a45a5cb5bd3c290d1d98"
+  },
+  "off/defined.txt": {
+    "bytes": 185163,
+    "sha256": "58a1d971bf49371da4fda56e3d94ed68000bb471eabb17d9a8f994fc1098856a"
+  },
+  "off/load-segments.txt": {
+    "bytes": 596,
+    "sha256": "2611bf31b952c13921a0d9cd69c63aa0f05ee0c6b1c24a8cf5e56776a2bba633"
+  },
+  "off/missing.cpp": {
+    "bytes": 94,
+    "sha256": "7e3ebc71a1d09122209b3ee20e053ccc1b418846d88cd950724ad4394c97754a"
+  },
+  "off/missing.txt": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "off/pass1.log": {
+    "bytes": 138,
+    "sha256": "cf9fe866f74015bbff111347c9733eebab78e3b6a219325c904113420ef77bb0"
+  },
+  "off/resolved-knobs.txt": {
+    "bytes": 244618,
+    "sha256": "b9733514e1500ae31e6ef75399a9a3ac321d8a4ee13e5bed8a8607840571984f"
+  },
+  "off/sections.txt": {
+    "bytes": 2528,
+    "sha256": "2c2d165f94e6877f5c112c711a3e5969729c617ee0c85a300d6ca669596d856b"
+  },
+  "off/symbols.txt": {
+    "bytes": 581672,
+    "sha256": "0f16f8c9aad30e7e4b5d224a9fb603c8301d1384b32d371c51479a9ccce523a3"
+  },
+  "off/undefined.txt": {
+    "bytes": 6118,
+    "sha256": "9ae18453b44e929acb6ba4096750e1cde802f66c0867fcd102b0e9b1f2087a08"
+  },
+  "on/aliases-all.ld": {
+    "bytes": 4116,
+    "sha256": "5c51cd2595d407cee281c1ec9fe1f1474b80dc7e5a99a85ec5c4f78b4a299d1d"
+  },
+  "on/aliases.ld": {
+    "bytes": 2747,
+    "sha256": "c92af93af4063845767a4f189f81d5cc1a16ad396360c0b15f7125c1f9783735"
+  },
+  "on/command.json": {
+    "bytes": 7527,
+    "sha256": "58fae69ca74f0a32f26dd374484745ca46f24744a9d75e8078d1ac7e064caedf"
+  },
+  "on/defined.txt": {
+    "bytes": 185163,
+    "sha256": "58a1d971bf49371da4fda56e3d94ed68000bb471eabb17d9a8f994fc1098856a"
+  },
+  "on/load-segments.txt": {
+    "bytes": 596,
+    "sha256": "0fea9d4dfd2799ad0114bf2ed76da866069656dcf4c1eb3a74ae96f45021a7c9"
+  },
+  "on/missing.cpp": {
+    "bytes": 94,
+    "sha256": "7e3ebc71a1d09122209b3ee20e053ccc1b418846d88cd950724ad4394c97754a"
+  },
+  "on/missing.txt": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "on/pass1.log": {
+    "bytes": 138,
+    "sha256": "cf9fe866f74015bbff111347c9733eebab78e3b6a219325c904113420ef77bb0"
+  },
+  "on/resolved-knobs.txt": {
+    "bytes": 242212,
+    "sha256": "38830a211e00902200b13199f22979029e2dabdd76caf20c12a3409d8db441fd"
+  },
+  "on/sections.txt": {
+    "bytes": 2528,
+    "sha256": "179b62aeb7fe833946cb55129c7ad0a48b29cbe7f4177eec1b559e629f0e2a2f"
+  },
+  "on/symbols.txt": {
+    "bytes": 581855,
+    "sha256": "a48fbd70bbacfd6689f6fca7f6f5688fea282d1cb8a5b63653ba4bce30398d66"
+  },
+  "on/undefined.txt": {
+    "bytes": 6118,
+    "sha256": "9ae18453b44e929acb6ba4096750e1cde802f66c0867fcd102b0e9b1f2087a08"
+  }
+}

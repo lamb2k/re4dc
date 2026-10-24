@@ -1,0 +1,89 @@
+{
+  "scope": "read-only current helper/template/VMU metadata; no source49ad runner reuse or attempt authorization",
+  "pins": {
+    "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/stat-guest-slot.sh": {
+      "sha256": "452123f936d4764244244f17d51d22299fdbd17eb0aada1de1991a4782d74549",
+      "bytes": 249
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/census-bound-run.py": {
+      "sha256": "e3f31e4a797b934543ac9e598a0e6350965533bdfe12299771200d11f183629c",
+      "bytes": 2438
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/stat_owned_ram.py": {
+      "sha256": "8bd179110988d1b808d8e353b182f921dc244fdae985a51995293ba570c136b0",
+      "bytes": 5502
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-stills/force_limited.py": {
+      "sha256": "872a4a2d30ec342cf01e15d04507269f02a713c8eccc68c3dde5320afb1eff15",
+      "bytes": 3552
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-stills/freeze_capture.py": {
+      "sha256": "66b21342983108db10a8a1a37ab41f189212faf4fe8794240912c4ad93742e93",
+      "bytes": 6758
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-stills/run_still.py": {
+      "sha256": "c93d83ae02820e879be7d7879d167e5403a2cd3b1559e427ebde1ed5a3438ecb",
+      "bytes": 6589
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-stills/PINS.json": {
+      "sha256": "8009389004c1a42aa44c973cb92eed94eab3763b926e9947bf6fe90be88ac08d",
+      "bytes": 1158
+    },
+    "/root/work/lanes/water-rain24/port/dreamcast/tools/d367/trace_lock.sh": {
+      "sha256": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688",
+      "bytes": 2169
+    },
+    "/root/work/lanes/water-rain24/port/dreamcast/tools/d367/fullplay/fp_run.py": {
+      "sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747",
+      "bytes": 15608
+    },
+    "/root/work/lanes/water-rain24/port/dreamcast/tools/d367/fullplay/fp_master.sh": {
+      "sha256": "f1f341e94c29d50f64afa229ce305d9a60f50f4eafb3c7d9fe9a9c06844e457f",
+      "bytes": 6937
+    },
+    "/root/work/lanes/water-rain24/port/dreamcast/tools/d367/fullplay/fp_twin.sh": {
+      "sha256": "38faa0fa167df94d83512f72da013f79e8bcd6b9afbf44da6ddfcbfc9cdf40ad",
+      "bytes": 4513
+    },
+    "/root/work/lanes/water-rain24/port/dreamcast/tools/d367/rr/recipe.conf": {
+      "sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+      "bytes": 10428
+    },
+    "/root/work/lanes/water-rain24/port/dreamcast/tools/d367/rr/rr-qa.sh": {
+      "sha256": "c74763c57053411ff0a683c06cf70db83461221b71cfac5c75970cb924addb91",
+      "bytes": 4425
+    },
+    "/root/work/lanes/water-rain24/port/dreamcast/tools/d367/qa20/mkqa.py": {
+      "sha256": "6f3385409e8e91cf714a169190ae76c3570a306dafaac92e4bc19f2c2f6f4c50",
+      "bytes": 5611
+    },
+    "/root/work/lanes/water-rain24/port/dreamcast/tools/d367/qa20/src/lake-scene5.txt": {
+      "sha256": "aacdde8a4d85950f0d763a0b5b2ce81f258241f96652e32093f7e83a31c9814c",
+      "bytes": 162
+    },
+    "/root/work/lanes/water-rain24/port/dreamcast/tools/d367/qa20/src/lake-scene3.txt": {
+      "sha256": "9d82ccd28a36bd74df5bf1ff0ac16ab94441c51c3312b4f19d5eb58677a2a052",
+      "bytes": 535
+    },
+    "/root/work/lanes/stat-bytes23-takeover-scratch/release/manifest.json": {
+      "sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+      "bytes": 210736
+    },
+    "/root/work/lanes/stat-bytes23-takeover-scratch/release/IP.BIN": {
+      "sha256": "0e4e13d0b8df6477d9e43370591fd1a580c54b4df2209b944610d2a0b6b0062c",
+      "bytes": 32768
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/flycast-console-bin/flycast-console.exe": {
+      "sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a",
+      "bytes": 14416384
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/d367-harness-par/data/T0000_vmu_save_A1.bin": {
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20",
+      "bytes": 131072
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/d367-harness-par/data/vmu_save_A2.bin": {
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20",
+      "bytes": 131072
+    }
+  }
+}

@@ -1,0 +1,225 @@
+{
+  "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "baseline": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "profile": "/root/probe/lanes/route/out-rrfb254e8rP",
+  "pins": {
+    "/root/probe/lanes/route/out-rrfb254e8rP/candidate.txt": "0d5e7fe22f95b6aa8a131a790490dd8fc268b10f721924909de206610a11028d",
+    "/root/probe/lanes/route/out-rrfb254e8rP/resolved-knobs.txt": "63b9cdf90190a880422074bf4e7c7c488cd013463a18d9aaeb6fc3bd470a9a5b",
+    "/root/probe/lanes/route/out-rrfb254e8rP/re4dc-game.elf": "3a110765ef415dfd4e4a00104bfc6094b393f87cb9f9f55672046f90e702ee8f",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em22.ovl": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em2b.ovl": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em2f.ovl": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em35.ovl": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em3b.ovl": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417",
+    "/root/probe/lanes/route/out-rrfb254e8rP/pl0f.ovl": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e",
+    "/root/probe/lanes/route/out-rrfb254e8rP/pl11.ovl": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e",
+    "/root/probe/lanes/route/out-rrfb254e8rP/pl14.ovl": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e",
+    "/root/probe/lanes/route/out-rrfb254e8rP/sscrn.ovl": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st1_0.ovl": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st1_1.ovl": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st1_2.ovl": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st1_3.ovl": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st2_0.ovl": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2",
+    "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a": "5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/test/shz_test_scenario.h": "b27081020b89853b798c464b579068455d8f7a02d1148a530bc77e5c97098de7",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/test/shz_test.hpp": "dee21b346054ef1b8791e932defd1ec7eefac295b166f5300aba895d38b3248d",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_scalar.hpp": "e51e043db461766c55df24b3320b83ae296d63435be068f19223b4a683884191",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_sh4zam.h": "207159b59032b4a33de7c4b152fb180ed93914db5da744f7cbe96ac648ef0929",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_vector.h": "844bae12ab9ca484135b03e58050b1308da31c21e5a2c7862c09c98ded29626d",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_matrix.hpp": "c5716f6aa271210956a791264642ea9c3af582ae652c5391cbc6e0f5af4d2f5c",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_cdefs.h": "48138da62e45d103861241923331192f5bc67de3b0cfe8db64ab049ba31ed3c2",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_complex.hpp": "6ea78dc5c19821244931f362a000b8f582c51747dc1b49aed9582452c4e31e4a",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_version.h": "a55211678e9542c12bb41ce0275293039309920ed93d1b967c093b812a5b9c7f",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_quat.h": "236c57697e14fa7c3d3b8388508be7539a05368f52ec9d518fe90425dcbb4414",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_xmtrx.hpp": "28de84880358eb38ba821c9039ae03a07912c0194514264bab307cfff7e24d78",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_trig.hpp": "25016b4d64316e27b6e0b7065c1c25a4615f71c83ded1b2622502a4b377aa19e",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_complex.h": "c7a9dcff2eb30050879a61996a8452da4e0fe817f88766452b01b716d1074e12",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_mem.hpp": "197eabbe44bd25cd80a0048ddd92299d806f63e3ca2b3e636ecbed38fa5250b2",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_mem.h": "89cd76be2d07566f2f104560a3bb16fbebad2d23f8013b774c96c66ce72ce062",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_vector.hpp": "a7c1ca9221eb7aa54cc67f8df98917e5835b03605e27dc1783d8e2304c2313d8",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_trig.h": "5f6c20c555a3d4f5a9d10efc653d63d098f327f25e1fae71d6a262285cec9e68",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_sh4zam.hpp": "ecae29daec2b5c2d6735127764391f7cc6bbf1697c42bc06a64a85c3eba10eea",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_version.hpp": "095fec8d1d190571967e21e1472446b9c9d30e9098866d06277d5d566943c7e6",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_cdefs.hpp": "ab6579e934e167ca141a0745e50aa4b02ac289b4e812f6a4bd8ede3aacf83c60",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_scalar.h": "fc3e4b2195bf55a76795eedd5910cd52b4248a6454763ea909011da63ea7b6fc",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_quat.hpp": "627fca9913a7a3267702bf6c076ce7e6a68c4fa7b420c617bd66ea08f500f030",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_matrix.h": "460d73a41b0ced91a2bb76d264d41dd9bf21f1ed8839e248b2b9ec4152acdc01",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_xmtrx.h": "d3d8e8eb4a3e77f3e8c12df6dabb8804fa444ce67085dbd1af37630dacaab085",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_trig.inl.h": "ffa679b6d97faff8031e41d471008ffa2a8e19d9995066108537941fc0283966",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_complex.inl.h": "189314670a9b910d54c7f3941a347f0fabb4c466b91305510d6b452dac4f139b",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_scalar.inl.h": "fc699674f5abf5a929d0ff2fbe02da03c4a183b55c273f59cb7d0937d35e8857",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_mem.inl.h": "abe2b45892f22b5dcd6c20f3730a859f8f806b4fc7f31cee6935912ec001f7a2",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_xmtrx.inl.h": "90d14ec7870529f613f08165f2f52d99bd008f6273144c716298f8545d0f216e",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_quat.inl.h": "930ffbc64e7d286f048cad38b82dda97aad9efce63f7c0f9d34198d3f9c18a89",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_matrix.inl.h": "43edccaf2794ce70d846e8f301508392e9d3e968e16e44b1961dcf26ea10eea8",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_vector.inl.h": "6011b3b0f5de566f5245d2f216eedfa0649d62b0cab44fd1e9b45af3100ea323",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/spu/shz_vector_spu.inl.h": "be444f8072b0d2308109675d09483c0ba5a04fc51dae67764833b57c93065bc7",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_trig_sh4.inl.h": "4e62d63a6c49c97f44dfa6c6de8265f66a1fcd0c0cdb1372680a88db205de18b",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_vector_sh4.inl.h": "87dc6091a8f270e3800ec08c6ea44178417daed93a65f4e4210aed5fa590dd34",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_xmtrx_sh4.inl.h": "5ba4a0295ebc422764e829c84d5640ed06a75affcdbde6fff1c1bc98b34e3138",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_quat_sh4.inl.h": "2f162fa7db1e98dff1a4db1ee0e100b5f5773771bb99ca767f9e36e9ed32898d",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_matrix_sh4.inl.h": "8eb874dbc230fef74883f2aec9c53813cb1cba98f5c4e6edd3e17ef8ae8132bd",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_mem_sh4.inl.h": "f1b40c951bc00989496708ae76de2d747109841e04716d992514a1c8dc180774",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_scalar_sh4.inl.h": "b0c1d4cf98b44d5ecb137ef2d5f195f433a824d2f4d8c751a5c826aa692a37cb",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_xmtrx_sw.inl.h": "59c2ca091388e1439dc3a91f9748f1b7b379a276f1a37a5e10a099571a794c07",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_mem_sw.inl.h": "c37e1e2d30c78712eab17045b9647108edc6bf6e7e1c56cebc1e557cdd8533a9",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_matrix_sw.inl.h": "cf82a20611f39bbfaedc22a307e465677d90427206671dc983ee38d8076b009e",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_quat_sw.inl.h": "e9c4f9aeb50ce806cd74626b9c6542aa7ffac405d8322abce9e82f62de822574",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_vector_sw.inl.h": "9364e039f4523831506d1fd5ac95fef393b823424fc7d6cdb6d040e4b8c4de0a",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_trig_sw.inl.h": "e5f0bc71b6a2355dea3a550dd391bf964c6dad02668c18907a075e131cac58e6",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_scalar_sw.inl.h": "67b99cebd707217664165070d6675343aa850301498b1360bfb46ad7e67f9f17"
+  },
+  "scope": "Fresh actual normal full source rP builds using exact retained candidate overrides, catalog0. No media/stage/guest, installed catalog or I001 pass.",
+  "arms": {
+    "off": {
+      "seconds": 40.235647455003345,
+      "files": {
+        "re4dc-game.elf": {
+          "bytes": 28568852,
+          "sha256": "9d199189e9326a089e61a1a76077dc98308e8f0b831694e368ef9cb51ca0de57"
+        },
+        "em22.ovl": {
+          "bytes": 27236,
+          "sha256": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e"
+        },
+        "em2b.ovl": {
+          "bytes": 67900,
+          "sha256": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695"
+        },
+        "em2f.ovl": {
+          "bytes": 16800,
+          "sha256": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1"
+        },
+        "em35.ovl": {
+          "bytes": 52392,
+          "sha256": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7"
+        },
+        "em3b.ovl": {
+          "bytes": 7568,
+          "sha256": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417"
+        },
+        "pl0f.ovl": {
+          "bytes": 45608,
+          "sha256": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e"
+        },
+        "pl11.ovl": {
+          "bytes": 35592,
+          "sha256": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e"
+        },
+        "pl14.ovl": {
+          "bytes": 18832,
+          "sha256": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e"
+        },
+        "sscrn.ovl": {
+          "bytes": 134372,
+          "sha256": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60"
+        },
+        "st1_0.ovl": {
+          "bytes": 36340,
+          "sha256": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a"
+        },
+        "st1_1.ovl": {
+          "bytes": 81540,
+          "sha256": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0"
+        },
+        "st1_2.ovl": {
+          "bytes": 50076,
+          "sha256": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c"
+        },
+        "st1_3.ovl": {
+          "bytes": 88748,
+          "sha256": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc"
+        },
+        "st2_0.ovl": {
+          "bytes": 96788,
+          "sha256": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2"
+        }
+      },
+      "raw_sha256": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+      "resolved_sha256": "fcb8b1459b58f9f567c757d6cb576707708c57ed1c79fe8851091961cfd647dd",
+      "buildlog_sha256": "79f2b24570345fbdc0e337e43318c7d4e2d9136b15dcdff7d07f43d9cbccfcbc",
+      "missing_bytes": 0,
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n2693812\t 675588\t 962900\t4332300\t 421b0c\t/root/work/lanes/gc-port23-full-target2-scratch/off/out/re4dc-game.elf\n",
+      "off_programme_and14_identical": true,
+      "catalog_pin": "0",
+      "free_after": 39060135936
+    },
+    "on": {
+      "seconds": 42.45911916400655,
+      "files": {
+        "re4dc-game.elf": {
+          "bytes": 28921888,
+          "sha256": "2f7e505e7a1002f863c5dad3864530c80a68b69c51af2b972d767ca412426d45"
+        },
+        "em22.ovl": {
+          "bytes": 27236,
+          "sha256": "39f9adde09290de6cad98a809c7ec0ecf6b6c10875e6806ffb91ddbac67b310b"
+        },
+        "em2b.ovl": {
+          "bytes": 67900,
+          "sha256": "9d0db75ab5fc72e8f87768b9d3026ad17ed73bcd09c4975f604127963cffbff0"
+        },
+        "em2f.ovl": {
+          "bytes": 16800,
+          "sha256": "c19e33d9cd68fe6bffaf221b701aef7042aa02a865f6ae31c3a49ae150fd6066"
+        },
+        "em35.ovl": {
+          "bytes": 52392,
+          "sha256": "f8921917ca954b778b2df0418bc234d2533eab97cd3b4b3bfa6b382710a6acce"
+        },
+        "em3b.ovl": {
+          "bytes": 7568,
+          "sha256": "ddf475f04b203d3a75b3c6b6dba3c523e3d7cae472cca5ee1b08d2e3502f01bd"
+        },
+        "pl0f.ovl": {
+          "bytes": 45608,
+          "sha256": "d99f02ccf8e4f846cacff5a0aca3886a2ae64a9bac152022954b7d61d52ae85b"
+        },
+        "pl11.ovl": {
+          "bytes": 35592,
+          "sha256": "f53ba62a5546ebb00f00e34da2af4b95c42ffda334997a22ca3ba55b74f32f08"
+        },
+        "pl14.ovl": {
+          "bytes": 18832,
+          "sha256": "e68c20cc9d5e79eeaa3333e4e9f0023212a04279ab49ca6a5102b96ac41bfac9"
+        },
+        "sscrn.ovl": {
+          "bytes": 134372,
+          "sha256": "c6fb156630f6a78553499e3d05e027465b3f0f4e4908cc2a5646c795c9f16f03"
+        },
+        "st1_0.ovl": {
+          "bytes": 36340,
+          "sha256": "a5e3232ac1256a408185c6dd088320d3e24b8d077fbfa811eaa7fd8c31713086"
+        },
+        "st1_1.ovl": {
+          "bytes": 81540,
+          "sha256": "c4f094772e71f6dca83fa2d78034de52cdd075e524aa6bc814b46d6a23c0d09b"
+        },
+        "st1_2.ovl": {
+          "bytes": 50076,
+          "sha256": "bdaba8ede804392e22829b0c38502f31b0be0ca6719ab6fff327c76cdebb1c65"
+        },
+        "st1_3.ovl": {
+          "bytes": 88748,
+          "sha256": "0f544a91bf7a97490d203ed5a1b7ac1b43e62d271efc7282d0e204443a96eef5"
+        },
+        "st2_0.ovl": {
+          "bytes": 96788,
+          "sha256": "648f7579dd1b09610367a0a0ea12d256c9804bcf9d836534956e00688f894713"
+        }
+      },
+      "raw_sha256": "0c5c530d8082d2283c9fd50551b561fb324cc15bc502ab638d55f88e296f5636",
+      "resolved_sha256": "4cd0b147aa4d3ca79f47d8b3ef0e8c0d36fa74e4851550251b8608cec6e5ecb2",
+      "buildlog_sha256": "2a2637f7d751372e3219753014c039b60bfd598eadf3bb910e329418b20078bb",
+      "missing_bytes": 0,
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n2737180\t 676324\t 979828\t4393332\t 430974\t/root/work/lanes/gc-port23-full-target2-scratch/on/out/re4dc-game.elf\n",
+      "off_programme_and14_identical": false,
+      "catalog_pin": "0",
+      "free_after": 38873309184
+    }
+  },
+  "allocated_cap": 6442450944,
+  "floor": 25769803776,
+  "source_script_sha256": "4786017fdefdf065dd021fd2f6114aea67bd1d72807e6bcf33eead54ae501a88",
+  "complete": true
+}

@@ -1,0 +1,35 @@
+There are 26 section headers, starting at offset 0x1b94c10:
+
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .text             PROGBITS        8c010000 000100 258bc0 00  AX  0   0 32
+  [ 2] .init             PROGBITS        8c268bc0 258cc0 000036 00  AX  0   0  4
+  [ 3] .fini             PROGBITS        8c268bf8 258cf8 00002a 00  AX  0   0  4
+  [ 4] .rodata           PROGBITS        8c268c40 258d40 0432c0 00   A  0   0 32
+  [ 5] .eh_frame         PROGBITS        8c2abf00 29c000 00053c 00   A  0   0  4
+  [ 6] .ctors            PROGBITS        8c2ac4bc 29c53c 000084 00  WA  0   0  4
+  [ 7] .dtors            PROGBITS        8c2ac540 29c5c0 000008 00  WA  0   0  4
+  [ 8] .data             PROGBITS        8c2ac560 29c5e0 02d3ac 00  WA  0   0 32
+  [ 9] .re4dc_char_data  PROGBITS        8c2d9920 2c99a0 077da0 00  WA  0   0 32
+  [10] .got              PROGBITS        8c35190c 34178c 00000c 04  WA  0   0  4
+  [11] .bss              NOBITS          8c351920 341798 0ef374 00  WA  0   0 32
+  [12] .ocram            PROGBITS        7c001000 341798 000000 00   W  0   0  1
+  [13] .comment          PROGBITS        00000000 341798 000012 01  MS  0   0  1
+  [14] .debug_aranges    PROGBITS        00000000 3417aa 01ce08 00      0   0  1
+  [15] .debug_info       PROGBITS        00000000 35e5b2 b3868c 00      0   0  1
+  [16] .debug_abbrev     PROGBITS        00000000 e96c3e 110ea2 00      0   0  1
+  [17] .debug_line       PROGBITS        00000000 fa7ae0 6986bf 00      0   0  1
+  [18] .debug_frame      PROGBITS        00000000 16401a0 097d4c 00      0   0  4
+  [19] .debug_str        PROGBITS        00000000 16d7eec 088003 01  MS  0   0  1
+  [20] .debug_loclists   PROGBITS        00000000 175feef 33b623 00      0   0  1
+  [21] .debug_rnglists   PROGBITS        00000000 1a9b512 06572c 00      0   0  1
+  [22] .debug_line_str   PROGBITS        00000000 1b00c3e 00a157 01  MS  0   0  1
+  [23] .symtab           SYMTAB          00000000 1b0ad98 038380 10     24 6141  4
+  [24] .strtab           STRTAB          00000000 1b43118 0519fa 00      0   0  1
+  [25] .shstrtab         STRTAB          00000000 1b94b12 0000fb 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), p (processor specific)

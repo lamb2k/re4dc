@@ -1,0 +1,75 @@
+{
+  "created_utc": "2026-10-24T05:58:29.799633+00:00",
+  "source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "clean": true,
+  "scope": "read-only target receipt/profile verification plus proposed bounded console55 allocation; no SDK/stage/guest/source mutation",
+  "root_target_receipt_sha256": "0fe56bb227018ff33cb1a95076db02a6c84c04ad288910dda04d81d28f18c1ff",
+  "verified_arm_file_counts": {
+    "off": 15,
+    "on": 15
+  },
+  "normal_rP_not_rW_QA": true,
+  "root_full_link_delta": {
+    "text": 672,
+    "data": 0,
+    "bss": 0,
+    "source_ticket_bytes": 8
+  },
+  "canonical_common_assets_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+  "asset_manifest_metadata_only_no_fresh_payload_rehash": true,
+  "proposed_initial_guest_cases": 2,
+  "guests_allocated_or_started_here": 0,
+  "stages_created_here": 0,
+  "original_source_host_receipt_unchanged": true,
+  "source_host_original_status_handback_preserved": true,
+  "artifacts": {
+    "NEXT-PRIVATE-CONSOLE55-PLAN.md": {
+      "sha256": "223ab6e12afd41495064fdf2c1ba19321b1b472a6bef60f514c6abd179b44db5",
+      "bytes": 14897
+    },
+    "RIG-PINS.json": {
+      "sha256": "36898001699874bd1e305066f9e67761e58c45b1469242313288e986a4a8f653",
+      "bytes": 4231
+    },
+    "SOURCE-HOST-HANDBACK-bca-v1.md": {
+      "sha256": "2f19ab549dbe28db1bfd46f657524e18965ca2d274fd175d0a975fdef603cfb0",
+      "bytes": 2955
+    },
+    "STATUS-SOURCE-HOST-bca-v1.md": {
+      "sha256": "6ff00f0a5664a94f7b9388425fd17551618da1f853bbc10da1da0a029bfc614a",
+      "bytes": 4528
+    },
+    "TARGET-READBACK.json": {
+      "sha256": "d2a215bd7353b6e674e05c8e64ea9ad88553c76d0f00caa12a5ca09334387280",
+      "bytes": 3196
+    },
+    "../STATUS.md": {
+      "sha256": "a732b0999efcd86759a1ff960c67d1b7bd9ce17f91d2517cf78d747333a0b04f",
+      "bytes": 4941
+    },
+    "../rain-r10c-experiment/HANDBACK.md": {
+      "sha256": "8934c27d6c9ec59b5e364bd66f505c406f3ccb23c61ad2224aaff10607aba769",
+      "bytes": 5356
+    },
+    "../rain-r10c-experiment/RECEIPT.json": {
+      "sha256": "6a79c0c4cc74d323f32ae2c74802148161a70fe1e9098e28de85590ef1660323",
+      "bytes": 5657
+    },
+    "../review-rain-bca/REVIEW.md": {
+      "sha256": "7ee5572a83bfbbbba0317dead20c25c0421784662e000198158bde464c403661",
+      "bytes": 4769
+    },
+    "../verify-full-target-and-fixtures.py": {
+      "sha256": "ced3a50c1846c39f0bc490134b410a51593df65250fd127f6b7120ef12422561",
+      "bytes": 2624
+    }
+  },
+  "remaining": [
+    "fresh matched rW/QA programme/base identity",
+    "current guest loaded-owner/setter-record/actual callback lifecycle",
+    "source-reachable Stop/destruct/transition itinerary; optional hooks need separate source authorization",
+    "KOS/H2/census/memory",
+    "per-buffer phase-qualified stills; strict actor/viewport/present pixel binding unproven",
+    "PS2-informed user look approval; no ancestry/coverage/speed acceptance"
+  ]
+}

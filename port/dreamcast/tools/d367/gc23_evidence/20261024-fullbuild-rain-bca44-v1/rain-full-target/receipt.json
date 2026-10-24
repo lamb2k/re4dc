@@ -1,0 +1,225 @@
+{
+  "source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "baseline": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "profile": "/root/probe/lanes/route/out-rrfb254e8rP",
+  "pins": {
+    "/root/probe/lanes/route/out-rrfb254e8rP/candidate.txt": "0d5e7fe22f95b6aa8a131a790490dd8fc268b10f721924909de206610a11028d",
+    "/root/probe/lanes/route/out-rrfb254e8rP/resolved-knobs.txt": "63b9cdf90190a880422074bf4e7c7c488cd013463a18d9aaeb6fc3bd470a9a5b",
+    "/root/probe/lanes/route/out-rrfb254e8rP/re4dc-game.elf": "3a110765ef415dfd4e4a00104bfc6094b393f87cb9f9f55672046f90e702ee8f",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em22.ovl": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em2b.ovl": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em2f.ovl": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em35.ovl": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em3b.ovl": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417",
+    "/root/probe/lanes/route/out-rrfb254e8rP/pl0f.ovl": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e",
+    "/root/probe/lanes/route/out-rrfb254e8rP/pl11.ovl": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e",
+    "/root/probe/lanes/route/out-rrfb254e8rP/pl14.ovl": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e",
+    "/root/probe/lanes/route/out-rrfb254e8rP/sscrn.ovl": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st1_0.ovl": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st1_1.ovl": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st1_2.ovl": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st1_3.ovl": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st2_0.ovl": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2",
+    "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a": "5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/test/shz_test_scenario.h": "b27081020b89853b798c464b579068455d8f7a02d1148a530bc77e5c97098de7",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/test/shz_test.hpp": "dee21b346054ef1b8791e932defd1ec7eefac295b166f5300aba895d38b3248d",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_scalar.hpp": "e51e043db461766c55df24b3320b83ae296d63435be068f19223b4a683884191",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_sh4zam.h": "207159b59032b4a33de7c4b152fb180ed93914db5da744f7cbe96ac648ef0929",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_vector.h": "844bae12ab9ca484135b03e58050b1308da31c21e5a2c7862c09c98ded29626d",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_matrix.hpp": "c5716f6aa271210956a791264642ea9c3af582ae652c5391cbc6e0f5af4d2f5c",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_cdefs.h": "48138da62e45d103861241923331192f5bc67de3b0cfe8db64ab049ba31ed3c2",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_complex.hpp": "6ea78dc5c19821244931f362a000b8f582c51747dc1b49aed9582452c4e31e4a",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_version.h": "a55211678e9542c12bb41ce0275293039309920ed93d1b967c093b812a5b9c7f",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_quat.h": "236c57697e14fa7c3d3b8388508be7539a05368f52ec9d518fe90425dcbb4414",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_xmtrx.hpp": "28de84880358eb38ba821c9039ae03a07912c0194514264bab307cfff7e24d78",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_trig.hpp": "25016b4d64316e27b6e0b7065c1c25a4615f71c83ded1b2622502a4b377aa19e",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_complex.h": "c7a9dcff2eb30050879a61996a8452da4e0fe817f88766452b01b716d1074e12",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_mem.hpp": "197eabbe44bd25cd80a0048ddd92299d806f63e3ca2b3e636ecbed38fa5250b2",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_mem.h": "89cd76be2d07566f2f104560a3bb16fbebad2d23f8013b774c96c66ce72ce062",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_vector.hpp": "a7c1ca9221eb7aa54cc67f8df98917e5835b03605e27dc1783d8e2304c2313d8",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_trig.h": "5f6c20c555a3d4f5a9d10efc653d63d098f327f25e1fae71d6a262285cec9e68",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_sh4zam.hpp": "ecae29daec2b5c2d6735127764391f7cc6bbf1697c42bc06a64a85c3eba10eea",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_version.hpp": "095fec8d1d190571967e21e1472446b9c9d30e9098866d06277d5d566943c7e6",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_cdefs.hpp": "ab6579e934e167ca141a0745e50aa4b02ac289b4e812f6a4bd8ede3aacf83c60",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_scalar.h": "fc3e4b2195bf55a76795eedd5910cd52b4248a6454763ea909011da63ea7b6fc",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_quat.hpp": "627fca9913a7a3267702bf6c076ce7e6a68c4fa7b420c617bd66ea08f500f030",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_matrix.h": "460d73a41b0ced91a2bb76d264d41dd9bf21f1ed8839e248b2b9ec4152acdc01",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_xmtrx.h": "d3d8e8eb4a3e77f3e8c12df6dabb8804fa444ce67085dbd1af37630dacaab085",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_trig.inl.h": "ffa679b6d97faff8031e41d471008ffa2a8e19d9995066108537941fc0283966",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_complex.inl.h": "189314670a9b910d54c7f3941a347f0fabb4c466b91305510d6b452dac4f139b",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_scalar.inl.h": "fc699674f5abf5a929d0ff2fbe02da03c4a183b55c273f59cb7d0937d35e8857",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_mem.inl.h": "abe2b45892f22b5dcd6c20f3730a859f8f806b4fc7f31cee6935912ec001f7a2",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_xmtrx.inl.h": "90d14ec7870529f613f08165f2f52d99bd008f6273144c716298f8545d0f216e",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_quat.inl.h": "930ffbc64e7d286f048cad38b82dda97aad9efce63f7c0f9d34198d3f9c18a89",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_matrix.inl.h": "43edccaf2794ce70d846e8f301508392e9d3e968e16e44b1961dcf26ea10eea8",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_vector.inl.h": "6011b3b0f5de566f5245d2f216eedfa0649d62b0cab44fd1e9b45af3100ea323",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/spu/shz_vector_spu.inl.h": "be444f8072b0d2308109675d09483c0ba5a04fc51dae67764833b57c93065bc7",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_trig_sh4.inl.h": "4e62d63a6c49c97f44dfa6c6de8265f66a1fcd0c0cdb1372680a88db205de18b",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_vector_sh4.inl.h": "87dc6091a8f270e3800ec08c6ea44178417daed93a65f4e4210aed5fa590dd34",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_xmtrx_sh4.inl.h": "5ba4a0295ebc422764e829c84d5640ed06a75affcdbde6fff1c1bc98b34e3138",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_quat_sh4.inl.h": "2f162fa7db1e98dff1a4db1ee0e100b5f5773771bb99ca767f9e36e9ed32898d",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_matrix_sh4.inl.h": "8eb874dbc230fef74883f2aec9c53813cb1cba98f5c4e6edd3e17ef8ae8132bd",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_mem_sh4.inl.h": "f1b40c951bc00989496708ae76de2d747109841e04716d992514a1c8dc180774",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_scalar_sh4.inl.h": "b0c1d4cf98b44d5ecb137ef2d5f195f433a824d2f4d8c751a5c826aa692a37cb",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_xmtrx_sw.inl.h": "59c2ca091388e1439dc3a91f9748f1b7b379a276f1a37a5e10a099571a794c07",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_mem_sw.inl.h": "c37e1e2d30c78712eab17045b9647108edc6bf6e7e1c56cebc1e557cdd8533a9",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_matrix_sw.inl.h": "cf82a20611f39bbfaedc22a307e465677d90427206671dc983ee38d8076b009e",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_quat_sw.inl.h": "e9c4f9aeb50ce806cd74626b9c6542aa7ffac405d8322abce9e82f62de822574",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_vector_sw.inl.h": "9364e039f4523831506d1fd5ac95fef393b823424fc7d6cdb6d040e4b8c4de0a",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_trig_sw.inl.h": "e5f0bc71b6a2355dea3a550dd391bf964c6dad02668c18907a075e131cac58e6",
+    "/root/work/lanes/water-rain24/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_scalar_sw.inl.h": "67b99cebd707217664165070d6675343aa850301498b1360bfb46ad7e67f9f17"
+  },
+  "scope": "Fresh actual normal full source rP rain experiment OFF/ON builds with exact retained candidate overrides. No media/stage/guest, PS2 ancestry, live lifecycle, appearance or speed acceptance.",
+  "arms": {
+    "off": {
+      "seconds": 40.24955157900695,
+      "files": {
+        "re4dc-game.elf": {
+          "bytes": 28568696,
+          "sha256": "60b2b8fa19bff93342a3dfade19b79050a5198389d8d9ecc868d56fd5ea44fa0"
+        },
+        "em22.ovl": {
+          "bytes": 27236,
+          "sha256": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e"
+        },
+        "em2b.ovl": {
+          "bytes": 67900,
+          "sha256": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695"
+        },
+        "em2f.ovl": {
+          "bytes": 16800,
+          "sha256": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1"
+        },
+        "em35.ovl": {
+          "bytes": 52392,
+          "sha256": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7"
+        },
+        "em3b.ovl": {
+          "bytes": 7568,
+          "sha256": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417"
+        },
+        "pl0f.ovl": {
+          "bytes": 45608,
+          "sha256": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e"
+        },
+        "pl11.ovl": {
+          "bytes": 35592,
+          "sha256": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e"
+        },
+        "pl14.ovl": {
+          "bytes": 18832,
+          "sha256": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e"
+        },
+        "sscrn.ovl": {
+          "bytes": 134372,
+          "sha256": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60"
+        },
+        "st1_0.ovl": {
+          "bytes": 36340,
+          "sha256": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a"
+        },
+        "st1_1.ovl": {
+          "bytes": 81540,
+          "sha256": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0"
+        },
+        "st1_2.ovl": {
+          "bytes": 50076,
+          "sha256": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c"
+        },
+        "st1_3.ovl": {
+          "bytes": 88748,
+          "sha256": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc"
+        },
+        "st2_0.ovl": {
+          "bytes": 96788,
+          "sha256": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2"
+        }
+      },
+      "raw_sha256": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+      "resolved_sha256": "b9733514e1500ae31e6ef75399a9a3ac321d8a4ee13e5bed8a8607840571984f",
+      "buildlog_sha256": "802636fb7c8a04608a76123b678ae0603674161bda97d5f7c0a686f837d53a74",
+      "missing_bytes": 0,
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n2693812\t 675588\t 962900\t4332300\t 421b0c\t/root/work/lanes/water-rain24-full-target-scratch/off/out/re4dc-game.elf\n",
+      "off_programme_and14_identical": true,
+      "rain_option": "0",
+      "free_after": 38922452992
+    },
+    "on": {
+      "seconds": 42.45690042700153,
+      "files": {
+        "re4dc-game.elf": {
+          "bytes": 28571208,
+          "sha256": "ef695d7e4e73d9c7848025071c7cadcb6349cc8a788707e4a50c5455b17f803a"
+        },
+        "em22.ovl": {
+          "bytes": 27236,
+          "sha256": "748e6fb78531fb84eeedae4babde21db29ba450a93bacd389bdbe8e43d6c6b0a"
+        },
+        "em2b.ovl": {
+          "bytes": 67900,
+          "sha256": "9dc5b2918c3633fead709e8eacf1d3d2eba8af8e58879786ef5cb20053af4836"
+        },
+        "em2f.ovl": {
+          "bytes": 16800,
+          "sha256": "9ff1e222a9346ee13f32e002b6bf8421dd2d05353b81f93d43ebba75f20bf001"
+        },
+        "em35.ovl": {
+          "bytes": 52392,
+          "sha256": "5ff961566a6b9d5099ea9f9bacc24731ca2623c8baf3cd323102c3c4d1ab6fbf"
+        },
+        "em3b.ovl": {
+          "bytes": 7568,
+          "sha256": "1de8940f4646ece29a684062df4ba584f9704b0e819144772d33e04870f460fe"
+        },
+        "pl0f.ovl": {
+          "bytes": 45608,
+          "sha256": "fcc8d1227e469dc55e47401a472512f0f165aa059f99dc64724a1acdc4532445"
+        },
+        "pl11.ovl": {
+          "bytes": 35592,
+          "sha256": "13122c3bb490d2ff25745053beeb1651b46aebef450bc03e033a6c3097724884"
+        },
+        "pl14.ovl": {
+          "bytes": 18832,
+          "sha256": "31dc927a0cf3f7699078741a69ef2089540dcb4ac9ee40b00ea89b05da24a886"
+        },
+        "sscrn.ovl": {
+          "bytes": 134372,
+          "sha256": "bc70071fe62efb43e7e64974797fd7eb5363712cf6d35b455e237ed9a67629e0"
+        },
+        "st1_0.ovl": {
+          "bytes": 36340,
+          "sha256": "75afa0eeda23d0eee7c8b294a82248f114ec014510d79932adfb42c44cd92f20"
+        },
+        "st1_1.ovl": {
+          "bytes": 81540,
+          "sha256": "d1eb9f7a30c71a08c8305036c8cc631908ddde74693791f7f35061400b3040dc"
+        },
+        "st1_2.ovl": {
+          "bytes": 50076,
+          "sha256": "7d6716252f33e325497c1ac228e86efab57a045f08ad1e9d465e47e9089e4d9c"
+        },
+        "st1_3.ovl": {
+          "bytes": 88748,
+          "sha256": "b2effaaad4f8c8e54e2bdc32aae57d934b18c34a866c6781d9be8de19cbe0b7f"
+        },
+        "st2_0.ovl": {
+          "bytes": 96788,
+          "sha256": "48f028c97577a64de5632dcf84f186afde4950015875ea1bca6eda977390e7d1"
+        }
+      },
+      "raw_sha256": "63c4fe1f83b352e0c49d90f53d5d80e4d5ae7620037dfb6642981883551cd678",
+      "resolved_sha256": "38830a211e00902200b13199f22979029e2dabdd76caf20c12a3409d8db441fd",
+      "buildlog_sha256": "1b1c3af9c110319f6a6b295a16f55d26a7c331e8228b740e7412e51ab4711daa",
+      "missing_bytes": 0,
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n2694484\t 675588\t 962900\t4332972\t 421dac\t/root/work/lanes/water-rain24-full-target-scratch/on/out/re4dc-game.elf\n",
+      "off_programme_and14_identical": false,
+      "rain_option": "1",
+      "free_after": 38486769664
+    }
+  },
+  "allocated_cap": 6442450944,
+  "floor": 25769803776,
+  "source_script_sha256": "7edc198deee7c4138e89f98c1064092879b5fc6fe0609eb8c6ba3a301ef68344",
+  "complete": true
+}

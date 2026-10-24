@@ -1,0 +1,280 @@
+{
+  "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "runtime_edited": false,
+  "source_rows": [
+    {
+      "path": "port/dreamcast/game/platform/gc_asset_disc.cpp",
+      "bytes": 1975,
+      "sha256": "ae86e86ec54358b9676f64da571402b3aa48374f12c7f4685faa7be7602373e9",
+      "git_blob": "35f62044baff685a358c8109ee366c7a6067d35e"
+    },
+    {
+      "path": "port/dreamcast/game/platform/gc_asset_gate.cpp",
+      "bytes": 18095,
+      "sha256": "b5addcdcd7b2c8e89c4035451083183938fa3a7018932b467d2016c27047badb",
+      "git_blob": "e318d13eff7b213a38762f7c3f14d448defd89ec"
+    },
+    {
+      "path": "port/dreamcast/game/platform/gc_asset_audio.cpp",
+      "bytes": 9332,
+      "sha256": "2233cf89175b240fb8319699bed7561a580bdda1df640db1f230c25bab3a8409",
+      "git_blob": "4cf542b5b74a7169df30198571b281c47b8e8fb0"
+    },
+    {
+      "path": "port/dreamcast/game/platform/gc_asset_members.cpp",
+      "bytes": 10577,
+      "sha256": "3f1c768789846928c5aea662171f44fa5c07e5b5579ef93a09528407b132c12a",
+      "git_blob": "3ea264d89a33da64cef1ea02eea7eeeef133e672"
+    },
+    {
+      "path": "port/dreamcast/game/platform/gc_asset_payloads.cpp",
+      "bytes": 18596,
+      "sha256": "c9015ed87c6085995182e9a6b795baa6e4c52bd6337f49fcfc7ca5a40a0f926d",
+      "git_blob": "f8cd2a2ae1bb239e3c8d15c083a36452ea528501"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "bytes": 531438,
+      "sha256": "d3aa5b9ec587332b33d0255758c23af0ab8348de9e26e5559d828ea5aa3a6266",
+      "git_blob": "f47f50c30ba2c0ff6b5fee58c16c27febc93028a"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_actor_fast.cpp",
+      "bytes": 347409,
+      "sha256": "3213ca98e5a1e6f96a512cf8d3a6c773383bb0d1714d22d71d6909b0e562d318",
+      "git_blob": "5f7cc7424b8c4134a605b5b46f95ae518530d555"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_movie.cpp",
+      "bytes": 70455,
+      "sha256": "276e8e6f092320f9fcaf6fa9ff27c39550ae2b30939668d3aadf4b2af464e39e",
+      "git_blob": "eacf1588dabd8b754247d893d48c53db49eddabe"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_movie_stream.c",
+      "bytes": 23345,
+      "sha256": "a0e1d2979ae217c0c1cc426dac919758fbf50e69a99431ab9939ae258a7e5aaa",
+      "git_blob": "5682481f1b360ceb16b84b26c93fc814f9a770b3"
+    },
+    {
+      "path": "port/dreamcast/game/platform/audio_aica.cpp",
+      "bytes": 105155,
+      "sha256": "a38df037b6b138eeaeeb2e78232b30356eb894c52e8897c65b8ac9bb720f04ca",
+      "git_blob": "b1d331e03b17fa0213e589e7c49a64e12743e221"
+    },
+    {
+      "path": "port/dreamcast/game/platform/audio_strm.cpp",
+      "bytes": 8663,
+      "sha256": "a2001ed624245163cc319f496cbcbfec52de39e74733aaefd59cc4d5a6f93b6a",
+      "git_blob": "dcd941cfc6d888437a35d4ac14014edad636c1e8"
+    },
+    {
+      "path": "port/dreamcast/game/platform/audio_stub.cpp",
+      "bytes": 12675,
+      "sha256": "30cf01fc29bd20163db1cda2d888931b3494e0b1b50bdf47eed8ee11a26f944e",
+      "git_blob": "618e01ca339231bbee33a61c5a89b4142ce05d40"
+    },
+    {
+      "path": "port/dreamcast/game/platform/dvd.cpp",
+      "bytes": 20989,
+      "sha256": "058b5dab66aba43c5e69a0a3733c030c09ef695c4eacac0fa600d5052a82bb7f",
+      "git_blob": "80eefd2493d785ef2e200de9db3f72f7c7971f54"
+    },
+    {
+      "path": "port/dreamcast/game/platform/dvd_read_safe.cpp",
+      "bytes": 56507,
+      "sha256": "06f73af57a47b6301f869abc2486c247b7d35f1e0534ef1ec686f98de2cb66ae",
+      "git_blob": "2413ab5f48d529bd6e04b558cb3a307322d5bcdd"
+    },
+    {
+      "path": "port/dreamcast/game/platform/os.cpp",
+      "bytes": 35736,
+      "sha256": "f861a5b9ebb9c6555fc642922af604674fa1acc16a90ba757f55e8ea135b7c92",
+      "git_blob": "52b0bc63a46efea208e6e116cf93a5162e6d0acb"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/gc_asset_index.inc",
+      "bytes": 2116,
+      "sha256": "a2451dfa59a4e638367d12d12a68666c0283a817e6020a4c7446799dd4e10725",
+      "git_blob": "b89c9d05081fb9865481f2e1db0b93503e402ea0"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/gc_asset_gate.h",
+      "bytes": 5972,
+      "sha256": "c8fb4b2435a46487ecec8b03f1c5a4176f429cdfbafbb8e0dbb5930100d74517",
+      "git_blob": "cca5758f07abfd9e9626e7e5cbd3eca18624e37e"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/gc_asset_lifecycle.h",
+      "bytes": 353,
+      "sha256": "8b986321ed5916de5aadcad4b5b24a94144294a7b71db71d5fdc77e0ca59b4ff",
+      "git_blob": "e319996708fff71ced9408bc2e0f191ba8b9ed1b"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/gc_asset_static.h",
+      "bytes": 2424,
+      "sha256": "1d78c81c8c1096b622374dfc477f60ad2fe64fc6365195dd4877445434679bd4",
+      "git_blob": "0dd3ebd4a6307e07181770ae00a9835d899ac185"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/native_io.h",
+      "bytes": 1504,
+      "sha256": "249cbab48d5dbc6ee48159afa26ac1d4a23d272e9c6b00a01697e89e26feec86",
+      "git_blob": "600ba38493e9adedadfb82d0639b762a730760a1"
+    },
+    {
+      "path": "port/dreamcast/game/coarse_actor_leon_hands.inc",
+      "bytes": 24001,
+      "sha256": "f99d173a0df7cef72ba8ae7b322c55cd35e6a4831d0c7ce8a301de3e4eed06e3",
+      "git_blob": "f6069aba86cf590ec8f1f7821b8b5ae9083a83f2"
+    },
+    {
+      "path": "port/dreamcast/game/dbgwarp_bridge.cpp",
+      "bytes": 105646,
+      "sha256": "06dcb69d8108c438ab577f6787ab3b468d2d4fed6cbe2e7c07e30873650b95a7",
+      "git_blob": "5faa083e9d60efb24db972b2fc906757a0ac84b6"
+    },
+    {
+      "path": "port/dreamcast/game/bench.cpp",
+      "bytes": 62471,
+      "sha256": "30cf3a547c2f76a9d8ec44268677bd509c15bbcadf633669d5cd59f51aa94909",
+      "git_blob": "1c0ef8a668c28b8c10607b5513aaa72d6367d752"
+    },
+    {
+      "path": "port/dreamcast/game/ui_bridge.cpp",
+      "bytes": 47895,
+      "sha256": "cb2bd2ca4ace0abf7cc33719ec3f4cc9b4b24ba6bca7c7ddec6d64dd3a6beeb8",
+      "git_blob": "ad547c01fd5f51bc832a4af1ce3f88bbdbe3cbe4"
+    },
+    {
+      "path": "port/dreamcast/room/gpu_lifecycle.cpp",
+      "bytes": 263,
+      "sha256": "0f6b86827a721c730dfcd6a92ee2cc376fa62345e688be9cef3ece59a65fc465",
+      "git_blob": "d3b33a365d33e6dd35baa48ee190ce50118162ef"
+    },
+    {
+      "path": "src/game/main.cpp",
+      "bytes": 22790,
+      "sha256": "b0956d568914717092569c137ea60eba27e557880351998d4e51105156815e35",
+      "git_blob": "0dbbd8616796023463347e9cba20e73317eb7bce"
+    },
+    {
+      "path": "src/game/main_sub.cpp",
+      "bytes": 20545,
+      "sha256": "67483158e94c5fb54d50bb6fd4cdc4a1988d3db073d9fdccbd573e77128cfc29",
+      "git_blob": "4a8a610ec141569b56a8849db41d4e20afaf92f4"
+    },
+    {
+      "path": "src/game/scheduler.cpp",
+      "bytes": 18839,
+      "sha256": "6479263912945cd5e396f270a2872d88262a69b85bbf4dc357e9e6f4212ea5ce",
+      "git_blob": "d108af401d421abb3434c5ed352e4d956c6e87eb"
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "bytes": 77658,
+      "sha256": "ecd14b4234d7d75591a2c09cc52073f394f720226061b15fc777185733fe299b",
+      "git_blob": "cee9ed2c43d3f46c3026fcc78224cbb2370b7c3a"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "bytes": 58943,
+      "sha256": "5dcbbd75b80e7c0d9ad7e58361c4b73e8605c140d204be3f0ca463b02dce80b2",
+      "git_blob": "5e45925f397cad58ef57551372ccd8d2709e99a2"
+    },
+    {
+      "path": "src/game/snd.cpp",
+      "bytes": 93973,
+      "sha256": "bd1dd308b7bff42b13e65ec3c174156da56c3f41f3e1c106a20919b68688c206",
+      "git_blob": "257c0ded914642cbcd35d8fbf5986b44b625e6f4"
+    },
+    {
+      "path": "src/game/snd_sub0.cpp",
+      "bytes": 6347,
+      "sha256": "387d655962a1b5ebd2031e58549df9b5285bced69597e91e5de3de231a5abefa",
+      "git_blob": "f51d1b9e75f71c03cccb457771c72d52df88a1e5"
+    },
+    {
+      "path": "src/game/snd_str2.cpp",
+      "bytes": 9574,
+      "sha256": "ef9f6628c47df03b2928e9397ad60ab16ebbf3465c7d55612eb51e9013394398",
+      "git_blob": "668718e147b9b19b4b6c55f9c08c0b62c2a85730"
+    },
+    {
+      "path": "src/game/model.cpp",
+      "bytes": 69523,
+      "sha256": "c520c138ecdaaa0c80a3dff529f203be283376dc6217773a3dfdba4738fb7fd6",
+      "git_blob": "4c702b5a8c3e2ff5a169d6d99081fded2a07093a"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/gc_port23/test_runtime_hooks.py",
+      "bytes": 33625,
+      "sha256": "9962becc7cffb064e81faa054f5e85e078a9c35a4d8035996b7cb7387a9c5c2f",
+      "git_blob": "f733ed12d939c5b025070134d785956de7f36800"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/gc_port23/LIFECYCLE.md",
+      "bytes": 6354,
+      "sha256": "0e6285c5e4c0ee4e01c0ff5dac72976ffc7004d0a43a49765d7157a4d7aa9a67",
+      "git_blob": "011e164ae3ae55130c1b64f60532b5f0ccc7272f"
+    }
+  ],
+  "external": [
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/NEXT-LINK-COVERAGE.md",
+      "bytes": 8688,
+      "sha256": "087d37ee28570e489d3100a0e7e2d29526a16ca80948c03838c27c809a779e4b",
+      "scope": "external documentation/profile, not frozen git source"
+    },
+    {
+      "path": "/root/probe/lanes/route/out-rrfb254e8rP/resolved-knobs.txt",
+      "bytes": 201255,
+      "sha256": "63b9cdf90190a880422074bf4e7c7c488cd013463a18d9aaeb6fc3bd470a9a5b",
+      "scope": "external documentation/profile, not frozen git source"
+    }
+  ],
+  "provider_source": [
+    {
+      "path": "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/fs/fs_iso9660.c",
+      "bytes": 35768,
+      "sha256": "1edcdd8dcc0d740f4d53c57bad69e606f49358805c842336688bb507d6c318c1",
+      "scope": "read-only provider source, no SDK execution"
+    },
+    {
+      "path": "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/sound/snd_stream.c",
+      "bytes": 25098,
+      "sha256": "274a28f323cd0fef85cd3e1dd2faa5def2295a3e481f1eca097a1a583901ac4b",
+      "scope": "read-only provider source, no SDK execution"
+    },
+    {
+      "path": "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/hardware/spu.c",
+      "bytes": 10844,
+      "sha256": "b5765c65041166105ca6c56ecfd52e968f023904f5f3c791006525e3174b73f2",
+      "scope": "read-only provider source, no SDK execution"
+    },
+    {
+      "path": "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/hardware/g2bus.c",
+      "bytes": 3870,
+      "sha256": "d4ae2e484f367dd84bd8e66b7dac888531b29a9e1d0bae6880f4c162b9186082",
+      "scope": "read-only provider source, no SDK execution"
+    },
+    {
+      "path": "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/hardware/cdrom.c",
+      "bytes": 23917,
+      "sha256": "9715e3f23a4524e858e8c00fff80af1084c082e8d76996a4343c853c3e5680ba",
+      "scope": "read-only provider source, no SDK execution"
+    },
+    {
+      "path": "/root/work/kos-re4dc-d367/kernel/thread/thread.c",
+      "bytes": 33047,
+      "sha256": "98d8356785338d392f06a18347e9aee02469958b048d8cb1d1de715393b00446",
+      "scope": "read-only provider source, no SDK execution"
+    },
+    {
+      "path": "/root/work/kos-re4dc-d367/kernel/thread/mutex.c",
+      "bytes": 4870,
+      "sha256": "c11e2a4e255632d1a3f998bbe6a0319a6dc097d5bbf3b4b23b30eeb38a00153c",
+      "scope": "read-only provider source, no SDK execution"
+    }
+  ]
+}

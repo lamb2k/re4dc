@@ -1,0 +1,736 @@
+{
+  "status": "SOURCE_AND_METADATA_PRESERVATION_CHECKS_PASS",
+  "metadata_manifests": {
+    "gc-full-current": {
+      "sha256": "76ec4448e08f4bb7c59cb17eb18344c126cdf05d802b2e2060bbe9c44e75b667",
+      "members": 26
+    },
+    "gc-full-link-readback": {
+      "sha256": "3cfdf2dd9b557739be3f8eec3b48c11eb9cdfd3b1c6957835a7e179a3c19b40f",
+      "members": 2
+    },
+    "rain-selected-target": {
+      "sha256": "68d3ddc9fb337a4af5d5c53b8f5cc4880bf70c0c2d4f314b01e47e4485db0575",
+      "members": 26
+    },
+    "rain-full-target": {
+      "sha256": "512498ca42c32391af0b253a0ab0614edf3022c58b5de7f611e046740672931a",
+      "members": 26
+    }
+  },
+  "source_inputs_verified": [
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/gc_asset_disc.cpp",
+      "sha256": "ae86e86ec54358b9676f64da571402b3aa48374f12c7f4685faa7be7602373e9"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/gc_asset_gate.cpp",
+      "sha256": "b5addcdcd7b2c8e89c4035451083183938fa3a7018932b467d2016c27047badb"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/gc_asset_audio.cpp",
+      "sha256": "2233cf89175b240fb8319699bed7561a580bdda1df640db1f230c25bab3a8409"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/gc_asset_members.cpp",
+      "sha256": "3f1c768789846928c5aea662171f44fa5c07e5b5579ef93a09528407b132c12a"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/gc_asset_payloads.cpp",
+      "sha256": "c9015ed87c6085995182e9a6b795baa6e4c52bd6337f49fcfc7ca5a40a0f926d"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "sha256": "d3aa5b9ec587332b33d0255758c23af0ab8348de9e26e5559d828ea5aa3a6266"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/native_actor_fast.cpp",
+      "sha256": "3213ca98e5a1e6f96a512cf8d3a6c773383bb0d1714d22d71d6909b0e562d318"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/native_movie.cpp",
+      "sha256": "276e8e6f092320f9fcaf6fa9ff27c39550ae2b30939668d3aadf4b2af464e39e"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/native_movie_stream.c",
+      "sha256": "a0e1d2979ae217c0c1cc426dac919758fbf50e69a99431ab9939ae258a7e5aaa"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/audio_aica.cpp",
+      "sha256": "a38df037b6b138eeaeeb2e78232b30356eb894c52e8897c65b8ac9bb720f04ca"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/audio_strm.cpp",
+      "sha256": "a2001ed624245163cc319f496cbcbfec52de39e74733aaefd59cc4d5a6f93b6a"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/audio_stub.cpp",
+      "sha256": "30cf01fc29bd20163db1cda2d888931b3494e0b1b50bdf47eed8ee11a26f944e"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/dvd.cpp",
+      "sha256": "058b5dab66aba43c5e69a0a3733c030c09ef695c4eacac0fa600d5052a82bb7f"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/dvd_read_safe.cpp",
+      "sha256": "06f73af57a47b6301f869abc2486c247b7d35f1e0534ef1ec686f98de2cb66ae"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/os.cpp",
+      "sha256": "f861a5b9ebb9c6555fc642922af604674fa1acc16a90ba757f55e8ea135b7c92"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/include/gc_asset_index.inc",
+      "sha256": "a2451dfa59a4e638367d12d12a68666c0283a817e6020a4c7446799dd4e10725"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/include/gc_asset_gate.h",
+      "sha256": "c8fb4b2435a46487ecec8b03f1c5a4176f429cdfbafbb8e0dbb5930100d74517"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/include/gc_asset_lifecycle.h",
+      "sha256": "8b986321ed5916de5aadcad4b5b24a94144294a7b71db71d5fdc77e0ca59b4ff"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/include/gc_asset_static.h",
+      "sha256": "1d78c81c8c1096b622374dfc477f60ad2fe64fc6365195dd4877445434679bd4"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/platform/include/native_io.h",
+      "sha256": "249cbab48d5dbc6ee48159afa26ac1d4a23d272e9c6b00a01697e89e26feec86"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/coarse_actor_leon_hands.inc",
+      "sha256": "f99d173a0df7cef72ba8ae7b322c55cd35e6a4831d0c7ce8a301de3e4eed06e3"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/dbgwarp_bridge.cpp",
+      "sha256": "06dcb69d8108c438ab577f6787ab3b468d2d4fed6cbe2e7c07e30873650b95a7"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/bench.cpp",
+      "sha256": "30cf3a547c2f76a9d8ec44268677bd509c15bbcadf633669d5cd59f51aa94909"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/game/ui_bridge.cpp",
+      "sha256": "cb2bd2ca4ace0abf7cc33719ec3f4cc9b4b24ba6bca7c7ddec6d64dd3a6beeb8"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/room/gpu_lifecycle.cpp",
+      "sha256": "0f6b86827a721c730dfcd6a92ee2cc376fa62345e688be9cef3ece59a65fc465"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "src/game/main.cpp",
+      "sha256": "b0956d568914717092569c137ea60eba27e557880351998d4e51105156815e35"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "src/game/main_sub.cpp",
+      "sha256": "67483158e94c5fb54d50bb6fd4cdc4a1988d3db073d9fdccbd573e77128cfc29"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "src/game/scheduler.cpp",
+      "sha256": "6479263912945cd5e396f270a2872d88262a69b85bbf4dc357e9e6f4212ea5ce"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "src/game/dvd.cpp",
+      "sha256": "ecd14b4234d7d75591a2c09cc52073f394f720226061b15fc777185733fe299b"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "src/game/read.cpp",
+      "sha256": "5dcbbd75b80e7c0d9ad7e58361c4b73e8605c140d204be3f0ca463b02dce80b2"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "src/game/snd.cpp",
+      "sha256": "bd1dd308b7bff42b13e65ec3c174156da56c3f41f3e1c106a20919b68688c206"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "src/game/snd_sub0.cpp",
+      "sha256": "387d655962a1b5ebd2031e58549df9b5285bced69597e91e5de3de231a5abefa"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "src/game/snd_str2.cpp",
+      "sha256": "ef9f6628c47df03b2928e9397ad60ab16ebbf3465c7d55612eb51e9013394398"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "src/game/model.cpp",
+      "sha256": "c520c138ecdaaa0c80a3dff529f203be283376dc6217773a3dfdba4738fb7fd6"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/tools/d367/gc_port23/test_runtime_hooks.py",
+      "sha256": "9962becc7cffb064e81faa054f5e85e078a9c35a4d8035996b7cb7387a9c5c2f"
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "path": "port/dreamcast/tools/d367/gc_port23/LIFECYCLE.md",
+      "sha256": "0e6285c5e4c0ee4e01c0ff5dac72976ffc7004d0a43a49765d7157a4d7aa9a67"
+    },
+    {
+      "source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+      "path": "port/dreamcast/game/effects30.mk",
+      "sha256": "3fb6de911aa2aee82bd72bb77fe8685c08f86b059556325bae2868d615de1830"
+    },
+    {
+      "source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+      "path": "port/dreamcast/tools/d367/water_rain24/RAIN-R10C-EXPERIMENT.md",
+      "sha256": "950a37351a48e45e269a4ffa27378d2f0e8c7de11b9233aa54b8c087e1e2d1af"
+    },
+    {
+      "source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+      "path": "port/dreamcast/tools/d367/water_rain24/fixture_rain_r10c.cpp.in",
+      "sha256": "8bc4cf3a6de6618e607741409e91527938315ced9d7e4fbd7c34236c1dc1b39c"
+    },
+    {
+      "source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+      "path": "port/dreamcast/tools/d367/water_rain24/test_rain_r10c.py",
+      "sha256": "c86dd840b86714950c75b2dfd6a8ff60ad45be5715e98c209c67bd9c3a4841b7"
+    },
+    {
+      "source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+      "path": "src/game/filter06.cpp",
+      "sha256": "e004ee0d621850f656e8020a78533436187969d18ae2865dd18059dd631da686"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "test/shz_test_scenario.h",
+      "sha256": "b27081020b89853b798c464b579068455d8f7a02d1148a530bc77e5c97098de7"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "test/shz_test.hpp",
+      "sha256": "dee21b346054ef1b8791e932defd1ec7eefac295b166f5300aba895d38b3248d"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_scalar.hpp",
+      "sha256": "e51e043db461766c55df24b3320b83ae296d63435be068f19223b4a683884191"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_sh4zam.h",
+      "sha256": "207159b59032b4a33de7c4b152fb180ed93914db5da744f7cbe96ac648ef0929"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_vector.h",
+      "sha256": "844bae12ab9ca484135b03e58050b1308da31c21e5a2c7862c09c98ded29626d"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_matrix.hpp",
+      "sha256": "c5716f6aa271210956a791264642ea9c3af582ae652c5391cbc6e0f5af4d2f5c"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_cdefs.h",
+      "sha256": "48138da62e45d103861241923331192f5bc67de3b0cfe8db64ab049ba31ed3c2"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_complex.hpp",
+      "sha256": "6ea78dc5c19821244931f362a000b8f582c51747dc1b49aed9582452c4e31e4a"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_version.h",
+      "sha256": "a55211678e9542c12bb41ce0275293039309920ed93d1b967c093b812a5b9c7f"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_quat.h",
+      "sha256": "236c57697e14fa7c3d3b8388508be7539a05368f52ec9d518fe90425dcbb4414"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_xmtrx.hpp",
+      "sha256": "28de84880358eb38ba821c9039ae03a07912c0194514264bab307cfff7e24d78"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_trig.hpp",
+      "sha256": "25016b4d64316e27b6e0b7065c1c25a4615f71c83ded1b2622502a4b377aa19e"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_complex.h",
+      "sha256": "c7a9dcff2eb30050879a61996a8452da4e0fe817f88766452b01b716d1074e12"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_mem.hpp",
+      "sha256": "197eabbe44bd25cd80a0048ddd92299d806f63e3ca2b3e636ecbed38fa5250b2"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_mem.h",
+      "sha256": "89cd76be2d07566f2f104560a3bb16fbebad2d23f8013b774c96c66ce72ce062"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_vector.hpp",
+      "sha256": "a7c1ca9221eb7aa54cc67f8df98917e5835b03605e27dc1783d8e2304c2313d8"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_trig.h",
+      "sha256": "5f6c20c555a3d4f5a9d10efc653d63d098f327f25e1fae71d6a262285cec9e68"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_sh4zam.hpp",
+      "sha256": "ecae29daec2b5c2d6735127764391f7cc6bbf1697c42bc06a64a85c3eba10eea"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_version.hpp",
+      "sha256": "095fec8d1d190571967e21e1472446b9c9d30e9098866d06277d5d566943c7e6"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_cdefs.hpp",
+      "sha256": "ab6579e934e167ca141a0745e50aa4b02ac289b4e812f6a4bd8ede3aacf83c60"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_scalar.h",
+      "sha256": "fc3e4b2195bf55a76795eedd5910cd52b4248a6454763ea909011da63ea7b6fc"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_quat.hpp",
+      "sha256": "627fca9913a7a3267702bf6c076ce7e6a68c4fa7b420c617bd66ea08f500f030"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_matrix.h",
+      "sha256": "460d73a41b0ced91a2bb76d264d41dd9bf21f1ed8839e248b2b9ec4152acdc01"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_xmtrx.h",
+      "sha256": "d3d8e8eb4a3e77f3e8c12df6dabb8804fa444ce67085dbd1af37630dacaab085"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/shz_trig.inl.h",
+      "sha256": "ffa679b6d97faff8031e41d471008ffa2a8e19d9995066108537941fc0283966"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/shz_complex.inl.h",
+      "sha256": "189314670a9b910d54c7f3941a347f0fabb4c466b91305510d6b452dac4f139b"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/shz_scalar.inl.h",
+      "sha256": "fc699674f5abf5a929d0ff2fbe02da03c4a183b55c273f59cb7d0937d35e8857"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/shz_mem.inl.h",
+      "sha256": "abe2b45892f22b5dcd6c20f3730a859f8f806b4fc7f31cee6935912ec001f7a2"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/shz_xmtrx.inl.h",
+      "sha256": "90d14ec7870529f613f08165f2f52d99bd008f6273144c716298f8545d0f216e"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/shz_quat.inl.h",
+      "sha256": "930ffbc64e7d286f048cad38b82dda97aad9efce63f7c0f9d34198d3f9c18a89"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/shz_matrix.inl.h",
+      "sha256": "43edccaf2794ce70d846e8f301508392e9d3e968e16e44b1961dcf26ea10eea8"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/shz_vector.inl.h",
+      "sha256": "6011b3b0f5de566f5245d2f216eedfa0649d62b0cab44fd1e9b45af3100ea323"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/spu/shz_vector_spu.inl.h",
+      "sha256": "be444f8072b0d2308109675d09483c0ba5a04fc51dae67764833b57c93065bc7"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sh4/shz_trig_sh4.inl.h",
+      "sha256": "4e62d63a6c49c97f44dfa6c6de8265f66a1fcd0c0cdb1372680a88db205de18b"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sh4/shz_vector_sh4.inl.h",
+      "sha256": "87dc6091a8f270e3800ec08c6ea44178417daed93a65f4e4210aed5fa590dd34"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sh4/shz_xmtrx_sh4.inl.h",
+      "sha256": "5ba4a0295ebc422764e829c84d5640ed06a75affcdbde6fff1c1bc98b34e3138"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sh4/shz_quat_sh4.inl.h",
+      "sha256": "2f162fa7db1e98dff1a4db1ee0e100b5f5773771bb99ca767f9e36e9ed32898d"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sh4/shz_matrix_sh4.inl.h",
+      "sha256": "8eb874dbc230fef74883f2aec9c53813cb1cba98f5c4e6edd3e17ef8ae8132bd"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sh4/shz_mem_sh4.inl.h",
+      "sha256": "f1b40c951bc00989496708ae76de2d747109841e04716d992514a1c8dc180774"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sh4/shz_scalar_sh4.inl.h",
+      "sha256": "b0c1d4cf98b44d5ecb137ef2d5f195f433a824d2f4d8c751a5c826aa692a37cb"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sw/shz_xmtrx_sw.inl.h",
+      "sha256": "59c2ca091388e1439dc3a91f9748f1b7b379a276f1a37a5e10a099571a794c07"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sw/shz_mem_sw.inl.h",
+      "sha256": "c37e1e2d30c78712eab17045b9647108edc6bf6e7e1c56cebc1e557cdd8533a9"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sw/shz_matrix_sw.inl.h",
+      "sha256": "cf82a20611f39bbfaedc22a307e465677d90427206671dc983ee38d8076b009e"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sw/shz_quat_sw.inl.h",
+      "sha256": "e9c4f9aeb50ce806cd74626b9c6542aa7ffac405d8322abce9e82f62de822574"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sw/shz_vector_sw.inl.h",
+      "sha256": "9364e039f4523831506d1fd5ac95fef393b823424fc7d6cdb6d040e4b8c4de0a"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sw/shz_trig_sw.inl.h",
+      "sha256": "e5f0bc71b6a2355dea3a550dd391bf964c6dad02668c18907a075e131cac58e6"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sw/shz_scalar_sw.inl.h",
+      "sha256": "67b99cebd707217664165070d6675343aa850301498b1360bfb46ad7e67f9f17"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "test/shz_test_scenario.h",
+      "sha256": "b27081020b89853b798c464b579068455d8f7a02d1148a530bc77e5c97098de7"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "test/shz_test.hpp",
+      "sha256": "dee21b346054ef1b8791e932defd1ec7eefac295b166f5300aba895d38b3248d"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_scalar.hpp",
+      "sha256": "e51e043db461766c55df24b3320b83ae296d63435be068f19223b4a683884191"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_sh4zam.h",
+      "sha256": "207159b59032b4a33de7c4b152fb180ed93914db5da744f7cbe96ac648ef0929"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_vector.h",
+      "sha256": "844bae12ab9ca484135b03e58050b1308da31c21e5a2c7862c09c98ded29626d"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_matrix.hpp",
+      "sha256": "c5716f6aa271210956a791264642ea9c3af582ae652c5391cbc6e0f5af4d2f5c"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_cdefs.h",
+      "sha256": "48138da62e45d103861241923331192f5bc67de3b0cfe8db64ab049ba31ed3c2"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_complex.hpp",
+      "sha256": "6ea78dc5c19821244931f362a000b8f582c51747dc1b49aed9582452c4e31e4a"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_version.h",
+      "sha256": "a55211678e9542c12bb41ce0275293039309920ed93d1b967c093b812a5b9c7f"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_quat.h",
+      "sha256": "236c57697e14fa7c3d3b8388508be7539a05368f52ec9d518fe90425dcbb4414"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_xmtrx.hpp",
+      "sha256": "28de84880358eb38ba821c9039ae03a07912c0194514264bab307cfff7e24d78"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_trig.hpp",
+      "sha256": "25016b4d64316e27b6e0b7065c1c25a4615f71c83ded1b2622502a4b377aa19e"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_complex.h",
+      "sha256": "c7a9dcff2eb30050879a61996a8452da4e0fe817f88766452b01b716d1074e12"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_mem.hpp",
+      "sha256": "197eabbe44bd25cd80a0048ddd92299d806f63e3ca2b3e636ecbed38fa5250b2"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_mem.h",
+      "sha256": "89cd76be2d07566f2f104560a3bb16fbebad2d23f8013b774c96c66ce72ce062"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_vector.hpp",
+      "sha256": "a7c1ca9221eb7aa54cc67f8df98917e5835b03605e27dc1783d8e2304c2313d8"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_trig.h",
+      "sha256": "5f6c20c555a3d4f5a9d10efc653d63d098f327f25e1fae71d6a262285cec9e68"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_sh4zam.hpp",
+      "sha256": "ecae29daec2b5c2d6735127764391f7cc6bbf1697c42bc06a64a85c3eba10eea"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_version.hpp",
+      "sha256": "095fec8d1d190571967e21e1472446b9c9d30e9098866d06277d5d566943c7e6"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_cdefs.hpp",
+      "sha256": "ab6579e934e167ca141a0745e50aa4b02ac289b4e812f6a4bd8ede3aacf83c60"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_scalar.h",
+      "sha256": "fc3e4b2195bf55a76795eedd5910cd52b4248a6454763ea909011da63ea7b6fc"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_quat.hpp",
+      "sha256": "627fca9913a7a3267702bf6c076ce7e6a68c4fa7b420c617bd66ea08f500f030"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_matrix.h",
+      "sha256": "460d73a41b0ced91a2bb76d264d41dd9bf21f1ed8839e248b2b9ec4152acdc01"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/shz_xmtrx.h",
+      "sha256": "d3d8e8eb4a3e77f3e8c12df6dabb8804fa444ce67085dbd1af37630dacaab085"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/shz_trig.inl.h",
+      "sha256": "ffa679b6d97faff8031e41d471008ffa2a8e19d9995066108537941fc0283966"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/shz_complex.inl.h",
+      "sha256": "189314670a9b910d54c7f3941a347f0fabb4c466b91305510d6b452dac4f139b"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/shz_scalar.inl.h",
+      "sha256": "fc699674f5abf5a929d0ff2fbe02da03c4a183b55c273f59cb7d0937d35e8857"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/shz_mem.inl.h",
+      "sha256": "abe2b45892f22b5dcd6c20f3730a859f8f806b4fc7f31cee6935912ec001f7a2"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/shz_xmtrx.inl.h",
+      "sha256": "90d14ec7870529f613f08165f2f52d99bd008f6273144c716298f8545d0f216e"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/shz_quat.inl.h",
+      "sha256": "930ffbc64e7d286f048cad38b82dda97aad9efce63f7c0f9d34198d3f9c18a89"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/shz_matrix.inl.h",
+      "sha256": "43edccaf2794ce70d846e8f301508392e9d3e968e16e44b1961dcf26ea10eea8"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/shz_vector.inl.h",
+      "sha256": "6011b3b0f5de566f5245d2f216eedfa0649d62b0cab44fd1e9b45af3100ea323"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/spu/shz_vector_spu.inl.h",
+      "sha256": "be444f8072b0d2308109675d09483c0ba5a04fc51dae67764833b57c93065bc7"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sh4/shz_trig_sh4.inl.h",
+      "sha256": "4e62d63a6c49c97f44dfa6c6de8265f66a1fcd0c0cdb1372680a88db205de18b"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sh4/shz_vector_sh4.inl.h",
+      "sha256": "87dc6091a8f270e3800ec08c6ea44178417daed93a65f4e4210aed5fa590dd34"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sh4/shz_xmtrx_sh4.inl.h",
+      "sha256": "5ba4a0295ebc422764e829c84d5640ed06a75affcdbde6fff1c1bc98b34e3138"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sh4/shz_quat_sh4.inl.h",
+      "sha256": "2f162fa7db1e98dff1a4db1ee0e100b5f5773771bb99ca767f9e36e9ed32898d"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sh4/shz_matrix_sh4.inl.h",
+      "sha256": "8eb874dbc230fef74883f2aec9c53813cb1cba98f5c4e6edd3e17ef8ae8132bd"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sh4/shz_mem_sh4.inl.h",
+      "sha256": "f1b40c951bc00989496708ae76de2d747109841e04716d992514a1c8dc180774"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sh4/shz_scalar_sh4.inl.h",
+      "sha256": "b0c1d4cf98b44d5ecb137ef2d5f195f433a824d2f4d8c751a5c826aa692a37cb"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sw/shz_xmtrx_sw.inl.h",
+      "sha256": "59c2ca091388e1439dc3a91f9748f1b7b379a276f1a37a5e10a099571a794c07"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sw/shz_mem_sw.inl.h",
+      "sha256": "c37e1e2d30c78712eab17045b9647108edc6bf6e7e1c56cebc1e557cdd8533a9"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sw/shz_matrix_sw.inl.h",
+      "sha256": "cf82a20611f39bbfaedc22a307e465677d90427206671dc983ee38d8076b009e"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sw/shz_quat_sw.inl.h",
+      "sha256": "e9c4f9aeb50ce806cd74626b9c6542aa7ffac405d8322abce9e82f62de822574"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sw/shz_vector_sw.inl.h",
+      "sha256": "9364e039f4523831506d1fd5ac95fef393b823424fc7d6cdb6d040e4b8c4de0a"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sw/shz_trig_sw.inl.h",
+      "sha256": "e5f0bc71b6a2355dea3a550dd391bf964c6dad02668c18907a075e131cac58e6"
+    },
+    {
+      "source": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+      "path": "include/sh4zam/inline/sw/shz_scalar_sw.inl.h",
+      "sha256": "67b99cebd707217664165070d6675343aa850301498b1360bfb46ad7e67f9f17"
+    }
+  ],
+  "syntax_checked_not_executed": [
+    "gc-root-helpers/finalize-full-target-static1d63-20261024.py",
+    "gc-root-helpers/full-target-static1d63-20261024.py",
+    "gc-root-helpers/full-target-static1d63-20261024.sh",
+    "gc-root-helpers/full-target-static1d63-r2-20261024.py",
+    "gc-root-helpers/full-target-static1d63-r2-20261024.sh",
+    "gc-root-helpers/prepare-full-target-static1d63-r2-20261024.py",
+    "gc-root-helpers/init-pinned-sh4zam-20261024.sh",
+    "rain-root-helpers/finalize-full-target-rain-bca-20261024.py",
+    "rain-root-helpers/finalize-target-rain-bca-20261024.py",
+    "rain-root-helpers/full-target-rain-bca-20261024.py",
+    "rain-root-helpers/full-target-rain-bca-20261024.sh",
+    "rain-root-helpers/prepare-full-target-rain-bca-20261024.py",
+    "rain-root-helpers/target-rain-bca-20261024.py",
+    "rain-root-helpers/target-rain-bca-20261024.sh",
+    "rain-root-helpers/init-pinned-sh4zam-20261024.sh",
+    "gc-full-attempt1/full-target-static1d63-20261024.py",
+    "gc-full-attempt1/full-target-static1d63-20261024.sh",
+    "gc-full-link-readback/verify-readback.py",
+    "rain-review-bca/finalize_review.py",
+    "rain-review-bca/independent_controls.py",
+    "rain-readback-helper/verify-full-target-and-fixtures.py",
+    "terminal-frozen1d63-audit/pin_sources.py",
+    "terminal-frozen1d63-audit/run_catalog_counterexample.py",
+    "terminal-frozen1d63-audit/run_completion_counterexample.py",
+    "terminal-frozen1d63-audit/run_counterexamples.py",
+    "dated-20261024-shared-snapshots/takeover-refresh-20261024.py",
+    "collect.py"
+  ],
+  "terminal_manifest_sha256": "8e1fc89a474c186abd8d4366471e79905b768a0584ccd47d0d77cc528ba433c1",
+  "prior_snapshot_seal_unchanged": "f22ca3784095544b5b5f117b0f465f94bda1697e6d2c076bb59df61534aa05ec",
+  "objects_or_binaries_read_or_copied": 0,
+  "SDK_or_guest_runs": 0,
+  "limits": [
+    "Preserves prior full-build and selected-target receipts; not a new build/readback/runtime acceptance.",
+    "Binary/SDK pins are retained as reported hashes only, without binary reads or copies.",
+    "GC catalog0 only and rain lifecycle/ancestry/appearance/heap/KOS/H2/guest/hardware limitations remain in original reports."
+  ]
+}

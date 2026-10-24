@@ -1,0 +1,41 @@
+{
+  "status": "FULL_NORMAL_CATALOG0_LINK_COMPLETE_ONLY",
+  "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "baseline": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "time": "2026-10-24T05:39:43.140897+00:00",
+  "off_programme_and_all14_identical": true,
+  "missing_symbols_both": 0,
+  "GC_alias_or_stub": false,
+  "gc_symbol_counts": {
+    "off": 0,
+    "on": 189
+  },
+  "linked_sections": {
+    "text": 43368,
+    "data": 736,
+    "bss": 16928
+  },
+  "linked_section_total": 61032,
+  "boundary_symbols": {
+    "off": {
+      "_edata": 2352246596,
+      "_end": 2353209524,
+      "_etext": 2351296098
+    },
+    "on": {
+      "_edata": 2352290072,
+      "_end": 2353269908,
+      "_etext": 2351336482
+    }
+  },
+  "boundary_delta": {
+    "_edata": 43476,
+    "_end": 60384,
+    "_etext": 40384
+  },
+  "raw_hashes": {
+    "off": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+    "on": "0c5c530d8082d2283c9fd50551b561fb324cc15bc502ab638d55f88e296f5636"
+  },
+  "scope": "Fresh full normal source builds, exact current rP ordered args plus gate/catalog knobs. Real SDK/source/SH4ZAM pins before/after. No linked stubs or GC aliases. Catalog0 only; synthetic configured branch not qualified. No runtime heap, KOS/H2, guest, catalog, I001 or hardware performance acceptance."
+}

@@ -1,0 +1,76 @@
+{
+  "status": "PASS_SOURCE_HOST_BINDING",
+  "source_commit": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "files": {
+    "/root/work/lanes/water-rain24/port/dreamcast/game/effects30.mk": {
+      "git_blob_sha256": "3fb6de911aa2aee82bd72bb77fe8685c08f86b059556325bae2868d615de1830",
+      "physical_sha256": "3fb6de911aa2aee82bd72bb77fe8685c08f86b059556325bae2868d615de1830"
+    },
+    "/root/work/lanes/water-rain24/port/dreamcast/tools/d367/water_rain24/RAIN-R10C-EXPERIMENT.md": {
+      "git_blob_sha256": "950a37351a48e45e269a4ffa27378d2f0e8c7de11b9233aa54b8c087e1e2d1af",
+      "physical_sha256": "950a37351a48e45e269a4ffa27378d2f0e8c7de11b9233aa54b8c087e1e2d1af"
+    },
+    "/root/work/lanes/water-rain24/port/dreamcast/tools/d367/water_rain24/fixture_rain_r10c.cpp.in": {
+      "git_blob_sha256": "8bc4cf3a6de6618e607741409e91527938315ced9d7e4fbd7c34236c1dc1b39c",
+      "physical_sha256": "8bc4cf3a6de6618e607741409e91527938315ced9d7e4fbd7c34236c1dc1b39c"
+    },
+    "/root/work/lanes/water-rain24/port/dreamcast/tools/d367/water_rain24/test_rain_r10c.py": {
+      "git_blob_sha256": "c86dd840b86714950c75b2dfd6a8ff60ad45be5715e98c209c67bd9c3a4841b7",
+      "physical_sha256": "c86dd840b86714950c75b2dfd6a8ff60ad45be5715e98c209c67bd9c3a4841b7"
+    },
+    "/root/work/lanes/water-rain24/src/game/filter06.cpp": {
+      "git_blob_sha256": "e004ee0d621850f656e8020a78533436187969d18ae2865dd18059dd631da686",
+      "physical_sha256": "e004ee0d621850f656e8020a78533436187969d18ae2865dd18059dd631da686"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/rain-r10c-experiment/B-regression.log": {
+      "physical_sha256": "151adc3f87c649899796136e39612c9400c248a1a141ef5caa37555583fcd2c2"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/rain-r10c-experiment/HANDBACK.md": {
+      "physical_sha256": "2f19ab549dbe28db1bfd46f657524e18965ca2d274fd175d0a975fdef603cfb0"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/rain-r10c-experiment/HOST-CONTROLS.json": {
+      "physical_sha256": "9818e569b1ba7d1f1c4ca3e605051218112c6260e5a0b85076d06abedfe3daf9"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/rain-r10c-experiment/host-controls.log": {
+      "physical_sha256": "9818e569b1ba7d1f1c4ca3e605051218112c6260e5a0b85076d06abedfe3daf9"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/STATUS.md": {
+      "physical_sha256": "6ff00f0a5664a94f7b9388425fd17551618da1f853bbc10da1da0a029bfc614a"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/STATUS-A-TRACE-e7f.md": {
+      "physical_sha256": "8f64f9c6c31da0a019f01fc4ff79a692334a6a602cac23046637f645376d3cc4"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/rain-trace/RECEIPT.json": {
+      "physical_sha256": "e7f2a60bc2fb8a5b25652bd2dc6875cd252bbb2ebad05dd9d07d9a6f177dde7c"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/review-rain-a/REVIEW.md": {
+      "physical_sha256": "7261851491b54f12749d1916ab1144316fc646fe0d5f48a9d3aad5eb59a1418e"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/rain-r10c-experiment/RECEIPT.json": {
+      "physical_sha256": "6a79c0c4cc74d323f32ae2c74802148161a70fe1e9098e28de85590ef1660323"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/review-rain-bca/INDEPENDENT-HOST-RESULTS.json": {
+      "physical_sha256": "9d9f359131d787fa546f9f39b4333fcf96f8ec130e6d4c57bfdb068709741fc7"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/review-rain-bca/SUPPLIED-SUITE-RERUN.json": {
+      "physical_sha256": "dbf2ef841833bded931dccc26228e38038fe78c6c1a4b85ac3b8b9098606684d"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/review-rain-bca/independent_controls.py": {
+      "physical_sha256": "6c561561abd7feee78fd01b9e56d6213fbdbc1317ae6de502d55d7adc8020c67"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/review-rain-bca/REVIEW.md": {
+      "physical_sha256": "7ee5572a83bfbbbba0317dead20c25c0421784662e000198158bde464c403661"
+    }
+  },
+  "changed_paths": [
+    "port/dreamcast/game/effects30.mk",
+    "port/dreamcast/tools/d367/water_rain24/RAIN-R10C-EXPERIMENT.md",
+    "port/dreamcast/tools/d367/water_rain24/fixture_rain_r10c.cpp.in",
+    "port/dreamcast/tools/d367/water_rain24/test_rain_r10c.py",
+    "src/game/filter06.cpp"
+  ],
+  "source_dirty": false,
+  "source_or_asset_write": false,
+  "SDK": false,
+  "guest": false
+}

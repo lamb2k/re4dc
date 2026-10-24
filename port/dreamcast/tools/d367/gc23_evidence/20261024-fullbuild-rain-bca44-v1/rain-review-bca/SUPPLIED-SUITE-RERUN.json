@@ -1,0 +1,71 @@
+{
+  "status": "PASS_INDEPENDENT_RERUN",
+  "source_commit": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "command": "wsl.exe -d Ubuntu-24.04 -u root -- env PYTHONDONTWRITEBYTECODE=1 python3 /root/work/lanes/water-rain24/port/dreamcast/tools/d367/water_rain24/test_rain_r10c.py",
+  "observed_tool_exit_code": 0,
+  "observed_tool_wall_seconds": 7.3517064,
+  "controls": {
+    "scope": "host source excerpts, source-order checks, preprocessing and GNU Make flags; no SH4 ABI/target/image/current-loaded proof",
+    "base": "d291f814b5a873718c3f32b686eef5f1a8707f1d",
+    "source_sha256": "e004ee0d621850f656e8020a78533436187969d18ae2865dd18059dd631da686",
+    "unchanged_simulation_function_sha256": {
+      "void cParticle06::init(": "423e289bb385c8036c713d8509ede515b910992cd34b06b4f6f6c1b42ce0f7a5",
+      "void cParticle06::move()": "d961d27e8f3fd1350aedd961d3e763ded037077706f02e949b252ca84e1666c6",
+      "void Filter06Trans()": "60efcbce6479a4373809ebaa21681620a4e0f7026b7744bfa6c3ac1a73ad2a96",
+      "static int Filter06Ps2Rain()": "91da37c02bc1dab853d5141ed4b09f13a7c7c35bd1b409802ee0bb933019c8d7"
+    },
+    "frame_lifecycle_sha256": {
+      "main_loop_excerpt": "630e4545aca1c1dd1d3261beed9d46d3d7fe0d5c9dc4fc3f25144732f32d9797",
+      "Render": "8f5c87d7cd6937fbefadbb5be3064521c494068eef948e49329f39b566f2d22f",
+      "GXSetDrawSync": "e9af88424a0ce91a19bdb91bea456d500140d27ddd744ff610983cc625ab19ea"
+    },
+    "passed": [
+      "PASS off leaves r10c unadmitted",
+      "PASS off leaves r10c unadmitted",
+      "PASS r10c signature/dispatcher/alloc/fade/frame+room/rebind/destruct/stop/consume/reused-night"
+    ],
+    "old_night_parity": {
+      "bytes": 332968,
+      "sha256": "f2b379580c557860bd97f29d22cc49e0e2cb54bd43ccdc81b10c52ae01251f3b",
+      "arms": [
+        "baseline",
+        "new OFF",
+        "new ON"
+      ]
+    },
+    "source_mutants_defeated": [
+      "room-only-signature",
+      "stale-frame",
+      "prior-registration-frame",
+      "stop-keeps-moving",
+      "wrong-alpha-normalizer",
+      "night-color-for-r10c",
+      "repeat-pending",
+      "no-setter-cancel",
+      "no-room-init-cancel",
+      "ignore-indoor-flush",
+      "ignore-height-flush"
+    ],
+    "gate0_full_preprocessed_file_comparisons": 12,
+    "make_negative_cases": [
+      "flag=''",
+      "flag='2'",
+      "flag='-1'",
+      "flag='01'",
+      "flag='0 1'",
+      "flag='1 1'",
+      "flag='%'",
+      "flag='*'",
+      "RAIN_DC=0",
+      "RAIN_PS2=0",
+      "D349_RENDERER_STACK=0",
+      "PVR_STREAM=0",
+      "NATIVE_LASER=0",
+      "EFFECT_SPRITES=0"
+    ],
+    "make_flush_owner_mutation_detected": true
+  },
+  "scope": "Observed successful tool transcript, not another rerun; host/source only",
+  "SDK": false,
+  "guest": false
+}

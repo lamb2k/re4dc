@@ -1,0 +1,16 @@
+{
+  "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "actual_functions": [
+    "audio_strm.cpp::pend_push",
+    "audio_strm.cpp::re4dc_audio_pend_run"
+  ],
+  "scope": "source-extracted deterministic callback schedules; host uintptr_t stands in for SH4 u32 pointer carrier, IRQ provider mocked",
+  "global_empty_while_local_callback_executing": true,
+  "callback_reenqueue_requires_another_actual_drain": true,
+  "overflow_runs_callback_inline_on_producer": true,
+  "no_terminal_quiescence_proved": true,
+  "fixture_sha256": "4a64817c586b23fb0ac4bfff9ca55f718fb7c914d8c3379c690d600a5181c1df",
+  "rlimit_as_bytes": 268435456,
+  "jobs": 1,
+  "max_child_rss_kib": 28288
+}

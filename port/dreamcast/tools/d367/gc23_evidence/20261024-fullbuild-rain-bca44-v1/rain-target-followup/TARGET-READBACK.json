@@ -1,0 +1,89 @@
+{
+  "receipt_sha256": "0fe56bb227018ff33cb1a95076db02a6c84c04ad288910dda04d81d28f18c1ff",
+  "source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "profile": "/root/probe/lanes/route/out-rrfb254e8rP",
+  "complete": true,
+  "arms": {
+    "off": {
+      "out": "/root/work/lanes/water-rain24-full-target-scratch/off/out",
+      "raw_sha256": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+      "elf": {
+        "bytes": 28568696,
+        "sha256": "60b2b8fa19bff93342a3dfade19b79050a5198389d8d9ecc868d56fd5ea44fa0"
+      },
+      "files_verified": 15,
+      "resolved": {
+        "DBG_WARP": "0",
+        "WARP_JUMP": "0",
+        "QA_MENU": "0",
+        "QA_SCENARIO": "ABSENT",
+        "RAIN_R10C_DC": "0",
+        "RAIN_DC": "1",
+        "RAIN_PS2": "1",
+        "RAIN_DC_N": "320",
+        "D349_RENDERER_STACK": "1",
+        "PVR_STREAM": "1",
+        "NATIVE_LASER": "1",
+        "EFFECT_SPRITES": "1",
+        "QUALITY": "1",
+        "QUALITY_LOD_PX": "5",
+        "MESH_LOD_PX": "3",
+        "SCENERY_FAR_LOD": "4",
+        "R101_ALIVE_CAP": "4",
+        "SCENERY_EMIT_CENSUS": "ABSENT",
+        "WORLD_METER": "0",
+        "PC_SAMPLER": "0",
+        "KOS_CACHE_P2_DIAG": "0",
+        "STAT_ROUTINE_BYTES": "1",
+        "ESP_POOL_RECYCLE": "1",
+        "R117_EFFECT_FAILURE_SAFE": "1",
+        "KOS_CACHE_P2": "1",
+        "R10C_SPAWN_LIVE_GUARD": "1",
+        "EM_READ_RETRY": "1",
+        "GC_ASSET_GATE": "ABSENT"
+      },
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n2693812\t 675588\t 962900\t4332300\t 421b0c\t/root/work/lanes/water-rain24-full-target-scratch/off/out/re4dc-game.elf\n"
+    },
+    "on": {
+      "out": "/root/work/lanes/water-rain24-full-target-scratch/on/out",
+      "raw_sha256": "63c4fe1f83b352e0c49d90f53d5d80e4d5ae7620037dfb6642981883551cd678",
+      "elf": {
+        "bytes": 28571208,
+        "sha256": "ef695d7e4e73d9c7848025071c7cadcb6349cc8a788707e4a50c5455b17f803a"
+      },
+      "files_verified": 15,
+      "resolved": {
+        "DBG_WARP": "0",
+        "WARP_JUMP": "0",
+        "QA_MENU": "0",
+        "QA_SCENARIO": "ABSENT",
+        "RAIN_R10C_DC": "1",
+        "RAIN_DC": "1",
+        "RAIN_PS2": "1",
+        "RAIN_DC_N": "320",
+        "D349_RENDERER_STACK": "1",
+        "PVR_STREAM": "1",
+        "NATIVE_LASER": "1",
+        "EFFECT_SPRITES": "1",
+        "QUALITY": "1",
+        "QUALITY_LOD_PX": "5",
+        "MESH_LOD_PX": "3",
+        "SCENERY_FAR_LOD": "4",
+        "R101_ALIVE_CAP": "4",
+        "SCENERY_EMIT_CENSUS": "ABSENT",
+        "WORLD_METER": "0",
+        "PC_SAMPLER": "0",
+        "KOS_CACHE_P2_DIAG": "0",
+        "STAT_ROUTINE_BYTES": "1",
+        "ESP_POOL_RECYCLE": "1",
+        "R117_EFFECT_FAILURE_SAFE": "1",
+        "KOS_CACHE_P2": "1",
+        "R10C_SPAWN_LIVE_GUARD": "1",
+        "EM_READ_RETRY": "1",
+        "GC_ASSET_GATE": "ABSENT"
+      },
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n2694484\t 675588\t 962900\t4332972\t 421dac\t/root/work/lanes/water-rain24-full-target-scratch/on/out/re4dc-game.elf\n"
+    }
+  },
+  "scope": "read-only hash/byte/profile verification; no SDK/guest/stage; rP programme is not rW/QA or live owner proof"
+}

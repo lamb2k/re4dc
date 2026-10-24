@@ -1,0 +1,11 @@
+../../../src/game/filter06.cpp:74:12:int Filter06Ps2Rain()	0	static
+../../../src/game/filter06.cpp:129:12:f32 RainDcUnit()	0	static
+../../../src/game/filter06.cpp:138:13:void RainDcSpawn(RainDcDrop*, int)	16	static
+D:/Bio4/Prog/filter06.cpp:308:6:void Filter06Render()	48	static
+../../../src/game/filter06.cpp:239:17:void re4dc_rain_flush()	76	static
+../../../src/game/filter06.cpp:304:6:void cParticle06::init(u32)	28	static
+../../../src/game/filter06.cpp:319:6:void cParticle06::move()	40	static
+D:/Bio4/Prog/filter06.cpp:198:6:void Filter06RoomInit()	8	static
+D:/Bio4/Prog/filter06.cpp:192:6:void Filter06Init()	4	static
+D:/Bio4/Prog/filter06.cpp:226:6:void Filter06Trans()	28	static
+D:/Bio4/Prog/filter06.cpp:276:6:void Filter06SetParam(u32, int, int, int, int, f32, Vec*, f32, Vec*, f32, int)	68	static

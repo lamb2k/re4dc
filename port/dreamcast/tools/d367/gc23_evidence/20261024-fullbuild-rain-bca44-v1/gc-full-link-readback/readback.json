@@ -1,0 +1,59 @@
+{
+  "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "scope": "Independent read-only actual ELF parsing/hash verification; no SDK command/build/runtime tests",
+  "metadata_members_verified": 26,
+  "immutable_input_pins_verified": 65,
+  "programme_arms": {
+    "off": {
+      "elf_sha256": "9d199189e9326a089e61a1a76077dc98308e8f0b831694e368ef9cb51ca0de57",
+      "raw_sha256": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+      "raw_bytes": 3370820,
+      "sections": {
+        "text": 2693812,
+        "data": 675588,
+        "bss": 962900
+      },
+      "boundaries": {
+        "_end": 2353209524,
+        "_etext": 2351296098,
+        "_edata": 2352246596
+      },
+      "gc_named_defined_count": 0
+    },
+    "on": {
+      "elf_sha256": "2f7e505e7a1002f863c5dad3864530c80a68b69c51af2b972d767ca412426d45",
+      "raw_sha256": "0c5c530d8082d2283c9fd50551b561fb324cc15bc502ab638d55f88e296f5636",
+      "raw_bytes": 3414296,
+      "sections": {
+        "text": 2737180,
+        "data": 676324,
+        "bss": 979828
+      },
+      "boundaries": {
+        "_end": 2353269908,
+        "_etext": 2351336482,
+        "_edata": 2352290072
+      },
+      "gc_named_defined_count": 186
+    }
+  },
+  "baseline_off_raw_and_all14_equal": true,
+  "only_ordered_command_difference": [
+    [
+      308,
+      "GC_ASSET_GATE=0",
+      "GC_ASSET_GATE=1"
+    ]
+  ],
+  "linked_sections_delta": {
+    "text": 43368,
+    "data": 736,
+    "bss": 16928
+  },
+  "linked_total_delta": 61032,
+  "end_delta": 60384,
+  "missing_lists_empty": true,
+  "no_gc_alias_or_generated_stub": true,
+  "source_clean": true,
+  "limits": "Catalog0 only; no configured pin/file install, runtime heap/high-water/H2/guest/I001 acceptance."
+}

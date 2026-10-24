@@ -1,0 +1,10 @@
+{
+  "readback.json": {
+    "bytes": 1729,
+    "sha256": "4c3a1213731a791ae18a94428125d12f0fa71a2c556099c300627c0e34c2e26d"
+  },
+  "verify-readback.py": {
+    "bytes": 4691,
+    "sha256": "5b51e2875e4a52548cd70185de7c568b14d5ab3b09f6e782c6a4d229927e2f48"
+  }
+}

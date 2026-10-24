@@ -1,0 +1,25 @@
+{
+  "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "scope": "actual gate/payload and source-extracted hand yield/native cancel; synthetic providers; single-thread deterministic interleavings, not concurrent target proof",
+  "groups": [
+    {
+      "name": "actual-gate-end-late-ticket-payload-counterexamples",
+      "pass": true,
+      "returncode": 0,
+      "fixture_sha256": "d02d439f444432a957717ce26dc2ac84fc0dc04f3c3dd7ecdf4f448e461ddbbc"
+    },
+    {
+      "name": "actual-hand-yield-reopens-queue",
+      "pass": true,
+      "returncode": 0,
+      "fixture_sha256": "694f7a6b237b0407ceeb4c80e872cde501d91b58abacafc7edbaeb9cd2e705be"
+    },
+    {
+      "name": "actual-native-DVD-cancel-is-not-a-reader-fence",
+      "pass": true,
+      "returncode": 0,
+      "fixture_sha256": "c407325ebf117a24f5fbdc8d13eeeb82f459aad17ce1db168cbee6ec1f88e959"
+    }
+  ],
+  "no_terminal_quiescence_proved": true
+}

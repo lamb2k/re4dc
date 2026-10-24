@@ -1,0 +1,13 @@
+{
+  "status": "MAKE_PREFLIGHT_REFUSAL",
+  "reason": "Pinned SH4ZAM submodule was uninitialized in this tree; no compiler or linker reached",
+  "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "pinned_submodule": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+  "members": {
+    "full-target-static1d63-20261024.py": "54c46c013f6c4760181b51da13977e1589cd9163fa71e1a60d09265e30a35c54",
+    "full-target-static1d63-20261024.sh": "47aa320bdcb58380398ca7f03d615315d90eeb434830eadb2bc1b1bf96356760",
+    "off-build.log": "a478c11da22c92fa2453b3b9d86b3955e3132348dd631acf8e8f051dddbd5deb",
+    "off-command.json": "16fb10e70ddeed8d0f708b6926bf2d27e96fb2551ed87708dbb02b7666860363",
+    "receipt.json": "80b9f286c3db7dbf624187e80b0dd9b4189693747d37ea80de01cfb79b348514"
+  }
+}

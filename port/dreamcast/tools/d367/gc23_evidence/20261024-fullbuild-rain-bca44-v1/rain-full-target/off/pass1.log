@@ -1,0 +1,1 @@
+/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/bin/ld: warning: obj/pass1.elf has a LOAD segment with RWX permissions

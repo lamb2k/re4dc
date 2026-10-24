@@ -1,0 +1,1414 @@
+{
+  "schema": 1,
+  "captured_utc": "2026-10-24T06:14:05.828595+00:00",
+  "parent_evidence_commit": "ee658c182d7c8d4c7a1154f220542c16ec4efd79",
+  "gc_frozen_source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "rain_frozen_source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "baseline": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "files": [
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/finalize-full-target-static1d63-20261024.py",
+      "destination": "gc-root-helpers/finalize-full-target-static1d63-20261024.py",
+      "bytes": 3086,
+      "sha256": "23a42f7d9d7e3f29c631052bf38528064adadd68f3650875e5d720a5b8b707cc",
+      "lf_sha256": "23a42f7d9d7e3f29c631052bf38528064adadd68f3650875e5d720a5b8b707cc",
+      "crlf_count": 0,
+      "lf_count": 35,
+      "source_mtime_ns": 1792820382830021800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/full-target-static1d63-20261024.py",
+      "destination": "gc-root-helpers/full-target-static1d63-20261024.py",
+      "bytes": 6581,
+      "sha256": "54c46c013f6c4760181b51da13977e1589cd9163fa71e1a60d09265e30a35c54",
+      "lf_sha256": "54c46c013f6c4760181b51da13977e1589cd9163fa71e1a60d09265e30a35c54",
+      "crlf_count": 0,
+      "lf_count": 83,
+      "source_mtime_ns": 1792819922677581500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/full-target-static1d63-20261024.sh",
+      "destination": "gc-root-helpers/full-target-static1d63-20261024.sh",
+      "bytes": 799,
+      "sha256": "47aa320bdcb58380398ca7f03d615315d90eeb434830eadb2bc1b1bf96356760",
+      "lf_sha256": "47aa320bdcb58380398ca7f03d615315d90eeb434830eadb2bc1b1bf96356760",
+      "crlf_count": 0,
+      "lf_count": 14,
+      "source_mtime_ns": 1792819922678581100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/full-target-static1d63-r2-20261024.py",
+      "destination": "gc-root-helpers/full-target-static1d63-r2-20261024.py",
+      "bytes": 7121,
+      "sha256": "4786017fdefdf065dd021fd2f6114aea67bd1d72807e6bcf33eead54ae501a88",
+      "lf_sha256": "4786017fdefdf065dd021fd2f6114aea67bd1d72807e6bcf33eead54ae501a88",
+      "crlf_count": 0,
+      "lf_count": 87,
+      "source_mtime_ns": 1792820064653376400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/full-target-static1d63-r2-20261024.sh",
+      "destination": "gc-root-helpers/full-target-static1d63-r2-20261024.sh",
+      "bytes": 805,
+      "sha256": "4ac1a6c54361e3281a38b110c64bde98f8394a8cfef95fa62553f28fba03b553",
+      "lf_sha256": "4ac1a6c54361e3281a38b110c64bde98f8394a8cfef95fa62553f28fba03b553",
+      "crlf_count": 0,
+      "lf_count": 14,
+      "source_mtime_ns": 1792820064653376400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/prepare-full-target-static1d63-r2-20261024.py",
+      "destination": "gc-root-helpers/prepare-full-target-static1d63-r2-20261024.py",
+      "bytes": 2407,
+      "sha256": "830074d2c53eef1b96821e934baad87092ac742fec30efee7a8e91a0664fe8c0",
+      "lf_sha256": "830074d2c53eef1b96821e934baad87092ac742fec30efee7a8e91a0664fe8c0",
+      "crlf_count": 0,
+      "lf_count": 16,
+      "source_mtime_ns": 1792820064552320000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/init-pinned-sh4zam-20261024.sh",
+      "destination": "gc-root-helpers/init-pinned-sh4zam-20261024.sh",
+      "bytes": 783,
+      "sha256": "df759cc03c0127bb93837a47fc812d711c78406f953b9ab9278fd803bfd13912",
+      "lf_sha256": "df759cc03c0127bb93837a47fc812d711c78406f953b9ab9278fd803bfd13912",
+      "crlf_count": 0,
+      "lf_count": 13,
+      "source_mtime_ns": 1792819986438406300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/finalize-full-target-rain-bca-20261024.py",
+      "destination": "rain-root-helpers/finalize-full-target-rain-bca-20261024.py",
+      "bytes": 3177,
+      "sha256": "467dee50e0e05826e7912a38c3a729c4239b9a9bde3924530762930a0a33d949",
+      "lf_sha256": "467dee50e0e05826e7912a38c3a729c4239b9a9bde3924530762930a0a33d949",
+      "crlf_count": 0,
+      "lf_count": 36,
+      "source_mtime_ns": 1792822063544713100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/finalize-target-rain-bca-20261024.py",
+      "destination": "rain-root-helpers/finalize-target-rain-bca-20261024.py",
+      "bytes": 2002,
+      "sha256": "d61b8f19893c689b816beacec04c75871a4099d329569cbca0c1163e750be57d",
+      "lf_sha256": "d61b8f19893c689b816beacec04c75871a4099d329569cbca0c1163e750be57d",
+      "crlf_count": 0,
+      "lf_count": 20,
+      "source_mtime_ns": 1792820703336671000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/full-target-rain-bca-20261024.py",
+      "destination": "rain-root-helpers/full-target-rain-bca-20261024.py",
+      "bytes": 7139,
+      "sha256": "7edc198deee7c4138e89f98c1064092879b5fc6fe0609eb8c6ba3a301ef68344",
+      "lf_sha256": "7edc198deee7c4138e89f98c1064092879b5fc6fe0609eb8c6ba3a301ef68344",
+      "crlf_count": 0,
+      "lf_count": 87,
+      "source_mtime_ns": 1792820760871124900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/full-target-rain-bca-20261024.sh",
+      "destination": "rain-root-helpers/full-target-rain-bca-20261024.sh",
+      "bytes": 804,
+      "sha256": "0156c2b517b89214b2e0ebee778ad37724fdcea3a78c6614d48cc9b34fe13a90",
+      "lf_sha256": "0156c2b517b89214b2e0ebee778ad37724fdcea3a78c6614d48cc9b34fe13a90",
+      "crlf_count": 0,
+      "lf_count": 14,
+      "source_mtime_ns": 1792820760871124900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/prepare-full-target-rain-bca-20261024.py",
+      "destination": "rain-root-helpers/prepare-full-target-rain-bca-20261024.py",
+      "bytes": 2329,
+      "sha256": "f37a0ca51814c561f2da7ef7889f35f539e2386a6e3fc0a0f9d655dae95f5f9e",
+      "lf_sha256": "f37a0ca51814c561f2da7ef7889f35f539e2386a6e3fc0a0f9d655dae95f5f9e",
+      "crlf_count": 0,
+      "lf_count": 17,
+      "source_mtime_ns": 1792820760815124500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/target-rain-bca-20261024.py",
+      "destination": "rain-root-helpers/target-rain-bca-20261024.py",
+      "bytes": 4398,
+      "sha256": "b358143b212d045b09cb64f40b775072bfdef4a48c8d86801e10e1404318ab0a",
+      "lf_sha256": "b358143b212d045b09cb64f40b775072bfdef4a48c8d86801e10e1404318ab0a",
+      "crlf_count": 0,
+      "lf_count": 56,
+      "source_mtime_ns": 1792820475822961100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/target-rain-bca-20261024.sh",
+      "destination": "rain-root-helpers/target-rain-bca-20261024.sh",
+      "bytes": 1006,
+      "sha256": "c83d863cabad4277993fbbc89ebea2b5798e9e056fa765b03e4c3e3d85fb1b11",
+      "lf_sha256": "c83d863cabad4277993fbbc89ebea2b5798e9e056fa765b03e4c3e3d85fb1b11",
+      "crlf_count": 0,
+      "lf_count": 14,
+      "source_mtime_ns": 1792820475822961100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/init-pinned-sh4zam-20261024.sh",
+      "destination": "rain-root-helpers/init-pinned-sh4zam-20261024.sh",
+      "bytes": 786,
+      "sha256": "420230ca6f792e23e1ef002a4cdaeffe428766596c5b7b9e7cb8d946dd9f413b",
+      "lf_sha256": "420230ca6f792e23e1ef002a4cdaeffe428766596c5b7b9e7cb8d946dd9f413b",
+      "crlf_count": 0,
+      "lf_count": 13,
+      "source_mtime_ns": 1792820760869124000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/SHA256-MANIFEST.json",
+      "destination": "gc-full-current/SHA256-MANIFEST.json",
+      "bytes": 3346,
+      "sha256": "76ec4448e08f4bb7c59cb17eb18344c126cdf05d802b2e2060bbe9c44e75b667",
+      "lf_sha256": "76ec4448e08f4bb7c59cb17eb18344c126cdf05d802b2e2060bbe9c44e75b667",
+      "crlf_count": 0,
+      "lf_count": 106,
+      "source_mtime_ns": 1792820383435560400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/SUMMARY.json",
+      "destination": "gc-full-current/SUMMARY.json",
+      "bytes": 1302,
+      "sha256": "75eb5be2f1c9e51b3994fb35a969765a10530bc222c2a4a6e30c1d9a166b9b18",
+      "lf_sha256": "75eb5be2f1c9e51b3994fb35a969765a10530bc222c2a4a6e30c1d9a166b9b18",
+      "crlf_count": 0,
+      "lf_count": 41,
+      "source_mtime_ns": 1792820383143312200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/aliases-all.ld",
+      "destination": "gc-full-current/off/aliases-all.ld",
+      "bytes": 4116,
+      "sha256": "5c51cd2595d407cee281c1ec9fe1f1474b80dc7e5a99a85ec5c4f78b4a299d1d",
+      "lf_sha256": "5c51cd2595d407cee281c1ec9fe1f1474b80dc7e5a99a85ec5c4f78b4a299d1d",
+      "crlf_count": 0,
+      "lf_count": 81,
+      "source_mtime_ns": 1792820382997048600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/aliases.ld",
+      "destination": "gc-full-current/off/aliases.ld",
+      "bytes": 2747,
+      "sha256": "c92af93af4063845767a4f189f81d5cc1a16ad396360c0b15f7125c1f9783735",
+      "lf_sha256": "c92af93af4063845767a4f189f81d5cc1a16ad396360c0b15f7125c1f9783735",
+      "crlf_count": 0,
+      "lf_count": 58,
+      "source_mtime_ns": 1792820382992453000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/command.json",
+      "destination": "gc-full-current/off/command.json",
+      "bytes": 7556,
+      "sha256": "16fb10e70ddeed8d0f708b6926bf2d27e96fb2551ed87708dbb02b7666860363",
+      "lf_sha256": "16fb10e70ddeed8d0f708b6926bf2d27e96fb2551ed87708dbb02b7666860363",
+      "crlf_count": 0,
+      "lf_count": 312,
+      "source_mtime_ns": 1792820382976449800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/defined.txt",
+      "destination": "gc-full-current/off/defined.txt",
+      "bytes": 185163,
+      "sha256": "58a1d971bf49371da4fda56e3d94ed68000bb471eabb17d9a8f994fc1098856a",
+      "lf_sha256": "58a1d971bf49371da4fda56e3d94ed68000bb471eabb17d9a8f994fc1098856a",
+      "crlf_count": 0,
+      "lf_count": 8625,
+      "source_mtime_ns": 1792820383014053900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/load-segments.txt",
+      "destination": "gc-full-current/off/load-segments.txt",
+      "bytes": 596,
+      "sha256": "2611bf31b952c13921a0d9cd69c63aa0f05ee0c6b1c24a8cf5e56776a2bba633",
+      "lf_sha256": "2611bf31b952c13921a0d9cd69c63aa0f05ee0c6b1c24a8cf5e56776a2bba633",
+      "crlf_count": 0,
+      "lf_count": 16,
+      "source_mtime_ns": 1792820383025056600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/missing.cpp",
+      "destination": "gc-full-current/off/missing.cpp",
+      "bytes": 94,
+      "sha256": "7e3ebc71a1d09122209b3ee20e053ccc1b418846d88cd950724ad4394c97754a",
+      "lf_sha256": "7e3ebc71a1d09122209b3ee20e053ccc1b418846d88cd950724ad4394c97754a",
+      "crlf_count": 0,
+      "lf_count": 3,
+      "source_mtime_ns": 1792820383005053300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/missing.txt",
+      "destination": "gc-full-current/off/missing.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792820383000054000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/pass1.log",
+      "destination": "gc-full-current/off/pass1.log",
+      "bytes": 138,
+      "sha256": "cf9fe866f74015bbff111347c9733eebab78e3b6a219325c904113420ef77bb0",
+      "lf_sha256": "cf9fe866f74015bbff111347c9733eebab78e3b6a219325c904113420ef77bb0",
+      "crlf_count": 0,
+      "lf_count": 1,
+      "source_mtime_ns": 1792820383009054400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/resolved-knobs.txt",
+      "destination": "gc-full-current/off/resolved-knobs.txt",
+      "bytes": 240397,
+      "sha256": "fcb8b1459b58f9f567c757d6cb576707708c57ed1c79fe8851091961cfd647dd",
+      "lf_sha256": "fcb8b1459b58f9f567c757d6cb576707708c57ed1c79fe8851091961cfd647dd",
+      "crlf_count": 0,
+      "lf_count": 1158,
+      "source_mtime_ns": 1792820382988453100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/sections.txt",
+      "destination": "gc-full-current/off/sections.txt",
+      "bytes": 2528,
+      "sha256": "19a1d75df98eeb2c35e0ffd4f78844455889b026ae8d01da4a65609e49708495",
+      "lf_sha256": "19a1d75df98eeb2c35e0ffd4f78844455889b026ae8d01da4a65609e49708495",
+      "crlf_count": 0,
+      "lf_count": 35,
+      "source_mtime_ns": 1792820383029054400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/symbols.txt",
+      "destination": "gc-full-current/off/symbols.txt",
+      "bytes": 581672,
+      "sha256": "0f16f8c9aad30e7e4b5d224a9fb603c8301d1384b32d371c51479a9ccce523a3",
+      "lf_sha256": "0f16f8c9aad30e7e4b5d224a9fb603c8301d1384b32d371c51479a9ccce523a3",
+      "crlf_count": 0,
+      "lf_count": 13284,
+      "source_mtime_ns": 1792820382983452700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/undefined.txt",
+      "destination": "gc-full-current/off/undefined.txt",
+      "bytes": 6118,
+      "sha256": "9ae18453b44e929acb6ba4096750e1cde802f66c0867fcd102b0e9b1f2087a08",
+      "lf_sha256": "9ae18453b44e929acb6ba4096750e1cde802f66c0867fcd102b0e9b1f2087a08",
+      "crlf_count": 0,
+      "lf_count": 370,
+      "source_mtime_ns": 1792820383018053800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/aliases-all.ld",
+      "destination": "gc-full-current/on/aliases-all.ld",
+      "bytes": 4116,
+      "sha256": "5c51cd2595d407cee281c1ec9fe1f1474b80dc7e5a99a85ec5c4f78b4a299d1d",
+      "lf_sha256": "5c51cd2595d407cee281c1ec9fe1f1474b80dc7e5a99a85ec5c4f78b4a299d1d",
+      "crlf_count": 0,
+      "lf_count": 81,
+      "source_mtime_ns": 1792820383079185400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/aliases.ld",
+      "destination": "gc-full-current/on/aliases.ld",
+      "bytes": 2747,
+      "sha256": "c92af93af4063845767a4f189f81d5cc1a16ad396360c0b15f7125c1f9783735",
+      "lf_sha256": "c92af93af4063845767a4f189f81d5cc1a16ad396360c0b15f7125c1f9783735",
+      "crlf_count": 0,
+      "lf_count": 58,
+      "source_mtime_ns": 1792820383075186500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/command.json",
+      "destination": "gc-full-current/on/command.json",
+      "bytes": 7556,
+      "sha256": "3901dd25af932227c85f85bef2a7042c55464ded1309e6d4ebf08068f5e65edf",
+      "lf_sha256": "3901dd25af932227c85f85bef2a7042c55464ded1309e6d4ebf08068f5e65edf",
+      "crlf_count": 0,
+      "lf_count": 312,
+      "source_mtime_ns": 1792820383057737900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/defined.txt",
+      "destination": "gc-full-current/on/defined.txt",
+      "bytes": 192729,
+      "sha256": "4abac1966563fdbd5830124b58d2f8a1efde3354d55de67d38f3bf9c0dc3ed6d",
+      "lf_sha256": "4abac1966563fdbd5830124b58d2f8a1efde3354d55de67d38f3bf9c0dc3ed6d",
+      "crlf_count": 0,
+      "lf_count": 8779,
+      "source_mtime_ns": 1792820383096185300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/load-segments.txt",
+      "destination": "gc-full-current/on/load-segments.txt",
+      "bytes": 596,
+      "sha256": "55ab697a4cdadbde912d0c597344fba6032d22951276ed7ad447b654004e1254",
+      "lf_sha256": "55ab697a4cdadbde912d0c597344fba6032d22951276ed7ad447b654004e1254",
+      "crlf_count": 0,
+      "lf_count": 16,
+      "source_mtime_ns": 1792820383107186000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/missing.cpp",
+      "destination": "gc-full-current/on/missing.cpp",
+      "bytes": 94,
+      "sha256": "7e3ebc71a1d09122209b3ee20e053ccc1b418846d88cd950724ad4394c97754a",
+      "lf_sha256": "7e3ebc71a1d09122209b3ee20e053ccc1b418846d88cd950724ad4394c97754a",
+      "crlf_count": 0,
+      "lf_count": 3,
+      "source_mtime_ns": 1792820383087185800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/missing.txt",
+      "destination": "gc-full-current/on/missing.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792820383082186100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/pass1.log",
+      "destination": "gc-full-current/on/pass1.log",
+      "bytes": 138,
+      "sha256": "cf9fe866f74015bbff111347c9733eebab78e3b6a219325c904113420ef77bb0",
+      "lf_sha256": "cf9fe866f74015bbff111347c9733eebab78e3b6a219325c904113420ef77bb0",
+      "crlf_count": 0,
+      "lf_count": 1,
+      "source_mtime_ns": 1792820383091188300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/resolved-knobs.txt",
+      "destination": "gc-full-current/on/resolved-knobs.txt",
+      "bytes": 238928,
+      "sha256": "4cd0b147aa4d3ca79f47d8b3ef0e8c0d36fa74e4851550251b8608cec6e5ecb2",
+      "lf_sha256": "4cd0b147aa4d3ca79f47d8b3ef0e8c0d36fa74e4851550251b8608cec6e5ecb2",
+      "crlf_count": 0,
+      "lf_count": 1158,
+      "source_mtime_ns": 1792820383070184900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/sections.txt",
+      "destination": "gc-full-current/on/sections.txt",
+      "bytes": 2528,
+      "sha256": "add2cb94e22a9120acaf13ec4fb64fa41212ac3adcf4d664e74aa2926faa8fbb",
+      "lf_sha256": "add2cb94e22a9120acaf13ec4fb64fa41212ac3adcf4d664e74aa2926faa8fbb",
+      "crlf_count": 0,
+      "lf_count": 35,
+      "source_mtime_ns": 1792820383112188500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/symbols.txt",
+      "destination": "gc-full-current/on/symbols.txt",
+      "bytes": 601809,
+      "sha256": "4f1c7a9026d5ef9ce508b2a46f11102d88c1297db93f39530fb9672e662b8982",
+      "lf_sha256": "4f1c7a9026d5ef9ce508b2a46f11102d88c1297db93f39530fb9672e662b8982",
+      "crlf_count": 0,
+      "lf_count": 13570,
+      "source_mtime_ns": 1792820383065186600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/undefined.txt",
+      "destination": "gc-full-current/on/undefined.txt",
+      "bytes": 6118,
+      "sha256": "9ae18453b44e929acb6ba4096750e1cde802f66c0867fcd102b0e9b1f2087a08",
+      "lf_sha256": "9ae18453b44e929acb6ba4096750e1cde802f66c0867fcd102b0e9b1f2087a08",
+      "crlf_count": 0,
+      "lf_count": 370,
+      "source_mtime_ns": 1792820383100185900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/receipt.json",
+      "destination": "gc-full-current/receipt.json",
+      "bytes": 16832,
+      "sha256": "8103804d650a1caf469c6d2820a06aa560702acfc0404bac990f8cbde821b631",
+      "lf_sha256": "8103804d650a1caf469c6d2820a06aa560702acfc0404bac990f8cbde821b631",
+      "crlf_count": 0,
+      "lf_count": 225,
+      "source_mtime_ns": 1792820383139203000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-attempt1/FAILURE.json",
+      "destination": "gc-full-attempt1/FAILURE.json",
+      "bytes": 785,
+      "sha256": "b1389fe05c8a35e3fae9810f88a2ff8c7a46f7819d5011d97657e2f9082d704c",
+      "lf_sha256": "b97f20cfdfd1ca199af4346e1eb1a6c35ae6a760486818c07e1e21d9f8e6349e",
+      "crlf_count": 13,
+      "lf_count": 13,
+      "source_mtime_ns": 1792820064650375500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-attempt1/full-target-static1d63-20261024.py",
+      "destination": "gc-full-attempt1/full-target-static1d63-20261024.py",
+      "bytes": 6581,
+      "sha256": "54c46c013f6c4760181b51da13977e1589cd9163fa71e1a60d09265e30a35c54",
+      "lf_sha256": "54c46c013f6c4760181b51da13977e1589cd9163fa71e1a60d09265e30a35c54",
+      "crlf_count": 0,
+      "lf_count": 83,
+      "source_mtime_ns": 1792820064638375900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-attempt1/full-target-static1d63-20261024.sh",
+      "destination": "gc-full-attempt1/full-target-static1d63-20261024.sh",
+      "bytes": 799,
+      "sha256": "47aa320bdcb58380398ca7f03d615315d90eeb434830eadb2bc1b1bf96356760",
+      "lf_sha256": "47aa320bdcb58380398ca7f03d615315d90eeb434830eadb2bc1b1bf96356760",
+      "crlf_count": 0,
+      "lf_count": 14,
+      "source_mtime_ns": 1792820064639375200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-attempt1/off-build.log",
+      "destination": "gc-full-attempt1/off-build.log",
+      "bytes": 566,
+      "sha256": "a478c11da22c92fa2453b3b9d86b3955e3132348dd631acf8e8f051dddbd5deb",
+      "lf_sha256": "a478c11da22c92fa2453b3b9d86b3955e3132348dd631acf8e8f051dddbd5deb",
+      "crlf_count": 0,
+      "lf_count": 5,
+      "source_mtime_ns": 1792820064630377800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-attempt1/off-command.json",
+      "destination": "gc-full-attempt1/off-command.json",
+      "bytes": 7556,
+      "sha256": "16fb10e70ddeed8d0f708b6926bf2d27e96fb2551ed87708dbb02b7666860363",
+      "lf_sha256": "16fb10e70ddeed8d0f708b6926bf2d27e96fb2551ed87708dbb02b7666860363",
+      "crlf_count": 0,
+      "lf_count": 312,
+      "source_mtime_ns": 1792820064638375900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-attempt1/receipt.json",
+      "destination": "gc-full-attempt1/receipt.json",
+      "bytes": 2778,
+      "sha256": "80b9f286c3db7dbf624187e80b0dd9b4189693747d37ea80de01cfb79b348514",
+      "lf_sha256": "80b9f286c3db7dbf624187e80b0dd9b4189693747d37ea80de01cfb79b348514",
+      "crlf_count": 0,
+      "lf_count": 30,
+      "source_mtime_ns": 1792820064626375300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-link-readback1d63/SHA256-MANIFEST.json",
+      "destination": "gc-full-link-readback/SHA256-MANIFEST.json",
+      "bytes": 260,
+      "sha256": "3cfdf2dd9b557739be3f8eec3b48c11eb9cdfd3b1c6957835a7e179a3c19b40f",
+      "lf_sha256": "3cfdf2dd9b557739be3f8eec3b48c11eb9cdfd3b1c6957835a7e179a3c19b40f",
+      "crlf_count": 0,
+      "lf_count": 10,
+      "source_mtime_ns": 1792821310472969600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-link-readback1d63/readback.json",
+      "destination": "gc-full-link-readback/readback.json",
+      "bytes": 1729,
+      "sha256": "4c3a1213731a791ae18a94428125d12f0fa71a2c556099c300627c0e34c2e26d",
+      "lf_sha256": "4c3a1213731a791ae18a94428125d12f0fa71a2c556099c300627c0e34c2e26d",
+      "crlf_count": 0,
+      "lf_count": 59,
+      "source_mtime_ns": 1792820583116452900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-link-readback1d63/verify-readback.py",
+      "destination": "gc-full-link-readback/verify-readback.py",
+      "bytes": 4691,
+      "sha256": "5b51e2875e4a52548cd70185de7c568b14d5ab3b09f6e782c6a4d229927e2f48",
+      "lf_sha256": "5efdbb5dbfc3e7c28f9b5a85d39d09bc30278e73ad0cf57bf41a7ed902f517df",
+      "crlf_count": 1,
+      "lf_count": 56,
+      "source_mtime_ns": 1792820582757057900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/SHA256-MANIFEST.json",
+      "destination": "rain-selected-target/SHA256-MANIFEST.json",
+      "bytes": 3357,
+      "sha256": "68d3ddc9fb337a4af5d5c53b8f5cc4880bf70c0c2d4f314b01e47e4485db0575",
+      "lf_sha256": "025ddcb62b226d2ac5667ddcd296fab3f5e979739f62f793d9c75ebf743f5d47",
+      "crlf_count": 106,
+      "lf_count": 106,
+      "source_mtime_ns": 1792820703679469100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/SUMMARY.json",
+      "destination": "rain-selected-target/SUMMARY.json",
+      "bytes": 732,
+      "sha256": "87b38621bfd5e122d21adfbad96f70597623db3f6ebdbaa6d2f837baaf8984a8",
+      "lf_sha256": "0dd12404cad15cab84f35d31ee77848e0bf40b5d13767fdc7cef0918fbc6ee02",
+      "crlf_count": 20,
+      "lf_count": 20,
+      "source_mtime_ns": 1792820703660467700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/absent-command.json",
+      "destination": "rain-selected-target/absent-command.json",
+      "bytes": 2567,
+      "sha256": "8a592c87b5b7047402c2e9bb929d3ae9c2e1483329482686e79713016be04686",
+      "lf_sha256": "8a592c87b5b7047402c2e9bb929d3ae9c2e1483329482686e79713016be04686",
+      "crlf_count": 0,
+      "lf_count": 100,
+      "source_mtime_ns": 1792820703584769400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/absent-inputs.json",
+      "destination": "rain-selected-target/absent-inputs.json",
+      "bytes": 2988,
+      "sha256": "a7e58afe1817ed37fa1af05230b26804d3c8f17a46fd0354fd4d17e0c8e4f6eb",
+      "lf_sha256": "a7e58afe1817ed37fa1af05230b26804d3c8f17a46fd0354fd4d17e0c8e4f6eb",
+      "crlf_count": 0,
+      "lf_count": 26,
+      "source_mtime_ns": 1792820703557741500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/absent-undefined.txt",
+      "destination": "rain-selected-target/absent-undefined.txt",
+      "bytes": 913,
+      "sha256": "15239f04eb11e7bbabd8f484da4ed27967510be8d0898bd97a1ac49f4dae59a9",
+      "lf_sha256": "15239f04eb11e7bbabd8f484da4ed27967510be8d0898bd97a1ac49f4dae59a9",
+      "crlf_count": 0,
+      "lf_count": 34,
+      "source_mtime_ns": 1792820703551741000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/absent.d",
+      "destination": "rain-selected-target/absent.d",
+      "bytes": 855,
+      "sha256": "7cb204b204f77bf5d36a8654f7aa77dfb3358cf71478d36bf633cd076e5de59b",
+      "lf_sha256": "7cb204b204f77bf5d36a8654f7aa77dfb3358cf71478d36bf633cd076e5de59b",
+      "crlf_count": 0,
+      "lf_count": 15,
+      "source_mtime_ns": 1792820703570745700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/absent.log",
+      "destination": "rain-selected-target/absent.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792820703575761700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/absent.su",
+      "destination": "rain-selected-target/absent.su",
+      "bytes": 808,
+      "sha256": "a981b5b7abc12af466ae148dce4c3b357ac68fc38a86be9b5a829afd7be6fd31",
+      "lf_sha256": "a981b5b7abc12af466ae148dce4c3b357ac68fc38a86be9b5a829afd7be6fd31",
+      "crlf_count": 0,
+      "lf_count": 11,
+      "source_mtime_ns": 1792820703562745300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/baseline-command.json",
+      "destination": "rain-selected-target/baseline-command.json",
+      "bytes": 2569,
+      "sha256": "1b222b3a37f08ec374542b2a0555c2b075e294050b3e91bd11eee4b130c32833",
+      "lf_sha256": "1b222b3a37f08ec374542b2a0555c2b075e294050b3e91bd11eee4b130c32833",
+      "crlf_count": 0,
+      "lf_count": 100,
+      "source_mtime_ns": 1792820703637466400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/baseline-inputs.json",
+      "destination": "rain-selected-target/baseline-inputs.json",
+      "bytes": 2919,
+      "sha256": "8867698ea14a1df77600ae95ff5dda3540c3501f69f6501359afd061fe12009a",
+      "lf_sha256": "8867698ea14a1df77600ae95ff5dda3540c3501f69f6501359afd061fe12009a",
+      "crlf_count": 0,
+      "lf_count": 26,
+      "source_mtime_ns": 1792820703605280700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/baseline-undefined.txt",
+      "destination": "rain-selected-target/baseline-undefined.txt",
+      "bytes": 913,
+      "sha256": "15239f04eb11e7bbabd8f484da4ed27967510be8d0898bd97a1ac49f4dae59a9",
+      "lf_sha256": "15239f04eb11e7bbabd8f484da4ed27967510be8d0898bd97a1ac49f4dae59a9",
+      "crlf_count": 0,
+      "lf_count": 34,
+      "source_mtime_ns": 1792820703594771300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/baseline.d",
+      "destination": "rain-selected-target/baseline.d",
+      "bytes": 857,
+      "sha256": "c439dc09a3f7febabbad08a2f63c10b49818a6c9aaab1e1492c74f5409fa8f4e",
+      "lf_sha256": "c439dc09a3f7febabbad08a2f63c10b49818a6c9aaab1e1492c74f5409fa8f4e",
+      "crlf_count": 0,
+      "lf_count": 15,
+      "source_mtime_ns": 1792820703622430900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/baseline.log",
+      "destination": "rain-selected-target/baseline.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792820703627461100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/baseline.su",
+      "destination": "rain-selected-target/baseline.su",
+      "bytes": 808,
+      "sha256": "5a3351bce8111ab9250a21da9088b63355df437a4c65e66a5ec79c3629988595",
+      "lf_sha256": "5a3351bce8111ab9250a21da9088b63355df437a4c65e66a5ec79c3629988595",
+      "crlf_count": 0,
+      "lf_count": 11,
+      "source_mtime_ns": 1792820703614280300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/on-command.json",
+      "destination": "rain-selected-target/on-command.json",
+      "bytes": 2591,
+      "sha256": "51953b5a5ede07fab13a743a4dbda54e841bac36ae1eb08edf20208632bc5d97",
+      "lf_sha256": "51953b5a5ede07fab13a743a4dbda54e841bac36ae1eb08edf20208632bc5d97",
+      "crlf_count": 0,
+      "lf_count": 101,
+      "source_mtime_ns": 1792820703506741700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/on-inputs.json",
+      "destination": "rain-selected-target/on-inputs.json",
+      "bytes": 2988,
+      "sha256": "a7e58afe1817ed37fa1af05230b26804d3c8f17a46fd0354fd4d17e0c8e4f6eb",
+      "lf_sha256": "a7e58afe1817ed37fa1af05230b26804d3c8f17a46fd0354fd4d17e0c8e4f6eb",
+      "crlf_count": 0,
+      "lf_count": 26,
+      "source_mtime_ns": 1792820703478741300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/on-undefined.txt",
+      "destination": "rain-selected-target/on-undefined.txt",
+      "bytes": 965,
+      "sha256": "f3084d10e2f6ceff460d8028990c9b6d0eb64a0762f965bf4252740e61c8c439",
+      "lf_sha256": "f3084d10e2f6ceff460d8028990c9b6d0eb64a0762f965bf4252740e61c8c439",
+      "crlf_count": 0,
+      "lf_count": 36,
+      "source_mtime_ns": 1792820703469740900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/on.d",
+      "destination": "rain-selected-target/on.d",
+      "bytes": 851,
+      "sha256": "e8692dffe7e4cf718ec5a5a7a96a79ab4e54f05cc428dab632dea7ccb439176c",
+      "lf_sha256": "e8692dffe7e4cf718ec5a5a7a96a79ab4e54f05cc428dab632dea7ccb439176c",
+      "crlf_count": 0,
+      "lf_count": 15,
+      "source_mtime_ns": 1792820703493741600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/on.log",
+      "destination": "rain-selected-target/on.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792820703498740200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/on.su",
+      "destination": "rain-selected-target/on.su",
+      "bytes": 949,
+      "sha256": "46a9a2454053711fbcd98d306c3e116841303bbf43d189aea262139b3a308bec",
+      "lf_sha256": "46a9a2454053711fbcd98d306c3e116841303bbf43d189aea262139b3a308bec",
+      "crlf_count": 0,
+      "lf_count": 13,
+      "source_mtime_ns": 1792820703486741800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/report.json",
+      "destination": "rain-selected-target/report.json",
+      "bytes": 2600,
+      "sha256": "6da8846af0d3115f7bb5c4afca02b4929ae7417c16bcf53635e2aad9774e7dff",
+      "lf_sha256": "6da8846af0d3115f7bb5c4afca02b4929ae7417c16bcf53635e2aad9774e7dff",
+      "crlf_count": 0,
+      "lf_count": 44,
+      "source_mtime_ns": 1792820703589770700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/zero-command.json",
+      "destination": "rain-selected-target/zero-command.json",
+      "bytes": 2593,
+      "sha256": "43385e85808f7d7479322a84877ab6823e1186f8ebed7d041f14ba6ccfad5533",
+      "lf_sha256": "43385e85808f7d7479322a84877ab6823e1186f8ebed7d041f14ba6ccfad5533",
+      "crlf_count": 0,
+      "lf_count": 101,
+      "source_mtime_ns": 1792820703547739100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/zero-inputs.json",
+      "destination": "rain-selected-target/zero-inputs.json",
+      "bytes": 2988,
+      "sha256": "a7e58afe1817ed37fa1af05230b26804d3c8f17a46fd0354fd4d17e0c8e4f6eb",
+      "lf_sha256": "a7e58afe1817ed37fa1af05230b26804d3c8f17a46fd0354fd4d17e0c8e4f6eb",
+      "crlf_count": 0,
+      "lf_count": 26,
+      "source_mtime_ns": 1792820703519740400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/zero-undefined.txt",
+      "destination": "rain-selected-target/zero-undefined.txt",
+      "bytes": 913,
+      "sha256": "15239f04eb11e7bbabd8f484da4ed27967510be8d0898bd97a1ac49f4dae59a9",
+      "lf_sha256": "15239f04eb11e7bbabd8f484da4ed27967510be8d0898bd97a1ac49f4dae59a9",
+      "crlf_count": 0,
+      "lf_count": 34,
+      "source_mtime_ns": 1792820703513742400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/zero.d",
+      "destination": "rain-selected-target/zero.d",
+      "bytes": 853,
+      "sha256": "0e01eaf467057c4a7907f3518b9902d304b6ad7f23d24944377fdce757d4ab8a",
+      "lf_sha256": "0e01eaf467057c4a7907f3518b9902d304b6ad7f23d24944377fdce757d4ab8a",
+      "crlf_count": 0,
+      "lf_count": 15,
+      "source_mtime_ns": 1792820703534740500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/zero.log",
+      "destination": "rain-selected-target/zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792820703538742500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-target-bca44-current/zero.su",
+      "destination": "rain-selected-target/zero.su",
+      "bytes": 808,
+      "sha256": "a981b5b7abc12af466ae148dce4c3b357ac68fc38a86be9b5a829afd7be6fd31",
+      "lf_sha256": "a981b5b7abc12af466ae148dce4c3b357ac68fc38a86be9b5a829afd7be6fd31",
+      "crlf_count": 0,
+      "lf_count": 11,
+      "source_mtime_ns": 1792820703526742000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/SHA256-MANIFEST.json",
+      "destination": "rain-full-target/SHA256-MANIFEST.json",
+      "bytes": 3346,
+      "sha256": "512498ca42c32391af0b253a0ab0614edf3022c58b5de7f611e046740672931a",
+      "lf_sha256": "512498ca42c32391af0b253a0ab0614edf3022c58b5de7f611e046740672931a",
+      "crlf_count": 0,
+      "lf_count": 106,
+      "source_mtime_ns": 1792822064206941100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/SUMMARY.json",
+      "destination": "rain-full-target/SUMMARY.json",
+      "bytes": 1253,
+      "sha256": "73cd1f022bae35c3dac5db1fbbf40568051b85ff58e0f940c00d37eb8836cd8f",
+      "lf_sha256": "73cd1f022bae35c3dac5db1fbbf40568051b85ff58e0f940c00d37eb8836cd8f",
+      "crlf_count": 0,
+      "lf_count": 41,
+      "source_mtime_ns": 1792822063908228300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/off/aliases-all.ld",
+      "destination": "rain-full-target/off/aliases-all.ld",
+      "bytes": 4116,
+      "sha256": "5c51cd2595d407cee281c1ec9fe1f1474b80dc7e5a99a85ec5c4f78b4a299d1d",
+      "lf_sha256": "5c51cd2595d407cee281c1ec9fe1f1474b80dc7e5a99a85ec5c4f78b4a299d1d",
+      "crlf_count": 0,
+      "lf_count": 81,
+      "source_mtime_ns": 1792822063739329000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/off/aliases.ld",
+      "destination": "rain-full-target/off/aliases.ld",
+      "bytes": 2747,
+      "sha256": "c92af93af4063845767a4f189f81d5cc1a16ad396360c0b15f7125c1f9783735",
+      "lf_sha256": "c92af93af4063845767a4f189f81d5cc1a16ad396360c0b15f7125c1f9783735",
+      "crlf_count": 0,
+      "lf_count": 58,
+      "source_mtime_ns": 1792822063735326700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/off/command.json",
+      "destination": "rain-full-target/off/command.json",
+      "bytes": 7527,
+      "sha256": "749525851941370f59e894a256aa8b00a908a000fcf9a45a5cb5bd3c290d1d98",
+      "lf_sha256": "749525851941370f59e894a256aa8b00a908a000fcf9a45a5cb5bd3c290d1d98",
+      "crlf_count": 0,
+      "lf_count": 311,
+      "source_mtime_ns": 1792822063716933200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/off/defined.txt",
+      "destination": "rain-full-target/off/defined.txt",
+      "bytes": 185163,
+      "sha256": "58a1d971bf49371da4fda56e3d94ed68000bb471eabb17d9a8f994fc1098856a",
+      "lf_sha256": "58a1d971bf49371da4fda56e3d94ed68000bb471eabb17d9a8f994fc1098856a",
+      "crlf_count": 0,
+      "lf_count": 8625,
+      "source_mtime_ns": 1792822063757327800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/off/load-segments.txt",
+      "destination": "rain-full-target/off/load-segments.txt",
+      "bytes": 596,
+      "sha256": "2611bf31b952c13921a0d9cd69c63aa0f05ee0c6b1c24a8cf5e56776a2bba633",
+      "lf_sha256": "2611bf31b952c13921a0d9cd69c63aa0f05ee0c6b1c24a8cf5e56776a2bba633",
+      "crlf_count": 0,
+      "lf_count": 16,
+      "source_mtime_ns": 1792822063771332400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/off/missing.cpp",
+      "destination": "rain-full-target/off/missing.cpp",
+      "bytes": 94,
+      "sha256": "7e3ebc71a1d09122209b3ee20e053ccc1b418846d88cd950724ad4394c97754a",
+      "lf_sha256": "7e3ebc71a1d09122209b3ee20e053ccc1b418846d88cd950724ad4394c97754a",
+      "crlf_count": 0,
+      "lf_count": 3,
+      "source_mtime_ns": 1792822063747327000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/off/missing.txt",
+      "destination": "rain-full-target/off/missing.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792822063742327100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/off/pass1.log",
+      "destination": "rain-full-target/off/pass1.log",
+      "bytes": 138,
+      "sha256": "cf9fe866f74015bbff111347c9733eebab78e3b6a219325c904113420ef77bb0",
+      "lf_sha256": "cf9fe866f74015bbff111347c9733eebab78e3b6a219325c904113420ef77bb0",
+      "crlf_count": 0,
+      "lf_count": 1,
+      "source_mtime_ns": 1792822063752327400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/off/resolved-knobs.txt",
+      "destination": "rain-full-target/off/resolved-knobs.txt",
+      "bytes": 244618,
+      "sha256": "b9733514e1500ae31e6ef75399a9a3ac321d8a4ee13e5bed8a8607840571984f",
+      "lf_sha256": "b9733514e1500ae31e6ef75399a9a3ac321d8a4ee13e5bed8a8607840571984f",
+      "crlf_count": 0,
+      "lf_count": 1157,
+      "source_mtime_ns": 1792822063730322500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/off/sections.txt",
+      "destination": "rain-full-target/off/sections.txt",
+      "bytes": 2528,
+      "sha256": "2c2d165f94e6877f5c112c711a3e5969729c617ee0c85a300d6ca669596d856b",
+      "lf_sha256": "2c2d165f94e6877f5c112c711a3e5969729c617ee0c85a300d6ca669596d856b",
+      "crlf_count": 0,
+      "lf_count": 35,
+      "source_mtime_ns": 1792822063776330700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/off/symbols.txt",
+      "destination": "rain-full-target/off/symbols.txt",
+      "bytes": 581672,
+      "sha256": "0f16f8c9aad30e7e4b5d224a9fb603c8301d1384b32d371c51479a9ccce523a3",
+      "lf_sha256": "0f16f8c9aad30e7e4b5d224a9fb603c8301d1384b32d371c51479a9ccce523a3",
+      "crlf_count": 0,
+      "lf_count": 13284,
+      "source_mtime_ns": 1792822063723934000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/off/undefined.txt",
+      "destination": "rain-full-target/off/undefined.txt",
+      "bytes": 6118,
+      "sha256": "9ae18453b44e929acb6ba4096750e1cde802f66c0867fcd102b0e9b1f2087a08",
+      "lf_sha256": "9ae18453b44e929acb6ba4096750e1cde802f66c0867fcd102b0e9b1f2087a08",
+      "crlf_count": 0,
+      "lf_count": 370,
+      "source_mtime_ns": 1792822063761330600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/on/aliases-all.ld",
+      "destination": "rain-full-target/on/aliases-all.ld",
+      "bytes": 4116,
+      "sha256": "5c51cd2595d407cee281c1ec9fe1f1474b80dc7e5a99a85ec5c4f78b4a299d1d",
+      "lf_sha256": "5c51cd2595d407cee281c1ec9fe1f1474b80dc7e5a99a85ec5c4f78b4a299d1d",
+      "crlf_count": 0,
+      "lf_count": 81,
+      "source_mtime_ns": 1792822063837714200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/on/aliases.ld",
+      "destination": "rain-full-target/on/aliases.ld",
+      "bytes": 2747,
+      "sha256": "c92af93af4063845767a4f189f81d5cc1a16ad396360c0b15f7125c1f9783735",
+      "lf_sha256": "c92af93af4063845767a4f189f81d5cc1a16ad396360c0b15f7125c1f9783735",
+      "crlf_count": 0,
+      "lf_count": 58,
+      "source_mtime_ns": 1792822063832711700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/on/command.json",
+      "destination": "rain-full-target/on/command.json",
+      "bytes": 7527,
+      "sha256": "58fae69ca74f0a32f26dd374484745ca46f24744a9d75e8078d1ac7e064caedf",
+      "lf_sha256": "58fae69ca74f0a32f26dd374484745ca46f24744a9d75e8078d1ac7e064caedf",
+      "crlf_count": 0,
+      "lf_count": 311,
+      "source_mtime_ns": 1792822063815711300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/on/defined.txt",
+      "destination": "rain-full-target/on/defined.txt",
+      "bytes": 185163,
+      "sha256": "58a1d971bf49371da4fda56e3d94ed68000bb471eabb17d9a8f994fc1098856a",
+      "lf_sha256": "58a1d971bf49371da4fda56e3d94ed68000bb471eabb17d9a8f994fc1098856a",
+      "crlf_count": 0,
+      "lf_count": 8625,
+      "source_mtime_ns": 1792822063853713000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/on/load-segments.txt",
+      "destination": "rain-full-target/on/load-segments.txt",
+      "bytes": 596,
+      "sha256": "0fea9d4dfd2799ad0114bf2ed76da866069656dcf4c1eb3a74ae96f45021a7c9",
+      "lf_sha256": "0fea9d4dfd2799ad0114bf2ed76da866069656dcf4c1eb3a74ae96f45021a7c9",
+      "crlf_count": 0,
+      "lf_count": 16,
+      "source_mtime_ns": 1792822063866712600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/on/missing.cpp",
+      "destination": "rain-full-target/on/missing.cpp",
+      "bytes": 94,
+      "sha256": "7e3ebc71a1d09122209b3ee20e053ccc1b418846d88cd950724ad4394c97754a",
+      "lf_sha256": "7e3ebc71a1d09122209b3ee20e053ccc1b418846d88cd950724ad4394c97754a",
+      "crlf_count": 0,
+      "lf_count": 3,
+      "source_mtime_ns": 1792822063844712100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/on/missing.txt",
+      "destination": "rain-full-target/on/missing.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792822063840711800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/on/pass1.log",
+      "destination": "rain-full-target/on/pass1.log",
+      "bytes": 138,
+      "sha256": "cf9fe866f74015bbff111347c9733eebab78e3b6a219325c904113420ef77bb0",
+      "lf_sha256": "cf9fe866f74015bbff111347c9733eebab78e3b6a219325c904113420ef77bb0",
+      "crlf_count": 0,
+      "lf_count": 1,
+      "source_mtime_ns": 1792822063848711800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/on/resolved-knobs.txt",
+      "destination": "rain-full-target/on/resolved-knobs.txt",
+      "bytes": 242212,
+      "sha256": "38830a211e00902200b13199f22979029e2dabdd76caf20c12a3409d8db441fd",
+      "lf_sha256": "38830a211e00902200b13199f22979029e2dabdd76caf20c12a3409d8db441fd",
+      "crlf_count": 0,
+      "lf_count": 1157,
+      "source_mtime_ns": 1792822063828711600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/on/sections.txt",
+      "destination": "rain-full-target/on/sections.txt",
+      "bytes": 2528,
+      "sha256": "179b62aeb7fe833946cb55129c7ad0a48b29cbe7f4177eec1b559e629f0e2a2f",
+      "lf_sha256": "179b62aeb7fe833946cb55129c7ad0a48b29cbe7f4177eec1b559e629f0e2a2f",
+      "crlf_count": 0,
+      "lf_count": 35,
+      "source_mtime_ns": 1792822063870713800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/on/symbols.txt",
+      "destination": "rain-full-target/on/symbols.txt",
+      "bytes": 581855,
+      "sha256": "a48fbd70bbacfd6689f6fca7f6f5688fea282d1cb8a5b63653ba4bce30398d66",
+      "lf_sha256": "a48fbd70bbacfd6689f6fca7f6f5688fea282d1cb8a5b63653ba4bce30398d66",
+      "crlf_count": 0,
+      "lf_count": 13288,
+      "source_mtime_ns": 1792822063823711600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/on/undefined.txt",
+      "destination": "rain-full-target/on/undefined.txt",
+      "bytes": 6118,
+      "sha256": "9ae18453b44e929acb6ba4096750e1cde802f66c0867fcd102b0e9b1f2087a08",
+      "lf_sha256": "9ae18453b44e929acb6ba4096750e1cde802f66c0867fcd102b0e9b1f2087a08",
+      "crlf_count": 0,
+      "lf_count": 370,
+      "source_mtime_ns": 1792822063858712100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-full-target-bca44-current/receipt.json",
+      "destination": "rain-full-target/receipt.json",
+      "bytes": 17018,
+      "sha256": "0fe56bb227018ff33cb1a95076db02a6c84c04ad288910dda04d81d28f18c1ff",
+      "lf_sha256": "0fe56bb227018ff33cb1a95076db02a6c84c04ad288910dda04d81d28f18c1ff",
+      "crlf_count": 0,
+      "lf_count": 225,
+      "source_mtime_ns": 1792822063905230700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/review-rain-bca/INDEPENDENT-HOST-RESULTS.json",
+      "destination": "rain-review-bca/INDEPENDENT-HOST-RESULTS.json",
+      "bytes": 1961,
+      "sha256": "9d9f359131d787fa546f9f39b4333fcf96f8ec130e6d4c57bfdb068709741fc7",
+      "lf_sha256": "9d9f359131d787fa546f9f39b4333fcf96f8ec130e6d4c57bfdb068709741fc7",
+      "crlf_count": 0,
+      "lf_count": 44,
+      "source_mtime_ns": 1792820266819080900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/review-rain-bca/READBACK.json",
+      "destination": "rain-review-bca/READBACK.json",
+      "bytes": 4394,
+      "sha256": "c1897abe6a4d9f3e98d46a5e8f031b7bdf43fef2baa81bf5574de494730d6284",
+      "lf_sha256": "c1897abe6a4d9f3e98d46a5e8f031b7bdf43fef2baa81bf5574de494730d6284",
+      "crlf_count": 0,
+      "lf_count": 76,
+      "source_mtime_ns": 1792820382584871300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/review-rain-bca/REVIEW-CLEAR.json",
+      "destination": "rain-review-bca/REVIEW-CLEAR.json",
+      "bytes": 1242,
+      "sha256": "007f39ff61128a0c5f979bc957585813b16a635156d5abb1675b34b8cf65a5e4",
+      "lf_sha256": "007f39ff61128a0c5f979bc957585813b16a635156d5abb1675b34b8cf65a5e4",
+      "crlf_count": 0,
+      "lf_count": 27,
+      "source_mtime_ns": 1792820382602674000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/review-rain-bca/REVIEW.md",
+      "destination": "rain-review-bca/REVIEW.md",
+      "bytes": 4769,
+      "sha256": "7ee5572a83bfbbbba0317dead20c25c0421784662e000198158bde464c403661",
+      "lf_sha256": "7ee5572a83bfbbbba0317dead20c25c0421784662e000198158bde464c403661",
+      "crlf_count": 0,
+      "lf_count": 19,
+      "source_mtime_ns": 1792820377778723300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/review-rain-bca/SUPPLIED-SUITE-RERUN.json",
+      "destination": "rain-review-bca/SUPPLIED-SUITE-RERUN.json",
+      "bytes": 2749,
+      "sha256": "dbf2ef841833bded931dccc26228e38038fe78c6c1a4b85ac3b8b9098606684d",
+      "lf_sha256": "dbf2ef841833bded931dccc26228e38038fe78c6c1a4b85ac3b8b9098606684d",
+      "crlf_count": 0,
+      "lf_count": 71,
+      "source_mtime_ns": 1792820382565867000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/review-rain-bca/finalize_review.py",
+      "destination": "rain-review-bca/finalize_review.py",
+      "bytes": 3680,
+      "sha256": "46317c320ed3a66209f1025528dd945ecfa7a5b9d4cd765291d4e5aa51d68435",
+      "lf_sha256": "46317c320ed3a66209f1025528dd945ecfa7a5b9d4cd765291d4e5aa51d68435",
+      "crlf_count": 0,
+      "lf_count": 41,
+      "source_mtime_ns": 1792820377779723100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/review-rain-bca/independent_controls.py",
+      "destination": "rain-review-bca/independent_controls.py",
+      "bytes": 6250,
+      "sha256": "6c561561abd7feee78fd01b9e56d6213fbdbc1317ae6de502d55d7adc8020c67",
+      "lf_sha256": "6c561561abd7feee78fd01b9e56d6213fbdbc1317ae6de502d55d7adc8020c67",
+      "crlf_count": 0,
+      "lf_count": 76,
+      "source_mtime_ns": 1792820251343112600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/rain-r10c-target-followup/NEXT-PRIVATE-CONSOLE55-PLAN.md",
+      "destination": "rain-target-followup/NEXT-PRIVATE-CONSOLE55-PLAN.md",
+      "bytes": 14897,
+      "sha256": "223ab6e12afd41495064fdf2c1ba19321b1b472a6bef60f514c6abd179b44db5",
+      "lf_sha256": "223ab6e12afd41495064fdf2c1ba19321b1b472a6bef60f514c6abd179b44db5",
+      "crlf_count": 0,
+      "lf_count": 53,
+      "source_mtime_ns": 1792821460259281400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/rain-r10c-target-followup/RECEIPT.json",
+      "destination": "rain-target-followup/RECEIPT.json",
+      "bytes": 2912,
+      "sha256": "8a5482ce614bf6446b55316df6666f86d100c7aeecb7a02a36310d431188b88d",
+      "lf_sha256": "8a5482ce614bf6446b55316df6666f86d100c7aeecb7a02a36310d431188b88d",
+      "crlf_count": 0,
+      "lf_count": 75,
+      "source_mtime_ns": 1792821509803624000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/rain-r10c-target-followup/RIG-PINS.json",
+      "destination": "rain-target-followup/RIG-PINS.json",
+      "bytes": 4231,
+      "sha256": "36898001699874bd1e305066f9e67761e58c45b1469242313288e986a4a8f653",
+      "lf_sha256": "36898001699874bd1e305066f9e67761e58c45b1469242313288e986a4a8f653",
+      "crlf_count": 0,
+      "lf_count": 89,
+      "source_mtime_ns": 1792821509725790600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/rain-r10c-target-followup/SOURCE-HOST-HANDBACK-bca-v1.md",
+      "destination": "rain-target-followup/SOURCE-HOST-HANDBACK-bca-v1.md",
+      "bytes": 2955,
+      "sha256": "2f19ab549dbe28db1bfd46f657524e18965ca2d274fd175d0a975fdef603cfb0",
+      "lf_sha256": "2f19ab549dbe28db1bfd46f657524e18965ca2d274fd175d0a975fdef603cfb0",
+      "crlf_count": 0,
+      "lf_count": 12,
+      "source_mtime_ns": 1792819933011165800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/rain-r10c-target-followup/STATUS-SOURCE-HOST-bca-v1.md",
+      "destination": "rain-target-followup/STATUS-SOURCE-HOST-bca-v1.md",
+      "bytes": 4528,
+      "sha256": "6ff00f0a5664a94f7b9388425fd17551618da1f853bbc10da1da0a029bfc614a",
+      "lf_sha256": "6ff00f0a5664a94f7b9388425fd17551618da1f853bbc10da1da0a029bfc614a",
+      "crlf_count": 0,
+      "lf_count": 24,
+      "source_mtime_ns": 1792820001945646900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/rain-r10c-target-followup/TARGET-READBACK.json",
+      "destination": "rain-target-followup/TARGET-READBACK.json",
+      "bytes": 3196,
+      "sha256": "d2a215bd7353b6e674e05c8e64ea9ad88553c76d0f00caa12a5ca09334387280",
+      "lf_sha256": "d2a215bd7353b6e674e05c8e64ea9ad88553c76d0f00caa12a5ca09334387280",
+      "crlf_count": 0,
+      "lf_count": 89,
+      "source_mtime_ns": 1792821068798934700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/verify-full-target-and-fixtures.py",
+      "destination": "rain-readback-helper/verify-full-target-and-fixtures.py",
+      "bytes": 2624,
+      "sha256": "ced3a50c1846c39f0bc490134b410a51593df65250fd127f6b7120ef12422561",
+      "lf_sha256": "ced3a50c1846c39f0bc490134b410a51593df65250fd127f6b7120ef12422561",
+      "crlf_count": 0,
+      "lf_count": 19,
+      "source_mtime_ns": 1792821068617621100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/terminal-next-audit/REPRODUCE.md",
+      "destination": "terminal-frozen1d63-audit/REPRODUCE.md",
+      "bytes": 2451,
+      "sha256": "75abc9f2e99aff4a7fccfcf4f6b7b3b3d22d43dabddb568290aaec0b8ca97fb9",
+      "lf_sha256": "75abc9f2e99aff4a7fccfcf4f6b7b3b3d22d43dabddb568290aaec0b8ca97fb9",
+      "crlf_count": 0,
+      "lf_count": 13,
+      "source_mtime_ns": 1792822092700625900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/terminal-next-audit/REVIEW-TERMINAL.md",
+      "destination": "terminal-frozen1d63-audit/REVIEW-TERMINAL.md",
+      "bytes": 17863,
+      "sha256": "6178c047ee9f030346bb4758bf0741b4fc79bf0ad693290ba72b96a713dc83d5",
+      "lf_sha256": "6178c047ee9f030346bb4758bf0741b4fc79bf0ad693290ba72b96a713dc83d5",
+      "crlf_count": 0,
+      "lf_count": 57,
+      "source_mtime_ns": 1792821987019560700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/terminal-next-audit/actual-audio-completion-local-batch-counterexample.cpp",
+      "destination": "terminal-frozen1d63-audit/actual-audio-completion-local-batch-counterexample.cpp",
+      "bytes": 1960,
+      "sha256": "4a64817c586b23fb0ac4bfff9ca55f718fb7c914d8c3379c690d600a5181c1df",
+      "lf_sha256": "4a64817c586b23fb0ac4bfff9ca55f718fb7c914d8c3379c690d600a5181c1df",
+      "crlf_count": 0,
+      "lf_count": 43,
+      "source_mtime_ns": 1792821847429239600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/terminal-next-audit/actual-gate-end-late-ticket-payload-counterexamples.cpp",
+      "destination": "terminal-frozen1d63-audit/actual-gate-end-late-ticket-payload-counterexamples.cpp",
+      "bytes": 2176,
+      "sha256": "d02d439f444432a957717ce26dc2ac84fc0dc04f3c3dd7ecdf4f448e461ddbbc",
+      "lf_sha256": "d02d439f444432a957717ce26dc2ac84fc0dc04f3c3dd7ecdf4f448e461ddbbc",
+      "crlf_count": 0,
+      "lf_count": 20,
+      "source_mtime_ns": 1792821845114219600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/terminal-next-audit/actual-hand-yield-reopens-queue.cpp",
+      "destination": "terminal-frozen1d63-audit/actual-hand-yield-reopens-queue.cpp",
+      "bytes": 1439,
+      "sha256": "694f7a6b237b0407ceeb4c80e872cde501d91b58abacafc7edbaeb9cd2e705be",
+      "lf_sha256": "694f7a6b237b0407ceeb4c80e872cde501d91b58abacafc7edbaeb9cd2e705be",
+      "crlf_count": 0,
+      "lf_count": 25,
+      "source_mtime_ns": 1792821845971094600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/terminal-next-audit/actual-native-DVD-cancel-is-not-a-reader-fence.cpp",
+      "destination": "terminal-frozen1d63-audit/actual-native-DVD-cancel-is-not-a-reader-fence.cpp",
+      "bytes": 741,
+      "sha256": "c407325ebf117a24f5fbdc8d13eeeb82f459aad17ce1db168cbee6ec1f88e959",
+      "lf_sha256": "c407325ebf117a24f5fbdc8d13eeeb82f459aad17ce1db168cbee6ec1f88e959",
+      "crlf_count": 0,
+      "lf_count": 17,
+      "source_mtime_ns": 1792821846250517100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/terminal-next-audit/actual-shared-catalog-cursor-counterexample.cpp",
+      "destination": "terminal-frozen1d63-audit/actual-shared-catalog-cursor-counterexample.cpp",
+      "bytes": 2830,
+      "sha256": "b05bc3c2f3ca91722ba25eb647664e5e98d1cfce55e123e0a5a90dd253661ea8",
+      "lf_sha256": "b05bc3c2f3ca91722ba25eb647664e5e98d1cfce55e123e0a5a90dd253661ea8",
+      "crlf_count": 0,
+      "lf_count": 31,
+      "source_mtime_ns": 1792822085285108000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/terminal-next-audit/independent-catalog-counterexample.json",
+      "destination": "terminal-frozen1d63-audit/independent-catalog-counterexample.json",
+      "bytes": 556,
+      "sha256": "b4cbeb20c8a7afa40eb6241e912deec731306c37e5ee92ce8ed3fb1685e8b97c",
+      "lf_sha256": "b4cbeb20c8a7afa40eb6241e912deec731306c37e5ee92ce8ed3fb1685e8b97c",
+      "crlf_count": 0,
+      "lf_count": 9,
+      "source_mtime_ns": 1792822085925423000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/terminal-next-audit/independent-completion-counterexample.json",
+      "destination": "terminal-frozen1d63-audit/independent-completion-counterexample.json",
+      "bytes": 675,
+      "sha256": "1ff1c2e6b31b4b7ecbffd6e481226a086266ab2a64ed9f5bcb9ca06ebfae6e91",
+      "lf_sha256": "1ff1c2e6b31b4b7ecbffd6e481226a086266ab2a64ed9f5bcb9ca06ebfae6e91",
+      "crlf_count": 0,
+      "lf_count": 16,
+      "source_mtime_ns": 1792821847719883900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/terminal-next-audit/independent-counterexamples.json",
+      "destination": "terminal-frozen1d63-audit/independent-counterexamples.json",
+      "bytes": 914,
+      "sha256": "4c4c0228ff19ae5fda675d61cb9c3d9d72583be3e7d47c67cec133483bca87e9",
+      "lf_sha256": "4c4c0228ff19ae5fda675d61cb9c3d9d72583be3e7d47c67cec133483bca87e9",
+      "crlf_count": 0,
+      "lf_count": 25,
+      "source_mtime_ns": 1792821846523986600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/terminal-next-audit/pin_sources.py",
+      "destination": "terminal-frozen1d63-audit/pin_sources.py",
+      "bytes": 2650,
+      "sha256": "a700a9b5c01cd307dbfaa0344ae3deee934c6d6388970ad88b8b3e52ac12bafd",
+      "lf_sha256": "a700a9b5c01cd307dbfaa0344ae3deee934c6d6388970ad88b8b3e52ac12bafd",
+      "crlf_count": 0,
+      "lf_count": 19,
+      "source_mtime_ns": 1792822055175974500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/terminal-next-audit/run_catalog_counterexample.py",
+      "destination": "terminal-frozen1d63-audit/run_catalog_counterexample.py",
+      "bytes": 4403,
+      "sha256": "e390c8169be552d866da139aa89e121b6e77b0af18b845cd1952d35a5a03af1f",
+      "lf_sha256": "e390c8169be552d866da139aa89e121b6e77b0af18b845cd1952d35a5a03af1f",
+      "crlf_count": 0,
+      "lf_count": 37,
+      "source_mtime_ns": 1792821844968746600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/terminal-next-audit/run_completion_counterexample.py",
+      "destination": "terminal-frozen1d63-audit/run_completion_counterexample.py",
+      "bytes": 3069,
+      "sha256": "f3bd23e6693751c609ba40087d333b774d8dc0b6e4ddc080776c408876c2630d",
+      "lf_sha256": "f3bd23e6693751c609ba40087d333b774d8dc0b6e4ddc080776c408876c2630d",
+      "crlf_count": 0,
+      "lf_count": 23,
+      "source_mtime_ns": 1792821537950670200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/terminal-next-audit/run_counterexamples.py",
+      "destination": "terminal-frozen1d63-audit/run_counterexamples.py",
+      "bytes": 5707,
+      "sha256": "7fd7a0d2cf981a1ac86414be4d0f00ac97d473058d06b46ac6b055035702d90f",
+      "lf_sha256": "7fd7a0d2cf981a1ac86414be4d0f00ac97d473058d06b46ac6b055035702d90f",
+      "crlf_count": 0,
+      "lf_count": 49,
+      "source_mtime_ns": 1792821844962745600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/terminal-next-audit/source-pins.json",
+      "destination": "terminal-frozen1d63-audit/source-pins.json",
+      "bytes": 11010,
+      "sha256": "532081b2f633cb0bf81bf90691cf6ed8c120f9b29616dc05e79709043f9e23ab",
+      "lf_sha256": "532081b2f633cb0bf81bf90691cf6ed8c120f9b29616dc05e79709043f9e23ab",
+      "crlf_count": 0,
+      "lf_count": 280,
+      "source_mtime_ns": 1792822055478303400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/terminal-next-audit/MANIFEST.json",
+      "destination": "terminal-frozen1d63-audit/MANIFEST.json",
+      "bytes": 2806,
+      "sha256": "8e1fc89a474c186abd8d4366471e79905b768a0584ccd47d0d77cc528ba433c1",
+      "lf_sha256": "8e1fc89a474c186abd8d4366471e79905b768a0584ccd47d0d77cc528ba433c1",
+      "crlf_count": 0,
+      "lf_count": 82,
+      "source_mtime_ns": 1792822092864250100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/takeover-refresh-20261024.py",
+      "destination": "dated-20261024-shared-snapshots/takeover-refresh-20261024.py",
+      "bytes": 10126,
+      "sha256": "9853cf1b00eb6824371824dba2c6651393d70fd6190e5dd86ba066272ba6aba0",
+      "lf_sha256": "9853cf1b00eb6824371824dba2c6651393d70fd6190e5dd86ba066272ba6aba0",
+      "crlf_count": 0,
+      "lf_count": 31,
+      "source_mtime_ns": 1792822085500007600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+      "destination": "dated-20261024-shared-snapshots/CODEX-TAKEOVER-STATUS.md",
+      "bytes": 14745,
+      "sha256": "b8afddd96a07eacccdf2c1c6cc223c332a1cb46dd45fe4a5ac82546961c969a1",
+      "lf_sha256": "75bf42b0c8d11c75eb86b6c14c3a157bfb6dd6b483bdba609aff92d5a0eb7bb9",
+      "crlf_count": 38,
+      "lf_count": 38,
+      "source_mtime_ns": 1792822085567673300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-vis23/triangle-shadow-next/ROOT-CONNECTED-PATCH-PLAN-20261024.md",
+      "destination": "dated-20261024-crosslane-proposals/interior-vis23/ROOT-CONNECTED-PATCH-PLAN-20261024.md",
+      "bytes": 4738,
+      "sha256": "e06087c1b0c877242ef2836f1e4bd937be93061aa0c6f0a91e96f7ffd6720f18",
+      "lf_sha256": "e06087c1b0c877242ef2836f1e4bd937be93061aa0c6f0a91e96f7ffd6720f18",
+      "crlf_count": 0,
+      "lf_count": 30,
+      "source_mtime_ns": 1792822291354779800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-vis23/triangle-shadow-next/review-patch-union-implementation.md",
+      "destination": "dated-20261024-crosslane-proposals/interior-vis23/review-patch-union-implementation.md",
+      "bytes": 9760,
+      "sha256": "2b61a48ff0006d8d8d3b4149293948e9e04e9ec9f180dfd6dd636b67115dcc6e",
+      "lf_sha256": "2b61a48ff0006d8d8d3b4149293948e9e04e9ec9f180dfd6dd636b67115dcc6e",
+      "crlf_count": 0,
+      "lf_count": 57,
+      "source_mtime_ns": 1792822166875130700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-fullbuild-rain-20261024/collect.py",
+      "destination": "collect.py",
+      "bytes": 14417,
+      "sha256": "e92018fec7f45f8a53554242623a7037bf097e90c4ae02e88726e01728d51d72",
+      "lf_sha256": "e92018fec7f45f8a53554242623a7037bf097e90c4ae02e88726e01728d51d72",
+      "crlf_count": 0,
+      "lf_count": 182,
+      "source_mtime_ns": 1792822436746728200
+    }
+  ],
+  "scope": "Source/JSON/markdown/text/symbol/section/alias metadata only. No objects/binaries/assets/raw game logs/build-log bulk, frozen tree mutation, SDK/guest or integration operation.",
+  "rain_path_correction": "Requested full-target-bca44-current does not exist; authenticated finalizer actual path rain-full-target-bca44-current is preserved.",
+  "dated_snapshot_scope": "takeover updater/summary are observed20261024 snapshots, not live replacements. Terminal snapshot uses exact frozen1d63 manifest; mutable later catalog-successor outputs and active rain canary trees/outputs are excluded.",
+  "crosslane_proposal_scope": "Connected-patch proposal and latest union implementation review are dated source/host/offline records only. No proposal, runtime/data or performance admission follows; no wait for pending connected-plan review."
+}

@@ -1,0 +1,5 @@
+make: Entering directory '/root/work/lanes/gc-port23/port/dreamcast/game'
+Makefile:1458: warning: overriding recipe for target '/root/work/lanes/gc-port23-full-target-scratch/off/out/obj/aica-audio.h'
+Makefile:1444: warning: ignoring old recipe for target '/root/work/lanes/gc-port23-full-target-scratch/off/out/obj/aica-audio.h'
+game30.mk:3718: *** SH4ZAM submodule port/dreamcast/game/third_party/sh4zam is empty: run git submodule update --init (or clone with --recurse-submodules).  Stop.
+make: Leaving directory '/root/work/lanes/gc-port23/port/dreamcast/game'

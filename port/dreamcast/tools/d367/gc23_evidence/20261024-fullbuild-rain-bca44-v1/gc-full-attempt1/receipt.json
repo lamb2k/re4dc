@@ -1,0 +1,30 @@
+{
+  "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "baseline": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "profile": "/root/probe/lanes/route/out-rrfb254e8rP",
+  "pins": {
+    "/root/probe/lanes/route/out-rrfb254e8rP/candidate.txt": "0d5e7fe22f95b6aa8a131a790490dd8fc268b10f721924909de206610a11028d",
+    "/root/probe/lanes/route/out-rrfb254e8rP/resolved-knobs.txt": "63b9cdf90190a880422074bf4e7c7c488cd013463a18d9aaeb6fc3bd470a9a5b",
+    "/root/probe/lanes/route/out-rrfb254e8rP/re4dc-game.elf": "3a110765ef415dfd4e4a00104bfc6094b393f87cb9f9f55672046f90e702ee8f",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em22.ovl": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em2b.ovl": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em2f.ovl": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em35.ovl": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em3b.ovl": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417",
+    "/root/probe/lanes/route/out-rrfb254e8rP/pl0f.ovl": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e",
+    "/root/probe/lanes/route/out-rrfb254e8rP/pl11.ovl": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e",
+    "/root/probe/lanes/route/out-rrfb254e8rP/pl14.ovl": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e",
+    "/root/probe/lanes/route/out-rrfb254e8rP/sscrn.ovl": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st1_0.ovl": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st1_1.ovl": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st1_2.ovl": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st1_3.ovl": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st2_0.ovl": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2",
+    "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a": "5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf"
+  },
+  "scope": "Fresh actual normal full source rP builds using exact retained candidate overrides, catalog0. No media/stage/guest, installed catalog or I001 pass.",
+  "arms": {},
+  "allocated_cap": 6442450944,
+  "floor": 25769803776,
+  "source_script_sha256": "54c46c013f6c4760181b51da13977e1589cd9163fa71e1a60d09265e30a35c54"
+}
