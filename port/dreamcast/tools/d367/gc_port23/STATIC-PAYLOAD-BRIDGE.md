@@ -43,9 +43,13 @@ real payload/core helpers. The shared renderer is still unapplied.
 
 Open integration boundaries, deliberately not certified by this patch:
 
-- Far-shell draw needs its own exact immutable payload bounds and acceptance
-  bridge. The r11f early transaction routes into the same scoped ps2_pass;
-  that mapping still needs whole-boundary integration review.
+- The separate far_shell_payload_patch.py proposal adds stable proof outside
+  reset State, full validated file capture excluding generated LUT/tight data
+  and padding, retirement before free, and a scope around actual direct draws.
+  Loader/draw controls cover reload, failed input/bind, zero accepted vertices
+  and stale proof. Both include parts preserve OFF preprocessed tokens. This
+  patch and the paired static patch remain unapplied. The r11f early transaction
+  routes into the same scoped ps2_pass and needs whole-boundary review.
 - R4SG or any other consumed file that changes geometry/material/source
   interpretation requires a separate/composite reviewed identity. R4PW alone
   does not qualify those additional sidecars.
@@ -58,5 +62,6 @@ image identity, memory/heap gate or guest acceptance follows from this proposal.
 Embedded proof target size is expected 44 B per owner plus one deferred pointer
 and small global registry state. Mixed quad records add 12 B each (576 B for
 48), plus a borrowed 576-byte stack proof list, small scope descriptors and one
-4-byte active batch pointer on SH4. There is no heap table or resident catalog
+4-byte active batch pointer on SH4. Far-shell adds one stable 44-byte proof,
+excluded entirely when the gate is off. There is no heap table or resident catalog
 growth. Actual SH4 object/link pricing remains required.
