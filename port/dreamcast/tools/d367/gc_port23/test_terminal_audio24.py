@@ -35,10 +35,14 @@ class TerminalAudio(unittest.TestCase):
 #include <mutex>
 #include <thread>
 #include "include/gc_asset_audio_stop.h"
+std::mutex irq_lock;
+struct HostCritical {HostCritical(){irq_lock.lock();}~HostCritical(){irq_lock.unlock();}};
+using Stop=re4dc_gcasset::AudioStop<HostCritical>;
+static_assert(sizeof(Stop)==4);
 std::mutex g_lock;
 void mutex_lock(std::mutex* p){p->lock();}
 void mutex_unlock(std::mutex* p){p->unlock();}
-re4dc_gcasset::AudioStop gcasset_audio_stop;
+Stop gcasset_audio_stop;
 unsigned gcasset_audio_checkpoints=0, closes=0, opens=0, faults=0;
 namespace re4dc_gcasset {
 void close_audio_admission(){++closes;}
@@ -78,12 +82,12 @@ int main(){
     re4dc_gcasset_audio_admission(1);re4dc_gcasset_audio_handoff(7,8);
     assert(opens==0 && faults==2);
     // A creation failure releases exactly its claim; stop still cannot reopen.
-    re4dc_gcasset::AudioStop failed;
+    Stop failed;
     assert(failed.reader_starting());failed.reader_exited();failed.request();
     assert(failed.reader_idle() && !failed.reader_starting());
     // Stop-versus-detached-create race: either refused or charged until exit.
     for(unsigned i=0;i<100;++i){
-        re4dc_gcasset::AudioStop state;bool accepted=false;
+        Stop state;bool accepted=false;
         std::thread a([&]{accepted=state.reader_starting();});
         std::thread b([&]{state.request();});a.join();b.join();
         assert(state.stopped());assert(state.reader_idle()!=accepted);

@@ -2,23 +2,22 @@
 #include "gc_asset_gate.h"
 #if RE4DC_GC_ASSET_GATE
 namespace re4dc_gcasset {
-// Terminal-only stop, not a room handoff. Audio callback admission is serialized
-// by its existing mutex. Reader creation and stop use one atomic word so stop
-// cannot report idle in the gap before a detached reader starts. Only the real
-// reader exit, after its last disc/G2 operation, releases the reader bit.
-// No allocation, logging, waits or catalog access belongs in this state.
-struct AudioStop {
-    unsigned state = 0;
-    enum : unsigned { Stop = 1, Reader = 2 };
-    bool stopped() const { return (__atomic_load_n(&state, __ATOMIC_ACQUIRE)&Stop)!=0; }
-    void request() { __atomic_fetch_or(&state, Stop, __ATOMIC_ACQ_REL); }
+// One SH4, one tiny caller-supplied IRQ critical section. No new 32-bit atomic
+// runtime/library or SH4A-only instruction contract. The host control supplies
+// a mutex critical section to exercise concurrent creation/exit requests.
+// No wait, allocation, logging, G2 work or catalog access belongs in this state.
+template<class Critical> struct AudioStop {
+    unsigned state=0;
+    enum : unsigned { Stop=1,Reader=2 };
+    bool stopped() const { Critical guard;return (state&Stop)!=0; }
+    void request() { Critical guard;state|=Stop; }
     bool reader_starting() {
-        unsigned expected=0;
-        return __atomic_compare_exchange_n(&state,&expected,Reader,false,__ATOMIC_ACQ_REL,__ATOMIC_ACQUIRE);
+        Critical guard;
+        if(state)return false;
+        state=Reader;return true;
     }
-    void reader_exited() { __atomic_fetch_and(&state, ~Reader, __ATOMIC_RELEASE); }
-    bool reader_idle() const { return (__atomic_load_n(&state, __ATOMIC_ACQUIRE)&Reader)==0; }
+    void reader_exited() { Critical guard;state&=~Reader; }
+    bool reader_idle() const { Critical guard;return (state&Reader)==0; }
 };
-static_assert(sizeof(AudioStop)==4,"price terminal audio state explicitly");
 }
 #endif

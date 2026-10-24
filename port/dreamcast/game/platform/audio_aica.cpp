@@ -1388,7 +1388,14 @@ namespace {
 mutex_t g_lock = MUTEX_INITIALIZER;   // blocks (map) vs the audio step
 #if RE4DC_GC_ASSET_GATE
 unsigned gcasset_audio_checkpoints;
-re4dc_gcasset::AudioStop gcasset_audio_stop;
+struct GcAssetAudioCritical {
+    int previous;
+    GcAssetAudioCritical():previous(irq_disable()){}
+    ~GcAssetAudioCritical(){irq_restore(previous);}
+};
+using GcAssetAudioStop=re4dc_gcasset::AudioStop<GcAssetAudioCritical>;
+static_assert(sizeof(GcAssetAudioStop)==4,"price terminal audio state explicitly");
+GcAssetAudioStop gcasset_audio_stop;
 #endif
 #if RE4DC_CABIN_SOURCE
 // CABIN_AUDIO_STATE_BEGIN: fixed output-only ownership; all access holds g_lock
@@ -1930,7 +1937,7 @@ void start_thread()
     r.label = "re4dc-aica-str";
     r.create_detached = true;
 #if RE4DC_GC_ASSET_GATE
-    // The atomic claim refuses a terminal request even if it raced creation.
+    // The IRQ-guarded claim refuses a stop that raced reader creation.
     kthread_t* st = nullptr;
     if(gcasset_audio_stop.reader_starting()){
         st=thd_create_ex(&r,str_main,nullptr);
