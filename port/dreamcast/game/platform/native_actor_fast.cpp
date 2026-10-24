@@ -141,6 +141,11 @@ void re4dc_ganlit_fill_set(unsigned percent) {
 #ifndef RE4DC_ACTOR_SETUP_LEAN
 #define RE4DC_ACTOR_SETUP_LEAN 0
 #endif
+// ACTOR_BYTES_LEAN (game30.mk; default 0): a Part's constant ARGB survives position/UV updates.
+// Prime its cache slots once, including the headroom fold. MOVCA position allocation cannot retain it.
+#ifndef RE4DC_ACTOR_BYTES_LEAN
+#define RE4DC_ACTOR_BYTES_LEAN 0
+#endif
 // ACTOR_MOVCA (game30.mk; render only, default 0): the position kernels allocate each meshlet cache entry's line
 // with movca.l (no fill from RAM: the line is written before it is read); emit / emit_sq write the flags word.
 #ifndef RE4DC_ACTOR_MOVCA
@@ -3361,6 +3366,10 @@ struct Part {
     Re4dcModelPacket packet{};
     Cache cache{};
     unsigned used = 0, input = 0, output = 0, primed = 0;
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+    // Unlike flags/oargb, this must start fresh for each Part even when a OneWindow reuses its cache.
+    unsigned flat_primed = 0;
+#endif
     bool streaming = false, committed = false;
 #if RE4DC_ACTOR_DIRECT
     bool direct = false;
@@ -3495,6 +3504,18 @@ struct Part {
         return true;
     }
     // Flags/oargb words of the cache entries (the passes never write them).
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+    void flat_colors(unsigned n, u32 argb) {
+        if (n <= flat_primed) return;
+        unsigned i = flat_primed;
+        pvr_vertex_t* v = cache.v + i;
+        for (; i + 4 <= n; i += 4, v += 4) {
+            v[0].argb = argb; v[1].argb = argb; v[2].argb = argb; v[3].argb = argb;
+        }
+        for (; i < n; ++i, ++v) v->argb = argb;
+        flat_primed = n;
+    }
+#endif
     void prime(unsigned n) {
         for (; primed < n; ++primed) { cache.v[primed].flags = PVR_CMD_VERTEX; cache.v[primed].oargb = 0; }
     }
@@ -5894,6 +5915,17 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
                      near_distance, far_distance};
     e.colors = (p.alpha_state & 256) ? p.colors : nullptr;
     e.alpha = u32(p.alpha_state & 255) << 24;
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+    const bool retain_flat = lights.constant && !e.colors;
+    u32 flat_argb = 0;
+    if (retain_flat) {
+        flat_argb = e.alpha | lights.constant_rgb;
+#if RE4DC_LEON_LIGHT_HEADROOM
+        if (lights.half_post)
+            flat_argb = (flat_argb & 0xFF000000U) | ((flat_argb >> 1) & 0x007F7F7FU);
+#endif
+    }
+#endif
     const auto* table = reinterpret_cast<const MeshletInfo*>(base + sizeof(BlobHeader));
     const unsigned rs = 3U + ((blob->flags & kHasCi) ? 1U : 0U) + ((blob->flags & kHasBake) ? 1U : 0U);
     const unsigned color_index = blob->color_index;
@@ -5964,6 +5996,10 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         e.prime(nv);
         if (e.uv16) pack_uv16(e.cache.v, nv, true);
         if (lights.constant) {
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+            if (!e.colors) e.flat_colors(nv, flat_argb);
+            else
+#else
 #if RE4DC_AVK
             // ACTOR_VTX_KERNEL: without per-vertex alpha every vertex gets the same word; one store each
             // (the loop below reloads e.colors after every store: the stores may alias it).
@@ -5976,6 +6012,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
                 }
                 for (; i < nv; ++i, ++v) v->argb = argb;
             } else
+#endif
 #endif
             for (unsigned i = 0; i < nv; ++i)
                 e.cache.v[i].argb = (e.colors ? u32(e.colors[r.ci(i) * 4 + 3]) << 24 : e.alpha) | lights.constant_rgb;
@@ -6000,7 +6037,11 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
 #if RE4DC_LEON_LIGHT_HEADROOM
         // LEON_LIGHT_HEADROOM: a 2x-texture part outside the owner path (build_lights half_post): the 1x look
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+        if (lights.half_post && !retain_flat)
+#else
         if (lights.half_post)
+#endif
             for (unsigned i = 0; i < nv; ++i) {
                 const u32 c = e.cache.v[i].argb;
                 e.cache.v[i].argb = (c & 0xFF000000U) | ((c >> 1) & 0x007F7F7FU);
@@ -6533,6 +6574,17 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
                      near_distance, far_distance};
     e.colors = (p.alpha_state & 256) ? p.colors : nullptr;
     e.alpha = u32(p.alpha_state & 255) << 24;
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+    const bool retain_flat = lights.constant && !e.colors;
+    u32 flat_argb = 0;
+    if (retain_flat) {
+        flat_argb = e.alpha | lights.constant_rgb;
+#if RE4DC_LEON_LIGHT_HEADROOM
+        if (lights.half_post)
+            flat_argb = (flat_argb & 0xFF000000U) | ((flat_argb >> 1) & 0x007F7F7FU);
+#endif
+    }
+#endif
     const unsigned rs = 3U + ((blob->flags & kHasCi) ? 1U : 0U) + ((blob->flags & kHasBake) ? 1U : 0U);
     const unsigned color_index = blob->color_index;
     const unsigned level = tier == kTierFar ? blob->levels
@@ -6613,6 +6665,10 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         e.prime(nv);
         APROF_SPAN(aprof_lit, APROF_LIT);
         if (lights.constant) {
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+            if (!e.colors) e.flat_colors(nv, flat_argb);
+            else
+#else
 #if RE4DC_AVK
             if (!e.colors) {
                 const u32 argb = e.alpha | lights.constant_rgb;
@@ -6623,6 +6679,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
                 }
                 for (; i < nv; ++i, ++v) v->argb = argb;
             } else
+#endif
 #endif
             for (unsigned i = 0; i < nv; ++i)
                 e.cache.v[i].argb = (e.colors ? u32(e.colors[r.ci(i) * 4 + 3]) << 24 : e.alpha) | lights.constant_rgb;
@@ -6647,7 +6704,11 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
 #endif
 #if RE4DC_LEON_LIGHT_HEADROOM
         // LEON_LIGHT_HEADROOM: a 2x-texture part outside the owner path (build_lights half_post): the 1x look
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+        if (lights.half_post && !retain_flat)
+#else
         if (lights.half_post)
+#endif
             for (unsigned i = 0; i < nv; ++i) {
                 const u32 c = e.cache.v[i].argb;
                 e.cache.v[i].argb = (c & 0xFF000000U) | ((c >> 1) & 0x007F7F7FU);

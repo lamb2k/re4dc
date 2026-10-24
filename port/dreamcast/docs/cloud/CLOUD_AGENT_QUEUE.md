@@ -153,3 +153,18 @@ release recipe are left for the coordinator.
 
 Continue to Build 7 after publishing this branch, as requested. No change to
 the landed Build 4 fixes or Build 5 implementation is included.
+### 2026-10-24: Build 7 hand-back (`codex/actor-bytes-lean-20261024`)
+
+Candidate: `ACTOR_BYTES_LEAN=1`, default 0. Base `d5c1ceab`.
+The [report](BUILD7_ACTOR_BYTES_LEAN_20261024.md) separates eliminated colour
+stores/repeated line visits from the unchanged unique vertex-cache footprint.
+Palette-run reuse already exists; the larger input-line reduction is an offline
+split-stream proposal, with no format change in this branch.
+
+1. Can the actor census provide constant-light/no-vertex-alpha parts, visible
+   meshlet sizes per part, and `half_post` frequency? The 87/50 world-part counts
+   cannot scale an actor estimate.
+2. Does matched console A/B show a benefit from fewer colour writes and revisits
+   with the same distinct vertex-cache lines?
+3. How much source-position/normal sharing must remain resident for clipping,
+   mutable models and fallback paths before a dense offline repack is viable?
