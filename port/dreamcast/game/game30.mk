@@ -3976,10 +3976,12 @@ endif
 # PS2_ETS_MATCH=1 (render + room objects, default 0; lane fix-r10d-speed23 2026-10-23): skip the etc-list entries the
 # PS2 room data dropped (EtcModel.cpp EtcModelListSet). r10d: GC lists 16 etc models, the PS2 r10d.dat ETS 13; the
 # three GC-only entries are the et1400 torches (cEmTorch, ids 2/4/5). No room script references them (R10dMain is empty).
+# PS2_ETS_MATCH=2 (lane purge-props24 2026-10-24, GC purge "drop what PS2 dropped"): the same for every chapter 1-2 room
+# (109 entries: torches et1400 / et0c00 / et3800 / et1c00, r11a et1000, r11f et0000 panes; table in EtcModel.cpp).
 PS2_ETS_MATCH ?= 0
-ifneq ($(filter-out 0 1,$(PS2_ETS_MATCH)),)
-$(error PS2_ETS_MATCH is 0 or 1)
+ifneq ($(filter-out 0 1 2,$(PS2_ETS_MATCH)),)
+$(error PS2_ETS_MATCH is 0, 1 or 2)
 endif
-ifeq ($(PS2_ETS_MATCH),1)
-$(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_PS2_ETS_MATCH=1
+ifneq ($(PS2_ETS_MATCH),0)
+$(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_PS2_ETS_MATCH=$(PS2_ETS_MATCH)
 endif

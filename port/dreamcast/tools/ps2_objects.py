@@ -29,6 +29,8 @@ triangle is oriented so its face normal agrees with its corner normals in the sa
                        already draws it): the GC copy keeps its header, joints and part headers with no triangles
                        (empty parts; one unused vertex so no array is empty). r101 BIN 0x20 = the burning stake
                        (SetObj00), PS2 SMD_016 / SMD_120.
+     --etm-empty et0000.bin,...  etc models whose PS2 model is a placeholder (window panes et0000 / et2500: one
+                       degenerate triangle): emptied like --world-owned (the PS2 draws nothing there; lane purge-props24).
      --etm-from et1000.bin=r109,...  an etc model absent from this room's PS2 ETM, taken from that room's PS2 ETM;
                        refused unless this room's GC model is byte-identical to that room's (the same object). r11a
                        et1000 (torch type 4) = r109's.
@@ -650,6 +652,9 @@ def room(args):
                 raise ValueError('--etm-from %s: %s is in this room\'s PS2 ETM or absent in %s' % (spec, nm, src_room))
             pents[nm] = sp[nm]; ps2_from[nm] = src_room
         want = None if args.etm == 'all' else set(args.etm.split(','))
+        etm_empty = set(x for x in (args.etm_empty or '').split(',') if x)
+        if want is not None:
+            want |= etm_empty
         pieces = []
         if lents[-1][2] != len(lb) or lents[0][1] != 0x20:
             raise ValueError('ETM sub-files do not tile the entry')
@@ -663,7 +668,13 @@ def room(args):
                     src_le = to_le(gbin, nm)
                     if body[0x40:].rstrip(b'\0') != src_le.rstrip(b'\0'):
                         raise ValueError('ETM %s is not le_mirror(GC)' % nm)
-                    new, st = rebuild(gbin, pents[nm], tex_map=TEX_MAPS.get(nm.lower()))
+                    if nm in etm_empty:
+                        # --etm-empty: the PS2 model is a placeholder (no triangle): the GC copy keeps its header,
+                        # joints and part headers with no triangles, as --world-owned
+                        new, st = rebuild(gbin, None, lambda m: [], allow_empty=True)
+                        st['ps2'] = 'placeholder (emptied)'
+                    else:
+                        new, st = rebuild(gbin, pents[nm], tex_map=TEX_MAPS.get(nm.lower()))
                     if st['out_tris'] >= st['gc_tris'] and not args.keep_larger:
                         st.update(kind='etc', name=nm, skipped='PS2 not smaller')
                         report['objects'].append(st)
@@ -721,6 +732,7 @@ def main():
     a.add_argument('--dar', required=True); a.add_argument('--room', required=True); a.add_argument('--pairs')
     a.add_argument('--etm'); a.add_argument('--pad-to'); a.add_argument('--out', required=True); a.add_argument('--json')
     a.add_argument('--keep-larger', action='store_true'); a.add_argument('--world-owned'); a.add_argument('--etm-from')
+    a.add_argument('--etm-empty', help='etc models (name,...) whose PS2 model is a placeholder: emptied (lane purge-props24)')
     a.add_argument('--uv-fold', action='store_true', help='converter v3: fold PS2 triangle UVs into [0, 1] (UV_FOLD)')
     a.add_argument('--gc-iso', default=GC_ISO); a.add_argument('--ps2-iso', default=PS2_ISO)
     args = ap.parse_args()
