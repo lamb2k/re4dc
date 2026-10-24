@@ -43,6 +43,13 @@ void begin(unsigned room, unsigned visit, unsigned wired_consumers);
 void begin_closed(unsigned room,unsigned visit,unsigned wired_consumers);
 void begin_startup_closed(unsigned visit,unsigned wired_consumers);
 void open_audio_admission(); // fixed state only, no logging/IO
+// Publish the next identity under the same audio mutex before unlocked END /
+// BEGIN logging. Future-tagged events remain queued until the matching BEGIN.
+bool handoff_audio_admission(unsigned room,unsigned visit);
+void begin_room_handoff(unsigned room,unsigned visit,unsigned wired_consumers);
+enum TransitionReason : unsigned { InitialRoom,RoomRetire };
+constexpr unsigned FromStartup=0xffffffffU;
+void begin_transition_handoff(unsigned visit,unsigned wired_consumers,unsigned from_room,TransitionReason);
 // digest is the hash of the actual immutable authored payload, computed at load
 // before pose/colour writes; GC lookup keys and source pointer values are not it.
 // Call only after vertices/sample key-on were accepted. Loads, reservations,

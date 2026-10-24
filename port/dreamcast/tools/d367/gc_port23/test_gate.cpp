@@ -87,4 +87,36 @@ int main() {
     assert(!rows() && output.find("errors=3")!=std::string::npos); // begin, refused reopen, old visit
     output.clear();begin_startup_closed(0xffffffffU,0xffffffffU);test_max_counters();
     emitted(SourceGeometry,"abcdefghijklmno","abcdefghijklmnopqrstuvwxyz012345678901234567890",gc);end(0xffffffffU);
+    // Publish next admission before unlocked old END/new BEGIN. Future audio
+    // must remain queued, not be dropped or relabeled as the old visit.
+    assert(install(catalog,2));output.clear();begin_startup_closed(1,Required);open_audio_admission();
+    queued(audio_ticket(),SoundBank,"sample","core:1",gc);
+    audio_mutex=true;assert(handoff_audio_admission(0,2));queued(audio_ticket(),SoundBank,"sample","core:1",gc);audio_mutex=false;
+    end(1);assert(rows()==1 && output.find("errors=0")!=std::string::npos);
+    output.clear();queued(audio_ticket(),SoundBank,"sample","core:1",gc);pump();assert(output.empty()); // unlocked handoff gap
+    begin_transition_handoff(2,Required,FromStartup,InitialRoom);pump();
+    assert(rows()==1 && output.find("phase=transition visit=2")!=std::string::npos && output.find("from_phase=startup")!=std::string::npos);
+    audio_mutex=true;assert(handoff_audio_admission(0x111,3));queued(audio_ticket(),SoundBank,"sample","core:1",gc);audio_mutex=false;
+    end(2);assert(output.find("sound_bank=2")!=std::string::npos && output.find("errors=0")!=std::string::npos);
+    output.clear();begin_room_handoff(0x111,3,Required);pump();end(3);assert(rows()==1 && output.find("room=0111 visit=3")!=std::string::npos);
+    assert(output.find("errors=0")!=std::string::npos);
+    // An outstanding old ticket is still fatal across a published transition.
+    output.clear();begin(0x111,4,Required);const auto old_ticket=audio_ticket();assert(handoff_audio_admission(0,5));
+    queued(audio_ticket(),SoundBank,"sample","core:1",gc);end(4);assert(output.find("errors=1")!=std::string::npos);
+    output.clear();begin_transition_handoff(5,Required,0x111,RoomRetire);queued(old_ticket,SoundBank,"sample","core:1",gc);pump();end(5);
+    assert(rows()==1 && output.find("from_room=0111 transition_reason=room-retire")!=std::string::npos && output.find("errors=2")!=std::string::npos);
+    // Explicit terminal close cancels a prepublished handoff. Pending future
+    // work cannot be excluded from the terminal checkpoint as if BEGIN existed.
+    output.clear();begin(0x111,6,Required);assert(handoff_audio_admission(0,7));queued(audio_ticket(),SoundBank,"sample","core:1",gc);
+    close_audio_admission();end(6);assert(!rows() && output.find("errors=1")!=std::string::npos);
+    output.clear();begin(0x111,8,Required);test_queue_lock(true);assert(!handoff_audio_admission(0,9));test_queue_lock(false);end(8);
+    assert(output.find("errors=1")!=std::string::npos);
+    output.clear();begin(0x111,10,Required);assert(handoff_audio_admission(0,11));
+    for(unsigned i=0;i<40;++i)queued(audio_ticket(),SoundBank,"sample","core:1",gc);
+    end(10);assert(!rows() && output.find("errors=9")!=std::string::npos);
+    begin_transition_handoff(11,Required,0x111,RoomRetire);pump();end(11);
+    // Maximum-width transition BEGIN, ASSET, COUNTS and END use production formatter.
+    assert(install(catalog,2));output.clear();begin(0x111,0xfffffffeU,Required);assert(handoff_audio_admission(0,0xffffffffU));end(1);
+    begin_transition_handoff(0xffffffffU,0xffffffffU,0xffffffffU,RoomRetire);test_max_counters();
+    emitted(SourceGeometry,"abcdefghijklmno","abcdefghijklmnopqrstuvwxyz012345678901234567890",gc);end(0xffffffffU);
 }

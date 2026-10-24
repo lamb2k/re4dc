@@ -20,13 +20,25 @@ HERE = Path(__file__).resolve().parent
 def scope_name(row):
     if 'room' in row and 'phase' not in row and isinstance(row['room'], str) and ROOM.fullmatch(row['room']):
         return row['room']
-    if 'room' not in row and row.get('phase') == 'startup':
-        return '@startup'
-    raise ValueError('requires exactly one game room or named startup phase')
+    if 'room' not in row and row.get('phase') in ('startup', 'transition'):
+        return '@' + row['phase']
+    raise ValueError('requires exactly one game room or named startup/transition phase')
+
+
+def transition_location(row):
+    if row.get('transition_reason') == 'initial-room' and row.get('from_phase') == 'startup' and 'from_room' not in row:
+        return {'transition_reason': 'initial-room', 'from_phase': 'startup'}
+    if row.get('transition_reason') == 'room-retire' and isinstance(row.get('from_room'), str) and ROOM.fullmatch(row['from_room']) and 'from_phase' not in row:
+        return {'transition_reason': 'room-retire', 'from_room': row['from_room']}
+    raise ValueError('transition requires exact reason and originating room or startup phase')
 
 
 def identity(row):
-    return (scope_name(row), *(row[k] for k in ('kind', 'id', 'sha256', 'provenance')))
+    scope = scope_name(row)
+    if scope == '@transition':
+        metadata = transition_location(row)
+        scope += '/' + '/'.join(f'{k}:{v}' for k, v in sorted(metadata.items()))
+    return (scope, *(row[k] for k in ('kind', 'id', 'sha256', 'provenance')))
 
 
 def read_allowlist(path, baseline):
@@ -37,8 +49,11 @@ def read_allowlist(path, baseline):
             raise ValueError('allowlist schema must be 1 with an entries list')
         seen = set()
         for r in document['entries']:
-            location_field = 'phase' if scope_name(r) == '@startup' else 'room'
-            if set(r) != {location_field, 'kind', 'id', 'sha256', 'provenance', 'reason', 'owner', 'evidence'}:
+            scope = scope_name(r)
+            location_fields = {'phase'} if scope.startswith('@') else {'room'}
+            if scope == '@transition':
+                location_fields |= transition_location(r).keys()
+            if set(r) != {*location_fields, 'kind', 'id', 'sha256', 'provenance', 'reason', 'owner', 'evidence'}:
                 raise ValueError('allowlist row fields differ from schema')
             if not TOKEN.fullmatch(r['kind']) or not TOKEN.fullmatch(r['id']):
                 raise ValueError('allowlist requires exact room/kind/id; patterns are forbidden')
@@ -80,6 +95,7 @@ def judge(logs, allowlist, requested):
         file_visits = 0
         startup_visits = 0
         last_visit = 0
+        previous_scope = None
         for number, line in enumerate(content.splitlines(), 1):
             if 'GC-ASSET' not in line:
                 continue
@@ -92,7 +108,7 @@ def judge(logs, allowlist, requested):
                     raise ValueError('unrecognized GC-ASSET diagnostic')
                 r = fields(line, prefix)
                 scope = scope_name(r)
-                location_field = 'phase' if scope == '@startup' else 'room'
+                location_field = 'phase' if scope.startswith('@') else 'room'
                 if not r.get('visit', '').isdigit() or not 0 < int(r['visit']) <= 0xffffffff:
                     raise ValueError('invalid room/visit')
                 key = (name, scope, int(r['visit']))
@@ -107,16 +123,24 @@ def judge(logs, allowlist, requested):
                         startup_visits += 1
                     elif startup_visits != 1:
                         raise ValueError('game room requires preceding startup diagnostic coverage')
+                    transition = {}
+                    if scope == '@transition':
+                        transition = transition_location(r)
+                        origin = '@startup' if 'from_phase' in transition else transition['from_room']
+                        if previous_scope != origin:
+                            raise ValueError('transition origin does not match the preceding completed visit')
+                    elif scope != '@startup' and previous_scope != '@transition':
+                        raise ValueError('game room requires preceding completed transition coverage')
                     last_visit = key[2]
-                    required = {'v', location_field, 'visit', 'wired', 'required', 'catalog', 'catalog_ok'}
+                    required = {'v', location_field, 'visit', 'wired', 'required', 'catalog', 'catalog_ok', *transition}
                     if set(r) != required or int(r['wired'], 16) != REQUIRED or int(r['required'], 16) != REQUIRED:
                         raise ValueError('missing diagnostic consumer wiring')
                     if r['catalog_ok'] != '1' or not r['catalog'].isdigit():
                         raise ValueError('invalid provenance catalog')
-                    visits[key] = {'rows': set(), 'first_consumers': {c: 0 for c in CONSUMERS}, 'counts': None, 'ended': False, 'scope': scope}
+                    visits[key] = {'rows': set(), 'first_consumers': {c: 0 for c in CONSUMERS}, 'counts': None, 'ended': False, 'scope': scope, 'transition': transition}
                     file_visits += 1
                     active = key
-                    if scope != '@startup':
+                    if not scope.startswith('@'):
                         observed.add(scope)
                 elif prefix == 'GC-ASSET ':
                     if active != key:
@@ -129,7 +153,7 @@ def judge(logs, allowlist, requested):
                         raise ValueError('invalid asset identity/payload digest')
                     if r['provenance'] not in ('gc', 'unknown'):
                         raise ValueError('GC-ASSET row must retain gc/unknown provenance')
-                    asset = identity(r)
+                    asset = identity({**r, **visits[key]['transition']})
                     if asset in visits[key]['rows']:
                         raise ValueError('duplicate asset row in room visit')
                     visits[key]['rows'].add(asset)
@@ -164,6 +188,7 @@ def judge(logs, allowlist, requested):
                     if any(counts[c] < 0 for c in CONSUMERS) or int(r['frame']) < 0:
                         raise ValueError('negative counter/frame')
                     visits[key]['ended'] = True
+                    previous_scope = scope
                     active = None
             except (ValueError, KeyError, TypeError) as error:
                 failures.append(f'{location}: {error}')

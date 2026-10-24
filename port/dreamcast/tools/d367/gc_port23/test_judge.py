@@ -18,30 +18,56 @@ END = ('GC-ASSET-COUNTS v=1 room=0111 visit=1 '
        + ' '.join(f'{c}={1 if c == "source_geometry" else 0}' for c in j.CONSUMERS)
        + '\nGC-ASSET-END v=1 room=0111 visit=1 frame=2 wired=1ff checked=1ff required=1ff unique=1 overflow=0 errors=0 catalog_ok=1')
 STARTUP = '\n'.join((BEGIN, END.replace('unique=1', 'unique=0'))).replace('room=0111', 'phase=startup')
+INITIAL = (BEGIN.replace('room=0111', 'phase=transition from_phase=startup transition_reason=initial-room')+'\n'+END.replace('unique=1', 'unique=0').replace('room=0111', 'phase=transition')).replace('visit=1', 'visit=2')
 
 
 class JudgeTests(unittest.TestCase):
     def check(self, text, expected, required=('0111',), allow=None):
-        text = STARTUP + '\n' + text.replace('visit=1', 'visit=2')
+        text = STARTUP + '\n' + INITIAL + '\n' + text.replace('visit=1', 'visit=3')
         result = j.judge([('fixture', text)], {j.identity(ROW): ROW} if allow is None else allow, required)
         self.assertEqual(result['pass'], expected, result)
         return result
 
     def test_startup_is_named_required_and_has_independent_exceptions(self):
-        room = '\n'.join((BEGIN, EVENT, END)).replace('visit=1', 'visit=2')
+        room = '\n'.join((BEGIN, EVENT, END)).replace('visit=1', 'visit=3')
         self.assertFalse(j.judge([('fixture', room)], {j.identity(ROW): ROW}, ['0111'])['pass'])
         startup_row = dict(ROW);del startup_row['room'];startup_row['phase'] = 'startup'
         startup = '\n'.join((BEGIN, EVENT, END)).replace('room=0111', 'phase=startup')
         allow = {j.identity(ROW): ROW}
-        self.assertFalse(j.judge([('fixture', startup+'\n'+room)], allow, ['0111'])['pass'])
+        self.assertFalse(j.judge([('fixture', startup+'\n'+INITIAL+'\n'+room)], allow, ['0111'])['pass'])
         allow[j.identity(startup_row)] = startup_row
-        self.assertTrue(j.judge([('fixture', startup+'\n'+room)], allow, ['0111'])['pass'])
+        self.assertTrue(j.judge([('fixture', startup+'\n'+INITIAL+'\n'+room)], allow, ['0111'])['pass'])
         self.assertFalse(j.judge([('fixture', startup)], allow, [])['pass'])
         for bad in (startup.replace('phase=startup', 'room=0000'),
                     startup.replace('phase=startup', 'phase=startup room=0000'),
                     startup.replace('phase=startup', 'phase=menu'),
                     startup.replace('visit=1', 'visit=2')):
-            self.assertFalse(j.judge([('fixture', bad+'\n'+room)], allow, ['0111'])['pass'])
+            self.assertFalse(j.judge([('fixture', bad+'\n'+INITIAL+'\n'+room)], allow, ['0111'])['pass'])
+
+    def test_transition_origin_order_and_separate_allowance(self):
+        room = '\n'.join((BEGIN, EVENT, END)).replace('visit=1', 'visit=3')
+        transition = (BEGIN.replace('room=0111', 'phase=transition from_room=0111 transition_reason=room-retire')+'\n'+EVENT.replace('room=0111', 'phase=transition')+'\n'+END.replace('room=0111', 'phase=transition')).replace('visit=1', 'visit=4')
+        next_room = room.replace('0111', '0113').replace('visit=3', 'visit=5')
+        allow = {j.identity(ROW): ROW}
+        next_row = dict(ROW, room='0113');allow[j.identity(next_row)] = next_row
+        reviewed = dict(ROW);del reviewed['room'];reviewed.update(phase='transition', from_room='0111', transition_reason='room-retire')
+        full = '\n'.join((STARTUP, INITIAL, room, transition, next_room))
+        self.assertFalse(j.judge([('fixture', full)], allow, ['0111', '0113'])['pass'])
+        allow[j.identity(reviewed)] = reviewed
+        self.assertTrue(j.judge([('fixture', full)], allow, ['0111', '0113'])['pass'])
+        for bad in (transition.replace('from_room=0111', 'from_room=0113'),
+                    transition.replace('from_room=0111', 'from_phase=startup'),
+                    transition.replace('transition_reason=room-retire', 'transition_reason=other'),
+                    transition.replace('visit=4', 'visit=3')):
+            self.assertFalse(j.judge([('fixture', '\n'.join((STARTUP, INITIAL, room, bad, next_room)))], allow, ['0111'])['pass'])
+        self.assertFalse(j.judge([('fixture', '\n'.join((STARTUP, room)))], allow, ['0111'])['pass'])
+        self.assertFalse(j.judge([('fixture', '\n'.join((STARTUP, INITIAL, room, next_room)))], allow, ['0111'])['pass'])
+        with tempfile.TemporaryDirectory() as folder:
+            current, accepted = (Path(folder)/n for n in ('current.json', 'accepted.json'))
+            accepted.write_text(json.dumps(dict(schema=1, entries=[reviewed])))
+            current.write_text(accepted.read_text());self.assertEqual(len(j.read_allowlist(current, accepted)), 1)
+            reviewed['from_room'] = '0113';current.write_text(json.dumps(dict(schema=1, entries=[reviewed])))
+            with self.assertRaises(ValueError):j.read_allowlist(current, accepted)
 
     def test_startup_allowlist_cannot_borrow_room_or_grow(self):
         startup = dict(ROW);del startup['room'];startup['phase'] = 'startup'

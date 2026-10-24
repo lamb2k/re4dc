@@ -1,7 +1,8 @@
-Diagnostic visits use two explicit namespaces. Startup/title/menu rows have
-`phase=startup` and no room field. Game-room rows have `room=hhhh` and no phase
-field. The same visit serial increases across both namespaces. Exactly one
-complete startup visit must precede the first game room in each judged log.
+Diagnostic visits use three explicit namespaces. Startup/title/menu rows have
+`phase=startup`, loading/door rows have `phase=transition`, and both omit room.
+Game-room rows have `room=hhhh` and no phase field. The same visit serial
+increases across all namespaces. Exactly one complete startup visit must precede
+an initial transition and the first game room in each judged log.
 Startup alone is not route coverage. Unknown phase names, both location fields,
 room 0000 used in place of startup, missing startup, duplicate/reordered visits
 and incomplete checkpoints fail. The startup phase receives the same catalog,
@@ -14,6 +15,17 @@ authorize a startup asset. The accepted baseline must already contain each
 startup exception, so this extension does not learn or add allowances. Missing
 historical startup evidence remains an explicit gate failure.
 
+Transition BEGIN adds `transition_reason=initial-room from_phase=startup` for
+initial entry, or `transition_reason=room-retire from_room=hhhh` for a completed
+room. The origin must equal the preceding completed visit. Each game room must
+follow a complete transition; repeated transitions or direct room-to-room
+labels fail. Other rows retain only phase/visit so maximum ASSET/COUNTS lines
+fit the production 256-byte logger; their allowance identity inherits the exact
+origin/reason from the matching BEGIN. Transition allowance entries require
+that same `transition_reason` and `from_phase` or `from_room`, in addition to the
+human approval `reason`, owner, evidence and full asset identity. A transition
+from room0111 cannot borrow an exception for room0113, startup or a game room.
+
 The runtime API separates checkpoint preparation from audio admission:
 `begin_startup_closed` or `begin_closed` initializes and logs outside the audio
 mutex, with admission still closed. `open_audio_admission` then publishes only
@@ -21,6 +33,16 @@ fixed state under the existing audio mutex. Closing admission under that same
 mutex precedes unlocked flush/end. Neither admission function hashes, logs,
 allocates or performs IO. Outstanding tickets, queue contention and late
 startup-to-room completions remain fail-closed and cannot acquire a new label.
+
+For continuous transitions, `handoff_audio_admission` publishes separate next
+admission room/visit fields under that same audio mutex before unlocked old END
+and new BEGIN. Current events drain normally; exact future-tagged queue events
+and tickets remain bounded until the matching `begin_*_handoff` adopts them.
+Old/unexpected outstanding work still fails, future overflow still fails, and
+explicit terminal close cancels the handoff so pending future work cannot be
+silently excluded. No event is retagged. The real production formatter controls
+include maximum-width transition metadata and all counters. The core/judge
+handoff contract is implemented; actual lifecycle adoption is the next step.
 
 Successful native UI initialization now starts the named startup visit. Every
 accepted direct UI room retirement finalizes after the existing movie-owner
