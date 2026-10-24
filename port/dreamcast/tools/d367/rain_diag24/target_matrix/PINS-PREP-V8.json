@@ -1,0 +1,1059 @@
+{
+  "base": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "source": "da413ff058f88fa136375ecff629610fc59c0e51",
+  "runtime": "fdb5ed4212fc78823f625ab75b78cc237cfd181a",
+  "scope": "PREPARATION ONLY; selected objects; no SDK executed",
+  "tools": {
+    "cxx": {
+      "path": "/root/work/kos-re4dc-d367/utils/build_wrappers/kos-c++",
+      "resolved": "/root/work/kos-re4dc-d367/utils/build_wrappers/kos-c++",
+      "bytes": 254,
+      "sha256": "657b7e95d6d95ca9eadb2880db9a7c16f8c4ba720702fc06af20f1eae1a1d2d2"
+    },
+    "cc_wrapper": {
+      "path": "/root/work/kos-re4dc-d367/utils/build_wrappers/kos-cc",
+      "resolved": "/root/work/kos-re4dc-d367/utils/build_wrappers/kos-cc",
+      "bytes": 3305,
+      "sha256": "9be639adedf7d4b55482b82ea91bd80f3ee21468f8bdcc31af79b0126e8f09c5"
+    },
+    "driver": {
+      "path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
+      "resolved": "/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
+      "bytes": 2050928,
+      "sha256": "e93807f83ebb80283de9777d006dae7f5873784032bbaa867a8f16db0e3c0053"
+    },
+    "bootstrap_c_driver": {
+      "path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-gcc",
+      "resolved": "/opt/toolchains/dc/sh-elf/bin/sh-elf-gcc",
+      "bytes": 2046832,
+      "sha256": "ccd1719433327d505d2d59cb3fd9b2acdcf3172652ecdac6f41cfe0ad2656a13"
+    },
+    "cc1plus": {
+      "path": "/opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1plus",
+      "resolved": "/opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1plus",
+      "bytes": 33567464,
+      "sha256": "9e2183ee4f7380839129e4e16c02101d24ab7e1bef3ec89101b7c65be9a50cfa"
+    },
+    "as": {
+      "path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-as",
+      "resolved": "/opt/toolchains/dc/sh-elf/bin/sh-elf-as",
+      "bytes": 1923680,
+      "sha256": "f531978403ce0506056434ca83954df83d5b78347205680997d8a79258a4004d"
+    },
+    "ld": {
+      "path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-ld",
+      "resolved": "/opt/toolchains/dc/sh-elf/bin/sh-elf-ld",
+      "bytes": 2353152,
+      "sha256": "a9a91daa2613b683a33babf37d24db8923ff1015b2de979e44bc275ce2af27aa"
+    },
+    "objcopy": {
+      "path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-objcopy",
+      "resolved": "/opt/toolchains/dc/sh-elf/bin/sh-elf-objcopy",
+      "bytes": 1677552,
+      "sha256": "7993dcb70aaea6cf83190e6babf63c663324a0fd493c3ceb9987a7d8820839d0"
+    },
+    "objdump": {
+      "path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-objdump",
+      "resolved": "/opt/toolchains/dc/sh-elf/bin/sh-elf-objdump",
+      "bytes": 2311720,
+      "sha256": "f1997b6728d2eb1b0eff1a5b74473a53670d46411f465070c3cbae54a1ad22e4"
+    },
+    "kos_env": {
+      "path": "/root/work/kos-re4dc-d367/environ_base.sh",
+      "resolved": "/root/work/kos-re4dc-d367/environ_base.sh",
+      "bytes": 2988,
+      "sha256": "e14090a17f8cdfc381c83ae9304325b4d4311591c9f0a9bb8474b8b87bb24026"
+    },
+    "kos_arch_env": {
+      "path": "/root/work/kos-re4dc-d367/environ_dreamcast.sh",
+      "resolved": "/root/work/kos-re4dc-d367/environ_dreamcast.sh",
+      "bytes": 2670,
+      "sha256": "e4398b91d86abf48cd383403d3495aa2dfd05d8a6f3782c869bf460a19defe5b"
+    },
+    "kos_version": {
+      "path": "/root/work/kos-re4dc-d367/include/kos/version.h",
+      "resolved": "/root/work/kos-re4dc-d367/include/kos/version.h",
+      "bytes": 17221,
+      "sha256": "a6d5a5c0f6bd7d38274ff51a5770672a7284290c3c385704fd49728d383cc578"
+    },
+    "cache_h": {
+      "path": "/root/work/kos-re4dc-d367/include/kos/cache.h",
+      "resolved": "/root/work/kos-re4dc-d367/include/kos/cache.h",
+      "bytes": 9346,
+      "sha256": "cb65548d09447e45329be136666bbb1d22f3f1448b7f7a4f1ad09fb600372c02"
+    },
+    "arch_cache_h": {
+      "path": "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include/arch/cache.h",
+      "resolved": "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include/arch/cache.h",
+      "bytes": 5912,
+      "sha256": "d5ca901258bc9ec3f3f4f92c4fbfef97ee15bf61c9b02486de173bf1f93b8295"
+    },
+    "slot": {
+      "path": "/root/probe/d367-buildslot.sh",
+      "resolved": "/root/probe/d367-buildslot.sh",
+      "bytes": 485,
+      "sha256": "14eaa5f2dc1a3b87282b1a2faaaa20a0676788b0e870f2e4e26bdc87d1e0a4dd"
+    }
+  },
+  "provider": {
+    "path": "/root/work/lanes/water-rain24-full-target-scratch/off/out/re4dc-game.elf",
+    "resolved": "/root/work/lanes/water-rain24-full-target-scratch/off/out/re4dc-game.elf",
+    "bytes": 28568696,
+    "sha256": "60b2b8fa19bff93342a3dfade19b79050a5198389d8d9ecc868d56fd5ea44fa0"
+  },
+  "normal": {
+    "0/filter06": {
+      "argv": [
+        "-O2",
+        "-fno-PIC",
+        "-fno-PIE",
+        "-fomit-frame-pointer",
+        "-m4-single",
+        "-ml",
+        "-mfsrra",
+        "-mfsca",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-matomic-model=soft-gusa",
+        "-ftls-model=local-exec",
+        "-D__DREAMCAST__",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/include",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/addons/include/",
+        "-isystem",
+        "/root/work/kos-ports/include",
+        "-D_arch_dreamcast=1",
+        "-D_arch_sub_pristine=1",
+        "-Wall",
+        "-g",
+        "-std=gnu++20",
+        "-fpermissive",
+        "-w",
+        "-O1",
+        "-include",
+        "platform/include/re4dc_prelude.h",
+        "-I../../../include",
+        "-I../../../src",
+        "-Iplatform/include",
+        "-DRE4DC_GAME",
+        "-DRE4DC_STAT_ROUTINE_BYTES=1",
+        "-fno-exceptions",
+        "-fno-unwind-tables",
+        "-fno-asynchronous-unwind-tables",
+        "-fno-threadsafe-statics",
+        "-DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1",
+        "-DRE4DC_SS_RESTORE_VALIDATE_FIRST=1",
+        "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+        "-DRE4DC_RENDER_FSAA=1",
+        "-DRE4DC_RENDER_OPTION=1",
+        "-DRE4DC_VIEW_DIST_OPTION=1",
+        "-DRE4DC_VIEW_DIST_BOOT=1",
+        "-DRE4DC_FAR_SHELL=1",
+        "-DRE4DC_FOLIAGE_OPTION=1",
+        "-DRE4DC_RES_MODES=9",
+        "-DRE4DC_RES_MODE=0",
+        "-DRE4DC_RES_CYCLE_FRAMES=0",
+        "-DRE4DC_ATCHK_LIST=1",
+        "-DRE4DC_ATCHK_CACHE=1",
+        "-DRE4DC_WORKAT_INLINE=1",
+        "-DRE4DC_ESP_OWNER=1",
+        "-DRE4DC_FX_SCAN=1",
+        "-DRE4DC_FX_MOVE=1",
+        "-DRE4DC_OT_MASK=1",
+        "-DRE4DC_PAD_PROMPTS=1",
+        "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+        "-DRE4DC_SKEL_FTRV=1",
+        "-DRE4DC_VEC_INLINE=1",
+        "-ffp-contract=off",
+        "-DRE4DC_LEON_CLOTH_DRAWN=1",
+        "-DRE4DC_LOGIC_WASTE=1",
+        "-DRE4DC_LOGIC_WASTE_MASK=0x02",
+        "-DRE4DC_LOGIC_APPROX_MASK=0x01",
+        "-DRE4DC_RESET_HEAP_FIX=1",
+        "-DRE4DC_EM_READ_RETRY=1",
+        "-DRE4DC_RESET_MEM_FIX=1",
+        "-DRE4DC_SH4ZAM_RENDER=1",
+        "-DRE4DC_ACTOR_TRANSACTION=1",
+        "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+        "-DRE4DC_VMU_DIALOG=1",
+        "-I/root/probe/lanes/play-actor-bundle",
+        "-DRE4DC_LEON_HEADLESS=1",
+        "-DRE4DC_ACTOR_PL08=1",
+        "-DRE4DC_ACTOR_PL08_PACK=1",
+        "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+        "-DRE4DC_NMR_POOL=1",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_NMR_LOD=1",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_TEX_PKG_SKIP=1",
+        "-DRE4DC_GC_CENSUS_TRIM=1",
+        "-DRE4DC_GXF_JITTER=1",
+        "-DRE4DC_ESP_POOL_RECYCLE=1",
+        "-DRE4DC_R117_EFFECT_FAILURE_SAFE=1",
+        "-DRE4DC_RAIN_PS2=1",
+        "-DRE4DC_RAIN_DC=1",
+        "-DRE4DC_RAIN_DC_N=320",
+        "-MMD",
+        "-MP",
+        "-c",
+        "../../../src/game/filter06.cpp",
+        "-o",
+        "/root/work/lanes/water-rain24-full-target-scratch/off/out/obj/src/game/filter06.o"
+      ],
+      "line": "kos-c++ -O2 -fno-PIC -fno-PIE -fomit-frame-pointer -m4-single -ml -mfsrra -mfsca -ffunction-sections -fdata-sections -matomic-model=soft-gusa -ftls-model=local-exec -D__DREAMCAST__  -isystem /root/work/kos-re4dc-d367/include -isystem /root/work/kos-re4dc-d367/kernel/arch/dreamcast/include -isystem /root/work/kos-re4dc-d367/addons/include/ -isystem /root/work/kos-ports/include -D_arch_dreamcast=1 -D_arch_sub_pristine=1 -Wall -g -std=gnu++20 -fpermissive -w -O1 -include platform/include/re4dc_prelude.h -I../../../include -I../../../src -Iplatform/include -DRE4DC_GAME -DRE4DC_STAT_ROUTINE_BYTES=1 -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-threadsafe-statics -DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1 -DRE4DC_SS_RESTORE_VALIDATE_FIRST=1 -DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1 -DRE4DC_RENDER_FSAA=1 -DRE4DC_RENDER_OPTION=1 -DRE4DC_VIEW_DIST_OPTION=1 -DRE4DC_VIEW_DIST_BOOT=1 -DRE4DC_FAR_SHELL=1 -DRE4DC_FOLIAGE_OPTION=1 -DRE4DC_RES_MODES=9 -DRE4DC_RES_MODE=0 -DRE4DC_RES_CYCLE_FRAMES=0 -DRE4DC_ATCHK_LIST=1 -DRE4DC_ATCHK_CACHE=1 -DRE4DC_WORKAT_INLINE=1 -DRE4DC_ESP_OWNER=1 -DRE4DC_FX_SCAN=1 -DRE4DC_FX_MOVE=1 -DRE4DC_OT_MASK=1 -DRE4DC_PAD_PROMPTS=1 -DRE4DC_PAD_PROMPT_MANUAL_ART=1 -DRE4DC_SKEL_FTRV=1 -DRE4DC_VEC_INLINE=1 -ffp-contract=off  -DRE4DC_LEON_CLOTH_DRAWN=1 -DRE4DC_LOGIC_WASTE=1 -DRE4DC_LOGIC_WASTE_MASK=0x02 -DRE4DC_LOGIC_APPROX_MASK=0x01 -DRE4DC_RESET_HEAP_FIX=1 -DRE4DC_EM_READ_RETRY=1 -DRE4DC_RESET_MEM_FIX=1 -DRE4DC_SH4ZAM_RENDER=1 -DRE4DC_ACTOR_TRANSACTION=1 -DRE4DC_ACTOR_LEON_NATIVE_LOOK=1 -DRE4DC_VMU_DIALOG=1 -I/root/probe/lanes/play-actor-bundle -DRE4DC_LEON_HEADLESS=1 -DRE4DC_ACTOR_PL08=1 -DRE4DC_ACTOR_PL08_PACK=1 -DRE4DC_ACTOR_LIGHT_PROBE_API=1 -DRE4DC_NMR_POOL=1 -DRE4DC_ACTOR_MATERIALS=4 -DRE4DC_NMR_LOD=1 -DRE4DC_ACTOR_MATERIALS=4 -DRE4DC_TEX_PKG_SKIP=1 -DRE4DC_GC_CENSUS_TRIM=1 -DRE4DC_GXF_JITTER=1 -DRE4DC_ESP_POOL_RECYCLE=1 -DRE4DC_R117_EFFECT_FAILURE_SAFE=1 -DRE4DC_RAIN_PS2=1 -DRE4DC_RAIN_DC=1 -DRE4DC_RAIN_DC_N=320 -MMD -MP -c ../../../src/game/filter06.cpp -o /root/work/lanes/water-rain24-full-target-scratch/off/out/obj/src/game/filter06.o",
+      "dependency_tokens": [
+        "../../../src/game/filter06.cpp",
+        "platform/include/re4dc_prelude.h",
+        "../../../include/filter.h",
+        "../../../include/types.h",
+        "../../../include/vec.h",
+        "../../../include/atari.h",
+        "../../../include/db_log.h",
+        "../../../include/va_ppc.h",
+        "../../../include/cManager.h",
+        "../../../include/at_sub.h",
+        "../../../include/at_sub2.h",
+        "../../../include/main_mem.h",
+        "../../../include/light.h",
+        "../../../include/gx.h",
+        "../../../include/../port/dreamcast/game/gx_fast.h",
+        "../../../include/lightPath.h",
+        "../../../include/gx.h",
+        "../../../include/main_sub.h",
+        "../../../include/main_mem.h",
+        "../../../include/db_log.h",
+        "../../../include/trans_ot.h",
+        "../../../include/global.h",
+        "../../../include/camera.h",
+        "../../../include/camera.h",
+        "../../../include/rnd.h",
+        "../../../include/math_sub.h",
+        "platform/include/native_ui.h"
+      ]
+    },
+    "0/espgen44": {
+      "argv": [
+        "-O2",
+        "-fno-PIC",
+        "-fno-PIE",
+        "-fomit-frame-pointer",
+        "-m4-single",
+        "-ml",
+        "-mfsrra",
+        "-mfsca",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-matomic-model=soft-gusa",
+        "-ftls-model=local-exec",
+        "-D__DREAMCAST__",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/include",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/addons/include/",
+        "-isystem",
+        "/root/work/kos-ports/include",
+        "-D_arch_dreamcast=1",
+        "-D_arch_sub_pristine=1",
+        "-Wall",
+        "-g",
+        "-std=gnu++20",
+        "-fpermissive",
+        "-w",
+        "-O1",
+        "-include",
+        "platform/include/re4dc_prelude.h",
+        "-I../../../include",
+        "-I../../../src",
+        "-Iplatform/include",
+        "-DRE4DC_GAME",
+        "-DRE4DC_STAT_ROUTINE_BYTES=1",
+        "-fno-exceptions",
+        "-fno-unwind-tables",
+        "-fno-asynchronous-unwind-tables",
+        "-fno-threadsafe-statics",
+        "-DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1",
+        "-DRE4DC_SS_RESTORE_VALIDATE_FIRST=1",
+        "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+        "-DRE4DC_RENDER_FSAA=1",
+        "-DRE4DC_RENDER_OPTION=1",
+        "-DRE4DC_VIEW_DIST_OPTION=1",
+        "-DRE4DC_VIEW_DIST_BOOT=1",
+        "-DRE4DC_FAR_SHELL=1",
+        "-DRE4DC_FOLIAGE_OPTION=1",
+        "-DRE4DC_RES_MODES=9",
+        "-DRE4DC_RES_MODE=0",
+        "-DRE4DC_RES_CYCLE_FRAMES=0",
+        "-DRE4DC_ATCHK_LIST=1",
+        "-DRE4DC_ATCHK_CACHE=1",
+        "-DRE4DC_WORKAT_INLINE=1",
+        "-DRE4DC_ESP_OWNER=1",
+        "-DRE4DC_FX_SCAN=1",
+        "-DRE4DC_FX_MOVE=1",
+        "-DRE4DC_OT_MASK=1",
+        "-DRE4DC_PAD_PROMPTS=1",
+        "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+        "-DRE4DC_SKEL_FTRV=1",
+        "-DRE4DC_VEC_INLINE=1",
+        "-ffp-contract=off",
+        "-O2",
+        "-fwrapv",
+        "-fno-strict-aliasing",
+        "-fno-delete-null-pointer-checks",
+        "-fno-isolate-erroneous-paths-dereference",
+        "-DRE4DC_LEON_CLOTH_DRAWN=1",
+        "-DRE4DC_LOGIC_WASTE=1",
+        "-DRE4DC_LOGIC_WASTE_MASK=0x02",
+        "-DRE4DC_LOGIC_APPROX_MASK=0x01",
+        "-DRE4DC_RESET_HEAP_FIX=1",
+        "-DRE4DC_EM_READ_RETRY=1",
+        "-DRE4DC_RESET_MEM_FIX=1",
+        "-DRE4DC_SH4ZAM_RENDER=1",
+        "-DRE4DC_ACTOR_TRANSACTION=1",
+        "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+        "-DRE4DC_VMU_DIALOG=1",
+        "-I/root/probe/lanes/play-actor-bundle",
+        "-DRE4DC_LEON_HEADLESS=1",
+        "-DRE4DC_ACTOR_PL08=1",
+        "-DRE4DC_ACTOR_PL08_PACK=1",
+        "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+        "-DRE4DC_NMR_POOL=1",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_NMR_LOD=1",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_TEX_PKG_SKIP=1",
+        "-DRE4DC_GC_CENSUS_TRIM=1",
+        "-DRE4DC_GXF_JITTER=1",
+        "-DRE4DC_ESP_POOL_RECYCLE=1",
+        "-DRE4DC_R117_EFFECT_FAILURE_SAFE=1",
+        "-MMD",
+        "-MP",
+        "-c",
+        "../../../src/game/espgen44.cpp",
+        "-o",
+        "/root/work/lanes/water-rain24-full-target-scratch/off/out/obj/src/game/espgen44.o"
+      ],
+      "line": "kos-c++ -O2 -fno-PIC -fno-PIE -fomit-frame-pointer -m4-single -ml -mfsrra -mfsca -ffunction-sections -fdata-sections -matomic-model=soft-gusa -ftls-model=local-exec -D__DREAMCAST__  -isystem /root/work/kos-re4dc-d367/include -isystem /root/work/kos-re4dc-d367/kernel/arch/dreamcast/include -isystem /root/work/kos-re4dc-d367/addons/include/ -isystem /root/work/kos-ports/include -D_arch_dreamcast=1 -D_arch_sub_pristine=1 -Wall -g -std=gnu++20 -fpermissive -w -O1 -include platform/include/re4dc_prelude.h -I../../../include -I../../../src -Iplatform/include -DRE4DC_GAME -DRE4DC_STAT_ROUTINE_BYTES=1 -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-threadsafe-statics -DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1 -DRE4DC_SS_RESTORE_VALIDATE_FIRST=1 -DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1 -DRE4DC_RENDER_FSAA=1 -DRE4DC_RENDER_OPTION=1 -DRE4DC_VIEW_DIST_OPTION=1 -DRE4DC_VIEW_DIST_BOOT=1 -DRE4DC_FAR_SHELL=1 -DRE4DC_FOLIAGE_OPTION=1 -DRE4DC_RES_MODES=9 -DRE4DC_RES_MODE=0 -DRE4DC_RES_CYCLE_FRAMES=0 -DRE4DC_ATCHK_LIST=1 -DRE4DC_ATCHK_CACHE=1 -DRE4DC_WORKAT_INLINE=1 -DRE4DC_ESP_OWNER=1 -DRE4DC_FX_SCAN=1 -DRE4DC_FX_MOVE=1 -DRE4DC_OT_MASK=1 -DRE4DC_PAD_PROMPTS=1 -DRE4DC_PAD_PROMPT_MANUAL_ART=1 -DRE4DC_SKEL_FTRV=1 -DRE4DC_VEC_INLINE=1 -ffp-contract=off -O2 -fwrapv -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-isolate-erroneous-paths-dereference -DRE4DC_LEON_CLOTH_DRAWN=1 -DRE4DC_LOGIC_WASTE=1 -DRE4DC_LOGIC_WASTE_MASK=0x02 -DRE4DC_LOGIC_APPROX_MASK=0x01 -DRE4DC_RESET_HEAP_FIX=1 -DRE4DC_EM_READ_RETRY=1 -DRE4DC_RESET_MEM_FIX=1 -DRE4DC_SH4ZAM_RENDER=1 -DRE4DC_ACTOR_TRANSACTION=1 -DRE4DC_ACTOR_LEON_NATIVE_LOOK=1 -DRE4DC_VMU_DIALOG=1 -I/root/probe/lanes/play-actor-bundle -DRE4DC_LEON_HEADLESS=1 -DRE4DC_ACTOR_PL08=1 -DRE4DC_ACTOR_PL08_PACK=1 -DRE4DC_ACTOR_LIGHT_PROBE_API=1 -DRE4DC_NMR_POOL=1 -DRE4DC_ACTOR_MATERIALS=4 -DRE4DC_NMR_LOD=1 -DRE4DC_ACTOR_MATERIALS=4 -DRE4DC_TEX_PKG_SKIP=1 -DRE4DC_GC_CENSUS_TRIM=1 -DRE4DC_GXF_JITTER=1 -DRE4DC_ESP_POOL_RECYCLE=1 -DRE4DC_R117_EFFECT_FAILURE_SAFE=1 -MMD -MP -c ../../../src/game/espgen44.cpp -o /root/work/lanes/water-rain24-full-target-scratch/off/out/obj/src/game/espgen44.o",
+      "dependency_tokens": [
+        "../../../src/game/espgen44.cpp",
+        "platform/include/re4dc_prelude.h",
+        "../../../include/atari.h",
+        "../../../include/types.h",
+        "../../../include/vec.h",
+        "../../../include/db_log.h",
+        "../../../include/va_ppc.h",
+        "../../../include/cManager.h",
+        "../../../include/at_sub.h",
+        "../../../include/at_sub2.h",
+        "../../../include/main_mem.h",
+        "../../../include/light.h",
+        "../../../include/gx.h",
+        "../../../include/../port/dreamcast/game/gx_fast.h",
+        "../../../include/lightPath.h",
+        "../../../include/esp.h",
+        "../../../include/model.h",
+        "platform/include/actor_lifetime.h",
+        "platform/include/actor_ganado_ps2_stump.h",
+        "../../../include/atariInfo.h",
+        "../../../include/trans_ot.h",
+        "../../../include/espgen.h",
+        "../../../include/light.h",
+        "../../../include/esp.h",
+        "../../../include/tpl.h",
+        "../../../include/filter.h"
+      ]
+    },
+    "1/filter06": {
+      "argv": [
+        "-O2",
+        "-fno-PIC",
+        "-fno-PIE",
+        "-fomit-frame-pointer",
+        "-m4-single",
+        "-ml",
+        "-mfsrra",
+        "-mfsca",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-matomic-model=soft-gusa",
+        "-ftls-model=local-exec",
+        "-D__DREAMCAST__",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/include",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/addons/include/",
+        "-isystem",
+        "/root/work/kos-ports/include",
+        "-D_arch_dreamcast=1",
+        "-D_arch_sub_pristine=1",
+        "-Wall",
+        "-g",
+        "-std=gnu++20",
+        "-fpermissive",
+        "-w",
+        "-O1",
+        "-include",
+        "platform/include/re4dc_prelude.h",
+        "-I../../../include",
+        "-I../../../src",
+        "-Iplatform/include",
+        "-DRE4DC_GAME",
+        "-DRE4DC_STAT_ROUTINE_BYTES=1",
+        "-fno-exceptions",
+        "-fno-unwind-tables",
+        "-fno-asynchronous-unwind-tables",
+        "-fno-threadsafe-statics",
+        "-DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1",
+        "-DRE4DC_SS_RESTORE_VALIDATE_FIRST=1",
+        "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+        "-DRE4DC_RENDER_FSAA=1",
+        "-DRE4DC_RENDER_OPTION=1",
+        "-DRE4DC_VIEW_DIST_OPTION=1",
+        "-DRE4DC_VIEW_DIST_BOOT=1",
+        "-DRE4DC_FAR_SHELL=1",
+        "-DRE4DC_FOLIAGE_OPTION=1",
+        "-DRE4DC_RES_MODES=9",
+        "-DRE4DC_RES_MODE=0",
+        "-DRE4DC_RES_CYCLE_FRAMES=0",
+        "-DRE4DC_ATCHK_LIST=1",
+        "-DRE4DC_ATCHK_CACHE=1",
+        "-DRE4DC_WORKAT_INLINE=1",
+        "-DRE4DC_ESP_OWNER=1",
+        "-DRE4DC_FX_SCAN=1",
+        "-DRE4DC_FX_MOVE=1",
+        "-DRE4DC_OT_MASK=1",
+        "-DRE4DC_PAD_PROMPTS=1",
+        "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+        "-DRE4DC_SKEL_FTRV=1",
+        "-DRE4DC_VEC_INLINE=1",
+        "-ffp-contract=off",
+        "-DRE4DC_LEON_CLOTH_DRAWN=1",
+        "-DRE4DC_LOGIC_WASTE=1",
+        "-DRE4DC_LOGIC_WASTE_MASK=0x02",
+        "-DRE4DC_LOGIC_APPROX_MASK=0x01",
+        "-DRE4DC_RESET_HEAP_FIX=1",
+        "-DRE4DC_EM_READ_RETRY=1",
+        "-DRE4DC_RESET_MEM_FIX=1",
+        "-DRE4DC_SH4ZAM_RENDER=1",
+        "-DRE4DC_ACTOR_TRANSACTION=1",
+        "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+        "-DRE4DC_VMU_DIALOG=1",
+        "-I/root/probe/lanes/play-actor-bundle",
+        "-DRE4DC_LEON_HEADLESS=1",
+        "-DRE4DC_ACTOR_PL08=1",
+        "-DRE4DC_ACTOR_PL08_PACK=1",
+        "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+        "-DRE4DC_NMR_POOL=1",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_NMR_LOD=1",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_TEX_PKG_SKIP=1",
+        "-DRE4DC_GC_CENSUS_TRIM=1",
+        "-DRE4DC_GXF_JITTER=1",
+        "-DRE4DC_ESP_POOL_RECYCLE=1",
+        "-DRE4DC_R117_EFFECT_FAILURE_SAFE=1",
+        "-DRE4DC_RAIN_PS2=1",
+        "-DRE4DC_RAIN_DC=1",
+        "-DRE4DC_RAIN_DC_N=320",
+        "-DRE4DC_RAIN_R10C_DC=1",
+        "-MMD",
+        "-MP",
+        "-c",
+        "../../../src/game/filter06.cpp",
+        "-o",
+        "/root/work/lanes/water-rain24-full-target-scratch/on/out/obj/src/game/filter06.o"
+      ],
+      "line": "kos-c++ -O2 -fno-PIC -fno-PIE -fomit-frame-pointer -m4-single -ml -mfsrra -mfsca -ffunction-sections -fdata-sections -matomic-model=soft-gusa -ftls-model=local-exec -D__DREAMCAST__  -isystem /root/work/kos-re4dc-d367/include -isystem /root/work/kos-re4dc-d367/kernel/arch/dreamcast/include -isystem /root/work/kos-re4dc-d367/addons/include/ -isystem /root/work/kos-ports/include -D_arch_dreamcast=1 -D_arch_sub_pristine=1 -Wall -g -std=gnu++20 -fpermissive -w -O1 -include platform/include/re4dc_prelude.h -I../../../include -I../../../src -Iplatform/include -DRE4DC_GAME -DRE4DC_STAT_ROUTINE_BYTES=1 -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-threadsafe-statics -DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1 -DRE4DC_SS_RESTORE_VALIDATE_FIRST=1 -DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1 -DRE4DC_RENDER_FSAA=1 -DRE4DC_RENDER_OPTION=1 -DRE4DC_VIEW_DIST_OPTION=1 -DRE4DC_VIEW_DIST_BOOT=1 -DRE4DC_FAR_SHELL=1 -DRE4DC_FOLIAGE_OPTION=1 -DRE4DC_RES_MODES=9 -DRE4DC_RES_MODE=0 -DRE4DC_RES_CYCLE_FRAMES=0 -DRE4DC_ATCHK_LIST=1 -DRE4DC_ATCHK_CACHE=1 -DRE4DC_WORKAT_INLINE=1 -DRE4DC_ESP_OWNER=1 -DRE4DC_FX_SCAN=1 -DRE4DC_FX_MOVE=1 -DRE4DC_OT_MASK=1 -DRE4DC_PAD_PROMPTS=1 -DRE4DC_PAD_PROMPT_MANUAL_ART=1 -DRE4DC_SKEL_FTRV=1 -DRE4DC_VEC_INLINE=1 -ffp-contract=off  -DRE4DC_LEON_CLOTH_DRAWN=1 -DRE4DC_LOGIC_WASTE=1 -DRE4DC_LOGIC_WASTE_MASK=0x02 -DRE4DC_LOGIC_APPROX_MASK=0x01 -DRE4DC_RESET_HEAP_FIX=1 -DRE4DC_EM_READ_RETRY=1 -DRE4DC_RESET_MEM_FIX=1 -DRE4DC_SH4ZAM_RENDER=1 -DRE4DC_ACTOR_TRANSACTION=1 -DRE4DC_ACTOR_LEON_NATIVE_LOOK=1 -DRE4DC_VMU_DIALOG=1 -I/root/probe/lanes/play-actor-bundle -DRE4DC_LEON_HEADLESS=1 -DRE4DC_ACTOR_PL08=1 -DRE4DC_ACTOR_PL08_PACK=1 -DRE4DC_ACTOR_LIGHT_PROBE_API=1 -DRE4DC_NMR_POOL=1 -DRE4DC_ACTOR_MATERIALS=4 -DRE4DC_NMR_LOD=1 -DRE4DC_ACTOR_MATERIALS=4 -DRE4DC_TEX_PKG_SKIP=1 -DRE4DC_GC_CENSUS_TRIM=1 -DRE4DC_GXF_JITTER=1 -DRE4DC_ESP_POOL_RECYCLE=1 -DRE4DC_R117_EFFECT_FAILURE_SAFE=1 -DRE4DC_RAIN_PS2=1 -DRE4DC_RAIN_DC=1 -DRE4DC_RAIN_DC_N=320 -DRE4DC_RAIN_R10C_DC=1 -MMD -MP -c ../../../src/game/filter06.cpp -o /root/work/lanes/water-rain24-full-target-scratch/on/out/obj/src/game/filter06.o",
+      "dependency_tokens": [
+        "../../../src/game/filter06.cpp",
+        "platform/include/re4dc_prelude.h",
+        "../../../include/filter.h",
+        "../../../include/types.h",
+        "../../../include/vec.h",
+        "../../../include/atari.h",
+        "../../../include/db_log.h",
+        "../../../include/va_ppc.h",
+        "../../../include/cManager.h",
+        "../../../include/at_sub.h",
+        "../../../include/at_sub2.h",
+        "../../../include/main_mem.h",
+        "../../../include/light.h",
+        "../../../include/gx.h",
+        "../../../include/../port/dreamcast/game/gx_fast.h",
+        "../../../include/lightPath.h",
+        "../../../include/gx.h",
+        "../../../include/main_sub.h",
+        "../../../include/main_mem.h",
+        "../../../include/db_log.h",
+        "../../../include/trans_ot.h",
+        "../../../include/global.h",
+        "../../../include/camera.h",
+        "../../../include/camera.h",
+        "../../../include/rnd.h",
+        "../../../include/math_sub.h",
+        "platform/include/native_ui.h"
+      ]
+    },
+    "1/espgen44": {
+      "argv": [
+        "-O2",
+        "-fno-PIC",
+        "-fno-PIE",
+        "-fomit-frame-pointer",
+        "-m4-single",
+        "-ml",
+        "-mfsrra",
+        "-mfsca",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-matomic-model=soft-gusa",
+        "-ftls-model=local-exec",
+        "-D__DREAMCAST__",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/include",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/addons/include/",
+        "-isystem",
+        "/root/work/kos-ports/include",
+        "-D_arch_dreamcast=1",
+        "-D_arch_sub_pristine=1",
+        "-Wall",
+        "-g",
+        "-std=gnu++20",
+        "-fpermissive",
+        "-w",
+        "-O1",
+        "-include",
+        "platform/include/re4dc_prelude.h",
+        "-I../../../include",
+        "-I../../../src",
+        "-Iplatform/include",
+        "-DRE4DC_GAME",
+        "-DRE4DC_STAT_ROUTINE_BYTES=1",
+        "-fno-exceptions",
+        "-fno-unwind-tables",
+        "-fno-asynchronous-unwind-tables",
+        "-fno-threadsafe-statics",
+        "-DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1",
+        "-DRE4DC_SS_RESTORE_VALIDATE_FIRST=1",
+        "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+        "-DRE4DC_RENDER_FSAA=1",
+        "-DRE4DC_RENDER_OPTION=1",
+        "-DRE4DC_VIEW_DIST_OPTION=1",
+        "-DRE4DC_VIEW_DIST_BOOT=1",
+        "-DRE4DC_FAR_SHELL=1",
+        "-DRE4DC_FOLIAGE_OPTION=1",
+        "-DRE4DC_RES_MODES=9",
+        "-DRE4DC_RES_MODE=0",
+        "-DRE4DC_RES_CYCLE_FRAMES=0",
+        "-DRE4DC_ATCHK_LIST=1",
+        "-DRE4DC_ATCHK_CACHE=1",
+        "-DRE4DC_WORKAT_INLINE=1",
+        "-DRE4DC_ESP_OWNER=1",
+        "-DRE4DC_FX_SCAN=1",
+        "-DRE4DC_FX_MOVE=1",
+        "-DRE4DC_OT_MASK=1",
+        "-DRE4DC_PAD_PROMPTS=1",
+        "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+        "-DRE4DC_SKEL_FTRV=1",
+        "-DRE4DC_VEC_INLINE=1",
+        "-ffp-contract=off",
+        "-O2",
+        "-fwrapv",
+        "-fno-strict-aliasing",
+        "-fno-delete-null-pointer-checks",
+        "-fno-isolate-erroneous-paths-dereference",
+        "-DRE4DC_LEON_CLOTH_DRAWN=1",
+        "-DRE4DC_LOGIC_WASTE=1",
+        "-DRE4DC_LOGIC_WASTE_MASK=0x02",
+        "-DRE4DC_LOGIC_APPROX_MASK=0x01",
+        "-DRE4DC_RESET_HEAP_FIX=1",
+        "-DRE4DC_EM_READ_RETRY=1",
+        "-DRE4DC_RESET_MEM_FIX=1",
+        "-DRE4DC_SH4ZAM_RENDER=1",
+        "-DRE4DC_ACTOR_TRANSACTION=1",
+        "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+        "-DRE4DC_VMU_DIALOG=1",
+        "-I/root/probe/lanes/play-actor-bundle",
+        "-DRE4DC_LEON_HEADLESS=1",
+        "-DRE4DC_ACTOR_PL08=1",
+        "-DRE4DC_ACTOR_PL08_PACK=1",
+        "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+        "-DRE4DC_NMR_POOL=1",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_NMR_LOD=1",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_TEX_PKG_SKIP=1",
+        "-DRE4DC_GC_CENSUS_TRIM=1",
+        "-DRE4DC_GXF_JITTER=1",
+        "-DRE4DC_ESP_POOL_RECYCLE=1",
+        "-DRE4DC_R117_EFFECT_FAILURE_SAFE=1",
+        "-MMD",
+        "-MP",
+        "-c",
+        "../../../src/game/espgen44.cpp",
+        "-o",
+        "/root/work/lanes/water-rain24-full-target-scratch/on/out/obj/src/game/espgen44.o"
+      ],
+      "line": "kos-c++ -O2 -fno-PIC -fno-PIE -fomit-frame-pointer -m4-single -ml -mfsrra -mfsca -ffunction-sections -fdata-sections -matomic-model=soft-gusa -ftls-model=local-exec -D__DREAMCAST__  -isystem /root/work/kos-re4dc-d367/include -isystem /root/work/kos-re4dc-d367/kernel/arch/dreamcast/include -isystem /root/work/kos-re4dc-d367/addons/include/ -isystem /root/work/kos-ports/include -D_arch_dreamcast=1 -D_arch_sub_pristine=1 -Wall -g -std=gnu++20 -fpermissive -w -O1 -include platform/include/re4dc_prelude.h -I../../../include -I../../../src -Iplatform/include -DRE4DC_GAME -DRE4DC_STAT_ROUTINE_BYTES=1 -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-threadsafe-statics -DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1 -DRE4DC_SS_RESTORE_VALIDATE_FIRST=1 -DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1 -DRE4DC_RENDER_FSAA=1 -DRE4DC_RENDER_OPTION=1 -DRE4DC_VIEW_DIST_OPTION=1 -DRE4DC_VIEW_DIST_BOOT=1 -DRE4DC_FAR_SHELL=1 -DRE4DC_FOLIAGE_OPTION=1 -DRE4DC_RES_MODES=9 -DRE4DC_RES_MODE=0 -DRE4DC_RES_CYCLE_FRAMES=0 -DRE4DC_ATCHK_LIST=1 -DRE4DC_ATCHK_CACHE=1 -DRE4DC_WORKAT_INLINE=1 -DRE4DC_ESP_OWNER=1 -DRE4DC_FX_SCAN=1 -DRE4DC_FX_MOVE=1 -DRE4DC_OT_MASK=1 -DRE4DC_PAD_PROMPTS=1 -DRE4DC_PAD_PROMPT_MANUAL_ART=1 -DRE4DC_SKEL_FTRV=1 -DRE4DC_VEC_INLINE=1 -ffp-contract=off -O2 -fwrapv -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-isolate-erroneous-paths-dereference -DRE4DC_LEON_CLOTH_DRAWN=1 -DRE4DC_LOGIC_WASTE=1 -DRE4DC_LOGIC_WASTE_MASK=0x02 -DRE4DC_LOGIC_APPROX_MASK=0x01 -DRE4DC_RESET_HEAP_FIX=1 -DRE4DC_EM_READ_RETRY=1 -DRE4DC_RESET_MEM_FIX=1 -DRE4DC_SH4ZAM_RENDER=1 -DRE4DC_ACTOR_TRANSACTION=1 -DRE4DC_ACTOR_LEON_NATIVE_LOOK=1 -DRE4DC_VMU_DIALOG=1 -I/root/probe/lanes/play-actor-bundle -DRE4DC_LEON_HEADLESS=1 -DRE4DC_ACTOR_PL08=1 -DRE4DC_ACTOR_PL08_PACK=1 -DRE4DC_ACTOR_LIGHT_PROBE_API=1 -DRE4DC_NMR_POOL=1 -DRE4DC_ACTOR_MATERIALS=4 -DRE4DC_NMR_LOD=1 -DRE4DC_ACTOR_MATERIALS=4 -DRE4DC_TEX_PKG_SKIP=1 -DRE4DC_GC_CENSUS_TRIM=1 -DRE4DC_GXF_JITTER=1 -DRE4DC_ESP_POOL_RECYCLE=1 -DRE4DC_R117_EFFECT_FAILURE_SAFE=1 -MMD -MP -c ../../../src/game/espgen44.cpp -o /root/work/lanes/water-rain24-full-target-scratch/on/out/obj/src/game/espgen44.o",
+      "dependency_tokens": [
+        "../../../src/game/espgen44.cpp",
+        "platform/include/re4dc_prelude.h",
+        "../../../include/atari.h",
+        "../../../include/types.h",
+        "../../../include/vec.h",
+        "../../../include/db_log.h",
+        "../../../include/va_ppc.h",
+        "../../../include/cManager.h",
+        "../../../include/at_sub.h",
+        "../../../include/at_sub2.h",
+        "../../../include/main_mem.h",
+        "../../../include/light.h",
+        "../../../include/gx.h",
+        "../../../include/../port/dreamcast/game/gx_fast.h",
+        "../../../include/lightPath.h",
+        "../../../include/esp.h",
+        "../../../include/model.h",
+        "platform/include/actor_lifetime.h",
+        "platform/include/actor_ganado_ps2_stump.h",
+        "../../../include/atariInfo.h",
+        "../../../include/trans_ot.h",
+        "../../../include/espgen.h",
+        "../../../include/light.h",
+        "../../../include/esp.h",
+        "../../../include/tpl.h",
+        "../../../include/filter.h"
+      ]
+    }
+  },
+  "inputs": {
+    "/root/work/lanes/water-rain24-full-target-scratch/off/build.log": {
+      "path": "/root/work/lanes/water-rain24-full-target-scratch/off/build.log",
+      "resolved": "/root/work/lanes/water-rain24-full-target-scratch/off/build.log",
+      "bytes": 1268774,
+      "sha256": "802636fb7c8a04608a76123b678ae0603674161bda97d5f7c0a686f837d53a74"
+    },
+    "/root/work/lanes/water-rain24-full-target-scratch/off/out/resolved-knobs.txt": {
+      "path": "/root/work/lanes/water-rain24-full-target-scratch/off/out/resolved-knobs.txt",
+      "resolved": "/root/work/lanes/water-rain24-full-target-scratch/off/out/resolved-knobs.txt",
+      "bytes": 244618,
+      "sha256": "b9733514e1500ae31e6ef75399a9a3ac321d8a4ee13e5bed8a8607840571984f"
+    },
+    "/root/work/lanes/water-rain24-full-target-scratch/off/out/obj/src/game/filter06.d": {
+      "path": "/root/work/lanes/water-rain24-full-target-scratch/off/out/obj/src/game/filter06.d",
+      "resolved": "/root/work/lanes/water-rain24-full-target-scratch/off/out/obj/src/game/filter06.d",
+      "bytes": 1600,
+      "sha256": "fd8a59dca340f4f8ac9b76dd3a75a638a348e1ecc52ea1dad3a5d34c4781bef9"
+    },
+    "/root/work/lanes/water-rain24-full-target-scratch/off/out/obj/src/game/espgen44.d": {
+      "path": "/root/work/lanes/water-rain24-full-target-scratch/off/out/obj/src/game/espgen44.d",
+      "resolved": "/root/work/lanes/water-rain24-full-target-scratch/off/out/obj/src/game/espgen44.d",
+      "bytes": 1572,
+      "sha256": "421b9744b279962311c3bfc2477df406f766f1f82a843e8a8f64c42517a6b7da"
+    },
+    "/root/work/lanes/water-rain24-full-target-scratch/on/build.log": {
+      "path": "/root/work/lanes/water-rain24-full-target-scratch/on/build.log",
+      "resolved": "/root/work/lanes/water-rain24-full-target-scratch/on/build.log",
+      "bytes": 1267140,
+      "sha256": "1b1c3af9c110319f6a6b295a16f55d26a7c331e8228b740e7412e51ab4711daa"
+    },
+    "/root/work/lanes/water-rain24-full-target-scratch/on/out/resolved-knobs.txt": {
+      "path": "/root/work/lanes/water-rain24-full-target-scratch/on/out/resolved-knobs.txt",
+      "resolved": "/root/work/lanes/water-rain24-full-target-scratch/on/out/resolved-knobs.txt",
+      "bytes": 242212,
+      "sha256": "38830a211e00902200b13199f22979029e2dabdd76caf20c12a3409d8db441fd"
+    },
+    "/root/work/lanes/water-rain24-full-target-scratch/on/out/obj/src/game/filter06.d": {
+      "path": "/root/work/lanes/water-rain24-full-target-scratch/on/out/obj/src/game/filter06.d",
+      "resolved": "/root/work/lanes/water-rain24-full-target-scratch/on/out/obj/src/game/filter06.d",
+      "bytes": 1599,
+      "sha256": "4c06d352a6e2d326f349b814ad9b2d1a0a5f285e029b8940d1b754019a15deea"
+    },
+    "/root/work/lanes/water-rain24-full-target-scratch/on/out/obj/src/game/espgen44.d": {
+      "path": "/root/work/lanes/water-rain24-full-target-scratch/on/out/obj/src/game/espgen44.d",
+      "resolved": "/root/work/lanes/water-rain24-full-target-scratch/on/out/obj/src/game/espgen44.d",
+      "bytes": 1571,
+      "sha256": "a5b3d73570e10273dd76362f6d509ed822fadd5384fb79215a3c90634be37840"
+    }
+  },
+  "source_files": {
+    "include/at_sub.h": {
+      "base": {
+        "sha256": "e66f9b5eaff83eb74ba320c4c497a600fa6f361e13d65b1e19c8708a07f13679",
+        "bytes": 2813
+      },
+      "new": {
+        "sha256": "e66f9b5eaff83eb74ba320c4c497a600fa6f361e13d65b1e19c8708a07f13679",
+        "bytes": 2813
+      }
+    },
+    "include/at_sub2.h": {
+      "base": {
+        "sha256": "85da5c29cfe17b9d109f1e8abc0eaac923a5d7c15a990ee3f60a8d0bcae62d2d",
+        "bytes": 656
+      },
+      "new": {
+        "sha256": "85da5c29cfe17b9d109f1e8abc0eaac923a5d7c15a990ee3f60a8d0bcae62d2d",
+        "bytes": 656
+      }
+    },
+    "include/atari.h": {
+      "base": {
+        "sha256": "852525c2e518f0c1d89301372170425af68e71ffaf917a7a956e42584b68bc72",
+        "bytes": 8500
+      },
+      "new": {
+        "sha256": "852525c2e518f0c1d89301372170425af68e71ffaf917a7a956e42584b68bc72",
+        "bytes": 8500
+      }
+    },
+    "include/atariInfo.h": {
+      "base": {
+        "sha256": "45bc12b409e0e28ab66b43867d4b8404502dcf0508f5b46b0c0204d6366623b8",
+        "bytes": 6210
+      },
+      "new": {
+        "sha256": "45bc12b409e0e28ab66b43867d4b8404502dcf0508f5b46b0c0204d6366623b8",
+        "bytes": 6210
+      }
+    },
+    "include/cManager.h": {
+      "base": {
+        "sha256": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20",
+        "bytes": 19670
+      },
+      "new": {
+        "sha256": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20",
+        "bytes": 19670
+      }
+    },
+    "include/camera.h": {
+      "base": {
+        "sha256": "d22b4698b6f90eb4a5aab88f2d289b967c590ec409c51f9129b47829907bb33b",
+        "bytes": 2482
+      },
+      "new": {
+        "sha256": "d22b4698b6f90eb4a5aab88f2d289b967c590ec409c51f9129b47829907bb33b",
+        "bytes": 2482
+      }
+    },
+    "include/db_log.h": {
+      "base": {
+        "sha256": "d3b7c882b8499bb61ec4f74efa2dd6233ca38bec31f273a95d3dbeb1a17243c1",
+        "bytes": 2704
+      },
+      "new": {
+        "sha256": "d3b7c882b8499bb61ec4f74efa2dd6233ca38bec31f273a95d3dbeb1a17243c1",
+        "bytes": 2704
+      }
+    },
+    "include/esp.h": {
+      "base": {
+        "sha256": "a02bdcd8632113b4c2e7b099ea90cfefea9c7f0f1c779b31e354dfd634e0e1ba",
+        "bytes": 24972
+      },
+      "new": {
+        "sha256": "a02bdcd8632113b4c2e7b099ea90cfefea9c7f0f1c779b31e354dfd634e0e1ba",
+        "bytes": 24972
+      }
+    },
+    "include/espgen.h": {
+      "base": {
+        "sha256": "245308dc8833b1e18f71682bcf2a0564e73480eda629f076313f6c037be09757",
+        "bytes": 13619
+      },
+      "new": {
+        "sha256": "245308dc8833b1e18f71682bcf2a0564e73480eda629f076313f6c037be09757",
+        "bytes": 13619
+      }
+    },
+    "include/filter.h": {
+      "base": {
+        "sha256": "9fe214f01a352873092ab03aa9a2a5db1d7ba39c5d971dc2ae6955c0f15330e4",
+        "bytes": 1804
+      },
+      "new": {
+        "sha256": "9fe214f01a352873092ab03aa9a2a5db1d7ba39c5d971dc2ae6955c0f15330e4",
+        "bytes": 1804
+      }
+    },
+    "include/global.h": {
+      "base": {
+        "sha256": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a",
+        "bytes": 19112
+      },
+      "new": {
+        "sha256": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a",
+        "bytes": 19112
+      }
+    },
+    "include/gx.h": {
+      "base": {
+        "sha256": "471d0065eb45b8de8b47289e50534778f4a83bff15bbff7eb55780f9758de4e8",
+        "bytes": 8362
+      },
+      "new": {
+        "sha256": "471d0065eb45b8de8b47289e50534778f4a83bff15bbff7eb55780f9758de4e8",
+        "bytes": 8362
+      }
+    },
+    "include/light.h": {
+      "base": {
+        "sha256": "17f3609a7e81275f51571497bd00624571c93e24b725713081a9237b1d10540c",
+        "bytes": 14105
+      },
+      "new": {
+        "sha256": "17f3609a7e81275f51571497bd00624571c93e24b725713081a9237b1d10540c",
+        "bytes": 14105
+      }
+    },
+    "include/lightPath.h": {
+      "base": {
+        "sha256": "7a2db7f00ab5d9dcf42151016de26c9651ded9e5a2f863db64a61df0164e9e5d",
+        "bytes": 841
+      },
+      "new": {
+        "sha256": "7a2db7f00ab5d9dcf42151016de26c9651ded9e5a2f863db64a61df0164e9e5d",
+        "bytes": 841
+      }
+    },
+    "include/main_mem.h": {
+      "base": {
+        "sha256": "7d4f1e41ae696fb77c0075d1f3cd9f5db019ce42632d71dd29d949793f7ef2a7",
+        "bytes": 3872
+      },
+      "new": {
+        "sha256": "7d4f1e41ae696fb77c0075d1f3cd9f5db019ce42632d71dd29d949793f7ef2a7",
+        "bytes": 3872
+      }
+    },
+    "include/main_sub.h": {
+      "base": {
+        "sha256": "bf6b3ebd70ab88200102cfd7ed2fcfd210a3b1db4f6aad56d5ddc5a0a0c734b6",
+        "bytes": 2548
+      },
+      "new": {
+        "sha256": "bf6b3ebd70ab88200102cfd7ed2fcfd210a3b1db4f6aad56d5ddc5a0a0c734b6",
+        "bytes": 2548
+      }
+    },
+    "include/math_sub.h": {
+      "base": {
+        "sha256": "b22ea560254b33002780cc9067e3065136245d731550de227b0c340e8af04507",
+        "bytes": 4966
+      },
+      "new": {
+        "sha256": "b22ea560254b33002780cc9067e3065136245d731550de227b0c340e8af04507",
+        "bytes": 4966
+      }
+    },
+    "include/model.h": {
+      "base": {
+        "sha256": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5",
+        "bytes": 31880
+      },
+      "new": {
+        "sha256": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5",
+        "bytes": 31880
+      }
+    },
+    "include/rnd.h": {
+      "base": {
+        "sha256": "720a81ce6f22cd5edbb6a2762dd8b9d31f89c6f1476163a6dc165fae5ffce383",
+        "bytes": 305
+      },
+      "new": {
+        "sha256": "720a81ce6f22cd5edbb6a2762dd8b9d31f89c6f1476163a6dc165fae5ffce383",
+        "bytes": 305
+      }
+    },
+    "include/tpl.h": {
+      "base": {
+        "sha256": "74ef5db021156b4c0cc5c2406ad9d861e1a810b0bb2eb5a83e56c09228cc3f35",
+        "bytes": 1133
+      },
+      "new": {
+        "sha256": "74ef5db021156b4c0cc5c2406ad9d861e1a810b0bb2eb5a83e56c09228cc3f35",
+        "bytes": 1133
+      }
+    },
+    "include/trans_ot.h": {
+      "base": {
+        "sha256": "10f21bdd7a8e53de6ad007f398663e99049e0a295dcc203580d199ba9f535c48",
+        "bytes": 2766
+      },
+      "new": {
+        "sha256": "10f21bdd7a8e53de6ad007f398663e99049e0a295dcc203580d199ba9f535c48",
+        "bytes": 2766
+      }
+    },
+    "include/types.h": {
+      "base": {
+        "sha256": "d88ba2c842abf4efdce4f3ea40f3039ff73e1196be17190508ba53e05bf6ba3d",
+        "bytes": 3235
+      },
+      "new": {
+        "sha256": "d88ba2c842abf4efdce4f3ea40f3039ff73e1196be17190508ba53e05bf6ba3d",
+        "bytes": 3235
+      }
+    },
+    "include/va_ppc.h": {
+      "base": {
+        "sha256": "a141e41ab83325c63be833a59e98bc90e1be761f7753f0887469184145d94129",
+        "bytes": 3470
+      },
+      "new": {
+        "sha256": "a141e41ab83325c63be833a59e98bc90e1be761f7753f0887469184145d94129",
+        "bytes": 3470
+      }
+    },
+    "include/vec.h": {
+      "base": {
+        "sha256": "7b8bc9b2715fcd8b06b9e66c92ff0164a114cd2ca64e9dd8cf6db8dab8dd1a7d",
+        "bytes": 7572
+      },
+      "new": {
+        "sha256": "7b8bc9b2715fcd8b06b9e66c92ff0164a114cd2ca64e9dd8cf6db8dab8dd1a7d",
+        "bytes": 7572
+      }
+    },
+    "port/dreamcast/game/effects30.mk": {
+      "base": {
+        "sha256": "3fb6de911aa2aee82bd72bb77fe8685c08f86b059556325bae2868d615de1830",
+        "bytes": 39097
+      },
+      "new": {
+        "sha256": "66386156f0ccf987665b30e9ecae8e7257087ba41af2b747049b0bcfa22d7d3f",
+        "bytes": 40013
+      }
+    },
+    "port/dreamcast/game/gx_fast.h": {
+      "base": {
+        "sha256": "e8e981f1afaec9a5b115e05a36f2abc6c72f41f27ac9f1ceaa18cb0c8da74959",
+        "bytes": 2775
+      },
+      "new": {
+        "sha256": "e8e981f1afaec9a5b115e05a36f2abc6c72f41f27ac9f1ceaa18cb0c8da74959",
+        "bytes": 2775
+      }
+    },
+    "port/dreamcast/game/platform/include/actor_ganado_ps2_stump.h": {
+      "base": {
+        "sha256": "c6781c08e9d9a4e7b59bd0c7f5dfb94f09841a03e2ff70238a2668e60d7def9f",
+        "bytes": 1122
+      },
+      "new": {
+        "sha256": "c6781c08e9d9a4e7b59bd0c7f5dfb94f09841a03e2ff70238a2668e60d7def9f",
+        "bytes": 1122
+      }
+    },
+    "port/dreamcast/game/platform/include/actor_lifetime.h": {
+      "base": {
+        "sha256": "9c204cb853b3f39a97d7c785110f98994c892ae30bb42216f7ab366b9b54fdfc",
+        "bytes": 2887
+      },
+      "new": {
+        "sha256": "9c204cb853b3f39a97d7c785110f98994c892ae30bb42216f7ab366b9b54fdfc",
+        "bytes": 2887
+      }
+    },
+    "port/dreamcast/game/platform/include/native_ui.h": {
+      "base": {
+        "sha256": "7490e37bbe989399aa75108cf880027a4943da89ffa4999f272b0eccf4ffb882",
+        "bytes": 7767
+      },
+      "new": {
+        "sha256": "7490e37bbe989399aa75108cf880027a4943da89ffa4999f272b0eccf4ffb882",
+        "bytes": 7767
+      }
+    },
+    "port/dreamcast/game/platform/include/re4dc_prelude.h": {
+      "base": {
+        "sha256": "25e2e3dd536dce40dc03b5e42a26dc7149de4768a1d8ecb707c2e46474b9c50f",
+        "bytes": 1460
+      },
+      "new": {
+        "sha256": "25e2e3dd536dce40dc03b5e42a26dc7149de4768a1d8ecb707c2e46474b9c50f",
+        "bytes": 1460
+      }
+    },
+    "port/dreamcast/kos-env.sh": {
+      "base": {
+        "sha256": "d776b3b236236bc5f91500ae5e469c140b41f94e44ec72165efd556afd7aebb8",
+        "bytes": 1225
+      },
+      "new": {
+        "sha256": "d776b3b236236bc5f91500ae5e469c140b41f94e44ec72165efd556afd7aebb8",
+        "bytes": 1225
+      }
+    },
+    "src/game/espgen44.cpp": {
+      "base": {
+        "sha256": "08aba515d56c5e530d954a4489b00ef7a257d6705ace110eea7a5aa6ca459562",
+        "bytes": 3382
+      },
+      "new": {
+        "sha256": "6f2bab97dc6b8a8fb508c3ee159f2e553dab061a44ee3791e248eaca227a6cea",
+        "bytes": 4163
+      }
+    },
+    "src/game/filter06.cpp": {
+      "base": {
+        "sha256": "e004ee0d621850f656e8020a78533436187969d18ae2865dd18059dd631da686",
+        "bytes": 22013
+      },
+      "new": {
+        "sha256": "60364736a8d2935b1f49cc4bbf73915757e78e03e0333fcde57adfaa88ea6dd0",
+        "bytes": 36906
+      }
+    }
+  },
+  "case_names": [
+    "base-f0",
+    "base-f1",
+    "new-f0-dabsent",
+    "new-f0-d0",
+    "new-f0-d1",
+    "new-f1-dabsent",
+    "new-f1-d0",
+    "new-f1-d1"
+  ],
+  "limits": {
+    "address_space_bytes": 268435456,
+    "owned_output_bytes": 268435456,
+    "jobs": 1,
+    "command_seconds": 60,
+    "wall_seconds": 360,
+    "C_floor_bytes": 25769803776
+  },
+  "helpers": {
+    "matrix.py": {
+      "sha256": "e2700d4f66dcfa12deaa93057d8f4fe68009ced867d68bdc7b9854f49775a67d",
+      "bytes": 16936
+    },
+    "readback.py": {
+      "sha256": "bdff3ae963413b5fc47f89026bebb005be1e7426699b71b2f5c725bdc231098a",
+      "bytes": 11112
+    },
+    "run-matrix.sh": {
+      "sha256": "bd02811520ed2e8bb62baa54f1bc064c222303cc9a44b1208251463f08486b6f",
+      "bytes": 2101
+    },
+    "test_preparation.py": {
+      "sha256": "5ebf27dbc3315cdd408c918bdd2c2a20473bb758fc98d99ddee3a59937543466",
+      "bytes": 8495
+    },
+    "README.md": {
+      "sha256": "3baa23076b00084c1cc5db0eae6d0082283f3b9ef27f5a66d7bb25bb86b315d7",
+      "bytes": 8364
+    }
+  }
+}

@@ -80,13 +80,19 @@ def main():
     (q/(unit+'.su')).write_text('unit.cpp:1:1:void function()\t32\tstatic\n')
     (q/(unit+'-disassembly.txt')).write_text('ocbwb @r4\n')
    elf(q/'pair.o',record=d=='1')
-  for rel in ('RESERVED.json','environment-bootstrap.log','environment.nul','grant.json','pins.json'):(root/rel).write_text('retained allocation\n')
-  run={'runtime':matrix.RUNTIME,'limits':matrix.LIMITS,'source':matrix.SOURCE,'base':matrix.BASE,'selected_compilation_complete':True,'case_names':p['case_names'],'artifacts':{}}
+  actual_pins_sha=matrix.digest((json.dumps(pins,indent=2)+'\n').encode())
+  actual_grant={'kind':'ROOT_SELECTED_SH4_GRANT','authorized':True,'source':pins['source'],'base':pins['base'],'pins_sha256':actual_pins_sha,'output':str(root),'jobs':1,'address_space_bytes':matrix.CAP,'owned_output_bytes':matrix.CAP,'command_seconds':60,'wall_seconds':360,'case_names':pins['case_names'],'grant_id':'HOST_TEST_ONLY_SYNTHETIC'}
+  for rel,value in [('RESERVED.json',{'pins_sha256':actual_pins_sha,'grant':actual_grant}),('grant.json',actual_grant),('pins.json',pins)]:
+   (root/rel).write_text(json.dumps(value,indent=2)+'\n')
+  for rel in ('environment-bootstrap.log','environment.nul'):(root/rel).write_text('retained allocation\n')
+  run={'pins_sha256':actual_pins_sha,'grant_id':actual_grant['grant_id'],'runtime':matrix.RUNTIME,'limits':matrix.LIMITS,'source':matrix.SOURCE,'base':matrix.BASE,'selected_compilation_complete':True,'case_names':p['case_names'],'artifacts':{}}
   for q in root.rglob('*'):
    if q.is_file():run['artifacts'][str(q.relative_to(root))]={'bytes':q.stat().st_size,'sha256':readback.sha(q)}
   def save(): (root/'matrix-result.json').write_text(json.dumps(run))
   save();report=readback.check(root,pins);yes(len(report['off_identity'])==8);yes(len(report['objects'])==12);yes(report['opcodes_require_root_review'])
   badpins=copy.deepcopy(pins);badpins['provider']['sha256']='bad';reject(lambda:readback.check(root,badpins))
+  oldsha=run['pins_sha256'];run['pins_sha256']='bad';save();reject(lambda:readback.check(root,pins));run['pins_sha256']=oldsha
+  oldid=run['grant_id'];run['grant_id']='wrong';save();reject(lambda:readback.check(root,pins));run['grant_id']=oldid
   key='new-f0-dabsent-filter06-includes.log';kept=run['artifacts'].pop(key);save();reject(lambda:readback.check(root,pins));run['artifacts'][key]=kept
   key='cases/new-f0-dabsent/filter06.su';kept=run['artifacts'].pop(key);save();reject(lambda:readback.check(root,pins));run['artifacts'][key]=kept
   run['selected_compilation_complete']=False;save();reject(lambda:readback.check(root,pins));run['selected_compilation_complete']=True

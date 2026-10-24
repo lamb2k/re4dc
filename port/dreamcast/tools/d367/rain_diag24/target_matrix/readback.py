@@ -104,6 +104,11 @@ def check(root,pins):
   candidate=root/rel;path=candidate.resolve()
   if any(x.is_symlink() for x in [candidate]+list(candidate.parents) if x.is_relative_to(root)) or not path.is_relative_to(root.resolve()) or not path.is_file() or sha(path)!=pin['sha256'] or path.stat().st_size!=pin['bytes']:raise ValueError('artifact drift')
  if sha(pins['provider']['path'])!=pins['provider']['sha256']:raise ValueError('provider drift')
+ expected_pins_sha=hashlib.sha256((json.dumps(pins,indent=2)+'\n').encode()).hexdigest()
+ if run.get('pins_sha256')!=expected_pins_sha or json.loads((root/'pins.json').read_text())!=pins:raise ValueError('persisted PINS binding')
+ grant=json.loads((root/'grant.json').read_text());reserved=json.loads((root/'RESERVED.json').read_text())
+ expected={'kind':'ROOT_SELECTED_SH4_GRANT','authorized':True,'source':pins['source'],'base':pins['base'],'pins_sha256':expected_pins_sha,'output':str(root),'jobs':1,'address_space_bytes':268435456,'owned_output_bytes':268435456,'command_seconds':60,'wall_seconds':360,'case_names':pins['case_names']}
+ if any(grant.get(k)!=v for k,v in expected.items()) or not grant.get('grant_id') or run.get('grant_id')!=grant['grant_id'] or reserved.get('grant')!=grant or reserved.get('pins_sha256')!=expected_pins_sha:raise ValueError('persisted grant/reservation binding')
  provider=Elf(pins['provider']['path']);provided=provider.definitions();report={'scope':'selected SH4 objects only; no whole programme/guest/cache execution/ancestry/look acceptance','objects':[],'off_identity':[],'on_pricing':[],'opcodes_require_root_review':True}
  for feature in (0,1):
   base=root/'cases'/('base-f'+str(feature));base_pair=Elf(base/'pair.o')

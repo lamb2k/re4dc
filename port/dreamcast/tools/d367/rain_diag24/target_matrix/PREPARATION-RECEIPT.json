@@ -1,11 +1,11 @@
 {
-  "at_utc": "2026-10-24T08:31:28.037912+00:00",
+  "at_utc": "2026-10-24T08:34:51.062119+00:00",
   "scope": "PREPARATION ONLY; no SDK/environment initialization/fullnormal/stage/guest",
   "source": "da413ff058f88fa136375ecff629610fc59c0e51",
   "runtime": "fdb5ed4212fc78823f625ab75b78cc237cfd181a",
   "base": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
-  "pins_sha256": "a8e2c59f9a3589a711c5704385eb32100ab55b8e98ad4e71d194301b8b599776",
-  "host_checks": 96,
+  "pins_sha256": "a2d28c7459fab885c0b9807048777270f08968a7fc3d5393507df8fed1476591",
+  "host_checks": 98,
   "source_files": 33,
   "tool_environment_files": 15,
   "selected_cases": 8,
@@ -18,8 +18,8 @@
         "test_preparation.py"
       ],
       "exit": 0,
-      "path": "/dev/shm/rain-diag24-preparation-v05o9m0p/host-0.log",
-      "sha256": "8d7af02fde4c6097ccfe483a75f2aff39da58dbc2166350f77761324aaa731d7",
+      "path": "/dev/shm/rain-diag24-preparation-final-72stdpc9/host-0.log",
+      "sha256": "0486feb8ea24fd724bfd55e171bc756fbbe42b5b39970a9932a763343f246876",
       "bytes": 172
     },
     {
@@ -29,7 +29,7 @@
         "check"
       ],
       "exit": 0,
-      "path": "/dev/shm/rain-diag24-preparation-v05o9m0p/host-1.log",
+      "path": "/dev/shm/rain-diag24-preparation-final-72stdpc9/host-1.log",
       "sha256": "49236158d423b426292e8fb613ac37160a218285e412f121eac0ba5b7c928d42",
       "bytes": 48
     },
@@ -40,7 +40,7 @@
         "plan"
       ],
       "exit": 0,
-      "path": "/dev/shm/rain-diag24-preparation-v05o9m0p/host-2.log",
+      "path": "/dev/shm/rain-diag24-preparation-final-72stdpc9/host-2.log",
       "sha256": "e3087cbd317182aa6d60f81bba6346ba51fce61c4193ffaa9872b9cb7adb112c",
       "bytes": 7348
     },
@@ -51,7 +51,7 @@
         "run-matrix.sh"
       ],
       "exit": 0,
-      "path": "/dev/shm/rain-diag24-preparation-v05o9m0p/host-3.log",
+      "path": "/dev/shm/rain-diag24-preparation-final-72stdpc9/host-3.log",
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "bytes": 0
     },
@@ -62,33 +62,35 @@
         "template unauthorized"
       ],
       "exit": 1,
-      "path": "/dev/shm/rain-diag24-preparation-v05o9m0p/grant-refused.log",
+      "path": "/dev/shm/rain-diag24-preparation-final-72stdpc9/grant-refused.log",
       "sha256": "1c3a79493637b99f5cd25589931971fbdf7c6252f81fdbd258a66dc7daaca436",
       "bytes": 1226
     }
   ],
   "helpers": {
     "matrix.py": {
-      "sha256": "e2700d4f66dcfa12deaa93057d8f4fe68009ced867d68bdc7b9854f49775a67d",
-      "bytes": 16936
+      "sha256": "41f86c7f256cba903d66d8554ea482ab83243c003667a2bb15fc8e6cbf466e67",
+      "bytes": 17020
     },
     "readback.py": {
-      "sha256": "bdff3ae963413b5fc47f89026bebb005be1e7426699b71b2f5c725bdc231098a",
-      "bytes": 11112
+      "sha256": "9f9c64f6dedb7fa251c0b522a6c069381f23f0d6493a05ec026f5e1515c061c3",
+      "bytes": 12013
     },
     "run-matrix.sh": {
       "sha256": "bd02811520ed2e8bb62baa54f1bc064c222303cc9a44b1208251463f08486b6f",
       "bytes": 2101
     },
     "test_preparation.py": {
-      "sha256": "5ebf27dbc3315cdd408c918bdd2c2a20473bb758fc98d99ddee3a59937543466",
-      "bytes": 8495
+      "sha256": "3754a8a4a485b608100f9e6ea86792b2b736e480f73dae8517b1e8dbeda1099d",
+      "bytes": 9383
     },
     "README.md": {
-      "sha256": "3baa23076b00084c1cc5db0eae6d0082283f3b9ef27f5a66d7bb25bb86b315d7",
-      "bytes": 8364
+      "sha256": "04e737c314dcede94f9b8b230538513616e6947a07ce8edeb15daaef971b9a23",
+      "bytes": 8469
     }
   },
+  "prior_preparation_checkpoint": "48e43e2146e5f348cb5ee482ec2c316a842628e3 preserved",
+  "successor_delta": "Independent readback now joins persisted PINS/grant/reservation/run metadata; wrong-PINS and wrong-grant-ID controls reject",
   "limitations": [
     "Synthetic ELF and host protocol controls; no generated SH4 evidence",
     "Immutable source exports are Git-object pinned and materialize into RAM only after allocation",

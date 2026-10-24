@@ -134,7 +134,7 @@ def execute(p,pins_path,g,output):
  def interrupted(sig,frame):raise InterruptedError('owned wrapper signal '+str(sig))
  signal.signal(signal.SIGTERM,interrupted);signal.signal(signal.SIGINT,interrupted)
  start=time.monotonic();write_json(root/'grant.json',g);write_json(root/'pins.json',p)
- result={'source':SOURCE,'base':BASE,'runtime':RUNTIME,'selected_compilation_complete':False,'artifacts':{},'commands':[],'case_names':p['case_names'],'limits':p['limits'],'SDK_only_after_explicit_root_grant':True}
+ result={'source':SOURCE,'base':BASE,'runtime':RUNTIME,'pins_sha256':digest(pathlib.Path(pins_path).read_bytes()),'grant_id':g['grant_id'],'selected_compilation_complete':False,'artifacts':{},'commands':[],'case_names':p['case_names'],'limits':p['limits'],'SDK_only_after_explicit_root_grant':True}
  bench=root/'bench';cwd=bench/'port/dreamcast/game';cwd.mkdir(parents=True);tmp=root/'tmp';tmp.mkdir();os.environ['TMPDIR']=str(tmp)
  def command(a,tag,stdout=None):
   if time.monotonic()-start>p['limits']['wall_seconds']:raise ValueError('whole matrix deadline')
