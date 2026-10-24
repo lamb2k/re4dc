@@ -106,6 +106,19 @@ if(geometry_low_at&&acquired==geometry_low_at)model_pending=kModelPacketBytes/32
     return template,values,hashlib.sha256(original_fill.encode()).hexdigest()
 
 
+def authenticate_source(tree,expected_source):
+    if (tree/'source-pins.json').is_file():
+        pins=json.loads((tree/'source-pins.json').read_text())
+        if pins['source']!=expected_source:raise ValueError('Snapshot source mismatch')
+        for name,sha in pins['files'].items():
+            if digest(tree/name)!=sha:raise ValueError('Snapshot input changed: '+name)
+    else:
+        head=subprocess.check_output(['git','-C',str(tree),'rev-parse','HEAD'],text=True).strip()
+        if head!=expected_source:raise ValueError('Source HEAD mismatch')
+        dirty=subprocess.check_output(['git','-C',str(tree),'status','--porcelain','--untracked-files=no'],text=True)
+        if dirty:raise ValueError('Tracked source tree is dirty; extraction refused')
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--source-tree',type=Path,required=True)
@@ -114,12 +127,7 @@ def main():
     a=p.parse_args();tree=a.source_tree.resolve();output=a.output.resolve()
     resource.setrlimit(resource.RLIMIT_CORE,(0,0))
     if not output.is_relative_to(Path('/dev/shm')):raise ValueError('Generated outputs must remain in /dev/shm')
-    if (tree/'source-pins.json').is_file():
-        pins=json.loads((tree/'source-pins.json').read_text())
-        assert pins['source']==a.expected_source
-        for name,sha in pins['files'].items():assert digest(tree/name)==sha,name
-    else:
-        assert subprocess.check_output(['git','-C',str(tree),'rev-parse','HEAD'],text=True).strip()==a.expected_source
+    authenticate_source(tree,a.expected_source)
     output.mkdir(parents=True,exist_ok=False)
     for name,text in {
         'dc/pvr.h':'#pragma once\n',
