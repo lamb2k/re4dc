@@ -1,0 +1,22 @@
+{
+  "schema": "one-NTFS-trial-source-before-execution-v1",
+  "created_utc": "2026-10-24T02:59:32.921752+00:00",
+  "base_source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "preservation_parent": "faff7bbf8fdc151ef81efd21682192e33e1568ab",
+  "copied": [
+    {
+      "path": "c-side/trial-ntfs-compression-audits-h2-on-r2-v1.ps1",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/trial-ntfs-compression-audits-h2-on-r2-v1.ps1",
+      "bytes": 11804,
+      "sha256": "d3596dfbf24d7fdc866e8d600f57a42c17dbdd02160183f6c403bd2dee8d47f8"
+    },
+    {
+      "path": "c-side/NTFS-COMPRESSION-ONE-TRIAL-SOURCE-CHECK-v1.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/NTFS-COMPRESSION-ONE-TRIAL-SOURCE-CHECK-v1.json",
+      "bytes": 1003,
+      "sha256": "3ff0b8dd6b638361b670ae727c02192aecda25180b4142dd5cc00f6ca3ead4ee"
+    }
+  ],
+  "trial_executed": false,
+  "batch_authorized": false
+}

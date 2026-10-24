@@ -1,0 +1,15 @@
+{
+  "Schema": "ONE_CAPTURE_NTFS_TRIAL_SOURCE_REVIEW_V1",
+  "ScriptSHA256": "d3596dfbf24d7fdc866e8d600f57a42c17dbdd02160183f6c403bd2dee8d47f8",
+  "NativeParser": "PASS",
+  "TargetOnly": "C:\\Flycast-Evidence\\re4-dreamcast\\audits23-takeover\\5e4de9a0\\h2-on-r2\\flycast.exe",
+  "ApprovedScope": "Root explicit ONE fixed eligible closed-capture /C->verify->/U->verify trial, no batch",
+  "ExpectedFileId": "E8D47561:00050000004F12B7",
+  "ExpectedSHA256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a",
+  "ExpectedLogicalBytes": 14416384,
+  "ExpectedOriginalAllocatedBytes": 14417920,
+  "AllocationAccounting": "Win32 GetCompressedFileSize raw plus actual4096B cluster rounding, FileStandardInfo separate; uncompressed rawsize can be logical length",
+  "CaptureSidecars": "All29 surrounding files hashed and compared, no original writes",
+  "Failure": "Journal+preserve; only same identity/fullbytes/liveness/closed admissible /U rollback",
+  "SourceExecuted": false
+}
