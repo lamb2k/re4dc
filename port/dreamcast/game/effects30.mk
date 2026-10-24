@@ -648,3 +648,35 @@ FLASHLIGHT_POOL_TUNE := $(if $(FLASHLIGHT_POOL_DIST),-DRE4DC_FLASHLIGHT_POOL_DIS
 $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_FX_STRIP21=1 -DRE4DC_FLASHLIGHT_POOL=1 $(FLASHLIGHT_POOL_TUNE)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FLASHLIGHT_POOL=1
 endif
+
+# RAIN_R10C_DIAG: private memory-only causal observation, defaults off independently of render arm.
+RAIN_R10C_DIAG ?= 0
+ifneq ($(RAIN_R10C_DIAG),0)
+ifneq ($(RAIN_R10C_DIAG),1)
+$(error RAIN_R10C_DIAG is exactly 0 or 1)
+endif
+ifneq ($(RAIN_DC),1)
+$(error RAIN_R10C_DIAG needs RAIN_DC=1)
+endif
+ifneq ($(RAIN_PS2),1)
+$(error RAIN_R10C_DIAG needs RAIN_PS2=1)
+endif
+ifneq ($(D349_RENDERER_STACK),1)
+$(error RAIN_R10C_DIAG needs D349_RENDERER_STACK=1)
+endif
+ifneq ($(PVR_STREAM),1)
+$(error RAIN_R10C_DIAG needs PVR_STREAM=1)
+endif
+ifneq ($(NATIVE_LASER),1)
+$(error RAIN_R10C_DIAG needs NATIVE_LASER=1)
+endif
+ifneq ($(EFFECT_SPRITES),1)
+$(error RAIN_R10C_DIAG needs EFFECT_SPRITES=1)
+endif
+ifneq ($(RAIN_R10C_DC),0)
+ifneq ($(RAIN_R10C_DC),1)
+$(error RAIN_R10C_DIAG requires strict RAIN_R10C_DC=0 or 1)
+endif
+endif
+$(OBJDIR)/src/game/filter06.o $(OBJDIR)/src/game/espgen44.o: GAME_CPPFLAGS += -DRE4DC_RAIN_R10C_DIAG=1
+endif
