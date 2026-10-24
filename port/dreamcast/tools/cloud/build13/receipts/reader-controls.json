@@ -1,0 +1,216 @@
+{
+  "status": "PASS",
+  "scope": "Actual split reader and source-extracted R4SG admission controls.\n\nUses the public genuine-builder fixtures. Malformed bodies have recomputed\nchecksums unless the checksum itself is under test. The file-open/owner\nlifecycle is outside this host adapter; actual bounded reader, source-header\npredicate, production CRC and loader R4SG gate are executed unchanged.\n",
+  "sanitized": false,
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_static.cpp": "f30d66e52eb7e3945e8316ced31e081e7a3277532e9c4fe638b4da0b384b66ac",
+    "port/dreamcast/room/scenery_record_split.hpp": "0b0a82260b6ce19db64046efc5e3088e2dcff3975305beedd29dab0973ec3bb5",
+    "port/dreamcast/room/instanced_mesh.hpp": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019",
+    "port/dreamcast/tools/cloud/build13/check_reader.py": "abfc2db32abcdb33dffe683761151aed3bbbe8e3a441c7240525a3d891a92286",
+    "port/dreamcast/tools/cloud/build13/fixture_reader.cpp.in": "2d299e823fb0e898fd10159b0525550aab4894e2f9f84b0783cb769ece210197"
+  },
+  "extracted_sha256": {
+    "CRC": "3ccea7002626ed15ed6447dbbd1a457bcd018ae622ef45987be9d5d57f445dc6",
+    "GROUP_GATE": "06900e3052d2af62aa4195f0567b91795da7663be7d6d73cff6675bd9b2bcc5e"
+  },
+  "fixture_manifest_sha256": "06e00dd398b187efe327c048a777abf7bf0f5388000e08747e70acbd74a27350",
+  "observations": [
+    {
+      "label": "32-ordinary",
+      "expected": 0,
+      "stderr": "",
+      "stdout": "ADMIT version=3 meshlets=75 split=0\n",
+      "mesh_sha256": "38b4ec517b5f066843f72cc95923dced7ec4e9564932aebc656c42d21307a7da",
+      "groups_sha256": "ea465ab677cd44c484fe2ecaffc164d4df1add21e0b24a0d2dab8930655faf7b"
+    },
+    {
+      "label": "32-split",
+      "expected": 0,
+      "stderr": "",
+      "stdout": "ADMIT version=4 meshlets=75 split=1\n",
+      "mesh_sha256": "4946e341c3359bd996d6cf1b936dc656d60cf1ba3b26ac7fe7ef75b7c20a8c9d",
+      "groups_sha256": "ef49eb785d9ea53183547b336cdcb8ef669d201bc8393c267beade761d254bd4"
+    },
+    {
+      "label": "64-ordinary",
+      "expected": 0,
+      "stderr": "",
+      "stdout": "ADMIT version=3 meshlets=27 split=0\n",
+      "mesh_sha256": "36c24884a3ff65cac39270bd251f78c6902833521733580bf69d99c6041c5828",
+      "groups_sha256": "d24740337266bde04d4d46426be802742af1f48db2482360fac0cc8b814e70bc"
+    },
+    {
+      "label": "64-split",
+      "expected": 0,
+      "stderr": "",
+      "stdout": "ADMIT version=4 meshlets=27 split=1\n",
+      "mesh_sha256": "d6777ade70a55ccfb34bda2c896e58e169970f7c0ecfbbba0c91928cfed94a37",
+      "groups_sha256": "4defb516d63d68455ba995959a2600560da001d87be7dd2d6158d622d8bd5f3c"
+    },
+    {
+      "label": "128-ordinary",
+      "expected": 0,
+      "stderr": "",
+      "stdout": "ADMIT version=3 meshlets=18 split=0\n",
+      "mesh_sha256": "5efe2621d9ccbdc15059913a71830ee92d75440085e77c263b29f39d2e3ea60a",
+      "groups_sha256": "dd2c1e757e1650dd2ebc572390203a54bf067c3534c53aaa7841597864e055e1"
+    },
+    {
+      "label": "128-split",
+      "expected": 0,
+      "stderr": "",
+      "stdout": "ADMIT version=4 meshlets=18 split=1\n",
+      "mesh_sha256": "93ea86e0e4de745da16fbe2f8d763284e708c337c0b242d4038f35f27b0f2814",
+      "groups_sha256": "95d6bb77bc510f27f483afb406e4c365d1fd01338e0536b1510d539ec31ec110"
+    },
+    {
+      "label": "256-ordinary",
+      "expected": 0,
+      "stderr": "",
+      "stdout": "ADMIT version=3 meshlets=12 split=0\n",
+      "mesh_sha256": "f86e6e4cc1ae9de00a015e74a12826eae6b3f58d488b15d1d5c3f9dbc62d4e8b",
+      "groups_sha256": "7f590a8ff6686572c632ce574eab85faa76cf780380852c9b962248f92140f38"
+    },
+    {
+      "label": "256-split",
+      "expected": 0,
+      "stderr": "",
+      "stdout": "ADMIT version=4 meshlets=12 split=1\n",
+      "mesh_sha256": "1a62e2886f0a2bc282a9cc81f9ac23330d6d4e60077fd3e027d4e6121bd037b4",
+      "groups_sha256": "e29a318281499128d0a41ea3a1c26107c885a1fb51a40c507d5172175db964d1"
+    },
+    {
+      "label": "bounds-offset",
+      "expected": 1,
+      "stderr": "READER_REFUSAL split section layout\n",
+      "stdout": "",
+      "mesh_sha256": "c133b869e24fc9f7ef80e1dec4fe13eaeda5de013f3e5c230d6b4f25f6fde00b",
+      "groups_sha256": "4defb516d63d68455ba995959a2600560da001d87be7dd2d6158d622d8bd5f3c"
+    },
+    {
+      "label": "meshlet-capacity",
+      "expected": 1,
+      "stderr": "READER_REFUSAL split meshlet id capacity\n",
+      "stdout": "",
+      "mesh_sha256": "63f66ee60b30a275bd9b50bf769789c1a85ad12070173f69dc3a5f00322db13a",
+      "groups_sha256": "4defb516d63d68455ba995959a2600560da001d87be7dd2d6158d622d8bd5f3c"
+    },
+    {
+      "label": "color-mode",
+      "expected": 1,
+      "stderr": "READER_REFUSAL split header\n",
+      "stdout": "",
+      "mesh_sha256": "6d7e809e24f6388521c3319c761b14a3895681c425c25ef3276d99ead0be40f4",
+      "groups_sha256": "4defb516d63d68455ba995959a2600560da001d87be7dd2d6158d622d8bd5f3c"
+    },
+    {
+      "label": "extension-header",
+      "expected": 1,
+      "stderr": "READER_REFUSAL split header\n",
+      "stdout": "",
+      "mesh_sha256": "771a0d28dc5381a3b5f083d98f11077ea4ff0a051b5d8ba346c70d651644e9ca",
+      "groups_sha256": "4defb516d63d68455ba995959a2600560da001d87be7dd2d6158d622d8bd5f3c"
+    },
+    {
+      "label": "emit-count",
+      "expected": 1,
+      "stderr": "READER_REFUSAL split emit range\n",
+      "stdout": "",
+      "mesh_sha256": "416699a4b6abc6a795c5ec40a59f1175714f6b797a105badf9b9ef7178b86f13",
+      "groups_sha256": "4defb516d63d68455ba995959a2600560da001d87be7dd2d6158d622d8bd5f3c"
+    },
+    {
+      "label": "source-crc",
+      "expected": 4,
+      "stderr": "",
+      "stdout": "",
+      "mesh_sha256": "f868e3ec1b9ec9a8a337575f87b157c1e20e02502f7832df6e766481d128d7a5",
+      "groups_sha256": "4defb516d63d68455ba995959a2600560da001d87be7dd2d6158d622d8bd5f3c"
+    },
+    {
+      "label": "source-extent",
+      "expected": 4,
+      "stderr": "",
+      "stdout": "",
+      "mesh_sha256": "0ad26bbffce093fd6f2c5bfc913b022c214975cf25f78d901f95a47911d402f1",
+      "groups_sha256": "4defb516d63d68455ba995959a2600560da001d87be7dd2d6158d622d8bd5f3c"
+    },
+    {
+      "label": "body-crc",
+      "expected": 2,
+      "stderr": "",
+      "stdout": "",
+      "mesh_sha256": "aa9c4410663af19ef34131d6f0710e284a739abfb14b1fe7c37da865e911cbe8",
+      "groups_sha256": "4defb516d63d68455ba995959a2600560da001d87be7dd2d6158d622d8bd5f3c"
+    },
+    {
+      "label": "part-pool",
+      "expected": 1,
+      "stderr": "READER_REFUSAL split part pool\n",
+      "stdout": "",
+      "mesh_sha256": "e6f255af8c67989356c0a898febd27c68fa076fd4cee0148fc30d56a069d29db",
+      "groups_sha256": "4defb516d63d68455ba995959a2600560da001d87be7dd2d6158d622d8bd5f3c"
+    },
+    {
+      "label": "pick-capacity",
+      "expected": 1,
+      "stderr": "READER_REFUSAL split pick capacity\n",
+      "stdout": "",
+      "mesh_sha256": "dac120c934dad88a6fb2658da3f2adc5495913f507ac2431f7c987f4b4d811cd",
+      "groups_sha256": "4defb516d63d68455ba995959a2600560da001d87be7dd2d6158d622d8bd5f3c"
+    },
+    {
+      "label": "sg-strip-boundary",
+      "expected": 5,
+      "stderr": "GROUP_REFUSAL split group strip boundary\n",
+      "stdout": "",
+      "mesh_sha256": "d6777ade70a55ccfb34bda2c896e58e169970f7c0ecfbbba0c91928cfed94a37",
+      "groups_sha256": "80e8cae88a94c287d9e8424be51334744159196998939efb81eb3f52453ffb3d"
+    },
+    {
+      "label": "sg-extent",
+      "expected": 5,
+      "stderr": "GROUP_REFUSAL split group extent\n",
+      "stdout": "",
+      "mesh_sha256": "d6777ade70a55ccfb34bda2c896e58e169970f7c0ecfbbba0c91928cfed94a37",
+      "groups_sha256": "72e24d3faeb492db64f68142eaa2834f6f6cf3dc70f1aa8c8c7bd6b47a70917b"
+    },
+    {
+      "label": "sg-corner-range",
+      "expected": 5,
+      "stderr": "GROUP_REFUSAL split group corner range\n",
+      "stdout": "",
+      "mesh_sha256": "d6777ade70a55ccfb34bda2c896e58e169970f7c0ecfbbba0c91928cfed94a37",
+      "groups_sha256": "d742f28115f1a42d712ce5707a466bc8eda8aca7566394217273da2bcc5bc3f6"
+    },
+    {
+      "label": "sg-enclosure",
+      "expected": 5,
+      "stderr": "GROUP_REFUSAL split group enclosure\n",
+      "stdout": "",
+      "mesh_sha256": "d6777ade70a55ccfb34bda2c896e58e169970f7c0ecfbbba0c91928cfed94a37",
+      "groups_sha256": "c470b6c22f6665900b0d6313e9e814514400e3a806153c3cdcb2760568d8aa7f"
+    },
+    {
+      "label": "sg-binding",
+      "expected": 5,
+      "stderr": "GROUP_REFUSAL header\n",
+      "stdout": "",
+      "mesh_sha256": "d6777ade70a55ccfb34bda2c896e58e169970f7c0ecfbbba0c91928cfed94a37",
+      "groups_sha256": "667121da21ed859e7528a1d1edae6c1dee39518401650aeebdb21bc31144e587"
+    }
+  ],
+  "group_malformed_crc_recomputed": true,
+  "command": [
+    "g++",
+    "-std=c++20",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-DRE4DC_SCENERY_RECORD_SPLIT=1",
+    "-I/tmp/b13-reader-current-v2/shim",
+    "/tmp/b13-reader-current-v2/reader.cpp",
+    "-o",
+    "/tmp/b13-reader-current-v2/reader"
+  ]
+}

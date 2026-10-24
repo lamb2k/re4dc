@@ -91,6 +91,23 @@
 #ifndef RE4DC_WORLD_RECT21
 #define RE4DC_WORLD_RECT21 0
 #endif
+#ifndef RE4DC_SCENERY_RECORD_SPLIT
+#define RE4DC_SCENERY_RECORD_SPLIT 0
+#endif
+#if RE4DC_SCENERY_RECORD_SPLIT != 0 && RE4DC_SCENERY_RECORD_SPLIT != 1
+#error SCENERY_RECORD_SPLIT must be 0 or 1
+#endif
+#if RE4DC_SCENERY_RECORD_SPLIT
+#if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
+#error SCENERY_RECORD_SPLIT has not qualified Build12 payload/lineage composition
+#endif
+#if RE4DC_WORLD_VERT || RE4DC_SCENERY21_AB || RE4DC_SCENERY_DEDUP || RE4DC_SCENERY_CONE || RE4DC_SCENERY_PIECE_STATE || RE4DC_PS2_PVS || RE4DC_PS2_INTERIOR_CULL || RE4DC_WORLD_RECT21
+#error SCENERY_RECORD_SPLIT needs independent matched metadata controls
+#endif
+#define RE4DC_SCENERY_RECORD re4dc::record_split::Record
+#else
+#define RE4DC_SCENERY_RECORD re4dc::room::Meshlet
+#endif
 #if RE4DC_WORLD_RECT21
 #if !RE4DC_PS2_WORLD_DRAW || !RE4DC_PS2_WORLD_MESH
 #error WORLD_RECT21 provenance requires the PS2 world mesh consumer
@@ -177,6 +194,9 @@ extern "C" volatile unsigned re4dc_rigid_hide;   // native_actor_fast.cpp (RIGID
 #endif
 #if RE4DC_NATIVE_MESH
 #include "../../room/instanced_mesh.hpp"
+#if RE4DC_SCENERY_RECORD_SPLIT
+#include "../../room/scenery_record_split.hpp"
+#endif
 #endif
 // COARSE_NO_STD_SCENERY (game30.mk; COARSE=1 with COARSE_WORLD only; default off): in the room the coarse
 // world draws (coarse.cpp re4dc_coarse_world_room: coarse_world.h kRoom) bind_mesh() neither opens nor binds
@@ -2477,7 +2497,11 @@ extern "C" void re4dc_world_scratch_prime_reset(){
 }
 #endif
 struct MeshDraw : Emitter {
+#if RE4DC_SCENERY_RECORD_SPLIT
+    const re4dc::record_split::RecordView package; const re4dc::room::MeshPart& part;
+#else
     const re4dc::room::MeshPackage& package; const re4dc::room::MeshPart& part;
+#endif
     const std::uint32_t* lut; // mesh view's colour LUT (nullptr: per-corner path)
     re4dc::room::CompactVertex12* gather_pool; // mesh view's v3 gather buffer (nullptr: v1/v2)
 #if RE4DC_PS2_PVS
@@ -2532,7 +2556,12 @@ struct MeshDraw : Emitter {
         gathered=gather_pool;
         return gathered!=nullptr;
     }
-    const re4dc::room::CompactVertex12* corners(const re4dc::room::Meshlet& l){
+#if RE4DC_SCENERY_RECORD_SPLIT
+    template<class EmitRecord>
+    const re4dc::room::CompactVertex12* corners(const EmitRecord& l){
+#else
+    const re4dc::room::CompactVertex12* corners(const RE4DC_SCENERY_RECORD& l){
+#endif
         const auto* base=package.vertices()+l.first_vertex;
 #if RE4DC_SCENERY_DEDUP==3
         const unsigned rep=package.repeat_count(l);
@@ -2553,7 +2582,7 @@ struct MeshDraw : Emitter {
     // These getters follow corners(l), which refreshes the current meshlet's decoder
     // even for plain/indexed geometry. Reuse that context rather than decode it twice.
     // Modes 1/2 retain their external table word (src offset | repeats << 24).
-    std::uint32_t dd_word(const re4dc::room::Meshlet& l)const{
+    std::uint32_t dd_word(const RE4DC_SCENERY_RECORD& l)const{
 #if RE4DC_SCENERY_DEDUP==3
         (void)l;
         return (dd_count-dd_unique)<<24;
@@ -2568,14 +2597,14 @@ struct MeshDraw : Emitter {
         return dw>>24;
 #endif
     }
-    unsigned dd_unique_count(const re4dc::room::Meshlet& l,std::uint32_t dw)const{
+    unsigned dd_unique_count(const RE4DC_SCENERY_RECORD& l,std::uint32_t dw)const{
 #if RE4DC_SCENERY_DEDUP==3
         (void)l;(void)dw;return dd_unique;
 #else
         return l.vertex_count-(dw>>24);
 #endif
     }
-    const std::uint8_t* dd_source(const re4dc::room::Meshlet& l,std::uint32_t dw)const{
+    const std::uint8_t* dd_source(const RE4DC_SCENERY_RECORD& l,std::uint32_t dw)const{
 #if RE4DC_SCENERY_DEDUP==3
         (void)l;(void)dw;
         return reinterpret_cast<const std::uint8_t*>(dd_base+dd_unique);
@@ -2590,7 +2619,7 @@ struct MeshDraw : Emitter {
     pvr_vertex_t* cache=nullptr; std::uint8_t* outcodes=nullptr;
     re4dc::vp::Constants k{};
 #if RE4DC_PS2_PVS
-    void pvs_observed(const re4dc::room::Meshlet& l){
+    void pvs_observed(const RE4DC_SCENERY_RECORD& l){
 #if RE4DC_MESH_DIRECT
         if(ps2 && direct && sq && pvs_placement!=~0U)
             re4dc_pvs23_observe(pvs_placement,part_index,unsigned(&l-package.meshlets()),cache,
@@ -2703,7 +2732,7 @@ struct MeshDraw : Emitter {
     // accepted (copied from the cache), culled (all corners outside one screen
     // edge) or handed to the unchanged clipper (a corner outside near/far),
     // the same three outcomes, in the same order, as Emitter::strip().
-    int meshlet(const re4dc::room::Meshlet& l,const re4dc::room::CompactBatch& batch){
+    int meshlet(const RE4DC_SCENERY_RECORD& l,const re4dc::room::CompactBatch& batch){
         namespace vp=re4dc::vp;
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         re4dc::wc24::Scope wc_phase(re4dc::wc24::Selection);
@@ -3079,7 +3108,7 @@ struct MeshDraw : Emitter {
     // culled / emitted counts, every written word, and the lean_flush() counter formulas against the
     // reference's per-strip sums. Meshlets with more strip bytes than the buffers hold are counted as
     // skipped.
-    void strip_lean_compare(const re4dc::room::Meshlet& l){
+    void strip_lean_compare(const RE4DC_SCENERY_RECORD& l){
         namespace vp=re4dc::vp;
         constexpr unsigned screen=vp::screen_mask(vp::kChecksAll),depth=vp::depth_mask(vp::kChecksAll);
         const std::uint8_t* s=package.strip_begin(l);
@@ -3117,7 +3146,7 @@ struct MeshDraw : Emitter {
 #endif
 #endif
     // One meshlet: 1 drawn or culled, 0 fallback allowed, -1 frame aborted.
-    int draw(const re4dc::room::Meshlet& l
+    int draw(const RE4DC_SCENERY_RECORD& l
 #if RE4DC_PS2_WORLD_LEAN
              ,bool known=false // PS2_WORLD_LEAN bit 2: the meshlet's cluster (or placement) is inside every plane
 #endif
@@ -3261,7 +3290,11 @@ struct MeshDraw : Emitter {
 #endif
             ++stats.lod_draws[level<3?level:3];
             const auto& lv=levels[cl.first_level+level];
+#if RE4DC_SCENERY_RECORD_SPLIT
+            const auto lets=package.meshlets()+lv.first_meshlet;
+#else
             const auto* lets=package.meshlets()+lv.first_meshlet;
+#endif
             for(unsigned i=0;i<lv.meshlet_count;++i){
 #if RE4DC_PS2_INTERIOR_CULL
                 if(pc_state<0){
@@ -3310,11 +3343,19 @@ struct MeshDraw : Emitter {
     }
     void prefetch_emit_header(const Pick& pk)const{
         // Meshlet has a 28-byte stride; only the first 16 bytes feed emission.
+#if RE4DC_SCENERY_RECORD_SPLIT
+        emit_prefetch_span(&package.emit(pk.let),16U);
+#else
         emit_prefetch_span(package.meshlets()+pk.let,16U);
+#endif
     }
     void prefetch_emit_payload(const Pick& pk)const{
         if(!pk.nr)return;
+#if RE4DC_SCENERY_RECORD_SPLIT
+        const auto& l=package.emit(pk.let);
+#else
         const auto& l=package.meshlets()[pk.let];
+#endif
         const auto* base=package.vertices()+l.first_vertex;
         const auto* raw=package.strips()+l.first_strip;
         if(package.indexed(l)){
@@ -3335,7 +3376,12 @@ struct MeshDraw : Emitter {
         if(pk.nr==0xffU)__builtin_prefetch(raw);
         else if(sg)__builtin_prefetch(sg+16U*sg_groups*pk.let);
     }
-    const re4dc::room::CompactVertex12* emit_corners(const re4dc::room::Meshlet& l,const Pick& pk){
+#if RE4DC_SCENERY_RECORD_SPLIT
+    template<class EmitRecord>
+    const re4dc::room::CompactVertex12* emit_corners(const EmitRecord& l,const Pick& pk){
+#else
+    const re4dc::room::CompactVertex12* emit_corners(const RE4DC_SCENERY_RECORD& l,const Pick& pk){
+#endif
         const auto* base=package.vertices()+l.first_vertex;
 #if RE4DC_SCENERY_DEDUP==3
         // Match corners(): refresh or clear the decoder before every early return.
@@ -3374,7 +3420,11 @@ struct MeshDraw : Emitter {
 #endif
         if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
         if(!borrow()){++stats.reserve_rejects;return submitted?-1:0;}
+#if RE4DC_SCENERY_RECORD_SPLIT
+        const auto& l=package.emit(pk.let);
+#else
         const auto& l=package.meshlets()[pk.let];
+#endif
 #if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
         struct CenScope {
             const Emitter* e;unsigned n,s0,c0,o0,v0;
@@ -3512,7 +3562,11 @@ struct MeshDraw : Emitter {
 #elif defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK
             // PREF_WALK (cache20.h): the next pick's corners and first strip bytes while this one is transformed / sent
             if(i+1<n && RE4DC_C20_PREF_ON()){
+#if RE4DC_SCENERY_RECORD_SPLIT
+                const auto& nl=package.emit(pk[i+1].let);
+#else
                 const auto& nl=package.meshlets()[pk[i+1].let];
+#endif
                 RE4DC_C20_PREF(package.vertices()+nl.first_vertex);RE4DC_C20_PREF(package.strip_begin(nl));
             }
 #endif
@@ -3551,7 +3605,11 @@ struct MeshDraw : Emitter {
         }else
 #endif
         {
+#if RE4DC_SCENERY_RECORD_SPLIT
+            const auto lets=package.meshlets()+part.first_meshlet;
+#else
             const auto* lets=package.meshlets()+part.first_meshlet;
+#endif
             for(unsigned i=0;i<part.meshlet_count;++i){
                 const int result=draw(lets[i]);
                 if(result<=0)return result;
@@ -3570,7 +3628,11 @@ struct MeshDraw : Emitter {
 // arrays uninitialized; their guards are false until chunk_select fills them.
 struct ScenerySelector {
     using Pick=MeshDraw::Pick;
+#if RE4DC_SCENERY_RECORD_SPLIT
+    const re4dc::record_split::RecordView package;
+#else
     const re4dc::room::MeshPackage& package;
+#endif
     const Re4dcModelPart& p;
     const float* mvq;
     float near,cull_far,lod_scale=0;
@@ -3594,7 +3656,11 @@ struct ScenerySelector {
     bool sg_lp_ok=false;
     lean::SgPlane sg_lp[5];
 #endif
+#if RE4DC_SCENERY_RECORD_SPLIT
+    ScenerySelector(const Re4dcModelPart& source,re4dc::record_split::RecordView mesh,
+#else
     ScenerySelector(const Re4dcModelPart& source,const re4dc::room::MeshPackage& mesh,
+#endif
                     const float* matrix,float clip_near,float reject_far)
         :package(mesh),p(source),mvq(matrix),near(clip_near),cull_far(reject_far){}
 #include "include/scenery_chunk_select.inc"
@@ -4743,7 +4809,11 @@ struct Ps2Head { char magic[4]; std::uint32_t version,placements,parts,meshes,cr
 static_assert(sizeof(Ps2Part)==16 && sizeof(Ps2Placement)==52 && sizeof(Ps2Head)==32);
 struct Ps2Counts { unsigned placements,culled,parts,native,fallback,aborts; float near,far,cull_far; };
 struct Ps2World {
+#if RE4DC_SCENERY_RECORD_SPLIT
+    re4dc::record_split::WorldPackage package;
+#else
     re4dc::room::MeshPackage package;
+#endif
     unsigned char* storage=nullptr; unsigned bytes=0;
     const Ps2Part* parts=nullptr; const Ps2Placement* placements=nullptr; unsigned nplacements=0;
     const std::uint32_t* lut=nullptr; re4dc::room::CompactVertex12* gather=nullptr;
@@ -5811,6 +5881,20 @@ bool scenery_variant_room(unsigned room){
     (void)room;return true;
 }
 #endif
+#if RE4DC_SCENERY_RECORD_SPLIT
+bool record_split_room(unsigned room){
+#if RE4DC_MOVIE_WORLD_ARENA || RE4DC_PS2_WORLD_R11F_OWNER
+    if(room==0x11f)return false;
+#endif
+#if RE4DC_MOVIE_WORLD_ARENA && RE4DC_MOVIE_WORLD_ARENA_S30
+    if(room==0x100)return false;
+#endif
+#if RE4DC_PS2_WORLD_SOURCE_OWNER
+    if(room==0x200)return false;
+#endif
+    (void)room;return true;
+}
+#endif
 bool ps2_open(){
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return false; // BEFORE storage/room-mismatch paths
@@ -5844,7 +5928,7 @@ bool ps2_open(){
         if(fm!=FILEHND_INVALID)ps2w.alt=true;
     }
     if(fm==FILEHND_INVALID)fm=fs_open(mpath,O_RDONLY);
-#elif RE4DC_WORLD_VERT || RE4DC_SCENERY_DEDUP==3 || RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
+#elif RE4DC_WORLD_VERT || RE4DC_SCENERY_DEDUP==3 || RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS || RE4DC_SCENERY_RECORD_SPLIT
     file_t fm=fs_open(mpath,O_RDONLY);
 #else
     const file_t fm=fs_open(mpath,O_RDONLY);
@@ -5869,6 +5953,24 @@ bool ps2_open(){
             fs_close(fm);fm=fv;variant_alternate=true;
         }else re4dc_log("SCNVAR room=%03x requested=%s admitted=base reason=alternate-absent\n",
                        ps2w.room,re4dc::scenery_data::stem(kSceneryVariant));
+    }
+#endif
+#if RE4DC_SCENERY_RECORD_SPLIT
+    unsigned split_source_crc=0,split_source_bytes=0;
+    bool split_alternate=false,split_source_ok=false;
+    if(!record_split_room(ps2w.room)){
+        re4dc_log("SCNSPLIT room=%03x admitted=base reason=pinned-owner-or-movie\n",ps2w.room);
+    }else if(fm!=FILEHND_INVALID){
+        char path[64];snprintf(path,sizeof(path),"/cd/dc/native/r%03x/ps2-world-split.re4mesh",ps2w.room);
+        const file_t alternate=fs_open(path,O_RDONLY);
+        if(alternate!=FILEHND_INVALID){
+            alignas(32) re4dc::room::MeshHeader source{};
+            const auto extent=fs_total(fm);
+            split_source_ok=extent>=112 && extent<=UINT32_MAX && read_package(fm,reinterpret_cast<unsigned char*>(&source),80U,0) &&
+                re4dc::record_split::source_header(source,unsigned(extent));
+            if(split_source_ok){split_source_crc=source.crc;split_source_bytes=source.bytes;}
+            fs_close(fm);fm=alternate;split_alternate=true;
+        }else re4dc_log("SCNSPLIT room=%03x admitted=base reason=alternate-absent\n",ps2w.room);
     }
 #endif
 #if RE4DC_SCENERY_DEDUP==3
@@ -5959,7 +6061,22 @@ bool ps2_open(){
         else if(dd_alternate && ps2_crc32(s+80,msize-80U)!=crc){why="offline crc";ok=false;}
     }
 #endif
+#if RE4DC_SCENERY_RECORD_SPLIT
+    if(ok){
+        re4dc::room::MeshHeader file{};
+        if(msize>=sizeof(file))std::memcpy(&file,s,sizeof(file));
+        if(split_alternate && (!split_source_ok || file.version!=4U || msize<112U)){
+            why="split source/header";ok=false;
+        }else if(!split_alternate && file.version==4U){why="split filename";ok=false;}
+        else if(split_alternate && ps2_crc32(s+80,msize-80U)!=file.crc){why="split crc";ok=false;}
+    }
+#endif
     if(ok && !ps2w.package.adopt(s,msize,true,true)){why=ps2w.package.error();ok=false;}
+#if RE4DC_SCENERY_RECORD_SPLIT
+    if(ok && split_alternate && !ps2w.package.source_identity(split_source_crc,split_source_bytes)){
+        why="split source identity";ok=false;
+    }
+#endif
 #if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
     if(ok){
         if(variant_alternate){
@@ -6144,6 +6261,9 @@ bool ps2_open(){
         // PS2_STRIP_GROUPS: tools/ps2_strip_groups.py's group records for this exact package (mesh crc / bytes, R4PW
         // crc, record crc). Absent or not matching: no groups (the whole-meshlet path).
         char gpath[48];snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-world.r4sg",ps2w.room);
+#if RE4DC_SCENERY_RECORD_SPLIT
+        if(ps2w.package.is_split())snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-world-split.r4sg",ps2w.room);
+#endif
 #if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
         if(re4dc::scenery_data::kind(ps2w.package)!=re4dc::scenery_data::Kind::None)
             snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/%s.r4sg",ps2w.room,re4dc::scenery_data::stem(kSceneryVariant));
@@ -6188,6 +6308,9 @@ bool ps2_open(){
 #if RE4DC_SCENERY_DEDUP==3
         if(!gwhy && ps2w.package.offline_dedup() && !ps2w.package.offline_groups(gb+32,gsize-32U,w[3]))gwhy="offline ranges";
 #endif
+#if RE4DC_SCENERY_RECORD_SPLIT
+        if(!gwhy && ps2w.package.is_split())gwhy=ps2w.package.group_error(gb+32,gsize-32U,w[3]);
+#endif
         if(gwhy){if(gb)re4dc_static_free(gb);}
         else {ps2w.sg_block=gb;ps2w.sg=gb+32;ps2w.sg_groups=w[3];
 #if RE4DC_WORLD_VERT
@@ -6206,6 +6329,12 @@ bool ps2_open(){
 #endif
     re4dc_log("PS2MESH open bytes=%u version=%u meshes=%u parts=%u meshlets=%u vertices=%u placements=%u heap=%d->%d\n",
         total,mh.version,mh.mesh_count,mh.part_count,mh.meshlet_count,mh.vertex_count,h.placements,before,re4dc_static_heap_free());
+#if RE4DC_SCENERY_RECORD_SPLIT
+    re4dc_log("SCNSPLIT room=%03x admitted=%s version=%u mesh_bytes=%u actual_crc=%08x source_crc=%08x source_bytes=%u emit_offset=%u bounds_offset=%u gather_reserved=%u\n",
+        ps2w.room,ps2w.package.is_split()?"v4":"base",mh.version,mh.bytes,mh.crc,
+        ps2w.package.is_split()?mh.reserved[2]:mh.crc,ps2w.package.is_split()?mh.reserved[3]:mh.bytes,
+        mh.meshlet_offset,ps2w.package.is_split()?mh.reserved[1]:0U,kGatherBytes);
+#endif
 #if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
     re4dc_log("SCNVAR room=%03x requested=%s admitted=%s mesh_bytes=%u gather_reserved=%u actual_crc=%08x source_crc=%08x\n",
         ps2w.room,re4dc::scenery_data::stem(kSceneryVariant),variant_alternate?re4dc::scenery_data::stem(kSceneryVariant):"base",

@@ -1,0 +1,66 @@
+{
+  "label": "MODELLED",
+  "scope": "Arithmetic setup-only scenario, not measured frame or r101 prediction",
+  "clock_hz": 200000000,
+  "assumed_other_ms": 30,
+  "placements": 2,
+  "parts": 3,
+  "geometry_in_other_assumption": true,
+  "probe_excluded": true,
+  "formula": "30 + 2 * sum(part selection + part replay_setup warm cycles) / 200000",
+  "source_receipt": "target-costs.json",
+  "rows": [
+    {
+      "meshlet_limit": 32,
+      "setup_cycles": {
+        "ordinary": 12336,
+        "enabled_fallback": 14784,
+        "split": 13938
+      },
+      "modelled_frame_ms": {
+        "ordinary": 30.06168,
+        "enabled_fallback": 30.07392,
+        "split": 30.06969
+      }
+    },
+    {
+      "meshlet_limit": 64,
+      "setup_cycles": {
+        "ordinary": 9840,
+        "enabled_fallback": 10464,
+        "split": 10098
+      },
+      "modelled_frame_ms": {
+        "ordinary": 30.0492,
+        "enabled_fallback": 30.05232,
+        "split": 30.05049
+      }
+    },
+    {
+      "meshlet_limit": 128,
+      "setup_cycles": {
+        "ordinary": 9372,
+        "enabled_fallback": 9654,
+        "split": 9378
+      },
+      "modelled_frame_ms": {
+        "ordinary": 30.04686,
+        "enabled_fallback": 30.04827,
+        "split": 30.04689
+      }
+    },
+    {
+      "meshlet_limit": 256,
+      "setup_cycles": {
+        "ordinary": 9060,
+        "enabled_fallback": 9114,
+        "split": 8898
+      },
+      "modelled_frame_ms": {
+        "ordinary": 30.0453,
+        "enabled_fallback": 30.04557,
+        "split": 30.04449
+      }
+    }
+  ]
+}
