@@ -1,0 +1,76 @@
+{
+  "name": "rr-qa-boot",
+  "status": "RUN_COMPLETE",
+  "start_utc": "2026-10-24T03:58:55.621401+00:00",
+  "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\rr\\1023-2350-fb254e82-qa\\_discs\\qa",
+  "tracks": {
+    "base": "C:\\Flycast-Evidence\\re4-dreamcast\\rr\\1023-2350-fb254e82-qa\\_discs\\qa",
+    "kind": "release",
+    "track03_sha256": "174d25bbfa9433c4a8c352085afb27e84680dd5b392d7336310fb648055c8193"
+  },
+  "seconds": 60,
+  "vmu": null,
+  "keys": "C:\\Flycast-Evidence\\re4-dreamcast\\rr\\1023-2350-fb254e82-qa\\fixtures\\qa-boot-keys.txt",
+  "stop": "room enter|phase=enter",
+  "fixtures": {
+    "warp": {
+      "src": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pad": {
+      "src": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "w11": {
+      "src": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "errors": [],
+  "key_log": [
+    {
+      "step": 0,
+      "keys": [
+        "down"
+      ],
+      "host_s": 5.7,
+      "windows": 5
+    },
+    {
+      "step": 1,
+      "keys": [
+        "a"
+      ],
+      "host_s": 7.3,
+      "windows": 5
+    },
+    {
+      "step": 2,
+      "keys": [
+        "a"
+      ],
+      "host_s": 9.0,
+      "windows": 5
+    },
+    {
+      "step": 3,
+      "keys": [
+        "a"
+      ],
+      "host_s": 10.7,
+      "windows": 5
+    }
+  ],
+  "align": false,
+  "emu": "harness",
+  "emu_env": {},
+  "stop_matched_s": 17.4,
+  "stopped": "goal",
+  "log_idle_s": 0.1,
+  "end_utc": "2026-10-24T03:59:28.552568+00:00",
+  "elapsed_s": 32.8,
+  "emulator_exited": true
+}

@@ -1,0 +1,28 @@
+{
+  "name": "rr-boot",
+  "status": "RUN_COMPLETE",
+  "start_utc": "2026-10-24T03:53:09.908365+00:00",
+  "disc": "C:\\Game Dev\\Emulators\\RE4DC-RR\\cand-fb254e82\\gdemu",
+  "tracks": {
+    "disc.gdi": 87,
+    "track01.bin": 1058400,
+    "track02.raw": 1237152,
+    "track03.bin": 1185760800
+  },
+  "seconds": 45,
+  "vmu": null,
+  "keys": null,
+  "stop": "state title=",
+  "fixtures": {},
+  "errors": [],
+  "key_log": [],
+  "align": false,
+  "emu": "harness",
+  "emu_env": {},
+  "stop_matched_s": 4.1,
+  "stopped": "goal",
+  "log_idle_s": 0.0,
+  "end_utc": "2026-10-24T03:53:19.208349+00:00",
+  "elapsed_s": 9.2,
+  "emulator_exited": true
+}

@@ -1,0 +1,34 @@
+{
+  "source": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "cycle": "1023-2350-fb254e82",
+  "metadata_refreshed_utc": "2026-10-24T04:13:07.360045+00:00",
+  "RR_terminal_before_edit": true,
+  "exclusive_RR_lock_during_edit": true,
+  "inspection_sha256": "d236b9d39f2d618d7c715f6d10c9d83bb10ebbabb7861b4064608a7ad7ecc447",
+  "original_metadata_backed_up": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/original-metadata",
+  "unchanged_original_four_track_sums": true,
+  "media_ZIP_fingerprints_unchanged": true,
+  "metadata_files": {
+    "README.txt": {
+      "size": 2309,
+      "sha256": "a9439bbf77627c433ce859e91249828234bb92632ec3e2f65607e48818802cff"
+    },
+    "STEPS.txt": {
+      "size": 2099,
+      "sha256": "96d9313f5c2946705ccd54f8a1af3869ebcbc97d90cbff04917f957bd13ed499"
+    },
+    "IDENTITY.json": {
+      "size": 23070,
+      "sha256": "9ff3968e9760496cbe225a1dadfbd98482ec2dcd635b85feb4dab6c3ef8127a2"
+    },
+    "QUALIFICATION-SHA256SUMS.txt": {
+      "size": 760,
+      "sha256": "8ac2cac791745553d33189e0d2b0a2b49bbf114b47c87583e05a6ef754609326"
+    }
+  },
+  "helper_sha256": "518ffb80249d742d2c50e1ea084619b9565f93dece68785885d01163c72d9097",
+  "source_programme_assets_tracks_ZIP_changed": false,
+  "legacy_current_console55_distinction_explicit": true,
+  "new_guest_build_or_cleanup": false,
+  "current_actual_candidate_console55_boot": "PENDING"
+}

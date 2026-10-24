@@ -1,0 +1,43 @@
+{
+  "name": "rr-qa-warp",
+  "status": "RUN_COMPLETE",
+  "start_utc": "2026-10-24T03:58:58.517019+00:00",
+  "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\rr\\1023-2350-fb254e82-qa\\_discs\\qa",
+  "tracks": {
+    "base": "C:\\Flycast-Evidence\\re4-dreamcast\\rr\\1023-2350-fb254e82-qa\\_discs\\qa",
+    "kind": "release",
+    "track03_sha256": "174d25bbfa9433c4a8c352085afb27e84680dd5b392d7336310fb648055c8193"
+  },
+  "seconds": 60,
+  "vmu": null,
+  "keys": null,
+  "stop": "phase=enter room=103",
+  "fixtures": {
+    "warp": {
+      "src": "C:\\Flycast-Evidence\\re4-dreamcast\\rr\\1023-2350-fb254e82-qa\\fixtures\\qa-warp.txt",
+      "bytes": 150,
+      "sha256": "396b2bbc8f114cc7f222ba3d973c684d9b8d5f80f5b441e5638ecbf10204bc0b"
+    },
+    "pad": {
+      "src": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "w11": {
+      "src": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "errors": [],
+  "key_log": [],
+  "align": false,
+  "emu": "harness",
+  "emu_env": {},
+  "stop_matched_s": 55.0,
+  "reader_exit": 0,
+  "log_idle_s": 0.6,
+  "end_utc": "2026-10-24T03:59:59.745423+00:00",
+  "elapsed_s": 61.1,
+  "emulator_exited": true
+}

@@ -1,0 +1,462 @@
+{
+  "schema": "source-only-byte-preserving-archive-v1",
+  "created_utc": "2026-10-24T04:17:45.204813+00:00",
+  "base_source": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "archive_parent": "2aac5aacad11753799ce053a7c089b2601375399",
+  "scope": "Private current candidate metadata/source preservation; legacy RR evidence, not current console55 acceptance.",
+  "copied": [
+    {
+      "path": "c-side/helper/candidate_handback.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/candidate-fb254e82-handback/candidate_handback.py",
+      "bytes": 17487,
+      "sha256": "518ffb80249d742d2c50e1ea084619b9565f93dece68785885d01163c72d9097"
+    },
+    {
+      "path": "c-side/helper/candidate_handback.inspect-v1.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/candidate-fb254e82-handback/candidate_handback.inspect-v1.py",
+      "bytes": 17187,
+      "sha256": "157cb0944b797fc420901af7d821c2c23222d7cd2024fde8536afdb19f5f0015"
+    },
+    {
+      "path": "c-side/helper/HANDOFF.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/candidate-fb254e82-handback/HANDOFF.md",
+      "bytes": 2901,
+      "sha256": "5fc49d5c90584f8093b80f5ab178935e7557a4a48de3902478a5d388f72ae6f4"
+    },
+    {
+      "path": "c-side/helper/CLAIM.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/candidate-fb254e82-handback/CLAIM.md",
+      "bytes": 546,
+      "sha256": "c342b203c1d7c79c5d8179c1b1de8bfc33c242e72ee75e8befc33bbb631d32dc"
+    },
+    {
+      "path": "c-side/review-evidence/HANDBACK.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/HANDBACK.json",
+      "bytes": 1405,
+      "sha256": "bb0d3d044e276fc6860abe3974a140b0ba8f3d7d13abc2c7290e6d28588dffa8"
+    },
+    {
+      "path": "c-side/review-evidence/HANDBACK.md",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/HANDBACK.md",
+      "bytes": 2899,
+      "sha256": "d070ef610ad5ce34e45899f8492991b6b41e2b98d55908e58fa6550b68378b8c"
+    },
+    {
+      "path": "c-side/review-evidence/INSPECTION.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/INSPECTION.json",
+      "bytes": 24046,
+      "sha256": "d236b9d39f2d618d7c715f6d10c9d83bb10ebbabb7861b4064608a7ad7ecc447"
+    },
+    {
+      "path": "c-side/review-evidence/full-readback-manifest.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/full-readback-manifest.json",
+      "bytes": 231281,
+      "sha256": "4d07e720300fcd72ae1081a00fe6a702331983ed2e8af4fdfadb0346691a726a"
+    },
+    {
+      "path": "c-side/review-evidence/metadata-draft/IDENTITY.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/metadata-draft/IDENTITY.json",
+      "bytes": 23070,
+      "sha256": "9ff3968e9760496cbe225a1dadfbd98482ec2dcd635b85feb4dab6c3ef8127a2"
+    },
+    {
+      "path": "c-side/review-evidence/metadata-draft/QUALIFICATION-SHA256SUMS.txt",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/metadata-draft/QUALIFICATION-SHA256SUMS.txt",
+      "bytes": 760,
+      "sha256": "8ac2cac791745553d33189e0d2b0a2b49bbf114b47c87583e05a6ef754609326"
+    },
+    {
+      "path": "c-side/review-evidence/metadata-draft/README.txt",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/metadata-draft/README.txt",
+      "bytes": 2309,
+      "sha256": "a9439bbf77627c433ce859e91249828234bb92632ec3e2f65607e48818802cff"
+    },
+    {
+      "path": "c-side/review-evidence/metadata-draft/STEPS.txt",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/metadata-draft/STEPS.txt",
+      "bytes": 2099,
+      "sha256": "96d9313f5c2946705ccd54f8a1af3869ebcbc97d90cbff04917f957bd13ed499"
+    },
+    {
+      "path": "c-side/review-evidence/original-metadata/README.txt",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/original-metadata/README.txt",
+      "bytes": 1616,
+      "sha256": "4938dc36c04de30fce33e5cbb58b3dc0b9b33ea723c68de5a4ba08c1993e0fd1"
+    },
+    {
+      "path": "c-side/review-evidence/original-metadata/SHA256SUMS.txt",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/original-metadata/SHA256SUMS.txt",
+      "bytes": 333,
+      "sha256": "1e877f3c86c8091efeceeb0154c73eef9ed5f73b3a0a9dbc097f3f9c86270d31"
+    },
+    {
+      "path": "c-side/review-evidence/original-release-manifest.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/original-release-manifest.json",
+      "bytes": 231281,
+      "sha256": "927e564fb95821d2509cb9b2ef7f7a56ebc3164afd18c552451f509722136763"
+    },
+    {
+      "path": "c-side/review-evidence/rr-status-before-inspection.txt",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/rr-status-before-inspection.txt",
+      "bytes": 681,
+      "sha256": "231efe4be359fa5dd3b560e41e1689235cfac4cf5f02725ebf14060e17bee46f"
+    },
+    {
+      "path": "c-side/review-evidence/rr-status-before-metadata.txt",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/rr-status-before-metadata.txt",
+      "bytes": 681,
+      "sha256": "231efe4be359fa5dd3b560e41e1689235cfac4cf5f02725ebf14060e17bee46f"
+    },
+    {
+      "path": "c-side/candidate-metadata/README.txt",
+      "origin": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/README.txt",
+      "bytes": 2309,
+      "sha256": "a9439bbf77627c433ce859e91249828234bb92632ec3e2f65607e48818802cff"
+    },
+    {
+      "path": "c-side/candidate-metadata/STEPS.txt",
+      "origin": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/STEPS.txt",
+      "bytes": 2099,
+      "sha256": "96d9313f5c2946705ccd54f8a1af3869ebcbc97d90cbff04917f957bd13ed499"
+    },
+    {
+      "path": "c-side/candidate-metadata/IDENTITY.json",
+      "origin": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/IDENTITY.json",
+      "bytes": 23070,
+      "sha256": "9ff3968e9760496cbe225a1dadfbd98482ec2dcd635b85feb4dab6c3ef8127a2"
+    },
+    {
+      "path": "c-side/candidate-metadata/QUALIFICATION-SHA256SUMS.txt",
+      "origin": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/QUALIFICATION-SHA256SUMS.txt",
+      "bytes": 760,
+      "sha256": "8ac2cac791745553d33189e0d2b0a2b49bbf114b47c87583e05a6ef754609326"
+    },
+    {
+      "path": "c-side/candidate-metadata/SHA256SUMS.txt",
+      "origin": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/SHA256SUMS.txt",
+      "bytes": 333,
+      "sha256": "1e877f3c86c8091efeceeb0154c73eef9ed5f73b3a0a9dbc097f3f9c86270d31"
+    },
+    {
+      "path": "c-side/legacy-rr/RELEASE-READY.md",
+      "origin": "/root/rr/work/1023-2350-fb254e82/RELEASE-READY.md",
+      "bytes": 7843,
+      "sha256": "d6a04528eb018e5155102d53efcdbecb673ee5ce6d0ae934d6b6b3a53de1a499"
+    },
+    {
+      "path": "c-side/legacy-rr/result.json",
+      "origin": "/root/rr/work/1023-2350-fb254e82/result.json",
+      "bytes": 4129,
+      "sha256": "94319d6c0a8d37afe6766394e387796069e199c1a2ad77d0883b4d437ce0a089"
+    },
+    {
+      "path": "c-side/legacy-rr/verdict.txt",
+      "origin": "/root/rr/work/1023-2350-fb254e82/verdict.txt",
+      "bytes": 5,
+      "sha256": "c26de83abdc9496cd1301470918ec39ecca1cf389ef0ae1c6504da1800d1c431"
+    },
+    {
+      "path": "c-side/legacy-rr/qa-verdict.txt",
+      "origin": "/root/rr/work/1023-2350-fb254e82/qa-verdict.txt",
+      "bytes": 5,
+      "sha256": "c26de83abdc9496cd1301470918ec39ecca1cf389ef0ae1c6504da1800d1c431"
+    },
+    {
+      "path": "c-side/legacy-rr/cycle.env",
+      "origin": "/root/rr/work/1023-2350-fb254e82/cycle.env",
+      "bytes": 267,
+      "sha256": "5ff2df7c3923e8444968072eccdbbf073929217927fd79573855e7bb78587c7a"
+    },
+    {
+      "path": "c-side/legacy-rr/image.sha256",
+      "origin": "/root/rr/work/1023-2350-fb254e82/image.sha256",
+      "bytes": 65,
+      "sha256": "6d16e1815c14850241a4bfe618c78e54bc872f5428df1c65c1292394080983cc"
+    },
+    {
+      "path": "c-side/legacy-rr/recipe.conf",
+      "origin": "/root/rr/work/1023-2350-fb254e82/recipe.conf",
+      "bytes": 10428,
+      "sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898"
+    },
+    {
+      "path": "c-side/legacy-rr/steps.tsv",
+      "origin": "/root/rr/work/1023-2350-fb254e82/steps.tsv",
+      "bytes": 287,
+      "sha256": "ccf62d171c2cbadf6a2d5f2381ac10c66bb68e558b17d30d923feb8054e666a1"
+    },
+    {
+      "path": "c-side/legacy-rr/qa-steps.tsv",
+      "origin": "/root/rr/work/1023-2350-fb254e82/qa-steps.tsv",
+      "bytes": 67,
+      "sha256": "6c64d446d296f1faa49a4890a4b3fa9297c2c9394bba7cb79c66987a2b5e9970"
+    },
+    {
+      "path": "c-side/legacy-rr/qa.txt",
+      "origin": "/root/rr/work/1023-2350-fb254e82/qa.txt",
+      "bytes": 1058,
+      "sha256": "8722b062df3dd0deafad743808994658f197c7560eb9243f82e0361c9e17143d"
+    },
+    {
+      "path": "c-side/legacy-rr/census-rooms.txt",
+      "origin": "/root/rr/work/1023-2350-fb254e82/census-rooms.txt",
+      "bytes": 130,
+      "sha256": "1e4f331740e72361c02da610ceb56e4e37ed626f5ab1ed314c3357549f1f1666"
+    },
+    {
+      "path": "c-side/legacy-rr/knobs-diff.txt",
+      "origin": "/root/rr/work/1023-2350-fb254e82/knobs-diff.txt",
+      "bytes": 496,
+      "sha256": "2b1b44c148bdbd18248728fc1606a6a675b050dc6524f0bfb346f6ae7f9de088"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/boot/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/boot/run-result.json",
+      "bytes": 668,
+      "sha256": "74544b5a46ce343ea6891f16502873b50912a47a4e3102864d00feaf3ac3b5d6"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r100/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r100/run-result.json",
+      "bytes": 1259,
+      "sha256": "c6d0de2f63624c599d7296026b5ed6bdd48520e05ccff04b8aa0cfe1f4d7c2ac"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r101/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r101/run-result.json",
+      "bytes": 1259,
+      "sha256": "3e23077467e298b3e80cfc8418b93e81477213efe3f903d1391dae93d8b401f6"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r102/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r102/run-result.json",
+      "bytes": 1259,
+      "sha256": "627c549696cfc0e2b622c53af2c39e16289be9c2a901b9f8cda06936b1aaa652"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r103/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r103/run-result.json",
+      "bytes": 1259,
+      "sha256": "ccd78cd874f4cb2457b6d6fb533ea331e1ec8b87f942988f986cb65aadec55b9"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r104/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r104/run-result.json",
+      "bytes": 1259,
+      "sha256": "379507564bdcdb29388f4a66f94b88b369e93364f9affbfb7c86932c64c87427"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r105/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r105/run-result.json",
+      "bytes": 1259,
+      "sha256": "61f4ffe552708289721757f4a57e5dddc00bf9fc6aa6b163b2cc97cb272fcc80"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r106/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r106/run-result.json",
+      "bytes": 1259,
+      "sha256": "8a81f54c261e38c5caac4c421b39ced5ea067af6e80cd19db1ff56c6ceea35fa"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r107/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r107/run-result.json",
+      "bytes": 1259,
+      "sha256": "266193731a1a63d1ee654b458e68f0a0c134326991810a508b12962aa88b6274"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r108/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r108/run-result.json",
+      "bytes": 1259,
+      "sha256": "3477a883d193dd684321fa497fce3cf566b01681547ea4173785bd30cea8b5bd"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r109/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r109/run-result.json",
+      "bytes": 1259,
+      "sha256": "12e6362bd4498ed4c1abf11771d67fd0209cd705aa760c98542496c7e25cf8be"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r10a/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r10a/run-result.json",
+      "bytes": 1259,
+      "sha256": "a0ffe936cbb9c680537ba3fd41b486c568e17c9479a5b3863173806c896e177d"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r10b/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r10b/run-result.json",
+      "bytes": 1259,
+      "sha256": "09b5613495b2388fe3b8c9590743b71d3de65306858e7d318f49f145a6c8ab46"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r10f/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r10f/run-result.json",
+      "bytes": 1259,
+      "sha256": "5122e3e82b9d5eb7191971a686e4d87ff8c0a657ccdf97ca22e651f04a537256"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r111/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r111/run-result.json",
+      "bytes": 1259,
+      "sha256": "9cffdd821877ae1e180b0e7982f099c3fdf0c6a15ded763113117b3a6bc9d3bf"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r112/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r112/run-result.json",
+      "bytes": 1259,
+      "sha256": "e1177e36ef53c1c168bbcc8d24b56eabb1f96ac2f68c5865d240d2ce780ad853"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r113/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r113/run-result.json",
+      "bytes": 1259,
+      "sha256": "bb177b5c4a0d0ff5a56b86fececa573f0d02b84042e0e36a38ec2442e6cce9fa"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r117/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r117/run-result.json",
+      "bytes": 1259,
+      "sha256": "8ba3d7bb3206904f01ad3f611e11018c41142883874ae06f159f9ce82b3a68fe"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r118/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r118/run-result.json",
+      "bytes": 1259,
+      "sha256": "83892f05019bcd3b49329dba2c6bac4611bafdf979cc5c4fd4e8e0a4d817f03c"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r119/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r119/run-result.json",
+      "bytes": 1259,
+      "sha256": "9277e7e4a438397eafb788cabbb5dad0db8044ebc5273a12811b79818cab7e6f"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r11a/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r11a/run-result.json",
+      "bytes": 1259,
+      "sha256": "ca3170aece7a6b726dab2b8a8e15bb1ce4b8d3ae210a8210495df72c64c3a4c4"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r11b/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r11b/run-result.json",
+      "bytes": 1259,
+      "sha256": "8c30393304d66a017b86b954f660905d5f74d9f8bdd5761dabbc417ec6c1c809"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r11c/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r11c/run-result.json",
+      "bytes": 1259,
+      "sha256": "6b63af28b8b3aa4e4ff4600ee841e9647e00c53eb1d9a5a88452a646c8f63fae"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r11d/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r11d/run-result.json",
+      "bytes": 1259,
+      "sha256": "d26e46d030a7d48e6e257c880dbbd0220a9e5d78786ef1938c5ea39fa08d5748"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r11e/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r11e/run-result.json",
+      "bytes": 1259,
+      "sha256": "352304e80afe6ccce667313ef13dfbef698b88547c00d3de8c0f400df843f254"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r11f/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r11f/run-result.json",
+      "bytes": 1259,
+      "sha256": "e1ccca89e7bac4b84e74d0e5b24a21478549f6051d20b2caaa1a0ebed954485a"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/cg-r200/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/cg-r200/run-result.json",
+      "bytes": 1259,
+      "sha256": "96224630cf7f1cc117f7f8b883beb01b415f3fb9368e17bfa3621f11eca3163c"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/rr-s1/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/gdemu/rr-s1/run-result.json",
+      "bytes": 1437,
+      "sha256": "22408e1c3e7c0fe87de4ef678de8629335f5e0c92514f91cb464e302c2df4d3a"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/h2/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/h2/run-result.json",
+      "bytes": 1465,
+      "sha256": "bea6b829b99fb55791ba8c35fd0f01634181de467551fe5af3f73c4148c55428"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/kos-fight-49152-0/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/kos/kos-fight-49152-0/run-result.json",
+      "bytes": 1286,
+      "sha256": "044bd07a9c3ddf9f20a7d4423f7a8b04ea88ce26dfcf4d1a8b3f1eef00d6d112"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/production/kos-fight-49152-1/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82/kos/kos-fight-49152-1/run-result.json",
+      "bytes": 1286,
+      "sha256": "ba06647ee1876c89c03411eae0479aa8b39335dd424852b2d8edf6f6d01e8c20"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/qa/rrqa-s1/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82-qa/gdemu-qa/rrqa-s1/run-result.json",
+      "bytes": 1450,
+      "sha256": "9a38831fad41444e01f82d921fdda031b4d455fb460f3f6bad0350d893bbe3fa"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/qa/qa-boot/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82-qa/qa-boot/run-result.json",
+      "bytes": 1791,
+      "sha256": "900a36080d8b38d558be19a96dbb61ab5dc448c04b1a62534990d579a8d1f06e"
+    },
+    {
+      "path": "c-side/legacy-run-receipts/qa/qa-warp/run-result.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82-qa/qa-warp/run-result.json",
+      "bytes": 1318,
+      "sha256": "9d72e361d5e334292bfb5205ca375859f03b01944d19c8b71ea565c60be6aeb0"
+    },
+    {
+      "path": "c-side/programme-source-pins/production/resolved-knobs.txt",
+      "origin": "/root/probe/lanes/route/out-rrfb254e8rP/resolved-knobs.txt",
+      "bytes": 201255,
+      "sha256": "63b9cdf90190a880422074bf4e7c7c488cd013463a18d9aaeb6fc3bd470a9a5b"
+    },
+    {
+      "path": "c-side/programme-source-pins/production/stack.txt",
+      "origin": "/root/probe/lanes/route/out-rrfb254e8rP/stack.txt",
+      "bytes": 41,
+      "sha256": "2521e0c5121485db437427b55cfbb02df70233cf492dbe609c6c06b79af0b809"
+    },
+    {
+      "path": "c-side/programme-source-pins/qa/resolved-knobs.txt",
+      "origin": "/root/probe/lanes/route/out-rrfb254e8qrW/resolved-knobs.txt",
+      "bytes": 204312,
+      "sha256": "c70b545184cd56d51a54706e83d8e31ef3ec9d19dbc3f692d6b145d023f711e3"
+    },
+    {
+      "path": "c-side/programme-source-pins/qa/stack.txt",
+      "origin": "/root/probe/lanes/route/out-rrfb254e8qrW/stack.txt",
+      "bytes": 41,
+      "sha256": "2521e0c5121485db437427b55cfbb02df70233cf492dbe609c6c06b79af0b809"
+    },
+    {
+      "path": "c-side/legacy-rr/qa-manifest.json",
+      "origin": "/root/rr/work/1023-2350-fb254e82/qa/man.json",
+      "bytes": 214570,
+      "sha256": "444260ca5cf1d4ea8fc1f7aeb41662b8742118d5297c5ff142fc2ed83a011fdf"
+    },
+    {
+      "path": "c-side/legacy-rr/production-manifest.json",
+      "origin": "/root/rr/work/1023-2350-fb254e82/rel/manifest.json",
+      "bytes": 210736,
+      "sha256": "13cd3ce03e425e247d9ea70588e0fcad16960517ae669def2a4073450d410800"
+    }
+  ],
+  "excluded": [
+    "disc/track/ZIP/ELF/overlay/asset bytes",
+    "raw captures/screens/gameplay logs/private fixtures",
+    "live root STATUS/registry"
+  ],
+  "current_console55_boot": "PENDING",
+  "fresh_QA_disc_readback": false,
+  "original_four_track_SHA256SUMS_unchanged": true,
+  "fresh_old_candidate_inventory_claim": false
+}

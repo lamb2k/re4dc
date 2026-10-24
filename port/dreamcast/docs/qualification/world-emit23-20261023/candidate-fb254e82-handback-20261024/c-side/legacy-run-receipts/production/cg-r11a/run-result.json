@@ -1,0 +1,42 @@
+{
+  "name": "rr-cg-r11a",
+  "status": "RUN_COMPLETE",
+  "start_utc": "2026-10-24T03:54:53.545709+00:00",
+  "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\rr\\1023-2350-fb254e82\\_discs\\c",
+  "tracks": {
+    "base": "C:\\Flycast-Evidence\\re4-dreamcast\\rr\\1023-2350-fb254e82\\_discs\\c",
+    "kind": "twin",
+    "track03_sha256": "c535585400a82975dcf72ef7ed58df1113dd90af2e71b0289316f08e1906da8a"
+  },
+  "seconds": 60,
+  "vmu": null,
+  "keys": null,
+  "stop": null,
+  "fixtures": {
+    "warp": {
+      "src": "C:\\Flycast-Evidence\\re4-dreamcast\\rr\\1023-2350-fb254e82\\fixtures\\cg-r11a.txt",
+      "bytes": 365,
+      "sha256": "08e5d145a4f17d96d095f049f4ea139116948307fa3fb4b471b2cfe9cec2c968"
+    },
+    "pad": {
+      "src": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "w11": {
+      "src": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "errors": [],
+  "key_log": [],
+  "align": false,
+  "emu": "harness",
+  "emu_env": {},
+  "reader_exit": 0,
+  "log_idle_s": 0.6,
+  "end_utc": "2026-10-24T03:55:54.788690+00:00",
+  "elapsed_s": 61.1,
+  "emulator_exited": true
+}

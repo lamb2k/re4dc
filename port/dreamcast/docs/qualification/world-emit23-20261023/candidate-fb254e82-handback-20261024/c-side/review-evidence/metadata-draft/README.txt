@@ -1,0 +1,11 @@
+PRIVATE CURRENT CANDIDATE — fb254e82 (metadata handback, not release acceptance)
+
+Source fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2; RR cycle 1023-2350-fb254e82 quick PASS and QA PASS. The actual production main SHA256 is 49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b. Fresh independent actual-disc readback matches all 1,712 file rows, main/all 14 and the unchanged 1,697 non-programme original asset rows. Raw main/all 14 equal the retained qualified production baseline. Recipe/assets remain unchanged. Offline dedup and both experimental world switches remain OFF.
+
+RR results are LEGACY RR PIPELINE EVIDENCE. H2 used emu=harness, requested 300 seconds, elapsed 167.7 seconds; census/KOS/QAboot/QAwarp also use legacy harness runs. Two GDEMU seed runs report console mode with 60-second requests and 59.0/58.8-second elapsed; they do not meet the current exact 55-second qualification contract. No RR PASS here is presented as current bounded-console, hardware, speed, full-route or historical dam-crash causal acceptance. Fresh actual-candidate console55 boot remains PENDING for root's bounded adapter. Separate source/profile identity-bound console gates are prior evidence, not a new candidate run.
+
+The original generated Test22 README is backed up outside this candidate. Its historical fixed-crash wording is not a fresh candidate-specific finding. Ordinary manual boot/VMU/boat/dam/church/village/Mendez routes remain pending. No physical two-minute Arena challenge or QA Mendez pass is claimed.
+
+The bundled qa/RE4DC-QA-TestRR-fb254e82-20261023-GDEMU.zip is retained unchanged. This handback hashed it and inspected its central directory, without extraction; retained QA raw main/all 14 compiler outputs were independently verified, but unpacked QA media is no longer retained. RR reported its ZIP integrity and QA checks, which remain legacy evidence. This handback does not claim fresh full-QA asset readback or current console QA execution.
+
+Use STEPS.txt for pending manual checks and IDENTITY.json for exact source/programme/assets/media and evidence limits. SHA256SUMS.txt remains the original four-disc-file list; QUALIFICATION-SHA256SUMS.txt additionally pins this metadata and the unchanged QA ZIP. No disc/asset/recipe bytes, ZIP, SD card or publication was changed.

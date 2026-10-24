@@ -1,0 +1,11 @@
+rc=0 rrfb254e8qrW 20ee472a5c874c6d 42s missing=0 end=8c44c154 fb254e82 DOOR_FREEZE=1 LOAD_INDICATOR=1 VMU_CONTEXT=1 OPTION_ROW_STYLE=1 PT_BLEND_FIX=1 MODEL_STREAM_FIX=1 SS_MENU_ANIM_RT=1 PS2_ENEMY_RUL
+fixture /root/rr/work/1023-2350-fb254e82/qa/fix/pkg-rrfb254e8qrW.json data fsh,ch2,cast16,r108p,r111p,pak17,zr17,zr17b,v101,stump17,res17g,trans17,res17b,res18f,res22,boss18g50r,garr18h,rc19,ch21r,nos
+mkqa: 33 presets in /root/rr/work/1023-2350-fb254e82/qa/qa
+-rw-r--r-- 1 root root 1185760800 Oct 23 23:57 track03.bin
+QA disc_lint loader: DISC_LINT PASS /root/rr/work/1023-2350-fb254e82/qa/gdemu/disc.gdi profile=loader violations=0
+QA disc_lint standard: DISC_LINT PASS /root/rr/work/1023-2350-fb254e82/qa/gdemu/disc.gdi profile=standard violations=0
+QA README: port/dreamcast/tools/d367/qa20/README-package.txt
+QA zip RE4DC-QA-TestRR-fb254e82-20261023-GDEMU.zip testzip ok
+files 1746 bytes 1021434953
+MASTER release /mnt/c/Flycast-Evidence/re4-dreamcast/rr/1023-2350-fb254e82-qa/_discs/qa 10 diff lines; identical 1746, differing 3 (not allowed 0)
+QA_OK

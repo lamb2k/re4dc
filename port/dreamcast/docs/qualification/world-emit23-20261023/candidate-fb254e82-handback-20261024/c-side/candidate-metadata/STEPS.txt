@@ -1,0 +1,13 @@
+Pending manual observations for the CURRENT fb254e82 candidate
+
+No step below was executed by this metadata handback. Root's fresh actual-disc console55 boot is pending. Use the normal production gdemu/disc.gdi for ordinary play; keep the separate QA ZIP unchanged unless separately asked to use it. No SD-copy or extraction operation is performed here.
+
+1. Boot normally to the title/menu and start a New Game. Record build/source and console/video/controller/VMU configuration. Do not count initialization alone as playable-route acceptance.
+2. At an ordinary save point, test VMU save, load, reset and resume. Record any failed write, changed state, missing audio or load problem; a legacy harness PASS is not a physical VMU result.
+3. Follow the ordinary opening village and bell progression, preserving fights, triggers and doors. Continue the normal route toward lake/boat; test boat entry, traversal and exit where reached.
+4. Follow the dam path to the first axe villager encounter. If it never triggers, report exact position/progression rather than PASS. Historical physical-crash cause/fix is not certified by this handback.
+5. Reach the church by normal progression. Record the starting puzzle state, solve using the normal controls and confirm the solved/disarmed result and ordinary exit. Source diagnostic placement fixtures are not a substitute for this manual traversal.
+6. Continue toward Mendez; record both deaths, movies, exit/window and the next room where actually reached. No QA Mendez or full-route physical acceptance is supplied in this candidate.
+7. Report freezes, read failures, missing geometry/textures, audio/state changes and reproducible view/steps. Speed/performance and any two-minute physical Arena challenge require separately matched profiles and observations; do not infer them from the legacy 300-second H2 harness request.
+
+The QA ZIP contains a QA-menu build of the same source, with ordinary 33 presets. Its legacy boot/warp/seed results are recorded separately. Teleport/diagnostic fixtures do not prove manual route progression or hardware acceptance.

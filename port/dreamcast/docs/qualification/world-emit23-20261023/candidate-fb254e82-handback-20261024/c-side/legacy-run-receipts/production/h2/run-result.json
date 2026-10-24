@@ -1,0 +1,43 @@
+{
+  "name": "rr-h2",
+  "status": "RUN_COMPLETE",
+  "start_utc": "2026-10-24T03:53:12.911333+00:00",
+  "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\rr\\1023-2350-fb254e82\\_discs\\g",
+  "tracks": {
+    "base": "C:\\Flycast-Evidence\\re4-dreamcast\\rr\\1023-2350-fb254e82\\_discs\\g",
+    "kind": "twin",
+    "track03_sha256": "17e42df8b04d01069ae09900ded2cab61413acc1e75b0c493b9a52f44642dfb4"
+  },
+  "seconds": 300,
+  "vmu": null,
+  "keys": null,
+  "stop": "route movie terminal=. id=10030",
+  "fixtures": {
+    "warp": {
+      "src": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\work\\lanes\\rr\\port\\dreamcast\\tools\\d367\\fullplay\\segments\\h2-warp.txt",
+      "bytes": 363,
+      "sha256": "921ee89e2286ff7801736dabd1d9cb58321f25540ab3b3e3e63230eabb822012"
+    },
+    "pad": {
+      "src": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\work\\lanes\\rr\\port\\dreamcast\\tools\\d367\\fullplay\\segments\\h2-pad.txt",
+      "bytes": 215,
+      "sha256": "80a97aa5b3ac9c4e3f8945089108d98f432fa8f57b00d2e7385733cb8d461ac1"
+    },
+    "w11": {
+      "src": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "errors": [],
+  "key_log": [],
+  "align": false,
+  "emu": "harness",
+  "emu_env": {},
+  "stop_matched_s": 157.4,
+  "stopped": "goal",
+  "log_idle_s": 0.1,
+  "end_utc": "2026-10-24T03:56:00.707584+00:00",
+  "elapsed_s": 167.7,
+  "emulator_exited": true
+}

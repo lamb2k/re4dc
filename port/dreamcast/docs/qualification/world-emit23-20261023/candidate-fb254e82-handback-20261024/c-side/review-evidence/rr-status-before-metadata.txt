@@ -1,0 +1,9 @@
+last good: sha fb254e82 image 49a4173a1792823f cycle 1023-2350-fb254e82 disc /mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/gdemu
+last tried: fb254e82; origin/t15/int: fb254e82
+cycle running: no
+watcher: cron installed
+2026-10-23T23:56:55-04:00 cycle 1023-2350-fb254e82 verdict PASS (413 s)
+2026-10-23T23:56:56-04:00 deleted old candidate /mnt/c/Game Dev/Emulators/RE4DC-RR/cand-d5c1ceab
+2026-10-24T00:00:01-04:00 cycle 1023-2350-fb254e82 QA PASS (reported only; the game verdict is unchanged)
+**Last good candidate:** t15/int fb254e82, image 49a4173a1792823f, cycle 1023-2350-fb254e82, disc `C:\Game Dev\Emulators\RE4DC-RR\cand-fb254e82\gdemu`.
+## This cycle: PASS (quick tier)
