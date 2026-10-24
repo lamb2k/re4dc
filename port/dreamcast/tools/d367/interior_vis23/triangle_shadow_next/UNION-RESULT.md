@@ -32,9 +32,10 @@ placements 69 and 165; no broader face search is included.
 | Local 500 mm | 184 | 0 | 0 |
 | Local 250 mm | 184 | 0 | 0 |
 
-All cases pass the preceding topology, chart, real-plane and convexity
-prerequisites, then refuse outer-edge target coverage. The same source union
-therefore does not cover the full eye x target product in the sufficient test.
+All cases pass topology, the common chart, both real-plane and diagonal tests,
+then reach and refuse an outer-edge target test. Convexity is checked for each
+edge before its target test; later edges may remain unexamined after refusal.
+No completed full-boundary convexity proof is inferred from an edge refusal.
 The requested-uncertainty stage is not reached after nominal refusal. This is
 bounded coverage, not a rejection of other room triangles or exact occlusion.
 Per-camera cut corners are zero in all 43 hut, 43 arrival-turn and 43 walk views.
