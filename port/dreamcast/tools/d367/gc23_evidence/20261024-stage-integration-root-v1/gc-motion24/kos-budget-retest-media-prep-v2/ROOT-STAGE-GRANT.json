@@ -1,0 +1,26 @@
+{
+  "approved": true,
+  "scope": "STAGE_ONLY_NO_GUEST_NO_SDK",
+  "source": "427784b1f48aa30742850bb5025925ab619b740e",
+  "toolchain_sha256": "2301e39cfb166ee25bab261f0323d1df27331155148b67453bc527ce7330bee1",
+  "binding_sha256": "c718747e5cd79fc8ce3994d8014e37a717839f153539029ceaaa63c58b97c7f9",
+  "baseline_identity": {
+    "size": 1674494,
+    "sha256": "5d1f9a8cb6e16f3abb145664faee503c88125061bc1d30c083489eae9baf56f0"
+  },
+  "owned_cap_bytes": 6979321856,
+  "C_admit_bytes": 27917287424,
+  "C_floor_bytes": 25769803776,
+  "arms": [
+    "off",
+    "on"
+  ],
+  "existing_OFF_reuse_only": true,
+  "new_final_arms": [
+    "on"
+  ],
+  "new_delta_cap": 1342177280,
+  "aggregate_cap": 6979321856,
+  "review_sha256": "a38d3d6c9d9bdde5dc99b69c8e837c9cd7bf2c0db93fc1bc8b68a3513a42b7c0",
+  "issued_utc": "2026-10-24T12:39:15.329135+00:00"
+}

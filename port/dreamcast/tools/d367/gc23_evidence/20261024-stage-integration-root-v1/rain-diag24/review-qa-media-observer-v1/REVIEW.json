@@ -1,0 +1,38 @@
+{
+ "verdict": "HOLD_THREE_PRECISE_SOURCE_FINDINGS",
+ "kit_seal": {
+  "size": 3739,
+  "sha256": "b18b5c7e9d39aafd7d17a8cfde4d111e7d72a38e080ca13d71119ad581624e03"
+ },
+ "plan": {
+  "size": 24352,
+  "sha256": "7c4acf482a0fb39db80787fc00dd5034291cdcbaae55e88c9b2e4b775facaf33"
+ },
+ "original_kit_unchanged": true,
+ "public_groups_pass": 18,
+ "findings": {
+  "OBSERVER-FAILURE-ACCEPTED.json": {
+   "size": 4041,
+   "sha256": "7abfb851646c3d0442930f2093ed773f95fcfed70d78dcd159c0ea9e2537858d"
+  },
+  "STAGE-SUCCESS-DESCENDANT-LIVE.json": {
+   "size": 198,
+   "sha256": "7773574b023a2755871dd0284dd0b35f85f4a2e9cb0ba8a88c9e95972e936e40"
+  },
+  "CLEANUP-NULL-HANDLE-CLASSIFICATION.json": {
+   "size": 559,
+   "sha256": "957b3d601f11befc64a2140bc170e2cfb76b680474ead3ad2357324682855fab"
+  }
+ },
+ "review": {
+  "size": 2948,
+  "sha256": "170fcb52f8f51e9b33a22d76ec944d26f388e6d54734b34b81480a0a900367c9"
+ },
+ "SDK": 0,
+ "queries": 0,
+ "actual_stage": 0,
+ "Windows_process_API": 0,
+ "guests": 0,
+ "followup": "Only authorized narrow successor source/host review after final freeze",
+ "held48KiB_H2": "UNALLOCATED"
+}

@@ -1,0 +1,422 @@
+{
+  "verdict": "CLEAR_RETAINED_FINITE75_RUN_COMPLETENESS_ALL75_UNKNOWN",
+  "report": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/source-quad24-private-original75-root-r1/report.json",
+    "bytes": 601917,
+    "sha256": "078c8de6593c1ea28509c038bf3f360d4d326c3cb6ee33ab9f2280f3f4f0edfa"
+  },
+  "grant": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-root-execution-v1/ROOT-GRANT.json",
+    "bytes": 1758,
+    "sha256": "de42b10d7974b0b0ea210de3150ed8da35124bec2ef3a3d8fda066cdc9427e88"
+  },
+  "prior_independent_review": {
+    "seal_identifier": "3b31e72080f1888540a43d6ee4a8b9ba6bda117e6f29c059af518c16272f3780",
+    "final_review": {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/FINAL-REVIEW.json",
+      "bytes": 3213,
+      "sha256": "75639c76ff8c203a8ff576c8084586cf938334e37012a694eee8b57fdd594f1d"
+    }
+  },
+  "source": "f7fb7da46359694262b84cb78a3a7dfa4fc0fa4a",
+  "adapter_sha256": "083c2dd804a82ed49804a8baeb186857cb901eb6e247703962cadc6b749821ab",
+  "generic_source": "975a976eb8888ee7ddc8a58c69e7b0907c89ea80",
+  "reader_source": "ebfc129bf010e4752494059468ed3ab04b7d315f",
+  "preparation_source": "be113d594ed5c6b411d0fffaed84a61bcf4bff3f",
+  "input_cases_sha256": "fee71614fbf5bedd7e9a1c35cbb2d05edff5c119d1d8695560f43585f817ee8d",
+  "converted_cases_sha256": "012801fc1d0c34621e03b850d3e94395fa5a26cb3d51452f8d6b50565e25b647",
+  "plan_sha256": "24ef9acac6f1b616f832aa7a1cd36cce656cccb8ac51f4efa3e2f3e049bda324",
+  "prep_seal_sha256": "786192cefc3309e10929fa33608f73133ee18f1cac94e021e8675909636f5ba6",
+  "controls_sha256": "4ffc4a2785c4ac26cff01941a54320c14a9fe9087455b6634aa7093181fafebc",
+  "cohort": [
+    {
+      "label": "hut",
+      "frame": 647,
+      "size_mm": 2000,
+      "cases": 25
+    },
+    {
+      "label": "hut",
+      "frame": 647,
+      "size_mm": 500,
+      "cases": 25
+    },
+    {
+      "label": "hut",
+      "frame": 647,
+      "size_mm": 250,
+      "cases": 25
+    }
+  ],
+  "counts": {
+    "started_cases": 75,
+    "UNKNOWN_NO_FIXED_PANEL": 75,
+    "nominal_whole_case_opportunities": 0,
+    "original_occurrences": 2667,
+    "source_face_occurrences": 3108,
+    "full_panel_occurrences": 2637,
+    "candidate_slots_charged": 3396,
+    "candidate_volume_upper_charged": 434688,
+    "candidate_primitives_reported": 3036,
+    "certificate_formations_reported": 2637,
+    "final_batches": 0,
+    "final_original_checks": 0,
+    "final_volume_upper": 0,
+    "refusals": {
+      "NO_FIXED_FIRST_NORMAL_DEPTH": 351,
+      "OUTER_CONE": 2213,
+      "SOURCE_TARGET_DEPTH": 332,
+      "PROJECTED_CONVEXITY": 417,
+      "ARITHMETIC_BITS": 12
+    },
+    "partial_candidate_answers_discarded": 71
+  },
+  "caps": {
+    "candidate_attempts": 100000,
+    "candidate_volume_upper": 12800000,
+    "final_original_checks": 2667,
+    "final_volume_upper": 341376,
+    "compute_seconds": 115,
+    "wall_seconds": 120,
+    "address_bytes": 268435456,
+    "output_bytes": 16777216,
+    "tail_bytes": 65536,
+    "jobs": 1
+  },
+  "work": {
+    "caps": [
+      100000,
+      12800000,
+      2667,
+      341376
+    ],
+    "used": [
+      3396,
+      434688,
+      0,
+      0
+    ],
+    "active_reservation": null,
+    "unused_refunded_only_after_case": true
+  },
+  "root_reported_seconds": 5.6155421110161114,
+  "root_reported_peak_rss_kib": 202416,
+  "runtime_admitted": false,
+  "numeric_raster_current_source_receipts": "UNQUALIFIED",
+  "other9600_cases": "UNTESTED_UNKNOWN",
+  "scope_limit": "Archival metadata/hash and count consistency only. Temporary frozen module identities are chained to exact retained Git blobs; no recovered geometry or case binding was rerun. No numeric/raster proof or current runtime cuts.",
+  "lineage_hashes": {
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/source-quad24-private-original75-root-r1/report.json": {
+      "bytes": 601917,
+      "sha256": "078c8de6593c1ea28509c038bf3f360d4d326c3cb6ee33ab9f2280f3f4f0edfa"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-root-execution-v1/ROOT-GRANT.json": {
+      "bytes": 1758,
+      "sha256": "de42b10d7974b0b0ea210de3150ed8da35124bec2ef3a3d8fda066cdc9427e88"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/FINAL-REVIEW.json": {
+      "bytes": 3213,
+      "sha256": "75639c76ff8c203a8ff576c8084586cf938334e37012a694eee8b57fdd594f1d"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/SOURCE-SEAL.json": {
+      "bytes": 5417,
+      "sha256": "4800d73ef34ac0a4cc6a6ccbb7d97ea721a3f699a6ed3d46352f1207cc8d899d"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/ADAPTER.md": {
+      "bytes": 10562,
+      "sha256": "d2a015ea12644bc53bb4d66a44392426cddd561ac6f168359d49da1af90c94e7"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/CHECKS-9b955c.json": {
+      "bytes": 3671,
+      "sha256": "fbc61b44babf25bbdfd635986a5bad525371fd117ae8fb3917900d6f12a133ff"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/PUBLIC-CACHE-CLOSURE.json": {
+      "bytes": 2015,
+      "sha256": "6fa07ceffa2860fd2d49fdde175080208ae1deb1892c5e40912f7864a04616ad"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/PUBLIC-CACHE-CONTROL.json": {
+      "bytes": 1759,
+      "sha256": "97ae8c24a63baba880081afbc072c7b9e5553ccdb16170a3111b67ae87619351"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/PUBLIC-SCRATCH-MANIFEST.json": {
+      "bytes": 860,
+      "sha256": "c35086ed2701a032cab72bc7408b018018c0228113724c081fe0b008b7f58228"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/PUBLIC.log": {
+      "bytes": 2997,
+      "sha256": "fc92bada4288e4ec4638dc0a5e5f0ad81f0a691a2aa0ff761fd0d52b9835b652"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/READER-SOURCE-INDEPENDENT.json": {
+      "bytes": 2110,
+      "sha256": "13634661011fce57b990451b06ce5be46d09f72af9caa0e3791b7ae86d0afa15"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/README.md": {
+      "bytes": 10233,
+      "sha256": "f6d81653b8ecb131e939bed4ba4938391e1a567d462265542521ba17d02608d2"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/REPORT.md": {
+      "bytes": 8516,
+      "sha256": "84dd2b7ffa643e935da78856526a39292c4ec77bc0d610bc4a16341edf38d36b"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/STATUS.md": {
+      "bytes": 569,
+      "sha256": "80e44ad50c370161942a7476d49a6f254ed4221e59154b21297b6ede9619db65"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/adapter.py": {
+      "bytes": 22236,
+      "sha256": "2eeb5ec1ae629a3900dd94e417a09a725555731bf3585e6df202e084122943a0"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/bind-final.py": {
+      "bytes": 3092,
+      "sha256": "2d7ae1824c26dcb6463b29f860fb5f2bf6151ae63bbfb0669cebcf60982a1aa7"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/check-cache-closure.py": {
+      "bytes": 2629,
+      "sha256": "66c07f62f09e024adfa469773361b5829d5d698c18d1506287f817e3cd5d6490"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/check-public-cache.py": {
+      "bytes": 2223,
+      "sha256": "a4623f97019b21b3c4f44f69fc88b192fbdb4de1bf446e4176412e7c972abd25"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/check-reader-source.py": {
+      "bytes": 1561,
+      "sha256": "3307bf018626148a4d864e3d700f0e37c4b02b386693fd3fdbf4dc5cef1b1e07"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/public-cache-evidence/initial/__pycache__/source_quad.cpython-312.pyc": {
+      "bytes": 231,
+      "sha256": "6cc824adae2026c042583172a4daeb8d9d0d098b795daf43bfb12e4f5bb509c3"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/public-cache-evidence/initial/adapter.py": {
+      "bytes": 22236,
+      "sha256": "2eeb5ec1ae629a3900dd94e417a09a725555731bf3585e6df202e084122943a0"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/public-cache-evidence/initial/source_quad.py": {
+      "bytes": 14894,
+      "sha256": "2221649a8e347e567b4bf05d612ced71007db60a5678b01c95fc60ec61c4227f"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/public-cache-evidence/repaired/__pycache__/source_quad.cpython-312.pyc": {
+      "bytes": 232,
+      "sha256": "5e11b7f92b9956cbbaae15b2c5a1a6666d863e137a050a1b738f44e288aadb79"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/public-cache-evidence/repaired/adapter.py": {
+      "bytes": 22910,
+      "sha256": "083c2dd804a82ed49804a8baeb186857cb901eb6e247703962cadc6b749821ab"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/public-cache-evidence/repaired/source_quad.py": {
+      "bytes": 14917,
+      "sha256": "53332efa21f9f3c478576bc555ecb73ee1bb00198f995fad0fb42ddc8dad8cfc"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/repair/ADAPTER.md": {
+      "bytes": 11235,
+      "sha256": "ce34c1e41d6e748850418ed01bc7024df0c5dde4be95fc67c9a10b19faa58bf5"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/repair/CHECKS-f7fb7d.json": {
+      "bytes": 3665,
+      "sha256": "4e0c4d85387f55b9d7bd9ebb0ca78707f144935bd1ce70e94f06513ca3eea5bd"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/repair/PUBLIC.log": {
+      "bytes": 3187,
+      "sha256": "cd46402e4b71a59e60fda4dcca7cf833b8cd5a974322133b98042f817b05224a"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/repair/README.md": {
+      "bytes": 10233,
+      "sha256": "f6d81653b8ecb131e939bed4ba4938391e1a567d462265542521ba17d02608d2"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/repair/adapter.py": {
+      "bytes": 22910,
+      "sha256": "083c2dd804a82ed49804a8baeb186857cb901eb6e247703962cadc6b749821ab"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/repair/source_quad.py": {
+      "bytes": 14894,
+      "sha256": "2221649a8e347e567b4bf05d612ced71007db60a5678b01c95fc60ec61c4227f"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/repair/test_adapter.py": {
+      "bytes": 21243,
+      "sha256": "9704d6dd0f6e5ae189f8c96cb61c026af50882e037d78dc244187916b12aebdb"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/repair/test_source_quad.py": {
+      "bytes": 16423,
+      "sha256": "19bae47a41ee0d2849306a6f79ba6e050c5fe360bc9e6850c18ff100b38d29a0"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/review-public.py": {
+      "bytes": 7495,
+      "sha256": "90109fa4f21b8bedee9abbbe1983361747792c8da64b23fd2d9415dc8e55b3e5"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/review-repair-public.py": {
+      "bytes": 7455,
+      "sha256": "997c24fb595f1ba54cf9e8ab048d09dc8f7e1e4392270fa8baece3331acf3b09"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/source_quad.py": {
+      "bytes": 14894,
+      "sha256": "2221649a8e347e567b4bf05d612ced71007db60a5678b01c95fc60ec61c4227f"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/test_adapter.py": {
+      "bytes": 18944,
+      "sha256": "faf819e9bd3126ce5aa49809de6e4aa807fe03008b053dcf0ec13106bd1ce216"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/source-quad-adapter-independent-review-v1/test_source_quad.py": {
+      "bytes": 16423,
+      "sha256": "19bae47a41ee0d2849306a6f79ba6e050c5fe360bc9e6850c18ff100b38d29a0"
+    },
+    "/root/work/lanes/source-quad24/port/dreamcast/tools/d367/source_quad24/source_quad.py": {
+      "bytes": 14894,
+      "sha256": "2221649a8e347e567b4bf05d612ced71007db60a5678b01c95fc60ec61c4227f"
+    },
+    "/root/work/lanes/source-quad24/port/dreamcast/tools/d367/source_quad24/test_source_quad.py": {
+      "bytes": 16423,
+      "sha256": "19bae47a41ee0d2849306a6f79ba6e050c5fe360bc9e6850c18ff100b38d29a0"
+    },
+    "/root/work/lanes/source-quad24/port/dreamcast/tools/d367/source_quad24/README.md": {
+      "bytes": 10233,
+      "sha256": "f6d81653b8ecb131e939bed4ba4938391e1a567d462265542521ba17d02608d2"
+    },
+    "/root/work/lanes/source-quad24/port/dreamcast/tools/d367/source_quad24/adapter.py": {
+      "bytes": 22910,
+      "sha256": "083c2dd804a82ed49804a8baeb186857cb901eb6e247703962cadc6b749821ab"
+    },
+    "/root/work/lanes/source-quad24/port/dreamcast/tools/d367/source_quad24/test_adapter.py": {
+      "bytes": 21243,
+      "sha256": "9704d6dd0f6e5ae189f8c96cb61c026af50882e037d78dc244187916b12aebdb"
+    },
+    "/root/work/lanes/source-quad24/port/dreamcast/tools/d367/source_quad24/ADAPTER.md": {
+      "bytes": 11235,
+      "sha256": "ce34c1e41d6e748850418ed01bc7024df0c5dde4be95fc67c9a10b19faa58bf5"
+    },
+    "/root/work/lanes/triangle-partition24/port/dreamcast/tools/d367/triangle_partition24/partition.py": {
+      "bytes": 10461,
+      "sha256": "f227a5bf26ae4d65ca97481f92d3e3220beee3cbbf6979cd8299ba1b827f0278"
+    },
+    "/root/work/lanes/triangle-partition24/port/dreamcast/tools/d367/triangle_partition24/test_partition.py": {
+      "bytes": 11443,
+      "sha256": "c6a14d516e1fcf0a6ac5b2c1b1995bbabddb810112becff74bf0e1ba5f436191"
+    },
+    "/root/work/lanes/triangle-partition24/port/dreamcast/tools/d367/triangle_partition24/prepare_private.py": {
+      "bytes": 13578,
+      "sha256": "1ea2b8fe6bce38cef79982e99965179f180afe6a05b4fe6755143053b79af1ff"
+    },
+    "/root/work/lanes/triangle-partition24/port/dreamcast/tools/d367/triangle_partition24/verify_private.py": {
+      "bytes": 13168,
+      "sha256": "ebac1f1d89ec0dccc3a6cd4c55ead210ade16dcf782ca3ec41f29b74cae5674e"
+    },
+    "/root/work/lanes/triangle-partition24/port/dreamcast/tools/d367/triangle_partition24/test_preparation.py": {
+      "bytes": 5719,
+      "sha256": "c10f18797f25564ac582711f8c1bc1cc873316be1ca967b56c831e77a802256b"
+    },
+    "/root/work/lanes/triangle-partition24/port/dreamcast/tools/d367/triangle_partition24/seal_private.py": {
+      "bytes": 2646,
+      "sha256": "bd1a1b052b48b7db46700baba99365131ebbe03066fb9a47dec61c1bbb5e244a"
+    },
+    "/root/work/lanes/triangle-partition24/port/dreamcast/tools/d367/triangle_partition24/README.md": {
+      "bytes": 6090,
+      "sha256": "bba2d30b12f26473aaed2eae6f57570c7ab175b87ef91d4711f1aa8c7cd7eaad"
+    },
+    "/root/work/lanes/triangle-partition24/port/dreamcast/tools/d367/triangle_partition24/PRIVATE-PREPARATION.md": {
+      "bytes": 6360,
+      "sha256": "945cfc7aea5ce3f38b61047e0aba07f9af6244f104f692876191bd4ca70cd3e8"
+    },
+    "/root/work/lanes/triangle-partition24/port/dreamcast/tools/d367/triangle_partition24/origin-before-helper-checkpoint.txt": {
+      "bytes": 41,
+      "sha256": "2521e0c5121485db437427b55cfbb02df70233cf492dbe609c6c06b79af0b809"
+    },
+    "/root/work/lanes/triangle-partition24/port/dreamcast/tools/d367/triangle_partition24/runner.py": {
+      "bytes": 18549,
+      "sha256": "bbf860bb6b0627e467b3d7ab58d0feff16d0d08c6c37bdd7f2eee6e92f3c5f22"
+    },
+    "/root/work/lanes/triangle-partition24/port/dreamcast/tools/d367/triangle_partition24/test_runner.py": {
+      "bytes": 10646,
+      "sha256": "142563817da628ae3bc99e51ce3a5a845176cb9f08178387790d94f1aeebcddf"
+    },
+    "/root/work/lanes/triangle-partition24/port/dreamcast/tools/d367/triangle_partition24/RUNNER.md": {
+      "bytes": 7847,
+      "sha256": "d64b726e45d47693c0c1e13a637514b8ed61094b2fbde0bfa5e7b3bc54e50884"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/triangle-partition24-private-plan-r3/report.json": {
+      "bytes": 4891119,
+      "sha256": "24ef9acac6f1b616f832aa7a1cd36cce656cccb8ac51f4efa3e2f3e049bda324"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/triangle-partition24-private-plan-r3/PREPARATION-SEAL.json": {
+      "bytes": 3690,
+      "sha256": "786192cefc3309e10929fa33608f73133ee18f1cac94e021e8675909636f5ba6"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/triangle-partition24-private-plan-r3/structural-controls.json": {
+      "bytes": 4598,
+      "sha256": "4ffc4a2785c4ac26cff01941a54320c14a9fe9087455b6634aa7093181fafebc"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/actual-triangle-prep24-r3/report.json": {
+      "bytes": 1697979,
+      "sha256": "22b2fe4dc83c0a0ba846eefb822fe1dead4bbbaa850b1e838dc5eaaadc56d57c"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/actual-triangle-prep24-r3/SEAL.json": {
+      "bytes": 3795,
+      "sha256": "ef328388f80574e2fc41bf4f01a9b983822c6b20a28c8844a72eafdc7c17e265"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-discovery24-effective0-r1/capability-r2/CAPABILITY.json": {
+      "bytes": 58818,
+      "sha256": "4cd7f0eef390f9e80ac4e0b82b9fdd919b53e181254c0dce332042c3c7fdd4f5"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-fb254-lod-surface-r6/prepared/inputs/base-report.json": {
+      "bytes": 30218,
+      "sha256": "f737c2b85398e73090f02ad7f33ba5ded734ae5902b06c9bb61f1e7a1d8a791d"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-fb254-lod-surface-r6/prepared/inputs/original.r4pw": {
+      "bytes": 16448,
+      "sha256": "dccc680b038d7da2e299a1f518ea440c4793f504d34b14a1217c7944f74d3e70"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-fb254-lod-surface-r6/prepared/inputs/ps2-world.ids": {
+      "bytes": 256,
+      "sha256": "8999b49ce73627e5b62d50f07f0936552c7c7645713e4183078577f3ca5189ba"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-fb254-lod-surface-r6/prepared/inputs/ps2-world.r4pw": {
+      "bytes": 16448,
+      "sha256": "27a3dc3980df13f4dcaf97186e919821e6e0ebd6aa74ded1695c03b6d92b916b"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-fb254-lod-surface-r6/prepared/inputs/ps2-world.re4mesh": {
+      "bytes": 793216,
+      "sha256": "31ec2e15faca0f171b1ae94290ecc22153eb06d256b6b6ef965bde3315f674b1"
+    },
+    "/root/re4data/private/mip22b-20261022/dc/tex.pak": {
+      "bytes": 162154496,
+      "sha256": "5bba464a1175d8ebe153d5aecb629ea9637807c2bf4fc438a32c17148d0729da"
+    },
+    "/root/probe/interior-discovery24/port/dreamcast/room/texture_package.hpp": {
+      "bytes": 12818,
+      "sha256": "126e73c96162585d3ea74973bd0655a7d73b1a5747b646c09bcb2a3c25f27f8c"
+    },
+    "/root/probe/interior-discovery24/port/dreamcast/tools/d367/texture_rect21/scoped_representations.inc": {
+      "bytes": 69428,
+      "sha256": "d853037aafafd9484aceb4494ea74d08345088108e09226e76be3624c5d558f2"
+    },
+    "/root/probe/interior-discovery24/port/dreamcast/tools/d367/texture_rect21/world_rect_bind.h": {
+      "bytes": 2666,
+      "sha256": "d45021a03f771847731bbef020588030a5da2e21320760bd11eadbee0d3667b9"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-fb254-lod-surface-r6/current-resolved-knobs.txt": {
+      "bytes": 201255,
+      "sha256": "63b9cdf90190a880422074bf4e7c7c488cd013463a18d9aaeb6fc3bd470a9a5b"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/camera-hut-console-r2/run-output.txt": {
+      "bytes": 420021,
+      "sha256": "aed3fba68a86dd5a66b1f4111075684828e4442fa943639e17ec59acf6808340"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-fb254-lod-surface-r6/hut-selected-instances.json": {
+      "bytes": 1459981,
+      "sha256": "a95b0dad68d58d41b3aa2bad65083459c55340b946751f105b15e89e7e722a94"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/camera-turn-console-r2/run-output.txt": {
+      "bytes": 484166,
+      "sha256": "ec07497d9972ed86080e88bfe13f4684ea4c8d769b6ba448070dbef59065af9b"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-fb254-lod-surface-r6/turn-selected-instances.json": {
+      "bytes": 1456196,
+      "sha256": "35b92c11311ef58a74f4c1b70494ab1253232e27fff678afdccc2fc2bd10faae"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/camera-walk-console-r2/run-output.txt": {
+      "bytes": 481377,
+      "sha256": "f1632ebbdb3747ee69fd095ec1be00144fbcae55c72e5a1a5e2e4a7b7191493e"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-fb254-lod-surface-r6/walk-selected-instances.json": {
+      "bytes": 1456784,
+      "sha256": "a43c1c729075e4fc2bc228575d064df0a7a69e9bfe4a1b0372d6b309b699f5c4"
+    }
+  }
+}

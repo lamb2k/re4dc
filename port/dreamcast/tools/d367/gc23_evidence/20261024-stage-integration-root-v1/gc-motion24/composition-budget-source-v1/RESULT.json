@@ -1,0 +1,26 @@
+{
+  "scope": "Source integration preparation and host IO/audio checks only; no SDK/guest/gates",
+  "commit": "c2f9ba8cbcebe30a218fe4fb6cf9ecd2305d853e",
+  "parents": [
+    "8ce5ee2d00027268c3e69c9c300b819c1b14c63f",
+    "427784b1f48aa30742850bb5025925ab619b740e"
+  ],
+  "audio_sha256": "3bb6f94415627fb741c87fb9458420fd96c0dab137edc3d26b692d6391412056",
+  "results": [
+    {
+      "name": "stream-io",
+      "returncode": 0,
+      "seconds": 0.9903613940114155,
+      "log_sha256": "406e4059c71e6e61cfc563922498c570ad85afb4b6dba8c5b24982fa8e1b8d42"
+    },
+    {
+      "name": "runtime-audio",
+      "returncode": 0,
+      "seconds": 1.320689668005798,
+      "log_sha256": "7237e00832792ce3bf9d0088ddf5a433ff3c2523090599db9c34f09b5704ca32"
+    }
+  ],
+  "recipe_changed": false,
+  "assets_changed": false,
+  "integration_landed": false
+}

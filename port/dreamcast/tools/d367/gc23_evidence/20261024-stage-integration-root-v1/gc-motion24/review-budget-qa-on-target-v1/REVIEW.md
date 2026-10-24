@@ -1,0 +1,17 @@
+# Independent completed GC427 QA target readback
+
+CLEAR for static target identity only. Continuation receipt SHA256 `4cccda258c4db04e5be740be727cf9b7af20e94a289df5401ee8bd916470e0b9` is complete. OFF is the authenticated historical completed arm (116.366240666 seconds), reused without a new SDK build; ON is fresh (127.017121614 seconds recorded). This review ran no SDK, Make query, bootstrap, staging or guest.
+
+Canonical source remains clean at commit `427784b1f48aa30742850bb5025925ab619b740e`. Audio runtime source means `port/dreamcast/game/platform/audio_aica.cpp` SHA256 `3bb6f94415627fb741c87fb9458420fd96c0dab137edc3d26b692d6391412056`, not a Git commit. This exact hash matches the canonical tree and all old/new source exports. The continuation and parent helper seals, original source/input/dependency pins, whole17,443-file failed root, original failed receipt and completed OFF proof remain exact.
+
+The unchanged static reader independently reran both arms' profile/graph checks: OFF449 ordered link objects and ON455, actual expected overlay generation order, current complete resolved maps, disabled census object, required GC motion/admission symbols, all16 programme/ELF/overlay identities, complete checked external dependency bindings and build/resolved/command/postcheck hashes. The actual ON command equals the planned fresh ON command. No old partial ON output was used.
+
+Both programmes were independently reconstructed from actual ELF32 SH section bytes and their load addresses, excluding `.stack`/NOBITS and preserving address gaps; each reconstruction equals the raw programme byte for byte. The relevant symbol addresses were independently parsed from the actual ELF symbol table and equal the retained analysis/postcheck values. OFF raw remains `e0168b780b102356c9bc3ee785753a659be6a020b1d1d3f8db92f14a90c16de5`; ON raw is `9e3758b23940ab1ce88fcd37eae3dff28efb19086bd044f8552ff81350e33876`. This establishes static ELF/raw relationships, not runtime execution or heap recovery.
+
+The durable export manifest at `C:/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/stream-budget-427-qa-programmes-v1/MANIFEST.json` has SHA256 `73bc1537067aa0c28a8e25e5117d40d2ad045c7be7e83adf4893898b8ef52063`. All47 declared programme/metadata files, totaling70,151,055 bytes, were freshly hashed against both the manifest and their actual original source paths. No private assets were part of this export.
+
+The root observer/grant binding was checked: grantSHA `d8bbe8511554d2ddf9ee1af0667e7227fd21fbc8f4f057e78abef88d22ed6f36`, source/plan/tools exact, observer returncode0 and no release work observed. FD7 canonical and FD9 shared-slot metadata match the reviewed actual-lock verification path. Descriptors are historical execution evidence; this posthoc review does not claim to reobserve live held locks or prove no release process existed between observer samples.
+
+The first independent ELF read attempt used an incorrect ELF-header field index and refused before producing a result. That reviewer-only script is preserved; the corrected reader passes the actual source/output checks and ELF reconstruction. No programme or producer evidence was changed.
+
+Original memory failure remains open. KOS squeeze, H2, heap recovery, source-state behavior, visual/performance and physical acceptance are NOT established by these linked targets or this static readback. Root retains the next allocation and gate decisions.

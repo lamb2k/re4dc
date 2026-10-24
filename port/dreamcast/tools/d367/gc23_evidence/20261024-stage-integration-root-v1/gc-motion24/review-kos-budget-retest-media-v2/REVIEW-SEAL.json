@@ -1,0 +1,64 @@
+{
+  "scope": "INDEPENDENT_GC_BUDGET_RETEST_STAGEKIT_SOURCE_HOST_ONLY",
+  "decision": "CLEAR_STAGEKIT_SOURCE_HOST_ONLY_ROOT_STAGE_GRANT_REQUIRED",
+  "toolchain_sha256": "2301e39cfb166ee25bab261f0323d1df27331155148b67453bc527ce7330bee1",
+  "files": {
+    "FINAL-REVIEW.json": {
+      "bytes": 1903,
+      "sha256": "a38d3d6c9d9bdde5dc99b69c8e837c9cd7bf2c0db93fc1bc8b68a3513a42b7c0"
+    },
+    "HANDBACK.md": {
+      "bytes": 1000,
+      "sha256": "ad2376d2e58b59493bd42138d01e995fb50f3795cfa9e97f6242d97bdf300948"
+    },
+    "HOST-CONTROLS.log": {
+      "bytes": 1948,
+      "sha256": "debd917297c28c27f3d68aa9d1dd2555213534d8556d058bcc65d3964487ada5"
+    },
+    "OWNED-DESCENDANT-CLOSED.json": {
+      "bytes": 1678,
+      "sha256": "997dcafc5577f3e91537a3fd13396d5d41877045eecc8cd73401688aa434e347"
+    },
+    "OWNED-DESCENDANT.json": {
+      "bytes": 323,
+      "sha256": "13572662c602c9f08ae894a8673aa08bd2a2a61f4d46e6ec3874b5064a0bb6cf"
+    },
+    "OWNED-LEADER.log": {
+      "bytes": 75,
+      "sha256": "925f2a5144da41d5284d9ddb9a57d33213f69574db05954b48bab280e9e0f2a8"
+    },
+    "REVIEW.json": {
+      "bytes": 27080,
+      "sha256": "a4ae7a619d8a4bdbfeefd37e7d7602358bb4aeebb172497a4d08a6bd2bc4b8d3"
+    },
+    "REVIEW.md": {
+      "bytes": 5660,
+      "sha256": "a68326a842091b9d9472492ef0d97b3dd6ffb61ba41058bb78de8dcf6f9d4a95"
+    },
+    "STATUS.md": {
+      "bytes": 410,
+      "sha256": "32316b5f4f5cc0f35f8d9112ebcc1d51223bf61fe762444ca2e3b4167114889d"
+    },
+    "cleanup_control.py": {
+      "bytes": 2966,
+      "sha256": "2aded83813d12534d0ebc19726af92f91ac1d034d40a33d5cfcc39ed662af64c"
+    },
+    "finalize.py": {
+      "bytes": 10216,
+      "sha256": "769dbdf37679e87b58279142fd8a29a9db0fa58752ad2167edad5b473dcdb534"
+    },
+    "owned_descendant.py": {
+      "bytes": 289,
+      "sha256": "f09a710f13c4b276e687361951ccadbec17bb596793d388ee87c9cbb8645ab84"
+    },
+    "owned_leader.py": {
+      "bytes": 370,
+      "sha256": "dabb7e87ee5d121bed412548e08f23c836ed449af8b3c8f942ef8124a4fdd037"
+    },
+    "review.py": {
+      "bytes": 8133,
+      "sha256": "559cb07931a77caafe3216f4e7d90f1e7fbbd04dc045a007bb773e8984af55f8"
+    }
+  },
+  "seal_sha256": "4143f16e8379db5ca046b2a971cdc9b41d111d9b90e26b83cb6fc764b414343a"
+}

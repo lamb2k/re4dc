@@ -1,0 +1,21 @@
+{
+ "verdict": "CLEAR_STATIC_TARGET_READBACK_ONLY",
+ "readback": {
+  "bytes": 2854,
+  "sha256": "130bb13f1788cc13fefd001a77447ca3542661cd5cc4636797bede8e6ed53f88"
+ },
+ "review": {
+  "bytes": 3440,
+  "sha256": "9f23b8fcf3c025994202e585d4260ceef348d5e385f4ba9005e372fe6c6f19b2"
+ },
+ "source": "427784b1f48aa30742850bb5025925ab619b740e",
+ "runtime_audio_sha256": "3bb6f94415627fb741c87fb9458420fd96c0dab137edc3d26b692d6391412056",
+ "OFF": "reused_authenticated_completed_original",
+ "ON": "fresh_completed_actual_target",
+ "SDK": 0,
+ "query": 0,
+ "stage": 0,
+ "guest": 0,
+ "memory_gate": "NOT_RUN",
+ "H2": "NOT_RUN"
+}

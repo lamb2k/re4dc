@@ -1,0 +1,49 @@
+{
+  "decision": "CLEAR_STAGEKIT_SOURCE_HOST_ONLY_ROOT_STAGE_GRANT_REQUIRED",
+  "source": "427784b1f48aa30742850bb5025925ab619b740e",
+  "toolchain": {
+    "size": 2751,
+    "sha256": "2301e39cfb166ee25bab261f0323d1df27331155148b67453bc527ce7330bee1"
+  },
+  "independent_controls": {
+    "author_tests_rerun": 21,
+    "additional_focused_controls": 10,
+    "successful_leader_descendant_cleanup": true
+  },
+  "cleanup_receipt": {
+    "bytes": 1678,
+    "sha256": "997dcafc5577f3e91537a3fd13396d5d41877045eecc8cd73401688aa434e347"
+  },
+  "target_review_seal": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-budget-qa-on-target-v1/REVIEW-SEAL.json",
+    "bytes": 831,
+    "sha256": "b7d76a873b8938cb2789ea4451284c38f79fb360247a5f0d8c6dd1a23c4cd623"
+  },
+  "durable_manifest": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/stream-budget-427-qa-programmes-v1/MANIFEST.json",
+    "identity": {
+      "size": 11142,
+      "sha256": "73bc1537067aa0c28a8e25e5117d40d2ad045c7be7e83adf4893898b8ef52063"
+    }
+  },
+  "legacy_ADMISSION_monitor_text": "Inherited descriptive string says owned4GiB. New actual polling enforces delta1.25GiB/aggregate6.5GiB, preserving both historical4GiB contracts. Root explicitly accepted descriptive mismatch and will correct/clarify it in final root receipt without rewriting original labels.",
+  "stage_scope_only": true,
+  "stage_grant_required": true,
+  "no_guest_permission": true,
+  "no_new_stage_run": true,
+  "caps": {
+    "new_delta": 1342177280,
+    "aggregate": 6979321856,
+    "C_admit": 27917287424,
+    "C_floor": 25769803776
+  },
+  "baseline_unique_bytes": 5278682286,
+  "baseline_members_fully_rehashed": 7122,
+  "limits": {
+    "address_bytes": 268435456,
+    "seconds": 120,
+    "actual_seconds": 76.64945652597817,
+    "peak_rss_kib": 42156
+  },
+  "runtime_memory_look_performance_physical_acceptance": false
+}

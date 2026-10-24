@@ -1,0 +1,104 @@
+{
+ "verdict": "CLEAR_STATIC_TARGET_READBACK_ONLY",
+ "source": "427784b1f48aa30742850bb5025925ab619b740e",
+ "audio_runtime_source_sha256": "3bb6f94415627fb741c87fb9458420fd96c0dab137edc3d26b692d6391412056",
+ "receipt": {
+  "bytes": 7099,
+  "sha256": "4cccda258c4db04e5be740be727cf9b7af20e94a289df5401ee8bd916470e0b9"
+ },
+ "old_failure": {
+  "bytes": 4744,
+  "sha256": "6cf13b9f7d7311531c08739ea3a892cad53d7a881766b08875feccdb19d0c0b9"
+ },
+ "old_root_all_files_unchanged": 17443,
+ "OFF_reused_not_rebuilt": true,
+ "OFF_seconds_historical": 116.36624066598597,
+ "ON_seconds_actual_recorded": 127.01712161398609,
+ "ON_graph_objects": 455,
+ "OFF_graph_objects": 449,
+ "ELF_independent_readback": {
+  "off": {
+   "raw_from_ELF_equal": true,
+   "start": 2348875776,
+   "end": 2352285700,
+   "bytes": 3409924,
+   "sha256": "e0168b780b102356c9bc3ee785753a659be6a020b1d1d3f8db92f14a90c16de5",
+   "allocated_sections": [
+    ".text",
+    ".init",
+    ".fini",
+    ".rodata",
+    ".eh_frame",
+    ".ctors",
+    ".dtors",
+    ".data",
+    ".re4dc_char_data",
+    ".got"
+   ],
+   "required_symbols_from_actual_ELF": {
+    "_re4dc_stage": 2352983904,
+    "_edata": 2352285700,
+    "_re4dc_logbuf": 2352918368,
+    "_etext": 2351328706,
+    "_end": 2353271156,
+    "__bss_start": 2352285704,
+    "_re4dc_log_head": 2352983908
+   }
+  },
+  "on": {
+   "raw_from_ELF_equal": true,
+   "start": 2348875776,
+   "end": 2352331896,
+   "bytes": 3456120,
+   "sha256": "9e3758b23940ab1ce88fcd37eae3dff28efb19086bd044f8552ff81350e33876",
+   "allocated_sections": [
+    ".text",
+    ".init",
+    ".fini",
+    ".rodata",
+    ".eh_frame",
+    ".ctors",
+    ".dtors",
+    ".data",
+    ".re4dc_char_data",
+    ".got"
+   ],
+   "required_symbols_from_actual_ELF": {
+    "_re4dc_stage": 2353030144,
+    "_edata": 2352331896,
+    "_re4dc_logbuf": 2352964608,
+    "_etext": 2351371522,
+    "_end": 2353334292,
+    "__bss_start": 2352331896,
+    "_re4dc_log_head": 2353030148
+   }
+  }
+ },
+ "durable_manifest": {
+  "bytes": 11142,
+  "sha256": "73bc1537067aa0c28a8e25e5117d40d2ad045c7be7e83adf4893898b8ef52063"
+ },
+ "durable_files_rehashed_against_originals": 47,
+ "durable_bytes": 70151055,
+ "source_clean_at427": true,
+ "all_profiles_and_dependencies_exact": true,
+ "observer": {
+  "bytes": 839,
+  "sha256": "b775aabd02cdaa57d9ee0ee350939a0f36228c7979dc48f430ae4edb34bf15e0"
+ },
+ "observer_no_RR_observed": true,
+ "historical_FD_metadata_validated_not_live_reobserved": {
+  "canonical_FD": 7,
+  "canonical_path": "/tmp/d367-build-679eaf5c8c4c.lock",
+  "shared_FD": 9,
+  "shared_path": "/root/probe/d367-build.lock"
+ },
+ "review_seconds": 7.500106802006485,
+ "SDK": 0,
+ "queries": 0,
+ "stage": 0,
+ "guests": 0,
+ "memory_gate": "NOT_RUN",
+ "H2_gate": "NOT_RUN",
+ "scope": "Static source/profile/ELF/raw/all14 target identity plus durable export readback; no memory/runtime/physical acceptance"
+}

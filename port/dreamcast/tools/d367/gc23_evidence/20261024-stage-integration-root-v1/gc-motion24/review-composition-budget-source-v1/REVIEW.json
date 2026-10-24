@@ -1,0 +1,72 @@
+{
+ "verdict": "CLEAR_COMPACT_SOURCE_COMPOSITION_ONLY",
+ "commit": "c2f9ba8cbcebe30a218fe4fb6cf9ecd2305d853e",
+ "parents": [
+  "8ce5ee2d00027268c3e69c9c300b819c1b14c63f",
+  "427784b1f48aa30742850bb5025925ab619b740e"
+ ],
+ "source_clean": true,
+ "remote_branch_exact": true,
+ "declared_six_changed_files_match427_exact": {
+  "port/dreamcast/game/platform/audio_aica.cpp": {
+   "bytes": 105603,
+   "sha256": "3bb6f94415627fb741c87fb9458420fd96c0dab137edc3d26b692d6391412056"
+  },
+  "port/dreamcast/tools/d367/gc_port23/STREAM-HANDLE-FULL-HOST.json": {
+   "bytes": 539,
+   "sha256": "bcdd017a192a73201fbc826a0036d911da2a35962f5c97c19bb0433e355e2529"
+  },
+  "port/dreamcast/tools/d367/gc_port23/STREAM-HANDLE-HOST.json": {
+   "bytes": 731,
+   "sha256": "9b8d61fcf2c00425feff4ca07ba4f9d9282cd3501c9cfa67c86edd055576a3be"
+  },
+  "port/dreamcast/tools/d367/gc_port23/STREAM-HANDLE.md": {
+   "bytes": 2101,
+   "sha256": "0442ffb9a72ef10fdac47caac4ba55f0738dadddc8f1958a5093b963b99bfa31"
+  },
+  "port/dreamcast/tools/d367/gc_port23/test_runtime_audio.py": {
+   "bytes": 11936,
+   "sha256": "899c54517127efabb9106cce30a79f366191770996f0f84ed4f695144948dd35"
+  },
+  "port/dreamcast/tools/d367/gc_port23/test_stream_handle.py": {
+   "bytes": 5773,
+   "sha256": "b2971094488beeedf05844fb2a1680c67af881a172f29674cf8b1a408e9f0334"
+  }
+ },
+ "unchanged_guard_file_pins": {
+  "port/dreamcast/game/gc_asset_gate.mk": {
+   "bytes": 2731,
+   "sha256": "4e34c10a9a44aa749ce2182e3756eb94f96495942f9a13f9d518b3c9265546a2"
+  },
+  "port/dreamcast/game/effects30.mk": {
+   "bytes": 40013,
+   "sha256": "66386156f0ccf987665b30e9ecae8e7257087ba41af2b747049b0bcfa22d7d3f"
+  },
+  "port/dreamcast/game/scenery19.mk": {
+   "bytes": 12582,
+   "sha256": "86d103d2bba0c69db30d6525b288ebb3de1be4c97acf2fb2c3978a52ec353278"
+  },
+  "port/dreamcast/game/platform/native_static.cpp": {
+   "bytes": 408844,
+   "sha256": "993a1e7cba8f06f4c34b59d38b1efdeecf6985a19842df3f4fa60fd90c6f5fc4"
+  }
+ },
+ "rain_PVS_composition_runtime_unchanged_since8ce": true,
+ "tracked_recipes_assets_unchanged": true,
+ "audio_change_inside_existing_GC_default_off_guard": true,
+ "enabled_GC_PVS_composition_rejection_preserved_source_only": true,
+ "root_retained_test_receipt": {
+  "bytes": 836,
+  "sha256": "b6db31a9c5362c813577d4455f49bc1e442523a72145e464b4ea454c14d4c214"
+ },
+ "root_retained_checks_readback": {
+  "stream_actual_function_cases": 50,
+  "runtime_audio_methods": 5
+ },
+ "review_new_tests": 0,
+ "SDK": 0,
+ "Make_queries": 0,
+ "stage": 0,
+ "guest": 0,
+ "qualification": "Source merge composition and prior host receipt binding only; no merged target/off identity/runtime/memory acceptance"
+}

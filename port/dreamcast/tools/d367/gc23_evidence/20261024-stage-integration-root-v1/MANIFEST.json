@@ -1,0 +1,80 @@
+{
+  "scope": "Owned source controllers, source-review and qualification metadata only; no private media/programme/geometry payload",
+  "members": [
+    {
+      "path": "CODEX-TAKEOVER-STATUS.md",
+      "bytes": 19199,
+      "sha256": "b3c3bc67de8ec1fa8f53e6e0ec77fe7fb0768a69e37010012e91d8647e2d148c"
+    },
+    {
+      "path": "takeover-refresh-20261024.py",
+      "bytes": 19438,
+      "sha256": "e7369a5b7103416c6528616538b80d1f52ab989710c1b4eb979fb902eeef5bbe"
+    },
+    {
+      "path": "gc-motion24/kos-budget-retest-stage-root-v1/GRANT-IDENTITY.json",
+      "bytes": 242,
+      "sha256": "b7b57b27dca094ee02b57e09232426c1e44f127062e49c09940921afc5aa5822"
+    },
+    {
+      "path": "gc-motion24/kos-budget-retest-stage-root-v1/root-stage-observer.py",
+      "bytes": 1969,
+      "sha256": "d7c18589518685d46823788076be2d2d77ccf708bb19451492de0d9bbf3d8085"
+    },
+    {
+      "path": "gc-motion24/kos-budget-retest-media-prep-v2/ROOT-STAGE-GRANT.json",
+      "bytes": 836,
+      "sha256": "83c68a8de1462a4feb080a48849af396dff769f4a65b37854878c16aa395562e"
+    },
+    {
+      "path": "gc-motion24/review-kos-budget-retest-media-v2/FINAL-REVIEW.json",
+      "bytes": 1903,
+      "sha256": "a38d3d6c9d9bdde5dc99b69c8e837c9cd7bf2c0db93fc1bc8b68a3513a42b7c0"
+    },
+    {
+      "path": "gc-motion24/review-kos-budget-retest-media-v2/REVIEW-SEAL.json",
+      "bytes": 2240,
+      "sha256": "47049376ad99762daeeec51d18c273fe6b7c2a7599d4ad6f03e4131709d0f23c"
+    },
+    {
+      "path": "gc-motion24/review-budget-qa-on-target-v1/REVIEW.json",
+      "bytes": 614,
+      "sha256": "3d207941b8a91c191f8487f5a5d2553fa07cf9d262fddb50be0437bcdb972d66"
+    },
+    {
+      "path": "gc-motion24/review-budget-qa-on-target-v1/REVIEW.md",
+      "bytes": 3440,
+      "sha256": "9f23b8fcf3c025994202e585d4260ceef348d5e385f4ba9005e372fe6c6f19b2"
+    },
+    {
+      "path": "gc-motion24/review-budget-qa-on-target-v1/READBACK.json",
+      "bytes": 2854,
+      "sha256": "130bb13f1788cc13fefd001a77447ca3542661cd5cc4636797bede8e6ed53f88"
+    },
+    {
+      "path": "gc-motion24/composition-budget-source-v1/RESULT.json",
+      "bytes": 836,
+      "sha256": "b6db31a9c5362c813577d4455f49bc1e442523a72145e464b4ea454c14d4c214"
+    },
+    {
+      "path": "gc-motion24/review-composition-budget-source-v1/REVIEW.json",
+      "bytes": 2641,
+      "sha256": "d2d4d57356d0930cfce4bef08379b22034ca2f436fd7f5bb08484dd36bb27279"
+    },
+    {
+      "path": "rain-diag24/review-qa-media-observer-v1/REVIEW.json",
+      "bytes": 1105,
+      "sha256": "c07b157c70ba280fb0201c7d292ee5b24aa57cfba3f24159aee22a23a4dc0ef1"
+    },
+    {
+      "path": "interior-discovery24/source-quad75-root-independent-readback-v1/ARCHIVAL-SUMMARY.json",
+      "bytes": 22060,
+      "sha256": "608e4b0c26db3dfd1c94845b05f65acde21b456c1f32a478f5551264e23b71c8"
+    },
+    {
+      "path": "interior-discovery24/original-chunks-independent-review-v1/HANDBACK.md",
+      "bytes": 832,
+      "sha256": "c5e21afe84080c2c750a017fbeb76f85d596966b17b99e02aa934f1c41b61b86"
+    }
+  ]
+}
