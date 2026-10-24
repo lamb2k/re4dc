@@ -457,11 +457,34 @@ static void r100RequiredEventFailure(int no, u32 capacity, const char* reason)
 
 // Loads event `no` (r100_evtName) through a data unit; with `wait` the data is swapped into the
 // Ganado module's block (events 0, 4, 9) or loaded in place, and `out` receives its address.
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_EVD_MOVIE_NO_READ
+// EVD_MOVIE_NO_READ (GC asset purge 24): r100RouteReadEvent presents these events by their PS2 movies and never
+// uses the evd, so the source preloads (wait 0) skip the GameCube file while the movie is on the disc.
+// r100_evtName index -> movie id (0 = none: s01, s02, s42 keep their evd).
+#include "native_movie.h"
+static unsigned r100EventMovieId(int no)
+{
+    static const unsigned id[10] = {0x10003, 0, 0, 0x10020, 0x10030, 0x10041, 0, 0x10043, 0x10044, 0x10040};
+    return (no >= 0 && no < 10) ? id[no] : 0;
+}
+static bool r100EventMovieOwned(int no)
+{
+    const unsigned id = r100EventMovieId(no);
+    return id != 0 && re4dc_movie_available(id);
+}
+#endif
+
 extern "C" int readEvent(int no, int wait, void** out)
 {
     if (out != 0) {
         *out = 0;
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_EVD_MOVIE_NO_READ
+    if (wait == 0 && W->evt[no] == 0 && r100EventMovieOwned(no)) {
+        re4dc_log("evd movie-owned: %s preload skipped (movie %05x)\n", r100_evtName[no], r100EventMovieId(no));
+        return 1;
+    }
+#endif
     if (W->evt[no] == 0) {
         W->evt[no] = DC.setData(EvtMgr.NameChange(r100_evtName[no]));
         if (W->evt[no] == 0) {
@@ -556,6 +579,12 @@ extern "C" void freeEvent(int no, int swap)
         }
         W->evt[no]->setCommand(CMND_CLEAR_DATA, 0, 0);
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_EVD_MOVIE_NO_READ
+    else if (r100EventMovieId(no) != 0) {
+        // The source clear point of a never-read movie-owned evd (fullplay's reset segment keys on this line).
+        OSReport("DC:%s set CLEAR movie_owned=1\n", r100_evtName[no]);
+    }
+#endif
 }
 
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES
