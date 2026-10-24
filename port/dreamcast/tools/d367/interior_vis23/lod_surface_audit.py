@@ -12,7 +12,10 @@ from fractions import Fraction
 from pathlib import Path
 
 INTEGRATION='fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2'
-POLICY_FILES=['port/dreamcast/game/platform/native_static.cpp','port/dreamcast/game/platform/include/scenery_chunk_select.inc','port/dreamcast/game/platform/include/scenery_select_lean2.inc','port/dreamcast/room/pvr_geometry.cpp','port/dreamcast/room/pvr_geometry.hpp','port/dreamcast/room/instanced_mesh.hpp','port/dreamcast/room/nonempty_lod.hpp','port/dreamcast/game/platform/quality.cpp','port/dreamcast/tools/d367/rr/recipe.conf']
+FROZEN_MERGED_FILES={'port/dreamcast/game/platform/native_static.cpp': 'e23dda292ae37aff409bd66228c0a2edf80c27536ba477b9b9a51c1cc19113eb', 'port/dreamcast/game/platform/native_ui.cpp': 'cdf3ed59c8d1b5bb126c0397eb289a9b25f250e647d99291dd82a3c472d1c746'}
+FROZEN_PROFILE_SHA256='63b9cdf90190a880422074bf4e7c7c488cd013463a18d9aaeb6fc3bd470a9a5b'
+FROZEN_INPUT_SHA256={'base-report.json': 'f737c2b85398e73090f02ad7f33ba5ded734ae5902b06c9bb61f1e7a1d8a791d', 'original.r4pw': 'dccc680b038d7da2e299a1f518ea440c4793f504d34b14a1217c7944f74d3e70', 'ps2-world.ids': '8999b49ce73627e5b62d50f07f0936552c7c7645713e4183078577f3ca5189ba', 'ps2-world.r4pw': '27a3dc3980df13f4dcaf97186e919821e6e0ebd6aa74ded1695c03b6d92b916b', 'ps2-world.re4mesh': '31ec2e15faca0f171b1ae94290ecc22153eb06d256b6b6ef965bde3315f674b1'}
+POLICY_FILES=['port/dreamcast/game/platform/native_static.cpp','port/dreamcast/game/platform/native_ui.cpp','port/dreamcast/game/platform/include/scenery_chunk_select.inc','port/dreamcast/game/platform/include/scenery_select_lean2.inc','port/dreamcast/room/pvr_geometry.cpp','port/dreamcast/room/pvr_geometry.hpp','port/dreamcast/room/instanced_mesh.hpp','port/dreamcast/room/nonempty_lod.hpp','port/dreamcast/game/platform/quality.cpp','port/dreamcast/tools/d367/rr/recipe.conf']
 EXPECTED={'QUALITY':'1','QUALITY_LOD_PX':'5','SCENERY_FAR_LOD':'4','SCENERY_DEDUP':'0','PS2_PVS':'0','CPU_BACKFACE':'0','PS2_WORLD_NONEMPTY_LOD':'1','PS2_STRIP_GROUPS':'1','SCENERY_SELECT_ONLY':'1','SCENERY_REPLAY_LEAN':'1','SCENERY_SUBMIT_BATCH':'1','WORLD_RECT21':'1'}
 
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
@@ -84,9 +87,11 @@ def bind_source(repo,profile):
   if rel.endswith('native_static.cpp'):
    for begin,end in [('const float px_x=RE4DC_SCREEN_HALF_WF*std::fabs(P[1])','    const auto& pk=ps2w.package;'),('    int draw_clusters(){','            ++stats.lod_draws')]:
     if block(original.decode(),begin,end)!=block(current.decode(),begin,end):raise ValueError('Core selector changed')
-  elif current!=original:raise ValueError('Renderer policy differs from integration: '+rel)
+  elif rel not in FROZEN_MERGED_FILES and current!=original:raise ValueError('Renderer policy differs from integration: '+rel)
+  if rel in FROZEN_MERGED_FILES and hashlib.sha256(current).hexdigest()!=FROZEN_MERGED_FILES[rel]:raise ValueError('Unreviewed merged renderer file '+rel)
   if rel.endswith('native_static.cpp') and (b'constexpr unsigned kIds=250,kMoved=16,kNone=0xFF;' not in original or b'if(count[id]==1)dyn::slot_of[id]' not in original):raise ValueError('Unique-ID source contract changed')
   rows[rel]=dict(integration_sha256=hashlib.sha256(original).hexdigest(),owned_tree_sha256=hashlib.sha256(current).hexdigest())
+ if sha(profile)!=FROZEN_PROFILE_SHA256:raise ValueError('Unknown current resolved profile bytes')
  actual={}
  for line in profile.read_text().splitlines():
   if '=' in line:
@@ -102,6 +107,8 @@ def main():
  if v.out.exists():raise ValueError('Preserve prior output')
  source=bind_source(v.source_tree,v.profile);root=v.prepared;receipt=json.loads((root/'prepare-receipt.json').read_text());pkg=root/'inputs'
  staged=json.loads(v.staging_plan.read_text());files={}
+ for name,pin in FROZEN_INPUT_SHA256.items():
+  if sha(pkg/name)!=pin:raise ValueError('Unreviewed r10d source input '+name)
  for name in ['ps2-world.re4mesh','ps2-world.r4pw','ps2-world.ids']:
   p=pkg/name;actual=Path(staged['replace']['dc/native/r10d/'+name]);pin=receipt['inputs'][name]
   if sha(p)!=pin['sha256'] or p.stat().st_size!=pin['bytes'] or sha(actual)!=sha(p):raise ValueError('Current staged input mismatch '+name)
