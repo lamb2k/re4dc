@@ -1,0 +1,1 @@
+This is the identical helper-source checkpoint of the executable C:/Game Dev/Emulators/codex-lanes/rain-diag24/qa-pair-prep-v1 kit. Private plans, source exports, programme bytes, asset manifests and observed receipts stay outside Git. Run only the reviewed C kit with its root grant and seal; the source8ce build input is unchanged.

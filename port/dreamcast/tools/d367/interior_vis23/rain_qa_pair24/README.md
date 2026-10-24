@@ -1,0 +1,41 @@
+# Rain 8ce matched QA pair: prepared, not run
+
+One executable entrypoint is execute.sh. It builds and reads back a serial OFF/ON QA pair only after root supplies a reviewed grant. No SDK, Make query, bootstrap, staging, image creation, or guest was executed during preparation. HOST-CONTROLS-SEALED.json records 73 host-only checks. An actual wrong-allocation wrapper control reaches the controller and refuses before any SDK action. The original normal controller, completed normal pair, and historical QA pair remain immutable.
+
+Frozen game source: 8ce5ee2d00027268c3e69c9c300b819c1b14c63f, canonical tree /root/work/lanes/codex-composition-int24. Fresh source exports were made directly from that Git object plus sh4zam gitlink 33fa4850cacb30dd0ad35485ef035526ec4ce782. Each arm has 7746 files and 100403427 source bytes. No old object is reused. Prepared root is /dev/shm/rain8ce-qa-pair-v1-2ykw93ke; both arm outputs are absent.
+
+The command list is taken exactly from completed qa-memory-aab-v2 OFF, not from the normal programme recipe. Its actual build log has 568 compile commands and 449 ordered unique link objects: dbgwarp_bridge adds one to normal567/448. Both new arms require that same QA568/449 graph, all14 regenerated overlays, and all actual compile argv after exact arm-root normalization, permitting only the intended rain defines. Full QA reference log, command, resolved map, 516 .d files, generated aliases/missing evidence, raw/all14 programme identities, source/SDK/external inputs, and historical supplemental closure/EOL bridge are pinned.
+
+Common QA settings are DBG_WARP1, WARP_JUMP1, TEX_CHECK1, MCHECK_LEONGC1, KOS_WATCH1, KOS_SQUEEZE1, W11_FIXTURE1, PC_SAMPLER0, QA_MENU0, WORLD_METER0, KOS_CACHE_P2_DIAG0; KOS squeeze bytes/fragmentation are0. GC gate/motion/catalog, PVS batch compose, and effective0 sources remain0. The existing normal recipe flags remain ordered and unchanged underneath these original QA overrides. OFF has RAIN_R10C_DC0/DIAG0; ON changes only those two to1. No quality, assets, recipe or renderer source is changed.
+
+OFF must reproduce the prior same-QA raw e0168b780b102356c9bc3ee785753a659be6a020b1d1d3f8db92f14a90c16de5 and every one of its14 overlays, with linked _end0x8c441174. This is the QA baseline, not the normal raw49a4 image. ON is not assigned an invented programme hash or BSS delta: actual build/readback will measure it. Both arms require six empty/unflagged/unlinked GC helper objects, an empty missing-provider inventory/no stub functions, exact unchanged provider aliases, and no final unresolved globals or GC symbols. ON requires exactly one128-byte GLOBAL OBJECT rain record, other0, aligned32, inside actual cached P1 BSS; OFF must have none. Actual .d closure fails on unpinned external inputs or source drift. ELF/raw/size/nm/sections and all14 actual programme files are checked.
+
+The pure ELF helper contains only the five unchanged generic parser/hash functions extracted from the reviewed reader; its old CLI and old profile constants were removed. It cannot run the previous review. Postbuild readers have256MiB/120-second limits. Host tests use those limits too. Those limits are not inherited by the future SDK compiler processes.
+
+Execution after root review and SDK allocation
+
+1. Copy ROOT-GRANT-TEMPLATE.json to a separate absolute root-owned grant file. Root sets approved=true, a unique grant_id, and the final KIT-SEAL.json SHA256. Keep the exact source, root, contract hash and limits. The sealed template itself remains unmodified and is not authorization.
+2. Set RAIN8CE_QA_ROOT_GRANT to that grant's absolute WSL path, RAIN8CE_QA_GRANT_SHA256 to its exact SHA256, and RAIN8CE_QA_ALLOCATED to the exact CONTRACT.json SHA256.
+3. Run the following single entrypoint from WSL outside another SDK slot:
+
+    /bin/bash '/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/qa-pair-prep-v1/execute.sh'
+
+No SDK may run without the matching grant, contract and kit seal. The controller takes /tmp/d367-build-7d1f56a1729c.lock plus exactly one of /root/probe/d367-build.lock and d367-build2.lock, nonblocking. It owns one canonical tree lease, one of the two SDK slots, and JOBS1. Inherited compiler/Make injection and already-held slot state refuse. The SDK receives a minimal explicit environment and pinned build/script/tool paths. Python runs with -B and an isolated unused bytecache path.
+
+Each arm has a600-second total build/readback budget. Combined owned exports, outputs, scratch, kit, host-control evidence and logs are capped at2GiB. Admission requires the lower of fresh Windows/WSL C free readings >=26GiB and RAM >=3GiB; each arm repeats admission after acquiring the lease/slot. Ongoing floors are24GiB C and512MiB RAM. Floor/cap/deadline/release priority checks occur between child polls at0.5-second intervals; observations themselves take time, and a failed Windows observation refuses. Normal SDK analyses remain in the same arm budget. No automatic retry or cleanup of files occurs.
+
+Every actual child starts a new owned process group. All descendants of that group are terminated on exit/failure/floor/deadline, including when the leader has already exited. The final host suite checks that case and leaves an unrelated sibling unaffected. No process-name kill, broad cleanup, shared bytecache mutation, asset staging, or old-output deletion is used. An authorized failure after acquiring the lease/slot is journaled even during preflight; no SDK child starts before input/admission checks. First-arm failure stops the pair. Both arms and final postbuild/input checks must pass before complete=true. Original and failed outputs/logs remain preserved.
+
+Result: /dev/shm/rain8ce-qa-pair-v1-2ykw93ke/qa-pair-result-v1/receipt.json. Per-arm postbuild.json, logs, commands, symbols/section/size evidence, raw programme and all14 overlays remain in that owned root. A completed pair would qualify static QA programme identity/layout only, not memory floors in the game, cache coherency, visible use, appearance, ancestry, or hardware performance.
+
+Next short console observation: proposal only
+
+Reuse the exact fixture-warp.txt and fixture-pad.txt from the authenticated bca44 captures at C:/Flycast-Evidence/re4-dreamcast/water-rain24/rain-bca44-console55-20261024/captures/{off,on}-r10c-view-v1. Their exact identities and run-output.txt references are pinned under PREPARATION.route_proposal; no coordinate or fixture edit was made. Those are historical bca native-canary observations, not current fdb5/8ce diagnostic-runtime evidence.
+
+After separate media and guest grants, propose one matched short console-mode observation per arm using those exact fixtures, at most an exact55-second child via the normal WSL trace lock and authenticated harness. Use each newly built QA ELF's actual symbols, never the normal image's record address. Observe current r10c init/setter/callback/queue/native-return causality and stable diagnostic record/positive native accepted return when naturally reached. Capture P1/P2/cache observations under the reviewed observer contract; ELF placement or old canary success alone is insufficient. Missing callbacks, skipped branches, unknown source ancestry or no accepted return stay unknown/refused. This preparation does not launch or grant those observations.
+
+KOS48/fragmentation/headroom and natural lifecycle/route memory gates remain separate, freshly allocated matched QA runs; this kit's compiled KOS squeeze support with zero held bytes is not a KOS48 pass. No old exception or old QA GC memory failure is reused as rain qualification.
+
+Preservation
+
+Construction-history retains the helper-edit attempts and their failures; it is not another execution layer. An initial quoted shell adaptation failed before writing postbuild; one later helper-edit search failed and a redundant host run refused an existing exclusive receipt after completing its tests. PREPARATION-FAILURES.json records them; earlier passing receipts are unchanged. An additional actual wrapper check found a final CRLF token in the initial shell wrapper; construction-history preserves its argparse refusal, and the final wrapper uses LF and reaches the allocation guard. Final73 controls and the exact sealed entrypoints are authoritative. No failed SDK attempt exists because SDK execution has not occurred.
