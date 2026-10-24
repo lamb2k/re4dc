@@ -1,0 +1,156 @@
+// Controlled host edges for check_missing_actor.py. Production fragments are
+// inserted at the markers; this is not a full game or a binary replay.
+#include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <string>
+#include <vector>
+#include <limits>
+using u8 = unsigned char;
+using u32 = uintptr_t; // source pointer casts only; target layout checked separately
+using f32 = float;
+struct cEm;
+struct EmListData { int id=0x12, room=0x10c, be_flag=1, set=7; } entries[256];
+struct Global { unsigned stage_no=1,room_no=12,room_id=0x10c,Frame_cnt=0,Room_flg[1]={0},Status_flg[3]={0}; void* pRoom=nullptr; } global;
+Global* pG=&global;
+struct Totals {
+ unsigned attempts=0,initial_moves=0,retired_uses=0,event_starts=0,motion_sets=0,effect_sets=0,
+          bank_3=0,bank_4=0,sleep_frames=0,sequence=2166136261u;
+} totals;
+void record(unsigned kind,unsigned arg=0){totals.sequence=(totals.sequence^kind)*16777619u;totals.sequence=(totals.sequence^arg)*16777619u;}
+bool seen;
+int current_list,request_cursor,initial_failure;
+std::vector<int> requests;
+EmListData* emList(int no){current_list=no;return &entries[no];}
+#define EM_LIST(no) emList(no)
+#define EM_SET_ID_NG(id) 0
+#define EM_SET_WORK(em,d,no) do{(em)->emset_no=(no);record(20,(no));}while(0)
+#define G_ROOM_ID (pG->room_id)
+#define BitOn(flags,bits) ((flags)|=(bits))
+#define BitOff(flags,bits) ((flags)&=~(bits))
+#define ISSUE52_NOTE(...) ((void)0)
+#define ROOM_ARC_PTR(...) nullptr
+#define PL_ARC_PTR(...) nullptr
+#define RE4_MEM_LO uintptr_t(1)
+#define RE4_MEM_HI std::numeric_limits<uintptr_t>::max()
+#define RE4DC_MANAGER_IS_ALIVE(p) ((p)->isAlive())
+#define RE4DC_MANAGER_FLAG_STORE(p,v) ((p)->be_flag=(v))
+#define RE4DC_MANAGER_FLAG_SET(p,v) ((p)->be_flag|=(v))
+struct MotionWork {};
+struct Em10Work {};
+struct cEm {
+ u32 be_flag=1,flag=0;unsigned emset_no=0,r_no_0=0;float l_sub=0;void*subArc=nullptr;
+ MotionWork Motion;int tag=0;
+ bool isAlive(){return (be_flag&0x201)==1;}
+ void setNoSuspend(int on){if(!isAlive())++totals.retired_uses;record(1,on);}
+ void move();
+};
+using cEm10=cEm;
+Em10Work em_work;
+#define EM10_WK(em) (&em_work)
+cEm actors[4],player;
+cEm* pPL=&player;
+cEm* errEm=nullptr;
+struct RoomWork {cEm* em=nullptr;} work;
+struct WorkPointer {RoomWork*p=&work;} r10c_work;
+template<class T>struct cManager {
+ int flag=2;const char*name="cEmMgr";
+ void destroy(T*);
+ void deleteList(T*p){record(5,p->tag);}
+ void log(const char*,...){record(27);}
+};
+cManager<cEm> EmMgr;
+@DESTROY@
+struct Logger {void err(int,int,const char*,...){record(21);}} logger;
+Logger*pLog=&logger;
+void initialize(cEm*){record(22);}
+void(*Em10SetFunc)(cEm*)=initialize;
+void EspDataLoad(u32,int,int){record(23);}
+int em10ModelInit(cEm*){return initial_failure!=1;}
+@INIT_FAILURE_PREFIX@
+void(*Em10_R0_move_tbl[1])(cEm10*)={em10_R0_Init};
+void cEm::move(){
+ if(emset_no!=2)return;
+ ++totals.initial_moves;
+@MOVE_DESTROY_BRANCH@
+}
+int EmSetDieCk(int){return 0;}
+int checkListId(int){return 1;}
+int re4dc_aliveCapDefer(int no,int){if(no==2)++totals.attempts;return 0;}
+void aliveCapNoteFresh(cEm*,int no){record(24,no);}
+void EmSetDist(cEm*){record(25);}
+cEm* EmCreate(int){
+ if(current_list==2){
+  int request=request_cursor<(int)requests.size()?requests[request_cursor++]:0;
+  record(26,request);
+  if(request==1)return nullptr;
+  initial_failure=request==2?1:request==3?2:0;
+  Em10SetFunc=initial_failure==2?nullptr:initialize;
+  actors[0]=cEm{};actors[0].tag=2;
+  if(request==4)actors[0].be_flag|=0x810;
+  return &actors[0];
+ }
+ if(current_list==3){++totals.bank_3;actors[1]=cEm{};actors[1].tag=3;return &actors[1];}
+ if(current_list==4){++totals.bank_4;actors[2]=cEm{};actors[2].tag=4;return &actors[2];}
+ assert(false);return nullptr;
+}
+cEm* emMustCreate(cEm*p,u8){return p;} // no EM_MUST owner in this room event
+@SPAWN@
+// Count every call, including admission refusal before alive-cap checks.
+cEm* countedSpawn(int no,int chk){
+ unsigned before=totals.attempts;
+ cEm* result=EmSetFromList2(no,chk);
+ if(no==2 && totals.attempts==before)++totals.attempts;
+ return result;
+}
+#define EmSetFromList2 countedSpawn
+int RsfCheck(unsigned,int){return seen;}
+void RsfSet(unsigned,int){seen=true;record(2);}
+void SceSleep(int frames){totals.sleep_frames+=frames;record(3,frames);}
+void OSReport(const char*,...){record(4);}
+void EffectEspDelete(int,int,int,int){record(6);}
+void EffectEspgenDelete(int,int,int){record(7);}
+void EffectEfmDelete(int,int,int){record(8);}
+struct Camera {
+ int remaining=0;
+ void Comeback(int){record(9);}
+ void CutCall(int no){record(10,no);remaining=no==0x12?220:2;}
+ int IsMotionEnd(){return remaining--<=0;}
+} CamCtrl;
+void SceEventStart(int){++totals.event_starts;record(11);}
+void SceEventEnd(int){record(12);}
+void r10c_setPosXYZ(cEm*,float,float,float){record(13);}
+void r10c_setAngXYZ(cEm*,float,float,float){record(14);}
+void EstSet(int,int,int,int,int,int,int,int,int,int){++totals.effect_sets;record(15);}
+void MotionSetCore(cEm*em,MotionWork*,void*,int,int,int,int){if(!em->isAlive())++totals.retired_uses;++totals.motion_sets;record(16);}
+void SndStrReq(int,int,unsigned,int,int,float){record(17);}
+using TaskFunc=void(*)();
+void SceSetEventCancel(int on,TaskFunc,int,int,int){record(18,on);}
+@EXIT@
+@EVENT@
+void run(const char*name,std::vector<int> outcomes,bool already=false){
+ totals={};global=Global{};seen=already;requests=outcomes;request_cursor=0;initial_failure=0;
+ work={};player=cEm{};Em10SetFunc=initialize;
+ for(auto&entry:entries)entry=EmListData{};
+ r10c_EmEvent();
+ // Model-init failure does not undo the list's admitted bit. The two existing
+ // retries therefore refuse ALREADY_SET, rather than constructing duplicates.
+ printf("\"%s\":{\"attempts\":%u,\"initial_moves\":%u,\"retired_uses\":%u,\"event_starts\":%u,"
+        "\"motion_sets\":%u,\"effect_sets\":%u,\"bank_3\":%u,\"bank_4\":%u,\"sleep_frames\":%u,"
+        "\"sequence\":%u,\"list2_flags\":%d,\"list2_set\":%d}",name,totals.attempts,
+        totals.initial_moves,totals.retired_uses,totals.event_starts,totals.motion_sets,totals.effect_sets,
+        totals.bank_3,totals.bank_4,totals.sleep_frames,totals.sequence,entries[2].be_flag,entries[2].set);
+}
+int main(){
+ printf("{");run("success",{0});printf(",");
+ run("one_missing_then_success",{1,0});printf(",");
+ run("two_missing_then_success",{1,1,0});printf(",");
+ run("all_missing",{1,1,1});printf(",");
+ run("first_move_failure",{2});printf(",");
+ run("retry_move_failure",{1,2});printf(",");
+ run("last_retry_move_failure",{1,1,2});printf(",");
+ run("missing_initializer",{3});printf(",");
+ run("already_seen",{0},true);printf(",");
+ run("live_other_flags",{4});printf("}\n");
+}

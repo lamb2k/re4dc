@@ -1,0 +1,205 @@
+// Actual production Emitter, borrow/gather, emit_pick, replay and clipper.
+// Geometry is a small validated synthetic R4IM; no game asset is present.
+#define RE4DC_SCENERY_CHUNK 1
+#define RE4DC_MESH_DIRECT 1
+#define RE4DC_PS2_WORLD_MESH 1
+#define RE4DC_PS2_VERTEX_ALPHA 1
+#define RE4DC_PS2_PVS 0
+#define RE4DC_SKY_ANY 1
+#define RE4DC_MESH_FASTPATH 1
+#define RE4DC_MESH_PRIME_LAZY 1
+#define RE4DC_PS2_WORLD_LEAN 23
+#define RE4DC_PS2_STRIP_GROUPS 1
+#define RE4DC_MESH_VP_SCHED 1
+#define RE4DC_MESH_STRIP_LEAN 1
+#define RE4DC_HW_LEAN 1
+#define RE4DC_SCENERY_SCREEN_MEMO 1
+#define RE4DC_INV255 /255.0f
+#include "@ROOT@/port/dreamcast/room/instanced_mesh.hpp"
+#include "@ROOT@/port/dreamcast/room/mesh_fastpath.hpp"
+#include "@ROOT@/port/dreamcast/room/mesh_fastpath_sched.hpp"
+#include "@ROOT@/port/dreamcast/room/pvr_geometry.hpp"
+#include "@ROOT@/port/dreamcast/room/static_room_prepare.hpp"
+
+namespace re4dc::render {
+@SHADE_COLOR@
+@INTERPOLATE_VERTEX@
+@CLIP_PROJECTED_TRIANGLE@
+}
+struct QueuePart {unsigned cull=1;float uv_offset[2]{.125f,-.25f},projection[7]{},viewport[6]{};};
+using Re4dcModelPart=QueuePart;
+struct Re4dcModelPacket {void* vertices;unsigned capacity;float u_scale,v_scale;};
+static unsigned model_parts,model_empty_parts,model_input,model_output,packet_aborts;
+static unsigned pick_calls,lut_calls,screen_loads,queue_native,queue_fallback,queue_aborts;
+static unsigned re4dc_mv_camera_frame=~0U;
+static float re4dc_mv_projection[7],re4dc_mv_viewport[6];
+static std::vector<unsigned> queue_events;
+static std::uint32_t lut[512],ps2_lut4[512];
+static bool ps2_lut4_built;
+namespace piece {static const void* pkg;static unsigned* table;}
+namespace whd {static void note(unsigned,const unsigned*){assert(!locked);}}
+namespace lean {
+constexpr unsigned kMode=23;
+static pvr_vertex_t* prime_at;
+static unsigned primed;
+static struct {unsigned prime_reuse=0,prime_bad=0;}st;
+}
+@STATIC_STATS@
+static unsigned re4dc_ui_frame(){return frame;}
+@ALPHA_LUT@
+static int re4dc_model_packet_streaming(){return 1;}
+static void re4dc_model_packet_commit(unsigned){assert(false);}
+static void re4dc_model_result(unsigned reason,unsigned input,unsigned output){
+    assert(reason==0);++model_parts;if(!output)++model_empty_parts;model_input+=input;model_output+=output;
+    queue_events.insert(queue_events.end(),{8,reason,input,output});
+}
+static void re4dc_model_packet_abort(){assert(!locked);++packet_aborts;stream_aborted=true;model_used=0;model_handle=nullptr;}
+static int re4dc_model_direct_begin(const QueuePart*,Re4dcModelDirect*){assert(false);return 0;}
+static int re4dc_model_packet_begin(const QueuePart*,Re4dcModelPacket*){assert(false);return 0;}
+static std::uint32_t* re4dc_ta_put(std::uint32_t* q,const pvr_vertex_t* v,unsigned n){
+    for(unsigned i=0;i<n;++i){std::memcpy(q,v+i,32);sq_flush(q);q+=8;}return q;
+}
+
+// SH4-only walk_lean's hardware edge, using the repository's portable codes
+// and emit helpers. It has the documented depth-cull/clip/screen-cull ordering.
+// The production C++ strips_lean caller and clipper remain unmodified below.
+namespace re4dc::vp {
+static const std::uint8_t* walk_lean(const std::uint8_t* s,const std::uint8_t* end,const std::uint8_t* oc,
+    const pvr_vertex_t* cache,unsigned limit,std::uint32_t*& q,unsigned& culled,unsigned& emitted){
+    while(s<end){
+        const unsigned n=*s;
+        const auto code=codes(oc,s+1,n);
+        if(code.all&depth_mask(kChecksAll)){++culled;s+=n+1;continue;}
+        if((code.any&depth_mask(kChecksAll))||n>limit)return s;
+        if(code.all&screen_mask(kChecksAll))++culled;
+        else {
+            auto* first=reinterpret_cast<pvr_vertex_t*>(q);
+            auto* last=emit(first,cache,s+1,n);
+            for(auto* v=first;v<last;++v)sq_flush(reinterpret_cast<std::uint32_t*>(v));
+            q=reinterpret_cast<std::uint32_t*>(last);++emitted;
+        }
+        s+=n+1;
+    }
+    return s;
+}
+}
+@LOAD_SCREEN@
+@EMITTER@;
+struct MeshDraw:Emitter {
+    const re4dc::room::MeshPackage& package;const re4dc::room::MeshPart& part;
+    const std::uint32_t* lut;re4dc::room::CompactVertex12* gather_pool;
+    bool lean_inside=false,lean_part=false;const float* lean_am=nullptr;
+    const std::uint8_t* sg=nullptr;unsigned sg_groups=0;
+    unsigned pc_mode=0;const float* pc_wq=nullptr;bool pc_all=false,pc_check=false;
+    float cull_far=0,lod_scale=0;unsigned part_index=0;
+    re4dc::room::CompactBatch batch{};
+    re4dc::room::CompactVertex12* gathered=nullptr;
+    pvr_vertex_t* cache=nullptr;std::uint8_t* outcodes=nullptr;
+    re4dc::vp::Constants k{};unsigned primed=0;
+    @BORROW_GATHER@
+    @CORNERS@
+    @BORROW@
+    @LEAN_FLUSH@
+    @STRIPS_LEAN@
+    @PICK_DEFINITION@;
+    @EMIT_MEMBERS@
+    @EMIT_PICK@
+    @REPLAY_RESTART@
+    @CHUNK_EMIT@
+};
+
+// Two meshlets per part, eight vertices and two four-corner strips each.
+// v3 additionally exercises indexed gather and preserved gather ownership.
+static std::vector<std::uint8_t> make_package(unsigned version){
+    using namespace re4dc::room;
+    MeshHeader h{};std::memcpy(h.magic,"R4IM",4);h.version=version;
+    h.mesh_count=1;h.part_count=8;h.meshlet_count=16;h.vertex_count=128;h.palette_count=1;
+    h.strip_bytes=16*(version==3?26U:10U);h.reserved[0]=kColorArgb1555;
+    unsigned at=sizeof(h)+(version>=2?sizeof(MeshLodHeader):0);
+    const auto section=[&](unsigned count,unsigned bytes){at=(at+3)&~3U;unsigned result=at;at+=count*bytes;return result;};
+    h.mesh_offset=section(1,sizeof(MeshRecord));h.part_offset=section(8,sizeof(MeshPart));
+    h.meshlet_offset=section(16,sizeof(Meshlet));h.vertex_offset=section(128,sizeof(CompactVertex12));
+    h.strip_offset=section(h.strip_bytes,1);h.palette_offset=section(1,4);
+    MeshLodHeader lod{};
+    if(version>=2){lod.cluster_count=lod.level_count=8;lod.part_lod_offset=section(8,sizeof(MeshPartLod));
+        lod.cluster_offset=section(8,sizeof(MeshCluster));lod.level_offset=section(8,sizeof(MeshLevel));}
+    h.bytes=at;std::vector<std::uint8_t> data(at);std::memcpy(data.data(),&h,sizeof(h));
+    if(version>=2)std::memcpy(data.data()+sizeof(h),&lod,sizeof(lod));
+    auto& record=*reinterpret_cast<MeshRecord*>(data.data()+h.mesh_offset);record.part_count=record.source_parts=8;
+    record.step[0]=record.step[1]=record.step[2]=1;
+    auto* parts=reinterpret_cast<MeshPart*>(data.data()+h.part_offset);
+    auto* lets=reinterpret_cast<Meshlet*>(data.data()+h.meshlet_offset);
+    auto* vertices=reinterpret_cast<CompactVertex12*>(data.data()+h.vertex_offset);
+    const unsigned xyz[8][3]={{0,0,0},{2,0,0},{0,2,2},{2,2,2},{3,3,4},{5,3,4},{3,5,0},{5,5,0}};
+    for(unsigned i=0;i<8;++i){auto& p=parts[i];p.first_meshlet=2*i;p.meshlet_count=2;
+        p.uv_bias[0]=float(i)*.125f;p.uv_bias[1]=-float(i)*.25f;
+        p.uv_scale[0]=(i+1)*.0625f;p.uv_scale[1]=(i+1)*.03125f;
+        if(version>=2){auto* pl=reinterpret_cast<MeshPartLod*>(data.data()+lod.part_lod_offset);pl[i]={i,1};
+            auto* cl=reinterpret_cast<MeshCluster*>(data.data()+lod.cluster_offset);cl[i].first_level=i;cl[i].level_count=1;
+            auto* lv=reinterpret_cast<MeshLevel*>(data.data()+lod.level_offset);lv[i].first_meshlet=2*i;lv[i].meshlet_count=2;}
+        for(unsigned m=0;m<2;++m){const unsigned li=2*i+m;auto& l=lets[li];l.first_vertex=version==3?i*16:li*8;
+            l.first_strip=li*(version==3?26:10);l.vertex_count=8;l.strip_count=2|(version==3?kIndexedMeshlet:0);l.strip_bytes=10;
+            std::uint8_t* s=data.data()+h.strip_offset+l.first_strip;
+            if(version==3){auto* offsets=reinterpret_cast<std::uint16_t*>(s);for(unsigned k=0;k<8;++k)offsets[k]=m*8+k;s+=16;}
+            const std::uint8_t strip[10]={4,0,1,2,3,4,4,5,6,7};std::memcpy(s,strip,10);
+            for(unsigned k=0;k<8;++k)vertices[li*8+k]={std::uint16_t(xyz[k][0]),std::uint16_t(xyz[k][1]),std::uint16_t(xyz[k][2]),
+                std::uint16_t(k*16),std::uint16_t(127-k*8),std::uint16_t(0x1000U*i+0x8123U+k*37U)};
+        }
+    }
+    return data;
+}
+static void queue_case(unsigned id){
+    const bool extension=id>=166;
+    const unsigned mode=extension?(id-166)/2:0,variant=extension?(id-166):id-100;
+    const unsigned version=(variant&1)?3:1,shape=extension?(mode>=4?1:0):(variant/2)%8;
+    const unsigned count=extension?8:(variant/16)%2?48:8;
+    geometry_low_at=(id==164||id==165)?2:0;
+    auto data=make_package(version);re4dc::room::MeshPackage package;
+    assert(package.adopt(data.data(),unsigned(data.size()),true,true));const auto& cpkg=package;
+    re4dc::vp::build_lut(lut);re4dc::room::CompactVertex12 gather[256];
+    std::memset(gather,0xa5,sizeof(gather));
+    std::uint16_t groups[16*2*8]{};
+    for(unsigned i=0;i<16;++i){groups[i*16+6]=5;groups[i*16+7]=0|(3U<<8);
+        groups[i*16+14]=10;groups[i*16+15]=4|(7U<<8);}
+    struct {const unsigned* lut;re4dc::room::CompactVertex12* gather;const std::uint8_t* sg;unsigned sg_groups;}
+        ps2w{::lut,gather,reinterpret_cast<const std::uint8_t*>(groups),2};
+    QueuePart part;part.cull=1;part.projection[1]=part.projection[3]=1;
+    part.viewport[2]=640;part.viewport[3]=480;
+    part.uv_offset[0]=float(variant%3)*.125f;part.uv_offset[1]=-float(variant%5)*.0625f;
+    const float near=1,far=1000;const unsigned pass=0;
+    struct {unsigned native=0,fallback=0,aborts=0;}c;
+    @CHUNK_PART@;
+    static constexpr unsigned kChunkParts=48,kChunkPicks=320;
+    ChunkPart cctx[kChunkParts]{};MeshDraw::Pick cpk[kChunkPicks]{};
+    unsigned nctx=count,npk=0;piece::pkg=&cpkg;piece::table=piece_words;
+    for(unsigned j=0;j<count;++j){auto& x=cctx[j];x.index=j%8;x.cull=j%3;x.sky=j&1;x.marked=(j&1)!=0;
+        key_for(x.index,0,x.cull,x.key);x.first=npk;x.count=2;x.cull_far=1000;x.lod_scale=2;
+        if(extension&&mode<2)x.count=mode;
+        #if RE4DC_SCENERY_UV_SNAPSHOT
+        x.uv_offset[0]=float(j%5)*.125f;x.uv_offset[1]=-float(j%7)*.0625f;
+#endif
+        x.mvq[0]=x.mvq[5]=x.mvq[10]=1;x.mvq[3]=-3+float(j%3)*.125f;x.mvq[7]=-3;
+        x.mvq[11]=(shape==3||(extension&&mode>=4))?-2:shape==4?-1500:shape==5?100:-20;
+        if(shape==6)x.mvq[3]=2000;
+        if(shape==7&&(j%3==0))x.count=0;
+        for(unsigned m=0;m<x.count;++m){
+            const unsigned selected=extension&&mode==2?1-m:extension&&mode==3?0:m;
+            cpk[npk++]={std::uint16_t(2*x.index+selected),std::uint8_t(shape==1?1:shape==2?0:255),
+                std::uint8_t(extension&&mode==5?2:1),std::uint8_t(extension&&mode==5?4:0),std::uint8_t(extension&&mode==5?7:3),{0,0}};
+        }
+        if(variant>=32)entries[x.index].package.texture.width=32;
+    }
+    re4dc_ps2_sky_header=7;
+    @CHUNK_FLUSH@;
+    const int result=chunk_flush();assert(!locked&&!direct_open);
+#if RE4DC_SCENERY_EMIT_PREFETCH && !RE4DC_SCENERY_DEDUP
+    if(version==3&&shape==2&&!geometry_low_at){
+        const auto* poison=reinterpret_cast<const std::uint8_t*>(gather);
+        for(unsigned i=0;i<sizeof(gather);++i)assert(poison[i]==0xa5);
+    }
+#endif
+    if(geometry_low_at){assert(result<0&&c.aborts==1&&model_parts==1&&acquired==2);}
+    else {assert(result>0&&part.cull==1);assert(re4dc_ps2_sky_header==7&&nctx==0&&npk==0);}
+    returns.push_back(unsigned(result));queue_native=c.native;queue_fallback=c.fallback;queue_aborts=c.aborts;
+    @REPORT_STATS@
+}

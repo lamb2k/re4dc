@@ -414,6 +414,12 @@ static void r10c_EmEvent()
 
             ISSUE52_NOTE(2, 0);
             em = EmSetFromList2(2, 1);
+#if defined(RE4DC_R10C_SPAWN_LIVE_GUARD) && RE4DC_R10C_SPAWN_LIVE_GUARD
+            // EmSetFromList2 runs the first move before returning. Ganado model-init failure
+            // retires the actor there, leaving a non-NULL pointer with the deferred-delete bit.
+            // Check this returned, still-backed work before any sleep or virtual/event use.
+            if (em != 0 && (em->be_flag & 0x201) != 1) em = 0;
+#endif
 #if defined(RE4DC_EM_READ_RETRY) && RE4DC_EM_READ_RETRY
             // Issue #52: EmSetFromList2 returns errEm (0) when the enemy cannot be created (its module read or a
             // pool slot failed; readEmData has already retried the read); the original dereferences it. Try twice
@@ -422,6 +428,9 @@ static void r10c_EmEvent()
             for (int k = 0; em == 0 && k < 2; k++) {
                 SceSleep(30);
                 em = EmSetFromList2(2, 1);
+#if defined(RE4DC_R10C_SPAWN_LIVE_GUARD) && RE4DC_R10C_SPAWN_LIVE_GUARD
+                if (em != 0 && (em->be_flag & 0x201) != 1) em = 0;
+#endif
             }
 #endif
             ISSUE52_NOTE(3, em);

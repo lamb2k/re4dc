@@ -102,6 +102,13 @@ static const Vec r117_smdRot = {0.0f, 0.0f, 0.0f};
 // The beam is done when bit 2 of its byte 0xF9 is set.
 static inline int r117_espEnd(cEsp* esp)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_R117_EFFECT_FAILURE_SAFE) && RE4DC_R117_EFFECT_FAILURE_SAFE
+    // LightSet stores NULL when the beam cannot be allocated. There is then
+    // no animation to wait for; retain the normal completion test otherwise.
+    if (esp == 0) {
+        return 1;
+    }
+#endif
     int on = 0;
 
     if (((u8*) esp)[0xF9] & 4) {
@@ -396,6 +403,11 @@ extern "C" void r117_LightDirCalc(int n)
     default:
         return;
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_R117_EFFECT_FAILURE_SAFE) && RE4DC_R117_EFFECT_FAILURE_SAFE
+    if (W->esp[n] == 0) {
+        return;
+    }
+#endif
     PSVECSubtract(&SmdGetObjPtr(id)->pos, &W->esp[n]->m_Pos, &dir);
     SetOrientationZX(&dir, &axis, m);
     Matrix2AxisAngle(m, &rot);
@@ -703,11 +715,17 @@ extern "C" void r117_LightRotate(int no, f32 dir)
     for (i = 0; i < 10; i++) {
         f32 d = step[i] * 0.017453292f * dir;
 
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_R117_EFFECT_FAILURE_SAFE) && RE4DC_R117_EFFECT_FAILURE_SAFE
+        if (W->esp[no] != 0)
+#endif
         W->esp[no]->m_Ang.z += d;
         W->light[no]->ang.z += d;
         W->light[no]->matUpdate();
         SceSleep(1);
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_R117_EFFECT_FAILURE_SAFE) && RE4DC_R117_EFFECT_FAILURE_SAFE
+    if (W->esp[no] != 0)
+#endif
     W->esp[no]->m_Ang.z = (f32) W->cur[no] * 1.5707964f;
     W->light[no]->ang.z = (f32) W->tgt[no] * 1.5707964f;
     W->light[no]->matUpdate();
