@@ -1,5 +1,6 @@
 import unittest
 from fractions import Fraction as Q
+from exact_union import prove_union
 from vertical_domain import affine_row,intersect,quantized_band,solve,constraints
 class VerticalTests(unittest.TestCase):
  def test_exact_open_linear_bounds(self):
@@ -22,6 +23,12 @@ class VerticalTests(unittest.TestCase):
   v={0:(-20000,-20000,0),1:(20000,-20000,0),2:(20000,20000,0),3:(-20000,20000,0)};t=((0,1,2),(0,2,3))
   branches=[intersect(constraints(v,t,((-1000,10000),(1000,12000)),((-1000,-1000,-12000),(1000,1000,-10000)),sigma,sign)) for sigma in (1,-1) for sign in (1,-1)]
   good=[r for r in branches if r['nonempty']];self.assertEqual(len(good),1);self.assertEqual((good[0]['lower'],good[0]['upper']),(Q(-107500,3),Q(107500,3)))
+ def test_warped_pair_halfspaces_match_continuous_oracle(self):
+  v={0:(-20,-20,0),1:(20,-20,1),2:(20,20,0),3:(-20,20,2)};t=((0,1,2),(0,2,3));xz=((-1,10),(1,12));target=((-3,-3,-12),(3,3,-10))
+  branches=[intersect(constraints(v,t,xz,target,sigma,sign)) for sigma in (1,-1) for sign in (1,-1)]
+  for lo,hi in ((-1,1),(-20,20),(0,0),(Q(-1,10),Q(1,10)),(50,60)):
+   admitted=any(r['nonempty'] and (r['lower'] is None or r['lower']<lo) and (r['upper'] is None or hi<r['upper']) for r in branches)
+   self.assertEqual(admitted,prove_union(v,t,((-1,lo,10),(1,hi,12)),target)['proven'])
  def test_nonaffine_refused(self):
   with self.assertRaises(ValueError):affine_row('square',lambda y:y*y)
 if __name__=='__main__':unittest.main()
