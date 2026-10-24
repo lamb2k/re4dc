@@ -256,3 +256,27 @@ recipe and coordinator status table are unchanged.
 3. Do the local appearance, STRICT gameplay and retirement/transition gates
    remain unchanged, with actual-flip cadence consistent with the serial
    and QA census rows?
+
+**Claude answers (2026-10-24, owner).** Merged default 0 as t15/int 057e00a2 (merge f79934c5); the knob-off release
+image equals Test 23 (d28b3cfc).
+
+1. Yes. Twin of the f79934c5 release build with `QA_MENU=1 WARP_AFTER_RESET=1 WORLD_CENSUS24=1 WORLD_CENSUS24_WINDOW=300`
+   (fp_twin diag knobs DBG_WARP=1 WARP_JUMP=1 TEX_CHECK=1 MCHECK_LEONGC=1), the Test 23 disc data (DATA line of
+   rr/recipe.conf at 057e00a2, fol24 pack 35eba5c2), 60 s runs, fixtures logiclod20/hwcross-warp.txt and hwfarm-warp.txt.
+   All windows err=0. Flycast, MODELLED, per drawn tick (raw `WC24` lines in
+   C:\Flycast-Evidence\re4-dreamcast\world2ms\wc24-1024\{hwcross,hwfarm}\run-output.txt):
+
+   | scene | window | t / d | wall us | world us | sel / xform / clip / hdr / submit / other | wait | residual | v | c | h / m | pick | flip / gap |
+   |---|---|---|---|---|---|---|---|---|---|---|---|---|
+   | r101 cross | q=2 | 310 / 300 | 34548 | 14097 | 3800 / 3399 / 415 / 1614 / 2998 / 1868 | 62 | 20389 | 11248 | 8672 | 81 / 78 | 25,309,61 | 300 / 20 |
+   | r101 cross | q=3 | 309 / 300 | 34460 | 14145 | 3813 / 3412 / 413 / 1627 / 3003 / 1875 | 3 | 20311 | 11248 | 8672 | 81 / 78 | 25,309,61 | 300 / 18 |
+   | r103 farm | q=3 | 300 / 300 | 33447 | 9744 | 1777 / 2987 / 468 / 946 / 2447 / 1116 | 2793 | 20909 | 11328 | 8291 | 48 / 39 | 9,184,0 | 300 / 0 |
+   | r103 farm | q=4 | 300 / 300 | 33447 | 9775 | 1816 / 2970 / 465 / 947 / 2445 / 1129 | 2583 | 21088 | 11328 | 8291 | 48 / 39 | 9,184,0 | 300 / 2 |
+
+   q=1 in each run is the settle window (loading, alert start) and is not a steady sample. Flycast's SH-4 timing is not
+   the console's: these are Gate 0 shape (phase split, counts, denominators), not the 2 ms comparison numbers.
+2. Not measured yet. The matched console off/on pair needs an SD-card disc pair, which waits on the user's OK (the menu
+   catalog is near full). Until then no overhead is subtracted.
+3. Look: a frozen r101 cross still pair, census on vs off at tick 600, shows the same world; 11.4% of pixels differ, all
+   in the pyre fire sprites, whose animation keeps its own clock under a frozen world (pair-cross-on-off.png). STRICT
+   gameplay and retirement / transition gates are not run yet; flip cadence: d=300 with flip=300 in every window.
