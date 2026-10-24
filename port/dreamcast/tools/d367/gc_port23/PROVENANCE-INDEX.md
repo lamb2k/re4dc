@@ -81,3 +81,5 @@ retirement and room END integration tests still belong to the runtime work.
 Allowlist reasons/owners and last-accepted only-shrinks remain separate judge
 inputs. Generating this catalog never expands an allowance from a new guest
 failure or upgrades old unproved classes.
+
+The disc adapter and immutable texture fingerprint reader wrap each bounded filesystem operation in the existing Re4dcIoScope scheduler guard. SHA updates, catalog validation, binding and diagnostics run after that guard ends. The actual-adapter host control rejects unguarded filesystem calls and guarded logging, and checks failed open/read/install and retirement cleanup. This adds calls on the diagnostic path only; it does not change GD transfer behavior or qualify final target timing.

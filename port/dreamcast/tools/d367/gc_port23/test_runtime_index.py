@@ -18,6 +18,7 @@ class RuntimeIndexTests(unittest.TestCase):
         capture = function(ui, 'bool gcasset_texture_fingerprint(')
         fixture = r'''
 #include "gc_asset_gate.h"
+#include "native_io.h"
 #include <kos/fs.h>
 #include <fcntl.h>
 #include <cassert>
@@ -28,19 +29,21 @@ class RuntimeIndexTests(unittest.TestCase):
 #include <vector>
 using namespace re4dc_gcasset;
 std::vector<unsigned char> catalog={BLOB},texture={PAYLOAD};
-unsigned offsets[3],opens,closes;bool missing;std::string logs;
-extern "C" void re4dc_log(const char* fmt,...){char line[256];va_list ap;va_start(ap,fmt);vsnprintf(line,sizeof line,fmt,ap);va_end(ap);logs+=line;}
-file_t fs_open(const char* path,int){++opens;if(missing)return FILEHND_INVALID;return !std::strcmp(path,"/cd/dc/gc-assets.idx")?1:2;}
-int fs_close(file_t){++closes;return 0;}
-off_t fs_total(file_t fd){return fd==1?catalog.size():texture.size();}
-off_t fs_seek(file_t fd,off_t at,int){offsets[fd]=unsigned(at);return at;}
-ssize_t fs_read(file_t fd,void* target,unsigned bytes){auto& source=fd==1?catalog:texture;unsigned& at=offsets[fd];if(at>source.size() || bytes>source.size()-at)return 0;memcpy(target,source.data()+at,bytes);at+=bytes;return bytes;}
+unsigned offsets[3],opens,closes,io_depth,io_calls;bool missing,short_read;std::string logs;
+extern "C" void* re4dc_io_begin(){assert(!io_depth);++io_depth;++io_calls;return &io_depth;}
+extern "C" void re4dc_io_end(void* owner){assert(owner==&io_depth && io_depth==1);--io_depth;}
+extern "C" void re4dc_log(const char* fmt,...){assert(!io_depth);char line[256];va_list ap;va_start(ap,fmt);vsnprintf(line,sizeof line,fmt,ap);va_end(ap);logs+=line;}
+file_t fs_open(const char* path,int){assert(io_depth==1);++opens;if(missing)return FILEHND_INVALID;return !std::strcmp(path,"/cd/dc/gc-assets.idx")?1:2;}
+int fs_close(file_t){assert(io_depth==1);++closes;return 0;}
+off_t fs_total(file_t fd){assert(io_depth==1);return fd==1?catalog.size():texture.size();}
+off_t fs_seek(file_t fd,off_t at,int){assert(io_depth==1);offsets[fd]=unsigned(at);return at;}
+ssize_t fs_read(file_t fd,void* target,unsigned bytes){assert(io_depth==1);auto& source=fd==1?catalog:texture;unsigned& at=offsets[fd];if(short_read || at>source.size() || bytes>source.size()-at)return 0;memcpy(target,source.data()+at,bytes);at+=bytes;return bytes;}
 struct Key{unsigned crc,fnv;};struct Entry{CheckedAsset asset;Key key;};
 ''' + capture + r'''
 int main(){
     if(!std::strcmp(RE4DC_GC_ASSET_CATALOG_SHA256,"0")){
         assert(!ensure_disc_catalog());assert(!ensure_disc_catalog());assert(!opens);
-        assert(logs.find("catalog-pin-missing")!=std::string::npos);return 0;
+        assert(logs.find("catalog-pin-missing")!=std::string::npos);assert(!io_depth && !io_calls);return 0;
     }
     Entry entry{};entry.key={99,99};const Key key{1,2};
     assert(gcasset_texture_fingerprint(entry,key,"/cd/member.tex",0,0));
@@ -57,6 +60,15 @@ int main(){
     logs.clear();begin(0x111,3,Required);emitted_checked(Texture,old);end(1);assert(logs.find("catalog-token")!=std::string::npos);
     retire_disc_catalog();missing=true;assert(!ensure_disc_catalog());const unsigned failed_opens=opens;
     assert(!ensure_disc_catalog() && opens==failed_opens); // failure is not an auto-learning/retry path
+    retire_disc_catalog();missing=false;short_read=true;
+    assert(!ensure_disc_catalog());assert(!io_depth); // failed install closes outside formatting
+    retire_disc_catalog();short_read=false;assert(ensure_disc_catalog());
+    short_read=true;const unsigned before_close=closes;
+    assert(!gcasset_texture_fingerprint(entry,key,"/cd/member.tex",0,0));
+    assert(!entry.asset.value && closes==before_close+1 && !io_depth);
+    short_read=false;missing=true;
+    assert(!gcasset_texture_fingerprint(entry,key,"/cd/member.tex",0,0));
+    assert(!entry.asset.value && !io_depth);retire_disc_catalog();assert(!io_depth && io_calls);
 }
 '''
         fixture = fixture.replace('BLOB', ','.join(map(str, blob))).replace('PAYLOAD', ','.join(map(str, payload)))

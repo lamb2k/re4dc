@@ -6,6 +6,7 @@
 #include "include/gc_asset_movie.h"
 #include "include/gc_asset_lifecycle.h"
 #if RE4DC_GC_ASSET_GATE
+#include "include/native_io.h"
 #define RE4DC_GCA_ADOPT(...) ((void)(re4dc_gcasset::ensure_disc_catalog() && re4dc_gcasset::member_adopt(__VA_ARGS__)))
 #define RE4DC_GCA_RETIRE(...) re4dc_gcasset::member_retire(__VA_ARGS__)
 #else
@@ -402,18 +403,21 @@ Entry entries[kTextureCount]; Source sources[kSourceCount]; unsigned nsource;
 bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,unsigned offset,unsigned bytes) {
     entry.asset={};
     if(!re4dc_gcasset::ensure_disc_catalog())return false;
-    const file_t file=fs_open(path,O_RDONLY);
+    file_t file;{Re4dcIoScope io;file=fs_open(path,O_RDONLY);}
     if(file==FILEHND_INVALID)return false;
     bool okay=true;
-    if(!bytes) { const auto length=fs_total(file);okay=length>=0;bytes=okay?unsigned(length):0; }
-    if(okay)okay=fs_seek(file,offset,SEEK_SET)==off_t(offset);
+    {Re4dcIoScope io;
+        if(!bytes) { const auto length=fs_total(file);okay=length>=0;bytes=okay?unsigned(length):0; }
+        if(okay)okay=fs_seek(file,offset,SEEK_SET)==off_t(offset);
+    }
     const auto reader=[](void* context,void* target,unsigned count)->unsigned {
+        Re4dcIoScope io;
         const file_t fd=*static_cast<const file_t*>(context);const ssize_t got=fs_read(fd,target,count);
         return got<0?0:unsigned(got);
     };
     re4dc_gcasset::Digest digest{};
     if(okay)okay=re4dc_gcasset::fingerprint_read(digest,reader,const_cast<file_t*>(&file),bytes);
-    fs_close(file);
+    {Re4dcIoScope io;fs_close(file);}
     if(okay){char id[24];snprintf(id,sizeof id,"%08x-%08x",key.crc,key.fnv);entry.asset=re4dc_gcasset::bind_checked("texture",id,digest);okay=entry.asset.value!=0;}
     return okay;
 }
