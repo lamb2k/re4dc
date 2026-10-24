@@ -1,0 +1,1 @@
+{"index_bytes": 818176, "index_sha256": "7861254ae33c183b2e2f8e8b63f82390dc727a341e9433b7f252c9f0d699f806", "origins": {"authored": 0, "gc": 0, "ps2": 0, "unknown": 7304}, "records": 7304, "retained_accepted_allowances": 0, "unapproved_proposals": 5763}

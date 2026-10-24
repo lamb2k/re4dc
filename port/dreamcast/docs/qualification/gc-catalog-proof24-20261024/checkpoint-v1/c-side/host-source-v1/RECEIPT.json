@@ -1,0 +1,33 @@
+{
+  "command": [
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "test_proof_catalog24",
+    "test_catalog_index",
+    "test_seed",
+    "test_judge",
+    "-v"
+  ],
+  "returncode": 0,
+  "elapsed_seconds": 0.34428981301607564,
+  "max_address_space_bytes": 268435456,
+  "timeout_seconds": 120,
+  "core_dumps": false,
+  "SDK_guest_stage_runtime_assets": false,
+  "source_files": {
+    "proof_catalog24.py": {
+      "bytes": 16495,
+      "sha256": "20930bada94fea7f86c8777139ed6b64db84d68ae41ab6c3bfcf4cf8e6c136a4"
+    },
+    "test_proof_catalog24.py": {
+      "bytes": 13577,
+      "sha256": "7703452d66f70009fb6a0ff2487919d50eea55c3aaf250b667322e9f30747f0f"
+    },
+    "PROOF-CATALOG24.md": {
+      "bytes": 8107,
+      "sha256": "066de1118b4dda92615e011a311740d3e49a82c24793dd3175c903d2c81b550d"
+    }
+  }
+}

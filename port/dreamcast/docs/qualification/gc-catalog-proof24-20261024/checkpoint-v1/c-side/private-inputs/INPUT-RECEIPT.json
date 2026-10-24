@@ -1,0 +1,86 @@
+{
+  "accepted_allowance_baseline": null,
+  "asset_bytes_copied": false,
+  "historical_seed_role": "Unapproved historical load proposals only; never accepted ceiling.",
+  "input_pins": [
+    {
+      "bytes": 24046,
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/INSPECTION.json",
+      "sha256": "d236b9d39f2d618d7c715f6d10c9d83bb10ebbabb7861b4064608a7ad7ecc447"
+    },
+    {
+      "bytes": 210736,
+      "path": "/root/rr/work/1023-2350-fb254e82/rel/manifest.json",
+      "sha256": "13cd3ce03e425e247d9ea70588e0fcad16960517ae669def2a4073450d410800"
+    },
+    {
+      "bytes": 231281,
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/full-readback-manifest.json",
+      "sha256": "4d07e720300fcd72ae1081a00fe6a702331983ed2e8af4fdfadb0346691a726a"
+    },
+    {
+      "bytes": 231281,
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/original-release-manifest.json",
+      "sha256": "927e564fb95821d2509cb9b2ef7f7a56ebc3164afd18c552451f509722136763"
+    },
+    {
+      "bytes": 281537,
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-assets23/pkg-rre17af64rP.json",
+      "sha256": "c3eaa42015af9f1be44484f340006f03b1ccb7653ddc5ea2a457d6a1e65d0d37"
+    },
+    {
+      "bytes": 3788045,
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/seed/reviewed-v1/reviewed-seed.json",
+      "sha256": "117cb44162e1efa822e06db124cfa78dd5a60f0f5e7de7ec9958fd6c4af9274c"
+    }
+  ],
+  "no_new_guest_or_stage": true,
+  "positive_origin_proofs": null,
+  "production_pin": 0,
+  "providers": [
+    {
+      "asset": "dc/tex.pak",
+      "path": "/root/re4data/private/mip22b-20261022/dc/tex.pak",
+      "provider": "texpak"
+    },
+    {
+      "asset": "dc/tex/3f690586-7edb7c3e.re4tex",
+      "id": "3f690586-7edb7c3e",
+      "kind": "texture",
+      "path": "/root/re4data/private/ch2data-20261018/files/dc/tex/3f690586-7edb7c3e.re4tex",
+      "provider": "file"
+    },
+    {
+      "asset": "dc/tex/4da9c3fa-98934ea1.re4tex",
+      "id": "4da9c3fa-98934ea1",
+      "kind": "texture",
+      "path": "/root/re4data/private/ch2data-20261018/files/dc/tex/4da9c3fa-98934ea1.re4tex",
+      "provider": "file"
+    },
+    {
+      "asset": "dc/tex/61519868-9ee3f93f.re4tex",
+      "id": "61519868-9ee3f93f",
+      "kind": "texture",
+      "path": "/root/re4data/private/ch2data-20261018/files/dc/tex/61519868-9ee3f93f.re4tex",
+      "provider": "file"
+    },
+    {
+      "asset": "dc/tex/fc75dd46-779f14bd.re4tex",
+      "id": "fc75dd46-779f14bd",
+      "kind": "texture",
+      "path": "/root/re4data/private/ch2data-20261018/files/dc/tex/fc75dd46-779f14bd.re4tex",
+      "provider": "file"
+    },
+    {
+      "asset": "bgm/aica_str.dat",
+      "id": "aica-str-dat",
+      "kind": "sound-stream",
+      "path": "/root/re4data/private/ch2data-20261018/files/bgm/aica_str.dat",
+      "provider": "file"
+    }
+  ],
+  "runtime_integration_base": "140a699f8ead7b406e76581de7075191acf77a96",
+  "schema": 1,
+  "selected_asset_rows": 1697,
+  "selection_asset_authority": "Retained fb254 independent full1712 readback;1697asset rows exactly original release; no claim of current runtime accepted use."
+}

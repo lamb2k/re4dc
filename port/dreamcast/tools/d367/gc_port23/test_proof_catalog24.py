@@ -175,4 +175,70 @@ class CatalogProofTests(unittest.TestCase):
         output2=self.root/'failure';args[-1]=str(output2);self.pack.write_bytes(b'invalid')
         self.assertNotEqual(subprocess.run(args,capture_output=True,timeout=30).returncode,0);self.assertFalse(output2.exists())
 
+
+class PrivateGeneratedIndexTests(unittest.TestCase):
+    @unittest.skipUnless(os.environ.get('GC_PROOF_ACTUAL_DIR'), 'opt-in exact generated index; no asset bytes')
+    def test_actual_generated_index_against_current_cpp_core(self):
+        directory=Path(os.environ['GC_PROOF_ACTUAL_DIR'])
+        report=json.loads((directory/'report.json').read_bytes())
+        catalog=json.loads((directory/'catalog.json').read_bytes())
+        blob=(directory/'gc-assets.idx').read_bytes()
+        self.assertEqual(p.digest(blob),report['index_sha256'])
+        self.assertEqual(len(catalog['entries']),report['records'])
+        self.assertEqual(report['origins']['unknown'],report['records'])
+        self.assertEqual(report['origins']['ps2'],0)
+        self.assertFalse(report['emission_or_coverage_or_gate_pass'])
+        game=Path(__file__).resolve().parents[3]/'game'
+        fixture=r"""
+#include "gc_asset_gate.h"
+#include <cassert>
+#include <cstdarg>
+#include <cstdio>
+#include <cstring>
+#include <fstream>
+#include <iterator>
+#include <string>
+#include <vector>
+using namespace re4dc_gcasset;
+unsigned reads=0;
+extern "C" void re4dc_log(const char*,...){}
+unsigned read_at(void* context,unsigned offset,void* out,unsigned bytes){
+ auto& data=*static_cast<std::vector<unsigned char>*>(context);++reads;
+ if(offset>data.size() || bytes>data.size()-offset)return 0;
+ std::memcpy(out,data.data()+offset,bytes);return bytes;
+}
+unsigned nibble(char c){assert(c>='0' && c<='f');return c<='9'?c-'0':c-'a'+10;}
+Digest parse(const std::string& s){assert(s.size()==64);Digest d{};for(unsigned i=0;i<32;++i)d.bytes[i]=nibble(s[i*2])*16+nibble(s[i*2+1]);return d;}
+int main(int argc,char** argv){
+ assert(argc==4);std::ifstream f(argv[1],std::ios::binary);assert(f.good());
+ std::vector<unsigned char> data((std::istreambuf_iterator<char>(f)),std::istreambuf_iterator<char>());
+ auto pin=parse(argv[2]);assert(install_index(read_at,&data,data.size(),pin));
+ std::ifstream expected(argv[3]);assert(expected.good());std::string kind,id,hash;unsigned count=0,max_reads=0;CheckedAsset first{};
+ while(expected>>kind>>id>>hash){
+  auto sha=parse(hash);unsigned before=reads;auto token=bind_checked(kind.c_str(),id.c_str(),sha);
+  assert(token.value);unsigned delta=reads-before;if(delta>max_reads)max_reads=delta;
+  AssetDescription desc{};assert(describe_checked(token,&desc));assert(desc.provenance==Unknown);
+  assert(kind==desc.kind && id==desc.id && !std::memcmp(desc.digest.bytes,sha.bytes,32));
+  if(!count){first=token;}
+  ++count;
+ }
+ assert(count==7304);assert(max_reads<=14);AssetDescription desc{};
+ assert(install_index(read_at,&data,data.size(),pin));assert(!describe_checked(first,&desc));
+ for(unsigned i=0;i<8;++i){char unknown[32];std::snprintf(unknown,sizeof unknown,"not-selected-%u",i);assert(bind_checked("texture",unknown,fingerprint(unknown,std::strlen(unknown))).value);}
+ assert(!bind_checked("texture","unselected-overflow",fingerprint("x",1)).value);
+ retire_catalog();assert(!describe_checked(first,&desc));
+ std::printf("records=%u max_bind_record_reads=%u all_unknown=1 stale_rejected=1 quarantine_overflow_rejected=1\n",count,max_reads);
+}
+"""
+        with tempfile.TemporaryDirectory(prefix='gc-proof24-core-',dir='/dev/shm') as temp:
+            root=Path(temp);(root/'fixture.cpp').write_text(fixture)
+            (root/'expected.tsv').write_text(''.join(x['kind']+'\t'+x['id']+'\t'+x['sha256']+'\n' for x in catalog['entries']))
+            exe=root/'fixture'
+            compile=subprocess.run(['g++','-std=c++17','-O2','-Wall','-Wextra','-Werror','-DRE4DC_GC_ASSET_GATE=1','-I',str(game/'platform/include'),str(root/'fixture.cpp'),str(game/'platform/gc_asset_gate.cpp'),'-o',str(exe)],capture_output=True,text=True,timeout=60)
+            self.assertEqual(compile.returncode,0,compile.stderr)
+            run=subprocess.run([str(exe),str(directory/'gc-assets.idx'),report['index_sha256'],str(root/'expected.tsv')],capture_output=True,text=True,timeout=30)
+            self.assertEqual(run.returncode,0,run.stderr)
+            self.assertIn('records=7304',run.stdout);self.assertIn('all_unknown=1',run.stdout)
+            print(run.stdout.strip())
+
 if __name__=='__main__':unittest.main(verbosity=2)

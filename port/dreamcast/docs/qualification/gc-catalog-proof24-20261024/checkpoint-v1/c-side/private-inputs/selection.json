@@ -1,0 +1,46 @@
+{
+  "manifest_sha256": "a2e52995f549c8be11df4f8047c54e1b558ce89fe148b151ac797a9a6de037e9",
+  "providers": [
+    {
+      "asset": "dc/tex.pak",
+      "path": "/root/re4data/private/mip22b-20261022/dc/tex.pak",
+      "provider": "texpak"
+    },
+    {
+      "asset": "dc/tex/3f690586-7edb7c3e.re4tex",
+      "id": "3f690586-7edb7c3e",
+      "kind": "texture",
+      "path": "/root/re4data/private/ch2data-20261018/files/dc/tex/3f690586-7edb7c3e.re4tex",
+      "provider": "file"
+    },
+    {
+      "asset": "dc/tex/4da9c3fa-98934ea1.re4tex",
+      "id": "4da9c3fa-98934ea1",
+      "kind": "texture",
+      "path": "/root/re4data/private/ch2data-20261018/files/dc/tex/4da9c3fa-98934ea1.re4tex",
+      "provider": "file"
+    },
+    {
+      "asset": "dc/tex/61519868-9ee3f93f.re4tex",
+      "id": "61519868-9ee3f93f",
+      "kind": "texture",
+      "path": "/root/re4data/private/ch2data-20261018/files/dc/tex/61519868-9ee3f93f.re4tex",
+      "provider": "file"
+    },
+    {
+      "asset": "dc/tex/fc75dd46-779f14bd.re4tex",
+      "id": "fc75dd46-779f14bd",
+      "kind": "texture",
+      "path": "/root/re4data/private/ch2data-20261018/files/dc/tex/fc75dd46-779f14bd.re4tex",
+      "provider": "file"
+    },
+    {
+      "asset": "bgm/aica_str.dat",
+      "id": "aica-str-dat",
+      "kind": "sound-stream",
+      "path": "/root/re4data/private/ch2data-20261018/files/bgm/aica_str.dat",
+      "provider": "file"
+    }
+  ],
+  "schema": 1
+}

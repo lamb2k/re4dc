@@ -1,0 +1,136 @@
+{
+  "base_source": "34d276a61d7b1134fc60b7a114314258d15bd029",
+  "runtime_base": "140a699f8ead7b406e76581de7075191acf77a96",
+  "utc": "2026-10-24T15:58:47.035267+00:00",
+  "copied": [
+    {
+      "path": "c-side/lane/prepare_private_current_v1.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/prepare_private_current_v1.py",
+      "bytes": 3397,
+      "sha256": "8383b3ad17bc0e8bbf0c91dad352a7396f30559467ad4be4e4215822c4e91bcf"
+    },
+    {
+      "path": "c-side/lane/HANDBACK.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/HANDBACK.md",
+      "bytes": 3581,
+      "sha256": "dd90e63f8b8edc2a092523af93109a82569e372a2c9dbf4a9340944ae60f4dc5"
+    },
+    {
+      "path": "c-side/lane/STATUS.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/STATUS.md",
+      "bytes": 1562,
+      "sha256": "953cc44faa1f81782ae4c7893b440f954bc740264137f1896af720296a433345"
+    },
+    {
+      "path": "c-side/host-source-v1/RECEIPT.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/host-source-v1/RECEIPT.json",
+      "bytes": 813,
+      "sha256": "75c5640a85692401322462dc77e35c00ac978d913e59493e2be2d0651a02777d"
+    },
+    {
+      "path": "c-side/host-source-v1/stderr.txt",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/host-source-v1/stderr.txt",
+      "bytes": 8520,
+      "sha256": "22db693cbcf44fa0b351d57875cf8958862dfc0b38492ba5a7d1323ea9f73eac"
+    },
+    {
+      "path": "c-side/host-source-v1/stdout.txt",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/host-source-v1/stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "c-side/host-source-v2/RECEIPT.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/host-source-v2/RECEIPT.json",
+      "bytes": 567,
+      "sha256": "bf0ab87eecbed56acdbfd192970488b7724a846fd37aa0f2df0e9d5d2fcdfa43"
+    },
+    {
+      "path": "c-side/host-source-v2/stderr.txt",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/host-source-v2/stderr.txt",
+      "bytes": 9848,
+      "sha256": "b711b9b86c3ff9be73aef25e54f7637d8d674461c707a0a3ab5e6aa87a57c2f7"
+    },
+    {
+      "path": "c-side/host-source-v2/stdout.txt",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/host-source-v2/stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "c-side/host-source-v3/RECEIPT.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/host-source-v3/RECEIPT.json",
+      "bytes": 567,
+      "sha256": "3d7a0267b71b487c22d808764e5de64ba5b1588027b8789afc0c9d7d71e50904"
+    },
+    {
+      "path": "c-side/host-source-v3/stderr.txt",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/host-source-v3/stderr.txt",
+      "bytes": 8683,
+      "sha256": "ec7f259e730fcf125897dedf0e73f256fb532fe4f39e8b01e580f6ccc58ccb45"
+    },
+    {
+      "path": "c-side/host-source-v3/stdout.txt",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/host-source-v3/stdout.txt",
+      "bytes": 100,
+      "sha256": "b1c3d2e76572556f9ca98266fc7a9959f0f594991306b0a8107b40aa9d78d40d"
+    },
+    {
+      "path": "c-side/private-inputs/selection.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-v1-inputs/selection.json",
+      "bytes": 1433,
+      "sha256": "5f917f3521be886568e3880f63404def99a9cfaa1c0810321713f216c98d4484"
+    },
+    {
+      "path": "c-side/private-inputs/manifest-selected1697.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-v1-inputs/manifest-selected1697.json",
+      "bytes": 229412,
+      "sha256": "a2e52995f549c8be11df4f8047c54e1b558ce89fe148b151ac797a9a6de037e9"
+    },
+    {
+      "path": "c-side/private-inputs/INPUT-RECEIPT.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-v1-inputs/INPUT-RECEIPT.json",
+      "bytes": 3229,
+      "sha256": "3178071e07966be056d5c2d4370e1b9d2fa9268078148d8a221c1f01ef03d269"
+    },
+    {
+      "path": "c-side/private-output-metadata/report.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-v1/report.json",
+      "bytes": 2924,
+      "sha256": "26d7fcdd76d1076fd2cd4cbcc197136d911154a0d8a6dde470168a51a7da6cf8"
+    },
+    {
+      "path": "c-side/private-output-metadata/data-option.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-v1/data-option.json",
+      "bytes": 277,
+      "sha256": "c2716ae82e0042d7da4fd6f3b005f11a141bf27f40cb053218c81fb51729e7a9"
+    },
+    {
+      "path": "c-side/private-output-metadata/PRIVATE-OUTPUT-PINS.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/PRIVATE-OUTPUT-PINS.json",
+      "bytes": 1699,
+      "sha256": "009939284f93b8907439a414b419259862a70b2acbd9be07f1bc3c357cf4001e"
+    },
+    {
+      "path": "c-side/private-execution/RUN.json",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-v1-execution/RUN.json",
+      "bytes": 1423,
+      "sha256": "67a1c112b64ea8b8d7b8432b5cdbda32e377b24ddffbd174e9338937e3bb4d7d"
+    },
+    {
+      "path": "c-side/private-execution/stderr.txt",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-v1-execution/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "c-side/private-execution/stdout.txt",
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-v1-execution/stdout.txt",
+      "bytes": 254,
+      "sha256": "34a97963ffafc8a4a961e9b0360b4887c46d15278081d3796f7cc5a6aea33598"
+    }
+  ],
+  "scope": "Authored selected-provider recipe and text/hash metadata only. Private binary index, catalog bodies, proposals list, assets and gameplay captures excluded.",
+  "current_index_sha256": "7861254ae33c183b2e2f8e8b63f82390dc727a341e9433b7f252c9f0d699f806",
+  "provenance": "all7304Unknown; no accepted allowances; productionpin0"
+}

@@ -1,0 +1,79 @@
+{
+  "accepted_baseline_sha256": null,
+  "emission_or_coverage_or_gate_pass": false,
+  "historical_proposals_sha256": "117cb44162e1efa822e06db124cfa78dd5a60f0f5e7de7ec9958fd6c4af9274c",
+  "index_bytes": 818176,
+  "index_capacity": 16376,
+  "index_sha256": "7861254ae33c183b2e2f8e8b63f82390dc727a341e9433b7f252c9f0d699f806",
+  "manifest_asset_rows": 1697,
+  "manifest_sha256": "a2e52995f549c8be11df4f8047c54e1b558ce89fe148b151ac797a9a6de037e9",
+  "origins": {
+    "authored": 0,
+    "gc": 0,
+    "ps2": 0,
+    "unknown": 7304
+  },
+  "production_pin_unchanged": 0,
+  "proofs_sha256": null,
+  "provider_files": [
+    {
+      "asset": "dc/tex.pak",
+      "path": "/root/re4data/private/mip22b-20261022/dc/tex.pak",
+      "provider": "texpak",
+      "sha256": "5bba464a1175d8ebe153d5aecb629ea9637807c2bf4fc438a32c17148d0729da",
+      "size": 162154496
+    },
+    {
+      "asset": "dc/tex/3f690586-7edb7c3e.re4tex",
+      "path": "/root/re4data/private/ch2data-20261018/files/dc/tex/3f690586-7edb7c3e.re4tex",
+      "provider": "file",
+      "sha256": "3fc2fe247cdf28ad194ed02acf95d6dc80edb6cac60034512ca763c88630aed4",
+      "size": 65680
+    },
+    {
+      "asset": "dc/tex/4da9c3fa-98934ea1.re4tex",
+      "path": "/root/re4data/private/ch2data-20261018/files/dc/tex/4da9c3fa-98934ea1.re4tex",
+      "provider": "file",
+      "sha256": "8c30c337090785120d7551ea334f7dde5732958592238f65948c04586f9ced93",
+      "size": 65680
+    },
+    {
+      "asset": "dc/tex/61519868-9ee3f93f.re4tex",
+      "path": "/root/re4data/private/ch2data-20261018/files/dc/tex/61519868-9ee3f93f.re4tex",
+      "provider": "file",
+      "sha256": "d768ebf9222c668f59b76e0a0fbe0f43dfd7fbbd827933d645b2e85b06eb82fb",
+      "size": 67728
+    },
+    {
+      "asset": "dc/tex/fc75dd46-779f14bd.re4tex",
+      "path": "/root/re4data/private/ch2data-20261018/files/dc/tex/fc75dd46-779f14bd.re4tex",
+      "provider": "file",
+      "sha256": "bcf94e85150963b960c993d53d27feca6eda9875cc937f970dd3ddb41a4b5ba2",
+      "size": 65680
+    },
+    {
+      "asset": "bgm/aica_str.dat",
+      "path": "/root/re4data/private/ch2data-20261018/files/bgm/aica_str.dat",
+      "provider": "file",
+      "sha256": "f63bb2272e57b52808a3ac34adb7b6663d27a3139b7f0b4269516a3be077cb9c",
+      "size": 48134144
+    }
+  ],
+  "records": 7304,
+  "requested_allowance_sha256": null,
+  "retained_accepted_allowances": 0,
+  "runtime_contract": {
+    "Seen_capacity_bytes": 2048,
+    "extra_runtime_allocations_from_tool": 0,
+    "header_bytes": 128,
+    "install_hash_scratch_bytes": 512,
+    "max_record_reads_per_lookup": 14,
+    "read_only_catalog_FDs": 1,
+    "record_bytes": 112,
+    "unknown_quarantine_entries": 8
+  },
+  "schema": 1,
+  "scope": "Selected immutable payloads only; neither load/read nor a reviewed origin proves accepted consumer coverage.",
+  "selection_sha256": "5f917f3521be886568e3880f63404def99a9cfaa1c0810321713f216c98d4484",
+  "unapproved_proposals": 5763
+}

@@ -1,0 +1,22 @@
+{
+  "source_base": "34d276a61d7b1134fc60b7a114314258d15bd029",
+  "test_successor_sha256": "eaa16231331790f81c8e64451e4af8bfb22fa80fed778a879f81d382dc3e2154",
+  "command": [
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "test_proof_catalog24",
+    "test_catalog_index",
+    "test_seed",
+    "test_judge",
+    "-v"
+  ],
+  "returncode": 0,
+  "elapsed_seconds": 1.0889984979876317,
+  "max_address_space_bytes": 268435456,
+  "peak_child_maxrss_KiB": 80644,
+  "timeout_seconds": 120,
+  "actual_current_Cpp_gate_readat": true,
+  "no_SDK_guest_stage_assets": true
+}

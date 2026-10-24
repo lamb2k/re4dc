@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "generated_by_source": "34d276a61d7b1134fc60b7a114314258d15bd029",
+  "runtime_base": "140a699f8ead7b406e76581de7075191acf77a96",
+  "output_dir": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-v1",
+  "outputs": {
+    "allowlist.json": {
+      "bytes": 35,
+      "sha256": "f65b36057b1b48860873c56c97f6046b80cf16dc34546a0bea00932fee4e5ab2"
+    },
+    "catalog.json": {
+      "bytes": 5030573,
+      "sha256": "8d29e181e545ff745685412b8a2f9edf00c2dd692bb3847150575394d820b364"
+    },
+    "data-option.json": {
+      "bytes": 277,
+      "sha256": "c2716ae82e0042d7da4fd6f3b005f11a141bf27f40cb053218c81fb51729e7a9"
+    },
+    "gc-assets.idx": {
+      "bytes": 818176,
+      "sha256": "7861254ae33c183b2e2f8e8b63f82390dc727a341e9433b7f252c9f0d699f806"
+    },
+    "report.json": {
+      "bytes": 2924,
+      "sha256": "26d7fcdd76d1076fd2cd4cbcc197136d911154a0d8a6dde470168a51a7da6cf8"
+    },
+    "unapproved-proposals.json": {
+      "bytes": 3788045,
+      "sha256": "117cb44162e1efa822e06db124cfa78dd5a60f0f5e7de7ec9958fd6c4af9274c"
+    }
+  },
+  "no_asset_payload_bytes_copied": true,
+  "production_pin": 0,
+  "origin_verdicts": {
+    "authored": 0,
+    "gc": 0,
+    "ps2": 0,
+    "unknown": 7304
+  },
+  "accepted_allowance_rows": 0,
+  "historical_proposals_unapproved": 5763,
+  "source_provider_classes_present": [
+    "texture",
+    "sound-stream"
+  ],
+  "model_motion_geometry_provider_private_inputs": "not supplied; owner constituent/span proof still partial",
+  "actual_current_CPP_core": "all7304 identities exact Unknown; max14 record reads/bind; stale token and quarantine overflow rejected",
+  "runtime_gate_or_accepted_use_proof": false
+}

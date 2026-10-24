@@ -1,0 +1,1 @@
+records=7304 max_bind_record_reads=14 all_unknown=1 stale_rejected=1 quarantine_overflow_rejected=1
