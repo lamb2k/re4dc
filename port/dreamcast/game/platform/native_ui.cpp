@@ -11,6 +11,9 @@ extern "C" volatile unsigned re4dc_vram_key_crc,re4dc_vram_key_fnv;   // vram_pa
 #if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
 #include "include/resident_list_cache.h"
 #endif
+#if defined(RE4DC_EM35_DIAG) && RE4DC_EM35_DIAG
+#include "include/em35_diag.h"
+#endif
 #if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
 extern "C" void re4dc_bfc_feed(unsigned list,const void* data,unsigned bytes);
 extern "C" void re4dc_bfc_scene(unsigned frame,int present);
@@ -2417,6 +2420,23 @@ void speed_draw(){
         static const std::uint32_t kPhaseColour[kPhaseRows]={0xe080ff80U,0xe0ffff60U,0xe0ffffffU,0xe0ff9060U,0xe0ffb090U,
             0xe0a0d0ffU,0xe0c0c0c0U,0xe0e0a0ffU,0xe080ffffU,0xe0909090U,0xe0ffffffU};
         for(int k=0;k<kPhaseRows;++k)hud_number(b,500,SY+k*18,phase_v[k],k!=1,kPhaseColour[k]);
+#endif
+#if defined(RE4DC_EM35_DIAG) && RE4DC_EM35_DIAG
+        // EM35_DIAG=1 (em35_diag.h; diagnostic): one row per live Mendez half (top orange: whole body, below pink: upper
+        // body), left to right: r_no_0 x100 + r_no_1, r_no_2, motion index, motion frame, seconds on this step with a
+        // still motion frame, game frames since his last move() (0 or 1 = he is being moved).
+        for(unsigned t=0;t<2;++t){
+            const Re4dcEm35Diag& d=re4dc_em35_diag[t];
+            if(!d.live)continue;
+            const float y=SY+120+t*18;
+            const std::uint32_t col=t?0xe0ff80ffU:0xe0ffa040U;
+            hud_number(b,40,y,(d.r>>24)*100+((d.r>>16)&0xFF),false,col);
+            hud_number(b,100,y,(d.r>>8)&0xFF,false,col);
+            hud_number(b,160,y,d.mot,false,col);
+            hud_number(b,220,y,unsigned(d.frame10>0?d.frame10:0),true,col);
+            hud_number(b,280,y,d.same/3,true,col);
+            hud_number(b,340,y,re4dc_em35_diag_polls-d.last_poll,false,col);
+        }
 #endif
 #if defined(RE4DC_PMC_ROW) && RE4DC_PMC_ROW
         {   // PMC_ROW: event code (25 D-miss freeze, 24 I-miss freeze, 4 / 5 OC read / write misses, 8 IC misses), value
@@ -7691,6 +7711,9 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
 #endif
 #if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
 #include "include/native_effect_strip21.inc"
+#endif
+#if defined(RE4DC_FLASHLIGHT_POOL) && RE4DC_FLASHLIGHT_POOL
+#include "include/native_flashlight_pool.inc"
 #endif
 #if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
 // Esp19's source line becomes one untextured, colour-interpolated strip in

@@ -356,7 +356,7 @@ void cPlayer::move()
         ShapeMove(Body->pShape);
     }
     if ((int) pos.x == (int) pos_old.x && (int) pos.y == (int) pos_old.y && (int) pos.z == (int) pos_old.z
-        && (stat & 0xFFFFFF00) == 0x100 && !(pG->Status_flg[0] & 0x20)) {
+        && (stat & STAT_BE(0xFFFFFF00)) == STAT_BE(0x100) && !(pG->Status_flg[0] & 0x20)) {
         moved = 0;
         if ((int) pG->Debug_flg[0] >= 0) {
             goto moveChecked;
@@ -385,9 +385,12 @@ moveChecked:
             }
         }
     }
-    if ((stat & 0xFFFFFF00) == 0x00060000) {
+    if ((stat & STAT_BE(0xFFFFFF00)) == STAT_BE(0x00060000)) {
         pParts->ang.y *= 0.5f;
     }
+#if defined(RE4DC_STAT_DIAG) && RE4DC_STAT_DIAG
+    { extern void re4dc_stat_diag_player(cPlayer*); re4dc_stat_diag_player(this); }
+#endif
     ang.y = LIMIT_ANGLE(ang.y);
     m_Flag = (u16) m_Flag;
     shadowCtrl();
@@ -1573,3 +1576,77 @@ f32 getHeighAdjust(cPlayer* pl)
     PSVECAdd(&p, &pl->m_ActCross, &p);
     return SatMgr.getFloor(&p, 600.0f, 100000.0f, 0, 0) - pl->pos.y;
 }
+#if defined(RE4DC_STAT_DIAG) && RE4DC_STAT_DIAG
+// STAT_DIAG=1 (lane stat-bytes23): for each routine-word test of the player / partner that STAT_ROUTINE_BYTES
+// repairs, evaluate the GameCube meaning (named bytes) and the raw little-endian word compare on the live stat, and
+// log the first frame they disagree plus a count every 600 frames. Also a one-time self test of STAT_BE.
+extern "C" void re4dc_log(const char* fmt, ...);
+struct StatDiagSite {
+    const char* name;
+    u32 mask, val;
+    u8 who;  // 0 player, 1 partner
+};
+static const StatDiagSite s_statDiagSites[] = {
+    {"player.cpp:359 moved", 0xFFFFFF00, 0x00000100, 0},
+    {"player.cpp:388 r6/0", 0xFFFFFF00, 0x00060000, 0},
+    {"pl_class.cpp:926 isKamae", 0x0000FFFF, 0x00000000, 0},
+    {"pl_sub.cpp:1091 wepno", 0xFFFF0000, 0x000B0000, 0},
+    {"pl_wep.cpp:596 marker", 0xFFFFFF00, 0x00060100, 0},
+    {"pl_wep.cpp:875 corner", 0xFFFF0000, 0x000D0000, 0},
+    {"cockpit.cpp:656 bullets", 0xFFFF0000, 0x000F0000, 0},
+    {"pl_npc.cpp:1828 pl0E", 0xFFFF0000, 0x000E0000, 0},
+    {"pl_npc.cpp:2563 pl10", 0xFFFF0000, 0x00100000, 0},
+    {"pl0f.cpp:974 boat", 0xFFFFFF00, 0x000F0200, 0},
+    {"pl_sub.cpp:539 sub0F", 0xFFFF0000, 0x000F0000, 1},
+    {"pl_npc.cpp:3107 sub10", 0xFFFF0000, 0x00100000, 1},
+};
+static u32 s_statDiagCount[sizeof(s_statDiagSites) / sizeof(s_statDiagSites[0])];
+static u8 s_statDiagLogged[sizeof(s_statDiagSites) / sizeof(s_statDiagSites[0])];
+static u32 s_statDiagFrames;
+void re4dc_stat_diag_player(cPlayer* pl)
+{
+    if (s_statDiagFrames == 0) {
+        // self test: the bytes of GC word 0x010D0002 are r_no_0 1, r_no_1 0xD, r_no_2 0, r_no_3 2
+        static u32 s_buf[(sizeof(cModel) + 3) / 4];
+        cModel& m = *(cModel*) s_buf;
+        m.r_no_0 = 1; m.r_no_1 = 0xD; m.r_no_2 = 0; m.r_no_3 = 2;
+        const int ok = m.stat == STAT_BE(0x010D0002) && (m.stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x010D0000);
+        re4dc_log("STATDIAG selftest %s (STAT_BE(0x010D0002)=%08x stat=%08x knob=%d)\n", ok ? "match" : "MISMATCH",
+                  (unsigned) STAT_BE(0x010D0002), (unsigned) m.stat,
+#if defined(RE4DC_STAT_ROUTINE_BYTES) && RE4DC_STAT_ROUTINE_BYTES
+                  1
+#else
+                  0
+#endif
+        );
+    }
+    ++s_statDiagFrames;
+    cModel* sub = (cModel*) pSUB;
+    for (unsigned i = 0; i < sizeof(s_statDiagSites) / sizeof(s_statDiagSites[0]); ++i) {
+        const StatDiagSite& d = s_statDiagSites[i];
+        const cModel* m = d.who ? sub : (cModel*) pl;
+        if (!m) continue;
+        const u32 s = m->stat;
+        const u32 named = (u32) m->r_no_0 << 24 | (u32) m->r_no_1 << 16 | (u32) m->r_no_2 << 8 | m->r_no_3;
+        const int gc = (named & d.mask) == d.val;
+        const int raw = (s & d.mask) == d.val;
+        if (gc != raw) {
+            ++s_statDiagCount[i];
+            if (s_statDiagLogged[i] < 3) {
+                ++s_statDiagLogged[i];
+                re4dc_log("STATDIAG differ f=%u room=%x site=%s r=%02x.%02x.%02x.%02x gc=%d raw=%d\n",
+                          (unsigned) pG->Frame_cnt, (unsigned) pG->room_id, d.name, m->r_no_0, m->r_no_1, m->r_no_2,
+                          m->r_no_3, gc, raw);
+            }
+        }
+    }
+    if (s_statDiagFrames % 600 == 0) {
+        for (unsigned i = 0; i < sizeof(s_statDiagSites) / sizeof(s_statDiagSites[0]); ++i) {
+            if (s_statDiagCount[i]) {
+                re4dc_log("STATDIAG count f=%u site=%s frames=%u\n", (unsigned) pG->Frame_cnt, s_statDiagSites[i].name,
+                          (unsigned) s_statDiagCount[i]);
+            }
+        }
+    }
+}
+#endif

@@ -1442,7 +1442,7 @@ void cEm25::setHide()
 // 1 while the parasite is parked in Hide (R0 1 / R1 0).
 int cEm25::ckHide()
 {
-    return (stat & 0xFFFF0000) == 0x01000000;
+    return (stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01000000);
 }
 
 // Room script: a floor parasite is born at `ppos` facing `ang` (Birth 1).

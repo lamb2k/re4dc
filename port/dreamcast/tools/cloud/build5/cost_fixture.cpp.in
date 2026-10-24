@@ -1,0 +1,103 @@
+// Appended to the existing full-TU selector fixture. Only emit_pick geometry
+// is replaced. Actual chunk replay, new prefetch helpers and accounting run.
+#include <new>
+@CHUNK_PART@;
+extern "C" {
+ChunkPart fixture_contexts[48];
+MeshDraw::Pick fixture_replay_picks[320];
+unsigned fixture_replay_count,fixture_replay_shape,fixture_picks_per_part=1;
+unsigned fixture_replay_partial,fixture_replay_total;
+unsigned fixture_replay_result[8];
+}
+
+extern "C" void fixture_prepare_replay(unsigned count) {
+    fixture_replay_count=count;fixture_replay_total=0;
+    for(unsigned j=0;j<count;++j){
+        auto& x=fixture_contexts[j];
+        std::memcpy(x.mvq,fixture_input.mvq,sizeof(x.mvq));
+        x.key[0]=0x12345678U+j;x.key[1]=0x87654321U+j;
+        x.key[2]=32;x.key[3]=32;x.key[4]=j%3;x.key[5]=j%3;
+        x.index=fixture_input.part_index;x.first=fixture_replay_total;
+        x.count=fixture_replay_shape==1?0U:fixture_replay_shape==2&&j%3==1?0U:fixture_picks_per_part;
+        x.cull=j%3;x.marked=(j&1)!=0;x.sky=j%2;
+        x.cull_far=fixture_input.cull_far;x.lod_scale=fixture_input.lod_scale;
+#if RE4DC_SCENERY_UV_SNAPSHOT
+        x.uv_offset[0]=float(j)*.125f;x.uv_offset[1]=-float(j)*.25f;
+#endif
+        for(unsigned k=0;k<x.count;++k){
+            unsigned at=fixture_replay_total++;
+            fixture_replay_picks[at]={std::uint16_t(319-at),std::uint8_t(fixture_replay_partial==2?0:fixture_replay_partial?1:255),
+                std::uint8_t(fixture_replay_partial?2:0),std::uint8_t(fixture_replay_partial?3:0),
+                std::uint8_t(fixture_replay_partial?5:0),{0,0}};
+        }
+    }
+    std::memset(fixture_replay_result,0,sizeof(fixture_replay_result));
+    fixture_part.cull=fixture_input.cull;
+#if RE4DC_SKY_ANY
+    re4dc_ps2_sky_header=7;
+#endif
+}
+
+extern "C" __attribute__((noinline)) int fixture_replay() {
+    auto& part=fixture_part;
+    const float near=fixture_input.near_distance,far=fixture_input.far_distance;
+    const unsigned pass=fixture_input.pass;
+    auto* cctx=fixture_contexts;auto* cpk=fixture_replay_picks;
+    unsigned nctx=fixture_replay_count,npk=fixture_replay_total;
+    const auto& cpkg=fixture_package;
+    struct {unsigned native=0,fallback=0,aborts=0;}c;
+@CHUNK_FLUSH@;
+    const int result=chunk_flush();
+    fixture_replay_result[0]=result;fixture_replay_result[1]=c.native;
+    fixture_replay_result[2]=c.fallback;fixture_replay_result[3]=c.aborts;
+    fixture_replay_result[4]=nctx;fixture_replay_result[5]=npk;
+    fixture_replay_result[6]=part.cull;
+#if RE4DC_SKY_ANY
+    fixture_replay_result[7]=re4dc_ps2_sky_header;
+#endif
+    return result;
+}
+
+// Keep the established replay layout prefix for its qualified observer.
+extern "C" const std::uintptr_t fixture_replay_layout[]={
+    1,sizeof(MeshDraw),sizeof(ChunkPart),
+    reinterpret_cast<std::uintptr_t>(&fixture_replay_count),
+    reinterpret_cast<std::uintptr_t>(&fixture_replay_shape),
+    reinterpret_cast<std::uintptr_t>(fixture_replay_result),
+    offsetof(MeshDraw,mvq),offsetof(MeshDraw,used),offsetof(MeshDraw,input),
+    offsetof(MeshDraw,output),offsetof(MeshDraw,slots),offsetof(MeshDraw,sq),
+    offsetof(MeshDraw,bound),offsetof(MeshDraw,submitted),offsetof(MeshDraw,cache),
+    offsetof(MeshDraw,primed),offsetof(MeshDraw,palette),offsetof(MeshDraw,ps2),
+    offsetof(MeshDraw,vertex_alpha),offsetof(MeshDraw,c4444),offsetof(MeshDraw,alpha),
+    offsetof(MeshDraw,streaming),offsetof(MeshDraw,direct),offsetof(MeshDraw,lean_part),
+    offsetof(MeshDraw,batch)+offsetof(re4dc::room::CompactBatch,uv_bias),
+    offsetof(MeshDraw,batch)+offsetof(re4dc::room::CompactBatch,uv_scale),
+    offsetof(MeshDraw,proj_bx),offsetof(MeshDraw,proj_by),offsetof(MeshDraw,clip),
+    sizeof(re4dc::render::ClipParameters),offsetof(MeshDraw,part_index),
+    reinterpret_cast<std::uintptr_t>(&fixture_part),offsetof(Re4dcModelPart,cull),
+    offsetof(Re4dcModelPart,uv_offset),offsetof(MeshDraw,near),offsetof(MeshDraw,far)
+};
+
+// Construct/initialize the actual context before the timed gather entry.
+// Vertex copying is real source; no transform or renderer stub runs here.
+alignas(MeshDraw) unsigned char fixture_gather_state[sizeof(MeshDraw)];
+extern "C" void fixture_prepare_gather() {
+    auto* e=new(fixture_gather_state) MeshDraw{{fixture_part,{},fixture_input.near_distance,fixture_input.far_distance},
+        fixture_package,fixture_package.parts()[0],fixture_lut,fixture_gather};
+    e->borrow_gather();
+    std::memset(fixture_gather,0xa5,sizeof(fixture_gather));
+}
+extern "C" __attribute__((noinline)) const re4dc::room::CompactVertex12* fixture_gather_entry() {
+    auto& e=*reinterpret_cast<MeshDraw*>(fixture_gather_state);
+    const auto& pk=fixture_replay_picks[0];
+    const auto& l=fixture_package.meshlets()[pk.let];
+#if RE4DC_SCENERY_EMIT_PREFETCH
+    return e.emit_corners(l,pk);
+#else
+    return e.corners(l);
+#endif
+}
+extern "C" const std::uintptr_t fixture_gather_layout[]={
+    reinterpret_cast<std::uintptr_t>(fixture_gather),sizeof(fixture_gather),
+    reinterpret_cast<std::uintptr_t>(fixture_replay_picks),sizeof(fixture_replay_picks)
+};

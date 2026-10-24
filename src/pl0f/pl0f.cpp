@@ -971,7 +971,7 @@ void pl0fBoatControl(cPl0f* em)
         cPlayer* pl = pPL;
         cModel* p = em->getPartsPtr(1);
 
-        if ((pPL->stat & 0xFFFFFF00) == 0x000F0200) {
+        if ((pPL->stat & STAT_BE(0xFFFFFF00)) == STAT_BE(0x000F0200)) {
             p->ang.y = pl->blendRate500 * (1.0f / 255.0f) * -0.5235988f;
         } else {
             p->ang.y *= 0.9f;

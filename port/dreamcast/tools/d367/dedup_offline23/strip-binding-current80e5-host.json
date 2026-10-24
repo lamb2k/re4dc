@@ -1,0 +1,42 @@
+{
+  "status": "PASS_HOST_BINDING_LAYOUT_ONLY",
+  "source": "80e5115c01051151dce1fb75c1095b67e105522f",
+  "source_sha256": "2e7040a2c24302e163d4dcd6f4b50c1ad84650e8277019a7cca6bde8194dfc53",
+  "reader_sha256": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019",
+  "helper_sha256": "77c6a07ac451c483d94e27c57a18a809db6da848cdefa0903f4526cc56103172",
+  "fixture_sha256": "d311fd3b06ed2df2b31c365c1f063a1dc96c89838cda402b57e16dd868450476",
+  "extracted_sha256": {
+    "OPEN": "69c2998b3e0f2cfad17b4b578e69cbf8c66c6e0e9c6761ce324cbd7bc95c1722",
+    "BOUND": "281565928072e1e67e30696403e619cb79696c0eec729f74bb938a3edbf91aba",
+    "LAYOUT": "a268ffbf8305e7b14bfff3eeb2199df6b7f8617c20d0ca4697fdb3b64bd51071",
+    "CRC": "3ccea7002626ed15ed6447dbbd1a457bcd018ae622ef45987be9d5d57f445dc6",
+    "FNV": "2cc5a8622d784a68990afa3acc34ebac58fb25f9ea3fc79e98fb1ece9dd4b213"
+  },
+  "results": {
+    "r100": {
+      "stdout": "PASS legacy+compact fresh binding; malformed extent/CRC/size/baseline refused; exact layout/retained-header/fullfile hashes checked for r100",
+      "input_sha256": {
+        "/root/re4payload/t164-20261018/tree/dc/native/r100/ps2-world.re4mesh": "130bac7969255f0bf31d5f9226cee21a33415103f044f0fdc7dda3607ffc89bb",
+        "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r100-linear/ps2-dd3.re4mesh": "19548f9d6b473b65ff634caefa45cdc907b86ec5a6f767357062c91ff2bd607b",
+        "/dev/shm/dedup-current80e5-PRUyuW/compact/r100/ps2-dd3.re4mesh": "3d339013ff79b6b0c917b40beb326f9a063d959c9db10da33331a1f335d8fb1d"
+      }
+    },
+    "r101": {
+      "stdout": "PASS legacy+compact fresh binding; malformed extent/CRC/size/baseline refused; exact layout/retained-header/fullfile hashes checked for r100",
+      "input_sha256": {
+        "/root/re4payload/t164-20261018/tree/dc/native/r101/ps2-world.re4mesh": "500d17dac6279aa1ca71c8698ac31292cb2d3452befacfbef2d25069f9f7bff3",
+        "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r101-linear/ps2-dd3.re4mesh": "19c227e5215fcdf8935d24c091c16be4d7767a0b30beaeace2122b04d777bef5",
+        "/dev/shm/dedup-current80e5-PRUyuW/compact/r101/ps2-dd3.re4mesh": "e7f257773fb7ee43271994c867f5f4307a2a13c1d85cd93afcbcc15488c00708"
+      }
+    },
+    "r103": {
+      "stdout": "PASS legacy+compact fresh binding; malformed extent/CRC/size/baseline refused; exact layout/retained-header/fullfile hashes checked for r100",
+      "input_sha256": {
+        "/root/re4payload/t164-20261018/tree/dc/native/r103/ps2-world.re4mesh": "96d2382299065c6ab48f7696a88e37de7020fd0a21e37507d4bb87a0a739fdd3",
+        "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r103-linear/ps2-dd3.re4mesh": "7785ad48983c33f0da8195453be0ba923acc5a1061036fce2d0bc3d11e241365",
+        "/dev/shm/dedup-current80e5-PRUyuW/compact/r103/ps2-dd3.re4mesh": "2b805c88a9375180e41aeb55f8c0656d07fe96c32a12acf504b05be8b16d110a"
+      }
+    }
+  },
+  "limits": "Actual extracted fresh baseline-header selection, source extent/CRC and alternate body CRC branch; actual reader; actual movie-layout predicate and whole-file CRC/FNV. Mock file I/O. Actual KOS movie reload/world generation and rendered target/memory gates remain pending."
+}

@@ -1825,7 +1825,7 @@ void cSubChar::moveFallWait()
         sub540++;
     }
     if (subX534 == 0) {
-        if (subHideMode == 0 && (pPL->stat & 0xFFFF0000) != 0x000E0000) {
+        if (subHideMode == 0 && (pPL->stat & STAT_BE(0xFFFF0000)) != STAT_BE(0x000E0000)) {
             subX534 = 1;
         }
     }
@@ -2532,7 +2532,7 @@ int cSubChar::actionCheck()
         d.z = -satNorm.z;
         ang.y += Muku3(&d, ang.y, 3.1415927f);
     }
-    if (m_PlActTime && dist <= 300.0f && (pPL->stat & 0xFFFF0000) != 0x000E0000) {
+    if (m_PlActTime && dist <= 300.0f && (pPL->stat & STAT_BE(0xFFFF0000)) != STAT_BE(0x000E0000)) {
         if (getCliffHeight(m_PlActAngY) < 2900.0f) {
             m_PlActTime = 0;
             pos = m_PlActPos;
@@ -2560,7 +2560,7 @@ int cSubChar::ladder2Check()
     if (fabsf(distPos.y - pos.y) < 1000.0f) {
         return 0;
     }
-    if ((pPL->stat & 0xFFFF0000) == 0x00100000) {
+    if ((pPL->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x00100000)) {
         return 0;
     }
     {
@@ -3104,7 +3104,7 @@ void cSubChar::control(int mode)
         if (r_no_0 == 5) {
             SubRoutineSet(this, 0, 0, 0, 0);
         }
-        if ((stat & 0xFFFF0000) != 0x00100000) {
+        if ((stat & STAT_BE(0xFFFF0000)) != STAT_BE(0x00100000)) {
             BitOff16(subFlags, 1);
             subFlags |= 2;
             AtariOn(&atari, 0x300);
@@ -3114,7 +3114,7 @@ void cSubChar::control(int mode)
         if (r_no_0 == 5) {
             SubRoutineSet(this, 0, 0, 0, 0);
         }
-        if ((stat & 0xFFFF0000) != 0x00100000) {
+        if ((stat & STAT_BE(0xFFFF0000)) != STAT_BE(0x00100000)) {
             setPos(&pPL->pos);
         }
         r_no_0 = 0;
@@ -3126,7 +3126,7 @@ void cSubChar::control(int mode)
         if (r_no_0 == 5) {
             SubRoutineSet(this, 0, 0, 0, 0);
         }
-        if ((stat & 0xFFFF0000) != 0x00100000) {
+        if ((stat & STAT_BE(0xFFFF0000)) != STAT_BE(0x00100000)) {
             BitOff16(subFlags, 3);
             AtariOn(&atari, 0x300);
         }
@@ -3269,7 +3269,7 @@ u32 SubCharGetStatus()
         }
         break;
     }
-    if (SUBFLAG(sub)->check(1) || SUBFLAG(sub)->check(0) || (sub->stat & 0xFFFF0000) == 0x00100000) {
+    if (SUBFLAG(sub)->check(1) || SUBFLAG(sub)->check(0) || (sub->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x00100000)) {
         ret |= 0x40000000;
     } else {
         ret |= 0x20000000;
@@ -3959,7 +3959,7 @@ u32 SubCharGetCondition()
     Re4dcSsActorView view;
     if (re4dc_ss_actor_view(&view)) {
         if (!view.partner_present) return 0;
-        u32 ret = view.partner_wait || (view.partner_stat & 0xFFFF0000) == 0x00100000 ? 2 : 1;
+        u32 ret = view.partner_wait || (view.partner_stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x00100000) ? 2 : 1;
         if (pG->Status_flg[1] & 0x10000) return ret | 8;
         if (view.partner_move) return ret | 0x20;
         if (view.partner_routine0 != 0) return ret;
@@ -3973,7 +3973,7 @@ u32 SubCharGetCondition()
     if (sub == 0) {
         return 0;
     }
-    if (SUBFLAG(sub)->check(1) || (sub->stat & 0xFFFF0000) == 0x00100000) {
+    if (SUBFLAG(sub)->check(1) || (sub->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x00100000)) {
         ret = 2;
     } else {
         ret = 1;

@@ -172,8 +172,14 @@ extern "C" int re4dc_esp_strip21_eligible(cEsp* esp){
         !(esp->m_Tool_flg&(0x10000|0x40|0x4000)) && !(esp->m_Flg&0x10) && esp->xA4==1;
 }
 extern "C" void re4dc_esp_strip21_color(GXColor color){s_effect_col=color;}
+#if defined(RE4DC_FX_TRIM) && RE4DC_FX_TRIM
+extern "C" int re4dc_fx_essential_strip_cut(const cEsp* esp);   // FX_TRIM Essential: trails / ribbons not drawn
+#endif
 extern "C" int re4dc_esp_strip21_draw(cEsp* esp,int no,Vec* corners,u8 repeat,int direction){
     if(!re4dc_esp_strip21_eligible(esp))return 0;
+#if defined(RE4DC_FX_TRIM) && RE4DC_FX_TRIM
+    if(re4dc_fx_essential_strip_cut(esp))return 1;
+#endif
     EspTexWk* work=&g_pEspSys->Esp_tex_tbl[esp->m_Tex_id];
     if(work->Owner==0xD2 || !work->pTpl || esp->m_Ptn_no>=work->pTpl->numDescriptors)return 0;
     // EspTexSet's matrix is source state. Only its proven identity registration
@@ -1033,8 +1039,223 @@ static void FxLevelScale(Re4dcEffectSprite* s, f32 size, f32 alpha)
         s->color = (s->color & 0xffffffU) | ((a >= 255.0f ? 255U : (u32) a) << 24);
     }
 }
+#if defined(RE4DC_FX_TRIM) && RE4DC_FX_TRIM
+// FX_TRIM (effects30.mk, lane fx-trim23; render only): the FX_LEVEL dial over EVERY effect sprite, not only the PS2
+// room recipes: fire, smoke, dust, sparks, blood, glows of enemies, objects, weapons and rooms. At the emit, after the
+// effect has moved, lived and drawn its Rnd(): nothing the game reads changes. Per frame, an effect id keeps its first
+// `free` sprites; past them a fixed hash of the pool slot keeps keep_of_8 (the same particles stay: no flicker). Sprites
+// deeper than `far` mm or smaller than `min_px` screen pixels are not drawn, and at most `budget` trimmed-class sprites
+// a frame. Leon's own effects (owner 0x03: muzzle flash, his blood) and screen-space sprites are never trimmed.
+struct FxTrim { u8 free, keep_of_8; f32 far, min_px; u16 budget; };
+static const FxTrim kFxTrim[3] = {
+    {255, 8, 0.0f, 0.0f, 0},                 // 0: as-is (FX_TRIM_LOG counts only)
+    {6, 4, 30000.0f, 24.0f, 48},             // 1: reduced
+    {4, 3, 20000.0f, 48.0f, 32},             // 2: low
+};
+#if defined(RE4DC_FX_TRIM_LOG) && RE4DC_FX_TRIM_LOG
+// FX_TRIM_LOG (test only): "fx trim:" every 120 frames, per-frame means: sprites seen / drawn by owner class (r room
+// 0x01 / 0xd0, l Leon 0x03, e enemies / animals / objects 0x10..0xcf, o other), drops by reason, and the drawn and seen
+// translucent screen area in 1/100 screens (640x480).
+static u32 s_ftl_frame0, s_ftl_frames, s_ftl_seen[4], s_ftl_drawn[4], s_ftl_drop[5];
+static f32 s_ftl_area_seen, s_ftl_area_drawn;
+static u32 s_ftl_unk[64];   // owner << 16 | id << 8 | tex (key 0: owner 0 id 0 tex 0 never logged)
+static u32 s_ftl_kind[64];  // the same key | 1 << 24 when not drawn: non-room sprite kinds ("fx ess kinds:")
+#endif
+static unsigned FxTrimOwnerClass(unsigned owner)
+{
+    return owner == 0x01 || owner == 0xD0 ? 0 : owner == 0x03 ? 1 : owner >= 0x10 && owner < 0xD0 ? 2 : 3;
+}
+static f32 FxTrimArea(const Re4dcEffectSprite* s)
+{
+    f32 a = 0.0f;
+    for (int i = 0; i < 4; ++i) {
+        const int j = (i + 1) & 3;
+        a += s->x[i] * s->y[j] - s->x[j] * s->y[i];
+    }
+    return a < 0.0f ? -a * 0.5f : a * 0.5f;
+}
+// "Essential only" (user 10-23; FX_LEVEL=3 = the room dial at 0 + this filter, so the PS2 room-effect
+// thinning (Ps2fxClass, which LOGIC_WASTE's effect skip reads) stays as at level 0 and only the emit decides; runtime re4dc_fx_essential): keep the
+// effects that carry gameplay (muzzle flash, hit blood, explosions and fire incl. grenades / traps / burning hazards,
+// blob shadows; Leon's own effects whole), cut the atmosphere (mist / haze sheets, dust, ambient smoke and sparks,
+// glows, light shafts, glare, trails / ribbons) and stack at most kEssLayer sprites of one smoke / spark layer per owner.
+// Classes by effect texture id: the core EFF ids (etc/core.das EFF#1) and the room EFF ids are one global id space and
+// keep their meaning across rooms (sheets in the lane evidence, texsheets/). Unknown ids: drawn (capped) for enemies,
+// objects and weapons, cut for the room's own ambient tables (owners 0x01 / 0xd0).
+enum { ESS_KEEP = 1, ESS_LAYER = 2, ESS_CUT = 3, ESS_GLOW = 4 };
+static u8 s_ess_class[256];
+static void FxEssInit()
+{
+    static const u8 keep[] = {0x00, 0x01, 0x03, 0x04, 0x06, 0x07, 0x09, 0x0c, 0x0e, 0x0f, 0x10, 0x16, 0x18, 0x19, 0xce,   // blood
+                              0x23, 0x1b, 0x26, 0x28, 0x2c, 0x2e, 0xcd, 0x29, 0x85, 0x86,   // explosion, blast ring, fire, flames
+                              0xb2,                                                           // blob shadow disc
+                              // Ganado EFF (em10): blood, gore, the burst with fire
+                              0x37, 0x3b, 0x3c, 0x3f, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4a, 0x4b, 0x54};
+    static const u8 layer[] = {0x12, 0x1d, 0x1e, 0x1f, 0x24, 0x51, 0x52, 0x53, 0xff, 0xca, 0xc3,   // smoke
+                               0x56, 0x57, 0x58, 0x5a, 0xe2, 0xe3,                              // sparks, debris, embers
+                               // Ganado EFF (em10): hit debris, dirt and dust puffs, chips, water drops
+                               0x36, 0x38, 0x39, 0x3a, 0x3d, 0x3e, 0x40, 0x41, 0x4c, 0x4d, 0x4e, 0x4f, 0x93, 0x95, 0x98, 0x9f,
+                               0xa4};
+    static const u8 cut[] = {0x5f, 0x6f, 0x72, 0x79, 0xe9, 0x9d,          // dust
+                             0xc1};                                       // light shafts, glare
+    static const u8 glow[] = {0x08, 0x0b, 0x13, 0x17, 0x1c, 0xf7};       // glows, flares: cut, except owner 0x00's
+    for (unsigned i = 0; i < sizeof(keep); ++i) s_ess_class[keep[i]] = ESS_KEEP;
+    for (unsigned i = 0; i < sizeof(layer); ++i) s_ess_class[layer[i]] = ESS_LAYER;
+    for (unsigned i = 0; i < sizeof(cut); ++i) s_ess_class[cut[i]] = ESS_CUT;
+    for (unsigned i = 0; i < sizeof(glow); ++i) s_ess_class[glow[i]] = ESS_GLOW;
+}
+enum { kEssLayer = 2 };
+extern "C" {
+u8 re4dc_fx_essential = RE4DC_FX_ESSENTIAL_BOOT;
+}
+// 1: not drawn under Essential.
+static int FxEssentialCut(const cEsp* esp, int screen)
+{
+    static u32 s_frame = ~0U;
+    static u8 s_layer[256];   // (owner ^ tex) buckets: sprites of one layer this frame
+    if (!s_ess_class[0x00]) FxEssInit();
+    if (s_frame != pG->Frame_cnt) {
+        s_frame = pG->Frame_cnt;
+        for (int i = 0; i < 256; ++i) s_layer[i] = 0;
+    }
+    const unsigned owner = esp->info.owner;
+    if (owner == 0x03) return 0;                                   // Leon: muzzle flash, his blood, his grenades
+    if (esp->m_Id == 0x0e || esp->m_Id == 0x15 || esp->m_Id == 0x48) return 1;   // glows, haze, mist sheets
+    if (screen) return 0;
+    const unsigned c = s_ess_class[esp->m_Tex_id & 0xFF];
+    const int room = owner == 0x01 || owner == 0xD0;
+    if (c == ESS_KEEP) return 0;
+    if (c == ESS_CUT) return 1;
+    // Owner 0x00 (core / weapon effects: the hand, incendiary and flash grenade blasts, the laser sight's glint;
+    // lane fx-trim23 grenade check 10-23, FX_TRIM_LOG "fx ess kinds") keeps its glows and flares.
+    if (c == ESS_GLOW) return owner != 0x00;
+    if (room) return 1;                                            // the room's ambient smoke / sparks / leaves / dust
+    u8* n = &s_layer[(owner * 31U + esp->m_Tex_id) & 0xFF];          // layers and unknown ids: one thin layer each
+    return (*n)++ >= kEssLayer;
+}
+// FX_STRIP21 strips (Esp01 / Esp02 trails, ribbons): not drawn under Essential except Leon's.
+extern "C" int re4dc_fx_essential_strip_cut(const cEsp* esp)
+{
+    return re4dc_fx_essential && esp->info.owner != 0x03;
+}
+// 0: not drawn. reason: 0 drawn, 1 thinned, 2 far, 3 small, 4 budget, 5 essential.
+static int FxTrimSprite(const cEsp* esp, const Re4dcEffectSprite* s, f32 area)
+{
+    static u32 s_frame = ~0U, s_used;
+    static u8 s_per_id[256];
+    if (s_frame != pG->Frame_cnt) {
+        s_frame = pG->Frame_cnt;
+        s_used = 0;
+        for (int i = 0; i < 256; ++i) s_per_id[i] = 0;
+    }
+    if (re4dc_fx_essential) {
+        return FxEssentialCut(esp, s->screen) ? 5 : 0;   // Essential: kinds only (no thinning of what it keeps)
+    }
+    if (s->screen || esp->info.owner == 0x03) {
+        return 0;
+    }
+    const FxTrim& T = kFxTrim[re4dc_fx_level];
+    if (T.keep_of_8 < 8) {
+        u8* n = &s_per_id[esp->m_Id & 0xFF];
+        if (*n < 255) ++*n;
+        if (*n > T.free) {
+            const u32 slot = (u32) ((const u8*) esp - (const u8*) g_pEspSys->pEspBuf) / 0x150;
+            if (((slot * 2654435761U) >> 29) >= T.keep_of_8) return 1;
+        }
+    }
+    if (T.far > 0.0f && s->z[0] > 0.0f && 1.0f / s->z[0] > T.far && esp->m_Id != 0x0e) {   // Esp0e: torch glows stay
+        return 2;
+    }
+    if (T.min_px > 0.0f && area < T.min_px) {
+        return 3;
+    }
+    if (T.budget && s_used >= T.budget) {
+        return 4;
+    }
+    ++s_used;
+    return 0;
+}
+static int FxLevelSpriteBase(const cEsp* esp, Re4dcEffectSprite* s);
+static int FxLevelSprite(const cEsp* esp, Re4dcEffectSprite* s)
+{
+    const f32 area = FxTrimArea(s);
+    const int why = FxTrimSprite(esp, s, area);
+    const int drawn = !why && FxLevelSpriteBase(esp, s);
+#if defined(RE4DC_FX_TRIM_LOG) && RE4DC_FX_TRIM_LOG
+    if (s_ftl_frame0 != pG->Frame_cnt) {
+        s_ftl_frame0 = pG->Frame_cnt;
+        if (++s_ftl_frames == 120) {
+            const u32 F = 120;
+            re4dc_log("fx trim: f=%u room=%03x lvl=%u seen r%u l%u e%u o%u drawn r%u l%u e%u o%u drop thin%u far%u small%u budget%u "
+                      "ess%u area seen=%u drawn=%u\n", (unsigned) s_ftl_frame0, (unsigned) G_ROOM_ID,
+                      (unsigned) re4dc_fx_level + 3U * re4dc_fx_essential,
+                      s_ftl_seen[0] / F, s_ftl_seen[1] / F, s_ftl_seen[2] / F, s_ftl_seen[3] / F, s_ftl_drawn[0] / F,
+                      s_ftl_drawn[1] / F, s_ftl_drawn[2] / F, s_ftl_drawn[3] / F, s_ftl_drop[0] / F, s_ftl_drop[1] / F,
+                      s_ftl_drop[2] / F, s_ftl_drop[3] / F, s_ftl_drop[4] / F, (unsigned) (s_ftl_area_seen / (F * 3072.0f)),
+                      (unsigned) (s_ftl_area_drawn / (F * 3072.0f)));
+            {   // unclassified texture ids met this window (owner.tex.id), for the Essential table
+                char buf[200];
+                int k = 0;
+                for (int i = 0; i < 64 && s_ftl_unk[i]; ++i) {
+                    k += __builtin_snprintf(buf + k, sizeof(buf) - k, " %02x.%02x.%02x", (unsigned) (s_ftl_unk[i] >> 16),
+                                  (unsigned) (s_ftl_unk[i] & 0xff), (unsigned) ((s_ftl_unk[i] >> 8) & 0xff));
+                    s_ftl_unk[i] = 0;
+                    if (k > 180) break;
+                }
+                for (int i = 0; i < 64; ++i) s_ftl_unk[i] = 0;
+                if (k) re4dc_log("fx ess unknown: room=%03x%s\n", (unsigned) G_ROOM_ID, buf);
+                k = 0;   // every non-room sprite kind met this window: owner.tex.id + d (drawn) / c (cut)
+                for (int i = 0; i < 64 && s_ftl_kind[i]; ++i) {
+                    if (k < 180)
+                        k += __builtin_snprintf(buf + k, sizeof(buf) - k, " %02x.%02x.%02x%c",
+                                                (unsigned) ((s_ftl_kind[i] >> 16) & 0xff), (unsigned) (s_ftl_kind[i] & 0xff),
+                                                (unsigned) ((s_ftl_kind[i] >> 8) & 0xff), (s_ftl_kind[i] >> 24) ? 'c' : 'd');
+                    s_ftl_kind[i] = 0;
+                }
+                if (k) re4dc_log("fx ess kinds: room=%03x%s\n", (unsigned) G_ROOM_ID, buf);
+            }
+            for (int i = 0; i < 4; ++i) s_ftl_seen[i] = s_ftl_drawn[i] = 0;
+            for (int i = 0; i < 5; ++i) s_ftl_drop[i] = 0;
+            s_ftl_area_seen = s_ftl_area_drawn = 0.0f;
+            s_ftl_frames = 0;
+        }
+    }
+    {
+        const unsigned c = FxTrimOwnerClass(esp->info.owner);
+        if (!s_ess_class[0x00]) FxEssInit();
+        if (!s_ess_class[esp->m_Tex_id & 0xFF] && esp->info.owner != 0x03) {
+            const u32 key = ((u32) esp->info.owner << 16) | ((u32) esp->m_Id << 8) | esp->m_Tex_id;
+            for (int i = 0; i < 64; ++i) {
+                if (s_ftl_unk[i] == key) break;
+                if (!s_ftl_unk[i]) { s_ftl_unk[i] = key; break; }
+            }
+        }
+        if (c != 0) {
+            const u32 key = ((u32) esp->info.owner << 16) | ((u32) esp->m_Id << 8) | esp->m_Tex_id | (drawn ? 0U : 1U << 24);
+            for (int i = 0; i < 64; ++i) {
+                if (s_ftl_kind[i] == key) break;
+                if (!s_ftl_kind[i]) { s_ftl_kind[i] = key; break; }
+            }
+        }
+        ++s_ftl_seen[c];
+        s_ftl_area_seen += area;
+        if (drawn) {
+            ++s_ftl_drawn[c];
+            s_ftl_area_drawn += FxTrimArea(s);
+        } else if (why) {
+            ++s_ftl_drop[why - 1];
+        }
+    }
+#else
+    (void) FxTrimOwnerClass;
+#endif
+    return drawn;
+}
+static int FxLevelSpriteBase(const cEsp* esp, Re4dcEffectSprite* s)
+#else
 // EspSpriteEmit: depth cap, per-frame budget, size and alpha (0: not drawn).
 static int FxLevelSprite(const cEsp* esp, Re4dcEffectSprite* s)
+#endif
 {
 #if defined(RE4DC_EFFECT_OWNERS_ALL) && RE4DC_EFFECT_OWNERS_ALL
     if (EspOwnerAdmitted(esp->info.owner)) { if (esp->info.owner == 0x03 || !kFxLevel[re4dc_fx_level].owners) return 1;   // PL00 opt-out
@@ -4484,14 +4705,36 @@ extern "C" void re4dc_log(const char* fmt, ...);
 static u32 s_fx_level_osd_until;
 static const char* const kFxLevelText[3] = {"FX level 0: PS2 effects as-is", "FX level 1: medium effects",
                                             "FX level 2: low effects"};
+#if defined(RE4DC_FX_TRIM) && RE4DC_FX_TRIM
+extern "C" u8 re4dc_fx_essential;
+#endif
 extern "C" void re4dc_fx_level_toggle(void)
 {
+#if defined(RE4DC_FX_TRIM) && RE4DC_FX_TRIM
+    // FX_TRIM: 0 -> 1 -> 2 -> Essential (room dial 0 + the Essential filter) -> 0
+    if (re4dc_fx_essential) {
+        re4dc_fx_essential = 0;
+        re4dc_fx_level_set(0);
+    } else if (re4dc_fx_level >= 2) {
+        re4dc_fx_essential = 1;
+        re4dc_fx_level_set(0);
+    } else {
+        re4dc_fx_level_cycle();
+    }
+    s_fx_level_osd_until = re4dc_vi_retrace_count() + 180U;
+    re4dc_log("fx level: %u essential=%u frame=%u\n", (unsigned) re4dc_fx_level, (unsigned) re4dc_fx_essential,
+              pG ? (unsigned) pG->Frame_cnt : 0u);
+    return;
+#endif
     re4dc_fx_level_cycle();
     s_fx_level_osd_until = re4dc_vi_retrace_count() + 180U;
     re4dc_log("fx level: %u frame=%u\n", (unsigned) re4dc_fx_level, pG ? (unsigned) pG->Frame_cnt : 0u);
 }
 extern "C" const char* re4dc_fx_level_osd_text(void)
 {
+#if defined(RE4DC_FX_TRIM) && RE4DC_FX_TRIM
+    if (re4dc_fx_essential && (int) (s_fx_level_osd_until - re4dc_vi_retrace_count()) > 0) return "FX level 3: essential only";
+#endif
     return (int) (s_fx_level_osd_until - re4dc_vi_retrace_count()) > 0 ? kFxLevelText[re4dc_fx_level % 3] : 0;
 }
 #endif

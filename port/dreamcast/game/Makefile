@@ -64,6 +64,18 @@ endif
 $(OBJDIR)/mod/em10g/shared/src/em10/em10.o: GAME_CPPFLAGS += -DRE4DC_GANADO_ROUTINE_BYTES=1
 endif
 
+# EM35_ROUTINE_BYTES=1 (lane fix-mendez-freeze23 2026-10-23, #55 item 5; default 0 = image unchanged): Mendez's
+# routine-byte repair, as GANADO_ROUTINE_BYTES. The catch hit stored the GC big-endian word 0x010D000n, which on the
+# Dreamcast set routine 1/0 step 0xD (no such Wait step): Mendez froze for the rest of the fight. The bear hug / catch
+# player callbacks' word test (EM_RTN) also read the wrong bytes and released Leon at once.
+EM35_ROUTINE_BYTES ?= 0
+ifneq ($(EM35_ROUTINE_BYTES),0)
+ifneq ($(EM35_ROUTINE_BYTES),1)
+$(error EM35_ROUTINE_BYTES must be 0 or 1)
+endif
+$(OBJDIR)/mod/em35/src/em35/em35.o: GAME_CPPFLAGS += -DRE4DC_EM35_ROUTINE_BYTES=1
+endif
+
 # EM_ADMISSION_DISP_FIX=1 (default 0): restore the caller's display flags when
 # readEm cannot find a free module slot, as on its transport-failure return.
 EM_ADMISSION_DISP_FIX ?= 1
@@ -2274,6 +2286,23 @@ GAME_OPT ?= -O1
 GAME_CPPFLAGS = -std=gnu++20 -fpermissive -w $(GAME_OPT) \
 	-include platform/include/re4dc_prelude.h \
 	-I$(ROOT)/include -I$(ROOT)/src -Iplatform/include -DRE4DC_GAME
+# STAT_ROUTINE_BYTES=1 (lane stat-bytes23 2026-10-23; default 0 = image unchanged): every remaining GameCube
+# big-endian store / test of the cModel::stat routine word (STAT_BE in re4dc_prelude.h): player / partner / HUD
+# tests, the r100 trap dog (em21 + em2a), El Gigante (em2b), Luis (pl14), the boat (pl0f), the bell / gatling
+# objects and the later bosses. em10 / em35 keep their own GANADO_ / EM35_ROUTINE_BYTES knobs.
+STAT_ROUTINE_BYTES ?= 0
+ifneq ($(STAT_ROUTINE_BYTES),0)
+ifneq ($(STAT_ROUTINE_BYTES),1)
+$(error STAT_ROUTINE_BYTES must be 0 or 1)
+endif
+GAME_CPPFLAGS += -DRE4DC_STAT_ROUTINE_BYTES=1
+endif
+# STAT_DIAG=1 (test / QA discs only; default 0): STATDIAG log lines (player / partner routine-word tests where the
+# GameCube meaning and the raw word compare disagree, the r100 trap dog and its trap's routine changes, a self test).
+STAT_DIAG ?= 0
+ifneq ($(STAT_DIAG),0)
+GAME_CPPFLAGS += -DRE4DC_STAT_DIAG=1
+endif
 PLATFORM_CPPFLAGS = -std=gnu++20 -Wall -Wextra $(GAME_OPT) \
 	-Iplatform/include -DRE4DC_GAME
 
@@ -3414,3 +3443,6 @@ include qamenu.mk
 
 # Isolated bounded A/B/C memory experiment; default 0.
 include worldscratch.mk
+
+# Pinned KOS whole-cache writeback repair; default 0, shared KOS untouched.
+include kos_cache_p2.mk

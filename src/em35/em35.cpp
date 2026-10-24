@@ -150,6 +150,73 @@ static inline int em35DeadCk(cEm* em)
     return em->dmg.m_Flag || em->dmg.m_Timer;
 }
 
+#if defined(RE4DC_EM35_DIAG) && RE4DC_EM35_DIAG
+// EM35_DIAG=1 (game30.mk; diagnostic, test discs only): copies the routine, motion and timers into
+// re4dc_em35_diag after each move() and logs every routine change and any hold of one routine with a
+// motion frame that does not advance (platform/include/em35_diag.h). Reads only.
+#include "em35_diag.h"
+extern "C" void re4dc_log(const char* fmt, ...);
+static void em35DiagNote(cEm35* em)
+{
+    Em35Work* w = EM35_WK(em);
+    const unsigned t = em->type == 1 ? 1u : 0u;
+    Re4dcEm35Diag* d = &re4dc_em35_diag[t];
+    MotionWork* mw = MOTION(em);
+    const unsigned r = ((unsigned) em->r_no_0 << 24) | ((unsigned) em->r_no_1 << 16) | ((unsigned) em->r_no_2 << 8) |
+                       (unsigned) em->r_no_3;
+    const int f10 = (int) (mw->Mot_frame * 10.0f);
+    unsigned mot = 0xFE;
+    if (mw->pMot) {
+        mot = 0xFF;
+        for (unsigned n = 0; n < 0xA0; ++n) {
+            if (ARC(n) == (void*) mw->pMot) { mot = n; break; }
+        }
+    }
+    const f32 dx = em->pos.x - pPL->pos.x, dz = em->pos.z - pPL->pos.z;
+    const unsigned dist = (unsigned) SQRTF(dx * dx + dz * dz);
+    const bool same_r1 = d->live && (d->r >> 16) == (r >> 16);
+    const bool same = d->live && (d->r & 0xFFFFFF00u) == (r & 0xFFFFFF00u) && d->frame10 == f10 && d->mot == mot;
+    if (!d->live || (d->r & 0xFFFFFF00u) != (r & 0xFFFFFF00u) || d->mot != mot) {
+        re4dc_log("EM35 f=%u ty=%u r=%02x.%02x.%02x.%02x mot=%02x fr=%d/%d at=%04x st=%x ev=%02x hp=%d d=%u aw=%u lw=%u "
+                  "fl=%02x pl=%x.%x.%x dt=%d life=%d stop=%08x\n",
+                  (unsigned) pG->Frame_cnt, t, r >> 24, (r >> 16) & 0xFF, (r >> 8) & 0xFF, r & 0xFF, mot, f10,
+                  (int) (mw->Mot_frame_max * 10.0f), (unsigned) mw->Mot_attr, (unsigned) mw->Mot_state,
+                  (unsigned) em->motEvent, (int) em->hp, dist, (unsigned) w->atkWait, (unsigned) w->lockWait,
+                  (unsigned) (w->flags & 0xFF), (unsigned) pPL->r_no_0, (unsigned) pPL->r_no_1, (unsigned) pPL->r_no_2,
+                  pPL->dmgType == (int) em ? 1 : 0, (int) (s16) pG->pl_life, (unsigned) pG->Stop_flg);
+    }
+    d->same = same ? d->same + 1 : 0;
+    d->same_r1 = same_r1 ? d->same_r1 + 1 : 0;
+    if (!same && !same_r1) d->stuck_logged = 0;
+    // 90 moves (3 s at 30 fps) on one routine step with a still motion frame, or 900 moves (30 s) in one routine
+    if ((d->same == 90 || d->same_r1 == 900) && em->hp > 0 && (s16) pG->pl_life > 0 && d->stuck_logged < 4) {
+        ++d->stuck_logged;
+        re4dc_log("EM35 STUCK f=%u ty=%u r=%02x.%02x.%02x.%02x mot=%02x fr=%d/%d at=%04x st=%x same=%u same_r1=%u hp=%d "
+                  "d=%u aw=%u lw=%u atkHit=%u timer=%u pl=%x.%x.%x dt=%d life=%d stop=%08x stat=%08x be=%08x\n",
+                  (unsigned) pG->Frame_cnt, t, r >> 24, (r >> 16) & 0xFF, (r >> 8) & 0xFF, r & 0xFF, mot, f10,
+                  (int) (mw->Mot_frame_max * 10.0f), (unsigned) mw->Mot_attr, (unsigned) mw->Mot_state, d->same,
+                  d->same_r1, (int) em->hp, dist, (unsigned) w->atkWait, (unsigned) w->lockWait, (unsigned) w->atkHit,
+                  (unsigned) w->timer, (unsigned) pPL->r_no_0, (unsigned) pPL->r_no_1, (unsigned) pPL->r_no_2,
+                  pPL->dmgType == (int) em ? 1 : 0, (int) (s16) pG->pl_life, (unsigned) pG->Stop_flg,
+                  (unsigned) em->stat, (unsigned) em->be_flag);
+    }
+    d->live = 1;
+    ++d->moves;
+    d->last_poll = re4dc_em35_diag_polls;
+    d->r = r;
+    d->mot = mot;
+    d->frame10 = f10;
+    d->max10 = (int) (mw->Mot_frame_max * 10.0f);
+    d->attr = ((unsigned) mw->Mot_attr << 16) | (unsigned) mw->Mot_state;
+    d->ev = em->motEvent;
+    d->hp = em->hp;
+    d->dist = dist;
+    d->atk_wait = w->atkWait;
+    d->lock_wait = w->lockWait;
+    d->flags = w->flags;
+}
+#endif
+
 extern "C" void _prolog()
 {
     OSReport("em35 prolog Ok\n");
@@ -879,6 +946,9 @@ void cEm35::move()
         }
     }
     em35WeakMove(this);
+#if defined(RE4DC_EM35_DIAG) && RE4DC_EM35_DIAG
+    em35DiagNote(this);
+#endif
 }
 
 // Routine 0: per-type setup on the first frame. Loads the model (archive 4 with the extra model 6
@@ -1706,8 +1776,19 @@ static void em35_R1_BearHug(cEm35* em)
     em->x3A8 = em->pos;
 }
 
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EM35_ROUTINE_BYTES) && RE4DC_EM35_ROUTINE_BYTES
+// EM35_ROUTINE_BYTES=1 (Makefile; lane fix-mendez-freeze23): the status word is big endian on the recovered target
+// (r_no_0 in its top byte). Test the named bytes on the little-endian Dreamcast, as GANADO_ROUTINE_BYTES does for em10;
+// the word compare read r_no_3 / r_no_2 here, so the bear hug and catch releases ended the player's hold at once.
+static inline int Em35RoutineIs(const cModel* em, int r0, int r1)
+{
+    return em->r_no_0 == r0 && em->r_no_1 == r1;
+}
+#define EM_RTN(em, fc, fd) Em35RoutineIs((em), (fc), (fd))
+#else
 // Routine test on the cModel status word (em10.cpp EM_RTN).
 #define EM_RTN(em, fc, fd) (((em)->stat & 0xFFFF0000) == (u32) (((fc) << 24) | ((fd) << 16)))
+#endif
 
 // Player damage callback of the bear hug (dmType 10). Step 0/1: placed 3.5 m in front of the enemy
 // facing it, the squeezed motion with the crush sounds / rumble at frames 73 and 158, its step
@@ -2419,11 +2500,18 @@ static void em35_R1_br_Catch(cEm35* em)
 {
     if (em->hp > 0 && (em->motEvent & 2) && em35CatchCk(em)) {
         VibSetData(VIB_TBL, 7, 1);
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EM35_ROUTINE_BYTES) && RE4DC_EM35_ROUTINE_BYTES
+        // EM35_ROUTINE_BYTES=1: the GC word 0x010D000n names r_no_0 1, r_no_1 0xD, r_no_3 n. Stored as a word on the
+        // little-endian Dreamcast it gave routine 1/0 step 0xD, a Wait step with no case: Mendez stood still for the
+        // rest of the fight after any catch that reached Leon (#55 item 5).
+        EmRoutineSet(em, 1, 0xD, 0, (em->motFlags & 0x40) ? 1 : 0);
+#else
         if (em->motFlags & 0x40) {
             em->stat = 0x010D0001;
         } else {
             em->stat = 0x010D0000;
         }
+#endif
     }
 }
 

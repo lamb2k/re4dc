@@ -1,0 +1,236 @@
+// Production selector and numeric bodies over adopted, synthetic R4IM data.
+// This fixture executes host arithmetic; target controls qualify SH4 setup.
+#include <cassert>
+#include <cmath>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <fstream>
+#include <iterator>
+#include <string>
+#include <vector>
+#include "@ROOM@/instanced_mesh.hpp"
+#include "@ROOM@/nonempty_lod.hpp"
+#define RE4DC_PS2_WORLD_NONEMPTY_LOD 1
+#define RE4DC_PS2_WORLD_LEAN 23
+#define RE4DC_PS2_STRIP_GROUPS 1
+#define RE4DC_SCENERY_CONE_SIGN 1
+#define RE4DC_PROFILE_SCOPE(x) ((void)0)
+#define RE4DC_PREF_WALK 1
+struct pvr_vertex_t;
+static unsigned prefetches;
+#define RE4DC_C20_PREF_ON() true
+#define RE4DC_C20_PREF(p) (++prefetches)
+struct Re4dcModelPart {unsigned cull;float projection[7],viewport[6];};
+struct {unsigned clusters_culled,clusters_visible,lod_draws[4],groups_culled;} stats;
+namespace re4dc::render {
+struct DrawBounds {float minimum[3],maximum[3];};
+@GROUP_VISIBLE@
+}
+@LEAN_NAMESPACE@
+static unsigned re4dc_sg_lean_on;
+namespace cone {static const void* pkg;static const std::uint8_t* rec;static const float* tab2;
+static unsigned tests,rejects,vskip,picks_dropped;}
+struct MeshDraw {@PICK@;};
+@SELECTOR@;
+struct Input {
+    unsigned part_index,cull,inside,use_abs,groups,use_groups,cone_on,marked,pass,sky;
+    float near_distance,far_distance,cull_far,lod_scale;
+    float mvq[12],projection[7],viewport[6],uv_offset[2];
+};
+static_assert(sizeof(Input)==164);
+static unsigned semantic_cases,guard_cases,inside_cases,partial_cases,empty_picks,cut_picks;
+static unsigned occupied[32];
+static void one_case(const std::string& path,unsigned sg_on,unsigned guard,unsigned initial_skipped){
+    std::ifstream file(path,std::ios::binary);
+    std::vector<char> bytes((std::istreambuf_iterator<char>(file)),{});
+    assert(bytes.size()>=20+sizeof(Input));
+    std::uint32_t header[5];std::memcpy(header,bytes.data(),20);
+    assert(header[0]==0x31505357U&&header[1]==sizeof(Input));
+    assert(bytes.size()==20+sizeof(Input)+header[2]+header[3]+header[4]);
+    Input input;std::memcpy(&input,bytes.data()+20,sizeof(input));
+    const auto* package_data=reinterpret_cast<const std::uint8_t*>(bytes.data()+20+sizeof(input));
+    const auto* group_data=package_data+header[2];const auto* cone_data=group_data+header[3];
+    re4dc::room::MeshPackage package;
+    assert(package.adopt(package_data,header[2],true,true));
+    Re4dcModelPart part{};part.cull=input.cull;
+    std::memcpy(part.projection,input.projection,sizeof(part.projection));
+    std::memcpy(part.viewport,input.viewport,sizeof(part.viewport));
+    lean::side_setup(input.projection,input.viewport);
+    float am[9];lean::abs9(input.mvq,am);
+    float cone_table[64];for(unsigned i=0;i<64;++i)cone_table[i]=float(i)*.01f;
+    cone::pkg=input.cone_on?&package:nullptr;cone::rec=cone_data;cone::tab2=cone_table;
+    cone::tests=cone::rejects=cone::vskip=cone::picks_dropped=0;
+    re4dc_sg_lean_on=sg_on;
+    stats={};lean::st={};lean::st.skipped=initial_skipped;prefetches=0;
+#if RE4DC_SG_SELECT_LEAN
+    lean::lst={};
+#endif
+    ScenerySelector selector{part,package,input.mvq,input.near_distance,input.cull_far};
+    selector.part_index=input.part_index;selector.lod_scale=input.lod_scale;
+    selector.lean_inside=input.inside!=0;selector.lean_am=input.use_abs?am:nullptr;
+    selector.sg=input.use_groups?group_data:nullptr;selector.sg_groups=input.groups;
+    const unsigned key[6]={1,2,32,32,input.pass,input.cull};selector.ps2=key;
+#if RE4DC_PS2_PVS
+    if(guard&1U)selector.pvs_set=group_data;
+#endif
+#if RE4DC_PS2_INTERIOR_CULL
+    if(guard&2U)selector.pc_mode=1;
+#endif
+#if RE4DC_QUALITY_ASSETS
+    if(guard&4U)selector.skip_clusters=1;
+#endif
+    MeshDraw::Pick storage[322];std::memset(storage,0xa5,sizeof(storage));
+    auto* picks=storage+1;
+    const unsigned eligible=selector.chunk_ok();
+    unsigned active_guard=0;
+#if RE4DC_PS2_PVS
+    active_guard|=guard&1U;
+#endif
+#if RE4DC_PS2_INTERIOR_CULL
+    active_guard|=guard&2U;
+#endif
+#if RE4DC_QUALITY_ASSETS
+    active_guard|=guard&4U;
+#endif
+    const bool expected_eligible=package.lod()&&!(lean::kMode&8U)&&input.groups<=8U&&!active_guard;
+    assert(bool(eligible)==expected_eligible);
+    const unsigned count=eligible?selector.chunk_select(picks):0;assert(count<=320);
+    const auto* first=reinterpret_cast<const unsigned char*>(storage);
+    const auto* last=reinterpret_cast<const unsigned char*>(storage+321);
+    for(unsigned i=0;i<sizeof(*storage);++i)assert(first[i]==0xa5&&last[i]==0xa5);
+    ++semantic_cases;if(!eligible)++guard_cases;
+    const bool inside=stats.clusters_visible&&lean::st.cl_inside==stats.clusters_visible;
+    if(input.inside||inside){++inside_cases;assert(lean::st.sg_tests==0);}
+    if(lean::st.sg_tests)++partial_cases;
+    for(unsigned i=0;i<count;++i){if(!picks[i].nr)++empty_picks;if(picks[i].nr!=255)++cut_picks;}
+    std::fwrite(&count,sizeof(count),1,stdout);std::fwrite(&eligible,sizeof(eligible),1,stdout);
+    std::fwrite(&stats,sizeof(stats),1,stdout);std::fwrite(&lean::st,sizeof(lean::st),1,stdout);
+#if RE4DC_SG_SELECT_LEAN
+    std::fwrite(&lean::lst,sizeof(lean::lst),1,stdout);
+#else
+    const unsigned zero[5]{};std::fwrite(zero,sizeof(zero),1,stdout);
+#endif
+    const unsigned cone_stats[]={cone::tests,cone::rejects,cone::vskip,cone::picks_dropped,prefetches};
+    std::fwrite(cone_stats,sizeof(cone_stats),1,stdout);std::fwrite(storage,sizeof(storage),1,stdout);
+}
+
+static unsigned reference_pick(const std::uint16_t* groups,unsigned n,const float* coef,
+#if RE4DC_SG_SELECT_LEAN
+        const lean::SgPlane* planes,
+#endif
+        unsigned mask,unsigned lean_mode){
+    unsigned lo,hi,cut,nr;std::uint16_t r0[8],r1[8];
+#if RE4DC_SG_SELECT_LEAN
+    if(lean_mode)nr=lean::sg_select_lean(groups,n,planes,mask,r0,r1,lo,hi,cut);
+    else
+#endif
+        nr=lean::sg_select(groups,n,coef,mask,r0,r1,lo,hi,cut);
+    unsigned bits=0,prev=0,j=0;
+    for(unsigned k=0;k<n&&j<nr;++k){const unsigned end=groups[8*k+6];if(end==prev)continue;
+        if(r0[j]==prev&&r1[j]==end){bits|=1U<<k;++j;}prev=end;}
+    return bits|(lo<<8)|(hi<<16)|(cut<<24)|(nr<<28);
+}
+static std::uint32_t random_state=0x6d2b79f5U;
+static unsigned rng(){random_state^=random_state<<13;random_state^=random_state>>17;random_state^=random_state<<5;return random_state;}
+static unsigned helper_cases,box_cases,box_outside;
+static unsigned box_masks[32];
+static float from_bits(unsigned u){float v;std::memcpy(&v,&u,4);return v;}
+static void box_controls(){
+    const float projection[7]={0,1,0,1,0,-1.f/999,-1000.f/999};
+    const float viewport[6]={0,0,640,480,0,1};lean::side_setup(projection,viewport);
+    const unsigned special[]={0,0x80000000U,0x3f800000U,0xbf800000U,0x00800000U,
+        0x80800000U,0x7f7fffffU,0xff7fffffU,0x7f800000U,0xff800000U,0x7fc12345U,0x7f812345U};
+    for(unsigned seed=0;seed<32768;++seed){
+        re4dc::room::Meshlet let{};
+        for(unsigned a=0;a<3;++a){
+            let.bounds_min[a]=std::uint16_t(rng());let.bounds_max[a]=std::uint16_t(rng());
+            if(seed%4==0)let.bounds_min[a]=let.bounds_max[a];
+            if(seed%4==1){let.bounds_min[a]=0;let.bounds_max[a]=65535;}
+            if(seed%4==2&&let.bounds_min[a]>let.bounds_max[a])std::swap(let.bounds_min[a],let.bounds_max[a]);
+        }
+        float lo[3],hi[3],m[12],am[9];
+        for(unsigned a=0;a<3;++a){lo[a]=float(let.bounds_min[a]);hi[a]=float(let.bounds_max[a]);}
+        for(float& x:m)x=float(int(rng()%8193)-4096)/4096.f;
+        m[3]*=32768.f;m[7]*=32768.f;m[11]*=32768.f;
+        if(seed%8==0)m[seed%12]=from_bits(special[(seed/8)%12]);
+        if(seed%8==1){for(float& x:m)x=from_bits(rng());}
+        if(seed%8==2){
+            for(float& x:m)x=0.f;
+            m[0]=m[5]=.001f;m[10]=-.001f;m[3]=m[7]=-32.f;m[11]=-1.f;
+            m[(seed/8)%3*4+3]=std::nextafter(m[(seed/8)%3*4+3],(seed&16)?INFINITY:-INFINITY);
+        }
+        lean::abs9(m,am);
+        const float near_distance=seed%16==0?from_bits(special[(seed/16)%12]):float(seed%11)/8.f;
+        const float far_distance=seed%16==1?from_bits(special[(seed/16)%12]):1000.f;
+        for(unsigned mode=0;mode<(RE4DC_SG_SELECT_LEAN?2U:1U);++mode){
+            int expected;
+#if RE4DC_SG_SELECT_LEAN
+            if(mode)expected=lean::box_mask_lean(lo,hi,m,am,near_distance,far_distance);else
+#endif
+                expected=lean::box_mask(lo,hi,m,am,near_distance,far_distance);
+            int observed=expected;
+#if RE4DC_SCENERY_SELECT_LEAN2 && ((defined(RE4DC_SCENERY_SELECT_LEAN2_BOX_TRIAL) && RE4DC_SCENERY_SELECT_LEAN2_BOX_TRIAL) || defined(FIXTURE_BOX_GRID_FINAL))
+#if RE4DC_SG_SELECT_LEAN
+            if(mode)observed=lean::box_mask_grid_lean(let,m,am,near_distance,far_distance);else
+#endif
+                observed=lean::box_mask_grid(let,m,am,near_distance,far_distance);
+#endif
+            if(expected!=observed){std::fprintf(stderr,"box mismatch seed=%u mode=%u expected=%d observed=%d\n",seed,mode,expected,observed);std::abort();}
+            ++box_cases;if(observed<0)++box_outside;else ++box_masks[observed];
+            std::fwrite(&observed,sizeof(observed),1,stdout);
+        }
+    }
+}
+static void helper_controls(){
+#if RE4DC_SG_SELECT_LEAN
+    const float projection[7]={0,1.125f,.0625f,.875f,-.125f,-1.f/999,-1000.f/999};
+    const float viewport[6]={17,11,640,480,0,1};lean::side_setup(projection,viewport);
+    for(unsigned seed=0;seed<1024;++seed){
+        std::uint16_t g[64]{};unsigned end=0;
+        for(unsigned k=0;k<8;++k){
+            for(unsigned a=0;a<3;++a){g[8*k+a]=std::uint16_t(rng());g[8*k+3+a]=std::uint16_t(rng());
+                if(g[8*k+a]>g[8*k+3+a])std::swap(g[8*k+a],g[8*k+3+a]);}
+            if(seed%4==0)end=(rng()%5)*4;else if(seed%4==1)end+=(rng()&1U)*4;else end+=4;
+            g[8*k+6]=std::uint16_t(end);g[8*k+7]=std::uint16_t(rng());
+        }
+        float m[12];
+        for(float& v:m)v=float(int(rng()%4097)-2048)/256.f;
+        if(seed%16==0){m[0]=m[5]=m[10]=0.0f;}
+        if(seed%16==1){m[0]=-0.0f;m[5]=0.0f;m[10]=-0.0f;}
+        m[3]*=32768.f;m[7]*=32768.f;m[11]*=32768.f;
+        float coef[40];lean::sg_coef(m,float(seed%7),coef);
+#if RE4DC_SG_SELECT_LEAN
+        lean::SgPlane planes[5];lean::sg_coef_lean(m,float(seed%7),planes);
+#endif
+        for(unsigned n=0;n<=8;++n)for(unsigned mask=0;mask<32;++mask)
+        for(unsigned mode=1;mode<2;++mode){
+            const unsigned expected=reference_pick(g,n,coef,
+#if RE4DC_SG_SELECT_LEAN
+                planes,
+#endif
+                mask,mode);
+            unsigned observed=expected;
+#if RE4DC_SCENERY_SELECT_LEAN2
+            observed=lean::sg_pick_lean(g,n,planes,mask);
+#endif
+            if(expected!=observed){std::fprintf(stderr,"helper mismatch seed=%u n=%u mask=%u mode=%u expected=%08x observed=%08x\n",seed,n,mask,mode,expected,observed);std::abort();}
+            ++helper_cases;++occupied[mask];
+            std::fwrite(&observed,sizeof(observed),1,stdout);
+        }
+    }
+#endif
+}
+int main(int argc,char** argv){
+    assert(argc==3);
+    if(std::strcmp(argv[1],"helpers")==0){helper_controls();box_controls();}
+    else{
+        std::ifstream list(argv[1]);std::string path;
+        const unsigned guard=unsigned(std::strtoul(argv[2],nullptr,10));
+        while(std::getline(list,path))for(unsigned sg_on=0;sg_on<2;++sg_on)
+            for(unsigned wrap=0;wrap<2;++wrap)one_case(path,sg_on,guard,wrap?0xfffffffeU:0);
+    }
+    std::fprintf(stderr,"semantic=%u guards=%u inside=%u partial=%u empty_picks=%u cut_picks=%u helpers=%u boxes=%u box_outside=%u\n",
+        semantic_cases,guard_cases,inside_cases,partial_cases,empty_picks,cut_picks,helper_cases,box_cases,box_outside);
+}

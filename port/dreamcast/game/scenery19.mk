@@ -77,6 +77,35 @@ $(error SCENERY_UV_SNAPSHOT needs SCENERY_CHUNK)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_UV_SNAPSHOT=1
 endif
+# SCENERY_SELECT_LEAN2=1 (exact, render only): read packed meshlet bounds
+# directly and share each crossed plane across its groups, returning final picks.
+SCENERY_SELECT_LEAN2 ?= 0
+ifneq ($(SCENERY_SELECT_LEAN2),0)
+ifneq ($(SCENERY_SELECT_LEAN2),1)
+$(error SCENERY_SELECT_LEAN2 must be 0 or 1)
+endif
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_SELECT_LEAN2 needs SCENERY_CHUNK)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_SELECT_LEAN2=1
+endif
+# SCENERY_EMIT_PREFETCH=1 (exact, render only): hint selected meshlet headers
+# two picks ahead and their input one pick ahead, including the next queued
+# part. Empty indexed picks skip the unused gather; nonempty gathers read the
+# immutable vertex count once. Selection, binding and the strip walk stay exact.
+SCENERY_EMIT_PREFETCH ?= 0
+ifneq ($(SCENERY_EMIT_PREFETCH),0)
+ifneq ($(SCENERY_EMIT_PREFETCH),1)
+$(error SCENERY_EMIT_PREFETCH must be 0 or 1)
+endif
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_EMIT_PREFETCH needs SCENERY_CHUNK)
+endif
+ifneq ($(TA_DIRECT)$(MESH_DIRECT)$(PS2_WORLD_MESH),111)
+$(error SCENERY_EMIT_PREFETCH needs TA_DIRECT=1 MESH_DIRECT=1 PS2_WORLD_MESH=1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_EMIT_PREFETCH=1
+endif
 # SCENERY_DEDUP=1 (exact, render only; needs SCENERY_CHUNK, MESH_VP_SCHED=1, HW_LEAN): each PS2 world meshlet's corners
 # are reordered at room load (repeated grid positions last), and a draw transforms each position once and builds the
 # repeats from it. Heap 4: 4 bytes per meshlet + 1 per repeat (r101 ~33 KB), freed with the room's world.
@@ -88,8 +117,23 @@ ifneq ($(SCENERY_DEDUP),0)
 ifeq ($(SCENERY_DEDUP),1)
 $(error SCENERY_DEDUP=1 is retired: its load-time reorder moved plain meshlets that pool-indexed meshlets address; use 2)
 endif
-ifneq ($(SCENERY_DEDUP),2)
-$(error SCENERY_DEDUP must be 0 or 2)
+ifeq ($(filter 2 3,$(SCENERY_DEDUP)),)
+$(error SCENERY_DEDUP must be 0, 2 or 3)
+endif
+# Mode3: byte-neutral offline ps2-dd3.* alternate; no SCDD table or load reorder.
+ifeq ($(SCENERY_DEDUP),3)
+# The header reader must have one definition in every translation unit.
+GAME_CPPFLAGS += -DRE4DC_SCENERY_DEDUP=3
+PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_DEDUP=3
+ifneq ($(IO_ALIGNED),1)
+$(error SCENERY_DEDUP=3 needs IO_ALIGNED=1 for source header binding)
+endif
+ifeq ($(filter 1 2,$(PS2_WORLD_ROOMS)),)
+$(error SCENERY_DEDUP=3 needs PS2_WORLD_ROOMS=1 or 2)
+endif
+ifneq ($(filter-out 0,$(WORLD_VERT) $(SCENERY21_AB)),)
+$(error SCENERY_DEDUP=3 uses its own alternate data; WORLD_VERT and SCENERY21_AB must be 0)
+endif
 endif
 ifeq ($(SCENERY_CHUNK),0)
 $(error SCENERY_DEDUP needs SCENERY_CHUNK)

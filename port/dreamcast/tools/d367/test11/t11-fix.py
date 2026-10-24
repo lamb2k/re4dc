@@ -907,6 +907,22 @@ if os.path.isdir(MIP22BD):
 # (13 added: r000 HUD digits 2-9 + muzzle flash 148d2ff5 / 3a866b91; r100 983d1064 96f42df9; r101 cf2208cd), sha256 b81231ff.
 RES22CD = os.environ.get('RES22CD', '/root/re4data/private/res22c-20261022')
 DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
+# Lane fix-r10d-speed23 (10-23, #55 r10d merchant cave, approximation): r10dlod23 = r10d's PS2 world mesh rebuilt with
+# offline LOD for the clusters that had none and 3 m clusters (ps2_room_r4im.py, ch21l inputs and light, + --lod-cluster
+# 3000 --lod-min-gain 0.8 --lod-uv-guard 0.05 --lod-floor 60). Same parts and placements as ch21l (ps2-world.r4pw
+# byte-identical), so mip22b's rekeyed r4pw still applies. After mip22b. Hut view MODELLED: TA params 1.69 -> 1.06 MB,
+# triangles 37.5k -> 21.7k. Private store copy: re4-assets-private/r10dlod23-20261023 (RECIPE.txt, SHA256SUMS).
+R10DLOD23D = os.environ.get('R10DLOD23D', '/root/re4data/private/r10dlod23-20261023')
+# Its ps2-world.ids carries mip22b's physical r4pw crc: a mesh outside the rect21 provenance certificates keeps that crc,
+# and without the file PS2DYN logs "ids=header" (the 61 dynamic placements stop following their objects).
+DATA['r10dlod23'] = {'dc/native/r10d/ps2-world.%s' % x: R10DLOD23D + '/dc/native/r10d/ps2-world.%s' % x for x in ('re4mesh', 'ids')}
+# r10dbake23 (same lane, step 2 "mostly static and pregenerated"): r10dlod23's recipe + ps2_room_r4im.py --bake-static: the
+# 167 static placements (scroll id 254) as one world-space mesh, parts by material and 3 m clusters; the 61 placements with
+# an id < 250 stay their own. 228 -> 62 placements, 285 -> 155 parts. r4pw rekeyed to mip22b's texture keys
+# (tools/d367/ps2world/r4pw_rekey.py) and its ids. Replaces r10dlod23 in the data line (use one of the two).
+R10DBAKE23D = os.environ.get('R10DBAKE23D', '/root/re4data/private/r10dbake23-20261023')
+DATA['r10dbake23'] = {'dc/native/r10d/ps2-world.%s' % x: R10DBAKE23D + '/dc/native/r10d/ps2-world.%s' % x
+                      for x in ('re4mesh', 'r4pw', 'ids')}
 
 
 if __name__ == '__main__':

@@ -247,8 +247,8 @@ FX_LEVEL ?= 0
 endif
 FX_LEVEL ?=
 ifneq ($(FX_LEVEL),)
-ifneq ($(filter $(FX_LEVEL),0 1 2)$(PS2_FX_ROOMS),$(FX_LEVEL)1)
-$(error FX_LEVEL must be 0, 1 or 2 and needs PS2_FX_ROOMS=1)
+ifneq ($(filter $(FX_LEVEL),0 1 2 $(if $(filter 1,$(FX_TRIM)),3))$(PS2_FX_ROOMS),$(FX_LEVEL)1)
+$(error FX_LEVEL must be 0, 1 or 2 (3 = Essential, with FX_TRIM=1) and needs PS2_FX_ROOMS=1)
 endif
 endif
 # EFFECT_OWNERS_ALL=1 (test 11 lane fx 2026-10-14, parity census; needs EFFECT_SPRITES=1 and EFFECT_ROOM; render only, default
@@ -273,6 +273,36 @@ GAME_CPPFLAGS += -DRE4DC_FX_LEVEL_TOGGLE=1
 PLATFORM_CPPFLAGS += -DRE4DC_FX_LEVEL_TOGGLE=1
 else ifneq ($(FX_LEVEL_TOGGLE),0)
 $(error FX_LEVEL_TOGGLE is 0 or 1)
+endif
+# FX_TRIM=1 (lane fx-trim23 2026-10-23, user "the goal is to have fewer effects"; render only, default 0; needs FX_LEVEL):
+#                    the FX_LEVEL dial over every effect sprite game-wide (fire, smoke, dust, sparks, blood, glows of enemies,
+#                    objects, weapons and rooms), not only the PS2 room recipes. At levels 1 / 2: an effect id keeps its first
+#                    6 / 4 sprites a frame and a fixed pool-slot hash keeps 4 / 3 of 8 beyond them; sprites deeper than
+#                    30 / 20 m or under 24 / 48 screen pixels are not drawn; at most 48 / 32 such sprites a frame. Draw time
+#                    only (effects still spawn, move and draw their Rnd()); Leon's own effects and screen sprites are never
+#                    trimmed. Level 0 draws as without it. esp_sub.cpp kFxTrim. FX_TRIM_LOG=1 (test only): "fx trim:" lines.
+#                    FX_LEVEL=3 (with FX_TRIM=1; user 10-23 "Essential only"): the room dial at 0 plus the Essential filter
+#                    (esp_sub.cpp FxEssentialCut): gameplay effects kept (Leon's own effects, hit blood, explosions, fire and
+#                    flames, blob shadows), atmosphere cut (mist / haze, dust, ambient smoke and sparks, glows, shafts, glare,
+#                    FX_STRIP21 trails / ribbons; owner 0x00 keeps its glows: grenade blasts, laser glint), at most 2 sprites a frame per owner of one smoke / spark layer or unknown
+#                    id. Runtime re4dc_fx_essential; FX_LEVEL_TOGGLE steps 0 -> 1 -> 2 -> Essential -> 0.
+FX_TRIM ?= 0
+FX_TRIM_LOG ?= 0
+ifeq ($(FX_LEVEL)$(FX_TRIM),30)
+$(error FX_LEVEL=3 needs FX_TRIM=1)
+endif
+ifneq ($(filter-out 0 1,$(FX_TRIM) $(FX_TRIM_LOG)),)
+$(error FX_TRIM and FX_TRIM_LOG are 0 or 1)
+endif
+ifneq ($(FX_TRIM)$(FX_TRIM_LOG),00)
+ifeq ($(FX_LEVEL),)
+$(error FX_TRIM / FX_TRIM_LOG need FX_LEVEL)
+endif
+endif
+ifeq ($(FX_TRIM_LOG),1)
+ifneq ($(FX_TRIM),1)
+$(error FX_TRIM_LOG=1 needs FX_TRIM=1)
+endif
 endif
 # FX_FLIPBOOK=N (test 12 fx lane, render only, default 0): an effect flipbook (a TPL of >= FX_FLIPBOOK_MIN pictures: the
 #                    r101 pyre fire, smoke) draws every Nth picture only (picture p - p % N), so N times fewer distinct
@@ -510,10 +540,16 @@ ifneq ($(EFFECT_OWNERS_ALL),0)
 	@printf '#define RE4DC_EFFECT_OWNERS_ALL %s\n' '$(EFFECT_OWNERS_ALL)' >> $@.tmp
 endif
 ifneq ($(FX_LEVEL),)
-	@printf '#define RE4DC_FX_LEVEL %s\n' '$(FX_LEVEL)' >> $@.tmp
+	@printf '#define RE4DC_FX_LEVEL %s\n' '$(if $(filter 3,$(FX_LEVEL)),0,$(FX_LEVEL))' >> $@.tmp
 endif
 ifneq ($(SHORE_FX_LEVEL),)
 	@printf '#define RE4DC_SHORE_FX_LEVEL %s\n' '$(SHORE_FX_LEVEL)' >> $@.tmp
+endif
+ifneq ($(FX_TRIM),0)
+	@printf '#define RE4DC_FX_TRIM 1\n#define RE4DC_FX_ESSENTIAL_BOOT %s\n' '$(if $(filter 3,$(FX_LEVEL)),1,0)' >> $@.tmp
+endif
+ifneq ($(FX_TRIM_LOG),0)
+	@printf '#define RE4DC_FX_TRIM_LOG 1\n' >> $@.tmp
 endif
 ifneq ($(EFFECT_TORCH),0)
 	@printf '#define RE4DC_EFFECT_TORCH %s\n' '$(EFFECT_TORCH)' >> $@.tmp
@@ -566,4 +602,22 @@ endif
 $(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_FX_STRIP21=1 -DRE4DC_CLOTH_NATIVE=1
 $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_NATIVE=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_NATIVE=1
+endif
+# FLASHLIGHT_POOL=1 (lane fix-fx-missing23 2026-10-23, issue #55 item 3 "missing flashlight", user option B; render only,
+#   approximation; default 0 = no code, identical image): in a room whose light data attach a spot light to Leon (the
+#   night rooms: r11d / r11e chest spot + ~4 m point), trans.cpp draws one additive radial pool quad ahead of him with the
+#   depth test inverted (native_flashlight_pool.inc), so the world in front of him brightens like the GameCube's spot.
+#   Generated texture (no GameCube asset). Log: `flashlight pool:` once per room. Needs FX_STRIP21=1 (shares its quad path).
+#   Tuning (test arms): FLASHLIGHT_POOL_DIST (3500), FLASHLIGHT_POOL_SIZE (1800), FLASHLIGHT_POOL_GAIN (percent, 150). Torch = player-attached spot, radius <= 4000.
+FLASHLIGHT_POOL ?= 0
+ifneq ($(filter-out 0 1,$(FLASHLIGHT_POOL)),)
+$(error FLASHLIGHT_POOL is 0 or 1)
+endif
+ifeq ($(FLASHLIGHT_POOL),1)
+ifneq ($(FX_STRIP21),1)
+$(error FLASHLIGHT_POOL needs FX_STRIP21=1)
+endif
+FLASHLIGHT_POOL_TUNE := $(if $(FLASHLIGHT_POOL_DIST),-DRE4DC_FLASHLIGHT_POOL_DIST=$(FLASHLIGHT_POOL_DIST)) $(if $(FLASHLIGHT_POOL_SIZE),-DRE4DC_FLASHLIGHT_POOL_SIZE=$(FLASHLIGHT_POOL_SIZE)) $(if $(FLASHLIGHT_POOL_GAIN),-DRE4DC_FLASHLIGHT_POOL_GAIN=$(FLASHLIGHT_POOL_GAIN))
+$(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_FX_STRIP21=1 -DRE4DC_FLASHLIGHT_POOL=1 $(FLASHLIGHT_POOL_TUNE)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FLASHLIGHT_POOL=1
 endif

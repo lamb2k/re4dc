@@ -3520,6 +3520,20 @@ EM_READ_RETRY ?= 1
 ifeq ($(EM_READ_RETRY),1)
 GAME_CPPFLAGS += -DRE4DC_EM_READ_RETRY=1
 endif
+# R10C_SPAWN_LIVE_GUARD=1 (issue #52 follow-up, default 0): a first move can retire a Ganado after
+#   successful construction. Treat that returned, no-longer-live work as a missing event actor before
+#   r10c dispatches setNoSuspend or installs its motion/effect. Reuses EM_READ_RETRY's bounded retry/skip;
+#   leaves list admission flags and the manager's deferred cleanup untouched. No malformed-pointer test.
+R10C_SPAWN_LIVE_GUARD ?= 0
+ifeq ($(filter $(R10C_SPAWN_LIVE_GUARD),0 1),)
+$(error R10C_SPAWN_LIVE_GUARD must be 0 or 1)
+endif
+ifeq ($(R10C_SPAWN_LIVE_GUARD),1)
+ifneq ($(EM_READ_RETRY),1)
+$(error R10C_SPAWN_LIVE_GUARD=1 requires EM_READ_RETRY=1)
+endif
+$(OBJDIR)/mod/st1_2/src/st1/r10c.o $(OBJDIR)/src/st1/r10c.o: GAME_CPPFLAGS += -DRE4DC_R10C_SPAWN_LIVE_GUARD=1
+endif
 # EM_READ_FAIL_INJECT=N (test only, default 0 = no code): enemy module reads in room EM_READ_FAIL_INJECT_ROOM (default 0x10C) fail N times (>= 99: always), the
 #   issue #52 console failure on Flycast.
 EM_READ_FAIL_INJECT ?= 0
@@ -3881,6 +3895,22 @@ $(OBJDIR)/mod/st1_2/src/st1/r10c.o: GAME_CPPFLAGS += -DRE4DC_ISSUE52_ACTOR_DIAG=
 $(OBJDIR)/src/game/em_set.o $(OBJDIR)/src/game/em.o $(OBJDIR)/src/game/read.o: GAME_CPPFLAGS += -DRE4DC_ISSUE52_ACTOR_DIAG=1
 $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_ISSUE52_ACTOR_DIAG=1
 endif
+# EM35_DIAG=1 (lane fix-mendez-freeze23 2026-10-23; diagnostic for test / QA discs, default 0 = image unchanged):
+# Mendez (em35) routine, motion and timers copied after each move() (reads only): "EM35" log lines on every routine
+# step change, "EM35 STUCK" when one step holds a still motion frame 3 s (or one routine 30 s) with Leon alive,
+# "EM35 NOMOVE" when a live half is not moved for 60 game frames, and two rows left of the speed counter
+# (platform/include/em35_diag.h) so a console freeze can be photographed. Needs ROUTE_CH23=1 (em35 overlay).
+EM35_DIAG ?= 0
+ifeq ($(filter $(EM35_DIAG),0 1),)
+$(error EM35_DIAG must be 0 or 1)
+endif
+ifeq ($(EM35_DIAG),1)
+ifneq ($(ROUTE_CH23),1)
+$(error EM35_DIAG needs ROUTE_CH23=1)
+endif
+$(OBJDIR)/mod/em35/src/em35/em35.o $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_EM35_DIAG=1
+$(OBJDIR)/ui_bridge.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_EM35_DIAG=1
+endif
 # MOTION_MISS_LOG=1 (castle lane 2026-10-15; diagnostic, log only, default 0): "motion miss" lines (clip, wait, slab).
 MOTION_MISS_LOG ?= 0
 ifeq ($(filter $(MOTION_MISS_LOG),0 1),)
@@ -3910,4 +3940,14 @@ $(error CLOTH_LIGHT_ABI_FIX is 0 or 1)
 endif
 ifeq ($(CLOTH_LIGHT_ABI_FIX),1)
 $(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_LIGHT_ABI_FIX=1
+endif
+# PS2_ETS_MATCH=1 (render + room objects, default 0; lane fix-r10d-speed23 2026-10-23): skip the etc-list entries the
+# PS2 room data dropped (EtcModel.cpp EtcModelListSet). r10d: GC lists 16 etc models, the PS2 r10d.dat ETS 13; the
+# three GC-only entries are the et1400 torches (cEmTorch, ids 2/4/5). No room script references them (R10dMain is empty).
+PS2_ETS_MATCH ?= 0
+ifneq ($(filter-out 0 1,$(PS2_ETS_MATCH)),)
+$(error PS2_ETS_MATCH is 0 or 1)
+endif
+ifeq ($(PS2_ETS_MATCH),1)
+$(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_PS2_ETS_MATCH=1
 endif

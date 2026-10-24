@@ -1,0 +1,8 @@
+name dedup23-farm-f330
+room 0x103
+pos 7500 38 -400
+ang -2.300
+inv default
+god
+alivelog 150
+freeze 330
