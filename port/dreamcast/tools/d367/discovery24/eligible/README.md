@@ -42,7 +42,7 @@ Existing NumPy path (no install/copy):
 NumPy native kernels/OpenBLAS/dependencies/libc/libm, FE_TONEAREST, x87 control and
 MXCSR(noFTZ/noDAZ; sticky exceptions ignored). Runtime drift refuses before rays.
 Source scene cap200k triangles. Entire new unit output cap16MiB includes controls
-and failed runs. No full images, assets or guest execution.
+and failed runs; report admission leaves64KiB for final log/receipt metadata. No full images, assets or guest execution.
 
 One persistent RAY-LEDGER.json enforces110000 total reserved rays across host
 controls, BVH/brute comparisons, failed/full repeated runs and cameras. Controls
@@ -62,17 +62,17 @@ python3 -B port/dreamcast/tools/d367/discovery24/eligible/check.py \
  --out /mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-discovery24-eligible-r1/controls-NEW
 ```
 
-Twelve methods: nearer multiLOD/static/conditional/material/cull/alpha exclusions;
+Thirteen methods: nearer multiLOD/static/conditional/material/cull/alpha exclusions;
 late/equal source prefix; own instance versus shared-placement geometry; edge and
 near uncertainty;256BVH/brute ray pairs; persistent reservation/rerun/negative-or-float-ledger
 and token cap; triangle cap; exact-AST observer integrity and source mutant refusal;
 actual original numeric visible/offscreen-let observer; duplicate/alternativeLOD
-union refusal; patch touched-work versus single-patch sample coverage. All ray controls are charged to the same unit ledger.
+union refusal; patch touched-work versus single-patch sample coverage; final-output64KiB headroom boundary. All ray controls are charged to the same unit ledger.
 
 ## Pending full command
 
 After review, replace FROZEN_COMMIT with the immutable checkpoint from the lane
-handback and use the independently reviewed controls-r4/HOST-RUNTIME.json pin:
+handback and use the independently reviewed controls-r5/HOST-RUNTIME.json pin:
 
 ```
 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 \
@@ -81,7 +81,7 @@ python3 -B port/dreamcast/tools/d367/discovery24/eligible/run.py \
  --source-tree /root/probe/interior-discovery24 --source-commit FROZEN_COMMIT \
  --r6 /mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-fb254-lod-surface-r6 \
  --prior-report /mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-discovery24-r3/report.json \
- --runtime-pin /mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-discovery24-eligible-r1/controls-r4/HOST-RUNTIME.json \
+ --runtime-pin /mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-discovery24-eligible-r1/controls-r5/HOST-RUNTIME.json \
  --ledger /mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-discovery24-eligible-r1/RAY-LEDGER.json \
  --out /mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-discovery24-eligible-r1/run-r1
 ```

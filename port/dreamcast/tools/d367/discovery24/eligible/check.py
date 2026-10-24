@@ -84,6 +84,11 @@ class Controls(unittest.TestCase):
         self.assertEqual(group['associated_target_corner_records_union'],36)
         self.assertEqual(group['alone_all_fixed_samples_corner_records_union'],6)
         self.assertEqual([x['patch_samples_hit'] for x in group['patch_sample_hits_by_target']],[26,27])
+    def test_final_output_metadata_headroom(self):
+        from run import output_budget,OUTPUT_CAP,FINAL_METADATA_RESERVE
+        output_budget(0,OUTPUT_CAP-FINAL_METADATA_RESERVE)
+        with self.assertRaises(ValueError):output_budget(0,OUTPUT_CAP-FINAL_METADATA_RESERVE+1)
+        with self.assertRaises(ValueError):output_budget(100,OUTPUT_CAP-FINAL_METADATA_RESERVE-99)
     def test_actual_numeric_visible_let_observer(self):
         import numpy as np
         rm,_=selection.load()

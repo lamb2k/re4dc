@@ -8,7 +8,11 @@ from rays import discover
 from pool import EligibleScene,source_allowed
 from ledger import Ledger
 import selection,runtime,subprocess
-LIMIT=256*1024*1024;OUTPUT_CAP=16*1024*1024
+LIMIT=256*1024*1024;OUTPUT_CAP=16*1024*1024;FINAL_METADATA_RESERVE=64*1024
+
+def output_budget(existing,report_size):
+    if existing+report_size+FINAL_METADATA_RESERVE>OUTPUT_CAP:raise ValueError('Entire unit output cap incl64KiB final log/receipt reserve')
+
 
 def audit_union(rows):
     keys=set();levels={};total=0
@@ -109,10 +113,10 @@ def main():
         rows.sort(key=lambda x:(-int(x['all_fixed_samples_hit'] and x['outside_old_prefix_wholecluster_hint']),-x['target']['host_corner_records'],-x['usable_hit_count'],x['target']['instance'],x['target']['meshlet']))
         output['views'].append(dict(camera={k:v for k,v in camera.items() if k!='eye'},eye_exact=[str(v) for v in camera['eye']],target_roster=roster,source_roster=source_roster,source_triangles=len(scene.patch),source_patches=len(scene.patches),filtered_source_lets=scene.refused,ray_queries=scene.rays,all_sample_hit_lets=len(positives),all_hit_nonoverlap_corner_ceiling=audit_union(positives),incremental_lets_beyond_old_wholecluster_hints=len(incremental),incremental_nonoverlap_corner_ceiling=audit_union(incremental),ranked_lets=rows,patches=patches,common_source_groups=groups));gc.collect();print(json.dumps(dict(view=camera['label'],selected_targets=len(roster),eligible_triangles=len(scene.patch),hints=len(positives),incremental_hints=len(incremental),incremental_corners=audit_union(incremental))),flush=True)
     if token.used!=sum(v['ray_queries'] for v in output['views']):raise ValueError('Global ray query accounting mismatch')
-    output['limits']=dict(address_cap_bytes=LIMIT,peak_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,ray_reserved_this_run=planned,ray_queries_used=token.used,ledger=json.loads(a.ledger.read_text()),seconds=time.monotonic()-start,maximum_unit_output_bytes=OUTPUT_CAP)
+    output['limits']=dict(address_cap_bytes=LIMIT,peak_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,ray_reserved_this_run=planned,ray_queries_used=token.used,ledger=json.loads(a.ledger.read_text()),seconds=time.monotonic()-start,maximum_unit_output_bytes=OUTPUT_CAP,final_log_metadata_reserved_bytes=FINAL_METADATA_RESERVE)
     output['tool_pins']={str(p.relative_to(a.source_tree)):f.identity(p) for p in sorted(HERE.glob('*.py'))};output['parent_tool_pins']={p.name:f.identity(p) for p in (HERE.parent/'rank.py',HERE.parent/'rays.py',Path(rank.f.__file__),Path(rank.f.audit.__file__),HERE.parent.parent/'interior_vis23/surface_mesh.py',HERE.parent.parent/'interior_vis23/triangle_shadow_next/smaller_domains.py',HERE.parent.parent/'interior_vis23/triangle_shadow_next/exact_shadow.py')}
     data=(json.dumps(output,separators=(',',':'))+'\n').encode();existing=sum(p.stat().st_size for p in a.out.parent.rglob('*') if p.is_file())
-    if existing+len(data)>OUTPUT_CAP:raise ValueError('Entire unit output cap incl controls/old failed runs')
+    output_budget(existing,len(data))
     with (a.out/'report.json').open('xb') as f:f.write(data)
     print(json.dumps(dict(status='NO_CERTIFICATE',report=rank.f.identity(a.out/'report.json'),limits=output['limits'])),flush=True)
 if __name__=='__main__':main()
