@@ -271,13 +271,13 @@ void cObjBell::setBreak()
 // 1 when the room flagged the bell as breakable (stat high half 0x0100).
 int cObjBell::ckBreakEnable()
 {
-    return (stat & 0xFFFF0000) == 0x01000000;
+    return (stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01000000);
 }
 
 // 1 when the bell is broken (stat high half 0x0101).
 int cObjBell::ckBreak()
 {
-    return (stat & 0xFFFF0000) == 0x01010000;
+    return (stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01010000);
 }
 
 // Pendulum set-up: parts 1 -> 2 chain with max swing 45 / 25 degrees, gravity 15.
