@@ -35,6 +35,26 @@ class PreparationControls(unittest.TestCase):
     pins=p.own_sources(root,sha);self.assertEqual(set(pins),set(p.OWNED))
     (folder/'PRIVATE-PREPARATION.md').write_text('different source bytes')
     with self.assertRaisesRegex(ValueError,'differ from frozen'):p.own_sources(root,sha)
+ def test_consistent_affine_rebind_refuses_against_raw_operand_identity(self):
+  import hashlib
+  import partition as part
+  import verify_private as verify
+  physical=(1,1,2,3,0,4);inputsha={'mesh':'a'*64,'policy':'b'*64};operands=bytes(range(72));actual=hashlib.sha256(operands).hexdigest()
+  raw=dict(operands=operands,affine_sha256=actual,triangles=((0,1,2),(1,3,2)),xyz=((0,0,2),(4,0,2),(0,4,2),(4,4,2)))
+  old=dict(physical=list(physical),target=dict(meshlet=4));binding=p.token(dict(prepared=p.REPORT_SHA,inputs=inputsha,physical=physical,affine=actual,original_let_index=4))
+  parents=tuple(part.Parent((*physical,i),indices,actual,tuple(raw['xyz'][j] for j in indices)) for i,indices in enumerate(raw['triangles']))
+  target=dict(affine_operand_bytes_hex=operands.hex(),affine_sha256=actual,parents=[p.manifest(x) for x in parents],source_binding_sha256=binding,original_inventory_sha256=part.inventory_digest(parents,binding))
+  verify.authenticate_target_affine(target,old,raw,inputsha,part)
+  mutant=copy.deepcopy(target);changed=bytearray(operands);changed[0]^=1;newsha=hashlib.sha256(changed).hexdigest();mutant.update(affine_operand_bytes_hex=changed.hex(),affine_sha256=newsha)
+  for parent in mutant['parents']:parent['affine_sha256']=newsha
+  mutant['source_binding_sha256']=p.token(dict(prepared=p.REPORT_SHA,inputs=inputsha,physical=physical,affine=newsha,original_let_index=4))
+  fabricated=tuple(part.Parent((*physical,i),indices,newsha,tuple(raw['xyz'][j] for j in indices)) for i,indices in enumerate(raw['triangles']));mutant['original_inventory_sha256']=part.inventory_digest(fabricated,mutant['source_binding_sha256'])
+  with self.assertRaisesRegex(ValueError,'raw target affine operands'):verify.authenticate_target_affine(mutant,old,raw,inputsha,part)
+  record=(*physical[:4],physical[5],*raw['triangles'][0],*raw['triangles'][1]);key=(*physical,0);faces=tuple(tuple(raw['xyz'][j] for j in t) for t in raw['triangles'])
+  source=dict(key=key,actual_ordinals=[0,1],physical_record=record,faces_exact=[p.exact(t) for t in faces],affine_sha256=actual,source_binding_sha256=p.token(dict(prepared=p.REPORT_SHA,inputs=inputsha,physical=physical,affine=actual,record=record,ordinals=[0,1])))
+  verify.authenticate_source_affine(source,raw,inputsha)
+  source['affine_sha256']=newsha;source['source_binding_sha256']=p.token(dict(prepared=p.REPORT_SHA,inputs=inputsha,physical=physical,affine=newsha,record=record,ordinals=[0,1]))
+  with self.assertRaisesRegex(ValueError,'raw source affine Panel'):verify.authenticate_source_affine(source,raw,inputsha)
  def test_preparation_tools_have_no_scene_execution_switch_or_calls(self):
   root=Path(p.__file__).parent
   for name in ('prepare_private.py','verify_private.py','seal_private.py'):

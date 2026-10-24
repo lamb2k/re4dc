@@ -29,3 +29,5 @@ SHA=$(sha256sum "$OUT/report.json" | cut -d' ' -f1)
 ```
 
 All actual geometry coverage, numeric/SH4 error, raster/near/clipping, material/source prefix, current frame/generation/lifetime and useful runtime/gain questions remain unqualified. A source review and separate explicit root execution grant remain required before any new private shadow predicates.
+
+Verifier successor correction: target affine operand bytes and their token, parent tokens, source binding and complete inventory digest are now recomputed from the freshly authenticated raw mesh/policy slice for the exact physical tuple/globallet. A consistently rehashed serialized fabrication refuses against actual bytes. Exposed source affine tokens, full Panel geometry and source bindings are likewise rederived from raw inputs. Public and actual-private structural regressions cover consistent target and source rebinds; no shadow predicate is involved. Original6f/r2 stays preserved.
