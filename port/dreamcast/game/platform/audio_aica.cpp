@@ -42,6 +42,7 @@
 #include <string.h>
 
 #include "re4dc_platform.h"
+#include "include/gc_asset_audio.h"
 #if defined(RE4DC_LEON_HAND_PACK) && RE4DC_LEON_HAND_PACK
 extern "C" void re4dc_leon_hands_yield();  // coarse_actor_leon_hands.inc: Leon's AICA hand cache gives way to sound
 #endif
@@ -232,6 +233,9 @@ u16 dipan(u32 pan)
 // Converted sample banks.
 struct MapEnt { u32 gc_nib; u32 len; u32 aica; };  // aica: addr | shift << 24 | ok << 31
 struct Blk {
+#if RE4DC_GC_ASSET_GATE
+    unsigned asset_generation;
+#endif
     u32 gc_base, gc_size;        // GC ARAM bytes
     u32 aica, aica_size;         // AICA allocation
     u16 first, count;            // map entries (sample index order)
@@ -1188,6 +1192,9 @@ u32 g_strEntN;
 
 enum { kStrIdle, kStrPrep, kStrReady, kStrPlaying };
 struct Stream {
+#if RE4DC_GC_ASSET_GATE
+    unsigned asset_generation;
+#endif
     volatile u8 state;           // kStr*; prep: the reader fills the ring from the start
     volatile u8 want;            // the driver's voice L is running
     volatile u8 dead;            // the driver freed the voices
@@ -1258,12 +1265,18 @@ void str_flush(RegWriter& w)
         if (oct & 8) oct -= 16;
         u64 r = 44100ull * (1024 + (freq & 1023));
         s.rate_q10 = oct >= 0 ? r << oct : r >> -oct;
+#if RE4DC_GC_ASSET_GATE
+        const auto asset_use=re4dc_gcasset::stream_ticket(s.asset_generation);
+#endif
         for (int c = 0; c < s.nch; c++) {
             u16 pan = s.nch == 1 ? dipan(s.v[0]->vs.mix.pan) : dipan(c ? 127 : 0);
             s.sent_tl[c] = str_tl(c);
             ch_start(w, s.ch[c], g_strRing + c * kStrChBytes, 2 * kStrHalfSamples, 1, 0, freq, s.sent_tl[c], pan,
                      31, 0, 0, 28, s.play_cont[c], 3);
         }
+#if RE4DC_GC_ASSET_GATE
+        re4dc_gcasset::played(asset_use);
+#endif
         s.t0 = timer_us_gettime64();
         s.state = kStrPlaying;
         ++S.str_starts;
@@ -1302,7 +1315,13 @@ void flush()
         u16 pan = dipan(v.mix.pan);
         u16 freq = (v.dirty & 5) ? aica_freq_reg((u32) (v.ratio * 32000.0f) >> v.shift) : v.sent_freq;
         if (v.dirty & 1) {
+#if RE4DC_GC_ASSET_GATE
+            const auto asset_use=re4dc_gcasset::bank_ticket(v.blk<0 || v.blk>=14?14:unsigned(v.blk),v.blk<0 || v.blk>=14?0:g_blk[v.blk].asset_generation);
+#endif
             ch_start(w, v.ch, v.aica, v.len, v.loop, v.loop_start, freq, tl, pan, 31, 0, 0, 31, v.play_cont);
+#if RE4DC_GC_ASSET_GATE
+            re4dc_gcasset::played(asset_use);
+#endif
             v.sent_tl = tl; v.sent_pan = pan; v.sent_freq = freq;
         } else {
             if (tl != v.sent_tl) { w.w(v.ch, 0x28, ((u32) tl << 8) | 0x24); v.sent_tl = tl; }
@@ -1317,11 +1336,18 @@ void flush()
         if (!n.used) continue;
         Synth* s = n.synth ? as_synth(n.synth) : nullptr;
         if ((n.dirty & 1) && s) {
+#if RE4DC_GC_ASSET_GATE
+            const int asset_bank=s->blk>=0?s->blk:synth_block(s);
+            const auto asset_use=re4dc_gcasset::bank_ticket(asset_bank<0 || asset_bank>=14?14:unsigned(asset_bank),asset_bank<0 || asset_bank>=14?0:g_blk[asset_bank].asset_generation);
+#endif
             n.sent_tl = note_tl(n, s);
             n.sent_freq = note_freq(n, s);
             n.seen_gen = s->gen;
             ch_start(w, n.ch, n.aica, n.len, n.loop, n.lsa, n.sent_freq, n.sent_tl,
                      dipan(n.ch_midi == 9 ? 64 : s->ch[n.ch_midi].pan), n.ar, n.d1r, n.dl, n.rr, n.play_cont);
+#if RE4DC_GC_ASSET_GATE
+            re4dc_gcasset::played(asset_use);
+#endif
             n.dirty &= ~1;
             if (n.released) n.dirty |= 8;   // released before it sounded
         }
@@ -1359,6 +1385,9 @@ void flush()
 namespace {
 
 mutex_t g_lock = MUTEX_INITIALIZER;   // blocks (map) vs the audio step
+#if RE4DC_GC_ASSET_GATE
+unsigned gcasset_audio_checkpoints;
+#endif
 #if RE4DC_CABIN_SOURCE
 // CABIN_AUDIO_STATE_BEGIN: fixed output-only ownership; all access holds g_lock
 // (or borrows that lock from this exact audio-step thread).
@@ -1518,6 +1547,9 @@ void audio_step()
     u32 notes = 0;
     for (int i = 0; i < kNotes; i++) notes += g_notes[i].used;
     flush();
+#if RE4DC_GC_ASSET_GATE
+    gcasset_audio_checkpoints|=(1U<<re4dc_gcasset::SoundBank)|(1U<<re4dc_gcasset::SoundStream);
+#endif
 #if RE4DC_CABIN_SOURCE
     g_cabin_audio_step_thread = nullptr;
 #endif
@@ -1612,6 +1644,30 @@ bool str_index_load()
 #endif
     g_strEntN = h[1];
     memcpy(g_strEnt, h + 4, g_strEntN * sizeof(StrEnt));
+#if RE4DC_GC_ASSET_GATE
+    // Conservative whole-container proof: AIS1 metadata + all intro/loop
+    // payloads stay one immutable source identity. This adds one full file
+    // read in diagnostic builds, before any ring claim or audio lock.
+    {
+        // str_main owns this descriptor and has not yet entered str_scan.
+        // Reuse it: a second ISO handle consumes KOS memory throughout the hash.
+        const auto asset_resume=fs_seek(g_strFile,0,SEEK_CUR);
+        const auto asset_bytes=fs_total(g_strFile);
+        re4dc_gcasset::Digest digest{};
+        const auto read=[](void* context,void* target,unsigned bytes)->unsigned {
+            const ssize_t count=fs_read(*static_cast<const file_t*>(context),target,bytes);return count<0?0:unsigned(count);
+        };
+        const bool bound=asset_resume>=0 && asset_bytes>0 && asset_bytes<=0x1fffffff &&
+            fs_seek(g_strFile,0,SEEK_SET)==0 &&
+            re4dc_gcasset::fingerprint_read(digest,read,&g_strFile,unsigned(asset_bytes));
+        if(asset_resume>=0 && fs_seek(g_strFile,asset_resume,SEEK_SET)!=asset_resume){
+            re4dc_gcasset::stream_source_failed();
+            re4dc_log("aica: diagnostic stream position restore failed, disc streams stay silent\n");
+            fs_close(g_strFile);g_strFile=-1;return false;
+        }
+        if(bound)re4dc_gcasset::stream_source(digest);else re4dc_gcasset::stream_source_failed();
+    }
+#endif
     for (u32 i = 0; i < g_strEntN; i++) {
         const StrEnt& e = g_strEnt[i];
         re4dc_log("aica: stream %u:%u sbb=%06x %u Hz ch=%u intro=%u loop=%u samples\n", (unsigned) (e.flags >> 8 & 255),
@@ -1675,6 +1731,9 @@ void str_scan()
 #endif
         if (Snd_str_work[i].voiceL == (void*) vl && vl->vs.strm == 1 && vr->vs.strm == 1) {
             Stream& s = g_str;
+#if RE4DC_GC_ASSET_GATE
+            s.asset_generation=re4dc_gcasset::stream_generation();
+#endif
             s.slot = i;
             s.e = e;
             s.nch = (u8) nch;
@@ -2064,6 +2123,23 @@ void re4dc_cabin_audio_publish_end(unsigned token)
 unsigned re4dc_aica_used_bytes(void) { return g_aicaUsed; }
 // Sound bank blocks left silent so far (does not fit / rejected / layout refused): native_ui.cpp VRAM_ROOM_LOG.
 unsigned re4dc_aica_skipped_blocks(void) { return S.blocks_skipped; }
+#if RE4DC_GC_ASSET_GATE
+extern "C" unsigned re4dc_gcasset_audio_admission(unsigned open){
+    mutex_lock(&g_lock);
+    const unsigned checkpoints=gcasset_audio_checkpoints;
+    if(open){gcasset_audio_checkpoints=0;re4dc_gcasset::open_audio_admission();}
+    else re4dc_gcasset::close_audio_admission();
+    mutex_unlock(&g_lock);
+    return checkpoints;
+}
+extern "C" unsigned re4dc_gcasset_audio_handoff(unsigned room,unsigned visit){
+    mutex_lock(&g_lock);
+    const unsigned checkpoints=gcasset_audio_checkpoints;gcasset_audio_checkpoints=0;
+    (void)re4dc_gcasset::handoff_audio_admission(room,visit); // failure persists in core fault accounting
+    mutex_unlock(&g_lock);
+    return checkpoints;
+}
+#endif
 #if RE4DC_RADIO_SUB_RT
 // RADIO_SUB_RT (subscreen.mk): disc stream starts so far and when the last one began to sound (KOS timer us,
 // Stream::t0), for the codec call's subtitle clock (src/Sscrn/ss_term.cpp). Written by the audio thread under
@@ -2124,6 +2200,9 @@ void re4dc_audio_arq(u32 src, u32 dst, u32 len)
                 bool pre = len >= sizeof(AicaBankHeader) && h->magic == kBankMagic;
                 mutex_lock(&g_lock);
                 bool ok = pre ? blk_begin_prebuilt(t, dst, *h) : blk_begin(t, dst);
+#if RE4DC_GC_ASSET_GATE
+                if(ok)g_blk[t].asset_generation=re4dc_gcasset::bank_generation(t);
+#endif
                 mutex_unlock(&g_lock);
                 if (!ok) return;
                 break;

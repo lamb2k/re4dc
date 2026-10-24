@@ -99,6 +99,36 @@
 // that object's creation serial; nothing else is registered. Packets, headers,
 // texture pins, pass selection and translucent deferral are the existing
 // native_ui frame owner's (re4dc_model_packet_*/re4dc_model_defer_part).
+// PVS_BATCH_COMPOSITION_GUARD
+#ifndef RE4DC_PS2_PVS_BATCH_COMPOSE
+#define RE4DC_PS2_PVS_BATCH_COMPOSE 0
+#endif
+#if RE4DC_PS2_PVS_BATCH_COMPOSE != 0 && RE4DC_PS2_PVS_BATCH_COMPOSE != 1
+#error PS2_PVS_BATCH_COMPOSE must be 0 or 1
+#endif
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+#if (defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE != 0) || (defined(RE4DC_GC_ASSET_MOTION_UNKNOWN) && RE4DC_GC_ASSET_MOTION_UNKNOWN != 0)
+#error PS2_PVS_BATCH_COMPOSE does not yet qualify GC asset diagnostics
+#endif
+#if RE4DC_PS2_PVS != 1 || RE4DC_SCENERY_SUBMIT_BATCH != 1 || RE4DC_TA_DIRECT != 1 || RE4DC_PS2_WORLD_HDR_CACHE != 1 || RE4DC_PVR_STREAM != 1 || RE4DC_D349_RENDERER_STACK != 1 || RE4DC_PS2_WORLD_SOURCE_OWNER != 1 || RE4DC_PS2_WORLD_SOURCE_TEX_PREP != 1
+#error PS2_PVS_BATCH_COMPOSE needs the qualified streaming source/direct path
+#endif
+#if !defined(RE4DC_PS2_PVS_DEFAULT) || RE4DC_PS2_PVS_DEFAULT != 0
+#error PS2_PVS_BATCH_COMPOSE needs explicit PS2_PVS_DEFAULT=0
+#endif
+#if RE4DC_WORLD_SCRATCH || RE4DC_TA_GUARD || RE4DC_PS2_WORLD_TRANSITION_OWNER || RE4DC_PS2_WORLD_R11F_OWNER || RE4DC_SCENERY_PIECE_STATE || RE4DC_SCENERY_DEDUP || RE4DC_SCENERY_CONE || RE4DC_CPU_BACKFACE || RE4DC_TA_MATERIAL_DIAG || RE4DC_WORLD_HOLE_DIAG || RE4DC_PS2_WORLD_PREFLIGHT_DIAG
+#error PS2_PVS_BATCH_COMPOSE has an unqualified owner, scratch or diagnostic path
+#endif
+#if RE4DC_PS2_INTERIOR_CULL != 0 && RE4DC_PS2_INTERIOR_CULL != 1
+#error PS2_PVS_BATCH_COMPOSE does not qualify interior header-check mode
+#endif
+#endif
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+#if RE4DC_SCENERY_CHUNK != 1 || RE4DC_SCENERY_SELECT_ONLY != 1 || RE4DC_SCENERY_REPLAY_LEAN != 1 || RE4DC_MESH_DIRECT != 1 || RE4DC_MESH_FASTPATH != 1 || RE4DC_MESH_VP_SCHED != 1 || RE4DC_HW_LEAN != 1 || RE4DC_PS2_STRIP_GROUPS != 1 || RE4DC_PS2_WORLD_MESH != 1
+#error PS2_PVS_BATCH_COMPOSE needs the qualified static selection/replay path
+#endif
+#endif
+// PVS_BATCH_COMPOSITION_GUARD_END
 #include <kos.h>
 #include <fcntl.h>
 #include <malloc.h>
@@ -129,6 +159,8 @@ extern "C" volatile unsigned re4dc_rigid_hide;   // native_actor_fast.cpp (RIGID
 #include "quality.h"
 #endif
 #include "native_model.h"
+#include "include/gc_asset_static.h"
+#include "include/gc_asset_static_source.inc"
 #if RE4DC_SCENERY_SUBMIT_BATCH
 #include "include/scenery_submit_batch.h"
 #endif
@@ -581,6 +613,46 @@ unsigned re4dc_blob_camera_frame=~0U;
 
 namespace {
 using re4dc::room::Package;
+#if RE4DC_GC_ASSET_GATE
+#if RE4DC_PS2_WORLD_MESH
+void gcasset_invalidate_world();
+#else
+void gcasset_invalidate_world(){}
+#endif
+void gcasset_static_policy(re4dc_gcasset::StaticManifest&,unsigned room);
+void gcasset_static_invalidate_all();
+// Borrowed only during a cold load. Movie/re-adopt calls omit this argument
+// and cannot reconstruct original sidecar identities from prepared storage.
+#define GCASSET_STATIC_ONLY_PARAM re4dc_gcasset::StaticManifest* gcmanifest=nullptr
+#define GCASSET_STATIC_PARAM ,GCASSET_STATIC_ONLY_PARAM
+#define GCASSET_STATIC_ARG ,&gcasset_source
+void gcasset_static_state(re4dc_gcasset::StaticManifest* m,re4dc_gcasset::StaticRole role,re4dc_gcasset::StaticState state){
+    if(m)re4dc_gcasset::static_manifest_note(*m,role,state);
+}
+void gcasset_static_bytes(re4dc_gcasset::StaticManifest* m,re4dc_gcasset::StaticRole role,const void* p,unsigned n,unsigned version=0,unsigned flags=0){
+    if(m)re4dc_gcasset::static_manifest_bytes(*m,role,p,n,version,flags);
+}
+#else
+#define GCASSET_STATIC_ONLY_PARAM
+#define GCASSET_STATIC_PARAM
+#define GCASSET_STATIC_ARG
+#endif
+#if RE4DC_GC_ASSET_GATE
+unsigned gcasset_static_profile(){
+    return 0x01000000U | (unsigned(RE4DC_SCENERY_ENCODING)&3U) |
+        ((RE4DC_MESH_LOD!=0)?4U:0U)
+#if defined(RE4DC_SCENERY_DEDUP)
+        | ((unsigned(RE4DC_SCENERY_DEDUP)&3U)<<4)
+#endif
+        ; // absent knob is the same mode0 as the existing preprocessor paths
+}
+void gcasset_static_ordinary_manifest(re4dc_gcasset::StaticManifest& source,re4dc_gcasset::StaticOwner owner,unsigned room,const void* data,unsigned bytes){
+    using namespace re4dc_gcasset;
+    static_manifest_begin(source,owner,room,gcasset_static_profile(),data,bytes);
+    for(unsigned i=0;i<StaticRoleCount;++i)if(i!=STD_INDEX && i!=PCL1_CELL)static_manifest_note(source,StaticRole(i),NotApplicable);
+    gcasset_static_policy(source,room);
+}
+#endif
 #if RE4DC_QUALITY_ASSETS
 // Standard asset set (D367_ASSET_PIPELINE.md s16). re4dc_std_room_enter() parses
 // native/<room>/low/index.txt once per room entry (Standard mode only) into these
@@ -601,6 +673,9 @@ struct StdRoom {
     unsigned char checked;                                // bit per mesh view: records verified at open
     unsigned ntex,ndrop,ncull,nimp,nptex,nimpt;
     StdTex tex[kStdTex]; StdKey drop[kStdDrop]; StdCull cull[kStdCull]; StdImp imp[kStdImp]; StdPtex ptex[kStdPtex]; StdImpt impt[kStdImpt];
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::PayloadProof asset_proof;
+#endif
 };
 StdRoom std_room;
 unsigned std_stats[6]; // culled draws, impostor records used, baked parts, low/ opens, tree quads, tree cluster ranges drawn
@@ -623,8 +698,22 @@ struct View {
     Binding* bindings=nullptr;
     re4dc::room::MaterialSourceKey keys[kMaxMaterials];
     unsigned room=0; bool attempted=false;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::PayloadProof asset_proof;
+#endif
 };
 View views[kViews];
+#if RE4DC_GC_ASSET_GATE && !RE4DC_NATIVE_MESH
+void gcasset_static_invalidate_all(){
+    for(auto& v:views)if(v.asset_proof.owner)re4dc_gcasset::payload_invalidate(v.asset_proof,&v);
+    gcasset_invalidate_world();
+}
+void gcasset_static_policy(re4dc_gcasset::StaticManifest& source,unsigned room){
+    (void)room;
+    re4dc_gcasset::static_manifest_note(source,re4dc_gcasset::STD_INDEX,re4dc_gcasset::Disabled);
+    re4dc_gcasset::static_manifest_note(source,re4dc_gcasset::PCL1_CELL,re4dc_gcasset::Disabled);
+}
+#endif
 Re4dcStaticStats stats{};
 #if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
 // SCN_CENSUS=1 (logiclod20.mk; test only): per meshlet drawn by meshlet(): visits, corners, corners of meshlets none of
@@ -779,6 +868,9 @@ bool std_check_view(unsigned view,const re4dc::room::MeshPackage& pk){
 }
 #endif
 void retire(View& v){
+#if RE4DC_GC_ASSET_GATE
+    if(v.asset_proof.owner)re4dc_gcasset::payload_invalidate(v.asset_proof,&v);
+#endif
     v.package.close();
     if(v.storage){re4dc_static_free(v.storage);stats.package_bytes-=v.bytes;--stats.owners_open;}
     v.storage=nullptr;v.bytes=0;v.bindings=nullptr;v.attempted=false;v.room=0;
@@ -817,6 +909,9 @@ bool read_package(file_t f,unsigned char* storage,unsigned size,unsigned head){
     if(v.storage && v.room==room)return true;
     if(v.attempted && v.room==room)return false;
     retire(v);v.attempted=true;v.room=room;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::payload_retire(v.asset_proof); // cold, before read/adopt
+#endif
     char name[16],path[64];
     snprintf(path,sizeof(path),"/cd/dc/native/r%x%02x/%s.re4room",room>>8,room&255U,owner_name(index,name,sizeof(name)));
     const file_t file=fs_open(path,O_RDONLY);
@@ -845,6 +940,10 @@ bool read_package(file_t f,unsigned char* storage,unsigned size,unsigned head){
     fs_close(file);
     stats.heap_after=re4dc_static_heap_free();
     if(!storage){re4dc_log("native static: %s not loaded (size=%u heap=%d)\n",path,size,stats.heap_before);return false;}
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::StaticManifest gcasset_source;
+    gcasset_static_ordinary_manifest(gcasset_source,re4dc_gcasset::StaticView,room,storage,size);
+#endif
     v.storage=storage;
     if(!v.package.adopt(storage,size) || !v.package.material_keys() ||
        v.package.header().material_count>kMaxMaterials){
@@ -853,6 +952,9 @@ bool read_package(file_t f,unsigned char* storage,unsigned size,unsigned head){
         re4dc_static_free(storage);v.storage=nullptr;v.bytes=0;v.package.close();++stats.open_failures;return false;
     }
     const auto& b=v.package.header();
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::payload_capture_composite(v.asset_proof,&v,storage,size,nullptr,0,gcasset_source);
+#endif
     for(unsigned m=0;m<b.material_count;++m)
         re4dc::room::material_source_key(v.package.materials()[m],v.keys[m]);
     v.bindings=reinterpret_cast<Binding*>(storage+package_bytes);
@@ -1445,15 +1547,29 @@ struct MeshView {
     const std::uint32_t* lut=nullptr; // ARGB1555 -> 8888 halves, same allocation
     re4dc::room::CompactVertex12* gather=nullptr; // v3: one meshlet's gathered corners, same allocation
     unsigned room=0; bool attempted=false;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::PayloadProof asset_proof;
+#endif
 #if RE4DC_SCENERY_ENCODING
     const std::uint32_t* vertex_colors=nullptr; // kColorOctVertex: each vertex's CLR0 (ARGB8888), read in place of the palette
 #endif
 };
 MeshView mesh_views[kMeshViews];
+#if RE4DC_GC_ASSET_GATE
+void gcasset_static_invalidate_all(){
+    for(auto& v:views)if(v.asset_proof.owner)re4dc_gcasset::payload_invalidate(v.asset_proof,&v);
+    for(auto& v:mesh_views)if(v.asset_proof.owner)re4dc_gcasset::payload_invalidate(v.asset_proof,&v);
+    gcasset_invalidate_world();
+}
+#endif
 #if RE4DC_TREE_IMPOSTOR
 // This frame's impostor quads (screen x, y, 1/w per corner: TL, TR, BL, BR),
 // sent per atlas by re4dc_static_flush_impostors(). A retired view clears it.
-struct ImpostorQuad { const re4dc::room::MeshImpostor* record; std::uint32_t argb; std::uint16_t cell; std::uint8_t fog,pad; float s[4][3]; };
+struct ImpostorQuad { const re4dc::room::MeshImpostor* record; std::uint32_t argb; std::uint16_t cell; std::uint8_t fog,pad; float s[4][3];
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::PayloadQuadUse source;
+#endif
+};
 constexpr unsigned kImpostorQuads=48;
 ImpostorQuad impostor_queue[kImpostorQuads];
 unsigned impostor_count=0,impostor_frame=~0U,impostor_flushed=~0U;
@@ -1469,6 +1585,9 @@ constexpr unsigned kLutBytes=0;
 constexpr unsigned kGatherBytes=(256U*unsigned(sizeof(re4dc::room::CompactVertex12))+31U)&~31U;
 
 void retire(MeshView& v){
+#if RE4DC_GC_ASSET_GATE
+    if(v.asset_proof.owner)re4dc_gcasset::payload_invalidate(v.asset_proof,&v);
+#endif
 #if RE4DC_TREE_IMPOSTOR
     impostor_frame=~0U; // queued records may point into this view
 #endif
@@ -1484,6 +1603,9 @@ bool open(MeshView& v,unsigned index,unsigned room){
     if(v.storage && v.room==room)return true;
     if(v.attempted && v.room==room)return false;
     retire(v);v.attempted=true;v.room=room;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::payload_retire(v.asset_proof); // cold, before read/adopt
+#endif
     char name[16],path[64];
     if(index==kCommonView)snprintf(name,sizeof(name),"COMMON");
     else owner_name(index,name,sizeof(name));
@@ -1498,6 +1620,10 @@ bool open(MeshView& v,unsigned index,unsigned room){
     const unsigned size=unsigned(fs_total(file));
 #if RE4DC_QUALITY_ASSETS
     if(low && size!=std_room.mesh_bytes[view]){
+#if RE4DC_GC_ASSET_GATE
+        gcasset_static_invalidate_all();
+        re4dc_gcasset::payload_invalidate(std_room.asset_proof,&std_room);
+#endif
         re4dc_log("quality assets: %s is %u B, index says %u: Original package\n",path,size,std_room.mesh_bytes[view]);
         fs_close(file);std_room.mesh_views&=~(1U<<view);v.attempted=false;return open(v,index,room);
     }
@@ -1527,6 +1653,10 @@ bool open(MeshView& v,unsigned index,unsigned room){
     fs_close(file);
     stats.heap_after=re4dc_static_heap_free();
     if(!storage){re4dc_log("native mesh: %s not loaded (size=%u heap=%d)\n",path,size,stats.heap_before);return false;}
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::StaticManifest gcasset_source;
+    gcasset_static_ordinary_manifest(gcasset_source,re4dc_gcasset::StaticMesh,room,storage,size);
+#endif
 #if RE4DC_SCENERY_ENCODING
     if(!re4dc::room::adopt_by_encoding(v.package,storage,size,RE4DC_MESH_LOD!=0,&v.vertex_colors)){
 #else
@@ -1536,11 +1666,19 @@ bool open(MeshView& v,unsigned index,unsigned room){
         re4dc_static_free(storage);++stats.open_failures;
 #if RE4DC_QUALITY_ASSETS
         // A rejected Standard package: this owner opens its Original package instead.
-        if(low){std_room.mesh_views&=~(1U<<view);v.attempted=false;re4dc_log("quality assets: Original package for this owner\n");return open(v,index,room);}
+        if(low){
+#if RE4DC_GC_ASSET_GATE
+            gcasset_static_invalidate_all();
+            re4dc_gcasset::payload_invalidate(std_room.asset_proof,&std_room);
+#endif
+            std_room.mesh_views&=~(1U<<view);v.attempted=false;re4dc_log("quality assets: Original package for this owner\n");return open(v,index,room);}
 #endif
         return false;
     }
     v.storage=storage;v.bytes=package_bytes+table+kLutBytes+gather;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::payload_capture_composite(v.asset_proof,&v,storage,size,nullptr,0,gcasset_source);
+#endif
 #if RE4DC_SCENERY_ENCODING
     {
         std::uint32_t encoding;std::memcpy(&encoding,storage+offsetof(re4dc::room::MeshHeader,reserved),4);
@@ -1554,7 +1692,12 @@ bool open(MeshView& v,unsigned index,unsigned room){
     if(std_room.active && std_room.room==room){
         if(!low || !std_check_view(view,v.package)){
             if(low)re4dc_log("quality assets: %s records do not match the package: records off for this room\n",path);
-            if(low){std_room.ncull=std_room.nimp=std_room.nptex=std_room.nimpt=0;}
+            if(low){
+#if RE4DC_GC_ASSET_GATE
+                gcasset_static_invalidate_all();
+                re4dc_gcasset::payload_invalidate(std_room.asset_proof,&std_room);
+#endif
+                std_room.ncull=std_room.nimp=std_room.nptex=std_room.nimpt=0;}
         }else std_room.checked|=1U<<view;
     }
 #endif
@@ -1688,6 +1831,14 @@ std::uint16_t pack1555(const float rgb[3],unsigned alpha){
 // relative lights stay as first seen - the labelled Dreamcast compromise.
 void light_part(MeshView& v,const re4dc::room::MeshRecord& mesh,re4dc::room::MeshPart& part,
                 const Re4dcModelPart& p){
+#if RE4DC_GC_ASSET_GATE
+    // A first-light rewrite outlives this caller and later deferred lighting
+    // snapshots. Unknown derivation must revoke the stable owner as well as
+    // this draw's selected use; a later flag-free caller cannot promote it.
+    if(v.asset_proof.owner && (!re4dc_gcasset::source_use.serial || re4dc_gcasset::source_use.payload!=&v.asset_proof ||
+       re4dc_gcasset::source_use.serial!=v.asset_proof.serial))
+        re4dc_gcasset::payload_invalidate(v.asset_proof,&v);
+#endif
     auto* vertices=reinterpret_cast<re4dc::room::CompactVertex12*>(v.storage+v.package.header().vertex_offset);
     const std::uint32_t* palette=v.package.palette();
     re4dc::render::PreparedSourceLights lights;
@@ -1857,6 +2008,9 @@ struct State {
 struct Data {
     void* block=nullptr;const Cell* cells=nullptr;const Portal* portals=nullptr;
     bool lent=false; unsigned loads=0,fails=0,lends=0;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::PayloadProof asset_proof;
+#endif
 } data;
 constexpr unsigned kFrBytes=kMaxFr*unsigned(sizeof(Frustum));
 // The eye from a 3x4 row-major view matrix: the inverse's translation.
@@ -1955,6 +2109,10 @@ inline int grid_hidden(const float* wq,const std::uint16_t lo[3],const std::uint
 State& trans_state();
 // Frees the cell block (both states inactive: nothing is culled until it is read again).
 inline unsigned unload(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_static_invalidate_all();
+    if(data.asset_proof.owner)re4dc_gcasset::payload_invalidate(data.asset_proof,&data);
+#endif
     if(!data.block)return 0;
     re4dc_static_free(data.block);
     data.block=nullptr;data.cells=nullptr;data.portals=nullptr;
@@ -1966,6 +2124,9 @@ inline unsigned unload(){
 inline bool load(){
     if(data.block)return true;
     if(!st.ok)return false;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::payload_retire(data.asset_proof); // safe cold reload
+#endif
     const int before=re4dc_static_heap_free();
     const char* why=nullptr;
     const file_t file=fs_open("/cd/dc/native/r100/interior.cell",O_RDONLY);
@@ -1991,6 +2152,11 @@ inline bool load(){
         re4dc_log("PCCULL cell file %s: not culling (heap4=%d)\n",why,before);
         return false;
     }
+#if RE4DC_GC_ASSET_GATE
+    gcasset_static_invalidate_all();
+    const auto gcasset_digest=re4dc_gcasset::fingerprint(b,kPcFileBytes);
+    re4dc_gcasset::payload_capture_receipt(data.asset_proof,&data,gcasset_digest,kPcFileBytes);
+#endif
     data.block=b;data.cells=cells;data.portals=reinterpret_cast<const Portal*>(b+32+kPcCellCount*sizeof(Cell));
     st.fr=reinterpret_cast<Frustum*>(b+kPcFileBytes);trans_state().fr=reinterpret_cast<Frustum*>(b+kPcFileBytes+kFrBytes);
     ++data.loads;
@@ -2014,6 +2180,27 @@ unsigned owner_tests=0,owner_hid=0; // PS2_INTERIOR_ACTORS=2: owner-path Ganados
 #endif
 }
 #endif
+#endif
+#if RE4DC_GC_ASSET_GATE
+void gcasset_static_policy(re4dc_gcasset::StaticManifest& source,unsigned room){
+    using namespace re4dc_gcasset;
+#if RE4DC_QUALITY_ASSETS
+    if(!re4dc_quality_std_assets())static_manifest_note(source,STD_INDEX,Disabled);
+    else if(std_room.active && std_room.room==room)static_manifest_receipt(source,STD_INDEX,std_room.asset_proof,&std_room,1,StaticConsumedSpan);
+    else static_manifest_note(source,STD_INDEX,Unproven);
+#else
+    static_manifest_note(source,STD_INDEX,Disabled);
+#endif
+#if RE4DC_PS2_INTERIOR_CULL
+    if(room!=pc::kPcRoom)static_manifest_note(source,PCL1_CELL,NotApplicable);
+    else if(pc::data.block)static_manifest_receipt(source,PCL1_CELL,pc::data.asset_proof,&pc::data,1);
+    // A null block also follows rejected/short/failed reads or an unqualified
+    // package. No durable original absence receipt exists for those cases.
+    else static_manifest_note(source,PCL1_CELL,Unproven);
+#else
+    (void)room;static_manifest_note(source,PCL1_CELL,Disabled);
+#endif
+}
 #endif
 #if RE4DC_PS2_WORLD_LEAN
 // PS2_WORLD_LEAN (game30.mk, render only, default 0; lane objs 2026-10-14, r101 world submit). Bits:
@@ -3423,6 +3610,9 @@ extern "C" void re4dc_static_retire_all(){
 #endif
 }
 extern "C" const Re4dcStaticStats* re4dc_static_stats(){return &stats;}
+#if RE4DC_GC_ASSET_GATE
+extern "C" void re4dc_gcasset_room_parent_retire(){gcasset_static_invalidate_all();}
+#endif
 #if RE4DC_NO_STD_ANY
 // coarse.cpp re4dc_coarse_tick(), once per Trans(): 1 when this tick's image (drawn by the next Render()) is coarse.
 extern "C" void re4dc_std_scenery_tick(int coarse){
@@ -3435,6 +3625,9 @@ extern "C" void re4dc_std_scenery_tick(int coarse){
 // of the room opens. Original never reads the index (nor low/ or texlow/).
 extern "C" void re4dc_std_room_enter(unsigned room){
     StdRoom& r=std_room;
+#if RE4DC_GC_ASSET_GATE
+    gcasset_static_invalidate_all();re4dc_gcasset::payload_retire(r.asset_proof);
+#endif
     r.room=room;r.active=false;r.mesh_views=0;r.checked=0;r.ntex=r.ndrop=r.ncull=r.nimp=r.nptex=r.nimpt=0;
     if(!re4dc_quality_std_assets())return;
     char path[64];snprintf(path,sizeof(path),"/cd/dc/native/r%x%02x/low/index.txt",room>>8,room&255U);
@@ -3442,10 +3635,18 @@ extern "C" void re4dc_std_room_enter(unsigned room){
     const int n=text?re4dc_fixture_read(path,text,kStdText):-1;
     if(n<=0){re4dc_log("quality assets: %s missing: Original packages\n",path);std::free(text);return;}
     if(n>=int(kStdText)){re4dc_log("quality assets: %s larger than %u B: Original packages\n",path,kStdText);std::free(text);return;}
+#if RE4DC_GC_ASSET_GATE
+    // fixture_read is one bounded read: receipt its exact n-byte consumed span,
+    // never claim a full file or hash the tokenized/freed buffer later.
+    const auto gcasset_digest=re4dc_gcasset::fingerprint(text,unsigned(n));
+#endif
     text[n]=0;
     r.active=std_parse(text,room);
     std::free(text);
     if(!r.active){r.mesh_views=0;r.ntex=r.ndrop=r.ncull=r.nimp=r.nptex=r.nimpt=0;re4dc_log("quality assets: %s rejected: Original packages\n",path);return;}
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::payload_capture_receipt(r.asset_proof,&r,gcasset_digest,unsigned(n));
+#endif
     re4dc_log("quality assets: %s mesh=%02x tex=%u drop=%u cull=%u imp=%u impt=%u ptex=%u\n",path,r.mesh_views,r.ntex,r.ndrop,r.ncull,r.nimp,r.nimpt,r.nptex);
 }
 // native_ui.cpp: texture keys Standard adds (texlow/), and the room keys it drops.
@@ -3481,6 +3682,9 @@ extern "C" void re4dc_static_flush_impostors(){
         Re4dcModelPacket packet{};
         const bool bound=re4dc_model_pt_begin(first->key_crc,first->key_fnv,first->atlas_w,first->atlas_h,int(fog),&packet)!=0;
         auto* out=static_cast<pvr_vertex_t*>(packet.vertices);unsigned used=0;
+#if RE4DC_GC_ASSET_GATE
+        re4dc_gcasset::PayloadQuadUse accepted[kImpostorQuads];unsigned accepted_count=0;
+#endif
         for(unsigned j=i;j<impostor_count;++j){
             ImpostorQuad& q=impostor_queue[j];
             const auto* r=q.record;
@@ -3497,9 +3701,17 @@ extern "C" void re4dc_static_flush_impostors(){
                 o.x=q.s[k][0];o.y=q.s[k][1];o.z=q.s[k][2];
                 o.u=(k&1)?u1:u0;o.v=(k&2)?v1:v0;o.argb=q.argb;o.oargb=0;
             }
+#if RE4DC_GC_ASSET_GATE
+            accepted[accepted_count++]=q.source;
+#endif
             used+=4;
         }
-        if(bound){re4dc_model_packet_commit(used);++impostor_stats[3];}
+        if(bound){
+#if RE4DC_GC_ASSET_GATE
+            const re4dc_gcasset::PayloadQuadBatch batch{accepted,accepted_count,out,used};
+            re4dc_gcasset::PayloadQuadScope selected(batch);
+#endif
+            re4dc_model_packet_commit(used);++impostor_stats[3];}
     }
     impostor_count=0;
 }
@@ -4167,6 +4379,9 @@ int mesh_impostor(MeshView& v,unsigned mesh_index,const re4dc::room::MeshPart& p
     impostor_queued=true;
     if(left==4 || right==4 || top==4 || bottom==4)return 1;
     q.record=r;q.cell=std::uint16_t(cell);q.fog=p.source_key[2]?1:0;q.argb=impostor_color(v,mesh,*r);
+#if RE4DC_GC_ASSET_GATE
+    q.source={re4dc_gcasset::source_use.payload,re4dc_gcasset::source_use.serial,re4dc_gcasset::source_use.mask};
+#endif
     ++impostor_count;++impostor_stats[0];
     return 1;
 }
@@ -4207,6 +4422,9 @@ int tree_quad(MeshView& v,const re4dc::room::MeshRecord& mesh,StdImpt& t,const R
     }
     if(left==4 || right==4 || top==4 || bottom==4)return 1;
     q.record=r;q.cell=std::uint16_t(cell);q.fog=p.source_key[2]?1:0;q.argb=impostor_color(v,mesh,*r);
+#if RE4DC_GC_ASSET_GATE
+    q.source={re4dc_gcasset::source_use.payload,re4dc_gcasset::source_use.serial,re4dc_gcasset::source_use.mask};
+#endif
     ++impostor_count;++impostor_stats[0];++std_stats[4];
     return 1;
 }
@@ -4221,6 +4439,9 @@ int mesh_submit(const Re4dcModelPart& p){
         return 0;
     }
     MeshView& v=e->common?mesh_views[kCommonView]:mesh_views[owner];
+#if RE4DC_GC_ASSET_GATE
+    GcStaticSourceScope gcasset_source_scope(v.asset_proof,&v,&p);
+#endif
     if(!v.package.valid() || e->mesh>=v.package.header().mesh_count){++stats.stale_bindings;return 0;}
     const auto& mesh=v.package.meshes()[e->mesh];
     const unsigned char* data=model_data(p);
@@ -4431,6 +4652,9 @@ extern "C" int re4dc_static_submit(const Re4dcModelPart* part){
         return 0;
     }
     Binding& b=*at.binding;View& v=*at.view;
+#if RE4DC_GC_ASSET_GATE
+    GcStaticSourceScope gcasset_source_scope(v.asset_proof,&v,&p);
+#endif
     if(b.frame!=frame){b.frame=frame;b.drawn=b.fallback=0;}
     const auto& header=v.package.header();
     unsigned material=header.material_count;
@@ -4508,6 +4732,9 @@ struct Ps2World {
     const Ps2Part* parts=nullptr; const Ps2Placement* placements=nullptr; unsigned nplacements=0;
     const std::uint32_t* lut=nullptr; re4dc::room::CompactVertex12* gather=nullptr;
     float view[12]{},projection[7]{},viewport[6]{}; bool camera=false,attempted=false;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::PayloadProof asset_proof;
+#endif
     Ps2Counts count[3]{};
 #if RE4DC_PS2_WORLD_ROOMS
     unsigned room=0,want=0x101; // package loaded / attempted for; the room re4dc_ps2_mesh_select asks for
@@ -4528,6 +4755,9 @@ struct Ps2World {
     unsigned sg_bytes=0;    // WORLD_VERT: bytes of the strip-group block (level 0's size)
 #endif
 } ps2w;
+#if RE4DC_GC_ASSET_GATE
+void gcasset_invalidate_world(){if(ps2w.asset_proof.owner)re4dc_gcasset::payload_invalidate(ps2w.asset_proof,&ps2w);}
+#endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
 unsigned r11fPackageGeneration=1,r11fSidecarCrc;
 void r11fPackageAdvance() {
@@ -4564,6 +4794,9 @@ bool ps2_movie_current(){
         re4dc_room4_cell_valid(ps2_movie.base,ps2_movie.capacity,gen);
 }
 void ps2_movie_unpublish(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     r11fPackageAdvance();
 #endif
@@ -4801,6 +5034,9 @@ std::uint8_t moved_of[kIds];
 float delta[kMoved][12];
 unsigned binds=0,hidden=0,moved=0,overflow=0,logged_frame=0;
 void reset(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
     if(block)re4dc_static_free(block);
 #if RE4DC_PS2_WORLD_PARTS
     if(slots)for(unsigned i=0;i<nslots;++i)if(slots[i].parts)re4dc_static_free(slots[i].parts);
@@ -4982,7 +5218,11 @@ unsigned char* block=nullptr; Head h{}; const Cell* cells=nullptr; const std::ui
 const std::uint16_t* base=nullptr; const std::uint16_t* poff=nullptr; // per placement (n+1) / per part: first instance
 const std::uint8_t* cur=nullptr; unsigned cur_frame=~0U,last_on=~0U; float last_view[12]{}; int cur_cell=-1; float eye[3]={0,0,0};
 unsigned frames=0,active=0,pl_tested=0,pl_skipped=0,logged=~0U,bytes=0; const char* why="off";
-void close(){++generation;if(block)re4dc_static_free(block);block=nullptr;cells=nullptr;sets=nullptr;base=nullptr;poff=nullptr;cur=nullptr;
+void close(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
+    ++generation;if(block)re4dc_static_free(block);block=nullptr;cells=nullptr;sets=nullptr;base=nullptr;poff=nullptr;cur=nullptr;
              cur_frame=~0U;cur_cell=-1;bytes=0;loaded_room=~0U;h={};why="off";}
 // The camera's world position from the world-to-view affine (rows): v = R w + t, so w = -R^-1 t.
 bool eye_of(const float* v,float e[3]){
@@ -4996,11 +5236,15 @@ bool eye_of(const float* v,float e[3]){
     e[0]=-(i00*t0+i01*t1+i02*t2);e[1]=-(i10*t0+i11*t1+i12*t2);e[2]=-(i20*t0+i21*t1+i22*t2);
     return re4dc::render::is_finite(e[0]) && re4dc::render::is_finite(e[1]) && re4dc::render::is_finite(e[2]);
 }
-void open(unsigned room,std::uint32_t mesh_crc,std::uint32_t mesh_bytes,std::uint32_t side_crc){
+void open(unsigned room,std::uint32_t mesh_crc,std::uint32_t mesh_bytes,std::uint32_t side_crc GCASSET_STATIC_PARAM){
     close();why="absent";
     char path[48];snprintf(path,sizeof(path),"/cd/dc/native/r%03x/ps2-world.pvs",room);
     const file_t f=fs_open(path,O_RDONLY);
-    if(f==FILEHND_INVALID){re4dc_log("PS2PVS room=%03x file=absent\n",room);return;}
+    if(f==FILEHND_INVALID){
+#if RE4DC_GC_ASSET_GATE
+        gcasset_static_state(gcmanifest,re4dc_gcasset::R4PV,re4dc_gcasset::Absent);
+#endif
+        re4dc_log("PS2PVS room=%03x file=absent\n",room);return;}
     const unsigned size=unsigned(fs_total(f));
     const unsigned np=ps2w.nplacements,nparts=ps2w.package.header().part_count;
     if(np>=65536U || nparts>=65536U){fs_close(f);why="instance capacity";return;}
@@ -5065,7 +5309,11 @@ void open(unsigned room,std::uint32_t mesh_crc,std::uint32_t mesh_bytes,std::uin
         }
     }
     if(why){if(b)re4dc_static_free(b);cells=nullptr;sets=nullptr;base=nullptr;poff=nullptr;}
-    else {block=b;bytes=size+extra;loaded_room=room;}
+    else {
+#if RE4DC_GC_ASSET_GATE
+        gcasset_static_bytes(gcmanifest,re4dc_gcasset::R4PV,b,size,h.version);
+#endif
+        block=b;bytes=size+extra;loaded_room=room;}
     re4dc_log("PS2PVS room=%03x file=%s bytes=%u cells=%ux%u with_set=%u sets=%u instances=%u cell_mm=%d heap=%d\n",room,why?why:"ok",
               size+extra,unsigned(h.nx),unsigned(h.nz),unsigned(h.ncells),unsigned(h.nsets),unsigned(h.ninst),
               std::isfinite(h.cell) && h.cell>=0 && h.cell<2147483520.0f?int(h.cell):0,re4dc_static_heap_free());
@@ -5138,12 +5386,19 @@ struct Head { char magic[4]; std::uint32_t version,classifier,parts,r4pw_crc,bod
 static_assert(sizeof(Head)==24);
 static std::uint8_t* block=nullptr; static const std::uint8_t* cls=nullptr;
 static unsigned room=~0U,nparts=0,flat=0,carded=0,dropped=0,last_room=~0U; static std::uint32_t last_frame;
-static void close(){ if(block)re4dc_static_free(block); block=nullptr;cls=nullptr;room=~0U;nparts=0; }
+static void close(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
+    if(block)re4dc_static_free(block); block=nullptr;cls=nullptr;room=~0U;nparts=0; }
 // After the R4PW sidecar is accepted (room, its body crc, its part count). Reads the class sidecar into heap 4.
 // The disc's sidecar index (dc/native/trclass.idx, tools/d367/tr_classify.py: "R4TI", u32 count, u16 room ids), read
 // once at the first world open, so a room without a sidecar costs no disc access at its entry (a door's wall-timed
 // load would otherwise shift, coordinator 10-17). No index = the policy is idle for the whole session.
 static std::uint16_t idx_rooms[128]; static unsigned idx_n=0; static int idx_state=0; // 0 unread, 1 ok, -1 none
+#if RE4DC_GC_ASSET_GATE
+static re4dc_gcasset::PayloadProof idx_asset_proof;
+#endif
 static bool listed(unsigned r){
     if(!idx_state){
         idx_state=-1;
@@ -5153,19 +5408,44 @@ static bool listed(unsigned r){
             const ssize_t got=fs_read(f,b,sizeof(b));fs_close(f);
             std::uint32_t n=0;
             if(got>=8 && !std::memcmp(b,"R4TI",4)){std::memcpy(&n,b+4,4);
-                if(n<=128 && got>=ssize_t(8+2*n)){std::memcpy(idx_rooms,b+8,2*n);idx_n=n;idx_state=1;}}
+                if(n<=128 && got>=ssize_t(8+2*n)){
+#if RE4DC_GC_ASSET_GATE
+                    // The existing single bounded read consumes got bytes;
+                    // it establishes no digest of an unread file suffix.
+                    if(got<=ssize_t(sizeof(b))){
+                        const auto digest=re4dc_gcasset::fingerprint(b,unsigned(got));
+                        re4dc_gcasset::payload_capture_receipt(idx_asset_proof,idx_rooms,digest,unsigned(got));
+                    }
+#endif
+                    std::memcpy(idx_rooms,b+8,2*n);idx_n=n;idx_state=1;}}
         }
         re4dc_log("trans: index %s rooms=%u\n",idx_state>0?"ok":"absent",idx_n);
     }
     for(unsigned i=0;i<idx_n;++i)if(idx_rooms[i]==r)return true;
     return false;
 }
-static void open(unsigned r,std::uint32_t r4pw_crc,unsigned parts){
+static void open(unsigned r,std::uint32_t r4pw_crc,unsigned parts GCASSET_STATIC_PARAM){
     close();
-    if(!listed(r)){re4dc_log("trans: room=%03x policy=%u classes=unlisted\n",r,unsigned(re4dc_trans_policy));return;}
+#if RE4DC_GC_ASSET_GATE
+    const bool has_table=listed(r);
+    if(gcmanifest){
+        if(idx_state==1)re4dc_gcasset::static_manifest_receipt(*gcmanifest,re4dc_gcasset::R4TI_SELECTOR,idx_asset_proof,idx_rooms,1,re4dc_gcasset::StaticConsumedSpan);
+        else gcasset_static_state(gcmanifest,re4dc_gcasset::R4TI_SELECTOR,re4dc_gcasset::Unproven);
+    }
+    if(!has_table){
+#else
+    if(!listed(r)){
+#endif
+#if RE4DC_GC_ASSET_GATE
+        gcasset_static_state(gcmanifest,re4dc_gcasset::R4TC,idx_state==1?re4dc_gcasset::Absent:re4dc_gcasset::Unproven);
+#endif
+        re4dc_log("trans: room=%03x policy=%u classes=unlisted\n",r,unsigned(re4dc_trans_policy));return;}
     char path[48];snprintf(path,sizeof(path),"/cd/dc/native/r%03x/ps2-world.r4tc",r);
     const file_t f=fs_open(path,O_RDONLY);
     const char* why=nullptr;
+#if RE4DC_GC_ASSET_GATE
+    if(f==FILEHND_INVALID)gcasset_static_state(gcmanifest,re4dc_gcasset::R4TC,re4dc_gcasset::Absent);
+#endif
     if(f==FILEHND_INVALID)why="no file";
     else{
         const unsigned size=unsigned(fs_total(f));
@@ -5180,7 +5460,11 @@ static void open(unsigned r,std::uint32_t r4pw_crc,unsigned parts){
             else if(ps2_crc32(block+sizeof(Head),parts)!=h.body_crc)why="crc";
         }
         fs_close(f);
-        if(!why){cls=block+sizeof(Head);room=r;nparts=parts;}
+        if(!why){
+#if RE4DC_GC_ASSET_GATE
+            gcasset_static_bytes(gcmanifest,re4dc_gcasset::R4TC,block,size,h.version);
+#endif
+            cls=block+sizeof(Head);room=r;nparts=parts;}
         else if(block){re4dc_static_free(block);block=nullptr;}
     }
     re4dc_log("trans: room=%03x policy=%u classes=%s parts=%u heap=%d\n",r,unsigned(re4dc_trans_policy),why?why:"ok",parts,
@@ -5290,7 +5574,10 @@ static void note(unsigned pass,unsigned drawn){
 #if RE4DC_SCENERY_CONE || RE4DC_SCENERY_PIECE_STATE
 // scenery21: the room file's SCCN / SCPS sections against this package (crc, bytes, counts; SCCN also needs the
 // package's strip groups). A missing or stale section leaves its knob's path off for the room (SCN21 log line says why).
-void scn21_open(){
+void scn21_open(GCASSET_STATIC_ONLY_PARAM){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
     auto& pk=ps2w.package;const auto& h=pk.header();
     unsigned len=0,ver=0,fl=0;
 #if RE4DC_SCENERY21_AB
@@ -5302,13 +5589,22 @@ void scn21_open(){
         piece::pkg=nullptr;piece::table=nullptr;
 #endif
         re4dc_log("SCN21 room=%03x arm A or no sc21 package: off\n",ps2w.room);
+#if RE4DC_GC_ASSET_GATE
+#if RE4DC_SCENERY_CONE
+        gcasset_static_state(gcmanifest,re4dc_gcasset::SCCN,re4dc_gcasset::Disabled);
+#endif
+#if RE4DC_SCENERY_PIECE_STATE
+        gcasset_static_state(gcmanifest,re4dc_gcasset::SCPS,re4dc_gcasset::Disabled);
+#endif
+#endif
         return;
     }
 #endif
 #if RE4DC_SCENERY_CONE
     {
         cone::pkg=nullptr;cone::rec=nullptr;cone::tab2=nullptr;
-        const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCCN",&len,&ver,&fl,nullptr));
+        const re4dc_room_header* source_header=nullptr;
+        const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCCN",&len,&ver,&fl,&source_header));
         const char* why=nullptr;std::uint32_t w[4]={};
         if(!sec)why="no section";
         else if(re4dc_room_file_room()!=ps2w.room)why="room";
@@ -5318,6 +5614,10 @@ void scn21_open(){
             if(ver!=1 || w[0]!=h.crc || w[1]!=h.bytes || w[2]!=h.meshlet_count || w[3]!=ps2w.sg_groups ||
                len<16U+256U+8U*w[2]*w[3])why="package";
         }
+#if RE4DC_GC_ASSET_GATE
+        if(!sec)gcasset_static_state(gcmanifest,re4dc_gcasset::SCCN,re4dc_gcasset::Absent);
+        else if(!why && re4dc_gcasset_room_span(sec,len,ver,fl,source_header))gcasset_static_bytes(gcmanifest,re4dc_gcasset::SCCN,sec,len,ver,fl);
+#endif
         if(!why){cone::tab2=reinterpret_cast<const float*>(sec+16);cone::rec=sec+16+256;cone::pkg=&pk;}
         re4dc_log("SCN21 cone room=%03x %s groups=%u bytes=%u\n",ps2w.room,why?why:"on",unsigned(w[3]),len);
     }
@@ -5325,7 +5625,8 @@ void scn21_open(){
 #if RE4DC_SCENERY_PIECE_STATE
     {
         piece::pkg=nullptr;piece::table=nullptr;
-        const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCPS",&len,&ver,&fl,nullptr));
+        const re4dc_room_header* source_header=nullptr;
+        const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCPS",&len,&ver,&fl,&source_header));
         const char* why=nullptr;std::uint32_t w[4]={};
         if(!sec)why="no section";
         else if(re4dc_room_file_room()!=ps2w.room)why="room";
@@ -5334,10 +5635,16 @@ void scn21_open(){
             if(ver!=1 || w[0]!=h.crc || w[1]!=h.bytes || w[2]!=h.part_count || len<16U+4U*w[2])why="package";
         }
         if(!why){
+#if RE4DC_GC_ASSET_GATE
+            if(re4dc_gcasset_room_original(sec,len,ver,fl,source_header))gcasset_static_bytes(gcmanifest,re4dc_gcasset::SCPS,sec,len,ver,fl);
+#endif
             piece::table=reinterpret_cast<std::uint32_t*>(const_cast<std::uint8_t*>(sec)+16);
             std::memset(piece::table,0,4U*w[2]);   // slot words are this program's: start empty at every open
             piece::pkg=&pk;
         }
+#if RE4DC_GC_ASSET_GATE
+        if(!sec)gcasset_static_state(gcmanifest,re4dc_gcasset::SCPS,re4dc_gcasset::Absent);
+#endif
         re4dc_log("SCN21 piece room=%03x %s parts=%u\n",ps2w.room,why?why:"on",unsigned(w[2]));
     }
 #endif
@@ -5346,8 +5653,12 @@ void scn21_open(){
 #if RE4DC_SCENERY_DEDUP==3
 // SDO3 is already reordered in the alternate package. The existing package owns
 // all source bytes; there is no room section, mask, table allocation or reload reorder.
-void dedup_free(){} // no retained pointers, mask, generation state or allocation in mode3
-void dedup_open(){
+void dedup_free(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
+} // no retained pointers, mask, generation state or allocation in mode3
+void dedup_open(GCASSET_STATIC_ONLY_PARAM){
     auto& pk=ps2w.package;
     if(!pk.offline_dedup())return;
     unsigned repeats=0;
@@ -5490,15 +5801,19 @@ unsigned run(re4dc::room::MeshPackage& pk,std::uint8_t* sg,unsigned groups,void*
 #if RE4DC_SCENERY_DEDUP==2
 // the room file's heap-4 block (room_file.c) holds the section: never freed here, valid until the room leave
 void dedup_free(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
     dedup::block=nullptr;dedup::pkg=nullptr;dedup::lets=nullptr;dedup::src=nullptr;dedup::mask=nullptr;
     dedup::nlets=dedup::nsrc=dedup::bytes=0;
 }
-void dedup_open(){
+void dedup_open(GCASSET_STATIC_ONLY_PARAM){
     dedup_free();
     auto& pk=ps2w.package;const unsigned nl=pk.header().meshlet_count;
     const std::uint64_t t0=timer_us_gettime64();
     unsigned len=0,ver=0,fl=0;
-    const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCDD",&len,&ver,&fl,nullptr));
+    const re4dc_room_header* source_header=nullptr;
+    const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCDD",&len,&ver,&fl,&source_header));
     const char* why=nullptr;unsigned nrep=0;
     if(!sec)why="no section";
 #if defined(RE4DC_SCENERY_DEDUP_LOADONLY) && RE4DC_SCENERY_DEDUP_LOADONLY
@@ -5518,21 +5833,30 @@ void dedup_open(){
         }
     }
     if(!why){
+#if RE4DC_GC_ASSET_GATE
+        if(re4dc_gcasset_room_original(sec,len,ver,fl,source_header))gcasset_static_bytes(gcmanifest,re4dc_gcasset::SCDD,sec,len,ver,fl);
+#endif
         dedup::block=const_cast<void*>(re4dc_room_file_block());dedup::bytes=len;
         dedup::run(pk,ps2w.sg_block?ps2w.sg_block+32:nullptr,ps2w.sg_groups,ps2w.gather,1);
         dedup::pkg=&pk;
     }
+#if RE4DC_GC_ASSET_GATE
+    if(!sec)gcasset_static_state(gcmanifest,re4dc_gcasset::SCDD,re4dc_gcasset::Absent);
+#endif
     re4dc_log("SCNDEDUP room=%03x meshlets=%u repeats=%u bytes=%u %s load_us=%u heap=%d\n",ps2w.room,nl,nrep,len,
               why?why:"applied",unsigned(timer_us_gettime64()-t0),re4dc_static_heap_free());
 }
 #else
 void dedup_free(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
     if(dedup::block)re4dc_static_free(dedup::block);
     dedup::block=nullptr;dedup::pkg=nullptr;dedup::lets=nullptr;dedup::src=nullptr;dedup::nlets=dedup::nsrc=dedup::bytes=0;
 }
 #endif
 #if RE4DC_SCENERY_DEDUP!=2
-void dedup_open(){
+void dedup_open(GCASSET_STATIC_ONLY_PARAM){
     dedup_free();
     auto& pk=ps2w.package;const unsigned nl=pk.header().meshlet_count;
     const std::uint64_t t0=timer_us_gettime64();
@@ -5564,6 +5888,9 @@ bool ps2_open(){
 #endif
     if(ps2w.attempted)return false;
     ps2w.attempted=true;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::payload_retire(ps2w.asset_proof);
+#endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     r11fPackageAdvance();
 #endif
@@ -5591,6 +5918,9 @@ bool ps2_open(){
 #if RE4DC_SCENERY_DEDUP==3
     // Bind alternate source CRC/extent to the freshly read standard file header.
     unsigned dd_base_crc=0,dd_base_bytes=0;bool dd_alternate=false;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::Digest gcasset_base80{};
+#endif
     if(fm!=FILEHND_INVALID){
         char dpath[48];snprintf(dpath,sizeof(dpath),"/cd/dc/native/r%03x/ps2-dd3.re4mesh",ps2w.room);
         const file_t fd=fs_open(dpath,O_RDONLY);
@@ -5600,6 +5930,9 @@ bool ps2_open(){
             if(fs_total(fd)>=112 && fs_total(fd)<=base_bytes && read_package(fm,reinterpret_cast<unsigned char*>(head),80U,0) &&
                head[0]==0x4d493452U && head[1]==3U && head[2]==unsigned(base_bytes) && head[16]==re4dc::room::kColorArgb1555 && !head[17] && !head[18] && !head[19]){
                 dd_base_crc=head[3];dd_base_bytes=head[2];dd_alternate=true;fs_close(fm);fm=fd;
+#if RE4DC_GC_ASSET_GATE
+                gcasset_base80=re4dc_gcasset::fingerprint(head,80U);
+#endif
             }else{fs_close(fd);fs_seek(fm,0,SEEK_SET);}
         }
     }
@@ -5676,6 +6009,39 @@ bool ps2_open(){
         else if(dd_alternate && ps2_crc32(s+80,msize-80U)!=crc){why="offline crc";ok=false;}
     }
 #endif
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::StaticManifest gcasset_source;
+    if(ok && msize<=mbytes && mbytes<=total && psize<=total-mbytes && total<=40U*1024*1024)
+        re4dc_gcasset::static_manifest_begin(gcasset_source,re4dc_gcasset::StaticWorld,ps2w.room,gcasset_static_profile(),s,msize);
+    using namespace re4dc_gcasset;
+#if !(RE4DC_PS2_WORLD_DYNAMIC && RE4DC_PS2_WORLD_ROOMS)
+    static_manifest_note(gcasset_source,R4ID,Disabled);
+#endif
+#if !defined(RE4DC_TRANS_POLICY)
+    static_manifest_note(gcasset_source,R4TC,Disabled);static_manifest_note(gcasset_source,R4TI_SELECTOR,Disabled);
+#endif
+#if !RE4DC_PS2_PVS
+    static_manifest_note(gcasset_source,R4PV,Disabled);
+#endif
+#if !RE4DC_PS2_STRIP_GROUPS
+    static_manifest_note(gcasset_source,R4SG,Disabled);
+#endif
+#if !RE4DC_SCENERY_CONE
+    static_manifest_note(gcasset_source,SCCN,Disabled);
+#endif
+#if !RE4DC_SCENERY_PIECE_STATE
+    static_manifest_note(gcasset_source,SCPS,Disabled);
+#endif
+#if RE4DC_SCENERY_DEDUP!=2
+    static_manifest_note(gcasset_source,SCDD,NotApplicable);
+#endif
+#if RE4DC_SCENERY_DEDUP==3
+    if(dd_alternate)static_manifest_note(gcasset_source,SDO3_BASE80,Accepted,80U,3,StaticConsumedSpan,&gcasset_base80);
+    else static_manifest_note(gcasset_source,SDO3_BASE80,NotApplicable);
+#else
+    static_manifest_note(gcasset_source,SDO3_BASE80,NotApplicable);
+#endif
+#endif
     if(ok && !ps2w.package.adopt(s,msize,true,true)){why=ps2w.package.error();ok=false;}
 #if RE4DC_PS2_OPEN_TRACE
     re4dc_log("PS2OPEN adopt ok=%d why=%s\n",int(ok),why?why:"-");
@@ -5710,6 +6076,10 @@ bool ps2_open(){
         return false;
     }
     ps2w.storage=s;ps2w.bytes=total;ps2w.nplacements=h.placements;
+#if RE4DC_GC_ASSET_GATE
+    if(gcasset_source.geometry_base==s)static_manifest_bytes(gcasset_source,R4PW,s+mbytes,psize,h.version);
+    else static_manifest_note(gcasset_source,R4PW,Unproven);
+#endif
     // Geometry/material policy identity is separate from the physical R4PW
     // checksum. Only the certified scoped17 lineage can reuse original baked
     // metadata; profiles, logs and movie lifetime fingerprints remain actual.
@@ -5775,6 +6145,9 @@ bool ps2_open(){
                 auto* sb=n?static_cast<dyn::Slot*>(re4dc_static_alloc(n*sizeof(dyn::Slot))):nullptr;
                 iwhy="no heap";
                 if(sb){
+#if RE4DC_GC_ASSET_GATE
+                    static_manifest_bytes(gcasset_source,R4ID,ib,isize,ih.version);
+#endif
                     unsigned k=0;
                     for(unsigned id=0;id<dyn::kIds;++id)if(count[id]==1)dyn::slot_of[id]=std::uint8_t(k++);
                     std::memset(static_cast<void*>(sb),0,n*sizeof(dyn::Slot));
@@ -5783,6 +6156,9 @@ bool ps2_open(){
                 }
             }
         } else if(ib)iwhy="read";
+#if RE4DC_GC_ASSET_GATE
+        if(fi==FILEHND_INVALID)static_manifest_note(gcasset_source,R4ID,Absent);
+#endif
         if(ib)re4dc_static_free(ib);
         re4dc_log("PS2DYN room=%03x ids=%s placements=%u unique=%u heap=%d\n",ps2w.room,iwhy?iwhy:"ok",dyn::nids,dyn::nslots,re4dc_static_heap_free());
     }
@@ -5800,7 +6176,7 @@ bool ps2_open(){
     }
 #endif
 #if defined(RE4DC_TRANS_POLICY)
-    trans::open(ps2w.room,policySourceCrc,h.parts);
+    trans::open(ps2w.room,policySourceCrc,h.parts GCASSET_STATIC_ARG);
 #if RE4DC_PS2_PASS_MASK
     trans::mask(ps2w.parts,ps2w.placements,h.placements);
 #endif
@@ -5810,9 +6186,9 @@ bool ps2_open(){
     // baked AREA/IDs/SG metadata which uses the provenance-mapped source CRC.
 #if RE4DC_SCENERY_DEDUP==3
     // SDO3 certifies this exact source package's bounds, placements, meshlets and strip geometry.
-    pvs::open(ps2w.room,ps2w.package.source_crc(),ps2w.package.source_bytes(),h.crc);
+    pvs::open(ps2w.room,ps2w.package.source_crc(),ps2w.package.source_bytes(),h.crc GCASSET_STATIC_ARG);
 #else
-    pvs::open(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes,h.crc);
+    pvs::open(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes,h.crc GCASSET_STATIC_ARG);
 #endif
 #endif
 #if RE4DC_MESH_FASTPATH
@@ -5891,6 +6267,15 @@ bool ps2_open(){
 #if RE4DC_SCENERY_DEDUP==3
         if(!gwhy && ps2w.package.offline_dedup() && !ps2w.package.offline_groups(gb+32,gsize-32U,w[3]))gwhy="offline ranges";
 #endif
+#if RE4DC_GC_ASSET_GATE
+        if(fg==FILEHND_INVALID)static_manifest_note(gcasset_source,R4SG,Absent);
+        else if(!gwhy){
+#if RE4DC_WORLD_VERT
+            if(gsize<=galloc && galloc<=40U*1024*1024)
+#endif
+                static_manifest_bytes(gcasset_source,R4SG,gb,gsize,w[1]);
+        }
+#endif
         if(gwhy){if(gb)re4dc_static_free(gb);}
         else {ps2w.sg_block=gb;ps2w.sg=gb+32;ps2w.sg_groups=w[3];
 #if RE4DC_WORLD_VERT
@@ -5902,10 +6287,25 @@ bool ps2_open(){
     }
 #endif
 #if RE4DC_SCENERY_CONE || RE4DC_SCENERY_PIECE_STATE
-    scn21_open();
+    scn21_open(
+#if RE4DC_GC_ASSET_GATE
+        &gcasset_source
+#endif
+    );
 #endif
 #if RE4DC_SCENERY_DEDUP
-    dedup_open();
+    dedup_open(
+#if RE4DC_GC_ASSET_GATE
+        &gcasset_source
+#endif
+    );
+#endif
+#if RE4DC_GC_ASSET_GATE
+    gcasset_static_policy(gcasset_source,ps2w.room);
+    // A skipped enabled reader or a rejected/short/failed read is explicit
+    // unproven data, never an inferred absence or geometry-only ancestry.
+    for(unsigned r=0;r<StaticRoleCount;++r)if(!(gcasset_source.seen&(1U<<r)))static_manifest_note(gcasset_source,StaticRole(r),Unproven);
+    payload_capture_composite(ps2w.asset_proof,&ps2w,s,msize,s+mbytes,psize,gcasset_source);
 #endif
     re4dc_log("PS2MESH open bytes=%u version=%u meshes=%u parts=%u meshlets=%u vertices=%u placements=%u heap=%d->%d\n",
         total,mh.version,mh.mesh_count,mh.part_count,mh.meshlet_count,mh.vertex_count,h.placements,before,re4dc_static_heap_free());
@@ -5921,6 +6321,9 @@ bool ps2_open(){
 }
 #if RE4DC_MOVIE_WORLD_ARENA
 bool ps2_movie_reload(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world(); // mesh/R4PW alone cannot renew prepared sidecars
+#endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     r11fPackageAdvance();
 #endif
@@ -6200,6 +6603,9 @@ static void note(unsigned pass,unsigned drawn_pass){
 }
 #endif
 int ps2_pass(unsigned pass,float zfar){
+#if RE4DC_GC_ASSET_GATE
+    GcStaticSourceScope gcasset_source_scope(ps2w.asset_proof,&ps2w);
+#endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return -1;}
 #endif
@@ -6488,7 +6894,13 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
             e.end_direct();
 #if RE4DC_SCENERY_SUBMIT_BATCH
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+            // Logical completion/accounting precedes release. Only actual
+            // source witnesses drain; opaque_ready remains outside SQ.
+            if(result<=0 || e.pvs_pending[2])re4dc_ps2_world_batch_close(&submit_scope.batch);
+#else
             if(result<=0)re4dc_ps2_world_batch_close(&submit_scope.batch);
+#endif
 #endif
 #if RE4DC_PS2_PVS
             e.pvs_finish(result>0);
@@ -6525,7 +6937,13 @@ int ps2_pass(unsigned pass,float zfar){
     const auto& pk=ps2w.package;
     for(unsigned i=0;i<ps2w.nplacements;++i){
 #if RE4DC_PS2_PVS
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+        // Qualification mode ONLY: internal pvs::cur still authenticates source
+        // observation, but never supplies legacy target-hide/selector authority.
+        const std::uint8_t* const pvs_cur=nullptr;
+#else
         const std::uint8_t* const pvs_cur=pvs::can_cut(i)?pvs::cur:nullptr;
+#endif
 #endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
         if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();++c.aborts;return -1;}
@@ -6617,6 +7035,11 @@ int ps2_pass(unsigned pass,float zfar){
         float mv[12];concat(ps2w.view,pl.affine,mv);
 #endif
 #define RE4DC_PS2_AFFINE pl.affine
+#endif
+#if RE4DC_PS2_PVS
+        // A receipt must describe the immutable baked geometry actually selected.
+        // Capture this with mvq; fresh source state can change before queued replay.
+        const unsigned pvs_source_placement=(RE4DC_PS2_AFFINE==pl.affine)?i:~0U;
 #endif
 #if RE4DC_PS2_WORLD_LEAN
 #if RE4DC_SKY_ANY
@@ -6773,7 +7196,7 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
                     x.cull_far=d.cull_far;x.lod_scale=lod_scale;x.index=index;x.cull=meta.cull;
 #if RE4DC_PS2_PVS
-                    x.placement=i;
+                    x.placement=pvs_source_placement;
 #endif
                     x.marked=marked;x.first=npk;
 #if RE4DC_SKY_ANY
@@ -6795,7 +7218,7 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
             d.part_index=index;d.lod_scale=lod_scale;
 #if RE4DC_PS2_PVS
-            d.pvs_placement=i;
+            d.pvs_placement=pvs_source_placement;
 #endif
 #if defined(RE4DC_FOLIAGE_TRIM)
             const bool foliage_near=foliage_pass!=meta.pass && foliage::kNear<cull_far;
@@ -6833,7 +7256,7 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
                 x.cull_far=d.cull_far;x.lod_scale=lod_scale;x.index=index;x.cull=meta.cull;
 #if RE4DC_PS2_PVS
-                x.placement=i;
+                x.placement=pvs_source_placement;
 #endif
                 x.marked=d.vertex_alpha;x.first=npk;
 #if RE4DC_SKY_ANY
@@ -7267,6 +7690,9 @@ extern "C" void re4dc_ps2_mesh_log(unsigned frame){
 #endif
 }
 extern "C" void re4dc_ps2_mesh_retire(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     ++wm_generation; // also invalidate a same-room package reload or teleport
 #endif

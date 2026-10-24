@@ -13,13 +13,21 @@ extern "C" int re4dc_static_heap_free();
 extern "C" void re4dc_actor_transaction_retire();
 namespace {
 file_t pl08_pack_file=FILEHND_INVALID;
+#if RE4DC_GC_ASSET_GATE
+re4dc_gcasset::PayloadProof gcasset_pl08;
+#endif
 leon4k::Chunk pl08_pack_chunks[3];  // the published descriptors (zero when unpublished)
 struct Pl08ChunkView;
 int pl08_hook_open();
 bool pl08_hook_read(unsigned char*,unsigned);
 void pl08_hook_close();
 unsigned char* pl08_hook_alloc(unsigned bytes) {return static_cast<unsigned char*>(re4dc_static_alloc(bytes));}
-void pl08_hook_free(unsigned char* cell) {re4dc_static_free(cell);}
+void pl08_hook_free(unsigned char* cell) {
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::payload_retire(gcasset_pl08);
+#endif
+    re4dc_static_free(cell);
+}
 bool pl08_hook_preflight(const Pl08ChunkView&,unsigned&);
 unsigned pl08_hook_reset() {
 #if defined(RE4DC_LEON_ATLAS_SPLIT) && RE4DC_LEON_ATLAS_SPLIT
@@ -35,6 +43,9 @@ void pl08_hook_retire_owned() {if(pl08_pack_owned_live())re4dc_actor_transaction
 #define P8LOG(...) re4dc_log(__VA_ARGS__)
 #include "actor_pl08_pack_check.inc"
 #undef P8LOG
+#if RE4DC_GC_ASSET_GATE
+extern Pl08PackLife pl08_pack;
+#endif
 int pl08_hook_open() {
     pl08_hook_close();
 #if defined(RE4DC_PS2_LEON_PL08) && RE4DC_PS2_LEON_PL08
@@ -62,6 +73,11 @@ bool pl08_hook_preflight(const Pl08ChunkView& v,unsigned& detail) {
     detail=unsigned(e);return e==re4dc_source::BlobError::None;
 }
 void pl08_hook_published(const Pl08ChunkView* v) {
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::payload_retire(gcasset_pl08);
+    if(v && pl08_pack.base && re4dc_gcasset::ensure_disc_catalog())
+        (void)re4dc_gcasset::payload_capture(gcasset_pl08,&pl08_pack,pl08_pack.base,kPl08PackBytes);
+#endif
     for(unsigned k=0;k<3;++k)pl08_pack_chunks[k]=v?leon4k::Chunk{v[k].source_info,v[k].position_count,v[k].normal_count,
         v[k].palette_count,v[k].triangles,v[k].bytes[3],v[k].array[0],v[k].array[1],v[k].array[2],v[k].array[3],
         reinterpret_cast<const leon4k::Weight*>(v[k].array[4])}:leon4k::Chunk{};

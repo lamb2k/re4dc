@@ -1,7 +1,13 @@
+#include "include/gc_asset_motion_unknown.h"
 // Narrow ModelData indexed-stream adapter, not a GX display-list interpreter.
 // Only an explicitly enabled base-texture diagnostic currently uses this path.
 #include "re4dc_screen.h"
 #include "native_model.h"
+#include "include/gc_asset_members.h"
+#if RE4DC_GC_ASSET_GATE
+extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**);
+extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned);
+#endif
 #include "native_render_profile.hpp"
 #include "native_reuse_audit.hpp"
 #if RE4DC_NATIVE_RENDER_PROFILE && defined(__sh__)
@@ -705,6 +711,14 @@ extern "C" void re4dc_pprof_add(const void* model, unsigned pth, unsigned us, un
 #define PP_PATH(x) ((void) 0)
 #endif
 extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
+#if RE4DC_GC_ASSET_GATE
+    // Replacement/static paths must supply their own immutable asset proof.
+    // A source caller's BIN cannot certify the bytes their emitter consumes.
+    re4dc_gcasset::SourceScope gcasset_source_scope;
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::motion_model_reason());
+#endif
+#endif
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
     pprof::Scope pprof_scope(p);
 #endif
@@ -758,6 +772,21 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     if(p && p->world){plain=*p;plain.serial=0;plain.world=plain.view=nullptr;
         plain.source_key[0]=0;plain.source_key[1]=0xff;p=&plain;}
 #endif
+#endif
+#if RE4DC_GC_ASSET_GATE
+    if(p) {
+        const void* data=nullptr;re4dc_gcasset::ModelMember member;
+        if(re4dc_gcasset::replay_use.serial!=0xffffffffU)
+            re4dc_gcasset::source_use={re4dc_gcasset::replay_use.payload?re4dc_gcasset::replay_use.serial:0,re4dc_gcasset::replay_use.mask,p->model,p->info,re4dc_gcasset::replay_use.payload};
+        else if(re4dc_gcasset_model_identity(p->model,p->info,&data)!=0xffffffffU &&
+           re4dc_gcasset::member_lookup(data,&member)) {
+            const unsigned mask=(1U<<re4dc_gcasset::SourceGeometry)|
+                (re4dc_gcasset_weapon_consumer(p->model,p->info,member.arc,member.family)?1U<<re4dc_gcasset::Weapon:0U);
+            // Role is known, but a full BIN hash does not authenticate every
+            // consumed UV/color/weight/shape extent or prepared derivation.
+            re4dc_gcasset::source_use={0,mask,p->model,p->info};
+        }
+    }
 #endif
 #if RE4DC_NATIVE_ACTOR
     // Non-scenery parts (actors, weapons, room SMD objects): dense per-info
@@ -818,6 +847,11 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
           double(p->projection[0]),double(p->viewport[2]),double(p->viewport[3]));
         re4dc_halt("Converted stream reached GX",0);
     }
+#endif
+#if RE4DC_GC_ASSET_GATE
+    // An actor decline may have restored a frozen/outer context. The generic
+    // walker has no complete constituent receipt yet; preserve class only.
+    re4dc_gcasset::source_use={0,re4dc_gcasset::source_use.mask,p?p->model:nullptr,p?p->info:nullptr};
 #endif
     if(!p || p->alpha_state>511 || ((p->alpha_state&256) && (!(p->flags&0x80000000U) || !p->colors)) || p->shift>30 || (p->position_stride!=6 && p->position_stride!=8) ||
        !p->position_count || !p->normal_count || p->stream_bytes>1024*1024 ||

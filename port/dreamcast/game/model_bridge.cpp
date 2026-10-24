@@ -1,3 +1,4 @@
+#include "platform/include/gc_asset_motion_unknown.h"
 #include "actor_visibility_diag.h"
 // Recovered commonModelTrans -> existing native frame/packet/texture owner.
 // Diagnostic base-material connection; not full GX lighting/TEV emulation.
@@ -6,6 +7,10 @@
 #include "model.h"
 #include "gx.h"
 #include "native_model.h"
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+#include "gc_asset_members.h"
+#include "player.h"
+#endif
 #if RE4DC_NATIVE_FOG
 #include "view.h"
 extern "C" unsigned re4dc_fog_enabled();
@@ -393,6 +398,10 @@ Entry* build(const Pending& q){
 void flush(){
     Pending& q=S->pend;
     if(!q.on)return;
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    // Held/cached merged groups never borrow the replay caller's current pose.
+    re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::MotionDelayedModel|re4dc_gcasset::MotionModelPose|re4dc_gcasset::MotionViewTrack);
+#endif
     q.on=false;
     ++st.groups;st.lists+=q.n;
     Re4dcModelPart r=q.rec;
@@ -1011,6 +1020,33 @@ extern "C" void re4dc_actor_census_describe(const void* model, unsigned verts) {
     re4dc_log("ACENSUS_OBJ m=%p kind=%u type=%u ot=%u blk=%d verts=%u pos=%d,%d,%d\n", model, unsigned(m->kindid),
               unsigned(m->type), unsigned(m->ot_type), reinterpret_cast<const int*>(model)[0x324 / 4], verts,
               w ? int(w[3]) : 0, w ? int(w[7]) : 0, w ? int(w[11]) : 0);
+}
+#endif
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+// Use the source declarations here; platform diagnostics never duplicate the
+// cModel/cModelInfo layout. The data pointer remains subject to member bounds
+// and owner-generation validation in gc_asset_members before any byte read.
+extern "C" unsigned re4dc_gcasset_model_identity(const void* model,const void* info,const void** data) {
+    if(data)*data=nullptr;
+    if(!model || !info || !data)return 0xffffffffU;
+    const auto* m=static_cast<const cModel*>(model);
+    *data=static_cast<const cModelInfo*>(info)->pData;
+    return (unsigned(m->kindid)&255U)<<24 | (unsigned(m->id)&255U)<<16 | (unsigned(m->type)&255U)<<8 |
+        (unsigned(m->nParts)&255U);
+}
+// Class/role selects a diagnostic consumer only; member SHA determines origin.
+extern "C" unsigned re4dc_gcasset_weapon_consumer(const void* model,const void* info,unsigned arc,unsigned family) {
+    if(!model || !info)return 0;
+    const auto* m=static_cast<const cModel*>(model);
+    if(family==re4dc_gcasset::WeaponOwner)return 1;
+    if(m->kindid==1)switch(m->id) {
+        case 0x21:case 0x23:case 0x24:case 0x25:case 0x27:case 0x28:case 0x2b:case 0x2c:
+        case 0x2d:case 0x2e:case 0x2f:case 0x30:case 0x31:case 0x32:case 0x33:case 0x34:
+        case 0x36:case 0x3c:case 0x3d:case 0x1a:case 0x22:case 0x29:case 0x2a:case 0x3a:return 1;
+    }
+    if(family==re4dc_gcasset::PlayerOwner &&
+       ((m->kindid==1 && m->id==0x0a && arc==0x7a) || (m->kindid==0 && m->id==0x4f && arc==0x72)))return 1;
+    return pPL && model==pPL && pPL->Body && (info==pPL->Body->pRight || info==pPL->Body->pLeft);
 }
 #endif
 #if defined(RE4DC_MODEL_DROP_LOG) && RE4DC_MODEL_DROP_LOG

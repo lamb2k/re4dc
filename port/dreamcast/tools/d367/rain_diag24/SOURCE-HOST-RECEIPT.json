@@ -1,0 +1,51 @@
+{
+  "runtime_source_checkpoint": "fdb5ed4212fc78823f625ab75b78cc237cfd181a",
+  "base": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "reviewed_design": "016757886d06d431e3e4adf42b91b3be36c348a8",
+  "scope": "source and actual C++ host controls only; no SDK/stage/guest",
+  "files": {
+    "src/game/filter06.cpp": {
+      "bytes": 36906,
+      "sha256": "60364736a8d2935b1f49cc4bbf73915757e78e03e0333fcde57adfaa88ea6dd0",
+      "blob": "1a90a4f12dfd5901d2aec0717e8aebf603a15554"
+    },
+    "src/game/espgen44.cpp": {
+      "bytes": 4163,
+      "sha256": "6f2bab97dc6b8a8fb508c3ee159f2e553dab061a44ee3791e248eaca227a6cea",
+      "blob": "55ef261e2cd8fa48a1b02476321114e28cf3cd6f"
+    },
+    "port/dreamcast/game/effects30.mk": {
+      "bytes": 40013,
+      "sha256": "66386156f0ccf987665b30e9ecae8e7257087ba41af2b747049b0bcfa22d7d3f",
+      "blob": "3c8bfeca6507c580eb3ec718527515da6d0ee56d"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/fixture_rain_diag.cpp.in": {
+      "bytes": 18288,
+      "sha256": "ab4e750aeba95b80c073f5bc25dfcf1e679eacbcc05b48b16a7d82dd1c29144d",
+      "blob": "2542a802fd7cea05ee1a76adacb90bbbcbca313e"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/test_rain_diag.py": {
+      "bytes": 12593,
+      "sha256": "233e8f2f7afa80290cb8735e9ff42156a11f3b574236162f204d563184f70fc9",
+      "blob": "b0116b3cd55423ef8f6718055eced9d81735b8ef"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/README.md": {
+      "bytes": 5431,
+      "sha256": "6347832f18b94a622b036102fc384aab4fb500e241437e0a71712ddb7e3477bd",
+      "blob": "8bbff691fd4bc1d4319fdaf9b5b1d4b7ffb6af16"
+    }
+  },
+  "host_controls_sha256": "bf4b0cddb04490633239311456deefc4831c9908ff4b18607b99175deb159a4e",
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "host_address_space_bytes": 134217728,
+  "generated_outputs": "temporary /dev/shm only, automatically removed",
+  "sdk": false,
+  "guest": false,
+  "archive_authority": "UNKNOWN",
+  "target_off_programme_identity": "PENDING",
+  "target_opcodes_cache_stack_padding": "PENDING",
+  "read_only_KOS_header_pins": {
+    "/root/work/kos-re4dc-d367/include/kos/cache.h": "cb65548d09447e45329be136666bbb1d22f3f1448b7f7a4f1ad09fb600372c02",
+    "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include/arch/cache.h": "d5ca901258bc9ec3f3f4f92c4fbfef97ee15bf61c9b02486de173bf1f93b8295"
+  }
+}

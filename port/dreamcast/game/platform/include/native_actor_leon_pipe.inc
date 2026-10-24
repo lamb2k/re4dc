@@ -126,7 +126,13 @@ extern "C" int re4dc_leon_pipe_submit(Re4dcModelPart* part, const Re4dcActorDraw
         bool switched = false;
         if (changed && window.open && header[material].valid && leon_tr_idle(part) &&
             base + window.slots + 1U + bound <= 32767U) {
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+            if(window.motion_accounted)re4dc_gcasset::motion_pending_accounted();
+#endif
             if (std::uint32_t* sq = re4dc_leon_direct_switch(part, &header[material], window.slots, window.sq)) {
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+                window.motion_accounted=0;
+#endif
                 base += window.slots + 1U;
                 window.sq = sq;
                 window.slots = 0;

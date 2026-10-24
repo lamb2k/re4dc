@@ -1,4 +1,5 @@
 #include "platform/include/movie_world_arena.h"
+#include "platform/include/gc_asset_lifecycle.h"
 #if defined(RE4DC_KOS_CACHE_P2_DIAG) && RE4DC_KOS_CACHE_P2_DIAG
 #include "platform/include/kos_cache_p2_diag.h"
 #endif
@@ -498,6 +499,10 @@ extern "C" void re4dc_room_enter(){
     re4dc_warp_room_enter();                            // test warp rig: flags at the first entry
 #endif
     re4dc_room4_open();
+#if RE4DC_GC_ASSET_GATE
+    if(pG)re4dc_gcasset_room_enter((unsigned(pG->stage_no)<<8)|pG->room_no);
+    else re4dc_gcasset::unresolved(re4dc_gcasset::Ui,"room-without-global");
+#endif
 #if defined(RE4DC_ROOM_FILE) && RE4DC_ROOM_FILE
     re4dc_room_file_enter((unsigned(pG->stage_no)<<8)|pG->room_no);  // room data file into heap 4; absent = source path
 #endif
