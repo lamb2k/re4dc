@@ -11,6 +11,33 @@ GAME=HERE.parents[2]/'game'
 PLATFORM=GAME/'platform'
 BASE='870789095c4c14fbdbf22043447b249063d2ec3a'
 
+def project_ui_motion0(source):
+    """Remove only the exact approved Motion-only additions, never wildcard guards."""
+    include='#include "include/gc_asset_motion_unknown.h"\n'
+    assert source.count(include)==1
+    source=source.replace(include,'')
+    blocks=[(1,'''#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::motion_prepare();
+#endif
+'''),(1,'''#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::motion_accept_pending(count); // also before quad geometry's early return
+#endif
+'''),(1,'''#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::motion_unknown_flush();
+#endif
+'''),(2,'''#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::motion_accept_pending(vertices);
+#endif
+'''),(1,'''#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+        re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::MotionDelayedModel|re4dc_gcasset::MotionViewTrack);
+#endif
+''')]
+    for count,block in blocks:
+        assert source.count(block)==count
+        source=source.replace(block,'')
+    return source
+
+
 class MotionUnknownTests(unittest.TestCase):
     def fixture(self):
         ui=(PLATFORM/'native_ui.cpp').read_text()
@@ -291,6 +318,19 @@ int main(){install(nullptr,0);begin(0x111,1,0x1f6);ModelPart a,b;int object,info
             symbols=subprocess.check_output(['nm','-S','-C','--defined-only',str(obj)],text=True)
             state=[line for line in symbols.splitlines() if ' b ' in line or ' B ' in line or ' d ' in line or ' D ' in line]
             self.assertEqual(len(state),1);self.assertIn('0000000000000018 b re4dc_gcasset::(anonymous namespace)::motion',state[0])
+
+    def test_exact_ui_projection_and_mutants(self):
+        source=(PLATFORM/'native_ui.cpp').read_text()
+        baseline=subprocess.check_output(['git','-C',str(GAME.parents[2]),'show',BASE+':port/dreamcast/game/platform/native_ui.cpp'],text=True)
+        self.assertEqual(project_ui_motion0(source),baseline)
+        for old,new in [
+            ('#if RE4DC_GC_ASSET_MOTION_UNKNOWN\n    re4dc_gcasset::motion_prepare();\n#endif','    re4dc_gcasset::motion_prepare();'),
+            ('#if RE4DC_GC_ASSET_MOTION_UNKNOWN\n    re4dc_gcasset::motion_prepare();','#if RE4DC_GC_ASSET_GATE\n    re4dc_gcasset::motion_prepare();'),
+            ('|(1U<<re4dc_gcasset::Motion));',');'),
+        ]:
+            with self.subTest(mutant=old):
+                self.assertEqual(source.count(old),1)
+                with self.assertRaises(AssertionError):self.assertEqual(project_ui_motion0(source.replace(old,new)),baseline)
 
     def test_default0_tokens_and_empty_helper(self):
         paths=['platform/native_ui.cpp','platform/native_model.cpp','platform/native_actor_fast.cpp','platform/include/native_actor_leon_pipe.inc','model_bridge.cpp']

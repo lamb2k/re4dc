@@ -47,7 +47,12 @@ class JudgeTests(unittest.TestCase):
         mask='unsigned mask=re4dc_gcasset::Required&~((1U<<re4dc_gcasset::SourceGeometry)|(1U<<re4dc_gcasset::Weapon));'
         self.assertEqual(old.count(mask),1)
         expected=expected.replace(mask,mask.replace('Weapon));','Weapon)|(1U<<re4dc_gcasset::Motion));'))
-        self.assertEqual((game/'platform/native_ui.cpp').read_text(),expected)
+        current=(game/'platform/native_ui.cpp').read_text()
+        # New standalone Motion diagnostics do not alter this historical v2
+        # protocol boundary. Strip ONLY exact approved guarded insertions;
+        # ungated/bad-guard/dropped-mask mutants are tested separately.
+        from test_motion_unknown import project_ui_motion0
+        self.assertEqual(project_ui_motion0(current),expected)
         with tempfile.TemporaryDirectory() as folder:
             path=Path(folder)/'protocol.json'
             for key,value in [('schema',1),('required','1ff'),('diagnostic_version',1),
