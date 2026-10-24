@@ -1,0 +1,37 @@
+{
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "pins": {
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-root-graph-fix-v2/graph.py": {
+      "bytes": 6771,
+      "sha256": "a3bd56cfff18a83f26a6a5e491ed4cab254753c4aec99efd1bf940812bd37b6b"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-root-graph-fix-v2/continue.py": {
+      "bytes": 6736,
+      "sha256": "43d03c43921347811e819be61282adf9903623340a13d6a38ae2429e5bddb8ae"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-root-graph-fix-v2/run.sh": {
+      "bytes": 1940,
+      "sha256": "7ce3980e175040d632e9d71b0c4eba768bc5d0adfc1aab4852e5cb539d10d069"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-root-graph-fix-v2/OFF-EXISTING-PINS.json": {
+      "bytes": 1986936,
+      "sha256": "aa98aa540a624597c62ad7e1284ca952be403a7bf84f9bb6c647d783bf74257a"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-root-graph-fix-v2/ROOT-CONTROLS.json": {
+      "bytes": 478,
+      "sha256": "396840587aeedc2f46044c9ec38e973f36c321cbfb2f9f49f6dc8c789888f08d"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-review/verify_completed_pair.py": {
+      "bytes": 14061,
+      "sha256": "1a90e49bf926aa069361cc59938900a79d38b917c4d076e55daa0a278c2c3342"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-preparation-v1/TOOLCHAIN-SEAL.json": {
+      "bytes": 2231,
+      "sha256": "c30f2f90564882fa6e179f0895a4e82dbb771722befa79844b853ccb73108209"
+    }
+  },
+  "original_failure_sha256": "3edb55f122dd5207772099ea4ef22fb88ae5c13001cf9dbfa262d0afe0e7c388",
+  "graph_repair_sha256": "a3bd56cfff18a83f26a6a5e491ed4cab254753c4aec99efd1bf940812bd37b6b",
+  "scope": "OFF existing link and allfiles reverified, ON freshlink; no stage or guest. Exactoriginalinput/source/seal/actualflock/floor/deadline checks remain.",
+  "predecessor": "v1 refused before resultmkdir/SDK because Git threaded lstat EAGAIN. Source/inputs/OFF unchanged, originalcache preserved; v2 bounds local read-only Git index workers only."
+}

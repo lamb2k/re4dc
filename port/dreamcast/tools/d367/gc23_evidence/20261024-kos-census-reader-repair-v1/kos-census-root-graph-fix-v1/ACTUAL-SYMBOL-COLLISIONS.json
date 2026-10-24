@@ -1,0 +1,2050 @@
+{
+  "ELF": {
+    "bytes": 28765828,
+    "sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+  },
+  "ambiguous_local_names": {
+    "__ZN12_GLOBAL__N_1L4wordEPKh": [
+      {
+        "value": 2350783164,
+        "size": 28,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2348892932,
+        "size": 40,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350763872,
+        "size": 28,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "_timer_us_gettime64": [
+      {
+        "value": 2350870720,
+        "size": 68,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350989964,
+        "size": 68,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350964916,
+        "size": 68,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZN12_GLOBAL__N_1L7projectERfS0_S0_Pv": [
+      {
+        "value": 2348996736,
+        "size": 136,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350768356,
+        "size": 140,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZN5cUnit10beginEventEv": [
+      {
+        "value": 2350451752,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350372636,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350342208,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350360884,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350353856,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350332916,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350349468,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350379452,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350390576,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350394428,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350403368,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350407624,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412820,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424140,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426968,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350433972,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350449964,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2349375408,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN5cUnit8endEventEv": [
+      {
+        "value": 2350451756,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350372640,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350342212,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350360888,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350353860,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350332920,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350349472,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350379456,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350390580,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350394432,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350403372,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350407628,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412824,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424144,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426972,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350433976,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350449968,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2349375412,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cPlayer7setHeadEi": [
+      {
+        "value": 2350451760,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2349639360,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZL14wep02_r3_set40P7cPlayer": [
+      {
+        "value": 2350337360,
+        "size": 56,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350414828,
+        "size": 52,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZL14wep02_r3_set10P7cPlayer": [
+      {
+        "value": 2350337416,
+        "size": 12,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350414880,
+        "size": 20,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZL14wep02_r3_set00P7cPlayer": [
+      {
+        "value": 2350337428,
+        "size": 124,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350414900,
+        "size": 124,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZL13wep02_r2_fireP7cPlayer": [
+      {
+        "value": 2350337552,
+        "size": 44,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350415024,
+        "size": 44,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZL16wep02_r3_ready20P7cPlayer": [
+      {
+        "value": 2350337596,
+        "size": 132,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350415068,
+        "size": 144,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZL16wep02_r3_ready10P7cPlayer": [
+      {
+        "value": 2350337728,
+        "size": 284,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350415212,
+        "size": 296,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZL14wep02_r2_readyP7cPlayer": [
+      {
+        "value": 2350338012,
+        "size": 368,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350415508,
+        "size": 380,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZL16wep02_r3_ready30P7cPlayer": [
+      {
+        "value": 2350338380,
+        "size": 460,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350415888,
+        "size": 484,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZL15wep02_r3_fire00P7cPlayer": [
+      {
+        "value": 2350338840,
+        "size": 588,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350416372,
+        "size": 600,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZL16wep02_r3_ready00P7cPlayer": [
+      {
+        "value": 2350339428,
+        "size": 304,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350416972,
+        "size": 316,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZL15wep02_r3_fire10P7cPlayer": [
+      {
+        "value": 2350339732,
+        "size": 196,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350417288,
+        "size": 204,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZL15wep02_r2_reloadP7cPlayer": [
+      {
+        "value": 2350340244,
+        "size": 580,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350417844,
+        "size": 676,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZL12wep02_r2_setP7cPlayer": [
+      {
+        "value": 2350340824,
+        "size": 360,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350418520,
+        "size": 404,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep8moveDownEv": [
+      {
+        "value": 2350335460,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412840,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424160,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426988,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350433992,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350449988,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350040600,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN8cManagerI4cObjE10createBackEi": [
+      {
+        "value": 2350341336,
+        "size": 596,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350419168,
+        "size": 424,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426380,
+        "size": 424,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350433312,
+        "size": 424,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350439484,
+        "size": 424,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350444732,
+        "size": 424,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350448876,
+        "size": 424,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2349732836,
+        "size": 596,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep8keyKamaeEv": [
+      {
+        "value": 2350332936,
+        "size": 16,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412848,
+        "size": 16,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424168,
+        "size": 16,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426996,
+        "size": 16,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350434000,
+        "size": 16,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350057872,
+        "size": 16,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjMgr8memClearEP4cObjm": [
+      {
+        "value": 2350341240,
+        "size": 12,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2349731812,
+        "size": 12,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep4initEP6cModel": [
+      {
+        "value": 2350341184,
+        "size": 52,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350057816,
+        "size": 52,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep11beginReloadEv": [
+      {
+        "value": 2350332956,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412868,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424188,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350427016,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350434020,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350450004,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350040612,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep8moveDropEv": [
+      {
+        "value": 2350332932,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412844,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424164,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426992,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350433996,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350449996,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350057812,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep9moveReadyEv": [
+      {
+        "value": 2350335456,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412836,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424156,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426984,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350433988,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350449980,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350040596,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__Z13PlHandgunMoveP7cPlayer": [
+      {
+        "value": 2350339928,
+        "size": 48,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350417492,
+        "size": 52,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep9setMotionEP7cPlayer": [
+      {
+        "value": 2350341236,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350057868,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep4fireEv": [
+      {
+        "value": 2350332952,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412864,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424184,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350427012,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350434016,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350450000,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350040608,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep7moveAllEv": [
+      {
+        "value": 2350332924,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412828,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424148,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426976,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350433980,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350449972,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350040588,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__Z7wepDownP7cPlayer": [
+      {
+        "value": 2350339976,
+        "size": 268,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350417544,
+        "size": 300,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350423580,
+        "size": 140,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep8moveStayEv": [
+      {
+        "value": 2350332928,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412832,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424152,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426980,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350433984,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350449976,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350040592,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN8cManagerI4cObjE15countActiveWorkEv": [
+      {
+        "value": 2350419004,
+        "size": 164,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426216,
+        "size": 164,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350433148,
+        "size": 164,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350439320,
+        "size": 164,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350444568,
+        "size": 164,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350448712,
+        "size": 164,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZL7wepDownP7cPlayer": [
+      {
+        "value": 2350429728,
+        "size": 404,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350445748,
+        "size": 184,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__Z11equipWeaponP7cPlayer": [
+      {
+        "value": 2350433736,
+        "size": 92,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350451092,
+        "size": 508,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep8moveFireEv": [
+      {
+        "value": 2350449984,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350057808,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep10moveReloadEv": [
+      {
+        "value": 2350449992,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350040604,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN12_GLOBAL__N_1L3putEt": [
+      {
+        "value": 2351116576,
+        "size": 40,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2351124152,
+        "size": 40,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ],
+    "__ZN12_GLOBAL__N_1L3putEPKc": [
+      {
+        "value": 2351116616,
+        "size": 104,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2351124192,
+        "size": 104,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      }
+    ]
+  },
+  "global_ambiguities": {
+    "__ZN5cUnit10beginEventEv": [
+      {
+        "value": 2350451752,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350372636,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350342208,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350360884,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350353856,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350332916,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350349468,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350379452,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350390576,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350394428,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350403368,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350407624,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412820,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424140,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426968,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350433972,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350449964,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2349375408,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN5cUnit8endEventEv": [
+      {
+        "value": 2350451756,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350372640,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350342212,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350360888,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350353860,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350332920,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350349472,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350379456,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350390580,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350394432,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350403372,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350407628,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412824,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424144,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426972,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350433976,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350449968,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2349375412,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cPlayer7setHeadEi": [
+      {
+        "value": 2350451760,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2349639360,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep8moveDownEv": [
+      {
+        "value": 2350335460,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412840,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424160,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426988,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350433992,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350449988,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350040600,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN8cManagerI4cObjE10createBackEi": [
+      {
+        "value": 2350341336,
+        "size": 596,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350419168,
+        "size": 424,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426380,
+        "size": 424,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350433312,
+        "size": 424,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350439484,
+        "size": 424,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350444732,
+        "size": 424,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350448876,
+        "size": 424,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2349732836,
+        "size": 596,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep8keyKamaeEv": [
+      {
+        "value": 2350332936,
+        "size": 16,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412848,
+        "size": 16,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424168,
+        "size": 16,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426996,
+        "size": 16,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350434000,
+        "size": 16,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350057872,
+        "size": 16,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjMgr8memClearEP4cObjm": [
+      {
+        "value": 2350341240,
+        "size": 12,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2349731812,
+        "size": 12,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep4initEP6cModel": [
+      {
+        "value": 2350341184,
+        "size": 52,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350057816,
+        "size": 52,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep11beginReloadEv": [
+      {
+        "value": 2350332956,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412868,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424188,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350427016,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350434020,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350450004,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350040612,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep8moveDropEv": [
+      {
+        "value": 2350332932,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412844,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424164,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426992,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350433996,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350449996,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350057812,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep9moveReadyEv": [
+      {
+        "value": 2350335456,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412836,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424156,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426984,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350433988,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350449980,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350040596,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep9setMotionEP7cPlayer": [
+      {
+        "value": 2350341236,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350057868,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep4fireEv": [
+      {
+        "value": 2350332952,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412864,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424184,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350427012,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350434016,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350450000,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350040608,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep7moveAllEv": [
+      {
+        "value": 2350332924,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412828,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424148,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426976,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350433980,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350449972,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350040588,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep8moveStayEv": [
+      {
+        "value": 2350332928,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350412832,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350424152,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350426980,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350433984,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350449976,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350040592,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep8moveFireEv": [
+      {
+        "value": 2350449984,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350057808,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ],
+    "__ZN7cObjWep10moveReloadEv": [
+      {
+        "value": 2350449992,
+        "size": 4,
+        "index": 1,
+        "bind": 0,
+        "other": 0
+      },
+      {
+        "value": 2350040604,
+        "size": 4,
+        "index": 1,
+        "bind": 2,
+        "other": 0
+      }
+    ]
+  },
+  "receipt_failure": "AssertionError()"
+}

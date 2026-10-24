@@ -1,0 +1,17 @@
+{
+  "original_host_controls": 38,
+  "actual_reader_controls": [
+    "actual-13-edges-PASS",
+    "local-name-alias-cannot-shadow-global",
+    "missing-global-no-local-fallback",
+    "conflicting-global-provider",
+    "conflicting-weak-provider",
+    "unsupported-function-binding",
+    "one-weak-definition-is-unambiguous"
+  ],
+  "SDK": 0,
+  "Make": 0,
+  "guest": 0,
+  "coverage": "UNKNOWN",
+  "graph_sha256": "a3bd56cfff18a83f26a6a5e491ed4cab254753c4aec99efd1bf940812bd37b6b"
+}

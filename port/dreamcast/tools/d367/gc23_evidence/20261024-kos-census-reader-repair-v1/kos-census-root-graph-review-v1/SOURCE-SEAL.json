@@ -1,0 +1,52 @@
+{
+  "utc": "2026-10-24T10:19:52.661834+00:00",
+  "decision": "CLEAR_TINY_READER_REPAIR_ONLY",
+  "reviewed_graph_sha256": "a3bd56cfff18a83f26a6a5e491ed4cab254753c4aec99efd1bf940812bd37b6b",
+  "review_json_sha256": "37b15279b16d875e6a272a6f05a2e5840ecc6629fd33cf470539808021b766d0",
+  "files": {
+    "EXACT-DIFF.txt": {
+      "bytes": 914,
+      "sha256": "3aa2ac02c7cbe4565034364892be5cac6624cce720f43544cf0f45d9df48b93c"
+    },
+    "HANDBACK.md": {
+      "bytes": 960,
+      "sha256": "6f27242ea2914abd7f2bbd937b32fcfa1098e5f854929ffa47eea2058f878d0b"
+    },
+    "PREP-EXACT-DIFF.txt": {
+      "bytes": 914,
+      "sha256": "3aa2ac02c7cbe4565034364892be5cac6624cce720f43544cf0f45d9df48b93c"
+    },
+    "PREP-REVIEW.json": {
+      "bytes": 10886,
+      "sha256": "41ec625608d588b516a5a62aee9f12c134c92757b563712f845b8c1c46a0c010"
+    },
+    "PRESERVED-SETUP-FAILURE.json": {
+      "bytes": 391,
+      "sha256": "18f3e80bb6e439c13c64b9e8b4609bd44c4442a74a2fa19436d7be0809a5f4b2"
+    },
+    "REVIEW.json": {
+      "bytes": 10885,
+      "sha256": "37b15279b16d875e6a272a6f05a2e5840ecc6629fd33cf470539808021b766d0"
+    },
+    "REVIEW.md": {
+      "bytes": 3334,
+      "sha256": "ee2de068771e5a5f262329a4af99273271237dc4e441a5f74d346b62adeda40e"
+    },
+    "review.py": {
+      "bytes": 10860,
+      "sha256": "43c4986e5d71b41e56a7ace4301f64a2256a0d1d7517a5ca70bc73a5512321e1"
+    },
+    "STATUS.md": {
+      "bytes": 624,
+      "sha256": "9a500c27aad7c1044cf6abc5e0dd13068322d66cf541492aa49cec41b1f27fa9"
+    }
+  },
+  "actual_ELF_routes": 13,
+  "controls": 26,
+  "live_coverage": "UNKNOWN",
+  "SDK": 0,
+  "Make": 0,
+  "guests": 0,
+  "stage": 0,
+  "original_or_fixed_source_writes": 0
+}

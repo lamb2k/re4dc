@@ -1,0 +1,6 @@
+{
+  "status": "REVIEW_INVOCATION_ERROR_NOT_READER_DEFECT",
+  "operation": "independent verify baseline wraps argument",
+  "error": "Passed the entire off/on mapping instead of its off arm list; unchanged link_graph correctly rejected it.",
+  "repair": "Read exact plan baseline_wraps[off]; no graph/source/binary edits and no approval or acceptance inferred from failed invocation."
+}

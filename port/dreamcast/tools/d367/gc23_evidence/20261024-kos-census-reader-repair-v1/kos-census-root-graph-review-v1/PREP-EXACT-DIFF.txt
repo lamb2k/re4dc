@@ -1,0 +1,14 @@
+--- /mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-preparation-v1/graph.py
++++ /mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-root-graph-fix-v1/graph.py
+@@ -25,6 +25,11 @@
+                 assert name < len(strings)
+                 name = strings[name:].split(b'\0', 1)[0].decode()
+                 if name and index and (info & 15) == 2:
++                    binding = info >> 4
++                    assert binding in (0, 1, 2), ('Unsupported function binding', name, binding)
++                    # Local functions from different translation units may share a name.
++                    # Allocator route targets must resolve to one global/weak definition.
++                    if binding == 0: continue
+                     entry = (value, size, index)
+                     if name in self.symbols: assert self.symbols[name] == entry
+                     self.symbols[name] = entry

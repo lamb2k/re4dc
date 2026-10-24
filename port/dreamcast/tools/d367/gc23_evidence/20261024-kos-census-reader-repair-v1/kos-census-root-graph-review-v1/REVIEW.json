@@ -1,0 +1,356 @@
+{
+  "utc": "2026-10-24T10:19:19.771811+00:00",
+  "decision": "CLEAR_TINY_DEFINED_FUNCTION_BINDING_REPAIR_ONLY",
+  "scope": "Narrow ELF reader repair independent review; no original whole-unit reaudit or live allocation coverage.",
+  "original_graph": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-preparation-v1/graph.py",
+    "sha256": "f7c13930d98642f70bcbc95881f6d38bf001cbb7e20c59bcc3f8d81b0f7d6adf"
+  },
+  "original_tool_seal": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-preparation-v1/TOOLCHAIN-SEAL.json",
+    "sha256": "c30f2f90564882fa6e179f0895a4e82dbb771722befa79844b853ccb73108209"
+  },
+  "fixed_graph": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-root-graph-fix-v1/graph.py",
+    "sha256": "a3bd56cfff18a83f26a6a5e491ed4cab254753c4aec99efd1bf940812bd37b6b"
+  },
+  "exact_executable_delta": "5 added lines: supported binding assertion, two comments and LOCAL skip",
+  "all_other_AST_including_opcode_predicates_unchanged": true,
+  "actual_ELF": {
+    "path": "/dev/shm/gc-motion24-kos-census-v1-2g7teq3g/off/out/re4dc-game.elf",
+    "bytes": 28765828,
+    "sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+  },
+  "build_log": {
+    "path": "/dev/shm/gc-motion24-kos-census-v1-2g7teq3g/off/build.log",
+    "sha256": "a970d0c4de03a347c26395ae3bd4810b3f581b530c91ab9c08f2caae1d0b450e"
+  },
+  "root_graph_receipt": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-root-graph-fix-v1/OFF-GRAPH-READBACK.json",
+    "sha256": "2bbe86aae5c1dd01ba0bc1cef155090fb58f083723ac75b71630f090abb5d809"
+  },
+  "actual_collisions": {
+    "distinct_local_name_collision_groups": 40,
+    "with_valid_global_or_weak": 17,
+    "conflicting_global_weak_names": 0,
+    "names": [
+      "__Z11equipWeaponP7cPlayer",
+      "__Z13PlHandgunMoveP7cPlayer",
+      "__Z7wepDownP7cPlayer",
+      "__ZL12wep02_r2_setP7cPlayer",
+      "__ZL13wep02_r2_fireP7cPlayer",
+      "__ZL14wep02_r2_readyP7cPlayer",
+      "__ZL14wep02_r3_set00P7cPlayer",
+      "__ZL14wep02_r3_set10P7cPlayer",
+      "__ZL14wep02_r3_set40P7cPlayer",
+      "__ZL15wep02_r2_reloadP7cPlayer",
+      "__ZL15wep02_r3_fire00P7cPlayer",
+      "__ZL15wep02_r3_fire10P7cPlayer",
+      "__ZL16wep02_r3_ready00P7cPlayer",
+      "__ZL16wep02_r3_ready10P7cPlayer",
+      "__ZL16wep02_r3_ready20P7cPlayer",
+      "__ZL16wep02_r3_ready30P7cPlayer",
+      "__ZL7wepDownP7cPlayer",
+      "__ZN12_GLOBAL__N_1L3putEPKc",
+      "__ZN12_GLOBAL__N_1L3putEt",
+      "__ZN12_GLOBAL__N_1L4wordEPKh",
+      "__ZN12_GLOBAL__N_1L7projectERfS0_S0_Pv",
+      "__ZN5cUnit10beginEventEv",
+      "__ZN5cUnit8endEventEv",
+      "__ZN7cObjMgr8memClearEP4cObjm",
+      "__ZN7cObjWep10moveReloadEv",
+      "__ZN7cObjWep11beginReloadEv",
+      "__ZN7cObjWep4fireEv",
+      "__ZN7cObjWep4initEP6cModel",
+      "__ZN7cObjWep7moveAllEv",
+      "__ZN7cObjWep8keyKamaeEv",
+      "__ZN7cObjWep8moveDownEv",
+      "__ZN7cObjWep8moveDropEv",
+      "__ZN7cObjWep8moveFireEv",
+      "__ZN7cObjWep8moveStayEv",
+      "__ZN7cObjWep9moveReadyEv",
+      "__ZN7cObjWep9setMotionEP7cPlayer",
+      "__ZN7cPlayer7setHeadEi",
+      "__ZN8cManagerI4cObjE10createBackEi",
+      "__ZN8cManagerI4cObjE15countActiveWorkEv",
+      "_timer_us_gettime64"
+    ]
+  },
+  "actual_routes": {
+    "_aligned_alloc -> __memalign_r": {
+      "load": 2351242148,
+      "literal": 2351242160,
+      "branch": 2351242152,
+      "target": 2351329520
+    },
+    "__memalign_r -> ___wrap_memalign": {
+      "load": 2351329520,
+      "literal": 2351329528,
+      "branch": 2351329524,
+      "target": 2350720444
+    },
+    "__malloc_r -> ___wrap_malloc": {
+      "load": 2351329484,
+      "literal": 2351329492,
+      "branch": 2351329486,
+      "target": 2350720340
+    },
+    "__calloc_r -> ___wrap_calloc": {
+      "load": 2351329496,
+      "literal": 2351329504,
+      "branch": 2351329500,
+      "target": 2350720388
+    },
+    "__realloc_r -> ___wrap_realloc": {
+      "load": 2351329508,
+      "literal": 2351329516,
+      "branch": 2351329512,
+      "target": 2350720492
+    },
+    "__free_r -> ___wrap_free": {
+      "load": 2351329472,
+      "literal": 2351329480,
+      "branch": 2351329474,
+      "target": 2350720568
+    },
+    "___wrap_malloc -> _malloc": {
+      "load": 2350720350,
+      "literal": 2350720380,
+      "branch": 2350720352,
+      "target": 2351150924
+    },
+    "___wrap_calloc -> _calloc": {
+      "load": 2350720402,
+      "literal": 2350720436,
+      "branch": 2350720404,
+      "target": 2351151908
+    },
+    "___wrap_realloc -> _realloc": {
+      "load": 2350720506,
+      "literal": 2350720556,
+      "branch": 2350720508,
+      "target": 2351151068
+    },
+    "___wrap_memalign -> _memalign": {
+      "load": 2350720454,
+      "literal": 2350720484,
+      "branch": 2350720456,
+      "target": 2351151524
+    },
+    "___wrap_free -> _free": {
+      "load": 2350720578,
+      "literal": 2350720596,
+      "branch": 2350720580,
+      "target": 2351151000
+    },
+    "___wrap__Znwj -> __Znwj": {
+      "load": 2350720606,
+      "literal": 2350720632,
+      "branch": 2350720608,
+      "target": 2349904984
+    },
+    "___wrap__Znaj -> __Znaj": {
+      "load": 2350720646,
+      "literal": 2350720672,
+      "branch": 2350720648,
+      "target": 2349905020
+    }
+  },
+  "checks": [
+    {
+      "name": "synthetic real SH4 route passes",
+      "status": "PASS",
+      "result": {
+        "load": 2348875776,
+        "literal": 2348875784,
+        "branch": 2348875778,
+        "target": 2348875808
+      }
+    },
+    {
+      "name": "two distinct same-name LOCAL definitions do not collide globally",
+      "status": "PASS",
+      "result": true
+    },
+    {
+      "name": "GLOBAL wins over unrelated LOCAL in order0",
+      "status": "PASS",
+      "result": {
+        "load": 2348875776,
+        "literal": 2348875784,
+        "branch": 2348875778,
+        "target": 2348875808
+      }
+    },
+    {
+      "name": "GLOBAL wins over unrelated LOCAL in order1",
+      "status": "PASS",
+      "result": {
+        "load": 2348875776,
+        "literal": 2348875784,
+        "branch": 2348875778,
+        "target": 2348875808
+      }
+    },
+    {
+      "name": "WEAK wins over unrelated LOCAL in order0",
+      "status": "PASS",
+      "result": {
+        "load": 2348875776,
+        "literal": 2348875784,
+        "branch": 2348875778,
+        "target": 2348875808
+      }
+    },
+    {
+      "name": "WEAK wins over unrelated LOCAL in order1",
+      "status": "PASS",
+      "result": {
+        "load": 2348875776,
+        "literal": 2348875784,
+        "branch": 2348875778,
+        "target": 2348875808
+      }
+    },
+    {
+      "name": "sole WEAK route definition is valid",
+      "status": "PASS",
+      "result": {
+        "load": 2348875776,
+        "literal": 2348875784,
+        "branch": 2348875778,
+        "target": 2348875808
+      }
+    },
+    {
+      "name": "identical GLOBAL and WEAK duplicate definition remains accepted",
+      "status": "PASS",
+      "result": {
+        "load": 2348875776,
+        "literal": 2348875784,
+        "branch": 2348875778,
+        "target": 2348875808
+      }
+    },
+    {
+      "name": "conflicting bindings(1, 1)",
+      "status": "EXPECTED_REFUSAL",
+      "exception": "AssertionError",
+      "reason": ""
+    },
+    {
+      "name": "conflicting bindings(2, 2)",
+      "status": "EXPECTED_REFUSAL",
+      "exception": "AssertionError",
+      "reason": ""
+    },
+    {
+      "name": "conflicting bindings(1, 2)",
+      "status": "EXPECTED_REFUSAL",
+      "exception": "AssertionError",
+      "reason": ""
+    },
+    {
+      "name": "conflicting bindings(2, 1)",
+      "status": "EXPECTED_REFUSAL",
+      "exception": "AssertionError",
+      "reason": ""
+    },
+    {
+      "name": "conflicting GLOBAL size is refused",
+      "status": "EXPECTED_REFUSAL",
+      "exception": "AssertionError",
+      "reason": ""
+    },
+    {
+      "name": "LOCAL-only required target cannot satisfy route",
+      "status": "EXPECTED_REFUSAL",
+      "exception": "KeyError",
+      "reason": "'_target'"
+    },
+    {
+      "name": "undefined GLOBAL plus LOCAL cannot satisfy required target",
+      "status": "EXPECTED_REFUSAL",
+      "exception": "KeyError",
+      "reason": "'_target'"
+    },
+    {
+      "name": "unsupported defined function binding3",
+      "status": "EXPECTED_REFUSAL",
+      "exception": "AssertionError",
+      "reason": "('Unsupported function binding', '_unsupported', 3)"
+    },
+    {
+      "name": "unsupported defined function binding10",
+      "status": "EXPECTED_REFUSAL",
+      "exception": "AssertionError",
+      "reason": "('Unsupported function binding', '_unsupported', 10)"
+    },
+    {
+      "name": "unsupported defined function binding15",
+      "status": "EXPECTED_REFUSAL",
+      "exception": "AssertionError",
+      "reason": "('Unsupported function binding', '_unsupported', 15)"
+    },
+    {
+      "name": "LOCAL destination cannot disguise wrong GLOBAL reference",
+      "status": "EXPECTED_REFUSAL",
+      "exception": "AssertionError",
+      "reason": "('_route', '_target', [])"
+    },
+    {
+      "name": "GLOBAL source/target alias does not prove a route",
+      "status": "EXPECTED_REFUSAL",
+      "exception": "AssertionError",
+      "reason": "('_route', '_target', [])"
+    },
+    {
+      "name": "wrong branch-register opcode still refuses",
+      "status": "EXPECTED_REFUSAL",
+      "exception": "AssertionError",
+      "reason": "('_route', '_target', [])"
+    },
+    {
+      "name": "wrong target literal still refuses",
+      "status": "EXPECTED_REFUSAL",
+      "exception": "AssertionError",
+      "reason": "('_route', '_target', [])"
+    },
+    {
+      "name": "non-whitelisted opcode before branch still refuses",
+      "status": "EXPECTED_REFUSAL",
+      "exception": "AssertionError",
+      "reason": "('_route', '_target', [])"
+    },
+    {
+      "name": "original reader actually refuses retained ELF",
+      "status": "EXPECTED_REFUSAL",
+      "exception": "AssertionError",
+      "reason": ""
+    },
+    {
+      "name": "independent actual OFF ELF +build-log verification",
+      "status": "PASS",
+      "routes": 13,
+      "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+    },
+    {
+      "name": "actual ELF provider aliased to wrapper refuses opcode route",
+      "status": "EXPECTED_REFUSAL",
+      "exception": "AssertionError",
+      "reason": "('___wrap_malloc', '_malloc', [])"
+    }
+  ],
+  "limits": {
+    "process_wall_seconds": 120,
+    "address_space_bytes": 268435456,
+    "actual_wall_seconds": 0.2817429240094498,
+    "self_peak_rss_kib": 117424
+  },
+  "runtime_coverage": "UNKNOWN: this review does not qualify live census rows/lost/overflow/mallinfo reconciliation, memory or performance.",
+  "SDK": 0,
+  "Make": 0,
+  "stage": 0,
+  "guests": 0,
+  "original_or_fixed_source_writes": 0
+}

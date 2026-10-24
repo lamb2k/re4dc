@@ -1,0 +1,127 @@
+{
+  "scope": "Exact generic root reader/continuation source and source-only review/identities; no programme/asset payload. Original reader fail3edb55 retained; v1 Git EAGAIN preflight occurred before SDK/outputdir. V2 bounds local read-only index threads, OFF actual13routesverified, ON compiling at capture. No live allocation coverage/performance claim.",
+  "files": {
+    "kos-census-root-graph-fix-v1/ACTUAL-SYMBOL-COLLISIONS.json": {
+      "bytes": 36601,
+      "sha256": "daaaef98b2be179d458b124ea60db1b048f204f906e11340e453ee253b172087"
+    },
+    "kos-census-root-graph-fix-v1/CONTINUATION-CONTRACT.json": {
+      "bytes": 1924,
+      "sha256": "18ac42807cbea739626e81ecf09980afc054855cf461dbc2d73c6e3d69106d52"
+    },
+    "kos-census-root-graph-fix-v1/continue.py": {
+      "bytes": 6461,
+      "sha256": "a2c9841b11a630db3d7cbd5c2fcece552261b72abf3725cd505465bf8a26c8ce"
+    },
+    "kos-census-root-graph-fix-v1/graph.py": {
+      "bytes": 6771,
+      "sha256": "a3bd56cfff18a83f26a6a5e491ed4cab254753c4aec99efd1bf940812bd37b6b"
+    },
+    "kos-census-root-graph-fix-v1/OFF-EXISTING-PINS.json": {
+      "bytes": 1986936,
+      "sha256": "aa98aa540a624597c62ad7e1284ca952be403a7bf84f9bb6c647d783bf74257a"
+    },
+    "kos-census-root-graph-fix-v1/OFF-GRAPH-READBACK.json": {
+      "bytes": 40751,
+      "sha256": "2bbe86aae5c1dd01ba0bc1cef155090fb58f083723ac75b71630f090abb5d809"
+    },
+    "kos-census-root-graph-fix-v1/README-ROOT.md": {
+      "bytes": 773,
+      "sha256": "3ad10aa10ba58ec8667cb09191b49bdea72349de052eb73b9889ad4189022992"
+    },
+    "kos-census-root-graph-fix-v1/ROOT-CONTROLS.json": {
+      "bytes": 478,
+      "sha256": "396840587aeedc2f46044c9ec38e973f36c321cbfb2f9f49f6dc8c789888f08d"
+    },
+    "kos-census-root-graph-fix-v1/ROOT-CONTROLS.log": {
+      "bytes": 3547,
+      "sha256": "84b2072a12c3f13e288475bf5fcb424ce0670376929c35b756a26f7daafb65d7"
+    },
+    "kos-census-root-graph-fix-v1/run.sh": {
+      "bytes": 1808,
+      "sha256": "9e430982509ab2c5c6356a0bb6bd54e29c246f3b3ca07f5608c25622868c741f"
+    },
+    "kos-census-root-graph-fix-v1/test_root_graph.py": {
+      "bytes": 3110,
+      "sha256": "022f1b01dd8aa3e0c1154ae0798e00b66681970c1dde371220ea729ec7600579"
+    },
+    "kos-census-root-graph-fix-v2/CONTINUATION-CONTRACT.json": {
+      "bytes": 2117,
+      "sha256": "f68cff9879baf138d61b2577a777ffcd53f9586c1fc3747bf83b477f971642d8"
+    },
+    "kos-census-root-graph-fix-v2/continue.py": {
+      "bytes": 6736,
+      "sha256": "43d03c43921347811e819be61282adf9903623340a13d6a38ae2429e5bddb8ae"
+    },
+    "kos-census-root-graph-fix-v2/graph.py": {
+      "bytes": 6771,
+      "sha256": "a3bd56cfff18a83f26a6a5e491ed4cab254753c4aec99efd1bf940812bd37b6b"
+    },
+    "kos-census-root-graph-fix-v2/OFF-EXISTING-PINS.json": {
+      "bytes": 1986936,
+      "sha256": "aa98aa540a624597c62ad7e1284ca952be403a7bf84f9bb6c647d783bf74257a"
+    },
+    "kos-census-root-graph-fix-v2/README-ROOT.md": {
+      "bytes": 773,
+      "sha256": "3ad10aa10ba58ec8667cb09191b49bdea72349de052eb73b9889ad4189022992"
+    },
+    "kos-census-root-graph-fix-v2/ROOT-CONTROLS.json": {
+      "bytes": 478,
+      "sha256": "396840587aeedc2f46044c9ec38e973f36c321cbfb2f9f49f6dc8c789888f08d"
+    },
+    "kos-census-root-graph-fix-v2/run.sh": {
+      "bytes": 1940,
+      "sha256": "7ce3980e175040d632e9d71b0c4eba768bc5d0adfc1aab4852e5cb539d10d069"
+    },
+    "kos-census-root-graph-review-v1/EXACT-DIFF.txt": {
+      "bytes": 914,
+      "sha256": "3aa2ac02c7cbe4565034364892be5cac6624cce720f43544cf0f45d9df48b93c"
+    },
+    "kos-census-root-graph-review-v1/HANDBACK.md": {
+      "bytes": 960,
+      "sha256": "6f27242ea2914abd7f2bbd937b32fcfa1098e5f854929ffa47eea2058f878d0b"
+    },
+    "kos-census-root-graph-review-v1/PREP-EXACT-DIFF.txt": {
+      "bytes": 914,
+      "sha256": "3aa2ac02c7cbe4565034364892be5cac6624cce720f43544cf0f45d9df48b93c"
+    },
+    "kos-census-root-graph-review-v1/PREP-REVIEW.json": {
+      "bytes": 10886,
+      "sha256": "41ec625608d588b516a5a62aee9f12c134c92757b563712f845b8c1c46a0c010"
+    },
+    "kos-census-root-graph-review-v1/PRESERVED-SETUP-FAILURE.json": {
+      "bytes": 391,
+      "sha256": "18f3e80bb6e439c13c64b9e8b4609bd44c4442a74a2fa19436d7be0809a5f4b2"
+    },
+    "kos-census-root-graph-review-v1/REVIEW.json": {
+      "bytes": 10885,
+      "sha256": "37b15279b16d875e6a272a6f05a2e5840ecc6629fd33cf470539808021b766d0"
+    },
+    "kos-census-root-graph-review-v1/REVIEW.md": {
+      "bytes": 3334,
+      "sha256": "ee2de068771e5a5f262329a4af99273271237dc4e441a5f74d346b62adeda40e"
+    },
+    "kos-census-root-graph-review-v1/review.py": {
+      "bytes": 10860,
+      "sha256": "43c4986e5d71b41e56a7ace4301f64a2256a0d1d7517a5ca70bc73a5512321e1"
+    },
+    "kos-census-root-graph-review-v1/SOURCE-SEAL.json": {
+      "bytes": 1733,
+      "sha256": "bb65dca6bd3c871b53ddd8383231337f1f7b3a99e90d37959d170f67f7bdbd38"
+    },
+    "kos-census-root-graph-review-v1/STATUS.md": {
+      "bytes": 624,
+      "sha256": "9a500c27aad7c1044cf6abc5e0dd13068322d66cf541492aa49cec41b1f27fa9"
+    }
+  },
+  "grants_hash_only": {
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-root-graph-fix-v1/ROOT-CONTINUATION-GRANT.json": {
+      "bytes": 521,
+      "sha256": "420bd595949693f4db0d9eac91d0d8f6719f1dc640698887df205672d83fa139"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-root-graph-fix-v2/ROOT-CONTINUATION-GRANT.json": {
+      "bytes": 630,
+      "sha256": "b9204dfd0c8070206b6932389ebd95f609859beb0c016dcc5e37865dec69a2bc"
+    }
+  }
+}
