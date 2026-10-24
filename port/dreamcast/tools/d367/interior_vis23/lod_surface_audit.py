@@ -104,14 +104,14 @@ def main():
   files[name]=dict(prepared=identity(p),current_source=identity(actual))
  if any('/r10d/' in k for k in staged['remove']):raise ValueError('Current staging removes room input')
  if 'dc/native/r10d/ps2-world.r4sg' in staged['replace'] or (pkg/'ps2-world.r4sg').exists():raise ValueError('SG source not qualified for this room audit')
- reader=root/'helpers/interior/r4im.py';spec=importlib.util.spec_from_file_location('pinned_r4im',reader);mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod);p=mod.Pkg(pkg/'ps2-world.re4mesh',pkg/'ps2-world.r4pw')
+ reader=Path(__file__).with_name('surface_mesh.py');spec=importlib.util.spec_from_file_location('surface_mesh',reader);mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod);p=mod.Pkg(pkg/'ps2-world.re4mesh',pkg/'ps2-world.r4pw')
  if p.magic!=b'R4IM' or p.version!=3:raise ValueError('Unsupported mesh format')
  ids=(pkg/'ps2-world.ids').read_bytes();magic,version,n,crc=struct.unpack_from('<4sIII',ids)
  if magic!=b'R4ID' or version!=1 or n!=len(p.placements) or len(ids)<16+n:raise ValueError('Invalid IDs')
  shape_cache={};placements=[];instance=0;instance_keys=[]
  for pi,pl in enumerate(p.placements):
   mesh=p.meshes[pl['mesh']];facets=[];parts=[];clusters=[]
-  affine=[[Fraction(float(pl['affine'][i,j])) for j in range(3)] for i in range(3)]
+  affine=[[Fraction(float(pl['affine'][i][j])) for j in range(3)] for i in range(3)]
   det=dot(affine[0],cross(affine[1],affine[2]));singular=not det
   for part in range(mesh['first_part'],mesh['first_part']+mesh['part_count']):
    meta=p.pmeta[part];reserved=Path(pkg/'ps2-world.r4pw').read_bytes()[32+16*part+15]
@@ -123,7 +123,7 @@ def main():
      fm,nm,_=p.levels[cl['first_level']+lv];counts.append(nm);ll=set();total=0
      for li in range(fm,fm+nm):
       if li not in shape_cache:
-       corners,ix=p.let_tris(li);shape_cache[li]=[(tuple(tuple(0 if mesh['step'][k]==0 else int(corners[j,k]) for k in range(3)) for j in tri)) for tri in ix]
+       corners,ix=p.let_tris(li);shape_cache[li]=[(tuple(tuple(0 if mesh['step'][k]==0 else int(corners[j][k]) for k in range(3)) for j in tri)) for tri in ix]
       for tri in shape_cache[li]:
        t=canonical(tri)
        if t is not None:ll.add(t);total+=1
@@ -133,7 +133,7 @@ def main():
     r=dict(instance=instance,part=part,cluster=ci,level_meshlet_counts=counts,selectable_levels=selected,oriented_facets_per_level=[len(x) for x in levels],nondegenerate_triangles_per_level=raw_count,invariant_facets=len(keep),geometry_prerequisite=eligible,invariant_subset_verified=all(keep<=levels[lv] for lv in selected))
     clusters.append(r);instance_keys.append((pi,part,ci));instance+=1
   owner=ids[16+pl['placement']];comps=topology(facets)
-  placements.append(dict(placement=pi,field=pl['placement'],owner=owner,conditional_source=owner!=255,mesh=pl['mesh'],singular_affine=singular,affine_bytes_sha256=hashlib.sha256(struct.pack('<12f',*pl['affine'].flatten())).hexdigest(),parts=parts,clusters=clusters,components=comps,oriented_invariant_facets=len(facets),closed_graphs=sum(x['closed_oriented_graph_prerequisite'] for x in comps),unresolved_boundaries=sum(len(x['boundary_edges']) for x in comps),enclosure_proven=False,fail_open=True))
+  placements.append(dict(placement=pi,field=pl['placement'],owner=owner,conditional_source=owner!=255,mesh=pl['mesh'],singular_affine=singular,affine_bytes_sha256=hashlib.sha256(struct.pack('<12f',*[x for row in pl['affine'] for x in row])).hexdigest(),parts=parts,clusters=clusters,components=comps,oriented_invariant_facets=len(facets),closed_graphs=sum(x['closed_oriented_graph_prerequisite'] for x in comps),unresolved_boundaries=sum(len(x['boundary_edges']) for x in comps),enclosure_proven=False,fail_open=True))
  weighted=[]
  for replay in v.replay:
   rows=json.loads(replay.read_text());frames=[x['frame'] for x in rows]
