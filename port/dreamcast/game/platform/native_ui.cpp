@@ -539,6 +539,12 @@ void gca_tex_gap(void*,const re4dc::texture::Package* package,file_t file,std::u
     if(package!=h.package || h.bad)return;
     if(upto<h.cursor){h.bad=true;return;}
     if(upto==h.cursor)return;
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+    static unsigned gap_n;static unsigned long long gap_us,gap_total;
+    const unsigned long long gap_t0=timer_us_gettime64();gap_total+=upto-h.cursor;
+    struct GapDone{unsigned long long t0;~GapDone(){gap_us+=timer_us_gettime64()-t0;
+        if(!(++gap_n&15))re4dc_log("GC-ASSET-PROF gaps=%u gap_bytes=%llu gap_us=%llu\n",gap_n,gap_total,gap_us);}} gap_done{gap_t0};
+#endif
     Re4dcIoScope io;
     if(file==FILEHND_INVALID || fs_seek(file,off_t(base+h.cursor),SEEK_SET)!=off_t(base+h.cursor) ||
        !re4dc::storage::read_chunks(file,upto-h.cursor,[](const std::uint8_t* p,std::size_t n,void* ctx){
