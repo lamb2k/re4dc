@@ -1,0 +1,97 @@
+{
+  "Schema": "ONE_APPROVED_CLOSED_CAPTURE_NTFS_TRIAL_V1",
+  "Status": "PASS_ROUNDTRIP_ORIGINAL_UNCOMPRESSED",
+  "SourcePin": {
+    "SourceCommit": "d3e7ee5fe4ac6045dd11444a0ad2379a4b343b02",
+    "Branch": "wip/world-emit23-evidence-tools-20261023",
+    "OriginExactVerified": true,
+    "ScriptSHA256": "d3596dfbf24d7fdc866e8d600f57a42c17dbdd02160183f6c403bd2dee8d47f8",
+    "ScopeTarget": "C:\\Flycast-Evidence\\re4-dreamcast\\audits23-takeover\\5e4de9a0\\h2-on-r2\\flycast.exe",
+    "ApprovedOneOnly": true
+  },
+  "Target": "C:\\Flycast-Evidence\\re4-dreamcast\\audits23-takeover\\5e4de9a0\\h2-on-r2\\flycast.exe",
+  "Before": {
+    "Path": "C:\\Flycast-Evidence\\re4-dreamcast\\audits23-takeover\\5e4de9a0\\h2-on-r2\\flycast.exe",
+    "FileId": "E8D47561:00050000004F12B7",
+    "Links": 1,
+    "LogicalBytes": 14416384,
+    "StandardAllocationBytes": 14417920,
+    "PhysicalStorageBytes": 14416384,
+    "AllocatedStorageBytes": 14417920,
+    "ClusterBytes": 4096,
+    "SHA256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a",
+    "Readonly": false,
+    "Compressed": false,
+    "Attributes": "Archive",
+    "LastWriteUtc": "2026-10-24T00:40:40.8350443Z"
+  },
+  "Compressed": {
+    "Path": "C:\\Flycast-Evidence\\re4-dreamcast\\audits23-takeover\\5e4de9a0\\h2-on-r2\\flycast.exe",
+    "FileId": "E8D47561:00050000004F12B7",
+    "Links": 1,
+    "LogicalBytes": 14416384,
+    "StandardAllocationBytes": 9629696,
+    "PhysicalStorageBytes": 9629696,
+    "AllocatedStorageBytes": 9629696,
+    "ClusterBytes": 4096,
+    "SHA256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a",
+    "Readonly": false,
+    "Compressed": true,
+    "Attributes": "Archive, Compressed",
+    "LastWriteUtc": "2026-10-24T00:40:40.8350443Z"
+  },
+  "Restored": {
+    "Path": "C:\\Flycast-Evidence\\re4-dreamcast\\audits23-takeover\\5e4de9a0\\h2-on-r2\\flycast.exe",
+    "FileId": "E8D47561:00050000004F12B7",
+    "Links": 1,
+    "LogicalBytes": 14416384,
+    "StandardAllocationBytes": 14417920,
+    "PhysicalStorageBytes": 14416384,
+    "AllocatedStorageBytes": 14417920,
+    "ClusterBytes": 4096,
+    "SHA256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a",
+    "Readonly": false,
+    "Compressed": false,
+    "Attributes": "Archive",
+    "LastWriteUtc": "2026-10-24T00:40:40.8350443Z"
+  },
+  "Commands": [
+    {
+      "Utility": "C:\\WINDOWS\\System32\\compact.exe",
+      "Arguments": [
+        "/C",
+        "/F",
+        "/Q",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\audits23-takeover\\5e4de9a0\\h2-on-r2\\flycast.exe"
+      ],
+      "ExitCode": 0,
+      "HostUtilityWallMilliseconds": 102.4978,
+      "RawOutput": "C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\ntfs-compression-one-trial-v1\\compact-C-output.txt",
+      "RawOutputSHA256": "716ee616dc08ac22381461113c5bbebf0ca0ddb5de9adc01235c676c1b27a533"
+    },
+    {
+      "Utility": "C:\\WINDOWS\\System32\\compact.exe",
+      "Arguments": [
+        "/U",
+        "/F",
+        "/Q",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\audits23-takeover\\5e4de9a0\\h2-on-r2\\flycast.exe"
+      ],
+      "ExitCode": 0,
+      "HostUtilityWallMilliseconds": 52.0189,
+      "RawOutput": "C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\ntfs-compression-one-trial-v1\\compact-U-output.txt",
+      "RawOutputSHA256": "d6721441ff5f7e84d9eb5b6243ef979fe498f84a6041f299c1cb3c2e029e2f30"
+    }
+  ],
+  "FullOriginalByteSequenceComparedAfterBoth": true,
+  "SidecarFilesVerifiedUnchanged": 29,
+  "RunAndBoundReceiptsUnchanged": true,
+  "CFreeBytesBefore": 33455243264,
+  "CFreeBytesAfter": 33455099904,
+  "PhysicalReductionDuringTrial": 4788224,
+  "CompressionStorageRatio": 0.6678977272727272,
+  "FinalExecutableBytesReclaimed": 0,
+  "OtherCapturesModified": 0,
+  "BatchAuthorized": false,
+  "Attribution": "Host compact.exe wall time only; concurrent free-space changes not attributed. Target left uncompressed. No gameplay/performance claim."
+}

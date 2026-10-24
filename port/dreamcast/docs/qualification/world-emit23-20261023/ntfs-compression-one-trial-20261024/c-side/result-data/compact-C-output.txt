@@ -1,0 +1,8 @@
+
+ Compressing files in C:\Flycast-Evidence\re4-dreamcast\audits23-takeover\5e4de9a0\h2-on-r2\
+
+
+1 files within 1 directories were compressed.
+14,416,384 total bytes of data are stored in 9,629,696 bytes.
+The compression ratio is 1.5 to 1.
+

@@ -1,0 +1,7 @@
+
+ Uncompressing files in C:\Flycast-Evidence\re4-dreamcast\audits23-takeover\5e4de9a0\h2-on-r2\
+
+
+1 files within 1 directories were uncompressed.
+
+

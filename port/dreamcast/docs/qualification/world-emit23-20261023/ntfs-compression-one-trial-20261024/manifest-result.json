@@ -1,0 +1,43 @@
+{
+  "schema": "one-approved-NTFS-trial-result-preservation-v1",
+  "sealed_utc": "2026-10-24T03:01:09.597791+00:00",
+  "source_checkpoint": "d3e7ee5fe4ac6045dd11444a0ad2379a4b343b02",
+  "copied": [
+    {
+      "path": "c-side/result-data/NTFS-COMPRESSION-ONE-TRIAL-SOURCE-PIN-v1.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/NTFS-COMPRESSION-ONE-TRIAL-SOURCE-PIN-v1.json",
+      "bytes": 373,
+      "sha256": "3a33b7e72baf075ae193266485adce9232f55ad3023c50c7c111d586cf0e731a"
+    },
+    {
+      "path": "c-side/result-data/result.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/ntfs-compression-one-trial-v1/result.json",
+      "bytes": 4036,
+      "sha256": "f162482ab85c4b998fff7aea411c2e3fdaae95bfbc709410162de65fa7f4ef3d"
+    },
+    {
+      "path": "c-side/result-data/journal.jsonl",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/ntfs-compression-one-trial-v1/journal.jsonl",
+      "bytes": 11423,
+      "sha256": "7241aa4ff425bf1b1066e263bedf9a56064ad6850354a1a7c63fb03fbf055b18"
+    },
+    {
+      "path": "c-side/result-data/compact-C-output.txt",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/ntfs-compression-one-trial-v1/compact-C-output.txt",
+      "bytes": 248,
+      "sha256": "716ee616dc08ac22381461113c5bbebf0ca0ddb5de9adc01235c676c1b27a533"
+    },
+    {
+      "path": "c-side/result-data/compact-U-output.txt",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/ntfs-compression-one-trial-v1/compact-U-output.txt",
+      "bytes": 155,
+      "sha256": "d6721441ff5f7e84d9eb5b6243ef979fe498f84a6041f299c1cb3c2e029e2f30"
+    }
+  ],
+  "actual_target": "C:\\Flycast-Evidence\\re4-dreamcast\\audits23-takeover\\5e4de9a0\\h2-on-r2\\flycast.exe",
+  "status": "PASS_ROUNDTRIP_ORIGINAL_UNCOMPRESSED",
+  "all_original_bytes_and29sidecars_unchanged": true,
+  "final_reclaimed_bytes": 0,
+  "batch_authorized": false,
+  "scope": "Actual native utility metadata/rawoutput only; no captured game logs/pixels/VMU/fixturebody/executable bytes copied."
+}
