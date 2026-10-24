@@ -194,3 +194,26 @@ endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY21_AB=1
 ROOMFILE_SECTIONS += -DRE4DC_SCENERY21_AB=1
 endif
+
+# One-frame diagnostic census only. Nonzero is the minimum UI capture frame.
+# Off adds no definition or compiler-command change.
+SCENERY_EMIT_CENSUS ?= 0
+ifneq ($(SCENERY_EMIT_CENSUS),0)
+scenery_census_nondigits := $(subst 9,,$(subst 8,,$(subst 7,,$(subst 6,,$(subst 5,,$(subst 4,,$(subst 3,,$(subst 2,,$(subst 1,,$(subst 0,,$(SCENERY_EMIT_CENSUS)))))))))))
+ifneq ($(scenery_census_nondigits),)
+$(error SCENERY_EMIT_CENSUS must be a decimal frame from 0 to 10000000)
+endif
+ifneq ($(filter 0%,$(SCENERY_EMIT_CENSUS)),)
+$(error SCENERY_EMIT_CENSUS does not accept leading zeroes)
+endif
+ifneq ($(shell test "$(SCENERY_EMIT_CENSUS)" -le 10000000 2>/dev/null && echo yes),yes)
+$(error SCENERY_EMIT_CENSUS must be a decimal frame from 0 to 10000000)
+endif
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_EMIT_CENSUS needs SCENERY_CHUNK)
+endif
+ifneq ($(PS2_WORLD_MESH),1)
+$(error SCENERY_EMIT_CENSUS needs PS2_WORLD_MESH=1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_EMIT_CENSUS=$(SCENERY_EMIT_CENSUS)
+endif
