@@ -15,7 +15,7 @@ def legacy_viewport_audit(path,first=500,last=794,stride=7):
     rows may concatenate without LF; labels delimit rather than readlines().
     """
     wanted=set(range(first,last+1,stride));rows={}
-    for m in re.finditer(r'PS2CAM f=(\d+) cf=[0-9a-f]{8} c=[0-9a-f ]+ p=[0-9a-f ]+ vp=([0-9a-f ]+)',Path(path).read_text(errors='replace')):
+    for m in re.finditer(r'PS2CAM f=(\d+) cf=[0-9a-f]{8} c=[0-9a-f ]+ p=[0-9a-f ]+ vp=([^\r\n]*?)(?=PS2CAM|[\r\n]|$)',Path(path).read_text(errors='replace')):
         f=int(m[1])
         if f not in wanted:continue
         words=m[2].split()

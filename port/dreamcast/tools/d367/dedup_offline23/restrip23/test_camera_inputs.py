@@ -10,7 +10,7 @@ class CameraInputs(unittest.TestCase):
   cam,a=self.runrow(self.row('00000000 00000000 44200000 43f00000 00000000 3f80000'))
   self.assertEqual(a['truncated_rows'],1);self.assertEqual(a['frames'][500]['remaining_words'][-1],'3f80000');self.assertEqual(len(cam[0][1]),20)
  def test_offsets_bad_extent_and_missing_used_word_rejected(self):
-  for vp in ('3f800000 00000000 44200000 43f00000','00000000 00000000 00000000 43f00000','00000000 00000000 44200000 43f0000'):
+  for vp in ('3f800000 00000000 44200000 43f00000','00000000 00000000 00000000 43f00000','00000000 00000000 44200000 43f0000','00000000 00000000 44200000 43f00000Z'):
    with self.assertRaises(ValueError):self.runrow(self.row(vp))
  def test_unused_tail_cannot_change_model_camera(self):
   a,_=self.runrow(self.row('00000000 00000000 44200000 43f00000 deadbeef fffffff'))
