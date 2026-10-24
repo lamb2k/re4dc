@@ -45,7 +45,7 @@ def source_policy(coverage,manifest,source_root,source_code_root):
         blob=path.read_bytes();digest=sha(blob)
         if digest!=manifest[rel]['sha256'] or len(blob)!=manifest[rel]['size']:
             metadata[rel]=dict(retained=False,reason='named-input-not-original-hash',actual_sha256=digest);continue
-        try:parsed[rel]=effect_consumers.source_bindings(blob)
+        try:parsed[rel]=effect_consumers.source_bindings(blob,separate_model_namespace=True)
         except ValueError as e:metadata[rel]=dict(retained=True,parsed=False,sha256=digest,reason=str(e));continue
         metadata[rel]=dict(retained=True,parsed=True,path=str(path),sha256=digest,size=len(blob),
             EFF_blocks=len(parsed[rel]['effects']),compact_sequences=parsed[rel]['compact_sequences'])
@@ -87,6 +87,14 @@ def build(original,base_pack,coverage,policy,*,enabled=False,engine='auto'):
         for b in row['source_bindings']:
             m=policy['source_files'].get(b['source_path'],{})
             if not m.get('retained') or not m.get('parsed') or m['sha256']!=b['source_sha256']:raise ValueError('effect policy source is not exact')
+        expected_refs={(b['path'],b['arc_index'],b['tpl_offset'],b['file_sha256']) for b in expected[name]['source_refs']}
+        actual_refs={(b['source_path'],b['archive_entry'],b['tpl_offset'],b['source_sha256']) for b in row['source_bindings']}
+        if actual_refs!=expected_refs or len(actual_refs)!=len(row['source_bindings']):
+            raise ValueError('generic effect policy omits or duplicates an original source binding')
+        if any((b['path'],b['arc_index']) in effect_policy.ID_UI for b in expected[name]['source_refs']):
+            raise ValueError('generic effect source has a fixed-ID UI consumer')
+        if any(effect_consumers.record_reference_namespace(r)!='effect-texture' for r in records):
+            raise ValueError('generic effect policy contains a model or unresolved reference namespace')
         classes=[effect_consumers.record_sampling(r,policy['common_sprite_ids'],extended=True) for r in records]
         if any(c.startswith('hold-') for c in classes) or not any(c.startswith('common-world-sprite') for c in classes):raise ValueError('effect policy contains an unsupported sampler')
         st=tpl.TEXTURE.unpack_from(source[key],48);bt=tpl.TEXTURE.unpack_from(base[key],48)
