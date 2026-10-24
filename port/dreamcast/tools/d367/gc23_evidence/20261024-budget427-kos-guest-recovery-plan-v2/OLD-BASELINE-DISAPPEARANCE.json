@@ -1,0 +1,63 @@
+{
+ "status": "HOLD_UNCHANGED_GUARD",
+ "baseline_unique": 5278682286,
+ "actual_unique": 3229490508,
+ "delta": -2049191778,
+ "changes": [
+  {
+   "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-media-aab-v1/base-off/track03.iso",
+   "old": {
+    "size": 1024573440,
+    "dev": 64,
+    "ino": 281474981912325,
+    "nlink": 1,
+    "sha256": "087fcd114f232d043485555256b3e026d3c4a9a2d1b846e875747040b9828515"
+   },
+   "current": null,
+   "current_identity": null
+  },
+  {
+   "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-media-aab-v1/base-off/track03.iso.sha256",
+   "old": null,
+   "current": {
+    "size": 79,
+    "dev": 64,
+    "ino": 1970324842113605,
+    "nlink": 1
+   },
+   "current_identity": {
+    "size": 79,
+    "sha256": "cfa0d0902bc5ac942f9f5ec0001ab77838de59b35df3e8b5db5a353d322369ff"
+   }
+  },
+  {
+   "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-media-aab-v1/base-on/track03.iso",
+   "old": {
+    "size": 1024618496,
+    "dev": 64,
+    "ino": 281474981912362,
+    "nlink": 1,
+    "sha256": "00fe2258d545155fb59c23f13a5e402319d372f37c1b05c7f1df3939c68f776c"
+   },
+   "current": null,
+   "current_identity": null
+  },
+  {
+   "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-media-aab-v1/base-on/track03.iso.sha256",
+   "old": null,
+   "current": {
+    "size": 79,
+    "dev": 64,
+    "ino": 844424934605969,
+    "nlink": 1
+   },
+   "current_identity": {
+    "size": 79,
+    "sha256": "5f61fddbfc930e2506e024e2dbbaafca8737fae261290b4919736e61808d700a"
+   }
+  }
+ ],
+ "no_mutation": true,
+ "SDK": 0,
+ "guest": 0
+}

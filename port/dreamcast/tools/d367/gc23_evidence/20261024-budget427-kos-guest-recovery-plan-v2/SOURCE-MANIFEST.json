@@ -1,0 +1,78 @@
+{
+ "utc": "2026-10-24T13:31:52.014007+00:00",
+ "parent": "8c9cf9d5621b067dc10073b832e6e387b60e4a30",
+ "source_members": {
+  "BINDING-PENDING.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v2/BINDING-PENDING.json",
+   "size": 933,
+   "sha256": "9c5113e36d5e1190293ef27958df271ca1d7b62c8f9dce34b6940e10ec49812b"
+  },
+  "HOST-CONTROLS-r1.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v2/HOST-CONTROLS-r1.json",
+   "size": 218,
+   "sha256": "4a2e6ddb9a307bbae7233688309b31ef04c76236f3e3550bb37f878e93e9d7a5"
+  },
+  "HOST-CONTROLS.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v2/HOST-CONTROLS.json",
+   "size": 218,
+   "sha256": "fba8a078c4ad73cc9206d929195de99a4054355e93ea5b7b8f9c9339830ef218"
+  },
+  "host_controls.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v2/host_controls.py",
+   "size": 7017,
+   "sha256": "094364dccc0133aa5a391083c87168157f385e1463baf31aa682a7d68890b276"
+  },
+  "OLD-BASELINE-DISAPPEARANCE.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v2/OLD-BASELINE-DISAPPEARANCE.json",
+   "size": 1641,
+   "sha256": "9409bd8b090ec545cf7e927fc68ac63266b558c4907493deabee91a0836aef85"
+  },
+  "PLAN-SEAL.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v2/PLAN-SEAL.json",
+   "size": 1753,
+   "sha256": "b6e24101a8e1889f278f48a1603384f87efa6a8445fe750f79b51860210e053b"
+  },
+  "PREDECESSOR-PINS.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v2/PREDECESSOR-PINS.json",
+   "size": 3989,
+   "sha256": "1d2fd1b81f6c8dcfef62d4ab4b9c2e12ec4fab87b0d3e88105e2e8bb6bafbf65"
+  },
+  "prepare_plan.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v2/prepare_plan.py",
+   "size": 5328,
+   "sha256": "f9be91ab49270feb31ac103c524b8afaffa0922070ea9ffe52e41a637283561e"
+  },
+  "READBACK.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v2/READBACK.json",
+   "size": 261,
+   "sha256": "1d18a57d957aac6152d921c74c57f11bd980d6869663f893aa12d0f033ce9afb"
+  },
+  "README.md": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v2/README.md",
+   "size": 3818,
+   "sha256": "c273b6e2bd9d661e9eda595d2826450728049b177ae00732a250b50b19453178"
+  },
+  "RECOVERY-PLAN.json": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v2/RECOVERY-PLAN.json",
+   "size": 4015,
+   "sha256": "0ce389a135fa774938f7fec75d6207a634ad8aa04a1bdc62f01cc449b02b0196"
+  },
+  "recovery.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v2/recovery.py",
+   "size": 5503,
+   "sha256": "024191aa1a5e77f566c4ed4973e6c1ea2530ea0fdbc65d31e387c9333aa04a64"
+  },
+  "seal_plan.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v2/seal_plan.py",
+   "size": 1839,
+   "sha256": "430c9e42f0c43fb9e26e3933d5da681380cdd309a997167c5b07c07efd2fb0d4"
+  },
+  "archive_source.py": {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/archive-recovery-plan-v2.py",
+   "size": 4067,
+   "sha256": "89e7bf28bf56015242d739acddd87a78cb7a464c2c241ac89b12379f2a9cc921"
+  }
+ },
+ "bytes": 40600,
+ "line_endings": "Original bytes; Git text normalization disabled locally"
+}

@@ -1,0 +1,81 @@
+{
+ "predecessors_are_immutable": true,
+ "files": {
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v1/TOOLCHAIN-SEAL.json": {
+   "size": 3857,
+   "sha256": "7b5120956b13f1d25f50280120686a8efe45ed70f09ca14042722cb4eaa9997e"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v1/BASELINE-DRIFT.json": {
+   "size": 1641,
+   "sha256": "9409bd8b090ec545cf7e927fc68ac63266b558c4907493deabee91a0836aef85"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v1/STATUS.json": {
+   "size": 1924,
+   "sha256": "c53a2c98028db0e6f3a4e83e7a7b5e0e0d78a0f62305ec664e7f5879aab6d4ca"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v1/controller.py": {
+   "size": 7272,
+   "sha256": "29b68123eb5c0171ac221c89347219767158921f0a0c56e4bac6f70a902b4711"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v1/post_slot.py": {
+   "size": 2347,
+   "sha256": "e0f43cd7e852f797687867177a42c99ce4e72a34108e9ee7d66b707201108d71"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v1/launch.py": {
+   "size": 1146,
+   "sha256": "75df762663e334f2b80261546c8b3a36a7fa43c10b190a49cc2aa87cce12a276"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v1/windows_entry.py": {
+   "size": 5389,
+   "sha256": "8fb96ed116a2412f4455ff0a9598df5b200122e25615439702d0020a8a58b209"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v1/owned_process.py": {
+   "size": 2552,
+   "sha256": "812b39c00151bad4ec2d888b36e5cf74407ce6b5234c219a675ffd04757a4ae7"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v1/judge.py": {
+   "size": 1634,
+   "sha256": "f110a07b17a1758e4aa08a6a3201ec9f9423a78489c71975e70e5d7a15571836"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v1/common.py": {
+   "size": 11339,
+   "sha256": "fa2b25a9ad0e8b2d00eb81f4f5517d28ec119996a62d1c6591b9b58c7c815d65"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v1/INPUT-PINS.json": {
+   "size": 5272,
+   "sha256": "664d5ac37ff93aa41f7cad1213f4ae7d07b6b1ca46285df1adf6e7c5119b483e"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v1/PLAN.json": {
+   "size": 10167,
+   "sha256": "0d662fea2252864ae72ab68b166ec88e3d3804e3370a4ecabfbbc21f70e8d1b3"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v1/POSTSTAGE-PINS.json": {
+   "size": 577,
+   "sha256": "7af4ada4528bcb68d3ca82bcc096249fbfc907aa08b6b7c50d90fdd45bb9ceb1"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/TOOLCHAIN-SEAL.json": {
+   "size": 2751,
+   "sha256": "2301e39cfb166ee25bab261f0323d1df27331155148b67453bc527ce7330bee1"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/BASELINE.json": {
+   "size": 1674494,
+   "sha256": "5d1f9a8cb6e16f3abb145664faee503c88125061bc1d30c083489eae9baf56f0"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/core.py": {
+   "size": 5315,
+   "sha256": "346cb535de50868c77a745ccb6ce5f0a14d7e0be1a4d04339553bbe1f6b1b5ee"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/BINDING.json": {
+   "size": 10656,
+   "sha256": "c718747e5cd79fc8ce3994d8014e37a717839f153539029ceaaa63c58b97c7f9"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/OFF-EXPECTED-MANIFEST.json": {
+   "size": 221364,
+   "sha256": "d38313c06533dce2d7a858937fbba8943f5951b3c32423679e20c486e87f9bcb"
+  },
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/ON-EXPECTED-MANIFEST.json": {
+   "size": 221364,
+   "sha256": "ea37b49d0799797a114b9529eb296a3175b022bae25c37bb08194e25863a7ac0"
+  }
+ }
+}

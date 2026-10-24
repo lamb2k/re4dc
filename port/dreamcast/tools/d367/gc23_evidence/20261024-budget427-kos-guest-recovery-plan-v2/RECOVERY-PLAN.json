@@ -1,0 +1,110 @@
+{
+ "status": "SOURCE_PLAN_ONLY_PENDING_PROTECTED_OFF_AND_FRESH_BOTH_MEDIA_READBACK",
+ "snapshot_utc": "2026-10-24T13:26:05Z",
+ "source": "427784b1f48aa30742850bb5025925ab619b740e",
+ "no_guest_grant": true,
+ "root_reported_compaction": {
+  "utc": "2026-10-24T13:01:00Z",
+  "mechanism": "hourly EvidenceCompaction -> Remove-StagedDiscs.ps1",
+  "count": 2,
+  "independent_forensic_cause_verification": false,
+  "narrow_Name_guard_root_owned": true,
+  "KEEP_marker_additions_expected": true
+ },
+ "retained_roots_to_revalidate": [
+  "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-media-aab-v1",
+  "/root/probe/gc-motion24-qa-media-v1",
+  "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1",
+  "/root/probe/gc-motion24-kos-census-media-v1",
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep",
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1",
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v1",
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2",
+  "/root/probe/gc-motion24-kos-budget-retest-media-v2",
+  "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-budget-retest-media-v2",
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v1",
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-prep-v2",
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-stage-root-v1",
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-media-poststage-v1"
+ ],
+ "finite_future_metadata_roots_record_absence_then_charge_all_new_inodes": [
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-root-review-v1",
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-guest-root-review-v2",
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-kos-budget-retest-media-poststage-v2"
+ ],
+ "protected_shared_OFF_root": null,
+ "protected_shared_OFF_root_hint": "_qa-media-8ce-recovery-v4/base-off (producer path pending)",
+ "new_baseline": null,
+ "new_baseline_may_finalize_only_after": [
+  "Protected OFF producer handback complete",
+  "Independent full OFF payload/IP/redirect/programme/track readback",
+  "Fresh corrected ON full payload/IP/redirect/programme/track readback",
+  "Explicit approved current root list",
+  "Full hash/dev/inode inventory of all current retained members and KEEP additions",
+  "Disappearance and all other current drift reconciled with root; no silent migration"
+ ],
+ "allocation": {
+  "new_delta_cap": 1342177280,
+  "aggregate_cap": 6979321856,
+  "C_start": 27917287424,
+  "C_floor": 25769803776,
+  "unique_inode_shared_OFF_charged_once": true,
+  "hash_equality_alone_does_not_deduplicate": true,
+  "prior_sealed_guards_unchanged": true
+ },
+ "controller": {
+  "predecessor_seal": "7b5120956b13f1d25f50280120686a8efe45ed70f09ca14042722cb4eaa9997e",
+  "reuse_exact_logic": [
+   "controller.py",
+   "post_slot.py",
+   "launch.py",
+   "windows_entry.py",
+   "owned_process.py",
+   "judge.py"
+  ],
+  "necessary_reviewed_delta_only": [
+   "current recovery context/capacity implementation",
+   "exact media roots/current baseline and receipts",
+   "fresh case paths and V2 grant bindings"
+  ],
+  "four_cases": [
+   {
+    "arm": "off",
+    "frag": 0,
+    "held": 49152
+   },
+   {
+    "arm": "on",
+    "frag": 0,
+    "held": 49152
+   },
+   {
+    "arm": "off",
+    "frag": 1,
+    "held": 49152
+   },
+   {
+    "arm": "on",
+    "frag": 1,
+    "held": 49152
+   }
+  ],
+  "harness_seconds": 45,
+  "exact_child_seconds": 55,
+  "admission_seconds": 180,
+  "runtime_seconds": 95,
+  "overall_seconds": 1300,
+  "root_slots": 3,
+  "global_slots": 16,
+  "H2": false,
+  "retry": false
+ },
+ "qualification": {
+  "production_media_read": false,
+  "SDK": false,
+  "stage": false,
+  "guest": false,
+  "memory": "NOT_RUN",
+  "future_executable_V2_adaptation": "PENDING_ACTUAL_OFF_BINDING_AND_REVIEW"
+ }
+}

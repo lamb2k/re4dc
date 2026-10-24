@@ -1,0 +1,10 @@
+{
+ "status": "EXACT_SOURCE_PLAN_READBACK_PASS_NO_BASELINE_NO_GUEST",
+ "seal": {
+  "size": 1753,
+  "sha256": "b6e24101a8e1889f278f48a1603384f87efa6a8445fe750f79b51860210e053b"
+ },
+ "members": 11,
+ "bytes": 34519,
+ "no_actual_programmes_or_assets_copied": true
+}

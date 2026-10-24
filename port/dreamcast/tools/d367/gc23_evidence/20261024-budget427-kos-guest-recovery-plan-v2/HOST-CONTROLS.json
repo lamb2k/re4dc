@@ -1,0 +1,12 @@
+{
+ "status": "PASS",
+ "tests": 39,
+ "failures": 0,
+ "errors": 0,
+ "production_media_read": 0,
+ "SDK": 0,
+ "stage": 0,
+ "guest": 0,
+ "production_locks": 0,
+ "scope": "Synthetic source accounting/pending refusal only"
+}

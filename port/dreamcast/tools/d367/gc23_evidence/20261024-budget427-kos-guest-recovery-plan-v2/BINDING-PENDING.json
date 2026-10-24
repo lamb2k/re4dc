@@ -1,0 +1,24 @@
+{
+ "source": "427784b1f48aa30742850bb5025925ab619b740e",
+ "predecessor_guest_seal": "7b5120956b13f1d25f50280120686a8efe45ed70f09ca14042722cb4eaa9997e",
+ "state": "PENDING_ACTUAL_OFF",
+ "old_baseline_disappearance_acknowledged": true,
+ "restored_old_image_identity": false,
+ "off_build_provenance": "RAIN_PRODUCED_DISABLED_PAYLOAD_EQUIVALENT",
+ "off_program_sha256": "e0168b780b102356c9bc3ee785753a659be6a020b1d1d3f8db92f14a90c16de5",
+ "off_root": null,
+ "on_root": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-budget-retest-media-v2/on",
+ "off_readback_path": null,
+ "on_readback_path": null,
+ "off_track_identity": null,
+ "on_track_identity": {
+  "size": 1024618496,
+  "sha256": "86d1f4107417912abc74af0e2005a3bbd79a2eed03e543721db6e022dd815dfa"
+ },
+ "off_readback_identity": null,
+ "on_readback_identity": null,
+ "all14_exact": false,
+ "assets1697_exact": false,
+ "IP_exact": false,
+ "redirects6_exact": false
+}
