@@ -1,0 +1,37 @@
+platform/native_static.cpp: In function ‘int {anonymous}::mesh_submit(const Re4dcModelPart&)’:
+platform/native_static.cpp:4503:67: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+ 4503 |     MeshDraw d{{*drawn,{},near,far},v.package,*part,v.lut,v.gather};
+      |                                                                   ^
+platform/native_static.cpp:4503:67: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+platform/native_static.cpp:4503:67: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_lp’ [-Wmissing-field-initializers]
+platform/native_static.cpp: In function ‘void {anonymous}::trans::close()’:
+platform/native_static.cpp:5363:5: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+ 5363 |     if(block)re4dc_static_free(block); block=nullptr;cls=nullptr;room=~0U;nparts=0; }
+      |     ^~
+platform/native_static.cpp:5363:40: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+ 5363 |     if(block)re4dc_static_free(block); block=nullptr;cls=nullptr;room=~0U;nparts=0; }
+      |                                        ^~~~~
+platform/native_static.cpp: In lambda function:
+platform/native_static.cpp:6803:76: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+ 6803 |         MeshDraw e{{part,{},near,far},cpkg,replay_part,ps2w.lut,ps2w.gather};
+      |                                                                            ^
+platform/native_static.cpp:6803:76: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+platform/native_static.cpp:6803:76: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_lp’ [-Wmissing-field-initializers]
+platform/native_static.cpp: In function ‘int {anonymous}::ps2_pass(unsigned int, float)’:
+platform/native_static.cpp:7166:84: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+ 7166 |                        marked&&ps2w.lut?ps2_vertex_alpha_lut():ps2w.lut,ps2w.gather};
+      |                                                                                    ^
+platform/native_static.cpp:7166:84: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+platform/native_static.cpp:7166:84: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_lp’ [-Wmissing-field-initializers]
+platform/native_static.cpp: In function ‘void re4dc_std_room_enter(unsigned int)’:
+platform/native_static.cpp:745:57: warning: ‘%02x’ directive output may be truncated writing 2 bytes into a region of size between 1 and 6 [-Wformat-truncation=]
+  745 |             char want[8];snprintf(want,sizeof(want),"r%x%02x",room>>8,room&255U);
+      |                                                         ^~~~
+In function ‘bool {anonymous}::std_parse(char*, unsigned int)’,
+    inlined from ‘void re4dc_std_room_enter(unsigned int)’ at platform/native_static.cpp:3614:23:
+platform/native_static.cpp:745:53: note: directive argument in the range [0, 255]
+  745 |             char want[8];snprintf(want,sizeof(want),"r%x%02x",room>>8,room&255U);
+      |                                                     ^~~~~~~~~
+platform/native_static.cpp:745:34: note: ‘snprintf’ output between 5 and 10 bytes into a destination of size 8
+  745 |             char want[8];snprintf(want,sizeof(want),"r%x%02x",room>>8,room&255U);
+      |                          ~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

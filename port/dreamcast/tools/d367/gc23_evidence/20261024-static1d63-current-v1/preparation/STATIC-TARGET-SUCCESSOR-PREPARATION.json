@@ -1,0 +1,9 @@
+{
+  "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "prior_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+  "prior_report_sha256": "666759f4e9019398d854d959244c19080ffeee1edf323f8611ef5e874a679979",
+  "harness_sha256": "ebd6a4e8e452f219cbcc8b3f631deb21ac908a23e78da7f2fd78b3d441f47105",
+  "wrapper_sha256": "8b0cd44fc1de062efe954d7bfd8786c781d8e6eee061d837fcd35e08fa67574a",
+  "scope": "Same14units/fivehelpers/67arms. Reuse only exact current-profile failed-attempt objects with immutable report, SDK/profile, ALL input, object/stripped and normalized actual compiler command pins. Changed native_static inputs recompile. Combined RAM scratch256MiB, C floor24GiB. No link/guest.",
+  "status": "PREPARED_ONLY"
+}

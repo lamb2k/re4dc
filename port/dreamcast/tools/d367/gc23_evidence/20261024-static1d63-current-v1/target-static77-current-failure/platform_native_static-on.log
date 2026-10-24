@@ -1,0 +1,30 @@
+platform/native_static.cpp: In function ‘unsigned int {anonymous}::gcasset_static_profile()’:
+platform/native_static.cpp:613:50: error: ‘RE4DC_SCENERY_DEDUP’ was not declared in this scope; did you mean ‘RE4DC_SCENERY_GATE’?
+  613 |         ((RE4DC_MESH_LOD!=0)?4U:0U) | ((unsigned(RE4DC_SCENERY_DEDUP)&3U)<<4);
+      |                                                  ^~~~~~~~~~~~~~~~~~~
+      |                                                  RE4DC_SCENERY_GATE
+platform/native_static.cpp: In function ‘int {anonymous}::mesh_submit(const Re4dcModelPart&)’:
+platform/native_static.cpp:4499:67: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+ 4499 |     MeshDraw d{{*drawn,{},near,far},v.package,*part,v.lut,v.gather};
+      |                                                                   ^
+platform/native_static.cpp:4499:67: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+platform/native_static.cpp:4499:67: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_lp’ [-Wmissing-field-initializers]
+platform/native_static.cpp: In function ‘void {anonymous}::trans::close()’:
+platform/native_static.cpp:5359:5: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+ 5359 |     if(block)re4dc_static_free(block); block=nullptr;cls=nullptr;room=~0U;nparts=0; }
+      |     ^~
+platform/native_static.cpp:5359:40: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+ 5359 |     if(block)re4dc_static_free(block); block=nullptr;cls=nullptr;room=~0U;nparts=0; }
+      |                                        ^~~~~
+platform/native_static.cpp: In lambda function:
+platform/native_static.cpp:6799:76: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+ 6799 |         MeshDraw e{{part,{},near,far},cpkg,replay_part,ps2w.lut,ps2w.gather};
+      |                                                                            ^
+platform/native_static.cpp:6799:76: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+platform/native_static.cpp:6799:76: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_lp’ [-Wmissing-field-initializers]
+platform/native_static.cpp: In function ‘int {anonymous}::ps2_pass(unsigned int, float)’:
+platform/native_static.cpp:7162:84: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+ 7162 |                        marked&&ps2w.lut?ps2_vertex_alpha_lut():ps2w.lut,ps2w.gather};
+      |                                                                                    ^
+platform/native_static.cpp:7162:84: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+platform/native_static.cpp:7162:84: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_lp’ [-Wmissing-field-initializers]

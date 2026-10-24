@@ -1,0 +1,9 @@
+{
+  "runtime_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+  "baseline": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "profile": "out-rrfb254e8rP",
+  "old_harness_sha256": "eb48c264de4dde7cf1713e1d53c7c64bc8eeb24c7c589de065d5227153b85961",
+  "new_harness_sha256": "6f8f984ed689ee8c0c0701d054f15c7a276b0f8d9d59c475cf3f15e4322935ba",
+  "wrapper_sha256": "3a9e1cae4373fae0797c0a501ae5dce30d0dc261d6d5d89f8e74cfd303ebdfc9",
+  "scope": "Source-only prepared adaptation. No SDK run yet. Fresh14 existing objects absent/0/ON compared to current baseline; five new helpers OFF/ON; no old object reuse. C/game bridge units mirror actual make GATE-only, platform C++ additionally catalog define. OneSDK slot/tree lease;256MiB owned output cap."
+}

@@ -1,0 +1,229 @@
+coarse_actor.cpp:190:10:unsigned int {anonymous}::fingerprint(const void*)	0	static
+coarse_actor_leon_hands.inc:424:17:unsigned int {anonymous}::leon_r32(unsigned int)	0	static
+coarse_actor_leon_hands.inc:428:17:unsigned int {anonymous}::leon_hand_key(unsigned int, int, int)	0	static
+coarse_actor_owner_registry.inc:212:6:bool {anonymous}::registry_plan_shape(const Re4dcActorPlan*, const nmr::Descriptor*)	8	static
+coarse_actor_owner_registry.inc:379:32:bool {anonymous}::registry_skeleton_slots(cModel*, RegistryBinding&, const nmr::Descriptor&, float*)	1060	static
+coarse_actor_pl08_pack.inc:32:10:unsigned int {anonymous}::pl08_hook_reset()	4	static
+coarse_actor_pl08_pack.inc:66:26:re4dc_source::ChunkInput {anonymous}::pl08_view_input(const Pl08ChunkView&)	0	static
+coarse_actor_owner_pl08.inc:198:6:bool {anonymous}::leon_head_object(const cModel*)	0	static
+coarse_actor_death_fade_context.inc:37:6:bool {anonymous}::actor_fade_eligible(cModel*, const Re4dcActorPlan&)	0	static
+coarse_actor_death_fade_context.inc:49:10:unsigned int {anonymous}::actor_fade_hash(const ActorFadeContext&)	48	static
+coarse_actor_death_fade_context.inc:70:19:{anonymous}::ActorFadePending* {anonymous}::actor_fade_find(const re4dc_source::ModelIdentity&)	0	static
+coarse_actor_transaction.inc:577:6:bool {anonymous}::crowd_ganado(cModel*)	0	static
+actor_lifetime.inc:8:17:unsigned int re4dc_leon_hand_role(const cModel*, const cModelInfo*)	0	static
+coarse_actor_material.inc:783:13:bool app0_grip_source_material(unsigned int, const re4dc_material::Role*)	0	static
+coarse_actor_registry_pack_check.inc:112:10:void {anonymous}::PackHash::add(const unsigned char*, unsigned int)	4	static
+platform/include/gc_asset_actor_compiled.inc:6:26:re4dc_source::ChunkInput {anonymous}::gcasset_compiled_input(unsigned int)	0	static
+platform/include/gc_asset_actor_compiled.inc:18:6:bool {anonymous}::gcasset_compiled_current(unsigned int)	68	static
+platform/include/gc_asset_actor_select.inc:30:6:bool {anonymous}::gcasset_actor_chunk(const Chunk&, unsigned int, const Re4dcModelPart&, const Re4dcActorSource&) [with Chunk = leon4k::Chunk]	0	static
+actor_pl08_pack_check.inc:116:6:void {anonymous}::pl08_life_refuse(Pl08PackLife&, const char*, Pl08Why, unsigned int)	4	static
+coarse_actor_owner_pl08.inc:202:6:bool {anonymous}::leon_head_refuse(unsigned int)	4	static
+coarse_actor_death_fade_context.inc:83:6:void {anonymous}::actor_fade_note(const char*, const Re4dcActorFadeTicket&, const ActorFadeContext*, unsigned int)	48	static
+platform/include/gc_asset_hand_source.inc:71:25:static unsigned int leon_hand_pack::gcasset_hand_directory_pump()::Reader::read(void*, void*, unsigned int)	36	static
+coarse_actor_owner_registry.inc:162:12:nmr::Chunk {anonymous}::registry_geom_view(const unsigned char*, const unsigned char*, unsigned int)	68	static
+coarse_actor_owner_registry.inc:172:12:nmr::Chunk {anonymous}::registry_gview(unsigned int)	100	static
+coarse_actor_owner_registry.inc:917:6:bool {anonymous}::registry_run_is(const Re4dcActorPlannedRun&, unsigned int, unsigned int)	104	static
+coarse_actor_registry_pack.inc:53:6:void {anonymous}::registry_view_clear()	20	static
+coarse_actor_pl08_pack.inc:65:6:void {anonymous}::pl08_hook_close()	4	static
+coarse_actor_registry_pack.inc:231:6:bool {anonymous}::pack_file_read(PackFile&, unsigned char*)	16	static
+/root/work/kos-re4dc-d367/include/kos/timer.h:64:24:uint64_t timer_us_gettime64()	4	static
+/root/work/kos-re4dc-d367/include/kos/mutex.h:188:19:int mutex_lock(mutex_t*)	4	static
+coarse_actor_pl08_pack.inc:75:6:void {anonymous}::pl08_hook_published(const Pl08ChunkView*)	40	static
+actor_pl08_pack_check.inc:136:6:void {anonymous}::pl08_life_unpublish(Pl08PackLife&, const char*)	16	static
+actor_pl08_pack_check.inc:126:6:void {anonymous}::pl08_life_publish(Pl08PackLife&, const char*, const Pl08ChunkView*)	36	static
+coarse_actor_registry_pack.inc:45:6:void {anonymous}::gcasset_registry_capture(unsigned int, const void*, unsigned int)	24	static
+coarse_actor_pl08_pack.inc:88:6:void {anonymous}::pl08_pack_note(const char*, bool, const unsigned char*)	36	static
+coarse_actor_registry_pack.inc:73:6:void {anonymous}::pack_refuse(unsigned int, PackWhy, unsigned int)	20	static
+coarse_actor_transaction.inc:302:10:unsigned int {anonymous}::actor_source_lighting(cModel*, ActorOwnedRecord&)	188	static
+actor_lifetime.inc:439:17:unsigned int registry_role_next(const re4dc_material::life::Info&, unsigned int)	12	static
+coarse_actor_registry_pack.inc:217:6:bool {anonymous}::pack_file_open(unsigned int, const char*, PackFile&)	96	static
+platform/include/gc_asset_actor_select.inc:9:10:unsigned int {anonymous}::gcasset_actor_consumer_mask(const Re4dcModelPart&)	68	static
+coarse_actor_death_fade_context.inc:74:6:bool {anonymous}::actor_fade_current(const Re4dcActorFadeTicket&, unsigned int)	56	static
+actor_pl08_pack_check.inc:54:9:{anonymous}::Pl08Why {anonymous}::pl08_pack_validate(const unsigned char*, unsigned int, Pl08ChunkView*, unsigned int&)	364	static
+coarse_actor_registry_pack_check.inc:195:9:{anonymous}::PackWhy {anonymous}::pack_validate(const unsigned char*, unsigned int, unsigned int, unsigned int&, const PackBase&)	5040	static
+coarse_actor_death_fade.inc:55:5:int {anonymous}::actor_fade_drain_failed(const Re4dcActorFadeTicket&, const ActorFadeContext*, unsigned int)	16	static
+coarse_actor_transaction.inc:106:6:bool {anonymous}::actor_release(ActorOwnedRecord&)	24	static
+coarse_actor_transaction.inc:287:19:{anonymous}::ActorOwnedRecord* {anonymous}::actor_decline(ActorOwnedRecord&, bool&)	24	static
+platform/include/native_io.h:13:5:Re4dcIoScope::Re4dcIoScope()	8	static
+platform/include/native_io.h:14:5:Re4dcIoScope::~Re4dcIoScope()	4	static
+platform/include/gc_asset_hand_source.inc:10:21:static unsigned int leon_hand_pack::GcassetHandFile::read(void*, void*, unsigned int)	24	static
+platform/include/gc_asset_hand_copy.h:14:13:bool re4dc_gcasset::hand_copy_valid(HandCopyProof, unsigned int, unsigned int)	0	static
+platform/include/gc_asset_hand_copy.h:17:22:re4dc_gcasset::HandCopyProof re4dc_gcasset::hand_read_begin(unsigned int&, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)	0	static
+platform/include/gc_asset_hand_copy.h:21:22:re4dc_gcasset::HandCopyProof re4dc_gcasset::hand_read_complete(HandCopyProof, unsigned int, unsigned int, bool)	0	static
+platform/include/gc_asset_hand_copy.h:24:22:re4dc_gcasset::HandCopyProof re4dc_gcasset::hand_copy_begin(HandCopyProof&, HandCopyProof, unsigned int&, unsigned int, unsigned int)	0	static
+platform/include/gc_asset_hand_copy.h:28:13:bool re4dc_gcasset::hand_copy_complete(HandCopyProof&, HandCopyProof, unsigned int, unsigned int, bool)	0	static
+platform/include/gc_asset_hand_derivation.h:9:17:unsigned int re4dc_gcasset::hand_derive_begin(HandDerivationState&, PayloadProof&, const HandCopyProof&, unsigned int, unsigned int, const void*, unsigned int, const void*, unsigned int)	16	static
+platform/include/gc_asset_hand_derivation.h:18:13:bool re4dc_gcasset::hand_derive_end(HandDerivationState&, PayloadProof&, const HandCopyProof&, unsigned int, unsigned int, unsigned int, bool)	8	static
+coarse_actor.cpp:238:16:int re4dc_coarse_actor_source(const void*, Re4dcActorSource*)	12	static
+platform/include/coarse_actor_preflight.h:36:18:re4dc_source::BlobError re4dc_source::preflight_chunk(const ChunkInput&, ChunkProof&)	92	static
+actor_pl08_pack_check.inc:120:6:bool {anonymous}::pl08_life_check(Pl08PackLife&, const char*, Pl08ChunkView*)	124	static
+actor_pl08_pack_check.inc:156:6:void {anonymous}::pl08_life_sync(Pl08PackLife&, const char*)	408	static
+coarse_actor_registry_pack.inc:239:9:{anonymous}::PackWhy {anonymous}::pack_preflight(const unsigned char*, unsigned int&, unsigned int&)	216	static
+coarse_actor_leon_hands.inc:66:10:unsigned int leon_hand_pack::blob_bytes(const Blob&)	0	static
+coarse_actor_leon_hands.inc:199:7:void* leon_hand_pack::job_main(void*)	24	static
+coarse_actor_leon_hands.inc:67:10:unsigned int leon_hand_pack::cell_offset(unsigned int)	0	static
+coarse_actor_leon_hands.inc:68:13:const char* leon_hand_pack::package()	0	static
+coarse_actor_leon_hands.inc:71:6:bool leon_hand_pack::read_at(unsigned int, void*, unsigned int)	24	static
+platform/include/gc_asset_hand_source.inc:22:6:void leon_hand_pack::gcasset_hand_startup()	128	static
+platform/include/gc_asset_hand_source.inc:56:6:void leon_hand_pack::gcasset_hand_directory_candidate(const unsigned int*)	8	static
+platform/include/gc_asset_hand_source.inc:61:6:void leon_hand_pack::gcasset_hand_directory_pump()	80	static
+platform/include/gc_asset_hand_runtime.inc:11:10:unsigned int leon_hand_pack::gcasset_hand_parent()	8	static
+platform/include/gc_asset_hand_runtime.inc:15:6:bool leon_hand_pack::gcasset_hand_blob(int)	20	static
+platform/include/gc_asset_hand_runtime.inc:23:15:re4dc_gcasset::HandCopyProof leon_hand_pack::gcasset_hand_read_begin(int)	24	static
+platform/include/gc_asset_hand_runtime.inc:28:15:re4dc_gcasset::HandCopyProof leon_hand_pack::gcasset_hand_read_end(re4dc_gcasset::HandCopyProof, int, bool)	28	static
+platform/include/gc_asset_hand_runtime.inc:31:6:void leon_hand_pack::gcasset_hand_slot_revoke(unsigned int)	8	static
+platform/include/gc_asset_hand_runtime.inc:35:15:re4dc_gcasset::HandCopyProof leon_hand_pack::gcasset_hand_origin(const void*, int)	20	static
+platform/include/gc_asset_hand_runtime.inc:43:15:re4dc_gcasset::HandCopyProof leon_hand_pack::gcasset_hand_slot_begin(unsigned int, int, re4dc_gcasset::HandCopyProof)	28	static
+platform/include/gc_asset_hand_runtime.inc:47:6:void leon_hand_pack::gcasset_hand_slot_end(unsigned int, int, re4dc_gcasset::HandCopyProof)	32	static
+platform/include/gc_asset_hand_runtime.inc:50:15:re4dc_gcasset::HandCopyProof leon_hand_pack::gcasset_hand_cell_begin(unsigned int, int, const void*)	32	static
+platform/include/gc_asset_hand_runtime.inc:54:6:void leon_hand_pack::gcasset_hand_cell_end(unsigned int, int, re4dc_gcasset::HandCopyProof)	32	static
+platform/include/gc_asset_hand_runtime.inc:59:15:re4dc_gcasset::HandCopyProof leon_hand_pack::gcasset_hand_cell_origin(unsigned int, int)	12	static
+platform/include/gc_asset_hand_runtime.inc:63:6:void leon_hand_pack::gcasset_hand_job_begin(int, void*, void*)	56	static
+platform/include/gc_asset_hand_runtime.inc:69:6:void leon_hand_pack::gcasset_hand_job_end(void*, void*, void*, int, bool)	20	static
+platform/include/gc_asset_hand_runtime.inc:76:6:void leon_hand_pack::gcasset_hand_slot_publish(unsigned int, int)	16	static
+platform/include/gc_asset_hand_runtime.inc:81:6:bool leon_hand_pack::gcasset_hand_chunk_current(unsigned int)	48	static
+platform/include/gc_asset_actor_select.inc:47:26:re4dc_gcasset::SourceUse {anonymous}::gcasset_actor_current_select(const Re4dcModelPart*, const Re4dcActorSource*, bool)	200	static
+platform/include/gc_asset_hand_runtime.inc:91:10:unsigned int leon_hand_pack::gcasset_hand_derive_begin(const void*, unsigned int)	48	static
+platform/include/gc_asset_hand_runtime.inc:101:6:void leon_hand_pack::gcasset_hand_derive_end(unsigned int, bool)	36	static
+coarse_actor_leon_hands.inc:83:6:bool leon_hand_pack::directory()	108	static
+coarse_actor_leon_hands.inc:110:6:bool leon_hand_pack::cells()	8	static
+coarse_actor_leon_hands.inc:116:5:int leon_hand_pack::cell_of(int)	0	static
+coarse_actor_leon_hands.inc:122:10:unsigned int leon_hand_pack::cell_for(int)	0	static
+coarse_actor_leon_hands.inc:136:6:void leon_hand_pack::cache(int, const unsigned char*)	28	static
+coarse_actor_leon_hands.inc:162:6:void leon_hand_pack::prefetch(int)	24	static
+coarse_actor_leon_hands.inc:181:6:void leon_hand_pack::prefetch_home()	24	static
+coarse_actor_leon_hands.inc:198:16:unsigned char* leon_hand_pack::job_data()	0	static
+coarse_actor_leon_hands.inc:207:6:void leon_hand_pack::job_enqueue(int)	0	static
+coarse_actor_leon_hands.inc:212:6:bool leon_hand_pack::job_start(int)	88	static
+coarse_actor_leon_hands.inc:304:6:void leon_hand_pack::refill_now()	20	static
+coarse_actor_leon_hands.inc:377:5:int leon_hand_pack::blob_for(unsigned int, const cModelInfo*)	16	static
+coarse_actor_leon_hands.inc:396:17:unsigned int leon_hand_pack::std_pal(unsigned int)	0	static
+coarse_actor_leon_hands.inc:399:21:unsigned int re4dc_gcasset_hand_derive_begin(const void*, unsigned int)	0	static
+coarse_actor_leon_hands.inc:400:17:void re4dc_gcasset_hand_derive_end(unsigned int, bool)	0	static
+coarse_actor_leon_hands.inc:447:17:void re4dc_leon_hands_weapon(const char*)	40	static
+coarse_actor_leon_hands.inc:472:17:void re4dc_leon_hands_yield()	48	static
+coarse_actor_owner_leon.inc:359:16:int re4dc_actor_hair_texture_key(const Re4dcUiImage*, unsigned int*, unsigned int*)	0	static
+coarse_actor_owner_leon.inc:365:21:unsigned int re4dc_actor_material_runs_capability(const Re4dcActorPlan*)	0	static
+coarse_actor_owner_registry.inc:924:16:int re4dc_registry_runs_match(const Re4dcActorPlan*)	60	static
+coarse_actor_owner_registry.inc:968:16:int re4dc_registry_masked(const Re4dcActorPlan*)	16	static
+coarse_actor_owner_registry.inc:1005:16:int re4dc_registry_covered_roles(const cModel*, const Re4dcActorPlan*, unsigned int*)	24	static
+coarse_actor_owner_registry.inc:1044:16:int re4dc_registry_merchant_robe(unsigned int, unsigned int, unsigned int, unsigned int)	0	static
+coarse_actor_owner_registry.inc:1065:16:int re4dc_registry_model(const cModel*, const Re4dcActorPlan*)	12	static
+coarse_actor_owner_registry.inc:1084:16:int re4dc_registry_candidate(const cModel*)	4	static
+coarse_actor_owner_registry.inc:1099:16:int re4dc_registry_ashley_face(unsigned int, unsigned int)	0	static
+coarse_actor_owner_registry.inc:1125:21:unsigned int re4dc_registry_sections(unsigned int)	0	static
+coarse_actor_owner_registry.inc:1128:16:int re4dc_registry_texture_key(const Re4dcUiImage*, unsigned int*, unsigned int*)	8	static
+coarse_actor.cpp:270:16:int re4dc_coarse_actor_texture_key(const Re4dcUiImage*, unsigned int*, unsigned int*)	16	static
+coarse_actor_geometry_once.inc:94:36:re4dc_source::BlobError re4dc_actor_immutable_chunk_proof(unsigned int, const re4dc_source::ChunkInput&, re4dc_source::ChunkProof&)	24	static
+coarse_actor_geometry_once.inc:127:17:void re4dc_actor_immutable_chunk_reset(unsigned int)	0	static
+coarse_actor_owner_leon.inc:430:33:void leon_hand_pack::reset_role_ids(unsigned int)	0	static
+coarse_actor_leon_hands.inc:312:6:void leon_hand_pack::set_slot(unsigned int, int)	60	static
+coarse_actor_leon_hands.inc:239:6:void leon_hand_pack::job_poll()	92	static
+coarse_actor_leon_hands.inc:325:6:bool leon_hand_pack::load_now(unsigned int, int)	32	static
+coarse_actor_leon_hands.inc:433:17:void re4dc_leon_hands_room_enter()	56	static
+coarse_actor_leon_hands.inc:343:6:bool leon_hand_pack::load(unsigned int, int)	64	static
+coarse_actor_leon_hands.inc:406:40:{anonymous}::LeonHandPick {anonymous}::leon_hand_pick(unsigned int, const cModelInfo*, const leon4k::Chunk&, const re4dc_source::ChunkInput&)	32	static
+coarse_actor_pl08_pack.inc:94:17:void re4dc_pl08_pack_player(unsigned int)	16	static
+coarse_actor_pl08_pack.inc:110:17:void re4dc_pl08_pack_forget()	4	static
+coarse_actor_transaction.inc:712:16:int re4dc_actor_owned_live()	0	static
+coarse_actor_transaction.inc:714:17:void re4dc_actor_transaction_retire()	8	static
+actor_pl08_pack_check.inc:166:6:void {anonymous}::pl08_life_room_leave(Pl08PackLife&, const char*)	24	static
+coarse_actor_pl08_pack.inc:98:17:void re4dc_pl08_pack_room_enter()	16	static
+coarse_actor_pl08_pack.inc:102:17:void re4dc_pl08_pack_room_leave()	16	static
+coarse_actor_material.inc:58:6:bool re4dc_material::digest(const void*, const Digest&)	4	static
+coarse_actor_material.inc:68:13:const re4dc_material::Role* re4dc_material::find(unsigned int, unsigned int)	8	static
+coarse_actor_material.inc:203:7:re4dc_material::Error re4dc_material::texture_full(const void*, const Texture&)	96	static
+coarse_actor_material.inc:178:7:re4dc_material::Error re4dc_material::texture(const void*, const Texture&)	112	static
+coarse_actor_material.inc:805:12:int lean_source_material(cModel*, cModelInfo*, unsigned int, unsigned int, const re4dc_material::Role*, Re4dcActorOwnedMaterial*)	116	static
+actor_lifetime.inc:54:10:unsigned int re4dc_material::life::next()	0	static
+actor_lifetime.inc:55:6:bool re4dc_material::life::span(const void*, unsigned int, const void*, unsigned int)	0	static
+actor_lifetime.inc:59:6:bool re4dc_material::life::overlap(const void*, unsigned int, const void*, unsigned int)	0	static
+actor_lifetime.inc:63:6:void re4dc_material::life::changed()	4	static
+actor_lifetime.inc:64:6:void re4dc_material::life::revoke(unsigned int)	8	static
+actor_lifetime.inc:73:6:bool re4dc_material::life::entry(const Archive&, unsigned int, const char*, const unsigned char*&, unsigned int&)	60	static
+actor_lifetime.inc:95:6:bool re4dc_material::life::current(const Asset&)	12	static
+actor_lifetime.inc:103:6:bool re4dc_material::life::tpl_owned(const Archive&, const void*, unsigned int, const re4dc_material::Role&)	56	static
+actor_lifetime.inc:119:10:unsigned int re4dc_material::life::tpl_family(const re4dc_material::Role&)	0	static
+actor_lifetime.inc:129:7:re4dc_material::life::Info* re4dc_material::life::find_info(const void*)	0	static
+actor_lifetime.inc:130:6:bool re4dc_material::life::info_current(const Info&, unsigned int)	28	static
+actor_lifetime.inc:464:36:const re4dc_material::Role* actor_current_role(cModel*, cModelInfo*, unsigned int, unsigned int)	56	static
+actor_swap_park.inc:58:10:unsigned int re4dc_material::life::park_hash(const void*, unsigned int)	36	static
+actor_swap_park.inc:64:6:bool re4dc_material::life::park_inside(const void*, unsigned int)	0	static
+actor_swap_park.inc:68:6:void re4dc_material::life::park_drop_info(ParkInfo&)	0	static
+actor_swap_park.inc:69:6:void re4dc_material::life::park_drop_archive(unsigned int)	24	static
+actor_swap_park.inc:75:6:void re4dc_material::life::park_drop_all()	20	static
+actor_swap_park.inc:80:6:void re4dc_material::life::park_forget(const void*, unsigned int)	28	static
+actor_swap_park.inc:86:6:void re4dc_material::life::park_info_retire(const void*)	20	static
+actor_swap_park.inc:91:6:void re4dc_material::life::park_drop_key(const void*)	20	static
+actor_swap_park.inc:94:6:void re4dc_material::life::park_drop_overlap(const void*, unsigned int)	28	static
+actor_swap_park.inc:98:6:void re4dc_material::life::park_drop_family(unsigned int)	20	static
+actor_swap_park.inc:148:6:void re4dc_material::life::park_close(bool)	184	static
+actor_swap_park.inc:102:6:void re4dc_material::life::park_open(const void*, unsigned int, ParkSaved)	276	static
+actor_swap_park.inc:221:17:void re4dc_actor_swap_park(const void*, unsigned int, int (*)(const void*, unsigned int))	4	static
+actor_swap_park.inc:224:17:void re4dc_actor_swap_unpark(int)	4	static
+actor_lifetime.inc:143:17:void re4dc_actor_archive_retire(const void*)	20	static
+actor_lifetime.inc:148:17:void re4dc_actor_archive_adopt(const void*, void*, unsigned int, unsigned int)	100	static
+actor_lifetime.inc:185:17:void re4dc_actor_archive_retire_transient()	16	static
+actor_lifetime.inc:193:17:void re4dc_actor_info_retire(const void*)	8	static
+actor_lifetime.inc:241:17:void re4dc_actor_info_adopt(cModelInfo*)	140	static
+actor_lifetime.inc:341:17:void re4dc_actor_forget_range(const void*, unsigned int)	36	static
+actor_lifetime.inc:349:17:void re4dc_actor_forget_all()	16	static
+actor_lifetime.inc:361:6:void re4dc_material::life::room_rows_publish(const re4dc_material::Role*, unsigned int, const re4dc_material::SourceBlob*, unsigned int, unsigned int)	4	static
+actor_lifetime.inc:364:6:void re4dc_material::life::room_rows_retire(unsigned int&, unsigned int&)	84	static
+actor_lifetime.inc:386:10:unsigned int re4dc_material::life::room_rows_users()	0	static
+actor_lifetime.inc:392:10:unsigned int re4dc_material::life::live_family(unsigned int)	0	static
+actor_lifetime.inc:397:17:void re4dc_actor_data_move(const void*)	24	static
+actor_lifetime.inc:402:17:void re4dc_actor_model_retire(cModel*)	0	static
+actor_lifetime.inc:411:17:void re4dc_actor_model_changed(cModel*)	4	static
+actor_lifetime.inc:412:21:unsigned int re4dc_actor_binding_revision(cModel*)	20	static
+coarse_actor_transaction.inc:322:19:{anonymous}::ActorOwnedRecord* {anonymous}::actor_acquire(cModel*, const Re4dcActorPlan&, const re4dc_source::FrameIdentity&, const re4dc_source::ModelIdentity&, bool&, bool, const ActorFadeContext*, unsigned int, const void*)	676	static
+actor_lifetime.inc:428:21:unsigned int re4dc_actor_binding_peek(cModel*)	0	static
+actor_lifetime.inc:533:21:unsigned int re4dc_actor_role_source_bin(cModel*, cModelInfo*, unsigned int, unsigned int)	4	static
+actor_lifetime.inc:536:16:int re4dc_actor_material_owner_proof(cModel*, cModelInfo*, unsigned int, unsigned int, unsigned int)	44	static
+actor_lifetime.inc:575:6:bool re4dc_material::life::adopt_memo(const cModelInfo*, bool)	36	static
+actor_lifetime.inc:608:16:int re4dc_actor_role_bindings(cModel*, unsigned int, cModelInfo**, unsigned int)	208	static
+coarse_actor_owner_leon.inc:177:6:bool {anonymous}::owner_leon_bind(cModel*)	28	static
+coarse_actor_owner_leon.inc:289:16:int re4dc_actor_plan_leon(cModel*, Re4dcActorPlan*)	2004	static
+coarse_actor_owner_registry.inc:471:10:unsigned int {anonymous}::registry_lod_want(cModel*, unsigned int, unsigned int)	68	static
+coarse_actor_owner_pl08.inc:84:6:bool {anonymous}::owner_pl08h_bind(cModel*)	28	static
+coarse_actor_owner_pl08.inc:33:6:bool {anonymous}::owner_pl08_bind(cModel*)	24	static
+actor_lifetime.inc:772:16:int re4dc_actor_pool_bindings(cModel*, unsigned int, unsigned int, cModelInfo**, unsigned char*, unsigned int)	68	static
+coarse_actor_owner_registry.inc:492:6:bool {anonymous}::registry_bind(cModel*)	100	static
+actor_lifetime.inc:811:21:unsigned int re4dc_actor_stream_begin(const void*, unsigned int)	52	static
+actor_lifetime.inc:834:17:void re4dc_actor_stream_end(unsigned int, const void*, unsigned int)	12	static
+coarse_actor_material.inc:263:15:const re4dc_material::record::Record* re4dc_material::record::hit(cModel*, const Re4dcActorPlan*)	24	static
+coarse_actor_material.inc:281:6:void re4dc_material::record::store(cModel*, const Re4dcActorPlan*, const re4dc_material::Result&, const re4dc_material::Role* const*)	104	static
+coarse_actor_material.inc:321:7:re4dc_material::Error re4dc_material::info(cModelInfo*, const Role&, Result&, bool, bool)	104	static
+coarse_actor_material.inc:444:7:re4dc_material::Error re4dc_material::hand_info(cModelInfo*, const Role&, Result&)	32	static
+coarse_actor_material.inc:791:16:int re4dc_actor_source_material(cModel*, cModelInfo*, unsigned int, unsigned int, Re4dcActorOwnedMaterial*)	32	static
+coarse_actor_material.inc:464:8:re4dc_material::Result re4dc_material::compare_core(cModel*, const Re4dcActorPlan*, bool, const record::Record*, const Role**)	244	static
+coarse_actor_material.inc:748:8:re4dc_material::Result re4dc_material::compare(cModel*, const Re4dcActorPlan*, bool)	76	static
+coarse_actor_material.inc:833:16:int re4dc_actor_material_certificate(cModel*, const Re4dcActorPlan*)	40	static
+coarse_actor_transaction.inc:160:6:bool {anonymous}::actor_semantics(cModel*, const Re4dcActorPlan&)	168	static
+coarse_actor_death_fade.inc:63:16:int re4dc_actor_death_fade_drain(Re4dcActorFadeTicket)	3756	static
+coarse_actor_material.inc:862:21:unsigned int re4dc_actor_material_diagnose(cModel*, const Re4dcActorPlan*, unsigned int*, unsigned int*)	32	static
+coarse_actor_material.inc:873:16:int re4dc_registry_source_key(unsigned int, unsigned int)	4	static
+coarse_actor_registry_pack.inc:80:17:void re4dc_registry_room_leave()	84	static
+coarse_actor.cpp:473:17:void re4dc_charbake_set(unsigned int)	48	static
+coarse_actor.cpp:486:17:void re4dc_charbake_cycle()	4	static
+coarse_actor.cpp:487:21:unsigned int re4dc_charbake_variant()	0	static
+coarse_actor.cpp:488:24:const char* re4dc_charbake_label()	0	static
+platform/include/gc_asset_actor_compiled.inc:28:17:void re4dc_gcasset_actor_startup()	708	static
+platform/include/gc_asset_actor_select.inc:96:37:re4dc_gcasset::SourceUse re4dc_gcasset_actor_select(const Re4dcModelPart*, const Re4dcActorSource*)	44	static
+platform/include/gc_asset_actor_select.inc:110:37:re4dc_gcasset::SourceUse re4dc_gcasset_actor_main_select(const Re4dcModelPart*, const re4dc_gcasset::SourceUse*)	88	static
+coarse_skin.h:26:17:unsigned int coarse_group_build(const Weight*, unsigned int, unsigned char*, unsigned int, unsigned int*, unsigned char*) [with Weight = leon4k::Weight]	324	static
+coarse_actor.cpp:140:6:bool {anonymous}::skin_build(unsigned int, const leon4k::Chunk* const*, unsigned int)	172	static
+coarse_actor.cpp:292:16:int re4dc_coarse_leon(cModel*)	1256	static
+coarse_actor_owner_leon.inc:253:5:int {anonymous}::owner_leon_palettes(cModel*, const Re4dcActorPlan&, float* const*)	176	static
+coarse_actor_owner_pl08.inc:54:5:int {anonymous}::owner_pl08_palettes(cModel*, const Re4dcActorPlan&, float* const*)	164	static
+coarse_actor_owner_pl08.inc:105:5:int {anonymous}::owner_pl08h_palettes(cModel*, const Re4dcActorPlan&, float* const*)	164	static
+coarse_actor_owner_pl08.inc:206:6:bool {anonymous}::leon_head_load(const cModel*)	164	static
+coarse_actor_owner_pl08.inc:228:5:int {anonymous}::leon_head_palettes(cModel*, const Re4dcActorPlan&, float* const*)	176	static
+coarse_actor_owner_pl08.inc:276:16:int re4dc_actor_plan_pl08(cModel*, Re4dcActorPlan*)	3932	static
+coarse_skin.h:26:17:unsigned int coarse_group_build(const Weight*, unsigned int, unsigned char*, unsigned int, unsigned int*, unsigned char*) [with Weight = nmr::Weight]	324	static
+coarse_actor_owner_registry.inc:335:6:bool {anonymous}::registry_skin_init(unsigned int)	144	static
+coarse_actor_owner_registry.inc:596:5:int {anonymous}::registry_palettes(cModel*, const Re4dcActorPlan&, float* const*)	188	static
+coarse_actor_registry_pack.inc:255:17:void re4dc_registry_room_enter(unsigned int)	412	static
+coarse_actor_owner_registry.inc:817:16:int re4dc_actor_plan_registry(cModel*, Re4dcActorPlan*)	1936	static
+coarse_actor_transaction.inc:784:16:int re4dc_actor_transaction_draw(cModel*)	3824	static
+platform/include/gc_asset_actor_select.inc:136:1:inc)	0	static

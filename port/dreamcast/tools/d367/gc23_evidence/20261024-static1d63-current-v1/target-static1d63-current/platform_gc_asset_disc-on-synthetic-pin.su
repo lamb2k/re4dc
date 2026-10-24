@@ -1,0 +1,3 @@
+platform/gc_asset_disc.cpp:15:10:unsigned int re4dc_gcasset::{anonymous}::disc_read(void*, unsigned int, void*, unsigned int)	20	static
+platform/gc_asset_disc.cpp:31:6:bool re4dc_gcasset::ensure_disc_catalog()	48	static
+platform/gc_asset_disc.cpp:44:6:void re4dc_gcasset::retire_disc_catalog()	8	static

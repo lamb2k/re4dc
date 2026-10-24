@@ -1,0 +1,32 @@
+platform/gc_asset_payloads.cpp:9:6:bool re4dc_gcasset::{anonymous}::overlaps(const void*, unsigned int, const void*, unsigned int)	0	static
+platform/gc_asset_payloads.cpp:56:6:void re4dc_gcasset::{anonymous}::manifest_word(unsigned char*, unsigned int)	0	static
+platform/gc_asset_payloads.cpp:57:10:unsigned int re4dc_gcasset::{anonymous}::manifest_word(const unsigned char*)	0	static
+platform/gc_asset_payloads.cpp:58:6:bool re4dc_gcasset::{anonymous}::manifest_digest(const unsigned char*)	0	static
+platform/gc_asset_payloads.cpp:59:6:bool re4dc_gcasset::{anonymous}::manifest_row(const unsigned char*, unsigned int)	20	static
+platform/gc_asset_payloads.cpp:170:25:static unsigned int re4dc_gcasset::payload_capture_fragments(PayloadProof&, const void*, const PayloadSpan*, unsigned int)::Reader::read(void*, void*, unsigned int)	24	static
+platform/gc_asset_payloads.cpp:39:14:re4dc_gcasset::CheckedAsset re4dc_gcasset::{anonymous}::capture_digest(const re4dc_gcasset::Digest&, const char*)	72	static
+platform/gc_asset_payloads.cpp:34:14:re4dc_gcasset::CheckedAsset re4dc_gcasset::{anonymous}::capture(const char*, const void*, unsigned int)	104	static
+platform/gc_asset_payloads.cpp:44:6:void re4dc_gcasset::{anonymous}::flush(re4dc_gcasset::PayloadProof&)	28	static
+platform/gc_asset_payloads.cpp:66:6:bool re4dc_gcasset::static_manifest_begin(StaticManifest&, StaticOwner, unsigned int, unsigned int, const void*, unsigned int)	64	static
+platform/gc_asset_payloads.cpp:81:6:bool re4dc_gcasset::static_manifest_note(StaticManifest&, StaticRole, StaticState, unsigned int, unsigned int, unsigned int, const Digest*)	28	static
+platform/gc_asset_payloads.cpp:91:6:bool re4dc_gcasset::static_manifest_bytes(StaticManifest&, StaticRole, const void*, unsigned int, unsigned int, unsigned int)	60	static
+platform/gc_asset_payloads.cpp:97:6:bool re4dc_gcasset::static_manifest_seal(const StaticManifest&, Digest&)	64	static
+platform/gc_asset_payloads.cpp:125:6:void re4dc_gcasset::payload_invalidate(PayloadProof&, const void*)	0	static
+platform/gc_asset_payloads.cpp:134:6:bool re4dc_gcasset::static_manifest_receipt(StaticManifest&, StaticRole, const PayloadProof&, const void*, unsigned int, unsigned int)	128	static
+platform/gc_asset_payloads.cpp:213:6:bool re4dc_gcasset::payload_copy_current(const PayloadProof&)	4	static
+platform/gc_asset_payloads.cpp:219:6:void re4dc_gcasset::payload_copy_invalidate(PayloadProof&, const void*)	0	static
+platform/gc_asset_payloads.cpp:223:6:bool re4dc_gcasset::payload_copy_publish(PayloadProof&, const void*, const PayloadProof&, unsigned int)	20	static
+platform/gc_asset_payloads.cpp:233:6:void re4dc_gcasset::payload_retire(PayloadProof&)	8	static
+platform/gc_asset_payloads.cpp:14:6:bool re4dc_gcasset::{anonymous}::prepare_owner(re4dc_gcasset::PayloadProof&, const void*, const void*, unsigned int, const void*, unsigned int)	52	static
+platform/gc_asset_payloads.cpp:108:6:bool re4dc_gcasset::payload_capture_composite(PayloadProof&, const void*, const void*, unsigned int, const void*, unsigned int, const StaticManifest&)	104	static
+platform/gc_asset_payloads.cpp:140:6:bool re4dc_gcasset::payload_capture(PayloadProof&, const void*, const void*, unsigned int, const void*, unsigned int)	40	static
+platform/gc_asset_payloads.cpp:191:6:bool re4dc_gcasset::payload_capture_digest(PayloadProof&, const void*, const Digest&)	16	static
+platform/gc_asset_payloads.cpp:129:6:bool re4dc_gcasset::payload_capture_receipt(PayloadProof&, const void*, const Digest&, unsigned int)	12	static
+platform/gc_asset_payloads.cpp:152:6:bool re4dc_gcasset::payload_capture_fragments(PayloadProof&, const void*, const PayloadSpan*, unsigned int)	84	static
+platform/gc_asset_payloads.cpp:200:6:bool re4dc_gcasset::payload_copy_register(PayloadProof&, const void*, const void*, unsigned int)	32	static
+platform/gc_asset_payloads.cpp:237:6:void re4dc_gcasset::payload_accept(PayloadProof*, unsigned int, unsigned int)	12	static
+platform/gc_asset_payloads.cpp:245:6:void re4dc_gcasset::payload_flush_all()	20	static
+platform/gc_asset_payloads.cpp:250:1:re4dc_gcasset::PayloadQuadScope::PayloadQuadScope(const re4dc_gcasset::PayloadQuadBatch&)	0	static
+platform/gc_asset_payloads.cpp:254:1:re4dc_gcasset::PayloadQuadScope::~PayloadQuadScope()	0	static
+platform/gc_asset_payloads.cpp:255:6:bool re4dc_gcasset::payload_quads_accept(const void*, unsigned int)	20	static
+platform/gc_asset_payloads.cpp:266:1:re4dc_gcasset::PayloadScope::PayloadScope(re4dc_gcasset::PayloadProof&, const void*, const void*, const void*, unsigned int)	0	static

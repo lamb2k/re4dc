@@ -1,0 +1,12 @@
+         U _fs_close
+         U _fs_open
+         U _fs_read
+         U _fs_seek
+         U _fs_total
+         U _memset
+         U _re4dc_gcasset_room_parent_retire
+         U _re4dc_log
+         U _re4dc_static_alloc
+         U _re4dc_static_free
+         U _re4dc_static_heap_free
+         U _snprintf

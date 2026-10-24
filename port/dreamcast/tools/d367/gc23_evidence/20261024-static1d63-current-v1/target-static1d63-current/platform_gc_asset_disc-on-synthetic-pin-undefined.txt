@@ -1,0 +1,10 @@
+         U __ZN13re4dc_gcasset10unresolvedENS_8ConsumerEPKc
+         U __ZN13re4dc_gcasset13install_indexEPFjPvjS0_jES0_jRKNS_6DigestE
+         U __ZN13re4dc_gcasset14retire_catalogEv
+         U _fs_close
+         U _fs_open
+         U _fs_read
+         U _fs_seek
+         U _fs_total
+         U _re4dc_io_begin
+         U _re4dc_io_end

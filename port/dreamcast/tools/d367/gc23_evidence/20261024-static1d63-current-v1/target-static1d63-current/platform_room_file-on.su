@@ -1,0 +1,6 @@
+platform/room_file.c:73:6:re4dc_room_file_leave	4	static
+platform/room_file.c:82:6:re4dc_room_file_enter	436	static
+platform/room_file.c:163:13:re4dc_room_section	12	static
+platform/room_file.c:174:10:re4dc_room_file_room	0	static
+platform/room_file.c:178:5:re4dc_gcasset_room_span	8	static
+platform/room_file.c:188:5:re4dc_gcasset_room_original	12	static

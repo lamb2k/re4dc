@@ -1,0 +1,21 @@
+{
+  "time": "2026-10-24T05:12:35.570665+00:00",
+  "status": "TARGET_COMPILE_FAILED",
+  "source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+  "baseline": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "profile": "/root/probe/lanes/route/out-rrfb254e8rP",
+  "completed_objects": 51,
+  "completed_off_comparisons": 12,
+  "failure": "native_static.cpp ON: RE4DC_SCENERY_DEDUP undeclared in gcasset_static_profile at line613",
+  "scratch": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-77d8a20b2-jx_x05a2",
+  "no_link_or_guest": true,
+  "preserved": {
+    "platform_native_static-on-command.json": "14c3c4e02abb7ef082dbb5a8b46be86d60736d739f781254bad8ff14abf251c3",
+    "platform_native_static-on.d": "a6fcf7939e33f6e8ff5ba4f797183d9c57d38a19302d6c93f07fbdb097407b9a",
+    "platform_native_static-on.log": "e10f66c4adf24ef3c53fc404b7db13edc390cf3991dcb545074d4f1958e6feb9",
+    "report.json": "666759f4e9019398d854d959244c19080ffeee1edf323f8611ef5e874a679979",
+    "static-target-current-20261024.py": "6f8f984ed689ee8c0c0701d054f15c7a276b0f8d9d59c475cf3f15e4322935ba",
+    "static-target-current-20261024.sh": "3a9e1cae4373fae0797c0a501ae5dce30d0dc261d6d5d89f8e74cfd303ebdfc9",
+    "STATIC-TARGET-PREPARATION.json": "9f432eb08ad0124250aa0305693a22c5baee09e8d55077c867cc1ecae8b9ecde"
+  }
+}

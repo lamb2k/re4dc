@@ -1,0 +1,36 @@
+ui_bridge.cpp:832:13:const char* {anonymous}::heap4_tag(unsigned int, int)	0	static
+ui_bridge.cpp:806:13:void heap4_census()	552	static
+ui_bridge.cpp:700:6:void {anonymous}::room_free4(void*, const char*)	12	static
+ui_bridge.cpp:722:7:void* {anonymous}::room_alloc4_high(unsigned int, const char*)	24	static
+ui_bridge.cpp:273:6:void {anonymous}::audit(int)	208	static
+ui_bridge.cpp:30:16:int re4dc_item_ui_order()	0	static
+ui_bridge.cpp:37:16:int re4dc_ui_heap_free()	4	static
+ui_bridge.cpp:39:18:void* re4dc_ui_stage_alloc(unsigned int)	8	static
+ui_bridge.cpp:42:17:void re4dc_ui_stage_free(void*)	4	static
+ui_bridge.cpp:90:17:void re4dc_draw_id_quad(const IdUnit*)	304	static
+ui_bridge.cpp:179:17:void re4dc_profile_source(re4dc::profile::Source*)	16	static
+ui_bridge.cpp:189:21:unsigned int re4dc_fixture_source_frame()	0	static
+ui_bridge.cpp:200:16:int re4dc_pad_context()	0	static
+ui_bridge.cpp:221:16:int re4dc_pad_debug_state()	0	static
+ui_bridge.cpp:404:17:void re4dc_room_leave()	4	static
+ui_bridge.cpp:570:16:int re4dc_room_cycle_poll()	108	static
+ui_bridge.cpp:772:16:int re4dc_room4_live_generation(unsigned int*)	4	static
+ui_bridge.cpp:776:16:int re4dc_room4_cell_valid(const void*, unsigned int, unsigned int)	16	static
+ui_bridge.cpp:787:17:void re4dc_room4_open()	0	static
+ui_bridge.cpp:467:17:void re4dc_room_enter()	8	static
+ui_bridge.cpp:789:17:void re4dc_room4_close()	0	static
+ui_bridge.cpp:790:16:int re4dc_room4_state(unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int*)	0	static
+ui_bridge.cpp:795:17:void re4dc_model_preparation_owner(void*)	8	static
+ui_bridge.cpp:838:17:void re4dc_heap4_free_map()	60	static
+ui_bridge.cpp:859:18:void* re4dc_model_retained_storage(unsigned int*)	24	static
+ui_bridge.cpp:890:21:unsigned int re4dc_model_release_retained()	4	static
+ui_bridge.cpp:900:16:int re4dc_model_return_retained(unsigned int*, unsigned int*)	8	static
+ui_bridge.cpp:919:16:int re4dc_static_heap_free()	4	static
+ui_bridge.cpp:925:18:void* re4dc_static_alloc(unsigned int)	16	static
+ui_bridge.cpp:956:17:void re4dc_static_free(void*)	4	static
+platform/include/manual_pages_bridge.inc:4:17:void re4dc_manual_pages_retire()	0	static
+platform/include/manual_pages_bridge.inc:7:16:int re4dc_manual_page_companion_allowed(unsigned int)	8	static
+platform/include/manual_pages_bridge.inc:19:21:unsigned int re4dc_manual_camera_live_kind()	4	static
+platform/include/manual_pages_bridge.inc:26:17:void re4dc_manual_camera_text_choice(unsigned int)	0	static
+platform/include/manual_pages_bridge.inc:30:17:void re4dc_manual_pages_adopt(void*, unsigned int, unsigned int, unsigned int)	48	static
+platform/include/manual_pages_bridge.inc:55:16:int re4dc_draw_manual_pages(GXTexObj*, short int, short int, short int, short int, short int)	300	static

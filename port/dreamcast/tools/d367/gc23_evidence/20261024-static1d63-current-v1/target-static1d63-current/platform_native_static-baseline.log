@@ -1,0 +1,30 @@
+platform/native_static.cpp: In function ‘int {anonymous}::mesh_submit(const Re4dcModelPart&)’:
+platform/native_static.cpp:4312:67: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+ 4312 |     MeshDraw d{{*drawn,{},near,far},v.package,*part,v.lut,v.gather};
+      |                                                                   ^
+platform/native_static.cpp:4312:67: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+platform/native_static.cpp:4312:67: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_lp’ [-Wmissing-field-initializers]
+platform/native_static.cpp: In lambda function:
+platform/native_static.cpp:6427:76: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+ 6427 |         MeshDraw e{{part,{},near,far},cpkg,replay_part,ps2w.lut,ps2w.gather};
+      |                                                                            ^
+platform/native_static.cpp:6427:76: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+platform/native_static.cpp:6427:76: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_lp’ [-Wmissing-field-initializers]
+platform/native_static.cpp: In function ‘int {anonymous}::ps2_pass(unsigned int, float)’:
+platform/native_static.cpp:6790:84: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+ 6790 |                        marked&&ps2w.lut?ps2_vertex_alpha_lut():ps2w.lut,ps2w.gather};
+      |                                                                                    ^
+platform/native_static.cpp:6790:84: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_coef’ [-Wmissing-field-initializers]
+platform/native_static.cpp:6790:84: warning: missing initializer for member ‘{anonymous}::MeshDraw::sg_lp’ [-Wmissing-field-initializers]
+platform/native_static.cpp: In function ‘void re4dc_std_room_enter(unsigned int)’:
+platform/native_static.cpp:686:57: warning: ‘%02x’ directive output may be truncated writing 2 bytes into a region of size between 1 and 6 [-Wformat-truncation=]
+  686 |             char want[8];snprintf(want,sizeof(want),"r%x%02x",room>>8,room&255U);
+      |                                                         ^~~~
+In function ‘bool {anonymous}::std_parse(char*, unsigned int)’,
+    inlined from ‘void re4dc_std_room_enter(unsigned int)’ at platform/native_static.cpp:3446:23:
+platform/native_static.cpp:686:53: note: directive argument in the range [0, 255]
+  686 |             char want[8];snprintf(want,sizeof(want),"r%x%02x",room>>8,room&255U);
+      |                                                     ^~~~~~~~~
+platform/native_static.cpp:686:34: note: ‘snprintf’ output between 5 and 10 bytes into a destination of size 8
+  686 |             char want[8];snprintf(want,sizeof(want),"r%x%02x",room>>8,room&255U);
+      |                          ~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

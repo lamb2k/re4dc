@@ -1,0 +1,7 @@
+platform/native_model.cpp: In member function ‘unsigned int {anonymous}::PreparedModelBatch::next()’:
+platform/native_model.cpp:134:13: warning: this ‘for’ clause does not guard... [-Wmisleading-indentation]
+  134 |             for(auto& s:positions)s.serial=0;for(auto& s:normals)s.serial=0;for(auto& s:shades)s.serial=0;
+      |             ^~~
+platform/native_model.cpp:134:46: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘for’
+  134 |             for(auto& s:positions)s.serial=0;for(auto& s:normals)s.serial=0;for(auto& s:shades)s.serial=0;
+      |                                              ^~~

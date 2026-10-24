@@ -1,0 +1,109 @@
+platform/audio_aica.cpp:188:5:u16 {anonymous}::aica_freq_reg(u32)	4	static
+platform/audio_aica.cpp:204:5:u32 {anonymous}::rate_for_ms(const f32*, f32)	0	static
+platform/audio_aica.cpp:216:5:u16 {anonymous}::tl_from_db10(s32)	0	static
+platform/audio_aica.cpp:223:5:u16 {anonymous}::dipan(u32)	0	static
+platform/audio_aica.cpp:309:5:u16 {anonymous}::pref_cap(int)	0	static
+platform/audio_aica.cpp:321:5:u32 {anonymous}::sample_shift(const WTSAMPLE&, u32)	0	static
+platform/audio_aica.cpp:327:5:u32 {anonymous}::sample_bytes(const WTSAMPLE&, u32)	0	static
+platform/audio_aica.cpp:438:6:void {anonymous}::blk_map(Blk&, u32, u32)	40	static
+platform/audio_aica.cpp:807:6:void {anonymous}::emit(s32)	0	static
+platform/audio_aica.cpp:996:5:int {anonymous}::synth_block(const Synth*)	0	static
+platform/audio_aica.cpp:1211:5:u16 {anonymous}::str_tl(int)	4	static
+platform/audio_aica.cpp:404:6:bool {anonymous}::blk_wavetable(int, const WTSAMPLE*&, const WTADPCM*&, u32&)	4	static
+platform/audio_aica.cpp:938:6:void {anonymous}::chn_free(s8)	4	static
+platform/audio_aica.cpp:931:4:s8 {anonymous}::chn_alloc()	4	static
+platform/audio_aica.cpp:465:6:void {anonymous}::stream_ring_retry_locked(u64)	12	static
+platform/audio_aica.cpp:789:6:void {anonymous}::stage_flush(const Blk&, const MapEnt&, bool)	20	static
+platform/audio_aica.cpp:984:5:s32 {anonymous}::db_curve(u32)	4	static
+platform/audio_aica.cpp:1014:5:f32 {anonymous}::tc_ms(s32)	4	static
+platform/audio_aica.cpp:989:6:void {anonymous}::ch_update(Synth*, SynCh&)	20	static
+platform/audio_aica.cpp:903:6:void {anonymous}::ch_keyoff(RegWriter&, s8, u32)	12	static
+platform/audio_aica.cpp:387:6:void {anonymous}::blk_free(int)	40	static
+platform/audio_aica.cpp:1218:6:void {anonymous}::str_keyoff(RegWriter&)	32	static
+platform/audio_aica.cpp:909:6:void {anonymous}::ch_start(RegWriter&, s8, u32, u32, u32, u32, u16, u16, u16, u32, u32, u32, u32, u32&, u32)	44	static
+platform/audio_aica.cpp:1721:6:void {anonymous}::str_fill(u32, u32)	64	static
+platform/audio_aica.cpp:1764:31:void* {anonymous}::str_main(void*)	64	static
+platform/audio_aica.cpp:1121:6:void {anonymous}::synth_all_off(Synth*, bool)	8	static
+platform/audio_aica.cpp:1475:6:void {anonymous}::audio_step()	160	static
+platform/audio_aica.cpp:1558:7:void* {anonymous}::audio_main(void*)	16	static
+platform/audio_aica.cpp:421:6:void {anonymous}::blk_prepare(int, u32)	16	static
+platform/audio_aica.cpp:2064:10:unsigned int re4dc_aica_used_bytes()	0	static
+platform/audio_aica.cpp:2066:10:unsigned int re4dc_aica_skipped_blocks()	0	static
+platform/audio_aica.cpp:2071:10:unsigned int re4dc_aica_stream_started(long long unsigned int*)	0	static
+platform/audio_aica.cpp:2091:6:void re4dc_audio_frame()	4	static
+platform/audio_aica.cpp:2114:6:void re4dc_audio_arq(u32, u32, u32)	252	static
+platform/audio_aica.cpp:2180:16:int re4dc_audio_pad_skip(unsigned int, unsigned int)	0	static
+platform/audio_aica.cpp:2193:6:void AIInit(u8*)	0	static
+platform/audio_aica.cpp:2194:6:void AIReset()	0	static
+platform/audio_aica.cpp:2195:6:void AXInitEx(u32)	4	static
+platform/audio_aica.cpp:2196:6:void AXQuit()	0	static
+platform/audio_aica.cpp:2197:6:void AXSetMode(u32)	0	static
+platform/audio_aica.cpp:2198:6:void AXSetCompressor(u32)	0	static
+platform/audio_aica.cpp:2199:5:u32 AXGetDspCycles()	0	static
+platform/audio_aica.cpp:2200:5:u32 AXGetMaxDspCycles()	0	static
+platform/audio_aica.cpp:2201:12:void (* AXRegisterCallback(AXCallback))()	56	static
+platform/audio_aica.cpp:2208:6:void AXRegisterAuxACallback(void (*)(void*, void*), void*)	0	static
+platform/audio_aica.cpp:2209:6:void AXRegisterAuxBCallback(void (*)(void*, void*), void*)	0	static
+platform/audio_aica.cpp:2211:7:void* AXAcquireVoice(u32, void (*)(void*), u32)	12	static
+platform/audio_aica.cpp:2227:6:void AXFreeVoice(void*)	0	static
+platform/audio_aica.cpp:2244:6:void AXSetVoiceAddr(void*, void*)	4	static
+platform/audio_aica.cpp:2249:6:void AXSetVoiceState(void*, u16)	56	static
+platform/audio_aica.cpp:2323:6:void AXSetVoiceType(void*, u16)	0	static
+platform/audio_aica.cpp:2324:6:void AXSetVoicePriority(void*, u32)	0	static
+platform/audio_aica.cpp:2325:6:void AXSetVoiceAdpcm(void*, void*)	0	static
+platform/audio_aica.cpp:2326:6:void AXSetVoiceAdpcmLoop(void*, void*)	0	static
+platform/audio_aica.cpp:2327:6:void AXSetVoiceLoop(void*, u16)	0	static
+platform/audio_aica.cpp:2328:6:void AXSetVoiceLoopAddr(void*, u32)	0	static
+platform/audio_aica.cpp:2329:6:void AXSetVoiceEndAddr(void*, u32)	0	static
+platform/audio_aica.cpp:2330:6:void AXSetVoiceSrc(void*, void*)	0	static
+platform/audio_aica.cpp:2337:6:void AXSetVoiceSrcType(void*, u32)	0	static
+platform/audio_aica.cpp:2338:6:void AXSetVoiceSrcRatio(void*, f32)	0	static
+platform/audio_aica.cpp:2339:6:void AXSetVoiceLpf(void*, void*)	0	static
+platform/audio_aica.cpp:2340:6:void AXSetVoiceLpfCoefs(void*, u16, u16)	0	static
+platform/audio_aica.cpp:2342:6:void AXFXSetHooks(void* (*)(u32), void (*)(void*))	0	static
+platform/audio_aica.cpp:2343:5:int AXFXReverbHiInit(void*)	0	static
+platform/audio_aica.cpp:2344:5:int AXFXReverbHiSettings(void*)	0	static
+platform/audio_aica.cpp:2345:5:int AXFXReverbHiShutdown(void*)	0	static
+platform/audio_aica.cpp:2346:6:void AXFXReverbHiCallback(void*, void*)	0	static
+platform/audio_aica.cpp:2347:5:int AXFXReverbHiInitDpl2(void*)	0	static
+platform/audio_aica.cpp:2348:5:int AXFXReverbHiSettingsDpl2(void*)	0	static
+platform/audio_aica.cpp:2349:5:int AXFXReverbHiShutdownDpl2(void*)	0	static
+platform/audio_aica.cpp:2350:6:void AXFXReverbHiCallbackDpl2(void*, void*)	0	static
+platform/audio_aica.cpp:2351:5:int AXFXReverbStdInit(void*)	0	static
+platform/audio_aica.cpp:2352:5:int AXFXReverbStdSettings(void*)	0	static
+platform/audio_aica.cpp:2353:5:int AXFXReverbStdShutdown(void*)	0	static
+platform/audio_aica.cpp:2354:6:void AXFXReverbStdCallback(void*, void*)	0	static
+platform/audio_aica.cpp:2355:5:int AXFXDelayInit(void*)	0	static
+platform/audio_aica.cpp:2356:5:int AXFXDelaySettings(void*)	0	static
+platform/audio_aica.cpp:2357:5:int AXFXDelayShutdown(void*)	0	static
+platform/audio_aica.cpp:2358:6:void AXFXDelayCallback(void*, void*)	0	static
+platform/audio_aica.cpp:2359:5:int AXFXChorusInit(void*)	0	static
+platform/audio_aica.cpp:2360:5:int AXFXChorusSettings(void*)	0	static
+platform/audio_aica.cpp:2361:5:int AXFXChorusShutdown(void*)	0	static
+platform/audio_aica.cpp:2362:6:void AXFXChorusCallback(void*, void*)	0	static
+platform/audio_aica.cpp:2364:6:void AXARTInit()	0	static
+platform/audio_aica.cpp:2365:6:void AXARTQuit()	0	static
+platform/audio_aica.cpp:2366:6:void AXARTServiceSounds()	0	static
+platform/audio_aica.cpp:2368:6:void MIXInit()	0	static
+platform/audio_aica.cpp:2369:6:void MIXQuit()	0	static
+platform/audio_aica.cpp:2370:6:void MIXInitChannel(void*, u32, int, int, int, int, int, int)	0	static
+platform/audio_aica.cpp:2379:6:void MIXReleaseChannel(void*)	0	static
+platform/audio_aica.cpp:2380:6:void MIXSetInput(void*, int)	0	static
+platform/audio_aica.cpp:2381:6:void MIXSetAuxA(void*, int)	0	static
+platform/audio_aica.cpp:2382:6:void MIXSetAuxB(void*, int)	0	static
+platform/audio_aica.cpp:2383:6:void MIXSetPan(void*, int)	0	static
+platform/audio_aica.cpp:2384:6:void MIXSetSPan(void*, int)	0	static
+platform/audio_aica.cpp:2385:6:void MIXSetSoundMode(u32)	0	static
+platform/audio_aica.cpp:2386:6:void MIXUpdateSettings()	0	static
+platform/audio_aica.cpp:2388:6:void SYNInit()	0	static
+platform/audio_aica.cpp:2389:6:void SYNQuit()	0	static
+platform/audio_aica.cpp:2390:6:void SYNInitSynth(void*, void*, u32, u32, u32, u32, u32)	40	static
+platform/audio_aica.cpp:2412:6:void SYNQuitSynth(void*)	8	static
+platform/audio_aica.cpp:2420:6:void SYNRunAudioFrame()	0	static
+platform/audio_aica.cpp:2421:6:void SYNMidiInput(void*, u8*)	104	static
+platform/audio_aica.cpp:2458:5:u32 SYNGetActiveNotes(void*)	0	static
+platform/audio_aica.cpp:2464:6:void SYNSetMasterVolume(void*, s32)	0	static
+platform/audio_aica.cpp:2469:6:void SEQInit()	0	static
+platform/audio_aica.cpp:2470:6:void SEQQuit()	0	static
+platform/audio_aica.cpp:2471:6:void SEQRunAudioFrame()	0	static
+platform/audio_aica.cpp:2473:1:cpp)	0	static

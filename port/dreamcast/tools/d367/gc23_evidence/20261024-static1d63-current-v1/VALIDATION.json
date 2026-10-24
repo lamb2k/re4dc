@@ -1,0 +1,36 @@
+{
+  "status": "SOURCE_AND_METADATA_CHAIN_PASS_NO_TARGET_EXECUTION",
+  "current_report_sha256": "95d25a3dcbf5323c30fd788c99b6d51e3d3f5e60e73a154f0cbc17f3675df25c",
+  "summary_sha256": "1bd6f3dcae656106ea065827f5388698e0a3dcdc9b4d006248ac3e12908c5c8d",
+  "metadata_manifest_sha256": "dd9eb350712df794e49d5f3f8c5c3508dbe14b2721d8a4e0c8f0b587dec01f17",
+  "failure_receipt_sha256": "3c6ed03878adada497c513010f1ddeebeaf47b3a777d1183ac4ccf1ee5f1da00",
+  "prior_report_sha256": "666759f4e9019398d854d959244c19080ffeee1edf323f8611ef5e874a679979",
+  "current_arms": 67,
+  "current_off_identical": 14,
+  "reused_arms": 49,
+  "prior_partial_arms": 51,
+  "prior_off_identical": 12,
+  "metadata_files_verified": 335,
+  "helper_AST_or_shell_syntax_checks": 8,
+  "objects_read_or_copied": 0,
+  "SDK_or_guest_runs": 0,
+  "compiler_summary_only": {
+    "delta": {
+      "text": 45656,
+      "data": 128,
+      "bss": 17408
+    },
+    "delta_total": 63192,
+    "synthetic_pin": [
+      445,
+      0,
+      0
+    ]
+  },
+  "limits": [
+    "Actual current fb254 selected compiler commands; no final link/image/map/heap/KOS/H2/guest or installed catalog qualification.",
+    "Compiler self-frames are not call-chain high-water or IRQ stack proof.",
+    "Required3ff/wired1f6 remains incomplete.",
+    "Original77 target failure preserved separately; current rows carry exact compiled source and origin when reused."
+  ]
+}

@@ -1,0 +1,17 @@
+platform/gc_asset_members.cpp:21:6:bool re4dc_gcasset::{anonymous}::contains(const void*, unsigned int, const void*, unsigned int)	0	static
+platform/gc_asset_members.cpp:104:6:bool re4dc_gcasset::{anonymous}::current(const Member&)	4	static
+platform/gc_asset_members.cpp:25:10:unsigned int re4dc_gcasset::{anonymous}::word(const unsigned char*, unsigned int)	8	static
+platform/gc_asset_members.cpp:28:6:bool re4dc_gcasset::{anonymous}::table(const Archive&, unsigned int&)	12	static
+platform/gc_asset_members.cpp:142:6:bool re4dc_gcasset::member_capture(const void*)	220	static
+platform/gc_asset_members.cpp:161:6:bool re4dc_gcasset::member_lookup(const void*, ModelMember*)	92	static
+platform/gc_asset_members.cpp:173:6:bool re4dc_gcasset::member_contains(unsigned int, const void*, unsigned int)	32	static
+platform/gc_asset_members.cpp:179:6:void re4dc_gcasset::member_accept(unsigned int, unsigned int)	24	static
+platform/gc_asset_members.cpp:185:6:void re4dc_gcasset::member_flush()	32	static
+platform/gc_asset_members.cpp:109:6:void re4dc_gcasset::{anonymous}::revoke(unsigned int)	8	static
+platform/gc_asset_members.cpp:115:6:bool re4dc_gcasset::member_adopt(const void*, void*, unsigned int, bool, OwnerFamily)	68	static
+platform/gc_asset_members.cpp:139:6:void re4dc_gcasset::member_retire(const void*)	20	static
+platform/gc_asset_members.cpp:140:6:void re4dc_gcasset::member_retire_archive(const void*)	20	static
+platform/gc_asset_members.cpp:141:6:void re4dc_gcasset::member_retire_transient()	20	static
+platform/gc_asset_members.cpp:198:17:void re4dc_gcasset_capture_model(const void*)	4	static
+platform/gc_asset_members.cpp:199:17:void re4dc_gcasset_retire_archive(const void*)	4	static
+platform/gc_asset_members.cpp:199:110:cpp)	0	static

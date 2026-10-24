@@ -1,0 +1,6 @@
+         U __ZN13re4dc_gcasset10unresolvedENS_8ConsumerEPKc
+         U __ZN13re4dc_gcasset11fingerprintEPKvj
+         U __ZN13re4dc_gcasset12bind_checkedEPKcS1_RKNS_6DigestE
+         U __ZN13re4dc_gcasset15emitted_checkedENS_8ConsumerENS_12CheckedAssetE
+         U _memcmp
+         U _memcpy

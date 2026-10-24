@@ -1,0 +1,559 @@
+{
+  "status": "SELECTED_TARGET_COMPLETE_ONLY",
+  "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "baseline": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "objects": 67,
+  "reused": 49,
+  "off14_identical": true,
+  "helpers5_off_empty": true,
+  "delta": {
+    "text": 45656,
+    "data": 128,
+    "bss": 17408
+  },
+  "delta_total": 63192,
+  "synthetic_catalog_pin_text_data_bss": [
+    445,
+    0,
+    0
+  ],
+  "top_on_compiler_frames": [
+    {
+      "unit": "platform/native_static.cpp",
+      "arm": "on",
+      "function": "int {anonymous}::ps2_pass(unsigned int, float)",
+      "bytes": 9012,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-1d63cffe3-vhytjv63\\platform_native_static-on.su"
+    },
+    {
+      "unit": "platform/native_model.cpp",
+      "arm": "on",
+      "function": "void re4dc_model_submit(const Re4dcModelPart*)",
+      "bytes": 6168,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-77d8a20b2-jx_x05a2\\platform_native_model-on.su"
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "arm": "on",
+      "function": "{anonymous}::PackWhy {anonymous}::pack_validate(const unsigned char*, unsigned int, unsigned int, unsigned int&, const PackBase&)",
+      "bytes": 5040,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-77d8a20b2-jx_x05a2\\coarse_actor-on.su"
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "arm": "on",
+      "function": "int re4dc_actor_plan_pl08(cModel*, Re4dcActorPlan*)",
+      "bytes": 3932,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-77d8a20b2-jx_x05a2\\coarse_actor-on.su"
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "arm": "on",
+      "function": "int re4dc_actor_transaction_draw(cModel*)",
+      "bytes": 3824,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-77d8a20b2-jx_x05a2\\coarse_actor-on.su"
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "arm": "on",
+      "function": "int re4dc_actor_death_fade_drain(Re4dcActorFadeTicket)",
+      "bytes": 3756,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-77d8a20b2-jx_x05a2\\coarse_actor-on.su"
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "arm": "on",
+      "function": "void {anonymous}::water_emit(const WaterNode&)",
+      "bytes": 2948,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-77d8a20b2-jx_x05a2\\platform_native_ui-on.su"
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "arm": "on",
+      "function": "void ui_draw_quad(unsigned int)",
+      "bytes": 2540,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-77d8a20b2-jx_x05a2\\platform_native_ui-on.su"
+    },
+    {
+      "unit": "platform/native_actor_fast.cpp",
+      "arm": "on",
+      "function": "bool {anonymous}::Converter::finish(const {anonymous}::u16*, unsigned int, const {anonymous}::u8*, unsigned int, unsigned int, const {anonymous}::u32*)",
+      "bytes": 2388,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-77d8a20b2-jx_x05a2\\platform_native_actor_fast-on.su"
+    },
+    {
+      "unit": "platform/native_actor_fast.cpp",
+      "arm": "on",
+      "function": "bool {anonymous}::Converter::levels_impl(unsigned int, const {anonymous}::u16*, const {anonymous}::u16*, const {anonymous}::u16*, unsigned int, const {anonymous}::u32*, const {anonymous}::u16*)",
+      "bytes": 2232,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-77d8a20b2-jx_x05a2\\platform_native_actor_fast-on.su"
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "arm": "on",
+      "function": "int re4dc_actor_plan_leon(cModel*, Re4dcActorPlan*)",
+      "bytes": 2004,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-77d8a20b2-jx_x05a2\\coarse_actor-on.su"
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "arm": "on",
+      "function": "int re4dc_actor_plan_registry(cModel*, Re4dcActorPlan*)",
+      "bytes": 1936,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-77d8a20b2-jx_x05a2\\coarse_actor-on.su"
+    },
+    {
+      "unit": "platform/native_static.cpp",
+      "arm": "on",
+      "function": "int {anonymous}::mesh_submit(const Re4dcModelPart&)",
+      "bytes": 1904,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-1d63cffe3-vhytjv63\\platform_native_static-on.su"
+    },
+    {
+      "unit": "platform/native_actor_fast.cpp",
+      "arm": "on",
+      "function": "0(const Re4dcModelPart*)",
+      "bytes": 1716,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-77d8a20b2-jx_x05a2\\platform_native_actor_fast-on.su"
+    },
+    {
+      "unit": "platform/native_actor_fast.cpp",
+      "arm": "on",
+      "function": "int owned_submit_runs(Re4dcModelPart*, const Re4dcActorDrawRun*, unsigned int, const Re4dcActorOwnedMaterial*, unsigned int, const Re4dcActorWorkspaceLease*, const Re4dcActorSkinLease*, const Re4dcActorTextureLease*, bool)",
+      "bytes": 1456,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-77d8a20b2-jx_x05a2\\platform_native_actor_fast-on.su"
+    },
+    {
+      "unit": "platform/native_actor_fast.cpp",
+      "arm": "on",
+      "function": "unsigned int re4dc_actor_submit_chunks(Re4dcModelPart*, const Re4dcActorChunk*, unsigned int)",
+      "bytes": 1392,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-77d8a20b2-jx_x05a2\\platform_native_actor_fast-on.su"
+    },
+    {
+      "unit": "platform/native_static.cpp",
+      "arm": "on",
+      "function": "bool {anonymous}::ps2_open()",
+      "bytes": 1300,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-1d63cffe3-vhytjv63\\platform_native_static-on.su"
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "arm": "on",
+      "function": "unsigned int re4dc_rain_dc_streaks(const Re4dcRainStreak*, unsigned int)",
+      "bytes": 1296,
+      "classification": "static",
+      "receipt": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-port23-current-77d8a20b2-jx_x05a2\\platform_native_ui-on.su"
+    }
+  ],
+  "changed_compiler_frames": [
+    {
+      "unit": "coarse_actor.cpp",
+      "function": "void leon_hand_pack::job_poll()",
+      "off": 48,
+      "on": 92,
+      "delta": 44
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "function": "bool leon_hand_pack::job_start(int)",
+      "off": 44,
+      "on": 88,
+      "delta": 44
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "function": "bool leon_hand_pack::load(unsigned int, int)",
+      "off": 56,
+      "on": 64,
+      "delta": 8
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "function": "void leon_hand_pack::set_slot(unsigned int, int)",
+      "off": 52,
+      "on": 60,
+      "delta": 8
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "function": "void re4dc_leon_hands_yield()",
+      "off": 12,
+      "on": 48,
+      "delta": 36
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "function": "void {anonymous}::pl08_hook_published(const Pl08ChunkView*)",
+      "off": 28,
+      "on": 40,
+      "delta": 12
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "function": "bool leon_hand_pack::load_now(unsigned int, int)",
+      "off": 20,
+      "on": 32,
+      "delta": 12
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "function": "void leon_hand_pack::cache(int, const unsigned char*)",
+      "off": 20,
+      "on": 28,
+      "delta": 8
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "function": "void leon_hand_pack::prefetch(int)",
+      "off": 12,
+      "on": 24,
+      "delta": 12
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "function": "void {anonymous}::pl08_life_room_leave(Pl08PackLife&, const char*)",
+      "off": 20,
+      "on": 24,
+      "delta": 4
+    },
+    {
+      "unit": "platform/native_actor_fast.cpp",
+      "function": "0(Re4dcModelPart&, OneWindow&)",
+      "off": 1084,
+      "on": 1136,
+      "delta": 52
+    },
+    {
+      "unit": "platform/native_actor_fast.cpp",
+      "function": "void {anonymous}::relod(const Re4dcModelPart&, bool)",
+      "off": 600,
+      "on": 604,
+      "delta": 4
+    },
+    {
+      "unit": "platform/native_actor_fast.cpp",
+      "function": "{anonymous}::BakeUse {anonymous}::bake_prepare(Part&, const Lights&, const BlobHeader&, unsigned int, unsigned int*)",
+      "off": 120,
+      "on": 124,
+      "delta": 4
+    },
+    {
+      "unit": "platform/native_actor_fast.cpp",
+      "function": "int re4dc_actor_submit(const Re4dcModelPart*)",
+      "off": 1676,
+      "on": 8,
+      "delta": -1668
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "void ui_draw_quad(unsigned int)",
+      "off": 2460,
+      "on": 2540,
+      "delta": 80
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "void re4dc_model_finish_source_draws()",
+      "off": 880,
+      "on": 896,
+      "delta": 16
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "int {anonymous}::glyph_cell(const Re4dcUiGlyph&)",
+      "off": 604,
+      "on": 672,
+      "delta": 68
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "0(const Re4dcModelPart*, const SourceLighting*)",
+      "off": 652,
+      "on": 660,
+      "delta": 8
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "void {anonymous}::movie_draw()",
+      "off": 468,
+      "on": 496,
+      "delta": 28
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "{anonymous}::Entry* {anonymous}::load(const Re4dcUiImage&, bool, const Key*)",
+      "off": 212,
+      "on": 268,
+      "delta": 56
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "void re4dc_ui_glyph(const Re4dcUiGlyph*)",
+      "off": 80,
+      "on": 76,
+      "delta": -4
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "void {anonymous}::stream_send(const void*, unsigned int)",
+      "off": 12,
+      "on": 48,
+      "delta": 36
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "int re4dc_ui_bind_enemy(void*, unsigned int)",
+      "off": 28,
+      "on": 32,
+      "delta": 4
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "int re4dc_ui_bind_core(void*, unsigned int)",
+      "off": 20,
+      "on": 24,
+      "delta": 4
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "int re4dc_ui_bind_option(void*, unsigned int)",
+      "off": 20,
+      "on": 24,
+      "delta": 4
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "int re4dc_ui_bind_player(void*, unsigned int)",
+      "off": 20,
+      "on": 24,
+      "delta": 4
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "int re4dc_ui_bind_weapon(void*, unsigned int)",
+      "off": 20,
+      "on": 24,
+      "delta": 4
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "int re4dc_ui_bind_room(void*, unsigned int)",
+      "off": 16,
+      "on": 20,
+      "delta": 4
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "void re4dc_model_packet_commit(unsigned int)",
+      "off": 8,
+      "on": 20,
+      "delta": 12
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "void model_direct_account(unsigned int)",
+      "off": 8,
+      "on": 16,
+      "delta": 8
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "int re4dc_ui_movie_try_close()",
+      "off": 12,
+      "on": 16,
+      "delta": 4
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "function": "{anonymous}::movie_window_release(unsigned int, bool, unsigned int&)::<lambda(unsigned int)>",
+      "off": 32,
+      "on": 4,
+      "delta": -28
+    },
+    {
+      "unit": "platform/native_model.cpp",
+      "function": "void re4dc_model_submit(const Re4dcModelPart*)",
+      "off": 6136,
+      "on": 6168,
+      "delta": 32
+    },
+    {
+      "unit": "platform/audio_aica.cpp",
+      "function": "void {anonymous}::audio_step()",
+      "off": 160,
+      "on": 264,
+      "delta": 104
+    },
+    {
+      "unit": "platform/audio_aica.cpp",
+      "function": "void* {anonymous}::str_main(void*)",
+      "off": 64,
+      "on": 104,
+      "delta": 40
+    },
+    {
+      "unit": "platform/native_movie.cpp",
+      "function": "int {anonymous}::iterate(RouteMoviePictureTick, bool)",
+      "off": 588,
+      "on": 592,
+      "delta": 4
+    },
+    {
+      "unit": "platform/native_movie.cpp",
+      "function": "int re4dc_movie_play_until(unsigned int, unsigned int, RouteMoviePictureTick, unsigned int)",
+      "off": 172,
+      "on": 188,
+      "delta": 16
+    },
+    {
+      "unit": "platform/native_movie.cpp",
+      "function": "int {anonymous}::finish(int)",
+      "off": 192,
+      "on": 184,
+      "delta": -8
+    },
+    {
+      "unit": "platform/native_movie_stream.c",
+      "function": "snd_stream_start",
+      "off": 0,
+      "on": 16,
+      "delta": 16
+    },
+    {
+      "unit": "platform/native_movie_stream.c",
+      "function": "snd_stream_start_pcm8",
+      "off": 0,
+      "on": 16,
+      "delta": 16
+    },
+    {
+      "unit": "platform/native_movie_stream.c",
+      "function": "snd_stream_start_adpcm",
+      "off": 0,
+      "on": 16,
+      "delta": 16
+    },
+    {
+      "unit": "platform/native_movie_stream.c",
+      "function": "snd_stream_stop",
+      "off": 112,
+      "on": 8,
+      "delta": -104
+    },
+    {
+      "unit": "platform/native_movie_stream.c",
+      "function": "snd_stream_destroy",
+      "off": 24,
+      "on": 8,
+      "delta": -16
+    },
+    {
+      "unit": "platform/native_movie_stream.c",
+      "function": "snd_stream_shutdown",
+      "off": 16,
+      "on": 4,
+      "delta": -12
+    },
+    {
+      "unit": "../../../src/game/model.cpp",
+      "function": "void calcModelAddr(ModelData*)",
+      "off": 4,
+      "on": 0,
+      "delta": -4
+    },
+    {
+      "unit": "../../../src/game/dvd.cpp",
+      "function": "void cDvdQueue::readMain()",
+      "off": 56,
+      "on": 60,
+      "delta": 4
+    },
+    {
+      "unit": "platform/native_static.cpp",
+      "function": "int {anonymous}::ps2_pass(unsigned int, float)",
+      "off": 8992,
+      "on": 9012,
+      "delta": 20
+    },
+    {
+      "unit": "platform/native_static.cpp",
+      "function": "int {anonymous}::mesh_submit(const Re4dcModelPart&)",
+      "off": 1884,
+      "on": 1904,
+      "delta": 20
+    },
+    {
+      "unit": "platform/native_static.cpp",
+      "function": "bool {anonymous}::ps2_open()",
+      "off": 596,
+      "on": 1300,
+      "delta": 704
+    },
+    {
+      "unit": "platform/native_static.cpp",
+      "function": "bool {anonymous}::open(MeshView&, unsigned int, unsigned int)",
+      "off": 312,
+      "on": 1016,
+      "delta": 704
+    },
+    {
+      "unit": "platform/native_static.cpp",
+      "function": "void re4dc_static_flush_impostors()",
+      "off": 72,
+      "on": 676,
+      "delta": 604
+    },
+    {
+      "unit": "platform/native_static.cpp",
+      "function": "int re4dc_far_shell_draw(float, float)",
+      "off": 464,
+      "on": 480,
+      "delta": 16
+    },
+    {
+      "unit": "platform/native_static.cpp",
+      "function": "void re4dc_std_room_enter(unsigned int)",
+      "off": 416,
+      "on": 456,
+      "delta": 40
+    },
+    {
+      "unit": "platform/native_static.cpp",
+      "function": "void {anonymous}::retire(View&)",
+      "off": 8,
+      "on": 12,
+      "delta": 4
+    },
+    {
+      "unit": "platform/native_static.cpp",
+      "function": "void {anonymous}::farshell::sync()",
+      "off": 184,
+      "on": 12,
+      "delta": -172
+    }
+  ],
+  "limits": [
+    "Actual current fb254 selected compiler commands; no final link/image/map/heap/KOS/H2/guest or installed catalog qualification.",
+    "Compiler self-frames are not call-chain high-water or IRQ stack proof.",
+    "Required3ff/wired1f6 remains incomplete.",
+    "Original77 target failure preserved separately; current rows carry exact compiled source and origin when reused."
+  ]
+}

@@ -1,0 +1,52 @@
+platform/native_ui.cpp: In function ‘void {anonymous}::hud_flush(HudBatch&)’:
+platform/native_ui.cpp:2446:5: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+ 2446 |     if(b.n>1)stream_send(b.v,b.n*32);b.n=1;}
+      |     ^~
+platform/native_ui.cpp:2446:38: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+ 2446 |     if(b.n>1)stream_send(b.v,b.n*32);b.n=1;}
+      |                                      ^
+platform/native_ui.cpp: In function ‘void re4dc_ui_end_frame(int)’:
+platform/native_ui.cpp:6562:27: warning: ‘++’ expression of ‘volatile’-qualified type is deprecated [-Wvolatile]
+ 6562 |     completed_preparation.sequence++;
+      |     ~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~
+platform/native_ui.cpp:6570:57: warning: ‘++’ expression of ‘volatile’-qualified type is deprecated [-Wvolatile]
+ 6570 |     asm volatile("" ::: "memory");completed_preparation.sequence++;
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~
+In file included from platform/native_ui.cpp:7812:
+platform/include/fx_sprite_trim.inc: In function ‘int {anonymous}::fx_trim(const Re4dcEffectSprite&, const Entry*, Re4dcEffectSprite&, float*, float*)’:
+platform/include/fx_sprite_trim.inc:101:14: warning: variable ‘why’ set but not used [-Wunused-but-set-variable]
+  101 |     unsigned why=0;
+      |              ^~~
+In file included from platform/native_ui.cpp:8275:
+platform/include/native_water_ps2.inc: In function ‘void {anonymous}::water_emit(const WaterNode&)’:
+platform/include/native_water_ps2.inc:97:21: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+   97 |                     if(p->sx>=0.0f)l=false;if(p->sx<=RE4DC_SCREEN_WF)r=false;
+      |                     ^~
+platform/include/native_water_ps2.inc:97:44: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   97 |                     if(p->sx>=0.0f)l=false;if(p->sx<=RE4DC_SCREEN_WF)r=false;
+      |                                            ^~
+platform/include/native_water_ps2.inc:98:21: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+   98 |                     if(p->sy>=0.0f)t=false;if(p->sy<=RE4DC_SCREEN_HF)b=false;
+      |                     ^~
+platform/include/native_water_ps2.inc:98:44: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+   98 |                     if(p->sy>=0.0f)t=false;if(p->sy<=RE4DC_SCREEN_HF)b=false;
+      |                                            ^~
+platform/native_ui.cpp: At global scope:
+platform/native_ui.cpp:3421:10: warning: ‘{anonymous}::gad_hits’ defined but not used [-Wunused-variable]
+ 3421 | unsigned gad_hits[5],gad_drops,gad_closes;
+      |          ^~~~~~~~
+platform/native_ui.cpp:2884:79: warning: ‘{anonymous}::source_bad’ defined but not used [-Wunused-variable]
+ 2884 | unsigned source_used[kSourceCount],source_clock,source_evict,source_late_hits,source_bad;
+      |                                                                               ^~~~~~~~~~
+platform/native_ui.cpp:2434:25: warning: ‘{anonymous}::hud_begin_prev’ defined but not used [-Wunused-variable]
+ 2434 | std::uint64_t hud_begin,hud_begin_prev;
+      |                         ^~~~~~~~~~~~~~
+platform/native_ui.cpp:2434:15: warning: ‘{anonymous}::hud_begin’ defined but not used [-Wunused-variable]
+ 2434 | std::uint64_t hud_begin,hud_begin_prev;
+      |               ^~~~~~~~~
+platform/native_ui.cpp:640:6: warning: ‘{anonymous}::frag_discard’ defined but not used [-Wunused-variable]
+  640 | bool frag_discard; // =2: the open scene closes unrendered (stream_close), the previous picture stays one more frame
+      |      ^~~~~~~~~~~~
+platform/native_ui.cpp:639:75: warning: ‘{anonymous}::frag_drop_frame’ defined but not used [-Wunused-variable]
+  639 | unsigned frag_win_ok,frag_win_none,frag_win_bytes,frag_drops,frag_drop_ok,frag_drop_frame=~0U-1000U;
+      |                                                                           ^~~~~~~~~~~~~~~

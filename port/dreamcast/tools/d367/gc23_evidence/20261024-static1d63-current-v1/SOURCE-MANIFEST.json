@@ -1,0 +1,3581 @@
+{
+  "schema": 1,
+  "captured_utc": "2026-10-24T05:20:24.753545+00:00",
+  "runtime_source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "prior_failed_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+  "baseline": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "files": [
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/prepare-static-target-20261024.py",
+      "destination": "helpers/prepare-static-target-20261024.py",
+      "bytes": 4842,
+      "sha256": "7fb4e4720958e7e2c1d276ebc49262fe10288271d7517c18e7cfe786613665bc",
+      "lf_sha256": "7fb4e4720958e7e2c1d276ebc49262fe10288271d7517c18e7cfe786613665bc",
+      "crlf_count": 0,
+      "lf_count": 48,
+      "source_mtime_ns": 1792818271181705100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/static-target-current-20261024.py",
+      "destination": "helpers/static-target-current-20261024.py",
+      "bytes": 10994,
+      "sha256": "6f8f984ed689ee8c0c0701d054f15c7a276b0f8d9d59c475cf3f15e4322935ba",
+      "lf_sha256": "6f8f984ed689ee8c0c0701d054f15c7a276b0f8d9d59c475cf3f15e4322935ba",
+      "crlf_count": 0,
+      "lf_count": 163,
+      "source_mtime_ns": 1792818271464644000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/static-target-current-20261024.sh",
+      "destination": "helpers/static-target-current-20261024.sh",
+      "bytes": 1118,
+      "sha256": "3a9e1cae4373fae0797c0a501ae5dce30d0dc261d6d5d89f8e74cfd303ebdfc9",
+      "lf_sha256": "3a9e1cae4373fae0797c0a501ae5dce30d0dc261d6d5d89f8e74cfd303ebdfc9",
+      "crlf_count": 0,
+      "lf_count": 23,
+      "source_mtime_ns": 1792818271465640500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/preserve-target-static77-failure-20261024.py",
+      "destination": "helpers/preserve-target-static77-failure-20261024.py",
+      "bytes": 1462,
+      "sha256": "8450595ab982f14acd2a44fa7f870a596431094a4582688b3b7d644d0683bc23",
+      "lf_sha256": "8450595ab982f14acd2a44fa7f870a596431094a4582688b3b7d644d0683bc23",
+      "crlf_count": 0,
+      "lf_count": 15,
+      "source_mtime_ns": 1792818755451449100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/prepare-static-target-successor-20261024.py",
+      "destination": "helpers/prepare-static-target-successor-20261024.py",
+      "bytes": 3102,
+      "sha256": "842887fec047fa76e703ecde79fbacc3cf60ecb3f300659c14465ed8380289b5",
+      "lf_sha256": "842887fec047fa76e703ecde79fbacc3cf60ecb3f300659c14465ed8380289b5",
+      "crlf_count": 0,
+      "lf_count": 20,
+      "source_mtime_ns": 1792818896245784100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/static-target-successor-20261024.py",
+      "destination": "helpers/static-target-successor-20261024.py",
+      "bytes": 11973,
+      "sha256": "ebd6a4e8e452f219cbcc8b3f631deb21ac908a23e78da7f2fd78b3d441f47105",
+      "lf_sha256": "ebd6a4e8e452f219cbcc8b3f631deb21ac908a23e78da7f2fd78b3d441f47105",
+      "crlf_count": 0,
+      "lf_count": 168,
+      "source_mtime_ns": 1792818896317298400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/static-target-successor-20261024.sh",
+      "destination": "helpers/static-target-successor-20261024.sh",
+      "bytes": 1183,
+      "sha256": "8b0cd44fc1de062efe954d7bfd8786c781d8e6eee061d837fcd35e08fa67574a",
+      "lf_sha256": "8b0cd44fc1de062efe954d7bfd8786c781d8e6eee061d837fcd35e08fa67574a",
+      "crlf_count": 0,
+      "lf_count": 23,
+      "source_mtime_ns": 1792818896317298400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/summarize-static-target-20261024.py",
+      "destination": "helpers/summarize-static-target-20261024.py",
+      "bytes": 3771,
+      "sha256": "470b24a805fa4fd1f1508fadd9cdeb65d83406f1044e8df04fb4f209196ad011",
+      "lf_sha256": "470b24a805fa4fd1f1508fadd9cdeb65d83406f1044e8df04fb4f209196ad011",
+      "crlf_count": 0,
+      "lf_count": 54,
+      "source_mtime_ns": 1792818986787565400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/STATIC-TARGET-PREPARATION.json",
+      "destination": "preparation/STATIC-TARGET-PREPARATION.json",
+      "bytes": 754,
+      "sha256": "9f432eb08ad0124250aa0305693a22c5baee09e8d55077c867cc1ecae8b9ecde",
+      "lf_sha256": "6b44091ff22a61dfddc20299e956f1f655c8e97a4ff83db8c8c3257d7f01426f",
+      "crlf_count": 9,
+      "lf_count": 9,
+      "source_mtime_ns": 1792818271481639800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/STATIC-TARGET-SUCCESSOR-PREPARATION.json",
+      "destination": "preparation/STATIC-TARGET-SUCCESSOR-PREPARATION.json",
+      "bytes": 735,
+      "sha256": "615eaf0ab69d2165622f757bc70c8bdb8ae87e7cb005372c009713e9bc1f48dd",
+      "lf_sha256": "4c4a4ae9181ecfaaf62e28a04c49a9fc63f7ded7bd53d762c354e10762f0b8e8",
+      "crlf_count": 9,
+      "lf_count": 9,
+      "source_mtime_ns": 1792818896318295200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/METADATA-MANIFEST.json",
+      "destination": "target-static1d63-current/METADATA-MANIFEST.json",
+      "bytes": 95692,
+      "sha256": "dd9eb350712df794e49d5f3f8c5c3508dbe14b2721d8a4e0c8f0b587dec01f17",
+      "lf_sha256": "5fc530267d8d4a93b7c89566212f17473aa6bf6916f1495bc5409bb7739f97c0",
+      "crlf_count": 1677,
+      "lf_count": 1677,
+      "source_mtime_ns": 1792818991135614700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/SUMMARY.json",
+      "destination": "target-static1d63-current/SUMMARY.json",
+      "bytes": 17184,
+      "sha256": "1bd6f3dcae656106ea065827f5388698e0a3dcdc9b4d006248ac3e12908c5c8d",
+      "lf_sha256": "17e2f47c38f44df0d3cbdfb1ad587b9682b8d1313e013e7a7b102eb813851257",
+      "crlf_count": 559,
+      "lf_count": 559,
+      "source_mtime_ns": 1792818991133614700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-absent-command.json",
+      "destination": "target-static1d63-current/coarse_actor-absent-command.json",
+      "bytes": 5136,
+      "sha256": "d783abc6bf927160c0d49aed6adc524fb2143136e09fbe4233641ecfd0453282",
+      "lf_sha256": "d783abc6bf927160c0d49aed6adc524fb2143136e09fbe4233641ecfd0453282",
+      "crlf_count": 0,
+      "lf_count": 178,
+      "source_mtime_ns": 1792818988440127100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-absent-inputs.json",
+      "destination": "target-static1d63-current/coarse_actor-absent-inputs.json",
+      "bytes": 23343,
+      "sha256": "24ee7c471408d5ca64bfb4313c85e43ca1e9e6584fd3cf91010c45bcab28df80",
+      "lf_sha256": "24ee7c471408d5ca64bfb4313c85e43ca1e9e6584fd3cf91010c45bcab28df80",
+      "crlf_count": 0,
+      "lf_count": 173,
+      "source_mtime_ns": 1792818988448130700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-absent-undefined.txt",
+      "destination": "target-static1d63-current/coarse_actor-absent-undefined.txt",
+      "bytes": 2633,
+      "sha256": "bdfe2581a77a30ea2de46a7dfada8c16cc88f9cbd36ba398bfc461cdb5a8bef0",
+      "lf_sha256": "bdfe2581a77a30ea2de46a7dfada8c16cc88f9cbd36ba398bfc461cdb5a8bef0",
+      "crlf_count": 0,
+      "lf_count": 83,
+      "source_mtime_ns": 1792818988474449400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-absent.log",
+      "destination": "target-static1d63-current/coarse_actor-absent.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818988456131600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-absent.su",
+      "destination": "target-static1d63-current/coarse_actor-absent.su",
+      "bytes": 20149,
+      "sha256": "f3f92610dff2f85f1983033d0afc068a1ae0069a0ba0ec239df34a1791b47bc3",
+      "lf_sha256": "f3f92610dff2f85f1983033d0afc068a1ae0069a0ba0ec239df34a1791b47bc3",
+      "crlf_count": 0,
+      "lf_count": 187,
+      "source_mtime_ns": 1792818988465132600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-baseline-command.json",
+      "destination": "target-static1d63-current/coarse_actor-baseline-command.json",
+      "bytes": 5138,
+      "sha256": "a4c9fc0a66d8a979646a5079c26f734ca470c96a51b18eba3f59d5ccbcd58c72",
+      "lf_sha256": "a4c9fc0a66d8a979646a5079c26f734ca470c96a51b18eba3f59d5ccbcd58c72",
+      "crlf_count": 0,
+      "lf_count": 178,
+      "source_mtime_ns": 1792818988392325200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-baseline-inputs.json",
+      "destination": "target-static1d63-current/coarse_actor-baseline-inputs.json",
+      "bytes": 24114,
+      "sha256": "a1a808dc2e0fa628af30aa034566592716e9070df052f11ee406d6d92970e0b2",
+      "lf_sha256": "a1a808dc2e0fa628af30aa034566592716e9070df052f11ee406d6d92970e0b2",
+      "crlf_count": 0,
+      "lf_count": 165,
+      "source_mtime_ns": 1792818988402123400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-baseline-undefined.txt",
+      "destination": "target-static1d63-current/coarse_actor-baseline-undefined.txt",
+      "bytes": 2633,
+      "sha256": "bdfe2581a77a30ea2de46a7dfada8c16cc88f9cbd36ba398bfc461cdb5a8bef0",
+      "lf_sha256": "bdfe2581a77a30ea2de46a7dfada8c16cc88f9cbd36ba398bfc461cdb5a8bef0",
+      "crlf_count": 0,
+      "lf_count": 83,
+      "source_mtime_ns": 1792818988430127400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-baseline.log",
+      "destination": "target-static1d63-current/coarse_actor-baseline.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818988409126600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-baseline.su",
+      "destination": "target-static1d63-current/coarse_actor-baseline.su",
+      "bytes": 20147,
+      "sha256": "92bc23df373c8c5d2fd7370b2bb2f38e7874477323822769a1348b43822224db",
+      "lf_sha256": "92bc23df373c8c5d2fd7370b2bb2f38e7874477323822769a1348b43822224db",
+      "crlf_count": 0,
+      "lf_count": 187,
+      "source_mtime_ns": 1792818988418127000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-on-command.json",
+      "destination": "target-static1d63-current/coarse_actor-on-command.json",
+      "bytes": 5161,
+      "sha256": "1c5dd6b4a2a4a1f548eb4769f238d557811ce9fa96da6ef6b021c68d33e78270",
+      "lf_sha256": "1c5dd6b4a2a4a1f548eb4769f238d557811ce9fa96da6ef6b021c68d33e78270",
+      "crlf_count": 0,
+      "lf_count": 179,
+      "source_mtime_ns": 1792818988530447300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-on-inputs.json",
+      "destination": "target-static1d63-current/coarse_actor-on-inputs.json",
+      "bytes": 23956,
+      "sha256": "fec895406845227bc480daa8de2a78030c999d93db5a112247cd2bd4523e1a95",
+      "lf_sha256": "fec895406845227bc480daa8de2a78030c999d93db5a112247cd2bd4523e1a95",
+      "crlf_count": 0,
+      "lf_count": 177,
+      "source_mtime_ns": 1792818988539449700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-on-undefined.txt",
+      "destination": "target-static1d63-current/coarse_actor-on-undefined.txt",
+      "bytes": 3915,
+      "sha256": "4bc6560dd05aba8200321b3f6988ca6d6598a90e00d5921bcfedeba585502c8d",
+      "lf_sha256": "4bc6560dd05aba8200321b3f6988ca6d6598a90e00d5921bcfedeba585502c8d",
+      "crlf_count": 0,
+      "lf_count": 103,
+      "source_mtime_ns": 1792818988568448100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-on.log",
+      "destination": "target-static1d63-current/coarse_actor-on.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818988547447600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-on.su",
+      "destination": "target-static1d63-current/coarse_actor-on.su",
+      "bytes": 26114,
+      "sha256": "687035ca23accf3e7bd1412b4c48204a79d8ca4a1c273fb1a1caf7da4ce5c62e",
+      "lf_sha256": "687035ca23accf3e7bd1412b4c48204a79d8ca4a1c273fb1a1caf7da4ce5c62e",
+      "crlf_count": 0,
+      "lf_count": 229,
+      "source_mtime_ns": 1792818988555447900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-zero-command.json",
+      "destination": "target-static1d63-current/coarse_actor-zero-command.json",
+      "bytes": 5163,
+      "sha256": "c3ef64dfcef4ffa5d4e034cd2b309406e0df9d53aafd3ec351c55d9d1340956a",
+      "lf_sha256": "c3ef64dfcef4ffa5d4e034cd2b309406e0df9d53aafd3ec351c55d9d1340956a",
+      "crlf_count": 0,
+      "lf_count": 179,
+      "source_mtime_ns": 1792818988484448900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-zero-inputs.json",
+      "destination": "target-static1d63-current/coarse_actor-zero-inputs.json",
+      "bytes": 23343,
+      "sha256": "24ee7c471408d5ca64bfb4313c85e43ca1e9e6584fd3cf91010c45bcab28df80",
+      "lf_sha256": "24ee7c471408d5ca64bfb4313c85e43ca1e9e6584fd3cf91010c45bcab28df80",
+      "crlf_count": 0,
+      "lf_count": 173,
+      "source_mtime_ns": 1792818988493450200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-zero-undefined.txt",
+      "destination": "target-static1d63-current/coarse_actor-zero-undefined.txt",
+      "bytes": 2633,
+      "sha256": "bdfe2581a77a30ea2de46a7dfada8c16cc88f9cbd36ba398bfc461cdb5a8bef0",
+      "lf_sha256": "bdfe2581a77a30ea2de46a7dfada8c16cc88f9cbd36ba398bfc461cdb5a8bef0",
+      "crlf_count": 0,
+      "lf_count": 83,
+      "source_mtime_ns": 1792818988520447600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-zero.log",
+      "destination": "target-static1d63-current/coarse_actor-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818988501447300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/coarse_actor-zero.su",
+      "destination": "target-static1d63-current/coarse_actor-zero.su",
+      "bytes": 20149,
+      "sha256": "f3f92610dff2f85f1983033d0afc068a1ae0069a0ba0ec239df34a1791b47bc3",
+      "lf_sha256": "f3f92610dff2f85f1983033d0afc068a1ae0069a0ba0ec239df34a1791b47bc3",
+      "crlf_count": 0,
+      "lf_count": 187,
+      "source_mtime_ns": 1792818988510448600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-absent-command.json",
+      "destination": "target-static1d63-current/model_bridge-absent-command.json",
+      "bytes": 3213,
+      "sha256": "8ebb80851adbe7b36d9815345685ef7cd3a17b5663330a8df448105b6f74518b",
+      "lf_sha256": "8ebb80851adbe7b36d9815345685ef7cd3a17b5663330a8df448105b6f74518b",
+      "crlf_count": 0,
+      "lf_count": 118,
+      "source_mtime_ns": 1792818989206580100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-absent-inputs.json",
+      "destination": "target-static1d63-current/model_bridge-absent-inputs.json",
+      "bytes": 9220,
+      "sha256": "22929f2e2140764477181bff507df3ab42c7b4d59956fd1a5d6e73dfe72d1731",
+      "lf_sha256": "22929f2e2140764477181bff507df3ab42c7b4d59956fd1a5d6e73dfe72d1731",
+      "crlf_count": 0,
+      "lf_count": 73,
+      "source_mtime_ns": 1792818989216094000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-absent-undefined.txt",
+      "destination": "target-static1d63-current/model_bridge-absent-undefined.txt",
+      "bytes": 1065,
+      "sha256": "305c6055a74375413d7a23971590db0ae8f25dba52bd309d020ad85b9e6769a5",
+      "lf_sha256": "305c6055a74375413d7a23971590db0ae8f25dba52bd309d020ad85b9e6769a5",
+      "crlf_count": 0,
+      "lf_count": 35,
+      "source_mtime_ns": 1792818989234611700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-absent.log",
+      "destination": "target-static1d63-current/model_bridge-absent.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989222602700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-absent.su",
+      "destination": "target-static1d63-current/model_bridge-absent.su",
+      "bytes": 2186,
+      "sha256": "3666816f8849fc10a9794b1acc615c23061d059982aae3f2af6895868077dd6f",
+      "lf_sha256": "3666816f8849fc10a9794b1acc615c23061d059982aae3f2af6895868077dd6f",
+      "crlf_count": 0,
+      "lf_count": 27,
+      "source_mtime_ns": 1792818989228609200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-baseline-command.json",
+      "destination": "target-static1d63-current/model_bridge-baseline-command.json",
+      "bytes": 3215,
+      "sha256": "27f93789876e1bdc0da43d73244f645e30d3002589a60f2bc5be51ffea0c9a13",
+      "lf_sha256": "27f93789876e1bdc0da43d73244f645e30d3002589a60f2bc5be51ffea0c9a13",
+      "crlf_count": 0,
+      "lf_count": 118,
+      "source_mtime_ns": 1792818989166579200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-baseline-inputs.json",
+      "destination": "target-static1d63-current/model_bridge-baseline-inputs.json",
+      "bytes": 10312,
+      "sha256": "34638da101b2a0b19c49366a179ff553430f7526fceb4b846fb315fb5b9ad6aa",
+      "lf_sha256": "34638da101b2a0b19c49366a179ff553430f7526fceb4b846fb315fb5b9ad6aa",
+      "crlf_count": 0,
+      "lf_count": 73,
+      "source_mtime_ns": 1792818989175579500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-baseline-undefined.txt",
+      "destination": "target-static1d63-current/model_bridge-baseline-undefined.txt",
+      "bytes": 1065,
+      "sha256": "305c6055a74375413d7a23971590db0ae8f25dba52bd309d020ad85b9e6769a5",
+      "lf_sha256": "305c6055a74375413d7a23971590db0ae8f25dba52bd309d020ad85b9e6769a5",
+      "crlf_count": 0,
+      "lf_count": 35,
+      "source_mtime_ns": 1792818989197582600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-baseline.log",
+      "destination": "target-static1d63-current/model_bridge-baseline.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989183580600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-baseline.su",
+      "destination": "target-static1d63-current/model_bridge-baseline.su",
+      "bytes": 2186,
+      "sha256": "dfa6586e30d5f79771f1dfcd423a6280d90b8360f24d59dc8298fff1d03dc8be",
+      "lf_sha256": "dfa6586e30d5f79771f1dfcd423a6280d90b8360f24d59dc8298fff1d03dc8be",
+      "crlf_count": 0,
+      "lf_count": 27,
+      "source_mtime_ns": 1792818989188579800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-on-command.json",
+      "destination": "target-static1d63-current/model_bridge-on-command.json",
+      "bytes": 3238,
+      "sha256": "9167060f1d5c09648522ddedcafcf07ada836e4f341afe148f5fc8da1f336140",
+      "lf_sha256": "9167060f1d5c09648522ddedcafcf07ada836e4f341afe148f5fc8da1f336140",
+      "crlf_count": 0,
+      "lf_count": 119,
+      "source_mtime_ns": 1792818989281660700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-on-inputs.json",
+      "destination": "target-static1d63-current/model_bridge-on-inputs.json",
+      "bytes": 10115,
+      "sha256": "c376fca26dcaca1e6c30bbf3ac83e2e0a64fd4ad66117aa5f55ce2b72752a6c0",
+      "lf_sha256": "c376fca26dcaca1e6c30bbf3ac83e2e0a64fd4ad66117aa5f55ce2b72752a6c0",
+      "crlf_count": 0,
+      "lf_count": 80,
+      "source_mtime_ns": 1792818989290659200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-on-undefined.txt",
+      "destination": "target-static1d63-current/model_bridge-on-undefined.txt",
+      "bytes": 1081,
+      "sha256": "93c126788fed2f403bc5dc94b04088ad8f1bf75787a0a9cb56fff8553914f14b",
+      "lf_sha256": "93c126788fed2f403bc5dc94b04088ad8f1bf75787a0a9cb56fff8553914f14b",
+      "crlf_count": 0,
+      "lf_count": 36,
+      "source_mtime_ns": 1792818989313835100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-on.log",
+      "destination": "target-static1d63-current/model_bridge-on.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989298837600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-on.su",
+      "destination": "target-static1d63-current/model_bridge-on.su",
+      "bytes": 2433,
+      "sha256": "2b31c4babbabc3a1d63670d4c7a55d9a8e4f8fec318405eaeeffd8b2ccb9ef3a",
+      "lf_sha256": "2b31c4babbabc3a1d63670d4c7a55d9a8e4f8fec318405eaeeffd8b2ccb9ef3a",
+      "crlf_count": 0,
+      "lf_count": 29,
+      "source_mtime_ns": 1792818989304835900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-zero-command.json",
+      "destination": "target-static1d63-current/model_bridge-zero-command.json",
+      "bytes": 3240,
+      "sha256": "19ee9de5a53911ca3dbc34f52ae4578711ac811f048ba5a083766e257f9bdd23",
+      "lf_sha256": "19ee9de5a53911ca3dbc34f52ae4578711ac811f048ba5a083766e257f9bdd23",
+      "crlf_count": 0,
+      "lf_count": 119,
+      "source_mtime_ns": 1792818989244609800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-zero-inputs.json",
+      "destination": "target-static1d63-current/model_bridge-zero-inputs.json",
+      "bytes": 9220,
+      "sha256": "22929f2e2140764477181bff507df3ab42c7b4d59956fd1a5d6e73dfe72d1731",
+      "lf_sha256": "22929f2e2140764477181bff507df3ab42c7b4d59956fd1a5d6e73dfe72d1731",
+      "crlf_count": 0,
+      "lf_count": 73,
+      "source_mtime_ns": 1792818989253609600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-zero-undefined.txt",
+      "destination": "target-static1d63-current/model_bridge-zero-undefined.txt",
+      "bytes": 1065,
+      "sha256": "305c6055a74375413d7a23971590db0ae8f25dba52bd309d020ad85b9e6769a5",
+      "lf_sha256": "305c6055a74375413d7a23971590db0ae8f25dba52bd309d020ad85b9e6769a5",
+      "crlf_count": 0,
+      "lf_count": 35,
+      "source_mtime_ns": 1792818989272637500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-zero.log",
+      "destination": "target-static1d63-current/model_bridge-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989260608700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/model_bridge-zero.su",
+      "destination": "target-static1d63-current/model_bridge-zero.su",
+      "bytes": 2186,
+      "sha256": "3666816f8849fc10a9794b1acc615c23061d059982aae3f2af6895868077dd6f",
+      "lf_sha256": "3666816f8849fc10a9794b1acc615c23061d059982aae3f2af6895868077dd6f",
+      "crlf_count": 0,
+      "lf_count": 27,
+      "source_mtime_ns": 1792818989266637300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-absent-command.json",
+      "destination": "target-static1d63-current/platform_audio_aica-absent-command.json",
+      "bytes": 2623,
+      "sha256": "5d4afa5b9a4d2d82f0832a989bb84dfe7ad9e6c98a114566708003dbd2991fa0",
+      "lf_sha256": "5d4afa5b9a4d2d82f0832a989bb84dfe7ad9e6c98a114566708003dbd2991fa0",
+      "crlf_count": 0,
+      "lf_count": 102,
+      "source_mtime_ns": 1792818989524734700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-absent-inputs.json",
+      "destination": "target-static1d63-current/platform_audio_aica-absent-inputs.json",
+      "bytes": 30495,
+      "sha256": "32e632555b9b226ce1cbedee5bd3432d6338a9e6f738d37381ca352b37d067e7",
+      "lf_sha256": "32e632555b9b226ce1cbedee5bd3432d6338a9e6f738d37381ca352b37d067e7",
+      "crlf_count": 0,
+      "lf_count": 228,
+      "source_mtime_ns": 1792818989534733900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-absent-undefined.txt",
+      "destination": "target-static1d63-current/platform_audio_aica-absent-undefined.txt",
+      "bytes": 1057,
+      "sha256": "603aea6cb7098a1bc145b63d8f52eda9a68ad9929902dc0ac24c592fc7349de0",
+      "lf_sha256": "603aea6cb7098a1bc145b63d8f52eda9a68ad9929902dc0ac24c592fc7349de0",
+      "crlf_count": 0,
+      "lf_count": 41,
+      "source_mtime_ns": 1792818989552737300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-absent.log",
+      "destination": "target-static1d63-current/platform_audio_aica-absent.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989541737600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-absent.su",
+      "destination": "target-static1d63-current/platform_audio_aica-absent.su",
+      "bytes": 8106,
+      "sha256": "26ffd81718c3f4fdb62075668f69ffea3522f4027f56afeb1e17be27763131df",
+      "lf_sha256": "26ffd81718c3f4fdb62075668f69ffea3522f4027f56afeb1e17be27763131df",
+      "crlf_count": 0,
+      "lf_count": 109,
+      "source_mtime_ns": 1792818989546734500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-baseline-command.json",
+      "destination": "target-static1d63-current/platform_audio_aica-baseline-command.json",
+      "bytes": 2625,
+      "sha256": "311ba7eb8e02dc8032cea1d09eefc955523235a3f12ca8d9ee68e181f305768f",
+      "lf_sha256": "311ba7eb8e02dc8032cea1d09eefc955523235a3f12ca8d9ee68e181f305768f",
+      "crlf_count": 0,
+      "lf_count": 102,
+      "source_mtime_ns": 1792818989483034100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-baseline-inputs.json",
+      "destination": "target-static1d63-current/platform_audio_aica-baseline-inputs.json",
+      "bytes": 30272,
+      "sha256": "b8d97a6f36d992839e2d57870bee312c8cbc416446402e4955a462c06d31e9d0",
+      "lf_sha256": "b8d97a6f36d992839e2d57870bee312c8cbc416446402e4955a462c06d31e9d0",
+      "crlf_count": 0,
+      "lf_count": 226,
+      "source_mtime_ns": 1792818989493692400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-baseline-undefined.txt",
+      "destination": "target-static1d63-current/platform_audio_aica-baseline-undefined.txt",
+      "bytes": 1057,
+      "sha256": "603aea6cb7098a1bc145b63d8f52eda9a68ad9929902dc0ac24c592fc7349de0",
+      "lf_sha256": "603aea6cb7098a1bc145b63d8f52eda9a68ad9929902dc0ac24c592fc7349de0",
+      "crlf_count": 0,
+      "lf_count": 41,
+      "source_mtime_ns": 1792818989514696200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-baseline.log",
+      "destination": "target-static1d63-current/platform_audio_aica-baseline.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989500689100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-baseline.su",
+      "destination": "target-static1d63-current/platform_audio_aica-baseline.su",
+      "bytes": 8105,
+      "sha256": "1312c452b4af4bd2716d508602bd65cea8a25f12f82f7b20ce517700bc4a37eb",
+      "lf_sha256": "1312c452b4af4bd2716d508602bd65cea8a25f12f82f7b20ce517700bc4a37eb",
+      "crlf_count": 0,
+      "lf_count": 109,
+      "source_mtime_ns": 1792818989505692300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-on-command.json",
+      "destination": "target-static1d63-current/platform_audio_aica-on-command.json",
+      "bytes": 2691,
+      "sha256": "529471cfb769742ac4f89aec0c4895434a181a7dc07011354726ee47c845a2b0",
+      "lf_sha256": "529471cfb769742ac4f89aec0c4895434a181a7dc07011354726ee47c845a2b0",
+      "crlf_count": 0,
+      "lf_count": 104,
+      "source_mtime_ns": 1792818989599737400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-on-inputs.json",
+      "destination": "target-static1d63-current/platform_audio_aica-on-inputs.json",
+      "bytes": 30628,
+      "sha256": "397bf9654832042747ecd322aaf6662aa667310e2449b79a7fe86fed81e0d090",
+      "lf_sha256": "397bf9654832042747ecd322aaf6662aa667310e2449b79a7fe86fed81e0d090",
+      "crlf_count": 0,
+      "lf_count": 229,
+      "source_mtime_ns": 1792818989609736900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-on-undefined.txt",
+      "destination": "target-static1d63-current/platform_audio_aica-on-undefined.txt",
+      "bytes": 1690,
+      "sha256": "c473535b6e588ffc63d3d5eb8c1520cff64c5f72bdd50dc1a961d791350e08ba",
+      "lf_sha256": "c473535b6e588ffc63d3d5eb8c1520cff64c5f72bdd50dc1a961d791350e08ba",
+      "crlf_count": 0,
+      "lf_count": 53,
+      "source_mtime_ns": 1792818989638736500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-on.log",
+      "destination": "target-static1d63-current/platform_audio_aica-on.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989616738800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-on.su",
+      "destination": "target-static1d63-current/platform_audio_aica-on.su",
+      "bytes": 8490,
+      "sha256": "7e09e86bfb239ef0309485c43432cabd05a2df9de53bcbc5524f34e27faadd6f",
+      "lf_sha256": "7e09e86bfb239ef0309485c43432cabd05a2df9de53bcbc5524f34e27faadd6f",
+      "crlf_count": 0,
+      "lf_count": 112,
+      "source_mtime_ns": 1792818989626736000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-zero-command.json",
+      "destination": "target-static1d63-current/platform_audio_aica-zero-command.json",
+      "bytes": 2650,
+      "sha256": "b8d9781dfcb5c1b5788ca49c98c16f2bec44a9502fd6256f80ebad0eb8fc8a0f",
+      "lf_sha256": "b8d9781dfcb5c1b5788ca49c98c16f2bec44a9502fd6256f80ebad0eb8fc8a0f",
+      "crlf_count": 0,
+      "lf_count": 103,
+      "source_mtime_ns": 1792818989561734800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-zero-inputs.json",
+      "destination": "target-static1d63-current/platform_audio_aica-zero-inputs.json",
+      "bytes": 30495,
+      "sha256": "32e632555b9b226ce1cbedee5bd3432d6338a9e6f738d37381ca352b37d067e7",
+      "lf_sha256": "32e632555b9b226ce1cbedee5bd3432d6338a9e6f738d37381ca352b37d067e7",
+      "crlf_count": 0,
+      "lf_count": 228,
+      "source_mtime_ns": 1792818989570738100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-zero-undefined.txt",
+      "destination": "target-static1d63-current/platform_audio_aica-zero-undefined.txt",
+      "bytes": 1057,
+      "sha256": "603aea6cb7098a1bc145b63d8f52eda9a68ad9929902dc0ac24c592fc7349de0",
+      "lf_sha256": "603aea6cb7098a1bc145b63d8f52eda9a68ad9929902dc0ac24c592fc7349de0",
+      "crlf_count": 0,
+      "lf_count": 41,
+      "source_mtime_ns": 1792818989590737900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-zero.log",
+      "destination": "target-static1d63-current/platform_audio_aica-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989578735300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_audio_aica-zero.su",
+      "destination": "target-static1d63-current/platform_audio_aica-zero.su",
+      "bytes": 8106,
+      "sha256": "26ffd81718c3f4fdb62075668f69ffea3522f4027f56afeb1e17be27763131df",
+      "lf_sha256": "26ffd81718c3f4fdb62075668f69ffea3522f4027f56afeb1e17be27763131df",
+      "crlf_count": 0,
+      "lf_count": 109,
+      "source_mtime_ns": 1792818989584734800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_audio-on-command.json",
+      "destination": "target-static1d63-current/platform_gc_asset_audio-on-command.json",
+      "bytes": 2379,
+      "sha256": "37e42f3a437d96523b5445f55825f5f66c45ca482600975a9a328570984160e7",
+      "lf_sha256": "37e42f3a437d96523b5445f55825f5f66c45ca482600975a9a328570984160e7",
+      "crlf_count": 0,
+      "lf_count": 93,
+      "source_mtime_ns": 1792818990988518500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_audio-on-inputs.json",
+      "destination": "target-static1d63-current/platform_gc_asset_audio-on-inputs.json",
+      "bytes": 10770,
+      "sha256": "71eecc6eb6a2a132c0232f45d013fcb16aec64dc06028c39876a491965afc2ca",
+      "lf_sha256": "71eecc6eb6a2a132c0232f45d013fcb16aec64dc06028c39876a491965afc2ca",
+      "crlf_count": 0,
+      "lf_count": 83,
+      "source_mtime_ns": 1792818990998516000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_audio-on-undefined.txt",
+      "destination": "target-static1d63-current/platform_gc_asset_audio-on-undefined.txt",
+      "bytes": 415,
+      "sha256": "427e807c436d30a1da6c91d953fdb54ac31c9dff32f156838d10f24d499fecb4",
+      "lf_sha256": "427e807c436d30a1da6c91d953fdb54ac31c9dff32f156838d10f24d499fecb4",
+      "crlf_count": 0,
+      "lf_count": 7,
+      "source_mtime_ns": 1792818991021045300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_audio-on.log",
+      "destination": "target-static1d63-current/platform_gc_asset_audio-on.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818991006937400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_audio-on.su",
+      "destination": "target-static1d63-current/platform_gc_asset_audio-on.su",
+      "bytes": 1887,
+      "sha256": "b77c2b21f73ccebcb741734eaa2dec1a41b6e40f4c25f9d1e74cb2786be9c8ba",
+      "lf_sha256": "b77c2b21f73ccebcb741734eaa2dec1a41b6e40f4c25f9d1e74cb2786be9c8ba",
+      "crlf_count": 0,
+      "lf_count": 18,
+      "source_mtime_ns": 1792818991012118700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_audio-zero-command.json",
+      "destination": "target-static1d63-current/platform_gc_asset_audio-zero-command.json",
+      "bytes": 2338,
+      "sha256": "a69e044f22cfd74b9fe8b6550378b1faebd21377032cc5cb5ea0da6efaf20afa",
+      "lf_sha256": "a69e044f22cfd74b9fe8b6550378b1faebd21377032cc5cb5ea0da6efaf20afa",
+      "crlf_count": 0,
+      "lf_count": 92,
+      "source_mtime_ns": 1792818990957474800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_audio-zero-inputs.json",
+      "destination": "target-static1d63-current/platform_gc_asset_audio-zero-inputs.json",
+      "bytes": 749,
+      "sha256": "a0680ea8da352388554990ccdccf62dbe6995d7594000afd759abe27c1b02b8a",
+      "lf_sha256": "a0680ea8da352388554990ccdccf62dbe6995d7594000afd759abe27c1b02b8a",
+      "crlf_count": 0,
+      "lf_count": 7,
+      "source_mtime_ns": 1792818990967480400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_audio-zero-undefined.txt",
+      "destination": "target-static1d63-current/platform_gc_asset_audio-zero-undefined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990979518100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_audio-zero.log",
+      "destination": "target-static1d63-current/platform_gc_asset_audio-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990971480600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_audio-zero.su",
+      "destination": "target-static1d63-current/platform_gc_asset_audio-zero.su",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990975481800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_disc-on-command.json",
+      "destination": "target-static1d63-current/platform_gc_asset_disc-on-command.json",
+      "bytes": 2377,
+      "sha256": "d4fc2c42e11b5505ee1fecb2af13cd243d2dca531be5ed005a5121491d7a1c13",
+      "lf_sha256": "d4fc2c42e11b5505ee1fecb2af13cd243d2dca531be5ed005a5121491d7a1c13",
+      "crlf_count": 0,
+      "lf_count": 93,
+      "source_mtime_ns": 1792818991060603100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_disc-on-inputs.json",
+      "destination": "target-static1d63-current/platform_gc_asset_disc-on-inputs.json",
+      "bytes": 8505,
+      "sha256": "f351d634f7998e8cba74158925ced5dfc89478ae60d37c450104dcbb67d99f2b",
+      "lf_sha256": "f351d634f7998e8cba74158925ced5dfc89478ae60d37c450104dcbb67d99f2b",
+      "crlf_count": 0,
+      "lf_count": 68,
+      "source_mtime_ns": 1792818991069960100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_disc-on-synthetic-pin-command.json",
+      "destination": "target-static1d63-current/platform_gc_asset_disc-on-synthetic-pin-command.json",
+      "bytes": 2454,
+      "sha256": "6fa06b7282c1f8480d16ede4d6ed3da27379336efc2d1f0b2d4d767b57838b78",
+      "lf_sha256": "6fa06b7282c1f8480d16ede4d6ed3da27379336efc2d1f0b2d4d767b57838b78",
+      "crlf_count": 0,
+      "lf_count": 93,
+      "source_mtime_ns": 1792818991101953800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_disc-on-synthetic-pin-inputs.json",
+      "destination": "target-static1d63-current/platform_gc_asset_disc-on-synthetic-pin-inputs.json",
+      "bytes": 8505,
+      "sha256": "f351d634f7998e8cba74158925ced5dfc89478ae60d37c450104dcbb67d99f2b",
+      "lf_sha256": "f351d634f7998e8cba74158925ced5dfc89478ae60d37c450104dcbb67d99f2b",
+      "crlf_count": 0,
+      "lf_count": 68,
+      "source_mtime_ns": 1792818991110989000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_disc-on-synthetic-pin-undefined.txt",
+      "destination": "target-static1d63-current/platform_gc_asset_disc-on-synthetic-pin-undefined.txt",
+      "bytes": 338,
+      "sha256": "3693225277f43f6570d70f989e5dbdb3561eeb299d6668ee7ecc1b9cae8b9bf3",
+      "lf_sha256": "3693225277f43f6570d70f989e5dbdb3561eeb299d6668ee7ecc1b9cae8b9bf3",
+      "crlf_count": 0,
+      "lf_count": 10,
+      "source_mtime_ns": 1792818991132617200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_disc-on-synthetic-pin.log",
+      "destination": "target-static1d63-current/platform_gc_asset_disc-on-synthetic-pin.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818991118617800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_disc-on-synthetic-pin.su",
+      "destination": "target-static1d63-current/platform_gc_asset_disc-on-synthetic-pin.su",
+      "bytes": 303,
+      "sha256": "f996d3f80777e9beff9095ece7ecf1d1b78f6f432931726814bd92db969df668",
+      "lf_sha256": "f996d3f80777e9beff9095ece7ecf1d1b78f6f432931726814bd92db969df668",
+      "crlf_count": 0,
+      "lf_count": 3,
+      "source_mtime_ns": 1792818991123619100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_disc-on-undefined.txt",
+      "destination": "target-static1d63-current/platform_gc_asset_disc-on-undefined.txt",
+      "bytes": 222,
+      "sha256": "e774ed776c482d12ebc5cbf9c9444c7c7c9b5dc0c95b69e51a53ebca9e20e942",
+      "lf_sha256": "e774ed776c482d12ebc5cbf9c9444c7c7c9b5dc0c95b69e51a53ebca9e20e942",
+      "crlf_count": 0,
+      "lf_count": 7,
+      "source_mtime_ns": 1792818991092446000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_disc-on.log",
+      "destination": "target-static1d63-current/platform_gc_asset_disc-on.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818991077806800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_disc-on.su",
+      "destination": "target-static1d63-current/platform_gc_asset_disc-on.su",
+      "bytes": 302,
+      "sha256": "d7d816de1a922e3a1fd0490f4f8cbdc5c558fb59c3890574518735ea12293afc",
+      "lf_sha256": "d7d816de1a922e3a1fd0490f4f8cbdc5c558fb59c3890574518735ea12293afc",
+      "crlf_count": 0,
+      "lf_count": 3,
+      "source_mtime_ns": 1792818991083629200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_disc-zero-command.json",
+      "destination": "target-static1d63-current/platform_gc_asset_disc-zero-command.json",
+      "bytes": 2336,
+      "sha256": "1e72ceaa073afd04cde1cc0d31667351f68c64bb1774730e689b0eec7915b7a3",
+      "lf_sha256": "1e72ceaa073afd04cde1cc0d31667351f68c64bb1774730e689b0eec7915b7a3",
+      "crlf_count": 0,
+      "lf_count": 92,
+      "source_mtime_ns": 1792818991030930200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_disc-zero-inputs.json",
+      "destination": "target-static1d63-current/platform_gc_asset_disc-zero-inputs.json",
+      "bytes": 433,
+      "sha256": "726ea0fca99e6fe92c50152607b307f0e2cbc1921e7a5be7e292e13258995d81",
+      "lf_sha256": "726ea0fca99e6fe92c50152607b307f0e2cbc1921e7a5be7e292e13258995d81",
+      "crlf_count": 0,
+      "lf_count": 5,
+      "source_mtime_ns": 1792818991040393100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_disc-zero-undefined.txt",
+      "destination": "target-static1d63-current/platform_gc_asset_disc-zero-undefined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818991052439700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_disc-zero.log",
+      "destination": "target-static1d63-current/platform_gc_asset_disc-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818991044446600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_disc-zero.su",
+      "destination": "target-static1d63-current/platform_gc_asset_disc-zero.su",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818991048238000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_gate-on-command.json",
+      "destination": "target-static1d63-current/platform_gc_asset_gate-on-command.json",
+      "bytes": 2377,
+      "sha256": "6b7d7b23b1ad27b71331f40a59d81273b3be121c0132a3695186f4b018652023",
+      "lf_sha256": "6b7d7b23b1ad27b71331f40a59d81273b3be121c0132a3695186f4b018652023",
+      "crlf_count": 0,
+      "lf_count": 93,
+      "source_mtime_ns": 1792818990781434300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_gate-on-inputs.json",
+      "destination": "target-static1d63-current/platform_gc_asset_gate-on-inputs.json",
+      "bytes": 12112,
+      "sha256": "37916ca8b2a2f99e53bbb407efbfd3e710207e714f61dd64d32b0e63f32ab938",
+      "lf_sha256": "37916ca8b2a2f99e53bbb407efbfd3e710207e714f61dd64d32b0e63f32ab938",
+      "crlf_count": 0,
+      "lf_count": 94,
+      "source_mtime_ns": 1792818990790432700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_gate-on-undefined.txt",
+      "destination": "target-static1d63-current/platform_gc_asset_gate-on-undefined.txt",
+      "bytes": 146,
+      "sha256": "721394cef4ba97b55ed3aacf5e9f0168e7ea823d47674488c985d2a5aa2e8dd8",
+      "lf_sha256": "721394cef4ba97b55ed3aacf5e9f0168e7ea823d47674488c985d2a5aa2e8dd8",
+      "crlf_count": 0,
+      "lf_count": 7,
+      "source_mtime_ns": 1792818990813433100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_gate-on.log",
+      "destination": "target-static1d63-current/platform_gc_asset_gate-on.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990799433200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_gate-on.su",
+      "destination": "target-static1d63-current/platform_gc_asset_gate-on.su",
+      "bytes": 4463,
+      "sha256": "9b9b340b4ffb76781f42aa652fdd2139fda6c7cad37e58f85a89bd162903b2b8",
+      "lf_sha256": "9b9b340b4ffb76781f42aa652fdd2139fda6c7cad37e58f85a89bd162903b2b8",
+      "crlf_count": 0,
+      "lf_count": 39,
+      "source_mtime_ns": 1792818990804434700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_gate-zero-command.json",
+      "destination": "target-static1d63-current/platform_gc_asset_gate-zero-command.json",
+      "bytes": 2336,
+      "sha256": "a651d704bb5661a4683c93cfe002358089409aa268b50c6af637befe1bb82c3c",
+      "lf_sha256": "a651d704bb5661a4683c93cfe002358089409aa268b50c6af637befe1bb82c3c",
+      "crlf_count": 0,
+      "lf_count": 92,
+      "source_mtime_ns": 1792818990752431800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_gate-zero-inputs.json",
+      "destination": "target-static1d63-current/platform_gc_asset_gate-zero-inputs.json",
+      "bytes": 433,
+      "sha256": "578e8cc7b551c91f6293af9fa70ccd2cbc4d0d0c6de4deb052acb4d5445ead58",
+      "lf_sha256": "578e8cc7b551c91f6293af9fa70ccd2cbc4d0d0c6de4deb052acb4d5445ead58",
+      "crlf_count": 0,
+      "lf_count": 5,
+      "source_mtime_ns": 1792818990761434000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_gate-zero-undefined.txt",
+      "destination": "target-static1d63-current/platform_gc_asset_gate-zero-undefined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990773432200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_gate-zero.log",
+      "destination": "target-static1d63-current/platform_gc_asset_gate-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990765433700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_gate-zero.su",
+      "destination": "target-static1d63-current/platform_gc_asset_gate-zero.su",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990769432300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_members-on-command.json",
+      "destination": "target-static1d63-current/platform_gc_asset_members-on-command.json",
+      "bytes": 2383,
+      "sha256": "b9b91075b66c687e9c4acfa6f3d30a331026ce30f2983793df17bd9f2646f6e4",
+      "lf_sha256": "b9b91075b66c687e9c4acfa6f3d30a331026ce30f2983793df17bd9f2646f6e4",
+      "crlf_count": 0,
+      "lf_count": 93,
+      "source_mtime_ns": 1792818990851436000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_members-on-inputs.json",
+      "destination": "target-static1d63-current/platform_gc_asset_members-on-inputs.json",
+      "bytes": 4280,
+      "sha256": "c9516e90aa4ef71b03131c52a0aa1084819d9cce7b5e90b16649b23aa70aa6b9",
+      "lf_sha256": "c9516e90aa4ef71b03131c52a0aa1084819d9cce7b5e90b16649b23aa70aa6b9",
+      "crlf_count": 0,
+      "lf_count": 34,
+      "source_mtime_ns": 1792818990860434100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_members-on-undefined.txt",
+      "destination": "target-static1d63-current/platform_gc_asset_members-on-undefined.txt",
+      "bytes": 292,
+      "sha256": "b372337b23d4a9df57f731b7d194769c169173a9c63d5a758dde75b0dfb685e3",
+      "lf_sha256": "b372337b23d4a9df57f731b7d194769c169173a9c63d5a758dde75b0dfb685e3",
+      "crlf_count": 0,
+      "lf_count": 6,
+      "source_mtime_ns": 1792818990879441000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_members-on.log",
+      "destination": "target-static1d63-current/platform_gc_asset_members-on.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990864434100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_members-on.su",
+      "destination": "target-static1d63-current/platform_gc_asset_members-on.su",
+      "bytes": 1751,
+      "sha256": "ce63e1353710de5f1e7f21424b411419b8e20b1bae3b3ed0890476fab902bcd9",
+      "lf_sha256": "ce63e1353710de5f1e7f21424b411419b8e20b1bae3b3ed0890476fab902bcd9",
+      "crlf_count": 0,
+      "lf_count": 17,
+      "source_mtime_ns": 1792818990870434400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_members-zero-command.json",
+      "destination": "target-static1d63-current/platform_gc_asset_members-zero-command.json",
+      "bytes": 2342,
+      "sha256": "1c7f3f837f98bb785b0824b0e874b716c9b0bab99660f60092e86c507fbc3b3e",
+      "lf_sha256": "1c7f3f837f98bb785b0824b0e874b716c9b0bab99660f60092e86c507fbc3b3e",
+      "crlf_count": 0,
+      "lf_count": 92,
+      "source_mtime_ns": 1792818990822435400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_members-zero-inputs.json",
+      "destination": "target-static1d63-current/platform_gc_asset_members-zero-inputs.json",
+      "bytes": 592,
+      "sha256": "185f07eaa6950dea5f56b35e4e2787befd3ed4556e8eb5658911d71866ebf378",
+      "lf_sha256": "185f07eaa6950dea5f56b35e4e2787befd3ed4556e8eb5658911d71866ebf378",
+      "crlf_count": 0,
+      "lf_count": 6,
+      "source_mtime_ns": 1792818990830433700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_members-zero-undefined.txt",
+      "destination": "target-static1d63-current/platform_gc_asset_members-zero-undefined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990842435400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_members-zero.log",
+      "destination": "target-static1d63-current/platform_gc_asset_members-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990835435100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_members-zero.su",
+      "destination": "target-static1d63-current/platform_gc_asset_members-zero.su",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990838434400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_payloads-on-command.json",
+      "destination": "target-static1d63-current/platform_gc_asset_payloads-on-command.json",
+      "bytes": 2385,
+      "sha256": "a488b6e6664b0745b6ae8ff548f47604db045807259a3a2aad2c4ca54393186e",
+      "lf_sha256": "a488b6e6664b0745b6ae8ff548f47604db045807259a3a2aad2c4ca54393186e",
+      "crlf_count": 0,
+      "lf_count": 93,
+      "source_mtime_ns": 1792818990917476400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_payloads-on-inputs.json",
+      "destination": "target-static1d63-current/platform_gc_asset_payloads-on-inputs.json",
+      "bytes": 2549,
+      "sha256": "a8420c88c36ef73926e4c1e8ecc8573ea579a759a0effc41dcd246f0ede30f2d",
+      "lf_sha256": "a8420c88c36ef73926e4c1e8ecc8573ea579a759a0effc41dcd246f0ede30f2d",
+      "crlf_count": 0,
+      "lf_count": 20,
+      "source_mtime_ns": 1792818990927474200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_payloads-on-undefined.txt",
+      "destination": "target-static1d63-current/platform_gc_asset_payloads-on-undefined.txt",
+      "bytes": 614,
+      "sha256": "990111269c42b99fffa6fbaa65d304a44715fad139f393a35ab9501ed00ff1bb",
+      "lf_sha256": "990111269c42b99fffa6fbaa65d304a44715fad139f393a35ab9501ed00ff1bb",
+      "crlf_count": 0,
+      "lf_count": 11,
+      "source_mtime_ns": 1792818990947474400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_payloads-on.log",
+      "destination": "target-static1d63-current/platform_gc_asset_payloads-on.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990931474100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_payloads-on.su",
+      "destination": "target-static1d63-current/platform_gc_asset_payloads-on.su",
+      "bytes": 4556,
+      "sha256": "063e1629ab0e85a3f3969d8bd59d049dacc2cbf2261fa0c008a073f4bec10cbd",
+      "lf_sha256": "063e1629ab0e85a3f3969d8bd59d049dacc2cbf2261fa0c008a073f4bec10cbd",
+      "crlf_count": 0,
+      "lf_count": 32,
+      "source_mtime_ns": 1792818990937477600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_payloads-zero-command.json",
+      "destination": "target-static1d63-current/platform_gc_asset_payloads-zero-command.json",
+      "bytes": 2344,
+      "sha256": "42087a3f6c31b71e1555fa7c0f552b6fb02e6e226f6ff06f64f2b8fcb59824e7",
+      "lf_sha256": "42087a3f6c31b71e1555fa7c0f552b6fb02e6e226f6ff06f64f2b8fcb59824e7",
+      "crlf_count": 0,
+      "lf_count": 92,
+      "source_mtime_ns": 1792818990888440500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_payloads-zero-inputs.json",
+      "destination": "target-static1d63-current/platform_gc_asset_payloads-zero-inputs.json",
+      "bytes": 905,
+      "sha256": "fb355009e7828d7ce7e6e01b603e06c84d880a1fb4bbba16249ef796e105676e",
+      "lf_sha256": "fb355009e7828d7ce7e6e01b603e06c84d880a1fb4bbba16249ef796e105676e",
+      "crlf_count": 0,
+      "lf_count": 8,
+      "source_mtime_ns": 1792818990897473700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_payloads-zero-undefined.txt",
+      "destination": "target-static1d63-current/platform_gc_asset_payloads-zero-undefined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990909475400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_payloads-zero.log",
+      "destination": "target-static1d63-current/platform_gc_asset_payloads-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990901473900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_gc_asset_payloads-zero.su",
+      "destination": "target-static1d63-current/platform_gc_asset_payloads-zero.su",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990905473600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-absent-command.json",
+      "destination": "target-static1d63-current/platform_native_actor_fast-absent-command.json",
+      "bytes": 3542,
+      "sha256": "e3609156a8e358d5727a64429f7a595610ace7e929e04f09434ff8037cbbcbab",
+      "lf_sha256": "e3609156a8e358d5727a64429f7a595610ace7e929e04f09434ff8037cbbcbab",
+      "crlf_count": 0,
+      "lf_count": 129,
+      "source_mtime_ns": 1792818988632450800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-absent-inputs.json",
+      "destination": "target-static1d63-current/platform_native_actor_fast-absent-inputs.json",
+      "bytes": 25458,
+      "sha256": "81fc3e188936726d717d6ee2f18043311795591f77d02a6be15aa2c9380c0f8f",
+      "lf_sha256": "81fc3e188936726d717d6ee2f18043311795591f77d02a6be15aa2c9380c0f8f",
+      "crlf_count": 0,
+      "lf_count": 186,
+      "source_mtime_ns": 1792818988642449900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-absent-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_actor_fast-absent-undefined.txt",
+      "bytes": 2186,
+      "sha256": "6ea0c9ae64d0762c9fbd49b66ef8a9e25f2d04717ed566c18608304c399d4371",
+      "lf_sha256": "6ea0c9ae64d0762c9fbd49b66ef8a9e25f2d04717ed566c18608304c399d4371",
+      "crlf_count": 0,
+      "lf_count": 61,
+      "source_mtime_ns": 1792818988676129900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-absent.log",
+      "destination": "target-static1d63-current/platform_native_actor_fast-absent.log",
+      "bytes": 1543,
+      "sha256": "1befe0c41b4f10e2e2125b0d4eaca6b645f19c5f379170a51976c4e39b88929c",
+      "lf_sha256": "1befe0c41b4f10e2e2125b0d4eaca6b645f19c5f379170a51976c4e39b88929c",
+      "crlf_count": 0,
+      "lf_count": 16,
+      "source_mtime_ns": 1792818988656450900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-absent.su",
+      "destination": "target-static1d63-current/platform_native_actor_fast-absent.su",
+      "bytes": 10371,
+      "sha256": "76023da8365af5a50db9c213a9ff43c86c4b06800b20a96657410ed98e7a74a3",
+      "lf_sha256": "76023da8365af5a50db9c213a9ff43c86c4b06800b20a96657410ed98e7a74a3",
+      "crlf_count": 0,
+      "lf_count": 73,
+      "source_mtime_ns": 1792818988666455800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-baseline-command.json",
+      "destination": "target-static1d63-current/platform_native_actor_fast-baseline-command.json",
+      "bytes": 3544,
+      "sha256": "aa0f00a15d89e392a0bede3c66a6ab7c9b442854f0dad30a54936fb6d13e076a",
+      "lf_sha256": "aa0f00a15d89e392a0bede3c66a6ab7c9b442854f0dad30a54936fb6d13e076a",
+      "crlf_count": 0,
+      "lf_count": 129,
+      "source_mtime_ns": 1792818988577448200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-baseline-inputs.json",
+      "destination": "target-static1d63-current/platform_native_actor_fast-baseline-inputs.json",
+      "bytes": 25510,
+      "sha256": "482a848d7f73076a07b08063f2d91012af632cd893d48cca49d7209341df7c27",
+      "lf_sha256": "482a848d7f73076a07b08063f2d91012af632cd893d48cca49d7209341df7c27",
+      "crlf_count": 0,
+      "lf_count": 182,
+      "source_mtime_ns": 1792818988586447600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-baseline-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_actor_fast-baseline-undefined.txt",
+      "bytes": 2186,
+      "sha256": "6ea0c9ae64d0762c9fbd49b66ef8a9e25f2d04717ed566c18608304c399d4371",
+      "lf_sha256": "6ea0c9ae64d0762c9fbd49b66ef8a9e25f2d04717ed566c18608304c399d4371",
+      "crlf_count": 0,
+      "lf_count": 61,
+      "source_mtime_ns": 1792818988622450800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-baseline.log",
+      "destination": "target-static1d63-current/platform_native_actor_fast-baseline.log",
+      "bytes": 1543,
+      "sha256": "2fe891966b7933b32645b1e5f7c55d9192b00d9564a96da289cc936a0da32c70",
+      "lf_sha256": "2fe891966b7933b32645b1e5f7c55d9192b00d9564a96da289cc936a0da32c70",
+      "crlf_count": 0,
+      "lf_count": 16,
+      "source_mtime_ns": 1792818988601449300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-baseline.su",
+      "destination": "target-static1d63-current/platform_native_actor_fast-baseline.su",
+      "bytes": 10371,
+      "sha256": "80f15fea92619cbbd563d1da1e3b50a7a0611052b23558a657005867608bece9",
+      "lf_sha256": "80f15fea92619cbbd563d1da1e3b50a7a0611052b23558a657005867608bece9",
+      "crlf_count": 0,
+      "lf_count": 73,
+      "source_mtime_ns": 1792818988610448800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-on-command.json",
+      "destination": "target-static1d63-current/platform_native_actor_fast-on-command.json",
+      "bytes": 3649,
+      "sha256": "372820a0650e98f3f025c3c2516f238bbf7bd7b3967d07f497042c4e1d8fab83",
+      "lf_sha256": "372820a0650e98f3f025c3c2516f238bbf7bd7b3967d07f497042c4e1d8fab83",
+      "crlf_count": 0,
+      "lf_count": 132,
+      "source_mtime_ns": 1792818988732132200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-on-inputs.json",
+      "destination": "target-static1d63-current/platform_native_actor_fast-on-inputs.json",
+      "bytes": 25458,
+      "sha256": "43dee3d9e0e2f2fee21ba4fb363dab960402f60f330e7c32ded3a7558fd772de",
+      "lf_sha256": "43dee3d9e0e2f2fee21ba4fb363dab960402f60f330e7c32ded3a7558fd772de",
+      "crlf_count": 0,
+      "lf_count": 186,
+      "source_mtime_ns": 1792818988742131100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-on-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_actor_fast-on-undefined.txt",
+      "bytes": 2468,
+      "sha256": "33b96b4c0c061dad7f370e41b4a94a6aee0ce5a7fb58edd36a622b1274f01d9c",
+      "lf_sha256": "33b96b4c0c061dad7f370e41b4a94a6aee0ce5a7fb58edd36a622b1274f01d9c",
+      "crlf_count": 0,
+      "lf_count": 67,
+      "source_mtime_ns": 1792818988778132100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-on.log",
+      "destination": "target-static1d63-current/platform_native_actor_fast-on.log",
+      "bytes": 1543,
+      "sha256": "1befe0c41b4f10e2e2125b0d4eaca6b645f19c5f379170a51976c4e39b88929c",
+      "lf_sha256": "1befe0c41b4f10e2e2125b0d4eaca6b645f19c5f379170a51976c4e39b88929c",
+      "crlf_count": 0,
+      "lf_count": 16,
+      "source_mtime_ns": 1792818988752130800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-on.su",
+      "destination": "target-static1d63-current/platform_native_actor_fast-on.su",
+      "bytes": 10636,
+      "sha256": "fe8226f8e44aaee6b30726a577c9a1be7e4ffc9ac8d90b4049835ad4602fe99e",
+      "lf_sha256": "fe8226f8e44aaee6b30726a577c9a1be7e4ffc9ac8d90b4049835ad4602fe99e",
+      "crlf_count": 0,
+      "lf_count": 76,
+      "source_mtime_ns": 1792818988764132400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-zero-command.json",
+      "destination": "target-static1d63-current/platform_native_actor_fast-zero-command.json",
+      "bytes": 3569,
+      "sha256": "94ab824ddcecf02b10893a2a857d2f3c98a5d7d792d78cb8aa1f2597be823af1",
+      "lf_sha256": "94ab824ddcecf02b10893a2a857d2f3c98a5d7d792d78cb8aa1f2597be823af1",
+      "crlf_count": 0,
+      "lf_count": 130,
+      "source_mtime_ns": 1792818988685130100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-zero-inputs.json",
+      "destination": "target-static1d63-current/platform_native_actor_fast-zero-inputs.json",
+      "bytes": 25458,
+      "sha256": "81fc3e188936726d717d6ee2f18043311795591f77d02a6be15aa2c9380c0f8f",
+      "lf_sha256": "81fc3e188936726d717d6ee2f18043311795591f77d02a6be15aa2c9380c0f8f",
+      "crlf_count": 0,
+      "lf_count": 186,
+      "source_mtime_ns": 1792818988694132300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-zero-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_actor_fast-zero-undefined.txt",
+      "bytes": 2186,
+      "sha256": "6ea0c9ae64d0762c9fbd49b66ef8a9e25f2d04717ed566c18608304c399d4371",
+      "lf_sha256": "6ea0c9ae64d0762c9fbd49b66ef8a9e25f2d04717ed566c18608304c399d4371",
+      "crlf_count": 0,
+      "lf_count": 61,
+      "source_mtime_ns": 1792818988723132700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-zero.log",
+      "destination": "target-static1d63-current/platform_native_actor_fast-zero.log",
+      "bytes": 1543,
+      "sha256": "1befe0c41b4f10e2e2125b0d4eaca6b645f19c5f379170a51976c4e39b88929c",
+      "lf_sha256": "1befe0c41b4f10e2e2125b0d4eaca6b645f19c5f379170a51976c4e39b88929c",
+      "crlf_count": 0,
+      "lf_count": 16,
+      "source_mtime_ns": 1792818988703130200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_actor_fast-zero.su",
+      "destination": "target-static1d63-current/platform_native_actor_fast-zero.su",
+      "bytes": 10371,
+      "sha256": "76023da8365af5a50db9c213a9ff43c86c4b06800b20a96657410ed98e7a74a3",
+      "lf_sha256": "76023da8365af5a50db9c213a9ff43c86c4b06800b20a96657410ed98e7a74a3",
+      "crlf_count": 0,
+      "lf_count": 73,
+      "source_mtime_ns": 1792818988713130800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-absent-command.json",
+      "destination": "target-static1d63-current/platform_native_model-absent-command.json",
+      "bytes": 3009,
+      "sha256": "a46802b4491bec32401d3088fb6442081c5540c1a5792a06fdd253702eac878f",
+      "lf_sha256": "a46802b4491bec32401d3088fb6442081c5540c1a5792a06fdd253702eac878f",
+      "crlf_count": 0,
+      "lf_count": 110,
+      "source_mtime_ns": 1792818989038787400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-absent-inputs.json",
+      "destination": "target-static1d63-current/platform_native_model-absent-inputs.json",
+      "bytes": 24073,
+      "sha256": "86d17f238016882114e4a055e03c7af59d1e236951042b2e02435d66b89fb19e",
+      "lf_sha256": "86d17f238016882114e4a055e03c7af59d1e236951042b2e02435d66b89fb19e",
+      "crlf_count": 0,
+      "lf_count": 178,
+      "source_mtime_ns": 1792818989048786000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-absent-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_model-absent-undefined.txt",
+      "bytes": 1654,
+      "sha256": "f2905828278291b561682d70dbc7fb5169ff428592cbff1add867bcd6daced10",
+      "lf_sha256": "f2905828278291b561682d70dbc7fb5169ff428592cbff1add867bcd6daced10",
+      "crlf_count": 0,
+      "lf_count": 40,
+      "source_mtime_ns": 1792818989072794200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-absent.log",
+      "destination": "target-static1d63-current/platform_native_model-absent.log",
+      "bytes": 665,
+      "sha256": "cb78b5c40fd7b324f382c70ee65511ff3523b5a12b5f4a8d3fa4235ab79f5fbf",
+      "lf_sha256": "cb78b5c40fd7b324f382c70ee65511ff3523b5a12b5f4a8d3fa4235ab79f5fbf",
+      "crlf_count": 0,
+      "lf_count": 7,
+      "source_mtime_ns": 1792818989060792000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-absent.su",
+      "destination": "target-static1d63-current/platform_native_model-absent.su",
+      "bytes": 1514,
+      "sha256": "38ff7eaeb39c6c71f252c5bfcf922bc14a18b36f21cd8c1c91300b5e2aad311e",
+      "lf_sha256": "38ff7eaeb39c6c71f252c5bfcf922bc14a18b36f21cd8c1c91300b5e2aad311e",
+      "crlf_count": 0,
+      "lf_count": 14,
+      "source_mtime_ns": 1792818989066793900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-baseline-command.json",
+      "destination": "target-static1d63-current/platform_native_model-baseline-command.json",
+      "bytes": 3011,
+      "sha256": "704e5691a46f8a4c3c3ea095ea210da5694e6ae114fcab775d0105c8f9c5ccd8",
+      "lf_sha256": "704e5691a46f8a4c3c3ea095ea210da5694e6ae114fcab775d0105c8f9c5ccd8",
+      "crlf_count": 0,
+      "lf_count": 110,
+      "source_mtime_ns": 1792818988993784600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-baseline-inputs.json",
+      "destination": "target-static1d63-current/platform_native_model-baseline-inputs.json",
+      "bytes": 24100,
+      "sha256": "b631f94016ad7bd8f1cdce580c3874a6ea52930da6bcbf067801f4bd9bce840b",
+      "lf_sha256": "b631f94016ad7bd8f1cdce580c3874a6ea52930da6bcbf067801f4bd9bce840b",
+      "crlf_count": 0,
+      "lf_count": 176,
+      "source_mtime_ns": 1792818989002784900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-baseline-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_model-baseline-undefined.txt",
+      "bytes": 1654,
+      "sha256": "f2905828278291b561682d70dbc7fb5169ff428592cbff1add867bcd6daced10",
+      "lf_sha256": "f2905828278291b561682d70dbc7fb5169ff428592cbff1add867bcd6daced10",
+      "crlf_count": 0,
+      "lf_count": 40,
+      "source_mtime_ns": 1792818989029785400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-baseline.log",
+      "destination": "target-static1d63-current/platform_native_model-baseline.log",
+      "bytes": 665,
+      "sha256": "db7252a416129fcb6c5d6b4a82131be5535a65d541b1be2ab001632b6357b336",
+      "lf_sha256": "db7252a416129fcb6c5d6b4a82131be5535a65d541b1be2ab001632b6357b336",
+      "crlf_count": 0,
+      "lf_count": 7,
+      "source_mtime_ns": 1792818989014785600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-baseline.su",
+      "destination": "target-static1d63-current/platform_native_model-baseline.su",
+      "bytes": 1514,
+      "sha256": "33f5c9cea2ec387a56f622d76b2101b417fd5b40710da36d1c03c9e02cd61c08",
+      "lf_sha256": "33f5c9cea2ec387a56f622d76b2101b417fd5b40710da36d1c03c9e02cd61c08",
+      "crlf_count": 0,
+      "lf_count": 14,
+      "source_mtime_ns": 1792818989020785100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-on-command.json",
+      "destination": "target-static1d63-current/platform_native_model-on-command.json",
+      "bytes": 3077,
+      "sha256": "eeaf24443930a2346e607b6b42b8712c6ca6d2d7781562a2b21cf886f044db67",
+      "lf_sha256": "eeaf24443930a2346e607b6b42b8712c6ca6d2d7781562a2b21cf886f044db67",
+      "crlf_count": 0,
+      "lf_count": 112,
+      "source_mtime_ns": 1792818989122312100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-on-inputs.json",
+      "destination": "target-static1d63-current/platform_native_model-on-inputs.json",
+      "bytes": 24073,
+      "sha256": "86d17f238016882114e4a055e03c7af59d1e236951042b2e02435d66b89fb19e",
+      "lf_sha256": "86d17f238016882114e4a055e03c7af59d1e236951042b2e02435d66b89fb19e",
+      "crlf_count": 0,
+      "lf_count": 178,
+      "source_mtime_ns": 1792818989132442600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-on-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_model-on-undefined.txt",
+      "bytes": 1893,
+      "sha256": "33c66e7733234cac49b9a9c8ae66f275fb5311dc5d61452d4b082e8d03709f30",
+      "lf_sha256": "33c66e7733234cac49b9a9c8ae66f275fb5311dc5d61452d4b082e8d03709f30",
+      "crlf_count": 0,
+      "lf_count": 45,
+      "source_mtime_ns": 1792818989157000900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-on.log",
+      "destination": "target-static1d63-current/platform_native_model-on.log",
+      "bytes": 665,
+      "sha256": "cb78b5c40fd7b324f382c70ee65511ff3523b5a12b5f4a8d3fa4235ab79f5fbf",
+      "lf_sha256": "cb78b5c40fd7b324f382c70ee65511ff3523b5a12b5f4a8d3fa4235ab79f5fbf",
+      "crlf_count": 0,
+      "lf_count": 7,
+      "source_mtime_ns": 1792818989141446700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-on.su",
+      "destination": "target-static1d63-current/platform_native_model-on.su",
+      "bytes": 1514,
+      "sha256": "80840c95bf809f8adf6b7d53a48fd094b8cfb67ec4bdf96249df5b2001068c60",
+      "lf_sha256": "80840c95bf809f8adf6b7d53a48fd094b8cfb67ec4bdf96249df5b2001068c60",
+      "crlf_count": 0,
+      "lf_count": 14,
+      "source_mtime_ns": 1792818989147446600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-zero-command.json",
+      "destination": "target-static1d63-current/platform_native_model-zero-command.json",
+      "bytes": 3036,
+      "sha256": "d7f6b637757b494161c3d7a69eb6e25b3359e2433c62502eb47a68c95f6231e5",
+      "lf_sha256": "d7f6b637757b494161c3d7a69eb6e25b3359e2433c62502eb47a68c95f6231e5",
+      "crlf_count": 0,
+      "lf_count": 111,
+      "source_mtime_ns": 1792818989081306300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-zero-inputs.json",
+      "destination": "target-static1d63-current/platform_native_model-zero-inputs.json",
+      "bytes": 24073,
+      "sha256": "86d17f238016882114e4a055e03c7af59d1e236951042b2e02435d66b89fb19e",
+      "lf_sha256": "86d17f238016882114e4a055e03c7af59d1e236951042b2e02435d66b89fb19e",
+      "crlf_count": 0,
+      "lf_count": 178,
+      "source_mtime_ns": 1792818989091306100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-zero-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_model-zero-undefined.txt",
+      "bytes": 1654,
+      "sha256": "f2905828278291b561682d70dbc7fb5169ff428592cbff1add867bcd6daced10",
+      "lf_sha256": "f2905828278291b561682d70dbc7fb5169ff428592cbff1add867bcd6daced10",
+      "crlf_count": 0,
+      "lf_count": 40,
+      "source_mtime_ns": 1792818989113312800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-zero.log",
+      "destination": "target-static1d63-current/platform_native_model-zero.log",
+      "bytes": 665,
+      "sha256": "cb78b5c40fd7b324f382c70ee65511ff3523b5a12b5f4a8d3fa4235ab79f5fbf",
+      "lf_sha256": "cb78b5c40fd7b324f382c70ee65511ff3523b5a12b5f4a8d3fa4235ab79f5fbf",
+      "crlf_count": 0,
+      "lf_count": 7,
+      "source_mtime_ns": 1792818989100306800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_model-zero.su",
+      "destination": "target-static1d63-current/platform_native_model-zero.su",
+      "bytes": 1514,
+      "sha256": "38ff7eaeb39c6c71f252c5bfcf922bc14a18b36f21cd8c1c91300b5e2aad311e",
+      "lf_sha256": "38ff7eaeb39c6c71f252c5bfcf922bc14a18b36f21cd8c1c91300b5e2aad311e",
+      "crlf_count": 0,
+      "lf_count": 14,
+      "source_mtime_ns": 1792818989107306400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-absent-command.json",
+      "destination": "target-static1d63-current/platform_native_movie-absent-command.json",
+      "bytes": 2984,
+      "sha256": "701ab8817477a2e858e9828f30ba7d245950ae37f7b5ca80f3a70fab3601bea5",
+      "lf_sha256": "701ab8817477a2e858e9828f30ba7d245950ae37f7b5ca80f3a70fab3601bea5",
+      "crlf_count": 0,
+      "lf_count": 114,
+      "source_mtime_ns": 1792818989696311800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-absent-inputs.json",
+      "destination": "target-static1d63-current/platform_native_movie-absent-inputs.json",
+      "bytes": 32759,
+      "sha256": "61e40c276ad0c4d7bd7bfe0985098a0e86c796350fe10610b69a8f238003453a",
+      "lf_sha256": "61e40c276ad0c4d7bd7bfe0985098a0e86c796350fe10610b69a8f238003453a",
+      "crlf_count": 0,
+      "lf_count": 244,
+      "source_mtime_ns": 1792818989707312300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-absent-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_movie-absent-undefined.txt",
+      "bytes": 2185,
+      "sha256": "63430dc04afd6db32a3d177d902435e56b3efc36af52bbcfa71b5c486f1b85f6",
+      "lf_sha256": "63430dc04afd6db32a3d177d902435e56b3efc36af52bbcfa71b5c486f1b85f6",
+      "crlf_count": 0,
+      "lf_count": 68,
+      "source_mtime_ns": 1792818989733314300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-absent.log",
+      "destination": "target-static1d63-current/platform_native_movie-absent.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989715314500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-absent.su",
+      "destination": "target-static1d63-current/platform_native_movie-absent.su",
+      "bytes": 14284,
+      "sha256": "19656e99afd15386b909664cda63d4137e6a5b85cc454120c6aedffb49d86a76",
+      "lf_sha256": "19656e99afd15386b909664cda63d4137e6a5b85cc454120c6aedffb49d86a76",
+      "crlf_count": 0,
+      "lf_count": 150,
+      "source_mtime_ns": 1792818989723316000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-baseline-command.json",
+      "destination": "target-static1d63-current/platform_native_movie-baseline-command.json",
+      "bytes": 2986,
+      "sha256": "8a814dc9e40a6c703ff31a8c07bc2c29eb9b32fd24213a3a59f9d7f744334a81",
+      "lf_sha256": "8a814dc9e40a6c703ff31a8c07bc2c29eb9b32fd24213a3a59f9d7f744334a81",
+      "crlf_count": 0,
+      "lf_count": 114,
+      "source_mtime_ns": 1792818989647738200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-baseline-inputs.json",
+      "destination": "target-static1d63-current/platform_native_movie-baseline-inputs.json",
+      "bytes": 32571,
+      "sha256": "7b5e65be8e061083f0661ecd56b0d631baf0ecccec2978351868e71219cfe785",
+      "lf_sha256": "7b5e65be8e061083f0661ecd56b0d631baf0ecccec2978351868e71219cfe785",
+      "crlf_count": 0,
+      "lf_count": 241,
+      "source_mtime_ns": 1792818989657736700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-baseline-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_movie-baseline-undefined.txt",
+      "bytes": 2185,
+      "sha256": "63430dc04afd6db32a3d177d902435e56b3efc36af52bbcfa71b5c486f1b85f6",
+      "lf_sha256": "63430dc04afd6db32a3d177d902435e56b3efc36af52bbcfa71b5c486f1b85f6",
+      "crlf_count": 0,
+      "lf_count": 68,
+      "source_mtime_ns": 1792818989687316500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-baseline.log",
+      "destination": "target-static1d63-current/platform_native_movie-baseline.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989665740200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-baseline.su",
+      "destination": "target-static1d63-current/platform_native_movie-baseline.su",
+      "bytes": 14284,
+      "sha256": "3126a9cebcdcc1c56f0ddf26525c3f9959c4b86bc48bfd00fe53ee3df6ef87bb",
+      "lf_sha256": "3126a9cebcdcc1c56f0ddf26525c3f9959c4b86bc48bfd00fe53ee3df6ef87bb",
+      "crlf_count": 0,
+      "lf_count": 150,
+      "source_mtime_ns": 1792818989674742400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-on-command.json",
+      "destination": "target-static1d63-current/platform_native_movie-on-command.json",
+      "bytes": 3052,
+      "sha256": "420a285cea58fcdbb38e64a47d046479cbef9315bc30b5de6297aec8c33aecbc",
+      "lf_sha256": "420a285cea58fcdbb38e64a47d046479cbef9315bc30b5de6297aec8c33aecbc",
+      "crlf_count": 0,
+      "lf_count": 116,
+      "source_mtime_ns": 1792818989789313700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-on-inputs.json",
+      "destination": "target-static1d63-current/platform_native_movie-on-inputs.json",
+      "bytes": 32759,
+      "sha256": "edd47524a2f1ba8fa9cd4fc92c37dd56ace234eb3212950f17a2b5894f8d0902",
+      "lf_sha256": "edd47524a2f1ba8fa9cd4fc92c37dd56ace234eb3212950f17a2b5894f8d0902",
+      "crlf_count": 0,
+      "lf_count": 244,
+      "source_mtime_ns": 1792818989798313700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-on-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_movie-on-undefined.txt",
+      "bytes": 2626,
+      "sha256": "2cbea55d73e747b5c1fdad0cc59335a5e9bcc7713dbb5941d6eb25080c79d7d6",
+      "lf_sha256": "2cbea55d73e747b5c1fdad0cc59335a5e9bcc7713dbb5941d6eb25080c79d7d6",
+      "crlf_count": 0,
+      "lf_count": 77,
+      "source_mtime_ns": 1792818989827316000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-on.log",
+      "destination": "target-static1d63-current/platform_native_movie-on.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989806314200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-on.su",
+      "destination": "target-static1d63-current/platform_native_movie-on.su",
+      "bytes": 14460,
+      "sha256": "f1183f32f2210d4e889ec97693fa4aeff9a96ed0e0ee0f624fe3a4cfa385cb87",
+      "lf_sha256": "f1183f32f2210d4e889ec97693fa4aeff9a96ed0e0ee0f624fe3a4cfa385cb87",
+      "crlf_count": 0,
+      "lf_count": 151,
+      "source_mtime_ns": 1792818989814316600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-zero-command.json",
+      "destination": "target-static1d63-current/platform_native_movie-zero-command.json",
+      "bytes": 3011,
+      "sha256": "305649eb8f3cc4fa2807967f7b932932641f15b498c5c78f79749210cc263ff9",
+      "lf_sha256": "305649eb8f3cc4fa2807967f7b932932641f15b498c5c78f79749210cc263ff9",
+      "crlf_count": 0,
+      "lf_count": 115,
+      "source_mtime_ns": 1792818989744314200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-zero-inputs.json",
+      "destination": "target-static1d63-current/platform_native_movie-zero-inputs.json",
+      "bytes": 32759,
+      "sha256": "61e40c276ad0c4d7bd7bfe0985098a0e86c796350fe10610b69a8f238003453a",
+      "lf_sha256": "61e40c276ad0c4d7bd7bfe0985098a0e86c796350fe10610b69a8f238003453a",
+      "crlf_count": 0,
+      "lf_count": 244,
+      "source_mtime_ns": 1792818989754313200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-zero-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_movie-zero-undefined.txt",
+      "bytes": 2185,
+      "sha256": "63430dc04afd6db32a3d177d902435e56b3efc36af52bbcfa71b5c486f1b85f6",
+      "lf_sha256": "63430dc04afd6db32a3d177d902435e56b3efc36af52bbcfa71b5c486f1b85f6",
+      "crlf_count": 0,
+      "lf_count": 68,
+      "source_mtime_ns": 1792818989780314000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-zero.log",
+      "destination": "target-static1d63-current/platform_native_movie-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989762316200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie-zero.su",
+      "destination": "target-static1d63-current/platform_native_movie-zero.su",
+      "bytes": 14284,
+      "sha256": "19656e99afd15386b909664cda63d4137e6a5b85cc454120c6aedffb49d86a76",
+      "lf_sha256": "19656e99afd15386b909664cda63d4137e6a5b85cc454120c6aedffb49d86a76",
+      "crlf_count": 0,
+      "lf_count": 150,
+      "source_mtime_ns": 1792818989771313500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-absent-command.json",
+      "destination": "target-static1d63-current/platform_native_movie_stream-absent-command.json",
+      "bytes": 1103,
+      "sha256": "178246fffb50a022a5ea5d132414b4838d730afedfc974c91721449d3316db87",
+      "lf_sha256": "178246fffb50a022a5ea5d132414b4838d730afedfc974c91721449d3316db87",
+      "crlf_count": 0,
+      "lf_count": 42,
+      "source_mtime_ns": 1792818989882836600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-absent-inputs.json",
+      "destination": "target-static1d63-current/platform_native_movie_stream-absent-inputs.json",
+      "bytes": 12408,
+      "sha256": "3b51cc07b83990597e8067e30bf126e67e161459a0b325ade83c332584c3d139",
+      "lf_sha256": "3b51cc07b83990597e8067e30bf126e67e161459a0b325ade83c332584c3d139",
+      "crlf_count": 0,
+      "lf_count": 98,
+      "source_mtime_ns": 1792818989892179300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-absent-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_movie_stream-absent-undefined.txt",
+      "bytes": 1004,
+      "sha256": "bf87de2fba291f9791da348ddb29ef74845aeaa1b59ff462aa6126a53a11c3aa",
+      "lf_sha256": "bf87de2fba291f9791da348ddb29ef74845aeaa1b59ff462aa6126a53a11c3aa",
+      "crlf_count": 0,
+      "lf_count": 39,
+      "source_mtime_ns": 1792818989911178800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-absent.log",
+      "destination": "target-static1d63-current/platform_native_movie_stream-absent.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989899178400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-absent.su",
+      "destination": "target-static1d63-current/platform_native_movie_stream-absent.su",
+      "bytes": 3716,
+      "sha256": "2796f0daab75e6276d902ce2cb9f33de9e539b441659300edb956f54a865cdc5",
+      "lf_sha256": "2796f0daab75e6276d902ce2cb9f33de9e539b441659300edb956f54a865cdc5",
+      "crlf_count": 0,
+      "lf_count": 36,
+      "source_mtime_ns": 1792818989905178700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-baseline-command.json",
+      "destination": "target-static1d63-current/platform_native_movie_stream-baseline-command.json",
+      "bytes": 1105,
+      "sha256": "bb1ed878c662f713b207544fa85a4de7a563921b170c5f5a143af51999118ae6",
+      "lf_sha256": "bb1ed878c662f713b207544fa85a4de7a563921b170c5f5a143af51999118ae6",
+      "crlf_count": 0,
+      "lf_count": 42,
+      "source_mtime_ns": 1792818989838314800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-baseline-inputs.json",
+      "destination": "target-static1d63-current/platform_native_movie_stream-baseline-inputs.json",
+      "bytes": 12303,
+      "sha256": "ea9d4fe38a76feb3afc80c225e87bbe5fc4746f716c0a10bf9c450e25de8fa21",
+      "lf_sha256": "ea9d4fe38a76feb3afc80c225e87bbe5fc4746f716c0a10bf9c450e25de8fa21",
+      "crlf_count": 0,
+      "lf_count": 97,
+      "source_mtime_ns": 1792818989849318800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-baseline-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_movie_stream-baseline-undefined.txt",
+      "bytes": 1004,
+      "sha256": "bf87de2fba291f9791da348ddb29ef74845aeaa1b59ff462aa6126a53a11c3aa",
+      "lf_sha256": "bf87de2fba291f9791da348ddb29ef74845aeaa1b59ff462aa6126a53a11c3aa",
+      "crlf_count": 0,
+      "lf_count": 39,
+      "source_mtime_ns": 1792818989873837200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-baseline.log",
+      "destination": "target-static1d63-current/platform_native_movie_stream-baseline.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989856833500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-baseline.su",
+      "destination": "target-static1d63-current/platform_native_movie_stream-baseline.su",
+      "bytes": 3716,
+      "sha256": "fbf2622dba91a2ac28bb63ae25ba76242b2eb0227ff85f27a39f8ed6fcd27f2e",
+      "lf_sha256": "fbf2622dba91a2ac28bb63ae25ba76242b2eb0227ff85f27a39f8ed6fcd27f2e",
+      "crlf_count": 0,
+      "lf_count": 36,
+      "source_mtime_ns": 1792818989863833200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-on-command.json",
+      "destination": "target-static1d63-current/platform_native_movie_stream-on-command.json",
+      "bytes": 1128,
+      "sha256": "9b07336359abc5ee73ae948c2c61c18ab64952b5431ff1e9733fd660f97e13c7",
+      "lf_sha256": "9b07336359abc5ee73ae948c2c61c18ab64952b5431ff1e9733fd660f97e13c7",
+      "crlf_count": 0,
+      "lf_count": 43,
+      "source_mtime_ns": 1792818989958185000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-on-inputs.json",
+      "destination": "target-static1d63-current/platform_native_movie_stream-on-inputs.json",
+      "bytes": 12408,
+      "sha256": "03977e6414cf21e5531999f809a3e98a71b66b44e96847fe7c3180f427819b19",
+      "lf_sha256": "03977e6414cf21e5531999f809a3e98a71b66b44e96847fe7c3180f427819b19",
+      "crlf_count": 0,
+      "lf_count": 98,
+      "source_mtime_ns": 1792818989967904200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-on-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_movie_stream-on-undefined.txt",
+      "bytes": 1094,
+      "sha256": "1127452f16bcb736386e80bbd9705084f0b3aa51a33374aeac02f436a2f46a63",
+      "lf_sha256": "1127452f16bcb736386e80bbd9705084f0b3aa51a33374aeac02f436a2f46a63",
+      "crlf_count": 0,
+      "lf_count": 41,
+      "source_mtime_ns": 1792818989989412200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-on.log",
+      "destination": "target-static1d63-current/platform_native_movie_stream-on.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989974904600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-on.su",
+      "destination": "target-static1d63-current/platform_native_movie_stream-on.su",
+      "bytes": 4483,
+      "sha256": "552c66554ca88d4894a9a3aa47d069d4f25d36c9417d2688e41ca02af8249b04",
+      "lf_sha256": "552c66554ca88d4894a9a3aa47d069d4f25d36c9417d2688e41ca02af8249b04",
+      "crlf_count": 0,
+      "lf_count": 47,
+      "source_mtime_ns": 1792818989980412500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-zero-command.json",
+      "destination": "target-static1d63-current/platform_native_movie_stream-zero-command.json",
+      "bytes": 1130,
+      "sha256": "925bcfda6abce3c887b60056dbe5e295d10b4c701aada6bc597588aabaf6a766",
+      "lf_sha256": "925bcfda6abce3c887b60056dbe5e295d10b4c701aada6bc597588aabaf6a766",
+      "crlf_count": 0,
+      "lf_count": 43,
+      "source_mtime_ns": 1792818989920178600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-zero-inputs.json",
+      "destination": "target-static1d63-current/platform_native_movie_stream-zero-inputs.json",
+      "bytes": 12408,
+      "sha256": "3b51cc07b83990597e8067e30bf126e67e161459a0b325ade83c332584c3d139",
+      "lf_sha256": "3b51cc07b83990597e8067e30bf126e67e161459a0b325ade83c332584c3d139",
+      "crlf_count": 0,
+      "lf_count": 98,
+      "source_mtime_ns": 1792818989930179100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-zero-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_movie_stream-zero-undefined.txt",
+      "bytes": 1004,
+      "sha256": "bf87de2fba291f9791da348ddb29ef74845aeaa1b59ff462aa6126a53a11c3aa",
+      "lf_sha256": "bf87de2fba291f9791da348ddb29ef74845aeaa1b59ff462aa6126a53a11c3aa",
+      "crlf_count": 0,
+      "lf_count": 39,
+      "source_mtime_ns": 1792818989949182800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-zero.log",
+      "destination": "target-static1d63-current/platform_native_movie_stream-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989937179700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_movie_stream-zero.su",
+      "destination": "target-static1d63-current/platform_native_movie_stream-zero.su",
+      "bytes": 3716,
+      "sha256": "2796f0daab75e6276d902ce2cb9f33de9e539b441659300edb956f54a865cdc5",
+      "lf_sha256": "2796f0daab75e6276d902ce2cb9f33de9e539b441659300edb956f54a865cdc5",
+      "crlf_count": 0,
+      "lf_count": 36,
+      "source_mtime_ns": 1792818989943180600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-absent-command.json",
+      "destination": "target-static1d63-current/platform_native_static-absent-command.json",
+      "bytes": 4844,
+      "sha256": "3befe128699d9ccb892c566a9b7ba113f29a196064ba58e44281bee3cad8c51c",
+      "lf_sha256": "3befe128699d9ccb892c566a9b7ba113f29a196064ba58e44281bee3cad8c51c",
+      "crlf_count": 0,
+      "lf_count": 166,
+      "source_mtime_ns": 1792818990469869100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-absent-inputs.json",
+      "destination": "target-static1d63-current/platform_native_static-absent-inputs.json",
+      "bytes": 38778,
+      "sha256": "7a8f108451dfaf7a7f2cace70c6fb7dd987e55f782b17d883515897b07231181",
+      "lf_sha256": "7a8f108451dfaf7a7f2cace70c6fb7dd987e55f782b17d883515897b07231181",
+      "crlf_count": 0,
+      "lf_count": 285,
+      "source_mtime_ns": 1792818990478872000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-absent-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_static-absent-undefined.txt",
+      "bytes": 2999,
+      "sha256": "e1d200812e5a2f4fb2c6288dd44ce213efea5d3a4e790c2328fb3900a63889b2",
+      "lf_sha256": "e1d200812e5a2f4fb2c6288dd44ce213efea5d3a4e790c2328fb3900a63889b2",
+      "crlf_count": 0,
+      "lf_count": 90,
+      "source_mtime_ns": 1792818990510382300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-absent.log",
+      "destination": "target-static1d63-current/platform_native_static-absent.log",
+      "bytes": 3745,
+      "sha256": "7f5dd65278bb492fdba7d5e50b14442a5825fbe82c1924b870923fe11b042346",
+      "lf_sha256": "7f5dd65278bb492fdba7d5e50b14442a5825fbe82c1924b870923fe11b042346",
+      "crlf_count": 0,
+      "lf_count": 37,
+      "source_mtime_ns": 1792818990491380500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-absent.su",
+      "destination": "target-static1d63-current/platform_native_static-absent.su",
+      "bytes": 17554,
+      "sha256": "3ab87db055fad31d5586aa4af86e1df51fc1af75d1478a65d4d316ae9e81b13d",
+      "lf_sha256": "3ab87db055fad31d5586aa4af86e1df51fc1af75d1478a65d4d316ae9e81b13d",
+      "crlf_count": 0,
+      "lf_count": 168,
+      "source_mtime_ns": 1792818990501380600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-baseline-command.json",
+      "destination": "target-static1d63-current/platform_native_static-baseline-command.json",
+      "bytes": 4846,
+      "sha256": "49f42e185b27e5630c5e7e17034e1b03fbc70b6670fd921d6dc4c501412a2d8f",
+      "lf_sha256": "49f42e185b27e5630c5e7e17034e1b03fbc70b6670fd921d6dc4c501412a2d8f",
+      "crlf_count": 0,
+      "lf_count": 166,
+      "source_mtime_ns": 1792818990415867600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-baseline-inputs.json",
+      "destination": "target-static1d63-current/platform_native_static-baseline-inputs.json",
+      "bytes": 39141,
+      "sha256": "e33789fd0e06a8b90449c335b068a72e22bbea18aeef9d532855e99191c28fe7",
+      "lf_sha256": "e33789fd0e06a8b90449c335b068a72e22bbea18aeef9d532855e99191c28fe7",
+      "crlf_count": 0,
+      "lf_count": 280,
+      "source_mtime_ns": 1792818990424867900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-baseline-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_static-baseline-undefined.txt",
+      "bytes": 2999,
+      "sha256": "e1d200812e5a2f4fb2c6288dd44ce213efea5d3a4e790c2328fb3900a63889b2",
+      "lf_sha256": "e1d200812e5a2f4fb2c6288dd44ce213efea5d3a4e790c2328fb3900a63889b2",
+      "crlf_count": 0,
+      "lf_count": 90,
+      "source_mtime_ns": 1792818990459869300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-baseline.log",
+      "destination": "target-static1d63-current/platform_native_static-baseline.log",
+      "bytes": 3160,
+      "sha256": "88b0c6b3ca7f4517ae92e3a010667148117dccbc238c3880f54769d39e8b2edf",
+      "lf_sha256": "88b0c6b3ca7f4517ae92e3a010667148117dccbc238c3880f54769d39e8b2edf",
+      "crlf_count": 0,
+      "lf_count": 30,
+      "source_mtime_ns": 1792818990437868100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-baseline.su",
+      "destination": "target-static1d63-current/platform_native_static-baseline.su",
+      "bytes": 17553,
+      "sha256": "462db596daa742e3d89f7257e6e4094eff48d0548f5836383fbd0db77655663a",
+      "lf_sha256": "462db596daa742e3d89f7257e6e4094eff48d0548f5836383fbd0db77655663a",
+      "crlf_count": 0,
+      "lf_count": 168,
+      "source_mtime_ns": 1792818990447870400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-on-command.json",
+      "destination": "target-static1d63-current/platform_native_static-on-command.json",
+      "bytes": 4912,
+      "sha256": "c06c48dde2680dd492e67b7d821a675337089089e5867ee3a33c1ea1c807497e",
+      "lf_sha256": "c06c48dde2680dd492e67b7d821a675337089089e5867ee3a33c1ea1c807497e",
+      "crlf_count": 0,
+      "lf_count": 168,
+      "source_mtime_ns": 1792818990567381500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-on-inputs.json",
+      "destination": "target-static1d63-current/platform_native_static-on-inputs.json",
+      "bytes": 38778,
+      "sha256": "7a8f108451dfaf7a7f2cace70c6fb7dd987e55f782b17d883515897b07231181",
+      "lf_sha256": "7a8f108451dfaf7a7f2cace70c6fb7dd987e55f782b17d883515897b07231181",
+      "crlf_count": 0,
+      "lf_count": 285,
+      "source_mtime_ns": 1792818990576381500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-on-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_static-on-undefined.txt",
+      "bytes": 4278,
+      "sha256": "27a2f561647aeb6ea236d242826f7bdc95fbb586e20bddd11fa994c194cbd611",
+      "lf_sha256": "27a2f561647aeb6ea236d242826f7bdc95fbb586e20bddd11fa994c194cbd611",
+      "crlf_count": 0,
+      "lf_count": 107,
+      "source_mtime_ns": 1792818990607381900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-on.log",
+      "destination": "target-static1d63-current/platform_native_static-on.log",
+      "bytes": 3745,
+      "sha256": "7f5dd65278bb492fdba7d5e50b14442a5825fbe82c1924b870923fe11b042346",
+      "lf_sha256": "7f5dd65278bb492fdba7d5e50b14442a5825fbe82c1924b870923fe11b042346",
+      "crlf_count": 0,
+      "lf_count": 37,
+      "source_mtime_ns": 1792818990585381900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-on.su",
+      "destination": "target-static1d63-current/platform_native_static-on.su",
+      "bytes": 18218,
+      "sha256": "559a1ae1edf56aa6f26ef59cd9df572b3a6df9e5d14477edadf5797bbcd38272",
+      "lf_sha256": "559a1ae1edf56aa6f26ef59cd9df572b3a6df9e5d14477edadf5797bbcd38272",
+      "crlf_count": 0,
+      "lf_count": 174,
+      "source_mtime_ns": 1792818990595381700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-zero-command.json",
+      "destination": "target-static1d63-current/platform_native_static-zero-command.json",
+      "bytes": 4871,
+      "sha256": "7b8c933720cf606e8975246c5b754e341a3f6314890db3cf59db907690010ddb",
+      "lf_sha256": "7b8c933720cf606e8975246c5b754e341a3f6314890db3cf59db907690010ddb",
+      "crlf_count": 0,
+      "lf_count": 167,
+      "source_mtime_ns": 1792818990519380700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-zero-inputs.json",
+      "destination": "target-static1d63-current/platform_native_static-zero-inputs.json",
+      "bytes": 38778,
+      "sha256": "7a8f108451dfaf7a7f2cace70c6fb7dd987e55f782b17d883515897b07231181",
+      "lf_sha256": "7a8f108451dfaf7a7f2cace70c6fb7dd987e55f782b17d883515897b07231181",
+      "crlf_count": 0,
+      "lf_count": 285,
+      "source_mtime_ns": 1792818990528381100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-zero-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_static-zero-undefined.txt",
+      "bytes": 2999,
+      "sha256": "e1d200812e5a2f4fb2c6288dd44ce213efea5d3a4e790c2328fb3900a63889b2",
+      "lf_sha256": "e1d200812e5a2f4fb2c6288dd44ce213efea5d3a4e790c2328fb3900a63889b2",
+      "crlf_count": 0,
+      "lf_count": 90,
+      "source_mtime_ns": 1792818990557384000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-zero.log",
+      "destination": "target-static1d63-current/platform_native_static-zero.log",
+      "bytes": 3745,
+      "sha256": "7f5dd65278bb492fdba7d5e50b14442a5825fbe82c1924b870923fe11b042346",
+      "lf_sha256": "7f5dd65278bb492fdba7d5e50b14442a5825fbe82c1924b870923fe11b042346",
+      "crlf_count": 0,
+      "lf_count": 37,
+      "source_mtime_ns": 1792818990537383100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_static-zero.su",
+      "destination": "target-static1d63-current/platform_native_static-zero.su",
+      "bytes": 17554,
+      "sha256": "3ab87db055fad31d5586aa4af86e1df51fc1af75d1478a65d4d316ae9e81b13d",
+      "lf_sha256": "3ab87db055fad31d5586aa4af86e1df51fc1af75d1478a65d4d316ae9e81b13d",
+      "crlf_count": 0,
+      "lf_count": 168,
+      "source_mtime_ns": 1792818990547383000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-absent-command.json",
+      "destination": "target-static1d63-current/platform_native_ui-absent-command.json",
+      "bytes": 6259,
+      "sha256": "24631cfd95b4bc119d9a8fd9a69e302deb19c66e67dc84bca880466fbe136e76",
+      "lf_sha256": "24631cfd95b4bc119d9a8fd9a69e302deb19c66e67dc84bca880466fbe136e76",
+      "crlf_count": 0,
+      "lf_count": 207,
+      "source_mtime_ns": 1792818988843133200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-absent-inputs.json",
+      "destination": "target-static1d63-current/platform_native_ui-absent-inputs.json",
+      "bytes": 45638,
+      "sha256": "ef706af18ae68bee17861849a8f96f6a9d6719db855f7d60d6cae1ebe9b81854",
+      "lf_sha256": "ef706af18ae68bee17861849a8f96f6a9d6719db855f7d60d6cae1ebe9b81854",
+      "crlf_count": 0,
+      "lf_count": 331,
+      "source_mtime_ns": 1792818988853133300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-absent-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_ui-absent-undefined.txt",
+      "bytes": 5905,
+      "sha256": "36500ab30584bb8d8a30e73341ab795f4ae8815e83b3310e34dd3d6a4354c94d",
+      "lf_sha256": "36500ab30584bb8d8a30e73341ab795f4ae8815e83b3310e34dd3d6a4354c94d",
+      "crlf_count": 0,
+      "lf_count": 173,
+      "source_mtime_ns": 1792818988886023600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-absent.log",
+      "destination": "target-static1d63-current/platform_native_ui-absent.log",
+      "bytes": 4150,
+      "sha256": "490164bbe4b4a8e380646e886975d39b0e99dbfb9997fd5a7df37af7fa3b3541",
+      "lf_sha256": "490164bbe4b4a8e380646e886975d39b0e99dbfb9997fd5a7df37af7fa3b3541",
+      "crlf_count": 0,
+      "lf_count": 52,
+      "source_mtime_ns": 1792818988867141300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-absent.su",
+      "destination": "target-static1d63-current/platform_native_ui-absent.su",
+      "bytes": 24134,
+      "sha256": "af0abe915296abb9313f925859c1c9be9e692d8be5927a02b68b00427f162cae",
+      "lf_sha256": "af0abe915296abb9313f925859c1c9be9e692d8be5927a02b68b00427f162cae",
+      "crlf_count": 0,
+      "lf_count": 240,
+      "source_mtime_ns": 1792818988876023900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-baseline-command.json",
+      "destination": "target-static1d63-current/platform_native_ui-baseline-command.json",
+      "bytes": 6261,
+      "sha256": "8dc29dcbb4e6513705699e57888141ecff620237b0959720885be6f60cd06662",
+      "lf_sha256": "8dc29dcbb4e6513705699e57888141ecff620237b0959720885be6f60cd06662",
+      "crlf_count": 0,
+      "lf_count": 207,
+      "source_mtime_ns": 1792818988788134700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-baseline-inputs.json",
+      "destination": "target-static1d63-current/platform_native_ui-baseline-inputs.json",
+      "bytes": 45741,
+      "sha256": "3c03fedb2713493943fd3e23a95479ef8ca84d1d595bd065ed1eadcaa2464744",
+      "lf_sha256": "3c03fedb2713493943fd3e23a95479ef8ca84d1d595bd065ed1eadcaa2464744",
+      "crlf_count": 0,
+      "lf_count": 322,
+      "source_mtime_ns": 1792818988797135000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-baseline-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_ui-baseline-undefined.txt",
+      "bytes": 5905,
+      "sha256": "36500ab30584bb8d8a30e73341ab795f4ae8815e83b3310e34dd3d6a4354c94d",
+      "lf_sha256": "36500ab30584bb8d8a30e73341ab795f4ae8815e83b3310e34dd3d6a4354c94d",
+      "crlf_count": 0,
+      "lf_count": 173,
+      "source_mtime_ns": 1792818988833135100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-baseline.log",
+      "destination": "target-static1d63-current/platform_native_ui-baseline.log",
+      "bytes": 4150,
+      "sha256": "d8d1dc9749c2ed0a4d75da1cac5d7788f75a410b5656bf21cd17c1be23def989",
+      "lf_sha256": "d8d1dc9749c2ed0a4d75da1cac5d7788f75a410b5656bf21cd17c1be23def989",
+      "crlf_count": 0,
+      "lf_count": 52,
+      "source_mtime_ns": 1792818988811132600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-baseline.su",
+      "destination": "target-static1d63-current/platform_native_ui-baseline.su",
+      "bytes": 24132,
+      "sha256": "c7e500fb72265cabccad381213fae4ed19fa479c69ad23808d79dd164022ddec",
+      "lf_sha256": "c7e500fb72265cabccad381213fae4ed19fa479c69ad23808d79dd164022ddec",
+      "crlf_count": 0,
+      "lf_count": 240,
+      "source_mtime_ns": 1792818988821132900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-on-command.json",
+      "destination": "target-static1d63-current/platform_native_ui-on-command.json",
+      "bytes": 6363,
+      "sha256": "2f9d90ad7493e170686c12419dd26b29238853dfce62f930da8518e69c01e649",
+      "lf_sha256": "2f9d90ad7493e170686c12419dd26b29238853dfce62f930da8518e69c01e649",
+      "crlf_count": 0,
+      "lf_count": 210,
+      "source_mtime_ns": 1792818988943024800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-on-inputs.json",
+      "destination": "target-static1d63-current/platform_native_ui-on-inputs.json",
+      "bytes": 45787,
+      "sha256": "1f6acf38539b113643fef33e0a61028016541820b818d4ec12e9f96bcf6d9cf6",
+      "lf_sha256": "1f6acf38539b113643fef33e0a61028016541820b818d4ec12e9f96bcf6d9cf6",
+      "crlf_count": 0,
+      "lf_count": 332,
+      "source_mtime_ns": 1792818988953022200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-on-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_ui-on-undefined.txt",
+      "bytes": 7409,
+      "sha256": "1924057881c6f3149cb04cb0b47c671b456bee97095c4c7f83e8260f38c21849",
+      "lf_sha256": "1924057881c6f3149cb04cb0b47c671b456bee97095c4c7f83e8260f38c21849",
+      "crlf_count": 0,
+      "lf_count": 203,
+      "source_mtime_ns": 1792818988983784700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-on.log",
+      "destination": "target-static1d63-current/platform_native_ui-on.log",
+      "bytes": 4150,
+      "sha256": "490164bbe4b4a8e380646e886975d39b0e99dbfb9997fd5a7df37af7fa3b3541",
+      "lf_sha256": "490164bbe4b4a8e380646e886975d39b0e99dbfb9997fd5a7df37af7fa3b3541",
+      "crlf_count": 0,
+      "lf_count": 52,
+      "source_mtime_ns": 1792818988962029200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-on.su",
+      "destination": "target-static1d63-current/platform_native_ui-on.su",
+      "bytes": 26307,
+      "sha256": "bf348e4474f67f00fe1bc9013709d9196ec83893d4fea095ee784c30ec197127",
+      "lf_sha256": "bf348e4474f67f00fe1bc9013709d9196ec83893d4fea095ee784c30ec197127",
+      "crlf_count": 0,
+      "lf_count": 261,
+      "source_mtime_ns": 1792818988971027600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-zero-command.json",
+      "destination": "target-static1d63-current/platform_native_ui-zero-command.json",
+      "bytes": 6286,
+      "sha256": "522ac8dab4ddacdd86b9b784ea51aa000885723cef44714f200e49fcd5395ee7",
+      "lf_sha256": "522ac8dab4ddacdd86b9b784ea51aa000885723cef44714f200e49fcd5395ee7",
+      "crlf_count": 0,
+      "lf_count": 208,
+      "source_mtime_ns": 1792818988896024900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-zero-inputs.json",
+      "destination": "target-static1d63-current/platform_native_ui-zero-inputs.json",
+      "bytes": 45638,
+      "sha256": "ef706af18ae68bee17861849a8f96f6a9d6719db855f7d60d6cae1ebe9b81854",
+      "lf_sha256": "ef706af18ae68bee17861849a8f96f6a9d6719db855f7d60d6cae1ebe9b81854",
+      "crlf_count": 0,
+      "lf_count": 331,
+      "source_mtime_ns": 1792818988905026200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-zero-undefined.txt",
+      "destination": "target-static1d63-current/platform_native_ui-zero-undefined.txt",
+      "bytes": 5905,
+      "sha256": "36500ab30584bb8d8a30e73341ab795f4ae8815e83b3310e34dd3d6a4354c94d",
+      "lf_sha256": "36500ab30584bb8d8a30e73341ab795f4ae8815e83b3310e34dd3d6a4354c94d",
+      "crlf_count": 0,
+      "lf_count": 173,
+      "source_mtime_ns": 1792818988933024800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-zero.log",
+      "destination": "target-static1d63-current/platform_native_ui-zero.log",
+      "bytes": 4150,
+      "sha256": "490164bbe4b4a8e380646e886975d39b0e99dbfb9997fd5a7df37af7fa3b3541",
+      "lf_sha256": "490164bbe4b4a8e380646e886975d39b0e99dbfb9997fd5a7df37af7fa3b3541",
+      "crlf_count": 0,
+      "lf_count": 52,
+      "source_mtime_ns": 1792818988915022000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_native_ui-zero.su",
+      "destination": "target-static1d63-current/platform_native_ui-zero.su",
+      "bytes": 24134,
+      "sha256": "af0abe915296abb9313f925859c1c9be9e692d8be5927a02b68b00427f162cae",
+      "lf_sha256": "af0abe915296abb9313f925859c1c9be9e692d8be5927a02b68b00427f162cae",
+      "crlf_count": 0,
+      "lf_count": 240,
+      "source_mtime_ns": 1792818988924023600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-absent-command.json",
+      "destination": "target-static1d63-current/platform_room_file-absent-command.json",
+      "bytes": 764,
+      "sha256": "1381d2d896cfe8b77137c1a5a1efc994ce648674b11d535ed89e58e811ae9c79",
+      "lf_sha256": "1381d2d896cfe8b77137c1a5a1efc994ce648674b11d535ed89e58e811ae9c79",
+      "crlf_count": 0,
+      "lf_count": 36,
+      "source_mtime_ns": 1792818990653384900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-absent-inputs.json",
+      "destination": "target-static1d63-current/platform_room_file-absent-inputs.json",
+      "bytes": 6962,
+      "sha256": "3d8511bd449535cf187a02c56dfba6375fb52f12ba13915c60c9a4d3a720b672",
+      "lf_sha256": "3d8511bd449535cf187a02c56dfba6375fb52f12ba13915c60c9a4d3a720b672",
+      "crlf_count": 0,
+      "lf_count": 57,
+      "source_mtime_ns": 1792818990662385100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-absent-undefined.txt",
+      "destination": "target-static1d63-current/platform_room_file-absent-undefined.txt",
+      "bytes": 260,
+      "sha256": "3f740298f7f270c2438be99a6c790e40bf0d146af28223c3d8b46dd678fb4767",
+      "lf_sha256": "3f740298f7f270c2438be99a6c790e40bf0d146af28223c3d8b46dd678fb4767",
+      "crlf_count": 0,
+      "lf_count": 11,
+      "source_mtime_ns": 1792818990678389000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-absent.log",
+      "destination": "target-static1d63-current/platform_room_file-absent.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990667384000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-absent.su",
+      "destination": "target-static1d63-current/platform_room_file-absent.su",
+      "bytes": 231,
+      "sha256": "53fc1a137e7743b8b331acb7435fd006adb212c76602e7c48ee077e3ffaa6511",
+      "lf_sha256": "53fc1a137e7743b8b331acb7435fd006adb212c76602e7c48ee077e3ffaa6511",
+      "crlf_count": 0,
+      "lf_count": 4,
+      "source_mtime_ns": 1792818990672383900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-baseline-command.json",
+      "destination": "target-static1d63-current/platform_room_file-baseline-command.json",
+      "bytes": 766,
+      "sha256": "4606d887251451c2c8fd25721748e3ebb63ae22932b179bec5bf3bdfa96ba4ce",
+      "lf_sha256": "4606d887251451c2c8fd25721748e3ebb63ae22932b179bec5bf3bdfa96ba4ce",
+      "crlf_count": 0,
+      "lf_count": 36,
+      "source_mtime_ns": 1792818990616385800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-baseline-inputs.json",
+      "destination": "target-static1d63-current/platform_room_file-baseline-inputs.json",
+      "bytes": 7018,
+      "sha256": "ed0e82103d20d8848f420a4c85349d9f0aa26f274fc70248c53cda3838efb86a",
+      "lf_sha256": "ed0e82103d20d8848f420a4c85349d9f0aa26f274fc70248c53cda3838efb86a",
+      "crlf_count": 0,
+      "lf_count": 57,
+      "source_mtime_ns": 1792818990626382700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-baseline-undefined.txt",
+      "destination": "target-static1d63-current/platform_room_file-baseline-undefined.txt",
+      "bytes": 260,
+      "sha256": "3f740298f7f270c2438be99a6c790e40bf0d146af28223c3d8b46dd678fb4767",
+      "lf_sha256": "3f740298f7f270c2438be99a6c790e40bf0d146af28223c3d8b46dd678fb4767",
+      "crlf_count": 0,
+      "lf_count": 11,
+      "source_mtime_ns": 1792818990644385100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-baseline.log",
+      "destination": "target-static1d63-current/platform_room_file-baseline.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990630384000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-baseline.su",
+      "destination": "target-static1d63-current/platform_room_file-baseline.su",
+      "bytes": 231,
+      "sha256": "e41dd1809c55899bd2d434e2595d5a384a576d9e080fff3deb04645ba5c54b53",
+      "lf_sha256": "e41dd1809c55899bd2d434e2595d5a384a576d9e080fff3deb04645ba5c54b53",
+      "crlf_count": 0,
+      "lf_count": 4,
+      "source_mtime_ns": 1792818990635382600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-on-command.json",
+      "destination": "target-static1d63-current/platform_room_file-on-command.json",
+      "bytes": 789,
+      "sha256": "25df00dae1cb57166e6d8d8e6431e21c6979e12b4d4fe8b6bfdd32e50be98dce",
+      "lf_sha256": "25df00dae1cb57166e6d8d8e6431e21c6979e12b4d4fe8b6bfdd32e50be98dce",
+      "crlf_count": 0,
+      "lf_count": 37,
+      "source_mtime_ns": 1792818990718431700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-on-inputs.json",
+      "destination": "target-static1d63-current/platform_room_file-on-inputs.json",
+      "bytes": 6962,
+      "sha256": "3d8511bd449535cf187a02c56dfba6375fb52f12ba13915c60c9a4d3a720b672",
+      "lf_sha256": "3d8511bd449535cf187a02c56dfba6375fb52f12ba13915c60c9a4d3a720b672",
+      "crlf_count": 0,
+      "lf_count": 57,
+      "source_mtime_ns": 1792818990724431200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-on-undefined.txt",
+      "destination": "target-static1d63-current/platform_room_file-on-undefined.txt",
+      "bytes": 305,
+      "sha256": "c0d436837e4aa168abc5b47a012bd5794604a748287f66a8553b22c90fe49c83",
+      "lf_sha256": "c0d436837e4aa168abc5b47a012bd5794604a748287f66a8553b22c90fe49c83",
+      "crlf_count": 0,
+      "lf_count": 12,
+      "source_mtime_ns": 1792818990743434000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-on.log",
+      "destination": "target-static1d63-current/platform_room_file-on.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990729433900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-on.su",
+      "destination": "target-static1d63-current/platform_room_file-on.su",
+      "bytes": 356,
+      "sha256": "5392e3f9aa579d401bfae1e0a0172e2ad142d9c752048f6a135f864e16b8cfc5",
+      "lf_sha256": "5392e3f9aa579d401bfae1e0a0172e2ad142d9c752048f6a135f864e16b8cfc5",
+      "crlf_count": 0,
+      "lf_count": 6,
+      "source_mtime_ns": 1792818990734433800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-zero-command.json",
+      "destination": "target-static1d63-current/platform_room_file-zero-command.json",
+      "bytes": 791,
+      "sha256": "97c29f34a4a45f677c3e8277dc9fb906ce0332b9f35e0e33a67fb80c686fe9e7",
+      "lf_sha256": "97c29f34a4a45f677c3e8277dc9fb906ce0332b9f35e0e33a67fb80c686fe9e7",
+      "crlf_count": 0,
+      "lf_count": 37,
+      "source_mtime_ns": 1792818990687390500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-zero-inputs.json",
+      "destination": "target-static1d63-current/platform_room_file-zero-inputs.json",
+      "bytes": 6962,
+      "sha256": "3d8511bd449535cf187a02c56dfba6375fb52f12ba13915c60c9a4d3a720b672",
+      "lf_sha256": "3d8511bd449535cf187a02c56dfba6375fb52f12ba13915c60c9a4d3a720b672",
+      "crlf_count": 0,
+      "lf_count": 57,
+      "source_mtime_ns": 1792818990693430700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-zero-undefined.txt",
+      "destination": "target-static1d63-current/platform_room_file-zero-undefined.txt",
+      "bytes": 260,
+      "sha256": "3f740298f7f270c2438be99a6c790e40bf0d146af28223c3d8b46dd678fb4767",
+      "lf_sha256": "3f740298f7f270c2438be99a6c790e40bf0d146af28223c3d8b46dd678fb4767",
+      "crlf_count": 0,
+      "lf_count": 11,
+      "source_mtime_ns": 1792818990709431400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-zero.log",
+      "destination": "target-static1d63-current/platform_room_file-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990697430800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/platform_room_file-zero.su",
+      "destination": "target-static1d63-current/platform_room_file-zero.su",
+      "bytes": 231,
+      "sha256": "53fc1a137e7743b8b331acb7435fd006adb212c76602e7c48ee077e3ffaa6511",
+      "lf_sha256": "53fc1a137e7743b8b331acb7435fd006adb212c76602e7c48ee077e3ffaa6511",
+      "crlf_count": 0,
+      "lf_count": 4,
+      "source_mtime_ns": 1792818990703431100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/report.json",
+      "destination": "target-static1d63-current/report.json",
+      "bytes": 40558,
+      "sha256": "95d25a3dcbf5323c30fd788c99b6d51e3d3f5e60e73a154f0cbc17f3675df25c",
+      "lf_sha256": "95d25a3dcbf5323c30fd788c99b6d51e3d3f5e60e73a154f0cbc17f3675df25c",
+      "crlf_count": 0,
+      "lf_count": 681,
+      "source_mtime_ns": 1792818988383327100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-absent-command.json",
+      "destination": "target-static1d63-current/src_game_dvd-absent-command.json",
+      "bytes": 2759,
+      "sha256": "b86473d7548f23bb16ca0a1f3f7416eca52f2ee9eea874bd04995fd0c9070aba",
+      "lf_sha256": "b86473d7548f23bb16ca0a1f3f7416eca52f2ee9eea874bd04995fd0c9070aba",
+      "crlf_count": 0,
+      "lf_count": 104,
+      "source_mtime_ns": 1792818990314865400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-absent-inputs.json",
+      "destination": "target-static1d63-current/src_game_dvd-absent-inputs.json",
+      "bytes": 6317,
+      "sha256": "de2707794c627de53e7dedad3d40f33240f4784deaaec7d44d5290e5d2cae357",
+      "lf_sha256": "de2707794c627de53e7dedad3d40f33240f4784deaaec7d44d5290e5d2cae357",
+      "crlf_count": 0,
+      "lf_count": 52,
+      "source_mtime_ns": 1792818990323866400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-absent-undefined.txt",
+      "destination": "target-static1d63-current/src_game_dvd-absent-undefined.txt",
+      "bytes": 2577,
+      "sha256": "2764c3e5ca2a5bc5cf7bf4c3c0bc87f81682f33e07ff04d630acbb4a41f05a5d",
+      "lf_sha256": "2764c3e5ca2a5bc5cf7bf4c3c0bc87f81682f33e07ff04d630acbb4a41f05a5d",
+      "crlf_count": 0,
+      "lf_count": 93,
+      "source_mtime_ns": 1792818990338867100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-absent.log",
+      "destination": "target-static1d63-current/src_game_dvd-absent.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990327867500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-absent.su",
+      "destination": "target-static1d63-current/src_game_dvd-absent.su",
+      "bytes": 4009,
+      "sha256": "200d69c4f72d65e639ac865d8102896cf751764d641e95f6830b257cec29f8b4",
+      "lf_sha256": "200d69c4f72d65e639ac865d8102896cf751764d641e95f6830b257cec29f8b4",
+      "crlf_count": 0,
+      "lf_count": 56,
+      "source_mtime_ns": 1792818990333865500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-baseline-command.json",
+      "destination": "target-static1d63-current/src_game_dvd-baseline-command.json",
+      "bytes": 2761,
+      "sha256": "4a9890166ef207e0765250e0b44db94cd33c0fa9fd0a83660aea2ea42662b28e",
+      "lf_sha256": "4a9890166ef207e0765250e0b44db94cd33c0fa9fd0a83660aea2ea42662b28e",
+      "crlf_count": 0,
+      "lf_count": 104,
+      "source_mtime_ns": 1792818990276985100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-baseline-inputs.json",
+      "destination": "target-static1d63-current/src_game_dvd-baseline-inputs.json",
+      "bytes": 7270,
+      "sha256": "ead1e5e88cbddc7670bac658b460c43bbcfaeddd2f6ec3721b11bb3064fcb80b",
+      "lf_sha256": "ead1e5e88cbddc7670bac658b460c43bbcfaeddd2f6ec3721b11bb3064fcb80b",
+      "crlf_count": 0,
+      "lf_count": 50,
+      "source_mtime_ns": 1792818990285985900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-baseline-undefined.txt",
+      "destination": "target-static1d63-current/src_game_dvd-baseline-undefined.txt",
+      "bytes": 2577,
+      "sha256": "2764c3e5ca2a5bc5cf7bf4c3c0bc87f81682f33e07ff04d630acbb4a41f05a5d",
+      "lf_sha256": "2764c3e5ca2a5bc5cf7bf4c3c0bc87f81682f33e07ff04d630acbb4a41f05a5d",
+      "crlf_count": 0,
+      "lf_count": 93,
+      "source_mtime_ns": 1792818990304865100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-baseline.log",
+      "destination": "target-static1d63-current/src_game_dvd-baseline.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990290248400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-baseline.su",
+      "destination": "target-static1d63-current/src_game_dvd-baseline.su",
+      "bytes": 4008,
+      "sha256": "9513e9325e30cb9a894fd0cbd1a42214b44a5f78edac9dc9623607bc5770e9b1",
+      "lf_sha256": "9513e9325e30cb9a894fd0cbd1a42214b44a5f78edac9dc9623607bc5770e9b1",
+      "crlf_count": 0,
+      "lf_count": 56,
+      "source_mtime_ns": 1792818990295860200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-on-command.json",
+      "destination": "target-static1d63-current/src_game_dvd-on-command.json",
+      "bytes": 2784,
+      "sha256": "c9f294d71f775566982ebc7722413ce85dfa620003caf39ee808d722c5489aea",
+      "lf_sha256": "c9f294d71f775566982ebc7722413ce85dfa620003caf39ee808d722c5489aea",
+      "crlf_count": 0,
+      "lf_count": 105,
+      "source_mtime_ns": 1792818990376867800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-on-inputs.json",
+      "destination": "target-static1d63-current/src_game_dvd-on-inputs.json",
+      "bytes": 7961,
+      "sha256": "0e1abac4e9d32b05c7edc43fc426db8899a25e5c190dc962e256099e34913aa8",
+      "lf_sha256": "0e1abac4e9d32b05c7edc43fc426db8899a25e5c190dc962e256099e34913aa8",
+      "crlf_count": 0,
+      "lf_count": 64,
+      "source_mtime_ns": 1792818990386865400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-on-undefined.txt",
+      "destination": "target-static1d63-current/src_game_dvd-on-undefined.txt",
+      "bytes": 2725,
+      "sha256": "545a2ca800115d53379da76840f5a23ecd7659fe801576330a91727f06f5ad1f",
+      "lf_sha256": "545a2ca800115d53379da76840f5a23ecd7659fe801576330a91727f06f5ad1f",
+      "crlf_count": 0,
+      "lf_count": 96,
+      "source_mtime_ns": 1792818990405867400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-on.log",
+      "destination": "target-static1d63-current/src_game_dvd-on.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990390867000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-on.su",
+      "destination": "target-static1d63-current/src_game_dvd-on.su",
+      "bytes": 4009,
+      "sha256": "f40029989f5c8f0cc1fb182349590cfceb4933ab7cb35e027ac5018329ecc29b",
+      "lf_sha256": "f40029989f5c8f0cc1fb182349590cfceb4933ab7cb35e027ac5018329ecc29b",
+      "crlf_count": 0,
+      "lf_count": 56,
+      "source_mtime_ns": 1792818990396866900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-zero-command.json",
+      "destination": "target-static1d63-current/src_game_dvd-zero-command.json",
+      "bytes": 2786,
+      "sha256": "26f91a0233a0305c6f7a22c7b18ccf16d8e48d2f482f228308e5b0cff350f29c",
+      "lf_sha256": "26f91a0233a0305c6f7a22c7b18ccf16d8e48d2f482f228308e5b0cff350f29c",
+      "crlf_count": 0,
+      "lf_count": 105,
+      "source_mtime_ns": 1792818990347866500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-zero-inputs.json",
+      "destination": "target-static1d63-current/src_game_dvd-zero-inputs.json",
+      "bytes": 6317,
+      "sha256": "de2707794c627de53e7dedad3d40f33240f4784deaaec7d44d5290e5d2cae357",
+      "lf_sha256": "de2707794c627de53e7dedad3d40f33240f4784deaaec7d44d5290e5d2cae357",
+      "crlf_count": 0,
+      "lf_count": 52,
+      "source_mtime_ns": 1792818990352866000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-zero-undefined.txt",
+      "destination": "target-static1d63-current/src_game_dvd-zero-undefined.txt",
+      "bytes": 2577,
+      "sha256": "2764c3e5ca2a5bc5cf7bf4c3c0bc87f81682f33e07ff04d630acbb4a41f05a5d",
+      "lf_sha256": "2764c3e5ca2a5bc5cf7bf4c3c0bc87f81682f33e07ff04d630acbb4a41f05a5d",
+      "crlf_count": 0,
+      "lf_count": 93,
+      "source_mtime_ns": 1792818990367866900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-zero.log",
+      "destination": "target-static1d63-current/src_game_dvd-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990355866600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_dvd-zero.su",
+      "destination": "target-static1d63-current/src_game_dvd-zero.su",
+      "bytes": 4009,
+      "sha256": "200d69c4f72d65e639ac865d8102896cf751764d641e95f6830b257cec29f8b4",
+      "lf_sha256": "200d69c4f72d65e639ac865d8102896cf751764d641e95f6830b257cec29f8b4",
+      "crlf_count": 0,
+      "lf_count": 56,
+      "source_mtime_ns": 1792818990360868800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-absent-command.json",
+      "destination": "target-static1d63-current/src_game_model-absent-command.json",
+      "bytes": 2750,
+      "sha256": "98a9b1410f8f74e15f4d7738e7e2cfe1359097b8892a1ac5044f37983aec7d71",
+      "lf_sha256": "98a9b1410f8f74e15f4d7738e7e2cfe1359097b8892a1ac5044f37983aec7d71",
+      "crlf_count": 0,
+      "lf_count": 106,
+      "source_mtime_ns": 1792818990036412900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-absent-inputs.json",
+      "destination": "target-static1d63-current/src_game_model-absent-inputs.json",
+      "bytes": 6248,
+      "sha256": "519043de107ac53ac2d8c1004b7f5d4cc7a9089c61f74b899017471adb84adaa",
+      "lf_sha256": "519043de107ac53ac2d8c1004b7f5d4cc7a9089c61f74b899017471adb84adaa",
+      "crlf_count": 0,
+      "lf_count": 52,
+      "source_mtime_ns": 1792818990045413500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-absent-undefined.txt",
+      "destination": "target-static1d63-current/src_game_model-absent-undefined.txt",
+      "bytes": 1784,
+      "sha256": "7e76a8b8802b28cfb87e495253ef91459d23a2ad01da4ebfa24e514b00775c74",
+      "lf_sha256": "7e76a8b8802b28cfb87e495253ef91459d23a2ad01da4ebfa24e514b00775c74",
+      "crlf_count": 0,
+      "lf_count": 58,
+      "source_mtime_ns": 1792818990060417900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-absent.log",
+      "destination": "target-static1d63-current/src_game_model-absent.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990049413700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-absent.su",
+      "destination": "target-static1d63-current/src_game_model-absent.su",
+      "bytes": 7216,
+      "sha256": "93bfba34e859a64d59737f7382ddb46597ef6554ee8dcff5948a1d42e9d80b18",
+      "lf_sha256": "93bfba34e859a64d59737f7382ddb46597ef6554ee8dcff5948a1d42e9d80b18",
+      "crlf_count": 0,
+      "lf_count": 94,
+      "source_mtime_ns": 1792818990054416200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-baseline-command.json",
+      "destination": "target-static1d63-current/src_game_model-baseline-command.json",
+      "bytes": 2752,
+      "sha256": "c997c2385bb68539b101483b606050b9da76c59be1e582a5fd3af3a6f5044e53",
+      "lf_sha256": "c997c2385bb68539b101483b606050b9da76c59be1e582a5fd3af3a6f5044e53",
+      "crlf_count": 0,
+      "lf_count": 106,
+      "source_mtime_ns": 1792818989999413900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-baseline-inputs.json",
+      "destination": "target-static1d63-current/src_game_model-baseline-inputs.json",
+      "bytes": 7144,
+      "sha256": "2a9b3bbb790105c1f6f5b2881fa6cfd47c83f273938dc013fe6b38cbd8333359",
+      "lf_sha256": "2a9b3bbb790105c1f6f5b2881fa6cfd47c83f273938dc013fe6b38cbd8333359",
+      "crlf_count": 0,
+      "lf_count": 52,
+      "source_mtime_ns": 1792818990008412700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-baseline-undefined.txt",
+      "destination": "target-static1d63-current/src_game_model-baseline-undefined.txt",
+      "bytes": 1784,
+      "sha256": "7e76a8b8802b28cfb87e495253ef91459d23a2ad01da4ebfa24e514b00775c74",
+      "lf_sha256": "7e76a8b8802b28cfb87e495253ef91459d23a2ad01da4ebfa24e514b00775c74",
+      "crlf_count": 0,
+      "lf_count": 58,
+      "source_mtime_ns": 1792818990026413000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-baseline.log",
+      "destination": "target-static1d63-current/src_game_model-baseline.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990012412800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-baseline.su",
+      "destination": "target-static1d63-current/src_game_model-baseline.su",
+      "bytes": 7216,
+      "sha256": "b26415b0c45f7b333b3bf08a70d1c74793f446f88db5d730d440cf3f378a3d23",
+      "lf_sha256": "b26415b0c45f7b333b3bf08a70d1c74793f446f88db5d730d440cf3f378a3d23",
+      "crlf_count": 0,
+      "lf_count": 94,
+      "source_mtime_ns": 1792818990017413000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-on-command.json",
+      "destination": "target-static1d63-current/src_game_model-on-command.json",
+      "bytes": 2775,
+      "sha256": "ad596912b475bc248d6a54359e25cd6a87a97c57099d4f255f0b59a9d96a8378",
+      "lf_sha256": "ad596912b475bc248d6a54359e25cd6a87a97c57099d4f255f0b59a9d96a8378",
+      "crlf_count": 0,
+      "lf_count": 107,
+      "source_mtime_ns": 1792818990100977600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-on-inputs.json",
+      "destination": "target-static1d63-current/src_game_model-on-inputs.json",
+      "bytes": 6248,
+      "sha256": "519043de107ac53ac2d8c1004b7f5d4cc7a9089c61f74b899017471adb84adaa",
+      "lf_sha256": "519043de107ac53ac2d8c1004b7f5d4cc7a9089c61f74b899017471adb84adaa",
+      "crlf_count": 0,
+      "lf_count": 52,
+      "source_mtime_ns": 1792818990106979100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-on-undefined.txt",
+      "destination": "target-static1d63-current/src_game_model-on-undefined.txt",
+      "bytes": 1824,
+      "sha256": "35ef4fdfcb3ec765f1185be2ccc1ab0c479c0287a83c11efd3dff0978ba71ebc",
+      "lf_sha256": "35ef4fdfcb3ec765f1185be2ccc1ab0c479c0287a83c11efd3dff0978ba71ebc",
+      "crlf_count": 0,
+      "lf_count": 59,
+      "source_mtime_ns": 1792818990125979500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-on.log",
+      "destination": "target-static1d63-current/src_game_model-on.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990110977300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-on.su",
+      "destination": "target-static1d63-current/src_game_model-on.su",
+      "bytes": 7274,
+      "sha256": "b6d389bf8526090a125d8075b7144808e2f0fd05a216a15f29efcdfa562b4997",
+      "lf_sha256": "b6d389bf8526090a125d8075b7144808e2f0fd05a216a15f29efcdfa562b4997",
+      "crlf_count": 0,
+      "lf_count": 95,
+      "source_mtime_ns": 1792818990116983300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-zero-command.json",
+      "destination": "target-static1d63-current/src_game_model-zero-command.json",
+      "bytes": 2777,
+      "sha256": "2f08f1858c006eba7170cb95dce4edf46ac6b0bee8f48fe655db872c76f356cd",
+      "lf_sha256": "2f08f1858c006eba7170cb95dce4edf46ac6b0bee8f48fe655db872c76f356cd",
+      "crlf_count": 0,
+      "lf_count": 107,
+      "source_mtime_ns": 1792818990070414200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-zero-inputs.json",
+      "destination": "target-static1d63-current/src_game_model-zero-inputs.json",
+      "bytes": 6248,
+      "sha256": "519043de107ac53ac2d8c1004b7f5d4cc7a9089c61f74b899017471adb84adaa",
+      "lf_sha256": "519043de107ac53ac2d8c1004b7f5d4cc7a9089c61f74b899017471adb84adaa",
+      "crlf_count": 0,
+      "lf_count": 52,
+      "source_mtime_ns": 1792818990076418300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-zero-undefined.txt",
+      "destination": "target-static1d63-current/src_game_model-zero-undefined.txt",
+      "bytes": 1784,
+      "sha256": "7e76a8b8802b28cfb87e495253ef91459d23a2ad01da4ebfa24e514b00775c74",
+      "lf_sha256": "7e76a8b8802b28cfb87e495253ef91459d23a2ad01da4ebfa24e514b00775c74",
+      "crlf_count": 0,
+      "lf_count": 58,
+      "source_mtime_ns": 1792818990091982900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-zero.log",
+      "destination": "target-static1d63-current/src_game_model-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990080418100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_model-zero.su",
+      "destination": "target-static1d63-current/src_game_model-zero.su",
+      "bytes": 7216,
+      "sha256": "93bfba34e859a64d59737f7382ddb46597ef6554ee8dcff5948a1d42e9d80b18",
+      "lf_sha256": "93bfba34e859a64d59737f7382ddb46597ef6554ee8dcff5948a1d42e9d80b18",
+      "crlf_count": 0,
+      "lf_count": 94,
+      "source_mtime_ns": 1792818990085921800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-absent-command.json",
+      "destination": "target-static1d63-current/src_game_read-absent-command.json",
+      "bytes": 2799,
+      "sha256": "baebecfe1aef87d317b4bf75e9adf3b644578322f420692a91afac915ce9ad61",
+      "lf_sha256": "baebecfe1aef87d317b4bf75e9adf3b644578322f420692a91afac915ce9ad61",
+      "crlf_count": 0,
+      "lf_count": 106,
+      "source_mtime_ns": 1792818990175979000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-absent-inputs.json",
+      "destination": "target-static1d63-current/src_game_read-absent-inputs.json",
+      "bytes": 7293,
+      "sha256": "7ad2f82901cadad132ece87ae7494ac863f223bb646d486090190dd94feb62cf",
+      "lf_sha256": "7ad2f82901cadad132ece87ae7494ac863f223bb646d486090190dd94feb62cf",
+      "crlf_count": 0,
+      "lf_count": 60,
+      "source_mtime_ns": 1792818990184979900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-absent-undefined.txt",
+      "destination": "target-static1d63-current/src_game_read-absent-undefined.txt",
+      "bytes": 1900,
+      "sha256": "92f03c83bed141a61ea19937648141fb9d254666ba730ce5703b6a7cacc40cef",
+      "lf_sha256": "92f03c83bed141a61ea19937648141fb9d254666ba730ce5703b6a7cacc40cef",
+      "crlf_count": 0,
+      "lf_count": 66,
+      "source_mtime_ns": 1792818990200983600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-absent.log",
+      "destination": "target-static1d63-current/src_game_read-absent.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990188981600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-absent.su",
+      "destination": "target-static1d63-current/src_game_read-absent.su",
+      "bytes": 1552,
+      "sha256": "c49dbee1ef03ab0447ec0935d772eb8e1e0bf7446aab08db579db74bf753cc3d",
+      "lf_sha256": "c49dbee1ef03ab0447ec0935d772eb8e1e0bf7446aab08db579db74bf753cc3d",
+      "crlf_count": 0,
+      "lf_count": 23,
+      "source_mtime_ns": 1792818990193978500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-baseline-command.json",
+      "destination": "target-static1d63-current/src_game_read-baseline-command.json",
+      "bytes": 2801,
+      "sha256": "17e6d22d777480fb0fc6bbd92b00f95af97e637d961bc6ff5e0950725b1288ae",
+      "lf_sha256": "17e6d22d777480fb0fc6bbd92b00f95af97e637d961bc6ff5e0950725b1288ae",
+      "crlf_count": 0,
+      "lf_count": 106,
+      "source_mtime_ns": 1792818990135979000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-baseline-inputs.json",
+      "destination": "target-static1d63-current/src_game_read-baseline-inputs.json",
+      "bytes": 8665,
+      "sha256": "808ea53e90ed4f0d7a4bcbdc3760034a37645c07beedbf1b7f0017e18ef9a15f",
+      "lf_sha256": "808ea53e90ed4f0d7a4bcbdc3760034a37645c07beedbf1b7f0017e18ef9a15f",
+      "crlf_count": 0,
+      "lf_count": 60,
+      "source_mtime_ns": 1792818990144983000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-baseline-undefined.txt",
+      "destination": "target-static1d63-current/src_game_read-baseline-undefined.txt",
+      "bytes": 1900,
+      "sha256": "92f03c83bed141a61ea19937648141fb9d254666ba730ce5703b6a7cacc40cef",
+      "lf_sha256": "92f03c83bed141a61ea19937648141fb9d254666ba730ce5703b6a7cacc40cef",
+      "crlf_count": 0,
+      "lf_count": 66,
+      "source_mtime_ns": 1792818990165980300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-baseline.log",
+      "destination": "target-static1d63-current/src_game_read-baseline.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990151980000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-baseline.su",
+      "destination": "target-static1d63-current/src_game_read-baseline.su",
+      "bytes": 1552,
+      "sha256": "c49dbee1ef03ab0447ec0935d772eb8e1e0bf7446aab08db579db74bf753cc3d",
+      "lf_sha256": "c49dbee1ef03ab0447ec0935d772eb8e1e0bf7446aab08db579db74bf753cc3d",
+      "crlf_count": 0,
+      "lf_count": 23,
+      "source_mtime_ns": 1792818990156978400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-on-command.json",
+      "destination": "target-static1d63-current/src_game_read-on-command.json",
+      "bytes": 2824,
+      "sha256": "c2a03236374ac84de1ecc0d70493a6633f0116f378c1ee09bb48d6dd0ee8027c",
+      "lf_sha256": "c2a03236374ac84de1ecc0d70493a6633f0116f378c1ee09bb48d6dd0ee8027c",
+      "crlf_count": 0,
+      "lf_count": 107,
+      "source_mtime_ns": 1792818990242979800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-on-inputs.json",
+      "destination": "target-static1d63-current/src_game_read-on-inputs.json",
+      "bytes": 7293,
+      "sha256": "7ad2f82901cadad132ece87ae7494ac863f223bb646d486090190dd94feb62cf",
+      "lf_sha256": "7ad2f82901cadad132ece87ae7494ac863f223bb646d486090190dd94feb62cf",
+      "crlf_count": 0,
+      "lf_count": 60,
+      "source_mtime_ns": 1792818990248980000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-on-undefined.txt",
+      "destination": "target-static1d63-current/src_game_read-on-undefined.txt",
+      "bytes": 1941,
+      "sha256": "436cdbd89de9f3b117135b443cfa7fbc1e92a002b4400b4065a45d489a7383b4",
+      "lf_sha256": "436cdbd89de9f3b117135b443cfa7fbc1e92a002b4400b4065a45d489a7383b4",
+      "crlf_count": 0,
+      "lf_count": 67,
+      "source_mtime_ns": 1792818990267980200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-on.log",
+      "destination": "target-static1d63-current/src_game_read-on.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990252983000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-on.su",
+      "destination": "target-static1d63-current/src_game_read-on.su",
+      "bytes": 1552,
+      "sha256": "c49dbee1ef03ab0447ec0935d772eb8e1e0bf7446aab08db579db74bf753cc3d",
+      "lf_sha256": "c49dbee1ef03ab0447ec0935d772eb8e1e0bf7446aab08db579db74bf753cc3d",
+      "crlf_count": 0,
+      "lf_count": 23,
+      "source_mtime_ns": 1792818990257980100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-zero-command.json",
+      "destination": "target-static1d63-current/src_game_read-zero-command.json",
+      "bytes": 2826,
+      "sha256": "1e6daef225a63b94d99e53524f2486314627e5606ec94ed5d39dc2046d62c516",
+      "lf_sha256": "1e6daef225a63b94d99e53524f2486314627e5606ec94ed5d39dc2046d62c516",
+      "crlf_count": 0,
+      "lf_count": 107,
+      "source_mtime_ns": 1792818990209979100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-zero-inputs.json",
+      "destination": "target-static1d63-current/src_game_read-zero-inputs.json",
+      "bytes": 7293,
+      "sha256": "7ad2f82901cadad132ece87ae7494ac863f223bb646d486090190dd94feb62cf",
+      "lf_sha256": "7ad2f82901cadad132ece87ae7494ac863f223bb646d486090190dd94feb62cf",
+      "crlf_count": 0,
+      "lf_count": 60,
+      "source_mtime_ns": 1792818990216979000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-zero-undefined.txt",
+      "destination": "target-static1d63-current/src_game_read-zero-undefined.txt",
+      "bytes": 1900,
+      "sha256": "92f03c83bed141a61ea19937648141fb9d254666ba730ce5703b6a7cacc40cef",
+      "lf_sha256": "92f03c83bed141a61ea19937648141fb9d254666ba730ce5703b6a7cacc40cef",
+      "crlf_count": 0,
+      "lf_count": 66,
+      "source_mtime_ns": 1792818990232984600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-zero.log",
+      "destination": "target-static1d63-current/src_game_read-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818990220980000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/src_game_read-zero.su",
+      "destination": "target-static1d63-current/src_game_read-zero.su",
+      "bytes": 1552,
+      "sha256": "c49dbee1ef03ab0447ec0935d772eb8e1e0bf7446aab08db579db74bf753cc3d",
+      "lf_sha256": "c49dbee1ef03ab0447ec0935d772eb8e1e0bf7446aab08db579db74bf753cc3d",
+      "crlf_count": 0,
+      "lf_count": 23,
+      "source_mtime_ns": 1792818990226979100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-absent-command.json",
+      "destination": "target-static1d63-current/ui_bridge-absent-command.json",
+      "bytes": 3641,
+      "sha256": "e6bd82c5d9b23ebba492a12616f8caefc7dea54fb0ac1c54ae81d8057fc04e76",
+      "lf_sha256": "e6bd82c5d9b23ebba492a12616f8caefc7dea54fb0ac1c54ae81d8057fc04e76",
+      "crlf_count": 0,
+      "lf_count": 130,
+      "source_mtime_ns": 1792818989365836100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-absent-inputs.json",
+      "destination": "target-static1d63-current/ui_bridge-absent-inputs.json",
+      "bytes": 16197,
+      "sha256": "95294778539ec14c4dd4d7d9d21afac7e7636a957a0870b13f534b03022cafa5",
+      "lf_sha256": "95294778539ec14c4dd4d7d9d21afac7e7636a957a0870b13f534b03022cafa5",
+      "crlf_count": 0,
+      "lf_count": 127,
+      "source_mtime_ns": 1792818989374837200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-absent-undefined.txt",
+      "destination": "target-static1d63-current/ui_bridge-absent-undefined.txt",
+      "bytes": 2438,
+      "sha256": "ec2267aabaf392d18100758ec3597ac6eeacda08d9f9aceaea340c528f9056cb",
+      "lf_sha256": "ec2267aabaf392d18100758ec3597ac6eeacda08d9f9aceaea340c528f9056cb",
+      "crlf_count": 0,
+      "lf_count": 78,
+      "source_mtime_ns": 1792818989393836600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-absent.log",
+      "destination": "target-static1d63-current/ui_bridge-absent.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989382836700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-absent.su",
+      "destination": "target-static1d63-current/ui_bridge-absent.su",
+      "bytes": 2784,
+      "sha256": "1e2266f9c59e1d756210a8b4bb25b023e1de72037acff66572ca6c288e78c4c9",
+      "lf_sha256": "1e2266f9c59e1d756210a8b4bb25b023e1de72037acff66572ca6c288e78c4c9",
+      "crlf_count": 0,
+      "lf_count": 36,
+      "source_mtime_ns": 1792818989387836300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-baseline-command.json",
+      "destination": "target-static1d63-current/ui_bridge-baseline-command.json",
+      "bytes": 3643,
+      "sha256": "58501ed1ae3280d768c8dfd1beaccc7194c78089fc514591c1a5bacba876044f",
+      "lf_sha256": "58501ed1ae3280d768c8dfd1beaccc7194c78089fc514591c1a5bacba876044f",
+      "crlf_count": 0,
+      "lf_count": 130,
+      "source_mtime_ns": 1792818989322836800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-baseline-inputs.json",
+      "destination": "target-static1d63-current/ui_bridge-baseline-inputs.json",
+      "bytes": 17454,
+      "sha256": "d15823daede377c422adca75e58e726579b93833824f821cdda1cd1a11db2e1f",
+      "lf_sha256": "d15823daede377c422adca75e58e726579b93833824f821cdda1cd1a11db2e1f",
+      "crlf_count": 0,
+      "lf_count": 125,
+      "source_mtime_ns": 1792818989332835800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-baseline-undefined.txt",
+      "destination": "target-static1d63-current/ui_bridge-baseline-undefined.txt",
+      "bytes": 2438,
+      "sha256": "ec2267aabaf392d18100758ec3597ac6eeacda08d9f9aceaea340c528f9056cb",
+      "lf_sha256": "ec2267aabaf392d18100758ec3597ac6eeacda08d9f9aceaea340c528f9056cb",
+      "crlf_count": 0,
+      "lf_count": 78,
+      "source_mtime_ns": 1792818989354835700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-baseline.log",
+      "destination": "target-static1d63-current/ui_bridge-baseline.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989339835700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-baseline.su",
+      "destination": "target-static1d63-current/ui_bridge-baseline.su",
+      "bytes": 2784,
+      "sha256": "afcee6d7d638775627b50c23a3e3435d1253d839391f8880da3d85cd8a596092",
+      "lf_sha256": "afcee6d7d638775627b50c23a3e3435d1253d839391f8880da3d85cd8a596092",
+      "crlf_count": 0,
+      "lf_count": 36,
+      "source_mtime_ns": 1792818989345835500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-on-command.json",
+      "destination": "target-static1d63-current/ui_bridge-on-command.json",
+      "bytes": 3666,
+      "sha256": "868b33e66566c5f73111d39365b4d068f30191e9b5940a0dcc1c769cd756a7dd",
+      "lf_sha256": "868b33e66566c5f73111d39365b4d068f30191e9b5940a0dcc1c769cd756a7dd",
+      "crlf_count": 0,
+      "lf_count": 131,
+      "source_mtime_ns": 1792818989441054300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-on-inputs.json",
+      "destination": "target-static1d63-current/ui_bridge-on-inputs.json",
+      "bytes": 16197,
+      "sha256": "f1e3138424ee35412107bb7eda5e2c7f1aa820cc9d98878d95d04a17893e5466",
+      "lf_sha256": "f1e3138424ee35412107bb7eda5e2c7f1aa820cc9d98878d95d04a17893e5466",
+      "crlf_count": 0,
+      "lf_count": 127,
+      "source_mtime_ns": 1792818989450053200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-on-undefined.txt",
+      "destination": "target-static1d63-current/ui_bridge-on-undefined.txt",
+      "bytes": 2535,
+      "sha256": "74d8ebf13a1418c7603801487993c5c9e3183e63911deff8512015293625cd72",
+      "lf_sha256": "74d8ebf13a1418c7603801487993c5c9e3183e63911deff8512015293625cd72",
+      "crlf_count": 0,
+      "lf_count": 80,
+      "source_mtime_ns": 1792818989474054200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-on.log",
+      "destination": "target-static1d63-current/ui_bridge-on.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989458054000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-on.su",
+      "destination": "target-static1d63-current/ui_bridge-on.su",
+      "bytes": 2784,
+      "sha256": "1e2266f9c59e1d756210a8b4bb25b023e1de72037acff66572ca6c288e78c4c9",
+      "lf_sha256": "1e2266f9c59e1d756210a8b4bb25b023e1de72037acff66572ca6c288e78c4c9",
+      "crlf_count": 0,
+      "lf_count": 36,
+      "source_mtime_ns": 1792818989463054000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-zero-command.json",
+      "destination": "target-static1d63-current/ui_bridge-zero-command.json",
+      "bytes": 3668,
+      "sha256": "3132af6ad8f3366abab80b2898d71d429b3d8841247ef4f0660ffb256379fa7e",
+      "lf_sha256": "3132af6ad8f3366abab80b2898d71d429b3d8841247ef4f0660ffb256379fa7e",
+      "crlf_count": 0,
+      "lf_count": 131,
+      "source_mtime_ns": 1792818989403841700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-zero-inputs.json",
+      "destination": "target-static1d63-current/ui_bridge-zero-inputs.json",
+      "bytes": 16197,
+      "sha256": "95294778539ec14c4dd4d7d9d21afac7e7636a957a0870b13f534b03022cafa5",
+      "lf_sha256": "95294778539ec14c4dd4d7d9d21afac7e7636a957a0870b13f534b03022cafa5",
+      "crlf_count": 0,
+      "lf_count": 127,
+      "source_mtime_ns": 1792818989412842000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-zero-undefined.txt",
+      "destination": "target-static1d63-current/ui_bridge-zero-undefined.txt",
+      "bytes": 2438,
+      "sha256": "ec2267aabaf392d18100758ec3597ac6eeacda08d9f9aceaea340c528f9056cb",
+      "lf_sha256": "ec2267aabaf392d18100758ec3597ac6eeacda08d9f9aceaea340c528f9056cb",
+      "crlf_count": 0,
+      "lf_count": 78,
+      "source_mtime_ns": 1792818989432019700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-zero.log",
+      "destination": "target-static1d63-current/ui_bridge-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "lf_count": 0,
+      "source_mtime_ns": 1792818989419860900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static1d63-current/ui_bridge-zero.su",
+      "destination": "target-static1d63-current/ui_bridge-zero.su",
+      "bytes": 2784,
+      "sha256": "1e2266f9c59e1d756210a8b4bb25b023e1de72037acff66572ca6c288e78c4c9",
+      "lf_sha256": "1e2266f9c59e1d756210a8b4bb25b023e1de72037acff66572ca6c288e78c4c9",
+      "crlf_count": 0,
+      "lf_count": 36,
+      "source_mtime_ns": 1792818989426021200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static77-current-failure/FAILURE.json",
+      "destination": "target-static77-current-failure/FAILURE.json",
+      "bytes": 1323,
+      "sha256": "3c6ed03878adada497c513010f1ddeebeaf47b3a777d1183ac4ccf1ee5f1da00",
+      "lf_sha256": "439293fdca0085e7c4a098413691f55b4d6b7cd81790fd0e681bd58ba8a734dd",
+      "crlf_count": 21,
+      "lf_count": 21,
+      "source_mtime_ns": 1792818755587725200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static77-current-failure/STATIC-TARGET-PREPARATION.json",
+      "destination": "target-static77-current-failure/STATIC-TARGET-PREPARATION.json",
+      "bytes": 754,
+      "sha256": "9f432eb08ad0124250aa0305693a22c5baee09e8d55077c867cc1ecae8b9ecde",
+      "lf_sha256": "6b44091ff22a61dfddc20299e956f1f655c8e97a4ff83db8c8c3257d7f01426f",
+      "crlf_count": 9,
+      "lf_count": 9,
+      "source_mtime_ns": 1792818755565664100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static77-current-failure/platform_native_static-on-command.json",
+      "destination": "target-static77-current-failure/platform_native_static-on-command.json",
+      "bytes": 4912,
+      "sha256": "14c3c4e02abb7ef082dbb5a8b46be86d60736d739f781254bad8ff14abf251c3",
+      "lf_sha256": "14c3c4e02abb7ef082dbb5a8b46be86d60736d739f781254bad8ff14abf251c3",
+      "crlf_count": 0,
+      "lf_count": 168,
+      "source_mtime_ns": 1792818755548039000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static77-current-failure/platform_native_static-on.d",
+      "destination": "target-static77-current-failure/platform_native_static-on.d",
+      "bytes": 17232,
+      "sha256": "a6fcf7939e33f6e8ff5ba4f797183d9c57d38a19302d6c93f07fbdb097407b9a",
+      "lf_sha256": "a6fcf7939e33f6e8ff5ba4f797183d9c57d38a19302d6c93f07fbdb097407b9a",
+      "crlf_count": 0,
+      "lf_count": 272,
+      "source_mtime_ns": 1792818755558583200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static77-current-failure/platform_native_static-on.log",
+      "destination": "target-static77-current-failure/platform_native_static-on.log",
+      "bytes": 3104,
+      "sha256": "e10f66c4adf24ef3c53fc404b7db13edc390cf3991dcb545074d4f1958e6feb9",
+      "lf_sha256": "e10f66c4adf24ef3c53fc404b7db13edc390cf3991dcb545074d4f1958e6feb9",
+      "crlf_count": 0,
+      "lf_count": 30,
+      "source_mtime_ns": 1792818755542039600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static77-current-failure/report.json",
+      "destination": "target-static77-current-failure/report.json",
+      "bytes": 25475,
+      "sha256": "666759f4e9019398d854d959244c19080ffeee1edf323f8611ef5e874a679979",
+      "lf_sha256": "666759f4e9019398d854d959244c19080ffeee1edf323f8611ef5e874a679979",
+      "crlf_count": 0,
+      "lf_count": 451,
+      "source_mtime_ns": 1792818755536530600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static77-current-failure/static-target-current-20261024.py",
+      "destination": "target-static77-current-failure/static-target-current-20261024.py",
+      "bytes": 10994,
+      "sha256": "6f8f984ed689ee8c0c0701d054f15c7a276b0f8d9d59c475cf3f15e4322935ba",
+      "lf_sha256": "6f8f984ed689ee8c0c0701d054f15c7a276b0f8d9d59c475cf3f15e4322935ba",
+      "crlf_count": 0,
+      "lf_count": 163,
+      "source_mtime_ns": 1792818755559584300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/target-static77-current-failure/static-target-current-20261024.sh",
+      "destination": "target-static77-current-failure/static-target-current-20261024.sh",
+      "bytes": 1118,
+      "sha256": "3a9e1cae4373fae0797c0a501ae5dce30d0dc261d6d5d89f8e74cfd303ebdfc9",
+      "lf_sha256": "3a9e1cae4373fae0797c0a501ae5dce30d0dc261d6d5d89f8e74cfd303ebdfc9",
+      "crlf_count": 0,
+      "lf_count": 23,
+      "source_mtime_ns": 1792818755559584300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-static1d63-20261024/collect.py",
+      "destination": "collect.py",
+      "bytes": 10266,
+      "sha256": "80277ad3991e100e317e76777f340e12bde3ee041c33b4a84a0a7e9961940b4d",
+      "lf_sha256": "80277ad3991e100e317e76777f340e12bde3ee041c33b4a84a0a7e9961940b4d",
+      "crlf_count": 0,
+      "lf_count": 123,
+      "source_mtime_ns": 1792819207509879300
+    }
+  ],
+  "scope": "Root helpers/preparation and bounded compiler reports/commands/input hashes/stack/undefined/dependency diagnostics only; no object, ELF, binary, media, image, catalog, private asset or frozen runtime source mutation.",
+  "line_endings": "Exact original bytes retained. Eight generated/helper Python/shell files are intentional LF and match raw preparation hashes. Other Windows-authored receipts may be CRLF; lf_sha256 diagnoses differences only, never normalizes stored bytes."
+}

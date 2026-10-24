@@ -1,0 +1,56 @@
+../../../src/game/dvd.cpp:611:6:void trans2aram_cb(u32)	0	static
+../../../src/game/dvd.cpp:632:6:void dvdread_callback(s32, DVDFileInfo*)	0	static
+../../../src/game/dvd.cpp:992:6:void cDvdQueue::readCancelWait()	0	static
+../../../src/game/dvd.cpp:1298:6:void aram_cb(u32)	0	static
+D:/Bio4/Prog/dvd.cpp:338:6:void readcancel_cb(s32, DVDCommandBlock*)	0	static
+../../../src/game/dvd.cpp:603:6:void cDvdQueue::trans2mram(void*, u32, u32)	16	static
+../../../src/game/dvd.cpp:621:6:void cDvdQueue::trans2aram(void*, u32, u32)	36	static
+../../../src/game/dvd.cpp:1021:5:int cDvdQueue::Read()	16	static
+../../../src/game/dvd.cpp:1066:6:void cDvdQueue::Initialize()	76	static
+../../../src/game/dvd.cpp:1127:5:int cDvdQueue::LinkQueue()	0	static
+../../../src/game/dvd.cpp:1164:6:void cDvdQueue::PushQueue()	0	static
+../../../src/game/dvd.cpp:1170:6:void cDvdQueue::ErrMemFree()	4	static
+../../../src/game/dvd.cpp:1185:5:int cDvdQueue::fileOpen()	4	static
+../../../src/game/dvd.cpp:1198:5:int cDvdQueue::fileGetLength()	0	static
+../../../src/game/dvd.cpp:1204:5:int cDvdQueue::fileReadAsync(void*, u32, u32)	12	static
+../../../src/game/dvd.cpp:647:6:void cDvdQueue::readInit()	24	static
+../../../src/game/dvd.cpp:783:6:void cDvdQueue::readMain()	56	static
+../../../src/game/dvd.cpp:1212:5:int cDvdQueue::fileClose()	4	static
+../../../src/game/dvd.cpp:1001:6:void cDvdQueue::readExit()	8	static
+../../../src/game/dvd.cpp:1280:10:AramReq* cAram::pullAramQueue(int*)	24	static
+../../../src/game/dvd.cpp:1307:6:void cAram::DmaTrans(AramReq*, int)	32	static
+../../../src/game/dvd.cpp:1225:5:int cAram::DmaTransReq(int, u32, u32, u32, int)	28	static
+../../../src/game/dvd.cpp:517:6:void MemorySwap(void*, u32, u32)	48	static
+../../../src/game/dvd.cpp:1333:5:int cAram::TransCheck(int)	0	static
+../../../src/game/dvd.cpp:1348:5:int cAram::DmaCancel(int)	16	static
+../../../src/game/dvd.cpp:1380:6:void cAram::DmaCancelAll()	16	static
+D:/Bio4/Prog/dvd.cpp:213:6:void cDvd::FileTblExistCheck()	16	static
+../../../src/game/dvd.cpp:1404:6:void cDvd::Init()	16	static
+D:/Bio4/Prog/dvd.cpp:223:5:int cDvd::FileExistCheck(const char*, u32*)	72	static
+D:/Bio4/Prog/dvd.cpp:396:6:void cDvd::ReadCancelAll()	8	static
+D:/Bio4/Prog/dvd.cpp:413:12:cDvdQueue* cDvd::pullReadQueue()	16	static
+D:/Bio4/Prog/dvd.cpp:534:12:cDvdQueue* cDvd::getQueuePtr(u8)	0	static
+D:/Bio4/Prog/dvd.cpp:347:5:int cDvd::ReadCancel(int, int)	16	static
+D:/Bio4/Prog/dvd.cpp:486:5:int cDvd::readCheckMain(int, DvdReadInfo*)	16	static
+D:/Bio4/Prog/dvd.cpp:435:5:int cDvd::ReadCheck(int, int*, int*, void**)	532	static
+D:/Bio4/Prog/dvd.cpp:463:5:int cDvd::ReadCheck(int)	524	static
+D:/Bio4/Prog/dvd.cpp:478:5:int cDvd::ReadCheckInfo(int, DvdReadInfo*)	4	static
+D:/Bio4/Prog/dvd.cpp:694:6:void MesSysMessage(int, int)	60	static
+D:/Bio4/Prog/dvd.cpp:726:6:void RomFontPrint(int, int, const char*)	52	static
+D:/Bio4/Prog/dvd.cpp:744:6:void RomFontMessage(u32, int)	8	static
+D:/Bio4/Prog/dvd.cpp:976:5:int cDvd::GetDiscNo()	8	static
+D:/Bio4/Prog/dvd.cpp:992:6:void RomFontSetting()	4	static
+D:/Bio4/Prog/dvd.cpp:1005:6:void cDvd::queueStatusDisp()	44	static
+D:/Bio4/Prog/dvd.cpp:1054:6:void cDvd::DiscReadInfo()	68	static
+D:/Bio4/Prog/dvd.cpp:552:5:int cDvd::ErrCheck(int, int)	48	static
+D:/Bio4/Prog/dvd.cpp:156:6:void cDvd::readProcMain(cDvdQueue*)	32	static
+D:/Bio4/Prog/dvd.cpp:116:6:void cDvd::ReadProc()	20	static
+D:/Bio4/Prog/dvd.cpp:109:6:void DvdReadProc()	4	static
+D:/Bio4/Prog/dvd.cpp:263:6:void cDvd::blockRead(cDvdQueue*)	24	static
+D:/Bio4/Prog/dvd.cpp:244:5:int cDvd::ReadReq()	16	static
+../../../src/game/dvd.cpp:406:5:int DvdRead(int, void*, u32, u32, u32, int, const char*, int)	24	static
+../../../src/game/dvd.cpp:425:5:int DvdReadN(const char*, void*, int, int, int, int, const char*, int)	28	static
+D:/Bio4/Prog/dvd.cpp:98:6:void cDvd::SizeTableRead()	28	static
+D:/Bio4/Prog/dvd.cpp:171:6:void cDvd::ReadNblk2Blk(int)	12	static
+D:/Bio4/Prog/dvd.cpp:946:5:int cDvd::DiscChange(int)	116	static
+D:/Bio4/Prog/dvd.cpp:312:6:void cDvd::Watcher()	8	static

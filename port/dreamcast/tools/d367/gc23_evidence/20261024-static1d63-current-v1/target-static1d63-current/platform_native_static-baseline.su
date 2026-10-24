@@ -1,0 +1,168 @@
+platform/native_static.cpp:367:13:void re4dc_look_render_done(uint32_t, void*)	4	static
+platform/native_static.cpp:757:19:{anonymous}::std_check_view(unsigned int, const re4dc::room::MeshPackage&)::<lambda(unsigned int, unsigned int, unsigned int)>	0	static
+platform/native_static.cpp:872:6:void {anonymous}::concat(const float*, const float*, float*)	24	static
+platform/native_static.cpp:876:6:bool {anonymous}::inverse(const float*, float*)	116	static
+platform/native_static.cpp:996:17:static void {anonymous}::Emitter::project(float&, float&, float&, void*)	0	static
+platform/native_static.cpp:1863:13:bool {anonymous}::pc::eye_of(const float*, float*)	76	static
+platform/native_static.cpp:1918:12:int {anonymous}::pc::hidden_state(State&, const float*, const float*)	56	static
+platform/native_static.cpp:2049:13:void {anonymous}::lean::abs9(const float*, float*)	4	static
+platform/native_static.cpp:2057:17:unsigned int {anonymous}::lean::box_class(const float*, const float*, const float*, const float*, float, float, const float*)	88	static
+platform/native_static.cpp:2093:13:bool {anonymous}::lean::world_out(const World&, const float*, const float*, const float*)	24	static
+platform/native_static.cpp:2106:13:void {anonymous}::lean::concat_u(const float*, const float*, float*)	88	static
+platform/native_static.cpp:2118:12:int {anonymous}::lean::box_mask(const float*, const float*, const float*, const float*, float, float)	24	static
+platform/native_static.cpp:2158:36:unsigned int {anonymous}::lean::sg_select(const uint16_t*, unsigned int, const float*, unsigned int, uint16_t*, uint16_t*, unsigned int&, unsigned int&, unsigned int&)	76	static
+platform/native_static.cpp:2195:13:void {anonymous}::lean::sg_coef_lean(const float*, float, SgPlane*)	60	static
+platform/native_static.cpp:2265:12:int {anonymous}::lean::box_mask_lean(const float*, const float*, const float*, const float*, float, float)	28	static
+platform/include/scenery_chunk_select.inc:3:10:bool {anonymous}::ScenerySelector::chunk_ok() const	0	static
+platform/native_static.cpp:3621:7:float {anonymous}::fog_exp2(float)	0	static
+platform/native_static.cpp:4052:7:float {anonymous}::turns(float, float)	0	static
+platform/include/movie_world_arena_lifecycle.inc:62:17:unsigned int {anonymous}::movie_world::fnv(const unsigned char*, unsigned int)	0	static
+platform/native_static.cpp:4727:13:bool {anonymous}::area::hide(unsigned int)	0	static
+platform/native_static.cpp:4952:15:uint32_t {anonymous}::ps2_crc32(const unsigned char*, unsigned int)	0	static
+platform/native_static.cpp:5190:17:unsigned int {anonymous}::trans::target(unsigned int, unsigned int)	0	static
+platform/native_static.cpp:5242:14:float {anonymous}::trans::depth_at(float)	0	static
+platform/native_static.cpp:1635:6:void {anonymous}::no_std_log(const char*)	88	static
+platform/native_static.cpp:5141:13:void {anonymous}::trans::close()	8	static
+platform/far_shell.inc:69:6:void {anonymous}::farshell::close()	4	static
+platform/native_static.cpp:1957:17:unsigned int {anonymous}::pc::unload()	12	static
+platform/native_static.cpp:4803:6:void {anonymous}::dyn::reset()	28	static
+platform/native_static.cpp:809:6:bool {anonymous}::read_package(file_t, unsigned char*, unsigned int, unsigned int)	132	static
+platform/native_static.cpp:4816:10:unsigned int {anonymous}::dyn::query(unsigned int)	120	static
+platform/native_static.cpp:781:6:void {anonymous}::retire(View&)	8	static
+platform/native_static.cpp:652:6:bool {anonymous}::std_hex_key(const char*, unsigned int&, unsigned int&)	24	static
+platform/native_static.cpp:3714:14:float fog_indoor_next()	12	static
+platform/native_static.cpp:1876:13:void {anonymous}::pc::setup_state(State&, const float*, const float*, float)	164	static
+platform/native_static.cpp:891:6:void {anonymous}::load_screen(const float*, const float*, const float*)	108	static
+platform/native_static.cpp:2226:36:unsigned int {anonymous}::lean::sg_select_lean(const uint16_t*, unsigned int, const SgPlane*, unsigned int, uint16_t*, uint16_t*, unsigned int&, unsigned int&, unsigned int&)	72	static
+platform/native_static.cpp:1030:10:void {anonymous}::Emitter::end_direct()	8	static
+platform/native_static.cpp:4560:6:bool {anonymous}::ps2_movie_current()	8	static
+platform/far_shell.inc:175:6:bool {anonymous}::far_shell_cut_on()	4	static
+platform/native_static.cpp:627:6:void __tcf_ZN12_GLOBAL__N_1L5viewsE(void*)	16	static
+platform/native_static.cpp:3629:7:float {anonymous}::gx_fog(int, float, float, float)	8	static
+platform/native_static.cpp:4542:6:bool {anonymous}::ps2_movie_layout(unsigned int)	0	static
+platform/native_static.cpp:4559:6:bool {anonymous}::ps2_movie_blocked()	0	static
+platform/native_static.cpp:4588:22:const uint32_t* {anonymous}::ps2_vertex_alpha_lut()	12	static
+platform/native_static.cpp:5261:14:float {anonymous}::trans::far_of(const {anonymous}::Ps2Part&, unsigned int, unsigned int)	0	static
+platform/native_static.cpp:6041:13:bool {anonymous}::ps2_sky_row(unsigned int, unsigned int)	0	static
+platform/native_static.cpp:1622:6:void {anonymous}::no_std_read(unsigned int, const Re4dcModelPart*)	16	static
+platform/far_shell.inc:142:6:void {anonymous}::farshell::release(const char*)	20	static
+platform/far_shell.inc:150:6:void {anonymous}::farshell::sync()	184	static
+platform/native_static.cpp:1040:10:0()	44	static
+platform/native_static.cpp:4066:15:0(const MeshView&, const re4dc::room::MeshRecord&, re4dc::room::MeshImpostor&)	160	static
+platform/include/movie_world_arena_lifecycle.inc:21:10:bool {anonymous}::movie_world::Ledger::valid(unsigned int, bool) const	0	static
+platform/native_static.cpp:3357:5:{anonymous}::ScenerySelector::ScenerySelector(const Re4dcModelPart&, const re4dc::room::MeshPackage&, const float*, float, float)	0	static
+platform/native_static.cpp:2082:13:void {anonymous}::lean::world_planes(const float*, const float*, const float*, float, float, World&)	124	static
+platform/native_static.cpp:2043:13:void {anonymous}::lean::side_setup(const float*, const float*)	16	static
+platform/include/movie_world_arena_lifecycle.inc:55:10:bool {anonymous}::movie_world::Ledger::retire(unsigned int, bool)	0	static
+platform/native_static.cpp:1578:18:constprop(const void*, unsigned int&)	16	static
+platform/native_static.cpp:1966:13:bool {anonymous}::pc::load()	80	static
+platform/native_static.cpp:683:24:{anonymous}::std_parse(char*, unsigned int)::<lambda(const char*)>	0	static
+platform/native_static.cpp:6009:6:bool {anonymous}::ps2_movie_dyn_valid()	32	static
+platform/native_static.cpp:3611:7:float {anonymous}::fog_ramp_start(float)	0	static
+platform/include/scenery_chunk_select.inc:17:40:unsigned int {anonymous}::ScenerySelector::chunk_select(Pick*)	260	static
+platform/native_static.cpp:1277:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>	0	static
+platform/native_static.cpp:1238:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]	560	static
+platform/native_static.cpp:646:5:int {anonymous}::std_owner(const char*)	36	static
+platform/../../tools/d367/texture_rect21/world_rect_provenance.h:22:22:uint32_t re4dc::rect21::provenance::word(const unsigned char*)	0	static
+platform/../../tools/d367/texture_rect21/world_rect_provenance.h:31:22:uint32_t re4dc::rect21::provenance::policy_source_crc(unsigned int, const unsigned char*, unsigned int, uint32_t, unsigned int, unsigned int, unsigned int)	44	static
+platform/../../room/instanced_mesh.hpp:308:31:re4dc::room::MeshPackage::adopt(const uint8_t*, uint32_t, bool, bool)::<lambda(float)>	0	static
+platform/../../room/instanced_mesh.hpp:335:10:void re4dc::room::MeshPackage::close()	12	static
+platform/native_static.cpp:1471:6:void {anonymous}::retire(MeshView&)	12	static
+platform/native_static.cpp:4566:6:void {anonymous}::ps2_movie_unpublish()	8	static
+platform/../../room/instanced_mesh.hpp:398:10:bool re4dc::room::MeshPackage::part_pool(const re4dc::room::MeshPart&, uint32_t&, uint32_t&) const	20	static
+platform/../../room/instanced_mesh.hpp:470:10:bool re4dc::room::MeshPackage::source_identity(unsigned int, unsigned int, unsigned int) const	0	static
+platform/../../room/instanced_mesh.hpp:486:17:static bool re4dc::room::MeshPackage::section(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t)	4	static
+platform/../../room/instanced_mesh.hpp:150:10:bool re4dc::room::MeshPackage::adopt(const uint8_t*, uint32_t, bool, bool)	112	static
+platform/../../room/instanced_mesh.hpp:508:13:bool re4dc::room::adopt_by_encoding(MeshPackage&, uint8_t*, uint32_t, bool, const uint32_t**)	60	static
+platform/../../room/mesh_fastpath.hpp:95:22:uint32_t re4dc::vp::argb1555(uint32_t)	0	static
+platform/../../room/mesh_fastpath.hpp:99:13:void re4dc::vp::build_lut(uint32_t*)	24	static
+platform/native_static.cpp:1483:6:bool {anonymous}::open(MeshView&, unsigned int, unsigned int)	312	static
+platform/../../room/mesh_strip_lean.hpp:25:28:const uint8_t* re4dc::vp::walk_lean(const uint8_t*, const uint8_t*, const uint8_t*, const pvr_vertex_t*, unsigned int, uint32_t*&, unsigned int&, unsigned int&)	56	static
+platform/native_static.cpp:398:17:void re4dc_look_osd_toggle()	8	static
+platform/native_static.cpp:420:24:const char* re4dc_look_osd_text()	12	static
+platform/native_static.cpp:442:17:void re4dc_look_set(unsigned int)	80	static
+platform/native_static.cpp:463:21:unsigned int re4dc_look_grade_argb()	8	static
+platform/native_static.cpp:467:17:void re4dc_look_cycle()	0	static
+platform/native_static.cpp:468:24:const char* re4dc_look_label()	0	static
+platform/native_static.cpp:469:16:int re4dc_look_filter00()	8	static
+platform/native_static.cpp:2293:57:void {anonymous}::re4dc_sg_select_lean_set(unsigned int)	0	static
+platform/native_static.cpp:3403:17:void re4dc_static_retire_owner(int)	12	static
+platform/native_static.cpp:3413:17:void re4dc_static_retire_all()	16	static
+platform/native_static.cpp:3425:36:const Re4dcStaticStats* re4dc_static_stats()	0	static
+platform/native_static.cpp:3428:17:void re4dc_std_scenery_tick(int)	0	static
+platform/native_static.cpp:3436:17:void re4dc_std_room_enter(unsigned int)	416	static
+platform/native_static.cpp:3452:16:int re4dc_std_texlow(unsigned int, unsigned int)	0	static
+platform/native_static.cpp:3457:16:int re4dc_std_dropped(unsigned int, unsigned int)	0	static
+platform/native_static.cpp:3463:16:int re4dc_std_texture(unsigned int, unsigned int*)	0	static
+platform/native_static.cpp:3472:17:void re4dc_static_flush_impostors()	72	static
+platform/native_static.cpp:3511:16:int re4dc_static_mesh_lit(const void*, unsigned int, unsigned int)	28	static
+platform/native_static.cpp:3642:17:void re4dc_fog_capture(int, float, float, unsigned int)	0	static
+platform/native_static.cpp:3645:21:unsigned int re4dc_fog_enabled()	0	static
+platform/native_static.cpp:3649:18:float re4dc_fog_amount(float)	24	static
+platform/native_static.cpp:3674:18:float re4dc_fog_gate_far()	0	static
+platform/native_static.cpp:3761:16:int re4dc_fog_frame_pending()	8	static
+platform/native_static.cpp:3791:17:void re4dc_fog_frame()	628	static
+platform/native_static.cpp:4642:17:void {anonymous}::re4dc_ps2_place_prepare_fn(unsigned int, void (*)(unsigned int))	0	static
+platform/native_static.cpp:4647:16:int {anonymous}::re4dc_ps2_place_ready(unsigned int, unsigned int)	28	static
+platform/native_static.cpp:4662:17:void {anonymous}::re4dc_ps2_place_own(unsigned int, unsigned int)	16	static
+platform/native_static.cpp:4668:17:void {anonymous}::re4dc_ps2_place_gate(unsigned int, unsigned int, int)	0	static
+platform/native_static.cpp:4729:17:void {anonymous}::re4dc_ps2_area_flags(unsigned int, unsigned int)	0	static
+platform/native_static.cpp:4892:16:int {anonymous}::re4dc_ps2_world_intact(unsigned int, uint32_t)	0	static
+platform/native_static.cpp:4898:16:int {anonymous}::re4dc_ps2_placements_intact(unsigned int, const unsigned char*, unsigned int)	60	static
+platform/native_static.cpp:6980:16:int re4dc_ps2_mesh_movie_blocked()	4	static
+platform/native_static.cpp:6981:21:unsigned int re4dc_ps2_mesh_movie_borrow(unsigned int)	32	static
+platform/native_static.cpp:6999:16:int re4dc_ps2_mesh_movie_valid(unsigned int)	8	static
+platform/native_static.cpp:7000:18:void* re4dc_ps2_mesh_movie_alloc(unsigned int, unsigned int)	12	static
+platform/native_static.cpp:7003:16:int re4dc_ps2_mesh_movie_free(unsigned int, void*)	12	static
+platform/native_static.cpp:7006:16:int re4dc_ps2_mesh_movie_return(unsigned int, int)	244	static
+platform/native_static.cpp:7025:17:void re4dc_ps2_mesh_camera(const float*, const float*, const float*)	20	static
+platform/far_shell.inc:180:17:void re4dc_far_shell_set(int, const char*)	0	static
+platform/far_shell.inc:187:17:void re4dc_far_shell_view_changed(int)	0	static
+platform/far_shell.inc:194:21:unsigned int re4dc_far_shell_movie_release()	12	static
+platform/far_shell.inc:205:17:void re4dc_far_shell_movie_restore()	0	static
+platform/far_shell.inc:208:16:int re4dc_far_shell_shortfall(unsigned int, const char*)	20	static
+platform/far_shell.inc:222:16:int re4dc_far_shell_keeps_fog()	4	static
+platform/far_shell.inc:224:17:void re4dc_far_shell_note_far(float)	0	static
+platform/far_shell.inc:226:18:float re4dc_far_shell_full(float)	8	static
+platform/far_shell.inc:231:16:int re4dc_far_shell_draw(float, float)	464	static
+platform/far_shell.inc:382:17:void re4dc_far_shell_log(unsigned int)	96	static
+platform/native_static.cpp:7159:21:unsigned int re4dc_ps2_interior_movie_release()	8	static
+platform/native_static.cpp:7166:17:void re4dc_ps2_interior_movie_restore()	0	static
+platform/native_static.cpp:7174:16:int re4dc_ps2_interior_hidden(const float*, const float*)	40	static
+platform/native_static.cpp:7188:17:void re4dc_ps2_interior_trans(const float*, const float*)	28	static
+platform/native_static.cpp:7205:16:int re4dc_ps2_interior_trans_active()	8	static
+platform/native_static.cpp:7210:16:int re4dc_ps2_interior_actor_hidden(const float*, const float*)	40	static
+platform/native_static.cpp:7233:16:int re4dc_ps2_interior_owner_hidden(const float*, const float*)	40	static
+platform/native_static.cpp:7252:17:void re4dc_ps2_mesh_log(unsigned int)	52	static
+platform/native_static.cpp:7269:17:void re4dc_ps2_mesh_retire()	12	static
+platform/native_static.cpp:6953:16:int re4dc_movie_world_before_heap_change(const void*, unsigned int)	8	static
+platform/native_static.cpp:5553:6:bool {anonymous}::ps2_open()	596	static
+platform/native_static.cpp:7332:17:void re4dc_ps2_dyn_bind(unsigned int, unsigned int, const void*, const void*, const void*, const float*)	28	static
+platform/native_static.cpp:7354:17:void re4dc_ps2_dyn_parts(unsigned int, unsigned int, const void*, const void*, unsigned int, unsigned int, unsigned int, unsigned int)	68	static
+platform/native_static.cpp:7387:16:int re4dc_ps2_dyn_source(unsigned int, const void*, unsigned int)	20	static
+platform/native_static.cpp:7435:16:int re4dc_ps2_world_room(unsigned int)	0	static
+platform/native_static.cpp:7454:16:int re4dc_ps2_mesh_preload(unsigned int)	8	static
+platform/native_static.cpp:3368:17:void re4dc_static_bind(const void*, unsigned int, int, unsigned int, unsigned int, unsigned int, unsigned int, const float*)	40	static
+platform/include/native_source_world.inc:3:16:int re4dc_ps2_source_package(unsigned int*)	0	static
+platform/include/native_source_world.inc:12:16:int re4dc_ps2_source_texture(unsigned int, Re4dcSourceWorldTexture*)	16	static
+platform/include/native_source_world.inc:132:16:int re4dc_ps2_source_draw(unsigned int)	136	static
+platform/include/native_source_world.inc:168:16:int re4dc_ps2_source_passes_complete()	0	static
+platform/native_static.cpp:7480:17:void re4dc_ps2_mesh_source(unsigned int, const Re4dcModelPart&)	120	static
+platform/native_static.cpp:7533:16:int re4dc_ps2_mesh_texture(unsigned int, unsigned int*)	12	static
+platform/native_static.cpp:7545:21:unsigned int re4dc_ps2_mesh_room()	0	static
+platform/native_static.cpp:7548:17:void re4dc_ps2_mesh_select(unsigned int)	8	static
+platform/native_static.cpp:7555:16:int re4dc_ps2_mesh_failed(unsigned int)	8	static
+platform/native_static.cpp:7572:18:float re4dc_far_cap(float)	0	static
+platform/native_static.cpp:3677:18:float re4dc_fog_far_for_gate(float)	12	static
+platform/native_static.cpp:3544:16:int re4dc_static_gate(const void*, const float*, const float*, float)	44	static
+platform/native_static.cpp:3694:17:void re4dc_fog_note_far(float)	12	static
+platform/../../room/mesh_fastpath_sched.hpp:166:13:void re4dc::vp::transform_sched(const Vertex12*, unsigned int, pvr_vertex_t*, uint8_t*, const Constants&) [with unsigned int Checks = 3]	48	static
+platform/native_static.cpp:3253:35:int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)	128	static
+platform/native_static.cpp:6390:22:0() const	896	static
+platform/native_static.cpp:2924:9:int {anonymous}::MeshDraw::draw(const re4dc::room::Meshlet&, bool)	192	static
+platform/native_static.cpp:3288:9:int {anonymous}::MeshDraw::run()	240	static
+platform/native_static.cpp:4214:5:int {anonymous}::mesh_submit(const Re4dcModelPart&)	1884	static
+platform/native_static.cpp:4410:16:int re4dc_static_submit(const Re4dcModelPart*)	92	static
+platform/native_static.cpp:6202:5:int {anonymous}::ps2_pass(unsigned int, float)	8992	static
+platform/native_static.cpp:7124:16:int re4dc_ps2_mesh_draw(unsigned int, float)	16	static
+platform/native_static.cpp:7581:1:cpp)	0	static

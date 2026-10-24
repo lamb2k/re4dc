@@ -1,0 +1,681 @@
+{
+  "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "baseline": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "profile": "/root/probe/lanes/route/out-rrfb254e8rP",
+  "pins": {
+    "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a": "5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf",
+    "/root/probe/lanes/route/out-rrfb254e8rP/candidate.txt": "0d5e7fe22f95b6aa8a131a790490dd8fc268b10f721924909de206610a11028d",
+    "/root/probe/lanes/route/out-rrfb254e8rP/resolved-knobs.txt": "63b9cdf90190a880422074bf4e7c7c488cd013463a18d9aaeb6fc3bd470a9a5b",
+    "/root/probe/lanes/route/out-rrfb254e8rP/build.log": "08359102921e322ef7f364250ecc18187c3c82fb69c18d1f05c0be46808f4ca0"
+  },
+  "knobs": {
+    "KOS_CACHE_P2": "1",
+    "KOS_CACHE_P2_DIAG": "0",
+    "STAT_ROUTINE_BYTES": "1",
+    "ESP_POOL_RECYCLE": "1",
+    "R117_EFFECT_FAILURE_SAFE": "1",
+    "R10C_SPAWN_LIVE_GUARD": "1",
+    "EM_READ_RETRY": "1",
+    "COARSE_LEON": "1",
+    "ACTOR_TRANSACTION": "1",
+    "LEON_HAND_PACK": "1",
+    "LEON_HAND_RETAIN": "0"
+  },
+  "objects": [
+    {
+      "unit": "coarse_actor.cpp",
+      "arm": "baseline",
+      "sha256": "8ba8f6d63e0e9c632609d344288bc2b013591c0651a1330338182c5b05211488",
+      "nodebug_sha256": "e221b2830f6b0a59258335f7680b4e435573d90ce2921ed7a454179ec1006b8a",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 215414\t   1172\t 124880\t 341466\t  535da\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/coarse_actor-baseline.o\n",
+      "inputs": 163,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "arm": "absent",
+      "sha256": "ced956c35ff81ef4dff50319293fd6d73a512cc41921e6b43eeec211b88b2386",
+      "nodebug_sha256": "e221b2830f6b0a59258335f7680b4e435573d90ce2921ed7a454179ec1006b8a",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 215414\t   1172\t 124880\t 341466\t  535da\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/coarse_actor-absent.o\n",
+      "inputs": 171,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "arm": "zero",
+      "sha256": "ced956c35ff81ef4dff50319293fd6d73a512cc41921e6b43eeec211b88b2386",
+      "nodebug_sha256": "e221b2830f6b0a59258335f7680b4e435573d90ce2921ed7a454179ec1006b8a",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 215414\t   1172\t 124880\t 341466\t  535da\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/coarse_actor-zero.o\n",
+      "inputs": 171,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "coarse_actor.cpp",
+      "arm": "on",
+      "sha256": "66707c40661a3c1d7f3f7e60a241b8b2aa36daa11f85b6740cb10d3c439d1993",
+      "nodebug_sha256": "7e7a82b4050b57f2c09831327b6b83a0e0f49723e6ba4bfec4c4c71d4f362f0a",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 224622\t   1208\t 125341\t 351171\t  55bc3\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/coarse_actor-on.o\n",
+      "inputs": 175,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_actor_fast.cpp",
+      "arm": "baseline",
+      "sha256": "46536e451eb3e0f7e6bfcc42241858c71ee7e3f050dcf24e5c7b3da01f8438a3",
+      "nodebug_sha256": "481ee1b3113b8cec59e92f9e814bde79cdcfab581dd45d790b86882ac7748e9c",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  61171\t   1312\t  13183\t  75666\t  12792\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_actor_fast-baseline.o\n",
+      "inputs": 180,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_actor_fast.cpp",
+      "arm": "absent",
+      "sha256": "fbb1b145b2ffc14af935fe3254f4a7d82ab8627ffb913897a13c8f4331c547d5",
+      "nodebug_sha256": "481ee1b3113b8cec59e92f9e814bde79cdcfab581dd45d790b86882ac7748e9c",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  61171\t   1312\t  13183\t  75666\t  12792\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_actor_fast-absent.o\n",
+      "inputs": 184,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_actor_fast.cpp",
+      "arm": "zero",
+      "sha256": "fbb1b145b2ffc14af935fe3254f4a7d82ab8627ffb913897a13c8f4331c547d5",
+      "nodebug_sha256": "481ee1b3113b8cec59e92f9e814bde79cdcfab581dd45d790b86882ac7748e9c",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  61171\t   1312\t  13183\t  75666\t  12792\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_actor_fast-zero.o\n",
+      "inputs": 184,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_actor_fast.cpp",
+      "arm": "on",
+      "sha256": "956d3684efee148a48427dc402fe73840882466691d0e27bcc0d0e36adcb8f79",
+      "nodebug_sha256": "1e233b13e105ee2a3b5a84db16df4f1695b07d64c36526ec61318804c3f9b0d5",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  61759\t   1312\t  13231\t  76302\t  12a0e\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_actor_fast-on.o\n",
+      "inputs": 184,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "arm": "baseline",
+      "sha256": "e3561deec178b791f399661010d7a3ef5e9a6e337400133566e271ed78f11151",
+      "nodebug_sha256": "ac5a107b9dfe8bfbd8432862b250eba29487803d4182e92d5d5bbc5467e88cb6",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 135265\t 100509\t 152415\t 388189\t  5ec5d\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_ui-baseline.o\n",
+      "inputs": 320,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "arm": "absent",
+      "sha256": "8cdb7d79dea13c545041c0d94915653c98ddcd04719feb7d5f8d5f42b998ec91",
+      "nodebug_sha256": "ac5a107b9dfe8bfbd8432862b250eba29487803d4182e92d5d5bbc5467e88cb6",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 135265\t 100509\t 152415\t 388189\t  5ec5d\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_ui-absent.o\n",
+      "inputs": 329,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "arm": "zero",
+      "sha256": "8cdb7d79dea13c545041c0d94915653c98ddcd04719feb7d5f8d5f42b998ec91",
+      "nodebug_sha256": "ac5a107b9dfe8bfbd8432862b250eba29487803d4182e92d5d5bbc5467e88cb6",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 135265\t 100509\t 152415\t 388189\t  5ec5d\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_ui-zero.o\n",
+      "inputs": 329,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "arm": "on",
+      "sha256": "30a7371f4b7535b606538fd3da173fca8be0a090cf2c3d58be852b2f48879249",
+      "nodebug_sha256": "89b4bb8af78252c532c21295baf5bbb314c798cfe1ed903a6ef7322e6a2ede91",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n 140045\t 100513\t 156453\t 397011\t  60ed3\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_ui-on.o\n",
+      "inputs": 330,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_model.cpp",
+      "arm": "baseline",
+      "sha256": "de0ad9242bcac47dab3d7ebf0a0cb16da7793924526bab2f53fa2ba7ec1437c1",
+      "nodebug_sha256": "2eb469809fd86ecf2f47effffc8b22da6ce1da2e48f57a257805e566e6e2a53a",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  14472\t      0\t    192\t  14664\t   3948\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_model-baseline.o\n",
+      "inputs": 174,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_model.cpp",
+      "arm": "absent",
+      "sha256": "3ab5cef90af79d9e8fc716be80e457918320ff68151bcb67058f88e7bd325230",
+      "nodebug_sha256": "2eb469809fd86ecf2f47effffc8b22da6ce1da2e48f57a257805e566e6e2a53a",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  14472\t      0\t    192\t  14664\t   3948\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_model-absent.o\n",
+      "inputs": 176,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_model.cpp",
+      "arm": "zero",
+      "sha256": "3ab5cef90af79d9e8fc716be80e457918320ff68151bcb67058f88e7bd325230",
+      "nodebug_sha256": "2eb469809fd86ecf2f47effffc8b22da6ce1da2e48f57a257805e566e6e2a53a",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  14472\t      0\t    192\t  14664\t   3948\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_model-zero.o\n",
+      "inputs": 176,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_model.cpp",
+      "arm": "on",
+      "sha256": "68c645095237206dc1c3b1af298c7cda0f87865d39dbdc6f1d92fceec78405c6",
+      "nodebug_sha256": "efe631b1add15c36539f294ac155b3edec91da416cdedb85cb8b46ea66b24e4b",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  14644\t      0\t    192\t  14836\t   39f4\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_model-on.o\n",
+      "inputs": 176,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "model_bridge.cpp",
+      "arm": "baseline",
+      "sha256": "46c09bbf6f2bfbf59cf1f87045825e74cf83a7682adc2410ff62dfc3ec1e2d3c",
+      "nodebug_sha256": "8c83a4c065b137695b095822145a719293b49aac304d92fb80dd35c7af33d43f",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   7017\t     12\t    138\t   7167\t   1bff\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/model_bridge-baseline.o\n",
+      "inputs": 71,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "model_bridge.cpp",
+      "arm": "absent",
+      "sha256": "223cd89535b7b7e605618bc02d32e6c829221f9e1d980676af3a3c7f4b560377",
+      "nodebug_sha256": "8c83a4c065b137695b095822145a719293b49aac304d92fb80dd35c7af33d43f",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   7017\t     12\t    138\t   7167\t   1bff\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/model_bridge-absent.o\n",
+      "inputs": 71,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "model_bridge.cpp",
+      "arm": "zero",
+      "sha256": "223cd89535b7b7e605618bc02d32e6c829221f9e1d980676af3a3c7f4b560377",
+      "nodebug_sha256": "8c83a4c065b137695b095822145a719293b49aac304d92fb80dd35c7af33d43f",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   7017\t     12\t    138\t   7167\t   1bff\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/model_bridge-zero.o\n",
+      "inputs": 71,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "model_bridge.cpp",
+      "arm": "on",
+      "sha256": "295e5f5beb5f19f765f3013e243a675f0bb9d98e4d939a3272a6d521ac877a0e",
+      "nodebug_sha256": "df72b5695e38f53167bdd945914bea2955692e538f331703f84b75f6c96158a9",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   7375\t     12\t    138\t   7525\t   1d65\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/model_bridge-on.o\n",
+      "inputs": 78,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "ui_bridge.cpp",
+      "arm": "baseline",
+      "sha256": "89008ed772d62f837d7f44d31d7445a7060dd4acaeae2c190490187e8c16c093",
+      "nodebug_sha256": "5158070051400cf444595f2e806a3b2adb20138d923af5518b87c6fd12ed915f",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   9831\t      8\t    155\t   9994\t   270a\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/ui_bridge-baseline.o\n",
+      "inputs": 123,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "ui_bridge.cpp",
+      "arm": "absent",
+      "sha256": "89dc7bfb216e40a49e6ae9b0d906064314ae36dba09dd90adb40549e1c107e11",
+      "nodebug_sha256": "5158070051400cf444595f2e806a3b2adb20138d923af5518b87c6fd12ed915f",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   9831\t      8\t    155\t   9994\t   270a\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/ui_bridge-absent.o\n",
+      "inputs": 125,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "ui_bridge.cpp",
+      "arm": "zero",
+      "sha256": "89dc7bfb216e40a49e6ae9b0d906064314ae36dba09dd90adb40549e1c107e11",
+      "nodebug_sha256": "5158070051400cf444595f2e806a3b2adb20138d923af5518b87c6fd12ed915f",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   9831\t      8\t    155\t   9994\t   270a\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/ui_bridge-zero.o\n",
+      "inputs": 125,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "ui_bridge.cpp",
+      "arm": "on",
+      "sha256": "0624e05bea97786cf29df0bbea7b2d78bce617bf15c72b0ff1ce6b3140f2f457",
+      "nodebug_sha256": "d40f8cd0ab9d4fce32456fac0a4d77dc98d6f7ffa1c3c080115f43d1d4bcfb3f",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   9906\t      8\t    155\t  10069\t   2755\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/ui_bridge-on.o\n",
+      "inputs": 125,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/audio_aica.cpp",
+      "arm": "baseline",
+      "sha256": "44333f75eb42d9b528003355724244757f62e4fca3f91592fe5a9708ca2fe085",
+      "nodebug_sha256": "19b5f1cc7563efd5427ae716d2b09cba49b365889163d940a3024dfb290d9f6c",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  22421\t     28\t  71215\t  93664\t  16de0\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_audio_aica-baseline.o\n",
+      "inputs": 224,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/audio_aica.cpp",
+      "arm": "absent",
+      "sha256": "62768ff6abf2e4dd5c2e7522c802374da93432fbe2657d9fa89b8616638831b3",
+      "nodebug_sha256": "19b5f1cc7563efd5427ae716d2b09cba49b365889163d940a3024dfb290d9f6c",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  22421\t     28\t  71215\t  93664\t  16de0\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_audio_aica-absent.o\n",
+      "inputs": 226,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/audio_aica.cpp",
+      "arm": "zero",
+      "sha256": "62768ff6abf2e4dd5c2e7522c802374da93432fbe2657d9fa89b8616638831b3",
+      "nodebug_sha256": "19b5f1cc7563efd5427ae716d2b09cba49b365889163d940a3024dfb290d9f6c",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  22421\t     28\t  71215\t  93664\t  16de0\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_audio_aica-zero.o\n",
+      "inputs": 226,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/audio_aica.cpp",
+      "arm": "on",
+      "sha256": "8917512db46aa70e3d8ae70bd8fecc3762a0461a906e0350ab5630214d8e82eb",
+      "nodebug_sha256": "31145c2d758db15c6cca822e80cc7fc59ce765330f5e7852cd8aa9931cd14af9",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  23273\t     28\t  71279\t  94580\t  17174\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_audio_aica-on.o\n",
+      "inputs": 227,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_movie.cpp",
+      "arm": "baseline",
+      "sha256": "768091e322eada6d63344c0720eb4b828ab47c3a297c0770e7b966f1c331788d",
+      "nodebug_sha256": "96d66565a6d684f6d2a9003468bd5dbd94df4b17df27b5b38e444ca14adc4a7d",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  63530\t    520\t    539\t  64589\t   fc4d\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_movie-baseline.o\n",
+      "inputs": 239,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_movie.cpp",
+      "arm": "absent",
+      "sha256": "9a02bb62bbb402a07b31fd377fcc8ff762a9ba3622ab8a4b084f9538590d9072",
+      "nodebug_sha256": "96d66565a6d684f6d2a9003468bd5dbd94df4b17df27b5b38e444ca14adc4a7d",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  63530\t    520\t    539\t  64589\t   fc4d\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_movie-absent.o\n",
+      "inputs": 242,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_movie.cpp",
+      "arm": "zero",
+      "sha256": "9a02bb62bbb402a07b31fd377fcc8ff762a9ba3622ab8a4b084f9538590d9072",
+      "nodebug_sha256": "96d66565a6d684f6d2a9003468bd5dbd94df4b17df27b5b38e444ca14adc4a7d",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  63530\t    520\t    539\t  64589\t   fc4d\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_movie-zero.o\n",
+      "inputs": 242,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_movie.cpp",
+      "arm": "on",
+      "sha256": "7e63cd9b54105c46864a8785c647c0d887402ecc32cdc8df4301985b1dae2ba6",
+      "nodebug_sha256": "b98808cd286032f5edab6204e32963c469e088b4629f19c4a43dd11a64abc1e5",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  63966\t    528\t    539\t  65033\t   fe09\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_movie-on.o\n",
+      "inputs": 242,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_movie_stream.c",
+      "arm": "baseline",
+      "sha256": "30c4bd39edd793461114ff57b138c9b092d0981d1d8082e316676be6a0e95309",
+      "nodebug_sha256": "433fe3e3bbfddb4afcc8d021ae5364b01f595c287d4ae69d328ba9004c1f647e",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   6649\t      8\t    332\t   6989\t   1b4d\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_movie_stream-baseline.o\n",
+      "inputs": 95,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_movie_stream.c",
+      "arm": "absent",
+      "sha256": "ce8c3c9cefec39475de20b142ac4c2775982cb79288546c742b0a137401a398f",
+      "nodebug_sha256": "433fe3e3bbfddb4afcc8d021ae5364b01f595c287d4ae69d328ba9004c1f647e",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   6649\t      8\t    332\t   6989\t   1b4d\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_movie_stream-absent.o\n",
+      "inputs": 96,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_movie_stream.c",
+      "arm": "zero",
+      "sha256": "ce8c3c9cefec39475de20b142ac4c2775982cb79288546c742b0a137401a398f",
+      "nodebug_sha256": "433fe3e3bbfddb4afcc8d021ae5364b01f595c287d4ae69d328ba9004c1f647e",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   6649\t      8\t    332\t   6989\t   1b4d\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_movie_stream-zero.o\n",
+      "inputs": 96,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_movie_stream.c",
+      "arm": "on",
+      "sha256": "0b9a64b0780255d9455197e858f725eca901155de16d92590f6b206ccbb93188",
+      "nodebug_sha256": "d6c8e2a5c092e117ff52adce095d53180690a1e4aa9a48e36f66208362403aee",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   7785\t      8\t    404\t   8197\t   2005\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_movie_stream-on.o\n",
+      "inputs": 96,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "../../../src/game/model.cpp",
+      "arm": "baseline",
+      "sha256": "fb93dc17bd03e303400c9f6cf9bdeefecbe7591cc5bd132862380a12a846db0b",
+      "nodebug_sha256": "828b57a0b22e3dcc823de1b43086da4e374446989f2c9ab6912a0061619f2085",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  14684\t     12\t    116\t  14812\t   39dc\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/src_game_model-baseline.o\n",
+      "inputs": 50,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "../../../src/game/model.cpp",
+      "arm": "absent",
+      "sha256": "92a3004b6ef4dd297c52ce9263e8eb38ea1a2d2bd230dd93b64cfd65241114e1",
+      "nodebug_sha256": "828b57a0b22e3dcc823de1b43086da4e374446989f2c9ab6912a0061619f2085",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  14684\t     12\t    116\t  14812\t   39dc\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/src_game_model-absent.o\n",
+      "inputs": 50,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "../../../src/game/model.cpp",
+      "arm": "zero",
+      "sha256": "92a3004b6ef4dd297c52ce9263e8eb38ea1a2d2bd230dd93b64cfd65241114e1",
+      "nodebug_sha256": "828b57a0b22e3dcc823de1b43086da4e374446989f2c9ab6912a0061619f2085",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  14684\t     12\t    116\t  14812\t   39dc\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/src_game_model-zero.o\n",
+      "inputs": 50,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "../../../src/game/model.cpp",
+      "arm": "on",
+      "sha256": "047c257827d7c53b3d7e5610e0bd69d15a6ef00ab50c4140e558df0d6fe9a333",
+      "nodebug_sha256": "67eeb64fcc0e99e9de4e420b06778f8dd9fd2a1f29d2ebdeeb200d83735e8d4a",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  14732\t     12\t    116\t  14860\t   3a0c\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/src_game_model-on.o\n",
+      "inputs": 50,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "../../../src/game/read.cpp",
+      "arm": "baseline",
+      "sha256": "45e5f09e8586cf682ad4997b7d16b683dea335bc36dd97b1e06880bb27fd3b88",
+      "nodebug_sha256": "b89a69b29350d3283403f9d77368ed892b827485627b5df80b355195220266b5",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   8425\t   3892\t    930\t  13247\t   33bf\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/src_game_read-baseline.o\n",
+      "inputs": 58,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "../../../src/game/read.cpp",
+      "arm": "absent",
+      "sha256": "5f0177aff03c01897962ab81e7e42c05e8d5e9734a8932a0cf81fc1b3755b0f0",
+      "nodebug_sha256": "b89a69b29350d3283403f9d77368ed892b827485627b5df80b355195220266b5",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   8425\t   3892\t    930\t  13247\t   33bf\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/src_game_read-absent.o\n",
+      "inputs": 58,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "../../../src/game/read.cpp",
+      "arm": "zero",
+      "sha256": "5f0177aff03c01897962ab81e7e42c05e8d5e9734a8932a0cf81fc1b3755b0f0",
+      "nodebug_sha256": "b89a69b29350d3283403f9d77368ed892b827485627b5df80b355195220266b5",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   8425\t   3892\t    930\t  13247\t   33bf\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/src_game_read-zero.o\n",
+      "inputs": 58,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "../../../src/game/read.cpp",
+      "arm": "on",
+      "sha256": "852cdf90a029c8ab5832ff676eebdaa3a74fd23578fe3510dd3d1d81ca053651",
+      "nodebug_sha256": "0a7f02ab096f0c78ff7bf8f992a89fe696c644d17f61f1d502f67a9eea2dc99b",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   8433\t   3892\t    930\t  13255\t   33c7\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/src_game_read-on.o\n",
+      "inputs": 58,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "../../../src/game/dvd.cpp",
+      "arm": "baseline",
+      "sha256": "6282242effb95de86b8104212d96a54a9354a77f1b2ef033d093ae7ba182d6e3",
+      "nodebug_sha256": "0456586db941fd70b4ed72024e2500924d8c96b31f5d43f730f5b9d8272e7650",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  19266\t   2340\t  17216\t  38822\t   97a6\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/src_game_dvd-baseline.o\n",
+      "inputs": 48,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "../../../src/game/dvd.cpp",
+      "arm": "absent",
+      "sha256": "62d17fb63fffe433d6b83cf343211b062374f28eb1402c0b82bc47ac577785e3",
+      "nodebug_sha256": "0456586db941fd70b4ed72024e2500924d8c96b31f5d43f730f5b9d8272e7650",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  19266\t   2340\t  17216\t  38822\t   97a6\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/src_game_dvd-absent.o\n",
+      "inputs": 50,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "../../../src/game/dvd.cpp",
+      "arm": "zero",
+      "sha256": "62d17fb63fffe433d6b83cf343211b062374f28eb1402c0b82bc47ac577785e3",
+      "nodebug_sha256": "0456586db941fd70b4ed72024e2500924d8c96b31f5d43f730f5b9d8272e7650",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  19266\t   2340\t  17216\t  38822\t   97a6\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/src_game_dvd-zero.o\n",
+      "inputs": 50,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "../../../src/game/dvd.cpp",
+      "arm": "on",
+      "sha256": "253d280b07493108c61d0cf5329653a1ec31049a430eed7afbe92ec9a93d72f5",
+      "nodebug_sha256": "eb0cebc342837c5324aaa994e295524261e4c3470728dfde6b4faa118f854a15",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  19442\t   2340\t  17216\t  38998\t   9856\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/src_game_dvd-on.o\n",
+      "inputs": 62,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_static.cpp",
+      "arm": "baseline",
+      "sha256": "3529f1387d12f6f30711bcb4976abb9ebfd6cf54c56f9052c5c188ea6b4e3bf3",
+      "nodebug_sha256": "2cc214bcbfcf52c899eb0d0488f35b357e154355f7cc779e4c64abb969e4d3b0",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  91587\t   2804\t  17212\t 111603\t  1b3f3\t/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/platform_native_static-baseline.o\n",
+      "inputs": 278,
+      "compiled_source": "77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22",
+      "reused_from": "/dev/shm/gc-port23-current-77d8a20b2-jx_x05a2/report.json"
+    },
+    {
+      "unit": "platform/native_static.cpp",
+      "arm": "absent",
+      "sha256": "bc6fdbedab845b2a45a7fd9e2aee1ff4aef3eb26551808d5496bcc3929edf84e",
+      "nodebug_sha256": "2cc214bcbfcf52c899eb0d0488f35b357e154355f7cc779e4c64abb969e4d3b0",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  91587\t   2804\t  17212\t 111603\t  1b3f3\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_native_static-absent.o\n",
+      "inputs": 283
+    },
+    {
+      "unit": "platform/native_static.cpp",
+      "arm": "zero",
+      "sha256": "bc6fdbedab845b2a45a7fd9e2aee1ff4aef3eb26551808d5496bcc3929edf84e",
+      "nodebug_sha256": "2cc214bcbfcf52c899eb0d0488f35b357e154355f7cc779e4c64abb969e4d3b0",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  91587\t   2804\t  17212\t 111603\t  1b3f3\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_native_static-zero.o\n",
+      "inputs": 283
+    },
+    {
+      "unit": "platform/native_static.cpp",
+      "arm": "on",
+      "sha256": "a09ad7eed13a8524fcbd13c09161a003dab7d604b1752c26216fcd835a26ba1c",
+      "nodebug_sha256": "ec1bf08eecffb14d1b2fd2d3bddf4ff02ee6c01ee4557d1c48693f5f9d9a29cb",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  94411\t   2848\t  18536\t 115795\t  1c453\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_native_static-on.o\n",
+      "inputs": 283
+    },
+    {
+      "unit": "platform/room_file.c",
+      "arm": "baseline",
+      "sha256": "d9f47b6b12a3120479000d9642b8a0b717c0441c1b73df0e002bfda8a691e885",
+      "nodebug_sha256": "14f9f5ada8a2ffd8584d2abf4f49cac96b2f13ce3c5a19b72480ec78551359b5",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   1369\t      0\t    172\t   1541\t    605\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_room_file-baseline.o\n",
+      "inputs": 55
+    },
+    {
+      "unit": "platform/room_file.c",
+      "arm": "absent",
+      "sha256": "d7ad2647f991486a70cb500a3d2769c8c111b84fe61af4085a5c41f98af5eb27",
+      "nodebug_sha256": "14f9f5ada8a2ffd8584d2abf4f49cac96b2f13ce3c5a19b72480ec78551359b5",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   1369\t      0\t    172\t   1541\t    605\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_room_file-absent.o\n",
+      "inputs": 55
+    },
+    {
+      "unit": "platform/room_file.c",
+      "arm": "zero",
+      "sha256": "d7ad2647f991486a70cb500a3d2769c8c111b84fe61af4085a5c41f98af5eb27",
+      "nodebug_sha256": "14f9f5ada8a2ffd8584d2abf4f49cac96b2f13ce3c5a19b72480ec78551359b5",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   1369\t      0\t    172\t   1541\t    605\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_room_file-zero.o\n",
+      "inputs": 55
+    },
+    {
+      "unit": "platform/room_file.c",
+      "arm": "on",
+      "sha256": "eb28fc7b5cd18a5ac66b8067bc31e373eeb47884ac1b5aebd5d9dcac5672719f",
+      "nodebug_sha256": "ede1a1964a36536f2bb44d57bb88287ac7d47451c7b6bd0f9aeb6c157fca1de5",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   1613\t      0\t    176\t   1789\t    6fd\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_room_file-on.o\n",
+      "inputs": 55
+    },
+    {
+      "unit": "platform/gc_asset_gate.cpp",
+      "arm": "zero",
+      "sha256": "cb6d4509f74aa33bdefd2820b4cc15b3c1c7ce9eade7813c2b82dc149a137218",
+      "nodebug_sha256": "aa0c75f835c1f10cfa23f0c5a26c25af875f29310a43bbd4a623b0afa13e20c5",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n      0\t      0\t      0\t      0\t      0\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_gc_asset_gate-zero.o\n",
+      "inputs": 3
+    },
+    {
+      "unit": "platform/gc_asset_gate.cpp",
+      "arm": "on",
+      "sha256": "8f13653e063bf6dda502612b7e5e6f2a482d21cfce14d6555f0e070a68d4f709",
+      "nodebug_sha256": "e33d77dd86c744b297c41cc2335703ec75bbbe4f9fa0e718867beab8d7335f8c",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  10885\t      4\t   5052\t  15941\t   3e45\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_gc_asset_gate-on.o\n",
+      "inputs": 92
+    },
+    {
+      "unit": "platform/gc_asset_members.cpp",
+      "arm": "zero",
+      "sha256": "0e99be9ec5bade5e52c7de0d37f329c66c5a27466c827a244460e210cf28ce0b",
+      "nodebug_sha256": "aa0c75f835c1f10cfa23f0c5a26c25af875f29310a43bbd4a623b0afa13e20c5",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n      0\t      0\t      0\t      0\t      0\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_gc_asset_members-zero.o\n",
+      "inputs": 4
+    },
+    {
+      "unit": "platform/gc_asset_members.cpp",
+      "arm": "on",
+      "sha256": "40dfd07a50b2db915d370fe2caf2f67d50614ca794d23ed2a8520de34c6c0c7a",
+      "nodebug_sha256": "9ab97266cee955685f8095aabb3c3e8f3f54de29db3b048b559a1398114177b6",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   3480\t     24\t   4952\t   8456\t   2108\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_gc_asset_members-on.o\n",
+      "inputs": 32
+    },
+    {
+      "unit": "platform/gc_asset_payloads.cpp",
+      "arm": "zero",
+      "sha256": "9c8d38469ba1d60832277073d0b30ab25dc7c4e4ba5857a3d23d66f37abbc547",
+      "nodebug_sha256": "aa0c75f835c1f10cfa23f0c5a26c25af875f29310a43bbd4a623b0afa13e20c5",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n      0\t      0\t      0\t      0\t      0\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_gc_asset_payloads-zero.o\n",
+      "inputs": 6
+    },
+    {
+      "unit": "platform/gc_asset_payloads.cpp",
+      "arm": "on",
+      "sha256": "14891be460746b12a94950dc185b9f8b942512c4853987dcdcf7c91275155562",
+      "nodebug_sha256": "97d2e614d63bea432a7741dc2496dca396dd04582bfef15462f08c0a5530a798",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   5373\t      0\t     20\t   5393\t   1511\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_gc_asset_payloads-on.o\n",
+      "inputs": 18
+    },
+    {
+      "unit": "platform/gc_asset_audio.cpp",
+      "arm": "zero",
+      "sha256": "88022796f2ee3996bdf49082ce319e453652d93dc784bbef08c78fd8dd9ae23d",
+      "nodebug_sha256": "aa0c75f835c1f10cfa23f0c5a26c25af875f29310a43bbd4a623b0afa13e20c5",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n      0\t      0\t      0\t      0\t      0\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_gc_asset_audio-zero.o\n",
+      "inputs": 5
+    },
+    {
+      "unit": "platform/gc_asset_audio.cpp",
+      "arm": "on",
+      "sha256": "657a918949cb7dcd86c95b4e2f314b3778353e5685a9f30c69489c56e2e20aa4",
+      "nodebug_sha256": "be02af6cc67cfe7cf6da54727555b0b944c8cb394542903036127a5fd6062ab4",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   4749\t      4\t   1369\t   6122\t   17ea\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_gc_asset_audio-on.o\n",
+      "inputs": 81
+    },
+    {
+      "unit": "platform/gc_asset_disc.cpp",
+      "arm": "zero",
+      "sha256": "adfa35afec20a19a8edcf438b5894b45df6035f282038e63c7fd98a204711e46",
+      "nodebug_sha256": "aa0c75f835c1f10cfa23f0c5a26c25af875f29310a43bbd4a623b0afa13e20c5",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n      0\t      0\t      0\t      0\t      0\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_gc_asset_disc-zero.o\n",
+      "inputs": 3
+    },
+    {
+      "unit": "platform/gc_asset_disc.cpp",
+      "arm": "on",
+      "sha256": "3f0a0806a06439082ed9e9a3133533bc7123e55cc733b98c2a9fcaa65145adcd",
+      "nodebug_sha256": "cb8523b2750e090ec9eb65ddbca4906b332cf034d3c7452a146208de53809439",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n    264\t      4\t      4\t    272\t    110\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_gc_asset_disc-on.o\n",
+      "inputs": 66
+    },
+    {
+      "unit": "platform/gc_asset_disc.cpp",
+      "arm": "on-synthetic-pin",
+      "sha256": "5b9b22ce6f7998af6691a6c4b300bfac1d7cb8438779835ea1e7a51921baaca7",
+      "nodebug_sha256": "4bbb8584b028ca93c44da21d3798ffce06ad65bb7be7f6dc5e4615018d285379",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n    709\t      4\t      4\t    717\t    2cd\t/dev/shm/gc-port23-current-1d63cffe3-vhytjv63/platform_gc_asset_disc-on-synthetic-pin.o\n",
+      "inputs": 66
+    }
+  ],
+  "harness_source_sha256": "ebd6a4e8e452f219cbcc8b3f631deb21ac908a23e78da7f2fd78b3d441f47105",
+  "scope_version": "STATIC1D63_CURRENT_FB_PINNED_CONTINUATION",
+  "note": "Selected objects only; actual current fb254 commands/profile and baseline, default catalog pin0. No linked heap/image/guest/provenance acceptance.",
+  "off_identity": {
+    "coarse_actor.cpp": true,
+    "platform/native_actor_fast.cpp": true,
+    "platform/native_ui.cpp": true,
+    "platform/native_model.cpp": true,
+    "model_bridge.cpp": true,
+    "ui_bridge.cpp": true,
+    "platform/audio_aica.cpp": true,
+    "platform/native_movie.cpp": true,
+    "platform/native_movie_stream.c": true,
+    "../../../src/game/model.cpp": true,
+    "../../../src/game/read.cpp": true,
+    "../../../src/game/dvd.cpp": true,
+    "platform/native_static.cpp": true,
+    "platform/room_file.c": true
+  },
+  "prior_report_sha256": "666759f4e9019398d854d959244c19080ffeee1edf323f8611ef5e874a679979",
+  "complete": true
+}

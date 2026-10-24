@@ -1,0 +1,94 @@
+../../../include/cManager.h:25:18:virtual void cUnit::beginEvent()	0	static
+../../../include/cManager.h:26:18:virtual void cUnit::endEvent()	0	static
+../../../include/model.h:48:13:virtual cCoord::~cCoord()	0	static
+../../../include/model.h:379:13:virtual cParts::~cParts()	0	static
+../../../src/game/model.cpp:410:13:virtual void cModel::move()	0	static
+../../../src/game/model.cpp:415:13:virtual void cModel::setNoSuspend(int)	0	static
+../../../include/model.h:345:7:cModInfoMgr::~cModInfoMgr()	0	static
+../../../include/model.h:384:7:cPartsMgr::~cPartsMgr()	0	static
+../../../include/model.h:389:18:virtual void cPartsMgr::memClear(cParts*, u32)	0	static
+../../../include/model.h:50:18:virtual void cCoord::matUpdate()	12	static
+../../../include/model.h:195:13:virtual cModelInfo::~cModelInfo()	0	static
+D:/Bio4/Prog/model.cpp:2332:6:)	88	static
+../../../include/model.h:350:18:virtual void cModInfoMgr::memClear(cModelInfo*, u32)	12	static
+../../../include/model.h:349:18:virtual void cModInfoMgr::memFree(void*)	0	static
+../../../include/model.h:388:18:virtual void cPartsMgr::memFree(void*)	0	static
+../../../include/model.h:348:19:virtual void* cModInfoMgr::memAlloc(u32)	0	static
+../../../include/model.h:387:19:virtual void* cPartsMgr::memAlloc(u32)	0	static
+../../../include/model.h:384:7:virtual cPartsMgr::~cPartsMgr()	0	static
+../../../include/model.h:345:7:virtual cModInfoMgr::~cModInfoMgr()	0	static
+../../../include/model.h:528:13:virtual cModel::~cModel()	0	static
+../../../include/cManager.h:364:5:u32 cManager<T>::countActiveWork() [with T = cParts]	20	static
+../../../include/cManager.h:507:13:void cManager<T>::destroy(T*) [with T = cParts]	12	static
+../../../include/cManager.h:507:13:void cManager<T>::destroy(T*) [with T = cModelInfo]	12	static
+D:/Bio4/Prog/model.cpp:2248:5:virtual int cPartsMgr::construct(cParts*, u32)	12	static
+D:/Bio4/Prog/model.cpp:2341:5:virtual int cModInfoMgr::construct(cModelInfo*, u32)	8	static
+../../../src/game/model.cpp:836:6:void {anonymous}::skelPartLive(cParts*)	216	static
+../../../src/game/model.cpp:163:1:cModel::cModel()	16	static
+../../../src/game/model.cpp:345:6:void cModel::setPartsParent()	44	static
+../../../src/game/model.cpp:377:6:void cModel::partsMatCalc()	32	static
+../../../src/game/model.cpp:425:16:int cModel::isTrans()	0	static
+../../../src/game/model.cpp:437:20:cModel* cModel::getPartsPtr(int)	8	static
+../../../src/game/model.cpp:466:6:void cModel::matBlend(f32)	200	static
+../../../src/game/model.cpp:955:6:void cModel::partsWorldCalc()	24	static
+D:/Bio4/Prog/model.cpp:2167:6:virtual void cModel::matUpdate()	12	static
+../../../src/game/model.cpp:1055:6:void cModel::setParent(cModel*, Vec*, Vec*)	0	static
+../../../src/game/model.cpp:1065:6:void cModel::setParent(cModel*, int, Vec*, Vec*)	20	static
+../../../src/game/model.cpp:1072:6:void cModel::updateOldPos()	0	static
+../../../src/game/model.cpp:1085:6:void cModel::setPos(Vec*)	44	static
+../../../src/game/model.cpp:549:6:void cModel::zeroPartsPosInit(Vec*, Vec*)	12	static
+../../../src/game/model.cpp:1111:6:void cModel::setAng(Vec*)	0	static
+../../../src/game/model.cpp:1118:6:void cModel::setSca(Vec*)	0	static
+../../../src/game/model.cpp:1125:6:void cModel::debugSkeletonDisp()	132	static
+../../../src/game/model.cpp:1259:6:void cModel::addModel(cModelInfo*)	12	static
+../../../src/game/model.cpp:1277:6:void cModel::partsFixMemory(int)	16	static
+../../../src/game/model.cpp:1292:6:void cModel::partsFixAdjust()	12	static
+../../../src/game/model.cpp:1329:1:cModelInfo::cModelInfo()	8	static
+../../../src/game/model.cpp:1368:6:void cModelInfo::setTexBlendTbl(void*)	0	static
+../../../src/game/model.cpp:1375:6:void cModelInfo::resetTexBlendTbl()	0	static
+../../../src/game/model.cpp:1382:6:void cModelInfo::setBlendRatio(u16)	0	static
+../../../src/game/model.cpp:1388:6:void cModelInfo::setBlendType(u8)	0	static
+../../../src/game/model.cpp:1394:6:void cModelInfo::setSpecular(u8, u8, u8)	0	static
+../../../src/game/model.cpp:1445:5:int cModel::deleteModelData(ModelData*)	12	static
+../../../src/game/model.cpp:1472:5:int cModel::deleteModelInfo(cModelInfo*)	12	static
+../../../src/game/model.cpp:1499:5:int cModel::swapModelInfo(ModelData*, cModelInfo*)	16	static
+../../../src/game/model.cpp:1547:6:void calcModelAddr(ModelData*)	4	static
+../../../src/game/model.cpp:299:6:void cModel::setPartsOffset(void*)	48	static
+D:/Bio4/Prog/model.cpp:1912:6:void calcModelOffset(ModelData*)	8	static
+D:/Bio4/Prog/model.cpp:1941:6:void slideModelAddr(u32, int)	12	static
+D:/Bio4/Prog/model.cpp:1970:6:void calcTplAddr(TEXPalette*)	0	static
+../../../src/game/model.cpp:1344:6:void cModelInfo::setTplAddr(void*)	12	static
+../../../src/game/model.cpp:1359:6:void cModelInfo::addTplAddr(void*)	8	static
+D:/Bio4/Prog/model.cpp:1993:6:void calcTplOffset(TEXPalette*)	8	static
+../../../src/game/model.cpp:1525:6:void cModel::moveDataAddr(int)	16	static
+D:/Bio4/Prog/model.cpp:2017:6:void slideTplAddr(void*, int)	12	static
+D:/Bio4/Prog/model.cpp:2039:6:void cModel::releaseModelInfo()	16	static
+D:/Bio4/Prog/model.cpp:2092:6:void cModel::setJointInfo(void*)	12	static
+D:/Bio4/Prog/model.cpp:2118:6:void cModel::releasePartsList(int)	28	static
+../../../src/game/model.cpp:1310:6:void cModel::push()	8	static
+../../../src/game/model.cpp:289:6:void cModel::releaseJoint()	0	static
+D:/Bio4/Prog/model.cpp:2149:6:void cModel::motionSet(void*, int, int, int, int)	16	static
+D:/Bio4/Prog/model.cpp:2155:5:int cModel::motionMove()	0	static
+D:/Bio4/Prog/model.cpp:2161:6:void cModel::motionPause()	0	static
+D:/Bio4/Prog/model.cpp:2178:1:cParts::cParts()	12	static
+D:/Bio4/Prog/model.cpp:2183:6:void getBoundingBox(ModelData*, ModelBound*)	4	static
+D:/Bio4/Prog/model.cpp:2233:1:cPartsMgr::cPartsMgr()	0	static
+D:/Bio4/Prog/model.cpp:2326:1:cModInfoMgr::cModInfoMgr()	0	static
+D:/Bio4/Prog/model.cpp:2381:9:cModel* GetPartsAddr(cModel*, int)	12	static
+D:/Bio4/Prog/model.cpp:2403:13:cModelInfo* GetModelInfoAddr(cModelInfo*, int)	12	static
+D:/Bio4/Prog/model.cpp:2425:5:int GetModelInfoNum(cModelInfo*)	8	static
+D:/Bio4/Prog/model.cpp:2447:6:void ModelInfoRefrectOffAll(cModel*)	20	static
+D:/Bio4/Prog/model.cpp:2466:6:void ModelInfoRefrectOn(cModel*, int)	4	static
+D:/Bio4/Prog/model.cpp:2481:6:void ModelInfoSetTrans(cModel*, int, int)	8	static
+D:/Bio4/Prog/model.cpp:2502:6:void drawBoundingBox(f32 (*)[4], ModelBound*)	172	static
+../../../src/game/model.cpp:1320:6:void cModel::drawAllBoundingBox(cModelInfo*)	16	static
+D:/Bio4/Prog/model.cpp:2553:6:void cModel::error()	32	static
+../../../include/cManager.h:427:4:T* cManager<T>::create(int, u32) [with T = cParts]	20	static
+D:/Bio4/Prog/model.cpp:2269:9:cParts* cPartsMgr::createSequential(u32)	36	static
+../../../include/cManager.h:391:4:T* cManager<T>::create(int) [with T = cParts]	20	static
+D:/Bio4/Prog/model.cpp:2057:5:int cModel::makePartsList(int)	28	static
+../../../src/game/model.cpp:270:5:int cModel::initJoint(void*)	20	static
+../../../include/cManager.h:391:4:T* cManager<T>::create(int) [with T = cModelInfo]	24	static
+D:/Bio4/Prog/model.cpp:2349:13:cModelInfo* cModInfoMgr::create(void*, void*)	20	static
+../../../src/game/model.cpp:221:5:int cModel::modelInit(void*, void*)	20	static
+D:/Bio4/Prog/model.cpp:2573:1:cpp)	0	static

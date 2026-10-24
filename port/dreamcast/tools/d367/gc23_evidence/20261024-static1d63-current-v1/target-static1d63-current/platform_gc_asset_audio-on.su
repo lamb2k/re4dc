@@ -1,0 +1,18 @@
+platform/include/gc_asset_sha.inc:10:10:void re4dc_gcasset::{anonymous}::IdentitySha::transform()	136	static
+platform/gc_asset_audio.cpp:25:6:void re4dc_gcasset::{anonymous}::fault()	0	static
+platform/gc_asset_audio.cpp:29:14:re4dc_gcasset::CheckedAsset re4dc_gcasset::{anonymous}::bind(const char*, const re4dc_gcasset::Digest&)	72	static
+platform/gc_asset_audio.cpp:35:6:void re4dc_gcasset::bank_begin(const void*, unsigned int, unsigned int, unsigned int)	20	static
+platform/gc_asset_audio.cpp:49:6:void re4dc_gcasset::bank_piece(const void*, unsigned int, unsigned int, const void*, unsigned int)	28	static
+platform/gc_asset_audio.cpp:62:6:void re4dc_gcasset::bank_end(const void*, unsigned int)	44	static
+platform/gc_asset_audio.cpp:71:10:unsigned int re4dc_gcasset::bank_generation(unsigned int)	0	static
+platform/gc_asset_audio.cpp:72:6:void re4dc_gcasset::bank_pump()	136	static
+platform/gc_asset_audio.cpp:100:6:void re4dc_gcasset::stream_source_failed()	0	static
+platform/gc_asset_audio.cpp:101:6:void re4dc_gcasset::stream_source(const Digest&)	4	static
+platform/gc_asset_audio.cpp:108:10:unsigned int re4dc_gcasset::stream_generation()	0	static
+platform/gc_asset_audio.cpp:109:10:re4dc_gcasset::AudioUse re4dc_gcasset::play_ticket(Consumer, CheckedAsset)	8	static
+platform/gc_asset_audio.cpp:112:10:re4dc_gcasset::AudioUse re4dc_gcasset::bank_ticket(unsigned int, unsigned int)	284	static
+platform/gc_asset_audio.cpp:127:10:re4dc_gcasset::AudioUse re4dc_gcasset::stream_ticket(unsigned int)	168	static
+platform/gc_asset_audio.cpp:139:6:void re4dc_gcasset::played(const AudioUse&)	28	static
+platform/gc_asset_audio.cpp:150:17:void re4dc_gcasset_movie_audio_ticket(unsigned int*, unsigned int*)	12	static
+platform/gc_asset_audio.cpp:153:17:void re4dc_gcasset_movie_audio_submit(unsigned int, unsigned int, unsigned int)	4	static
+platform/gc_asset_audio.cpp:155:1:cpp)	0	static

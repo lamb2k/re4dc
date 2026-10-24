@@ -1,0 +1,23 @@
+D:/Bio4/Prog/read.cpp:294:13:void ModuleMemFree(void*)	4	static
+D:/Bio4/Prog/read.cpp:169:6:void CoreDataRead()	544	static
+D:/Bio4/Prog/read.cpp:245:6:void OptionDataRead()	656	static
+D:/Bio4/Prog/read.cpp:314:6:void InitModule(ReadModule*)	12	static
+D:/Bio4/Prog/read.cpp:450:5:int readEmData(ReadModule*, int, void*, u32)	608	static
+D:/Bio4/Prog/read.cpp:832:6:void setEmModule(ReadModule*, int)	36	static
+D:/Bio4/Prog/read.cpp:879:6:void EmReadInit()	16	static
+D:/Bio4/Prog/read.cpp:923:13:ReadModule* SearchEmModule(int)	0	static
+D:/Bio4/Prog/read.cpp:938:13:ReadModule* pullEmModule()	0	static
+D:/Bio4/Prog/read.cpp:903:7:void* EmReadSearch(int, void*, u32)	32	static
+D:/Bio4/Prog/read.cpp:1199:6:void ReleasePlData()	4	static
+D:/Bio4/Prog/read.cpp:953:6:void ReadPlayerData(int, int)	568	static
+D:/Bio4/Prog/read.cpp:1302:6:void ReleaseWepData()	4	static
+D:/Bio4/Prog/read.cpp:1327:6:void re4dc_weapon_heap4_room_reset()	4	static
+D:/Bio4/Prog/read.cpp:1373:16:int re4dc_weapon_heap4_movie_release()	4	static
+D:/Bio4/Prog/read.cpp:1386:17:void re4dc_weapon_heap4_movie_restore()	8	static
+D:/Bio4/Prog/read.cpp:1473:6:void ReadWepData(u32, u32)	568	static
+D:/Bio4/Prog/read.cpp:1338:6:void re4dc_weapon_revert(int, int, int, int)	48	static
+D:/Bio4/Prog/read.cpp:1605:6:void ContinueWepData()	8	static
+D:/Bio4/Prog/read.cpp:1624:7:void* GetDataExt(void*, const char*, int)	20	static
+D:/Bio4/Prog/read.cpp:91:6:void ReadAreaData()	620	static
+D:/Bio4/Prog/read.cpp:1702:17:void re4dc_em_sleep(int)	32	static
+D:/Bio4/Prog/read.cpp:1715:1:cpp)	0	static

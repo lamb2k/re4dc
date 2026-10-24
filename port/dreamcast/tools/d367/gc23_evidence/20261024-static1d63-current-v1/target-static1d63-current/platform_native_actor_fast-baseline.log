@@ -1,0 +1,16 @@
+In file included from platform/native_actor_fast.cpp:78:
+platform/include/actor_native_owner.h: In member function ‘bool re4dc_actor::WorkspaceReservations::acquire(unsigned int, unsigned int, Re4dcActorWorkspaceLease&)’:
+platform/include/actor_native_owner.h:111:13: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  111 |             if(bytes>maximum_)maximum_=bytes;return true;
+      |             ^~
+platform/include/actor_native_owner.h:111:46: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  111 |             if(bytes>maximum_)maximum_=bytes;return true;
+      |                                              ^~~~~~
+platform/native_actor_fast.cpp: In function ‘unsigned int {anonymous}::crowd_tier(const Re4dcModelPart&, int)’:
+platform/native_actor_fast.cpp:4745:60: warning: missing initializer for member ‘{anonymous}::CrowdEntry::lit’ [-Wmissing-field-initializers]
+ 4745 |         *e = CrowdEntry{p.model, d, frame_serial, kTierNear};
+      |                                                            ^
+platform/native_actor_fast.cpp: In function ‘void re4dc_actor_crowd_note(const void*, const float*)’:
+platform/native_actor_fast.cpp:5116:80: warning: missing initializer for member ‘{anonymous}::CrowdEntry::lit’ [-Wmissing-field-initializers]
+ 5116 |             crowd[crowd_count++] = CrowdEntry{model, d, frame_serial, kTierNear};
+      |                                                                                ^

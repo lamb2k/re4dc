@@ -1,0 +1,7 @@
+         U __ZN13re4dc_gcasset10unresolvedENS_8ConsumerEPKc
+         U __ZN13re4dc_gcasset12audio_ticketEv
+         U __ZN13re4dc_gcasset12bind_checkedEPKcS1_RKNS_6DigestE
+         U __ZN13re4dc_gcasset14queued_checkedENS_11AudioTicketENS_8ConsumerENS_12CheckedAssetE
+         U __ZN13re4dc_gcasset14queued_pendingENS_11AudioTicketENS_8ConsumerENS_12PendingSoundERKNS_6DigestE
+         U _memcpy
+         U _memset
