@@ -10,17 +10,17 @@
     {
       "gate": 0,
       "entries": 255,
-      "result": "8 actual-function cases passed"
+      "result": "9 actual-function cases passed"
     },
     {
       "gate": 1,
       "entries": 63,
-      "result": "14 actual-function cases passed"
+      "result": "16 actual-function cases passed"
     },
     {
       "gate": 1,
       "entries": 255,
-      "result": "15 actual-function cases passed"
+      "result": "18 actual-function cases passed"
     }
   ],
   "host_off_function_preprocessing_identical": true,
