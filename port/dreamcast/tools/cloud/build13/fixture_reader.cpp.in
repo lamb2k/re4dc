@@ -1,0 +1,42 @@
+// Actual v4 reader and the production CRC/R4SG admission block. Files and
+// allocation are host adapters; the public runtime filesystem is not mocked.
+#include <cassert>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <vector>
+#include "@ROOT@/port/dreamcast/room/scenery_record_split.hpp"
+static std::vector<std::uint8_t> fixture_read(const char* path){
+    FILE* f=std::fopen(path,"rb");assert(f);
+    assert(!std::fseek(f,0,SEEK_END));const long size=std::ftell(f);assert(size>=0);
+    assert(!std::fseek(f,0,SEEK_SET));std::vector<std::uint8_t> bytes(static_cast<std::size_t>(size));
+    assert(std::fread(bytes.data(),1,bytes.size(),f)==bytes.size());std::fclose(f);return bytes;
+}
+@CRC@
+static const char* fixture_group_error(re4dc::record_split::WorldPackage& package,
+    std::vector<std::uint8_t>& groups,unsigned policySourceCrc){
+    struct {re4dc::record_split::WorldPackage& package;}ps2w{package};
+    const auto& mh=package.header();const unsigned gsize=unsigned(groups.size());
+    unsigned char* gb=groups.data();const char* gwhy=nullptr;
+    if(gsize<32U || gsize>262144U || (gsize&15U))return "size";
+    @GROUP_GATE@
+    return gwhy;
+}
+int main(int argc,char** argv){
+    assert(argc==5);auto bytes=fixture_read(argv[1]),source=fixture_read(argv[2]);
+    auto policy=fixture_read(argv[3]),groups=fixture_read(argv[4]);
+    re4dc::record_split::WorldPackage package;
+    if(!package.adopt(bytes.data(),unsigned(bytes.size()),true,true)){
+        std::fprintf(stderr,"READER_REFUSAL %s\n",package.error());return 1;
+    }
+    if(ps2_crc32(bytes.data()+80,unsigned(bytes.size())-80)!=package.header().crc)return 2;
+    re4dc::room::MeshHeader original{};if(source.size()<112U)return 3;
+    std::memcpy(&original,source.data(),sizeof(original));
+    if(!re4dc::record_split::source_header(original,unsigned(source.size())))return 3;
+    if(package.is_split() && !package.source_identity(original.crc,unsigned(source.size())))return 4;
+    assert(policy.size()>=32U);unsigned policySourceCrc;std::memcpy(&policySourceCrc,policy.data()+20,4);
+    if(const char* why=fixture_group_error(package,groups,policySourceCrc)){
+        std::fprintf(stderr,"GROUP_REFUSAL %s\n",why);return 5;
+    }
+    std::printf("ADMIT version=%u meshlets=%u split=%u\n",package.header().version,package.header().meshlet_count,package.is_split());
+}

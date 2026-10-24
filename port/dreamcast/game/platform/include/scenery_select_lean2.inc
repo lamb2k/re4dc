@@ -4,7 +4,12 @@
 // Read packed bounds directly. The old caller stored six converted floats that
 // an out-of-line box helper immediately read back. Keep every original matrix
 // and plane expression, including its comparison thresholds and operation order.
+#if RE4DC_SCENERY_RECORD_SPLIT
+template<class MeshletBounds>
+inline int box_mask_grid(const MeshletBounds& l,const float* m,const float* am,
+#else
 inline int box_mask_grid(const re4dc::room::Meshlet& l,const float* m,const float* am,
+#endif
         float near_distance,float far_distance){
     const float l0=float(l.bounds_min[0]),l1=float(l.bounds_min[1]),l2=float(l.bounds_min[2]);
     const float h0=float(l.bounds_max[0]),h1=float(l.bounds_max[1]),h2=float(l.bounds_max[2]);
@@ -25,7 +30,12 @@ inline int box_mask_grid(const re4dc::room::Meshlet& l,const float* m,const floa
     return mask;
 }
 #if RE4DC_SG_SELECT_LEAN
+#if RE4DC_SCENERY_RECORD_SPLIT
+template<class MeshletBounds>
+inline int box_mask_grid_lean(const MeshletBounds& l,const float* m,const float* am,
+#else
 inline int box_mask_grid_lean(const re4dc::room::Meshlet& l,const float* m,const float* am,
+#endif
         float near_distance,float far_distance){
     const float l0=float(l.bounds_min[0]),l1=float(l.bounds_min[1]),l2=float(l.bounds_min[2]);
     const float h0=float(l.bounds_max[0]),h1=float(l.bounds_max[1]),h2=float(l.bounds_max[2]);

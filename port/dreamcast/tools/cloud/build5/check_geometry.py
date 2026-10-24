@@ -50,8 +50,21 @@ def sources():
         "STRIPS_LEAN": "const std::uint8_t* strips_lean(", "EMIT_PICK": "int emit_pick(",
         "ALPHA_LUT": "const std::uint32_t* ps2_vertex_alpha_lut(){",
     }
+    record_signature = "const re4dc::room::CompactVertex12* corners(const RE4DC_SCENERY_RECORD& l){"
+    split_declaration = record_signature in raw and "template<class EmitRecord>" in raw
     for name, signature in names.items():
+        if name == "CORNERS" and split_declaration:
+            continue
         values[name] = function(raw, signature)
+    # Build 13's world-only record view templates the same gather body. As
+    # with chunk_emit above, retain both guarded declarations but count braces
+    # from the second one. No renderer body is substituted by this adapter.
+    if split_declaration:
+        first = raw.index(names["CORNERS"])
+        second = raw.index(record_signature, first)
+        begin = raw.rfind("#if RE4DC_SCENERY_RECORD_SPLIT", 0, first)
+        assert begin >= 0 and "#else" in raw[first:second]
+        values["CORNERS"] = raw[begin:second + len(function(raw, record_signature))]
     begin, end = "// SCENERY_EMIT_PREFETCH_MEMBERS_BEGIN", "// SCENERY_EMIT_PREFETCH_MEMBERS_END"
     if begin in raw:
         assert raw.count(begin) == raw.count(end) == 1

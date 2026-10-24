@@ -374,3 +374,33 @@ knob-off release image identical to Test 23 (d28b3cfc).
    console result.
 3. Console A/B waits for a qualified control and the user's SD-card OK. Peak RAM: the runtime heap row after the
    farm load is 3,733,792 (base), 3,680,960 (SLI1) and 3,604,608 (SDS1) bytes free in heap 4 (more data, less free).
+
+### 2026-10-24: Build 13 hand-back (`codex/scenery-record-split-20261024`)
+
+Candidate: `SCENERY_RECORD_SPLIT=1`, default 0; publication base `fc535318`,
+validation base `9b248c5b` (only a known-issues documentation link changed),
+including landed Builds 10–12. The existing meshlet vertex limit is qualified at
+32/64/128/256 without changing the 64 default. Explicit R4IM v4 stores
+Emit16 and Bounds12 separately, with actual source CRC/extent lineage and
+direct runtime views. It allocates no reconstructed AoS table. The
+[report](BUILD13_SCENERY_RECORD_SPLIT_20261024.md) includes OFF identity,
+actual-reader/geometry gates, warm/cold-I cycles, demand traffic, code/stack
+and an explicitly MODELLED setup-only frame scenario. The recipe and status
+tables remain under the coordinator's control.
+
+1. On the final private ordinary package, do conversion and `SCNSPLIT`/`PS2SG`
+   admission pass with the matched `PS2_INTERIOR_CULL=0 WORLD_RECT21=0
+   FOLIAGE_MIP24=0` recipe and original-policy assets? The converter preserves
+   nonsequential raw index placement, but unknown siblings, stale certificates
+   and Build 12 mixed payloads still require a separate reviewed contract.
+2. What are the selected-ID density, per-part size, reuse, clipping/partial
+   range distribution and complete world/frame timings? In the public
+   320-pick fixture, metadata lines fall 280→160 while warm selection cycles
+   rise 4,877→9,374. Six plane-tested picks retain a combined metadata union
+   of six lines in both layouts. Fewer emit lines alone do not accept it.
+3. Which size, if any, passes the still/walk and STRICT gates? The public
+   size sweep preserves oriented triangle multisets but changes LOD0 order,
+   including translucency. Split versus ordinary at the same size preserves
+   order. Keep the 64 default until a console win and visual acceptance;
+   record restart corners, transformed inputs, total RAM and transition
+   ownership for the same final data.

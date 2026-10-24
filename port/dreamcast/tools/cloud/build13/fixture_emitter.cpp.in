@@ -1,0 +1,120 @@
+// Public genuine-builder files through actual renderer bodies. Picks and
+// queued camera/placement snapshots are controlled inputs, not a selector.
+static std::vector<std::uint8_t> fixture_read(const char* path){
+    FILE* f=std::fopen(path,"rb");assert(f);
+    assert(!std::fseek(f,0,SEEK_END));const long size=std::ftell(f);assert(size>=0);
+    assert(!std::fseek(f,0,SEEK_SET));std::vector<std::uint8_t> bytes(static_cast<std::size_t>(size));
+    assert(std::fread(bytes.data(),1,bytes.size(),f)==bytes.size());std::fclose(f);return bytes;
+}
+#if RE4DC_SCENERY_RECORD_SPLIT
+using FixturePackage=re4dc::record_split::WorldPackage;
+#else
+using FixturePackage=re4dc::room::MeshPackage;
+#endif
+@CRC@
+static const char* fixture_group_error(FixturePackage& package,
+    std::vector<std::uint8_t>& groups,unsigned policySourceCrc,unsigned& group_count){
+    struct {FixturePackage& package;}ps2w{package};
+    const auto& mh=package.header();const unsigned gsize=unsigned(groups.size());
+    unsigned char* gb=groups.data();const char* gwhy=nullptr;
+    if(gsize<32U || gsize>262144U || (gsize&15U))return "size";
+    @GROUP_GATE@
+    if(!gwhy)group_count=w[3];
+    return gwhy;
+}
+static void layout_case(unsigned id,const char* mesh_path,const char* group_path,const char* policy_path){
+    const unsigned scenario=(id-200)/12,pass=((id-200)/4)%3,level=(id-200)%4;
+    assert(scenario<=13 && pass<3 && level<4);
+    auto data=fixture_read(mesh_path),policy=fixture_read(policy_path);
+    FixturePackage package;assert(package.adopt(data.data(),unsigned(data.size()),true,true));
+    assert(ps2_crc32(data.data()+80,unsigned(data.size())-80)==package.header().crc);
+    const auto& cpkg=package;re4dc::vp::build_lut(lut);
+    re4dc::room::CompactVertex12 gather[256];std::memset(gather,0xa5,sizeof(gather));
+    assert(policy.size()>=32 && !std::memcmp(policy.data(),"R4PW",4));
+    unsigned policySourceCrc,placements;
+    std::memcpy(&policySourceCrc,policy.data()+20,4);std::memcpy(&placements,policy.data()+8,4);
+    assert(placements==2 && package.header().part_count==3);
+    std::vector<std::uint8_t> groups;
+    const bool absent=scenario==10 || !std::strcmp(group_path,"-");
+    unsigned group_count=0;const char* group_error="absent";
+    if(!absent){groups=fixture_read(group_path);group_error=fixture_group_error(package,groups,policySourceCrc,group_count);}
+    if(!absent && scenario!=13)assert(!group_error && group_count==4);
+    if(!absent && scenario==13){assert(group_error);assert(!std::strcmp(group_error,"split group strip boundary"));}
+    struct {const unsigned* lut;re4dc::room::CompactVertex12* gather;const std::uint8_t* sg;unsigned sg_groups;}
+        ps2w{::lut,gather,group_error?nullptr:groups.data()+32,group_error?0U:group_count};
+    QueuePart part;part.cull=1;part.projection[1]=part.projection[3]=1;
+    part.viewport[2]=640;part.viewport[3]=480;
+    const float near=1,far=1000;
+    struct {unsigned native=0,fallback=0,aborts=0;}c;
+    @CHUNK_PART@;
+    static constexpr unsigned kChunkParts=48,kChunkPicks=320;
+    ChunkPart cctx[kChunkParts]{};MeshDraw::Pick cpk[kChunkPicks]{};
+    unsigned nctx=placements,npk=0;piece::pkg=&cpkg;piece::table=piece_words;
+    const auto& pl=cpkg.part_lods()[pass];assert(pl.cluster_count==1);
+    const auto& cluster=cpkg.clusters()[pl.first_cluster];assert(cluster.level_count==4);
+    const auto& selected=cpkg.levels()[cluster.first_level+level];
+    // Whole-cluster bounds keep every LOD inside the full-inside camera.
+    float center[3],span=0;
+    for(unsigned a=0;a<3;++a){center[a]=.5f*(cluster.bounds_min[a]+cluster.bounds_max[a]);
+        const float s=float(cluster.bounds_max[a]-cluster.bounds_min[a]);if(s>span)span=s;}
+    assert(span>0);const float scale=100.0f/span;
+    unsigned picked=0,indexed=0,partial_nonempty=0;
+    for(unsigned j=0;j<nctx;++j){auto& x=cctx[j];x.index=pass;x.cull=(j+pass)%3;x.sky=j&1;x.marked=(j&1)!=0;
+        key_for(x.index,pass,x.cull,x.key);x.first=npk;x.cull_far=far;x.lod_scale=2;
+#if RE4DC_SCENERY_UV_SNAPSHOT
+        x.uv_offset[0]=float(j)*.125f;x.uv_offset[1]=-float(j)*.0625f;
+#endif
+        x.mvq[0]=scale*(scenario==8?-1.0f:scenario==9?2.0f:1.0f);
+        x.mvq[5]=scale*(scenario==8?.5f:scenario==9?.25f:1.0f);x.mvq[10]=scale;
+        x.mvq[3]=-center[0]*x.mvq[0]+float(j)*.125f;x.mvq[7]=-center[1]*x.mvq[5];
+        const float depth=scenario==1?near:scenario==2?far:300.0f;
+        x.mvq[11]=-center[2]*scale-depth;
+        if(scenario==3)x.mvq[3]+=5000;
+        for(unsigned i=0;i<selected.meshlet_count;++i){
+            if(scenario==11 && i%4)continue;
+            assert(npk<kChunkPicks);
+            const unsigned li=selected.first_meshlet+i;
+            auto& pick=cpk[npk++];pick={std::uint16_t(li),255,0,0,255,{0,0}};
+            ++x.count;++picked;
+            if(cpkg.indexed(cpkg.meshlets()[li]))++indexed;
+            if(scenario==4 || scenario==5 || scenario==12){
+                assert(ps2w.sg && ps2w.sg_groups==4);
+                const unsigned mask=scenario==12?5U:1U<<(scenario-4);
+                const auto* g=reinterpret_cast<const std::uint16_t*>(ps2w.sg+16*group_count*li);
+                unsigned first=255,last=0,nr=0;
+                for(unsigned q=0;q<group_count;++q){
+                    const unsigned before=q?g[8*(q-1)+6]:0,end=g[8*q+6];
+                    if(((mask>>q)&1U) && end>before){
+                        const unsigned lo=g[8*q+7]&255U,hi=g[8*q+7]>>8;
+                        assert(lo<=hi);if(lo<first)first=lo;if(hi>last)last=hi;++nr;
+                    }
+                }
+                pick.nr=std::uint8_t(nr);pick.gmask=std::uint8_t(mask);
+                pick.lo=std::uint8_t(first);pick.hi=std::uint8_t(last);
+                if(nr)++partial_nonempty;
+            }else if(scenario==6)pick.nr=0;
+        }
+    }
+    // These authored strips are at most 40 corners, below borrow's 64-slot
+    // minimum. Exercise an actual reserve refusal rather than falsely calling
+    // a small but sufficient tail an oversize-strip fallback.
+    // The real bind derives model_pending from model_used plus its header.
+    // Leave fewer than 64 slots after the reserved cache and header.
+    if(scenario==7)model_used=kModelPacketBytes/32-(re4dc::vp::kCacheSlots+63);
+    re4dc_ps2_sky_header=7;
+    @CHUNK_FLUSH@;
+    const int result=chunk_flush();assert(result && !locked && !direct_open && !nctx && !npk);
+    // bind has submitted a polygon header: a later reserve refusal must
+    // abort, not pretend the original caller can start a pristine fallback.
+    if(scenario==7)assert(result<0 && c.aborts==1 && stats.reserve_rejects==1);
+    else assert(result>0 && !c.aborts && !c.fallback && re4dc_ps2_sky_header==7);
+    returns.push_back(unsigned(result));queue_native=c.native;queue_fallback=c.fallback;queue_aborts=c.aborts;
+    @REPORT_STATS@
+    unsigned ta_corners=0;for(unsigned word=0;word<sent.size();word+=8)if(sent[word]>>29==7U)++ta_corners;
+    if(scenario==0)assert(ta_corners>0);
+    std::fprintf(stderr,"LAYOUT {\"case\":%u,\"scenario\":%u,\"pass\":%u,\"lod\":%u,"
+        "\"picked\":%u,\"indexed_picks\":%u,\"partial_nonempty\":%u,\"result\":%d,\"aborts\":%u,\"fallbacks\":%u,\"group_error\":\"%s\","
+        "\"ta_corners\":%u,\"vertices\":%u,\"strips\":%u,\"strips_clipped\":%u,\"triangles_clipped\":%u,\"strips_culled\":%u,\"reserve_rejects\":%u}\n",
+        id,scenario,pass,level,picked,indexed,partial_nonempty,result,c.aborts,c.fallback,group_error?group_error:"none",ta_corners,
+        stats.vertices,stats.strips,stats.strips_clipped,stats.triangles_clipped,stats.strips_culled,stats.reserve_rejects);
+}
