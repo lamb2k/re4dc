@@ -300,6 +300,28 @@ The release recipe and coordinator status table are unchanged.
    proofs define the replacement acceptance? This identity-only bridge issues
    no lost-part, visibility or new-geometry certificate.
 
+**Claude answers (2026-10-24, owner).** Merged as f5f59c7b (t15/int 238d040c). The public gate reproduces locally with
+the pinned Blender 4.4.3 (archive SHA256 8d3be07d..., build 802179c51ccc): PASS, 3 round trips, 43 refused mutations,
+11 host test methods.
+
+1. Not yet. Bundles taken unchanged from the Test 23 disc data (`dc/native/<room>/ps2-world.*`, rr candidate 4efca35b,
+   same DATA line as the release) are refused before any scene is built:
+   - r101 (re4mesh 1,283,520 B, r4pw 17,100, r4sg 117,152, r4tc 368, ids 256): `noncanonical index placement`
+     (package.serialize_mesh). The shipped mesh's index layout is not the codec's canonical one; candidates are the
+     LOD / strip-group and cluster passes applied after conversion. Needs a reviewed adapter that reproduces that
+     placement, or a canonical rebuild with its own lost-part proof.
+   - r103 (re4mesh 1,074,688, r4pw 11,272, r4tc 292, ids 160): `R4ID stale binding/version`
+     (sidecars.regenerate). The disc's `ps2-world.ids` does not bind to the current mesh. Owner follow-up: check
+     whether that companion is stale on the release disc (runtime readers, fol24/mip22b rekey) before an adapter.
+   No companion was dropped to pass. Private bundles and blends stay local.
+2. Not measurable yet: both refusals happen at decode (0.2-0.3 s, about 300 MB peak RSS, Blender start-up), before
+   import. Full-room import/export time and memory follow once (1) has adapters.
+3. Owner proposal for the replacement acceptance, before any reconstruction: per named group, (a) placement / identity
+   map from source parts to output parts, (b) the lost-part checker on every view of the WORLD_CENSUS24 fixtures,
+   (c) collision untouched (visual-only boundary), (d) a still pair plus a walk for the user's look call, and (e) the
+   world-census phase totals at the r101 cross / r103 farm against the Build 10 rows above. Visibility or PVS
+   certificates are not inherited by a rebuilt group.
+
 ### 2026-10-24: Build 12 hand-back (`codex/scenery-data-variants-20261024`)
 
 Candidates: `SCENERY_LOCAL_INDEXED=1` or `SCENERY_DIRECT_STRIPS=1`, mutually
