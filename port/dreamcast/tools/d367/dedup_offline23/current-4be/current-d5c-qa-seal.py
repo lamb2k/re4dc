@@ -7,6 +7,8 @@ sha=lambda p:hashlib.file_digest(p.open('rb'),'sha256').hexdigest()
 m=json.loads((E/'qa-media-r1/pair-media-identity.json').read_text());plan=json.loads((E/'private-qa-plan-prelink.json').read_text());report={}
 for arm,mode in [('off',0),('on',3)]:
  x=m['arms'][arm];d=Path(x['path']);gates={}
+ k=dict(v.split('=',1) for v in (Path(x['programme']['path'])/'resolved-knobs.txt').read_text().splitlines() if '=' in v)
+ assert k['SCENERY_EMIT_PREFETCH']=='0' and k['SCENERY_SELECT_LEAN2']=='0'
  for kind in ('boot','warp','h2'):
   p=E/f'qa-{arm}-{kind}-console-r1/qa-gate.json';g=json.loads(p.read_text());assert g['status']=='PASS' and g['source']==m['source'];gates[kind]=g
  retirement=E/f'qa-{arm}-proxy-retirement-r1.json';rr=json.loads(retirement.read_text());assert rr['status']=='REMOVED_ONLY_EXACT_AUTHORIZED_NEW_PROXY_BACKING' and rr['all_final_tracks_full_readback_equal']
@@ -26,7 +28,7 @@ ON3 selects the strict validated compact alternate. All original geometry,
 UV/color/LOD/source identity and all41 texture assets retained; no pruning.
 Current audits four fixes ON, EM_READ_RETRY1, arena0; SELECT_ONLY/REPLAY_LEAN/
 SUBMIT_BATCH1. Normal QA1/PC0, KOS/squeeze/census/diagnostic contamination0.
-Production recipe dedup remains OFF pending root decision.
+SCENERY_EMIT_PREFETCH=0 and SCENERY_SELECT_LEAN2=0 only. The separately found`nexperimental PREFETCH1 context defect is outside this qualified profile.`nProduction recipe dedup remains OFF pending root decision.
 
 Programme {x['programme']['label']}
 Raw programme SHA256: {x['programme']['raw_sha256']}
@@ -73,7 +75,7 @@ report all materials correct from these bounded tests. No hardware FPS claim.
  (d/'README.txt').write_text(readme);(d/'STEPS.txt').write_text(steps)
  shutil.copyfile(T/'qa20/README-package.txt',d/'README-tooling.txt')
  (d/'QUALIFICATION-PENDING.txt').write_text('Local normal QA checks pass. Root review/integration and physical acceptance remain pending; no SD/publication.\n')
- identity=dict(status='LOCAL_NORMAL_QA_PAIR_GATES_PASS_ROOT_REVIEW_PENDING',source=m['source'],baseline_source='d5c1ceab9e06461462669b3ce1d28a379747a74a',arm=arm,scenery_dedup=mode,programme=x['programme'],tracks=x['tracks'],final_manifest_sha256=x['manifest_sha256'],post_final_manifest_sha256=rr['final_post_manifest_sha256'],only_programme_differences=m['only_programme_differences'],original_assets_and_exact4_alternates_common=True,baseline_packages=plan['baseline_packages'],compact_alternates=plan['alternates'],normal_qa_gates=gates,proxy_retirement_receipt_sha256=sha(retirement),gdemu10_gates_sha256=sha(E/'gdemu10-gates-r1.json'),known_limitations=['Physical-console acceptance pending','No hardware performance claim','Known baseline Mendez late-pair material issue retained; separate unproven-visible PS2 private repair not included','Scoped observed diagnostics, not all-material completeness','Root integration/recipe decision pending'])
+ identity=dict(status='LOCAL_NORMAL_QA_PAIR_GATES_PASS_ROOT_REVIEW_PENDING',source=m['source'],baseline_source='d5c1ceab9e06461462669b3ce1d28a379747a74a',arm=arm,scenery_dedup=mode,programme=x['programme'],tracks=x['tracks'],final_manifest_sha256=x['manifest_sha256'],post_final_manifest_sha256=rr['final_post_manifest_sha256'],only_programme_differences=m['only_programme_differences'],original_assets_and_exact4_alternates_common=True,baseline_packages=plan['baseline_packages'],compact_alternates=plan['alternates'],normal_qa_gates=gates,proxy_retirement_receipt_sha256=sha(retirement),gdemu10_gates_sha256=sha(E/'gdemu10-gates-r1.json'),known_limitations=['Physical-console acceptance pending','No hardware performance claim','Known baseline Mendez late-pair material issue retained; separate unproven-visible PS2 private repair not included','Scoped observed diagnostics, not all-material completeness','SCENERY_EMIT_PREFETCH=0 / SCENERY_SELECT_LEAN2=0 only; separate PREFETCH1 defect is unqualified','Root integration/recipe decision pending'])
  (d/'IDENTITY.json').write_text(json.dumps(identity,indent=2)+'\n')
  sums=[]
  for f in sorted(d.rglob('*')):
