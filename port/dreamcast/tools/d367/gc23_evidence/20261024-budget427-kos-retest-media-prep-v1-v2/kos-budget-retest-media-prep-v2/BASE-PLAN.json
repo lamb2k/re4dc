@@ -1,0 +1,131 @@
+{
+ "candidate": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82",
+ "candidate_identity": {
+  "size": 24395,
+  "sha256": "2e43f6f01573a604e323287e6e4134824b093daeec0cc31bbd559fd592132fab"
+ },
+ "candidate_tracks": {
+  "disc.gdi": {
+   "size": 87,
+   "sha256": "025516557d49e1835e7eb8571e09244b64db190cf3981ead555c54b1924ca19f"
+  },
+  "track01.bin": {
+   "size": 1058400,
+   "sha256": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9"
+  },
+  "track02.raw": {
+   "size": 1237152,
+   "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48"
+  },
+  "track03.bin": {
+   "size": 1185760800,
+   "sha256": "7cc0a64936f8eafa4ec3fb605582500d9fbc6e5a712f407836009773c58624aa"
+  }
+ },
+ "assets": {
+  "files": 1697,
+  "logical_bytes": 1017241266,
+  "read_only_fixture": "/root/work/lanes/dedup-offline23-main/stage-on/pkgtree",
+  "fixture_extra_files_excluded": true,
+  "tex_pak": {
+   "size": 162154496,
+   "sha256": "5bba464a1175d8ebe153d5aecb629ea9637807c2bf4fc438a32c17148d0729da"
+  }
+ },
+ "sourceIP": {
+  "size": 32768,
+  "sha256": "0e4e13d0b8df6477d9e43370591fd1a580c54b4df2209b944610d2a0b6b0062c"
+ },
+ "original_manifest": {
+  "size": 231281,
+  "sha256": "4d07e720300fcd72ae1081a00fe6a702331983ed2e8af4fdfadb0346691a726a"
+ },
+ "genisoimage": {
+  "size": 694424,
+  "sha256": "9bacc5951ca0767701cfd8e6b47537f199977e51a6e943f4edfdcf9d639d99d2"
+ },
+ "source": "427784b1f48aa30742850bb5025925ab619b740e",
+ "status": "INPUTS_READBACK_ONLY_NO_STAGE",
+ "sourceIP_path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/SOURCE-IP.BIN",
+ "overlays": [
+  "em22.ovl",
+  "em2b.ovl",
+  "em2f.ovl",
+  "em35.ovl",
+  "em3b.ovl",
+  "pl0f.ovl",
+  "pl11.ovl",
+  "pl14.ovl",
+  "sscrn.ovl",
+  "st1_0.ovl",
+  "st1_1.ovl",
+  "st1_2.ovl",
+  "st1_3.ovl",
+  "st2_0.ovl"
+ ],
+ "official_iso_tool": {
+  "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/fullplay/fp_iso.py",
+  "identity": {
+   "size": 8006,
+   "sha256": "e473a3493aa97ba63391cb507b2263935b8904153adddd99c421b689810f54da"
+  }
+ },
+ "official_tools": {
+  "fullplay/fp_iso.py": {
+   "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/fullplay/fp_iso.py",
+   "identity": {
+    "size": 8006,
+    "sha256": "e473a3493aa97ba63391cb507b2263935b8904153adddd99c421b689810f54da"
+   }
+  },
+  "fullplay/fp_master.sh": {
+   "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/fullplay/fp_master.sh",
+   "identity": {
+    "size": 6937,
+    "sha256": "f1f341e94c29d50f64afa229ce305d9a60f50f4eafb3c7d9fe9a9c06844e457f"
+   }
+  },
+  "fullplay/fp_run.py": {
+   "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/fullplay/fp_run.py",
+   "identity": {
+    "size": 15608,
+    "sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747"
+   }
+  },
+  "trace_lock.sh": {
+   "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/trace_lock.sh",
+   "identity": {
+    "size": 2169,
+    "sha256": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688"
+   }
+  }
+ },
+ "python3": {
+  "size": 8020928,
+  "sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f"
+ },
+ "original_fixture": {
+  "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/fixtures/kos-fight-49152-0.txt",
+  "identity": {
+   "size": 770,
+   "sha256": "246778ae0af43bf62e1bb43098316187b0772781c70c75f87dbca52773bd4128"
+  }
+ },
+ "squeeze0_fixture": {
+  "size": 770,
+  "sha256": "246778ae0af43bf62e1bb43098316187b0772781c70c75f87dbca52773bd4128"
+ },
+ "programmes": "CORRECTED_DURABLE_427_READBACK_CLEAR",
+ "prior_seal_sha256": "130d48651e89216555a01f2f481eb76490494491e6a934acab1fd9094c75d786",
+ "capacity": {
+  "delta": 1342177280,
+  "aggregate": 6979321856,
+  "admit": 27917287424,
+  "floor": 25769803776
+ },
+ "no_stage": true,
+ "windows_python": {
+  "size": 104952,
+  "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+ }
+}

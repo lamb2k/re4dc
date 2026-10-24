@@ -1,0 +1,37 @@
+{
+ "status": "READY_FOR_INDEPENDENT_PREPARATION_REVIEW_NO_ALLOCATION",
+ "seal": {
+  "size": 2751,
+  "sha256": "2301e39cfb166ee25bab261f0323d1df27331155148b67453bc527ce7330bee1"
+ },
+ "baseline": {
+  "size": 1674494,
+  "sha256": "5d1f9a8cb6e16f3abb145664faee503c88125061bc1d30c083489eae9baf56f0"
+ },
+ "binding": {
+  "size": 10656,
+  "sha256": "c718747e5cd79fc8ce3994d8014e37a717839f153539029ceaaa63c58b97c7f9"
+ },
+ "capacity": {
+  "prior_unique_bytes": 5278682286,
+  "new_unique_bytes": 2398224,
+  "aggregate_bytes": 5281080510,
+  "delta_cap": 1342177280,
+  "aggregate_cap": 6979321856,
+  "C_free": 41183322112
+ },
+ "controls": {
+  "tests": 21,
+  "success": true,
+  "failures": 0,
+  "errors": 0,
+  "SDK": 0,
+  "geniso": 0,
+  "stage": 0,
+  "guests": 0
+ },
+ "SDK": 0,
+ "stage": 0,
+ "guest": 0,
+ "H2": "HELD"
+}

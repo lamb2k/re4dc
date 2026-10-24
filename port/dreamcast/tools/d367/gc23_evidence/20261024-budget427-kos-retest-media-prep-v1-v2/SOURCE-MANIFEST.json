@@ -1,0 +1,169 @@
+{
+ "source": "427784b1f48aa30742850bb5025925ab619b740e",
+ "scope": "Source/metadata only. v1 capacityHOLD preserved; root explicit successor budget. No SDK/stage/guest/H2 or memory pass.",
+ "transport": "Exact original bytes including EOL; local gitattributes disables text normalization",
+ "files": [
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v1/CAPACITY-HOLD.json",
+   "archived": "kos-budget-retest-media-prep-v1/CAPACITY-HOLD.json",
+   "bytes": 11448,
+   "sha256": "71d456cc4abe3f4fa668d6fe2c8e9b222d76bb4f21042abb8ba83b5db554feeb"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v1/OWNED-FILE-INVENTORY.json",
+   "archived": "kos-budget-retest-media-prep-v1/OWNED-FILE-INVENTORY.json",
+   "bytes": 2151605,
+   "sha256": "a2d6b0827e2f4d1ea3301d720f86d49610c2cf8272d89ef36b5246920f52170d"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v1/capacity.py",
+   "archived": "kos-budget-retest-media-prep-v1/capacity.py",
+   "bytes": 1418,
+   "sha256": "1cdddd7d0ddd54e685cac85c6b68863a2476ca18218ee807b5ee3ced0cbece49"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v1/inventory_owned.py",
+   "archived": "kos-budget-retest-media-prep-v1/inventory_owned.py",
+   "bytes": 2803,
+   "sha256": "c2aaf5011c487cb027fdcedc91f9e874577411d90cbfb73d0c9e1108e68c3497"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v1/record_hold.py",
+   "archived": "kos-budget-retest-media-prep-v1/record_hold.py",
+   "bytes": 2598,
+   "sha256": "eb565a803c9e5b9ba1b21168f5f32007e92c09526ef334af789f7fc80a6f1233"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/ALLOCATION-CONTRACT.json",
+   "archived": "kos-budget-retest-media-prep-v2/ALLOCATION-CONTRACT.json",
+   "bytes": 2208,
+   "sha256": "4c85c153a9dd8c16e263b2dc4dbcc6c226d07aba1a495cee4e241b49e020aa69"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/BASE-PLAN.json",
+   "archived": "kos-budget-retest-media-prep-v2/BASE-PLAN.json",
+   "bytes": 4037,
+   "sha256": "011095d23b8a68b472e4f4a2a64f500f986742770cbfc1b78a9f38d626522512"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/BASELINE.json",
+   "archived": "kos-budget-retest-media-prep-v2/BASELINE.json",
+   "bytes": 1674494,
+   "sha256": "5d1f9a8cb6e16f3abb145664faee503c88125061bc1d30c083489eae9baf56f0"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/BINDING.json",
+   "archived": "kos-budget-retest-media-prep-v2/BINDING.json",
+   "bytes": 10656,
+   "sha256": "c718747e5cd79fc8ce3994d8014e37a717839f153539029ceaaa63c58b97c7f9"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/CURRENT-CANDIDATE-MANIFEST.json",
+   "archived": "kos-budget-retest-media-prep-v2/CURRENT-CANDIDATE-MANIFEST.json",
+   "bytes": 221009,
+   "sha256": "2e313cc69c6826ec5be00df9fbfed4d5dd50317ba706d8188051870e7644347e"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/GUEST-PROPOSAL.json",
+   "archived": "kos-budget-retest-media-prep-v2/GUEST-PROPOSAL.json",
+   "bytes": 9583,
+   "sha256": "6079bb13af8282bdd5b9b43213a79f9dc297b730f25c0d87ce96624c96f095dc"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/HOST-CONTROLS-r1.json",
+   "archived": "kos-budget-retest-media-prep-v2/HOST-CONTROLS-r1.json",
+   "bytes": 117,
+   "sha256": "77024c7caa131b047bd0d2a2dcd0ca5e53f00b94bed0e9b555ffc9e78ab656f8"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/HOST-CONTROLS.json",
+   "archived": "kos-budget-retest-media-prep-v2/HOST-CONTROLS.json",
+   "bytes": 117,
+   "sha256": "61d7adbae77fb776270fbca23cbdd870984727878a73ffa0012123d84eb67917"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/OFF-EXPECTED-MANIFEST.json",
+   "archived": "kos-budget-retest-media-prep-v2/OFF-EXPECTED-MANIFEST.json",
+   "bytes": 221364,
+   "sha256": "d38313c06533dce2d7a858937fbba8943f5951b3c32423679e20c486e87f9bcb"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/ON-EXPECTED-MANIFEST.json",
+   "archived": "kos-budget-retest-media-prep-v2/ON-EXPECTED-MANIFEST.json",
+   "bytes": 221364,
+   "sha256": "ea37b49d0799797a114b9529eb296a3175b022bae25c37bb08194e25863a7ac0"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/READBACK.json",
+   "archived": "kos-budget-retest-media-prep-v2/READBACK.json",
+   "bytes": 806,
+   "sha256": "824f9a8f66e9d1db79817213e92e97b64cead1f046ca6dc590a28446b5ad071f"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/README.md",
+   "archived": "kos-budget-retest-media-prep-v2/README.md",
+   "bytes": 4569,
+   "sha256": "c3722ea34afe260152b36da076b1af4997dd7d8fd6b873b486e784fe35505791"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/ROOT-STAGE-GRANT-TEMPLATE.json",
+   "archived": "kos-budget-retest-media-prep-v2/ROOT-STAGE-GRANT-TEMPLATE.json",
+   "bytes": 631,
+   "sha256": "6b1530198398e7c74b47fed772443eb3ec0b71e6f0798e0d22a76d5fecd84abf"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/TOOLCHAIN-SEAL.json",
+   "archived": "kos-budget-retest-media-prep-v2/TOOLCHAIN-SEAL.json",
+   "bytes": 2751,
+   "sha256": "2301e39cfb166ee25bab261f0323d1df27331155148b67453bc527ce7330bee1"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/core.py",
+   "archived": "kos-budget-retest-media-prep-v2/core.py",
+   "bytes": 5315,
+   "sha256": "346cb535de50868c77a745ccb6ce5f0a14d7e0be1a4d04339553bbe1f6b1b5ee"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/guest_plan.py",
+   "archived": "kos-budget-retest-media-prep-v2/guest_plan.py",
+   "bytes": 3177,
+   "sha256": "6c6dfcef241586405d26b2a1780313390c424566fb7c01941b3f73e6532627ef"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/host_controls.py",
+   "archived": "kos-budget-retest-media-prep-v2/host_controls.py",
+   "bytes": 4915,
+   "sha256": "6cf19579acf51db203b8805a861f8e01134fde4bd77337f1b7b2138918e92a24"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/launch.py",
+   "archived": "kos-budget-retest-media-prep-v2/launch.py",
+   "bytes": 800,
+   "sha256": "c9baaeece74f08784b67dbf06e31e1618494df70d2d6d92a8d6051d2416f8e81"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/prepare.py",
+   "archived": "kos-budget-retest-media-prep-v2/prepare.py",
+   "bytes": 5452,
+   "sha256": "024c8435fe3384db63e49bef8ab6077e80ea2d852611b9347f0f516438c6e40f"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/readback.py",
+   "archived": "kos-budget-retest-media-prep-v2/readback.py",
+   "bytes": 1279,
+   "sha256": "54935172cd04fbd06026d41c25f0e554d06edc5236cfc24485ad403ac3008f40"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/seal.py",
+   "archived": "kos-budget-retest-media-prep-v2/seal.py",
+   "bytes": 1649,
+   "sha256": "bd9a84063253fc168b22b682b72d095fa4ff6240d122a2b952b78686242a297f"
+  },
+  {
+   "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-budget-retest-media-prep-v2/stage.py",
+   "archived": "kos-budget-retest-media-prep-v2/stage.py",
+   "bytes": 2737,
+   "sha256": "1e1fdfb80f66389ef4615ffb7ca0e67e550a0f3d99433946fe37c16f50723386"
+  }
+ ]
+}

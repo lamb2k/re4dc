@@ -1,0 +1,87 @@
+{
+ "status": "SOURCE_HOST_PREPARATION_NO_STAGE_NO_GUEST",
+ "source": "427784b1f48aa30742850bb5025925ab619b740e",
+ "members": {
+  "ALLOCATION-CONTRACT.json": {
+   "size": 2208,
+   "sha256": "4c85c153a9dd8c16e263b2dc4dbcc6c226d07aba1a495cee4e241b49e020aa69"
+  },
+  "BASE-PLAN.json": {
+   "size": 4037,
+   "sha256": "011095d23b8a68b472e4f4a2a64f500f986742770cbfc1b78a9f38d626522512"
+  },
+  "BASELINE.json": {
+   "size": 1674494,
+   "sha256": "5d1f9a8cb6e16f3abb145664faee503c88125061bc1d30c083489eae9baf56f0"
+  },
+  "BINDING.json": {
+   "size": 10656,
+   "sha256": "c718747e5cd79fc8ce3994d8014e37a717839f153539029ceaaa63c58b97c7f9"
+  },
+  "core.py": {
+   "size": 5315,
+   "sha256": "346cb535de50868c77a745ccb6ce5f0a14d7e0be1a4d04339553bbe1f6b1b5ee"
+  },
+  "CURRENT-CANDIDATE-MANIFEST.json": {
+   "size": 221009,
+   "sha256": "2e313cc69c6826ec5be00df9fbfed4d5dd50317ba706d8188051870e7644347e"
+  },
+  "GUEST-PROPOSAL.json": {
+   "size": 9583,
+   "sha256": "6079bb13af8282bdd5b9b43213a79f9dc297b730f25c0d87ce96624c96f095dc"
+  },
+  "guest_plan.py": {
+   "size": 3177,
+   "sha256": "6c6dfcef241586405d26b2a1780313390c424566fb7c01941b3f73e6532627ef"
+  },
+  "HOST-CONTROLS-r1.json": {
+   "size": 117,
+   "sha256": "77024c7caa131b047bd0d2a2dcd0ca5e53f00b94bed0e9b555ffc9e78ab656f8"
+  },
+  "HOST-CONTROLS.json": {
+   "size": 117,
+   "sha256": "61d7adbae77fb776270fbca23cbdd870984727878a73ffa0012123d84eb67917"
+  },
+  "host_controls.py": {
+   "size": 4915,
+   "sha256": "6cf19579acf51db203b8805a861f8e01134fde4bd77337f1b7b2138918e92a24"
+  },
+  "launch.py": {
+   "size": 800,
+   "sha256": "c9baaeece74f08784b67dbf06e31e1618494df70d2d6d92a8d6051d2416f8e81"
+  },
+  "OFF-EXPECTED-MANIFEST.json": {
+   "size": 221364,
+   "sha256": "d38313c06533dce2d7a858937fbba8943f5951b3c32423679e20c486e87f9bcb"
+  },
+  "ON-EXPECTED-MANIFEST.json": {
+   "size": 221364,
+   "sha256": "ea37b49d0799797a114b9529eb296a3175b022bae25c37bb08194e25863a7ac0"
+  },
+  "prepare.py": {
+   "size": 5452,
+   "sha256": "024c8435fe3384db63e49bef8ab6077e80ea2d852611b9347f0f516438c6e40f"
+  },
+  "readback.py": {
+   "size": 1279,
+   "sha256": "54935172cd04fbd06026d41c25f0e554d06edc5236cfc24485ad403ac3008f40"
+  },
+  "README.md": {
+   "size": 4569,
+   "sha256": "c3722ea34afe260152b36da076b1af4997dd7d8fd6b873b486e784fe35505791"
+  },
+  "ROOT-STAGE-GRANT-TEMPLATE.json": {
+   "size": 631,
+   "sha256": "6b1530198398e7c74b47fed772443eb3ec0b71e6f0798e0d22a76d5fecd84abf"
+  },
+  "seal.py": {
+   "size": 1649,
+   "sha256": "bd9a84063253fc168b22b682b72d095fa4ff6240d122a2b952b78686242a297f"
+  },
+  "stage.py": {
+   "size": 2737,
+   "sha256": "1e1fdfb80f66389ef4615ffb7ca0e67e550a0f3d99433946fe37c16f50723386"
+  }
+ },
+ "parent_seal_sha256": "812c92f2eb0ec29a41051754e16c44de87a8ea7bfeebd066da0ac41524e11a3c"
+}

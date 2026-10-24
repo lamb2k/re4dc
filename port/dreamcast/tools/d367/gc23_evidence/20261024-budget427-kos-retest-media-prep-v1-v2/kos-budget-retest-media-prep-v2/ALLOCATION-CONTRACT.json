@@ -1,0 +1,78 @@
+{
+ "source": "427784b1f48aa30742850bb5025925ab619b740e",
+ "baseline": {
+  "size": 1674494,
+  "sha256": "5d1f9a8cb6e16f3abb145664faee503c88125061bc1d30c083489eae9baf56f0"
+ },
+ "binding": {
+  "size": 10656,
+  "sha256": "c718747e5cd79fc8ce3994d8014e37a717839f153539029ceaaa63c58b97c7f9"
+ },
+ "prior_unique_bytes": 5278682286,
+ "new_delta_cap": 1342177280,
+ "aggregate_cap": 6979321856,
+ "C_admission": 27917287424,
+ "C_floor": 25769803776,
+ "new_final_arms": [
+  "on"
+ ],
+ "existing_OFF": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-media-aab-v1/base-off",
+ "reuse_OFF_exact_bytes": true,
+ "immutable_asset_hardlinks_only": true,
+ "no_whole_asset_copy": true,
+ "fixtures": [
+  {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/fixtures/kos-fight-49152-0.txt",
+   "identity": {
+    "size": 770,
+    "sha256": "246778ae0af43bf62e1bb43098316187b0772781c70c75f87dbca52773bd4128"
+   }
+  },
+  {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/fixtures/kos-fight-49152-1.txt",
+   "identity": {
+    "size": 770,
+    "sha256": "e4220c13c7b4e6e7890ad5c5bf084ecac63e6c80016dad79856d6df9cf7e1a7b"
+   }
+  }
+ ],
+ "pillow": [
+  {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/pillow-isolated-prep-v1/SOURCE-SEAL.json",
+   "identity": {
+    "size": 2490,
+    "sha256": "3bcff1c5a4eb7f5823296be065c097a246251ffd3c3d3d42ecf11073eeb7add2"
+   }
+  },
+  {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/pillow-isolated-prep-v1/pillow_launcher.py",
+   "identity": {
+    "size": 5077,
+    "sha256": "42cdc98cb3f2611a02afb6b0d8dc00cc5df5c6ee0450168558fd0feceab39e78"
+   }
+  },
+  {
+   "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/pillow-isolated-prep-v1/PILLOW-PINS.json",
+   "identity": {
+    "size": 17990,
+    "sha256": "e7027f68abb393a897c405c95465cc2a701a948f8ec4b990da460a18b9a492d4"
+   }
+  }
+ ],
+ "cases": [
+  "off-frag0",
+  "on-frag0",
+  "off-frag1",
+  "on-frag1"
+ ],
+ "seconds": 45,
+ "exact_child_cap": 55,
+ "root_pool": 3,
+ "global_slots": 16,
+ "H2": "HELD_NO_PERMISSION",
+ "FP_NOLIMIT": "1",
+ "configLimitFPS": "no",
+ "memory_result": "NOT_RUN",
+ "no_stage": true,
+ "no_guest": true
+}
