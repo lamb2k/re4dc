@@ -407,6 +407,33 @@ RAIN_DC_N ?= 160
 $(OBJDIR)/src/game/filter06.o: GAME_CPPFLAGS += -DRE4DC_RAIN_DC=1 -DRE4DC_RAIN_DC_N=$(RAIN_DC_N)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_RAIN_DC=1
 endif
+# RAIN_R10C_DC=1: private experimental r10c Filter06 callback adapter, default0.
+# No production recipe. Render profile is sheet-informed, not qualified PS2 appearance.
+RAIN_R10C_DC ?= 0
+ifneq ($(RAIN_R10C_DC),0)
+ifneq ($(RAIN_R10C_DC),1)
+$(error RAIN_R10C_DC is exactly 0 or 1)
+endif
+ifneq ($(RAIN_DC),1)
+$(error RAIN_R10C_DC needs RAIN_DC=1)
+endif
+ifneq ($(RAIN_PS2),1)
+$(error RAIN_R10C_DC needs RAIN_PS2=1)
+endif
+ifneq ($(D349_RENDERER_STACK),1)
+$(error RAIN_R10C_DC needs D349_RENDERER_STACK=1 for the actual ADEB flush)
+endif
+ifneq ($(PVR_STREAM),1)
+$(error RAIN_R10C_DC needs PVR_STREAM=1)
+endif
+ifneq ($(NATIVE_LASER),1)
+$(error RAIN_R10C_DC needs NATIVE_LASER=1)
+endif
+ifneq ($(EFFECT_SPRITES),1)
+$(error RAIN_R10C_DC needs EFFECT_SPRITES=1)
+endif
+$(OBJDIR)/src/game/filter06.o: GAME_CPPFLAGS += -DRE4DC_RAIN_R10C_DC=1
+endif
 # LAKE_FIX_TOGGLE=1 (lane lake20 2026-10-20; scenario / QA discs only, default 0 = no code): the lake switches at run time
 #                    from one flag, re4dc_lake_fix (native_ui.cpp; the scenario menu's A button, bench.cpp BENCH_SCENARIO):
 #                    on = SHORE_FX_LEVEL in r11b, half of the RAIN_DC_N rain streaks, SS11_ROOM_EVICT's evict; off = as

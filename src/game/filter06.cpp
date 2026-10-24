@@ -107,6 +107,25 @@ static Re4dcRainStreak s_raindc_out[RE4DC_RAIN_DC_N];
 static u32 s_raindc_seed = 0x2545F491U, s_raindc_frame, s_raindc_pending, s_raindc_ready, s_raindc_alpha;
 static u32 s_raindc_frames, s_raindc_sent;
 static f32 s_raindc_area;
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+// Private default-off render experiment. This signature is not a loaded-record receipt.
+static u32 s_raindc_queued_room, s_raindc_queued_frame; // exactly 8 extra bytes
+static int Filter06R10cRain()
+{
+    return pG->room_id == 0x10C && flt06.p != 0 && flt06.num == 1100 &&
+           flt06.col[0] == 170 && flt06.col[1] == 170 && flt06.col[2] == 170 && flt06.col[3] == 80 &&
+           flt06.rate == 1.0f && flt06.scale == 1.0f && flt06.spd.x == 21.0f &&
+           flt06.spd.y == -250.0f && flt06.spd.z == 0.0f && flt06.alphaMin == 0;
+}
+static void RainDcR10cCancel()
+{
+    if (s_raindc_queued_room == 0x10C) {
+        s_raindc_pending = 0;
+        s_raindc_queued_room = 0;
+        s_raindc_queued_frame = 0;
+    }
+}
+#endif
 static f32 RainDcUnit()
 {
     u32 x = s_raindc_seed;
@@ -134,6 +153,17 @@ static void RainDcFlush()
     if (!s_raindc_pending) {
         return;
     }
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+    const int r10c = s_raindc_queued_room == 0x10C;
+    if (r10c && (s_raindc_queued_frame != pG->Frame_cnt || !Filter06R10cRain() || flt06.cur[3] == 0 ||
+                 (pG->Status_flg[1] & 0x02000000) || !Render_checkBlurPermission() ||
+                 Screen.width != 512.0f || Screen.height != 448.0f || Filter09GetbUse())) {
+        RainDcR10cCancel();
+        return;
+    }
+    s_raindc_queued_room = 0;
+    s_raindc_queued_frame = 0;
+#endif
     s_raindc_pending = 0;
     u32 now = pG->Frame_cnt, dt = now - s_raindc_frame;
     s_raindc_frame = now;
@@ -144,10 +174,20 @@ static void RainDcFlush()
         s_raindc_ready = 1;
         dt = 0;
     }
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+    if (r10c && (pG->Stop_flg & 0x08000000)) {
+        dt = 0; // source Stop freezes motion/alpha but still draws
+    }
+#endif
     if (dt > 4) {
         dt = 4;
     }
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+    const f32 fade = r10c ? (f32) (s_raindc_alpha > 80 ? 80 : s_raindc_alpha) * (1.0f / 80.0f) :
+                           (f32) (s_raindc_alpha > 60 ? 60 : s_raindc_alpha) * (1.0f / 60.0f);
+#else
     const f32 fade = (f32) (s_raindc_alpha > 60 ? 60 : s_raindc_alpha) * (1.0f / 60.0f);
+#endif
     u32 n = 0;
     f32 area = 0.0f;
     for (u32 i = 0; i < RE4DC_RAIN_DC_N; ++i) {
@@ -156,7 +196,12 @@ static void RainDcFlush()
         if (p->y > 480.0f) {
             RainDcSpawn(p, 1);
         }
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+        // Experimental sheet-informed profile (r10c 210/120 versus night 180/100), not pixel equivalence.
+        const u32 a = r10c ? (u32) (p->a * fade * 1.2f) : (u32) (p->a * fade);
+#else
         const u32 a = (u32) (p->a * fade);
+#endif
         if (a == 0 || i >= (u32) RAIN_DC_DRAWN) {
             continue;
         }
@@ -166,8 +211,14 @@ static void RainDcFlush()
         s->y1 = p->y + p->len;
         s->z = 1.0f / p->d;
         s->w = p->w;
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+        const u32 rgb = r10c ? 0xD2D2D2U : 0xB4B4B4U;
+        s->tail = ((a >> 2) << 24) | rgb;
+        s->head = (a << 24) | rgb;
+#else
         s->tail = ((a >> 2) << 24) | 0xB4B4B4U;     // PS2 sheet colour 180
         s->head = (a << 24) | 0xB4B4B4U;
+#endif
         const f32 t = s->y0 > 0.0f ? s->y0 : 0.0f, b = s->y1 < 480.0f ? s->y1 : 480.0f;
         if (b > t) {
             area += (b - t) * s->w;                     // screen area submitted (before depth rejection)
@@ -349,6 +400,9 @@ void Filter06Init()
 // Room init: no particles, colour black, box 2500/2500/5000, spread 5000.
 void Filter06RoomInit()
 {
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+    RainDcR10cCancel();
+#endif
     memclr_asm(&flt06, sizeof(flt06));
     flt06.col[0] = 0;
     flt06.col[1] = 0;
@@ -424,6 +478,9 @@ void Filter06SetParam(u32 level, int r, int g, int b, int a, f32 rate, Vec* spd,
 {
     u32 i;
 
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+    RainDcR10cCancel();
+#endif
     flt06.num = level;
     if (level > 0x800) {
         flt06.num = 0x800;
@@ -478,6 +535,17 @@ void Filter06Render()
         s_rain_pending = 1;
     }
 #if defined(RE4DC_RAIN_DC) && RE4DC_RAIN_DC
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+    // Stamp in the actual OT callback, not the preceding Trans registration.
+    // main.cpp increments Frame_cnt only after Render returns; ADEB flush is synchronous inside Render.
+    RainDcR10cCancel();
+    if (Filter06R10cRain() && flt06.cur[3] != 0) {
+        s_raindc_queued_room = 0x10C;
+        s_raindc_queued_frame = pG->Frame_cnt;
+        s_raindc_pending = 1;
+        s_raindc_alpha = flt06.cur[3];
+    }
+#endif
     if ((pG->room_id == 0x11A || pG->room_id == 0x11B) && flt06.num != 0 && flt06.cur[3] != 0) {
         s_raindc_pending = 1;
         s_raindc_alpha = flt06.cur[3];
