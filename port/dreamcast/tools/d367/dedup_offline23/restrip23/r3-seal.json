@@ -29,5 +29,16 @@
     "test_input_pins.py": "2da02695a2c86c797f6b7676f11fa725eddaca69a5f24ac82a09bca2bbdba916"
   },
   "tests": "21 Windows Python312 host tests PASS;3 camera input controls include used-word failure and unused-tail insensitivity",
-  "limits": "Forest pending; legacy vp4/vp5 incomplete and unused; near clipping/TA not modeled; no assets/SDK/guests"
+  "limits": "Forest pending; legacy vp4/vp5 incomplete and unused; near clipping/TA not modeled; no assets/SDK/guests",
+  "reports_pin_scope": "Original private physical report bytes on C; Windows camera JSON is CRLF. Git normalizes its tracked copy to LF. Both identities are recorded separately.",
+  "git_canonical_reports": {
+    "graph-loaded-r3.json": {
+      "bytes": 9921,
+      "sha256": "b06bf569a65b3c65d1754e53fc891ed98bfc6762a12abe11b9cafbbf04538490"
+    },
+    "graph-cameras-lod20-r3.json": {
+      "bytes": 165017,
+      "sha256": "5bff63ce7547864652c35cdea72abd22763ab44fddfb44190f0d2079c9351b4c"
+    }
+  }
 }

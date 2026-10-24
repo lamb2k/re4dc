@@ -52,3 +52,7 @@ Forest remains pending root's authenticated camera capture. Fixture player pose
 is not a camera. Missing forest data does not block reporting the existing cross
 candidate's failure to establish GO. No runtime/shared-builder claim, SDK, guest,
 new media, recipe or production change follows from this estimate checkpoint.
+
+Physical report byte pins refer to preserved C evidence. Git normalizes Windows
+camera JSON CRLF to LF; r3-seal.json records the separate Git canonical byte pins.
+Parsed report values are identical. No earlier physical evidence is overwritten.
