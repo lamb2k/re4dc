@@ -1,0 +1,1511 @@
+{
+  "base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+  "note": "Literal added-line check supplements, does not establish semantic equivalence by itself. All whole-file blob classifications in source-audit.",
+  "rows": [
+    {
+      "branch": "origin/wip/atlas22",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/tools/d367/release-knobs.py",
+          "added_nontrivial_lines": 2,
+          "literal_lines_absent_current": 2,
+          "absent_samples": [
+            "           'ACTOR_GANADO_PS2_STUMP_DIR': 'ps2stump', 'LEON_HEADLESS_DIR': 'ps2leonhead',",
+            "           'LEON_ATLAS_SPLIT_DIR': 'leonatlas'}"
+          ]
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/codex22-qa22nomips",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/tools/d367/rr/recipe.conf",
+          "added_nontrivial_lines": 4,
+          "literal_lines_absent_current": 4,
+          "absent_samples": [
+            "RR_RECIPE_NAME=\"QA22-NoMips console test disc (QA22-All without mipmaps: mip knobs 0, no mip22/mip22b/res22c data)\"",
+            "CH2=\"ROUTE_CH22=1 ROUTE_CH23=1 PS2_CH2_ENEMY=1 PS2_ENEMY_CH22_DIR=/root/re4data/private/ps2enemy-ch2-20261016 PS2_ENEMY_CH23_DIR=/root/re4data/private/ps2enemy-ch2-20261016 MOTION_BOUNDED_R11F=1 NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1 PS2_WORLD_SOURCE_OWNER=1 PS2_WORLD_SOURCE_TEX_PREP=1 AICA_STR_ENT_MAX=56 AICA_SPILL=1 NATIVE_MODEL_REGISTRY_FIRST=1 NATIVE_MODEL_REGISTRY_LOD=1 ROUTE_SOON_RETURN=1 MOVIE_AUDIO_PRIME=1 ROOM_LEFTOVER_FIT=1 PS2_WORLD_SOURCE_TEX_VQ=1 LEON_SKIN_SLOTS=2 LEON_HEADLESS=1 LEON_HEADLESS_DIR=/root/re4data/private/garr18-head-20261019 LEON_CLOTH_DRAWN=1 HAZE_SPRITE_CUT=1 FX_MIST_PS2=1 PS2_HDR_SETS=128 ROUTE_CH21_FULL=1 RESET_MEM_FIX=1 GANADO_ROUTINE_BYTES=1 CLOTH_LIGHT_ABI_FIX=1 AICA_LAYOUT_RECOVER=1 PAUSE_NATIVE_PRESENTATION=1 TEX_TWIDDLED_MIPMAP=0 TEX_PAL4_MIPMAP=0 TEX_PAL8_MIPMAP=0 WORLD_RECT21=0 TEX_MIP_DADJ=0 VRAM_ROOM_ARENA=0 EVD_ADMISSION_TXN=1 EVD_START_CLEANUP=1 EVD_START_ROLLBACK=1 EVD_DEBUG_READ_CLEANUP=1 EVD_EXEC_FAILURE_CLEANUP=1 EVD_READ_RELEASE_REFS=1 EVD_READ_ADMISSION_PREFLIGHT=1 EVD_MODULE_VALIDATE_FIRST=1 EVENT_MANAGER_STORAGE_FLAGS=1 EFFECT_ADMISSION_GUARD=1 EFFECT_CONTROLLER_VALIDATE_FIRST=1 EM_ADMISSION_DISP_FIX=1 RESET_RETIRE_BEFORE_HEAPS=1 MOTION_RETIRE_PREFLIGHT=1 SS_RESTORE_VALIDATE_FIRST=1 SS_ACTOR_LIFETIME=1 SS_MSG_FIELDS=1 SS_CERT_PARTNER_CAPACITY=1 PARTS_LINKED_FLAG=1 TEX_PAYLOAD_RETRY=1 PS2_WORLD_NONEMPTY_LOD=1 MOTION_CAPACITY=1 FX_STRIP21=1 CPU_BACKFACE=1 ACTOR_BACKFACE=1 GANADO_EVENT_KEEP_LOD=1 SS_DATA_LZ=1\"",
+            "DATA=\"fsh,ch2,cast16,r108p,r111p,pak17,zr17,zr17b,v101,stump17,res17g,trans17,res17b,res18f,res22,boss18g50r,garr18h,rc19,ch21r,nostd20,pair20,ch21l,ash21,lake22,sslz23,res22nm\"",
+            "# 0.75) and VRAM_ROOM_ARENA=0 (two-ended texture RAM); DATA += mip22 (last: pack v5 a21e75d1, 27 rekeyed worlds,"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/test11/t11-fix.py",
+          "added_nontrivial_lines": 4,
+          "literal_lines_absent_current": 4,
+          "absent_samples": [
+            "# res22nm (lane codex22, 10-22, QA22-NoMips disc only): res22's pre-mipmap resident.bin extended with the current",
+            "# resident lists' keys (resident_keys.py extend, no remap). Replaces res22c on a disc without mip22 / mip22b.",
+            "RES22NMD = os.environ.get('RES22NMD', '/root/re4data/private/res22nm-20261022')",
+            "DATA['res22nm'] = {'dc/resident.bin': RES22NMD + '/resident.bin'}"
+          ]
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/foliagemip22",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/game/Makefile",
+          "added_nontrivial_lines": 8,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/game30.mk",
+          "added_nontrivial_lines": 9,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_static.cpp",
+          "added_nontrivial_lines": 21,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_ui.cpp",
+          "added_nontrivial_lines": 42,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/vram_pages.cpp",
+          "added_nontrivial_lines": 26,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/tools/d367/mipmap22/room-select.tsv",
+          "added_nontrivial_lines": 183,
+          "literal_lines_absent_current": 179,
+          "absent_samples": [
+            "01a568c0-446af7bb\tr101\t64\tpal4\tsmall-chain",
+            "033d2aa2-2edefe32\tr101\t64\tpal4\tsmall-chain",
+            "039fb1a4-782728af\tr100\t64\ttwiddled\tsmall-chain",
+            "04c6d550-9593c613\tr101\t64\tvq\tsmall-chain",
+            "086b2cdc-365495b9\tr100\t32\ttwiddled\tsmall-chain"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/texture_rect21/scoped_representations.inc",
+          "added_nontrivial_lines": 792,
+          "literal_lines_absent_current": 99,
+          "absent_samples": [
+            "{0x04eba87dU,0x7ba0eb37U,256U,128U,{128U,128U,0U,0U,2U,6144U,0xe225eb38U},1.0f,1.0f},",
+            "{0x079b1b50U,0x0cb2b485U,256U,32U,{32U,32U,0U,0U,2U,2304U,0x11c25979U},1.0f,1.0f},",
+            "{0x095707efU,0x6c371c03U,256U,128U,{128U,128U,0U,0U,2U,6144U,0x976aa624U},1.0f,1.0f},",
+            "{0x0b34cb07U,0x30408365U,256U,64U,{64U,64U,0U,0U,2U,3072U,0xebe664acU},1.0f,1.0f},",
+            "{0x0e56be24U,0x9608e572U,64U,32U,{32U,32U,0U,0U,2U,2304U,0x994760cfU},1.0f,1.0f},"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/mipmap_compact_vq.py",
+          "added_nontrivial_lines": 90,
+          "literal_lines_absent_current": 53,
+          "absent_samples": [
+            "    top=(1 << bits)-1",
+            "    return min(top,max(0,int(c*top/255+0.5)))",
+            "def _original_reference_words(base):",
+            "    \"\"\"Ideal box-filtered levels of an opaque RGB565 base, quantized to RGB565 words, Morton-free row-major.\"\"\"",
+            "    px=[tuple(float(c) for c in p[:3]) for p in vq.decode_level(base,side)]"
+          ]
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/issue52-looks23-20261023",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/tools/d367/test11/t11-fix.py",
+          "added_nontrivial_lines": 12,
+          "literal_lines_absent_current": 12,
+          "absent_samples": [
+            "# look23 (lane issue52-looks23 10-23, GitHub #52 broken textures; data only, no program knob): the Codex issue52-visuals",
+            "# candidates (origin/codex/issue52-visuals 4746b6c7, tools/d367/issue52_visuals) on the Test 22 disc's own inputs (r100.dar",
+            "# 4abfcc88 and r117.dar cf667833 equal the Test 21 DARs those tools pin). st1/r100.dar: the r100 car officers' face",
+            "# materials (repair_officer_heads.py) + body TPL 0x25 with the three PS2 body pictures (emit_officer_body.py, 256 B at",
+            "# DAR offset 5023744); st1/r117.dar: the church swinging chandelier atlas (repair_chandelier_atlas.py). dc/tex.pak ="
+          ]
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/mipfault22",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/game/Makefile",
+          "added_nontrivial_lines": 18,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/crash_screen.cpp",
+          "added_nontrivial_lines": 8,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/modules.cpp",
+          "added_nontrivial_lines": 17,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_ui.cpp",
+          "added_nontrivial_lines": 19,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/vram_pages.cpp",
+          "added_nontrivial_lines": 18,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "    ring('A', re4dc_vram_arena_class, best_at, len, std::uint32_t(reinterpret_cast<std::uintptr_t>(__builtin_return_address(0))));"
+          ]
+        },
+        {
+          "path": "port/dreamcast/game/tools/link.sh",
+          "added_nontrivial_lines": 1,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "        cp obj/overlay-b.elf \"$OVL_DIR/${m,,}.dbg.elf\"; rm -f obj/overlay-b.elf"
+          ]
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/mipfault22-qa",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/game/Makefile",
+          "added_nontrivial_lines": 13,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/backface.mk",
+          "added_nontrivial_lines": 34,
+          "literal_lines_absent_current": 7,
+          "absent_samples": [
+            "$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_BACKFACE_CENSUS=1",
+            "ifneq ($(filter $(CPU_BACKFACE),0 1),$(CPU_BACKFACE))",
+            "$(error CPU_BACKFACE must be 0 or 1)",
+            "ifeq ($(CPU_BACKFACE),1)",
+            "$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_CPU_BACKFACE=1"
+          ]
+        },
+        {
+          "path": "port/dreamcast/game/coarse_actor.cpp",
+          "added_nontrivial_lines": 1,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/coarse_actor_transaction.inc",
+          "added_nontrivial_lines": 7,
+          "literal_lines_absent_current": 2,
+          "absent_samples": [
+            "    // ACTOR_BACKFACE (backface.mk, needs CPU_BACKFACE): Leon (id 0) and the Ganados (0x10..0x20) take the source model's",
+            "    if(m->id==0 || (m->id>=0x10 && m->id<=0x20))"
+          ]
+        },
+        {
+          "path": "port/dreamcast/game/platform/backface_census.cpp",
+          "added_nontrivial_lines": 84,
+          "literal_lines_absent_current": 3,
+          "absent_samples": [
+            "struct Sum { unsigned v, cv, t, b[2], r[2], s[2], id; };",
+            "        re4dc_log(\"bfc: frame=%u..%u scenes=%u cls=%u v=%u cv=%u t=%u b=%u/%u r=%u/%u s=%u/%u id=%02x\\n\", win_first, frame,",
+            "                  win_scenes, c, s.v, s.cv, s.t, s.b[0], s.b[1], s.r[0], s.r[1], s.s[0], s.s[1], s.id);"
+          ]
+        },
+        {
+          "path": "port/dreamcast/game/platform/crash_screen.cpp",
+          "added_nontrivial_lines": 8,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/modules.cpp",
+          "added_nontrivial_lines": 17,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_actor_fast.cpp",
+          "added_nontrivial_lines": 23,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "#include \"../../room/backface_emit.hpp\"  // CPU_BACKFACE (backface.mk)"
+          ]
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_static.cpp",
+          "added_nontrivial_lines": 33,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_ui.cpp",
+          "added_nontrivial_lines": 11,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/vram_pages.cpp",
+          "added_nontrivial_lines": 18,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "    ring('A', re4dc_vram_arena_class, best_at, len, std::uint32_t(reinterpret_cast<std::uintptr_t>(__builtin_return_address(0))));"
+          ]
+        },
+        {
+          "path": "port/dreamcast/room/backface_emit.hpp",
+          "added_nontrivial_lines": 53,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/tools/d367/rr/recipe.conf",
+          "added_nontrivial_lines": 3,
+          "literal_lines_absent_current": 3,
+          "absent_samples": [
+            "RR_RECIPE_NAME=\"QA22-All console test disc (codex22 unit + backface22; CPU_BACKFACE=1 ACTOR_BACKFACE=1 VRAM_ROOM_ARENA=0)\"",
+            "CH2=\"ROUTE_CH22=1 ROUTE_CH23=1 PS2_CH2_ENEMY=1 PS2_ENEMY_CH22_DIR=/root/re4data/private/ps2enemy-ch2-20261016 PS2_ENEMY_CH23_DIR=/root/re4data/private/ps2enemy-ch2-20261016 MOTION_BOUNDED_R11F=1 NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1 PS2_WORLD_SOURCE_OWNER=1 PS2_WORLD_SOURCE_TEX_PREP=1 AICA_STR_ENT_MAX=56 AICA_SPILL=1 NATIVE_MODEL_REGISTRY_FIRST=1 NATIVE_MODEL_REGISTRY_LOD=1 ROUTE_SOON_RETURN=1 MOVIE_AUDIO_PRIME=1 ROOM_LEFTOVER_FIT=1 PS2_WORLD_SOURCE_TEX_VQ=1 LEON_SKIN_SLOTS=2 LEON_HEADLESS=1 LEON_HEADLESS_DIR=/root/re4data/private/garr18-head-20261019 LEON_CLOTH_DRAWN=1 HAZE_SPRITE_CUT=1 FX_MIST_PS2=1 PS2_HDR_SETS=128 ROUTE_CH21_FULL=1 RESET_MEM_FIX=1 GANADO_ROUTINE_BYTES=1 CLOTH_LIGHT_ABI_FIX=1 AICA_LAYOUT_RECOVER=1 PAUSE_NATIVE_PRESENTATION=1 CAST_MIPMAP=1 TEX_TWIDDLED_MIPMAP=1 TEX_PAL4_ALPHA=1 TEX_PAL4_MIPMAP=1 TEX_PAL8_ALPHA=1 TEX_PAL8_MIPMAP=1 WORLD_RECT21=1 TEX_MIP_DADJ=3 VRAM_ROOM_ARENA=0 EVD_ADMISSION_TXN=1 EVD_START_CLEANUP=1 EVD_START_ROLLBACK=1 EVD_DEBUG_READ_CLEANUP=1 EVD_EXEC_FAILURE_CLEANUP=1 EVD_READ_RELEASE_REFS=1 EVD_READ_ADMISSION_PREFLIGHT=1 EVD_MODULE_VALIDATE_FIRST=1 EVENT_MANAGER_STORAGE_FLAGS=1 EFFECT_ADMISSION_GUARD=1 EFFECT_CONTROLLER_VALIDATE_FIRST=1 EM_ADMISSION_DISP_FIX=1 RESET_RETIRE_BEFORE_HEAPS=1 MOTION_RETIRE_PREFLIGHT=1 SS_RESTORE_VALIDATE_FIRST=1 SS_ACTOR_LIFETIME=1 SS_MSG_FIELDS=1 SS_CERT_PARTNER_CAPACITY=1 PARTS_LINKED_FLAG=1 TEX_PAYLOAD_RETRY=1 PS2_WORLD_NONEMPTY_LOD=1 MOTION_CAPACITY=1 FX_STRIP21=1 CPU_BACKFACE=1 ACTOR_BACKFACE=1 GANADO_EVENT_KEEP_LOD=1\"",
+            "# 0.75) and VRAM_ROOM_ARENA=0 (two-ended texture RAM); DATA += mip22 (last: pack v5 a21e75d1, 27 rekeyed worlds,"
+          ]
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/mipfix22",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/game/platform/native_static.cpp",
+          "added_nontrivial_lines": 12,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/tools/d367/mipmap21/mip_quality.py",
+          "added_nontrivial_lines": 171,
+          "literal_lines_absent_current": 3,
+          "absent_samples": [
+            "    with multiprocessing.Pool(a.jobs) as pool:",
+            "    for key, _, held in results:",
+            "    held = {k: h for k, _, h in results if h is not None}"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/texture_rect21/scoped_origins.inc",
+          "added_nontrivial_lines": 37,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "// Generated by scoped_origin.py: {scoped crc, fnv, original crc, fnv}, sorted by scoped key."
+          ]
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/mipmap22",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/game/Makefile",
+          "added_nontrivial_lines": 8,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/game30.mk",
+          "added_nontrivial_lines": 9,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_static.cpp",
+          "added_nontrivial_lines": 21,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_ui.cpp",
+          "added_nontrivial_lines": 42,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/vram_pages.cpp",
+          "added_nontrivial_lines": 26,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/tools/d367/vram/resident/r100.tsv",
+          "added_nontrivial_lines": 1,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/miprecover22-20261022",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/game/Makefile",
+          "added_nontrivial_lines": 8,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/game30.mk",
+          "added_nontrivial_lines": 9,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_static.cpp",
+          "added_nontrivial_lines": 21,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_ui.cpp",
+          "added_nontrivial_lines": 42,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/vram_pages.cpp",
+          "added_nontrivial_lines": 26,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/tools/d367/mipmap22/room-select.tsv",
+          "added_nontrivial_lines": 183,
+          "literal_lines_absent_current": 179,
+          "absent_samples": [
+            "01a568c0-446af7bb\tr101\t64\tpal4\tsmall-chain",
+            "033d2aa2-2edefe32\tr101\t64\tpal4\tsmall-chain",
+            "039fb1a4-782728af\tr100\t64\ttwiddled\tsmall-chain",
+            "04c6d550-9593c613\tr101\t64\tvq\tsmall-chain",
+            "086b2cdc-365495b9\tr100\t32\ttwiddled\tsmall-chain"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/texture_rect21/scoped_representations.inc",
+          "added_nontrivial_lines": 792,
+          "literal_lines_absent_current": 99,
+          "absent_samples": [
+            "{0x04eba87dU,0x7ba0eb37U,256U,128U,{128U,128U,0U,0U,2U,6144U,0xe225eb38U},1.0f,1.0f},",
+            "{0x079b1b50U,0x0cb2b485U,256U,32U,{32U,32U,0U,0U,2U,2304U,0x11c25979U},1.0f,1.0f},",
+            "{0x095707efU,0x6c371c03U,256U,128U,{128U,128U,0U,0U,2U,6144U,0x976aa624U},1.0f,1.0f},",
+            "{0x0b34cb07U,0x30408365U,256U,64U,{64U,64U,0U,0U,2U,3072U,0xebe664acU},1.0f,1.0f},",
+            "{0x0e56be24U,0x9608e572U,64U,32U,{32U,32U,0U,0U,2U,2304U,0x994760cfU},1.0f,1.0f},"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/mipmap_compact_vq.py",
+          "added_nontrivial_lines": 90,
+          "literal_lines_absent_current": 53,
+          "absent_samples": [
+            "    top=(1 << bits)-1",
+            "    return min(top,max(0,int(c*top/255+0.5)))",
+            "def _original_reference_words(base):",
+            "    \"\"\"Ideal box-filtered levels of an opaque RGB565 base, quantized to RGB565 words, Morton-free row-major.\"\"\"",
+            "    px=[tuple(float(c) for c in p[:3]) for p in vq.decode_level(base,side)]"
+          ]
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/reset22-tools-20261022",
+      "changed_path_added_line_presence": []
+    },
+    {
+      "branch": "origin/wip/snap20261022/probe-lanes-20261018-ch3regen-lane",
+      "changed_path_added_line_presence": []
+    },
+    {
+      "branch": "origin/wip/snap20261022/probe-lanes-20261018-ch3regen-trees-90606dcf",
+      "changed_path_added_line_presence": [
+        {
+          "path": ".gitignore",
+          "added_nontrivial_lines": 1,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "# Private disc-derived output from make assets."
+          ]
+        },
+        {
+          "path": "README.md",
+          "added_nontrivial_lines": 5,
+          "literal_lines_absent_current": 5,
+          "absent_samples": [
+            "For original-disc asset work, [the PS2 asset build guide](port/dreamcast/docs/PS2_ASSET_BUILD.md)",
+            "identifies the supported USA `SLUS_211.34` source and the new `make assets` world workflow",
+            "(14 room recipes, default r102/r106), including the remaining GameCube dependencies and full-disc build gaps.",
+            "documentation are [CC0](LICENSE), except attributed third-party helpers with their own",
+            "[notices](port/dreamcast/tools/ps2_assets/README.md)."
+          ]
+        },
+        {
+          "path": "port/dreamcast/CONTRIBUTING-PORT.md",
+          "added_nontrivial_lines": 5,
+          "literal_lines_absent_current": 5,
+          "absent_samples": [
+            "The automated world profile is now `make assets` (14 room recipes, default r102/r106). See the",
+            "[PS2 asset build guide](docs/PS2_ASSET_BUILD.md) for the exact USA PS2 source revision,",
+            "one-time setup, conversion command, validation and remaining coverage. It produces",
+            "a candidate native-world overlay; it does not yet replace the full-disc procedure.",
+            "| PS2 USA, `BIO4DAT.AFS` rooms (plus two JADERLINK unpack tools) | PS2 room worlds `dc/native/rXXX/ps2-world.*` | `make assets` for 14 room recipes; remaining worlds need their retained recipes and review |"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/ps2_room_extract.py",
+          "added_nontrivial_lines": 5,
+          "literal_lines_absent_current": 5,
+          "absent_samples": [
+            "def afs_index(f, sector=AFS_SECTOR):",
+            "    base = sector * 2048",
+            "def extract(room, iso_f, index, work, inputs, dat_exe=DAT_EXE, smd_exe=SMD_EXE):",
+            "    run_tool(dat_exe, [room + '.dat'], work, work / 'dat.log')",
+            "    run_tool(smd_exe, [smds[0]], sub, work / 'smd.log')"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/ps2_room_r4im.py",
+          "added_nontrivial_lines": 28,
+          "literal_lines_absent_current": 16,
+          "absent_samples": [
+            "import argparse, collections, hashlib, importlib.util, json, math, os, struct, sys, zlib",
+            "# Helpers are repository-local so a fresh checkout uses the same conversion rules.",
+            "MESH_TOOLS = Path(os.environ.get('RE4_TOOLS', HERE))",
+            "from ps2_assets import scenario as ps, tpl, texture as codec  # noqa: E402",
+            "from ps2_assets.light import gx_light  # noqa: E402"
+          ]
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/probe-lanes-20261018-ch4regen-cxtree-b47",
+      "changed_path_added_line_presence": [
+        {
+          "path": ".gitignore",
+          "added_nontrivial_lines": 1,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "# Private disc-derived output from make assets."
+          ]
+        },
+        {
+          "path": "README.md",
+          "added_nontrivial_lines": 5,
+          "literal_lines_absent_current": 5,
+          "absent_samples": [
+            "For original-disc asset work, [the PS2 asset build guide](port/dreamcast/docs/PS2_ASSET_BUILD.md)",
+            "identifies the supported USA `SLUS_211.34` source and the new `make assets` world workflow",
+            "(14 room recipes, default r102/r106), including the remaining GameCube dependencies and full-disc build gaps.",
+            "documentation are [CC0](LICENSE), except attributed third-party helpers with their own",
+            "[notices](port/dreamcast/tools/ps2_assets/README.md)."
+          ]
+        },
+        {
+          "path": "port/dreamcast/CONTRIBUTING-PORT.md",
+          "added_nontrivial_lines": 5,
+          "literal_lines_absent_current": 5,
+          "absent_samples": [
+            "The automated world profile is now `make assets` (14 room recipes, default r102/r106). See the",
+            "[PS2 asset build guide](docs/PS2_ASSET_BUILD.md) for the exact USA PS2 source revision,",
+            "one-time setup, conversion command, validation and remaining coverage. It produces",
+            "a candidate native-world overlay; it does not yet replace the full-disc procedure.",
+            "| PS2 USA, `BIO4DAT.AFS` rooms (plus two JADERLINK unpack tools) | PS2 room worlds `dc/native/rXXX/ps2-world.*` | `make assets` for 14 room recipes; remaining worlds need their retained recipes and review |"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/le_mirror.py",
+          "added_nontrivial_lines": 40,
+          "literal_lines_absent_current": 34,
+          "absent_samples": [
+            "    # cItmSys::DataLoad never accesses BIN/TPL tables when the id count is",
+            "    # zero. Authored empty packs (r215/r22b) use two null table offsets.",
+            "    if oi >= 16 and ob == ot == 0:",
+            "        with sw.bounded(off + oi, off + size - (off + oi)):",
+            "                raise ValueError('nonempty item model pack has null tables')"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/ps2_room_extract.py",
+          "added_nontrivial_lines": 5,
+          "literal_lines_absent_current": 5,
+          "absent_samples": [
+            "def afs_index(f, sector=AFS_SECTOR):",
+            "    base = sector * 2048",
+            "def extract(room, iso_f, index, work, inputs, dat_exe=DAT_EXE, smd_exe=SMD_EXE):",
+            "    run_tool(dat_exe, [room + '.dat'], work, work / 'dat.log')",
+            "    run_tool(smd_exe, [smds[0]], sub, work / 'smd.log')"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/ps2_room_r4im.py",
+          "added_nontrivial_lines": 28,
+          "literal_lines_absent_current": 16,
+          "absent_samples": [
+            "import argparse, collections, hashlib, importlib.util, json, math, os, struct, sys, zlib",
+            "# Helpers are repository-local so a fresh checkout uses the same conversion rules.",
+            "MESH_TOOLS = Path(os.environ.get('RE4_TOOLS', HERE))",
+            "from ps2_assets import scenario as ps, tpl, texture as codec  # noqa: E402",
+            "from ps2_assets.light import gx_light  # noqa: E402"
+          ]
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/probe-lanes-20261018-ch4regen-cxtree-c3",
+      "changed_path_added_line_presence": [
+        {
+          "path": ".gitignore",
+          "added_nontrivial_lines": 1,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "# Private disc-derived output from make assets."
+          ]
+        },
+        {
+          "path": "README.md",
+          "added_nontrivial_lines": 5,
+          "literal_lines_absent_current": 5,
+          "absent_samples": [
+            "For original-disc asset work, [the PS2 asset build guide](port/dreamcast/docs/PS2_ASSET_BUILD.md)",
+            "identifies the supported USA `SLUS_211.34` source and the new `make assets` world workflow",
+            "(14 room recipes, default r102/r106), including the remaining GameCube dependencies and full-disc build gaps.",
+            "documentation are [CC0](LICENSE), except attributed third-party helpers with their own",
+            "[notices](port/dreamcast/tools/ps2_assets/README.md)."
+          ]
+        },
+        {
+          "path": "port/dreamcast/CONTRIBUTING-PORT.md",
+          "added_nontrivial_lines": 5,
+          "literal_lines_absent_current": 5,
+          "absent_samples": [
+            "The automated world profile is now `make assets` (14 room recipes, default r102/r106). See the",
+            "[PS2 asset build guide](docs/PS2_ASSET_BUILD.md) for the exact USA PS2 source revision,",
+            "one-time setup, conversion command, validation and remaining coverage. It produces",
+            "a candidate native-world overlay; it does not yet replace the full-disc procedure.",
+            "| PS2 USA, `BIO4DAT.AFS` rooms (plus two JADERLINK unpack tools) | PS2 room worlds `dc/native/rXXX/ps2-world.*` | `make assets` for 14 room recipes; remaining worlds need their retained recipes and review |"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/le_mirror.py",
+          "added_nontrivial_lines": 17,
+          "literal_lines_absent_current": 11,
+          "absent_samples": [
+            "        elif kind == 9:  # SceAtShdDisp (sce_at.h): shadow number, then byte flags",
+            "            sw.u16(d)",
+            "        elif kind == 10:  # SceAtDamage: time, byte kind/flags, arg, power",
+            "            sw.u32(d + 8)",
+            "            sw.f32s(d + 12, 1)"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/ps2_room_extract.py",
+          "added_nontrivial_lines": 5,
+          "literal_lines_absent_current": 5,
+          "absent_samples": [
+            "def afs_index(f, sector=AFS_SECTOR):",
+            "    base = sector * 2048",
+            "def extract(room, iso_f, index, work, inputs, dat_exe=DAT_EXE, smd_exe=SMD_EXE):",
+            "    run_tool(dat_exe, [room + '.dat'], work, work / 'dat.log')",
+            "    run_tool(smd_exe, [smds[0]], sub, work / 'smd.log')"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/ps2_room_r4im.py",
+          "added_nontrivial_lines": 28,
+          "literal_lines_absent_current": 16,
+          "absent_samples": [
+            "import argparse, collections, hashlib, importlib.util, json, math, os, struct, sys, zlib",
+            "# Helpers are repository-local so a fresh checkout uses the same conversion rules.",
+            "MESH_TOOLS = Path(os.environ.get('RE4_TOOLS', HERE))",
+            "from ps2_assets import scenario as ps, tpl, texture as codec  # noqa: E402",
+            "from ps2_assets.light import gx_light  # noqa: E402"
+          ]
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/probe-lanes-20261018-ch4regen-cxtree-v0",
+      "changed_path_added_line_presence": [
+        {
+          "path": ".gitignore",
+          "added_nontrivial_lines": 1,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "# Private disc-derived output from make assets."
+          ]
+        },
+        {
+          "path": "README.md",
+          "added_nontrivial_lines": 5,
+          "literal_lines_absent_current": 5,
+          "absent_samples": [
+            "For original-disc asset work, [the PS2 asset build guide](port/dreamcast/docs/PS2_ASSET_BUILD.md)",
+            "identifies the supported USA `SLUS_211.34` source and the new `make assets` world workflow",
+            "(14 room recipes, default r102/r106), including the remaining GameCube dependencies and full-disc build gaps.",
+            "documentation are [CC0](LICENSE), except attributed third-party helpers with their own",
+            "[notices](port/dreamcast/tools/ps2_assets/README.md)."
+          ]
+        },
+        {
+          "path": "port/dreamcast/CONTRIBUTING-PORT.md",
+          "added_nontrivial_lines": 5,
+          "literal_lines_absent_current": 5,
+          "absent_samples": [
+            "The automated world profile is now `make assets` (14 room recipes, default r102/r106). See the",
+            "[PS2 asset build guide](docs/PS2_ASSET_BUILD.md) for the exact USA PS2 source revision,",
+            "one-time setup, conversion command, validation and remaining coverage. It produces",
+            "a candidate native-world overlay; it does not yet replace the full-disc procedure.",
+            "| PS2 USA, `BIO4DAT.AFS` rooms (plus two JADERLINK unpack tools) | PS2 room worlds `dc/native/rXXX/ps2-world.*` | `make assets` for 14 room recipes; remaining worlds need their retained recipes and review |"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/ps2_room_extract.py",
+          "added_nontrivial_lines": 5,
+          "literal_lines_absent_current": 5,
+          "absent_samples": [
+            "def afs_index(f, sector=AFS_SECTOR):",
+            "    base = sector * 2048",
+            "def extract(room, iso_f, index, work, inputs, dat_exe=DAT_EXE, smd_exe=SMD_EXE):",
+            "    run_tool(dat_exe, [room + '.dat'], work, work / 'dat.log')",
+            "    run_tool(smd_exe, [smds[0]], sub, work / 'smd.log')"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/ps2_room_r4im.py",
+          "added_nontrivial_lines": 28,
+          "literal_lines_absent_current": 16,
+          "absent_samples": [
+            "import argparse, collections, hashlib, importlib.util, json, math, os, struct, sys, zlib",
+            "# Helpers are repository-local so a fresh checkout uses the same conversion rules.",
+            "MESH_TOOLS = Path(os.environ.get('RE4_TOOLS', HERE))",
+            "from ps2_assets import scenario as ps, tpl, texture as codec  # noqa: E402",
+            "from ps2_assets.light import gx_light  # noqa: E402"
+          ]
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-bodysvc20",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/game/Makefile",
+          "added_nontrivial_lines": 2,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/engine_preview.mk",
+          "added_nontrivial_lines": 13,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "src/em10/em10.cpp",
+          "added_nontrivial_lines": 27,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "src/game/em.cpp",
+          "added_nontrivial_lines": 53,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-ch2rooms20",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/game/Makefile",
+          "added_nontrivial_lines": 11,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/audio_aica.cpp",
+          "added_nontrivial_lines": 14,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/tools/d367/test11/t11-fix.py",
+          "added_nontrivial_lines": 32,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/tools/d367/trace_lock.sh",
+          "added_nontrivial_lines": 1,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "src/game/em_set.cpp",
+          "added_nontrivial_lines": 3,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "src/st1/r10c.cpp",
+          "added_nontrivial_lines": 9,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-chardraw19",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/game/Makefile",
+          "added_nontrivial_lines": 2,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/chardraw19.mk",
+          "added_nontrivial_lines": 18,
+          "literal_lines_absent_current": 2,
+          "absent_samples": [
+            "# CHUNK_SUBMIT=1). CHAR_CHUNK_BACKEND=0 keeps the stage-1 adapter over today's store-queue window instead.",
+            "CHAR_CHUNK_BACKEND ?= 1"
+          ]
+        },
+        {
+          "path": "port/dreamcast/game/platform/chunk_submit.cpp",
+          "added_nontrivial_lines": 80,
+          "literal_lines_absent_current": 3,
+          "absent_samples": [
+            "const void* re4dc_chunk_vertices(const re4dc_chunk_sink* s){return s->cache;}",
+            "const std::uint8_t* re4dc_chunk_outcodes(const re4dc_chunk_sink* s){return s->cache+kCornerCodeOff;}",
+            "    const pvr_vertex_t* v=verts(s);const std::uint8_t* oc=ccodes(s);"
+          ]
+        },
+        {
+          "path": "port/dreamcast/game/platform/chunk_submit.h",
+          "added_nontrivial_lines": 54,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            " * v1 (10-19), implemented in platform/chunk_submit.cpp (scenery19.mk: CHUNK_SUBMIT=1, implied by SCENERY_CHUNK)."
+          ]
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_actor_chunk.inc",
+          "added_nontrivial_lines": 196,
+          "literal_lines_absent_current": 21,
+          "absent_samples": [
+            "// One meshlet through the back end: points = the records' screen words (already skinned once per distinct point),",
+            "// corners = the records (u, v, colour), strips = the meshlet's actor-form index list. false: not taken (caller",
+            "// falls back to the adapter, nothing sent).",
+            "    if (!e.direct || nv > RE4DC_CHUNK_MAX_POINTS || e.slots + 6U * nt > 32767U) return false;",
+            "    u8* const work = static_cast<u8*>(scratch(RE4DC_CHUNK_CACHE_BYTES + nv * 28U + 64U));"
+          ]
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_actor_fast.cpp",
+          "added_nontrivial_lines": 20,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/scenery19.mk",
+          "added_nontrivial_lines": 4,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-chardraw19-diag",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/game/platform/native_actor_chunk.inc",
+          "added_nontrivial_lines": 96,
+          "literal_lines_absent_current": 54,
+          "absent_samples": [
+            "        void nj_dump(unsigned);",
+            "        nj_dump(frame_serial);",
+            "// One meshlet through the back end: points = the records' screen words (already skinned once per distinct point),",
+            "// corners = the records (u, v, colour), strips = the meshlet's actor-form index list. false: not taken (caller",
+            "// falls back to the adapter, nothing sent)."
+          ]
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_actor_fast.cpp",
+          "added_nontrivial_lines": 9,
+          "literal_lines_absent_current": 7,
+          "absent_samples": [
+            "    if (part) nj_note(part);",
+            "    if (src.normals) {",
+            "        bool seen = false;",
+            "        for (unsigned i = 0; i < nj_nn; ++i) if (nj_norm[i].arr == src.normals) seen = true;",
+            "        if (!seen && nj_nn < 512)"
+          ]
+        },
+        {
+          "path": "src/game/model.cpp",
+          "added_nontrivial_lines": 23,
+          "literal_lines_absent_current": 22,
+          "absent_samples": [
+            "// NINJA DIAG (throwaway, lane chardraw19; never delivered): bones with unit pos / ang / scale per model id.",
+            "struct NjB { u32 used; u8 id, type; u32 calls, parts, skip2, upos, uang, uscl, all3, posang, nparts; };",
+            "static u32 njbCalls;",
+            "static void njBones(cModel* m)",
+            "    NjB* r = &njb[63];"
+          ]
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-discsets20",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/game/Makefile",
+          "added_nontrivial_lines": 8,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/dbgwarp_bridge.cpp",
+          "added_nontrivial_lines": 6,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/tools/d367/trace_lock.sh",
+          "added_nontrivial_lines": 1,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "src/game/game.cpp",
+          "added_nontrivial_lines": 9,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-logiclod20",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/game/platform/native_static.cpp",
+          "added_nontrivial_lines": 34,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/tools/d367/trace_lock.sh",
+          "added_nontrivial_lines": 1,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-rel20",
+      "changed_path_added_line_presence": [
+        {
+          "path": "README.md",
+          "added_nontrivial_lines": 16,
+          "literal_lines_absent_current": 3,
+          "absent_samples": [
+            "**[Download Test 20](https://github.com/lamb2k/re4dc/releases/latest)** \u00b7 [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) \u00b7",
+            "## Coming soon: Test 21",
+            "Planned, with no date yet. Ticked items have passed our checks and will be in Test 21."
+          ]
+        },
+        {
+          "path": "port/dreamcast/CONTRIBUTING-PORT.md",
+          "added_nontrivial_lines": 13,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "`tools/d367/test20/release-knobs.txt` (test 20: the previous release recipe plus `ROUTE_CH21_FULL=1` (chapter 2-1's real path: the dam r10c, r10d and r10e, with the Insignia Key from the dam's own pickup; data set `ch21r`; it replaces `ROUTE_SOON_KEY`), the scenery speed knobs `SCENERY_UNIT_CONCAT=1 SCENERY_SCREEN_MEMO=1 SCENERY_FAR_LOD=4` and the enemy logic knobs `LOGIC_LOD_EM=2 LOGIC_APPROX_MASK=0x01 ESP_TYPE_CAP=16 ESP_CUT_EARLY=1`; `SCENERY_DEDUP` and `CHAR_CHUNK` are off (measured slower). The `T15_V` group of `tools/d367/test15/t15-build.sh` carries `VIEW_DIST_BOOT=1` and `FOLIAGE_TRIM=2` (every boot at view distance Near and foliage Off), `QUICK_WEAPON=1`, `ACTOR_PLAN=1`, `MANUAL_PACK_PROBE=1` (the Dreamcast manual pages), `SCENERY_CHUNK=1 SG_SELECT_LEAN=1` (scenery draw path) and `ENEMY_VIS_CULL=1` (the wall check, with the room files of data set `rc19`); see the knob notes below. Earlier releases added the chapter 2-2 / 2-3 knobs of `tools/d367/ch2/ch2-build.sh` and `ROUTE_SOON_RETURN=1`, `MOVIE_AUDIO_PRIME=1` (cutscene sound loaded before it starts), `ROOM_LEFTOVER_FIT=1 PS2_WORLD_SOURCE_TEX_VQ=1` (the r10f to r200 pictures), `LEON_SKIN_SLOTS=2` (r119), `LEON_HEADLESS=1` (Leon after his head comes off), `LEON_CLOTH_DRAWN=1` (jacket movement only when shown) and `FX_MIST_PS2=1 PS2_HDR_SETS=128` (the village and farm mist); the disc data sets are on its `disc-sets` line, with the lighter El Gigante `boss18g50` and the resident lists `res18f`; its header names the source commit). The maintainers write that file from"
+          ]
+        },
+        {
+          "path": "port/dreamcast/README.md",
+          "added_nontrivial_lines": 2,
+          "literal_lines_absent_current": 2,
+          "absent_samples": [
+            "- **Current build:** Test 20, on the [releases page](https://github.com/lamb2k/re4dc/releases/latest).",
+            "- **Next:** Test 21, see [Coming soon: Test 21](../../README.md#coming-soon-test-21)."
+          ]
+        },
+        {
+          "path": "port/dreamcast/build-public.sh",
+          "added_nontrivial_lines": 1,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "RELEASE_KNOBS=${RELEASE_KNOBS:-$PORT/tools/d367/test20/release-knobs.txt}"
+          ]
+        },
+        {
+          "path": "port/dreamcast/docs/KNOWN_ISSUES.md",
+          "added_nontrivial_lines": 7,
+          "literal_lines_absent_current": 3,
+          "absent_samples": [
+            "**Last updated:** October 20, 2026.",
+            "**Current build: Test 20** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): chapter 2-1's real path.",
+            "The dam (r10c), r10d and r10e are playable, the Insignia Key comes from the dam, and far scenery and far enemies cost less."
+          ]
+        },
+        {
+          "path": "port/dreamcast/game/Makefile",
+          "added_nontrivial_lines": 13,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/bench.cpp",
+          "added_nontrivial_lines": 168,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/bench.mk",
+          "added_nontrivial_lines": 15,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/pace.cpp",
+          "added_nontrivial_lines": 13,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/audio_aica.cpp",
+          "added_nontrivial_lines": 14,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_actor_fast.cpp",
+          "added_nontrivial_lines": 2,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_static.cpp",
+          "added_nontrivial_lines": 47,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_ui.cpp",
+          "added_nontrivial_lines": 2,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/scenery19.mk",
+          "added_nontrivial_lines": 10,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/tools/d367/rr/README.md",
+          "added_nontrivial_lines": 27,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/tools/d367/rr/known.txt",
+          "added_nontrivial_lines": 2,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "texchk r100 TEXCHK fails in r100 as in Test 17, 18 and 19 (REL19-STATUS: census TEXCHK 25/26)"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/rr/recipe.conf",
+          "added_nontrivial_lines": 20,
+          "literal_lines_absent_current": 3,
+          "absent_samples": [
+            "CH2=\"ROUTE_CH22=1 ROUTE_CH23=1 PS2_CH2_ENEMY=1 PS2_ENEMY_CH22_DIR=/root/re4data/private/ps2enemy-ch2-20261016 PS2_ENEMY_CH23_DIR=/root/re4data/private/ps2enemy-ch2-20261016 MOTION_BOUNDED_R11F=1 NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1 PS2_WORLD_SOURCE_OWNER=1 PS2_WORLD_SOURCE_TEX_PREP=1 AICA_STR_ENT_MAX=56 AICA_SPILL=1 NATIVE_MODEL_REGISTRY_FIRST=1 NATIVE_MODEL_REGISTRY_LOD=1 ROUTE_SOON_RETURN=1 MOVIE_AUDIO_PRIME=1 ROOM_LEFTOVER_FIT=1 PS2_WORLD_SOURCE_TEX_VQ=1 LEON_SKIN_SLOTS=2 LEON_HEADLESS=1 LEON_HEADLESS_DIR=/root/re4data/private/garr18-head-20261019 LEON_CLOTH_DRAWN=1 HAZE_SPRITE_CUT=1 FX_MIST_PS2=1 PS2_HDR_SETS=128 ROUTE_CH21_FULL=1\"",
+            "DATA=\"fsh,ch2,cast16,r108p,pak17,zr17,zr17b,v101,stump17,res17g,trans17,res17b,res18f,boss18g50r,garr18h,rc19,ch21r,nostd20,pair20\"",
+            "KSETS=\"snd16,water16i,vq16w,fsh,ch2,cast16,r108p,pak17,zr17,zr17b,v101,stump17,res17b,trans17,res18f,boss18g50r,garr18h,rc19,ch21r,pair20\""
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/rr/rr-cycle.sh",
+          "added_nontrivial_lines": 165,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/tools/d367/rr/rr-flycast.sh",
+          "added_nontrivial_lines": 18,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "  ( t=$(date +%s); bash \"$J/$name.sh\" > \"$J/$name.log\" 2>&1; rc=$?; echo $rc > \"$J/$name.rc\""
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/rr/rr-jobs.sh",
+          "added_nontrivial_lines": 77,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "    job 2 kit \"MSYS_NO_PATHCONV=1 wsl -d Ubuntu-24.04 -u root -- bash -c 'set -euo pipefail; rm -rf ${KW:?}; cd $T/port/dreamcast && WORK=$KW JOBS=4 bash tools/d367/kit-check.sh ${KF#$T/port/dreamcast/} $ROUTE/out-rr${S7}rP \\\"$CAND\\\"' && bash '$WT/kit-boot.sh' $KW\""
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/rr/rr-judge.py",
+          "added_nontrivial_lines": 170,
+          "literal_lines_absent_current": 3,
+          "absent_samples": [
+            "EVU = Path(env['ev']); J = EVU / '_jobs'",
+            "        '- t15/int %s; recipe: %s' % (env['sha'][:8], subprocess.run(['bash', '-c', '. \"%s/recipe.conf\"; echo \"$RR_RECIPE_NAME\"' % BIN], capture_output=True, text=True).stdout.strip()),",
+            "    out += ['', 'NOT-DRAWN rows (reported, not judged): ' + '; '.join(x.strip() for x in extra['not_drawn'])]"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/rr/rr.sh",
+          "added_nontrivial_lines": 43,
+          "literal_lines_absent_current": 3,
+          "absent_samples": [
+            "# rr.sh status | cycle | full | package <tag> [test name] | install | uninstall   (WSL, root; lane rr, 2026-10-19)",
+            "    . \"$RR_HOME/bin/recipe.conf\"",
+            "    echo \"knob file for the release lane: $W/kit/release-knobs.txt\" ;;"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/test11/t11-fix.py",
+          "added_nontrivial_lines": 39,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/tools/d367/test15/t15-build.sh",
+          "added_nontrivial_lines": 7,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "T15_V=${T15_V-VIEW_DIST_OPTION=1 VIEW_DIST_BOOT=1 QUICK_WEAPON=1 ACTOR_PLAN=1 MANUAL_PACK_PROBE=1 SCENERY_CHUNK=1 SG_SELECT_LEAN=1 ENEMY_VIS_CULL=1 SCENERY_UNIT_CONCAT=1 SCENERY_SCREEN_MEMO=1 SCENERY_FAR_LOD=4 LOGIC_LOD_EM=2 LOGIC_APPROX_MASK=0x01 ESP_TYPE_CAP=16 ESP_CUT_EARLY=1}"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/trace_lock.sh",
+          "added_nontrivial_lines": 2,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "# D367 host-wide trace slots (2026-10-13 dettrace rule; 12 from 10-19, user): at most TRACE_SLOTS (default 12) logic-trace Flycast runs"
+          ]
+        },
+        {
+          "path": "src/game/em.cpp",
+          "added_nontrivial_lines": 39,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "src/game/em_set.cpp",
+          "added_nontrivial_lines": 3,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "src/game/esp.cpp",
+          "added_nontrivial_lines": 70,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "src/game/esp_sub.cpp",
+          "added_nontrivial_lines": 43,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "src/game/main.cpp",
+          "added_nontrivial_lines": 1,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "src/st1/r10c.cpp",
+          "added_nontrivial_lines": 9,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-rel20-land",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/tools/d367/trace_lock.sh",
+          "added_nontrivial_lines": 1,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-rigid20",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/game/Makefile",
+          "added_nontrivial_lines": 1,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_actor_fast.cpp",
+          "added_nontrivial_lines": 32,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/rigid20.mk",
+          "added_nontrivial_lines": 18,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/tools/d367/rigid20/fx.sh",
+          "added_nontrivial_lines": 11,
+          "literal_lines_absent_current": 2,
+          "absent_samples": [
+            "# fx.sh <arm label> <name> <warp file> [pad file] (WSL; lane rigid20): Flycast fixture (Test 20 disc data line + the warp) for run.sh.",
+            "python3 \"$D367/test11/t11-fix.py\" \"$L\" \"$RAW\" --base payload --data \"$DATA\" --warp \"$W\" ${4:+--pad \"$4\"} > \"$K/fix/$N.log\" 2>&1 || { tail -5 \"$K/fix/$N.log\" >&2; exit 1; }"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/trace_lock.sh",
+          "added_nontrivial_lines": 1,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-rr-src",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/tools/d367/rr/README.md",
+          "added_nontrivial_lines": 27,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/tools/d367/rr/known.txt",
+          "added_nontrivial_lines": 2,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "texchk r100 TEXCHK fails in r100 as in Test 17, 18 and 19 (REL19-STATUS: census TEXCHK 25/26)"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/rr/recipe.conf",
+          "added_nontrivial_lines": 18,
+          "literal_lines_absent_current": 5,
+          "absent_samples": [
+            "RR_RECIPE_NAME=\"Test 19.1 (Test 19 + SCENERY_DEDUP=2)\"",
+            "CH2=\"ROUTE_CH22=1 ROUTE_CH23=1 PS2_CH2_ENEMY=1 PS2_ENEMY_CH22_DIR=/root/re4data/private/ps2enemy-ch2-20261016 PS2_ENEMY_CH23_DIR=/root/re4data/private/ps2enemy-ch2-20261016 MOTION_BOUNDED_R11F=1 NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1 PS2_WORLD_SOURCE_OWNER=1 PS2_WORLD_SOURCE_TEX_PREP=1 AICA_STR_ENT_MAX=56 AICA_SPILL=1 NATIVE_MODEL_REGISTRY_FIRST=1 NATIVE_MODEL_REGISTRY_LOD=1 ROUTE_SOON_RETURN=1 MOVIE_AUDIO_PRIME=1 ROOM_LEFTOVER_FIT=1 PS2_WORLD_SOURCE_TEX_VQ=1 LEON_SKIN_SLOTS=2 LEON_HEADLESS=1 LEON_HEADLESS_DIR=/root/re4data/private/garr18-head-20261019 LEON_CLOTH_DRAWN=1 HAZE_SPRITE_CUT=1 FX_MIST_PS2=1 PS2_HDR_SETS=128 ROUTE_SOON_KEY=1 SCENERY_DEDUP=2\"",
+            "DATA=\"fsh,ch2,cast16,r108p,pak17,zr17,zr17b,v101,stump17,res17g,trans17,res17b,res18f,boss18g50r,garr18h,rc19\"",
+            "KSETS=\"snd16,water16i,vq16w,fsh,ch2,cast16,r108p,pak17,zr17,zr17b,v101,stump17,res17b,trans17,res18f,boss18g50r,garr18h,rc19\"",
+            "CH2_REF=\"${CH2% SCENERY_DEDUP=2}\""
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/rr/rr-cycle.sh",
+          "added_nontrivial_lines": 165,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/tools/d367/rr/rr-flycast.sh",
+          "added_nontrivial_lines": 18,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "  ( t=$(date +%s); bash \"$J/$name.sh\" > \"$J/$name.log\" 2>&1; rc=$?; echo $rc > \"$J/$name.rc\""
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/rr/rr-jobs.sh",
+          "added_nontrivial_lines": 77,
+          "literal_lines_absent_current": 1,
+          "absent_samples": [
+            "    job 2 kit \"MSYS_NO_PATHCONV=1 wsl -d Ubuntu-24.04 -u root -- bash -c 'set -euo pipefail; rm -rf ${KW:?}; cd $T/port/dreamcast && WORK=$KW JOBS=4 bash tools/d367/kit-check.sh ${KF#$T/port/dreamcast/} $ROUTE/out-rr${S7}rP \\\"$CAND\\\"' && bash '$WT/kit-boot.sh' $KW\""
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/rr/rr-judge.py",
+          "added_nontrivial_lines": 170,
+          "literal_lines_absent_current": 3,
+          "absent_samples": [
+            "EVU = Path(env['ev']); J = EVU / '_jobs'",
+            "        '- t15/int %s; recipe: %s' % (env['sha'][:8], subprocess.run(['bash', '-c', '. \"%s/recipe.conf\"; echo \"$RR_RECIPE_NAME\"' % BIN], capture_output=True, text=True).stdout.strip()),",
+            "    out += ['', 'NOT-DRAWN rows (reported, not judged): ' + '; '.join(x.strip() for x in extra['not_drawn'])]"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/rr/rr.sh",
+          "added_nontrivial_lines": 43,
+          "literal_lines_absent_current": 3,
+          "absent_samples": [
+            "# rr.sh status | cycle | full | package <tag> [test name] | install | uninstall   (WSL, root; lane rr, 2026-10-19)",
+            "    . \"$RR_HOME/bin/recipe.conf\"",
+            "    echo \"knob file for the release lane: $W/kit/release-knobs.txt\" ;;"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/trace_lock.sh",
+          "added_nontrivial_lines": 1,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-scenery19",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/tools/d367/trace_lock.sh",
+          "added_nontrivial_lines": 1,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/texclass22",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/game/platform/include/ta_material_diag.h",
+          "added_nontrivial_lines": 30,
+          "literal_lines_absent_current": 29,
+          "absent_samples": [
+            "#if defined(RE4DC_TEX_USAGE) && RE4DC_TEX_USAGE",
+            "// TEX_USAGE_LOG (lane texusage22): rows live for a whole window (many scenes), so the table is larger.",
+            "constexpr unsigned MaxRows=1024, Buckets=4096, None=~0u, Bins=5;",
+            "#if defined(RE4DC_TEX_USAGE) && RE4DC_TEX_USAGE",
+            "    unsigned hdrs;        // polygon / sprite headers selecting this row (draw submissions)"
+          ]
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_ui.cpp",
+          "added_nontrivial_lines": 30,
+          "literal_lines_absent_current": 27,
+          "absent_samples": [
+            "    if(i!=re4dc_tamat::None)++census.rows[i].hdrs;",
+            "// TEX_USAGE_LOG (lane texusage22): one window = 120 scenes or a room change; rows are dumped once at its end.",
+            "unsigned win_scenes,win_present,win_room=~0u,win_no,win_first;",
+            "void usage_dump(unsigned frame,unsigned room){",
+            "    re4dc_log(\"texuse win: v=1 w=%u room=%03x f=%u..%u scenes=%u present=%u rows=%u overflow=%u invalid=%u orphan=%u\\n\","
+          ]
+        },
+        {
+          "path": "port/dreamcast/game/tahash.mk",
+          "added_nontrivial_lines": 11,
+          "literal_lines_absent_current": 11,
+          "absent_samples": [
+            "# TEX_USAGE_LOG=1 (lane texusage22, 2026-10-22; telemetry only, default 0 = no code): the TA_MATERIAL_DIAG observer",
+            "# aggregated per texture over a window (120 scenes, or until the room changes) instead of per scene, with each",
+            "# triangle's / sprite's texels per pixel (UV area x texture size / unclipped screen area) binned by its clipped screen",
+            "# area (<1, 1-2, 2-4, 4-8, >=8 texels per pixel), the polygon header count and the texture size / mip bit. One",
+            "# \"texuse:\" line per (list, source, TSP, TCW) row at the window end. Forces TA_HASH=1 TA_BIN_DIAG=1 TA_MATERIAL_DIAG=1."
+          ]
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/texconv22-20261022",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/game/effects30.mk",
+          "added_nontrivial_lines": 9,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/game30.mk",
+          "added_nontrivial_lines": 7,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/include/native_effect_strip21.inc",
+          "added_nontrivial_lines": 77,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/include/native_ui.h",
+          "added_nontrivial_lines": 8,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_ui.cpp",
+          "added_nontrivial_lines": 7,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "port/dreamcast/tests/test_mipmap_effect_consumers.py",
+          "added_nontrivial_lines": 23,
+          "literal_lines_absent_current": 23,
+          "absent_samples": [
+            "    def test_model_index_never_proves_an_image_binding_and_unknown_generator_stays_held(self):",
+            "        sprite=record(texture=0x31);model=record(ident=0xff,texture=0x31)",
+            "        unknown=bytearray(record(ident=0xff,texture=0x31,kind=1));unknown[265]=9",
+            "        def parse(values,separate=False):",
+            "            blob=bytearray(112+48+300*len(values))"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tests/test_mipmap_generic_effects.py",
+          "added_nontrivial_lines": 49,
+          "literal_lines_absent_current": 45,
+          "absent_samples": [
+            "import compact_native_pal8 as pal8",
+            "import test_compact_native_pal8 as palette_fixture",
+            "                source_references=[dict(owner_category='effect',path='fixture',arc_index=0,tpl_offset=80,file_sha256='source')],native_world_references=[],native_registry_references=[]))",
+            "                source_bindings=[dict(source_path='fixture',source_sha256='source',archive_entry=0,tpl_offset=80,records=[rec])]))",
+            "        policy=copy.deepcopy(self.policy);policy['sampling_contract_version']=4"
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/mipmap21/effect_consumers.py",
+          "added_nontrivial_lines": 21,
+          "literal_lines_absent_current": 21,
+          "absent_samples": [
+            "def record_reference_namespace(record):",
+            "    \"\"\"Known EspSeqSet dispatch; unknown generators retain conservative binding.",
+            "    IDs FC..FF use Tex_id as an Efm/scroll model index, not the ordinary",
+            "    Esp_tex_tbl image index. Generator00/02 spawn through the same EspSeqSet;",
+            "    other generators must keep their nominal binding until individually traced."
+          ]
+        },
+        {
+          "path": "port/dreamcast/tools/d367/mipmap21/generic_effect_candidate.py",
+          "added_nontrivial_lines": 35,
+          "literal_lines_absent_current": 32,
+          "absent_samples": [
+            "import compact_native_pal8 as pal8",
+            "def build(original,base_pack,coverage,policy,*,enabled=False,engine='auto',canonical_pal8=False):",
+            "    version=policy.get('sampling_contract_version',2)",
+            "    if version not in (2,3):raise ValueError('unsupported generic effect sampling contract')",
+            "        expected_refs={(b['path'],b['arc_index'],b['tpl_offset'],b['file_sha256']) for b in expected[name]['source_refs']}"
+          ]
+        },
+        {
+          "path": "src/game/cloth.cpp",
+          "added_nontrivial_lines": 4,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "src/game/esp.cpp",
+          "added_nontrivial_lines": 7,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        },
+        {
+          "path": "src/game/esp_sub.cpp",
+          "added_nontrivial_lines": 34,
+          "literal_lines_absent_current": 0,
+          "absent_samples": []
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/texsrc22",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/game/platform/include/ta_material_diag.h",
+          "added_nontrivial_lines": 30,
+          "literal_lines_absent_current": 29,
+          "absent_samples": [
+            "#if defined(RE4DC_TEX_USAGE) && RE4DC_TEX_USAGE",
+            "// TEX_USAGE_LOG (lane texusage22): rows live for a whole window (many scenes), so the table is larger.",
+            "constexpr unsigned MaxRows=1024, Buckets=4096, None=~0u, Bins=5;",
+            "#if defined(RE4DC_TEX_USAGE) && RE4DC_TEX_USAGE",
+            "    unsigned hdrs;        // polygon / sprite headers selecting this row (draw submissions)"
+          ]
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_ui.cpp",
+          "added_nontrivial_lines": 30,
+          "literal_lines_absent_current": 27,
+          "absent_samples": [
+            "    if(i!=re4dc_tamat::None)++census.rows[i].hdrs;",
+            "// TEX_USAGE_LOG (lane texusage22): one window = 120 scenes or a room change; rows are dumped once at its end.",
+            "unsigned win_scenes,win_present,win_room=~0u,win_no,win_first;",
+            "void usage_dump(unsigned frame,unsigned room){",
+            "    re4dc_log(\"texuse win: v=1 w=%u room=%03x f=%u..%u scenes=%u present=%u rows=%u overflow=%u invalid=%u orphan=%u\\n\","
+          ]
+        },
+        {
+          "path": "port/dreamcast/game/tahash.mk",
+          "added_nontrivial_lines": 11,
+          "literal_lines_absent_current": 11,
+          "absent_samples": [
+            "# TEX_USAGE_LOG=1 (lane texusage22, 2026-10-22; telemetry only, default 0 = no code): the TA_MATERIAL_DIAG observer",
+            "# aggregated per texture over a window (120 scenes, or until the room changes) instead of per scene, with each",
+            "# triangle's / sprite's texels per pixel (UV area x texture size / unclipped screen area) binned by its clipped screen",
+            "# area (<1, 1-2, 2-4, 4-8, >=8 texels per pixel), the polygon header count and the texture size / mip bit. One",
+            "# \"texuse:\" line per (list, source, TSP, TCW) row at the window end. Forces TA_HASH=1 TA_BIN_DIAG=1 TA_MATERIAL_DIAG=1."
+          ]
+        }
+      ]
+    },
+    {
+      "branch": "origin/wip/texusage22",
+      "changed_path_added_line_presence": [
+        {
+          "path": "port/dreamcast/game/platform/include/ta_material_diag.h",
+          "added_nontrivial_lines": 30,
+          "literal_lines_absent_current": 29,
+          "absent_samples": [
+            "#if defined(RE4DC_TEX_USAGE) && RE4DC_TEX_USAGE",
+            "// TEX_USAGE_LOG (lane texusage22): rows live for a whole window (many scenes), so the table is larger.",
+            "constexpr unsigned MaxRows=1024, Buckets=4096, None=~0u, Bins=5;",
+            "#if defined(RE4DC_TEX_USAGE) && RE4DC_TEX_USAGE",
+            "    unsigned hdrs;        // polygon / sprite headers selecting this row (draw submissions)"
+          ]
+        },
+        {
+          "path": "port/dreamcast/game/platform/native_ui.cpp",
+          "added_nontrivial_lines": 30,
+          "literal_lines_absent_current": 27,
+          "absent_samples": [
+            "    if(i!=re4dc_tamat::None)++census.rows[i].hdrs;",
+            "// TEX_USAGE_LOG (lane texusage22): one window = 120 scenes or a room change; rows are dumped once at its end.",
+            "unsigned win_scenes,win_present,win_room=~0u,win_no,win_first;",
+            "void usage_dump(unsigned frame,unsigned room){",
+            "    re4dc_log(\"texuse win: v=1 w=%u room=%03x f=%u..%u scenes=%u present=%u rows=%u overflow=%u invalid=%u orphan=%u\\n\","
+          ]
+        },
+        {
+          "path": "port/dreamcast/game/tahash.mk",
+          "added_nontrivial_lines": 11,
+          "literal_lines_absent_current": 11,
+          "absent_samples": [
+            "# TEX_USAGE_LOG=1 (lane texusage22, 2026-10-22; telemetry only, default 0 = no code): the TA_MATERIAL_DIAG observer",
+            "# aggregated per texture over a window (120 scenes, or until the room changes) instead of per scene, with each",
+            "# triangle's / sprite's texels per pixel (UV area x texture size / unclipped screen area) binned by its clipped screen",
+            "# area (<1, 1-2, 2-4, 4-8, >=8 texels per pixel), the polygon header count and the texture size / mip bit. One",
+            "# \"texuse:\" line per (list, source, TSP, TCW) row at the window end. Forces TA_HASH=1 TA_BIN_DIAG=1 TA_MATERIAL_DIAG=1."
+          ]
+        }
+      ]
+    }
+  ]
+}

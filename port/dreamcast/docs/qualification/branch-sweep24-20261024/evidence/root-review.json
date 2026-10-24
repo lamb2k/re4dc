@@ -1,0 +1,544 @@
+[
+  {
+    "branch": "origin/codex/backface-sh4zam",
+    "category": "superseded or closed",
+    "reason": "Backface speed experiment is closed after slower console results. Production path already exists in its landed form; these fused/caller/SDK iterations are not a new landing candidate.",
+    "evidence": [
+      "CODEX-HANDOVER-20261023.md: ruled out",
+      "CODEX-STATUS-20261022.md: backface closed"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/codex/backface-sh4zam-actors",
+    "category": "superseded or closed",
+    "reason": "Backface speed experiment is closed after slower console results. Production path already exists in its landed form; these fused/caller/SDK iterations are not a new landing candidate.",
+    "evidence": [
+      "CODEX-HANDOVER-20261023.md: ruled out",
+      "CODEX-STATUS-20261022.md: backface closed"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/codex/backface-sh4zam-fused",
+    "category": "superseded or closed",
+    "reason": "Backface speed experiment is closed after slower console results. Production path already exists in its landed form; these fused/caller/SDK iterations are not a new landing candidate.",
+    "evidence": [
+      "CODEX-HANDOVER-20261023.md: ruled out",
+      "CODEX-STATUS-20261022.md: backface closed"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/codex/backface-sh4zam-gates",
+    "category": "evidence only",
+    "reason": "Private gate schedules, review models and capture tooling; retained for the closed backface experiment, not a runtime landing.",
+    "evidence": [
+      "codex-lanes/CODEX-STATUS-20261022.md",
+      "codex-lanes/backface-sh4zam/STATUS.md"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/codex/backface-sh4zam-kernel",
+    "category": "superseded or closed",
+    "reason": "Backface speed experiment is closed after slower console results. Production path already exists in its landed form; these fused/caller/SDK iterations are not a new landing candidate.",
+    "evidence": [
+      "CODEX-HANDOVER-20261023.md: ruled out",
+      "CODEX-STATUS-20261022.md: backface closed"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/codex/backface-sh4zam-lean",
+    "category": "superseded or closed",
+    "reason": "Backface speed experiment is closed after slower console results. Production path already exists in its landed form; these fused/caller/SDK iterations are not a new landing candidate.",
+    "evidence": [
+      "CODEX-HANDOVER-20261023.md: ruled out",
+      "CODEX-STATUS-20261022.md: backface closed"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/codex/backface-sh4zam-review",
+    "category": "evidence only",
+    "reason": "Private gate schedules, review models and capture tooling; retained for the closed backface experiment, not a runtime landing.",
+    "evidence": [
+      "codex-lanes/CODEX-STATUS-20261022.md",
+      "codex-lanes/backface-sh4zam/STATUS.md"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/codex/backface-sh4zam-sdk",
+    "category": "superseded or closed",
+    "reason": "Backface speed experiment is closed after slower console results. Production path already exists in its landed form; these fused/caller/SDK iterations are not a new landing candidate.",
+    "evidence": [
+      "CODEX-HANDOVER-20261023.md: ruled out",
+      "CODEX-STATUS-20261022.md: backface closed"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/codex/backface-sh4zam-world",
+    "category": "superseded or closed",
+    "reason": "Backface speed experiment is closed after slower console results. Production path already exists in its landed form; these fused/caller/SDK iterations are not a new landing candidate.",
+    "evidence": [
+      "CODEX-HANDOVER-20261023.md: ruled out",
+      "CODEX-STATUS-20261022.md: backface closed"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/codex/backface-walk23",
+    "category": "superseded or closed",
+    "reason": "Isolated C-walker control belongs to the closed backface speed study; do not restart from a stale Next line.",
+    "evidence": [
+      "CODEX-HANDOVER-20261023.md: ruled out CPU backface"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/codex/cabin23",
+    "category": "superseded or closed",
+    "reason": "Parked design only; no implementation approval. Existing movie path remains accepted.",
+    "evidence": [
+      "CODEX-HANDOVER-20261023.md: Parked",
+      "cabin23/STATUS.md"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/codex/cone-front-certificate-20261023",
+    "category": "superseded or closed",
+    "reason": "Cloud PR56 all-front certificates remain draft/parked; zero real hits and no authorization to extend. The queued-cull-state correctness subset was independently landed dd8981e8.",
+    "evidence": [
+      "CODEX-HANDOVER-20261023.md: PR56",
+      "dd8981e8"
+    ],
+    "cloud_untouched": true,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/codex/rootpose23",
+    "category": "landed in another form",
+    "reason": "Movie part-cell allocation/validation fix integrated as a5de753a1 and enabled f586774d0; current movie-world test file exactly matches branch. Do not requeue stale launcher Next.",
+    "evidence": [
+      "a5de753a14e8a076873c6d3586d7237c2d50cb44",
+      "f586774d0",
+      "root-equivalence-evidence.json"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/codex/world-emit-prefetch-20261023",
+    "category": "still needs landing",
+    "reason": "Unmerged cloud Build5 alternative c3163443, not the landed 87d66a52/82d5f827 implementation. Gather narrowing still needs private-builder index-enclosure validation; externally held, not in local queue.",
+    "evidence": [
+      "9f6a25c6:port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md",
+      "c3163443"
+    ],
+    "cloud_untouched": true,
+    "queue_key": "CLOUD-BUILD5-ALT",
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/codex/world-scratch23",
+    "category": "landed in another form",
+    "reason": "Exact patch-equivalent scratch experiment exists in integration (git cherry minus; landed fc4fb60a). It remains disabled and console ruled it out for speed.",
+    "evidence": [
+      "root-analysis.json: patch_cherry",
+      "fc4fb60a",
+      "CODEX-HANDOVER-20261023.md: scratch console result"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/codex/world-setup-spike-20261023",
+    "category": "landed in another form",
+    "reason": "Selection/submission spike was split into the accepted SELECT_ONLY and SUBMIT_BATCH integrations; do not merge older inherited cone/cull changes.",
+    "evidence": [
+      "2747f9285",
+      "451bed6fa",
+      "e452afecd",
+      "9f6a25c6:cloud queue"
+    ],
+    "cloud_untouched": true,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/codex/world-submit-spike-20261023",
+    "category": "landed in another form",
+    "reason": "Selection/submission spike was split into the accepted SELECT_ONLY and SUBMIT_BATCH integrations; do not merge older inherited cone/cull changes.",
+    "evidence": [
+      "2747f9285",
+      "451bed6fa",
+      "e452afecd",
+      "9f6a25c6:cloud queue"
+    ],
+    "cloud_untouched": true,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/actor-vis23-20261023",
+    "category": "superseded or closed",
+    "reason": "Wide actor visibility extension parked at near-zero MODELLED benefit; existing accepted actor wall cut is distinct and stays in integration.",
+    "evidence": [
+      "CODEX-HANDOVER-20261023.md: actor-vis23 wide",
+      "interior-vis23/INBOX.md: actor wall cut already handled"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/audits23-arena-20261023",
+    "category": "evidence only",
+    "reason": "Private arena challenge or qualification archive for the already-landed four-fix audit unit; not another runtime patch.",
+    "evidence": [
+      "d5c1ceab9",
+      "audits23/STATUS.md",
+      "53fcbc0ba8fac8fcf035143dbd8cdd0870dd2b77"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/audits23-evidence-tools-20261023",
+    "category": "evidence only",
+    "reason": "Private arena challenge or qualification archive for the already-landed four-fix audit unit; not another runtime patch.",
+    "evidence": [
+      "d5c1ceab9",
+      "audits23/STATUS.md",
+      "087276f98e59d61cdc93ff61721f4cf9aa047cb9"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/audits23-readme-20261023",
+    "category": "landed in another form",
+    "reason": "All relevant qualified Test23 README tick lines are exactly present in current integration; latest patches differ in surrounding README context. Earlier two release tick patches are patch-equivalent. Other unique ancestry is dreamcast-port release documentation, never merge wholesale into t15/int.",
+    "evidence": [
+      "root-analysis.json: patch_cherry",
+      "d5c1ceab9",
+      "a5e972e44",
+      "CODEX-TAKEOVER-20261023.md: never merge dreamcast-port into t15/int",
+      "readme-equivalence.json"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/camera-log24-20261024",
+    "category": "evidence only",
+    "reason": "Camera diagnostic format, exact target identities and capture receipts are research tools; no player runtime change is requested.",
+    "evidence": [
+      "camera-log24/STATUS.md",
+      "c8aeefa767ca6f8d9bc6ebf1fcb6339683b91cb9"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/castle22",
+    "category": "superseded or closed",
+    "reason": "Explicitly paused castle fixtures and coverage notes; authentic state preserved, no restart.",
+    "evidence": [
+      "CODEX-HANDOVER-20261023.md: Castle parked",
+      "castle18/STATUS.md"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/codex22-qa22all",
+    "category": "evidence only",
+    "reason": "Historical private QA-only recipe arm; integration contains the repaired unit. Never merge its experimental recipe wholesale.",
+    "evidence": [
+      "CODEX-UPDATE-20261022.md",
+      "20752045a856121ef97cef92662e31bd661b4988"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/codex22-qa22nobf",
+    "category": "evidence only",
+    "reason": "Historical private QA-only recipe arm; integration contains the repaired unit. Never merge its experimental recipe wholesale.",
+    "evidence": [
+      "CODEX-UPDATE-20261022.md",
+      "c4a98f8c0d9c4de4323252dd851ea8f65550b219"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/dedup-offline23-20261023",
+    "category": "evidence only",
+    "reason": "Remaining branch-only changes are qualified private QA controllers, fixtures and evidence. Runtime dedup and prefetch correction already landed by fb254e82.",
+    "evidence": [
+      "fb254e82",
+      "dedup-offline23/STATUS.md",
+      "111 files changed, 5915 insertions(+)"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/dedup-restrip23-20261023",
+    "category": "superseded or closed",
+    "reason": "I-001 fixed-real-data re-strip result is NO-GO: cross0.105% versus15% requirement; retain tools and result, do not queue runtime.",
+    "evidence": [
+      "dedup-offline23/STATUS.md",
+      "a16a04cd"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/dedup23-evidence-tools-20261023",
+    "category": "evidence only",
+    "reason": "Exact root landing/private-QA metadata archive for already integrated dedup.",
+    "evidence": [
+      "fb254e82",
+      "8ffa0ce789777f2af295dce444c755cd3e767d1f"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/facing-groups23-20261023",
+    "category": "superseded or closed",
+    "reason": "Facing-group offline estimate failed its bar; no runtime candidate authorized.",
+    "evidence": [
+      "CODEX-HANDOVER-20261023.md: facing-groups ruled out",
+      "807618af"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/fix-r200-gears23-20261023",
+    "category": "landed in another form",
+    "reason": "Mipmap source-world preparation and movie root-cell validation integrated as a5de753a1, guarded/enabled by f586774d0. Historical branch has different knob packaging.",
+    "evidence": [
+      "a5de753a14e8a076873c6d3586d7237c2d50cb44",
+      "f586774d0",
+      "root-equivalence-evidence.json"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/rr-evidence24-20261024",
+    "category": "evidence only",
+    "reason": "Owned RR capsule/console observer and title-only acceptance snapshot are qualification tooling. No global RR activation or production behavior change is requested.",
+    "evidence": [
+      "rr-safe-cycle23/STATUS.md",
+      "CODEX-TAKEOVER-STATUS.md: candidate title-only",
+      "04ebc9859c44dda712ff7a93248b0e033d64a328"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/rr-safe-cycle23-20261023",
+    "category": "evidence only",
+    "reason": "Owned RR capsule/console observer and title-only acceptance snapshot are qualification tooling. No global RR activation or production behavior change is requested.",
+    "evidence": [
+      "rr-safe-cycle23/STATUS.md",
+      "CODEX-TAKEOVER-STATUS.md: candidate title-only",
+      "34a5c48bfe22c3d9718810166407048a906b8bcc"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/stat-bytes23-camera-control-20261023",
+    "category": "evidence only",
+    "reason": "Diagnostic-only alternate camera predicate used to explain trace differences; intentionally not a production stat fix.",
+    "evidence": [
+      "stat-bytes23/STATUS.md",
+      "ec0cd720"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/stat-bytes23-evidence-tools-20261023",
+    "category": "evidence only",
+    "reason": "Stat qualification source and receipt archive; complete runtime fix already landed/enabled.",
+    "evidence": [
+      "a5e972e44",
+      "91f7750536586964403c12ef2ec8fb998fa49a36"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/stat-bytes23-readme-20261023",
+    "category": "landed in another form",
+    "reason": "All relevant qualified Test23 README tick lines are exactly present in current integration; latest patches differ in surrounding README context. Earlier two release tick patches are patch-equivalent. Other unique ancestry is dreamcast-port release documentation, never merge wholesale into t15/int.",
+    "evidence": [
+      "root-analysis.json: patch_cherry",
+      "d5c1ceab9",
+      "a5e972e44",
+      "CODEX-TAKEOVER-20261023.md: never merge dreamcast-port into t15/int",
+      "readme-equivalence.json"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/world-emit23-census-20261023",
+    "category": "evidence only",
+    "reason": "Branch-specific addition is private one-frame census and/or evidence tooling. Underlying LEAN2/EMIT_PREFETCH options already landed default-off; no duplicate optimization or recipe enablement queued.",
+    "evidence": [
+      "world-emit23/STATUS.md",
+      "ea969bb24",
+      "82d5f827",
+      "f2b290b285116d0a440aa4557a09acdd7a29c20e"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/world-emit23-current-20261023",
+    "category": "evidence only",
+    "reason": "Branch-specific addition is private one-frame census and/or evidence tooling. Underlying LEAN2/EMIT_PREFETCH options already landed default-off; no duplicate optimization or recipe enablement queued.",
+    "evidence": [
+      "world-emit23/STATUS.md",
+      "ea969bb24",
+      "82d5f827",
+      "49ad20f9932d638ddb7becf5db6f86b92e0a76a2"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/world-emit23-evidence-tools-20261023",
+    "category": "evidence only",
+    "reason": "Branch-specific addition is private one-frame census and/or evidence tooling. Underlying LEAN2/EMIT_PREFETCH options already landed default-off; no duplicate optimization or recipe enablement queued.",
+    "evidence": [
+      "world-emit23/STATUS.md",
+      "ea969bb24",
+      "82d5f827",
+      "1d677733b2ef9bb4ab0ee8c71f6ee794acfb3c37"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/world-emit23-qualify-20261023",
+    "category": "evidence only",
+    "reason": "Branch-specific addition is private one-frame census and/or evidence tooling. Underlying LEAN2/EMIT_PREFETCH options already landed default-off; no duplicate optimization or recipe enablement queued.",
+    "evidence": [
+      "world-emit23/STATUS.md",
+      "ea969bb24",
+      "82d5f827",
+      "7a3af776ff8c14070f96272cd48074e5895d0490"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/world-merge23-20261023",
+    "category": "superseded or closed",
+    "reason": "Corrected LOD20 fixed-cell placement merge failed >=40% fewer contexts and <=10% vertex growth; no runtime implementation warranted.",
+    "evidence": [
+      "world-merge23/STATUS.md",
+      "4cf3b40d"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/worlddraw23-20261022",
+    "category": "landed in another form",
+    "reason": "Both unique WORLD_METER commits are exact patch-equivalent to integration (git cherry minus); current meter comes through landed copies.",
+    "evidence": [
+      "root-analysis.json: patch_cherry",
+      "9c6c57005",
+      "14afb24fe"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/worlddraw23-qa22wm",
+    "category": "evidence only",
+    "reason": "QA22 private WorldMeter/NoBackface recipe arm. WORLD_METER itself already landed; private recipe overrides are not production changes.",
+    "evidence": [
+      "9c6c57005",
+      "28e23d825a3e7a33e35145dfb0ef4451c47fc414"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  },
+  {
+    "branch": "origin/wip/worldemit-ui-pair23-20261023",
+    "category": "evidence only",
+    "reason": "Private PS2 Mendez opacity-pair preparation helper; neither source conversion nor look acceptance.",
+    "evidence": [
+      "world-emit23/STATUS.md",
+      "67474ea4b1dd01b0d47e2f80c0e9b58103a7f86d"
+    ],
+    "cloud_untouched": false,
+    "queue_key": null,
+    "confidence": "verified"
+  }
+]

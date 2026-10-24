@@ -1,0 +1,1285 @@
+{
+ "schema": 1,
+ "status": "READ_ONLY_ASSIGNED_REF_CLASSIFICATION_COMPLETE_NO_RUNTIME_ACCEPTANCE",
+ "observed_utc": "2026-10-24T13:52:42.767022+00:00",
+ "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+ "inventory_identity": {
+  "size": 1171463,
+  "sha256": "ab0e401e633e1e70d39a4a699b20725f710856e063452dd49ee30d5852f0168d"
+ },
+ "assignment_identity": {
+  "size": 7409,
+  "sha256": "7f5282e1002badc89bedd97237c53d90360ab285496dd5d5331b14ae7deef725"
+ },
+ "git_repository": "/root/work/lanes/gc23-evidence-tools",
+ "scope": "Exact20 active-review refs from frozen inventory; no refs, checkout, cloud, build, stage or guest mutations",
+ "assigned_count": 20,
+ "category_counts": {
+  "still needs landing": 1,
+  "superseded or closed": 10,
+  "evidence only": 9
+ },
+ "categories": [
+  "landed in another form",
+  "superseded or closed",
+  "evidence only",
+  "still needs landing"
+ ],
+ "rows": [
+  {
+   "branch": "origin/wip/codex-composition-budget24-20261024",
+   "sha": "c2f9ba8cbcebe30a218fe4fb6cf9ecd2305d853e",
+   "category": "still needs landing",
+   "reason": "Active whole-unit candidate: merge c2f9 has parents8ce5 and427784; it contains current GC catalog/Motion, repaired owned stream handle, guarded visibility/PVS receipt composition and rain diagnostics. Absent from9f6. Source CLEAR only; root must compose with9f6 and run whole-unit normal/OFF identities and gates. Do not cherry-pick constituent fragments.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+     "identity": {
+      "size": 7052,
+      "sha256": "5578c00df9a13badb157c60aefb9eb299fae9b1423ec8deba77983518a9059cf"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-composition-budget-source-v1/REVIEW.json",
+     "identity": {
+      "size": 2641,
+      "sha256": "d2d4d57356d0930cfce4bef08379b22034ca2f436fd7f5bb08484dd36bb27279"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/STATUS.md",
+     "identity": {
+      "size": 2564,
+      "sha256": "0111bcdbe05f68c5788fbdf98ae50c4471aa4cb5749a226987d2424659c15a9f"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "c2f9ba8cbcebe30a218fe4fb6cf9ecd2305d853e",
+     "tree": "5c8bc830d811fbf7441087e5fa907571528dc690",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": true,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [
+      "M\tport/dreamcast/game/Makefile",
+      "M\tport/dreamcast/game/coarse_actor.cpp",
+      "M\tport/dreamcast/game/coarse_actor_leon_hands.inc",
+      "M\tport/dreamcast/game/coarse_actor_pl08_pack.inc",
+      "M\tport/dreamcast/game/coarse_actor_registry_pack.inc",
+      "M\tport/dreamcast/game/effects30.mk",
+      "A\tport/dreamcast/game/gc_asset_gate.mk",
+      "M\tport/dreamcast/game/model_bridge.cpp",
+      "M\tport/dreamcast/game/platform/audio_aica.cpp",
+      "M\tport/dreamcast/game/platform/far_shell.inc",
+      "A\tport/dreamcast/game/platform/gc_asset_audio.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_disc.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_gate.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_members.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_motion_unknown.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_payloads.cpp",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor_compiled.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor_select.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_audio.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_gate.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_copy.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_derivation.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_runtime.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_source.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_index.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_lifecycle.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_members.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_motion_unknown.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_movie.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_movie_stream.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_packet_cursor.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_payloads.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_sha.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_static.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_static_source.inc",
+      "M\tport/dreamcast/game/platform/include/native_actor_leon_pipe.inc",
+      "M\tport/dreamcast/game/platform/include/native_ui_source_world.inc",
+      "M\tport/dreamcast/game/platform/include/pvs23_runtime.inc",
+      "M\tport/dreamcast/game/platform/native_actor_fast.cpp",
+      "M\tport/dreamcast/game/platform/native_model.cpp",
+      "M\tport/dreamcast/game/platform/native_movie.cpp",
+      "M\tport/dreamcast/game/platform/native_movie_stream.c",
+      "M\tport/dreamcast/game/platform/native_static.cpp",
+      "M\tport/dreamcast/game/platform/native_ui.cpp",
+      "M\tport/dreamcast/game/platform/room_file.c",
+      "M\tport/dreamcast/game/scenery19.mk",
+      "M\tport/dreamcast/game/t2exact.mk",
+      "M\tport/dreamcast/game/ui_bridge.cpp",
+      "M\tsrc/game/dvd.cpp",
+      "M\tsrc/game/espgen44.cpp",
+      "M\tsrc/game/filter06.cpp",
+      "M\tsrc/game/model.cpp",
+      "M\tsrc/game/read.cpp"
+     ],
+     "all_branch_diff_identity": {
+      "size": 15393,
+      "sha256": "06e36e9b065ff7c170273f6106c6304eb1fb76d304833e8fdbffe052a03b1a68"
+     }
+    }
+   ],
+   "queue_key": "composition24-gc427-visibility-rain-whole-unit",
+   "represented_by_queue_key": null,
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/codex-composition-int24-20261024",
+   "sha": "8ce5ee2d00027268c3e69c9c300b819c1b14c63f",
+   "category": "superseded or closed",
+   "reason": "8ce is an exact parent of c2f9. Its earlier unlanded composition is superseded by the whole-unit stream-handle successor; no independent merge or prior programme qualification transfers to fresh9f6.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+     "identity": {
+      "size": 7052,
+      "sha256": "5578c00df9a13badb157c60aefb9eb299fae9b1423ec8deba77983518a9059cf"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "8ce5ee2d00027268c3e69c9c300b819c1b14c63f",
+     "tree": "e1f65cda81d536d44dcaade4c16f40dbb2017bc3",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": true,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [
+      "M\tport/dreamcast/game/Makefile",
+      "M\tport/dreamcast/game/coarse_actor.cpp",
+      "M\tport/dreamcast/game/coarse_actor_leon_hands.inc",
+      "M\tport/dreamcast/game/coarse_actor_pl08_pack.inc",
+      "M\tport/dreamcast/game/coarse_actor_registry_pack.inc",
+      "M\tport/dreamcast/game/effects30.mk",
+      "A\tport/dreamcast/game/gc_asset_gate.mk",
+      "M\tport/dreamcast/game/model_bridge.cpp",
+      "M\tport/dreamcast/game/platform/audio_aica.cpp",
+      "M\tport/dreamcast/game/platform/far_shell.inc",
+      "A\tport/dreamcast/game/platform/gc_asset_audio.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_disc.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_gate.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_members.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_motion_unknown.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_payloads.cpp",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor_compiled.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor_select.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_audio.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_gate.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_copy.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_derivation.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_runtime.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_source.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_index.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_lifecycle.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_members.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_motion_unknown.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_movie.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_movie_stream.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_packet_cursor.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_payloads.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_sha.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_static.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_static_source.inc",
+      "M\tport/dreamcast/game/platform/include/native_actor_leon_pipe.inc",
+      "M\tport/dreamcast/game/platform/include/native_ui_source_world.inc",
+      "M\tport/dreamcast/game/platform/include/pvs23_runtime.inc",
+      "M\tport/dreamcast/game/platform/native_actor_fast.cpp",
+      "M\tport/dreamcast/game/platform/native_model.cpp",
+      "M\tport/dreamcast/game/platform/native_movie.cpp",
+      "M\tport/dreamcast/game/platform/native_movie_stream.c",
+      "M\tport/dreamcast/game/platform/native_static.cpp",
+      "M\tport/dreamcast/game/platform/native_ui.cpp",
+      "M\tport/dreamcast/game/platform/room_file.c",
+      "M\tport/dreamcast/game/scenery19.mk",
+      "M\tport/dreamcast/game/t2exact.mk",
+      "M\tport/dreamcast/game/ui_bridge.cpp",
+      "M\tsrc/game/dvd.cpp",
+      "M\tsrc/game/espgen44.cpp",
+      "M\tsrc/game/filter06.cpp",
+      "M\tsrc/game/model.cpp",
+      "M\tsrc/game/read.cpp"
+     ],
+     "all_branch_diff_identity": {
+      "size": 15149,
+      "sha256": "94fe375e1dd14538620e3aa9f527c0ce06bc7d1e1d389f84c32362d64babc521"
+     }
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": "composition24-gc427-visibility-rain-whole-unit",
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/gc-catalog24-20261024",
+   "sha": "870789095c4c14fbdbf22043447b249063d2ec3a",
+   "category": "superseded or closed",
+   "reason": "Frozen catalog870789/a132 is an ancestor of Motionaab, repaired427 and composedc2f9. Selected-target/source validation is historical, catalog0 only, not catalog/runtime completeness. Carry through the composed unit rather than merge this ancestor separately.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/STATUS.md",
+     "identity": {
+      "size": 6299,
+      "sha256": "644d6b6940f5fdb9f631d5f050927a4b999ad9a36fa5bea11720b94968cf7e47"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/STATUS.md",
+     "identity": {
+      "size": 2564,
+      "sha256": "0111bcdbe05f68c5788fbdf98ae50c4471aa4cb5749a226987d2424659c15a9f"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "870789095c4c14fbdbf22043447b249063d2ec3a",
+     "tree": "b420b1422a03a73b154542e2de0b610ed1b8034a",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": true,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [
+      "M\tport/dreamcast/game/Makefile",
+      "M\tport/dreamcast/game/coarse_actor.cpp",
+      "M\tport/dreamcast/game/coarse_actor_leon_hands.inc",
+      "M\tport/dreamcast/game/coarse_actor_pl08_pack.inc",
+      "M\tport/dreamcast/game/coarse_actor_registry_pack.inc",
+      "A\tport/dreamcast/game/gc_asset_gate.mk",
+      "M\tport/dreamcast/game/model_bridge.cpp",
+      "M\tport/dreamcast/game/platform/audio_aica.cpp",
+      "M\tport/dreamcast/game/platform/far_shell.inc",
+      "A\tport/dreamcast/game/platform/gc_asset_audio.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_disc.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_gate.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_members.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_payloads.cpp",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor_compiled.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor_select.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_audio.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_gate.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_copy.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_derivation.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_runtime.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_source.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_index.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_lifecycle.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_members.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_movie.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_movie_stream.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_packet_cursor.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_payloads.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_sha.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_static.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_static_source.inc",
+      "M\tport/dreamcast/game/platform/native_actor_fast.cpp",
+      "M\tport/dreamcast/game/platform/native_model.cpp",
+      "M\tport/dreamcast/game/platform/native_movie.cpp",
+      "M\tport/dreamcast/game/platform/native_movie_stream.c",
+      "M\tport/dreamcast/game/platform/native_static.cpp",
+      "M\tport/dreamcast/game/platform/native_ui.cpp",
+      "M\tport/dreamcast/game/platform/room_file.c",
+      "M\tport/dreamcast/game/ui_bridge.cpp",
+      "M\tsrc/game/dvd.cpp",
+      "M\tsrc/game/model.cpp",
+      "M\tsrc/game/read.cpp"
+     ],
+     "all_branch_diff_identity": {
+      "size": 6598,
+      "sha256": "e8f1a8f01fb53611095a78b46b7a362527f7787cbbd5c0e79ecb315df4eeb8d7"
+     }
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": "composition24-gc427-visibility-rain-whole-unit",
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/gc-motion24-20261024",
+   "sha": "aab201ceac0e18107f64a3212398afe916793327",
+   "category": "superseded or closed",
+   "reason": "Original Motionaab is an ancestor of repaired427 andc2f9. Preserve original actual QA ON KOS4000/4016 failure; it is superseded as candidate by the owned-handle repair, whose actual memory retest has not run.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/STATUS.md",
+     "identity": {
+      "size": 2564,
+      "sha256": "0111bcdbe05f68c5788fbdf98ae50c4471aa4cb5749a226987d2424659c15a9f"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+     "identity": {
+      "size": 7052,
+      "sha256": "5578c00df9a13badb157c60aefb9eb299fae9b1423ec8deba77983518a9059cf"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "aab201ceac0e18107f64a3212398afe916793327",
+     "tree": "06d258fdb76994dbda5e2f15393fdd4bb557d774",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": true,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [
+      "M\tport/dreamcast/game/Makefile",
+      "M\tport/dreamcast/game/coarse_actor.cpp",
+      "M\tport/dreamcast/game/coarse_actor_leon_hands.inc",
+      "M\tport/dreamcast/game/coarse_actor_pl08_pack.inc",
+      "M\tport/dreamcast/game/coarse_actor_registry_pack.inc",
+      "A\tport/dreamcast/game/gc_asset_gate.mk",
+      "M\tport/dreamcast/game/model_bridge.cpp",
+      "M\tport/dreamcast/game/platform/audio_aica.cpp",
+      "M\tport/dreamcast/game/platform/far_shell.inc",
+      "A\tport/dreamcast/game/platform/gc_asset_audio.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_disc.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_gate.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_members.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_motion_unknown.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_payloads.cpp",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor_compiled.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor_select.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_audio.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_gate.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_copy.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_derivation.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_runtime.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_source.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_index.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_lifecycle.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_members.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_motion_unknown.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_movie.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_movie_stream.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_packet_cursor.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_payloads.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_sha.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_static.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_static_source.inc",
+      "M\tport/dreamcast/game/platform/include/native_actor_leon_pipe.inc",
+      "M\tport/dreamcast/game/platform/native_actor_fast.cpp",
+      "M\tport/dreamcast/game/platform/native_model.cpp",
+      "M\tport/dreamcast/game/platform/native_movie.cpp",
+      "M\tport/dreamcast/game/platform/native_movie_stream.c",
+      "M\tport/dreamcast/game/platform/native_static.cpp",
+      "M\tport/dreamcast/game/platform/native_ui.cpp",
+      "M\tport/dreamcast/game/platform/room_file.c",
+      "M\tport/dreamcast/game/ui_bridge.cpp",
+      "M\tsrc/game/dvd.cpp",
+      "M\tsrc/game/model.cpp",
+      "M\tsrc/game/read.cpp"
+     ],
+     "all_branch_diff_identity": {
+      "size": 6972,
+      "sha256": "40be0cf12dccc6cb7a59da68c644ffbccab93423d4cd5391fdfbd789cbcebe9e"
+     }
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": "composition24-gc427-visibility-rain-whole-unit",
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/gc-motion24-budget-20261024",
+   "sha": "427784b1f48aa30742850bb5025925ab619b740e",
+   "category": "superseded or closed",
+   "reason": "Repair427 is a direct parent ofc2f9 and its six-file payload is retained exactly. Standalone427 has source/host and actual target static readback, but no corrected KOS acceptance. Keep its qualification/recovery work as a prerequisite of the same composed queue item, not a second merge.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-composition-budget-source-v1/REVIEW.json",
+     "identity": {
+      "size": 2641,
+      "sha256": "d2d4d57356d0930cfce4bef08379b22034ca2f436fd7f5bb08484dd36bb27279"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-budget-qa-on-target-v1/REVIEW.json",
+     "identity": {
+      "size": 614,
+      "sha256": "3d207941b8a91c191f8487f5a5d2553fa07cf9d262fddb50be0437bcdb972d66"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/STATUS.md",
+     "identity": {
+      "size": 2564,
+      "sha256": "0111bcdbe05f68c5788fbdf98ae50c4471aa4cb5749a226987d2424659c15a9f"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "427784b1f48aa30742850bb5025925ab619b740e",
+     "tree": "0ae6751f9c7882fae469006d27cbe8de06984ba7",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": true,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [
+      "M\tport/dreamcast/game/Makefile",
+      "M\tport/dreamcast/game/coarse_actor.cpp",
+      "M\tport/dreamcast/game/coarse_actor_leon_hands.inc",
+      "M\tport/dreamcast/game/coarse_actor_pl08_pack.inc",
+      "M\tport/dreamcast/game/coarse_actor_registry_pack.inc",
+      "A\tport/dreamcast/game/gc_asset_gate.mk",
+      "M\tport/dreamcast/game/model_bridge.cpp",
+      "M\tport/dreamcast/game/platform/audio_aica.cpp",
+      "M\tport/dreamcast/game/platform/far_shell.inc",
+      "A\tport/dreamcast/game/platform/gc_asset_audio.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_disc.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_gate.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_members.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_motion_unknown.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_payloads.cpp",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor_compiled.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor_select.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_audio.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_gate.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_copy.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_derivation.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_runtime.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_source.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_index.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_lifecycle.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_members.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_motion_unknown.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_movie.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_movie_stream.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_packet_cursor.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_payloads.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_sha.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_static.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_static_source.inc",
+      "M\tport/dreamcast/game/platform/include/native_actor_leon_pipe.inc",
+      "M\tport/dreamcast/game/platform/native_actor_fast.cpp",
+      "M\tport/dreamcast/game/platform/native_model.cpp",
+      "M\tport/dreamcast/game/platform/native_movie.cpp",
+      "M\tport/dreamcast/game/platform/native_movie_stream.c",
+      "M\tport/dreamcast/game/platform/native_static.cpp",
+      "M\tport/dreamcast/game/platform/native_ui.cpp",
+      "M\tport/dreamcast/game/platform/room_file.c",
+      "M\tport/dreamcast/game/ui_bridge.cpp",
+      "M\tsrc/game/dvd.cpp",
+      "M\tsrc/game/model.cpp",
+      "M\tsrc/game/read.cpp"
+     ],
+     "all_branch_diff_identity": {
+      "size": 7216,
+      "sha256": "7436185919ce0cf9eb1efcc1c6399708fa27690b41c849e4c0d2806e8da097fb"
+     }
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": "composition24-gc427-visibility-rain-whole-unit",
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/gc-port23-20261023",
+   "sha": "1d63cffe3a232c402418f2f2d919e7abae476957",
+   "category": "superseded or closed",
+   "reason": "Historical static1d63 is an ancestor of catalog,Motion,repair andc2f9. Its STATUS explicitly redirects active ownership to Motion. Partial source/target closure never established complete GC asset coverage, terminal protocol or memory acceptance.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/STATUS.md",
+     "identity": {
+      "size": 6299,
+      "sha256": "644d6b6940f5fdb9f631d5f050927a4b999ad9a36fa5bea11720b94968cf7e47"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/STATUS.md",
+     "identity": {
+      "size": 2564,
+      "sha256": "0111bcdbe05f68c5788fbdf98ae50c4471aa4cb5749a226987d2424659c15a9f"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "1d63cffe3a232c402418f2f2d919e7abae476957",
+     "tree": "f1c225747a427d1c65631dd1276c2dc5290f6b69",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": true,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [
+      "M\tport/dreamcast/game/Makefile",
+      "M\tport/dreamcast/game/coarse_actor.cpp",
+      "M\tport/dreamcast/game/coarse_actor_leon_hands.inc",
+      "M\tport/dreamcast/game/coarse_actor_pl08_pack.inc",
+      "M\tport/dreamcast/game/coarse_actor_registry_pack.inc",
+      "A\tport/dreamcast/game/gc_asset_gate.mk",
+      "M\tport/dreamcast/game/model_bridge.cpp",
+      "M\tport/dreamcast/game/platform/audio_aica.cpp",
+      "M\tport/dreamcast/game/platform/far_shell.inc",
+      "A\tport/dreamcast/game/platform/gc_asset_audio.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_disc.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_gate.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_members.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_payloads.cpp",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor_compiled.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor_select.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_audio.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_gate.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_copy.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_derivation.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_runtime.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_source.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_index.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_lifecycle.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_members.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_movie.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_movie_stream.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_packet_cursor.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_payloads.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_sha.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_static.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_static_source.inc",
+      "M\tport/dreamcast/game/platform/native_actor_fast.cpp",
+      "M\tport/dreamcast/game/platform/native_model.cpp",
+      "M\tport/dreamcast/game/platform/native_movie.cpp",
+      "M\tport/dreamcast/game/platform/native_movie_stream.c",
+      "M\tport/dreamcast/game/platform/native_static.cpp",
+      "M\tport/dreamcast/game/platform/native_ui.cpp",
+      "M\tport/dreamcast/game/platform/room_file.c",
+      "M\tport/dreamcast/game/ui_bridge.cpp",
+      "M\tsrc/game/dvd.cpp",
+      "M\tsrc/game/model.cpp",
+      "M\tsrc/game/read.cpp"
+     ],
+     "all_branch_diff_identity": {
+      "size": 6164,
+      "sha256": "0fad93c6cdf5e2b0ef756a2652e0a47a752ffc09f3a42da1d91971dc6c002a7f"
+     }
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": "composition24-gc427-visibility-rain-whole-unit",
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/gc-port23-seed-20261023",
+   "sha": "9e557b0e1dc1376a019f9ce3222edf13cbcbb3f1",
+   "category": "superseded or closed",
+   "reason": "Historical seed commit is patch-equivalent in the c2f9 lineage; generator,test andSEED documentation blobs are byte-identical there. Do not merge its obsolete diagnostic core separately. The helper remains historical unknown-provenance texture evidence, not GC coverage acceptance.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/STATUS.md",
+     "identity": {
+      "size": 6299,
+      "sha256": "644d6b6940f5fdb9f631d5f050927a4b999ad9a36fa5bea11720b94968cf7e47"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "9e557b0e1dc1376a019f9ce3222edf13cbcbb3f1",
+     "tree": "687eb20f2755b83b03a9501e4d8e6c76b594c1e0",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": false,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [
+      "A\tport/dreamcast/game/gc_asset_gate.mk",
+      "A\tport/dreamcast/game/platform/gc_asset_gate.cpp",
+      "A\tport/dreamcast/game/platform/include/gc_asset_gate.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_sha.inc"
+     ],
+     "all_branch_diff_identity": {
+      "size": 612,
+      "sha256": "24e7ab148b351046b88552349e62400810bba767b62c972e5cf7489ddeb9428c"
+     }
+    },
+    {
+     "type": "exact_seed_blob_equivalence",
+     "pairs": [
+      {
+       "path": "port/dreamcast/tools/d367/gc_port23/build_reviewed_seed.py",
+       "tip_blob": "372323652f40e38f88a3dd632e1889b095d8ebc1",
+       "candidate_blob": "372323652f40e38f88a3dd632e1889b095d8ebc1"
+      },
+      {
+       "path": "port/dreamcast/tools/d367/gc_port23/test_seed.py",
+       "tip_blob": "ac955513ba3972e35b78725a0cd73b61de622bf7",
+       "candidate_blob": "ac955513ba3972e35b78725a0cd73b61de622bf7"
+      },
+      {
+       "path": "port/dreamcast/tools/d367/gc_port23/SEED.md",
+       "tip_blob": "2cb9c54c6f70b01a23fe6fa52c6e216077693e4d",
+       "candidate_blob": "2cb9c54c6f70b01a23fe6fa52c6e216077693e4d"
+      }
+     ],
+     "cherry": [
+      "- 9e557b0e1dc1376a019f9ce3222edf13cbcbb3f1"
+     ]
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": "composition24-gc427-visibility-rain-whole-unit",
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/gc23-evidence-tools-20261024",
+   "sha": "35fde3ff83d5121fbe7426efa114a70e6c3b365a",
+   "category": "evidence only",
+   "reason": "Append-only source/control/evidence archive. Runtime paths in its ancestry are historical1d63; all runtime commits are already in c2f9. Its tip35fde preserves pending recovery metadata, not executable guest authority or a runtime candidate. Archive branch is intentionally not a production merge unit.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/STATUS.md",
+     "identity": {
+      "size": 2564,
+      "sha256": "0111bcdbe05f68c5788fbdf98ae50c4471aa4cb5749a226987d2424659c15a9f"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+     "identity": {
+      "size": 7052,
+      "sha256": "5578c00df9a13badb157c60aefb9eb299fae9b1423ec8deba77983518a9059cf"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "35fde3ff83d5121fbe7426efa114a70e6c3b365a",
+     "tree": "76f5e09a11692b28331c07c0f78483a687851ea3",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": false,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [
+      "M\tport/dreamcast/game/Makefile",
+      "M\tport/dreamcast/game/coarse_actor.cpp",
+      "M\tport/dreamcast/game/coarse_actor_leon_hands.inc",
+      "M\tport/dreamcast/game/coarse_actor_pl08_pack.inc",
+      "M\tport/dreamcast/game/coarse_actor_registry_pack.inc",
+      "A\tport/dreamcast/game/gc_asset_gate.mk",
+      "M\tport/dreamcast/game/model_bridge.cpp",
+      "M\tport/dreamcast/game/platform/audio_aica.cpp",
+      "M\tport/dreamcast/game/platform/far_shell.inc",
+      "A\tport/dreamcast/game/platform/gc_asset_audio.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_disc.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_gate.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_members.cpp",
+      "A\tport/dreamcast/game/platform/gc_asset_payloads.cpp",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor_compiled.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_actor_select.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_audio.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_gate.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_copy.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_derivation.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_runtime.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_hand_source.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_index.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_lifecycle.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_members.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_movie.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_movie_stream.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_packet_cursor.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_payloads.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_sha.inc",
+      "A\tport/dreamcast/game/platform/include/gc_asset_static.h",
+      "A\tport/dreamcast/game/platform/include/gc_asset_static_source.inc",
+      "M\tport/dreamcast/game/platform/native_actor_fast.cpp",
+      "M\tport/dreamcast/game/platform/native_model.cpp",
+      "M\tport/dreamcast/game/platform/native_movie.cpp",
+      "M\tport/dreamcast/game/platform/native_movie_stream.c",
+      "M\tport/dreamcast/game/platform/native_static.cpp",
+      "M\tport/dreamcast/game/platform/native_ui.cpp",
+      "M\tport/dreamcast/game/platform/room_file.c",
+      "M\tport/dreamcast/game/ui_bridge.cpp",
+      "M\tsrc/game/dvd.cpp",
+      "M\tsrc/game/model.cpp",
+      "M\tsrc/game/read.cpp"
+     ],
+     "all_branch_diff_identity": {
+      "size": 236266,
+      "sha256": "391f8d26804f9c13f63c3f1f8b126028b3b565026bcb51cfcfbe653ca67f1703"
+     }
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": null,
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/interior-discovery24-20261024",
+   "sha": "64f256b083f734dfc685cdcf0ad244867fb57a18",
+   "category": "evidence only",
+   "reason": "Completed bounded effective-zero discovery/tools/results. It produced sample hints and NO_CERTIFICATE, with zero runtime admission; no runtime commit lies outsidec2f9. Optional later finite coverage work is not a merge-ready feature.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/STATUS.md",
+     "identity": {
+      "size": 2036,
+      "sha256": "99962a50cb27c0a2d76f34db05dd6b57ebb391a80bbd703a20abd3f4128ccdca"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+     "identity": {
+      "size": 7052,
+      "sha256": "5578c00df9a13badb157c60aefb9eb299fae9b1423ec8deba77983518a9059cf"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "64f256b083f734dfc685cdcf0ad244867fb57a18",
+     "tree": "df8f3e53f903d09d74331b6892537781360b9bb1",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": false,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [
+      "M\tport/dreamcast/game/platform/native_static.cpp",
+      "M\tport/dreamcast/game/platform/native_ui.cpp"
+     ],
+     "all_branch_diff_identity": {
+      "size": 5385,
+      "sha256": "875c6164c51836622aa2c249e67fe5e6fc8549233debc62b914cde6884d96e06"
+     }
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": null,
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/interior-vis23-20261023",
+   "sha": "18f2ffa79a63f81a8379f220014f9def86ec36d1",
+   "category": "evidence only",
+   "reason": "Current tip18f2 adds protected Rain recovery tooling/reviews. Its historical effective0/runtime commits are already in c2f9; remaining tip is not a separate runtime delta. V4 source/public CLEAR does not authorize or qualify media/guest/look. Keep active recovery workflow, not a duplicate runtime merge.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-vis23/STATUS.md",
+     "identity": {
+      "size": 4144,
+      "sha256": "e3f2ffea1d21cfdb1f6f40d5c48f6b99a42c854bd78d6491a1f33b29eb130687"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+     "identity": {
+      "size": 7052,
+      "sha256": "5578c00df9a13badb157c60aefb9eb299fae9b1423ec8deba77983518a9059cf"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "18f2ffa79a63f81a8379f220014f9def86ec36d1",
+     "tree": "aa12e6abbfbf0f0bc0cfe892c229518c12b13d41",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": false,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [
+      "M\tport/dreamcast/game/platform/include/pvs23_runtime.inc",
+      "M\tport/dreamcast/game/platform/native_static.cpp",
+      "M\tport/dreamcast/game/platform/native_ui.cpp",
+      "M\tport/dreamcast/game/t2exact.mk"
+     ],
+     "all_branch_diff_identity": {
+      "size": 15219,
+      "sha256": "ac63af8c0d35bf053399741202c935d96c72ab3f8595f3c06961f41b42132360"
+     }
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": null,
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/interior-vis23-runtime-20261023",
+   "sha": "abfe2038cf686ddb2580058ee72639f5c89bfeb8",
+   "category": "superseded or closed",
+   "reason": "All three historical queued-affine/source-receipt commits are patch-equivalent in c2f9 (git cherry marks each minus). Runtime fix was carried in later visibility/composed source; no standalone obsolete branch merge or source-only runtime acceptance.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-vis23/STATUS.md",
+     "identity": {
+      "size": 4144,
+      "sha256": "e3f2ffea1d21cfdb1f6f40d5c48f6b99a42c854bd78d6491a1f33b29eb130687"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "abfe2038cf686ddb2580058ee72639f5c89bfeb8",
+     "tree": "604aaea248cd4c46af10b7328db679ca68bc38b1",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": false,
+     "runtime_commit_log_not_in_candidate": [
+      "5576aea2963059c91838a6d187ea28eb3bf28cbb Fix PVS source receipts to follow selected baked affine"
+     ],
+     "branch_runtime_diff_paths_vs_merge_base": [
+      "M\tport/dreamcast/game/platform/native_static.cpp"
+     ],
+     "all_branch_diff_identity": {
+      "size": 253,
+      "sha256": "330a2aa68b0a7dbe5ec76d700f9001a338f674fbe3f5df9d47ad9996165756cf"
+     }
+    },
+    {
+     "type": "patch_equivalence_in_unlanded_successor",
+     "command": "git cherry c2f9ba8cbcebe30a218fe4fb6cf9ecd2305d853e abfe2038cf686ddb2580058ee72639f5c89bfeb8",
+     "result": [
+      "- 5576aea2963059c91838a6d187ea28eb3bf28cbb",
+      "- 787ce8c588281da0d738623e9231e42153fcf060",
+      "- abfe2038cf686ddb2580058ee72639f5c89bfeb8"
+     ]
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": "composition24-gc427-visibility-rain-whole-unit",
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/interior-vis23-targets-20261023",
+   "sha": "e210f3c45c15590126f5c29edbbe18812ec20476",
+   "category": "superseded or closed",
+   "reason": "Historical selected-affine conditional target proposal/material prerequisite branch. It has no runtime commit outsidec2f9; guarded current visibility source supersedes its runtime path. Host selected-target proposals are not accepted cuts, and the old branch should not be merged independently.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-vis23/STATUS.md",
+     "identity": {
+      "size": 4144,
+      "sha256": "e3f2ffea1d21cfdb1f6f40d5c48f6b99a42c854bd78d6491a1f33b29eb130687"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+     "identity": {
+      "size": 7052,
+      "sha256": "5578c00df9a13badb157c60aefb9eb299fae9b1423ec8deba77983518a9059cf"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "e210f3c45c15590126f5c29edbbe18812ec20476",
+     "tree": "0f6bdbb380d84eb81d231d9cc73ef10caf7c8aab",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": false,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [
+      "M\tport/dreamcast/game/platform/native_static.cpp",
+      "M\tport/dreamcast/game/platform/native_ui.cpp"
+     ],
+     "all_branch_diff_identity": {
+      "size": 1154,
+      "sha256": "575af973d3ad7ed670d384776f1e2a2e34b49088556507d2414e6d287444b6ce"
+     }
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": "composition24-gc427-visibility-rain-whole-unit",
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/patch2810-coverage24-20261024",
+   "sha": "0ab8cca47e604e117abb47828c2314ba1b18c7d9",
+   "category": "evidence only",
+   "reason": "Tools and exact supported-domain refusal report only, no runtime delta. Two audited patch disks yielded zero sufficient continuous proofs; no admitted corners/gain, and no all-algorithm impossibility conclusion. Closed bounded research evidence.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+     "identity": {
+      "size": 7052,
+      "sha256": "5578c00df9a13badb157c60aefb9eb299fae9b1423ec8deba77983518a9059cf"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "0ab8cca47e604e117abb47828c2314ba1b18c7d9",
+     "tree": "ff744901de0a15527fbb2e505436a789b16ea17d",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": false,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [],
+     "all_branch_diff_identity": {
+      "size": 399,
+      "sha256": "3621e70410922d43ac035d0b8af73247af8de6a1be4d10c91332f8e72c754753"
+     }
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": null,
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/rain-diag24-20261024",
+   "sha": "a7bffa9e318aa4143e97a32a5fbe7ae8e52838a1",
+   "category": "superseded or closed",
+   "reason": "Runtime bca/fdb5/da413 is already carried in guarded8ce/c2f9; latera7 target-readback tools are not another runtime unit. Static selected/full-programme facts remain source-specific, while current protected media recovery, cache/lifecycle/memory and rain look are unaccepted. Queue only the composed successor.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/STATUS.md",
+     "identity": {
+      "size": 1591,
+      "sha256": "99e190ee0bf20aad38be28e2b9d94df107188eb733b9c053c5a31beef115212a"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/STATUS.md",
+     "identity": {
+      "size": 7602,
+      "sha256": "b21324bacfac61381fc02f80c81d7b23e48b51ee7cc71ea3e3b71b8197dc86eb"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+     "identity": {
+      "size": 7052,
+      "sha256": "5578c00df9a13badb157c60aefb9eb299fae9b1423ec8deba77983518a9059cf"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "a7bffa9e318aa4143e97a32a5fbe7ae8e52838a1",
+     "tree": "7f01204532365132cc64e43ccf7052472d027537",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": false,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [
+      "M\tport/dreamcast/game/effects30.mk",
+      "M\tsrc/game/espgen44.cpp",
+      "M\tsrc/game/filter06.cpp"
+     ],
+     "all_branch_diff_identity": {
+      "size": 2754,
+      "sha256": "deb95d04703d818910df7d67be67585402a79b5d9ddb2cca365e53e3b8840d5f"
+     }
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": "composition24-gc427-visibility-rain-whole-unit",
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/rain-qa-on24-20261024",
+   "sha": "525d046c350ae3bf6b0fc6c336a582bb865f499c",
+   "category": "evidence only",
+   "reason": "Grant-only build continuation/controller tooling, with no game runtime diff. Current root status independently records completed static programme pair and later media recovery; the tip STATUS predates that execution and is not current runtime acceptance. Preserve original interruption/continuation evidence.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/STATUS.md",
+     "identity": {
+      "size": 1591,
+      "sha256": "99e190ee0bf20aad38be28e2b9d94df107188eb733b9c053c5a31beef115212a"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+     "identity": {
+      "size": 7052,
+      "sha256": "5578c00df9a13badb157c60aefb9eb299fae9b1423ec8deba77983518a9059cf"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "525d046c350ae3bf6b0fc6c336a582bb865f499c",
+     "tree": "d728dc930837268cb73b01cf81bd400f8f8c6572",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": false,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [],
+     "all_branch_diff_identity": {
+      "size": 381,
+      "sha256": "15eb9ac74bf019d59c3b9c52a20062578ebc0dd26141cf34d146f827d64294f7"
+     }
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": null,
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/source-quad24-20261024",
+   "sha": "853611b56be113ab174f395116783c7940f0f424",
+   "category": "evidence only",
+   "reason": "Generic exact-shadow/partition/original-strip metadata helpers and grant-gated adapters, no runtime delta. Latest strip extractor is source/public reviewed; actual extraction remains unrun. Nominal coverage, restart fragmentation, encoded cost/numeric/raster/current-prefix qualification remain distinct; not a production feature to merge.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+     "identity": {
+      "size": 7052,
+      "sha256": "5578c00df9a13badb157c60aefb9eb299fae9b1423ec8deba77983518a9059cf"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "853611b56be113ab174f395116783c7940f0f424",
+     "tree": "925d33e637589b751b9ddd5420f57392ce43cde8",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": false,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [],
+     "all_branch_diff_identity": {
+      "size": 911,
+      "sha256": "cf73b8899342677ce9e83a6aafd34471a2c9b6e607337e39cbae1622f33dc451"
+     }
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": null,
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/triangle-opportunity-prep24-20261024",
+   "sha": "0879a93189e850e3f15cee9729aee4b40751fa67",
+   "category": "evidence only",
+   "reason": "Finite actual-triangle importer/runner and source namespace audit only. Exact75 hut cases all UNKNOWN, no whole-let candidate. r111 repeated group binding and absent current13/14 camera mapping are explicit blockers; no partial runtime hide is ready.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/triangle-opportunity-prep24/STATUS.md",
+     "identity": {
+      "size": 2700,
+      "sha256": "555643819e0abd09a50ded95de4639e4c14cf2139a315c52e78abcbc80e5908c"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+     "identity": {
+      "size": 7052,
+      "sha256": "5578c00df9a13badb157c60aefb9eb299fae9b1423ec8deba77983518a9059cf"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "0879a93189e850e3f15cee9729aee4b40751fa67",
+     "tree": "764168d34f3b8cd378965477a016176285561da3",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": false,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [],
+     "all_branch_diff_identity": {
+      "size": 1222,
+      "sha256": "18034cbee4bd197da7dcb1bbd47443b4eb5cd974d962add5722ad202d6ab5903"
+     }
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": null,
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/triangle-partition24-20261024",
+   "sha": "ebfc129bf010e4752494059468ed3ab04b7d315f",
+   "category": "evidence only",
+   "reason": "Canonical partition helper, private inventory and grant-only finite runner; no runtime diff. Author default-only smoke left75 cases UNTESTED_UNKNOWN; later root status reports bounded smaller-group nominal analysis, not runtime cuts. Tool preparation/results do not establish material/encoding/numeric/raster admission.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/triangle-partition24/STATUS.md",
+     "identity": {
+      "size": 1934,
+      "sha256": "d26fc2078182bea420960f69d96daae584d80a8bb4c7d0804a524cd6f8bc861f"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+     "identity": {
+      "size": 7052,
+      "sha256": "5578c00df9a13badb157c60aefb9eb299fae9b1423ec8deba77983518a9059cf"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "ebfc129bf010e4752494059468ed3ab04b7d315f",
+     "tree": "744800768513809c3b565aef0024160410ed0597",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": false,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [],
+     "all_branch_diff_identity": {
+      "size": 796,
+      "sha256": "656e129d7b482f0a39a326c5f14381e72c3f3f1fdff61854d96ee94e1f8fbc68"
+     }
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": null,
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/water-rain24-20261024",
+   "sha": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+   "category": "superseded or closed",
+   "reason": "Initial bca callback experiment is an ancestor of rain diagnostics andc2f9. Later causal diagnostics supersede the bare experiment. Historical short views/signatures do not establish current rain look, complete lifecycle, cache/memory or physical acceptance; no separate experiment merge.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/STATUS.md",
+     "identity": {
+      "size": 7602,
+      "sha256": "b21324bacfac61381fc02f80c81d7b23e48b51ee7cc71ea3e3b71b8197dc86eb"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/STATUS.md",
+     "identity": {
+      "size": 1591,
+      "sha256": "99e190ee0bf20aad38be28e2b9d94df107188eb733b9c053c5a31beef115212a"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+     "tree": "cc8175fa57f02718385ca28b8d76a999ac898384",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": true,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [
+      "M\tport/dreamcast/game/effects30.mk",
+      "M\tsrc/game/filter06.cpp"
+     ],
+     "all_branch_diff_identity": {
+      "size": 405,
+      "sha256": "d514855eea7fadfd6f41e35b53e634abacac46a862a953de9a5fd579ff79119e"
+     }
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": "composition24-gc427-visibility-rain-whole-unit",
+   "confidence": "high",
+   "runtime_acceptance": false
+  },
+  {
+   "branch": "origin/wip/water-rain24-canary-evidence-20261024",
+   "sha": "016757886d06d431e3e4adf42b91b3be36c348a8",
+   "category": "evidence only",
+   "reason": "Canary helpers and revised diagnostic design evidence atop the historical bca experiment. Current causal runtime is already in c2f9; this branch has no runtime commit outside it. Prior views/design/source controls remain historical and do not qualify current composed rain appearance.",
+   "evidence": [
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/STATUS.md",
+     "identity": {
+      "size": 7602,
+      "sha256": "b21324bacfac61381fc02f80c81d7b23e48b51ee7cc71ea3e3b71b8197dc86eb"
+     }
+    },
+    {
+     "type": "live_status_or_review",
+     "path": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/STATUS.md",
+     "identity": {
+      "size": 1591,
+      "sha256": "99e190ee0bf20aad38be28e2b9d94df107188eb733b9c053c5a31beef115212a"
+     }
+    },
+    {
+     "type": "git_frozen_commit",
+     "sha": "016757886d06d431e3e4adf42b91b3be36c348a8",
+     "tree": "1ff5e4b7381087a31bed22dec3f5b0242a95c9d1",
+     "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+     "is_ancestor_of_integration": false,
+     "is_ancestor_of_runtime_candidate": false,
+     "runtime_commit_log_not_in_candidate": [],
+     "branch_runtime_diff_paths_vs_merge_base": [
+      "M\tport/dreamcast/game/effects30.mk",
+      "M\tsrc/game/filter06.cpp"
+     ],
+     "all_branch_diff_identity": {
+      "size": 3189,
+      "sha256": "0266b2430cdab69b24f79059cfaa579139d8f4712ca4541393295f7c4c90ccea"
+     }
+    }
+   ],
+   "queue_key": null,
+   "represented_by_queue_key": null,
+   "confidence": "high",
+   "runtime_acceptance": false
+  }
+ ],
+ "deduplicated_queue": [
+  {
+   "queue_key": "composition24-gc427-visibility-rain-whole-unit",
+   "branch": "origin/wip/codex-composition-budget24-20261024",
+   "source": "c2f9ba8cbcebe30a218fe4fb6cf9ecd2305d853e",
+   "status": "NOT_READY_FOR_MERGE_OR_RUNTIME_ACCEPTANCE",
+   "action": "Compose the complete guarded unit against actual integration9f6; do not independently merge8ce,427,aab,catalog/static/rain fragments.",
+   "required_gates": [
+    "Fresh source composition and conflict/default-off/guard checks against9f6, not historicfb-only context",
+    "Fresh normal/OFF identity main+all14 and current composed whole-unit qualification",
+    "Original GC KOS48 frag0/1 corrected programme retests after fresh protected control and independently verified current baseline; original4000/4016 failure persists",
+    "Full H2 remains held pending original KOS closure and separately authorized fresh time-limit exception",
+    "Rain cache/lifecycle/memory and look acceptance remain unresolved; old canary or source/host CLEAR does not close them",
+    "GC gate remains partial/incomplete: no GC-ASSET completeness/conversion/terminal protocol acceptance",
+    "Numeric/raster/current-prefix/fresh-context requirements remain open; zero new admitted visibility cuts or hardware gain"
+   ]
+  }
+ ],
+ "notes": [
+  "No assigned branch tip is an ancestor of pinned9f6. Category landed in another form is therefore unused; inclusion in unlandedc2f9 means superseded, not landed.",
+  "Root moving status header says integrationfb254; frozen inventory9f6 is the comparison authority and includes later default-off cloud6-9 landings. This sweep does not alter or qualify cloud work.",
+  "Tools/evidence classifications describe intended landing scope, not deletion permission. All original source/failures/private media metadata remain preserved.",
+  "The only non-ancestor historical runtime commit outsidec2f9 is queued-affine5576; git cherry proves it and both associated host/doc commits patch-equivalent there.",
+  "Live handbacks are hashed at observation; their historic prepared/not-run text is distinguished from newer root status. No source-only or static target PASS is called runtime acceptance."
+ ],
+ "writes": [
+  "branch-sweep24/wip-active-review.json"
+ ]
+}

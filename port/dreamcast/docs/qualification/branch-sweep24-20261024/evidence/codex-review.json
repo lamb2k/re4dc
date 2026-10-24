@@ -1,0 +1,894 @@
+{
+  "schema": "branch-sweep24-codex-review-v1",
+  "reviewed_utc": "2026-10-24T13:55:30.553606+00:00",
+  "integration_base": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+  "inventory_sha256": "ab0e401e633e1e70d39a4a699b20725f710856e063452dd49ee30d5852f0168d",
+  "assignment_sha256": "7f5282e1002badc89bedd97237c53d90360ab285496dd5d5331b14ae7deef725",
+  "git_audit_sha256": "37a49d36057879c08afd91fb4ab2956e63af46beaf62f9ea4a0f5101e59bb64b",
+  "assigned_count": 40,
+  "reviewed_count": 40,
+  "category_counts": {
+    "superseded or closed": 11,
+    "evidence only": 24,
+    "landed in another form": 5
+  },
+  "method": "Read-only pinned Git commit ancestry, unique history, git cherry patch equivalence, branch-change paths and current-base differences; authoritative current takeover/carry and per-lane handbacks. No moving refs used for content comparison. Unrelated-history support tree handled by listing its own tree. Inherited runtime commits classified separately from own support commits.",
+  "cloud_policy": "No cloud branches among these40 assignments; all cloud refs untouched and none queued. Root owns cloud alternative c3163443 decision.",
+  "evidence_pins": [
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CLAUDE-CARRY23.md",
+      "bytes": 31073,
+      "sha256": "412dc0f52da433c52e9b49feb1e4e8381353b7547ee1b12a79525f7948d8db32"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-20261023.md",
+      "bytes": 6136,
+      "sha256": "18b4f4e82ea63364264710cd11cb8852723434023cf7927976c736a954aff4f6"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+      "bytes": 7052,
+      "sha256": "5578c00df9a13badb157c60aefb9eb299fae9b1423ec8deba77983518a9059cf"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-UPDATE-20261022.md",
+      "bytes": 20165,
+      "sha256": "7bed08972ae0bf6dcb48387ee5a4feea0ab4899f45c86cbf8f80b8c73a3fcb3f"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/actor-visibility23/CLAUDE-STATUS.md",
+      "bytes": 2553,
+      "sha256": "50eca3f9f40d6376be93f385d61f998bb2b8558c7053fd90a4e1ab0ac1dea38d"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/actor-visibility23/MAIN-MEMORY-QUALIFICATION-HANDOFF.md",
+      "bytes": 34317,
+      "sha256": "4e284fc3d0c55141c7031c7c6c8d15bb907250a6ca212d3e4f621c4c20f79d67"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/actor-visibility23/STATUS.md",
+      "bytes": 5531,
+      "sha256": "73587eb6c1ad5d87373e670f7a43c5d580f6f374ce8a2c22a4b34eebee15eaba"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/arena23/STATUS.md",
+      "bytes": 2751,
+      "sha256": "77c34d557777e954fc130530b4beac7f823bef17bd92f1bd38663322577dd24d"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/cache21-callers/STATUS.md",
+      "bytes": 1009,
+      "sha256": "5d0cb8be6b365c813aa709cbb9b26d1b25ba32637344c9fc76c21aed1281ff61"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/cache21-payload/STATUS.md",
+      "bytes": 1009,
+      "sha256": "8decafadb48886a6c94ede37fc94c925c7ca22c7936f90a6ad01d0d9a82f6258"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/cache21/STATUS.md",
+      "bytes": 986,
+      "sha256": "e25f26743dffb0dbb585e38be6233d67a9d21f51e2a1d5956c1d783213686a1b"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/STATUS.md",
+      "bytes": 984,
+      "sha256": "90896c7d5a5db710bddfe0374a6c7da3b9c54e489612f4eb377882e350625c52"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/damcause23/STATUS.md",
+      "bytes": 2261,
+      "sha256": "42cf47d5a8f1a994703cd902dda0e2bf389fde396f60ad48cf9f64d34c62efac"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/issue52-650-objectprep/STATUS.md",
+      "bytes": 1023,
+      "sha256": "919e9d5a884ebb6b5d496c70321939057605b90cc8266ad2e2766b60a4605288"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/issue52-792-objectprep/STATUS.md",
+      "bytes": 1023,
+      "sha256": "8c2ee200b0e76a4652dafac74bb5f61b7c49e0026ac65142c52e5be650b347e8"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/issue52-cache-currentqa-plan/STATUS.md",
+      "bytes": 1035,
+      "sha256": "2017b49eb10728262cbf82bebd06b60b26d42937dfd148f246922311bed8511a"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/issue52-cache-em10-objectprep/STATUS.md",
+      "bytes": 1037,
+      "sha256": "a3c5e3b8ae9942de565365e20415fce4d6d1ae458659dc48ad6bd282ca709fdd"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/issue52-cache-programme-prep02/STATUS.md",
+      "bytes": 1039,
+      "sha256": "3e664a32963af4c53194e3aebb4a16840414d56f8fb8ecedd3ce872385cb4010"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/issue52-cache-repairs-objectprep/STATUS.md",
+      "bytes": 1043,
+      "sha256": "0ddde7bd60ca079bc55cf18174fa1b35d73d7c9ccec339f9acfc34f076eb4b00"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/issue52-rootpose23-review/STATUS.md",
+      "bytes": 1346,
+      "sha256": "5e4a244d168a3e7e19b054229c2adf1d95d1a7dfecde4076ce8c4474a8d9196c"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/mipmap23/STATUS.md",
+      "bytes": 2794,
+      "sha256": "50f1bc29bbb5aa99b751da252d900ba2de5713ec7bd3cc9512a5ef45c7d09124"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/pvs-batch-compose24/HANDBACK.md",
+      "bytes": 2932,
+      "sha256": "16d1502547030074b49879b3a0126cf722d3549bbb7d1453abb0a3de6b363d95"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/pvs-batch-compose24/STATUS.md",
+      "bytes": 1413,
+      "sha256": "623c961d0e745a8e973d687388e1a9f205c4168192e9f1e75520fb4186c0026a"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/texture-rect21/STATUS.md",
+      "bytes": 1008,
+      "sha256": "28ac1d4a7ffe5adee2fda262e065760d0ce97852fcba68a8c9ac9c5d79b7d658"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/texture-world-next21/STATUS.md",
+      "bytes": 1008,
+      "sha256": "9b8eb11885222a24dec82d6783faebf7953f80510263765b2c9ea3e51f0e67b2"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/texture21-benchmark/STATUS.md",
+      "bytes": 999,
+      "sha256": "a3cad0c81d5d27d45d2fe34ec12e399586bf90c73abf697621edf1ebbb7aa941"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/world-meter23/METER-RECONCILIATION-20261022.md",
+      "bytes": 6968,
+      "sha256": "f1cc2652943331fa6cf739d973fe87d9b9c44a8625ae5b579159494a923d6ff5"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/world-meter23/STATUS.md",
+      "bytes": 2699,
+      "sha256": "57c4aacc181d48f324c2dba54dfe51a25a6f87d94900aad39a69bfcf512d571c"
+    }
+  ],
+  "branches": [
+    {
+      "branch": "origin/codex/actor-coverage23",
+      "sha": "bea2d402ba06d41fb7b39946b5a9431a72f5b52a",
+      "category": "superseded or closed",
+      "reason": "Historical bounded actor proposal is carried by the later e21db50 WIDE/BOOT/WHY wallcut successor, owned by the parent review. Do not queue this older tip separately. Latest carry status reports no modeled gain and holds integration/gates unless console benefit justifies continuation; no production acceptance is inferred.",
+      "evidence_refs": [
+        "CODEX-UPDATE-20261022.md:5-13",
+        "actor-visibility23/CLAUDE-STATUS.md",
+        "actor-visibility23/MAIN-MEMORY-QUALIFICATION-HANDOFF.md",
+        "git:e21db50feda96b14a656c20602c8b2e5c40a26f6",
+        "codex-git-audit.json#origin/codex/actor-coverage23"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 13,
+      "patch_equivalent_commits": 1,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/actor-material-route23",
+      "sha": "f2405bb06ebaff6e2a7681479d5308ec5d3b988a",
+      "category": "superseded or closed",
+      "reason": "Unlanded parked actor owner/material diagnostic extension. This fork is not an ancestor of the later e21db50 wallcut successor; its source review and linked programme do not establish runtime cut/pixel/memory acceptance. Preserve the fork and handoff, but do not treat it as accepted hardware wallcut or silently merge it with that queue.",
+      "evidence_refs": [
+        "CODEX-UPDATE-20261022.md:5-13",
+        "actor-visibility23/CLAUDE-STATUS.md",
+        "actor-visibility23/MAIN-MEMORY-QUALIFICATION-HANDOFF.md",
+        "git:e21db50feda96b14a656c20602c8b2e5c40a26f6",
+        "actor-visibility23/STATUS.md",
+        "codex-git-audit.json#origin/codex/actor-material-route23"
+      ],
+      "queue_key": null,
+      "confidence": "medium",
+      "unique_commits_actual": 16,
+      "patch_equivalent_commits": 1,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/actor-material23-build-support-20261023",
+      "sha": "777887edd05e14364e85059ce759cfeb5efd4015",
+      "category": "evidence only",
+      "reason": "Standalone bounded build/proof preparation, including retained first failure and fresh ON2 SDK-manifest support. Tip changes only support files; no runtime landing is requested. Actor runtime lineage is a separate proposal.",
+      "evidence_refs": [
+        "git:777887edd05e14364e85059ce759cfeb5efd4015:README.md",
+        "actor-visibility23/MAIN-MEMORY-QUALIFICATION-HANDOFF.md",
+        "codex-git-audit.json#origin/codex/actor-material23-build-support-20261023"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 2,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/actor-material23-normalize-support-20261023",
+      "sha": "36b093d36220a4d33d2f9939caa9720b07d6b796",
+      "category": "evidence only",
+      "reason": "Own tip adds read-only ON2 normalization/audit/proof helpers under support/. Inherited f240 actor runtime changes do not turn this supporting branch into a new runtime landing.",
+      "evidence_refs": [
+        "git:36b093d36220a4d33d2f9939caa9720b07d6b796:support/actor-visibility23/native-normalize-f240r1/HANDOFF.md",
+        "actor-visibility23/MAIN-MEMORY-QUALIFICATION-HANDOFF.md",
+        "codex-git-audit.json#origin/codex/actor-material23-normalize-support-20261023"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 17,
+      "patch_equivalent_commits": 1,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/actor-owner-witness23",
+      "sha": "18a9db3b400721c00ab5aa3a912cbd5681547919",
+      "category": "superseded or closed",
+      "reason": "Unlanded parked actor owner/material diagnostic extension. This fork is not an ancestor of the later e21db50 wallcut successor; its source review and linked programme do not establish runtime cut/pixel/memory acceptance. Preserve the fork and handoff, but do not treat it as accepted hardware wallcut or silently merge it with that queue.",
+      "evidence_refs": [
+        "CODEX-UPDATE-20261022.md:5-13",
+        "actor-visibility23/CLAUDE-STATUS.md",
+        "actor-visibility23/MAIN-MEMORY-QUALIFICATION-HANDOFF.md",
+        "git:e21db50feda96b14a656c20602c8b2e5c40a26f6",
+        "actor-visibility23/STATUS.md",
+        "codex-git-audit.json#origin/codex/actor-owner-witness23"
+      ],
+      "queue_key": null,
+      "confidence": "medium",
+      "unique_commits_actual": 14,
+      "patch_equivalent_commits": 1,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/actor-owner-witness23-support",
+      "sha": "d943adf4e59a3b8ead95368c5512d3ef29e8358b",
+      "category": "evidence only",
+      "reason": "Own tip adds the strict bounded host witness parser/tests/docs. The parser deliberately always reports qualified:false; inherited owner-witness runtime is separately parked.",
+      "evidence_refs": [
+        "git:d943adf4e59a3b8ead95368c5512d3ef29e8358b:port/dreamcast/game/tests/actor_visibility23/owner_witness_parser/README.md",
+        "codex-git-audit.json#origin/codex/actor-owner-witness23-support"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 15,
+      "patch_equivalent_commits": 1,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/actor-qualification23-support",
+      "sha": "d348254f84d7f22d1072f533f8dee54a9de6267a",
+      "category": "evidence only",
+      "reason": "Own support commits preserve census path-identity corrections, bounded launchers, post-link proof and resumption handoff. They inherit bea actor source but add no independent production runtime proposal.",
+      "evidence_refs": [
+        "git:d348254f84d7f22d1072f533f8dee54a9de6267a",
+        "actor-visibility23/MAIN-MEMORY-QUALIFICATION-HANDOFF.md",
+        "codex-git-audit.json#origin/codex/actor-qualification23-support"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 18,
+      "patch_equivalent_commits": 1,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/actor-visibility23",
+      "sha": "7997bc3312e02e4c6c6849a8b7c7f8a5fd928ac5",
+      "category": "superseded or closed",
+      "reason": "Historical bounded actor proposal is carried by the later e21db50 WIDE/BOOT/WHY wallcut successor, owned by the parent review. Do not queue this older tip separately. Latest carry status reports no modeled gain and holds integration/gates unless console benefit justifies continuation; no production acceptance is inferred.",
+      "evidence_refs": [
+        "CODEX-UPDATE-20261022.md:5-13",
+        "actor-visibility23/CLAUDE-STATUS.md",
+        "actor-visibility23/MAIN-MEMORY-QUALIFICATION-HANDOFF.md",
+        "git:e21db50feda96b14a656c20602c8b2e5c40a26f6",
+        "codex-git-audit.json#origin/codex/actor-visibility23"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 9,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/actor-visibility23-integration",
+      "sha": "bea2d402ba06d41fb7b39946b5a9431a72f5b52a",
+      "category": "superseded or closed",
+      "reason": "Historical bounded actor proposal is carried by the later e21db50 WIDE/BOOT/WHY wallcut successor, owned by the parent review. Do not queue this older tip separately. Latest carry status reports no modeled gain and holds integration/gates unless console benefit justifies continuation; no production acceptance is inferred.",
+      "evidence_refs": [
+        "CODEX-UPDATE-20261022.md:5-13",
+        "actor-visibility23/CLAUDE-STATUS.md",
+        "actor-visibility23/MAIN-MEMORY-QUALIFICATION-HANDOFF.md",
+        "git:e21db50feda96b14a656c20602c8b2e5c40a26f6",
+        "codex-git-audit.json#origin/codex/actor-visibility23-integration"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 13,
+      "patch_equivalent_commits": 1,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/arena23",
+      "sha": "af84fd8f3c5995b2f17e13c7a33e01374d7ead8c",
+      "category": "landed in another form",
+      "reason": "Three substantive runtime patches have exact patch-equivalent commits at integration; arena merge10d7ab1b contains equivalent low-placement, diagnostic/ring and OFF-expression repairs plus CACHE_LINEWISE. Remaining unique package-accounting note is evidence. Default-off integration is not console crash acceptance.",
+      "evidence_refs": [
+        "git:10d7ab1b7",
+        "git:62158853d",
+        "git:2316e1596",
+        "git:1b690d4aa",
+        "arena23/STATUS.md",
+        "codex-git-audit.json#origin/codex/arena23"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 5,
+      "patch_equivalent_commits": 3,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/cache21-callers",
+      "sha": "c0104387b00fb5979ab52a017552951ae6610bf8",
+      "category": "evidence only",
+      "reason": "Latest own commits are caller/ownership/provenance reviews and host tools. Sixteen inherited patches are equivalent in integration; historical cache queue is explicitly closed. Residual documentation/tools and old source context are not a fresh runtime landing.",
+      "evidence_refs": [
+        "cache21-callers/STATUS.md",
+        "CODEX-TAKEOVER-STATUS.md",
+        "git:c0104387b00fb5979ab52a017552951ae6610bf8",
+        "codex-git-audit.json#origin/codex/cache21-callers"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 35,
+      "patch_equivalent_commits": 16,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/cache21-integration-next",
+      "sha": "42ed27c21073ec7d8744d6c532f7d156e2a39001",
+      "category": "evidence only",
+      "reason": "Only two source/docs files preserve actual04 mipmap programme admission. README explicitly says image pair binding refused missing original M0 and forbids using this execution-location-specific snapshot as a new allocation. No runtime file change.",
+      "evidence_refs": [
+        "git:42ed27c210:port/dreamcast/tools/d367/cache21_mipmap04_admission/README.md",
+        "cache21/STATUS.md",
+        "CODEX-TAKEOVER-STATUS.md",
+        "codex-git-audit.json#origin/codex/cache21-integration-next"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 1,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/cache21-payload",
+      "sha": "4f53ceee56d3892b5f481a825b3b507c8f9ce1b8",
+      "category": "evidence only",
+      "reason": "Latest own commits independently review detached startup, ownership, inventory and allocation helpers. Payload retry implementation is already equivalent at integration; legacy cache work is closed. Retain unadopted diagnostics, do not queue an old runtime snapshot.",
+      "evidence_refs": [
+        "cache21-payload/STATUS.md",
+        "CODEX-TAKEOVER-STATUS.md",
+        "git:4f53ceee56d3892b5f481a825b3b507c8f9ce1b8",
+        "codex-git-audit.json#origin/codex/cache21-payload"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 24,
+      "patch_equivalent_commits": 4,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/castle22-source023",
+      "sha": "c7439c0831590d09b35a90b92468ac7547944884",
+      "category": "evidence only",
+      "reason": "Only controlled023 source/event preparation and retained actual original AEV16 escape closeout evidence. This is a parked castle evidence checkpoint, not new gameplay code to land.",
+      "evidence_refs": [
+        "git:c7439c0831",
+        "castle18/STATUS.md",
+        "CODEX-TAKEOVER-STATUS.md",
+        "codex-git-audit.json#origin/codex/castle22-source023"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 2,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/damcause23",
+      "sha": "8a6881b7b2b53fc1f9bee4ec80a833aa7467c2e7",
+      "category": "landed in another form",
+      "reason": "Admission/read diagnostic hooks are equivalent at503f38de1 and explicit three-object diagnostic wiring is landed at87a970c8b. Entry2 source files match the branch; latest carry parks damcause as diagnostic-only after fix landing. Target-object receipts and unresolved physical cause remain evidence.",
+      "evidence_refs": [
+        "git:503f38de1",
+        "git:87a970c8b440d56f42b48a41fd17aca3d514f46c",
+        "CODEX-UPDATE-20261022.md:13",
+        "damcause23/STATUS.md",
+        "codex-git-audit.json#origin/codex/damcause23"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 5,
+      "patch_equivalent_commits": 1,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/issue52-650-objectprep",
+      "sha": "30238b1ccdb7f80bca3db8691e0e4d369e0af824",
+      "category": "evidence only",
+      "reason": "Source-only object/programme preparation, input pins, contracts and retained qualification support under tools/. Actual unique commits contain no independent game runtime implementation; lane is explicitly closed by reconciliation and latest takeover parks old cache/M0/QA queues.",
+      "evidence_refs": [
+        "issue52-650-objectprep/STATUS.md",
+        "CODEX-TAKEOVER-STATUS.md",
+        "git:30238b1ccdb7f80bca3db8691e0e4d369e0af824",
+        "codex-git-audit.json#origin/codex/issue52-650-objectprep"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 3,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/issue52-792-objectprep",
+      "sha": "fc2a8e9c39db83bfc81e03707a557a6b3dcfa80a",
+      "category": "evidence only",
+      "reason": "Source-only object/programme preparation, input pins, contracts and retained qualification support under tools/. Actual unique commits contain no independent game runtime implementation; lane is explicitly closed by reconciliation and latest takeover parks old cache/M0/QA queues.",
+      "evidence_refs": [
+        "issue52-792-objectprep/STATUS.md",
+        "CODEX-TAKEOVER-STATUS.md",
+        "git:fc2a8e9c39db83bfc81e03707a557a6b3dcfa80a",
+        "codex-git-audit.json#origin/codex/issue52-792-objectprep"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 4,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/issue52-cache-currentqa-plan",
+      "sha": "89ea415b5e698c4ab4aec28c7d2568fbb7f81ba5",
+      "category": "evidence only",
+      "reason": "Source-only object/programme preparation, input pins, contracts and retained qualification support under tools/. Actual unique commits contain no independent game runtime implementation; lane is explicitly closed by reconciliation and latest takeover parks old cache/M0/QA queues.",
+      "evidence_refs": [
+        "issue52-cache-currentqa-plan/STATUS.md",
+        "CODEX-TAKEOVER-STATUS.md",
+        "git:89ea415b5e698c4ab4aec28c7d2568fbb7f81ba5",
+        "codex-git-audit.json#origin/codex/issue52-cache-currentqa-plan"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 7,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/issue52-cache-em10-objectprep",
+      "sha": "d1dbc5344f859cc669937bfe87970792b6a9f72c",
+      "category": "evidence only",
+      "reason": "Source-only object/programme preparation, input pins, contracts and retained qualification support under tools/. Actual unique commits contain no independent game runtime implementation; lane is explicitly closed by reconciliation and latest takeover parks old cache/M0/QA queues.",
+      "evidence_refs": [
+        "issue52-cache-em10-objectprep/STATUS.md",
+        "CODEX-TAKEOVER-STATUS.md",
+        "git:d1dbc5344f859cc669937bfe87970792b6a9f72c",
+        "codex-git-audit.json#origin/codex/issue52-cache-em10-objectprep"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 9,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/issue52-cache-programme-prep02",
+      "sha": "20133f9ea4593e456e61648166eb15e0056fc121",
+      "category": "evidence only",
+      "reason": "Source-only object/programme preparation, input pins, contracts and retained qualification support under tools/. Actual unique commits contain no independent game runtime implementation; lane is explicitly closed by reconciliation and latest takeover parks old cache/M0/QA queues.",
+      "evidence_refs": [
+        "issue52-cache-programme-prep02/STATUS.md",
+        "CODEX-TAKEOVER-STATUS.md",
+        "git:20133f9ea4593e456e61648166eb15e0056fc121",
+        "codex-git-audit.json#origin/codex/issue52-cache-programme-prep02"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 6,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/issue52-cache-repairs-objectprep",
+      "sha": "b5bbbe920e171e54e3b6f337f18be4850a48be4a",
+      "category": "evidence only",
+      "reason": "Source-only object/programme preparation, input pins, contracts and retained qualification support under tools/. Actual unique commits contain no independent game runtime implementation; lane is explicitly closed by reconciliation and latest takeover parks old cache/M0/QA queues.",
+      "evidence_refs": [
+        "issue52-cache-repairs-objectprep/STATUS.md",
+        "CODEX-TAKEOVER-STATUS.md",
+        "git:b5bbbe920e171e54e3b6f337f18be4850a48be4a",
+        "codex-git-audit.json#origin/codex/issue52-cache-repairs-objectprep"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 5,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/issue52-rootpose23-review",
+      "sha": "7470fb107e68ee2057cfcfb9a8cbaadb5c58ffc9",
+      "category": "evidence only",
+      "reason": "Independent source/object/admission review records and reviewer scripts only. Does not add the rootpose runtime repair; parent owns the rootpose equivalence/gate classification.",
+      "evidence_refs": [
+        "git:7470fb107e",
+        "issue52-rootpose23-review/STATUS.md",
+        "codex-git-audit.json#origin/codex/issue52-rootpose23-review"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 5,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/material-census23-support",
+      "sha": "ebd9d082657e9f0f1efabd55bd4c2c82641214c7",
+      "category": "evidence only",
+      "reason": "Own tip adds bounded material-census host/launcher/log support in codex-support/. It inherits actor runtime ancestry but is not a separate runtime landing. Actual material/owner fork remains parked and unqualified.",
+      "evidence_refs": [
+        "git:ebd9d08265",
+        "actor-visibility23/MAIN-MEMORY-QUALIFICATION-HANDOFF.md",
+        "codex-git-audit.json#origin/codex/material-census23-support"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 17,
+      "patch_equivalent_commits": 1,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/mipmap21-area-policy",
+      "sha": "2cef76a4f2aa9d2f9ae3af247dfb774e771c2f17",
+      "category": "landed in another form",
+      "reason": "The guarded r107 source-policy CRC acceptance and AREA caller using policySourceCrc are present at integration native_static.cpp4710/5731. Probe script is byte-identical; only retained docs/later surrounding source differ. This is the shipped mipmap22 form, not a new AREA expansion.",
+      "evidence_refs": [
+        "git:39814a88ee5e4f3ce7c312405aa217a02e234794",
+        "git:9f6a25c61df6ad635c46e837b2371fc8b523ada6:port/dreamcast/game/platform/native_static.cpp:4710",
+        "git:9f6a25c61df6ad635c46e837b2371fc8b523ada6:port/dreamcast/game/platform/native_static.cpp:5731",
+        "CODEX-UPDATE-20261022.md:152",
+        "codex-git-audit.json#origin/codex/mipmap21-area-policy"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 2,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/mipmap21-next650-integration",
+      "sha": "33504b9df434b82cd92e7bab3bb4630663a72ddd",
+      "category": "superseded or closed",
+      "reason": "Historical650/792 descriptor/certificate candidate superseded by integrated mipmap22/mip22b and later scoped tables. Shared AREA source-policy change is present at integration; original candidate tables are not asserted byte-identical to current tables. Eight792 tooling paths/three650 tooling paths already match. Old candidate/image queue is explicitly closed; no recipe or rollback landing.",
+      "evidence_refs": [
+        "CODEX-UPDATE-20261022.md:37",
+        "CODEX-TAKEOVER-STATUS.md",
+        "cache21/STATUS.md",
+        "git:33504b9df434b82cd92e7bab3bb4630663a72ddd",
+        "codex-git-audit.json#origin/codex/mipmap21-next650-integration"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 1,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/mipmap21-next792-integration",
+      "sha": "63644457a2251a398de174f47be650e1b2b4c791",
+      "category": "superseded or closed",
+      "reason": "Historical650/792 descriptor/certificate candidate superseded by integrated mipmap22/mip22b and later scoped tables. Shared AREA source-policy change is present at integration; original candidate tables are not asserted byte-identical to current tables. Eight792 tooling paths/three650 tooling paths already match. Old candidate/image queue is explicitly closed; no recipe or rollback landing.",
+      "evidence_refs": [
+        "CODEX-UPDATE-20261022.md:37",
+        "CODEX-TAKEOVER-STATUS.md",
+        "cache21/STATUS.md",
+        "git:63644457a2251a398de174f47be650e1b2b4c791",
+        "codex-git-audit.json#origin/codex/mipmap21-next792-integration"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 2,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/mipmap23",
+      "sha": "8075a7c41028bd158b2344c09b83ecfa68ca3830",
+      "category": "landed in another form",
+      "reason": "The narrow8075 r200 VQ-mip preparation repair and fixture/tests were integrated as a5de753a1, with a default-off PS2_WORLD_SOURCE_TEX_MIP wrapper and native_ui definition. This is an adapted implementation, not whole-file equivalence to the older branch. Remaining coverage tools/private candidate work are evidence; ch23end/physical gates remain separate.",
+      "evidence_refs": [
+        "git:a5de753a14e8a076873c6d3586d7237c2d50cb44",
+        "mipmap23/STATUS.md",
+        "CODEX-UPDATE-20261022.md:7",
+        "codex-git-audit.json#origin/codex/mipmap23"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 10,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/pvs-batch-compose24",
+      "sha": "b6b4fa7a3cf3a5244d28a31eae9a8bf42f18ce45",
+      "category": "superseded or closed",
+      "reason": "Both b6 source commits are ancestors of the unlanded whole-unit c2f9 composite (via8ce). Therefore this standalone branch is superseded, not landed at9f6. Parent active review owns the single composition24-gc427-visibility-rain-whole-unit queue; no constituent-fragment merge or second queue. Host/source evidence remains bounded receipt/lifecycle qualification with zero useful new cuts; fresh whole-unit identities and gates remain required.",
+      "evidence_refs": [
+        "pvs-batch-compose24/STATUS.md",
+        "pvs-batch-compose24/HANDBACK.md",
+        "git:b6b4fa7a3cf3a5244d28a31eae9a8bf42f18ce45",
+        "codex-git-audit.json#origin/codex/pvs-batch-compose24",
+        "git:c2f9ba8cbcebe30a218fe4fb6cf9ecd2305d853e",
+        "wip-active-review.json#origin/wip/codex-composition-budget24-20261024",
+        "codex-composition-ancestry.json"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 2,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance.",
+      "represented_by_queue_key": "composition24-gc427-visibility-rain-whole-unit"
+    },
+    {
+      "branch": "origin/codex/pvs23-data",
+      "sha": "dd61a3fb14f14dd9d6099b34bb466d926c315607",
+      "category": "evidence only",
+      "reason": "All thirteen changed paths are source-proof/preparer/review tools and documents. Continuous/actual-triangle proof and independent review support current PVS/interior work; this branch adds no runtime cut implementation. Runtime source/data certification is owned by separate active lanes.",
+      "evidence_refs": [
+        "git:dd61a3fb14f14dd9d6099b34bb466d926c315607",
+        "CODEX-TAKEOVER-STATUS.md",
+        "codex-git-audit.json#origin/codex/pvs23-data"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 8,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/qa22-detached-seal",
+      "sha": "a881e6278dc470b97eda16b1bd5cfeef5f13ddbc",
+      "category": "evidence only",
+      "reason": "Source-only detached owned-runner successor and frozen future launch request/qualification artifacts. No game runtime source change. README separates source seals from absent/future allocation/native runtime acceptance; legacy QA queue is parked, not a programme landing.",
+      "evidence_refs": [
+        "git:a881e6278dc470b97eda16b1bd5cfeef5f13ddbc",
+        "CODEX-TAKEOVER-STATUS.md",
+        "codex-git-audit.json#origin/codex/qa22-detached-seal"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 3,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/qa22-detached-source",
+      "sha": "fc8f707efd980ac3cb98de529e52c5ec03c90286",
+      "category": "evidence only",
+      "reason": "Source-only detached owned-runner successor and frozen future launch request/qualification artifacts. No game runtime source change. README separates source seals from absent/future allocation/native runtime acceptance; legacy QA queue is parked, not a programme landing.",
+      "evidence_refs": [
+        "git:fc8f707efd980ac3cb98de529e52c5ec03c90286",
+        "CODEX-TAKEOVER-STATUS.md",
+        "codex-git-audit.json#origin/codex/qa22-detached-source"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 2,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/recover-actor-ce03423",
+      "sha": "8993077283bd9bbbc51397ddfa6d863f366c62d2",
+      "category": "evidence only",
+      "reason": "Bounded exact-media recovery/restoration support with host controls and truthful failed/pending receipts; latest tip adds only helper/docs. Inherited actor source does not make this a runtime landing. Default invocation does not restore media; any actual execution remains separately admitted main work.",
+      "evidence_refs": [
+        "git:8993077283bd9bbbc51397ddfa6d863f366c62d2",
+        "actor-visibility23/MAIN-MEMORY-QUALIFICATION-HANDOFF.md",
+        "codex-git-audit.json#origin/codex/recover-actor-ce03423"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 16,
+      "patch_equivalent_commits": 1,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/restore-memory2158-r1",
+      "sha": "33b2466f41efc97fd33d03f38ff6f149ea36368f",
+      "category": "evidence only",
+      "reason": "Bounded exact-media recovery/restoration support with host controls and truthful failed/pending receipts; latest tip adds only helper/docs. Inherited actor source does not make this a runtime landing. Default invocation does not restore media; any actual execution remains separately admitted main work.",
+      "evidence_refs": [
+        "git:33b2466f41efc97fd33d03f38ff6f149ea36368f",
+        "actor-visibility23/MAIN-MEMORY-QUALIFICATION-HANDOFF.md",
+        "codex-git-audit.json#origin/codex/restore-memory2158-r1"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 15,
+      "patch_equivalent_commits": 1,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/texsrc22-resume-20261022",
+      "sha": "0a905de5babb2c6be30dbac40c71df666773f390",
+      "category": "evidence only",
+      "reason": "Consumer classification/mip preparation scripts and retained review/validation evidence only. These candidate tools feed the newer mipmap23 coverage lane; no direct runtime change or unreviewed asset promotion is requested.",
+      "evidence_refs": [
+        "git:0a905de5babb2c6be30dbac40c71df666773f390",
+        "mipmap23/STATUS.md",
+        "CODEX-UPDATE-20261022.md:68",
+        "codex-git-audit.json#origin/codex/texsrc22-resume-20261022"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 6,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/texture-rect21",
+      "sha": "91303e03b3349aac95698acf4912cb6043818c84",
+      "category": "superseded or closed",
+      "reason": "Old rectangular coverage/candidate packet is retained and explicitly closed; current remaining coverage belongs to mipmap23. Candidate helpers do not warrant restoring a pre-mipmap22 runtime or asset queue.",
+      "evidence_refs": [
+        "texture-rect21/STATUS.md",
+        "CODEX-TAKEOVER-STATUS.md",
+        "git:91303e03b3",
+        "codex-git-audit.json#origin/codex/texture-rect21"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 14,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/texture-world-next21",
+      "sha": "2f0f4691532a4418060594474dfa5a0fac33dd05",
+      "category": "evidence only",
+      "reason": "Unique paths are canonical texture/drawproof tools and independent castle/1760 controller reviews. No runtime source change. Castle-related continuations remain parked pending explicit restart; retained source evidence should not become a landing request.",
+      "evidence_refs": [
+        "texture-world-next21/STATUS.md",
+        "CODEX-TAKEOVER-STATUS.md",
+        "git:2f0f4691532a4418060594474dfa5a0fac33dd05",
+        "codex-git-audit.json#origin/codex/texture-world-next21"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 17,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/texture21-benchmark",
+      "sha": "afb6bef2fd486f64500cc9e72f1cb85ac853c37d",
+      "category": "superseded or closed",
+      "reason": "Old pack/image comparison queue is explicitly superseded by shipped mipmap22/mip22b. Retained immutable append/controller/observer tools and unexecuted1760 plans remain evidence, with no runtime implementation or outstanding production landing in this legacy branch.",
+      "evidence_refs": [
+        "texture21-benchmark/STATUS.md",
+        "CODEX-TAKEOVER-STATUS.md",
+        "git:afb6bef2fd486f64500cc9e72f1cb85ac853c37d",
+        "codex-git-audit.json#origin/codex/texture21-benchmark"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 36,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/triangle-shadow24",
+      "sha": "28c739468ae7d2d2d3c09f81330015e7769dc824",
+      "category": "evidence only",
+      "reason": "Two commits preserve the public exact-rational whole-triangle prerequisite prototype/tests/docs. No private scene predicate or runtime cuts. Later source-quad/interior units own actual finite work; nominal front remains numerically/raster unqualified.",
+      "evidence_refs": [
+        "git:28c739468ae7d2d2d3c09f81330015e7769dc824",
+        "CODEX-TAKEOVER-STATUS.md",
+        "codex-git-audit.json#origin/codex/triangle-shadow24"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 2,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/warp-late-open23",
+      "sha": "0b848affe210d928faf4f524ca66dda41ec82349",
+      "category": "landed in another form",
+      "reason": "The exact side-effect-free mask-zero late-window query/header was replayed as9af397916 in integration. Patch-id differs because dbgwarp insertion context includes WORLD_METER; the function/header additions match. Later scratch readiness additions are separate and do not reopen this helper.",
+      "evidence_refs": [
+        "git:0b848affe210d928faf4f524ca66dda41ec82349",
+        "git:9af3979162d1f8b64af0111704af6595e8b0c951",
+        "codex-git-audit.json#origin/codex/warp-late-open23"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 1,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    },
+    {
+      "branch": "origin/codex/world-meter23",
+      "sha": "75a6b4cec8a308d4c8f6a60e6c31e6d7fef33170",
+      "category": "superseded or closed",
+      "reason": "Duplicate WORLD_DRAW_METER implementation was expressly retained for tests/design and must not merge alongside designated WORLD_METER. Latest lane status selects worlddraw23/93bbdf339 as sole basis; current integration has9c6c57005/73a13949b WORLD_METER equivalents. Inherited backface experiments are parent-owned and do not make this duplicate meter open.",
+      "evidence_refs": [
+        "world-meter23/STATUS.md",
+        "world-meter23/METER-RECONCILIATION-20261022.md",
+        "CODEX-UPDATE-20261022.md:13",
+        "git:9c6c57005",
+        "git:73a13949b",
+        "codex-git-audit.json#origin/codex/world-meter23"
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unique_commits_actual": 25,
+      "patch_equivalent_commits": 0,
+      "cloud_untouched": false,
+      "gate_scope": "Classification only; no new build, runtime, pixel, memory, numerical, raster, performance or physical acceptance."
+    }
+  ],
+  "limitations": [
+    "Category does not authorize merge or revive a parked lane. Root owns deduplication and current integration composition.",
+    "The old actor runtime forks remain preserved; closure here means superseded/parked queue, not proven equivalent implementation or accepted runtime behavior.",
+    "Git patch-equivalence and marker/source readback establish landing scope, not target execution or hardware gates."
+  ],
+  "notes": [
+    "Parent deduplication decision applied: PVS batch b6 is inside unlanded c2f9 and has no standalone queue."
+  ]
+}

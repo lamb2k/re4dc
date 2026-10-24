@@ -1,0 +1,62 @@
+[
+  {
+    "branch": "origin/codex/actor-bytes-lean-20261024",
+    "sha": "795e4a8e28fbd59ca95531b6e047317b5e3a7abe",
+    "reachable": true,
+    "action": "classified only; no queue/ref/checkout/build/merge changes"
+  },
+  {
+    "branch": "origin/codex/actor-setup-lean-20261023",
+    "sha": "c957ca592af2c8e30b32d82d05a9ada2389d2648",
+    "reachable": true,
+    "action": "classified only; no queue/ref/checkout/build/merge changes"
+  },
+  {
+    "branch": "origin/codex/anim-sample-lean-20261024",
+    "sha": "3bf7721b244f6d84adbf6aef18a414cac5309f60",
+    "reachable": true,
+    "action": "classified only; no queue/ref/checkout/build/merge changes"
+  },
+  {
+    "branch": "origin/codex/backface-throughput-20261023",
+    "sha": "a24c2e003b92a210cec1d9a88e406f8f0e46748f",
+    "reachable": true,
+    "action": "classified only; no queue/ref/checkout/build/merge changes"
+  },
+  {
+    "branch": "origin/codex/cone-front-certificate-20261023",
+    "sha": "8c7226467dba68ac8ee16652accc10f683562685",
+    "reachable": false,
+    "action": "classified only; no queue/ref/checkout/build/merge changes"
+  },
+  {
+    "branch": "origin/codex/esp-setup-lean-20261024",
+    "sha": "e11dcaba3b11c676452f1825efc321f1b3a091f2",
+    "reachable": true,
+    "action": "classified only; no queue/ref/checkout/build/merge changes"
+  },
+  {
+    "branch": "origin/codex/ui-draw-lean-20261024",
+    "sha": "1b7f785e32c8c546cf2c9bb26593d936712befa2",
+    "reachable": true,
+    "action": "classified only; no queue/ref/checkout/build/merge changes"
+  },
+  {
+    "branch": "origin/codex/world-emit-prefetch-20261023",
+    "sha": "c31634437c82c6806011d7ac265d2f96ccaf144a",
+    "reachable": false,
+    "action": "classified only; no queue/ref/checkout/build/merge changes"
+  },
+  {
+    "branch": "origin/codex/world-setup-spike-20261023",
+    "sha": "86c1b91a72a8d6d419cf9c5fa0c335ff3f552a9d",
+    "reachable": false,
+    "action": "classified only; no queue/ref/checkout/build/merge changes"
+  },
+  {
+    "branch": "origin/codex/world-submit-spike-20261023",
+    "sha": "585ac6dd248cc9e7e87adad5f83402c746507ea5",
+    "reachable": false,
+    "action": "classified only; no queue/ref/checkout/build/merge changes"
+  }
+]

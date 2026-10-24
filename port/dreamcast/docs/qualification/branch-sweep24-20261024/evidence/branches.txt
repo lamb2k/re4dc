@@ -1,0 +1,133 @@
+origin/codex/actor-coverage23|bea2d402|13/13|Derive actor panel coverage from certified source subsets
+origin/codex/actor-material-route23|f2405bb0|16/16|Add material routing controls and strict successor witness parser
+origin/codex/actor-material23-build-support-20261023|777887ed|2/2|Preserve failed actor build and prepare fresh on2 with retained SDK manifest
+origin/codex/actor-material23-normalize-support-20261023|36b093d3|17/17|Checkpoint read-only actor material ON2 normalization helpers
+origin/codex/actor-owner-witness23|18a9db3b|14/14|Add bounded owner-attributed actor visibility diagnostics
+origin/codex/actor-owner-witness23-support|d943adf4|15/15|Add strict host parser for bounded owner visibility witness
+origin/codex/actor-qualification23-support|d348254f|18/18|Checkpoint post-link proof tools and current resumption handoff
+origin/codex/actor-visibility23|7997bc33|9/9|Defer actor fixture consumption until its loaded context is ready
+origin/codex/actor-visibility23-integration|bea2d402|13/13|Derive actor panel coverage from certified source subsets
+origin/codex/arena23|af84fd8f|5/5|arena23: retain original allocator expression with experiment off
+origin/codex/backface-sh4zam|0f022725|22/22|Verify pinned SH4ZAM runtime body before CPU2 builds
+origin/codex/backface-sh4zam-actors|c932384b|10/10|Integrate actor backface assembly callers and exact census trace
+origin/codex/backface-sh4zam-fused|2249d3cf|25/25|Pipeline exact SDK facing across bounded six-triangle blocks
+origin/codex/backface-sh4zam-gates|62a5f66b|6/6|Bind backface admission to explicit console and exact root review
+origin/codex/backface-sh4zam-kernel|a7e16dc0|9/9|Use target FMAC arithmetic in fused backface SQ kernel
+origin/codex/backface-sh4zam-lean|df66e10c|23/23|Reduce repeated index decoding in fused backface hot loop
+origin/codex/backface-sh4zam-review|05e61f7a|13/13|Price carried seeds and full-block fused candidates with fair OFF batches
+origin/codex/backface-sh4zam-sdk|ee60ba44|20/20|Compile pinned SH4ZAM facing primitives into fused strip emitters
+origin/codex/backface-sh4zam-world|0a26871d|2/2|Use SH4 backface strip kernel in world generic and lean walks
+origin/codex/backface-walk23|1c674259|2/2|Reject target receipt replay after source input drift
+origin/codex/cabin23|74543dcd|3/3|docs: refresh cabin design on current integration base
+origin/codex/cache21-callers|c0104387|7/35|Review current QA cache integration provenance without execution
+origin/codex/cache21-integration-next|42ed27c2|1/1|Preserve qualified mipmap programme admission source and image hold
+origin/codex/cache21-payload|4f53ceee|14/24|Review strict detached startup and allocation accounting candidate
+origin/codex/castle22-source023|c7439c08|2/2|Seal original AEV16 escape actual result
+origin/codex/cone-front-certificate-20261023|8c722646|4/4|backface: integrate hideout room policy with front certification
+origin/codex/damcause23|8a6881b7|5/5|test(issue52): qualify actual SH4 diagnostic objects and first-event plan
+origin/codex/issue52-650-objectprep|30238b1c|3/3|Verify sealed object controls and assembler resolution
+origin/codex/issue52-792-objectprep|fc2a8e9c|4/4|Prepare source-only fresh NEXT792 SH4 object qualification
+origin/codex/issue52-cache-currentqa-plan|89ea415b|7/7|docs: derive cache repairs from current Ganado QA identity
+origin/codex/issue52-cache-em10-objectprep|d1dbc534|9/9|docs: keep unused QA tree snapshot outside future input gates
+origin/codex/issue52-cache-programme-prep02|20133f9e|6/6|Prepare explicit QA cache programme integration matrix
+origin/codex/issue52-cache-repairs-objectprep|b5bbbe92|5/5|Prepare frozen cache repair full-TU SH4 object controls
+origin/codex/issue52-rootpose23-review|7470fb10|5/5|Record independent review of sealed dam admission diagnostics
+origin/codex/material-census23-support|ebd9d082|17/17|Add source-only corrected material census support; external review pins pending
+origin/codex/mipmap21-area-policy|2cef76a4|2/2|Keep AREA candidate documentation non-executable
+origin/codex/mipmap21-next650-integration|33504b9d|1/1|Prepare guarded 650 world mip descriptors with bounded lookup
+origin/codex/mipmap21-next792-integration|63644457|2/2|Prepare default-off 792 rectangle source integration
+origin/codex/mipmap23|8075a7c4|10/10|fix: admit validated r200 VQ mip layout in source-world preparation
+origin/codex/pvs-batch-compose24|b6b4fa7a|2/2|Qualify PVS batch lifecycle controls and document fault reentry limit
+origin/codex/pvs23-data|dd61a3fb|8/8|docs: independently review actual triangle shadow implementation
+origin/codex/qa22-detached-seal|a881e627|3/3|Seal concrete detached domains02 future launch request
+origin/codex/qa22-detached-source|fc8f707e|2/2|Seal detached owned adapter focused source qualification
+origin/codex/recover-actor-ce03423|89930772|16/16|Bind recovery publication to held and literal verified paths
+origin/codex/restore-memory2158-r1|33b2466f|15/15|Checkpoint exact memory2158 restoration source and miniature path guards
+origin/codex/rootpose23|6b47094d|1/1|Fix movie-world validation of root-pose part allocations
+origin/codex/texsrc22-resume-20261022|0a905de5|6/6|texsrc22: preserve consumer evidence and prepare reviewed mip candidates
+origin/codex/texture-rect21|91303e03|9/14|Seal alpha142 addition inputs and explicit57-sector index expansion
+origin/codex/texture-world-next21|2f0f4691|13/17|Review candidate1760 image controller fork and bounded source guards
+origin/codex/texture21-benchmark|afb6bef2|15/36|Prepare retained-job candidate1760 image controller and exact plan builder
+origin/codex/triangle-shadow24|28c73946|2/2|Normalize math prototype source files for exact readback
+origin/codex/warp-late-open23|0b848aff|1/1|Expose read-only late activation window including mask-zero controls
+origin/codex/world-emit-prefetch-20261023|c3163443|1/1|World emit: trim unused gathers and stage bounded next-pick hints
+origin/codex/world-meter23|75a6b4ce|25/25|Require positive world pass success and guarded renderer receipts
+origin/codex/world-scratch23|3acf90db|1/1|Add default-off bounded world scratch A/B/C experiment
+origin/codex/world-setup-spike-20261023|86c1b91a|5/5|Spike lightweight world chunk selection setup
+origin/codex/world-submit-spike-20261023|585ac6dd|6/6|Spike batched world submission ownership
+origin/wip/actor-vis23-20261023|e21db50f|15/15|actor-vis23: WIDE eligibility (per-part path + two-sided parts), BOOT mode for normal play, QA menu row
+origin/wip/atlas22|8ed03e36|1/1|release-knobs: map LEON_ATLAS_SPLIT_DIR to @ASSETS@/leonatlas (atlas22)
+origin/wip/audits23-arena-20261023|53fcbc0b|1/1|Pin private current-source Audits arena QA challenge
+origin/wip/audits23-evidence-tools-20261023|087276f9|2/2|Preserve final audits qualification helpers and source reviews
+origin/wip/audits23-readme-20261023|ec3dcf4a|5/19|Mark the qualified effect, puzzle and dam safety fixes in Test 23 notes
+origin/wip/camera-log24-20261024|c8aeefa7|2/2|Preserve camera diagnostic target identity and complete capture receipts
+origin/wip/castle22|df1a7d70|1/1|castle22: WIP warp rigs and coverage notes (paused by user)
+origin/wip/codex-composition-budget24-20261024|c2f9ba8c|165/165|Compose guarded stream-handle repair with integrated rain diagnostics
+origin/wip/codex-composition-int24-20261024|8ce5ee2d|160/160|Prepare guarded visibility and diagnostics composition with exact source host controls
+origin/wip/codex22-qa22all|20752045|7/7|Merge lane/codex22 8c7b722d (t15/int 64a28a7b) into QA22-All
+origin/wip/codex22-qa22nobf|c4a98f8c|8/8|QA22-NoBackface disc only: QA22-All with CPU_BACKFACE=0 ACTOR_BACKFACE=0
+origin/wip/codex22-qa22nomips|962c950f|12/12|QA22-NoMips: match 808fb061 exactly: CAST_MIPMAP and TEX_PAL4_ALPHA come from the base line (on there); only the 10-21/22 mip knobs are 0
+origin/wip/dedup-offline23-20261023|2472ccfd|13/13|Seal current private normal QA pair and bounded gate evidence
+origin/wip/dedup-restrip23-20261023|a16a04cd|10/10|docs: close I001 three-room estimate with scoped NO-GO
+origin/wip/dedup23-evidence-tools-20261023|8ffa0ce7|1/1|Preserve exact dedup root landing and private QA evidence sources
+origin/wip/facing-groups23-20261023|807618af|1/1|facing23: offline estimate of facing-sorted world strip groups (step 1, NO-GO)
+origin/wip/fix-r200-gears23-20261023|59254408|3/3|PS2_WORLD_SOURCE_TEX_MIP knob (default 0) for the r200 mip prep repair
+origin/wip/foliagemip22|aba7e3dc|29/29|foliagemip22: --worlds adds held cut-outs placed in the room PS2 worlds (bare-tree branches)
+origin/wip/gc-catalog24-20261024|87078909|75/75|Record focused catalog SH4 pricing and preserved controls
+origin/wip/gc-motion24-20261024|aab201ce|79/79|Record frozen unknown Motion host sweep and preserved failure
+origin/wip/gc-motion24-budget-20261024|427784b1|83/83|Keep production digest contract tests on the owned stream handle
+origin/wip/gc-port23-20261023|1d63cffe|72/72|Respect absent dedup knob in diagnostic static profile
+origin/wip/gc-port23-seed-20261023|9e557b0e|2/2|Add pinned historical texture seed helper for GC asset gate
+origin/wip/gc23-evidence-tools-20261024|35fde3ff|92/92|Preserve pending GC KOS guest recovery plan and honest missing-media HOLD
+origin/wip/interior-discovery24-20261024|64f256b0|56/56|Record bounded effective-zero discovery comparison without admission claims
+origin/wip/interior-vis23-20261023|18f2ffa7|82/82|tools: prepare fresh rain media recovery under protected parent
+origin/wip/interior-vis23-runtime-20261023|abfe2038|3/3|Record exact host proof inputs and compiler
+origin/wip/interior-vis23-targets-20261023|e210f3c4|14/14|Prepare guarded selected-affine conditional target proposal and host proof
+origin/wip/issue52-looks23-20261023|f909847c|2/2|issue52-looks23: look23 body pictures as VQ (r100 VRAM fit)
+origin/wip/mipfault22|8459e76b|4/4|HDR_ALIGN_PROBE: fix newline, caller pc
+origin/wip/mipfault22-qa|5cabb0d0|6/6|mipfault22: ARENA_RING (crash-screen ring of the last 12 texture-RAM ops), OVL_GUARD=3 (hash + UBC + ring), LOG_TRIM (layout-neutral diagnostics); all default 0
+origin/wip/mipfix22|7c7eee42|6/6|mipfix22: gate every mip level down to 1x1; tiny alpha level policy
+origin/wip/mipmap22|e8c5dadf|34/34|mipmap22: restore pack v5 (all room-select chains re-admitted; coordinator decision)
+origin/wip/miprecover22-20261022|0b368488|27/27|miprecover22: opt-in original-VQ colour recovery in unused codebook slots
+origin/wip/patch2810-coverage24-20261024|0ab8cca4|2/2|docs: record exact patch2810 supported-domain refusals
+origin/wip/rain-diag24-20261024|a7bffa9e|10/10|test(rain): refuse unsupported external symbol bindings
+origin/wip/rain-qa-on24-20261024|525d046c|1/1|Add grant-only fresh rain QA ON continuation with authenticated OFF reuse
+origin/wip/reset22-tools-20261022|6de7d8a4|1/1|lane reset22: repeated reset cycle pads (test tools, wip)
+origin/wip/rr-evidence24-20261024|04ebc985|4/4|Preserve source-only RR title-boot acceptance snapshot
+origin/wip/rr-safe-cycle23-20261023|34a5c48b|3/3|Keep full established bad-read rejection in boot semantics
+origin/wip/snap20261022/probe-lanes-20261018-ch3regen-lane|89be3771|0/6|ch3regen: ch3found ch4-owned evt4/pairs/em1c/fcv covered from ch4regen; split91
+origin/wip/snap20261022/probe-lanes-20261018-ch3regen-trees-90606dcf|34206723|1/4|WIP snapshot of /root/probe/lanes-20261018/ch3regen/trees/90606dcf (tracked edits + untracked source), push sweep 2026-10-22
+origin/wip/snap20261022/probe-lanes-20261018-ch4regen-cxtree-b47|7fa58f42|1/4|WIP snapshot of /root/probe/lanes-20261018/ch4regen/cxtree-b47, push sweep 2026-10-22
+origin/wip/snap20261022/probe-lanes-20261018-ch4regen-cxtree-c3|eb3befc8|1/4|WIP snapshot of /root/probe/lanes-20261018/ch4regen/cxtree-c3, push sweep 2026-10-22
+origin/wip/snap20261022/probe-lanes-20261018-ch4regen-cxtree-v0|90606dcf|0/3|Extend reproducible PS2 world recipes to fourteen rooms
+origin/wip/snap20261022/work-lanes-bodysvc20|a840b528|1/3|WIP snapshot of /root/work/lanes/bodysvc20 (tracked edits + untracked source), push sweep 2026-10-22
+origin/wip/snap20261022/work-lanes-ch2rooms20|53c32d26|1/6|WIP snapshot of /root/work/lanes/ch2rooms20 (tracked edits + untracked source), push sweep 2026-10-22
+origin/wip/snap20261022/work-lanes-chardraw19|14e4ee27|1/5|WIP snapshot of /root/work/lanes/chardraw19 (tracked edits + untracked source), push sweep 2026-10-22
+origin/wip/snap20261022/work-lanes-chardraw19-diag|8c63b56d|1/3|WIP snapshot of /root/work/lanes/chardraw19-diag (tracked edits + untracked source), push sweep 2026-10-22
+origin/wip/snap20261022/work-lanes-discsets20|0fdcc334|1/4|WIP snapshot of /root/work/lanes/discsets20 (tracked edits + untracked source), push sweep 2026-10-22
+origin/wip/snap20261022/work-lanes-logiclod20|e2f0b4f0|1/4|WIP snapshot of /root/work/lanes/logiclod20 (tracked edits + untracked source), push sweep 2026-10-22
+origin/wip/snap20261022/work-lanes-rel20|c4b6edac|1/9|WIP snapshot of /root/work/lanes/rel20 (tracked edits + untracked source), push sweep 2026-10-22
+origin/wip/snap20261022/work-lanes-rel20-land|239ea637|1/1|WIP snapshot of /root/work/lanes/rel20-land (tracked edits + untracked source), push sweep 2026-10-22
+origin/wip/snap20261022/work-lanes-rigid20|da2c3ce9|1/3|WIP snapshot of /root/work/lanes/rigid20 (tracked edits + untracked source), push sweep 2026-10-22
+origin/wip/snap20261022/work-lanes-rr-src|681568ad|1/5|WIP snapshot of /root/work/lanes/rr-src (tracked edits + untracked source), push sweep 2026-10-22
+origin/wip/snap20261022/work-lanes-scenery19|947774f8|1/1|WIP snapshot of /root/work/lanes/scenery19 (tracked edits + untracked source), push sweep 2026-10-22
+origin/wip/source-quad24-20261024|853611b5|8/8|Require exact JSON types in strip metadata root grants
+origin/wip/stat-bytes23-camera-control-20261023|ec0cd720|1/1|Test control only: isolate legacy camera moved predicate from the stat audit
+origin/wip/stat-bytes23-evidence-tools-20261023|91f77505|2/2|Save final stat landing and camera attribution; preserve exact tool bytes
+origin/wip/stat-bytes23-readme-20261023|8cecb9c9|4/18|README: mark the qualified Test23 boat weapon display fix
+origin/wip/texclass22|fa98a78e|3/3|texclass22: route classification summary (paused)
+origin/wip/texconv22-20261022|e42104f6|1/10|texconv22: exact-base repeat for 6 compact missing-profile alpha keys, PAL622 use sort, add-on pack composer
+origin/wip/texsrc22|bfce2800|7/7|Merge pull request #53 from lamb2k/codex/texsrc22-resume-20261022
+origin/wip/texusage22|e35b6fc9|2/2|texusage22: 120-scene windows, ranking tool, foliage-full scene
+origin/wip/triangle-opportunity-prep24-20261024|0879a931|4/4|docs: limit r111 camera blocker to authenticated static room namespace
+origin/wip/triangle-partition24-20261024|ebfc129b|5/5|Add finite grant-only canonical partition runner and host controls
+origin/wip/water-rain24-20261024|bca44d58|3/3|Add default-off r10c rain callback experiment and host controls
+origin/wip/water-rain24-canary-evidence-20261024|01675788|7/7|docs: freeze rain diagnostic model after every latched fault
+origin/wip/world-emit23-census-20261023|f2b290b2|3/3|Seal final census flush count against missing terminal blocks
+origin/wip/world-emit23-current-20261023|49ad20f9|5/5|Compose reviewed world census with the current qualified audit recipe
+origin/wip/world-emit23-evidence-tools-20261023|1d677733|14/14|Preserve fb254e82 candidate metadata and legacy RR boundaries
+origin/wip/world-emit23-qualify-20261023|7a3af776|4/4|Integrate the reviewed one-frame world census for private qualification
+origin/wip/world-merge23-20261023|4cf3b40d|3/3|Require explicit LOD policy in world merge estimates
+origin/wip/worlddraw23-20261022|93bbdf33|2/2|worlddraw23: WORLD_METER knob-off identity (qa_menu Menu/snapshot sizes only with the knob)
+origin/wip/worlddraw23-qa22wm|28e23d82|9/9|QA22-WorldMeter disc only: QA22-NoBackface (c4a98f8c) + worlddraw23 WORLD_METER (build with WORLD_METER=1 on the QA arm)
+origin/wip/worldemit-ui-pair23-20261023|67474ea4|1/1|tools: prepare private PS2 Mendez opacity pair

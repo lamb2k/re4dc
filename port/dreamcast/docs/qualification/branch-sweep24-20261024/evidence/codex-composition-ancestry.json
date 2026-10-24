@@ -1,0 +1,12 @@
+{
+  "branch_sha": "b6b4fa7a3cf3a5244d28a31eae9a8bf42f18ce45",
+  "composite_sha": "c2f9ba8cbcebe30a218fe4fb6cf9ecd2305d853e",
+  "is_ancestor": true,
+  "composite_tree": "5c8bc830d811fbf7441087e5fa907571528dc690",
+  "composite_parents": [
+    "8ce5ee2d00027268c3e69c9c300b819c1b14c63f",
+    "427784b1f48aa30742850bb5025925ab619b740e"
+  ],
+  "active_review_sha256": "5b15162e13c7e06df8d4a6b958534a12653789a75be61fce03980a35ca1d76dc",
+  "scope": "Read-only pinned ancestry; no runtime acceptance or merge."
+}

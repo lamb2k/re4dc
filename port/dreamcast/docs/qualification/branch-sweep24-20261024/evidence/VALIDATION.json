@@ -1,0 +1,17 @@
+{
+  "coverage": "PASS",
+  "classified_rows": 133,
+  "distinct_rows": 133,
+  "counts": {
+    "superseded or closed": 42,
+    "evidence only": 63,
+    "landed in another form": 24,
+    "still needs landing": 4
+  },
+  "local_gate_units": 3,
+  "cloud_held_not_queued": 1,
+  "all_local_report_links_exist": true,
+  "report_size": 47815,
+  "report_sha256": "46492e4cf3b7cf1cc48f67a116a85facc8701b57580ff1fe8ea0fc6431346ecb",
+  "no_build_or_runtime_acceptance": true
+}

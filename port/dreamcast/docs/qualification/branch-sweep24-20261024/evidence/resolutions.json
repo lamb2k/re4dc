@@ -1,0 +1,8 @@
+[
+  {
+    "branch": "origin/codex/texsrc22-resume-20261022",
+    "review_category": "evidence only",
+    "final_category": "superseded or closed",
+    "reason": "PR53 source is carried by its WIP merge bfce2800, not integrated9f6. Portable fixes are real pending tools, not merely evidence; queue wip/texsrc22 once and preserve this merged topic as predecessor."
+  }
+]

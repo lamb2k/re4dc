@@ -1,0 +1,10 @@
+{
+  "integration": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+  "exact_lines": [
+    "- [x] **Boat weapon display:** boarding the boat shows the harpoon and hides handgun ammunition.",
+    "- [x] **Effect and puzzle safety:** full effect-pool reuse releases old effects correctly; the church light puzzle handles a missing beam.",
+    "- [x] **Dam encounter safety:** a villager that retires while loading is retried instead of being used by the scripted encounter."
+  ],
+  "all_present": true,
+  "note": "latest tick commits are not whole-patch-id equivalent due README context; text equivalent, earlier two release tick patches exact-patch equivalent"
+}

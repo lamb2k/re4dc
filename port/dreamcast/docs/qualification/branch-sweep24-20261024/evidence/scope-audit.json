@@ -1,0 +1,6 @@
+{
+  "checked_utc": "2026-10-24T13:51:11.173063+00:00",
+  "method": "git log --since-as-filter over each complete unlanded ancestry",
+  "differences": [],
+  "utc_broader_cutoff_extra_branches": []
+}

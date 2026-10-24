@@ -1,0 +1,126 @@
+{
+  "captured_utc": "2026-10-24T14:04:51.793690+00:00",
+  "integration": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+  "members": [
+    {
+      "path": "BRANCH-SWEEP-20261024.md",
+      "bytes": 47815,
+      "sha256": "46492e4cf3b7cf1cc48f67a116a85facc8701b57580ff1fe8ea0fc6431346ecb"
+    },
+    {
+      "path": "evidence/INBOX.md",
+      "bytes": 4921,
+      "sha256": "d2dc20a41bd473215fa25dbb690a084b7bea3688ea44c897b0d26760b0995587"
+    },
+    {
+      "path": "evidence/VALIDATION.json",
+      "bytes": 461,
+      "sha256": "388f1357cf7ac98eff5989df9a6f797a6c0bdad1aa4220e83ba5c4d55b9fe400"
+    },
+    {
+      "path": "evidence/assignment.json",
+      "bytes": 7409,
+      "sha256": "7f5282e1002badc89bedd97237c53d90360ab285496dd5d5331b14ae7deef725"
+    },
+    {
+      "path": "evidence/branches.txt",
+      "bytes": 16023,
+      "sha256": "bd552c200439a32f9fab651e0839307666223d5c96a09845de46b0f78705b65a"
+    },
+    {
+      "path": "evidence/classified.json",
+      "bytes": 217478,
+      "sha256": "da3153b448cc3c7a615d86f25b1929b4e3ad09df6df23bb3ddb7cd33e4abf604"
+    },
+    {
+      "path": "evidence/cloud-exclusions.json",
+      "bytes": 2195,
+      "sha256": "16e20e8c87900adb0408095c599c277be76a1d84a782cad2f2fbfc3003fe6e61"
+    },
+    {
+      "path": "evidence/codex-composition-ancestry.json",
+      "bytes": 505,
+      "sha256": "3f787624435a91112f3c797e04eca2bbc56f3beb9ca076d2aaa195a00700ae2d"
+    },
+    {
+      "path": "evidence/codex-git-audit.json",
+      "bytes": 263356,
+      "sha256": "37a49d36057879c08afd91fb4ab2956e63af46beaf62f9ea4a0f5101e59bb64b"
+    },
+    {
+      "path": "evidence/codex-review.json",
+      "bytes": 47733,
+      "sha256": "a1ab2040cad5118eea71ed17771ff9a467a51628aa2184ec386b9e612a86c706"
+    },
+    {
+      "path": "evidence/inventory.json",
+      "bytes": 1171463,
+      "sha256": "ab0e401e633e1e70d39a4a699b20725f710856e063452dd49ee30d5852f0168d"
+    },
+    {
+      "path": "evidence/readme-equivalence.json",
+      "bytes": 656,
+      "sha256": "493f1e028ead67d0e58aa9f7b29889d07be8356545b5b77c83ad8c7416f8346e"
+    },
+    {
+      "path": "evidence/refs-at-start.txt",
+      "bytes": 25057,
+      "sha256": "f9e464eccb782fcb86bbf8f6dba2b572246d5ce4d44e14973b52df0fe63494d1"
+    },
+    {
+      "path": "evidence/remote-check.json",
+      "bytes": 365,
+      "sha256": "97440498d3d630d8b5049e3b9b95acc13a78e2d6b1556b81527490300a20c818"
+    },
+    {
+      "path": "evidence/remote-heads-check.txt",
+      "bytes": 26864,
+      "sha256": "20ab2a77083a574ea9d3c6a149c92f3aa3ab12d601a095f50a824c89cd478837"
+    },
+    {
+      "path": "evidence/resolutions.json",
+      "bytes": 368,
+      "sha256": "d619dd7b0e5f6614d9e7ed630439322fdf9fe58a99a0665221be9dbae2834eb5"
+    },
+    {
+      "path": "evidence/root-analysis.json",
+      "bytes": 243964,
+      "sha256": "7d670c5415e64c624e0bcd4f6c2711ab59fdf2273bc0ce3cafca46e820c3f6bc"
+    },
+    {
+      "path": "evidence/root-equivalence-evidence.json",
+      "bytes": 21624,
+      "sha256": "55a5b889f14269ce2d5f7687164256eff4d11b4dc466c0fd2c0b66e4489a08b9"
+    },
+    {
+      "path": "evidence/root-review.json",
+      "bytes": 20347,
+      "sha256": "2e50bafed184457a6d2f57f67031e7f98a51ade54be8a57b242b163ab5cffb8a"
+    },
+    {
+      "path": "evidence/scope-audit.json",
+      "bytes": 197,
+      "sha256": "d31b3fb8fdda38a552c9f64721305ad74fac60017b80801b38c07932a11c4756"
+    },
+    {
+      "path": "evidence/wip-active-review.json",
+      "bytes": 59182,
+      "sha256": "5b15162e13c7e06df8d4a6b958534a12653789a75be61fce03980a35ca1d76dc"
+    },
+    {
+      "path": "evidence/wip-legacy-hunk-audit.json",
+      "bytes": 70795,
+      "sha256": "3a299345741ff4cfcdde7c10ef9ede953bcc1e12a03f2b305e8fd109922f4b53"
+    },
+    {
+      "path": "evidence/wip-legacy-review.json",
+      "bytes": 90983,
+      "sha256": "c7bf9b32885822d91d42c85765a4a0a67caf3142f9e7b4fe444914fb435e240e"
+    },
+    {
+      "path": "evidence/wip-legacy-source-audit.json",
+      "bytes": 121344,
+      "sha256": "8a787bc234c57002be6e610342f1505cc4af7996e59df791032250069d280d43"
+    }
+  ]
+}

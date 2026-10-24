@@ -1,0 +1,1545 @@
+{
+  "schema": "RE4_BRANCH_SWEEP_LEGACY_REVIEW_V1",
+  "reviewed_utc": "2026-10-24T13:58:42.989985+00:00",
+  "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+  "repository": "/root/work/lanes/gc23-evidence-tools",
+  "inventory_sha256": "ab0e401e633e1e70d39a4a699b20725f710856e063452dd49ee30d5852f0168d",
+  "assignment_sha256": "7f5282e1002badc89bedd97237c53d90360ab285496dd5d5331b14ae7deef725",
+  "scope": "Exactly30 assigned origin/wip refs; read-only Git/source/status review. No fetch/checkouts/refs/stage/merge/queue/cloud/build/guest changes.",
+  "method": [
+    "Frozen tip and merge-base unique diff inspected; git cherry/ancestry are supporting checks only, never semantic landing proof.",
+    "Current whole-file Gitblob equality and actual runtime/tool hunk examination, supplemented by latest handover/status. Literal added-line presence is not alone semantic proof.",
+    "Mixed branches classified by actionable remaining unit; unlanded diagnostic/private reconstruction residue explicitly preserved."
+  ],
+  "summary": {
+    "superseded or closed": 5,
+    "evidence only": 12,
+    "landed in another form": 11,
+    "still needs landing": 2
+  },
+  "queues": [
+    {
+      "queue_key": "texsrc22-portable-classifier-converter",
+      "branches": [
+        "origin/wip/texsrc22"
+      ],
+      "source_commit": "0a905de5b (PR53 merged atbfce2800c)",
+      "intended_source_paths": [
+        "port/dreamcast/tools/d367/texsrc22/classify.py",
+        "port/dreamcast/tools/d367/texsrc22/convert.py"
+      ],
+      "intended_test_paths": [
+        "port/dreamcast/tools/d367/texsrc22/test_classify.py",
+        "port/dreamcast/tools/d367/texsrc22/test_convert.py"
+      ],
+      "support_docs": [
+        "TEXSRC22-RESUMED.md",
+        "port/dreamcast/tools/d367/texsrc22/resume-review.json",
+        "port/dreamcast/tools/d367/texsrc22/resume-review.tsv",
+        "port/dreamcast/tools/d367/texsrc22/resume-validation.json"
+      ],
+      "exclude": [
+        "Old TEX_USAGE_LOG/native_ui/ta_material_diag/tahash runtime hooks",
+        "Old texclass and first-pass tables as approval lists",
+        "GC source-label ancestry promotion",
+        "Private pack/media/data/recipe changes or automatic approved-key list"
+      ],
+      "required_source_gates": [
+        "Rebase exact portable modules onto current encoder/quality interfaces; run both meaningful host suites against current mip_quality.py with real final-level cases enabled",
+        "Verify malformed pack/missing input/HUD/shared-origin/resident evidence conflicts and OFF byte identity; ON exact reviewed selection/gate/policy pins; held/unselected/base pixels retained"
+      ],
+      "affected_media_gates": "None for tools-only landing. Any generated candidate later needs exact original PS2 ancestry/current pack joins, current quality/memory/look/room/guest gates and separate production permission."
+    },
+    {
+      "queue_key": "texconv22-consumer-binding-corrections",
+      "branches": [
+        "origin/wip/texconv22-20261022"
+      ],
+      "source_commits": [
+        "d7e207599 (model-vs-image namespace)",
+        "8de6aa8ea (extract only conservative binding/UI checks from mixed palette feature)"
+      ],
+      "intended_source_paths": [
+        "port/dreamcast/tools/d367/mipmap21/effect_consumers.py",
+        "port/dreamcast/tools/d367/mipmap21/generic_effect_candidate.py"
+      ],
+      "intended_test_paths": [
+        "port/dreamcast/tests/test_mipmap_effect_consumers.py",
+        "port/dreamcast/tests/test_mipmap_generic_effects.py"
+      ],
+      "exclude": [
+        "Already-landed FX_STRIP21/CLOTH_LIGHT_ABI_FIX runtime/Make changes",
+        "Canonical-PAL8 opt-in and new data generation unless separately justified",
+        "Hard-coded texconv22 combine/inv/pal622/repeat6 private-run scripts",
+        "Historical qualification JSON as current media acceptance",
+        "Any private assets, recipes or rendering changes"
+      ],
+      "required_source_gates": [
+        "Current effect-consumer/generic suites plus actual namespace dispatch controls FC..FF, unknown generator held, same image/model numeric ID",
+        "Omitted/duplicate source-binding and fixed-ID UI forged-policy refusal; verify unchanged default conversions and OFF bytes"
+      ],
+      "affected_media_gates": "Tools-only conservative refusal change has no new programme. Any regenerated media separately qualifies exact source binding/current pack, all mip levels, memory/visual and room runtime gates."
+    }
+  ],
+  "rows": [
+    {
+      "branch": "origin/wip/atlas22",
+      "tip_sha": "8ed03e366e4c07a60847b691c776fd9b7a34ef47",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "superseded or closed",
+      "reason": "Only the export-token mapping is absent. Leon atlas is a parked look fallback for console mip bleeding, not an owed active integration unit; do not activate or queue it merely because the mapping is missing.",
+      "evidence": [
+        "Tip8ed03e366 adds LEON_ATLAS_SPLIT_DIR:leonatlas only in release-knobs.py; current PRIVATE dictionary lacks it.",
+        "ATLAS22-STATUS.md: default-off runtime already landed; not in Test22, no gain, revisit only for coat seam/bleed.",
+        "Root current-handover scope clarification explicitly keeps atlas parked."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [
+        "release-knobs.py export mapping retained on branch; no claim it landed"
+      ],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "d0dba247a57a065da56a760cce92639c027ce8a2",
+        "exact_current_blobs": 0,
+        "missing_current_paths": [],
+        "evolved_current_paths": [
+          "port/dreamcast/tools/d367/release-knobs.py"
+        ]
+      },
+      "unique_commits": [
+        "8ed03e366 release-knobs: map LEON_ATLAS_SPLIT_DIR to @ASSETS@/leonatlas (atlas22)"
+      ]
+    },
+    {
+      "branch": "origin/wip/codex22-qa22nomips",
+      "tip_sha": "962c950f4b0b52d099c159e0560a890b9eb2880d",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "superseded or closed",
+      "reason": "Historical no-mips QA arm is superseded by the accepted mip22/mip22b production data and later qualification. It is not a current recipe change.",
+      "evidence": [
+        "Only recipe.conf and test11/t11-fix.py differ on the QA branch.",
+        "Pinned recipe DATA includes mip22,mip22b,res22c; t11 contains their current bindings.",
+        "CODEX-UPDATE-20261022.md: mipmaps shipped, old M0 recovery baseline closed."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "8c7b722dd50d65b326b2a4568b86de1cfd29d5ee",
+        "exact_current_blobs": 0,
+        "missing_current_paths": [],
+        "evolved_current_paths": [
+          "port/dreamcast/tools/d367/rr/recipe.conf",
+          "port/dreamcast/tools/d367/test11/t11-fix.py"
+        ]
+      },
+      "unique_commits": [
+        "962c950f4 QA22-NoMips: match 808fb061 exactly: CAST_MIPMAP and TEX_PAL4_ALPHA come from the base line (on there); only the 10-21/22 mip knobs are 0",
+        "4a5307798 QA22-NoMips: TEX_PAL4/PAL8_ALPHA=0 too (808fb061 had neither; the pre-mip pack's fmt 6 pictures fail the PAL8_ALPHA validator)",
+        "3d697179b QA22-NoMips: register res22nm before main",
+        "1436a7d7d QA22-NoMips: res22nm resident data (pre-mipmap res22 + current resident keys)",
+        "1bf1872f0 QA22-NoMips disc only: QA22-All with mipmaps off and pre-mipmap texture data",
+        "20752045a Merge lane/codex22 8c7b722d (t15/int 64a28a7b) into QA22-All",
+        "a25534e6e QA22-All: SS_DATA_LZ=1 + sslz23",
+        "b99f1904c Merge lane/codex22 51d2f63d (t15/int f047721fb, SS_DATA_LZ) into QA22-All",
+        "0e2386bb5 QA22-All: GANADO_EVENT_KEEP_LOD=1",
+        "ba83d6d7c Merge lane/codex22 944971ce (GANADO_EVENT_KEEP_LOD) into QA22-All",
+        "33d9399ff QA22-All console test disc only (not the unit recipe): codex22 unit + wip/backface22 8b4d82e4, CPU_BACKFACE=1 ACTOR_BACKFACE=1 VRAM_ROOM_ARENA=0",
+        "d86d3f34b Merge remote-tracking branch 'origin/wip/backface22' into qa22all"
+      ]
+    },
+    {
+      "branch": "origin/wip/foliagemip22",
+      "tip_sha": "aba7e3dcc34a2347de5cb28dee477421af427b18",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "evidence only",
+      "reason": "Runtime arena/rectangle/mip changes were incorporated; the extra alpha/recovery generation scripts remain absent historical opt-in candidate tooling. Preserve them and their evidence; no current handover authorizes promoting their candidate data or superseding current holds.",
+      "evidence": [
+        "All nontrivial added runtime lines in Makefile/game30/native_static/native_ui/vram_pages are present at base.",
+        "29 changed-branch paths are exact current blobs; alpha_mip.py/recover_alpha.py and miprecover22 scripts remain missing.",
+        "Current mipmap23 STATUS retains quality holds and all41 shared originals; CODEX-UPDATE closes old mipmap/M0 baseline."
+      ],
+      "queue_key": null,
+      "confidence": "medium",
+      "unlanded_residue": [
+        "foliagemip22/alpha_mip.py",
+        "foliagemip22/recover_alpha.py",
+        "miprecover22/candidates.tsv and recover.py",
+        "mipmap_compact_vq.py original-VQ unused-slot generator differs; not claimed landed"
+      ],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "64d04e2572f06e660bb63d4f2650f7996150dce5",
+        "exact_current_blobs": 29,
+        "missing_current_paths": [
+          "port/dreamcast/tools/d367/foliagemip22/alpha_mip.py",
+          "port/dreamcast/tools/d367/foliagemip22/recover_alpha.py",
+          "port/dreamcast/tools/d367/miprecover22/candidates.tsv",
+          "port/dreamcast/tools/d367/miprecover22/recover.py"
+        ],
+        "evolved_current_paths": [
+          "port/dreamcast/game/Makefile",
+          "port/dreamcast/game/game30.mk",
+          "port/dreamcast/game/platform/native_static.cpp",
+          "port/dreamcast/game/platform/native_ui.cpp",
+          "port/dreamcast/game/platform/vram_pages.cpp",
+          "port/dreamcast/tools/d367/mipmap22/room-select.tsv",
+          "port/dreamcast/tools/d367/texture_rect21/scoped_representations.inc",
+          "port/dreamcast/tools/mipmap_compact_vq.py"
+        ]
+      },
+      "unique_commits": [
+        "aba7e3dcc foliagemip22: --worlds adds held cut-outs placed in the room PS2 worlds (bare-tree branches)",
+        "8d92d22c4 foliagemip22: opt-in coverage-preserving alpha mip chains for foliage / branch cut-outs",
+        "0b3684883 miprecover22: opt-in original-VQ colour recovery in unused codebook slots",
+        "e7954f610 mipmap22: FOLIAGE pass_of: knob-off code byte-identical to t15/int (mipfix22 change kept under WORLD_RECT21)",
+        "824dd8224 mipmap22: keep the knob-off code of overlay_slab_take / glyph atlas byte-identical",
+        "21fa38a82 mipmap22: VRAM_ROOM_ARENA room change also overrides ROOM_REENTRY_EVICT (close every unpinned non-core entry)",
+        "b8a9bbcba mipmap22: VRAM_ROOM_ARENA declaration at the top of native_ui.cpp",
+        "54eebcf78 mipmap22: VRAM_ROOM_ARENA class declared at file scope",
+        "65b923566 mipmap22: VRAM_ROOM_ARENA (two-ended texture RAM: core/long-lived from the top, room textures from the bottom, old room freed as one region at the room change); default 0",
+        "b74aa921a mipmap22: room-select tier 2 (r100/r101 chains side <= 128 held; 256 ground chains kept); pack v3 c759dd52",
+        "236a0030c mipmap22: resident remap from parsed R4PW part records (keeps originals a part or first-sight load still uses; stored sizes for the preload estimate); v2-gate pack rebuild",
+        "45d487447 mipmap22: merge wip/mipfix22 7c7eee429 (v2 gate: every level to 1x1)",
+        "f338b916d mipmap22: merge t15/int 64d04e257",
+        "7c7eee429 mipfix22: gate every mip level down to 1x1; tiny alpha level policy",
+        "6651fa49b mipmap22: held keys get their release-pack member back (mip_quality --original-pack); tables rebound",
+        "0fd278a8a mipmap22: per-room chain selection manifest (room-select.tsv, mip_quality --hold-keys), resident keep list; tables rebound",
+        "eceb3f014 mipmap22: rect21 tables for the mipfix22 pack + texconv22 add-on (798 rows, origins), resident.bin scoped-key remap tool",
+        "cb14bfb41 mipmap22: merge wip/mipfix22 9c979c426 (foliage ids, builder, quality gates)",
+        "280da4645 mipmap22: merge t15/int 47558dcce",
+        "9c979c426 mipfix22: coverage gate relative to the base silhouette (thin branches)",
+        "7e6b10ee8 mipmap22: TEX_MIP_DADJ knob (PVR mipmap D adjust for compiled headers; render only, default 0 = unchanged)",
+        "a9844db59 mipfix22: PS2_AREA_HIDE uses the policy source identity under WORLD_RECT21",
+        "41528473e mipfix22: lower-mip quality gate (cutout coverage, VQ colour) with hold",
+        "0fcb25749 mipfix22: world_candidate accepts checksum-only normalization of selected keys",
+        "28674a495 mipfix22: keep original material policy for scoped rect21 texture keys",
+        "64177c61d mipmap22: texconv22 add-on bind rows (798) + rekeyed world certificates for B2 (WORLD_RECT21 only, default off)",
+        "754ce7e24 mipmap22: merge codex/mipmap21-next792-integration @ 63644457a (792 rectangle world representations for the 1,760 pack)",
+        "63644457a Prepare default-off 792 rectangle source integration",
+        "33504b9df Prepare guarded 650 world mip descriptors with bounded lookup"
+      ]
+    },
+    {
+      "branch": "origin/wip/issue52-looks23-20261023",
+      "tip_sha": "f909847c2bc41be6703442e8cc6403978f78dc6f",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "superseded or closed",
+      "reason": "look23 data binding is absent, but this candidate is explicitly parked because r100 heap4 drops36.9KB. No demonstrated memory-split successor is present in this branch; no landing queue or production enablement.",
+      "evidence": [
+        "Tipf909847c2/c07c6564c add only DATA[look23]/PAK_DERIVED[look23] to t11-fix.py.",
+        "CODEX-HANDOVER-20261023.md:103 explicitly parks officers/chandelier pending memory split.",
+        "Current recipe lacks look23; actual branch only VQ body changes and binding, not a memory-split implementation."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "bb41fe68346421d04f4ad78e2d34fb0963fa5896",
+        "exact_current_blobs": 0,
+        "missing_current_paths": [],
+        "evolved_current_paths": [
+          "port/dreamcast/tools/d367/test11/t11-fix.py"
+        ]
+      },
+      "unique_commits": [
+        "f909847c2 issue52-looks23: look23 body pictures as VQ (r100 VRAM fit)",
+        "c07c6564c issue52-looks23: data set look23 (r100 officers' faces + bodies, r117 chandelier atlas; #52)"
+      ]
+    },
+    {
+      "branch": "origin/wip/mipfault22",
+      "tip_sha": "8459e76b634e237d7db528298b2ce345849a577e",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "landed in another form",
+      "reason": "Arena crash diagnostics and final header-probe correction are present in current code; later source replaced the allocation-ring class access safely. Do not replay old diagnostic QA layouts.",
+      "evidence": [
+        "All added lines in Makefile/crash_screen/modules/native_ui are present, including final HDR_ALIGN_PROBE newline and caller PC.",
+        "Current vram_pages uses saved ring_class at allocation rather than volatile arena-class reread; ARENA_RING/OVL_GUARD/LOG_TRIM remain.",
+        "CODEX-HANDOVER lists arena23 landing10d7ab1b; CODEX-UPDATE:143 handed original diagnostics to arena23."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [
+        "Old link.sh temporary overlay dbg.elf handling differs; current linker implementation supersedes the scratch layout"
+      ],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "496c1a39365f4696114bd57382d8b88932f59b94",
+        "exact_current_blobs": 1,
+        "missing_current_paths": [],
+        "evolved_current_paths": [
+          "port/dreamcast/game/Makefile",
+          "port/dreamcast/game/platform/crash_screen.cpp",
+          "port/dreamcast/game/platform/modules.cpp",
+          "port/dreamcast/game/platform/native_ui.cpp",
+          "port/dreamcast/game/platform/vram_pages.cpp",
+          "port/dreamcast/game/tools/link.sh"
+        ]
+      },
+      "unique_commits": [
+        "8459e76b6 HDR_ALIGN_PROBE: fix newline, caller pc",
+        "f0188ffb0 HDR_ALIGN_PROBE diagnostic: log misaligned PVR header compiles (movca.l)",
+        "1ad4de95c mipfault22: ARENA_RING (crash-screen ring of the last 12 texture-RAM ops), OVL_GUARD=3 (hash + UBC + ring), LOG_TRIM (layout-neutral diagnostics); all default 0",
+        "f0cacf59e mipfault22: OVL_GUARD split: =1 code hash check only, =2 UBC write watch on the st1_1+0x6114 literal only (handler records + removes itself, screen drawn from the next UI frame)"
+      ]
+    },
+    {
+      "branch": "origin/wip/mipfault22-qa",
+      "tip_sha": "5cabb0d073d5314b7ad97cb6eadd47ac4e9123c0",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "superseded or closed",
+      "reason": "Old arena/crash-layout QA arm is historical. Its diagnostic features landed through arena/mipfault integration, while its recipe/layout should not replace current production or current arena qualification.",
+      "evidence": [
+        "Shared mipfault diagnostics are present in current runtime.",
+        "Three branch-modified paths are exact current blobs; remaining QA/config/runtime files evolved.",
+        "Current handover says mipfault finished/paused and arena23 owns successor; recipe production arena remains independent."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "944971ce922f7037eb3022543d9a8de2afeaf79e",
+        "exact_current_blobs": 3,
+        "missing_current_paths": [],
+        "evolved_current_paths": [
+          "port/dreamcast/game/Makefile",
+          "port/dreamcast/game/backface.mk",
+          "port/dreamcast/game/coarse_actor.cpp",
+          "port/dreamcast/game/coarse_actor_transaction.inc",
+          "port/dreamcast/game/platform/backface_census.cpp",
+          "port/dreamcast/game/platform/crash_screen.cpp",
+          "port/dreamcast/game/platform/modules.cpp",
+          "port/dreamcast/game/platform/native_actor_fast.cpp",
+          "port/dreamcast/game/platform/native_static.cpp",
+          "port/dreamcast/game/platform/native_ui.cpp",
+          "port/dreamcast/game/platform/vram_pages.cpp",
+          "port/dreamcast/room/backface_emit.hpp",
+          "port/dreamcast/tools/d367/rr/recipe.conf"
+        ]
+      },
+      "unique_commits": [
+        "5cabb0d07 mipfault22: ARENA_RING (crash-screen ring of the last 12 texture-RAM ops), OVL_GUARD=3 (hash + UBC + ring), LOG_TRIM (layout-neutral diagnostics); all default 0",
+        "91dac778b mipfault22: OVL_GUARD split: =1 code hash check only, =2 UBC write watch on the st1_1+0x6114 literal only (handler records + removes itself, screen drawn from the next UI frame)",
+        "0e2386bb5 QA22-All: GANADO_EVENT_KEEP_LOD=1",
+        "ba83d6d7c Merge lane/codex22 944971ce (GANADO_EVENT_KEEP_LOD) into QA22-All",
+        "33d9399ff QA22-All console test disc only (not the unit recipe): codex22 unit + wip/backface22 8b4d82e4, CPU_BACKFACE=1 ACTOR_BACKFACE=1 VRAM_ROOM_ARENA=0",
+        "d86d3f34b Merge remote-tracking branch 'origin/wip/backface22' into qa22all"
+      ]
+    },
+    {
+      "branch": "origin/wip/mipfix22",
+      "tip_sha": "7c7eee4295d6ff39ef88f8d4f530142651b26f41",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "landed in another form",
+      "reason": "Material-policy preservation and every-level mip quality gates are present; current helper scheduling/reporting and generated origins evolved rather than needing replay.",
+      "evidence": [
+        "13 modified branch paths are exact current blobs.",
+        "All12 nontrivial native_static added lines are present; mip_quality has168/171 nontrivial added lines, remaining differences are pool/result handling.",
+        "Current mipmap22 exact test_mip_quality and quality pipeline; texture pipeline integration48f71838a is an ancestor of base."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "c8ffac8593454fe36651ebfbbc108dff0f034b9b",
+        "exact_current_blobs": 13,
+        "missing_current_paths": [],
+        "evolved_current_paths": [
+          "port/dreamcast/game/platform/native_static.cpp",
+          "port/dreamcast/tools/d367/mipmap21/mip_quality.py",
+          "port/dreamcast/tools/d367/texture_rect21/scoped_origins.inc"
+        ]
+      },
+      "unique_commits": [
+        "7c7eee429 mipfix22: gate every mip level down to 1x1; tiny alpha level policy",
+        "9c979c426 mipfix22: coverage gate relative to the base silhouette (thin branches)",
+        "a9844db59 mipfix22: PS2_AREA_HIDE uses the policy source identity under WORLD_RECT21",
+        "41528473e mipfix22: lower-mip quality gate (cutout coverage, VQ colour) with hold",
+        "0fcb25749 mipfix22: world_candidate accepts checksum-only normalization of selected keys",
+        "28674a495 mipfix22: keep original material policy for scoped rect21 texture keys"
+      ]
+    },
+    {
+      "branch": "origin/wip/mipmap22",
+      "tip_sha": "e8c5dadfd3e5d42b630d7e316e25a10b26828dec",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "landed in another form",
+      "reason": "Texture pipeline landed as the current integrated pipeline with subsequent fixes/data holds; old branch ancestry is not needed and its accepted files match current blobs.",
+      "evidence": [
+        "33 branch-modified files match current blobs, including mip quality/runtime tests, room-select, scoped representation/origin tables and composition helpers.",
+        "Integration48f71838a is an ancestor of base; actual native arena/mip/rectangle feature hunks are present.",
+        "Pinned recipe uses mip22/mip22b and res22c; current holds override old intermediate selections."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "64d04e2572f06e660bb63d4f2650f7996150dce5",
+        "exact_current_blobs": 33,
+        "missing_current_paths": [],
+        "evolved_current_paths": [
+          "port/dreamcast/game/Makefile",
+          "port/dreamcast/game/game30.mk",
+          "port/dreamcast/game/platform/native_static.cpp",
+          "port/dreamcast/game/platform/native_ui.cpp",
+          "port/dreamcast/game/platform/vram_pages.cpp",
+          "port/dreamcast/tools/d367/vram/resident/r100.tsv"
+        ]
+      },
+      "unique_commits": [
+        "e8c5dadfd mipmap22: restore pack v5 (all room-select chains re-admitted; coordinator decision)",
+        "838926bc4 mipmap22: re-hold 107 lowest-area room-select chains (pack v6)",
+        "6e2c8735d mipmap22: re-admit every room-select hold under VRAM_ROOM_ARENA (pack v5 a21e75d1)",
+        "8db001afc vram r100 resident list: add 3d9d333a-125fadf1 (loaded in play after the sub screen closes on every r100 visit; the 1 upload after preload on both arms)",
+        "6a08ede39 mipmap22: re-admit 12 room-select-held r100/r101 chains under VRAM_ROOM_ARENA (pack v4 1c9db917 = v3 + 12 + miprecover22 42)",
+        "b89aaf234 Merge 39814a88e (r107 AREA source-policy guard) into wip/mipmap22",
+        "9ef794712 mipmap22: miprecover22 add-on tables (42 representations rebound, pack 786dc9a6)",
+        "e7954f610 mipmap22: FOLIAGE pass_of: knob-off code byte-identical to t15/int (mipfix22 change kept under WORLD_RECT21)",
+        "824dd8224 mipmap22: keep the knob-off code of overlay_slab_take / glyph atlas byte-identical",
+        "21fa38a82 mipmap22: VRAM_ROOM_ARENA room change also overrides ROOM_REENTRY_EVICT (close every unpinned non-core entry)",
+        "b8a9bbcba mipmap22: VRAM_ROOM_ARENA declaration at the top of native_ui.cpp",
+        "54eebcf78 mipmap22: VRAM_ROOM_ARENA class declared at file scope",
+        "65b923566 mipmap22: VRAM_ROOM_ARENA (two-ended texture RAM: core/long-lived from the top, room textures from the bottom, old room freed as one region at the room change); default 0",
+        "b74aa921a mipmap22: room-select tier 2 (r100/r101 chains side <= 128 held; 256 ground chains kept); pack v3 c759dd52",
+        "236a0030c mipmap22: resident remap from parsed R4PW part records (keeps originals a part or first-sight load still uses; stored sizes for the preload estimate); v2-gate pack rebuild",
+        "45d487447 mipmap22: merge wip/mipfix22 7c7eee429 (v2 gate: every level to 1x1)",
+        "f338b916d mipmap22: merge t15/int 64d04e257",
+        "7c7eee429 mipfix22: gate every mip level down to 1x1; tiny alpha level policy",
+        "6651fa49b mipmap22: held keys get their release-pack member back (mip_quality --original-pack); tables rebound",
+        "0fd278a8a mipmap22: per-room chain selection manifest (room-select.tsv, mip_quality --hold-keys), resident keep list; tables rebound",
+        "eceb3f014 mipmap22: rect21 tables for the mipfix22 pack + texconv22 add-on (798 rows, origins), resident.bin scoped-key remap tool",
+        "cb14bfb41 mipmap22: merge wip/mipfix22 9c979c426 (foliage ids, builder, quality gates)",
+        "280da4645 mipmap22: merge t15/int 47558dcce",
+        "9c979c426 mipfix22: coverage gate relative to the base silhouette (thin branches)",
+        "7e6b10ee8 mipmap22: TEX_MIP_DADJ knob (PVR mipmap D adjust for compiled headers; render only, default 0 = unchanged)",
+        "a9844db59 mipfix22: PS2_AREA_HIDE uses the policy source identity under WORLD_RECT21",
+        "41528473e mipfix22: lower-mip quality gate (cutout coverage, VQ colour) with hold",
+        "0fcb25749 mipfix22: world_candidate accepts checksum-only normalization of selected keys",
+        "28674a495 mipfix22: keep original material policy for scoped rect21 texture keys",
+        "64177c61d mipmap22: texconv22 add-on bind rows (798) + rekeyed world certificates for B2 (WORLD_RECT21 only, default off)",
+        "754ce7e24 mipmap22: merge codex/mipmap21-next792-integration @ 63644457a (792 rectangle world representations for the 1,760 pack)",
+        "63644457a Prepare default-off 792 rectangle source integration",
+        "33504b9df Prepare guarded 650 world mip descriptors with bounded lookup",
+        "39814a88e Guard r107 AREA source-policy profile for scoped world remaps"
+      ]
+    },
+    {
+      "branch": "origin/wip/miprecover22-20261022",
+      "tip_sha": "0b368488347ba06aa23ef36273f5580d4527a1a0",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "evidence only",
+      "reason": "Shipped mip pipeline supersedes this historical generation run; its original-VQ unused-codebook recovery source is not fully landed. Retain reproducibility tooling/evidence without treating the old candidate/selection as a current required baseline.",
+      "evidence": [
+        "29 paths exact current blobs and every added runtime arena/mip line is present.",
+        "miprecover22/candidates.tsv/recover.py absent, and add_mipmaps_original body absent in current compact helper.",
+        "CODEX-UPDATE:75 explicitly closes old mipmap/M0 recovery baseline because mipmaps already shipped; current mip22b/current holds remain authoritative."
+      ],
+      "queue_key": null,
+      "confidence": "medium",
+      "unlanded_residue": [
+        "Original-VQ recovery generator and candidate table remain on this branch; not falsely counted as integrated"
+      ],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "64d04e2572f06e660bb63d4f2650f7996150dce5",
+        "exact_current_blobs": 29,
+        "missing_current_paths": [
+          "port/dreamcast/tools/d367/miprecover22/candidates.tsv",
+          "port/dreamcast/tools/d367/miprecover22/recover.py"
+        ],
+        "evolved_current_paths": [
+          "port/dreamcast/game/Makefile",
+          "port/dreamcast/game/game30.mk",
+          "port/dreamcast/game/platform/native_static.cpp",
+          "port/dreamcast/game/platform/native_ui.cpp",
+          "port/dreamcast/game/platform/vram_pages.cpp",
+          "port/dreamcast/tools/d367/mipmap22/room-select.tsv",
+          "port/dreamcast/tools/d367/texture_rect21/scoped_representations.inc",
+          "port/dreamcast/tools/mipmap_compact_vq.py"
+        ]
+      },
+      "unique_commits": [
+        "0b3684883 miprecover22: opt-in original-VQ colour recovery in unused codebook slots",
+        "e7954f610 mipmap22: FOLIAGE pass_of: knob-off code byte-identical to t15/int (mipfix22 change kept under WORLD_RECT21)",
+        "824dd8224 mipmap22: keep the knob-off code of overlay_slab_take / glyph atlas byte-identical",
+        "21fa38a82 mipmap22: VRAM_ROOM_ARENA room change also overrides ROOM_REENTRY_EVICT (close every unpinned non-core entry)",
+        "b8a9bbcba mipmap22: VRAM_ROOM_ARENA declaration at the top of native_ui.cpp",
+        "54eebcf78 mipmap22: VRAM_ROOM_ARENA class declared at file scope",
+        "65b923566 mipmap22: VRAM_ROOM_ARENA (two-ended texture RAM: core/long-lived from the top, room textures from the bottom, old room freed as one region at the room change); default 0",
+        "b74aa921a mipmap22: room-select tier 2 (r100/r101 chains side <= 128 held; 256 ground chains kept); pack v3 c759dd52",
+        "236a0030c mipmap22: resident remap from parsed R4PW part records (keeps originals a part or first-sight load still uses; stored sizes for the preload estimate); v2-gate pack rebuild",
+        "45d487447 mipmap22: merge wip/mipfix22 7c7eee429 (v2 gate: every level to 1x1)",
+        "f338b916d mipmap22: merge t15/int 64d04e257",
+        "7c7eee429 mipfix22: gate every mip level down to 1x1; tiny alpha level policy",
+        "6651fa49b mipmap22: held keys get their release-pack member back (mip_quality --original-pack); tables rebound",
+        "0fd278a8a mipmap22: per-room chain selection manifest (room-select.tsv, mip_quality --hold-keys), resident keep list; tables rebound",
+        "eceb3f014 mipmap22: rect21 tables for the mipfix22 pack + texconv22 add-on (798 rows, origins), resident.bin scoped-key remap tool",
+        "cb14bfb41 mipmap22: merge wip/mipfix22 9c979c426 (foliage ids, builder, quality gates)",
+        "280da4645 mipmap22: merge t15/int 47558dcce",
+        "9c979c426 mipfix22: coverage gate relative to the base silhouette (thin branches)",
+        "7e6b10ee8 mipmap22: TEX_MIP_DADJ knob (PVR mipmap D adjust for compiled headers; render only, default 0 = unchanged)",
+        "a9844db59 mipfix22: PS2_AREA_HIDE uses the policy source identity under WORLD_RECT21",
+        "41528473e mipfix22: lower-mip quality gate (cutout coverage, VQ colour) with hold",
+        "0fcb25749 mipfix22: world_candidate accepts checksum-only normalization of selected keys",
+        "28674a495 mipfix22: keep original material policy for scoped rect21 texture keys",
+        "64177c61d mipmap22: texconv22 add-on bind rows (798) + rekeyed world certificates for B2 (WORLD_RECT21 only, default off)",
+        "754ce7e24 mipmap22: merge codex/mipmap21-next792-integration @ 63644457a (792 rectangle world representations for the 1,760 pack)",
+        "63644457a Prepare default-off 792 rectangle source integration",
+        "33504b9df Prepare guarded 650 world mip descriptors with bounded lookup"
+      ]
+    },
+    {
+      "branch": "origin/wip/reset22-tools-20261022",
+      "tip_sha": "6de7d8a483139f6f1cd9c08fc1f437e3a139472f",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "evidence only",
+      "reason": "Two repeated-reset pad fixtures are a historical lane test unit, with no game/runtime change or current promised landing. Preserve fixtures; no reset runtime fix is hidden here.",
+      "evidence": [
+        "Tip6de7d8a48 adds only fullplay/segments/rs22ld-pad.txt and rs22ng-pad.txt,104 lines total.",
+        "Both paths absent at base; there are no source/config changes to land."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "64d04e2572f06e660bb63d4f2650f7996150dce5",
+        "exact_current_blobs": 0,
+        "missing_current_paths": [
+          "port/dreamcast/tools/d367/fullplay/segments/rs22ld-pad.txt",
+          "port/dreamcast/tools/d367/fullplay/segments/rs22ng-pad.txt"
+        ],
+        "evolved_current_paths": []
+      },
+      "unique_commits": [
+        "6de7d8a48 lane reset22: repeated reset cycle pads (test tools, wip)"
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/probe-lanes-20261018-ch3regen-lane",
+      "tip_sha": "89be37714543d4858fba23f68983c23bec4b12fa",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "evidence only",
+      "reason": "68 private-reconstruction replay scripts, including exact texture-chain and split91 recovery evidence; no runtime code. Castle remains explicitly paused; preserve the source snapshots without reopening its conversions or treating reconstruction scripts as a released asset pipeline.",
+      "evidence": [
+        "Inspected unique diff and snapshot tip; missing paths documented in source-audit, including ch3/regen.",
+        "Base does not contain these absent tools; this is not a claim of patch/code equivalence.",
+        "CODEX-HANDOVER-20261023.md:100 and TAKEOVER preserve castle pause awaiting user restart."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "4cf2574ba2bec6380234f92dc50fdc6f9d9d67a3",
+        "exact_current_blobs": 0,
+        "missing_current_paths": [
+          "port/dreamcast/tools/d367/ch3/regen/README.md",
+          "port/dreamcast/tools/d367/ch3/regen/aica_search4k.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-a4k.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-aica.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-c34b.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-c34bq.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-c3xq.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-castlefill.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-castlekeys.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-castlepak.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-chap3.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-commit.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-copyout.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-emtex.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-evt4q.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-find2.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-git1.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-git2.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-git3.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-git4.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-git5.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-hunt2.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-land.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-lem.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-lm2.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-pairs.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-pakhunt.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-pakloose.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-pkg.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-pl11.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-prepem.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-prepem2.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-r11d.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-rel.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-res.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-setup.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-split91.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-str.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-t12d.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-t12d2.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-t12d3.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-tex1.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-vq34.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r-warps.sh",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_aichdr.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_castlefill.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_castleloose.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_castlepak.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_cmp.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_compact.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_cover.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_coveradd.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_gcx.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_gdix.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_isox.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_loosemap.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_pakhunt.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_paksrc.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_pl11b.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_pl11dbg.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_remhit.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_split91.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_srcmap.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_stage.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_t12d.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_t12d2.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_t12d3.py",
+          "port/dreamcast/tools/d367/ch3/regen/c3r_vq34.py"
+        ],
+        "evolved_current_paths": []
+      },
+      "unique_commits": [
+        "89be37714 ch3regen: ch3found ch4-owned evt4/pairs/em1c/fcv covered from ch4regen; split91",
+        "15466bba5 ch3regen: castle tex chain c31..c33b replayed, tex.pak 15975911 byte-exact",
+        "58c984dcc ch3regen: tex-t12d 43be4b59 and tex-c34b 7398aaaa recovered",
+        "6affad44a ch3regen: t12d pair search, land script, coverage rerun",
+        "ed15c78ef ch3regen: pak-loose VQ, pairs, chap3, warps, resident, streams, tex-c34, pl11-hot, copyout",
+        "b8493c0ca ch3regen: castle/ch3found replay scripts (tex, MAINSCENARIO, compact/release, AICA search, prepem)"
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/probe-lanes-20261018-ch3regen-trees-90606dcf",
+      "tip_sha": "3420672316ed7dfb7d7222e238f93171c7f3acfc",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "evidence only",
+      "reason": "PS2 asset-builder base plus17 frozen le_mirror source versions; generated reconstruction context, not a current isolated fix. Castle remains explicitly paused; preserve the source snapshots without reopening its conversions or treating reconstruction scripts as a released asset pipeline.",
+      "evidence": [
+        "Inspected unique diff and snapshot tip; missing paths documented in source-audit, including PS2 asset build and lem_* snapshots.",
+        "Base does not contain these absent tools; this is not a claim of patch/code equivalence.",
+        "CODEX-HANDOVER-20261023.md:100 and TAKEOVER preserve castle pause awaiting user restart."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "85e7da5d375b8dabab7b610d7125ac674b631d39",
+        "exact_current_blobs": 0,
+        "missing_current_paths": [
+          "Makefile",
+          "port/dreamcast/docs/PS2_ASSET_BUILD.md",
+          "port/dreamcast/tools/build_ps2_assets.py",
+          "port/dreamcast/tools/lem_17c795ca2101854922705fd75580c6266b49ffda.py",
+          "port/dreamcast/tools/lem_1995c5d7c0d22c248b682eb971ebbd964453c970.py",
+          "port/dreamcast/tools/lem_29e4dbb9050882541d9af94b2f2f1f45b5882ac6.py",
+          "port/dreamcast/tools/lem_2b26b2e2965f2b7b233347e4dafe6937fc8cbcf5.py",
+          "port/dreamcast/tools/lem_436cf98ccebe4a7ec31769fa3a8dc3b7c61d0994.py",
+          "port/dreamcast/tools/lem_4d7007c56ef89ae731331b1255fdc73a091bd0c8.py",
+          "port/dreamcast/tools/lem_5ca7cd3d533ab0d95b8acc6f1a1c16148c5060cf.py",
+          "port/dreamcast/tools/lem_6184c71ae1e3474e23d3e16decf8a44225ec538b.py",
+          "port/dreamcast/tools/lem_6b8111b81f27545e3b13c050e471301791baeb31.py",
+          "port/dreamcast/tools/lem_8982264431d6dc5362e4dd286b78af39397c34e4.py",
+          "port/dreamcast/tools/lem_8dd37d3dcd577170a2e7571d4d1c34f2b4b3f8cf.py",
+          "port/dreamcast/tools/lem_9fd6aec6f57e25ebb9f5bcdb894bd62e9d953720.py",
+          "port/dreamcast/tools/lem_b47.py",
+          "port/dreamcast/tools/lem_b560fd0c87ae296a1f3bcb229def79603aa8a599.py",
+          "port/dreamcast/tools/lem_dbd98794ea869fbeaef840735cd4624274076e00.py",
+          "port/dreamcast/tools/lem_f2f7861cf6810cbb7fac8cf5efa9533e2a3fea68.py",
+          "port/dreamcast/tools/lem_p45.py",
+          "port/dreamcast/tools/ps2_assets/LICENSE-JADERLINK.txt",
+          "port/dreamcast/tools/ps2_assets/README.md",
+          "port/dreamcast/tools/ps2_assets/__init__.py",
+          "port/dreamcast/tools/ps2_assets/light.py",
+          "port/dreamcast/tools/ps2_assets/requirements.txt",
+          "port/dreamcast/tools/ps2_assets/scenario.py",
+          "port/dreamcast/tools/ps2_assets/test_build.py",
+          "port/dreamcast/tools/ps2_assets/texture.py",
+          "port/dreamcast/tools/ps2_assets/tpl.py",
+          "port/dreamcast/tools/ps2_assets/vq.py",
+          "port/dreamcast/tools/ps2_assets/worlds.json"
+        ],
+        "evolved_current_paths": [
+          ".gitignore",
+          "README.md",
+          "port/dreamcast/CONTRIBUTING-PORT.md",
+          "port/dreamcast/tools/ps2_room_extract.py",
+          "port/dreamcast/tools/ps2_room_r4im.py"
+        ]
+      },
+      "unique_commits": [
+        "342067231 WIP snapshot of /root/probe/lanes-20261018/ch3regen/trees/90606dcf (tracked edits + untracked source), push sweep 2026-10-22",
+        "90606dcf8 Extend reproducible PS2 world recipes to fourteen rooms",
+        "3ff0928bd Validate PS2 world overlays with runtime package checks",
+        "e417cb190 Automate initial PS2-derived world asset builds"
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/probe-lanes-20261018-ch4regen-cxtree-b47",
+      "tip_sha": "7fa58f42db713ecefa7d145388d8db80c8adeb8f",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "evidence only",
+      "reason": "PS2 builder base plus cx_room_dependencies and old le_mirror dependency preparation changes. Castle remains explicitly paused; preserve the source snapshots without reopening its conversions or treating reconstruction scripts as a released asset pipeline.",
+      "evidence": [
+        "Inspected unique diff and snapshot tip; missing paths documented in source-audit, including cx_room_dependencies.py and le_mirror.py.",
+        "Base does not contain these absent tools; this is not a claim of patch/code equivalence.",
+        "CODEX-HANDOVER-20261023.md:100 and TAKEOVER preserve castle pause awaiting user restart."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "85e7da5d375b8dabab7b610d7125ac674b631d39",
+        "exact_current_blobs": 0,
+        "missing_current_paths": [
+          "Makefile",
+          "port/dreamcast/docs/PS2_ASSET_BUILD.md",
+          "port/dreamcast/tools/build_ps2_assets.py",
+          "port/dreamcast/tools/d367/cx_room_dependencies.py",
+          "port/dreamcast/tools/ps2_assets/LICENSE-JADERLINK.txt",
+          "port/dreamcast/tools/ps2_assets/README.md",
+          "port/dreamcast/tools/ps2_assets/__init__.py",
+          "port/dreamcast/tools/ps2_assets/light.py",
+          "port/dreamcast/tools/ps2_assets/requirements.txt",
+          "port/dreamcast/tools/ps2_assets/scenario.py",
+          "port/dreamcast/tools/ps2_assets/test_build.py",
+          "port/dreamcast/tools/ps2_assets/texture.py",
+          "port/dreamcast/tools/ps2_assets/tpl.py",
+          "port/dreamcast/tools/ps2_assets/vq.py",
+          "port/dreamcast/tools/ps2_assets/worlds.json"
+        ],
+        "evolved_current_paths": [
+          ".gitignore",
+          "README.md",
+          "port/dreamcast/CONTRIBUTING-PORT.md",
+          "port/dreamcast/tools/le_mirror.py",
+          "port/dreamcast/tools/ps2_room_extract.py",
+          "port/dreamcast/tools/ps2_room_r4im.py"
+        ]
+      },
+      "unique_commits": [
+        "7fa58f42d WIP snapshot of /root/probe/lanes-20261018/ch4regen/cxtree-b47, push sweep 2026-10-22",
+        "90606dcf8 Extend reproducible PS2 world recipes to fourteen rooms",
+        "3ff0928bd Validate PS2 world overlays with runtime package checks",
+        "e417cb190 Automate initial PS2-derived world asset builds"
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/probe-lanes-20261018-ch4regen-cxtree-c3",
+      "tip_sha": "eb3befc8117197956f13f394a30a4c620b89be8a",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "evidence only",
+      "reason": "PS2 builder base plus cx_room_dependencies/cx_room_fixtures and le_mirror fixture transport. Castle remains explicitly paused; preserve the source snapshots without reopening its conversions or treating reconstruction scripts as a released asset pipeline.",
+      "evidence": [
+        "Inspected unique diff and snapshot tip; missing paths documented in source-audit, including cx_room_dependencies.py/cx_room_fixtures.py.",
+        "Base does not contain these absent tools; this is not a claim of patch/code equivalence.",
+        "CODEX-HANDOVER-20261023.md:100 and TAKEOVER preserve castle pause awaiting user restart."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "85e7da5d375b8dabab7b610d7125ac674b631d39",
+        "exact_current_blobs": 0,
+        "missing_current_paths": [
+          "Makefile",
+          "port/dreamcast/docs/PS2_ASSET_BUILD.md",
+          "port/dreamcast/tools/build_ps2_assets.py",
+          "port/dreamcast/tools/d367/cx_room_dependencies.py",
+          "port/dreamcast/tools/d367/cx_room_fixtures.py",
+          "port/dreamcast/tools/ps2_assets/LICENSE-JADERLINK.txt",
+          "port/dreamcast/tools/ps2_assets/README.md",
+          "port/dreamcast/tools/ps2_assets/__init__.py",
+          "port/dreamcast/tools/ps2_assets/light.py",
+          "port/dreamcast/tools/ps2_assets/requirements.txt",
+          "port/dreamcast/tools/ps2_assets/scenario.py",
+          "port/dreamcast/tools/ps2_assets/test_build.py",
+          "port/dreamcast/tools/ps2_assets/texture.py",
+          "port/dreamcast/tools/ps2_assets/tpl.py",
+          "port/dreamcast/tools/ps2_assets/vq.py",
+          "port/dreamcast/tools/ps2_assets/worlds.json"
+        ],
+        "evolved_current_paths": [
+          ".gitignore",
+          "README.md",
+          "port/dreamcast/CONTRIBUTING-PORT.md",
+          "port/dreamcast/tools/le_mirror.py",
+          "port/dreamcast/tools/ps2_room_extract.py",
+          "port/dreamcast/tools/ps2_room_r4im.py"
+        ]
+      },
+      "unique_commits": [
+        "eb3befc81 WIP snapshot of /root/probe/lanes-20261018/ch4regen/cxtree-c3, push sweep 2026-10-22",
+        "90606dcf8 Extend reproducible PS2 world recipes to fourteen rooms",
+        "3ff0928bd Validate PS2 world overlays with runtime package checks",
+        "e417cb190 Automate initial PS2-derived world asset builds"
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/probe-lanes-20261018-ch4regen-cxtree-v0",
+      "tip_sha": "90606dcf8c1b588b273247eb27d5471b336cc4af",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "evidence only",
+      "reason": "Frozen reproducible PS2 world builder/validation recipes for fourteen rooms; absent builder tooling is retained, not declared integrated. Castle remains explicitly paused; preserve the source snapshots without reopening its conversions or treating reconstruction scripts as a released asset pipeline.",
+      "evidence": [
+        "Inspected unique diff and snapshot tip; missing paths documented in source-audit, including build_ps2_assets.py/ps2_assets/*.",
+        "Base does not contain these absent tools; this is not a claim of patch/code equivalence.",
+        "CODEX-HANDOVER-20261023.md:100 and TAKEOVER preserve castle pause awaiting user restart."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "85e7da5d375b8dabab7b610d7125ac674b631d39",
+        "exact_current_blobs": 0,
+        "missing_current_paths": [
+          "Makefile",
+          "port/dreamcast/docs/PS2_ASSET_BUILD.md",
+          "port/dreamcast/tools/build_ps2_assets.py",
+          "port/dreamcast/tools/ps2_assets/LICENSE-JADERLINK.txt",
+          "port/dreamcast/tools/ps2_assets/README.md",
+          "port/dreamcast/tools/ps2_assets/__init__.py",
+          "port/dreamcast/tools/ps2_assets/light.py",
+          "port/dreamcast/tools/ps2_assets/requirements.txt",
+          "port/dreamcast/tools/ps2_assets/scenario.py",
+          "port/dreamcast/tools/ps2_assets/test_build.py",
+          "port/dreamcast/tools/ps2_assets/texture.py",
+          "port/dreamcast/tools/ps2_assets/tpl.py",
+          "port/dreamcast/tools/ps2_assets/vq.py",
+          "port/dreamcast/tools/ps2_assets/worlds.json"
+        ],
+        "evolved_current_paths": [
+          ".gitignore",
+          "README.md",
+          "port/dreamcast/CONTRIBUTING-PORT.md",
+          "port/dreamcast/tools/ps2_room_extract.py",
+          "port/dreamcast/tools/ps2_room_r4im.py"
+        ]
+      },
+      "unique_commits": [
+        "90606dcf8 Extend reproducible PS2 world recipes to fourteen rooms",
+        "3ff0928bd Validate PS2 world overlays with runtime package checks",
+        "e417cb190 Automate initial PS2-derived world asset builds"
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-bodysvc20",
+      "tip_sha": "a840b528c6795539e2f2facf72a9f1d16dbc2154",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "landed in another form",
+      "reason": "Body-service correctness/runtime unit is present through integration; only a tiny historical framebuffer comparison helper remains snapshot-only.",
+      "evidence": [
+        "278221095 is an ancestor of base; BODYSVC20-STATUS records landing and default0 knobs.",
+        "Eight paths exact; all nontrivial added lines in Makefile/engine_preview/em10/em are present.",
+        "Snapshot tip adds only11-line fbdiff.py; no hidden new body-service decision."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [
+        "bodysvc20/fbdiff.py diagnostic comparison helper retained as evidence"
+      ],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "d7844a796c738c4749981da1de686838aa102e76",
+        "exact_current_blobs": 8,
+        "missing_current_paths": [
+          "port/dreamcast/tools/d367/bodysvc20/fbdiff.py"
+        ],
+        "evolved_current_paths": [
+          "port/dreamcast/game/Makefile",
+          "port/dreamcast/game/engine_preview.mk",
+          "src/em10/em10.cpp",
+          "src/game/em.cpp"
+        ]
+      },
+      "unique_commits": [
+        "a840b528c WIP snapshot of /root/work/lanes/bodysvc20 (tracked edits + untracked source), push sweep 2026-10-22",
+        "305c1b29a bodysvc20: BODY_CORPSE also covers dissolved bodies (Die_Lost end state); BODY_LOG diagnostics; lane scripts",
+        "3a14d56fe bodysvc20 WIP: BODY_GRID, BODY_CORPSE, BODY_IK, BODY_ROUTE (all default off); fix actor_rt.c string newlines"
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-ch2rooms20",
+      "tip_sha": "53c32d26ea48df2bbef4c352b7d8a061d59157dd",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "landed in another form",
+      "reason": "Chapter2 room/native audio/actor source and DATA bindings are present. Snapshot-only change is trace capacity12\u219216, also present now.",
+      "evidence": [
+        "Four paths exact; all nontrivial added lines across Makefile/audio_aica/t11-fix/em_set/r10c/trace_lock are present.",
+        "Current trace_lock.sh defaults TRACE_SLOTS16.",
+        "Snapshot tip53c32d26 changes only that trace default; no new missed runtime fix."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "046a578edd914c731576d4579084688ab111ebc9",
+        "exact_current_blobs": 4,
+        "missing_current_paths": [],
+        "evolved_current_paths": [
+          "port/dreamcast/game/Makefile",
+          "port/dreamcast/game/platform/audio_aica.cpp",
+          "port/dreamcast/tools/d367/test11/t11-fix.py",
+          "port/dreamcast/tools/d367/trace_lock.sh",
+          "src/game/em_set.cpp",
+          "src/st1/r10c.cpp"
+        ]
+      },
+      "unique_commits": [
+        "53c32d26e WIP snapshot of /root/work/lanes/ch2rooms20 (tracked edits + untracked source), push sweep 2026-10-22",
+        "6266a14ad ch2rooms20: nostd20 data set (GC scenery packages off the disc in PS2-world rooms) + ch21r without MAINSCENARIO",
+        "16640e0d5 ch2rooms20: t11-fix data set ch21r (r10c / r10d / r10e rooms, worlds, merchant registries, derived tex.pak)",
+        "abcd872de WIP ch2rooms20: tail-first bank takes the end of the BGM0 slot (the room BGM0 loads after its room banks)",
+        "ad6dbcf3d WIP ch2rooms20: AICA tail-first bank (r10c), aica_banks fit --tail-blk, r10d/r10e ROOMS, nmr_retarget.py",
+        "515b48c1a WIP ch2rooms20: r10d/r10e room contracts, pack_add.py, ROUTE_CH21_FULL r10c ambush through the cap"
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-chardraw19",
+      "tip_sha": "14e4ee27534a2ffc99a3921ef65b67f6f537d337",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "landed in another form",
+      "reason": "Character chunk adapter/backend is incorporated through later stage3 code. Preserve historical benchmark conclusion; do not enable the slower path.",
+      "evidence": [
+        "Current rel20 native_actor_chunk.inc is byte-identical to integrated stage3 snapshot, while this earlier branch version has subsequent changes.",
+        "CHARDRAW19-STATUS describes stage3 successor c5de8d47/b252d61/bc9ee09d and measured slower CHAR_CHUNK, not a fresh win.",
+        "Inspected tip backend adapter/outcode/clip implementation versus current evolved chunk path; no unique correctness fix established."
+      ],
+      "queue_key": null,
+      "confidence": "medium",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "e86bf58ee261475306a15c841a823fdf9116bfa5",
+        "exact_current_blobs": 1,
+        "missing_current_paths": [],
+        "evolved_current_paths": [
+          "port/dreamcast/game/Makefile",
+          "port/dreamcast/game/chardraw19.mk",
+          "port/dreamcast/game/platform/chunk_submit.cpp",
+          "port/dreamcast/game/platform/chunk_submit.h",
+          "port/dreamcast/game/platform/native_actor_chunk.inc",
+          "port/dreamcast/game/platform/native_actor_fast.cpp",
+          "port/dreamcast/game/scenery19.mk"
+        ]
+      },
+      "unique_commits": [
+        "14e4ee275 WIP snapshot of /root/work/lanes/chardraw19 (tracked edits + untracked source), push sweep 2026-10-22",
+        "de20f20cb Merge lane/scenery19 38da3276 (chunk_submit back end v1) into lane/chardraw19",
+        "2bd1f59d1 chardraw19: CHAR_CHUNK stages 1-2 rebased onto t15/int e86bf58e (one commit; history on wip/chardraw19-20261019)",
+        "38da32763 scenery19: bgate PEXTRA for the knob-on arm",
+        "40dd41052 scenery19: chunk-submit back end v1 implemented (CHUNK_SUBMIT=1; caller-owned binding, grid/screen points, corners, R4IM/actor strips, clip callback)"
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-chardraw19-diag",
+      "tip_sha": "8c63b56d16a122a611b1fd432eb34f8904f45cde",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "evidence only",
+      "reason": "The unique snapshot is explicit throwaway NINJA logging, not a correctness fix to integrate. Keep it as diagnostic evidence; current backend is already present without these probes.",
+      "evidence": [
+        "Unique tip inserts nj_note/nj_dump/NJB arrays and source comment: throwaway, never delivered.",
+        "chardraw19.mk and quickweapon.mk are exact current blobs.",
+        "Current source lacks these intentional diagnostic-only hooks; this absence is not a renderer defect."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "74a1ce62409b5d96c2b4f41eae67f622b3e55921",
+        "exact_current_blobs": 2,
+        "missing_current_paths": [],
+        "evolved_current_paths": [
+          "port/dreamcast/game/platform/native_actor_chunk.inc",
+          "port/dreamcast/game/platform/native_actor_fast.cpp",
+          "src/game/model.cpp"
+        ]
+      },
+      "unique_commits": [
+        "8c63b56d1 WIP snapshot of /root/work/lanes/chardraw19-diag (tracked edits + untracked source), push sweep 2026-10-22",
+        "5d2c95875 QUICK_WEAPON: swap disc-meter log only with DOOR_PROBE=1 (re4dc_disc_meter_totals is built only then; DISC_READ_METER bench builds linked a missing stub)",
+        "3f042d0a3 character-draw-path stage 3: CHAR_CHUNK sends through chunk_submit v1 (CHAR_CHUNK_BACKEND=1, needs CHUNK_SUBMIT=1)"
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-discsets20",
+      "tip_sha": "0fdcc33483b1bc9e9ca2c57d0c881a589a64825e",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "landed in another form",
+      "reason": "Disc-set validation, chapter warp and disc2 builder source are present through integrated disc-sets unit; later release/physical completion is separate from source landing.",
+      "evidence": [
+        "01fcdfc24 is an ancestor of base; current dvd.cpp platform/game and discsets README/mkdisc2.py are exact branch blobs.",
+        "Every nontrivial added Makefile/dbgwarp/game line is present.",
+        "Snapshot-only TRACE_SLOTS16 already present; DISCSETS20-STATUS retains later disc qualification gaps."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "a45baf451e381f7560a7d29104200e44ae9a3e60",
+        "exact_current_blobs": 4,
+        "missing_current_paths": [],
+        "evolved_current_paths": [
+          "port/dreamcast/game/Makefile",
+          "port/dreamcast/game/dbgwarp_bridge.cpp",
+          "port/dreamcast/tools/d367/trace_lock.sh",
+          "src/game/game.cpp"
+        ]
+      },
+      "unique_commits": [
+        "0fdcc3348 WIP snapshot of /root/work/lanes/discsets20 (tracked edits + untracked source), push sweep 2026-10-22",
+        "96771b878 discsets: disc-2 tree builder (castle18 r200b + r201j keys, village rooms pruned) and recipe notes",
+        "035e31486 warp rig: chapter <n> sets pG->chapter before the first room (DISC_SET disc-2/3 warps)",
+        "cdc40c680 DISC_SET=1 (default 0): three-disc release disc check"
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-logiclod20",
+      "tip_sha": "e2f0b4f0d6598c1f7dbf07b9ce73d6ab26005dbe",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "landed in another form",
+      "reason": "Post-strip-group transformed-corner census correction is incorporated, including its default-off knob and historical tooling.",
+      "evidence": [
+        "67ace9cf0 and516918f04 are ancestors of base.",
+        "All34 native_static added lines present; logiclod20.mk and12 lane tool/scene files byte-identical.",
+        "LOGICLOD20-STATUS records integrated bundle; snapshot tip trace16 also present."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "2775448674b3ba1ec12a610e47758564b15808d4",
+        "exact_current_blobs": 13,
+        "missing_current_paths": [],
+        "evolved_current_paths": [
+          "port/dreamcast/game/platform/native_static.cpp",
+          "port/dreamcast/tools/d367/trace_lock.sh"
+        ]
+      },
+      "unique_commits": [
+        "e2f0b4f0d WIP snapshot of /root/work/lanes/logiclod20 (tracked edits + untracked source), push sweep 2026-10-22",
+        "59f2846d0 logiclod20: SCN_CENSUS counts only corners transformed after strip-group selection",
+        "a569ad376 logiclod20: SCN_CENSUS knob in logiclod20.mk; drop DEDUP_FILL_FAST",
+        "7b32d26eb logiclod20: SCN_CENSUS=1 test-only scenery corner census"
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-rel20",
+      "tip_sha": "c4b6edac933acd469c727403e73bad9fddd5f077",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "superseded or closed",
+      "reason": "Historical Test20 release source/docs/knob snapshot is superseded by later releases and current integration. Preserve its release evidence; do not replay old recipe or docs.",
+      "evidence": [
+        "30 modified branch paths exact, including Test20 package/knob artifacts and release images; current recipe/docs/scripts evolved.",
+        "Inspected unique Test20 commits and snapshot trace16; snapshot contains no further game fix beyond release state.",
+        "Current recipe DATA includes later mip22/mip22b/res22c/sslz23 and current release is newer; source-only snapshot is not a fresh release task."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "968f25eb8b7951e8de446c3dc11636033886048f",
+        "exact_current_blobs": 30,
+        "missing_current_paths": [],
+        "evolved_current_paths": [
+          "README.md",
+          "port/dreamcast/CONTRIBUTING-PORT.md",
+          "port/dreamcast/README.md",
+          "port/dreamcast/build-public.sh",
+          "port/dreamcast/docs/KNOWN_ISSUES.md",
+          "port/dreamcast/game/Makefile",
+          "port/dreamcast/game/bench.cpp",
+          "port/dreamcast/game/bench.mk",
+          "port/dreamcast/game/pace.cpp",
+          "port/dreamcast/game/platform/audio_aica.cpp",
+          "port/dreamcast/game/platform/native_actor_fast.cpp",
+          "port/dreamcast/game/platform/native_static.cpp",
+          "port/dreamcast/game/platform/native_ui.cpp",
+          "port/dreamcast/game/scenery19.mk",
+          "port/dreamcast/tools/d367/rr/README.md",
+          "port/dreamcast/tools/d367/rr/known.txt",
+          "port/dreamcast/tools/d367/rr/recipe.conf",
+          "port/dreamcast/tools/d367/rr/rr-cycle.sh",
+          "port/dreamcast/tools/d367/rr/rr-flycast.sh",
+          "port/dreamcast/tools/d367/rr/rr-jobs.sh",
+          "port/dreamcast/tools/d367/rr/rr-judge.py",
+          "port/dreamcast/tools/d367/rr/rr.sh",
+          "port/dreamcast/tools/d367/test11/t11-fix.py",
+          "port/dreamcast/tools/d367/test15/t15-build.sh",
+          "port/dreamcast/tools/d367/trace_lock.sh",
+          "src/game/em.cpp",
+          "src/game/em_set.cpp",
+          "src/game/esp.cpp",
+          "src/game/esp_sub.cpp",
+          "src/game/main.cpp",
+          "src/st1/r10c.cpp"
+        ]
+      },
+      "unique_commits": [
+        "c4b6edac9 WIP snapshot of /root/work/lanes/rel20 (tracked edits + untracked source), push sweep 2026-10-22",
+        "741451405 KNOWN_ISSUES: dam rooms light row links #47",
+        "1185bd7fc Test 20 release source a5737e0e: data set pair20 (t11-fix, recipe.conf) and the knob list (tag test-a5737e0e-20261020)",
+        "cd1b4a502 Test 20 docs: README What's new 20 (dam + key images, Flycast captures), Coming soon Test 21, At a glance, KNOWN_ISSUES header",
+        "b06bc40e1 CONTRIBUTING-PORT: Test 20 recipe (ROUTE_CH21_FULL, scenery and enemy logic knobs; CHAR_CHUNK and SCENERY_DEDUP off)",
+        "82e177c3d build-public.sh: default knob list = Test 20",
+        "ca2bfb5c8 Test 20 published knob list (release-knobs.txt, image 26da4fe3)",
+        "e44f7f8a9 Test 20 tree: t15/int a45baf45 on dreamcast-port (README kept)",
+        "65aadd768 README Coming soon: Test 20 adds chapter 2-1's real path (the dam, r10d, r10e)"
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-rel20-land",
+      "tip_sha": "239ea637121b8a6d06a39b14c28849051c73218b",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "landed in another form",
+      "reason": "Its entire unique diff is the trace-slot12\u219216 default already in current code.",
+      "evidence": [
+        "Tip239ea6371 changes only trace_lock.sh N=${TRACE_SLOTS:-16}.",
+        "Pinned current trace_lock.sh:14 is the same default; no remaining unique payload."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "0a2dd555b02acee0f961c9e0937de6147c7212a8",
+        "exact_current_blobs": 0,
+        "missing_current_paths": [],
+        "evolved_current_paths": [
+          "port/dreamcast/tools/d367/trace_lock.sh"
+        ]
+      },
+      "unique_commits": [
+        "239ea6371 WIP snapshot of /root/work/lanes/rel20-land (tracked edits + untracked source), push sweep 2026-10-22"
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-rigid20",
+      "tip_sha": "da2c3ce926524cb17ec2cbbe51490d4b7559b5d3",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "landed in another form",
+      "reason": "Rigid chunk runtime and Make guard/source bridge landed; missing old fixtures and evolved lane script are historical qualification evidence.",
+      "evidence": [
+        "d7844a79 is an ancestor of base; native_actor_rigid.inc is exact branch blob.",
+        "Every nontrivial added runtime/Make/rigid20.mk line is present; only two fx.sh fixture-invocation/comment lines differ.",
+        "RIGID20-STATUS records landing, later moving truck coverage remains separate."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [
+        "s00-pad.txt/s00-warp.txt/truck-end-warp.txt fixtures absent but preserved on branch"
+      ],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "01fcdfc24c494814e7a2d995465d858f57ce1ddc",
+        "exact_current_blobs": 7,
+        "missing_current_paths": [
+          "port/dreamcast/tools/d367/rigid20/s00-pad.txt",
+          "port/dreamcast/tools/d367/rigid20/s00-warp.txt",
+          "port/dreamcast/tools/d367/rigid20/truck-end-warp.txt"
+        ],
+        "evolved_current_paths": [
+          "port/dreamcast/game/Makefile",
+          "port/dreamcast/game/platform/native_actor_fast.cpp",
+          "port/dreamcast/game/rigid20.mk",
+          "port/dreamcast/tools/d367/rigid20/fx.sh",
+          "port/dreamcast/tools/d367/trace_lock.sh"
+        ]
+      },
+      "unique_commits": [
+        "da2c3ce92 WIP snapshot of /root/work/lanes/rigid20 (tracked edits + untracked source), push sweep 2026-10-22",
+        "7a3b2c160 rigid20: truck-ride / s00 / KOS check fixtures (lane tools only)",
+        "020225ec8 rigid20: RIGID_CHUNK (rigid models on the new draw path) + RIGID_CENSUS diagnostic; default off"
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-rr-src",
+      "tip_sha": "681568ad0963e9e8a59e2f815d9b78ed98f7c933",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "landed in another form",
+      "reason": "RR cycle/installer/judge implementation is present through subsequent integration and evolved fixes; the snapshot trace change also landed. Do not reapply its old300/60 profiles or cleanup policy.",
+      "evidence": [
+        "Current rr-cycle.sh retains guarded failed-candidate cleanup, rr-judge/rr.sh retain evolved implementation; all RR paths exist.",
+        "release-checks.conf/rr-clean-builds.sh/st-r11b-warp.txt exact current blobs; trace16 exact.",
+        "Inspected d7ed77e69/b41319e3c/8e7591999 changes; current separate rr-safe-cycle23 bounded adapter owns later one-boot policy, not this snapshot."
+      ],
+      "queue_key": null,
+      "confidence": "medium",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "77723a750e37f68793575293e8a3accd4f8938ab",
+        "exact_current_blobs": 3,
+        "missing_current_paths": [],
+        "evolved_current_paths": [
+          "port/dreamcast/tools/d367/rr/README.md",
+          "port/dreamcast/tools/d367/rr/known.txt",
+          "port/dreamcast/tools/d367/rr/recipe.conf",
+          "port/dreamcast/tools/d367/rr/rr-cycle.sh",
+          "port/dreamcast/tools/d367/rr/rr-flycast.sh",
+          "port/dreamcast/tools/d367/rr/rr-jobs.sh",
+          "port/dreamcast/tools/d367/rr/rr-judge.py",
+          "port/dreamcast/tools/d367/rr/rr.sh",
+          "port/dreamcast/tools/d367/trace_lock.sh"
+        ]
+      },
+      "unique_commits": [
+        "681568ad0 WIP snapshot of /root/work/lanes/rr-src (tracked edits + untracked source), push sweep 2026-10-22",
+        "d7ed77e69 rr: a failed cycle removes its whole candidate dir",
+        "b41319e3c rr: judge fixes (TEXCHK per-log verdicts, CAST-GC summary), newest knob file by commit time",
+        "8e7591999 rr.sh install: refuse to copy the installed tools onto themselves",
+        "726690ced rr: always-ready release candidate (watcher, quick + full tiers, rr.sh)"
+      ]
+    },
+    {
+      "branch": "origin/wip/snap20261022/work-lanes-scenery19",
+      "tip_sha": "947774f8b980587ebb9da7d074f7514bf2267e05",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "evidence only",
+      "reason": "Unique diff is old five-scene benchmark launchers/fixtures plus already-landed trace default. It is preserved measurement setup, not a missing renderer optimization.",
+      "evidence": [
+        "Eight absent files all under scenery19/bench; reviewed bb.sh/bp.sh old Test19/20 MODELLED arms.",
+        "trace_lock12\u219216 is present; no runtime file in unique diff.",
+        "Old scripts include historical own-output deletion/build/staging commands; do not run them in a branch sweep."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "2775448674b3ba1ec12a610e47758564b15808d4",
+        "exact_current_blobs": 0,
+        "missing_current_paths": [
+          "port/dreamcast/tools/d367/scenery19/bench/bb.sh",
+          "port/dreamcast/tools/d367/scenery19/bench/bp.sh",
+          "port/dreamcast/tools/d367/scenery19/bench/scenes/farm-midfight-src.txt",
+          "port/dreamcast/tools/d367/scenery19/bench/scenes/scene1.txt",
+          "port/dreamcast/tools/d367/scenery19/bench/scenes/scene2.txt",
+          "port/dreamcast/tools/d367/scenery19/bench/scenes/scene3.txt",
+          "port/dreamcast/tools/d367/scenery19/bench/scenes/scene4.txt",
+          "port/dreamcast/tools/d367/scenery19/bench/scenes/scene5.txt"
+        ],
+        "evolved_current_paths": [
+          "port/dreamcast/tools/d367/trace_lock.sh"
+        ]
+      },
+      "unique_commits": [
+        "947774f8b WIP snapshot of /root/work/lanes/scenery19 (tracked edits + untracked source), push sweep 2026-10-22"
+      ]
+    },
+    {
+      "branch": "origin/wip/texclass22",
+      "tip_sha": "fa98a78e6fc69334c868d5b1edb78fac8ee340c5",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "evidence only",
+      "reason": "Paused historical route classification and telemetry are source evidence, not proof of source ancestry/current use or a pending runtime enablement. PR53 successor annotations supersede unsafe first-pass reachability interpretations.",
+      "evidence": [
+        "37 absent tool/scene/report paths; diagnostic TEX_USAGE_LOG hooks absent from current runtime.",
+        "texclass branch records paused summary; TEXSRC22-RESUMED corrects false unreachable and source-list truncation interpretations.",
+        "No private pack regeneration or live-source/draw proof is established by these old tables."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "8a2a15cbb66413c1dee41884c8e9dac924a24d16",
+        "exact_current_blobs": 0,
+        "missing_current_paths": [
+          "port/dreamcast/tools/d367/texclass22/classify.py",
+          "port/dreamcast/tools/d367/texclass22/convert.py",
+          "port/dreamcast/tools/d367/texclass22/scenes/r100.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r101.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r102.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r103.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r104.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r105.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r106.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r107.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r108.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r109.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r10a.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r10b.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r10c.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r10e.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r10f.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r111.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r112.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r113.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r117.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r118.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r119.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r11a.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r11b.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r11c.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r11d.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r11e.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r11f.txt",
+          "port/dreamcast/tools/d367/texclass22/summary-route.json",
+          "port/dreamcast/tools/d367/texusage22/scenes/ambush.txt",
+          "port/dreamcast/tools/d367/texusage22/scenes/cross.txt",
+          "port/dreamcast/tools/d367/texusage22/scenes/crossfol.txt",
+          "port/dreamcast/tools/d367/texusage22/scenes/farm.txt",
+          "port/dreamcast/tools/d367/texusage22/scenes/shoot.txt",
+          "port/dreamcast/tools/d367/texusage22/scenes/woods.txt",
+          "port/dreamcast/tools/d367/texusage22/texusage.py"
+        ],
+        "evolved_current_paths": [
+          "port/dreamcast/game/platform/include/ta_material_diag.h",
+          "port/dreamcast/game/platform/native_ui.cpp",
+          "port/dreamcast/game/tahash.mk"
+        ]
+      },
+      "unique_commits": [
+        "fa98a78e6 texclass22: route classification summary (paused)",
+        "677be6023 texclass22: route scenes (27 rooms), classify.py (unclassified keys by measured use), convert.py (add-on mip chains)",
+        "4212c167a texclass22: base = t15/int + texusage22 telemetry (TEX_USAGE_LOG)"
+      ]
+    },
+    {
+      "branch": "origin/wip/texconv22-20261022",
+      "tip_sha": "e42104f6ee0c9a922e9c0d8354cc98a611665fd4",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "still needs landing",
+      "reason": "Runtime FX strip/cloth ABI portions are already integrated. Narrow remaining conservative source-tool fixes distinguish effect-model indices from image indices and reject omitted/duplicate/fixed-UI bindings in generic conversion.",
+      "evidence": [
+        "Current effect_consumers.py lacks record_reference_namespace and separate_model_namespace; tests from d7e207599 absent.",
+        "Current generic_effect_candidate.py lacks expected_refs==actual_refs/duplicate and fixed-ID UI rejection added by8de6aa8ea; corresponding test additions absent.",
+        "All nontrivial added FX_STRIP21/CLOTH_LIGHT_ABI_FIX runtime lines present; geometry/UV headers and runtime tests exact current blobs; fef9faf93 and8a2a15cbb ancestors."
+      ],
+      "queue_key": "texconv22-consumer-binding-corrections",
+      "confidence": "high",
+      "unlanded_residue": [
+        "Separate bounded tools/test port only; no wholesale branch merge"
+      ],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "0881a103e1e5d1e13669d4197525a1da4d878ac6",
+        "exact_current_blobs": 9,
+        "missing_current_paths": [
+          "port/dreamcast/tests/test_mipmap_effect_models.py",
+          "port/dreamcast/tools/d367/mipmap21/canonical-generic-qualification-20261021.json",
+          "port/dreamcast/tools/d367/mipmap21/cloth-source-contract-20261021.json",
+          "port/dreamcast/tools/d367/mipmap21/effect-model-mask-qualification-20261021.json",
+          "port/dreamcast/tools/d367/mipmap21/effect_model_candidate.py",
+          "port/dreamcast/tools/d367/mipmap21/effect_model_consumers.py",
+          "port/dreamcast/tools/d367/mipmap21/recovered-fx-qualification-20261021.json",
+          "port/dreamcast/tools/d367/mipmap21/special-consumer-followups-20261021.json",
+          "port/dreamcast/tools/d367/texconv22/combine.py",
+          "port/dreamcast/tools/d367/texconv22/inv.py",
+          "port/dreamcast/tools/d367/texconv22/pal622.py",
+          "port/dreamcast/tools/d367/texconv22/repeat6.py"
+        ],
+        "evolved_current_paths": [
+          "port/dreamcast/game/effects30.mk",
+          "port/dreamcast/game/game30.mk",
+          "port/dreamcast/game/platform/include/native_effect_strip21.inc",
+          "port/dreamcast/game/platform/include/native_ui.h",
+          "port/dreamcast/game/platform/native_ui.cpp",
+          "port/dreamcast/tests/test_mipmap_effect_consumers.py",
+          "port/dreamcast/tests/test_mipmap_generic_effects.py",
+          "port/dreamcast/tools/d367/mipmap21/effect_consumers.py",
+          "port/dreamcast/tools/d367/mipmap21/generic_effect_candidate.py",
+          "src/game/cloth.cpp",
+          "src/game/esp.cpp",
+          "src/game/esp_sub.cpp"
+        ]
+      },
+      "unique_commits": [
+        "e42104f6e texconv22: exact-base repeat for 6 compact missing-profile alpha keys, PAL622 use sort, add-on pack composer",
+        "0584b4ef4 Bind r104 cloth source grid and unresolved alpha pass contract",
+        "87833f42f Guard SH4 cloth light pointer ABI correction with exact source controls",
+        "5ceff070b Qualify guarded strip source dispatch packets and disabled SH4 objects",
+        "34ec20df8 WIP: restore source strip callbacks through guarded native quad queue",
+        "1b9c98344 Qualify actual masked Efm materials before original VQ mip conversion",
+        "bfb6e55b5 WIP: preserve bounded Efm model material binding audit",
+        "d7e207599 Separate effect model references and record special geometry consumers",
+        "8de6aa8ea Compose exact shared-palette generic effect mip chains",
+        "c6cefb7b0 Record exact source recovery and seventy qualified effect mip chains"
+      ]
+    },
+    {
+      "branch": "origin/wip/texsrc22",
+      "tip_sha": "bfce2800cbd726b18fbb416ee39d64c07ab00c23",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "still needs landing",
+      "reason": "PR53 portable classifier/converter correctness source is absent from integration despite merge on its WIP branch. Land the conservative tools/test unit separately; it grants no GC ancestry, pruning, texture conversion or recipe permission.",
+      "evidence": [
+        "0a905de5b introduces corrected classify.py/portable convert.py/test_classify.py/test_convert.py and annotated resume ledgers; all absent at base.",
+        "TEXSRC22-RESUMED: preserve all origins/HUD aliases and resident evidence; shared Ganado unknown stays held; source lists not truncated; exact pack/index and gate selection validated.",
+        "CODEX-UPDATE:20-22 assigns PR53 successor to mipmap23 and retains all41 originals; current mipmap23 hold policy agrees but does not supply these missing tool files."
+      ],
+      "queue_key": "texsrc22-portable-classifier-converter",
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "8a2a15cbb66413c1dee41884c8e9dac924a24d16",
+        "exact_current_blobs": 0,
+        "missing_current_paths": [
+          "TEXSRC22-RESUMED.md",
+          "port/dreamcast/tools/d367/texclass22/classify.py",
+          "port/dreamcast/tools/d367/texclass22/convert.py",
+          "port/dreamcast/tools/d367/texclass22/scenes/r100.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r101.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r102.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r103.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r104.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r105.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r106.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r107.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r108.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r109.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r10a.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r10b.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r10c.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r10e.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r10f.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r111.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r112.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r113.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r117.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r118.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r119.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r11a.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r11b.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r11c.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r11d.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r11e.txt",
+          "port/dreamcast/tools/d367/texclass22/scenes/r11f.txt",
+          "port/dreamcast/tools/d367/texclass22/summary-route.json",
+          "port/dreamcast/tools/d367/texsrc22/classify.py",
+          "port/dreamcast/tools/d367/texsrc22/convert.py",
+          "port/dreamcast/tools/d367/texsrc22/keys1035.txt",
+          "port/dreamcast/tools/d367/texsrc22/resume-review.json",
+          "port/dreamcast/tools/d367/texsrc22/resume-review.tsv",
+          "port/dreamcast/tools/d367/texsrc22/resume-validation.json",
+          "port/dreamcast/tools/d367/texsrc22/scan.py",
+          "port/dreamcast/tools/d367/texsrc22/test_classify.py",
+          "port/dreamcast/tools/d367/texsrc22/test_convert.py",
+          "port/dreamcast/tools/d367/texsrc22/texsrc22-summary.json",
+          "port/dreamcast/tools/d367/texsrc22/texsrc22.tsv",
+          "port/dreamcast/tools/d367/texsrc22/textrefs.py",
+          "port/dreamcast/tools/d367/texusage22/scenes/ambush.txt",
+          "port/dreamcast/tools/d367/texusage22/scenes/cross.txt",
+          "port/dreamcast/tools/d367/texusage22/scenes/crossfol.txt",
+          "port/dreamcast/tools/d367/texusage22/scenes/farm.txt",
+          "port/dreamcast/tools/d367/texusage22/scenes/shoot.txt",
+          "port/dreamcast/tools/d367/texusage22/scenes/woods.txt",
+          "port/dreamcast/tools/d367/texusage22/texusage.py"
+        ],
+        "evolved_current_paths": [
+          "port/dreamcast/game/platform/include/ta_material_diag.h",
+          "port/dreamcast/game/platform/native_ui.cpp",
+          "port/dreamcast/game/tahash.mk"
+        ]
+      },
+      "unique_commits": [
+        "bfce2800c Merge pull request #53 from lamb2k/codex/texsrc22-resume-20261022",
+        "0a905de5b texsrc22: preserve consumer evidence and prepare reviewed mip candidates",
+        "00ec40a46 texsrc22: parked; first-pass classification TSV/summary (pre em-label refinement)",
+        "2a74f261a texsrc22: static key->source scan (GC disc 1 TPL observer), text refs, source-based classifier (WIP)",
+        "fa98a78e6 texclass22: route classification summary (paused)",
+        "677be6023 texclass22: route scenes (27 rooms), classify.py (unclassified keys by measured use), convert.py (add-on mip chains)",
+        "4212c167a texclass22: base = t15/int + texusage22 telemetry (TEX_USAGE_LOG)"
+      ]
+    },
+    {
+      "branch": "origin/wip/texusage22",
+      "tip_sha": "e35b6fc95242719bc2851172d74b4c1fe027d304",
+      "base_sha": "9f6a25c61df6ad635c46e837b2371fc8b523ada6",
+      "category": "evidence only",
+      "reason": "Old texture-usage logger/ranker and six scenes are retained measurement evidence; no current request requires reintroducing this old telemetry into native_ui.",
+      "evidence": [
+        "Tip e35b6fc95 adds scene/ranking tooling;3ad433d87 adds default0 TEX_USAGE_LOG hooks.",
+        "Seven tool/scene paths and runtime hook marker absent at base; absence explicitly recorded, not mislabelled landed.",
+        "TEXUSAGE22.md: old120-scene windows measure submitted footprint rather than visible pixels/minification; source ancestry is not proven."
+      ],
+      "queue_key": null,
+      "confidence": "high",
+      "unlanded_residue": [],
+      "source_checks": {
+        "tip_matches_frozen_inventory": true,
+        "tip_ancestor_of_base": false,
+        "merge_base": "f257fe86e4f47367ed2eb8769dd2b1f454157018",
+        "exact_current_blobs": 0,
+        "missing_current_paths": [
+          "port/dreamcast/tools/d367/texusage22/scenes/ambush.txt",
+          "port/dreamcast/tools/d367/texusage22/scenes/cross.txt",
+          "port/dreamcast/tools/d367/texusage22/scenes/crossfol.txt",
+          "port/dreamcast/tools/d367/texusage22/scenes/farm.txt",
+          "port/dreamcast/tools/d367/texusage22/scenes/shoot.txt",
+          "port/dreamcast/tools/d367/texusage22/scenes/woods.txt",
+          "port/dreamcast/tools/d367/texusage22/texusage.py"
+        ],
+        "evolved_current_paths": [
+          "port/dreamcast/game/platform/include/ta_material_diag.h",
+          "port/dreamcast/game/platform/native_ui.cpp",
+          "port/dreamcast/game/tahash.mk"
+        ]
+      },
+      "unique_commits": [
+        "e35b6fc95 texusage22: 120-scene windows, ranking tool, foliage-full scene",
+        "3ad433d87 texusage22: TEX_USAGE_LOG=1 per-texture usage telemetry (default 0 = no code)"
+      ]
+    }
+  ],
+  "unresolved_claims": [
+    "No fresh execution or independent code-quality clearance of proposed tools ports; queue gates listed above are prerequisites.",
+    "foliagemip22 and miprecover22 optional generators remain absent and preserved as evidence; medium-confidence disposition follows shipped-mipmap baseline closure/current holds, not proof their code landed.",
+    "chardraw19/rr-src evolved equivalents are medium confidence; original diagnostic/profile evidence is not reactivated."
+  ],
+  "source_audit_sha256": "8a787bc234c57002be6e610342f1505cc4af7996e59df791032250069d280d43",
+  "hunk_audit_sha256": "3a299345741ff4cfcdde7c10ef9ede953bcc1e12a03f2b305e8fd109922f4b53",
+  "repository_status_at_close": ""
+}
