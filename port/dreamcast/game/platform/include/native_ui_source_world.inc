@@ -83,10 +83,35 @@ void sourceWorldDiagBind(const Key& key) {
 #endif
 #if RE4DC_PS2_WORLD_SOURCE_TEX_PREP
 Key sourceWorldPreparedKey{};unsigned sourceWorldPreparedFrame,sourceWorldAcquired;
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+// One source preparation ticket, one captured diagnostic. No ring/heap or
+// alternate Acquired value: live bookkeeping remains exactly 0 or 1.
+struct SourceWorldAcquireDiagnostic { Key key{};unsigned frame=0;bool pending=false; } sourceWorldAcquireDiagnostic;
+bool sourceWorldDiagnosticSqHeld=false;
+bool sourceWorldTextureFlushAcquired() {
+    // direct_open alone is insufficient: a logical end can retain batch SQ.
+    if(direct_open || sourceWorldDiagnosticSqHeld)return false;
+    auto& d=sourceWorldAcquireDiagnostic;
+    if(d.pending){
+        const Key key=d.key;const unsigned old_frame=d.frame;d.pending=false;
+        re4dc_log("PS2SOURCE_TEX_ACQUIRE f=%u key=%08x-%08x\n",old_frame,key.crc,key.fnv);
+    }
+    return true;
+}
+#endif
 void sourceWorldTextureAcquired(const Key& key) {
     if(frame!=sourceWorldPreparedFrame || !(key==sourceWorldPreparedKey) || sourceWorldAcquired)return;
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+    // A second preparation cannot overwrite an undelivered old event. Normal
+    // prepare flushes before replacing its ticket; unsupported reentry refuses.
+    if(sourceWorldAcquireDiagnostic.pending)return;
+#endif
     sourceWorldAcquired=1;
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+    sourceWorldAcquireDiagnostic={key,frame,true};
+#else
     re4dc_log("PS2SOURCE_TEX_ACQUIRE f=%u key=%08x-%08x\n",frame,key.crc,key.fnv);
+#endif
 }
 #endif
 #if (defined(RE4DC_PS2_WORLD_SOURCE_TEX_MIP) && RE4DC_PS2_WORLD_SOURCE_TEX_MIP) || defined(RE4DC_CAST_MIPMAP) // host fixture (mipmap23 test)
@@ -162,6 +187,12 @@ void sourceWorldTransitionPin() {
 }
 #endif
 void sourceWorldTexturePrepare() {
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+    // Sole normal caller is frame begin, after the previous synchronous draw
+    // and SubmitScope have retired. Preserve the live ticket on unsupported
+    // reentry; this is NOT a new source-admission or manager-revocation API.
+    if(!sourceWorldTextureFlushAcquired())return;
+#endif
 #if RE4DC_PS2_WORLD_PREFLIGHT_DIAG
     re4dc_source_world_diag_begin(frame);sourceWorldDiagSnapshot("preflight");
 #endif

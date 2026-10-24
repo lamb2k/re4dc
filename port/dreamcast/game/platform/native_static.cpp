@@ -99,6 +99,30 @@
 // that object's creation serial; nothing else is registered. Packets, headers,
 // texture pins, pass selection and translucent deferral are the existing
 // native_ui frame owner's (re4dc_model_packet_*/re4dc_model_defer_part).
+// PVS_BATCH_COMPOSITION_GUARD
+#ifndef RE4DC_PS2_PVS_BATCH_COMPOSE
+#define RE4DC_PS2_PVS_BATCH_COMPOSE 0
+#endif
+#if RE4DC_PS2_PVS_BATCH_COMPOSE != 0 && RE4DC_PS2_PVS_BATCH_COMPOSE != 1
+#error PS2_PVS_BATCH_COMPOSE must be 0 or 1
+#endif
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+#if RE4DC_PS2_PVS != 1 || RE4DC_SCENERY_SUBMIT_BATCH != 1 || RE4DC_TA_DIRECT != 1 || RE4DC_PS2_WORLD_HDR_CACHE != 1 || RE4DC_PVR_STREAM != 1 || RE4DC_D349_RENDERER_STACK != 1 || RE4DC_PS2_WORLD_SOURCE_OWNER != 1 || RE4DC_PS2_WORLD_SOURCE_TEX_PREP != 1
+#error PS2_PVS_BATCH_COMPOSE needs the qualified streaming source/direct path
+#endif
+#if !defined(RE4DC_PS2_PVS_DEFAULT) || RE4DC_PS2_PVS_DEFAULT != 0
+#error PS2_PVS_BATCH_COMPOSE needs explicit PS2_PVS_DEFAULT=0
+#endif
+#if RE4DC_WORLD_SCRATCH || RE4DC_TA_GUARD || RE4DC_PS2_WORLD_TRANSITION_OWNER || RE4DC_PS2_WORLD_R11F_OWNER || RE4DC_SCENERY_PIECE_STATE || RE4DC_SCENERY_DEDUP || RE4DC_SCENERY_CONE || RE4DC_CPU_BACKFACE || RE4DC_TA_MATERIAL_DIAG || RE4DC_WORLD_HOLE_DIAG || RE4DC_PS2_WORLD_PREFLIGHT_DIAG
+#error PS2_PVS_BATCH_COMPOSE has an unqualified owner, scratch or diagnostic path
+#endif
+#endif
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+#if RE4DC_SCENERY_CHUNK != 1 || RE4DC_SCENERY_SELECT_ONLY != 1 || RE4DC_SCENERY_REPLAY_LEAN != 1 || RE4DC_MESH_DIRECT != 1 || RE4DC_MESH_FASTPATH != 1 || RE4DC_MESH_VP_SCHED != 1 || RE4DC_HW_LEAN != 1 || RE4DC_PS2_STRIP_GROUPS != 1 || RE4DC_PS2_WORLD_MESH != 1
+#error PS2_PVS_BATCH_COMPOSE needs the qualified static selection/replay path
+#endif
+#endif
+// PVS_BATCH_COMPOSITION_GUARD_END
 #include <kos.h>
 #include <fcntl.h>
 #include <malloc.h>
@@ -6488,7 +6512,13 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
             e.end_direct();
 #if RE4DC_SCENERY_SUBMIT_BATCH
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+            // Logical completion/accounting precedes release. Only actual
+            // source witnesses drain; opaque_ready remains outside SQ.
+            if(result<=0 || e.pvs_pending[2])re4dc_ps2_world_batch_close(&submit_scope.batch);
+#else
             if(result<=0)re4dc_ps2_world_batch_close(&submit_scope.batch);
+#endif
 #endif
 #if RE4DC_PS2_PVS
             e.pvs_finish(result>0);
@@ -6525,7 +6555,13 @@ int ps2_pass(unsigned pass,float zfar){
     const auto& pk=ps2w.package;
     for(unsigned i=0;i<ps2w.nplacements;++i){
 #if RE4DC_PS2_PVS
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+        // Qualification mode ONLY: internal pvs::cur still authenticates source
+        // observation, but never supplies legacy target-hide/selector authority.
+        const std::uint8_t* const pvs_cur=nullptr;
+#else
         const std::uint8_t* const pvs_cur=pvs::can_cut(i)?pvs::cur:nullptr;
+#endif
 #endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
         if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();++c.aborts;return -1;}
