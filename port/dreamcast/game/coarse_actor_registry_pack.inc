@@ -40,6 +40,16 @@ struct PackState {
 #endif
 };
 PackState pack{};
+#if RE4DC_GC_ASSET_GATE
+re4dc_gcasset::PayloadProof gcasset_registry[2];
+void gcasset_registry_capture(unsigned index,const void* base,unsigned bytes){
+    auto& proof=gcasset_registry[index];
+    re4dc_gcasset::payload_retire(proof);
+    if(re4dc_gcasset::ensure_disc_catalog())
+        (void)re4dc_gcasset::payload_capture(proof,&proof,base,bytes);
+}
+void gcasset_registry_retire(){for(auto& proof:gcasset_registry)re4dc_gcasset::payload_retire(proof);}
+#endif
 void registry_view_clear() {
     registry=RegistryView{};registry_mask_ready=false;
 #if RE4DC_NMR_MASK
@@ -68,6 +78,9 @@ void pack_refuse(unsigned room,PackWhy why,unsigned detail) {
 }
 
 extern "C" void re4dc_registry_room_leave() {
+#if RE4DC_GC_ASSET_GATE
+    gcasset_registry_retire();
+#endif
     if(!pack.cell)return;
     const unsigned room=pack.room,generation=pack.generation;
     const bool owned=actor_owned_live;
@@ -138,6 +151,9 @@ extern "C" void re4dc_registry_room_enter(unsigned room) {
     unsigned generation=0,cells=0,cell_bytes=0,stale=0,refused=0;
     re4dc_room4_state(&generation,&cells,&cell_bytes,&stale,&refused);
     if(why==kPwNone) {
+#if RE4DC_GC_ASSET_GATE
+        gcasset_registry_capture(0,base,size);
+#endif
         // The target preflight of every unique geometry (through a chunk that references it: all do), then the
         // view is staged for every descriptor's skin stream.
         const unsigned nd=pu32(base,kPackHeader+kDesc*16+12),nc=pu32(base,kPackHeader+kRef*16+12),
@@ -183,6 +199,9 @@ extern "C" void re4dc_registry_room_enter(unsigned room) {
             return;
         }
     }
+#if RE4DC_GC_ASSET_GATE
+    gcasset_registry_retire();
+#endif
     re4dc_static_free(cell);
     pack_refuse(room,why,detail);
 }
@@ -272,6 +291,10 @@ extern "C" void re4dc_registry_room_enter(unsigned room) {
     unsigned generation=0,cells=0,cell_bytes=0,stale=0,refused=0;
     re4dc_room4_state(&generation,&cells,&cell_bytes,&stale,&refused);
     unsigned geometries=0;
+#if RE4DC_GC_ASSET_GATE
+    gcasset_registry_capture(0,base,a.size);
+    if(has_b)gcasset_registry_capture(1,base2,b.size);
+#endif
     why=pack_preflight(base,detail,geometries);
     if(why==kPwNone && has_b){why=pack_preflight(base2,detail,geometries);if(why!=kPwNone)detail+=0x10000u;}
     const unsigned nd=pb.desc+(has_b?pack_count(base2,kDesc):0u),nc=pb.ref+(has_b?pack_count(base2,kRef):0u),
@@ -307,6 +330,9 @@ extern "C" void re4dc_registry_room_enter(unsigned room) {
             pb.geom,pb.tex,pack.partners);
         return;
     }
+#if RE4DC_GC_ASSET_GATE
+    gcasset_registry_retire();
+#endif
     if(cell2)re4dc_static_free(cell2);
     re4dc_static_free(cell);
     pack_refuse(room,why,detail);

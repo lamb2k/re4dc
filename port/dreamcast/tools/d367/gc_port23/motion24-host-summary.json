@@ -1,0 +1,21 @@
+{
+  "source": "5e6b7d8c0f76e7431f1a7787459faa41fb0b507c",
+  "runtime": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+  "discovered": 118,
+  "passed": 117,
+  "skipped": 1,
+  "python_seconds": 98.726,
+  "wrapper_seconds": 100.98381463601254,
+  "wrapper_exit": 0,
+  "cpp_core_member_cursor_default_off": "PASS",
+  "focused_motion_methods": 10,
+  "compiled_mutants_rejected": 13,
+  "projection_mutants_rejected": 3,
+  "log_sha256": "9b6a2ca9f12673be68b767a3ac01ed0882943c46ee79e2c6e669250382bc83e9",
+  "manifest_sha256": "a0fed4eae71756fba7c59f1e7b0ccaca8dac6bb6167ce219fa363fffa4584687",
+  "target": false,
+  "guest": false,
+  "coverage": false,
+  "provenance": false,
+  "limits": "Renderer-thread-only UNKNOWN accepted records; raw/shadow/alternate routes partial; Required/wired/Motion refusal unchanged. fce original failure preserved."
+}

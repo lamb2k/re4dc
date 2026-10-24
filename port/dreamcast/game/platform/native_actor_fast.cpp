@@ -1,3 +1,5 @@
+#include "include/gc_asset_motion_unknown.h"
+#include "include/gc_asset_actor.h"
 // D367 actors30: meshlet actor path (NATIVE_ACTOR=1 NATIVE_ACTOR_FAST=1).
 //
 // Same contract as native_actor.cpp (the source selects, animates, lights and
@@ -1739,6 +1741,20 @@ struct Frame {  // per (info, matrices) per frame
 constexpr unsigned kFrames = 4;
 Frame frames[kFrames];
 unsigned frame_victim = 0;
+#if RE4DC_GC_ASSET_GATE
+// Geometry origin only; this does not qualify pose/palette/Motion history.
+struct GcAssetFrameUse { unsigned serial=0,mask=0;re4dc_gcasset::PayloadProof* payload=nullptr; };
+GcAssetFrameUse gcasset_frame_uses[kFrames]{};
+static_assert(kFrames==4 && (sizeof(void*)!=4 || sizeof(gcasset_frame_uses)==48),"price fixed geometry receipts");
+void gcasset_frame_stamp(Frame& f){
+    const auto& use=re4dc_gcasset::source_use;
+    gcasset_frame_uses[&f-frames]={use.serial,use.mask,use.payload};
+}
+void gcasset_frame_check(Frame& f){
+    const auto& saved=gcasset_frame_uses[&f-frames];auto& use=re4dc_gcasset::source_use;
+    if(!saved.serial || saved.serial!=use.serial || saved.mask!=use.mask || saved.payload!=use.payload){use.serial=0;use.payload=nullptr;}
+}
+#endif
 
 bool same_words(const float* a, const float* b, unsigned n) {
     const u32* x = reinterpret_cast<const u32*>(a); const u32* y = reinterpret_cast<const u32*>(b);
@@ -1793,10 +1809,16 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
             same_words(f.modelview, p.modelview, 12) && same_words(f.projection, p.projection, 7) &&
             same_words(f.viewport, p.viewport, 6)) {
             // Mode is a function of (info, positions) within a frame.
+#if RE4DC_GC_ASSET_GATE
+            gcasset_frame_check(f);
+#endif
             return &f;
         }
     Frame& f = frames[frame_victim]; frame_victim = (frame_victim + 1) % kFrames;
     f = Frame{};
+#if RE4DC_GC_ASSET_GATE
+    gcasset_frame_stamp(f);
+#endif
     f.info = p.info; f.frame = frame_serial;
     std::memcpy(f.modelview, p.modelview, sizeof(f.modelview));
     std::memcpy(f.projection, p.projection, sizeof(f.projection));
@@ -4542,6 +4564,9 @@ BakeUse bake_prepare(Part& e, const Lights& L, const BlobHeader& b, unsigned rs,
         }
     }
     Re4dcActorStreamMutation mutation(&b,e.p.stream_bytes);
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+    re4dc_gcasset::HandDerivationScope gcasset_mutation(&b,e.p.stream_bytes);
+#endif
     // Rebake: light every level-0 record into its colour field.
     const auto* table = reinterpret_cast<const MeshletInfo*>(base + sizeof(BlobHeader));
     u16* records = reinterpret_cast<u16*>(base + b.rec4 * 4U);
@@ -4561,6 +4586,9 @@ BakeUse bake_prepare(Part& e, const Lights& L, const BlobHeader& b, unsigned rs,
     std::memcpy(k.dir, &L.dir[0][0], sizeof(k.dir));
     std::memcpy(k.color, L.color, sizeof(k.color));
     ++stats.bake_builds;
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+    gcasset_mutation.complete();
+#endif
     return kBakeCopy;
 }
 
@@ -4893,6 +4921,9 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
             unsigned size = cp->bytes();
             if (prelit_candidate(p)) size = add_bake_field(out, size, p.stream_bytes);
             Re4dcActorStreamMutation mutation(p.stream,p.stream_bytes);
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+            re4dc_gcasset::HandDerivationScope gcasset_mutation(p.stream,p.stream_bytes);
+#endif
             std::memcpy(const_cast<u8*>(p.stream), out, size);
 #if RE4DC_ACTOR_BACKFACE_CONE
             if (cp->split()) abc_build(p, size, abc_class_of(p.model));
@@ -4906,6 +4937,9 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
                 }
             }
 #endif
+#endif
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+            gcasset_mutation.complete();
 #endif
             ++stats.conversions;
             if (cp->level_count()) ++stats.lod_parts;
@@ -4964,13 +4998,25 @@ void relod(const Re4dcModelPart& p, bool crowd_part) {
     // level 0, full detail.
     if (triangles > RE4DC_ACTOR_LOD_PART_MAX) {
         Re4dcActorStreamMutation mutation(p.stream, p.stream_bytes);
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+        re4dc_gcasset::HandDerivationScope gcasset_mutation(p.stream,p.stream_bytes);
+#endif
         stream[2] &= u8(~kLodPending);
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+        gcasset_mutation.complete();
+#endif
         return;
     }
 #endif
     if (triangles >= kLodMinTriangles && !lod_take(triangles)) return;
     Re4dcActorStreamMutation mutation(p.stream,p.stream_bytes);
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+    re4dc_gcasset::HandDerivationScope gcasset_mutation(p.stream,p.stream_bytes);
+#endif
     stream[2] &= u8(~kLodPending);
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+    if(triangles<kLodMinTriangles)gcasset_mutation.complete();
+#endif
     if (triangles < kLodMinTriangles) return;
     const unsigned stride = (p.flags & 0x80000000U) ? 8U : 6U;
     const unsigned rs = 3U + ((b.flags & kHasCi) ? 1U : 0U) + ((b.flags & kHasBake) ? 1U : 0U);
@@ -4986,6 +5032,9 @@ void relod(const Re4dcModelPart& p, bool crowd_part) {
 #endif
         ) & ~31U;
     u8* work = out && room ? static_cast<u8*>(scratch(room)) : nullptr;
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+    if(!work)gcasset_mutation.complete(); // the only owned write was the completed flag clear
+#endif
     if (!work) { ++stats.workspace_misses; workspace_top = mark; return; }
     u8* w = gx;
     auto put16 = [&](unsigned v) { *w++ = u8(v >> 8); *w++ = u8(v); };
@@ -5034,6 +5083,9 @@ void relod(const Re4dcModelPart& p, bool crowd_part) {
 #endif
         ++stats.lod_parts; ++stats.lod_rebuilds;
     }
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+    gcasset_mutation.complete();
+#endif
     workspace_top = mark;
 }
 }  // namespace
@@ -5508,6 +5560,9 @@ void abc_verify(Part& e, const Records& r, unsigned nv, const PosConst& k, bool 
 }  // namespace
 #endif
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::motion_model_reason());
+#endif
     ++stats.parts;
     PXF_BEGIN(part);
 #if defined(RE4DC_CALLPROF) && RE4DC_CALLPROF
@@ -5541,6 +5596,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
     if (!part || !qualifies(*part)) { ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
     const Re4dcModelPart& p = *part;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::ActorMainSourceScope gcasset_main_scope(&p);
+#endif
 #if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
     // Generic/source replay may occur after the transaction scope ended.
     // Re-establish its actual actor identity for every subsequent SQ burst.
@@ -6143,9 +6201,16 @@ Frame& one_frame(const Re4dcModelPart& p, float near_distance, float far_distanc
         if (f.frame == frame_serial && f.info == p.info &&
             same_words(f.modelview, p.modelview, 12) && same_words(f.projection, p.projection, 7) &&
             same_words(f.viewport, p.viewport, 6))
+#if RE4DC_GC_ASSET_GATE
+            {gcasset_frame_check(f);return f;}
+#else
             return f;
+#endif
     Frame& f = frames[frame_victim]; frame_victim = (frame_victim + 1) % kFrames;
     f = Frame{};
+#if RE4DC_GC_ASSET_GATE
+    gcasset_frame_stamp(f);
+#endif
     f.info = p.info; f.frame = frame_serial;
     std::memcpy(f.modelview, p.modelview, sizeof(f.modelview));
     std::memcpy(f.projection, p.projection, sizeof(f.projection));
@@ -6197,6 +6262,9 @@ Frame& one_frame(const Re4dcModelPart& p, float near_distance, float far_distanc
 }
 
 struct OneWindow {
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    unsigned motion_accounted=0; // local only; chunks own their accepted records
+#endif
     bool open = false;
     Re4dcModelDirect direct{};
     std::uint32_t* sq = nullptr;
@@ -6211,6 +6279,10 @@ struct OneWindow {
 };
 void one_close(OneWindow& w) {
     if (!w.open) return;
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    if(w.motion_accounted)re4dc_gcasset::motion_pending_accounted();
+    w.motion_accounted=0;
+#endif
     re4dc_model_direct_end(w.slots);
     w.open = false; w.slots = 0; w.primed = 0;
 }
@@ -6242,6 +6314,12 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     const SkinEntry* se = nullptr;
     Re4dcActorSource src{};
     if (!one_qualifies(p, se, src)) { ++stats.declined; return 0; }
+#endif
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::ActorSourceScope gcasset_actor_scope(&p,&src);
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::motion_model_reason());
+#endif
 #endif
     const float near_distance = p.projection[6] / (p.projection[5] - 1.0f);
     const float far_distance = p.projection[6] / p.projection[5];
@@ -6671,6 +6749,12 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         APROF_STOP(aprof_pack);
     }
     if (e.direct) {
+#if RE4DC_GC_ASSET_GATE
+        if(e.slots)gcasset_actor_scope.accepted();
+#endif
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+        if(e.slots){re4dc_gcasset::motion_accept_current(e.slots);w.motion_accounted=1;}
+#endif
         w.sq = e.sq; w.slots += e.slots; w.primed = e.primed;
         if (!ok) {
             re4dc_model_packet_abort();

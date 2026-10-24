@@ -1,3 +1,20 @@
+#include "include/gc_asset_motion_unknown.h"
+#include "include/gc_asset_gate.h"
+#include "include/gc_asset_packet_cursor.h"
+#include "include/gc_asset_members.h"
+#include "include/gc_asset_payloads.h"
+#include "include/gc_asset_audio.h"
+#include "include/gc_asset_movie.h"
+#include "include/gc_asset_lifecycle.h"
+#include "include/gc_asset_actor.h"
+#if RE4DC_GC_ASSET_GATE
+#include "include/native_io.h"
+#define RE4DC_GCA_ADOPT(...) ((void)(re4dc_gcasset::ensure_disc_catalog() && re4dc_gcasset::member_adopt(__VA_ARGS__)))
+#define RE4DC_GCA_RETIRE(...) re4dc_gcasset::member_retire(__VA_ARGS__)
+#else
+#define RE4DC_GCA_ADOPT(...) ((void)0)
+#define RE4DC_GCA_RETIRE(...) ((void)0)
+#endif
 #include "../world_scratch.h"
 #if RE4DC_WORLD_SCRATCH
 extern "C" unsigned re4dc_ps2_mesh_room();
@@ -368,6 +385,10 @@ static_assert(texpack_payload_retry::kMembers==texpack::kMaxCount,"payload retry
 #endif
 #endif
 struct Entry { re4dc::texture::Package package; Key key{}; unsigned frame=0; bool valid=false;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::CheckedAsset asset{};
+    unsigned asset_consumers=0;
+#endif
 #if RE4DC_D349_RENDERER_STACK
     pvr_poly_hdr_t model_header{};unsigned model_header_key=~0U;
 #endif
@@ -380,6 +401,113 @@ struct Source { Re4dcUiImage image{}; Key key{}; };
 // bytes from the optional source-key lookup cache, not the game heap/queue.
 // An uncached source descriptor still resolves through its existing owner table.
 Entry entries[kTextureCount]; Source sources[kSourceCount]; unsigned nsource;
+#if RE4DC_GC_ASSET_GATE
+bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,unsigned offset,unsigned bytes) {
+    entry.asset={};
+    if(!re4dc_gcasset::ensure_disc_catalog())return false;
+    file_t file;{Re4dcIoScope io;file=fs_open(path,O_RDONLY);}
+    if(file==FILEHND_INVALID)return false;
+    bool okay=true;
+    {Re4dcIoScope io;
+        if(!bytes) { const auto length=fs_total(file);okay=length>=0;bytes=okay?unsigned(length):0; }
+        if(okay)okay=fs_seek(file,offset,SEEK_SET)==off_t(offset);
+    }
+    const auto reader=[](void* context,void* target,unsigned count)->unsigned {
+        Re4dcIoScope io;
+        const file_t fd=*static_cast<const file_t*>(context);const ssize_t got=fs_read(fd,target,count);
+        return got<0?0:unsigned(got);
+    };
+    re4dc_gcasset::Digest digest{};
+    if(okay)okay=re4dc_gcasset::fingerprint_read(digest,reader,const_cast<file_t*>(&file),bytes);
+    {Re4dcIoScope io;fs_close(file);}
+    if(okay){char id[24];snprintf(id,sizeof id,"%08x-%08x",key.crc,key.fnv);entry.asset=re4dc_gcasset::bind_checked("texture",id,digest);okay=entry.asset.value!=0;}
+    return okay;
+}
+void gcasset_texture_emitted(Entry* entry,re4dc_gcasset::Consumer consumer=re4dc_gcasset::Texture) {
+    if(!entry || !entry->valid)return;
+    // Some direct world ends retain the SQ lock across parts. Latch only;
+    // formatting/hashing/logging happens later, after submission releases it.
+    entry->asset_consumers |= (1U<<consumer)|(1U<<re4dc_gcasset::Texture);
+}
+void gcasset_texture_flush(Entry& entry) {
+    const unsigned mask=entry.asset_consumers;entry.asset_consumers=0;
+    if(!mask)return;
+    for(unsigned i=0;i<re4dc_gcasset::ConsumerCount;++i)if(mask&(1U<<i))
+        re4dc_gcasset::emitted_checked(re4dc_gcasset::Consumer(i),entry.asset);
+}
+using GcAssetPacketState=re4dc_gcasset::PacketCursor;
+re4dc_gcasset::Consumer gcasset_packet_consumer=re4dc_gcasset::Texture;
+struct GcAssetGeneratedPacket {
+    const void* packet;unsigned bytes,address;re4dc_gcasset::Consumer consumer;bool verified,accepted=false;
+};
+GcAssetGeneratedPacket* gcasset_generated_packet;
+struct GcAssetGeneratedScope {
+    GcAssetGeneratedPacket* previous;re4dc_gcasset::Consumer old_consumer;
+    GcAssetGeneratedScope(GcAssetGeneratedPacket& packet):previous(gcasset_generated_packet),old_consumer(gcasset_packet_consumer){
+        if(previous){packet.verified=false;re4dc_gcasset::unresolved(packet.consumer,"nested-generated-packet");}
+        gcasset_generated_packet=&packet;gcasset_packet_consumer=packet.consumer;
+    }
+    ~GcAssetGeneratedScope(){gcasset_generated_packet=previous;gcasset_packet_consumer=old_consumer;}
+};
+GcAssetPacketState gcasset_packet_states[5];
+re4dc_gcasset::SourceUse gcasset_model_pending;
+void gcasset_model_prepare(const Re4dcModelPart* p) {
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::motion_prepare();
+#endif
+    gcasset_model_pending={};const auto& source=re4dc_gcasset::source_use;
+    if(source.payload || (p && p->model==source.model && p->info==source.info))gcasset_model_pending=source;
+}
+void gcasset_model_accept(const void* vertices=nullptr,unsigned count=0) {
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::motion_accept_pending(count); // also before quad geometry's early return
+#endif
+    if(re4dc_gcasset::payload_quads_accept(vertices,count))return;
+    const unsigned mask=gcasset_model_pending.mask?gcasset_model_pending.mask:1U<<re4dc_gcasset::SourceGeometry;
+    if(gcasset_model_pending.payload)re4dc_gcasset::payload_accept(gcasset_model_pending.payload,gcasset_model_pending.serial,mask);
+    else re4dc_gcasset::member_accept(gcasset_model_pending.serial,mask);
+}
+void gcasset_packet_reset(){for(auto& state:gcasset_packet_states){
+    if(state.continuation)re4dc_gcasset::unresolved(re4dc_gcasset::Texture,"incomplete-packet-continuation");
+    state={};
+}}
+void gcasset_packet_emitted(const void* packet,unsigned bytes,unsigned list,re4dc_gcasset::Consumer consumer) {
+    if(!bytes)return;
+    if(list>=5 || !packet || bytes%32){re4dc_gcasset::unresolved(consumer,"packet-shape");return;}
+    auto& state=gcasset_packet_states[list];
+    const auto* words=static_cast<const std::uint32_t*>(packet);
+    for(unsigned offset=0;offset<bytes;offset+=32) {
+        const auto* q=words+offset/4;
+        if(!state.feed(q,gcasset_generated_packet!=nullptr))continue;
+        unsigned matches=0;
+        for(auto& e:entries)if(e.valid && e.package.upload_complete()) {
+            const unsigned n=e.package.header().texture_count;
+            for(unsigned t=0;t<n;++t)if((unsigned(reinterpret_cast<std::uintptr_t>(e.package.pvr_texture(t)))&0x007fffffU)==state.address) {
+                gcasset_texture_emitted(&e,consumer);++matches;break;
+            }
+        }
+        if(matches!=1){
+            auto* generated=gcasset_generated_packet;
+            if(!matches && generated && generated->verified && generated->packet==packet && generated->bytes==bytes &&
+                generated->address==state.address && generated->consumer==consumer)generated->accepted=true;
+            else re4dc_gcasset::unresolved(consumer,matches?"ambiguous-texture-address":"unmapped-texture-address");
+        }
+    }
+}
+#define RE4DC_GCA_TEXTURE(...) gcasset_texture_emitted(__VA_ARGS__)
+#define RE4DC_GCA_PACKET(...) gcasset_packet_emitted(__VA_ARGS__)
+#define RE4DC_GCA_MODEL_PREPARE(...) gcasset_model_prepare(__VA_ARGS__)
+#define RE4DC_GCA_MODEL_ACCEPT() gcasset_model_accept()
+#define RE4DC_GCA_MODEL_PACKET_ACCEPT(vertices,count) gcasset_model_accept(vertices,count)
+#define RE4DC_GCA_MODEL_TEXTURE(entry) do { gcasset_texture_emitted(entry);if(gcasset_model_pending.mask&(1U<<re4dc_gcasset::Weapon))gcasset_texture_emitted(entry,re4dc_gcasset::Weapon); } while(0)
+#else
+#define RE4DC_GCA_TEXTURE(...) ((void)0)
+#define RE4DC_GCA_PACKET(...) ((void)0)
+#define RE4DC_GCA_MODEL_PREPARE(...) ((void)0)
+#define RE4DC_GCA_MODEL_ACCEPT() ((void)0)
+#define RE4DC_GCA_MODEL_PACKET_ACCEPT(...) ((void)0)
+#define RE4DC_GCA_MODEL_TEXTURE(...) ((void)0)
+#endif
 #if defined(RE4DC_FX_PS2_PACK) && RE4DC_FX_PS2_PACK
 // FX_PS2_PACK=1 (effects30.mk, test 12 fx lane; render only): a package that fx_ps2_pack.py built from the PS2 picture of
 // a GameCube effect texture (smaller than the source TPL image) says in its header flags how many of its texels the
@@ -631,7 +759,12 @@ struct DeferredLighting { DeferredLighting* next;const DeferredLightSet* lights;
 constexpr unsigned kViewWords=sizeof(Re4dcModelPart)/sizeof(unsigned);
 constexpr unsigned kViewMasks=(kViewWords+31)/32;
 static_assert(sizeof(Re4dcModelPart)%sizeof(unsigned)==0);
-struct DeferredPart { DeferredPart* next;DeferredLighting* lighting;unsigned changed[kViewMasks]; };
+struct DeferredPart { DeferredPart* next;DeferredLighting* lighting;unsigned changed[kViewMasks];
+#if RE4DC_GC_ASSET_GATE
+    unsigned asset_serial=0,asset_mask=0;
+    re4dc_gcasset::PayloadProof* asset_payload=nullptr;
+#endif
+};
 Re4dcModelPart* deferred_basis=nullptr;
 #if RE4DC_BRIDGE_LEAN
 // Same word-difference encoding. The 4-byte memcpy()s above were libcalls on
@@ -806,6 +939,13 @@ extern "C" int re4dc_vi_black();
 // it replaces the UI quads and is presented even when the source holds its
 // picture (System_flg 0x400) or requests VI black.
 pvr_ptr_t movie_texture; bool movie_picture; unsigned movie_width,movie_height;
+#if RE4DC_GC_ASSET_GATE
+struct GcAssetMovieProof {
+    const void* texture=nullptr;unsigned width=0,height=0,owner=0,upload=0,uploading=0;re4dc_gcasset::CheckedAsset asset{};
+} gcasset_movie;
+unsigned gcasset_movie_serial;
+void gcasset_movie_forget(){gcasset_movie={};}
+#endif
 bool movie_background;  // re4dc_ui_movie_background: the frame draws the picture behind its UI
 unsigned movie_upload_serial,movie_shown_serial,movie_presentations;
 #if RE4DC_CABIN_SOURCE
@@ -1980,6 +2120,9 @@ unsigned pvs23_scene_epoch=0; // observation identity only; no renderer ownershi
 extern "C" void re4dc_bf_room_update();   // native_static.cpp (BACKFACE_ROOMS, lane fix-hideout23)
 #endif
 void stream_open() { RE4DC_TAIL_GPU_SCOPE(open);
+#if RE4DC_GC_ASSET_GATE
+    gcasset_packet_reset();
+#endif
 #if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
     re4dc_bf_room_update();
 #endif
@@ -2166,6 +2309,7 @@ void stream_send(const void* data,unsigned bytes) {
 #endif
     re4dc::render::submit_pvr(data,bytes);
     sq_unlock();
+    RE4DC_GCA_PACKET(data,bytes,unsigned(stream_list),gcasset_packet_consumer);
 #if RE4DC_TA_GUARD
     guard_account(1,bytes/32-1); // every call is one header + its vertices
 #endif
@@ -3233,6 +3377,11 @@ void vram_room_frame(){
 }
 #endif
 void close_entry(Entry& entry) {
+#if RE4DC_GC_ASSET_GATE
+    gcasset_texture_flush(entry);
+    // A pending header cannot survive retirement/reuse of any texture entry.
+    gcasset_packet_reset();
+#endif
     struct OvlwAfter{~OvlwAfter(){OVLW("close");OVLG("close");}} ovlw_after;
 #if RE4DC_TEX_CHECK
     if(entry.valid)texchk::verify(entry,"close",true);
@@ -3472,6 +3621,19 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #define RE4DC_OPEN_PACKAGE() RE4DC_OPEN_PACKAGE_RAW()
 #endif
     bool ok=RE4DC_OPEN_PACKAGE();
+#if RE4DC_GC_ASSET_GATE
+    // Hash only the accepted member at immutable load. This is preparation,
+    // not an emission; cached/culled/preloaded Entries produce no GC-ASSET row.
+    if(ok) {
+#if RE4DC_TEX_PACK
+        const bool fingerprint_ok=gcasset_texture_fingerprint(*slot,key,in_pack?texpack::kPath:path,
+            in_pack?pack_offset:0,in_pack?pack_size:0);
+#else
+        const bool fingerprint_ok=gcasset_texture_fingerprint(*slot,key,path,0,0);
+#endif
+        if(!fingerprint_ok)re4dc_log("GC-ASSET-ERROR v=2 why=texture-fingerprint key=%08x-%08x\n",key.crc,key.fnv);
+    }
+#endif
     if(!ok) {RE4DC_PROFILE_COUNT(TextureOpenFailures,1);re4dc_log("native UI: package rejected: %s\n",slot->package.error());}
 #if RE4DC_UI_FRAG_RESERVE
     if(frag_held && key==frag_key){
@@ -4822,6 +4984,7 @@ extern "C" void re4dc_ui_room_preload_again(){
 }
 #endif
 extern "C" int re4dc_ui_bind_core(void* archive,unsigned bytes){
+    RE4DC_GCA_ADOPT(&core_identities,archive,bytes,false);
     sources_reset();
     const bool ok=core_identities.adopt(archive,bytes);
     if(ok)re4dc_model_bind_draw_owner(&core_identities,archive,bytes,0);
@@ -4830,6 +4993,7 @@ extern "C" int re4dc_ui_bind_core(void* archive,unsigned bytes){
     return ok;
 }
 extern "C" int re4dc_ui_bind_room(void* archive,unsigned bytes){
+    RE4DC_GCA_ADOPT(&room_identities,archive,bytes,true);
     sources_reset();identity_hits=0;
     const bool ok=room_identities.adopt(archive,bytes);
 #if RE4DC_D349_RENDERER_STACK
@@ -4846,15 +5010,17 @@ extern "C" int re4dc_ui_bind_room(void* archive,unsigned bytes){
 // Option/death UI remains resident across rooms. Borrow only its validated
 // identity table; source overwrite invalidates descriptor lookups first.
 extern "C" int re4dc_ui_bind_option(void* archive,unsigned bytes){
+    RE4DC_GCA_ADOPT(&option_identities,archive,bytes,false);
     sources_reset();bool ok=option_identities.adopt(archive,bytes);
     if(ok)re4dc_model_bind_draw_owner(&option_identities,archive,bytes,0);
     else re4dc_model_unbind_draw_owner(&option_identities);
     re4dc_log("native option identities: %s count=%u archive=%u\n",ok?"ok":"REJECTED",option_identities.count(),bytes);return ok;
 }
-extern "C" void re4dc_ui_unbind_option(){re4dc_model_unbind_draw_owner(&option_identities);option_identities.clear();sources_reset();}
+extern "C" void re4dc_ui_unbind_option(){RE4DC_GCA_RETIRE(&option_identities);re4dc_model_unbind_draw_owner(&option_identities);option_identities.clear();sources_reset();}
 // Player and weapon regions persist across room retirement when the source
 // retains them. Their explicit source release/overwrite boundaries clear views.
 extern "C" int re4dc_ui_bind_player(void* archive,unsigned bytes){
+    RE4DC_GCA_ADOPT(&player_identities,archive,bytes,false,re4dc_gcasset::PlayerOwner);
     sources_reset();bool ok=player_identities.adopt(archive,bytes);
     if(ok)re4dc_actor_archive_adopt(&player_identities,archive,bytes,1);
     else re4dc_actor_archive_retire(&player_identities);
@@ -4866,6 +5032,7 @@ extern "C" int re4dc_ui_bind_player(void* archive,unsigned bytes){
     re4dc_log("native player identities: %s count=%u archive=%u\n",ok?"ok":"REJECTED",player_identities.count(),bytes);return ok;
 }
 extern "C" int re4dc_ui_bind_weapon(void* archive,unsigned bytes){
+    RE4DC_GCA_ADOPT(&weapon_identities,archive,bytes,false,re4dc_gcasset::WeaponOwner);
     sources_reset();bool ok=weapon_identities.adopt(archive,bytes);
     if(ok)re4dc_actor_archive_adopt(&weapon_identities,archive,bytes,3);
     else re4dc_actor_archive_retire(&weapon_identities);
@@ -4876,13 +5043,14 @@ extern "C" int re4dc_ui_bind_weapon(void* archive,unsigned bytes){
     else re4dc_model_unbind_draw_owner(&weapon_identities);
     re4dc_log("native weapon identities: %s count=%u archive=%u\n",ok?"ok":"REJECTED",weapon_identities.count(),bytes);return ok;
 }
-extern "C" void re4dc_ui_unbind_player(){re4dc_actor_archive_retire(&player_identities);re4dc_model_unbind_draw_owner(&player_identities);player_identities.clear();sources_reset();}
-extern "C" void re4dc_ui_unbind_weapon(){re4dc_actor_archive_retire(&weapon_identities);re4dc_model_unbind_draw_owner(&weapon_identities);weapon_identities.clear();sources_reset();}
+extern "C" void re4dc_ui_unbind_player(){RE4DC_GCA_RETIRE(&player_identities);re4dc_actor_archive_retire(&player_identities);re4dc_model_unbind_draw_owner(&player_identities);player_identities.clear();sources_reset();}
+extern "C" void re4dc_ui_unbind_weapon(){RE4DC_GCA_RETIRE(&weapon_identities);re4dc_actor_archive_retire(&weapon_identities);re4dc_model_unbind_draw_owner(&weapon_identities);weapon_identities.clear();sources_reset();}
 #if defined(RE4DC_OT_PROF) && RE4DC_OT_PROF
 extern "C" unsigned re4dc_stream_model_bytes_now(){return stream_model_bytes;}
 extern "C" unsigned long long re4dc_otp_now_us(){return timer_us_gettime64();}
 #endif
 extern "C" int re4dc_ui_bind_enemy(void* archive,unsigned bytes){
+    RE4DC_GCA_ADOPT(archive,archive,bytes,true);
     re4dc::texture::SourceIdentityTable table;
     if(!table.adopt(archive,bytes))return 0;
     if(!table.count()) {
@@ -4903,6 +5071,7 @@ extern "C" int re4dc_ui_bind_enemy(void* archive,unsigned bytes){
     return 1;
 }
 extern "C" void re4dc_ui_unbind_enemy(void* archive){
+    RE4DC_GCA_RETIRE(archive);
     re4dc_actor_archive_retire(archive);
 #if RE4DC_D349_RENDERER_STACK
     if(deferred_first){reset_deferred();stream_aborted=true;}
@@ -4967,7 +5136,13 @@ extern "C" void re4dc_ui_retire_room(){
 #if RE4DC_TEX_CHECK
     texchk::room_end();
 #endif
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_retire();
+#endif
     re4dc_actor_archive_retire_transient();
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::member_retire_transient();
+#endif
 #if RE4DC_TEX_PACK
     texpack::room_loaded();   // after read errors: the next pack init attempt runs at once (texpack_index.inc)
 #endif
@@ -5040,10 +5215,37 @@ namespace {
 static_assert(RE4DC_NATIVE_MES_CELLS==64 || RE4DC_NATIVE_MES_CELLS==128,"NATIVE_MES_CELLS: 64 (256x256) or 128 (256x512)");
 // A 256x512 twiddled texture is two 256x256 squares one after the other; cell c: square c/64, cell c%64 in it.
 constexpr unsigned kGlyphCells=RE4DC_NATIVE_MES_CELLS,kGlyphCapacity=384,kGlyphBanks=8,kGlyphAtlasH=kGlyphCells/8*32,kGlyphAtlasBytes=256*kGlyphAtlasH/2;
-struct GlyphCell { const void* sheet; const void* clut; short u,v; unsigned char cw,ch,bank; bool valid; unsigned frame; };
-struct GlyphQuad { short x0,y0,x1,y1; unsigned char cell,cw,ch,bank; unsigned argb; }; // x/y in 1/4 px
+struct GlyphCell { const void* sheet; const void* clut; short u,v; unsigned char cw,ch,bank; bool valid; unsigned frame;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::CheckedAsset asset{};unsigned serial=0,palette_serial=0;
+#endif
+};
+struct GlyphQuad { short x0,y0,x1,y1; unsigned char cell,cw,ch,bank; unsigned argb;
+#if RE4DC_GC_ASSET_GATE
+    unsigned serial=0,palette_serial=0;
+#endif
+}; // x/y in 1/4 px
+#if !RE4DC_GC_ASSET_GATE
 static_assert(sizeof(GlyphQuad)==16);
-struct GlyphBank { const void* clut; unsigned sum; bool valid; };
+#endif
+struct GlyphBank { const void* clut; unsigned sum; bool valid;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::CheckedAsset asset{};unsigned serial=0;
+#endif
+};
+#if RE4DC_GC_ASSET_GATE
+unsigned glyph_asset_serial;
+re4dc_gcasset::CheckedAsset gcasset_glyph_payload(const char* kind,const void* payload,unsigned bytes){
+    if(!re4dc_gcasset::ensure_disc_catalog())return {};
+    const auto digest=re4dc_gcasset::fingerprint(payload,bytes);char id[41];
+    for(unsigned i=0;i<20;++i)snprintf(id+2*i,3,"%02x",digest.bytes[i]);
+    return re4dc_gcasset::bind_checked(kind,id,digest);
+}
+unsigned gcasset_glyph_version(){
+    if(glyph_asset_serial==0xffffffffU){re4dc_gcasset::unresolved(re4dc_gcasset::Font,"glyph-version-overflow");return 0;}
+    return ++glyph_asset_serial;
+}
+#endif
 pvr_ptr_t glyph_atlas;
 GlyphCell glyph_cells[kGlyphCells];
 GlyphQuad glyph_quads[kGlyphCapacity];
@@ -5104,8 +5306,17 @@ int glyph_bank(const void* clut,unsigned format,unsigned entries){
 #if RE4DC_PVR_MID_FENCE
     present_fence();   // PVR_MID_FENCE: no palette RAM write while a queued render runs
 #endif
+#if RE4DC_GC_ASSET_GATE
+    unsigned palette[16];for(unsigned i=0;i<16;++i)palette[i]=glyph_color((p[2*i]<<8)|p[2*i+1],format);
+    for(unsigned i=0;i<16;++i)pvr_set_pal_entry(unsigned(free_bank)*16+i,palette[i]);
+#else
     for(unsigned i=0;i<16;++i)pvr_set_pal_entry(unsigned(free_bank)*16+i,glyph_color((p[2*i]<<8)|p[2*i+1],format));
+#endif
     glyph_banks[free_bank]={clut,sum,true};
+#if RE4DC_GC_ASSET_GATE
+    glyph_banks[free_bank].asset=gcasset_glyph_payload("font-palette",palette,sizeof palette);
+    glyph_banks[free_bank].serial=gcasset_glyph_version();
+#endif
     re4dc_log("native mes: palette bank %d <- tlut %p format %u\n",free_bank,clut,format);
     return free_bank;
 }
@@ -5160,6 +5371,9 @@ int glyph_cell(const Re4dcUiGlyph& g){
 #endif
     pvr_txr_load(cell,(char*)glyph_atlas+square*32768U+((glyph_twx[cx]|glyph_twy[cy])<<9),sizeof(cell));
     c={g.sheet,g.clut,(short)g.u,(short)g.v,(unsigned char)g.cw,(unsigned char)g.ch,(unsigned char)bank,true,frame};
+#if RE4DC_GC_ASSET_GATE
+    c.asset=gcasset_glyph_payload("font-glyph",cell,sizeof cell);c.serial=gcasset_glyph_version();c.palette_serial=glyph_banks[bank].serial;
+#endif
     glyph_hint[h]=(unsigned char)(victim+1);
     return victim;
 }
@@ -5173,6 +5387,28 @@ const pvr_poly_hdr_t& glyph_header(unsigned bank){
     }
     return glyph_headers[bank];
 }
+#if RE4DC_GC_ASSET_GATE
+bool gcasset_glyph_matches(const GlyphQuad& glyph){
+#if RE4DC_TREE_IMPOSTOR && !RE4DC_TEX_PAL4_ALPHA
+    // Legacy package palettes do not reserve the glyph banks. That profile
+    // needs an actual shared-palette ownership bridge before it can qualify.
+    (void)glyph;return false;
+#else
+    if(glyph.cell>=kGlyphCells || glyph.bank>=kGlyphBanks)return false;
+    const auto& cell=glyph_cells[glyph.cell];const auto& bank=glyph_banks[glyph.bank];
+    return glyph.serial && glyph.palette_serial && cell.serial==glyph.serial && cell.bank==glyph.bank &&
+        cell.palette_serial==glyph.palette_serial && bank.serial==glyph.palette_serial;
+#endif
+}
+void gcasset_glyph_emitted(const GlyphQuad& glyph){
+    if(!gcasset_glyph_matches(glyph)){re4dc_gcasset::unresolved(re4dc_gcasset::Font,"glyph-cell-version");return;}
+    const auto tile=glyph_cells[glyph.cell].asset,palette=glyph_banks[glyph.bank].asset;
+    const re4dc_gcasset::Consumer consumers[]={re4dc_gcasset::Font,re4dc_gcasset::Texture,re4dc_gcasset::Ui};
+    for(const auto consumer:consumers){
+        re4dc_gcasset::emitted_checked(consumer,tile);re4dc_gcasset::emitted_checked(consumer,palette);
+    }
+}
+#endif
 // One run: a header when the palette bank changes, then a 4-vertex strip per glyph (a strip
 // after an end-of-strip vertex reuses the last header).
 void glyph_draw_run(unsigned first,unsigned count){
@@ -5181,12 +5417,27 @@ void glyph_draw_run(unsigned first,unsigned count){
 #endif
     alignas(32) pvr_vertex_t buf[1+4*16];
     unsigned n=0;int bank=-1;
+#if RE4DC_GC_ASSET_GATE
+    const GlyphQuad* asset_quads[16];unsigned asset_count=0;
+#endif
     auto flush=[&]{
         if(!n)return;
+#if RE4DC_GC_ASSET_GATE
+        bool verified=asset_count!=0;
+        for(unsigned i=0;i<asset_count;++i)verified=verified && gcasset_glyph_matches(*asset_quads[i]);
+        GcAssetGeneratedPacket packet{buf,unsigned(n*sizeof(pvr_vertex_t)),unsigned(reinterpret_cast<std::uintptr_t>(glyph_atlas))&0x007fffffU,re4dc_gcasset::Font,verified};
+        {GcAssetGeneratedScope asset_scope(packet);
+#endif
 #if RE4DC_PVR_STREAM
         stream_send(buf,n*sizeof(pvr_vertex_t));
 #else
         re4dc::render::submit_pvr(buf,n*sizeof(pvr_vertex_t));
+#endif
+#if RE4DC_GC_ASSET_GATE
+        }
+        if(packet.accepted && verified){for(unsigned i=0;i<asset_count;++i)gcasset_glyph_emitted(*asset_quads[i]);}
+        else re4dc_gcasset::unresolved(re4dc_gcasset::Font,"unqualified-glyph-packet");
+        asset_count=0;
 #endif
         n=0;
     };
@@ -5204,6 +5455,9 @@ void glyph_draw_run(unsigned first,unsigned count){
             p.flags=k==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;p.x=RE4DC_UI_X(x[k]);p.y=RE4DC_UI_Y(y[k]);p.z=layer;p.u=u[k];p.v=v[k];p.argb=g.argb;p.oargb=0;
         }
         ++glyph_drawn;
+#if RE4DC_GC_ASSET_GATE
+        asset_quads[asset_count++]=&g;
+#endif
     }
     flush();
 }
@@ -5237,6 +5491,9 @@ extern "C" void re4dc_ui_glyph(const Re4dcUiGlyph* g){
             g->u,g->v,g->cw,g->ch,int(g->x0),int(g->y0),int(g->x1),int(g->y1),g->argb);}
     glyph_quads[nglyph]={glyph_quarter(g->x0),glyph_quarter(g->y0),glyph_quarter(g->x1),glyph_quarter(g->y1),(unsigned char)cell,
         (unsigned char)g->cw,(unsigned char)g->ch,glyph_cells[cell].bank,g->argb};
+#if RE4DC_GC_ASSET_GATE
+    glyph_quads[nglyph].serial=glyph_cells[cell].serial;glyph_quads[nglyph].palette_serial=glyph_cells[cell].palette_serial;
+#endif
     if(extend)++quads[nquad-1].image.height;
     else {
         Re4dcUiQuad* q=new(quads+nquad) Re4dcUiQuad{};
@@ -5270,6 +5527,79 @@ extern "C" void re4dc_res_apply_pending();
 #endif
 #if RE4DC_VGA_SOFT
 extern "C" void re4dc_vga_soft_init(void); // vga_soft.cpp (VGA_SOFT): the vertical filter on a VGA box, once
+#endif
+#if RE4DC_GC_ASSET_GATE
+// GC_ASSET_LIFECYCLE_BEGIN
+namespace {
+unsigned gcasset_visit_serial;bool gcasset_started,gcasset_visit_live;
+enum GcAssetPhase { GcStartup,GcRoom,GcTransition };GcAssetPhase gcasset_phase;unsigned gcasset_current_room;
+constexpr unsigned gcasset_wired_mask(){
+    // Specialized static/coarse payload bridges are not integrated yet. Keep
+    // both affected consumer classes visibly incomplete, even in empty rooms.
+    unsigned mask=re4dc_gcasset::Required&~((1U<<re4dc_gcasset::SourceGeometry)|(1U<<re4dc_gcasset::Weapon)|(1U<<re4dc_gcasset::Motion));
+#if !RE4DC_NATIVE_MES
+    mask&=~(1U<<re4dc_gcasset::Font); // legacy font consumer is not qualified
+#endif
+    return mask;
+}
+void gcasset_flush(){
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::motion_unknown_flush();
+#endif
+    for(auto& entry:entries)gcasset_texture_flush(entry);
+    re4dc_gcasset::member_flush();re4dc_gcasset::payload_flush_all();
+    re4dc_gcasset::bank_pump();re4dc_gcasset::pump();
+}
+void gcasset_startup(){
+    if(gcasset_started)return;
+    gcasset_started=true;gcasset_phase=GcStartup;re4dc_gcasset_audio_admission(0);
+    re4dc_gcasset::ensure_disc_catalog();
+    re4dc_gcasset::begin_startup_closed(++gcasset_visit_serial,gcasset_wired_mask());
+#if defined(RE4DC_GC_ASSET_COARSE_LEON) && RE4DC_GC_ASSET_COARSE_LEON
+    re4dc_gcasset_actor_startup();
+#endif
+    gcasset_visit_live=true;re4dc_gcasset_audio_admission(1);
+}
+void gcasset_close_visit(unsigned audio){
+    gcasset_flush();gcasset_packet_reset();
+    // The actual renderer observer/flush paths are source-extracted in tests.
+    // Active sound coverage additionally requires the real audio_step flush.
+    for(auto consumer:{re4dc_gcasset::Texture,re4dc_gcasset::EffectPicture,re4dc_gcasset::Ui,re4dc_gcasset::Movie})
+        re4dc_gcasset::checked(consumer);
+#if RE4DC_NATIVE_MES
+    re4dc_gcasset::checked(re4dc_gcasset::Font);
+#endif
+    for(auto consumer:{re4dc_gcasset::SoundBank,re4dc_gcasset::SoundStream})
+        if(audio&(1U<<consumer))re4dc_gcasset::checked(consumer);
+    re4dc_gcasset::end(frame);gcasset_visit_live=false;
+}
+}
+extern "C" void re4dc_gcasset_finish(){
+    const unsigned audio=re4dc_gcasset_audio_admission(0);
+    if(gcasset_visit_live)gcasset_close_visit(audio);else re4dc_gcasset::pump();
+}
+extern "C" void re4dc_gcasset_retire(){
+    if(!gcasset_visit_live){re4dc_gcasset::pump();return;}
+    if(gcasset_phase==GcTransition){gcasset_flush();return;} // repeated accepted retirement is idempotent
+    if(gcasset_visit_serial==~0U){re4dc_gcasset::unresolved(re4dc_gcasset::Ui,"visit-serial-exhausted");re4dc_gcasset_finish();return;}
+    const unsigned next=gcasset_visit_serial+1;
+    const unsigned from=gcasset_phase==GcStartup?re4dc_gcasset::FromStartup:gcasset_current_room;
+    const auto why=gcasset_phase==GcStartup?re4dc_gcasset::InitialRoom:re4dc_gcasset::RoomRetire;
+    const unsigned audio=re4dc_gcasset_audio_handoff(0,next);
+    gcasset_close_visit(audio);gcasset_phase=GcTransition;gcasset_visit_serial=next;
+    re4dc_gcasset::begin_transition_handoff(next,gcasset_wired_mask(),from,why);gcasset_visit_live=true;
+}
+extern "C" void re4dc_gcasset_room_enter(unsigned room){
+    if(!gcasset_started){re4dc_gcasset::unresolved(re4dc_gcasset::Ui,"room-without-startup");gcasset_startup();}
+    if(gcasset_visit_serial==~0U){re4dc_gcasset::unresolved(re4dc_gcasset::Ui,"visit-serial-exhausted");re4dc_gcasset_finish();return;}
+    const unsigned next=gcasset_visit_serial+1;
+    if(!gcasset_visit_live || gcasset_phase!=GcTransition)re4dc_gcasset::unresolved(re4dc_gcasset::Ui,"room-enter-without-transition");
+    const unsigned audio=re4dc_gcasset_audio_handoff(room,next);
+    if(gcasset_visit_live)gcasset_close_visit(audio);
+    gcasset_phase=GcRoom;gcasset_current_room=room;gcasset_visit_serial=next;
+    re4dc_gcasset::begin_room_handoff(room,next,gcasset_wired_mask());gcasset_visit_live=true;
+}
+// GC_ASSET_LIFECYCLE_END
 #endif
 extern "C" void re4dc_ui_init(){
     if(ready)return;
@@ -5321,6 +5651,9 @@ extern "C" void re4dc_ui_init(){
     ta_vertex_bytes=re4dc_res_params(&params); // res_mode.cpp: the allocation for the largest available mode
 #endif
     ready=pvr_init(&params)==0;
+#if RE4DC_GC_ASSET_GATE
+    if(ready)gcasset_startup();
+#endif
 #if RE4DC_MV_SHADOWS
     if(ready)pvr_set_shadow_scale(true,float(RE4DC_MV_SCALE)/100.0f); // cheap shadow: receivers inside a volume at this intensity
 #endif
@@ -5869,7 +6202,7 @@ static void ui_draw_quad(unsigned i){
 #else
         re4dc::render::submit_pvr(commands,sizeof(commands));
 #endif
-        ++drawn;
+        RE4DC_GCA_TEXTURE(handles[i],re4dc_gcasset::Ui);++drawn;
 
 }
 static void ui_order_flush(){
@@ -5959,7 +6292,7 @@ extern "C" void re4dc_ui_present(){
 #else
         re4dc::render::submit_pvr(commands,sizeof(commands));
 #endif
-        ++drawn;
+        RE4DC_GCA_TEXTURE(handles[i],re4dc_gcasset::Ui);++drawn;
     }
 #endif
 #if RE4DC_DOOR_FREEZE && RE4DC_PVR_STREAM
@@ -6136,6 +6469,11 @@ extern "C" void re4dc_ui_present(){
 }
 
 extern "C" void re4dc_ui_end_frame(int present){
+#if RE4DC_GC_ASSET_GATE
+    struct GcAssetFrameFlush {
+        ~GcAssetFrameFlush(){gcasset_flush();}
+    } gcasset_frame_flush;
+#endif
 #if RE4DC_WORLD_SCRATCH
     Re4dcWorldScratchFrameEnd scratch_frame_end{&stream_aborted};
 #endif
@@ -6648,7 +6986,7 @@ if(!handle){
     if(re4dc_mv_receiver && list==PVR_LIST_OP_POLY){model_packets[model_used].flags|=PVR_TA_CMD_MODIFIER;++mv_receivers;}
 #endif
     RE4DC_GAD_HIT(handle->key);
-    model_pending=model_used+count;model_handle=handle;
+    RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
 #if RE4DC_MESH_TEXTURES
     if(model_texture){out->u_scale=1.0f;out->v_scale=1.0f;}
@@ -6673,6 +7011,7 @@ if(!handle){
     if(p->alpha_state&256)++model_alpha_vertex;else ++model_alpha_material;
     if(!(p->alpha_state&256) && (p->alpha_state&255)<255)++model_alpha_faded;
     if(model_parts<6)re4dc_log("native model DIAGNOSTIC source=%08x info=%08x part=%08x positions=%u stride=%u stream=%u flags=%08x material=%02x cull=%u\n",(unsigned)p->model,(unsigned)p->info,(unsigned)p->part,p->position_count,p->position_stride,p->stream_bytes,p->flags,p->material_flags,p->cull);
+    RE4DC_GCA_MODEL_PREPARE(p);
     return 1;
 }
 extern "C" void re4dc_model_packet_commit(unsigned count){
@@ -6682,6 +7021,8 @@ extern "C" void re4dc_model_packet_commit(unsigned count){
     // A loaded but wholly clipped/rolled-back part owns no submitted packets.
     // Keep its upload cached; pin only when this part actually commits a draw.
     if(count){
+        RE4DC_GCA_MODEL_TEXTURE(model_handle);
+        RE4DC_GCA_MODEL_PACKET_ACCEPT(model_packets+model_pending,count);
         model_handle->frame=frame;model_used=model_pending+count;
         if(model_used*32>model_peak)model_peak=model_used*32;
 #if RE4DC_PVR_STREAM
@@ -6819,6 +7160,10 @@ extern "C" void re4dc_model_direct_end(unsigned vertices){
     sq_unlock();direct_open=false;
 #endif
     if(vertices>32767)re4dc_missing("native direct part exceeded the store-queue window");
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::motion_accept_pending(vertices);
+#endif
+    if(vertices) { RE4DC_GCA_MODEL_TEXTURE(model_handle);RE4DC_GCA_MODEL_ACCEPT(); }
     ++direct_parts;direct_slots+=vertices;
 #if RE4DC_TA_GUARD
     guard_account(1,vertices);
@@ -6946,6 +7291,10 @@ extern "C" std::uint32_t* re4dc_leon_direct_switch(const Re4dcModelPart* p,const
        unsigned(stream_list)!=h->list || select_model_pass(p)!=stream_list || leon_header_key(p,h->list)!=h->key ||
        handle->model_header_key!=h->key || std::memcmp(h->words,&handle->model_header,32))return nullptr;
     // re4dc_model_direct_end(vertices)
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::motion_accept_pending(vertices);
+#endif
+    if(vertices) { RE4DC_GCA_MODEL_TEXTURE(model_handle);RE4DC_GCA_MODEL_ACCEPT(); }
     ++direct_parts;direct_slots+=vertices;
     frame_pvr_bytes+=vertices*32;stream_model_bytes+=vertices*32;
     if(stream_model_bytes>stream_peak_bytes)stream_peak_bytes=stream_model_bytes;
@@ -6964,11 +7313,12 @@ extern "C" std::uint32_t* re4dc_leon_direct_switch(const Re4dcModelPart* p,const
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
     RE4DC_GAD_HIT(handle->key);
-    model_pending=model_used+count;model_handle=handle;
+    RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
     if(h->scale_rebuild)++model_scale_rebuilds;
     if(p->alpha_state&256)++model_alpha_vertex;else ++model_alpha_material;
     if(!(p->alpha_state&256) && (p->alpha_state&255)<255)++model_alpha_faded;
     if(model_parts<6)re4dc_log("native model DIAGNOSTIC source=%08x info=%08x part=%08x positions=%u stride=%u stream=%u flags=%08x material=%02x cull=%u\n",(unsigned)p->model,(unsigned)p->info,(unsigned)p->part,p->position_count,p->position_stride,p->stream_bytes,p->flags,p->material_flags,p->cull);
+    RE4DC_GCA_MODEL_PREPARE(p);
     const auto* words=reinterpret_cast<const std::uint32_t*>(model_packets+model_used);
     for(unsigned i=0;i<8;++i)sq[i]=words[i];
 #if RE4DC_TA_HASH
@@ -7209,7 +7559,7 @@ extern "C" int re4dc_model_pt_begin(unsigned crc,unsigned fnv,unsigned width,uns
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
     RE4DC_GAD_HIT(handle->key);
-    model_pending=model_used+count;model_handle=handle;
+    RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
     out->u_scale=1.0f;out->v_scale=1.0f;
     return 1;
@@ -7282,6 +7632,10 @@ int defer_part(const Re4dcModelPart* p,const SourceLighting* source){
         for(unsigned i=0;i<words;++i)out[i]=values[i];
     } // else: the basis is this view, no differing words (changed[] stays zero)
     node->lighting=lighting;
+#if RE4DC_GC_ASSET_GATE
+    const auto& proof=re4dc_gcasset::source_use;
+    if(proof.model==view.model && proof.info==view.info){node->asset_serial=proof.serial;node->asset_mask=proof.mask;node->asset_payload=proof.payload;}
+#endif
     if(deferred_last)deferred_last->next=node;else deferred_first=node;
     deferred_last=node;++deferred_count;
     AVD_EVENT(Enqueue,node,&view,unsigned(uintptr_t(node->lighting)));
@@ -7358,6 +7712,10 @@ extern "C" int re4dc_model_defer_part(const Re4dcModelPart* p){
     auto* node=new(storage+*top) DeferredPart{};
     view_words(view,*deferred_basis,node->changed,reinterpret_cast<unsigned*>(node+1));
     node->lighting=lighting;
+#if RE4DC_GC_ASSET_GATE
+    const auto& proof=re4dc_gcasset::source_use;
+    if(proof.model==view.model && proof.info==view.info){node->asset_serial=proof.serial;node->asset_mask=proof.mask;node->asset_payload=proof.payload;}
+#endif
     if(deferred_last)deferred_last->next=node;else deferred_first=node;
     deferred_last=node;++deferred_count;
     AVD_EVENT(Enqueue,node,&view,unsigned(uintptr_t(node->lighting)));
@@ -7399,6 +7757,16 @@ struct FxHeaderKey{unsigned fmt,w,h;const void* txr;unsigned char src,dst,screen
 FxHeaderKey fx_hdr_key{~0U,0,0,nullptr,0,0,0};
 alignas(32) pvr_poly_hdr_t fx_hdr_cache;
 #endif
+#if RE4DC_GC_ASSET_GATE
+void gcasset_fx_stream_send(const void* packet,unsigned bytes){
+    const auto previous=gcasset_packet_consumer;
+    gcasset_packet_consumer=re4dc_gcasset::EffectPicture;
+    stream_send(packet,bytes);
+    gcasset_packet_consumer=previous;
+}
+#else
+#define gcasset_fx_stream_send stream_send
+#endif
 void fx_send(unsigned char* packet,bool screen){
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(4);
@@ -7411,7 +7779,7 @@ void fx_send(unsigned char* packet,bool screen){
 #else
     (void)screen;
 #endif
-    stream_send(packet,kSpritePacket);
+    gcasset_fx_stream_send(packet,kSpritePacket);
 }
 #if defined(RE4DC_EFFECT_HAZE_LEAN) && (RE4DC_EFFECT_HAZE_LEAN & 4)
 // EFFECT_HAZE_LEAN bit 4 (STUDY2 M2): a PS2 haze sprite (esp_sub.cpp sets pad 1) as a regular octagon inscribed in
@@ -7508,6 +7876,9 @@ extern "C" float re4dc_fog_gate_far() __attribute__((weak)); // ACTOR_FOG_GATE b
 #endif
 // EFFECT_SPRITES (effects30.mk): one effect sprite from EspCommonTrans. Never aborts the
 // frame: without texture, over the per-frame cap or without queue room the sprite is dropped.
+#if RE4DC_GC_ASSET_GATE
+#define stream_send gcasset_fx_stream_send
+#endif
 extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(4);
@@ -7714,6 +8085,9 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
 #endif
 #if defined(RE4DC_FLASHLIGHT_POOL) && RE4DC_FLASHLIGHT_POOL
 #include "include/native_flashlight_pool.inc"
+#endif
+#if RE4DC_GC_ASSET_GATE
+#undef stream_send
 #endif
 #if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
 // Esp19's source line becomes one untextured, colour-interpolated strip in
@@ -8247,7 +8621,7 @@ extern "C" int re4dc_ps2_world_packet(unsigned crc,unsigned fnv,unsigned width,u
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
     RE4DC_GAD_HIT(handle->key);
-    model_pending=model_used+count;model_handle=handle;
+    RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
     out->u_scale=out->v_scale=1;
     return 1;
@@ -8297,7 +8671,7 @@ extern "C" int re4dc_ps2_world_packet_cull(unsigned crc,unsigned fnv,unsigned wi
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
     RE4DC_GAD_HIT(handle->key);
-    model_pending=model_used+count;model_handle=handle;
+    RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
     out->u_scale=out->v_scale=1;
     return 1;
@@ -8429,11 +8803,20 @@ extern "C" int re4dc_pvs23_opaque_ready(const unsigned k[6],unsigned minimum_scr
        resident->package.header().texture_count!=1U)return 0;
     const auto& texture=resident->package.textures()[0];
     const auto address=resident->package.pvr_texture(0);
-    // Exact dimensions only: padded, dropped or adapted representations need
-    // their own qualification. RGB565 is intrinsically opaque.
-    if(!address || texture.width!=k[2] || texture.height!=k[3] ||
-       texture.format!=re4dc::texture::kRgb565 ||
+    // RGB565 is intrinsically opaque. Only the same authenticated rect21
+    // representation accepted by direct_begin may bridge logical dimensions.
+    if(!address || texture.format!=re4dc::texture::kRgb565 ||
        (texture.flags&(re4dc::texture::kAlpha|re4dc::texture::kBinaryAlpha|re4dc::texture::kTopDrop)))return 0;
+    if(texture.width!=k[2] || texture.height!=k[3]){
+#if RE4DC_WORLD_RECT21
+        float u=1.0f,v=1.0f;
+        if(!re4dc::rect21::adapt(k[0],k[1],k[2],k[3],
+            {texture.width,texture.height,texture.format,texture.flags,texture.payload,texture.data_size,
+             resident->package.header().payload_crc32},u,v,true))return 0;
+#else
+        return 0;
+#endif
+    }
     pvr_poly_cxt_t c;
     pvr_poly_cxt_txr(&c,PVR_LIST_OP_POLY,re4dc::texture::pvr_format(texture),
         RE4DC_TSP_W(texture),RE4DC_TSP_H(texture),address,PVR_FILTER_BILINEAR);
@@ -8700,7 +9083,7 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #endif
         std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
         RE4DC_GAD_HIT(handle->key);
-    model_pending=model_used+count;model_handle=handle;
+    RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
 #if RE4DC_SCENERY_SUBMIT_BATCH
         if(!stream_scene){re4dc_ps2_world_batch_close(batch);stream_open();}
 #else
@@ -8863,7 +9246,7 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
     RE4DC_GAD_HIT(handle->key);
-    model_pending=model_used+count;model_handle=handle;
+    RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
 #if RE4DC_SCENERY_SUBMIT_BATCH
     if(!stream_scene){re4dc_ps2_world_batch_close(batch);stream_open();}
 #else
@@ -9007,7 +9390,7 @@ extern "C" void re4dc_model_finish_source_draws(){
         if(deferred_first->lighting==kEffectQuad21Tag){
             const auto* packet=reinterpret_cast<const unsigned char*>(deferred_first)+kEffectQuad21Node;
             const unsigned bytes=deferred_first->changed[0];
-            deferred_first=deferred_first->next;stream_send(packet,bytes);continue;
+            deferred_first=deferred_first->next;gcasset_fx_stream_send(packet,bytes);continue;
         }
 #endif
         if(deferred_first->lighting==kSpriteTag){
@@ -9024,7 +9407,7 @@ extern "C" void re4dc_model_finish_source_draws(){
 #if RE4DC_TA_BIN_DIAG
             tabin::skip_fill=true;
 #endif
-            deferred_first=deferred_first->next;stream_send(packet,kFxOctPacket);
+            deferred_first=deferred_first->next;gcasset_fx_stream_send(packet,kFxOctPacket);
 #if RE4DC_TA_BIN_DIAG
             tabin::skip_fill=false;
 #endif
@@ -9040,7 +9423,7 @@ extern "C" void re4dc_model_finish_source_draws(){
 #if RE4DC_TA_BIN_DIAG
             tabin::skip_fill=true;
 #endif
-            deferred_first=deferred_first->next;stream_send(packet,kOctPacket);
+            deferred_first=deferred_first->next;gcasset_fx_stream_send(packet,kOctPacket);
 #if RE4DC_TA_BIN_DIAG
             tabin::skip_fill=false;
 #endif
@@ -9077,6 +9460,12 @@ extern "C" void re4dc_model_finish_source_draws(){
         // Copy the small view before I/O can yield. Retirement clears the queue
         // and aborts this same frame; it never frees an in-flight PVR texture.
         Re4dcModelPart view=restore_view(deferred_first);
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+        re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::MotionDelayedModel|re4dc_gcasset::MotionViewTrack);
+#endif
+#if RE4DC_GC_ASSET_GATE
+        re4dc_gcasset::ReplayScope gcasset_replay_scope(deferred_first->asset_serial,deferred_first->asset_mask,deferred_first->asset_payload);
+#endif
         AVD_EVENT(DrainModel,deferred_first,&view,0);
 #if RE4DC_ACTOR_GANADO_DEATH_FADE && RE4DC_ACTOR_TRANSACTION_DIAG
         if(actor_fade_queue_seen)re4dc_log("AFD_FIFO model ep=%u node=%p m=%p info=%p part=%p alpha=%08x\n",
@@ -9187,7 +9576,11 @@ extern "C" int re4dc_ui_movie_try_close(){
     if(present_failures)return 0;
 #endif
     movie_background=false;movie_picture=false;
-    if(movie_texture){pvr_mem_free(movie_texture);movie_texture=nullptr;
+    if(movie_texture){
+#if RE4DC_GC_ASSET_GATE
+        gcasset_movie_forget();
+#endif
+        pvr_mem_free(movie_texture);movie_texture=nullptr;
 #if RE4DC_TEX_RESIDENT
         re4dc_ui_vram_unclaim();
 #endif
@@ -9368,6 +9761,36 @@ extern "C" void re4dc_ui_movie_upload_rows(const void* uyvy,unsigned y,unsigned 
 }
 extern "C" void re4dc_ui_movie_upload_end(){movie_picture=true;++movie_upload_serial;}
 extern "C" unsigned re4dc_ui_movie_presented(){return movie_presentations;}
+#if RE4DC_GC_ASSET_GATE
+// GC_ASSET_MOVIE_API_BEGIN
+extern "C" unsigned re4dc_gcasset_movie_bind(const void* texture,unsigned width,unsigned height,unsigned asset){
+    gcasset_movie_forget();
+    if(!texture || texture!=movie_texture || width!=movie_width || height!=movie_height ||
+       !width || !height || gcasset_movie_serial==~0U){
+        re4dc_gcasset::unresolved(re4dc_gcasset::Movie,"movie-bind");return 0;
+    }
+    gcasset_movie={texture,width,height,++gcasset_movie_serial,0,0,{asset}};
+    return gcasset_movie.owner;
+}
+extern "C" void re4dc_gcasset_movie_begin_upload(unsigned owner,const void* texture){
+    // Even a stale writer can overwrite the current VRAM allocation. Revoke
+    // before checking its owner, so it cannot leave a previous picture valid.
+    gcasset_movie.upload=0;gcasset_movie.uploading=0;
+    if(!owner || owner!=gcasset_movie.owner || texture!=gcasset_movie.texture)
+        re4dc_gcasset::unresolved(re4dc_gcasset::Movie,"movie-upload-owner");
+    else gcasset_movie.uploading=owner;
+}
+extern "C" void re4dc_gcasset_movie_uploaded(unsigned owner,const void* texture,unsigned width,unsigned height,unsigned asset){
+    const unsigned uploading=gcasset_movie.uploading;gcasset_movie.uploading=0;
+    if(!owner || uploading!=owner || owner!=gcasset_movie.owner || texture!=gcasset_movie.texture || texture!=movie_texture ||
+       width!=gcasset_movie.width || height!=gcasset_movie.height || width!=movie_width || height!=movie_height ||
+       asset!=gcasset_movie.asset.value || !movie_picture || !movie_upload_serial){
+        gcasset_movie.upload=0;re4dc_gcasset::unresolved(re4dc_gcasset::Movie,"movie-upload-version");return;
+    }
+    gcasset_movie.upload=movie_upload_serial;
+}
+// GC_ASSET_MOVIE_API_END
+#endif
 extern "C" uint64_t re4dc_ui_movie_first_picture_us(){return movie_first_picture_us;}
 // The PVR YUV converter writes the movie texture directly (native_movie.cpp).
 extern "C" void* re4dc_ui_movie_texture(){return movie_texture;}
@@ -9453,6 +9876,9 @@ extern "C" int re4dc_ui_movie_close(){
 #if RE4DC_MOVIE_WORLD_ARENA
     if(re4dc_movie_world_active() && (pvr_state.ta_busy || pvr_state.render_busy))return 0;
 #endif
+#if RE4DC_GC_ASSET_GATE
+    gcasset_movie_forget();
+#endif
     pvr_mem_free(movie_texture);movie_texture=nullptr;movie_picture=false;
 #if RE4DC_TEX_RESIDENT
     re4dc_ui_vram_unclaim();
@@ -9471,10 +9897,24 @@ void movie_draw(){
     const float x[]={0,640,0,640},y[]={0,0,480,480};
     for(unsigned i=0;i<4;++i){auto& v=packet[count+i];v.flags=i==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
         v.x=RE4DC_UI_X(x[i]);v.y=RE4DC_UI_Y(y[i]);v.z=1;v.u=(i&1)?(movie_width-0.5f)/512:0.5f/512;v.v=i>=2?(movie_height-0.5f)/256:0.5f/256;v.argb=0xffffffff;}
+#if RE4DC_GC_ASSET_GATE
+    const bool verified=movie_picture && gcasset_movie.owner && gcasset_movie.texture==movie_texture &&
+        gcasset_movie.width==movie_width && gcasset_movie.height==movie_height &&
+        gcasset_movie.upload && gcasset_movie.upload==movie_upload_serial;
+    GcAssetGeneratedPacket asset_packet{packet,unsigned(sizeof(packet)),unsigned(reinterpret_cast<std::uintptr_t>(movie_texture))&0x007fffffU,re4dc_gcasset::Movie,verified};
+    {GcAssetGeneratedScope asset_scope(asset_packet);
+#endif
 #if RE4DC_PVR_STREAM
     stream_send(packet,sizeof(packet));
 #else
     re4dc::render::submit_pvr(packet,sizeof(packet));
+#endif
+#if RE4DC_GC_ASSET_GATE
+    }
+    if(asset_packet.accepted && verified){
+        re4dc_gcasset::emitted_checked(re4dc_gcasset::Movie,gcasset_movie.asset);
+        re4dc_gcasset::emitted_checked(re4dc_gcasset::Texture,gcasset_movie.asset);
+    }else re4dc_gcasset::unresolved(re4dc_gcasset::Movie,"unqualified-movie-picture");
 #endif
 }
 }

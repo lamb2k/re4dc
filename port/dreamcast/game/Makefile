@@ -3446,3 +3446,5 @@ include worldscratch.mk
 
 # Pinned KOS whole-cache writeback repair; default 0, shared KOS untouched.
 include kos_cache_p2.mk
+# GC-ASSET diagnostics: default 0, no linked object/flags when off.
+include gc_asset_gate.mk

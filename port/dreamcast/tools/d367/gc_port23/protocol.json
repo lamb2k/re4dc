@@ -1,0 +1,12 @@
+{
+  "schema": 2,
+  "gate": "GC-ASSET",
+  "diagnostic_version": 2,
+  "required": "3ff",
+  "consumers": ["source_geometry", "texture", "effect_picture", "weapon", "font", "ui", "sound_bank", "sound_stream", "movie", "motion"],
+  "motion_coverage": "unwired; zero counter is not a zero-use assertion",
+  "motion_identity_kind": "motion",
+  "legacy_diagnostic_versions_rejected": [1],
+  "catalog_format_schema": 1,
+  "reviewed_allowlist_schema": 1
+}

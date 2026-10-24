@@ -76,6 +76,8 @@ bool read_at(unsigned offset,void* to,unsigned bytes) {
     ++reads;read_bytes+=bytes;
     return ok;
 }
+#include "platform/include/gc_asset_hand_source.inc"
+#include "platform/include/gc_asset_hand_runtime.inc"
 // The package's directory (hands_pack.py checks every field it writes; here: the layout, the bounds the reads and
 // slots rely on, and the standard hands as blobs 0 (right) and 1 (left)).
 bool directory() {
@@ -97,6 +99,9 @@ bool directory() {
     }
     re4dc_log("LHPACK dir rows=%u blobs=%u src=%u file=%u why=%u\n",nrows,nblobs,nsrcs,file_bytes,bad);
     if(bad)return false;
+#if RE4DC_GC_ASSET_GATE
+    gcasset_hand_directory_candidate(h);
+#endif
     job_file=fs_open(package(),O_RDONLY);
     dir_state=1;
     return true;
@@ -132,7 +137,13 @@ void cache(int b,const unsigned char* from) {
     if(!cells())return;
     const unsigned c=cell_for(b);
 #endif
+#if RE4DC_GC_ASSET_GATE
+    const auto gcasset_copy=gcasset_hand_cell_begin(c,b,from);
+#endif
     spu_memload(aica+cell_offset(c),from,blob_bytes(blobs[b]));
+#if RE4DC_GC_ASSET_GATE
+    gcasset_hand_cell_end(c,b,gcasset_copy);
+#endif
 #if RE4DC_LEON_HAND_RETAIN
     cell_blob[c]=b;if(use==Demand)cell_used[c]=++use_clock;else if(!same)cell_used[c]=0;
 #else
@@ -152,7 +163,13 @@ void prefetch(int b) {
     if(b<0 || unsigned(b)>=nblobs || cell_of(b)>=0 || !cells())return;
 #endif
     unsigned char* t=re4dc_dvd_buff+0x10000;
+#if RE4DC_GC_ASSET_GATE
+    gcasset_hand_scratch={};const auto gcasset_read=gcasset_hand_read_begin(b);
+#endif
     if(!read_at(unsigned(blobs[b].offset32)*32u,t,blob_bytes(blobs[b])))return;
+#if RE4DC_GC_ASSET_GATE
+    gcasset_hand_scratch=gcasset_hand_read_end(gcasset_read,b,true);
+#endif
 #if RE4DC_LEON_HAND_RETAIN
     cache(b,t,use);
 #else
@@ -197,10 +214,20 @@ bool job_start(int b) {
     job_mem=static_cast<unsigned char*>(re4dc_motion_alloc(kJobBytes));
     if(!job_mem)return false;
     job_blob=b;job_state=1;
+#if RE4DC_GC_ASSET_GATE
+    gcasset_hand_job_begin(b,job_mem,job_data());
+#endif
     kthread_attr_t a{};
     a.stack_ptr=job_mem;a.stack_size=kJobStack;a.prio=PRIO_DEFAULT;a.label="leon-hands";
     job_thd=thd_create_ex(&a,job_main,nullptr);
-    if(!job_thd){re4dc_motion_free(job_mem);job_mem=nullptr;job_blob=-1;job_state=0;return false;}
+    if(!job_thd){
+#if RE4DC_GC_ASSET_GATE
+        gcasset_hand_job={};
+#endif
+        re4dc_motion_free(job_mem);job_mem=nullptr;job_blob=-1;job_state=0;return false;}
+#if RE4DC_GC_ASSET_GATE
+    gcasset_hand_job.thread=job_thd;
+#endif
     return true;
 }
 void set_slot(unsigned side,int b);
@@ -212,21 +239,46 @@ bool load(unsigned side,int b);
 void job_poll() {
     if(job_state==1)return;
     if(job_thd) {
+#if RE4DC_GC_ASSET_GATE
+        auto* const gcasset_joined=job_thd;
+#endif
         thd_join(job_thd,nullptr);job_thd=nullptr;
         const int b=job_blob;
+#if RE4DC_GC_ASSET_GATE
+        gcasset_hand_job_end(gcasset_joined,job_mem,job_data(),b,job_state==2);
+#endif
         if(job_state==2) {
             const Blob& x=blobs[b];const unsigned side=x.role-5u;
             ++reads;++async_reads;read_bytes+=blob_bytes(x);if(job_us>async_max_us)async_max_us=job_us;
 #if RE4DC_LEON_HAND_RETAIN
             const bool demanded=want[side]==b;
             cache(b,job_data(),demanded?Demand:Hint);
-            if(demanded){std::memcpy(slot[side],job_data(),blob_bytes(x));set_slot(side,b);want[side]=-1;}
+            if(demanded){
+#if RE4DC_GC_ASSET_GATE
+                const auto gcasset_copy=gcasset_hand_slot_begin(side,b,gcasset_hand_origin(job_data(),b));
+#endif
+                std::memcpy(slot[side],job_data(),blob_bytes(x));
+#if RE4DC_GC_ASSET_GATE
+                gcasset_hand_slot_end(side,b,gcasset_copy);
+#endif
+                set_slot(side,b);want[side]=-1;}
 #else
             cache(b,job_data());
-            if(want[side]==b){std::memcpy(slot[side],job_data(),blob_bytes(x));set_slot(side,b);want[side]=-1;}
+            if(want[side]==b){
+#if RE4DC_GC_ASSET_GATE
+                const auto gcasset_copy=gcasset_hand_slot_begin(side,b,gcasset_hand_origin(job_data(),b));
+#endif
+                std::memcpy(slot[side],job_data(),blob_bytes(x));
+#if RE4DC_GC_ASSET_GATE
+                gcasset_hand_slot_end(side,b,gcasset_copy);
+#endif
+                set_slot(side,b);want[side]=-1;}
 #endif
             if(async_reads<=64)re4dc_log("LHPACK landed blob=%u role=%u read_us=%u\n",unsigned(b),5u+side,unsigned(job_us));
         } else ++async_fails;
+#if RE4DC_GC_ASSET_GATE
+        gcasset_hand_job={};
+#endif
         re4dc_motion_free(job_mem);job_mem=nullptr;job_blob=-1;job_state=0;
     }
     while(job_n) {
@@ -265,11 +317,20 @@ void set_slot(unsigned side,int b) {
         reinterpret_cast<const leon4k::Weight*>(a[4])};
     slot_blob[side]=b;
     reset_role_ids(5+side);
+#if RE4DC_GC_ASSET_GATE
+    gcasset_hand_slot_publish(side,b);
+#endif
 }
 // Load point only (room load: an empty slot): read blob b into the slot now.
 bool load_now(unsigned side,int b) {
     const Blob& x=blobs[b];
+#if RE4DC_GC_ASSET_GATE
+    gcasset_hand_slot_revoke(side);const auto gcasset_read=gcasset_hand_read_begin(b);
+#endif
     if(!read_at(unsigned(x.offset32)*32u,slot[side],blob_bytes(x)))return false;
+#if RE4DC_GC_ASSET_GATE
+    gcasset_hand_copy[side]=gcasset_hand_read_end(gcasset_read,b,true);
+#endif
 #if RE4DC_LEON_HAND_RETAIN
     cache(b,slot[side],Demand);set_slot(side,b);
 #else
@@ -293,7 +354,13 @@ bool load(unsigned side,int b) {
     const int c=cell_of(b);
     if(c>=0) {
         const unsigned t0=unsigned(timer_us_gettime64());
+#if RE4DC_GC_ASSET_GATE
+        const auto gcasset_copy=gcasset_hand_slot_begin(side,b,gcasset_hand_cell_origin(unsigned(c),b));
+#endif
         spu_memread(slot[side],aica+cell_offset(unsigned(c)),blob_bytes(x));++copies;++hits;cell_used[c]=++use_clock;
+#if RE4DC_GC_ASSET_GATE
+        gcasset_hand_slot_end(side,b,gcasset_copy);
+#endif
         const unsigned us=unsigned(timer_us_gettime64())-t0;if(us>hit_max_us)hit_max_us=us;
         set_slot(side,b);want[side]=-1;
         return true;
@@ -328,6 +395,10 @@ int blob_for(unsigned role,const cModelInfo* info) {
 }
 inline unsigned std_pal(unsigned role){return blobs[role-5].pal;}  // the standard hands are blobs 0 / 1
 }
+#if RE4DC_GC_ASSET_GATE
+extern "C" unsigned re4dc_gcasset_hand_derive_begin(const void* target,unsigned bytes){return leon_hand_pack::gcasset_hand_derive_begin(target,bytes);}
+extern "C" void re4dc_gcasset_hand_derive_end(unsigned ticket,bool complete){leon_hand_pack::gcasset_hand_derive_end(ticket,complete);}
+#endif
 namespace {
 unsigned leon_hand_asset(unsigned){return 0;}  // unused: the slots keep IDs 6 / 7
 struct LeonHandPick { const leon4k::Chunk* chunk;re4dc_source::ChunkInput input;unsigned asset;int pose; };
@@ -368,6 +439,9 @@ extern "C" void re4dc_leon_hands_room_enter() {
         reads,read_bytes,hits,misses,async_reads,async_fails,async_max_us,pick_max_us,yields,hit_max_us,
         cell_blob[0],cell_blob[1],cell_blob[2],cell_blob[3]);
     mutex_unlock(&lh_mutex);
+#if RE4DC_GC_ASSET_GATE
+    gcasset_hand_directory_pump();
+#endif
 }
 // Weapon equip (read.cpp ReadWepData, after the weapon archive read): the weapon's own hand BINs into the other cells.
 extern "C" void re4dc_leon_hands_weapon(const char* name) {
@@ -390,11 +464,18 @@ extern "C" void re4dc_leon_hands_weapon(const char* name) {
     for(unsigned i=0;i<nblobs;++i)if((blobs[i].flags&4) && !done[blobs[i].role-5])prefetch(int(i));
 #endif
     mutex_unlock(&lh_mutex);
+#if RE4DC_GC_ASSET_GATE
+    gcasset_hand_directory_pump();
+#endif
 }
 // Movie open (native_movie.cpp) and a runtime sound bank conversion (audio_aica.cpp): give the AICA cells back.
 extern "C" void re4dc_leon_hands_yield() {
     using namespace leon_hand_pack;
     mutex_lock(&lh_mutex);
+#if RE4DC_GC_ASSET_GATE
+    gcasset_hand_job={};gcasset_hand_scratch={};
+    for(auto& cell:gcasset_hand_cell)cell={};gcasset_hand_aica=0;
+#endif
     if(job_thd){thd_join(job_thd,nullptr);job_thd=nullptr;re4dc_motion_free(job_mem);job_mem=nullptr;job_blob=-1;job_state=0;}
     job_n=0;want[0]=want[1]=-1;
     if(!aica){mutex_unlock(&lh_mutex);return;}

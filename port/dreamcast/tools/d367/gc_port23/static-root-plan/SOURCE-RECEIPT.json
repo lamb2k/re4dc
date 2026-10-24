@@ -1,0 +1,170 @@
+{
+  "utc": "2026-10-24T03:51:47.020420+00:00",
+  "read_tree": "/root/work/lanes/gc-port23",
+  "read_head": "e303aaeb9ad3274818bcdaf2b97ce3e1e7d13287",
+  "current_tree_head_observed_only": "3c7d93f661b2d05e3c7a01aba3304eb319c29107",
+  "dirty_paths_preserved": [],
+  "root_base": "d5c1ceab9e06461462669b3ce1d28a379747a74a",
+  "dedup_pending_source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "native_static_far_shell_identical_to_root_base": true,
+  "source_files": {
+    "port/dreamcast/game/platform/native_static.cpp": {
+      "bytes": 383739,
+      "sha256": "30c25b2036b0126ada50601273b9f99c55bf4cb87f6ae5a95826075bd77ce7b0"
+    },
+    "port/dreamcast/game/platform/far_shell.inc": {
+      "bytes": 23457,
+      "sha256": "7a4702a69238ee3f2b8afa23a2d8405848b4eb032a37211f0c7448050f6cf07d"
+    },
+    "port/dreamcast/game/platform/native_ui.cpp": {
+      "bytes": 531438,
+      "sha256": "d3aa5b9ec587332b33d0255758c23af0ab8348de9e26e5559d828ea5aa3a6266"
+    },
+    "port/dreamcast/game/platform/gc_asset_payloads.cpp": {
+      "bytes": 11459,
+      "sha256": "163c63191c7070737b9ca589d29b66e0c81b7b3794875a1b69e06837343bb1a5"
+    },
+    "port/dreamcast/game/platform/include/gc_asset_payloads.h": {
+      "bytes": 3250,
+      "sha256": "28785476705627bc9e872a3cc79c0bcddc9b699f5d4fdeedaeeed7b499855842"
+    },
+    "port/dreamcast/game/platform/include/gc_asset_gate.h": {
+      "bytes": 5972,
+      "sha256": "c8fb4b2435a46487ecec8b03f1c5a4176f429cdfbafbb8e0dbb5930100d74517"
+    },
+    "port/dreamcast/game/platform/include/gc_asset_members.h": {
+      "bytes": 2108,
+      "sha256": "22c174a00ce0fc98788694babdd6b1a0218d20a3ed2171442caf025801a3e637"
+    },
+    "port/dreamcast/game/platform/include/gc_asset_sha.inc": {
+      "bytes": 2825,
+      "sha256": "f62ded088c455df1c75d9eb380db314af7b6c28344885623767c93ec69f7c019"
+    },
+    "port/dreamcast/game/platform/room_file.c": {
+      "bytes": 6803,
+      "sha256": "4f15a8fc0a5eee1fc9e1e8c914f1005177243ace095ff911ae54de6d9e46373e"
+    },
+    "port/dreamcast/room/instanced_mesh.hpp": {
+      "bytes": 25040,
+      "sha256": "bf43408d054e448ff6052ac9c46ebc00b92a2495979c4555919a663724d2aff3"
+    },
+    "port/dreamcast/tools/d367/gc_port23/STATIC-PAYLOAD-BRIDGE.md": {
+      "bytes": 5447,
+      "sha256": "5ccb125af6b308a0f8456fb3c0e21640bdbed391facddb7c4dbd4f77debaa411"
+    },
+    "port/dreamcast/tools/d367/gc_port23/STATIC-SOURCE-INVENTORY.md": {
+      "bytes": 5225,
+      "sha256": "8daa3cac77ac29009a238d0f459a601eb79b4ef1a02fbc0de8579d5df979e8d2"
+    },
+    "port/dreamcast/tools/d367/gc_port23/REMAINING-COVERAGE.md": {
+      "bytes": 9001,
+      "sha256": "c2c2b1dd4a3d29616e51238a5b70ba6f303dc1cc58ec08af3b171d6cee9c2e17"
+    },
+    "port/dreamcast/tools/d367/gc_port23/static_payload_patch.py": {
+      "bytes": 7022,
+      "sha256": "50ad492d6a0bc97f36a8a4a0a63c6d9c006ca0579c74e2d2d000830b558f1ce7"
+    },
+    "port/dreamcast/tools/d367/gc_port23/far_shell_payload_patch.py": {
+      "bytes": 1829,
+      "sha256": "0edbb5990c73f1ffb0d5cd43075f56d723c82ecda8ad08103910582f541fb4e0"
+    }
+  },
+  "anchors": {
+    "port/dreamcast/game/platform/native_static.cpp": {
+      "struct View {": [
+        620
+      ],
+      "struct MeshView {": [
+        1426
+      ],
+      "struct Ps2World {": [
+        4431
+      ],
+      "void retire(View& v){": [
+        781
+      ],
+      "void retire(MeshView& v){": [
+        1456
+      ],
+      "int mesh_submit(const Re4dcModelPart& p){": [
+        4140
+      ],
+      "int ps2_pass(unsigned pass,float zfar){": [
+        6058
+      ],
+      "extern \"C\" void re4dc_static_flush_impostors(){": [
+        3398
+      ],
+      "bool ps2_movie_reload(){": [
+        5787
+      ],
+      "extern \"C\" void re4dc_ps2_mesh_retire(){": [
+        7125
+      ],
+      "std::memset(piece::table,0,4U*w[2]);": [
+        5257
+      ],
+      "m->size": []
+    },
+    "port/dreamcast/game/platform/native_ui.cpp": {
+      "void gcasset_model_prepare(": [
+        453
+      ],
+      "void gcasset_model_accept(": [
+        457
+      ],
+      "extern \"C\" void re4dc_model_packet_commit(": [
+        7007
+      ],
+      "static void model_direct_account(": [
+        7143
+      ],
+      "extern \"C\" void re4dc_ps2_world_direct_end_batch(": [
+        7175
+      ]
+    },
+    "port/dreamcast/game/platform/far_shell.inc": {
+      "void close() {": [
+        69
+      ],
+      "void open(unsigned room) {": [
+        73
+      ],
+      "extern \"C\" int re4dc_far_shell_draw(": [
+        231
+      ]
+    },
+    "port/dreamcast/game/platform/room_file.c": {
+      "void re4dc_room_file_leave(void)": [
+        67
+      ],
+      "const void* re4dc_room_section(": [
+        148
+      ]
+    }
+  },
+  "dedup_changed_source": {
+    "port/dreamcast/game/platform/native_static.cpp": "2e7040a2c24302e163d4dcd6f4b50c1ad84650e8277019a7cca6bde8194dfc53",
+    "port/dreamcast/game/platform/far_shell.inc": "7a4702a69238ee3f2b8afa23a2d8405848b4eb032a37211f0c7448050f6cf07d",
+    "port/dreamcast/room/instanced_mesh.hpp": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019"
+  },
+  "allocation_arithmetic_only": {
+    "proof_raw_sh4": 44,
+    "stable_owner_count": 16,
+    "owner_metadata_raw": 704,
+    "quad_uses_raw": 576,
+    "cold_manifest_raw": 688,
+    "cold_caller_raw_max": 728,
+    "quad_flush_raw": 596,
+    "no_target_layout_or_stack_test": true
+  },
+  "scope": "read-only source planning; no SDK/guest/runtime/assets/catalog/allowance or coverage changes",
+  "outputs": {
+    "dedup4be-source-delta.patch": "3059101ad9e3dea515d7a93d30f9d4a25ae7f940e23e60c3971e5e43224daa34",
+    "inventory-static.py": "929ea4645263ac1a2edc7878d5efbed99d1e7bbf8284babce45781f58185576a",
+    "OWNER-LIFETIMES.md": "7ffcc157aa408f70eae3c4e25986a4933a49f0708b795b9baa5b8e694c486315",
+    "pin-plan-inputs.py": "258f45e45b3e9434a240a28ab9aea1ec987e4a9225f8560fc49cd984ef8dda93",
+    "PLAN.md": "5a2349c8dd3b873f6e192ab073f5225f68ace6d55611eb862a63bdd648c35035",
+    "ROOT-PLAN.md": "a20a416973102a60a8b4c4c7f30174c7f9d2f3e8d8d12e0989a2a615dd86c38f"
+  }
+}

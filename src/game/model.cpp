@@ -103,6 +103,9 @@ extern "C" void re4dc_model_assets_changed();
 extern "C" {
 void OSReport(const char* fmt, ...);
 void PartsWorldPosCalc(cModel* m);
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+extern "C" void re4dc_gcasset_capture_model(const void*);
+#endif
 void calcModelAddr(ModelData* data);
 void calcModelOffset(ModelData* data);
 void calcTplOffset(TEXPalette* tpl);
@@ -1551,6 +1554,11 @@ void calcModelAddr(ModelData* d)
     if ((int) d->pClr < 0) {
         return;
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    // Capture the bounded immutable BIN before any pointer or FE mutation.
+    // Preparation alone never logs a drawn/played GC asset.
+    re4dc_gcasset_capture_model(d);
+#endif
     d->pClr = base + (u32) d->pClr;
     d->pTex = base + (u32) d->pTex;
     d->pHead = (ModelDataHead*) (base + (u32) d->pHead);
