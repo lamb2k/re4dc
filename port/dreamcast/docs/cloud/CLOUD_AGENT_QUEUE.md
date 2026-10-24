@@ -280,3 +280,25 @@ image equals Test 23 (d28b3cfc).
 3. Look: a frozen r101 cross still pair, census on vs off at tick 600, shows the same world; 11.4% of pixels differ, all
    in the pyre fire sprites, whose animation keeps its own clock under a frozen world (pair-cross-on-off.png). STRICT
    gameplay and retirement / transition gates are not run yet; flip cadence: d=300 with flip=300 in every window.
+
+### 2026-10-24: Build 12 hand-back (`codex/scenery-data-variants-20261024`)
+
+Candidates: `SCENERY_LOCAL_INDEXED=1` or `SCENERY_DIRECT_STRIPS=1`, mutually
+exclusive, both default 0. Publication base `4efca35b`, validation base
+`057e00a2` (the difference is queue documentation only), including Build 10. The
+[report](BUILD12_SCENERY_DATA_VARIANTS_20261024.md) separates package growth,
+transforms, architectural bytes/lines and warm/cold-I model cost. Existing
+geometry, placement identities and ordered TA output are preserved in the
+public fixtures. The release recipe and coordinator status table are unchanged.
+
+1. Can the matched private-builder run provide current/local/sequential bytes,
+   R4SG sizes, selected meshlets, vertex reuse and clipping frequency at the
+   cross and farm? These replace the explicit synthetic populations.
+2. Use matched `PS2_INTERIOR_CULL=0 WORLD_RECT21=0 FOLIAGE_MIP24=0` controls with
+   corresponding original-policy assets; this experiment does not impersonate
+   existing mesh-bound certificates. Does the `SCNVAR` admission log confirm
+   the candidate rather than a pinned-owner or absent-file base fallback?
+3. Does the console favor the eliminated gather, or the sequential arm's
+   smaller low-reuse working set despite repeated transforms? Include peak
+   RAM, complete world cost, presentation cadence, look/STRICT and transition
+   gates. The retained 3 KB gather allocation is not a heap saving.

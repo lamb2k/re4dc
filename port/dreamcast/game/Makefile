@@ -3418,6 +3418,7 @@ include vmu_context.mk
 include t2exact.mk
 # Lane scenery19 (SCENERY_CHUNK; default off: no effect).
 include scenery19.mk
+include scenery_data_variants.mk
 # Lane chardraw19 (CHAR_CHUNK; default off: no effect).
 include chardraw19.mk
 # Lane logiclod20 (LOGIC_LOD_EM, ESP_LOD; default off: no effect).

@@ -1,0 +1,11 @@
+{
+  "validation_base": "057e00a248c9ed473d0b3377a0ce14b0b2f5186d",
+  "publication_base": "4efca35b98cdcdd845122c279321b848b621e029",
+  "upstream_changed_paths": [
+    "port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md"
+  ],
+  "scope": "Upstream changed only the coordinator queue. All tracked target/build/tool inputs are byte-identical between these bases. Preserve its new answers and append the Build 12 hand-back; no target gate is claimed rerun for documentation-only upstream movement.",
+  "original_queue_sha256": "1e0ae40bb549ee300ee17ebf5e6e50d34974024afe8a03e55d34f6016c51fb57",
+  "upstream_queue_sha256": "0689a6cc3c05909bbf64ac4b0f9936c04146d7f59c95c689097e6b3b3357a96a",
+  "merged_queue_sha256": "4d8e1f2f9a3828b50312c55ae282134c8066ac156f8263aa4d5e97bad0138b64"
+}

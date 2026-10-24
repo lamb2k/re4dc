@@ -1,0 +1,79 @@
+// Additional Build 12 cases use the Python converter's actual synthetic
+// files and the existing Build 5 controlled header/TA/SQ/owner sink.
+static std::vector<std::uint8_t> fixture_read(const char* path){
+    FILE* f=std::fopen(path,"rb");assert(f);
+    assert(!std::fseek(f,0,SEEK_END));const long size=std::ftell(f);assert(size>=0);
+    assert(!std::fseek(f,0,SEEK_SET));std::vector<std::uint8_t> bytes(static_cast<std::size_t>(size));
+    assert(std::fread(bytes.data(),1,bytes.size(),f)==bytes.size());std::fclose(f);return bytes;
+}
+@CRC@
+static int fixture_validate(const char* path,unsigned expected,unsigned source_bytes,unsigned source_crc){
+    auto bytes=fixture_read(path);re4dc::room::MeshPackage package;
+    if(!package.adopt(bytes.data(),unsigned(bytes.size()),true,true))return 1;
+    if(ps2_crc32(bytes.data()+80,unsigned(bytes.size())-80)!=package.header().crc)return 2;
+    const char* why=re4dc::scenery_data::validate(package,static_cast<re4dc::scenery_data::Kind>(expected),
+                                                source_bytes,source_crc);
+    if(why)std::fprintf(stderr,"VARIANT_REFUSAL %s\n",why);
+    return why?3:0;
+}
+static void variant_case(unsigned id,const char* mesh_path,const char* group_path){
+    const unsigned scenario=(id-200)/6,pass=((id-200)/2)%3,level=(id-200)%2;
+    auto data=fixture_read(mesh_path),groups=fixture_read(group_path);
+    re4dc::room::MeshPackage package;assert(package.adopt(data.data(),unsigned(data.size()),true,true));
+    const auto kind=re4dc::scenery_data::kind(package);
+    if(kind!=re4dc::scenery_data::Kind::None)
+        assert(!re4dc::scenery_data::validate(package,kind,package.header().reserved[1],package.header().reserved[2]));
+    const auto& cpkg=package;re4dc::vp::build_lut(lut);
+    re4dc::room::CompactVertex12 gather[256];std::memset(gather,0xa5,sizeof(gather));
+    assert(groups.size()>=32);unsigned group_count;std::memcpy(&group_count,groups.data()+12,4);
+    assert(group_count==2 && groups.size()==32+16*group_count*package.header().meshlet_count);
+    struct {const unsigned* lut;re4dc::room::CompactVertex12* gather;const std::uint8_t* sg;unsigned sg_groups;}
+        ps2w{::lut,gather,groups.data()+32,group_count};
+    QueuePart part;part.cull=1;part.projection[1]=part.projection[3]=1;
+    part.viewport[2]=640;part.viewport[3]=480;
+    const float near=1,far=1000;
+    struct {unsigned native=0,fallback=0,aborts=0;}c;
+    @CHUNK_PART@;
+    static constexpr unsigned kChunkParts=48,kChunkPicks=320;
+    ChunkPart cctx[kChunkParts]{};MeshDraw::Pick cpk[kChunkPicks]{};
+    unsigned nctx=3,npk=0;piece::pkg=&cpkg;piece::table=piece_words;
+    const auto& pl=cpkg.part_lods()[pass];const auto& cluster=cpkg.clusters()[pl.first_cluster];
+    const auto& selected=cpkg.levels()[cluster.first_level+level];
+    const auto& bound=cpkg.meshlets()[selected.first_meshlet];
+    const float cx=.5f*(bound.bounds_min[0]+bound.bounds_max[0]);
+    const float cy=.5f*(bound.bounds_min[1]+bound.bounds_max[1]);
+    const float cz=.5f*(bound.bounds_min[2]+bound.bounds_max[2]);
+    for(unsigned j=0;j<nctx;++j){auto& x=cctx[j];x.index=pass;x.cull=j%3;x.sky=j&1;x.marked=(j&1)!=0;
+        key_for(x.index,pass,x.cull,x.key);x.first=npk;x.count=selected.meshlet_count;x.cull_far=far;x.lod_scale=2;
+#if RE4DC_SCENERY_UV_SNAPSHOT
+        x.uv_offset[0]=float(j)*.125f;x.uv_offset[1]=-float(j)*.0625f;
+#endif
+        x.mvq[0]=scenario==8?-1.0f:scenario==9?2.0f:1.0f;
+        x.mvq[5]=scenario==8?.5f:scenario==9?.25f:1.0f;x.mvq[10]=1;
+        x.mvq[3]=-cx*x.mvq[0];x.mvq[7]=-cy*x.mvq[5];
+        x.mvq[11]=scenario==1?-cz:scenario==2?-cz-far:-float(bound.bounds_max[2])-300;
+        if(scenario==3)x.mvq[3]=5000;
+        for(unsigned i=0;i<x.count;++i){
+            const unsigned li=selected.first_meshlet+i;
+            auto& pick=cpk[npk++];pick={std::uint16_t(li),255,0,0,255,{0,0}};
+            if(scenario==4 || scenario==5){
+                const unsigned gi=scenario-4;const auto* g=reinterpret_cast<const std::uint16_t*>(ps2w.sg+16*group_count*li);
+                const unsigned before=gi?g[8*(gi-1)+6]:0,end=g[8*gi+6];
+                pick.nr=end>before?1:0;pick.gmask=std::uint8_t(1U<<gi);
+                pick.lo=std::uint8_t(g[8*gi+7]);pick.hi=std::uint8_t(g[8*gi+7]>>8);
+            }else if(scenario==6)pick.nr=0;
+        }
+    }
+    // A valid but smaller packet tail makes long strips take the production
+    // oversize/clip fallback. It never changes a strip's source corners.
+    if(scenario==7)model_pending=kModelPacketBytes/32-(re4dc::vp::kCacheSlots+128);
+    re4dc_ps2_sky_header=7;
+    @CHUNK_FLUSH@;
+    const int result=chunk_flush();assert(result==1 && !locked && !direct_open && !nctx && !npk);
+    returns.push_back(unsigned(result));queue_native=c.native;queue_fallback=c.fallback;queue_aborts=c.aborts;
+    // Resident/transform/setup counts may legitimately differ by layout.
+    // Keep the externally visible accounting in report(), and record the
+    // changed internal work separately rather than comparing it as identity.
+    std::fprintf(stderr,"VARIANT %u direct=%u batches=%u groups=%u vertices=%u strips=%u culled=%u\n",
+        id,direct_commits,stats.batches,stats.groups_visible,stats.vertices,stats.strips,stats.strips_culled);
+}
