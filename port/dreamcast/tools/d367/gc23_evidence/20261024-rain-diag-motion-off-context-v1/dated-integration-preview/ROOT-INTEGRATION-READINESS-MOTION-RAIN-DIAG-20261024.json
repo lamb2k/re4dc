@@ -1,0 +1,50 @@
+{
+  "status": "CURRENT_MOTION_CATALOG_RAIN_DIAG_TEXTUAL_PREVIEW_CLEAR",
+  "utc": "2026-10-24T08:00:51.773180+00:00",
+  "scope": "Writes only unreachable Git merge-tree objects and this receipt. No branch/worktree/recipe/SDK/guest mutation; not integrated qualification or landing.",
+  "integration": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "gc_metadata_head": "aab201ceac0e18107f64a3212398afe916793327",
+  "gc_runtime": "fce285ddd77ced898b40f49ae310b91a539b7b5d",
+  "rain_metadata_head": "da413ff058f88fa136375ecff629610fc59c0e51",
+  "rain_runtime": "fdb5ed4212fc78823f625ab75b78cc237cfd181a",
+  "preview_tree": "e0e692656194343054a83ae0787bed66475f568d",
+  "rain_delta": [
+    "M\tport/dreamcast/game/effects30.mk",
+    "A\tport/dreamcast/tools/d367/rain_diag24/HOST-CONTROLS.json",
+    "A\tport/dreamcast/tools/d367/rain_diag24/README.md",
+    "A\tport/dreamcast/tools/d367/rain_diag24/SOURCE-HOST-RECEIPT.json",
+    "A\tport/dreamcast/tools/d367/rain_diag24/fixture_rain_diag.cpp.in",
+    "A\tport/dreamcast/tools/d367/rain_diag24/history/HOST-CONTROLS-94f55-PRE-REVIEW.json",
+    "A\tport/dreamcast/tools/d367/rain_diag24/history/README.md",
+    "A\tport/dreamcast/tools/d367/rain_diag24/history/SOURCE-HOST-RECEIPT-94f55-PRE-REVIEW.json",
+    "A\tport/dreamcast/tools/d367/rain_diag24/test_rain_diag.py",
+    "A\tport/dreamcast/tools/d367/water_rain24/RAIN-R10C-EXPERIMENT.md",
+    "A\tport/dreamcast/tools/d367/water_rain24/README.md",
+    "A\tport/dreamcast/tools/d367/water_rain24/audit.py",
+    "A\tport/dreamcast/tools/d367/water_rain24/fixture_rain_r10c.cpp.in",
+    "A\tport/dreamcast/tools/d367/water_rain24/test_audit.py",
+    "A\tport/dreamcast/tools/d367/water_rain24/test_rain_r10c.py",
+    "M\tsrc/game/espgen44.cpp",
+    "M\tsrc/game/filter06.cpp"
+  ],
+  "runtime_whitespace": {
+    "current-gc": 0,
+    "rain": 0
+  },
+  "heads_unchanged": {
+    "/root/work/lanes/gc-motion24": "aab201ceac0e18107f64a3212398afe916793327",
+    "/root/work/lanes/rain-diag24": "da413ff058f88fa136375ecff629610fc59c0e51"
+  },
+  "recipe_unchanged": true,
+  "listed_asset_roots_unchanged": true,
+  "motion_review_sha256": "f3010b1e70ab7d55f4ecdbee57ead05357411fb951f5f464720940fcaaef811c",
+  "remaining": [
+    "Successor full programme/overlay OFF identity and ON pricing",
+    "Configured catalog and required consumer coverage",
+    "Both memory and runtime/census/gameplay gates",
+    "Producer terminal acknowledgements",
+    "Rain source/lifecycle/appearance acceptance",
+    "Physical acceptance"
+  ],
+  "prior_preview_preserved": true
+}

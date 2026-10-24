@@ -1,0 +1,50 @@
+{
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "scope": "Fresh normal current OFF and Gate1/Motion1/catalog0 full links; no stage/guest/installed catalog/provenance/coverage acceptance",
+  "preparation_sha256": "186784375ab0add42a8d27aeeb938fad5e4af06e0a8ed0c7662cfecd889ce8ee",
+  "source_manifest_sha256": "280f1350087fffb7fb5fe5af10a0402e6d18ee5f08364d774f39c88b8451e42e",
+  "arms": {
+    "off": {
+      "started": true,
+      "command_sha256": "7d818e8e808985de971900f42c63e0d0326116793f32d60ec4911c17374bb5ce",
+      "environment": {
+        "ASSETS": "/root/probe/lanes/play-actor-bundle",
+        "OUT": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out",
+        "OBJDIR": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/obj",
+        "JOBS": "1",
+        "SOURCE_DATE_EPOCH": "1760000000",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "RE4DC_KOS_BASE": "/root/work/kos-re4dc-d367"
+      }
+    }
+  },
+  "complete": false,
+  "runner_sha256": "7251d227586634ef2654180791597de68282e3087ce0c3fe5a2fe097bc1890e6",
+  "analysis_commands": [
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-objcopy",
+      "-R",
+      ".stack",
+      "-O",
+      "binary",
+      "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/re4dc-game.elf",
+      "/dev/shm/gc-motion24-full-pair-wrf50x14/off/program.bin"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-nm",
+      "-S",
+      "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/re4dc-game.elf"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-size",
+      "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/re4dc-game.elf"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-size",
+      "-A",
+      "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/re4dc-game.elf"
+    ]
+  ],
+  "failure": "AssertionError()",
+  "owned_bytes": 550717508
+}

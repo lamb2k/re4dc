@@ -1,0 +1,19 @@
+{
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "allocated": "2026-10-24T07:56:51.4890434Z",
+  "purpose": "Fresh normal OFF Gate0 Motion0 versus ON Gate1 Motion1 catalog0, all 14 overlays",
+  "tree": "/root/work/lanes/gc-motion24",
+  "output": "/dev/shm/gc-motion24-full-pair-wrf50x14",
+  "sdk_slots": 1,
+  "jobs": 1,
+  "owned_byte_cap": 2147483648,
+  "c_admission_gib": 26,
+  "c_floor_gib": 24,
+  "ram_admission_gib": 3,
+  "ram_floor_mib": 512,
+  "seconds_per_arm": 1800,
+  "guest_allocation": 0,
+  "prep_readback": "FRESH_NORMAL_PAIR_PREPARATION_READBACK_PASS",
+  "source_mutation": false,
+  "production_recipe_mutation": false
+}

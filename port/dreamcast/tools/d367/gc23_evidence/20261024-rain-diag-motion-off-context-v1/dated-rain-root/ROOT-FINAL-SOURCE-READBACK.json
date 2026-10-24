@@ -1,0 +1,16 @@
+{
+  "status": "ROOT_RAIN_FINAL_SOURCE_REVIEW_RECEIPT_READBACK_PASS",
+  "utc": "2026-10-24T08:01:24.470597+00:00",
+  "source": "da413ff058f88fa136375ecff629610fc59c0e51",
+  "runtime": "fdb5ed4212fc78823f625ab75b78cc237cfd181a",
+  "review_files_verified": 17,
+  "review_manifest_sha256": "f11c0ad62ae97c4efd0349b0ca32cecd7d44da0d325dc467dce54d533007e4f8",
+  "runtime_pins": {
+    "src/game/filter06.cpp": "60364736a8d2935b1f49cc4bbf73915757e78e03e0333fcde57adfaa88ea6dd0",
+    "src/game/espgen44.cpp": "6f2bab97dc6b8a8fb508c3ee159f2e553dab061a44ee3791e248eaca227a6cea",
+    "port/dreamcast/game/effects30.mk": "66386156f0ccf987665b30e9ecae8e7257087ba41af2b747049b0bcfa22d7d3f"
+  },
+  "root_review": "Read exact five-live-key repair and final diagnostic/Make/dispatcher source. Existing native call, source rain and original old-night semantics preserved by bounded source/host controls. Source-only CLEAR, no target cache/opcode/stack/programme/heap/guest or look acceptance.",
+  "integration_preview_tree": "e0e692656194343054a83ae0787bed66475f568d",
+  "SDK_or_guest": false
+}

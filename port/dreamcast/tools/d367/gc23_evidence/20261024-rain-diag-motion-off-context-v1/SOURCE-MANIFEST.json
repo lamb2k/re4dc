@@ -1,0 +1,558 @@
+{
+  "schema": 1,
+  "captured_utc": "2026-10-24T08:06:51.940226+00:00",
+  "parent_evidence_commit": "c3aacc8f1573d238f1d5fde4775d643a6533a974",
+  "root_docs_frozen_utc": "2026-10-24T08:04:03.232177+00:00",
+  "files": [
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-rain-motion-off-20261024/stable-dated-inputs/takeover-refresh-20261024.py",
+      "destination": "dated-root-docs/takeover-refresh-20261024.py",
+      "bytes": 19176,
+      "sha256": "84a1c007633fcae608172bf0b5781134d136e67728963f2b78dbae9ff6d71c61",
+      "lf_sha256": "0d697b5e50365cfbf897663afc0c7f41d3df929b16e652d16bf72a33e7c28f0f",
+      "crlf_count": 31,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792829043236223700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-rain-motion-off-20261024/stable-dated-inputs/CODEX-TAKEOVER-STATUS.md",
+      "destination": "dated-root-docs/CODEX-TAKEOVER-STATUS.md",
+      "bytes": 23764,
+      "sha256": "a3ac43ea496547e193e4f9e52570cd59e4f0d161b7fb4ede44160d7385956c05",
+      "lf_sha256": "1d07a634ce4516a005cd76ac48a4bc53491bb5fea3fd38d718bec1c6c44bdffd",
+      "crlf_count": 38,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792829043255221200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-rain-motion-off-20261024/stable-dated-inputs/CLAUDE-CARRY23.md",
+      "destination": "dated-root-docs/CLAUDE-CARRY23.md",
+      "bytes": 22200,
+      "sha256": "f049df98059e78bba3aff6304e80e7008ceec2fec4d1eb885c22be76061c1624",
+      "lf_sha256": "1e93cd919b5b1dddde3bff7e54d6b6d2ef042197a03afd89a792122c1584cd7d",
+      "crlf_count": 89,
+      "text_encoding": "windows-1252 byte-preserved original",
+      "source_mtime_ns": 1792829043272222700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-rain-motion-off-20261024/stable-dated-inputs/CAPTURED-DOCS.json",
+      "destination": "dated-root-docs/CAPTURED-DOCS.json",
+      "bytes": 806,
+      "sha256": "85c91ccc8fb37d40583ba9aba57472dd400101b7e35f021781e2383c06bc06d2",
+      "lf_sha256": "85c91ccc8fb37d40583ba9aba57472dd400101b7e35f021781e2383c06bc06d2",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792829043281222900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/REVIEW-94f-HOLD.md",
+      "destination": "rain-independent-review/REVIEW-94f-HOLD.md",
+      "bytes": 3566,
+      "sha256": "3f8946e4878308660bf7d9905e25d743715950594e92792a1e9c132b6deb3845",
+      "lf_sha256": "3f8946e4878308660bf7d9905e25d743715950594e92792a1e9c132b6deb3845",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828450015733300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/REVIEW-FINAL.md",
+      "destination": "rain-independent-review/REVIEW-FINAL.md",
+      "bytes": 9701,
+      "sha256": "a10c81c65133e2542401f6492a0cde8913cd610e39fd7ae9f4d1ba78b0f68d96",
+      "lf_sha256": "a10c81c65133e2542401f6492a0cde8913cd610e39fd7ae9f4d1ba78b0f68d96",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828759190995400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/actual-return-live-state-counterexample.cpp",
+      "destination": "rain-independent-review/actual-return-live-state-counterexample.cpp",
+      "bytes": 44772,
+      "sha256": "02ee46806f78739ffa3ebd6302a0e135054de915808e513fe87a23bf5b67a7e2",
+      "lf_sha256": "02ee46806f78739ffa3ebd6302a0e135054de915808e513fe87a23bf5b67a7e2",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828206334854400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/actual-return-live-state-successor.cpp",
+      "destination": "rain-independent-review/actual-return-live-state-successor.cpp",
+      "bytes": 46542,
+      "sha256": "f1fb9a2d0266eeb6d913810bec406e5204b2167f0fb56ca72673698355c9f4ac",
+      "lf_sha256": "f1fb9a2d0266eeb6d913810bec406e5204b2167f0fb56ca72673698355c9f4ac",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828627714356600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/author-receipt-readback.json",
+      "destination": "rain-independent-review/author-receipt-readback.json",
+      "bytes": 502,
+      "sha256": "0c50afc7ccd202ab729c434f1a927c7e19ec6c0a6bd13232a262cf8cd9566727",
+      "lf_sha256": "0c50afc7ccd202ab729c434f1a927c7e19ec6c0a6bd13232a262cf8cd9566727",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828759393811600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/frozen94f-author-controls.json",
+      "destination": "rain-independent-review/frozen94f-author-controls.json",
+      "bytes": 365,
+      "sha256": "b79f64b364b9e34386708af88705e579c16f919734da668600f8929dd3dfa596",
+      "lf_sha256": "b79f64b364b9e34386708af88705e579c16f919734da668600f8929dd3dfa596",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828308993361600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/frozen94f-author-controls.log",
+      "destination": "rain-independent-review/frozen94f-author-controls.log",
+      "bytes": 4044,
+      "sha256": "46d7edfa20789cd1e7fb68651d14d919a35b7eb999e10f55b23f51148de838b6",
+      "lf_sha256": "46d7edfa20789cd1e7fb68651d14d919a35b7eb999e10f55b23f51148de838b6",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828308990360500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/frozenfdb-actual-controls.json",
+      "destination": "rain-independent-review/frozenfdb-actual-controls.json",
+      "bytes": 361,
+      "sha256": "415a68d879fe3c683f1159f2c74e6513a58cc1aa3d9ddaed0a00a614990a9823",
+      "lf_sha256": "415a68d879fe3c683f1159f2c74e6513a58cc1aa3d9ddaed0a00a614990a9823",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828510308854400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/frozenfdb-actual-controls.log",
+      "destination": "rain-independent-review/frozenfdb-actual-controls.log",
+      "bytes": 4379,
+      "sha256": "bf4b0cddb04490633239311456deefc4831c9908ff4b18607b99175deb159a4e",
+      "lf_sha256": "bf4b0cddb04490633239311456deefc4831c9908ff4b18607b99175deb159a4e",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828510305855600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/independent-live-state-counterexample.json",
+      "destination": "rain-independent-review/independent-live-state-counterexample.json",
+      "bytes": 842,
+      "sha256": "d7217f39108bc05a248b1bfc9d33d3c38b2528664aac79bae1ef9b053e8374a3",
+      "lf_sha256": "d7217f39108bc05a248b1bfc9d33d3c38b2528664aac79bae1ef9b053e8374a3",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828206925547800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/independent-live-state-successor.json",
+      "destination": "rain-independent-review/independent-live-state-successor.json",
+      "bytes": 958,
+      "sha256": "4cdda8f46d9d8a8dcba005de36b73725a588e70736c5db718b9221ea89d1f955",
+      "lf_sha256": "4cdda8f46d9d8a8dcba005de36b73725a588e70736c5db718b9221ea89d1f955",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828628282512300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/run_frozen94f_controls.py",
+      "destination": "rain-independent-review/run_frozen94f_controls.py",
+      "bytes": 991,
+      "sha256": "6a5734ae28cf8ce3f0db8fa3fbfd45d50e4b44338bb391be63c944b46e452536",
+      "lf_sha256": "6a5734ae28cf8ce3f0db8fa3fbfd45d50e4b44338bb391be63c944b46e452536",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828291205273600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/run_frozenfdb_controls.py",
+      "destination": "rain-independent-review/run_frozenfdb_controls.py",
+      "bytes": 1796,
+      "sha256": "88a183c30b717ae859fecab35377e2fe81a769a40958638b6faccbd64b52ab50",
+      "lf_sha256": "88a183c30b717ae859fecab35377e2fe81a769a40958638b6faccbd64b52ab50",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828490210530800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/run_live_state_counterexample.py",
+      "destination": "rain-independent-review/run_live_state_counterexample.py",
+      "bytes": 3010,
+      "sha256": "83eafd3fe4d0fcf12b2cd42da3d3a81dca7830eaffcdd340b132d966f131e8e3",
+      "lf_sha256": "83eafd3fe4d0fcf12b2cd42da3d3a81dca7830eaffcdd340b132d966f131e8e3",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828206182822700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/run_live_state_successor.py",
+      "destination": "rain-independent-review/run_live_state_successor.py",
+      "bytes": 3767,
+      "sha256": "a56edd8ee269d8b101f7f8d4b1572b7083e688a27cab1744144003de5318b7a4",
+      "lf_sha256": "a56edd8ee269d8b101f7f8d4b1572b7083e688a27cab1744144003de5318b7a4",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828627555177800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/source-pins-94f.json",
+      "destination": "rain-independent-review/source-pins-94f.json",
+      "bytes": 3619,
+      "sha256": "1da54108c140e0e905b026dd067b039f99697da980a590bc7ec90ee8833fa79f",
+      "lf_sha256": "1da54108c140e0e905b026dd067b039f99697da980a590bc7ec90ee8833fa79f",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828450169457000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/source-pins-final.json",
+      "destination": "rain-independent-review/source-pins-final.json",
+      "bytes": 3073,
+      "sha256": "0d78c1897f3f94fb618296728f6300ba270bd9863b455cebda237fae067144e9",
+      "lf_sha256": "0d78c1897f3f94fb618296728f6300ba270bd9863b455cebda237fae067144e9",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828759360183300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review/MANIFEST.json",
+      "destination": "rain-independent-review/MANIFEST.json",
+      "bytes": 3021,
+      "sha256": "f11c0ad62ae97c4efd0349b0ca32cecd7d44da0d325dc467dce54d533007e4f8",
+      "lf_sha256": "f11c0ad62ae97c4efd0349b0ca32cecd7d44da0d325dc467dce54d533007e4f8",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828759491350200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/ROOT-FINAL-SOURCE-READBACK.json",
+      "destination": "dated-rain-root/ROOT-FINAL-SOURCE-READBACK.json",
+      "bytes": 1076,
+      "sha256": "1dbe67ad94a2fdc0612f4eff8c0fc804ca42f1e776b4c3a02ed92b5b49cb8e5f",
+      "lf_sha256": "1dbe67ad94a2fdc0612f4eff8c0fc804ca42f1e776b4c3a02ed92b5b49cb8e5f",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828884476710100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/root-final-source-readback.py",
+      "destination": "dated-rain-root/root-final-source-readback.py",
+      "bytes": 2025,
+      "sha256": "b146f43f37ee1fcdc3e33b82482664ed49b3dad60254415e4f77e549832c3cf1",
+      "lf_sha256": "1fc51a85a9db3f7e2d1e8e3e878ce6bb3ee8a7074429bfdf0f5c762fc5871126",
+      "crlf_count": 1,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828884227869100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/HANDBACK.md",
+      "destination": "dated-rain-root/HANDBACK.md",
+      "bytes": 3458,
+      "sha256": "baf59e86916563307d606b12b70aabdce56e0dbc10eaeb4399aa03d52804dc54",
+      "lf_sha256": "baf59e86916563307d606b12b70aabdce56e0dbc10eaeb4399aa03d52804dc54",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828810271868800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/STATUS.md",
+      "destination": "dated-rain-root/STATUS.md",
+      "bytes": 1713,
+      "sha256": "fa052ada9ceae350546b03957d5c60bb1cf3b559f3f15fdf3a35797534d552ae",
+      "lf_sha256": "fa052ada9ceae350546b03957d5c60bb1cf3b559f3f15fdf3a35797534d552ae",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828810270870300
+    },
+    {
+      "source": "git:da413ff058f88fa136375ecff629610fc59c0e51:port/dreamcast/game/effects30.mk",
+      "destination": "frozen-rain-source/port/dreamcast/game/effects30.mk",
+      "bytes": 40013,
+      "sha256": "66386156f0ccf987665b30e9ecae8e7257087ba41af2b747049b0bcfa22d7d3f",
+      "lf_sha256": "66386156f0ccf987665b30e9ecae8e7257087ba41af2b747049b0bcfa22d7d3f",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:da413ff058f88fa136375ecff629610fc59c0e51:port/dreamcast/tools/d367/rain_diag24/HOST-CONTROLS.json",
+      "destination": "frozen-rain-source/port/dreamcast/tools/d367/rain_diag24/HOST-CONTROLS.json",
+      "bytes": 4379,
+      "sha256": "bf4b0cddb04490633239311456deefc4831c9908ff4b18607b99175deb159a4e",
+      "lf_sha256": "bf4b0cddb04490633239311456deefc4831c9908ff4b18607b99175deb159a4e",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:da413ff058f88fa136375ecff629610fc59c0e51:port/dreamcast/tools/d367/rain_diag24/README.md",
+      "destination": "frozen-rain-source/port/dreamcast/tools/d367/rain_diag24/README.md",
+      "bytes": 5431,
+      "sha256": "6347832f18b94a622b036102fc384aab4fb500e241437e0a71712ddb7e3477bd",
+      "lf_sha256": "6347832f18b94a622b036102fc384aab4fb500e241437e0a71712ddb7e3477bd",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:da413ff058f88fa136375ecff629610fc59c0e51:port/dreamcast/tools/d367/rain_diag24/SOURCE-HOST-RECEIPT.json",
+      "destination": "frozen-rain-source/port/dreamcast/tools/d367/rain_diag24/SOURCE-HOST-RECEIPT.json",
+      "bytes": 2341,
+      "sha256": "cb5a89eaaaca25b72f890b8c1b0c1a891d1c3ee45b357d49c4d3a59f5e755117",
+      "lf_sha256": "cb5a89eaaaca25b72f890b8c1b0c1a891d1c3ee45b357d49c4d3a59f5e755117",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:da413ff058f88fa136375ecff629610fc59c0e51:port/dreamcast/tools/d367/rain_diag24/fixture_rain_diag.cpp.in",
+      "destination": "frozen-rain-source/port/dreamcast/tools/d367/rain_diag24/fixture_rain_diag.cpp.in",
+      "bytes": 18288,
+      "sha256": "ab4e750aeba95b80c073f5bc25dfcf1e679eacbcc05b48b16a7d82dd1c29144d",
+      "lf_sha256": "ab4e750aeba95b80c073f5bc25dfcf1e679eacbcc05b48b16a7d82dd1c29144d",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:da413ff058f88fa136375ecff629610fc59c0e51:port/dreamcast/tools/d367/rain_diag24/history/HOST-CONTROLS-94f55-PRE-REVIEW.json",
+      "destination": "frozen-rain-source/port/dreamcast/tools/d367/rain_diag24/history/HOST-CONTROLS-94f55-PRE-REVIEW.json",
+      "bytes": 4259,
+      "sha256": "4f3c93bf7f614addccc48a4fa54c6fea97e12804dd8494476c32091476c4e54e",
+      "lf_sha256": "4f3c93bf7f614addccc48a4fa54c6fea97e12804dd8494476c32091476c4e54e",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:da413ff058f88fa136375ecff629610fc59c0e51:port/dreamcast/tools/d367/rain_diag24/history/README.md",
+      "destination": "frozen-rain-source/port/dreamcast/tools/d367/rain_diag24/history/README.md",
+      "bytes": 357,
+      "sha256": "9eadc68f3c5204d4f61914631c38ea0ea7317446fa3c4c91a72a9a298dbc8960",
+      "lf_sha256": "9eadc68f3c5204d4f61914631c38ea0ea7317446fa3c4c91a72a9a298dbc8960",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:da413ff058f88fa136375ecff629610fc59c0e51:port/dreamcast/tools/d367/rain_diag24/history/SOURCE-HOST-RECEIPT-94f55-PRE-REVIEW.json",
+      "destination": "frozen-rain-source/port/dreamcast/tools/d367/rain_diag24/history/SOURCE-HOST-RECEIPT-94f55-PRE-REVIEW.json",
+      "bytes": 2341,
+      "sha256": "ca5184008625676c75e39db5d2fbd20942d013996caa008fca4434a9e7a8fa8d",
+      "lf_sha256": "ca5184008625676c75e39db5d2fbd20942d013996caa008fca4434a9e7a8fa8d",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:da413ff058f88fa136375ecff629610fc59c0e51:port/dreamcast/tools/d367/rain_diag24/test_rain_diag.py",
+      "destination": "frozen-rain-source/port/dreamcast/tools/d367/rain_diag24/test_rain_diag.py",
+      "bytes": 12593,
+      "sha256": "233e8f2f7afa80290cb8735e9ff42156a11f3b574236162f204d563184f70fc9",
+      "lf_sha256": "233e8f2f7afa80290cb8735e9ff42156a11f3b574236162f204d563184f70fc9",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:da413ff058f88fa136375ecff629610fc59c0e51:src/game/espgen44.cpp",
+      "destination": "frozen-rain-source/src/game/espgen44.cpp",
+      "bytes": 4163,
+      "sha256": "6f2bab97dc6b8a8fb508c3ee159f2e553dab061a44ee3791e248eaca227a6cea",
+      "lf_sha256": "6f2bab97dc6b8a8fb508c3ee159f2e553dab061a44ee3791e248eaca227a6cea",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:da413ff058f88fa136375ecff629610fc59c0e51:src/game/filter06.cpp",
+      "destination": "frozen-rain-source/src/game/filter06.cpp",
+      "bytes": 36906,
+      "sha256": "60364736a8d2935b1f49cc4bbf73915757e78e03e0333fcde57adfaa88ea6dd0",
+      "lf_sha256": "60364736a8d2935b1f49cc4bbf73915757e78e03e0333fcde57adfaa88ea6dd0",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/integration-readiness-motion-rain-diag-20261024.py",
+      "destination": "dated-integration-preview/integration-readiness-motion-rain-diag-20261024.py",
+      "bytes": 3453,
+      "sha256": "de7479b78031f12ef85e40c54232ab3c3f23cae9bba989de131c0076a0832dd7",
+      "lf_sha256": "f17835574a171e10255ada9bcbac84865cebd57322d6567fe163eddf0e4e9e66",
+      "crlf_count": 31,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828851436987900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/ROOT-INTEGRATION-READINESS-MOTION-RAIN-DIAG-20261024.json",
+      "destination": "dated-integration-preview/ROOT-INTEGRATION-READINESS-MOTION-RAIN-DIAG-20261024.json",
+      "bytes": 2548,
+      "sha256": "5e2a54ee49dccdf7617abad95e9f7338508645035b6b699d62e9501adf136cda",
+      "lf_sha256": "5e2a54ee49dccdf7617abad95e9f7338508645035b6b699d62e9501adf136cda",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828851778077200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-prep/HANDBACK.md",
+      "destination": "motion-original-preparation/HANDBACK.md",
+      "bytes": 5434,
+      "sha256": "8555a79282c8b16d24212e4deea72470b0674e715bd622e208365da78c47454c",
+      "lf_sha256": "8555a79282c8b16d24212e4deea72470b0674e715bd622e208365da78c47454c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828206601497500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-prep/PREPARATION.json",
+      "destination": "motion-original-preparation/PREPARATION.json",
+      "bytes": 2386904,
+      "sha256": "186784375ab0add42a8d27aeeb938fad5e4af06e0a8ed0c7662cfecd889ce8ee",
+      "lf_sha256": "186784375ab0add42a8d27aeeb938fad5e4af06e0a8ed0c7662cfecd889ce8ee",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828126715887100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-prep/prepare_full_pair.py",
+      "destination": "motion-original-preparation/prepare_full_pair.py",
+      "bytes": 10345,
+      "sha256": "0736395a8b7afa4e7021fe08e32bbdf1948edb7401afe7adb46f6723caf1aafc",
+      "lf_sha256": "0736395a8b7afa4e7021fe08e32bbdf1948edb7401afe7adb46f6723caf1aafc",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828126619287700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-prep/READBACK.json",
+      "destination": "motion-original-preparation/READBACK.json",
+      "bytes": 775,
+      "sha256": "c121ca3be280cc3daeae38a90a117e4531c310b39c4a39d7ed781f3cb2f382a3",
+      "lf_sha256": "c121ca3be280cc3daeae38a90a117e4531c310b39c4a39d7ed781f3cb2f382a3",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828596023714100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-prep/readback_full_prep.py",
+      "destination": "motion-original-preparation/readback_full_prep.py",
+      "bytes": 3973,
+      "sha256": "765311b7fb7d24c5a7f5f239ac3975069380d293d5116c4d153045c6df70066a",
+      "lf_sha256": "765311b7fb7d24c5a7f5f239ac3975069380d293d5116c4d153045c6df70066a",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792827989975627900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-prep/run_full_pair.py",
+      "destination": "motion-original-preparation/run_full_pair.py",
+      "bytes": 8801,
+      "sha256": "7251d227586634ef2654180791597de68282e3087ce0c3fe5a2fe097bc1890e6",
+      "lf_sha256": "7251d227586634ef2654180791597de68282e3087ce0c3fe5a2fe097bc1890e6",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828126626287200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-prep/run_full_pair.sh",
+      "destination": "motion-original-preparation/run_full_pair.sh",
+      "bytes": 875,
+      "sha256": "d231a5385a927f31b29cd15e201c565ec530de3c7ded3806bbc395bd1c9446e7",
+      "lf_sha256": "d231a5385a927f31b29cd15e201c565ec530de3c7ded3806bbc395bd1c9446e7",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792827759750565700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-prep/SHA256-MANIFEST.json",
+      "destination": "motion-original-preparation/SHA256-MANIFEST.json",
+      "bytes": 909,
+      "sha256": "b41995a706cfc93eba06c8b1540ad86898ca7d6c0752b2f82bca264ca0493df8",
+      "lf_sha256": "b41995a706cfc93eba06c8b1540ad86898ca7d6c0752b2f82bca264ca0493df8",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828206673747500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-prep/ROOT-GRANT.json",
+      "destination": "motion-original-preparation/ROOT-GRANT.json",
+      "bytes": 663,
+      "sha256": "31bb525010e6ff557c8478cdf75fe3ef2872d0704bce8987699693228ff3462f",
+      "lf_sha256": "a630a617c4d85082f2358673574bd453e3a72f7807d6757d57920a664b979fde",
+      "crlf_count": 19,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828611513400600
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/receipt.json",
+      "destination": "motion-original-failed-OFF/receipt.json",
+      "bytes": 1809,
+      "sha256": "15cf2fd3805f3a67532d37669f08f7494720a762e1e5dbeabcec6d43287cdfa7",
+      "lf_sha256": "15cf2fd3805f3a67532d37669f08f7494720a762e1e5dbeabcec6d43287cdfa7",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828719973787430
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/command.json",
+      "destination": "motion-original-failed-OFF/off/command.json",
+      "bytes": 7611,
+      "sha256": "7d818e8e808985de971900f42c63e0d0326116793f32d60ec4911c17374bb5ce",
+      "lf_sha256": "7d818e8e808985de971900f42c63e0d0326116793f32d60ec4911c17374bb5ce",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828612539381869
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/size.txt",
+      "destination": "motion-original-failed-OFF/off/size.txt",
+      "bytes": 152,
+      "sha256": "59810a8387ca1637c9c56036ac59d1138fafb8c98714691789f09a5b706f5ac6",
+      "lf_sha256": "59810a8387ca1637c9c56036ac59d1138fafb8c98714691789f09a5b706f5ac6",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828719769782983
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/sections.txt",
+      "destination": "motion-original-failed-OFF/off/sections.txt",
+      "bytes": 1039,
+      "sha256": "642a7405769c3f7f6f83e9dfb1c6653ff9ce87d163430e2bc0f97a3dc0e8bbff",
+      "lf_sha256": "642a7405769c3f7f6f83e9dfb1c6653ff9ce87d163430e2bc0f97a3dc0e8bbff",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828719769782983
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/resolved-knobs.txt",
+      "destination": "motion-original-failed-OFF/off/resolved-knobs.txt",
+      "bytes": 221355,
+      "sha256": "bde3112cfd419e41aadb3678af34ebe1451ea271cb9cff968b1b92e24fabe630",
+      "lf_sha256": "bde3112cfd419e41aadb3678af34ebe1451ea271cb9cff968b1b92e24fabe630",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792828717753738365
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-continuation/READBACK.json",
+      "destination": "motion-root-validated-OFF-extract/READBACK.json",
+      "bytes": 464,
+      "sha256": "f334b9cceeb5c2c5deb97f90445372af13a69f8ee6691e496581a49029d8a053",
+      "lf_sha256": "f334b9cceeb5c2c5deb97f90445372af13a69f8ee6691e496581a49029d8a053",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792829042457235900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-rain-motion-off-20261024/collect.py",
+      "destination": "collect.py",
+      "bytes": 14074,
+      "sha256": "fdd2ae67a38d9d1968ce6fe0f209732585f135561ee504a0f9d524c94da09051",
+      "lf_sha256": "fdd2ae67a38d9d1968ce6fe0f209732585f135561ee504a0f9d524c94da09051",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792829208322580000
+    }
+  ]
+}

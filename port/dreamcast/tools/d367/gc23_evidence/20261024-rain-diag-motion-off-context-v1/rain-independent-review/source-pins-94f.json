@@ -1,0 +1,97 @@
+{
+  "source": "94f55ff4fe4a57478d35fdd392ee8e53914d36ce",
+  "parent": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "inputs": [
+    {
+      "path": "port/dreamcast/game/effects30.mk",
+      "bytes": 40013,
+      "sha256": "66386156f0ccf987665b30e9ecae8e7257087ba41af2b747049b0bcfa22d7d3f",
+      "git_blob": "3c8bfeca6507c580eb3ec718527515da6d0ee56d"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/rain_diag24/README.md",
+      "bytes": 4611,
+      "sha256": "e124f046361c62f5ab42db4174d557e0e7dae3b57ac3e5f7cae9ee833bd93897",
+      "git_blob": "ba1c30c4c9619d33340f4de8f751be37f05c6aec"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/rain_diag24/fixture_rain_diag.cpp.in",
+      "bytes": 17636,
+      "sha256": "b6d4ece131fc322354294d2358e2067aefc9e28ce79069927406600655eeea04",
+      "git_blob": "5a339a750ca98cb70e92098053fe6e67defa52e3"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/rain_diag24/test_rain_diag.py",
+      "bytes": 10566,
+      "sha256": "29cf06caa07cde68d4ff0b2f3dfca577885af0f15b7fbecbdf918d0531c26543",
+      "git_blob": "679a2c7aec048d5062d348a66592dc1d14a7051b"
+    },
+    {
+      "path": "src/game/espgen44.cpp",
+      "bytes": 4163,
+      "sha256": "6f2bab97dc6b8a8fb508c3ee159f2e553dab061a44ee3791e248eaca227a6cea",
+      "git_blob": "55ef261e2cd8fa48a1b02476321114e28cf3cd6f"
+    },
+    {
+      "path": "src/game/filter06.cpp",
+      "bytes": 36524,
+      "sha256": "d664a3f2d48a6189ef8109cafb1bf41316a2b78fcf6c826c43c8052eca757bcc",
+      "git_blob": "e9eea023fb4f602da52c1a0172fea37c7ce6aa1d"
+    },
+    {
+      "path": "src/game/filter.cpp",
+      "bytes": 1913,
+      "sha256": "ff7fe4a958e6ffdbb84eb4352b9a882ca7fcb1f8f8113dc6f738543b00251d27",
+      "git_blob": "0bb892757fcabf38e5c7db35129d636a6e0cb522"
+    },
+    {
+      "path": "src/game/main_sub.cpp",
+      "bytes": 20545,
+      "sha256": "67483158e94c5fb54d50bb6fd4cdc4a1988d3db073d9fdccbd573e77128cfc29",
+      "git_blob": "4a8a610ec141569b56a8849db41d4e20afaf92f4"
+    },
+    {
+      "path": "src/game/main.cpp",
+      "bytes": 22790,
+      "sha256": "b0956d568914717092569c137ea60eba27e557880351998d4e51105156815e35",
+      "git_blob": "0dbbd8616796023463347e9cba20e73317eb7bce"
+    },
+    {
+      "path": "src/game/trans.cpp",
+      "bytes": 233619,
+      "sha256": "a83e4235dff43faa39ae46118ca644316a6c1733eaf75c2e726426205e29f91a",
+      "git_blob": "78908324df429fa7e043317ff19727338ba8a4f7"
+    },
+    {
+      "path": "src/game/espgen.cpp",
+      "bytes": 28724,
+      "sha256": "43bc31c723c59f77d706864322de95d5dd4c3f29bb33bc7fb3dd64e6b1a2bb07",
+      "git_blob": "d97851234b93c2e94f616e54a4cc06f9dee85bb9"
+    },
+    {
+      "path": "src/game/espgen10.cpp",
+      "bytes": 7762,
+      "sha256": "5f2d991b2839505a66d4f3e4b0b6489da15293bf3c91f6d1d6028ce653920ef2",
+      "git_blob": "611abd6d9271884ee35d7c94ffe1930db30c60bd"
+    },
+    {
+      "path": "port/dreamcast/game/platform/gx_stub.cpp",
+      "bytes": 17457,
+      "sha256": "9775ceea655cdeba1259b36f128f4222ea325d49b102ccdccea6efe853ca3881",
+      "git_blob": "69aca031da8e8e19bded6eb49506dd85ca066c12"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "bytes": 510195,
+      "sha256": "607fc67cd72f5c6acc2a7a1c2aecf651b78c2ca9e847c562171f820f9f12ea4a",
+      "git_blob": "72b12339509476481c6e8f93e6f6aac9c2c0263c"
+    },
+    {
+      "path": "port/dreamcast/room/pvr_geometry.cpp",
+      "bytes": 9182,
+      "sha256": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136",
+      "git_blob": "1eeecb677848d6051185c36ac82d9ef7256c137d"
+    }
+  ],
+  "review_scope": "immutable source/host only"
+}

@@ -1,0 +1,18 @@
+{
+  "source": "94f55ff4fe4a57478d35fdd392ee8e53914d36ce",
+  "scope": "actual new C++ helpers + actual setter/callback/flush excerpts; mocked native provider; deterministic contract adversaries, not observed guest mutation",
+  "cases": [
+    "flt06.num",
+    "flt06.cur alpha",
+    "flt06.col target alpha",
+    "Stop",
+    "indoor"
+  ],
+  "reproduced": "RD_SAMPLE retained and valid_sample true after changed live state re-snapshotted at return",
+  "actual_current_native_mutation_reachability": "not demonstrated; no such writes evident in current provider",
+  "stdout": "REPRODUCED 5 native-return samples retain RD_SAMPLE while post-call live key changes are freshly snapshotted\n",
+  "fixture_sha256": "02ee46806f78739ffa3ebd6302a0e135054de915808e513fe87a23bf5b67a7e2",
+  "RLIMIT_AS_bytes": 268435456,
+  "SDK": false,
+  "guests": false
+}

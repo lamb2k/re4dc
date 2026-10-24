@@ -1,0 +1,9 @@
+{
+  "source": "94f55ff4fe4a57478d35fdd392ee8e53914d36ce",
+  "scope": "unchanged frozen actual-excerpt/pp/Make/mutant runner independently invoked on immutable snapshot, no SDK",
+  "exit": 0,
+  "seconds": 17.57480313599808,
+  "resource_limit_runner_bytes": 134217728,
+  "jobs": 1,
+  "log_sha256": "46d7edfa20789cd1e7fb68651d14d919a35b7eb999e10f55b23f51148de838b6"
+}

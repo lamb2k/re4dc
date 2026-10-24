@@ -1,0 +1,9 @@
+{
+  "source": "da413ff058f88fa136375ecff629610fc59c0e51",
+  "runtime_tested": "fdb5ed4212fc78823f625ab75b78cc237cfd181a",
+  "source_host_receipt_sha256": "cb5a89eaaaca25b72f890b8c1b0c1a891d1c3ee45b357d49c4d3a59f5e755117",
+  "host_controls_sha256": "bf4b0cddb04490633239311456deefc4831c9908ff4b18607b99175deb159a4e",
+  "verified_source_files": 6,
+  "verified_read_only_provider_headers": 2,
+  "scope": "author evidence bytes/source hashes verified; independent actual host suite separately preserved"
+}

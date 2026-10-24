@@ -1,0 +1,27 @@
+/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/re4dc-game.elf  :
+section                size         addr
+.text               2420224   2348875776
+.init                    54   2351296000
+.fini                    42   2351296056
+.rodata              272152   2351296128
+.eh_frame              1340   2351568280
+.ctors                  120   2351569748
+.dtors                    8   2351569868
+.data                185176   2351569888
+.re4dc_char_data     490272   2351755072
+.got                     12   2352246584
+.bss                 962900   2352246624
+.ocram                    0   2080378880
+.comment                 18            0
+.debug_aranges       116552            0
+.debug_info        11654185            0
+.debug_abbrev       1108253            0
+.debug_line         6832648            0
+.debug_frame         612480            0
+.debug_str           538015            0
+.debug_loclists     3339024            0
+.debug_rnglists      410074            0
+.debug_line_str       40244            0
+Total              28983793
+
+

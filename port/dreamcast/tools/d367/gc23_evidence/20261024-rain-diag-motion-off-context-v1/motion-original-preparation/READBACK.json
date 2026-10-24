@@ -1,0 +1,24 @@
+{
+  "status": "FRESH_NORMAL_PAIR_PREPARATION_READBACK_PASS",
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "source_files_per_arm": 7640,
+  "source_export_bytes_per_arm": 99683666,
+  "input_pins_verified": 1539,
+  "old_full_files_preserved_and_rehashed": 2740,
+  "fresh_arms": 2,
+  "old_object_reuse": false,
+  "rejected_metadata_mutants": [
+    "MotionOFF-in-ON",
+    "catalog-configured",
+    "old-source-output",
+    "missing-overlay",
+    "jobs4",
+    "source-wrong",
+    "old-graph-reused-as-new"
+  ],
+  "SDK_commands": 0,
+  "Make_queries": 0,
+  "links": 0,
+  "output_dirs_created": false,
+  "limits": "Preparation only. Actual full Make expansion, all fresh compiles/links/14 overlays, raw identity and linked_end remain unmeasured until root allocation."
+}

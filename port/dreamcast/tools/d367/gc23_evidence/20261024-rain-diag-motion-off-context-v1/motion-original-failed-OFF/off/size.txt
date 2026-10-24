@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+2693812	 675588	 962900	4332300	 421b0c	/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/re4dc-game.elf

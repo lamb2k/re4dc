@@ -1,0 +1,149 @@
+{
+  "files": [
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/re4dc-game.elf",
+      "bytes": 28568292,
+      "sha256": "90decb044fcd31a42c3bf819965ac6b682494772c2519c716461215fd32edd56",
+      "source_mtime_ns": 1792828717465731965,
+      "payload_copied": false,
+      "scope": "Original immutable OFF programme/ELF/overlay hash only; no bytes archived."
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/program.bin",
+      "bytes": 3370820,
+      "sha256": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+      "source_mtime_ns": 1792828719757782721,
+      "payload_copied": false,
+      "scope": "Original immutable OFF programme/ELF/overlay hash only; no bytes archived."
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/em22.ovl",
+      "bytes": 27236,
+      "sha256": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e",
+      "source_mtime_ns": 1792828712365618452,
+      "payload_copied": false,
+      "scope": "Original immutable OFF programme/ELF/overlay hash only; no bytes archived."
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/em2b.ovl",
+      "bytes": 67900,
+      "sha256": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695",
+      "source_mtime_ns": 1792828712769627455,
+      "payload_copied": false,
+      "scope": "Original immutable OFF programme/ELF/overlay hash only; no bytes archived."
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/em2f.ovl",
+      "bytes": 16800,
+      "sha256": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1",
+      "source_mtime_ns": 1792828711965609535,
+      "payload_copied": false,
+      "scope": "Original immutable OFF programme/ELF/overlay hash only; no bytes archived."
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/em35.ovl",
+      "bytes": 52392,
+      "sha256": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7",
+      "source_mtime_ns": 1792828714409663986,
+      "payload_copied": false,
+      "scope": "Original immutable OFF programme/ELF/overlay hash only; no bytes archived."
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/em3b.ovl",
+      "bytes": 7568,
+      "sha256": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417",
+      "source_mtime_ns": 1792828714009655081,
+      "payload_copied": false,
+      "scope": "Original immutable OFF programme/ELF/overlay hash only; no bytes archived."
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/pl0f.ovl",
+      "bytes": 45608,
+      "sha256": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e",
+      "source_mtime_ns": 1792828711561600524,
+      "payload_copied": false,
+      "scope": "Original immutable OFF programme/ELF/overlay hash only; no bytes archived."
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/pl11.ovl",
+      "bytes": 35592,
+      "sha256": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e",
+      "source_mtime_ns": 1792828713181636638,
+      "payload_copied": false,
+      "scope": "Original immutable OFF programme/ELF/overlay hash only; no bytes archived."
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/pl14.ovl",
+      "bytes": 18832,
+      "sha256": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e",
+      "source_mtime_ns": 1792828713605646081,
+      "payload_copied": false,
+      "scope": "Original immutable OFF programme/ELF/overlay hash only; no bytes archived."
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/sscrn.ovl",
+      "bytes": 134372,
+      "sha256": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60",
+      "source_mtime_ns": 1792828716889719161,
+      "payload_copied": false,
+      "scope": "Original immutable OFF programme/ELF/overlay hash only; no bytes archived."
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/st1_0.ovl",
+      "bytes": 36340,
+      "sha256": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a",
+      "source_mtime_ns": 1792828714821673158,
+      "payload_copied": false,
+      "scope": "Original immutable OFF programme/ELF/overlay hash only; no bytes archived."
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/st1_1.ovl",
+      "bytes": 81540,
+      "sha256": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0",
+      "source_mtime_ns": 1792828715225682149,
+      "payload_copied": false,
+      "scope": "Original immutable OFF programme/ELF/overlay hash only; no bytes archived."
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/st1_2.ovl",
+      "bytes": 50076,
+      "sha256": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c",
+      "source_mtime_ns": 1792828715633691227,
+      "payload_copied": false,
+      "scope": "Original immutable OFF programme/ELF/overlay hash only; no bytes archived."
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/st1_3.ovl",
+      "bytes": 88748,
+      "sha256": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc",
+      "source_mtime_ns": 1792828716049700482,
+      "payload_copied": false,
+      "scope": "Original immutable OFF programme/ELF/overlay hash only; no bytes archived."
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/st2_0.ovl",
+      "bytes": 96788,
+      "sha256": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2",
+      "source_mtime_ns": 1792828716457709557,
+      "payload_copied": false,
+      "scope": "Original immutable OFF programme/ELF/overlay hash only; no bytes archived."
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/build.log",
+      "bytes": 1263553,
+      "sha256": "7b975aa9cafe4b06ace0a1600876a817f1151b388199ac7335e89e36391dfa75",
+      "source_mtime_ns": 1792828717481732320,
+      "payload_copied": false,
+      "scope": "Bulk build log or helper object identity only."
+    },
+    {
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/obj/platform/gc_asset_motion_unknown.o",
+      "bytes": 1464,
+      "sha256": "c893e82007cc5fa687b28b91198cb3af7eeb8d0c177df0053fd69d00d19da342",
+      "source_mtime_ns": 1792828685273006427,
+      "payload_copied": false,
+      "scope": "Bulk build log or helper object identity only."
+    }
+  ],
+  "payloads_archived": false
+}

@@ -1,0 +1,16 @@
+{
+  "status": "PURE_READBACK_PASS_NO_EXECUTION",
+  "OFF_preserved_files": 9013,
+  "OFF_main": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+  "OFF_all14": true,
+  "OFF_empty_helper": true,
+  "negative_controls": [
+    "nonempty-helper",
+    "OFF-Motion-flag",
+    "helper-linked-OFF",
+    "OFF-wrong-main",
+    "dropped-overlay"
+  ],
+  "ON_only": true,
+  "failed_receipt": "15cf2fd3805f3a67532d37669f08f7494720a762e1e5dbeabcec6d43287cdfa7"
+}

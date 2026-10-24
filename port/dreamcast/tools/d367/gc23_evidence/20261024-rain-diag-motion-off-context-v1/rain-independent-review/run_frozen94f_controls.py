@@ -1,0 +1,5 @@
+from pathlib import Path
+import subprocess,json,resource,sys,hashlib,time
+resource.setrlimit(resource.RLIMIT_AS,(256*1024*1024,256*1024*1024));resource.setrlimit(resource.RLIMIT_CORE,(0,0))
+out=Path('/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/review');test=Path('/dev/shm/rain-diag-review94f/source/port/dreamcast/tools/d367/rain_diag24/test_rain_diag.py');start=time.monotonic();p=subprocess.run([sys.executable,str(test)],capture_output=True,text=True);log=p.stdout+p.stderr;(out/'frozen94f-author-controls.log').write_text(log)
+rec={'source':'94f55ff4fe4a57478d35fdd392ee8e53914d36ce','scope':'unchanged frozen actual-excerpt/pp/Make/mutant runner independently invoked on immutable snapshot, no SDK','exit':p.returncode,'seconds':time.monotonic()-start,'resource_limit_runner_bytes':128*1024*1024,'jobs':1,'log_sha256':hashlib.sha256(log.encode()).hexdigest()};(out/'frozen94f-author-controls.json').write_text(json.dumps(rec,indent=2)+'\n');print('exit',p.returncode,log[-6000:])

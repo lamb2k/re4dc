@@ -1,0 +1,74 @@
+{
+  "source": "da413ff058f88fa136375ecff629610fc59c0e51",
+  "runtime_tested": "fdb5ed4212fc78823f625ab75b78cc237cfd181a",
+  "base": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "scope": "exact frozen inputs; runtime and fixture/runner equivalence to independently executed fdb snapshot verified",
+  "changed_files": [
+    {
+      "path": "port/dreamcast/game/effects30.mk",
+      "bytes": 40013,
+      "sha256": "66386156f0ccf987665b30e9ecae8e7257087ba41af2b747049b0bcfa22d7d3f",
+      "git_blob": "3c8bfeca6507c580eb3ec718527515da6d0ee56d"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/rain_diag24/HOST-CONTROLS.json",
+      "bytes": 4379,
+      "sha256": "bf4b0cddb04490633239311456deefc4831c9908ff4b18607b99175deb159a4e",
+      "git_blob": "4cc5b6c553f1b68c1441f896175d95ebed1709c0"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/rain_diag24/README.md",
+      "bytes": 5431,
+      "sha256": "6347832f18b94a622b036102fc384aab4fb500e241437e0a71712ddb7e3477bd",
+      "git_blob": "8bbff691fd4bc1d4319fdaf9b5b1d4b7ffb6af16"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/rain_diag24/SOURCE-HOST-RECEIPT.json",
+      "bytes": 2341,
+      "sha256": "cb5a89eaaaca25b72f890b8c1b0c1a891d1c3ee45b357d49c4d3a59f5e755117",
+      "git_blob": "a68524749c4877227c296734ee426e175fb971cc"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/rain_diag24/fixture_rain_diag.cpp.in",
+      "bytes": 18288,
+      "sha256": "ab4e750aeba95b80c073f5bc25dfcf1e679eacbcc05b48b16a7d82dd1c29144d",
+      "git_blob": "2542a802fd7cea05ee1a76adacb90bbbcbca313e"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/rain_diag24/history/HOST-CONTROLS-94f55-PRE-REVIEW.json",
+      "bytes": 4259,
+      "sha256": "4f3c93bf7f614addccc48a4fa54c6fea97e12804dd8494476c32091476c4e54e",
+      "git_blob": "75205e113b8cbebba61b057c5ebac9555d103479"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/rain_diag24/history/README.md",
+      "bytes": 357,
+      "sha256": "9eadc68f3c5204d4f61914631c38ea0ea7317446fa3c4c91a72a9a298dbc8960",
+      "git_blob": "d84ab1ddd0a4ee23acfbb45d30972f8d1f074ef4"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/rain_diag24/history/SOURCE-HOST-RECEIPT-94f55-PRE-REVIEW.json",
+      "bytes": 2341,
+      "sha256": "ca5184008625676c75e39db5d2fbd20942d013996caa008fca4434a9e7a8fa8d",
+      "git_blob": "7fef47db105e3a9a33094db3601f766d4f0d4ed4"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/rain_diag24/test_rain_diag.py",
+      "bytes": 12593,
+      "sha256": "233e8f2f7afa80290cb8735e9ff42156a11f3b574236162f204d563184f70fc9",
+      "git_blob": "b0116b3cd55423ef8f6718055eced9d81735b8ef"
+    },
+    {
+      "path": "src/game/espgen44.cpp",
+      "bytes": 4163,
+      "sha256": "6f2bab97dc6b8a8fb508c3ee159f2e553dab061a44ee3791e248eaca227a6cea",
+      "git_blob": "55ef261e2cd8fa48a1b02476321114e28cf3cd6f"
+    },
+    {
+      "path": "src/game/filter06.cpp",
+      "bytes": 36906,
+      "sha256": "60364736a8d2935b1f49cc4bbf73915757e78e03e0333fcde57adfaa88ea6dd0",
+      "git_blob": "1a90a4f12dfd5901d2aec0717e8aebf603a15554"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "rain_review_members": 17,
+  "frozen_rain_changed_files": 11,
+  "actual_runtime_files_matching_fdb": 3,
+  "original_failed_runner_preserved": true,
+  "OFF_existing_root_validator_extracted_separately": true,
+  "OFF_main_all14_hashes_independently_verified": true,
+  "source_preservation_only": true,
+  "syntax_only_checked": [
+    "dated-root-docs/takeover-refresh-20261024.py",
+    "rain-independent-review/run_frozen94f_controls.py",
+    "rain-independent-review/run_frozenfdb_controls.py",
+    "rain-independent-review/run_live_state_counterexample.py",
+    "rain-independent-review/run_live_state_successor.py",
+    "dated-rain-root/root-final-source-readback.py",
+    "frozen-rain-source/port/dreamcast/tools/d367/rain_diag24/test_rain_diag.py",
+    "dated-integration-preview/integration-readiness-motion-rain-diag-20261024.py",
+    "motion-original-preparation/prepare_full_pair.py",
+    "motion-original-preparation/readback_full_prep.py",
+    "motion-original-preparation/run_full_pair.py",
+    "motion-original-preparation/run_full_pair.sh",
+    "collect.py"
+  ],
+  "SDK_or_guest_runs": 0,
+  "active_source_or_runner_mutated": false,
+  "integration_or_recipe_mutated": false,
+  "remaining": [
+    "Rain target/cache/programme/heap/guest/source-lifecycle-look acceptance",
+    "Motion full OFF/ON pair acceptance and ON pricing",
+    "Integrated runtime/heap/KOS/H2/catalog/consumer/terminal/hardware acceptance"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "source": "fdb5ed4212fc78823f625ab75b78cc237cfd181a",
+  "scope": "actual new C++ helpers + actual setter/callback/flush excerpts; mocked native provider; deterministic contract adversaries, not observed guest mutation",
+  "cases": [
+    "flt06.num",
+    "flt06.cur alpha",
+    "flt06.col target alpha",
+    "Stop",
+    "indoor",
+    "rate/signature"
+  ],
+  "result": "all6 changed live-state samples reject validity;4fault classes freeze diagnostic while actual rain continues",
+  "actual_current_native_mutation_reachability": "not demonstrated; no such writes evident in current provider",
+  "stdout": "PASS 6 changed live-state samples reject RD_SAMPLE while retaining actual lifetime return total\nPASS 4 coherent exhaustion classes freeze diagnostic bytes while actual rain calls continue\n",
+  "fixture_sha256": "f1fb9a2d0266eeb6d913810bec406e5204b2167f0fb56ca72673698355c9f4ac",
+  "RLIMIT_AS_bytes": 268435456,
+  "SDK": false,
+  "guests": false
+}

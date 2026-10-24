@@ -1,0 +1,30 @@
+{
+  "HANDBACK.md": {
+    "bytes": 5434,
+    "sha256": "8555a79282c8b16d24212e4deea72470b0674e715bd622e208365da78c47454c"
+  },
+  "PREPARATION.json": {
+    "bytes": 2386904,
+    "sha256": "186784375ab0add42a8d27aeeb938fad5e4af06e0a8ed0c7662cfecd889ce8ee"
+  },
+  "prepare_full_pair.py": {
+    "bytes": 10345,
+    "sha256": "0736395a8b7afa4e7021fe08e32bbdf1948edb7401afe7adb46f6723caf1aafc"
+  },
+  "READBACK.json": {
+    "bytes": 775,
+    "sha256": "c121ca3be280cc3daeae38a90a117e4531c310b39c4a39d7ed781f3cb2f382a3"
+  },
+  "readback_full_prep.py": {
+    "bytes": 3973,
+    "sha256": "765311b7fb7d24c5a7f5f239ac3975069380d293d5116c4d153045c6df70066a"
+  },
+  "run_full_pair.py": {
+    "bytes": 8801,
+    "sha256": "7251d227586634ef2654180791597de68282e3087ce0c3fe5a2fe097bc1890e6"
+  },
+  "run_full_pair.sh": {
+    "bytes": 875,
+    "sha256": "d231a5385a927f31b29cd15e201c565ec530de3c7ded3806bbc395bd1c9446e7"
+  }
+}

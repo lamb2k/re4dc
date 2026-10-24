@@ -1,0 +1,23 @@
+{
+  "captured_utc": "2026-10-24T08:04:03.232177+00:00",
+  "files": [
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/takeover-refresh-20261024.py",
+      "snapshot": "takeover-refresh-20261024.py",
+      "bytes": 19176,
+      "sha256": "84a1c007633fcae608172bf0b5781134d136e67728963f2b78dbae9ff6d71c61"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+      "snapshot": "CODEX-TAKEOVER-STATUS.md",
+      "bytes": 23764,
+      "sha256": "a3ac43ea496547e193e4f9e52570cd59e4f0d161b7fb4ede44160d7385956c05"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/CLAUDE-CARRY23.md",
+      "snapshot": "CLAUDE-CARRY23.md",
+      "bytes": 22200,
+      "sha256": "f049df98059e78bba3aff6304e80e7008ceec2fec4d1eb885c22be76061c1624"
+    }
+  ]
+}
