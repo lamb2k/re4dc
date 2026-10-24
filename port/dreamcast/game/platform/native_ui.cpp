@@ -3460,7 +3460,36 @@ void vram_room_frame(){
 #endif
 }
 #endif
+#if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT
+// FX_PS2_NONE_CUT (lane purge-fx24, render only; effects30.mk): an effect picture the PS2 dropped (ps2lib effects-tex
+// ps2_source=NONE) is not drawn. Decided once per texture entry and room, then a byte test per sprite.
+}   // namespace (fx_none_cut.inc is plain data)
+struct FxNoneCutRow { unsigned short room; unsigned crc,fnv; };
+#include "fx_none_cut.inc"
+extern "C" unsigned re4dc_wm_room(void);   // dbgwarp_bridge.cpp
+namespace {
+unsigned short fxnone_room[kTextureCount];   // room + 1 when decided for the entry's current texture
+unsigned char fxnone_cut[kTextureCount];
+unsigned fxnone_cuts;
+bool fx_none_cut(const Entry& e){
+    const unsigned i=unsigned(&e-entries);
+    if(i>=kTextureCount)return false;
+    const unsigned room=re4dc_wm_room()&0xffffU;
+    if(fxnone_room[i]==room+1U)return fxnone_cut[i]!=0;
+    bool lib=false,cut=false;
+    for(unsigned short r:kFxNoneRooms)if(r==room){lib=true;break;}
+    for(const auto& c:kFxNoneCut){
+        if(c.crc==e.key.crc && c.fnv==e.key.fnv && (c.room==room || (c.room==0xffffU && !lib))){cut=true;break;}
+    }
+    fxnone_room[i]=(unsigned short)(room+1U);fxnone_cut[i]=cut;
+    if(cut)re4dc_log("fx ps2 none cut: room=%03x key=%08x-%08x total=%u\n",room,e.key.crc,e.key.fnv,fxnone_cuts);
+    return cut;
+}
+#endif
 void close_entry(Entry& entry) {
+#if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT
+    fxnone_room[&entry-entries]=0;
+#endif
 #if RE4DC_GC_ASSET_GATE
     gcasset_texture_flush(entry);
     // A pending header cannot survive retirement/reuse of any texture entry.
@@ -8187,6 +8216,9 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
     fxCoreTextureAcquired(s->image,e);
 #endif
     if(!e){++fx_missing;return 0;}
+#if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT
+    if(fx_none_cut(*e)){++fxnone_cuts;return 0;}   // FX_PS2_NONE_CUT: a picture the PS2 dropped
+#endif
 #if RE4DC_VRAM_ROOM_LOG && defined(RE4DC_FX_PS2_PACK) && RE4DC_FX_PS2_PACK
     if(!RE4DC_COVER(e->package))vram_room_gcfx(*e);   // VRAM_ROOM_LOG: a GameCube effect picture (no PS2 conversion)
 #endif
