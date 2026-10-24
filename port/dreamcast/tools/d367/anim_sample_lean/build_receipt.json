@@ -1,0 +1,1162 @@
+{
+  "status": "PASS",
+  "scope": "Compile the complete motion TU and prove default-OFF identity to integration.\n\nThe base Make recipe and source are independently materialized with git archive.\nIts full preprocessed TU and raw object are compared with current absent and\nexplicit-zero arms. The matrix crosses the supported Hermite sampler and diagnostic variants. No geometry data, target executable or private assets are used.\n",
+  "baseline": "d5c1ceab9e06461462669b3ce1d28a379747a74a",
+  "knob": "ANIM_SAMPLE_LEAN",
+  "compiler": "sh-elf-g++ (GCC) 15.2.0",
+  "off_identity_comparisons": 28,
+  "inactive_on_identity_comparisons": 6,
+  "source_sha256": {
+    "src/game/motion.cpp": "63e72196ab98e230d3dd14b7ad7328433a63e44d4c0406227374cd9a5b522a8f",
+    "port/dreamcast/game/game30.mk": "4fb38b26e8b872ba87c6922590b5f244e3998eec751f9cf60de51971d0ba3fc9"
+  },
+  "recipe_inputs": {
+    "recipe": "port/dreamcast/tools/d367/rr/recipe.conf",
+    "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+    "current_ch2": [
+      "ROUTE_CH22=1",
+      "ROUTE_CH23=1",
+      "PS2_CH2_ENEMY=1",
+      "PS2_ENEMY_CH22_DIR=/root/re4data/private/ps2enemy-ch2-20261016",
+      "PS2_ENEMY_CH23_DIR=/root/re4data/private/ps2enemy-ch2-20261016",
+      "MOTION_BOUNDED_R11F=1",
+      "NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1",
+      "PS2_WORLD_SOURCE_OWNER=1",
+      "PS2_WORLD_SOURCE_TEX_PREP=1",
+      "AICA_STR_ENT_MAX=56",
+      "AICA_SPILL=1",
+      "NATIVE_MODEL_REGISTRY_FIRST=1",
+      "NATIVE_MODEL_REGISTRY_LOD=1",
+      "ROUTE_SOON_RETURN=1",
+      "MOVIE_AUDIO_PRIME=1",
+      "ROOM_LEFTOVER_FIT=1",
+      "PS2_WORLD_SOURCE_TEX_VQ=1",
+      "LEON_SKIN_SLOTS=2",
+      "LEON_HEADLESS=1",
+      "LEON_HEADLESS_DIR=/root/re4data/private/garr18-head-20261019",
+      "LEON_CLOTH_DRAWN=1",
+      "HAZE_SPRITE_CUT=1",
+      "FX_MIST_PS2=1",
+      "PS2_HDR_SETS=128",
+      "ROUTE_CH21_FULL=1",
+      "RESET_MEM_FIX=1",
+      "GANADO_ROUTINE_BYTES=1",
+      "CLOTH_LIGHT_ABI_FIX=1",
+      "AICA_LAYOUT_RECOVER=1",
+      "PAUSE_NATIVE_PRESENTATION=1",
+      "CAST_MIPMAP=1",
+      "TEX_TWIDDLED_MIPMAP=1",
+      "TEX_PAL4_ALPHA=1",
+      "TEX_PAL4_MIPMAP=1",
+      "TEX_PAL8_ALPHA=1",
+      "TEX_PAL8_MIPMAP=1",
+      "WORLD_RECT21=1",
+      "TEX_MIP_DADJ=3",
+      "VRAM_ROOM_ARENA=0",
+      "EVD_ADMISSION_TXN=1",
+      "EVD_START_CLEANUP=1",
+      "EVD_START_ROLLBACK=1",
+      "EVD_DEBUG_READ_CLEANUP=1",
+      "EVD_EXEC_FAILURE_CLEANUP=1",
+      "EVD_READ_RELEASE_REFS=1",
+      "EVD_READ_ADMISSION_PREFLIGHT=1",
+      "EVD_MODULE_VALIDATE_FIRST=1",
+      "EVENT_MANAGER_STORAGE_FLAGS=1",
+      "EFFECT_ADMISSION_GUARD=1",
+      "EFFECT_CONTROLLER_VALIDATE_FIRST=1",
+      "EM_ADMISSION_DISP_FIX=1",
+      "RESET_RETIRE_BEFORE_HEAPS=1",
+      "MOTION_RETIRE_PREFLIGHT=1",
+      "SS_RESTORE_VALIDATE_FIRST=1",
+      "SS_ACTOR_LIFETIME=1",
+      "SS_MSG_FIELDS=1",
+      "SS_CERT_PARTNER_CAPACITY=1",
+      "PARTS_LINKED_FLAG=1",
+      "TEX_PAYLOAD_RETRY=1",
+      "PS2_WORLD_NONEMPTY_LOD=1",
+      "MOTION_CAPACITY=1",
+      "FX_STRIP21=1",
+      "GANADO_EVENT_KEEP_LOD=1",
+      "SS_DATA_LZ=1",
+      "CPU_BACKFACE=0",
+      "ACTOR_BACKFACE=0",
+      "PS2_WORLD_SOURCE_TEX_MIP=1",
+      "PS2_WORLD_ROOT_POSE=1",
+      "WATER_PS2_EXT=1",
+      "TRAP_FX=1",
+      "LIGHT_CUT_HOLD=1",
+      "FX_ROOM_SPILL_KB=24",
+      "DISC_DMA_WAIT_TIMEOUT=1",
+      "EM35_ROUTINE_BYTES=1",
+      "FX_LEVEL=3",
+      "FX_TRIM=1",
+      "SCENERY_SELECT_ONLY=1",
+      "SCENERY_REPLAY_LEAN=1",
+      "SCENERY_SUBMIT_BATCH=1",
+      "STAT_ROUTINE_BYTES=1",
+      "ESP_POOL_RECYCLE=1",
+      "R117_EFFECT_FAILURE_SAFE=1",
+      "KOS_CACHE_P2=1",
+      "R10C_SPAWN_LIVE_GUARD=1",
+      "EM_READ_RETRY=1"
+    ],
+    "public_ch2": [
+      "ROUTE_CH22=1",
+      "ROUTE_CH23=1",
+      "PS2_CH2_ENEMY=1",
+      "MOTION_BOUNDED_R11F=1",
+      "NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1",
+      "PS2_WORLD_SOURCE_OWNER=1",
+      "PS2_WORLD_SOURCE_TEX_PREP=1",
+      "AICA_STR_ENT_MAX=56",
+      "AICA_SPILL=1",
+      "NATIVE_MODEL_REGISTRY_FIRST=1",
+      "NATIVE_MODEL_REGISTRY_LOD=1",
+      "ROUTE_SOON_RETURN=1",
+      "MOVIE_AUDIO_PRIME=1",
+      "ROOM_LEFTOVER_FIT=1",
+      "PS2_WORLD_SOURCE_TEX_VQ=1",
+      "LEON_SKIN_SLOTS=2",
+      "LEON_HEADLESS=1",
+      "LEON_CLOTH_DRAWN=1",
+      "HAZE_SPRITE_CUT=1",
+      "FX_MIST_PS2=1",
+      "PS2_HDR_SETS=128",
+      "ROUTE_CH21_FULL=1",
+      "RESET_MEM_FIX=1",
+      "GANADO_ROUTINE_BYTES=1",
+      "CLOTH_LIGHT_ABI_FIX=1",
+      "AICA_LAYOUT_RECOVER=1",
+      "PAUSE_NATIVE_PRESENTATION=1",
+      "CAST_MIPMAP=1",
+      "TEX_TWIDDLED_MIPMAP=1",
+      "TEX_PAL4_ALPHA=1",
+      "TEX_PAL4_MIPMAP=1",
+      "TEX_PAL8_ALPHA=1",
+      "TEX_PAL8_MIPMAP=1",
+      "WORLD_RECT21=1",
+      "TEX_MIP_DADJ=3",
+      "VRAM_ROOM_ARENA=0",
+      "EVD_ADMISSION_TXN=1",
+      "EVD_START_CLEANUP=1",
+      "EVD_START_ROLLBACK=1",
+      "EVD_DEBUG_READ_CLEANUP=1",
+      "EVD_EXEC_FAILURE_CLEANUP=1",
+      "EVD_READ_RELEASE_REFS=1",
+      "EVD_READ_ADMISSION_PREFLIGHT=1",
+      "EVD_MODULE_VALIDATE_FIRST=1",
+      "EVENT_MANAGER_STORAGE_FLAGS=1",
+      "EFFECT_ADMISSION_GUARD=1",
+      "EFFECT_CONTROLLER_VALIDATE_FIRST=1",
+      "EM_ADMISSION_DISP_FIX=1",
+      "RESET_RETIRE_BEFORE_HEAPS=1",
+      "MOTION_RETIRE_PREFLIGHT=1",
+      "SS_RESTORE_VALIDATE_FIRST=1",
+      "SS_ACTOR_LIFETIME=1",
+      "SS_MSG_FIELDS=1",
+      "SS_CERT_PARTNER_CAPACITY=1",
+      "PARTS_LINKED_FLAG=1",
+      "TEX_PAYLOAD_RETRY=1",
+      "PS2_WORLD_NONEMPTY_LOD=1",
+      "MOTION_CAPACITY=1",
+      "FX_STRIP21=1",
+      "GANADO_EVENT_KEEP_LOD=1",
+      "SS_DATA_LZ=1",
+      "CPU_BACKFACE=0",
+      "ACTOR_BACKFACE=0",
+      "PS2_WORLD_SOURCE_TEX_MIP=1",
+      "PS2_WORLD_ROOT_POSE=1",
+      "WATER_PS2_EXT=1",
+      "TRAP_FX=1",
+      "LIGHT_CUT_HOLD=1",
+      "FX_ROOM_SPILL_KB=24",
+      "DISC_DMA_WAIT_TIMEOUT=1",
+      "EM35_ROUTINE_BYTES=1",
+      "FX_LEVEL=3",
+      "FX_TRIM=1",
+      "SCENERY_SELECT_ONLY=1",
+      "SCENERY_REPLAY_LEAN=1",
+      "SCENERY_SUBMIT_BATCH=1",
+      "STAT_ROUTINE_BYTES=1",
+      "ESP_POOL_RECYCLE=1",
+      "R117_EFFECT_FAILURE_SAFE=1",
+      "KOS_CACHE_P2=1",
+      "R10C_SPAWN_LIVE_GUARD=1",
+      "EM_READ_RETRY=1"
+    ],
+    "removed_asset_path_assignments": [
+      "PS2_LEON_DIR=/workspace/scratch/c4e1a2818fde/re4dc-anim-sample-lean/port/dreamcast/game/public-assets/ps2leon",
+      "PS2_GANADO_DIR=/workspace/scratch/c4e1a2818fde/re4dc-anim-sample-lean/port/dreamcast/game/public-assets/ps2ganado",
+      "GANADO_LOD_PACK=/workspace/scratch/c4e1a2818fde/re4dc-anim-sample-lean/port/dreamcast/game/public-assets/glod/ganado_lod.re4gl",
+      "ACTOR_GANADO_PS2_STUMP_DIR=/workspace/scratch/c4e1a2818fde/re4dc-anim-sample-lean/port/dreamcast/game/public-assets/ps2stump",
+      "PS2_ENEMY_CH22_DIR=/workspace/scratch/c4e1a2818fde/re4dc-anim-sample-lean/port/dreamcast/game/public-assets/ps2enemych2",
+      "PS2_ENEMY_CH23_DIR=/workspace/scratch/c4e1a2818fde/re4dc-anim-sample-lean/port/dreamcast/game/public-assets/ps2enemych2",
+      "LEON_HEADLESS_DIR=/workspace/scratch/c4e1a2818fde/re4dc-anim-sample-lean/port/dreamcast/game/public-assets/ps2leonhead",
+      "PS2_ENEMY_CH22_DIR=/root/re4data/private/ps2enemy-ch2-20261016",
+      "PS2_ENEMY_CH23_DIR=/root/re4data/private/ps2enemy-ch2-20261016",
+      "LEON_HEADLESS_DIR=/root/re4data/private/garr18-head-20261019"
+    ],
+    "missing_asset_overrides": [
+      "PS2_LEON=0",
+      "LEON_HAND_PACK=0",
+      "PS2_GANADO=0",
+      "PS2_GANADO_LIT=0",
+      "GANADO_LOD=0",
+      "GANADO_EVENT_KEEP_LOD=0",
+      "ACTOR_PROBE_LIGHT=1",
+      "GANADO_LIT=0",
+      "NATIVE_MODEL_REGISTRY_DYING=0",
+      "LEON_HEADLESS=0",
+      "PS2_CH2_ENEMY=0",
+      "ACTOR_GANADO_PS2_STUMP=0"
+    ],
+    "source_sha256": {
+      "port/dreamcast/tools/d367/build-r21.sh": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93",
+      "port/dreamcast/tools/d367/test22/release-knobs.txt": "b67978e9d50cfae966d91bdd771e242ba12f4d899b539db0dbf6982e5e91a46c",
+      "port/dreamcast/tools/d367/rr/recipe.conf": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+      "port/dreamcast/build-public.sh": "7eaba2006802a1dc5a10ff0602d316cc86b09f32535edfa66412ce2564ca0d9f",
+      "port/dreamcast/kos-env.sh": "d776b3b236236bc5f91500ae5e469c140b41f94e44ec72165efd556afd7aebb8",
+      "port/dreamcast/game/Makefile": "28022956e878150c71fd874d705bddfb5d2a50e9b413493ebdea22633b59427f",
+      "port/dreamcast/game/actor_ganado_ps2_stump.mk": "4e405949406531d8435bf7a292d9da8ccf1d3ea0d259c6f463e9e029827ffbf2",
+      "port/dreamcast/game/actorplan.mk": "d256e5c6abbcbc2301a83753017c6d0f466b215f301d847f26c7ff5aaa4ff4ce",
+      "port/dreamcast/game/backface.mk": "e579718e2109acb6f5cc04001e38323dbf6c5eee893f843e12c810b6ab3f312f",
+      "port/dreamcast/game/bench.mk": "7c6eca2f116b6fabe4799d33e79a44ac52e775462658124d6833fbd7eba3854d",
+      "port/dreamcast/game/blender30.mk": "9769d1141e1ca47e10ff94fa67f7a7799ec33c3fade565ada37b641e9186537d",
+      "port/dreamcast/game/bodysvc20.mk": "df456c8a62b5e3d58bc4b6f3c11ead1365d3f0ed75a53a0dc0ad2a8460135453",
+      "port/dreamcast/game/cache20.mk": "b88f46b5b4494d5a830d2c01e850fd75e64af66a063025e5568b2ce29100381c",
+      "port/dreamcast/game/charbake.mk": "b6e58694cab718df70b31915ada82417fc32b0ab7517ff6e85eedb5b6570d2d3",
+      "port/dreamcast/game/chardraw19.mk": "0a9db853a9432df007421d5a6e7ca8c90c2aa770fa46a30ed72a321f2f87403f",
+      "port/dreamcast/game/crowd.mk": "3b41a6951044114518ec24ad74da2d91cf8c333ae2a7e1c0d2d2f4c553875fca",
+      "port/dreamcast/game/dbgwarp.mk": "e0530c3591858f3c2ee5227e06571f0375f50831df1b80bf8b08a475062e83f0",
+      "port/dreamcast/game/demo_candidate.mk": "548266bfcb134492aed006771600fda3c2b3d5b046596a1fc2f7d074520912d4",
+      "port/dreamcast/game/effects30.mk": "74b55a48b1edb02691667a723f49804c4f4e100f9422b60e858c93a4426e51b8",
+      "port/dreamcast/game/engine_preview.mk": "6ad87f53c5f2c4f164b9c8229cdc077a895111057b4a17c6294e9eac38454e18",
+      "port/dreamcast/game/esppool.mk": "fbe98591f1beeadfc4192dbf88d7d6dc321dc7642b88696afec4de6eb7a6b13d",
+      "port/dreamcast/game/frontend30.mk": "c6ac0510ca94d30dbb41a36afd5e45e84555c49511f7003dde1f4c6511064614",
+      "port/dreamcast/game/fxtrim.mk": "40e2d18ee46a8284a1fb5773c46c60d73e970bc851c2be494e4f503616abb0d4",
+      "port/dreamcast/game/g1parts.mk": "f5ffeb4594647e7c239fac40a038f77ff43ebe2c4ed4f503af1436058c5c3a50",
+      "port/dreamcast/game/game30.mk": "4fb38b26e8b872ba87c6922590b5f244e3998eec751f9cf60de51971d0ba3fc9",
+      "port/dreamcast/game/hwfog.mk": "95d43fd37359ebd11e8d8f11efe678d479b69b3f648440440c24c595adefae25",
+      "port/dreamcast/game/knobs.mk": "8be88086cfa0e7f23b87ae1cdb4d09c0924ea783cea45009747b722383d59863",
+      "port/dreamcast/game/kos_cache_p2.mk": "0ca0b63cbfc3fe0e15a67752d86413088a867a630418782dded42539fbe9d3ae",
+      "port/dreamcast/game/logiclod20.mk": "d90740b778194734e335421da72b3593849e9d75f372c155a2cc56e40b0bd969",
+      "port/dreamcast/game/mcheck.mk": "988282bed93d335a6a1dae07cd74c8c85abf71f47e49847fd68ee28dc2bd94ba",
+      "port/dreamcast/game/mendezfx.mk": "b0c6641416b8d8672fc5f2a7319c7ed208af4ed9a83276499a24e31280ccd3dd",
+      "port/dreamcast/game/native_model_registry.mk": "bb8f9338a6a29674c248d9103f0a73e19118ff1f95548e91599abf27b2583f46",
+      "port/dreamcast/game/pace.mk": "78fef47bf1ec90662be905d449bb4ef139105e4d74c4fac6848f51ce3bf43710",
+      "port/dreamcast/game/post30.mk": "c9e7a3ff79f1a8d59a1adabbead4a269eda26a467185597bf96f3ab1542ac8d5",
+      "port/dreamcast/game/ps2leon.mk": "afacaa37db731ab421916f9a84b1fddd71bb036c7a5ef9a7a0e536d652fdd916",
+      "port/dreamcast/game/pvr_rtt.mk": "4b34e026faf4835b7339ee9eac9dd3ddcc8020153885f0acb1ed32bee175c2c3",
+      "port/dreamcast/game/qamenu.mk": "9f4f57e42c0e3f2fb21df320e4badb9295b375cf856a5d44410203a11b607558",
+      "port/dreamcast/game/quickweapon.mk": "6329640761dbc5802c32fd4272d90347b64807a0995c888098d7237ecd27abf0",
+      "port/dreamcast/game/records30.mk": "132df68c9fdd14efb107fcf921183b7519e430d82c6b87bc026108f50eba515c",
+      "port/dreamcast/game/rigid20.mk": "3608f11dd5572b98692db3839a8c92189cc09009eb11350a311949d644e07b63",
+      "port/dreamcast/game/safecuts.mk": "da6ba39b803e76b1f97e34688ae05bbc7baff5f5f47a9f0ff2efdbdea7d80afe",
+      "port/dreamcast/game/scenery19.mk": "236ddb4113a244a621cb76da2f3ae3b6d07eafcb94cf97d35035c58fbfc0a9dd",
+      "port/dreamcast/game/scenery30.mk": "46acf4cb67022b9d4f820bf887075143e951b1895e3e1cb95e9e2335105411ec",
+      "port/dreamcast/game/shotfx20.mk": "dc5be227dcf55f1a28eeb68dfb58589cc929bc04fdb2e473a7efb8ac62e946a6",
+      "port/dreamcast/game/subscreen.mk": "326f2a516ee9b52dbc43ad32b3b2ec93a597265e4184811a52c6919643f2c95c",
+      "port/dreamcast/game/t2exact.mk": "1e0e369e489ff81f3dc4f7cbd1839e89f6313fe6c5e097a891198a62d2a4c175",
+      "port/dreamcast/game/tahash.mk": "c32223ced5323b52388ed5b282e223495a9dc89f927bfcc947d6f0423a00f184",
+      "port/dreamcast/game/vmu_context.mk": "c2f3714f6f86f7c96d7c8697498e7679bf5b1ae33820cba059a610772a0502e4",
+      "port/dreamcast/game/vmusave.mk": "c99a41216906a2b9d3c1c55be2a826cf0fba4eecb0d71d3b0c50c14ed885e5eb",
+      "port/dreamcast/game/worldhole.mk": "fc39dd79c316360601ad59b1805662864fdd9a5c9a42542193513fc167fc3f2c",
+      "port/dreamcast/game/worldscratch.mk": "7a71efa755f0c1984df3eef28ff07122459b90ca86bf596872f7b8b5b013f057"
+    }
+  },
+  "make_identity": {
+    "reg1": {
+      "flags_identical_off": true,
+      "generated_headers_identical": true,
+      "on_adds_only_knob": true
+    },
+    "reg0": {
+      "flags_identical_off": true,
+      "generated_headers_identical": true,
+      "on_adds_only_knob": true
+    },
+    "reg2": {
+      "flags_identical_off": true,
+      "generated_headers_identical": true,
+      "on_adds_only_knob": true
+    },
+    "fast2": {
+      "flags_identical_off": true,
+      "generated_headers_identical": true,
+      "on_adds_only_knob": true
+    },
+    "no_prefetch": {
+      "flags_identical_off": true,
+      "generated_headers_identical": true,
+      "on_adds_only_knob": true
+    },
+    "reference": {
+      "flags_identical_off": true,
+      "generated_headers_identical": true,
+      "on_adds_only_knob": true
+    },
+    "asm1": {
+      "flags_identical_off": true,
+      "generated_headers_identical": true,
+      "on_adds_only_knob": true
+    }
+  },
+  "production": {
+    "reg1": {
+      "baseline.ii": {
+        "bytes": 143815,
+        "sha256": "3d6e85d46afe1d47d9f91a41418a0b7d1b523f60cb2bf2a7a3b67a458705272e"
+      },
+      "baseline.o": {
+        "bytes": 28076,
+        "sha256": "29194d07c6f43c13c315e7018ece37bb160f6611c105ca5f036e95bda79ea930",
+        "executable_bytes": 16620,
+        "allocated_bytes": 17084,
+        "zero_fill_bytes": 0,
+        "stack_usage": [
+          {
+            "function": "<stdin>:2094:5:int {anonymous}::hermiteFast(HermitePrm*, Vec*, u16*)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 5]",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 0]",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 6]",
+            "bytes": 56,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2366:5:int {anonymous}::hermiteReg(HermitePrm*, Vec*, u16*)",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:742:6:void MotionMoveCore(cModel*, MotionWork*, int)",
+            "bytes": 108,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2535:5:int HermiteInterpolation(HermitePrm*, Vec*, u16*)",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:1886:5:int HermiteInterpolation_ref(HermitePrm*, Vec*, u16*)",
+            "bytes": 108,
+            "kind": "static"
+          }
+        ]
+      },
+      "absent.ii": {
+        "bytes": 143815,
+        "sha256": "3d6e85d46afe1d47d9f91a41418a0b7d1b523f60cb2bf2a7a3b67a458705272e"
+      },
+      "absent.o": {
+        "bytes": 28076,
+        "sha256": "29194d07c6f43c13c315e7018ece37bb160f6611c105ca5f036e95bda79ea930",
+        "executable_bytes": 16620,
+        "allocated_bytes": 17084,
+        "zero_fill_bytes": 0
+      },
+      "zero.ii": {
+        "bytes": 143815,
+        "sha256": "3d6e85d46afe1d47d9f91a41418a0b7d1b523f60cb2bf2a7a3b67a458705272e"
+      },
+      "zero.o": {
+        "bytes": 28076,
+        "sha256": "29194d07c6f43c13c315e7018ece37bb160f6611c105ca5f036e95bda79ea930",
+        "executable_bytes": 16620,
+        "allocated_bytes": 17084,
+        "zero_fill_bytes": 0
+      },
+      "on.ii": {
+        "bytes": 145130,
+        "sha256": "1d42d2476873428fd27a22cb52bb1d9391e95c6cb9b6452d44f132a4d2916df8"
+      },
+      "on.o": {
+        "bytes": 29256,
+        "sha256": "a20e6d021fd94af50a6d26473d1335b0c19cf66c66a1b1e5b738fb04b8329301",
+        "executable_bytes": 17048,
+        "allocated_bytes": 17512,
+        "zero_fill_bytes": 0,
+        "stack_usage": [
+          {
+            "function": "<stdin>:2094:5:int {anonymous}::hermiteFast(HermitePrm*, Vec*, u16*)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 5]",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2371:31:int {anonymous}::hfClamped(HermitePrm*, Vec*, u16*) [with int T = 5]",
+            "bytes": 24,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 0]",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2371:31:int {anonymous}::hfClamped(HermitePrm*, Vec*, u16*) [with int T = 0]",
+            "bytes": 24,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 6]",
+            "bytes": 56,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2613:5:int HermiteInterpolation(HermitePrm*, Vec*, u16*)",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2371:31:int {anonymous}::hfClamped(HermitePrm*, Vec*, u16*) [with int T = 6]",
+            "bytes": 20,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2617:12:int HermiteInterpolationClamped(HermitePrm*, Vec*, u16*)",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:742:6:void MotionMoveCore(cModel*, MotionWork*, int)",
+            "bytes": 108,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:1886:5:int HermiteInterpolation_ref(HermitePrm*, Vec*, u16*)",
+            "bytes": 108,
+            "kind": "static"
+          }
+        ]
+      }
+    },
+    "reg0": {
+      "baseline.ii": {
+        "bytes": 138978,
+        "sha256": "e01bbb2aebc26507849b6b8d9ffcb9c707dd6ed39d5dc03d663165b3deb99262"
+      },
+      "baseline.o": {
+        "bytes": 25012,
+        "sha256": "4659462c4bfe11b85ca0c69c8e39287cd404e871ee8aab92ece937145cedb3ec",
+        "executable_bytes": 14596,
+        "allocated_bytes": 15060,
+        "zero_fill_bytes": 0,
+        "stack_usage": [
+          {
+            "function": "<stdin>:2094:5:int {anonymous}::hermiteFast(HermitePrm*, Vec*, u16*)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:742:6:void MotionMoveCore(cModel*, MotionWork*, int)",
+            "bytes": 108,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2535:5:int HermiteInterpolation(HermitePrm*, Vec*, u16*)",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:1886:5:int HermiteInterpolation_ref(HermitePrm*, Vec*, u16*)",
+            "bytes": 108,
+            "kind": "static"
+          }
+        ]
+      },
+      "absent.ii": {
+        "bytes": 138978,
+        "sha256": "e01bbb2aebc26507849b6b8d9ffcb9c707dd6ed39d5dc03d663165b3deb99262"
+      },
+      "absent.o": {
+        "bytes": 25012,
+        "sha256": "4659462c4bfe11b85ca0c69c8e39287cd404e871ee8aab92ece937145cedb3ec",
+        "executable_bytes": 14596,
+        "allocated_bytes": 15060,
+        "zero_fill_bytes": 0
+      },
+      "zero.ii": {
+        "bytes": 138978,
+        "sha256": "e01bbb2aebc26507849b6b8d9ffcb9c707dd6ed39d5dc03d663165b3deb99262"
+      },
+      "zero.o": {
+        "bytes": 25012,
+        "sha256": "4659462c4bfe11b85ca0c69c8e39287cd404e871ee8aab92ece937145cedb3ec",
+        "executable_bytes": 14596,
+        "allocated_bytes": 15060,
+        "zero_fill_bytes": 0
+      },
+      "on.ii": {
+        "bytes": 138978,
+        "sha256": "e01bbb2aebc26507849b6b8d9ffcb9c707dd6ed39d5dc03d663165b3deb99262"
+      },
+      "on.o": {
+        "bytes": 25012,
+        "sha256": "4659462c4bfe11b85ca0c69c8e39287cd404e871ee8aab92ece937145cedb3ec",
+        "executable_bytes": 14596,
+        "allocated_bytes": 15060,
+        "zero_fill_bytes": 0,
+        "stack_usage": [
+          {
+            "function": "<stdin>:2094:5:int {anonymous}::hermiteFast(HermitePrm*, Vec*, u16*)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:742:6:void MotionMoveCore(cModel*, MotionWork*, int)",
+            "bytes": 108,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2577:5:int HermiteInterpolation(HermitePrm*, Vec*, u16*)",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:1886:5:int HermiteInterpolation_ref(HermitePrm*, Vec*, u16*)",
+            "bytes": 108,
+            "kind": "static"
+          }
+        ]
+      }
+    },
+    "reg2": {
+      "baseline.ii": {
+        "bytes": 144897,
+        "sha256": "7495e804b4d74d5e74a73741a9c1482482e4ecdf9940af513f48773584252523"
+      },
+      "baseline.o": {
+        "bytes": 29372,
+        "sha256": "f1a7868fd78d3453abe5f9f2128a04c1d1adacd4d81d7da8bd9e3784683052a3",
+        "executable_bytes": 16756,
+        "allocated_bytes": 17323,
+        "zero_fill_bytes": 24,
+        "stack_usage": [
+          {
+            "function": "<stdin>:2094:5:int {anonymous}::hermiteFast(HermitePrm*, Vec*, u16*)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 5]",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 0]",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 6]",
+            "bytes": 56,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2366:5:int {anonymous}::hermiteReg(HermitePrm*, Vec*, u16*)",
+            "bytes": 80,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:742:6:void MotionMoveCore(cModel*, MotionWork*, int)",
+            "bytes": 108,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2535:5:int HermiteInterpolation(HermitePrm*, Vec*, u16*)",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:1886:5:int HermiteInterpolation_ref(HermitePrm*, Vec*, u16*)",
+            "bytes": 108,
+            "kind": "static"
+          }
+        ]
+      },
+      "absent.ii": {
+        "bytes": 144897,
+        "sha256": "7495e804b4d74d5e74a73741a9c1482482e4ecdf9940af513f48773584252523"
+      },
+      "absent.o": {
+        "bytes": 29372,
+        "sha256": "f1a7868fd78d3453abe5f9f2128a04c1d1adacd4d81d7da8bd9e3784683052a3",
+        "executable_bytes": 16756,
+        "allocated_bytes": 17323,
+        "zero_fill_bytes": 24
+      },
+      "zero.ii": {
+        "bytes": 144897,
+        "sha256": "7495e804b4d74d5e74a73741a9c1482482e4ecdf9940af513f48773584252523"
+      },
+      "zero.o": {
+        "bytes": 29372,
+        "sha256": "f1a7868fd78d3453abe5f9f2128a04c1d1adacd4d81d7da8bd9e3784683052a3",
+        "executable_bytes": 16756,
+        "allocated_bytes": 17323,
+        "zero_fill_bytes": 24
+      },
+      "on.ii": {
+        "bytes": 146242,
+        "sha256": "b071967a662d76c427119e40f72e5e3858f622cd67a3ed31c2c2feebbe2b1948"
+      },
+      "on.o": {
+        "bytes": 31036,
+        "sha256": "88bbd956e2dc4e4973d0420cd1bcb0680e5e1ba5a4f8a30589e539720db8e8dc",
+        "executable_bytes": 17524,
+        "allocated_bytes": 18091,
+        "zero_fill_bytes": 24,
+        "stack_usage": [
+          {
+            "function": "<stdin>:2094:5:int {anonymous}::hermiteFast(HermitePrm*, Vec*, u16*)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 5]",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2371:31:int {anonymous}::hfClamped(HermitePrm*, Vec*, u16*) [with int T = 5]",
+            "bytes": 24,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 0]",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2371:31:int {anonymous}::hfClamped(HermitePrm*, Vec*, u16*) [with int T = 0]",
+            "bytes": 24,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 6]",
+            "bytes": 56,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2371:31:int {anonymous}::hfClamped(HermitePrm*, Vec*, u16*) [with int T = 6]",
+            "bytes": 20,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2617:12:int HermiteInterpolationClamped(HermitePrm*, Vec*, u16*)",
+            "bytes": 80,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2613:5:int HermiteInterpolation(HermitePrm*, Vec*, u16*)",
+            "bytes": 80,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:742:6:void MotionMoveCore(cModel*, MotionWork*, int)",
+            "bytes": 108,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:1886:5:int HermiteInterpolation_ref(HermitePrm*, Vec*, u16*)",
+            "bytes": 108,
+            "kind": "static"
+          }
+        ]
+      }
+    },
+    "fast2": {
+      "baseline.ii": {
+        "bytes": 144616,
+        "sha256": "0f3ca4585f1ceaf1de6f2839ac43452649777b4825a962b053d5c83ef967b937"
+      },
+      "baseline.o": {
+        "bytes": 28676,
+        "sha256": "dca6d183154f497f7433bf3e46fc88db9cbedb314d5c9cdf759df6d2829556ed",
+        "executable_bytes": 16668,
+        "allocated_bytes": 17213,
+        "zero_fill_bytes": 16,
+        "stack_usage": [
+          {
+            "function": "<stdin>:2094:5:int {anonymous}::hermiteFast(HermitePrm*, Vec*, u16*)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 5]",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 0]",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 6]",
+            "bytes": 56,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:1886:5:int HermiteInterpolation_ref(HermitePrm*, Vec*, u16*)",
+            "bytes": 108,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2535:5:int HermiteInterpolation(HermitePrm*, Vec*, u16*)",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:742:6:void MotionMoveCore(cModel*, MotionWork*, int)",
+            "bytes": 108,
+            "kind": "static"
+          }
+        ]
+      },
+      "absent.ii": {
+        "bytes": 144616,
+        "sha256": "0f3ca4585f1ceaf1de6f2839ac43452649777b4825a962b053d5c83ef967b937"
+      },
+      "absent.o": {
+        "bytes": 28676,
+        "sha256": "dca6d183154f497f7433bf3e46fc88db9cbedb314d5c9cdf759df6d2829556ed",
+        "executable_bytes": 16668,
+        "allocated_bytes": 17213,
+        "zero_fill_bytes": 16
+      },
+      "zero.ii": {
+        "bytes": 144616,
+        "sha256": "0f3ca4585f1ceaf1de6f2839ac43452649777b4825a962b053d5c83ef967b937"
+      },
+      "zero.o": {
+        "bytes": 28676,
+        "sha256": "dca6d183154f497f7433bf3e46fc88db9cbedb314d5c9cdf759df6d2829556ed",
+        "executable_bytes": 16668,
+        "allocated_bytes": 17213,
+        "zero_fill_bytes": 16
+      },
+      "on.ii": {
+        "bytes": 145931,
+        "sha256": "fb8f2f277f927c1436f4cd57d1768539cb0cf5cdac55a420393dc6fa67a9a8a1"
+      },
+      "on.o": {
+        "bytes": 30620,
+        "sha256": "5247286db9555a9e45e4fb0cb24a2aa4f15122537444f48b83a0e0ac43c07c16",
+        "executable_bytes": 17456,
+        "allocated_bytes": 18001,
+        "zero_fill_bytes": 16,
+        "stack_usage": [
+          {
+            "function": "<stdin>:2094:5:int {anonymous}::hermiteFast(HermitePrm*, Vec*, u16*)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 5]",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2371:31:int {anonymous}::hfClamped(HermitePrm*, Vec*, u16*) [with int T = 5]",
+            "bytes": 24,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 0]",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2371:31:int {anonymous}::hfClamped(HermitePrm*, Vec*, u16*) [with int T = 0]",
+            "bytes": 24,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 6]",
+            "bytes": 56,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2371:31:int {anonymous}::hfClamped(HermitePrm*, Vec*, u16*) [with int T = 6]",
+            "bytes": 20,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:742:6:void MotionMoveCore(cModel*, MotionWork*, int)",
+            "bytes": 108,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:1886:5:int HermiteInterpolation_ref(HermitePrm*, Vec*, u16*)",
+            "bytes": 108,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2617:12:int HermiteInterpolationClamped(HermitePrm*, Vec*, u16*)",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2613:5:int HermiteInterpolation(HermitePrm*, Vec*, u16*)",
+            "bytes": 68,
+            "kind": "static"
+          }
+        ]
+      }
+    },
+    "no_prefetch": {
+      "baseline.ii": {
+        "bytes": 143561,
+        "sha256": "d1648e90f9add86e005e6903112aef8ed8a8b08e0b61bdffa84ff1f3e1c190f7"
+      },
+      "baseline.o": {
+        "bytes": 28060,
+        "sha256": "b2463d0578a158bb5afe938122c5108102a98855aa87ebbe16be117ade3b1e02",
+        "executable_bytes": 16604,
+        "allocated_bytes": 17068,
+        "zero_fill_bytes": 0,
+        "stack_usage": [
+          {
+            "function": "<stdin>:2094:5:int {anonymous}::hermiteFast(HermitePrm*, Vec*, u16*)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 5]",
+            "bytes": 72,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 0]",
+            "bytes": 72,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 6]",
+            "bytes": 56,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2366:5:int {anonymous}::hermiteReg(HermitePrm*, Vec*, u16*)",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:742:6:void MotionMoveCore(cModel*, MotionWork*, int)",
+            "bytes": 108,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2535:5:int HermiteInterpolation(HermitePrm*, Vec*, u16*)",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:1886:5:int HermiteInterpolation_ref(HermitePrm*, Vec*, u16*)",
+            "bytes": 108,
+            "kind": "static"
+          }
+        ]
+      },
+      "absent.ii": {
+        "bytes": 143561,
+        "sha256": "d1648e90f9add86e005e6903112aef8ed8a8b08e0b61bdffa84ff1f3e1c190f7"
+      },
+      "absent.o": {
+        "bytes": 28060,
+        "sha256": "b2463d0578a158bb5afe938122c5108102a98855aa87ebbe16be117ade3b1e02",
+        "executable_bytes": 16604,
+        "allocated_bytes": 17068,
+        "zero_fill_bytes": 0
+      },
+      "zero.ii": {
+        "bytes": 143561,
+        "sha256": "d1648e90f9add86e005e6903112aef8ed8a8b08e0b61bdffa84ff1f3e1c190f7"
+      },
+      "zero.o": {
+        "bytes": 28060,
+        "sha256": "b2463d0578a158bb5afe938122c5108102a98855aa87ebbe16be117ade3b1e02",
+        "executable_bytes": 16604,
+        "allocated_bytes": 17068,
+        "zero_fill_bytes": 0
+      },
+      "on.ii": {
+        "bytes": 144831,
+        "sha256": "e578817233e32eb35ec09fc2c9bf95dbb1a85345b5ad2306e4fc96d1235fca5f"
+      },
+      "on.o": {
+        "bytes": 29192,
+        "sha256": "02655db3bd9380bace4251e52f1b67599f8235f98e04205ad0116f619fadc852",
+        "executable_bytes": 16984,
+        "allocated_bytes": 17448,
+        "zero_fill_bytes": 0,
+        "stack_usage": [
+          {
+            "function": "<stdin>:2094:5:int {anonymous}::hermiteFast(HermitePrm*, Vec*, u16*)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 5]",
+            "bytes": 72,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2371:31:int {anonymous}::hfClamped(HermitePrm*, Vec*, u16*) [with int T = 5]",
+            "bytes": 24,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 0]",
+            "bytes": 72,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2371:31:int {anonymous}::hfClamped(HermitePrm*, Vec*, u16*) [with int T = 0]",
+            "bytes": 20,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2242:31:int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 6]",
+            "bytes": 56,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2371:31:int {anonymous}::hfClamped(HermitePrm*, Vec*, u16*) [with int T = 6]",
+            "bytes": 24,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2617:12:int HermiteInterpolationClamped(HermitePrm*, Vec*, u16*)",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2613:5:int HermiteInterpolation(HermitePrm*, Vec*, u16*)",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:742:6:void MotionMoveCore(cModel*, MotionWork*, int)",
+            "bytes": 108,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:1886:5:int HermiteInterpolation_ref(HermitePrm*, Vec*, u16*)",
+            "bytes": 108,
+            "kind": "static"
+          }
+        ]
+      }
+    },
+    "reference": {
+      "baseline.ii": {
+        "bytes": 133851,
+        "sha256": "1c073bedb7c954366e74e4c984ae2a285dcdc323b743e2d814e90b9d57bf859c"
+      },
+      "baseline.o": {
+        "bytes": 22144,
+        "sha256": "a3356131cdf877f4142b6b62d7d984743f8dcb80e0d360dd115e5828675aa2cc",
+        "executable_bytes": 12576,
+        "allocated_bytes": 13024,
+        "zero_fill_bytes": 0,
+        "stack_usage": [
+          {
+            "function": "<stdin>:1886:5:int HermiteInterpolation(HermitePrm*, Vec*, u16*)",
+            "bytes": 108,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:742:6:void MotionMoveCore(cModel*, MotionWork*, int)",
+            "bytes": 108,
+            "kind": "static"
+          }
+        ]
+      },
+      "absent.ii": {
+        "bytes": 133851,
+        "sha256": "1c073bedb7c954366e74e4c984ae2a285dcdc323b743e2d814e90b9d57bf859c"
+      },
+      "absent.o": {
+        "bytes": 22144,
+        "sha256": "a3356131cdf877f4142b6b62d7d984743f8dcb80e0d360dd115e5828675aa2cc",
+        "executable_bytes": 12576,
+        "allocated_bytes": 13024,
+        "zero_fill_bytes": 0
+      },
+      "zero.ii": {
+        "bytes": 133851,
+        "sha256": "1c073bedb7c954366e74e4c984ae2a285dcdc323b743e2d814e90b9d57bf859c"
+      },
+      "zero.o": {
+        "bytes": 22144,
+        "sha256": "a3356131cdf877f4142b6b62d7d984743f8dcb80e0d360dd115e5828675aa2cc",
+        "executable_bytes": 12576,
+        "allocated_bytes": 13024,
+        "zero_fill_bytes": 0
+      },
+      "on.ii": {
+        "bytes": 133851,
+        "sha256": "1c073bedb7c954366e74e4c984ae2a285dcdc323b743e2d814e90b9d57bf859c"
+      },
+      "on.o": {
+        "bytes": 22144,
+        "sha256": "a3356131cdf877f4142b6b62d7d984743f8dcb80e0d360dd115e5828675aa2cc",
+        "executable_bytes": 12576,
+        "allocated_bytes": 13024,
+        "zero_fill_bytes": 0,
+        "stack_usage": [
+          {
+            "function": "<stdin>:1886:5:int HermiteInterpolation(HermitePrm*, Vec*, u16*)",
+            "bytes": 108,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:742:6:void MotionMoveCore(cModel*, MotionWork*, int)",
+            "bytes": 108,
+            "kind": "static"
+          }
+        ]
+      }
+    },
+    "asm1": {
+      "baseline.ii": {
+        "bytes": 139752,
+        "sha256": "a32ce2136bee6039131db66fd1e956ec1402ee04b1cdad99bcba6e051ce740a2"
+      },
+      "baseline.o": {
+        "bytes": 25228,
+        "sha256": "ee5d10b03000ec328fe9d908b5d2ab6e25476f80f0245a99ad958301854db7de",
+        "executable_bytes": 14496,
+        "allocated_bytes": 14960,
+        "zero_fill_bytes": 0,
+        "stack_usage": [
+          {
+            "function": "<stdin>:2094:5:int {anonymous}::hermiteFast(HermitePrm*, Vec*, u16*)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:742:6:void MotionMoveCore(cModel*, MotionWork*, int)",
+            "bytes": 104,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2535:5:int HermiteInterpolation(HermitePrm*, Vec*, u16*)",
+            "bytes": 16,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:1886:5:int HermiteInterpolation_ref(HermitePrm*, Vec*, u16*)",
+            "bytes": 108,
+            "kind": "static"
+          }
+        ]
+      },
+      "absent.ii": {
+        "bytes": 139752,
+        "sha256": "a32ce2136bee6039131db66fd1e956ec1402ee04b1cdad99bcba6e051ce740a2"
+      },
+      "absent.o": {
+        "bytes": 25228,
+        "sha256": "ee5d10b03000ec328fe9d908b5d2ab6e25476f80f0245a99ad958301854db7de",
+        "executable_bytes": 14496,
+        "allocated_bytes": 14960,
+        "zero_fill_bytes": 0
+      },
+      "zero.ii": {
+        "bytes": 139752,
+        "sha256": "a32ce2136bee6039131db66fd1e956ec1402ee04b1cdad99bcba6e051ce740a2"
+      },
+      "zero.o": {
+        "bytes": 25228,
+        "sha256": "ee5d10b03000ec328fe9d908b5d2ab6e25476f80f0245a99ad958301854db7de",
+        "executable_bytes": 14496,
+        "allocated_bytes": 14960,
+        "zero_fill_bytes": 0
+      },
+      "on.ii": {
+        "bytes": 139752,
+        "sha256": "a32ce2136bee6039131db66fd1e956ec1402ee04b1cdad99bcba6e051ce740a2"
+      },
+      "on.o": {
+        "bytes": 25228,
+        "sha256": "ee5d10b03000ec328fe9d908b5d2ab6e25476f80f0245a99ad958301854db7de",
+        "executable_bytes": 14496,
+        "allocated_bytes": 14960,
+        "zero_fill_bytes": 0,
+        "stack_usage": [
+          {
+            "function": "<stdin>:2094:5:int {anonymous}::hermiteFast(HermitePrm*, Vec*, u16*)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:742:6:void MotionMoveCore(cModel*, MotionWork*, int)",
+            "bytes": 104,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:2577:5:int HermiteInterpolation(HermitePrm*, Vec*, u16*)",
+            "bytes": 16,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:1886:5:int HermiteInterpolation_ref(HermitePrm*, Vec*, u16*)",
+            "bytes": 108,
+            "kind": "static"
+          }
+        ]
+      }
+    }
+  },
+  "raw_build_receipt_sha256": "1093e066d5dac73ed1b6ca1c730b45027283065e383c89ee56f36085d936584b",
+  "target": {
+    "scope": "Link complete Make-built SH4 motion objects to a synthetic sampler fixture.\n\nNo sampler body is extracted or reconstructed. Link-time section collection\nretains the public entry, selected hfReg kernels, fallback and Fcc decoders.\nThe sampler has only a logging return edge. Full MotionMoveCore additionally\nuses typed resident-key, model-lookup and unchanged matrix/angle adapters.\nTheir fixture costs are included and identified, not claimed as original game\nmath or lookup cost. No game image is built.\n",
+    "source_sha256": {
+      "src/game/motion.cpp": "63e72196ab98e230d3dd14b7ad7328433a63e44d4c0406227374cd9a5b522a8f",
+      "port/dreamcast/tools/d367/anim_sample_lean/target_build.py": "80ffc004cf0853fa5ca8ea26949a33f640a45493066cd755057154331b47b71f",
+      "port/dreamcast/tools/d367/anim_sample_lean/target_fixture.cpp.in": "651d0271b7099f55a668e0b9970195260869567941f50b1d142f51f2ef844c4c",
+      "port/dreamcast/tools/d367/anim_sample_lean/build_profile.py": "e7b7590edd9bc3ce8ff0e4e1d45690045228db962ba76e12ecf8896d1ea6ba48"
+    },
+    "raw_target_build_receipt_sha256": "8343cebf4cd2744d9f5895f25c6331452b3aa204b888d8099e22fa42fed22369",
+    "arms": {
+      "l0": {
+        "sha256": "1fc65a629595f02f2fa22219eb70dfe883824f0009e8c93294897b9d34cc295d",
+        "object_sha256": "29194d07c6f43c13c315e7018ece37bb160f6611c105ca5f036e95bda79ea930",
+        "sections": {
+          "executable_bytes": 16620,
+          "allocated_bytes": 17084,
+          "zero_fill_bytes": 0
+        }
+      },
+      "l1": {
+        "sha256": "87bbd0027dd3db5e47c1a6b541b03920e25be67c39edf582b6a48861715dafa4",
+        "object_sha256": "a20e6d021fd94af50a6d26473d1335b0c19cf66c66a1b1e5b738fb04b8329301",
+        "sections": {
+          "executable_bytes": 17048,
+          "allocated_bytes": 17512,
+          "zero_fill_bytes": 0
+        }
+      }
+    }
+  }
+}

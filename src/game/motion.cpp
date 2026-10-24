@@ -20,6 +20,19 @@
 #include "player.h"
 #include "eprintf.h"
 
+// ANIM_SAMPLE_LEAN (Dreamcast; default 0): sample all three clamped axes together.
+// Other frames and exceptional histories keep the original register sampler and its fallback.
+#ifndef RE4DC_ANIM_SAMPLE_LEAN
+#define RE4DC_ANIM_SAMPLE_LEAN 0
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ANIM_SAMPLE_LEAN && \
+    defined(RE4DC_HERMITE_FAST) && RE4DC_HERMITE_FAST && defined(RE4DC_HF_REG) && RE4DC_HF_REG
+static int HermiteInterpolationClamped(HermitePrm*, Vec*, u16*);
+#define ANIM_SAMPLE_CLAMPED 1
+#else
+#define ANIM_SAMPLE_CLAMPED 0
+#endif
+
 extern const Vec vecZero;
 extern "C" void* memset(void* dst, int c, unsigned int n);
 
@@ -703,6 +716,15 @@ void MotionMoveCore(cModel* m, MotionWork* w, int flag)
             pp->flags &= ~2;
         }
     }
+#if ANIM_SAMPLE_CLAMPED
+    // Frame/maxFrame and flags bits 1/2 stay fixed throughout this pose; per-joint bit 3 does not
+    // affect clamp admission. Keep the ordinary entry on all other poses without per-sample tests.
+    int (*sample)(HermitePrm*, Vec*, u16*) =
+        pp->maxFrame <= pp->frame && (pp->flags & 6) != 4 ? HermiteInterpolationClamped : HermiteInterpolation;
+#define MOTION_POSE_SAMPLE sample
+#else
+#define MOTION_POSE_SAMPLE HermiteInterpolation
+#endif
     if (!(w->Mot_flag & 0x40000000)) {
         RotMatrix(m->mat, &m->ang);
         TransMatrix(m->mat, &m->pos);
@@ -740,24 +762,24 @@ void MotionMoveCore(cModel* m, MotionWork* w, int flag)
             pp->type = info >> 12;
             pp->key = (u8*) MOTION_KEY(w, i);
             if (i == cam->parts[0]) {
-                HermiteInterpolation(pp, &cam->out[0], cam->hist[0]);
+                MOTION_POSE_SAMPLE(pp, &cam->out[0], cam->hist[0]);
                 if (w->Mot_attr & 0x40) {
                     cam->out[0].x = -cam->out[0].x;
                 }
             } else if (i == cam->parts[1]) {
-                HermiteInterpolation(pp, &cam->out[1], cam->hist[1]);
+                MOTION_POSE_SAMPLE(pp, &cam->out[1], cam->hist[1]);
                 if (w->Mot_attr & 0x40) {
                     cam->out[1].x = -cam->out[1].x;
                 }
             } else if (i == cam->parts[2]) {
-                HermiteInterpolation(pp, &cam->out[2], cam->hist[2]);
+                MOTION_POSE_SAMPLE(pp, &cam->out[2], cam->hist[2]);
                 if (w->Mot_attr & 0x40) {
                     cam->out[2].y = -cam->out[2].y;
                 }
             } else if (i == cam->parts[3]) {
-                HermiteInterpolation(pp, &cam->out[3], cam->hist[3]);
+                MOTION_POSE_SAMPLE(pp, &cam->out[3], cam->hist[3]);
             } else if (i == cam->parts[4]) {
-                HermiteInterpolation(pp, &cam->out[4], cam->hist[4]);
+                MOTION_POSE_SAMPLE(pp, &cam->out[4], cam->hist[4]);
                 cam->frame = (u8) (cam->out[4].y / 100.0f);
             }
             continue;
@@ -796,21 +818,21 @@ void MotionMoveCore(cModel* m, MotionWork* w, int flag)
             pp->flags &= ~8;
         }
         if (kind & 2) {
-            HermiteInterpolation(pp, &p->ang, flip ? MOTION_PARTS(p)->hist[3] : MOTION_PARTS(p)->hist[0]);
+            MOTION_POSE_SAMPLE(pp, &p->ang, flip ? MOTION_PARTS(p)->hist[3] : MOTION_PARTS(p)->hist[0]);
             VecRadLimit(&p->ang);
             if (w->Mot_attr & 0x40) {
                 p->ang.y = -p->ang.y;
                 p->ang.z = -p->ang.z;
             }
         } else if (kind & 4) {
-            HermiteInterpolation(pp, &p->pos, flip ? MOTION_PARTS(p)->hist[4] : MOTION_PARTS(p)->hist[1]);
+            MOTION_POSE_SAMPLE(pp, &p->pos, flip ? MOTION_PARTS(p)->hist[4] : MOTION_PARTS(p)->hist[1]);
             if (w->Mot_attr & 0x40) {
                 p->pos.x = -p->pos.x;
             }
         } else if (kind & 8) {
-            HermiteInterpolation(pp, &p->scale, flip ? MOTION_PARTS(p)->hist[5] : MOTION_PARTS(p)->hist[2]);
+            MOTION_POSE_SAMPLE(pp, &p->scale, flip ? MOTION_PARTS(p)->hist[5] : MOTION_PARTS(p)->hist[2]);
         } else if (kind & 0x30) {
-            HermiteInterpolation(pp, &p->ang, flip ? MOTION_PARTS(p)->hist[3] : MOTION_PARTS(p)->hist[0]);
+            MOTION_POSE_SAMPLE(pp, &p->ang, flip ? MOTION_PARTS(p)->hist[3] : MOTION_PARTS(p)->hist[0]);
             VecRadLimit(&p->ang);
             if (w->Mot_attr & 0x40) {
                 p->ang.y = -p->ang.y;
@@ -818,6 +840,7 @@ void MotionMoveCore(cModel* m, MotionWork* w, int flag)
             }
         }
     } while (++i < n);
+#undef MOTION_POSE_SAMPLE
 }
 
 // |d| < eps.
@@ -1776,6 +1799,35 @@ bail:
     hist[2] = hs2;
     return hermiteFast(prm, out, hist);
 }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ANIM_SAMPLE_LEAN
+// Called only for a non-wrapping frame at/past maxFrame. All axes select their last value;
+// no search, interpolation state or history transaction is needed. A failed validation delegates
+// the whole call to hfReg so its error, diagnostics and stale-pair fallback remain authoritative.
+template <int T>
+__attribute__((noinline)) int hfClamped(HermitePrm* prm, Vec* out, u16* hist)
+{
+    typedef HfLayout<T> L;
+    const u8* p = prm->key;
+    const bool ignore_history = (prm->flags & 8) != 0;
+    f32* o = (f32*) out;
+    for (unsigned axis = 0; axis < 3; ++axis) {
+        const unsigned n = *(const u16*) p;
+        const u8* data = p + 2 + n * 2;
+        p = data + n * L::S;
+#if defined(RE4DC_HF_PF) && RE4DC_HF_PF
+        if (axis < 2) __builtin_prefetch(p);
+#endif
+        const unsigned idx = ignore_history ? 0 : hist[axis];
+        if (idx >= n) return hfReg<T>(prm, out, hist);
+        o[axis] = L::v(data, n - 1);
+    }
+    return 0;
+}
+#endif
+#if ANIM_SAMPLE_CLAMPED
+template <bool Clamped = false>
+__attribute__((always_inline)) inline
+#endif
 int hermiteReg(HermitePrm* prm, Vec* out, u16* hist)
 {
 #if RE4DC_HF_REG == 2
@@ -1797,10 +1849,19 @@ int hermiteReg(HermitePrm* prm, Vec* out, u16* hist)
     if (!((u32) prm->key & 1)) {
         switch (prm->type) {
         case 5:
+#if ANIM_SAMPLE_CLAMPED
+            if (Clamped) { HFR_RET(hfClamped<5>(prm, out, hist)); }
+#endif
             HFR_RET(hfReg<5>(prm, out, hist));
         case 0:
+#if ANIM_SAMPLE_CLAMPED
+            if (Clamped) { HFR_RET(hfClamped<0>(prm, out, hist)); }
+#endif
             HFR_RET(hfReg<0>(prm, out, hist));
         case 6:
+#if ANIM_SAMPLE_CLAMPED
+            if (Clamped) { HFR_RET(hfClamped<6>(prm, out, hist)); }
+#endif
             HFR_RET(hfReg<6>(prm, out, hist));
         default:
             break;
@@ -1945,7 +2006,12 @@ extern "C" void re4dc_log(const char* fmt, ...);
 u32 hfCalls, hfMisOut, hfMisHist, hfMisRet;
 #endif
 }   // namespace
+#if ANIM_SAMPLE_CLAMPED
+template <bool Clamped>
+__attribute__((always_inline)) static inline int hermiteSampleEntry(HermitePrm* prm, Vec* out, u16* hist)
+#else
 int HermiteInterpolation(HermitePrm* prm, Vec* out, u16* hist)
+#endif
 {
 #if RE4DC_HERMITE_FAST == 2
     const u16 h0[3] = {hist[0], hist[1], hist[2]};
@@ -1955,7 +2021,11 @@ int HermiteInterpolation(HermitePrm* prm, Vec* out, u16* hist)
     hist[0] = h0[0];
     hist[1] = h0[1];
     hist[2] = h0[2];
+#if ANIM_SAMPLE_CLAMPED
+    const int fr = hermiteReg<Clamped>(prm, out, hist);
+#else
     const int fr = hermiteSelected(prm, out, hist);
+#endif
     u32 a[3], b[3];
     __builtin_memcpy(a, &ro, 12);
     __builtin_memcpy(b, out, 12);
@@ -1968,9 +2038,23 @@ int HermiteInterpolation(HermitePrm* prm, Vec* out, u16* hist)
     }
     return fr;
 #else
+#if ANIM_SAMPLE_CLAMPED
+    return hermiteReg<Clamped>(prm, out, hist);
+#else
     return hermiteSelected(prm, out, hist);
 #endif
+#endif
 }
+#if ANIM_SAMPLE_CLAMPED
+int HermiteInterpolation(HermitePrm* prm, Vec* out, u16* hist)
+{
+    return hermiteSampleEntry<false>(prm, out, hist);
+}
+static int HermiteInterpolationClamped(HermitePrm* prm, Vec* out, u16* hist)
+{
+    return hermiteSampleEntry<true>(prm, out, hist);
+}
+#endif
 #endif
 
 // Byte-wise big-endian reads of the key data (the streams are unaligned).

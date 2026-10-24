@@ -168,3 +168,14 @@ split-stream proposal, with no format change in this branch.
    with the same distinct vertex-cache lines?
 3. How much source-position/normal sharing must remain resident for clipping,
    mutable models and fallback paths before a dense offline repack is viable?
+### 2026-10-24: Build 8 hand-back (`codex/anim-sample-lean-20261024`)
+
+Candidate: `ANIM_SAMPLE_LEAN=1`, default 0. Base `d5c1ceab`.
+The [report](BUILD8_ANIM_SAMPLE_LEAN_20261024.md) records the source/compiled
+audit, rejected decode/per-call-dispatch attempts, and the per-pose selection
+of a clamped sampler. No update-rate, quaternion or motion-data change is made.
+
+1. Can the animation census count sampled vectors per pose and classify clamped,
+   ordinary and wrapping poses at r101 and in the piled-body farm case?
+2. Does console A/B confirm that less sampler stack/traffic repays the
+   once-per-pose dispatch cost in the measured mix?

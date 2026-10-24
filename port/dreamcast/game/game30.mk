@@ -2387,6 +2387,17 @@ $(error GAME_HF_REG and GAME_HF_ASM both replace the hermite entry)
 endif
 $(OBJDIR)/src/game/motion.o: GAME_CPPFLAGS += -DRE4DC_HF_REG=$(GAME_HF_REG)
 endif
+# ANIM_SAMPLE_LEAN=1 (exact; default 0): MotionMoveCore selects its sampler once per pose. A
+#              non-wrapping clamped pose reads each channel's three last values without GAME_HF_REG's
+#              search/interpolation setup. Invalid histories keep the original sampler and diagnostics.
+#              Other entry points and interpolation math stay unchanged; GAME_HF_REG is not forced on.
+ANIM_SAMPLE_LEAN ?= 0
+ifneq ($(ANIM_SAMPLE_LEAN),0)
+ifneq ($(ANIM_SAMPLE_LEAN),1)
+$(error ANIM_SAMPLE_LEAN must be 0 or 1)
+endif
+$(OBJDIR)/src/game/motion.o: GAME_CPPFLAGS += -DRE4DC_ANIM_SAMPLE_LEAN=1
+endif
 # GAME_SND_WALL_ALT=1 (audio only; report candidate 12): sndSurroundCalc tests a tracked SE's wall occlusion (a line
 #                     query to the player's head) on every other frame and reuses the slot's last verdict in
 #                     between (snd.cpp). Only an occluded SE's muffled volume can lag one frame; the logic trace

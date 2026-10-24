@@ -1,0 +1,2495 @@
+{
+  "status": "PASS",
+  "scope": "Price complete compiled MotionMoveCore dispatch and sampler traffic.\n\nThe real caller executes all frame/flag setup, joint and camera dispatch,\nfunction-pointer selection, histories and samplers over mapped production\nlayouts. Resident-key acquire, model lookup, matrix helpers, VecRadLimit and\nlogging are typed fixture adapters; their fixed adapter instructions remain in\nboth totals, but original math/I/O/lookup implementation costs are not claimed.\nMotion sequence advance, IK, hokan and world matrices outside this function are\nnot included. Matrix work inside this function is disabled by its existing flag.\nThe matrix/angle adapters therefore are not a general pose-arithmetic oracle.\nThe only additional opcode is FTRC for finite camera-frame values (-1,256);\nother inputs are rejected rather than claiming general conversion behavior.\n",
+  "sequence_scope": "Two additional complete poses using the regular 10.6 Seq.frame path.\n\nThis only changes the mapped frame-input fields of pose_run's existing T5/N16\nfixture. The compiled MotionMoveCore and both samplers execute unchanged.\nOffsets 0xAC (Seq.frame) and 0xB8 (Seq_frame) are the production MotionWork ABI;\nthe enclosing record size and Seq_frame offset are checked against the linked\nheader-derived layout. Original lookup/math costs remain typed fixture edges.\n\nPrice complete compiled MotionMoveCore dispatch and sampler traffic.\n\nThe real caller executes all frame/flag setup, joint and camera dispatch,\nfunction-pointer selection, histories and samplers over mapped production\nlayouts. Resident-key acquire, model lookup, matrix helpers, VecRadLimit and\nlogging are typed fixture adapters; their fixed adapter instructions remain in\nboth totals, but original math/I/O/lookup implementation costs are not claimed.\nMotion sequence advance, IK, hokan and world matrices outside this function are\nnot included. Matrix work inside this function is disabled by its existing flag.\nThe matrix/angle adapters therefore are not a general pose-arithmetic oracle.\nThe only additional opcode is FTRC for finite camera-frame values (-1,256);\nother inputs are rejected rather than claiming general conversion behavior.\n",
+  "source_sha256": {
+    "port/dreamcast/tools/d367/anim_sample_lean/pose_run.py": "8807166e36a94b3c139b60bc56f1dee0ff5edbd5695b0fc4ea8234042f076793",
+    "port/dreamcast/tools/d367/anim_sample_lean/target_run.py": "bce29899e875d96d81869f929be7252f8bb566892404e2f560323de3dc75906e",
+    "port/dreamcast/tools/d367/anim_sample_lean/sequence_run.py": "240e76d75e98dd270b675a8d4364e480dcf1e04742900b8ad3ef5d7f5a4cc074",
+    "include/model.h": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5"
+  },
+  "target_build_sha256": "8343cebf4cd2744d9f5895f25c6331452b3aa204b888d8099e22fa42fed22369",
+  "conversion_controls": "FTRC camera-frame subset: seven exact finite inputs in (-1,256), no memory or state side effects",
+  "models": {
+    "l0": {
+      "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+      "source": "/workspace/scratch/c4e1a2818fde/re4dc-anim-sample-lean/port/dreamcast/tools/hwmodel/hwsim.c",
+      "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+      "compile_command": [
+        "gcc",
+        "-O2",
+        "-o",
+        "/workspace/scratch/c4e1a2818fde/backface-tools/build8-pose-run-04/model-l0/hwsim",
+        "/workspace/scratch/c4e1a2818fde/re4dc-anim-sample-lean/port/dreamcast/tools/hwmodel/hwsim.c",
+        "-lm"
+      ],
+      "flags": [
+        "--perfect-ic",
+        "--perfect-dc",
+        "--no-dma",
+        "--sq-cost",
+        "0"
+      ],
+      "exact_dynamic_instruction_and_delay_slot_counts": true,
+      "no_hardware_time_or_frame_speedup_claim": true
+    },
+    "l1": {
+      "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+      "source": "/workspace/scratch/c4e1a2818fde/re4dc-anim-sample-lean/port/dreamcast/tools/hwmodel/hwsim.c",
+      "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+      "compile_command": [
+        "gcc",
+        "-O2",
+        "-o",
+        "/workspace/scratch/c4e1a2818fde/backface-tools/build8-pose-run-04/model-l1/hwsim",
+        "/workspace/scratch/c4e1a2818fde/re4dc-anim-sample-lean/port/dreamcast/tools/hwmodel/hwsim.c",
+        "-lm"
+      ],
+      "flags": [
+        "--perfect-ic",
+        "--perfect-dc",
+        "--no-dma",
+        "--sq-cost",
+        "0"
+      ],
+      "exact_dynamic_instruction_and_delay_slot_counts": true,
+      "no_hardware_time_or_frame_speedup_claim": true
+    }
+  },
+  "cases": [
+    {
+      "name": "t0-n1-interior",
+      "kind": 0,
+      "joints": 1,
+      "clamped": false,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 754,
+          "peak_stack_bytes": 176,
+          "model_cycles": 733,
+          "pose_sha256": "425595f985b95c0609530f014e4b30d8476906be79533a9efac7b0cbfd6468d0",
+          "trace_sha256": "57e44c9eb9c015a296bbdf7302e123c84ec562e3e15d0a365dc41c598cffa8b8",
+          "source_key_bytes": 344,
+          "cold_icache": {
+            "model_cycles": 1342,
+            "instruction_fills": 47.0
+          },
+          "traffic": {
+            "load_instructions": 136,
+            "store_instructions": 60,
+            "load_bytes": 421,
+            "store_bytes": 219,
+            "unique_read_lines": 39,
+            "unique_write_lines": 12,
+            "unique_data_lines": 40
+          },
+          "demand_line_visits": 196,
+          "repeated_demand_line_visits": 156,
+          "prefetch": {
+            "requests": 2,
+            "unique_requested_lines": 2,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 1,
+            "_VecRadLimit": 1
+          }
+        },
+        "l1": {
+          "instructions": 757,
+          "peak_stack_bytes": 176,
+          "model_cycles": 740,
+          "pose_sha256": "425595f985b95c0609530f014e4b30d8476906be79533a9efac7b0cbfd6468d0",
+          "trace_sha256": "13240188f18d387d319c58cfb23ef5867691f574da04a9c08fffea772427e15a",
+          "source_key_bytes": 344,
+          "cold_icache": {
+            "model_cycles": 1329,
+            "instruction_fills": 46.0
+          },
+          "traffic": {
+            "load_instructions": 136,
+            "store_instructions": 60,
+            "load_bytes": 421,
+            "store_bytes": 219,
+            "unique_read_lines": 38,
+            "unique_write_lines": 12,
+            "unique_data_lines": 39
+          },
+          "demand_line_visits": 196,
+          "repeated_demand_line_visits": 157,
+          "prefetch": {
+            "requests": 2,
+            "unique_requested_lines": 2,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 1,
+            "_VecRadLimit": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "t0-n1-clamped",
+      "kind": 0,
+      "joints": 1,
+      "clamped": true,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 460,
+          "peak_stack_bytes": 176,
+          "model_cycles": 415,
+          "pose_sha256": "d02577248ab12ebc2d2ecef94db002212aaf4d507b9146187f2842bd520ea481",
+          "trace_sha256": "0b566641dcab31c8173419e28d26201aa7c6bec573ba6d3dcd3f327bbaaf71f6",
+          "source_key_bytes": 344,
+          "cold_icache": {
+            "model_cycles": 959,
+            "instruction_fills": 41.0
+          },
+          "traffic": {
+            "load_instructions": 109,
+            "store_instructions": 48,
+            "load_bytes": 361,
+            "store_bytes": 183,
+            "unique_read_lines": 35,
+            "unique_write_lines": 10,
+            "unique_data_lines": 36
+          },
+          "demand_line_visits": 157,
+          "repeated_demand_line_visits": 121,
+          "prefetch": {
+            "requests": 2,
+            "unique_requested_lines": 2,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 1,
+            "_VecRadLimit": 1
+          }
+        },
+        "l1": {
+          "instructions": 423,
+          "peak_stack_bytes": 132,
+          "model_cycles": 379,
+          "pose_sha256": "d02577248ab12ebc2d2ecef94db002212aaf4d507b9146187f2842bd520ea481",
+          "trace_sha256": "6a6ec6d6f0e0e220e77e062ed05df7c9a0c75c4f8f6ab6021dfacee611769a87",
+          "source_key_bytes": 344,
+          "cold_icache": {
+            "model_cycles": 833,
+            "instruction_fills": 36.0
+          },
+          "traffic": {
+            "load_instructions": 94,
+            "store_instructions": 39,
+            "load_bytes": 307,
+            "store_bytes": 153,
+            "unique_read_lines": 33,
+            "unique_write_lines": 9,
+            "unique_data_lines": 34
+          },
+          "demand_line_visits": 133,
+          "repeated_demand_line_visits": 99,
+          "prefetch": {
+            "requests": 2,
+            "unique_requested_lines": 2,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 1,
+            "_VecRadLimit": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "t0-n4-interior",
+      "kind": 0,
+      "joints": 4,
+      "clamped": false,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 2615,
+          "peak_stack_bytes": 176,
+          "model_cycles": 2575,
+          "pose_sha256": "ea5712546e6a9c541fae774499c22eb28aac96dd69fc7dab46124a4dc9e9d297",
+          "trace_sha256": "3a6b724f917e1bdde313a7b403346823241ddf5ec96ca8fee6787331bd8b6c4d",
+          "source_key_bytes": 1376,
+          "cold_icache": {
+            "model_cycles": 3206,
+            "instruction_fills": 49.0
+          },
+          "traffic": {
+            "load_instructions": 433,
+            "store_instructions": 166,
+            "load_bytes": 1293,
+            "store_bytes": 580,
+            "unique_read_lines": 72,
+            "unique_write_lines": 22,
+            "unique_data_lines": 76
+          },
+          "demand_line_visits": 599,
+          "repeated_demand_line_visits": 523,
+          "prefetch": {
+            "requests": 11,
+            "unique_requested_lines": 11,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 4,
+            "_VecRadLimit": 2
+          }
+        },
+        "l1": {
+          "instructions": 2612,
+          "peak_stack_bytes": 176,
+          "model_cycles": 2573,
+          "pose_sha256": "ea5712546e6a9c541fae774499c22eb28aac96dd69fc7dab46124a4dc9e9d297",
+          "trace_sha256": "b11610bb159814302176dcdf753a49a7f4a3bc41141536eb280a5bdc56a7a82b",
+          "source_key_bytes": 1376,
+          "cold_icache": {
+            "model_cycles": 3198,
+            "instruction_fills": 49.0
+          },
+          "traffic": {
+            "load_instructions": 430,
+            "store_instructions": 163,
+            "load_bytes": 1281,
+            "store_bytes": 568,
+            "unique_read_lines": 71,
+            "unique_write_lines": 22,
+            "unique_data_lines": 75
+          },
+          "demand_line_visits": 593,
+          "repeated_demand_line_visits": 518,
+          "prefetch": {
+            "requests": 11,
+            "unique_requested_lines": 11,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 4,
+            "_VecRadLimit": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "t0-n4-clamped",
+      "kind": 0,
+      "joints": 4,
+      "clamped": true,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 1439,
+          "peak_stack_bytes": 176,
+          "model_cycles": 1303,
+          "pose_sha256": "55799f0983dd36ee2a297ec69d27dfda3a6c0aa1c70fdbebef38e44ce6227511",
+          "trace_sha256": "3f7648d04e531b753c81abf270fa89fbcd792521a990787cf5c15b0899fd3756",
+          "source_key_bytes": 1376,
+          "cold_icache": {
+            "model_cycles": 1869,
+            "instruction_fills": 43.0
+          },
+          "traffic": {
+            "load_instructions": 325,
+            "store_instructions": 118,
+            "load_bytes": 1053,
+            "store_bytes": 436,
+            "unique_read_lines": 54,
+            "unique_write_lines": 16,
+            "unique_data_lines": 58
+          },
+          "demand_line_visits": 443,
+          "repeated_demand_line_visits": 385,
+          "prefetch": {
+            "requests": 11,
+            "unique_requested_lines": 11,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 4,
+            "_VecRadLimit": 2
+          }
+        },
+        "l1": {
+          "instructions": 1273,
+          "peak_stack_bytes": 132,
+          "model_cycles": 1129,
+          "pose_sha256": "55799f0983dd36ee2a297ec69d27dfda3a6c0aa1c70fdbebef38e44ce6227511",
+          "trace_sha256": "e096a45f6109c3ad5f4c7bdccb64baba2489c445d67e69064e7ee0f7a6dba06e",
+          "source_key_bytes": 1376,
+          "cold_icache": {
+            "model_cycles": 1619,
+            "instruction_fills": 39.0
+          },
+          "traffic": {
+            "load_instructions": 262,
+            "store_instructions": 79,
+            "load_bytes": 825,
+            "store_bytes": 304,
+            "unique_read_lines": 52,
+            "unique_write_lines": 15,
+            "unique_data_lines": 56
+          },
+          "demand_line_visits": 341,
+          "repeated_demand_line_visits": 285,
+          "prefetch": {
+            "requests": 11,
+            "unique_requested_lines": 11,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 4,
+            "_VecRadLimit": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "t0-n16-interior",
+      "kind": 0,
+      "joints": 16,
+      "clamped": false,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 10067,
+          "peak_stack_bytes": 176,
+          "model_cycles": 9952,
+          "pose_sha256": "f47017fd45025a75af4a73fe658a495af9e76b64165a23f5d7d0bd8179ea7024",
+          "trace_sha256": "a133b7e45ee835d6107b91dab11c2c9c4f10ff2d976be31c1083660fddfb64bc",
+          "source_key_bytes": 5504,
+          "cold_icache": {
+            "model_cycles": 10583,
+            "instruction_fills": 49.0
+          },
+          "traffic": {
+            "load_instructions": 1627,
+            "store_instructions": 592,
+            "load_bytes": 4803,
+            "store_bytes": 2032,
+            "unique_read_lines": 205,
+            "unique_write_lines": 64,
+            "unique_data_lines": 221
+          },
+          "demand_line_visits": 2219,
+          "repeated_demand_line_visits": 1998,
+          "prefetch": {
+            "requests": 47,
+            "unique_requested_lines": 47,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 16,
+            "_VecRadLimit": 8
+          }
+        },
+        "l1": {
+          "instructions": 10040,
+          "peak_stack_bytes": 176,
+          "model_cycles": 9914,
+          "pose_sha256": "f47017fd45025a75af4a73fe658a495af9e76b64165a23f5d7d0bd8179ea7024",
+          "trace_sha256": "21e6b918dda4e10e807da74288723a14153910fe816c9ffa4096b93da74bbca2",
+          "source_key_bytes": 5504,
+          "cold_icache": {
+            "model_cycles": 10539,
+            "instruction_fills": 49.0
+          },
+          "traffic": {
+            "load_instructions": 1612,
+            "store_instructions": 577,
+            "load_bytes": 4743,
+            "store_bytes": 1972,
+            "unique_read_lines": 204,
+            "unique_write_lines": 64,
+            "unique_data_lines": 220
+          },
+          "demand_line_visits": 2189,
+          "repeated_demand_line_visits": 1969,
+          "prefetch": {
+            "requests": 47,
+            "unique_requested_lines": 47,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 16,
+            "_VecRadLimit": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "t0-n16-clamped",
+      "kind": 0,
+      "joints": 16,
+      "clamped": true,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 5363,
+          "peak_stack_bytes": 176,
+          "model_cycles": 4864,
+          "pose_sha256": "91dd7b61d6297c764c396d41c731225de7961d44e2b39f14adb405d93c184443",
+          "trace_sha256": "a9e78262df025355a47e585d8ae2ec4865955f8eed5b63a8f7bcab04ef0a43c3",
+          "source_key_bytes": 5504,
+          "cold_icache": {
+            "model_cycles": 5430,
+            "instruction_fills": 43.0
+          },
+          "traffic": {
+            "load_instructions": 1195,
+            "store_instructions": 400,
+            "load_bytes": 3843,
+            "store_bytes": 1456,
+            "unique_read_lines": 136,
+            "unique_write_lines": 40,
+            "unique_data_lines": 152
+          },
+          "demand_line_visits": 1595,
+          "repeated_demand_line_visits": 1443,
+          "prefetch": {
+            "requests": 47,
+            "unique_requested_lines": 47,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 16,
+            "_VecRadLimit": 8
+          }
+        },
+        "l1": {
+          "instructions": 4681,
+          "peak_stack_bytes": 132,
+          "model_cycles": 4138,
+          "pose_sha256": "91dd7b61d6297c764c396d41c731225de7961d44e2b39f14adb405d93c184443",
+          "trace_sha256": "c1f0de0b1e73dc295ef0ba4313cd30c51dbdb72908614dc14247ceb13a0445ef",
+          "source_key_bytes": 5504,
+          "cold_icache": {
+            "model_cycles": 4628,
+            "instruction_fills": 39.0
+          },
+          "traffic": {
+            "load_instructions": 940,
+            "store_instructions": 241,
+            "load_bytes": 2919,
+            "store_bytes": 916,
+            "unique_read_lines": 134,
+            "unique_write_lines": 39,
+            "unique_data_lines": 150
+          },
+          "demand_line_visits": 1181,
+          "repeated_demand_line_visits": 1031,
+          "prefetch": {
+            "requests": 47,
+            "unique_requested_lines": 47,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 16,
+            "_VecRadLimit": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n1-interior",
+      "kind": 5,
+      "joints": 1,
+      "clamped": false,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 711,
+          "peak_stack_bytes": 176,
+          "model_cycles": 685,
+          "pose_sha256": "0509d63ad24ce1ec5d15f012ea3bf3421f901af254fa9b59b4409f2d39c5eb4e",
+          "trace_sha256": "abcd679f26a8f796e39ea95bf6a736a0a3a018bf9a0028385b012310eb3cf86d",
+          "source_key_bytes": 200,
+          "cold_icache": {
+            "model_cycles": 1294,
+            "instruction_fills": 47.0
+          },
+          "traffic": {
+            "load_instructions": 127,
+            "store_instructions": 60,
+            "load_bytes": 409,
+            "store_bytes": 219,
+            "unique_read_lines": 38,
+            "unique_write_lines": 12,
+            "unique_data_lines": 39
+          },
+          "demand_line_visits": 187,
+          "repeated_demand_line_visits": 148,
+          "prefetch": {
+            "requests": 2,
+            "unique_requested_lines": 2,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 1,
+            "_VecRadLimit": 1
+          }
+        },
+        "l1": {
+          "instructions": 714,
+          "peak_stack_bytes": 176,
+          "model_cycles": 692,
+          "pose_sha256": "0509d63ad24ce1ec5d15f012ea3bf3421f901af254fa9b59b4409f2d39c5eb4e",
+          "trace_sha256": "8de9e04ae3c39f577920f059469cd02327fa25460bfc545447ff36b2648cb85a",
+          "source_key_bytes": 200,
+          "cold_icache": {
+            "model_cycles": 1295,
+            "instruction_fills": 47.0
+          },
+          "traffic": {
+            "load_instructions": 127,
+            "store_instructions": 60,
+            "load_bytes": 409,
+            "store_bytes": 219,
+            "unique_read_lines": 37,
+            "unique_write_lines": 12,
+            "unique_data_lines": 38
+          },
+          "demand_line_visits": 187,
+          "repeated_demand_line_visits": 149,
+          "prefetch": {
+            "requests": 2,
+            "unique_requested_lines": 2,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 1,
+            "_VecRadLimit": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n1-clamped",
+      "kind": 5,
+      "joints": 1,
+      "clamped": true,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 447,
+          "peak_stack_bytes": 176,
+          "model_cycles": 415,
+          "pose_sha256": "91ab92ba271dcdaf856e6a9f76a7f09966a78a3fff6dbc2bd14b93d55422315e",
+          "trace_sha256": "9dbe2b7e89fd6ca414c67e9ba1b36a1a4d06104caf91f449d7c48cf8da64b28c",
+          "source_key_bytes": 200,
+          "cold_icache": {
+            "model_cycles": 946,
+            "instruction_fills": 40.0
+          },
+          "traffic": {
+            "load_instructions": 109,
+            "store_instructions": 48,
+            "load_bytes": 367,
+            "store_bytes": 183,
+            "unique_read_lines": 37,
+            "unique_write_lines": 10,
+            "unique_data_lines": 38
+          },
+          "demand_line_visits": 157,
+          "repeated_demand_line_visits": 119,
+          "prefetch": {
+            "requests": 2,
+            "unique_requested_lines": 2,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 1,
+            "_VecRadLimit": 1
+          }
+        },
+        "l1": {
+          "instructions": 420,
+          "peak_stack_bytes": 132,
+          "model_cycles": 386,
+          "pose_sha256": "91ab92ba271dcdaf856e6a9f76a7f09966a78a3fff6dbc2bd14b93d55422315e",
+          "trace_sha256": "8a542420b3d3fb82f22056581779db83ad383f4ee29e4cb2b7c09ac8b073e96a",
+          "source_key_bytes": 200,
+          "cold_icache": {
+            "model_cycles": 850,
+            "instruction_fills": 36.0
+          },
+          "traffic": {
+            "load_instructions": 91,
+            "store_instructions": 39,
+            "load_bytes": 301,
+            "store_bytes": 153,
+            "unique_read_lines": 34,
+            "unique_write_lines": 9,
+            "unique_data_lines": 36
+          },
+          "demand_line_visits": 130,
+          "repeated_demand_line_visits": 94,
+          "prefetch": {
+            "requests": 2,
+            "unique_requested_lines": 2,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 1,
+            "_VecRadLimit": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n4-interior",
+      "kind": 5,
+      "joints": 4,
+      "clamped": false,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 2443,
+          "peak_stack_bytes": 176,
+          "model_cycles": 2383,
+          "pose_sha256": "3afe285cb0cdd16db64937be2d5211ebc9c5af5b595d4524ddbcd8f5be038e90",
+          "trace_sha256": "c65a7a2fa869ee7e861a34bf50fcf35de25ad0b0894acb62b6f2d69bc1070c92",
+          "source_key_bytes": 800,
+          "cold_icache": {
+            "model_cycles": 3014,
+            "instruction_fills": 49.0
+          },
+          "traffic": {
+            "load_instructions": 397,
+            "store_instructions": 166,
+            "load_bytes": 1245,
+            "store_bytes": 580,
+            "unique_read_lines": 64,
+            "unique_write_lines": 22,
+            "unique_data_lines": 68
+          },
+          "demand_line_visits": 563,
+          "repeated_demand_line_visits": 495,
+          "prefetch": {
+            "requests": 11,
+            "unique_requested_lines": 11,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 4,
+            "_VecRadLimit": 2
+          }
+        },
+        "l1": {
+          "instructions": 2440,
+          "peak_stack_bytes": 176,
+          "model_cycles": 2381,
+          "pose_sha256": "3afe285cb0cdd16db64937be2d5211ebc9c5af5b595d4524ddbcd8f5be038e90",
+          "trace_sha256": "bf608d11800feb28cb674f29a1bff74c2d4ed522cfa1e0b7c63a3651d4b23ad8",
+          "source_key_bytes": 800,
+          "cold_icache": {
+            "model_cycles": 3020,
+            "instruction_fills": 50.0
+          },
+          "traffic": {
+            "load_instructions": 394,
+            "store_instructions": 163,
+            "load_bytes": 1233,
+            "store_bytes": 568,
+            "unique_read_lines": 63,
+            "unique_write_lines": 22,
+            "unique_data_lines": 67
+          },
+          "demand_line_visits": 557,
+          "repeated_demand_line_visits": 490,
+          "prefetch": {
+            "requests": 11,
+            "unique_requested_lines": 11,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 4,
+            "_VecRadLimit": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n4-clamped",
+      "kind": 5,
+      "joints": 4,
+      "clamped": true,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 1387,
+          "peak_stack_bytes": 176,
+          "model_cycles": 1303,
+          "pose_sha256": "a1e818114fb9eea46b793942a64c1d1e92d805d46ea6971d7fde6ca8c571f801",
+          "trace_sha256": "184509c1d318d77760e3b9e401dc3d423b506158e510521b66125ab1fd23cc7d",
+          "source_key_bytes": 800,
+          "cold_icache": {
+            "model_cycles": 1856,
+            "instruction_fills": 42.0
+          },
+          "traffic": {
+            "load_instructions": 325,
+            "store_instructions": 118,
+            "load_bytes": 1077,
+            "store_bytes": 436,
+            "unique_read_lines": 53,
+            "unique_write_lines": 16,
+            "unique_data_lines": 57
+          },
+          "demand_line_visits": 443,
+          "repeated_demand_line_visits": 386,
+          "prefetch": {
+            "requests": 11,
+            "unique_requested_lines": 11,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 4,
+            "_VecRadLimit": 2
+          }
+        },
+        "l1": {
+          "instructions": 1261,
+          "peak_stack_bytes": 132,
+          "model_cycles": 1157,
+          "pose_sha256": "a1e818114fb9eea46b793942a64c1d1e92d805d46ea6971d7fde6ca8c571f801",
+          "trace_sha256": "7127876a464656e4072b529700e5eec3078f8a326f6a7424c9f8eb110119a020",
+          "source_key_bytes": 800,
+          "cold_icache": {
+            "model_cycles": 1657,
+            "instruction_fills": 39.0
+          },
+          "traffic": {
+            "load_instructions": 250,
+            "store_instructions": 79,
+            "load_bytes": 801,
+            "store_bytes": 304,
+            "unique_read_lines": 50,
+            "unique_write_lines": 15,
+            "unique_data_lines": 55
+          },
+          "demand_line_visits": 329,
+          "repeated_demand_line_visits": 274,
+          "prefetch": {
+            "requests": 11,
+            "unique_requested_lines": 11,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 4,
+            "_VecRadLimit": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n16-interior",
+      "kind": 5,
+      "joints": 16,
+      "clamped": false,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 9379,
+          "peak_stack_bytes": 176,
+          "model_cycles": 9184,
+          "pose_sha256": "71b30651d43c7edde3376168325cfcaedfee9128a2a49d310ffacf3eea27a10d",
+          "trace_sha256": "26831a3be3a3f074a327c8feed5b2f04b49ec88372ee062131afaf105d336113",
+          "source_key_bytes": 3200,
+          "cold_icache": {
+            "model_cycles": 9815,
+            "instruction_fills": 49.0
+          },
+          "traffic": {
+            "load_instructions": 1483,
+            "store_instructions": 592,
+            "load_bytes": 4611,
+            "store_bytes": 2032,
+            "unique_read_lines": 170,
+            "unique_write_lines": 64,
+            "unique_data_lines": 186
+          },
+          "demand_line_visits": 2075,
+          "repeated_demand_line_visits": 1889,
+          "prefetch": {
+            "requests": 47,
+            "unique_requested_lines": 47,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 16,
+            "_VecRadLimit": 8
+          }
+        },
+        "l1": {
+          "instructions": 9352,
+          "peak_stack_bytes": 176,
+          "model_cycles": 9146,
+          "pose_sha256": "71b30651d43c7edde3376168325cfcaedfee9128a2a49d310ffacf3eea27a10d",
+          "trace_sha256": "2de6673a7adfa02f36c904e2335154410411e04b471d5f26686ae7b7b8ec7975",
+          "source_key_bytes": 3200,
+          "cold_icache": {
+            "model_cycles": 9785,
+            "instruction_fills": 50.0
+          },
+          "traffic": {
+            "load_instructions": 1468,
+            "store_instructions": 577,
+            "load_bytes": 4551,
+            "store_bytes": 1972,
+            "unique_read_lines": 169,
+            "unique_write_lines": 64,
+            "unique_data_lines": 185
+          },
+          "demand_line_visits": 2045,
+          "repeated_demand_line_visits": 1860,
+          "prefetch": {
+            "requests": 47,
+            "unique_requested_lines": 47,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 16,
+            "_VecRadLimit": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n16-clamped",
+      "kind": 5,
+      "joints": 16,
+      "clamped": true,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 5155,
+          "peak_stack_bytes": 176,
+          "model_cycles": 4864,
+          "pose_sha256": "b902f8580180b21b3c4a641a5c9c249a8916d7fd46dd87e0f45449c844ab75b0",
+          "trace_sha256": "be50e73447a47e133ca013460cc12ec4cbdaad6cb44fb81fb3d9d86ce086309c",
+          "source_key_bytes": 3200,
+          "cold_icache": {
+            "model_cycles": 5417,
+            "instruction_fills": 42.0
+          },
+          "traffic": {
+            "load_instructions": 1195,
+            "store_instructions": 400,
+            "load_bytes": 3939,
+            "store_bytes": 1456,
+            "unique_read_lines": 129,
+            "unique_write_lines": 40,
+            "unique_data_lines": 145
+          },
+          "demand_line_visits": 1595,
+          "repeated_demand_line_visits": 1450,
+          "prefetch": {
+            "requests": 47,
+            "unique_requested_lines": 47,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 16,
+            "_VecRadLimit": 8
+          }
+        },
+        "l1": {
+          "instructions": 4633,
+          "peak_stack_bytes": 132,
+          "model_cycles": 4250,
+          "pose_sha256": "b902f8580180b21b3c4a641a5c9c249a8916d7fd46dd87e0f45449c844ab75b0",
+          "trace_sha256": "a792c2150266ea70dd42b29974669c5198967f6c0e80da52bd2382d649e30aa5",
+          "source_key_bytes": 3200,
+          "cold_icache": {
+            "model_cycles": 4750,
+            "instruction_fills": 39.0
+          },
+          "traffic": {
+            "load_instructions": 892,
+            "store_instructions": 241,
+            "load_bytes": 2823,
+            "store_bytes": 916,
+            "unique_read_lines": 126,
+            "unique_write_lines": 39,
+            "unique_data_lines": 143
+          },
+          "demand_line_visits": 1133,
+          "repeated_demand_line_visits": 990,
+          "prefetch": {
+            "requests": 47,
+            "unique_requested_lines": 47,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 16,
+            "_VecRadLimit": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "t6-n1-interior",
+      "kind": 6,
+      "joints": 1,
+      "clamped": false,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 677,
+          "peak_stack_bytes": 164,
+          "model_cycles": 668,
+          "pose_sha256": "cb8c8f1451617a08bf89fbe4f7fe9082690f385ea65b33edab83fb48a4c32cc4",
+          "trace_sha256": "f612fb2e47dc10e81fb317cb2eb53727cca2f43802dd91cfaff56d1ce92bbdcf",
+          "source_key_bytes": 152,
+          "cold_icache": {
+            "model_cycles": 1257,
+            "instruction_fills": 46.0
+          },
+          "traffic": {
+            "load_instructions": 124,
+            "store_instructions": 51,
+            "load_bytes": 391,
+            "store_bytes": 189,
+            "unique_read_lines": 36,
+            "unique_write_lines": 12,
+            "unique_data_lines": 37
+          },
+          "demand_line_visits": 175,
+          "repeated_demand_line_visits": 138,
+          "prefetch": {
+            "requests": 2,
+            "unique_requested_lines": 2,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 1,
+            "_VecRadLimit": 1
+          }
+        },
+        "l1": {
+          "instructions": 680,
+          "peak_stack_bytes": 164,
+          "model_cycles": 675,
+          "pose_sha256": "cb8c8f1451617a08bf89fbe4f7fe9082690f385ea65b33edab83fb48a4c32cc4",
+          "trace_sha256": "b21abd6656b6a5dba6e7abf14e2221d3743c8e641c3cc46293cdd32a801fac8b",
+          "source_key_bytes": 152,
+          "cold_icache": {
+            "model_cycles": 1258,
+            "instruction_fills": 46.0
+          },
+          "traffic": {
+            "load_instructions": 124,
+            "store_instructions": 51,
+            "load_bytes": 391,
+            "store_bytes": 189,
+            "unique_read_lines": 35,
+            "unique_write_lines": 12,
+            "unique_data_lines": 36
+          },
+          "demand_line_visits": 175,
+          "repeated_demand_line_visits": 139,
+          "prefetch": {
+            "requests": 2,
+            "unique_requested_lines": 2,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 1,
+            "_VecRadLimit": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "t6-n1-clamped",
+      "kind": 6,
+      "joints": 1,
+      "clamped": true,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 446,
+          "peak_stack_bytes": 164,
+          "model_cycles": 410,
+          "pose_sha256": "91ab92ba271dcdaf856e6a9f76a7f09966a78a3fff6dbc2bd14b93d55422315e",
+          "trace_sha256": "5a43871b4fb94828fc28276ba50f62bae15c04cecba54f950f4363851384abea",
+          "source_key_bytes": 152,
+          "cold_icache": {
+            "model_cycles": 949,
+            "instruction_fills": 41.0
+          },
+          "traffic": {
+            "load_instructions": 109,
+            "store_instructions": 48,
+            "load_bytes": 367,
+            "store_bytes": 183,
+            "unique_read_lines": 35,
+            "unique_write_lines": 10,
+            "unique_data_lines": 36
+          },
+          "demand_line_visits": 157,
+          "repeated_demand_line_visits": 121,
+          "prefetch": {
+            "requests": 2,
+            "unique_requested_lines": 2,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 1,
+            "_VecRadLimit": 1
+          }
+        },
+        "l1": {
+          "instructions": 402,
+          "peak_stack_bytes": 128,
+          "model_cycles": 377,
+          "pose_sha256": "91ab92ba271dcdaf856e6a9f76a7f09966a78a3fff6dbc2bd14b93d55422315e",
+          "trace_sha256": "9ca8b438ddf1e383c7ffbc1a20335c9d2889132045d303d38628bcab2d4ac711",
+          "source_key_bytes": 152,
+          "cold_icache": {
+            "model_cycles": 839,
+            "instruction_fills": 36.0
+          },
+          "traffic": {
+            "load_instructions": 90,
+            "store_instructions": 38,
+            "load_bytes": 297,
+            "store_bytes": 149,
+            "unique_read_lines": 32,
+            "unique_write_lines": 8,
+            "unique_data_lines": 33
+          },
+          "demand_line_visits": 128,
+          "repeated_demand_line_visits": 95,
+          "prefetch": {
+            "requests": 2,
+            "unique_requested_lines": 2,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 1,
+            "_VecRadLimit": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "t6-n4-interior",
+      "kind": 6,
+      "joints": 4,
+      "clamped": false,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 2307,
+          "peak_stack_bytes": 164,
+          "model_cycles": 2315,
+          "pose_sha256": "e41b72afa9eec7dfc400daebe99cbe5c030e5b3aa4fe19b03655ef886ea425d9",
+          "trace_sha256": "580c1d965489cef01144291913626da073ae329b59302f4b6125442ad5b884e3",
+          "source_key_bytes": 608,
+          "cold_icache": {
+            "model_cycles": 2926,
+            "instruction_fills": 48.0
+          },
+          "traffic": {
+            "load_instructions": 385,
+            "store_instructions": 130,
+            "load_bytes": 1173,
+            "store_bytes": 460,
+            "unique_read_lines": 57,
+            "unique_write_lines": 22,
+            "unique_data_lines": 61
+          },
+          "demand_line_visits": 515,
+          "repeated_demand_line_visits": 454,
+          "prefetch": {
+            "requests": 11,
+            "unique_requested_lines": 11,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 4,
+            "_VecRadLimit": 2
+          }
+        },
+        "l1": {
+          "instructions": 2304,
+          "peak_stack_bytes": 164,
+          "model_cycles": 2313,
+          "pose_sha256": "e41b72afa9eec7dfc400daebe99cbe5c030e5b3aa4fe19b03655ef886ea425d9",
+          "trace_sha256": "8ce2b480d2ccb418d9d0f0978a65bc909fd403f15c231d0a6970852cb203ddb8",
+          "source_key_bytes": 608,
+          "cold_icache": {
+            "model_cycles": 2932,
+            "instruction_fills": 49.0
+          },
+          "traffic": {
+            "load_instructions": 382,
+            "store_instructions": 127,
+            "load_bytes": 1161,
+            "store_bytes": 448,
+            "unique_read_lines": 56,
+            "unique_write_lines": 22,
+            "unique_data_lines": 60
+          },
+          "demand_line_visits": 509,
+          "repeated_demand_line_visits": 449,
+          "prefetch": {
+            "requests": 11,
+            "unique_requested_lines": 11,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 4,
+            "_VecRadLimit": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "t6-n4-clamped",
+      "kind": 6,
+      "joints": 4,
+      "clamped": true,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 1383,
+          "peak_stack_bytes": 164,
+          "model_cycles": 1283,
+          "pose_sha256": "a1e818114fb9eea46b793942a64c1d1e92d805d46ea6971d7fde6ca8c571f801",
+          "trace_sha256": "4e89e2ea79279d10e6147e6201d9fe443510632f5bfb72612cf82aad606af63f",
+          "source_key_bytes": 608,
+          "cold_icache": {
+            "model_cycles": 1844,
+            "instruction_fills": 43.0
+          },
+          "traffic": {
+            "load_instructions": 325,
+            "store_instructions": 118,
+            "load_bytes": 1077,
+            "store_bytes": 436,
+            "unique_read_lines": 52,
+            "unique_write_lines": 16,
+            "unique_data_lines": 56
+          },
+          "demand_line_visits": 443,
+          "repeated_demand_line_visits": 387,
+          "prefetch": {
+            "requests": 11,
+            "unique_requested_lines": 11,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 4,
+            "_VecRadLimit": 2
+          }
+        },
+        "l1": {
+          "instructions": 1189,
+          "peak_stack_bytes": 128,
+          "model_cycles": 1121,
+          "pose_sha256": "a1e818114fb9eea46b793942a64c1d1e92d805d46ea6971d7fde6ca8c571f801",
+          "trace_sha256": "3bdad8056a2b579df9892f830e68bb1eea7fd840176f9ce56a0dd3c4e06b01fe",
+          "source_key_bytes": 608,
+          "cold_icache": {
+            "model_cycles": 1619,
+            "instruction_fills": 39.0
+          },
+          "traffic": {
+            "load_instructions": 246,
+            "store_instructions": 75,
+            "load_bytes": 785,
+            "store_bytes": 288,
+            "unique_read_lines": 49,
+            "unique_write_lines": 14,
+            "unique_data_lines": 53
+          },
+          "demand_line_visits": 321,
+          "repeated_demand_line_visits": 268,
+          "prefetch": {
+            "requests": 11,
+            "unique_requested_lines": 11,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 4,
+            "_VecRadLimit": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "t6-n16-interior",
+      "kind": 6,
+      "joints": 16,
+      "clamped": false,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 8835,
+          "peak_stack_bytes": 164,
+          "model_cycles": 8912,
+          "pose_sha256": "8136abf683712d82e891cc1f921958b7548467df1e1e08abae61da9195a47d0b",
+          "trace_sha256": "af8c2d24abcbcc3342ab68cab8b8bb34a65aff325e9cee781f2d6489102a9409",
+          "source_key_bytes": 2432,
+          "cold_icache": {
+            "model_cycles": 9523,
+            "instruction_fills": 48.0
+          },
+          "traffic": {
+            "load_instructions": 1435,
+            "store_instructions": 448,
+            "load_bytes": 4323,
+            "store_bytes": 1552,
+            "unique_read_lines": 145,
+            "unique_write_lines": 64,
+            "unique_data_lines": 161
+          },
+          "demand_line_visits": 1883,
+          "repeated_demand_line_visits": 1722,
+          "prefetch": {
+            "requests": 47,
+            "unique_requested_lines": 47,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 16,
+            "_VecRadLimit": 8
+          }
+        },
+        "l1": {
+          "instructions": 8808,
+          "peak_stack_bytes": 164,
+          "model_cycles": 8874,
+          "pose_sha256": "8136abf683712d82e891cc1f921958b7548467df1e1e08abae61da9195a47d0b",
+          "trace_sha256": "796d6504fc01c0153af2922c29928185e61c68f7486b4cc4355b272bc8714863",
+          "source_key_bytes": 2432,
+          "cold_icache": {
+            "model_cycles": 9493,
+            "instruction_fills": 49.0
+          },
+          "traffic": {
+            "load_instructions": 1420,
+            "store_instructions": 433,
+            "load_bytes": 4263,
+            "store_bytes": 1492,
+            "unique_read_lines": 144,
+            "unique_write_lines": 64,
+            "unique_data_lines": 160
+          },
+          "demand_line_visits": 1853,
+          "repeated_demand_line_visits": 1693,
+          "prefetch": {
+            "requests": 47,
+            "unique_requested_lines": 47,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 16,
+            "_VecRadLimit": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "t6-n16-clamped",
+      "kind": 6,
+      "joints": 16,
+      "clamped": true,
+      "mode": "normal",
+      "arms": {
+        "l0": {
+          "instructions": 5139,
+          "peak_stack_bytes": 164,
+          "model_cycles": 4784,
+          "pose_sha256": "b902f8580180b21b3c4a641a5c9c249a8916d7fd46dd87e0f45449c844ab75b0",
+          "trace_sha256": "e28fba4f2b9910910444c80d83344ea431e1218c1e56856401de370243b44661",
+          "source_key_bytes": 2432,
+          "cold_icache": {
+            "model_cycles": 5345,
+            "instruction_fills": 43.0
+          },
+          "traffic": {
+            "load_instructions": 1195,
+            "store_instructions": 400,
+            "load_bytes": 3939,
+            "store_bytes": 1456,
+            "unique_read_lines": 125,
+            "unique_write_lines": 40,
+            "unique_data_lines": 141
+          },
+          "demand_line_visits": 1595,
+          "repeated_demand_line_visits": 1454,
+          "prefetch": {
+            "requests": 47,
+            "unique_requested_lines": 47,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 16,
+            "_VecRadLimit": 8
+          }
+        },
+        "l1": {
+          "instructions": 4345,
+          "peak_stack_bytes": 128,
+          "model_cycles": 4106,
+          "pose_sha256": "b902f8580180b21b3c4a641a5c9c249a8916d7fd46dd87e0f45449c844ab75b0",
+          "trace_sha256": "19dd715d7e7b162d6ee9c0ddda51eb58f0621f06028f1fef3e10a31baffb1724",
+          "source_key_bytes": 2432,
+          "cold_icache": {
+            "model_cycles": 4604,
+            "instruction_fills": 39.0
+          },
+          "traffic": {
+            "load_instructions": 876,
+            "store_instructions": 225,
+            "load_bytes": 2759,
+            "store_bytes": 852,
+            "unique_read_lines": 122,
+            "unique_write_lines": 38,
+            "unique_data_lines": 138
+          },
+          "demand_line_visits": 1101,
+          "repeated_demand_line_visits": 963,
+          "prefetch": {
+            "requests": 47,
+            "unique_requested_lines": 47,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 16,
+            "_VecRadLimit": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n12-camera-interior",
+      "kind": 5,
+      "joints": 12,
+      "clamped": false,
+      "mode": "camera",
+      "arms": {
+        "l0": {
+          "instructions": 6828,
+          "peak_stack_bytes": 176,
+          "model_cycles": 6667,
+          "pose_sha256": "666c86cb8e11700b01a31a84cf6755bc043a3fcb520a0e68c3056b1b95a7bca2",
+          "trace_sha256": "beb89a82bede697385453d8781cc6a694702646e1ebbd2f940227c2ee10af410",
+          "source_key_bytes": 2400,
+          "cold_icache": {
+            "model_cycles": 7369,
+            "instruction_fills": 55.0
+          },
+          "traffic": {
+            "load_instructions": 1029,
+            "store_instructions": 438,
+            "load_bytes": 3139,
+            "store_bytes": 1497,
+            "unique_read_lines": 125,
+            "unique_write_lines": 37,
+            "unique_data_lines": 134
+          },
+          "demand_line_visits": 1467,
+          "repeated_demand_line_visits": 1333,
+          "prefetch": {
+            "requests": 35,
+            "unique_requested_lines": 35,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 7,
+            "_VecRadLimit": 3
+          }
+        },
+        "l1": {
+          "instructions": 6810,
+          "peak_stack_bytes": 176,
+          "model_cycles": 6652,
+          "pose_sha256": "666c86cb8e11700b01a31a84cf6755bc043a3fcb520a0e68c3056b1b95a7bca2",
+          "trace_sha256": "fa94a96107557e382cf9bd1d8644b5a4a8495f8af1173fd6899aea569b3298ec",
+          "source_key_bytes": 2400,
+          "cold_icache": {
+            "model_cycles": 7343,
+            "instruction_fills": 54.0
+          },
+          "traffic": {
+            "load_instructions": 1018,
+            "store_instructions": 427,
+            "load_bytes": 3095,
+            "store_bytes": 1453,
+            "unique_read_lines": 124,
+            "unique_write_lines": 37,
+            "unique_data_lines": 133
+          },
+          "demand_line_visits": 1445,
+          "repeated_demand_line_visits": 1312,
+          "prefetch": {
+            "requests": 35,
+            "unique_requested_lines": 35,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 7,
+            "_VecRadLimit": 3
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n12-camera-endpoint",
+      "kind": 5,
+      "joints": 12,
+      "clamped": true,
+      "mode": "camera",
+      "arms": {
+        "l0": {
+          "instructions": 3660,
+          "peak_stack_bytes": 176,
+          "model_cycles": 3427,
+          "pose_sha256": "4db2c52c78d9916ff17e09907433daa518e57432c82fc42c663bfedb93006e5a",
+          "trace_sha256": "71f9e2ba7cb91fe60b37a1600a1cf5c96e24dd5e370192cee356dce3d50047c5",
+          "source_key_bytes": 2400,
+          "cold_icache": {
+            "model_cycles": 4051,
+            "instruction_fills": 48.0
+          },
+          "traffic": {
+            "load_instructions": 813,
+            "store_instructions": 294,
+            "load_bytes": 2635,
+            "store_bytes": 1065,
+            "unique_read_lines": 94,
+            "unique_write_lines": 26,
+            "unique_data_lines": 103
+          },
+          "demand_line_visits": 1107,
+          "repeated_demand_line_visits": 1004,
+          "prefetch": {
+            "requests": 35,
+            "unique_requested_lines": 35,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 7,
+            "_VecRadLimit": 3
+          }
+        },
+        "l1": {
+          "instructions": 3271,
+          "peak_stack_bytes": 132,
+          "model_cycles": 2980,
+          "pose_sha256": "4db2c52c78d9916ff17e09907433daa518e57432c82fc42c663bfedb93006e5a",
+          "trace_sha256": "7b742c0b776b9ce7dd020ad0230d70c33fdbd6dc13adac52d56f20e3bd16b571",
+          "source_key_bytes": 2400,
+          "cold_icache": {
+            "model_cycles": 3527,
+            "instruction_fills": 43.0
+          },
+          "traffic": {
+            "load_instructions": 586,
+            "store_instructions": 175,
+            "load_bytes": 1799,
+            "store_bytes": 661,
+            "unique_read_lines": 91,
+            "unique_write_lines": 25,
+            "unique_data_lines": 101
+          },
+          "demand_line_visits": 761,
+          "repeated_demand_line_visits": 660,
+          "prefetch": {
+            "requests": 35,
+            "unique_requested_lines": 35,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 7,
+            "_VecRadLimit": 3
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n12-mixed-interior",
+      "kind": 5,
+      "joints": 12,
+      "clamped": false,
+      "mode": "mixed",
+      "arms": {
+        "l0": {
+          "instructions": 7883,
+          "peak_stack_bytes": 176,
+          "model_cycles": 7905,
+          "pose_sha256": "5765ca4a33e81810f72ca904b7c10dab77ecb1b9e96d8c3b287a8dd560b53430",
+          "trace_sha256": "714c55685e25c47d5f181612a498c958c074f3c609909a9bcbf3590fd6c5fda5",
+          "source_key_bytes": 2784,
+          "cold_icache": {
+            "model_cycles": 8884,
+            "instruction_fills": 79.0
+          },
+          "traffic": {
+            "load_instructions": 1181,
+            "store_instructions": 426,
+            "load_bytes": 3537,
+            "store_bytes": 1452,
+            "unique_read_lines": 140,
+            "unique_write_lines": 44,
+            "unique_data_lines": 152
+          },
+          "demand_line_visits": 1607,
+          "repeated_demand_line_visits": 1455,
+          "prefetch": {
+            "requests": 35,
+            "unique_requested_lines": 35,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 12,
+            "_VecRadLimit": 6
+          }
+        },
+        "l1": {
+          "instructions": 7864,
+          "peak_stack_bytes": 176,
+          "model_cycles": 7871,
+          "pose_sha256": "5765ca4a33e81810f72ca904b7c10dab77ecb1b9e96d8c3b287a8dd560b53430",
+          "trace_sha256": "ad20741abf3c3149920519500d823eb2d6667ae3f382ba54cd07a9d25db44ff1",
+          "source_key_bytes": 2784,
+          "cold_icache": {
+            "model_cycles": 8841,
+            "instruction_fills": 79.0
+          },
+          "traffic": {
+            "load_instructions": 1170,
+            "store_instructions": 415,
+            "load_bytes": 3493,
+            "store_bytes": 1408,
+            "unique_read_lines": 139,
+            "unique_write_lines": 44,
+            "unique_data_lines": 151
+          },
+          "demand_line_visits": 1585,
+          "repeated_demand_line_visits": 1434,
+          "prefetch": {
+            "requests": 35,
+            "unique_requested_lines": 35,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 12,
+            "_VecRadLimit": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n12-mixed-endpoint",
+      "kind": 5,
+      "joints": 12,
+      "clamped": true,
+      "mode": "mixed",
+      "arms": {
+        "l0": {
+          "instructions": 3887,
+          "peak_stack_bytes": 176,
+          "model_cycles": 3585,
+          "pose_sha256": "84a95a8af68d8324d4e616f6f2bed2edac30842e759daa2c74a4913df68cb9c4",
+          "trace_sha256": "bce5b2e4c90ec7f87e8947ec8da74ca03493a53e046abc1e458362ac3534db8d",
+          "source_key_bytes": 2784,
+          "cold_icache": {
+            "model_cycles": 4330,
+            "instruction_fills": 58.0
+          },
+          "traffic": {
+            "load_instructions": 881,
+            "store_instructions": 306,
+            "load_bytes": 2889,
+            "store_bytes": 1116,
+            "unique_read_lines": 106,
+            "unique_write_lines": 32,
+            "unique_data_lines": 118
+          },
+          "demand_line_visits": 1187,
+          "repeated_demand_line_visits": 1069,
+          "prefetch": {
+            "requests": 35,
+            "unique_requested_lines": 35,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 12,
+            "_VecRadLimit": 6
+          }
+        },
+        "l1": {
+          "instructions": 3413,
+          "peak_stack_bytes": 132,
+          "model_cycles": 3123,
+          "pose_sha256": "84a95a8af68d8324d4e616f6f2bed2edac30842e759daa2c74a4913df68cb9c4",
+          "trace_sha256": "869b089a2392a7094310526fcd59e067988702103a841459b0a7b08d96c0a871",
+          "source_key_bytes": 2784,
+          "cold_icache": {
+            "model_cycles": 3741,
+            "instruction_fills": 49.0
+          },
+          "traffic": {
+            "load_instructions": 674,
+            "store_instructions": 183,
+            "load_bytes": 2133,
+            "store_bytes": 696,
+            "unique_read_lines": 98,
+            "unique_write_lines": 31,
+            "unique_data_lines": 110
+          },
+          "demand_line_visits": 857,
+          "repeated_demand_line_visits": 747,
+          "prefetch": {
+            "requests": 35,
+            "unique_requested_lines": 35,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 12,
+            "_VecRadLimit": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n12-ignore_history-interior",
+      "kind": 5,
+      "joints": 12,
+      "clamped": false,
+      "mode": "ignore_history",
+      "arms": {
+        "l0": {
+          "instructions": 9407,
+          "peak_stack_bytes": 176,
+          "model_cycles": 9509,
+          "pose_sha256": "2c904f4c4d350b76304c1fe1ee50f86561d083253596d8c80cd1d14a13b6db4e",
+          "trace_sha256": "90ab45bfef66faa7596fd8cee5d3d5fb625b668c201a6dbb8ffc176c05695e60",
+          "source_key_bytes": 2400,
+          "cold_icache": {
+            "model_cycles": 10134,
+            "instruction_fills": 49.0
+          },
+          "traffic": {
+            "load_instructions": 1229,
+            "store_instructions": 486,
+            "load_bytes": 3705,
+            "store_bytes": 1620,
+            "unique_read_lines": 135,
+            "unique_write_lines": 32,
+            "unique_data_lines": 147
+          },
+          "demand_line_visits": 1715,
+          "repeated_demand_line_visits": 1568,
+          "prefetch": {
+            "requests": 35,
+            "unique_requested_lines": 35,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 12,
+            "_VecRadLimit": 6
+          }
+        },
+        "l1": {
+          "instructions": 9388,
+          "peak_stack_bytes": 176,
+          "model_cycles": 9459,
+          "pose_sha256": "2c904f4c4d350b76304c1fe1ee50f86561d083253596d8c80cd1d14a13b6db4e",
+          "trace_sha256": "48a68701a3ee25f167803e251b0241183d173a1f8333a380fda5d65cff61b022",
+          "source_key_bytes": 2400,
+          "cold_icache": {
+            "model_cycles": 10093,
+            "instruction_fills": 50.0
+          },
+          "traffic": {
+            "load_instructions": 1218,
+            "store_instructions": 475,
+            "load_bytes": 3661,
+            "store_bytes": 1576,
+            "unique_read_lines": 134,
+            "unique_write_lines": 32,
+            "unique_data_lines": 146
+          },
+          "demand_line_visits": 1693,
+          "repeated_demand_line_visits": 1547,
+          "prefetch": {
+            "requests": 35,
+            "unique_requested_lines": 35,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 12,
+            "_VecRadLimit": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n12-ignore_history-endpoint",
+      "kind": 5,
+      "joints": 12,
+      "clamped": true,
+      "mode": "ignore_history",
+      "arms": {
+        "l0": {
+          "instructions": 3719,
+          "peak_stack_bytes": 176,
+          "model_cycles": 3461,
+          "pose_sha256": "cc934fa78cf87d6664732740e9cb12702029d5251abfa8716c68e31963faaf93",
+          "trace_sha256": "16226b1e7800e03528a2788a9780c16c257772331b0611f723dcc1624c475aa4",
+          "source_key_bytes": 2400,
+          "cold_icache": {
+            "model_cycles": 3986,
+            "instruction_fills": 40.0
+          },
+          "traffic": {
+            "load_instructions": 833,
+            "store_instructions": 306,
+            "load_bytes": 2769,
+            "store_bytes": 1116,
+            "unique_read_lines": 104,
+            "unique_write_lines": 32,
+            "unique_data_lines": 116
+          },
+          "demand_line_visits": 1139,
+          "repeated_demand_line_visits": 1023,
+          "prefetch": {
+            "requests": 35,
+            "unique_requested_lines": 35,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 12,
+            "_VecRadLimit": 6
+          }
+        },
+        "l1": {
+          "instructions": 3401,
+          "peak_stack_bytes": 132,
+          "model_cycles": 3123,
+          "pose_sha256": "cc934fa78cf87d6664732740e9cb12702029d5251abfa8716c68e31963faaf93",
+          "trace_sha256": "03a72c2430b593fcb5c1e78fd37c6ffe9eecabf5dffa8f39792655cc735edd95",
+          "source_key_bytes": 2400,
+          "cold_icache": {
+            "model_cycles": 3624,
+            "instruction_fills": 39.0
+          },
+          "traffic": {
+            "load_instructions": 642,
+            "store_instructions": 187,
+            "load_bytes": 2077,
+            "store_bytes": 712,
+            "unique_read_lines": 83,
+            "unique_write_lines": 31,
+            "unique_data_lines": 96
+          },
+          "demand_line_visits": 829,
+          "repeated_demand_line_visits": 733,
+          "prefetch": {
+            "requests": 35,
+            "unique_requested_lines": 35,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 12,
+            "_VecRadLimit": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n12-skip-interior",
+      "kind": 5,
+      "joints": 12,
+      "clamped": false,
+      "mode": "skip",
+      "arms": {
+        "l0": {
+          "instructions": 5023,
+          "peak_stack_bytes": 176,
+          "model_cycles": 4926,
+          "pose_sha256": "3062c1c59896ae48043171fcdbf3e26913279c1384a7708eb3dcc09a33854a50",
+          "trace_sha256": "0cf1f30c453f6a2e8272d14b5b84601ac51955f7c81e56deffa8405356ec60be",
+          "source_key_bytes": 2400,
+          "cold_icache": {
+            "model_cycles": 5558,
+            "instruction_fills": 49.0
+          },
+          "traffic": {
+            "load_instructions": 839,
+            "store_instructions": 308,
+            "load_bytes": 2615,
+            "store_bytes": 1064,
+            "unique_read_lines": 104,
+            "unique_write_lines": 36,
+            "unique_data_lines": 112
+          },
+          "demand_line_visits": 1147,
+          "repeated_demand_line_visits": 1035,
+          "prefetch": {
+            "requests": 27,
+            "unique_requested_lines": 27,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 12,
+            "_VecRadLimit": 4
+          }
+        },
+        "l1": {
+          "instructions": 5012,
+          "peak_stack_bytes": 176,
+          "model_cycles": 4912,
+          "pose_sha256": "3062c1c59896ae48043171fcdbf3e26913279c1384a7708eb3dcc09a33854a50",
+          "trace_sha256": "1ae24cd2f782c8eadd732a6344fb88497ce27f875529e184b9874b4d9789fdf7",
+          "source_key_bytes": 2400,
+          "cold_icache": {
+            "model_cycles": 5552,
+            "instruction_fills": 50.0
+          },
+          "traffic": {
+            "load_instructions": 832,
+            "store_instructions": 301,
+            "load_bytes": 2587,
+            "store_bytes": 1036,
+            "unique_read_lines": 103,
+            "unique_write_lines": 36,
+            "unique_data_lines": 111
+          },
+          "demand_line_visits": 1133,
+          "repeated_demand_line_visits": 1022,
+          "prefetch": {
+            "requests": 27,
+            "unique_requested_lines": 27,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 12,
+            "_VecRadLimit": 4
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n12-skip-endpoint",
+      "kind": 5,
+      "joints": 12,
+      "clamped": true,
+      "mode": "skip",
+      "arms": {
+        "l0": {
+          "instructions": 2911,
+          "peak_stack_bytes": 176,
+          "model_cycles": 2766,
+          "pose_sha256": "eeac9ab5ec0d13aa065848b3ddd561a60a2367d3648b0f7944b8ff08cf8ede83",
+          "trace_sha256": "b2f82dbe0dbaedd8a4b86b5dd81e6c58fee44049f910f72d0b1905c3913e46a1",
+          "source_key_bytes": 2400,
+          "cold_icache": {
+            "model_cycles": 3320,
+            "instruction_fills": 42.0
+          },
+          "traffic": {
+            "load_instructions": 695,
+            "store_instructions": 212,
+            "load_bytes": 2279,
+            "store_bytes": 776,
+            "unique_read_lines": 86,
+            "unique_write_lines": 24,
+            "unique_data_lines": 94
+          },
+          "demand_line_visits": 907,
+          "repeated_demand_line_visits": 813,
+          "prefetch": {
+            "requests": 27,
+            "unique_requested_lines": 27,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 12,
+            "_VecRadLimit": 4
+          }
+        },
+        "l1": {
+          "instructions": 2653,
+          "peak_stack_bytes": 132,
+          "model_cycles": 2464,
+          "pose_sha256": "eeac9ab5ec0d13aa065848b3ddd561a60a2367d3648b0f7944b8ff08cf8ede83",
+          "trace_sha256": "4b6fe0b9ce7011ac23152c3cec08a42a286c83a3d82c3ffb53da047f891bf708",
+          "source_key_bytes": 2400,
+          "cold_icache": {
+            "model_cycles": 2962,
+            "instruction_fills": 39.0
+          },
+          "traffic": {
+            "load_instructions": 544,
+            "store_instructions": 133,
+            "load_bytes": 1723,
+            "store_bytes": 508,
+            "unique_read_lines": 83,
+            "unique_write_lines": 23,
+            "unique_data_lines": 92
+          },
+          "demand_line_visits": 677,
+          "repeated_demand_line_visits": 585,
+          "prefetch": {
+            "requests": 27,
+            "unique_requested_lines": 27,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 12,
+            "_VecRadLimit": 4
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n12-loop-interior",
+      "kind": 5,
+      "joints": 12,
+      "clamped": false,
+      "mode": "loop",
+      "arms": {
+        "l0": {
+          "instructions": 7074,
+          "peak_stack_bytes": 176,
+          "model_cycles": 6924,
+          "pose_sha256": "8fa677a67a2b0fffbecd6a5ef3fa97b6011c25c4658c4bf45e4bda825d40abe0",
+          "trace_sha256": "cd85d74365f70cdfc3829c9d4237144606024318e0b3e70bb45dfc9c55f220e2",
+          "source_key_bytes": 2400,
+          "cold_icache": {
+            "model_cycles": 7553,
+            "instruction_fills": 49.0
+          },
+          "traffic": {
+            "load_instructions": 1122,
+            "store_instructions": 451,
+            "load_bytes": 3493,
+            "store_bytes": 1552,
+            "unique_read_lines": 135,
+            "unique_write_lines": 50,
+            "unique_data_lines": 147
+          },
+          "demand_line_visits": 1573,
+          "repeated_demand_line_visits": 1426,
+          "prefetch": {
+            "requests": 35,
+            "unique_requested_lines": 35,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 12,
+            "_VecRadLimit": 6
+          }
+        },
+        "l1": {
+          "instructions": 7054,
+          "peak_stack_bytes": 176,
+          "model_cycles": 6897,
+          "pose_sha256": "8fa677a67a2b0fffbecd6a5ef3fa97b6011c25c4658c4bf45e4bda825d40abe0",
+          "trace_sha256": "fff76c4f09c35e8d5f99d90c41ad14619b3e32e612d5aa69f0df64b85b6aa747",
+          "source_key_bytes": 2400,
+          "cold_icache": {
+            "model_cycles": 7533,
+            "instruction_fills": 50.0
+          },
+          "traffic": {
+            "load_instructions": 1111,
+            "store_instructions": 439,
+            "load_bytes": 3449,
+            "store_bytes": 1504,
+            "unique_read_lines": 134,
+            "unique_write_lines": 50,
+            "unique_data_lines": 146
+          },
+          "demand_line_visits": 1550,
+          "repeated_demand_line_visits": 1404,
+          "prefetch": {
+            "requests": 35,
+            "unique_requested_lines": 35,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 12,
+            "_VecRadLimit": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n12-loop-endpoint",
+      "kind": 5,
+      "joints": 12,
+      "clamped": true,
+      "mode": "loop",
+      "arms": {
+        "l0": {
+          "instructions": 10482,
+          "peak_stack_bytes": 176,
+          "model_cycles": 10992,
+          "pose_sha256": "a6bec3b856e2222f6d021cf715c4472560ed828f93bdb89dfc70f504cdb2b8f9",
+          "trace_sha256": "200b47076891363a8f132e22071f3b93eac2c581983b4f0a14b5ae8405fec65d",
+          "source_key_bytes": 2400,
+          "cold_icache": {
+            "model_cycles": 11648,
+            "instruction_fills": 51.0
+          },
+          "traffic": {
+            "load_instructions": 1302,
+            "store_instructions": 463,
+            "load_bytes": 3901,
+            "store_bytes": 1576,
+            "unique_read_lines": 123,
+            "unique_write_lines": 50,
+            "unique_data_lines": 135
+          },
+          "demand_line_visits": 1765,
+          "repeated_demand_line_visits": 1630,
+          "prefetch": {
+            "requests": 35,
+            "unique_requested_lines": 35,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 12,
+            "_VecRadLimit": 6
+          }
+        },
+        "l1": {
+          "instructions": 10463,
+          "peak_stack_bytes": 176,
+          "model_cycles": 10967,
+          "pose_sha256": "a6bec3b856e2222f6d021cf715c4472560ed828f93bdb89dfc70f504cdb2b8f9",
+          "trace_sha256": "e53c5310a116ceb2725ede3862d6a6660ef0e26644f054c64b554df282224565",
+          "source_key_bytes": 2400,
+          "cold_icache": {
+            "model_cycles": 11630,
+            "instruction_fills": 52.0
+          },
+          "traffic": {
+            "load_instructions": 1291,
+            "store_instructions": 451,
+            "load_bytes": 3857,
+            "store_bytes": 1528,
+            "unique_read_lines": 122,
+            "unique_write_lines": 50,
+            "unique_data_lines": 134
+          },
+          "demand_line_visits": 1742,
+          "repeated_demand_line_visits": 1608,
+          "prefetch": {
+            "requests": 35,
+            "unique_requested_lines": 35,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 12,
+            "_VecRadLimit": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n16-seq106-interior",
+      "kind": 5,
+      "joints": 16,
+      "clamped": false,
+      "mode": "normal",
+      "frame_source": "Seq.frame 10.6",
+      "arms": {
+        "l0": {
+          "instructions": 9390,
+          "peak_stack_bytes": 176,
+          "model_cycles": 9196,
+          "pose_sha256": "4d2d1b1fa8f7ca505b28506a19f9b1370c0707a646e6915de0b687c9c44088b3",
+          "trace_sha256": "b556f2dd3e5c7bf473baf1a358efffe54ef7a7e73024087d871cb505b5e94fc4",
+          "source_key_bytes": 3200,
+          "cold_icache": {
+            "model_cycles": 9818,
+            "instruction_fills": 49.0
+          },
+          "traffic": {
+            "load_instructions": 1484,
+            "store_instructions": 592,
+            "load_bytes": 4613,
+            "store_bytes": 2032,
+            "unique_read_lines": 170,
+            "unique_write_lines": 64,
+            "unique_data_lines": 186
+          },
+          "demand_line_visits": 2076,
+          "repeated_demand_line_visits": 1890,
+          "prefetch": {
+            "requests": 47,
+            "unique_requested_lines": 47,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 16,
+            "_VecRadLimit": 8
+          }
+        },
+        "l1": {
+          "instructions": 9363,
+          "peak_stack_bytes": 176,
+          "model_cycles": 9158,
+          "pose_sha256": "4d2d1b1fa8f7ca505b28506a19f9b1370c0707a646e6915de0b687c9c44088b3",
+          "trace_sha256": "8515f0182fabc42713ae4a95e79a8487b4b8af242bf746b029221331c3c79aa3",
+          "source_key_bytes": 3200,
+          "cold_icache": {
+            "model_cycles": 9793,
+            "instruction_fills": 50.0
+          },
+          "traffic": {
+            "load_instructions": 1469,
+            "store_instructions": 577,
+            "load_bytes": 4553,
+            "store_bytes": 1972,
+            "unique_read_lines": 169,
+            "unique_write_lines": 64,
+            "unique_data_lines": 185
+          },
+          "demand_line_visits": 2046,
+          "repeated_demand_line_visits": 1861,
+          "prefetch": {
+            "requests": 47,
+            "unique_requested_lines": 47,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 16,
+            "_VecRadLimit": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n16-seq106-clamped",
+      "kind": 5,
+      "joints": 16,
+      "clamped": true,
+      "mode": "normal",
+      "frame_source": "Seq.frame 10.6",
+      "arms": {
+        "l0": {
+          "instructions": 5166,
+          "peak_stack_bytes": 176,
+          "model_cycles": 4876,
+          "pose_sha256": "883bee7737b978b7e726feaead4b83247f1d1a1e8285a778a092586adf4cd545",
+          "trace_sha256": "eec99a2f4a497c0efab638d4649760b3bcbac73bab12ca9e9f79d3a00441051b",
+          "source_key_bytes": 3200,
+          "cold_icache": {
+            "model_cycles": 5420,
+            "instruction_fills": 42.0
+          },
+          "traffic": {
+            "load_instructions": 1196,
+            "store_instructions": 400,
+            "load_bytes": 3941,
+            "store_bytes": 1456,
+            "unique_read_lines": 129,
+            "unique_write_lines": 40,
+            "unique_data_lines": 145
+          },
+          "demand_line_visits": 1596,
+          "repeated_demand_line_visits": 1451,
+          "prefetch": {
+            "requests": 47,
+            "unique_requested_lines": 47,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 16,
+            "_VecRadLimit": 8
+          }
+        },
+        "l1": {
+          "instructions": 4644,
+          "peak_stack_bytes": 132,
+          "model_cycles": 4262,
+          "pose_sha256": "883bee7737b978b7e726feaead4b83247f1d1a1e8285a778a092586adf4cd545",
+          "trace_sha256": "cfed6403353d14baebd600fca2fd6a4059737c01c3b456e5203f976bbb4e81d4",
+          "source_key_bytes": 3200,
+          "cold_icache": {
+            "model_cycles": 4758,
+            "instruction_fills": 39.0
+          },
+          "traffic": {
+            "load_instructions": 893,
+            "store_instructions": 241,
+            "load_bytes": 2825,
+            "store_bytes": 916,
+            "unique_read_lines": 126,
+            "unique_write_lines": 39,
+            "unique_data_lines": 143
+          },
+          "demand_line_visits": 1134,
+          "repeated_demand_line_visits": 991,
+          "prefetch": {
+            "requests": 47,
+            "unique_requested_lines": 47,
+            "sq_flush_requests": 0
+          },
+          "uncached_bytes": 0,
+          "store_queue_bytes": 0,
+          "errors": [],
+          "adapter_counts": {
+            "_re4dc_motion_acquire": 1,
+            "__ZN6cModel11getPartsPtrEi": 16,
+            "_VecRadLimit": 8
+          }
+        }
+      }
+    }
+  ],
+  "raw_receipt_sha256": "778ff3932f4f75eeb6581196ab2bdf56550102d454ae2ed29e7f791ab3d6246f",
+  "raw_sequence_receipt_sha256": "82aecac915d1cabd8c860c34acf88e5a89b8110763ee7ac2042a47379b22ece2"
+}
