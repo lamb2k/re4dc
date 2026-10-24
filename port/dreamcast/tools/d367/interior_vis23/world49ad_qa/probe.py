@@ -1,6 +1,7 @@
 """Six authorized sequential QA probes: actual final GDI boot, two labelled fixture proxies."""
 from pathlib import Path
 import argparse,fcntl,hashlib,importlib.util,json,os,re,shutil,subprocess,sys
+import auto_menu
 HERE=Path(__file__).resolve().parent
 s=importlib.util.spec_from_file_location('media',HERE/'media.py');m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
 
@@ -41,8 +42,9 @@ def main(arm,gate):
   observed=dict(menu33=bool(re.search(r'qa: 33 presets in 6 chapters',text)),room_enter=bool(re.search(r'room enter|phase=enter',text)),all_keys=not run.get('keys_pending') and len(run.get('key_log',[]))==4,owned_windows=all(r['windows']>0 for r in run.get('key_log',[])))
   ok=ok and all(observed.values()) and run.get('stopped')=='goal'
  elif gate=='menu-warp':
-  observed=dict(menu33=bool(re.search(r'qa: 33 presets in 6 chapters',text)),room103='phase=enter room=103' in text,teleport=bool(re.search(r'qa: teleport .*r103.txt',text)))
-  ok=ok and all(observed.values()) and run.get('stopped')=='goal'
+  observed=auto_menu.observe(text)
+  ok=ok and observed['ordered_auto_menu_chain'] and run.get('stopped')=='goal'
+  if observed['ordered_auto_menu_chain']:observed['negative_controls']=auto_menu.controls(text)
  else:
   term=re.search(r'route movie terminal=1 id=10030 frames=340/340 uploaded=340 presented=340[^\n]*heap_before=(\d+)',text);b=re.search(r'MOVIEARENA borrow id=10030 token=(\d+)\b',text)
   restored=bool(b and re.search(r'MOVIEARENA return token='+b[1]+r'\b[^\n]*restored=1',text))
@@ -54,3 +56,4 @@ def main(arm,gate):
 
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('arm',choices=['off','both']);p.add_argument('gate',choices=['boot','menu-warp','h2']);a=p.parse_args();main(a.arm,a.gate)
+
