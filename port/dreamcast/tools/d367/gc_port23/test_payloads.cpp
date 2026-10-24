@@ -26,8 +26,8 @@ int main(){
         sq_held=true;gcasset_model_accept();sq_held=false;}
     payload_flush_all();assert(rows()==2); // geometry + interpretation sidecar
     assert(logs.find("kind=geometry")!=std::string::npos && logs.find("kind=layout")!=std::string::npos);
-    logs.clear();{PayloadScope scope(proof,&other);gcasset_model_prepare(nullptr);sq_held=true;gcasset_model_accept();sq_held=false;}
-    member_flush();assert(logs.find("unbound-accepted-model")!=std::string::npos); // wrong active owner never inherits
+    logs.clear();{PayloadScope scope(proof,&other,&model,&info,(1U<<SourceGeometry)|(1U<<Weapon));gcasset_model_prepare(nullptr);sq_held=true;gcasset_model_accept();sq_held=false;}
+    payload_flush_all();assert(rows()==0 && logs.find("unbound-accepted-payload")!=std::string::npos && logs.find("consumer=3")!=std::string::npos); // wrong active owner never inherits; known class survives
     // Deferred proof stays attached to the original stable object + serial.
     payload_retire(proof);assert(payload_capture(proof,&owner,replacement,sizeof replacement));
     logs.clear();{ReplayScope replay(serial,1U<<SourceGeometry,&proof);PayloadScope scope(proof,&owner,&model,&info);

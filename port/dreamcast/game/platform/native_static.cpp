@@ -5308,7 +5308,8 @@ void scn21_open(){
 #if RE4DC_SCENERY_CONE
     {
         cone::pkg=nullptr;cone::rec=nullptr;cone::tab2=nullptr;
-        const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCCN",&len,&ver,&fl,nullptr));
+        const re4dc_room_header* source_header=nullptr;
+        const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCCN",&len,&ver,&fl,&source_header));
         const char* why=nullptr;std::uint32_t w[4]={};
         if(!sec)why="no section";
         else if(re4dc_room_file_room()!=ps2w.room)why="room";
@@ -5325,7 +5326,8 @@ void scn21_open(){
 #if RE4DC_SCENERY_PIECE_STATE
     {
         piece::pkg=nullptr;piece::table=nullptr;
-        const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCPS",&len,&ver,&fl,nullptr));
+        const re4dc_room_header* source_header=nullptr;
+        const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCPS",&len,&ver,&fl,&source_header));
         const char* why=nullptr;std::uint32_t w[4]={};
         if(!sec)why="no section";
         else if(re4dc_room_file_room()!=ps2w.room)why="room";
@@ -5498,7 +5500,8 @@ void dedup_open(){
     auto& pk=ps2w.package;const unsigned nl=pk.header().meshlet_count;
     const std::uint64_t t0=timer_us_gettime64();
     unsigned len=0,ver=0,fl=0;
-    const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCDD",&len,&ver,&fl,nullptr));
+    const re4dc_room_header* source_header=nullptr;
+    const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCDD",&len,&ver,&fl,&source_header));
     const char* why=nullptr;unsigned nrep=0;
     if(!sec)why="no section";
 #if defined(RE4DC_SCENERY_DEDUP_LOADONLY) && RE4DC_SCENERY_DEDUP_LOADONLY

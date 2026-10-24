@@ -1,0 +1,12 @@
+# Root action plan
+
+Source-only planning, no application or coverage PASS. Exact hooks, line references, immutable framing, lifetime rules, sizes and required mutations are in PLAN.md and OWNER-LIFETIMES.md; SOURCE-RECEIPT.json pins all read bytes and unique anchors.
+
+1. Rebase the unapplied static/far-shell patches after dedup4be lands. Capture actual selected full mesh/R4PW and every accepted interpretation input before adoption/rewrite/memset. The pending SDO3 standard-file probe is only80B, never a full original-file proof.
+2. Add one cold composite-capture API using the existing44B PayloadProof and two checked tokens. Use fixed, framed component roles/states and full SHA256. Keep exact original constituent receipts offline. No resident sidecar table/cache, heap, per-draw hashing or I/O.
+3. Cover R4ID/R4TC/R4PV/R4SG/SCCN/SCPS/SCDD, plus actual reachable low/index.txt geometry/material records and PCL1 interior.cell. R4TI remains a constituent until explicit classification; cached selector decisions without an original receipt stay UNPROVEN. Compiled policies need explicit root logic classification. Unknown consequential source CLR/visual input remains unknown even with PS2 replacement geometry.
+4. Freeze known SourceGeometry/Weapon mask even with unresolved serial0. Actual nonzero packet/direct/batch/lean/switch acceptance acknowledges it; selection/load/transform/zero output do not. Deferred and quad uses retain original pointer/serial/mask, never fresh current identity.
+5. Revoke before any constituent replacement, room-parent free or movie overwrite. Minimal no-cache movie return remains UNKNOWN when R4TC/PVS or already-mutated sidecars prevent a complete fresh receipt. No prepared-buffer rehash or CRC/FNV shortcut.
+6. Expected raw SH4 metadata:16 stable proofs704B including StdRoom; quad metadata576B; cold manifest688B/caller≤728B; quad-flush temporary596B. These are arithmetic bounds, not new target stack/link acceptance. Gate0 identity and Required/wired masks remain unchanged.
+
+Root implementation/review controls must defeat mesh-only proof, sidecar/mutation/absence changes, known-mask loss, stale/rebound/catalog/replay tokens, omitted accepted hooks and zero-output acknowledgement. No SourceGeometry/Weapon/Motion bit or complete I-001 result is granted by this plan. No runtime source, assets, catalogs or allowances were edited; SDK/guest work was not started.
