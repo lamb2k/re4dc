@@ -996,6 +996,14 @@ DATA['wep24'] = {'em/wep%s.drs' % n: WEP24D + '/em/wep%s.drs' % n
                  for n in ('01', '02', '03', '04', '06', '07', '08', '09', '10', '11', '12', '14', '15', '16', '17', '18',
                            '20', '21', '24')}
 DATA['wep24']['tex'] = WEP24D + '/tex'
+# evdmv24 (lane purge-movies24 10-24, GC asset purge): takes the GameCube evd files of the movie-owned route events off
+# the disc (r100 s03 s20 s40 s41 s43 s44, r101 s00 s21 s30, r11f s01 s10, each with its .evq sidecar): 22 files,
+# 12,968,300 bytes. Their PS2 movies (dc/movie/*.seq) present the events; ONLY with EVD_MOVIE_NO_READ=1 (r100 / r101
+# no longer preload them; r11f reads none while its movies are on the disc). r100 s01 / s02 / s42 (no PS2 movie) and
+# r11c's PS2-size evd stay. Knob-off programs must not stage it (r101 would open a missing file). Remove-only: no store.
+DATA['evdmv24'] = {'remove': ['evd/%s.evd%s' % (n, x) for n in (
+    'r100s03', 'r100s20', 'r100s40', 'r100s41', 'r100s43', 'r100s44', 'r101s00', 'r101s21', 'r101s30',
+    'r11fs01', 'r11fs10') for x in ('', '.evq')]}
 
 
 if __name__ == '__main__':
