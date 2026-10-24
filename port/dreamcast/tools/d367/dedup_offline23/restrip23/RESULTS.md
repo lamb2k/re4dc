@@ -1,3 +1,6 @@
+See FINAL-DECISION.md for the completed three-room R5 decision; this file preserves
+the earlier cross/farm R3 and parser-repair R4 checkpoint.
+
 # I-001 estimate checkpoint
 
 Runtime/recipe fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2; final helper freeze

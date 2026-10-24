@@ -1,3 +1,7 @@
+See FINAL-DECISION.md and FINAL-SEAL.json for the completed three-room estimate.
+The current candidate is NO-GO against the15% cross gate. Older pending notes below
+record the prior checkpoint; the new complete forest capture supersedes that gap.
+
 # I-001 offline re-strip estimate
 
 Runtime and recipe base fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2.

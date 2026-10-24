@@ -1,0 +1,34 @@
+{
+  "decision": "NO_GO_CURRENT_I001_CANDIDATE",
+  "required_cross_corner_reduction_percent": 15,
+  "estimated_cross_post_trivial_preclip_percent": 0.10462020565999985,
+  "runtime_recipe_base": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "estimation_source": "0f7790d398da48130efebc56f9493f82cddee5c3",
+  "admission_verifier_source": "b79217b29577b30248f3427589fa42c18157e7a8",
+  "camera_source": "c2f0d82e95050a708d0b977f94fad34890cbc279",
+  "numeric_helpers_unchanged_after_r5": true,
+  "only_changed_py_since_r5": [
+    "verify_camera_admission.py"
+  ],
+  "reports": {
+    "graph-cameras-lod20-three-room-r5.json": {
+      "physical_bytes": 258506,
+      "physical_sha256": "56dc9f5cfdd712af879f861d0eb724b16d9f96efc3a122ca37027623b6381aa4",
+      "git_canonical_bytes": 251339,
+      "git_canonical_sha256": "0acedd031faf05703bfd52ca2f22ae20f77ce4dafc10c8a98ad020c708259571"
+    },
+    "forest-camera-host-verification-r2.json": {
+      "physical_bytes": 1890,
+      "physical_sha256": "c054efa3b11f4c075ac1dda48a12d1fa63f0c790704f19439ec8084671502921",
+      "git_canonical_bytes": 1890,
+      "git_canonical_sha256": "c054efa3b11f4c075ac1dda48a12d1fa63f0c790704f19439ec8084671502921"
+    }
+  },
+  "legacy_cross_farm_totals_exactly_equal_r3": true,
+  "unique_consumed_camera_tuples": {
+    "r101": 43,
+    "r103": 43,
+    "r100": 1
+  },
+  "scope": "Offline MODELLED strips/corners and physical-byte estimate, no output assets. Candidate misses threshold; no SDK/guest/runtime/media gates. Not proof no other algorithm can improve post-cull TA traffic; near clipping/ties/provenance still require admission. No fresh r100 heap assertion."
+}
