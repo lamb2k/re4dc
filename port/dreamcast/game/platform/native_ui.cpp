@@ -224,6 +224,9 @@ static unsigned ta_vertex_bytes=RE4DC_TA_VERTBUF_KB*1024U;   // TA_HEADROOM: the
 #ifndef RE4DC_UI_HEADERS
 #define RE4DC_UI_HEADERS 0
 #endif
+#ifndef RE4DC_UI_DRAW_LEAN
+#define RE4DC_UI_DRAW_LEAN 0
+#endif
 #ifndef RE4DC_NATIVE_MES
 #define RE4DC_NATIVE_MES 0 // message glyphs: see re4dc_ui_glyph()
 #endif
@@ -5175,6 +5178,10 @@ const pvr_poly_hdr_t& glyph_header(unsigned bank){
 }
 // One run: a header when the palette bank changes, then a 4-vertex strip per glyph (a strip
 // after an end-of-strip vertex reuses the last header).
+#if RE4DC_UI_DRAW_LEAN
+// Ordinary quads do not need this run's 2080-byte packet buffer in their stack frame.
+__attribute__((noinline))
+#endif
 void glyph_draw_run(unsigned first,unsigned count){
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(3);
@@ -5197,12 +5204,27 @@ void glyph_draw_run(unsigned first,unsigned count){
         const float layer=overlay_depth();
         constexpr float kH=float(kGlyphAtlasH);
         const float u0=float((g.cell&7)*32)/256.0f,v0=float((g.cell>>3)*32)/kH;
+#if RE4DC_UI_DRAW_LEAN
+        // The queue already holds exact quarter-pixel endpoints. Emit from scalars instead
+        // of writing and rereading four temporary arrays for this four-vertex strip.
+        const float x0=g.x0*0.25f,x1=g.x1*0.25f,y0=g.y0*0.25f,y1=g.y1*0.25f;
+        const float u1=u0+g.cw/256.0f,v1=v0+g.ch/kH;
+        auto vertex=[&](float x,float y,float u,float v,unsigned flags) __attribute__((always_inline)) {
+            pvr_vertex_t& p=buf[n++];
+            p.flags=flags;p.x=RE4DC_UI_X(x);p.y=RE4DC_UI_Y(y);p.z=layer;p.u=u;p.v=v;p.argb=g.argb;p.oargb=0;
+        };
+        vertex(x0,y0,u0,v0,PVR_CMD_VERTEX);
+        vertex(x1,y0,u1,v0,PVR_CMD_VERTEX);
+        vertex(x0,y1,u0,v1,PVR_CMD_VERTEX);
+        vertex(x1,y1,u1,v1,PVR_CMD_VERTEX_EOL);
+#else
         const float x[4]={g.x0*0.25f,g.x1*0.25f,g.x0*0.25f,g.x1*0.25f},y[4]={g.y0*0.25f,g.y0*0.25f,g.y1*0.25f,g.y1*0.25f};
         const float u[4]={u0,u0+g.cw/256.0f,u0,u0+g.cw/256.0f},v[4]={v0,v0,v0+g.ch/kH,v0+g.ch/kH};
         for(unsigned k=0;k<4;++k){
             pvr_vertex_t& p=buf[n++];
             p.flags=k==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;p.x=RE4DC_UI_X(x[k]);p.y=RE4DC_UI_Y(y[k]);p.z=layer;p.u=u[k];p.v=v[k];p.argb=g.argb;p.oargb=0;
         }
+#endif
         ++glyph_drawn;
     }
     flush();
@@ -5857,13 +5879,27 @@ static void ui_draw_quad(unsigned i){
 #else
         pvr_poly_hdr_t header;pvr_poly_compile(&header,&c);
 #endif
+#if RE4DC_UI_DRAW_LEAN
+        alignas(32) pvr_vertex_t commands[5];std::uint32_t count;
+#else
         alignas(32) pvr_vertex_t commands[5]{};std::uint32_t count;
+#endif
         re4dc::render::begin_pvr_packet(commands,count,header);
         pvr_vertex_t* v=commands+count;const unsigned order[]={0,1,3,2};
         const float layer=overlay_depth();
+#if RE4DC_UI_DRAW_LEAN
+        const float cover_w=float(RE4DC_COVER_W(handles[i]->package,q.image.width)),
+                    texture_w=float(t.width),
+                    cover_h=float(RE4DC_COVER_H(handles[i]->package,q.image.height)),
+                    texture_h=float(t.height);
+#endif
         for(unsigned n=0;n<4;++n){unsigned j=order[n];v[n].flags=n==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
             v[n].x=RE4DC_UI_X(q.xy[2*j]);v[n].y=RE4DC_UI_Y(q.xy[2*j+1]);v[n].z=layer;
+#if RE4DC_UI_DRAW_LEAN
+            v[n].u=q.uv[2*j]*cover_w/texture_w;v[n].v=q.uv[2*j+1]*cover_h/texture_h;v[n].argb=q.color;v[n].oargb=0;}
+#else
             v[n].u=q.uv[2*j]*RE4DC_COVER_W(handles[i]->package,q.image.width)/t.width;v[n].v=q.uv[2*j+1]*RE4DC_COVER_H(handles[i]->package,q.image.height)/t.height;v[n].argb=q.color;}
+#endif
 #if RE4DC_PVR_STREAM
         stream_send(commands,sizeof(commands));
 #else
@@ -5947,13 +5983,27 @@ extern "C" void re4dc_ui_present(){
 #else
         pvr_poly_hdr_t header;pvr_poly_compile(&header,&c);
 #endif
+#if RE4DC_UI_DRAW_LEAN
+        alignas(32) pvr_vertex_t commands[5];std::uint32_t count;
+#else
         alignas(32) pvr_vertex_t commands[5]{};std::uint32_t count;
+#endif
         re4dc::render::begin_pvr_packet(commands,count,header);
         pvr_vertex_t* v=commands+count;const unsigned order[]={0,1,3,2};
         const float layer=overlay_depth();
+#if RE4DC_UI_DRAW_LEAN
+        const float cover_w=float(RE4DC_COVER_W(handles[i]->package,q.image.width)),
+                    texture_w=float(t.width),
+                    cover_h=float(RE4DC_COVER_H(handles[i]->package,q.image.height)),
+                    texture_h=float(t.height);
+#endif
         for(unsigned n=0;n<4;++n){unsigned j=order[n];v[n].flags=n==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
             v[n].x=RE4DC_UI_X(q.xy[2*j]);v[n].y=RE4DC_UI_Y(q.xy[2*j+1]);v[n].z=layer;
+#if RE4DC_UI_DRAW_LEAN
+            v[n].u=q.uv[2*j]*cover_w/texture_w;v[n].v=q.uv[2*j+1]*cover_h/texture_h;v[n].argb=q.color;v[n].oargb=0;}
+#else
             v[n].u=q.uv[2*j]*RE4DC_COVER_W(handles[i]->package,q.image.width)/t.width;v[n].v=q.uv[2*j+1]*RE4DC_COVER_H(handles[i]->package,q.image.height)/t.height;v[n].argb=q.color;}
+#endif
 #if RE4DC_PVR_STREAM
         stream_send(commands,sizeof(commands));
 #else

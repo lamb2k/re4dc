@@ -1,0 +1,5 @@
+// Typed unchanged metadata edges. The tested cache-hit emitter does no I/O.
+#include "texture_package.hpp"
+extern "C" re4dc::texture::Texture ui_fixture_texture;
+const re4dc::texture::Texture* re4dc::texture::Package::textures() const { return &ui_fixture_texture; }
+pvr_ptr_t re4dc::texture::Package::pvr_texture(std::uint32_t) const { return reinterpret_cast<pvr_ptr_t>(0xa4000000); }

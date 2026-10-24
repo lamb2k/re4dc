@@ -44,6 +44,9 @@ extern "C" void re4dc_ui_stage_free(void* data) { Mem_free(data); }
 #ifndef RE4DC_UI_QUAD_LEAN
 #define RE4DC_UI_QUAD_LEAN 0
 #endif
+#ifndef RE4DC_UI_DRAW_LEAN
+#define RE4DC_UI_DRAW_LEAN 0
+#endif
 #if RE4DC_UI_QUAD_LEAN
 // UI_QUAD_LEAN (game30.mk, make-room F1; exact): the four corners of an ID quad are projected inline with
 // GXProject's own x / y expressions (platform/gx_stub.cpp). This object is built with the same game flags as
@@ -92,7 +95,15 @@ extern "C" void re4dc_draw_id_quad(const IdUnit* u) {
     if (!wk || !wk->pTpl || u->texNo >= wk->pTpl->numDescriptors) return;
     const TEXDescriptor* descriptor = TEXGet(wk->pTpl, u->texNo);
     const TEXHeader* tex = descriptor->textureHeader;
+#if RE4DC_UI_DRAW_LEAN
+    // All other fields are assigned below, including every XY/UV word. Only an absent
+    // palette needs defaults; avoid clearing the 104-byte quad before overwriting it.
+    Re4dcUiQuad q;
+    q.image.palette = nullptr;
+    q.image.palette_bytes = 0;
+#else
     Re4dcUiQuad q = {};
+#endif
     q.image.pixels = tex->data;
     q.image.width = tex->width; q.image.height = tex->height;
     q.image.format = tex->format; q.image.palette_format = 0xffffffffU;

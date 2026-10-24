@@ -1,0 +1,73 @@
+@ID_UNIT@
+struct IDSystem {static Mtx m_scrn_mat;};
+Mtx IDSystem::m_scrn_mat;
+@TPL@
+@TEXTURE_TYPES@
+static TexWk fixture_wk[256];
+static bool wk_live[256];
+static TEXPalette fixture_tpl[256];
+static TEXDescriptor fixture_desc[256][3];
+static TEXHeader fixture_tex[256][3];
+static CLUTHeader fixture_clut[256][3];
+static bool prompt_success,mask_success;
+static unsigned prompt_kind;
+static TexWk* IdGetTexWk(u8 id,int quiet){event({0x20000001U,id,unsigned(quiet)});return wk_live[id]?&fixture_wk[id]:nullptr;}
+extern "C" TEXDescriptor* TEXGet(TEXPalette* tpl,u32 id){
+    const auto index=tpl-fixture_tpl;assert(index>=0&&index<256&&id<3);
+    event({0x20000002U,unsigned(index),id});return &tpl->descriptorArray[id];
+}
+static unsigned re4dc_pad_prompt_kind(unsigned device,unsigned flags){
+    ++prompt_calls;event({0x20000003U,device,flags,prompt_kind});return prompt_kind;
+}
+static int re4dc_ui_binocular_prompt(const Re4dcUiImage* source,unsigned kind,Re4dcUiImage* image){
+    Re4dcUiQuad q{};q.image=*source;note_quad(0x20000004U,q);event({kind,unsigned(prompt_success)});
+    if(prompt_success)*image={reinterpret_cast<void*>(std::uintptr_t(0x13000000U+kind*0x1000U)),nullptr,36,36,5,0xffffffffU,0};
+    return prompt_success;
+}
+static int re4dc_ui_hud_mask_submit(const Re4dcUiQuad* q,const Re4dcUiImage* mask){
+    ++mask_calls;note_quad(0x20000005U,*q);Re4dcUiQuad input{};input.image=*mask;note_quad(0x20000006U,input);
+    event({unsigned(mask_success)});return mask_success;
+}
+extern "C" void re4dc_lbx_note(unsigned cls,unsigned tex_id,unsigned tex_no,unsigned argb,const float* xy){
+    ++letterbox_calls;event({0x20000007U,cls,tex_id,tex_no,argb});words(xy,32);
+}
+extern "C" void re4dc_option_rows_art(const Re4dcUiQuad* q){++option_calls;note_quad(0x20000008U,*q);}
+@BRIDGE_HELPERS@
+@BRIDGE_DRAW@
+
+static void prepare_bridge(unsigned seed){
+    for(unsigned i=0;i<256;++i){
+        wk_live[i]=true;fixture_wk[i].pTpl=&fixture_tpl[i];fixture_tpl[i]={1,3,fixture_desc[i]};
+        for(unsigned k=0;k<3;++k){
+            auto& t=fixture_tex[i][k];t={};t.data=reinterpret_cast<void*>(std::uintptr_t(0x12000000U+((i+k)%12)*0x1000U));
+            t.width=u16(32U+((i+k)%8)*8U);t.height=u16(24U+((i+k)%7)*8U);t.format=(i+k)%11;
+            t.minFilter=t.magFilter=1;
+            auto& c=fixture_clut[i][k];c={};c.data=reinterpret_cast<void*>(std::uintptr_t(0x18000000U+(i*3+k)*0x200U));
+            c.numEntries=u16(1U<<((i+k)%9));c.format=(i+k)%3;
+            fixture_desc[i][k]={&t,((seed+i+k)&1)?&c:nullptr};
+        }
+    }
+    C_MTXIdentity(IDSystem::m_scrn_mat);
+    C_MTXOrtho(pG->Cam.ProjMat,0,384,0,512,0,-100);ProjType=2;
+    GXSetViewport(0,0,640,480,0,1);re4dc_res_vjitter=0;
+    prompt_kind=1;prompt_success=false;mask_success=false;
+}
+static IdUnit make_unit(unsigned seed){
+    IdUnit u{};C_MTXIdentity(u.mat);C_MTXIdentity(u.l_mat);
+    u.texId=u8(1+seed%200);u.texNo=u8(seed%3);u.maskId=0x12;u.maskNo=0;
+    u.classNo=2;u.markNo=3;u.blend_type=u8(seed%5);u.trans_type=0;
+    u.u0=-.125f;u.v0=.25f;u.u1=1.125f;u.v1=.875f;
+    u.col[0]=float(seed%256);u.col[1]=129;u.col[2]=254;u.col[3]=255;
+    u.vtx[0]={-16,-8,-40};u.vtx[1]={48,-8,-40};u.vtx[2]={48,24,-40};u.vtx[3]={-16,24,-40};
+    return u;
+}
+static void bridge_draw(const IdUnit& input){
+    IdUnit unit;std::memcpy(&unit,&input,sizeof unit);IdUnit before;std::memcpy(&before,&unit,sizeof before);
+    const auto old_nquad=nquad;
+    re4dc_draw_id_quad(&unit);
+    assert(!std::memcmp(&unit,&before,sizeof unit));
+    // Snapshot every queued quad field before the source unit can be reused.
+    for(unsigned n=old_nquad;n<nquad;++n)note_quad(0x20000009U,quads[n]);
+    std::memset(&unit,0x5a,sizeof unit);
+    words(g_projection,sizeof(float)*7);words(g_viewport,sizeof(float)*6);
+}
