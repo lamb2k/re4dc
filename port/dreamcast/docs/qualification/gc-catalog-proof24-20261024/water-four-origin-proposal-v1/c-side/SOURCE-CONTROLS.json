@@ -1,0 +1,38 @@
+{
+  "asset_files_written": 0,
+  "assets_RAM_only": true,
+  "controls": {
+    "13780699-289fc370_tail_mutation_rejected": true,
+    "13780699-289fc370_wrong_key_rejected": true,
+    "441a0cca-10da6929_tail_mutation_rejected": true,
+    "441a0cca-10da6929_wrong_key_rejected": true,
+    "4aaa2a61-69bd273d_tail_mutation_rejected": true,
+    "4aaa2a61-69bd273d_wrong_key_rejected": true,
+    "8b8bf3d6-0277ae15_tail_mutation_rejected": true,
+    "8b8bf3d6-0277ae15_wrong_key_rejected": true,
+    "PAL4_base_cannot_qualify_current_VQ": true,
+    "VQ_codebook_mutation_rejected": true,
+    "actual_duplicate_ID_in_EFF1_and25": true,
+    "base_only_hash_cannot_qualify_current_mip": true,
+    "changed_original_member_byte_rejected": true,
+    "wrong_EFF25_full_SHA_rejected": true
+  },
+  "count": 14,
+  "helper": {
+    "bytes": 2928,
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/test_water_source_controls_v1.py",
+    "sha256": "855eff0bdec65bb9ebe9df15d68216369f00d9524722d17be9046275ef274050"
+  },
+  "live_Entry_or_EST_recipe_proved": false,
+  "schema": 1,
+  "status": "PASS",
+  "wrong_duplicate": {
+    "EFF_bytes": 300768,
+    "EFF_sha256": "8d0b3d2e6b7179a181f2167c98a28706fb1232a90b92ba07e970b212440a009d",
+    "entry": 25,
+    "expected_EFF_entry": 1,
+    "expected_EFF_sha256": "e0a571bec16baa427c4267feb59ea6ec9aa64703b833d7ed42598115c62b0124",
+    "member": "Core.dat",
+    "same_texture_ID": "0x1d"
+  }
+}

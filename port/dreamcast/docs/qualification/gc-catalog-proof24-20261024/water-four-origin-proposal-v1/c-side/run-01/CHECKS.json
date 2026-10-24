@@ -1,0 +1,549 @@
+{
+  "AS_limit": 268435456,
+  "afs_table_sha256": "a7b0c37119f9ccabf8711ead7d83189065fe1d5df8c427cffe32022403ce3182",
+  "all_final_byte_mutations_rejected": true,
+  "allowances_added": 0,
+  "asset_bytes_RAM_only": true,
+  "asset_files_written": 0,
+  "dependencies": [
+    {
+      "bytes": 12987,
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/check_core_f7_v1.py",
+      "sha256": "d1813c40a5f27acc76f34b891cf6e38b69dec8944841a57f813386b969c6d62a"
+    },
+    {
+      "bytes": 11848,
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/check_core_tranche_v1.py",
+      "sha256": "5248fc52654b882ec7dde93cb47b7dff4affabd61e61289502f4d58ffc845599"
+    }
+  ],
+  "elapsed_seconds": 0.8045491889934056,
+  "frozen_public_sources": [
+    {
+      "bytes": 25816,
+      "path": "ps2_tpl_decode-952e8fbf.py",
+      "sha256": "19592a896163d12a3ba321be1a57a8dc46edd15bdcecd0fb9ce17fd63ecf80f7"
+    },
+    {
+      "bytes": 16757,
+      "path": "fx_ps2_pack-5182665f.py",
+      "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+    },
+    {
+      "bytes": 32480,
+      "path": "convert_tpl-5182665f.py",
+      "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+    },
+    {
+      "bytes": 19327,
+      "path": "fx_ps2_pack-952e8fbf.py",
+      "sha256": "9ca0101db562c0567504e8db19df502d468ea0ac2051214880f8142edea5410c"
+    },
+    {
+      "bytes": 32480,
+      "path": "convert_tpl-952e8fbf.py",
+      "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+    },
+    {
+      "bytes": 33531,
+      "path": "convert_tpl-0425534d.py",
+      "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+    },
+    {
+      "bytes": 10431,
+      "path": "mipmap_vq-0425534d.py",
+      "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+    },
+    {
+      "bytes": 6853,
+      "path": "mipmap_pal4-0425534d.py",
+      "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+    }
+  ],
+  "helper": {
+    "bytes": 14058,
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/check_water_targets_v1.py",
+    "sha256": "803b77417b2c9d13a914133d30cfc3afc108e8019d82909378ecb0cce2894481"
+  },
+  "historical_function_pins": {
+    "5182665f6d6b62aee348e58266c015c891da5d85": {
+      "C_functions": {
+        "_pack_4444": "1d4801debec4f492e0e8a22721ae9e2ee325ec88cd323006fae1abf4314159a8",
+        "_twiddle_table": "c3929328ecad9cee734ebc24d53674b73e888a05f4bc34df3fe67712e6d1ccc4",
+        "twiddle_16bpp": "a0e4f8ffa048d8f22c0b82c19443edbdbdd8172dd318118e2bf1e314b5512f07"
+      },
+      "fx_functions": {
+        "package": "0ccffad27099c6f941d2258393d4aca06f23fbbef58effdee302adf1fdb03046",
+        "palette16": "9cc2b98aadedd767f0c54e561a1374ccd243b442b730210a389f384a89d17ae4",
+        "premul": "c91decf3b9ff94a3f487c00617549247c952a6b297968fe8bbffd4e04072269d"
+      }
+    },
+    "952e8fbfce071e54ca251f09ed4d4793a23ac51e": {
+      "C_functions": {
+        "_pack_4444": "1d4801debec4f492e0e8a22721ae9e2ee325ec88cd323006fae1abf4314159a8",
+        "_twiddle_table": "c3929328ecad9cee734ebc24d53674b73e888a05f4bc34df3fe67712e6d1ccc4",
+        "twiddle_16bpp": "a0e4f8ffa048d8f22c0b82c19443edbdbdd8172dd318118e2bf1e314b5512f07"
+      },
+      "fx_functions": {
+        "package": "0ccffad27099c6f941d2258393d4aca06f23fbbef58effdee302adf1fdb03046",
+        "palette16": "9cc2b98aadedd767f0c54e561a1374ccd243b442b730210a389f384a89d17ae4",
+        "premul": "c91decf3b9ff94a3f487c00617549247c952a6b297968fe8bbffd4e04072269d"
+      }
+    }
+  },
+  "limitations": [
+    "Stored selected pack identity is not actual active Entry key/payload, EST assignment or emission proof.",
+    "No GC recipe, animation/material/target/runtime lifetime equivalence proved.",
+    "Historical UNGATED records are locators only, not guest/look acceptance."
+  ],
+  "lookup_receipts": {
+    "INDEX": {
+      "bytes": 409810,
+      "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/INDEX.tsv",
+      "sha256": "653cbe89abd8a86e8e47f0dadb35b9477197feeb2659857f45e1b5680ffeea7d"
+    },
+    "KEYS": {
+      "bytes": 105191,
+      "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/KEYS.tsv",
+      "sha256": "9286a741d602f4885e48a0c50e36ab6fda8c4c09916be2939b9b9d5c708f2a71"
+    }
+  },
+  "matched_identities": 3,
+  "negative_controls": [
+    {
+      "entry": 1,
+      "ignored_GS_swizzle_changes_full_output": true,
+      "member": "Core.dat",
+      "texture": 86
+    },
+    {
+      "entry": 1,
+      "ignored_GS_swizzle_changes_full_output": true,
+      "member": "Core.dat",
+      "texture": 29
+    },
+    {
+      "entry": 1,
+      "ignored_GS_swizzle_changes_full_output": true,
+      "member": "Core.dat",
+      "texture": 252
+    }
+  ],
+  "origin_authority": "Original exact user PS2 disc spans; root standing source authority accepted only f7 so far, these four proposals still require root review. No retail authenticity certificate.",
+  "peak_KiB": 60672,
+  "platform": {
+    "SYSTEM_CNF": {
+      "bytes": 57,
+      "offset": 567296,
+      "sha256": "342b765b1f20ad259725416d9cee60dab312862440f20b7639f2e5e6bf103ef7"
+    },
+    "boot_ELF": {
+      "ELF_machine": "MIPS",
+      "bytes": 3096892,
+      "header64_sha256": "ad297b0cb704fef2541b96a959fa41411ffab933123bfa28d5cc80f6021411fb",
+      "name": "SLUS_211.34;1",
+      "offset": 569344
+    },
+    "full_ISO_hash_computed": false,
+    "pvd_sha256": "f5d790d62a8136d4b98127aeeef0de439c6e83a349a52d1be5e0be146d39069a",
+    "retail_authenticity_or_untampered_dump_independently_proved": false,
+    "root_directory_sha256": "75ff643deb3451ad801fe2cd5a65055d9ebb9893636f174ee9cb7060a3918d77",
+    "volume_id": ""
+  },
+  "production_pin": 0,
+  "results": [
+    {
+      "KEYS_row": [
+        "13780699-289fc370",
+        "common",
+        "etc/core.das:0#1:0x56",
+        "0",
+        "128",
+        "128"
+      ],
+      "actual_selected_fullbyte_equal": true,
+      "base_bytes": 8368,
+      "base_sha256": "16a4855185372c169de9bfeec56c34f3a2583a4bdc2f9799490ab49e11a0eff3",
+      "bytes": 8368,
+      "current_full_SHA_equal": true,
+      "eff_entry": 1,
+      "historical_INDEX_row": {
+        "bytes": "8368",
+        "class": "effects-tex",
+        "converter": "fx_ps2_pack.py@vram12-d5",
+        "dc_format": "PAL4_ARGB4444 128x128 x1 (GC 128x128 x1)",
+        "gate": "UNGATED",
+        "gc_id": "etc/core.das:0#1:0x56",
+        "owner_lane": "fx12",
+        "ps2_source": "Core.dat:1",
+        "room": "common",
+        "sha256": "ad05b9e99748c524d67ff3b4a67122b95f20a628f8425095f99c0dab89edad97"
+      },
+      "historical_aggregate_exact": true,
+      "historical_aggregate_sha256": "ad05b9e99748c524d67ff3b4a67122b95f20a628f8425095f99c0dab89edad97",
+      "historical_converter_commit": "952e8fbfce071e54ca251f09ed4d4793a23ac51e",
+      "historical_library_fullbyte_equal": true,
+      "historical_lookup_context": "etc/core.das:0#1:0x56",
+      "id": "13780699-289fc370",
+      "kind": "texture",
+      "lookup_key": "13780699-289fc370",
+      "member": "Core.dat",
+      "mip_composition": null,
+      "picture": {
+        "decoded_RGBA_sha256": "2e02a6e09be96ef1317e39ce2db28a6beb22b68218174e96cfec9be0b5458d63",
+        "decoded_indices_sha256": "733a7ad8306c29893b587e54622bcc0172afd1bc6d0d59b941977e6c0a44a6a5",
+        "depth": 8,
+        "descriptor_offset": 489200,
+        "descriptor_sha256": "8a48ee0d040f7b4088d9e870d374444ea1cde38f56dfbb5efad9fdb0575075af",
+        "height": 128,
+        "interlace": 2,
+        "palette_bytes": 96,
+        "palette_offset": 497440,
+        "palette_sha256": "c324bc88a5db962e9fc2942b6828b9c2ee29abc087ccc2d8e112df8decf6de8a",
+        "pixels_bytes": 8192,
+        "pixels_offset": 489248,
+        "pixels_sha256": "148001cc8d82ad76bd91458d0ddcbfcc00e3706616cb5752c7336ad87b672972",
+        "slot": 37,
+        "texture": 86,
+        "tpl_bytes": 8384,
+        "tpl_offset": 489184,
+        "tpl_sha256": "4481ecc52ff44c1b6484d99abdd89132099739d07e83c03f912685b7ac57e01f",
+        "width": 128
+      },
+      "quantizer_error": 0.0,
+      "runtime_resolved_Entry_or_recipe_correspondence_proved": false,
+      "selected": {
+        "asset": "dc/tex.pak",
+        "bytes": 8368,
+        "full_payload_sha256": "16a4855185372c169de9bfeec56c34f3a2583a4bdc2f9799490ab49e11a0eff3",
+        "offset": 12730368,
+        "path": "/root/re4data/private/mip22b-20261022/dc/tex.pak",
+        "sha256": "5bba464a1175d8ebe153d5aecb629ea9637807c2bf4fc438a32c17148d0729da",
+        "size": 162154496
+      },
+      "sha256": "16a4855185372c169de9bfeec56c34f3a2583a4bdc2f9799490ab49e11a0eff3",
+      "status": "MATCH_UNAPPROVED",
+      "variant": "direct"
+    },
+    {
+      "KEYS_row": [
+        "441a0cca-10da6929",
+        "common",
+        "etc/core.das:0#1:0x1d",
+        "0",
+        "256",
+        "256"
+      ],
+      "actual_selected_fullbyte_equal": true,
+      "base_bytes": 32944,
+      "base_sha256": "4eef149e7efea2c6c2e692f060f0110fe5daad91301e50ae0d53876d81c1413c",
+      "bytes": 43868,
+      "current_full_SHA_equal": true,
+      "eff_entry": 1,
+      "historical_INDEX_row": {
+        "bytes": "32944",
+        "class": "effects-tex",
+        "converter": "fx_ps2_pack.py@vram12-d5",
+        "dc_format": "PAL4_ARGB4444 256x256 x1 (GC 256x256 x1)",
+        "gate": "UNGATED",
+        "gc_id": "etc/core.das:0#1:0x1d",
+        "owner_lane": "fx12",
+        "ps2_source": "Core.dat:1",
+        "room": "common",
+        "sha256": "5c9641d9f39b496c4d9aff6accb5184bcc225325a9087c1f452693b5ea0a8e72"
+      },
+      "historical_aggregate_exact": true,
+      "historical_aggregate_sha256": "5c9641d9f39b496c4d9aff6accb5184bcc225325a9087c1f452693b5ea0a8e72",
+      "historical_converter_commit": "952e8fbfce071e54ca251f09ed4d4793a23ac51e",
+      "historical_library_fullbyte_equal": true,
+      "historical_lookup_context": "etc/core.das:0#1:0x1d",
+      "id": "441a0cca-10da6929",
+      "kind": "texture",
+      "lookup_key": "441a0cca-10da6929",
+      "member": "Core.dat",
+      "mip_composition": {
+        "after_payload_bytes": 43724,
+        "base_indices_sha256": "1a9c559408b16b948b400dccb8b1d694331cf37ed4deb138184538578df1349e",
+        "base_level_exact": true,
+        "before_payload_bytes": 32800,
+        "changed": true,
+        "crc_rule": "header",
+        "enabled": true,
+        "engines": [
+          "python"
+        ],
+        "extra_payload_bytes": 10924,
+        "format": 4,
+        "height": 256,
+        "levels": [
+          {
+            "offset": 1,
+            "side": 1
+          },
+          {
+            "offset": 2,
+            "side": 2
+          },
+          {
+            "offset": 4,
+            "side": 4
+          },
+          {
+            "offset": 12,
+            "side": 8
+          },
+          {
+            "offset": 44,
+            "side": 16
+          },
+          {
+            "offset": 172,
+            "side": 32
+          },
+          {
+            "offset": 684,
+            "side": 64
+          },
+          {
+            "offset": 2732,
+            "side": 128
+          },
+          {
+            "offset": 10924,
+            "side": 256
+          }
+        ],
+        "package_sha256": "f861113a0f0475e23cbe19b1b90b35a022a23dbe573ff48aa8486de625dd52f7",
+        "palette_exact": true,
+        "palette_sha256": "0b5f78f4fbe0f9c4076392da6c38425b05f156ffa4b51034cbc8f03cf79bafd0",
+        "required_build_knobs": [
+          "TEX_PAL4_MIPMAP=1",
+          "TEX_PAL4_ALPHA=1",
+          "CAST_MIPMAP=1"
+        ],
+        "source_package_sha256": "4eef149e7efea2c6c2e692f060f0110fe5daad91301e50ae0d53876d81c1413c",
+        "width": 256
+      },
+      "picture": {
+        "decoded_RGBA_sha256": "c5c8881135093f4deb964fcc4f8badada712c95586898ec95013ae545877066a",
+        "decoded_indices_sha256": "66f2a290d015e3fcd5be09ec1d75945eb293486ce52e04b02f6381119049d6f2",
+        "depth": 8,
+        "descriptor_offset": 204592,
+        "descriptor_sha256": "99be1949fe5d6ba69e4f84515b41762df57bb86dfe0c8ffda013d6dea203633e",
+        "height": 256,
+        "interlace": 2,
+        "palette_bytes": 96,
+        "palette_offset": 237408,
+        "palette_sha256": "33380d0cf8504adf4ca8874d63bc704246687c4da3d8f7ce057dce3aefa243cd",
+        "pixels_bytes": 32768,
+        "pixels_offset": 204640,
+        "pixels_sha256": "1207ebcc586282415303779469f5da8f31f138315af4b5354227a3421b7197f2",
+        "slot": 23,
+        "texture": 29,
+        "tpl_bytes": 32960,
+        "tpl_offset": 204576,
+        "tpl_sha256": "950c0e4c10268c2ff2560a03ab96006179d84d0a7182517a70e0e188352a3ec2",
+        "width": 256
+      },
+      "quantizer_error": 0.0,
+      "runtime_resolved_Entry_or_recipe_correspondence_proved": false,
+      "selected": {
+        "asset": "dc/tex.pak",
+        "bytes": 43868,
+        "full_payload_sha256": "f861113a0f0475e23cbe19b1b90b35a022a23dbe573ff48aa8486de625dd52f7",
+        "offset": 44969984,
+        "path": "/root/re4data/private/mip22b-20261022/dc/tex.pak",
+        "sha256": "5bba464a1175d8ebe153d5aecb629ea9637807c2bf4fc438a32c17148d0729da",
+        "size": 162154496
+      },
+      "sha256": "f861113a0f0475e23cbe19b1b90b35a022a23dbe573ff48aa8486de625dd52f7",
+      "status": "MATCH_UNAPPROVED",
+      "variant": "composed_mip"
+    },
+    {
+      "KEYS_row": [
+        "4aaa2a61-69bd273d",
+        "common",
+        "etc/core.das:0#1:0xfc",
+        "0",
+        "128",
+        "128"
+      ],
+      "actual_selected_fullbyte_equal": false,
+      "base_bytes": 8368,
+      "base_sha256": "05a953b959ad7f5770ad6a356c99a8831d40ab9fdfaa994c75b2719489d9dc05",
+      "bytes": 11100,
+      "current_full_SHA_equal": false,
+      "eff_entry": 1,
+      "historical_INDEX_row": {
+        "bytes": "8368",
+        "class": "effects-tex",
+        "converter": "fx_ps2_pack.py@vram12-d5",
+        "dc_format": "PAL4_ARGB4444 128x128 x1 (GC 128x128 x1)",
+        "gate": "UNGATED",
+        "gc_id": "etc/core.das:0#1:0xfc",
+        "owner_lane": "fx12",
+        "ps2_source": "Core.dat:1",
+        "room": "common",
+        "sha256": "91a041955490bb25890d0d320148597e7937eaccae911341ee7be15f10ffc116"
+      },
+      "historical_aggregate_exact": true,
+      "historical_aggregate_sha256": "91a041955490bb25890d0d320148597e7937eaccae911341ee7be15f10ffc116",
+      "historical_converter_commit": "952e8fbfce071e54ca251f09ed4d4793a23ac51e",
+      "historical_library_fullbyte_equal": true,
+      "historical_lookup_context": "etc/core.das:0#1:0xfc",
+      "id": "4aaa2a61-69bd273d",
+      "kind": "texture",
+      "lookup_key": "4aaa2a61-69bd273d",
+      "member": "Core.dat",
+      "mip_composition": null,
+      "picture": {
+        "decoded_RGBA_sha256": "83130888bfc0ce98e5a7574f923eed0791810eaf2934dc2c5d9cc0426a1fed0e",
+        "decoded_indices_sha256": "96311df715a70b1d20f4227fc2e2aa1b95d5b2e3728e138962b81daea867c97b",
+        "depth": 8,
+        "descriptor_offset": 682704,
+        "descriptor_sha256": "8a48ee0d040f7b4088d9e870d374444ea1cde38f56dfbb5efad9fdb0575075af",
+        "height": 128,
+        "interlace": 2,
+        "palette_bytes": 96,
+        "palette_offset": 690944,
+        "palette_sha256": "c1eb5a5c23dff4d58663ea285d4758410f0f6f54b856d071c47c7b78224ca7b5",
+        "pixels_bytes": 8192,
+        "pixels_offset": 682752,
+        "pixels_sha256": "f6510535986f5956cc74ba7b8833e3251f3a34809dbef3ab48e0b2483fd165f7",
+        "slot": 54,
+        "texture": 252,
+        "tpl_bytes": 8384,
+        "tpl_offset": 682688,
+        "tpl_sha256": "789bc7ba37bc0ea6cd091c21bd28c286864b1767cd155c5e09545a87fc00134d",
+        "width": 128
+      },
+      "quantizer_error": 0.0,
+      "runtime_resolved_Entry_or_recipe_correspondence_proved": false,
+      "selected": {
+        "asset": "dc/tex.pak",
+        "bytes": 6288,
+        "full_payload_sha256": "14dc475e17be9f7a83c20bd43831416b1be803cef4734b1d7d792ac4319c83ee",
+        "offset": 48521216,
+        "path": "/root/re4data/private/mip22b-20261022/dc/tex.pak",
+        "sha256": "5bba464a1175d8ebe153d5aecb629ea9637807c2bf4fc438a32c17148d0729da",
+        "size": 162154496
+      },
+      "sha256": "8d85f10dd123cea6da5b4b186694f2af69616d05a6742245e3a054a5464512ce",
+      "status": "UNMATCHED_NO_PROPOSAL",
+      "variant": "unmatched"
+    },
+    {
+      "KEYS_row": [
+        "8b8bf3d6-0277ae15",
+        "r100",
+        "st1/r100.arc#8:0xca",
+        "0",
+        "128",
+        "128"
+      ],
+      "actual_selected_fullbyte_equal": true,
+      "base_bytes": 8368,
+      "base_sha256": "d47458eec2fbf6744849b9708fc035da0e8206209de3c4bd8b52be16b71376a8",
+      "bytes": 8368,
+      "current_full_SHA_equal": true,
+      "eff_entry": 6,
+      "historical_INDEX_row": {
+        "bytes": "8368",
+        "class": "effects-tex",
+        "converter": "fx_ps2_pack.py@5182665f",
+        "dc_format": "PAL4_ARGB4444 128x128 x1 (GC 128x128 x1)",
+        "gate": "UNGATED",
+        "gc_id": "st1/r100.arc#8:0xca",
+        "owner_lane": "fx12",
+        "ps2_source": "r100.dat:6",
+        "room": "r100",
+        "sha256": "38342473dab26f57fc11af3130c264d730e1ba9e943141eaffba63a013f03aa3"
+      },
+      "historical_aggregate_exact": true,
+      "historical_aggregate_sha256": "38342473dab26f57fc11af3130c264d730e1ba9e943141eaffba63a013f03aa3",
+      "historical_converter_commit": "5182665f6d6b62aee348e58266c015c891da5d85",
+      "historical_library_fullbyte_equal": true,
+      "historical_lookup_context": "st1/r100.arc#8:0xca",
+      "id": "8b8bf3d6-0277ae15",
+      "kind": "texture",
+      "lookup_key": "8b8bf3d6-0277ae15",
+      "member": "r100.dat",
+      "mip_composition": null,
+      "picture": {
+        "decoded_RGBA_sha256": "ffb63eb4d5594894654905d1ff0a50d8590316c2ea261461bae69065b707a294",
+        "decoded_indices_sha256": "f60c80c5b473a6f41a8af12a072f72ac74937041f84624ebf688454cb03357db",
+        "depth": 8,
+        "descriptor_offset": 320,
+        "descriptor_sha256": "9b48f28ce649aadab33539d3a18d8183e5d37e402dc5de5490c0864015c7093c",
+        "height": 128,
+        "interlace": 0,
+        "palette_bytes": 96,
+        "palette_offset": 8560,
+        "palette_sha256": "8248e48b09b7df3c95ea99d53f0f89df28b0207687f1bae281676a1d8049b8fa",
+        "pixels_bytes": 8192,
+        "pixels_offset": 368,
+        "pixels_sha256": "c54a14d3d024e1bc2f3d7cfb848e574f54a5f72f2dd4a382fbd3a59513882fb6",
+        "slot": 0,
+        "texture": 202,
+        "tpl_bytes": 8384,
+        "tpl_offset": 304,
+        "tpl_sha256": "b35d6b555b52a52f4dbdab126e12e84bf8c8afbeaa39f9caf3b4f990cbd6c94f",
+        "width": 128
+      },
+      "quantizer_error": 0.0,
+      "runtime_resolved_Entry_or_recipe_correspondence_proved": false,
+      "selected": {
+        "asset": "dc/tex.pak",
+        "bytes": 8368,
+        "full_payload_sha256": "d47458eec2fbf6744849b9708fc035da0e8206209de3c4bd8b52be16b71376a8",
+        "offset": 89595904,
+        "path": "/root/re4data/private/mip22b-20261022/dc/tex.pak",
+        "sha256": "5bba464a1175d8ebe153d5aecb629ea9637807c2bf4fc438a32c17148d0729da",
+        "size": 162154496
+      },
+      "sha256": "d47458eec2fbf6744849b9708fc035da0e8206209de3c4bd8b52be16b71376a8",
+      "status": "MATCH_UNAPPROVED",
+      "variant": "direct"
+    }
+  ],
+  "schema": 1,
+  "selection_sha256": "5f917f3521be886568e3880f63404def99a9cfaa1c0810321713f216c98d4484",
+  "source_input_receipt": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/water-coverage24/R100-TARGET-SOURCE-INPUTS.json",
+    "sha256": "e701f9bad3af2d5790ca70edeb483ff37854a7cbeadba2c7dbd01034552fa8aa"
+  },
+  "source_members": {
+    "Core.dat": {
+      "eff_bytes": 861056,
+      "eff_entry": 1,
+      "eff_offset_in_DAT": 14400,
+      "eff_offset_in_ISO": 1260922944,
+      "eff_sha256": "e0a571bec16baa427c4267feb59ea6ec9aa64703b833d7ed42598115c62b0124",
+      "member": {
+        "index": 368,
+        "name": "Core.dat",
+        "offset": 1260908544,
+        "sha256": "c48e2165a41cb20b124a11a96e9b00bcdcd051f435475004edcc23a47e920e33",
+        "size": 1524064
+      }
+    },
+    "r100.dat": {
+      "eff_bytes": 75744,
+      "eff_entry": 6,
+      "eff_offset_in_DAT": 3388768,
+      "eff_offset_in_ISO": 1851452768,
+      "eff_sha256": "2c2a3023fd8b084517b8850f269d557cb860f62bf65490b07e86a247a8a67b5e",
+      "member": {
+        "index": 2294,
+        "name": "r100.dat",
+        "offset": 1848064000,
+        "sha256": "75fe9de6fe15af37a454ae6d0a0667aec6a578a898afb5028bf79acf8b4b6441",
+        "size": 5214368
+      }
+    }
+  },
+  "status": "WATER_TARGET_STORED_IDENTITIES_ONLY_ROOT_REVIEW_PENDING",
+  "timeout_seconds": 120,
+  "wrong_EFF_member_tuples_rejected": true
+}

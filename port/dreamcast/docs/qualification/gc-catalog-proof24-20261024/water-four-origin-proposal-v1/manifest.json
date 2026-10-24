@@ -1,0 +1,175 @@
+{
+  "base_source": "bdfc176c35680bb82b3b18359e3855301fbe65bd",
+  "copied": [
+    {
+      "bytes": 2504,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/HANDBACK.md",
+      "path": "c-side/HANDBACK.md",
+      "sha256": "eb23b210bedf60cad05e639c917980282bc2f43fe972380a847d5364c9e26872"
+    },
+    {
+      "bytes": 1459,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/SOURCE-CONTROLS.json",
+      "path": "c-side/SOURCE-CONTROLS.json",
+      "sha256": "6d299590967ee058624206807b3ca3c77872798d0f106d938631478e9d145764"
+    },
+    {
+      "bytes": 2845,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/UNAPPROVED-REJECTION.json",
+      "path": "c-side/UNAPPROVED-REJECTION.json",
+      "sha256": "769f69cd1f6d748d314eabc2380e383e7d0968c6f38ce0f55dba48f79d47c9fa"
+    },
+    {
+      "bytes": 14058,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/check_water_targets_v1.py",
+      "path": "c-side/check_water_targets_v1.py",
+      "sha256": "803b77417b2c9d13a914133d30cfc3afc108e8019d82909378ecb0cce2894481"
+    },
+    {
+      "bytes": 14622,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/check_water_targets_v2.py",
+      "path": "c-side/check_water_targets_v2.py",
+      "sha256": "493163cd351a679482b4397fa8e58633542f54f06ae700712fd761d76e712501"
+    },
+    {
+      "bytes": 8059,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-01/ATTESTATION-PROPOSAL.json",
+      "path": "c-side/run-01/ATTESTATION-PROPOSAL.json",
+      "sha256": "cf29787949ca67c31e5b4dacfca843bb61f8339b58a643ad0fc682f1400d2f76"
+    },
+    {
+      "bytes": 20651,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-01/CHECKS.json",
+      "path": "c-side/run-01/CHECKS.json",
+      "sha256": "d792b6d00b8449acab88a2560bec3089e5c212e20acfcbb6b22a50210fb774ca"
+    },
+    {
+      "bytes": 33531,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-01/convert_tpl-0425534d.py",
+      "path": "c-side/run-01/convert_tpl-0425534d.py",
+      "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+    },
+    {
+      "bytes": 32480,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-01/convert_tpl-5182665f.py",
+      "path": "c-side/run-01/convert_tpl-5182665f.py",
+      "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+    },
+    {
+      "bytes": 32480,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-01/convert_tpl-952e8fbf.py",
+      "path": "c-side/run-01/convert_tpl-952e8fbf.py",
+      "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+    },
+    {
+      "bytes": 16757,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-01/fx_ps2_pack-5182665f.py",
+      "path": "c-side/run-01/fx_ps2_pack-5182665f.py",
+      "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+    },
+    {
+      "bytes": 19327,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-01/fx_ps2_pack-952e8fbf.py",
+      "path": "c-side/run-01/fx_ps2_pack-952e8fbf.py",
+      "sha256": "9ca0101db562c0567504e8db19df502d468ea0ac2051214880f8142edea5410c"
+    },
+    {
+      "bytes": 6853,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-01/mipmap_pal4-0425534d.py",
+      "path": "c-side/run-01/mipmap_pal4-0425534d.py",
+      "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+    },
+    {
+      "bytes": 10431,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-01/mipmap_vq-0425534d.py",
+      "path": "c-side/run-01/mipmap_vq-0425534d.py",
+      "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+    },
+    {
+      "bytes": 25816,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-01/ps2_tpl_decode-952e8fbf.py",
+      "path": "c-side/run-01/ps2_tpl_decode-952e8fbf.py",
+      "sha256": "19592a896163d12a3ba321be1a57a8dc46edd15bdcecd0fb9ce17fd63ecf80f7"
+    },
+    {
+      "bytes": 12663,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-02/ATTESTATION-PROPOSAL.json",
+      "path": "c-side/run-02/ATTESTATION-PROPOSAL.json",
+      "sha256": "da76df5468d303ed48d9a5bf60e18269ab88ef779f5bc2e62860bb838e9b9292"
+    },
+    {
+      "bytes": 22285,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-02/CHECKS.json",
+      "path": "c-side/run-02/CHECKS.json",
+      "sha256": "382e3639a609ec38932e571e76d566fec78015f0d1b4ff2ac26eee88e7a47af8"
+    },
+    {
+      "bytes": 4416,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-02/compact_native_vq-0425534d.py",
+      "path": "c-side/run-02/compact_native_vq-0425534d.py",
+      "sha256": "dc1af2643312507735672c65a025ca3c56a1d1d87782503c23fe1997b8fdfac4"
+    },
+    {
+      "bytes": 33531,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-02/convert_tpl-0425534d.py",
+      "path": "c-side/run-02/convert_tpl-0425534d.py",
+      "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+    },
+    {
+      "bytes": 32480,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-02/convert_tpl-5182665f.py",
+      "path": "c-side/run-02/convert_tpl-5182665f.py",
+      "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+    },
+    {
+      "bytes": 32480,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-02/convert_tpl-952e8fbf.py",
+      "path": "c-side/run-02/convert_tpl-952e8fbf.py",
+      "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+    },
+    {
+      "bytes": 16757,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-02/fx_ps2_pack-5182665f.py",
+      "path": "c-side/run-02/fx_ps2_pack-5182665f.py",
+      "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+    },
+    {
+      "bytes": 19327,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-02/fx_ps2_pack-952e8fbf.py",
+      "path": "c-side/run-02/fx_ps2_pack-952e8fbf.py",
+      "sha256": "9ca0101db562c0567504e8db19df502d468ea0ac2051214880f8142edea5410c"
+    },
+    {
+      "bytes": 6853,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-02/mipmap_pal4-0425534d.py",
+      "path": "c-side/run-02/mipmap_pal4-0425534d.py",
+      "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+    },
+    {
+      "bytes": 6075,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-02/mipmap_twiddled-0425534d.py",
+      "path": "c-side/run-02/mipmap_twiddled-0425534d.py",
+      "sha256": "a504d9714f90a8fd24e2589b25e42b4cb09d41cecf6b2717bcba9c56c2aa404e"
+    },
+    {
+      "bytes": 10431,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-02/mipmap_vq-0425534d.py",
+      "path": "c-side/run-02/mipmap_vq-0425534d.py",
+      "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+    },
+    {
+      "bytes": 25816,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/run-02/ps2_tpl_decode-952e8fbf.py",
+      "path": "c-side/run-02/ps2_tpl_decode-952e8fbf.py",
+      "sha256": "19592a896163d12a3ba321be1a57a8dc46edd15bdcecd0fb9ce17fd63ecf80f7"
+    },
+    {
+      "bytes": 2928,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/water-target-origin-v1/test_water_source_controls_v1.py",
+      "path": "c-side/test_water_source_controls_v1.py",
+      "sha256": "855eff0bdec65bb9ebe9df15d68216369f00d9524722d17be9046275ef274050"
+    }
+  ],
+  "created_utc": "2026-10-24T16:47:52.299202+00:00",
+  "scope": "Pause checkpoint of already-existing authored/public source plus hashes/identity metadata only. No private assets/index binaries/raw records/captures. No new tests performed after pause."
+}
