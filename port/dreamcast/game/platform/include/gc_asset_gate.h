@@ -31,6 +31,7 @@ void retire_catalog();
 bool ensure_disc_catalog();
 void retire_disc_catalog();
 CheckedAsset bind_checked(const char* kind,const char* id,const Digest& actual_sha);
+bool checked_current(CheckedAsset); // memory only; no catalog read, hashing or logging
 bool describe_checked(CheckedAsset,AssetDescription*); // safe boundaries only: may read the catalog
 void emitted_checked(Consumer,CheckedAsset); // unlocked flush: first room use may read a record
 // Catalog rows must be generated from reviewed payload hashes, never path names.

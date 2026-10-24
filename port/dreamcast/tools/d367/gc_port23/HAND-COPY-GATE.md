@@ -47,3 +47,20 @@ and permitted in-place derivation remain integration/review obligations. Any
 unaccounted writer or copy must leave the slot unknown. No transformed-byte
 hash is required when the complete original-source/controlled-derivation proof
 holds. No 6.4 KiB snapshot, per-blob digest cache or new lent allocation is added.
+
+The next helper milestone adds safe startup registration of two stable child
+PayloadProof records (44 bytes each on SH4, not yet target measured). Registration
+alone has no positive serial. Silent invalidation precedes a slot overwrite;
+silent publication inherits only a still-live whole-source serial and current
+catalog epoch, with a fresh child serial. The source record must outlive both
+children. These fixed metadata operations never bind/read a catalog, hash, log,
+flush or allocate. They are not proof that an actual copy completed.
+
+Accepted uses of the same original source retain their coalesced bookkeeping
+when a slot is invalidated or republished. A changed source with pending uses
+fails explicitly rather than relabeling those uses. Saved child serials reject
+same-address reloads, invalid publication revokes any old positive, and source
+retirement or catalog replacement invalidates the child. The focused controls
+exercise those cases with the real core/helper and assert logging remains
+outside the simulated LH/SQ lock. Actual hand copy/derivation integration and
+source-handle/directory authentication remain pending.

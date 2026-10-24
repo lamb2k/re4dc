@@ -123,6 +123,10 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
     }
     return {catalog_epoch<<14|index};
 }
+bool checked_current(CheckedAsset asset) {
+    return catalog_ok && catalog_epoch && asset.value>>14==catalog_epoch &&
+        (asset.value&16383U)<catalog_rows+unknown_count;
+}
 bool describe_checked(CheckedAsset asset,AssetDescription* out) {
     if(!out || !catalog_ok || asset.value>>14!=catalog_epoch || !catalog_epoch)return false;
     const unsigned index=asset.value&16383U;

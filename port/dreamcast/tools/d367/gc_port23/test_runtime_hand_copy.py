@@ -9,6 +9,57 @@ GAME = HERE.parents[2] / 'game'
 
 
 class HandCopyTests(unittest.TestCase):
+    def test_child_proof_generation_catalog_and_silent_retirement(self):
+        fixture = r'''
+#include "gc_asset_payloads.h"
+#include <cassert>
+#include <cstdarg>
+#include <cstdio>
+#include <string>
+using namespace re4dc_gcasset;
+bool locked;std::string logs;
+extern "C" void re4dc_log(const char* format,...){assert(!locked);char line[256];va_list args;va_start(args,format);vsnprintf(line,sizeof line,format,args);va_end(args);logs+=line;}
+int main(){
+ assert(install(nullptr,0));begin_startup_closed(1,Required);
+ PayloadProof package,left,right;int package_owner,left_owner,right_owner,wrong_owner;unsigned char slots[2][64]{};
+ Digest digest=fingerprint("whole-source",12);assert(payload_capture_digest(package,&package_owner,digest));
+ assert(payload_copy_register(left,&left_owner,slots[0],64));assert(payload_copy_register(right,&right_owner,slots[1],64));
+ assert(!payload_copy_current(left) && !left.serial);const unsigned source=package.serial;
+ logs.clear();locked=true;assert(payload_copy_publish(left,&left_owner,package,source));
+ assert(payload_copy_publish(right,&right_owner,package,source));assert(payload_copy_current(left));
+ const unsigned old=left.serial,other=right.serial;payload_accept(&left,old,1U<<SourceGeometry);
+ // Revocation cannot lose a previously accepted acknowledgement or emit under the lock.
+ payload_copy_invalidate(left,&left_owner);assert(!payload_copy_current(left));locked=false;
+ assert(logs.empty());payload_flush_all();assert(logs.find("kind=geometry")!=std::string::npos);
+ logs.clear();locked=true;assert(payload_copy_publish(left,&left_owner,package,source));assert(left.serial!=old);
+ // Saved/deferred old generation cannot follow a new blob in the same slot.
+ payload_accept(&left,old,1U<<SourceGeometry);locked=false;payload_flush_all();
+ assert(logs.find("unbound-accepted-payload")!=std::string::npos && logs.find("GC-ASSET v=")==std::string::npos);
+ assert(payload_copy_current(right) && right.serial==other);
+ // Invalid publication and wrong-owner revocation cannot retain an old positive.
+ locked=true;assert(!payload_copy_publish(left,&left_owner,package,source));assert(!left.serial);
+ assert(payload_copy_publish(left,&left_owner,package,source));payload_copy_invalidate(left,&wrong_owner);assert(!left.serial);
+ assert(!payload_copy_publish(left,&wrong_owner,package,source));locked=false;
+ // Retired/reissued package serial invalidates both inherited identities.
+ payload_retire(package);assert(!payload_copy_current(right));
+ assert(payload_capture_digest(package,&package_owner,digest));assert(package.serial!=source);
+ locked=true;payload_copy_invalidate(left,&left_owner);assert(!payload_copy_publish(left,&left_owner,package,source));
+ assert(payload_copy_publish(left,&left_owner,package,package.serial));locked=false;
+ end(1);assert(install(nullptr,0));begin_startup_closed(2,Required);
+ locked=true;assert(!payload_copy_current(left));payload_copy_invalidate(left,&left_owner);
+ assert(!payload_copy_publish(left,&left_owner,package,package.serial));locked=false;
+ // Catalog index values cannot silently regain validity in a new epoch.
+ payload_flush_all();end(2);
+}
+'''
+        with tempfile.TemporaryDirectory(prefix='gc-port23-hand-child-', dir='/dev/shm') as temporary:
+            root = Path(temporary);(root / 'fixture.cpp').write_text(fixture);executable = root / 'fixture'
+            subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror', '-DRE4DC_GC_ASSET_GATE=1',
+                            '-I', str(GAME / 'platform/include'), str(root / 'fixture.cpp'),
+                            str(GAME / 'platform/gc_asset_gate.cpp'), str(GAME / 'platform/gc_asset_members.cpp'),
+                            str(GAME / 'platform/gc_asset_payloads.cpp'), '-o', str(executable)], check=True)
+            subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
+
     def test_complete_copy_epoch_blob_and_overwrite_controls(self):
         fixture = r'''
 #include "gc_asset_hand_copy.h"

@@ -26,6 +26,15 @@ bool payload_capture_fragments(PayloadProof&,const void* owner,const PayloadSpan
 // of this exact owned source. The caller separately proves every accepted
 // copy/range/lifetime; this creates no positive pointer-range authority.
 bool payload_capture_digest(PayloadProof&,const void* owner,const Digest&);
+// Register stable owned copy storage at a safe startup boundary. Registration
+// alone grants no identity. The original source must remain live and checked.
+bool payload_copy_register(PayloadProof&,const void* owner,const void* base,unsigned capacity);
+// Fixed metadata only: revoke BEFORE every overwrite, then publish only after
+// a separately authenticated complete copy. No IO/hash/log/flush/allocation.
+// A fresh child serial prevents deferred use from following a reused slot.
+void payload_copy_invalidate(PayloadProof&,const void* owner);
+bool payload_copy_publish(PayloadProof&,const void* owner,const PayloadProof& source,unsigned source_serial);
+bool payload_copy_current(const PayloadProof&);
 void payload_retire(PayloadProof&);
 void payload_accept(PayloadProof*,unsigned serial,unsigned consumer_mask);
 void payload_flush_all();

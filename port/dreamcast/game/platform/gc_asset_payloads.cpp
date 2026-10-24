@@ -23,7 +23,9 @@ CheckedAsset capture_digest(const Digest& digest){
 void flush(PayloadProof& proof){
     const unsigned mask=proof.uses;proof.uses=0;
     for(unsigned i=0;i<ConsumerCount;++i)if(mask&(1U<<i)){
-        if(!proof.owner || !proof.serial)unresolved(Consumer(i),"retired-payload");
+        // A revoked copy retains the identity of uses accepted before the
+        // overwrite. Its marker is never enough to admit a new use.
+        if(!proof.owner || (!proof.serial && !(proof.layout && !proof.layout_bytes)))unresolved(Consumer(i),"retired-payload");
         else {emitted_checked(Consumer(i),proof.asset);if(proof.layout_bytes)emitted_checked(Consumer(i),proof.layout_asset);}
     }
 }
@@ -97,13 +99,46 @@ bool payload_capture_digest(PayloadProof& proof,const void* owner,const Digest& 
     const CheckedAsset asset=capture_digest(digest);if(!asset.value){unresolved(SourceGeometry,"payload-catalog-bind");return false;}
     proof.owner=owner;proof.asset=asset;proof.serial=++payload_serial;return true;
 }
+bool payload_copy_register(PayloadProof& proof,const void* owner,const void* base,unsigned capacity){
+    if(!owner || !base || !capacity || proof.owner){unresolved(SourceGeometry,"copy-owner");return false;}
+    bool conflict=false;
+    for(auto* old=payloads;old;old=old->next)if(old!=&proof && old->owner &&
+        (old->owner==owner || overlaps(base,capacity,old->base,old->bytes) || overlaps(base,capacity,old->layout,old->layout_bytes))){
+        payload_retire(*old);conflict=true;
+    }
+    if(conflict){unresolved(SourceGeometry,"copy-owner-overlap");return false;}
+    if(!proof.registered){if(payload_count==128){unresolved(SourceGeometry,"payload-owner-capacity");return false;}
+        proof.next=payloads;payloads=&proof;proof.registered=true;++payload_count;}
+    proof.owner=owner;proof.base=base;proof.bytes=capacity;return true;
+}
+bool payload_copy_current(const PayloadProof& proof){
+    if(!proof.registered || !proof.owner || !proof.serial || !proof.layout || proof.layout_bytes)return false;
+    const auto& source=*static_cast<const PayloadProof*>(proof.layout);
+    return source.owner && source.serial && source.serial==proof.layout_asset.value &&
+        source.asset.value==proof.asset.value && checked_current(source.asset);
+}
+void payload_copy_invalidate(PayloadProof& proof,const void* owner){
+    proof.serial=0;
+    if(!proof.registered || !owner || proof.owner!=owner || !proof.base || !proof.bytes){payload_faults|=1U<<SourceGeometry;return;}
+}
+bool payload_copy_publish(PayloadProof& proof,const void* owner,const PayloadProof& source,unsigned source_serial){
+    if(!proof.registered || !owner || proof.owner!=owner || !proof.base || !proof.bytes || proof.serial ||
+       &proof==&source || !source.owner || !source_serial || source.serial!=source_serial || source.layout ||
+       !checked_current(source.asset) || payload_serial>=0xfffffffeU){proof.serial=0;payload_faults|=1U<<SourceGeometry;return false;}
+    // Preserve coalesced acknowledgements of the same original source across
+    // copy generations. A different source cannot relabel pending old uses.
+    if(proof.uses && proof.asset.value!=source.asset.value){payload_faults|=proof.uses;proof.uses=0;}
+    proof.asset=source.asset;proof.layout=&source;proof.layout_asset.value=source_serial;
+    proof.serial=++payload_serial;return true;
+}
 void payload_retire(PayloadProof& proof){
     flush(proof);proof.owner=proof.base=proof.layout=nullptr;proof.bytes=proof.layout_bytes=0;
     proof.asset={};proof.layout_asset={};proof.serial=proof.uses=0;
 }
 void payload_accept(PayloadProof* proof,unsigned serial,unsigned mask){
     const unsigned allowed=(1U<<SourceGeometry)|(1U<<Weapon);
-    if(!proof || !serial || !proof->owner || proof->serial!=serial || !mask || (mask&~allowed)){
+    if(!proof || !serial || !proof->owner || proof->serial!=serial || !mask || (mask&~allowed) ||
+       (proof->layout && !proof->layout_bytes && !payload_copy_current(*proof))){
         payload_faults|=(mask&allowed)?mask&allowed:1U<<SourceGeometry;return;
     }
     proof->uses|=mask;
