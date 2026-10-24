@@ -11,7 +11,8 @@ MAX_FRAMES = 4096
 MAX_MODULUS = 1 << 20
 CONTRACT_PATHS = ('src/game/espgen45.cpp', 'src/game/water_ps2_ext.inc', 'include/esp.h',
                   'port/dreamcast/tools/convert_tpl.py', 'port/dreamcast/tools/prepare_native_ui.py',
-                  'port/dreamcast/tools/d367/test12fx/fx_ps2_pack.py')
+                  'port/dreamcast/tools/d367/test12fx/fx_ps2_pack.py',
+                  'port/dreamcast/game/platform/native_ui.cpp')
 
 def source_contract(root=ROOT):
     return {p: hashlib.sha256((root/p).read_bytes()).hexdigest() for p in CONTRACT_PATHS}
@@ -225,7 +226,8 @@ def resident_records(data):
             continue
         require(not padding, 'nonzero resident row after padding')
         room, w, h, fmt, crc, fnv = row
-        require(room and w and h and (crc or fnv), 'invalid resident record')
+        # Room0 with nonzero metadata/key is CORE_PIN, not padding (native_ui4041).
+        require(w and h and w <= 1024 and h <= 1024 and (crc or fnv), 'invalid resident record')
         identity = room, crc, fnv
         require(identity not in keys, 'duplicate/conflicting resident key')
         keys.add(identity)

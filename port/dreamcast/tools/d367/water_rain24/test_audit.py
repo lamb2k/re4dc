@@ -190,20 +190,21 @@ def preservation_controls():
     def pack(rows):
         data=b''.join(struct.pack('<4H2I',*r) for r in rows)
         return data+b'\0'*(-len(data)%512)
-    old=[(0x100,8,8,0,1,2),(0x10d,64,64,1,3,4)]
+    old=[(0,8,8,0,7,8),(0x100,8,8,0,1,2),(0x10d,64,64,1,3,4)]
     required=[(0x10c,64,64,0,8,9),(0x10e,64,64,1,5,6)]
     ordered=sorted(old+required,key=lambda x:(x[0],x[4],x[5]))
     A.preserve_resident(pack(old),pack(ordered),required,b'remap',b'remap')
     for row in required:
         refused(lambda r=row:A.preserve_resident(pack(old),pack([x for x in ordered if x!=r]),required))
     refused(lambda:A.preserve_resident(pack(old),pack(ordered),required,b'a',b'b'))
-    refused(lambda:A.preserve_resident(pack(old),pack(ordered[1:]),required))
+    refused(lambda:A.preserve_resident(pack(old),pack(ordered[1:]),required))  # core record removed
+    refused(lambda:A.preserve_resident(pack(old),pack([x for x in ordered if x[0]!=0x100]),required))
     refused(lambda:A.preserve_resident(pack(old),pack(ordered+[(0x200,1,1,0,1,1)]),required))
     refused(lambda:A.resident_records(pack(ordered)[1:]))
     refused(lambda:A.resident_records(pack(ordered+ordered[-1:])))
     refused(lambda:A.resident_records(pack(list(reversed(ordered)))))
     refused(lambda:A.resident_records(pack(old)+pack(required)))
-    return 9
+    return 10
 
 
 def main():
