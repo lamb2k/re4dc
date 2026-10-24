@@ -128,3 +128,28 @@ cache benefit. This branch leaves the status table for the coordinator.
 3. The 16 + 12 byte split: not yet. Decide after the console A/B shows whether emit-side misses matter. Keep the proposal in the report.
 
 Go on to Build 6 meanwhile.
+
+### 2026-10-24: Build 6 hand-back (`codex/esp-setup-lean-20261024`)
+
+Candidate: `ESP_SETUP_LEAN=1`, default 0, based on `a5e972e4`.
+The [report](BUILD6_ESP_SETUP_LEAN_20261024.md) separates compiled phase
+costs and demand lines from console cache behavior. The status table and
+release recipe are left for the coordinator.
+
+1. Can the FX0/FX3 matched r101 capture supply eligible common sprites,
+   unconditional Essential cuts after the first late filter call, and lengths
+   of consecutive runs with the same texture, blend, screen mode **and ARGB**?
+   These are the multipliers for the per-sprite model; 87/50 world parts are
+   not an effect population.
+2. Please gate the ordinary and PS2 batch producers with effects interleaved
+   with models, screen sprites/torch glows, RTT capture and room/reset paths.
+   Header batching keeps the ordered effective header/body pairs, but removes
+   redundant raw header words. TA guard/hash/bin/material diagnostic builds
+   deliberately retain full packets; their timing cannot measure this part.
+3. What is the console A/B at Essential-only, and at FX0 in an effect-heavy
+   view? Changing ARGB ends a header run. With few runs or few unconditional
+   cuts, the added checks can outweigh the scalar saving even though a
+   successful continuation eliminates one queue-data line.
+
+Continue to Build 7 after publishing this branch, as requested. No change to
+the landed Build 4 fixes or Build 5 implementation is included.

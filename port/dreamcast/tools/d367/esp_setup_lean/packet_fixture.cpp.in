@@ -1,0 +1,39 @@
+// Test-only: retain the real native UI layout and fx_packet body. Private
+// Package fields are exposed only so the Python runner can adopt synthetic
+// public descriptors without file IO, VRAM upload or a game-data package.
+#define private public
+#include "@TEXTURE_HEADER@"
+#undef private
+#include "@NATIVE_SOURCE@"
+
+alignas(32) Re4dcEffectSprite fixture_sprite;
+alignas(32) Entry fixture_entry;
+alignas(32) unsigned char fixture_metadata[sizeof(re4dc::texture::Header)+sizeof(re4dc::texture::Texture)];
+alignas(32) pvr_ptr_t fixture_pointers[1];
+alignas(32) unsigned char fixture_nodes[3*(kSpriteNode+kSpritePacket)];
+
+extern "C" void fixture_keep_packet()
+{
+#if defined(RE4DC_ESP_SETUP_BATCH)
+    fx_packet(fixture_sprite,&fixture_entry,fixture_nodes+kSpriteNode+kSpritePacket+kSpriteNode,
+              reinterpret_cast<DeferredPart*>(fixture_nodes));
+#else
+    fx_packet(fixture_sprite,&fixture_entry,fixture_nodes+kSpriteNode+kSpritePacket+kSpriteNode);
+#endif
+}
+
+#define OFFSET(type,field) unsigned(offsetof(type,field))
+#define ADDRESS(value) unsigned(reinterpret_cast<uintptr_t>(&(value)))
+extern "C" const unsigned fixture_layout[] = {
+    1, sizeof(Re4dcEffectSprite), sizeof(Entry), sizeof(DeferredPart),
+    ADDRESS(fixture_sprite), ADDRESS(fixture_entry), ADDRESS(fixture_metadata),
+    ADDRESS(fixture_pointers), ADDRESS(fixture_nodes)+kSpriteNode+kSpritePacket+kSpriteNode, ADDRESS(fixture_nodes),
+    OFFSET(re4dc::texture::Package,data_), OFFSET(re4dc::texture::Package,header_),
+    OFFSET(re4dc::texture::Package,pvr_textures_),
+    OFFSET(Re4dcEffectSprite,color), OFFSET(Re4dcEffectSprite,src), OFFSET(Re4dcEffectSprite,dst),
+    OFFSET(Re4dcEffectSprite,screen), OFFSET(Re4dcEffectSprite,x), OFFSET(Re4dcEffectSprite,y),
+    OFFSET(Re4dcEffectSprite,z), OFFSET(Re4dcEffectSprite,u), OFFSET(Re4dcEffectSprite,v),
+    OFFSET(Re4dcEffectSprite,image), OFFSET(Re4dcUiImage,width), OFFSET(Re4dcUiImage,height),
+    OFFSET(DeferredPart,lighting), ADDRESS(fx_hdr_key), sizeof(fx_hdr_key), ADDRESS(fx_hdr_cache),
+    kSpriteNode+kSpritePacket,kSpriteNode
+};

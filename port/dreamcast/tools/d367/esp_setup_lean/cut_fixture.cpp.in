@@ -1,0 +1,53 @@
+// Test-only partial phase: after ChannelSet through matrix preparation, before
+// EspSpriteEmit. Matrix/rotation routines are external return seams, with
+// calls counted by the runner. Their arithmetic, input/output memory traffic,
+// the projector and native emit are deliberately outside this cost model.
+#include "@ESP_SOURCE@"
+
+alignas(32) unsigned char fixture_effect[sizeof(cEsp)];
+alignas(32) unsigned char fixture_global[sizeof(GlobalWork)];
+alignas(32) unsigned char fixture_parent[sizeof(cCoord)];
+alignas(32) EspAnmData fixture_animation;
+GlobalWork* pG;
+extern "C" void fixture_emit_edge(cEsp*);
+
+extern "C" void fixture_setup(cEsp* esp, EspAnmData* s_pAnm)
+{
+    f32 sx,sy,ox,oy;
+@SETUP_PHASE@
+    fixture_emit_edge(esp);
+}
+
+extern "C" int fixture_early(cEsp* esp,int screen)
+{
+#if defined(RE4DC_ESP_ESSENTIAL_EARLY)
+    return FxEssentialSetupCut(esp,screen);
+#else
+    (void)esp;(void)screen;return 0;
+#endif
+}
+extern "C" void fixture_prime()
+{
+    FxEssInit();
+#if defined(RE4DC_ESP_ESSENTIAL_EARLY)
+    s_esp_setup_trim_frame=pG->Frame_cnt;
+    s_esp_setup_ess_frame=pG->Frame_cnt;
+#endif
+}
+#define OFFSET(type,field) unsigned(__builtin_offsetof(type,field))
+#define ADDRESS(value) unsigned(&(value))
+extern "C" const unsigned fixture_cut_layout[] = {
+    1,sizeof(cEsp),sizeof(GlobalWork),ADDRESS(fixture_effect),ADDRESS(fixture_global),
+    ADDRESS(fixture_parent),ADDRESS(fixture_animation),ADDRESS(pG),
+    OFFSET(GlobalWork,Frame_cnt),OFFSET(GlobalWork,Cam)+OFFSET(Camera,v_mat),
+    OFFSET(cEsp,info)+OFFSET(EspInfo,owner),OFFSET(cEsp,m_Id),OFFSET(cEsp,m_Tex_id),
+    OFFSET(cEsp,m_Parts_no),OFFSET(cEsp,m_Tool_flg),OFFSET(cEsp,m_Size_base_x),
+    OFFSET(cEsp,m_Size_base_y),OFFSET(cEsp,m_Size_mul),OFFSET(cEsp,m_Pos),OFFSET(cEsp,m_Ang),
+    OFFSET(cEsp,m_Mat),OFFSET(cEsp,parent),ADDRESS(re4dc_fx_essential),ADDRESS(re4dc_esp0e_glow),
+    OFFSET(cCoord,mat),sizeof(cCoord),ADDRESS(s_ess_class),
+#if defined(RE4DC_ESP_ESSENTIAL_EARLY)
+    ADDRESS(s_esp_setup_trim_frame),ADDRESS(s_esp_setup_ess_frame)
+#else
+    0,0
+#endif
+};

@@ -85,6 +85,20 @@ endif
 $(OBJDIR)/src/game/esp.o $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_ESP_SPRITE_FAST=$(ESP_SPRITE_FAST)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ESP_SPRITE_FAST=$(ESP_SPRITE_FAST)
 endif
+# Build 6: decline unconditional Essential cuts before matrix/projection;
+# share a header within a consecutive sprite run.
+# Queue reservations and the order/colour/depth of every sprite are unchanged.
+ESP_SETUP_LEAN ?= 0
+ifneq ($(filter-out 0 1,$(ESP_SETUP_LEAN)),)
+$(error ESP_SETUP_LEAN is 0 or 1)
+endif
+ifeq ($(ESP_SETUP_LEAN),1)
+ifneq ($(ESP_SPRITE_FAST),1)
+$(error ESP_SETUP_LEAN needs ESP_SPRITE_FAST=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_ESP_SETUP_LEAN=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ESP_SETUP_LEAN=1
+endif
 ESP47_SKIP_LEAN ?= 0
 ifneq ($(ESP47_SKIP_LEAN),0)
 ifeq ($(PACE_CATCHUP),0)

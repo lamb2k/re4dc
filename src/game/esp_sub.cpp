@@ -1108,10 +1108,23 @@ enum { kEssLayer = 2 };
 extern "C" {
 u8 re4dc_fx_essential = RE4DC_FX_ESSENTIAL_BOOT;
 }
+#if defined(RE4DC_ESP_SETUP_LEAN) && RE4DC_ESP_SETUP_LEAN && \
+    !(defined(RE4DC_FX_TRIM_LOG) && RE4DC_FX_TRIM_LOG) && \
+    !(defined(RE4DC_ESP_CENSUS) && RE4DC_ESP_CENSUS) && !defined(RE4DC_MIST_CUT)
+#define RE4DC_ESP_ESSENTIAL_EARLY 1
+// The original late reset points own these stamps. The shortcut is only legal
+// after both have already seen this frame; frame rewinds and Essential toggles
+// must still clear exactly the same buckets, even in frames containing cuts only.
+static u32 s_esp_setup_trim_frame = ~0U, s_esp_setup_ess_frame = ~0U;
+#endif
 // 1: not drawn under Essential.
 static int FxEssentialCut(const cEsp* esp, int screen)
 {
+#if defined(RE4DC_ESP_ESSENTIAL_EARLY)
+    u32& s_frame = s_esp_setup_ess_frame;
+#else
     static u32 s_frame = ~0U;
+#endif
     static u8 s_layer[256];   // (owner ^ tex) buckets: sprites of one layer this frame
     if (!s_ess_class[0x00]) FxEssInit();
     if (s_frame != pG->Frame_cnt) {
@@ -1133,6 +1146,29 @@ static int FxEssentialCut(const cEsp* esp, int screen)
     u8* n = &s_layer[(owner * 31U + esp->m_Tex_id) & 0xFF];          // layers and unknown ids: one thin layer each
     return (*n)++ >= kEssLayer;
 }
+#if defined(RE4DC_ESP_ESSENTIAL_EARLY)
+// Only stateless, unconditional cuts. Layer buckets still count at their
+// original post-projection point, so clipped/missing sprites cannot spend them.
+// Haze feeds hardware fog and torch glows have draw diagnostics: keep both on
+// the original path, even when Essential ultimately declines their sprites.
+static int FxEssentialSetupCut(const cEsp* esp, int screen)
+{
+    if (!re4dc_fx_essential || esp->info.owner == 0x03 ||
+        esp->m_Id == 0x15 || esp->m_Id == 0x48 || esp->m_Id == 0x0e) return 0;
+#if defined(RE4DC_EFFECT_TORCH) && RE4DC_EFFECT_TORCH
+    if (re4dc_esp0e_glow) return 0;
+#endif
+    if (screen) return 0;
+    if (!s_ess_class[0x00]) return 0; // the first eligible late call initializes it
+    const unsigned c = s_ess_class[esp->m_Tex_id & 0xFF];
+    if (c == ESS_KEEP) return 0;
+    const int cut = c == ESS_CUT || (c == ESS_GLOW ? esp->info.owner != 0x00 :
+                                   esp->info.owner == 0x01 || esp->info.owner == 0xD0);
+    // Kept sprites need neither stamp line. Potential cuts still preserve the
+    // original late reset points, including frame rewinds and mode switches.
+    return cut && s_esp_setup_trim_frame == pG->Frame_cnt && s_esp_setup_ess_frame == pG->Frame_cnt;
+}
+#endif
 // FX_STRIP21 strips (Esp01 / Esp02 trails, ribbons): not drawn under Essential except Leon's.
 extern "C" int re4dc_fx_essential_strip_cut(const cEsp* esp)
 {
@@ -1141,7 +1177,12 @@ extern "C" int re4dc_fx_essential_strip_cut(const cEsp* esp)
 // 0: not drawn. reason: 0 drawn, 1 thinned, 2 far, 3 small, 4 budget, 5 essential.
 static int FxTrimSprite(const cEsp* esp, const Re4dcEffectSprite* s, f32 area)
 {
+#if defined(RE4DC_ESP_ESSENTIAL_EARLY)
+    u32& s_frame = s_esp_setup_trim_frame;
+    static u32 s_used;
+#else
     static u32 s_frame = ~0U, s_used;
+#endif
     static u8 s_per_id[256];
     if (s_frame != pG->Frame_cnt) {
         s_frame = pG->Frame_cnt;
@@ -2865,6 +2906,11 @@ void EspCommonTrans(cEsp* esp)
         return;
     }
     ESPCT(2);
+#if defined(RE4DC_ESP_ESSENTIAL_EARLY)
+    // ChannelSet and the projection/animation cache updates already happened:
+    // their state remains available to the next OT callback as before.
+    if (re4dc_fx_essential && FxEssentialSetupCut(esp, ESP_PARTS_SCREEN(esp))) return;
+#endif
     sx = esp->m_Size_base_x * esp->m_Size_mul;
     sy = esp->m_Size_base_y * esp->m_Size_mul;
     if ((f32) s_pAnm->Cx == 0.0f) {
