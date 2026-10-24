@@ -630,6 +630,33 @@ int re4dc_water42_live(void);   // Espgen42.cpp (WATER_PS2)
 static unsigned s_wps2_frame = ~0U;
 static u8 s_wps2_dummy;
 
+// EARLY_WATER_DIAG (water-coverage24): read-only qualification of the existing
+// r107/r10a rows. It changes no activation, texture choice, water or gameplay.
+// Masks use kWaterPs2 table indices, so source-bound reports can explain every
+// skipped row without inventing a replacement plane. Root owns target flags.
+#ifndef RE4DC_EARLY_WATER_DIAG
+#define RE4DC_EARLY_WATER_DIAG 0
+#endif
+#if RE4DC_EARLY_WATER_DIAG
+extern "C" void re4dc_log(const char* fmt, ...);
+static void WaterPs2EarlyDiag(unsigned frame, int live, int level, const u32* masks)
+{
+    if (G_ROOM_ID != 0x107 && G_ROOM_ID != 0x10a) {
+        return;
+    }
+    static unsigned room = ~0U, last_frame;
+    static u32 previous[6];
+    if (room != G_ROOM_ID || memcmp(previous, masks, sizeof(previous)) || frame - last_frame >= 300u) {
+        room = G_ROOM_ID;
+        last_frame = frame;
+        memcpy(previous, masks, sizeof(previous));
+        re4dc_log("water early: room=%03x frame=%u live=%d level=%d rows=%08x quality=%08x inactive=%08x missing=%08x native_reject=%08x emitted=%08x\n",
+                  room, frame, live, level, (unsigned) masks[0], (unsigned) masks[1], (unsigned) masks[2],
+                  (unsigned) masks[3], (unsigned) masks[4], (unsigned) masks[5]);
+    }
+}
+#endif
+
 // WATER_PS2_ROOMS: the rooms drawn, bit 0 r107, 1 r108, 2 r10a, 3 r10b, 4 r11a, 5 r11b (default 0x3f: all six, lane water16b). A room left out
 // keeps today's water (r10b: WATER45_NATIVE + LAKE_RIPPLES).
 #ifndef RE4DC_WATER_PS2_ROOMS
@@ -753,18 +780,35 @@ extern "C" void re4dc_water_ps2_draw(void*)
     if (fin_on) {
         EffGetFinalCol(&fin);
     }
+#if RE4DC_EARLY_WATER_DIAG
+    u32 early_masks[6] = {};
+#endif
     for (u32 i = 0; i < sizeof(kWaterPs2) / sizeof(kWaterPs2[0]); ++i) {
         const WaterPs2Row& r = kWaterPs2[i];
+#if RE4DC_EARLY_WATER_DIAG
+        if (r.room == G_ROOM_ID) {
+            early_masks[0] |= 1u << (i & 31);
+            if (level > r.level) {
+                early_masks[1] |= 1u << (i & 31);
+            }
+        }
+#endif
         if (r.room != G_ROOM_ID || level > r.level) {
             continue;
         }
         if (r.area < 0 ? !live : !EffGetAreaState(r.area)) {
+#if RE4DC_EARLY_WATER_DIAG
+            early_masks[2] |= 1u << (i & 31);
+#endif
             continue;
         }
         memset(&L.image, 0, sizeof(L.image));
         if (r.tex != 0xF7) {   // 0xf7: the core's white picture, drawn untextured
             const EspTexWk* tw = &g_pEspSys->Esp_tex_tbl[r.tex];
             if (tw->Owner == 0xD2 || tw->pTpl == NULL || tw->pTpl->numDescriptors == 0) {
+#if RE4DC_EARLY_WATER_DIAG
+                early_masks[3] |= 1u << (i & 31);
+#endif
                 continue;
             }
             const TEXDescriptor* td = TEXGet(tw->pTpl, WaterPs2Pattern(r, tw, tw->pTpl->numDescriptors, tick));
@@ -806,8 +850,16 @@ extern "C" void re4dc_water_ps2_draw(void*)
         L.argb = a << 24 | cr << 16 | cg << 8 | cb;
         L.src = r.src;
         L.dst = r.dst;
+#if RE4DC_EARLY_WATER_DIAG
+        const int emitted = re4dc_water_layer(&L);
+        early_masks[emitted ? 5 : 4] |= 1u << (i & 31);
+#else
         re4dc_water_layer(&L);
+#endif
     }
+#if RE4DC_EARLY_WATER_DIAG
+    WaterPs2EarlyDiag(f, live, level, early_masks);
+#endif
 #if defined(RE4DC_WATER_PS2_EXT) && RE4DC_WATER_PS2_EXT
     if (!WaterPs2ExtRoomOn(G_ROOM_ID)) {
         return;
