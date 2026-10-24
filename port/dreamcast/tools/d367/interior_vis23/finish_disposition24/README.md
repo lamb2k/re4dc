@@ -1,0 +1,7 @@
+# Bounded interior disposition
+
+Metadata-only final disposition of the retained finite r10d25-target/75-domain report and r101 seed/east43-view portal-prerequisite reports. This neither runs a coverage predicate nor declares a global impossibility theorem. Every original must be accounted for and global full-Panel union limits remain16. Alternative domains are never summed as a frame saving. Partial original-triangle opportunities are not whole existing meshlet/cluster cuts.
+
+The runner rehashes exact named retained reports, small raw package/policy/IDs and authentic historical camera/profile bytes from a private input contract. It does not decode new scene geometry, run rays, regenerate packages, assign sources, read texture packages or change runtime/data. Its only result is a finite-cohort NO-GO while no nominal wholelet exists; any wholelet positive refuses this zero-only disposition and requires separate qualification. The generic source contains no private coordinates/assets.
+
+Gross saving of an admitted empty cut set is algebraically0ms; net runtime delta remains unavailable because lookup/drain/fragmentation/cache and actual emitted work have no calibrated matched model. The recorded200MHz break-even ratio is explicitly counterfactual arithmetic, not a calibrated cost or performance claim. No physical/runtime acceptance. Actual output under256MiB/120s/oneworker,256KiB compact cap. All historic reports and rejected250mm domain are preserved.
