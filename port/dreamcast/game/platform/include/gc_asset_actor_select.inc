@@ -28,6 +28,12 @@ bool gcasset_actor_bound(const re4dc_gcasset::PayloadProof& proof,const Chunk& c
 extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_select(const Re4dcModelPart* part,const Re4dcActorSource* source){
     using namespace re4dc_gcasset;
     if(!part || !source)return {};
+    // Deferred geometry keeps the original owner generation. Re-selecting a
+    // current fixed hand slot here could relabel old queued work after reload.
+    if(replay_use.serial!=0xffffffffU){
+        if(!replay_use.payload)return {};
+        return {replay_use.serial,replay_use.mask,part->model,part->info,replay_use.payload};
+    }
     PayloadProof* selected=nullptr;bool ambiguous=false;
     const auto accept=[&](PayloadProof& proof){if(selected && selected!=&proof)ambiguous=true;else selected=&proof;};
 #if RE4DC_ACTOR_TRANSACTION && !(defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD)

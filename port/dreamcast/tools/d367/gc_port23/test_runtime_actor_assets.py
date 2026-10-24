@@ -90,6 +90,10 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);unsigned char data
  // Mixed arrays or an out-of-range stream cannot inherit the previous owner.
  p.stream=chunks[0].stream;{ActorSourceScope scope(&p,&s);assert(!scope.selected.serial);sq=true;e.slots=3;acknowledge(scope,e,w);sq=false;}payload_flush_all();assert(!rows() && logs.find("unbound-accepted-payload")!=std::string::npos);
  logs.clear();p.stream=chunks[1].stream+30;assert(!re4dc_gcasset_actor_select(&p,&s).serial);p.stream=chunks[1].stream;
+ // Replay preserves its frozen payload serial, even while current source arrays match another live owner.
+ {ReplayScope replay(gcasset_registry[0].serial,1U<<SourceGeometry,&gcasset_registry[0]);ActorSourceScope scope(&p,&s);
+  assert(scope.selected.payload==&gcasset_registry[0] && scope.selected.serial==gcasset_registry[0].serial);}
+ {ReplayScope replay(0,0);ActorSourceScope scope(&p,&s);assert(!scope.selected.serial);}
  {ActorSourceScope scope(&p,&s);payload_retire(gcasset_registry[1]);sq=true;acknowledge(scope,e,w);sq=false;}payload_flush_all();assert(!rows() && logs.find("unbound-accepted-payload")!=std::string::npos);
 }
 '''
