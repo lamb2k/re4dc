@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-24T01:33:54.253266+00:00",
+  "status": "I002_DOCUMENTATION_AND_PRIVATE_STAGING_DONE",
+  "supersedes_only": "I002_QA_staging PENDING_DOC_REFRESH in original closure; other pending rows remain pending",
+  "original_review_body_sha256": "2479d95b713e85975991dd1045e954be4a09858042d2986895d0ad2853415204",
+  "source": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+  "normal_directory": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Audits-5e4de9a0",
+  "receipt": "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/qa-identity/docs-refresh-v1.json",
+  "receipt_sha256": "d4d7737ddbd4ce19809971391025047fafb87c7b125be94733edeb25d471b394",
+  "verified_manifest_entries": {
+    "gdemu/disc.gdi": "025516557d49e1835e7eb8571e09244b64db190cf3981ead555c54b1924ca19f",
+    "gdemu/track01.bin": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9",
+    "gdemu/track02.raw": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+    "gdemu/track03.bin": "4a9d6251103aa7ee32cb5d89d32b7293530b4ab15d93af65f75a17c392efd8db",
+    "IDENTITY.json": "308813a90d1328f27ce14f9f0569b5535e30a29ad0b6d2341ea23d3f353d7021",
+    "README-tooling.txt": "6212c2313067523cacdc9c83dad952af34596ef81610203d2f7f227ca379ec79",
+    "README.txt": "725649d2cda466084e1b0c1cbdc8b6b22c13878d25b40d09bbeccb010565a3b9",
+    "STEPS.txt": "85d642d2c2179dd47f2860388761cebe1f88e423857766e35c32baa0394867e6"
+  },
+  "metadata_sha256": {
+    "README.txt": "725649d2cda466084e1b0c1cbdc8b6b22c13878d25b40d09bbeccb010565a3b9",
+    "STEPS.txt": "85d642d2c2179dd47f2860388761cebe1f88e423857766e35c32baa0394867e6",
+    "IDENTITY.json": "308813a90d1328f27ce14f9f0569b5535e30a29ad0b6d2341ea23d3f353d7021",
+    "SHA256SUMS.txt": "aa620d508be19cf0f571bd7e0e64c2f0c3ab42fca1cd79351b0df22705c37f85"
+  },
+  "tracks_independently_streamed_and_unchanged_vs_pre_refresh": true,
+  "programme_and14_overlay_identity_records_unchanged": true,
+  "instructions_review": {
+    "all4named_I002_cases_covered": true,
+    "normal_village": true,
+    "dam_menu_manual_route": true,
+    "church_menu_2_3_1_rotate_then_check": true,
+    "separate_arena_2min_physical": true,
+    "fresh_boot_and_normal_settings_explicit": true,
+    "manual_dam_full_traversal_not_claimed": true
+  },
+  "pending": [
+    "root final integration landing and fresh full release tier",
+    "physical Dreamcast acceptance including arena two-minute challenge",
+    "historical arena failure cause and exact overlay phase/failure injection not proven"
+  ],
+  "no_new_sdk_guest_source_recipe_status_or_media_write": true
+}

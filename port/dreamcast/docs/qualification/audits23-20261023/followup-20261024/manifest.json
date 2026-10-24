@@ -1,0 +1,496 @@
+{
+  "schema": "audits23-source-followup-v1",
+  "created_utc": "2026-10-24T02:05:58.442868+00:00",
+  "parent_snapshot": "61d0b0415764bb5e65dd7f19fa8580227cdd37e7",
+  "policy": "Append-only original byte snapshot. No original helper executed. Never merge evidence branch into runtime integration.",
+  "included": [
+    {
+      "path": "HANDBACK.md",
+      "original_path": "C:/Game Dev/Emulators/codex-lanes/audits23/HANDBACK.md",
+      "bytes": 4935,
+      "sha256": "b024fac9614b686513a0d520c98d5af9f98e3075c02f40833d8f8305de89cfa1"
+    },
+    {
+      "path": "REVIEW-UNIT-CLOSURE-I002-ADDENDUM.json",
+      "original_path": "C:/Game Dev/Emulators/codex-lanes/audits23/REVIEW-UNIT-CLOSURE-I002-ADDENDUM.json",
+      "bytes": 2573,
+      "sha256": "b1ea884f63301dcd62b15fa21a614826262797c1d884b41850d10cb7e8db096b"
+    },
+    {
+      "path": "REVIEW-UNIT-CLOSURE.json",
+      "original_path": "C:/Game Dev/Emulators/codex-lanes/audits23/REVIEW-UNIT-CLOSURE.json",
+      "bytes": 14305,
+      "sha256": "dd9957c1c649d3524d27f92d61cf7c29128a14d8fc21bde4b093d4877e81b26a"
+    },
+    {
+      "path": "REVIEW-UNIT-CLOSURE.md",
+      "original_path": "C:/Game Dev/Emulators/codex-lanes/audits23/REVIEW-UNIT-CLOSURE.md",
+      "bytes": 9297,
+      "sha256": "d2bb0761e5981312ddf479d64efe5a5141418d9475a293b3762f9ed1d2774051"
+    },
+    {
+      "path": "takeover-gate-receipt-v1.py",
+      "original_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-gate-receipt-v1.py",
+      "bytes": 6962,
+      "sha256": "fd5ef095ebadb33d876d595802cbb3327f6d65c1329f84d87127713fd9602a99"
+    },
+    {
+      "path": "takeover-land-prepare-v1.sh",
+      "original_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-land-prepare-v1.sh",
+      "bytes": 7443,
+      "sha256": "45a53db9f34085d8a16a9235e20194bfa5ab40591773f061f38ea6455272729f"
+    },
+    {
+      "path": "takeover-land-prepare-v2.sh",
+      "original_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-land-prepare-v2.sh",
+      "bytes": 7402,
+      "sha256": "422f929d90817a43e56f023c737530d385bcb05fe5da0a00fff004016aa0c31e"
+    },
+    {
+      "path": "takeover-land-push-v1.sh",
+      "original_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-land-push-v1.sh",
+      "bytes": 1019,
+      "sha256": "54831bf3b4c0af454cc457c956ed64ab528527511910af5cb8f013af1861a71b"
+    },
+    {
+      "path": "takeover-land-verify-v1.sh",
+      "original_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-land-verify-v1.sh",
+      "bytes": 2489,
+      "sha256": "1288b6cd30860bff296607e3898b6a157f0f24def767251aac0b62795accbc98"
+    },
+    {
+      "path": "takeover-mirror-notes-v1.sh",
+      "original_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-mirror-notes-v1.sh",
+      "bytes": 1182,
+      "sha256": "fd989557d7e3a2aa686687453c4cd5e384ae6bba4555afe4de663815018c118c"
+    },
+    {
+      "path": "takeover-post-landing-docs-v1.py",
+      "original_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-post-landing-docs-v1.py",
+      "bytes": 3180,
+      "sha256": "86b535b1b5550a50d9fbbf138736760ad9105c68ff434023cc72a6334961f713"
+    },
+    {
+      "path": "takeover-refresh-console-docs-v1.py",
+      "original_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-refresh-console-docs-v1.py",
+      "bytes": 5932,
+      "sha256": "de076a3d7993d1323ce8a1762e9e6c889833f21c83d4ae674f62681a275776e3"
+    },
+    {
+      "path": "takeover-refresh-console-pending-v1.py",
+      "original_path": "C:/Game Dev/Emulators/codex-lanes/audits23/takeover-refresh-console-pending-v1.py",
+      "bytes": 1140,
+      "sha256": "35f7de1f531f614f21764fe33944dc7b19ba9a831153e71d09bfef4b3cea1265"
+    }
+  ],
+  "excluded": [
+    {
+      "path": "CACHE-DIAG-JUDGE-CONTROLS.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "CACHE-DIAG-JUDGE.md",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "CODEGEN-LOCATION.txt",
+      "reason": "raw logs/binary/cache/pointer text excluded"
+    },
+    {
+      "path": "EVENT-FIXTURES.md",
+      "reason": "asset/AEV/geometry/source positions excluded"
+    },
+    {
+      "path": "EVENT-OBSERVER-SHA256SUMS",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "EVENT-OBSERVER-V2-SHA256SUMS",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "EVENT-OBSERVER-V2.md",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "EVENT-OBSERVER-V3-SHA256SUMS",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "EVENT-OBSERVER-V3.md",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "EVENT-OBSERVER.md",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "FULL-DIAG-IMAGE.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "HOST-CONTROLS-COHERENCE.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "HOST-CONTROLS-FINAL.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "HOST-CONTROLS.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "INBOX.md",
+      "reason": "live status/inbox excluded"
+    },
+    {
+      "path": "MERGE-PIN.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "PREFLIGHT.md",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "REVIEW-CACHE-DIAG-HOST.log",
+      "reason": "raw logs/binary/cache/pointer text excluded"
+    },
+    {
+      "path": "REVIEW-CACHE-DIAG-MAKE.log",
+      "reason": "raw logs/binary/cache/pointer text excluded"
+    },
+    {
+      "path": "REVIEW-CACHE-DIAG.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "REVIEW-CACHE-DIAG.md",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "REVIEW-TARGET-CODEGEN.md",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "STATUS.md",
+      "reason": "live status/inbox excluded"
+    },
+    {
+      "path": "TARGET-CODEGEN.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "aud23-event-observer-v2.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "aud23-event-observer-v3.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "aud23-event-observer.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "ensure-rg-host.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/SHA256SUMS",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/__pycache__/stat_owned_ram.cpython-312.pyc",
+      "reason": "raw logs/binary/cache/pointer text excluded"
+    },
+    {
+      "path": "event-fixtures/bind-event-symbols.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/inspect-event-fixture-areas.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/judge-r117-solve.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/off-control-2a-symbols-v2.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/off-control-2a-symbols-v3.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/off-control-2a-symbols.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/on-5e4d-symbols-v2.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/on-5e4d-symbols-v3.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/on-5e4d-symbols.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/package-source-pins.json",
+      "reason": "asset/AEV/geometry/source positions excluded"
+    },
+    {
+      "path": "event-fixtures/prepare-observer-v2.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/probe-target-abi-v2.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/probe-target-abi-v2.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/probe-target-abi-v3.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/probe-target-abi-v3.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/r10c-first-villager-warp.txt",
+      "reason": "raw logs/binary/cache/pointer text excluded"
+    },
+    {
+      "path": "event-fixtures/r117-light-solve-idle180-pad.txt",
+      "reason": "raw logs/binary/cache/pointer text excluded"
+    },
+    {
+      "path": "event-fixtures/r117-light-solve-pad.txt",
+      "reason": "raw logs/binary/cache/pointer text excluded"
+    },
+    {
+      "path": "event-fixtures/r117-light-solve-warp.txt",
+      "reason": "raw logs/binary/cache/pointer text excluded"
+    },
+    {
+      "path": "event-fixtures/stat_owned_ram.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/target-abi-actual-em-object-v2.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/target-abi-off-v2.cpp",
+      "reason": "raw logs/binary/cache/pointer text excluded"
+    },
+    {
+      "path": "event-fixtures/target-abi-off-v2.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/target-abi-off-v3.cpp",
+      "reason": "raw logs/binary/cache/pointer text excluded"
+    },
+    {
+      "path": "event-fixtures/target-abi-off-v3.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/target-abi-on-v2.cpp",
+      "reason": "raw logs/binary/cache/pointer text excluded"
+    },
+    {
+      "path": "event-fixtures/target-abi-on-v2.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/target-abi-on-v3.cpp",
+      "reason": "raw logs/binary/cache/pointer text excluded"
+    },
+    {
+      "path": "event-fixtures/target-abi-on-v3.json",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "event-fixtures/test-event-fixtures.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "judge-cache-diag.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "judge-census-on.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "review-cache-diag.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-build-tools-inspect.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-build-v1.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-census-on.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-dam-backing-inspect.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-dam-layout-inspect.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-dam-observer-inspect.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-dam-pool-inspect.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-dam-slot-find.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-dam-slot-source.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-decisions-v1.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-diag-build-v1.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-diag-chain-v1.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-diag-inspect.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-diag-judge-v1.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-diag-run-v1.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-event-off-v3.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-event-v1.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-event-v2.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-event-v3.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-gdemu-chain-v1.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-gdemu-v1.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-generated-review.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-h2-c-reference-v1.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-h2-v1.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-knob-dump-inspect.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-knob-inspect.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-knob-writer-inspect.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-kos-v1.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-original-host-v1.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-qa-identity-v1.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-qa-probes-v1.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-qa-tools-inspect.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-qa-v1.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-source-watch.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "takeover-stage-v1.sh",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "test-aud23-event-observer-v2.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "test-aud23-event-observer-v3.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "test-aud23-event-observer.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    },
+    {
+      "path": "test-judge-cache-diag.py",
+      "reason": "unchanged prior snapshot; not duplicated"
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "review": "Independent audits23 unit closure",
+  "utc": "2026-10-24T01:31:20.505636+00:00",
+  "source": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+  "off_source": "2a14662d4b025031cd93f64eed6a5d8159d473b7",
+  "arena_source": "53fcbc0ba8fac8fcf035143dbd8cdd0870dd2b77",
+  "on_event_elf_sha256": "4f1f7c6a89aba1e72e8b121249ea9f0bd94717ce2ca5cd4eda2807c5163104b7",
+  "off_event_elf_sha256": "7a57db6b4cfabdf3730edc8ab3aa6f165a6bc72382de143bb36e7a7cc1b6c306",
+  "decision": "I001_BOUNDED_LOCAL_PASS; I002_PENDING_DOCUMENTATION; PHYSICAL/HISTORICAL_ACCEPTANCE_PENDING",
+  "recommendation": "Root may enable all four fixes together for the bounded LOCAL normal release recipe, with EM_READ_RETRY1, KOS_CACHE_P2_DIAG0 and production arena setting unchanged. Refresh/reseal normal QA instructions before completing I002. Preserve every pending row; no arena cure or fullrelease acceptance claim.",
+  "new_source_defects": [],
+  "local_runtime_blockers": [],
+  "source_contract_sha256": {
+    "src/game/esp.cpp": "e0b0b39540eab8d3b46e90c2685604ad35f1eb2d8ec5026129dbf9a80a114bd2",
+    "src/st1/r117.cpp": "b1830e22c353f5c7efa669a15ab2d4aaafbff061b839688cc79a5fb30f72a9c1",
+    "src/st1/r10c.cpp": "86608234203aa49e8d036508af64c2fb472c1a25c4df3c635fa226b3c6ad0ecf",
+    "port/dreamcast/patches/kos-804b319-cache-p2.patch": "c635bcf9d697438569e5593954ab2d444206736ab7a980acdf4805167eb784bd"
+  },
+  "source_unchanged_from_host_controls": "2ea754cd22197c0c5856841a84ebfb3d6cbe8c95 for all4listedruntimefiles",
+  "gates": [
+    {
+      "gate": "normal_source_and_OFF_identity",
+      "status": "PASS_LOCAL",
+      "detail": "Default0/no feature path preserved. Root OFF raw programme3370788B SHA0745d16c39fcc08dee3afb7d0d1ce473379387190a93b395aa8c4358dad741a2 and14 overlays match STAT1 baseline2a. Exact4 runtime source bodies remain unchanged from host controls2ea."
+    },
+    {
+      "gate": "H2",
+      "status": "PASS_LOCAL",
+      "detail": "Actual1465/571/340 decoded/uploaded/presented, s30heap_before93920B, one s30 movie-arena return restored1; movies03/20 do not borrow that arena."
+    },
+    {
+      "gate": "KOS_49152",
+      "status": "PASS_LOCAL",
+      "detail": "Mode0headroom6208B/mode1headroom6112B; no stop/fault/deadline."
+    },
+    {
+      "gate": "GDEMU_10seeds",
+      "status": "PASS_LOCAL",
+      "detail": "Seeds1..10 console-like GDEMU+jitter20000 through r101\u2192r103; no badreads/stops."
+    },
+    {
+      "gate": "census_TEXCHK",
+      "status": "PASS_LOCAL",
+      "detail": "r117/r10c/r200/r101 actualentry/census/draw;185NMRS rows, character/notdrawn/Leon/texture checks pass, no critical/refusal/no-contiguous gate failures. This r101 is production arenaOFF."
+    },
+    {
+      "gate": "decisions",
+      "status": "PASS_LOCAL",
+      "detail": "Bell2866/Mendez2644 required-field ticks MUST-IDENTICAL,0 movement drift. Mendez informational sq differs8 rows; not raw-trace identity."
+    },
+    {
+      "gate": "r117_normal_puzzle",
+      "status": "PASS_LOCAL",
+      "detail": "Matched ON/OFF identical fixtures+V3: initialized unsolved baseline after placement readiness\u2192event\u2192solved/disarmed/event-clear/source endpose. Independent fb1 visual inspection botharms confirms rendered church/OPERATEbefore/no promptafter. No pixel or unshown gate-angle claim."
+    },
+    {
+      "gate": "dam_first_villager",
+      "status": "PASS_LOCAL",
+      "detail": "Matched ON/OFF identical warp+V3: clear baseline without list2\u2192live id0x12(18),kind0,entry2\u219224 internally stable same-header advancing motion pairs perarm across two successive headers\u2192event-clear/source endpose. FirstheaderSHA81f322a957f8b0fe164c85e074443393b6ab693bd53879be279dd2d68f69176e, later2363d781abec5f9f8f824b495d7a7780cbc2c8c3ec60357756e787a6cfdf36e0; no full-FCV or overlayphase claim."
+    },
+    {
+      "gate": "cache_contract_and_recorded_observer",
+      "status": "PASS_LOCAL_SCOPED",
+      "detail": "Full linked realhelper/counterrelocation/opcodes pass; fourrooms observed72/8764/42/91 live wholecalls with100%validclock in pairedrows; nominalmean~7.86us MODELLED Flycast masked-subinterval, observerincluded/restoretailexcluded; boot/tail separate."
+    },
+    {
+      "gate": "current_private_arena_QA",
+      "status": "PASS_LOCAL_BOUNDED",
+      "detail": "53fcbc0b doc-only successor of5e, same1746fileassetset exceptprogramme15files. Own boot/warp/H2allmovies and~46s alert/fight bothKOS48KiB modes pass; s30heap44672B versus normalQA48768B, min6152/6056B; not historical B/B3 identity."
+    },
+    {
+      "gate": "I002_QA_staging",
+      "status": "PENDING_DOC_REFRESH",
+      "detail": "Normal and arena discs staged/hash-readback; normalQA ownboot/warp/H2pass. Normal README/STEPS still call church/dam checks pending and omit procedures; root acknowledged refresh+identity/hashreseal needed before I002 complete."
+    },
+    {
+      "gate": "historical_arena_two_minute_console_challenge",
+      "status": "PENDING",
+      "detail": "Unrun physical challenge, no deterministic local pad, no physical crash acceptance. Local bounded arena checks cannot turn this into PASS."
+    },
+    {
+      "gate": "historical_failure_causation",
+      "status": "PENDING_NOT_CLAIMED",
+      "detail": "No reproduced dam failureinjection/observed historical register cause, no demonstrated arena cause/cure. Required ordinary regression gates do not establish historical causality."
+    },
+    {
+      "gate": "full_IRQ_blocked_latency",
+      "status": "PENDING_NOT_MEASURED",
+      "detail": "No fullhelper IRQblocked hardware duration or calibrated observer subtraction. Existing counter report establishes only valid nominal maskedsubinterval windows."
+    },
+    {
+      "gate": "target_failure_injection_and_other_camera_angle",
+      "status": "PENDING_NOT_CLAIMED",
+      "detail": "Host source failurecontrols pass; realguest nullbeam/retiredactor injection and other churchgate angle were not shown. Existing normalpath equivalence has no new look change; no invented failure-path visual/phase acceptance."
+    },
+    {
+      "gate": "full_release_publication_SD_physical_acceptance",
+      "status": "PENDING_OUTSIDE_UNIT",
+      "detail": "Advisory local unit review grants no fullrelease/globalGC-ASSET/hardware/publication/SD acceptance."
+    }
+  ],
+  "governance": {
+    "takeover": "2026-10-23 takeover explicitly grants rootlocalintegration; supersedes older COMMON Claude-only division",
+    "gate_rule": "Gates before recipe changes; all4 audit fixes asoneunit; defaultOFFidentity; visible/gameplay equivalence maintained",
+    "interpretation": "Currentboundedlocal arena regression qualifies ordinary local scope; unrun historical2min physical challenge is still pending, not silently accepted and not a demonstrated new regression",
+    "outside": "No permission to publish/SD/GitHubchanges; root retains final local decision"
+  },
+  "normal_QA_docs_snapshot_sha256": {
+    "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Audits-5e4de9a0/README.txt": "725649d2cda466084e1b0c1cbdc8b6b22c13878d25b40d09bbeccb010565a3b9",
+    "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Audits-5e4de9a0/STEPS.txt": "85d642d2c2179dd47f2860388761cebe1f88e423857766e35c32baa0394867e6",
+    "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Audits-5e4de9a0/IDENTITY.json": "69f45b6753100ef8a6f086fa6a247fc0cdcd0f2ae6f8c696b000de3f117ee882",
+    "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Audits-5e4de9a0/SHA256SUMS.txt": "ecd5f3ef137c36a9caa896f43a40fa42de6a77ecc239991590938a7097a03adf"
+  },
+  "evidence_sha256": {
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/LOCAL-GATE-RECEIPT.json": "baeaf66e850137ed4a8352b668b7bc3a389adbf5f9e561ce46b974b58c4e58bc",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/census-on/results.json": "19d050a6dbad37795a41c43782c19e1e5f6d4594478b9d10590d1ccf49ba036a",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/census-on/receipt.json": "984e17d8442e23c8583f7b8bb32c34a9afbb379c42df86d9b49babbb75b4ad41",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/decisions-bell-comparison.json": "f9a490da272a021ec05231fdcb6581c60a3f8432d7a01774d40ce607dfab8c4f",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/decisions-mendez-comparison.json": "58fb6d3615336e8699a3e072e8d9bcf44f7c51f85f19fca12d572bb67deee688",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/qa-identity/own-qa-gates.json": "db80b9065423a0d0705a8cfa6d2b1d54a19598c66e260603831ccf8e971aa623",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/qa-identity/normal-staging-receipt.json": "74da882675eb110d2372ac256a2cc253e8271411057833ab1426bde91367d0a8",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-arena/53fcbc0b/qualification-final.json": "8f264a555f1cc3bde1ce6f671e25334988b0d26b1cb25bbccaad721762eba6a3",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-arena/53fcbc0b/identity-preflight.json": "13a23f3d4a617ad872dca318ded68775dd478278156e2da2b30a141906dd86e2",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/audits23/TARGET-CODEGEN.json": "67a0892c36309536072d8a68d90d79a3ad825efcaf4abbb0e2d6ecd98f0e37c6",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/audits23/FULL-DIAG-IMAGE.json": "487e5acdadd783125042a3a61f7b04f30b493fcd7c410ae62c1e0e8e433911ec",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/audits23/HOST-CONTROLS-FINAL.json": "e73870109aee7d9508dc5096b8fca4c5b176c951f99171e9fe2fb65a0001032f",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-r117-on-r3/aud23-event-observation.json": "9d711124546d05752a73987de8af9adf482dde69de527df2fd528dfb95c79c23",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-r117-on-r3/run-result.json": "5ab66387a8330e04dfa5f047fa1285dfd53315e577884df9078d168a10b6aea3",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-r117-on-r3/bounded-launch.json": "8d803c7c93c40809ba0496ba01bf7f852303d259574940c727286dd050be8742",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-r117-on-r3/fixture-warp.txt": "01e35405ef8dfdccad2807782b387dc5b5f4a29fb6793ea0f056a749d96b8640",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-r117-on-r3/fixture-pad.txt": "7c5e2fc8985b196102b3c64c0c86d3e917c62530bf0e718dccc24e7946468fdb",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-r117-off-r3/aud23-event-observation.json": "304aed0b98e3c3f0834a9999bc2c4af5a04700bfa89316d870f7fce7163591df",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-r117-off-r3/run-result.json": "125fe3280a86e91a7d53b10b776f993114c421546e6d8b0820e52da953cee57d",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-r117-off-r3/bounded-launch.json": "89a6ddac876c189c5258cac720ccd9920d12429136e7724b302aba96c3acdeea",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-r117-off-r3/fixture-warp.txt": "01e35405ef8dfdccad2807782b387dc5b5f4a29fb6793ea0f056a749d96b8640",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-r117-off-r3/fixture-pad.txt": "7c5e2fc8985b196102b3c64c0c86d3e917c62530bf0e718dccc24e7946468fdb",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-dam-on-r3/aud23-event-observation.json": "4b1d70680be1ca5d650e4bcc18e5a754bd85b1835b4ab90a8dca8e7a53f3c354",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-dam-on-r3/run-result.json": "341383d49f3663c78048ceda38ac76b8780a0fd8ffdbc9b214c4f6d59e0350b7",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-dam-on-r3/bounded-launch.json": "835085bd79b40a90734f6f200bee57df2e215a901670555d00cec4f261ac56c2",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-dam-on-r3/fixture-warp.txt": "11d17960f0a1efd9ed3b7ecc31de5be689e052db109e95e3d89357d86e122aca",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-dam-off-r3/aud23-event-observation.json": "7c27fa26880dc8b33f2e399f4702edc5cf6bccce2b3118c1faf0e437002af17d",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-dam-off-r3/run-result.json": "677e992a7fc66dd481f80d62d6edeb4e1fa5b39ed6c7d5a1c78d09608f4913e7",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-dam-off-r3/bounded-launch.json": "96e948846fa022c920015a70402614521cd71067559cfd00fec6d44c86eccebc",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-dam-off-r3/fixture-warp.txt": "11d17960f0a1efd9ed3b7ecc31de5be689e052db109e95e3d89357d86e122aca",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/diag-r101-r1/cache-diag.json": "b701649b6c0acd7c3f0177257534e1a399795050da2717494ab44cb118c73bb6",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/diag-r10c-r1/cache-diag.json": "c5a5dc9c669a90d8ed01eca6eb25cec0a48b9457bac1dd1cc6d3974da90b2985",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/diag-r117-r1/cache-diag.json": "ef6511e3d4efa1628191a3db50dd9d1ab8512473b89e7701817bcf69abbc5bb7",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/diag-r200-r1/cache-diag.json": "5d57b4c86befbaf498bcba134e0a1ce26e2b554a12a01a87aafb4ceeeba1bc0b",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-r117-on-r3/event-stills/unsolved-baseline/frames/fb1.png": "7175ef3ef71ee3c01f0d3765407b3cae515fd8cfc561113302d2284cd42ce1be",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-r117-on-r3/event-stills/solved-disarmed-event-clear/frames/fb1.png": "d8966857bd964ed197c188e66f3eda7335350ee07410e8913a42ccf54592e621",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-r117-off-r3/event-stills/unsolved-baseline/frames/fb1.png": "84dfb60d11e83696630d974ef588b930f856d5f8190b54857db0703b08c044c0",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/event-r117-off-r3/event-stills/solved-disarmed-event-clear/frames/fb1.png": "9c39ec5e8ebd0dcda8e9b3e522212713c5210317a26e6d228bc1b8de683fe9d1"
+  },
+  "review_operations": "Read-only source/evidence plus4PNGviews; wrote only newREVIEW-UNIT-CLOSURE.md/json, noSDK/guest/source/status/recipe edits"
+}

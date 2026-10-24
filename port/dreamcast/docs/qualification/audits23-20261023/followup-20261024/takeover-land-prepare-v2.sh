@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -euo pipefail
+B=/root/work/lanes/audits23
+L=/root/work/lanes/audits23-land
+A='/mnt/c/Game Dev/Emulators/codex-lanes/audits23'
+E='/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0'
+SOURCE=5e4de9a0262d3629c9833c959557de198b2e9f0c
+BASE=a5e972e44096410253ad93164b84d92e3c22655a
+[ "$(git -C "$B" rev-parse HEAD)" = "$SOURCE" ];[ -z "$(git -C "$B" status --porcelain)" ]
+git -C "$B" fetch origin t15/int
+[ "$(git -C "$B" rev-parse origin/t15/int)" = "$BASE" ]
+[ "$(git -C "$L" rev-parse HEAD^1)" = "$BASE" ];[ "$(git -C "$L" rev-parse HEAD^2)" = "$SOURCE" ];[ -z "$(git -C "$L" status --porcelain)" ]
+python3 - "$L" "$A" "$E" <<'PY'
+import pathlib,json,sys
+p,a,e=map(pathlib.Path,sys.argv[1:]);j=json.loads((e/'LOCAL-GATE-RECEIPT.json').read_text())
+assert j['source']=='5e4de9a0262d3629c9833c959557de198b2e9f0c' and len(j['gdemu'])==10 and len(j['events'])==4
+assert j['h2']['movies'][-1]['heap_before']==93920 and j['h2']['restored_returns']==1
+r=p/'port/dreamcast/tools/d367/rr/recipe.conf';ls=r.read_text().splitlines(True);ix=[i for i,x in enumerate(ls) if x.startswith('CH2="')];assert len(ix)==1;i=ix[0]
+for k in ['ESP_POOL_RECYCLE','R117_EFFECT_FAILURE_SAFE','KOS_CACHE_P2','R10C_SPAWN_LIVE_GUARD']:assert k+'=' not in ls[i],k
+assert 'EM_READ_RETRY=' not in ls[i]
+ls[i]=ls[i].rstrip('\n')[:-1]+' ESP_POOL_RECYCLE=1 R117_EFFECT_FAILURE_SAFE=1 KOS_CACHE_P2=1 R10C_SPAWN_LIVE_GUARD=1 EM_READ_RETRY=1"\n'
+ls.insert(i,'# 2026-10-23 (audits23, complete Build4 correctness unit): effect-pool reuse, church null beam,\n# P2 whole-cache helper and live dam-event actor admission. H2 340/340 heap_before93920/restored1;\n# KOS48KiB both modes, GDEMU10 seeds, four-room census, bell/Mendez and matched church/dam gates PASS.\n# KOS_CACHE_P2_DIAG remains off. Arena two-minute CONSOLE acceptance/cause and full IRQ duration remain unproven.\n')
+r.write_text(''.join(ls))
+bullets='- [x] **Effect and puzzle safety:** full effect-pool reuse releases old effects correctly; the church light puzzle handles a missing beam.\n- [x] **Dam encounter safety:** a villager that retires while loading is retried instead of being used by the scripted encounter.\n'
+r=p/'README.md';s=r.read_text();anchor='## Coming soon: Test 23';start=s.index(anchor);end=s.index('\n## ',start+len(anchor));assert 'Effect and puzzle safety' not in s;r.write_text(s[:end]+'\n'+bullets+s[end:])
+d=p/'port/dreamcast/docs/qualification';d.mkdir(exist_ok=True)
+(d/'AUDITS23_20261023.md').write_text('''# Four-fix audit unit qualification
+
+Frozen source5e4de9a0262d3629c9833c959557de198b2e9f0c, integration basea5e972e44096410253ad93164b84d92e3c22655a. ESP_POOL_RECYCLE, R117_EFFECT_FAILURE_SAFE, KOS_CACHE_P2 and R10C_SPAWN_LIVE_GUARD are enabled together in the recipe; source defaults remain zero. EM_READ_RETRY stays1. KOS_CACHE_P2_DIAG stays0. Production VRAM_ROOM_ARENA stays0. No cloud queue/branches or original assets changed.
+
+Source/host controls qualify actual full-pool wrap/reuse, null-beam failure and retired dam actors. Independent review repaired the cache diagnostic's startup coherence and ambiguous knob parsing. Emitted SH4 opcode/threshold/ABI controls and final real DMA helper linkage pass; these are models, not physical execution. SDK archive unchanged, SHA2565e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf. OFF raw programme and14overlays equal current production. OFF raw0745d16c39fcc08dee3afb7d0d1ce473379387190a93b395aa8c4358dad741a2; ON49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b.
+
+Local console-mode Flycast gates: full H2 movies1465/571/340 decoded/uploaded/presented, s30 heap_before93920 with its movie-arena borrow restored1; 48KiB KOS modes headroom6208/6112; GDEMU all10seeds; r117/r10c/r200/r101 census/TEXCHK/character checks4/4. Bell2866 and Mendez2644 required-field ticks MUST-IDENTICAL, zero actor movement drift. Mendez includes both normal damage/death forms, full movies, False Eye acknowledgement, normal window event and room10f exit.
+
+Matched OFF/ON normal-input puzzle runs observe ready unsolved -> active event -> solved/disarmed/event-clear at exit. Root inspected real loaded church pictures with OPERATE before and absent after. Idle frames/pose differ, so no pixelidentity claim or gate visibility at an unshown angle. Native target-compiled sparse actor-pool proofs observe dam first villager id0x12/kind0/entry2 alive during event,24 internally stable-header advancing-motion pairs per arm across2successive headers, and normal event-clear exit. Exact overlay phases, full FCV provenance, historical failure reproduction/injection and full dam traversal are not claimed. The separate source/host controls cover failure cases.
+
+Whole-cache diagnostic: live recorded intervals count72/8764/42/91 calls in r101/r10c/r117/r200, boot separate; tails remain unreported. All recorded clocks valid. Mean observed masked window about7.86us MODELLED, includes observer work and excludes final aggregation/restore tail. This is not full IRQ duration or console performance. DIAG image adds1344B end/992Btext/268Brodata/4Bdata/96BBSS versus matched census build. DIAG H2 and same-profile DIAG0 H2 both57056,340/340,restored1; do not compare that profile's floor with production93920 as an isolated diagnostic cost.
+
+Private normal QA RE4DC-QA23-Audits-5e4de9a0 has its own boot/menu-warp/H2 pass, s30heap48768; raw98c82a9d1ccb081c31b231f2dc52a316392ff27e4bce66bb764ae200e3cf4a64 and all14overlays read back from staged tracks. Separate arena1 challenge RE4DC-QA23-Audits-Arena-53fcbc0b passes local boot/menu-warp/H2 (44672) and48KiB fight modes6152/6056. Its profile differs from normal QA and historical B/B3. The historical two-minute physical arena observation remains pending; no crash-cause or cure claim. Source fixes are locally qualified, not physical acceptance or a fresh full release.
+
+Exact private logs/programmes/screenshots/data/receipts: C:/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0; LOCAL-GATE-RECEIPT.json. Original standard1712-file data manifest SHA256a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547. Private console folder STEPS cover normal village, dam, church and separate arena challenge. No SD copy/publication.
+
+Support source snapshot61d0b0415764bb5e65dd7f19fa8580227cdd37e7 on origin/wip/audits23-evidence-tools-20261023 preserves92 original helper/receipt files byte-for-byte, excluding private assets/AEV payloads. No evidence-tools branch is required for production.
+''')
+for src,dst in [('REVIEW-UNIT-CLOSURE.md','AUDITS23_UNIT_REVIEW_20261023.md'),('REVIEW-CACHE-DIAG.md','AUDITS23_CACHE_REVIEW_20261023.md'),('REVIEW-TARGET-CODEGEN.md','AUDITS23_TARGET_REVIEW_20261023.md')]: (d/dst).write_bytes((a/src).read_bytes())
+(e/'landing-bullets.txt').write_text(bullets)
+PY
+git -C "$L" diff --check
+git -C "$L" add README.md port/dreamcast/tools/d367/rr/recipe.conf port/dreamcast/docs/qualification/AUDITS23_20261023.md port/dreamcast/docs/qualification/AUDITS23_UNIT_REVIEW_20261023.md port/dreamcast/docs/qualification/AUDITS23_CACHE_REVIEW_20261023.md port/dreamcast/docs/qualification/AUDITS23_TARGET_REVIEW_20261023.md
+git -C "$L" commit -m 'Enable the qualified four-fix audit unit in the release recipe'
+git -C "$L" rev-parse HEAD > "$E/landing-candidate-source.txt"
+printf 'AUDITS_LANDING_CANDIDATE_READY source=%s\n' "$(git -C "$L" rev-parse HEAD)"
