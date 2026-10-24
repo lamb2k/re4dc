@@ -1,0 +1,50 @@
+{
+  "status": "PASS_FINAL_FULL_TRACK_AND_ALL10_INJECTED_FIXTURES_READBACK",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "plan_sha256": "840def0f47711be477ad2832d03d4ac7a47f12ffa32914abf55577d42362a3c8",
+  "gates_sha256": "74794e6d79313dcb9aa296b9ddc19fd682fb4f2a76d16b954e78693baf38b9bf",
+  "track03_sha256": "ff2bbc48a70be375c0c32000776fef4164a870c79ce23395eebc3c8c0430038a",
+  "all10_fixtures": {
+    "1": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu1-console-r1/fixture-warp.txt",
+      "wire_sha256": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+    },
+    "2": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu2-console-r1/fixture-warp.txt",
+      "wire_sha256": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+    },
+    "3": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu3-console-r1/fixture-warp.txt",
+      "wire_sha256": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+    },
+    "4": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu4-console-r1/fixture-warp.txt",
+      "wire_sha256": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+    },
+    "5": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu5-console-r1/fixture-warp.txt",
+      "wire_sha256": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+    },
+    "6": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu6-console-r1/fixture-warp.txt",
+      "wire_sha256": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+    },
+    "7": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu7-console-r1/fixture-warp.txt",
+      "wire_sha256": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+    },
+    "8": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu8-console-r1/fixture-warp.txt",
+      "wire_sha256": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+    },
+    "9": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu9-console-r1/fixture-warp.txt",
+      "wire_sha256": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+    },
+    "10": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu10-console-r1/fixture-warp.txt",
+      "wire_sha256": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+    }
+  },
+  "limits": "Final full shared-track and actual injected fixture-byte equality, supplementing captured env/profile/read/landing/endpoint checks; no physical-console claim."
+}

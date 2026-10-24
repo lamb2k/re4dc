@@ -1,0 +1,17 @@
+{
+  "seed": 4,
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "read_witness_rows": 22,
+  "early_stat_landing_rows": 21,
+  "serial_profile": "GDCONSOLE profile=gdemu cpb32=533 seek=20000 stat=2000 irq=4000 jitter=20000 early=1000/1000 chunk=32 seed=4",
+  "elapsed_host_s": 14.094,
+  "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu4-console-r1",
+  "sha256": {
+    "run-result.json": "9cd5b87dcf7dbbfdcae68751a1bc56ed95b87982bdc975d8e856b1badd8f12a4",
+    "bounded-launch.json": "b00f6e411fc0322493dcde80684da7b3aebf351a404566072fee93d921dccd35",
+    "run-output.txt": "6ebc885ca79bc1e304ed45fb1c1fab434d49436a2d7cb69342699fe7fefc8711",
+    "serial.txt": "1dbcef5ec5f0e7ce8012f14fe20a0c7b04b1733b0858c24934e9ea55e54113cc",
+    "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+    "fixture-warp.txt": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+  }
+}

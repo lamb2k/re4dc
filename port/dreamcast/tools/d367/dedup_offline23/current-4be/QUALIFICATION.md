@@ -79,3 +79,28 @@ pins. fuser '--' was unsupported: failed precheck explicitly corrected in
 cleanup-redundant-current-rawgdi-guard-correction.json; no retrospective FD
 proof. No other deletion. WSL VHD gave no immediate C free gain.
 
+
+## Required ten-seed correction and completion
+
+Root review correctly identified a gap in the earlier all-non-QA-complete
+claim: TAKEOVER requires TEN GDEMU seeds for disc/DMA changes, and compact
+reader/data/media changes qualify. Seed1 alone was incomplete. That earlier
+claim is superseded, with its original receipt and capture preserved.
+
+Frozen plan840def0f47711be477ad2832d03d4ac7a47f12ffa32914abf55577d42362a3c8
+and nine independent seed2..10 inputs were pushed at e3cb93e6a before launch.
+Two real-seed1 mutation test groups/13 negatives reject absent/wrong seed,
+wrong source/profile, serial mismatch, profile-only without reads, missing
+landing/endpoint, primary bad read and deadline. All source/helper/programme/
+full-track/fixture bindings remain frozen4be; no SDK, recipe or media change.
+
+All nine additional console guests actually completed serial ONE-guest chain,
+stat3/trace16/exact55, jitter20000, FP_NOLIMIT1. Seeds2..10 each14.1-14.6s;
+each has22 positive serial read rows and21 earlyStat/landedAfterStat witness
+rows, actual exact environment and serial seed, clean door103 endpoint,
+no primary bad read/error/fault/deadline. Existing seed1 is revalidated unchanged
+under the same strict checker. gdemu10-gates-r1.json records all10 pins/results.
+Final full shared-track SHA and all10 actual injected fixture byte readbacks
+pass in gdemu10-post-readback-r1.json. This is MODELLED disc/DMA safety, not
+physical-console/performance acceptance. All guests/SDK idle. Private QA media
+allocation/package/boot/warp/H2 and root integration/recipe decision remain open.

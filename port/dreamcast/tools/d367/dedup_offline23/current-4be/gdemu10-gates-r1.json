@@ -1,0 +1,178 @@
+{
+  "status": "PASS_TEN_ACTUAL_CURRENT_GDEMU_SEEDS",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "plan_sha256": "840def0f47711be477ad2832d03d4ac7a47f12ffa32914abf55577d42362a3c8",
+  "runs": [
+    {
+      "seed": 1,
+      "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+      "read_witness_rows": 22,
+      "early_stat_landing_rows": 21,
+      "serial_profile": "GDCONSOLE profile=gdemu cpb32=533 seek=20000 stat=2000 irq=4000 jitter=20000 early=1000/1000 chunk=32 seed=1",
+      "elapsed_host_s": 14.593,
+      "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu1-console-r1",
+      "sha256": {
+        "run-result.json": "7f7ffa8c0e88fc6809adb9d2747c457f4d02f8b432a41574eb09a88977f0d98d",
+        "bounded-launch.json": "6a2056a6048582655576ed60060c50f832e9c7d6ba8e039f271e6bc03b87354e",
+        "run-output.txt": "1c2263afae45a73e22624a94e31b734379c2f9c631bddf2f3bdbbd8038c29a0d",
+        "serial.txt": "60f00c1cfcae00dc9c91e22e938f4e422f72a1dd5fec81e2a4ec79b21b9c959f",
+        "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+        "fixture-warp.txt": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+      }
+    },
+    {
+      "seed": 2,
+      "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+      "read_witness_rows": 22,
+      "early_stat_landing_rows": 21,
+      "serial_profile": "GDCONSOLE profile=gdemu cpb32=533 seek=20000 stat=2000 irq=4000 jitter=20000 early=1000/1000 chunk=32 seed=2",
+      "elapsed_host_s": 14.141,
+      "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu2-console-r1",
+      "sha256": {
+        "run-result.json": "3ca79c4af20bf042e89a602a7b07b553dfef913ed9dc3a4635b7dc1540b60cea",
+        "bounded-launch.json": "4a7b5c457cb2d1a6c8f3365f89c0080d4dc040c2522d40cc855541fec66200a6",
+        "run-output.txt": "e7b3145aa1df61fe6a4c8184bb403d5af626a64d18655144215f22767a36b7b4",
+        "serial.txt": "d3de8320399730c9a4d5f2c6e29875fe1a85a13e878de04114d6c7e60e5d87c9",
+        "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+        "fixture-warp.txt": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+      }
+    },
+    {
+      "seed": 3,
+      "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+      "read_witness_rows": 22,
+      "early_stat_landing_rows": 21,
+      "serial_profile": "GDCONSOLE profile=gdemu cpb32=533 seek=20000 stat=2000 irq=4000 jitter=20000 early=1000/1000 chunk=32 seed=3",
+      "elapsed_host_s": 14.094,
+      "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu3-console-r1",
+      "sha256": {
+        "run-result.json": "08d1fdaea7c0bd43a6b7e3512a41187e99c5b5988e050433a5345bd864005453",
+        "bounded-launch.json": "4c6d4da469577947019d2e9752fa94e9a4d37a212b1490803ad79611486313a6",
+        "run-output.txt": "61eb3352741b4235cdffebda82ce95af52ce25047462fbc189d0166713c8a478",
+        "serial.txt": "8eda446d9009010af81f842f23d0447cdacb95d9ed5206ed02db97d59826cdf8",
+        "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+        "fixture-warp.txt": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+      }
+    },
+    {
+      "seed": 4,
+      "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+      "read_witness_rows": 22,
+      "early_stat_landing_rows": 21,
+      "serial_profile": "GDCONSOLE profile=gdemu cpb32=533 seek=20000 stat=2000 irq=4000 jitter=20000 early=1000/1000 chunk=32 seed=4",
+      "elapsed_host_s": 14.094,
+      "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu4-console-r1",
+      "sha256": {
+        "run-result.json": "9cd5b87dcf7dbbfdcae68751a1bc56ed95b87982bdc975d8e856b1badd8f12a4",
+        "bounded-launch.json": "b00f6e411fc0322493dcde80684da7b3aebf351a404566072fee93d921dccd35",
+        "run-output.txt": "6ebc885ca79bc1e304ed45fb1c1fab434d49436a2d7cb69342699fe7fefc8711",
+        "serial.txt": "1dbcef5ec5f0e7ce8012f14fe20a0c7b04b1733b0858c24934e9ea55e54113cc",
+        "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+        "fixture-warp.txt": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+      }
+    },
+    {
+      "seed": 5,
+      "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+      "read_witness_rows": 22,
+      "early_stat_landing_rows": 21,
+      "serial_profile": "GDCONSOLE profile=gdemu cpb32=533 seek=20000 stat=2000 irq=4000 jitter=20000 early=1000/1000 chunk=32 seed=5",
+      "elapsed_host_s": 14.109,
+      "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu5-console-r1",
+      "sha256": {
+        "run-result.json": "8d7134af709deebd1764d34cb08d7f1bd642d3a6a3a044ae077b64e4593b5c7a",
+        "bounded-launch.json": "99a2568be12558b7329e5d50140bda3a06b3af00f23c2c3c4ea741a766399b1f",
+        "run-output.txt": "98b912bc01c133f20d32c2a52871ba905def1794cbf7b3e0f6aca9a16ff61446",
+        "serial.txt": "ffe85f70da6efd95cabc5ad02659d5b248493acb34f5322ba20f950fef902d62",
+        "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+        "fixture-warp.txt": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+      }
+    },
+    {
+      "seed": 6,
+      "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+      "read_witness_rows": 22,
+      "early_stat_landing_rows": 21,
+      "serial_profile": "GDCONSOLE profile=gdemu cpb32=533 seek=20000 stat=2000 irq=4000 jitter=20000 early=1000/1000 chunk=32 seed=6",
+      "elapsed_host_s": 14.14,
+      "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu6-console-r1",
+      "sha256": {
+        "run-result.json": "ff55c7bd94700a73ddee57104bde9750059954e7ff5629e9ac37c538fef8e29b",
+        "bounded-launch.json": "a16dbbde4b1dfa9aaf7173d0eb9c625b26022e3645da979521335c0faae41a31",
+        "run-output.txt": "10e69851a139d8d8c945d1e8da1a51de1b81c1a443411ddd766c7ef3a8027e7b",
+        "serial.txt": "18d1bde06e49da998a1845fee64963a08c4e73783f20e314837814779064263c",
+        "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+        "fixture-warp.txt": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+      }
+    },
+    {
+      "seed": 7,
+      "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+      "read_witness_rows": 22,
+      "early_stat_landing_rows": 21,
+      "serial_profile": "GDCONSOLE profile=gdemu cpb32=533 seek=20000 stat=2000 irq=4000 jitter=20000 early=1000/1000 chunk=32 seed=7",
+      "elapsed_host_s": 14.078,
+      "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu7-console-r1",
+      "sha256": {
+        "run-result.json": "b523bb634685608368e86de39778be7c558f9d3fe0071b8a5992e1324d9f865e",
+        "bounded-launch.json": "b9231a320b8bfa6fd2f76e1762db6f08367090d348b1a21fd95155dcf6472634",
+        "run-output.txt": "da8d263d9666505bc6279d1248e7ac6ef48fa3144812c13043393fbd775759b5",
+        "serial.txt": "da8ce47fcd43ad1e8f99c1b7ea52b931f8b3b5c931733221f16219a58da76a50",
+        "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+        "fixture-warp.txt": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+      }
+    },
+    {
+      "seed": 8,
+      "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+      "read_witness_rows": 22,
+      "early_stat_landing_rows": 21,
+      "serial_profile": "GDCONSOLE profile=gdemu cpb32=533 seek=20000 stat=2000 irq=4000 jitter=20000 early=1000/1000 chunk=32 seed=8",
+      "elapsed_host_s": 14.594,
+      "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu8-console-r1",
+      "sha256": {
+        "run-result.json": "c26848521d833dd09c53ff40c87ffaa05c579930029ca2934adfe752617b4356",
+        "bounded-launch.json": "d17cb5bb852358ece1127ef8646af293de32c256fe87bebbef97f25d2fc97b61",
+        "run-output.txt": "841d1d3a8b8b0d503cc21509522404b1c53c569590c80f57e756631b6867706f",
+        "serial.txt": "2b72797a40aa23ecd8575d5d1998658aa607229fde3ef8cfc9cf79d9a8f7ddd9",
+        "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+        "fixture-warp.txt": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+      }
+    },
+    {
+      "seed": 9,
+      "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+      "read_witness_rows": 22,
+      "early_stat_landing_rows": 21,
+      "serial_profile": "GDCONSOLE profile=gdemu cpb32=533 seek=20000 stat=2000 irq=4000 jitter=20000 early=1000/1000 chunk=32 seed=9",
+      "elapsed_host_s": 14.594,
+      "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu9-console-r1",
+      "sha256": {
+        "run-result.json": "59faadb4e3aed461d32f1bb70fbb22ac76deb8694011c908345d496e7808caf7",
+        "bounded-launch.json": "3701ca1231938747cb21956c85ec096b18fd313ff7ef1b1358ba089ec455faff",
+        "run-output.txt": "c7192886927ef0e55b0abc8a80ccad12c3a3d3ea8e6339a9e5c0413af15769dc",
+        "serial.txt": "98c975932bdd1f116a7ee30b004fe558985faa6220102454b35a0047661caae2",
+        "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+        "fixture-warp.txt": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+      }
+    },
+    {
+      "seed": 10,
+      "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+      "read_witness_rows": 22,
+      "early_stat_landing_rows": 21,
+      "serial_profile": "GDCONSOLE profile=gdemu cpb32=533 seek=20000 stat=2000 irq=4000 jitter=20000 early=1000/1000 chunk=32 seed=10",
+      "elapsed_host_s": 14.094,
+      "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu10-console-r1",
+      "sha256": {
+        "run-result.json": "613dacf76bda162003887922550b69595229682db21fd0835dab66972a46d93e",
+        "bounded-launch.json": "1c620992c98d4e2a538814a254fc2205d553a1b8a8bcf0ea52319dac470a9739",
+        "run-output.txt": "9be03e56503411e9165b542991be9ab9aad01d0b603a4c8a903a88b1fef588aa",
+        "serial.txt": "9acd16b827a53807699f3c1770e08c2fabb087bf6defd522d1429fb723f9cd2b",
+        "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+        "fixture-warp.txt": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f"
+      }
+    }
+  ],
+  "limits": "MODELLED console disc/DMA safety; exact env+serial profile+positive read/landing witness+door103/bad-read predicates per seed. Existing seed1 preserved/revalidated; no hardware/performance or private QA acceptance."
+}

@@ -1,0 +1,25 @@
+{
+  "status": "PASS_HOST_ACTUAL_SEED1_BINDING_NEGATIVES",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "frozen_plan_sha256": "840def0f47711be477ad2832d03d4ac7a47f12ffa32914abf55577d42362a3c8",
+  "test_sha256": "b16fb100813d50832bb325419f5cb0333fda2a303e1981dc389d8e1bcd8c91b8",
+  "helper_sha256": "784c5cc313a017def89c346e7f4e496227498a576e797e73bd58bb30ecbe7f1d",
+  "test_groups": 2,
+  "negative_controls": [
+    "absent-seed",
+    "wrong-seed",
+    "wrong-profile",
+    "wrong-source",
+    "actual-absent-env-seed",
+    "actual-wrong-env-seed",
+    "actual-wrong-env-profile",
+    "serial-seed",
+    "profile-only-no-read",
+    "no-landing",
+    "no-endpoint",
+    "bad-read",
+    "deadline"
+  ],
+  "stdout": "",
+  "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.056s\n\nOK\n"
+}
