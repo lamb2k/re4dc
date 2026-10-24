@@ -450,19 +450,20 @@ Entry entries[kTextureCount]; Source sources[kSourceCount]; unsigned nsource;
 #if RE4DC_GC_ASSET_GATE
 #if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
 struct GcaFpProf {
-    static unsigned n; static unsigned long long us,bytes,bind_us;
+    static unsigned n,streamed; static unsigned long long us,bytes,bind_us;
     unsigned long long t0=timer_us_gettime64();
     ~GcaFpProf(){
         us+=timer_us_gettime64()-t0;
-        if(!(++n&7))re4dc_log("GC-ASSET-PROF fp=%u fp_us=%llu fp_bytes=%llu bind_us=%llu catalog_reads=%u catalog_us=%llu\n",
-            n,us,bytes,bind_us,re4dc_gcasset::prof_disc_reads(),re4dc_gcasset::prof_disc_us());
+        if(!(++n&7))re4dc_log("GC-ASSET-PROF fp=%u streamed=%u fp_us=%llu fp_bytes=%llu bind_us=%llu catalog_reads=%u catalog_us=%llu\n",
+            n,streamed,us,bytes,bind_us,re4dc_gcasset::prof_disc_reads(),re4dc_gcasset::prof_disc_us());
     }
 };
-unsigned GcaFpProf::n; unsigned long long GcaFpProf::us,GcaFpProf::bytes,GcaFpProf::bind_us;
+unsigned GcaFpProf::n,GcaFpProf::streamed; unsigned long long GcaFpProf::us,GcaFpProf::bytes,GcaFpProf::bind_us;
 #endif
-bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,unsigned offset,unsigned bytes) {
+bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,unsigned offset,unsigned bytes,
+                                 const re4dc_gcasset::Digest* streamed=nullptr) {
 #if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
-    GcaFpProf prof;
+    GcaFpProf prof;if(streamed)++GcaFpProf::streamed;
 #endif
     entry.asset={};
     if(!re4dc_gcasset::ensure_disc_catalog())return false;
@@ -476,6 +477,12 @@ bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,un
     if(cacheable && slot.token && slot.crc==key.crc && slot.fnv==key.fnv && slot.offset==offset && slot.bytes==bytes &&
        (slot.token>>14)==re4dc_gcasset::catalog_generation()){
         entry.asset.value=slot.token;return true;
+    }
+    if(streamed){
+        char id[24];snprintf(id,sizeof id,"%08x-%08x",key.crc,key.fnv);
+        entry.asset=re4dc_gcasset::bind_checked("texture",id,*streamed);
+        if(entry.asset.value && cacheable)slot={key.crc,key.fnv,offset,bytes,entry.asset.value};
+        return entry.asset.value!=0;
     }
     // Hash through the package's own open handle when it has one (no second
     // open/directory lookup); upload() seeks before each of its reads.
@@ -509,6 +516,50 @@ bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,un
     GcaFpProf::bind_us+=timer_us_gettime64()-bind_t0;
 #endif
     return okay;
+}
+// gc-catalog24b: hash the member from the bytes the streamed package already
+// reads (open: header + descriptors; upload: payload chunks; gap(): padding and
+// tail the upload skips, read here outside read_chunks). One load at a time on
+// the main thread; any out-of-order byte falls back to the full re-read above.
+struct GcaTexHash {
+    const re4dc::texture::Package* package=nullptr;
+    unsigned cursor=0;bool bad=false;
+    re4dc_gcasset::DigestStream stream;
+} gca_tex_hash;
+void gca_tex_bytes(void*,const re4dc::texture::Package* package,std::uint32_t offset,const std::uint8_t* data,std::size_t n){
+    auto& h=gca_tex_hash;
+    if(package!=h.package)return;
+    if(!offset){re4dc_gcasset::digest_begin(h.stream);h.cursor=0;h.bad=false;}   // a (re)open restarts the member
+    if(h.bad)return;
+    if(offset!=h.cursor){h.bad=true;return;}
+    re4dc_gcasset::digest_update(h.stream,data,unsigned(n));h.cursor+=unsigned(n);
+}
+void gca_tex_gap(void*,const re4dc::texture::Package* package,file_t file,std::uint32_t base,std::uint32_t upto){
+    auto& h=gca_tex_hash;
+    if(package!=h.package || h.bad)return;
+    if(upto<h.cursor){h.bad=true;return;}
+    if(upto==h.cursor)return;
+    Re4dcIoScope io;
+    if(file==FILEHND_INVALID || fs_seek(file,off_t(base+h.cursor),SEEK_SET)!=off_t(base+h.cursor) ||
+       !re4dc::storage::read_chunks(file,upto-h.cursor,[](const std::uint8_t* p,std::size_t n,void* ctx){
+           re4dc_gcasset::digest_update(*static_cast<re4dc_gcasset::DigestStream*>(ctx),p,unsigned(n));return true;
+       },&h.stream)){h.bad=true;return;}
+    h.cursor=upto;
+}
+void gca_tex_arm(Entry& entry){
+    gca_tex_hash.package=&entry.package;gca_tex_hash.cursor=0;gca_tex_hash.bad=true;   // valid only after an open reports byte 0
+    re4dc::texture::upload_observer={gca_tex_bytes,gca_tex_gap,nullptr};
+}
+void gca_tex_disarm(){re4dc::texture::upload_observer={};gca_tex_hash.package=nullptr;}
+// After a successful upload: bind from the streamed digest when the whole member
+// [0, bytes) was covered in order; otherwise the full re-read (same digest).
+bool gcasset_texture_finish(Entry& entry,const Key& key,const char* path,unsigned offset,unsigned bytes){
+    auto& h=gca_tex_hash;
+    const bool streamed=h.package==&entry.package && !h.bad && (!bytes || h.cursor==bytes);
+    gca_tex_disarm();
+    if(!streamed)return gcasset_texture_fingerprint(entry,key,path,offset,bytes);
+    const re4dc_gcasset::Digest digest=re4dc_gcasset::digest_finish(h.stream);
+    return gcasset_texture_fingerprint(entry,key,path,offset,bytes,&digest);
 }
 void gcasset_texture_emitted(Entry* entry,re4dc_gcasset::Consumer consumer=re4dc_gcasset::Texture) {
     if(!entry || !entry->valid)return;
@@ -3745,20 +3796,14 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #else
 #define RE4DC_OPEN_PACKAGE() RE4DC_OPEN_PACKAGE_RAW()
 #endif
-    bool ok=RE4DC_OPEN_PACKAGE();
 #if RE4DC_GC_ASSET_GATE
     // Hash only the accepted member at immutable load. This is preparation,
     // not an emission; cached/culled/preloaded Entries produce no GC-ASSET row.
-    if(ok) {
-#if RE4DC_TEX_PACK
-        const bool fingerprint_ok=gcasset_texture_fingerprint(*slot,key,in_pack?texpack::kPath:path,
-            in_pack?pack_offset:0,in_pack?pack_size:0);
-#else
-        const bool fingerprint_ok=gcasset_texture_fingerprint(*slot,key,path,0,0);
+    // gc-catalog24b: the digest is taken from the bytes open/upload read
+    // (gcasset_texture_finish after a successful upload).
+    slot->asset={};gca_tex_arm(*slot);
 #endif
-        if(!fingerprint_ok)re4dc_log("GC-ASSET-ERROR v=2 why=texture-fingerprint key=%08x-%08x\n",key.crc,key.fnv);
-    }
-#endif
+    bool ok=RE4DC_OPEN_PACKAGE();
     if(!ok) {RE4DC_PROFILE_COUNT(TextureOpenFailures,1);re4dc_log("native UI: package rejected: %s\n",slot->package.error());}
 #if RE4DC_UI_FRAG_RESERVE
     if(frag_held && key==frag_key){
@@ -3987,6 +4032,17 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     re4dc_log("native UI: bounded upload heap=%d->%d metadata=%u staging=shared-16384 source_allocation=0\n",heap_before,re4dc_ui_heap_free(),slot->package.metadata_bytes());
 #endif
     if(ok)++loads;
+#if RE4DC_GC_ASSET_GATE
+    if(ok){
+#if RE4DC_TEX_PACK
+        const bool fingerprint_ok=gcasset_texture_finish(*slot,key,in_pack?texpack::kPath:path,
+            in_pack?pack_offset:0,in_pack?pack_size:0);
+#else
+        const bool fingerprint_ok=gcasset_texture_finish(*slot,key,path,0,0);
+#endif
+        if(!fingerprint_ok)re4dc_log("GC-ASSET-ERROR v=2 why=texture-fingerprint key=%08x-%08x\n",key.crc,key.fnv);
+    } else gca_tex_disarm();
+#endif
     if(!ok) {RE4DC_TEXCHK_FAIL(key,texchk_why);return nullptr;}
     slot->valid=true;slot->key=key;
 #if RE4DC_TEX_RESIDENT

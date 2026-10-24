@@ -247,4 +247,18 @@ PackWindowStats pack_window_stats();
 #endif
 #endif
 
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+// GC-ASSET gate (gc-catalog24b): sees the member bytes a streamed package
+// already reads, in member order, so the gate can hash the member without a
+// second read. bytes(): header / descriptors at open, payload chunks at upload.
+// gap(): before each payload read and at the end of upload(), outside any
+// read_chunks call; the gate may read [its cursor, upto) through file.
+struct UploadObserver {
+    void (*bytes)(void* context, const Package* package, std::uint32_t offset, const std::uint8_t* data, std::size_t n);
+    void (*gap)(void* context, const Package* package, file_t file, std::uint32_t base, std::uint32_t upto);
+    void* context;
+};
+extern UploadObserver upload_observer;
+#endif
+
 } // namespace re4dc::texture
