@@ -57,10 +57,22 @@ def verify(admission_path,parser_source,programme_dir):
  log=(root/'capture-r2/run-output.txt').read_text();rr=json.loads((root/'capture-r2/run-result.json').read_text());bound=json.loads((root/'capture-r2/bounded-launch.json').read_text())
  if 'quality: init mode=standard source=default features=00000001 lod_px=5' not in log:raise ValueError('quality evidence')
  if rr['emu']!='console' or rr['stop']!='warp: frozen at tick 800' or bound['pid']!=a['actual_guest_pid'] or bound['deadline_seconds']!=55 or bound['deadline_fired'] or bound['guest_observed_elapsed_s']>55:raise ValueError('capture profile/bounds')
+ # Reconcile separately pinned artifacts; a pin alone does not prove derivation.
+ extracted=''.join(line for line in log.splitlines(keepends=True) if line.startswith('PS2CAM2 '))
+ if extracted!=raw:raise ValueError('raw camera is not exact capture-log extraction')
+ binding=json.loads((root/'BASE-BINDING.json').read_text())
+ if binding['programme_pins_sha256']!=sha((root/'PROGRAMME-PINS.json').read_bytes()):raise ValueError('base programme binding')
+ for key,name in (('base_metadata_sha256','base/base.json'),('base_manifest_sha256','base/base-manifest.json')):
+  if binding[key]!=sha((root/name).read_bytes()):raise ValueError('base metadata binding')
+ if binding['actual_track_sha256']!=rr['tracks']['track03_sha256']:raise ValueError('capture track binding')
+ fixture=(root/'forest-camera-fixture.txt').read_bytes();captured=(root/'capture-r2/fixture-warp.txt').read_bytes();normal=fixture.replace(b'\r\n',b'\n')
+ if fixture!=captured or sha(fixture)!=binding['fixture_sha256'] or len(normal)!=rr['fixtures']['warp']['bytes'] or sha(normal)!=rr['fixtures']['warp']['sha256']:raise ValueError('fixture transport binding')
+ for line in ('name bf-r100-forest','room 0x100','pos -99685 -484 -1343','ang 2.246','pvs 2','freeze 800'):
+  if line not in normal.decode().splitlines():raise ValueError('forest fixture '+line)
  cfg=(root/'capture-r2/emu.cfg').read_text()
  cp=configparser.ConfigParser();cp.read_string(cfg)
  if cp.get('config','aica.LimitFPS',fallback='')!='yes':raise ValueError('explicit FPS setting')
- return dict(status='PASS_PINNED_COMPLETE_FOREST_CAMERA_FOR_OFFLINE_MODEL',admission=dict(path=str(admission_path),bytes=len(b),sha256=sha(b)),parser_sha256=a['source_parser_sha256'],camera_source=EXPECTED_SOURCE,runtime_recipe_base='fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2',programme_pins_checked=len(programme['files']),root_pins_checked=len(a['pins']),effective_lod_divisor=20,actual_data_negative_controls=controls,**result,scope='All full camera float fields preserved from pinned source v2 rows; no full sampled runtime state, performance, target requalification or look equality claim.')
+ return dict(status='PASS_PINNED_COMPLETE_FOREST_CAMERA_FOR_OFFLINE_MODEL',admission=dict(path=str(admission_path),bytes=len(b),sha256=sha(b)),parser_sha256=a['source_parser_sha256'],camera_source=EXPECTED_SOURCE,runtime_recipe_base='fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2',programme_pins_checked=len(programme['files']),root_pins_checked=len(a['pins']),raw_equals_capture_log_extraction=True,fixture_original_and_lf_transport_both_bound=True,programme_base_metadata_manifest_and_capture_track_metadata_bound=True,media_limit='No fresh 1GB backing-track rehash; pinned root admission and matching captured track metadata are the authority.',effective_lod_divisor=20,actual_data_negative_controls=controls,**result,scope='All full camera float fields preserved from pinned source v2 rows; no full sampled runtime state, performance, target requalification or look equality claim.')
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--admission',type=Path,required=True);ap.add_argument('--parser-source',type=Path,required=True);ap.add_argument('--programme-dir',type=Path,required=True);ap.add_argument('--output',type=Path,required=True);a=ap.parse_args()
  if a.output.exists():raise FileExistsError(a.output)
