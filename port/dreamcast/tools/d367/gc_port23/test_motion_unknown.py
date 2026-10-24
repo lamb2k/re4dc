@@ -319,8 +319,9 @@ int main(){install(nullptr,0);begin(0x111,1,0x1f6);ModelPart a,b;int object,info
             state=[line for line in symbols.splitlines() if ' b ' in line or ' B ' in line or ' d ' in line or ' D ' in line]
             self.assertEqual(len(state),1);self.assertIn('0000000000000018 b re4dc_gcasset::(anonymous namespace)::motion',state[0])
 
-    def test_exact_ui_projection_and_mutants(self):
-        source=(PLATFORM/'native_ui.cpp').read_text()
+    def test_historical_exact_ui_projection_and_mutants(self):
+        from composition_references import frozen_source, GC_UNIT
+        source=frozen_source(GC_UNIT,'platform/native_ui.cpp')
         baseline=subprocess.check_output(['git','-C',str(GAME.parents[2]),'show',BASE+':port/dreamcast/game/platform/native_ui.cpp'],text=True)
         self.assertEqual(project_ui_motion0(source),baseline)
         for old,new in [

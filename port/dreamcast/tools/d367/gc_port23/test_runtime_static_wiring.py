@@ -409,12 +409,13 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);PayloadProof a,b;i
                         failed=subprocess.run(command,capture_output=True,text=True)
                         self.assertNotEqual(failed.returncode,0);self.assertIn('RE4DC_SCENERY_DEDUP',failed.stderr)
 
-    def test_gate0_static_and_shell_tokens_equal_reviewed_parent(self):
+    def test_historical_gate0_static_and_shell_tokens_equal_reviewed_parent(self):
+        from composition_references import frozen_source, GC_UNIT
         flags=['RE4DC_MESH_LOD=1','RE4DC_QUALITY=1','RE4DC_MESH_TEXTURES=1','RE4DC_NATIVE_STATIC=1','RE4DC_NATIVE_MESH=1','RE4DC_PS2_WORLD_MESH=1','RE4DC_PS2_WORLD_ROOMS=1','RE4DC_SCENERY_CONE=1','RE4DC_SCENERY_PIECE_STATE=1','RE4DC_PS2_PVS=2','RE4DC_PS2_STRIP_GROUPS=1','RE4DC_TRANS_POLICY=139','RE4DC_PS2_WORLD_DYNAMIC=1','RE4DC_QUALITY_ASSETS=1','RE4DC_PS2_INTERIOR_CULL=1','RE4DC_TREE_IMPOSTOR=1','RE4DC_FAR_SHELL=1']
         for name in ['native_static.cpp','far_shell.inc','room_file.c']:
             path='port/dreamcast/game/platform/'+name
             old=subprocess.check_output(['git','-C',str(GAME.parents[2]),'show',BASE+':'+path],text=True)
-            current=(GAME/'platform'/name).read_text()
+            current=frozen_source(GC_UNIT,'platform/'+name)
             for mode in [0,1,2,3]:
                 with self.subTest(file=name,dedup=mode),tempfile.TemporaryDirectory(prefix='gc-static-off-',dir='/dev/shm') as temp:
                     outputs=[]

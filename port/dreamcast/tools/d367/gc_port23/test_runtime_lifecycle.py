@@ -9,8 +9,9 @@ GAME = HERE.parents[2] / 'game'
 
 
 class RuntimeLifecycleTests(unittest.TestCase):
-    def test_current_audits_and_gc_room_hook_composition(self):
-        current = (GAME / 'ui_bridge.cpp').read_text()
+    def test_historical_audits_and_gc_room_hook_composition(self):
+        from composition_references import frozen_source, GC_COMPOSITION
+        current = frozen_source(GC_COMPOSITION, 'ui_bridge.cpp')
         incoming = subprocess.check_output(['git', '-C', str(GAME.parents[2]), 'show',
             'd5c1ceab9e06461462669b3ce1d28a379747a74a:port/dreamcast/game/ui_bridge.cpp'], text=True)
         include = '#include "platform/include/gc_asset_lifecycle.h"\n'

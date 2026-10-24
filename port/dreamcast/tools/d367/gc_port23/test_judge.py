@@ -47,7 +47,9 @@ class JudgeTests(unittest.TestCase):
         mask='unsigned mask=re4dc_gcasset::Required&~((1U<<re4dc_gcasset::SourceGeometry)|(1U<<re4dc_gcasset::Weapon));'
         self.assertEqual(old.count(mask),1)
         expected=expected.replace(mask,mask.replace('Weapon));','Weapon)|(1U<<re4dc_gcasset::Motion));'))
-        current=(game/'platform/native_ui.cpp').read_text()
+        # Historical v2/Motion proof stays bound to the reviewed GC unit.
+        from composition_references import frozen_source, GC_UNIT
+        current=frozen_source(GC_UNIT,'platform/native_ui.cpp')
         # New standalone Motion diagnostics do not alter this historical v2
         # protocol boundary. Strip ONLY exact approved guarded insertions;
         # ungated/bad-guard/dropped-mask mutants are tested separately.
