@@ -130,7 +130,7 @@ def prove(triangle, eye_box, target_box, vertex_error=0, eye_error=0,
 
 
 def nominal_filter(triangle, eye_box, target_box):
-    """Float necessary filter only. False may discard useful work; never admits.
+    """Heuristic float candidate filter. False may discard useful work; never admits.
 
     Retained pairs MUST pass prove() with exact serialized operands. This
     acceleration cannot turn float error into an accepted geometry proof.

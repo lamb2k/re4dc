@@ -82,6 +82,18 @@ class ExactShadowTests(unittest.TestCase):
         self.assertTrue(prove(self.tri,self.eye,self.target)['proven'])
         self.assertFalse(prove(self.tri,self.eye,self.target,vertex_error=32)['proven'])
 
+    def test_float_prefilter_is_not_an_exact_negative_certificate(self):
+        # Exact dyadic origin+grid step: cancellation at host float precision
+        # collapses two different points. This intentionally demonstrates the
+        # permitted false-negative boundary, not a renderer-eligible surface.
+        origin=Q(1024);step=Q(1,2**50)
+        tri=((origin,0,0),(origin+step,0,0),(origin,1,0))
+        eye=((origin+step/4,Q(1,4),10),)*2
+        target=((origin+step/4,Q(1,4),-10),)*2
+        self.assertTrue(prove(tri,eye,target)['proven'])
+        flt=lambda v:tuple(float(x) for x in v)
+        self.assertFalse(nominal_filter(tuple(map(flt,tri)),tuple(map(flt,eye)),tuple(map(flt,target))))
+
     def test_no_negative_perturbation_or_invalid_box(self):
         for kwargs in (dict(vertex_error=-1),dict(eye_error=-1),dict(target_error=-1),dict(eye_clearance=-1)):
             with self.assertRaises(ValueError):prove(self.tri,self.eye,self.target,**kwargs)
