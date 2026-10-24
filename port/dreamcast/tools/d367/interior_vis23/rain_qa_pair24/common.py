@@ -47,10 +47,16 @@ def release_active():
   except (OSError,PermissionError):continue
   if len(a)>1 and Path(os.fsdecode(a[0])).name in ['bash','python','python3'] and re.search(r'/rr-(cycle|qa|jobs)\.(sh|py)$',os.fsdecode(a[1])):return True
  return False
+def ram_observation(tmpfs_available,meminfo):
+ require(type(tmpfs_available) is int and tmpfs_available>=0,'Invalid tmpfs availability')
+ rows=[line.split() for line in meminfo.splitlines() if line.split() and line.split()[0]=='MemAvailable:']
+ require(len(rows)==1 and len(rows[0])==3 and rows[0][1].isdigit() and rows[0][2]=='kB','Missing/malformed MemAvailable')
+ available=int(rows[0][1])*1024
+ return dict(RAM_free=min(tmpfs_available,available),tmpfs_available_bytes=tmpfs_available,MemAvailable_bytes=available)
 def resources(root):
  # Lower Windows/WSL figure is authoritative; failed observation is a refusal.
  windows=int(subprocess.check_output([WINPY,'-c',"import shutil;print(shutil.disk_usage('C:\\\\').free)"],text=True,timeout=3).strip());s=os.statvfs('/mnt/c');wsl=s.f_bavail*s.f_frsize;s=os.statvfs('/dev/shm')
- return dict(C_free=min(windows,wsl),windows_C_free=windows,wsl_C_free=wsl,RAM_free=s.f_bavail*s.f_frsize,owned_bytes=used(root)+used(HERE)+(used(HOST_ROOT) if HOST_ROOT.exists() else 0),release_active=release_active())
+ return dict(C_free=min(windows,wsl),windows_C_free=windows,wsl_C_free=wsl,**ram_observation(s.f_bavail*s.f_frsize,Path('/proc/meminfo').read_text()),owned_bytes=used(root)+used(HERE)+(used(HOST_ROOT) if HOST_ROOT.exists() else 0),release_active=release_active())
 def boundaries(r,b,elapsed=0,admission=False):
  require(not r.get('release_active',False),'Release priority hold');require(r['C_free']>=b['C_admission_bytes' if admission else 'C_floor_bytes'],'C capacity');require(r['RAM_free']>=b['RAM_admission_bytes' if admission else 'RAM_floor_bytes'],'RAM capacity');require(r['owned_bytes']<=b['owned_bytes_cap'],'Total owned cap');require(elapsed<=b['per_arm_seconds'],'Arm deadline')
 def terminate(child):

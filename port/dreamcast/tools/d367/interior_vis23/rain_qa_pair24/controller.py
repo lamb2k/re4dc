@@ -1,7 +1,25 @@
 """One grant-gated serial QA pair; owns one canonical lease and one SDK slot."""
+import sys
+if __name__=='__main__' and not (sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode):
+ raise SystemExit('Controller requires isolated -I -S -B startup')
 from pathlib import Path
-import argparse,fcntl,json,os,signal,time
-import common as c
+import argparse,fcntl,json,os,signal,time,importlib.util
+# Keep isolated sys.path unchanged. Load only the exact local helper file.
+_common_path=Path(__file__).resolve().with_name('common.py')
+if 'common' in sys.modules:
+ c=sys.modules['common']
+ if Path(c.__file__).resolve()!=_common_path:raise ImportError('Foreign cached common module')
+else:
+ _spec=importlib.util.spec_from_file_location('common',_common_path)
+ c=importlib.util.module_from_spec(_spec);sys.modules['common']=c;_spec.loader.exec_module(c)
+POST_BOOTSTRAP="""import importlib.util,pathlib,runpy,sys
+script=pathlib.Path(sys.argv.pop(1)).resolve()
+spec=importlib.util.spec_from_file_location('common',script.with_name('common.py'))
+module=importlib.util.module_from_spec(spec);sys.modules['common']=module;spec.loader.exec_module(module)
+runpy.run_path(str(script),run_name='__main__')
+"""
+def postbuild_command(arm,output):
+ return ['/usr/bin/python3','-I','-S','-B','-c',POST_BOOTSTRAP,str(c.HERE/'postbuild.py'),'--arm',arm,'--output',str(output)]
 TOOLS=Path('/opt/toolchains/dc/sh-elf/bin')
 def check_grant(g,contract,digest,seal_sha):
  c.require(g.get('approved') is True and isinstance(g.get('grant_id'),str) and g['grant_id'] not in ['', 'ROOT_MUST_ASSIGN_UNIQUE_ID'] and g.get('authorization')=='SDK_QA_RAIN_OFF_ON' and g.get('source')==c.SOURCE and g.get('root')==str(c.ROOT) and g.get('contract_sha256')==digest and g.get('kit_seal_sha256')==seal_sha and g.get('budget')==contract['budget'],'Wrong root QA grant')
@@ -51,7 +69,7 @@ def main():
      r=c.resources(p);event(dict(arm=arm,monotonic=time.monotonic(),resources=r));return r
     c.run_owned(command,a/'source',env,a/'build.log',c.ROOT,budget,started,sample)
     elf=out/'re4dc-game.elf';raw=a/'program.bin'
-    commands=[([str(TOOLS/'sh-elf-objcopy'),'-R','.stack','-O','binary',str(elf),str(raw)],ad/'objcopy.log'),([str(TOOLS/'sh-elf-nm'),'-S',str(elf)],a/'symbols.txt'),([str(TOOLS/'sh-elf-size'),str(elf)],a/'size.txt'),([str(TOOLS/'sh-elf-size'),'-A',str(elf)],a/'sections.txt'),(['/usr/bin/python3','-B',str(c.HERE/'postbuild.py'),'--arm',arm,'--output',str(ad/'postbuild.json')],ad/'postbuild.log')]
+    commands=[([str(TOOLS/'sh-elf-objcopy'),'-R','.stack','-O','binary',str(elf),str(raw)],ad/'objcopy.log'),([str(TOOLS/'sh-elf-nm'),'-S',str(elf)],a/'symbols.txt'),([str(TOOLS/'sh-elf-size'),str(elf)],a/'size.txt'),([str(TOOLS/'sh-elf-size'),'-A',str(elf)],a/'sections.txt'),(postbuild_command(arm,ad/'postbuild.json'),ad/'postbuild.log')]
     for argv,log in commands:event(dict(arm=arm,analysis_argv=argv));c.run_owned(argv,c.HERE,env,log,c.ROOT,budget,started,sample)
     post=json.loads((ad/'postbuild.json').read_text());c.require(post['complete'] is True,'Incomplete postbuild');c.check_inputs(plan);c.boundaries(sample(c.ROOT),budget,time.monotonic()-started)
     report['arms'][arm].update(complete=True,seconds=time.monotonic()-started,postbuild_sha256=c.sha(ad/'postbuild.json'),files=post['files'],addresses=post['ELF']['addresses'],sizes=post['ELF']['sizes']);event(dict(arm=arm,status='COMPLETE'))
