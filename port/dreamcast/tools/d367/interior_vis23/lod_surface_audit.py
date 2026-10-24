@@ -33,6 +33,9 @@ def selectable(counts):
   while lv and not counts[lv]:lv-=1
   selected.add(lv)
  return sorted(selected)
+def conditional_fields(idv):
+ seen=collections.Counter(idv)
+ return {i for i,value in enumerate(idv) if value<250 and seen[value]==1}
 def invariant(level_facets,counts):
  levels=selectable(counts)
  if len(level_facets)!=len(counts):raise ValueError('Level cardinality mismatch')
@@ -82,6 +85,7 @@ def bind_source(repo,profile):
    for begin,end in [('const float px_x=RE4DC_SCREEN_HALF_WF*std::fabs(P[1])','    const auto& pk=ps2w.package;'),('    int draw_clusters(){','            ++stats.lod_draws')]:
     if block(original.decode(),begin,end)!=block(current.decode(),begin,end):raise ValueError('Core selector changed')
   elif current!=original:raise ValueError('Renderer policy differs from integration: '+rel)
+  if rel.endswith('native_static.cpp') and (b'constexpr unsigned kIds=250,kMoved=16,kNone=0xFF;' not in original or b'if(count[id]==1)dyn::slot_of[id]' not in original):raise ValueError('Unique-ID source contract changed')
   rows[rel]=dict(integration_sha256=hashlib.sha256(original).hexdigest(),owned_tree_sha256=hashlib.sha256(current).hexdigest())
  actual={}
  for line in profile.read_text().splitlines():
@@ -102,12 +106,20 @@ def main():
   p=pkg/name;actual=Path(staged['replace']['dc/native/r10d/'+name]);pin=receipt['inputs'][name]
   if sha(p)!=pin['sha256'] or p.stat().st_size!=pin['bytes'] or sha(actual)!=sha(p):raise ValueError('Current staged input mismatch '+name)
   files[name]=dict(prepared=identity(p),current_source=identity(actual))
+ for name in ['original.r4pw','base-report.json']:
+  pin=receipt['inputs'][name];q=pkg/name
+  if sha(q)!=pin['sha256'] or q.stat().st_size!=pin['bytes']:raise ValueError('Historical ownership provenance input mismatch '+name)
+  files[name]=dict(prepared=identity(q))
  if any('/r10d/' in k for k in staged['remove']):raise ValueError('Current staging removes room input')
  if 'dc/native/r10d/ps2-world.r4sg' in staged['replace'] or (pkg/'ps2-world.r4sg').exists():raise ValueError('SG source not qualified for this room audit')
  reader=Path(__file__).with_name('surface_mesh.py');spec=importlib.util.spec_from_file_location('surface_mesh',reader);mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod);p=mod.Pkg(pkg/'ps2-world.re4mesh',pkg/'ps2-world.r4pw')
  if p.magic!=b'R4IM' or p.version!=3:raise ValueError('Unsupported mesh format')
  ids=(pkg/'ps2-world.ids').read_bytes();magic,version,n,crc=struct.unpack_from('<4sIII',ids)
  if magic!=b'R4ID' or version!=1 or n!=len(p.placements) or len(ids)<16+n:raise ValueError('Invalid IDs')
+ original=mod.Pkg(pkg/'ps2-world.re4mesh',pkg/'original.r4pw');base_report=json.loads((pkg/'base-report.json').read_text())
+ if crc!=original.sidecar_crc or p.placements!=original.placements:raise ValueError('IDs/original/current physical placement provenance mismatch')
+ if base_report['re4mesh_sha256']!=sha(pkg/'ps2-world.re4mesh') or base_report['r4pw_sha256']!=sha(pkg/'original.r4pw') or base_report['placements']!=n or base_report['groups']!=n:raise ValueError('Original base conversion report mismatch')
+ fields=conditional_fields(ids[16:16+n])
  shape_cache={};placements=[];instance=0;instance_keys=[]
  for pi,pl in enumerate(p.placements):
   mesh=p.meshes[pl['mesh']];facets=[];parts=[];clusters=[]
@@ -134,7 +146,7 @@ def main():
     r=dict(instance=instance,part=part,cluster=ci,level_meshlet_counts=counts,selectable_levels=selected,oriented_facets_per_level=[len(x) for x in levels],nondegenerate_triangles_per_level=raw_count,invariant_facets=len(keep),invariant_oriented_grid_sha256=hashlib.sha256(json.dumps(sorted(keep),separators=(',',':')).encode()).hexdigest(),geometry_prerequisite=eligible,invariant_subset_verified=all(keep<=levels[lv] for lv in selected))
     clusters.append(r);instance_keys.append((pi,part,ci));instance+=1
   owner=ids[16+pl['placement']];comps=topology(facets)
-  placements.append(dict(placement=pi,field=pl['placement'],owner=owner,conditional_source=owner!=255,mesh=pl['mesh'],singular_affine=singular,affine_bytes_sha256=hashlib.sha256(struct.pack('<12f',*[x for row in pl['affine'] for x in row])).hexdigest(),parts=parts,clusters=clusters,components=comps,oriented_invariant_facets=len(facets),closed_graphs=sum(x['closed_oriented_graph_prerequisite'] for x in comps),unresolved_boundaries=sum(len(x['boundary_edges']) for x in comps),enclosure_proven=False,fail_open=True))
+  placements.append(dict(placement=pi,field=pl['placement'],owner=owner,conditional_source=pl['placement'] in fields,mesh=pl['mesh'],singular_affine=singular,affine_bytes_sha256=hashlib.sha256(struct.pack('<12f',*[x for row in pl['affine'] for x in row])).hexdigest(),parts=parts,clusters=clusters,components=comps,oriented_invariant_facets=len(facets),closed_graphs=sum(x['closed_oriented_graph_prerequisite'] for x in comps),unresolved_boundaries=sum(len(x['boundary_edges']) for x in comps),enclosure_proven=False,fail_open=True))
  weighted=[]
  for replay in v.replay:
   rows=json.loads(replay.read_text());frames=[x['frame'] for x in rows]
@@ -146,7 +158,7 @@ def main():
     if r['instance']!=j or tuple(r[k] for k in ['placement','part','cluster'])!=instance_keys[j]:raise ValueError('Replay source namespace mismatch')
     totals[r['placement']]+=r['corners']
   weighted.append(dict(input=identity(replay),frames=len(rows),label='Earlier camera-build baked-pose host selector weights only; not current target counters or hull visibility',mean_selected_corners=sum(totals.values())/len(rows),mean_selected_corners_in_placements_with_any_closed_graph=sum(totals[i] for i,r in enumerate(placements) if r['closed_graphs'])/len(rows)))
- out=dict(schema=1,kind='Exact all-selectable-LOD invariant source-surface lemma and fail-open topology prerequisite; no hull/cull admission',tool=identity(Path(__file__)),source=source,staging_plan=identity(v.staging_plan),prepared_receipt=identity(root/'prepare-receipt.json'),reader=identity(reader),inputs=files,mesh_crc=f'{p.mesh_crc:08x}',policy_crc=f'{p.sidecar_crc:08x}',placements=placements,historical_camera_weights=weighted,total_clusters=instance,all_lod_subset_verified=all(c['invariant_subset_verified'] for r in placements for c in r['clusters']),actual_runtime_cuts=0,enclosures_proven=0,runtime_admitted=False,fail_open=True,limitations=['No seam welding, planar fills or sampled-ray enclosure.', 'Closed-graph camera weights include entire placements containing any such component; they are not component workload or hidden work.', 'Every cluster independently selects a source LOD; witnesses intersect that cluster selectable levels, including authored empty base.', 'Faces lost from this conservative subset are unresolved coverage, not proved physical holes.', 'Closed oriented edge graph is not non-self-intersection, interior-volume, source-state, numeric or material proof.', 'No unconditional current emitted opaque/depth/prefix/affine receipt is provided; all geometry remains drawn.', 'No all-LOD target interior membership, portal proof, timing, new data option or runtime implementation is claimed.'])
+ out=dict(schema=1,kind='Exact all-selectable-LOD invariant source-surface lemma and fail-open topology prerequisite; no hull/cull admission',tool=identity(Path(__file__)),source=source,staging_plan=identity(v.staging_plan),prepared_receipt=identity(root/'prepare-receipt.json'),reader=identity(reader),inputs=files,mesh_crc=f'{p.mesh_crc:08x}',policy_crc=f'{p.sidecar_crc:08x}',ownership_rule='Current dyn contract: raw ID below250 occurs exactly once; IDs are bound to original policy CRC and exact current placement affines.254/255 are not dynamic IDs.',conditional_placements=sum(r['conditional_source'] for r in placements),placements=placements,historical_camera_weights=weighted,total_clusters=instance,all_lod_subset_verified=all(c['invariant_subset_verified'] for r in placements for c in r['clusters']),actual_runtime_cuts=0,enclosures_proven=0,runtime_admitted=False,fail_open=True,limitations=['No seam welding, planar fills or sampled-ray enclosure.', 'Closed-graph camera weights include entire placements containing any such component; they are not component workload or hidden work.', 'Every cluster independently selects a source LOD; witnesses intersect that cluster selectable levels, including authored empty base.', 'Faces lost from this conservative subset are unresolved coverage, not proved physical holes.', 'Closed oriented edge graph is not non-self-intersection, interior-volume, source-state, numeric or material proof.', 'No unconditional current emitted opaque/depth/prefix/affine receipt is provided; all geometry remains drawn.', 'No all-LOD target interior membership, portal proof, timing, new data option or runtime implementation is claimed.'])
  v.out.parent.mkdir(parents=True,exist_ok=True)
  with v.out.open('x') as f:json.dump(out,f,indent=1);f.write('\n')
  print(json.dumps(dict(source=source['owned_head'],placements=len(placements),clusters=instance,invariant_facets=sum(r['oriented_invariant_facets'] for r in placements),closed_graphs=sum(r['closed_graphs'] for r in placements),unresolved_boundaries=sum(r['unresolved_boundaries'] for r in placements),enclosures_proven=0,runtime_cuts=0,historical_camera_weights=weighted)))
