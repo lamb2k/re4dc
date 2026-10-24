@@ -477,7 +477,11 @@ bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,un
        (slot.token>>14)==re4dc_gcasset::catalog_generation()){
         entry.asset.value=slot.token;return true;
     }
-    file_t file;{Re4dcIoScope io;file=fs_open(path,O_RDONLY);}
+    // Hash through the package's own open handle when it has one (no second
+    // open/directory lookup); upload() seeks before each of its reads.
+    const file_t own=entry.package.stream_file();
+    file_t file=own;
+    if(file==FILEHND_INVALID){Re4dcIoScope io;file=fs_open(path,O_RDONLY);}
     if(file==FILEHND_INVALID)return false;
     bool okay=true;
     {Re4dcIoScope io;
@@ -506,7 +510,7 @@ bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,un
     };
     re4dc_gcasset::Digest digest{};
     if(okay)okay=re4dc_gcasset::fingerprint_read(digest,reader,&buffered,bytes);
-    {Re4dcIoScope io;fs_close(file);}
+    if(own==FILEHND_INVALID){Re4dcIoScope io;fs_close(file);}
 #if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
     GcaFpProf::bytes+=bytes;const unsigned long long bind_t0=timer_us_gettime64();
 #endif

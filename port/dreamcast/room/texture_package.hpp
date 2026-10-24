@@ -133,6 +133,10 @@ public:
     // caller closes it and loads it again.
     bool upload();
     bool upload_complete() const { return upload_complete_; }
+    // The streamed package's own open handle (FILEHND_INVALID when none). The
+    // GC-ASSET gate hashes the member through it instead of opening the file
+    // again; upload() seeks before every read, so the position is not shared state.
+    file_t stream_file() const { return file_; }
     // Test hook: stop the next upload after this many real allocations, zero
     // for never. Bounded and per-package, so the partial-upload path is
     // exercised rather than assumed. close() clears it.
