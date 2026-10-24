@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import re
 import subprocess
+from cache_diag import instrument, validate_timer, TIMER_INPUTS
 
 KOS_SHA = "804b3195ebd1a06a27cc2b3a5eacf7a2429040a3"
 INPUTS = {
@@ -58,11 +59,13 @@ def validate(kos):
     return head, calls
 
 
-def prepare(kos, output, patch):
+def prepare(kos, output, patch, diagnostics=False):
     kos, output, patch = kos.resolve(), output.resolve(), patch.resolve()
     if output == kos or kos in output.parents:
         raise ValueError("KOS_CACHE_P2: output must be outside KOS_BASE")
     head, calls = validate(kos)
+    if diagnostics:
+        validate_timer(kos)
     tree = output / "tree"
     # Copy only patch inputs. Existing files in the isolated output may be
     # refreshed by Make; unrelated files and the installed SDK are untouched.
@@ -77,6 +80,8 @@ def prepare(kos, output, patch):
     command = ["patch", "--batch", "--forward", "--fuzz=0", "-p1", "-d", str(tree)]
     result = subprocess.run(command, input=patch.read_bytes(), stdout=subprocess.PIPE,
                             stderr=subprocess.STDOUT, check=True)
+    if diagnostics:
+        helper.write_text(instrument(helper.read_text(), True))
     # The pinned environment uses -isystem; our -I overlay wins regardless of
     # command order. Fail clearly if a different environment overrides that.
     (output / "require_p2.h").write_text('''#include <kos/cache.h>
@@ -87,6 +92,8 @@ def prepare(kos, output, patch):
     receipt = dict(status="PASS", kos_commit=head, kos_root=str(kos), source_sha256=INPUTS,
                    inline_callers=calls, patch_sha256=sha(patch), patch_log=result.stdout.decode(),
                    output_sha256={str(p.relative_to(tree)): sha(p) for p in tree.rglob("*") if p.is_file()})
+    if diagnostics:
+        receipt["diagnostics"] = dict(timer_source_sha256=TIMER_INPUTS, helper_scope="masked subinterval, observer tail excluded")
     (output / "prepare.json").write_text(json.dumps(receipt, indent=2) + "\n")
     return receipt
 
@@ -96,9 +103,10 @@ def main():
     parser.add_argument("--kos-root", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--patch", type=Path, required=True)
+    parser.add_argument("--diagnostics", action="store_true")
     args = parser.parse_args()
     try:
-        result = prepare(args.kos_root, args.output, args.patch)
+        result = prepare(args.kos_root, args.output, args.patch, args.diagnostics)
     except (ValueError, subprocess.CalledProcessError) as error:
         parser.exit(1, str(error) + "\n")
     print(json.dumps(dict(status=result["status"], inline_callers=result["inline_callers"])))
