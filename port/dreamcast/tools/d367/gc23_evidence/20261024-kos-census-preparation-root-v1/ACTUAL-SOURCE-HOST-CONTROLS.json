@@ -1,0 +1,9 @@
+{
+  "exact_source_sha256": "beb692fa9725b788cfce647897ae6dad632421dc0916b2a6d08315e1702427eb",
+  "host_compiler_sha256": "1353e9bdd29a7295c7226bf6c63abccce056d8cac31f112e5cdbecc3f28c2769",
+  "host_only": true,
+  "SDK": false,
+  "scope": "Unmodified census body with three mock include headers and fake allocators; no game/target execution.",
+  "stdout": "ACTUAL_MODE1_ACCOUNTING_CONTROLS_PASS: duplicate/new/realloc/free-null/alignment/calloc/table-loss/row-overflow/32bit-limit\n",
+  "mode2_thread_and_peak_symbols_absent": true
+}

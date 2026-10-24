@@ -1,0 +1,86 @@
+{
+  "scope": "Exact generic source/host controls and hash-only source/input manifests; SDK pair allocated/running, final graph/coverage stillUNKNOWN. Programme and asset payload excluded. No stage or guest.",
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "files": {
+    "prepare.py": {
+      "bytes": 11384,
+      "sha256": "f1b9d9af6ab0242ae1a8ee198bdc319955b71cd090a602cb11eebdaee7fb9bfd"
+    },
+    "run.py": {
+      "bytes": 10774,
+      "sha256": "2a1c1aea5506784a669822da663a26f978895581658c02456fc3ceeb10b6d515"
+    },
+    "run.sh": {
+      "bytes": 1781,
+      "sha256": "b100dd8eca23cf15307cd7074dbe22f1ca13d162b73eabd6463568d276999b5a"
+    },
+    "graph.py": {
+      "bytes": 6409,
+      "sha256": "f7c13930d98642f70bcbc95881f6d38bf001cbb7e20c59bcc3f8d81b0f7d6adf"
+    },
+    "readback.py": {
+      "bytes": 1999,
+      "sha256": "5936600742014b4735c8fd06c0b2032ab4f3bd84d924d78f4b0ada6f9fe2e85f"
+    },
+    "test_preparation.py": {
+      "bytes": 16203,
+      "sha256": "50c0ea85ff767998699b36af0e8c57191c6ed58253e6d77a1eb76cbce5a12545"
+    },
+    "seal.py": {
+      "bytes": 2448,
+      "sha256": "94cdf7a2bb5e36123cf5564d4a0820a563ef48f4fff02be9ac06a4ce4c01901b"
+    },
+    "HANDBACK.md": {
+      "bytes": 4166,
+      "sha256": "83d91b3eebc0b177b9452b8058bd48606de89ec468a52213d57a74a5e5be3001"
+    },
+    "ATTRIBUTION.md": {
+      "bytes": 4807,
+      "sha256": "10237d5d3afc595e02b3f8beb41b0c4d3c5860b884ae792619312a37f8fc7011"
+    },
+    "PREPARATION.json": {
+      "bytes": 3491454,
+      "sha256": "3231436459cd8057fd4adb4fdc9eb679b12969170ef4b75c81fea25427503727"
+    },
+    "PREPARATION-RECEIPT.json": {
+      "bytes": 569,
+      "sha256": "2cb70bd97de965032bd59c4fefe9a0b0b56fe202fd754e9891dcf844cbb45272"
+    },
+    "HOST-CONTROLS.json": {
+      "bytes": 674,
+      "sha256": "bfcf6fb9792160fb592a5bdc60f7821dc4eea2254c6dd797045a54672a711322"
+    },
+    "HOST-CONTROLS.log": {
+      "bytes": 2775,
+      "sha256": "aeb776ae7c9b4bbab170ae9d7f3fd3418d401eacc3d65ea2992de5a0191ec743"
+    },
+    "ACTUAL-SOURCE-HOST-CONTROLS.json": {
+      "bytes": 532,
+      "sha256": "c967681641aa17cf73db0de58061646f6385f800f60bafc5fbfe359711516edd"
+    },
+    "TOOLCHAIN-SEAL.json": {
+      "bytes": 2231,
+      "sha256": "c30f2f90564882fa6e179f0895a4e82dbb771722befa79844b853ccb73108209"
+    },
+    "READBACK.json": {
+      "bytes": 979,
+      "sha256": "4ef24b7d8557ae8a5f78a38fccb030626d5099777f6a64354b6e3110433d4c51"
+    },
+    "root-review/HOST-CONTROLS.log": {
+      "bytes": 3079,
+      "sha256": "4ac183900b4d6b29e50f95d9ae9e06ffe32754a852a1afebb9e0cdf258c97c23"
+    },
+    "root-review/ROOT-REVIEW.json": {
+      "bytes": 929,
+      "sha256": "c66ae64c4f24569ccdddb653907fc87621409a677320ba38514904e6bfae7f28"
+    },
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    }
+  },
+  "root_grant_identity_only": {
+    "bytes": 902,
+    "sha256": "978cb0b097c3581835ddc64f8d5a5998a9a0502b99a7c4357fddb1832b9678ab"
+  }
+}

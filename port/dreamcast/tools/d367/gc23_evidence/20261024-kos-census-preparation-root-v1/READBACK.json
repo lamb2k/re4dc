@@ -1,0 +1,24 @@
+{
+  "status": "PURE_PREPARATION_READBACK_PASS_NO_TARGET_RUN",
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "root": "/dev/shm/gc-motion24-kos-census-v1-2g7teq3g",
+  "plan_sha256": "3231436459cd8057fd4adb4fdc9eb679b12969170ef4b75c81fea25427503727",
+  "tool_seal_sha256": "c30f2f90564882fa6e179f0895a4e82dbb771722befa79844b853ccb73108209",
+  "source_files_per_arm": {
+    "off": 7640,
+    "on": 7640
+  },
+  "current_input_pins": 1637,
+  "preserved_original_artifacts": 85,
+  "original_d_files": 2572,
+  "originals_unchanged": true,
+  "owned_bytes_RAM_and_C_kit": 206417144,
+  "owned_roots": [
+    "/dev/shm/gc-motion24-kos-census-v1-2g7teq3g",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-preparation-v1"
+  ],
+  "helper_preexisting_cache_paths_preserved": [],
+  "SDK_Make_envsource_stage_guest": false,
+  "qualification": "Mode1 attribution preparation only. Target routes and live coverage UNKNOWN.",
+  "utc": "2026-10-24T10:08:17.878961+00:00"
+}

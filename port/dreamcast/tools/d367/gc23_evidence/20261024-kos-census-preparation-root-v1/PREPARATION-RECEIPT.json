@@ -1,0 +1,20 @@
+{
+ "status": "SOURCE_EXPORT_AND_EXACT_DEAD_OPTION_PREFLIGHT_PASS_NOT_RUN",
+ "root": "/dev/shm/gc-motion24-kos-census-v1-2g7teq3g",
+ "source_files_per_arm": {
+  "off": 7640,
+  "on": 7640
+ },
+ "source_bytes_per_arm": {
+  "off": 99683666,
+  "on": 99683666
+ },
+ "input_pins": 1637,
+ "actual_existing_d_files": 2572,
+ "current_external_d_dependencies": 16,
+ "six_historical_omissions": 6,
+ "pg5_files": 66,
+ "plan_sha256": "3231436459cd8057fd4adb4fdc9eb679b12969170ef4b75c81fea25427503727",
+ "owned_bytes": 202858786,
+ "SDK_or_Make_or_env_source_or_stage_or_guest": false
+}

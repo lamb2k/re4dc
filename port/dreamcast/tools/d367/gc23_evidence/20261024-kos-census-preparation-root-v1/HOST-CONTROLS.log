@@ -1,0 +1,43 @@
+test_SIGHUP_owned_cleanup (__main__.Host.test_SIGHUP_owned_cleanup) ... ok
+test_SIGTERM_owned_cleanup (__main__.Host.test_SIGTERM_owned_cleanup) ... ok
+test_actual_dead_option (__main__.Host.test_actual_dead_option) ... ok
+test_actual_flock_not_path_or_env (__main__.Host.test_actual_flock_not_path_or_env) ... ok
+test_allocation_refused (__main__.Host.test_allocation_refused) ... ok
+test_analysis_deadline_owned_cleanup (__main__.Host.test_analysis_deadline_owned_cleanup) ... ok
+test_analysis_floor_owned_cleanup (__main__.Host.test_analysis_floor_owned_cleanup) ... ok
+test_cap_C (__main__.Host.test_cap_C) ... ok
+test_cap_RAM (__main__.Host.test_cap_RAM) ... ok
+test_cap_owned (__main__.Host.test_cap_owned) ... ok
+test_deadline (__main__.Host.test_deadline) ... ok
+test_environment_slot_is_insufficient (__main__.Host.test_environment_slot_is_insufficient) ... ok
+test_exact_pair (__main__.Host.test_exact_pair) ... ok
+test_extra_aligned_wrap_rejected (__main__.Host.test_extra_aligned_wrap_rejected) ... ok
+test_extra_object_rejected (__main__.Host.test_extra_object_rejected) ... ok
+test_floor (__main__.Host.test_floor) ... ok
+test_held_squeeze (__main__.Host.test_held_squeeze) ... ok
+test_inherited_compiler_refused (__main__.Host.test_inherited_compiler_refused) ... ok
+test_integrity_byte_flip (__main__.Host.test_integrity_byte_flip) ... ok
+test_jobs (__main__.Host.test_jobs) ... ok
+test_missing_wrap_rejected (__main__.Host.test_missing_wrap_rejected) ... ok
+test_mode1_graph (__main__.Host.test_mode1_graph) ... ok
+test_mode2 (__main__.Host.test_mode2) ... ok
+test_mode2_compile_rejected (__main__.Host.test_mode2_compile_rejected) ... ok
+test_object_reuse (__main__.Host.test_object_reuse) ... ok
+test_overlay_order_rejected (__main__.Host.test_overlay_order_rejected) ... ok
+test_preexisting_cache_isolated (__main__.Host.test_preexisting_cache_isolated) ... ok
+test_real_mode1_source_accounting (__main__.Host.test_real_mode1_source_accounting) ... ok
+test_register_clobber_rejected (__main__.Host.test_register_clobber_rejected) ... ok
+test_release_matcher (__main__.Host.test_release_matcher) ... ok
+test_release_priority_owned_cleanup (__main__.Host.test_release_priority_owned_cleanup) ... ok
+test_slots (__main__.Host.test_slots) ... ok
+test_synthetic_routes (__main__.Host.test_synthetic_routes) ... ok
+test_token_order (__main__.Host.test_token_order) ... ok
+test_unwrapped_malloc_route_rejected (__main__.Host.test_unwrapped_malloc_route_rejected) ... ok
+test_wrong_machine_rejected (__main__.Host.test_wrong_machine_rejected) ... ok
+test_wrong_root (__main__.Host.test_wrong_root) ... ok
+test_wrong_source (__main__.Host.test_wrong_source) ... ok
+
+----------------------------------------------------------------------
+Ran 38 tests in 4.390s
+
+OK

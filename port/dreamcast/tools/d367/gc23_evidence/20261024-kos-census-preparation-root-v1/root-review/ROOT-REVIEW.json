@@ -1,0 +1,29 @@
+{
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "scope": "Root reviewed prepare/run/graph/readback/attribution and rehashed all frozen tool/source/SDK/original dependency inputs;38 host controls rerun. No SDK/Make/envsource/stage/guest. Target graph and coverage UNKNOWN.",
+  "source_exports": {
+    "off": 7640,
+    "on": 7640
+  },
+  "tool_members": 14,
+  "input_pins": 1637,
+  "historical_d_files": 2572,
+  "host_controls": {
+    "bytes": 3079,
+    "sha256": "4ac183900b4d6b29e50f95d9ae9e06ffe32754a852a1afebb9e0cdf258c97c23"
+  },
+  "plan": {
+    "bytes": 3491454,
+    "sha256": "3231436459cd8057fd4adb4fdc9eb679b12969170ef4b75c81fea25427503727"
+  },
+  "seal": {
+    "bytes": 2231,
+    "sha256": "c30f2f90564882fa6e179f0895a4e82dbb771722befa79844b853ccb73108209"
+  },
+  "resources": {
+    "C_free": 42924097536,
+    "RAM_free": 11993137152,
+    "owned": 206418123
+  },
+  "utc": "2026-10-24T10:09:58.258676+00:00"
+}

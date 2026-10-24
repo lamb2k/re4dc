@@ -1,0 +1,23 @@
+{
+ "status": "38_HOST_CONTROLS_PASS",
+ "returncode": 0,
+ "command": [
+  "/usr/bin/python3",
+  "-B",
+  "-E",
+  "-X",
+  "pycache_prefix=/dev/shm/gc-motion24-kos-census-v1-2g7teq3g/host-final-cache",
+  "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-preparation-v1/test_preparation.py"
+ ],
+ "log": {
+  "bytes": 2775,
+  "sha256": "aeb776ae7c9b4bbab170ae9d7f3fd3418d401eacc3d65ea2992de5a0191ec743"
+ },
+ "actual_source_accounting": {
+  "bytes": 532,
+  "sha256": "c967681641aa17cf73db0de58061646f6385f800f60bafc5fbfe359711516edd"
+ },
+ "SDK_or_Make_or_KOS_env_source_or_stage_or_guest": false,
+ "host_compiler_only": true,
+ "utc": "2026-10-24T10:08:10.044195+00:00"
+}
