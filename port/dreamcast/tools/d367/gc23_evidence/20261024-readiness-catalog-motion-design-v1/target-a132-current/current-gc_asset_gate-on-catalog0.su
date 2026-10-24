@@ -1,0 +1,44 @@
+platform/include/gc_asset_sha.inc:10:10:void re4dc_gcasset::{anonymous}::IdentitySha::transform()	136	static
+platform/gc_asset_gate.cpp:32:6:bool re4dc_gcasset::{anonymous}::token(const char*, unsigned int)	0	static
+platform/gc_asset_gate.cpp:42:6:void re4dc_gcasset::{anonymous}::hex(const re4dc_gcasset::Digest&, char*)	0	static
+platform/gc_asset_gate.cpp:48:6:void re4dc_gcasset::{anonymous}::catalog_fault(unsigned int)	0	static
+platform/include/gc_asset_index.inc:5:6:bool re4dc_gcasset::{anonymous}::new_catalog_epoch()	0	static
+platform/include/gc_asset_index.inc:11:6:bool re4dc_gcasset::{anonymous}::index_generation(unsigned int)	0	static
+platform/include/gc_asset_index.inc:12:10:unsigned int re4dc_gcasset::{anonymous}::index_read_at(re4dc_gcasset::CatalogReadAt, void*, unsigned int, unsigned int, void*, unsigned int)	20	static
+platform/include/gc_asset_index.inc:18:10:unsigned int re4dc_gcasset::{anonymous}::index_stream_read(void*, void*, unsigned int)	16	static
+platform/include/gc_asset_index.inc:27:6:bool re4dc_gcasset::{anonymous}::index_string(const unsigned char*, unsigned int, char*)	12	static
+platform/include/gc_asset_index.inc:34:6:bool re4dc_gcasset::{anonymous}::index_read_row(re4dc_gcasset::CatalogReadAt, void*, unsigned int, unsigned int, unsigned int, unsigned int, re4dc_gcasset::AssetDescription&)	232	static
+platform/gc_asset_gate.cpp:181:13:bool re4dc_gcasset::future_event(unsigned int, unsigned int)	0	static
+platform/include/gc_asset_index.inc:4:10:unsigned int re4dc_gcasset::{anonymous}::index_word(const unsigned char*)	8	static
+platform/include/gc_asset_index.inc:23:5:int re4dc_gcasset::{anonymous}::index_compare(const re4dc_gcasset::AssetDescription&, const char*, const char*, const re4dc_gcasset::Digest&)	8	static
+platform/include/gc_asset_index.inc:46:6:bool re4dc_gcasset::{anonymous}::index_row(unsigned int, re4dc_gcasset::AssetDescription&)	36	static
+platform/gc_asset_gate.cpp:52:6:void re4dc_gcasset::{anonymous}::catalog_fault_flush()	32	static
+platform/gc_asset_gate.cpp:247:13:void re4dc_gcasset::enqueue(AudioTicket, Consumer, CheckedAsset, unsigned int, const Digest*)	24	static
+platform/gc_asset_gate.cpp:62:8:re4dc_gcasset::Digest re4dc_gcasset::fingerprint(const void*, unsigned int)	128	static
+platform/gc_asset_gate.cpp:67:6:bool re4dc_gcasset::fingerprint_read(Digest&, Read, void*, unsigned int)	660	static
+platform/gc_asset_gate.cpp:76:6:bool re4dc_gcasset::fingerprint_read_prefix(Digest&, Digest&, Read, void*, unsigned int, unsigned int)	780	static
+platform/gc_asset_gate.cpp:87:6:bool re4dc_gcasset::install(const CatalogRow*, unsigned int)	44	static
+platform/gc_asset_gate.cpp:99:6:bool re4dc_gcasset::install_index(CatalogReadAt, void*, unsigned int, const Digest&)	424	static
+platform/gc_asset_gate.cpp:124:6:void re4dc_gcasset::retire_catalog()	4	static
+platform/gc_asset_gate.cpp:130:14:re4dc_gcasset::CheckedAsset re4dc_gcasset::bind_checked(const char*, const char*, const Digest&)	140	static
+platform/gc_asset_gate.cpp:163:6:bool re4dc_gcasset::checked_current(CheckedAsset)	12	static
+platform/gc_asset_gate.cpp:167:6:bool re4dc_gcasset::describe_checked(CheckedAsset, AssetDescription*)	116	static
+platform/gc_asset_gate.cpp:223:6:bool re4dc_gcasset::handoff_audio_admission(unsigned int, unsigned int)	0	static
+platform/gc_asset_gate.cpp:230:6:void re4dc_gcasset::open_audio_admission()	0	static
+platform/gc_asset_gate.cpp:236:13:re4dc_gcasset::AudioTicket re4dc_gcasset::audio_ticket()	0	static
+platform/gc_asset_gate.cpp:246:6:void re4dc_gcasset::close_audio_admission()	0	static
+platform/gc_asset_gate.cpp:263:6:void re4dc_gcasset::queued_checked(AudioTicket, Consumer, CheckedAsset)	12	static
+platform/gc_asset_gate.cpp:264:6:void re4dc_gcasset::queued_pending(AudioTicket, Consumer, PendingSound, const Digest&)	12	static
+platform/gc_asset_gate.cpp:290:6:void re4dc_gcasset::checked(Consumer)	0	static
+platform/gc_asset_gate.cpp:295:6:void re4dc_gcasset::unresolved(Consumer, const char*)	4	static
+platform/gc_asset_gate.cpp:304:6:void re4dc_gcasset::emitted_checked(Consumer, CheckedAsset)	204	static
+platform/gc_asset_gate.cpp:299:6:void re4dc_gcasset::emitted(Consumer, const char*, const char*, const Digest&)	8	static
+platform/gc_asset_gate.cpp:268:6:void re4dc_gcasset::pump()	160	static
+platform/gc_asset_gate.cpp:324:6:void re4dc_gcasset::end(unsigned int)	68	static
+platform/gc_asset_gate.cpp:182:13:void re4dc_gcasset::begin_at(unsigned int, unsigned int, unsigned int, bool, bool, bool, bool, unsigned int, TransitionReason)	52	static
+platform/gc_asset_gate.cpp:218:6:void re4dc_gcasset::begin(unsigned int, unsigned int, unsigned int)	24	static
+platform/gc_asset_gate.cpp:219:6:void re4dc_gcasset::begin_closed(unsigned int, unsigned int, unsigned int)	24	static
+platform/gc_asset_gate.cpp:220:6:void re4dc_gcasset::begin_startup_closed(unsigned int, unsigned int)	24	static
+platform/gc_asset_gate.cpp:221:6:void re4dc_gcasset::begin_room_handoff(unsigned int, unsigned int, unsigned int)	24	static
+platform/gc_asset_gate.cpp:222:6:void re4dc_gcasset::begin_transition_handoff(unsigned int, unsigned int, unsigned int, TransitionReason)	24	static
+platform/gc_asset_gate.cpp:356:1:cpp)	0	static

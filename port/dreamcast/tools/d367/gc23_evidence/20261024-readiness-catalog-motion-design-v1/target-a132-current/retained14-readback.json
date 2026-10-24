@@ -1,0 +1,122 @@
+{
+  "scope": "Historical OFF13 available full dep inventories plus unchanged room_file.C direct includes (no .d emitted). Runtime diff only3 helpers. Not a fresh14 compile/link proof or a retroactive before-build dependency hash claim.",
+  "units": [
+    {
+      "unit": "coarse_actor.cpp",
+      "historical_dep_file": "/root/work/lanes/gc-port23-full-target2-scratch/off/out/obj/coarse_actor.d",
+      "dep_sha256": "7b6efea5ae7da8359511028af4a03767d56d49430e8580f20148b949fdc502e6",
+      "dependency_count": 92,
+      "dependency_inventory_sha256": "d6cb080247be7959cf5897527d117490f054c2157e2486616ba30c1bed244ac5",
+      "changed_runtime_dependency_intersection": []
+    },
+    {
+      "unit": "platform/native_actor_fast.cpp",
+      "historical_dep_file": "/root/work/lanes/gc-port23-full-target2-scratch/off/out/obj/platform/native_actor_fast.d",
+      "dep_sha256": "fcaa151be51450161bd925bddb50406a3d6d52c6267253c1b9fd1f1764f4d0cb",
+      "dependency_count": 34,
+      "dependency_inventory_sha256": "f3032aa4a498cc9a7027eb2a9e6c86962ab5e254bde0eb644512ebdc4779e738",
+      "changed_runtime_dependency_intersection": []
+    },
+    {
+      "unit": "platform/native_ui.cpp",
+      "historical_dep_file": "/root/work/lanes/gc-port23-full-target2-scratch/off/out/obj/platform/native_ui.d",
+      "dep_sha256": "d43e4e752758ccf2012f750ae73ba34a9f0e8ba152d9fc8749b0f2fa3c2ecd5c",
+      "dependency_count": 89,
+      "dependency_inventory_sha256": "7a4a98895abafbb56eba0711331819226745ce8bfb33c5a8a15b3e3a04b839e6",
+      "changed_runtime_dependency_intersection": []
+    },
+    {
+      "unit": "platform/native_model.cpp",
+      "historical_dep_file": "/root/work/lanes/gc-port23-full-target2-scratch/off/out/obj/platform/native_model.d",
+      "dep_sha256": "ac977f3fb9a8ced217f5315c167d9c211dd20b04172c735b507eeb560926833a",
+      "dependency_count": 23,
+      "dependency_inventory_sha256": "fd5802cd8d4e443ef1ead82f17da4c0744de40feb8b2fc59e68e5f4de10a2480",
+      "changed_runtime_dependency_intersection": []
+    },
+    {
+      "unit": "model_bridge.cpp",
+      "historical_dep_file": "/root/work/lanes/gc-port23-full-target2-scratch/off/out/obj/model_bridge.d",
+      "dep_sha256": "7bda9f1f250143a08c9d4fc5da6a2e5e92399882ac082eacd607200d429c10b7",
+      "dependency_count": 46,
+      "dependency_inventory_sha256": "938ab3642a0cb026849609050e2b1540a0e7dee2d7f82e1f644c2d819e6a998c",
+      "changed_runtime_dependency_intersection": []
+    },
+    {
+      "unit": "ui_bridge.cpp",
+      "historical_dep_file": "/root/work/lanes/gc-port23-full-target2-scratch/off/out/obj/ui_bridge.d",
+      "dep_sha256": "5c87f94b730344e0394a8ed9dfefacc702906e3acccb644aa429c1776a52c516",
+      "dependency_count": 71,
+      "dependency_inventory_sha256": "3732f2babbb671ac68f1d4453e57ab3a35dff05c321eaa67c3427e8a35d50faf",
+      "changed_runtime_dependency_intersection": []
+    },
+    {
+      "unit": "platform/audio_aica.cpp",
+      "historical_dep_file": "/root/work/lanes/gc-port23-full-target2-scratch/off/out/obj/platform/audio_aica.d",
+      "dep_sha256": "e5239c676e59229b289dcf64b7830ace817b5ad8ec4379cdaac75597edc663cb",
+      "dependency_count": 7,
+      "dependency_inventory_sha256": "49435ba89e2d9c0c966fa11929631f959507295d96e1361ed1c43edcae9a46a1",
+      "changed_runtime_dependency_intersection": []
+    },
+    {
+      "unit": "platform/native_movie.cpp",
+      "historical_dep_file": "/root/work/lanes/gc-port23-full-target2-scratch/off/out/obj/platform/native_movie.d",
+      "dep_sha256": "a1a945d040666c2eef508cd25472a683d60cf1d4b6553a3116046307ce918195",
+      "dependency_count": 16,
+      "dependency_inventory_sha256": "1bf7da5a02af0f5051fcae9f5bddbae1f7ba833e9121a04b9d1619ac866e9af1",
+      "changed_runtime_dependency_intersection": []
+    },
+    {
+      "unit": "platform/native_movie_stream.c",
+      "historical_dep_file": "/root/work/lanes/gc-port23-full-target2-scratch/off/out/obj/platform/native_movie_stream.d",
+      "dep_sha256": "9f19f992e68f5063af666b5418b4a70604fe4e54d1eae349f7b537c78af018c1",
+      "dependency_count": 9,
+      "dependency_inventory_sha256": "3e6a022f7d9e10162a040c1f3c5885197638bbb22d3837ab4dfdddc570ff29f7",
+      "changed_runtime_dependency_intersection": []
+    },
+    {
+      "unit": "../../../src/game/model.cpp",
+      "historical_dep_file": "/root/work/lanes/gc-port23-full-target2-scratch/off/out/obj/src/game/model.d",
+      "dep_sha256": "4a03002d9d6d538de683ca046b87b2227732674eef3839d806734ae8b1e52ee9",
+      "dependency_count": 36,
+      "dependency_inventory_sha256": "a027530fc0abedd0fc0a84d628cd9d5c9051da90e83ad6d073f0055f4af49e5f",
+      "changed_runtime_dependency_intersection": []
+    },
+    {
+      "unit": "../../../src/game/read.cpp",
+      "historical_dep_file": "/root/work/lanes/gc-port23-full-target2-scratch/off/out/obj/src/game/read.d",
+      "dep_sha256": "6db5b65cb46ed80f7dff56bca7bfff7338f2be3676a14bdd84e3f79968f8927d",
+      "dependency_count": 56,
+      "dependency_inventory_sha256": "7356929c2d6e681150fae4bafe2764cd56236b31fcd54ed201a759c28fc73f2f",
+      "changed_runtime_dependency_intersection": []
+    },
+    {
+      "unit": "../../../src/game/dvd.cpp",
+      "historical_dep_file": "/root/work/lanes/gc-port23-full-target2-scratch/off/out/obj/src/game/dvd.d",
+      "dep_sha256": "91655faf1a067cf99a351d353e1622c6a4542a8be274c44eb20e82a903d4c01a",
+      "dependency_count": 53,
+      "dependency_inventory_sha256": "ae8b6ff0abfea3f6970ae4dab1be24d5b6528e3f99c6b625cca46b27062b7d52",
+      "changed_runtime_dependency_intersection": []
+    },
+    {
+      "unit": "platform/native_static.cpp",
+      "historical_dep_file": "/root/work/lanes/gc-port23-full-target2-scratch/off/out/obj/platform/native_static.d",
+      "dep_sha256": "d10ecdaa3358f75e0d5282fed6f7a0248d71f48a02f76639e072b7a493056d49",
+      "dependency_count": 60,
+      "dependency_inventory_sha256": "342db07ff1bba1c394f0975d1c03467c422fb5837f07c962bc0e6e73872a8bf9",
+      "changed_runtime_dependency_intersection": []
+    },
+    {
+      "unit": "platform/room_file.c",
+      "scope": "Actual C full compile emits no .d; unchanged source/direct includes only, not transitive dependency readback",
+      "source_sha256": "e8f96e63390271f55fc349350352293fad6d64f2cea974e530b9e498a9ff65d6",
+      "direct_includes": [
+        "#include <stdint.h>",
+        "#include <stdio.h>",
+        "#include <string.h>",
+        "#include <kos/fs.h>",
+        "#include \"room_file.h\""
+      ],
+      "source_is_changed_runtime": false
+    }
+  ]
+}

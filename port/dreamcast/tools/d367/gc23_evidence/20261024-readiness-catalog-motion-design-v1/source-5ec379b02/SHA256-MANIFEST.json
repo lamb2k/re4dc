@@ -1,0 +1,10 @@
+{
+  "host.log": {
+    "bytes": 16513,
+    "sha256": "7dfeb417e817a64511385975c505cb8d52d5bf9184fcf01880c7a0f9a62eb85d"
+  },
+  "receipt.json": {
+    "bytes": 1309,
+    "sha256": "9c9ec00b1b8975ad09a7beadfba23bc3a8c8fd7b4fc72d49509ea68fa33c00e6"
+  }
+}

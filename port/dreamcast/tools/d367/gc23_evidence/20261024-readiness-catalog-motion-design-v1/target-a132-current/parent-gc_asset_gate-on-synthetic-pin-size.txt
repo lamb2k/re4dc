@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+  10885	      4	   5052	  15941	   3e45	/dev/shm/gc-catalog24-a132-avwm2i7d/parent-gc_asset_gate-on-synthetic-pin.o

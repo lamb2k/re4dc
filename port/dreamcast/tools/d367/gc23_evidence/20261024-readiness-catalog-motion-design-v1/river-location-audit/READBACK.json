@@ -1,0 +1,117 @@
+{
+  "status": "UNKNOWN_LOCATION_NO_REPAIR_ADMITTED",
+  "created_utc": "2026-10-24T06:28:52.067635+00:00",
+  "source_tree": "/root/work/lanes/water-rain24",
+  "source_head": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "source_tree_clean": true,
+  "issue_url": "https://github.com/lamb2k/re4dc/issues/55",
+  "issue_snapshot_retrieved_utc": "2026-10-24 04:30:30 UTC",
+  "reported_phrase": "It also happens at the first stage, the river carries no watter.",
+  "location_explicit_in_report": false,
+  "first_stage_image_explicitly_bound": false,
+  "selected_existing_capture_room": [
+    {
+      "line": 329,
+      "text": "warp: /cd/dc/warp.txt w16-f108 room=108 jp=0 pos=set rsf=0 scenario=00000000/00000000 find=00000000 unlock=00000000/00000000 acts=0"
+    }
+  ],
+  "read_inputs": [
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-20261023.md",
+      "bytes": 6136,
+      "sha256": "18b4f4e82ea63364264710cd11cb8852723434023cf7927976c736a954aff4f6"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/STATUS.md",
+      "bytes": 5017,
+      "sha256": "7bd0020d51d06b94556f000cc78716012a84f370db157b717c6bbdfea32a9683"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/PLAN.md",
+      "bytes": 9090,
+      "sha256": "06a6b3065f8655a787f01727184aa98c59e897c5dfce34dcdfc9dd82e371972a"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/ISSUE55-READONLY-SNAPSHOT.json",
+      "bytes": 6397,
+      "sha256": "8eb85c87c1658daa6d773f7b66ef861f061282a1408c86c1f1c3e65138958f75"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/port__dreamcast__docs__lanes__water16.md.txt",
+      "bytes": 10306,
+      "sha256": "a6297b0eb856ca14d779e24862b6ee374acc612a109e89ff9835399ce13fd41c"
+    },
+    {
+      "path": "/root/work/lanes/water-rain24/src/st1/r100.cpp",
+      "bytes": 51922,
+      "sha256": "a732b24228538d15b42343c7e26cb57bc0c502b8f79f9a3b409fd061132a9c6a"
+    },
+    {
+      "path": "/root/work/lanes/water-rain24/src/st1/r108.cpp",
+      "bytes": 17483,
+      "sha256": "50e0619138759dfa8ddfaf6fe038a4264f6f2b640837605b22d37315d99a297c"
+    },
+    {
+      "path": "/root/work/lanes/water-rain24/src/game/water_ps2_table.inc",
+      "bytes": 5981,
+      "sha256": "1c83138a0d6082ff6dc729ee0fc2162f0ea4628de57b27ed8743588e7eabe7be"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-20261016/fm-f108/capture/run-output.txt",
+      "bytes": 163208,
+      "sha256": "f740024170de88a719ea0fd7c387fbfc486229a3809256571b41fb93a837c300"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-20261016/fm-f108/capture/shots/t0056/frames/fb0.png",
+      "bytes": 161605,
+      "sha256": "04d51ac22dcc683b283550335ad83fcf9df4520c3e86269eb29988d9b816c2a3",
+      "dimensions": [
+        640,
+        480
+      ]
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/fix-water-traps23/stills/r10c-river.png",
+      "bytes": 864053,
+      "sha256": "ff630ccc74019b8bcd70df0eefdbb7479936068069d6e4cea3b8b8ea6407f2a6",
+      "dimensions": [
+        1920,
+        510
+      ]
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/fix-water-traps23/stills/r10e-river.png",
+      "bytes": 808830,
+      "sha256": "1fdddb75598832c665bb381df722ea22731403a59f388920036e4465ce7f2939",
+      "dimensions": [
+        1920,
+        510
+      ]
+    }
+  ],
+  "visual_inspection": [
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-20261016/fm-f108/capture/shots/t0056/frames/fb0.png",
+      "observation": "Leon on a rope suspension bridge above a foggy ravine/water region. Existing capture warp log identifies room108."
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/fix-water-traps23/stills/r10c-river.png",
+      "observation": "Existing comparison composite: waterwheel, wooden dam/sluice and steep rocky bank. Captioned GameCube issue55 / Flycast WATER_PS2_EXT off/on."
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/fix-water-traps23/stills/r10e-river.png",
+      "observation": "Existing comparison composite: enclosed rocky cave, tiered column-like formations, barrel and water surface. Captioned GameCube issue55 / Flycast WATER_PS2_EXT off/on."
+    }
+  ],
+  "scope": "Read-only bounded existing files and still inspection; no new run, asset decode/conversion, external access or machine-wide absence claim.",
+  "missing_evidence": [
+    "A reporter-identified frame of the first-stage river with matchable landmark, or exact room/position/event context",
+    "Then a match to authenticated PS2 room/container geometry before any repair"
+  ],
+  "ps2_ancestry_from_comparison_images": false,
+  "network_used": false,
+  "messages_sent_to_third_parties": false,
+  "runtime_or_asset_changes": false,
+  "rlimit_as_bytes": 268435456,
+  "peak_rss_kib": 17152
+}

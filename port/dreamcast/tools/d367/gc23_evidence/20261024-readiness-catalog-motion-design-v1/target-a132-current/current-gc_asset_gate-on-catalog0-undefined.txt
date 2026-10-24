@@ -1,0 +1,7 @@
+         U ___movmem_i4_odd
+         U _memcmp
+         U _memcpy
+         U _memset
+         U _re4dc_log
+         U _sprintf
+         U _strcpy

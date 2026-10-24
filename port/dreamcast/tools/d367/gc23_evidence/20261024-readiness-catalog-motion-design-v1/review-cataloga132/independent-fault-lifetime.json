@@ -1,0 +1,25 @@
+{
+  "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+  "scope": "actual full gate/index/disc; strict log !io_depth; independent deterministic schedules, no guest",
+  "tests": [
+    {
+      "name": "unowned_capacity_survives_replacement_drains_before_new_begin",
+      "exit": 0
+    },
+    {
+      "name": "repeated_owned_capacity_deduplicates_reason_but_preserves_two_errors_and_overflow",
+      "exit": 0
+    },
+    {
+      "name": "post_END_unowned_read_survives_explicit_reinstall_before_new_begin",
+      "exit": 0
+    },
+    {
+      "name": "startup_owned_retire_reports_old_scope_before_room_begin",
+      "exit": 0
+    }
+  ],
+  "fixture_sha256": "93faa24ef9e1609fa21c6f2b51d300cf2bcfd87bd5b602928221019e77b3c762",
+  "RLIMIT_AS_bytes": 268435456,
+  "compiler_jobs": 1
+}

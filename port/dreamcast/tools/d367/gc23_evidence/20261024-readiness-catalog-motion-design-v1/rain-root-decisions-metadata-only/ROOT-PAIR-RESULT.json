@@ -1,0 +1,325 @@
+{
+  "status": "TWO_LIMITED_CONSOLE_MODE_VIEW_OBSERVATIONS_COMPLETE",
+  "time": "2026-10-24T06:50:26.224969+00:00",
+  "source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "preflight_sha256": "837c095edf3a2eae9562a4020bdb964260b4e4126b4ce20e283f8ab40704d7bd",
+  "arms": {
+    "off": {
+      "pid": 53416,
+      "owned_observed_seconds": 23.219,
+      "deadline_fired": false,
+      "semantic_goal": true,
+      "guest_rc": 1,
+      "retained_controller_signature": true,
+      "native_emission": false,
+      "native_rows": [],
+      "native_counters": {
+        "s_raindc_frames": 0,
+        "s_raindc_sent": 0,
+        "s_raindc_pending": 0
+      },
+      "source_room": 268,
+      "source_frame": 330,
+      "stable_buffers": [
+        true,
+        true
+      ],
+      "config_sha256": "1bd32372b5ae76657caff6423dfeea3b0c1886ddd08a6f1ca711a595df54aa5e",
+      "files": {
+        "bounded-launch.json": {
+          "bytes": 624,
+          "sha256": "43faf85fac2d93869e7f6ef27aad31204a19dcfffb31d13199ee4975787e86ed"
+        },
+        "capture_ui_vram.py": {
+          "bytes": 3725,
+          "sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57"
+        },
+        "disc.gdi": {
+          "bytes": 87,
+          "sha256": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4"
+        },
+        "emu.cfg": {
+          "bytes": 629,
+          "sha256": "1bd32372b5ae76657caff6423dfeea3b0c1886ddd08a6f1ca711a595df54aa5e"
+        },
+        "fixture-pad.txt": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "fixture-warp.txt": {
+          "bytes": 173,
+          "sha256": "265c6562990fd79ca4177e0ff403b3f9c12dd647a60b538e833034bb8073767d"
+        },
+        "flycast.exe": {
+          "bytes": 14416384,
+          "sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a"
+        },
+        "flycast.log": {
+          "bytes": 2347,
+          "sha256": "329132fd54d59894613d6abdd134efd78dc2c2de5d4c4afbd34e81e294d726b0"
+        },
+        "flycast.pid": {
+          "bytes": 5,
+          "sha256": "10f76f057041fbb35ab8923ba959e51cc69693691c7db5a59f4c8ed91f262769"
+        },
+        "limitfps-prelaunch.cfg": {
+          "bytes": 629,
+          "sha256": "1bd32372b5ae76657caff6423dfeea3b0c1886ddd08a6f1ca711a595df54aa5e"
+        },
+        "limitfps-prelaunch.json": {
+          "bytes": 448,
+          "sha256": "c8007aa58c8ba810b019f5495933906ccc0a33833be2b22b27e88cb94719cc82"
+        },
+        "rain-canary-capture.json": {
+          "bytes": 9333,
+          "sha256": "f3013aa684886694fccfd1d978570fc59b365ac8adcc71d75cba2d831ed1a1a3"
+        },
+        "read-log.err": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "read_log.py": {
+          "bytes": 5311,
+          "sha256": "6c43705318caa4c63fddd2995c04bdc9c3730abfe66400192be89f4d1e845059"
+        },
+        "run-output.txt": {
+          "bytes": 129712,
+          "sha256": "98df84eb6e035fa9b9bf40c1e3b35ab27d483f5d89d71606d4d93560b98d7484"
+        },
+        "run-result.json": {
+          "bytes": 1615,
+          "sha256": "ab778dcee08c1f3584defcebd61675b3646fb1edd58dd212387b40d68179d83a"
+        },
+        "serial.txt": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "syms.txt": {
+          "bytes": 28,
+          "sha256": "bc9ff20ead21bcb67e39bbc025efeb30f81e66f50a72e0de5d7b09f874166036"
+        },
+        "data\\T0000_vmu_save_A1.bin": {
+          "bytes": 131072,
+          "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+        },
+        "data\\vmu_save_A2.bin": {
+          "bytes": 131072,
+          "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+        },
+        "__pycache__\\capture_ui_vram.cpython-312.pyc": {
+          "bytes": 6187,
+          "sha256": "0410ab546e092306049871726720c21c20daa6c1f4d5acf157e8e76717aff932"
+        },
+        "rain-canary-frames\\first\\fb0.png": {
+          "bytes": 280611,
+          "sha256": "647633263d47011c2c1e3415eaf05aeefe3dc64051b87daaed6fce87a8f46806"
+        },
+        "rain-canary-frames\\first\\fb0.rgb565": {
+          "bytes": 614400,
+          "sha256": "34c9228d504d4653b33525ec314f67af9053efd63a02b6656a66009cd8dccc54"
+        },
+        "rain-canary-frames\\first\\fb1.png": {
+          "bytes": 280514,
+          "sha256": "45145c2d40762ab7e127d820600f68e5b96fafed6301c2625e9416f0eff49777"
+        },
+        "rain-canary-frames\\first\\fb1.rgb565": {
+          "bytes": 614400,
+          "sha256": "76902a59b47773e5c4d14b4c4230dc8679de91c751ee9bfc9815ef88b147ca84"
+        },
+        "rain-canary-frames\\second\\fb0.png": {
+          "bytes": 280611,
+          "sha256": "647633263d47011c2c1e3415eaf05aeefe3dc64051b87daaed6fce87a8f46806"
+        },
+        "rain-canary-frames\\second\\fb0.rgb565": {
+          "bytes": 614400,
+          "sha256": "34c9228d504d4653b33525ec314f67af9053efd63a02b6656a66009cd8dccc54"
+        },
+        "rain-canary-frames\\second\\fb1.png": {
+          "bytes": 280514,
+          "sha256": "45145c2d40762ab7e127d820600f68e5b96fafed6301c2625e9416f0eff49777"
+        },
+        "rain-canary-frames\\second\\fb1.rgb565": {
+          "bytes": 614400,
+          "sha256": "76902a59b47773e5c4d14b4c4230dc8679de91c751ee9bfc9815ef88b147ca84"
+        }
+      },
+      "actual_VMU_after": {
+        "data\\T0000_vmu_save_A1.bin": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20",
+        "data\\vmu_save_A2.bin": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+      }
+    },
+    "on": {
+      "pid": 48036,
+      "owned_observed_seconds": 23.187,
+      "deadline_fired": false,
+      "semantic_goal": true,
+      "guest_rc": 1,
+      "retained_controller_signature": true,
+      "native_emission": true,
+      "native_rows": [
+        {
+          "frame": 179,
+          "streaks": 320,
+          "sent": 320
+        },
+        {
+          "frame": 299,
+          "streaks": 320,
+          "sent": 38400
+        }
+      ],
+      "native_counters": {
+        "s_raindc_frames": 151,
+        "s_raindc_sent": 48000,
+        "s_raindc_pending": 0,
+        "s_raindc_queued_room": 0,
+        "s_raindc_queued_frame": 0
+      },
+      "source_room": 268,
+      "source_frame": 330,
+      "stable_buffers": [
+        true,
+        true
+      ],
+      "config_sha256": "1bd32372b5ae76657caff6423dfeea3b0c1886ddd08a6f1ca711a595df54aa5e",
+      "files": {
+        "bounded-launch.json": {
+          "bytes": 622,
+          "sha256": "f360cfc4c26c32a97a32db7461ed72c3ee1d81f15a651ec97cd3807e3801a5fc"
+        },
+        "capture_ui_vram.py": {
+          "bytes": 3725,
+          "sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57"
+        },
+        "disc.gdi": {
+          "bytes": 87,
+          "sha256": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4"
+        },
+        "emu.cfg": {
+          "bytes": 629,
+          "sha256": "1bd32372b5ae76657caff6423dfeea3b0c1886ddd08a6f1ca711a595df54aa5e"
+        },
+        "fixture-pad.txt": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "fixture-warp.txt": {
+          "bytes": 173,
+          "sha256": "265c6562990fd79ca4177e0ff403b3f9c12dd647a60b538e833034bb8073767d"
+        },
+        "flycast.exe": {
+          "bytes": 14416384,
+          "sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a"
+        },
+        "flycast.log": {
+          "bytes": 2347,
+          "sha256": "1e8ec69a61d1d2f5fc7db163dad55967ddc87ef90e4ed93d00350176bd913e7d"
+        },
+        "flycast.pid": {
+          "bytes": 5,
+          "sha256": "e3a3f0493b76b0d5c42bbbabafe208ca39f1b01f369d41c15aae3e326a6ee110"
+        },
+        "limitfps-prelaunch.cfg": {
+          "bytes": 629,
+          "sha256": "1bd32372b5ae76657caff6423dfeea3b0c1886ddd08a6f1ca711a595df54aa5e"
+        },
+        "limitfps-prelaunch.json": {
+          "bytes": 449,
+          "sha256": "72eaa818055b07a5470ab37e01f7947572c7cdad5483f8559f848abdcd269824"
+        },
+        "rain-canary-capture.json": {
+          "bytes": 9894,
+          "sha256": "3ccb05ffac8345380876e3b583739ba3738aadbc57b7e5a29f94851317958f5a"
+        },
+        "read-log.err": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "read_log.py": {
+          "bytes": 5311,
+          "sha256": "6c43705318caa4c63fddd2995c04bdc9c3730abfe66400192be89f4d1e845059"
+        },
+        "run-output.txt": {
+          "bytes": 129949,
+          "sha256": "36193555e3bafa648b2aee988138cc59a9c14af97a25eb196d7e3121d8541a07"
+        },
+        "run-result.json": {
+          "bytes": 1611,
+          "sha256": "0ddb140b1049c69307c4ebcc077979560f356aa1df44e36212f4cd99b8dc648c"
+        },
+        "serial.txt": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "syms.txt": {
+          "bytes": 28,
+          "sha256": "f8e25a9949637fdd4fc7efb987053176c76fc35b0d2ad5db89e021193c9ae465"
+        },
+        "data\\T0000_vmu_save_A1.bin": {
+          "bytes": 131072,
+          "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+        },
+        "data\\vmu_save_A2.bin": {
+          "bytes": 131072,
+          "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+        },
+        "__pycache__\\capture_ui_vram.cpython-312.pyc": {
+          "bytes": 6186,
+          "sha256": "c72415cfa0c225342ca93b019041d21a3975481a3b2aed7bf354366fa6c2c530"
+        },
+        "rain-canary-frames\\first\\fb0.png": {
+          "bytes": 285477,
+          "sha256": "15ae59312ef1d8e652b079aaf82e2b7324f500a0793c3ec600033bc7624a47cc"
+        },
+        "rain-canary-frames\\first\\fb0.rgb565": {
+          "bytes": 614400,
+          "sha256": "1bc0d766522fdc9304626d480d8187aab460d9a488657ad9a58fe7eb1becc89c"
+        },
+        "rain-canary-frames\\first\\fb1.png": {
+          "bytes": 285733,
+          "sha256": "4796e5d90b2eee90267bb024f38b644bd4d0bbd82e1c237c551a5bf2fafb9695"
+        },
+        "rain-canary-frames\\first\\fb1.rgb565": {
+          "bytes": 614400,
+          "sha256": "bcf638620337cb54f55edc27756e191095c79664416c8e06d272bb2414e05bd6"
+        },
+        "rain-canary-frames\\second\\fb0.png": {
+          "bytes": 285477,
+          "sha256": "15ae59312ef1d8e652b079aaf82e2b7324f500a0793c3ec600033bc7624a47cc"
+        },
+        "rain-canary-frames\\second\\fb0.rgb565": {
+          "bytes": 614400,
+          "sha256": "1bc0d766522fdc9304626d480d8187aab460d9a488657ad9a58fe7eb1becc89c"
+        },
+        "rain-canary-frames\\second\\fb1.png": {
+          "bytes": 285733,
+          "sha256": "4796e5d90b2eee90267bb024f38b644bd4d0bbd82e1c237c551a5bf2fafb9695"
+        },
+        "rain-canary-frames\\second\\fb1.rgb565": {
+          "bytes": 614400,
+          "sha256": "bcf638620337cb54f55edc27756e191095c79664416c8e06d272bb2414e05bd6"
+        }
+      },
+      "actual_VMU_after": {
+        "data\\T0000_vmu_save_A1.bin": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20",
+        "data\\vmu_save_A2.bin": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+      }
+    }
+  },
+  "corresponding_buffer_pixel_differences": [
+    1951,
+    2155
+  ],
+  "root_visual_review": "Both fb1 images inspected. Same narrow rocky r10c entry/Leon view, visible streaks in ON. Does not represent the exterior dam/water or complete room appearance.",
+  "scope": "Two single-attempt console-mode Flycast proxy views, FPS limited, exact owned child55. OFF source controller retained/no new native emission; ON actual fresh room10c native-flush rows+positive counters. Both framebuffer regions stable in two timed reads. Cumulative counters/sample do not prove exact original controller-owner/callback-ticket/lifetime or completed actor/viewport/present frame.",
+  "not_accepted": [
+    "physical console/performance",
+    "complete source owner/ancestry",
+    "full lifecycle/cancel/stop",
+    "memory KOS/H2",
+    "strict pixel-identical/fullscene",
+    "standard/release media lint",
+    "user look approval/production enablement"
+  ],
+  "next": "No more guests under this consumed pair. Review source lifecycle observation gaps and exterior still/safety fixture plan before any new bounded suite."
+}

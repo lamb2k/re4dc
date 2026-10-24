@@ -1,0 +1,26 @@
+{
+  "time": "2026-10-24T06:41:54.800049+00:00",
+  "preflight_sha256": "837c095edf3a2eae9562a4020bdb964260b4e4126b4ce20e283f8ab40704d7bd",
+  "grant": {
+    "source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+    "preflight_sha256": "837c095edf3a2eae9562a4020bdb964260b4e4126b4ce20e283f8ab40704d7bd",
+    "root_approved": true,
+    "cases": [
+      "off",
+      "on"
+    ],
+    "maximum_guests": 2,
+    "seconds": 45
+  },
+  "root_review": [
+    "Completed normal OFF/all14 production identity is separate from fresh g/rW matched programmes.",
+    "Read actual launcher/observer source and current per-arm ELF/DWARF layouts; ran frozen no-guest OFF pin validation.",
+    "Actual Windows Python reads and hashes the frozen UNC fp_run input; unchanged646bd4eb harness.",
+    "Exact three redirected fixtures independently represented in ISO/Joliet/track1; preserved generic/standard lint failures prohibit release-disc PASS.",
+    "Only two45s limited view cases, exact owned child55, source/default/data/recipe unchanged.",
+    "OFF first; examine process and observation results before starting ON. No automatic retries or expanded suite.",
+    "No actor/completed-frame/callback-lifetime/pixel/memory/hardware or look approval is granted."
+  ],
+  "floor_bytes": 25769803776,
+  "private_case_output_cap_bytes": 134217728
+}

@@ -1,0 +1,17 @@
+{
+  "source": "5ec379b023a800a4e980108218b5242f4e2472ef",
+  "source_mode": "immutable git archive; original tests unchanged; git show uses existing read-only object database",
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "-v",
+    "test_catalog_defensive"
+  ],
+  "exit": 0,
+  "seconds": 5.478328319004504,
+  "RLIMIT_AS_bytes": 268435456,
+  "compiler_jobs": 1,
+  "log_sha256": "b35e0d12832bd3e5c9d1e586f10113a001c9f55835bba91a3b2b29ff4e116634",
+  "scope": "host actual source functions with mocked providers, no SDK/guest/target"
+}

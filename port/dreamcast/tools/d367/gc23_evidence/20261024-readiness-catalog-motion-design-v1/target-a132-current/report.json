@@ -1,0 +1,1065 @@
+{
+  "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+  "parent": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "baseline": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "profile": "/root/probe/lanes/route/out-rrfb254e8rP",
+  "pins": {
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/receipt.json": "8103804d650a1caf469c6d2820a06aa560702acfc0404bac990f8cbde821b631",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/SUMMARY.json": "75eb5be2f1c9e51b3994fb35a969765a10530bc222c2a4a6e30c1d9a166b9b18",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/SHA256-MANIFEST.json": "76ec4448e08f4bb7c59cb17eb18344c126cdf05d802b2e2060bbe9c44e75b667",
+    "/root/probe/lanes/route/out-rrfb254e8rP/candidate.txt": "0d5e7fe22f95b6aa8a131a790490dd8fc268b10f721924909de206610a11028d",
+    "/root/probe/lanes/route/out-rrfb254e8rP/resolved-knobs.txt": "63b9cdf90190a880422074bf4e7c7c488cd013463a18d9aaeb6fc3bd470a9a5b",
+    "/root/probe/lanes/route/out-rrfb254e8rP/re4dc-game.elf": "3a110765ef415dfd4e4a00104bfc6094b393f87cb9f9f55672046f90e702ee8f",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em22.ovl": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em2b.ovl": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em2f.ovl": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em35.ovl": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7",
+    "/root/probe/lanes/route/out-rrfb254e8rP/em3b.ovl": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417",
+    "/root/probe/lanes/route/out-rrfb254e8rP/pl0f.ovl": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e",
+    "/root/probe/lanes/route/out-rrfb254e8rP/pl11.ovl": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e",
+    "/root/probe/lanes/route/out-rrfb254e8rP/pl14.ovl": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e",
+    "/root/probe/lanes/route/out-rrfb254e8rP/sscrn.ovl": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st1_0.ovl": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st1_1.ovl": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st1_2.ovl": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st1_3.ovl": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc",
+    "/root/probe/lanes/route/out-rrfb254e8rP/st2_0.ovl": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2",
+    "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a": "5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/test/shz_test_scenario.h": "b27081020b89853b798c464b579068455d8f7a02d1148a530bc77e5c97098de7",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/test/shz_test.hpp": "dee21b346054ef1b8791e932defd1ec7eefac295b166f5300aba895d38b3248d",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_scalar.hpp": "e51e043db461766c55df24b3320b83ae296d63435be068f19223b4a683884191",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_sh4zam.h": "207159b59032b4a33de7c4b152fb180ed93914db5da744f7cbe96ac648ef0929",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_vector.h": "844bae12ab9ca484135b03e58050b1308da31c21e5a2c7862c09c98ded29626d",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_matrix.hpp": "c5716f6aa271210956a791264642ea9c3af582ae652c5391cbc6e0f5af4d2f5c",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_cdefs.h": "48138da62e45d103861241923331192f5bc67de3b0cfe8db64ab049ba31ed3c2",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_complex.hpp": "6ea78dc5c19821244931f362a000b8f582c51747dc1b49aed9582452c4e31e4a",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_version.h": "a55211678e9542c12bb41ce0275293039309920ed93d1b967c093b812a5b9c7f",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_quat.h": "236c57697e14fa7c3d3b8388508be7539a05368f52ec9d518fe90425dcbb4414",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_xmtrx.hpp": "28de84880358eb38ba821c9039ae03a07912c0194514264bab307cfff7e24d78",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_trig.hpp": "25016b4d64316e27b6e0b7065c1c25a4615f71c83ded1b2622502a4b377aa19e",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_complex.h": "c7a9dcff2eb30050879a61996a8452da4e0fe817f88766452b01b716d1074e12",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_mem.hpp": "197eabbe44bd25cd80a0048ddd92299d806f63e3ca2b3e636ecbed38fa5250b2",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_mem.h": "89cd76be2d07566f2f104560a3bb16fbebad2d23f8013b774c96c66ce72ce062",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_vector.hpp": "a7c1ca9221eb7aa54cc67f8df98917e5835b03605e27dc1783d8e2304c2313d8",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_trig.h": "5f6c20c555a3d4f5a9d10efc653d63d098f327f25e1fae71d6a262285cec9e68",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_sh4zam.hpp": "ecae29daec2b5c2d6735127764391f7cc6bbf1697c42bc06a64a85c3eba10eea",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_version.hpp": "095fec8d1d190571967e21e1472446b9c9d30e9098866d06277d5d566943c7e6",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_cdefs.hpp": "ab6579e934e167ca141a0745e50aa4b02ac289b4e812f6a4bd8ede3aacf83c60",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_scalar.h": "fc3e4b2195bf55a76795eedd5910cd52b4248a6454763ea909011da63ea7b6fc",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_quat.hpp": "627fca9913a7a3267702bf6c076ce7e6a68c4fa7b420c617bd66ea08f500f030",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_matrix.h": "460d73a41b0ced91a2bb76d264d41dd9bf21f1ed8839e248b2b9ec4152acdc01",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/shz_xmtrx.h": "d3d8e8eb4a3e77f3e8c12df6dabb8804fa444ce67085dbd1af37630dacaab085",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_trig.inl.h": "ffa679b6d97faff8031e41d471008ffa2a8e19d9995066108537941fc0283966",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_complex.inl.h": "189314670a9b910d54c7f3941a347f0fabb4c466b91305510d6b452dac4f139b",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_scalar.inl.h": "fc699674f5abf5a929d0ff2fbe02da03c4a183b55c273f59cb7d0937d35e8857",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_mem.inl.h": "abe2b45892f22b5dcd6c20f3730a859f8f806b4fc7f31cee6935912ec001f7a2",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_xmtrx.inl.h": "90d14ec7870529f613f08165f2f52d99bd008f6273144c716298f8545d0f216e",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_quat.inl.h": "930ffbc64e7d286f048cad38b82dda97aad9efce63f7c0f9d34198d3f9c18a89",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_matrix.inl.h": "43edccaf2794ce70d846e8f301508392e9d3e968e16e44b1961dcf26ea10eea8",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/shz_vector.inl.h": "6011b3b0f5de566f5245d2f216eedfa0649d62b0cab44fd1e9b45af3100ea323",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/spu/shz_vector_spu.inl.h": "be444f8072b0d2308109675d09483c0ba5a04fc51dae67764833b57c93065bc7",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_trig_sh4.inl.h": "4e62d63a6c49c97f44dfa6c6de8265f66a1fcd0c0cdb1372680a88db205de18b",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_vector_sh4.inl.h": "87dc6091a8f270e3800ec08c6ea44178417daed93a65f4e4210aed5fa590dd34",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_xmtrx_sh4.inl.h": "5ba4a0295ebc422764e829c84d5640ed06a75affcdbde6fff1c1bc98b34e3138",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_quat_sh4.inl.h": "2f162fa7db1e98dff1a4db1ee0e100b5f5773771bb99ca767f9e36e9ed32898d",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_matrix_sh4.inl.h": "8eb874dbc230fef74883f2aec9c53813cb1cba98f5c4e6edd3e17ef8ae8132bd",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_mem_sh4.inl.h": "f1b40c951bc00989496708ae76de2d747109841e04716d992514a1c8dc180774",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sh4/shz_scalar_sh4.inl.h": "b0c1d4cf98b44d5ecb137ef2d5f195f433a824d2f4d8c751a5c826aa692a37cb",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_xmtrx_sw.inl.h": "59c2ca091388e1439dc3a91f9748f1b7b379a276f1a37a5e10a099571a794c07",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_mem_sw.inl.h": "c37e1e2d30c78712eab17045b9647108edc6bf6e7e1c56cebc1e557cdd8533a9",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_matrix_sw.inl.h": "cf82a20611f39bbfaedc22a307e465677d90427206671dc983ee38d8076b009e",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_quat_sw.inl.h": "e9c4f9aeb50ce806cd74626b9c6542aa7ffac405d8322abce9e82f62de822574",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_vector_sw.inl.h": "9364e039f4523831506d1fd5ac95fef393b823424fc7d6cdb6d040e4b8c4de0a",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_trig_sw.inl.h": "e5f0bc71b6a2355dea3a550dd391bf964c6dad02668c18907a075e131cac58e6",
+    "/root/work/lanes/gc-port23/port/dreamcast/game/third_party/sh4zam/include/sh4zam/inline/sw/shz_scalar_sw.inl.h": "67b99cebd707217664165070d6675343aa850301498b1360bfb46ad7e67f9f17",
+    "/root/work/lanes/gc-port23-full-target2-scratch/off/build.log": "79f2b24570345fbdc0e337e43318c7d4e2d9136b15dcdff7d07f43d9cbccfcbc",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/command.json": "16fb10e70ddeed8d0f708b6926bf2d27e96fb2551ed87708dbb02b7666860363",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/off/resolved-knobs.txt": "fcb8b1459b58f9f567c757d6cb576707708c57ed1c79fe8851091961cfd647dd",
+    "/root/work/lanes/gc-port23-full-target2-scratch/on/build.log": "2a2637f7d751372e3219753014c039b60bfd598eadf3bb910e329418b20078bb",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/command.json": "3901dd25af932227c85f85bef2a7042c55464ded1309e6d4ebf08068f5e65edf",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/full-target-static1d63-current/on/resolved-knobs.txt": "4cd0b147aa4d3ca79f47d8b3ef0e8c0d36fa74e4851550251b8608cec6e5ecb2",
+    "/root/work/kos-re4dc-d367/utils/build_wrappers/kos-c++": "657b7e95d6d95ca9eadb2880db9a7c16f8c4ba720702fc06af20f1eae1a1d2d2",
+    "/root/work/kos-re4dc-d367/utils/build_wrappers/kos-cc": "9be639adedf7d4b55482b82ea91bd80f3ee21468f8bdcc31af79b0126e8f09c5",
+    "/root/work/lanes/gc-catalog24/port/dreamcast/kos-env.sh": "d776b3b236236bc5f91500ae5e469c140b41f94e44ec72165efd556afd7aebb8",
+    "/opt/toolchains/dc/sh-elf/bin/sh-elf-g++": "e93807f83ebb80283de9777d006dae7f5873784032bbaa867a8f16db0e3c0053",
+    "/opt/toolchains/dc/sh-elf/bin/sh-elf-size": "065fa8239db87b0108e73cbb23678486bd1120ea0ccdeaf6871f42d6ccb238d0",
+    "/opt/toolchains/dc/sh-elf/bin/sh-elf-nm": "387845d7aa216b1d75a0874bafbb33189ce25b514626b5042d90f9d109b3533c",
+    "/opt/toolchains/dc/sh-elf/bin/sh-elf-objcopy": "7993dcb70aaea6cf83190e6babf63c663324a0fd493c3ceb9987a7d8820839d0",
+    "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/libgcc.a": "067eb6f92b450e6ecaf9eab5d24dbf614addfd5d3989c798f2e48e6143e2fe32",
+    "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a": "69ca0c05802a25a39e241ab90547627985c4b940369fe9acee1bd2ac1958810a",
+    "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/platform/os.o": "cb29bc05051d83e85007f6edde4bf81327097e0055cf681bb0a0daed15c14568",
+    "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/platform/mem.o": "e53d335b4e7000f3289b88cefc4ea5fb20f3db40fd0800c4e32b2b1e69695858"
+  },
+  "commands": {
+    "off": {
+      "platform/gc_asset_disc.cpp": [
+        "kos-c++",
+        "-O2",
+        "-fno-PIC",
+        "-fno-PIE",
+        "-fomit-frame-pointer",
+        "-m4-single",
+        "-ml",
+        "-mfsrra",
+        "-mfsca",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-matomic-model=soft-gusa",
+        "-ftls-model=local-exec",
+        "-D__DREAMCAST__",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/include",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/addons/include/",
+        "-isystem",
+        "/root/work/kos-ports/include",
+        "-D_arch_dreamcast=1",
+        "-D_arch_sub_pristine=1",
+        "-Wall",
+        "-g",
+        "-std=gnu++20",
+        "-Wall",
+        "-Wextra",
+        "-O1",
+        "-Iplatform/include",
+        "-DRE4DC_GAME",
+        "-fno-exceptions",
+        "-fno-unwind-tables",
+        "-fno-asynchronous-unwind-tables",
+        "-fno-threadsafe-statics",
+        "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+        "-DRE4DC_RENDER_FSAA=1",
+        "-DRE4DC_RENDER_OPTION=1",
+        "-DRE4DC_VIEW_DIST_OPTION=1",
+        "-DRE4DC_FAR_SHELL=1",
+        "-DRE4DC_FOLIAGE_OPTION=1",
+        "-DRE4DC_RES_ALTERNATE=1",
+        "-DRE4DC_RES_MODES=9",
+        "-DRE4DC_RES_MODE=0",
+        "-DRE4DC_RES_CYCLE_FRAMES=0",
+        "-DRE4DC_MV_SHADOWS=1",
+        "-DRE4DC_MV_OPB_BINS=8",
+        "-DRE4DC_MV_SCALE=50",
+        "-DRE4DC_MV_SIDES=8",
+        "-DRE4DC_MV_RADIUS=420",
+        "-DRE4DC_MV_TOP=250",
+        "-DRE4DC_MV_DEPTH=1200",
+        "-DRE4DC_MV_RANGE_M=15",
+        "-DRE4DC_MV_MAX=12",
+        "-DRE4DC_MV_BODY=1700",
+        "-DRE4DC_MV_LEN_MAX=1800",
+        "-DRE4DC_ATCHK_LIST=1",
+        "-DRE4DC_ATCHK_CACHE=1",
+        "-DRE4DC_WORKAT_INLINE=1",
+        "-DRE4DC_FX_SCAN=1",
+        "-DRE4DC_FX_MOVE=1",
+        "-DRE4DC_OT_MASK=1",
+        "-DRE4DC_MANUAL_PACK_PROBE=1",
+        "-DRE4DC_PAD_PROMPTS=1",
+        "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+        "-ffp-contract=off",
+        "-DRE4DC_SH4ZAM_RENDER=1",
+        "-DRE4DC_ACTOR_TRANSACTION=1",
+        "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+        "-DRE4DC_VMU_DIALOG=1",
+        "-DRE4DC_LEON_HEADLESS=1",
+        "-DRE4DC_ACTOR_PL08=1",
+        "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+        "-DRE4DC_NMR_POOL=1",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_TEX_PKG_SKIP=1",
+        "-DRE4DC_GC_CENSUS_TRIM=1",
+        "-DRE4DC_GXF_JITTER=1",
+        "-MMD",
+        "-MP",
+        "-c",
+        "platform/gc_asset_disc.cpp",
+        "-o",
+        "/root/work/lanes/gc-port23-full-target2-scratch/off/out/obj/platform/gc_asset_disc.o"
+      ],
+      "platform/gc_asset_gate.cpp": [
+        "kos-c++",
+        "-O2",
+        "-fno-PIC",
+        "-fno-PIE",
+        "-fomit-frame-pointer",
+        "-m4-single",
+        "-ml",
+        "-mfsrra",
+        "-mfsca",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-matomic-model=soft-gusa",
+        "-ftls-model=local-exec",
+        "-D__DREAMCAST__",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/include",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/addons/include/",
+        "-isystem",
+        "/root/work/kos-ports/include",
+        "-D_arch_dreamcast=1",
+        "-D_arch_sub_pristine=1",
+        "-Wall",
+        "-g",
+        "-std=gnu++20",
+        "-Wall",
+        "-Wextra",
+        "-O1",
+        "-Iplatform/include",
+        "-DRE4DC_GAME",
+        "-fno-exceptions",
+        "-fno-unwind-tables",
+        "-fno-asynchronous-unwind-tables",
+        "-fno-threadsafe-statics",
+        "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+        "-DRE4DC_RENDER_FSAA=1",
+        "-DRE4DC_RENDER_OPTION=1",
+        "-DRE4DC_VIEW_DIST_OPTION=1",
+        "-DRE4DC_FAR_SHELL=1",
+        "-DRE4DC_FOLIAGE_OPTION=1",
+        "-DRE4DC_RES_ALTERNATE=1",
+        "-DRE4DC_RES_MODES=9",
+        "-DRE4DC_RES_MODE=0",
+        "-DRE4DC_RES_CYCLE_FRAMES=0",
+        "-DRE4DC_MV_SHADOWS=1",
+        "-DRE4DC_MV_OPB_BINS=8",
+        "-DRE4DC_MV_SCALE=50",
+        "-DRE4DC_MV_SIDES=8",
+        "-DRE4DC_MV_RADIUS=420",
+        "-DRE4DC_MV_TOP=250",
+        "-DRE4DC_MV_DEPTH=1200",
+        "-DRE4DC_MV_RANGE_M=15",
+        "-DRE4DC_MV_MAX=12",
+        "-DRE4DC_MV_BODY=1700",
+        "-DRE4DC_MV_LEN_MAX=1800",
+        "-DRE4DC_ATCHK_LIST=1",
+        "-DRE4DC_ATCHK_CACHE=1",
+        "-DRE4DC_WORKAT_INLINE=1",
+        "-DRE4DC_FX_SCAN=1",
+        "-DRE4DC_FX_MOVE=1",
+        "-DRE4DC_OT_MASK=1",
+        "-DRE4DC_MANUAL_PACK_PROBE=1",
+        "-DRE4DC_PAD_PROMPTS=1",
+        "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+        "-ffp-contract=off",
+        "-DRE4DC_SH4ZAM_RENDER=1",
+        "-DRE4DC_ACTOR_TRANSACTION=1",
+        "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+        "-DRE4DC_VMU_DIALOG=1",
+        "-DRE4DC_LEON_HEADLESS=1",
+        "-DRE4DC_ACTOR_PL08=1",
+        "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+        "-DRE4DC_NMR_POOL=1",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_TEX_PKG_SKIP=1",
+        "-DRE4DC_GC_CENSUS_TRIM=1",
+        "-DRE4DC_GXF_JITTER=1",
+        "-MMD",
+        "-MP",
+        "-c",
+        "platform/gc_asset_gate.cpp",
+        "-o",
+        "/root/work/lanes/gc-port23-full-target2-scratch/off/out/obj/platform/gc_asset_gate.o"
+      ]
+    },
+    "on": {
+      "platform/gc_asset_disc.cpp": [
+        "kos-c++",
+        "-O2",
+        "-fno-PIC",
+        "-fno-PIE",
+        "-fomit-frame-pointer",
+        "-m4-single",
+        "-ml",
+        "-mfsrra",
+        "-mfsca",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-matomic-model=soft-gusa",
+        "-ftls-model=local-exec",
+        "-D__DREAMCAST__",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/include",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/addons/include/",
+        "-isystem",
+        "/root/work/kos-ports/include",
+        "-D_arch_dreamcast=1",
+        "-D_arch_sub_pristine=1",
+        "-Wall",
+        "-g",
+        "-std=gnu++20",
+        "-Wall",
+        "-Wextra",
+        "-O1",
+        "-Iplatform/include",
+        "-DRE4DC_GAME",
+        "-fno-exceptions",
+        "-fno-unwind-tables",
+        "-fno-asynchronous-unwind-tables",
+        "-fno-threadsafe-statics",
+        "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+        "-DRE4DC_RENDER_FSAA=1",
+        "-DRE4DC_RENDER_OPTION=1",
+        "-DRE4DC_VIEW_DIST_OPTION=1",
+        "-DRE4DC_FAR_SHELL=1",
+        "-DRE4DC_FOLIAGE_OPTION=1",
+        "-DRE4DC_RES_ALTERNATE=1",
+        "-DRE4DC_RES_MODES=9",
+        "-DRE4DC_RES_MODE=0",
+        "-DRE4DC_RES_CYCLE_FRAMES=0",
+        "-DRE4DC_MV_SHADOWS=1",
+        "-DRE4DC_MV_OPB_BINS=8",
+        "-DRE4DC_MV_SCALE=50",
+        "-DRE4DC_MV_SIDES=8",
+        "-DRE4DC_MV_RADIUS=420",
+        "-DRE4DC_MV_TOP=250",
+        "-DRE4DC_MV_DEPTH=1200",
+        "-DRE4DC_MV_RANGE_M=15",
+        "-DRE4DC_MV_MAX=12",
+        "-DRE4DC_MV_BODY=1700",
+        "-DRE4DC_MV_LEN_MAX=1800",
+        "-DRE4DC_ATCHK_LIST=1",
+        "-DRE4DC_ATCHK_CACHE=1",
+        "-DRE4DC_WORKAT_INLINE=1",
+        "-DRE4DC_FX_SCAN=1",
+        "-DRE4DC_FX_MOVE=1",
+        "-DRE4DC_OT_MASK=1",
+        "-DRE4DC_MANUAL_PACK_PROBE=1",
+        "-DRE4DC_PAD_PROMPTS=1",
+        "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+        "-ffp-contract=off",
+        "-DRE4DC_SH4ZAM_RENDER=1",
+        "-DRE4DC_ACTOR_TRANSACTION=1",
+        "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+        "-DRE4DC_VMU_DIALOG=1",
+        "-DRE4DC_LEON_HEADLESS=1",
+        "-DRE4DC_ACTOR_PL08=1",
+        "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+        "-DRE4DC_NMR_POOL=1",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_TEX_PKG_SKIP=1",
+        "-DRE4DC_GC_CENSUS_TRIM=1",
+        "-DRE4DC_GXF_JITTER=1",
+        "-DRE4DC_GC_ASSET_GATE=1",
+        "-DRE4DC_GC_ASSET_CATALOG_SHA256=\"0\"",
+        "-MMD",
+        "-MP",
+        "-c",
+        "platform/gc_asset_disc.cpp",
+        "-o",
+        "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/platform/gc_asset_disc.o"
+      ],
+      "platform/gc_asset_gate.cpp": [
+        "kos-c++",
+        "-O2",
+        "-fno-PIC",
+        "-fno-PIE",
+        "-fomit-frame-pointer",
+        "-m4-single",
+        "-ml",
+        "-mfsrra",
+        "-mfsca",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-matomic-model=soft-gusa",
+        "-ftls-model=local-exec",
+        "-D__DREAMCAST__",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/include",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include",
+        "-isystem",
+        "/root/work/kos-re4dc-d367/addons/include/",
+        "-isystem",
+        "/root/work/kos-ports/include",
+        "-D_arch_dreamcast=1",
+        "-D_arch_sub_pristine=1",
+        "-Wall",
+        "-g",
+        "-std=gnu++20",
+        "-Wall",
+        "-Wextra",
+        "-O1",
+        "-Iplatform/include",
+        "-DRE4DC_GAME",
+        "-fno-exceptions",
+        "-fno-unwind-tables",
+        "-fno-asynchronous-unwind-tables",
+        "-fno-threadsafe-statics",
+        "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+        "-DRE4DC_RENDER_FSAA=1",
+        "-DRE4DC_RENDER_OPTION=1",
+        "-DRE4DC_VIEW_DIST_OPTION=1",
+        "-DRE4DC_FAR_SHELL=1",
+        "-DRE4DC_FOLIAGE_OPTION=1",
+        "-DRE4DC_RES_ALTERNATE=1",
+        "-DRE4DC_RES_MODES=9",
+        "-DRE4DC_RES_MODE=0",
+        "-DRE4DC_RES_CYCLE_FRAMES=0",
+        "-DRE4DC_MV_SHADOWS=1",
+        "-DRE4DC_MV_OPB_BINS=8",
+        "-DRE4DC_MV_SCALE=50",
+        "-DRE4DC_MV_SIDES=8",
+        "-DRE4DC_MV_RADIUS=420",
+        "-DRE4DC_MV_TOP=250",
+        "-DRE4DC_MV_DEPTH=1200",
+        "-DRE4DC_MV_RANGE_M=15",
+        "-DRE4DC_MV_MAX=12",
+        "-DRE4DC_MV_BODY=1700",
+        "-DRE4DC_MV_LEN_MAX=1800",
+        "-DRE4DC_ATCHK_LIST=1",
+        "-DRE4DC_ATCHK_CACHE=1",
+        "-DRE4DC_WORKAT_INLINE=1",
+        "-DRE4DC_FX_SCAN=1",
+        "-DRE4DC_FX_MOVE=1",
+        "-DRE4DC_OT_MASK=1",
+        "-DRE4DC_MANUAL_PACK_PROBE=1",
+        "-DRE4DC_PAD_PROMPTS=1",
+        "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+        "-ffp-contract=off",
+        "-DRE4DC_SH4ZAM_RENDER=1",
+        "-DRE4DC_ACTOR_TRANSACTION=1",
+        "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+        "-DRE4DC_VMU_DIALOG=1",
+        "-DRE4DC_LEON_HEADLESS=1",
+        "-DRE4DC_ACTOR_PL08=1",
+        "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+        "-DRE4DC_NMR_POOL=1",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_TEX_PKG_SKIP=1",
+        "-DRE4DC_GC_CENSUS_TRIM=1",
+        "-DRE4DC_GXF_JITTER=1",
+        "-DRE4DC_GC_ASSET_GATE=1",
+        "-DRE4DC_GC_ASSET_CATALOG_SHA256=\"0\"",
+        "-MMD",
+        "-MP",
+        "-c",
+        "platform/gc_asset_gate.cpp",
+        "-o",
+        "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/platform/gc_asset_gate.o"
+      ]
+    }
+  },
+  "changed": [
+    "port/dreamcast/game/platform/gc_asset_disc.cpp",
+    "port/dreamcast/game/platform/gc_asset_gate.cpp",
+    "port/dreamcast/game/platform/include/gc_asset_index.inc",
+    "port/dreamcast/tools/d367/gc_port23/CATALOG24.md",
+    "port/dreamcast/tools/d367/gc_port23/test_catalog_defensive.py"
+  ],
+  "runtime_diff": [
+    "port/dreamcast/game/platform/gc_asset_disc.cpp",
+    "port/dreamcast/game/platform/gc_asset_gate.cpp",
+    "port/dreamcast/game/platform/include/gc_asset_index.inc"
+  ],
+  "arms": [
+    "absent",
+    "zero",
+    "on-catalog0",
+    "on-synthetic-pin"
+  ],
+  "arm_count": 16,
+  "cap": 268435456,
+  "c_floor": 25769803776,
+  "scope": "Fresh selected gate/disc objects only, actual full normal flags. Retained old14 OFF programmes proof is historical plus unchanged runtime/input diff, not a new full link. Synthetic pin syntax/code retention only. No fullchain/heap/stage/guest/I001 acceptance.",
+  "objects": [
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "label": "parent",
+      "unit": "platform/gc_asset_gate.cpp",
+      "arm": "absent",
+      "sha256": "af14af711a613467970f060ed01143a5ca3baec6bff570f6c991807a05e0691b",
+      "nodebug_sha256": "aa0c75f835c1f10cfa23f0c5a26c25af875f29310a43bbd4a623b0afa13e20c5",
+      "sections": {
+        "text": 0,
+        "data": 0,
+        "bss": 0
+      },
+      "inputs_sha256": "d4b90b58d3e0bafbdfbcec89261ea3c052fb206e42fcc336b1aebb28a8497afa",
+      "command_sha256": "545d5468fe4d6138c0c2e3451c932f1c6b89fa65e74258ea05d2467c547a8014",
+      "su_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "seconds": 0.014762770995730534
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "label": "parent",
+      "unit": "platform/gc_asset_gate.cpp",
+      "arm": "zero",
+      "sha256": "af14af711a613467970f060ed01143a5ca3baec6bff570f6c991807a05e0691b",
+      "nodebug_sha256": "aa0c75f835c1f10cfa23f0c5a26c25af875f29310a43bbd4a623b0afa13e20c5",
+      "sections": {
+        "text": 0,
+        "data": 0,
+        "bss": 0
+      },
+      "inputs_sha256": "d4b90b58d3e0bafbdfbcec89261ea3c052fb206e42fcc336b1aebb28a8497afa",
+      "command_sha256": "99ffdc0119b8b2a33a9180ec9cec3c00b8d41c36f043fcb612838a2ac917248c",
+      "su_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "seconds": 0.014493628987111151
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "label": "parent",
+      "unit": "platform/gc_asset_gate.cpp",
+      "arm": "on-catalog0",
+      "sha256": "5fcb689dbd9809656b3fde47657e2d7720626ca749104ef7312e6e7c594ca146",
+      "nodebug_sha256": "e33d77dd86c744b297c41cc2335703ec75bbbe4f9fa0e718867beab8d7335f8c",
+      "sections": {
+        "text": 10885,
+        "data": 4,
+        "bss": 5052
+      },
+      "inputs_sha256": "ff3534d2a924ba006e29547c42ef0e8debe649df9940a929c45e4080475e0ccd",
+      "command_sha256": "673553e0bfac6b1c2ab64d574a627e76e2442ddcf35053e6abff2a7382c348d9",
+      "su_sha256": "9b9b340b4ffb76781f42aa652fdd2139fda6c7cad37e58f85a89bd162903b2b8",
+      "seconds": 0.2616261100047268
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "label": "parent",
+      "unit": "platform/gc_asset_gate.cpp",
+      "arm": "on-synthetic-pin",
+      "sha256": "5fcb689dbd9809656b3fde47657e2d7720626ca749104ef7312e6e7c594ca146",
+      "nodebug_sha256": "e33d77dd86c744b297c41cc2335703ec75bbbe4f9fa0e718867beab8d7335f8c",
+      "sections": {
+        "text": 10885,
+        "data": 4,
+        "bss": 5052
+      },
+      "inputs_sha256": "ff3534d2a924ba006e29547c42ef0e8debe649df9940a929c45e4080475e0ccd",
+      "command_sha256": "9d1f739cec625fd48694bec4ea584ff6e418c45604e4b184672f7e52c1c01d5a",
+      "su_sha256": "9b9b340b4ffb76781f42aa652fdd2139fda6c7cad37e58f85a89bd162903b2b8",
+      "seconds": 0.2650293270125985
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "label": "parent",
+      "unit": "platform/gc_asset_disc.cpp",
+      "arm": "absent",
+      "sha256": "76485cb02c272d8e2ea9a6c8a4fac361b869dac244e2784461aa673b4baf7ee1",
+      "nodebug_sha256": "aa0c75f835c1f10cfa23f0c5a26c25af875f29310a43bbd4a623b0afa13e20c5",
+      "sections": {
+        "text": 0,
+        "data": 0,
+        "bss": 0
+      },
+      "inputs_sha256": "cffbeb12d83227312b6bf8f16f7730f3f537c0e45b185174120b77fd7e703437",
+      "command_sha256": "6775479ebbf66ff73a314b3af65f66652fe00cb7732ce91b27e6172a51bd9ccb",
+      "su_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "seconds": 0.0146634140110109
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "label": "parent",
+      "unit": "platform/gc_asset_disc.cpp",
+      "arm": "zero",
+      "sha256": "76485cb02c272d8e2ea9a6c8a4fac361b869dac244e2784461aa673b4baf7ee1",
+      "nodebug_sha256": "aa0c75f835c1f10cfa23f0c5a26c25af875f29310a43bbd4a623b0afa13e20c5",
+      "sections": {
+        "text": 0,
+        "data": 0,
+        "bss": 0
+      },
+      "inputs_sha256": "cffbeb12d83227312b6bf8f16f7730f3f537c0e45b185174120b77fd7e703437",
+      "command_sha256": "2d28ab9796bc9ec56b5c9cc39382da84f47dfa830857d7db236cf7eb14fe31a3",
+      "su_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "seconds": 0.014443858992308378
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "label": "parent",
+      "unit": "platform/gc_asset_disc.cpp",
+      "arm": "on-catalog0",
+      "sha256": "936d6066dd7e9f79a4ef4c46d945bb2135f07fd503069bf98db005bde55ec5b8",
+      "nodebug_sha256": "cb8523b2750e090ec9eb65ddbca4906b332cf034d3c7452a146208de53809439",
+      "sections": {
+        "text": 264,
+        "data": 4,
+        "bss": 4
+      },
+      "inputs_sha256": "56e2b08b0bdc07d4020089d92906a6ac224cece94a0ee2e0e30560cfb5734422",
+      "command_sha256": "cba8ee23a0f54a6a6a67b8e4ac1529fba10e090fdbc94a941e080d4c5f789d5b",
+      "su_sha256": "d7d816de1a922e3a1fd0490f4f8cbdc5c558fb59c3890574518735ea12293afc",
+      "seconds": 0.04736074700485915
+    },
+    {
+      "source": "1d63cffe3a232c402418f2f2d919e7abae476957",
+      "label": "parent",
+      "unit": "platform/gc_asset_disc.cpp",
+      "arm": "on-synthetic-pin",
+      "sha256": "59899c4cc120db56ced1dd2d55139e1101f8fe62a8a32e07a0f3642179e60e86",
+      "nodebug_sha256": "4bbb8584b028ca93c44da21d3798ffce06ad65bb7be7f6dc5e4615018d285379",
+      "sections": {
+        "text": 709,
+        "data": 4,
+        "bss": 4
+      },
+      "inputs_sha256": "56e2b08b0bdc07d4020089d92906a6ac224cece94a0ee2e0e30560cfb5734422",
+      "command_sha256": "e4a4af3c5b75b00c864160c1e8633ff43bafde02e04aeb36a3861e443dc25689",
+      "su_sha256": "f996d3f80777e9beff9095ece7ecf1d1b78f6f432931726814bd92db969df668",
+      "seconds": 0.05006197502370924
+    },
+    {
+      "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+      "label": "current",
+      "unit": "platform/gc_asset_gate.cpp",
+      "arm": "absent",
+      "sha256": "c80804f1fc9deb61616caf6149b82ff69ec13a0083921eb78143258c84530e5e",
+      "nodebug_sha256": "aa0c75f835c1f10cfa23f0c5a26c25af875f29310a43bbd4a623b0afa13e20c5",
+      "sections": {
+        "text": 0,
+        "data": 0,
+        "bss": 0
+      },
+      "inputs_sha256": "037c261ace1aab5e07e78fe9c3b2c59fcc1af0add9a747cf4244b68111c4f39f",
+      "command_sha256": "1863dd5854013e34eb23dcfec1c9d2ddb1c39ac9503ae4a5491e663ae29e1a8c",
+      "su_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "seconds": 0.015352777001680806
+    },
+    {
+      "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+      "label": "current",
+      "unit": "platform/gc_asset_gate.cpp",
+      "arm": "zero",
+      "sha256": "c80804f1fc9deb61616caf6149b82ff69ec13a0083921eb78143258c84530e5e",
+      "nodebug_sha256": "aa0c75f835c1f10cfa23f0c5a26c25af875f29310a43bbd4a623b0afa13e20c5",
+      "sections": {
+        "text": 0,
+        "data": 0,
+        "bss": 0
+      },
+      "inputs_sha256": "037c261ace1aab5e07e78fe9c3b2c59fcc1af0add9a747cf4244b68111c4f39f",
+      "command_sha256": "120228b09a9f38189ce4d829ca9465337482e0475fe8dbf7f761a62ab948a493",
+      "su_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "seconds": 0.014857372996630147
+    },
+    {
+      "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+      "label": "current",
+      "unit": "platform/gc_asset_gate.cpp",
+      "arm": "on-catalog0",
+      "sha256": "55801495df069dca0e2e833782baff90eb3b8495ae4b0e6a9b7764de4fbae18b",
+      "nodebug_sha256": "cf34feceb0a9fa16bc94985dcc5866324d13c988204fda8ff84106099662022b",
+      "sections": {
+        "text": 12027,
+        "data": 4,
+        "bss": 5056
+      },
+      "inputs_sha256": "07411cb1a9fdf0efffb8bc383e37b09d5161be06671b2ab21c60b9b0b4897ad6",
+      "command_sha256": "f04440e60b713dd5946ac21f558d2b0997fa0bf64b00c40ab0beb449893fa725",
+      "su_sha256": "0e9a64a318e575c1e58054088d07832b95c69c54c9081bb7096d5145962e7d5b",
+      "seconds": 0.27516833899426274
+    },
+    {
+      "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+      "label": "current",
+      "unit": "platform/gc_asset_gate.cpp",
+      "arm": "on-synthetic-pin",
+      "sha256": "55801495df069dca0e2e833782baff90eb3b8495ae4b0e6a9b7764de4fbae18b",
+      "nodebug_sha256": "cf34feceb0a9fa16bc94985dcc5866324d13c988204fda8ff84106099662022b",
+      "sections": {
+        "text": 12027,
+        "data": 4,
+        "bss": 5056
+      },
+      "inputs_sha256": "07411cb1a9fdf0efffb8bc383e37b09d5161be06671b2ab21c60b9b0b4897ad6",
+      "command_sha256": "f87159407862c15fe78ab1cabe9c8269b3f235e038cb2d0671921b1932768266",
+      "su_sha256": "0e9a64a318e575c1e58054088d07832b95c69c54c9081bb7096d5145962e7d5b",
+      "seconds": 0.2988864810031373
+    },
+    {
+      "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+      "label": "current",
+      "unit": "platform/gc_asset_disc.cpp",
+      "arm": "absent",
+      "sha256": "11ff25b3fa9792d176a6292f72b3739231caa1397cd2ed604720a6e17e3a0763",
+      "nodebug_sha256": "aa0c75f835c1f10cfa23f0c5a26c25af875f29310a43bbd4a623b0afa13e20c5",
+      "sections": {
+        "text": 0,
+        "data": 0,
+        "bss": 0
+      },
+      "inputs_sha256": "0b89b33fc9146037ac0499b3d5683e723e53daf2c0cfeb8c588b5314951b63e1",
+      "command_sha256": "1f6b0bc30bccaf87e378429741f618aa2130767ab41e947656777216da49a1db",
+      "su_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "seconds": 0.01560979601345025
+    },
+    {
+      "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+      "label": "current",
+      "unit": "platform/gc_asset_disc.cpp",
+      "arm": "zero",
+      "sha256": "11ff25b3fa9792d176a6292f72b3739231caa1397cd2ed604720a6e17e3a0763",
+      "nodebug_sha256": "aa0c75f835c1f10cfa23f0c5a26c25af875f29310a43bbd4a623b0afa13e20c5",
+      "sections": {
+        "text": 0,
+        "data": 0,
+        "bss": 0
+      },
+      "inputs_sha256": "0b89b33fc9146037ac0499b3d5683e723e53daf2c0cfeb8c588b5314951b63e1",
+      "command_sha256": "adcb1d8ed84097d1bdbf69505a5915d8a15e7c6e74e883784356ceca3882cf24",
+      "su_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "seconds": 0.014354571991134435
+    },
+    {
+      "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+      "label": "current",
+      "unit": "platform/gc_asset_disc.cpp",
+      "arm": "on-catalog0",
+      "sha256": "5f712a02bc03669a8dcd7921caa4438500b6bcc7e604094f94b9c0949484a59a",
+      "nodebug_sha256": "6dda09edd289cb9685b3d16cf2dfe33a6b5ec9950bf48ee0d4e4862500a071cf",
+      "sections": {
+        "text": 512,
+        "data": 4,
+        "bss": 5
+      },
+      "inputs_sha256": "03d1f013ffde3d24876f52cd496f13c501cf60fa56cb005a0912b80ef486343d",
+      "command_sha256": "841828ba2a39058848c9a8d2492665659d8739b84a5b4ec0da9028e7a70fce95",
+      "su_sha256": "a28cb3e22a6220e6f989a2f20cb71ca2202dc39bed021890815bc322bf4c8f72",
+      "seconds": 0.09515464399009943
+    },
+    {
+      "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+      "label": "current",
+      "unit": "platform/gc_asset_disc.cpp",
+      "arm": "on-synthetic-pin",
+      "sha256": "c7ef744ffe52429af99b3d0bb2b9985c41458092f5f6e5f13031d0a4d80e70bd",
+      "nodebug_sha256": "557eef69c6b0d2b2c9c4b6efb49f07e5a041b30d852d96441fed15e0a340e9af",
+      "sections": {
+        "text": 1064,
+        "data": 4,
+        "bss": 5
+      },
+      "inputs_sha256": "03d1f013ffde3d24876f52cd496f13c501cf60fa56cb005a0912b80ef486343d",
+      "command_sha256": "631fbad27e69817e8a845d8431e3125d758f0e99a70d11454271cc63cebf42ec",
+      "su_sha256": "84aa42298fb3dcb8ec69a294f7c94b2a084987f4de20bd96dfbed8536462b5c6",
+      "seconds": 0.11181069299345836
+    }
+  ],
+  "complete": true,
+  "harness_sha256": "3952fa4df2c37f4145dd6a5a46f67714524f3cf4872674908dd99533ca3d83f2",
+  "off_identity": {
+    "platform/gc_asset_gate.cpp": true,
+    "platform/gc_asset_disc.cpp": true
+  },
+  "deltas": {
+    "platform/gc_asset_gate.cpp on-catalog0": {
+      "text": 1142,
+      "data": 0,
+      "bss": 4
+    },
+    "platform/gc_asset_gate.cpp on-synthetic-pin": {
+      "text": 1142,
+      "data": 0,
+      "bss": 4
+    },
+    "platform/gc_asset_disc.cpp on-catalog0": {
+      "text": 248,
+      "data": 0,
+      "bss": 1
+    },
+    "platform/gc_asset_disc.cpp on-synthetic-pin": {
+      "text": 355,
+      "data": 0,
+      "bss": 1
+    }
+  },
+  "provider_closure": {
+    "on-catalog0": {
+      "imports": {
+        "__ZN13re4dc_gcasset10unresolvedENS_8ConsumerEPKc": {
+          "selected_current_definitions": [
+            "current-gc_asset_gate-on-catalog0"
+          ],
+          "real_external_candidates": []
+        },
+        "__ZN13re4dc_gcasset14retire_catalogEv": {
+          "selected_current_definitions": [
+            "current-gc_asset_gate-on-catalog0"
+          ],
+          "real_external_candidates": []
+        },
+        "___movmem_i4_odd": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/libgcc.a",
+              "definition": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/libgcc.a:_movmem_i4.o:0000000e T ___movmem_i4_odd"
+            }
+          ]
+        },
+        "_fs_close": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a",
+              "definition": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a:fs.o:00000000 T _fs_close"
+            }
+          ]
+        },
+        "_fs_read": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a",
+              "definition": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a:fs.o:00000000 T _fs_read"
+            }
+          ]
+        },
+        "_fs_seek": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a",
+              "definition": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a:fs.o:00000000 T _fs_seek"
+            }
+          ]
+        },
+        "_memcmp": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a",
+              "definition": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a:libc_a-memcmp.o:00000000 T _memcmp"
+            }
+          ]
+        },
+        "_memcpy": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a",
+              "definition": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a:libc_a-memcpy.o:00000000 T _memcpy"
+            }
+          ]
+        },
+        "_memset": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a",
+              "definition": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a:libc_a-memset.o:00000000 T _memset"
+            }
+          ]
+        },
+        "_re4dc_io_begin": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/platform/os.o",
+              "definition": "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/platform/os.o:00000000 T _re4dc_io_begin"
+            }
+          ]
+        },
+        "_re4dc_io_end": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/platform/os.o",
+              "definition": "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/platform/os.o:00000000 T _re4dc_io_end"
+            }
+          ]
+        },
+        "_re4dc_log": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/platform/mem.o",
+              "definition": "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/platform/mem.o:00000000 T _re4dc_log"
+            }
+          ]
+        },
+        "_sprintf": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a",
+              "definition": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a:libc_a-sprintf.o:00000000 T _sprintf"
+            }
+          ]
+        },
+        "_strcpy": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a",
+              "definition": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a:libc_a-strcpy.o:00000000 T _strcpy"
+            }
+          ]
+        }
+      },
+      "missing": [],
+      "note": "No aliases/stubs; real candidates only. Archive selection/final map not re-linked."
+    },
+    "on-synthetic-pin": {
+      "imports": {
+        "__ZN13re4dc_gcasset10unresolvedENS_8ConsumerEPKc": {
+          "selected_current_definitions": [
+            "current-gc_asset_gate-on-synthetic-pin"
+          ],
+          "real_external_candidates": []
+        },
+        "__ZN13re4dc_gcasset13install_indexEPFjPvjS0_jES0_jRKNS_6DigestE": {
+          "selected_current_definitions": [
+            "current-gc_asset_gate-on-synthetic-pin"
+          ],
+          "real_external_candidates": []
+        },
+        "__ZN13re4dc_gcasset14retire_catalogEv": {
+          "selected_current_definitions": [
+            "current-gc_asset_gate-on-synthetic-pin"
+          ],
+          "real_external_candidates": []
+        },
+        "___movmem_i4_odd": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/libgcc.a",
+              "definition": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/libgcc.a:_movmem_i4.o:0000000e T ___movmem_i4_odd"
+            }
+          ]
+        },
+        "_fs_close": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a",
+              "definition": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a:fs.o:00000000 T _fs_close"
+            }
+          ]
+        },
+        "_fs_open": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a",
+              "definition": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a:fs.o:00000000 T _fs_open"
+            }
+          ]
+        },
+        "_fs_read": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a",
+              "definition": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a:fs.o:00000000 T _fs_read"
+            }
+          ]
+        },
+        "_fs_seek": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a",
+              "definition": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a:fs.o:00000000 T _fs_seek"
+            }
+          ]
+        },
+        "_fs_total": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a",
+              "definition": "/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a:fs.o:00000000 T _fs_total"
+            }
+          ]
+        },
+        "_memcmp": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a",
+              "definition": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a:libc_a-memcmp.o:00000000 T _memcmp"
+            }
+          ]
+        },
+        "_memcpy": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a",
+              "definition": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a:libc_a-memcpy.o:00000000 T _memcpy"
+            }
+          ]
+        },
+        "_memset": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a",
+              "definition": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a:libc_a-memset.o:00000000 T _memset"
+            }
+          ]
+        },
+        "_re4dc_io_begin": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/platform/os.o",
+              "definition": "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/platform/os.o:00000000 T _re4dc_io_begin"
+            }
+          ]
+        },
+        "_re4dc_io_end": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/platform/os.o",
+              "definition": "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/platform/os.o:00000000 T _re4dc_io_end"
+            }
+          ]
+        },
+        "_re4dc_log": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/platform/mem.o",
+              "definition": "/root/work/lanes/gc-port23-full-target2-scratch/on/out/obj/platform/mem.o:00000000 T _re4dc_log"
+            }
+          ]
+        },
+        "_sprintf": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a",
+              "definition": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a:libc_a-sprintf.o:00000000 T _sprintf"
+            }
+          ]
+        },
+        "_strcpy": {
+          "selected_current_definitions": [],
+          "real_external_candidates": [
+            {
+              "provider": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a",
+              "definition": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/../../../../sh-elf/lib/libc.a:libc_a-strcpy.o:00000000 T _strcpy"
+            }
+          ]
+        }
+      },
+      "missing": [],
+      "note": "No aliases/stubs; real candidates only. Archive selection/final map not re-linked."
+    }
+  },
+  "stack_scope": {
+    "self_frames": "Every .su retained; compiler self frames only. Inlining/indirect FS providers mean no full chain/highwater/heap conclusion.",
+    "known_source_chains": [
+      "emitted_checked -> describe_checked -> index_row -> index_read_row -> index_read_at -> disc_read -> fs_seek/read",
+      "ensure_disc_catalog -> install_index -> fingerprint_read -> index_stream_read -> index_read_at -> disc_read"
+    ]
+  },
+  "owned_output_bytes": 1115763
+}

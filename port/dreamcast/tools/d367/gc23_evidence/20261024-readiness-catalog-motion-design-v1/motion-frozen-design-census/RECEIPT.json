@@ -1,0 +1,28 @@
+{
+  "status": "DESIGN_READY_FOR_ROOT_SELECTION",
+  "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+  "observed_clean_successor": "870789095c4c14fbdbf22043447b249063d2ec3a",
+  "input_documents": [
+    {
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\gc-port23\\STATUS.md",
+      "bytes": 7569,
+      "sha256": "833f6c3ca30edc065604d9ac4e6de2c9cec4002c263eb6cc9577da2a4317474a"
+    },
+    {
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\gc-port23\\motion-next-audit\\LOW-METADATA-POSE-CONTRACT.md",
+      "bytes": 14446,
+      "sha256": "ed2dc6e98c8809503c33050ee07b02909378ac1fa437a2ad04b52579a021eef4"
+    }
+  ],
+  "source_files": 36,
+  "source_fact_controls": 8,
+  "detected_counterfactual_edits": 8,
+  "runtime_detector_implemented": false,
+  "Motion_positive_receipt": false,
+  "Motion_coverage": false,
+  "new_runtime_allocation_bytes": 0,
+  "source_edits": false,
+  "sdk": false,
+  "guest": false,
+  "limits": "Read-only source audit and design only; no I001/noGC/provenance PASS; all artifacts confined to own folder."
+}

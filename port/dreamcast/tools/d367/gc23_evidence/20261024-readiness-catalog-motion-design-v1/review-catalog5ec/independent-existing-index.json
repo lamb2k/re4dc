@@ -1,0 +1,6 @@
+{
+  "source": "5ec379b023a800a4e980108218b5242f4e2472ef",
+  "exit": 1,
+  "expected_result": "regression reproduction, fail on logging within io_depth",
+  "log_sha256": "02f72d595e938e8b89e0edb3c9814fd69d6b15feb3b74432cbd1368d8412ecc0"
+}

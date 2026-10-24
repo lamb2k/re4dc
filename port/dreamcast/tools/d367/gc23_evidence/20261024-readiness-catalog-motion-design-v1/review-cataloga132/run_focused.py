@@ -1,0 +1,9 @@
+from pathlib import Path
+import subprocess,tarfile,io,resource,json,hashlib,sys,time
+resource.setrlimit(resource.RLIMIT_AS,(256*1024*1024,256*1024*1024));resource.setrlimit(resource.RLIMIT_CORE,(0,0))
+repo='/root/work/lanes/gc-catalog24';sha='a132648e8199b50a5ac51cec4d339fe7dbc60135';root=Path('/dev/shm/gc-catalog-reviewa132/source');root.mkdir(parents=True,exist_ok=True)
+b=subprocess.check_output(['git','-C',repo,'archive',sha,'port/dreamcast/game','port/dreamcast/room','port/dreamcast/tools/d367/gc_port23'])
+with tarfile.open(fileobj=io.BytesIO(b)) as tf:tf.extractall(root,filter='data')
+gitdir=subprocess.check_output(['git','-C',repo,'rev-parse','--absolute-git-dir'],text=True).strip();(root/'.git').write_text('gitdir: '+gitdir+'\n')
+out=Path('/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-cataloga132');tests=root/'port/dreamcast/tools/d367/gc_port23';start=time.monotonic();p=subprocess.run([sys.executable,'-m','unittest','-v','test_catalog_defensive','test_runtime_index'],cwd=tests,capture_output=True,text=True);log=p.stdout+p.stderr;(out/'focused-and-regression.log').write_text(log)
+rec={'source':sha,'source_mode':'immutable git archive; original test files unchanged; existing read-only Git object database','tests':['test_catalog_defensive','test_runtime_index'],'exit':p.returncode,'seconds':time.monotonic()-start,'RLIMIT_AS_bytes':256*1024*1024,'compiler_jobs':1,'log_sha256':hashlib.sha256(log.encode()).hexdigest(),'scope':'host actual source with mocked providers; no SDK/guest/target'};(out/'focused-and-regression.json').write_text(json.dumps(rec,indent=2)+'\n');print(log);assert p.returncode==0

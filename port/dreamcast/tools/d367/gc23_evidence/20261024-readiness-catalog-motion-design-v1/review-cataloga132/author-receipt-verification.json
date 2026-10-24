@@ -1,0 +1,27 @@
+{
+  "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+  "scope": "author-executed broad evidence read-back; not reviewer full sweep",
+  "manifest_sha256": "cbe9e7d06aaa4ff9c6417c48e979e914eb867cf4ce50875955249a2718590d43",
+  "source_hashes_verified": 7,
+  "full_suite": {
+    "discovered": 108,
+    "passed": 107,
+    "skipped": 1,
+    "errors": 0,
+    "seconds": 88.906,
+    "cpp_gate_member_cursor": "PASS",
+    "whole_script_exit": 0
+  },
+  "files": [
+    {
+      "file": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/source-a132648e8/host.log",
+      "bytes": 16758,
+      "sha256": "62a2480c3da701d821fda8d080b4314bcbd25323a6ac4a3dce1ed01a815c4597"
+    },
+    {
+      "file": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/source-a132648e8/receipt.json",
+      "bytes": 2482,
+      "sha256": "50b4cc3d3a738c19d1dd9e65082614cf0b91ca0034888db2d8eb95a317f3d8aa"
+    }
+  ]
+}

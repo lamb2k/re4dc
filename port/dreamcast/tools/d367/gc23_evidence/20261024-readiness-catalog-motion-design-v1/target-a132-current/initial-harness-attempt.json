@@ -1,0 +1,9 @@
+{
+  "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+  "no_compiler_arms_started": true,
+  "scope": "Harness resource failure before first compilation; not a source/target failure",
+  "error": "fatal: unable to create threaded lstat: Resource temporarily unavailable",
+  "fix": "git CLI index.threads1/preloadIndexfalse; compiler/profile unchanged",
+  "report_sha256": "39fc40634301a3c6ff4f9bde50cdd3ec3405454cbfed57de4000b4cd535ba963",
+  "ram": "/dev/shm/gc-catalog24-a132-obkg9mte"
+}

@@ -1,0 +1,42 @@
+{
+  "status": "FROZEN_DESIGN_ONLY",
+  "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+  "files": [
+    {
+      "path": "HANDBACK.md",
+      "bytes": 1865,
+      "sha256": "525b1268fb2e0184c8cdbb54d60130caf6b0c7394729b9e435de859abda6b902"
+    },
+    {
+      "path": "MINIMAL-API.md",
+      "bytes": 9685,
+      "sha256": "4978dd0ce98b79258b9b5ef1acfc8d69da7b4d863a32e9ff4dec808c74eaf7e5"
+    },
+    {
+      "path": "readback.py",
+      "bytes": 9935,
+      "sha256": "9f5a33a192bf6993c0e9e7b422143181caf8dce0ae25a3d079cd7d5e7f5261b7"
+    },
+    {
+      "path": "RECEIPT.json",
+      "bytes": 1074,
+      "sha256": "a3e81c7e52a9f2caa1b8f6db7d99ad8e2031471b46095dceac61c5cca9f0dce3"
+    },
+    {
+      "path": "ROUTE-MAP.md",
+      "bytes": 12639,
+      "sha256": "4233442aef1debe7b23817139e7702c73d6bdc3a4dca0b3274998675db3fc268"
+    },
+    {
+      "path": "SOURCE-READBACK.json",
+      "bytes": 19828,
+      "sha256": "e85b5a5bb930a6c8a90451c65cb6fbc5d424f8f8831d8c2bd9087c75671ed130"
+    },
+    {
+      "path": "STATUS.md",
+      "bytes": 1610,
+      "sha256": "34642921ccb090ed11d50a24711fbdd7a9c0745627aa4cfc32054ae30f2a9572"
+    }
+  ],
+  "total_member_bytes": 56636
+}

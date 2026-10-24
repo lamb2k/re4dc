@@ -1,0 +1,173 @@
+{
+  "scope": "Hash receipts only; all original log payloads remain private.",
+  "files": [
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-cataloga132/focused-and-regression.log",
+      "bytes": 1536,
+      "sha256": "7c0ef499877e7f6fa17a55ceb5c1641bac4538c1f43dfc54c60eba19a2800b46",
+      "source_mtime_ns": 1792823300929113000,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-catalog5ec/focused-independent.log",
+      "bytes": 1054,
+      "sha256": "b35e0d12832bd3e5c9d1e586f10113a001c9f55835bba91a3b2b29ff4e116634",
+      "source_mtime_ns": 1792822808884861200,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-catalog5ec/independent-existing-index.log",
+      "bytes": 1382,
+      "sha256": "02f72d595e938e8b89e0edb3c9814fd69d6b15feb3b74432cbd1368d8412ecc0",
+      "source_mtime_ns": 1792822906767192500,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/source-a132648e8/host.log",
+      "bytes": 16758,
+      "sha256": "62a2480c3da701d821fda8d080b4314bcbd25323a6ac4a3dce1ed01a815c4597",
+      "source_mtime_ns": 1792823369774234700,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/source-5ec379b02/host.log",
+      "bytes": 16513,
+      "sha256": "7dfeb417e817a64511385975c505cb8d52d5bf9184fcf01880c7a0f9a62eb85d",
+      "source_mtime_ns": 1792823304394971100,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-absent.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792824047130350700,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-on-catalog0.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792824047076597100,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-on-synthetic-pin.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792824047047598400,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792824047103350400,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-absent.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792824047243352900,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-on-catalog0.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792824047190351000,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-on-synthetic-pin.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792824047160354400,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792824047216353100,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-absent.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792824047354881300,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-on-catalog0.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792824047299883400,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-on-synthetic-pin.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792824047272353300,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792824047326880100,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-absent.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792824047466884200,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-on-catalog0.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792824047411885200,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-on-synthetic-pin.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792824047383881100,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-zero.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792824047439883300,
+      "copied": false,
+      "scope": "Original retained privately; hash only, no log payload in source snapshot."
+    }
+  ]
+}

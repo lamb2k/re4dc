@@ -1,0 +1,1562 @@
+{
+  "schema": 1,
+  "captured_utc": "2026-10-24T06:58:02.227284+00:00",
+  "parent_evidence_commit": "47ed3ba2baaca4b4dd146a9d70128a69c3d47499",
+  "files": [
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-final-20261024/stable-dated-inputs/integration-readiness-20261024.py",
+      "destination": "dated-20261024-root-snapshots/integration-readiness-20261024.py",
+      "bytes": 3053,
+      "sha256": "4f22ad1c7cb34948d161953a2c722e2017544cd972ec5e657c286e608819f0af",
+      "lf_sha256": "4f22ad1c7cb34948d161953a2c722e2017544cd972ec5e657c286e608819f0af",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824937797842800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-final-20261024/stable-dated-inputs/ROOT-INTEGRATION-READINESS-20261024.json",
+      "destination": "dated-20261024-root-snapshots/ROOT-INTEGRATION-READINESS-20261024.json",
+      "bytes": 2150,
+      "sha256": "90f1ce2fc4fa150fae4d519b4efa1270a8d74d8bcc96b08bce1c2fa51201f1bd",
+      "lf_sha256": "90f1ce2fc4fa150fae4d519b4efa1270a8d74d8bcc96b08bce1c2fa51201f1bd",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824937805845100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-final-20261024/stable-dated-inputs/takeover-refresh-20261024.py",
+      "destination": "dated-20261024-root-snapshots/takeover-refresh-20261024.py",
+      "bytes": 14377,
+      "sha256": "2a6c4ecd91c86785c9868697f754e76265f30ff10cb9e984a3f35533b380693e",
+      "lf_sha256": "2a6c4ecd91c86785c9868697f754e76265f30ff10cb9e984a3f35533b380693e",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824937813914400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-final-20261024/stable-dated-inputs/CODEX-TAKEOVER-STATUS.md",
+      "destination": "dated-20261024-root-snapshots/CODEX-TAKEOVER-STATUS.md",
+      "bytes": 18996,
+      "sha256": "236ac622335a4e86a662b4495a703bc1ccbd549b15ff46aebebd44e9e5a43220",
+      "lf_sha256": "6b677823a3bd472aa69afba9301fdda9c8303242c0af0ec475f8e48f83529fee",
+      "crlf_count": 38,
+      "source_mtime_ns": 1792824937828918300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-final-20261024/stable-dated-inputs/CLAUDE-CARRY23.md",
+      "destination": "dated-20261024-root-snapshots/CLAUDE-CARRY23.md",
+      "bytes": 16090,
+      "sha256": "7ca73aa8e2739283bda5be2541e5c345757dd032e3f91f549845fa085aae3436",
+      "lf_sha256": "9aed7d81ca377a55c0a060351cd9764b68006dcb934f0f96a9604adc2c0f2277",
+      "crlf_count": 2,
+      "source_mtime_ns": 1792824937835919500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-final-20261024/stable-dated-inputs/CAPTURED-DOCS.json",
+      "destination": "dated-20261024-root-snapshots/CAPTURED-DOCS.json",
+      "bytes": 1659,
+      "sha256": "8889b1b7418192a583280dc7e8e1355b37d0ac07391c6b91303267ad7e7d391b",
+      "lf_sha256": "8889b1b7418192a583280dc7e8e1355b37d0ac07391c6b91303267ad7e7d391b",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824937839924300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-vis23/triangle-shadow-next/ROOT-CONNECTED-PATCH-REFINEMENT-20261024.md",
+      "destination": "dated-crosslane-connected-notes/ROOT-CONNECTED-PATCH-REFINEMENT-20261024.md",
+      "bytes": 1969,
+      "sha256": "e4ec95ee427870baa3eef8b62435397201175bf4b5cac2cac9234eb13fb97042",
+      "lf_sha256": "e4ec95ee427870baa3eef8b62435397201175bf4b5cac2cac9234eb13fb97042",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792822390873643300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-vis23/triangle-shadow-next/review-connected-patch-plan.md",
+      "destination": "dated-crosslane-connected-notes/review-connected-patch-plan.md",
+      "bytes": 10181,
+      "sha256": "aff55c37c441cab6c8d5d19e69127122e668efc8533bce4b2c732ba0a71f810f",
+      "lf_sha256": "aff55c37c441cab6c8d5d19e69127122e668efc8533bce4b2c732ba0a71f810f",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792822518308522400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-vis23/triangle-shadow-next/review-boundary-kernel.md",
+      "destination": "dated-crosslane-connected-notes/review-boundary-kernel.md",
+      "bytes": 7662,
+      "sha256": "6099aa1d7364b92362590f70663ebb42a844bd57df23564249fa6e3b81a5871b",
+      "lf_sha256": "6099aa1d7364b92362590f70663ebb42a844bd57df23564249fa6e3b81a5871b",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823201751141100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-vis23/triangle-shadow-next/review-connected-implementation.md",
+      "destination": "dated-crosslane-connected-notes/review-connected-implementation.md",
+      "bytes": 11026,
+      "sha256": "1a82d4fd9879ce8e208ea88cdc79f1edc7d3e71784b99dd4abd46a3320216086",
+      "lf_sha256": "a50c2ae9b017a451d1ba626e847563cb2c9b6188c106b05a71cc908f616e46c6",
+      "crlf_count": 72,
+      "source_mtime_ns": 1792824391891164500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/river-location-audit/LOCATION-NOTE.md",
+      "destination": "river-location-audit/LOCATION-NOTE.md",
+      "bytes": 3663,
+      "sha256": "9fc665165b97bed3cbea788a1f601679a73357c77f1676a05d39aa73954d1330",
+      "lf_sha256": "929426b88a6542912eb7e2d0ca667355aea508d8850fadcc94f33d0f86cd040b",
+      "crlf_count": 1,
+      "source_mtime_ns": 1792823353381106100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/water-rain24/river-location-audit/READBACK.json",
+      "destination": "river-location-audit/READBACK.json",
+      "bytes": 4890,
+      "sha256": "2d415cd59104baf69a5c11b1f4f78a87555001c3b5763d79e89712e6566070a5",
+      "lf_sha256": "2d415cd59104baf69a5c11b1f4f78a87555001c3b5763d79e89712e6566070a5",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823332067586700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/motion-unknown-census/HANDBACK.md",
+      "destination": "motion-frozen-design-census/HANDBACK.md",
+      "bytes": 1865,
+      "sha256": "525b1268fb2e0184c8cdbb54d60130caf6b0c7394729b9e435de859abda6b902",
+      "lf_sha256": "525b1268fb2e0184c8cdbb54d60130caf6b0c7394729b9e435de859abda6b902",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824188424360800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/motion-unknown-census/MINIMAL-API.md",
+      "destination": "motion-frozen-design-census/MINIMAL-API.md",
+      "bytes": 9685,
+      "sha256": "4978dd0ce98b79258b9b5ef1acfc8d69da7b4d863a32e9ff4dec808c74eaf7e5",
+      "lf_sha256": "4978dd0ce98b79258b9b5ef1acfc8d69da7b4d863a32e9ff4dec808c74eaf7e5",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824115547456200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/motion-unknown-census/readback.py",
+      "destination": "motion-frozen-design-census/readback.py",
+      "bytes": 9935,
+      "sha256": "9f5a33a192bf6993c0e9e7b422143181caf8dce0ae25a3d079cd7d5e7f5261b7",
+      "lf_sha256": "9f5a33a192bf6993c0e9e7b422143181caf8dce0ae25a3d079cd7d5e7f5261b7",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824214355306700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/motion-unknown-census/RECEIPT.json",
+      "destination": "motion-frozen-design-census/RECEIPT.json",
+      "bytes": 1074,
+      "sha256": "a3e81c7e52a9f2caa1b8f6db7d99ad8e2031471b46095dceac61c5cca9f0dce3",
+      "lf_sha256": "ba2101c1ef80fa98fd25b3ba36e511fbe4bf9743ed1c2c2944a55769c5f58446",
+      "crlf_count": 28,
+      "source_mtime_ns": 1792824240787252400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/motion-unknown-census/ROUTE-MAP.md",
+      "destination": "motion-frozen-design-census/ROUTE-MAP.md",
+      "bytes": 12639,
+      "sha256": "4233442aef1debe7b23817139e7702c73d6bdc3a4dca0b3274998675db3fc268",
+      "lf_sha256": "4233442aef1debe7b23817139e7702c73d6bdc3a4dca0b3274998675db3fc268",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824240525001600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/motion-unknown-census/SOURCE-READBACK.json",
+      "destination": "motion-frozen-design-census/SOURCE-READBACK.json",
+      "bytes": 19828,
+      "sha256": "e85b5a5bb930a6c8a90451c65cb6fbc5d424f8f8831d8c2bd9087c75671ed130",
+      "lf_sha256": "e85b5a5bb930a6c8a90451c65cb6fbc5d424f8f8831d8c2bd9087c75671ed130",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824214906855800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/motion-unknown-census/STATUS.md",
+      "destination": "motion-frozen-design-census/STATUS.md",
+      "bytes": 1610,
+      "sha256": "34642921ccb090ed11d50a24711fbdd7a9c0745627aa4cfc32054ae30f2a9572",
+      "lf_sha256": "34642921ccb090ed11d50a24711fbdd7a9c0745627aa4cfc32054ae30f2a9572",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824240525001600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/motion-unknown-census/SOURCE-SEAL.json",
+      "destination": "motion-frozen-design-census/SOURCE-SEAL.json",
+      "bytes": 1219,
+      "sha256": "fba3cb3af6cc8a1047be908e4de72adb499e2a72ac8d0f98b440a0863f59822f",
+      "lf_sha256": "4e2a2a5caebd1f8c55ec3f786acd02fb2fd59c7f5d05b3aeae6969e42e1fe28d",
+      "crlf_count": 42,
+      "source_mtime_ns": 1792824262712555100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-motion24/INITIAL-PLAN-REVIEW.md",
+      "destination": "motion-initial-plan-review/INITIAL-PLAN-REVIEW.md",
+      "bytes": 2293,
+      "sha256": "5b2ae669a4c2471edec2590dbac964e8f0c9923f7964cd532e3e35fcfbbcd31c",
+      "lf_sha256": "5b2ae669a4c2471edec2590dbac964e8f0c9923f7964cd532e3e35fcfbbcd31c",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824559356666600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-cataloga132/REVIEW.md",
+      "destination": "review-cataloga132/REVIEW.md",
+      "bytes": 7263,
+      "sha256": "1cf0406fb369e0bbc2fa2399b64d3101b8ce70ace45210ad46b9e27d9af60349",
+      "lf_sha256": "1cf0406fb369e0bbc2fa2399b64d3101b8ce70ace45210ad46b9e27d9af60349",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823455849291100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-cataloga132/actual-fault-lifetime-controls.cpp",
+      "destination": "review-cataloga132/actual-fault-lifetime-controls.cpp",
+      "bytes": 8280,
+      "sha256": "93faa24ef9e1609fa21c6f2b51d300cf2bcfd87bd5b602928221019e77b3c762",
+      "lf_sha256": "93faa24ef9e1609fa21c6f2b51d300cf2bcfd87bd5b602928221019e77b3c762",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823377725142700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-cataloga132/actual-wrapper-policy-controls.cpp",
+      "destination": "review-cataloga132/actual-wrapper-policy-controls.cpp",
+      "bytes": 7807,
+      "sha256": "c7e958e8034d5b5b18b6de99295d4e5dc17161b95a0094396974e5e4703fa73b",
+      "lf_sha256": "c7e958e8034d5b5b18b6de99295d4e5dc17161b95a0094396974e5e4703fa73b",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823332004078400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-cataloga132/author-receipt-verification.json",
+      "destination": "review-cataloga132/author-receipt-verification.json",
+      "bytes": 909,
+      "sha256": "0aa760ca6ad94be6b630829b5493c3cf55ab034046205a5e32e0fa2849a975c6",
+      "lf_sha256": "0aa760ca6ad94be6b630829b5493c3cf55ab034046205a5e32e0fa2849a975c6",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823456015653300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-cataloga132/focused-and-regression.json",
+      "destination": "review-cataloga132/focused-and-regression.json",
+      "bytes": 504,
+      "sha256": "cc6e7818e702643a7de43ac436a01b2e9634ad22999f7b39584d137c36949324",
+      "lf_sha256": "cc6e7818e702643a7de43ac436a01b2e9634ad22999f7b39584d137c36949324",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823300933114800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-cataloga132/independent-fault-lifetime.json",
+      "destination": "review-cataloga132/independent-fault-lifetime.json",
+      "bytes": 781,
+      "sha256": "505f0dbc66a5a26aea4aa7ed67b1bd1155bcf5fe7ecc3955dd1c39e1b6bc5edc",
+      "lf_sha256": "505f0dbc66a5a26aea4aa7ed67b1bd1155bcf5fe7ecc3955dd1c39e1b6bc5edc",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823377732147100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-cataloga132/independent-wrapper-policy.json",
+      "destination": "review-cataloga132/independent-wrapper-policy.json",
+      "bytes": 848,
+      "sha256": "89075c3166067dcdd2eea8234c46d6577d30d6fba5a40c9088ed30d831d91cf4",
+      "lf_sha256": "89075c3166067dcdd2eea8234c46d6577d30d6fba5a40c9088ed30d831d91cf4",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823332014076500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-cataloga132/run_focused.py",
+      "destination": "review-cataloga132/run_focused.py",
+      "bytes": 1637,
+      "sha256": "d9d9c0cc2a528b721d435af73364fa68a429ff93aeb204fcc2c53752b1f8bbeb",
+      "lf_sha256": "d9d9c0cc2a528b721d435af73364fa68a429ff93aeb204fcc2c53752b1f8bbeb",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823290738658600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-cataloga132/run_independent_faults.py",
+      "destination": "review-cataloga132/run_independent_faults.py",
+      "bytes": 4069,
+      "sha256": "46104fd853c7d0e332ae9c2af77ce90807616091fda75d93f42a36f57ef616c5",
+      "lf_sha256": "46104fd853c7d0e332ae9c2af77ce90807616091fda75d93f42a36f57ef616c5",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823376018916800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-cataloga132/run_independent_wrapper.py",
+      "destination": "review-cataloga132/run_independent_wrapper.py",
+      "bytes": 4107,
+      "sha256": "ecee6e44a4f90c0ce97d9ed7d4039eaee9ecbd128ceadfd76ff6be2d0599fa1d",
+      "lf_sha256": "ecee6e44a4f90c0ce97d9ed7d4039eaee9ecbd128ceadfd76ff6be2d0599fa1d",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823330433732100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-cataloga132/source-pins.json",
+      "destination": "review-cataloga132/source-pins.json",
+      "bytes": 3000,
+      "sha256": "898d0c36351f8ac575214d09672738ee32959ab829f2f2fed49c53a5822c25b1",
+      "lf_sha256": "898d0c36351f8ac575214d09672738ee32959ab829f2f2fed49c53a5822c25b1",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823455978652900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-cataloga132/MANIFEST.json",
+      "destination": "review-cataloga132/MANIFEST.json",
+      "bytes": 2088,
+      "sha256": "62131ee21eb9fae88f55e7cdaa3bf31297e9928bf4b30653394274077767c1d2",
+      "lf_sha256": "62131ee21eb9fae88f55e7cdaa3bf31297e9928bf4b30653394274077767c1d2",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823456086939100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-catalog5ec/REVIEW.md",
+      "destination": "review-catalog5ec/REVIEW.md",
+      "bytes": 6500,
+      "sha256": "787d36e57de889e600399e919a8be091af28388da0e86654caac606dc5e76b57",
+      "lf_sha256": "787d36e57de889e600399e919a8be091af28388da0e86654caac606dc5e76b57",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792822963341103700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-catalog5ec/actual-wrapper-policy-controls.cpp",
+      "destination": "review-catalog5ec/actual-wrapper-policy-controls.cpp",
+      "bytes": 7629,
+      "sha256": "4e6825a4cc6d04a546d6b83250527026ec14d8534f44ce75bf93d53b8cd71eac",
+      "lf_sha256": "4e6825a4cc6d04a546d6b83250527026ec14d8534f44ce75bf93d53b8cd71eac",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792822860718816800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-catalog5ec/focused-independent.json",
+      "destination": "review-catalog5ec/focused-independent.json",
+      "bytes": 546,
+      "sha256": "174f238ad37c2a39caf0e01ac7a152299cfc8778ffaf8597ebaf91675a2bbc48",
+      "lf_sha256": "174f238ad37c2a39caf0e01ac7a152299cfc8778ffaf8597ebaf91675a2bbc48",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792822808888377700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-catalog5ec/independent-existing-index.json",
+      "destination": "review-catalog5ec/independent-existing-index.json",
+      "bytes": 237,
+      "sha256": "dfec8f0de678f6aea9077b4a103230277b446631b200443813e60f88d8dd2d0d",
+      "lf_sha256": "dfec8f0de678f6aea9077b4a103230277b446631b200443813e60f88d8dd2d0d",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792822906770192000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-catalog5ec/independent-wrapper-policy.json",
+      "destination": "review-catalog5ec/independent-wrapper-policy.json",
+      "bytes": 848,
+      "sha256": "c29b29aab66e2f983265478702e3b1881f0e909f493233c7c59e891fe62bffcf",
+      "lf_sha256": "c29b29aab66e2f983265478702e3b1881f0e909f493233c7c59e891fe62bffcf",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792822860726845300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-catalog5ec/run_focused.py",
+      "destination": "review-catalog5ec/run_focused.py",
+      "bytes": 1148,
+      "sha256": "6b249b872ac4b17c55d963d46ed7ce5a933be1b4da09570418ccf9c57257837d",
+      "lf_sha256": "6b249b872ac4b17c55d963d46ed7ce5a933be1b4da09570418ccf9c57257837d",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792822803281517500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-catalog5ec/run_independent_wrapper.py",
+      "destination": "review-catalog5ec/run_independent_wrapper.py",
+      "bytes": 4075,
+      "sha256": "0e572c41757ba5b2c31a75cadd9080e21ccdeb1ec69af8d34a06de40af963e18",
+      "lf_sha256": "0e572c41757ba5b2c31a75cadd9080e21ccdeb1ec69af8d34a06de40af963e18",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792822859173796800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-catalog5ec/source-pins.json",
+      "destination": "review-catalog5ec/source-pins.json",
+      "bytes": 2698,
+      "sha256": "45bdc1fbad4059f0a5eeb2423b52da10eef005caf419517afdd87ec84dadc5ce",
+      "lf_sha256": "45bdc1fbad4059f0a5eeb2423b52da10eef005caf419517afdd87ec84dadc5ce",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792822963749482700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/review-catalog5ec/MANIFEST.json",
+      "destination": "review-catalog5ec/MANIFEST.json",
+      "bytes": 1709,
+      "sha256": "6c48fe73926075cfe6a0ddfa7f293ab389cd84a58c65eacba643159d8b5c88db",
+      "lf_sha256": "6c48fe73926075cfe6a0ddfa7f293ab389cd84a58c65eacba643159d8b5c88db",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792822963810043900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/source-a132648e8/receipt.json",
+      "destination": "source-a132648e8/receipt.json",
+      "bytes": 2482,
+      "sha256": "50b4cc3d3a738c19d1dd9e65082614cf0b91ca0034888db2d8eb95a317f3d8aa",
+      "lf_sha256": "50b4cc3d3a738c19d1dd9e65082614cf0b91ca0034888db2d8eb95a317f3d8aa",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823369794258900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/source-a132648e8/SHA256-MANIFEST.json",
+      "destination": "source-a132648e8/SHA256-MANIFEST.json",
+      "bytes": 250,
+      "sha256": "cbe9e7d06aaa4ff9c6417c48e979e914eb867cf4ce50875955249a2718590d43",
+      "lf_sha256": "cbe9e7d06aaa4ff9c6417c48e979e914eb867cf4ce50875955249a2718590d43",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823369812768100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/source-5ec379b02/receipt.json",
+      "destination": "source-5ec379b02/receipt.json",
+      "bytes": 1309,
+      "sha256": "9c9ec00b1b8975ad09a7beadfba23bc3a8c8fd7b4fc72d49509ea68fa33c00e6",
+      "lf_sha256": "9c9ec00b1b8975ad09a7beadfba23bc3a8c8fd7b4fc72d49509ea68fa33c00e6",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823304411968700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/source-5ec379b02/SHA256-MANIFEST.json",
+      "destination": "source-5ec379b02/SHA256-MANIFEST.json",
+      "bytes": 250,
+      "sha256": "8fc11bc900db20ae0b457e467f829ad9d9ef519963143ebecfc290dc7f2dd291",
+      "lf_sha256": "8fc11bc900db20ae0b457e467f829ad9d9ef519963143ebecfc290dc7f2dd291",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823304430970300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-absent-command.json",
+      "destination": "target-a132-current/current-gc_asset_disc-absent-command.json",
+      "bytes": 2146,
+      "sha256": "1f6b0bc30bccaf87e378429741f618aa2130767ab41e947656777216da49a1db",
+      "lf_sha256": "1f6b0bc30bccaf87e378429741f618aa2130767ab41e947656777216da49a1db",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047135350700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-absent-defined.txt",
+      "destination": "target-a132-current/current-gc_asset_disc-absent-defined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047110348000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-absent-inputs.json",
+      "destination": "target-a132-current/current-gc_asset_disc-absent-inputs.json",
+      "bytes": 337,
+      "sha256": "0b89b33fc9146037ac0499b3d5683e723e53daf2c0cfeb8c588b5314951b63e1",
+      "lf_sha256": "0b89b33fc9146037ac0499b3d5683e723e53daf2c0cfeb8c588b5314951b63e1",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047121352100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-absent-size.txt",
+      "destination": "target-a132-current/current-gc_asset_disc-absent-size.txt",
+      "bytes": 156,
+      "sha256": "e3ad40922eb7d52c5284fe87433eed50d3d67b2fabfda69b30d7789044f4c6b4",
+      "lf_sha256": "e3ad40922eb7d52c5284fe87433eed50d3d67b2fabfda69b30d7789044f4c6b4",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047117352300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-absent-undefined.txt",
+      "destination": "target-a132-current/current-gc_asset_disc-absent-undefined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047113348200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-absent.d",
+      "destination": "target-a132-current/current-gc_asset_disc-absent.d",
+      "bytes": 93,
+      "sha256": "f246408e457099ebdc0b846b6e0a4523b46c74c22ba5b9592d2382d75a88bba9",
+      "lf_sha256": "f246408e457099ebdc0b846b6e0a4523b46c74c22ba5b9592d2382d75a88bba9",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047128349800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-absent.su",
+      "destination": "target-a132-current/current-gc_asset_disc-absent.su",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047124349800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-on-catalog0-command.json",
+      "destination": "target-a132-current/current-gc_asset_disc-on-catalog0-command.json",
+      "bytes": 2223,
+      "sha256": "841828ba2a39058848c9a8d2492665659d8739b84a5b4ec0da9028e7a70fce95",
+      "lf_sha256": "841828ba2a39058848c9a8d2492665659d8739b84a5b4ec0da9028e7a70fce95",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047080597200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-on-catalog0-defined.txt",
+      "destination": "target-a132-current/current-gc_asset_disc-on-catalog0-defined.txt",
+      "bytes": 108,
+      "sha256": "43e860772a6992b740fb9e70612621ee92662903dd1689cb426be7d3824a80e9",
+      "lf_sha256": "43e860772a6992b740fb9e70612621ee92662903dd1689cb426be7d3824a80e9",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047055596400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-on-catalog0-inputs.json",
+      "destination": "target-a132-current/current-gc_asset_disc-on-catalog0-inputs.json",
+      "bytes": 11994,
+      "sha256": "03d1f013ffde3d24876f52cd496f13c501cf60fa56cb005a0912b80ef486343d",
+      "lf_sha256": "03d1f013ffde3d24876f52cd496f13c501cf60fa56cb005a0912b80ef486343d",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047066596700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-on-catalog0-size.txt",
+      "destination": "target-a132-current/current-gc_asset_disc-on-catalog0-size.txt",
+      "bytes": 161,
+      "sha256": "9f0e4279a9df096acc2a259e6cc70f726310b622ba5b88f6dc88e799e9510830",
+      "lf_sha256": "9f0e4279a9df096acc2a259e6cc70f726310b622ba5b88f6dc88e799e9510830",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047062596100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-on-catalog0-undefined.txt",
+      "destination": "target-a132-current/current-gc_asset_disc-on-catalog0-undefined.txt",
+      "bytes": 222,
+      "sha256": "e774ed776c482d12ebc5cbf9c9444c7c7c9b5dc0c95b69e51a53ebca9e20e942",
+      "lf_sha256": "e774ed776c482d12ebc5cbf9c9444c7c7c9b5dc0c95b69e51a53ebca9e20e942",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047058596000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-on-catalog0.d",
+      "destination": "target-a132-current/current-gc_asset_disc-on-catalog0.d",
+      "bytes": 5510,
+      "sha256": "3270b789f79a228d56621fb76472bb22aff1bddb24febb58700e32a33b091672",
+      "lf_sha256": "3270b789f79a228d56621fb76472bb22aff1bddb24febb58700e32a33b091672",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047073599000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-on-catalog0.su",
+      "destination": "target-a132-current/current-gc_asset_disc-on-catalog0.su",
+      "bytes": 390,
+      "sha256": "a28cb3e22a6220e6f989a2f20cb71ca2202dc39bed021890815bc322bf4c8f72",
+      "lf_sha256": "a28cb3e22a6220e6f989a2f20cb71ca2202dc39bed021890815bc322bf4c8f72",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047069599400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-on-synthetic-pin-command.json",
+      "destination": "target-a132-current/current-gc_asset_disc-on-synthetic-pin-command.json",
+      "bytes": 2291,
+      "sha256": "631fbad27e69817e8a845d8431e3125d758f0e99a70d11454271cc63cebf42ec",
+      "lf_sha256": "631fbad27e69817e8a845d8431e3125d758f0e99a70d11454271cc63cebf42ec",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047051598000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-on-synthetic-pin-defined.txt",
+      "destination": "target-a132-current/current-gc_asset_disc-on-synthetic-pin-defined.txt",
+      "bytes": 108,
+      "sha256": "43e860772a6992b740fb9e70612621ee92662903dd1689cb426be7d3824a80e9",
+      "lf_sha256": "43e860772a6992b740fb9e70612621ee92662903dd1689cb426be7d3824a80e9",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047027597800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-on-synthetic-pin-inputs.json",
+      "destination": "target-a132-current/current-gc_asset_disc-on-synthetic-pin-inputs.json",
+      "bytes": 11994,
+      "sha256": "03d1f013ffde3d24876f52cd496f13c501cf60fa56cb005a0912b80ef486343d",
+      "lf_sha256": "03d1f013ffde3d24876f52cd496f13c501cf60fa56cb005a0912b80ef486343d",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047038598100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-on-synthetic-pin-size.txt",
+      "destination": "target-a132-current/current-gc_asset_disc-on-synthetic-pin-size.txt",
+      "bytes": 166,
+      "sha256": "7ced10dce3ea9f324038b26f32c5134aeef090fc059d2539d9875143ff2257b4",
+      "lf_sha256": "7ced10dce3ea9f324038b26f32c5134aeef090fc059d2539d9875143ff2257b4",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047034597100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-on-synthetic-pin-undefined.txt",
+      "destination": "target-a132-current/current-gc_asset_disc-on-synthetic-pin-undefined.txt",
+      "bytes": 338,
+      "sha256": "3693225277f43f6570d70f989e5dbdb3561eeb299d6668ee7ecc1b9cae8b9bf3",
+      "lf_sha256": "3693225277f43f6570d70f989e5dbdb3561eeb299d6668ee7ecc1b9cae8b9bf3",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047031596100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-on-synthetic-pin.d",
+      "destination": "target-a132-current/current-gc_asset_disc-on-synthetic-pin.d",
+      "bytes": 5515,
+      "sha256": "dde631ec286aa83217cc5399ecca0ad4d06a6618691edeae7e716cfa135a1423",
+      "lf_sha256": "dde631ec286aa83217cc5399ecca0ad4d06a6618691edeae7e716cfa135a1423",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047045599700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-on-synthetic-pin.su",
+      "destination": "target-a132-current/current-gc_asset_disc-on-synthetic-pin.su",
+      "bytes": 391,
+      "sha256": "84aa42298fb3dcb8ec69a294f7c94b2a084987f4de20bd96dfbed8536462b5c6",
+      "lf_sha256": "84aa42298fb3dcb8ec69a294f7c94b2a084987f4de20bd96dfbed8536462b5c6",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047041596500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-zero-command.json",
+      "destination": "target-a132-current/current-gc_asset_disc-zero-command.json",
+      "bytes": 2173,
+      "sha256": "adcb1d8ed84097d1bdbf69505a5915d8a15e7c6e74e883784356ceca3882cf24",
+      "lf_sha256": "adcb1d8ed84097d1bdbf69505a5915d8a15e7c6e74e883784356ceca3882cf24",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047107349600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-zero-defined.txt",
+      "destination": "target-a132-current/current-gc_asset_disc-zero-defined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047083597500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-zero-inputs.json",
+      "destination": "target-a132-current/current-gc_asset_disc-zero-inputs.json",
+      "bytes": 337,
+      "sha256": "0b89b33fc9146037ac0499b3d5683e723e53daf2c0cfeb8c588b5314951b63e1",
+      "lf_sha256": "0b89b33fc9146037ac0499b3d5683e723e53daf2c0cfeb8c588b5314951b63e1",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047094104300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-zero-size.txt",
+      "destination": "target-a132-current/current-gc_asset_disc-zero-size.txt",
+      "bytes": 154,
+      "sha256": "754f1df1d1069fb335ed749309ddcd59eb7635f4363120cef2aaab5671f6cbad",
+      "lf_sha256": "754f1df1d1069fb335ed749309ddcd59eb7635f4363120cef2aaab5671f6cbad",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047091105100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-zero-undefined.txt",
+      "destination": "target-a132-current/current-gc_asset_disc-zero-undefined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047086596900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-zero.d",
+      "destination": "target-a132-current/current-gc_asset_disc-zero.d",
+      "bytes": 91,
+      "sha256": "245c7c61705175b534ad93c925e713a3b3eaa3ecb06d80d2eee80a22724faae9",
+      "lf_sha256": "245c7c61705175b534ad93c925e713a3b3eaa3ecb06d80d2eee80a22724faae9",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047101348300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_disc-zero.su",
+      "destination": "target-a132-current/current-gc_asset_disc-zero.su",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047097345100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-absent-command.json",
+      "destination": "target-a132-current/current-gc_asset_gate-absent-command.json",
+      "bytes": 2146,
+      "sha256": "1863dd5854013e34eb23dcfec1c9d2ddb1c39ac9503ae4a5491e663ae29e1a8c",
+      "lf_sha256": "1863dd5854013e34eb23dcfec1c9d2ddb1c39ac9503ae4a5491e663ae29e1a8c",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047248354700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-absent-defined.txt",
+      "destination": "target-a132-current/current-gc_asset_gate-absent-defined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047223352000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-absent-inputs.json",
+      "destination": "target-a132-current/current-gc_asset_gate-absent-inputs.json",
+      "bytes": 337,
+      "sha256": "037c261ace1aab5e07e78fe9c3b2c59fcc1af0add9a747cf4244b68111c4f39f",
+      "lf_sha256": "037c261ace1aab5e07e78fe9c3b2c59fcc1af0add9a747cf4244b68111c4f39f",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047234353000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-absent-size.txt",
+      "destination": "target-a132-current/current-gc_asset_gate-absent-size.txt",
+      "bytes": 156,
+      "sha256": "8a9bb89b2706689c9f5c43c64ece4e73ec5c721c3ea37787f6c3c96ee7f7cb00",
+      "lf_sha256": "8a9bb89b2706689c9f5c43c64ece4e73ec5c721c3ea37787f6c3c96ee7f7cb00",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047231352600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-absent-undefined.txt",
+      "destination": "target-a132-current/current-gc_asset_gate-absent-undefined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047227352300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-absent.d",
+      "destination": "target-a132-current/current-gc_asset_gate-absent.d",
+      "bytes": 93,
+      "sha256": "5f26e2fa8556b32aa80e3e601f0eded5783a8c7593cee66a6d096fdb4be5e335",
+      "lf_sha256": "5f26e2fa8556b32aa80e3e601f0eded5783a8c7593cee66a6d096fdb4be5e335",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047241354600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-absent.su",
+      "destination": "target-a132-current/current-gc_asset_gate-absent.su",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047237352500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-on-catalog0-command.json",
+      "destination": "target-a132-current/current-gc_asset_gate-on-catalog0-command.json",
+      "bytes": 2223,
+      "sha256": "f04440e60b713dd5946ac21f558d2b0997fa0bf64b00c40ab0beb449893fa725",
+      "lf_sha256": "f04440e60b713dd5946ac21f558d2b0997fa0bf64b00c40ab0beb449893fa725",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047193351300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-on-catalog0-defined.txt",
+      "destination": "target-a132-current/current-gc_asset_gate-on-catalog0-defined.txt",
+      "bytes": 1664,
+      "sha256": "b4f4f839afa18cdd1c42df9f4b4dd58204b4de9342bcc3d9017739cf2cbfd415",
+      "lf_sha256": "b4f4f839afa18cdd1c42df9f4b4dd58204b4de9342bcc3d9017739cf2cbfd415",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047169351900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-on-catalog0-inputs.json",
+      "destination": "target-a132-current/current-gc_asset_gate-on-catalog0-inputs.json",
+      "bytes": 12050,
+      "sha256": "07411cb1a9fdf0efffb8bc383e37b09d5161be06671b2ab21c60b9b0b4897ad6",
+      "lf_sha256": "07411cb1a9fdf0efffb8bc383e37b09d5161be06671b2ab21c60b9b0b4897ad6",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047179350900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-on-catalog0-size.txt",
+      "destination": "target-a132-current/current-gc_asset_gate-on-catalog0-size.txt",
+      "bytes": 161,
+      "sha256": "44a3380c271212a97a90393b7187c41919575a18ad476eaf31a6fe04272fe34e",
+      "lf_sha256": "44a3380c271212a97a90393b7187c41919575a18ad476eaf31a6fe04272fe34e",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047176350900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-on-catalog0-undefined.txt",
+      "destination": "target-a132-current/current-gc_asset_gate-on-catalog0-undefined.txt",
+      "bytes": 146,
+      "sha256": "721394cef4ba97b55ed3aacf5e9f0168e7ea823d47674488c985d2a5aa2e8dd8",
+      "lf_sha256": "721394cef4ba97b55ed3aacf5e9f0168e7ea823d47674488c985d2a5aa2e8dd8",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047173350800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-on-catalog0.d",
+      "destination": "target-a132-current/current-gc_asset_gate-on-catalog0.d",
+      "bytes": 5502,
+      "sha256": "33c8941108195a622ae02811621da8b9a1bc5b26d39a6358f6896fcb706098ea",
+      "lf_sha256": "33c8941108195a622ae02811621da8b9a1bc5b26d39a6358f6896fcb706098ea",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047187351700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-on-catalog0.su",
+      "destination": "target-a132-current/current-gc_asset_gate-on-catalog0.su",
+      "bytes": 5199,
+      "sha256": "0e9a64a318e575c1e58054088d07832b95c69c54c9081bb7096d5145962e7d5b",
+      "lf_sha256": "0e9a64a318e575c1e58054088d07832b95c69c54c9081bb7096d5145962e7d5b",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047183352900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-on-synthetic-pin-command.json",
+      "destination": "target-a132-current/current-gc_asset_gate-on-synthetic-pin-command.json",
+      "bytes": 2291,
+      "sha256": "f87159407862c15fe78ab1cabe9c8269b3f235e038cb2d0671921b1932768266",
+      "lf_sha256": "f87159407862c15fe78ab1cabe9c8269b3f235e038cb2d0671921b1932768266",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047165349900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-on-synthetic-pin-defined.txt",
+      "destination": "target-a132-current/current-gc_asset_gate-on-synthetic-pin-defined.txt",
+      "bytes": 1664,
+      "sha256": "b4f4f839afa18cdd1c42df9f4b4dd58204b4de9342bcc3d9017739cf2cbfd415",
+      "lf_sha256": "b4f4f839afa18cdd1c42df9f4b4dd58204b4de9342bcc3d9017739cf2cbfd415",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047138350000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-on-synthetic-pin-inputs.json",
+      "destination": "target-a132-current/current-gc_asset_gate-on-synthetic-pin-inputs.json",
+      "bytes": 12050,
+      "sha256": "07411cb1a9fdf0efffb8bc383e37b09d5161be06671b2ab21c60b9b0b4897ad6",
+      "lf_sha256": "07411cb1a9fdf0efffb8bc383e37b09d5161be06671b2ab21c60b9b0b4897ad6",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047149351100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-on-synthetic-pin-size.txt",
+      "destination": "target-a132-current/current-gc_asset_gate-on-synthetic-pin-size.txt",
+      "bytes": 166,
+      "sha256": "5e0eea9d3cef7cb5840dc00e35f4329a5b55fd4b4b49a27b982cb9186ba23fab",
+      "lf_sha256": "5e0eea9d3cef7cb5840dc00e35f4329a5b55fd4b4b49a27b982cb9186ba23fab",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047146349700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-on-synthetic-pin-undefined.txt",
+      "destination": "target-a132-current/current-gc_asset_gate-on-synthetic-pin-undefined.txt",
+      "bytes": 146,
+      "sha256": "721394cef4ba97b55ed3aacf5e9f0168e7ea823d47674488c985d2a5aa2e8dd8",
+      "lf_sha256": "721394cef4ba97b55ed3aacf5e9f0168e7ea823d47674488c985d2a5aa2e8dd8",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047142350200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-on-synthetic-pin.d",
+      "destination": "target-a132-current/current-gc_asset_gate-on-synthetic-pin.d",
+      "bytes": 5507,
+      "sha256": "c11bf207dc3bf32bf3f61feca324a0e9ae1a01a74e4c6018d13f1a3479ac6c7e",
+      "lf_sha256": "c11bf207dc3bf32bf3f61feca324a0e9ae1a01a74e4c6018d13f1a3479ac6c7e",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047156351000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-on-synthetic-pin.su",
+      "destination": "target-a132-current/current-gc_asset_gate-on-synthetic-pin.su",
+      "bytes": 5199,
+      "sha256": "0e9a64a318e575c1e58054088d07832b95c69c54c9081bb7096d5145962e7d5b",
+      "lf_sha256": "0e9a64a318e575c1e58054088d07832b95c69c54c9081bb7096d5145962e7d5b",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047153350600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-zero-command.json",
+      "destination": "target-a132-current/current-gc_asset_gate-zero-command.json",
+      "bytes": 2173,
+      "sha256": "120228b09a9f38189ce4d829ca9465337482e0475fe8dbf7f761a62ab948a493",
+      "lf_sha256": "120228b09a9f38189ce4d829ca9465337482e0475fe8dbf7f761a62ab948a493",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047221354000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-zero-defined.txt",
+      "destination": "target-a132-current/current-gc_asset_gate-zero-defined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047196351400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-zero-inputs.json",
+      "destination": "target-a132-current/current-gc_asset_gate-zero-inputs.json",
+      "bytes": 337,
+      "sha256": "037c261ace1aab5e07e78fe9c3b2c59fcc1af0add9a747cf4244b68111c4f39f",
+      "lf_sha256": "037c261ace1aab5e07e78fe9c3b2c59fcc1af0add9a747cf4244b68111c4f39f",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047207352700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-zero-size.txt",
+      "destination": "target-a132-current/current-gc_asset_gate-zero-size.txt",
+      "bytes": 154,
+      "sha256": "5d89f7dafad4b337ce4de982beb299c0128a18e1c2356c5f8fcf67a30b8de0e3",
+      "lf_sha256": "5d89f7dafad4b337ce4de982beb299c0128a18e1c2356c5f8fcf67a30b8de0e3",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047203351300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-zero-undefined.txt",
+      "destination": "target-a132-current/current-gc_asset_gate-zero-undefined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047199351800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-zero.d",
+      "destination": "target-a132-current/current-gc_asset_gate-zero.d",
+      "bytes": 91,
+      "sha256": "1eb6a58110f16df116556bc2d357c7f63292547e91ec7c3024d849c7ea122065",
+      "lf_sha256": "1eb6a58110f16df116556bc2d357c7f63292547e91ec7c3024d849c7ea122065",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047214352000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/current-gc_asset_gate-zero.su",
+      "destination": "target-a132-current/current-gc_asset_gate-zero.su",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047209355100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/initial-harness-attempt.json",
+      "destination": "target-a132-current/initial-harness-attempt.json",
+      "bytes": 491,
+      "sha256": "a6b6a8003b93a587be6b0e7e75e9f7a56b7adea542d86b31132c88ee882141ff",
+      "lf_sha256": "a6b6a8003b93a587be6b0e7e75e9f7a56b7adea542d86b31132c88ee882141ff",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047477884300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/initial-harness-report.json",
+      "destination": "target-a132-current/initial-harness-report.json",
+      "bytes": 25937,
+      "sha256": "39fc40634301a3c6ff4f9bde50cdd3ec3405454cbfed57de4000b4cd535ba963",
+      "lf_sha256": "39fc40634301a3c6ff4f9bde50cdd3ec3405454cbfed57de4000b4cd535ba963",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047481884400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-absent-command.json",
+      "destination": "target-a132-current/parent-gc_asset_disc-absent-command.json",
+      "bytes": 2145,
+      "sha256": "6775479ebbf66ff73a314b3af65f66652fe00cb7732ce91b27e6172a51bd9ccb",
+      "lf_sha256": "6775479ebbf66ff73a314b3af65f66652fe00cb7732ce91b27e6172a51bd9ccb",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047358881900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-absent-defined.txt",
+      "destination": "target-a132-current/parent-gc_asset_disc-absent-defined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047333880300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-absent-inputs.json",
+      "destination": "target-a132-current/parent-gc_asset_disc-absent-inputs.json",
+      "bytes": 335,
+      "sha256": "cffbeb12d83227312b6bf8f16f7730f3f537c0e45b185174120b77fd7e703437",
+      "lf_sha256": "cffbeb12d83227312b6bf8f16f7730f3f537c0e45b185174120b77fd7e703437",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047344882600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-absent-size.txt",
+      "destination": "target-a132-current/parent-gc_asset_disc-absent-size.txt",
+      "bytes": 155,
+      "sha256": "009e994bf361a6b743847efef63a9be37b51e638c533d41354ae3fba71bd19a3",
+      "lf_sha256": "009e994bf361a6b743847efef63a9be37b51e638c533d41354ae3fba71bd19a3",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047340880800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-absent-undefined.txt",
+      "destination": "target-a132-current/parent-gc_asset_disc-absent-undefined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047336880700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-absent.d",
+      "destination": "target-a132-current/parent-gc_asset_disc-absent.d",
+      "bytes": 92,
+      "sha256": "f1e255c8fc3d7ec377079be6d41cdacd2bfe457bae41ae3755c09a77df3d1d92",
+      "lf_sha256": "f1e255c8fc3d7ec377079be6d41cdacd2bfe457bae41ae3755c09a77df3d1d92",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047351881100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-absent.su",
+      "destination": "target-a132-current/parent-gc_asset_disc-absent.su",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047347881000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-on-catalog0-command.json",
+      "destination": "target-a132-current/parent-gc_asset_disc-on-catalog0-command.json",
+      "bytes": 2222,
+      "sha256": "cba8ee23a0f54a6a6a67b8e4ac1529fba10e090fdbc94a941e080d4c5f789d5b",
+      "lf_sha256": "cba8ee23a0f54a6a6a67b8e4ac1529fba10e090fdbc94a941e080d4c5f789d5b",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047303879400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-on-catalog0-defined.txt",
+      "destination": "target-a132-current/parent-gc_asset_disc-on-catalog0-defined.txt",
+      "bytes": 108,
+      "sha256": "43e860772a6992b740fb9e70612621ee92662903dd1689cb426be7d3824a80e9",
+      "lf_sha256": "43e860772a6992b740fb9e70612621ee92662903dd1689cb426be7d3824a80e9",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047280353300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-on-catalog0-inputs.json",
+      "destination": "target-a132-current/parent-gc_asset_disc-on-catalog0-inputs.json",
+      "bytes": 8423,
+      "sha256": "56e2b08b0bdc07d4020089d92906a6ac224cece94a0ee2e0e30560cfb5734422",
+      "lf_sha256": "56e2b08b0bdc07d4020089d92906a6ac224cece94a0ee2e0e30560cfb5734422",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047290357300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-on-catalog0-size.txt",
+      "destination": "target-a132-current/parent-gc_asset_disc-on-catalog0-size.txt",
+      "bytes": 160,
+      "sha256": "e17451a7686b005df0aeb849e4106ad92e72ffe778bb7f1f2c1657bcb1bb8faa",
+      "lf_sha256": "e17451a7686b005df0aeb849e4106ad92e72ffe778bb7f1f2c1657bcb1bb8faa",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047286358300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-on-catalog0-undefined.txt",
+      "destination": "target-a132-current/parent-gc_asset_disc-on-catalog0-undefined.txt",
+      "bytes": 222,
+      "sha256": "e774ed776c482d12ebc5cbf9c9444c7c7c9b5dc0c95b69e51a53ebca9e20e942",
+      "lf_sha256": "e774ed776c482d12ebc5cbf9c9444c7c7c9b5dc0c95b69e51a53ebca9e20e942",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047283357100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-on-catalog0.d",
+      "destination": "target-a132-current/parent-gc_asset_disc-on-catalog0.d",
+      "bytes": 3761,
+      "sha256": "6a41576c8fa14c4b975f71ea577a3d86dbc9f9b1d96886e49264c554a0f06380",
+      "lf_sha256": "6a41576c8fa14c4b975f71ea577a3d86dbc9f9b1d96886e49264c554a0f06380",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047296860700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-on-catalog0.su",
+      "destination": "target-a132-current/parent-gc_asset_disc-on-catalog0.su",
+      "bytes": 302,
+      "sha256": "d7d816de1a922e3a1fd0490f4f8cbdc5c558fb59c3890574518735ea12293afc",
+      "lf_sha256": "d7d816de1a922e3a1fd0490f4f8cbdc5c558fb59c3890574518735ea12293afc",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047293357300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-on-synthetic-pin-command.json",
+      "destination": "target-a132-current/parent-gc_asset_disc-on-synthetic-pin-command.json",
+      "bytes": 2290,
+      "sha256": "e4a4af3c5b75b00c864160c1e8633ff43bafde02e04aeb36a3861e443dc25689",
+      "lf_sha256": "e4a4af3c5b75b00c864160c1e8633ff43bafde02e04aeb36a3861e443dc25689",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047276353900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-on-synthetic-pin-defined.txt",
+      "destination": "target-a132-current/parent-gc_asset_disc-on-synthetic-pin-defined.txt",
+      "bytes": 108,
+      "sha256": "43e860772a6992b740fb9e70612621ee92662903dd1689cb426be7d3824a80e9",
+      "lf_sha256": "43e860772a6992b740fb9e70612621ee92662903dd1689cb426be7d3824a80e9",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047251353100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-on-synthetic-pin-inputs.json",
+      "destination": "target-a132-current/parent-gc_asset_disc-on-synthetic-pin-inputs.json",
+      "bytes": 8423,
+      "sha256": "56e2b08b0bdc07d4020089d92906a6ac224cece94a0ee2e0e30560cfb5734422",
+      "lf_sha256": "56e2b08b0bdc07d4020089d92906a6ac224cece94a0ee2e0e30560cfb5734422",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047262353000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-on-synthetic-pin-size.txt",
+      "destination": "target-a132-current/parent-gc_asset_disc-on-synthetic-pin-size.txt",
+      "bytes": 165,
+      "sha256": "5e733429b99d73874b4236c6ab77579a0e29699de3492a7fe9529dfc95ac7bf3",
+      "lf_sha256": "5e733429b99d73874b4236c6ab77579a0e29699de3492a7fe9529dfc95ac7bf3",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047258353400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-on-synthetic-pin-undefined.txt",
+      "destination": "target-a132-current/parent-gc_asset_disc-on-synthetic-pin-undefined.txt",
+      "bytes": 338,
+      "sha256": "3693225277f43f6570d70f989e5dbdb3561eeb299d6668ee7ecc1b9cae8b9bf3",
+      "lf_sha256": "3693225277f43f6570d70f989e5dbdb3561eeb299d6668ee7ecc1b9cae8b9bf3",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047255353600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-on-synthetic-pin.d",
+      "destination": "target-a132-current/parent-gc_asset_disc-on-synthetic-pin.d",
+      "bytes": 3766,
+      "sha256": "0305714a3abb7195283842df8d2860e2d6469754852a78f6e667fb1f178046f8",
+      "lf_sha256": "0305714a3abb7195283842df8d2860e2d6469754852a78f6e667fb1f178046f8",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047269353800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-on-synthetic-pin.su",
+      "destination": "target-a132-current/parent-gc_asset_disc-on-synthetic-pin.su",
+      "bytes": 303,
+      "sha256": "f996d3f80777e9beff9095ece7ecf1d1b78f6f432931726814bd92db969df668",
+      "lf_sha256": "f996d3f80777e9beff9095ece7ecf1d1b78f6f432931726814bd92db969df668",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047266353900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-zero-command.json",
+      "destination": "target-a132-current/parent-gc_asset_disc-zero-command.json",
+      "bytes": 2172,
+      "sha256": "2d28ab9796bc9ec56b5c9cc39382da84f47dfa830857d7db236cf7eb14fe31a3",
+      "lf_sha256": "2d28ab9796bc9ec56b5c9cc39382da84f47dfa830857d7db236cf7eb14fe31a3",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047330880100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-zero-defined.txt",
+      "destination": "target-a132-current/parent-gc_asset_disc-zero-defined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047306881700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-zero-inputs.json",
+      "destination": "target-a132-current/parent-gc_asset_disc-zero-inputs.json",
+      "bytes": 335,
+      "sha256": "cffbeb12d83227312b6bf8f16f7730f3f537c0e45b185174120b77fd7e703437",
+      "lf_sha256": "cffbeb12d83227312b6bf8f16f7730f3f537c0e45b185174120b77fd7e703437",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047317880500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-zero-size.txt",
+      "destination": "target-a132-current/parent-gc_asset_disc-zero-size.txt",
+      "bytes": 153,
+      "sha256": "232ae10a0d026af9a4d7b217917df8083c73bd5e7a2b3fb9d75cc79331cbe9d2",
+      "lf_sha256": "232ae10a0d026af9a4d7b217917df8083c73bd5e7a2b3fb9d75cc79331cbe9d2",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047313885600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-zero-undefined.txt",
+      "destination": "target-a132-current/parent-gc_asset_disc-zero-undefined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047309880000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-zero.d",
+      "destination": "target-a132-current/parent-gc_asset_disc-zero.d",
+      "bytes": 90,
+      "sha256": "3fb67274f8400816fbf396a1d734cedf6f0b2a8bd407af4912d7d7585d11d3c8",
+      "lf_sha256": "3fb67274f8400816fbf396a1d734cedf6f0b2a8bd407af4912d7d7585d11d3c8",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047324880700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_disc-zero.su",
+      "destination": "target-a132-current/parent-gc_asset_disc-zero.su",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047320880100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-absent-command.json",
+      "destination": "target-a132-current/parent-gc_asset_gate-absent-command.json",
+      "bytes": 2145,
+      "sha256": "545d5468fe4d6138c0c2e3451c932f1c6b89fa65e74258ea05d2467c547a8014",
+      "lf_sha256": "545d5468fe4d6138c0c2e3451c932f1c6b89fa65e74258ea05d2467c547a8014",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047470884500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-absent-defined.txt",
+      "destination": "target-a132-current/parent-gc_asset_gate-absent-defined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047446884800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-absent-inputs.json",
+      "destination": "target-a132-current/parent-gc_asset_gate-absent-inputs.json",
+      "bytes": 335,
+      "sha256": "d4b90b58d3e0bafbdfbcec89261ea3c052fb206e42fcc336b1aebb28a8497afa",
+      "lf_sha256": "d4b90b58d3e0bafbdfbcec89261ea3c052fb206e42fcc336b1aebb28a8497afa",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047456885800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-absent-size.txt",
+      "destination": "target-a132-current/parent-gc_asset_gate-absent-size.txt",
+      "bytes": 155,
+      "sha256": "d049690195f12e912b17f3a3f8dc954237424587c8aaf38c7b3d2201ae1655fc",
+      "lf_sha256": "d049690195f12e912b17f3a3f8dc954237424587c8aaf38c7b3d2201ae1655fc",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047453884200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-absent-undefined.txt",
+      "destination": "target-a132-current/parent-gc_asset_gate-absent-undefined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047449884300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-absent.d",
+      "destination": "target-a132-current/parent-gc_asset_gate-absent.d",
+      "bytes": 92,
+      "sha256": "ae51eaae06eb359edfea1fd5bb292e49a31f3bc73529bef60973b5a660e08685",
+      "lf_sha256": "ae51eaae06eb359edfea1fd5bb292e49a31f3bc73529bef60973b5a660e08685",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047463883300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-absent.su",
+      "destination": "target-a132-current/parent-gc_asset_gate-absent.su",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047459883500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-on-catalog0-command.json",
+      "destination": "target-a132-current/parent-gc_asset_gate-on-catalog0-command.json",
+      "bytes": 2222,
+      "sha256": "673553e0bfac6b1c2ab64d574a627e76e2442ddcf35053e6abff2a7382c348d9",
+      "lf_sha256": "673553e0bfac6b1c2ab64d574a627e76e2442ddcf35053e6abff2a7382c348d9",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047415884600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-on-catalog0-defined.txt",
+      "destination": "target-a132-current/parent-gc_asset_gate-on-catalog0-defined.txt",
+      "bytes": 1664,
+      "sha256": "b4f4f839afa18cdd1c42df9f4b4dd58204b4de9342bcc3d9017739cf2cbfd415",
+      "lf_sha256": "b4f4f839afa18cdd1c42df9f4b4dd58204b4de9342bcc3d9017739cf2cbfd415",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047391881800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-on-catalog0-inputs.json",
+      "destination": "target-a132-current/parent-gc_asset_gate-on-catalog0-inputs.json",
+      "bytes": 12046,
+      "sha256": "ff3534d2a924ba006e29547c42ef0e8debe649df9940a929c45e4080475e0ccd",
+      "lf_sha256": "ff3534d2a924ba006e29547c42ef0e8debe649df9940a929c45e4080475e0ccd",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047401883500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-on-catalog0-size.txt",
+      "destination": "target-a132-current/parent-gc_asset_gate-on-catalog0-size.txt",
+      "bytes": 160,
+      "sha256": "96eadbc9d0788e43433b3a767df13ae3c52c06cb0aa71d5d6b00bb2b001dc0df",
+      "lf_sha256": "96eadbc9d0788e43433b3a767df13ae3c52c06cb0aa71d5d6b00bb2b001dc0df",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047398881900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-on-catalog0-undefined.txt",
+      "destination": "target-a132-current/parent-gc_asset_gate-on-catalog0-undefined.txt",
+      "bytes": 146,
+      "sha256": "721394cef4ba97b55ed3aacf5e9f0168e7ea823d47674488c985d2a5aa2e8dd8",
+      "lf_sha256": "721394cef4ba97b55ed3aacf5e9f0168e7ea823d47674488c985d2a5aa2e8dd8",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047394882900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-on-catalog0.d",
+      "destination": "target-a132-current/parent-gc_asset_gate-on-catalog0.d",
+      "bytes": 5501,
+      "sha256": "a91a3aa2aa5a9050f8b8cf207bb34f38345daec26e78a15f8b11b05be9141188",
+      "lf_sha256": "a91a3aa2aa5a9050f8b8cf207bb34f38345daec26e78a15f8b11b05be9141188",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047409882500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-on-catalog0.su",
+      "destination": "target-a132-current/parent-gc_asset_gate-on-catalog0.su",
+      "bytes": 4463,
+      "sha256": "9b9b340b4ffb76781f42aa652fdd2139fda6c7cad37e58f85a89bd162903b2b8",
+      "lf_sha256": "9b9b340b4ffb76781f42aa652fdd2139fda6c7cad37e58f85a89bd162903b2b8",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047405882000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-on-synthetic-pin-command.json",
+      "destination": "target-a132-current/parent-gc_asset_gate-on-synthetic-pin-command.json",
+      "bytes": 2290,
+      "sha256": "9d1f739cec625fd48694bec4ea584ff6e418c45604e4b184672f7e52c1c01d5a",
+      "lf_sha256": "9d1f739cec625fd48694bec4ea584ff6e418c45604e4b184672f7e52c1c01d5a",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047388881900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-on-synthetic-pin-defined.txt",
+      "destination": "target-a132-current/parent-gc_asset_gate-on-synthetic-pin-defined.txt",
+      "bytes": 1664,
+      "sha256": "b4f4f839afa18cdd1c42df9f4b4dd58204b4de9342bcc3d9017739cf2cbfd415",
+      "lf_sha256": "b4f4f839afa18cdd1c42df9f4b4dd58204b4de9342bcc3d9017739cf2cbfd415",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047362881900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-on-synthetic-pin-inputs.json",
+      "destination": "target-a132-current/parent-gc_asset_gate-on-synthetic-pin-inputs.json",
+      "bytes": 12046,
+      "sha256": "ff3534d2a924ba006e29547c42ef0e8debe649df9940a929c45e4080475e0ccd",
+      "lf_sha256": "ff3534d2a924ba006e29547c42ef0e8debe649df9940a929c45e4080475e0ccd",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047373881900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-on-synthetic-pin-size.txt",
+      "destination": "target-a132-current/parent-gc_asset_gate-on-synthetic-pin-size.txt",
+      "bytes": 165,
+      "sha256": "b17a6fa3d64405c2b1afcd32311e06c4c6e94dadb1531db212e0c5d4cf1a4abc",
+      "lf_sha256": "b17a6fa3d64405c2b1afcd32311e06c4c6e94dadb1531db212e0c5d4cf1a4abc",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047370881900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-on-synthetic-pin-undefined.txt",
+      "destination": "target-a132-current/parent-gc_asset_gate-on-synthetic-pin-undefined.txt",
+      "bytes": 146,
+      "sha256": "721394cef4ba97b55ed3aacf5e9f0168e7ea823d47674488c985d2a5aa2e8dd8",
+      "lf_sha256": "721394cef4ba97b55ed3aacf5e9f0168e7ea823d47674488c985d2a5aa2e8dd8",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047365881300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-on-synthetic-pin.d",
+      "destination": "target-a132-current/parent-gc_asset_gate-on-synthetic-pin.d",
+      "bytes": 5506,
+      "sha256": "051f983ee948593098a50dbf14601739d5686f8cbc901f4588deed0032896592",
+      "lf_sha256": "051f983ee948593098a50dbf14601739d5686f8cbc901f4588deed0032896592",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047381881700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-on-synthetic-pin.su",
+      "destination": "target-a132-current/parent-gc_asset_gate-on-synthetic-pin.su",
+      "bytes": 4463,
+      "sha256": "9b9b340b4ffb76781f42aa652fdd2139fda6c7cad37e58f85a89bd162903b2b8",
+      "lf_sha256": "9b9b340b4ffb76781f42aa652fdd2139fda6c7cad37e58f85a89bd162903b2b8",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047377881300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-zero-command.json",
+      "destination": "target-a132-current/parent-gc_asset_gate-zero-command.json",
+      "bytes": 2172,
+      "sha256": "99ffdc0119b8b2a33a9180ec9cec3c00b8d41c36f043fcb612838a2ac917248c",
+      "lf_sha256": "99ffdc0119b8b2a33a9180ec9cec3c00b8d41c36f043fcb612838a2ac917248c",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047443883200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-zero-defined.txt",
+      "destination": "target-a132-current/parent-gc_asset_gate-zero-defined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047418885100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-zero-inputs.json",
+      "destination": "target-a132-current/parent-gc_asset_gate-zero-inputs.json",
+      "bytes": 335,
+      "sha256": "d4b90b58d3e0bafbdfbcec89261ea3c052fb206e42fcc336b1aebb28a8497afa",
+      "lf_sha256": "d4b90b58d3e0bafbdfbcec89261ea3c052fb206e42fcc336b1aebb28a8497afa",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047429885600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-zero-size.txt",
+      "destination": "target-a132-current/parent-gc_asset_gate-zero-size.txt",
+      "bytes": 153,
+      "sha256": "6ae26f9b2ae3ca9d2cb2d2269ff6dbb380e76007197e7a04ff946be521ca0533",
+      "lf_sha256": "6ae26f9b2ae3ca9d2cb2d2269ff6dbb380e76007197e7a04ff946be521ca0533",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047425882800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-zero-undefined.txt",
+      "destination": "target-a132-current/parent-gc_asset_gate-zero-undefined.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047421882600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-zero.d",
+      "destination": "target-a132-current/parent-gc_asset_gate-zero.d",
+      "bytes": 90,
+      "sha256": "1f69b6e53cc86e366841b3d60910e424106ad3735b109491da863df67c1b65c0",
+      "lf_sha256": "1f69b6e53cc86e366841b3d60910e424106ad3735b109491da863df67c1b65c0",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047436883800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/parent-gc_asset_gate-zero.su",
+      "destination": "target-a132-current/parent-gc_asset_gate-zero.su",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047432883100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/report.json",
+      "destination": "target-a132-current/report.json",
+      "bytes": 50295,
+      "sha256": "e6cbd69ea333bc2641c1189d0772a7de8e45888905a41bf91144e781a6ca3038",
+      "lf_sha256": "e6cbd69ea333bc2641c1189d0772a7de8e45888905a41bf91144e781a6ca3038",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047473884400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/retained14-readback.json",
+      "destination": "target-a132-current/retained14-readback.json",
+      "bytes": 6502,
+      "sha256": "ecbee46b8f63ca05a7b33483045dcc1b29865833e05ec6ee050a195a25e03c4f",
+      "lf_sha256": "ecbee46b8f63ca05a7b33483045dcc1b29865833e05ec6ee050a195a25e03c4f",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047023596600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/SUMMARY.json",
+      "destination": "target-a132-current/SUMMARY.json",
+      "bytes": 7966,
+      "sha256": "9a145136a9a71f378ed0cee109550c8208d48c77cc9b511e16b53c8ca351f2f3",
+      "lf_sha256": "9a145136a9a71f378ed0cee109550c8208d48c77cc9b511e16b53c8ca351f2f3",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824047020595800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog24-20261024/target-a132-current/SHA256-MANIFEST.json",
+      "destination": "target-a132-current/SHA256-MANIFEST.json",
+      "bytes": 20005,
+      "sha256": "845730c24bf1e19eb08778d60534ec54e2bd3328051efa5757f8611d5e3b1731",
+      "lf_sha256": "845730c24bf1e19eb08778d60534ec54e2bd3328051efa5757f8611d5e3b1731",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792824048605162600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog24/catalog-target-a132-attempt1.py",
+      "destination": "catalog-target-source-helpers/catalog-target-a132-attempt1.py",
+      "bytes": 11674,
+      "sha256": "31c5067b13654789a222299bf689c3446dc093113fa4c70ec627ccbf1a52eaf3",
+      "lf_sha256": "593d525c124bb1735c7d7a747e681403b463f74b2d27503b65faf9abcf5b6089",
+      "crlf_count": 1,
+      "source_mtime_ns": 1792823668027538600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog24/catalog-target-a132.py",
+      "destination": "catalog-target-source-helpers/catalog-target-a132.py",
+      "bytes": 11727,
+      "sha256": "3952fa4df2c37f4145dd6a5a46f67714524f3cf4872674908dd99533ca3d83f2",
+      "lf_sha256": "3952fa4df2c37f4145dd6a5a46f67714524f3cf4872674908dd99533ca3d83f2",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823706674750100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog24/catalog-target-a132.sh",
+      "destination": "catalog-target-source-helpers/catalog-target-a132.sh",
+      "bytes": 1151,
+      "sha256": "6dd6633ee754691acd4bbbb891d6fda8e2b9aacd762fa7ba886c78e00bfe2ec4",
+      "lf_sha256": "6dd6633ee754691acd4bbbb891d6fda8e2b9aacd762fa7ba886c78e00bfe2ec4",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823668092715100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog24/CATALOG24-TARGET-PREPARATION.json",
+      "destination": "catalog-target-source-helpers/CATALOG24-TARGET-PREPARATION.json",
+      "bytes": 25229,
+      "sha256": "2ff21c964979e37a881e109edcbe131dcd2c6b342aef7babe5f43a35bbca4ced",
+      "lf_sha256": "2ff21c964979e37a881e109edcbe131dcd2c6b342aef7babe5f43a35bbca4ced",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792823707627449800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-bca44-console55-20261024/ROOT-PREFLIGHT-DECISION.json",
+      "destination": "rain-root-decisions-metadata-only/ROOT-PREFLIGHT-DECISION.json",
+      "bytes": 1348,
+      "sha256": "9a08b949dc885f539dca38d0d5e2b0159c0c9063c6582e5425c983718886d2bc",
+      "lf_sha256": "a8ab132ac3c7f8e1a619c9b92f5cb8f6272bf2a702471321f20afacbc025b16f",
+      "crlf_count": 26,
+      "source_mtime_ns": 1792824114800049000
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-bca44-console55-20261024/ROOT-OFF-CANARY-REVIEW.json",
+      "destination": "rain-root-decisions-metadata-only/ROOT-OFF-CANARY-REVIEW.json",
+      "bytes": 1010,
+      "sha256": "1c05f96ee2b9d075d375d1d6638363f5ff99413d335a7a33d07d049797c09869",
+      "lf_sha256": "30a9ce29a6056e4ad6df669e3c89945660d87735bc6333654c5bc03c1c4eccd3",
+      "crlf_count": 17,
+      "source_mtime_ns": 1792824258466387600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-bca44-console55-20261024/ROOT-PAIR-RESULT.json",
+      "destination": "rain-root-decisions-metadata-only/ROOT-PAIR-RESULT.json",
+      "bytes": 12927,
+      "sha256": "0a1488bdf04beab0d5843c9cef994221e101a0c0647da3b4820a49978f731cd6",
+      "lf_sha256": "40b2e47e2707f836582cab765ca4ffb5f2ff88e66fa094c9b6af1788d1752dcd",
+      "crlf_count": 325,
+      "source_mtime_ns": 1792824626225968400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-final-20261024/collect.py",
+      "destination": "collect.py",
+      "bytes": 12610,
+      "sha256": "6f9a9a7f10b5e20efbc56c0289a831e764151f3b798ccdb519d82b85b66df42e",
+      "lf_sha256": "6f9a9a7f10b5e20efbc56c0289a831e764151f3b798ccdb519d82b85b66df42e",
+      "crlf_count": 0,
+      "source_mtime_ns": 1792825061664135000
+    }
+  ],
+  "log_hash_only_count": 21,
+  "scope": "Only named frozen/explicitly dated source and compact metadata. No active motion/PVS/Y work traversal, capture/image/game log/track/programme/grant/attempt payload or runtime/object/private asset copy.",
+  "dated_root_snapshot_time": "2026-10-24T06:55:37.837609+00:00",
+  "file_name_mapping": {
+    "requested_rootintegration_readiness": "integration-readiness-20261024.py",
+    "requested_review_connected_plan": "review-connected-patch-plan.md"
+  }
+}

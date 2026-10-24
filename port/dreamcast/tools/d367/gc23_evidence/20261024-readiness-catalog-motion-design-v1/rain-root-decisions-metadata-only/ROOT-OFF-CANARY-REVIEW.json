@@ -1,0 +1,17 @@
+{
+  "root_decision": "OFF limited control observed; proceed once to matched ON case under original two-case grant",
+  "checks": [
+    "actual room10c/controller1100 retained signature",
+    "native OFF counters0",
+    "two stable framebuffer reads in both buffers",
+    "console FPSyes/config stable",
+    "goal reached,23.219-second owned child, no deadline",
+    "image fb1 inspected: Leon in narrow rocky entry passage; no outside dam/water or whole-room appearance acceptance"
+  ],
+  "guest_rc_note": "Bounded child rc1 follows fp_run explicit goal termination; process exit code alone is not a game-crash verdict. Separate semantic goal/errors/config/capture checks above.",
+  "receipt_hashes": {
+    "run-result.json": "ab778dcee08c1f3584defcebd61675b3646fb1edd58dd212387b40d68179d83a",
+    "bounded-launch.json": "43faf85fac2d93869e7f6ef27aad31204a19dcfffb31d13199ee4975787e86ed",
+    "rain-canary-capture.json": "f3013aa684886694fccfd1d978570fc59b365ac8adcc71d75cba2d831ed1a1a3"
+  }
+}

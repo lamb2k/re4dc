@@ -1,0 +1,51 @@
+{
+  "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+  "tree": "836ae5650ac9497a52519e370a789617bc3a06b6",
+  "source_clean_after": true,
+  "full_suite": {
+    "discovered": 108,
+    "passed": 107,
+    "skipped": 1,
+    "errors": 0,
+    "seconds": 88.906,
+    "cpp_gate_member_cursor": "PASS",
+    "whole_script_exit": 0
+  },
+  "focused": {
+    "methods": 7,
+    "ordinary_schedule_cases": 36,
+    "private_epoch_exhaustion_case": 1,
+    "compiling_runtime_SIGABRT_mutants": 9,
+    "unchanged_runtime_index_methods": 2,
+    "strict_io_depth_log_guard": true,
+    "absent_and_explicit0_parent_stripped_object_identity": true,
+    "off_defined_symbols": 0
+  },
+  "host_formatter_max_including_LF": {
+    "ASSET": 247,
+    "COUNTS": 255,
+    "BEGIN": 157,
+    "END": 168,
+    "logger_bytes": 256
+  },
+  "host_off_note": "No defined symbols and parent-identical stripped objects. Host size reports32 bytes alloc metadata in OFF objects; not a zero-section SH4 claim.",
+  "metadata_raw_source_estimate": {
+    "pending_catalog_fault_mask_bytes": 4,
+    "disc_atomic_flag_bytes_unpriced": 1,
+    "disc_atomic_state_replaces_existing_unsigned": true,
+    "heap_allocations": 0,
+    "resident_digest_or_catalog_tables": 0,
+    "target_section_stack_provider_prices": "not run/no SDK allocation"
+  },
+  "source_pins": {
+    "port/dreamcast/game/platform/gc_asset_gate.cpp": "8e271fbe41023a5dd1e2e0d2d4163e6cacc8389b830ecd7a10848f680ac783d9",
+    "port/dreamcast/game/platform/gc_asset_disc.cpp": "ecd578a098bc2cc9739bd2f1e537b80c46883f0a9f2fa3b1e7294709a5bd2dde",
+    "port/dreamcast/game/platform/include/gc_asset_index.inc": "69ed9219291c0e22802852edf28ce315356860fb82e9fdb6ee590a3741c4f9ec",
+    "port/dreamcast/tools/d367/gc_port23/test_catalog_defensive.py": "75890caa62d37d9fe0a9c582e2fbf24b31b036be95947d58cd946f02ea89821b",
+    "port/dreamcast/tools/d367/gc_port23/test_runtime_index.py": "7e9d65ce511aa615d0436c217e22c69ecb6c696e928bce9bc1862c90aa406b25",
+    "port/dreamcast/tools/d367/gc_port23/run_host_tests.sh": "6d783c66d019a18d78761f30696e104730cb23e87c44f5f3d17177f2d4c63ac3",
+    "port/dreamcast/tools/d367/gc_port23/CATALOG24.md": "7cfee1e1462edc0cb27e9541d035b24dec9df17d07aa74275b1d07eefae2a4ef"
+  },
+  "host_log_sha256": "62a2480c3da701d821fda8d080b4314bcbd25323a6ac4a3dce1ed01a815c4597",
+  "scope": "Host source/contract controls only; no SH4 compile/link/stage/guest/catalog-production install/terminal/I001 acceptance.5ec failed receipt preserved separately."
+}

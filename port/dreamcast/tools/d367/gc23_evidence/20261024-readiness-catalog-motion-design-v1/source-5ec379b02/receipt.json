@@ -1,0 +1,22 @@
+{
+  "source": "5ec379b023a800a4e980108218b5242f4e2472ef",
+  "tree": "7d5546a13036746c8f04155c81af725e3d110653",
+  "host_log_sha256": "7dfeb417e817a64511385975c505cb8d52d5bf9184fcf01880c7a0f9a62eb85d",
+  "full_suite": {
+    "discovered": 107,
+    "passed": 105,
+    "errors": 1,
+    "skipped": 1,
+    "seconds": 85.624,
+    "cpp_stage_reached": false
+  },
+  "failure": "unchanged RuntimeIndexTests::test_actual_disc_loader_and_texture_load_boundary re4dc_log assertion !io_depth; new configured missing-file path formatted inside Re4dcIoScope",
+  "source_pins": {
+    "port/dreamcast/game/platform/gc_asset_gate.cpp": "efde4105e9cfb42a4e9760a465a05f427020e39f58358b7509a43c5161d9dddb",
+    "port/dreamcast/game/platform/gc_asset_disc.cpp": "33ccb1776a93054b614f249f666349fc787bc0779520fff6fa78cbd8eba40359",
+    "port/dreamcast/game/platform/include/gc_asset_index.inc": "69ed9219291c0e22802852edf28ce315356860fb82e9fdb6ee590a3741c4f9ec",
+    "port/dreamcast/tools/d367/gc_port23/test_catalog_defensive.py": "b18813c7ef07d64f16e664232debdbe61595b76ae71dd0717277d2fbb5c54e4f",
+    "port/dreamcast/tools/d367/gc_port23/CATALOG24.md": "91e6bb210761b5c996278b295f5172c191eee1203123ff8079fd6d304b6daa7a"
+  },
+  "preserved": "genuine broad-sweep failure at immutable5ec; successor source/passing results separate"
+}

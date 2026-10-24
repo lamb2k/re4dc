@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+      0	      0	      0	      0	      0	/dev/shm/gc-catalog24-a132-avwm2i7d/current-gc_asset_gate-zero.o

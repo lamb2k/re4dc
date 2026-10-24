@@ -1,0 +1,45 @@
+{
+  "time": "2026-10-24T06:15:34.524858+00:00",
+  "scope": "Read-only textual integration preview of independently frozen GC and rain source. Writes only unreachable Git merge-tree objects and this receipt; no branch, working tree, recipe, SDK or guest mutation. Not an integrated qualification.",
+  "base": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "gc": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "rain": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "remote_current": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "merge_exit": 0,
+  "merge_stdout": "cac3a8de734ae3f2f9a6afd5517cacafba5495ff\n",
+  "merge_stderr": "",
+  "heads_before": {
+    "/root/work/lanes/gc-port23": "1d63cffe3a232c402418f2f2d919e7abae476957",
+    "/root/work/lanes/water-rain24": "bca44d58a1fa0a51fd87ba94deba8cba925c8998"
+  },
+  "preview_tree": "cac3a8de734ae3f2f9a6afd5517cacafba5495ff",
+  "rain_delta_from_gc": [
+    "M\tport/dreamcast/game/effects30.mk",
+    "A\tport/dreamcast/tools/d367/water_rain24/RAIN-R10C-EXPERIMENT.md",
+    "A\tport/dreamcast/tools/d367/water_rain24/README.md",
+    "A\tport/dreamcast/tools/d367/water_rain24/audit.py",
+    "A\tport/dreamcast/tools/d367/water_rain24/fixture_rain_r10c.cpp.in",
+    "A\tport/dreamcast/tools/d367/water_rain24/test_audit.py",
+    "A\tport/dreamcast/tools/d367/water_rain24/test_rain_r10c.py",
+    "M\tsrc/game/filter06.cpp"
+  ],
+  "runtime_whitespace_checks": {
+    "gc": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "rain": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  },
+  "notes": [
+    "Frozen GC source is superseded for further qualification by the in-progress isolated catalog audit; do not land this preview.",
+    "Archived source-proof metadata has original CRLF/trailing bytes; preserve identities rather than silently normalizing receipts.",
+    "GC complete catalog, required consumer coverage, KOS/H2 and real producer terminal acknowledgements remain open.",
+    "Rain live lifecycle, memory and still/look acceptance remain open.",
+    "No production options were enabled. Default-off source qualification does not authorize a look change."
+  ]
+}

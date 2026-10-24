@@ -1,0 +1,2 @@
+00000000 T __ZN13re4dc_gcasset19ensure_disc_catalogEv
+00000000 T __ZN13re4dc_gcasset19retire_disc_catalogEv

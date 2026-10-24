@@ -1,0 +1,121 @@
+{
+  "status": "FROZEN_SOURCE_METADATA_PRESERVATION_PASS",
+  "verified_manifests": {
+    "motion-frozen-design-census": {
+      "sha256": "fba3cb3af6cc8a1047be908e4de72adb499e2a72ac8d0f98b440a0863f59822f",
+      "members": 7
+    },
+    "review-cataloga132": {
+      "sha256": "62131ee21eb9fae88f55e7cdaa3bf31297e9928bf4b30653394274077767c1d2",
+      "members": 12
+    },
+    "review-catalog5ec": {
+      "sha256": "6c48fe73926075cfe6a0ddfa7f293ab389cd84a58c65eacba643159d8b5c88db",
+      "members": 10
+    },
+    "source-a132648e8": {
+      "sha256": "cbe9e7d06aaa4ff9c6417c48e979e914eb867cf4ce50875955249a2718590d43",
+      "members": 2,
+      "logged_members_hash_only": 1
+    },
+    "source-5ec379b02": {
+      "sha256": "8fc11bc900db20ae0b457e467f829ad9d9ef519963143ebecfc290dc7f2dd291",
+      "members": 2,
+      "logged_members_hash_only": 1
+    },
+    "target-a132-current": {
+      "sha256": "845730c24bf1e19eb08778d60534ec54e2bd3328051efa5757f8611d5e3b1731",
+      "members": 133,
+      "logged_members_hash_only": 16
+    }
+  },
+  "public_source_pins_verified": [
+    {
+      "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+      "path": "port/dreamcast/game/platform/gc_asset_gate.cpp",
+      "sha256": "8e271fbe41023a5dd1e2e0d2d4163e6cacc8389b830ecd7a10848f680ac783d9"
+    },
+    {
+      "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+      "path": "port/dreamcast/game/platform/gc_asset_disc.cpp",
+      "sha256": "ecd578a098bc2cc9739bd2f1e537b80c46883f0a9f2fa3b1e7294709a5bd2dde"
+    },
+    {
+      "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+      "path": "port/dreamcast/game/platform/include/gc_asset_index.inc",
+      "sha256": "69ed9219291c0e22802852edf28ce315356860fb82e9fdb6ee590a3741c4f9ec"
+    },
+    {
+      "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+      "path": "port/dreamcast/tools/d367/gc_port23/test_catalog_defensive.py",
+      "sha256": "75890caa62d37d9fe0a9c582e2fbf24b31b036be95947d58cd946f02ea89821b"
+    },
+    {
+      "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+      "path": "port/dreamcast/tools/d367/gc_port23/test_runtime_index.py",
+      "sha256": "7e9d65ce511aa615d0436c217e22c69ecb6c696e928bce9bc1862c90aa406b25"
+    },
+    {
+      "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+      "path": "port/dreamcast/tools/d367/gc_port23/run_host_tests.sh",
+      "sha256": "6d783c66d019a18d78761f30696e104730cb23e87c44f5f3d17177f2d4c63ac3"
+    },
+    {
+      "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+      "path": "port/dreamcast/tools/d367/gc_port23/CATALOG24.md",
+      "sha256": "7cfee1e1462edc0cb27e9541d035b24dec9df17d07aa74275b1d07eefae2a4ef"
+    },
+    {
+      "source": "5ec379b023a800a4e980108218b5242f4e2472ef",
+      "path": "port/dreamcast/game/platform/gc_asset_gate.cpp",
+      "sha256": "efde4105e9cfb42a4e9760a465a05f427020e39f58358b7509a43c5161d9dddb"
+    },
+    {
+      "source": "5ec379b023a800a4e980108218b5242f4e2472ef",
+      "path": "port/dreamcast/game/platform/gc_asset_disc.cpp",
+      "sha256": "33ccb1776a93054b614f249f666349fc787bc0779520fff6fa78cbd8eba40359"
+    },
+    {
+      "source": "5ec379b023a800a4e980108218b5242f4e2472ef",
+      "path": "port/dreamcast/game/platform/include/gc_asset_index.inc",
+      "sha256": "69ed9219291c0e22802852edf28ce315356860fb82e9fdb6ee590a3741c4f9ec"
+    },
+    {
+      "source": "5ec379b023a800a4e980108218b5242f4e2472ef",
+      "path": "port/dreamcast/tools/d367/gc_port23/test_catalog_defensive.py",
+      "sha256": "b18813c7ef07d64f16e664232debdbe61595b76ae71dd0717277d2fbb5c54e4f"
+    },
+    {
+      "source": "5ec379b023a800a4e980108218b5242f4e2472ef",
+      "path": "port/dreamcast/tools/d367/gc_port23/CATALOG24.md",
+      "sha256": "91e6bb210761b5c996278b295f5172c191eee1203123ff8079fd6d304b6daa7a"
+    }
+  ],
+  "syntax_only_checks": [
+    "dated-20261024-root-snapshots/integration-readiness-20261024.py",
+    "dated-20261024-root-snapshots/takeover-refresh-20261024.py",
+    "motion-frozen-design-census/readback.py",
+    "review-cataloga132/run_focused.py",
+    "review-cataloga132/run_independent_faults.py",
+    "review-cataloga132/run_independent_wrapper.py",
+    "review-catalog5ec/run_focused.py",
+    "review-catalog5ec/run_independent_wrapper.py",
+    "catalog-target-source-helpers/catalog-target-a132-attempt1.py",
+    "catalog-target-source-helpers/catalog-target-a132.py",
+    "catalog-target-source-helpers/catalog-target-a132.sh",
+    "collect.py"
+  ],
+  "target133_members_verified": 133,
+  "target16_arms_recorded_only": true,
+  "motion7_members_verified": 7,
+  "log_payloads_copied": 0,
+  "log_hash_receipts": 21,
+  "SDK_or_guest_runs": 0,
+  "limits": [
+    "Archival preservation only; source/target/design/canary reports retain their original limited qualification.",
+    "5ec remains blocked; a132 host source and selected16 target arms do not establish full-link/runtime/producer-terminal/I001 acceptance.",
+    "Motion census is frozen design-only; initial motion review is not acceptance of active implementation.",
+    "Connected notes and river audit are dated source/offline records, not runtime/data/look/speed admission.",
+    "Rain three ROOT decisions do not authorize further guest runs or establish full lifecycle/heap/physical acceptance."
+  ]
+}

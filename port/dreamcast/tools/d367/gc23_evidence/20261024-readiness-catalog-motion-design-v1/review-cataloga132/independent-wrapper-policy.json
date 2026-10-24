@@ -1,0 +1,33 @@
+{
+  "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+  "scope": "actual full gate/index/disc; independent extra mocked callback/error schedules; no SDK/guest",
+  "tests": [
+    {
+      "name": "wrapper_failed_install_retires_new_core_replacement",
+      "exit": 0
+    },
+    {
+      "name": "ready_disc_read_preserves_replacement_but_rejects_old_description",
+      "exit": 0
+    },
+    {
+      "name": "open_failure_sticky_without_descriptor",
+      "exit": 0
+    },
+    {
+      "name": "short_total_retains_exact_descriptor_until_retry",
+      "exit": 0
+    },
+    {
+      "name": "seek_failure_sticky",
+      "exit": 0
+    },
+    {
+      "name": "negative_read_sticky",
+      "exit": 0
+    }
+  ],
+  "fixture_sha256": "c7e958e8034d5b5b18b6de99295d4e5dc17161b95a0094396974e5e4703fa73b",
+  "RLIMIT_AS_bytes": 268435456,
+  "compiler_jobs": 1
+}

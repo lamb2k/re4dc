@@ -1,0 +1,806 @@
+{
+  "status": "READBACK_PASS_DESIGN_ONLY",
+  "source_head": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+  "comparison_base": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "observed_tree_head": "870789095c4c14fbdbf22043447b249063d2ec3a",
+  "audited_files_match_frozen_source": true,
+  "source_files": [
+    {
+      "path": "port/dreamcast/game/platform/include/gc_asset_members.h",
+      "bytes": 2108,
+      "sha256": "22c174a00ce0fc98788694babdd6b1a0218d20a3ed2171442caf025801a3e637",
+      "same_as_1d63": true,
+      "anchors": {
+        "struct SourceUse": [
+          32
+        ],
+        "struct ReplayUse": [
+          34
+        ],
+        "struct SourceScope": [
+          41
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/gc_asset_actor.h",
+      "bytes": 2202,
+      "sha256": "a43ded544b66ba81c1f6cd22c6b92453198e878b58f6e411df7d4581de1db8eb",
+      "same_as_1d63": true,
+      "anchors": {
+        "struct ActorSourceScope": [
+          28
+        ],
+        "struct ActorMainSourceScope": [
+          39
+        ],
+        "void accepted()": [
+          33
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/gc_asset_actor_select.inc",
+      "bytes": 8315,
+      "sha256": "245c790929e0a81ddd07af151fe6e000c28808f752ff1485486a02b2875037d8",
+      "same_as_1d63": true,
+      "anchors": {
+        "gcasset_actor_current_select": [
+          47,
+          104,
+          108
+        ],
+        "re4dc_gcasset_actor_select": [
+          96,
+          128
+        ],
+        "re4dc_gcasset_actor_main_select": [
+          110
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/gc_asset_static_source.inc",
+      "bytes": 1889,
+      "sha256": "27b94d5b44bfd139fc606891d62125e20e42f993f0541e218d7888a5b1864e37",
+      "same_as_1d63": true,
+      "anchors": {
+        "struct GcStaticSourceScope": [
+          19
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/platform/gc_asset_members.cpp",
+      "bytes": 10577,
+      "sha256": "3f1c768789846928c5aea662171f44fa5c07e5b5579ef93a09528407b132c12a",
+      "same_as_1d63": true,
+      "anchors": {
+        "void member_accept": [
+          179
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/platform/gc_asset_payloads.cpp",
+      "bytes": 18596,
+      "sha256": "c9015ed87c6085995182e9a6b795baa6e4c52bd6337f49fcfc7ca5a40a0f926d",
+      "same_as_1d63": true,
+      "anchors": {
+        "void payload_accept": [
+          237
+        ],
+        "bool payload_quads_accept": [
+          255
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/platform/gc_asset_gate.cpp",
+      "bytes": 19622,
+      "sha256": "8e271fbe41023a5dd1e2e0d2d4163e6cacc8389b830ecd7a10848f680ac783d9",
+      "same_as_1d63": false,
+      "anchors": {
+        "void unresolved": [
+          295
+        ],
+        "void emitted_checked": [
+          304
+        ],
+        "void end(": [
+          324
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/gc_asset_gate.h",
+      "bytes": 5972,
+      "sha256": "c8fb4b2435a46487ecec8b03f1c5a4176f429cdfbafbb8e0dbb5930100d74517",
+      "same_as_1d63": true,
+      "anchors": {
+        "enum Consumer": [
+          9
+        ],
+        "constexpr unsigned Required": [
+          92
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_actor_fast.cpp",
+      "bytes": 347409,
+      "sha256": "3213ca98e5a1e6f96a512cf8d3a6c773383bb0d1714d22d71d6909b0e562d318",
+      "same_as_1d63": true,
+      "anchors": {
+        "struct SkinEntry": [
+          1671
+        ],
+        "struct Frame": [
+          1718
+        ],
+        "Frame* prepare_frame": [
+          1805
+        ],
+        "void skin_position_matrix": [
+          1892
+        ],
+        "re4dc_actor_skin_register(": [
+          5223
+        ],
+        "re4dc_actor_materialize(": [
+          5298
+        ],
+        "re4dc_actor_materialize_lazy(": [
+          5314
+        ],
+        "int re4dc_actor_submit(": [
+          5561
+        ],
+        "void one_close(": [
+          6273
+        ],
+        "Frame& one_frame(": [
+          6194
+        ],
+        "int one_chunk_core(": [
+          6284
+        ],
+        "if(e.slots)gcasset_actor_scope.accepted();": [
+          6739
+        ],
+        "unsigned re4dc_actor_submit_chunks(": [
+          6787
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/native_actor_owner_pool.inc",
+      "bytes": 5658,
+      "sha256": "a6f99e0e861d1071ff42247b3547afb4357843c7e5ab7a63223f76cb23497818",
+      "same_as_1d63": true,
+      "anchors": {
+        "SkinEntry": [
+          2,
+          4,
+          18,
+          99
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/native_actor_owner_runs.inc",
+      "bytes": 10516,
+      "sha256": "8d84b5e1b7a653a8a6fe439cdb9800f7571b6a74d6036b61c988071ed9b7bea5",
+      "same_as_1d63": true,
+      "anchors": {
+        "int re4dc_actor_submit_owned_runs(": [
+          54,
+          68
+        ],
+        "okay=one_chunk(*part,window)==1;": [
+          128
+        ],
+        "re4dc_model_packet_abort();return -1;": [
+          141
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_actor.cpp",
+      "bytes": 26544,
+      "sha256": "a81ec8cc86aff47798b15c5580813d3c505462610a66b8263109b3040154120a",
+      "same_as_1d63": true,
+      "anchors": {
+        "struct Prepared": [
+          45
+        ],
+        "bool same_positions(": [
+          104
+        ],
+        "re4dc_model_packet_commit(e.used);": [
+          535
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_model.cpp",
+      "bytes": 53727,
+      "sha256": "9223fce1be3fde6b632ec448d905ddf463fbcaa5e554b9900d25364dec48c686",
+      "same_as_1d63": true,
+      "anchors": {
+        "struct PreparedModelBatch": [
+          130
+        ],
+        "re4dc_model_packet_commit(used);": [
+          291
+        ],
+        "void re4dc_model_submit(": [
+          712
+        ],
+        "re4dc_model_packet_commit(b.used);": [
+          924
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "bytes": 531438,
+      "sha256": "d3aa5b9ec587332b33d0255758c23af0ab8348de9e26e5559d828ea5aa3a6266",
+      "same_as_1d63": true,
+      "anchors": {
+        "void gcasset_model_prepare(": [
+          453
+        ],
+        "void gcasset_model_accept(": [
+          457
+        ],
+        "struct DeferredPart": [
+          755
+        ],
+        "void gcasset_flush()": [
+          5538
+        ],
+        "void re4dc_model_packet_commit(": [
+          7007
+        ],
+        "static void model_direct_account(": [
+          7143
+        ],
+        "re4dc_leon_direct_switch(": [
+          7266
+        ],
+        "int re4dc_ui_mv_send(": [
+          7187
+        ],
+        "int re4dc_model_pt_begin(": [
+          7514
+        ],
+        "int re4dc_model_defer_part(": [
+          7637
+        ],
+        "ReplayScope gcasset_replay_scope": [
+          9448
+        ],
+        "void movie_draw()": [
+          964,
+          9870
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_static.cpp",
+      "bytes": 406053,
+      "sha256": "d0a43e079d22febbbf87cc7ef042bb3f43bac0ad4c3cb8881cdf0d97fec6bcb3",
+      "same_as_1d63": true,
+      "anchors": {
+        "struct ImpostorQuad": [
+          1538
+        ],
+        "void re4dc_static_flush_impostors()": [
+          3643
+        ],
+        "int re4dc_static_submit(": [
+          4601
+        ],
+        "namespace dyn {": [
+          4942
+        ],
+        "unsigned query(": [
+          5022
+        ],
+        "struct ChunkPart": [
+          6755
+        ],
+        "Queued emitters borrow its cull": [
+          6771
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/platform/far_shell.inc",
+      "bytes": 24428,
+      "sha256": "4ce2055d32f28a37536b1bbfd6bacfba71763efb26845df9f3c76a88318e0822",
+      "same_as_1d63": true,
+      "anchors": {
+        "int re4dc_far_shell_draw(": [
+          248
+        ],
+        "const Vert* src = st.verts": [
+          316
+        ],
+        "re4dc_model_direct_end(slots);": [
+          301,
+          396
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_ps2_world.cpp",
+      "bytes": 49129,
+      "sha256": "9d78a847177178abc80e3f5b8c5fde4ecd4c0e8d904673b66449a91abe1d86fc",
+      "same_as_1d63": true,
+      "anchors": {
+        "class WorldDraw": [
+          163
+        ],
+        "re4dc_model_packet_commit(used);": [
+          255,
+          269,
+          466,
+          639
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/model_bridge.cpp",
+      "bytes": 56928,
+      "sha256": "256d140f6b18d0855002ac288d8f7b3fb4d3abb38d3dc33e4d284a9a9b951165",
+      "same_as_1d63": true,
+      "anchors": {
+        "int re4dc_actor_model_prelit(": [
+          126
+        ],
+        "void flush(){": [
+          397
+        ],
+        "p.static_geometry=rigid": [
+          933
+        ],
+        "memcpy(p.modelview,mv": [
+          911
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/coarse_actor.cpp",
+      "bytes": 24271,
+      "sha256": "26a1abbb6d9c1aedf401681efb4e31fea90e27ffca4f2ccd186106177bf3a859",
+      "same_as_1d63": true,
+      "anchors": {
+        "int re4dc_coarse_leon(": [
+          292
+        ],
+        "re4dc_actor_skin_register(": [
+          379,
+          413
+        ],
+        "re4dc_actor_submit_chunks(": [
+          350
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/coarse_ganado.cpp",
+      "bytes": 13804,
+      "sha256": "037ca720f3b478891ce5b95daa4b56aaa110b64907fe97a6ab99ca3ac1ab7ecd",
+      "same_as_1d63": true,
+      "anchors": {
+        "re4dc_actor_skin_register(": [
+          210
+        ],
+        "re4dc_actor_submit(&p)": [
+          232
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/coarse_ganado_cast.cpp",
+      "bytes": 53996,
+      "sha256": "07be3005095de60396abf434bbe311af3aa59268009c96b8588d970ba028f49c",
+      "same_as_1d63": true,
+      "anchors": {
+        "re4dc_actor_skin_register(": [
+          850,
+          897
+        ],
+        "re4dc_actor_submit_chunks(": [
+          818
+        ],
+        "re4dc_actor_submit(&p)": [
+          926,
+          930
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/coarse_actor_transaction.inc",
+      "bytes": 67019,
+      "sha256": "dc7ffae1f7e8b95a2314eddfe073fe9e2c18d803e6bbdf030355bfde59d1fa8f",
+      "same_as_1d63": true,
+      "anchors": {
+        "p.palettes(m,p,palettes)": [
+          394
+        ],
+        "r->part[order].mv,mv": [
+          1074,
+          1079,
+          1085
+        ],
+        "RE4DC_ACTOR_SUBMIT_OWNED(": [
+          1127,
+          1139
+        ],
+        "ice_result=re4dc_actor_submit_owned_runs": [
+          1155
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/coarse_actor_owner_leon.inc",
+      "bytes": 26883,
+      "sha256": "9e3ea09c93551ff7309d97880942c58b49f925e3fb5563dd98d8017567e83a30",
+      "same_as_1d63": true,
+      "anchors": {
+        "int owner_leon_palettes(": [
+          253
+        ],
+        "skin_jobs[u]={&parts[b]->mat": [
+          271
+        ],
+        "leon_hand_pick(": [
+          69,
+          302,
+          303
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/coarse_actor_owner_ganado.inc",
+      "bytes": 70803,
+      "sha256": "572db2054ff00d1cfe0bc5448e31a6032098e753acf0e0d52297ed44e23dbad2",
+      "same_as_1d63": true,
+      "anchors": {
+        "PSMTXInverse(m->pParts->mat": [
+          305,
+          368,
+          670,
+          1188
+        ],
+        "registry": [
+          114,
+          158
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/coarse_actor_owner_pl08.inc",
+      "bytes": 22209,
+      "sha256": "f67b7f10a30be5e8bdaf135a81224aff59dc4998369eb5a538abc3fd54f6879d",
+      "same_as_1d63": true,
+      "anchors": {
+        "PSMTXInverse(m->pParts->mat": [
+          60,
+          111,
+          230
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/coarse_actor_owner_registry.inc",
+      "bytes": 69208,
+      "sha256": "cb077b5ddbf36f6556e8e83d7857da51ee57d581a2393c6d587de2d2784f589a",
+      "same_as_1d63": true,
+      "anchors": {
+        "PSMTXInverse(m->pParts->mat": [
+          609
+        ],
+        "registry_jobs[u]={&registry_bound->parts[b]->mat": [
+          618,
+          620
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/coarse_actor_leon_hands.inc",
+      "bytes": 24001,
+      "sha256": "f99d173a0df7cef72ba8ae7b322c55cd35e6a4831d0c7ce8a301de3e4eed06e3",
+      "same_as_1d63": true,
+      "anchors": {
+        "slot": [
+          8,
+          15,
+          21,
+          27,
+          52,
+          53,
+          54,
+          55,
+          82,
+          154,
+          159,
+          161,
+          196,
+          197,
+          233,
+          237,
+          258,
+          260,
+          262,
+          264,
+          269,
+          271,
+          273,
+          275,
+          291,
+          293,
+          311,
+          312,
+          314,
+          318,
+          321,
+          324,
+          328,
+          330,
+          335,
+          337,
+          341,
+          342,
+          345,
+          347,
+          351,
+          358,
+          360,
+          362,
+          365,
+          370,
+          372,
+          374,
+          403,
+          405,
+          417,
+          418,
+          437
+        ],
+        "skin": [
+          27
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/coarse_actor_atlas_split.inc",
+      "bytes": 4050,
+      "sha256": "71491203c8a512f378c04581e279663b33511311c366c4820a6491668a69de6b",
+      "same_as_1d63": true,
+      "anchors": {
+        "struct Cache": [
+          7
+        ],
+        "int re4dc_atlas_apply(": [
+          42
+        ],
+        "int re4dc_atlas_project(": [
+          53
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/coarse_world.cpp",
+      "bytes": 68090,
+      "sha256": "046c782d5c86825842228b822ad2c7c26d138864bf56f4a756c399333c5d1387",
+      "same_as_1d63": true,
+      "anchors": {
+        "re4dc_model_pt_begin(": [
+          76,
+          1528
+        ],
+        "re4dc_model_packet_commit(used);": [
+          1556
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/mv_shadow.cpp",
+      "bytes": 14734,
+      "sha256": "17954cf31ea241e845e761a3e477c6137bf9e350636bb5044d962bb9fd8cbc5c",
+      "same_as_1d63": true,
+      "anchors": {
+        "re4dc_ui_mv_send(g_buf": [
+          133
+        ],
+        "memcpy(M, &pG->Cam.v_mat": [
+          282
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/blob_shadow.cpp",
+      "bytes": 12124,
+      "sha256": "837ef0a6f6128c3bad2e83538ac0e73e2fa53f53b9aaebc1f9b05a86c8423c75",
+      "same_as_1d63": true,
+      "anchors": {
+        "root joint": [
+          11,
+          182
+        ],
+        "re4dc": [
+          22,
+          23,
+          47,
+          48,
+          49,
+          50,
+          56,
+          61,
+          64,
+          65,
+          67,
+          69,
+          135,
+          164,
+          205,
+          207,
+          214,
+          215,
+          250
+        ]
+      }
+    },
+    {
+      "path": "src/game/trans.cpp",
+      "bytes": 233619,
+      "sha256": "a83e4235dff43faa39ae46118ca644316a6c1733eaf75c2e726426205e29f91a",
+      "same_as_1d63": true,
+      "anchors": {
+        "static void invisInfoModelview(": [
+          2250
+        ],
+        "int re4dc_skin_defer(": [
+          2146,
+          5780
+        ],
+        "int re4dc_skin_defer_lazy(": [
+          1984,
+          5798
+        ],
+        "struct SkinLazyHead": [
+          5817
+        ],
+        "static int skinDeferPending(": [
+          300,
+          5860
+        ]
+      }
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "bytes": 74643,
+      "sha256": "d5aafa42667b16d10e9083ab69b1e7f0dd45788d0727bed61674c8a47dbb5b11",
+      "same_as_1d63": true,
+      "anchors": {
+        "void MotionSetCore(": [
+          157
+        ],
+        "void MotionMoveCore(": [
+          660
+        ],
+        "void MotionGetSpeed(": [
+          990
+        ],
+        "void MotionGetPosition(": [
+          1091
+        ]
+      }
+    },
+    {
+      "path": "src/game/cam_motion.cpp",
+      "bytes": 4388,
+      "sha256": "4c5ce5f7f73cfa30564158ee3aec3193296e80543e2f0561391bf79fdf71c734",
+      "same_as_1d63": true,
+      "anchors": {
+        "CameraMotion::CameraMotion(": [
+          24
+        ],
+        "void CameraMotion::move()": [
+          71
+        ],
+        "param.pos = pos;": [
+          111
+        ],
+        "param.fovy =": [
+          114
+        ]
+      }
+    },
+    {
+      "path": "src/game/camera.cpp",
+      "bytes": 6780,
+      "sha256": "b4d56bbcd7e48e2f436113088e39cbb04e79427928f142222690f6f002486bb3",
+      "same_as_1d63": true,
+      "anchors": {
+        "void CameraMove()": [
+          109
+        ],
+        "pG->Cam = CamCtrl.camera;": [
+          117
+        ],
+        "pG->Cam = *(Camera*) CamCtrl.m_pExtraCamera;": [
+          119
+        ]
+      }
+    },
+    {
+      "path": "port/dreamcast/game/gc_asset_gate.mk",
+      "bytes": 1876,
+      "sha256": "1ff14740423a49a265b296e6a26a52f4e446f897226af760c8eb6ee45b496e2f",
+      "same_as_1d63": true,
+      "anchors": {
+        "GC_ASSET_GATE ?= 0": [
+          3
+        ],
+        "GC_ASSET_GATE requires PVR_STREAM=1": [
+          15
+        ]
+      }
+    }
+  ],
+  "source_facts": {
+    "Motion-currently-refuses-before-catalog": true,
+    "member-mask-geometry-weapon-only": true,
+    "payload-mask-geometry-weapon-only": true,
+    "quad-batch-is-independent-early-return": true,
+    "actual-perchunk-accept-before-window-close": true,
+    "actual-queue-replay-frozen-geometry-not-Motion": true,
+    "prelit-hint-explicitly-null-motion-not-proof": true,
+    "actor-palette-consumes-current-bone-matrix": true
+  },
+  "readback_mutations_detected": [
+    {
+      "file": "port/dreamcast/game/platform/gc_asset_gate.cpp",
+      "changed_fact": "if(consumer==Motion){unresolved(Motion,\"motion-unwired\");return;}"
+    },
+    {
+      "file": "port/dreamcast/game/platform/gc_asset_members.cpp",
+      "changed_fact": "const unsigned allowed=(1U<<SourceGeometry)|(1U<<Weapon);"
+    },
+    {
+      "file": "port/dreamcast/game/platform/gc_asset_payloads.cpp",
+      "changed_fact": "const unsigned allowed=(1U<<SourceGeometry)|(1U<<Weapon);"
+    },
+    {
+      "file": "port/dreamcast/game/platform/native_ui.cpp",
+      "changed_fact": "if(re4dc_gcasset::payload_quads_accept(vertices,count))return;"
+    },
+    {
+      "file": "port/dreamcast/game/platform/native_actor_fast.cpp",
+      "changed_fact": "if(e.slots)gcasset_actor_scope.accepted();"
+    },
+    {
+      "file": "port/dreamcast/game/platform/native_ui.cpp",
+      "changed_fact": "ReplayScope gcasset_replay_scope(deferred_first->asset_serial,deferred_first->asset_mask,deferred_first->asset_payload)"
+    },
+    {
+      "file": "port/dreamcast/game/model_bridge.cpp",
+      "changed_fact": "return !m->pMotion && !info->pData->shapeOfs && !(info->be_flag&2);"
+    },
+    {
+      "file": "port/dreamcast/game/platform/native_actor_fast.cpp",
+      "changed_fact": "const float* P = f.palette + i * 12;"
+    }
+  ],
+  "runtime_detector_implemented": false,
+  "Motion_positive_receipt": false,
+  "Motion_coverage": false,
+  "new_runtime_allocation_bytes": 0,
+  "limits": "source reads and host string mutations only; no SDK/build/guest/assets/catalog IO",
+  "warning": "Mutation controls validate recorded SOURCE FACTS, not the unimplemented detector."
+}

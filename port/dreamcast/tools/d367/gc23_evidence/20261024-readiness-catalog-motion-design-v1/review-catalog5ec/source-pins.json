@@ -1,0 +1,67 @@
+{
+  "source": "5ec379b023a800a4e980108218b5242f4e2472ef",
+  "parent": "1d63cffe3a232c402418f2f2d919e7abae476957",
+  "scope": "immutable archive actual source; exactly five changed files",
+  "inputs": [
+    {
+      "path": "port/dreamcast/game/platform/gc_asset_disc.cpp",
+      "bytes": 3876,
+      "sha256": "33ccb1776a93054b614f249f666349fc787bc0779520fff6fa78cbd8eba40359",
+      "git_blob": "6b519d388e761f51d1743b347fcbbd2e989b8977"
+    },
+    {
+      "path": "port/dreamcast/game/platform/gc_asset_gate.cpp",
+      "bytes": 18804,
+      "sha256": "efde4105e9cfb42a4e9760a465a05f427020e39f58358b7509a43c5161d9dddb",
+      "git_blob": "2947c9a446c878e98af4ff4a0f9759c988b8e56f"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/gc_asset_index.inc",
+      "bytes": 3133,
+      "sha256": "69ed9219291c0e22802852edf28ce315356860fb82e9fdb6ee590a3741c4f9ec",
+      "git_blob": "a6d6fdc38c0d562ae090a36131bcc6a2ee43d4fb"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/gc_port23/CATALOG24.md",
+      "bytes": 3841,
+      "sha256": "91e6bb210761b5c996278b295f5172c191eee1203123ff8079fd6d304b6daa7a",
+      "git_blob": "f9b527445c9ae5686d90adb3c589fcb216732209"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/gc_port23/test_catalog_defensive.py",
+      "bytes": 16609,
+      "sha256": "b18813c7ef07d64f16e664232debdbe61595b76ae71dd0717277d2fbb5c54e4f",
+      "git_blob": "775e23c0c372abbc191980fe5d94bd7111a92c66"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/gc_asset_gate.h",
+      "bytes": 5972,
+      "sha256": "c8fb4b2435a46487ecec8b03f1c5a4176f429cdfbafbb8e0dbb5930100d74517",
+      "git_blob": "cca5758f07abfd9e9626e7e5cbd3eca18624e37e"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/gc_asset_sha.inc",
+      "bytes": 2825,
+      "sha256": "f62ded088c455df1c75d9eb380db314af7b6c28344885623767c93ec69f7c019",
+      "git_blob": "b374ad09b479040b1674c97eebbc5c635709c80f"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/native_io.h",
+      "bytes": 1504,
+      "sha256": "249cbab48d5dbc6ee48159afa26ac1d4a23d272e9c6b00a01697e89e26feec86",
+      "git_blob": "600ba38493e9adedadfb82d0639b762a730760a1"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/gc_port23/test_runtime_index.py",
+      "bytes": 11601,
+      "sha256": "7e9d65ce511aa615d0436c217e22c69ecb6c696e928bce9bc1862c90aa406b25",
+      "git_blob": "71d15475e3807d9765170ddc11fdb1b592099c26"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/gc_port23/catalog_index.py",
+      "bytes": 6119,
+      "sha256": "3553ab33fd4d22617c98ff1b574c1c4467be1cc2b1a1a5f2f92fd583fff5ad29",
+      "git_blob": "c0e75ea57d2f87722bfc86fdb436a107b197ea69"
+    }
+  ]
+}

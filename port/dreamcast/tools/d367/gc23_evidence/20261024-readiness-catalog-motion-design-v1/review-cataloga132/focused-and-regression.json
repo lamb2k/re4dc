@@ -1,0 +1,14 @@
+{
+  "source": "a132648e8199b50a5ac51cec4d339fe7dbc60135",
+  "source_mode": "immutable git archive; original test files unchanged; existing read-only Git object database",
+  "tests": [
+    "test_catalog_defensive",
+    "test_runtime_index"
+  ],
+  "exit": 0,
+  "seconds": 9.947387257998344,
+  "RLIMIT_AS_bytes": 268435456,
+  "compiler_jobs": 1,
+  "log_sha256": "7c0ef499877e7f6fa17a55ceb5c1641bac4538c1f43dfc54c60eba19a2800b46",
+  "scope": "host actual source with mocked providers; no SDK/guest/target"
+}
