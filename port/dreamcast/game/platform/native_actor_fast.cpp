@@ -1,3 +1,4 @@
+#include "include/gc_asset_actor.h"
 // D367 actors30: meshlet actor path (NATIVE_ACTOR=1 NATIVE_ACTOR_FAST=1).
 //
 // Same contract as native_actor.cpp (the source selects, animates, lights and
@@ -6243,6 +6244,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     Re4dcActorSource src{};
     if (!one_qualifies(p, se, src)) { ++stats.declined; return 0; }
 #endif
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::ActorSourceScope gcasset_actor_scope(&p,&src);
+#endif
     const float near_distance = p.projection[6] / (p.projection[5] - 1.0f);
     const float far_distance = p.projection[6] / p.projection[5];
     if (!re4dc::render::is_finite(near_distance) || !re4dc::render::is_finite(far_distance) ||
@@ -6671,6 +6675,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         APROF_STOP(aprof_pack);
     }
     if (e.direct) {
+#if RE4DC_GC_ASSET_GATE
+        if(e.slots)gcasset_actor_scope.accepted();
+#endif
         w.sq = e.sq; w.slots += e.slots; w.primed = e.primed;
         if (!ok) {
             re4dc_model_packet_abort();

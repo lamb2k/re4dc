@@ -2,6 +2,7 @@
 // the pose, part visibility and simulation. Input is the offline-qualified
 // native actor representation; no source game data is overwritten.
 #include "platform/include/gc_asset_payloads.h"
+#include "platform/include/gc_asset_actor.h"
 #include "platform/include/bfc_class.h"
 #include "global.h"
 #include "model.h"
@@ -485,3 +486,5 @@ extern "C" const char* re4dc_charbake_label(void){return re4dc_charbake::variant
 #if RE4DC_ACTOR_TEX_PREP_LEON
 #include "actor_tex_prep_leon_pick.inc"
 #endif
+
+#include "platform/include/gc_asset_actor_select.inc"

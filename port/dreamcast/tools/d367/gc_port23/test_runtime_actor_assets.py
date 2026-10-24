@@ -12,6 +12,51 @@ GAME = HERE.parents[2] / 'game'
 
 
 class ActorAssetTests(unittest.TestCase):
+    def test_actual_pack_selection_and_shared_window_acknowledgement(self):
+        selection = (GAME / 'platform/include/gc_asset_actor_select.inc').read_text()
+        fast = (GAME / 'platform/native_actor_fast.cpp').read_text()
+        accepted = function(fast, '    if (e.direct) {\n#if RE4DC_GC_ASSET_GATE\n        if(e.slots)gcasset_actor_scope.accepted();')
+        fixture = r'''
+#include "gc_asset_actor.h"
+#include <cassert>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdint>
+#include <cstring>
+#include <string>
+using namespace re4dc_gcasset;
+bool sq;std::string logs;
+extern "C" void re4dc_log(const char*fmt,...){assert(!sq);char text[256];va_list ap;va_start(ap,fmt);vsnprintf(text,sizeof text,fmt,ap);va_end(ap);logs+=text;}
+struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;};
+struct Re4dcActorSource{const unsigned char*positions,*normals;unsigned position_count,normal_count,palette_entries,small_normals;};
+struct Chunk{unsigned position_count=1,normal_count=1,palette_count=1,uv_bytes=4,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};
+struct RegistryView{unsigned geometry_count=2;}registry;Chunk chunks[2];Chunk registry_gview(unsigned g){return chunks[g];}
+PayloadProof gcasset_registry[2],gcasset_pl08;
+struct P8{bool published=false;struct View{unsigned bytes[5];}view[3];}pl08_pack;Chunk pl08_pack_chunks[3];
+''' + selection + r'''
+struct Window{unsigned*sq;unsigned slots=0,primed=0;};struct Emission{bool direct=true;unsigned slots=0,primed=0,input=0,output=0;unsigned*sq;};
+void re4dc_model_packet_abort(){}void re4dc_model_result(unsigned,unsigned,unsigned){}void one_close(Window&){}
+int acknowledge(ActorSourceScope& gcasset_actor_scope,Emission e,Window&w){bool ok=true;
+''' + accepted + r'''
+return 0;}
+unsigned rows(){unsigned n=0;std::size_t at=0;while((at=logs.find("GC-ASSET v=",at))!=std::string::npos){++at;++n;}return n;}
+int main(){assert(install(nullptr,0));begin(0x111,1,Required);unsigned char data[3][512]={{1},{2},{3}};
+ for(unsigned i=0;i<2;++i){auto&c=chunks[i];c.positions=data[i];c.normals=data[i]+64;c.uv=data[i]+128;c.stream=data[i]+160;c.weights=data[i]+256;assert(payload_capture(gcasset_registry[i],&gcasset_registry[i],data[i],512));}
+ Re4dcModelPart p{&p,&p,chunks[0].stream,chunks[0].uv,32,1,1};Re4dcActorSource s{chunks[0].positions,chunks[0].normals,1,1,1,0};Window w{};Emission e{};unsigned queue[32];e.sq=queue;w.sq=queue;
+ source_use.serial=99;{ActorSourceScope scope(&p,&s);assert(scope.selected.payload==&gcasset_registry[0]);sq=true;e.slots=3;acknowledge(scope,e,w);sq=false;}assert(source_use.serial==99);
+ // A second owner shares the real OneWindow: it still gets its own acknowledgement.
+ p.stream=chunks[1].stream;p.uv=chunks[1].uv;s.positions=chunks[1].positions;s.normals=chunks[1].normals;
+ {ActorSourceScope scope(&p,&s);assert(scope.selected.payload==&gcasset_registry[1]);sq=true;acknowledge(scope,e,w);sq=false;}payload_flush_all();assert(rows()==2 && w.slots==6);
+ end(1);begin(0x111,2,Required);logs.clear();{ActorSourceScope scope(&p,&s);sq=true;e.slots=0;acknowledge(scope,e,w);sq=false;}payload_flush_all();assert(logs.empty());
+ // Mixed arrays or an out-of-range stream cannot inherit the previous owner.
+ p.stream=chunks[0].stream;{ActorSourceScope scope(&p,&s);assert(!scope.selected.serial);sq=true;e.slots=3;acknowledge(scope,e,w);sq=false;}payload_flush_all();assert(!rows() && logs.find("unbound-accepted-payload")!=std::string::npos);
+ logs.clear();p.stream=chunks[1].stream+30;assert(!re4dc_gcasset_actor_select(&p,&s).serial);p.stream=chunks[1].stream;
+ {ActorSourceScope scope(&p,&s);payload_retire(gcasset_registry[1]);sq=true;acknowledge(scope,e,w);sq=false;}payload_flush_all();assert(!rows() && logs.find("unbound-accepted-payload")!=std::string::npos);
+}
+'''
+        self.compile_run(fixture, ['-DRE4DC_NATIVE_MODEL_REGISTRY=1', '-DRE4DC_NATIVE_MODEL_REGISTRY_PACK=1',
+                                   '-DRE4DC_NMR_MASK=1', '-DRE4DC_ACTOR_PL08=1', '-DRE4DC_ACTOR_PL08_PACK=1'])
+
     def test_actual_registry_and_pl08_capture_retire_hooks(self):
         registry = (GAME / 'coarse_actor_registry_pack.inc').read_text()
         pl08 = (GAME / 'coarse_actor_pl08_pack.inc').read_text()
@@ -51,11 +96,11 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);unsigned char a[64
         leave = function(registry, 'extern "C" void re4dc_registry_room_leave()')
         self.assertLess(leave.index('gcasset_registry_retire()'), leave.index('re4dc_static_free(pack.cell)'))
 
-    def compile_run(self, fixture):
+    def compile_run(self, fixture, definitions=()):
         with tempfile.TemporaryDirectory(prefix='gc-port23-actor-source-', dir='/dev/shm') as temporary:
             root = Path(temporary);(root / 'fixture.cpp').write_text(fixture);executable = root / 'fixture'
             subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
-                            '-DRE4DC_GC_ASSET_GATE=1', '-I', str(GAME / 'platform/include'),
+                            '-DRE4DC_GC_ASSET_GATE=1', *definitions, '-I', str(GAME / 'platform/include'),
                             str(root / 'fixture.cpp'), str(GAME / 'platform/gc_asset_gate.cpp'),
                             str(GAME / 'platform/gc_asset_members.cpp'), str(GAME / 'platform/gc_asset_payloads.cpp'),
                             '-o', str(executable)], check=True)
