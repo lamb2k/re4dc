@@ -1,0 +1,187 @@
+{
+  "classification": "SOURCE_ONLY_I002_PREPARATION_NO_NEW_HIDE_OR_GAIN",
+  "source": "78cbd962ee0d98dc700d0fb452500a16ac35b14c",
+  "source_files": {
+    "src/st1/r111.cpp": {
+      "bytes": 7508,
+      "sha256": "1294d719d663638a88c6b9866182f246895e2b2936c014da4f39e78e5cf44ff4"
+    },
+    "src/st1/r107.cpp": {
+      "bytes": 8305,
+      "sha256": "ebb702517beed3fa10a9ebe2eb33aed8223f57b2e34513a87536f9406b87249a"
+    },
+    "src/st1/r105.cpp": {
+      "bytes": 35231,
+      "sha256": "4586f55fa5062079c2ca0aba9d8f7d11aa15982e7aa8c8d60383fea325afd739"
+    },
+    "src/st1/r106.cpp": {
+      "bytes": 20397,
+      "sha256": "69de1aab19713764a212ef25270fbfbf2a2ede0a6ed40819244a8763a236a150"
+    },
+    "src/st1/r109.cpp": {
+      "bytes": 3205,
+      "sha256": "577464d36372d4f4b16d3e2354638a8d0e71eade5704e9258ea6430a4d62ecf7"
+    },
+    "src/st1/r113.cpp": {
+      "bytes": 13067,
+      "sha256": "3a2c7bcb0e808948da96ee45f93f693b4dc88d3ef0939a798d0678d4b05d53a9"
+    },
+    "src/st1/r11f.cpp": {
+      "bytes": 26871,
+      "sha256": "c898c2fb18e3e252859705f0d3a6175bd1f2f6aa59570cd50dcbf16e7ed02e4d"
+    },
+    "src/game/scroll.cpp": {
+      "bytes": 22949,
+      "sha256": "8f474a711a3c48be3a27c14fc0526f9e04f0ff67f5418cb30cb56aff65f28c0d"
+    },
+    "src/game/cam_ctrl.cpp": {
+      "bytes": 81608,
+      "sha256": "521cd463401f672e672d32a59eb25089fc395c23dbbada75966a2093d129b8b1"
+    },
+    "port/dreamcast/game/platform/native_static.cpp": {
+      "bytes": 390726,
+      "sha256": "eec0ce136e32169fa2b982018f0830013ca2c6c4fa36860bf2ec8ea7759be8ab"
+    },
+    "port/dreamcast/game/model_bridge.cpp": {
+      "bytes": 55179,
+      "sha256": "2796499d6927fa4015cbf9b953ba18a99b450d7053730773a267f91c10676839"
+    },
+    "port/dreamcast/game/game30.mk": {
+      "bytes": 230828,
+      "sha256": "592c5feee4c5e2818747c7d17f45dfdf3ae799df18c98a471c9ebc3c0fba00de"
+    },
+    "port/dreamcast/game/platform/include/source_world_scroll.inc": {
+      "bytes": 25915,
+      "sha256": "683c0f787a38819099d5217151f9c46db15abe3d5e3f96a7a6c5bcb469bd0887"
+    },
+    "port/dreamcast/game/platform/include/source_world_r11f_scroll.inc": {
+      "bytes": 11313,
+      "sha256": "d25277ad66ad23235ccab94d2c37241ccfcb33b6f1f6a8eb37b0d73177bd4af9"
+    },
+    "port/dreamcast/tools/d367/texture_rect21/provenance_certificates.inc": {
+      "bytes": 2429,
+      "sha256": "371206a9784a86359208fff95925f7d11d8360c33c0a8ab983d097923ecc9cde"
+    },
+    "port/dreamcast/tools/ps2_room_ids.py": {
+      "bytes": 3107,
+      "sha256": "ba5b7eb8af0cc27d021e9a720bf7607f835b33a25484f874c927929d2d7c498b"
+    }
+  },
+  "metadata": [
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I002-area-first-workload.json",
+      "bytes": 39010,
+      "sha256": "713c1f58189021f149b3accea0e6fc87de73934d4c637fbc9ebedbf08588050c"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I002-panel-material-prerequisites-rect21.json",
+      "bytes": 34662,
+      "sha256": "cc6f2dc995c752d2535c866dc9110682cdf4eab9cfdc27d703c12f4dc560da1b"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I002-r109-existing-dynamic-groups.json",
+      "bytes": 2792,
+      "sha256": "de66e7eef9a2cec8bfce88c0a988bccc10c68ce8c1b37903ad2b2fd5b4735a51"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I002-r102-static-target-ceiling.json",
+      "bytes": 2175,
+      "sha256": "e2fffb37229e527949d295a9f5669b437773a9373792c83954512efddaefa43f"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I002-r109-static-target-ceiling.json",
+      "bytes": 246,
+      "sha256": "44d1846154285668a928db5b6ec356b339864ff50a2f90f893eb9892021a0bee"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I002-r111-currentcam-proof.log",
+      "bytes": 2817,
+      "sha256": "5ed7e5f595854295bef6ab34960d6c1facb9e75c4c5593bcbc5106c399905176"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I002-r111-selected-work-provenance-pending.json",
+      "bytes": 492,
+      "sha256": "dca3a5dfec2ce186b6ffeb09bd3769d3b023be0b55db22673e36f4fc4bc84ae8"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I002-r111-group30-current-readback24-v3.json",
+      "bytes": 22641,
+      "sha256": "88e518629291a7741f4bf8bd52c0e5b339c5abd9799664c37c1935d69d2135bf"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I002-other-room-id-namespaces24.json",
+      "bytes": 8825,
+      "sha256": "710580293d3162296de3f72f33bc9486c995db678b42368c7b8ea7da232a97bb"
+    }
+  ],
+  "profile": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-fb254-lod-surface-r6/current-resolved-knobs.txt",
+    "bytes": 201255,
+    "sha256": "63b9cdf90190a880422074bf4e7c7c488cd013463a18d9aaeb6fc3bd470a9a5b"
+  },
+  "resolved_knobs": {
+    "PS2_AREA_HIDE": "1",
+    "PS2_ENEMY_RULES": "1",
+    "PS2_PLACE_GATE": "1",
+    "PS2_WORLD_DYNAMIC": "1",
+    "PS2_WORLD_PARTS": "1",
+    "PS2_WORLD_R11F_OWNER": "0",
+    "PS2_WORLD_SOURCE_OWNER": "1",
+    "ROUTE_CH22": "1",
+    "STATIC_OBJ_BAKE": "1"
+  },
+  "r111_group": {
+    "id": 30,
+    "placements": 13,
+    "fields": [
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69
+    ],
+    "totals": {
+      "pass0_parts": 20,
+      "pass0_meshlets": 95,
+      "pass0_corners": 5020,
+      "pass0_indexed_meshlets": 0,
+      "pass2_parts": 4,
+      "pass2_meshlets": 4,
+      "pass2_corners": 160,
+      "pass2_indexed_meshlets": 0
+    },
+    "vertex_alpha_parts": 0,
+    "all_cut_numbers": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      11,
+      12
+    ],
+    "trigger_mapping": "UNRESOLVED",
+    "repeated_group_binding": "MISSING_IN_COMMON_UNIQUE_ID_BRIDGE",
+    "independent_direct_offsets_equal": true
+  },
+  "new_shadow_predicates": 0,
+  "new_rays": 0,
+  "ledger_accesses": 0,
+  "SDK": 0,
+  "guests": 0,
+  "runtime_edits": 0,
+  "shared_file_claims": []
+}

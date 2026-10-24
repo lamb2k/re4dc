@@ -1,0 +1,58 @@
+{
+  "classification": "INDEPENDENT_FINAL_READBACK_MATCH_NO_NEW_PREDICATES",
+  "source": "78cbd962ee0d98dc700d0fb452500a16ac35b14c",
+  "inputs": [
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/actual-triangle-hut647-root-r1/report.json",
+      "bytes": 92462,
+      "sha256": "7e301a48c99a46afc2397d9e823aab08c1b5b0c0e9add46af7ed80d3835afef8"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/ROOT-HUT647-RUN-GRANT-v1.json",
+      "bytes": 789,
+      "sha256": "7d19a1a098aeb7d7cf0beab055af7271f67395c3de57e213d65f30696451f28e"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/root-runner-review-v3/REVIEW.json",
+      "bytes": 1459,
+      "sha256": "6318f97f6832bac3fa7f1e024468e5faf843db1dc48c8f6d2f82f906eeb53766"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/actual-triangle-runner24-plan-r3/metadata-controls.json",
+      "bytes": 1611,
+      "sha256": "28e805b3ee68d3915306595573797038822520ca615a4bfd9650af0a1cbe1af5"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/root-runner-review-v3/HOST.log",
+      "bytes": 2892,
+      "sha256": "ce9ac551fb285b55ec7c31bf74f2f546f9323e0c217371bf4daa1aa1132aa8c0"
+    }
+  ],
+  "cases": 75,
+  "wholelet_candidates": 0,
+  "statuses": {
+    "UNKNOWN_NO_FIXED_SOURCE": 75
+  },
+  "candidate_calls": 3255,
+  "final_batch_invocations": 0,
+  "refusals": {
+    "EYE_SIDE": 262,
+    "EDGE_VOLUME": 2691,
+    "TARGET_DEPTH": 288,
+    "UNKNOWN_UNREPRESENTABLE_PANEL": 9
+  },
+  "other_cases_untested": 9600,
+  "seconds": 1.275570713012712,
+  "peak_rss_kib": 183588,
+  "new_readback_predicates": 0,
+  "new_rays": 0,
+  "ledger_accesses": 0,
+  "runtime_admitted": false,
+  "limitations": [
+    "Only authentic hut647 at unchanged2000/500/250 fullY, not all129 cameras.",
+    "Failure of sufficient fixed-source coverage is UNKNOWN, not visibility or no possible occlusion.",
+    "Partial triangle successes cannot authorize any wholelet hide; final assignment calls0.",
+    "Ledger was not accessed by this readback; root run counters are0.",
+    "No gain, SDK, render, numeric/raster or console acceptance."
+  ]
+}

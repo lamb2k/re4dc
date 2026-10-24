@@ -1,0 +1,51 @@
+# I-002 area/group source review after the hut647 result
+
+The independently read-back hut647 run is complete: all75 fixed target/domain cases returned UNKNOWN_NO_FIXED_SOURCE, with3255 candidate primitive calls and no final assigned-proof call. It used only authentic hut frame647 at unchanged2m/500/250 full-Y domains. The other9600 cases remain UNTESTED_UNKNOWN. Refusals are not proof of visibility or of no possible occlusion. No useful whole-let certificate, runtime cut or gain resulted. Original results, grants, controls, disk refusals and broader camera evidence remain preserved. `HUT647-INDEPENDENT-READBACK.json` binds exact source/grant/review/result/control hashes without geometry.
+
+This I-002 step is read-only source/namespace ranking. No new shadow predicates, rays, ledger access, SDK, guests, assets, runtime, renderer, camera or recipe changes ran. Castle remains parked. Existing all41 shared character textures are untouched. Source links below refer to frozen78cbd962ee0d98dc700d0fb452500a16ac35b14c (runtime is current integrationfb254; the intervening commits add only tools).
+
+## Concrete r111 blocker, with actual work counts
+
+`src/st1/r111.cpp:176-189` contains the PS2-annotated R111Main action: camera13/14 hides SMD group0x1e; outside those camera cuts it shows the group. The source comment cites PS2 st1_3.rel0x8a10. This review did not newly redisassemble that original PS2 module or obtain its original CAM area data. A source comment alone is not fresh PS2 semantic qualification.
+
+The exact original ID file is224B SHA3b2bf77cf5f187c61ce8ab7c57d524cc5ec2526df15c6a0b50b35f8b0109d2e7, count205 and original policyCRC b3f71e55. Group0x1e occurs at13 physical placements57..69. Physical current meshbf552dcf... and policy56915822... were fully rehashed against the prior migration receipt, with unchanged original/current placement affines. CRCs and source extent are bound by the existing rect21 provenance certificate (room111,15572 policy bytes,205 placements,305 parts,169 meshes, physicalCRC cb94e80c, meshCRC8bb0d931, mesh1135328B, sourceCRC b3f71e55). The source identity is separate from the physical checksum.
+
+`src/game/scroll.cpp:672-744` establishes group semantics: SmdGetGroupObjPtr returns the head and SmdGetGroupNext follows every member; SmdSetTrans sets/clears be_flag bit1 on ALL members. It is not a unique model-identity operation. `native_static.cpp:5751-5781` creates dynamic slots only when count[id]==1; both re4dc_ps2_dyn_bind at7332 and the draw path at6594 require a valid unique slot. Repeated group0x1e therefore cannot propagate through that bridge. Expanding pose binding to repeated IDs would confuse distinct transforms and is not a repair proposal.
+
+Other current paths were checked: generic area table at4682-4730 has onlyr107; STATIC_OBJ_BAKE in model_bridge.cpp:630-645 contains onlyr101 entries; source_world_scroll.inc explicitly restricts the generic source owner tor200; r11f has its separate owner, disabled in the pinned profile. No r111 alternative group gate was found in these actual draw/ownership paths. This is a source-level propagation gap; no new live render fault or saved-work measurement is claimed.
+
+A second blocker prevents a partial fix: the actual current r111.dar is5506848B SHA5f0a861b2a7d26f7a0ffde610febc0cb0c3b6bde78a3daefbafb2ac56fd71f88. Its authentic CAM section is5728B SHAaab9083471c0cb82a1ec38931ad15fdd36aed9cde238959b36e9641d44d81cab. Independent fresh binary readback finds12 cut records and12 area links, both exactly camera numbers0,1,2,3,4,5,6,7,8,9,11,12. There is no13/14 cut in the full array. CameraControl::CurrentCameraNo at src/game/cam_ctrl.cpp:264 returns cameraNo; the ordinary area-switch path at662 assigns cut->camera_no. The current normal camera namespace supplies no direct PS2cam13/14 match. The old house fixture/captures therefore do not establish the PS2 hide trigger. Do not force camera numbers, substitute a player pose for a camera, infer an equivalent polygon or silently change look/gameplay.
+
+Two independent metadata decoders agree on the13-placement group's authoredLOD0 workload:
+
+| Physical pass | Parts | Meshlets | Corner records |
+|---|---:|---:|---:|
+|0 opaque|20|95|5020|
+|2 blend|4|4|160|
+|Total|24|99|5180|
+
+There are no indexed lets or vertex-alpha part flags in this group. These are full authoredLOD0 counts, not selected runtime/strip-group/clip work, visibility yield or milliseconds. The four pass2 parts forbid treating the group as opaque-only geometry. A genuine source visibility rule would have to apply consistently to the complete group and preserve existing ordering in each enabled state; actual descriptor/residency/source-prefix/lifetime and visible correctness remain unqualified. The final private report is I002-r111-group30-current-readback24-v3.json SHA88e518629291a7741f4bf8bd52c0e5b339c5abd9799664c37c1935d69d2135bf.
+
+**Prior handback correction:** “r111 already hides group1e at PS2 camera13/14 transitions” describes ported room-code intent only. It does not establish actual current-camera reachability or repeated-group propagation. The old handback is preserved unchanged.
+
+## Ranked source work, before any more geometric probes
+
+|Priority|Room / condition|Current namespace evidence and decision|
+|---|---|---|
+|Reference control|r107 area groups50..100|PS2_AREA_HIDE already enabled in the pinned production-derived profile. The exact table covers71 placements and original/certified sourceCRC; read-only PS2 AEV quads are in r107.cpp. Current table mask counts hide20/19/11 placements for the three states, not measured geometry or gains. This is the existing group-hiding reference, not a new interior optimization.|
+|1, blocked on complete semantics|r111 camera-dependent group1e|The concrete13-placement/5180L0-record candidate above. Both original PS2 trigger-to-current camera/room mapping AND repeated-group propagation must be solved together. No partial no-op implementation. Existing historical r111 whole-cluster proof yields only8-24L0 records/cell for150080B table heap, so repeating that table search is not justified.|
+|2, source lifecycle audit only|r11f area9 re-show groups0f/1e|The source has an explicitly ported PS2 AEV callback, not a guessed camera condition. Actual current IDs put0f at placements92/93 (repeated2) and1e at120 (unique1). Initial authored visibility, original PS2 group semantics, current event reachability and the separate r11f/source-owner work still need authentication before calling this a missing hide or useful repair. Coordinate root/GC ownership. No renderer claim or geometry search.|
+|Existing coverage, low incremental opportunity|r109 hut init|Current broken-state IDs26..2c exist exactly once each (placements26..32), so the unique-ID bridge has the intended namespace. Existing mapping reports only21 full-detail opaque records initially hidden, and the captured static-target ceiling is5records/one let. No new AREA table or PVS build follows.|
+|Existing unique binding, audit before new hiding|r105 church|All current literal hide/changed IDs20/21/22/23/30/31/32 exist once each at122/123/124/125/154/155/156. These are source puzzle/event actions, not a new area occlusion rule. No repeated-group gap identified for those IDs; live-object serial/part/flag behavior is an existing bridge responsibility.|
+|No source area-hide rule identified|r106 village hall; r113 storm house|r106 has no literal SmdSetTrans source action in this audit. r113 has no literal SmdSetTrans; its closet object55 is unique at35. Existing material-pair counts or large packages alone do not authorize a visibility condition. Source/event semantics and authenticated current room triggers would have to identify a real rule before geometry work.|
+|Do not relabel as interiors|r102/r112 farms|Source comments identify farm/day-night variants. Prior global14% ray ceilings are not actual indoor-camera yield; r102 captured static-target ceiling is0. No new table/search is justified from those numbers.|
+
+The existing28-package full-detail workload census is useful only as a cost inventory, not visibility yield. Material-pair eligibility is also not a hiding condition: corrected rect21 counts include r111410static/415 total and r11318static/362 total. No selected meshlet, current affine, alpha/raster or benefit is implied by those prerequisites. r100/r101 outdoors and their I-003 house-interior queue remain separate; the already accepted actor wall cut is untouched.
+
+## Conditional implementation outline, not a shared-file claim
+
+There is no complete admitted new unit yet. First authenticate original PS2 r111 R111Main and original CAM13/14 trigger data against current room/world coordinates and override/transition semantics. A read-only equivalent source condition must be proved; it must not mutate GC camera/game flags. Separately authenticate all13 SMD rows as group30 and its initial/transition visibility, including blend parts. If no faithful mapping exists, leave the group drawn and report the blocker.
+
+Only after those prerequisites and root review could a default0 `PS2_AREA_HIDE_R111` extension reuse the existing area/group machinery with strict room/package/sourceCRC/count/group-mask binding. Every new visit/package should start draw-all until a fresh matching source report arrives; stale room flags, mismatched namespace, unknown camera, failed binding or retirement must fail open. Do not broaden unique-ID pose binding, allocate a room heap table, reclassify materials or alter geometry/order. Both ordinary and chunk render paths and PVS source-intact checks must agree with the group visibility.
+
+A possible future narrow claim would be native_static.cpp's area/group handling only, src/st1/r111.cpp read-only reporting only, and game/game30.mk default0 validated knob/target defines only. NO claim is active, and root's8ce integration tree remains frozen. A fresh source branch/composition base must be explicitly coordinated with root. Off source/image identity, extracted source/lifecycle/unknown controls, actual memory/KOS/H2, relevant gameplay/current-trigger traces and visible stills would precede any recipe or private console acceptance. Counts above imply no ms estimate or look approval.
