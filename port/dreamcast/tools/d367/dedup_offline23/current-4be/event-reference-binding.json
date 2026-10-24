@@ -1,0 +1,49 @@
+{
+  "status": "PASS_REUSED_EVENT_REFERENCE_PROGRAMME_DATA_FIXTURE_BINDING",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "reference_source": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+  "current_off_trace_identity_sha256": "966e2753100552d1d000cf1ca1fed5b739ddf52b593090049099ed64ac893bbe",
+  "reference_manifest_sha256": "1e91ed3ff68128b6772df9c3702821e017f6ac1ef92dae36abf5e4daf19a7f5b",
+  "current_standard_off_manifest_sha256": "54243bdb67f6f171967a52414dda8336aaaf43309dbc43f7044e6d832d22f684",
+  "nonprogramme_data_equal": true,
+  "excluded_hot_fixture_paths": [
+    "dc/warp.txt",
+    "dc/padscript.txt",
+    "dc/w11.txt"
+  ],
+  "actual_capture_fixtures_explicitly_bound": true,
+  "scenes": {
+    "bell": {
+      "reference_capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/decisions-bell-on-r1",
+      "log_sha256": "3e3b33c573336a18c99dad8225309846b429f3dd31d8113dad097d8d4eabef8e",
+      "result_sha256": "12a0e66ae88708093847806f6ac43e22537cf525cd8a1584423e1d7572f21f0d",
+      "bounded_sha256": "73837bac6d3cb182bc34c7fcd7038e6004bc7712c3f1d51c4814fea997782a01",
+      "fixtures": {
+        "warp": {
+          "path": "/root/work/lanes/dedup-offline23-current-d5c/port/dreamcast/tools/d367/fullplay/segments/bell-trg-warp.txt",
+          "source_sha256": "70089822a9c1983e98cda8cee726d003d5dbfb4365e47740bd8e697134da3188",
+          "wire_sha256": "70089822a9c1983e98cda8cee726d003d5dbfb4365e47740bd8e697134da3188"
+        }
+      }
+    },
+    "mendez": {
+      "reference_capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/audits23-takeover/5e4de9a0/decisions-mendez-on-r1",
+      "log_sha256": "02133076bd19417e8c390ba2aed1f76788bff9c59749e7a38d03903d6b9cd103",
+      "result_sha256": "0e2aa920d53f5e71c697b54110a1cf5225ab9d3fb697b7aafbaf06067334268d",
+      "bounded_sha256": "c19f8a0d77e1d19c8838ace496d16bc9503b9b1ffe74411088323dea22cfab63",
+      "fixtures": {
+        "warp": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/stat-bytes23-20261023/mendez-bounded-itemack-r3/mendez-bounded-warp.txt",
+          "source_sha256": "3a2744d800341d2d539596e63dc39a061c5da4e6cf5bbeb47bfa469cafe8e41e",
+          "wire_sha256": "3a2744d800341d2d539596e63dc39a061c5da4e6cf5bbeb47bfa469cafe8e41e"
+        },
+        "pad": {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/stat-bytes23-20261023/mendez-bounded-itemack-r3/mendez-bounded-pad.txt",
+          "source_sha256": "d5f6af787212d6f242adf1e881c37768f5bfdd7b52245a405e3cbbb94af8fb58",
+          "wire_sha256": "d5f6af787212d6f242adf1e881c37768f5bfdd7b52245a405e3cbbb94af8fb58"
+        }
+      }
+    }
+  },
+  "limits": "Reused qualified actual baseline captures, not fresh OFF guests; currentOFF trace main/all14 freshly linked byte-identical and sourceprogramme/data/fixture identities established."
+}

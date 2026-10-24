@@ -1,0 +1,55 @@
+{
+  "status": "PASS_ACTUAL_OFF_TRACE_MAIN_AND_ALL14_IDENTITY",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "reference_source": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+  "programmes": {
+    "reference": {
+      "path": "/root/probe/lanes/route/out-au23on5e4drT",
+      "raw_sha256": "5b80931e968e6a294c1c4576319b717499ca1ed9984a8d749e891d0bdfd84aa8",
+      "overlays": {
+        "em2f.ovl": "343549dc04ef6cb494fe90bd1dc934f5c25cb72ae7dfbc75fabc09c367f76413",
+        "st2_0.ovl": "852a783ffd04617431ddb1ceccce1afacb1285657c07c0f477282fb26cec4b9b",
+        "st1_2.ovl": "6a1a23d6fc6ec0848aedcfe903d246e4912b74d44e60391062e666c665028b5f",
+        "pl14.ovl": "c1a52c7368e67402accb6d57670ca5c8218002eb489a0f11087be3014c925dab",
+        "st1_3.ovl": "31330411fd33e986d6f14b97ecd1be5b6136f72b49aae5ce5a17f46c782afedc",
+        "em2b.ovl": "52cd863b04485e3efd81c7106f73c2595bb8c9e20d795417b269fb1a4f91b9a8",
+        "pl11.ovl": "6d9e86c96be6bb79f1ac1fc4b8fb568a10242f15d82a398765211323f41fda1b",
+        "em35.ovl": "44e86b44f497d98a0c627c8d32a077f594ecbc2f9bb1cb5d009ede1c14070285",
+        "pl0f.ovl": "d9903c1b681d0da5c8061f1b185b14c20c9148d27d55c607f09ee0cb3dc92f0e",
+        "em3b.ovl": "751983f556f7667c9d0694d7a8a0eed97405f9828e470d85b1c369890e39d895",
+        "st1_0.ovl": "1247b5c4f8de6c9721c8ce346458879e1659695c1dfacb00fcd701922362235a",
+        "st1_1.ovl": "b644ccfb31959666665690dfb48568051110879c91dbfd57149322684a01a8f9",
+        "em22.ovl": "340b8a669126ee07ad67db5c612c67bf91baab6204b7efa51f7345e4213f1dfc",
+        "sscrn.ovl": "7a31a3d4bd081c02302c82f1420ea216dd5a9c7e65f4b56efb9a28438c91bccb"
+      },
+      "knobs_sha256": "dcddac749fa94cfb81061857c654e36398291bbb7b7988ee0588c5e5c9618794",
+      "stack_sha256": "409d630904b494ee8c1cb93e14fe3e8f15de4c380a592dd02c4568d4a6f26c62",
+      "elf_sha256": "ca9c7b1f57630ea4f58e9501daf0382a82eb4122c7376181ff49c02333f74283"
+    },
+    "currentoff": {
+      "path": "/root/probe/lanes/route/out-dd23cur4be08e01offrT",
+      "raw_sha256": "5b80931e968e6a294c1c4576319b717499ca1ed9984a8d749e891d0bdfd84aa8",
+      "overlays": {
+        "em2f.ovl": "343549dc04ef6cb494fe90bd1dc934f5c25cb72ae7dfbc75fabc09c367f76413",
+        "st2_0.ovl": "852a783ffd04617431ddb1ceccce1afacb1285657c07c0f477282fb26cec4b9b",
+        "st1_2.ovl": "6a1a23d6fc6ec0848aedcfe903d246e4912b74d44e60391062e666c665028b5f",
+        "pl14.ovl": "c1a52c7368e67402accb6d57670ca5c8218002eb489a0f11087be3014c925dab",
+        "st1_3.ovl": "31330411fd33e986d6f14b97ecd1be5b6136f72b49aae5ce5a17f46c782afedc",
+        "em2b.ovl": "52cd863b04485e3efd81c7106f73c2595bb8c9e20d795417b269fb1a4f91b9a8",
+        "pl11.ovl": "6d9e86c96be6bb79f1ac1fc4b8fb568a10242f15d82a398765211323f41fda1b",
+        "em35.ovl": "44e86b44f497d98a0c627c8d32a077f594ecbc2f9bb1cb5d009ede1c14070285",
+        "pl0f.ovl": "d9903c1b681d0da5c8061f1b185b14c20c9148d27d55c607f09ee0cb3dc92f0e",
+        "em3b.ovl": "751983f556f7667c9d0694d7a8a0eed97405f9828e470d85b1c369890e39d895",
+        "st1_0.ovl": "1247b5c4f8de6c9721c8ce346458879e1659695c1dfacb00fcd701922362235a",
+        "st1_1.ovl": "b644ccfb31959666665690dfb48568051110879c91dbfd57149322684a01a8f9",
+        "em22.ovl": "340b8a669126ee07ad67db5c612c67bf91baab6204b7efa51f7345e4213f1dfc",
+        "sscrn.ovl": "7a31a3d4bd081c02302c82f1420ea216dd5a9c7e65f4b56efb9a28438c91bccb"
+      },
+      "knobs_sha256": "6fda46e06e13360904052f654e81acc9b06f032cb798469e244594ce258277e3",
+      "stack_sha256": "b0cea00619414a9e0503839793e877c7ea0025ed7d938b18322b8279669aee71",
+      "elf_sha256": "0b179b0bbaa5b79f0b38d825f3f61feed847b530987247d96726321a9c9ac40d"
+    }
+  },
+  "normalized_resolved_differences": {},
+  "reuse": "Qualified5e bell/Mendez baseline capture eligible only after additional exact fixture/data/capture binding; reuse is not a fresh guest"
+}

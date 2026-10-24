@@ -1,0 +1,62 @@
+{
+  "status": "PASS_ACTUAL_RELEASE_REPRODUCTION_MAIN_AND_ALL14",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "arms": {
+    "off": {
+      "release": "/root/probe/lanes/route/out-dd23cur4be08e01offrP",
+      "reproduction": "/root/probe/lanes/route/out-fpdd23cur4be08e01offgP",
+      "warp_twin": "/root/probe/lanes/route/out-fpdd23cur4be08e01offgW",
+      "raw": {
+        "release": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+        "reproduction": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b"
+      },
+      "all14_overlays_equal": true,
+      "overlay_sha256": {
+        "em2f.ovl": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1",
+        "st2_0.ovl": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2",
+        "st1_2.ovl": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c",
+        "pl14.ovl": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e",
+        "st1_3.ovl": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc",
+        "em2b.ovl": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695",
+        "pl11.ovl": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e",
+        "em35.ovl": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7",
+        "pl0f.ovl": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e",
+        "em3b.ovl": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417",
+        "st1_0.ovl": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a",
+        "st1_1.ovl": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0",
+        "em22.ovl": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e",
+        "sscrn.ovl": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60"
+      },
+      "warp_elf_sha256": "bef7cc6e72fe6cb5c3f3aea835fd65cf5f348f9cb0547f7e83e8b56197f61510",
+      "warp_resolved_sha256": "fab9879e90935c66309dc45ffe0b26906f724a9cddb0b87dda81ef9ece168ce1"
+    },
+    "on": {
+      "release": "/root/probe/lanes/route/out-dd23cur4be08e01onrP",
+      "reproduction": "/root/probe/lanes/route/out-fpdd23cur4be08e01ongP",
+      "warp_twin": "/root/probe/lanes/route/out-fpdd23cur4be08e01ongW",
+      "raw": {
+        "release": "1077a1386ac3431b97d069291424a14117adf55f267aff78fbedf166bdc6df09",
+        "reproduction": "1077a1386ac3431b97d069291424a14117adf55f267aff78fbedf166bdc6df09"
+      },
+      "all14_overlays_equal": true,
+      "overlay_sha256": {
+        "em2f.ovl": "2e2294d46b124ca35c3d97cd2fbd253c2008822786e1b38274c5d2ab3a953481",
+        "st2_0.ovl": "d04d733b858e2f91bc06bcf5aa1fef723a0815951f5244f44b40169a9f4bac6e",
+        "st1_2.ovl": "b9a81a3d54aefca5f2cbf667b16088e2e06600481bafbdfdf3e1eb05d85989db",
+        "pl14.ovl": "46bfa8a212666aefd7060eb11215dcacf2d55d44614baf1c97f4c26895614641",
+        "st1_3.ovl": "e0e51c51378f3f8d80633a8c99e2460d5f9550bce96ef157d80e0df071b77a69",
+        "em2b.ovl": "b0cdce7154107b76e66ee1e5156e25d139717cc95446588d7d4f81b07f377069",
+        "pl11.ovl": "2ba4d548988e2d15e5e85a6293974bcf060d7114089e02f25ddeeccbe475efe5",
+        "em35.ovl": "f1c280e85a542fa75029b2de424c3678bf7a0123c20c6510f8c94098e9cddc4f",
+        "pl0f.ovl": "a8a97aaaa79f0f6ec75d99ac0ae89dd1107ca6d87d8a1997fd1a47705fd266d3",
+        "em3b.ovl": "4e92483d445fc35d9957d82b8fe0d9422c59a61c5e2f82a0ace8a5f24e83f281",
+        "st1_0.ovl": "c1a97c832adbadc059626a691e1644e47dc27fd70695fdf8645e774f22eace82",
+        "st1_1.ovl": "7682c07ba3bd54c9b2b62db6d25d0583f95a304aea31d607c582bf30c5407c0f",
+        "em22.ovl": "6df5a3171df33586a9a6f4056c27e2703960e37584d83f0c459ee4045436bdb2",
+        "sscrn.ovl": "eb4f656e3ec8ee6ca9378786dfdc5cf865356be98f1cc8cdcc64afcc174e4e40"
+      },
+      "warp_elf_sha256": "463045fc9d31f2729f406d6f25e7668e0bfa35d8b984c420dbc8554e46c1fb8f",
+      "warp_resolved_sha256": "f6268eaf0929d99e8e3eb9671c6e89cd2893ccda125fd69cf70c42d9323c4c1c"
+    }
+  }
+}

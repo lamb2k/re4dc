@@ -1,0 +1,128 @@
+{
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "status": "PASS_MATCHED_FULL_H2_PLAYBACK_AND_NO_LOSS_FLYCAST_PROXY",
+  "scope": "MODELLED: Flycast console mode with unthrottled JIT FP_NOLIMIT; actual captured heap/playback evidence, not physical console/performance or full release acceptance",
+  "arms": {
+    "off": {
+      "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+      "run": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/h2-off-console-r1/run-result.json",
+        "bytes": 1614,
+        "sha256": "bb2eebc9c6025f8ed8e6ce0450011359ef90b50741380a4feccd17507a879c50"
+      },
+      "log": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/h2-off-console-r1/run-output.txt",
+        "bytes": 315857,
+        "sha256": "e54cd60b8ec3e2926824738afe0b4e093976f6fde596f4509078711909b31b86"
+      },
+      "elapsed_s": 33.6,
+      "emulator_mode": "console",
+      "limit_s": 50,
+      "bounded55": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/h2-off-console-r1/bounded-launch.json",
+        "bytes": 644,
+        "sha256": "511ee98168d0af63a20514457098ca6a9c45d1e527a3d7c7017ae81cfe4ba554"
+      },
+      "movies": {
+        "10003": {
+          "frames": 1465,
+          "uploaded": 1465,
+          "presented": 1465,
+          "heap_before": 881248
+        },
+        "10020": {
+          "frames": 571,
+          "uploaded": 571,
+          "presented": 571,
+          "heap_before": 786624
+        },
+        "10030": {
+          "frames": 340,
+          "uploaded": 340,
+          "presented": 340,
+          "heap_before": 93920
+        }
+      },
+      "restored": true,
+      "world_borrows": [
+        {
+          "capacity": 1562656,
+          "budget": 363360
+        }
+      ],
+      "dd3_admissions": [],
+      "arena_bytes": 11968512,
+      "kos_left": 197912,
+      "base": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\base-standard-current4be-off-r1",
+      "track03_sha256": "a1d9b5e5928739145e47452f473a1fa872290e018dbee45ae4b904918c1b7cbd"
+    },
+    "on": {
+      "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+      "run": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/h2-on-console-r1/run-result.json",
+        "bytes": 1611,
+        "sha256": "9fbc44b1c237c1c527f609f6382a0318d06ce354a197682a2accfb7632dcba0f"
+      },
+      "log": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/h2-on-console-r1/run-output.txt",
+        "bytes": 316164,
+        "sha256": "f5789a803a71be3dfc0527197b93058677dea53bb1932ac6834150bb77c59469"
+      },
+      "elapsed_s": 34.3,
+      "emulator_mode": "console",
+      "limit_s": 50,
+      "bounded55": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/h2-on-console-r1/bounded-launch.json",
+        "bytes": 645,
+        "sha256": "4236fbcff4f1391fc2266dcc1e8e107a56f49758361df40f37b53f458b7db6f2"
+      },
+      "movies": {
+        "10003": {
+          "frames": 1465,
+          "uploaded": 1465,
+          "presented": 1465,
+          "heap_before": 926880
+        },
+        "10020": {
+          "frames": 571,
+          "uploaded": 571,
+          "presented": 571,
+          "heap_before": 832256
+        },
+        "10030": {
+          "frames": 340,
+          "uploaded": 340,
+          "presented": 340,
+          "heap_before": 139552
+        }
+      },
+      "restored": true,
+      "world_borrows": [
+        {
+          "capacity": 1512928,
+          "budget": 363360
+        }
+      ],
+      "dd3_admissions": [
+        "100",
+        "100"
+      ],
+      "arena_bytes": 11964416,
+      "kos_left": 199160,
+      "base": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\base-standard-current4be-on-r1",
+      "track03_sha256": "ff2bbc48a70be375c0c32000776fef4164a870c79ce23395eebc3c8c0430038a"
+    }
+  },
+  "s30_heap_delta_on_minus_off": 45632,
+  "data_identity_receipt": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/current4be-matched-data-r1.json",
+    "bytes": 5385,
+    "sha256": "56f12e2fa09de2122f3314bdfde07da5fc1cfc0261702cf083d8118ef1c93886"
+  },
+  "preflight_receipt": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/current4be-preflight-r1.json",
+    "bytes": 18045,
+    "sha256": "5067341190d8de2806299fb01c8da27900442a05bc94d391d72c293b0792bc00"
+  },
+  "limits": "Root owns final gating/QA/integration; diagnostic census/KOS/GDEMU/gameplay/look requirements not inferred from this fullH2 result. Prior failures preserved."
+}

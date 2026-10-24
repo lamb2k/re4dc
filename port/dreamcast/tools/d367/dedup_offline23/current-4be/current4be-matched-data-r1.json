@@ -1,0 +1,186 @@
+{
+  "status": "MATCHED_FRESH_DATA_ONLY_PROGRAMMES_AND4_ALT_DIFFER",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "different_paths": {
+    "dc/em22.ovl": {
+      "off": {
+        "sha256": "7813229c1b47c4ec612acfe406b6a32e68d2eea149d625748d3ac346102406c4",
+        "size": 27236
+      },
+      "on": {
+        "sha256": "7d7a6be331085c8012b4405fed70e8f04e5d7d8b8ea489062add6514ff00016c",
+        "size": 27236
+      }
+    },
+    "dc/em35.ovl": {
+      "off": {
+        "sha256": "9000911be0c4f6e9c2242ee1efd311cc80f0fb47f7ab4674c493cb71cdfd131a",
+        "size": 52392
+      },
+      "on": {
+        "sha256": "62ea0727ea2da1ead10e376e4ed3fee846c1510b39fbb5b930803ba9053e43bd",
+        "size": 52392
+      }
+    },
+    "dc/pl14.ovl": {
+      "off": {
+        "sha256": "d85f12566a47db6967c5f735b2c2d06b1d554edf5449a64a063dc948812e6ec6",
+        "size": 18832
+      },
+      "on": {
+        "sha256": "25b75b1a9be21c458bde12f082a479faf6ebf87ae2a6a8b98dd32a3417860e8d",
+        "size": 18832
+      }
+    },
+    "dc/sscrn.ovl": {
+      "off": {
+        "sha256": "8b10cbf325a1f310ec8bf17f50149e157a2e3a012595afdcbf603300697529e7",
+        "size": 134372
+      },
+      "on": {
+        "sha256": "69971efe580a5a6decccb4a09ce1bb19cc195bd4a894b4b0140b727c3e25d12a",
+        "size": 134372
+      }
+    },
+    "dc/st1_2.ovl": {
+      "off": {
+        "sha256": "5f7282d35cb2223f367beae41ca90ebaa20c63a57d2052f6cf5967e256f34286",
+        "size": 50076
+      },
+      "on": {
+        "sha256": "e2f1e1b80c1d863ef2129afc54b4f10419aaa124646f0880a3f2804ea3205c07",
+        "size": 50076
+      }
+    },
+    "dc/st1_0.ovl": {
+      "off": {
+        "sha256": "9ed7589301227ba8b9a9869aac17bbcb9c746d70783c03ed63f5c1ccc40cb3bc",
+        "size": 36228
+      },
+      "on": {
+        "sha256": "e342d30ed252e0564bf6cbadbe80975944bb6a1e306f938f29f9917855d80abc",
+        "size": 36228
+      }
+    },
+    "dc/native/r101/ps2-dd3.r4sg": {
+      "off": null,
+      "on": {
+        "sha256": "b1ffc00c3e00ca69874e1b2a0fbe84d243653bd6ccd280c2e837e2731300e30d",
+        "size": 117152
+      }
+    },
+    "dc/pl0f.ovl": {
+      "off": {
+        "sha256": "56414515b01a1c782b3bc1c4064153214f1cfe0da42663f5630ebff8a67ad31c",
+        "size": 45608
+      },
+      "on": {
+        "sha256": "e13b11a93311522aaab8c511da459f0048c005e2266b400e65ac7ed7c68140d0",
+        "size": 45608
+      }
+    },
+    "dc/em3b.ovl": {
+      "off": {
+        "sha256": "949e71f7b4a856848e877c470a12fc3a28e021d734889ccc82dfe0857fb90848",
+        "size": 7568
+      },
+      "on": {
+        "sha256": "412ae2708918fed6894e629a4bdb7ef157182af7a01423642237c4a52ff8519a",
+        "size": 7568
+      }
+    },
+    "dc/st1_1.ovl": {
+      "off": {
+        "sha256": "e87b1a0d193d9d034ac4d6e63e6cffd1e9ca8e7347e108e984d992f171ceaa51",
+        "size": 81572
+      },
+      "on": {
+        "sha256": "64aa0abc875326b84096858c11affd2fcc59dc10612c30c25666d8d7293f9012",
+        "size": 81572
+      }
+    },
+    "dc/pl11.ovl": {
+      "off": {
+        "sha256": "a5bff9203b3cfe40e4718dbb0667073e0cf4588552290302c45fc4bddc056b1b",
+        "size": 35592
+      },
+      "on": {
+        "sha256": "0856cf3c0a67f00314b4143299ce87aefcae0984f26f0b70d4186233cba159f5",
+        "size": 35592
+      }
+    },
+    "dc/native/r103/ps2-dd3.re4mesh": {
+      "off": null,
+      "on": {
+        "sha256": "2b805c88a9375180e41aeb55f8c0656d07fe96c32a12acf504b05be8b16d110a",
+        "size": 1047968
+      }
+    },
+    "dc/st1_3.ovl": {
+      "off": {
+        "sha256": "630df0f7cb845533b9a01454d8727f6193e9ea959be3ae412f4de820d3bbb123",
+        "size": 88748
+      },
+      "on": {
+        "sha256": "63341013f238eb8fcdac8b3f25fea532d8e23fa397a85097629c17806c66cfef",
+        "size": 88748
+      }
+    },
+    "dc/native/r100/ps2-dd3.re4mesh": {
+      "off": null,
+      "on": {
+        "sha256": "3d339013ff79b6b0c917b40beb326f9a063d959c9db10da33331a1f335d8fb1d",
+        "size": 1488192
+      }
+    },
+    "dc/em2f.ovl": {
+      "off": {
+        "sha256": "283292cb40f67e9257d3b09541f054d28ba5cb7d70e97976cae62715e49561cf",
+        "size": 16800
+      },
+      "on": {
+        "sha256": "0a0bec143bfcd7b91c0b43463cde296d4c22345b15027d362655814e21d8c62a",
+        "size": 16800
+      }
+    },
+    "dc/native/r101/ps2-dd3.re4mesh": {
+      "off": null,
+      "on": {
+        "sha256": "e7f257773fb7ee43271994c867f5f4307a2a13c1d85cd93afcbcc15488c00708",
+        "size": 1243808
+      }
+    },
+    "dc/st2_0.ovl": {
+      "off": {
+        "sha256": "d57b8ac2e6673d23cdc78091e36008b91ac4132ee1036f0b017a4024d6d0c462",
+        "size": 96788
+      },
+      "on": {
+        "sha256": "5b58d02595133964c6f54d7976411135864d8e99943294ccfb8a43e655839e49",
+        "size": 96788
+      }
+    },
+    "dc/em2b.ovl": {
+      "off": {
+        "sha256": "a0ad3ac4eb2e4039da5d48bb9b85d76489746888ce96583da8cef2dbcb3f3ce4",
+        "size": 67900
+      },
+      "on": {
+        "sha256": "3b9689079b990a336e2ea814dd14d054076d5023abf990c7fca9a883b010bdf5",
+        "size": 67900
+      }
+    },
+    "1ST_READ.BIN": {
+      "off": {
+        "sha256": "e51c8903a17ddb5dbde303c05120e8b26b22ffc1b6b76edf98701008a6d5ea99",
+        "size": 3402532
+      },
+      "on": {
+        "sha256": "ad4c16957be5484d382fddb4fd063f02e2bc6f3f4fe485a77d746f7d4d966cc5",
+        "size": 3405380
+      }
+    }
+  },
+  "data29_same": true,
+  "programme_overlay_differences_expected_and_pinned": true
+}
