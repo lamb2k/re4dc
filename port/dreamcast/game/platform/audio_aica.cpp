@@ -43,6 +43,7 @@
 
 #include "re4dc_platform.h"
 #include "include/gc_asset_audio.h"
+#include "include/gc_asset_audio_stop.h"
 #if defined(RE4DC_LEON_HAND_PACK) && RE4DC_LEON_HAND_PACK
 extern "C" void re4dc_leon_hands_yield();  // coarse_actor_leon_hands.inc: Leon's AICA hand cache gives way to sound
 #endif
@@ -1387,6 +1388,7 @@ namespace {
 mutex_t g_lock = MUTEX_INITIALIZER;   // blocks (map) vs the audio step
 #if RE4DC_GC_ASSET_GATE
 unsigned gcasset_audio_checkpoints;
+re4dc_gcasset::AudioStop gcasset_audio_stop;
 #endif
 #if RE4DC_CABIN_SOURCE
 // CABIN_AUDIO_STATE_BEGIN: fixed output-only ownership; all access holds g_lock
@@ -1511,6 +1513,10 @@ void audio_step()
     if ((int) ticks > re4dc_audio_max_ticks) { ticks = re4dc_audio_max_ticks; g_lastTickUs = now; }
     else g_lastTickUs += ticks * 5000ull;
     mutex_lock(&g_lock);
+#if RE4DC_GC_ASSET_GATE
+    // A terminal request waits for the last complete callback/flush on g_lock.
+    if(gcasset_audio_stop.stopped()){mutex_unlock(&g_lock);return;}
+#endif
 #if RE4DC_CABIN_SOURCE
     g_cabin_audio_step_thread = thd_current;
 #endif
@@ -1822,12 +1828,24 @@ extern "C" void re4dc_disc_meter_music_thread(void);  // dvd_read_safe.cpp: this
 #endif
 __attribute__((unused)) void* str_main(void*)
 {
+#if RE4DC_GC_ASSET_GATE
+    struct GcAssetReaderExit {
+        ~GcAssetReaderExit(){gcasset_audio_stop.reader_exited();}
+    } gcasset_reader_exit;
+#endif
 #if defined(RE4DC_DISC_READ_METER) && RE4DC_DISC_READ_METER
     re4dc_disc_meter_music_thread();
 #endif
     if (!str_index_load()) return nullptr;
     for (;;) {
+#if RE4DC_GC_ASSET_GATE
+        // Acknowledge only between complete disc/G2 fills, never during one.
+        if(gcasset_audio_stop.stopped())return nullptr;
+#endif
         thd_sleep(10);
+#if RE4DC_GC_ASSET_GATE
+        if(gcasset_audio_stop.stopped())return nullptr;
+#endif
 #if defined(RE4DC_AICA_LAYOUT_RECOVER) && RE4DC_AICA_LAYOUT_RECOVER
         if(!g_strRing){
             mutex_lock(&g_lock);
@@ -1892,6 +1910,9 @@ __attribute__((unused)) void* str_main(void*)
 void start_thread()
 {
     if (g_thread) return;
+#if RE4DC_GC_ASSET_GATE
+    if(gcasset_audio_stop.stopped())return; // terminal cannot be reopened
+#endif
     kthread_attr_t a{};
     a.stack_size = sizeof(g_thread_stack);
     a.stack_ptr = g_thread_stack;
@@ -1908,7 +1929,16 @@ void start_thread()
     r.prio = 4;
     r.label = "re4dc-aica-str";
     r.create_detached = true;
+#if RE4DC_GC_ASSET_GATE
+    // The atomic claim refuses a terminal request even if it raced creation.
+    kthread_t* st = nullptr;
+    if(gcasset_audio_stop.reader_starting()){
+        st=thd_create_ex(&r,str_main,nullptr);
+        if(!st)gcasset_audio_stop.reader_exited();
+    }
+#else
     kthread_t* st = thd_create_ex(&r, str_main, nullptr);
+#endif
     re4dc_log("aica: stream reader tid=%d prio=4\n", st ? (int) st->tid : -1);
 #else
     re4dc_log("aica: disc streams silent (built without AICA_STREAMS=1)\n");
@@ -2124,9 +2154,27 @@ unsigned re4dc_aica_used_bytes(void) { return g_aicaUsed; }
 // Sound bank blocks left silent so far (does not fit / rejected / layout refused): native_ui.cpp VRAM_ROOM_LOG.
 unsigned re4dc_aica_skipped_blocks(void) { return S.blocks_skipped; }
 #if RE4DC_GC_ASSET_GATE
+// Main-thread terminal boundary only. Poll without holding g_lock between
+// calls: the reader needs it for its final publication. Never wait here.
+extern "C" unsigned re4dc_gcasset_audio_quiesce(unsigned* checkpoints){
+    mutex_lock(&g_lock);
+    gcasset_audio_stop.request();
+    const bool idle=gcasset_audio_stop.reader_idle();
+    if(idle){
+        re4dc_gcasset::close_audio_admission();
+        if(checkpoints)*checkpoints=gcasset_audio_checkpoints;
+    }
+    mutex_unlock(&g_lock);
+    return idle?1U:0U;
+}
 extern "C" unsigned re4dc_gcasset_audio_admission(unsigned open){
     mutex_lock(&g_lock);
     const unsigned checkpoints=gcasset_audio_checkpoints;
+    if(open && gcasset_audio_stop.stopped()){
+        mutex_unlock(&g_lock);
+        re4dc_gcasset::unresolved(re4dc_gcasset::SoundStream,"audio-open-after-terminal-stop");
+        return 0;
+    }
     if(open){gcasset_audio_checkpoints=0;re4dc_gcasset::open_audio_admission();}
     else re4dc_gcasset::close_audio_admission();
     mutex_unlock(&g_lock);
@@ -2134,6 +2182,11 @@ extern "C" unsigned re4dc_gcasset_audio_admission(unsigned open){
 }
 extern "C" unsigned re4dc_gcasset_audio_handoff(unsigned room,unsigned visit){
     mutex_lock(&g_lock);
+    if(gcasset_audio_stop.stopped()){
+        mutex_unlock(&g_lock);
+        re4dc_gcasset::unresolved(re4dc_gcasset::SoundStream,"audio-handoff-after-terminal-stop");
+        return 0;
+    }
     const unsigned checkpoints=gcasset_audio_checkpoints;gcasset_audio_checkpoints=0;
     (void)re4dc_gcasset::handoff_audio_admission(room,visit); // failure persists in core fault accounting
     mutex_unlock(&g_lock);
