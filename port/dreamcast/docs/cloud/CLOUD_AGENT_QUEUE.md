@@ -280,3 +280,20 @@ image equals Test 23 (d28b3cfc).
 3. Look: a frozen r101 cross still pair, census on vs off at tick 600, shows the same world; 11.4% of pixels differ, all
    in the pyre fire sprites, whose animation keeps its own clock under a frozen world (pair-cross-on-off.png). STRICT
    gameplay and retirement / transition gates are not run yet; flip cadence: d=300 with flip=300 in every window.
+
+### 2026-10-24: Build 11 hand-back (`codex/world-blender-roundtrip-20261024`)
+
+Explicitly invoked tools only; no runtime/default pipeline integration. Base
+`057e00a2`. The [report](BUILD11_WORLD_BLENDER_ROUNDTRIP_20261024.md) and pinned
+Blender 4.4.3 receipt establish three real save/reopen byte-identical bundles,
+43 rejected scene mutations and regeneration of every registered companion.
+The release recipe and coordinator status table are unchanged.
+
+1. Does the accepted private R4IM v3/R4PW bundle pass the same strict identity
+   inventory and Blender round trip? An unknown companion requires a reviewed
+   adapter; it must not be dropped to pass the gate.
+2. What are full-room Blender import/export time and peak memory with repeated
+   placements? Public fixtures establish correctness, not private-room scale.
+3. Before intentional reconstruction, which source features and dependent
+   proofs define the replacement acceptance? This identity-only bridge issues
+   no lost-part, visibility or new-geometry certificate.

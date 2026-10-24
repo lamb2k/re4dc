@@ -1,0 +1,590 @@
+{
+  "absent_tool_off_identity": {
+    "baseline_commit": "057e00a248c9ed473d0b3377a0ce14b0b2f5186d",
+    "baseline_fixture_hashes": {
+      "ps2-world.r4pw": "05296dae19e3e601ff9142750bad4eaf91d38823d869e3f9e63cf8a79dee5c88",
+      "ps2-world.re4mesh": "3072b3258dabaed69e9c49aab4842f6ccabd5c2613b01fdd24a60b396e8e6980"
+    },
+    "builder_integration": "absent: explicit standalone tools only",
+    "current_fixture_hashes": {
+      "ps2-world.r4pw": "05296dae19e3e601ff9142750bad4eaf91d38823d869e3f9e63cf8a79dee5c88",
+      "ps2-world.re4mesh": "3072b3258dabaed69e9c49aab4842f6ccabd5c2613b01fdd24a60b396e8e6980"
+    },
+    "existing_dependencies_byte_identical": {
+      "port/dreamcast/room/instanced_mesh.hpp": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019",
+      "port/dreamcast/room/room_package.hpp": "0f68e9b943e018af1c1b67022d2f5774fed8f829c3a4e094b52fceccac9aa0fe",
+      "port/dreamcast/tools/assetpipe/r4im.py": "25e5a8a1e4ecc30ae318d5bb27e0edd96182fd83aaf61c34440557ba23e3c286",
+      "port/dreamcast/tools/convert_room_bins.py": "ae36a661041e39078f51f18401ed3c7c840b792e147460967238b0abd838280b",
+      "port/dreamcast/tools/d367/scenery19/scdd_compile.py": "93a11dd92800c7df0ba850e63ca664c1088cad49efc13bb47dbb59bffcdab923",
+      "port/dreamcast/tools/d367/visibility23/metadata.py": "7dbfa66ce850f16b208cd5a23fabf4cdb79ff36d0f98dc6941ab7412a881fd96",
+      "port/dreamcast/tools/mesh_lod.py": "79dd72d3615833269ddd1f9950a602ef498f96b0475d3b3e2fd3aecb67e535e2",
+      "port/dreamcast/tools/ps2_world_r4im.py": "d5b87017d94ee9e8f674b45fe81a087398a4bf7cd3d25b5fca1a1d14219efc9c"
+    }
+  },
+  "base_commit": "057e00a248c9ed473d0b3377a0ce14b0b2f5186d",
+  "blender": {
+    "archive_sha256": "8d3be07d2bc412b502c6bfe3cfe3e22195a4164076867da987ce148d73c27946",
+    "archive_url": "https://download.blender.org/release/Blender4.4/blender-4.4.3-linux-x64.tar.xz",
+    "build_hash": "802179c51ccc",
+    "executable_sha256": "2de8d1e2d358e52f88ecb18a31439a4f12da5858c82218e91fa8b4e6cdb365f6",
+    "pre_post_executable_identity": true,
+    "release_manifest_url": "https://download.blender.org/release/Blender4.4/blender-4.4.3.sha256",
+    "version": "4.4.3"
+  },
+  "blender_mutations": {
+    "blender_version": [
+      4,
+      4,
+      3
+    ],
+    "build_hash": "802179c51ccc",
+    "controls": 43,
+    "negative_controls": [
+      {
+        "control": "position",
+        "reason": "scene: draw.000001.000000 position",
+        "rejected": true
+      },
+      {
+        "control": "coarse-LOD-position",
+        "reason": "scene: draw.000001.000001 position",
+        "rejected": true
+      },
+      {
+        "control": "shared-placement-copy",
+        "reason": "scene: draw.000002.000000 position",
+        "rejected": true
+      },
+      {
+        "control": "UV",
+        "reason": "scene: draw.000001.000000 UV",
+        "rejected": true
+      },
+      {
+        "control": "prelit-color",
+        "reason": "scene: draw.000001.000000 prelit color",
+        "rejected": true
+      },
+      {
+        "control": "quantized-position",
+        "reason": "scene: draw.000001.000000 raw quantization/source vertex",
+        "rejected": true
+      },
+      {
+        "control": "quantized-UV",
+        "reason": "scene: draw.000001.000000 raw quantization/source vertex",
+        "rejected": true
+      },
+      {
+        "control": "quantized-color",
+        "reason": "scene: draw.000001.000000 raw quantization/source vertex",
+        "rejected": true
+      },
+      {
+        "control": "source-vertex-id",
+        "reason": "scene: draw.000001.000000 raw quantization/source vertex",
+        "rejected": true
+      },
+      {
+        "control": "triangle-winding",
+        "reason": "scene: draw.000001.000000 triangle winding/order/material/smoothing",
+        "rejected": true
+      },
+      {
+        "control": "smooth-normal",
+        "reason": "scene: draw.000001.000000 triangle winding/order/material/smoothing",
+        "rejected": true
+      },
+      {
+        "control": "extra-UV-layer",
+        "reason": "scene: draw.000001.000000 UV/color layers",
+        "rejected": true
+      },
+      {
+        "control": "extra-point-attribute",
+        "reason": "scene: draw.000001.000000 attribute inventory",
+        "rejected": true
+      },
+      {
+        "control": "shape-key",
+        "reason": "scene: draw.000001.000000 shape keys/animation/library/properties",
+        "rejected": true
+      },
+      {
+        "control": "modifier",
+        "reason": "scene: draw.000001.000000 type/parent/modifier/constraint/animation",
+        "rejected": true
+      },
+      {
+        "control": "object-transform",
+        "reason": "scene: draw.000001.000000 object transform",
+        "rejected": true
+      },
+      {
+        "control": "object-parent",
+        "reason": "scene: draw.000001.000000 type/parent/modifier/constraint/animation",
+        "rejected": true
+      },
+      {
+        "control": "object-addition",
+        "reason": "scene: collection inventory",
+        "rejected": true
+      },
+      {
+        "control": "object-deletion",
+        "reason": "scene: missing draw.000001.000000",
+        "rejected": true
+      },
+      {
+        "control": "object-rename",
+        "reason": "scene: missing draw.000001.000000",
+        "rejected": true
+      },
+      {
+        "control": "mesh-source-id",
+        "reason": "scene: mesh.000000 property r4_record",
+        "rejected": true
+      },
+      {
+        "control": "part-source-offset",
+        "reason": "scene: part.000000 property r4_record",
+        "rejected": true
+      },
+      {
+        "control": "cluster-bounds",
+        "reason": "scene: cluster.000000 property r4_record",
+        "rejected": true
+      },
+      {
+        "control": "LOD-error",
+        "reason": "scene: level.000001 property r4_record",
+        "rejected": true
+      },
+      {
+        "control": "strip-command",
+        "reason": "scene: draw.000001.000000 property r4_commands",
+        "rejected": true
+      },
+      {
+        "control": "placement-affine-metadata",
+        "reason": "scene: placement.000001 property r4_record",
+        "rejected": true
+      },
+      {
+        "control": "placement-affine-basis",
+        "reason": "scene: placement.000001 affine basis",
+        "rejected": true
+      },
+      {
+        "control": "placement-source-id",
+        "reason": "scene: placement.000001 property r4_record",
+        "rejected": true
+      },
+      {
+        "control": "pass",
+        "reason": "scene: material.000000 property r4_record",
+        "rejected": true
+      },
+      {
+        "control": "cull",
+        "reason": "scene: material.000000 property r4_record",
+        "rejected": true
+      },
+      {
+        "control": "texture-key",
+        "reason": "scene: material.000000 property r4_record",
+        "rejected": true
+      },
+      {
+        "control": "material-node-strength",
+        "reason": "scene: material.000000 emission strength",
+        "rejected": true
+      },
+      {
+        "control": "material-node-link",
+        "reason": "scene: material.000000 links",
+        "rejected": true
+      },
+      {
+        "control": "material-property",
+        "reason": "scene: material.000000 culling preview",
+        "rejected": true
+      },
+      {
+        "control": "material-scalar-setting",
+        "reason": "scene: material.000000 material/node/socket settings",
+        "rejected": true
+      },
+      {
+        "control": "material-assignment",
+        "reason": "scene: draw.000001.000000 material assignment",
+        "rejected": true
+      },
+      {
+        "control": "material-addition",
+        "reason": "scene: material inventory",
+        "rejected": true
+      },
+      {
+        "control": "animation",
+        "reason": "scene: image/node-group/action additions",
+        "rejected": true
+      },
+      {
+        "control": "LOD-visibility",
+        "reason": "scene: draw.000001.000001 visibility",
+        "rejected": true
+      },
+      {
+        "control": "palette",
+        "reason": "scene: R4IM.identity property r4_aux",
+        "rejected": true
+      },
+      {
+        "control": "class",
+        "reason": "scene: R4IM.identity property r4_aux",
+        "rejected": true
+      },
+      {
+        "control": "source-hash",
+        "reason": "scene: R4IM.identity property r4_sources",
+        "rejected": true
+      },
+      {
+        "control": "scene-unit",
+        "reason": "scene: units",
+        "rejected": true
+      }
+    ],
+    "process": {
+      "elapsed_seconds": 0.982138,
+      "exit_code": 0,
+      "log_sha256": "ddddce6ed1257adb8558d3bdf60768d0382461dc4577fb1e066fdf1de7b59f3d",
+      "peak_resident_kib": 280612,
+      "system_seconds": 0.407445,
+      "user_seconds": 1.113464
+    },
+    "restored_identity": true
+  },
+  "blender_roundtrips": [
+    {
+      "blend_bytes": 511290,
+      "counts": {
+        "clusters": 3,
+        "levels": 6,
+        "meshes": 2,
+        "meshlets": 6,
+        "parts": 3,
+        "placements": 3,
+        "vertices": 15
+      },
+      "export_process": {
+        "elapsed_seconds": 0.477456,
+        "exit_code": 0,
+        "log_sha256": "5650e1d96c956ec8b9b2080d93604700eb1f1ce32c78541ae10ee8bafda13a0e",
+        "peak_resident_kib": 268424,
+        "system_seconds": 0.082499,
+        "user_seconds": 0.426279
+      },
+      "files": {
+        "far-shell.fsh": {
+          "bytes": 152,
+          "sha256": "23f8aed979f3a6cc6741e2d2b46ac7866d30e0165e0228dfddd737ec82734d42"
+        },
+        "interior.cell": {
+          "bytes": 60,
+          "sha256": "fefd778d16f417f8ad7e86dc78eaf614a2a8e4b28697423cbf7920f6280a8d4b"
+        },
+        "ps2-world.ids": {
+          "bytes": 32,
+          "sha256": "d1f66396aab4450b344b9858f47763180d7dc53a851408fa37f286e806954678"
+        },
+        "ps2-world.json": {
+          "bytes": 585,
+          "sha256": "cbc8730a87e724f407872cb7c78d2f7d21d8d2f049650c8c4d12e8f56023ca0d"
+        },
+        "ps2-world.occl": {
+          "bytes": 32,
+          "sha256": "96f8d05641d172fc54881e0207c0130002b7be06c57657104bba47a8304d2400"
+        },
+        "ps2-world.pvs": {
+          "bytes": 96,
+          "sha256": "6e616b3cb31c1315077df2d48cda1a871d66d9998aa058756bea875910679314"
+        },
+        "ps2-world.r4pw": {
+          "bytes": 236,
+          "sha256": "c4811a73fcee9c941c723b55cf1f6469e67a824faae31d5a789b69d47fd39eda"
+        },
+        "ps2-world.r4sg": {
+          "bytes": 416,
+          "sha256": "65ab1bcc441a6c9ddc1b0bdfa7458fbe4569e9807186a8a09e4bf87435ae1fa2"
+        },
+        "ps2-world.r4tc": {
+          "bytes": 28,
+          "sha256": "2e525b2efa6df612a46ed0f588107796e578f461a2afc9973fb38d2023218fce"
+        },
+        "ps2-world.re4mesh": {
+          "bytes": 1184,
+          "sha256": "f77f1ebd8f5293ec89f8df5d1a1189e6af1a47fba97aa6d2ceb8367df70162d2"
+        },
+        "room.r4rc": {
+          "bytes": 1680,
+          "sha256": "75bf6dee1c16b9b65ecdfe32a38eba3ba0d2c35298d2145f3745e48f1665551f"
+        }
+      },
+      "fixture_build_seconds": 0.019463,
+      "identity": true,
+      "import_process": {
+        "elapsed_seconds": 0.680447,
+        "exit_code": 0,
+        "log_sha256": "c28c09292eb6e6306853c638fd9f1a50369bc02e13c985415d9af31994461689",
+        "peak_resident_kib": 282536,
+        "system_seconds": 0.159567,
+        "user_seconds": 0.545976
+      },
+      "input_bytes": 4501,
+      "name": "complete_v2",
+      "output_bytes": 4501
+    },
+    {
+      "blend_bytes": 511290,
+      "counts": {
+        "clusters": 3,
+        "levels": 6,
+        "meshes": 2,
+        "meshlets": 6,
+        "parts": 3,
+        "placements": 3,
+        "vertices": 15
+      },
+      "export_process": {
+        "elapsed_seconds": 0.548286,
+        "exit_code": 0,
+        "log_sha256": "aafa45c123ad79723ecdf45150bb4c703378d0df7a27a3e938d30543a49e0b0d",
+        "peak_resident_kib": 264280,
+        "system_seconds": 0.140803,
+        "user_seconds": 0.433313
+      },
+      "files": {
+        "far-shell.fsh": {
+          "bytes": 152,
+          "sha256": "2d9ae463510ca3ce69732bd85b8558eb3967ac02882d1acadc37c6fd8ea03bc0"
+        },
+        "interior.cell": {
+          "bytes": 60,
+          "sha256": "fefd778d16f417f8ad7e86dc78eaf614a2a8e4b28697423cbf7920f6280a8d4b"
+        },
+        "ps2-world.ids": {
+          "bytes": 32,
+          "sha256": "d1f66396aab4450b344b9858f47763180d7dc53a851408fa37f286e806954678"
+        },
+        "ps2-world.json": {
+          "bytes": 585,
+          "sha256": "cbc8730a87e724f407872cb7c78d2f7d21d8d2f049650c8c4d12e8f56023ca0d"
+        },
+        "ps2-world.occl": {
+          "bytes": 32,
+          "sha256": "96f8d05641d172fc54881e0207c0130002b7be06c57657104bba47a8304d2400"
+        },
+        "ps2-world.pvs": {
+          "bytes": 96,
+          "sha256": "6e616b3cb31c1315077df2d48cda1a871d66d9998aa058756bea875910679314"
+        },
+        "ps2-world.r4pw": {
+          "bytes": 236,
+          "sha256": "c4811a73fcee9c941c723b55cf1f6469e67a824faae31d5a789b69d47fd39eda"
+        },
+        "ps2-world.r4sg": {
+          "bytes": 416,
+          "sha256": "65ab1bcc441a6c9ddc1b0bdfa7458fbe4569e9807186a8a09e4bf87435ae1fa2"
+        },
+        "ps2-world.r4tc": {
+          "bytes": 28,
+          "sha256": "2e525b2efa6df612a46ed0f588107796e578f461a2afc9973fb38d2023218fce"
+        },
+        "ps2-world.re4mesh": {
+          "bytes": 1184,
+          "sha256": "f77f1ebd8f5293ec89f8df5d1a1189e6af1a47fba97aa6d2ceb8367df70162d2"
+        },
+        "room.r4rc": {
+          "bytes": 1648,
+          "sha256": "9b295c07e43c0b2d2e7e63b40dd2fc5b035877aeb6dcb80d5dd214fb6afef36d"
+        }
+      },
+      "fixture_build_seconds": 0.002219,
+      "identity": true,
+      "import_process": {
+        "elapsed_seconds": 0.634978,
+        "exit_code": 0,
+        "log_sha256": "a9def11d16584494bd1165c5e9167f6f2081482cb2c160d74d74cf4154b34761",
+        "peak_resident_kib": 268816,
+        "system_seconds": 0.115194,
+        "user_seconds": 0.53728
+      },
+      "input_bytes": 4469,
+      "name": "legacy_v1",
+      "output_bytes": 4469
+    },
+    {
+      "blend_bytes": 413431,
+      "counts": {
+        "clusters": 1,
+        "levels": 3,
+        "meshes": 1,
+        "meshlets": 2,
+        "parts": 1,
+        "placements": 1,
+        "vertices": 25
+      },
+      "export_process": {
+        "elapsed_seconds": 0.437654,
+        "exit_code": 0,
+        "log_sha256": "2543b673c6adbde3cbe7dcf0fd5db7e1cfccadaa8bc0cc511dccf50e0a455e06",
+        "peak_resident_kib": 258116,
+        "system_seconds": 0.075661,
+        "user_seconds": 0.376852
+      },
+      "files": {
+        "ps2-world.r4pw": {
+          "bytes": 100,
+          "sha256": "05296dae19e3e601ff9142750bad4eaf91d38823d869e3f9e63cf8a79dee5c88"
+        },
+        "ps2-world.re4mesh": {
+          "bytes": 896,
+          "sha256": "3072b3258dabaed69e9c49aab4842f6ccabd5c2613b01fdd24a60b396e8e6980"
+        }
+      },
+      "fixture_build_seconds": 0.003766,
+      "identity": true,
+      "import_process": {
+        "elapsed_seconds": 0.51127,
+        "exit_code": 0,
+        "log_sha256": "1a6c5802695639ac6a21ed38fc2a2d9a69ba47b7b71ef72349da16c27c2fda86",
+        "peak_resident_kib": 273548,
+        "system_seconds": 0.107076,
+        "user_seconds": 0.433768
+      },
+      "input_bytes": 996,
+      "name": "existing_converter",
+      "output_bytes": 996
+    }
+  ],
+  "build": 11,
+  "companion_registry": {
+    "far-shell.fsh": [
+      "FSH1 v1/v2",
+      "supported: independent far-shell representation, identity-only"
+    ],
+    "interior.cell": [
+      "PCL1",
+      "supported: identity-only inherited portal proof/constants"
+    ],
+    "ps2-world.ids": [
+      "R4ID v1",
+      "supported: inherited source IDs, current policy CRC"
+    ],
+    "ps2-world.json": [
+      "ps2_world_r4im report",
+      "supported: actual output hashes verified; source provenance inherited"
+    ],
+    "ps2-world.occl": [
+      "R4OC v1",
+      "supported: identity-only inherited occluder proof"
+    ],
+    "ps2-world.pvs": [
+      "R4PV v1",
+      "supported: identity-only inherited proof; no PVS23 certificate issued"
+    ],
+    "ps2-world.r4sg": [
+      "R4SG v1",
+      "supported: regenerate existing consecutive strip-group bounds"
+    ],
+    "ps2-world.r4tc": [
+      "R4TC v1/classifier1",
+      "supported: inherited classes, both CRCs"
+    ],
+    "ps2-world.re4mesh.dd3": [
+      "SDO3",
+      "unsupported: alternate lineage/dedup representation"
+    ],
+    "ps2-world.re4mesh.sds1": [
+      "SDS1",
+      "unsupported: Build12 direct-strip representation"
+    ],
+    "room.r4rc": [
+      "R4RC v1",
+      "supported: explicit SRCB/GRID/VIS/OCCL/SCNK/SCDD/SCCN/SCPS registry"
+    ]
+  },
+  "host_controls": {
+    "process": {
+      "elapsed_seconds": 0.117291,
+      "exit_code": 0,
+      "log_sha256": "4e7c0eed1ab02246cab4b623234ec799027abb8f70b443139c1efa4874c25ed2",
+      "peak_resident_kib": 19208,
+      "system_seconds": 0.016076,
+      "user_seconds": 0.100575
+    },
+    "test_methods": 11
+  },
+  "host_platform": {
+    "machine": "x86_64",
+    "python": "3.12.14",
+    "system": "Linux",
+    "timing_scope": "host wall/user/system including process startup; RSS is per child peak KiB"
+  },
+  "performance_claim": "None. Host conversion measurements are not Dreamcast timing; no real r101 assets or captures used.",
+  "proof_scope": "Known proof records are structurally checked and byte-identical. Existing geometric proofs, external SAT/source provenance and compiled guards are inherited, not certified. Unknown formats fail closed.",
+  "runtime_delta": {
+    "architectural_32byte_lines": 0,
+    "basis": "No runtime/build integration changes; every accepted output file is byte-identical.",
+    "executable_bytes": 0,
+    "loads": 0,
+    "main_ram_bytes": 0,
+    "modeled_world_cpu_frame_delta_ms": 0.0,
+    "sh4_cycles": 0,
+    "static_stack_bytes": 0,
+    "stores": 0,
+    "vram_bytes": 0
+  },
+  "runtime_host_admission": {
+    "compile": {
+      "elapsed_seconds": 0.956302,
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "peak_resident_kib": 72420,
+      "system_seconds": 0.129949,
+      "user_seconds": 0.821008
+    },
+    "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+    "execution": {
+      "elapsed_seconds": 0.004603,
+      "exit_code": 0,
+      "log_sha256": "1928cc0fec8475c72ba1a1f1a9dfdacccef1f9bfaf4f9457f4e2947ff52920f4",
+      "peak_resident_kib": 19208,
+      "system_seconds": 0.0,
+      "user_seconds": 0.004001
+    },
+    "fixture_sha256": "188735eb08c2cb9ac3b14850360b63e2afe9b977fc3c5d71db023290dc348b88",
+    "scope": "actual current MeshPackage::adopt(..., true, true) on host; file_t/FILEHND_INVALID declarations stubbed because no KOS filesystem function is called; no SH4 timing"
+  },
+  "source_sha256": {
+    "port/dreamcast/room/instanced_mesh.hpp": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019",
+    "port/dreamcast/room/room_package.hpp": "0f68e9b943e018af1c1b67022d2f5774fed8f829c3a4e094b52fceccac9aa0fe",
+    "port/dreamcast/tools/assetpipe/r4im.py": "25e5a8a1e4ecc30ae318d5bb27e0edd96182fd83aaf61c34440557ba23e3c286",
+    "port/dreamcast/tools/convert_room_bins.py": "ae36a661041e39078f51f18401ed3c7c840b792e147460967238b0abd838280b",
+    "port/dreamcast/tools/d367/scenery19/scdd_compile.py": "93a11dd92800c7df0ba850e63ca664c1088cad49efc13bb47dbb59bffcdab923",
+    "port/dreamcast/tools/d367/visibility23/metadata.py": "7dbfa66ce850f16b208cd5a23fabf4cdb79ff36d0f98dc6941ab7412a881fd96",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py": "7f9c5e91bac7a55fa5506f592d27bb0b950b1fbfe87812d5a672e6daa4f44159",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/blender_controls.py": "60816463da8ad64d13211af0555fc5933b15a854bc31b62f85d94df90317850e",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/fixtures.py": "3abad324ab613832dc63df7e455019c5e3dfa3fc21c3fecfb852762949807622",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/package.py": "56b4eebbcd2b42a38c0d69ab49edfa80ee27764d43a53d7e6ae4ab70d7db192a",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/proof_identity.py": "82a3e27cc4fe8c39753ae10bae039206bc659f0d5778c27abd196a710eeb624c",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/sidecars.py": "149b1c5fd4bb4f91e537bd3169f5e8ebd1d10b982a05433f0c6e7346eafd5d61",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/test_identity.py": "b572cd961a6c589f7cf27490e29548236c8f65a64099bc11057603cfc318776f",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/validate.py": "d75a639f82b11f70f76d1ec7d9798aab34b0a3fbbda5e72d9e92fc4ade6638ac",
+    "port/dreamcast/tools/mesh_lod.py": "79dd72d3615833269ddd1f9950a602ef498f96b0475d3b3e2fd3aecb67e535e2",
+    "port/dreamcast/tools/ps2_world_r4im.py": "d5b87017d94ee9e8f674b45fe81a087398a4bf7cd3d25b5fca1a1d14219efc9c"
+  },
+  "status": "PASS identity foundation; no geometry or performance acceptance"
+}
