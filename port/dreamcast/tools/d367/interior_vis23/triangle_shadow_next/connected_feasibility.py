@@ -48,7 +48,7 @@ def main():
   if not any(x['placement']==165 and x['part']==230 and x['cluster']==234 and x['meshlet']==951 and tuple(x['corners'])==tri for x in faces):raise ValueError('Actual face not stable ordinary opaque all-LOD source')
  vertices={i:world(cs[i][:3]) for tri in TRIANGLES for i in tri};topology=indexed_disk(TRIANGLES)
  target=targets[299]
- if tuple(target[k] for k in ('placement','part','cluster','field'))!=(209,268,272,209) or not target['ordinary'] or target['conditional']:raise ValueError('Target allLOD namespace changed')
+ if tuple(target[k] for k in ('placement','part','cluster','field'))!=(209,268,272,209) or not target['ordinary'] or not target['static'] or target['field'] in f.audit.conditional_fields(ids):raise ValueError('Target allLOD namespace changed')
  discovery=json.loads(a.discovery.read_text());patch=discovery['cameras'][0]['patches']['5131']
  if tuple(tuple(x[1:]) for x in patch['actual_component_triangles'])!=TRIANGLES or tuple(patch['source'][k] for k in ('placement','part','cluster','level','meshlet'))!=(165,230,234,0,951):raise ValueError('Discovery actual endpoint binding changed')
  prep=a.r6/'prepared/prepare-receipt.json'
