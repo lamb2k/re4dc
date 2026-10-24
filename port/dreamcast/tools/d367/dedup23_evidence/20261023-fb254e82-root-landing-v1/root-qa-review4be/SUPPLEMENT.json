@@ -1,0 +1,19 @@
+{
+  "status": "FROZEN_HOST_HELPERS_AND_INVENTORY_CLEAR",
+  "media_review_sha256": "3c13b0d58e81ae2c6f891fb0ea0d6b8082dbe3632b62d369aea315a701f73138",
+  "source_helper_commit": "2472ccfd6e120a10e15443506b11687330beb49c",
+  "host_helper_hashes": {
+    "current-d5c-qa-run.sh": "fb96df1a4231aa8d4b03ec0724196e4933617f9e57e5ca3cda9c0c0fae1c39d2",
+    "current-d5c-qa-judge.py": "f1ec34949f885bb474b734519d9f779f6c64b49eafb7f57a9082905dee4eb8f2",
+    "current-d5c-qa-stage.py": "712dcd2cbdf48b9545a306c6a901ef1d342f594d0d8e0125a158453016203f4f",
+    "current-d5c-qa-seal.py": "e36b4cecb0c66702a25ae79e0d56d36e2921c7b7e2e88764f1c485abb08addf1",
+    "current-d5c-qa-proxy.py": "f5afc0bd04fa742c428ba5b3bc9b3290b53830ec6066a1dca0ad6f3785be5074",
+    "current-d5c-qa-retire-proxy.py": "f95483eef9d0cbf95b7cfd248f85a47a6c6324c4e12c6935697c35a8e7315b32"
+  },
+  "native_checksum_readback_sha256": "3d6fdd9c846792cf297b3e2ca061bca516695e81d0f610aca74f3fc0ce3e763f",
+  "capture_inventory_sha256": "97e4a2ff8a283c02c313d3a4b13e3ee822e04a840da4f0d8f146ca611a7fa164",
+  "actual_png_count": 24,
+  "actual_png_bytes": 3807894,
+  "stat_slot_helper_sha256": "452123f936d4764244244f17d51d22299fdbd17eb0aada1de1991a4782d74549",
+  "scope": "24 PNG identities checked only; no additional visual review, wall-time pixel comparison or guest execution. Frozen host runner shows own lock/stat3/trace16 and exact-child bounded guard; raw capture bound receipts were separately checked."
+}

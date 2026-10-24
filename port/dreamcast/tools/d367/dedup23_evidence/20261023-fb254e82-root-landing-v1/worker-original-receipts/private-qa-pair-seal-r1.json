@@ -1,0 +1,25 @@
+{
+  "status": "LOCAL_NORMAL_QA_PAIR_PASS_ROOT_REVIEW_PENDING",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "arms": {
+    "off": {
+      "path": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-Off-4be08e01",
+      "identity_sha256": "eddd77771b71b470e2e5829580f28ac4f677cc280461c493e1c11b4289827b11",
+      "sha256sums_sha256": "ea75145c545fe083a67cc964794ba0e02f4512f9f05767a8be51fe52b0b531fe",
+      "normal_qa_s30_heap": 48768,
+      "final_track03_sha256": "52d2c05d1fa37d5d72546bb560cb317048540eb5ae1e97d6ae350aba9a0dc2a5"
+    },
+    "on": {
+      "path": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-On-4be08e01",
+      "identity_sha256": "2bfa8584f6d23d2a1f9dd2db757be2dbc030802b8cb0a6c8e70a04583d3724c1",
+      "sha256sums_sha256": "6e08a6b3984c209228a481667d34582728893578bafda4429e2693689110b266",
+      "normal_qa_s30_heap": 98496,
+      "final_track03_sha256": "e09cc566770513cd53647a7429d0f7f992fe5d6718e82a8bd960d6effb8d5920"
+    }
+  },
+  "qa_heap_gain": 49728,
+  "all_final_gdi_bytes_read_back": true,
+  "known_baseline_mendez_limit_retained": true,
+  "no_sd_publication_or_zip": true,
+  "c_free_after": 31687921664
+}

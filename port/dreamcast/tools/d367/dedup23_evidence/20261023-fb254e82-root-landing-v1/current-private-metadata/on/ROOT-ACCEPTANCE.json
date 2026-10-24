@@ -1,0 +1,27 @@
+{
+  "status": "ACCEPTED_FOR_PRIVATE_CONSOLE_FEEDBACK",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "worker_seal_sha256": "4180931954be3dc47e587bea96b82a550799c898a7491a9de4df5e01a69f95be",
+  "independent_review_sha256": "4e799aa3a8dc9051819ec77148f2be88067a0d18beff3579b3a643b05e733317",
+  "production_dedup": 0,
+  "physical_acceptance": false,
+  "hardware_performance_claim": false,
+  "profile": {
+    "SCENERY_EMIT_PREFETCH": 0,
+    "SCENERY_SELECT_LEAN2": 0
+  },
+  "normal_qa_heap": {
+    "off": 48768,
+    "on": 98496
+  },
+  "standard_heap": {
+    "off": 93920,
+    "on": 139552
+  },
+  "limits": [
+    "Actual final-GDI boot differs from separately labelled fixture-proxy menu-warp/H2.",
+    "Known baseline Mendez late-pair material issue remains; no texture completeness claim.",
+    "Later prefetch context repair does not alter this exact frozen4be QA pair.",
+    "No full-route, fresh full-release or physical acceptance."
+  ]
+}

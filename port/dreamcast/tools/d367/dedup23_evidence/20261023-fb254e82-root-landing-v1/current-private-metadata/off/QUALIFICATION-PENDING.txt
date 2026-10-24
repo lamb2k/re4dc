@@ -1,0 +1,1 @@
+Historical filename retained. Root private-media review passed; physical acceptance and hardware performance remain pending. Production dedup stays off. See ROOT-ACCEPTANCE.json.

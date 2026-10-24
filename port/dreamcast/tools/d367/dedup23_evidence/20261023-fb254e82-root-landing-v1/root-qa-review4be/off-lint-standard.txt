@@ -1,0 +1,50 @@
+ok    gdi.count          first .gdi line = number of track lines (3 vs 3)
+ok    gdi.offset         every track offset field is 0
+ok    gdi.files          every track file exists
+ok    gdi.names          track files are named trackNN.bin/.raw/.iso (8.3, no spaces)
+ok    gdi.crlf           .gdi uses CRLF line endings (TOSEC / mkdcdisc form)
+ok    track.size         each track file is a whole number of sectors
+ok    layout.3tracks     three tracks (data, audio, data)
+ok    layout.t1          track 1: LBA 0, data (CTRL 4)
+ok    layout.t2          track 2: audio (CTRL 0), 2352-byte sectors
+ok    layout.t2lba       track 2 starts 150 sectors after track 1 ends (600 = 0 + 450 + 150)
+ok    layout.t2len       track 2 is at least 300 sectors (4 s); has 526
+ok    layout.ld          low-density area ends before LBA 45000
+ok    layout.t3          track 3: LBA 45000, data (CTRL 4)
+ok    layout.hdcap       track 3 ends by LBA 549150 (ends 549150)
+ok    std.raw2352        data tracks are raw 2352-byte Mode 1 (track??.bin)
+ok    std.hdpad          track 3 is padded to the end of the high-density area, LBA 549150 (ends 549150; 0 sectors short)
+ok    std.t1len          track 1 is at least 450 sectors (has 450)
+ok    raw.header.t1      track 1 raw sectors: sync + MSF header + mode 1 (65 checked, 0 bad sync, 0 bad header)
+ok    raw.edcecc.t1      track 1 raw sectors: EDC + ECC valid (64 checked: 0 bad EDC, 0 bad ECC)
+ok    raw.header.t3      track 3 raw sectors: sync + MSF header + mode 1 (65 checked, 0 bad sync, 0 bad header)
+ok    raw.edcecc.t3      track 3 raw sectors: EDC + ECC valid (64 checked: 0 bad EDC, 0 bad ECC)
+ok    ip.present         high-density track carries IP.BIN
+ok    ip.hwid            Hardware ID "SEGA SEGAKATANA "
+ok    ip.maker           Maker ID "SEGA ENTERPRISES"
+ok    ip.device          Device Info names GD-ROM ('B6D8 GD-ROM1/1  ')
+ok    ip.devcrc          Device Info CRC B6D8 = CRC16(product+version) B6D8
+ok    ip.area            Area symbols from J/U/E ('JUE     ')
+ok    ip.regiontext      region text at 0x3700 matches every area symbol (['For JAPAN,TAIWAN,PHILIPINES.', 'For USA and CANADA.', 'For EUROPE.'])
+ok    ip.periph          Peripherals 7 hex digits ('0799810 ')
+ok    ip.version         Version Vx.yyy ('V1.000')
+ok    ip.date            Release date YYYYMMDD ('20260920        ')
+ok    ip.licence         SEGA licence code 0x300-0x36FF unmodified (9f3ef07ef0f2d5f5)
+WARN  ip.product         distinct product number ('T0000     '; T0000 is shared by much homebrew: menus key art and lists on it)
+ok    std.toc1           IP.BIN carries a TOC1 table at 0x100 matching track 3 (start FAD 45150, lead-out FAD 549300)
+ok    iso.pvd            track 3 has an ISO9660 PVD at sector 16
+ok    iso.block          logical block 2048
+ok    iso.absolute       directory extents are absolute LBAs inside track 3 (root at 45018)
+ok    iso.pathtable      L path table lists the same 132 directories
+ok    iso.extents        file extents inside track 3, no overlaps  
+ok    iso.names          long / lower-case names reachable by KOS fs_iso9660 (Joliet SVD or Rock Ridge NM on every record): joliet=False rr=True
+ok    iso.space          PVD volume space (504000) fits track 3
+ok    boot.present       IP.BIN boot file '1ST_READ.BIN' is in the track 3 root
+WARN  boot.pad           boot file is a whole number of 2048-byte sectors (3427108 B; KOS #1492: an unpadded 1ST_READ.BIN can leave BIOS read residue)
+ok    std.bootlast       boot file is the last file, 150 sectors before the end of track 3 (at 547326, tail 150 sectors)
+ok    ld.pvd             track 1 has an ISO9660 PVD at sector 16
+ok    ld.ip              track 1 system area starts with the SEGA SEGAKATANA header
+ok    std.ip0000         track 1 system area = IP0000.BIN: the 256-byte header repeated in all 16 sectors
+ok    std.ldtext         low-density PVD names COPYRIGH.TXT / ABSTRACT.TXT / BIBLIOGR.TXT ('COPYRIGH.TXT' 'ABSTRACT.TXT' 'BIBLIOGR.TXT')
+ok    std.ldhdr          low-density header fields equal the high-density IP.BIN
+DISC_LINT PASS /mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-Off-4be08e01/gdemu/disc.gdi profile=standard violations=0

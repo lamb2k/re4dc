@@ -1,0 +1,291 @@
+{
+  "status": "ACCEPTED_FOR_PRIVATE_CONSOLE_FEEDBACK",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "baseline_source": "d5c1ceab9e06461462669b3ce1d28a379747a74a",
+  "arm": "off",
+  "scenery_dedup": 0,
+  "programme": {
+    "label": "dd234be08e01offqrW",
+    "path": "/root/probe/lanes/route/out-dd234be08e01offqrW",
+    "elf_sha256": "c29f4ca756ef7e16f2d719512014b5f676422d06fb2e8ab67c957b3ebeb23098",
+    "raw_sha256": "dfdd3c2b3c38a8cafd95ba4a46a3acee12b2a50ec54a29f4bc2337bc4d48b8f7",
+    "raw_bytes": 3427108,
+    "scrambled_sha256": "d2166299cb37c878fe1c75ae5a20f45d04a1b44787c8a7b0bf38422123b0ca25",
+    "resolved_sha256": "ff8f921d96ac9a5a3257b539f24a9bea48bfe804633b3513b1217a842b4546e6",
+    "overlays": {
+      "em2f.ovl": "efa718d84baf5459f96a9b02e299560492fef8b41eb246cedaf6bf7a2eada10a",
+      "st2_0.ovl": "fd11d31b0a453a9c1fa4dc7e3907d638401bcda36f4a74923c60725bdcb564af",
+      "st1_2.ovl": "c93870668ed48a5830c20e264bee9aa29c964871e233f6289c522a39684ff3c1",
+      "pl14.ovl": "8e04ea43e47c0f9e526c17bfabeb9b52e0953ee9a9788ea9ee42266181d422df",
+      "st1_3.ovl": "6754f1f99cbc0372f346a3cf815bf79d68af9c2cd7adabe8648d3db709e94cae",
+      "em2b.ovl": "213b6fb3484479522983f5cb1d5b6c6683ad67bfd03388f9597d8b5f8528866a",
+      "pl11.ovl": "f44b8a47d515e006b481470577cc7a5cdb4cdb4536627cd324291eed13c2a590",
+      "em35.ovl": "2f1810c643462a7b9d6332d2604d196c57fad676816082f16b5ae70ada49ef2f",
+      "pl0f.ovl": "3c75740e209f70c590d1dca5d3a3e9f273b3b2c01b7b5230998305b35394307d",
+      "em3b.ovl": "9efb23a4fc089a19829c7b176fbf6dce92d731e8bee664645d615eb12107a90c",
+      "st1_0.ovl": "ae45869023bf9c1e024418b34e29635eac786facc00c03c9ecf01c761d584c69",
+      "st1_1.ovl": "15d427ee734def921f347d687ab53f85a75aec5c9230d8f5ef2f0354ccdb148a",
+      "em22.ovl": "c0074ed0d3229ffb9ab2612dd6a6679ac64ae9587d99edff9453564b3b19bc94",
+      "sscrn.ovl": "3bbf527f8eb49668c1746a9ab978a5ff4fbce8e7b95f989046ffc8b8615ed851"
+    },
+    "candidate": "/root/work/lanes/dedup-offline23-current-d5c-scratch/qa/programs/candidate-routedd234be08e01offqrW",
+    "required_resolved": {
+      "QA_MENU": "1",
+      "WARP_AFTER_RESET": "1",
+      "GAME_TICK_LOG": "60",
+      "PHASE_METER": "1",
+      "DISC_READ_METER": "1",
+      "QA_TEST": "23",
+      "QA_SRC": "4be08e01",
+      "PC_SAMPLER": "0",
+      "SCENERY_DEDUP": "0",
+      "KOS_WATCH": "0",
+      "KOS_SQUEEZE": "0",
+      "NATIVE_MODEL_REGISTRY_CENSUS": "0"
+    }
+  },
+  "tracks": {
+    "disc.gdi": {
+      "bytes": 87,
+      "sha256": "025516557d49e1835e7eb8571e09244b64db190cf3981ead555c54b1924ca19f"
+    },
+    "track01.bin": {
+      "bytes": 1058400,
+      "sha256": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9"
+    },
+    "track02.raw": {
+      "bytes": 1237152,
+      "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48"
+    },
+    "track03.bin": {
+      "bytes": 1185760800,
+      "sha256": "52d2c05d1fa37d5d72546bb560cb317048540eb5ae1e97d6ae350aba9a0dc2a5"
+    },
+    "IP.BIN": {
+      "bytes": 32768,
+      "sha256": "0e4e13d0b8df6477d9e43370591fd1a580c54b4df2209b944610d2a0b6b0062c"
+    }
+  },
+  "final_manifest_sha256": "8d338abf917e90ff1f753dab25e30d8f7b94015d6e77c320a60d62a6b1de9954",
+  "post_final_manifest_sha256": "8d338abf917e90ff1f753dab25e30d8f7b94015d6e77c320a60d62a6b1de9954",
+  "only_programme_differences": [
+    "dc/em2b.ovl",
+    "dc/st1_2.ovl",
+    "dc/st1_1.ovl",
+    "dc/st2_0.ovl",
+    "1ST_READ.BIN",
+    "dc/pl0f.ovl",
+    "dc/pl14.ovl",
+    "dc/pl11.ovl",
+    "dc/em35.ovl",
+    "dc/sscrn.ovl",
+    "dc/st1_3.ovl",
+    "dc/em3b.ovl",
+    "dc/em2f.ovl",
+    "dc/st1_0.ovl",
+    "dc/em22.ovl"
+  ],
+  "original_assets_and_exact4_alternates_common": true,
+  "baseline_packages": {
+    "r100": {
+      "path": "/root/re4payload/t164-20261018/tree/dc/native/r100/ps2-world.re4mesh",
+      "bytes": 1537920,
+      "sha256": "130bac7969255f0bf31d5f9226cee21a33415103f044f0fdc7dda3607ffc89bb"
+    },
+    "r101": {
+      "path": "/root/re4payload/t164-20261018/tree/dc/native/r101/ps2-world.re4mesh",
+      "bytes": 1283520,
+      "sha256": "500d17dac6279aa1ca71c8698ac31292cb2d3452befacfbef2d25069f9f7bff3"
+    },
+    "r103": {
+      "path": "/root/re4payload/t164-20261018/tree/dc/native/r103/ps2-world.re4mesh",
+      "bytes": 1074688,
+      "sha256": "96d2382299065c6ab48f7696a88e37de7020fd0a21e37507d4bb87a0a739fdd3"
+    }
+  },
+  "compact_alternates": [
+    {
+      "destination": "dc/native/r100/ps2-dd3.re4mesh",
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r100-stripshare-v1/ps2-dd3.re4mesh",
+      "bytes": 1488192,
+      "sha256": "3d339013ff79b6b0c917b40beb326f9a063d959c9db10da33331a1f335d8fb1d"
+    },
+    {
+      "destination": "dc/native/r101/ps2-dd3.re4mesh",
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r101-stripshare-v1/ps2-dd3.re4mesh",
+      "bytes": 1243808,
+      "sha256": "e7f257773fb7ee43271994c867f5f4307a2a13c1d85cd93afcbcc15488c00708"
+    },
+    {
+      "destination": "dc/native/r101/ps2-dd3.r4sg",
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r101-stripshare-v1/ps2-dd3.r4sg",
+      "bytes": 117152,
+      "sha256": "b1ffc00c3e00ca69874e1b2a0fbe84d243653bd6ccd280c2e837e2731300e30d"
+    },
+    {
+      "destination": "dc/native/r103/ps2-dd3.re4mesh",
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r103-stripshare-v1/ps2-dd3.re4mesh",
+      "bytes": 1047968,
+      "sha256": "2b805c88a9375180e41aeb55f8c0656d07fe96c32a12acf504b05be8b16d110a"
+    }
+  ],
+  "normal_qa_gates": {
+    "boot": {
+      "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+      "arm": "off",
+      "kind": "boot",
+      "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-off-boot-console-r1",
+      "status": "PASS",
+      "elapsed_host_s": 22.532,
+      "fault_rows": [],
+      "programme_elf_sha256": "c29f4ca756ef7e16f2d719512014b5f676422d06fb2e8ab67c957b3ebeb23098",
+      "final_track03_sha256": "52d2c05d1fa37d5d72546bb560cb317048540eb5ae1e97d6ae350aba9a0dc2a5",
+      "media": "FINAL_STANDARD_GDI",
+      "selected_r100": true,
+      "all4_pid_targeted_steps": true,
+      "key_log": [
+        {
+          "step": 0,
+          "keys": [
+            "down"
+          ],
+          "host_s": 3.6,
+          "windows": 5
+        },
+        {
+          "step": 1,
+          "keys": [
+            "a"
+          ],
+          "host_s": 4.6,
+          "windows": 5
+        },
+        {
+          "step": 2,
+          "keys": [
+            "a"
+          ],
+          "host_s": 5.7,
+          "windows": 5
+        },
+        {
+          "step": 3,
+          "keys": [
+            "a"
+          ],
+          "host_s": 6.7,
+          "windows": 5
+        }
+      ],
+      "sha256": {
+        "run-result.json": "5771d3f4a4aa1bcaa1dd4b1877ff15968a71665c10a1f8b7bf21ab859e820315",
+        "bounded-launch.json": "db7a23693e014ed786b56cfab1a205bf4d8155a1b9af3eafd7b475164f60b117",
+        "run-output.txt": "a654883b8eeedcdddb9890121bb1963198ff9b874890c20d1b61039aff64508a",
+        "serial.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+        "disc.gdi": "025516557d49e1835e7eb8571e09244b64db190cf3981ead555c54b1924ca19f"
+      }
+    },
+    "warp": {
+      "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+      "arm": "off",
+      "kind": "warp",
+      "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-off-warp-console-r1",
+      "status": "PASS",
+      "elapsed_host_s": 14.532,
+      "fault_rows": [],
+      "programme_elf_sha256": "c29f4ca756ef7e16f2d719512014b5f676422d06fb2e8ab67c957b3ebeb23098",
+      "final_track03_sha256": "52d2c05d1fa37d5d72546bb560cb317048540eb5ae1e97d6ae350aba9a0dc2a5",
+      "media": "SEPARATE_FIXTURE_PROXY_EXACT_FINAL_PROGRAMME_ALL14_DATA",
+      "proxy_identity_sha256": "1d51a3b5545d0c5800160f50e63269396d45fe4b243de3110b4518e83ccd9a79",
+      "fixtures": {
+        "warp": {
+          "src": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\qa-media-r1\\fixtures\\qa-menu-warp.txt",
+          "bytes": 102,
+          "sha256": "340d0229c3276cf64e42601943abe453e28e40e8be7782b355c405a324628d0d"
+        },
+        "pad": {
+          "src": null,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "w11": {
+          "src": null,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "menu_warp_checks": {
+        "qa: auto teleport /cd/dc/qa/r103.txt": true,
+        "warp: qa: preset armed at soft reset": true,
+        "phase=enter room=101": true,
+        "phase=enter room=103": true
+      },
+      "sha256": {
+        "run-result.json": "f7b713127d54e2e8e57a166308ef05a59835d4741c5f0e0b5f0cb4a4abe2e0b3",
+        "bounded-launch.json": "f856d6af60e69c432d6091c22f906920b4b6ec76ca4adffbbc9a84883b4bbe8f",
+        "run-output.txt": "e6d8820731f20a8029a3f264dedc80da90ab3bd93a098a37dc7b19c02de3e056",
+        "serial.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+        "disc.gdi": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4"
+      }
+    },
+    "h2": {
+      "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+      "arm": "off",
+      "kind": "h2",
+      "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-off-h2-console-r1",
+      "status": "PASS",
+      "elapsed_host_s": 32.812,
+      "fault_rows": [],
+      "programme_elf_sha256": "c29f4ca756ef7e16f2d719512014b5f676422d06fb2e8ab67c957b3ebeb23098",
+      "final_track03_sha256": "52d2c05d1fa37d5d72546bb560cb317048540eb5ae1e97d6ae350aba9a0dc2a5",
+      "media": "SEPARATE_FIXTURE_PROXY_EXACT_FINAL_PROGRAMME_ALL14_DATA",
+      "proxy_identity_sha256": "1d51a3b5545d0c5800160f50e63269396d45fe4b243de3110b4518e83ccd9a79",
+      "fixtures": {
+        "warp": {
+          "src": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\work\\lanes\\dedup-offline23-current-d5c\\port\\dreamcast\\tools\\d367\\fullplay\\segments\\h2-warp.txt",
+          "bytes": 363,
+          "sha256": "921ee89e2286ff7801736dabd1d9cb58321f25540ab3b3e3e63230eabb822012"
+        },
+        "pad": {
+          "src": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\work\\lanes\\dedup-offline23-current-d5c\\port\\dreamcast\\tools\\d367\\fullplay\\segments\\h2-pad.txt",
+          "bytes": 215,
+          "sha256": "80a97aa5b3ac9c4e3f8945089108d98f432fa8f57b00d2e7385733cb8d461ac1"
+        },
+        "w11": {
+          "src": null,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "movies": [
+        "route movie terminal=1 id=10003 frames=1465/1465 uploaded=1465 presented=1465 wall_us=49013556 media_us=48882166 underruns=1 silence_bytes=1472 heap_before=836096 heap_active=471904 staged=363328",
+        "route movie terminal=1 id=10020 frames=571/571 uploaded=571 presented=571 wall_us=19108003 media_us=19052366 underruns=2 silence_bytes=4180 heap_before=741472 heap_active=377280 staged=363328",
+        "route movie terminal=1 id=10030 frames=340/340 uploaded=340 presented=340 wall_us=11886330 media_us=11344666 underruns=1 silence_bytes=1472 heap_before=48768 heap_active=48768 staged=363328"
+      ],
+      "restored": true,
+      "heap_before": 48768,
+      "limits": "Normal QA heap, separate from standard memory gate; no blanket actor/texture completeness or physical/performance claim.",
+      "sha256": {
+        "run-result.json": "5d7514197d31c524ad85c6dda3c987e88ae114f4379fca04a04d59abac8b502f",
+        "bounded-launch.json": "78e681aeab35483494ef1367f0123b99be56bf04db2ff899e8c392ddc28d85e6",
+        "run-output.txt": "a72fa560ac08a12b109dbbbdc17e5a0be3f3cb752177e1af7222c31a1baedfb8",
+        "serial.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+        "disc.gdi": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4"
+      }
+    }
+  },
+  "proxy_retirement_receipt_sha256": "8499eaf3fa5d960e58a727b57a0a9cb563494c0186dd41439c3e4a0b17dcdeb6",
+  "gdemu10_gates_sha256": "74794e6d79313dcb9aa296b9ddc19fd682fb4f2a76d16b954e78693baf38b9bf",
+  "known_limitations": [
+    "Physical-console acceptance pending",
+    "No hardware performance claim",
+    "Known baseline Mendez late-pair material issue retained; separate unproven-visible PS2 private repair not included",
+    "Scoped observed diagnostics, not all-material completeness",
+    "SCENERY_EMIT_PREFETCH=0 / SCENERY_SELECT_LEAN2=0 only; separate PREFETCH1 defect is unqualified",
+    "Production dedup remains off; later integration has its separate source and image receipts."
+  ],
+  "root_acceptance_sha256": "aa87045dd510450964ee422a1d078a69c886ede9dd4e4f8e2a55a7bfc6362bb3"
+}

@@ -1,0 +1,1 @@
+Local normal QA checks pass. Root review/integration and physical acceptance remain pending; no SD/publication.

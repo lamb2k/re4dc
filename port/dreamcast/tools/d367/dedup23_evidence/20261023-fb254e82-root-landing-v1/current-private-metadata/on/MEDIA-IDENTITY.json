@@ -1,0 +1,73 @@
+{
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "status": "FINAL_MEDIA_READBACK_PASS_QA_GUEST_GATES_PENDING",
+  "path": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-On-4be08e01",
+  "work": "/root/work/lanes/dedup-offline23-qa-4be08e01-scratch/qa/on",
+  "programme": {
+    "label": "dd234be08e01onqrW",
+    "path": "/root/probe/lanes/route/out-dd234be08e01onqrW",
+    "elf_sha256": "d062ae5a4a69e7478411d67588150a99a325237b49b101398644eacaf57a9e9f",
+    "raw_sha256": "bb12c27c39f68229e86f78e8cfe2205af73089755b7e4b986bc43b7b08ccc8cb",
+    "raw_bytes": 3429988,
+    "scrambled_sha256": "ec67c10d016a1fdb889ffc6f3556b951387468f067a8848d2486035097499a1d",
+    "resolved_sha256": "8f949d2d6c46b5d6f29d52dbe2e7802440b05fb0f64abeb8d288743a9e1c142f",
+    "overlays": {
+      "em2f.ovl": "b1b5f7261d79226493945871a3a439d62796e5a5764d5ef1040c47f5c755cc1d",
+      "st2_0.ovl": "2b29b1e38914bfee9a6cb5f8bac1f851298bca8eaa7742f81cd0ef8a25c2bfcc",
+      "st1_2.ovl": "78a50b16fd4358d306d6080726402dd42525752b5b6b32558091dc7f65acb41d",
+      "pl14.ovl": "8d87cb26195b94650dbfa68f54ffecbc08f10eba7ccba5f8a87e2503065e719e",
+      "st1_3.ovl": "293fde172032abafc81ab56b98f711a15f0df0a7e4953aeabe29df4ea4b051a9",
+      "em2b.ovl": "a667365dc55ecbb1ead2889823f8b30096cad9e0813f0032c33f8ffaec77f7df",
+      "pl11.ovl": "ebd3b29d84a12e71ad1ba6c4c9df76dece0e094754203a907154708eac7f1065",
+      "em35.ovl": "b811e16c6527da55403e4ca0486a47ee68946945f10195161dbb0d79cf401ee1",
+      "pl0f.ovl": "08e554ee0e1558c27a17b069ac00315de52ea696005066513669dd76e12d4274",
+      "em3b.ovl": "0cf3a9143fea56918a5ffc10f72028a96d77c1b7e5ce5e4567ab0a830d9beb5e",
+      "st1_0.ovl": "e127b5f0562db459b3935f6e3b61ec542649af245a3f6c016bf80eb7af5c2da4",
+      "st1_1.ovl": "df7d4fbd340836c3efa5bfa8982d346dbf483f53cdb5a97e121185c44fc556b7",
+      "em22.ovl": "81b3787e0e3969c49d09cd84fd966e4b45910505004c7e2b99cbd1fae9b0c27e",
+      "sscrn.ovl": "c2115d1ca14497840e22014c18e0d9639248f7751e7588d6ac22c81d29954d55"
+    },
+    "candidate": "/root/work/lanes/dedup-offline23-current-d5c-scratch/qa/programs/candidate-routedd234be08e01onqrW",
+    "required_resolved": {
+      "QA_MENU": "1",
+      "WARP_AFTER_RESET": "1",
+      "GAME_TICK_LOG": "60",
+      "PHASE_METER": "1",
+      "DISC_READ_METER": "1",
+      "QA_TEST": "23",
+      "QA_SRC": "4be08e01",
+      "PC_SAMPLER": "0",
+      "SCENERY_DEDUP": "3",
+      "KOS_WATCH": "0",
+      "KOS_SQUEEZE": "0",
+      "NATIVE_MODEL_REGISTRY_CENSUS": "0"
+    }
+  },
+  "tracks": {
+    "disc.gdi": {
+      "bytes": 87,
+      "sha256": "025516557d49e1835e7eb8571e09244b64db190cf3981ead555c54b1924ca19f"
+    },
+    "track01.bin": {
+      "bytes": 1058400,
+      "sha256": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9"
+    },
+    "track02.raw": {
+      "bytes": 1237152,
+      "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48"
+    },
+    "track03.bin": {
+      "bytes": 1185760800,
+      "sha256": "e09cc566770513cd53647a7429d0f7f992fe5d6718e82a8bd960d6effb8d5920"
+    },
+    "IP.BIN": {
+      "bytes": 32768,
+      "sha256": "0e4e13d0b8df6477d9e43370591fd1a580c54b4df2209b944610d2a0b6b0062c"
+    }
+  },
+  "manifest": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-media-r1/on-final-manifest.json",
+  "manifest_sha256": "2276e5b5a2f3d442115018b8832fca6152ef1b643f7bc3bd55d4f76ba469250f",
+  "baseline_nonprogramme_assets_equal": true,
+  "exact4_alternates_on_both_arms": true,
+  "c_free_after": 31817924608
+}

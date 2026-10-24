@@ -1,0 +1,14 @@
+{
+  "off": {
+    "path": "C:\\Game Dev\\Emulators\\RE4DC-QA23-Dedup-Off-4be08e01",
+    "identity_sha256": "adf53cb8dfe9c41424d188679ffe05f66531afbc5c3ab687242e2e71bb0d0e28",
+    "sums_sha256": "e106e5ceb49dc7d0791e4636d550a2e259bed19e0e0dc4887a135dd700885b0b",
+    "files": 14
+  },
+  "on": {
+    "path": "C:\\Game Dev\\Emulators\\RE4DC-QA23-Dedup-On-4be08e01",
+    "identity_sha256": "2fe407893121cb93471e293b4621b19426b55435c2ecd059de86005ed3bf1d94",
+    "sums_sha256": "555e90f3d6824c7fddd38bdf477a9c350ffca03c322d9c73b0b2d0c62ce19f07",
+    "files": 14
+  }
+}

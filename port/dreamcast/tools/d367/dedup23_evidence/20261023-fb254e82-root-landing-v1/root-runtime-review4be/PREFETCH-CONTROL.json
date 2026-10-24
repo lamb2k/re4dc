@@ -1,0 +1,47 @@
+{
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "temporary": "/dev/shm/dedup-root-review4be-sfj_qupr",
+  "actual_prefetch_functions_sha256": "35a80eff8a1f395127bc3a470188b6eeeb2c0b8ab324e337e273e2a4a607fac6",
+  "generated_cpp_sha256": "29123a97a7ef5111ae882c5f92a91499159b77b698ece1d20727d4db5e4dca05",
+  "runs": {
+    "0-100": {
+      "rc": 0,
+      "stdout_sha256": "d4e0dc0cb07b480e4290aa2199331e201b71e5b0935994eb232b350b81d5710d"
+    },
+    "0-101": {
+      "rc": 0,
+      "stdout_sha256": "f5bb4f4d7ef9878798a2b6f053705cfb7304046371621da1fe3ce277ca53b21f"
+    },
+    "0-102": {
+      "rc": 0,
+      "stdout_sha256": "f69f4353deb2276c755810619f655a8a9fc8b3b89b465371739f2d54d036b2c8"
+    },
+    "0-103": {
+      "rc": 0,
+      "stdout_sha256": "43f8dfe464fc31b19eb2dd162dc84590c0811305c6462fd1ac7ecd63b1a0edc8"
+    },
+    "1-100": {
+      "rc": 0,
+      "stdout_sha256": "97eadeb310fb38358b4106a7e5348f1183355b629d01865ba2188c9642904feb"
+    },
+    "1-101": {
+      "rc": 0,
+      "stdout_sha256": "069fdd386c9de9c3c94167ade49b58c26012a62345c22646901858eea01ef5fa"
+    },
+    "1-102": {
+      "rc": 0,
+      "stdout_sha256": "a9f073ba58f9fee243cc47c7206b4b101fd299a92349faa05da73c0be6b0aa6b"
+    },
+    "1-103": {
+      "rc": 0,
+      "stdout_sha256": "43f8dfe464fc31b19eb2dd162dc84590c0811305c6462fd1ac7ecd63b1a0edc8"
+    }
+  },
+  "encoded_equals_decoded": {
+    "100": false,
+    "101": false,
+    "102": false,
+    "103": true
+  },
+  "scope": "Independent adaptation of existing exact-source host composition: enabled actual prefetch members/signature; same two SH4 FMAC host edges. Not target/guest/performance evidence."
+}

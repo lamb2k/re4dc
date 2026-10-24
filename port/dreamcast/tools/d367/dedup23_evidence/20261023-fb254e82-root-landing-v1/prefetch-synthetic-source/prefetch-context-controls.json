@@ -1,0 +1,43 @@
+{
+  "status": "PASS_HOST_PREFETCH_DEDUP_CONTEXT_ONLY",
+  "source_head": "0d30bd83098af2bcd5e9ca2197ffd4cd926e73c4",
+  "native_source_sha256": "eec0ce136e32169fa2b982018f0830013ca2c6c4fa36860bf2ec8ea7759be8ab",
+  "helper_sha256": "ae7abcd6bf27c41f33dff243405859b8c2c96f3faab1a95bafff1eb77e5df74c",
+  "generated_cpp_sha256": "50ee9c35acacaf6c7f7e5699ea1e217f4b3be7c555cf8578e3456255886f209a",
+  "prefetch_region_sha256": "b4ef5321c2f4c0e4cad3b7aaaed8a4b5e0ef4e805ea3ea72e0f175e58bb25dda",
+  "comparisons": 96,
+  "context_controls": {
+    "b0-d0-r0": "PASS encoded-first/plain/indexed/zero/new-material decoder context",
+    "b0-d0-r1": "PASS encoded-first/plain/indexed/zero/new-material decoder context",
+    "b0-d1-r0": "PASS encoded-first/plain/indexed/zero/new-material decoder context",
+    "b0-d1-r1": "PASS encoded-first/plain/indexed/zero/new-material decoder context",
+    "b1-d0-r0": "PASS encoded-first/plain/indexed/zero/new-material decoder context",
+    "b1-d0-r1": "PASS encoded-first/plain/indexed/zero/new-material decoder context",
+    "b1-d1-r0": "PASS encoded-first/plain/indexed/zero/new-material decoder context",
+    "b1-d1-r1": "PASS encoded-first/plain/indexed/zero/new-material decoder context"
+  },
+  "mutants": {
+    "missing-refresh": {
+      "returncode": -6,
+      "stderr": "missing-refresh: /dev/shm/root-dedup-prefetch-review-0d30/missing-refresh.cpp:2126: void prefetch_context_case(): Assertion `e.dd_base==(rep?base:nullptr)' failed."
+    },
+    "stale-reset": {
+      "returncode": -6,
+      "stderr": "stale-reset: /dev/shm/root-dedup-prefetch-review-0d30/stale-reset.cpp:2130: void prefetch_context_case(): Assertion `e.dd_base==(rep?base:nullptr)' failed."
+    }
+  },
+  "output_sha256": {
+    "b0-d0-r0": "9b771f078537e84bcf1e76985fdf7c86492d9b0103259daeb948c24734cf35b6",
+    "b0-d0-r1": "9b771f078537e84bcf1e76985fdf7c86492d9b0103259daeb948c24734cf35b6",
+    "b0-d1-r0": "9b771f078537e84bcf1e76985fdf7c86492d9b0103259daeb948c24734cf35b6",
+    "b0-d1-r1": "9b771f078537e84bcf1e76985fdf7c86492d9b0103259daeb948c24734cf35b6",
+    "b1-d0-r0": "9b771f078537e84bcf1e76985fdf7c86492d9b0103259daeb948c24734cf35b6",
+    "b1-d0-r1": "9b771f078537e84bcf1e76985fdf7c86492d9b0103259daeb948c24734cf35b6",
+    "b1-d1-r0": "9b771f078537e84bcf1e76985fdf7c86492d9b0103259daeb948c24734cf35b6",
+    "b1-d1-r1": "9b771f078537e84bcf1e76985fdf7c86492d9b0103259daeb948c24734cf35b6"
+  },
+  "prefetch0_changed_region_preprocessed_identical": true,
+  "prefetch0_preprocessed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "temporary_bytes": 1198357,
+  "scope": "Actual extracted methods, portable clipping and real reader on synthetic admitted packages; two FMAC host-arithmetic edges. No target/programme/guest/pixels/performance qualification; PREFETCH0 proof covers changed region, not a new whole-programme build."
+}

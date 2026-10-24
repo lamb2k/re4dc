@@ -1,0 +1,12 @@
+{
+  "source": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "baseline": "d5c1ceab9e06461462669b3ce1d28a379747a74a",
+  "mode": "on",
+  "raw_sha256": "1077a1386ac3431b97d069291424a14117adf55f267aff78fbedf166bdc6df09",
+  "all14_identical": true,
+  "elf_sha256": "941e99669b4f2d21c274fe5ac34714aea268e9dd1e59d48816b1ceec716f3e6f",
+  "profile_sha256": "231cf07109db93378bfb619be0855aedb13f69daa7eec4f38008f92d91dd0bc9",
+  "production_dedup": 0,
+  "production_prefetch": 0,
+  "physical_acceptance": false
+}

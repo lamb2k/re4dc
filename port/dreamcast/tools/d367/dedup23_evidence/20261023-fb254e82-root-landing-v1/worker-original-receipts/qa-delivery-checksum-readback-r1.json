@@ -1,0 +1,23 @@
+{
+  "verifier_sha256": "c60f404b86db7d124980935d497b52fd1f400cfad823c66806afb54087770d0b",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "seal_sha256": "4180931954be3dc47e587bea96b82a550799c898a7491a9de4df5e01a69f95be",
+  "limits": "Observed native sha256sum -c --quiet return0 on both complete delivered folders; no physical-console or performance claim.",
+  "status": "PASS_INDEPENDENT_SHA256SUM_DELIVERY_READBACK",
+  "arms": {
+    "off": {
+      "manifest_sha256": "ea75145c545fe083a67cc964794ba0e02f4512f9f05767a8be51fe52b0b531fe",
+      "path": "C:\\Game Dev\\Emulators\\RE4DC-QA23-Dedup-Off-4be08e01",
+      "sha256sum_check_exit_code": 0
+    },
+    "on": {
+      "manifest_sha256": "6e08a6b3984c209228a481667d34582728893578bafda4429e2693689110b266",
+      "path": "C:\\Game Dev\\Emulators\\RE4DC-QA23-Dedup-On-4be08e01",
+      "sha256sum_check_exit_code": 0
+    }
+  },
+  "stdout": [
+    "DELIVERY_CHECKSUM_READBACK_PASS Off",
+    "DELIVERY_CHECKSUM_READBACK_PASS On"
+  ]
+}

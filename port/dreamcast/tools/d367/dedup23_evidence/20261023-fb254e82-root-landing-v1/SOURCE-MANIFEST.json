@@ -1,0 +1,564 @@
+{
+  "schema": 1,
+  "captured_utc": "2026-10-24T03:47:12.141636+00:00",
+  "base_integration": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "branch": "wip/dedup23-evidence-tools-20261023",
+  "files": [
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/takeover-accept-private-v1.py",
+      "destination": "takeover-helpers/takeover-accept-private-v1.py",
+      "bytes": 3445,
+      "sha256": "00dac0b479f41e4d31beba014f34d2b1080e29749c5fdfb50ff95dccb96b457f",
+      "source_mtime_ns": 1792813208884234600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/takeover-land-build-v1.sh",
+      "destination": "takeover-helpers/takeover-land-build-v1.sh",
+      "bytes": 3835,
+      "sha256": "2090989687fc05441a82a2e5838be86b119c92ff9af02e0592eeddbb1621c1fe",
+      "source_mtime_ns": 1792812868515453700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/takeover-land-docs-v1.py",
+      "destination": "takeover-helpers/takeover-land-docs-v1.py",
+      "bytes": 4084,
+      "sha256": "85fb25907421a8ac8ee7a78a3656964721418660446c2702d7942d582b528d7e",
+      "source_mtime_ns": 1792813098290200700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/takeover-land-prepare-v1.sh",
+      "destination": "takeover-helpers/takeover-land-prepare-v1.sh",
+      "bytes": 1398,
+      "sha256": "8e32166125bd826f0c2b102ee9eaaeefa8d1be3cf6b16411758d532a80738ac1",
+      "source_mtime_ns": 1792812662939520000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/takeover-land-push-v1.sh",
+      "destination": "takeover-helpers/takeover-land-push-v1.sh",
+      "bytes": 2094,
+      "sha256": "818bee7db745899e6d17e4f32aa5f059d1583daa56990255595afdf4f181bae4",
+      "source_mtime_ns": 1792813249256808300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/takeover-post-landing-docs-v1.py",
+      "destination": "takeover-helpers/takeover-post-landing-docs-v1.py",
+      "bytes": 6967,
+      "sha256": "aa2e7f1d8350f4b63296daf5c7b665773631a9b5e7ce9609605e2555c1dd9d20",
+      "source_mtime_ns": 1792813420249757500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-review4be/FIX-HOST-CONTROLS.json",
+      "destination": "root-runtime-review4be/FIX-HOST-CONTROLS.json",
+      "bytes": 2877,
+      "sha256": "9cb75d1a996250ba0b278cfa71e424b8ee0592296dc4c446f9b86a73d722b8df",
+      "source_mtime_ns": 1792813099978538300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-review4be/PREFETCH-CONTEXT-REPAIR.md",
+      "destination": "root-runtime-review4be/PREFETCH-CONTEXT-REPAIR.md",
+      "bytes": 2280,
+      "sha256": "eca9d0594aea7b659379cb45c8b26a771c2f32ac438566de1862d911620c230b",
+      "source_mtime_ns": 1792812909972266900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-review4be/PREFETCH-CONTROL.json",
+      "destination": "root-runtime-review4be/PREFETCH-CONTROL.json",
+      "bytes": 1645,
+      "sha256": "cc7f9f9c5337036da98059baa2c0ce493b6174370c76ba03c2475795a9de6a8f",
+      "source_mtime_ns": 1792812663598243200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-review4be/ROOT-RUNTIME-REVIEW.json",
+      "destination": "root-runtime-review4be/ROOT-RUNTIME-REVIEW.json",
+      "bytes": 7800,
+      "sha256": "f1293a27c5d64a17c8fb64da1af37c4421bca67f343670dc341bf2fad30832ce",
+      "source_mtime_ns": 1792813100002537400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-review4be/ROOT-RUNTIME-REVIEW.md",
+      "destination": "root-runtime-review4be/ROOT-RUNTIME-REVIEW.md",
+      "bytes": 7504,
+      "sha256": "f6e5fc7ba92d96496ab73b64d22e693f7676e1405daf0e915231a13429f0f703",
+      "source_mtime_ns": 1792813099796387200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-review4be/apply_owned_fix.py",
+      "destination": "root-runtime-review4be/apply_owned_fix.py",
+      "bytes": 881,
+      "sha256": "3996d6d03af355340cdf04023d6348f0e7bcd2f42c12d9be0d28498955f614d3",
+      "source_mtime_ns": 1792812723592066600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-review4be/check_prefetch_composition.py",
+      "destination": "root-runtime-review4be/check_prefetch_composition.py",
+      "bytes": 3196,
+      "sha256": "603d192a7aaab3ee82aef4a65df990995d92708008e36a47429349a28cb4d9b8",
+      "source_mtime_ns": 1792812661177224400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-review4be/check_prefetch_context.py",
+      "destination": "root-runtime-review4be/check_prefetch_context.py",
+      "bytes": 8362,
+      "sha256": "ae7abcd6bf27c41f33dff243405859b8c2c96f3faab1a95bafff1eb77e5df74c",
+      "source_mtime_ns": 1792812858139288000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-review4be/seal_root_review.py",
+      "destination": "root-runtime-review4be/seal_root_review.py",
+      "bytes": 4424,
+      "sha256": "7f9b9ebd4e77190ce7ae477c5f2aab20474a7dd069781bc29b6e796abb776184",
+      "source_mtime_ns": 1792813099797388400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-qa-review4be/RESULTS.json",
+      "destination": "root-qa-review4be/RESULTS.json",
+      "bytes": 24196,
+      "sha256": "3c13b0d58e81ae2c6f891fb0ea0d6b8082dbe3632b62d369aea315a701f73138",
+      "source_mtime_ns": 1792813008622084000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-qa-review4be/REVIEW.md",
+      "destination": "root-qa-review4be/REVIEW.md",
+      "bytes": 4041,
+      "sha256": "4e799aa3a8dc9051819ec77148f2be88067a0d18beff3579b3a643b05e733317",
+      "source_mtime_ns": 1792813145376032200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-qa-review4be/SHA256SUMS",
+      "destination": "root-qa-review4be/SHA256SUMS",
+      "bytes": 746,
+      "sha256": "5c6280718e1907158e117232862a41ee3370dae9d09ed0581b52fdc83664b4e1",
+      "source_mtime_ns": 1792813158296920400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-qa-review4be/SUPPLEMENT.json",
+      "destination": "root-qa-review4be/SUPPLEMENT.json",
+      "bytes": 1459,
+      "sha256": "5d70a89c07093e0510c6be997e9705b6b5d10502bbf764b0a0ce57d8b24372ff",
+      "source_mtime_ns": 1792813102899779500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-qa-review4be/off-lint-loader.txt",
+      "destination": "root-qa-review4be/off-lint-loader.txt",
+      "bytes": 3325,
+      "sha256": "c8ef1d1a980fe59acc40d932c5f192ceb6ae6b627cb036b2f05c215e06ff9d21",
+      "source_mtime_ns": 1792812988412959100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-qa-review4be/off-lint-standard.txt",
+      "destination": "root-qa-review4be/off-lint-standard.txt",
+      "bytes": 4155,
+      "sha256": "e02cdf29ba9014c3705354adccc36f2dc136c3e1f7463f8f29476a3e33e784c9",
+      "source_mtime_ns": 1792812988277646400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-qa-review4be/on-lint-loader.txt",
+      "destination": "root-qa-review4be/on-lint-loader.txt",
+      "bytes": 3324,
+      "sha256": "1cc3f069c1f0c776f1c460d44bd323f85889c5115e8c9e9fc24701005b23d14a",
+      "source_mtime_ns": 1792813001403257400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-qa-review4be/on-lint-standard.txt",
+      "destination": "root-qa-review4be/on-lint-standard.txt",
+      "bytes": 4154,
+      "sha256": "afd22162e8cf41e2c47e5f633d4f27c0a371fc6aa655c8bdec85e8b079daceb0",
+      "source_mtime_ns": 1792813001266835700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-qa-review4be/review.py",
+      "destination": "root-qa-review4be/review.py",
+      "bytes": 17582,
+      "sha256": "30c3e8e7bd032db038a97ad06003d8f9912a380eb6101c7f9be2c461b2bbcfde",
+      "source_mtime_ns": 1792812974320267300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-qa-review4be/review_supplement.py",
+      "destination": "root-qa-review4be/review_supplement.py",
+      "bytes": 3587,
+      "sha256": "240c127bb03103a374270715688768cc0f31db43018e9fb6e480e60e5ec71c78",
+      "source_mtime_ns": 1792813099349336400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-landing/kos-off-after.sha256",
+      "destination": "root-landing/kos-off-after.sha256",
+      "bytes": 120,
+      "sha256": "f87a3a4b2141063d21dfa13b844ba7dea839f9ed8240ecd2bdcb04e4f4c922d3",
+      "source_mtime_ns": 1792813149963675200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-landing/kos-off-before.sha256",
+      "destination": "root-landing/kos-off-before.sha256",
+      "bytes": 120,
+      "sha256": "f87a3a4b2141063d21dfa13b844ba7dea839f9ed8240ecd2bdcb04e4f4c922d3",
+      "source_mtime_ns": 1792813110236553100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-landing/kos-on-after.sha256",
+      "destination": "root-landing/kos-on-after.sha256",
+      "bytes": 120,
+      "sha256": "f87a3a4b2141063d21dfa13b844ba7dea839f9ed8240ecd2bdcb04e4f4c922d3",
+      "source_mtime_ns": 1792813195055258700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-landing/kos-on-before.sha256",
+      "destination": "root-landing/kos-on-before.sha256",
+      "bytes": 120,
+      "sha256": "f87a3a4b2141063d21dfa13b844ba7dea839f9ed8240ecd2bdcb04e4f4c922d3",
+      "source_mtime_ns": 1792813154719207600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-landing/landing-build-off-identity.json",
+      "destination": "root-landing/landing-build-off-identity.json",
+      "bytes": 502,
+      "sha256": "a54a293b40d5fd8422ff469c34644dca4be321c0a9e02817699a45a7ca51de9a",
+      "source_mtime_ns": 1792813149953134200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-landing/landing-build-on-identity.json",
+      "destination": "root-landing/landing-build-on-identity.json",
+      "bytes": 501,
+      "sha256": "3b9096d0dc06204e2709f1a536c26ff9fc48e20ef6821b978a45bc514e659679",
+      "source_mtime_ns": 1792813195043198700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-landing/merge-source-before-docs.txt",
+      "destination": "root-landing/merge-source-before-docs.txt",
+      "bytes": 41,
+      "sha256": "a6cb34b7205f7015e250008a21f56a7a0c25b3899ffe9e85fe6e71af400c68ba",
+      "source_mtime_ns": 1792813038336365200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-landing/merge-source.txt",
+      "destination": "root-landing/merge-source.txt",
+      "bytes": 41,
+      "sha256": "2521e0c5121485db437427b55cfbb02df70233cf492dbe609c6c06b79af0b809",
+      "source_mtime_ns": 1792813109449779200
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-landing/merge-stat.txt",
+      "destination": "root-landing/merge-stat.txt",
+      "bytes": 6118,
+      "sha256": "81dfe8a769f763e9ee11aae1216c1b4911c1f8d5926e5653f3c588a0dfb21471",
+      "source_mtime_ns": 1792813038351367400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-landing/pushed-refs.txt",
+      "destination": "root-landing/pushed-refs.txt",
+      "bytes": 146,
+      "sha256": "2a55d3d3464347582f9b8ee653c4e63ef977bccb5935a33d9d33a1aeac903926",
+      "source_mtime_ns": 1792813253034386300
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-landing/release-process-check.txt",
+      "destination": "root-landing/release-process-check.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792813154690202500
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-private-delivery/DELIVERY-READBACK.json",
+      "destination": "root-private-delivery/DELIVERY-READBACK.json",
+      "bytes": 575,
+      "sha256": "0cbcf174f99b43e33a4405069178a62cfcaa224e3fc9ead2e5ad5a8059659796",
+      "source_mtime_ns": 1792813212983224900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-private-delivery/ROOT-ACCEPTANCE.json",
+      "destination": "root-private-delivery/ROOT-ACCEPTANCE.json",
+      "bytes": 979,
+      "sha256": "aa87045dd510450964ee422a1d078a69c886ede9dd4e4f8e2a55a7bfc6362bb3",
+      "source_mtime_ns": 1792813209176379100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-private-delivery/off/IDENTITY.json",
+      "destination": "root-private-delivery/off/IDENTITY.json",
+      "bytes": 13040,
+      "sha256": "eddd77771b71b470e2e5829580f28ac4f677cc280461c493e1c11b4289827b11",
+      "source_mtime_ns": 1792813209178389100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-private-delivery/off/QUALIFICATION-PENDING.txt",
+      "destination": "root-private-delivery/off/QUALIFICATION-PENDING.txt",
+      "bytes": 112,
+      "sha256": "34fdfb25db6ade32dbe97fdf49de16810532fa5b9e770a92ed99b0ec0f0bbe85",
+      "source_mtime_ns": 1792813209180389600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-private-delivery/off/README.txt",
+      "destination": "root-private-delivery/off/README.txt",
+      "bytes": 2458,
+      "sha256": "b812d1737a8e13d6a2885a617903a546f37152918f218932c278e83f4fbf301c",
+      "source_mtime_ns": 1792813209177387900
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-private-delivery/off/SHA256SUMS.txt",
+      "destination": "root-private-delivery/off/SHA256SUMS.txt",
+      "bytes": 1077,
+      "sha256": "ea75145c545fe083a67cc964794ba0e02f4512f9f05767a8be51fe52b0b531fe",
+      "source_mtime_ns": 1792813209179389100
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-private-delivery/on/IDENTITY.json",
+      "destination": "root-private-delivery/on/IDENTITY.json",
+      "bytes": 13028,
+      "sha256": "2bfa8584f6d23d2a1f9dd2db757be2dbc030802b8cb0a6c8e70a04583d3724c1",
+      "source_mtime_ns": 1792813211121312800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-private-delivery/on/QUALIFICATION-PENDING.txt",
+      "destination": "root-private-delivery/on/QUALIFICATION-PENDING.txt",
+      "bytes": 112,
+      "sha256": "34fdfb25db6ade32dbe97fdf49de16810532fa5b9e770a92ed99b0ec0f0bbe85",
+      "source_mtime_ns": 1792813211123318700
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-private-delivery/on/README.txt",
+      "destination": "root-private-delivery/on/README.txt",
+      "bytes": 2457,
+      "sha256": "9c6f27bf95aa2a3f697740590fbf8392e86d560beff3fe4bc62f6ff86fdc71ec",
+      "source_mtime_ns": 1792813211121312800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/root-private-delivery/on/SHA256SUMS.txt",
+      "destination": "root-private-delivery/on/SHA256SUMS.txt",
+      "bytes": 1077,
+      "sha256": "6e08a6b3984c209228a481667d34582728893578bafda4429e2693689110b266",
+      "source_mtime_ns": 1792813211122316800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/private-qa-pair-seal-r1.json",
+      "destination": "worker-original-receipts/private-qa-pair-seal-r1.json",
+      "bytes": 1141,
+      "sha256": "4180931954be3dc47e587bea96b82a550799c898a7491a9de4df5e01a69f95be",
+      "source_mtime_ns": 1792812834005380800
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-delivery-checksum-readback-r1.json",
+      "destination": "worker-original-receipts/qa-delivery-checksum-readback-r1.json",
+      "bytes": 1015,
+      "sha256": "3d6fdd9c846792cf297b3e2ca061bca516695e81d0f610aca74f3fc0ce3e763f",
+      "source_mtime_ns": 1792812902397549600
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-programme-pins-r1.json",
+      "destination": "worker-original-receipts/qa-programme-pins-r1.json",
+      "bytes": 4971,
+      "sha256": "8fedf96618a61aae1c0f1f591e4252128ffc8f9cb019012de7236f20dad1a529",
+      "source_mtime_ns": 1792810436020810400
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-media-r1/pair-media-identity.json",
+      "destination": "worker-original-receipts/pair-media-identity.json",
+      "bytes": 7999,
+      "sha256": "7684fc0b3a091d4f03e0a4b99c44508b421a79a476d132b658692960bb965da6",
+      "source_mtime_ns": 1792812128600145000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-Off-4be08e01/README.txt",
+      "destination": "current-private-metadata/off/README.txt",
+      "bytes": 2510,
+      "sha256": "9f0dd558b75f3321766b66562e8b31aa37001cb0404e16226221ca1feb522bf6",
+      "source_mtime_ns": 1792813209831439300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-Off-4be08e01/STEPS.txt",
+      "destination": "current-private-metadata/off/STEPS.txt",
+      "bytes": 1376,
+      "sha256": "1c55f2d9d4bdabeb0029d2ccfb462e090d2eea4265e549920d55c57851a3ba2b",
+      "source_mtime_ns": 1792812816821195600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-Off-4be08e01/README-tooling.txt",
+      "destination": "current-private-metadata/off/README-tooling.txt",
+      "bytes": 4260,
+      "sha256": "65a6e459d62ec7f5a417966321ad08e24945a64b3f51aceb4a563e3654a9bc25",
+      "source_mtime_ns": 1792812816825193200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-Off-4be08e01/IDENTITY.json",
+      "destination": "current-private-metadata/off/IDENTITY.json",
+      "bytes": 13464,
+      "sha256": "adf53cb8dfe9c41424d188679ffe05f66531afbc5c3ab687242e2e71bb0d0e28",
+      "source_mtime_ns": 1792813209831439300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-Off-4be08e01/SHA256SUMS.txt",
+      "destination": "current-private-metadata/off/SHA256SUMS.txt",
+      "bytes": 1178,
+      "sha256": "e106e5ceb49dc7d0791e4636d550a2e259bed19e0e0dc4887a135dd700885b0b",
+      "source_mtime_ns": 1792813210476545500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-Off-4be08e01/QUALIFICATION-PENDING.txt",
+      "destination": "current-private-metadata/off/QUALIFICATION-PENDING.txt",
+      "bytes": 180,
+      "sha256": "bf45ddc46dd3836c6e447cbc71ddb9e89e0393a21c6a39978982544c1080d5ba",
+      "source_mtime_ns": 1792813209832442100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-Off-4be08e01/ROOT-ACCEPTANCE.json",
+      "destination": "current-private-metadata/off/ROOT-ACCEPTANCE.json",
+      "bytes": 979,
+      "sha256": "aa87045dd510450964ee422a1d078a69c886ede9dd4e4f8e2a55a7bfc6362bb3",
+      "source_mtime_ns": 1792813209832442100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-Off-4be08e01/MEDIA-IDENTITY.json",
+      "destination": "current-private-metadata/off/MEDIA-IDENTITY.json",
+      "bytes": 3507,
+      "sha256": "65a81449f1d07c97fa2cc6695bf25de1a949eb490875f830757187b2edf5bcbf",
+      "source_mtime_ns": 1792812012766554100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-On-4be08e01/README.txt",
+      "destination": "current-private-metadata/on/README.txt",
+      "bytes": 2509,
+      "sha256": "1f1c90289b3019384fb6f0574fb4d0613632d7f899adaccac502639e55f37720",
+      "source_mtime_ns": 1792813211743653500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-On-4be08e01/STEPS.txt",
+      "destination": "current-private-metadata/on/STEPS.txt",
+      "bytes": 1376,
+      "sha256": "1c55f2d9d4bdabeb0029d2ccfb462e090d2eea4265e549920d55c57851a3ba2b",
+      "source_mtime_ns": 1792812828253861300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-On-4be08e01/README-tooling.txt",
+      "destination": "current-private-metadata/on/README-tooling.txt",
+      "bytes": 4260,
+      "sha256": "65a6e459d62ec7f5a417966321ad08e24945a64b3f51aceb4a563e3654a9bc25",
+      "source_mtime_ns": 1792812828256856600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-On-4be08e01/IDENTITY.json",
+      "destination": "current-private-metadata/on/IDENTITY.json",
+      "bytes": 13452,
+      "sha256": "2fe407893121cb93471e293b4621b19426b55435c2ecd059de86005ed3bf1d94",
+      "source_mtime_ns": 1792813211743653500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-On-4be08e01/SHA256SUMS.txt",
+      "destination": "current-private-metadata/on/SHA256SUMS.txt",
+      "bytes": 1178,
+      "sha256": "555e90f3d6824c7fddd38bdf477a9c350ffca03c322d9c73b0b2d0c62ce19f07",
+      "source_mtime_ns": 1792813212369714800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-On-4be08e01/QUALIFICATION-PENDING.txt",
+      "destination": "current-private-metadata/on/QUALIFICATION-PENDING.txt",
+      "bytes": 180,
+      "sha256": "bf45ddc46dd3836c6e447cbc71ddb9e89e0393a21c6a39978982544c1080d5ba",
+      "source_mtime_ns": 1792813211743653500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-On-4be08e01/ROOT-ACCEPTANCE.json",
+      "destination": "current-private-metadata/on/ROOT-ACCEPTANCE.json",
+      "bytes": 979,
+      "sha256": "aa87045dd510450964ee422a1d078a69c886ede9dd4e4f8e2a55a7bfc6362bb3",
+      "source_mtime_ns": 1792813211744652600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/RE4DC-QA23-Dedup-On-4be08e01/MEDIA-IDENTITY.json",
+      "destination": "current-private-metadata/on/MEDIA-IDENTITY.json",
+      "bytes": 3501,
+      "sha256": "bbf47148763f2d0f0903d8e174ec6500036c3c3369f85cf1ef3fc1b9fa80aaa8",
+      "source_mtime_ns": 1792812128586143800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md",
+      "destination": "dated-shared-snapshots/CODEX-TAKEOVER-STATUS.md",
+      "bytes": 9136,
+      "sha256": "299ce3b9cacd9cafd0d1fac417c306593ac25cf03a37ad51e055cf4810ccbbde",
+      "source_mtime_ns": 1792813420308290500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/CLAUDE-CARRY23.md",
+      "destination": "dated-shared-snapshots/CLAUDE-CARRY23.md",
+      "bytes": 14116,
+      "sha256": "a95c18c122805b965341241d3d73326f1c7afb377c2dea54ed204d3b81be25a8",
+      "source_mtime_ns": 1792813420308290500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/CONSOLE-DISCS-TEST23.md",
+      "destination": "dated-shared-snapshots/CONSOLE-DISCS-TEST23.md",
+      "bytes": 10644,
+      "sha256": "f2cfa0d8af7f800b7da37e3ebc5052ed5223f2c9474c871b68d8cf90398ceb7d",
+      "source_mtime_ns": 1792813420308290500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/STATUS.md",
+      "destination": "dated-shared-snapshots/STATUS.md",
+      "bytes": 2359,
+      "sha256": "3069f9ffc7c45b2ab74bd1d946fb5566246626f91a761bf193e8e0618d67d417",
+      "source_mtime_ns": 1792813621341748600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/INBOX.md",
+      "destination": "dated-shared-snapshots/INBOX.md",
+      "bytes": 2123,
+      "sha256": "11181f2b9802b5c94b84cea671a07dee9eb707661c9f2e8bcaedbda629080434",
+      "source_mtime_ns": 1792789618696356700
+    },
+    {
+      "source": "/dev/shm/root-dedup-prefetch-review-0d30/prefetch-context-controls.json",
+      "destination": "prefetch-synthetic-source/prefetch-context-controls.json",
+      "bytes": 2867,
+      "sha256": "9173f83f73f4c0601fd84d9ac75f6fa21a81da338f526af1a39a40c7969d9e33",
+      "source_mtime_ns": 1792812958066951177
+    },
+    {
+      "source": "/dev/shm/root-dedup-prefetch-review-0d30/prefetch.cpp",
+      "destination": "prefetch-synthetic-source/prefetch.cpp",
+      "bytes": 107895,
+      "sha256": "50ee9c35acacaf6c7f7e5699ea1e217f4b3be7c555cf8578e3456255886f209a",
+      "source_mtime_ns": 1792812948014714975
+    },
+    {
+      "source": "/dev/shm/root-dedup-prefetch-review-0d30/missing-refresh.cpp",
+      "destination": "prefetch-synthetic-source/missing-refresh.cpp",
+      "bytes": 107639,
+      "sha256": "7f59cc0e660cb276698d4c1247c51de38fc19028a0438d43cf1efc9fe6c879cc",
+      "source_mtime_ns": 1792812956050905055
+    },
+    {
+      "source": "/dev/shm/root-dedup-prefetch-review-0d30/stale-reset.cpp",
+      "destination": "prefetch-synthetic-source/stale-reset.cpp",
+      "bytes": 107890,
+      "sha256": "3731b8d992d3e965ee0e3408627ca249c9b77ee84a6fd77f66c2b89a5a862be1",
+      "source_mtime_ns": 1792812957046927845
+    },
+    {
+      "source": "/dev/shm/root-dedup-prefetch-review-0d30/shim/dc/matrix.h",
+      "destination": "prefetch-synthetic-source/shim/dc/matrix.h",
+      "bytes": 214,
+      "sha256": "ac3b42a1823bba5e7a3239faa4e6aeec406f79ad76db5e8dcf87cbd762afa432",
+      "source_mtime_ns": 1792812948014714975
+    },
+    {
+      "source": "/dev/shm/root-dedup-prefetch-review-0d30/shim/dc/pvr.h",
+      "destination": "prefetch-synthetic-source/shim/dc/pvr.h",
+      "bytes": 13,
+      "sha256": "b3adf106d95b8934f690943f2921308b90be5b766c4c8ba250c792de56400201",
+      "source_mtime_ns": 1792812948014714975
+    },
+    {
+      "source": "/dev/shm/root-dedup-prefetch-review-0d30/shim/kos/fs.h",
+      "destination": "prefetch-synthetic-source/shim/kos/fs.h",
+      "bytes": 60,
+      "sha256": "6012e7a33aa55b52f872079952748dee6f40dc48d26d5f30a91a240d452f0fa0",
+      "source_mtime_ns": 1792812948014714975
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-source-snapshot-fb254/collect.py",
+      "destination": "collect.py",
+      "bytes": 8685,
+      "sha256": "8ec5154af12c7bf319a3b254846babecb865c4a21613d7535aa2583c4022ffe8",
+      "source_mtime_ns": 1792813616827720200
+    }
+  ],
+  "scope": "Source/helpers/generated synthetic C++/metadata only. No binaries, ELFs, assets, images, tracks, capture logs/dumps, compiled scratch or production changes.",
+  "metadata_chain": "Worker original exact4be seal and root backup metadata precede root-accepted current metadata. Root acceptance is private console feedback, physical/hardware acceptance remains pending.",
+  "live_snapshot_limit": "Shared STATUS/CARRY/console registry and lane STATUS/INBOX are exact observed point-in-time bytes; they can advance independently after capture."
+}

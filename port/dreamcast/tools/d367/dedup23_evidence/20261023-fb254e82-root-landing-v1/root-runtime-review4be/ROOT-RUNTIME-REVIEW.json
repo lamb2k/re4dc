@@ -1,0 +1,128 @@
+{
+  "schema": "ROOT_DEDUP_RUNTIME_REVIEW_4BE_V1",
+  "status": "CLEAR_SOURCE_PREFETCH0_WITH_CONFIRMED_PREFETCH1_DEFECT_REPAIRED_SUCCESSOR",
+  "baseline": "d5c1ceab9e06461462669b3ce1d28a379747a74a",
+  "reviewed_source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "source": {
+    "port/dreamcast/game/platform/native_static.cpp": {
+      "bytes": 390469,
+      "sha256": "2e7040a2c24302e163d4dcd6f4b50c1ad84650e8277019a7cca6bde8194dfc53"
+    },
+    "port/dreamcast/game/scenery19.mk": {
+      "bytes": 10804,
+      "sha256": "c925576664844606a0021252065524f7cc81120058c814d121db77ad259efb19"
+    },
+    "port/dreamcast/room/instanced_mesh.hpp": {
+      "bytes": 30855,
+      "sha256": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019"
+    },
+    "port/dreamcast/tools/d367/dedup_offline23/offline_dedup.py": {
+      "bytes": 10679,
+      "sha256": "c3dc6d8cb71df76697f28c5498f2da226055ac1b7a6721829e3a2f3156ae67fd"
+    },
+    "port/dreamcast/tools/d367/dedup_offline23/strip_share.py": {
+      "bytes": 5517,
+      "sha256": "e5774b12b50a36bddf70e83e42d9783e291dc80884cd12cfdbc7530979ce2ded"
+    }
+  },
+  "qualification_receipts": {
+    "host-binding.json": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/host-binding.json",
+      "sha256": "64077afdf2c269f73c18ca0d53871ca7cb2f4c15d482d44e27978a499a3bd5ca",
+      "status": "PASS_HOST_BINDING_LAYOUT_ONLY",
+      "limits": "Actual extracted fresh baseline-header selection, source extent/CRC and alternate body CRC branch; actual reader; actual movie-layout predicate and whole-file CRC/FNV. Mock file I/O. Actual KOS movie reload/world generation and rendered target/memory gates remain pending."
+    },
+    "host-composition.json": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/host-composition.json",
+      "sha256": "d6cfee6b7130f7a6dcdc9baf093a45a9144ceb22558e17226b476cec033dc6e3",
+      "status": "PASS_HOST_COMPOSITION_ONLY",
+      "limits": "Actual extracted Emitter, MeshDraw corner/borrow/dedup/emit/restart, chunk replay and portable clipper; source admission of synthetic R4IM; controlled SQ/texture/owner edges. PREFETCH0 conditional signature seam resolved before brace extraction; only two SH4 FMAC instructions adapted to host arithmetic. No SH4 optimized clipping/FTRV/FSRRA, real room/frame, performance or target acceptance."
+    },
+    "current-off-identity.json": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/current-off-identity.json",
+      "sha256": "b47301456008c21edc9bd9243424748f23dbe66f16d4c92c8e8fe3255b10e11f",
+      "status": "PASS_ACTUAL_CURRENT_OFF_MAIN_AND_ALL14_IDENTITY",
+      "limits": "Actual fresh OFF link identical; prior baseline guest evidence is reusable only with exact fixture/data/programme binding, not automatically a fresh target gate."
+    },
+    "reproduction-identity.json": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/reproduction-identity.json",
+      "sha256": "fff8a1f513f0f9619a05300d11fa556d61e1c406f957c6ef3db3250eab1a0d5c",
+      "status": "PASS_ACTUAL_RELEASE_REPRODUCTION_MAIN_AND_ALL14",
+      "limits": null
+    },
+    "current4be-matched-h2-r1.json": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/current4be-matched-h2-r1.json",
+      "sha256": "8cabde8faf726e4451bdc13b361db5c96338df328833e811571d2e60ae88a503",
+      "status": "PASS_MATCHED_FULL_H2_PLAYBACK_AND_NO_LOSS_FLYCAST_PROXY",
+      "limits": "Root owns final gating/QA/integration; diagnostic census/KOS/GDEMU/gameplay/look requirements not inferred from this fullH2 result. Prior failures preserved."
+    },
+    "kos-48k-gates-r1.json": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/kos-48k-gates-r1.json",
+      "sha256": "3c2771ed1f2947014497274496a0d122c170391b556babfdd1ba7fcbb699675f",
+      "status": "PASS_CURRENT_48K_ALL8_BOUNDED_SCENES",
+      "limits": "MODELLED console FP_NOLIMIT1, actual held/headroom/endpoints; no physical-hardware timing/memory or all-frame state equality claim."
+    },
+    "gdemu10-gates-r1.json": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu10-gates-r1.json",
+      "sha256": "74794e6d79313dcb9aa296b9ddc19fd682fb4f2a76d16b954e78693baf38b9bf",
+      "status": "PASS_TEN_ACTUAL_CURRENT_GDEMU_SEEDS",
+      "limits": "MODELLED console disc/DMA safety; exact env+serial profile+positive read/landing witness+door103/bad-read predicates per seed. Existing seed1 preserved/revalidated; no hardware/performance or private QA acceptance."
+    },
+    "frozen-look-comparison-explicit-r4.json": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/frozen-look-comparison-explicit-r4.json",
+      "sha256": "42e9389f7e6aebeec5e052351525cb7866081dea2387734517153b6e60df139b",
+      "status": "MATCHED_AUTHENTICATED_FROZEN_FRAME_PIXEL_COMPARISON",
+      "limits": "MODELLED Flycast FPS-limited still-only control, explicit root approval; exact source/fixture/programme/track/config identities; scoped visible comparison only, not all-frame actor/runtime-state equality; not arbitrary wall-time pair, motion/performance or physical-console acceptance."
+    }
+  },
+  "confirmed_finding": {
+    "condition": "SCENERY_DEDUP3+SCENERY_EMIT_PREFETCH1",
+    "counterexample_receipt_sha256": "cc7f9f9c5337036da98059baa2c0ce493b6174370c76ba03c2475795a9de6a8f",
+    "failed_cases": [
+      100,
+      101,
+      102
+    ]
+  },
+  "repair": {
+    "source": "0d30bd83098af2bcd5e9ca2197ffd4cd926e73c4",
+    "parent": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+    "branch": "wip/dedup-prefetch-context23-20261023",
+    "files": {
+      "port/dreamcast/game/platform/native_static.cpp": {
+        "git_blob_sha256": "eec0ce136e32169fa2b982018f0830013ca2c6c4fa36860bf2ec8ea7759be8ab",
+        "working_sha256": "eec0ce136e32169fa2b982018f0830013ca2c6c4fa36860bf2ec8ea7759be8ab"
+      },
+      "port/dreamcast/tools/d367/dedup_offline23/PREFETCH-CONTEXT-REPAIR.md": {
+        "git_blob_sha256": "508cb30e8a92b0d369c11be5beef980f7c0c5c41c0bd314b7ac6f308f9b2bf02",
+        "working_sha256": "eca9d0594aea7b659379cb45c8b26a771c2f32ac438566de1862d911620c230b"
+      },
+      "port/dreamcast/tools/d367/dedup_offline23/check_prefetch_context.py": {
+        "git_blob_sha256": "6b01f634935b911f7696a8586a558238d6fdde0e62c426016e1ffc99967f94b8",
+        "working_sha256": "ae7abcd6bf27c41f33dff243405859b8c2c96f3faab1a95bafff1eb77e5df74c"
+      }
+    },
+    "host_receipt_sha256": "9cb75d1a996250ba0b278cfa71e424b8ee0592296dc4c446f9b86a73d722b8df",
+    "comparisons": 96,
+    "context_configurations": 8,
+    "mutants_detected": 2,
+    "root_independent_rerun": "/dev/shm/root-dedup-prefetch-review-0d30; parent reported96PASS/two mutants; reviewer author did not certify own repair independently"
+  },
+  "bounds_findings": {
+    "offline_groups_base_c": "Safe after adopt strip/index/repeat validation",
+    "unsigned_repeat_subtraction": "Early rejection before any wrapped value use",
+    "cross_part_alias": "Existing part_pool covers plain and indexed ranges",
+    "empty_group_prev": "No consumption; selectors skip before span use"
+  },
+  "remaining_gates": [
+    "Normal integrated OFF main/all14 identity",
+    "Final independent QA media review",
+    "Any future DEDUP3+PREFETCH1 target/guest/pixel qualification"
+  ],
+  "note": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/root-review4be/ROOT-RUNTIME-REVIEW.md",
+    "bytes": 7504,
+    "sha256": "f6e5fc7ba92d96496ab73b64d22e693f7676e1405daf0e915231a13429f0f703"
+  },
+  "no_target_build_or_guest": true
+}
