@@ -1,0 +1,88 @@
+{
+  "status": "PASS_NORMAL_QA_PROGRAMMES_ONLY_NO_MEDIA_STAGED",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "plan_sha256": "a05bfbf69967716c26cdfcab07b025679899c5630267ce71564b54b00a147148",
+  "arms": {
+    "off": {
+      "label": "dd234be08e01offqrW",
+      "path": "/root/probe/lanes/route/out-dd234be08e01offqrW",
+      "elf_sha256": "c29f4ca756ef7e16f2d719512014b5f676422d06fb2e8ab67c957b3ebeb23098",
+      "raw_sha256": "dfdd3c2b3c38a8cafd95ba4a46a3acee12b2a50ec54a29f4bc2337bc4d48b8f7",
+      "raw_bytes": 3427108,
+      "scrambled_sha256": "d2166299cb37c878fe1c75ae5a20f45d04a1b44787c8a7b0bf38422123b0ca25",
+      "resolved_sha256": "ff8f921d96ac9a5a3257b539f24a9bea48bfe804633b3513b1217a842b4546e6",
+      "overlays": {
+        "em2f.ovl": "efa718d84baf5459f96a9b02e299560492fef8b41eb246cedaf6bf7a2eada10a",
+        "st2_0.ovl": "fd11d31b0a453a9c1fa4dc7e3907d638401bcda36f4a74923c60725bdcb564af",
+        "st1_2.ovl": "c93870668ed48a5830c20e264bee9aa29c964871e233f6289c522a39684ff3c1",
+        "pl14.ovl": "8e04ea43e47c0f9e526c17bfabeb9b52e0953ee9a9788ea9ee42266181d422df",
+        "st1_3.ovl": "6754f1f99cbc0372f346a3cf815bf79d68af9c2cd7adabe8648d3db709e94cae",
+        "em2b.ovl": "213b6fb3484479522983f5cb1d5b6c6683ad67bfd03388f9597d8b5f8528866a",
+        "pl11.ovl": "f44b8a47d515e006b481470577cc7a5cdb4cdb4536627cd324291eed13c2a590",
+        "em35.ovl": "2f1810c643462a7b9d6332d2604d196c57fad676816082f16b5ae70ada49ef2f",
+        "pl0f.ovl": "3c75740e209f70c590d1dca5d3a3e9f273b3b2c01b7b5230998305b35394307d",
+        "em3b.ovl": "9efb23a4fc089a19829c7b176fbf6dce92d731e8bee664645d615eb12107a90c",
+        "st1_0.ovl": "ae45869023bf9c1e024418b34e29635eac786facc00c03c9ecf01c761d584c69",
+        "st1_1.ovl": "15d427ee734def921f347d687ab53f85a75aec5c9230d8f5ef2f0354ccdb148a",
+        "em22.ovl": "c0074ed0d3229ffb9ab2612dd6a6679ac64ae9587d99edff9453564b3b19bc94",
+        "sscrn.ovl": "3bbf527f8eb49668c1746a9ab978a5ff4fbce8e7b95f989046ffc8b8615ed851"
+      },
+      "candidate": "/root/work/lanes/dedup-offline23-current-d5c-scratch/qa/programs/candidate-routedd234be08e01offqrW",
+      "required_resolved": {
+        "QA_MENU": "1",
+        "WARP_AFTER_RESET": "1",
+        "GAME_TICK_LOG": "60",
+        "PHASE_METER": "1",
+        "DISC_READ_METER": "1",
+        "QA_TEST": "23",
+        "QA_SRC": "4be08e01",
+        "PC_SAMPLER": "0",
+        "SCENERY_DEDUP": "0",
+        "KOS_WATCH": "0",
+        "KOS_SQUEEZE": "0",
+        "NATIVE_MODEL_REGISTRY_CENSUS": "0"
+      }
+    },
+    "on": {
+      "label": "dd234be08e01onqrW",
+      "path": "/root/probe/lanes/route/out-dd234be08e01onqrW",
+      "elf_sha256": "d062ae5a4a69e7478411d67588150a99a325237b49b101398644eacaf57a9e9f",
+      "raw_sha256": "bb12c27c39f68229e86f78e8cfe2205af73089755b7e4b986bc43b7b08ccc8cb",
+      "raw_bytes": 3429988,
+      "scrambled_sha256": "ec67c10d016a1fdb889ffc6f3556b951387468f067a8848d2486035097499a1d",
+      "resolved_sha256": "8f949d2d6c46b5d6f29d52dbe2e7802440b05fb0f64abeb8d288743a9e1c142f",
+      "overlays": {
+        "em2f.ovl": "b1b5f7261d79226493945871a3a439d62796e5a5764d5ef1040c47f5c755cc1d",
+        "st2_0.ovl": "2b29b1e38914bfee9a6cb5f8bac1f851298bca8eaa7742f81cd0ef8a25c2bfcc",
+        "st1_2.ovl": "78a50b16fd4358d306d6080726402dd42525752b5b6b32558091dc7f65acb41d",
+        "pl14.ovl": "8d87cb26195b94650dbfa68f54ffecbc08f10eba7ccba5f8a87e2503065e719e",
+        "st1_3.ovl": "293fde172032abafc81ab56b98f711a15f0df0a7e4953aeabe29df4ea4b051a9",
+        "em2b.ovl": "a667365dc55ecbb1ead2889823f8b30096cad9e0813f0032c33f8ffaec77f7df",
+        "pl11.ovl": "ebd3b29d84a12e71ad1ba6c4c9df76dece0e094754203a907154708eac7f1065",
+        "em35.ovl": "b811e16c6527da55403e4ca0486a47ee68946945f10195161dbb0d79cf401ee1",
+        "pl0f.ovl": "08e554ee0e1558c27a17b069ac00315de52ea696005066513669dd76e12d4274",
+        "em3b.ovl": "0cf3a9143fea56918a5ffc10f72028a96d77c1b7e5ce5e4567ab0a830d9beb5e",
+        "st1_0.ovl": "e127b5f0562db459b3935f6e3b61ec542649af245a3f6c016bf80eb7af5c2da4",
+        "st1_1.ovl": "df7d4fbd340836c3efa5bfa8982d346dbf483f53cdb5a97e121185c44fc556b7",
+        "em22.ovl": "81b3787e0e3969c49d09cd84fd966e4b45910505004c7e2b99cbd1fae9b0c27e",
+        "sscrn.ovl": "c2115d1ca14497840e22014c18e0d9639248f7751e7588d6ac22c81d29954d55"
+      },
+      "candidate": "/root/work/lanes/dedup-offline23-current-d5c-scratch/qa/programs/candidate-routedd234be08e01onqrW",
+      "required_resolved": {
+        "QA_MENU": "1",
+        "WARP_AFTER_RESET": "1",
+        "GAME_TICK_LOG": "60",
+        "PHASE_METER": "1",
+        "DISC_READ_METER": "1",
+        "QA_TEST": "23",
+        "QA_SRC": "4be08e01",
+        "PC_SAMPLER": "0",
+        "SCENERY_DEDUP": "3",
+        "KOS_WATCH": "0",
+        "KOS_SQUEEZE": "0",
+        "NATIVE_MODEL_REGISTRY_CENSUS": "0"
+      }
+    }
+  },
+  "limits": "Exact source4be normal QA programmes and correct private candidate/all14 bound. No target memory/movie/QA-menu or media acceptance from this receipt."
+}
