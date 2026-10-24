@@ -152,6 +152,28 @@ void re4dc_kos_heap_state_cpp(unsigned* a, unsigned* b, unsigned* c) { re4dc_kos
 #ifndef RE4DC_SCENERY_SUBMIT_BATCH
 #define RE4DC_SCENERY_SUBMIT_BATCH 0
 #endif
+// PVS_BATCH_COMPOSITION_GUARD
+#ifndef RE4DC_PS2_PVS_BATCH_COMPOSE
+#define RE4DC_PS2_PVS_BATCH_COMPOSE 0
+#endif
+#if RE4DC_PS2_PVS_BATCH_COMPOSE != 0 && RE4DC_PS2_PVS_BATCH_COMPOSE != 1
+#error PS2_PVS_BATCH_COMPOSE must be 0 or 1
+#endif
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+#if RE4DC_PS2_PVS != 1 || RE4DC_SCENERY_SUBMIT_BATCH != 1 || RE4DC_TA_DIRECT != 1 || RE4DC_PS2_WORLD_HDR_CACHE != 1 || RE4DC_PVR_STREAM != 1 || RE4DC_D349_RENDERER_STACK != 1 || RE4DC_PS2_WORLD_SOURCE_OWNER != 1 || RE4DC_PS2_WORLD_SOURCE_TEX_PREP != 1
+#error PS2_PVS_BATCH_COMPOSE needs the qualified streaming source/direct path
+#endif
+#if !defined(RE4DC_PS2_PVS_DEFAULT) || RE4DC_PS2_PVS_DEFAULT != 0
+#error PS2_PVS_BATCH_COMPOSE needs explicit PS2_PVS_DEFAULT=0
+#endif
+#if RE4DC_WORLD_SCRATCH || RE4DC_TA_GUARD || RE4DC_PS2_WORLD_TRANSITION_OWNER || RE4DC_PS2_WORLD_R11F_OWNER || RE4DC_SCENERY_PIECE_STATE || RE4DC_SCENERY_DEDUP || RE4DC_SCENERY_CONE || RE4DC_CPU_BACKFACE || RE4DC_TA_MATERIAL_DIAG || RE4DC_WORLD_HOLE_DIAG || RE4DC_PS2_WORLD_PREFLIGHT_DIAG
+#error PS2_PVS_BATCH_COMPOSE has an unqualified owner, scratch or diagnostic path
+#endif
+#if RE4DC_PS2_INTERIOR_CULL != 0 && RE4DC_PS2_INTERIOR_CULL != 1
+#error PS2_PVS_BATCH_COMPOSE does not qualify interior header-check mode
+#endif
+#endif
+// PVS_BATCH_COMPOSITION_GUARD_END
 #if RE4DC_SCENERY_SUBMIT_BATCH != 0 && RE4DC_SCENERY_SUBMIT_BATCH != 1
 #error SCENERY_SUBMIT_BATCH must be 0 or 1
 #endif
@@ -159,7 +181,7 @@ void re4dc_kos_heap_state_cpp(unsigned* a, unsigned* b, unsigned* c) { re4dc_kos
 #if !RE4DC_TA_DIRECT || RE4DC_PS2_WORLD_HDR_CACHE != 1
 #error SCENERY_SUBMIT_BATCH needs TA_DIRECT=1 and PS2_WORLD_HDR_CACHE=1
 #endif
-#if RE4DC_PS2_PVS || RE4DC_WORLD_SCRATCH || RE4DC_TA_GUARD
+#if (RE4DC_PS2_PVS && !RE4DC_PS2_PVS_BATCH_COMPOSE) || RE4DC_WORLD_SCRATCH || RE4DC_TA_GUARD
 #error SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_GUARD
 #endif
 #include "include/scenery_submit_batch.h"
@@ -7179,11 +7201,19 @@ extern "C" void re4dc_model_direct_end(unsigned vertices){
 extern "C" void re4dc_model_direct_end(unsigned vertices){
     if(!direct_open)return;
     sq_unlock();direct_open=false;
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+    sourceWorldDiagnosticSqHeld=false;sourceWorldTextureFlushAcquired();
+#endif
     model_direct_account(vertices);
 }
 extern "C" void re4dc_ps2_world_batch_close(Re4dcWorldSubmitBatch* batch){
     // A nested-begin refusal does not revoke the current part's ownership.
-    if(batch && batch->sq && !direct_open){sq_unlock();batch->sq=nullptr;}
+    if(batch && batch->sq && !direct_open){
+        sq_unlock();batch->sq=nullptr;
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+        sourceWorldDiagnosticSqHeld=false;sourceWorldTextureFlushAcquired();
+#endif
+    }
 }
 extern "C" void re4dc_ps2_world_direct_end_batch(unsigned vertices,Re4dcWorldSubmitBatch* batch){
     if(!batch || !batch->sq){re4dc_model_direct_end(vertices);return;}
@@ -9110,6 +9140,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #else
         auto* sq=static_cast<std::uint32_t*>(static_cast<void*>(sq_lock((void*)PVR_TA_INPUT)));
 #endif
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+        sourceWorldDiagnosticSqHeld=true;
+#endif
         const auto* words=reinterpret_cast<const std::uint32_t*>(model_packets+model_used);
         for(unsigned i=0;i<8;++i)sq[i]=words[i];
 #if RE4DC_TA_HASH
@@ -9272,6 +9305,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
     if(batch)batch->sq=sq;
 #else
     auto* sq=static_cast<std::uint32_t*>(static_cast<void*>(sq_lock((void*)PVR_TA_INPUT)));
+#endif
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+    sourceWorldDiagnosticSqHeld=true;
 #endif
     const auto* words=reinterpret_cast<const std::uint32_t*>(model_packets+model_used);
     for(unsigned i=0;i<8;++i)sq[i]=words[i];
