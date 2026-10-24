@@ -188,7 +188,7 @@ class Diagnostic(unittest.TestCase):
         self.assertEqual(current.count('re4dc_cache_p2_diag_'),3)
     def test_make_guards_and_off_object_list(self):
         make='OBJDIR := /tmp/never-build-audits\nKOS_BASE := /root/work/kos-re4dc-d367\nTARGET := dummy\nPLATFORM_OBJS := /tmp/never-build-audits/platform/wanted.o /tmp/never-build-audits/platform/kos_cache_p2_diag.o\nOBJS = $(PLATFORM_OBJS)\ninclude '+str(GAME/'kos_cache_p2.mk')+'\nprint:\n\t@echo OBJS=$(OBJS)\n'
-        for p2,diag_on,ok in [(0,0,True),(1,0,True),(0,1,False),(1,1,True),(1,2,False)]:
+        for p2,diag_on,ok in [(0,0,True),(1,0,True),(0,1,False),(1,1,True),(1,2,False),(1,'0 1',False),(1,'1 0',False),(1,'%',False),(1,'',False)]:
             p=subprocess.run(['make','-s','-f','-','print',f'KOS_CACHE_P2={p2}',f'KOS_CACHE_P2_DIAG={diag_on}'],input=make,text=True,capture_output=True)
             self.assertEqual(p.returncode==0,ok,p.stderr)
             if ok:self.assertEqual('platform/kos_cache_p2_diag.o' in p.stdout,bool(diag_on))

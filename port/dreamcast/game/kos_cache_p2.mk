@@ -8,8 +8,10 @@ endif
 endif
 # Test-only observer; no object/flag/helper changes when it is zero.
 KOS_CACHE_P2_DIAG ?= 0
-ifeq ($(filter $(KOS_CACHE_P2_DIAG),0 1),)
+ifneq ($(KOS_CACHE_P2_DIAG),0)
+ifneq ($(KOS_CACHE_P2_DIAG),1)
 $(error KOS_CACHE_P2_DIAG must be 0 or 1)
+endif
 endif
 ifeq ($(KOS_CACHE_P2_DIAG),1)
 ifneq ($(KOS_CACHE_P2),1)
