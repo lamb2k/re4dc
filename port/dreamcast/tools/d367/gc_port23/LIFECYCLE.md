@@ -40,10 +40,23 @@ their final checks at the unlocked finalizer, independently source-audited and
 tested for accepted/rejected packets. These declarations do not substitute for
 the remaining full callgraph audit or runtime negative controls.
 
-`re4dc_gcasset_room_enter` and `re4dc_gcasset_finish` are callable integration
-boundaries. Actual ui_bridge room-entry and rr-owned final-stop wiring is still
-pending. The ui_bridge shared-file window is temporarily returned to the root
-audits23 priority-2 diagnostic hooks; this lane has not edited that file.
+The actual ui_bridge room-entry calls `re4dc_gcasset_room_enter` after its heap-4
+open and before room-file/package loads. Root-reviewed audits23 commit 6a3f6b60e
+was picked first; all twelve guarded cache diagnostic lines remain composed.
+Source-extracted actual enter/leave functions preserve the movie-owner refusal
+and absent-live-heap guards: a refused retirement cannot print END. The accepted
+UI retirement uses the same finalizer as direct retirement.
+
+`re4dc_gcasset_finish` is an exported callable; rr-owned final-stop wiring is
+still pending and belongs to root. It closes diagnostic admission, not the
+existing audio producer. Later accepted key-ons create unowned faults for the
+next pump/BEGIN. A trace cut immediately after END cannot establish absence of
+future events; final-stop integration must quiesce accepted producers and retain
+the final drain. Accepted loading/door audio in a gap between room retirement
+and next entry currently also fails explicitly as unowned. No transition phase
+or inferred room relabeling has been added; that remains a lifecycle coverage
+hold for integration review.
+
 Source-extracted real UI helpers and audio-admission code exercise startup to
 room transitions, same-mutex publication, unlocked flush/logging, duplicate
 retirement, missing audio execution, omitted retirement and visit exhaustion.
