@@ -2,6 +2,9 @@
 # Off emits no flags, dependencies or linked object, preserving program bytes.
 GC_ASSET_GATE ?= 0
 GC_ASSET_MOTION_UNKNOWN ?= 0
+GC_ASSET_MOTION_SOURCE ?= 0
+GC_ASSET_SOURCE_PROOFS ?= 0
+PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/gc_asset_motion_source.o,$(PLATFORM_OBJS))
 ifneq ($(GC_ASSET_MOTION_UNKNOWN),0)
 ifneq ($(GC_ASSET_MOTION_UNKNOWN),1)
 $(error GC_ASSET_MOTION_UNKNOWN must be 0 or 1)
@@ -50,4 +53,33 @@ endif
 PLATFORM_CPPFLAGS += -DRE4DC_GC_ASSET_MOTION_UNKNOWN=1
 GAME_CPPFLAGS += -DRE4DC_GC_ASSET_MOTION_UNKNOWN=1
 PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_motion_unknown.o
+endif
+
+# Original immutable source receipts are diagnostic only. This profile borrows
+# 24 KiB from the existing 32 KiB model metadata slab; the draw-plan cache is
+# explicitly unavailable in this profile. No extra slab/packet bytes are added.
+ifneq ($(GC_ASSET_MOTION_SOURCE),0)
+ifneq ($(GC_ASSET_MOTION_SOURCE),1)
+$(error GC_ASSET_MOTION_SOURCE must be 0 or 1)
+endif
+endif
+ifneq ($(GC_ASSET_SOURCE_PROOFS),0)
+ifneq ($(GC_ASSET_SOURCE_PROOFS),1)
+$(error GC_ASSET_SOURCE_PROOFS must be 0 or 1)
+endif
+endif
+ifeq ($(GC_ASSET_MOTION_SOURCE),1)
+ifneq ($(GC_ASSET_GATE)$(GC_ASSET_MOTION_UNKNOWN),11)
+$(error GC_ASSET_MOTION_SOURCE requires GC_ASSET_GATE=1 GC_ASSET_MOTION_UNKNOWN=1)
+endif
+PLATFORM_CPPFLAGS += -DRE4DC_GC_ASSET_MOTION_SOURCE=1
+GAME_CPPFLAGS += -DRE4DC_GC_ASSET_MOTION_SOURCE=1
+PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_motion_source.o
+endif
+ifeq ($(GC_ASSET_SOURCE_PROOFS),1)
+ifneq ($(GC_ASSET_MOTION_SOURCE)$(MODEL_DRAW_PLANS)$(D349_RENDERER_STACK),111)
+$(error GC_ASSET_SOURCE_PROOFS requires GC_ASSET_MOTION_SOURCE=1 MODEL_DRAW_PLANS=1 D349_RENDERER_STACK=1)
+endif
+PLATFORM_CPPFLAGS += -DRE4DC_GC_ASSET_SOURCE_PROOFS=1
+GAME_CPPFLAGS += -DRE4DC_GC_ASSET_SOURCE_PROOFS=1
 endif

@@ -6,6 +6,15 @@
 #include "include/gc_asset_audio.h"
 #include "include/gc_asset_movie.h"
 #include "include/gc_asset_lifecycle.h"
+#if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
+#include "include/gc_asset_motion_source.h"
+#endif
+#ifndef RE4DC_GC_ASSET_SOURCE_PROOFS
+#define RE4DC_GC_ASSET_SOURCE_PROOFS 0
+#endif
+#if RE4DC_GC_ASSET_SOURCE_PROOFS && (!RE4DC_GC_ASSET_GATE || !RE4DC_GC_ASSET_MOTION_SOURCE || !RE4DC_MODEL_DRAW_PLANS || !RE4DC_D349_RENDERER_STACK)
+#error "GC_ASSET_SOURCE_PROOFS requires the complete diagnostic storage profile"
+#endif
 #include "include/gc_asset_actor.h"
 #if RE4DC_GC_ASSET_GATE
 #include "include/native_io.h"
@@ -1020,6 +1029,15 @@ constexpr unsigned kModelSlabBytes=64*1024;
 constexpr unsigned kModelDeferredSpillBytes=RE4DC_D349_RENDERER_STACK?8192:0;
 #endif
 constexpr unsigned kModelMetadataBytes=RE4DC_MODEL_DRAW_PLANS?32*1024:0;
+#if RE4DC_GC_ASSET_SOURCE_PROOFS
+// Existing 32 KiB tail only. The proof profile trades the draw-plan cache for
+// original-source ownership; no slab growth or packet/preparation shrinkage.
+constexpr unsigned kGcGeometryBytes=12288,kGcMotionBytes=12288;
+static_assert(kGcGeometryBytes+kGcMotionBytes<=kModelMetadataBytes,"source partitions fit existing metadata");
+#endif
+#if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
+const void* gcasset_room_source_owner;
+#endif
 // Whole-stack bisection: two static-cache contexts yielded ~1 hit/frame while
 // late UI collided with source snapshots. Reassign those same 8 KiB to bounded
 // frame ownership; evaluate unchanged source lighting without that tiny cache.
@@ -5030,6 +5048,13 @@ extern "C" int re4dc_ui_bind_core(void* archive,unsigned bytes){
     return ok;
 }
 extern "C" int re4dc_ui_bind_room(void* archive,unsigned bytes){
+#if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
+    if(gcasset_room_source_owner){
+        re4dc_gcasset::unresolved(re4dc_gcasset::Motion,"room-source-rebound-without-retirement");
+        re4dc_gcasset::motion_source_retire(gcasset_room_source_owner);
+    }
+    gcasset_room_source_owner=archive;
+#endif
     RE4DC_GCA_ADOPT(&room_identities,archive,bytes,true);
     sources_reset();identity_hits=0;
     const bool ok=room_identities.adopt(archive,bytes);
@@ -5172,6 +5197,12 @@ extern "C" void re4dc_ui_retire_room(){
 #endif
 #if RE4DC_TEX_CHECK
     texchk::room_end();
+#endif
+#if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
+    if(gcasset_room_source_owner){
+        re4dc_gcasset::motion_source_retire(gcasset_room_source_owner);
+        gcasset_room_source_owner=nullptr;
+    }
 #endif
 #if RE4DC_GC_ASSET_GATE
     re4dc_gcasset_retire();
@@ -5609,10 +5640,24 @@ void gcasset_flush(){
 void gcasset_startup(){
     if(gcasset_started)return;
     gcasset_started=true;gcasset_phase=GcStartup;re4dc_gcasset_audio_admission(0);
+#if RE4DC_GC_ASSET_SOURCE_PROOFS
+    // Cold bind before the first source adoption/relocation. Earlier allocation
+    // timing and the cache-capacity tradeoff require this profile's own gates.
+    bool source_storage=false;
+    if(ensure_model_storage()){
+        auto* metadata=reinterpret_cast<unsigned char*>(model_packets)+kModelPacketBytes+kModelPreparationBytes+kModelStaticLightBytes+kModelDeferredSpillBytes;
+        source_storage=re4dc_gcasset::member_original_storage_bytes()==kGcGeometryBytes &&
+            re4dc_gcasset::member_original_storage(metadata,kGcGeometryBytes) &&
+            re4dc_gcasset::motion_source_storage_bind(metadata+kGcGeometryBytes,kGcMotionBytes);
+    }
+#endif
     re4dc_gcasset::ensure_disc_catalog();
     re4dc_gcasset::begin_startup_closed(++gcasset_visit_serial,gcasset_wired_mask());
 #if defined(RE4DC_GC_ASSET_COARSE_LEON) && RE4DC_GC_ASSET_COARSE_LEON
     re4dc_gcasset_actor_startup();
+#endif
+#if RE4DC_GC_ASSET_SOURCE_PROOFS
+    if(!source_storage)re4dc_gcasset::unresolved(re4dc_gcasset::SourceGeometry,"original-source-storage-unavailable");
 #endif
     gcasset_visit_live=true;re4dc_gcasset_audio_admission(1);
 }
@@ -6806,6 +6851,11 @@ extern "C" void* re4dc_model_preparation_storage(unsigned* bytes){
     return *bytes?reinterpret_cast<unsigned char*>(model_packets)+kModelPacketBytes:nullptr;
 }
 extern "C" void* re4dc_model_metadata_storage(unsigned* bytes){
+#if RE4DC_GC_ASSET_SOURCE_PROOFS
+    // All prior cache leases are absent: this profile starts disabled from boot.
+    // Never expose the original-source partition to draw-plan arena writes.
+    *bytes=0;return nullptr;
+#endif
     if(kModelMetadataBytes && !ensure_model_storage()){*bytes=0;return nullptr;}
     // The common slab owns allocation. This tail cannot overlap packet writes, survives
     // frame resets, and is invalidated by the same source owner generations.
