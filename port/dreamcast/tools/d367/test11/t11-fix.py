@@ -942,6 +942,14 @@ PUI24D = os.environ.get('PUI24D', '/root/re4data/private/pui24-20261024')
 if os.path.isdir(PUI24D):
     DATA['pui24'] = {'dc/tex.pak': PUI24D + '/dc/tex.pak'}
     PAK_DERIVED['pui24'] = PUI24D + '/pak-derived.json'
+# pfx24 (lane purge-fx24 10-24, GC asset purge): pui24's tex.pak with the r117 church candle flames (GC EFF 0x86, 16 x
+# 64x128 frames) as the PS2 r10e.dat EFF #7 0x86 flipbook (same 16 frames and size; PS2 r117.dat has no 0x86), PAL4
+# under the GC keys (tools/d367/purge-fx24/fx_cross_room.py pack). Data only; pair with FX_PS2_NONE_CUT=1 (its table no
+# longer cuts these keys in r117). After pui24. Private store copy: re4-assets-private/pfx24-20261024.
+PFX24D = os.environ.get('PFX24D', '/root/re4data/private/pfx24-20261024')
+if os.path.isdir(PFX24D):
+    DATA['pfx24'] = {'dc/tex.pak': PFX24D + '/dc/tex.pak'}
+    PAK_DERIVED['pfx24'] = PFX24D + '/pak-derived.json'
 # res22c (lane codex22, 10-22, data only): dc/resident.bin = mip22's remapped file + the listed keys it lacks
 # (mip22b ships the same resident.bin and remap; vram/resident_keys.py extend <out> mip22/dc/resident.bin mip22/dc/resident-remap.tsv vram/resident/r*.tsv; same inputs,
 # same bytes). Carries the first-use keys (HUD ammo digits in r000, shot effects, first Ganado pictures). Ships the remap
