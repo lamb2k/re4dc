@@ -160,6 +160,9 @@ void re4dc_kos_heap_state_cpp(unsigned* a, unsigned* b, unsigned* c) { re4dc_kos
 #error PS2_PVS_BATCH_COMPOSE must be 0 or 1
 #endif
 #if RE4DC_PS2_PVS_BATCH_COMPOSE
+#if (defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE != 0) || (defined(RE4DC_GC_ASSET_MOTION_UNKNOWN) && RE4DC_GC_ASSET_MOTION_UNKNOWN != 0)
+#error PS2_PVS_BATCH_COMPOSE does not yet qualify GC asset diagnostics
+#endif
 #if RE4DC_PS2_PVS != 1 || RE4DC_SCENERY_SUBMIT_BATCH != 1 || RE4DC_TA_DIRECT != 1 || RE4DC_PS2_WORLD_HDR_CACHE != 1 || RE4DC_PVR_STREAM != 1 || RE4DC_D349_RENDERER_STACK != 1 || RE4DC_PS2_WORLD_SOURCE_OWNER != 1 || RE4DC_PS2_WORLD_SOURCE_TEX_PREP != 1
 #error PS2_PVS_BATCH_COMPOSE needs the qualified streaming source/direct path
 #endif
