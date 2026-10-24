@@ -1,0 +1,56 @@
+{
+  "Schema": "OWNED_EXE_DEDUPE_MANDATORY_NTFS_CONTROL_V1",
+  "SealedUtc": "2026-10-24T02:49:22.4385082Z",
+  "Status": "FAIL_ABANDONED_NO_CAPTURE_MUTATION",
+  "Control": "Atomic File.Replace of original by hardlink to read-only canonical, with original read handle FileShare.Read|Delete",
+  "Observed": "System.UnauthorizedAccessException: Access to the path is denied",
+  "OriginalAfterExact": true,
+  "BackupCreated": false,
+  "SourceHandle": "FileAccess.Read; FileShare.Read|Delete",
+  "ReplacementCanonicalReadonly": true,
+  "RetryOrReadonlyRelaxationPerformed": false,
+  "CaptureMutationPerformed": false,
+  "ProductionCanonicalCreated": false,
+  "RollbackNotReached": true,
+  "Decision": "Required primitive rejected. Abandon rather than clear readonly or choose a different primitive without renewed root direction.",
+  "ProbeScript": {
+    "Path": "C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\dedupe-primitive-probe-v1.ps1",
+    "Sha256": "b62c538fd3890d627105d0fee214b122d5e2f9239320cef490f925cf4a8741b7"
+  },
+  "InventorySha256": "ef062a4655f3f84ca56248373cee77b749e12828cc6e614ec33e71777a336955",
+  "ControlFiles": [
+    {
+      "Path": "C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\dedupe-primitive-probe-v1\\canonical.txt",
+      "SHA256": "617d0a2f168c306a638ed53e38dd3273b61bd9c3b235e542d74fee2602533b49",
+      "Bytes": 22,
+      "Readonly": true,
+      "FileId": "File ID is 0x000000000000000000020000004f3a31",
+      "HardlinkNames": [
+        "\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\dedupe-primitive-probe-v1\\temp-link.txt",
+        "\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\dedupe-primitive-probe-v1\\canonical.txt"
+      ]
+    },
+    {
+      "Path": "C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\dedupe-primitive-probe-v1\\original.txt",
+      "SHA256": "617d0a2f168c306a638ed53e38dd3273b61bd9c3b235e542d74fee2602533b49",
+      "Bytes": 22,
+      "Readonly": false,
+      "FileId": "File ID is 0x000000000000000000020000004f3a36",
+      "HardlinkNames": [
+        "\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\dedupe-primitive-probe-v1\\original.txt"
+      ]
+    },
+    {
+      "Path": "C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\dedupe-primitive-probe-v1\\temp-link.txt",
+      "SHA256": "617d0a2f168c306a638ed53e38dd3273b61bd9c3b235e542d74fee2602533b49",
+      "Bytes": 22,
+      "Readonly": true,
+      "FileId": "File ID is 0x000000000000000000020000004f3a31",
+      "HardlinkNames": [
+        "\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\dedupe-primitive-probe-v1\\temp-link.txt",
+        "\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\dedupe-primitive-probe-v1\\canonical.txt"
+      ]
+    }
+  ],
+  "ExecutableSpaceReclaimedBytes": 0
+}

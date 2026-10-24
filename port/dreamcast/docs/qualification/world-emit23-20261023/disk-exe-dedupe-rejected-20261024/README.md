@@ -1,0 +1,7 @@
+# Owned executable dedupe: rejected primitive checkpoint
+
+The fixed107eligible capture inventory was not mutated. A tiny NEW NTFS control using an authored22-byte payload failed atomic File.Replace when replacement was a hardlink to a read-only canonical, with original read handle FileShare.Read|Delete. Windows returned Access denied; original remained exact and no backup was created. Per root direction hardlink dedupe is abandoned; no readonly workaround/retry was performed. No capture executable, global console, media, asset, log, receipt or production path was changed; zero executable space reclaimed. Tiny control files are preserved in their own C-side control directory, not committed as payload.
+
+This checkpoint archives exact inventory/plan/probe/failed receipt plus an abort-only guard. No capture-mutating executor was shipped. Native PowerShell parser controls pass for all3scripts; the guard was executed and correctly refused before any capture operation. The inventory potential1.42334GiB is historical hypothetical, not savings. The separately proposed NTFS compression path needs its own controls and root trial admission; this checkpoint does not approve compression.
+
+Manifest pins original C-side bytes. Original images/assets/private source/fixture bodies are excluded. verify.py only checks archived byte integrity/JSON and verifier synthetic controls; PS syntax was independently checked by the native parser and recorded in the guard receipt.

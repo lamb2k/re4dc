@@ -1,0 +1,23 @@
+{
+  "CheckedUtc": "2026-10-24T02:49:59.2187061Z",
+  "NativePowerShellSyntax": [
+    {
+      "Name": "inventory-owned-exes-v1.ps1",
+      "Syntax": "PASS",
+      "Sha256": "4cc6ef4e9512ce7e001d9ff6bd544756eb02c759e1afd8c21def09887907fc61"
+    },
+    {
+      "Name": "dedupe-primitive-probe-v1.ps1",
+      "Syntax": "PASS",
+      "Sha256": "b62c538fd3890d627105d0fee214b122d5e2f9239320cef490f925cf4a8741b7"
+    },
+    {
+      "Name": "dedupe-executor-refused-v1.ps1",
+      "Syntax": "PASS",
+      "Sha256": "c4ce3cbe1c9694cf1a358d206d39c0450979c8901478da47801c1759c770b2b8"
+    }
+  ],
+  "AbortGuardActualRefusal": true,
+  "NoCaptureExecutorImplemented": true,
+  "CaptureMutations": 0
+}

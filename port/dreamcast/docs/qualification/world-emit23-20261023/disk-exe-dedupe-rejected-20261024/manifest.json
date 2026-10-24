@@ -1,0 +1,58 @@
+{
+  "schema": "owned-exe-dedupe-rejected-source-checkpoint-v1",
+  "created_utc": "2026-10-24T02:50:23.721966+00:00",
+  "base_source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "preservation_parent": "0ece7680cb0217c4875729a4bd56b8b222d0bca8",
+  "copied": [
+    {
+      "path": "c-side/inventory-owned-exes-v1.ps1",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/inventory-owned-exes-v1.ps1",
+      "bytes": 9280,
+      "sha256": "4cc6ef4e9512ce7e001d9ff6bd544756eb02c759e1afd8c21def09887907fc61"
+    },
+    {
+      "path": "c-side/DISK-EXE-DEDUPE-INVENTORY-20261024-v1.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/DISK-EXE-DEDUPE-INVENTORY-20261024-v1.json",
+      "bytes": 328607,
+      "sha256": "ef062a4655f3f84ca56248373cee77b749e12828cc6e614ec33e71777a336955"
+    },
+    {
+      "path": "c-side/DISK-EXE-DEDUPE-PLAN-20261024-v1.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/DISK-EXE-DEDUPE-PLAN-20261024-v1.md",
+      "bytes": 8464,
+      "sha256": "90cba432f33e9d37e6a31adcb016b23a0bb17ff724ffdf868ed16f80445db24c"
+    },
+    {
+      "path": "c-side/DISK-EXE-DEDUPE-CLAIM.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/DISK-EXE-DEDUPE-CLAIM.md",
+      "bytes": 1004,
+      "sha256": "caf221b183a0f6ccffee0921876fa14f8e0f77c1c3b436e6a9efd45d073db037"
+    },
+    {
+      "path": "c-side/dedupe-primitive-probe-v1.ps1",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/dedupe-primitive-probe-v1.ps1",
+      "bytes": 1214,
+      "sha256": "b62c538fd3890d627105d0fee214b122d5e2f9239320cef490f925cf4a8741b7"
+    },
+    {
+      "path": "c-side/dedupe-executor-refused-v1.ps1",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/dedupe-executor-refused-v1.ps1",
+      "bytes": 608,
+      "sha256": "c4ce3cbe1c9694cf1a358d206d39c0450979c8901478da47801c1759c770b2b8"
+    },
+    {
+      "path": "c-side/DISK-EXE-DEDUPE-CONTROLS-REJECTED-20261024-v1.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/DISK-EXE-DEDUPE-CONTROLS-REJECTED-20261024-v1.json",
+      "bytes": 2785,
+      "sha256": "68dff40ebdf0555a1e12f13626f6429f4864988f2d698c58a9e84310181bfba0"
+    },
+    {
+      "path": "c-side/DISK-EXE-DEDUPE-GUARD-CHECK-v1.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/DISK-EXE-DEDUPE-GUARD-CHECK-v1.json",
+      "bytes": 708,
+      "sha256": "51318bf42c740a17f290ae5aec5524c4915eff32c37630e43ac0c25c262c3c00"
+    }
+  ],
+  "decision": "ABANDONED: mandatory readonly atomic File.Replace control rejected. No capture mutation or readonly workaround; zero space reclaimed.",
+  "capture_payload_or_exe_copied": false
+}
