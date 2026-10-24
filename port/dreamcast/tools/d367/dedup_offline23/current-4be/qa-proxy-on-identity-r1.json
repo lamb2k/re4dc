@@ -1,0 +1,15 @@
+{
+  "status": "PASS_EXACT_FINAL_QA_PROGRAMME_ALL14_DATA_PROXY_FIXTURES_ONLY",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "arm": "on",
+  "final_manifest_sha256": "2276e5b5a2f3d442115018b8832fca6152ef1b643f7bc3bd55d4f76ba469250f",
+  "proxy_manifest_sha256": "159d21449b9d157b0902101c15eed8dbe32bbe9872b86e3a4cc0810a06faa7e6",
+  "track03_sha256": "30ecdb190fc2d55a3c71752f0967dc6ac4edcb67b24bade00c0069726d4d9428",
+  "only_differences": [
+    "dc/padscript.txt",
+    "dc/warp.txt",
+    "dc/w11.txt"
+  ],
+  "final_track03_sha256": "e09cc566770513cd53647a7429d0f7f992fe5d6718e82a8bd960d6effb8d5920",
+  "base": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-proxy-on-r1"
+}

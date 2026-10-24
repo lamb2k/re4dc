@@ -1,106 +1,92 @@
-# Current4be qualification handback
+# Current 4be dedup qualification — root review pending
 
-Frozen local integration: 4be08e0110592510e3630c01fa9f49b3ac2fed3d,
-base d5c1ceab9e06461462669b3ce1d28a379747a74a. Recipe unchanged.
-Local integration branch is not pushed. This authored checkpoint contains
-source helpers and bounded evidence only.
+Source: 4be08e0110592510e3630c01fa9f49b3ac2fed3d.
+Baseline: d5c1ceab9e06461462669b3ce1d28a379747a74a.
+Root pushed and verified origin/wip/dedup-offline23-current-d5c-20261023.
+Production integration/recipe still awaits root decision. This lane changed
+only owned helpers/documents during current qualification; no runtime edits.
 
-All current SDK links are finished and slots/leases returned. OFF release raw
-49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b
-and all14 overlays equal actual d5c production. Current OFF trace main/all14
-equal qualified5e trace. Fresh ON raw
-1077a1386ac3431b97d069291424a14117adf55f267aff78fbedf166bdc6df09.
-Full-play twins reproduced their respective releases, main/all14. Source4be
-host28 tests/96composition+mutation/3binding/12reader pass; PREFETCH0/LEAN20 only.
+Both private normal QA folders are sealed for independent root review:
+- C:\Game Dev\Emulators\RE4DC-QA23-Dedup-Off-4be08e01
+- C:\Game Dev\Emulators\RE4DC-QA23-Dedup-On-4be08e01
 
-Fresh standard H2 captures completed all1465/571/340 decoded, uploaded,
-presented, restored1. OFF93920 / ON139552 (+45632), 33.6/34.3 host seconds.
-ON compact r100 loan1512928 and fresh SDO3 reload are observed. Actual source,
-programme, fixture and original DATA29 pins established; ON adds exact4
-compact files. Original geometry/UV/color/LOD/source IDs/all41textures retained.
-This is Flycast MODELLED safety evidence, not hardware performance.
+Each contains gdemu/disc.gdi and three final tracks, README.txt, STEPS.txt,
+IDENTITY.json, SHA256SUMS.txt and the retained menu controls guide.
+They remain marked root-review/physical-acceptance pending. No ZIP, SD copy,
+publication or private-pair-ready acceptance was performed.
 
-All8 KOS48 challenges held49152 and passed >=4096 headroom:
-fight6208/6112, call31448/31360, leave1006408/6320, leave1036408/6320.
-Enabled diagnostic census CAST-GC and LEON checks pass; TEXCHK5/5 logs pass.
-Observed VRAM gap refusal/guard/nocontig/latch/absence/drop/texture reject/
-sound failure fields are zero. Minimum free/largest bytes:
-r100175552/32768, r101172096/18432, r103666560/598016.
-r100 allocator fragmentation retries2/evicted11 are explicitly nonzero:
-native_ui.cpp3094/3595 describes eviction then allocation retry; these are
-not disc rereads. No zero-retry claim. r103 CROWD-SKIP0 em12 not-drawn census
-row is not full actor draw coverage. Diagnostic programme differs from
-standard memory/normal QA, as required.
+Both arms retain original DATA29, all 41 texture assets and the same four
+frozen compact alternates. OFF0 reads originals; ON3 selects the alternate.
+Final file manifests differ only in main programme and 14 overlays. Original
+geometry, UV/color, LOD/source identities and baseline files are retained.
+Normal QA knobs only: QA1/PC0, no KOS/squeeze/census diagnostic contamination,
+arena0, current four audits ON, select-only/replay/batch ON.
+SCENERY_EMIT_PREFETCH=0 and SCENERY_SELECT_LEAN2=0. The independently found
+PREFETCH1 context defect is outside this profile and is being repaired separately.
 
-GDseed1 serial authenticates gdemu jitter20000 seed1, with21 observed
-earlyStat/landedAfterStat race rows, clean door103 endpoint and no primary
-bad-read/fault line. This qualifies seed1 only, not seeds2..10.
+Final GDI track03 SHA256:
+OFF 52d2c05d1fa37d5d72546bb560cb317048540eb5ae1e97d6ae350aba9a0dc2a5
+ON  e09cc566770513cd53647a7429d0f7f992fe5d6718e82a8bd960d6effb8d5920
+Both pass loader/standard lint, independent full track and all-file readback,
+and a second final readback after their checks. Native sha256sum -c verifies
+every delivered file against each SHA256SUMS manifest.
 
-Bell/Mendez ON trace captures completed39.7/43.2 host seconds, exact55 bound,
-console FP_NOLIMIT1, goal reached/errorfree/deadlinefalse.
-Actual decision_cmp MUST-identical bell2866common ticks, Mendez2692;
-player/enemy drift0, slot mismatches0. Mendez current has2694records versus
-reference2692; comparison covers common0..2691 only. References are reused
-qualified actual OFF-equivalent captures authenticated by newly linked OFF
-main/all14 identity plus data and injected fixture bindings, not fresh OFF runs.
-Mendez11f02/11f10/11f11 completed1067/265/321 full uploads/presents,
-two arena returns restored1. Fixture intentionally cancels/skips intros.
-Bell decodes1331/1331 but uploads/presents1318 (reference1313); do not turn
-this scheduling variation into a full-upload or performance claim.
+Six actual bounded console-mode QA checks pass:
+- Final standard GDI boot, four PID-targeted key steps and R100 entry:
+  OFF 22.6 seconds / ON 22.6 seconds.
+- Separately labelled, exact same programme/all14/data fixture proxy:
+  menu diagnostics/QR flow, soft reset and R103 entry, OFF 14.6 / ON 14.7 seconds.
+- Same proxies, full H2: OFF 32.9 / ON 34.1 host seconds; all 1465/571/340
+  frames decoded/uploaded/presented, arena restored=1. Normal QA s30 heap:
+  OFF 48,768 / ON 98,496 bytes (+49,728). This is separate from standard
+  programme memory and does not establish hardware timing.
 
-Explicit limited r4 frozen looks: cross/farm/forest fb0+fb1 each0changed pixels,
-all observed late buffers stable. Visually inspected clean three fb0 views and
-cross fb1. Peer force_limited.py SHA
-872a4a2d30ec342cf01e15d04507269f02a713c8eccc68c3dde5320afb1eff15
-authors/verifies single aica.LimitFPS=yes before exact child Popen, final config
-same SHA/PID, fresh owned caps, shared template unchanged. Freeze is at top
-of tick330; held last-presented frames, not asserted rendered tick330 or
-all-frame actor-state identity. No withdrawn sparse-pool observer used.
-Earlier r1/r2 watchdog failures and r3 implicit-default captures are preserved;
-r3 runner is now a hold, original recorded script retained. r4 images do not
-retroactively qualify old captures.
+After each arm's three checks and fresh final readback, only its newly created
+proxy track03.iso backing was retired with exact resolved path, full hash,
+nlink=1, guest-lock/no-owned-Windows-guest and deletion manifest checks.
+All final media, proxy metadata, IP/manifests, source/ELFs/overlays, fixtures,
+logs, captures and screens remain. Earlier media/evidence were not pruned.
+The 4.5 GiB media reserve and 24 GiB stage floor were respected.
 
-Normal QA OFF/ON programmes linked separately at exact4be, normal QA additions
-only; KOS/census/sampler contamination absent. No QA media/destination staged.
-Private destinations after root media allocation:
-C:\Game Dev\Emulators\RE4DC-QA23-Dedup-Off-4be08e01
-C:\Game Dev\Emulators\RE4DC-QA23-Dedup-On-4be08e01
-Both arms retain originals plus exact4 compact files; mode0 ignores alternates.
-Correct RE4DC_HARNESS is current-d5c-scratch/qa, where built private all14 reside.
-Direct-master private C GDIs +two gatebases request4.5GiB; floor24GiB before
-each media step, world priority3 pair first. No SDK needed. Normal QA boot/
-warp/H2 and accurate README/STEPS/IDENTITY/readback/lint remain next.
-Root owns final recipe/integration/physical acceptance; no integration push,
-recipeflip, SD/publication or I001 re-strip.
+Existing standard-profile gates remain:
+- Fresh OFF release main/all14 equals actual d5c production; raw SHA
+  49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b.
+  ON raw 1077a1386ac3431b97d069291424a14117adf55f267aff78fbedf166bdc6df09.
+  Full-play twins reproduce their own releases, main/all14.
+- Standard H2 all 1465/571/340 uploaded/presented, restored=1; heap
+  OFF 93,920 / ON 139,552 (+45,632), compact loan 1,512,928 and reload observed.
+- All eight KOS 48 KiB challenges pass; minimum headroom >=4,096.
+- Required TEN actual GDEMU seeds pass exact environment/profile, read/landing
+  witnesses, door103 endpoint and bad-read/deadline checks. The earlier
+  seed-1-only completion claim was corrected explicitly and preserved.
+- Scoped enabled CAST-GC/TEXCHK/LEON/VRAM checks pass. r100 allocator retries=2,
+  evicted=11 are retained; observed refusal/guard/nocontig fields are zero.
+  No all-actor or all-material completeness claim.
+- Bell 2,866 and Mendez 2,692 common decision ticks MUST-identical, zero drift,
+  using byte/data/fixture-authenticated reused OFF-equivalent captures.
+  Bell decodes 1,331 but uploads/presents 1,318 (reference 1,313).
+- Explicit FPS=yes held cross/farm/forest stills match both buffers exactly.
+  This is scoped visible held-frame evidence, not all-frame actor state.
+  Earlier watchdog/implicit-default attempts remain preserved.
+- Host 28 tests, 96 composition cases plus mutation, three-room binding and
+  12 reader controls pass. Scope is PREFETCH0 / LEAN2=0.
 
-Authorized cleanup removed only redundant WSL standard off/on gdemu
-track03.bin after full byte/hash/resolved path and independent NTFS/programme
-pins. fuser '--' was unsupported: failed precheck explicitly corrected in
-cleanup-redundant-current-rawgdi-guard-correction.json; no retrospective FD
-proof. No other deletion. WSL VHD gave no immediate C free gain.
+Known baseline Mendez late-pair material issue remains. Root's separate private
+PS2 upload repair is not included or admitted; its visible use is unproven.
+Physical-console acceptance and hardware performance remain pending.
 
+Evidence root:
+C:\Flycast-Evidence\re4-dreamcast\dedup-offline23-20261023\current-4be08e01
+Final seal: private-qa-pair-seal-r1.json
+SHA256 4180931954be3dc47e587bea96b82a550799c898a7491a9de4df5e01a69f95be
+Independent checksum readback: qa-delivery-checksum-readback-r1.json
+SHA256 3d6fdd9c846792cf297b3e2ca061bca516695e81d0f610aca74f3fc0ce3e763f
+Other bounded receipts: qa-media-r1/pair-media-identity.json, six capture
+qa-gate.json files, qa-{off,on}-proxy-retirement-r1.json, and
+qa-capture-inventory-r1.json (24 PNGs; inventory only, no wall-time pixel claim).
 
-## Required ten-seed correction and completion
+Prior failed 5be OFF98,016/ON93,920 and successful compact712/current4be
+captures/source snapshots remain unchanged. I-001 stays queued until actual
+root landing. After that notice, the authorized offline estimate proceeds
+without another coordinator wait.
 
-Root review correctly identified a gap in the earlier all-non-QA-complete
-claim: TAKEOVER requires TEN GDEMU seeds for disc/DMA changes, and compact
-reader/data/media changes qualify. Seed1 alone was incomplete. That earlier
-claim is superseded, with its original receipt and capture preserved.
-
-Frozen plan840def0f47711be477ad2832d03d4ac7a47f12ffa32914abf55577d42362a3c8
-and nine independent seed2..10 inputs were pushed at e3cb93e6a before launch.
-Two real-seed1 mutation test groups/13 negatives reject absent/wrong seed,
-wrong source/profile, serial mismatch, profile-only without reads, missing
-landing/endpoint, primary bad read and deadline. All source/helper/programme/
-full-track/fixture bindings remain frozen4be; no SDK, recipe or media change.
-
-All nine additional console guests actually completed serial ONE-guest chain,
-stat3/trace16/exact55, jitter20000, FP_NOLIMIT1. Seeds2..10 each14.1-14.6s;
-each has22 positive serial read rows and21 earlyStat/landedAfterStat witness
-rows, actual exact environment and serial seed, clean door103 endpoint,
-no primary bad read/error/fault/deadline. Existing seed1 is revalidated unchanged
-under the same strict checker. gdemu10-gates-r1.json records all10 pins/results.
-Final full shared-track SHA and all10 actual injected fixture byte readbacks
-pass in gdemu10-post-readback-r1.json. This is MODELLED disc/DMA safety, not
-physical-console/performance acceptance. All guests/SDK idle. Private QA media
-allocation/package/boot/warp/H2 and root integration/recipe decision remain open.

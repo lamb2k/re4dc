@@ -1,0 +1,44 @@
+{
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "arm": "off",
+  "kind": "warp",
+  "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-off-warp-console-r1",
+  "status": "PASS",
+  "elapsed_host_s": 14.532,
+  "fault_rows": [],
+  "programme_elf_sha256": "c29f4ca756ef7e16f2d719512014b5f676422d06fb2e8ab67c957b3ebeb23098",
+  "final_track03_sha256": "52d2c05d1fa37d5d72546bb560cb317048540eb5ae1e97d6ae350aba9a0dc2a5",
+  "media": "SEPARATE_FIXTURE_PROXY_EXACT_FINAL_PROGRAMME_ALL14_DATA",
+  "proxy_identity_sha256": "1d51a3b5545d0c5800160f50e63269396d45fe4b243de3110b4518e83ccd9a79",
+  "fixtures": {
+    "warp": {
+      "src": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\qa-media-r1\\fixtures\\qa-menu-warp.txt",
+      "bytes": 102,
+      "sha256": "340d0229c3276cf64e42601943abe453e28e40e8be7782b355c405a324628d0d"
+    },
+    "pad": {
+      "src": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "w11": {
+      "src": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "menu_warp_checks": {
+    "qa: auto teleport /cd/dc/qa/r103.txt": true,
+    "warp: qa: preset armed at soft reset": true,
+    "phase=enter room=101": true,
+    "phase=enter room=103": true
+  },
+  "sha256": {
+    "run-result.json": "f7b713127d54e2e8e57a166308ef05a59835d4741c5f0e0b5f0cb4a4abe2e0b3",
+    "bounded-launch.json": "f856d6af60e69c432d6091c22f906920b4b6ec76ca4adffbbc9a84883b4bbe8f",
+    "run-output.txt": "e6d8820731f20a8029a3f264dedc80da90ab3bd93a098a37dc7b19c02de3e056",
+    "serial.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+    "disc.gdi": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4"
+  }
+}

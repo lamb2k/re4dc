@@ -1,0 +1,253 @@
+{
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "kind": "INVENTORY_ONLY_NO_WALL_TIME_PIXEL_IDENTITY",
+  "captures": {
+    "off-boot": {
+      "gate_sha256": "13fb07d32449541a53bfee5f12d26fc5c79f7a25a0c067bcba62b3b2d9680a47",
+      "screenshots": [
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-off-boot-console-r1/shots/t0010/frames/fb0.png",
+          "bytes": 214733,
+          "sha256": "2b5367fa2a12f34b85317da216aea97f5a71722e99f3b751f8e229f8dc9892a5",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-off-boot-console-r1/shots/t0010/frames/fb1.png",
+          "bytes": 214465,
+          "sha256": "436b4c20f75bed3657a0a6d71b7eb497e0877257da0dcc86928c2089eb884491",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-off-boot-console-r1/shots/t0020/frames/fb0.png",
+          "bytes": 216817,
+          "sha256": "67e503acd42d5782726acecbb742dbfa2cac844da019c314ad07f59ce1c5a91d",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-off-boot-console-r1/shots/t0020/frames/fb1.png",
+          "bytes": 216872,
+          "sha256": "fcd017a6de3b3a9bee575a780a7f4dd60969acba55488efca0e52afc90b35354",
+          "size": [
+            640,
+            480
+          ]
+        }
+      ]
+    },
+    "off-warp": {
+      "gate_sha256": "dba4c0c21ee8d82647236923bcc5fed7342ae64b83473a8a38975c0c4736be5a",
+      "screenshots": [
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-off-warp-console-r1/shots/t0010/frames/fb0.png",
+          "bytes": 4244,
+          "sha256": "cd65173bafe0046cb78249fcad6b9725613c643dde9b64e8fe35ffa0548ba881",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-off-warp-console-r1/shots/t0010/frames/fb1.png",
+          "bytes": 4244,
+          "sha256": "cd65173bafe0046cb78249fcad6b9725613c643dde9b64e8fe35ffa0548ba881",
+          "size": [
+            640,
+            480
+          ]
+        }
+      ]
+    },
+    "off-h2": {
+      "gate_sha256": "f3440c3d10eeda932d59dac1b44397acc9591c67f72ec413fdd362f932ca6def",
+      "screenshots": [
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-off-h2-console-r1/shots/t0010/frames/fb0.png",
+          "bytes": 196187,
+          "sha256": "d8ab6a98596134f650e3f8e356fe7253f79c80e0ea51699e849b77a3ace04b9c",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-off-h2-console-r1/shots/t0010/frames/fb1.png",
+          "bytes": 195792,
+          "sha256": "141f7a0835a7ef6c2fb70183d976512050a056087646fd93932a2cdf51b3f084",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-off-h2-console-r1/shots/t0020/frames/fb0.png",
+          "bytes": 135190,
+          "sha256": "75bb4fa16d63c9c24e47ab5317fdadcdef228f55a3e4f2e8991c0eb72065fbba",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-off-h2-console-r1/shots/t0020/frames/fb1.png",
+          "bytes": 138811,
+          "sha256": "93b622fcfcbc24aec3f0b56eac34733bbfaf9c740829075add7b1e8766286a68",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-off-h2-console-r1/shots/t0031/frames/fb0.png",
+          "bytes": 120057,
+          "sha256": "4b0113c7e75687bb9d2bee8101d017a746b899b07bd084eda490f6cf2e598d2e",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-off-h2-console-r1/shots/t0031/frames/fb1.png",
+          "bytes": 119847,
+          "sha256": "25722ad27416219f32d6e8f5fc67e5e886f750e6ca3aa5d5962d30ce468c973a",
+          "size": [
+            640,
+            480
+          ]
+        }
+      ]
+    },
+    "on-boot": {
+      "gate_sha256": "5cb0c87dd0abef896f957a079346045b00c83f893d73092cb0729162a83ed568",
+      "screenshots": [
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-on-boot-console-r1/shots/t0010/frames/fb0.png",
+          "bytes": 214653,
+          "sha256": "ab47a871c5f4cfd86e73159736db79c906edd9455499dae37100dc68b638a00a",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-on-boot-console-r1/shots/t0010/frames/fb1.png",
+          "bytes": 214716,
+          "sha256": "760fda5c5dd68941abc5d1fc21baea52b0cc58c5b047289cdc956f676a061e93",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-on-boot-console-r1/shots/t0020/frames/fb0.png",
+          "bytes": 216866,
+          "sha256": "79397000ce4eebcf867330f1309df8aec667191472a636e396232c04f809b2bf",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-on-boot-console-r1/shots/t0020/frames/fb1.png",
+          "bytes": 216696,
+          "sha256": "c74701ad954c0a6995c63b26111e946d43def977f7a48e5776539c896825de76",
+          "size": [
+            640,
+            480
+          ]
+        }
+      ]
+    },
+    "on-warp": {
+      "gate_sha256": "6169bdfab25af309c66971146237050c632fd733c7bc2f5bd2715a8f829b6816",
+      "screenshots": [
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-on-warp-console-r1/shots/t0010/frames/fb0.png",
+          "bytes": 4085,
+          "sha256": "ac542967abec5343f52e8d9a9c822874bf7cc011cf4e96faa709825eb965827f",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-on-warp-console-r1/shots/t0010/frames/fb1.png",
+          "bytes": 4085,
+          "sha256": "ac542967abec5343f52e8d9a9c822874bf7cc011cf4e96faa709825eb965827f",
+          "size": [
+            640,
+            480
+          ]
+        }
+      ]
+    },
+    "on-h2": {
+      "gate_sha256": "0fc5a71ec9298b8a12b46e12f2b5aa67621ea07001f12b18e17ef222e8c5514e",
+      "screenshots": [
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-on-h2-console-r1/shots/t0010/frames/fb0.png",
+          "bytes": 195283,
+          "sha256": "27f0b28e888fe2997e3a6b1e127fa467cece9761b87f659a0800bef019b601ed",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-on-h2-console-r1/shots/t0010/frames/fb1.png",
+          "bytes": 197477,
+          "sha256": "e05b11fe1df22fe390329e96416e26959665450ee5e5813f3938beec7bb643b5",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-on-h2-console-r1/shots/t0020/frames/fb0.png",
+          "bytes": 228643,
+          "sha256": "39f5326a4841ace7ad3e7261b89c5c97b7b75eab47aedbd2ef96b312959b6dc1",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-on-h2-console-r1/shots/t0020/frames/fb1.png",
+          "bytes": 227017,
+          "sha256": "be22cb3717d3d3524650afdba8c9800f9cfa5730f96cd10ae9e7d371fd0dd3f5",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-on-h2-console-r1/shots/t0031/frames/fb0.png",
+          "bytes": 155054,
+          "sha256": "b8e2de9a0857411eb02563ecef960fecad52e6155f80f0cebc2f3f15b7a7ab05",
+          "size": [
+            640,
+            480
+          ]
+        },
+        {
+          "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-on-h2-console-r1/shots/t0031/frames/fb1.png",
+          "bytes": 156060,
+          "sha256": "d4bce8fb770491d42c07ac0f8eda0dc746a5551d527bdeb65e98efb43616ab26",
+          "size": [
+            640,
+            480
+          ]
+        }
+      ]
+    }
+  },
+  "limits": "Inventory of actual PNG files; no arbitrary wall-time frame equality or complete actor/material visibility claim. Clean boot fb0 images inspected once per arm; standard held-frame comparison is a separate receipt."
+}

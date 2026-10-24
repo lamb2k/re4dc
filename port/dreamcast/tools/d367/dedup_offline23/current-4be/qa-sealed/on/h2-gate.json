@@ -1,0 +1,46 @@
+{
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "arm": "on",
+  "kind": "h2",
+  "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-on-h2-console-r1",
+  "status": "PASS",
+  "elapsed_host_s": 34.0,
+  "fault_rows": [],
+  "programme_elf_sha256": "d062ae5a4a69e7478411d67588150a99a325237b49b101398644eacaf57a9e9f",
+  "final_track03_sha256": "e09cc566770513cd53647a7429d0f7f992fe5d6718e82a8bd960d6effb8d5920",
+  "media": "SEPARATE_FIXTURE_PROXY_EXACT_FINAL_PROGRAMME_ALL14_DATA",
+  "proxy_identity_sha256": "aa936d648f50c3443a2fb5de9bf753e4b1cef45caf8dc4576225cd0b99f65e21",
+  "fixtures": {
+    "warp": {
+      "src": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\work\\lanes\\dedup-offline23-current-d5c\\port\\dreamcast\\tools\\d367\\fullplay\\segments\\h2-warp.txt",
+      "bytes": 363,
+      "sha256": "921ee89e2286ff7801736dabd1d9cb58321f25540ab3b3e3e63230eabb822012"
+    },
+    "pad": {
+      "src": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\work\\lanes\\dedup-offline23-current-d5c\\port\\dreamcast\\tools\\d367\\fullplay\\segments\\h2-pad.txt",
+      "bytes": 215,
+      "sha256": "80a97aa5b3ac9c4e3f8945089108d98f432fa8f57b00d2e7385733cb8d461ac1"
+    },
+    "w11": {
+      "src": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "movies": [
+    "route movie terminal=1 id=10003 frames=1465/1465 uploaded=1465 presented=1465 wall_us=49013560 media_us=48882166 underruns=1 silence_bytes=1472 heap_before=885824 heap_active=521632 staged=363328",
+    "route movie terminal=1 id=10020 frames=571/571 uploaded=571 presented=571 wall_us=19124625 media_us=19052366 underruns=2 silence_bytes=8448 heap_before=791200 heap_active=427008 staged=363328",
+    "route movie terminal=1 id=10030 frames=340/340 uploaded=340 presented=340 wall_us=11875336 media_us=11344666 underruns=1 silence_bytes=1472 heap_before=98496 heap_active=98496 staged=363328"
+  ],
+  "restored": true,
+  "heap_before": 98496,
+  "limits": "Normal QA heap, separate from standard memory gate; no blanket actor/texture completeness or physical/performance claim.",
+  "sha256": {
+    "run-result.json": "5bf64e155d05c5cb1ee6e313d1aef34f017e039ca1dde2fe58f95d46f82c0f17",
+    "bounded-launch.json": "7a894adc40adac990da0d27da5aa4c4afe813842225e35f5d170956c035718d5",
+    "run-output.txt": "2ea697aeb8b9edc83d6ae549b60cf89de44cec161424012f1f50bd3fe45453fa",
+    "serial.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+    "disc.gdi": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4"
+  }
+}

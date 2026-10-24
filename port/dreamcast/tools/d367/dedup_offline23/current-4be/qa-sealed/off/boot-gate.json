@@ -1,0 +1,56 @@
+{
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "arm": "off",
+  "kind": "boot",
+  "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-off-boot-console-r1",
+  "status": "PASS",
+  "elapsed_host_s": 22.532,
+  "fault_rows": [],
+  "programme_elf_sha256": "c29f4ca756ef7e16f2d719512014b5f676422d06fb2e8ab67c957b3ebeb23098",
+  "final_track03_sha256": "52d2c05d1fa37d5d72546bb560cb317048540eb5ae1e97d6ae350aba9a0dc2a5",
+  "media": "FINAL_STANDARD_GDI",
+  "selected_r100": true,
+  "all4_pid_targeted_steps": true,
+  "key_log": [
+    {
+      "step": 0,
+      "keys": [
+        "down"
+      ],
+      "host_s": 3.6,
+      "windows": 5
+    },
+    {
+      "step": 1,
+      "keys": [
+        "a"
+      ],
+      "host_s": 4.6,
+      "windows": 5
+    },
+    {
+      "step": 2,
+      "keys": [
+        "a"
+      ],
+      "host_s": 5.7,
+      "windows": 5
+    },
+    {
+      "step": 3,
+      "keys": [
+        "a"
+      ],
+      "host_s": 6.7,
+      "windows": 5
+    }
+  ],
+  "sha256": {
+    "run-result.json": "5771d3f4a4aa1bcaa1dd4b1877ff15968a71665c10a1f8b7bf21ab859e820315",
+    "bounded-launch.json": "db7a23693e014ed786b56cfab1a205bf4d8155a1b9af3eafd7b475164f60b117",
+    "run-output.txt": "a654883b8eeedcdddb9890121bb1963198ff9b874890c20d1b61039aff64508a",
+    "serial.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+    "disc.gdi": "025516557d49e1835e7eb8571e09244b64db190cf3981ead555c54b1924ca19f"
+  }
+}

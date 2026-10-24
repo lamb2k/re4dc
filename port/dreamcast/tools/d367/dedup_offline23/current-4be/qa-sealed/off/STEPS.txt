@@ -1,0 +1,19 @@
+PRIVATE TWO-MINUTE R101 COMPARISON - physical observation still pending
+Use the same Dreamcast, display, controller and view-distance setting for both
+Off and On. Keep existing saves/media untouched; no SD/publication is performed
+by this package. Select gdemu/disc.gdi in an emulator for private inspection.
+
+1. At QA menu choose Teleport -> CHAPTER 1-1: VILLAGE ->
+   R101 VILLAGE SQUARE (FIGHT START). Record which Off/On disc and source 4be08e01.
+2. Spend at least two minutes moving between the cross, houses and village edges.
+   Turn the camera through near/far transitions, building edges and clip seams.
+   Look for missing/wrong geometry, UV/color changes, flicker, corrupt strips,
+   black frames, freezes, input loss or new loading failures. Repeat same route
+   on the other arm; do not infer speed improvement from feel.
+3. Hold both triggers fully +D-pad Down to open QA in free play. Check Diagnostics;
+   X cycles QR pages, B backs out. Preserve photos/logs and exact scene/action.
+4. Optional next checks: R103 farm then R100 forest/house and movie return/reload.
+   The authored H2 proxy tests already cover the three movie terminals, but this
+   is not proof of physical-console movie/load behavior.
+Known baseline Mendez late-pair material limitation remains unrelated; do not
+report all materials correct from these bounded tests. No hardware FPS claim.

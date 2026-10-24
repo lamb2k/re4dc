@@ -1,0 +1,47 @@
+{
+  "status": "REMOVED_ONLY_EXACT_AUTHORIZED_NEW_PROXY_BACKING",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "arm": "on",
+  "resolved_target": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/qa-proxy-on-r1/track03.iso",
+  "bytes": 1028638720,
+  "sha256": "30ecdb190fc2d55a3c71752f0967dc6ac4edcb67b24bade00c0069726d4d9428",
+  "nlink": 1,
+  "c_free_before": 30664777728,
+  "arm_gates": {
+    "boot": "5cb0c87dd0abef896f957a079346045b00c83f893d73092cb0729162a83ed568",
+    "warp": "6169bdfab25af309c66971146237050c632fd733c7bc2f5bd2715a8f829b6816",
+    "h2": "0fc5a71ec9298b8a12b46e12f2b5aa67621ea07001f12b18e17ef222e8c5514e"
+  },
+  "final_post_manifest_sha256": "2276e5b5a2f3d442115018b8832fca6152ef1b643f7bc3bd55d4f76ba469250f",
+  "all_final_tracks_full_readback_equal": true,
+  "proxy_metadata_retained": {
+    "base-diff.txt": {
+      "bytes": 560,
+      "sha256": "8132f4ff1a938eba9cd62bdc2f36f1d18ad81904ff6d029498c575e35737bb81"
+    },
+    "base-manifest.json": {
+      "bytes": 215435,
+      "sha256": "159d21449b9d157b0902101c15eed8dbe32bbe9872b86e3a4cc0810a06faa7e6"
+    },
+    "base.json": {
+      "bytes": 345,
+      "sha256": "92496c26f4630065db4e8391a651c6a64e81b5e63aeb5a130704163b39e353ea"
+    },
+    "track01-template.iso": {
+      "bytes": 1241088,
+      "sha256": "d4e512d4aa6e8e2ad73cd4064e1ef94a96ce124e1f62995202120d8f061c9fde"
+    },
+    "track02.raw": {
+      "bytes": 710304,
+      "sha256": "9c97e0db4fd5cd70156208d1c921beaaa831f6f5ca5672cf6517d68a1e68f744"
+    },
+    "track03.sha256": {
+      "bytes": 65,
+      "sha256": "ae44892f8ad092572175e2772430bc98f19fca42701ce6ab9d7a3190aac11b93"
+    }
+  },
+  "owned_windows_guests_active": 0,
+  "limits": "Deletes only newly created exact owned proxy track03.iso after this arm boot/warp/H2 checks and fresh final GDI full readback. Final GDI, source/ELFs/overlays/IP/manifests/logs/caps/screens and all earlier media/evidence retained.",
+  "c_free_after": 31693414400,
+  "target_absent": true
+}
