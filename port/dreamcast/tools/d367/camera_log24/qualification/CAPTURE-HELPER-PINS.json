@@ -1,0 +1,14 @@
+{
+  "template": "C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\current-stills\\freeze_capture.py",
+  "template_sha256": "66b21342983108db10a8a1a37ab41f189212faf4fe8794240912c4ad93742e93",
+  "generated": "C:\\Game Dev\\Emulators\\codex-lanes\\dedup-offline23\\forest-freeze800-capture.py",
+  "generated_sha256": "0ef1d48d94e2e281116c8483e0873c4a96f98a9e2ac2533457ad1b3bdbb11eae",
+  "changes": [
+    "Exact freeze tick800 and output names; held-buffer scope",
+    "Import original force_limited.py from pinned original directory"
+  ],
+  "marker_controls": 3,
+  "force_limited_sha256": "872a4a2d30ec342cf01e15d04507269f02a713c8eccc68c3dde5320afb1eff15",
+  "bound_sha256": "e3f31e4a797b934543ac9e598a0e6350965533bdfe12299771200d11f183629c",
+  "ram_backend_sha256": "8bd179110988d1b808d8e353b182f921dc244fdae985a51995293ba570c136b0"
+}

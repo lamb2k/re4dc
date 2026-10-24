@@ -1,0 +1,30 @@
+{
+  "status": "CLEAR",
+  "source_commit": "c2f0d82e95050a708d0b977f94fad34890cbc279",
+  "camera_source_commit": "c2f0d82e95050a708d0b977f94fad34890cbc279",
+  "parent": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "reviewed_utc": "2026-10-24T04:17:33.406855+00:00",
+  "source_files": {
+    "port/dreamcast/game/platform/native_static.cpp": "ed69961c72f07b7fe346fed77ca21f02559a7bd50cf2cd8858190fd83cee30ab",
+    "port/dreamcast/tools/d367/camera_log24/README.md": "5b354f62fd1df5cdf1aaf81c89d83794211a2ac505fc32f31e881330399bf64e",
+    "port/dreamcast/tools/d367/camera_log24/camera_log_v2.py": "b2a2f6c9f5ea5b896b970c204fdcca5377052544c05ad4881552ecca434807bf",
+    "port/dreamcast/tools/d367/camera_log24/host-controls.json": "dfeaf3b8a7e3eaae6478b84d5410afca28de18f55eadc7b56574487d7e441df2",
+    "port/dreamcast/tools/d367/camera_log24/old_camera_call.cpp.txt": "9387be4ad83c682dc0fcddf8276fe4f241e9a822dc436ffe5d19661fe3843875"
+  },
+  "findings": [],
+  "scope": "Independent source and host controls only; no target/SDK/guest acceptance",
+  "independent_host_sha256": "7d8d183e460239f8f8aed5e1c4647aef0c7f746b5ba0718aed887ab8731478b0",
+  "author_controls_readback_sha256": "dfeaf3b8a7e3eaae6478b84d5410afca28de18f55eadc7b56574487d7e441df2",
+  "review_sha256": "dcf1f3994929566f089d3ddf8535d356696c269113b1b6b71d54420a3be05a8a",
+  "controls": {
+    "actual_logger": true,
+    "raw_u32_vectors": 256,
+    "exact_derived_legacy_rows": 256,
+    "argument_mutants_caught": 2,
+    "malformed_negatives": 12,
+    "pvs0_actual_changed_region_identical": true
+  },
+  "target_programme_identity_checked": false,
+  "guest_run": false,
+  "reviewer_source_edits": false
+}

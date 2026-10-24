@@ -1,0 +1,27 @@
+{
+  "status": "PASS_OFF_TARGET_IMAGE_IDENTITY",
+  "source": "c2f0d82e95050a708d0b977f94fad34890cbc279",
+  "reference_source": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "new_main_raw_sha256": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+  "main_identical": true,
+  "all14_identical": true,
+  "elf_sha256": "07ddbf663b1b75d6941b84688ff7cae8f9a1471a485d6e0517448a429b63e334",
+  "resolved_profile_sha256": "a9a7a8c2cf3225dee89427158625664b0c477808f24e7089f6de302c2c64142c",
+  "scope": "Actual normal recipe OFF link identity only; camera diagnostic capture separately qualified; no hardware claim.",
+  "overlays": {
+    "em22.ovl": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e",
+    "em2b.ovl": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695",
+    "em2f.ovl": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1",
+    "em35.ovl": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7",
+    "em3b.ovl": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417",
+    "pl0f.ovl": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e",
+    "pl11.ovl": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e",
+    "pl14.ovl": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e",
+    "sscrn.ovl": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60",
+    "st1_0.ovl": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a",
+    "st1_1.ovl": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0",
+    "st1_2.ovl": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c",
+    "st1_3.ovl": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc",
+    "st2_0.ovl": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2"
+  }
+}

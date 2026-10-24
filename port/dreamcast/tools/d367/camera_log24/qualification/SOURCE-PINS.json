@@ -1,0 +1,101 @@
+{
+  "frozen_runtime_source": "c2f0d82e95050a708d0b977f94fad34890cbc279",
+  "scope": "Source helpers and metadata only. No assets, binaries, raw RAM, images, game log or production recipe changes. File receipts refer to externally retained actual observations.",
+  "files": {
+    "prepare-forest-camera-v2-20261024.py": {
+      "original_path": "C:\\Game Dev\\Emulators\\codex-lanes\\dedup-offline23\\prepare-forest-camera-v2-20261024.py",
+      "bytes": 2748,
+      "sha256": "7b989ec96eca0be9685c28b60bebcc5cec6c1c4e68d6a8330a7adb956028bf17"
+    },
+    "forest-camera-v2-build-20261024.sh": {
+      "original_path": "C:\\Game Dev\\Emulators\\codex-lanes\\dedup-offline23\\forest-camera-v2-build-20261024.sh",
+      "bytes": 2979,
+      "sha256": "728471ebf0111028db1e11573c64e6804cecc9be18023edb94e680b99ceb29b0"
+    },
+    "forest-camera-v2-master-20261024.sh": {
+      "original_path": "C:\\Game Dev\\Emulators\\codex-lanes\\dedup-offline23\\forest-camera-v2-master-20261024.sh",
+      "bytes": 847,
+      "sha256": "085f5ec56fd50822b0bec2c51479f517ec15015f291a61ef205f332cf693674a"
+    },
+    "forest-camera-v2-run-20261024.sh": {
+      "original_path": "C:\\Game Dev\\Emulators\\codex-lanes\\dedup-offline23\\forest-camera-v2-run-20261024.sh",
+      "bytes": 3083,
+      "sha256": "8e5b2d845a74d2e482d3d0f633b948b241e87dc6ec19c379bdbcd1f90af36a52"
+    },
+    "camera-v2-off-identity-20261024.sh": {
+      "original_path": "C:\\Game Dev\\Emulators\\codex-lanes\\dedup-offline23\\camera-v2-off-identity-20261024.sh",
+      "bytes": 3231,
+      "sha256": "118c4c19753084c4321a0a779476325617425249db4ed32ef76a3a11f044d6ff"
+    },
+    "judge-forest-camera-v2-20261024.py": {
+      "original_path": "C:\\Game Dev\\Emulators\\codex-lanes\\dedup-offline23\\judge-forest-camera-v2-20261024.py",
+      "bytes": 4169,
+      "sha256": "0f66e5873eee1b9e5d59819144ca8d16bd117517796438aff40fb9c9fb2587d6"
+    },
+    "forest-freeze800-capture.py": {
+      "original_path": "C:\\Game Dev\\Emulators\\codex-lanes\\dedup-offline23\\forest-freeze800-capture.py",
+      "bytes": 6887,
+      "sha256": "0ef1d48d94e2e281116c8483e0873c4a96f98a9e2ac2533457ad1b3bdbb11eae"
+    },
+    "forest-camera-build-20261024.sh": {
+      "original_path": "C:\\Game Dev\\Emulators\\codex-lanes\\dedup-offline23\\forest-camera-build-20261024.sh",
+      "bytes": 2903,
+      "sha256": "521edea08211affe30d2797bd1cdc68face412de45c38503646231b811fcfcaa"
+    },
+    "forest-camera-master-20261024.sh": {
+      "original_path": "C:\\Game Dev\\Emulators\\codex-lanes\\dedup-offline23\\forest-camera-master-20261024.sh",
+      "bytes": 853,
+      "sha256": "a77f2f2691db42cdc07139da2c4d25b03ed9d432bebaa37bcb110bf0e17095e1"
+    },
+    "forest-camera-run-20261024.sh": {
+      "original_path": "C:\\Game Dev\\Emulators\\codex-lanes\\dedup-offline23\\forest-camera-run-20261024.sh",
+      "bytes": 3089,
+      "sha256": "790d2c7be29d112c89b4d6283d2d01977c3163f92c7baaf547e1790a247f64f0"
+    },
+    "FULL-CAMERA-REFUSAL.json": {
+      "original_path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\restrip23-fb254\\root-forest-camera\\FULL-CAMERA-REFUSAL.json",
+      "bytes": 19818,
+      "sha256": "10803bc2306dc05709b26fc665a2b4b89476e363587e96e6067abc6b44e8a8d8"
+    },
+    "CAMERA-ADMISSION.json": {
+      "original_path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\restrip23-fb254\\root-forest-camera-v2\\CAMERA-ADMISSION.json",
+      "bytes": 3579,
+      "sha256": "24fce2f65bbae4cd865158e948e571081c5ca1d8c6203d2cee8c138f62ce136e"
+    },
+    "OFF-IDENTITY.json": {
+      "original_path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\restrip23-fb254\\root-forest-camera-v2\\OFF-IDENTITY.json",
+      "bytes": 1826,
+      "sha256": "5468e153505181a231eaf4bfd3b5d142d28cff09f2e188a2e67ae605403baeb7"
+    },
+    "PROGRAMME-PINS.json": {
+      "original_path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\restrip23-fb254\\root-forest-camera-v2\\PROGRAMME-PINS.json",
+      "bytes": 2586,
+      "sha256": "c32b05d5b97755fd96b09898dfb9c4e6d34f4c72eb74ba01a146365d3260f24c"
+    },
+    "BASE-BINDING.json": {
+      "original_path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\restrip23-fb254\\root-forest-camera-v2\\BASE-BINDING.json",
+      "bytes": 593,
+      "sha256": "c087e23c282f3863cc762b9536c85660407e7480ef934f1334bd62eacc336d5f"
+    },
+    "CAMERA-REVIEW-PIN.json": {
+      "original_path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\restrip23-fb254\\root-forest-camera-v2\\CAMERA-REVIEW-PIN.json",
+      "bytes": 336,
+      "sha256": "f101961f8b0c59fe5b11837397a1b1437aaba9fd5ed43918fff58fc2ba2cc047"
+    },
+    "CAPTURE-HELPER-PINS.json": {
+      "original_path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\restrip23-fb254\\root-forest-camera-v2\\CAPTURE-HELPER-PINS.json",
+      "bytes": 850,
+      "sha256": "9573571d19aa99606a4314a3b8c60d3c4cdab263d45f12bf1c7dfa47257d2870"
+    },
+    "REVIEW-CLEAR.json": {
+      "original_path": "C:\\Game Dev\\Emulators\\codex-lanes\\camera-log24\\root-review-c2f0\\REVIEW-CLEAR.json",
+      "bytes": 1664,
+      "sha256": "d14e34dcaa45a6742d357fd76073e99a4603ad0317b91e7336c35b13648dc95d"
+    },
+    "ROOT-RUNTIME-REVIEW.md": {
+      "original_path": "C:\\Game Dev\\Emulators\\codex-lanes\\camera-log24\\root-review-c2f0\\ROOT-RUNTIME-REVIEW.md",
+      "bytes": 2685,
+      "sha256": "dcf1f3994929566f089d3ddf8535d356696c269113b1b6b71d54420a3be05a8a"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "programme_pins_sha256": "c32b05d5b97755fd96b09898dfb9c4e6d34f4c72eb74ba01a146365d3260f24c",
+  "base_metadata_sha256": "2c803805e71510165fa787a51e76108ce8e5345fa2ca6628f02b34632afcb7b7",
+  "base_manifest_sha256": "513058ab62935917d29c270d328dbb99e5b3ee2ac1c4f655432af0f775b97a48",
+  "actual_track_sha256": "af36fe211d70b49edccb748ceeb6bf9a2f9196be4e8a2645b86a7a82ad43f22e",
+  "fixture_sha256": "c0ac80b280f49133bd9b4192d1569f7e1a2f3ede176c00c946cabf28bb1555a9",
+  "scope": "Current source diagnostic only: PVS mode2, batch0, explicit limited console. No current-performance comparison."
+}

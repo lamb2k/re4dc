@@ -1,0 +1,120 @@
+{
+  "status": "PASS_COMPLETE_CAMERA_FOR_OFFLINE_MODEL",
+  "source": "c2f0d82e95050a708d0b977f94fad34890cbc279",
+  "source_parser_sha256": "b2a2f6c9f5ea5b896b970c204fdcca5377052544c05ad4881552ecca434807bf",
+  "actual_guest_pid": 51692,
+  "actual_guest_elapsed_seconds": 42.921,
+  "room": "100",
+  "fixture": "bf-r100-forest",
+  "freeze_tick": 800,
+  "actual_logged_frame_range": [
+    182,
+    797
+  ],
+  "complete_rows": 616,
+  "selected_frames": [
+    500,
+    507,
+    514,
+    521,
+    528,
+    535,
+    542,
+    549,
+    556,
+    563,
+    570,
+    577,
+    584,
+    591,
+    598,
+    605,
+    612,
+    619,
+    626,
+    633,
+    640,
+    647,
+    654,
+    661,
+    668,
+    675,
+    682,
+    689,
+    696,
+    703,
+    710,
+    717,
+    724,
+    731,
+    738,
+    745,
+    752,
+    759,
+    766,
+    773,
+    780,
+    787,
+    794
+  ],
+  "selected_rows": 43,
+  "legacy_derivation": "Exact field expansion from 27 complete v2 words; only CRLF transport is normalized. No missing bits inferred.",
+  "all_six_viewport_words_authentic": true,
+  "far_f32": 18750.0,
+  "scope": "Current source camera-only PVS2/batch0 diagnostic. Full logged camera tuples for offline calculations; held screenshots show forest, Leon and HUD, not a sampled full runtime state or hardware/performance acceptance.",
+  "root_visual_check": "Both first buffer PNGs viewed: correct forest, Leon, HUD; no loading screen or watchdog overlay. Stable between two reads.",
+  "pins": {
+    "capture-r2\\run-output.txt": {
+      "bytes": 336315,
+      "sha256": "2744edb817aa8b21c630827582b88dac92391be70c552b8e191db610c04d19bd"
+    },
+    "capture-r2\\run-result.json": {
+      "bytes": 1442,
+      "sha256": "2653fb32f9a7aa4a867d90bf749296c8626b2634a71257e163d8b7ae5b53e881"
+    },
+    "capture-r2\\bounded-launch.json": {
+      "bytes": 598,
+      "sha256": "2d8918b4bd3f09a77a4cd33381a01cb8ed6d4e7aa987ae875bee2162daff480a"
+    },
+    "capture-r2\\freeze800-capture.json": {
+      "bytes": 3480,
+      "sha256": "4af8bd6661bbf37c6da7ceb307459b17bfecbc4de93a6729a39a11f48b057302"
+    },
+    "capture-r2\\emu.cfg": {
+      "bytes": 629,
+      "sha256": "1bd32372b5ae76657caff6423dfeea3b0c1886ddd08a6f1ca711a595df54aa5e"
+    },
+    "PROGRAMME-PINS.json": {
+      "bytes": 2586,
+      "sha256": "c32b05d5b97755fd96b09898dfb9c4e6d34f4c72eb74ba01a146365d3260f24c"
+    },
+    "BASE-BINDING.json": {
+      "bytes": 593,
+      "sha256": "c087e23c282f3863cc762b9536c85660407e7480ef934f1334bd62eacc336d5f"
+    },
+    "FOREST-CAMERA-DERIVED-LEGACY.txt": {
+      "bytes": 11051,
+      "sha256": "bb5c69203a3922a9b8f7694fbbc973f567f5b5ec29ceb8cdac47d63cfae74425"
+    },
+    "FOREST-CAMERA-V2-RAW-RECORDS.txt": {
+      "bytes": 155232,
+      "sha256": "8c3a190715e250acefe9b70120686133c4452ea3fa13af9ba0f58ffcc07d7038"
+    },
+    "capture-r2\\freeze800-frames\\first\\fb0.png": {
+      "bytes": 294684,
+      "sha256": "6b6bad1a896225ea967c4db3ad952af9964ed69d277d0cb5f7546b51b657d1ef"
+    },
+    "capture-r2\\freeze800-frames\\first\\fb1.png": {
+      "bytes": 294418,
+      "sha256": "d3774fe4e0f63a4b3a3853bcaa6fae4121b448fb17148e44ba2cd42e0c7adede"
+    },
+    "capture-r2\\freeze800-frames\\second\\fb0.png": {
+      "bytes": 294684,
+      "sha256": "6b6bad1a896225ea967c4db3ad952af9964ed69d277d0cb5f7546b51b657d1ef"
+    },
+    "capture-r2\\freeze800-frames\\second\\fb1.png": {
+      "bytes": 294418,
+      "sha256": "d3774fe4e0f63a4b3a3853bcaa6fae4121b448fb17148e44ba2cd42e0c7adede"
+    }
+  }
+}

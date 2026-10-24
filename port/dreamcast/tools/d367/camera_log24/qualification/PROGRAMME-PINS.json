@@ -1,0 +1,79 @@
+{
+  "source": "c2f0d82e95050a708d0b977f94fad34890cbc279",
+  "label": "out-rs24c2f0camrW",
+  "scope": "Camera-only diagnostic; PVS mode2/no cuts; batch0 due existing guard; not performance or production-image qualification.",
+  "files": {
+    "re4dc-game.elf": {
+      "size": 28760784,
+      "sha256": "e141a2377d3ef275d5d3b4c82ccd1af7c25c23d30b111bd1ff50c07a11b2c91a"
+    },
+    "resolved-knobs.txt": {
+      "size": 206468,
+      "sha256": "9a1ac8004169e0b0166a62cbb83729f80f0452e2c3e87e3abfe017bfd7da432f"
+    },
+    "syms.txt": {
+      "size": 27,
+      "sha256": "430097d606b3ca73833386420800c0734f8f9a10d1233dd479d254125435fee2"
+    },
+    "stack.txt": {
+      "size": 41,
+      "sha256": "7be72a4882037c051a3d5ad8de250c7ec7b56e5783f05cd3f3ebb6c4001f36c0"
+    },
+    "em22.ovl": {
+      "size": 27236,
+      "sha256": "dea81d16bdffe4fdb84a902ebee4597703d7fa23a7ff5a7370597b0f022255fb"
+    },
+    "em2b.ovl": {
+      "size": 67900,
+      "sha256": "1bde56303198685c13b07201e9f73a2b7ed231e0e206610ce410ec23ba0ad49a"
+    },
+    "em2f.ovl": {
+      "size": 16800,
+      "sha256": "a298c3e49e7bdd1c2800984759d15089b23bb9185dc6c45506c88debe87446e1"
+    },
+    "em35.ovl": {
+      "size": 52392,
+      "sha256": "3656a1476908883501e3541d8637caec3757d551b48c8a7e7fc169975d95db6a"
+    },
+    "em3b.ovl": {
+      "size": 7568,
+      "sha256": "483331fb06938de935cecfe779303502fddc3b4034e4b1c038d8ea82a8c8d405"
+    },
+    "pl0f.ovl": {
+      "size": 45608,
+      "sha256": "dfae0550d063fba32a5aab158bdad5ffa613bd7c7a64ddad761100fcb05d7b7f"
+    },
+    "pl11.ovl": {
+      "size": 35592,
+      "sha256": "1ea49b77c7781dba0b2f5394c70767089313e52278e5f16779892aadb0c05474"
+    },
+    "pl14.ovl": {
+      "size": 18832,
+      "sha256": "5e5d78b87ec726b4d539ea03575bd1062a4533d7304afcd41967df13cbbc62d2"
+    },
+    "sscrn.ovl": {
+      "size": 134372,
+      "sha256": "e33961120518c99259cfa61cac6036ba818297367024db78946077c8bd89b4e2"
+    },
+    "st1_0.ovl": {
+      "size": 36340,
+      "sha256": "540dc2dfdc08c7ae90e853cf9f0c26db9e41861def7d6d5897ffb51e486317fb"
+    },
+    "st1_1.ovl": {
+      "size": 81572,
+      "sha256": "dae2c39ef6414dc98bae7606a5c7da45b45064da1223dcb14b63f952c4961f0d"
+    },
+    "st1_2.ovl": {
+      "size": 50076,
+      "sha256": "dddcc767f188338081a1f5405c2aa5d3b1a6411c043b43eac9d906a50e8948f9"
+    },
+    "st1_3.ovl": {
+      "size": 88748,
+      "sha256": "6f6c5727c053748a3b8ced90ed0ab705e0065ce394b8f933f56d2f288b1635ac"
+    },
+    "st2_0.ovl": {
+      "size": 96788,
+      "sha256": "69b92f3bdc0aad9718e6f9c56ae9890b9f7d5fbb364bbf5adac69fbad9d8ac66"
+    }
+  }
+}
