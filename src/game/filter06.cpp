@@ -107,6 +107,294 @@ static Re4dcRainStreak s_raindc_out[RE4DC_RAIN_DC_N];
 static u32 s_raindc_seed = 0x2545F491U, s_raindc_frame, s_raindc_pending, s_raindc_ready, s_raindc_alpha;
 static u32 s_raindc_frames, s_raindc_sent;
 static f32 s_raindc_area;
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+// Private default-off render experiment. This signature is not a loaded-record receipt.
+static u32 s_raindc_queued_room, s_raindc_queued_frame; // exactly 8 extra bytes
+#endif
+#if (defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC) || (defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG)
+static int Filter06R10cRain()
+{
+    return pG->room_id == 0x10C && flt06.p != 0 && flt06.num == 1100 &&
+           flt06.col[0] == 170 && flt06.col[1] == 170 && flt06.col[2] == 170 && flt06.col[3] == 80 &&
+           flt06.rate == 1.0f && flt06.scale == 1.0f && flt06.spd.x == 21.0f &&
+           flt06.spd.y == -250.0f && flt06.spd.z == 0.0f && flt06.alphaMin == 0;
+}
+#endif
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+static void RainDcR10cCancel()
+{
+    if (s_raindc_queued_room == 0x10C) {
+        s_raindc_pending = 0;
+        s_raindc_queued_room = 0;
+        s_raindc_queued_frame = 0;
+    }
+}
+#endif
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+// Private observation only. No archive-owner, TA acknowledgement or present proof.
+#include <stdint.h>
+#include <kos/cache.h>
+#if !defined(RE4DC_GAME) || defined(__PPC__)
+#error RAIN_R10C_DIAG requires the native Dreamcast game
+#endif
+struct RainDiagRecord {
+    u32 seq, abi_flags, setter_generation, callback_generation;
+    u32 controller, record, head, observed_owner;
+    u32 setter_frame, callback_frame, queue_frame, event_frame;
+    u32 rooms, event_reason, state_flags, particle_count;
+    u32 alpha_ids, native_requested, native_accepted, accepted_total;
+    u16 counts[24];
+};
+extern "C" {
+volatile RainDiagRecord re4dc_rain_r10c_diag __attribute__((aligned(32)));
+}
+static_assert(sizeof(RainDiagRecord) == 128, "rain diagnostic payload");
+static_assert(__builtin_offsetof(RainDiagRecord, counts) == 80, "rain diagnostic counters");
+enum {
+    RD_FEATURE = 1, RD_CAUSAL = 2, RD_SIGNATURE = 4, RD_PENDING = 8,
+    RD_WOULD = 16, RD_STOP = 32, RD_INDOOR = 64, RD_BLUR_KNOWN = 128,
+    RD_BLUR_OK = 256, RD_SAMPLE = 8192, RD_QUEUE_KEY = 16384,
+    RD_FAULT = 0x80000000U, RD_LAST = 0xfffffffeU,
+    RD_SET = 1, RD_BIND = 2, RD_ROOM = 3, RD_TRANS = 4, RD_CALLBACK = 5,
+    RD_QUEUE = 6, RD_CONSUME = 7, RD_RETURN = 8, RD_JOIN_LOST = 9,
+    RD_CANCEL = 10, RD_DESTRUCT = 11, RD_ALLOC = 12, RD_REJECT = 13,
+    RD_STALE = 1, RD_PROFILE = 2, RD_ALPHA = 4, RD_INSIDE = 8,
+    RD_BLUR = 16, RD_WIDTH = 32, RD_HEIGHT = 64, RD_PAUSE = 128,
+    RD_ZERO = 256
+};
+enum {
+    RDC_SET, RDC_BOUND, RDC_DESTRUCT, RDC_ROOM, RDC_ALLOC, RDC_TRANS,
+    RDC_ZERO, RDC_INDOOR, RDC_STOP, RDC_CALLBACK, RDC_CANDIDATE,
+    RDC_PROFILE, RDC_ALPHA, RDC_QUEUE, RDC_CANCEL_SET, RDC_CANCEL_ROOM,
+    RDC_CANCEL_CALLBACK, RDC_STALE, RDC_STATE, RDC_CONSUMED,
+    RDC_STOP_FLUSH, RDC_RETURN_ZERO, RDC_RETURN_POSITIVE, RDC_BIND_REJECT
+};
+static volatile RainDiagRecord* RainDiag()
+{
+#if defined(RE4DC_RAIN_DIAG_HOST_TEST)
+    extern volatile RainDiagRecord* re4dc_rain_diag_host_p2();
+    return re4dc_rain_diag_host_p2();
+#else
+    return (volatile RainDiagRecord*) ((uintptr_t) &re4dc_rain_r10c_diag | 0xa0000000U);
+#endif
+}
+static void RainDiagBarrier() { __asm__ volatile("" ::: "memory"); }
+static int RainDiagOpen(u32 event, u32 reason)
+{
+    volatile RainDiagRecord* d = RainDiag();
+    if (d->abi_flags != 1 || (d->seq & 1) || d->seq >= RD_LAST) return 0;
+    if (d->seq == RD_LAST - 2) {
+        ++d->seq; RainDiagBarrier(); d->abi_flags |= RD_FAULT;
+        RainDiagBarrier(); ++d->seq; return 0;
+    }
+    ++d->seq; RainDiagBarrier();
+    d->state_flags &= ~(RD_SAMPLE | RD_BLUR_KNOWN | RD_BLUR_OK);
+    d->event_reason = event | (reason << 16);
+    return 1;
+}
+static void RainDiagCount(u32 counter)
+{
+    volatile RainDiagRecord* d = RainDiag();
+    if (d->counts[counter] >= 0xfffe) {
+        d->counts[counter] = 0xffff; d->abi_flags |= RD_FAULT;
+    } else ++d->counts[counter];
+}
+static void RainDiagSnapshot()
+{
+    volatile RainDiagRecord* d = RainDiag();
+    d->event_frame = pG->Frame_cnt;
+    d->rooms = ((d->state_flags & RD_QUEUE_KEY) ? d->rooms & 0xffff0000U : 0xffff0000U) |
+               (pG->room_id & 0xffff);
+    d->particle_count = flt06.num;
+    d->alpha_ids = (d->alpha_ids & 0xffff0000U) | flt06.cur[3] | ((u32) flt06.col[3] << 8);
+    d->state_flags &= ~(RD_FEATURE | RD_SIGNATURE | RD_PENDING | RD_WOULD | RD_STOP | RD_INDOOR);
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+    d->state_flags |= RD_FEATURE;
+    if (s_raindc_pending && s_raindc_queued_room == 0x10c) d->state_flags |= RD_PENDING;
+#endif
+    if (Filter06R10cRain()) d->state_flags |= RD_SIGNATURE;
+    if (!(d->state_flags & RD_FEATURE) && (d->state_flags & RD_SIGNATURE) && flt06.cur[3]) d->state_flags |= RD_WOULD;
+    if (pG->Stop_flg & 0x08000000) d->state_flags |= RD_STOP;
+    if (pG->Status_flg[1] & 0x02000000) d->state_flags |= RD_INDOOR;
+}
+static void RainDiagClose()
+{
+    RainDiagSnapshot();
+    if (RainDiag()->abi_flags != 1) RainDiag()->state_flags &= ~RD_SAMPLE;
+    RainDiagBarrier(); ++RainDiag()->seq;
+}
+static void RainDiagClearCause()
+{
+    volatile RainDiagRecord* d = RainDiag();
+    d->state_flags &= ~(RD_CAUSAL | RD_QUEUE_KEY | RD_SAMPLE);
+    d->controller = d->record = d->head = d->callback_generation = 0;
+    d->observed_owner = 0xffffffffU;
+    d->setter_frame = d->callback_frame = d->queue_frame = 0;
+    d->alpha_ids &= 0xffff;
+}
+static void RainDiagForget()
+{
+    RainDiagClearCause();
+    volatile RainDiagRecord* d = RainDiag();
+    if (d->setter_generation >= 0xfffffffeU) {
+        d->setter_generation = 0xffffffffU; d->abi_flags |= RD_FAULT;
+    } else ++d->setter_generation;
+}
+static void RainDiagBoot()
+{
+    // Only Filter06Init calls this: systemRestartInit -> FilterInit, before source updates.
+    // Four isolated BSS lines: cold dirty P1 zeros become physical; warm P1 stays clean.
+    dcache_wback_range((uintptr_t) &re4dc_rain_r10c_diag, sizeof(re4dc_rain_r10c_diag));
+    volatile RainDiagRecord* d = RainDiag();
+    volatile u32* words = (volatile u32*) d;
+    u32 any = 0;
+    for (u32 i = 0; i < 32; ++i) any |= words[i];
+    if (any) return; // Includes ABI0/nonzero-sequence warm and every faulted record. Never thaw.
+    // Closed writers never zero this object. All-zero after BSS coherence is initial boot only.
+    d->seq = 1; RainDiagBarrier(); d->abi_flags = 1;
+    d->observed_owner = 0xffffffffU; d->rooms = 0xffffffffU;
+    RainDiagBarrier(); d->seq = 2;
+}
+static void RainDiagInvalidate(u32 event, u32 counter, u32 cancel_counter, u32 reason)
+{
+    if (!RainDiagOpen(event, reason)) return;
+    RainDiagCount(counter);
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+    if (s_raindc_pending && s_raindc_queued_room == 0x10c) RainDiagCount(cancel_counter);
+#endif
+    RainDiagForget(); RainDiagClose();
+}
+extern "C" u32 re4dc_rain_diag_generation()
+{
+    volatile RainDiagRecord* d = RainDiag();
+    return d->abi_flags == 1 && !(d->seq & 1) && d->seq < RD_LAST ? d->setter_generation : 0xffffffffU;
+}
+extern "C" void re4dc_rain_diag_bind44(u32 before, const void* controller, const void* record,
+                                       const void* head, u32 owner, u32 valid, u32 ids)
+{
+    if (!RainDiagOpen(RD_BIND, 0)) return;
+    volatile RainDiagRecord* d = RainDiag();
+    if (valid && controller && record && head && before < 0xfffffffeU &&
+        d->setter_generation == before + 1 && flt06.p && flt06.num) {
+        d->controller = (u32) (uintptr_t) controller;
+        d->record = (u32) (uintptr_t) record;
+        d->head = (u32) (uintptr_t) head;
+        d->observed_owner = owner <= 0xd0 ? owner : 0xffffffffU;
+        d->setter_frame = pG->Frame_cnt;
+        d->alpha_ids = (ids << 16) | (d->alpha_ids & 0xffff);
+        d->state_flags |= RD_CAUSAL;
+        RainDiagCount(RDC_BOUND);
+    } else {
+        RainDiagClearCause(); RainDiagCount(RDC_BIND_REJECT);
+    }
+    RainDiagClose();
+}
+extern "C" void re4dc_rain_diag_destruct44(const void* controller)
+{
+    if (!RainDiagOpen(RD_DESTRUCT, 0)) return;
+    volatile RainDiagRecord* d = RainDiag();
+    d->state_flags &= ~(RD_CAUSAL | RD_QUEUE_KEY);
+    d->controller = (u32) (uintptr_t) controller; d->record = d->head = 0;
+    d->observed_owner = 0xffffffffU;
+    RainDiagCount(RDC_DESTRUCT); RainDiagClose();
+}
+static void RainDiagEvent(u32 event, u32 counter, u32 reason)
+{
+    if (!RainDiagOpen(event, reason)) return;
+    RainDiagCount(counter); RainDiagClose();
+}
+static void RainDiagBlur(int allowed)
+{
+    if (!RainDiagOpen(RD_TRANS, allowed ? 0 : RD_BLUR)) return;
+    RainDiag()->state_flags |= RD_BLUR_KNOWN;
+    if (allowed) RainDiag()->state_flags |= RD_BLUR_OK;
+    else RainDiag()->state_flags &= ~RD_BLUR_OK;
+    RainDiagClose();
+}
+static void RainDiagCallback()
+{
+    if (!RainDiagOpen(RD_CALLBACK, 0)) return;
+    volatile RainDiagRecord* d = RainDiag();
+    d->state_flags &= ~RD_QUEUE_KEY;
+    d->queue_frame = 0;
+    d->callback_generation = d->setter_generation;
+    d->callback_frame = pG->Frame_cnt;
+    RainDiagCount(RDC_CALLBACK);
+    if (!Filter06R10cRain()) RainDiagCount(RDC_PROFILE);
+    else if (!flt06.cur[3]) RainDiagCount(RDC_ALPHA);
+    else RainDiagCount(RDC_CANDIDATE);
+    RainDiagClose();
+}
+static void RainDiagQueue()
+{
+    if (!RainDiagOpen(RD_QUEUE, 0)) return;
+    RainDiag()->state_flags |= RD_QUEUE_KEY;
+    RainDiag()->queue_frame = pG->Frame_cnt;
+    RainDiag()->rooms = (0x10cU << 16) | (pG->room_id & 0xffff);
+    RainDiagCount(RDC_QUEUE); RainDiagClose();
+}
+static int RainDiagCheck(u32 reason, int rejected)
+{
+    if (rejected && RainDiagOpen(RD_REJECT, reason)) {
+        RainDiagCount(reason == RD_STALE ? RDC_STALE : RDC_STATE); RainDiagClose();
+    }
+    return rejected;
+}
+static void RainDiagCancelCallback()
+{
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+    if (s_raindc_pending && s_raindc_queued_room == 0x10c)
+        RainDiagEvent(RD_CANCEL, RDC_CANCEL_CALLBACK, 0);
+#endif
+}
+struct RainDiagNativeKey { u32 seq, generation, frame, room, queue_frame, queue_room, requested, reported; };
+static_assert(sizeof(RainDiagNativeKey) == 32, "rain diagnostic planned scalar locals");
+static void RainDiagConsume(RainDiagNativeKey* key, u32 queue_room, u32 queue_frame)
+{
+    key->seq = RD_LAST; key->generation = key->frame = key->room = 0;
+    key->queue_room = queue_room; key->queue_frame = queue_frame;
+    key->requested = key->reported = 0;
+    if (!RainDiagOpen(RD_CONSUME, 0)) return;
+    RainDiagCount(RDC_CONSUMED);
+    if (queue_room == 0x10c && (pG->Stop_flg & 0x08000000)) RainDiagCount(RDC_STOP_FLUSH);
+    RainDiagClose();
+    key->seq = RainDiag()->seq; key->generation = RainDiag()->setter_generation;
+    key->frame = pG->Frame_cnt; key->room = pG->room_id;
+}
+static void RainDiagReturned(const RainDiagNativeKey* key)
+{
+    volatile RainDiagRecord* d = RainDiag();
+    if (d->abi_flags != 1 || (d->seq & 1) || d->seq >= RD_LAST) return;
+    // Sequence witnesses every already-published identity/state field; never copy a 128B record.
+    if (d->seq == key->seq && key->generation != 0 && d->setter_generation == key->generation &&
+        d->callback_generation == key->generation && d->callback_frame == key->frame &&
+        d->queue_frame == key->queue_frame && key->queue_frame == key->frame &&
+        d->event_frame == key->frame && pG->Frame_cnt == key->frame &&
+        key->queue_room == 0x10c && key->room == 0x10c && pG->room_id == key->room &&
+        d->rooms == ((key->queue_room << 16) | key->room) &&
+        (d->state_flags & (RD_FEATURE | RD_QUEUE_KEY)) == (RD_FEATURE | RD_QUEUE_KEY) &&
+        d->particle_count == flt06.num &&
+        ((d->state_flags & RD_SIGNATURE) != 0) == (Filter06R10cRain() != 0) &&
+        (d->alpha_ids & 0xffffU) == ((u32) flt06.cur[3] | ((u32) flt06.col[3] << 8)) &&
+        ((d->state_flags & RD_STOP) != 0) == ((pG->Stop_flg & 0x08000000) != 0) &&
+        ((d->state_flags & RD_INDOOR) != 0) == ((pG->Status_flg[1] & 0x02000000) != 0) &&
+        key->reported <= key->requested) {
+        if (!RainDiagOpen(RD_RETURN, 0)) return;
+        d->native_requested = key->requested; d->native_accepted = key->reported;
+        d->state_flags |= RD_SAMPLE;
+    } else {
+        if (!RainDiagOpen(RD_JOIN_LOST, 0)) return;
+        d->native_requested = d->native_accepted = 0;
+        RainDiagCount(RDC_BIND_REJECT);
+    }
+    // Native API-reported counts only: submit_pvr does not forward pvr_prim acknowledgement.
+    if (key->reported >= 0xffffffffU - d->accepted_total) {
+        d->accepted_total = 0xffffffffU; d->abi_flags |= RD_FAULT;
+    } else d->accepted_total += key->reported;
+    RainDiagCount(key->reported ? RDC_RETURN_POSITIVE : RDC_RETURN_ZERO);
+    RainDiagClose();
+}
+#endif
 static f32 RainDcUnit()
 {
     u32 x = s_raindc_seed;
@@ -134,7 +422,46 @@ static void RainDcFlush()
     if (!s_raindc_pending) {
         return;
     }
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+    const int r10c = s_raindc_queued_room == 0x10C;
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+    if (r10c && (RainDiagCheck(RD_STALE, s_raindc_queued_frame != pG->Frame_cnt) ||
+                 RainDiagCheck(RD_PROFILE, !Filter06R10cRain()) || RainDiagCheck(RD_ALPHA, flt06.cur[3] == 0) ||
+                 RainDiagCheck(RD_INSIDE, (pG->Status_flg[1] & 0x02000000) != 0) ||
+                 RainDiagCheck(RD_BLUR, !Render_checkBlurPermission()) ||
+                 RainDiagCheck(RD_WIDTH, Screen.width != 512.0f) ||
+                 RainDiagCheck(RD_HEIGHT, Screen.height != 448.0f) || RainDiagCheck(RD_PAUSE, Filter09GetbUse()))) {
+        RainDcR10cCancel();
+        if (RainDiagOpen(RD_CANCEL, RainDiag()->event_reason >> 16)) {
+            RainDiag()->state_flags &= ~RD_QUEUE_KEY; RainDiag()->queue_frame = 0; RainDiagClose();
+        }
+        return;
+    }
+#else
+    if (r10c && (s_raindc_queued_frame != pG->Frame_cnt || !Filter06R10cRain() || flt06.cur[3] == 0 ||
+                 (pG->Status_flg[1] & 0x02000000) || !Render_checkBlurPermission() ||
+                 Screen.width != 512.0f || Screen.height != 448.0f || Filter09GetbUse())) {
+        RainDcR10cCancel();
+        return;
+    }
+#endif
+#endif
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+    RainDiagNativeKey diag_key;
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+    diag_key.queue_room = s_raindc_queued_room; diag_key.queue_frame = s_raindc_queued_frame;
+#else
+    diag_key.queue_room = diag_key.queue_frame = 0;
+#endif
+#endif
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+    s_raindc_queued_room = 0;
+    s_raindc_queued_frame = 0;
+#endif
     s_raindc_pending = 0;
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+    RainDiagConsume(&diag_key, diag_key.queue_room, diag_key.queue_frame);
+#endif
     u32 now = pG->Frame_cnt, dt = now - s_raindc_frame;
     s_raindc_frame = now;
     if (!s_raindc_ready) {
@@ -144,10 +471,20 @@ static void RainDcFlush()
         s_raindc_ready = 1;
         dt = 0;
     }
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+    if (r10c && (pG->Stop_flg & 0x08000000)) {
+        dt = 0; // source Stop freezes motion/alpha but still draws
+    }
+#endif
     if (dt > 4) {
         dt = 4;
     }
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+    const f32 fade = r10c ? (f32) (s_raindc_alpha > 80 ? 80 : s_raindc_alpha) * (1.0f / 80.0f) :
+                           (f32) (s_raindc_alpha > 60 ? 60 : s_raindc_alpha) * (1.0f / 60.0f);
+#else
     const f32 fade = (f32) (s_raindc_alpha > 60 ? 60 : s_raindc_alpha) * (1.0f / 60.0f);
+#endif
     u32 n = 0;
     f32 area = 0.0f;
     for (u32 i = 0; i < RE4DC_RAIN_DC_N; ++i) {
@@ -156,7 +493,12 @@ static void RainDcFlush()
         if (p->y > 480.0f) {
             RainDcSpawn(p, 1);
         }
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+        // Experimental sheet-informed profile (r10c 210/120 versus night 180/100), not pixel equivalence.
+        const u32 a = r10c ? (u32) (p->a * fade * 1.2f) : (u32) (p->a * fade);
+#else
         const u32 a = (u32) (p->a * fade);
+#endif
         if (a == 0 || i >= (u32) RAIN_DC_DRAWN) {
             continue;
         }
@@ -166,14 +508,27 @@ static void RainDcFlush()
         s->y1 = p->y + p->len;
         s->z = 1.0f / p->d;
         s->w = p->w;
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+        const u32 rgb = r10c ? 0xD2D2D2U : 0xB4B4B4U;
+        s->tail = ((a >> 2) << 24) | rgb;
+        s->head = (a << 24) | rgb;
+#else
         s->tail = ((a >> 2) << 24) | 0xB4B4B4U;     // PS2 sheet colour 180
         s->head = (a << 24) | 0xB4B4B4U;
+#endif
         const f32 t = s->y0 > 0.0f ? s->y0 : 0.0f, b = s->y1 < 480.0f ? s->y1 : 480.0f;
         if (b > t) {
             area += (b - t) * s->w;                     // screen area submitted (before depth rejection)
         }
     }
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+    diag_key.requested = n;
+    diag_key.reported = re4dc_rain_dc_streaks(s_raindc_out, n);
+    s_raindc_sent += diag_key.reported;
+    RainDiagReturned(&diag_key);
+#else
     s_raindc_sent += re4dc_rain_dc_streaks(s_raindc_out, n);
+#endif
     s_raindc_area += area;
     if (++s_raindc_frames % 120 == 1) {
         re4dc_log("rain dc: frame=%u room=%x streaks=%u sent=%u alpha=%u area_px=%u mean_screens_x1e4=%u\n",
@@ -343,12 +698,21 @@ void cParticle06::move()
 // Boot: same as the room init.
 void Filter06Init()
 {
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+    RainDiagBoot();
+#endif
     Filter06RoomInit();
 }
 
 // Room init: no particles, colour black, box 2500/2500/5000, spread 5000.
 void Filter06RoomInit()
 {
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+    RainDiagInvalidate(RD_ROOM, RDC_ROOM, RDC_CANCEL_ROOM, 0);
+#endif
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+    RainDcR10cCancel();
+#endif
     memclr_asm(&flt06, sizeof(flt06));
     flt06.col[0] = 0;
     flt06.col[1] = 0;
@@ -377,19 +741,31 @@ void Filter06Trans()
     static int use_filter6 = 1;
     u32 i;
 
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+    RainDiagEvent(RD_TRANS, RDC_TRANS, 0);
+#endif
     if (use_filter6 == 0) {
         return;
     }
     if (flt06.num == 0) {
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+        RainDiagEvent(RD_TRANS, RDC_ZERO, RD_ZERO);
+#endif
         return;
     }
     if (pG->Status_flg[1] & 0x02000000) {
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+        RainDiagEvent(RD_TRANS, RDC_INDOOR, RD_INSIDE);
+#endif
         return;
     }
     PSVECSubtract(&pG->Cam.param.at, &pG->Cam.param.pos, &cam_vec_LR);
     PSVECCrossProduct(&cam_vec_LR, &pG->Cam.up, &cam_vec_LR);
 #line 246
     VECNormalize(&cam_vec_LR, &cam_vec_LR);
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+    if (pG->Stop_flg & 0x08000000) RainDiagEvent(RD_TRANS, RDC_STOP, 0);
+#endif
     if (!(pG->Stop_flg & 0x08000000)) {
 #if defined(RE4DC_RAIN_PS2) && RE4DC_RAIN_PS2
         // RAIN_PS2: in a room with the PS2 recipe only the drawn subset moves (no other reader of the positions).
@@ -412,8 +788,14 @@ void Filter06Trans()
         flt06.cur[3] = (u8) flt06.alphaF;
     }
     if (Render_checkBlurPermission()) {
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+        RainDiagBlur(1);
+#endif
         AddOtDirect(0x12, (void*) 0xCDCDCDCD, Filter06Render, 7, 0x400, 0, 0.0f);
     }
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+    else RainDiagBlur(0);
+#endif
 }
 
 // Starts `level` particles (max 0x800; buffer allocated on first use) with speed spd +- spdRand per
@@ -424,6 +806,12 @@ void Filter06SetParam(u32 level, int r, int g, int b, int a, f32 rate, Vec* spd,
 {
     u32 i;
 
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+    RainDiagInvalidate(RD_SET, RDC_SET, RDC_CANCEL_SET, level == 0 ? RD_ZERO : 0);
+#endif
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+    RainDcR10cCancel();
+#endif
     flt06.num = level;
     if (level > 0x800) {
         flt06.num = 0x800;
@@ -436,6 +824,9 @@ void Filter06SetParam(u32 level, int r, int g, int b, int a, f32 rate, Vec* spd,
         flt06.p = p;
         if (p == 0) {
             flt06.num = 0;
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+            RainDiagEvent(RD_ALLOC, RDC_ALLOC, 0);
+#endif
             pLog->err(0, 0, "Filter06: not enough memory.");
             return;
         }
@@ -466,6 +857,9 @@ void Filter06Render()
     cParticle06* p;
     f32 scale;
 
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+    RainDiagCallback();
+#endif
 #if defined(RE4DC_RAIN_PS2) && RE4DC_RAIN_PS2
     if (Filter06Ps2Rain()) {
         PSMTXCopy(pG->Cam.v_mat, s_rain_view);
@@ -478,6 +872,23 @@ void Filter06Render()
         s_rain_pending = 1;
     }
 #if defined(RE4DC_RAIN_DC) && RE4DC_RAIN_DC
+#if defined(RE4DC_RAIN_R10C_DC) && RE4DC_RAIN_R10C_DC
+    // Stamp in the actual OT callback, not the preceding Trans registration.
+    // main.cpp increments Frame_cnt only after Render returns; ADEB flush is synchronous inside Render.
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+    RainDiagCancelCallback();
+#endif
+    RainDcR10cCancel();
+    if (Filter06R10cRain() && flt06.cur[3] != 0) {
+        s_raindc_queued_room = 0x10C;
+        s_raindc_queued_frame = pG->Frame_cnt;
+        s_raindc_pending = 1;
+        s_raindc_alpha = flt06.cur[3];
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+        RainDiagQueue();
+#endif
+    }
+#endif
     if ((pG->room_id == 0x11A || pG->room_id == 0x11B) && flt06.num != 0 && flt06.cur[3] != 0) {
         s_raindc_pending = 1;
         s_raindc_alpha = flt06.cur[3];

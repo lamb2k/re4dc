@@ -3465,3 +3465,5 @@ include kos_cache_p2.mk
 # World programme Gate 0, diagnostic only; default 0.
 include world_census24.mk
 include perf_phase_miss.mk
+# GC-ASSET diagnostics: default 0, no linked object/flags when off.
+include gc_asset_gate.mk

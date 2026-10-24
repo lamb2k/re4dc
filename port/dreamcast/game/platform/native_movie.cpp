@@ -26,6 +26,7 @@
 #include "native_ui.h"
 #include "native_io.h"
 #include "native_movie.h"
+#include "include/gc_asset_movie.h"
 #include "include/native_cabin.h"
 #include "../../room/room_storage.hpp"
 #if RE4DC_MOVIE_DISC_QUIET
@@ -118,6 +119,9 @@ constexpr unsigned MaxAllocs=10;
 constexpr unsigned MaxReserve=12;
 #endif
 struct Movie {
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::CheckedAsset asset{};unsigned asset_owner=0;
+#endif
     unsigned id=0; char path[40]{};
     file_t file=-1; plm_buffer_t* input=nullptr; plm_video_t* decoder=nullptr;
     unsigned char *pcm=nullptr,*callback=nullptr,*readbuf=nullptr,*rows=nullptr;
@@ -630,6 +634,24 @@ bool open(unsigned id){
        m.width!=288 || m.height!=192 || !m.full))return false;
 #endif
     auto size=fs_total(m.file);if(size<2048||size>40000000)return false;
+#if RE4DC_GC_ASSET_GATE
+    // One extra immutable container read in diagnostic builds. Hash after the
+    // original size/header checks, outside audio/G2 and native file-call locks.
+    m.asset={};
+    if(re4dc_gcasset::ensure_disc_catalog()){
+        re4dc_gcasset::Digest digest{};bool captured=false;
+        {
+            Re4dcIoScope owner;const file_t file=fs_open(m.path,O_RDONLY);
+            const auto read=[](void* context,void* destination,unsigned bytes)->unsigned {
+                const ssize_t got=fs_read(*static_cast<const file_t*>(context),destination,bytes);return got<0?0:unsigned(got);
+            };
+            captured=file>=0 && fs_total(file)==size && re4dc_gcasset::fingerprint_read(digest,read,const_cast<file_t*>(&file),unsigned(size));
+            if(file>=0)fs_close(file);
+        }
+        if(captured){char id[16];snprintf(id,sizeof id,"%05x",m.id);m.asset=re4dc_gcasset::bind_checked("movie",id,digest);}
+        else re4dc_gcasset::unresolved(re4dc_gcasset::Movie,"movie-container-read");
+    }
+#endif
     m.transport_left=size-2048;
     {Re4dcIoScope owner;if(fs_seek(m.file,2048,SEEK_SET)!=2048)return false;}
     const unsigned long long video_us=(unsigned long long)m.expected_frames*1001000ULL/30,audio_us=(unsigned long long)m.audio_bytes*1000000ULL/128000;
@@ -676,6 +698,9 @@ bool open(unsigned id){
     if(!re4dc_ui_movie_open(m.width,m.height))return false;
     m.texture=true;
     m.tex=re4dc_ui_movie_texture();
+#if RE4DC_GC_ASSET_GATE
+    m.asset_owner=re4dc_gcasset_movie_bind(m.tex,m.width,m.height,m.asset.value);
+#endif
 #if RE4DC_CABIN_SOURCE
     if(cabin_movie.generation)cabin_movie.ui_generation=re4dc_ui_movie_cabin_generation();
 #endif
@@ -825,7 +850,13 @@ plm_frame_t* decode_next(){
 // Upload picture `index` and submit it one field before its flip vblank.
 bool show(plm_frame_t* f,unsigned index,unsigned now,RouteMoviePictureTick tick,bool present){
     if(!re4dc_ui_movie_upload_begin())return false;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_movie_begin_upload(m.asset_owner,m.tex);
+#endif
     if(!m.hw)convert_upload(f);else if(!yuv_upload(f))return false;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_movie_uploaded(m.asset_owner,m.tex,m.width,m.height,m.asset.value);
+#endif
 #if RE4DC_ROUTE_MOVIE_TEXHASH
     if(m.tex)texhash(index);
 #endif
@@ -880,6 +911,9 @@ int start(unsigned id,unsigned mask){
     m.pending=decode_next();
     if(!m.pending||!feed())return finish(RE4DC_MOVIE_ERROR);
     m.start=timer_us_gettime64();
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_movie_stream_arm(m.stream,m.asset_owner,m.asset.value);
+#endif
 #if RE4DC_CABIN_SOURCE
     if(cabin_movie.generation){
         if(!re4dc_movie_stream_cabin_start(m.stream,cabin_movie.generation))return finish(RE4DC_MOVIE_ERROR);

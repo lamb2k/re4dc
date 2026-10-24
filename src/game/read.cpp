@@ -5,6 +5,9 @@
 #if defined(RE4DC_GAME) && !defined(__PPC__)
 #include "native_ui.h"
 #endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+extern "C" void re4dc_gcasset_retire_archive(const void*);
+#endif
 // game/read: room / core / option / enemy / player / weapon data loading (D:/Bio4/Prog/read.cpp).
 // All 21 functions byte-identical (OptionDataRead's objdiff rows are reloc-only). readEmData: `m`
 // (14 refs / 198 insns, 2121) lost r29 to `newSize` (6 / 54, 2222) in global.c priority; the
@@ -310,6 +313,9 @@ void CoreDataRead()
     // Core reload has the source's suspended boot lifetime. Remove borrowed
     // effect identities before DVD overwrites their backing.
     re4dc_effect_unbind((void*) CORE_DATA_ADDR);
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_retire_archive((void*) CORE_DATA_ADDR);
+#endif
 #endif
     pG->pArc = (ArcFile*) CORE_DATA_ADDR;
 #line 219 "D:/Bio4/Prog/read.cpp"

@@ -1,0 +1,29 @@
+{
+  "source_sha256": "3bb6f94415627fb741c87fb9458420fd96c0dab137edc3d26b692d6391412056",
+  "scope": "Host fake IO over actual function, no SDK or guest acceptance",
+  "cases": [
+    {
+      "gate": 0,
+      "entries": 63,
+      "result": "7 actual-function cases passed"
+    },
+    {
+      "gate": 0,
+      "entries": 255,
+      "result": "9 actual-function cases passed"
+    },
+    {
+      "gate": 1,
+      "entries": 63,
+      "result": "16 actual-function cases passed"
+    },
+    {
+      "gate": 1,
+      "entries": 255,
+      "result": "18 actual-function cases passed"
+    }
+  ],
+  "host_off_function_preprocessing_identical": true,
+  "full_programme_OFF_identity": "NOT_RUN",
+  "original_KOS_floor_repaired": "NOT_PROVEN"
+}

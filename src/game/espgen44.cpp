@@ -6,6 +6,11 @@
 #include "esp.h"
 #include "espgen.h"
 #include "filter.h"
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+extern "C" u32 re4dc_rain_diag_generation();
+extern "C" void re4dc_rain_diag_bind44(u32, const void*, const void*, const void*, u32, u32, u32);
+extern "C" void re4dc_rain_diag_destruct44(const void*);
+#endif
 
 struct Espgen44Work {
     u8 type;           // 0x14 0 = Filter05, 1 = Filter06
@@ -41,6 +46,9 @@ void Espgen44_Destruct(EspgenWork* w)
         Filter05SetParamF(0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0);
         break;
     case 1: {
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+        re4dc_rain_diag_destruct44(w);
+#endif
         Vec zero = {0.0f, 0.0f, 0.0f};
         Filter06SetParam(0, 0, 0, 0, 0, 0.0f, &zero, 0.0f, &zero, 0.0f, 0);
         break;
@@ -73,8 +81,16 @@ int Espgen44_SetFreeWork(EspgenWork* w, EspGenWork* rec, EspSeqData* head, cMode
         int level = (s8) rec->Work8[0] * 100 + 100;
         f32 scale = rec->Size_base_x * 0.005f;
         int kind = rec->Work8[1];
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+        const u32 before = re4dc_rain_diag_generation();
+#endif
         Filter06SetParam(level, rec->Col_start_r, rec->Col_start_g, rec->Col_start_b, rec->Col_start_a, rec->Col_d_a, &rec->Speed, 0.0f, &rec->R_speed, scale,
                          kind);
+#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG
+        re4dc_rain_diag_bind44(before, w, rec, head, w->info.owner,
+            (w->flag & 3) == 1 && w->id == 0x44 && rec->Kind == 1 && rec->Espgen_id == 0x44 && rec->Id != 0,
+            ((u32) rec->Id << 8) | rec->Kind);
+#endif
         break;
     }
     }

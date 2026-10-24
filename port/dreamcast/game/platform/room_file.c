@@ -15,6 +15,9 @@ extern void re4dc_log(const char* fmt, ...);
 extern void* re4dc_static_alloc(unsigned bytes);
 extern void re4dc_static_free(void* data);
 extern int re4dc_static_heap_free(void);
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+extern void re4dc_gcasset_room_parent_retire(void); /* memory-only revocation */
+#endif
 #if defined(RE4DC_SCENERY21_AB) && RE4DC_SCENERY21_AB
 extern char re4dc_bench_arm(void) __attribute__((weak));
 #endif
@@ -41,6 +44,9 @@ extern char re4dc_bench_arm(void) __attribute__((weak));
 #define MAXSEC 8
 static struct {
     unsigned room, nsec, bytes;
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    unsigned gcasset_prepared; /* one bit per borrowed section, reset by actual owner reset */
+#endif
     uint8_t* block;
     re4dc_room_header hdr;
     struct { char tag[4]; uint16_t version, flags; uint8_t* data; uint32_t len; } sec[MAXSEC];
@@ -66,12 +72,18 @@ const void* re4dc_room_file_block(void) { return rf.block; }
 
 void re4dc_room_file_leave(void)
 {
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_room_parent_retire();
+#endif
     if (rf.block) re4dc_static_free(rf.block);
     memset(&rf, 0, sizeof(rf));
 }
 
 void re4dc_room_file_enter(unsigned room)
 {
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_room_parent_retire();
+#endif
     room &= 0xFFF;
     memset(&rf, 0, sizeof(rf));   /* the previous room's block was freed at re4dc_room_file_leave */
     rf.room = room;
@@ -129,6 +141,9 @@ void re4dc_room_file_enter(unsigned room)
     }
     fs_close(fd);
     if (why) {
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+        re4dc_gcasset_room_parent_retire();
+#endif
         if (rf.block) re4dc_static_free(rf.block);
         memset(&rf, 0, sizeof(rf));
         c_refused++;
@@ -157,3 +172,29 @@ const void* re4dc_room_section(const char tag[4], unsigned* len, unsigned* versi
 }
 
 unsigned re4dc_room_file_room(void) { return rf.room; }
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+/* Exact currently borrowed section, not a full parent-file hash. Its owner's
+ * mandatory retirement callback revokes old proof serials before reuse/free. */
+int re4dc_gcasset_room_span(const void* data, unsigned bytes, unsigned version, unsigned flags, const void* header)
+{
+    const uintptr_t base = (uintptr_t)rf.block, at = (uintptr_t)data;
+    if (!rf.block || !data || !bytes || header != &rf.hdr || at < base || at-base > rf.bytes || bytes > rf.bytes-(at-base)) return 0;
+    for (unsigned i=0; i<rf.nsec; ++i)
+        if (rf.sec[i].data == data && rf.sec[i].len == bytes && rf.sec[i].version == version && rf.sec[i].flags == flags) return 1;
+    return 0;
+}
+/* Claim original bytes once before SCPS/SCDD's first controlled rewrite. A
+ * world-only reload cannot hash the prepared parent as a fresh original. */
+int re4dc_gcasset_room_original(const void* data, unsigned bytes, unsigned version, unsigned flags, const void* header)
+{
+    if (!re4dc_gcasset_room_span(data,bytes,version,flags,header)) return 0;
+    for (unsigned i=0; i<rf.nsec; ++i)
+        if (rf.sec[i].data == data) {
+            const unsigned bit=1u<<i;
+            if (rf.gcasset_prepared & bit) return 0;
+            rf.gcasset_prepared |= bit;
+            return 1;
+        }
+    return 0;
+}
+#endif
