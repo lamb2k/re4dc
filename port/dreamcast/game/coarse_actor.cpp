@@ -6,6 +6,7 @@
 #if RE4DC_GC_ASSET_GATE
 #include <initializer_list>
 #include "platform/include/native_io.h"
+#include "platform/include/gc_asset_hand_derivation.h"
 #endif
 #include "platform/include/bfc_class.h"
 #include "global.h"

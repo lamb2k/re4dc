@@ -82,9 +82,43 @@ transfer decisions or publication behavior. Later runtime handles are covered
 only by the pinned immutable mounted source contract; mutable/replaced mounts
 must retire the catalog epoch. Pointer/path equality alone grants nothing.
 
-Additional metadata is the full-source and two child proofs (132 target bytes
-expected), one 32-byte prefix digest, 32-byte header, prefix count and flags;
-actual target alignment/code/stack remains unmeasured. Fixed copy tickets and
-derivation state will add their explicitly priced records when wired. The new
-derivation helper controls pending, bounded, complete/abort, nested, stale-copy
-and catalog-retired cases; the four real writer scopes are still pending.
+The current supported RETAIN=0 copy paths are now observed in the real owner:
+direct slot read, exact prefetch scratch borrow, issued AICA stores/readback,
+and joined worker with frozen allocation/data/thread/blob/offset/extent. Slots
+lose authority before every copy. Failed/partial direct reads remain unknown;
+wrong pending job metadata cannot publish. Job/cell records retire before free
+or AICA reuse. Same-slot hits retain only the same still-live source/copy proof.
+The immutable mounted-CD epoch covers the actual separate read handles; this
+does not add support for mutable media or silently treat a re-open as proof.
+
+Exact current blob arrays, padded spans, stream capacity and scalar counts are
+matched against the real selected chunk, then the two child proofs enter the
+existing accepted-use gateway. Deferred replay uses the saved child serial
+rather than re-selecting a current slot. RETAIN=1 remains explicitly unsupported.
+These hand uses currently acknowledge SourceGeometry; full Weapon consumer
+classification and complete SourceGeometry coverage remain separate open gates.
+
+The four approved existing actor preparation scopes now have memory-only hand
+observers: convert, both relod scopes and bake. Begin makes the exact bounded
+stream generation pending. Explicit completion restores its original child
+serial only if the source-copy generation and source catalog are still current;
+abort, unknown/nested/retired writes leave it revoked. Transient scratch output
+does not acquire permanent slot authority. No rendering algorithm, command,
+source choice, allocation or synchronization changes.
+
+Expected SH4 metadata totals 320 bytes: three proofs132, directorySHA/header/
+prefix/flags72, seven copy tickets56, two derivation states16, clock/AICA8,
+and frozen job context36. This is calculated layout, not target measurement.
+Each active derivation scope expects8 stack bytes. Cold full-prefix hashing
+uses512 scratch plus two104-byte SHA states, a transform's64-byte schedule and
+caller locals; actual peak stack/code/link costs remain unmeasured. No snapshot,
+resident catalog, per-blob digest cache or new runtime allocation was added.
+
+The full actual hand owner is executed in RAM against simulated filesystem,
+worker and G2 providers with real metadata/core. Controls cover direct/partial
+read, AICA readback, joined worker, mismatched job range, accepted use, old
+deferred generation, complete/aborted derivation and pre-free yield. Separate
+controls cover nested/reloaded/retired derivation and source-directory failures.
+OFF preprocessor tokens match the old hand owner, and native_actor_fast tokens
+match across four cone/LOD-limit variants with unchanged external includes.
+These are source/host controls, not target object/image/provider or guest proof.

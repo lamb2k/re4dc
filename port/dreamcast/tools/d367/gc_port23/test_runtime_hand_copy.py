@@ -1,5 +1,6 @@
 """Fail-closed fixed hand copy tickets; actual writer integration is separate."""
 from pathlib import Path
+import re
 import subprocess
 import tempfile
 import unittest
@@ -22,7 +23,10 @@ class HandCopyTests(unittest.TestCase):
                 target = root / (name + '.cpp');target.write_text(source)
                 outputs.append(subprocess.check_output(['g++', '-E', '-P', '-DRE4DC_GC_ASSET_GATE=0',
                     '-I', str(root), '-I', str(GAME), str(target)], text=True))
-            self.assertEqual(outputs[0], outputs[1])
+            # Existing one-line blocks gain diagnostic-only lines. Compare
+            # exact preprocessor tokens, retaining complete string literals.
+            tokens = lambda text: re.findall(r'"(?:\\.|[^"\\])*"|[A-Za-z_]\w*|\d+|\S', text)
+            self.assertEqual(tokens(outputs[0]), tokens(outputs[1]))
         from test_runtime_hooks import function
         for signature in ['extern "C" void re4dc_leon_hands_room_enter()', 'extern "C" void re4dc_leon_hands_weapon(']:
             body = function(current, signature)

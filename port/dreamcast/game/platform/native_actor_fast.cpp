@@ -4543,6 +4543,9 @@ BakeUse bake_prepare(Part& e, const Lights& L, const BlobHeader& b, unsigned rs,
         }
     }
     Re4dcActorStreamMutation mutation(&b,e.p.stream_bytes);
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+    re4dc_gcasset::HandDerivationScope gcasset_mutation(&b,e.p.stream_bytes);
+#endif
     // Rebake: light every level-0 record into its colour field.
     const auto* table = reinterpret_cast<const MeshletInfo*>(base + sizeof(BlobHeader));
     u16* records = reinterpret_cast<u16*>(base + b.rec4 * 4U);
@@ -4562,6 +4565,9 @@ BakeUse bake_prepare(Part& e, const Lights& L, const BlobHeader& b, unsigned rs,
     std::memcpy(k.dir, &L.dir[0][0], sizeof(k.dir));
     std::memcpy(k.color, L.color, sizeof(k.color));
     ++stats.bake_builds;
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+    gcasset_mutation.complete();
+#endif
     return kBakeCopy;
 }
 
@@ -4894,6 +4900,9 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
             unsigned size = cp->bytes();
             if (prelit_candidate(p)) size = add_bake_field(out, size, p.stream_bytes);
             Re4dcActorStreamMutation mutation(p.stream,p.stream_bytes);
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+            re4dc_gcasset::HandDerivationScope gcasset_mutation(p.stream,p.stream_bytes);
+#endif
             std::memcpy(const_cast<u8*>(p.stream), out, size);
 #if RE4DC_ACTOR_BACKFACE_CONE
             if (cp->split()) abc_build(p, size, abc_class_of(p.model));
@@ -4907,6 +4916,9 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
                 }
             }
 #endif
+#endif
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+            gcasset_mutation.complete();
 #endif
             ++stats.conversions;
             if (cp->level_count()) ++stats.lod_parts;
@@ -4965,13 +4977,25 @@ void relod(const Re4dcModelPart& p, bool crowd_part) {
     // level 0, full detail.
     if (triangles > RE4DC_ACTOR_LOD_PART_MAX) {
         Re4dcActorStreamMutation mutation(p.stream, p.stream_bytes);
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+        re4dc_gcasset::HandDerivationScope gcasset_mutation(p.stream,p.stream_bytes);
+#endif
         stream[2] &= u8(~kLodPending);
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+        gcasset_mutation.complete();
+#endif
         return;
     }
 #endif
     if (triangles >= kLodMinTriangles && !lod_take(triangles)) return;
     Re4dcActorStreamMutation mutation(p.stream,p.stream_bytes);
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+    re4dc_gcasset::HandDerivationScope gcasset_mutation(p.stream,p.stream_bytes);
+#endif
     stream[2] &= u8(~kLodPending);
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+    if(triangles<kLodMinTriangles)gcasset_mutation.complete();
+#endif
     if (triangles < kLodMinTriangles) return;
     const unsigned stride = (p.flags & 0x80000000U) ? 8U : 6U;
     const unsigned rs = 3U + ((b.flags & kHasCi) ? 1U : 0U) + ((b.flags & kHasBake) ? 1U : 0U);
@@ -4987,6 +5011,9 @@ void relod(const Re4dcModelPart& p, bool crowd_part) {
 #endif
         ) & ~31U;
     u8* work = out && room ? static_cast<u8*>(scratch(room)) : nullptr;
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+    if(!work)gcasset_mutation.complete(); // the only owned write was the completed flag clear
+#endif
     if (!work) { ++stats.workspace_misses; workspace_top = mark; return; }
     u8* w = gx;
     auto put16 = [&](unsigned v) { *w++ = u8(v >> 8); *w++ = u8(v); };
@@ -5035,6 +5062,9 @@ void relod(const Re4dcModelPart& p, bool crowd_part) {
 #endif
         ++stats.lod_parts; ++stats.lod_rebuilds;
     }
+#if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
+    gcasset_mutation.complete();
+#endif
     workspace_top = mark;
 }
 }  // namespace

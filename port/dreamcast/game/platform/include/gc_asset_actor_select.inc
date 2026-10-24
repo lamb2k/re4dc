@@ -63,6 +63,12 @@ extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_select(const Re4dcModelP
         if(gcasset_actor_chunk(c,uv_bytes,*part,*source) && gcasset_actor_bound(gcasset_pl08,c,uv_bytes))accept(gcasset_pl08);
     }
 #endif
+#if defined(RE4DC_GC_ASSET_HAND_SOURCE)
+    for(unsigned side=0;side<2;++side)if(leon_hand_pack::gcasset_hand_chunk_current(side)){
+        const auto& c=leon4k::chunks[5+side];const auto& x=leon_hand_pack::blobs[leon_hand_pack::slot_blob[side]];
+        if(gcasset_actor_chunk(c,x.size[2],*part,*source))accept(leon_hand_pack::gcasset_hand_slot[side]);
+    }
+#endif
     // Other hand owners remain unqualified, never the caller BIN.
     if(!selected || ambiguous)return {};
     return {selected->serial,1U<<SourceGeometry,part->model,part->info,selected};
