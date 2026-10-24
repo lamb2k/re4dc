@@ -1,0 +1,10 @@
+# lane purge-cast24 (10-24, GC purge) CAST-GC census warp for r118 after the rescue (Item_find_flg 0x00100000: R118Init
+# sets ESL 0x78, em3b type 1, at (7190, 9330, -16360), and the Ganados 0x79..0x7F): the r119 door arrival (<= 60 s).
+name cg-r118c
+room 0x118
+pos 94554 2258 12986
+ang -1.8420
+find 0x00100000
+inv default
+god
+alivelog 150
