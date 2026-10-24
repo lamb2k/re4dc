@@ -216,5 +216,22 @@
     "result": "ON_FAIL",
     "attribution": "472 to512 nonarena difference plus1600 bootfit residue; no single allocation owner proved; allocation census prep active"
   },
-  "created_utc": "2026-10-24T09:58:45.573300+00:00"
+  "created_utc": "2026-10-24T09:58:45.573300+00:00",
+  "independent_review": "CLEAR_SOURCE_LINK_ONLY",
+  "review_seal": {
+    "bytes": 1228,
+    "sha256": "d630b2ecca11e092a224c004c0bf3700465d0c8f4418f30d886ba062071815fa"
+  },
+  "bss_breakdown": {
+    "record": 128,
+    "context": 8,
+    "link_alignment": 24,
+    "total": 160
+  },
+  "raw_object_differences": 435,
+  "allocated_section_changes_only": [
+    "filter06.o",
+    "espgen44.o"
+  ],
+  "correction": "Earlier takeover checkpoint described128+32padding; superseded by independently proven128+8context+24alignment."
 }

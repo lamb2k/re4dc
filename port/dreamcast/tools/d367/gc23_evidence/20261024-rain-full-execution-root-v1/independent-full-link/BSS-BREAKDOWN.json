@@ -1,0 +1,48 @@
+{
+ "status": "PASS",
+ "record_bytes": 128,
+ "queued_context_bytes": 8,
+ "object_BSS_added": 136,
+ "whole_link_BSS_added": 160,
+ "link_alignment_residual": 24,
+ "added_named_symbols": [
+  {
+   "name": "__ZL20s_raindc_queued_room",
+   "bytes": 4,
+   "info": 1,
+   "other": 0,
+   "count": 1
+  },
+  {
+   "name": "__ZL21s_raindc_queued_frame",
+   "bytes": 4,
+   "info": 1,
+   "other": 0,
+   "count": 1
+  },
+  {
+   "name": "_re4dc_rain_r10c_diag",
+   "bytes": 128,
+   "info": 17,
+   "other": 0,
+   "count": 1
+  }
+ ],
+ "removed_named_symbols": [],
+ "source": {
+  "path": "/dev/shm/rain8ce-full-normal-179r4a5c/on/source/src/game/filter06.cpp",
+  "sha256": "60364736a8d2935b1f49cc4bbf73915757e78e03e0333fcde57adfaa88ea6dd0",
+  "refs": [
+   {
+    "line": 112,
+    "text": "static u32 s_raindc_queued_room, s_raindc_queued_frame; // exactly 8 extra bytes"
+   },
+   {
+    "line": 149,
+    "text": "volatile RainDiagRecord re4dc_rain_r10c_diag __attribute__((aligned(32)));"
+   }
+  ]
+ },
+ "clarification": "Initial readback whole_link_BSS_residual_vs128=32 is arithmetic only: 8 queued context bytes plus 24 alignment; not 32 bytes of padding. Record remains 128 bytes.",
+ "scope": "Static ELF/source arithmetic only; no execution or cache alias test."
+}

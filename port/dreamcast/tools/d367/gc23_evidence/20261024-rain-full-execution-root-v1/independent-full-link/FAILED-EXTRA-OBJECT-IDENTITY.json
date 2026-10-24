@@ -1,0 +1,7 @@
+{
+ "status": "FAILED_EXTRA_ASSERTION_RETAINED",
+ "attempt": "Expected only filter06.o and espgen44.o raw bytes differ across448 link objects",
+ "reason": "435 raw objects differ; an unrequired raw byte-identity premise was too strong",
+ "correction": "OBJECT-SECTIONS.json classifies all448: only two allocated-section changes; remaining differences debug-only",
+ "originals_modified": false
+}
