@@ -394,6 +394,17 @@ SLI1 -0.05 ms for -52,832 B of heap: a wash. SDS1 +1.42 ms (transform +1.4 ms on
 -129,184 B: rejected. Neither goes to a console A/B; both stay default off. Evidence:
 `C:\Flycast-Evidence\re4-dreamcast\world2ms\b12old-1024`.
 
+**Claude companion identity audit (2026-10-24; answers Build 11's `R4ID stale binding` and Build 12's `R4SG identity/CRC`).**
+On the Test 23 disc, all 27 rooms that mip22 re-keyed carry `ps2-world.ids` whose header CRC is the *pre-mip22* R4PW
+CRC (counts match), and r101 / r109 `ps2-world.r4sg` field 6 (policy CRC) is the same pre-mip22 value. This is by
+design, not stale data: with `WORLD_RECT21=1` the runtime derives `policySourceCrc` through
+`rect21::provenance::policy_source_crc` (native_static.cpp, "certified scoped17 lineage") and binds R4ID, R4SG,
+interior cells and enemy visibility to that source CRC. Every Test 23 run logs `PS2DYN ids=ok` for every room and
+`PS2SG groups=ok` for r101 / r109. The offline converters compare the physical R4PW CRC, so they refuse shipped data.
+On the original-policy control disc (`ctl-olddata`) every R4ID and the r101 R4SG bind to the physical CRC and pass.
+Converters that must take shipped data need the same provenance resolution (or should state they take
+original-policy inputs only, as Build 13 does).
+
 ### 2026-10-24: Build 13 hand-back (`codex/scenery-record-split-20261024`)
 
 Candidate: `SCENERY_RECORD_SPLIT=1`, default 0; publication base `fc535318`,
@@ -424,6 +435,32 @@ tables remain under the coordinator's control.
    record restart corners, transformed inputs, total RAM and transition
    ownership for the same final data.
 
+**Claude answers (2026-10-24, owner).** Twins of the 630d00ef release build (Build 14 merge, includes Build 13),
+census on, matched overrides `PS2_INTERIOR_CULL=0 WORLD_RECT21=0 FOLIAGE_MIP24=0`, original-policy data
+(`ctl-olddata`). Flycast MODELLED; Flycast does not model the operand cache, so the cache-line effect that is this
+format's purpose is not priced here.
+
+1. Yes. `scenery_record_split.py` accepted r103 (no R4SG; the generated 4-group `ps2-world-split.r4sg` was left
+   off the disc so both arms run `PS2SG groups=absent`) and r101 with its source R4SG (rebound, 117,152 B, record
+   bytes identical; both arms `groups=ok`). Runtime: `SCNSPLIT room=103 admitted=v4 ... emit_offset=18880
+   bounds_offset=42048` and `SCNSPLIT room=101 admitted=v4 ... emit_offset=26336 bounds_offset=55616`; err=0,
+   v = 11,328 (r103) / 11,248 (r101) in both arms; no HALT / TEXCHK fail. Shipped (re-keyed) data is refused
+   by design; see the Build 12 identity note.
+2. Per drawn tick, q=2..4 mean (r101: q=2..3):
+
+   | scene | arm | world us | sel / xform / clip / hdr / submit / other | heap 4 free |
+   |---|---|---|---|---|
+   | r103 farm | ordinary | 9,637 | 1,733 / 2,994 / 467 / 856 / 2,457 / 1,127 | 3,723,520 |
+   | r103 farm | split | 9,737 | 1,829 / 3,007 / 465 / 858 / 2,446 / 1,129 | 3,719,424 |
+   | r101 cross | ordinary | 13,938 | 3,751 / 3,406 / 414 / 1,476 / 3,013 / 1,877 | 3,145,728 |
+   | r101 cross | split | 14,118 | 3,856 / 3,456 / 413 / 1,483 / 3,032 / 1,878 | 3,141,632 |
+
+   Instruction cost is +0.10 ms (farm) / +0.18 ms (cross), almost all in selection, as the report predicted. Pick
+   counts are unchanged (r103 9,184,0; r101 25,309,61), so selected-ID density is the same in both layouts. Whether
+   fewer emit lines repay that needs the console; the pair goes on the SD-card list with Build 14.
+3. Pending: the owner is re-exporting r101 / r103 at 32 / 128 / 256 through `ps2_world_r4im.py` (64 must reproduce
+   the shipped original mesh byte-identically first). 64 stays the default.
+
 ### 2026-10-24: Build 14 hand-back (`codex/perf-phase-miss-20261024`)
 
 Diagnostic: `PERF_PHASE_MISS=1`, default 0, requiring the landed census.
@@ -448,3 +485,17 @@ fixed builds/runs. The recipe and coordinator status table are unchanged.
    explicitly hypothetical 1,000-edge frame costs about 2.075 ms at 200 MHz;
    this is not an r101 population or a portable subtraction constant. Use the
    ordinary observer-off run for the play build's frame deadline.
+
+**Claude answers (2026-10-24, owner; Flycast only, console pending).** Twins of 630d00ef with
+`WORLD_CENSUS24=1 QA_MENU=1`, Test 23 data, observer off / event 15 / event 37, r101 cross + r103 farm, 60 s each.
+
+1. Not yet: console. Flycast reports `PM14 ... ctl=UNRUN valid=0 samples=0 err=0` in every window (the paused-QA
+   control was not run), as designed. Three console discs are packaged like the QA disc (33 presets, disc_lint
+   loader + standard clean, 60 s Flycast boot clean): `RE4DC-W2MS\b14-{off,e15,e37}`. They wait on the user's SD-card OK.
+2. Same windows as census rows: cross t=321-322 / d=300, farm t=300 / d=300, err=0, samples=0.
+3. Perturbation with the observer present but UNRUN (Flycast MODELLED, world us per drawn tick): cross
+   14,121 -> 15,235 (+1.11 ms; other +0.47, hdr +0.18, submit +0.23, xform +0.14), farm 9,747 -> 10,373
+   (+0.63 ms); cross wall 34.50 -> 35.87 ms per tick. Event 15 and 37 builds are identical in cost. So the boundary
+   hooks cost about 1 ms on the cross even before the counter runs; the play build's deadline must come from the
+   observer-off build (as the report says), and any console miss attribution carries a perturbation of at least
+   this size.
