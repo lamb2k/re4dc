@@ -1,3 +1,4 @@
+#include "include/gc_asset_motion_unknown.h"
 #include "include/gc_asset_actor.h"
 // D367 actors30: meshlet actor path (NATIVE_ACTOR=1 NATIVE_ACTOR_FAST=1).
 //
@@ -5559,6 +5560,9 @@ void abc_verify(Part& e, const Records& r, unsigned nv, const PosConst& k, bool 
 }  // namespace
 #endif
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::motion_model_reason());
+#endif
     ++stats.parts;
     PXF_BEGIN(part);
 #if defined(RE4DC_CALLPROF) && RE4DC_CALLPROF
@@ -6258,6 +6262,9 @@ Frame& one_frame(const Re4dcModelPart& p, float near_distance, float far_distanc
 }
 
 struct OneWindow {
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    unsigned motion_accounted=0; // local only; chunks own their accepted records
+#endif
     bool open = false;
     Re4dcModelDirect direct{};
     std::uint32_t* sq = nullptr;
@@ -6272,6 +6279,10 @@ struct OneWindow {
 };
 void one_close(OneWindow& w) {
     if (!w.open) return;
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    if(w.motion_accounted)re4dc_gcasset::motion_pending_accounted();
+    w.motion_accounted=0;
+#endif
     re4dc_model_direct_end(w.slots);
     w.open = false; w.slots = 0; w.primed = 0;
 }
@@ -6306,6 +6317,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
 #endif
 #if RE4DC_GC_ASSET_GATE
     re4dc_gcasset::ActorSourceScope gcasset_actor_scope(&p,&src);
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::motion_model_reason());
+#endif
 #endif
     const float near_distance = p.projection[6] / (p.projection[5] - 1.0f);
     const float far_distance = p.projection[6] / p.projection[5];
@@ -6737,6 +6751,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     if (e.direct) {
 #if RE4DC_GC_ASSET_GATE
         if(e.slots)gcasset_actor_scope.accepted();
+#endif
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+        if(e.slots){re4dc_gcasset::motion_accept_current(e.slots);w.motion_accounted=1;}
 #endif
         w.sq = e.sq; w.slots += e.slots; w.primed = e.primed;
         if (!ok) {

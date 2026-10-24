@@ -1,3 +1,4 @@
+#include "include/gc_asset_motion_unknown.h"
 #include "include/gc_asset_gate.h"
 #include "include/gc_asset_packet_cursor.h"
 #include "include/gc_asset_members.h"
@@ -451,10 +452,16 @@ struct GcAssetGeneratedScope {
 GcAssetPacketState gcasset_packet_states[5];
 re4dc_gcasset::SourceUse gcasset_model_pending;
 void gcasset_model_prepare(const Re4dcModelPart* p) {
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::motion_prepare();
+#endif
     gcasset_model_pending={};const auto& source=re4dc_gcasset::source_use;
     if(source.payload || (p && p->model==source.model && p->info==source.info))gcasset_model_pending=source;
 }
 void gcasset_model_accept(const void* vertices=nullptr,unsigned count=0) {
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::motion_accept_pending(count); // also before quad geometry's early return
+#endif
     if(re4dc_gcasset::payload_quads_accept(vertices,count))return;
     const unsigned mask=gcasset_model_pending.mask?gcasset_model_pending.mask:1U<<re4dc_gcasset::SourceGeometry;
     if(gcasset_model_pending.payload)re4dc_gcasset::payload_accept(gcasset_model_pending.payload,gcasset_model_pending.serial,mask);
@@ -5536,6 +5543,9 @@ constexpr unsigned gcasset_wired_mask(){
     return mask;
 }
 void gcasset_flush(){
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::motion_unknown_flush();
+#endif
     for(auto& entry:entries)gcasset_texture_flush(entry);
     re4dc_gcasset::member_flush();re4dc_gcasset::payload_flush_all();
     re4dc_gcasset::bank_pump();re4dc_gcasset::pump();
@@ -7150,6 +7160,9 @@ extern "C" void re4dc_model_direct_end(unsigned vertices){
     sq_unlock();direct_open=false;
 #endif
     if(vertices>32767)re4dc_missing("native direct part exceeded the store-queue window");
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::motion_accept_pending(vertices);
+#endif
     if(vertices) { RE4DC_GCA_MODEL_TEXTURE(model_handle);RE4DC_GCA_MODEL_ACCEPT(); }
     ++direct_parts;direct_slots+=vertices;
 #if RE4DC_TA_GUARD
@@ -7278,6 +7291,9 @@ extern "C" std::uint32_t* re4dc_leon_direct_switch(const Re4dcModelPart* p,const
        unsigned(stream_list)!=h->list || select_model_pass(p)!=stream_list || leon_header_key(p,h->list)!=h->key ||
        handle->model_header_key!=h->key || std::memcmp(h->words,&handle->model_header,32))return nullptr;
     // re4dc_model_direct_end(vertices)
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::motion_accept_pending(vertices);
+#endif
     if(vertices) { RE4DC_GCA_MODEL_TEXTURE(model_handle);RE4DC_GCA_MODEL_ACCEPT(); }
     ++direct_parts;direct_slots+=vertices;
     frame_pvr_bytes+=vertices*32;stream_model_bytes+=vertices*32;
@@ -9444,6 +9460,9 @@ extern "C" void re4dc_model_finish_source_draws(){
         // Copy the small view before I/O can yield. Retirement clears the queue
         // and aborts this same frame; it never frees an in-flight PVR texture.
         Re4dcModelPart view=restore_view(deferred_first);
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+        re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::MotionDelayedModel|re4dc_gcasset::MotionViewTrack);
+#endif
 #if RE4DC_GC_ASSET_GATE
         re4dc_gcasset::ReplayScope gcasset_replay_scope(deferred_first->asset_serial,deferred_first->asset_mask,deferred_first->asset_payload);
 #endif

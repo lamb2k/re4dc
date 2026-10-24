@@ -1,3 +1,4 @@
+#include "include/gc_asset_motion_unknown.h"
 // Narrow ModelData indexed-stream adapter, not a GX display-list interpreter.
 // Only an explicitly enabled base-texture diagnostic currently uses this path.
 #include "re4dc_screen.h"
@@ -714,6 +715,9 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     // Replacement/static paths must supply their own immutable asset proof.
     // A source caller's BIN cannot certify the bytes their emitter consumes.
     re4dc_gcasset::SourceScope gcasset_source_scope;
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::motion_model_reason());
+#endif
 #endif
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
     pprof::Scope pprof_scope(p);

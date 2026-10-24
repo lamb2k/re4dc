@@ -1,6 +1,16 @@
 # Included by game/Makefile only after the runtime callsite patch is integrated.
 # Off emits no flags, dependencies or linked object, preserving program bytes.
 GC_ASSET_GATE ?= 0
+GC_ASSET_MOTION_UNKNOWN ?= 0
+ifneq ($(GC_ASSET_MOTION_UNKNOWN),0)
+ifneq ($(GC_ASSET_MOTION_UNKNOWN),1)
+$(error GC_ASSET_MOTION_UNKNOWN must be 0 or 1)
+endif
+ifneq ($(GC_ASSET_GATE),1)
+$(error GC_ASSET_MOTION_UNKNOWN requires GC_ASSET_GATE=1)
+endif
+endif
+PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/gc_asset_motion_unknown.o,$(PLATFORM_OBJS))
 GC_ASSET_CATALOG_SHA256 ?= 0
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/gc_asset_gate.o,$(PLATFORM_OBJS))
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/gc_asset_members.o,$(PLATFORM_OBJS))
@@ -29,4 +39,14 @@ PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_members.o
 PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_disc.o
 PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_payloads.o
 PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_audio.o
+endif
+
+ifeq ($(GC_ASSET_MOTION_UNKNOWN),1)
+ifneq ($(NATIVE_ACTOR)$(NATIVE_ACTOR_FAST),11)
+$(error GC_ASSET_MOTION_UNKNOWN supports only NATIVE_ACTOR=1 NATIVE_ACTOR_FAST=1)
+endif
+# This detector has partial route coverage. Raw TR / shadow and alternate world
+# emitters are not admitted as complete Motion coverage; wired remains unchanged.
+PLATFORM_CPPFLAGS += -DRE4DC_GC_ASSET_MOTION_UNKNOWN=1
+PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_motion_unknown.o
 endif
