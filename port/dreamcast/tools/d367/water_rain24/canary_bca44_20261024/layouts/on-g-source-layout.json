@@ -1,0 +1,100 @@
+{
+  "source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "arm": "on",
+  "elf": "/root/work/lanes/water-rain24-canary-bca44-20261024/programmes/on-g/out/re4dc-game.elf",
+  "elf_sha256": "bec85ca206a0b0de67cdb21f4052a120dd438c97e088da91d7f142b4704b7a73",
+  "symbols": {
+    "s_raindc_sent": {
+      "address": 2352390036,
+      "bytes": 4,
+      "storage": "b"
+    },
+    "s_raindc_frames": {
+      "address": 2352390040,
+      "bytes": 4,
+      "storage": "b"
+    },
+    "s_raindc_pending": {
+      "address": 2352390052,
+      "bytes": 4,
+      "storage": "b"
+    },
+    "s_raindc_queued_room": {
+      "address": 2352390028,
+      "bytes": 4,
+      "storage": "b"
+    },
+    "s_raindc_queued_frame": {
+      "address": 2352390024,
+      "bytes": 4,
+      "storage": "b"
+    },
+    "flt06": {
+      "address": 2352406788,
+      "bytes": 72,
+      "storage": "B"
+    },
+    "pG": {
+      "address": 2351639356,
+      "bytes": 4,
+      "storage": "D"
+    }
+  },
+  "types": {
+    "GlobalWork": {
+      "bytes": 34432,
+      "members": {
+        "Frame_cnt": {
+          "offset": 20964,
+          "type_die": "<0x12587>"
+        },
+        "room_id": {
+          "offset": 20382,
+          "type_die": "<0x1257b>"
+        }
+      },
+      "definition_count": 288
+    },
+    "Filter06Work": {
+      "bytes": 72,
+      "members": {
+        "p": {
+          "offset": 0,
+          "type_die": "<0x254f9f>"
+        },
+        "num": {
+          "offset": 4,
+          "type_die": "<0x253b71>"
+        },
+        "spd": {
+          "offset": 8,
+          "type_die": "<0x253bed>"
+        },
+        "col": {
+          "offset": 20,
+          "type_die": "<0x253d64>"
+        },
+        "cur": {
+          "offset": 24,
+          "type_die": "<0x253d64>"
+        },
+        "rate": {
+          "offset": 44,
+          "type_die": "<0x253b95>"
+        },
+        "scale": {
+          "offset": 64,
+          "type_die": "<0x253b95>"
+        },
+        "alphaMin": {
+          "offset": 68,
+          "type_die": "<0x253b4c>"
+        }
+      },
+      "definition_count": 1
+    }
+  },
+  "read_only": true,
+  "no_old_addresses_reused": true,
+  "scope": "live source scalar observation only; no completed scene/actors/viewport/present ownership"
+}

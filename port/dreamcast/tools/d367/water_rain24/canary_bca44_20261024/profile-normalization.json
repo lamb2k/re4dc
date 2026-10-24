@@ -1,0 +1,827 @@
+{
+  "scope": "metadata-only correction; no build/stage rerun",
+  "allowed_literal_roots": {
+    "off": "/root/work/lanes/water-rain24-canary-bca44-20261024/programmes/off-g/out",
+    "on": "/root/work/lanes/water-rain24-canary-bca44-20261024/programmes/on-g/out"
+  },
+  "replacement": "<OWNED_ARM_OUT>",
+  "boundary_checked": true,
+  "raw_differing_field_count": 76,
+  "path_only_field_count": 75,
+  "all_path_only_fields": [
+    {
+      "field": "BLENDER30_PLATFORM",
+      "off_literal_count": 3,
+      "on_literal_count": 3,
+      "off_raw_sha256": "91f72b8dbc92021023049fcd2659871bb4a600c52e6c8191c9a0fbe263f0485e",
+      "on_raw_sha256": "611d2a8d6c091d557c6d6af73f017e359737a3f545f6917d2b3308665a4b7975",
+      "normalized_value_sha256": "6df9b8cb24ca973a66d09d327ee5a6fb7294c1c72f79f580b275c3f7687a9b83"
+    },
+    {
+      "field": "CABIN_SOURCE_GAME",
+      "off_literal_count": 8,
+      "on_literal_count": 8,
+      "off_raw_sha256": "55425b69e03b78831ffd18c1c28561b2fcb7297aa67b6ff977dd37ff745d3f30",
+      "on_raw_sha256": "fc3bbcf1800bd95068ebd7c046f80661274be3a8591ddd4b3516d1030749f19f",
+      "normalized_value_sha256": "4b9c378db3a58ebdecd099ad357cc1a969c3210795b543559ae57ef76c722097"
+    },
+    {
+      "field": "CABIN_SOURCE_PLATFORM",
+      "off_literal_count": 6,
+      "on_literal_count": 6,
+      "off_raw_sha256": "7512db13e8d83abc18c5f1ead9d392909d4f810e4ffb95c89b3c641fa8ef5623",
+      "on_raw_sha256": "c576a9a3956e404be9ef87a2dcf6b88147d8d8a64afbcc5d4e90b9b8d696c8c3",
+      "normalized_value_sha256": "7c52cee2077ca699d5d4dee0508348ceb29e38bf769be153a9ef6f4235a821c5"
+    },
+    {
+      "field": "CENSUS_OBJS",
+      "off_literal_count": 386,
+      "on_literal_count": 386,
+      "off_raw_sha256": "9fd8c7dc391e6fe257e2a0cefc8e512423fbbdedb83a62e1697f257e8227f13c",
+      "on_raw_sha256": "5bcd2d364178cb6d3d871812ccd6b06b80c2cf05409609577bb4b1d2a6212645",
+      "normalized_value_sha256": "d4df29c1f48e64c1677ec581bcc2ce83e34a0e19e0756b211993276cc515ff1f"
+    },
+    {
+      "field": "D349_NATIVE_OBJS",
+      "off_literal_count": 5,
+      "on_literal_count": 5,
+      "off_raw_sha256": "398aa00e1e58146f8b639d681996805c66378b0b1fef8ae837095d09b2019830",
+      "on_raw_sha256": "05f39fe23f1a19148cc4535174f6ec5c5f85f9d6f2e56910feb1357652f60d5c",
+      "normalized_value_sha256": "d645327269a084619e02d65dba53e7b04d200ce4c1d3f830fa90b72e9be38d02"
+    },
+    {
+      "field": "DBGWARP_GAME",
+      "off_literal_count": 3,
+      "on_literal_count": 3,
+      "off_raw_sha256": "8c8c16db150d04a0b0a5c100f7a23a6a35804c152e9eb7ff334176a1e2b4efd8",
+      "on_raw_sha256": "53bd7e4cfb8c0114dcf15ce9a1cdf1a09e8eb061252f43804709f1eeb924185a",
+      "normalized_value_sha256": "acf7eff0e38e726a6fa6656f8f524b6c6cd76c64de3529e645cb1bc4c71ccf9e"
+    },
+    {
+      "field": "DBGWARP_LATE_GAME",
+      "off_literal_count": 3,
+      "on_literal_count": 3,
+      "off_raw_sha256": "5ec29368801136340587d07051b2b609f9daedd5eda04f0f4cefded89fd1860a",
+      "on_raw_sha256": "78e400785f2808995d2c28910ea41fea37a14d7500af00ef51e9030dbdaa591e",
+      "normalized_value_sha256": "ba69422abd3707d94c7fc3f29edf8bfd364c2d9e558cd1b2ec197493e438cd5c"
+    },
+    {
+      "field": "DBGWARP_LATE_PLATFORM",
+      "off_literal_count": 2,
+      "on_literal_count": 2,
+      "off_raw_sha256": "2a1035299e2b8f2e92df6bdcc1a85b0f972825ab3526abf68802ce1c23e2d502",
+      "on_raw_sha256": "13784ce24641e44879a0f07cd3b84ac97317f26bfe869a39cd1ccefc0be335ee",
+      "normalized_value_sha256": "7f363b99d6466a5ac4f4b1163b109ddf653f83dc4fd8e745ca9b35217b1fc565"
+    },
+    {
+      "field": "DEMO_PRESENTATION_OBJECTS",
+      "off_literal_count": 679,
+      "on_literal_count": 679,
+      "off_raw_sha256": "b5cdc5ee5e887c322e815a2b0c15a6b336e4431961d5d0f1f7e9864e4099419f",
+      "on_raw_sha256": "07a79f2424458b9cb1230dcd8504089c1d39b5f560e1ae6cd988b7107ffd9bcd",
+      "normalized_value_sha256": "7405a160b7475a88c22a2825623ff39896015152ca1a1bb9d30645f603583a8c"
+    },
+    {
+      "field": "DEMO_PRESENTATION_STAMP",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "02e01985078645393a01e324fd2f04801ac8fff841ae95374b90d0a6cf258493",
+      "on_raw_sha256": "69963c231bb49e40e142a6a163079fca061ed51977056a7db8f4a63fe7d6ca75",
+      "normalized_value_sha256": "77f7d32fceaaba061f6902d51a4e705f3d34e3089ed7d3cec517c7d114163d2c"
+    },
+    {
+      "field": "DOOR_PROBE_GAME",
+      "off_literal_count": 5,
+      "on_literal_count": 5,
+      "off_raw_sha256": "2222c22d899e77f68c9644d38dd9b6b45a8b888db23548ef660b067eb3309b9c",
+      "on_raw_sha256": "02d4f003331255bd9b20fef0f5b89051531e39b4471094906fad7fba171c8910",
+      "normalized_value_sha256": "8bf50db8696fbc25ff804c6fb9754b0613cc06b1f5151c6922883489561da81a"
+    },
+    {
+      "field": "EFFECTS30_GAME",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "78b6fd97fe1055091a0cb5474373a8aa9aadd329f0170b30dca65f017996d77b",
+      "on_raw_sha256": "6c0b217bac4cccf842164fb329839e20b6a5e12b8a80e56f63fb81b6f315a832",
+      "normalized_value_sha256": "4f4bad5e692b037a6c5446e640ff39c04cd22fc4377402af5ded36875b991929"
+    },
+    {
+      "field": "EFFECTS30_PLATFORM",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "d01a9ef649c81209e3bcd2eabb7588de6eda2a4c827d06e45cedd8ba90354e65",
+      "on_raw_sha256": "7235363e801595a7181262207930d0094b86522c20391a6a43451caa143bdb11",
+      "normalized_value_sha256": "e86056532fb020af158e8f588c0a9183f0de4f105dd5bbc70fb8b29942b205cf"
+    },
+    {
+      "field": "FRONTEND30_GAME",
+      "off_literal_count": 6,
+      "on_literal_count": 6,
+      "off_raw_sha256": "a03368705c1c8eaed35b2da337c693600b3163dea5c9679dc6609502c12021ed",
+      "on_raw_sha256": "39472d9eb06236e38c3c0cecd332319dfc42b074de28a5e5e849c72745da939f",
+      "normalized_value_sha256": "9455b0bbfe25d48212db94721fa8286243c853e310e6ceee026002b14b9d89da"
+    },
+    {
+      "field": "FRONTEND30_PLATFORM",
+      "off_literal_count": 5,
+      "on_literal_count": 5,
+      "off_raw_sha256": "2940c1d21701bd9a620f9182d90ad48792a146d49c8aebedab4ab07d041590e2",
+      "on_raw_sha256": "fca3473c1156a4ce462b98efc8f931f787ca2ac0c9469431b7f412477d1d8951",
+      "normalized_value_sha256": "607580b39f8ebf15f2ec1298cc53de22fab7eeb736016992ff0195548c4b4690"
+    },
+    {
+      "field": "GAME30_COLD_MODULE_PATTERNS",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "afae6fd044cb40a52377d61473ec7b4ff0cce95dd893e04391fa3009a1be66c8",
+      "on_raw_sha256": "2a5cfc7f0277f09565b044b7e6460dfacf419aa5090baed77f9d77b66d5f43f3",
+      "normalized_value_sha256": "17ae2f2c427789f7c4008ffe59df528f7ffd3767578172eff0253de30058b986"
+    },
+    {
+      "field": "GAME30_COLD_OBJS",
+      "off_literal_count": 11,
+      "on_literal_count": 11,
+      "off_raw_sha256": "59246e30670f8c9c289a2f4627cde1c7aa7d5d979ba128dec6ebfc798cf39ecf",
+      "on_raw_sha256": "9a2c727a093f924dd69205b025a8a577ef4e8b09a400c91465ab4c9743792c72",
+      "normalized_value_sha256": "320182aea712b161da2be476ee84a711186ba71d3c38df77eb29bdd438c058a3"
+    },
+    {
+      "field": "GAME30_HOT_MODULE_PATTERNS",
+      "off_literal_count": 4,
+      "on_literal_count": 4,
+      "off_raw_sha256": "61832ac9a3adedd4e8e895ef60afcd7cdf78cd75ab3adc3f2d0c70930580f7c1",
+      "on_raw_sha256": "4bbb22006749108b9fcaa6adac480ddf7eceacd2e5e01602d3574386bc7cac29",
+      "normalized_value_sha256": "d202bf084b23a373d76776d922b6dc13412da171196788efb214280e298916bd"
+    },
+    {
+      "field": "GAME30_HOT_OBJS",
+      "off_literal_count": 235,
+      "on_literal_count": 235,
+      "off_raw_sha256": "e5e58bf2ddad5be7b1eb7fceb3334abc741ace5be932588009b255aa0e7311e8",
+      "on_raw_sha256": "915c7dd5d1293c9bb7f3d49ffbf00805814c065006146d0949b46c28ba98cfa9",
+      "normalized_value_sha256": "b1b5bd875ceecf0cb727160e3d403adddf2d06c70dfdfdc9deb90ea9f578ebc4"
+    },
+    {
+      "field": "GAME30_RENDER_EXEMPT_OBJS",
+      "off_literal_count": 8,
+      "on_literal_count": 8,
+      "off_raw_sha256": "ba1ceb71ba58389b393b97bc87c2d040b5754cd2bdd1fc6e55ab51f6d55dab02",
+      "on_raw_sha256": "ac12446ac060c270897f30c21e3e1464529ad7117796dfb495068d79ef642e9d",
+      "normalized_value_sha256": "c54eaa9344652050f06b4e869ce1e777f606c25ec4421217ae63e975f6a5a295"
+    },
+    {
+      "field": "GAME_OBJS",
+      "off_literal_count": 294,
+      "on_literal_count": 294,
+      "off_raw_sha256": "b1a8a86bb50a5444b3a164b6170973127d5bbe4d3c987b8c18252e3f68921b9e",
+      "on_raw_sha256": "d1a8f803da0ad6033e998864c152f721c93a28cafd47e6d2d5ae29c97d831f11",
+      "normalized_value_sha256": "588e6837cac3cebea6b4bf9c285395154e7d7418da0fcb77a8b18a6a22c0e443"
+    },
+    {
+      "field": "GANADO_LOD_HDR",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "63ec2ec87a02611b4991a0db0fd09ec435a852e1768b509212875ec7e9df8ced",
+      "on_raw_sha256": "d2672bc6e2710aba6f0a956777f21e1d0debd79ecb5f7faf371a261a4bfb75d7",
+      "normalized_value_sha256": "a25f3ddce80b480da63b2adcff54e8afa35a81c7f25284e91eddd0bcc157c12e"
+    },
+    {
+      "field": "IO_PROBE_OBJS",
+      "off_literal_count": 5,
+      "on_literal_count": 5,
+      "off_raw_sha256": "6c4d090e2050a8e9c375eafa4830fff23bc1d2184f2ff4d5132353657dd79fc2",
+      "on_raw_sha256": "a69b13d63adde2eb1fad10388a7e82673a986ff2c6872df3de7158265e509448",
+      "normalized_value_sha256": "2f813b850cd73d66cbb90665dfa4705721b7b7ccd4d0bf7b8fae8e372d0302fe"
+    },
+    {
+      "field": "KOSCACHE",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "1ed899ae58580c0c0e8da605d3b275242051b3fe48f460fd1169438a8651beeb",
+      "on_raw_sha256": "df595c6ca95d7cf3b3ea4f30bbe2e8fdec4b794a02eb108dcd0964ba70b0eb4e",
+      "normalized_value_sha256": "9b80dc1a2a58b2982b0240ef05e3e50ada74ccedc9e38c3e64977058ec258012"
+    },
+    {
+      "field": "KOSCACHE_ASM",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "1c961f8b70f9562260eab55a22c688aeb9b4a26609e463da7e123262614663ae",
+      "on_raw_sha256": "e0d8be8882d7aab72d20962aa647fb1f4b40f44adacf4cb4c04d810f52e28173",
+      "normalized_value_sha256": "8eaa12e583e6addbb5f02ef2b4a7b7f0511ae120d6071a52bb7de4b3134aa6ff"
+    },
+    {
+      "field": "KOSCACHE_CHECK",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "4be602bbfdf006226ce7af2ca344b415e4a3d296fba01c5f21d5c586f8abea51",
+      "on_raw_sha256": "ef44e028ebd41f375ca3ce90092fcd8b83a471150980fdebb63d292e9eaeec8b",
+      "normalized_value_sha256": "0e35badb4bd062b8ac400a13fa5bade328b613080bb1a0e6da95995491063c16"
+    },
+    {
+      "field": "KOSCACHE_CPPFLAGS",
+      "off_literal_count": 2,
+      "on_literal_count": 2,
+      "off_raw_sha256": "8eeade1f195f24c0328d35b380bfb443e6da11518dd14f28972814ae4389020e",
+      "on_raw_sha256": "627231ab8debf08df90e3cf4f2f3407c08d46efbe3a672511a203b7589c271dd",
+      "normalized_value_sha256": "72c1ba10a141587be4a0436219b8bba1c5fe7abed4b8cf4c65c87af136773a83"
+    },
+    {
+      "field": "KOSCACHE_HEADER",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "246e5f751503264e39bcdf000186e1b45128ffc68d6bfdaad5c2343063995915",
+      "on_raw_sha256": "1ac6fe763b64f022d5d037973a0bd935919cd8e4c65ae204dd55942ba1583957",
+      "normalized_value_sha256": "a6eb2bece30679297c78437f29ecb18988b1f3fcd6475b7789606af72434d997"
+    },
+    {
+      "field": "KOSCACHE_OBJS",
+      "off_literal_count": 5,
+      "on_literal_count": 5,
+      "off_raw_sha256": "83245a11df6876ec07c6288d3fad5a2388bff49b3f83ac237edb6ff811c61e31",
+      "on_raw_sha256": "6956a9309eb8376179785ddc6d723ad26bfa2d1acaf9ea5452c4c7c0f4d34b1f",
+      "normalized_value_sha256": "6d6bcf2456cf6d260766bc7a7dca4b13055fd81326f3f2a930aa0908696775da"
+    },
+    {
+      "field": "KOSFIX",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "01f30201dcf6991dfdd3db983c8c2c60c8570191dfd6bf084a7f17d507f0a6b3",
+      "on_raw_sha256": "94a5af6617dc0a1ce3e9dc0a4f2076d7a91ee1a9760367229c344bc2b18ba505",
+      "normalized_value_sha256": "2ab4977b60c3b1d7172d91c5fb3ece7b04a80dfa2dbae65cb44dba38094e5374"
+    },
+    {
+      "field": "KOSMM",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "5ca58d43a34b5963c1f0e4523c950b37412c00831e4d99f59411c3d55a10d7c7",
+      "on_raw_sha256": "f0914288332f52bed11e944ce960176b9b4a04870e5e3012f61d8b80af77548b",
+      "normalized_value_sha256": "3560a3afdb1d9e2a7108075862126b15fae59b05565e7a18b8b0ece45c4d44ac"
+    },
+    {
+      "field": "LEON_FACE_LAZY_OBJS",
+      "off_literal_count": 4,
+      "on_literal_count": 4,
+      "off_raw_sha256": "2fd660dc5880441c1677fbb96864353af17af541667e588e4f2efc017748f649",
+      "on_raw_sha256": "c76a0664a515defc0bfc01dddf3612d78fd59922ff54d7fd18bd987a0baefc69",
+      "normalized_value_sha256": "3ed58fea93b4cb833cd56c0f7921e1d19402c2e53f3f80b87f43d6341bd472f4"
+    },
+    {
+      "field": "LEON_HAND_PACK_HDR",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "c3d14be365526bd932ed18b4e7970029f901195a4f3fed9934c2df11133be400",
+      "on_raw_sha256": "56248ca318c15deea5fc0a5f4943f43a5fb44495c6e8919d6522553f6dc60cdb",
+      "normalized_value_sha256": "be32d1eaf5800ee3cbcf2192b290da5093673ef0da0c0d968d3b10dec258ed15"
+    },
+    {
+      "field": "LINK_ENV",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "3be90b90b93d02fd40921d5cefd32387414a73c3031e1513ca38536e3695a811",
+      "on_raw_sha256": "9accd26d6b6dff1ecb8cb9f6c8ccc5d8b7974c14a6702d3758c32552e2c74a1c",
+      "normalized_value_sha256": "728810e3f1c642987b008698ce852e8475bc393cee774688251788d76c0304c4"
+    },
+    {
+      "field": "LINK_ORDER_FILE",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "20b6698b4f1d5af89dc0e7bce4604337597da40d5afed42ccf3b225952d83aad",
+      "on_raw_sha256": "9eb37470f70705b9131c71e87ae28a72e180c04d95a622b0767168beeb0ec55a",
+      "normalized_value_sha256": "227a263489ece480d971425e2608bd70f0d9689967c112313ec4e4242577f7e5"
+    },
+    {
+      "field": "MODULES_MK",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "8c733cd32b8587accb1de601fb3fef160b6d50ad62e5f52bfff5aeff4611a3b3",
+      "on_raw_sha256": "c1aad15236e8151be5816f38aa605003780faf708b22900f8a88d3fdb6d50028",
+      "normalized_value_sha256": "385096ca814f2dc695cc0ea3f3f801f40b2dbcf4933028e26e8e81d25b9d0c13"
+    },
+    {
+      "field": "MODULE_OBJS",
+      "off_literal_count": 32,
+      "on_literal_count": 32,
+      "off_raw_sha256": "877b8a57c8448d213a378808c8363552bf7fe8fa6335436b723326be8fd04fee",
+      "on_raw_sha256": "2464a665b7413585b8f732e3e7c73b8bdc71828204a86ae3f82f8a9b0dbd7da6",
+      "normalized_value_sha256": "c3140f26642e85d13fcaf36161f50dc06e7b07abdbe164a1920f7f68e812e82a"
+    },
+    {
+      "field": "MOVIE_WORLD_ARENA_GAME",
+      "off_literal_count": 3,
+      "on_literal_count": 3,
+      "off_raw_sha256": "4ac9e6babf8198b435d728085f06b88fad898aecb5310ca80549c5b489b4b2a1",
+      "on_raw_sha256": "4b95e138a41bccf55d1027d8386ec6ac555e0928cd0b8c4065021f47ca2503a6",
+      "normalized_value_sha256": "a661c2a1744cbcedf6dff09662c28004ea0ef308b894676c26e52829b3a84bd5"
+    },
+    {
+      "field": "MOVIE_WORLD_ARENA_PLATFORM",
+      "off_literal_count": 4,
+      "on_literal_count": 4,
+      "off_raw_sha256": "d436a4b6f79518cc54d7fc6c23abb7400fe955d8dc932f81d88e629c6df8a3de",
+      "on_raw_sha256": "6d54185c086428093def28cee180b07574493bd08bbac1a91935122652c3a031",
+      "normalized_value_sha256": "264d44d4e00f6514c2aa76f31937fdba8ede500569942e4e8329e28617456af2"
+    },
+    {
+      "field": "NATIVE_REUSE_OBJS",
+      "off_literal_count": 12,
+      "on_literal_count": 12,
+      "off_raw_sha256": "34d999a99f136069bdcabe5f9aa5b1b1bef366762bbc606ab386c41947dd7d08",
+      "on_raw_sha256": "a840134f63fa540dbe913837eb83540f6def96bdbf34dab4072565796759c7e7",
+      "normalized_value_sha256": "b2d1632d5314b86f7c2493756f5f6573a20015ab363484814280281b628e371f"
+    },
+    {
+      "field": "NATIVE_STATIC_GAME",
+      "off_literal_count": 3,
+      "on_literal_count": 3,
+      "off_raw_sha256": "d050a6922e7503e4a7e87c127f393f0a004afc5f042c17094a69cd000925eb14",
+      "on_raw_sha256": "43bea2fedd5695d7f57fdacc448fe654ac5d09742c98cdf324be9f3662d7c448",
+      "normalized_value_sha256": "0da6b50bf3f2ba7bdf3e972727c6e83d1c66a9b5eddf40775796bf52093c46f8"
+    },
+    {
+      "field": "NATIVE_STATIC_PLATFORM",
+      "off_literal_count": 4,
+      "on_literal_count": 4,
+      "off_raw_sha256": "4e2f2e2ff685d89cf00a5c1f9d101254c57cb68fd799615442fd082e3108bb2f",
+      "on_raw_sha256": "74079e4a03e8e99f635fe809b776490d7e223b577ac9bdfa754ca7de8884e68e",
+      "normalized_value_sha256": "053f6ab9c4744217837e6a8bec5a9ec1ef86ac01d5dc61ec6a9822c020d8e7f6"
+    },
+    {
+      "field": "OBJDIR",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "aabc1fdb888787e72a37c532da762ab1e0c41db4c5170cf238f8361c7a56e1af",
+      "on_raw_sha256": "b1792cecdd5a8a4263253e48407300e33e817e1dd26420fc0f8aaccd6671ec44",
+      "normalized_value_sha256": "498c481c17d27b94a0a651e56027cdc7ea9770bfd4f1faa13a9aa1ecc5298ab7"
+    },
+    {
+      "field": "OBJS",
+      "off_literal_count": 449,
+      "on_literal_count": 449,
+      "off_raw_sha256": "d05a4b05380ee92a1cebf59d165b8098e239dba76f2a4e31f6be51a4706b593d",
+      "on_raw_sha256": "7354b0f6267856103ebba7854715a5c19d912958c554e57fec83777fbd823a35",
+      "normalized_value_sha256": "fbb52324f48dd98284e66aadd61b3305620306162193654b5fbb97e9f68c6d08"
+    },
+    {
+      "field": "PACE_GAME",
+      "off_literal_count": 4,
+      "on_literal_count": 4,
+      "off_raw_sha256": "f1536c773101572ae3a191ba90d1c97899007c9d5c4d4456e2255c94d976b028",
+      "on_raw_sha256": "cb0915b8243bdb3c05161ff5fe3f6162a142c3fbbebbd66f7d78dcde02c0818f",
+      "normalized_value_sha256": "58a7117e8521de767bdb89f9d83944854814d26ef964f90b2e692b822e90cf2e"
+    },
+    {
+      "field": "PACE_PLATFORM",
+      "off_literal_count": 3,
+      "on_literal_count": 3,
+      "off_raw_sha256": "4d6b0d883eaa59b1f1345974691e50d9e189f6c65ee8af4dcf7b5131146cd458",
+      "on_raw_sha256": "06d6fafe8f245dd1c0ef4bcc82a3c2897e3ebe9d64d958ca98ff088a34e5662b",
+      "normalized_value_sha256": "6136d6eca905b57416d02b8400f05d6c906d2b473593244c7913090a5c7d4d43"
+    },
+    {
+      "field": "PC_SAMPLER_OBJS",
+      "off_literal_count": 3,
+      "on_literal_count": 3,
+      "off_raw_sha256": "6e7a32ac664e25d42ed43a8427c74d09e796b6387230c566319a5df7e4dffe57",
+      "on_raw_sha256": "f6686d7129de2c9ae4479d6f378779e5bfef132a9025796d98284a5724c34340",
+      "normalized_value_sha256": "dcfdfb996dba238b4c708568d23c1ba45183e3da5cce1e9977e84e8183b93818"
+    },
+    {
+      "field": "PLATFORM_OBJS",
+      "off_literal_count": 95,
+      "on_literal_count": 95,
+      "off_raw_sha256": "da0564efc913b5c9deda84f8cfcee3dae3530df4da4269dbf99371dcdb0fe4d7",
+      "on_raw_sha256": "3d3d5e3fa5f249735bb3d6da4e50f5d3f7f4381ebf2ba55aaf8e2b043fbf9668",
+      "normalized_value_sha256": "b60df2ea72025e6a51684a7d4305fbeecc3a8250e2934e6b8f3a4aeb6731ac84"
+    },
+    {
+      "field": "POST30_GAME",
+      "off_literal_count": 4,
+      "on_literal_count": 4,
+      "off_raw_sha256": "558465d67b6839159aecc5ebb24d20cee75cfb33502ef2e28995d316e8ab1b17",
+      "on_raw_sha256": "85fdd9b3927a1254b6cad20f4d7a184433dfa7cca9d3d48d64e0c4930ce27b19",
+      "normalized_value_sha256": "d9e2347706cd9b0ce0d45c96b8553203ef92470c31e4d61b9e5829c7ab458eb2"
+    },
+    {
+      "field": "POST30_PLATFORM",
+      "off_literal_count": 5,
+      "on_literal_count": 5,
+      "off_raw_sha256": "57a7be1b2e7a8324e0d813237cc9a007fe4c1097147029d0a3b76ac9ce61753f",
+      "on_raw_sha256": "dd273c4d551808cbd5db37833f24173f59a9dfdeac15b8f3c1777dcab24c3295",
+      "normalized_value_sha256": "cb74eb1a67834bae16ed88d2f0ab327b472d78a4630b6393b6d000fc6186a559"
+    },
+    {
+      "field": "QUALITY_GAME",
+      "off_literal_count": 3,
+      "on_literal_count": 3,
+      "off_raw_sha256": "53fc06ee42b5a42490ae7aefd67d6d995827539ff804c7cb16db2e28c5f42906",
+      "on_raw_sha256": "293fbb5daa215e9a1c12da1586dc5fd820e756e9a077a13977650b78d889213d",
+      "normalized_value_sha256": "03f249adef4d6e1ed2504fa470282dd66197b505b7d093fb8843065846330ef1"
+    },
+    {
+      "field": "QUALITY_PLATFORM",
+      "off_literal_count": 3,
+      "on_literal_count": 3,
+      "off_raw_sha256": "507241b5ec622b802e818f356fef9d0186850e59a20821c05ad0565410c645a4",
+      "on_raw_sha256": "838d3b185d2431bb9720fe8353d1e3588dd3ca66449fa63abb51c8a36843ceb7",
+      "normalized_value_sha256": "659911e009f217ceaa645cdf4c8d88232a76e238406b32d3d5e821fdbf287403"
+    },
+    {
+      "field": "RECORDS30_GAME",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "cd4b9127d97ef1885211fe575780ce27edaad8326c68da031bbae17bb1ae222a",
+      "on_raw_sha256": "ab9603e2aa8f24345da6dcf5c0715844cb527d31a5b3eaa2cb85f071a75be1ce",
+      "normalized_value_sha256": "84ef81fae591e30d71de3b994d0d233a67b06aa72ff9f4c9994bdc72fd695214"
+    },
+    {
+      "field": "ROUTE_CH22_ROOM_OBJS",
+      "off_literal_count": 5,
+      "on_literal_count": 5,
+      "off_raw_sha256": "4df6383b36428baae5cec7337b0645b88a74caf910bdb744359fe8df3ef9da41",
+      "on_raw_sha256": "1325a1c7c8d86cd541ce1c66465ec1f2a4dde24d4e19e546c351288e5c706d92",
+      "normalized_value_sha256": "61624232d3240760a384e7efdb47d090d1f8e8b76a6f761e991d8bb43a5780c6"
+    },
+    {
+      "field": "ROUTE_CH23_ROOM_OBJS",
+      "off_literal_count": 5,
+      "on_literal_count": 5,
+      "off_raw_sha256": "823eebe0278db6dc3573996ff85410e8ff3207a308a71e822d8f29df63609999",
+      "on_raw_sha256": "4c96bf5e8f5146db3563018e9c19f97164dc20b6b95d2a779a5d8b8f9b54c0b2",
+      "normalized_value_sha256": "b3d5aa1cd7058ee24f2b4b5d14d4ed08068abf42a06a36bac7d3a0ac65fb7bfe"
+    },
+    {
+      "field": "ROUTE_MOVIE_GAME",
+      "off_literal_count": 15,
+      "on_literal_count": 15,
+      "off_raw_sha256": "579ebf8f6e740c949dde79ffb414b6906bc4f1233858ffb2bced3c6707d8ec5b",
+      "on_raw_sha256": "ad75b837e65cabcaebb47eab215a796fb43c37ade6b20fe2eb07de7300066fb8",
+      "normalized_value_sha256": "86a0a866decd2cb71a7f7fe8430720226df0c053264aa5ecec1735f62c1b5ed7"
+    },
+    {
+      "field": "ROUTE_MOVIE_GAME_CH21",
+      "off_literal_count": 3,
+      "on_literal_count": 3,
+      "off_raw_sha256": "77f8c33e4ee646f7563bd38e36a779558ec156abc211abd0255f0ff74e9cac43",
+      "on_raw_sha256": "7f678d71c6caf6af11599d2669633b96f93419f15de728834b2cee6646dd0d64",
+      "normalized_value_sha256": "0fa2bc9e759ebefe9bd0d9f6dfc23a9b405e3e0d104fdf53e618a29767e81d00"
+    },
+    {
+      "field": "ROUTE_MOVIE_GAME_CH22",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "383c433dc35c2cc8ab1281330d85d465d50bfafef159118d085ad846a1bb53cb",
+      "on_raw_sha256": "0dd5d1f04aab673954d58727e970bc9f3bcb1dc10a66326c074b6c606fff6ca3",
+      "normalized_value_sha256": "643cf74039c1b3829c7459d32c955728e8a71eedb6eb0944e54fb081bfd86713"
+    },
+    {
+      "field": "ROUTE_MOVIE_GAME_CH23",
+      "off_literal_count": 2,
+      "on_literal_count": 2,
+      "off_raw_sha256": "ceeffcd62f24731193150effe19a6cf4378b57648c0bc43f563c7e84d761da44",
+      "on_raw_sha256": "0d83f41258b84934d1e7620fa0ded7504dafe6dbb2b9f19d07ba531cf463cc11",
+      "normalized_value_sha256": "864f289855de3fe9f59c17f143a77d0604d587506f5effa6fb78f815398cc8a3"
+    },
+    {
+      "field": "ROUTE_MOVIE_PLATFORM",
+      "off_literal_count": 3,
+      "on_literal_count": 3,
+      "off_raw_sha256": "3e22af1c02973d2f296ca7078fd34234b1e98b57b906aca74316028c7f607497",
+      "on_raw_sha256": "6576da1b7a89990465f5b903a38b0c50734ed10c32dd5912700f7c0ff4e37abb",
+      "normalized_value_sha256": "3050b25475d3b5247516a67fc3f5fee09c983958270e760a959b5eb3f14ea0bb"
+    },
+    {
+      "field": "SAFECUTS_GAME",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "2233ce6803195aa89bfbd013fc4e8af22e3952f13aaa01ce62b658d1398cb8b8",
+      "on_raw_sha256": "22437a97ff01c73d022228ad3b81b7ab837c9bb7a86d36cd66171650166e10df",
+      "normalized_value_sha256": "2ff1e42df6e9005137b214eb493ea7d58abd12d2708ac16dae4fbd62233d6b7f"
+    },
+    {
+      "field": "SCENERY30_GAME",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "cd4b9127d97ef1885211fe575780ce27edaad8326c68da031bbae17bb1ae222a",
+      "on_raw_sha256": "ab9603e2aa8f24345da6dcf5c0715844cb527d31a5b3eaa2cb85f071a75be1ce",
+      "normalized_value_sha256": "84ef81fae591e30d71de3b994d0d233a67b06aa72ff9f4c9994bdc72fd695214"
+    },
+    {
+      "field": "SCENERY30_PLATFORM",
+      "off_literal_count": 4,
+      "on_literal_count": 4,
+      "off_raw_sha256": "2621a6ca5aad04306bd46b1d703c6b07f6af215bcab75617d248a0718e1e60e0",
+      "on_raw_sha256": "9a88846e986a584fe03fe2b2324c79cf7e33ac9cc1b86cc9ed4fd14c0cd748e6",
+      "normalized_value_sha256": "371efb157afa60c3ee0407ec24ac3ac396a4c0dae31c3c2ea9d0acafcc91f696"
+    },
+    {
+      "field": "SCENERY30_PLATFORM_GATE",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "15badaba9fe8de08b94d5fe839c11e023086af40f8c4370960ac211fa1800b57",
+      "on_raw_sha256": "db1ad19c89762b5a0d39bd81bf998ceb7b583b28d8608401325784490d3b52ed",
+      "normalized_value_sha256": "2ec0349cc9d58d2a2979fc74696cdf7c07dec874efa398eb3a4f3fa3bb585162"
+    },
+    {
+      "field": "SDK_OBJS",
+      "off_literal_count": 6,
+      "on_literal_count": 6,
+      "off_raw_sha256": "270478ba0344fe5ce92cc36dabd173325f0ab7d06882ba625b7e9f0806624e96",
+      "on_raw_sha256": "9b2df9033715318fc31d928a50f82e2297c837055493e3f6111f3878e9cdd397",
+      "normalized_value_sha256": "99adf0fce7cfde05a4092e1c497dd7b8608ff8c8b03211fee78d5d5dbbb8b87a"
+    },
+    {
+      "field": "SH4ZAM_OBJS",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "00afa3d007d00d81c8ec9006fcb5e3a998c24565487cedda3de302591c48d0dd",
+      "on_raw_sha256": "5b81612cf77e8d9bf4e412ed03600a13e902097bdf7ebd5ca1bc12270626f4f7",
+      "normalized_value_sha256": "0453f7f9d304923b296a63f9cce20491b69014ac78980e8a5ecd75c22682719d"
+    },
+    {
+      "field": "SUBSCREEN_GAME",
+      "off_literal_count": 7,
+      "on_literal_count": 7,
+      "off_raw_sha256": "7d17b2035e7cb35b059eccc0c78f7dd078687d1b9330dce54c0f9b31cdeaf3c6",
+      "on_raw_sha256": "e4da02d73eb58954deb5a601870d9b998af6bcf94bc0945d5839204a0fd8cffd",
+      "normalized_value_sha256": "9b12a291f5e1d3b6284ca110595ef2572b98a242b8062ef360dd80624a0b6d68"
+    },
+    {
+      "field": "TAHASH_PLATFORM",
+      "off_literal_count": 3,
+      "on_literal_count": 3,
+      "off_raw_sha256": "094d16e6918837722f8202496d9a3f810fccec90850bf525d7a773569e1c13cc",
+      "on_raw_sha256": "8a4d8ef790779b2c7885925609404ae477db0f2cc0d8e0cefe4a87ce79f930f4",
+      "normalized_value_sha256": "597bdc24d4517dc0b47c51a21700ae6c42b10364c446f455769a15345b14c455"
+    },
+    {
+      "field": "TARGET",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "3a77cdc5535be9a750699d2f66c48a9ac24cb072a71be1dbe6c3e7d33bd4da0d",
+      "on_raw_sha256": "dc797dc106382f9699e92205b3e1e6bcc63bc1adfd061d8cf0ea53f30f96cc07",
+      "normalized_value_sha256": "5e20eb75e65a44b8e6f48552e96b292c2b8646b1176cc130a58ff76a64863497"
+    },
+    {
+      "field": "UI_HUD_MASK_STAMP",
+      "off_literal_count": 1,
+      "on_literal_count": 1,
+      "off_raw_sha256": "a1c377df0a25f95caaee7aa6ecf1549fdb329c250872af409bda65c5e34055e6",
+      "on_raw_sha256": "3ea4c7dc9ee8feffb0af8cae238d17af29a097f06928433f46679803ca58a0ed",
+      "normalized_value_sha256": "dba65dcaef391c7082a2c25f111a8b705d841742f044c390ae3fb12e773877a1"
+    },
+    {
+      "field": "VMUSAVE_PLATFORM",
+      "off_literal_count": 8,
+      "on_literal_count": 8,
+      "off_raw_sha256": "78e1bcabcfdd1ff94d0894fcc182b8b6461351cd42b92bdfed023c822b60576b",
+      "on_raw_sha256": "7ff9145a4033a91135d6c679723610112c08cbf3ea70eeb1a52d8e78b35177c6",
+      "normalized_value_sha256": "25103b3e8a5f6fca1c913ae43310bb3f606b2d73424bce2a61749165679949b8"
+    },
+    {
+      "field": "VMU_GAME",
+      "off_literal_count": 6,
+      "on_literal_count": 6,
+      "off_raw_sha256": "64761bdf5a86396cf11155cc267b6b59268b8920e70512b06770fe7f0752113a",
+      "on_raw_sha256": "e4de75ce9908b29821a297349e6643125d1f3873cd5319169cac860eea99a136",
+      "normalized_value_sha256": "7d705990f21d4ecd46f4c2953663bec4c9c01dc47f30068a6de563b68eefc105"
+    },
+    {
+      "field": "VMU_PLATFORM",
+      "off_literal_count": 3,
+      "on_literal_count": 3,
+      "off_raw_sha256": "4071c2f55ca78242ecc9e5d1ba4c6492c564e030a9432c510692560df444b64b",
+      "on_raw_sha256": "3e6294c0d99360705d6b9d3d44b9254f6b1e7e24e1b0b5d88f8cd8b3cfdd6bb7",
+      "normalized_value_sha256": "80657064cc63a55f115805b83537f8419a6b39e30e770ec773241d168f6aee6e"
+    },
+    {
+      "field": "VMU_PORT_GAME",
+      "off_literal_count": 4,
+      "on_literal_count": 4,
+      "off_raw_sha256": "9e67a0a16700a3bdcd3be431cf07123169372efcd8568d9e405777fee7d5716d",
+      "on_raw_sha256": "3746aad50bd6253395a63fec1e04b25cd5feff84d208b2bcfb0607727aba1798",
+      "normalized_value_sha256": "6c50fba61590b8e42123ebeef61a33c96433edaf1d4f52bcbf3aa2a8833c47a5"
+    },
+    {
+      "field": "WEAPON_HEAP4_OBJS",
+      "off_literal_count": 5,
+      "on_literal_count": 5,
+      "off_raw_sha256": "28c3dc52850b9093baf3a5926dfb8dabab53fe2b29100f328823d52969357b51",
+      "on_raw_sha256": "6e9c6c4cd46b9648dbb067f02bf2e384a00559d4ff35a03fc8fbeef10f7707c9",
+      "normalized_value_sha256": "4f3057e9824822dc5ebedbf3ba62042f4125051dc2a9f9a46d2f96aa68b0766b"
+    }
+  ],
+  "remaining_exact_option_difference": {
+    "RAIN_R10C_DC": [
+      "0",
+      "1"
+    ]
+  },
+  "derived_macro_normalization_fields": [],
+  "actual_filter06_compile": {
+    "off_tokens": [
+      "kos-c++",
+      "-O2",
+      "-fno-PIC",
+      "-fno-PIE",
+      "-fomit-frame-pointer",
+      "-m4-single",
+      "-ml",
+      "-mfsrra",
+      "-mfsca",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-matomic-model=soft-gusa",
+      "-ftls-model=local-exec",
+      "-D__DREAMCAST__",
+      "-isystem",
+      "/root/work/kos-re4dc-d367/include",
+      "-isystem",
+      "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include",
+      "-isystem",
+      "/root/work/kos-re4dc-d367/addons/include/",
+      "-isystem",
+      "/root/work/kos-ports/include",
+      "-D_arch_dreamcast=1",
+      "-D_arch_sub_pristine=1",
+      "-Wall",
+      "-g",
+      "-std=gnu++20",
+      "-fpermissive",
+      "-w",
+      "-O1",
+      "-include",
+      "platform/include/re4dc_prelude.h",
+      "-I../../../include",
+      "-I../../../src",
+      "-Iplatform/include",
+      "-DRE4DC_GAME",
+      "-DRE4DC_STAT_ROUTINE_BYTES=1",
+      "-fno-exceptions",
+      "-fno-unwind-tables",
+      "-fno-asynchronous-unwind-tables",
+      "-fno-threadsafe-statics",
+      "-DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1",
+      "-DRE4DC_SS_RESTORE_VALIDATE_FIRST=1",
+      "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+      "-DRE4DC_RENDER_FSAA=1",
+      "-DRE4DC_RENDER_OPTION=1",
+      "-DRE4DC_VIEW_DIST_OPTION=1",
+      "-DRE4DC_VIEW_DIST_BOOT=1",
+      "-DRE4DC_FAR_SHELL=1",
+      "-DRE4DC_FOLIAGE_OPTION=1",
+      "-DRE4DC_RES_MODES=9",
+      "-DRE4DC_RES_MODE=0",
+      "-DRE4DC_RES_CYCLE_FRAMES=0",
+      "-DRE4DC_ATCHK_LIST=1",
+      "-DRE4DC_ATCHK_CACHE=1",
+      "-DRE4DC_WORKAT_INLINE=1",
+      "-DRE4DC_ESP_OWNER=1",
+      "-DRE4DC_FX_SCAN=1",
+      "-DRE4DC_FX_MOVE=1",
+      "-DRE4DC_OT_MASK=1",
+      "-DRE4DC_PAD_PROMPTS=1",
+      "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+      "-DRE4DC_SKEL_FTRV=1",
+      "-DRE4DC_VEC_INLINE=1",
+      "-ffp-contract=off",
+      "-DRE4DC_LEON_CLOTH_DRAWN=1",
+      "-DRE4DC_LOGIC_WASTE=1",
+      "-DRE4DC_LOGIC_WASTE_MASK=0x02",
+      "-DRE4DC_LOGIC_APPROX_MASK=0x01",
+      "-DRE4DC_RESET_HEAP_FIX=1",
+      "-DRE4DC_EM_READ_RETRY=1",
+      "-DRE4DC_RESET_MEM_FIX=1",
+      "-DRE4DC_SH4ZAM_RENDER=1",
+      "-DRE4DC_ACTOR_TRANSACTION=1",
+      "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+      "-DRE4DC_VMU_DIALOG=1",
+      "-I/root/probe/lanes/play-actor-bundle",
+      "-DRE4DC_LEON_HEADLESS=1",
+      "-DRE4DC_ACTOR_PL08=1",
+      "-DRE4DC_ACTOR_PL08_PACK=1",
+      "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+      "-DRE4DC_NMR_POOL=1",
+      "-DRE4DC_ACTOR_MATERIALS=4",
+      "-DRE4DC_NMR_LOD=1",
+      "-DRE4DC_ACTOR_MATERIALS=4",
+      "-DRE4DC_TEX_PKG_SKIP=1",
+      "-DRE4DC_GC_CENSUS_TRIM=1",
+      "-DRE4DC_GXF_JITTER=1",
+      "-DRE4DC_ESP_POOL_RECYCLE=1",
+      "-DRE4DC_R117_EFFECT_FAILURE_SAFE=1",
+      "-DRE4DC_RAIN_PS2=1",
+      "-DRE4DC_RAIN_DC=1",
+      "-DRE4DC_RAIN_DC_N=320",
+      "-MMD",
+      "-MP",
+      "-c",
+      "../../../src/game/filter06.cpp",
+      "-o",
+      "<OWNED_ARM_OUT>/obj/src/game/filter06.o"
+    ],
+    "on_tokens": [
+      "kos-c++",
+      "-O2",
+      "-fno-PIC",
+      "-fno-PIE",
+      "-fomit-frame-pointer",
+      "-m4-single",
+      "-ml",
+      "-mfsrra",
+      "-mfsca",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-matomic-model=soft-gusa",
+      "-ftls-model=local-exec",
+      "-D__DREAMCAST__",
+      "-isystem",
+      "/root/work/kos-re4dc-d367/include",
+      "-isystem",
+      "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include",
+      "-isystem",
+      "/root/work/kos-re4dc-d367/addons/include/",
+      "-isystem",
+      "/root/work/kos-ports/include",
+      "-D_arch_dreamcast=1",
+      "-D_arch_sub_pristine=1",
+      "-Wall",
+      "-g",
+      "-std=gnu++20",
+      "-fpermissive",
+      "-w",
+      "-O1",
+      "-include",
+      "platform/include/re4dc_prelude.h",
+      "-I../../../include",
+      "-I../../../src",
+      "-Iplatform/include",
+      "-DRE4DC_GAME",
+      "-DRE4DC_STAT_ROUTINE_BYTES=1",
+      "-fno-exceptions",
+      "-fno-unwind-tables",
+      "-fno-asynchronous-unwind-tables",
+      "-fno-threadsafe-statics",
+      "-DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1",
+      "-DRE4DC_SS_RESTORE_VALIDATE_FIRST=1",
+      "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+      "-DRE4DC_RENDER_FSAA=1",
+      "-DRE4DC_RENDER_OPTION=1",
+      "-DRE4DC_VIEW_DIST_OPTION=1",
+      "-DRE4DC_VIEW_DIST_BOOT=1",
+      "-DRE4DC_FAR_SHELL=1",
+      "-DRE4DC_FOLIAGE_OPTION=1",
+      "-DRE4DC_RES_MODES=9",
+      "-DRE4DC_RES_MODE=0",
+      "-DRE4DC_RES_CYCLE_FRAMES=0",
+      "-DRE4DC_ATCHK_LIST=1",
+      "-DRE4DC_ATCHK_CACHE=1",
+      "-DRE4DC_WORKAT_INLINE=1",
+      "-DRE4DC_ESP_OWNER=1",
+      "-DRE4DC_FX_SCAN=1",
+      "-DRE4DC_FX_MOVE=1",
+      "-DRE4DC_OT_MASK=1",
+      "-DRE4DC_PAD_PROMPTS=1",
+      "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+      "-DRE4DC_SKEL_FTRV=1",
+      "-DRE4DC_VEC_INLINE=1",
+      "-ffp-contract=off",
+      "-DRE4DC_LEON_CLOTH_DRAWN=1",
+      "-DRE4DC_LOGIC_WASTE=1",
+      "-DRE4DC_LOGIC_WASTE_MASK=0x02",
+      "-DRE4DC_LOGIC_APPROX_MASK=0x01",
+      "-DRE4DC_RESET_HEAP_FIX=1",
+      "-DRE4DC_EM_READ_RETRY=1",
+      "-DRE4DC_RESET_MEM_FIX=1",
+      "-DRE4DC_SH4ZAM_RENDER=1",
+      "-DRE4DC_ACTOR_TRANSACTION=1",
+      "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+      "-DRE4DC_VMU_DIALOG=1",
+      "-I/root/probe/lanes/play-actor-bundle",
+      "-DRE4DC_LEON_HEADLESS=1",
+      "-DRE4DC_ACTOR_PL08=1",
+      "-DRE4DC_ACTOR_PL08_PACK=1",
+      "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+      "-DRE4DC_NMR_POOL=1",
+      "-DRE4DC_ACTOR_MATERIALS=4",
+      "-DRE4DC_NMR_LOD=1",
+      "-DRE4DC_ACTOR_MATERIALS=4",
+      "-DRE4DC_TEX_PKG_SKIP=1",
+      "-DRE4DC_GC_CENSUS_TRIM=1",
+      "-DRE4DC_GXF_JITTER=1",
+      "-DRE4DC_ESP_POOL_RECYCLE=1",
+      "-DRE4DC_R117_EFFECT_FAILURE_SAFE=1",
+      "-DRE4DC_RAIN_PS2=1",
+      "-DRE4DC_RAIN_DC=1",
+      "-DRE4DC_RAIN_DC_N=320",
+      "-DRE4DC_RAIN_R10C_DC=1",
+      "-MMD",
+      "-MP",
+      "-c",
+      "../../../src/game/filter06.cpp",
+      "-o",
+      "<OWNED_ARM_OUT>/obj/src/game/filter06.o"
+    ],
+    "sole_added_exact_token": "-DRE4DC_RAIN_R10C_DC=1"
+  },
+  "no_definitions_or_fields_dropped": true
+}

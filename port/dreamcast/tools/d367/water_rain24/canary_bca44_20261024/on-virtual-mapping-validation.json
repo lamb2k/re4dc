@@ -1,0 +1,112 @@
+{
+  "scope": "exact fp_run virtual fixture mapping only; GENERIC LINT REMAINS FAIL; not a standard/release disc pass",
+  "master_script": {
+    "bytes": 6937,
+    "sha256": "f1f341e94c29d50f64afa229ce305d9a60f50f4eafb3c7d9fe9a9c06844e457f"
+  },
+  "fp_run_script": {
+    "bytes": 15608,
+    "sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747"
+  },
+  "base_metadata": {
+    "bytes": 364,
+    "sha256": "6608a043c4ab88ae97e68335c85c25912fc0db988d824c407688ae85ae5b937b"
+  },
+  "directory_trees": {
+    "iso9660": {
+      "/dc/padscript.txt": {
+        "lba": 420,
+        "bytes": 8192,
+        "backing_sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+        "directory_lba": 45038,
+        "directory_offset": 1736
+      },
+      "/dc/w11.txt": {
+        "lba": 440,
+        "bytes": 8192,
+        "backing_sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+        "directory_lba": 45038,
+        "directory_offset": 3536
+      },
+      "/dc/warp.txt": {
+        "lba": 400,
+        "bytes": 8192,
+        "backing_sha256": "3282b1cd7c6e4c8e67a09f3b767356e9bb560035129bef1265a0f2a225fc58e2",
+        "directory_lba": 45038,
+        "directory_offset": 3658
+      }
+    },
+    "joliet": {
+      "/dc/padscript.txt": {
+        "lba": 420,
+        "bytes": 8192,
+        "backing_sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+        "directory_lba": 45245,
+        "directory_offset": 718
+      },
+      "/dc/w11.txt": {
+        "lba": 440,
+        "bytes": 8192,
+        "backing_sha256": "9f1dcbc35c350d6027f98be0f5c8b43b42ca52b7604459c0c42be3aa88913d47",
+        "directory_lba": 45245,
+        "directory_offset": 1432
+      },
+      "/dc/warp.txt": {
+        "lba": 400,
+        "bytes": 8192,
+        "backing_sha256": "3282b1cd7c6e4c8e67a09f3b767356e9bb560035129bef1265a0f2a225fc58e2",
+        "directory_lba": 45245,
+        "directory_offset": 1480
+      }
+    }
+  },
+  "all_virtual_members_read_back": 1715,
+  "virtual_manifest_sha256": "e90190fd9d5bc1fde859067ed5c957eabdae089a462537fc66c78c3870c94096",
+  "loader_errors_preserved": [
+    [
+      "ERROR",
+      "iso.extents",
+      "file extents inside track 3, no overlaps  ['/dc/warp.txt', '/dc/padscript.txt', '/dc/w11.txt']"
+    ]
+  ],
+  "standard_errors_preserved": [
+    [
+      "ERROR",
+      "iso.extents",
+      "file extents inside track 3, no overlaps  ['/dc/warp.txt', '/dc/padscript.txt', '/dc/w11.txt']"
+    ]
+  ],
+  "standard_deviations_preserved": [
+    [
+      "STD",
+      "std.raw2352",
+      "data tracks are raw 2352-byte Mode 1 (track??.bin)"
+    ],
+    [
+      "STD",
+      "std.hdpad",
+      "track 3 is padded to the end of the high-density area, LBA 549150 (ends 545276; 3874 sectors short)"
+    ],
+    [
+      "STD",
+      "std.toc1",
+      "IP.BIN carries a TOC1 table at 0x100 matching track 3 (start FAD 45150, lead-out FAD 545426)"
+    ],
+    [
+      "STD",
+      "std.bootlast",
+      "boot file is the last file, 150 sectors before the end of track 3 (at 45391, tail 150 sectors)"
+    ],
+    [
+      "STD",
+      "std.ip0000",
+      "track 1 system area = IP0000.BIN: the 256-byte header repeated in all 16 sectors"
+    ],
+    [
+      "STD",
+      "std.ldtext",
+      "low-density PVD names COPYRIGH.TXT / ABSTRACT.TXT / BIBLIOGR.TXT ('' '' '')"
+    ]
+  ],
+  "root_review_required": true
+}

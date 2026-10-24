@@ -1,0 +1,74 @@
+{
+  "source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "scope": "SOURCE/HELPER/METADATA PRESERVATION ONLY; no binary/assets/guests",
+  "preparation_receipt_sha256": "11c522432448fdb2fc9bc56b57eae622162056f6bac6b1341aa42c0f985e9794",
+  "launch_preflight_sha256": "837c095edf3a2eae9562a4020bdb964260b4e4126b4ce20e283f8ab40704d7bd",
+  "guests_started": 0,
+  "root_grant_created": false,
+  "new_owned_cap_bytes": 6442450944,
+  "final_unique_owned_bytes": 2462649650,
+  "free_after": 43357569024,
+  "profile_difference": {
+    "RAIN_R10C_DC": [
+      "0",
+      "1"
+    ]
+  },
+  "arms": {
+    "off": {
+      "out": "/root/work/lanes/water-rain24-canary-bca44-20261024/programmes/off-g/out",
+      "base": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-bca44-console55-20261024/_discs/off-g",
+      "raw": {
+        "bytes": 3402532,
+        "sha256": "e51c8903a17ddb5dbde303c05120e8b26b22ffc1b6b76edf98701008a6d5ea99"
+      },
+      "elf": {
+        "bytes": 28722804,
+        "sha256": "eeedaf36c77323f27afbcf99b897e9b67be7523804dfcb4aae98a365bc0e1796"
+      },
+      "syms": "0x3e9280 0x3f9284 0x3f9280",
+      "layout": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-bca44-console55-20261024/identities/off-g-source-layout.json",
+        "sha256": "6fb3049b09a539ee13dee27a37c59d877b9e3c751c5203641454291b2351bff2"
+      },
+      "track03": {
+        "bytes": 1024565248,
+        "sha256": "439dcc1abc7dc944e446224ad3f6de694932f99307d7bd59f1fa6f0238bf122d"
+      }
+    },
+    "on": {
+      "out": "/root/work/lanes/water-rain24-canary-bca44-20261024/programmes/on-g/out",
+      "base": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-bca44-console55-20261024/_discs/on-g",
+      "raw": {
+        "bytes": 3403204,
+        "sha256": "27687d8491d2b08563664a1c49c2db62deb3bd373f2937a10ef7aa7308148642"
+      },
+      "elf": {
+        "bytes": 28725316,
+        "sha256": "bec85ca206a0b0de67cdb21f4052a120dd438c97e088da91d7f142b4704b7a73"
+      },
+      "syms": "0x3e9520 0x3f9524 0x3f9520",
+      "layout": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/water-rain24/rain-bca44-console55-20261024/identities/on-g-source-layout.json",
+        "sha256": "2de78057ef0859ade9f6f099f20e1de2c9d3793a882096d9da6cfdb3126dc2ae"
+      },
+      "track03": {
+        "bytes": 1024565248,
+        "sha256": "76cfc943fc63a91db62d0e69d832497346c43a08887a2037c6cae56f21250fe8"
+      }
+    }
+  },
+  "generic_disc_lint_pass": false,
+  "mapping": "primary/Joliet exact3 redirect entries+backing bytes and all actual virtual members checked; root review required",
+  "host_controls": {
+    "groups": 14,
+    "result": "PASS; synthetic no guest"
+  },
+  "limits": [
+    "source scalar/room/frame observation only",
+    "actual source signature or fresh native room10c emission absent => UNEXERCISED",
+    "callback_ticket_direct_proof=false",
+    "no completed actor/viewport/present pixel gate",
+    "no appearance/owner/ancestry/lifecycle/memory/performance acceptance"
+  ]
+}

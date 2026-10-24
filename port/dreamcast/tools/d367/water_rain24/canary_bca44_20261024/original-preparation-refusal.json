@@ -1,0 +1,20 @@
+{
+  "status": "PRESERVED_ORIGINAL_POST-STAGE_METADATA_REFUSAL",
+  "reason": "v1 compared literal full Make values including distinct owned OBJDIR paths; compiler/stage succeeded",
+  "original_source": {
+    "bytes": 10377,
+    "sha256": "c337e219139ad215393735f5f378b2ed0d75e1d01592c31a0900dbe566770c4f"
+  },
+  "original_receipt": {
+    "bytes": 12624,
+    "sha256": "e5fc04e661937210319f34773d65f7dc7f32cb42ad7cf91d1124af60722aad3f"
+  },
+  "raw_differing_field_count": 76,
+  "path_only_field_count": 75,
+  "remaining_option_only": {
+    "RAIN_R10C_DC": [
+      "0",
+      "1"
+    ]
+  }
+}
