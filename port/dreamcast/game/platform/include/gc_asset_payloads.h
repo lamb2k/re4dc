@@ -22,6 +22,10 @@ bool payload_capture(PayloadProof&,const void* owner,const void* base,unsigned b
 // No span table is retained.
 struct PayloadSpan {const void* data;unsigned bytes;};
 bool payload_capture_fragments(PayloadProof&,const void* owner,const PayloadSpan*,unsigned count);
+// Safe load boundary only: digest must come from a complete successful read
+// of this exact owned source. The caller separately proves every accepted
+// copy/range/lifetime; this creates no positive pointer-range authority.
+bool payload_capture_digest(PayloadProof&,const void* owner,const Digest&);
 void payload_retire(PayloadProof&);
 void payload_accept(PayloadProof*,unsigned serial,unsigned consumer_mask);
 void payload_flush_all();

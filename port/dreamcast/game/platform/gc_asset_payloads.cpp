@@ -86,7 +86,11 @@ bool payload_capture_fragments(PayloadProof& proof,const void* owner,const Paylo
     } reader{spans,count};
     for(unsigned k=0;k<4;++k)reader.word[8+k]=count>>(8*k);
     Digest digest{};if(!fingerprint_read(digest,Reader::read,&reader,bytes))return false;
-    for(auto* old=payloads;old;old=old->next)if(old!=&proof && old->owner==owner){payload_retire(*old);unresolved(SourceGeometry,"fragment-owner-overlap");return false;}
+    return payload_capture_digest(proof,owner,digest);
+}
+bool payload_capture_digest(PayloadProof& proof,const void* owner,const Digest& digest){
+    if(!owner || proof.owner){payload_retire(proof);unresolved(SourceGeometry,"digest-owner");return false;}
+    for(auto* old=payloads;old;old=old->next)if(old!=&proof && old->owner==owner){payload_retire(*old);unresolved(SourceGeometry,"digest-owner-overlap");return false;}
     if(!proof.registered){if(payload_count==128){unresolved(SourceGeometry,"payload-owner-capacity");return false;}
         proof.next=payloads;payloads=&proof;proof.registered=true;++payload_count;}
     if(payload_serial>=0xfffffffeU){unresolved(SourceGeometry,"payload-serial-exhausted");return false;}
