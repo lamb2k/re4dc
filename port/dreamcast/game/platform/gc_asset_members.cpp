@@ -170,6 +170,12 @@ bool member_lookup(const void* data,ModelMember* out) {
     }
     return false;
 }
+bool member_contains(unsigned serial,const void* data,unsigned bytes) {
+    if(!serial || !bytes)return false;
+    for(const auto& member:members)if(current(member) && member.serial==serial)
+        return contains(member.base,member.bytes,data,bytes);
+    return false;
+}
 void member_accept(unsigned serial,unsigned mask) {
     const unsigned allowed=(1U<<SourceGeometry)|(1U<<Weapon);
     if(!serial || !mask || (mask&~allowed)) { use_faults|=mask&allowed?mask&allowed:1U<<SourceGeometry;return; }

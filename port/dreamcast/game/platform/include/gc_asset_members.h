@@ -19,6 +19,8 @@ void member_retire_transient();
 // pointer until a live, bounded complete BIN member has been located.
 bool member_capture(const void* data);
 bool member_lookup(const void* data, ModelMember*);
+// Memory-only full-span check against an already captured current generation.
+bool member_contains(unsigned serial,const void* data,unsigned bytes);
 // Accepted geometry latches only bounded metadata while SQ may be held.
 // Flush at an unlocked frame/retirement boundary, never inside an emitter.
 void member_accept(unsigned serial,unsigned consumer_mask);

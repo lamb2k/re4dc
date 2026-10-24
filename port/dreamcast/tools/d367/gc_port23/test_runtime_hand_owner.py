@@ -80,7 +80,7 @@ extern "C" {unsigned char re4dc_dvd_buff[0x20000];}
 struct ModelData{const void*vtxOrig;unsigned nVtx,nNrm,weight_ext_num,weight_palette_num;};struct cModelInfo{ModelData*pData;};
 unsigned fingerprint(const void*){return 1;}
 namespace leon4k{struct Weight{unsigned char data[16];};struct Chunk{unsigned source_info,position_count,normal_count,palette_count,triangles,stream_bytes;const unsigned char*positions,*normals,*uv,*stream;const Weight*weights;};Chunk chunks[8];}
-struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;};
+struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;const unsigned char*positions=nullptr,*normals=nullptr;unsigned position_stride=8,normal_stride=8,normal_shift=14;};
 struct Re4dcActorSource{const unsigned char*positions,*normals;unsigned position_count,normal_count,palette_entries,small_normals;};
 ''' + hands + r'''
 namespace leon_hand_pack{void reset_role_ids(unsigned){}}
@@ -103,7 +103,7 @@ int main(){using namespace leon_hand_pack;
  mutex_lock(&lh_mutex);partial=true;assert(!load_now(0,2));partial=false;assert(!gcasset_hand_slot[0].serial);assert(load_now(0,0));mutex_unlock(&lh_mutex);
  // Actual AICA issued-store/readback chain selects a fresh copy generation.
  mutex_lock(&lh_mutex);prefetch(2);assert(load(0,2));mutex_unlock(&lh_mutex);assert(gcasset_hand_chunk_current(0) && gcasset_hand_slot[0].serial!=original);
- p=part();s=source_for();logs.clear();{ReplayScope replay(original,1U<<SourceGeometry,&gcasset_hand_slot[0]);ActorSourceScope scope(&p,&s);assert(scope.selected.serial==original);sq=true;scope.accepted();sq=false;}payload_flush_all();assert(logs.find("unbound-accepted-payload")!=std::string::npos && logs.find("GC-ASSET v=")==std::string::npos);
+ p=part();s=source_for();logs.clear();{ReplayScope replay(original,1U<<SourceGeometry,&gcasset_hand_slot[0]);ActorSourceScope scope(&p,&s);assert(!scope.selected.serial);sq=true;scope.accepted();sq=false;}payload_flush_all();assert(logs.find("unbound-accepted-payload")!=std::string::npos && logs.find("GC-ASSET v=")==std::string::npos);
  // Real job allocation/range/thread, joined before cache and slot publication.
  mutex_lock(&lh_mutex);want[0]=3;assert(job_start(3));mutex_unlock(&lh_mutex);run_job(job_thd);
  mutex_lock(&lh_mutex);job_poll();mutex_unlock(&lh_mutex);assert(slot_blob[0]==3 && gcasset_hand_chunk_current(0));
@@ -120,6 +120,7 @@ int main(){using namespace leon_hand_pack;
  retire_catalog();assert(!gcasset_hand_chunk_current(0));
 }
 '''
+        fixture += '\nextern "C" int re4dc_actor_model_source(const void*,Re4dcActorSource*){return 0;}\n'
         with tempfile.TemporaryDirectory(prefix='gc-port23-hand-owner-', dir='/dev/shm') as temporary:
             root = Path(temporary);(root / 'fixture.cpp').write_text(fixture);executable = root / 'fixture'
             subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror', '-Wno-misleading-indentation',

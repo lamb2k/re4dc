@@ -29,7 +29,7 @@ extern "C" void re4dc_log(const char*fmt,...){assert(!sq);char text[256];va_list
 struct cModel{unsigned kindid=0,id=0x10,type=0,nParts=1;};struct cModelInfo{const void*pData=nullptr;};
 struct Body{cModelInfo*pRight=nullptr,*pLeft=nullptr;};struct Player:cModel{struct Body*Body=nullptr;}player;Player*pPL=&player;
 ''' + function(bridge, 'extern "C" unsigned re4dc_gcasset_model_identity(') + '\n' + function(bridge, 'extern "C" unsigned re4dc_gcasset_weapon_consumer(') + r'''
-struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;};
+struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;const unsigned char*positions=nullptr,*normals=nullptr;unsigned position_stride=8,normal_stride=8,normal_shift=14;};
 struct Re4dcActorSource{const unsigned char*positions,*normals;unsigned position_count,normal_count,palette_entries,small_normals;};
 struct Chunk{unsigned position_count=1,normal_count=1,palette_count=1,uv_bytes=4,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};
 struct RegistryView{unsigned geometry_count=1;}registry;Chunk chunks[1];Chunk registry_gview(unsigned g){return chunks[g];}PayloadProof gcasset_registry[2];
@@ -68,10 +68,10 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);unsigned char repl
         # These mutants compile the same actual bodies; each must fail an
         # executed assertion, rather than merely fail a text-presence check.
         ambiguous = 'if(!bound && ((kind==1 && id==0x0a) || (kind==0 && id==0x4f)))return 0;'
-        replay = function(selection, '    if(replay_use.serial!=0xffffffffU)')
+        replay = function(selection, '    if(saved.serial!=0xffffffffU)')
         for label, old, new in [('drop Weapon', '?1U<<Weapon:0U', '?0U:0U'),
                                 ('unbound shared class', ambiguous, 'if(!bound && kind==255 && id==255)return 0;'),
-                                ('recapture replay', replay, '')]:
+                                ('recapture replay', replay, '(void)saved;')]:
             with self.subTest(mutant=label):
                 self.assertEqual(fixture.count(old), 1)
                 self.compile_run(fixture.replace(old, new), definitions, bridge_stubs=False, reject=True)
@@ -91,7 +91,7 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);unsigned char repl
 using namespace re4dc_gcasset;
 std::string logs;extern "C" void re4dc_log(const char*fmt,...){char text[256];va_list ap;va_start(ap,fmt);vsnprintf(text,sizeof text,fmt,ap);va_end(ap);logs+=text;}
 namespace re4dc_gcasset{bool ensure_disc_catalog(){return true;}}
-struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;};
+struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;const unsigned char*positions=nullptr,*normals=nullptr;unsigned position_stride=8,normal_stride=8,normal_shift=14;};
 struct Re4dcActorSource{const unsigned char*positions,*normals;unsigned position_count,normal_count,palette_entries,small_normals;};
 namespace leon4k{struct Chunk{unsigned source_info,position_count=1,normal_count=1,palette_count=1,triangles=1,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};Chunk chunks[8];float bind[2][12]{};}
 unsigned char arrays[8][5][32]{};
@@ -130,7 +130,7 @@ int main(){assert(install(nullptr,0));begin_startup_closed(1,Required);
 using namespace re4dc_gcasset;
 bool sq;std::string logs;
 extern "C" void re4dc_log(const char*fmt,...){assert(!sq);char text[256];va_list ap;va_start(ap,fmt);vsnprintf(text,sizeof text,fmt,ap);va_end(ap);logs+=text;}
-struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;};
+struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;const unsigned char*positions=nullptr,*normals=nullptr;unsigned position_stride=8,normal_stride=8,normal_shift=14;};
 struct Re4dcActorSource{const unsigned char*positions,*normals;unsigned position_count,normal_count,palette_entries,small_normals;};
 struct Chunk{unsigned position_count=1,normal_count=1,palette_count=1,uv_bytes=4,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};
 struct RegistryView{unsigned geometry_count=2;}registry;Chunk chunks[2];Chunk registry_gview(unsigned g){return chunks[g];}
@@ -154,9 +154,9 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);unsigned char data
  // Mixed arrays or an out-of-range stream cannot inherit the previous owner.
  p.stream=chunks[0].stream;{ActorSourceScope scope(&p,&s);assert(!scope.selected.serial);sq=true;e.slots=3;acknowledge(scope,e,w);sq=false;}payload_flush_all();assert(!rows() && logs.find("unbound-accepted-payload")!=std::string::npos);
  logs.clear();p.stream=chunks[1].stream+30;assert(!re4dc_gcasset_actor_select(&p,&s).serial);p.stream=chunks[1].stream;
- // Replay preserves its frozen payload serial, even while current source arrays match another live owner.
+ // Replay never substitutes another live owner when consumed arrays changed.
  {ReplayScope replay(gcasset_registry[0].serial,1U<<SourceGeometry,&gcasset_registry[0]);ActorSourceScope scope(&p,&s);
-  assert(scope.selected.payload==&gcasset_registry[0] && scope.selected.serial==gcasset_registry[0].serial);}
+  assert(!scope.selected.serial);}
  {ReplayScope replay(0,0);ActorSourceScope scope(&p,&s);assert(!scope.selected.serial);}
  {ActorSourceScope scope(&p,&s);payload_retire(gcasset_registry[1]);sq=true;acknowledge(scope,e,w);sq=false;}payload_flush_all();assert(!rows() && logs.find("unbound-accepted-payload")!=std::string::npos);
 }
@@ -203,7 +203,9 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);unsigned char a[64
         leave = function(registry, 'extern "C" void re4dc_registry_room_leave()')
         self.assertLess(leave.index('gcasset_registry_retire()'), leave.index('re4dc_static_free(pack.cell)'))
 
-    def compile_run(self, fixture, definitions=(), bridge_stubs=True, reject=False):
+    def compile_run(self, fixture, definitions=(), bridge_stubs=True, reject=False, model_source_stub=True):
+        if model_source_stub:
+            fixture += '\nstruct Re4dcActorSource;extern "C" int re4dc_actor_model_source(const void*,Re4dcActorSource*){return 0;}\n'
         if bridge_stubs:
             fixture += '''
 extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**data){*data=nullptr;return 0x00100000U;}

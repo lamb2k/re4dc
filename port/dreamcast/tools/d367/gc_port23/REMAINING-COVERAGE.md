@@ -2,7 +2,8 @@
 
 Frozen hand source: 7e299c281, based on integration933936ea, independently CLEAR.
 Current integrationd5c1ceab9 is merged in e0f80c509. The replacement Weapon
-classification below is now a source implementation awaiting independent review;
+classification is independently CLEAR at d62995038. Its main-gateway/Frame
+successor described in MAIN-GEOMETRY.md awaits independent review;
 the static and Motion rows remain proposals. No catalog, allowance, asset, rr
 wiring or recipe is changed. Current runtime coverage remains
 explicitly partial: SourceGeometry and Weapon bits are absent (mask1f6 with
@@ -21,13 +22,15 @@ the older542/933 receipts do not establish current programme acceptance.
 | Replacement Weapon consumer classification | Original gateway and replacement selector use the actual model_bridge class/role accessor. Current original member family/ARC supplies class attribution only; replacement ancestry remains the selected package/copy. Missing ambiguous cObj0a/Em0/4f binding fails selection. Exact mask is frozen with replacement serial and reused before any current-class lookup on replay. | Source-extracted actual accessor/selector/acceptance controls cover held/dropped/thrown/projectile/hands, bound shell/mine, nonweapon, retired original, retired replacement and replay after class change. Three compiling mutants remove Weapon, admit unbound shared classes or recapture replay and must fail assertions. Independent review and current-profile accepted path census remain open; no Weapon coverage bit yet. |
 | EVD/event and motion-driven presentation | Accepted underlying model/texture/audio consumers use their own identities; a native movie container never blesses separate event data. Original inventory explicitly retains GC EVD model/motion blocks and em/pl motion sources. | Root explicitly classifies visible motion/FCV/EVD-derived poses as visual assets. Separate attribution is missing; see MOTION-PROPOSAL.md. Collision/sequencing logic remains exempt only as CLAUDE specifies. A PS2 geometry SHA cannot bless event/motion inputs. No EVD/motion conversion or swap starts from this proposal. |
 
-The minimum replacement Weapon proposal uses no new table: call the existing
+The replacement Weapon classifier uses no new table: call the existing
 real model identity accessor, optionally resolve its already-captured original
 member for consumer family/ARC, then call the existing weapon-consumer accessor.
 It changes only the consumer mask on the exact selected replacement proof.
 Model/key/class never establishes provenance. Tests must exercise accepted hand,
 held/dropped/thrown/projectile/shell/mine cases and actual nonweapon parts;
-unknown ambiguous roles must fail. The source-linked23-archive audit is external
+unknown ambiguous roles fail. The separate main/Frame geometry guard adds48B
+of fixed metadata pending actual target pricing; it cannot qualify Motion.
+The source-linked23-archive audit is external
 WEAPON-CONSUMER-BOUNDARY.md (frozen980 source; weapon modules themselves need
 revalidation against the merged current source before final coverage).
 

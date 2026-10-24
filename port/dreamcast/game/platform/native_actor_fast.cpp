@@ -1740,6 +1740,20 @@ struct Frame {  // per (info, matrices) per frame
 constexpr unsigned kFrames = 4;
 Frame frames[kFrames];
 unsigned frame_victim = 0;
+#if RE4DC_GC_ASSET_GATE
+// Geometry origin only; this does not qualify pose/palette/Motion history.
+struct GcAssetFrameUse { unsigned serial=0,mask=0;re4dc_gcasset::PayloadProof* payload=nullptr; };
+GcAssetFrameUse gcasset_frame_uses[kFrames]{};
+static_assert(kFrames==4 && (sizeof(void*)!=4 || sizeof(gcasset_frame_uses)==48),"price fixed geometry receipts");
+void gcasset_frame_stamp(Frame& f){
+    const auto& use=re4dc_gcasset::source_use;
+    gcasset_frame_uses[&f-frames]={use.serial,use.mask,use.payload};
+}
+void gcasset_frame_check(Frame& f){
+    const auto& saved=gcasset_frame_uses[&f-frames];auto& use=re4dc_gcasset::source_use;
+    if(!saved.serial || saved.serial!=use.serial || saved.mask!=use.mask || saved.payload!=use.payload)use={};
+}
+#endif
 
 bool same_words(const float* a, const float* b, unsigned n) {
     const u32* x = reinterpret_cast<const u32*>(a); const u32* y = reinterpret_cast<const u32*>(b);
@@ -1794,10 +1808,16 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
             same_words(f.modelview, p.modelview, 12) && same_words(f.projection, p.projection, 7) &&
             same_words(f.viewport, p.viewport, 6)) {
             // Mode is a function of (info, positions) within a frame.
+#if RE4DC_GC_ASSET_GATE
+            gcasset_frame_check(f);
+#endif
             return &f;
         }
     Frame& f = frames[frame_victim]; frame_victim = (frame_victim + 1) % kFrames;
     f = Frame{};
+#if RE4DC_GC_ASSET_GATE
+    gcasset_frame_stamp(f);
+#endif
     f.info = p.info; f.frame = frame_serial;
     std::memcpy(f.modelview, p.modelview, sizeof(f.modelview));
     std::memcpy(f.projection, p.projection, sizeof(f.projection));
@@ -5572,6 +5592,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
     if (!part || !qualifies(*part)) { ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
     const Re4dcModelPart& p = *part;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::ActorMainSourceScope gcasset_main_scope(&p);
+#endif
 #if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
     // Generic/source replay may occur after the transaction scope ended.
     // Re-establish its actual actor identity for every subsequent SQ burst.
@@ -6174,9 +6197,16 @@ Frame& one_frame(const Re4dcModelPart& p, float near_distance, float far_distanc
         if (f.frame == frame_serial && f.info == p.info &&
             same_words(f.modelview, p.modelview, 12) && same_words(f.projection, p.projection, 7) &&
             same_words(f.viewport, p.viewport, 6))
+#if RE4DC_GC_ASSET_GATE
+            {gcasset_frame_check(f);return f;}
+#else
             return f;
+#endif
     Frame& f = frames[frame_victim]; frame_victim = (frame_victim + 1) % kFrames;
     f = Frame{};
+#if RE4DC_GC_ASSET_GATE
+    gcasset_frame_stamp(f);
+#endif
     f.info = p.info; f.frame = frame_serial;
     std::memcpy(f.modelview, p.modelview, sizeof(f.modelview));
     std::memcpy(f.projection, p.projection, sizeof(f.projection));
