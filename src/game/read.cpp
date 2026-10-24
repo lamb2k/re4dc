@@ -983,10 +983,10 @@ void ReadPlayerData(int type, int costume)
     }
     name = (char*) FileTbl[file].name;
     SET_DRS_NAME(name);
-#line 1124 "D:/Bio4/Prog/read.cpp"
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
     re4dc_gcasset::motion_source_retire(&PlReadModule);
 #endif
+#line 1124 "D:/Bio4/Prog/read.cpp"
     req = DVD_READ_N(FileTbl[file].name, (void*) PL_DATA_ADDR, 0, 0, 0, 0x8100);
     while ((ret = Dvd.ReadCheckInfo(req, &info)) != 1) {
         if (ret < 0) {

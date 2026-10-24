@@ -422,4 +422,15 @@ int main(){unsigned original[4]={1,2,3,4},destination[4]{};Data data{original,2}
    self.assertEqual(result.returncode,0,result.stderr)
    run=subprocess.run(['/lib64/ld-linux-x86-64.so.2',str(p/'run')],capture_output=True,text=True,timeout=10)
    self.assertEqual(run.returncode,0,run.stderr)
+ def test_default_off_preprocessor_tokens_and_source_line_constants(self):
+  # Real preprocessor expands __LINE__/__FILE__ and disabled guards. Includes
+  # are isolated, not a target build; both inputs use identical default flags.
+  for path in ['src/game/read.cpp','src/game/motion.cpp','src/game/shape.cpp','src/game/cam_motion.cpp','port/dreamcast/game/platform/native_motion.cpp']:
+   old=subprocess.run(['git','show','140a699f8ead7b406e76581de7075191acf77a96:'+path],cwd=ROOT,check=True,capture_output=True,text=True).stdout
+   def preprocess(source):
+    source=re.sub(r'(?m)^\s*#include[^\n]*','',source)
+    result=subprocess.run(['g++','-E','-P','-x','c++','-DRE4DC_GAME=1','-DRE4DC_GC_ASSET_GATE=0','-DRE4DC_GC_ASSET_MOTION_SOURCE=0','-'],input=source,capture_output=True,text=True,timeout=60)
+    self.assertEqual(result.returncode,0,result.stderr)
+    return re.sub(r'\s+','',result.stdout)
+   self.assertEqual(preprocess(old),preprocess((ROOT/path).read_text()),path)
 if __name__=='__main__':unittest.main()
