@@ -73,3 +73,37 @@ event override with a PS2 mesh, unknown blend depth/owner, and an explicitly
 fresh no-motion producer. Independent negative mutants must remove one lifetime
 hop and be rejected. Final stop must quiesce pending motion evaluations/copies
 along with all existing audio/draw producers before its terminal checkpoint.
+
+## Executed current-source counterexamples
+
+test_motion_contract.py adds three RAM-only controls without changing runtime,
+schema, coverage masks or cloud animation files:
+
+- Actual cPlPush::stopTarget, MotionPause, MotionBlendOff and model_bridge prelit
+  bodies execute together. Pause retains its source pointer; stopping nulls it
+  but preserves the prior visible pose, and the existing prelit hint becomes
+  true. Neither null pMotion nor prelit is proof of a fresh no-motion producer.
+- The actual MotionHokan translation fragment consumes previous and current
+  pose matrices. With previous20/current2, the first committed translation is11
+  while pMot already names the new motion. Quaternion/scale evaluation is not
+  executed in this bounded fragment; its source receipt remains required too.
+- The actual Re4dcMotionLease class temporarily selects the evaluated table,
+  restores the resident proxy at release and preserves the original header
+  argument. Failed acquisition retains the proxy and emits no release. Provider
+  behavior is simulated; no pointer is promoted to asset-origin authority.
+
+All three execute/assert successfully. They demonstrate missing provenance
+information, not an implemented observer or a runtime gate pass. The existing
+Motion consumer is still unimplemented and the wired mask stays1f6. No original
+source ancestry, catalog entry, allowance, private conversion or source swap is
+newly accepted.
+
+The next minimum integration boundary needs a coordinated producer receipt
+around actual pose commitment/history and its later accepted palette/Frame
+reuse, plus source cache lease ownership. Owned read/model hooks can establish
+bounded immutable source lifetimes and expose a copied receipt but cannot
+observe all pose writers. In particular MotionSetCore copies current l_mat to
+prevMat before interpolation, MotionHokan consumes that history, MotionMove can
+combine a separate work, and event/IK/shape writers can alter the result. No
+caller pMot-only accessor, guessed blend-depth cap or geometry token closes
+these hops. Cloud animation changes remain outside the lane's claims.
