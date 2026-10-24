@@ -89,8 +89,14 @@ extern "C" int re4dc_effect_haze_batch(Re4dcEffectSprite* sprites,unsigned count
     const unsigned base=*top-required;
     DeferredPart* first=nullptr;DeferredPart* last=nullptr;unsigned offset=base;
     for(unsigned n=0;n<count;++n)if(mask&(1U<<n)){
+#if defined(RE4DC_ESP_SETUP_BATCH)
+        auto* node=new(storage+offset) DeferredPart{};node->changed[0]=0;
+        const bool body_only=fx_packet(sprites[n],texture,storage+offset+kSpriteNode,last?last:deferred_last?deferred_last:node);
+        node->lighting=body_only?kSpriteBodyTag:kSpriteTag;
+#else
         auto* node=new(storage+offset) DeferredPart{};node->lighting=kSpriteTag;node->changed[0]=0;
         fx_packet(sprites[n],texture,storage+offset+kSpriteNode);
+#endif
         AVD_EVENT(Enqueue,node,nullptr,unsigned(uintptr_t(node->lighting))); // Pre-splice, no remaining failure path.
         if(last)last->next=node;else first=node;last=node;offset+=stride;
     }

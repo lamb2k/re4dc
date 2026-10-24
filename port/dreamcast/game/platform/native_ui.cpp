@@ -632,6 +632,11 @@ constexpr unsigned kViewWords=sizeof(Re4dcModelPart)/sizeof(unsigned);
 constexpr unsigned kViewMasks=(kViewWords+31)/32;
 static_assert(sizeof(Re4dcModelPart)%sizeof(unsigned)==0);
 struct DeferredPart { DeferredPart* next;DeferredLighting* lighting;unsigned changed[kViewMasks]; };
+#if defined(RE4DC_ESP_SETUP_LEAN) && RE4DC_ESP_SETUP_LEAN && RE4DC_EFFECT_SPRITES && \
+    !RE4DC_TA_GUARD && !RE4DC_TA_HASH && !RE4DC_TA_BIN_DIAG && !RE4DC_TA_MATERIAL_DIAG
+#define RE4DC_ESP_SETUP_BATCH 1
+void fx_setup_forget();
+#endif
 Re4dcModelPart* deferred_basis=nullptr;
 #if RE4DC_BRIDGE_LEAN
 // Same word-difference encoding. The 4-byte memcpy()s above were libcalls on
@@ -779,6 +784,9 @@ unsigned avd_queue_epoch;
 void actor_fade_queue_reset();
 #endif
 void reset_deferred(){
+#if defined(RE4DC_ESP_SETUP_BATCH)
+    fx_setup_forget(); // queue addresses can be reused after any reset, even within a frame
+#endif
     AVD_EVENT(Reset,nullptr,nullptr,0); // Caller reason intentionally unknown.
 #if RE4DC_ACTOR_TRANSACTION_DIAG
     ++avd_queue_epoch;
@@ -7385,6 +7393,12 @@ namespace {
 // (header + textured sprite body). The drain sends it in OT order between model parts.
 DeferredLighting* const kSpriteTag=reinterpret_cast<DeferredLighting*>(1);
 constexpr unsigned kSpriteNode=(sizeof(DeferredPart)+31)&~31U,kSpritePacket=sizeof(pvr_poly_hdr_t)+sizeof(pvr_sprite_txr_t);
+#if defined(RE4DC_ESP_SETUP_BATCH)
+// Guard admission and packet diagnostics retain their original full packets.
+// A body-only node reserves the same bytes, so queue pressure admits the same
+// sprites. Its unused header line is neither written nor read.
+DeferredLighting* const kSpriteBodyTag=reinterpret_cast<DeferredLighting*>(9);
+#endif
 #if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
 DeferredLighting* const kLineTag=reinterpret_cast<DeferredLighting*>(3);
 constexpr unsigned kLinePacket=sizeof(pvr_poly_hdr_t)+4*sizeof(pvr_vertex_t);
@@ -7395,11 +7409,25 @@ extern "C" unsigned re4dc_fog_enabled();
 #if defined(RE4DC_ESP_SPRITE_FAST) && RE4DC_ESP_SPRITE_FAST
 // ESP_SPRITE_FAST: the compiled header is a pure function of the texture (format, size, VRAM address) and the
 // sprite's blend and screen flag; consecutive sprites mostly share them, so the last one is kept.
+#if defined(RE4DC_ESP_SETUP_BATCH)
+struct FxHeaderKey{unsigned fmt,w,h;const void* txr;unsigned char src,dst,screen;
+    const DeferredPart* owner;unsigned color;
+};
+alignas(32)
+#else
 struct FxHeaderKey{unsigned fmt,w,h;const void* txr;unsigned char src,dst,screen;};
+#endif
 FxHeaderKey fx_hdr_key{~0U,0,0,nullptr,0,0,0};
 alignas(32) pvr_poly_hdr_t fx_hdr_cache;
+#if defined(RE4DC_ESP_SETUP_BATCH)
+void fx_setup_forget(){fx_hdr_key.owner=nullptr;}
 #endif
+#endif
+#if defined(RE4DC_ESP_SETUP_BATCH)
+void fx_send(unsigned char* packet,bool screen,bool body_only=false){
+#else
 void fx_send(unsigned char* packet,bool screen){
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(4);
 #endif
@@ -7411,7 +7439,12 @@ void fx_send(unsigned char* packet,bool screen){
 #else
     (void)screen;
 #endif
+#if defined(RE4DC_ESP_SETUP_BATCH)
+    if(body_only)stream_send(packet+sizeof(pvr_poly_hdr_t),sizeof(pvr_sprite_txr_t));
+    else stream_send(packet,kSpritePacket);
+#else
     stream_send(packet,kSpritePacket);
+#endif
 }
 #if defined(RE4DC_EFFECT_HAZE_LEAN) && (RE4DC_EFFECT_HAZE_LEAN & 4)
 // EFFECT_HAZE_LEAN bit 4 (STUDY2 M2): a PS2 haze sprite (esp_sub.cpp sets pad 1) as a regular octagon inscribed in
@@ -7459,13 +7492,31 @@ void oct_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
 #if RE4DC_FX_SPRITE_TRIM || RE4DC_FX_SPRITE_TRIM_DIAG
 #include "include/fx_sprite_trim.inc"   // fxtrim.mk
 #endif
+#if defined(RE4DC_ESP_SETUP_BATCH)
+bool fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out,
+               const DeferredPart* previous=nullptr){
+#else
 void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
+#endif
     const auto& t=e->package.textures()[0];
     auto* h=reinterpret_cast<pvr_poly_hdr_t*>(out);
 #if defined(RE4DC_ESP_SPRITE_FAST) && RE4DC_ESP_SPRITE_FAST
     const unsigned fmt=re4dc::texture::pvr_format(t);const void* txr=e->package.pvr_texture(0);
+#if defined(RE4DC_ESP_SETUP_BATCH)
+    const bool same=fx_hdr_key.fmt==fmt && fx_hdr_key.w==t.width && fx_hdr_key.h==t.height && fx_hdr_key.txr==txr &&
+        fx_hdr_key.src==s.src && fx_hdr_key.dst==s.dst && fx_hdr_key.screen==s.screen;
+    // A queued call passes its predecessor, or its own fresh node for a head.
+    // Other callers (including RTT capture) pass null: do not subtract before
+    // their standalone output buffer. Four arguments fit the SH-4 call ABI.
+    const auto* owner=previous?reinterpret_cast<const DeferredPart*>(out-kSpriteNode):nullptr;
+    // Queue allocations never reuse/retag an admitted node before reset, which
+    // forgets owner. Provenance alone suffices; do not fetch the preceding node.
+    const bool body_only=previous && previous!=owner && fx_hdr_key.owner==previous && same && fx_hdr_key.color==s.color;
+    if(!same){
+#else
     if(fx_hdr_key.fmt!=fmt || fx_hdr_key.w!=t.width || fx_hdr_key.h!=t.height || fx_hdr_key.txr!=txr ||
        fx_hdr_key.src!=s.src || fx_hdr_key.dst!=s.dst || fx_hdr_key.screen!=s.screen){
+#endif
         pvr_sprite_cxt_t c;pvr_sprite_cxt_txr(&c,PVR_LIST_TR_POLY,fmt,RE4DC_TSP_W(t),RE4DC_TSP_H(t),
                                               const_cast<void*>(txr),PVR_FILTER_BILINEAR);
         c.gen.culling=PVR_CULLING_NONE;
@@ -7478,7 +7529,12 @@ void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
         pvr_sprite_compile(&fx_hdr_cache,&c);
         fx_hdr_key=FxHeaderKey{fmt,RE4DC_TSP_W(t),RE4DC_TSP_H(t),txr,(unsigned char)s.src,(unsigned char)s.dst,(unsigned char)s.screen};
     }
+#if defined(RE4DC_ESP_SETUP_BATCH)
+    if(!body_only){*h=fx_hdr_cache;h->argb=s.color;h->oargb=0;}
+    fx_hdr_key.owner=owner;fx_hdr_key.color=s.color;
+#else
     *h=fx_hdr_cache;h->argb=s.color;h->oargb=0;
+#endif
 #else
     pvr_sprite_cxt_t c;pvr_sprite_cxt_txr(&c,PVR_LIST_TR_POLY,re4dc::texture::pvr_format(t),RE4DC_TSP_W(t),RE4DC_TSP_H(t),
                                           e->package.pvr_texture(0),PVR_FILTER_BILINEAR);
@@ -7498,6 +7554,9 @@ void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
     b->cx=s.x[2];b->cy=s.y[2];b->cz=s.z[2];b->dx=s.x[3];b->dy=s.y[3];b->dummy=0;
     b->auv=PVR_PACK_16BIT_UV(s.u[0]*su,s.v[0]*sv);b->buv=PVR_PACK_16BIT_UV(s.u[1]*su,s.v[1]*sv);
     b->cuv=PVR_PACK_16BIT_UV(s.u[2]*su,s.v[2]*sv);
+#if defined(RE4DC_ESP_SETUP_BATCH)
+    return body_only;
+#endif
 }
 }
 #if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
@@ -7693,8 +7752,14 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
         storage=deferred_spill;top=&deferred_spill_top;
     }
     *top-=required;
+#if defined(RE4DC_ESP_SETUP_BATCH)
+    auto* node=new(storage+*top) DeferredPart{};node->changed[0]=s->screen;
+    const bool body_only=fx_packet(*s,e,storage+*top+kSpriteNode,deferred_last?deferred_last:node);
+    node->lighting=body_only?kSpriteBodyTag:kSpriteTag;
+#else
     auto* node=new(storage+*top) DeferredPart{};node->lighting=kSpriteTag;node->changed[0]=s->screen;
     fx_packet(*s,e,storage+*top+kSpriteNode);
+#endif
     if(deferred_last)deferred_last->next=node;else deferred_first=node;
     deferred_last=node;++deferred_count;
     AVD_EVENT(Enqueue,node,nullptr,unsigned(uintptr_t(node->lighting)));
@@ -9010,11 +9075,20 @@ extern "C" void re4dc_model_finish_source_draws(){
             deferred_first=deferred_first->next;stream_send(packet,bytes);continue;
         }
 #endif
+#if defined(RE4DC_ESP_SETUP_BATCH)
+        if(deferred_first->lighting==kSpriteTag || deferred_first->lighting==kSpriteBodyTag){
+            auto* packet=reinterpret_cast<unsigned char*>(deferred_first)+kSpriteNode;
+            const bool screen=deferred_first->changed[0]!=0;
+            const bool body_only=deferred_first->lighting==kSpriteBodyTag;
+            deferred_first=deferred_first->next;fx_send(packet,screen,body_only);continue;
+        }
+#else
         if(deferred_first->lighting==kSpriteTag){
             auto* packet=reinterpret_cast<unsigned char*>(deferred_first)+kSpriteNode;
             const bool screen=deferred_first->changed[0]!=0;
             deferred_first=deferred_first->next;fx_send(packet,screen);continue;
         }
+#endif
 #if RE4DC_FX_SPRITE_TRIM
         if(deferred_first->lighting==kFxOctTag){   // FX_SPRITE_TRIM octagon (fx_sprite_trim.inc)
 #if RE4DC_TA_MATERIAL_DIAG
