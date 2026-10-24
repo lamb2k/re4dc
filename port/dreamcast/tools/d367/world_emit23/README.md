@@ -89,3 +89,21 @@ physical PS2 provenance, runtime quality choice or safety gates.
 Use the external world-emit23/PREFLIGHT.md for four arms, current source/
 programme/data pins, separate timing/still runs, gates and console pair. No
 production recipe enablement is included here.
+
+## Ordered capture protocol repair
+
+Independent review of2adba1332 found that the original parser checked a bag of
+rows without enforcing source event order. Reversed rows, a completed flush
+moved after FRAME_END, a flush relabeled into the wrong active pass, and a
+threshold above the captured frame could pass. This tools-only successor
+consumes BEGIN, passes0/1/2, scoped flush/part/count closures and terminal
+FRAME_END in order. Flush IDs are globally contiguous from1 across passes.
+Threshold must be1..10000000 and not exceed the captured UI frame. Missing,
+unknown, duplicate and unsigned-out-of-range fields are refused.
+
+The actual generated host log supplies twelve protocol mutations, all rejected,
+and a valid cross-pass flush positive. Earlier aggregate/safety controls remain.
+Runtime/header/make files are unchanged by this repair. Source integration
+review is bounded to the actual SUBMIT_BATCH1/PVS0 profile; the selected-affine
+proposal is unapplied and unadmitted. No compatibility or qualification of that
+future patch follows from this census milestone. No SDK/guest gate has run.

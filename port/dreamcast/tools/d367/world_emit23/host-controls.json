@@ -2,6 +2,13 @@
   "base": "a5e972e44096410253ad93164b84d92e3c22655a",
   "source_sha256": "e6ca3be0462af9ac8e200ffc97b28593d4b22a403931b1f6ccd4266406918af6",
   "header_sha256": "76f1679eab457c01139707776a8bec483ed0b6be390cb1403563132b92b1cdb7",
+  "parser_sha256": "5f4b265ec45dc2e888ccd2b1612f4a85c9bafc3f51f7bf3bf569a5fa015208f7",
+  "test_sha256": "2e2a0a1c4de4ea0e54333c2f6b803bad5d48050e3d9ea0c05cb105f70de01e1c",
+  "integration_review_profile": {
+    "SCENERY_SUBMIT_BATCH": 1,
+    "PS2_PVS": 0,
+    "selected_affine": "unapplied/unadmitted"
+  },
   "checks": {
     "replay0-batch0-prefetch0": "PASS",
     "replay0-batch0-prefetch1": "PASS",
@@ -12,6 +19,19 @@
     "replay1-batch1-prefetch0": "PASS",
     "replay1-batch1-prefetch1": "PASS",
     "actual-log-parser-and-five-negatives": "PASS",
+    "protocol-flush-after-frame-end": "REJECTED",
+    "protocol-flush-wrong-active-pass": "REJECTED",
+    "protocol-reverse-complete-records": "REJECTED",
+    "protocol-future-threshold": "REJECTED",
+    "protocol-zero-threshold": "REJECTED",
+    "protocol-out-of-range-threshold": "REJECTED",
+    "protocol-global-flush-id-reuse": "REJECTED",
+    "protocol-global-flush-id-gap": "REJECTED",
+    "protocol-duplicate-begin": "REJECTED",
+    "protocol-record-after-frame-end": "REJECTED",
+    "protocol-counts-before-part": "REJECTED",
+    "protocol-flush-end-before-counts": "REJECTED",
+    "actual-log-valid-multipass": "PASS",
     "mutation-log-before-batch-close": "REJECTED",
     "off-source-directive-None": {
       "sha256": "6d787d97ce8662f53dc25d1bac9032d512f976474699c4127b2ee0bc6faa8359",

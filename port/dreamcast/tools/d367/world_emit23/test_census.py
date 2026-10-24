@@ -174,6 +174,37 @@ def run(out):
         except ValueError:pass
         else:raise AssertionError("wrong room accepted")
         checks["actual-log-parser-and-five-negatives"]="PASS"
+        lines=[line for line in captured.splitlines() if line.startswith("WEC23 ")]
+        q2=[line for line in lines if " q=2" in line]
+        remaining=[line for line in lines if " q=2" not in line]
+        def log(lines):return "\n".join(lines)+"\n"
+        # A valid globally second flush can occur in another active pass.
+        before_p1_end=next(i for i,line in enumerate(remaining) if line.startswith("WEC23 PASS_END") and " p=1 " in line)
+        multipass=remaining[:before_p1_end]+[line.replace(" p=0 "," p=1 ") for line in q2]+remaining[before_p1_end:]
+        assert [x["pass"] for x in parse(log(multipass),0x101)["flushes"]]==[0,1]
+        protocol={
+            "flush-after-frame-end":log(remaining+q2),
+            "flush-wrong-active-pass":log([line.replace(" p=0 "," p=1 ") if " q=2" in line else line for line in lines]),
+            "reverse-complete-records":log(list(reversed(lines))),
+            "future-threshold":captured.replace("threshold=360","threshold=999999"),
+            "zero-threshold":captured.replace("threshold=360","threshold=0"),
+            "out-of-range-threshold":captured.replace("threshold=360","threshold=10000001"),
+            "global-flush-id-reuse":log([line.replace(" q=2 "," q=1 ") for line in multipass]),
+            "global-flush-id-gap":log([line.replace(" q=2 "," q=3 ") for line in lines]),
+            "duplicate-begin":log([lines[0]]+lines),
+            "record-after-frame-end":log(lines+[lines[1]]),
+        }
+        swapped=list(lines);at=next(i for i,line in enumerate(swapped) if line.startswith("WEC23 PART "))
+        swapped[at],swapped[at+1]=swapped[at+1],swapped[at]
+        protocol["counts-before-part"]=log(swapped)
+        swapped=list(lines);at=next(i for i,line in enumerate(swapped) if line.startswith("WEC23 FLUSH_COUNTS "))
+        swapped[at],swapped[at+1]=swapped[at+1],swapped[at]
+        protocol["flush-end-before-counts"]=log(swapped)
+        for name,altered in protocol.items():
+            try:parse(altered,0x101)
+            except ValueError:checks["protocol-"+name]="REJECTED"
+            else:raise AssertionError("ordered protocol accepted "+name)
+        checks["actual-log-valid-multipass"]="PASS"
         cpp.write_text(fixture(source,True))
         cmd=[x for x in cmd if x!="-DRE4DC_SCENERY_SUBMIT_BATCH=1"]+["-DRE4DC_SCENERY_SUBMIT_BATCH=1"]
         subprocess.run(cmd,check=True,text=True)
@@ -213,7 +244,11 @@ def run(out):
         checks["make-default-absent-zero"]="IDENTICAL"
         checks["make-invalid-values-and-dependency"]="REJECTED"
     receipt={"base":BASE,"source_sha256":hashlib.sha256(source.encode()).hexdigest(),
-             "header_sha256":hashlib.sha256(HEADER.read_bytes()).hexdigest(),"checks":checks,
+             "header_sha256":hashlib.sha256(HEADER.read_bytes()).hexdigest(),
+             "parser_sha256":hashlib.sha256((HERE/"census.py").read_bytes()).hexdigest(),
+             "test_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+             "integration_review_profile":{"SCENERY_SUBMIT_BATCH":1,"PS2_PVS":0,"selected_affine":"unapplied/unadmitted"},
+             "checks":checks,
              "limits":["host/extracted diagnostic integration only","no SDK, complete emitter FP, linked image, guest or target memory qualification"]}
     if out:Path(out).write_text(json.dumps(receipt,indent=2)+"\n")
     print(json.dumps(receipt,indent=2))
