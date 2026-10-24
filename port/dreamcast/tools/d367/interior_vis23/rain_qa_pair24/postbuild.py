@@ -1,9 +1,12 @@
 """QA postbuild: actual568/449 graph and same-QA OFF identity, no SDK execution."""
 from pathlib import Path
-import argparse,hashlib,importlib.util,json,re,shlex,struct,resource,signal
+import argparse,hashlib,json,re,shlex,struct,resource,signal,sys,types
 import common as c
 SUPPORT=c.HERE/'elf_reader.py'
-s=importlib.util.spec_from_file_location('normal_elf',SUPPORT);e=importlib.util.module_from_spec(s);s.loader.exec_module(e)
+ELF_SOURCE_SHA256='a5099263389d5ac7555118fdad007af3ed2381a7647fa1616cb9eb1438e871e4'
+_elf_source=SUPPORT.read_bytes();c.require(hashlib.sha256(_elf_source).hexdigest()==ELF_SOURCE_SHA256,'ELF helper source changed')
+e=types.ModuleType('normal_elf');e.__file__=str(SUPPORT);sys.modules['normal_elf']=e
+exec(compile(_elf_source,str(SUPPORT),'exec',dont_inherit=True),e.__dict__)
 HELPERS={'gc_asset_gate','gc_asset_disc','gc_asset_members','gc_asset_payloads','gc_asset_audio','gc_asset_motion_unknown'}
 
 def overlays(names,plan):c.require(set(names)=={n.lower()+'.ovl' for n in plan['overlay_order']},'Missing/extra overlays')

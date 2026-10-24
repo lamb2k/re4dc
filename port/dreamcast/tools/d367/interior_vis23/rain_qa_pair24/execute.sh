@@ -2,7 +2,9 @@
 set -euo pipefail
 # The canonical caller MUST use bash -p; normal bash processes BASH_ENV first.
 case $- in *p*) ;; *) echo 'Use canonical /bin/bash -p invocation' >&2; exit 3 ;; esac
-HERE='/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/qa-pair-prep-v2'
+SCRIPT_DIR=${BASH_SOURCE[0]%/*}
+[ "$SCRIPT_DIR" != "${BASH_SOURCE[0]}" ] || SCRIPT_DIR=.
+HERE=$(builtin cd -P -- "$SCRIPT_DIR" && builtin pwd -P)
 for key in BASH_ENV ENV LD_PRELOAD LD_LIBRARY_PATH; do
   if [ -n "${!key-}" ]; then echo "Startup injection refused: $key" >&2; exit 3; fi
 done

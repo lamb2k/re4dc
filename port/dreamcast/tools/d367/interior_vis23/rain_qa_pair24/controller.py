@@ -3,21 +3,32 @@ import sys
 if __name__=='__main__' and not (sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode):
  raise SystemExit('Controller requires isolated -I -S -B startup')
 from pathlib import Path
-import argparse,fcntl,json,os,signal,time,importlib.util
-# Keep isolated sys.path unchanged. Load only the exact local helper file.
+import argparse,fcntl,json,os,signal,time,hashlib,types
+# Authenticate exact source bytes, never SourceFileLoader or adjacent bytecode.
+COMMON_SOURCE_SHA256='2d01c267f6ea24b68abe201680bfe29660ad6d3a25f58918ba7bf407ee9b0b87'
+POSTBUILD_SOURCE_SHA256='fcb3df088f732e2454f42501c20e2ad833e38aeb623ee3eb2808beab5cc458b2'
 _common_path=Path(__file__).resolve().with_name('common.py')
+_common_source=_common_path.read_bytes()
+if hashlib.sha256(_common_source).hexdigest()!=COMMON_SOURCE_SHA256:raise SystemExit('Common helper source changed')
 if 'common' in sys.modules:
  c=sys.modules['common']
  if Path(c.__file__).resolve()!=_common_path:raise ImportError('Foreign cached common module')
-else:
- _spec=importlib.util.spec_from_file_location('common',_common_path)
- c=importlib.util.module_from_spec(_spec);sys.modules['common']=c;_spec.loader.exec_module(c)
-POST_BOOTSTRAP="""import importlib.util,pathlib,runpy,sys
+else:c=types.ModuleType('common')
+c.__file__=str(_common_path);sys.modules['common']=c
+exec(compile(_common_source,str(_common_path),'exec',dont_inherit=True),c.__dict__)
+POST_BOOTSTRAP="""import hashlib,pathlib,sys,types
 script=pathlib.Path(sys.argv.pop(1)).resolve()
-spec=importlib.util.spec_from_file_location('common',script.with_name('common.py'))
-module=importlib.util.module_from_spec(spec);sys.modules['common']=module;spec.loader.exec_module(module)
-runpy.run_path(str(script),run_name='__main__')
+def load_source(name,path,expected):
+ raw=path.read_bytes()
+ if hashlib.sha256(raw).hexdigest()!=expected:raise SystemExit('Authenticated helper source changed: '+str(path))
+ module=types.ModuleType(name);module.__file__=str(path);sys.modules[name]=module
+ exec(compile(raw,str(path),'exec',dont_inherit=True),module.__dict__)
+ return module
+load_source('common',script.with_name('common.py'),'2d01c267f6ea24b68abe201680bfe29660ad6d3a25f58918ba7bf407ee9b0b87')
+sys.argv[0]=str(script)
+load_source('__main__',script,'fcb3df088f732e2454f42501c20e2ad833e38aeb623ee3eb2808beab5cc458b2')
 """
+
 def postbuild_command(arm,output):
  return ['/usr/bin/python3','-I','-S','-B','-c',POST_BOOTSTRAP,str(c.HERE/'postbuild.py'),'--arm',arm,'--output',str(output)]
 TOOLS=Path('/opt/toolchains/dc/sh-elf/bin')
