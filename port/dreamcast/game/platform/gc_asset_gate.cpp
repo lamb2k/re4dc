@@ -59,12 +59,33 @@ void catalog_fault_flush(){
 }
 #include "include/gc_asset_index.inc"
 }
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+// GC_ASSET_PROF: every hash call >= 20 ms is logged with its caller and size.
+extern "C" unsigned long long timer_us_gettime64(void);
+struct HashProf {
+    const char* what;void* caller;unsigned bytes;unsigned long long t0;
+    static unsigned long long total_us,total_bytes;static unsigned calls;
+    HashProf(const char* w,void* c,unsigned n):what(w),caller(c),bytes(n),t0(timer_us_gettime64()){}
+    ~HashProf(){
+        const unsigned long long us=timer_us_gettime64()-t0;total_us+=us;total_bytes+=bytes;++calls;
+        if(us>=20000)re4dc_log("GC-ASSET-PROF hash=%s caller=%p bytes=%u us=%llu total_calls=%u total_us=%llu total_bytes=%llu
+",
+            what,caller,bytes,us,calls,total_us,total_bytes);
+    }
+};
+unsigned long long HashProf::total_us,HashProf::total_bytes;unsigned HashProf::calls;
+#define RE4DC_GCA_HASH_PROF(w,n) HashProf hash_prof(w,__builtin_return_address(0),n)
+#else
+#define RE4DC_GCA_HASH_PROF(w,n) ((void)0)
+#endif
 Digest fingerprint(const void* data, unsigned count) {
+    RE4DC_GCA_HASH_PROF("ram",count);
     IdentitySha hash;Digest result{};
     if(!data && count) { ++queue_faults;return result; }
     hash.update(data,count);hash.finish(result.bytes);return result;
 }
 bool fingerprint_read(Digest& out, Read read, void* context, unsigned count) {
+    RE4DC_GCA_HASH_PROF("read",count);
     IdentitySha hash;unsigned char buffer[512];out={};
     while(count) {
         const unsigned take=count<sizeof buffer?count:sizeof buffer;
