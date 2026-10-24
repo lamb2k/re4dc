@@ -1,0 +1,242 @@
+{
+  "source": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "status": "OFFLINE_GRAPH_POTENTIAL_NOT_ADMISSION",
+  "inputs_sha256": "41938182814397bf935357ce35e3d43403bca1ce84295dbbc215254dd5c324f2",
+  "helper_files": {
+    "camera_selection.py": "c12c9af28e47e475059d98a5c1d6fc14120279d2ba00f72585b5831853fb0683",
+    "graph_strip.py": "86ac98c78247d960af2a1a9c5c5c7be09197c70656dab7ac4dc77bbf838b9a79",
+    "test_camera_inputs.py": "0648b18e5c495ec769ad98f5d08ea580b0f3fd791ac7ccc7746cf3c12d90b8cd",
+    "test_graph_strip.py": "1dc100c3939ecd9727a2b288b6aecbcf1201afc2e02e1362ce868a087676d285",
+    "estimate_cameras.py": "aca2a2fa85b9ddcbb11cae251540260737e95b439d4a626987b8223b74e0e19b",
+    "ordered_strip.py": "3b57b575d5c435a3a4d2be40901267f4f2d735d95757d9562064c4ac287189f5",
+    "test_ordered_strip.py": "c1a2c22b8a97c3102fb82d9896f662b25f256fd0ef82cc7174b3654459ea56c4",
+    "estimate_loaded.py": "9f37313f115b9a2995ba10b984b6feb435d7586e1d478b8aa221da44155e6971",
+    "estimate_graph.py": "d6ba35304859027f039249b992dee41c8fd2422d2733a3c72978706aa0ce497c",
+    "test_input_pins.py": "2da02695a2c86c797f6b7676f11fa725eddaca69a5f24ac82a09bca2bbdba916"
+  },
+  "rooms": {
+    "r100": {
+      "input": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r100-stripshare-v1/ps2-dd3.re4mesh",
+        "bytes": 1488192,
+        "sha256": "3d339013ff79b6b0c917b40beb326f9a063d959c9db10da33331a1f335d8fb1d"
+      },
+      "policy": {
+        "path": "/root/re4data/private/mip22b-20261022/dc/native/r100/ps2-world.r4pw",
+        "bytes": 19612,
+        "sha256": "07acc55b2b009abd8368af2880c556272cf6de41595908739afc589baceab6cd"
+      },
+      "groups": null,
+      "base": {
+        "meshlets": 1967,
+        "changed_meshlets": 0,
+        "admission": {
+          "opaque": 1257,
+          "nonopaque_alpha_or_marked": 710
+        },
+        "all_loaded_LOD_strips_before": 26185,
+        "all_loaded_LOD_strips_after": 26185,
+        "all_loaded_LOD_corners_before": 123664,
+        "all_loaded_LOD_corners_after": 123664,
+        "all_loaded_LOD_triangles": 71294,
+        "average_strip_before": 4.722703838075234,
+        "average_strip_after": 4.722703838075234,
+        "corner_reduction_percent": 0.0,
+        "physical_bytes_before": 1488192,
+        "estimated_physical_bytes_after": 1488192,
+        "allocation32_before": 1488192,
+        "allocation32_after": 1488192,
+        "strip_pool_before": 103941,
+        "estimated_strip_pool_after": 103941,
+        "vertex_bytes_unchanged": 1288248,
+        "limits": "Loaded packages including unused LOD/fallback; not camera-weighted or clipped TA traffic. No asset written; not GO evidence."
+      },
+      "modes": {
+        "fixed_provoking": {
+          "corners_before": 123664,
+          "corners_after": 123664,
+          "reduction_percent": 0.0,
+          "changed_meshlets": 0,
+          "estimated_physical_bytes": 1488192,
+          "physical_byte_delta": 0
+        },
+        "gouraud_cyclic": {
+          "corners_before": 123664,
+          "corners_after": 123310,
+          "reduction_percent": 0.2862595419847347,
+          "changed_meshlets": 127,
+          "estimated_physical_bytes": 1487808,
+          "physical_byte_delta": -384
+        },
+        "guarded_cyclic": {
+          "corners_before": 123664,
+          "corners_after": 123638,
+          "reduction_percent": 0.02102471212317436,
+          "changed_meshlets": 7,
+          "estimated_physical_bytes": 1488128,
+          "physical_byte_delta": -64
+        }
+      },
+      "risk_groups": {
+        "attribute_seam": 1114,
+        "crossing_surface": 358,
+        "nonmanifold_position_edge": 79,
+        "coplanar_positive_area_overlap": 5,
+        "duplicate_position_face": 2
+      },
+      "group_count": 1967,
+      "optimistic_all_loaded_min_corners": 117502,
+      "scope": "All loaded LODs, not camera gate. Unguarded modes retain known tie/degenerate risks; guarded mode still lacks near-equal depth/FP clipping proof. No assets written."
+    },
+    "r101": {
+      "input": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r101-stripshare-v1/ps2-dd3.re4mesh",
+        "bytes": 1243808,
+        "sha256": "e7f257773fb7ee43271994c867f5f4307a2a13c1d85cd93afcbcc15488c00708"
+      },
+      "policy": {
+        "path": "/root/re4data/private/mip22b-20261022/dc/native/r101/ps2-world.r4pw",
+        "bytes": 17100,
+        "sha256": "2398a9b4c985c0227b98b17b22db12c6e6e5f3fe686546940812bab769d2ea3d"
+      },
+      "groups": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r101-stripshare-v1/ps2-dd3.r4sg",
+        "bytes": 117152,
+        "sha256": "b1ffc00c3e00ca69874e1b2a0fbe84d243653bd6ccd280c2e837e2731300e30d"
+      },
+      "base": {
+        "meshlets": 1830,
+        "changed_meshlets": 0,
+        "admission": {
+          "opaque": 1678,
+          "nonopaque_alpha_or_marked": 152
+        },
+        "all_loaded_LOD_strips_before": 23166,
+        "all_loaded_LOD_strips_after": 23166,
+        "all_loaded_LOD_corners_before": 103562,
+        "all_loaded_LOD_corners_after": 103562,
+        "all_loaded_LOD_triangles": 57230,
+        "average_strip_before": 4.470430803764137,
+        "average_strip_after": 4.470430803764137,
+        "corner_reduction_percent": 0.0,
+        "physical_bytes_before": 1243808,
+        "estimated_physical_bytes_after": 1243808,
+        "allocation32_before": 1243808,
+        "allocation32_after": 1243808,
+        "strip_pool_before": 105079,
+        "estimated_strip_pool_after": 105079,
+        "vertex_bytes_unchanged": 1039104,
+        "limits": "Loaded packages including unused LOD/fallback; not camera-weighted or clipped TA traffic. No asset written; not GO evidence."
+      },
+      "modes": {
+        "fixed_provoking": {
+          "corners_before": 103562,
+          "corners_after": 103562,
+          "reduction_percent": 0.0,
+          "changed_meshlets": 0,
+          "estimated_physical_bytes": 1243808,
+          "physical_byte_delta": 0
+        },
+        "gouraud_cyclic": {
+          "corners_before": 103562,
+          "corners_after": 103474,
+          "reduction_percent": 0.0849732527374858,
+          "changed_meshlets": 36,
+          "estimated_physical_bytes": 1243712,
+          "physical_byte_delta": -96
+        },
+        "guarded_cyclic": {
+          "corners_before": 103562,
+          "corners_after": 103506,
+          "reduction_percent": 0.054073888105676815,
+          "changed_meshlets": 22,
+          "estimated_physical_bytes": 1243744,
+          "physical_byte_delta": -64
+        }
+      },
+      "risk_groups": {
+        "attribute_seam": 4080,
+        "crossing_surface": 513,
+        "degenerate": 2,
+        "coplanar_positive_area_overlap": 16,
+        "nonmanifold_position_edge": 40,
+        "duplicate_position_face": 8
+      },
+      "group_count": 7320,
+      "optimistic_all_loaded_min_corners": 100920,
+      "scope": "All loaded LODs, not camera gate. Unguarded modes retain known tie/degenerate risks; guarded mode still lacks near-equal depth/FP clipping proof. No assets written."
+    },
+    "r103": {
+      "input": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r103-stripshare-v1/ps2-dd3.re4mesh",
+        "bytes": 1047968,
+        "sha256": "2b805c88a9375180e41aeb55f8c0656d07fe96c32a12acf504b05be8b16d110a"
+      },
+      "policy": {
+        "path": "/root/re4data/private/mip22b-20261022/dc/native/r103/ps2-world.r4pw",
+        "bytes": 11272,
+        "sha256": "585972662d35ab6a9a4634227634a20b80e66ed2a294273245e17f20efa5fe31"
+      },
+      "groups": null,
+      "base": {
+        "meshlets": 1448,
+        "changed_meshlets": 0,
+        "admission": {
+          "opaque": 1157,
+          "nonopaque_alpha_or_marked": 291
+        },
+        "all_loaded_LOD_strips_before": 19700,
+        "all_loaded_LOD_strips_after": 19700,
+        "all_loaded_LOD_corners_before": 85192,
+        "all_loaded_LOD_corners_after": 85192,
+        "all_loaded_LOD_triangles": 45792,
+        "average_strip_before": 4.3244670050761425,
+        "average_strip_after": 4.3244670050761425,
+        "corner_reduction_percent": 0.0,
+        "physical_bytes_before": 1047968,
+        "estimated_physical_bytes_after": 1047968,
+        "allocation32_before": 1047968,
+        "allocation32_after": 1047968,
+        "strip_pool_before": 92121,
+        "estimated_strip_pool_after": 92121,
+        "vertex_bytes_unchanged": 883260,
+        "limits": "Loaded packages including unused LOD/fallback; not camera-weighted or clipped TA traffic. No asset written; not GO evidence."
+      },
+      "modes": {
+        "fixed_provoking": {
+          "corners_before": 85192,
+          "corners_after": 85192,
+          "reduction_percent": 0.0,
+          "changed_meshlets": 0,
+          "estimated_physical_bytes": 1047968,
+          "physical_byte_delta": 0
+        },
+        "gouraud_cyclic": {
+          "corners_before": 85192,
+          "corners_after": 85010,
+          "reduction_percent": 0.21363508310640045,
+          "changed_meshlets": 52,
+          "estimated_physical_bytes": 1047712,
+          "physical_byte_delta": -256
+        },
+        "guarded_cyclic": {
+          "corners_before": 85192,
+          "corners_after": 85192,
+          "reduction_percent": 0.0,
+          "changed_meshlets": 0,
+          "estimated_physical_bytes": 1047968,
+          "physical_byte_delta": 0
+        }
+      },
+      "risk_groups": {
+        "attribute_seam": 1053,
+        "crossing_surface": 428,
+        "coplanar_positive_area_overlap": 5,
+        "nonmanifold_position_edge": 24
+      },
+      "group_count": 1448,
+      "optimistic_all_loaded_min_corners": 82214,
+      "scope": "All loaded LODs, not camera gate. Unguarded modes retain known tie/degenerate risks; guarded mode still lacks near-equal depth/FP clipping proof. No assets written."
+    }
+  }
+}

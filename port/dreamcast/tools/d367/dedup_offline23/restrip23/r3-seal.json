@@ -1,0 +1,33 @@
+{
+  "helper_source": "955ebf73d46f7d75c49d35e7a824c0c2677144bd",
+  "runtime_recipe_base": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "kind": "OFFLINE_MODELLED_NOT_GO_OR_TARGET",
+  "reports": {
+    "graph-loaded-r3.json": {
+      "bytes": 9921,
+      "sha256": "b06bf569a65b3c65d1754e53fc891ed98bfc6762a12abe11b9cafbbf04538490"
+    },
+    "graph-cameras-lod20-r3.json": {
+      "bytes": 169696,
+      "sha256": "58f4dd0748b9f5013af320aa0220605c259b5c0ad65798f34d0e8d38cc02f978"
+    },
+    "resolved-inputs.json": {
+      "bytes": 6216,
+      "sha256": "41938182814397bf935357ce35e3d43403bca1ce84295dbbc215254dd5c324f2"
+    }
+  },
+  "helper_files": {
+    "camera_selection.py": "c12c9af28e47e475059d98a5c1d6fc14120279d2ba00f72585b5831853fb0683",
+    "graph_strip.py": "86ac98c78247d960af2a1a9c5c5c7be09197c70656dab7ac4dc77bbf838b9a79",
+    "test_camera_inputs.py": "0648b18e5c495ec769ad98f5d08ea580b0f3fd791ac7ccc7746cf3c12d90b8cd",
+    "test_graph_strip.py": "1dc100c3939ecd9727a2b288b6aecbcf1201afc2e02e1362ce868a087676d285",
+    "estimate_cameras.py": "aca2a2fa85b9ddcbb11cae251540260737e95b439d4a626987b8223b74e0e19b",
+    "ordered_strip.py": "3b57b575d5c435a3a4d2be40901267f4f2d735d95757d9562064c4ac287189f5",
+    "test_ordered_strip.py": "c1a2c22b8a97c3102fb82d9896f662b25f256fd0ef82cc7174b3654459ea56c4",
+    "estimate_loaded.py": "9f37313f115b9a2995ba10b984b6feb435d7586e1d478b8aa221da44155e6971",
+    "estimate_graph.py": "d6ba35304859027f039249b992dee41c8fd2422d2733a3c72978706aa0ce497c",
+    "test_input_pins.py": "2da02695a2c86c797f6b7676f11fa725eddaca69a5f24ac82a09bca2bbdba916"
+  },
+  "tests": "21 Windows Python312 host tests PASS;3 camera input controls include used-word failure and unused-tail insensitivity",
+  "limits": "Forest pending; legacy vp4/vp5 incomplete and unused; near clipping/TA not modeled; no assets/SDK/guests"
+}

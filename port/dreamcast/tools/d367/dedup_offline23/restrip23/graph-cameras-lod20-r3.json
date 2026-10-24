@@ -1,0 +1,4679 @@
+{
+  "source": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "lod_divisor": 20,
+  "frames": "500..794 stride7",
+  "scope": "MODELLED real-camera strip corners; post-trivial-reject counts are before actual near clipping. Does not model TA interpolation/coverage/depth ties. SG groups retain exact triangle membership and boxes; no assets/guests.",
+  "inputs_sha256": "41938182814397bf935357ce35e3d43403bca1ce84295dbbc215254dd5c324f2",
+  "helper_files": {
+    "camera_selection.py": "c12c9af28e47e475059d98a5c1d6fc14120279d2ba00f72585b5831853fb0683",
+    "graph_strip.py": "86ac98c78247d960af2a1a9c5c5c7be09197c70656dab7ac4dc77bbf838b9a79",
+    "test_camera_inputs.py": "0648b18e5c495ec769ad98f5d08ea580b0f3fd791ac7ccc7746cf3c12d90b8cd",
+    "test_graph_strip.py": "1dc100c3939ecd9727a2b288b6aecbcf1201afc2e02e1362ce868a087676d285",
+    "estimate_cameras.py": "aca2a2fa85b9ddcbb11cae251540260737e95b439d4a626987b8223b74e0e19b",
+    "ordered_strip.py": "3b57b575d5c435a3a4d2be40901267f4f2d735d95757d9562064c4ac287189f5",
+    "test_ordered_strip.py": "c1a2c22b8a97c3102fb82d9896f662b25f256fd0ef82cc7174b3654459ea56c4",
+    "estimate_loaded.py": "9f37313f115b9a2995ba10b984b6feb435d7586e1d478b8aa221da44155e6971",
+    "estimate_graph.py": "d6ba35304859027f039249b992dee41c8fd2422d2733a3c72978706aa0ce497c",
+    "test_input_pins.py": "2da02695a2c86c797f6b7676f11fa725eddaca69a5f24ac82a09bca2bbdba916"
+  },
+  "rooms": {
+    "r101": {
+      "camera": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\t2exact-20261015\\cam-cross\\capture\\run-output.txt",
+        "bytes": 626020,
+        "sha256": "bf2fd704b00da017afc9d5f2d59b2d9852e6a4e22dea8930fa4a7ad73bdf6f1e"
+      },
+      "legacy_viewport": {
+        "scope": "Only first4 viewport words authenticated for this corner/LOD model; vp4/vp5 unused, no full-camera or repaired-tail claim.",
+        "truncated_rows": 43,
+        "frames": {
+          "500": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "507": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "514": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "521": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "528": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "535": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "542": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "549": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "556": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "563": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "570": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "577": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "584": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "591": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "598": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "605": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "612": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "619": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "626": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "633": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "640": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "647": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "654": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "661": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "668": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "675": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "682": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "689": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "696": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "703": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "710": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "717": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "724": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "731": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "738": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "745": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "752": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "759": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "766": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "773": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "780": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "787": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "794": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          }
+        }
+      },
+      "compact": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\r101-stripshare-v1\\ps2-dd3.re4mesh",
+        "bytes": 1243808,
+        "sha256": "e7f257773fb7ee43271994c867f5f4307a2a13c1d85cd93afcbcc15488c00708"
+      },
+      "loaded": {
+        "base": {
+          "meshlets": 1830,
+          "changed_meshlets": 0,
+          "admission": {
+            "opaque": 1678,
+            "nonopaque_alpha_or_marked": 152
+          },
+          "all_loaded_LOD_strips_before": 23166,
+          "all_loaded_LOD_strips_after": 23166,
+          "all_loaded_LOD_corners_before": 103562,
+          "all_loaded_LOD_corners_after": 103562,
+          "all_loaded_LOD_triangles": 57230,
+          "average_strip_before": 4.470430803764137,
+          "average_strip_after": 4.470430803764137,
+          "corner_reduction_percent": 0.0,
+          "physical_bytes_before": 1243808,
+          "estimated_physical_bytes_after": 1243808,
+          "allocation32_before": 1243808,
+          "allocation32_after": 1243808,
+          "strip_pool_before": 105079,
+          "estimated_strip_pool_after": 105079,
+          "vertex_bytes_unchanged": 1039104,
+          "limits": "Loaded packages including unused LOD/fallback; not camera-weighted or clipped TA traffic. No asset written; not GO evidence."
+        },
+        "modes": {
+          "fixed_provoking": {
+            "corners_before": 103562,
+            "corners_after": 103562,
+            "reduction_percent": 0.0,
+            "changed_meshlets": 0,
+            "estimated_physical_bytes": 1243808,
+            "physical_byte_delta": 0
+          },
+          "gouraud_cyclic": {
+            "corners_before": 103562,
+            "corners_after": 103474,
+            "reduction_percent": 0.0849732527374858,
+            "changed_meshlets": 36,
+            "estimated_physical_bytes": 1243712,
+            "physical_byte_delta": -96
+          },
+          "guarded_cyclic": {
+            "corners_before": 103562,
+            "corners_after": 103506,
+            "reduction_percent": 0.054073888105676815,
+            "changed_meshlets": 22,
+            "estimated_physical_bytes": 1243744,
+            "physical_byte_delta": -64
+          }
+        },
+        "risk_groups": {
+          "attribute_seam": 4080,
+          "crossing_surface": 513,
+          "degenerate": 2,
+          "coplanar_positive_area_overlap": 16,
+          "nonmanifold_position_edge": 40,
+          "duplicate_position_face": 8
+        },
+        "group_count": 7320,
+        "optimistic_all_loaded_min_corners": 100920,
+        "scope": "All loaded LODs, not camera gate. Unguarded modes retain known tie/degenerate risks; guarded mode still lacks near-equal depth/FP clipping proof. No assets written."
+      },
+      "totals": {
+        "baseline": {
+          "selected_corners": 797119,
+          "post_trivial_reject_preclip_corners": 608869,
+          "near_straddling_strips": 301,
+          "post_trivial_reject_strips": 129924,
+          "walked_strips": 171436,
+          "optimistic_selected_min_corners": 771923,
+          "selected_average_strip_length": 4.649659348094916,
+          "post_trivial_reject_average_strip_length": 4.686347403097195,
+          "optimistic_selected_reduction_ceiling_percent": 3.16088313037326,
+          "selected_corners_reduction_percent": 0.0,
+          "post_trivial_reject_preclip_corners_reduction_percent": 0.0
+        },
+        "fixed_provoking": {
+          "selected_corners": 797119,
+          "post_trivial_reject_preclip_corners": 608869,
+          "near_straddling_strips": 301,
+          "post_trivial_reject_strips": 129924,
+          "walked_strips": 171436,
+          "optimistic_selected_min_corners": 771923,
+          "selected_average_strip_length": 4.649659348094916,
+          "post_trivial_reject_average_strip_length": 4.686347403097195,
+          "optimistic_selected_reduction_ceiling_percent": 3.16088313037326,
+          "selected_corners_reduction_percent": 0.0,
+          "post_trivial_reject_preclip_corners_reduction_percent": 0.0
+        },
+        "gouraud_cyclic": {
+          "selected_corners": 795821,
+          "post_trivial_reject_preclip_corners": 608232,
+          "near_straddling_strips": 301,
+          "post_trivial_reject_strips": 129522,
+          "walked_strips": 170787,
+          "optimistic_selected_min_corners": 771923,
+          "selected_average_strip_length": 4.65972819945312,
+          "post_trivial_reject_average_strip_length": 4.695974429054523,
+          "optimistic_selected_reduction_ceiling_percent": 3.16088313037326,
+          "selected_corners_reduction_percent": 0.1628364146382122,
+          "post_trivial_reject_preclip_corners_reduction_percent": 0.10462020565999985
+        },
+        "guarded_cyclic": {
+          "selected_corners": 796337,
+          "post_trivial_reject_preclip_corners": 608368,
+          "near_straddling_strips": 301,
+          "post_trivial_reject_strips": 129666,
+          "walked_strips": 171045,
+          "optimistic_selected_min_corners": 771923,
+          "selected_average_strip_length": 4.655716331959426,
+          "post_trivial_reject_average_strip_length": 4.691808184103774,
+          "optimistic_selected_reduction_ceiling_percent": 3.16088313037326,
+          "selected_corners_reduction_percent": 0.09810329448928234,
+          "post_trivial_reject_preclip_corners_reduction_percent": 0.08228370963212495
+        }
+      },
+      "frames": [
+        {
+          "frame": 500,
+          "selected_meshlets": 456,
+          "modes": {
+            "baseline": {
+              "selected_corners": 17637,
+              "post_trivial_reject_preclip_corners": 13581,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2902,
+              "walked_strips": 3794,
+              "optimistic_selected_min_corners": 17077
+            },
+            "fixed_provoking": {
+              "selected_corners": 17637,
+              "post_trivial_reject_preclip_corners": 13581,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2902,
+              "walked_strips": 3794,
+              "optimistic_selected_min_corners": 17077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 17609,
+              "post_trivial_reject_preclip_corners": 13565,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2893,
+              "walked_strips": 3780,
+              "optimistic_selected_min_corners": 17077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 17621,
+              "post_trivial_reject_preclip_corners": 13569,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2896,
+              "walked_strips": 3786,
+              "optimistic_selected_min_corners": 17077
+            }
+          }
+        },
+        {
+          "frame": 507,
+          "selected_meshlets": 456,
+          "modes": {
+            "baseline": {
+              "selected_corners": 17637,
+              "post_trivial_reject_preclip_corners": 13577,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2901,
+              "walked_strips": 3794,
+              "optimistic_selected_min_corners": 17077
+            },
+            "fixed_provoking": {
+              "selected_corners": 17637,
+              "post_trivial_reject_preclip_corners": 13577,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2901,
+              "walked_strips": 3794,
+              "optimistic_selected_min_corners": 17077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 17609,
+              "post_trivial_reject_preclip_corners": 13561,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2892,
+              "walked_strips": 3780,
+              "optimistic_selected_min_corners": 17077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 17621,
+              "post_trivial_reject_preclip_corners": 13565,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2895,
+              "walked_strips": 3786,
+              "optimistic_selected_min_corners": 17077
+            }
+          }
+        },
+        {
+          "frame": 514,
+          "selected_meshlets": 456,
+          "modes": {
+            "baseline": {
+              "selected_corners": 17637,
+              "post_trivial_reject_preclip_corners": 13573,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2900,
+              "walked_strips": 3794,
+              "optimistic_selected_min_corners": 17077
+            },
+            "fixed_provoking": {
+              "selected_corners": 17637,
+              "post_trivial_reject_preclip_corners": 13573,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2900,
+              "walked_strips": 3794,
+              "optimistic_selected_min_corners": 17077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 17609,
+              "post_trivial_reject_preclip_corners": 13557,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2891,
+              "walked_strips": 3780,
+              "optimistic_selected_min_corners": 17077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 17621,
+              "post_trivial_reject_preclip_corners": 13561,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2894,
+              "walked_strips": 3786,
+              "optimistic_selected_min_corners": 17077
+            }
+          }
+        },
+        {
+          "frame": 521,
+          "selected_meshlets": 456,
+          "modes": {
+            "baseline": {
+              "selected_corners": 17621,
+              "post_trivial_reject_preclip_corners": 13573,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2900,
+              "walked_strips": 3790,
+              "optimistic_selected_min_corners": 17061
+            },
+            "fixed_provoking": {
+              "selected_corners": 17621,
+              "post_trivial_reject_preclip_corners": 13573,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2900,
+              "walked_strips": 3790,
+              "optimistic_selected_min_corners": 17061
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 17593,
+              "post_trivial_reject_preclip_corners": 13557,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2891,
+              "walked_strips": 3776,
+              "optimistic_selected_min_corners": 17061
+            },
+            "guarded_cyclic": {
+              "selected_corners": 17605,
+              "post_trivial_reject_preclip_corners": 13561,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2894,
+              "walked_strips": 3782,
+              "optimistic_selected_min_corners": 17061
+            }
+          }
+        },
+        {
+          "frame": 528,
+          "selected_meshlets": 456,
+          "modes": {
+            "baseline": {
+              "selected_corners": 17621,
+              "post_trivial_reject_preclip_corners": 13569,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2899,
+              "walked_strips": 3790,
+              "optimistic_selected_min_corners": 17061
+            },
+            "fixed_provoking": {
+              "selected_corners": 17621,
+              "post_trivial_reject_preclip_corners": 13569,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2899,
+              "walked_strips": 3790,
+              "optimistic_selected_min_corners": 17061
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 17593,
+              "post_trivial_reject_preclip_corners": 13553,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2890,
+              "walked_strips": 3776,
+              "optimistic_selected_min_corners": 17061
+            },
+            "guarded_cyclic": {
+              "selected_corners": 17605,
+              "post_trivial_reject_preclip_corners": 13557,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2893,
+              "walked_strips": 3782,
+              "optimistic_selected_min_corners": 17061
+            }
+          }
+        },
+        {
+          "frame": 535,
+          "selected_meshlets": 456,
+          "modes": {
+            "baseline": {
+              "selected_corners": 17621,
+              "post_trivial_reject_preclip_corners": 13569,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2899,
+              "walked_strips": 3790,
+              "optimistic_selected_min_corners": 17061
+            },
+            "fixed_provoking": {
+              "selected_corners": 17621,
+              "post_trivial_reject_preclip_corners": 13569,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2899,
+              "walked_strips": 3790,
+              "optimistic_selected_min_corners": 17061
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 17593,
+              "post_trivial_reject_preclip_corners": 13553,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2890,
+              "walked_strips": 3776,
+              "optimistic_selected_min_corners": 17061
+            },
+            "guarded_cyclic": {
+              "selected_corners": 17605,
+              "post_trivial_reject_preclip_corners": 13557,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2893,
+              "walked_strips": 3782,
+              "optimistic_selected_min_corners": 17061
+            }
+          }
+        },
+        {
+          "frame": 542,
+          "selected_meshlets": 456,
+          "modes": {
+            "baseline": {
+              "selected_corners": 17621,
+              "post_trivial_reject_preclip_corners": 13569,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2899,
+              "walked_strips": 3790,
+              "optimistic_selected_min_corners": 17061
+            },
+            "fixed_provoking": {
+              "selected_corners": 17621,
+              "post_trivial_reject_preclip_corners": 13569,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2899,
+              "walked_strips": 3790,
+              "optimistic_selected_min_corners": 17061
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 17593,
+              "post_trivial_reject_preclip_corners": 13553,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2890,
+              "walked_strips": 3776,
+              "optimistic_selected_min_corners": 17061
+            },
+            "guarded_cyclic": {
+              "selected_corners": 17605,
+              "post_trivial_reject_preclip_corners": 13557,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2893,
+              "walked_strips": 3782,
+              "optimistic_selected_min_corners": 17061
+            }
+          }
+        },
+        {
+          "frame": 549,
+          "selected_meshlets": 456,
+          "modes": {
+            "baseline": {
+              "selected_corners": 17621,
+              "post_trivial_reject_preclip_corners": 13569,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2899,
+              "walked_strips": 3790,
+              "optimistic_selected_min_corners": 17061
+            },
+            "fixed_provoking": {
+              "selected_corners": 17621,
+              "post_trivial_reject_preclip_corners": 13569,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2899,
+              "walked_strips": 3790,
+              "optimistic_selected_min_corners": 17061
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 17593,
+              "post_trivial_reject_preclip_corners": 13553,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2890,
+              "walked_strips": 3776,
+              "optimistic_selected_min_corners": 17061
+            },
+            "guarded_cyclic": {
+              "selected_corners": 17605,
+              "post_trivial_reject_preclip_corners": 13557,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2893,
+              "walked_strips": 3782,
+              "optimistic_selected_min_corners": 17061
+            }
+          }
+        },
+        {
+          "frame": 556,
+          "selected_meshlets": 456,
+          "modes": {
+            "baseline": {
+              "selected_corners": 17621,
+              "post_trivial_reject_preclip_corners": 13569,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2899,
+              "walked_strips": 3790,
+              "optimistic_selected_min_corners": 17061
+            },
+            "fixed_provoking": {
+              "selected_corners": 17621,
+              "post_trivial_reject_preclip_corners": 13569,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2899,
+              "walked_strips": 3790,
+              "optimistic_selected_min_corners": 17061
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 17593,
+              "post_trivial_reject_preclip_corners": 13553,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2890,
+              "walked_strips": 3776,
+              "optimistic_selected_min_corners": 17061
+            },
+            "guarded_cyclic": {
+              "selected_corners": 17605,
+              "post_trivial_reject_preclip_corners": 13557,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2893,
+              "walked_strips": 3782,
+              "optimistic_selected_min_corners": 17061
+            }
+          }
+        },
+        {
+          "frame": 563,
+          "selected_meshlets": 456,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18000,
+              "post_trivial_reject_preclip_corners": 13796,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2923,
+              "walked_strips": 3848,
+              "optimistic_selected_min_corners": 17428
+            },
+            "fixed_provoking": {
+              "selected_corners": 18000,
+              "post_trivial_reject_preclip_corners": 13796,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2923,
+              "walked_strips": 3848,
+              "optimistic_selected_min_corners": 17428
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 17972,
+              "post_trivial_reject_preclip_corners": 13780,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2914,
+              "walked_strips": 3834,
+              "optimistic_selected_min_corners": 17428
+            },
+            "guarded_cyclic": {
+              "selected_corners": 17984,
+              "post_trivial_reject_preclip_corners": 13784,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2917,
+              "walked_strips": 3840,
+              "optimistic_selected_min_corners": 17428
+            }
+          }
+        },
+        {
+          "frame": 570,
+          "selected_meshlets": 461,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18194,
+              "post_trivial_reject_preclip_corners": 14045,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 2982,
+              "walked_strips": 3895,
+              "optimistic_selected_min_corners": 17614
+            },
+            "fixed_provoking": {
+              "selected_corners": 18194,
+              "post_trivial_reject_preclip_corners": 14045,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 2982,
+              "walked_strips": 3895,
+              "optimistic_selected_min_corners": 17614
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18166,
+              "post_trivial_reject_preclip_corners": 14031,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 2973,
+              "walked_strips": 3881,
+              "optimistic_selected_min_corners": 17614
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18178,
+              "post_trivial_reject_preclip_corners": 14033,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 2976,
+              "walked_strips": 3887,
+              "optimistic_selected_min_corners": 17614
+            }
+          }
+        },
+        {
+          "frame": 577,
+          "selected_meshlets": 454,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18221,
+              "post_trivial_reject_preclip_corners": 13856,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 2958,
+              "walked_strips": 3929,
+              "optimistic_selected_min_corners": 17655
+            },
+            "fixed_provoking": {
+              "selected_corners": 18221,
+              "post_trivial_reject_preclip_corners": 13856,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 2958,
+              "walked_strips": 3929,
+              "optimistic_selected_min_corners": 17655
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18191,
+              "post_trivial_reject_preclip_corners": 13842,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 2949,
+              "walked_strips": 3914,
+              "optimistic_selected_min_corners": 17655
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18203,
+              "post_trivial_reject_preclip_corners": 13844,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 2952,
+              "walked_strips": 3920,
+              "optimistic_selected_min_corners": 17655
+            }
+          }
+        },
+        {
+          "frame": 584,
+          "selected_meshlets": 454,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "fixed_provoking": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18415,
+              "post_trivial_reject_preclip_corners": 14062,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3001,
+              "walked_strips": 3959,
+              "optimistic_selected_min_corners": 17873
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18427,
+              "post_trivial_reject_preclip_corners": 14064,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3004,
+              "walked_strips": 3965,
+              "optimistic_selected_min_corners": 17873
+            }
+          }
+        },
+        {
+          "frame": 591,
+          "selected_meshlets": 452,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18413,
+              "post_trivial_reject_preclip_corners": 14022,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2993,
+              "walked_strips": 3958,
+              "optimistic_selected_min_corners": 17839
+            },
+            "fixed_provoking": {
+              "selected_corners": 18413,
+              "post_trivial_reject_preclip_corners": 14022,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2993,
+              "walked_strips": 3958,
+              "optimistic_selected_min_corners": 17839
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18383,
+              "post_trivial_reject_preclip_corners": 14008,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2984,
+              "walked_strips": 3943,
+              "optimistic_selected_min_corners": 17839
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18395,
+              "post_trivial_reject_preclip_corners": 14010,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 2987,
+              "walked_strips": 3949,
+              "optimistic_selected_min_corners": 17839
+            }
+          }
+        },
+        {
+          "frame": 598,
+          "selected_meshlets": 453,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18413,
+              "post_trivial_reject_preclip_corners": 14028,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 2998,
+              "walked_strips": 3965,
+              "optimistic_selected_min_corners": 17841
+            },
+            "fixed_provoking": {
+              "selected_corners": 18413,
+              "post_trivial_reject_preclip_corners": 14028,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 2998,
+              "walked_strips": 3965,
+              "optimistic_selected_min_corners": 17841
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18383,
+              "post_trivial_reject_preclip_corners": 14014,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 2989,
+              "walked_strips": 3950,
+              "optimistic_selected_min_corners": 17841
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18395,
+              "post_trivial_reject_preclip_corners": 14016,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 2992,
+              "walked_strips": 3956,
+              "optimistic_selected_min_corners": 17841
+            }
+          }
+        },
+        {
+          "frame": 605,
+          "selected_meshlets": 454,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "fixed_provoking": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18415,
+              "post_trivial_reject_preclip_corners": 14062,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3001,
+              "walked_strips": 3959,
+              "optimistic_selected_min_corners": 17873
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18427,
+              "post_trivial_reject_preclip_corners": 14064,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3004,
+              "walked_strips": 3965,
+              "optimistic_selected_min_corners": 17873
+            }
+          }
+        },
+        {
+          "frame": 612,
+          "selected_meshlets": 454,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "fixed_provoking": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18415,
+              "post_trivial_reject_preclip_corners": 14062,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3001,
+              "walked_strips": 3959,
+              "optimistic_selected_min_corners": 17873
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18427,
+              "post_trivial_reject_preclip_corners": 14064,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3004,
+              "walked_strips": 3965,
+              "optimistic_selected_min_corners": 17873
+            }
+          }
+        },
+        {
+          "frame": 619,
+          "selected_meshlets": 454,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "fixed_provoking": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18415,
+              "post_trivial_reject_preclip_corners": 14062,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3001,
+              "walked_strips": 3959,
+              "optimistic_selected_min_corners": 17873
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18427,
+              "post_trivial_reject_preclip_corners": 14064,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3004,
+              "walked_strips": 3965,
+              "optimistic_selected_min_corners": 17873
+            }
+          }
+        },
+        {
+          "frame": 626,
+          "selected_meshlets": 454,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "fixed_provoking": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18415,
+              "post_trivial_reject_preclip_corners": 14062,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3001,
+              "walked_strips": 3959,
+              "optimistic_selected_min_corners": 17873
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18427,
+              "post_trivial_reject_preclip_corners": 14064,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3004,
+              "walked_strips": 3965,
+              "optimistic_selected_min_corners": 17873
+            }
+          }
+        },
+        {
+          "frame": 633,
+          "selected_meshlets": 454,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "fixed_provoking": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18415,
+              "post_trivial_reject_preclip_corners": 14062,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3001,
+              "walked_strips": 3959,
+              "optimistic_selected_min_corners": 17873
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18427,
+              "post_trivial_reject_preclip_corners": 14064,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3004,
+              "walked_strips": 3965,
+              "optimistic_selected_min_corners": 17873
+            }
+          }
+        },
+        {
+          "frame": 640,
+          "selected_meshlets": 454,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "fixed_provoking": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18415,
+              "post_trivial_reject_preclip_corners": 14062,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3001,
+              "walked_strips": 3959,
+              "optimistic_selected_min_corners": 17873
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18427,
+              "post_trivial_reject_preclip_corners": 14064,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3004,
+              "walked_strips": 3965,
+              "optimistic_selected_min_corners": 17873
+            }
+          }
+        },
+        {
+          "frame": 647,
+          "selected_meshlets": 454,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "fixed_provoking": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18415,
+              "post_trivial_reject_preclip_corners": 14062,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3001,
+              "walked_strips": 3959,
+              "optimistic_selected_min_corners": 17873
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18427,
+              "post_trivial_reject_preclip_corners": 14064,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3004,
+              "walked_strips": 3965,
+              "optimistic_selected_min_corners": 17873
+            }
+          }
+        },
+        {
+          "frame": 654,
+          "selected_meshlets": 454,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "fixed_provoking": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18415,
+              "post_trivial_reject_preclip_corners": 14062,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3001,
+              "walked_strips": 3959,
+              "optimistic_selected_min_corners": 17873
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18427,
+              "post_trivial_reject_preclip_corners": 14064,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3004,
+              "walked_strips": 3965,
+              "optimistic_selected_min_corners": 17873
+            }
+          }
+        },
+        {
+          "frame": 661,
+          "selected_meshlets": 454,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "fixed_provoking": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18415,
+              "post_trivial_reject_preclip_corners": 14062,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3001,
+              "walked_strips": 3959,
+              "optimistic_selected_min_corners": 17873
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18427,
+              "post_trivial_reject_preclip_corners": 14064,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3004,
+              "walked_strips": 3965,
+              "optimistic_selected_min_corners": 17873
+            }
+          }
+        },
+        {
+          "frame": 668,
+          "selected_meshlets": 454,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "fixed_provoking": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18415,
+              "post_trivial_reject_preclip_corners": 14062,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3001,
+              "walked_strips": 3959,
+              "optimistic_selected_min_corners": 17873
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18427,
+              "post_trivial_reject_preclip_corners": 14064,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3004,
+              "walked_strips": 3965,
+              "optimistic_selected_min_corners": 17873
+            }
+          }
+        },
+        {
+          "frame": 675,
+          "selected_meshlets": 454,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "fixed_provoking": {
+              "selected_corners": 18445,
+              "post_trivial_reject_preclip_corners": 14076,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3010,
+              "walked_strips": 3974,
+              "optimistic_selected_min_corners": 17873
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18415,
+              "post_trivial_reject_preclip_corners": 14062,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3001,
+              "walked_strips": 3959,
+              "optimistic_selected_min_corners": 17873
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18427,
+              "post_trivial_reject_preclip_corners": 14064,
+              "near_straddling_strips": 8,
+              "post_trivial_reject_strips": 3004,
+              "walked_strips": 3965,
+              "optimistic_selected_min_corners": 17873
+            }
+          }
+        },
+        {
+          "frame": 682,
+          "selected_meshlets": 455,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18506,
+              "post_trivial_reject_preclip_corners": 14116,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3014,
+              "walked_strips": 3979,
+              "optimistic_selected_min_corners": 17928
+            },
+            "fixed_provoking": {
+              "selected_corners": 18506,
+              "post_trivial_reject_preclip_corners": 14116,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3014,
+              "walked_strips": 3979,
+              "optimistic_selected_min_corners": 17928
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18476,
+              "post_trivial_reject_preclip_corners": 14102,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3005,
+              "walked_strips": 3964,
+              "optimistic_selected_min_corners": 17928
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18488,
+              "post_trivial_reject_preclip_corners": 14104,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3008,
+              "walked_strips": 3970,
+              "optimistic_selected_min_corners": 17928
+            }
+          }
+        },
+        {
+          "frame": 689,
+          "selected_meshlets": 458,
+          "modes": {
+            "baseline": {
+              "selected_corners": 18654,
+              "post_trivial_reject_preclip_corners": 14328,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3069,
+              "walked_strips": 4021,
+              "optimistic_selected_min_corners": 18072
+            },
+            "fixed_provoking": {
+              "selected_corners": 18654,
+              "post_trivial_reject_preclip_corners": 14328,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3069,
+              "walked_strips": 4021,
+              "optimistic_selected_min_corners": 18072
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 18624,
+              "post_trivial_reject_preclip_corners": 14314,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3060,
+              "walked_strips": 4006,
+              "optimistic_selected_min_corners": 18072
+            },
+            "guarded_cyclic": {
+              "selected_corners": 18636,
+              "post_trivial_reject_preclip_corners": 14316,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3063,
+              "walked_strips": 4012,
+              "optimistic_selected_min_corners": 18072
+            }
+          }
+        },
+        {
+          "frame": 696,
+          "selected_meshlets": 473,
+          "modes": {
+            "baseline": {
+              "selected_corners": 19274,
+              "post_trivial_reject_preclip_corners": 14653,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3132,
+              "walked_strips": 4149,
+              "optimistic_selected_min_corners": 18658
+            },
+            "fixed_provoking": {
+              "selected_corners": 19274,
+              "post_trivial_reject_preclip_corners": 14653,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3132,
+              "walked_strips": 4149,
+              "optimistic_selected_min_corners": 18658
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 19242,
+              "post_trivial_reject_preclip_corners": 14638,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3122,
+              "walked_strips": 4133,
+              "optimistic_selected_min_corners": 18658
+            },
+            "guarded_cyclic": {
+              "selected_corners": 19254,
+              "post_trivial_reject_preclip_corners": 14642,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3126,
+              "walked_strips": 4139,
+              "optimistic_selected_min_corners": 18658
+            }
+          }
+        },
+        {
+          "frame": 703,
+          "selected_meshlets": 472,
+          "modes": {
+            "baseline": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14632,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3115,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "fixed_provoking": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14632,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3115,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 19218,
+              "post_trivial_reject_preclip_corners": 14617,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3105,
+              "walked_strips": 4119,
+              "optimistic_selected_min_corners": 18632
+            },
+            "guarded_cyclic": {
+              "selected_corners": 19230,
+              "post_trivial_reject_preclip_corners": 14621,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3109,
+              "walked_strips": 4125,
+              "optimistic_selected_min_corners": 18632
+            }
+          }
+        },
+        {
+          "frame": 710,
+          "selected_meshlets": 471,
+          "modes": {
+            "baseline": {
+              "selected_corners": 19217,
+              "post_trivial_reject_preclip_corners": 14629,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3113,
+              "walked_strips": 4127,
+              "optimistic_selected_min_corners": 18599
+            },
+            "fixed_provoking": {
+              "selected_corners": 19217,
+              "post_trivial_reject_preclip_corners": 14629,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3113,
+              "walked_strips": 4127,
+              "optimistic_selected_min_corners": 18599
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 19185,
+              "post_trivial_reject_preclip_corners": 14614,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3103,
+              "walked_strips": 4111,
+              "optimistic_selected_min_corners": 18599
+            },
+            "guarded_cyclic": {
+              "selected_corners": 19197,
+              "post_trivial_reject_preclip_corners": 14618,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3107,
+              "walked_strips": 4117,
+              "optimistic_selected_min_corners": 18599
+            }
+          }
+        },
+        {
+          "frame": 717,
+          "selected_meshlets": 471,
+          "modes": {
+            "baseline": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14649,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3119,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "fixed_provoking": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14649,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3119,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 19218,
+              "post_trivial_reject_preclip_corners": 14634,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3109,
+              "walked_strips": 4119,
+              "optimistic_selected_min_corners": 18632
+            },
+            "guarded_cyclic": {
+              "selected_corners": 19230,
+              "post_trivial_reject_preclip_corners": 14638,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3113,
+              "walked_strips": 4125,
+              "optimistic_selected_min_corners": 18632
+            }
+          }
+        },
+        {
+          "frame": 724,
+          "selected_meshlets": 472,
+          "modes": {
+            "baseline": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14649,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3119,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "fixed_provoking": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14649,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3119,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 19218,
+              "post_trivial_reject_preclip_corners": 14634,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3109,
+              "walked_strips": 4119,
+              "optimistic_selected_min_corners": 18632
+            },
+            "guarded_cyclic": {
+              "selected_corners": 19230,
+              "post_trivial_reject_preclip_corners": 14638,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3113,
+              "walked_strips": 4125,
+              "optimistic_selected_min_corners": 18632
+            }
+          }
+        },
+        {
+          "frame": 731,
+          "selected_meshlets": 472,
+          "modes": {
+            "baseline": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14645,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3118,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "fixed_provoking": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14645,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3118,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 19218,
+              "post_trivial_reject_preclip_corners": 14630,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3108,
+              "walked_strips": 4119,
+              "optimistic_selected_min_corners": 18632
+            },
+            "guarded_cyclic": {
+              "selected_corners": 19230,
+              "post_trivial_reject_preclip_corners": 14634,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3112,
+              "walked_strips": 4125,
+              "optimistic_selected_min_corners": 18632
+            }
+          }
+        },
+        {
+          "frame": 738,
+          "selected_meshlets": 472,
+          "modes": {
+            "baseline": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "fixed_provoking": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 19218,
+              "post_trivial_reject_preclip_corners": 14625,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3107,
+              "walked_strips": 4119,
+              "optimistic_selected_min_corners": 18632
+            },
+            "guarded_cyclic": {
+              "selected_corners": 19230,
+              "post_trivial_reject_preclip_corners": 14629,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3111,
+              "walked_strips": 4125,
+              "optimistic_selected_min_corners": 18632
+            }
+          }
+        },
+        {
+          "frame": 745,
+          "selected_meshlets": 472,
+          "modes": {
+            "baseline": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "fixed_provoking": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 19218,
+              "post_trivial_reject_preclip_corners": 14625,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3107,
+              "walked_strips": 4119,
+              "optimistic_selected_min_corners": 18632
+            },
+            "guarded_cyclic": {
+              "selected_corners": 19230,
+              "post_trivial_reject_preclip_corners": 14629,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3111,
+              "walked_strips": 4125,
+              "optimistic_selected_min_corners": 18632
+            }
+          }
+        },
+        {
+          "frame": 752,
+          "selected_meshlets": 472,
+          "modes": {
+            "baseline": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "fixed_provoking": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 19218,
+              "post_trivial_reject_preclip_corners": 14625,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3107,
+              "walked_strips": 4119,
+              "optimistic_selected_min_corners": 18632
+            },
+            "guarded_cyclic": {
+              "selected_corners": 19230,
+              "post_trivial_reject_preclip_corners": 14629,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3111,
+              "walked_strips": 4125,
+              "optimistic_selected_min_corners": 18632
+            }
+          }
+        },
+        {
+          "frame": 759,
+          "selected_meshlets": 472,
+          "modes": {
+            "baseline": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "fixed_provoking": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 19218,
+              "post_trivial_reject_preclip_corners": 14625,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3107,
+              "walked_strips": 4119,
+              "optimistic_selected_min_corners": 18632
+            },
+            "guarded_cyclic": {
+              "selected_corners": 19230,
+              "post_trivial_reject_preclip_corners": 14629,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3111,
+              "walked_strips": 4125,
+              "optimistic_selected_min_corners": 18632
+            }
+          }
+        },
+        {
+          "frame": 766,
+          "selected_meshlets": 472,
+          "modes": {
+            "baseline": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "fixed_provoking": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 19218,
+              "post_trivial_reject_preclip_corners": 14625,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3107,
+              "walked_strips": 4119,
+              "optimistic_selected_min_corners": 18632
+            },
+            "guarded_cyclic": {
+              "selected_corners": 19230,
+              "post_trivial_reject_preclip_corners": 14629,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3111,
+              "walked_strips": 4125,
+              "optimistic_selected_min_corners": 18632
+            }
+          }
+        },
+        {
+          "frame": 773,
+          "selected_meshlets": 472,
+          "modes": {
+            "baseline": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "fixed_provoking": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 19218,
+              "post_trivial_reject_preclip_corners": 14625,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3107,
+              "walked_strips": 4119,
+              "optimistic_selected_min_corners": 18632
+            },
+            "guarded_cyclic": {
+              "selected_corners": 19230,
+              "post_trivial_reject_preclip_corners": 14629,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3111,
+              "walked_strips": 4125,
+              "optimistic_selected_min_corners": 18632
+            }
+          }
+        },
+        {
+          "frame": 780,
+          "selected_meshlets": 472,
+          "modes": {
+            "baseline": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "fixed_provoking": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 19218,
+              "post_trivial_reject_preclip_corners": 14625,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3107,
+              "walked_strips": 4119,
+              "optimistic_selected_min_corners": 18632
+            },
+            "guarded_cyclic": {
+              "selected_corners": 19230,
+              "post_trivial_reject_preclip_corners": 14629,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3111,
+              "walked_strips": 4125,
+              "optimistic_selected_min_corners": 18632
+            }
+          }
+        },
+        {
+          "frame": 787,
+          "selected_meshlets": 472,
+          "modes": {
+            "baseline": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "fixed_provoking": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 19218,
+              "post_trivial_reject_preclip_corners": 14625,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3107,
+              "walked_strips": 4119,
+              "optimistic_selected_min_corners": 18632
+            },
+            "guarded_cyclic": {
+              "selected_corners": 19230,
+              "post_trivial_reject_preclip_corners": 14629,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3111,
+              "walked_strips": 4125,
+              "optimistic_selected_min_corners": 18632
+            }
+          }
+        },
+        {
+          "frame": 794,
+          "selected_meshlets": 472,
+          "modes": {
+            "baseline": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "fixed_provoking": {
+              "selected_corners": 19250,
+              "post_trivial_reject_preclip_corners": 14640,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3117,
+              "walked_strips": 4135,
+              "optimistic_selected_min_corners": 18632
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 19218,
+              "post_trivial_reject_preclip_corners": 14625,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3107,
+              "walked_strips": 4119,
+              "optimistic_selected_min_corners": 18632
+            },
+            "guarded_cyclic": {
+              "selected_corners": 19230,
+              "post_trivial_reject_preclip_corners": 14629,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3111,
+              "walked_strips": 4125,
+              "optimistic_selected_min_corners": 18632
+            }
+          }
+        }
+      ]
+    },
+    "r103": {
+      "camera": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\t2exact-20261015\\cam-farm\\capture\\run-output.txt",
+        "bytes": 505674,
+        "sha256": "cf4ebbb1be71d9ef06c7732197cbd469ad5c620e6b0b176f4b834aa00b8c0038"
+      },
+      "legacy_viewport": {
+        "scope": "Only first4 viewport words authenticated for this corner/LOD model; vp4/vp5 unused, no full-camera or repaired-tail claim.",
+        "truncated_rows": 42,
+        "frames": {
+          "500": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "507": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "514": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "521": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "528": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "535": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000a"
+            ],
+            "complete_6word_row": true
+          },
+          "542": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "549": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "556": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "563": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "570": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "577": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "584": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "591": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "598": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "605": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "612": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "619": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "626": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "633": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "640": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "647": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "654": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "661": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "668": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "675": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "682": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "689": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "696": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "703": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "710": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "717": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "724": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "731": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "738": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "745": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "752": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "759": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "766": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "773": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "780": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "787": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          },
+          "794": {
+            "consumed_first4_hex": [
+              "00000000",
+              "00000000",
+              "44000000",
+              "43e00000"
+            ],
+            "remaining_words": [
+              "00000000",
+              "3f80000"
+            ],
+            "complete_6word_row": false
+          }
+        }
+      },
+      "compact": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\r103-stripshare-v1\\ps2-dd3.re4mesh",
+        "bytes": 1047968,
+        "sha256": "2b805c88a9375180e41aeb55f8c0656d07fe96c32a12acf504b05be8b16d110a"
+      },
+      "loaded": {
+        "base": {
+          "meshlets": 1448,
+          "changed_meshlets": 0,
+          "admission": {
+            "opaque": 1157,
+            "nonopaque_alpha_or_marked": 291
+          },
+          "all_loaded_LOD_strips_before": 19700,
+          "all_loaded_LOD_strips_after": 19700,
+          "all_loaded_LOD_corners_before": 85192,
+          "all_loaded_LOD_corners_after": 85192,
+          "all_loaded_LOD_triangles": 45792,
+          "average_strip_before": 4.3244670050761425,
+          "average_strip_after": 4.3244670050761425,
+          "corner_reduction_percent": 0.0,
+          "physical_bytes_before": 1047968,
+          "estimated_physical_bytes_after": 1047968,
+          "allocation32_before": 1047968,
+          "allocation32_after": 1047968,
+          "strip_pool_before": 92121,
+          "estimated_strip_pool_after": 92121,
+          "vertex_bytes_unchanged": 883260,
+          "limits": "Loaded packages including unused LOD/fallback; not camera-weighted or clipped TA traffic. No asset written; not GO evidence."
+        },
+        "modes": {
+          "fixed_provoking": {
+            "corners_before": 85192,
+            "corners_after": 85192,
+            "reduction_percent": 0.0,
+            "changed_meshlets": 0,
+            "estimated_physical_bytes": 1047968,
+            "physical_byte_delta": 0
+          },
+          "gouraud_cyclic": {
+            "corners_before": 85192,
+            "corners_after": 85010,
+            "reduction_percent": 0.21363508310640045,
+            "changed_meshlets": 52,
+            "estimated_physical_bytes": 1047712,
+            "physical_byte_delta": -256
+          },
+          "guarded_cyclic": {
+            "corners_before": 85192,
+            "corners_after": 85192,
+            "reduction_percent": 0.0,
+            "changed_meshlets": 0,
+            "estimated_physical_bytes": 1047968,
+            "physical_byte_delta": 0
+          }
+        },
+        "risk_groups": {
+          "attribute_seam": 1053,
+          "crossing_surface": 428,
+          "coplanar_positive_area_overlap": 5,
+          "nonmanifold_position_edge": 24
+        },
+        "group_count": 1448,
+        "optimistic_all_loaded_min_corners": 82214,
+        "scope": "All loaded LODs, not camera gate. Unguarded modes retain known tie/degenerate risks; guarded mode still lacks near-equal depth/FP clipping proof. No assets written."
+      },
+      "totals": {
+        "baseline": {
+          "selected_corners": 1019229,
+          "post_trivial_reject_preclip_corners": 627757,
+          "near_straddling_strips": 258,
+          "post_trivial_reject_strips": 146200,
+          "walked_strips": 237661,
+          "optimistic_selected_min_corners": 992311,
+          "selected_average_strip_length": 4.288583318255835,
+          "post_trivial_reject_average_strip_length": 4.293823529411765,
+          "optimistic_selected_reduction_ceiling_percent": 2.6410159051596827,
+          "selected_corners_reduction_percent": 0.0,
+          "post_trivial_reject_preclip_corners_reduction_percent": 0.0
+        },
+        "fixed_provoking": {
+          "selected_corners": 1019229,
+          "post_trivial_reject_preclip_corners": 627757,
+          "near_straddling_strips": 258,
+          "post_trivial_reject_strips": 146200,
+          "walked_strips": 237661,
+          "optimistic_selected_min_corners": 992311,
+          "selected_average_strip_length": 4.288583318255835,
+          "post_trivial_reject_average_strip_length": 4.293823529411765,
+          "optimistic_selected_reduction_ceiling_percent": 2.6410159051596827,
+          "selected_corners_reduction_percent": 0.0,
+          "post_trivial_reject_preclip_corners_reduction_percent": 0.0
+        },
+        "gouraud_cyclic": {
+          "selected_corners": 1018111,
+          "post_trivial_reject_preclip_corners": 627327,
+          "near_straddling_strips": 301,
+          "post_trivial_reject_strips": 145899,
+          "walked_strips": 237102,
+          "optimistic_selected_min_corners": 992311,
+          "selected_average_strip_length": 4.293978962640551,
+          "post_trivial_reject_average_strip_length": 4.29973474801061,
+          "optimistic_selected_reduction_ceiling_percent": 2.6410159051596827,
+          "selected_corners_reduction_percent": 0.10969075644433612,
+          "post_trivial_reject_preclip_corners_reduction_percent": 0.06849784231797162
+        },
+        "guarded_cyclic": {
+          "selected_corners": 1019229,
+          "post_trivial_reject_preclip_corners": 627757,
+          "near_straddling_strips": 258,
+          "post_trivial_reject_strips": 146200,
+          "walked_strips": 237661,
+          "optimistic_selected_min_corners": 992311,
+          "selected_average_strip_length": 4.288583318255835,
+          "post_trivial_reject_average_strip_length": 4.293823529411765,
+          "optimistic_selected_reduction_ceiling_percent": 2.6410159051596827,
+          "selected_corners_reduction_percent": 0.0,
+          "post_trivial_reject_preclip_corners_reduction_percent": 0.0
+        }
+      },
+      "frames": [
+        {
+          "frame": 500,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 507,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 514,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 521,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 528,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 535,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 542,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 549,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 556,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 563,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 570,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 577,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 584,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 591,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 598,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 605,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 612,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 619,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 626,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 633,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 640,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 647,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 654,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 661,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 668,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 675,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 682,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 689,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 696,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 703,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 710,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 717,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 724,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 731,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 738,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 745,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 752,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 759,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 766,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 773,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 780,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 787,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        },
+        {
+          "frame": 794,
+          "selected_meshlets": 406,
+          "modes": {
+            "baseline": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "fixed_provoking": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            },
+            "gouraud_cyclic": {
+              "selected_corners": 23677,
+              "post_trivial_reject_preclip_corners": 14589,
+              "near_straddling_strips": 7,
+              "post_trivial_reject_strips": 3393,
+              "walked_strips": 5514,
+              "optimistic_selected_min_corners": 23077
+            },
+            "guarded_cyclic": {
+              "selected_corners": 23703,
+              "post_trivial_reject_preclip_corners": 14599,
+              "near_straddling_strips": 6,
+              "post_trivial_reject_strips": 3400,
+              "walked_strips": 5527,
+              "optimistic_selected_min_corners": 23077
+            }
+          }
+        }
+      ]
+    }
+  }
+}
