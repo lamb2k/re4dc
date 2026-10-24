@@ -343,3 +343,34 @@ public fixtures. The release recipe and coordinator status table are unchanged.
    smaller low-reuse working set despite repeated transforms? Include peak
    RAM, complete world cost, presentation cadence, look/STRICT and transition
    gates. The retained 3 KB gather allocation is not a heap saving.
+
+**Claude answers (2026-10-24, owner; provisional, windows NOT qualified).** Merged as 28c73edb (t15/int 238d040c);
+knob-off release image identical to Test 23 (d28b3cfc).
+
+1. Partly. `scenery_data_variants.py` on the shipped Test 23 worlds (`dc/native/<room>/ps2-world.*`):
+   - r103 (no R4SG; runtime `PS2SG groups=absent`): SLI1 1,127,520 B and SDS1 1,199,776 B, against the
+     1,074,688 B original.
+   - r101: both variants refused with `R4SG identity/CRC`. The runtime does admit that R4SG
+     (`PS2SG room=101 groups=ok per_meshlet=4 bytes=117152`), so the converter's binding check is stricter than the
+     reader's. Together with Build 11's r103 `R4ID stale binding`, the shipped companions' identity fields need an
+     owner audit before r101 group experiments; please say which identity field the R4SG check compares.
+2. Admission is confirmed: `SCNVAR room=103 requested=ps2-sli1 admitted=ps2-sli1 mesh_bytes=1127520 gather_reserved=3072`
+   and the same for `ps2-sds1` (1,199,776), with no base fallback. But the matched controls
+   `PS2_INTERIOR_CULL=0 WORLD_RECT21=0 FOLIAGE_MIP24=0` on the Test 23 disc data are not a valid control:
+   every window reports `err=1200` (4 per drawn tick) in all three arms, including the base arm. Transformed inputs
+   drop from 11,328 (recipe) to 3,260 per window, and TEXCHK / HALT stay 0. The Test 23 worlds and pack are re-keyed
+   for WORLD_RECT21 (mip22 / mip22b / fol24), so a qualified control needs original-policy disc data (a DATA line
+   before mip22). Owner next step: master that control disc. Please say which error class the census counts here
+   (refused shell, unsupported fallback or failed pass).
+   Provisional r103 farm, census on, Flycast MODELLED, per drawn tick (q=2..4 mean), err=1200 in every row:
+
+   | arm | world us | sel / xform / clip / hdr / submit / other | v | c | pick |
+   |---|---|---|---|---|---|
+   | base | 5,200 | 1,334 / 823 / 329 / 924 / 840 / 947 | 3,260 | 1,991 | 9,184,0 |
+   | SLI1 | 5,200 | 1,334 / 820 / 330 / 921 / 845 / 946 | 3,260 | 1,991 | 0,193,0 |
+   | SDS1 | 5,599 | 1,505 / 1,159 / 328 / 923 / 735 / 947 | 3,522 | 1,991 | 0,193,0 |
+
+   On this population, SLI1 is a wash and SDS1 costs about +0.4 ms (+8% transformed inputs, submit -0.1 ms). Not a
+   console result.
+3. Console A/B waits for a qualified control and the user's SD-card OK. Peak RAM: the runtime heap row after the
+   farm load is 3,733,792 (base), 3,680,960 (SLI1) and 3,604,608 (SDS1) bytes free in heap 4 (more data, less free).
