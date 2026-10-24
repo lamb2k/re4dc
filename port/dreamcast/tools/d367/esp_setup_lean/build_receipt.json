@@ -1,0 +1,574 @@
+{
+  "status": "PASS",
+  "baseline": "a5e972e44096410253ad93164b84d92e3c22655a",
+  "scope": "Complete-TU absent/zero identity and FX0/FX3 composition for ESP_SETUP_LEAN.\n\nThe baseline source and Make tree are archived independently. Debug records\nand preprocessor line markers are consistently omitted; executable options\ncome from actual public-recipe Make expansions, including current CH2.\n",
+  "off_identity_comparisons": 32,
+  "on_unaffected_identities": 8,
+  "on_translation_units": [
+    "esp_sub",
+    "native_ui"
+  ],
+  "source_sha256": {
+    "src/game/esp.cpp": "e0b0b39540eab8d3b46e90c2685604ad35f1eb2d8ec5026129dbf9a80a114bd2",
+    "src/game/esp_sub.cpp": "8236feb688d9b07355b6193c98bcf1bfa587ddf8bb52bc78d06f2ef6e9499d1c",
+    "src/game/esp_app.cpp": "d2ea90dc88b16f03828e7312ba86a65f57ef82f4988d5544f3403a2fd31e0639",
+    "port/dreamcast/game/platform/native_ui.cpp": "6b75a06605e3249c2e298484c9557839a21adde8b1511f24debdb71d4bc43134",
+    "port/dreamcast/game/effects30.mk": "e004cd9a8f4d25dd8e080bca8445f362ddaf1d41f96cb3b01a7e1b8ee7b9bcbd",
+    "port/dreamcast/game/platform/include/native_ui_fx_core_prep.inc": "fe39dfac505c982794fa7e54137c6d8a4de15e55d35155da823b106cc6320e5d",
+    "port/dreamcast/tools/d367/rr/recipe.conf": "96d67cd3f0cc532676f47c9c857bca1bcc84188a35119757cbf998849ab83d7b",
+    "port/dreamcast/tools/d367/esp_setup_lean/build_profile.py": "5c20c780342ab38890ad63835653e721615b066ba57fbc151ebb9db69c66315e",
+    "port/dreamcast/tools/d367/esp_setup_lean/build_controls.py": "e9e54f4c374176b47db265cdfd860840af67b1a34db800a44eaaa1e42b871d19",
+    "port/dreamcast/game/platform/include/native_effect_haze_batch.inc": "b505ff4856d1c9980737e1b86bf222aba74d36e8de988a08f341a2ec3a2ed6b7",
+    "port/dreamcast/game/platform/include/native_effect_stage1_batch.inc": "bbde967e08758b2c714aa8de0cb1990d1d84c31d455b96a45845e0657221df92"
+  },
+  "compiler": {
+    "compiler": "sh-elf-g++ (GCC) 15.2.0",
+    "compiler_sha256": "d3bb95f7a2e5cc5618a130bb0287db9e6892a788fd4a32487f3405f5e875d9f5"
+  },
+  "public_profile": {
+    "recipe": "port/dreamcast/tools/d367/rr/recipe.conf",
+    "recipe_sha256": "96d67cd3f0cc532676f47c9c857bca1bcc84188a35119757cbf998849ab83d7b",
+    "make_input_manifest_sha256": "92d1390867d3230f8bbeb75aa4eeec1e43b7d91a0ddbeb98330449d2109fc187",
+    "current_ch2": [
+      "ROUTE_CH22=1",
+      "ROUTE_CH23=1",
+      "PS2_CH2_ENEMY=1",
+      "PS2_ENEMY_CH22_DIR=/root/re4data/private/ps2enemy-ch2-20261016",
+      "PS2_ENEMY_CH23_DIR=/root/re4data/private/ps2enemy-ch2-20261016",
+      "MOTION_BOUNDED_R11F=1",
+      "NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1",
+      "PS2_WORLD_SOURCE_OWNER=1",
+      "PS2_WORLD_SOURCE_TEX_PREP=1",
+      "AICA_STR_ENT_MAX=56",
+      "AICA_SPILL=1",
+      "NATIVE_MODEL_REGISTRY_FIRST=1",
+      "NATIVE_MODEL_REGISTRY_LOD=1",
+      "ROUTE_SOON_RETURN=1",
+      "MOVIE_AUDIO_PRIME=1",
+      "ROOM_LEFTOVER_FIT=1",
+      "PS2_WORLD_SOURCE_TEX_VQ=1",
+      "LEON_SKIN_SLOTS=2",
+      "LEON_HEADLESS=1",
+      "LEON_HEADLESS_DIR=/root/re4data/private/garr18-head-20261019",
+      "LEON_CLOTH_DRAWN=1",
+      "HAZE_SPRITE_CUT=1",
+      "FX_MIST_PS2=1",
+      "PS2_HDR_SETS=128",
+      "ROUTE_CH21_FULL=1",
+      "RESET_MEM_FIX=1",
+      "GANADO_ROUTINE_BYTES=1",
+      "CLOTH_LIGHT_ABI_FIX=1",
+      "AICA_LAYOUT_RECOVER=1",
+      "PAUSE_NATIVE_PRESENTATION=1",
+      "CAST_MIPMAP=1",
+      "TEX_TWIDDLED_MIPMAP=1",
+      "TEX_PAL4_ALPHA=1",
+      "TEX_PAL4_MIPMAP=1",
+      "TEX_PAL8_ALPHA=1",
+      "TEX_PAL8_MIPMAP=1",
+      "WORLD_RECT21=1",
+      "TEX_MIP_DADJ=3",
+      "VRAM_ROOM_ARENA=0",
+      "EVD_ADMISSION_TXN=1",
+      "EVD_START_CLEANUP=1",
+      "EVD_START_ROLLBACK=1",
+      "EVD_DEBUG_READ_CLEANUP=1",
+      "EVD_EXEC_FAILURE_CLEANUP=1",
+      "EVD_READ_RELEASE_REFS=1",
+      "EVD_READ_ADMISSION_PREFLIGHT=1",
+      "EVD_MODULE_VALIDATE_FIRST=1",
+      "EVENT_MANAGER_STORAGE_FLAGS=1",
+      "EFFECT_ADMISSION_GUARD=1",
+      "EFFECT_CONTROLLER_VALIDATE_FIRST=1",
+      "EM_ADMISSION_DISP_FIX=1",
+      "RESET_RETIRE_BEFORE_HEAPS=1",
+      "MOTION_RETIRE_PREFLIGHT=1",
+      "SS_RESTORE_VALIDATE_FIRST=1",
+      "SS_ACTOR_LIFETIME=1",
+      "SS_MSG_FIELDS=1",
+      "SS_CERT_PARTNER_CAPACITY=1",
+      "PARTS_LINKED_FLAG=1",
+      "TEX_PAYLOAD_RETRY=1",
+      "PS2_WORLD_NONEMPTY_LOD=1",
+      "MOTION_CAPACITY=1",
+      "FX_STRIP21=1",
+      "GANADO_EVENT_KEEP_LOD=1",
+      "SS_DATA_LZ=1",
+      "CPU_BACKFACE=0",
+      "ACTOR_BACKFACE=0",
+      "PS2_WORLD_SOURCE_TEX_MIP=1",
+      "PS2_WORLD_ROOT_POSE=1",
+      "WATER_PS2_EXT=1",
+      "TRAP_FX=1",
+      "LIGHT_CUT_HOLD=1",
+      "FX_ROOM_SPILL_KB=24",
+      "DISC_DMA_WAIT_TIMEOUT=1",
+      "EM35_ROUTINE_BYTES=1",
+      "FX_LEVEL=3",
+      "FX_TRIM=1",
+      "SCENERY_SELECT_ONLY=1",
+      "SCENERY_REPLAY_LEAN=1",
+      "SCENERY_SUBMIT_BATCH=1",
+      "STAT_ROUTINE_BYTES=1"
+    ],
+    "public_asset_fallbacks": [
+      "PS2_LEON=0",
+      "LEON_HAND_PACK=0",
+      "PS2_GANADO=0",
+      "PS2_GANADO_LIT=0",
+      "GANADO_LOD=0",
+      "GANADO_EVENT_KEEP_LOD=0",
+      "ACTOR_PROBE_LIGHT=1",
+      "GANADO_LIT=0",
+      "NATIVE_MODEL_REGISTRY_DYING=0",
+      "LEON_HEADLESS=0",
+      "PS2_CH2_ENEMY=0",
+      "ACTOR_GANADO_PS2_STUMP=0"
+    ],
+    "profiles": {
+      "fx0": {
+        "fx_level": 0,
+        "fx_trim": 1,
+        "essential_boot": 0,
+        "generated_header_manifest_sha256": "0d4b86cb379f2a288e471de8b0dd885f47da59f055d495eac528a292c86c4d73",
+        "effects30_header_sha256": "1f4eba7ebd2d2ba3d92592e160dc2edcbec38565624a15e7f798b6ea746a2f69",
+        "normalized_flags_sha256": {
+          "esp": "7f0b6c1cef3ed5b072b2826f71549e447d587b1f55fb7f4d7d1b0be9eab298f8",
+          "esp_sub": "8b65796a7cdbf19a6407309d19545c63eb8c0c0cd91cc567fb5b567ae2c546d2",
+          "esp_app": "34d392a84da5ef38bee2e66ee46f1d1ffcb4729ad15b3d38d64d432d89cc8b2c",
+          "native_ui": "bb1540a7a087f90c3521c29329c8b16beb4af58ae12a54e07b7e6d254f2492d1"
+        },
+        "optimization": {
+          "esp": "-O2",
+          "esp_sub": "-O2",
+          "esp_app": "-O2",
+          "native_ui": "-Os"
+        }
+      },
+      "fx3": {
+        "fx_level": 3,
+        "fx_trim": 1,
+        "essential_boot": 1,
+        "generated_header_manifest_sha256": "a8e83f7c4aa76977dff0ac9723820455c472ad0751aa64e1718e40e35eaf3fe8",
+        "effects30_header_sha256": "bf47edfaceefda6034404ebdcc433f5890747511ace921a489930148226654c5",
+        "normalized_flags_sha256": {
+          "esp": "7f0b6c1cef3ed5b072b2826f71549e447d587b1f55fb7f4d7d1b0be9eab298f8",
+          "esp_sub": "8b65796a7cdbf19a6407309d19545c63eb8c0c0cd91cc567fb5b567ae2c546d2",
+          "esp_app": "34d392a84da5ef38bee2e66ee46f1d1ffcb4729ad15b3d38d64d432d89cc8b2c",
+          "native_ui": "bb1540a7a087f90c3521c29329c8b16beb4af58ae12a54e07b7e6d254f2492d1"
+        },
+        "optimization": {
+          "esp": "-O2",
+          "esp_sub": "-O2",
+          "esp_app": "-O2",
+          "native_ui": "-Os"
+        }
+      }
+    },
+    "note": "Actual Make dry runs; public Build22/R21 + release knobs + current rr CH2. Debug omitted uniformly; SDK used as headers only."
+  },
+  "identity": {
+    "fx0": {
+      "esp": {
+        "off_absent_and_explicit_zero_equal_baseline": true,
+        "baseline": {
+          "ii": "4157fa305074efe38a0b6bceb94e3fb9a7cb876339a6016df6e6cfa11ea5c8c7",
+          "o": "6854fd6cb69b28170d8466d54566bdc1c8e60d83d4d40fe56077dcbface2150f"
+        },
+        "on": {
+          "ii": "4157fa305074efe38a0b6bceb94e3fb9a7cb876339a6016df6e6cfa11ea5c8c7",
+          "o": "6854fd6cb69b28170d8466d54566bdc1c8e60d83d4d40fe56077dcbface2150f"
+        },
+        "on_unaffected": true
+      },
+      "esp_sub": {
+        "off_absent_and_explicit_zero_equal_baseline": true,
+        "baseline": {
+          "ii": "31a4c6cd33e5117b33531d5f672e88c0b40b0196293653eea03ec2f36243781b",
+          "o": "ccd1be9f9b53cbd8a4b1580c99a094b8fd4860c4fc909a47ddf6c56f56b97ed2"
+        },
+        "on": {
+          "ii": "a211174993aa36d7e799283316ece2754b411dcccc1d132cef7ea0cc0c22a9f2",
+          "o": "7ae55232aca1f7ef69e985e87d5454328e8c34e2da78c8cb8ab167c3bfddae29"
+        },
+        "on_unaffected": false
+      },
+      "esp_app": {
+        "off_absent_and_explicit_zero_equal_baseline": true,
+        "baseline": {
+          "ii": "eab74e61c2b09bd13c520bc526e272ecd679e8bf52fb41bdbb3ba1419d745c20",
+          "o": "81c5224dce8f94c2fb9fa502a29e40947db0bc08fa7ad512eff43a18d881d485"
+        },
+        "on": {
+          "ii": "eab74e61c2b09bd13c520bc526e272ecd679e8bf52fb41bdbb3ba1419d745c20",
+          "o": "81c5224dce8f94c2fb9fa502a29e40947db0bc08fa7ad512eff43a18d881d485"
+        },
+        "on_unaffected": true
+      },
+      "native_ui": {
+        "off_absent_and_explicit_zero_equal_baseline": true,
+        "baseline": {
+          "ii": "4a99b905dd6af57326a3ee130b103cccdfbe1795aeefcf4866aff149b7c8d8a8",
+          "o": "ddc85a2996a9125bcca5d4262103fac8c1f5c77d6d51468815c34abde5433e02"
+        },
+        "on": {
+          "ii": "6ccac14f7662dfe249439f70430a3de4c188a42dcf9142d424468a8be1a83ae5",
+          "o": "c7735e50c646172c618a01e6cddbfbc54b13b6610de92901c2125ae21154e752"
+        },
+        "on_unaffected": false
+      }
+    },
+    "fx3": {
+      "esp": {
+        "off_absent_and_explicit_zero_equal_baseline": true,
+        "baseline": {
+          "ii": "4157fa305074efe38a0b6bceb94e3fb9a7cb876339a6016df6e6cfa11ea5c8c7",
+          "o": "6854fd6cb69b28170d8466d54566bdc1c8e60d83d4d40fe56077dcbface2150f"
+        },
+        "on": {
+          "ii": "4157fa305074efe38a0b6bceb94e3fb9a7cb876339a6016df6e6cfa11ea5c8c7",
+          "o": "6854fd6cb69b28170d8466d54566bdc1c8e60d83d4d40fe56077dcbface2150f"
+        },
+        "on_unaffected": true
+      },
+      "esp_sub": {
+        "off_absent_and_explicit_zero_equal_baseline": true,
+        "baseline": {
+          "ii": "619de0f82154c7d17d66ae830b9865fce5eba604726bb94ed587a7f389ba8523",
+          "o": "7527c4b72b256f0b713fc9f0aedea4fcd1406031c5b4886fe2017003ddd3d5b6"
+        },
+        "on": {
+          "ii": "4f77588dd94e5a5232e0549158dc272637d8d210e3fd5daf4c41b6d79ed1b214",
+          "o": "06ac4184f0dc692c95f9abd5d7043f21f738cd42f942095e30e595f4be959afb"
+        },
+        "on_unaffected": false
+      },
+      "esp_app": {
+        "off_absent_and_explicit_zero_equal_baseline": true,
+        "baseline": {
+          "ii": "eab74e61c2b09bd13c520bc526e272ecd679e8bf52fb41bdbb3ba1419d745c20",
+          "o": "81c5224dce8f94c2fb9fa502a29e40947db0bc08fa7ad512eff43a18d881d485"
+        },
+        "on": {
+          "ii": "eab74e61c2b09bd13c520bc526e272ecd679e8bf52fb41bdbb3ba1419d745c20",
+          "o": "81c5224dce8f94c2fb9fa502a29e40947db0bc08fa7ad512eff43a18d881d485"
+        },
+        "on_unaffected": true
+      },
+      "native_ui": {
+        "off_absent_and_explicit_zero_equal_baseline": true,
+        "baseline": {
+          "ii": "4a99b905dd6af57326a3ee130b103cccdfbe1795aeefcf4866aff149b7c8d8a8",
+          "o": "ddc85a2996a9125bcca5d4262103fac8c1f5c77d6d51468815c34abde5433e02"
+        },
+        "on": {
+          "ii": "6ccac14f7662dfe249439f70430a3de4c188a42dcf9142d424468a8be1a83ae5",
+          "o": "c7735e50c646172c618a01e6cddbfbc54b13b6610de92901c2125ae21154e752"
+        },
+        "on_unaffected": false
+      }
+    }
+  },
+  "whole_translation_unit_object_sizes": {
+    "fx0": {
+      "esp": {
+        "baseline": {
+          "code_bytes": 5560,
+          "read_only_bytes": 276,
+          "initialized_writable_bytes": 0,
+          "bss_bytes": 11282
+        },
+        "on": {
+          "code_bytes": 5560,
+          "read_only_bytes": 276,
+          "initialized_writable_bytes": 0,
+          "bss_bytes": 11282
+        },
+        "delta": {
+          "code_bytes": 0,
+          "read_only_bytes": 0,
+          "initialized_writable_bytes": 0,
+          "bss_bytes": 0
+        }
+      },
+      "esp_sub": {
+        "baseline": {
+          "code_bytes": 38496,
+          "read_only_bytes": 3600,
+          "initialized_writable_bytes": 214,
+          "bss_bytes": 11475
+        },
+        "on": {
+          "code_bytes": 38664,
+          "read_only_bytes": 3600,
+          "initialized_writable_bytes": 214,
+          "bss_bytes": 11475
+        },
+        "delta": {
+          "code_bytes": 168,
+          "read_only_bytes": 0,
+          "initialized_writable_bytes": 0,
+          "bss_bytes": 0
+        }
+      },
+      "esp_app": {
+        "baseline": {
+          "code_bytes": 3208,
+          "read_only_bytes": 340,
+          "initialized_writable_bytes": 0,
+          "bss_bytes": 164
+        },
+        "on": {
+          "code_bytes": 3208,
+          "read_only_bytes": 340,
+          "initialized_writable_bytes": 0,
+          "bss_bytes": 164
+        },
+        "delta": {
+          "code_bytes": 0,
+          "read_only_bytes": 0,
+          "initialized_writable_bytes": 0,
+          "bss_bytes": 0
+        }
+      },
+      "native_ui": {
+        "baseline": {
+          "code_bytes": 77486,
+          "read_only_bytes": 56727,
+          "initialized_writable_bytes": 100505,
+          "bss_bytes": 152391
+        },
+        "on": {
+          "code_bytes": 77638,
+          "read_only_bytes": 56727,
+          "initialized_writable_bytes": 100513,
+          "bss_bytes": 152391
+        },
+        "delta": {
+          "code_bytes": 152,
+          "read_only_bytes": 0,
+          "initialized_writable_bytes": 8,
+          "bss_bytes": 0
+        }
+      }
+    },
+    "fx3": {
+      "esp": {
+        "baseline": {
+          "code_bytes": 5560,
+          "read_only_bytes": 276,
+          "initialized_writable_bytes": 0,
+          "bss_bytes": 11282
+        },
+        "on": {
+          "code_bytes": 5560,
+          "read_only_bytes": 276,
+          "initialized_writable_bytes": 0,
+          "bss_bytes": 11282
+        },
+        "delta": {
+          "code_bytes": 0,
+          "read_only_bytes": 0,
+          "initialized_writable_bytes": 0,
+          "bss_bytes": 0
+        }
+      },
+      "esp_sub": {
+        "baseline": {
+          "code_bytes": 38496,
+          "read_only_bytes": 3600,
+          "initialized_writable_bytes": 215,
+          "bss_bytes": 11474
+        },
+        "on": {
+          "code_bytes": 38664,
+          "read_only_bytes": 3600,
+          "initialized_writable_bytes": 215,
+          "bss_bytes": 11474
+        },
+        "delta": {
+          "code_bytes": 168,
+          "read_only_bytes": 0,
+          "initialized_writable_bytes": 0,
+          "bss_bytes": 0
+        }
+      },
+      "esp_app": {
+        "baseline": {
+          "code_bytes": 3208,
+          "read_only_bytes": 340,
+          "initialized_writable_bytes": 0,
+          "bss_bytes": 164
+        },
+        "on": {
+          "code_bytes": 3208,
+          "read_only_bytes": 340,
+          "initialized_writable_bytes": 0,
+          "bss_bytes": 164
+        },
+        "delta": {
+          "code_bytes": 0,
+          "read_only_bytes": 0,
+          "initialized_writable_bytes": 0,
+          "bss_bytes": 0
+        }
+      },
+      "native_ui": {
+        "baseline": {
+          "code_bytes": 77486,
+          "read_only_bytes": 56727,
+          "initialized_writable_bytes": 100505,
+          "bss_bytes": 152391
+        },
+        "on": {
+          "code_bytes": 77638,
+          "read_only_bytes": 56727,
+          "initialized_writable_bytes": 100513,
+          "bss_bytes": 152391
+        },
+        "delta": {
+          "code_bytes": 152,
+          "read_only_bytes": 0,
+          "initialized_writable_bytes": 8,
+          "bss_bytes": 0
+        }
+      }
+    }
+  },
+  "static_stack_bytes": {
+    "fx0": {
+      "EspCommonTrans wrapper": {
+        "baseline": 0,
+        "on": 0,
+        "delta": 0
+      },
+      "EspCommonTrans.part.0": {
+        "baseline": 408,
+        "on": 404,
+        "delta": -4
+      },
+      "fx_packet": {
+        "baseline": 148,
+        "on": 156,
+        "delta": 8
+      },
+      "re4dc_effect_sprite": {
+        "baseline": 788,
+        "on": 788,
+        "delta": 0
+      },
+      "re4dc_model_finish_source_draws": {
+        "baseline": 836,
+        "on": 836,
+        "delta": 0
+      }
+    },
+    "fx3": {
+      "EspCommonTrans wrapper": {
+        "baseline": 0,
+        "on": 0,
+        "delta": 0
+      },
+      "EspCommonTrans.part.0": {
+        "baseline": 408,
+        "on": 404,
+        "delta": -4
+      },
+      "fx_packet": {
+        "baseline": 148,
+        "on": 156,
+        "delta": 8
+      },
+      "re4dc_effect_sprite": {
+        "baseline": 788,
+        "on": 788,
+        "delta": 0
+      },
+      "re4dc_model_finish_source_draws": {
+        "baseline": 836,
+        "on": 836,
+        "delta": 0
+      }
+    }
+  },
+  "stack_note": "GCC names the split EspCommonTrans.part.0 body 0(cEsp*) in .su; nm/objdump identify its source line and prologue. Wrapper remains 0B. Per-function frames are not whole-call-chain peaks.",
+  "variants": {
+    "diagnostics": {
+      "overrides": [
+        "TA_HASH=1",
+        "FX_TRIM_LOG=1",
+        "ESP_CENSUS=1"
+      ],
+      "results": {
+        "esp_sub": {
+          "sha256": "9407d0c4e51889f387accd1e213e2f8aa8143a248a01092f1da8a43d898b4b26",
+          "executable_bytes": 41136,
+          "allocated_bytes": 57894,
+          "zero_fill_bytes": 12590,
+          "active_macros": {
+            "RE4DC_ESP_SETUP_LEAN": true,
+            "RE4DC_ESP_SETUP_BATCH": false,
+            "RE4DC_ESP_ESSENTIAL_EARLY": false,
+            "RE4DC_PS2_FX_COMMON_HAZE": false,
+            "RE4DC_PS2_FX_ADDITIONS": true,
+            "RE4DC_PVR_RTT": false
+          }
+        },
+        "native_ui": {
+          "sha256": "42a9ddd51310071910659b2ce818487c9e45887f01af1471a920963ba8e74b65",
+          "executable_bytes": 77794,
+          "allocated_bytes": 387541,
+          "zero_fill_bytes": 152431,
+          "active_macros": {
+            "RE4DC_ESP_SETUP_LEAN": true,
+            "RE4DC_ESP_SETUP_BATCH": false,
+            "RE4DC_ESP_ESSENTIAL_EARLY": false,
+            "RE4DC_PS2_FX_COMMON_HAZE": false,
+            "RE4DC_PS2_FX_ADDITIONS": true,
+            "RE4DC_PVR_RTT": false
+          }
+        }
+      }
+    },
+    "extra-batch-rtt": {
+      "overrides": [
+        "PS2_FX_COMMON_HAZE=1",
+        "PVR_RTT=1"
+      ],
+      "results": {
+        "esp_sub": {
+          "sha256": "9cd8a3603deb5c4ccc3688303bcd0c3d77c90fd91ef3d5e179c9aaec5552a37e",
+          "executable_bytes": 50580,
+          "allocated_bytes": 67445,
+          "zero_fill_bytes": 11376,
+          "active_macros": {
+            "RE4DC_ESP_SETUP_LEAN": true,
+            "RE4DC_ESP_SETUP_BATCH": false,
+            "RE4DC_ESP_ESSENTIAL_EARLY": true,
+            "RE4DC_PS2_FX_COMMON_HAZE": true,
+            "RE4DC_PS2_FX_ADDITIONS": true,
+            "RE4DC_PVR_RTT": true
+          }
+        },
+        "native_ui": {
+          "sha256": "328721b4450ddb58ddb974d2a58d338683934a18b014ab9005d5f5d3a6dd8aef",
+          "executable_bytes": 81414,
+          "allocated_bytes": 400872,
+          "zero_fill_bytes": 161940,
+          "active_macros": {
+            "RE4DC_ESP_SETUP_LEAN": true,
+            "RE4DC_ESP_SETUP_BATCH": true,
+            "RE4DC_ESP_ESSENTIAL_EARLY": false,
+            "RE4DC_PS2_FX_COMMON_HAZE": true,
+            "RE4DC_PS2_FX_ADDITIONS": true,
+            "RE4DC_PVR_RTT": true
+          }
+        }
+      }
+    }
+  },
+  "raw_receipt_sha256": "325240ec11a16437177e5292d8d618d0dcb32409500e63c3d735c08c9a737ea0",
+  "reproduce": [
+    "python3 port/dreamcast/tools/d367/esp_setup_lean/build_controls.py --output $OUT/controls --sh4-cxx $SH4_CXX --kos-root $KOS_ROOT --sdk-root $SH4ZAM_SDK"
+  ]
+}

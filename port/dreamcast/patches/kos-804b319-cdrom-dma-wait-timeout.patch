@@ -1,0 +1,128 @@
+RE4DC (issue #28, lane fix-dreamshell23 2026-10-23; DISC_DMA_WAIT_TIMEOUT=1): bound the blocking GD DMA waits
+(sector read, stream request) so a loader that never completes a DMA (DreamShell) falls back to plain reads.
+Applied after kos-804b319-cdrom-dma-done.patch.
+
+--- a/kernel/arch/dreamcast/hardware/cdrom.c
++++ b/kernel/arch/dreamcast/hardware/cdrom.c
+@@ -99,6 +99,44 @@
+     irq_restore(old);
+     re4dc_dma_drain();
+ }
++/* RE4DC DISC_DMA_WAIT_TIMEOUT (issue #28, lane fix-dreamshell23 10-23): a blocking GD DMA wait (sector read or stream
++   request) is bounded. DreamShell's ISO loader never completed the first DMA read (bgm/bio4str.hed) and KOS waited on
++   dma_done with no limit, so the game's plain-read fallback (DISC_READ_FALLBACK=3) never ran. The bound is 5 s + 8 ms
++   a sector (dvd_read_safe.cpp v2's command timeout). On a timeout the DMA state is closed here and ERR_TIMEOUT
++   returned; the caller falls back. re4dc_cdrom_wait_max_us is the longest wait seen (measurement). With
++   DISC_DMA_DROP_TEST=1 (test discs only) the first DMA read gets no completion. */
++unsigned re4dc_cdrom_wait_timeouts, re4dc_cdrom_wait_max_us, re4dc_cdrom_wait_last_ms;
++#ifdef RE4DC_DISC_DMA_DROP_TEST
++static int re4dc_drop_done;
++/* True once: the first DMA read (DreamShell's first read never completed). */
++static bool re4dc_drop_first(void) {
++    if(re4dc_drop_done) return false;
++    re4dc_drop_done = 1;
++    return true;
++}
++#endif
++unsigned re4dc_cdrom_wait_hw_busy, re4dc_cdrom_wait_abort_reset;
++static void re4dc_dma_abort(void);
++static int re4dc_dma_wait(size_t bytes, bool drop) {
++    unsigned ms = 5000u + 8u * (unsigned)((bytes + 2047) / 2048);
++    uint64_t t0 = timer_us_gettime64();
++#ifdef RE4DC_DISC_DMA_DROP_TEST
++    if(drop) {   /* the completion never arrives: none signalled later, any already signalled taken back */
++        int o = irq_disable();
++        dma_blocking = false;
++        while(sem_trywait(&dma_done) == 0) {}
++        irq_restore(o);
++    }
++#endif
++    int rv = sem_wait_timed(&dma_done, ms);
++    unsigned us = (unsigned)(timer_us_gettime64() - t0);
++    if(us > re4dc_cdrom_wait_max_us) re4dc_cdrom_wait_max_us = us;
++    if(rv == 0) return 0;
++    re4dc_dma_abort();
++    ++re4dc_cdrom_wait_timeouts;
++    re4dc_cdrom_wait_last_ms = ms;
++    return -1;
++}
+ static asic_evt_handler_entry_t old_dma_irq = {NULL, NULL};
+ static int vblank_hnd = -1;
+ 
+@@ -175,6 +213,40 @@
+     return cmd_response == CD_CMD_NOT_FOUND || cmd_response == CD_CMD_COMPLETED;
+ }
+ 
++/* RE4DC DISC_DMA_WAIT_TIMEOUT: a DMA wait gave up. Stop the G1 GD-DMA in hardware first (SB_GDEN 0xA05F7414 = 0 aborts
++   a transfer in progress; SB_GDST 0xA05F7418 reads 1 while one runs), so a loader that completes late cannot write
++   into a buffer the caller has moved on from. Then close KOS's DMA state with interrupts off: both completion paths
++   (g1_dma_irq_hnd, cdrom_vblank) act only while dma_in_progress, so a late completion is passed on, not counted.
++   Abort the BIOS command (1 s bound; drive reset + init + settle on timeout, as cdrom_abort_cmd), take back any
++   completion already signalled, and re-enable the engine for the next command (it starts only on SB_GDST). The
++   caller holds _g1_ata_sem and releases it. */
++static void re4dc_dma_abort(void) {
++    int old = irq_disable();
++    if(*(volatile uint32_t *)0xa05f7418 & 1)
++        ++re4dc_cdrom_wait_hw_busy;
++    *(volatile uint32_t *)0xa05f7414 = 0;
++    dma_in_progress = false;
++    dma_blocking = false;
++    dma_auto_unlock = false;
++    irq_restore(old);
++    if(cmd_hnd > 0) {
++        syscall_gdrom_abort_command(cmd_hnd);
++        if(cdrom_poll(&cmd_hnd, 1000, cdrom_check_abort_done) == ERR_TIMEOUT) {
++            ++re4dc_cdrom_wait_abort_reset;
++            syscall_gdrom_reset();
++            syscall_gdrom_init();
++            thd_sleep(100);
++        }
++    }
++    cmd_hnd = 0;
++    stream_enabled = false;
++    stream_cb = NULL;
++    old = irq_disable();
++    while(sem_trywait(&dma_done) == 0) {}
++    *(volatile uint32_t *)0xa05f7414 = 1;
++    irq_restore(old);
++}
++
+ static int cdrom_check_abort_streaming(void *d) {
+     syscall_gdrom_exec_server();
+ 
+@@ -419,9 +491,17 @@
+     /* Start the process of executing the command. */
+     cdrom_poll(&cmd_hnd, 0, cdrom_check_ready);
+ 
+-    if(cmd_response == CD_CMD_PROCESSING) {
++#ifdef RE4DC_DISC_DMA_DROP_TEST
++    bool drop = re4dc_drop_first();   /* as a loader whose DMA read stays in progress */
++#else
++    bool drop = false;
++#endif
++    if(cmd_response == CD_CMD_PROCESSING || drop) {
+         /* Wait DMA is finished or command failed. */
+-        sem_wait(&dma_done);
++        if(re4dc_dma_wait(params->num_sec * 2048, drop) < 0) {
++            cmd_hnd = 0;
++            return ERR_TIMEOUT;
++        }
+ 
+         /* Just to make sure the command is finished properly.
+            Usually we are already done here. */
+@@ -614,7 +694,14 @@
+         if(!block) {
+             return ERR_OK;
+         }
+-        sem_wait(&dma_done);
++#ifdef RE4DC_DISC_DMA_DROP_TEST
++        if(re4dc_dma_wait(size, re4dc_drop_first()) < 0) {
++#else
++        if(re4dc_dma_wait(size, false) < 0) {
++#endif
++            sem_signal(&_g1_ata_sem);
++            return ERR_TIMEOUT;
++        }
+         re4dc_dma_settle();
+     }
+     else {

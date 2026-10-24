@@ -74,6 +74,12 @@ extern "C" void re4dc_far_shell_set(int mode, const char* why);   // native_stat
 extern "C" s32 OSCheckHeap(int heap);
 static u32 farshell_probe_frame;   // warp line farshellprobe (test only)
 #endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+extern "C" volatile unsigned re4dc_qa_wopq_mm, re4dc_qa_wxlu_mm, re4dc_qa_wshell;   // native_static.cpp (WORLD_METER)
+#endif
+#if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
+extern "C" volatile unsigned re4dc_world_scratch_live;   // world_scratch.cpp (live arm)
+#endif
 #if defined(RE4DC_FOLIAGE_OPTION) && RE4DC_FOLIAGE_OPTION
 extern "C" unsigned re4dc_foliage;   // platform/native_static.cpp (FOLIAGE_TRIM level; the Options Foliage row)
 #endif
@@ -724,6 +730,19 @@ void load()
             // `farshellprobe <room frame>` (test only): at that frame of the first room, one heap-4 request of all the free
             // bytes (it cannot fit: cell headers), so the shell's shortfall path runs; the block is freed if it fit.
             farshell_probe_frame = (u32) num(tok[1]);
+#endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+        } else if (!strcmp(k, "wmeter") && n >= 4) {
+            // WORLD_METER: `wmeter <opaque cut mm> <translucent far mm, 1 = full> <shell 0 game, 1 on, 2 off>`, 0 = game's
+            re4dc_qa_wopq_mm = (unsigned) num(tok[1]); re4dc_qa_wxlu_mm = (unsigned) num(tok[2]);
+            re4dc_qa_wshell = (unsigned) num(tok[3]);
+            re4dc_log("warp: wmeter opq=%u xlu=%u shell=%u\n", re4dc_qa_wopq_mm, re4dc_qa_wxlu_mm, re4dc_qa_wshell);
+#endif
+#if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
+        } else if (!strcmp(k, "wscratch") && n >= 2) {
+            // WORLD_SCRATCH: `wscratch <arm>` the live arm from boot, 0 A normal / 1 B half cache / 2 C scratch
+            re4dc_world_scratch_live = (unsigned) num(tok[1]) % 3;
+            re4dc_log("warp: wscratch arm=%u\n", re4dc_world_scratch_live);
 #endif
 #if defined(RE4DC_FOLIAGE_OPTION) && RE4DC_FOLIAGE_OPTION
         } else if (!strcmp(k, "foliage") && n >= 2) {
@@ -1958,6 +1977,22 @@ unsigned re4dc_warp_late(void)
 }
 
 int re4dc_warp_late_set(void) { return wp.has_late ? 1 : 0; }
+
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+// WORLD_METER (game30.mk): the room the VRAMFAIL lines name (tick_log.cpp, once per tick).
+unsigned re4dc_wm_room(void) { return pG ? (unsigned) pG->room_id : 0u; }
+#endif
+// Read-only activation query, including mask0 OFF controls; does not log or arm.
+int re4dc_warp_late_open(void)
+{
+    return wp.has_late && pG && pG->room_id == wp.late_room && pG->Frame_cnt >= wp.late_tick ? 1 : 0;
+}
+
+// The validated late target/current game room, only while its window is open.
+unsigned re4dc_warp_late_room(void)
+{
+    return re4dc_warp_late_open() ? wp.late_room : 0u;
+}
 
 }  // extern "C"
 #endif  // RE4DC_DBG_WARP

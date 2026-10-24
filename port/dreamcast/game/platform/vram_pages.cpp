@@ -19,6 +19,7 @@
 #include <dc/pvr.h>
 #include <cstdint>
 #include <cstring>
+#include <cstdio>
 #include "re4dc_platform.h"
 
 namespace {
@@ -32,10 +33,20 @@ std::uintptr_t base; std::uint32_t pool, free_bytes;
 bool free_place;   // set only inside re4dc_vram_pages_malloc_any: this request needs no page
 #endif
 unsigned fails, peak_alloc, peak_free;
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+// OVL_GUARD=3 (lane mipfault22, console diagnostic): the last 12 texture-RAM operations for the crash screen.
+// op: A alloc / F free (VRAM offset, bytes, arena class, caller), U upload (key crc, VRAM bytes, main-RAM package).
+struct RingOp { char op; std::uint8_t cls; std::uint32_t a, b, c; };
+RingOp g_ring[12]; unsigned g_ring_n;
+inline void ring(char op, unsigned cls, std::uint32_t a, std::uint32_t b, std::uint32_t c) {
+    RingOp& r = g_ring[g_ring_n++ % 12]; r.op = op; r.cls = std::uint8_t(cls); r.a = a; r.b = b; r.c = c;
+}
+#endif
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
 // VRAM_ROOM_ARENA (Makefile; lane mipmap22): two-ended placement. Class 2 (long-lived: core keys, glyph atlas, overlay
 // slab) takes the highest place that fits, class 1 (room-lifetime textures) the lowest; class 0 (dynamic: movie, door,
 // lake, probes) keeps best fit in between. native_ui.cpp sets re4dc_vram_arena_class around its allocations.
+#if !defined(RE4DC_VRAM_ROOM_ARENA_NO_TOP) || !RE4DC_VRAM_ROOM_ARENA_NO_TOP
 // Highest page-rule placement of `len` bytes in extent e, or ~0 if it does not fit.
 std::uint32_t place_high(const Extent& e, std::uint32_t len) {
     if(len > e.len) return ~0U;
@@ -49,6 +60,7 @@ std::uint32_t place_high(const Extent& e, std::uint32_t len) {
     if(at < base + e.off) return ~0U;
     return std::uint32_t(at - base);
 }
+#endif
 #endif
 #if defined(RE4DC_TEX_CHECK) && RE4DC_TEX_CHECK == 2
 // TEX_CHECK=2 (test only): free texture RAM reads magenta (RGB565 0xF81F), so a draw from never-written or
@@ -88,11 +100,45 @@ std::uint32_t place(const Extent& e, std::uint32_t len) {
     const std::uint32_t off = std::uint32_t(at - base);
     return off + len <= e.off + e.len ? off : ~0U;
 }
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+// WORLD_METER (game30.mk; QA disc): each failed allocation is queued here (interrupts may be off) and logged by
+// re4dc_vram_fail_drain once per tick: size, free bytes, largest free extent, the caller, the texture key being loaded.
+struct FailRec { std::uint32_t size, free, largest, caller, crc, fnv; };
+constexpr unsigned kFailRing = 128;
+FailRec fail_ring[kFailRing]; unsigned fail_head, fail_tail, fail_lost;
+#endif
 }
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+extern "C" { volatile unsigned re4dc_vram_key_crc, re4dc_vram_key_fnv; }   // native_ui.cpp load(): the texture loading
+namespace {
+__attribute__((noinline)) void note_fail(std::size_t size, void* caller) {
+    ++fails;
+    if(fail_head - fail_tail >= kFailRing) { ++fail_lost; return; }
+    std::uint32_t largest = 0;
+    for(unsigned i = 0; i < nfree; ++i) if(free_list[i].len > largest) largest = free_list[i].len;
+    fail_ring[fail_head % kFailRing] = FailRec{std::uint32_t(size), free_bytes, largest,
+        std::uint32_t(reinterpret_cast<std::uintptr_t>(caller)), re4dc_vram_key_crc, re4dc_vram_key_fnv};
+    ++fail_head;
+}
+}
+#define RE4DC_VRAM_FAIL(sz) note_fail((sz), __builtin_return_address(0))
+#else
+#define RE4DC_VRAM_FAIL(sz) (++fails)
+#endif
 
 extern "C" {
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
 volatile unsigned re4dc_vram_arena_class;
+#endif
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+void re4dc_vram_ring_upload(std::uint32_t crc, std::uint32_t bytes, const void* package) {
+    irq_disable_scoped(); ring('U', 0, crc, bytes, std::uint32_t(reinterpret_cast<std::uintptr_t>(package)));
+}
+int re4dc_vram_ring_line(unsigned age, char* out, unsigned size) {
+    if(age >= 12 || age >= g_ring_n) return 0;
+    const RingOp& r = g_ring[(g_ring_n - 1 - age) % 12];
+    return snprintf(out, size, "%c%u %08lx %08lx %08lx", r.op, unsigned(r.cls), (unsigned long) r.a, (unsigned long) r.b, (unsigned long) r.c);
+}
 #endif
 #if defined(RE4DC_VRAM_PAGES_VQ_ONLY) && RE4DC_VRAM_PAGES_VQ_ONLY
 // VRAM_PAGES_VQ_ONLY (Makefile): texture_package.cpp allocate_texture allocates a non-VQ texture of more than one
@@ -118,7 +164,7 @@ void pvr_mem_reset(void) {
     if(base && pool) { free_list[0] = {0, pool}; nfree = 1; free_bytes = pool; RE4DC_VRAM_POISON(0, pool); }
 }
 pvr_ptr_t pvr_mem_malloc(size_t size) {
-    if(!base || !size || size > pool) { ++fails; return nullptr; }
+    if(!base || !size || size > pool) { RE4DC_VRAM_FAIL(size); return nullptr; }
     const std::uint32_t len = (std::uint32_t(size) + kGran - 1) & ~(kGran - 1);
     irq_disable_scoped();
     unsigned best = ~0U; std::uint32_t best_at = 0, best_left = ~0U;
@@ -129,25 +175,48 @@ pvr_ptr_t pvr_mem_malloc(size_t size) {
             const std::uint32_t at = place(free_list[i], len);
             if(at != ~0U) { best = i; best_at = at; }
         }
+#if !defined(RE4DC_VRAM_ROOM_ARENA_NO_TOP) || !RE4DC_VRAM_ROOM_ARENA_NO_TOP
     } else if(cls == 2) {   // long-lived: highest address that fits
         for(unsigned i = nfree; i-- > 0 && best == ~0U;) {
             const std::uint32_t at = place_high(free_list[i], len);
             if(at != ~0U) { best = i; best_at = at; }
         }
+#endif
     } else
 #endif
     for(unsigned i = 0; i < nfree; ++i) {
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA && \
+    defined(RE4DC_VRAM_ROOM_ARENA_NO_TOP) && RE4DC_VRAM_ROOM_ARENA_NO_TOP
+        Extent candidate = free_list[i];
+        // Console experiment: keep glyphs, the overlay slab and core keys below
+        // a47f2000. Class 1 room placement/retirement and dynamic use are unchanged.
+        // Clip only the candidate, never the real free list: other classes may
+        // still use the final 56 KiB. Do not fall back into that range on failure.
+        if(cls == 2) {
+            constexpr std::uintptr_t kLongLivedEnd = 0xa47f2000U;
+            const std::uintptr_t start = base + candidate.off;
+            if(start >= kLongLivedEnd) continue;
+            const std::uintptr_t available = kLongLivedEnd - start;
+            if(candidate.len > available) candidate.len = std::uint32_t(available);
+        }
+        const std::uint32_t at = place(candidate, len);
+        if(at == ~0U) continue;
+        const std::uint32_t left = candidate.len - len;
+#else
+        // Keep the original expression with the experiment off: at the release
+        // recipe's -O1, even an equivalent local extent copy changes code size.
         const std::uint32_t at = place(free_list[i], len);
         if(at == ~0U) continue;
         const std::uint32_t left = free_list[i].len - len;
+#endif
         if(left < best_left) { best = i; best_at = at; best_left = left; if(!left) break; }
     }
-    if(best == ~0U || nalloc >= kMaxAlloc) { ++fails; return nullptr; }
+    if(best == ~0U || nalloc >= kMaxAlloc) { RE4DC_VRAM_FAIL(size); return nullptr; }
     const Extent e = free_list[best];
     const Extent front{e.off, best_at - e.off}, back{best_at + len, e.off + e.len - best_at - len};
     // Replace the extent by its non-empty remainders (at most one extra entry).
     if(front.len && back.len) {
-        if(nfree >= kMaxFree) { ++fails; return nullptr; }
+        if(nfree >= kMaxFree) { RE4DC_VRAM_FAIL(size); return nullptr; }
         free_list[best] = front; insert_at(free_list, nfree, kMaxFree, best + 1, back);
     }
     else if(front.len) free_list[best] = front;
@@ -155,6 +224,14 @@ pvr_ptr_t pvr_mem_malloc(size_t size) {
     else erase_at(free_list, nfree, best);
     insert_at(alloc_list, nalloc, kMaxAlloc, lower_bound(alloc_list, nalloc, best_at), Extent{best_at, len});
     free_bytes -= len;
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+    const unsigned ring_class = re4dc_vram_arena_class;
+#else
+    const unsigned ring_class = 0;
+#endif
+    ring('A', ring_class, best_at, len, std::uint32_t(reinterpret_cast<std::uintptr_t>(__builtin_return_address(0))));
+#endif
     if(nalloc > peak_alloc) peak_alloc = nalloc;
     if(nfree > peak_free) peak_free = nfree;
     return reinterpret_cast<pvr_ptr_t>(base + best_at);
@@ -169,6 +246,9 @@ void pvr_mem_free(pvr_ptr_t chunk) {
         return;
     }
     Extent e = alloc_list[a]; erase_at(alloc_list, nalloc, a);
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+    ring('F', 0, e.off, e.len, std::uint32_t(reinterpret_cast<std::uintptr_t>(__builtin_return_address(0))));
+#endif
     RE4DC_VRAM_POISON(e.off, e.len);
     free_bytes += e.len;
     unsigned i = lower_bound(free_list, nfree, e.off);
@@ -211,5 +291,34 @@ void re4dc_vram_pages_census(unsigned* out) {
     for(unsigned k = 0; k < 5; ++k) out[5 + k] = hist[k];
     out[10] = fails; out[11] = peak_alloc; out[12] = peak_free;
 }
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+// Once per tick (tick_log.cpp): log the queued failures with the room, and count them per room.
+namespace { struct RoomFails { unsigned room, n; } room_fails[8]; unsigned last_fail_room, last_fail_n; }
+void re4dc_vram_fail_drain(unsigned room) {
+    for(;;) {
+        FailRec r;
+        {
+            irq_disable_scoped();
+            if(fail_tail == fail_head) break;
+            r = fail_ring[fail_tail % kFailRing]; ++fail_tail;
+        }
+        unsigned k = 0;
+        while(k < 8 && room_fails[k].n && room_fails[k].room != room) ++k;
+        if(k == 8) k = 7;   // table full: the last row collects the rest
+        if(room_fails[k].room != room) room_fails[k] = {room, 0};
+        ++room_fails[k].n;
+        last_fail_room = room; last_fail_n = room_fails[k].n;
+        re4dc_log("VRAMFAIL room=%03x n=%u size=%u free=%u largest=%u caller=%08x key=%08x/%08x total=%u lost=%u\n", room,
+                  room_fails[k].n, r.size, r.free, r.largest, r.caller, r.crc, r.fnv, fails, fail_lost);
+    }
+}
+// QA Diagnostics: the room with the latest failure and its count; rows of (room, count); returns the row count.
+unsigned re4dc_vram_fail_rooms(unsigned* last_room, unsigned* last_n, unsigned* rooms, unsigned* counts, unsigned max) {
+    *last_room = last_fail_room; *last_n = last_fail_n;
+    unsigned n = 0;
+    for(unsigned k = 0; k < 8 && n < max && room_fails[k].n; ++k, ++n) { rooms[n] = room_fails[k].room; counts[n] = room_fails[k].n; }
+    return n;
+}
+#endif
 }
 #endif

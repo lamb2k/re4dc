@@ -1,0 +1,413 @@
+// Whole production actor TU with explicitly enumerated host platform adapters.
+#include <cassert>
+#include <cstdio>
+#include <cstdlib>
+#include <vector>
+#include <array>
+#include <limits>
+#include <memory>
+#include <new>
+#include "actor_prof.h"
+#include "native_actor_host.inc"
+
+namespace check {
+alignas(32) pvr_vertex_t slab[2048];
+alignas(32) pvr_vertex_t scratch_vertices[256];
+alignas(32) std::uint32_t sq_words[32768 * 8];
+alignas(32) unsigned char work[96 * 1024];
+std::vector<std::uint32_t> ta, events, calls;
+unsigned serial=0, capacity=256, scratch_capacity=132;
+bool direct=true, streaming=true, reserve_ok=true, begin_ok=true, direct_ok=true, deferred=false;
+float us=1.0f, vs=1.0f;
+unsigned locks=0, unlocks=0;
+struct Source { const void* info; Re4dcActorSource source; };
+std::vector<Source> sources;
+
+void event(unsigned a,unsigned b=0,unsigned c=0){events.insert(events.end(),{a,b,c});}
+void words(const void* p,unsigned n){
+    const unsigned at=ta.size();ta.resize(at+n);
+    if(n)std::memcpy(ta.data()+at,p,n*4u);
+}
+void memory_words(const void* p,unsigned n){
+    const auto* b=static_cast<const unsigned char*>(p);
+    for(unsigned i=0;i<n;++i){unsigned w;std::memcpy(&w,b+i*4u,4);event(99,i,w);}
+}
+void header(const Re4dcModelPart* p){
+    const std::uint32_t h[]={0x80840000u,p->cull,p->flags,p->material_flags,p->alpha_state,p->depth_mode,p->wrap_s,p->wrap_t};
+    words(h,8);
+}
+unsigned pos(const AvkPos* a,bool skin,unsigned stride,bool signed_uv,unsigned kind){
+    calls.insert(calls.end(),{kind,a->n,a->rs,a->entries});
+    assert(a->rec&&a->pos&&a->uv&&a->dst&&a->oc&&a->matrix);
+    const PosConst k{0.0f,a->au,a->bu,a->av,a->bv,a->width,a->height,a->near_distance,a->far_distance};
+    auto* dst=static_cast<pvr_vertex_t*>(a->dst);
+    unsigned i=0;
+    while(i<a->n){
+        const auto* r=reinterpret_cast<const std::uint16_t*>(a->rec+i*a->rs);
+        const unsigned raw=skin?reinterpret_cast<const std::uint16_t*>(a->pos+r[0]*stride)[3]:0;
+        const unsigned pal=raw<a->entries?raw:0;
+        if(skin&&!a->ready[pal])return a->n-i;
+        load_xmtrx(a->matrix+(skin?pal*16u:0u));
+        unsigned all=~0u,any=0;
+        const unsigned done=positions_c(a->rec+i*a->rs,a->rs,a->n-i,a->pos,stride,skin,raw,a->uv,signed_uv,
+                                        dst+i,a->oc+i,k,all,any);
+        assert(done);i+=done;
+    }
+    return 0;
+}
+unsigned light(const AvkLight* a,bool skin,unsigned stride,bool n16,unsigned kind){
+    calls.insert(calls.end(),{kind,a->n,a->rs,a->entries,a->alpha});
+    assert(a->rec&&a->nrm&&a->argb&&a->color&&a->dirs);
+    load_xmtrx(a->color);
+    for(unsigned i=0;i<a->n;++i){
+        const auto* rec=reinterpret_cast<const std::uint16_t*>(a->rec+i*a->rs);
+        const unsigned char* base=a->nrm+rec[1]*stride;
+        const auto* small=reinterpret_cast<const signed char*>(base);
+        const auto* wide=reinterpret_cast<const short*>(base);
+        const unsigned raw=skin?(n16?unsigned(static_cast<std::uint16_t>(wide[3])):unsigned(base[3])):0;
+        const unsigned pal=raw<a->entries?raw:0;
+        if(skin&&!a->ready[pal])return a->n-i;
+        const float* d=a->dirs+(skin?pal*12u:0u);
+        const float nx=n16?float(wide[0]):float(small[0]),ny=n16?float(wide[1]):float(small[1]),nz=n16?float(wide[2]):float(small[2]);
+        const float d0=ACTOR_DOT3(d,nx,ny,nz),d1=ACTOR_DOT3(d+4,nx,ny,nz),d2=ACTOR_DOT3(d+8,nx,ny,nz);
+        float r=std::fabs(d0)+d0,g=std::fabs(d1)+d1,b=std::fabs(d2)+d2,w=1.0f;
+        ACTOR_FTRV(r,g,b,w);
+        r=std::min(r,255.0f);g=std::min(g,255.0f);b=std::min(b,255.0f);
+        a->argb[i*8u]=a->alpha|(std::uint32_t(int(r))<<16)|(std::uint32_t(int(g))<<8)|std::uint32_t(int(b));
+    }
+    return 0;
+}
+}
+
+extern "C" unsigned re4dc_avk_pos_skin_s16(const AvkPos*a){return check::pos(a,true,8,true,1);}
+extern "C" unsigned re4dc_avk_pos_skin_u16(const AvkPos*a){return check::pos(a,true,8,false,2);}
+extern "C" unsigned re4dc_avk_pos_rigid_s16(const AvkPos*a){return check::pos(a,false,8,true,3);}
+extern "C" unsigned re4dc_avk_pos_rigid_u16(const AvkPos*a){return check::pos(a,false,8,false,4);}
+extern "C" unsigned re4dc_avk_pos_rigid6_s16(const AvkPos*a){return check::pos(a,false,6,true,5);}
+extern "C" unsigned re4dc_avk_pos_rigid6_u16(const AvkPos*a){return check::pos(a,false,6,false,6);}
+extern "C" unsigned re4dc_avk_light_skin(const AvkLight*a){return check::light(a,true,4,false,11);}
+extern "C" unsigned re4dc_avk_light_rigid(const AvkLight*a){return check::light(a,false,4,false,12);}
+extern "C" unsigned re4dc_avk_light_rigid3(const AvkLight*a){return check::light(a,false,3,false,13);}
+extern "C" unsigned re4dc_avk_light_skin_n16(const AvkLight*a){return check::light(a,true,8,true,14);}
+extern "C" unsigned re4dc_avk_light_rigid_n16(const AvkLight*a){return check::light(a,false,8,true,15);}
+extern "C" unsigned re4dc_avk_light_rigid_n16s6(const AvkLight*a){return check::light(a,false,6,true,16);}
+extern "C" void re4dc_log(const char*,...){}
+extern "C" unsigned re4dc_vi_retrace_count(){return check::serial;}
+extern "C" int re4dc_actor_model_source(const void* info,Re4dcActorSource* out){for(const auto& s:check::sources)if(info==s.info){*out=s.source;return 1;}return 0;}
+extern "C" int re4dc_actor_model_prelit(const void*,const void*){return 0;}
+extern "C" int re4dc_actor_model_class(const void*,const void*){return 0;}
+extern "C" int re4dc_actor_model_id(const void*){return -1;}
+extern "C" int re4dc_skin_materialize(const void*,const float*){return 0;}
+extern "C" int re4dc_actor_model_buffers(Re4dcModelPart*){return 0;}
+extern "C" int re4dc_model_packet_reserve(const Re4dcModelPart*,Re4dcModelPacket* p){
+    check::event(1,check::capacity);*p={check::slab,check::capacity,check::us,check::vs};return check::reserve_ok;
+}
+extern "C" int re4dc_model_packet_begin(const Re4dcModelPart* p,Re4dcModelPacket* q){
+    check::event(2,check::capacity);*q={check::slab,check::capacity,check::us,check::vs};
+    if(check::begin_ok)check::header(p);
+    return check::begin_ok;
+}
+extern "C" void re4dc_model_packet_commit(unsigned n){check::event(3,n);check::words(check::slab,n*8u);}
+extern "C" void re4dc_model_result(unsigned r,unsigned in,unsigned out){check::event(4,r);check::event(5,in,out);}
+extern "C" int re4dc_model_packet_streaming(){return check::streaming;}
+extern "C" void re4dc_model_packet_abort(){check::event(6);}
+extern "C" int re4dc_model_direct_enabled(){return check::direct;}
+extern "C" int re4dc_model_direct_begin(const Re4dcModelPart* p,Re4dcModelDirect* d){
+    check::event(7,check::scratch_capacity);if(!check::direct_ok)return 0;
+    *d={check::sq_words,check::scratch_vertices,check::scratch_capacity,check::us,check::vs};
+    ++check::locks;check::header(p);return 1;
+}
+extern "C" int re4dc_model_direct_begin_reserved(const Re4dcModelPart* p,const Re4dcModelPacket*,Re4dcModelDirect*d){return re4dc_model_direct_begin(p,d);}
+extern "C" void re4dc_model_direct_end(unsigned n){++check::unlocks;check::event(8,n);check::words(check::sq_words,n*8u);}
+extern "C" int re4dc_model_defer_part(const Re4dcModelPart*){check::event(9,check::deferred);return check::deferred;}
+extern "C" void re4dc_model_next_header_pcw(unsigned,unsigned){}
+
+namespace check {
+// All geometry is synthetic. The native blob is built from the runtime's own
+// layout types, with actual cone construction when that option is compiled.
+struct Asset {
+    std::vector<std::uint32_t> stream;
+    std::vector<short> positions, wide_normals;
+    std::vector<signed char> small_normals;
+    std::vector<std::uint16_t> uv;
+    std::vector<unsigned char> colors;
+    std::array<float,36> palette;
+    SourceLighting lighting;
+    Re4dcModelPart p{};
+    unsigned used=0, meshlets=0, kind=0;
+    bool skin=false, small=true;
+
+    Asset(unsigned kind_,unsigned meshlets_=8,unsigned nv=12,unsigned indices=0,unsigned geometry=0,bool has_ci=false,bool empty=false)
+        :stream(16384,0),positions(meshlets_*nv*4u),wide_normals(meshlets_*nv*4u),
+         small_normals(meshlets_*nv*5u),uv(meshlets_*nv*2u),colors(meshlets_*nv*4u),meshlets(meshlets_),kind(kind_){
+        skin=kind==1||kind==3;
+        small=kind!=3&&kind!=4&&kind!=5;
+        const unsigned ps=kind==2?6u:8u;
+        const unsigned ns=small?(kind==6?3u:kind==7?5u:4u):(kind==4?6u:8u);
+        const unsigned count=meshlets*nv;
+        if(!indices)indices=nv-nv%3u;
+        const unsigned rs=has_ci?4u:3u;
+        auto* bytes=reinterpret_cast<unsigned char*>(stream.data());
+        auto& h=*reinterpret_cast<BlobHeader*>(bytes);
+        h={};h.magic=kMagic;h.version=kVersion;h.meshlets=static_cast<std::uint16_t>(meshlets);
+        h.flags=has_ci?kHasCi:0;h.color_index=1;
+        const unsigned rec_at=(sizeof(BlobHeader)+meshlets*sizeof(MeshletInfo)+3u)&~3u;
+        const unsigned idx_at=(rec_at+count*rs*2u+3u)&~3u;
+        h.rec4=rec_at/4u;h.idx4=idx_at/4u;
+        auto* table=reinterpret_cast<MeshletInfo*>(bytes+sizeof(BlobHeader));
+        auto* rec=reinterpret_cast<std::uint16_t*>(bytes+rec_at);
+        auto* idx=bytes+idx_at;
+        used=idx_at+meshlets*indices;
+        assert(used+meshlets*16u+32u<stream.size()*4u);
+        for(unsigned m=0;m<meshlets;++m){
+            table[m]={Counts::of(nv,empty?0u:indices,empty?0u:indices/3u),std::uint16_t(m*nv),std::uint16_t(m*indices)};
+            for(unsigned j=0;j<nv;++j){
+                const unsigned v=m*nv+j;
+                short x=short((j%3u==1?100:j%3u==2?-30:-100)+int(m%3u)*7);
+                short y=short(j%3u==2?100:-70);
+                short z=-600;
+                if(geometry==1)z=j%3u==0?-3:-15;             // Near-plane crossing.
+                if(geometry==2)x=short(-6000-int(j));        // All outside left.
+                if(geometry==3)z=-3000;                     // All beyond far.
+                if(geometry==4&&j%3u==0)x=-1900;            // Mixed screen outcodes.
+                if(geometry==5)z=m%2u?-600:-2;              // Alternating accepted/rejected meshlets.
+                auto* pos=reinterpret_cast<short*>(reinterpret_cast<unsigned char*>(positions.data())+v*ps);
+                pos[0]=x;pos[1]=y;pos[2]=z;
+                unsigned pal=j<nv/2u?0u:(m%2u?2u:1u);
+                if(ps==8)pos[3]=skin?short(pal):0;
+                auto* sn=reinterpret_cast<signed char*>(small_normals.data()+v*ns);
+                auto* wn=reinterpret_cast<short*>(reinterpret_cast<unsigned char*>(wide_normals.data())+v*ns);
+                if(small){sn[0]=short(j%3u*12u);sn[1]=30;sn[2]=45;if(ns>=4)sn[3]=skin?signed(pal):0;}
+                else {wn[0]=short(j%3u*2500u);wn[1]=8000;wn[2]=12000;if(ns>=8)wn[3]=skin?short(pal):0;}
+                uv[v*2u]=std::uint16_t((v*37u)%513u);uv[v*2u+1u]=std::uint16_t(511u-(v*17u)%512u);
+                colors[v*4u]=static_cast<unsigned char>(80u+(v*3u)%170u);colors[v*4u+1u]=static_cast<unsigned char>(40u+(v*5u)%210u);
+                colors[v*4u+2u]=static_cast<unsigned char>(30u+(v*7u)%220u);colors[v*4u+3u]=static_cast<unsigned char>(90u+(v*11u)%160u);
+                rec[v*rs]=std::uint16_t(v);rec[v*rs+1u]=std::uint16_t(v);rec[v*rs+2u]=std::uint16_t(v);
+                if(has_ci)rec[v*rs+3u]=std::uint16_t(v);
+            }
+            for(unsigned j=0;j<indices;++j)idx[m*indices+j]=static_cast<unsigned char>((j%nv)|((j%3u==2u)?128u:0u));
+        }
+        for(unsigned i=0;i<3;++i){float* b=palette.data()+i*12u;std::fill(b,b+12,0.0f);b[0]=b[4]=b[8]=1.0f;b[9]=float(i*4u);b[10]=float(i*2u);}
+        lighting.enable=1;lighting.mask=3;lighting.attenuation=1;lighting.diffuse=2;
+        lighting.normal_matrix[0]=lighting.normal_matrix[5]=lighting.normal_matrix[10]=1.0f;
+        lighting.ambient[0]=35;lighting.ambient[1]=45;lighting.ambient[2]=55;
+        for(unsigned i=0;i<2;++i){auto& l=lighting.lights[i];l.position[0]=400.0f-i*700.0f;l.position[1]=250.0f+i*100.0f;l.position[2]=40.0f;l.a[0]=l.k[0]=1.0f;l.color[0]=i?35:150;l.color[1]=i?75:90;l.color[2]=i?120:60;}
+        p.model=this;p.info=this;p.part=this;p.positions=skin?nullptr:reinterpret_cast<const unsigned char*>(positions.data());
+        p.normals=skin?nullptr:reinterpret_cast<const unsigned char*>(small?static_cast<const void*>(small_normals.data()):static_cast<const void*>(wide_normals.data()));
+        p.position_stride=skin?6u:ps;p.normal_stride=skin?(small?3u:6u):ns;p.normal_shift=small?6u:14u;
+        p.position_count=p.normal_count=count;p.shift=0;p.flags=0x80000000u;p.cull=0;
+        p.uv=reinterpret_cast<const unsigned char*>(uv.data());p.stream=bytes;p.stream_bytes=stream.size()*4u;
+        p.colors=colors.data();p.alpha_state=231;p.lighting=&lighting;p.image.width=128;p.image.height=64;
+        p.modelview[0]=p.modelview[5]=p.modelview[10]=1.0f;
+        p.projection[1]=1.0f;p.projection[3]=1.0f;p.projection[5]=-5.0f/1995.0f;p.projection[6]=-10000.0f/1995.0f;
+        p.viewport[2]=640.0f;p.viewport[3]=480.0f;p.viewport[5]=1.0f;
+    }
+    void bind(){
+        if(skin){
+            const Re4dcActorSource s{reinterpret_cast<const unsigned char*>(positions.data()),
+                reinterpret_cast<const unsigned char*>(small?static_cast<const void*>(small_normals.data()):static_cast<const void*>(wide_normals.data())),
+                p.position_count,p.normal_count,3u,unsigned(small)};
+            sources.push_back({this,s});
+            assert(re4dc_actor_skin_register(serial,this,nullptr,palette.data(),3u));
+        }
+#if RE4DC_ACTOR_BACKFACE_CONE
+        abc_build(p,used,1);
+#endif
+    }
+};
+
+void start(){
+    ta.clear();events.clear();calls.clear();sources.clear();locks=unlocks=0;
+    capacity=256;scratch_capacity=132;direct=true;streaming=true;reserve_ok=begin_ok=direct_ok=true;deferred=false;
+    us=1.0f;vs=1.0f;++serial;
+    std::memset(slab,0xcd,sizeof slab);std::memset(scratch_vertices,0xa5,sizeof scratch_vertices);
+    std::memset(sq_words,0x5a,sizeof sq_words);std::memset(work,0xd6,sizeof work);
+    re4dc_actor_frame(work,sizeof work);re4dc_actor_lod(0.0f,0);
+}
+void dump(unsigned id){
+    assert(locks==unlocks);
+#if RE4DC_ACTOR_BACKFACE_CONE == 2
+    assert(abc_bad==0);
+#endif
+#if RE4DC_AVK == 2
+    std::array<unsigned,sizeof(avk_chk)/sizeof(unsigned)> avk;
+    std::memcpy(avk.data(),&avk_chk,sizeof avk_chk);
+    for(unsigned i=0;i<avk.size();++i)event(93,i,avk[i]);
+#endif
+#if RE4DC_ACTOR_LIGHT_N16 == 2
+    for(unsigned i=0;i<kN16Reasons;++i){event(94,i,n16_meshlets[i]);event(95,i,n16_vertices[i]);}
+    for(unsigned i=0;i<3;++i)event(96,i,n16_kind_vertices[i]);
+    event(97,n16_checks,n16_lit);event(98,n16_words,n16_max);
+#endif
+    const unsigned head[]={0x41435452u,id,unsigned(ta.size()),unsigned(events.size()),unsigned(calls.size()),locks,unlocks};
+    assert(std::fwrite(head,sizeof(unsigned),7,stdout)==7);
+    assert(std::fwrite(ta.data(),4,ta.size(),stdout)==ta.size());
+    assert(std::fwrite(events.data(),4,events.size(),stdout)==events.size());
+    assert(std::fwrite(calls.data(),4,calls.size(),stdout)==calls.size());
+}
+unsigned count_case=0,total_words=0;
+void finish(unsigned id){total_words+=ta.size();++count_case;dump(id);}
+
+void ordinary(unsigned id,unsigned kind,unsigned style){
+    start();Asset a(kind,8,12,0,style%6u,style%2u==1u);
+    if(style==6)a.lighting.enable=0;
+    if(style==7)a.lighting.material[0]=127; // Exact source evaluator, no AVK lights.
+    if(style==8)a.p.alpha_state|=256u;     // Per-vertex alpha, no AVK lights.
+    if(style==9){a.p.flags=0;a.p.uv_offset[0]=0.125f;a.p.uv_offset[1]=-0.25f;us=0.75f;vs=0.5f;}
+    if(style==10){a.p.position_count=32769u;a.p.normal_count=32769u;}
+    if(style==11){a.p.cull=3;}
+    a.bind();
+    const int result=re4dc_actor_submit(&a.p);event(90,result);
+    if(result!=1)std::fprintf(stderr,"unexpected decline case=%u kind=%u style=%u\n",id,kind,style);
+    assert(result==1);finish(id);
+}
+void repeated(unsigned id,unsigned kind){
+    start();Asset a(kind,9,9);a.bind();
+    for(unsigned pass=0;pass<6;++pass){
+        a.p.alpha_state=201u-pass*17u;a.p.uv_offset[0]=float(pass)*0.125f;a.p.uv_offset[1]=-float(pass)*0.0625f;
+        a.lighting.lights[0].position[0]+=13.0f;a.lighting.ambient[2]+=3;
+        us=1.0f-float(pass)*0.0625f;vs=0.5f+float(pass)*0.03125f;
+        assert(re4dc_actor_submit(&a.p)==1);
+    }
+    finish(id);
+}
+void failures(unsigned id,unsigned mode){
+    start();Asset a(1,mode==9?48u:(mode==4||mode==5)?16u:8u,6u,mode==9?1023u:0u);a.bind();
+    switch(mode){
+    case 0:reserve_ok=false;break;
+    case 1:direct=false;begin_ok=false;break;
+    case 2:scratch_capacity=131;break;
+    case 3:direct=false;capacity=195;break;
+    case 4:direct=false;capacity=196;streaming=false;break;
+    case 5:direct=false;capacity=196;break;
+    case 6:direct_ok=false;break;
+    case 7:deferred=true;break;
+    case 8:a.p.projection[5]=0;break;
+    case 9:break; // Direct capacity overflow or many packet flushes.
+    case 10:a.p.lighting=nullptr;break;
+    }
+    event(90,re4dc_actor_submit(&a.p));finish(id);
+}
+void empty(unsigned id,bool cones,unsigned cull){
+    start();Asset a(0,8,12,0,0,false,!cones);a.p.cull=cull;a.bind();
+    assert(re4dc_actor_submit(&a.p)==1);finish(id);
+}
+void lights_cases(unsigned id,unsigned style){
+    start();Asset a(1,8,12);a.bind();
+    if(style==0)a.lighting.normal_matrix[3]=1.0e30f;   // Probe accepted.
+    if(style==1){a.lighting.normal_matrix[3]=1.0e30f;a.lighting.material[0]=110;} // Probe declines -> exact.
+    if(style==2){a.lighting.normal_matrix[3]=1.0e30f;a.p.modelview[0]=0;}       // Singular normal transform.
+    if(style==3){a.lighting.normal_matrix[7]=1.0e30f;a.lighting.material[0]=128;a.lighting.tev_scale=0.5f;}
+    if(style==4){a.lighting.ambient_vertex=1;a.p.alpha_state|=256u;}
+    if(style==5){a.lighting.material_vertex=1;}
+    if(style==6){a.lighting.mask=0;}
+    if(style==7){a.lighting.normal_matrix[3]=1.0e30f;a.p.modelview[11]=-200.0f;}
+    assert(re4dc_actor_submit(&a.p)==1);
+    // A later part reuses stack/window storage after a different lighting mode.
+    a.lighting.normal_matrix[3]=0;a.lighting.normal_matrix[7]=0;a.p.modelview[0]=1;
+    a.lighting.enable=0;a.lighting.ambient_vertex=a.lighting.material_vertex=0;
+    assert(re4dc_actor_submit(&a.p)==1);finish(id);
+}
+void reuse_frame(unsigned id,bool empty_workspace){
+    start();std::array<std::unique_ptr<Asset>,6> a;
+    for(unsigned i=0;i<a.size();++i){a[i]=std::make_unique<Asset>(i%2u?3u:1u,5u,12u);a[i]->bind();}
+    if(empty_workspace)re4dc_actor_frame(nullptr,0);
+    for(unsigned i=0;i<12;++i){auto& x=*a[i%6u];x.p.uv_offset[0]=float(i)*0.03f;assert(re4dc_actor_submit(&x.p)==1);}
+    finish(id);
+}
+void redirected_cache(unsigned id,unsigned kind){
+    start();Asset a(kind,2,12);a.bind();
+    const float near=a.p.projection[6]/(a.p.projection[5]-1.0f),far=a.p.projection[6]/a.p.projection[5];
+    Frame& f=*prepare_frame(a.p,near,far);
+    alignas(Part) unsigned char part_storage[sizeof(Part)];
+    std::memset(part_storage,0xa5,sizeof part_storage);
+    Part& e=*new(part_storage) Part{a.p,f,{a.p.projection,a.p.viewport},{near,far,640.0f,480.0f,project,nullptr}};
+    e.clip.context=&e.projection;e.alpha=201u<<24;
+    alignas(Lights) unsigned char light_storage[sizeof(Lights)];
+    std::memset(light_storage,0x5a,sizeof light_storage);
+    Lights& light=*new(light_storage) Lights;
+    assert(RE4DC_PART_LIGHTS(a.p,f,reinterpret_cast<const BlobHeader*>(a.p.stream)->center,light));
+    assert(light.source==a.p.lighting);
+    if(f.dirs_ready)std::memset(f.dirs_ready,0,f.palette_entries);
+    const PosConst k{0.0f,0.003f,0.125f,0.002f,-0.25f,640.0f,480.0f,near,far};
+    alignas(32) pvr_vertex_t output[2][128]{};
+    alignas(32) unsigned char oc[2][128]{};
+    const auto* h=reinterpret_cast<const BlobHeader*>(a.p.stream);
+    const auto* records=reinterpret_cast<const std::uint16_t*>(a.p.stream+h->rec4*4u);
+    std::uint16_t wide[12*5];
+    for(unsigned i=0;i<12;++i){wide[i*5]=records[i*3];wide[i*5+1]=records[i*3+1];wide[i*5+2]=records[i*3+2];wide[i*5+3]=0;wide[i*5+4]=0;}
+    for(unsigned pass=0;pass<2;++pass){
+        e.cache={output[pass],oc[pass]};
+        const Records r{pass?wide:records,pass?5u:3u,0,false};
+        assert(avk_positions(e,r,0,k,true)==0);
+        assert(avk_lights(e,light,r,0)==0);
+        unsigned all,any;pass_positions(e,r,12u,k,true,all,any);
+        pass_lights(e,light,r,12u);e.primed=0;e.prime(12u);
+        memory_words(output[pass],12u*8u);event(92,all,any);
+    }
+    assert(!std::memcmp(output[0],output[1],12u*sizeof(pvr_vertex_t)));
+    e.~Part();light.~Lights();
+    finish(id);
+}
+void baked(unsigned id,unsigned kind){
+    start();Asset a(kind,8,12,0,0,id%2u);
+    a.used=add_bake_field(reinterpret_cast<unsigned char*>(a.stream.data()),a.used,a.stream.size()*4u);
+    assert(reinterpret_cast<BlobHeader*>(a.stream.data())->flags&kHasBake);a.bind();
+    const unsigned before=stats.bake_builds;
+    assert(re4dc_actor_submit(&a.p)==1);
+    assert(unsigned(stats.bake_builds)==before+1u);
+    assert(re4dc_actor_submit(&a.p)==1); // Same baked colour fields, cache plan starts fresh.
+    a.lighting.lights[0].position[0]=-900.0f;
+    assert(re4dc_actor_submit(&a.p)==1); // Rebuild with changed fold.
+    memory_words(a.stream.data(),(a.used+3u)/4u);finish(id);
+}
+void lod_prefixes(unsigned id,unsigned kind){
+    start();Asset a(kind,8,30);
+    auto* b=reinterpret_cast<unsigned char*>(a.stream.data());
+    auto& h=*reinterpret_cast<BlobHeader*>(b);
+    const unsigned li=(a.used+3u)&~3u,mt=li+sizeof(LevelInfo),ix=mt+a.meshlets*sizeof(MeshletLevel);
+    auto* t=reinterpret_cast<MeshletLevel*>(b+mt);auto* index=b+ix;unsigned used_indices=0;
+    for(unsigned m=0;m<a.meshlets;++m){
+        const unsigned nv=m==3?0u:3u+(m%5u)*3u;
+        t[m]={Counts::of(nv,nv,nv/3u),std::uint16_t(used_indices),0};
+        for(unsigned i=0;i<nv;++i)index[used_indices++]=static_cast<unsigned char>(i|((i%3u==2)?128u:0u));
+    }
+    *reinterpret_cast<LevelInfo*>(b+li)={0.0f,std::uint16_t(mt/4u),std::uint16_t(ix/4u)};
+    h.levels=1;h.lod4=li/4u;h.center[2]=-600.0f;a.used=ix+used_indices;a.bind();re4dc_actor_lod(1.0f,0);
+    assert(re4dc_actor_submit(&a.p)==1);finish(id);
+}
+#if RE4DC_COARSE_ONE_SUBMIT
+void chunks(unsigned id,unsigned style){
+    start();std::array<std::unique_ptr<Asset>,4> a;
+    std::array<Re4dcActorChunk,4> c;
+    for(unsigned i=0;i<4;++i){
+        a[i]=std::make_unique<Asset>(style%2u?3u:1u,4u+i,6u+i*3u,0,i==1&&style==4?1u:0u);
+        a[i]->p.modelview[3]=float(i*11u);a[i]->bind();
+        c[i]={a[i].get(),a[i]->p.stream,a[i]->p.uv,a[i]->p.modelview,a[i]->p.stream_bytes,a[i]->p.position_count,a[i]->p.normal_count};
+    }
+    Re4dcModelPart p=a[0]->p;
+    if(style==2)a[0]->lighting.enable=0;
+    if(style==3){direct_ok=false;capacity=196;}
+    if(style==5){scratch_capacity=131;}
+    if(style==6){reserve_ok=false;}
+    if(style==7){deferred=true;}
+    event(91,re4dc_actor_submit_chunks(&p,c.data(),c.size()));finish(id);
+}
+#endif
+}
+
+int main(){
+    for(unsigned kind=0;kind<8;++kind)for(unsigned style=0;style<12;++style)check::ordinary(kind*12u+style,kind,style);
+    for(unsigned kind=0;kind<8;++kind)check::repeated(100u+kind,kind);
+    for(unsigned mode=0;mode<11;++mode)check::failures(120u+mode,mode);
+    check::empty(140,false,0);check::empty(141,true,1);check::empty(142,true,2);
+    for(unsigned style=0;style<8;++style)check::lights_cases(170u+style,style);
+    check::reuse_frame(180,false);check::reuse_frame(181,true);
+    for(unsigned kind:{0u,1u,3u,4u,6u})check::redirected_cache(190u+kind,kind);
+    for(unsigned kind:{0u,1u,3u,4u,6u})check::baked(210u+kind,kind);
+    for(unsigned kind:{0u,1u,3u,4u})check::lod_prefixes(230u+kind,kind);
+#if RE4DC_COARSE_ONE_SUBMIT
+    for(unsigned style=0;style<8;++style)check::chunks(150u+style,style);
+#endif
+    std::fprintf(stderr,"cases=%u ta_words=%u\n",check::count_case,check::total_words);
+}

@@ -1,4 +1,7 @@
 #include "platform/include/movie_world_arena.h"
+#if defined(RE4DC_KOS_CACHE_P2_DIAG) && RE4DC_KOS_CACHE_P2_DIAG
+#include "platform/include/kos_cache_p2_diag.h"
+#endif
 // Source ID layout/animation/ordering -> existing native texture/PVR mechanisms.
 #include "light.h"
 #include "id_sys.h"
@@ -40,6 +43,9 @@ extern "C" void re4dc_ui_stage_free(void* data) { Mem_free(data); }
 
 #ifndef RE4DC_UI_QUAD_LEAN
 #define RE4DC_UI_QUAD_LEAN 0
+#endif
+#ifndef RE4DC_UI_DRAW_LEAN
+#define RE4DC_UI_DRAW_LEAN 0
 #endif
 #if RE4DC_UI_QUAD_LEAN
 // UI_QUAD_LEAN (game30.mk, make-room F1; exact): the four corners of an ID quad are projected inline with
@@ -89,7 +95,15 @@ extern "C" void re4dc_draw_id_quad(const IdUnit* u) {
     if (!wk || !wk->pTpl || u->texNo >= wk->pTpl->numDescriptors) return;
     const TEXDescriptor* descriptor = TEXGet(wk->pTpl, u->texNo);
     const TEXHeader* tex = descriptor->textureHeader;
+#if RE4DC_UI_DRAW_LEAN
+    // All other fields are assigned below, including every XY/UV word. Only an absent
+    // palette needs defaults; avoid clearing the 104-byte quad before overwriting it.
+    Re4dcUiQuad q;
+    q.image.palette = nullptr;
+    q.image.palette_bytes = 0;
+#else
     Re4dcUiQuad q = {};
+#endif
     q.image.pixels = tex->data;
     q.image.width = tex->width; q.image.height = tex->height;
     q.image.format = tex->format; q.image.palette_format = 0xffffffffU;
@@ -439,6 +453,9 @@ extern "C" void re4dc_room_leave(){
 #endif
     re4dc_room4_close();
     audit(2);
+#if defined(RE4DC_KOS_CACHE_P2_DIAG) && RE4DC_KOS_CACHE_P2_DIAG
+    re4dc_cache_p2_diag_leave(unsigned(pG?pG->room_id:0xffff));
+#endif
     re4dc_room4_state(&generation,&cells,&bytes,&stale,&refused);
     if(cells)re4dc_log("room lifecycle: %u native heap-4 cells (%u B) outlived retirement\n",cells,bytes);
 }
@@ -459,6 +476,9 @@ extern "C" void re4dc_warp_poll(void);
 extern "C" void re4dc_std_room_enter(unsigned room);   // platform/native_static.cpp
 #endif
 extern "C" void re4dc_room_enter(){
+#if defined(RE4DC_KOS_CACHE_P2_DIAG) && RE4DC_KOS_CACHE_P2_DIAG
+    re4dc_cache_p2_diag_enter(unsigned(pG?pG->room_id:0xffff));
+#endif
 #if defined(RE4DC_DISC_READ_METER) && RE4DC_DISC_READ_METER
     re4dc_disc_meter_room(1,unsigned(pG->room_id));   // or here for the first room (no door)
 #endif
@@ -535,13 +555,42 @@ void load_cycle(){
 #if RE4DC_W11_FIXTURE
 extern "C" int re4dc_w11_room_poll(unsigned generation);
 #endif
+#if defined(RE4DC_EM35_DIAG) && RE4DC_EM35_DIAG
+#include "em35_diag.h"
+// EM35_DIAG=1 (game30.mk; diagnostic): game frames counted here; a live Mendez half that em35.cpp has not moved for
+// 60 of them is logged once (cEmMgr::move skipped it: Stop_flg 0x20000000, or it left the alive list).
+extern "C" { Re4dcEm35Diag re4dc_em35_diag[2]; unsigned re4dc_em35_diag_polls; }
+namespace { unsigned em35_room; unsigned em35_nomove_logged[2]; }
+static void em35_diag_poll(){
+    ++re4dc_em35_diag_polls;
+    const unsigned room=pG?unsigned(pG->room_id):0u;
+    if(room!=em35_room){em35_room=room;for(auto& d:re4dc_em35_diag)d.live=0;em35_nomove_logged[0]=em35_nomove_logged[1]=0;}
+    for(unsigned t=0;t<2;++t){
+        auto& d=re4dc_em35_diag[t];
+        if(!d.live)continue;
+        const unsigned idle=re4dc_em35_diag_polls-d.last_poll;
+        if(idle<=1){em35_nomove_logged[t]=0;continue;}
+        if(idle==60 && em35_nomove_logged[t]<4 && d.hp>0){
+            ++em35_nomove_logged[t];
+            re4dc_log("EM35 NOMOVE ty=%u idle=%u r=%08x mot=%02x fr=%d hp=%d stop=%08x life=%d\n",t,idle,d.r,d.mot,d.frame10,
+                      d.hp,unsigned(pG->Stop_flg),int(s16(pG->pl_life)));
+        }
+    }
+}
+#endif
 extern "C" int re4dc_room_cycle_poll(){
     unsigned generation,cells,bytes,stale,refused;
+#if defined(RE4DC_EM35_DIAG) && RE4DC_EM35_DIAG
+    em35_diag_poll();
+#endif
     if(!re4dc_room4_state(&generation,&cells,&bytes,&stale,&refused))return 0;
 #if RE4DC_W11_FIXTURE
     re4dc_w11_room_poll(generation);                    // death / life fixture (sscrn_bridge.cpp)
 #endif
     ++room_frames;
+#if defined(RE4DC_KOS_CACHE_P2_DIAG) && RE4DC_KOS_CACHE_P2_DIAG
+    if(room_frames%150==0)re4dc_cache_p2_diag_poll(unsigned(pG?pG->room_id:0xffff),room_frames);
+#endif
 #if defined(RE4DC_DISC_READ_METER) && RE4DC_DISC_READ_METER
     if(room_frames==1)re4dc_disc_meter_room(2,unsigned(pG->room_id)); if(room_frames==1)RE4DC_DOORPH_END(unsigned(pG->room_id));   // first gameMainLoop frame: the load ends
 #endif
@@ -875,7 +924,7 @@ extern "C" int re4dc_model_return_retained(unsigned* bytes,unsigned* requests){
 // their owner, which precedes the lazy retained allocation at first draw.
 #if RE4DC_NATIVE_STATIC
 #include "native_static.h"
-#if defined(RE4DC_MOTION_COLD_POOL_CASTLE) && RE4DC_MOTION_COLD_POOL_CASTLE
+#if (defined(RE4DC_MOTION_COLD_POOL_CASTLE) && RE4DC_MOTION_COLD_POOL_CASTLE) || (defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS)
 extern "C" unsigned re4dc_room_id_now(){return pG?unsigned(pG->room_id):0u;}   // native_motion.cpp
 #endif
 extern "C" int re4dc_static_heap_free(){

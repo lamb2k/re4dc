@@ -3,6 +3,7 @@
 // room-archive decoder entry (a C port is the next dependency) and the
 // bridges for members the sources call through GCC 2.95 link names.
 #include <kos.h>
+#include "cache_lines.h"
 #include <string.h>
 
 #include "re4dc_platform.h"
@@ -15,10 +16,10 @@ typedef unsigned long u32;
 extern "C" {
 
 // ---- cache (DC* = the SDK's data-cache ops)
-void DCFlushRange(void* addr, u32 n) { dcache_flush_range((uintptr_t) addr, n); }
-void DCFlushRangeNoSync(void* addr, u32 n) { dcache_flush_range((uintptr_t) addr, n); }
-void DCStoreRange(void* addr, u32 n) { dcache_flush_range((uintptr_t) addr, n); }
-void DCStoreRangeNoSync(void* addr, u32 n) { dcache_flush_range((uintptr_t) addr, n); }
+void DCFlushRange(void* addr, u32 n) { RE4DC_DCACHE_WBACK((uintptr_t) addr, n); }
+void DCFlushRangeNoSync(void* addr, u32 n) { RE4DC_DCACHE_WBACK((uintptr_t) addr, n); }
+void DCStoreRange(void* addr, u32 n) { RE4DC_DCACHE_WBACK((uintptr_t) addr, n); }
+void DCStoreRangeNoSync(void* addr, u32 n) { RE4DC_DCACHE_WBACK((uintptr_t) addr, n); }
 #if (defined(RE4DC_DCINV_PURGE) && RE4DC_DCINV_PURGE) || (defined(RE4DC_DCINV_AUDIT) && RE4DC_DCINV_AUDIT)
 }  // extern "C"
 #if defined(RE4DC_DCINV_AUDIT) && RE4DC_DCINV_AUDIT

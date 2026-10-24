@@ -13,6 +13,99 @@ $(error SCENERY_CHUNK needs PS2_STRIP_GROUPS=1)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_CHUNK=$(SCENERY_CHUNK)
 endif
+# SCENERY_SELECT_ONLY=1 (exact, render only): eligible chunk selection borrows
+# placement inputs in a small context, without constructing an emitter first.
+# The shared selector, queued snapshots and replay order remain the same.
+SCENERY_SELECT_ONLY ?= 0
+ifneq ($(SCENERY_SELECT_ONLY),0)
+ifneq ($(SCENERY_SELECT_ONLY),1)
+$(error SCENERY_SELECT_ONLY must be 0 or 1)
+endif
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_SELECT_ONLY needs SCENERY_CHUNK)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_SELECT_ONLY=1
+endif
+# SCENERY_SUBMIT_BATCH=1 (spike, exact rendering): keep the TA store-queue
+# mutex across compatible resident parts within one synchronous chunk replay.
+# Every part still sends its own header and starts at the original SQ address.
+# No texture load, pass transition or source-task boundary retains the mutex.
+SCENERY_SUBMIT_BATCH ?= 0
+ifneq ($(SCENERY_SUBMIT_BATCH),0)
+ifneq ($(SCENERY_SUBMIT_BATCH),1)
+$(error SCENERY_SUBMIT_BATCH must be 0 or 1)
+endif
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_SUBMIT_BATCH needs SCENERY_CHUNK)
+endif
+ifneq ($(TA_DIRECT)$(MESH_DIRECT)$(PS2_WORLD_MESH)$(PS2_WORLD_HDR_CACHE),1111)
+$(error SCENERY_SUBMIT_BATCH needs TA_DIRECT=1 MESH_DIRECT=1 PS2_WORLD_MESH=1 PS2_WORLD_HDR_CACHE=1)
+endif
+ifneq ($(filter-out 0,$(PS2_PVS) $(WORLD_SCRATCH) $(TA_GUARD)),)
+$(error SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_GUARD)
+endif
+$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_SUBMIT_BATCH=1
+endif
+# SCENERY_REPLAY_LEAN=1 (exact, render only): reuse one emitter per chunk replay,
+# retain the existing inside-cluster decisions and avoid screen-memo key copies.
+# Composes independently with SCENERY_SELECT_ONLY and SCENERY_SUBMIT_BATCH.
+SCENERY_REPLAY_LEAN ?= 0
+ifneq ($(SCENERY_REPLAY_LEAN),0)
+ifneq ($(SCENERY_REPLAY_LEAN),1)
+$(error SCENERY_REPLAY_LEAN must be 0 or 1)
+endif
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_REPLAY_LEAN needs SCENERY_CHUNK)
+endif
+ifneq ($(TA_DIRECT)$(MESH_DIRECT)$(PS2_WORLD_MESH),111)
+$(error SCENERY_REPLAY_LEAN needs TA_DIRECT=1 MESH_DIRECT=1 PS2_WORLD_MESH=1)
+endif
+ifneq ($(filter-out 0,$(WORLD_SCRATCH)),)
+$(error SCENERY_REPLAY_LEAN needs WORLD_SCRATCH=0 (ordinary per-part scratch lifetime))
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_REPLAY_LEAN=1
+endif
+# Capture each queued draw's dynamic owner UV offset before its owner scope ends.
+# Restores the pending draw across capacity drains; no change for static offsets.
+SCENERY_UV_SNAPSHOT ?= 0
+ifneq ($(SCENERY_UV_SNAPSHOT),0)
+ifneq ($(SCENERY_UV_SNAPSHOT),1)
+$(error SCENERY_UV_SNAPSHOT must be 0 or 1)
+endif
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_UV_SNAPSHOT needs SCENERY_CHUNK)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_UV_SNAPSHOT=1
+endif
+# SCENERY_SELECT_LEAN2=1 (exact, render only): read packed meshlet bounds
+# directly and share each crossed plane across its groups, returning final picks.
+SCENERY_SELECT_LEAN2 ?= 0
+ifneq ($(SCENERY_SELECT_LEAN2),0)
+ifneq ($(SCENERY_SELECT_LEAN2),1)
+$(error SCENERY_SELECT_LEAN2 must be 0 or 1)
+endif
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_SELECT_LEAN2 needs SCENERY_CHUNK)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_SELECT_LEAN2=1
+endif
+# SCENERY_EMIT_PREFETCH=1 (exact, render only): hint selected meshlet headers
+# two picks ahead and their input one pick ahead, including the next queued
+# part. Empty indexed picks skip the unused gather; nonempty gathers read the
+# immutable vertex count once. Selection, binding and the strip walk stay exact.
+SCENERY_EMIT_PREFETCH ?= 0
+ifneq ($(SCENERY_EMIT_PREFETCH),0)
+ifneq ($(SCENERY_EMIT_PREFETCH),1)
+$(error SCENERY_EMIT_PREFETCH must be 0 or 1)
+endif
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_EMIT_PREFETCH needs SCENERY_CHUNK)
+endif
+ifneq ($(TA_DIRECT)$(MESH_DIRECT)$(PS2_WORLD_MESH),111)
+$(error SCENERY_EMIT_PREFETCH needs TA_DIRECT=1 MESH_DIRECT=1 PS2_WORLD_MESH=1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_EMIT_PREFETCH=1
+endif
 # SCENERY_DEDUP=1 (exact, render only; needs SCENERY_CHUNK, MESH_VP_SCHED=1, HW_LEAN): each PS2 world meshlet's corners
 # are reordered at room load (repeated grid positions last), and a draw transforms each position once and builds the
 # repeats from it. Heap 4: 4 bytes per meshlet + 1 per repeat (r101 ~33 KB), freed with the room's world.
@@ -24,8 +117,23 @@ ifneq ($(SCENERY_DEDUP),0)
 ifeq ($(SCENERY_DEDUP),1)
 $(error SCENERY_DEDUP=1 is retired: its load-time reorder moved plain meshlets that pool-indexed meshlets address; use 2)
 endif
-ifneq ($(SCENERY_DEDUP),2)
-$(error SCENERY_DEDUP must be 0 or 2)
+ifeq ($(filter 2 3,$(SCENERY_DEDUP)),)
+$(error SCENERY_DEDUP must be 0, 2 or 3)
+endif
+# Mode3: byte-neutral offline ps2-dd3.* alternate; no SCDD table or load reorder.
+ifeq ($(SCENERY_DEDUP),3)
+# The header reader must have one definition in every translation unit.
+GAME_CPPFLAGS += -DRE4DC_SCENERY_DEDUP=3
+PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_DEDUP=3
+ifneq ($(IO_ALIGNED),1)
+$(error SCENERY_DEDUP=3 needs IO_ALIGNED=1 for source header binding)
+endif
+ifeq ($(filter 1 2,$(PS2_WORLD_ROOMS)),)
+$(error SCENERY_DEDUP=3 needs PS2_WORLD_ROOMS=1 or 2)
+endif
+ifneq ($(filter-out 0,$(WORLD_VERT) $(SCENERY21_AB)),)
+$(error SCENERY_DEDUP=3 uses its own alternate data; WORLD_VERT and SCENERY21_AB must be 0)
+endif
 endif
 ifeq ($(SCENERY_CHUNK),0)
 $(error SCENERY_DEDUP needs SCENERY_CHUNK)

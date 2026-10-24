@@ -149,7 +149,14 @@ void release(const char* why) {
 // ps2_open (world package open, and every world draw while it is open): the shell resident exactly while it is wanted.
 void sync() {
     if (pol.room != ps2w.room) { pol.room = ps2w.room; pol.tried = false; pol.movie = false; }   // another room: no movie holds it
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    // WORLD_METER: the QA row "Far shell" On keeps it resident at any View distance (Off only skips its draw, so the fog
+    // and the translucent far stay as the View distance sets them).
+    const bool want = mode == 1 && (re4dc_view_dist_get() == 2 || ::re4dc_qa_wshell == 1U) && !pol.movie &&
+                      !yielded(ps2w.room);
+#else
     const bool want = mode == 1 && re4dc_view_dist_get() == 2 && !pol.movie && !yielded(ps2w.room);
+#endif
     if (!want) { release(pol.movie ? "movie" : "not Short"); return; }
     if (st.h || pol.tried) return;
     pol.tried = true;

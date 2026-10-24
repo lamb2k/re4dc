@@ -1,0 +1,3826 @@
+{
+  "status": "PASS",
+  "base": "451bed6faa2c37f7f9aa05d6fb1116ec64219ebc",
+  "branch": "codex/world-replay-lean-20261023",
+  "knob": "SCENERY_REPLAY_LEAN",
+  "default": 0,
+  "scope": "Condensed final receipts; original SHA256 values identify full generated evidence. Reproduce with tools/d367/world_replay_lean/README.md. No linked release image, recorded full frame, or hardware speedup claim.",
+  "original_receipts": {
+    "production": {
+      "file": "build-controls.json",
+      "sha256": "00e19e6582e43d74d550bb2ecbeac22114fc2a8167a1bb018df298b07b35a8c9"
+    },
+    "boundary": {
+      "file": "check-controls.json",
+      "sha256": "d2240c8128693fed61a9af7507b9afe2fc98c88e63619bd80785e41508ebfdca"
+    },
+    "admission": {
+      "file": "admission-controls.json",
+      "sha256": "4ac51413821a0cc97d17b169dec1ece3275b4f12db0af7da2823e7269cfa28d0"
+    },
+    "geometry": {
+      "file": "geometry-controls.json",
+      "sha256": "a579788a96f178eec6030bfc17ed90560a9089a79467eaff680b1389e9ed205b"
+    },
+    "selection": {
+      "file": "selection-controls.json",
+      "sha256": "d28404499d81d9814b3dd0c9449ae5a4b3bc8430444d320b42d2e3fc722f4dbd"
+    },
+    "knobs": {
+      "file": "knob-controls.json",
+      "sha256": "39cae617678634351fb22792422416bd7c5891c604a1c2b1ce81a6ce09ec7587"
+    },
+    "target_build": {
+      "file": "target-build-controls.json",
+      "sha256": "c2f6dc5e1a1f82356a40945af8e22f418e273481aebcfcc41299fa5860342a59"
+    },
+    "target_run": {
+      "file": "target-controls.json",
+      "sha256": "43a4dcf457f38ee1c48fe6f9d893256147c6314f99bead47775667fa5b8a9d63"
+    },
+    "measurement": {
+      "file": "measurement-summary.json",
+      "sha256": "16e2d383d114bb896d5d0dca5788003168ef058417f0fe799c4582e4809f631e"
+    },
+    "production_clears": {
+      "file": "production-clear-audit.json",
+      "sha256": "ed96049ab11f0e9640903ead6736fe2f6798eb8b48eb731158f5251e1dd9a2c1"
+    }
+  },
+  "runtime_source_sha256": {
+    "port/dreamcast/game/platform/native_static.cpp": "c09973f22c62d1e1796370612fbaed80991c9606ca1af29309d767f1e12a1a59",
+    "port/dreamcast/game/platform/native_ui.cpp": "af8c5a111a948702f7a164e5209e53de48452fa93f2180f56bf33bb3b366e256",
+    "port/dreamcast/game/scenery19.mk": "5be75c7f22c72af76283316a9fcdbdce3ab43903fc44a86d656de795959e2ef8",
+    "port/dreamcast/game/platform/include/scenery_chunk_select.inc": "da87574562472d5f914467ba21541d8fe3ce6bc03cd06c55010381095b1ad6b7",
+    "port/dreamcast/game/platform/include/scenery_part_far.inc": "81099189e36cc324176605b1a0506a8bde2aa088ad498aa77e71101ff6d1303c",
+    "port/dreamcast/game/platform/include/scenery_submit_batch.h": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106"
+  },
+  "baseline_include_sha256": {
+    "scenery_chunk_select.inc": "da87574562472d5f914467ba21541d8fe3ce6bc03cd06c55010381095b1ad6b7",
+    "scenery_part_far.inc": "81099189e36cc324176605b1a0506a8bde2aa088ad498aa77e71101ff6d1303c",
+    "scenery_submit_batch.h": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106"
+  },
+  "compiler": "sh-elf-g++ (GCC) 15.2.0",
+  "public_test22_profile": {
+    "native_static": {
+      "scope": "Make-expanded Test22 public world configuration; complete TU compile only, no linked release image",
+      "flags": [
+        "-O2",
+        "-fno-PIC",
+        "-fno-PIE",
+        "-fomit-frame-pointer",
+        "-m4-single",
+        "-ml",
+        "-mfsrra",
+        "-mfsca",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-matomic-model=soft-gusa",
+        "-ftls-model=local-exec",
+        "-D__DREAMCAST__",
+        "-isystem",
+        "<KOS>/include",
+        "-isystem",
+        "<KOS>/kernel/arch/dreamcast/include",
+        "-isystem",
+        "<KOS>/addons/include",
+        "-D_arch_dreamcast=1",
+        "-D_arch_sub_pristine=1",
+        "-Wall",
+        "-std=gnu++20",
+        "-Wall",
+        "-Wextra",
+        "-O1",
+        "-I<REPO>/port/dreamcast/game/platform/include",
+        "-DRE4DC_GAME",
+        "-fno-exceptions",
+        "-fno-unwind-tables",
+        "-fno-asynchronous-unwind-tables",
+        "-fno-threadsafe-statics",
+        "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+        "-DRE4DC_RENDER_FSAA=1",
+        "-DRE4DC_RENDER_OPTION=1",
+        "-DRE4DC_VIEW_DIST_OPTION=1",
+        "-DRE4DC_FAR_SHELL=1",
+        "-DRE4DC_FOLIAGE_OPTION=1",
+        "-DRE4DC_RES_ALTERNATE=1",
+        "-DRE4DC_RES_MODES=9",
+        "-DRE4DC_RES_MODE=0",
+        "-DRE4DC_RES_CYCLE_FRAMES=0",
+        "-DRE4DC_MV_SHADOWS=1",
+        "-DRE4DC_MV_OPB_BINS=8",
+        "-DRE4DC_MV_SCALE=50",
+        "-DRE4DC_MV_SIDES=8",
+        "-DRE4DC_MV_RADIUS=420",
+        "-DRE4DC_MV_TOP=250",
+        "-DRE4DC_MV_DEPTH=1200",
+        "-DRE4DC_MV_RANGE_M=15",
+        "-DRE4DC_MV_MAX=12",
+        "-DRE4DC_MV_BODY=1700",
+        "-DRE4DC_MV_LEN_MAX=1800",
+        "-DRE4DC_ATCHK_LIST=1",
+        "-DRE4DC_ATCHK_CACHE=1",
+        "-DRE4DC_WORKAT_INLINE=1",
+        "-DRE4DC_FX_SCAN=1",
+        "-DRE4DC_FX_MOVE=1",
+        "-DRE4DC_OT_MASK=1",
+        "-DRE4DC_MANUAL_PACK_PROBE=1",
+        "-DRE4DC_PAD_PROMPTS=1",
+        "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+        "-DRE4DC_SH4ZAM_RENDER=1",
+        "-DRE4DC_ACTOR_TRANSACTION=1",
+        "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+        "-DRE4DC_VMU_DIALOG=1",
+        "-DRE4DC_ACTOR_PL08=1",
+        "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+        "-DRE4DC_NMR_POOL=1",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_TEX_PKG_SKIP=1",
+        "-DRE4DC_GC_CENSUS_TRIM=1",
+        "-DRE4DC_GXF_JITTER=1",
+        "-DRE4DC_WATER45_NATIVE=1",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/motion-read.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/quality-knobs.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/cabin-source.h",
+        "-include",
+        "<REPO>/port/dreamcast/game/platform/include/native_event_file.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/movie-world-arena.h",
+        "-DRE4DC_PS2_WORLD_DRAW=1",
+        "-DRE4DC_PS2_PRELOAD_LEAN=1",
+        "-DRE4DC_PS2_WORLD_MESH=1",
+        "-DRE4DC_WORLD_RECT21=1",
+        "-DRE4DC_PS2_PASS_MASK=1",
+        "-DRE4DC_PS2_VERTEX_ALPHA=1",
+        "-DRE4DC_PS2_PT_CUTOUT=1",
+        "-DRE4DC_PS2_R100_SMX=1",
+        "-DRE4DC_PS2_R100_TR4=1",
+        "-DRE4DC_PS2_INTERIOR_CULL=1",
+        "-DRE4DC_PS2_INTERIOR_ACTORS=1",
+        "-DRE4DC_PS2_INTERIOR_OWNER=1",
+        "-DRE4DC_PS2_WORLD_ROOMS=2",
+        "-DRE4DC_PS2_WORLD_DYNAMIC=1",
+        "-DRE4DC_PS2_WORLD_PARTS=1",
+        "-DRE4DC_PS2_WORLD_NONEMPTY_LOD=1",
+        "-DRE4DC_PS2_WORLD_SOURCE_OWNER=1",
+        "-DRE4DC_PS2_WORLD_SOURCE_TEX_PREP=1",
+        "-DRE4DC_PS2_WORLD_REGISTRY=1",
+        "-DRE4DC_PS2_OPEN_READ=1",
+        "-DRE4DC_SCENERY_ENCODING=1",
+        "-DRE4DC_PS2_WORLD_LEAN=23",
+        "-DRE4DC_PS2_PLACE_GATE=1",
+        "-DRE4DC_PS2_AREA_HIDE=1",
+        "-DRE4DC_PS2_ROOM_PIN=1",
+        "-DRE4DC_PS2_STRIP_GROUPS=1",
+        "-DRE4DC_MESH_VP_SCHED=1",
+        "-DRE4DC_MESH_STRIP_LEAN=1",
+        "-DRE4DC_MESH_PRIME_LAZY=1",
+        "-DRE4DC_MESH_CLIP_LEAN=1",
+        "-DRE4DC_MESH_CLIP_ACCEPT=1",
+        "-DRE4DC_ENEMY_VIS_CULL=1",
+        "-Os",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/native-static.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/d349-stack.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/frontend30.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/subscreen.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/effects30.h",
+        "-DRE4DC_HW_FOG_HAZE=1",
+        "-DRE4DC_FOLIAGE_TRIM=2",
+        "-DRE4DC_FOLIAGE_NEAR_MM=12000",
+        "-DRE4DC_TRANS_POLICY=3",
+        "-DRE4DC_FOLIAGE_NEAR_FIX=1",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/scenery30.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/blender30.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/tahash.h",
+        "-DRE4DC_EFFECT_PS2_TOGGLE=1",
+        "-I<KOS>/kernel/arch/dreamcast/hardware/pvr",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/post30.h",
+        "-DRE4DC_OWNER_SETUP_LEAN=1",
+        "-DRE4DC_CHARBAKE_TOGGLE=1",
+        "-DRE4DC_SG_SELECT_LEAN=1",
+        "-DRE4DC_SCENERY_CHUNK=1",
+        "-DRE4DC_SCENERY_UNIT_CONCAT=1",
+        "-DRE4DC_SCENERY_SCREEN_MEMO=1",
+        "-DRE4DC_SCENERY_FAR_LOD=4",
+        "-I<PUBLIC_SDK>/include",
+        "-I<EVIDENCE>/world-replay-build-03/release-profile/kos-overlay"
+      ],
+      "missing_asset_overrides": [
+        "PS2_LEON=0",
+        "LEON_HAND_PACK=0",
+        "PS2_GANADO=0",
+        "PS2_GANADO_LIT=0",
+        "GANADO_LOD=0",
+        "GANADO_EVENT_KEEP_LOD=0",
+        "ACTOR_PROBE_LIGHT=1",
+        "GANADO_LIT=0",
+        "NATIVE_MODEL_REGISTRY_DYING=0",
+        "LEON_HEADLESS=0",
+        "PS2_CH2_ENEMY=0",
+        "ACTOR_GANADO_PS2_STUMP=0"
+      ],
+      "removed_asset_path_knobs": [
+        "PS2_LEON_DIR=",
+        "PS2_GANADO_DIR=",
+        "GANADO_LOD_PACK=",
+        "LEON_HEADLESS_DIR=",
+        "PS2_ENEMY_CH22_DIR=",
+        "PS2_ENEMY_CH23_DIR=",
+        "ACTOR_GANADO_PS2_STUMP_DIR="
+      ],
+      "debug_records": false,
+      "modules_manifest_not_built": true,
+      "kos_library_patch_checks_not_executed": true,
+      "source_sha256": {
+        "port/dreamcast/tools/d367/build-r21.sh": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93",
+        "port/dreamcast/tools/d367/test22/release-knobs.txt": "b67978e9d50cfae966d91bdd771e242ba12f4d899b539db0dbf6982e5e91a46c",
+        "port/dreamcast/build-public.sh": "7eaba2006802a1dc5a10ff0602d316cc86b09f32535edfa66412ce2564ca0d9f",
+        "port/dreamcast/kos-env.sh": "d776b3b236236bc5f91500ae5e469c140b41f94e44ec72165efd556afd7aebb8",
+        "port/dreamcast/game/Makefile": "6b5b713e5bfd33ee0dc3a3ae726d0b183c6d98a1b382b1c44e98c65c7b68d5c0",
+        "port/dreamcast/game/actor_ganado_ps2_stump.mk": "4e405949406531d8435bf7a292d9da8ccf1d3ea0d259c6f463e9e029827ffbf2",
+        "port/dreamcast/game/actorplan.mk": "d256e5c6abbcbc2301a83753017c6d0f466b215f301d847f26c7ff5aaa4ff4ce",
+        "port/dreamcast/game/backface.mk": "e579718e2109acb6f5cc04001e38323dbf6c5eee893f843e12c810b6ab3f312f",
+        "port/dreamcast/game/bench.mk": "7c6eca2f116b6fabe4799d33e79a44ac52e775462658124d6833fbd7eba3854d",
+        "port/dreamcast/game/blender30.mk": "9769d1141e1ca47e10ff94fa67f7a7799ec33c3fade565ada37b641e9186537d",
+        "port/dreamcast/game/bodysvc20.mk": "df456c8a62b5e3d58bc4b6f3c11ead1365d3f0ed75a53a0dc0ad2a8460135453",
+        "port/dreamcast/game/cache20.mk": "b88f46b5b4494d5a830d2c01e850fd75e64af66a063025e5568b2ce29100381c",
+        "port/dreamcast/game/charbake.mk": "b6e58694cab718df70b31915ada82417fc32b0ab7517ff6e85eedb5b6570d2d3",
+        "port/dreamcast/game/chardraw19.mk": "0a9db853a9432df007421d5a6e7ca8c90c2aa770fa46a30ed72a321f2f87403f",
+        "port/dreamcast/game/crowd.mk": "3b41a6951044114518ec24ad74da2d91cf8c333ae2a7e1c0d2d2f4c553875fca",
+        "port/dreamcast/game/dbgwarp.mk": "e0530c3591858f3c2ee5227e06571f0375f50831df1b80bf8b08a475062e83f0",
+        "port/dreamcast/game/demo_candidate.mk": "548266bfcb134492aed006771600fda3c2b3d5b046596a1fc2f7d074520912d4",
+        "port/dreamcast/game/effects30.mk": "f6478d031be37c21a126c3f05ba68c96fc105060aab3201177cb7e09b79a248b",
+        "port/dreamcast/game/engine_preview.mk": "6ad87f53c5f2c4f164b9c8229cdc077a895111057b4a17c6294e9eac38454e18",
+        "port/dreamcast/game/esppool.mk": "46639be5e6eee89cc53dfbf43f1439a20bb898ffd131cd9b06cfb82abe961d0a",
+        "port/dreamcast/game/frontend30.mk": "c6ac0510ca94d30dbb41a36afd5e45e84555c49511f7003dde1f4c6511064614",
+        "port/dreamcast/game/fxtrim.mk": "40e2d18ee46a8284a1fb5773c46c60d73e970bc851c2be494e4f503616abb0d4",
+        "port/dreamcast/game/g1parts.mk": "f5ffeb4594647e7c239fac40a038f77ff43ebe2c4ed4f503af1436058c5c3a50",
+        "port/dreamcast/game/game30.mk": "47efa510d5f6ec32e73f6c442278411cc7e87738ec8cd656f1ec0753e50b60ce",
+        "port/dreamcast/game/hwfog.mk": "95d43fd37359ebd11e8d8f11efe678d479b69b3f648440440c24c595adefae25",
+        "port/dreamcast/game/knobs.mk": "8be88086cfa0e7f23b87ae1cdb4d09c0924ea783cea45009747b722383d59863",
+        "port/dreamcast/game/logiclod20.mk": "d90740b778194734e335421da72b3593849e9d75f372c155a2cc56e40b0bd969",
+        "port/dreamcast/game/mcheck.mk": "988282bed93d335a6a1dae07cd74c8c85abf71f47e49847fd68ee28dc2bd94ba",
+        "port/dreamcast/game/native_model_registry.mk": "bb8f9338a6a29674c248d9103f0a73e19118ff1f95548e91599abf27b2583f46",
+        "port/dreamcast/game/pace.mk": "78fef47bf1ec90662be905d449bb4ef139105e4d74c4fac6848f51ce3bf43710",
+        "port/dreamcast/game/post30.mk": "c9e7a3ff79f1a8d59a1adabbead4a269eda26a467185597bf96f3ab1542ac8d5",
+        "port/dreamcast/game/ps2leon.mk": "afacaa37db731ab421916f9a84b1fddd71bb036c7a5ef9a7a0e536d652fdd916",
+        "port/dreamcast/game/pvr_rtt.mk": "4b34e026faf4835b7339ee9eac9dd3ddcc8020153885f0acb1ed32bee175c2c3",
+        "port/dreamcast/game/qamenu.mk": "9f4f57e42c0e3f2fb21df320e4badb9295b375cf856a5d44410203a11b607558",
+        "port/dreamcast/game/quickweapon.mk": "6329640761dbc5802c32fd4272d90347b64807a0995c888098d7237ecd27abf0",
+        "port/dreamcast/game/records30.mk": "132df68c9fdd14efb107fcf921183b7519e430d82c6b87bc026108f50eba515c",
+        "port/dreamcast/game/rigid20.mk": "3608f11dd5572b98692db3839a8c92189cc09009eb11350a311949d644e07b63",
+        "port/dreamcast/game/safecuts.mk": "da6ba39b803e76b1f97e34688ae05bbc7baff5f5f47a9f0ff2efdbdea7d80afe",
+        "port/dreamcast/game/scenery19.mk": "5be75c7f22c72af76283316a9fcdbdce3ab43903fc44a86d656de795959e2ef8",
+        "port/dreamcast/game/scenery30.mk": "46acf4cb67022b9d4f820bf887075143e951b1895e3e1cb95e9e2335105411ec",
+        "port/dreamcast/game/shotfx20.mk": "dc5be227dcf55f1a28eeb68dfb58589cc929bc04fdb2e473a7efb8ac62e946a6",
+        "port/dreamcast/game/subscreen.mk": "326f2a516ee9b52dbc43ad32b3b2ec93a597265e4184811a52c6919643f2c95c",
+        "port/dreamcast/game/t2exact.mk": "1e0e369e489ff81f3dc4f7cbd1839e89f6313fe6c5e097a891198a62d2a4c175",
+        "port/dreamcast/game/tahash.mk": "c32223ced5323b52388ed5b282e223495a9dc89f927bfcc947d6f0423a00f184",
+        "port/dreamcast/game/vmu_context.mk": "c2f3714f6f86f7c96d7c8697498e7679bf5b1ae33820cba059a610772a0502e4",
+        "port/dreamcast/game/vmusave.mk": "c99a41216906a2b9d3c1c55be2a826cf0fba4eecb0d71d3b0c50c14ed885e5eb",
+        "port/dreamcast/game/worldhole.mk": "fc39dd79c316360601ad59b1805662864fdd9a5c9a42542193513fc167fc3f2c",
+        "port/dreamcast/game/worldscratch.mk": "7a71efa755f0c1984df3eef28ff07122459b90ca86bf596872f7b8b5b013f057"
+      }
+    },
+    "pvr_header_overlay": {
+      "source": "<KOS>/kernel/arch/dreamcast/include/dc/pvr.h",
+      "source_sha256": "280551012a9d631e88e4058141fd803c55c1968cdd3d76bb0979116ed6191eb4",
+      "patched_sha256": "55a2abc199af2f48b7c713e3975777150da567ea0216fae32cbd7c8f0d9dfa1f",
+      "patches": [
+        {
+          "path": "port/dreamcast/patches/kos-804b319-manual-flip.patch",
+          "sha256": "c8bd2883f9422e78da250e1b26a5bbc97c3f363cd98a6be242bd9cecf239f4df",
+          "applied_header_hunk_sha256": "70645175039038250cec56655841b85fa60c3cd00f7af4dbca26aa10662f4ee7",
+          "output": "patching file <EVIDENCE>/world-replay-build-03/release-profile/kos-overlay/dc/pvr.h\n"
+        },
+        {
+          "path": "port/dreamcast/patches/kos-804b319-async-present.patch",
+          "sha256": "d3fc98e7dbd78efe58f8d32592147d44d96030037a83358039629aa624b4d442",
+          "applied_header_hunk_sha256": "d3610193be03965021f8eea0ff60c1f086ab418056ab1fbce5d2f07c15fb79e6",
+          "output": "patching file <EVIDENCE>/world-replay-build-03/release-profile/kos-overlay/dc/pvr.h\n"
+        },
+        {
+          "path": "port/dreamcast/patches/kos-804b319-vbuf-switch.patch",
+          "sha256": "52f99b1fb5b0dd9391a193381434c808737302d4f8121747e6d0b4201963f4a7",
+          "applied_header_hunk_sha256": "9557be2aa8b7ba94240a505249573e2249f16ec86e6d1251909969d2ba417279",
+          "output": "patching file <EVIDENCE>/world-replay-build-03/release-profile/kos-overlay/dc/pvr.h\npatch unexpectedly ends in middle of line\nHunk #1 succeeded at 1089 with fuzz 1.\n"
+        }
+      ],
+      "scope": "Only declarations patched; KOS source/library unchanged and link guards not run"
+    },
+    "native_ui": {
+      "scope": "Make-expanded Test22 public world configuration; complete TU compile only, no linked release image",
+      "flags": [
+        "-O2",
+        "-fno-PIC",
+        "-fno-PIE",
+        "-fomit-frame-pointer",
+        "-m4-single",
+        "-ml",
+        "-mfsrra",
+        "-mfsca",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-matomic-model=soft-gusa",
+        "-ftls-model=local-exec",
+        "-D__DREAMCAST__",
+        "-isystem",
+        "<KOS>/include",
+        "-isystem",
+        "<KOS>/kernel/arch/dreamcast/include",
+        "-isystem",
+        "<KOS>/addons/include",
+        "-D_arch_dreamcast=1",
+        "-D_arch_sub_pristine=1",
+        "-Wall",
+        "-std=gnu++20",
+        "-Wall",
+        "-Wextra",
+        "-O1",
+        "-I<REPO>/port/dreamcast/game/platform/include",
+        "-DRE4DC_GAME",
+        "-fno-exceptions",
+        "-fno-unwind-tables",
+        "-fno-asynchronous-unwind-tables",
+        "-fno-threadsafe-statics",
+        "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+        "-DRE4DC_RENDER_FSAA=1",
+        "-DRE4DC_RENDER_OPTION=1",
+        "-DRE4DC_VIEW_DIST_OPTION=1",
+        "-DRE4DC_FAR_SHELL=1",
+        "-DRE4DC_FOLIAGE_OPTION=1",
+        "-DRE4DC_RES_ALTERNATE=1",
+        "-DRE4DC_RES_MODES=9",
+        "-DRE4DC_RES_MODE=0",
+        "-DRE4DC_RES_CYCLE_FRAMES=0",
+        "-DRE4DC_MV_SHADOWS=1",
+        "-DRE4DC_MV_OPB_BINS=8",
+        "-DRE4DC_MV_SCALE=50",
+        "-DRE4DC_MV_SIDES=8",
+        "-DRE4DC_MV_RADIUS=420",
+        "-DRE4DC_MV_TOP=250",
+        "-DRE4DC_MV_DEPTH=1200",
+        "-DRE4DC_MV_RANGE_M=15",
+        "-DRE4DC_MV_MAX=12",
+        "-DRE4DC_MV_BODY=1700",
+        "-DRE4DC_MV_LEN_MAX=1800",
+        "-DRE4DC_ATCHK_LIST=1",
+        "-DRE4DC_ATCHK_CACHE=1",
+        "-DRE4DC_WORKAT_INLINE=1",
+        "-DRE4DC_FX_SCAN=1",
+        "-DRE4DC_FX_MOVE=1",
+        "-DRE4DC_OT_MASK=1",
+        "-DRE4DC_MANUAL_PACK_PROBE=1",
+        "-DRE4DC_PAD_PROMPTS=1",
+        "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+        "-DRE4DC_SH4ZAM_RENDER=1",
+        "-DRE4DC_ACTOR_TRANSACTION=1",
+        "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+        "-DRE4DC_VMU_DIALOG=1",
+        "-DRE4DC_ACTOR_PL08=1",
+        "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+        "-DRE4DC_NMR_POOL=1",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_TEX_PKG_SKIP=1",
+        "-DRE4DC_GC_CENSUS_TRIM=1",
+        "-DRE4DC_GXF_JITTER=1",
+        "-DRE4DC_UI_POLY_ORDER=0",
+        "-DRE4DC_WATER45_NATIVE=1",
+        "-DRE4DC_LAKE_RIPPLES=1",
+        "-DRE4DC_LAKE_TILE=2800.0f",
+        "-DRE4DC_LAKE_ALPHA=0.35f",
+        "-DRE4DC_WATER_PS2=1",
+        "-DRE4DC_VGA_SOFT=1",
+        "-DRE4DC_LETTERBOX_CLIP=1",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/poison.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/io-probe.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/native-mes.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/quality-knobs.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/cabin-source.h",
+        "-include",
+        "<REPO>/port/dreamcast/game/platform/include/native_event_file.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/movie-world-arena.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/route-movies.h",
+        "-DRE4DC_UI_HEAP_LAZY=30",
+        "-DRE4DC_UI_PALETTE_SLOTS=32",
+        "-DRE4DC_UI_QUAD_LEAN=1",
+        "-DRE4DC_COARSE_LEON=1",
+        "-DRE4DC_COARSE_ONE_SUBMIT=1",
+        "-DRE4DC_COARSE=1",
+        "-DRE4DC_COARSE_SCENERY_FALLBACK=1",
+        "-DRE4DC_PS2_WORLD_DRAW=1",
+        "-DRE4DC_WORLD_AUTOSORT=1",
+        "-DRE4DC_PS2_PRELOAD_LEAN=1",
+        "-DRE4DC_TEX_PACK=1",
+        "-DRE4DC_TEX_PAYLOAD_RETRY=1",
+        "-DRE4DC_GANADO_ATLAS_DROP=3",
+        "-DRE4DC_GANADO_ATLAS_DROP_ROOMS=0x101",
+        "-DRE4DC_CLOSED_PASS_KEEP=1",
+        "-DRE4DC_UI_HUD_MASK=1",
+        "-DRE4DC_PS2_WORLD_MESH=1",
+        "-DRE4DC_WORLD_RECT21=1",
+        "-DRE4DC_PS2_WORLD_HDR_CACHE=1",
+        "-DRE4DC_PS2_HDR_SETS=128",
+        "-DRE4DC_PS2_WORLD_SOURCE_OWNER=1",
+        "-DRE4DC_PS2_WORLD_SOURCE_TEX_PREP=1",
+        "-DRE4DC_PS2_WORLD_SOURCE_TEX_VQ=1",
+        "-DRE4DC_ITEM_UI_ORDER=1",
+        "-DRE4DC_PS2_WORLD_FOG_SOURCE=1",
+        "-DRE4DC_PS2_PLACE_GATE=1",
+        "-DRE4DC_PS2_ROOM_PIN=1",
+        "-DRE4DC_UI_HUD_LENS_ALPHA=230",
+        "-DRE4DC_TEX_WRAP_SAFE=1",
+        "-DRE4DC_MODEL_DROP_LOG=0",
+        "-DRE4DC_TEX_PAL4_ALPHA=1",
+        "-DRE4DC_TEX_MIP_DADJ=3",
+        "-DRE4DC_MOVIE_FENCE_RETRY=1",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/pvr-stream.h",
+        "-DRE4DC_RETIRE_KOS_FLOOR=65536U",
+        "-DRE4DC_ROOM_CHANGE_EVICT=60U",
+        "-DRE4DC_ROOM_LEFTOVER_FIT=1",
+        "-DRE4DC_ROOM_REENTRY_EVICT=1",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/pipeline30.h",
+        "-I<KOS>/kernel/arch/dreamcast/hardware/pvr",
+        "-Os",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/d349-stack.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/native-profile.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/pc-sampler.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/model-draw-plan.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/native-static.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/native-actor.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/frontend30.h",
+        "-DRE4DC_CORE_PIN=2",
+        "-DRE4DC_SS_HOLD_RESTORE=1",
+        "-DRE4DC_SS11_PRELOAD=1",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/subscreen.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/vmusave.h",
+        "-DRE4DC_NATIVE_LASER=1",
+        "-DRE4DC_ESP_SPRITE_FAST=1",
+        "-DRE4DC_PS2_FX_ADDITIONS=1",
+        "-DRE4DC_RAIN_DC=1",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/effects30.h",
+        "-DRE4DC_FX_STRIP21=1",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/scenery30.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/blender30.h",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/tahash.h",
+        "-DRE4DC_WORLD_HOLE_FIX=1",
+        "-DRE4DC_FX_SPRITE_TRIM=2",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/pace.h",
+        "-DRE4DC_PACE_STEADY=1",
+        "-DRE4DC_PACE_HOLD_LOG=0",
+        "-DRE4DC_ACTOR_TRANSACTION_DIAG=0",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/post30.h",
+        "-DRE4DC_LEON_LIGHT_HEADROOM=1",
+        "-DRE4DC_UI_SOURCE_LRU=1",
+        "-DRE4DC_G1_DIAG_INLINE=1",
+        "-DRE4DC_G1_FP_UNSIGNED=1",
+        "-DRE4DC_G1_PRESORT_LAZY=1",
+        "-include",
+        "<EVIDENCE>/world-replay-build-03/release-profile/obj/vmu-context-options.h",
+        "-I<PUBLIC_SDK>/include",
+        "-I<EVIDENCE>/world-replay-build-03/release-profile/kos-overlay"
+      ],
+      "missing_asset_overrides": [
+        "PS2_LEON=0",
+        "LEON_HAND_PACK=0",
+        "PS2_GANADO=0",
+        "PS2_GANADO_LIT=0",
+        "GANADO_LOD=0",
+        "GANADO_EVENT_KEEP_LOD=0",
+        "ACTOR_PROBE_LIGHT=1",
+        "GANADO_LIT=0",
+        "NATIVE_MODEL_REGISTRY_DYING=0",
+        "LEON_HEADLESS=0",
+        "PS2_CH2_ENEMY=0",
+        "ACTOR_GANADO_PS2_STUMP=0"
+      ],
+      "removed_asset_path_knobs": [
+        "PS2_LEON_DIR=",
+        "PS2_GANADO_DIR=",
+        "GANADO_LOD_PACK=",
+        "LEON_HEADLESS_DIR=",
+        "PS2_ENEMY_CH22_DIR=",
+        "PS2_ENEMY_CH23_DIR=",
+        "ACTOR_GANADO_PS2_STUMP_DIR="
+      ],
+      "debug_records": false,
+      "modules_manifest_not_built": true,
+      "kos_library_patch_checks_not_executed": true,
+      "source_sha256": {
+        "port/dreamcast/tools/d367/build-r21.sh": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93",
+        "port/dreamcast/tools/d367/test22/release-knobs.txt": "b67978e9d50cfae966d91bdd771e242ba12f4d899b539db0dbf6982e5e91a46c",
+        "port/dreamcast/build-public.sh": "7eaba2006802a1dc5a10ff0602d316cc86b09f32535edfa66412ce2564ca0d9f",
+        "port/dreamcast/kos-env.sh": "d776b3b236236bc5f91500ae5e469c140b41f94e44ec72165efd556afd7aebb8",
+        "port/dreamcast/game/Makefile": "6b5b713e5bfd33ee0dc3a3ae726d0b183c6d98a1b382b1c44e98c65c7b68d5c0",
+        "port/dreamcast/game/actor_ganado_ps2_stump.mk": "4e405949406531d8435bf7a292d9da8ccf1d3ea0d259c6f463e9e029827ffbf2",
+        "port/dreamcast/game/actorplan.mk": "d256e5c6abbcbc2301a83753017c6d0f466b215f301d847f26c7ff5aaa4ff4ce",
+        "port/dreamcast/game/backface.mk": "e579718e2109acb6f5cc04001e38323dbf6c5eee893f843e12c810b6ab3f312f",
+        "port/dreamcast/game/bench.mk": "7c6eca2f116b6fabe4799d33e79a44ac52e775462658124d6833fbd7eba3854d",
+        "port/dreamcast/game/blender30.mk": "9769d1141e1ca47e10ff94fa67f7a7799ec33c3fade565ada37b641e9186537d",
+        "port/dreamcast/game/bodysvc20.mk": "df456c8a62b5e3d58bc4b6f3c11ead1365d3f0ed75a53a0dc0ad2a8460135453",
+        "port/dreamcast/game/cache20.mk": "b88f46b5b4494d5a830d2c01e850fd75e64af66a063025e5568b2ce29100381c",
+        "port/dreamcast/game/charbake.mk": "b6e58694cab718df70b31915ada82417fc32b0ab7517ff6e85eedb5b6570d2d3",
+        "port/dreamcast/game/chardraw19.mk": "0a9db853a9432df007421d5a6e7ca8c90c2aa770fa46a30ed72a321f2f87403f",
+        "port/dreamcast/game/crowd.mk": "3b41a6951044114518ec24ad74da2d91cf8c333ae2a7e1c0d2d2f4c553875fca",
+        "port/dreamcast/game/dbgwarp.mk": "e0530c3591858f3c2ee5227e06571f0375f50831df1b80bf8b08a475062e83f0",
+        "port/dreamcast/game/demo_candidate.mk": "548266bfcb134492aed006771600fda3c2b3d5b046596a1fc2f7d074520912d4",
+        "port/dreamcast/game/effects30.mk": "f6478d031be37c21a126c3f05ba68c96fc105060aab3201177cb7e09b79a248b",
+        "port/dreamcast/game/engine_preview.mk": "6ad87f53c5f2c4f164b9c8229cdc077a895111057b4a17c6294e9eac38454e18",
+        "port/dreamcast/game/esppool.mk": "46639be5e6eee89cc53dfbf43f1439a20bb898ffd131cd9b06cfb82abe961d0a",
+        "port/dreamcast/game/frontend30.mk": "c6ac0510ca94d30dbb41a36afd5e45e84555c49511f7003dde1f4c6511064614",
+        "port/dreamcast/game/fxtrim.mk": "40e2d18ee46a8284a1fb5773c46c60d73e970bc851c2be494e4f503616abb0d4",
+        "port/dreamcast/game/g1parts.mk": "f5ffeb4594647e7c239fac40a038f77ff43ebe2c4ed4f503af1436058c5c3a50",
+        "port/dreamcast/game/game30.mk": "47efa510d5f6ec32e73f6c442278411cc7e87738ec8cd656f1ec0753e50b60ce",
+        "port/dreamcast/game/hwfog.mk": "95d43fd37359ebd11e8d8f11efe678d479b69b3f648440440c24c595adefae25",
+        "port/dreamcast/game/knobs.mk": "8be88086cfa0e7f23b87ae1cdb4d09c0924ea783cea45009747b722383d59863",
+        "port/dreamcast/game/logiclod20.mk": "d90740b778194734e335421da72b3593849e9d75f372c155a2cc56e40b0bd969",
+        "port/dreamcast/game/mcheck.mk": "988282bed93d335a6a1dae07cd74c8c85abf71f47e49847fd68ee28dc2bd94ba",
+        "port/dreamcast/game/native_model_registry.mk": "bb8f9338a6a29674c248d9103f0a73e19118ff1f95548e91599abf27b2583f46",
+        "port/dreamcast/game/pace.mk": "78fef47bf1ec90662be905d449bb4ef139105e4d74c4fac6848f51ce3bf43710",
+        "port/dreamcast/game/post30.mk": "c9e7a3ff79f1a8d59a1adabbead4a269eda26a467185597bf96f3ab1542ac8d5",
+        "port/dreamcast/game/ps2leon.mk": "afacaa37db731ab421916f9a84b1fddd71bb036c7a5ef9a7a0e536d652fdd916",
+        "port/dreamcast/game/pvr_rtt.mk": "4b34e026faf4835b7339ee9eac9dd3ddcc8020153885f0acb1ed32bee175c2c3",
+        "port/dreamcast/game/qamenu.mk": "9f4f57e42c0e3f2fb21df320e4badb9295b375cf856a5d44410203a11b607558",
+        "port/dreamcast/game/quickweapon.mk": "6329640761dbc5802c32fd4272d90347b64807a0995c888098d7237ecd27abf0",
+        "port/dreamcast/game/records30.mk": "132df68c9fdd14efb107fcf921183b7519e430d82c6b87bc026108f50eba515c",
+        "port/dreamcast/game/rigid20.mk": "3608f11dd5572b98692db3839a8c92189cc09009eb11350a311949d644e07b63",
+        "port/dreamcast/game/safecuts.mk": "da6ba39b803e76b1f97e34688ae05bbc7baff5f5f47a9f0ff2efdbdea7d80afe",
+        "port/dreamcast/game/scenery19.mk": "5be75c7f22c72af76283316a9fcdbdce3ab43903fc44a86d656de795959e2ef8",
+        "port/dreamcast/game/scenery30.mk": "46acf4cb67022b9d4f820bf887075143e951b1895e3e1cb95e9e2335105411ec",
+        "port/dreamcast/game/shotfx20.mk": "dc5be227dcf55f1a28eeb68dfb58589cc929bc04fdb2e473a7efb8ac62e946a6",
+        "port/dreamcast/game/subscreen.mk": "326f2a516ee9b52dbc43ad32b3b2ec93a597265e4184811a52c6919643f2c95c",
+        "port/dreamcast/game/t2exact.mk": "1e0e369e489ff81f3dc4f7cbd1839e89f6313fe6c5e097a891198a62d2a4c175",
+        "port/dreamcast/game/tahash.mk": "c32223ced5323b52388ed5b282e223495a9dc89f927bfcc947d6f0423a00f184",
+        "port/dreamcast/game/vmu_context.mk": "c2f3714f6f86f7c96d7c8697498e7679bf5b1ae33820cba059a610772a0502e4",
+        "port/dreamcast/game/vmusave.mk": "c99a41216906a2b9d3c1c55be2a826cf0fba4eecb0d71d3b0c50c14ed885e5eb",
+        "port/dreamcast/game/worldhole.mk": "fc39dd79c316360601ad59b1805662864fdd9a5c9a42542193513fc167fc3f2c",
+        "port/dreamcast/game/worldscratch.mk": "7a71efa755f0c1984df3eef28ff07122459b90ca86bf596872f7b8b5b013f057"
+      }
+    }
+  },
+  "production_identity_comparisons": 32,
+  "production": {
+    "s0-b0": {
+      "native_static": {
+        "off_identical": true,
+        "arms": {
+          "baseline.ii": {
+            "bytes": 1042718,
+            "sha256": "881e1e5b22981832fe3e10e528192ad8a99308659126506e9ae45b1e2af9a481"
+          },
+          "baseline.o": {
+            "bytes": 174744,
+            "sha256": "dd20d9ab5592c097567ebffb4f101edf4848c2768b232d06d37ba6a63681c865",
+            "executable_bytes": 67040,
+            "allocated_bytes": 110627,
+            "zero_fill_bytes": 17212
+          },
+          "absent.ii": {
+            "bytes": 1042718,
+            "sha256": "881e1e5b22981832fe3e10e528192ad8a99308659126506e9ae45b1e2af9a481"
+          },
+          "absent.o": {
+            "bytes": 174744,
+            "sha256": "dd20d9ab5592c097567ebffb4f101edf4848c2768b232d06d37ba6a63681c865",
+            "executable_bytes": 67040,
+            "allocated_bytes": 110627,
+            "zero_fill_bytes": 17212
+          },
+          "zero.ii": {
+            "bytes": 1042718,
+            "sha256": "881e1e5b22981832fe3e10e528192ad8a99308659126506e9ae45b1e2af9a481"
+          },
+          "zero.o": {
+            "bytes": 174744,
+            "sha256": "dd20d9ab5592c097567ebffb4f101edf4848c2768b232d06d37ba6a63681c865",
+            "executable_bytes": 67040,
+            "allocated_bytes": 110627,
+            "zero_fill_bytes": 17212
+          },
+          "on.ii": {
+            "bytes": 1043150,
+            "sha256": "8d93e5945b381c11629187494636866e5f54476f0ab23bace8197c525703fc5b"
+          },
+          "on.o": {
+            "bytes": 174916,
+            "sha256": "c5ba7795bdfeec3477a66e81ced1466151d817a3ba0e7d9d718a87c9dea48618",
+            "executable_bytes": 67136,
+            "allocated_bytes": 110723,
+            "zero_fill_bytes": 17212
+          }
+        },
+        "enabled_section_delta": {
+          "executable_bytes": 96,
+          "allocated_bytes": 96,
+          "zero_fill_bytes": 0
+        },
+        "stack_frames": {
+          "baseline.o": [
+            {
+              "function": "<stdin>:861:6:void {anonymous}::load_screen(const float*, const float*, const float*)",
+              "bytes": 196,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:3055:35:int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+              "bytes": 136,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6104:22:{anonymous}::ps2_pass(unsigned int, float)::<lambda()>",
+              "bytes": 848,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:5919:5:int {anonymous}::ps2_pass(unsigned int, float)",
+              "bytes": 8988,
+              "kind": "static"
+            }
+          ],
+          "on.o": [
+            {
+              "function": "<stdin>:873:6:void {anonymous}::load_screen(const float*, const float*, const float*)",
+              "bytes": 108,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:3093:35:int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+              "bytes": 128,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6144:22:0() const",
+              "bytes": 884,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:5959:5:int {anonymous}::ps2_pass(unsigned int, float)",
+              "bytes": 8988,
+              "kind": "static"
+            }
+          ]
+        }
+      },
+      "native_ui": {
+        "off_identical": true,
+        "arms": {
+          "baseline.ii": {
+            "bytes": 1455199,
+            "sha256": "4c39d1a385020807ad07b9163baca6c9884cd14b637dda3cc936ae0c6fae9462"
+          },
+          "baseline.o": {
+            "bytes": 399556,
+            "sha256": "e91c92158bfadb9aa472660fc32e0c38fe5cce3d69067558bdd8a936f743bca3",
+            "executable_bytes": 76614,
+            "allocated_bytes": 386140,
+            "zero_fill_bytes": 152378
+          },
+          "absent.ii": {
+            "bytes": 1455199,
+            "sha256": "4c39d1a385020807ad07b9163baca6c9884cd14b637dda3cc936ae0c6fae9462"
+          },
+          "absent.o": {
+            "bytes": 399556,
+            "sha256": "e91c92158bfadb9aa472660fc32e0c38fe5cce3d69067558bdd8a936f743bca3",
+            "executable_bytes": 76614,
+            "allocated_bytes": 386140,
+            "zero_fill_bytes": 152378
+          },
+          "zero.ii": {
+            "bytes": 1455199,
+            "sha256": "4c39d1a385020807ad07b9163baca6c9884cd14b637dda3cc936ae0c6fae9462"
+          },
+          "zero.o": {
+            "bytes": 399556,
+            "sha256": "e91c92158bfadb9aa472660fc32e0c38fe5cce3d69067558bdd8a936f743bca3",
+            "executable_bytes": 76614,
+            "allocated_bytes": 386140,
+            "zero_fill_bytes": 152378
+          },
+          "on.ii": {
+            "bytes": 1455199,
+            "sha256": "4c39d1a385020807ad07b9163baca6c9884cd14b637dda3cc936ae0c6fae9462"
+          },
+          "on.o": {
+            "bytes": 399556,
+            "sha256": "e91c92158bfadb9aa472660fc32e0c38fe5cce3d69067558bdd8a936f743bca3",
+            "executable_bytes": 76614,
+            "allocated_bytes": 386140,
+            "zero_fill_bytes": 152378
+          }
+        },
+        "enabled_object_identical": true
+      }
+    },
+    "s0-b1": {
+      "native_static": {
+        "off_identical": true,
+        "arms": {
+          "baseline.ii": {
+            "bytes": 1043620,
+            "sha256": "65e1bfd36bc9e3047a9042280cec638bb42d031f74725410280c3988fe7de0bf"
+          },
+          "baseline.o": {
+            "bytes": 175172,
+            "sha256": "2580fc14e8bff8d745f55aa9679dd050ccb4e991beae13445eb3e412fd1b5da6",
+            "executable_bytes": 67068,
+            "allocated_bytes": 110655,
+            "zero_fill_bytes": 17212
+          },
+          "absent.ii": {
+            "bytes": 1043620,
+            "sha256": "65e1bfd36bc9e3047a9042280cec638bb42d031f74725410280c3988fe7de0bf"
+          },
+          "absent.o": {
+            "bytes": 175172,
+            "sha256": "2580fc14e8bff8d745f55aa9679dd050ccb4e991beae13445eb3e412fd1b5da6",
+            "executable_bytes": 67068,
+            "allocated_bytes": 110655,
+            "zero_fill_bytes": 17212
+          },
+          "zero.ii": {
+            "bytes": 1043620,
+            "sha256": "65e1bfd36bc9e3047a9042280cec638bb42d031f74725410280c3988fe7de0bf"
+          },
+          "zero.o": {
+            "bytes": 175172,
+            "sha256": "2580fc14e8bff8d745f55aa9679dd050ccb4e991beae13445eb3e412fd1b5da6",
+            "executable_bytes": 67068,
+            "allocated_bytes": 110655,
+            "zero_fill_bytes": 17212
+          },
+          "on.ii": {
+            "bytes": 1044048,
+            "sha256": "3307fd928e65c9f8e39070c21a3a8839fb4e0d82150e762c72f218f05df586ce"
+          },
+          "on.o": {
+            "bytes": 175344,
+            "sha256": "ee0410e2a51fc36356397a5abb163c7ec0ab944a148e08f54779d4044e9cca80",
+            "executable_bytes": 67164,
+            "allocated_bytes": 110751,
+            "zero_fill_bytes": 17212
+          }
+        },
+        "enabled_section_delta": {
+          "executable_bytes": 96,
+          "allocated_bytes": 96,
+          "zero_fill_bytes": 0
+        },
+        "stack_frames": {
+          "baseline.o": [
+            {
+              "function": "<stdin>:861:6:void {anonymous}::load_screen(const float*, const float*, const float*)",
+              "bytes": 196,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:3055:35:int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+              "bytes": 136,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6104:22:{anonymous}::ps2_pass(unsigned int, float)::<lambda()>",
+              "bytes": 852,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:5919:5:int {anonymous}::ps2_pass(unsigned int, float)",
+              "bytes": 8988,
+              "kind": "static"
+            }
+          ],
+          "on.o": [
+            {
+              "function": "<stdin>:873:6:void {anonymous}::load_screen(const float*, const float*, const float*)",
+              "bytes": 108,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:3093:35:int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+              "bytes": 128,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6144:22:0() const",
+              "bytes": 896,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:5959:5:int {anonymous}::ps2_pass(unsigned int, float)",
+              "bytes": 8988,
+              "kind": "static"
+            }
+          ]
+        }
+      },
+      "native_ui": {
+        "off_identical": true,
+        "arms": {
+          "baseline.ii": {
+            "bytes": 1457216,
+            "sha256": "0cc782bfbfb87edcbc4e0a4200d95de9b36221113070809cf2c30497962a04e3"
+          },
+          "baseline.o": {
+            "bytes": 400920,
+            "sha256": "44a3dc0778da20078fee1eb674c89d5c594c89e6d9a742c3b4b6479169fb4ea2",
+            "executable_bytes": 76986,
+            "allocated_bytes": 386512,
+            "zero_fill_bytes": 152378
+          },
+          "absent.ii": {
+            "bytes": 1457216,
+            "sha256": "0cc782bfbfb87edcbc4e0a4200d95de9b36221113070809cf2c30497962a04e3"
+          },
+          "absent.o": {
+            "bytes": 400920,
+            "sha256": "44a3dc0778da20078fee1eb674c89d5c594c89e6d9a742c3b4b6479169fb4ea2",
+            "executable_bytes": 76986,
+            "allocated_bytes": 386512,
+            "zero_fill_bytes": 152378
+          },
+          "zero.ii": {
+            "bytes": 1457216,
+            "sha256": "0cc782bfbfb87edcbc4e0a4200d95de9b36221113070809cf2c30497962a04e3"
+          },
+          "zero.o": {
+            "bytes": 400920,
+            "sha256": "44a3dc0778da20078fee1eb674c89d5c594c89e6d9a742c3b4b6479169fb4ea2",
+            "executable_bytes": 76986,
+            "allocated_bytes": 386512,
+            "zero_fill_bytes": 152378
+          },
+          "on.ii": {
+            "bytes": 1457216,
+            "sha256": "0cc782bfbfb87edcbc4e0a4200d95de9b36221113070809cf2c30497962a04e3"
+          },
+          "on.o": {
+            "bytes": 400920,
+            "sha256": "44a3dc0778da20078fee1eb674c89d5c594c89e6d9a742c3b4b6479169fb4ea2",
+            "executable_bytes": 76986,
+            "allocated_bytes": 386512,
+            "zero_fill_bytes": 152378
+          }
+        },
+        "enabled_object_identical": true
+      }
+    },
+    "s1-b0": {
+      "native_static": {
+        "off_identical": true,
+        "arms": {
+          "baseline.ii": {
+            "bytes": 1049396,
+            "sha256": "c0d12d2913307c5c36e6ae16da0d6cfdf5d88f58426550bd52443877a0ef274e"
+          },
+          "baseline.o": {
+            "bytes": 175580,
+            "sha256": "01ea3fd62fe51fa2638f9721c9086d3d7c308b701ddb3e6fa118aa3fc1279669",
+            "executable_bytes": 67264,
+            "allocated_bytes": 110851,
+            "zero_fill_bytes": 17212
+          },
+          "absent.ii": {
+            "bytes": 1049396,
+            "sha256": "c0d12d2913307c5c36e6ae16da0d6cfdf5d88f58426550bd52443877a0ef274e"
+          },
+          "absent.o": {
+            "bytes": 175580,
+            "sha256": "01ea3fd62fe51fa2638f9721c9086d3d7c308b701ddb3e6fa118aa3fc1279669",
+            "executable_bytes": 67264,
+            "allocated_bytes": 110851,
+            "zero_fill_bytes": 17212
+          },
+          "zero.ii": {
+            "bytes": 1049396,
+            "sha256": "c0d12d2913307c5c36e6ae16da0d6cfdf5d88f58426550bd52443877a0ef274e"
+          },
+          "zero.o": {
+            "bytes": 175580,
+            "sha256": "01ea3fd62fe51fa2638f9721c9086d3d7c308b701ddb3e6fa118aa3fc1279669",
+            "executable_bytes": 67264,
+            "allocated_bytes": 110851,
+            "zero_fill_bytes": 17212
+          },
+          "on.ii": {
+            "bytes": 1049828,
+            "sha256": "279100c9e2e2f3ea2190d0a400f8d197f3ba1cdd94b5552950a2c7387986adb5"
+          },
+          "on.o": {
+            "bytes": 175668,
+            "sha256": "aea365629fa9a0e6d0950b01e595f5d5328020f6ecf3ac4ee7b6b271c4878b36",
+            "executable_bytes": 67320,
+            "allocated_bytes": 110907,
+            "zero_fill_bytes": 17212
+          }
+        },
+        "enabled_section_delta": {
+          "executable_bytes": 56,
+          "allocated_bytes": 56,
+          "zero_fill_bytes": 0
+        },
+        "stack_frames": {
+          "baseline.o": [
+            {
+              "function": "<stdin>:861:6:void {anonymous}::load_screen(const float*, const float*, const float*)",
+              "bytes": 196,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:3055:35:int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+              "bytes": 136,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6104:22:{anonymous}::ps2_pass(unsigned int, float)::<lambda()>",
+              "bytes": 848,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:5919:5:int {anonymous}::ps2_pass(unsigned int, float)",
+              "bytes": 8992,
+              "kind": "static"
+            }
+          ],
+          "on.o": [
+            {
+              "function": "<stdin>:873:6:void {anonymous}::load_screen(const float*, const float*, const float*)",
+              "bytes": 108,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:3093:35:int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+              "bytes": 128,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6144:22:0() const",
+              "bytes": 884,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:5959:5:int {anonymous}::ps2_pass(unsigned int, float)",
+              "bytes": 8992,
+              "kind": "static"
+            }
+          ]
+        }
+      },
+      "native_ui": {
+        "off_identical": true,
+        "arms": {
+          "baseline.ii": {
+            "bytes": 1455199,
+            "sha256": "4c39d1a385020807ad07b9163baca6c9884cd14b637dda3cc936ae0c6fae9462"
+          },
+          "baseline.o": {
+            "bytes": 399556,
+            "sha256": "e91c92158bfadb9aa472660fc32e0c38fe5cce3d69067558bdd8a936f743bca3",
+            "executable_bytes": 76614,
+            "allocated_bytes": 386140,
+            "zero_fill_bytes": 152378
+          },
+          "absent.ii": {
+            "bytes": 1455199,
+            "sha256": "4c39d1a385020807ad07b9163baca6c9884cd14b637dda3cc936ae0c6fae9462"
+          },
+          "absent.o": {
+            "bytes": 399556,
+            "sha256": "e91c92158bfadb9aa472660fc32e0c38fe5cce3d69067558bdd8a936f743bca3",
+            "executable_bytes": 76614,
+            "allocated_bytes": 386140,
+            "zero_fill_bytes": 152378
+          },
+          "zero.ii": {
+            "bytes": 1455199,
+            "sha256": "4c39d1a385020807ad07b9163baca6c9884cd14b637dda3cc936ae0c6fae9462"
+          },
+          "zero.o": {
+            "bytes": 399556,
+            "sha256": "e91c92158bfadb9aa472660fc32e0c38fe5cce3d69067558bdd8a936f743bca3",
+            "executable_bytes": 76614,
+            "allocated_bytes": 386140,
+            "zero_fill_bytes": 152378
+          },
+          "on.ii": {
+            "bytes": 1455199,
+            "sha256": "4c39d1a385020807ad07b9163baca6c9884cd14b637dda3cc936ae0c6fae9462"
+          },
+          "on.o": {
+            "bytes": 399556,
+            "sha256": "e91c92158bfadb9aa472660fc32e0c38fe5cce3d69067558bdd8a936f743bca3",
+            "executable_bytes": 76614,
+            "allocated_bytes": 386140,
+            "zero_fill_bytes": 152378
+          }
+        },
+        "enabled_object_identical": true
+      }
+    },
+    "s1-b1": {
+      "native_static": {
+        "off_identical": true,
+        "arms": {
+          "baseline.ii": {
+            "bytes": 1050298,
+            "sha256": "1d1ac8dbd2e3c70ff626be9b87e11421d7544afa4c7bef6c31098c3f1601cf08"
+          },
+          "baseline.o": {
+            "bytes": 176028,
+            "sha256": "1343c7db44d6559b3d2f086133d21107d34fc7c6cda4ad1fe76a29dc026c790d",
+            "executable_bytes": 67304,
+            "allocated_bytes": 110891,
+            "zero_fill_bytes": 17212
+          },
+          "absent.ii": {
+            "bytes": 1050298,
+            "sha256": "1d1ac8dbd2e3c70ff626be9b87e11421d7544afa4c7bef6c31098c3f1601cf08"
+          },
+          "absent.o": {
+            "bytes": 176028,
+            "sha256": "1343c7db44d6559b3d2f086133d21107d34fc7c6cda4ad1fe76a29dc026c790d",
+            "executable_bytes": 67304,
+            "allocated_bytes": 110891,
+            "zero_fill_bytes": 17212
+          },
+          "zero.ii": {
+            "bytes": 1050298,
+            "sha256": "1d1ac8dbd2e3c70ff626be9b87e11421d7544afa4c7bef6c31098c3f1601cf08"
+          },
+          "zero.o": {
+            "bytes": 176028,
+            "sha256": "1343c7db44d6559b3d2f086133d21107d34fc7c6cda4ad1fe76a29dc026c790d",
+            "executable_bytes": 67304,
+            "allocated_bytes": 110891,
+            "zero_fill_bytes": 17212
+          },
+          "on.ii": {
+            "bytes": 1050726,
+            "sha256": "69c241e3118f50ad70f9e7fbbaa60c7b7f405e34d0fc64ffe45e1cbaba2a494a"
+          },
+          "on.o": {
+            "bytes": 176132,
+            "sha256": "3a315fdd7d647d41abf70b7da5040daa60db2d68b51612533a423bdc720d8f63",
+            "executable_bytes": 67372,
+            "allocated_bytes": 110959,
+            "zero_fill_bytes": 17212
+          }
+        },
+        "enabled_section_delta": {
+          "executable_bytes": 68,
+          "allocated_bytes": 68,
+          "zero_fill_bytes": 0
+        },
+        "stack_frames": {
+          "baseline.o": [
+            {
+              "function": "<stdin>:861:6:void {anonymous}::load_screen(const float*, const float*, const float*)",
+              "bytes": 196,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:3055:35:int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+              "bytes": 136,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6104:22:{anonymous}::ps2_pass(unsigned int, float)::<lambda()>",
+              "bytes": 852,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:5919:5:int {anonymous}::ps2_pass(unsigned int, float)",
+              "bytes": 8992,
+              "kind": "static"
+            }
+          ],
+          "on.o": [
+            {
+              "function": "<stdin>:873:6:void {anonymous}::load_screen(const float*, const float*, const float*)",
+              "bytes": 108,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:3093:35:int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+              "bytes": 128,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:6144:22:0() const",
+              "bytes": 896,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:5959:5:int {anonymous}::ps2_pass(unsigned int, float)",
+              "bytes": 8992,
+              "kind": "static"
+            }
+          ]
+        }
+      },
+      "native_ui": {
+        "off_identical": true,
+        "arms": {
+          "baseline.ii": {
+            "bytes": 1457216,
+            "sha256": "0cc782bfbfb87edcbc4e0a4200d95de9b36221113070809cf2c30497962a04e3"
+          },
+          "baseline.o": {
+            "bytes": 400920,
+            "sha256": "44a3dc0778da20078fee1eb674c89d5c594c89e6d9a742c3b4b6479169fb4ea2",
+            "executable_bytes": 76986,
+            "allocated_bytes": 386512,
+            "zero_fill_bytes": 152378
+          },
+          "absent.ii": {
+            "bytes": 1457216,
+            "sha256": "0cc782bfbfb87edcbc4e0a4200d95de9b36221113070809cf2c30497962a04e3"
+          },
+          "absent.o": {
+            "bytes": 400920,
+            "sha256": "44a3dc0778da20078fee1eb674c89d5c594c89e6d9a742c3b4b6479169fb4ea2",
+            "executable_bytes": 76986,
+            "allocated_bytes": 386512,
+            "zero_fill_bytes": 152378
+          },
+          "zero.ii": {
+            "bytes": 1457216,
+            "sha256": "0cc782bfbfb87edcbc4e0a4200d95de9b36221113070809cf2c30497962a04e3"
+          },
+          "zero.o": {
+            "bytes": 400920,
+            "sha256": "44a3dc0778da20078fee1eb674c89d5c594c89e6d9a742c3b4b6479169fb4ea2",
+            "executable_bytes": 76986,
+            "allocated_bytes": 386512,
+            "zero_fill_bytes": 152378
+          },
+          "on.ii": {
+            "bytes": 1457216,
+            "sha256": "0cc782bfbfb87edcbc4e0a4200d95de9b36221113070809cf2c30497962a04e3"
+          },
+          "on.o": {
+            "bytes": 400920,
+            "sha256": "44a3dc0778da20078fee1eb674c89d5c594c89e6d9a742c3b4b6479169fb4ea2",
+            "executable_bytes": 76986,
+            "allocated_bytes": 386512,
+            "zero_fill_bytes": 152378
+          }
+        },
+        "enabled_object_identical": true
+      }
+    }
+  },
+  "exact_output": {
+    "boundary": {
+      "status": "PASS",
+      "comparisons": 2288,
+      "source_sha256": {
+        "port/dreamcast/game/platform/native_ui.cpp": "af8c5a111a948702f7a164e5209e53de48452fa93f2180f56bf33bb3b366e256",
+        "port/dreamcast/game/platform/native_static.cpp": "c09973f22c62d1e1796370612fbaed80991c9606ca1af29309d767f1e12a1a59"
+      },
+      "extracted_sha256": {
+        "BATCH_HEADER": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106",
+        "DIRECT_BEGIN": "e82470291bd27f6a304ea6359915e956bff8d0fafd29a3f2d024077dc51993d9",
+        "DIRECT_END": "54850be8ae9a3ac45bc3d745530d0b0937941f5e03e3a50d0c9155f873bc451d",
+        "PICK_DEFINITION": "1a77c26bb2e6a94ddb5539e2966cbda484da6bc6f9d1f4d780a9ee66cf3e2e73",
+        "EMITTER_END": "d5c9eb25651c2b21f169ad4a13c187959450156a77cb91ad2ec3ca2794d05d79",
+        "EMITTER_BIND": "b24a4060c80735b28117fc2ebcd07a41db2330f813f2992858ff2003b66cefd2",
+        "CHUNK_EMIT": "c2522eefbc162a3df9602adabddace5066e93762b01d946341517b6b3c51baf7",
+        "CHUNK_PART": "a14ea703c0b8d1dd0b226e8c29e0e4f65211e3b8beb55e532d65170ba550f773",
+        "CHUNK_FLUSH": "b2bf8cd679aa7f029b2a06e868722aae72c546a00a6dbdd189f58df70215a296",
+        "REPLAY_RESTART": "c20e2eb5790083de565c30871b2d7342beca01f64f1e8e8c86a53f642b03f191"
+      },
+      "combinations": [
+        {
+          "diagnostics": 0,
+          "select": 0,
+          "submit_batch": 0,
+          "comparisons": 286,
+          "exact_words_equal": true
+        },
+        {
+          "diagnostics": 0,
+          "select": 0,
+          "submit_batch": 1,
+          "comparisons": 286,
+          "exact_words_equal": true
+        },
+        {
+          "diagnostics": 0,
+          "select": 1,
+          "submit_batch": 0,
+          "comparisons": 286,
+          "exact_words_equal": true
+        },
+        {
+          "diagnostics": 0,
+          "select": 1,
+          "submit_batch": 1,
+          "comparisons": 286,
+          "exact_words_equal": true
+        },
+        {
+          "diagnostics": 1,
+          "select": 0,
+          "submit_batch": 0,
+          "comparisons": 286,
+          "exact_words_equal": true
+        },
+        {
+          "diagnostics": 1,
+          "select": 0,
+          "submit_batch": 1,
+          "comparisons": 286,
+          "exact_words_equal": true
+        },
+        {
+          "diagnostics": 1,
+          "select": 1,
+          "submit_batch": 0,
+          "comparisons": 286,
+          "exact_words_equal": true
+        },
+        {
+          "diagnostics": 1,
+          "select": 1,
+          "submit_batch": 1,
+          "comparisons": 286,
+          "exact_words_equal": true
+        }
+      ],
+      "output_sha256": {
+        "d0-s0-b0-r0": "125fd9559ad8dd6c7896652fca3da15122840ae665f40a42adfc7d80a1cb8282",
+        "d0-s0-b0-r1": "125fd9559ad8dd6c7896652fca3da15122840ae665f40a42adfc7d80a1cb8282",
+        "d0-s0-b1-r0": "125fd9559ad8dd6c7896652fca3da15122840ae665f40a42adfc7d80a1cb8282",
+        "d0-s0-b1-r1": "125fd9559ad8dd6c7896652fca3da15122840ae665f40a42adfc7d80a1cb8282",
+        "d0-s1-b0-r0": "125fd9559ad8dd6c7896652fca3da15122840ae665f40a42adfc7d80a1cb8282",
+        "d0-s1-b0-r1": "125fd9559ad8dd6c7896652fca3da15122840ae665f40a42adfc7d80a1cb8282",
+        "d0-s1-b1-r0": "125fd9559ad8dd6c7896652fca3da15122840ae665f40a42adfc7d80a1cb8282",
+        "d0-s1-b1-r1": "125fd9559ad8dd6c7896652fca3da15122840ae665f40a42adfc7d80a1cb8282",
+        "d1-s0-b0-r0": "722c066fe72c3f42af00ef7c4002656a1405e0c7a73134b00c7cbf8965ac9cc6",
+        "d1-s0-b0-r1": "722c066fe72c3f42af00ef7c4002656a1405e0c7a73134b00c7cbf8965ac9cc6",
+        "d1-s0-b1-r0": "722c066fe72c3f42af00ef7c4002656a1405e0c7a73134b00c7cbf8965ac9cc6",
+        "d1-s0-b1-r1": "722c066fe72c3f42af00ef7c4002656a1405e0c7a73134b00c7cbf8965ac9cc6",
+        "d1-s1-b0-r0": "722c066fe72c3f42af00ef7c4002656a1405e0c7a73134b00c7cbf8965ac9cc6",
+        "d1-s1-b0-r1": "722c066fe72c3f42af00ef7c4002656a1405e0c7a73134b00c7cbf8965ac9cc6",
+        "d1-s1-b1-r0": "722c066fe72c3f42af00ef7c4002656a1405e0c7a73134b00c7cbf8965ac9cc6",
+        "d1-s1-b1-r1": "722c066fe72c3f42af00ef7c4002656a1405e0c7a73134b00c7cbf8965ac9cc6"
+      },
+      "scope": "Compare every controlled TA/state word across all S/B/replay combinations.\n\nProduction UI begin/end, emitter bind/end, chunk_emit and chunk_flush bodies\nare executed with controlled package, texture, stream, SQ and geometry edges.\nThis checks replay state and ownership, not complete renderer geometry or FPS.\n",
+      "lock_summary": {
+        "d0-s0-b0-r0": {
+          "cases": 286,
+          "all_balanced": true,
+          "total_locks": 1931,
+          "total_unlocks": 1931
+        },
+        "d0-s0-b0-r1": {
+          "cases": 286,
+          "all_balanced": true,
+          "total_locks": 1931,
+          "total_unlocks": 1931
+        },
+        "d0-s0-b1-r0": {
+          "cases": 286,
+          "all_balanced": true,
+          "total_locks": 777,
+          "total_unlocks": 777
+        },
+        "d0-s0-b1-r1": {
+          "cases": 286,
+          "all_balanced": true,
+          "total_locks": 777,
+          "total_unlocks": 777
+        },
+        "d0-s1-b0-r0": {
+          "cases": 286,
+          "all_balanced": true,
+          "total_locks": 1931,
+          "total_unlocks": 1931
+        },
+        "d0-s1-b0-r1": {
+          "cases": 286,
+          "all_balanced": true,
+          "total_locks": 1931,
+          "total_unlocks": 1931
+        },
+        "d0-s1-b1-r0": {
+          "cases": 286,
+          "all_balanced": true,
+          "total_locks": 777,
+          "total_unlocks": 777
+        },
+        "d0-s1-b1-r1": {
+          "cases": 286,
+          "all_balanced": true,
+          "total_locks": 777,
+          "total_unlocks": 777
+        },
+        "d1-s0-b0-r0": {
+          "cases": 286,
+          "all_balanced": true,
+          "total_locks": 1931,
+          "total_unlocks": 1931
+        },
+        "d1-s0-b0-r1": {
+          "cases": 286,
+          "all_balanced": true,
+          "total_locks": 1931,
+          "total_unlocks": 1931
+        },
+        "d1-s0-b1-r0": {
+          "cases": 286,
+          "all_balanced": true,
+          "total_locks": 1931,
+          "total_unlocks": 1931
+        },
+        "d1-s0-b1-r1": {
+          "cases": 286,
+          "all_balanced": true,
+          "total_locks": 1931,
+          "total_unlocks": 1931
+        },
+        "d1-s1-b0-r0": {
+          "cases": 286,
+          "all_balanced": true,
+          "total_locks": 1931,
+          "total_unlocks": 1931
+        },
+        "d1-s1-b0-r1": {
+          "cases": 286,
+          "all_balanced": true,
+          "total_locks": 1931,
+          "total_unlocks": 1931
+        },
+        "d1-s1-b1-r0": {
+          "cases": 286,
+          "all_balanced": true,
+          "total_locks": 1931,
+          "total_unlocks": 1931
+        },
+        "d1-s1-b1-r1": {
+          "cases": 286,
+          "all_balanced": true,
+          "total_locks": 1931,
+          "total_unlocks": 1931
+        }
+      }
+    },
+    "admission": {
+      "status": "PASS",
+      "comparisons": 21384,
+      "configurations": 12,
+      "source_sha256": {
+        "port/dreamcast/game/platform/native_static.cpp": "c09973f22c62d1e1796370612fbaed80991c9606ca1af29309d767f1e12a1a59",
+        "port/dreamcast/game/platform/include/scenery_chunk_select.inc": "da87574562472d5f914467ba21541d8fe3ce6bc03cd06c55010381095b1ad6b7",
+        "port/dreamcast/game/platform/include/scenery_part_far.inc": "81099189e36cc324176605b1a0506a8bde2aa088ad498aa77e71101ff6d1303c"
+      },
+      "extracted_sha256": {
+        "PICK_DEFINITION": "798589d65fec848b5cfc2f496583eb9ffda68813cad7cda73d05bf630294efe6",
+        "CHUNK_OK": "c644732131b1749aa137cf2d3a0ab1d6f2c8d7fc3c8c54fca5ec79091cf5635a",
+        "CHUNK_EMIT": "c2522eefbc162a3df9602adabddace5066e93762b01d946341517b6b3c51baf7",
+        "CHUNK_PART": "a14ea703c0b8d1dd0b226e8c29e0e4f65211e3b8beb55e532d65170ba550f773",
+        "CHUNK_FLUSH": "b2bf8cd679aa7f029b2a06e868722aae72c546a00a6dbdd189f58df70215a296",
+        "REPLAY_RESTART": "c20e2eb5790083de565c30871b2d7342beca01f64f1e8e8c86a53f642b03f191",
+        "EARLY_BRANCH": "aa9835fe5ced67be515d0645744e8097f8a1571cb32c51a07b79684fc2f33e03",
+        "FULL_SETUP": "1a2d18ef7a4569e05bae8dda4ca5bbbabd71ff12cf9dda08b08a58e1f6205571",
+        "CHUNK_DISPATCH": "9f7dc6e41929089a4a385d7b38af10abe761794e397e724f67c6e613e8dea268"
+      },
+      "combinations": [
+        {
+          "pvs": 0,
+          "select": 0,
+          "batch": 0,
+          "comparisons": 3564,
+          "exact_events_equal": true
+        },
+        {
+          "pvs": 0,
+          "select": 0,
+          "batch": 1,
+          "comparisons": 3564,
+          "exact_events_equal": true
+        },
+        {
+          "pvs": 0,
+          "select": 1,
+          "batch": 0,
+          "comparisons": 3564,
+          "exact_events_equal": true
+        },
+        {
+          "pvs": 0,
+          "select": 1,
+          "batch": 1,
+          "comparisons": 3564,
+          "exact_events_equal": true
+        },
+        {
+          "pvs": 1,
+          "select": 0,
+          "batch": 0,
+          "comparisons": 3564,
+          "exact_events_equal": true
+        },
+        {
+          "pvs": 1,
+          "select": 1,
+          "batch": 0,
+          "comparisons": 3564,
+          "exact_events_equal": true
+        }
+      ],
+      "output_sha256": {
+        "p0-s0-b0-r0": "109568985fec907c13a37e1aeabc5ff7d6d2fb099f0e661762bc208502f5d235",
+        "p0-s0-b0-r1": "109568985fec907c13a37e1aeabc5ff7d6d2fb099f0e661762bc208502f5d235",
+        "p0-s0-b1-r0": "109568985fec907c13a37e1aeabc5ff7d6d2fb099f0e661762bc208502f5d235",
+        "p0-s0-b1-r1": "109568985fec907c13a37e1aeabc5ff7d6d2fb099f0e661762bc208502f5d235",
+        "p0-s1-b0-r0": "109568985fec907c13a37e1aeabc5ff7d6d2fb099f0e661762bc208502f5d235",
+        "p0-s1-b0-r1": "109568985fec907c13a37e1aeabc5ff7d6d2fb099f0e661762bc208502f5d235",
+        "p0-s1-b1-r0": "109568985fec907c13a37e1aeabc5ff7d6d2fb099f0e661762bc208502f5d235",
+        "p0-s1-b1-r1": "109568985fec907c13a37e1aeabc5ff7d6d2fb099f0e661762bc208502f5d235",
+        "p1-s0-b0-r0": "a3fff14e013442a2af53077381c1a714a3b386f1664c0cb09d86973f79114349",
+        "p1-s0-b0-r1": "a3fff14e013442a2af53077381c1a714a3b386f1664c0cb09d86973f79114349",
+        "p1-s1-b0-r0": "a3fff14e013442a2af53077381c1a714a3b386f1664c0cb09d86973f79114349",
+        "p1-s1-b0-r1": "a3fff14e013442a2af53077381c1a714a3b386f1664c0cb09d86973f79114349"
+      },
+      "scope": "Compare production selection admission and replay with controlled edges.\n\nExtracts SELECT_ONLY's real admission branch, ordinary setup, capacity drain,\nqueue snapshots, chunk_flush and chunk_emit. Visibility, geometry and submit\nownership are controlled here; check_geometry/check_runtime cover their actual\nruntime bodies separately. Every emitted event word is compared, not hashes.\n"
+    },
+    "geometry": {
+      "status": "PASS",
+      "comparisons": 264,
+      "baseline": "451bed6faa2c37f7f9aa05d6fb1116ec64219ebc",
+      "source_sha256": {
+        "port/dreamcast/game/platform/native_static.cpp": "c09973f22c62d1e1796370612fbaed80991c9606ca1af29309d767f1e12a1a59",
+        "port/dreamcast/game/platform/native_ui.cpp": "af8c5a111a948702f7a164e5209e53de48452fa93f2180f56bf33bb3b366e256",
+        "port/dreamcast/room/mesh_fastpath.hpp": "732b9aa75741265ca59e729a5e9ce8c2c2a018d4d32812f412ae9eb721ea19cd",
+        "port/dreamcast/room/mesh_fastpath_sched.hpp": "dced065599a7fa28122a981fb3ef92e6da8f8e0c96e02f1cdc4b7093611f5120",
+        "port/dreamcast/room/mesh_strip_lean.hpp": "0cbfb2d425fecc2462641ae9391cbeb134553de15e11d8a290b9175165631b1c",
+        "port/dreamcast/room/pvr_geometry.cpp": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136",
+        "port/dreamcast/room/pvr_geometry.hpp": "0e7d6a83bff8a5e76794aea8e4da75a7adfc9c497f9b5ccb815a79a4e3d75d3c",
+        "port/dreamcast/room/static_room_prepare.hpp": "65f55db4ec1ab97162c38c6038d228a9df3b6814dc5e3e0cc1130ce148929329",
+        "port/dreamcast/room/instanced_mesh.hpp": "bf43408d054e448ff6052ac9c46ebc00b92a2495979c4555919a663724d2aff3",
+        "port/dreamcast/room/room_package.hpp": "0f68e9b943e018af1c1b67022d2f5774fed8f829c3a4e094b52fceccac9aa0fe"
+      },
+      "unchanged_production_body_sha256": {
+        "EMITTER": "46aa5072564923662ab91f6cd63b9d11d31bdd90df9f7c8714dc4368e024f456",
+        "BORROW_GATHER": "1be2499fc1d773a14f0b8d4c8aaf4d8c18b5a603522c7b48de82ca040e1c6bd6",
+        "CORNERS": "6dc88b8dbd6c67451f2714d8873e3199fbd9c2eb2d4fe55e470ad7f0137e61fa",
+        "BORROW": "a1b45785e70448419ccaa3a763aca782abb831e2bf7015689d3dbeec7312eb48",
+        "LEAN_FLUSH": "c3baa9b094011cbc53cb75e3db298b93bae65e20897d25b9d64fad5bf9a015ba",
+        "STRIPS_LEAN": "5e445c6dc4e69a1ab1124fcb9c4c36ff6ab22eb8bb69b7931727bb4aecb92581",
+        "EMIT_PICK": "3e24cc08524a6baa46933ada0a4d7d6d58d5cfca7e5346ede7037787e8557c88",
+        "ALPHA_LUT": "110edba6122304561529302889212ed2901c69e1cb30891016f631db9074cb54"
+      },
+      "extracted_sha256": {
+        "BATCH_HEADER": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106",
+        "DIRECT_BEGIN": "e82470291bd27f6a304ea6359915e956bff8d0fafd29a3f2d024077dc51993d9",
+        "DIRECT_END": "54850be8ae9a3ac45bc3d745530d0b0937941f5e03e3a50d0c9155f873bc451d",
+        "PICK_DEFINITION": "1a77c26bb2e6a94ddb5539e2966cbda484da6bc6f9d1f4d780a9ee66cf3e2e73",
+        "EMITTER_END": "d5c9eb25651c2b21f169ad4a13c187959450156a77cb91ad2ec3ca2794d05d79",
+        "EMITTER_BIND": "b24a4060c80735b28117fc2ebcd07a41db2330f813f2992858ff2003b66cefd2",
+        "CHUNK_EMIT": "c2522eefbc162a3df9602adabddace5066e93762b01d946341517b6b3c51baf7",
+        "CHUNK_PART": "a14ea703c0b8d1dd0b226e8c29e0e4f65211e3b8beb55e532d65170ba550f773",
+        "CHUNK_FLUSH": "b2bf8cd679aa7f029b2a06e868722aae72c546a00a6dbdd189f58df70215a296",
+        "EMITTER": "46aa5072564923662ab91f6cd63b9d11d31bdd90df9f7c8714dc4368e024f456",
+        "BORROW_GATHER": "1be2499fc1d773a14f0b8d4c8aaf4d8c18b5a603522c7b48de82ca040e1c6bd6",
+        "CORNERS": "6dc88b8dbd6c67451f2714d8873e3199fbd9c2eb2d4fe55e470ad7f0137e61fa",
+        "BORROW": "a1b45785e70448419ccaa3a763aca782abb831e2bf7015689d3dbeec7312eb48",
+        "LEAN_FLUSH": "c3baa9b094011cbc53cb75e3db298b93bae65e20897d25b9d64fad5bf9a015ba",
+        "STRIPS_LEAN": "5e445c6dc4e69a1ab1124fcb9c4c36ff6ab22eb8bb69b7931727bb4aecb92581",
+        "EMIT_PICK": "3e24cc08524a6baa46933ada0a4d7d6d58d5cfca7e5346ede7037787e8557c88",
+        "ALPHA_LUT": "110edba6122304561529302889212ed2901c69e1cb30891016f631db9074cb54",
+        "LOAD_SCREEN": "a2b07b21fe5b4baaa8116e577fa991ec4c2d504990c515ab085390fa6eabc255",
+        "REPLAY_RESTART": "c20e2eb5790083de565c30871b2d7342beca01f64f1e8e8c86a53f642b03f191",
+        "SHADE_COLOR": "049d0df5b56cc36d551f44905b61baf81652e58b348a4b64edfacfa525dc3266",
+        "INTERPOLATE_VERTEX": "73866200f52c44203895d59fd39d50499233b7c6b72b5c077842269647c4d3a9",
+        "CLIP_PROJECTED_TRIANGLE": "375b70506db66236a1b5ad9e326f5e27fe991bf0e5a89f15cc698614f662cea3",
+        "STATIC_STATS": "24526a78a1920e26cd9aa169244abf410de07b3149e61d5845b4872018929375",
+        "REPORT_STATS": "d2174d66ac961ddd5e699b0f69895a2850cb68e7bfc79e56b8a28688fce2d178",
+        "ROOT": "498ee442db104456a2f0eca0756de97840f295f7236b5e977f3f7df6aa86d101"
+      },
+      "combinations": [
+        {
+          "select": 0,
+          "submit_batch": 0,
+          "comparisons": 66,
+          "exact_words_equal": true
+        },
+        {
+          "select": 0,
+          "submit_batch": 1,
+          "comparisons": 66,
+          "exact_words_equal": true
+        },
+        {
+          "select": 1,
+          "submit_batch": 0,
+          "comparisons": 66,
+          "exact_words_equal": true
+        },
+        {
+          "select": 1,
+          "submit_batch": 1,
+          "comparisons": 66,
+          "exact_words_equal": true
+        }
+      ],
+      "output_sha256": {
+        "s0-b0-r0": "3dc3f43ba29897082ea67d9706ef917d9490df71a92197d296c893c541ad3131",
+        "s0-b0-r1": "3dc3f43ba29897082ea67d9706ef917d9490df71a92197d296c893c541ad3131",
+        "s0-b1-r0": "3dc3f43ba29897082ea67d9706ef917d9490df71a92197d296c893c541ad3131",
+        "s0-b1-r1": "3dc3f43ba29897082ea67d9706ef917d9490df71a92197d296c893c541ad3131",
+        "s1-b0-r0": "3dc3f43ba29897082ea67d9706ef917d9490df71a92197d296c893c541ad3131",
+        "s1-b0-r1": "3dc3f43ba29897082ea67d9706ef917d9490df71a92197d296c893c541ad3131",
+        "s1-b1-r0": "3dc3f43ba29897082ea67d9706ef917d9490df71a92197d296c893c541ad3131",
+        "s1-b1-r1": "3dc3f43ba29897082ea67d9706ef917d9490df71a92197d296c893c541ad3131"
+      },
+      "scope": "Host replay equivalence with validated meshes and actual portable geometry.\n\nRuns production Emitter/borrow/gather/emit_pick/strips_lean/clipper/replay bodies,\nthe existing portable vertex transform, and a documented C SQ-walk adapter.\nIt compares every TA word and accounting word. This is host arithmetic, not\nSH4 FTRV/FSRRA execution, a full game frame, or a performance measurement.\n"
+    },
+    "selection": {
+      "status": "PASS",
+      "scope": "Verify unchanged inside selection and compare the screen memo off/on.\n\nSelection executes source-extracted numeric helpers and the unchanged package\nvalidator over deterministic public fixtures. Entry counters confirm that the\nexisting fully-inside path calls neither meshlet box nor strip-group tests.\nScreen tests prove bitwise memo keys and a hardware reload on every call.\nNo new selection-culling saving, target cost, or full-game claim is made.\n",
+      "baseline": "451bed6faa2c37f7f9aa05d6fb1116ec64219ebc",
+      "selector_identical_to_base": true,
+      "selection": [
+        {
+          "cone": 0,
+          "sg": 0,
+          "comparisons": 208,
+          "inside_cases": {
+            "placement": 8,
+            "classified_cluster": 152
+          },
+          "prefetch_requests_unchanged": true
+        },
+        {
+          "cone": 0,
+          "sg": 1,
+          "comparisons": 208,
+          "inside_cases": {
+            "placement": 8,
+            "classified_cluster": 152
+          },
+          "prefetch_requests_unchanged": true
+        },
+        {
+          "cone": 1,
+          "sg": 0,
+          "comparisons": 208,
+          "inside_cases": {
+            "placement": 8,
+            "classified_cluster": 152
+          },
+          "prefetch_requests_unchanged": true
+        },
+        {
+          "cone": 1,
+          "sg": 1,
+          "comparisons": 208,
+          "inside_cases": {
+            "placement": 8,
+            "classified_cluster": 152
+          },
+          "prefetch_requests_unchanged": true
+        }
+      ],
+      "screen": {
+        "cases": 61,
+        "hits": 33,
+        "misses": 28,
+        "loads": 61
+      },
+      "extracted_sha256": {
+        "PICK": "1a77c26bb2e6a94ddb5539e2966cbda484da6bc6f9d1f4d780a9ee66cf3e2e73",
+        "GROUP_VISIBLE": "80493baa35fd07faa7fb7c81b6570a074f07fd5d50d455fabf250589845970d1",
+        "SELECTOR": "d4a52f13a8f3e9f8ebdeb116f037e4b22d244f69a3c3a24ea3d4d34469fdfd41",
+        "LEAN_STATS": "f02a55f494f1839ef6acecd9385004eab9b6b2fc9670795f6b7c061b11f7c720",
+        "SG_STATS": "a9b2b0436f3744ef00cc399a80c38f7c087f976e48fd49ffac90bb638412ad9e",
+        "SIDE": "fe52a261aaafde99e1458ab2a96a933387ad8d5caf98e3b4177ec6e3bf3a215c",
+        "SG_PLANE": "9bf84f5bb9770d8f6a6ac08e7f55a6f015bab4d116093ea5e0f7b064f7735fa2",
+        "SIDE_SETUP": "04956f796ef4dfb64aa335dc861393924754ab7490fd44061f2be6ac8cd197e9",
+        "ABS9": "7538e494f7ce2a992083d1d2fad8c2b6dff492329e455ada0a146b0873d5989f",
+        "BOX_CLASS": "6bf613bc394f46fc330b9f2ce7de90af61d462d03f86d9f3684e3b1265f32c79",
+        "BOX_MASK": "d933570eb0756d9e9470fc13a7829d5fade6e27abd2d87160d2bf474dc73794c",
+        "SG_COEF": "906d7ea6a4285798a104c1150065ff3569e37c16ce459c39ffdb5e4ee1aefa6a",
+        "SG_SELECT": "668b5bea4ed7627c41a565124fdc0758c27435b1b63910f8082f5f80116d7991",
+        "SG_COEF_LEAN": "614acc449f502b43453ac525c17aedda88c0c4c8d0b2a615fc590b84a6178187",
+        "SG_SELECT_LEAN": "b612f9ee7918f7134d4a3d388e0a5c2a56d248fc726d9600418fe4157d38febb",
+        "BOX_MASK_LEAN": "87af61d47e4deb34cc57434c581b4a539aa55afbf0ccbfd7377400048047146d",
+        "LOAD_SCREEN": "a2b07b21fe5b4baaa8116e577fa991ec4c2d504990c515ab085390fa6eabc255"
+      },
+      "source_sha256": {
+        "port/dreamcast/game/platform/native_static.cpp": "c09973f22c62d1e1796370612fbaed80991c9606ca1af29309d767f1e12a1a59",
+        "port/dreamcast/game/platform/include/scenery_chunk_select.inc": "da87574562472d5f914467ba21541d8fe3ce6bc03cd06c55010381095b1ad6b7",
+        "port/dreamcast/tools/d367/world_replay_lean/selection_controls.py": "9a05c4e644f533747dd63f85ac94f91b4da8e56c821bf33061782157cd6f086b",
+        "port/dreamcast/tools/d367/world_replay_lean/selection_control.cpp.in": "495a6c2902735e4f2def6d92df1dd1d03121c09ac6d31fa329da8651cc556802",
+        "port/dreamcast/tools/d367/world_replay_lean/screen_control.cpp.in": "26003c0974ca8a94405852a6323cd05a214c40ed1e80a2d3ec4ce0fbe0cd18d5"
+      }
+    }
+  },
+  "knobs": {
+    "status": "PASS",
+    "cases": [
+      {
+        "name": "absent",
+        "options": [],
+        "accepted": true,
+        "native_static": {
+          "exit": 0,
+          "diagnostics": []
+        },
+        "native_ui": {
+          "exit": 0,
+          "diagnostics": []
+        }
+      },
+      {
+        "name": "r0-s0-b0",
+        "options": [
+          "SCENERY_REPLAY_LEAN=0",
+          "SCENERY_SELECT_ONLY=0",
+          "SCENERY_SUBMIT_BATCH=0"
+        ],
+        "accepted": true,
+        "native_static": {
+          "exit": 0,
+          "diagnostics": []
+        },
+        "native_ui": {
+          "exit": 0,
+          "diagnostics": []
+        }
+      },
+      {
+        "name": "r0-s0-b1",
+        "options": [
+          "SCENERY_REPLAY_LEAN=0",
+          "SCENERY_SELECT_ONLY=0",
+          "SCENERY_SUBMIT_BATCH=1"
+        ],
+        "accepted": true,
+        "native_static": {
+          "exit": 0,
+          "diagnostics": []
+        },
+        "native_ui": {
+          "exit": 0,
+          "diagnostics": []
+        }
+      },
+      {
+        "name": "r0-s1-b0",
+        "options": [
+          "SCENERY_REPLAY_LEAN=0",
+          "SCENERY_SELECT_ONLY=1",
+          "SCENERY_SUBMIT_BATCH=0"
+        ],
+        "accepted": true,
+        "native_static": {
+          "exit": 0,
+          "diagnostics": []
+        },
+        "native_ui": {
+          "exit": 0,
+          "diagnostics": []
+        }
+      },
+      {
+        "name": "r0-s1-b1",
+        "options": [
+          "SCENERY_REPLAY_LEAN=0",
+          "SCENERY_SELECT_ONLY=1",
+          "SCENERY_SUBMIT_BATCH=1"
+        ],
+        "accepted": true,
+        "native_static": {
+          "exit": 0,
+          "diagnostics": []
+        },
+        "native_ui": {
+          "exit": 0,
+          "diagnostics": []
+        }
+      },
+      {
+        "name": "r1-s0-b0",
+        "options": [
+          "SCENERY_REPLAY_LEAN=1",
+          "SCENERY_SELECT_ONLY=0",
+          "SCENERY_SUBMIT_BATCH=0"
+        ],
+        "accepted": true,
+        "native_static": {
+          "exit": 0,
+          "diagnostics": []
+        },
+        "native_ui": {
+          "exit": 0,
+          "diagnostics": []
+        }
+      },
+      {
+        "name": "r1-s0-b1",
+        "options": [
+          "SCENERY_REPLAY_LEAN=1",
+          "SCENERY_SELECT_ONLY=0",
+          "SCENERY_SUBMIT_BATCH=1"
+        ],
+        "accepted": true,
+        "native_static": {
+          "exit": 0,
+          "diagnostics": []
+        },
+        "native_ui": {
+          "exit": 0,
+          "diagnostics": []
+        }
+      },
+      {
+        "name": "r1-s1-b0",
+        "options": [
+          "SCENERY_REPLAY_LEAN=1",
+          "SCENERY_SELECT_ONLY=1",
+          "SCENERY_SUBMIT_BATCH=0"
+        ],
+        "accepted": true,
+        "native_static": {
+          "exit": 0,
+          "diagnostics": []
+        },
+        "native_ui": {
+          "exit": 0,
+          "diagnostics": []
+        }
+      },
+      {
+        "name": "r1-s1-b1",
+        "options": [
+          "SCENERY_REPLAY_LEAN=1",
+          "SCENERY_SELECT_ONLY=1",
+          "SCENERY_SUBMIT_BATCH=1"
+        ],
+        "accepted": true,
+        "native_static": {
+          "exit": 0,
+          "diagnostics": []
+        },
+        "native_ui": {
+          "exit": 0,
+          "diagnostics": []
+        }
+      },
+      {
+        "name": "invalid",
+        "options": [
+          "SCENERY_REPLAY_LEAN=2"
+        ],
+        "accepted": false,
+        "native_static": {
+          "exit": 2,
+          "diagnostics": [
+            "scenery19.mk:55: *** SCENERY_REPLAY_LEAN must be 0 or 1.  Stop."
+          ]
+        },
+        "native_ui": {
+          "exit": 2,
+          "diagnostics": [
+            "scenery19.mk:55: *** SCENERY_REPLAY_LEAN must be 0 or 1.  Stop."
+          ]
+        }
+      },
+      {
+        "name": "no_chunk",
+        "options": [
+          "SCENERY_REPLAY_LEAN=1",
+          "SCENERY_CHUNK=0"
+        ],
+        "accepted": false,
+        "native_static": {
+          "exit": 2,
+          "diagnostics": [
+            "scenery19.mk:58: *** SCENERY_REPLAY_LEAN needs SCENERY_CHUNK.  Stop."
+          ]
+        },
+        "native_ui": {
+          "exit": 2,
+          "diagnostics": [
+            "scenery19.mk:58: *** SCENERY_REPLAY_LEAN needs SCENERY_CHUNK.  Stop."
+          ]
+        }
+      },
+      {
+        "name": "no_ta_direct",
+        "options": [
+          "SCENERY_REPLAY_LEAN=1",
+          "TA_DIRECT=0"
+        ],
+        "accepted": false,
+        "native_static": {
+          "exit": 2,
+          "diagnostics": [
+            "game30.mk:2638: *** PS2_WORLD_MESH needs NATIVE_MESH=1 MESH_LOD=1 MESH_DIRECT=1 TA_DIRECT=1.  Stop."
+          ]
+        },
+        "native_ui": {
+          "exit": 2,
+          "diagnostics": [
+            "game30.mk:2638: *** PS2_WORLD_MESH needs NATIVE_MESH=1 MESH_LOD=1 MESH_DIRECT=1 TA_DIRECT=1.  Stop."
+          ]
+        }
+      },
+      {
+        "name": "no_mesh_direct",
+        "options": [
+          "SCENERY_REPLAY_LEAN=1",
+          "MESH_DIRECT=0"
+        ],
+        "accepted": false,
+        "native_static": {
+          "exit": 2,
+          "diagnostics": [
+            "game30.mk:2638: *** PS2_WORLD_MESH needs NATIVE_MESH=1 MESH_LOD=1 MESH_DIRECT=1 TA_DIRECT=1.  Stop."
+          ]
+        },
+        "native_ui": {
+          "exit": 2,
+          "diagnostics": [
+            "game30.mk:2638: *** PS2_WORLD_MESH needs NATIVE_MESH=1 MESH_LOD=1 MESH_DIRECT=1 TA_DIRECT=1.  Stop."
+          ]
+        }
+      },
+      {
+        "name": "no_ps2_mesh",
+        "options": [
+          "SCENERY_REPLAY_LEAN=1",
+          "PS2_WORLD_MESH=0"
+        ],
+        "accepted": false,
+        "native_static": {
+          "exit": 2,
+          "diagnostics": [
+            "game30.mk:2659: *** WORLD_RECT21=1 requires PS2_WORLD_MESH=1.  Stop."
+          ]
+        },
+        "native_ui": {
+          "exit": 2,
+          "diagnostics": [
+            "game30.mk:2659: *** WORLD_RECT21=1 requires PS2_WORLD_MESH=1.  Stop."
+          ]
+        }
+      },
+      {
+        "name": "scratch",
+        "options": [
+          "SCENERY_REPLAY_LEAN=1",
+          "WORLD_SCRATCH=1"
+        ],
+        "accepted": false,
+        "native_static": {
+          "exit": 2,
+          "diagnostics": [
+            "scenery19.mk:64: *** SCENERY_REPLAY_LEAN needs WORLD_SCRATCH=0 (ordinary per-part scratch lifetime).  Stop."
+          ]
+        },
+        "native_ui": {
+          "exit": 2,
+          "diagnostics": [
+            "scenery19.mk:64: *** SCENERY_REPLAY_LEAN needs WORLD_SCRATCH=0 (ordinary per-part scratch lifetime).  Stop."
+          ]
+        }
+      },
+      {
+        "name": "pvs_without_submit",
+        "options": [
+          "SCENERY_REPLAY_LEAN=1",
+          "PS2_PVS=1"
+        ],
+        "accepted": true,
+        "native_static": {
+          "exit": 0,
+          "diagnostics": []
+        },
+        "native_ui": {
+          "exit": 0,
+          "diagnostics": []
+        }
+      },
+      {
+        "name": "no_header_cache_without_submit",
+        "options": [
+          "SCENERY_REPLAY_LEAN=1",
+          "PS2_WORLD_HDR_CACHE=0"
+        ],
+        "accepted": true,
+        "native_static": {
+          "exit": 0,
+          "diagnostics": []
+        },
+        "native_ui": {
+          "exit": 0,
+          "diagnostics": []
+        }
+      }
+    ],
+    "source_sha256": "5be75c7f22c72af76283316a9fcdbdce3ab43903fc44a86d656de795959e2ef8",
+    "scope": "Make dry-runs only, no shell recipes, all three switches and new-knob dependency guards"
+  },
+  "target": {
+    "checks": 72,
+    "scope": "Execute actual SH4 replay setup, selector and matrix-memo code with traffic.\n\nThe replay geometry edge observes active inputs and writes representative bound\nstate; its geometry/TA work is excluded. Screen-matrix loads capture all 64 bytes\nbut exclude the unchanged hardware transfer. The pipeline model assumes perfect\nD-cache, no bus/SQ/IRQ/DMA events. Cache-line touches are observed address sets,\nnever measured cache misses. This is no recorded game frame or hardware result.\n",
+    "target_build_scope": "Build real SH4 selector, replay-setup and screen-memo fixtures.\n\nFull native_static layout and setup bodies are retained. emit_pick is the sole\nreplaced renderer body, an observed geometry edge. mat_load and external UI\naccounting use explicit entry/return stubs. No transform, TA submission or whole\ngame frame is priced. Production identity is the separate build_controls gate.\n",
+    "source_sha256": {
+      "port/dreamcast/game/platform/native_static.cpp": "c09973f22c62d1e1796370612fbaed80991c9606ca1af29309d767f1e12a1a59",
+      "port/dreamcast/game/platform/include/scenery_chunk_select.inc": "da87574562472d5f914467ba21541d8fe3ce6bc03cd06c55010381095b1ad6b7",
+      "port/dreamcast/game/platform/include/scenery_part_far.inc": "81099189e36cc324176605b1a0506a8bde2aa088ad498aa77e71101ff6d1303c",
+      "port/dreamcast/game/platform/include/scenery_submit_batch.h": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106",
+      "port/dreamcast/tools/d367/world_replay_lean/target_fixture.cpp.in": "b986d53b7f9e5df99dd65fb04111d22a643d9574fd9c18863569a94b66acded1"
+    },
+    "model": {
+      "r0-b0": {
+        "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+        "source": "<REPO>/port/dreamcast/tools/hwmodel/hwsim.c",
+        "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+        "compile_command": [
+          "gcc",
+          "-O2",
+          "-o",
+          "<EVIDENCE>/world-replay-target-run-02/model-r0-b0/hwsim",
+          "<REPO>/port/dreamcast/tools/hwmodel/hwsim.c",
+          "-lm"
+        ],
+        "flags": [
+          "--perfect-ic",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0"
+        ],
+        "exact_dynamic_instruction_and_delay_slot_counts": true,
+        "no_hardware_time_or_frame_speedup_claim": true
+      },
+      "r0-b1": {
+        "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+        "source": "<REPO>/port/dreamcast/tools/hwmodel/hwsim.c",
+        "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+        "compile_command": [
+          "gcc",
+          "-O2",
+          "-o",
+          "<EVIDENCE>/world-replay-target-run-02/model-r0-b1/hwsim",
+          "<REPO>/port/dreamcast/tools/hwmodel/hwsim.c",
+          "-lm"
+        ],
+        "flags": [
+          "--perfect-ic",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0"
+        ],
+        "exact_dynamic_instruction_and_delay_slot_counts": true,
+        "no_hardware_time_or_frame_speedup_claim": true
+      },
+      "r1-b0": {
+        "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+        "source": "<REPO>/port/dreamcast/tools/hwmodel/hwsim.c",
+        "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+        "compile_command": [
+          "gcc",
+          "-O2",
+          "-o",
+          "<EVIDENCE>/world-replay-target-run-02/model-r1-b0/hwsim",
+          "<REPO>/port/dreamcast/tools/hwmodel/hwsim.c",
+          "-lm"
+        ],
+        "flags": [
+          "--perfect-ic",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0"
+        ],
+        "exact_dynamic_instruction_and_delay_slot_counts": true,
+        "no_hardware_time_or_frame_speedup_claim": true
+      },
+      "r1-b1": {
+        "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+        "source": "<REPO>/port/dreamcast/tools/hwmodel/hwsim.c",
+        "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+        "compile_command": [
+          "gcc",
+          "-O2",
+          "-o",
+          "<EVIDENCE>/world-replay-target-run-02/model-r1-b1/hwsim",
+          "<REPO>/port/dreamcast/tools/hwmodel/hwsim.c",
+          "-lm"
+        ],
+        "flags": [
+          "--perfect-ic",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0"
+        ],
+        "exact_dynamic_instruction_and_delay_slot_counts": true,
+        "no_hardware_time_or_frame_speedup_claim": true
+      }
+    },
+    "memory_controls": {
+      "status": "PASS",
+      "controls": [
+        "fetches excluded; scalar load/store retained",
+        "PC-relative literal classified as data",
+        "data read of current opcode word retained",
+        "delay slot attributed exactly once",
+        "double-register move counted as one 8-byte load",
+        "32-bit effective address wrap",
+        "store queues excluded from cached footprint",
+        "cached PREF counted separately from demand loads"
+      ]
+    },
+    "observer_source_sha256": {
+      "<REPO>/port/dreamcast/tools/d367/world_replay_lean/target_run.py": "519937b2c950be305c9c6bc609a7d6d646d9cac8e768a1575f6a72d988715756",
+      "<REPO>/port/dreamcast/tools/d367/world_replay_lean/target_machine.py": "256416fd8ef5b45c46824c05bae40afb55156417395c8d9fa4769f462b66c62d",
+      "<REPO>/port/dreamcast/tools/d367/world_replay_lean/sh4_machine.py": "45838692bd4938e8e9960adbd4eb4efb2cf5daab90afd196ebe8da3a611dbcfd",
+      "<REPO>/port/dreamcast/tools/d367/world_replay_lean/memory_trace.py": "74d6f8f2f549eccc514f117a4ba96462744649b097dc1a0272fa8806a1fbdad4",
+      "<REPO>/port/dreamcast/tools/d367/world_replay_lean/pipeline_cost.py": "a7327c31ad09a923520b63c53c19f0ddf433ddeeaa535f3ea3fa259680a2571e"
+    },
+    "arms": {
+      "r0-b0": {
+        "sha256": "37a858a45be26c9f0e43f2d81614c72d7f5262a20289eaae831f369fd3cde5c5",
+        "object_sha256": "753a33d3d1b6093a61a03288931fd800c8e124a2e40fa321c2d9c49c4cae69df",
+        "flags": [
+          "<SH4_TOOLCHAIN>/bin/sh-elf-g++",
+          "-O2",
+          "-fno-PIC",
+          "-fno-PIE",
+          "-fomit-frame-pointer",
+          "-m4-single",
+          "-ml",
+          "-mfsrra",
+          "-mfsca",
+          "-ffunction-sections",
+          "-fdata-sections",
+          "-matomic-model=soft-gusa",
+          "-ftls-model=local-exec",
+          "-D__DREAMCAST__",
+          "-isystem",
+          "<KOS>/include",
+          "-isystem",
+          "<KOS>/kernel/arch/dreamcast/include",
+          "-isystem",
+          "<KOS>/addons/include",
+          "-D_arch_dreamcast=1",
+          "-D_arch_sub_pristine=1",
+          "-Wall",
+          "-std=gnu++20",
+          "-Wall",
+          "-Wextra",
+          "-O1",
+          "-I<REPO>/port/dreamcast/game/platform/include",
+          "-DRE4DC_GAME",
+          "-fno-exceptions",
+          "-fno-unwind-tables",
+          "-fno-asynchronous-unwind-tables",
+          "-fno-threadsafe-statics",
+          "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+          "-DRE4DC_RENDER_FSAA=1",
+          "-DRE4DC_RENDER_OPTION=1",
+          "-DRE4DC_VIEW_DIST_OPTION=1",
+          "-DRE4DC_FAR_SHELL=1",
+          "-DRE4DC_FOLIAGE_OPTION=1",
+          "-DRE4DC_RES_ALTERNATE=1",
+          "-DRE4DC_RES_MODES=9",
+          "-DRE4DC_RES_MODE=0",
+          "-DRE4DC_RES_CYCLE_FRAMES=0",
+          "-DRE4DC_MV_SHADOWS=1",
+          "-DRE4DC_MV_OPB_BINS=8",
+          "-DRE4DC_MV_SCALE=50",
+          "-DRE4DC_MV_SIDES=8",
+          "-DRE4DC_MV_RADIUS=420",
+          "-DRE4DC_MV_TOP=250",
+          "-DRE4DC_MV_DEPTH=1200",
+          "-DRE4DC_MV_RANGE_M=15",
+          "-DRE4DC_MV_MAX=12",
+          "-DRE4DC_MV_BODY=1700",
+          "-DRE4DC_MV_LEN_MAX=1800",
+          "-DRE4DC_ATCHK_LIST=1",
+          "-DRE4DC_ATCHK_CACHE=1",
+          "-DRE4DC_WORKAT_INLINE=1",
+          "-DRE4DC_FX_SCAN=1",
+          "-DRE4DC_FX_MOVE=1",
+          "-DRE4DC_OT_MASK=1",
+          "-DRE4DC_MANUAL_PACK_PROBE=1",
+          "-DRE4DC_PAD_PROMPTS=1",
+          "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+          "-DRE4DC_SH4ZAM_RENDER=1",
+          "-DRE4DC_ACTOR_TRANSACTION=1",
+          "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+          "-DRE4DC_VMU_DIALOG=1",
+          "-DRE4DC_ACTOR_PL08=1",
+          "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+          "-DRE4DC_NMR_POOL=1",
+          "-DRE4DC_ACTOR_MATERIALS=4",
+          "-DRE4DC_ACTOR_MATERIALS=4",
+          "-DRE4DC_TEX_PKG_SKIP=1",
+          "-DRE4DC_GC_CENSUS_TRIM=1",
+          "-DRE4DC_GXF_JITTER=1",
+          "-DRE4DC_WATER45_NATIVE=1",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/motion-read.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/quality-knobs.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/cabin-source.h",
+          "-include",
+          "<REPO>/port/dreamcast/game/platform/include/native_event_file.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/movie-world-arena.h",
+          "-DRE4DC_PS2_WORLD_DRAW=1",
+          "-DRE4DC_PS2_PRELOAD_LEAN=1",
+          "-DRE4DC_PS2_WORLD_MESH=1",
+          "-DRE4DC_WORLD_RECT21=1",
+          "-DRE4DC_PS2_PASS_MASK=1",
+          "-DRE4DC_PS2_VERTEX_ALPHA=1",
+          "-DRE4DC_PS2_PT_CUTOUT=1",
+          "-DRE4DC_PS2_R100_SMX=1",
+          "-DRE4DC_PS2_R100_TR4=1",
+          "-DRE4DC_PS2_INTERIOR_CULL=1",
+          "-DRE4DC_PS2_INTERIOR_ACTORS=1",
+          "-DRE4DC_PS2_INTERIOR_OWNER=1",
+          "-DRE4DC_PS2_WORLD_ROOMS=2",
+          "-DRE4DC_PS2_WORLD_DYNAMIC=1",
+          "-DRE4DC_PS2_WORLD_PARTS=1",
+          "-DRE4DC_PS2_WORLD_NONEMPTY_LOD=1",
+          "-DRE4DC_PS2_WORLD_SOURCE_OWNER=1",
+          "-DRE4DC_PS2_WORLD_SOURCE_TEX_PREP=1",
+          "-DRE4DC_PS2_WORLD_REGISTRY=1",
+          "-DRE4DC_PS2_OPEN_READ=1",
+          "-DRE4DC_SCENERY_ENCODING=1",
+          "-DRE4DC_PS2_WORLD_LEAN=23",
+          "-DRE4DC_PS2_PLACE_GATE=1",
+          "-DRE4DC_PS2_AREA_HIDE=1",
+          "-DRE4DC_PS2_ROOM_PIN=1",
+          "-DRE4DC_PS2_STRIP_GROUPS=1",
+          "-DRE4DC_MESH_VP_SCHED=1",
+          "-DRE4DC_MESH_STRIP_LEAN=1",
+          "-DRE4DC_MESH_PRIME_LAZY=1",
+          "-DRE4DC_MESH_CLIP_LEAN=1",
+          "-DRE4DC_MESH_CLIP_ACCEPT=1",
+          "-DRE4DC_ENEMY_VIS_CULL=1",
+          "-Os",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/native-static.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/d349-stack.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/frontend30.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/subscreen.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/effects30.h",
+          "-DRE4DC_HW_FOG_HAZE=1",
+          "-DRE4DC_FOLIAGE_TRIM=2",
+          "-DRE4DC_FOLIAGE_NEAR_MM=12000",
+          "-DRE4DC_TRANS_POLICY=3",
+          "-DRE4DC_FOLIAGE_NEAR_FIX=1",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/scenery30.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/blender30.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/tahash.h",
+          "-DRE4DC_EFFECT_PS2_TOGGLE=1",
+          "-I<KOS>/kernel/arch/dreamcast/hardware/pvr",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/post30.h",
+          "-DRE4DC_OWNER_SETUP_LEAN=1",
+          "-DRE4DC_CHARBAKE_TOGGLE=1",
+          "-DRE4DC_SG_SELECT_LEAN=1",
+          "-DRE4DC_SCENERY_CHUNK=1",
+          "-DRE4DC_SCENERY_UNIT_CONCAT=1",
+          "-DRE4DC_SCENERY_SCREEN_MEMO=1",
+          "-DRE4DC_SCENERY_FAR_LOD=4",
+          "-I<PUBLIC_SDK>/include",
+          "-I<EVIDENCE>/world-replay-target-04/release-profile/kos-overlay",
+          "-DRE4DC_SCENERY_SELECT_ONLY=1",
+          "-DRE4DC_SCENERY_REPLAY_LEAN=0",
+          "-DRE4DC_SCENERY_SUBMIT_BATCH=0",
+          "-iquote",
+          "<REPO>/port/dreamcast/game/platform"
+        ]
+      },
+      "r0-b1": {
+        "sha256": "4773d3c547b55987e0b727f2d273283d38bd00cca461c843a8e8410b744e709f",
+        "object_sha256": "f20227ecd62a91478cb06bf54f4e90198453bcf84815671c965b730afc628e77",
+        "flags": [
+          "<SH4_TOOLCHAIN>/bin/sh-elf-g++",
+          "-O2",
+          "-fno-PIC",
+          "-fno-PIE",
+          "-fomit-frame-pointer",
+          "-m4-single",
+          "-ml",
+          "-mfsrra",
+          "-mfsca",
+          "-ffunction-sections",
+          "-fdata-sections",
+          "-matomic-model=soft-gusa",
+          "-ftls-model=local-exec",
+          "-D__DREAMCAST__",
+          "-isystem",
+          "<KOS>/include",
+          "-isystem",
+          "<KOS>/kernel/arch/dreamcast/include",
+          "-isystem",
+          "<KOS>/addons/include",
+          "-D_arch_dreamcast=1",
+          "-D_arch_sub_pristine=1",
+          "-Wall",
+          "-std=gnu++20",
+          "-Wall",
+          "-Wextra",
+          "-O1",
+          "-I<REPO>/port/dreamcast/game/platform/include",
+          "-DRE4DC_GAME",
+          "-fno-exceptions",
+          "-fno-unwind-tables",
+          "-fno-asynchronous-unwind-tables",
+          "-fno-threadsafe-statics",
+          "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+          "-DRE4DC_RENDER_FSAA=1",
+          "-DRE4DC_RENDER_OPTION=1",
+          "-DRE4DC_VIEW_DIST_OPTION=1",
+          "-DRE4DC_FAR_SHELL=1",
+          "-DRE4DC_FOLIAGE_OPTION=1",
+          "-DRE4DC_RES_ALTERNATE=1",
+          "-DRE4DC_RES_MODES=9",
+          "-DRE4DC_RES_MODE=0",
+          "-DRE4DC_RES_CYCLE_FRAMES=0",
+          "-DRE4DC_MV_SHADOWS=1",
+          "-DRE4DC_MV_OPB_BINS=8",
+          "-DRE4DC_MV_SCALE=50",
+          "-DRE4DC_MV_SIDES=8",
+          "-DRE4DC_MV_RADIUS=420",
+          "-DRE4DC_MV_TOP=250",
+          "-DRE4DC_MV_DEPTH=1200",
+          "-DRE4DC_MV_RANGE_M=15",
+          "-DRE4DC_MV_MAX=12",
+          "-DRE4DC_MV_BODY=1700",
+          "-DRE4DC_MV_LEN_MAX=1800",
+          "-DRE4DC_ATCHK_LIST=1",
+          "-DRE4DC_ATCHK_CACHE=1",
+          "-DRE4DC_WORKAT_INLINE=1",
+          "-DRE4DC_FX_SCAN=1",
+          "-DRE4DC_FX_MOVE=1",
+          "-DRE4DC_OT_MASK=1",
+          "-DRE4DC_MANUAL_PACK_PROBE=1",
+          "-DRE4DC_PAD_PROMPTS=1",
+          "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+          "-DRE4DC_SH4ZAM_RENDER=1",
+          "-DRE4DC_ACTOR_TRANSACTION=1",
+          "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+          "-DRE4DC_VMU_DIALOG=1",
+          "-DRE4DC_ACTOR_PL08=1",
+          "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+          "-DRE4DC_NMR_POOL=1",
+          "-DRE4DC_ACTOR_MATERIALS=4",
+          "-DRE4DC_ACTOR_MATERIALS=4",
+          "-DRE4DC_TEX_PKG_SKIP=1",
+          "-DRE4DC_GC_CENSUS_TRIM=1",
+          "-DRE4DC_GXF_JITTER=1",
+          "-DRE4DC_WATER45_NATIVE=1",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/motion-read.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/quality-knobs.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/cabin-source.h",
+          "-include",
+          "<REPO>/port/dreamcast/game/platform/include/native_event_file.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/movie-world-arena.h",
+          "-DRE4DC_PS2_WORLD_DRAW=1",
+          "-DRE4DC_PS2_PRELOAD_LEAN=1",
+          "-DRE4DC_PS2_WORLD_MESH=1",
+          "-DRE4DC_WORLD_RECT21=1",
+          "-DRE4DC_PS2_PASS_MASK=1",
+          "-DRE4DC_PS2_VERTEX_ALPHA=1",
+          "-DRE4DC_PS2_PT_CUTOUT=1",
+          "-DRE4DC_PS2_R100_SMX=1",
+          "-DRE4DC_PS2_R100_TR4=1",
+          "-DRE4DC_PS2_INTERIOR_CULL=1",
+          "-DRE4DC_PS2_INTERIOR_ACTORS=1",
+          "-DRE4DC_PS2_INTERIOR_OWNER=1",
+          "-DRE4DC_PS2_WORLD_ROOMS=2",
+          "-DRE4DC_PS2_WORLD_DYNAMIC=1",
+          "-DRE4DC_PS2_WORLD_PARTS=1",
+          "-DRE4DC_PS2_WORLD_NONEMPTY_LOD=1",
+          "-DRE4DC_PS2_WORLD_SOURCE_OWNER=1",
+          "-DRE4DC_PS2_WORLD_SOURCE_TEX_PREP=1",
+          "-DRE4DC_PS2_WORLD_REGISTRY=1",
+          "-DRE4DC_PS2_OPEN_READ=1",
+          "-DRE4DC_SCENERY_ENCODING=1",
+          "-DRE4DC_PS2_WORLD_LEAN=23",
+          "-DRE4DC_PS2_PLACE_GATE=1",
+          "-DRE4DC_PS2_AREA_HIDE=1",
+          "-DRE4DC_PS2_ROOM_PIN=1",
+          "-DRE4DC_PS2_STRIP_GROUPS=1",
+          "-DRE4DC_MESH_VP_SCHED=1",
+          "-DRE4DC_MESH_STRIP_LEAN=1",
+          "-DRE4DC_MESH_PRIME_LAZY=1",
+          "-DRE4DC_MESH_CLIP_LEAN=1",
+          "-DRE4DC_MESH_CLIP_ACCEPT=1",
+          "-DRE4DC_ENEMY_VIS_CULL=1",
+          "-Os",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/native-static.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/d349-stack.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/frontend30.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/subscreen.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/effects30.h",
+          "-DRE4DC_HW_FOG_HAZE=1",
+          "-DRE4DC_FOLIAGE_TRIM=2",
+          "-DRE4DC_FOLIAGE_NEAR_MM=12000",
+          "-DRE4DC_TRANS_POLICY=3",
+          "-DRE4DC_FOLIAGE_NEAR_FIX=1",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/scenery30.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/blender30.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/tahash.h",
+          "-DRE4DC_EFFECT_PS2_TOGGLE=1",
+          "-I<KOS>/kernel/arch/dreamcast/hardware/pvr",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/post30.h",
+          "-DRE4DC_OWNER_SETUP_LEAN=1",
+          "-DRE4DC_CHARBAKE_TOGGLE=1",
+          "-DRE4DC_SG_SELECT_LEAN=1",
+          "-DRE4DC_SCENERY_CHUNK=1",
+          "-DRE4DC_SCENERY_UNIT_CONCAT=1",
+          "-DRE4DC_SCENERY_SCREEN_MEMO=1",
+          "-DRE4DC_SCENERY_FAR_LOD=4",
+          "-I<PUBLIC_SDK>/include",
+          "-I<EVIDENCE>/world-replay-target-04/release-profile/kos-overlay",
+          "-DRE4DC_SCENERY_SELECT_ONLY=1",
+          "-DRE4DC_SCENERY_REPLAY_LEAN=0",
+          "-DRE4DC_SCENERY_SUBMIT_BATCH=1",
+          "-iquote",
+          "<REPO>/port/dreamcast/game/platform"
+        ]
+      },
+      "r1-b0": {
+        "sha256": "bbb8b5ea7b585dfe2b089a94fa77e5a435f0b52303b3d71274ed6c5d511411f0",
+        "object_sha256": "9dd3b8ff0d093602b55f3faf25a102ae4580d178c9cb4041b00fc6f2dbdf6925",
+        "flags": [
+          "<SH4_TOOLCHAIN>/bin/sh-elf-g++",
+          "-O2",
+          "-fno-PIC",
+          "-fno-PIE",
+          "-fomit-frame-pointer",
+          "-m4-single",
+          "-ml",
+          "-mfsrra",
+          "-mfsca",
+          "-ffunction-sections",
+          "-fdata-sections",
+          "-matomic-model=soft-gusa",
+          "-ftls-model=local-exec",
+          "-D__DREAMCAST__",
+          "-isystem",
+          "<KOS>/include",
+          "-isystem",
+          "<KOS>/kernel/arch/dreamcast/include",
+          "-isystem",
+          "<KOS>/addons/include",
+          "-D_arch_dreamcast=1",
+          "-D_arch_sub_pristine=1",
+          "-Wall",
+          "-std=gnu++20",
+          "-Wall",
+          "-Wextra",
+          "-O1",
+          "-I<REPO>/port/dreamcast/game/platform/include",
+          "-DRE4DC_GAME",
+          "-fno-exceptions",
+          "-fno-unwind-tables",
+          "-fno-asynchronous-unwind-tables",
+          "-fno-threadsafe-statics",
+          "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+          "-DRE4DC_RENDER_FSAA=1",
+          "-DRE4DC_RENDER_OPTION=1",
+          "-DRE4DC_VIEW_DIST_OPTION=1",
+          "-DRE4DC_FAR_SHELL=1",
+          "-DRE4DC_FOLIAGE_OPTION=1",
+          "-DRE4DC_RES_ALTERNATE=1",
+          "-DRE4DC_RES_MODES=9",
+          "-DRE4DC_RES_MODE=0",
+          "-DRE4DC_RES_CYCLE_FRAMES=0",
+          "-DRE4DC_MV_SHADOWS=1",
+          "-DRE4DC_MV_OPB_BINS=8",
+          "-DRE4DC_MV_SCALE=50",
+          "-DRE4DC_MV_SIDES=8",
+          "-DRE4DC_MV_RADIUS=420",
+          "-DRE4DC_MV_TOP=250",
+          "-DRE4DC_MV_DEPTH=1200",
+          "-DRE4DC_MV_RANGE_M=15",
+          "-DRE4DC_MV_MAX=12",
+          "-DRE4DC_MV_BODY=1700",
+          "-DRE4DC_MV_LEN_MAX=1800",
+          "-DRE4DC_ATCHK_LIST=1",
+          "-DRE4DC_ATCHK_CACHE=1",
+          "-DRE4DC_WORKAT_INLINE=1",
+          "-DRE4DC_FX_SCAN=1",
+          "-DRE4DC_FX_MOVE=1",
+          "-DRE4DC_OT_MASK=1",
+          "-DRE4DC_MANUAL_PACK_PROBE=1",
+          "-DRE4DC_PAD_PROMPTS=1",
+          "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+          "-DRE4DC_SH4ZAM_RENDER=1",
+          "-DRE4DC_ACTOR_TRANSACTION=1",
+          "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+          "-DRE4DC_VMU_DIALOG=1",
+          "-DRE4DC_ACTOR_PL08=1",
+          "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+          "-DRE4DC_NMR_POOL=1",
+          "-DRE4DC_ACTOR_MATERIALS=4",
+          "-DRE4DC_ACTOR_MATERIALS=4",
+          "-DRE4DC_TEX_PKG_SKIP=1",
+          "-DRE4DC_GC_CENSUS_TRIM=1",
+          "-DRE4DC_GXF_JITTER=1",
+          "-DRE4DC_WATER45_NATIVE=1",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/motion-read.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/quality-knobs.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/cabin-source.h",
+          "-include",
+          "<REPO>/port/dreamcast/game/platform/include/native_event_file.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/movie-world-arena.h",
+          "-DRE4DC_PS2_WORLD_DRAW=1",
+          "-DRE4DC_PS2_PRELOAD_LEAN=1",
+          "-DRE4DC_PS2_WORLD_MESH=1",
+          "-DRE4DC_WORLD_RECT21=1",
+          "-DRE4DC_PS2_PASS_MASK=1",
+          "-DRE4DC_PS2_VERTEX_ALPHA=1",
+          "-DRE4DC_PS2_PT_CUTOUT=1",
+          "-DRE4DC_PS2_R100_SMX=1",
+          "-DRE4DC_PS2_R100_TR4=1",
+          "-DRE4DC_PS2_INTERIOR_CULL=1",
+          "-DRE4DC_PS2_INTERIOR_ACTORS=1",
+          "-DRE4DC_PS2_INTERIOR_OWNER=1",
+          "-DRE4DC_PS2_WORLD_ROOMS=2",
+          "-DRE4DC_PS2_WORLD_DYNAMIC=1",
+          "-DRE4DC_PS2_WORLD_PARTS=1",
+          "-DRE4DC_PS2_WORLD_NONEMPTY_LOD=1",
+          "-DRE4DC_PS2_WORLD_SOURCE_OWNER=1",
+          "-DRE4DC_PS2_WORLD_SOURCE_TEX_PREP=1",
+          "-DRE4DC_PS2_WORLD_REGISTRY=1",
+          "-DRE4DC_PS2_OPEN_READ=1",
+          "-DRE4DC_SCENERY_ENCODING=1",
+          "-DRE4DC_PS2_WORLD_LEAN=23",
+          "-DRE4DC_PS2_PLACE_GATE=1",
+          "-DRE4DC_PS2_AREA_HIDE=1",
+          "-DRE4DC_PS2_ROOM_PIN=1",
+          "-DRE4DC_PS2_STRIP_GROUPS=1",
+          "-DRE4DC_MESH_VP_SCHED=1",
+          "-DRE4DC_MESH_STRIP_LEAN=1",
+          "-DRE4DC_MESH_PRIME_LAZY=1",
+          "-DRE4DC_MESH_CLIP_LEAN=1",
+          "-DRE4DC_MESH_CLIP_ACCEPT=1",
+          "-DRE4DC_ENEMY_VIS_CULL=1",
+          "-Os",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/native-static.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/d349-stack.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/frontend30.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/subscreen.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/effects30.h",
+          "-DRE4DC_HW_FOG_HAZE=1",
+          "-DRE4DC_FOLIAGE_TRIM=2",
+          "-DRE4DC_FOLIAGE_NEAR_MM=12000",
+          "-DRE4DC_TRANS_POLICY=3",
+          "-DRE4DC_FOLIAGE_NEAR_FIX=1",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/scenery30.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/blender30.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/tahash.h",
+          "-DRE4DC_EFFECT_PS2_TOGGLE=1",
+          "-I<KOS>/kernel/arch/dreamcast/hardware/pvr",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/post30.h",
+          "-DRE4DC_OWNER_SETUP_LEAN=1",
+          "-DRE4DC_CHARBAKE_TOGGLE=1",
+          "-DRE4DC_SG_SELECT_LEAN=1",
+          "-DRE4DC_SCENERY_CHUNK=1",
+          "-DRE4DC_SCENERY_UNIT_CONCAT=1",
+          "-DRE4DC_SCENERY_SCREEN_MEMO=1",
+          "-DRE4DC_SCENERY_FAR_LOD=4",
+          "-I<PUBLIC_SDK>/include",
+          "-I<EVIDENCE>/world-replay-target-04/release-profile/kos-overlay",
+          "-DRE4DC_SCENERY_SELECT_ONLY=1",
+          "-DRE4DC_SCENERY_REPLAY_LEAN=1",
+          "-DRE4DC_SCENERY_SUBMIT_BATCH=0",
+          "-iquote",
+          "<REPO>/port/dreamcast/game/platform"
+        ]
+      },
+      "r1-b1": {
+        "sha256": "8133aa2b8b7deddcbfb4d0254e0ecbb1afb837f1323c3fe09f40daa63fb490c0",
+        "object_sha256": "739fe97c94ec0c4c505d0f428b2dc3f44bb5a9318b6cebee06aec429efa797ed",
+        "flags": [
+          "<SH4_TOOLCHAIN>/bin/sh-elf-g++",
+          "-O2",
+          "-fno-PIC",
+          "-fno-PIE",
+          "-fomit-frame-pointer",
+          "-m4-single",
+          "-ml",
+          "-mfsrra",
+          "-mfsca",
+          "-ffunction-sections",
+          "-fdata-sections",
+          "-matomic-model=soft-gusa",
+          "-ftls-model=local-exec",
+          "-D__DREAMCAST__",
+          "-isystem",
+          "<KOS>/include",
+          "-isystem",
+          "<KOS>/kernel/arch/dreamcast/include",
+          "-isystem",
+          "<KOS>/addons/include",
+          "-D_arch_dreamcast=1",
+          "-D_arch_sub_pristine=1",
+          "-Wall",
+          "-std=gnu++20",
+          "-Wall",
+          "-Wextra",
+          "-O1",
+          "-I<REPO>/port/dreamcast/game/platform/include",
+          "-DRE4DC_GAME",
+          "-fno-exceptions",
+          "-fno-unwind-tables",
+          "-fno-asynchronous-unwind-tables",
+          "-fno-threadsafe-statics",
+          "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+          "-DRE4DC_RENDER_FSAA=1",
+          "-DRE4DC_RENDER_OPTION=1",
+          "-DRE4DC_VIEW_DIST_OPTION=1",
+          "-DRE4DC_FAR_SHELL=1",
+          "-DRE4DC_FOLIAGE_OPTION=1",
+          "-DRE4DC_RES_ALTERNATE=1",
+          "-DRE4DC_RES_MODES=9",
+          "-DRE4DC_RES_MODE=0",
+          "-DRE4DC_RES_CYCLE_FRAMES=0",
+          "-DRE4DC_MV_SHADOWS=1",
+          "-DRE4DC_MV_OPB_BINS=8",
+          "-DRE4DC_MV_SCALE=50",
+          "-DRE4DC_MV_SIDES=8",
+          "-DRE4DC_MV_RADIUS=420",
+          "-DRE4DC_MV_TOP=250",
+          "-DRE4DC_MV_DEPTH=1200",
+          "-DRE4DC_MV_RANGE_M=15",
+          "-DRE4DC_MV_MAX=12",
+          "-DRE4DC_MV_BODY=1700",
+          "-DRE4DC_MV_LEN_MAX=1800",
+          "-DRE4DC_ATCHK_LIST=1",
+          "-DRE4DC_ATCHK_CACHE=1",
+          "-DRE4DC_WORKAT_INLINE=1",
+          "-DRE4DC_FX_SCAN=1",
+          "-DRE4DC_FX_MOVE=1",
+          "-DRE4DC_OT_MASK=1",
+          "-DRE4DC_MANUAL_PACK_PROBE=1",
+          "-DRE4DC_PAD_PROMPTS=1",
+          "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+          "-DRE4DC_SH4ZAM_RENDER=1",
+          "-DRE4DC_ACTOR_TRANSACTION=1",
+          "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+          "-DRE4DC_VMU_DIALOG=1",
+          "-DRE4DC_ACTOR_PL08=1",
+          "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+          "-DRE4DC_NMR_POOL=1",
+          "-DRE4DC_ACTOR_MATERIALS=4",
+          "-DRE4DC_ACTOR_MATERIALS=4",
+          "-DRE4DC_TEX_PKG_SKIP=1",
+          "-DRE4DC_GC_CENSUS_TRIM=1",
+          "-DRE4DC_GXF_JITTER=1",
+          "-DRE4DC_WATER45_NATIVE=1",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/motion-read.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/quality-knobs.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/cabin-source.h",
+          "-include",
+          "<REPO>/port/dreamcast/game/platform/include/native_event_file.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/movie-world-arena.h",
+          "-DRE4DC_PS2_WORLD_DRAW=1",
+          "-DRE4DC_PS2_PRELOAD_LEAN=1",
+          "-DRE4DC_PS2_WORLD_MESH=1",
+          "-DRE4DC_WORLD_RECT21=1",
+          "-DRE4DC_PS2_PASS_MASK=1",
+          "-DRE4DC_PS2_VERTEX_ALPHA=1",
+          "-DRE4DC_PS2_PT_CUTOUT=1",
+          "-DRE4DC_PS2_R100_SMX=1",
+          "-DRE4DC_PS2_R100_TR4=1",
+          "-DRE4DC_PS2_INTERIOR_CULL=1",
+          "-DRE4DC_PS2_INTERIOR_ACTORS=1",
+          "-DRE4DC_PS2_INTERIOR_OWNER=1",
+          "-DRE4DC_PS2_WORLD_ROOMS=2",
+          "-DRE4DC_PS2_WORLD_DYNAMIC=1",
+          "-DRE4DC_PS2_WORLD_PARTS=1",
+          "-DRE4DC_PS2_WORLD_NONEMPTY_LOD=1",
+          "-DRE4DC_PS2_WORLD_SOURCE_OWNER=1",
+          "-DRE4DC_PS2_WORLD_SOURCE_TEX_PREP=1",
+          "-DRE4DC_PS2_WORLD_REGISTRY=1",
+          "-DRE4DC_PS2_OPEN_READ=1",
+          "-DRE4DC_SCENERY_ENCODING=1",
+          "-DRE4DC_PS2_WORLD_LEAN=23",
+          "-DRE4DC_PS2_PLACE_GATE=1",
+          "-DRE4DC_PS2_AREA_HIDE=1",
+          "-DRE4DC_PS2_ROOM_PIN=1",
+          "-DRE4DC_PS2_STRIP_GROUPS=1",
+          "-DRE4DC_MESH_VP_SCHED=1",
+          "-DRE4DC_MESH_STRIP_LEAN=1",
+          "-DRE4DC_MESH_PRIME_LAZY=1",
+          "-DRE4DC_MESH_CLIP_LEAN=1",
+          "-DRE4DC_MESH_CLIP_ACCEPT=1",
+          "-DRE4DC_ENEMY_VIS_CULL=1",
+          "-Os",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/native-static.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/d349-stack.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/frontend30.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/subscreen.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/effects30.h",
+          "-DRE4DC_HW_FOG_HAZE=1",
+          "-DRE4DC_FOLIAGE_TRIM=2",
+          "-DRE4DC_FOLIAGE_NEAR_MM=12000",
+          "-DRE4DC_TRANS_POLICY=3",
+          "-DRE4DC_FOLIAGE_NEAR_FIX=1",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/scenery30.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/blender30.h",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/tahash.h",
+          "-DRE4DC_EFFECT_PS2_TOGGLE=1",
+          "-I<KOS>/kernel/arch/dreamcast/hardware/pvr",
+          "-include",
+          "<EVIDENCE>/world-replay-target-04/release-profile/obj/post30.h",
+          "-DRE4DC_OWNER_SETUP_LEAN=1",
+          "-DRE4DC_CHARBAKE_TOGGLE=1",
+          "-DRE4DC_SG_SELECT_LEAN=1",
+          "-DRE4DC_SCENERY_CHUNK=1",
+          "-DRE4DC_SCENERY_UNIT_CONCAT=1",
+          "-DRE4DC_SCENERY_SCREEN_MEMO=1",
+          "-DRE4DC_SCENERY_FAR_LOD=4",
+          "-I<PUBLIC_SDK>/include",
+          "-I<EVIDENCE>/world-replay-target-04/release-profile/kos-overlay",
+          "-DRE4DC_SCENERY_SELECT_ONLY=1",
+          "-DRE4DC_SCENERY_REPLAY_LEAN=1",
+          "-DRE4DC_SCENERY_SUBMIT_BATCH=1",
+          "-iquote",
+          "<REPO>/port/dreamcast/game/platform"
+        ]
+      }
+    },
+    "case_groups": {
+      "selection": 52,
+      "replay": 18,
+      "screen": 2
+    }
+  },
+  "measurements": {
+    "status": "PASS",
+    "scope": "Summarize measured target traces and an explicitly synthetic frame estimate.\n\nThe underlying fixture prices replay setup with a controlled geometry edge.\nData accesses are retired target loads/stores, not cache misses or bus traffic.\nThe frame projection assumes the requested piece count, replay batch occupancy,\none screen-memo call per piece, and a chosen memo hit fraction. It adds no new\nselector saving: the base already avoids box/group selection when fully inside.\n",
+    "target_controls_sha256": "43a4dcf457f38ee1c48fe6f9d893256147c6314f99bead47775667fa5b8a9d63",
+    "target_build_sha256": "c2f6dc5e1a1f82356a40945af8e22f418e273481aebcfcc41299fa5860342a59",
+    "controls": 72,
+    "pieces": 500,
+    "replay_batch_sizes": [
+      48,
+      48,
+      48,
+      48,
+      48,
+      48,
+      48,
+      48,
+      48,
+      48,
+      20
+    ],
+    "assumed_mhz": 200,
+    "per_run": [
+      {
+        "parts": 0,
+        "arms": {
+          "r0-b0": {
+            "warm_i_cycles": 124,
+            "cold_i_cycles": 269,
+            "instructions": 133,
+            "loads": 48,
+            "stores": 46,
+            "load_bytes": 182,
+            "store_bytes": 184,
+            "distinct_32b_lines": 14,
+            "distinct_read_32b_lines": 13,
+            "distinct_write_32b_lines": 8,
+            "segment_32b_line_touches": 14,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 928
+          },
+          "r0-b1": {
+            "warm_i_cycles": 134,
+            "cold_i_cycles": 316,
+            "instructions": 143,
+            "loads": 49,
+            "stores": 47,
+            "load_bytes": 186,
+            "store_bytes": 188,
+            "distinct_32b_lines": 15,
+            "distinct_read_32b_lines": 14,
+            "distinct_write_32b_lines": 8,
+            "segment_32b_line_touches": 15,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 932
+          },
+          "r1-b0": {
+            "warm_i_cycles": 103,
+            "cold_i_cycles": 226,
+            "instructions": 109,
+            "loads": 37,
+            "stores": 39,
+            "load_bytes": 144,
+            "store_bytes": 156,
+            "distinct_32b_lines": 12,
+            "distinct_read_32b_lines": 11,
+            "distinct_write_32b_lines": 5,
+            "segment_32b_line_touches": 12,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 968
+          },
+          "r1-b1": {
+            "warm_i_cycles": 103,
+            "cold_i_cycles": 225,
+            "instructions": 110,
+            "loads": 37,
+            "stores": 39,
+            "load_bytes": 144,
+            "store_bytes": 156,
+            "distinct_32b_lines": 12,
+            "distinct_read_32b_lines": 11,
+            "distinct_write_32b_lines": 5,
+            "segment_32b_line_touches": 12,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 976
+          }
+        }
+      },
+      {
+        "parts": 1,
+        "arms": {
+          "r0-b0": {
+            "warm_i_cycles": 976,
+            "cold_i_cycles": 1485,
+            "instructions": 1271,
+            "loads": 179,
+            "stores": 374,
+            "load_bytes": 644,
+            "store_bytes": 1454,
+            "distinct_32b_lines": 55,
+            "distinct_read_32b_lines": 34,
+            "distinct_write_32b_lines": 33,
+            "segment_32b_line_touches": 70,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 956,
+            "per_piece": {
+              "warm_i_cycles": 976.0,
+              "cold_i_cycles": 1485.0,
+              "instructions": 1271.0,
+              "loads": 179.0,
+              "stores": 374.0,
+              "load_bytes": 644.0,
+              "store_bytes": 1454.0,
+              "segment_32b_line_touches": 70.0
+            }
+          },
+          "r0-b1": {
+            "warm_i_cycles": 1022,
+            "cold_i_cycles": 1536,
+            "instructions": 1314,
+            "loads": 185,
+            "stores": 382,
+            "load_bytes": 666,
+            "store_bytes": 1474,
+            "distinct_32b_lines": 59,
+            "distinct_read_32b_lines": 39,
+            "distinct_write_32b_lines": 33,
+            "segment_32b_line_touches": 73,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 960,
+            "per_piece": {
+              "warm_i_cycles": 1022.0,
+              "cold_i_cycles": 1536.0,
+              "instructions": 1314.0,
+              "loads": 185.0,
+              "stores": 382.0,
+              "load_bytes": 666.0,
+              "store_bytes": 1474.0,
+              "segment_32b_line_touches": 73.0
+            }
+          },
+          "r1-b0": {
+            "warm_i_cycles": 974,
+            "cold_i_cycles": 1529,
+            "instructions": 1279,
+            "loads": 172,
+            "stores": 384,
+            "load_bytes": 622,
+            "store_bytes": 1476,
+            "distinct_32b_lines": 57,
+            "distinct_read_32b_lines": 36,
+            "distinct_write_32b_lines": 34,
+            "segment_32b_line_touches": 72,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 992,
+            "per_piece": {
+              "warm_i_cycles": 974.0,
+              "cold_i_cycles": 1529.0,
+              "instructions": 1279.0,
+              "loads": 172.0,
+              "stores": 384.0,
+              "load_bytes": 622.0,
+              "store_bytes": 1476.0,
+              "segment_32b_line_touches": 72.0
+            }
+          },
+          "r1-b1": {
+            "warm_i_cycles": 1021,
+            "cold_i_cycles": 1567,
+            "instructions": 1320,
+            "loads": 179,
+            "stores": 392,
+            "load_bytes": 648,
+            "store_bytes": 1496,
+            "distinct_32b_lines": 60,
+            "distinct_read_32b_lines": 40,
+            "distinct_write_32b_lines": 35,
+            "segment_32b_line_touches": 77,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 1000,
+            "per_piece": {
+              "warm_i_cycles": 1021.0,
+              "cold_i_cycles": 1567.0,
+              "instructions": 1320.0,
+              "loads": 179.0,
+              "stores": 392.0,
+              "load_bytes": 648.0,
+              "store_bytes": 1496.0,
+              "segment_32b_line_touches": 77.0
+            }
+          }
+        }
+      },
+      {
+        "parts": 2,
+        "arms": {
+          "r0-b0": {
+            "warm_i_cycles": 1854,
+            "cold_i_cycles": 2410,
+            "instructions": 2431,
+            "loads": 320,
+            "stores": 707,
+            "load_bytes": 1143,
+            "store_bytes": 2744,
+            "distinct_32b_lines": 59,
+            "distinct_read_32b_lines": 38,
+            "distinct_write_32b_lines": 33,
+            "segment_32b_line_touches": 121,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 956,
+            "per_piece": {
+              "warm_i_cycles": 927.0,
+              "cold_i_cycles": 1205.0,
+              "instructions": 1215.5,
+              "loads": 160.0,
+              "stores": 353.5,
+              "load_bytes": 571.5,
+              "store_bytes": 1372.0,
+              "segment_32b_line_touches": 60.5
+            }
+          },
+          "r0-b1": {
+            "warm_i_cycles": 1936,
+            "cold_i_cycles": 2484,
+            "instructions": 2507,
+            "loads": 331,
+            "stores": 722,
+            "load_bytes": 1183,
+            "store_bytes": 2780,
+            "distinct_32b_lines": 63,
+            "distinct_read_32b_lines": 43,
+            "distinct_write_32b_lines": 33,
+            "segment_32b_line_touches": 126,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 960,
+            "per_piece": {
+              "warm_i_cycles": 968.0,
+              "cold_i_cycles": 1242.0,
+              "instructions": 1253.5,
+              "loads": 165.5,
+              "stores": 361.0,
+              "load_bytes": 591.5,
+              "store_bytes": 1390.0,
+              "segment_32b_line_touches": 63.0
+            }
+          },
+          "r1-b0": {
+            "warm_i_cycles": 1240,
+            "cold_i_cycles": 1849,
+            "instructions": 1569,
+            "loads": 251,
+            "stores": 433,
+            "load_bytes": 911,
+            "store_bytes": 1660,
+            "distinct_32b_lines": 61,
+            "distinct_read_32b_lines": 40,
+            "distinct_write_32b_lines": 34,
+            "segment_32b_line_touches": 104,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 992,
+            "per_piece": {
+              "warm_i_cycles": 620.0,
+              "cold_i_cycles": 924.5,
+              "instructions": 784.5,
+              "loads": 125.5,
+              "stores": 216.5,
+              "load_bytes": 455.5,
+              "store_bytes": 830.0,
+              "segment_32b_line_touches": 52.0
+            }
+          },
+          "r1-b1": {
+            "warm_i_cycles": 1305,
+            "cold_i_cycles": 1892,
+            "instructions": 1624,
+            "loads": 263,
+            "stores": 442,
+            "load_bytes": 955,
+            "store_bytes": 1684,
+            "distinct_32b_lines": 64,
+            "distinct_read_32b_lines": 44,
+            "distinct_write_32b_lines": 35,
+            "segment_32b_line_touches": 111,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 1000,
+            "per_piece": {
+              "warm_i_cycles": 652.5,
+              "cold_i_cycles": 946.0,
+              "instructions": 812.0,
+              "loads": 131.5,
+              "stores": 221.0,
+              "load_bytes": 477.5,
+              "store_bytes": 842.0,
+              "segment_32b_line_touches": 55.5
+            }
+          }
+        }
+      },
+      {
+        "parts": 8,
+        "arms": {
+          "r0-b0": {
+            "warm_i_cycles": 7044,
+            "cold_i_cycles": 7600,
+            "instructions": 9325,
+            "loads": 1136,
+            "stores": 2690,
+            "load_bytes": 4026,
+            "store_bytes": 10424,
+            "distinct_32b_lines": 77,
+            "distinct_read_32b_lines": 56,
+            "distinct_write_32b_lines": 33,
+            "segment_32b_line_touches": 424,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 956,
+            "per_piece": {
+              "warm_i_cycles": 880.5,
+              "cold_i_cycles": 950.0,
+              "instructions": 1165.625,
+              "loads": 142.0,
+              "stores": 336.25,
+              "load_bytes": 503.25,
+              "store_bytes": 1303.0,
+              "segment_32b_line_touches": 53.0
+            }
+          },
+          "r0-b1": {
+            "warm_i_cycles": 7342,
+            "cold_i_cycles": 7890,
+            "instructions": 9599,
+            "loads": 1177,
+            "stores": 2747,
+            "load_bytes": 4174,
+            "store_bytes": 10556,
+            "distinct_32b_lines": 81,
+            "distinct_read_32b_lines": 61,
+            "distinct_write_32b_lines": 33,
+            "segment_32b_line_touches": 441,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 960,
+            "per_piece": {
+              "warm_i_cycles": 917.75,
+              "cold_i_cycles": 986.25,
+              "instructions": 1199.875,
+              "loads": 147.125,
+              "stores": 343.375,
+              "load_bytes": 521.75,
+              "store_bytes": 1319.5,
+              "segment_32b_line_touches": 55.125
+            }
+          },
+          "r1-b0": {
+            "warm_i_cycles": 2767,
+            "cold_i_cycles": 3376,
+            "instructions": 3246,
+            "loads": 698,
+            "stores": 712,
+            "load_bytes": 2546,
+            "store_bytes": 2704,
+            "distinct_32b_lines": 79,
+            "distinct_read_32b_lines": 58,
+            "distinct_write_32b_lines": 34,
+            "segment_32b_line_touches": 293,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 992,
+            "per_piece": {
+              "warm_i_cycles": 345.875,
+              "cold_i_cycles": 422.0,
+              "instructions": 405.75,
+              "loads": 87.25,
+              "stores": 89.0,
+              "load_bytes": 318.25,
+              "store_bytes": 338.0,
+              "segment_32b_line_touches": 36.625
+            }
+          },
+          "r1-b1": {
+            "warm_i_cycles": 2940,
+            "cold_i_cycles": 3527,
+            "instructions": 3385,
+            "loads": 740,
+            "stores": 727,
+            "load_bytes": 2698,
+            "store_bytes": 2752,
+            "distinct_32b_lines": 82,
+            "distinct_read_32b_lines": 62,
+            "distinct_write_32b_lines": 35,
+            "segment_32b_line_touches": 312,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 1000,
+            "per_piece": {
+              "warm_i_cycles": 367.5,
+              "cold_i_cycles": 440.875,
+              "instructions": 423.125,
+              "loads": 92.5,
+              "stores": 90.875,
+              "load_bytes": 337.25,
+              "store_bytes": 344.0,
+              "segment_32b_line_touches": 39.0
+            }
+          }
+        }
+      },
+      {
+        "parts": 20,
+        "arms": {
+          "r0-b0": {
+            "warm_i_cycles": 17424,
+            "cold_i_cycles": 17980,
+            "instructions": 23113,
+            "loads": 2768,
+            "stores": 6656,
+            "load_bytes": 9792,
+            "store_bytes": 25784,
+            "distinct_32b_lines": 113,
+            "distinct_read_32b_lines": 92,
+            "distinct_write_32b_lines": 33,
+            "segment_32b_line_touches": 1030,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 956,
+            "per_piece": {
+              "warm_i_cycles": 871.2,
+              "cold_i_cycles": 899.0,
+              "instructions": 1155.65,
+              "loads": 138.4,
+              "stores": 332.8,
+              "load_bytes": 489.6,
+              "store_bytes": 1289.2,
+              "segment_32b_line_touches": 51.5
+            }
+          },
+          "r0-b1": {
+            "warm_i_cycles": 18154,
+            "cold_i_cycles": 18702,
+            "instructions": 23783,
+            "loads": 2869,
+            "stores": 6797,
+            "load_bytes": 10156,
+            "store_bytes": 26108,
+            "distinct_32b_lines": 117,
+            "distinct_read_32b_lines": 97,
+            "distinct_write_32b_lines": 33,
+            "segment_32b_line_touches": 1071,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 960,
+            "per_piece": {
+              "warm_i_cycles": 907.7,
+              "cold_i_cycles": 935.1,
+              "instructions": 1189.15,
+              "loads": 143.45,
+              "stores": 339.85,
+              "load_bytes": 507.8,
+              "store_bytes": 1305.4,
+              "segment_32b_line_touches": 53.55
+            }
+          },
+          "r1-b0": {
+            "warm_i_cycles": 5821,
+            "cold_i_cycles": 6430,
+            "instructions": 6600,
+            "loads": 1592,
+            "stores": 1270,
+            "load_bytes": 5816,
+            "store_bytes": 4792,
+            "distinct_32b_lines": 115,
+            "distinct_read_32b_lines": 94,
+            "distinct_write_32b_lines": 34,
+            "segment_32b_line_touches": 671,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 992,
+            "per_piece": {
+              "warm_i_cycles": 291.05,
+              "cold_i_cycles": 321.5,
+              "instructions": 330.0,
+              "loads": 79.6,
+              "stores": 63.5,
+              "load_bytes": 290.8,
+              "store_bytes": 239.6,
+              "segment_32b_line_touches": 33.55
+            }
+          },
+          "r1-b1": {
+            "warm_i_cycles": 6210,
+            "cold_i_cycles": 6797,
+            "instructions": 6907,
+            "loads": 1694,
+            "stores": 1297,
+            "load_bytes": 6184,
+            "store_bytes": 4888,
+            "distinct_32b_lines": 118,
+            "distinct_read_32b_lines": 98,
+            "distinct_write_32b_lines": 35,
+            "segment_32b_line_touches": 714,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 1000,
+            "per_piece": {
+              "warm_i_cycles": 310.5,
+              "cold_i_cycles": 339.85,
+              "instructions": 345.35,
+              "loads": 84.7,
+              "stores": 64.85,
+              "load_bytes": 309.2,
+              "store_bytes": 244.4,
+              "segment_32b_line_touches": 35.7
+            }
+          }
+        }
+      },
+      {
+        "parts": 48,
+        "arms": {
+          "r0-b0": {
+            "warm_i_cycles": 41644,
+            "cold_i_cycles": 42200,
+            "instructions": 55285,
+            "loads": 6576,
+            "stores": 15910,
+            "load_bytes": 23246,
+            "store_bytes": 61624,
+            "distinct_32b_lines": 197,
+            "distinct_read_32b_lines": 176,
+            "distinct_write_32b_lines": 33,
+            "segment_32b_line_touches": 2444,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 956,
+            "per_piece": {
+              "warm_i_cycles": 867.5833333333334,
+              "cold_i_cycles": 879.1666666666666,
+              "instructions": 1151.7708333333333,
+              "loads": 137.0,
+              "stores": 331.4583333333333,
+              "load_bytes": 484.2916666666667,
+              "store_bytes": 1283.8333333333333,
+              "segment_32b_line_touches": 50.916666666666664
+            }
+          },
+          "r0-b1": {
+            "warm_i_cycles": 43382,
+            "cold_i_cycles": 43930,
+            "instructions": 56879,
+            "loads": 6817,
+            "stores": 16247,
+            "load_bytes": 24114,
+            "store_bytes": 62396,
+            "distinct_32b_lines": 201,
+            "distinct_read_32b_lines": 181,
+            "distinct_write_32b_lines": 33,
+            "segment_32b_line_touches": 2541,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 960,
+            "per_piece": {
+              "warm_i_cycles": 903.7916666666666,
+              "cold_i_cycles": 915.2083333333334,
+              "instructions": 1184.9791666666667,
+              "loads": 142.02083333333334,
+              "stores": 338.4791666666667,
+              "load_bytes": 502.375,
+              "store_bytes": 1299.9166666666667,
+              "segment_32b_line_touches": 52.9375
+            }
+          },
+          "r1-b0": {
+            "warm_i_cycles": 12947,
+            "cold_i_cycles": 13556,
+            "instructions": 14426,
+            "loads": 3678,
+            "stores": 2572,
+            "load_bytes": 13446,
+            "store_bytes": 9664,
+            "distinct_32b_lines": 199,
+            "distinct_read_32b_lines": 178,
+            "distinct_write_32b_lines": 34,
+            "segment_32b_line_touches": 1553,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 992,
+            "per_piece": {
+              "warm_i_cycles": 269.7291666666667,
+              "cold_i_cycles": 282.4166666666667,
+              "instructions": 300.5416666666667,
+              "loads": 76.625,
+              "stores": 53.583333333333336,
+              "load_bytes": 280.125,
+              "store_bytes": 201.33333333333334,
+              "segment_32b_line_touches": 32.354166666666664
+            }
+          },
+          "r1-b1": {
+            "warm_i_cycles": 13840,
+            "cold_i_cycles": 14427,
+            "instructions": 15125,
+            "loads": 3920,
+            "stores": 2627,
+            "load_bytes": 14318,
+            "store_bytes": 9872,
+            "distinct_32b_lines": 202,
+            "distinct_read_32b_lines": 182,
+            "distinct_write_32b_lines": 35,
+            "segment_32b_line_touches": 1652,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 1000,
+            "per_piece": {
+              "warm_i_cycles": 288.3333333333333,
+              "cold_i_cycles": 300.5625,
+              "instructions": 315.1041666666667,
+              "loads": 81.66666666666667,
+              "stores": 54.729166666666664,
+              "load_bytes": 298.2916666666667,
+              "store_bytes": 205.66666666666666,
+              "segment_32b_line_touches": 34.416666666666664
+            }
+          }
+        }
+      }
+    ],
+    "screen": [
+      {
+        "name": "miss",
+        "arms": {
+          "r0-b0": {
+            "warm_i_cycles": 728,
+            "cold_i_cycles": 973,
+            "instructions": 914,
+            "loads": 183,
+            "stores": 89,
+            "load_bytes": 719,
+            "store_bytes": 353,
+            "distinct_32b_lines": 21,
+            "distinct_read_32b_lines": 17,
+            "distinct_write_32b_lines": 12,
+            "segment_32b_line_touches": null,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 196
+          },
+          "r0-b1": {
+            "warm_i_cycles": 728,
+            "cold_i_cycles": 988,
+            "instructions": 914,
+            "loads": 183,
+            "stores": 89,
+            "load_bytes": 719,
+            "store_bytes": 353,
+            "distinct_32b_lines": 21,
+            "distinct_read_32b_lines": 17,
+            "distinct_write_32b_lines": 12,
+            "segment_32b_line_touches": null,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 196
+          },
+          "r1-b0": {
+            "warm_i_cycles": 654,
+            "cold_i_cycles": 951,
+            "instructions": 824,
+            "loads": 162,
+            "stores": 64,
+            "load_bytes": 645,
+            "store_bytes": 253,
+            "distinct_32b_lines": 16,
+            "distinct_read_32b_lines": 12,
+            "distinct_write_32b_lines": 9,
+            "segment_32b_line_touches": null,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 108
+          },
+          "r1-b1": {
+            "warm_i_cycles": 654,
+            "cold_i_cycles": 919,
+            "instructions": 824,
+            "loads": 162,
+            "stores": 64,
+            "load_bytes": 645,
+            "store_bytes": 253,
+            "distinct_32b_lines": 17,
+            "distinct_read_32b_lines": 13,
+            "distinct_write_32b_lines": 9,
+            "segment_32b_line_touches": null,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 108
+          }
+        }
+      },
+      {
+        "name": "hit",
+        "arms": {
+          "r0-b0": {
+            "warm_i_cycles": 461,
+            "cold_i_cycles": 732,
+            "instructions": 570,
+            "loads": 99,
+            "stores": 52,
+            "load_bytes": 383,
+            "store_bytes": 208,
+            "distinct_32b_lines": 19,
+            "distinct_read_32b_lines": 16,
+            "distinct_write_32b_lines": 7,
+            "segment_32b_line_touches": null,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 196
+          },
+          "r0-b1": {
+            "warm_i_cycles": 461,
+            "cold_i_cycles": 732,
+            "instructions": 570,
+            "loads": 99,
+            "stores": 52,
+            "load_bytes": 383,
+            "store_bytes": 208,
+            "distinct_32b_lines": 19,
+            "distinct_read_32b_lines": 16,
+            "distinct_write_32b_lines": 7,
+            "segment_32b_line_touches": null,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 196
+          },
+          "r1-b0": {
+            "warm_i_cycles": 302,
+            "cold_i_cycles": 451,
+            "instructions": 374,
+            "loads": 59,
+            "stores": 7,
+            "load_bytes": 233,
+            "store_bytes": 28,
+            "distinct_32b_lines": 9,
+            "distinct_read_32b_lines": 9,
+            "distinct_write_32b_lines": 1,
+            "segment_32b_line_touches": null,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 108
+          },
+          "r1-b1": {
+            "warm_i_cycles": 302,
+            "cold_i_cycles": 453,
+            "instructions": 374,
+            "loads": 59,
+            "stores": 7,
+            "load_bytes": 233,
+            "store_bytes": 28,
+            "distinct_32b_lines": 9,
+            "distinct_read_32b_lines": 9,
+            "distinct_write_32b_lines": 1,
+            "segment_32b_line_touches": null,
+            "pref_requests": 0,
+            "fixture_peak_stack_bytes": 108
+          }
+        }
+      }
+    ],
+    "frame_estimates": [
+      {
+        "submit_batch": 0,
+        "replay_totals": {
+          "r0-b0": {
+            "warm_i_cycles": 433864,
+            "loads": 68528,
+            "stores": 165756,
+            "load_bytes": 242252,
+            "store_bytes": 642024,
+            "sum_of_per_batch_distinct_lines": 2083
+          },
+          "r1-b0": {
+            "warm_i_cycles": 135291,
+            "loads": 38372,
+            "stores": 26990,
+            "load_bytes": 140276,
+            "store_bytes": 101432,
+            "sum_of_per_batch_distinct_lines": 2105
+          }
+        },
+        "replay_savings": {
+          "warm_i_cycles": 298573,
+          "loads": 30156,
+          "stores": 138766,
+          "load_bytes": 101976,
+          "store_bytes": 540592,
+          "sum_of_per_batch_distinct_lines": -22
+        },
+        "replay_warm_i_saving_ms": 1.492865,
+        "scenarios": [
+          {
+            "memo_hit_fraction": 0.0,
+            "memo_savings": {
+              "warm_i_cycles": 37000.0,
+              "loads": 10500.0,
+              "stores": 12500.0,
+              "load_bytes": 37000.0,
+              "store_bytes": 50000.0
+            },
+            "combined_warm_i_saving_cycles": 335573.0,
+            "combined_warm_i_saving_ms": 1.677865,
+            "assumed_baseline_frame_ms": 49.3,
+            "projected_frame_ms": 47.622135,
+            "projected_fps": 20.998638553269398
+          },
+          {
+            "memo_hit_fraction": 0.5,
+            "memo_savings": {
+              "warm_i_cycles": 58250.0,
+              "loads": 15250.0,
+              "stores": 17500.0,
+              "load_bytes": 56000.0,
+              "store_bytes": 70000.0
+            },
+            "combined_warm_i_saving_cycles": 356823.0,
+            "combined_warm_i_saving_ms": 1.784115,
+            "assumed_baseline_frame_ms": 49.3,
+            "projected_frame_ms": 47.515885,
+            "projected_fps": 21.04559348941938
+          },
+          {
+            "memo_hit_fraction": 1.0,
+            "memo_savings": {
+              "warm_i_cycles": 79500.0,
+              "loads": 20000.0,
+              "stores": 22500.0,
+              "load_bytes": 75000.0,
+              "store_bytes": 90000.0
+            },
+            "combined_warm_i_saving_cycles": 378073.0,
+            "combined_warm_i_saving_ms": 1.890365,
+            "assumed_baseline_frame_ms": 49.3,
+            "projected_frame_ms": 47.409634999999994,
+            "projected_fps": 21.092758887513057
+          }
+        ]
+      },
+      {
+        "submit_batch": 1,
+        "replay_totals": {
+          "r0-b1": {
+            "warm_i_cycles": 451974,
+            "loads": 71039,
+            "stores": 169267,
+            "load_bytes": 251296,
+            "store_bytes": 650068,
+            "sum_of_per_batch_distinct_lines": 2127
+          },
+          "r1-b1": {
+            "warm_i_cycles": 144610,
+            "loads": 40894,
+            "stores": 27567,
+            "load_bytes": 149364,
+            "store_bytes": 103608,
+            "sum_of_per_batch_distinct_lines": 2138
+          }
+        },
+        "replay_savings": {
+          "warm_i_cycles": 307364,
+          "loads": 30145,
+          "stores": 141700,
+          "load_bytes": 101932,
+          "store_bytes": 546460,
+          "sum_of_per_batch_distinct_lines": -11
+        },
+        "replay_warm_i_saving_ms": 1.53682,
+        "scenarios": [
+          {
+            "memo_hit_fraction": 0.0,
+            "memo_savings": {
+              "warm_i_cycles": 37000.0,
+              "loads": 10500.0,
+              "stores": 12500.0,
+              "load_bytes": 37000.0,
+              "store_bytes": 50000.0
+            },
+            "combined_warm_i_saving_cycles": 344364.0,
+            "combined_warm_i_saving_ms": 1.72182,
+            "assumed_baseline_frame_ms": 49.3,
+            "projected_frame_ms": 47.578179999999996,
+            "projected_fps": 21.01803810065875
+          },
+          {
+            "memo_hit_fraction": 0.5,
+            "memo_savings": {
+              "warm_i_cycles": 58250.0,
+              "loads": 15250.0,
+              "stores": 17500.0,
+              "load_bytes": 56000.0,
+              "store_bytes": 70000.0
+            },
+            "combined_warm_i_saving_cycles": 365614.0,
+            "combined_warm_i_saving_ms": 1.82807,
+            "assumed_baseline_frame_ms": 49.3,
+            "projected_frame_ms": 47.47193,
+            "projected_fps": 21.065079932499057
+          },
+          {
+            "memo_hit_fraction": 1.0,
+            "memo_savings": {
+              "warm_i_cycles": 79500.0,
+              "loads": 20000.0,
+              "stores": 22500.0,
+              "load_bytes": 75000.0,
+              "store_bytes": 90000.0
+            },
+            "combined_warm_i_saving_cycles": 386864.0,
+            "combined_warm_i_saving_ms": 1.93432,
+            "assumed_baseline_frame_ms": 49.3,
+            "projected_frame_ms": 47.36568,
+            "projected_fps": 21.112332811436467
+          }
+        ]
+      }
+    ],
+    "limitations": [
+      "Perfect D-cache in both models; no SQ, DMA, interrupt or unrelated bus-contention cost. Cold I includes modeled instruction line-fill service.",
+      "Warm I means ideal instruction residency; cold I begins with an empty 8 KB I-cache once per fixture run.",
+      "Cold-I results are per-sequence sensitivity figures and are not added into a frame projection.",
+      "Real geometry, matrix hardware transfer and UI submission work are excluded from these controlled traces.",
+      "Loads/stores include stack, literals and helper library accesses; bytes are architectural accesses, not external transfers.",
+      "Per-piece segment line touches apportion prologue/epilogue and count repeated lines between geometry edges.",
+      "Distinct lines describe one batch address union; they must not be divided by occupancy and called per-piece working set.",
+      "Production code and stack deltas come from the separate full translation-unit build receipt.",
+      "Selector saving is zero; the experimental extra fast loop was rejected and the original selector retained.",
+      "No measured hardware or Flycast speedup is claimed."
+    ]
+  },
+  "production_clear_audit": {
+    "status": "PASS",
+    "scope": "Record a narrow production/fixture disassembly audit of constructor clears.\n\nThis is not a claim that the whole setup fixture is byte-identical to production.\nIt records the real replay lambda, the literal R6 lengths immediately preceding\nits constructor memset calls, and nearby instructions for independent review.\nThe production caller retains real geometry; the fixture has a controlled edge.\nDifferent capture/register allocation and inlining can change other instructions.\n",
+    "production_receipt_sha256": "00e19e6582e43d74d550bb2ecbeac22114fc2a8167a1bb018df298b07b35a8c9",
+    "target_build_receipt_sha256": "c2f6dc5e1a1f82356a40945af8e22f418e273481aebcfcc41299fa5860342a59",
+    "reviewed_interpretation": [
+      "Both production and controlled target compile the same 776-byte and 209-byte overlapping clears.",
+      "Baseline repeats those clears inside its per-part replay loop.",
+      "Candidate moves them before the loop, adds one 36-byte material snapshot clear, and uses narrow restart stores per row.",
+      "These requested clear lengths include overlap; they are not distinct bytes or cache-miss counts.",
+      "The dominant store reduction is supported by untouched production code; other fixture instruction costs remain model estimates."
+    ],
+    "rows": [
+      {
+        "kind": "production",
+        "replay": 0,
+        "artifact_sha256": "01ea3fd62fe51fa2638f9721c9086d3d7c308b701ddb3e6fa118aa3fc1279669",
+        "function": "(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const",
+        "function_disassembly_sha256": "bc29f13877ba5d799b9b59b737d4bc6653a2025c4d3475fa772dbb41dc5ae922",
+        "clear_calls": [
+          {
+            "requested_bytes": 776,
+            "argument_load_offset": "0x70",
+            "call_offset": "0x8e",
+            "argument_instruction": "  70:\tae 96       \tmov.w\t1d0 <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const+0x1d0>,r6\t! 308",
+            "call_instruction": "  8e:\t0b 43       \tjsr\t@r3",
+            "review_excerpt": "  6c:\t83 64       \tmov\tr8,r4\n  6e:\t1a 01       \tsts\tmacl,r1\n  70:\tae 96       \tmov.w\t1d0 <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const+0x1d0>,r6\t! 308\n  72:\tbc 31       \tadd\tr11,r1\n  74:\t13 63       \tmov\tr1,r3\n  76:\t5c 73       \tadd\t#92,r3\n  78:\t30 63       \tmov.b\t@r3,r3\n  7a:\t3c 63       \textu.b\tr3,r3\n  7c:\t3d 12       \tmov.l\tr3,@(52,r2)\n  7e:\t13 63       \tmov\tr1,r3\n  80:\t5e 73       \tadd\t#94,r3\n  82:\t30 63       \tmov.b\t@r3,r3\n  84:\t3c 63       \textu.b\tr3,r3\n  86:\t32 27       \tmov.l\tr3,@r7\n  88:\t57 d3       \tmov.l\t1e8 <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const+0x1e8>,r3\t! 0 <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const>\n  8a:\t11 1f       \tmov.l\tr1,@(4,r15)\n  8c:\t22 2f       \tmov.l\tr2,@r15\n  8e:\t0b 43       \tjsr\t@r3\n  90:\t32 1f       \tmov.l\tr3,@(8,r15)"
+          },
+          {
+            "requested_bytes": 209,
+            "argument_load_offset": "0x96",
+            "call_offset": "0x9c",
+            "argument_instruction": "  96:\t9c 96       \tmov.w\t1d2 <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const+0x1d2>,r6\t! d1",
+            "call_instruction": "  9c:\t0b 43       \tjsr\t@r3",
+            "review_excerpt": "  92:\tf2 53       \tmov.l\t@(8,r15),r3\n  94:\t00 e5       \tmov\t#0,r5\n  96:\t9c 96       \tmov.w\t1d2 <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const+0x1d2>,r6\t! d1\n  98:\t83 64       \tmov\tr8,r4\n  9a:\te7 1a       \tmov.l\tr14,@(28,r10)\n  9c:\t0b 43       \tjsr\t@r3\n  9e:\t04 74       \tadd\t#4,r4"
+          }
+        ],
+        "requested_clear_bytes": 985,
+        "frequency": "Each queued replay part"
+      },
+      {
+        "kind": "fixture",
+        "replay": 0,
+        "artifact_sha256": "37a858a45be26c9f0e43f2d81614c72d7f5262a20289eaae831f369fd3cde5c5",
+        "function": "fixture_replay::{lambda()#1}::operator()() const [clone .constprop.0]",
+        "function_disassembly_sha256": "07476026f47e676825b6999407428d4a6c672382918031a62b1f5e1217fb4e03",
+        "clear_calls": [
+          {
+            "requested_bytes": 776,
+            "argument_load_offset": "0x6c",
+            "call_offset": "0x84",
+            "argument_instruction": "  102378:\tb7 96       \tmov.w\t1024ea <fixture_replay::{lambda()#1}::operator()() const [clone .constprop.0]+0x1de>,r6\t! 308",
+            "call_instruction": "  102390:\t0b 47       \tjsr\t@r7",
+            "review_excerpt": "  102374:\t83 64       \tmov\tr8,r4\n  102376:\t1a 03       \tsts\tmacl,r3\n  102378:\tb7 96       \tmov.w\t1024ea <fixture_replay::{lambda()#1}::operator()() const [clone .constprop.0]+0x1de>,r6\t! 308\n  10237a:\t3c 39       \tadd\tr3,r9\n  10237c:\t93 63       \tmov\tr9,r3\n  10237e:\t50 73       \tadd\t#80,r3\n  102380:\t3c 84       \tmov.b\t@(12,r3),r0\n  102382:\t0c 60       \textu.b\tr0,r0\n  102384:\t0d 1a       \tmov.l\tr0,@(52,r10)\n  102386:\t3e 84       \tmov.b\t@(14,r3),r0\n  102388:\t0c 60       \textu.b\tr0,r0\n  10238a:\t02 27       \tmov.l\tr0,@r7\n  10238c:\t5e d7       \tmov.l\t102508 <fixture_replay::{lambda()#1}::operator()() const [clone .constprop.0]+0x1fc>,r7\t! 103e38 <memset>\n  10238e:\t32 2f       \tmov.l\tr3,@r15\n  102390:\t0b 47       \tjsr\t@r7\n  102392:\t72 1f       \tmov.l\tr7,@(8,r15)"
+          },
+          {
+            "requested_bytes": 209,
+            "argument_load_offset": "0x8c",
+            "call_offset": "0x92",
+            "argument_instruction": "  102398:\ta8 96       \tmov.w\t1024ec <fixture_replay::{lambda()#1}::operator()() const [clone .constprop.0]+0x1e0>,r6\t! d1",
+            "call_instruction": "  10239e:\t0b 47       \tjsr\t@r7",
+            "review_excerpt": "  102394:\tf2 57       \tmov.l\t@(8,r15),r7\n  102396:\t00 e5       \tmov\t#0,r5\n  102398:\ta8 96       \tmov.w\t1024ec <fixture_replay::{lambda()#1}::operator()() const [clone .constprop.0]+0x1e0>,r6\t! d1\n  10239a:\t83 64       \tmov\tr8,r4\n  10239c:\tc7 1e       \tmov.l\tr12,@(28,r14)\n  10239e:\t0b 47       \tjsr\t@r7\n  1023a0:\t04 74       \tadd\t#4,r4"
+          }
+        ],
+        "requested_clear_bytes": 985,
+        "frequency": "Each queued replay part"
+      },
+      {
+        "kind": "production",
+        "replay": 1,
+        "artifact_sha256": "aea365629fa9a0e6d0950b01e595f5d5328020f6ecf3ac4ee7b6b271c4878b36",
+        "function": "(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const [clone .part.0]",
+        "function_disassembly_sha256": "072c294bbc3038a12c7de61653f97aae711a29bc4a9a83b03c11b6969ef5aa38",
+        "clear_calls": [
+          {
+            "requested_bytes": 36,
+            "argument_load_offset": "0x2",
+            "call_offset": "0x34",
+            "argument_instruction": "   2:\t24 e6       \tmov\t#36,r6",
+            "call_instruction": "  34:\t0b 4a       \tjsr\t@r10",
+            "review_excerpt": "   0:\t86 2f       \tmov.l\tr8,@-r15\n   2:\t24 e6       \tmov\t#36,r6\n   4:\t96 2f       \tmov.l\tr9,@-r15\n   6:\t00 e5       \tmov\t#0,r5\n   8:\ta6 2f       \tmov.l\tr10,@-r15\n   a:\t43 69       \tmov\tr4,r9\n   c:\tb6 2f       \tmov.l\tr11,@-r15\n   e:\tc6 2f       \tmov.l\tr12,@-r15\n  10:\td6 2f       \tmov.l\tr13,@-r15\n  12:\te6 2f       \tmov.l\tr14,@-r15\n  14:\t22 4f       \tsts.l\tpr,@-r15\n  16:\ta4 91       \tmov.w\t162 <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const [clone .part.0]+0x162>,r1\t! 354\n  18:\t5b d0       \tmov.l\t188 <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const [clone .part.0]+0x188>,r0\t! 0 <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const [clone .part.0]>\n  1a:\t18 3f       \tsub\tr1,r15\n  1c:\t42 51       \tmov.l\t@(8,r4),r1\n  1e:\t5b da       \tmov.l\t18c <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const [clone .part.0]+0x18c>,r10\t! 0 <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const [clone .part.0]>\n  20:\tf3 68       \tmov\tr15,r8\n  22:\t4f 78       \tadd\t#79,r8\n  24:\t1d 52       \tmov.l\t@(52,r1),r2\n  26:\t02 60       \tmov.l\t@r0,r0\n  28:\t09 48       \tshlr2\tr8\n  2a:\t01 48       \tshlr\tr8\n  2c:\t13 1f       \tmov.l\tr1,@(12,r15)\n  2e:\t24 1f       \tmov.l\tr2,@(16,r15)\n  30:\tf3 64       \tmov\tr15,r4\n  32:\t05 1f       \tmov.l\tr0,@(20,r15)\n  34:\t0b 4a       \tjsr\t@r10\n  36:\t24 74       \tadd\t#36,r4"
+          },
+          {
+            "requested_bytes": 776,
+            "argument_load_offset": "0x3a",
+            "call_offset": "0x42",
+            "argument_instruction": "  3a:\t93 96       \tmov.w\t164 <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const [clone .part.0]+0x164>,r6\t! 308",
+            "call_instruction": "  42:\t0b 4a       \tjsr\t@r10",
+            "review_excerpt": "  36:\t24 74       \tadd\t#36,r4\n  38:\t08 48       \tshll2\tr8\n  3a:\t93 96       \tmov.w\t164 <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const [clone .part.0]+0x164>,r6\t! 308\n  3c:\t8c 38       \tadd\tr8,r8\n  3e:\t92 9e       \tmov.w\t166 <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const [clone .part.0]+0x166>,r14\t! bc\n  40:\t00 e5       \tmov\t#0,r5\n  42:\t0b 4a       \tjsr\t@r10\n  44:\t83 64       \tmov\tr8,r4"
+          },
+          {
+            "requested_bytes": 209,
+            "argument_load_offset": "0x4a",
+            "call_offset": "0x54",
+            "argument_instruction": "  4a:\t8d 96       \tmov.w\t168 <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const [clone .part.0]+0x168>,r6\t! d1",
+            "call_instruction": "  54:\t0b 4a       \tjsr\t@r10",
+            "review_excerpt": "  46:\t52 db       \tmov.l\t190 <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const [clone .part.0]+0x190>,r11\t! 0 <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const [clone .part.0]>\n  48:\t8c 3e       \tadd\tr8,r14\n  4a:\t8d 96       \tmov.w\t168 <(anonymous namespace)::ps2_pass(unsigned int, float)::{lambda()#1}::operator()() const [clone .part.0]+0x168>,r6\t! d1\n  4c:\t00 e5       \tmov\t#0,r5\n  4e:\tb7 1e       \tmov.l\tr11,@(28,r14)\n  50:\t83 64       \tmov\tr8,r4\n  52:\t04 74       \tadd\t#4,r4\n  54:\t0b 4a       \tjsr\t@r10\n  56:\t83 6d       \tmov\tr8,r13"
+          }
+        ],
+        "requested_clear_bytes": 1021,
+        "frequency": "Once per nonempty replay batch"
+      },
+      {
+        "kind": "fixture",
+        "replay": 1,
+        "artifact_sha256": "bbb8b5ea7b585dfe2b089a94fa77e5a435f0b52303b3d71274ed6c5d511411f0",
+        "function": "fixture_replay::{lambda()#1}::operator()() const [clone .constprop.0]",
+        "function_disassembly_sha256": "4cac342b9b37cb48f5e8402b2acafab5ed10f3c152a1da4a4cd72467b5a8bdfb",
+        "clear_calls": [
+          {
+            "requested_bytes": 36,
+            "argument_load_offset": "0x4a",
+            "call_offset": "0x60",
+            "argument_instruction": "  10226e:\t24 e6       \tmov\t#36,r6",
+            "call_instruction": "  102284:\t0b 49       \tjsr\t@r9",
+            "review_excerpt": "  10226a:\tf6 68       \tmov.l\t@r15+,r8\n  10226c:\t57 d1       \tmov.l\t1023cc <fixture_replay::{lambda()#1}::operator()() const [clone .constprop.0]+0x1a8>,r1\t! 107b8c <fixture_part>\n  10226e:\t24 e6       \tmov\t#36,r6\n  102270:\t57 d2       \tmov.l\t1023d0 <fixture_replay::{lambda()#1}::operator()() const [clone .constprop.0]+0x1ac>,r2\t! 4888e0 <re4dc_ps2_sky_header>\n  102272:\t00 e5       \tmov\t#0,r5\n  102274:\t57 d9       \tmov.l\t1023d4 <fixture_replay::{lambda()#1}::operator()() const [clone .constprop.0]+0x1b0>,r9\t! 103e50 <memset>\n  102276:\tf3 64       \tmov\tr15,r4\n  102278:\t1d 51       \tmov.l\t@(52,r1),r1\n  10227a:\t20 74       \tadd\t#32,r4\n  10227c:\t22 62       \tmov.l\t@r2,r2\n  10227e:\t83 6e       \tmov\tr8,r14\n  102280:\t13 1f       \tmov.l\tr1,@(12,r15)\n  102282:\t34 7e       \tadd\t#52,r14\n  102284:\t0b 49       \tjsr\t@r9\n  102286:\t24 1f       \tmov.l\tr2,@(16,r15)"
+          },
+          {
+            "requested_bytes": 776,
+            "argument_load_offset": "0x64",
+            "call_offset": "0x6a",
+            "argument_instruction": "  102288:\t8f 96       \tmov.w\t1023aa <fixture_replay::{lambda()#1}::operator()() const [clone .constprop.0]+0x186>,r6\t! 308",
+            "call_instruction": "  10228e:\t0b 49       \tjsr\t@r9",
+            "review_excerpt": "  102284:\t0b 49       \tjsr\t@r9\n  102286:\t24 1f       \tmov.l\tr2,@(16,r15)\n  102288:\t8f 96       \tmov.w\t1023aa <fixture_replay::{lambda()#1}::operator()() const [clone .constprop.0]+0x186>,r6\t! 308\n  10228a:\t00 e5       \tmov\t#0,r5\n  10228c:\t8e 9a       \tmov.w\t1023ac <fixture_replay::{lambda()#1}::operator()() const [clone .constprop.0]+0x188>,r10\t! bc\n  10228e:\t0b 49       \tjsr\t@r9\n  102290:\t83 64       \tmov\tr8,r4"
+          },
+          {
+            "requested_bytes": 209,
+            "argument_load_offset": "0x72",
+            "call_offset": "0x7c",
+            "argument_instruction": "  102296:\t8a 96       \tmov.w\t1023ae <fixture_replay::{lambda()#1}::operator()() const [clone .constprop.0]+0x18a>,r6\t! d1",
+            "call_instruction": "  1022a0:\t0b 49       \tjsr\t@r9",
+            "review_excerpt": "  102292:\t51 dc       \tmov.l\t1023d8 <fixture_replay::{lambda()#1}::operator()() const [clone .constprop.0]+0x1b4>,r12\t! 107cac <fixture_package>\n  102294:\t8c 3a       \tadd\tr8,r10\n  102296:\t8a 96       \tmov.w\t1023ae <fixture_replay::{lambda()#1}::operator()() const [clone .constprop.0]+0x18a>,r6\t! d1\n  102298:\t00 e5       \tmov\t#0,r5\n  10229a:\tc7 1a       \tmov.l\tr12,@(28,r10)\n  10229c:\t83 64       \tmov\tr8,r4\n  10229e:\t87 9d       \tmov.w\t1023b0 <fixture_replay::{lambda()#1}::operator()() const [clone .constprop.0]+0x18c>,r13\t! c0\n  1022a0:\t0b 49       \tjsr\t@r9\n  1022a2:\t04 74       \tadd\t#4,r4"
+          }
+        ],
+        "requested_clear_bytes": 1021,
+        "frequency": "Once per nonempty replay batch"
+      }
+    ]
+  },
+  "qualification_tool_sha256": {
+    "port/dreamcast/tools/d367/world_replay_lean/build_controls.py": "325ef72b395be952b560b925c87111d607999105d16312f9057dff74bd9fc87a",
+    "port/dreamcast/tools/d367/world_replay_lean/check_admission.py": "2ba77a6b05b546afde2350586469ede6008d57085260fc2393064d372ff03adf",
+    "port/dreamcast/tools/d367/world_replay_lean/check_geometry.py": "d79f4ecf2eb814816542712a05760f3dfb2cf71df05988fae9dcec5ff6ba8bee",
+    "port/dreamcast/tools/d367/world_replay_lean/check_runtime.py": "1cbf06804b5996afbe159ecd5c971a706d742595be3c4b13349e284eb167c9be",
+    "port/dreamcast/tools/d367/world_replay_lean/fixture_admission.cpp.in": "e6ac20543fd6c619952ca6917b37af0a28e07215848d601178543d990bda152f",
+    "port/dreamcast/tools/d367/world_replay_lean/fixture_boundary.cpp.in": "b9c66c1d0352c25f3a88937233500888092468d0def8974c5d94cf2e2391aefb",
+    "port/dreamcast/tools/d367/world_replay_lean/fixture_geometry.cpp.in": "93157fd1994cf4d0c5532454e12c2de57f2ffa8c3d6d5fed6a870cc6dafd17e8",
+    "port/dreamcast/tools/d367/world_replay_lean/fixture_queue.cpp.in": "113f4c97ea2b850eb548506c4180725c08236fa51a814011758701126ecb0c84",
+    "port/dreamcast/tools/d367/world_replay_lean/measure_clear_audit.py": "20d7627bab6f4d2a194f8b03cad82460a24e8246bec4ff1372036f0c840030bb",
+    "port/dreamcast/tools/d367/world_replay_lean/measure_summary.py": "62c104d7e65f7009113e8580790d755fc0e0a1d8426e6839bc0de01cd394c817",
+    "port/dreamcast/tools/d367/world_replay_lean/memory_trace.py": "74d6f8f2f549eccc514f117a4ba96462744649b097dc1a0272fa8806a1fbdad4",
+    "port/dreamcast/tools/d367/world_replay_lean/pipeline_cost.py": "a7327c31ad09a923520b63c53c19f0ddf433ddeeaa535f3ea3fa259680a2571e",
+    "port/dreamcast/tools/d367/world_replay_lean/screen_control.cpp.in": "26003c0974ca8a94405852a6323cd05a214c40ed1e80a2d3ec4ce0fbe0cd18d5",
+    "port/dreamcast/tools/d367/world_replay_lean/selection_control.cpp.in": "495a6c2902735e4f2def6d92df1dd1d03121c09ac6d31fa329da8651cc556802",
+    "port/dreamcast/tools/d367/world_replay_lean/selection_controls.py": "9a05c4e644f533747dd63f85ac94f91b4da8e56c821bf33061782157cd6f086b",
+    "port/dreamcast/tools/d367/world_replay_lean/sh4_machine.py": "45838692bd4938e8e9960adbd4eb4efb2cf5daab90afd196ebe8da3a611dbcfd",
+    "port/dreamcast/tools/d367/world_replay_lean/target_build.py": "30f9f0e77eadf494311440896abb16e1f788afc294ccbaafbce7658fca1c242b",
+    "port/dreamcast/tools/d367/world_replay_lean/target_fixture.cpp.in": "b986d53b7f9e5df99dd65fb04111d22a643d9574fd9c18863569a94b66acded1",
+    "port/dreamcast/tools/d367/world_replay_lean/target_machine.py": "256416fd8ef5b45c46824c05bae40afb55156417395c8d9fa4769f462b66c62d",
+    "port/dreamcast/tools/d367/world_replay_lean/target_run.py": "519937b2c950be305c9c6bc609a7d6d646d9cac8e768a1575f6a72d988715756",
+    "port/dreamcast/tools/d367/world_replay_lean/verify_knobs.py": "8cacb938f6b31f193e08ad3d0becef65a2c77aa15db90593de9f7fc5dbc067b3"
+  }
+}

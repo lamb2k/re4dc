@@ -1,0 +1,188 @@
+{
+  "base": "64a28a7bdc44312924b14414501b7d4ff1d2d032",
+  "source_pins": [
+    {
+      "path": "src/game/em_set.cpp",
+      "before_sha256": "b374d561028b70f14a191af8415ab532ec7c4873d9b052f4dd4743841941ddb5",
+      "after_sha256": "ee690c7b74f42589a293e9b0a3a81718fe09578429d9bea0d90ab2742566d667"
+    },
+    {
+      "path": "src/game/em.cpp",
+      "before_sha256": "12f2df9e82640ede3c4ba408edbb8b1684ceb08b63f3042a0e3331267b229fbb",
+      "after_sha256": "c286c701c8374275abf2df37f69379069e50094c1f0d6572a5408fc508e556a8"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "before_sha256": "5b55735df468a38ec9af1df809becacbe373bb483b1b0f700879633b15efa237",
+      "after_sha256": "fd3c97658d17ac91661bdc59545c1c6e81e6fb63f11822b2b603de37af35c1c6"
+    },
+    {
+      "path": "port/dreamcast/game/platform/crash_screen.cpp",
+      "before_sha256": "0efb58916343a9fd9d427f7eff0886385a893758df406019f553156bfd6c10ea",
+      "after_sha256": "0a1348d4a20fa5c849f7452ac3c14220faed84797461ca02778d96cb6c6688b8"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/issue52_actor_diag.h",
+      "before_sha256": "7e0271813cd11401c43877faa4b9eb207db33b39d483f3e5dcf4ed21689e25ad",
+      "after_sha256": "97585b2e172ef28f63b7d2fd6f450fabf054d9b373f8f2ecd7646363aaa45b52"
+    }
+  ],
+  "source_task_pins": [
+    {
+      "path": "src/game/scheduler.cpp",
+      "base": "64a28a7bdc44312924b14414501b7d4ff1d2d032",
+      "sha256": "6479263912945cd5e396f270a2872d88262a69b85bbf4dc357e9e6f4212ea5ce"
+    },
+    {
+      "path": "src/game/sce_sys.cpp",
+      "base": "64a28a7bdc44312924b14414501b7d4ff1d2d032",
+      "sha256": "bf641562d0d0e473a418906e31d416c2b260c3c5f6ca44fd475863c00424f93c"
+    },
+    {
+      "path": "include/scheduler.h",
+      "base": "64a28a7bdc44312924b14414501b7d4ff1d2d032",
+      "sha256": "85af29294a35315b47be5d14e42b1c479a0dcc273846f0a1e3dd839a2b06a826"
+    }
+  ],
+  "runner_sha256": "6182b04743f204acbbfc57a991d94ce026e2b288db3a21e1a86c9135a5e72cbf",
+  "disabled_preprocessor_controls": [
+    {
+      "variant": "default",
+      "path": "src/game/em_set.cpp",
+      "tokens": 4794,
+      "exact": true
+    },
+    {
+      "variant": "default",
+      "path": "src/game/em.cpp",
+      "tokens": 2069,
+      "exact": true
+    },
+    {
+      "variant": "default",
+      "path": "src/game/read.cpp",
+      "tokens": 9434,
+      "exact": true
+    },
+    {
+      "variant": "default",
+      "path": "port/dreamcast/game/platform/crash_screen.cpp",
+      "tokens": 3827,
+      "exact": true
+    },
+    {
+      "variant": "zero",
+      "path": "src/game/em_set.cpp",
+      "tokens": 4794,
+      "exact": true
+    },
+    {
+      "variant": "zero",
+      "path": "src/game/em.cpp",
+      "tokens": 2069,
+      "exact": true
+    },
+    {
+      "variant": "zero",
+      "path": "src/game/read.cpp",
+      "tokens": 9434,
+      "exact": true
+    },
+    {
+      "variant": "zero",
+      "path": "port/dreamcast/game/platform/crash_screen.cpp",
+      "tokens": 3827,
+      "exact": true
+    },
+    {
+      "variant": "ppc_one",
+      "path": "src/game/em_set.cpp",
+      "tokens": 4794,
+      "exact": true
+    },
+    {
+      "variant": "ppc_one",
+      "path": "src/game/em.cpp",
+      "tokens": 2069,
+      "exact": true
+    },
+    {
+      "variant": "ppc_one",
+      "path": "src/game/read.cpp",
+      "tokens": 9062,
+      "exact": true
+    },
+    {
+      "variant": "non_native_one",
+      "path": "src/game/em_set.cpp",
+      "tokens": 4794,
+      "exact": true
+    },
+    {
+      "variant": "non_native_one",
+      "path": "src/game/em.cpp",
+      "tokens": 2069,
+      "exact": true
+    },
+    {
+      "variant": "non_native_one",
+      "path": "src/game/read.cpp",
+      "tokens": 9158,
+      "exact": true
+    }
+  ],
+  "host": [
+    {
+      "variant": "baseline",
+      "fixture_sha256": "45776d3fefdde13344657be747b872f55acf03f9675fdd374d5fd0e331f76c20",
+      "exe_sha256": "24997b62efa67283f9d614f65e9bf80ccc1a2fd6bdce156e49147056814a0915",
+      "build_stderr": "",
+      "stdout": [
+        {
+          "scenarios": 13,
+          "behavior_fingerprint": "ecedc219b8612312"
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "variant": "disabled",
+      "fixture_sha256": "7728b7c3442adccf5f5f091162d92f125316bb415f0b42edc37120775fa46689",
+      "exe_sha256": "809096d567f4e5c3d7faef34cdb057bc13147272a15815cd8d4826e79d3f7677",
+      "build_stderr": "",
+      "stdout": [
+        {
+          "scenarios": 13,
+          "behavior_fingerprint": "ecedc219b8612312"
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "variant": "enabled",
+      "fixture_sha256": "7728b7c3442adccf5f5f091162d92f125316bb415f0b42edc37120775fa46689",
+      "exe_sha256": "1c2fff7f47b6eb8df665c1d042a9ab65c1b5a9a124b5873d32af16688a5af851",
+      "build_stderr": "",
+      "stdout": [
+        {
+          "scenarios": 13,
+          "behavior_fingerprint": "ecedc219b8612312"
+        },
+        {
+          "collector_controls": 15,
+          "collector_bytes_host": 104
+        }
+      ],
+      "stderr": ""
+    }
+  ],
+  "no_runtime_guard_changes": true,
+  "shared_claim": "DIAGNOSTIC-SOURCE-CLAIM-02.json",
+  "limits": [
+    "Actual collector/wrappers and admission, constructor, enemy lookup/read functions execute with bounded host dependencies.",
+    "No SH4 layout, full translation-unit/target object, real scheduling, archive binding or physical I/O acceptance.",
+    "Host uses pointer-sized u32 to compile recovered pointer arithmetic; fixture DLL branch is not exercised.",
+    "Native task resolver is source-reviewed; host supplies task identities.",
+    "No image, guest, target build, process inventory, release or hardware check."
+  ]
+}

@@ -455,6 +455,28 @@ endif
 GAME_CPPFLAGS += -DRE4DC_FAR_SHELL=1
 PLATFORM_CPPFLAGS += -DRE4DC_FAR_SHELL=1
 endif
+# WORLD_METER=1 (lane worlddraw23, Test 23 groundwork; QA disc only; default 0 = no code; render / display only): meters
+#   the PS2 world draw, which runs inside Render() (the "setup" ProcessTick phase the QA Diagnostics page never showed):
+#   WORLD OPQ (pass 0, the opaque world inside the cut), WORLD XLU (passes 1 + 2, punch-through and translucent, at
+#   whatever far they draw), SHELL (far shell): us and vertices per tick, plus the tick's wall time, in the GAME_TICK_LOG
+#   window (PT line fields wopq / wxlu / wshell / wall / vopq / vxlu / vshell). The Diagnostics page shows them with
+#   RENDER (setup minus the world) and OTHER (wall minus every shown part), so the shown parts add up to the frame.
+#   VRAM: every failed texture-RAM allocation is logged (VRAMFAIL size, caller, texture key, room) and counted per room.
+#   QA menu rows (this boot only; default GAME = the Options View distance as built): opaque world cut 12.5 / 10 / 8 m,
+#   translucent world far Full / 12.5 / 8 m, far shell On / Off; each changes only its own pass (the fog follows the
+#   Options View distance as before). DBG_WARP builds: warp line `wmeter <opaque mm> <translucent mm, 1 = full> <shell 0
+#   game, 1 on, 2 off>`. Needs QA_MENU=1, GAME_TICK_LOG, FAR_SHELL=1, VRAM_PAGES=1 (the QA disc recipe).
+WORLD_METER ?= 0
+ifneq ($(filter-out 0 1,$(WORLD_METER)),)
+$(error WORLD_METER must be 0 or 1)
+endif
+ifeq ($(WORLD_METER),1)
+ifneq ($(FAR_SHELL),1)
+$(error WORLD_METER needs FAR_SHELL=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_WORLD_METER=1
+PLATFORM_CPPFLAGS += -DRE4DC_WORLD_METER=1
+endif
 # FOLIAGE_OPTION=1 (test 15, user 10-16 "ship with full near and off"; default 0 = no code; render only): a fourth Options
 #   row below View distance, "Foliage  Full / Near / Off" (option_rows.cpp), setting the FOLIAGE_TRIM level (hwfog.mk:
 #   0 full = every translucent world part as the PS2 draws it, 1 near = cut-out brush / leaf cards in the punch-through
@@ -1106,6 +1128,17 @@ UI_QUAD_LEAN ?= 0
 ifneq ($(UI_QUAD_LEAN),0)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_UI_QUAD_LEAN=$(UI_QUAD_LEAN)
 $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_UI_QUAD_LEAN=$(UI_QUAD_LEAN)
+endif
+# UI_DRAW_LEAN=1 (default 0): retain the constant native-message projection, initialize only
+# the UI quad fields that need defaults, and write native packets once. Existing texture,
+# glyph and header caches, live geometry/colour, queue order and overlay depth remain authoritative.
+UI_DRAW_LEAN ?= 0
+ifneq ($(UI_DRAW_LEAN),0)
+ifneq ($(UI_DRAW_LEAN),1)
+$(error UI_DRAW_LEAN must be 0 or 1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_UI_DRAW_LEAN=1
+$(OBJDIR)/ui_bridge.o $(OBJDIR)/src/game/mes.o: GAME_CPPFLAGS += -DRE4DC_UI_DRAW_LEAN=1
 endif
 # LINK_ORDER=<file> (G; exact, code placement only): an ld --section-ordering-file that puts the hot
 #                    input sections first in .text (tools/d367/ordgen_c3.py from hwproject evidence: call
@@ -2006,6 +2039,27 @@ $(OBJDIR)/platform/avk_sh4.o: platform/avk_sh4.S
 	kos-cc $(KOS_CFLAGS) $(AVK_SFLAGS) -c $< -o $@
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_VTX_KERNEL=$(ACTOR_VTX_KERNEL)
 endif
+# ACTOR_SETUP_LEAN=1 (render only; default 0): retain invariant AVK argument words, eligibility and kernel choice
+#              for the current Part instead of rebuilding them for every meshlet. Records, cache destinations and
+#              palette readiness remain live. With ACTOR_NO_CLEAR, also drop the Lights constructor's duplicate
+#              initialization: every light fold calls lights_reset first. No persistent frame/model cache is added.
+ACTOR_SETUP_LEAN ?= 0
+ifneq ($(ACTOR_SETUP_LEAN),0)
+ifneq ($(ACTOR_SETUP_LEAN),1)
+$(error ACTOR_SETUP_LEAN must be 0 or 1)
+endif
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_SETUP_LEAN=1
+endif
+# ACTOR_BYTES_LEAN=1 (render only; default 0): retain constant ARGB in the current Part's meshlet
+#              cache instead of rewriting every slot for every meshlet. Per-vertex alpha and MOVCA
+#              position allocation keep the original path. No source records or palettes change.
+ACTOR_BYTES_LEAN ?= 0
+ifneq ($(ACTOR_BYTES_LEAN),0)
+ifneq ($(ACTOR_BYTES_LEAN),1)
+$(error ACTOR_BYTES_LEAN must be 0 or 1)
+endif
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_BYTES_LEAN=1
+endif
 # AVK_RIGID6=1 (needs ACTOR_VTX_KERNEL; render only, exact): rigid parts with stride 6 positions (props, weapons,
 #              attachments: positions_asm<kPos6>, ~65% of pass_positions at the r101 entry) take the pipelined
 #              rigid6 kernels (mkavk.py @p6: the index x 6 through r14) instead of the one-vertex loop.
@@ -2343,6 +2397,17 @@ ifneq ($(GAME_HF_ASM),0)
 $(error GAME_HF_REG and GAME_HF_ASM both replace the hermite entry)
 endif
 $(OBJDIR)/src/game/motion.o: GAME_CPPFLAGS += -DRE4DC_HF_REG=$(GAME_HF_REG)
+endif
+# ANIM_SAMPLE_LEAN=1 (exact; default 0): MotionMoveCore selects its sampler once per pose. A
+#              non-wrapping clamped pose reads each channel's three last values without GAME_HF_REG's
+#              search/interpolation setup. Invalid histories keep the original sampler and diagnostics.
+#              Other entry points and interpolation math stay unchanged; GAME_HF_REG is not forced on.
+ANIM_SAMPLE_LEAN ?= 0
+ifneq ($(ANIM_SAMPLE_LEAN),0)
+ifneq ($(ANIM_SAMPLE_LEAN),1)
+$(error ANIM_SAMPLE_LEAN must be 0 or 1)
+endif
+$(OBJDIR)/src/game/motion.o: GAME_CPPFLAGS += -DRE4DC_ANIM_SAMPLE_LEAN=1
 endif
 # GAME_SND_WALL_ALT=1 (audio only; report candidate 12): sndSurroundCalc tests a tracked SE's wall occlusion (a line
 #                     query to the player's head) on every other frame and reuses the slot's last verdict in
@@ -2983,6 +3048,20 @@ $(error PS2_WORLD_SOURCE_TEX_VQ needs PS2_WORLD_SOURCE_TEX_PREP=1)
 endif
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_SOURCE_TEX_VQ=1
 endif
+# PS2_WORLD_SOURCE_TEX_MIP=1 (lane fix-r200-gears23 from Codex mipmap23 8075a7c4; bug fix, default 0 = image unchanged;
+# needs PS2_WORLD_SOURCE_TEX_VQ=1 CAST_MIPMAP=1): since the mip22 data the r200 late-pass descriptor fa6fe38c-1a02365f is a
+# mipmapped full-codebook VQ package (23,894 B), which the VQ size check above refuses (ready=0, TEXCHK fail at r200). With
+# it the prep checks the package's exact current layout and size (raw16, base VQ or VQ mip chain) instead.
+PS2_WORLD_SOURCE_TEX_MIP ?= 0
+ifneq ($(filter-out 0 1,$(PS2_WORLD_SOURCE_TEX_MIP)),)
+$(error PS2_WORLD_SOURCE_TEX_MIP must be 0 or 1)
+endif
+ifeq ($(PS2_WORLD_SOURCE_TEX_MIP),1)
+ifneq ($(PS2_WORLD_SOURCE_TEX_VQ)$(CAST_MIPMAP),11)
+$(error PS2_WORLD_SOURCE_TEX_MIP needs PS2_WORLD_SOURCE_TEX_VQ=1 CAST_MIPMAP=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_SOURCE_TEX_MIP=1
+endif
 # Original r11f authored-group owner. Host qualification precedes runtime use.
 PS2_WORLD_R11F_OWNER ?= 0
 ifneq ($(filter-out 0 1,$(PS2_WORLD_R11F_OWNER)),)
@@ -3473,6 +3552,20 @@ EM_READ_RETRY ?= 1
 ifeq ($(EM_READ_RETRY),1)
 GAME_CPPFLAGS += -DRE4DC_EM_READ_RETRY=1
 endif
+# R10C_SPAWN_LIVE_GUARD=1 (issue #52 follow-up, default 0): a first move can retire a Ganado after
+#   successful construction. Treat that returned, no-longer-live work as a missing event actor before
+#   r10c dispatches setNoSuspend or installs its motion/effect. Reuses EM_READ_RETRY's bounded retry/skip;
+#   leaves list admission flags and the manager's deferred cleanup untouched. No malformed-pointer test.
+R10C_SPAWN_LIVE_GUARD ?= 0
+ifeq ($(filter $(R10C_SPAWN_LIVE_GUARD),0 1),)
+$(error R10C_SPAWN_LIVE_GUARD must be 0 or 1)
+endif
+ifeq ($(R10C_SPAWN_LIVE_GUARD),1)
+ifneq ($(EM_READ_RETRY),1)
+$(error R10C_SPAWN_LIVE_GUARD=1 requires EM_READ_RETRY=1)
+endif
+$(OBJDIR)/mod/st1_2/src/st1/r10c.o $(OBJDIR)/src/st1/r10c.o: GAME_CPPFLAGS += -DRE4DC_R10C_SPAWN_LIVE_GUARD=1
+endif
 # EM_READ_FAIL_INJECT=N (test only, default 0 = no code): enemy module reads in room EM_READ_FAIL_INJECT_ROOM (default 0x10C) fail N times (>= 99: always), the
 #   issue #52 console failure on Flycast.
 EM_READ_FAIL_INJECT ?= 0
@@ -3831,7 +3924,24 @@ ifneq ($(ROUTE_OVL),1)
 $(error ISSUE52_ACTOR_DIAG needs ROUTE_OVL=1 via ROUTE_CH13=1)
 endif
 $(OBJDIR)/mod/st1_2/src/st1/r10c.o: GAME_CPPFLAGS += -DRE4DC_ISSUE52_ACTOR_DIAG=1
+$(OBJDIR)/src/game/em_set.o $(OBJDIR)/src/game/em.o $(OBJDIR)/src/game/read.o: GAME_CPPFLAGS += -DRE4DC_ISSUE52_ACTOR_DIAG=1
 $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_ISSUE52_ACTOR_DIAG=1
+endif
+# EM35_DIAG=1 (lane fix-mendez-freeze23 2026-10-23; diagnostic for test / QA discs, default 0 = image unchanged):
+# Mendez (em35) routine, motion and timers copied after each move() (reads only): "EM35" log lines on every routine
+# step change, "EM35 STUCK" when one step holds a still motion frame 3 s (or one routine 30 s) with Leon alive,
+# "EM35 NOMOVE" when a live half is not moved for 60 game frames, and two rows left of the speed counter
+# (platform/include/em35_diag.h) so a console freeze can be photographed. Needs ROUTE_CH23=1 (em35 overlay).
+EM35_DIAG ?= 0
+ifeq ($(filter $(EM35_DIAG),0 1),)
+$(error EM35_DIAG must be 0 or 1)
+endif
+ifeq ($(EM35_DIAG),1)
+ifneq ($(ROUTE_CH23),1)
+$(error EM35_DIAG needs ROUTE_CH23=1)
+endif
+$(OBJDIR)/mod/em35/src/em35/em35.o $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_EM35_DIAG=1
+$(OBJDIR)/ui_bridge.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_EM35_DIAG=1
 endif
 # MOTION_MISS_LOG=1 (castle lane 2026-10-15; diagnostic, log only, default 0): "motion miss" lines (clip, wait, slab).
 MOTION_MISS_LOG ?= 0
@@ -3862,4 +3972,14 @@ $(error CLOTH_LIGHT_ABI_FIX is 0 or 1)
 endif
 ifeq ($(CLOTH_LIGHT_ABI_FIX),1)
 $(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_LIGHT_ABI_FIX=1
+endif
+# PS2_ETS_MATCH=1 (render + room objects, default 0; lane fix-r10d-speed23 2026-10-23): skip the etc-list entries the
+# PS2 room data dropped (EtcModel.cpp EtcModelListSet). r10d: GC lists 16 etc models, the PS2 r10d.dat ETS 13; the
+# three GC-only entries are the et1400 torches (cEmTorch, ids 2/4/5). No room script references them (R10dMain is empty).
+PS2_ETS_MATCH ?= 0
+ifneq ($(filter-out 0 1,$(PS2_ETS_MATCH)),)
+$(error PS2_ETS_MATCH is 0 or 1)
+endif
+ifeq ($(PS2_ETS_MATCH),1)
+$(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_PS2_ETS_MATCH=1
 endif

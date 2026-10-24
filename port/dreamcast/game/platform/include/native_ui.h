@@ -64,6 +64,29 @@ struct Re4dcEffectQuad {
     unsigned char src,dst,wrap_s,wrap_t;
 };
 extern "C" int re4dc_effect_quad(const Re4dcEffectQuad*);
+#if defined(RE4DC_FLASHLIGHT_POOL) && RE4DC_FLASHLIGHT_POOL
+// FLASHLIGHT_POOL: an additive Gouraud fan in view space, centre colour fading to black at the ring
+// (native_flashlight_pool.inc).
+struct Re4dcEffectFan {
+    float centre[3],ring[16][3],projection[7],viewport[6];
+    unsigned n,centre_argb;
+};
+extern "C" int re4dc_effect_fan(const Re4dcEffectFan*);
+#endif
+#if defined(RE4DC_CLOTH_NATIVE) && RE4DC_CLOTH_NATIVE
+// CLOTH_NATIVE (cloth.cpp clothTrans, esp4e cloth sheets): a cols x rows grid of live view-space points (row major,
+// row 0 = the hanging edge) drawn as one PVR strip per row pair, UV = (col/(cols-1), row/(rows-1)) as the source.
+struct Re4dcEffectMesh21 {
+    Re4dcUiImage image;
+    const float* positions;
+    unsigned cols,rows;
+    float v_top,v_step;   // source t of row 0 and per row (the caller may pass a band of a larger grid)
+    float projection[7],viewport[6];
+    unsigned color;
+    unsigned char src,dst,wrap_s,wrap_t;
+};
+extern "C" int re4dc_effect_mesh21(const Re4dcEffectMesh21*);
+#endif
 #endif
 struct Re4dcEffectLine {
     float x[2], y[2], z[2];

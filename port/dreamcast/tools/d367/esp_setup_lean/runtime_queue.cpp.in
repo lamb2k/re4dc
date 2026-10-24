@@ -1,0 +1,245 @@
+// Actual packet, enqueue, local-chain batch, trim and drain source is inserted below.
+// PVR context compilation, texture lookup and stream transport are host shims.
+#include <algorithm>
+#include <cassert>
+#include <cmath>
+#include <cstdarg>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <limits>
+#include <new>
+#include <vector>
+#include "native_ui.h"
+using std::memcpy;
+struct alignas(32) pvr_poly_hdr_t {unsigned cmd,mode1,mode2,mode3,argb,oargb,d1,d2;};
+using pvr_sprite_hdr_t=pvr_poly_hdr_t;
+struct alignas(32) pvr_sprite_txr_t {unsigned flags;float ax,ay,az,bx,by,bz,cx,cy,cz,dx,dy;unsigned dummy,auv,buv,cuv;};
+struct alignas(32) pvr_vertex_t {unsigned flags;float x,y,z,u,v;unsigned argb,oargb;};
+static_assert(sizeof(pvr_poly_hdr_t)==32 && sizeof(pvr_sprite_txr_t)==64);
+enum pvr_blend_mode_t {PVR_BLEND_ZERO=0,PVR_BLEND_ONE=1,PVR_BLEND_SRCALPHA=4,PVR_BLEND_INVSRCALPHA=5};
+enum {PVR_LIST_TR_POLY=2,PVR_CULLING_NONE=0,PVR_DEPTHCMP_GEQUAL=3,PVR_DEPTHCMP_ALWAYS=7,
+    PVR_DEPTHWRITE_DISABLE=1,PVR_TXRENV_MODULATEALPHA=1,PVR_UVCLAMP_UV=3,
+    PVR_FOG_DISABLE=0,PVR_FOG_TABLE=1,PVR_FILTER_BILINEAR=1};
+constexpr unsigned PVR_CMD_VERTEX=0xe0000000U,PVR_CMD_VERTEX_EOL=0xf0000000U;
+struct pvr_sprite_cxt_t {
+    unsigned list,fmt,w,h;const void* address;
+    struct{unsigned culling,fog_type;}gen;
+    struct{unsigned comparison,write;}depth;
+    struct{pvr_blend_mode_t src,dst;}blend;
+    struct{unsigned env,uv_clamp;}txr;
+};
+using pvr_poly_cxt_t=pvr_sprite_cxt_t;
+unsigned compiles=0,sent_bytes=0,sent_sprites=0,body_packets=0,queue_cases=0,abort_after=0;
+void pvr_sprite_cxt_txr(pvr_sprite_cxt_t* c,unsigned list,unsigned fmt,unsigned w,unsigned h,void* address,unsigned){
+    *c={};c->list=list;c->fmt=fmt;c->w=w;c->h=h;c->address=address;
+}
+void pvr_poly_cxt_txr(pvr_poly_cxt_t* c,unsigned list,unsigned fmt,unsigned w,unsigned h,void* address,unsigned filter){
+    pvr_sprite_cxt_txr(c,list,fmt,w,h,address,filter);
+}
+void pvr_sprite_compile(pvr_poly_hdr_t* h,const pvr_sprite_cxt_t* c){
+    ++compiles;
+    *h={0x80000000U|c->list,c->fmt,c->w|(c->h<<16),unsigned(uintptr_t(c->address)),0,0,
+        c->gen.culling|c->gen.fog_type<<4|c->depth.comparison<<8|c->depth.write<<12,
+        unsigned(c->blend.src)|unsigned(c->blend.dst)<<4|c->txr.env<<8|c->txr.uv_clamp<<16};
+}
+void pvr_poly_compile(pvr_poly_hdr_t* h,const pvr_poly_cxt_t* c){pvr_sprite_compile(h,c);h->cmd|=0x100;}
+unsigned uv(float u,float v){unsigned a,b;memcpy(&a,&u,4);memcpy(&b,&v,4);return(a&0xffff0000U)|(b>>16);}
+#define PVR_PACK_16BIT_UV(u,v) uv((u),(v))
+struct DeferredLighting {};
+struct DeferredPart {DeferredPart* next;DeferredLighting* lighting;unsigned changed[2];};
+@BATCH_ENABLE@
+DeferredPart* deferred_first=nullptr;DeferredPart* deferred_last=nullptr;
+void* deferred_light_sets=nullptr;void* deferred_basis=nullptr;void* deferred_lights=nullptr;
+unsigned avd_queue_epoch=0;
+void actor_fade_queue_reset(){}
+alignas(32) unsigned char frame_storage[32768],spill[4096];
+unsigned deferred_top=sizeof(frame_storage),deferred_spill_top=0,deferred_spill_capacity=0;
+unsigned char* deferred_spill=nullptr;
+unsigned frame=1,fx_frame=0,fx_count=0,fx_culled=0,fx_capped=0,fx_missing=0,fx_direct=0,fx_queued=0,fx_peak=0,fx_dropped=0;
+unsigned nquad=0,deferred_count=0,frame_queue_peak=0,fx_new_loads=0,fx_evict_frame=0,load_opens=0;
+unsigned drops=0,lookups=0,spill_requests=0,vram_notes=0;
+bool frame_ready=true,stream_aborted=false,draining_parts=false,source_draws_finished=false,direct_open=false;
+bool fx_resident_only=false,spill_available=true,texture_missing=false,world_autosort=true;
+constexpr unsigned kFxNewLoads=8;
+float re4dc_ui_sx=1,re4dc_ui_sy=1,fog_far=0;
+namespace re4dc::render { bool is_finite(float v){return std::isfinite(v);} }
+struct Texture {unsigned width=64,height=64,format=0x40000000,payload=1;};
+struct Package {
+    Texture t;void* address=reinterpret_cast<void*>(0x10000000);unsigned cover=0;
+    const Texture* textures()const{return &t;}
+    void* pvr_texture(unsigned)const{return address;}
+};
+struct Key {unsigned id=0,crc=0,fnv=0;bool operator==(const Key& b)const{return id==b.id&&crc==b.crc&&fnv==b.fnv;}};
+struct Entry {Package package;Key key;unsigned frame=0;bool valid=true;};
+Entry entries[4];
+void vram_room_gcfx(const Entry&){++vram_notes;}
+namespace re4dc::texture {unsigned pvr_format(const Texture& t){return t.format;}}
+#define RE4DC_COVER_W(p,w) (w)
+#define RE4DC_COVER_H(p,h) (h)
+#define RE4DC_COVER(p) ((p).cover)
+#define RE4DC_TSP_W(t) ((t).width)
+#define RE4DC_TSP_H(t) ((t).height)
+#define RE4DC_SCREEN_WF (640.0f*re4dc_ui_sx)
+#define RE4DC_SCREEN_HF (480.0f*re4dc_ui_sy)
+#define RE4DC_FQ_DROP(a,b) (++drops)
+#define AVD_EVENT(...) ((void)0)
+FILE* output=nullptr;
+void word(unsigned value){assert(std::fwrite(&value,4,1,output)==1);}
+void bytes(const void* data,unsigned n){assert(std::fwrite(data,1,n,output)==n);}
+void re4dc_log(const char* fmt,...){char b[512];va_list ap;va_start(ap,fmt);int n=vsnprintf(b,sizeof b,fmt,ap);va_end(ap);assert(n>=0&&n<int(sizeof b));word(0x100);word(n);bytes(b,n);}
+namespace tamat {struct Scope {explicit Scope(unsigned){};};}
+namespace tabin {float fill_haze=0,fill_mist=0,fill_fx=0;bool skip_fill=false;float clip_area(const float* x,const float* y,unsigned){return std::fabs((x[1]-x[0])*(y[2]-y[1]));}}
+float re4dc_fog_gate_far(){return fog_far;}
+bool same_image(const Re4dcUiImage& a,const Re4dcUiImage& b){return a.pixels==b.pixels&&a.palette==b.palette&&a.width==b.width&&a.height==b.height&&a.format==b.format&&a.palette_format==b.palette_format&&a.palette_bytes==b.palette_bytes;}
+unsigned image_size(const Re4dcUiImage& image){return image.format<16?image.width*image.height:0;}
+bool image_key(const Re4dcUiImage& image,Key& key){key={unsigned(uintptr_t(image.pixels)),0,0};return !texture_missing;}
+Entry* resolve(const Re4dcUiImage& image,const void* mask,bool pin){
+    assert(!mask&&pin);++lookups;if(texture_missing)return nullptr;
+    const unsigned index=unsigned(uintptr_t(image.pixels))-1;assert(index<4);
+    if(!entries[index].valid)return nullptr;entries[index].frame=frame;return &entries[index];
+}
+Entry* load(const Re4dcUiImage& image){return resolve(image,nullptr,true);}
+void* re4dc_model_deferred_storage(unsigned* size){++spill_requests;*size=spill_available?sizeof(spill):0;return spill_available?spill:nullptr;}
+unsigned overlay_calls=0;
+float overlay_depth(){return 2.0f+float(++overlay_calls)*0.0001f;}
+pvr_poly_hdr_t active_header{};bool header_valid=false;
+void stream_select(unsigned list){assert(list==PVR_LIST_TR_POLY);word(0x101);word(list);}
+void stream_send(const void* data,unsigned count){
+    sent_bytes+=count;
+    if(count==96){memcpy(&active_header,data,32);header_valid=true;word(0x102);bytes(data,count);++sent_sprites;}
+    else if(count==64){assert(header_valid);word(0x102);bytes(&active_header,32);bytes(data,count);++sent_sprites;++body_packets;}
+    else {assert(count>=32);memcpy(&active_header,data,32);header_valid=true;word(0x103);word(count);bytes(data,count);}
+    if(abort_after&&sent_sprites>=abort_after)stream_aborted=true;
+}
+@PACKET@
+@RESET_FUNCTION@
+#include "fx_sprite_trim.inc"
+@SUBMIT@
+@BATCHES@
+static void drain(){
+    if(!deferred_first){source_draws_finished=true;return;}
+    draining_parts=true;stream_select(PVR_LIST_TR_POLY);
+    while(deferred_first&&!stream_aborted){
+@DRAIN@
+        // Unchanged model/strip/octagon owners are represented by their actual queue tag and opaque bytes.
+        auto* packet=reinterpret_cast<unsigned char*>(deferred_first)+kSpriteNode;
+        const unsigned count=deferred_first->changed[1];
+        deferred_first=deferred_first->next;stream_send(packet,count);
+    }
+    draining_parts=false;source_draws_finished=true;
+}
+static void state(unsigned result){
+    word(0x104);word(++queue_cases);word(result);word(fx_count);word(fx_culled);word(fx_capped);word(fx_missing);
+    word(fx_direct);word(fx_queued);word(fx_dropped);word(deferred_count);word(deferred_top);word(deferred_spill_top);
+    word(fx_new_loads);word(load_opens);word(lookups);word(drops);word(spill_requests);word(overlay_calls);
+    word(frame_queue_peak);word(fx_peak);word(vram_notes);for(const auto& e:entries)word(e.frame);
+}
+static void reset(){
+    reset_deferred();
+    ++frame;fx_count=fx_culled=fx_capped=fx_missing=fx_direct=fx_queued=fx_peak=fx_dropped=0;
+    deferred_count=frame_queue_peak=fx_new_loads=load_opens=drops=lookups=spill_requests=overlay_calls=vram_notes=0;
+    frame_ready=true;stream_aborted=draining_parts=source_draws_finished=direct_open=false;
+    spill_available=true;texture_missing=fx_resident_only=false;world_autosort=true;
+    deferred_first=deferred_last=nullptr;deferred_top=sizeof(frame_storage);
+    deferred_spill=nullptr;deferred_spill_top=deferred_spill_capacity=0;
+    re4dc_ui_sx=re4dc_ui_sy=1;fog_far=0;header_valid=false;abort_after=0;
+    memset(frame_storage,0xa5,sizeof(frame_storage));memset(spill,0xa5,sizeof(spill));
+    for(unsigned i=0;i<4;++i){entries[i]={};entries[i].key.id=i+1;entries[i].package.address=reinterpret_cast<void*>(uintptr_t(0x10000000+i*0x1000));}
+}
+static Re4dcEffectSprite sprite(unsigned id=1){
+    Re4dcEffectSprite s{};s.image={reinterpret_cast<void*>(uintptr_t(id)),nullptr,64,64,14,0xffffffffU,0};
+    const float x[]={10,110,110,10},y[]={110,110,10,10},u[]={0,1,1,0},v[]={1,1,0,0};
+    memcpy(s.x,x,sizeof x);memcpy(s.y,y,sizeof y);memcpy(s.u,u,sizeof u);memcpy(s.v,v,sizeof v);
+    for(auto& z:s.z)z=0.01f;s.color=0xad714f29;s.src=4;s.dst=5;return s;
+}
+static void add(Re4dcEffectSprite& s){const auto before=s;int r=re4dc_effect_sprite(&s);assert(!memcmp(&before,&s,sizeof s));state(r);}
+static void marker(unsigned id){
+    constexpr unsigned size=32;deferred_top-=kSpriteNode+size;
+    auto* node=new(frame_storage+deferred_top)DeferredPart{};node->lighting=reinterpret_cast<DeferredLighting*>(uintptr_t(0x100+id));node->changed[1]=size;
+    pvr_poly_hdr_t h{0x80000102U,id,id+1,id+2,id+3,id+4,id+5,id+6};memcpy(frame_storage+deferred_top+kSpriteNode,&h,32);
+    if(deferred_last)deferred_last->next=node;else deferred_first=node;deferred_last=node;++deferred_count;
+}
+static void manual_sprite(const unsigned char* packet){
+    deferred_top-=kSpriteNode+kSpritePacket;
+    auto* node=new(frame_storage+deferred_top)DeferredPart{};node->lighting=kSpriteTag;
+    memcpy(frame_storage+deferred_top+kSpriteNode,packet,kSpritePacket);
+    if(deferred_last)deferred_last->next=node;else deferred_first=node;deferred_last=node;++deferred_count;
+}
+int main(int argc,char** argv){
+    assert(argc==2);output=std::fopen(argv[1],"wb");assert(output);
+    for(unsigned field=0;field<15;++field){
+        reset();auto s=sprite();add(s);add(s);
+        switch(field){
+        case 0:s.color^=0x01000000;break;case 1:s.color^=0x00010000;break;
+        case 2:s.src=1;break;case 3:s.dst=1;break;case 4:s.screen=1;break;
+        case 5:entries[0].package.t.width=128;break;case 6:entries[0].package.t.height=128;break;
+        case 7:entries[0].package.t.format^=0x10000000;break;case 8:entries[0].package.address=reinterpret_cast<void*>(0x20000000);break;
+        case 9:s.image.width=32;break;case 10:s.image.height=32;break;
+        case 11:s.x[0]+=0.125f;s.z[0]*=2;break;case 12:marker(3);break;
+        case 13:{alignas(32)unsigned char captured[96];s.color^=0x00000100;fx_packet(s,&entries[0],captured);break;}
+        case 14:s.image.pixels=reinterpret_cast<void*>(2);break;
+        }
+        add(s);add(s);drain();state(1);
+    }
+    // Same addresses reused next frame must begin with an explicit header.
+    for(unsigned n=0;n<3;++n){reset();auto s=sprite();for(unsigned i=0;i<8;++i)add(s);drain();state(1);}
+    // A reset can reuse the old owner address for a full sprite from another producer.
+    // Its tag alone cannot establish ownership of the cached header.
+    {reset();auto s=sprite();add(s);alignas(32)unsigned char old[96];
+     memcpy(old,reinterpret_cast<unsigned char*>(deferred_last)+kSpriteNode,sizeof old);drain();
+     reset();reinterpret_cast<pvr_poly_hdr_t*>(old)->argb^=0x01000000U;manual_sprite(old);
+     add(s);drain();state(1);}
+    // Missing texture, alpha/cap/rejection and malformed geometry leave header ownership coherent.
+    for(unsigned failure=0;failure<8;++failure){
+        reset();auto s=sprite();add(s);auto bad=s;
+        switch(failure){case 0:bad.color&=0xffffff;break;case 1:texture_missing=true;break;
+        case 2:bad.x[0]=std::numeric_limits<float>::infinity();break;case 3:for(auto& x:bad.x)x-=1000;break;
+        case 4:frame_ready=false;break;case 5:draining_parts=true;break;case 6:fx_count=64;break;case 7:stream_aborted=true;break;}
+        add(bad);texture_missing=false;frame_ready=true;draining_parts=false;stream_aborted=false;if(failure==6)fx_count=1;
+        add(s);drain();state(1);
+    }
+    // Screen overlay depths must advance exactly once per accepted body in both paths.
+    for(unsigned screen=0;screen<2;++screen)for(unsigned sort=0;sort<2;++sort){
+        reset();world_autosort=sort;auto s=sprite();s.screen=screen;
+        for(unsigned i=0;i<5;++i)add(s);drain();source_draws_finished=true;
+        for(unsigned i=0;i<3;++i)add(s);state(1);
+    }
+    // The actual trim helper can enqueue a non-sprite octagon between matching sprites.
+    {reset();auto s=sprite();add(s);
+     entries[0].package.t.width=entries[0].package.t.height=128;
+     entries[0].key.crc=kFxTrim[0].crc;entries[0].key.fnv=kFxTrim[0].fnv;
+     s.image.width=s.image.height=128;Re4dcEffectSprite trimmed;float p[8],q[8];
+     assert(fx_trim(s,&entries[0],trimmed,p,q)==2);add(s);
+     entries[0].key.crc=entries[0].key.fnv=0;add(s);add(s);drain();state(1);}
+    // Spill pressure and failed admissions reserve exactly the old number of bytes.
+    for(unsigned avail=0;avail<2;++avail){reset();deferred_top=8192;spill_available=avail;auto s=sprite();for(unsigned i=0;i<40;++i)add(s);drain();state(1);}
+    // Every possible abort point observes the same ordered prefix.
+    for(unsigned n=1;n<=5;++n){reset();auto s=sprite();for(unsigned i=0;i<5;++i)add(s);abort_after=sent_sprites+n;drain();state(1);}
+    // Local chain batches can borrow the preceding queue header, including between batches.
+    for(unsigned mode=0;mode<8;++mode){
+        reset();auto s=sprite();if(mode&1){s.dst=1;}if(mode&2){re4dc_ui_sx=0.5f;re4dc_ui_sy=0.75f;}
+        if(mode&4){deferred_top=8192;deferred_spill=spill;deferred_spill_top=sizeof(spill);deferred_spill_capacity=sizeof(spill);}
+        add(s);
+        for(unsigned batch=0;batch<3;++batch){
+            Re4dcEffectSprite local[6];for(auto& e:local)e=s;
+            local[1].color=0;local[2].color^=0x00000100;local[3].x[0]+=2;local[4].color=local[2].color;
+            unsigned submitted=99;int r=(mode&1)?re4dc_effect_stage1_batch(local,6,1,&submitted):
+                (batch&1)?re4dc_effect_stage1_batch(local,6,5,&submitted):re4dc_effect_haze_batch(local,6,&submitted);
+            state(r);word(submitted);for(const auto& e:local){bytes(e.x,sizeof e.x);bytes(e.y,sizeof e.y);}
+            if(batch==1)marker(5);add(s);
+        }
+        drain();state(1);
+    }
+    // Failed/all-invisible local batches leave the prior tail and packet ownership usable.
+    for(unsigned failure=0;failure<6;++failure){
+        reset();auto s=sprite();add(s);Re4dcEffectSprite local[2]={s,s};
+        if(failure==0)local[0].src=1;if(failure==1)local[0].image.pixels=reinterpret_cast<void*>(4);
+        if(failure==2)local[0].z[0]=0;if(failure==3)local[0].color=local[1].color=0;
+        if(failure==4)texture_missing=true;if(failure==5)fx_count=64;
+        unsigned submitted=99;state(re4dc_effect_haze_batch(local,2,&submitted));word(submitted);
+        texture_missing=false;if(failure==5)fx_count=1;add(s);drain();state(1);
+    }
+    std::fclose(output);
+    std::printf("{\"observations\":%u,\"sprites\":%u,\"body_only\":%u,\"bytes_sent\":%u,\"header_compiles\":%u}\n",queue_cases,sent_sprites,body_packets,sent_bytes,compiles);
+}

@@ -981,6 +981,17 @@ extern "C" void re4dc_draw_model_part(const void* model,const void* info_ptr,
 #endif
 }
 
+#if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
+// Deferred/source actor submissions no longer have the transaction's class
+// scope. Read the same synchronous model identity the bridge already uses;
+// do not walk actors or infer cModel offsets in the platform emitter.
+extern "C" unsigned re4dc_backface_model_tag(const void* model) {
+    const auto* m=static_cast<const cModel*>(model);
+    if(!m || m->kindid!=0)return 0;
+    const unsigned id=unsigned(m->id);
+    return ((id==0?3u:(id>=0x10 && id<=0x20)?4u:5u)<<8)|id;
+}
+#endif
 #if RE4DC_ACTOR_CENSUS
 // ACTOR_CENSUS (diagnostic): id | ot_type << 8 | nParts << 16 of a submitted part's model.
 extern "C" unsigned re4dc_actor_census_key(const void* model) {

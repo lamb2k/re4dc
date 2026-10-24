@@ -1,0 +1,160 @@
+diff --git a/kernel/arch/dreamcast/include/arch/cache.h b/kernel/arch/dreamcast/include/arch/cache.h
+--- a/kernel/arch/dreamcast/include/arch/cache.h
++++ b/kernel/arch/dreamcast/include/arch/cache.h
+@@ -161,12 +161,23 @@
+         arch_dcache_inval_line((void *)start);
+ }
+ 
++#if defined(KOS_CACHE_P2) && KOS_CACHE_P2
++#define KOS_DCACHE_WBACK_P2_ACTIVE 1
++/* SH7750/SH7750S: memory-mapped cache access must execute in P2.
++   External call also orders ordinary memory stores around the writeback. */
++void arch_dcache_wback_all_p2(void);
++#endif
++
+ static inline void arch_dcache_wback_all(void) {
++#if defined(KOS_CACHE_P2) && KOS_CACHE_P2
++    arch_dcache_wback_all_p2();
++#else
+     unsigned int i;
+     volatile uint32_t *dca = (volatile uint32_t *)0xf4000008;
+ 
+     for (i = 0; i < 512; i++, dca += 8)
+         *dca &= ~BIT(1); /* Zero out U bit */
++#endif
+ }
+ 
+ static inline void arch_dcache_wback_range(uintptr_t start, size_t count) {
+diff --git a/Makefile b/Makefile
+--- a/Makefile
++++ b/Makefile
+@@ -13,6 +13,19 @@
+ # I expect everyone to keep their code warning free. Don't make me add -Werror
+ # here too. ;-)
+ KOS_CFLAGS += -Wextra -Wno-deprecated
++
++# Optional SH7750 whole-cache writeback repair. Rebuild KOS and consumers in
++# a separate tree with KOS_CACHE_P2=1; the default emits the original objects.
++KOS_CACHE_P2 ?= 0
++ifneq ($(KOS_CACHE_P2),0)
++ifneq ($(KOS_CACHE_P2),1)
++$(error KOS_CACHE_P2 must be 0 or 1)
++endif
++endif
++ifeq ($(KOS_CACHE_P2),1)
++export KOS_CACHE_P2
++override KOS_CFLAGS += -DKOS_CACHE_P2=1
++endif
+ 
+ # Add stuff to SUBDIRS to auto-compile it with the big tree.
+ SUBDIRS = utils kernel addons # examples
+diff --git a/kernel/arch/dreamcast/kernel/Makefile b/kernel/arch/dreamcast/kernel/Makefile
+--- a/kernel/arch/dreamcast/kernel/Makefile
++++ b/kernel/arch/dreamcast/kernel/Makefile
+@@ -10,6 +10,9 @@
+ # that minimum set must be present.
+ 
+ COPYOBJS = cache.o entry.o irq.o init.o panic.o
++ifeq ($(KOS_CACHE_P2),1)
++COPYOBJS += cache_p2.o
++endif
+ COPYOBJS += timer.o perfctr.o perf_monitor.o
+ COPYOBJS += mmu.o itlb.o
+ COPYOBJS += exec.o execasm.o stack.o thdswitch.o tls_static.o arch_exports.o subarch_exports.o
+diff --git a/kernel/arch/dreamcast/kernel/cache_p2.S b/kernel/arch/dreamcast/kernel/cache_p2.S
+new file mode 100644
+--- /dev/null
++++ b/kernel/arch/dreamcast/kernel/cache_p2.S
+@@ -0,0 +1,92 @@
++/* KallistiOS ##version##
++
++   arch/dreamcast/kernel/cache_p2.S
++   Copyright (C) 2026 RE4 Dreamcast contributors
++
++   Optional SH7750/SH7750S whole-OC writeback. Manual R01UH0456EJ0702
++   sections 4.3.6, 4.5 and 4.5.3: P2 MOVs, longwords, zero reserved bits,
++   and at least eight instructions before returning to cached code.
++   Existing cache.s uses the same P2 execution and SR preservation pattern.
++   This routine never changes CCR, writes cache data, or touches the stack.
++*/
++
++#if defined(KOS_CACHE_P2) && KOS_CACHE_P2
++    .section .text.arch_dcache_wback_all_p2,"ax"
++    .align 2
++    .global _arch_dcache_wback_all_p2
++    .type _arch_dcache_wback_all_p2,@function
++_arch_dcache_wback_all_p2:
++    /* PC-relative target works at every linked RAM address and from P1/P2. */
++    mova .Lp2,r0
++    mov.l .Lp2_mask,r1
++    or r1,r0
++    jmp @r0
++    nop
++
++    .align 2
++.Lp2:
++    /* No interrupt/thread may replace a tag between the read and write.
++       Preserve all SR bits and the caller's original IRQ mask/bank. */
++    stc sr,r7
++    mov.l .Lblock,r0
++    or r7,r0
++    ldc r0,sr
++
++    mov.l .Lccr,r0
++    mov.l @r0,r0
++    tst #0x20,r0              /* CCR.ORA: SH7750 OC RAM mode */
++    bf .Lram
++    mov #1,r2                /* one block of 512 cache entries */
++    mov #2,r3
++    bra .Lsetup
++    shll8 r3
++.Lram:
++    mov #2,r2                /* two blocks: entries 0..127, 256..383 */
++    mov #64,r3
++    shll r3                  /* leave RAM entries 128..255, 384..511 alone */
++.Lsetup:
++    mov.l .Loc_array,r4      /* non-associative; no MMU tag translation */
++    mov.l .Ltag_v,r6         /* preserve only physical tag[28:10] and V */
++.Lblock_start:
++    mov r3,r5
++.Lloop:
++    mov.l @r4,r0
++    and r6,r0               /* clear U and every reserved read bit */
++    mov.l r0,@r4            /* dirty valid line writes back; tag/V unchanged */
++    add #32,r4
++    dt r5
++    bf .Lloop
++    dt r2
++    bt .Ldone
++    mov #16,r0
++    shll8 r0
++    add r0,r4               /* skip the 128 entries reserved as OC RAM */
++    bra .Lblock_start
++    nop
++.Ldone:
++    /* Eight explicit instructions after the final array MOV, independently
++       of loop-control instructions. IRQs stay blocked throughout this gap. */
++    nop
++    nop
++    nop
++    nop
++    nop
++    nop
++    nop
++    nop
++    ldc r7,sr
++    rts
++    nop
++    .align 2
++.Lp2_mask:
++    .long 0xa0000000
++.Lblock:
++    .long 0x100000f0
++.Lccr:
++    .long 0xff00001c
++.Loc_array:
++    .long 0xf4000000
++.Ltag_v:
++    .long 0x1ffffc01
++    .size _arch_dcache_wback_all_p2,.-_arch_dcache_wback_all_p2
++#endif

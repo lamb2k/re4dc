@@ -12,12 +12,28 @@
 
 #ifdef __cplusplus
 extern "C" {
+
+
 #endif
 void* memcpy(void* dst, const void* src, unsigned int n);
 
 int strcmp(const char* a, const char* b);
 #ifdef __cplusplus
 }
+
+
+#endif
+
+
+
+// STAT_ROUTINE_BYTES=1 (Makefile; lane stat-bytes23 2026-10-23): cModel::stat is the four routine bytes
+// r_no_0..3 read as one word. The recovered sources store / test it as a GameCube big-endian word (r_no_0 in the
+// top byte); on the little-endian Dreamcast r_no_0 is the low byte, so those constants named the wrong routine /
+// step. STAT_BE() wraps every such constant (stores, masks and compare values); off it is the constant unchanged.
+#if defined(RE4DC_STAT_ROUTINE_BYTES) && RE4DC_STAT_ROUTINE_BYTES && !defined(__PPC__)
+#define STAT_BE(x) ((unsigned int) __builtin_bswap32((unsigned int) (x)))
+#else
+#define STAT_BE(x) (x)
 #endif
 
 #endif

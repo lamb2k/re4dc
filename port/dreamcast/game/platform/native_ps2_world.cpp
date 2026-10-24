@@ -58,6 +58,12 @@ extern "C" float re4dc_far_shell_full(float cut);          // native_static.cpp 
 extern "C" int re4dc_far_shell_draw(float cut,float full);
 extern "C" void re4dc_far_shell_log(unsigned frame);
 #endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+extern "C" volatile unsigned re4dc_qa_wshell;          // native_static.cpp (WORLD_METER QA rows)
+extern "C" float re4dc_wm_far(unsigned pass,float far);
+extern "C" float re4dc_wm_full(void);
+extern "C" int re4dc_wm_shell_draw(float cut,float full);
+#endif
 #if RE4DC_PS2_WORLD_KERNEL==4
 extern "C" int re4dc_ps2_world_packet_cull(unsigned,unsigned,unsigned,unsigned,unsigned,unsigned,Re4dcModelPacket*);
 #endif
@@ -693,7 +699,16 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
         // the PT / TR passes (flush) keep Full's far.
         float full=re4dc_far_shell_full(state.far);
         if(full>RE4DC_PS2_FAR)full=RE4DC_PS2_FAR;
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+        // WORLD_METER (QA rows): the shell starts at the opaque cut actually drawn; On draws it out to Full at any View
+        // distance, Off skips only its draw. state.far (the PT / TR far) is the game's either way (re4dc_wm_far then).
+        const float cut=re4dc_wm_far(0,state.far);
+        if(re4dc_qa_wshell==1U){float f=re4dc_wm_full();if(f>RE4DC_PS2_FAR)f=RE4DC_PS2_FAR;if(f>cut)re4dc_wm_shell_draw(cut,f);}
+        else if(full>state.far && re4dc_qa_wshell!=2U)re4dc_wm_shell_draw(cut,full);
+        if(full>state.far)state.far=full;
+#else
         if(full>state.far){re4dc_far_shell_draw(state.far,full);state.far=full;}
+#endif
     }
 #endif
     return drawn?1:fallback(4);

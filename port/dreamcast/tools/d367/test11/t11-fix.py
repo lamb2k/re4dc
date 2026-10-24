@@ -657,6 +657,12 @@ DATA['lake22'] = {'st1/r10b.dar': LAKE22D + '/r10b.dar'}
 # SS_DATA_LZ=1 programs; the .dat files stay on the disc for every other program. Any place in the data line.
 SSLZ23D = os.environ.get('SSLZ23D', '/root/re4data/private/sslz23-20261022')
 DATA['sslz23'] = {'ss/eng/ss_cmmn.lz': SSLZ23D + '/ss/eng/ss_cmmn.lz', 'ss/eng/ss_pzzl.lz': SSLZ23D + '/ss/eng/ss_pzzl.lz'}
+# Lane pvs23 (10-23, Codex visibility23 91640233, data only, no knob): sg109 = r109's strip-group metadata
+# (dc/native/r109/ps2-world.r4sg, 76,128 B, sha256 f605d3ca; ps2_strip_groups.py --preserve-order). Binds the mip22b r109
+# mesh (d2e244fc) and scoped policy 177cae56, so it needs mip22b + WORLD_RECT21 (release line only, not KSETS); any other
+# program finds it stale and draws whole meshlets. Opaque transformed vertices -14% at the r109 entry, on-screen unchanged.
+SG109D = os.environ.get('SG109D', '/root/re4data/private/r109-stripgroups23-20261022-v1')
+DATA['sg109'] = {'dc/native/r109/ps2-world.r4sg': SG109D + '/r109/ps2-world.r4sg'}
 # Release lane rel18 (10-19, Test 18 item 10): garr18h = the LEON_HEADLESS v2 archives of data set garr18-head-20261019
 # (tools/d367/ps2leon/build_head.py): em/pl00.drs and em/pl08.drs with GC arc 0xC stubbed and the PS2 severed head as
 # its payload. Built from the payload disc's pl00 (1fdb5378) / pl08 (f4acbfad); no set on the Test 18 line stages either.
@@ -894,6 +900,13 @@ if os.path.isdir(MIP22BD):
     for _r in sorted(os.listdir(MIP22BD + '/dc/native')):
         DATA['mip22b']['dc/native/%s/ps2-world.r4pw' % _r] = '%s/dc/native/%s/ps2-world.r4pw' % (MIP22BD, _r)
     PAK_DERIVED['mip22b'] = MIP22BD + '/pak-derived.json'
+# fol24 (lane mip-finish24 10-24, Test 23): mip22b's tex.pak + coverage-preserving alpha mip chains for 169 held foliage /
+# cut-out keys of the 27 ch1-ch2 PS2 worlds (tools/d367/foliagemip22/recover_alpha.py). Needs FOLIAGE_MIP24=1 (86 rebound
+# rect21 rows). After mip22b; release line only (not KSETS). Private store copy: re4-assets-private/fol24-20261024.
+FOL24D = os.environ.get('FOL24D', '/root/re4data/private/fol24-20261024')
+if os.path.isdir(FOL24D):
+    DATA['fol24'] = {'dc/tex.pak': FOL24D + '/dc/tex.pak'}
+    PAK_DERIVED['fol24'] = FOL24D + '/pak-derived.json'
 # res22c (lane codex22, 10-22, data only): dc/resident.bin = mip22's remapped file + the listed keys it lacks
 # (mip22b ships the same resident.bin and remap; vram/resident_keys.py extend <out> mip22/dc/resident.bin mip22/dc/resident-remap.tsv vram/resident/r*.tsv; same inputs,
 # same bytes). Carries the first-use keys (HUD ammo digits in r000, shot effects, first Ganado pictures). Ships the remap
@@ -901,6 +914,22 @@ if os.path.isdir(MIP22BD):
 # (13 added: r000 HUD digits 2-9 + muzzle flash 148d2ff5 / 3a866b91; r100 983d1064 96f42df9; r101 cf2208cd), sha256 b81231ff.
 RES22CD = os.environ.get('RES22CD', '/root/re4data/private/res22c-20261022')
 DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
+# Lane fix-r10d-speed23 (10-23, #55 r10d merchant cave, approximation): r10dlod23 = r10d's PS2 world mesh rebuilt with
+# offline LOD for the clusters that had none and 3 m clusters (ps2_room_r4im.py, ch21l inputs and light, + --lod-cluster
+# 3000 --lod-min-gain 0.8 --lod-uv-guard 0.05 --lod-floor 60). Same parts and placements as ch21l (ps2-world.r4pw
+# byte-identical), so mip22b's rekeyed r4pw still applies. After mip22b. Hut view MODELLED: TA params 1.69 -> 1.06 MB,
+# triangles 37.5k -> 21.7k. Private store copy: re4-assets-private/r10dlod23-20261023 (RECIPE.txt, SHA256SUMS).
+R10DLOD23D = os.environ.get('R10DLOD23D', '/root/re4data/private/r10dlod23-20261023')
+# Its ps2-world.ids carries mip22b's physical r4pw crc: a mesh outside the rect21 provenance certificates keeps that crc,
+# and without the file PS2DYN logs "ids=header" (the 61 dynamic placements stop following their objects).
+DATA['r10dlod23'] = {'dc/native/r10d/ps2-world.%s' % x: R10DLOD23D + '/dc/native/r10d/ps2-world.%s' % x for x in ('re4mesh', 'ids')}
+# r10dbake23 (same lane, step 2 "mostly static and pregenerated"): r10dlod23's recipe + ps2_room_r4im.py --bake-static: the
+# 167 static placements (scroll id 254) as one world-space mesh, parts by material and 3 m clusters; the 61 placements with
+# an id < 250 stay their own. 228 -> 62 placements, 285 -> 155 parts. r4pw rekeyed to mip22b's texture keys
+# (tools/d367/ps2world/r4pw_rekey.py) and its ids. Replaces r10dlod23 in the data line (use one of the two).
+R10DBAKE23D = os.environ.get('R10DBAKE23D', '/root/re4data/private/r10dbake23-20261023')
+DATA['r10dbake23'] = {'dc/native/r10d/ps2-world.%s' % x: R10DBAKE23D + '/dc/native/r10d/ps2-world.%s' % x
+                      for x in ('re4mesh', 'r4pw', 'ids')}
 
 
 if __name__ == '__main__':

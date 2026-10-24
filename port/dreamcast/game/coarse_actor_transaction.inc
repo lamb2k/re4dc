@@ -456,8 +456,18 @@ ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
     // ACTOR_BACKFACE (backface.mk, needs CPU_BACKFACE): Leon (id 0), the Ganados (0x10..0x20) and El Gigante (0x2B) take the source model's
     // cull mode (as model_bridge.cpp's source path and the NMR_SOURCE_CULL bosses do) instead of cull none; per material,
     // native_actor_owner_runs.inc keeps alpha-mask and no-depth-write materials double-sided.
+#if defined(RE4DC_ACTOR_BACKFACE_CONE) && RE4DC_ACTOR_BACKFACE_CONE
+    // ACTOR_BACKFACE_CONE (backface.mk): the same classes plus Ashley (id 3); the converter splits these models' opaque
+    // parts by palette entry and facing (native_actor_fast.cpp re4dc_abc_mark).
+    {
+        const unsigned abc=m->id==0?1u:(m->id>=0x10 && m->id<=0x20)?2u:m->id==0x2B?3u:m->id==3?4u:0u;
+        if(abc)b.cull=(unsigned char)re4dc_model_cull(m->CullMode,(pG->Debug_flg[0]&0x20000000)!=0);
+        if(abc)re4dc_abc_mark(m,abc);
+    }
+#else
     if(m->id==0 || (m->id>=0x10 && m->id<=0x20) || m->id==0x2B)  // + El Gigante (em2b)
         b.cull=(unsigned char)re4dc_model_cull(m->CullMode,(pG->Debug_flg[0]&0x20000000)!=0);
+#endif
 #endif
 #if RE4DC_ACTOR_GANADO_SOURCE_LIGHT
     if(!RE4DC_LEON_LIKE(p.appearance)) {

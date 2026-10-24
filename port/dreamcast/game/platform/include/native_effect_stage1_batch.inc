@@ -68,7 +68,7 @@ extern "C" int re4dc_effect_stage1_batch(Re4dcEffectSprite* sprites,unsigned cou
         ++fx_capped;return prior_count>RE4DC_EFFECT_SPRITE_MAX?stage1_batch_refuse(20,count,prior_count,RE4DC_EFFECT_SPRITE_MAX):
             stage1_batch_refuse(21,count,visible,RE4DC_EFFECT_SPRITE_MAX-prior_count);
     }
-    const unsigned stride=kSpriteNode+kSpritePacket,required=visible*stride,margin=8192;
+    const unsigned stride=kSpriteNode+kSpritePacket,required=visible*stride,margin=RE4DC_FX_QUEUE_MARGIN;
     unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         // Borrow an already-existing spill tail only; the candidate adds no allocator.
@@ -100,8 +100,14 @@ extern "C" int re4dc_effect_stage1_batch(Re4dcEffectSprite* sprites,unsigned cou
     DeferredPart* first=nullptr;DeferredPart* last=nullptr;unsigned offset=base;
     for(unsigned i=0;i<visible;++i){
         const unsigned n=visible_index[i];
+#if defined(RE4DC_ESP_SETUP_BATCH)
+        auto* node=new(storage+offset) DeferredPart{};node->changed[0]=0;
+        const bool body_only=fx_packet(sprites[n],texture,storage+offset+kSpriteNode,last?last:deferred_last?deferred_last:node);
+        node->lighting=body_only?kSpriteBodyTag:kSpriteTag;
+#else
         auto* node=new(storage+offset) DeferredPart{};node->lighting=kSpriteTag;node->changed[0]=0;
         fx_packet(sprites[n],texture,storage+offset+kSpriteNode);
+#endif
         if(last)last->next=node;else first=node;last=node;offset+=stride;
     }
     *top=base;if(deferred_last)deferred_last->next=first;else deferred_first=first;deferred_last=last;

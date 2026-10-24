@@ -15,6 +15,9 @@
 // FPSCR.SZ (64-bit fmov) is set once per call: nothing else in the loop uses the FPU.
 // Returns s; q advances 32 B per emitted vertex; culled / emitted count the strips.
 #include "mesh_fastpath.hpp"
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
+#include "backface_sh4.hpp"
+#endif
 
 namespace re4dc::vp {
 #if defined(__sh__)
@@ -123,5 +126,22 @@ inline const std::uint8_t* walk_lean(const std::uint8_t* s,const std::uint8_t* e
     q=sq;culled=c;emitted=e;
     return s;
 }
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
+// The CPU2 culling walk keeps the pipelined integer outcode scan. Facing,
+// run selection, parity and the peeled SQ bursts are the common SH-4 kernel;
+// there is no C facing or C strip emitter fallback. Stops on the count byte of
+// the first depth-crossing / oversize strip, as walk_lean does. Source packages
+// have validated positive strip counts; world indices use all eight bits.
+inline const std::uint8_t* walk_lean_sq(const std::uint8_t* s,const std::uint8_t* end,const std::uint8_t* oc,
+                                       const pvr_vertex_t* cache,unsigned lim,unsigned cull,std::uint32_t*& q,
+                                       unsigned& culled,unsigned& emitted,unsigned& accepted_triangles){
+    shz_strip_walk_t context{s,end,oc,cache,lim,cull,q,culled,emitted,accepted_triangles};
+    shz_strip_walk_sq(&context);
+    q=context.q;culled=context.culled;emitted=context.emitted;
+    accepted_triangles=context.accepted_triangles;
+    s=context.cursor;
+    return s;
+}
+#endif
 #endif
 } // namespace re4dc::vp

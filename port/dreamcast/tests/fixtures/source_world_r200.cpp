@@ -13,6 +13,7 @@
 #include <cmath>
 #include <sys/mman.h>
 #include "re4dc_platform.h"
+#include "other_profile.h"
 #define RE4DC_PS2_WORLD_SOURCE_OWNER 1
 #define RE4DC_PS2_WORLD_SOURCE_TEX_PREP 1
 #define RE4DC_PRIMITIVE_BUFFERS 2
@@ -90,7 +91,14 @@ using GxWork=Gx;
 #define GXWORK() (&::gx)
 #include "source_world_frame.inc"
 struct Key {unsigned crc=0,fnv=0;bool operator==(const Key& b)const{return crc==b.crc&&fnv==b.fnv;}};
-struct Tex {unsigned width=256,height=256;};struct TexHeader {unsigned texture_count=1;};
+// Match the public Texture descriptor fields read by the production predicate.
+// Synthetic services still do not validate/upload actual GPU payloads.
+namespace re4dc::texture {
+constexpr unsigned kArgb4444=2,kAlpha=1,kBinaryAlpha=2,kMipmap=4;
+constexpr unsigned kPayloadLinear=0,kPayloadTwiddled=1,kPayloadVq=2;
+}
+struct Tex {unsigned width=256,height=256,format=2,data_size=131072,flags=0,payload=1,reserved_0=0;};
+struct TexHeader {unsigned texture_count=1;};
 struct TexturePackage {bool uploaded=true;unsigned bytes=131072;void* vram=archive;Tex t{};TexHeader h{};bool upload_complete()const{return uploaded;}unsigned vram_bytes()const{return bytes;}void* pvr_texture(unsigned)const{return vram;}const TexHeader& header()const{return h;}const Tex* textures()const{return &t;}};
 struct Entry {bool valid=true;Key key{};unsigned frame=0;TexturePackage package{};}cache_entry;
 bool frame_ready=true,stream_scene=false,stream_retire=false,stream_aborted=false,direct_open=false;unsigned vram_claims=0,loads=0,load_case=0,texfails=0;bool loaded_pin=false;
@@ -388,5 +396,57 @@ int main(){
  check(std::memcmp(&before_global,&global,sizeof(global))==0);
  check(std::memcmp(before_archive.data(),archive,sizeof(archive))==0);
  check(aborts==0);
+ // Representation regression: execute the actual preparation/readiness path.
+ // Keep existing legacy formats/layouts and reject inconsistent metadata even
+ // when one byte count happens to match the historical size allowlist.
+ for(unsigned format=0;format<3;++format)for(unsigned payload=0;payload<2;++payload){
+  reset();cache_entry.package.t.format=format;cache_entry.package.t.payload=payload;
+  sourceWorldTexturePrepare();check(sourceWorldFrame.ready&&loads==1&&texfails==0);
+ }
+ for(unsigned format=0;format<3;++format)for(unsigned mip=0;mip<2;++mip){
+  reset();auto& t=cache_entry.package.t;t.format=format;t.payload=2;t.flags=mip?4u:0u;
+  cache_entry.package.bytes=t.data_size=mip?23894u:18432u;
+  sourceWorldTexturePrepare();
+#if defined(RE4DC_PS2_WORLD_SOURCE_TEX_VQ) && RE4DC_PS2_WORLD_SOURCE_TEX_VQ
+#if RE4DC_CAST_MIPMAP
+  const bool expected=true;
+#else
+  const bool expected=mip==0;
+#endif
+#else
+  const bool expected=false;
+#endif
+  check(sourceWorldFrame.ready==expected);
+  check(texfails==(expected?0u:1u));
+ }
+ for(unsigned mutation=0;mutation<16;++mutation){
+  reset();auto& t=cache_entry.package.t;t.payload=2;t.flags=4;
+  cache_entry.package.bytes=t.data_size=23894;
+  switch(mutation){
+   case 0:--cache_entry.package.bytes;break; // truncated/partial upload bytes
+   case 1:--t.data_size;break;              // truncated descriptor
+   case 2:t.flags=0;break;                 // mip-sized but base-only layout
+   case 3:t.payload=1;break;               // VQ-sized but twiddled layout
+   case 4:t.format=3;break;                // indexed/non-16-bit representation
+   case 5:t.flags|=1u<<30;break;           // dropped top level
+   case 6:t.reserved_0=1;break;
+   case 7:t.width=128;break;
+   case 8:t.height=128;break;
+   case 9:cache_entry.package.uploaded=false;break;
+   case 10:cache_entry.package.h.texture_count=2;break;
+   case 11:cache_entry.package.vram=nullptr;break;
+   case 12:--cache_entry.package.bytes;--t.data_size;break;
+   case 13:++cache_entry.package.bytes;++t.data_size;break;
+   case 14:cache_entry.package.bytes=t.data_size=18432;break;
+   case 15:t.flags=0;t.payload=0;cache_entry.package.bytes=t.data_size=18432;break;
+  }
+  sourceWorldTexturePrepare();check(!sourceWorldFrame.ready&&texfails==1);
+ }
+ for(unsigned mutation=0;mutation<5;++mutation){
+  reset();auto& t=cache_entry.package.t;
+  switch(mutation){case 0:t.data_size=18432;break;case 1:t.payload=9;break;
+   case 2:t.format=5;break;case 3:t.flags=4;break;case 4:t.flags=8;break;}
+  sourceWorldTexturePrepare();check(!sourceWorldFrame.ready&&texfails==1);
+ }
  std::printf("source world actual readers: %u checks PASS (synthetic source/cache/GPU services)\n",checks);
 }

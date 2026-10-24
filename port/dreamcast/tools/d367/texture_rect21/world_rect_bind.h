@@ -14,7 +14,12 @@ struct Representation {
     float u_scale,v_scale;
 };
 inline constexpr Representation qualified[] = {
+#if defined(RE4DC_FOLIAGE_MIP24) && RE4DC_FOLIAGE_MIP24
+// lane mip-finish24: the same 798 keys, 86 foliage/cut-out rows rebound to the fol24 pack's coverage mip chains
+#include "scoped_representations_fol24.inc"
+#else
 #include "scoped_representations.inc"
+#endif
 };
 inline constexpr unsigned qualified_count=sizeof(qualified)/sizeof(qualified[0]);
 constexpr bool keys_ordered() {

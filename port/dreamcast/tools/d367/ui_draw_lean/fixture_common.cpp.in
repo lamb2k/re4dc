@@ -1,0 +1,156 @@
+// Actual data declarations and production bodies are inserted by check_runtime.py.
+#include <algorithm>
+#include <array>
+#include <cassert>
+#include <cmath>
+#include <cstdarg>
+#include <cstddef>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <fstream>
+#include <new>
+#include <vector>
+
+using u8=std::uint8_t;using u16=std::uint16_t;using u32=std::uint32_t;
+using s8=std::int8_t;using s16=std::int16_t;using s32=std::int32_t;using f32=float;
+using Mtx=float[3][4];using Mtx44=float[4][4];using MtxPtr=float(*)[4];
+struct Vec {float x,y,z;};struct Hermite1;
+#include "@ROOT@/port/dreamcast/game/platform/include/native_ui.h"
+#include "@ROOT@/port/dreamcast/game/platform/include/re4dc_screen.h"
+
+using pvr_ptr_t=void*;
+@KOS_CONSTANTS@
+@KOS_TYPES@
+
+static std::vector<u32> observations;
+static std::ofstream output;
+static std::ofstream scalar_ta_output;
+static u32 bits(float f){u32 v;std::memcpy(&v,&f,4);return v;}
+static void words(const void* ptr,unsigned bytes){
+    assert((bytes&3)==0);const auto* p=static_cast<const unsigned char*>(ptr);
+    for(unsigned n=0;n<bytes;n+=4){u32 v;std::memcpy(&v,p+n,4);observations.push_back(v);}
+}
+static void event(std::initializer_list<u32> values){observations.insert(observations.end(),values);}
+static u32 ptr32(const void* p){auto n=reinterpret_cast<std::uintptr_t>(p);assert(n<=0xffffffffULL);return u32(n);}
+// Serialize every field in the target 104-byte quad, without host pointer padding.
+static std::array<u32,26> quad_words(const Re4dcUiQuad& q){
+    std::array<u32,26> w{};w[0]=ptr32(q.image.pixels);w[1]=ptr32(q.image.palette);
+    w[2]=q.image.width;w[3]=q.image.height;w[4]=q.image.format;w[5]=q.image.palette_format;w[6]=q.image.palette_bytes;
+    for(unsigned n=0;n<8;++n){w[7+n]=bits(q.xy[n]);w[15+n]=bits(q.uv[n]);}
+    w[23]=q.color;w[24]=q.blend;w[25]=q.masked;return w;
+}
+static_assert(sizeof(std::array<u32,26>)==104);
+static void note_quad(unsigned kind,const Re4dcUiQuad& q){event({kind});auto w=quad_words(q);words(w.data(),sizeof w);}
+
+static unsigned total_cases,bridge_cases,native_cases,camera_cases,glyph_cases;
+static unsigned ta_packets,ta_words,ta_vertices,defined_headers,opaque_tail_headers,full_header_hits;
+static unsigned resolve_calls,compile_calls,projection_calls,empty_load_calls,empty_current_calls,diagnostic_calls;
+static unsigned bridge_submissions,mask_calls,prompt_calls,letterbox_calls,option_calls;
+static unsigned long long diagnostic_hash=1469598103934665603ULL;
+extern "C" void re4dc_log(const char* fmt,...){
+    char buf[512];va_list ap;va_start(ap,fmt);int n=std::vsnprintf(buf,sizeof buf,fmt,ap);va_end(ap);
+    assert(n>=0 && unsigned(n)<sizeof buf);++diagnostic_calls;
+    for(int i=0;i<n;++i){diagnostic_hash^=u8(buf[i]);diagnostic_hash*=1099511628211ULL;}
+}
+#define RE4DC_PROFILE_SCOPE(...) ((void)0)
+#define RE4DC_PROFILE_COUNT(...) ((void)0)
+#define RE4DC_PROFILE_HIGH(...) ((void)0)
+#define RE4DC_WHD_ABORT(...) ((void)0)
+#define ASSERTMSGLINE(line,value,message) assert(value)
+#define assert_msg(value,message) assert(value)
+#define PVR_RAM_SIZE (8U*1024U*1024U)
+// KOS MOVCA may leave packed-color words4..7 unspecified. Give them an explicit
+// marker in the host edge; capture masks only those words, including glyph fills.
+static constexpr u32 kUnspecifiedTail=0xd4d4d4d4U;
+static void dcache_alloc_line_with_value(void* dst,u32 cmd){
+    auto* p=static_cast<u32*>(dst);p[0]=cmd;for(unsigned i=4;i<8;++i)p[i]=kUnspecifiedTail;
+    ++compile_calls;
+}
+@KOS_COMPILER@
+#define RE4DC_HDR_PROBE(...) ((void)0)
+@HEADER_WRAPPER@
+
+using file_t=int;
+constexpr int FILEHND_INVALID=-1;
+@PACKAGE_HEADER@
+namespace re4dc::texture {
+// Population/destruction are fixture edges; layout and all used getters are real.
+Package::~Package() {}
+@PACKAGE_GETTERS@
+}
+@ENTRY@
+@COVER_MACROS@
+
+extern "C" {
+int re4dc_screen_w=640,re4dc_screen_h=480;
+float re4dc_screen_wf=640,re4dc_screen_hf=480,re4dc_ui_sx=1,re4dc_ui_sy=1,re4dc_screen_half_wf=320,re4dc_screen_half_hf=240;
+float re4dc_res_vjitter=0;
+float re4dc_gxf_projection[7],re4dc_gxf_viewport[6];
+}
+#define g_projection re4dc_gxf_projection
+#define g_viewport re4dc_gxf_viewport
+#define GX_COPY std::memcpy
+static float projection_matrix[4][4];
+static void fixture_projection_note(const float m[4][4],int type){
+    ++projection_calls;std::memcpy(projection_matrix,m,sizeof projection_matrix);(void)type;
+}
+@GX_VIEWPORT@
+@GX_PROJECTION@
+@GX_EMPTY@
+@GXF_HEADER@
+@MATRIX_BODIES@
+static void PSMTXIdentity(Mtx m){C_MTXIdentity(m);}
+#define RE4DC_RENDER_MTXConcat C_MTXConcat
+struct FixtureCamera {Mtx44 ProjMat;};
+struct FixtureGlobal {FixtureCamera Cam;};
+static FixtureGlobal global_state;
+static FixtureGlobal* pG=&global_state;
+int ProjType=1;
+@CAMERA_CURRENT@
+@MESSAGE_CAMERA@
+
+static constexpr unsigned kQuadCount=256,kFixtureEntries=12;
+static Entry entries[kFixtureEntries];
+static Re4dcUiQuad quads[kQuadCount];
+static Entry* handles[kQuadCount];
+static unsigned char frame_storage[sizeof quads];
+static unsigned frame=1,nquad,quads_flushed,deferred_top=sizeof frame_storage,drawn,culled,unsupported,dropped,missing,frame_queue_drops;
+static bool frame_ready=true,stream_aborted,world_autosort=true,ui_order=true,black,movie_override;
+static unsigned overlay_layer;
+static int re4dc_vi_black(){return black;}
+static void stream_select(pvr_list_t list){event({0x10000001U,unsigned(list)});}
+static void capture_ta(const void* data,unsigned bytes){
+    assert((bytes%32)==0);++ta_packets;ta_words+=bytes/4;event({0x10000002U,bytes});
+    // Preserve all fixture words as a separate stream, including the explicit
+    // MOVCA marker. This stream is a scalar-fixture result, not a claim that
+    // hardware defines those four cold-header tail words.
+    scalar_ta_output.write(reinterpret_cast<const char*>(&bytes),4);
+    scalar_ta_output.write(static_cast<const char*>(data),bytes);assert(scalar_ta_output.good());
+    const auto* p=static_cast<const u8*>(data);
+    for(unsigned offset=0;offset<bytes;offset+=32){
+        u32 w[8];std::memcpy(w,p+offset,32);
+        if((w[0]&0xe0000000U)==0x80000000U){
+            ++defined_headers;
+            bool undefined=true;for(unsigned n=4;n<8;++n)undefined&=w[n]==kUnspecifiedTail;
+            if(undefined){++opaque_tail_headers;for(unsigned n=4;n<8;++n)w[n]=0;}
+            else ++full_header_hits;
+        }else{assert(w[0]==PVR_CMD_VERTEX||w[0]==PVR_CMD_VERTEX_EOL);++ta_vertices;}
+        words(w,32);
+    }
+}
+static void stream_send(const void* p,unsigned n){capture_ta(p,n);}
+namespace re4dc::render {
+@BEGIN_PACKET@
+static void submit_pvr(const void* p,unsigned n){capture_ta(p,n);}
+}
+@OVERLAY_DEPTH@
+
+static Entry* resolve(const Re4dcUiImage& image,const void*,bool){
+    ++resolve_calls;event({0x10000003U,ptr32(image.pixels),ptr32(image.palette),image.width,image.height,image.format,image.palette_format,image.palette_bytes});
+    const unsigned n=(ptr32(image.pixels)>>12)%kFixtureEntries;
+    if(!image.pixels||!entries[n].valid)return nullptr;
+    entries[n].frame=frame;return &entries[n];
+}
+static Entry* load(const Re4dcUiImage& image){return resolve(image,nullptr,true);}
+static void fixture_native_enqueue_note(const Re4dcUiQuad* q){++bridge_submissions;note_quad(0x10000004U,*q);}

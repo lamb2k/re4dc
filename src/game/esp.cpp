@@ -315,7 +315,7 @@ int PullEsp(cEsp** out, int id)
 #endif
     } else {
 #if defined(RE4DC_ESP_POOL_DIAG) && RE4DC_ESP_POOL_DIAG
-        if (espd_refuse++ < 4) espd_report("REFUSED");
+        if (espd_refuse++ < 4 || !(espd_refuse & 63)) espd_report("REFUSED");
 #endif
         pLog->warn(6, 0, "ESP : ESP work full!!");
     }
@@ -395,6 +395,12 @@ loop2:
 loop4:
             esp = (cEsp*) (sys->pEspBuf + ofs);
             if ((esp->m_Be_flg & 1) && (esp->m_Tool_flg & 0x40000)) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ESP_POOL_RECYCLE) && RE4DC_ESP_POOL_RECYCLE
+                // Match the forward steal: retire the old owner/resources before
+                // clearing its slot. Free-slot searches jump directly to found.
+                ESPD_STEAL();
+                PushEsp(esp);
+#endif
 found:
 #if defined(RE4DC_ESP_POOL_DIAG) && RE4DC_ESP_POOL_DIAG
                 if (esp->m_Be_flg & 1) ESPD_STEAL();
@@ -1116,6 +1122,18 @@ int EspArrayAlloc(u32 n)
     // ESP_POOL_CAP (esppool.mk): the room asks for at most this many slots (heap 4; the GC cons values are 1024).
     if (n > RE4DC_ESP_POOL_CAP) {
         n = RE4DC_ESP_POOL_CAP;
+    }
+#endif
+#if defined(RE4DC_ESP_POOL_ROOM_MIN) && RE4DC_ESP_POOL_ROOM_MIN
+    // ESP_POOL_ROOM_MIN (mendezfx.mk; #55): the listed rooms get at least this many slots (r11f: the Mendez fight
+    // fills the GC's 1,024 when the boss takes rapid hits; the barn's heap has the room).
+    {
+        static const u16 rooms[] = {RE4DC_ESP_POOL_ROOM_LIST};
+        for (u32 k = 0; k < sizeof(rooms) / sizeof(rooms[0]); k++) {
+            if (pG && rooms[k] == (u16) pG->room_id && n < RE4DC_ESP_POOL_ROOM_MIN) {
+                n = RE4DC_ESP_POOL_ROOM_MIN;
+            }
+        }
     }
 #endif
 #if defined(RE4DC_ESP_POOL_DIAG) && RE4DC_ESP_POOL_DIAG

@@ -104,6 +104,28 @@ extern "C" int __real_cdrom_read_sectors_ex(void* buffer, uint32_t sector, size_
 #if RE4DC_DISC_READ_FALLBACK || RE4DC_DISC_FAIL_TEST || RE4DC_DISC_READ_VERIFY
 extern "C" int __real_cdrom_stream_stop(bool abort_dma);
 #endif
+#if defined(RE4DC_DISC_DMA_WAIT_TIMEOUT) && RE4DC_DISC_DMA_WAIT_TIMEOUT
+// DISC_DMA_WAIT_TIMEOUT=1 (issue #28): KOS's DMA wait gave up (kos-804b319-cdrom-dma-wait-timeout.patch); the caller below
+// falls back to plain reads. Counters are KOS's.
+extern "C" unsigned re4dc_cdrom_wait_timeouts, re4dc_cdrom_wait_max_us, re4dc_cdrom_wait_last_ms;
+extern "C" unsigned re4dc_cdrom_wait_hw_busy, re4dc_cdrom_wait_abort_reset;
+static void dma_wait_timeout_log(const char* what, uint32_t at, size_t bytes)
+{
+    re4dc_log("disc dma wait timeout: %s (%u bytes at %u) got no completion in %u ms; GD DMA stopped (engine was busy "
+              "%u, drive reset %u); falling back to plain reads (timeouts %u)\n", what, (unsigned) bytes, (unsigned) at,
+              re4dc_cdrom_wait_last_ms, re4dc_cdrom_wait_hw_busy, re4dc_cdrom_wait_abort_reset, re4dc_cdrom_wait_timeouts);
+}
+// The longest completed DMA wait so far, logged when it grows by a quarter (how far normal reads stay from the bound).
+static unsigned s_wait_max_logged;
+static void dma_wait_note(size_t bytes)
+{
+    const unsigned m = re4dc_cdrom_wait_max_us;
+    if (m > s_wait_max_logged + s_wait_max_logged / 4 + 1000u) {
+        s_wait_max_logged = m;
+        re4dc_log("disc dma wait max: %u us (request %u bytes; bound 5000 ms + 8 ms a sector)\n", m, (unsigned) bytes);
+    }
+}
+#endif
 
 #if RE4DC_DISC_READ_METER
 // DISC_READ_METER=1 (Makefile; T12 Phases disc, display / log only). Every drive call made through the wraps below
@@ -1004,6 +1026,10 @@ extern "C" int __wrap_cdrom_read_sectors_ex(void* buffer, uint32_t sector, size_
 #else
     int rv = __real_cdrom_read_sectors_ex(buffer, sector, cnt, true);
 #endif
+#if defined(RE4DC_DISC_DMA_WAIT_TIMEOUT) && RE4DC_DISC_DMA_WAIT_TIMEOUT
+    if (rv == ERR_TIMEOUT) dma_wait_timeout_log("a DMA sector read", sector, cnt * 2048);
+    dma_wait_note(cnt * 2048);
+#endif
 #if RE4DC_DISC_READ_VERIFY
     if (rv == ERR_OK) dma_settle("a sector read", buffer, cnt * 2048);
 #endif
@@ -1119,6 +1145,10 @@ extern "C" int __wrap_cdrom_stream_request(void* buffer, size_t size, bool block
     int rv = s_dma ? ERR_OK : __real_cdrom_stream_request(buffer, size, block);  // skipped: "done" without the transfer
 #else
     int rv = __real_cdrom_stream_request(buffer, size, block);
+#endif
+#if defined(RE4DC_DISC_DMA_WAIT_TIMEOUT) && RE4DC_DISC_DMA_WAIT_TIMEOUT
+    if (rv == ERR_TIMEOUT) dma_wait_timeout_log("a DMA stream request", (uint32_t) s_sector, size);
+    dma_wait_note(size);
 #endif
 #if RE4DC_DISC_READ_VERIFY
     if (rv == ERR_OK && s_dma) dma_settle("a stream request", buffer, size);

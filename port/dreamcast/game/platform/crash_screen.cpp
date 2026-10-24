@@ -20,6 +20,9 @@
 #if defined(RE4DC_CRASH_OVL_LINE) && RE4DC_CRASH_OVL_LINE
 extern "C" int re4dc_ovl_crash_line(char* out, int size);   // modules.cpp
 #endif
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+extern "C" int re4dc_vram_ring_line(unsigned age, char* out, unsigned size);   // vram_pages.cpp (OVL_GUARD=3)
+#endif
 #if defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
 #include "issue52_actor_diag.h"
 #endif
@@ -44,7 +47,10 @@ extern "C" int pvr_present_pending(void) __attribute__((weak));
 #if RE4DC_PVR_LATCH
 extern "C" int re4dc_pvr_latch_line(unsigned which, char* out, unsigned size) __attribute__((weak));  /* native_ui.cpp */ extern "C" void re4dc_pvr_ready_test_arm(int slices) __attribute__((weak));  // PVR_READY_STRICT; one line: keeps __LINE__
 #endif
-static const unsigned kLogSize = 0x10000;  // mem.cpp RE4DC_LOG_SIZE
+#ifndef RE4DC_LOG_TRIM
+#define RE4DC_LOG_TRIM 0
+#endif
+static const unsigned kLogSize = 0x10000 - RE4DC_LOG_TRIM;  // mem.cpp RE4DC_LOG_SIZE
 
 #if defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
 struct Issue52ActorSnapshot {
@@ -52,6 +58,39 @@ struct Issue52ActorSnapshot {
     unsigned long base, actor;
 };
 static volatile Issue52ActorSnapshot g_issue52_actor{};
+static Issue52Attempt g_issue52_attempt{};
+
+extern "C" unsigned re4dc_issue52_begin(unsigned long task, unsigned frame,
+    unsigned room, unsigned entry, unsigned id)
+{
+    const unsigned long base = re4dc_issue52_stage_base();
+    const int old = irq_disable();
+    const unsigned token = g_issue52_attempt.begin(task, frame, room, entry, id, base);
+    irq_restore(old);
+    return token;
+}
+extern "C" unsigned re4dc_issue52_current(unsigned long task, unsigned id)
+{
+    const int old = irq_disable();
+    const unsigned token = g_issue52_attempt.current(task, id);
+    irq_restore(old);
+    return token;
+}
+extern "C" void re4dc_issue52_detail(unsigned token, unsigned long task,
+    unsigned kind, int a, int b)
+{
+    const int old = irq_disable();
+    g_issue52_attempt.detail(token, task, kind, a, b);
+    irq_restore(old);
+}
+extern "C" void re4dc_issue52_finish(unsigned token, unsigned long task,
+    unsigned reason, unsigned long actor, unsigned frame)
+{
+    const unsigned long base = re4dc_issue52_stage_base();
+    const int old = irq_disable();
+    g_issue52_attempt.finish(token, task, reason, actor, frame, base);
+    irq_restore(old);
+}
 
 extern "C" void re4dc_issue52_actor_note(unsigned phase, unsigned frame,
                                          unsigned room, unsigned long actor)
@@ -78,6 +117,18 @@ static bool issue52_actor_line(char* out, unsigned size)
     if (!s.phase) return false;
     snprintf(out, size, "I52 %u r%03x b%08lx a%08lx f%u",
              s.phase, s.room, s.base, s.actor, s.frame);
+    return true;
+}
+
+static bool issue52_attempt_line(char* out, unsigned size)
+{
+    const int old = irq_disable();
+    const Issue52Attempt s = g_issue52_attempt;
+    irq_restore(old);
+    if (!s.serial) return false;
+    // Integers copied while live only. Pending/abandoned is not a causal result.
+    snprintf(out, size, "52 t%u s%u w%x c%x R%x q%d r%d n%x", s.serial,
+        s.state, s.reason, s.construct, s.read_path, s.request, s.poll, s.negatives);
     return true;
 }
 #endif
@@ -360,8 +411,15 @@ void show(const char* kind, const char* detail, bool wait_render)
             for (int k = 0; ol[k] && row < 40; k += 52) { snprintf(line, 53, "%s", ol + k); put_text(0, row++, line, 0x07FF); }
     }
 #endif
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+    {
+        for (unsigned age = 0; age < 12 && row < 40; ++age)
+            if (re4dc_vram_ring_line(age, line, 53)) put_text(0, row++, line, 0xF81F);
+    }
+#endif
 #if defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
     if (issue52_actor_line(line, sizeof(line))) put_text(0, row++, line, 0xFFE0);
+    if (issue52_attempt_line(line, sizeof(line))) put_text(0, row++, line, 0xFFE0);
 #endif
 #if RE4DC_CRASH_FAULT_DETAIL
     fault_detail(row);

@@ -54,6 +54,9 @@
 #include "charbake_variants.h" // charbake.mk CHARBAKE_TOGGLE: the character texture variants (keys only)
 #endif
 
+#if defined(RE4DC_ACTOR_BACKFACE_CONE) && RE4DC_ACTOR_BACKFACE_CONE
+extern "C" void re4dc_abc_mark(const void* model,unsigned cls);  // native_actor_fast.cpp
+#endif
 extern "C" void re4dc_log(const char*, ...);
 extern "C" void GXGetProjectionv(float*);
 extern "C" void GXGetViewportv(float*);

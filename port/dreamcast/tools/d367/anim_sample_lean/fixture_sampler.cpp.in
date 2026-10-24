@@ -1,0 +1,262 @@
+// Synthetic key streams around the real production sampler. No game assets.
+#include "re4_host_stub.h"
+#include <algorithm>
+#include <array>
+#include <cassert>
+#include <cstdarg>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <fstream>
+#include <sys/mman.h>
+#include <vector>
+
+typedef u16 u16_un __attribute__((aligned(1)));
+static unsigned errors, diagnostics, asm_edges;
+static unsigned fixture_clamped_calls, fixture_clamp_kernel_calls, fixture_core_site=9;
+static unsigned fixture_core_sites[9], fixture_clamped_sites[9];
+static unsigned long long error_hash = 1469598103934665603ULL;
+static unsigned long long diagnostic_hash = 1469598103934665603ULL;
+static void add_hash(unsigned long long& h, const void* p, size_t n) {
+    const auto* b = static_cast<const unsigned char*>(p);
+    for (size_t i = 0; i < n; ++i) { h ^= b[i]; h *= 1099511628211ULL; }
+}
+static Log logger;
+Log* pLog = &logger;
+void Log::err(int, int, const char* fmt, ...) {
+    char text[512]; va_list ap; va_start(ap, fmt);
+    const int n = vsnprintf(text, sizeof text, fmt, ap); va_end(ap);
+    assert(n >= 0 && unsigned(n) < sizeof text);
+    ++errors; add_hash(error_hash, text, unsigned(n));
+}
+extern "C" void re4dc_log(const char* fmt, ...) {
+    char text[512]; va_list ap; va_start(ap, fmt);
+    const int n = vsnprintf(text, sizeof text, fmt, ap); va_end(ap);
+    assert(n >= 0 && unsigned(n) < sizeof text);
+    ++diagnostics; add_hash(diagnostic_hash, text, unsigned(n));
+}
+
+@SAMPLER@
+
+#if defined(RE4DC_HF_ASM) && RE4DC_HF_ASM
+// Qualified host edge only: assembly conformance belongs to the target tool.
+extern "C" int re4dc_hf_run(HermitePrm* prm, Vec* out, u16* hist) {
+    ++asm_edges;
+    return hermiteFast(prm, out, hist);
+}
+#endif
+
+static u32 bits(float f) { u32 v; std::memcpy(&v, &f, sizeof v); return v; }
+static void put16(u8* p, unsigned v) { p[0] = u8(v); p[1] = u8(v >> 8); }
+static void put32(u8* p, u32 v) {
+    for (unsigned i = 0; i < 4; ++i) p[i] = u8(v >> (8*i));
+}
+static int stride(int type) {
+    const int all[16] = {12,8,6,-1,10,6,4,-1,9,5,3,-1,-1,-1,-1,4};
+    return all[type];
+}
+struct Stream {
+    alignas(4) std::array<u8, 8192> storage;
+    size_t bytes;
+    unsigned alignment;
+    u8* key() { return storage.data() + alignment; }
+};
+
+static u32 float_pattern(unsigned seed, unsigned pattern) {
+    const float general[] = {-123.5f, 9.25f, -0.125f, 0.015625f, 1000.0f, -17.0f, 0.0f, -0.0f};
+    if (pattern == 1) return seed & 1 ? 0x80000000U : 0;
+    if (pattern == 2) return bits(0.125f);  // constant values, independent tangent words
+    return bits(general[seed % (sizeof general/sizeof *general)]);
+}
+static void encode_field(u8* d, int width, unsigned seed, unsigned pattern, bool tangent) {
+    if (width == 4) put32(d, tangent && pattern == 2 ? 0 : float_pattern(seed, pattern));
+    else if (width == 2) {
+        const s16 values[] = {-32768, 32767, -19999, 17777, -1, 0, 1, 9999};
+        const s16 v = pattern == 1 || (pattern == 2 && tangent) ? 0
+            : pattern == 2 ? 1250 : values[seed % 8];
+        put16(d, u16(v));
+    } else {
+        const s8 values[] = {-128,127,-99,81,-1,0,1,42};
+        const s8 v = pattern == 1 || (pattern == 2 && tangent) ? 0
+            : pattern == 2 ? 12 : values[seed % 8];
+        *d = u8(v);
+    }
+}
+static void build(Stream& s, int type, const std::array<std::vector<u16>,3>& frames,
+                  unsigned alignment, unsigned pattern, unsigned salt) {
+    s.storage.fill(0xa5); s.alignment = alignment;
+    u8* p = s.key();
+    for (unsigned axis = 0; axis < 3; ++axis) {
+        const auto& f = frames[axis]; put16(p, f.size()); p += 2;
+        for (u16 frame : f) { put16(p, frame); p += 2; }
+        int vw, tw;
+        if (type == 15) { vw = 4; tw = 0; }
+        else { vw = 4 >> (type >> 2); tw = 4 >> (type & 3); }
+        for (unsigned i = 0; i < f.size(); ++i) {
+            const unsigned seed = i * 3 + axis * 5 + salt;
+            encode_field(p, vw, seed, pattern, false);
+            if (tw) {
+                encode_field(p + vw, tw, seed + 1, pattern, true);
+                encode_field(p + vw + tw, tw, seed + 2, pattern, true);
+            }
+            p += stride(type);
+        }
+    }
+    s.bytes = size_t(p - s.key());
+    assert(s.bytes + alignment < s.storage.size());
+}
+
+struct Counts {
+    unsigned cases=0, stale=0, singles=0, sequences=0, history_changes=0, source_rewrites=0, mixed_clamp=0, float_payload=0;
+    unsigned long long output_words=0;
+} counts;
+static std::ofstream output;
+static Vec sample(Stream& s, unsigned type, float frame, float maximum, unsigned flags,
+                   u16 hist[3], unsigned category) {
+    HermitePrm prm={frame,maximum,flags,u8(type),{0,0,0},s.key()}, before_prm=prm;
+    const auto original=s.storage;
+    const u16 before[3]={hist[0],hist[1],hist[2]};
+    Vec out={-1000.125f,1001.25f,-1002.5f};
+    const unsigned old_errors=errors;
+    int result;
+#if ANIM_SAMPLE_CLAMPED
+    if(prm.maxFrame<=prm.frame && (prm.flags&6)!=4) result=HermiteInterpolationClamped(&prm,&out,hist);
+    else
+#endif
+    result=HermiteInterpolation(&prm,&out,hist);
+    assert(!std::memcmp(&prm,&before_prm,sizeof prm));
+    assert(s.storage==original);
+    counts.history_changes += std::memcmp(before,hist,sizeof before)!=0;
+    const u32 row[]={counts.cases++,category,type,s.alignment,flags,bits(frame),bits(maximum),
+        before[0],before[1],before[2],u32(result),bits(out.x),bits(out.y),bits(out.z),hist[0],hist[1],hist[2],
+        errors-old_errors,u32(error_hash),u32(error_hash>>32),diagnostics,u32(diagnostic_hash),u32(diagnostic_hash>>32)};
+    output.write(reinterpret_cast<const char*>(row),sizeof row); counts.output_words += sizeof row/4;
+    return out;
+}
+
+@CORE@
+
+int main(int argc,char**argv) {
+    assert(argc==2); const u16 endian=1; assert(*reinterpret_cast<const u8*>(&endian)==1);
+    output.open(argv[1],std::ios::binary); assert(output.good());
+#if !defined(FIXTURE_CORE_ONLY) || !FIXTURE_CORE_ONLY
+    Stream stream;
+    const unsigned types[]={0,1,2,4,5,6,8,9,10,15};
+    const unsigned sizes[]={2,3,8};
+    for (unsigned type:types) for(unsigned n:sizes) for(unsigned align=0;align<4;++align)
+    for(unsigned pattern=0;pattern<3;++pattern) {
+        std::array<std::vector<u16>,3> keys;
+        for(auto& axis:keys) for(unsigned i=0;i<n;++i) axis.push_back(u16(i*4));
+        build(stream,type,keys,align,pattern,n);
+        const float maximum=float((n-1)*4);
+        const float frames[]={0.0f,0.25f,2.5f,4.0f,maximum-0.25f,maximum,maximum+0.25f,maximum*2};
+        const unsigned histories[]={0,n-1,n+3,65535};
+        for(unsigned flags=0;flags<16;++flags) for(float frame:frames) for(unsigned h:histories) {
+            if(type==15 && frame>0 && frame<maximum && frame!=4.0f) continue;
+            if(type==15 && (flags&6)==4 && frame>maximum && frame!=maximum*2) continue;
+            u16 hist[3]={u16(h),u16(h),u16(h)};
+            sample(stream,type,frame,maximum,flags,hist,0);
+        }
+    }
+    // Defined one-key calls: exact frame or non-looping clamp. Interior samples
+    // with one key can read an uninitialized stale pair and are not test inputs.
+    for(unsigned type:types) for(unsigned align=0;align<4;++align) {
+        const std::array<std::vector<u16>,3> keys={{{0},{0},{0}}};
+        build(stream,type,keys,align,0,7);
+        for(unsigned flags=0;flags<16;++flags) for(unsigned h:{0U,7U}) {
+            u16 hist[3]={u16(h),u16(h),u16(h)};
+            sample(stream,type,0,0,flags,hist,1);++counts.singles;
+            if((flags&6)!=4) {sample(stream,type,3,0,flags,hist,1);++counts.singles;}
+        }
+    }
+    // Unequal axis lengths catch stepping by the wrong count/stride. Every
+    // looping case wraps to an exact first key; non-looping cases clamp.
+    const unsigned mixed[][3]={{2,3,8},{1,5,2},{8,2,1},{3,32,4}};
+    for(unsigned type:types) for(unsigned align=0;align<4;++align) for(const auto& ns:mixed) {
+        std::array<std::vector<u16>,3> keys;
+        for(unsigned a=0;a<3;++a) for(unsigned i=0;i<ns[a];++i) keys[a].push_back(u16(i*4));
+        build(stream,type,keys,align,0,43);
+        for(unsigned flags=0;flags<16;++flags) for(unsigned bad_axis=0;bad_axis<4;++bad_axis) {
+            u16 hist[3]={u16(ns[0]-1),u16(ns[1]-1),u16(ns[2]-1)};
+            if(bad_axis<3) hist[bad_axis]=u16(ns[bad_axis]+5);
+            sample(stream,type,128,128,flags,hist,4);++counts.mixed_clamp;
+            if((flags&6)!=4) {
+                sample(stream,type,INFINITY,128,flags,hist,4);++counts.mixed_clamp;
+                sample(stream,type,-INFINITY,-INFINITY,flags,hist,4);++counts.mixed_clamp;
+            }
+        }
+    }
+    // Exact f32 payloads in the defined clamped path, without interpolating
+    // NaNs/infinities: preserve negative zero and a quiet-NaN payload as bits.
+    for(unsigned align=0;align<4;++align) {
+        const std::array<std::vector<u16>,3> keys={{{0,4},{0,4},{0,4}}};
+        build(stream,0,keys,align,0,3);
+        const u32 expected[3]={0x80000000U,0x7f800000U,0x7fc12345U};
+        for(unsigned axis=0;axis<3;++axis) put32(stream.key()+axis*30+18,expected[axis]);
+        for(unsigned flags=0;flags<16;++flags) if((flags&6)!=4) for(float frame:{4.0f,INFINITY}) {
+            u16 hist[3]={0,1,0};
+            const Vec v=sample(stream,0,frame,4,flags,hist,5);++counts.float_payload;
+            assert(bits(v.x)==expected[0] && bits(v.y)==expected[1] && bits(v.z)==expected[2]);
+        }
+    }
+    // Later-axis search exhaustion is defined because the earlier axis loads
+    // the stale pair. Preserve whole-call fallback, original history and logs.
+    for(unsigned type:{0U,5U,6U}) for(unsigned align=0;align<4;++align)
+    for(unsigned stale_axis:{1U,2U}) for(bool prior_exact:{false,true}) {
+        std::array<std::vector<u16>,3> keys={{{0,6,12},{0,6,12},{0,6,12}}};
+        if(prior_exact) keys[0]={0,5,9};
+        keys[stale_axis]={0,3,6};
+        build(stream,type,keys,align,0,19);
+        for(unsigned flags:{0U,1U,8U,9U}) for(unsigned h:{0U,1U,2U,9U}) {
+            u16 hist[3]={u16(h),u16(h),u16(h)};
+            sample(stream,type,9,12,flags,hist,2);++counts.stale;
+        }
+    }
+    // Persistent histories through forwards, reverse, loop, ignored history,
+    // clip replacement at the same address and restarts. No cached key identity.
+    for(unsigned type:{0U,5U,6U,10U}) for(unsigned align=0;align<4;++align) {
+        std::array<std::vector<u16>,3> keys={{{0,4,8,12},{0,4,8,12},{0,4,8,12}}};
+        u16 hist[3]={0,0,0};
+        for(unsigned generation=0;generation<4;++generation) {
+            build(stream,type,keys,align,generation%3,generation*17);++counts.source_rewrites;
+            for(unsigned step=0;step<=24;++step) {sample(stream,type,step*0.5f,12,0,hist,3);++counts.sequences;}
+            for(int step=24;step>=0;--step) {sample(stream,type,step*0.5f,12,1,hist,3);++counts.sequences;}
+            for(unsigned step=20;step<=28;++step) {sample(stream,type,step*0.5f,12,4,hist,3);++counts.sequences;}
+            for(unsigned step=0;step<=24;++step) {sample(stream,type,step*0.5f,12,8,hist,3);++counts.sequences;}
+        }
+    }
+    // The ordinary public entry must stay on the original sampler even when
+    // directly called with a clamp-eligible frame.
+    for(unsigned type:{0U,5U,6U}) {
+        const std::array<std::vector<u16>,3> keys={{{0,4},{0,4},{0,4}}};
+        build(stream,type,keys,0,0,19);
+        HermitePrm prm={4,4,0,u8(type),{0,0,0},stream.key()};Vec value{};u16 hist[3]={0,0,0};
+        const unsigned before=fixture_clamp_kernel_calls;
+        assert(HermiteInterpolation(&prm,&value,hist)==0);
+        assert(fixture_clamp_kernel_calls==before);
+    }
+#endif
+    core_tests();
+    output.close(); assert(output.good());
+#if defined(RE4DC_HF_REG) && RE4DC_HF_REG==2
+    assert(hfrMisOut==0 && hfrMisHist==0 && hfrMisRet==0);
+#endif
+#if defined(RE4DC_HERMITE_FAST) && RE4DC_HERMITE_FAST==2
+    assert(hfMisOut==0 && hfMisHist==0 && hfMisRet==0);
+#endif
+#if ANIM_SAMPLE_CLAMPED
+    assert(fixture_clamp_kernel_calls>0);
+#endif
+    std::printf("{\"cases\":%u,\"output_words\":%llu,\"errors\":%u,\"diagnostics\":%u,"
+        "\"later_axis_exhaustion\":%u,\"defined_single_key\":%u,\"sequence_calls\":%u,"
+        "\"history_changes\":%u,\"source_rewrites\":%u,\"mixed_clamp\":%u,\"float_payload\":%u,\"asm_host_edges\":%u,"
+        "\"clamped_entries\":%u,\"clamp_kernel_calls\":%u,\"core_cases\":%u,\"core_lease_acquires\":%u,\"core_lease_releases\":%u,"
+        "\"core_sites\":[%u,%u,%u,%u,%u,%u,%u,%u,%u],\"clamped_sites\":[%u,%u,%u,%u,%u,%u,%u,%u,%u]}\n",
+        counts.cases,counts.output_words,errors,diagnostics,counts.stale,counts.singles,counts.sequences,
+        counts.history_changes,counts.source_rewrites,counts.mixed_clamp,counts.float_payload,asm_edges,
+        fixture_clamped_calls,fixture_clamp_kernel_calls,core_cases,core_lease_acquires,core_lease_releases,
+        fixture_core_sites[0],fixture_core_sites[1],fixture_core_sites[2],fixture_core_sites[3],fixture_core_sites[4],
+        fixture_core_sites[5],fixture_core_sites[6],fixture_core_sites[7],fixture_core_sites[8],
+        fixture_clamped_sites[0],fixture_clamped_sites[1],fixture_clamped_sites[2],fixture_clamped_sites[3],fixture_clamped_sites[4],
+        fixture_clamped_sites[5],fixture_clamped_sites[6],fixture_clamped_sites[7],fixture_clamped_sites[8]);
+}

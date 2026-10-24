@@ -617,6 +617,30 @@ def fit_affine(a, b):
     return M.T                                              # 3 x 4
 
 
+def bake_static(groups, obj_path, dynamic_below=250):
+    """--bake-static: the static groups (scroll object id >= dynamic_below) as one world-space group placed once (the
+    first static group's index, so ps2-world.ids gives it a static id); the other groups unchanged, in order."""
+    import ps2_room_ids
+    ids = ps2_room_ids.group_ids(obj_path)
+    keep = [g for g in groups if ids[g['index']] < dynamic_below]
+    stat = [g for g in groups if ids[g['index']] >= dynamic_below]
+    if len(stat) < 2:
+        return groups
+    base, vidx = 0, []
+    for g in stat:
+        vidx.append(g['vidx'] + base)
+        base += int(g['vidx'].max()) + 1
+    cat = lambda k: np.concatenate([g[k] for g in stat])
+    merged = dict(index=stat[0]['index'], name='baked-static', bin=-1, kind='BAKED', smd=stat[0]['smd'],
+                  vidx=np.concatenate(vidx), pos=cat('pos'), uv=cat('uv'), rgb=cat('rgb'), alpha=cat('alpha'),
+                  tex=cat('tex'), blend=cat('blend'), cull=stat[0]['cull'],
+                  face_cull=np.concatenate([np.full(len(g['tex']), g['cull']) for g in stat]),
+                  gc_lights=None, a0gc=False)
+    print('bake-static: %d static groups (%d triangles) -> 1 mesh; %d groups kept' % (
+        len(stat), len(merged['tex']), len(keep)), file=sys.stderr)
+    return keep + [merged]
+
+
 def build(groups, gains, textures, share=True, vertex_alpha='off'):
     meshes, placements, sources, parts_meta = [], [], {}, []
     by_bin = collections.defaultdict(list)                  # bin -> [(mesh index, group)]
@@ -676,7 +700,8 @@ def build(groups, gains, textures, share=True, vertex_alpha='off'):
         uvs, uv_index, colors, color_index = [], {}, [], {}
         order, loose = [], {}
         for f in range(len(g['tex'])):
-            key = (int(g['tex'][f]), int(g['pass'][f]), g['cull'], bool(g['mark'][f]))
+            key = (int(g['tex'][f]), int(g['pass'][f]), int(g['face_cull'][f]) if 'face_cull' in g else g['cull'],
+                   bool(g['mark'][f]))
             if key not in loose:
                 loose[key] = []
                 order.append(key)
@@ -767,6 +792,12 @@ def main():
     ap.add_argument('--a0-light-own', action='store_true',
                     help="--a0-light gc: light each copy of an instanced BIN at its own place (no mesh sharing for them; "
                          "default: the copies' mean, so they still share one mesh)")
+    ap.add_argument('--bake-static', action='store_true',
+                    help="merge every static group (SMD row whose scroll object id is >= 250: no room code moves or "
+                         "hides it) into ONE world-space mesh, parts by material, placed once; groups with an id < 250 "
+                         "(doors, PS2_WORLD_DYNAMIC binds, sky) stay their own placements. With --lod-cluster the merged "
+                         "mesh is cut into spatial clusters, so culling and LOD still work per region (lane "
+                         "fix-r10d-speed23: r10d, 167 static of 228 placements). Default off (byte-identical packages)")
     a = ap.parse_args()
     crb.MAX_MESHLET_VERTICES = a.meshlet_vertices
     global CUTOUT_MAX_ALPHA
@@ -781,6 +812,8 @@ def main():
                         a.a0_light, a.a0_light_json, a.a0_light_own, a.a0_ps2_w)
     used, gains = final_gains(a.room, a.src, a.out, groups)
     textures = build_textures(a.room, a.src, a.out, used, gains)
+    if a.bake_static:
+        groups = bake_static(groups, a.src / f'{a.room}_004.scenario.obj')
     meshes, placements, sources, parts_meta, stats = build(groups, gains, textures, share=not a.no_share,
                                                            vertex_alpha=a.vertex_alpha)
     scales = collections.defaultdict(float)

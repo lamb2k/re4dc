@@ -1,0 +1,194 @@
+static void native_tests(){
+    const float scales[][2]={{1,1},{.5f,2},{-0.0f,1.0f/3.0f}};
+    for(unsigned hot=0;hot<2;++hot)for(unsigned blend=0;blend<5;++blend)
+    for(unsigned entry=0;entry<12;++entry)for(unsigned mutation=0;mutation<16;++mutation)
+    for(unsigned scale=0;scale<3;++scale){
+        begin_case(1);++native_cases;
+        auto q=make_quad(entry);q.blend=blend;seed_entry(entry,blend,hot);
+        re4dc_ui_sx=scales[scale][0];re4dc_ui_sy=scales[scale][1];
+        world_autosort=((entry+mutation)&1)!=0;
+        if(mutation==15)overlay_layer=0xfffffffeU;
+        enqueue_copy(q);drain();
+        // Actual queue snapshots and emit-time texture/scale reads stay live.
+        switch(mutation){
+        case 0:break;
+        case 1:q.xy[entry%8]=-0.0f;break;
+        case 2:q.xy[entry%8]+=31.125f;break;
+        case 3:q.uv[entry%8]=-0.0f;break;
+        case 4:q.uv[entry%8]-=2.375f;break;
+        case 5:q.color^=0x0055aaaaU;break;
+        case 6:q.blend=(blend+1)%5;break;
+        case 7:q.image.width+=19;break;
+        case 8:q.image.height+=13;break;
+        case 9:q.image.pixels=reinterpret_cast<void*>(std::uintptr_t(0x12000000U+((entry+1)%12)*0x1000U));break;
+        case 10:texture_data[entry].texture.width*=2;if(texture_data[entry].texture.width>1024)texture_data[entry].texture.width=16;break;
+        case 11:texture_data[entry].header.flags^=0x80008821U;break;
+        case 12:
+            texture_addresses[entry]=reinterpret_cast<void*>(std::uintptr_t(0xa4500000U+entry*0x2000));
+#if RE4DC_UI_HEADERS
+            entries[entry].ui_header_key=~0U;
+#endif
+            break;
+        case 13:re4dc_ui_sx=-2;re4dc_ui_sy=1e-20f;break;
+        case 14:q.image.palette=reinterpret_cast<void*>(0x19000000U);q.image.palette_bytes=32;q.image.palette_format=2;break;
+        case 15:frame=(entry&1)?0:~0U;break;
+        }
+        enqueue_copy(q);drain();end_case();
+    }
+    // Every rejection precedes texture resolution; NaN and infinity payloads
+    // are supplied as bits to avoid undefined float-to-integer conversions.
+    for(unsigned reason=0;reason<26;++reason){
+        begin_case(2);++native_cases;auto q=make_quad(4);
+        switch(reason){
+        case 0:frame_ready=false;break;
+        case 1:stream_aborted=true;break;
+        case 2:q.color&=0x00ffffffU;break;
+        case 3:q.masked=1;break;
+        case 4:q.blend=5;break;
+        case 5:deferred_top=0;nquad=kQuadCount;break;
+        case 6:entries[4].valid=false;break;
+        case 7:q.image.pixels=nullptr;break;
+        case 8:black=true;break;
+        case 9:movie_override=true;break;
+        default:{u32 v=(reason&1)?0x7fc01234U:0x7f800000U;float* coordinate=(reason<18?q.xy:q.uv);
+            std::memcpy(coordinate+(reason-10)%8,&v,4);break;}
+        }
+        enqueue_copy(q);
+        if(nquad<=kQuadCount)drain();end_case();
+    }
+    // Null handles are skipped and source-order barriers consume only a prefix.
+    for(unsigned split=0;split<9;++split){
+        begin_case(3);++native_cases;
+        for(unsigned i=0;i<8;++i){auto q=make_quad(i);enqueue_copy(q);if(i+1==split)drain();}
+        handles[3]=nullptr;door_mark=4;drain();end_case();
+    }
+}
+
+static void bridge_tests(){
+    for(unsigned scenario=0;scenario<40;++scenario)for(unsigned seed=0;seed<32;++seed){
+        begin_case(4);++bridge_cases;prepare_bridge(seed);auto u=make_unit(seed);
+        auto& tex=fixture_tex[u.texId][u.texNo];auto& descriptor=fixture_desc[u.texId][u.texNo];
+        switch(scenario){
+        case 0:descriptor.CLUTHeader=nullptr;break;
+        case 1:descriptor.CLUTHeader=&fixture_clut[u.texId][u.texNo];break;
+        case 2:wk_live[u.texId]=false;break;
+        case 3:fixture_wk[u.texId].pTpl=nullptr;break;
+        case 4:u.texNo=3;break;
+        case 5:ProjType=1;pG->Cam.ProjMat[2][3]=-1.75f;break;
+        case 6:ProjType=1;for(auto& v:u.vtx)v.z=0;break;
+        case 7:u.mat[0][1]=.375f;u.mat[1][0]=-.5f;break;
+        case 8:IDSystem::m_scrn_mat[0][3]=37.25f;break;
+        case 9:GXSetViewport(17.5f,-9.25f,320,224,0,1);break;
+        case 10:re4dc_res_vjitter=.5f/240.0f;break;
+        case 11:u.col[3]=0;break;
+        case 12:u.tex_flag=1;break;
+        case 13:u.blend_type=5;break;
+        case 14:u.col[0]=255.75f;u.col[1]=.75f;break;
+        case 15:u.u0=-0.0f;u.v0=-0.0f;break;
+        case 16:u.vtx[seed%4].x=-0.0f;u.mat[2][3]=-0.0f;break;
+        case 17:tex.width=1024;tex.height=8;break;
+        case 18:tex.data=reinterpret_cast<void*>(0x12009000U);break;
+        case 19:u.classNo=0x24;u.markNo=0x30;u.texId=0x89;u.texNo=0;prompt_kind=0;break;
+        case 20:u.classNo=0x24;u.markNo=0x30;u.texId=0x89;u.texNo=0;prompt_kind=1;prompt_success=true;break;
+        case 21:u.classNo=0x24;u.markNo=0x30;u.texId=0x89;u.texNo=0;prompt_kind=2;prompt_success=false;break;
+        case 22:u.classNo=0x2a;u.markNo=5;break;
+        default:
+            u.tex_flag=1;u.texId=0x0a;u.texNo=0;u.maskId=(seed&1)?0x12:0x17;u.blend_type=seed%2;
+            fixture_desc[u.maskId][0].CLUTHeader=&fixture_clut[u.maskId][0];
+            switch(scenario){
+            case 23:mask_success=true;break;
+            case 24:mask_success=false;break;
+            case 25:fixture_tex[u.maskId][0].minFilter=0;break;
+            case 26:fixture_tex[u.maskId][0].magFilter=0;break;
+            case 27:fixture_tex[u.maskId][0].minLOD=1;break;
+            case 28:fixture_tex[u.maskId][0].maxLOD=1;break;
+            case 29:fixture_tex[u.maskId][0].LODBias=.125f;break;
+            case 30:fixture_tex[u.maskId][0].edgeLODEnable=1;break;
+            case 31:fixture_desc[u.maskId][0].CLUTHeader=nullptr;break;
+            case 32:wk_live[u.maskId]=false;break;
+            case 33:fixture_tpl[u.maskId].numDescriptors=0;break;
+            case 34:u.maskNo=1;break;
+            case 35:u.maskId=0x18;break;
+            case 36:u.trans_type=1;break;
+            case 37:u.blend_type=2;break;
+            case 38:fixture_desc[u.maskId][0].textureHeader=nullptr;break;
+            case 39:fixture_tex[u.maskId][0].LODBias=-0.0f;mask_success=true;break;
+            }
+            break;
+        }
+        bridge_draw(u);drain();
+        // Same unit/address reused with changed live values on the next frame.
+        ++frame;u.u1+=.03125f;u.mat[0][3]+=2.5f;u.col[2]=7;u.vtx[2].y+=4;
+        re4dc_res_vjitter=-re4dc_res_vjitter;
+        if(wk_live[u.texId]&&fixture_wk[u.texId].pTpl&&u.texNo<3){
+            auto& current=fixture_desc[u.texId][u.texNo];
+            if(current.textureHeader)current.textureHeader->data=reinterpret_cast<void*>(0x12005000U);
+            current.CLUTHeader=(seed&1)?nullptr:&fixture_clut[u.texId][u.texNo];
+        }
+        bridge_draw(u);drain();end_case();
+    }
+}
+
+static void camera_tests(){
+    const u32 expected[7]={0x3f800000U,0x3b800000U,0xbf800000U,0xbbaaaaabU,0x3f800000U,0x3c23d70aU,0xbf800000U};
+    Mtx44 reference;C_MTXOrtho(reference,0,384,0,512,0,-100);
+    for(unsigned i=0;i<256;++i){
+        begin_case(5);++camera_cases;
+        for(unsigned k=0;k<7;++k)g_projection[k]=float(int(i*7+k)-500)*.125f;
+        for(auto& row:projection_matrix)for(float& f:row)f=-999.5f;
+        GXSetViewport(float(i%13),-float(i%11),float(256+(i%6)*64),float(192+(i%5)*48),-.25f,2);
+        float before_view[6];std::memcpy(before_view,g_viewport,sizeof before_view);
+        const unsigned old_projection=projection_calls;messageCamera();
+        assert(projection_calls==old_projection+1);
+        assert(!std::memcmp(projection_matrix,reference,sizeof reference));
+        assert(!std::memcmp(g_projection,expected,sizeof expected));
+        assert(!std::memcmp(g_viewport,before_view,sizeof before_view));
+        words(projection_matrix,sizeof projection_matrix);words(g_projection,28);words(g_viewport,24);end_case();
+    }
+}
+
+static void glyph_tests(){
+#if RE4DC_NATIVE_MES
+    const unsigned sizes[]={0,1,2,15,16,17,31,32,33,64,129,384};
+    const float scales[][2]={{1,1},{.5f,2},{-0.0f,1.0f/3.0f},{-2,1e-20f}};
+    for(unsigned hot=0;hot<2;++hot)for(unsigned count:sizes)for(unsigned stride:{1U,2U,16U,64U})
+    for(unsigned scale=0;scale<4;++scale){
+        begin_case(6);++glyph_cases;
+        re4dc_ui_sx=scales[scale][0];re4dc_ui_sy=scales[scale][1];
+        world_autosort=(count&1)!=0;overlay_layer=count==33?0xfffffffeU:3;
+        enqueue_copy(make_quad(2));enqueue_glyphs(count,stride,hot);
+        for(unsigned i=0;i<nglyph;++i){
+            if(i%5==0){glyph_quads[i].x0=-32000;glyph_quads[i].y0=32000;}
+            if(i%7==0){glyph_quads[i].x1=glyph_quads[i].x0;glyph_quads[i].argb=0;}
+        }
+        drain();enqueue_copy(make_quad(7));
+        if(count<64)enqueue_glyphs(17,stride,hot);
+        drain();end_case();
+    }
+    for(unsigned first:{0U,1U,15U,16U,31U,64U,128U})for(unsigned count:{0U,1U,17U,128U}){
+        begin_case(7);++glyph_cases;enqueue_glyphs(64,3,true);
+        quads[0].image.width=first;quads[0].image.height=count;drain();end_case();
+    }
+#endif
+}
+
+int main(int argc,char**argv){
+    assert(argc==2);output.open(argv[1],std::ios::binary);assert(output.good());
+    scalar_ta_output.open(std::string(argv[1])+".ta",std::ios::binary);assert(scalar_ta_output.good());
+    native_tests();bridge_tests();camera_tests();glyph_tests();
+    output.close();assert(output.good());
+    scalar_ta_output.close();assert(scalar_ta_output.good());
+#if RE4DC_UI_QUAD_LEAN>=2
+    assert(uql_mismatch==0);
+#endif
+    assert(camera_cases&&bridge_cases&&native_cases&&ta_vertices&&defined_headers&&opaque_tail_headers);
+#if RE4DC_UI_HEADERS
+    assert(full_header_hits);
+#endif
+    std::printf("{\"cases\":%u,\"native_cases\":%u,\"bridge_cases\":%u,\"camera_cases\":%u,\"glyph_cases\":%u,"
+        "\"ta_packets\":%u,\"ta_words\":%u,\"ta_vertices\":%u,\"defined_headers\":%u,\"opaque_tail_headers\":%u,\"full_header_hits\":%u,"
+        "\"resolve_calls\":%u,\"compile_calls\":%u,\"projection_calls\":%u,\"empty_load_calls\":%u,\"empty_current_calls\":%u,"
+        "\"bridge_submissions\":%u,\"mask_calls\":%u,\"prompt_calls\":%u,\"letterbox_calls\":%u,\"option_calls\":%u,\"diagnostic_calls\":%u}\n",
+        total_cases,native_cases,bridge_cases,camera_cases,glyph_cases,ta_packets,ta_words,ta_vertices,defined_headers,opaque_tail_headers,full_header_hits,
+        resolve_calls,compile_calls,projection_calls,empty_load_calls,empty_current_calls,bridge_submissions,mask_calls,prompt_calls,letterbox_calls,option_calls,diagnostic_calls);
+}

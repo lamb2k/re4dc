@@ -1,0 +1,115 @@
+// Synthetic composition sequence only. Production methods are extracted by
+// check_composition.py; no game data is embedded in this file.
+static bool encoded_part(unsigned i){return i==0||i==4||i==6;}
+static std::vector<std::uint8_t> composition_package(){
+    using namespace re4dc::room;
+    auto data=make_package(3);
+    auto& h=*reinterpret_cast<MeshHeader*>(data.data());
+    h.reserved[2]=0x12345678;h.reserved[3]=COMPOSITION_DECODED?0:kOfflineDedupMarker;
+    auto* lets=reinterpret_cast<Meshlet*>(data.data()+h.meshlet_offset);
+    auto* vertices=reinterpret_cast<CompactVertex12*>(data.data()+h.vertex_offset);
+    for(unsigned i=0;i<8;++i)for(unsigned m=0;m<2;++m){
+        const unsigned li=2*i+m;auto& l=lets[li];
+        if(i==3)continue; // Retain real v3 indexed gather, isolated part pool.
+        l.first_vertex=li*8;l.first_strip+=16;l.strip_count=2;
+        if(!encoded_part(i))continue;
+        auto* v=vertices+l.first_vertex;
+        const unsigned refs[4]={1,2,3,1};
+        for(unsigned j=4;j<8;++j){
+            const auto source=v[refs[j-4]];
+#if COMPOSITION_DECODED
+            v[j].x=source.x;v[j].y=source.y;v[j].z=source.z;
+#else
+            v[j].x=std::uint16_t(refs[j-4]);v[j].y=kOfflineDedupY;v[j].z=kOfflineDedupZ;
+#endif
+            // Preserve distinct repeat UV/color: a real seam, not vertex dedup.
+            assert(v[j].u!=source.u&&v[j].color!=source.color);
+        }
+#if !COMPOSITION_DECODED
+        l.strip_count|=4U<<7;
+#endif
+    }
+    return data;
+}
+
+// Compare only cache records actually consumed by selected strips. Unselected
+// entries are intentionally permitted to retain prior scratch bytes.
+static void observe_cache(MeshDraw& e,const MeshDraw::Pick* picks,unsigned count,int result){
+    queue_events.insert(queue_events.end(),{91,e.part_index,unsigned(result),count});
+    if(result<=0||!e.cache)return;
+    for(unsigned pi=0;pi<count;++pi){
+        const auto& pk=picks[pi];if(pk.nr==0)continue;
+        const auto& l=e.package.meshlets()[pk.let];bool used[256]{};
+        const auto* sb=e.package.strip_begin(l);
+        for(unsigned group=0,prev=0;group<(pk.nr==255?1:e.sg_groups);++group){
+            const unsigned end=pk.nr==255?l.strip_bytes:
+                reinterpret_cast<const std::uint16_t*>(e.sg+16U*e.sg_groups*pk.let)[8*group+6];
+            if(pk.nr==255||((pk.gmask>>group)&1U)){
+                const auto* s=sb+prev;
+                while(s<sb+end){const unsigned n=*s++;for(unsigned j=0;j<n;++j)used[*s++]=true;}
+            }
+            prev=end;
+        }
+        for(unsigned i=0;i<l.vertex_count;++i)if(used[i]){
+            std::uint32_t words[8];std::memcpy(words,e.cache+i,32);
+            queue_events.insert(queue_events.end(),{92,pk.let,i,e.outcodes[i]});
+            queue_events.insert(queue_events.end(),words,words+8);
+        }
+    }
+}
+
+static void queue_case(unsigned id){
+    const unsigned variant=id-100,shape=variant%4,failure=variant/4;
+    assert(shape<4&&failure<3);
+    geometry_low_at=failure==1?2:0;
+    if(failure==2){acquire_invalid_at=2;acquire_invalid_kind=1;}
+    auto data=composition_package();re4dc::room::MeshPackage package;
+    assert(package.adopt(data.data(),unsigned(data.size()),true,true));
+    assert(package.offline_dedup()==!COMPOSITION_DECODED);
+    const auto& cpkg=package;
+    re4dc::vp::build_lut(lut);re4dc::room::CompactVertex12 gather[256]{};
+    std::uint16_t groups[16*2*8]{};
+    for(unsigned li=0;li<16;++li){
+        groups[li*16+6]=5;groups[li*16+7]=0|(3U<<8);
+        groups[li*16+14]=10;
+        groups[li*16+15]=(encoded_part(li/2)?1U:4U)|((encoded_part(li/2)&&!COMPOSITION_DECODED?3U:7U)<<8);
+    }
+    assert(package.offline_groups(reinterpret_cast<const std::uint8_t*>(groups),sizeof(groups),2));
+    struct {const unsigned* lut;re4dc::room::CompactVertex12* gather;const std::uint8_t* sg;unsigned sg_groups;}
+        ps2w{::lut,gather,reinterpret_cast<const std::uint8_t*>(groups),2};
+    QueuePart part;part.cull=1;part.projection[1]=part.projection[3]=1;
+    part.viewport[2]=640;part.viewport[3]=480;
+    part.uv_offset[0]=.125f;part.uv_offset[1]=-.25f;
+    const float near=1,far=1000;const unsigned pass=0;
+    struct {unsigned native=0,fallback=0,aborts=0;}c;
+    @CHUNK_PART@;
+    static constexpr unsigned kChunkParts=48,kChunkPicks=320;
+    ChunkPart cctx[kChunkParts]{};MeshDraw::Pick cpk[kChunkPicks]{};
+    unsigned nctx=8,npk=0;piece::pkg=&cpkg;piece::table=piece_words;
+    for(unsigned j=0;j<nctx;++j){
+        auto& x=cctx[j];x.index=j;x.cull=j%3;x.sky=j&1;x.marked=j%3==1;
+        key_for(j,0,x.cull,x.key);x.first=npk;x.count=j==1?0:2;
+        x.cull_far=1000;x.lod_scale=2;
+        x.mvq[0]=x.mvq[5]=x.mvq[10]=1;
+        x.mvq[3]=shape==3?2000:-3+float(j)*.125f;
+        x.mvq[7]=-3+float(j)*.0625f;
+        x.mvq[11]=shape==1?-2:shape==2?-1001:-20-float(j);
+        for(unsigned m=0;m<x.count;++m){
+            const bool subset=j==4||j==6,zero=j==5;
+            cpk[npk++]={std::uint16_t(2*j+m),std::uint8_t(zero?0:subset?1:255),
+                        std::uint8_t(subset?2:1),std::uint8_t(subset?1:0),std::uint8_t(subset&&!COMPOSITION_DECODED?3:7),{0,0}};
+        }
+    }
+    re4dc_ps2_sky_header=7;
+    @CHUNK_FLUSH@;
+    const int result=chunk_flush();assert(!locked&&!direct_open);
+    assert(model_parts>=1); // Every failure follows a successful first part.
+    if(failure==0){
+        assert(result>0&&c.native==8&&c.fallback==0&&c.aborts==0);
+        assert(part.cull==1&&re4dc_ps2_sky_header==7&&nctx==0&&npk==0);
+        if(shape==1||shape==2)assert(stats.strips_clipped>0);
+    }else if(failure==1){assert(result<0&&c.aborts==1&&acquired==2);}
+    else {assert(source_failures>0&&acquired==2&&c.native>=1);assert(c.aborts||c.fallback);}
+    returns.push_back(unsigned(result));queue_native=c.native;queue_fallback=c.fallback;queue_aborts=c.aborts;
+    @REPORT_STATS@
+}

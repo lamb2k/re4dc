@@ -83,8 +83,7 @@ movie_world::Ledger ps2_movie;
 struct MovieWorldFiles{unsigned mesh=0,side=0,mesh_crc=0,mesh_fnv=0,side_crc=0,side_fnv=0;}ps2_movie_files;
 struct MovieWorldRead{MovieWorldRead(){++ps2_movie.readers;}~MovieWorldRead(){--ps2_movie.readers;}};
 namespace dyn {
-struct PartPose{const unsigned char* part;float pose[9];};
-struct Slot{const unsigned char* obj;uint32_t serial;float rest[12];PartPose* parts;unsigned nparts,pose_offset;bool source;};
+#include "production_dynamic_types.inc"
 unsigned char* block=nullptr;Slot* slots=nullptr;unsigned nslots=0,frame=9,nmoved=3;
 uint8_t state[250];
 void reset(){block=nullptr;slots=nullptr;nslots=0;}
@@ -143,7 +142,14 @@ void initialize(unsigned room=0x11f){
     dyn::block=static_cast<unsigned char*>(cell(cap+64,64));dyn::nslots=1;
     dyn::slots=static_cast<dyn::Slot*>(cell(cap+160,sizeof(dyn::Slot)));*dyn::slots={};
     dyn::slots->serial=0xabc;dyn::slots->rest[3]=71;dyn::slots->source=true;dyn::slots->nparts=1;dyn::slots->pose_offset=56;
-    dyn::slots->parts=static_cast<dyn::PartPose*>(cell(cap+416,sizeof(dyn::PartPose)));*dyn::slots->parts={};dyn::slots->parts->pose[5]=42;
+    const unsigned part_bytes=sizeof(dyn::PartPose)+(RE4DC_PS2_WORLD_ROOT_POSE?96U:0U);
+    dyn::slots->parts=static_cast<dyn::PartPose*>(cell(cap+416,part_bytes));
+    std::memset(dyn::slots->parts,0,part_bytes);dyn::slots->parts->pose[5]=42;
+#if RE4DC_PS2_WORLD_ROOT_POSE
+    dyn::slots->root_matrix_offset=65;
+    auto* root=reinterpret_cast<float*>(dyn::slots->parts+1);
+    for(unsigned i=0;i<24;++i)root[i]=float(i+1);
+#endif
     dyn::frame=9;dyn::nmoved=3;std::memset(dyn::state,4,sizeof(dyn::state));
 }
 std::vector<void*> allocate_player(unsigned token){
@@ -153,6 +159,36 @@ std::vector<void*> allocate_player(unsigned token){
     return p;
 }
 void free_player(unsigned token,const std::vector<void*>& p){for(void* v:p)CHECK(re4dc_ps2_mesh_movie_free(token,v));}
+void test_dynamic_part_cell_contract(){
+    for(unsigned count: {1U,2U,255U}){
+        initialize(0x100);
+        const unsigned bytes=count*sizeof(dyn::PartPose)+
+            ((RE4DC_PS2_WORLD_ROOT_POSE && count==1)?96U:0U);
+        // Keep this expected layout independent of the production sizing helper.
+        dyn::slots->nparts=count;
+        dyn::slots->parts=static_cast<dyn::PartPose*>(cell(1562656+416,bytes));
+        std::memset(dyn::slots->parts,0x39,bytes);
+        auto* header=reinterpret_cast<Room4Cell*>(dyn::slots->parts)-1;
+        CHECK(ps2_movie_dyn_valid());
+        --header->bytes;CHECK(!ps2_movie_dyn_valid());++header->bytes;
+        ++header->bytes;CHECK(!ps2_movie_dyn_valid());--header->bytes;
+        ++header->generation;CHECK(!ps2_movie_dyn_valid());--header->generation;
+#if RE4DC_PS2_WORLD_ROOT_POSE
+        if(count==1){
+            header->bytes-=96;CHECK(!ps2_movie_dyn_valid());header->bytes+=96;
+            // A refused/singular witness still owns the same allocation size.
+            dyn::slots->root_matrix_offset=~0U;CHECK(ps2_movie_dyn_valid());
+        }
+#endif
+        std::vector<unsigned char> saved(bytes);
+        std::memcpy(saved.data(),dyn::slots->parts,bytes);
+        const auto slot=*dyn::slots;
+        const auto token=re4dc_ps2_mesh_movie_borrow(0x10030);CHECK(token);
+        CHECK(re4dc_ps2_mesh_movie_return(token,0)==1);
+        CHECK(!std::memcmp(dyn::slots,&slot,sizeof(slot)));
+        CHECK(!std::memcmp(dyn::slots->parts,saved.data(),bytes));
+    }
+}
 void test_s30_roundtrip_and_failures(){
     initialize(0x100);
     CHECK(!re4dc_ps2_mesh_movie_borrow(0x10020));CHECK(!re4dc_ps2_mesh_movie_borrow(0x11f10));
@@ -430,6 +466,6 @@ int main(){
     region=mmap(nullptr,region_bytes,PROT_NONE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);CHECK(region!=MAP_FAILED);heap_begin=static_cast<unsigned char*>(region)+page;
     player::re4dc_movie_world_scope(0x10030);CHECK(player::movie_scope==0x10030);
     player::re4dc_movie_world_scope(0x10020);CHECK(player::movie_scope==0);
-    test_s30_roundtrip_and_failures();test_roundtrip_and_slots();test_declines();test_restore_faults();test_protected_stale_and_boundaries();test_every_partial_allocation_and_service();player::test_terminals();heap_host::test_transitions();
+    test_dynamic_part_cell_contract();test_s30_roundtrip_and_failures();test_roundtrip_and_slots();test_declines();test_restore_faults();test_protected_stale_and_boundaries();test_every_partial_allocation_and_service();player::test_terminals();heap_host::test_transitions();
     CHECK(munmap(region,region_bytes)==0);std::printf("PASS: %u assertions; actual production lifecycle/restore/UI/service helpers; guard pages + UBSan\n",checks);
 }

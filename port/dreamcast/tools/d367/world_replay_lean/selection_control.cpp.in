@@ -1,0 +1,99 @@
+// Actual selector and numeric helpers with production-adopted synthetic R4IM
+// packages. This is a host decision/output comparison, not a target cost run.
+#include <cassert>
+#include <cmath>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <fstream>
+#include <iterator>
+#include <vector>
+#include "@ROOM@/instanced_mesh.hpp"
+#include "@ROOM@/nonempty_lod.hpp"
+#define RE4DC_PS2_WORLD_NONEMPTY_LOD 1
+#define RE4DC_SCENERY_CONE_SIGN 1
+#define RE4DC_PROFILE_SCOPE(x) ((void)0)
+#define RE4DC_PREF_WALK 1
+static unsigned prefetches,fixture_box_mask_calls,fixture_sg_select_calls;
+#define RE4DC_C20_PREF_ON() true
+#define RE4DC_C20_PREF(p) (++prefetches)
+struct Re4dcModelPart {unsigned cull;float projection[7],viewport[6];};
+struct {unsigned clusters_culled,clusters_visible,lod_draws[4],groups_culled;} stats;
+namespace re4dc::render {
+struct DrawBounds {float minimum[3],maximum[3];};
+@GROUP_VISIBLE@
+}
+namespace lean {
+constexpr unsigned kMode=3;
+@LEAN_STATS@ st;
+@SIDE@ side;
+@SIDE_SETUP@
+@ABS9@
+@BOX_CLASS@
+@BOX_MASK@
+@SG_COEF@
+@SG_SELECT@
+@SG_STATS@ lst;
+#if RE4DC_SG_SELECT_LEAN
+@SG_PLANE@;
+@SG_COEF_LEAN@
+@SG_SELECT_LEAN@
+@BOX_MASK_LEAN@
+#endif
+}
+static unsigned re4dc_sg_lean_on;
+namespace cone {static const void* pkg;static const std::uint8_t* rec;static const float* tab2;
+static unsigned tests,rejects,vskip,picks_dropped;}
+struct MeshDraw {@PICK@;};
+@SELECTOR@;
+struct Input {
+    unsigned part_index,cull,inside,use_abs,groups,use_groups,cone_on,marked,pass,sky;
+    float near_distance,far_distance,cull_far,lod_scale;
+    float mvq[12],projection[7],viewport[6],uv_offset[2];
+};
+static_assert(sizeof(Input)==164);
+int main(int argc,char** argv){
+    assert(argc==4);
+    std::ifstream file(argv[1],std::ios::binary);
+    std::vector<char> bytes((std::istreambuf_iterator<char>(file)),{});
+    assert(bytes.size()>=20+sizeof(Input));
+    std::uint32_t header[5];std::memcpy(header,bytes.data(),20);
+    assert(header[0]==0x31505357U && header[1]==sizeof(Input));
+    assert(bytes.size()==20+sizeof(Input)+header[2]+header[3]+header[4]);
+    Input input;std::memcpy(&input,bytes.data()+20,sizeof(input));
+    const auto* package_data=reinterpret_cast<const std::uint8_t*>(bytes.data()+20+sizeof(input));
+    const auto* group_data=package_data+header[2];const auto* cone_data=group_data+header[3];
+    re4dc::room::MeshPackage package;
+    assert(package.adopt(package_data,header[2],true,true));
+    Re4dcModelPart part{};part.cull=input.cull;
+    std::memcpy(part.projection,input.projection,sizeof(part.projection));
+    std::memcpy(part.viewport,input.viewport,sizeof(part.viewport));
+    lean::side_setup(input.projection,input.viewport);
+    float am[9];lean::abs9(input.mvq,am);
+    float cone_table[64];for(unsigned i=0;i<64;++i)cone_table[i]=float(i)*.01f;
+    cone::pkg=input.cone_on?&package:nullptr;cone::rec=cone_data;cone::tab2=cone_table;
+    re4dc_sg_lean_on=unsigned(std::strtoul(argv[2],nullptr,10));
+    const unsigned initial_skipped=unsigned(std::strtoul(argv[3],nullptr,10));
+    lean::st.skipped=initial_skipped;
+    ScenerySelector selector{part,package,input.mvq,input.near_distance,input.cull_far};
+    selector.part_index=input.part_index;selector.lod_scale=input.lod_scale;
+    selector.lean_inside=input.inside!=0;selector.lean_am=input.use_abs?am:nullptr;
+    selector.sg=input.use_groups?group_data:nullptr;selector.sg_groups=input.groups;
+    const unsigned key[6]={1,2,32,32,input.pass,input.cull};selector.ps2=key;
+    MeshDraw::Pick picks[320];std::memset(picks,0xa5,sizeof(picks));
+    const unsigned eligible=selector.chunk_ok();assert(eligible);
+    const unsigned count=selector.chunk_select(picks);assert(count<=320);
+    const bool classified_inside=stats.clusters_visible && lean::st.cl_inside==stats.clusters_visible;
+    if(input.inside || classified_inside){
+        assert(lean::st.sg_tests==0);
+        assert(fixture_box_mask_calls==0 && fixture_sg_select_calls==0);
+    }
+    std::fwrite(&count,sizeof(count),1,stdout);std::fwrite(&eligible,sizeof(eligible),1,stdout);
+    std::fwrite(&stats,sizeof(stats),1,stdout);std::fwrite(&lean::st,sizeof(lean::st),1,stdout);
+    std::fwrite(&lean::lst,sizeof(lean::lst),1,stdout);
+    const unsigned cone_stats[]={cone::tests,cone::rejects,cone::vskip,cone::picks_dropped};
+    std::fwrite(cone_stats,sizeof(cone_stats),1,stdout);std::fwrite(picks,sizeof(picks),1,stdout);
+    std::fprintf(stderr,"prefetches=%u box_masks=%u sg_selects=%u inside=%u\n",prefetches,
+        fixture_box_mask_calls,fixture_sg_select_calls,input.inside?1U:classified_inside?2U:0U);
+}

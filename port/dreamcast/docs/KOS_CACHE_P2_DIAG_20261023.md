@@ -1,0 +1,40 @@
+# Whole-cache P2 diagnostic (default off), 2026-10-23
+
+`KOS_CACHE_P2_DIAG=1` requires `KOS_CACHE_P2=1`. It prepares an instrumented copy of the pinned helper inside OBJDIR, adds one observer object, and enables three guarded ui_bridge lifecycle hooks. The original patch, shared KOS source/archive, production recipe and other audit knobs are unchanged. Use a fresh OBJDIR for each arm. DIAG=0 returns the original helper bytes exactly, adds no observer object/flags and removes the hooks during preprocessing. Full target object/image identity is still a qualification gate.
+
+## What is observed
+
+Every whole helper invocation increments calls plus full512 or ram256 after the original complete cache sweep. The latter imply cache-array capacity coverage of 16384 or 8192 bytes per call; they are **not the caller request length or actual dirty writeback bytes**. The helper has no length argument. All counter accesses use an uncached P2 alias of two isolated aligned cache lines (64B). No counter write precedes the sweep, so a dirty startup P1 BSS alias cannot write older counter data over the observer stores. The C observer never reads/resets those counters through P1. Before its first safe snapshot it writes back the aligned64B range once, under its existing IRQ lock, then uses P2. This is necessary because KOS enables cache before zeroing BSS through P1: without it, a first snapshot preceding any whole helper can see stale backing RAM. The64B inline range path issues two OCBWB lines, not a whole-helper call. Dirty startup zeros become coherent; if a helper already ran, its clean P1 aliases do not overwrite real P2 increments. The first-report barrier adds observer overhead only, does not manufacture a whole-helper frequency event, and is tested with cold dirty aliases and warm prior-helper counts. Removing it is a failing negative control.
+
+TMU2 reads are direct P4 accesses, not timer API calls. The generated helper changes no timer register, CCR or original SR save/restore ordering. Timer sources are separately hash-pinned when DIAG=1: kernel/arch/dreamcast/kernel/timer.c, arch/timer.h and kos/timer.h at KOS 804b3195. The actual driver primes TMU2 with reload 12468720 and prescaler 0, starts it through TSTR bit 2, and services underflow in a separate 1Hz ISR. The hardware counter progresses while interrupts are masked; the driver's own uptime reader handles the pending underflow flag explicitly. No interrupt callback, function call, wait, stack, allocation, hash, log or filesystem access is added inside the helper.
+
+A valid sample requires running TMU2, pinned reload/prescaler and in-range counters at both endpoints; neither endpoint may have UNF set and the counter must not increase. Any underflow, including one whose ISR cannot run while SR is masked, rejects timing. Pending underflow at entry is also rejected. Stopped/reconfigured/out-of-range clocks increment unavailable; underflow/reversed counts increment rejected. Every invocation still increments frequency/mode counters. No modular subtraction guesses a duration across rollover. A multi-period stall retains UNF while IRQs are masked and is rejected too. Four 32-bit counter overflows and total-tick 64-bit overflow are flagged (also mode counter wraps); affected totals cannot qualify as complete counts/durations.
+
+**Timing scope is an observed masked subinterval, not exact total IRQ-blocked latency.** The first counter read follows the original SR mask; the second follows the original eight-NOP exit gap. Thus the window includes the original sweep and start-validation observer instructions. It excludes the first clock-address/read setup and the final counter aggregation/clock validation/SR-restore tail. Observer overhead is not subtracted or calibrated. Direct P4 clock reads, uncached state traffic, the new code/data layout and periodic snapshots/logging perturb this diagnostic build. The snapshot itself creates an additional short IRQ-masked section. No source instruction count is a measured duration.
+
+Raw ticks are authoritative for the observed window. Source-derived nominal rate is 12468720Hz (about 80.2007ns/tick; the KOS public API rounds to 80ns). Quantization is one tick per endpoint, and oscillator calibration is not established here. A conversion `ticks * 1000000 / 12468720` is nominal microseconds, **MODELLED for Flycast/model evidence**; it is not console acceptance or a measurement of the omitted tail. With timed=0 there is no duration sample; report unavailable/rejected counts instead of zero latency. Valid-sample max/mean exclude all rejected/unavailable calls and must be labeled that way.
+
+## Attribution and log protocol
+
+At the beginning of re4dc_room_enter, the previous boot/transition interval is snapshotted and the live room interval begins. At the end of successful re4dc_room_leave, its counters are reported and the context becomes room ffff/transition. Loads outside those bounds stay explicitly unattributed; never assign them to the previous/next room speculatively. During a live room, re4dc_room_cycle_poll checkpoints every 150 room frames, so a single-room warp emits data without needing to leave. This is an interval count, not a wall-time rate. Each checkpoint resets the counters under irq_disable, restores the caller's unmasked SR, then formats/logs. Unsafe already-masked hooks defer reporting and increment sticky hook_reject; room mismatches are flagged and move to unattributed context. Those cases must not qualify silently.
+
+Two log lines share room/seq (format buffers stay below the actual 256-byte logger limit, checked with all fields at UINT32_MAX):
+
+```
+cachep2diag room=0101 phase=live seq=N frame=F calls=C timed=T rejected=R unavailable=U overflow=O hook_reject=H
+cachep2diag time room=0101 seq=N ticks=HHHHHHHH:LLLLLLLL max=M full512=A ram256=B capacity=HHHHHHHH:LLLLLLLL
+```
+
+Sum disjoint complete room/seq pairs across a captured interval. Require C=T+R+U and C=A+B, overflow=0 and hook_reject=0. Require both lines, no duplicate pairs, and source/programme/executable binding from the gate receipt. Sum 64-bit ticks and capacity by combining high/low words; capacity must equal 16384*A+8192*B. Keep boot and transition totals separate. Report timed/calls coverage and all rejected/unavailable counts alongside valid-sample mean/max. Missing/no log data is NODATA, never zero calls. Reports must retain an interrupted final interval as incomplete; polling does not guarantee that a guest's last partial interval was flushed.
+
+## Controls and remaining gates
+
+RAM-only command (no SDK compilation/guest):
+
+```
+PYTHONDONTWRITEBYTECODE=1 python3 port/dreamcast/tools/d367/kos_cache_audit/test_cache_diag.py
+```
+
+Ten control groups execute the actual generated ASM source in a deliberately narrow instruction model and compile the actual C++ observer with IRQ/logger stubs. They check normal/OC-RAM coverage, three link addresses and four initial SR values, safe counter ordering/aliases, clock stopped/reconfigured/out-of-range/underflow/reverse cases, counter carries/wraps, source-OFF identity, Make default-off object absence/dependency rejection, timer-source pin rejection, room/unknown/deferred logging, first-snapshot cold/warm coherence, and maximum formatter lengths. P1 execution, missing SR masking, cached state aliases and disabled UNF-check mutations are detected. The model checks semantics/displacement ranges, not actual emitted opcodes, instruction timing, bus effects or physical hardware.
+
+Before using a report: root must review source, allocate target compilation, verify DIAG0 source/object/image identity against the existing P2 build, inspect actual helper opcodes/branch/literal ranges/register ABI/SR/CCR/gap, bind all four KOS replacement objects in the final link, price code/BSS/layout and observer overhead, then allocate exact diagnostic guests. Per-room frequency and raw valid-window ticks require fresh receipts; no such duration/frequency results exist yet. The four audit fixes remain a single qualification unit and no recipe has been enabled here.

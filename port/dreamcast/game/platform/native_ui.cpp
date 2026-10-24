@@ -1,8 +1,18 @@
+#include "../world_scratch.h"
+#if RE4DC_WORLD_SCRATCH
+extern "C" unsigned re4dc_ps2_mesh_room();
+#endif
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
 extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_ROOM_ARENA)
 #endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+extern "C" volatile unsigned re4dc_vram_key_crc,re4dc_vram_key_fnv;   // vram_pages.cpp (WORLD_METER VRAMFAIL lines)
+#endif
 #if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
 #include "include/resident_list_cache.h"
+#endif
+#if defined(RE4DC_EM35_DIAG) && RE4DC_EM35_DIAG
+#include "include/em35_diag.h"
 #endif
 #if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
 extern "C" void re4dc_bfc_feed(unsigned list,const void* data,unsigned bytes);
@@ -35,6 +45,11 @@ extern "C" unsigned re4dc_lbx_rows_last;  // letterbox_clip.cpp (MCHECK_SAFE, mc
 #include <type_traits>
 #if defined(RE4DC_MCHECK_PT) && RE4DC_MCHECK_PT
 #include "include/ta_pt_audit.h"
+#endif
+// FX_QUEUE_MARGIN=<bytes> (mendezfx.mk; render only, default 8192 = unchanged; #41 / #55): the frame-queue bytes an
+// effect sprite leaves free for the world's translucent parts that come after it (on top of the UI reserve).
+#ifndef RE4DC_FX_QUEUE_MARGIN
+#define RE4DC_FX_QUEUE_MARGIN 8192U
 #endif
 #ifndef RE4DC_WORLD_AUTOSORT
 #define RE4DC_WORLD_AUTOSORT 0
@@ -117,6 +132,21 @@ void re4dc_kos_heap_state_cpp(unsigned* a, unsigned* b, unsigned* c) { re4dc_kos
 #ifndef RE4DC_TA_GUARD
 #define RE4DC_TA_GUARD 0
 #endif
+#ifndef RE4DC_SCENERY_SUBMIT_BATCH
+#define RE4DC_SCENERY_SUBMIT_BATCH 0
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH != 0 && RE4DC_SCENERY_SUBMIT_BATCH != 1
+#error SCENERY_SUBMIT_BATCH must be 0 or 1
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH
+#if !RE4DC_TA_DIRECT || RE4DC_PS2_WORLD_HDR_CACHE != 1
+#error SCENERY_SUBMIT_BATCH needs TA_DIRECT=1 and PS2_WORLD_HDR_CACHE=1
+#endif
+#if RE4DC_PS2_PVS || RE4DC_WORLD_SCRATCH || RE4DC_TA_GUARD
+#error SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_GUARD
+#endif
+#include "include/scenery_submit_batch.h"
+#endif
 #ifndef RE4DC_PERF_HUD
 #define RE4DC_PERF_HUD 0
 #endif
@@ -193,6 +223,9 @@ static unsigned ta_vertex_bytes=RE4DC_TA_VERTBUF_KB*1024U;   // TA_HEADROOM: the
 // and reused while the entry lives; the per-frame UI path only writes vertices.
 #ifndef RE4DC_UI_HEADERS
 #define RE4DC_UI_HEADERS 0
+#endif
+#ifndef RE4DC_UI_DRAW_LEAN
+#define RE4DC_UI_DRAW_LEAN 0
 #endif
 #ifndef RE4DC_NATIVE_MES
 #define RE4DC_NATIVE_MES 0 // message glyphs: see re4dc_ui_glyph()
@@ -409,6 +442,9 @@ extern "C" void re4dc_ovl_watch(const char* where);
 #else
 #define OVLW(x) ((void)0)
 #endif
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+extern "C" void re4dc_vram_ring_upload(std::uint32_t crc, std::uint32_t bytes, const void* package);
+#endif
 #if defined(RE4DC_OVL_GUARD) && RE4DC_OVL_GUARD
 extern "C" void re4dc_ovl_guard(const char* where);
 #define OVLG(x) re4dc_ovl_guard(x)
@@ -599,6 +635,11 @@ constexpr unsigned kViewWords=sizeof(Re4dcModelPart)/sizeof(unsigned);
 constexpr unsigned kViewMasks=(kViewWords+31)/32;
 static_assert(sizeof(Re4dcModelPart)%sizeof(unsigned)==0);
 struct DeferredPart { DeferredPart* next;DeferredLighting* lighting;unsigned changed[kViewMasks]; };
+#if defined(RE4DC_ESP_SETUP_LEAN) && RE4DC_ESP_SETUP_LEAN && RE4DC_EFFECT_SPRITES && \
+    !RE4DC_TA_GUARD && !RE4DC_TA_HASH && !RE4DC_TA_BIN_DIAG && !RE4DC_TA_MATERIAL_DIAG
+#define RE4DC_ESP_SETUP_BATCH 1
+void fx_setup_forget();
+#endif
 Re4dcModelPart* deferred_basis=nullptr;
 #if RE4DC_BRIDGE_LEAN
 // Same word-difference encoding. The 4-byte memcpy()s above were libcalls on
@@ -746,6 +787,9 @@ unsigned avd_queue_epoch;
 void actor_fade_queue_reset();
 #endif
 void reset_deferred(){
+#if defined(RE4DC_ESP_SETUP_BATCH)
+    fx_setup_forget(); // queue addresses can be reused after any reset, even within a frame
+#endif
     AVD_EVENT(Reset,nullptr,nullptr,0); // Caller reason intentionally unknown.
 #if RE4DC_ACTOR_TRANSACTION_DIAG
     ++avd_queue_epoch;
@@ -1940,7 +1984,16 @@ bool ta_double=true,ta_double_wanted=false;
 #if defined(RE4DC_LETTERBOX_CLIP) && RE4DC_LETTERBOX_CLIP
 void stream_send(const void* data,unsigned bytes);
 #endif
+#if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
+unsigned pvs23_scene_epoch=0; // observation identity only; no renderer ownership
+#endif
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+extern "C" void re4dc_bf_room_update();   // native_static.cpp (BACKFACE_ROOMS, lane fix-hideout23)
+#endif
 void stream_open() { RE4DC_TAIL_GPU_SCOPE(open);
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+    re4dc_bf_room_update();
+#endif
 #if RE4DC_PACE_CATCHUP
     // A movie presents its own picture (re4dc_ui_movie_present_now) even inside a skipped tick.
 #if RE4DC_ROUTE_MOVIES
@@ -2003,6 +2056,9 @@ void stream_open() { RE4DC_TAIL_GPU_SCOPE(open);
     // Do not retain the main thread's SQ mutex across source task dispatch or
     // file/audio services. Each synchronous packet transfer reacquires it.
     sq_unlock();stream_scene=true;
+#if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
+    if(!++pvs23_scene_epoch)++pvs23_scene_epoch;
+#endif
 #if defined(RE4DC_LETTERBOX_CLIP) && RE4DC_LETTERBOX_CLIP
 #if RE4DC_TA_MATERIAL_DIAG
     { tamat::Scope source_scope(3); re4dc_lbx_open(int(stream_list),stream_send); }
@@ -2375,6 +2431,23 @@ void speed_draw(){
         static const std::uint32_t kPhaseColour[kPhaseRows]={0xe080ff80U,0xe0ffff60U,0xe0ffffffU,0xe0ff9060U,0xe0ffb090U,
             0xe0a0d0ffU,0xe0c0c0c0U,0xe0e0a0ffU,0xe080ffffU,0xe0909090U,0xe0ffffffU};
         for(int k=0;k<kPhaseRows;++k)hud_number(b,500,SY+k*18,phase_v[k],k!=1,kPhaseColour[k]);
+#endif
+#if defined(RE4DC_EM35_DIAG) && RE4DC_EM35_DIAG
+        // EM35_DIAG=1 (em35_diag.h; diagnostic): one row per live Mendez half (top orange: whole body, below pink: upper
+        // body), left to right: r_no_0 x100 + r_no_1, r_no_2, motion index, motion frame, seconds on this step with a
+        // still motion frame, game frames since his last move() (0 or 1 = he is being moved).
+        for(unsigned t=0;t<2;++t){
+            const Re4dcEm35Diag& d=re4dc_em35_diag[t];
+            if(!d.live)continue;
+            const float y=SY+120+t*18;
+            const std::uint32_t col=t?0xe0ff80ffU:0xe0ffa040U;
+            hud_number(b,40,y,(d.r>>24)*100+((d.r>>16)&0xFF),false,col);
+            hud_number(b,100,y,(d.r>>8)&0xFF,false,col);
+            hud_number(b,160,y,d.mot,false,col);
+            hud_number(b,220,y,unsigned(d.frame10>0?d.frame10:0),true,col);
+            hud_number(b,280,y,d.same/3,true,col);
+            hud_number(b,340,y,re4dc_em35_diag_polls-d.last_poll,false,col);
+        }
 #endif
 #if defined(RE4DC_PMC_ROW) && RE4DC_PMC_ROW
         {   // PMC_ROW: event code (25 D-miss freeze, 24 I-miss freeze, 4 / 5 OC read / write misses, 8 IC misses), value
@@ -3304,6 +3377,11 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #else
     for(auto& e:entries) if(e.valid && e.key==key) {RE4DC_TOUCH(e);RE4DC_GAD_HIT(e.key);RE4DC_PROFILE_COUNT(TextureHits,1);RE4DC_TEXCHK_BIND(e);return &e;}
 #endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    // WORLD_METER: a failed texture-RAM allocation from here on names this key in its VRAMFAIL log line (vram_pages.cpp).
+    struct VramKeyScope{VramKeyScope(const Key& k){re4dc_vram_key_crc=k.crc;re4dc_vram_key_fnv=k.fnv;}
+                        ~VramKeyScope(){re4dc_vram_key_crc=0;re4dc_vram_key_fnv=0;}} vram_key_scope(key);
+#endif
 #if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
     if(fx_resident_only){++fx_resident_skips;
 #if RE4DC_VRAM_ROOM_LOG
@@ -3613,6 +3691,9 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #endif
     re4dc_log("native UI: upload %s vram=%u\n",ok?"ok":"FAILED",slot->package.vram_bytes());
     OVLW("upload");
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+    re4dc_vram_ring_upload(slot->key.crc, ok ? slot->package.vram_bytes() : 0xFFFFFFFFU, &slot->package);
+#endif
     OVLG("upload");
 #if RE4DC_TEX_CHECK
     const char* const texchk_why=slot->package.error()?slot->package.error():"upload";
@@ -4880,6 +4961,10 @@ void room_change_retire(){
 }  // namespace
 #endif
 extern "C" void re4dc_ui_retire_room(){
+#if RE4DC_WORLD_SCRATCH
+    // Close admission immediately; the final synchronous borrower restores mode.
+    re4dc_world_scratch_cancel();
+#endif
 #if defined(RE4DC_FX_TEX_POOL) && RE4DC_FX_TEX_POOL
     for(unsigned i=0;i<kTextureCount;++i)fx_pool_pin[i]=false;   // FX_TEX_POOL: the next room fills its own pool
     fx_pool_bytes=0;fx_pool_full=0;
@@ -5101,6 +5186,10 @@ const pvr_poly_hdr_t& glyph_header(unsigned bank){
 }
 // One run: a header when the palette bank changes, then a 4-vertex strip per glyph (a strip
 // after an end-of-strip vertex reuses the last header).
+#if RE4DC_UI_DRAW_LEAN
+// Ordinary quads do not need this run's 2080-byte packet buffer in their stack frame.
+__attribute__((noinline))
+#endif
 void glyph_draw_run(unsigned first,unsigned count){
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(3);
@@ -5123,12 +5212,27 @@ void glyph_draw_run(unsigned first,unsigned count){
         const float layer=overlay_depth();
         constexpr float kH=float(kGlyphAtlasH);
         const float u0=float((g.cell&7)*32)/256.0f,v0=float((g.cell>>3)*32)/kH;
+#if RE4DC_UI_DRAW_LEAN
+        // The queue already holds exact quarter-pixel endpoints. Emit from scalars instead
+        // of writing and rereading four temporary arrays for this four-vertex strip.
+        const float x0=g.x0*0.25f,x1=g.x1*0.25f,y0=g.y0*0.25f,y1=g.y1*0.25f;
+        const float u1=u0+g.cw/256.0f,v1=v0+g.ch/kH;
+        auto vertex=[&](float x,float y,float u,float v,unsigned flags) __attribute__((always_inline)) {
+            pvr_vertex_t& p=buf[n++];
+            p.flags=flags;p.x=RE4DC_UI_X(x);p.y=RE4DC_UI_Y(y);p.z=layer;p.u=u;p.v=v;p.argb=g.argb;p.oargb=0;
+        };
+        vertex(x0,y0,u0,v0,PVR_CMD_VERTEX);
+        vertex(x1,y0,u1,v0,PVR_CMD_VERTEX);
+        vertex(x0,y1,u0,v1,PVR_CMD_VERTEX);
+        vertex(x1,y1,u1,v1,PVR_CMD_VERTEX_EOL);
+#else
         const float x[4]={g.x0*0.25f,g.x1*0.25f,g.x0*0.25f,g.x1*0.25f},y[4]={g.y0*0.25f,g.y0*0.25f,g.y1*0.25f,g.y1*0.25f};
         const float u[4]={u0,u0+g.cw/256.0f,u0,u0+g.cw/256.0f},v[4]={v0,v0,v0+g.ch/kH,v0+g.ch/kH};
         for(unsigned k=0;k<4;++k){
             pvr_vertex_t& p=buf[n++];
             p.flags=k==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;p.x=RE4DC_UI_X(x[k]);p.y=RE4DC_UI_Y(y[k]);p.z=layer;p.u=u[k];p.v=v[k];p.argb=g.argb;p.oargb=0;
         }
+#endif
         ++glyph_drawn;
     }
     flush();
@@ -5333,6 +5437,9 @@ unsigned pace_skipped_frames;   // skipped iterations: frame + this = iterations
 // re4dc_ui_begin; the frame is not begun (frame_ready=false: every emission entry returns before
 // any work, no texture is resolved or uploaded, no preload, no fog), `frame` does not advance.
 extern "C" void re4dc_ui_begin_skip(){
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_boundary(1,re4dc_ps2_mesh_room());
+#endif
 #if RE4DC_SS_UI_ORDER
     ui_order=false;quads_flushed=0;
 #endif
@@ -5346,10 +5453,16 @@ extern "C" void re4dc_ui_begin_skip(){
     stream_aborted=false;stream_model_bytes=0;
 #endif
     nquad=0;model_used=0;frame_ready=false;pace_skip_frame=true;++pace_skipped_frames;
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_begin(re4dc_ps2_mesh_room());
+#endif
     re4dc_prepare_model_assets();
 }
 // Skipped iteration: nothing to present; the previous picture stays. Frame boundary only.
 extern "C" void re4dc_ui_end_frame_skip(){
+#if RE4DC_WORLD_SCRATCH
+    Re4dcWorldScratchFrameEnd scratch_frame_end{&stream_aborted};
+#endif
     re4dc_pcs_frame(frame+pace_skipped_frames);
 }
 #endif
@@ -5513,7 +5626,13 @@ extern "C" void re4dc_ui_door_mark(){if(door_ui_mark==~0U)door_ui_mark=nquad;doo
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
 #include "include/native_ui_source_world.inc"
 #endif
+#if defined(RE4DC_FX_ROOM_SPILL_FORCE) && RE4DC_FX_ROOM_SPILL_FORCE
+extern "C" void* re4dc_model_deferred_storage(unsigned* bytes);
+#endif
 extern "C" void re4dc_ui_begin(){
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_boundary(0,re4dc_ps2_mesh_room());
+#endif
 #if RE4DC_KOS_HEAP_CHECK
     re4dc_heap_check();
 #endif
@@ -5550,6 +5669,9 @@ extern "C" void re4dc_ui_begin(){
     hud_begin_prev=hud_begin;hud_begin=timer_us_gettime64();
 #endif
     re4dc_model_preparation_frame();
+#if defined(RE4DC_FX_ROOM_SPILL_FORCE) && RE4DC_FX_ROOM_SPILL_FORCE
+    {unsigned force_bytes=0;(void)re4dc_model_deferred_storage(&force_bytes);}   // FX_ROOM_SPILL_FORCE (test only): spill cell at the room's first frame
+#endif
 #if RE4DC_D349_RENDERER_STACK
     if(deferred_first)re4dc_missing("source pose queue crossed frame reset");
     reset_deferred();source_draws_finished=false;desired_list=PVR_LIST_OP_POLY;
@@ -5572,7 +5694,19 @@ extern "C" void re4dc_ui_begin(){
 #endif
     if(model_diagnostic==1 && frame%120==0)
         re4dc_log("native model DIAGNOSTIC boundary: frame=%u previous_bytes=%u committed_parts=%u invalid=%u resource=%u overflow=%u presented=%u\n",frame,model_used*32,model_parts,model_invalid,model_resource,model_overflow,model_presented);
+#if defined(RE4DC_FX_QUEUE_LOG) && RE4DC_FX_QUEUE_LOG
+    {   // FX_QUEUE_LOG (mendezfx.mk, log only): per 120 frames the peak UI quads of a frame and the peak sprites.
+        static unsigned fql_quads,fql_fx,fql_used;
+        fql_quads=std::max(fql_quads,nquad);fql_fx=std::max(fql_fx,fx_count);
+        fql_used=std::max(fql_used,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
+        if(frame%120==0){re4dc_log("fxqueue: frame=%u ui_quads_peak=%u quad_bytes=%u storage=%u fx_peak=%u queue_used_peak=%u dropped=%u\n",
+            frame,fql_quads,unsigned(sizeof(Re4dcUiQuad)),unsigned(sizeof(frame_storage)),fql_fx,fql_used,fx_dropped);fql_quads=fql_fx=fql_used=0;}
+    }
+#endif
     nquad=0;model_used=0;++frame;
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_begin(re4dc_ps2_mesh_room());
+#endif
 #if RE4DC_TEX_CHECK
     texchk::frame_sweep();
 #endif
@@ -5753,13 +5887,27 @@ static void ui_draw_quad(unsigned i){
 #else
         pvr_poly_hdr_t header;pvr_poly_compile(&header,&c);
 #endif
+#if RE4DC_UI_DRAW_LEAN
+        alignas(32) pvr_vertex_t commands[5];std::uint32_t count;
+#else
         alignas(32) pvr_vertex_t commands[5]{};std::uint32_t count;
+#endif
         re4dc::render::begin_pvr_packet(commands,count,header);
         pvr_vertex_t* v=commands+count;const unsigned order[]={0,1,3,2};
         const float layer=overlay_depth();
+#if RE4DC_UI_DRAW_LEAN
+        const float cover_w=float(RE4DC_COVER_W(handles[i]->package,q.image.width)),
+                    texture_w=float(t.width),
+                    cover_h=float(RE4DC_COVER_H(handles[i]->package,q.image.height)),
+                    texture_h=float(t.height);
+#endif
         for(unsigned n=0;n<4;++n){unsigned j=order[n];v[n].flags=n==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
             v[n].x=RE4DC_UI_X(q.xy[2*j]);v[n].y=RE4DC_UI_Y(q.xy[2*j+1]);v[n].z=layer;
+#if RE4DC_UI_DRAW_LEAN
+            v[n].u=q.uv[2*j]*cover_w/texture_w;v[n].v=q.uv[2*j+1]*cover_h/texture_h;v[n].argb=q.color;v[n].oargb=0;}
+#else
             v[n].u=q.uv[2*j]*RE4DC_COVER_W(handles[i]->package,q.image.width)/t.width;v[n].v=q.uv[2*j+1]*RE4DC_COVER_H(handles[i]->package,q.image.height)/t.height;v[n].argb=q.color;}
+#endif
 #if RE4DC_PVR_STREAM
         stream_send(commands,sizeof(commands));
 #else
@@ -5843,13 +5991,27 @@ extern "C" void re4dc_ui_present(){
 #else
         pvr_poly_hdr_t header;pvr_poly_compile(&header,&c);
 #endif
+#if RE4DC_UI_DRAW_LEAN
+        alignas(32) pvr_vertex_t commands[5];std::uint32_t count;
+#else
         alignas(32) pvr_vertex_t commands[5]{};std::uint32_t count;
+#endif
         re4dc::render::begin_pvr_packet(commands,count,header);
         pvr_vertex_t* v=commands+count;const unsigned order[]={0,1,3,2};
         const float layer=overlay_depth();
+#if RE4DC_UI_DRAW_LEAN
+        const float cover_w=float(RE4DC_COVER_W(handles[i]->package,q.image.width)),
+                    texture_w=float(t.width),
+                    cover_h=float(RE4DC_COVER_H(handles[i]->package,q.image.height)),
+                    texture_h=float(t.height);
+#endif
         for(unsigned n=0;n<4;++n){unsigned j=order[n];v[n].flags=n==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
             v[n].x=RE4DC_UI_X(q.xy[2*j]);v[n].y=RE4DC_UI_Y(q.xy[2*j+1]);v[n].z=layer;
+#if RE4DC_UI_DRAW_LEAN
+            v[n].u=q.uv[2*j]*cover_w/texture_w;v[n].v=q.uv[2*j+1]*cover_h/texture_h;v[n].argb=q.color;v[n].oargb=0;}
+#else
             v[n].u=q.uv[2*j]*RE4DC_COVER_W(handles[i]->package,q.image.width)/t.width;v[n].v=q.uv[2*j+1]*RE4DC_COVER_H(handles[i]->package,q.image.height)/t.height;v[n].argb=q.color;}
+#endif
 #if RE4DC_PVR_STREAM
         stream_send(commands,sizeof(commands));
 #else
@@ -6032,6 +6194,9 @@ extern "C" void re4dc_ui_present(){
 }
 
 extern "C" void re4dc_ui_end_frame(int present){
+#if RE4DC_WORLD_SCRATCH
+    Re4dcWorldScratchFrameEnd scratch_frame_end{&stream_aborted};
+#endif
 #if defined(RE4DC_FX_CORE_TEX_PREP) && RE4DC_FX_CORE_TEX_PREP
     fxCoreFinish();
 #endif
@@ -6044,6 +6209,9 @@ extern "C" void re4dc_ui_end_frame(int present){
 #endif
     re4dc_model_draw_plan_frame(frame);
 #if RE4DC_PVR_STREAM
+#if RE4DC_WORLD_SCRATCH
+    if(!frame_ready || stream_aborted)re4dc_world_scratch_cancel();
+#endif
     if(!frame_ready)return;
 #if RE4DC_ROUTE_MOVIES
     const bool movie_shown=movie_texture && movie_picture;
@@ -6597,6 +6765,10 @@ extern "C" unsigned re4dc_model_input_count(){return model_input;}  // ENC_CENSU
 
 extern "C" int re4dc_model_packet_streaming(){return RE4DC_PVR_STREAM;}
 extern "C" void re4dc_model_packet_abort(){
+#if RE4DC_WORLD_SCRATCH
+    // Close admission immediately; the final synchronous borrower restores mode.
+    re4dc_world_scratch_cancel();
+#endif
 #if RE4DC_PVR_STREAM
     RE4DC_WHD_ABORT(2,__builtin_return_address(0),0);
     // Previous chunks may already be in TA. Never present an incomplete model:
@@ -6691,10 +6863,19 @@ extern "C" int re4dc_model_direct_begin(const Re4dcModelPart* p,Re4dcModelDirect
     (void)p;(void)out;return 0;
 #endif
 }
+// WORLD_SUBMIT_END_IMPLEMENTATION
+#if RE4DC_SCENERY_SUBMIT_BATCH
+// The same logical end for ordinary and batched world parts. Only the caller
+// decides whether to release the physical SQ mutex before this accounting.
+static void model_direct_account(unsigned vertices){
+#else
 extern "C" void re4dc_model_direct_end(unsigned vertices){
+#endif
 #if RE4DC_TA_DIRECT
+#if !RE4DC_SCENERY_SUBMIT_BATCH
     if(!direct_open)return;
     sq_unlock();direct_open=false;
+#endif
     if(vertices>32767)re4dc_missing("native direct part exceeded the store-queue window");
     ++direct_parts;direct_slots+=vertices;
 #if RE4DC_TA_GUARD
@@ -6707,6 +6888,26 @@ extern "C" void re4dc_model_direct_end(unsigned vertices){
     (void)vertices;
 #endif
 }
+#if RE4DC_SCENERY_SUBMIT_BATCH
+extern "C" void re4dc_model_direct_end(unsigned vertices){
+    if(!direct_open)return;
+    sq_unlock();direct_open=false;
+    model_direct_account(vertices);
+}
+extern "C" void re4dc_ps2_world_batch_close(Re4dcWorldSubmitBatch* batch){
+    // A nested-begin refusal does not revoke the current part's ownership.
+    if(batch && batch->sq && !direct_open){sq_unlock();batch->sq=nullptr;}
+}
+extern "C" void re4dc_ps2_world_direct_end_batch(unsigned vertices,Re4dcWorldSubmitBatch* batch){
+    if(!batch || !batch->sq){re4dc_model_direct_end(vertices);return;}
+    if(!direct_open)return;
+    direct_open=false;
+    // The original end reports overflow after unlocking. Keep that boundary.
+    if(vertices>32767U)re4dc_ps2_world_batch_close(batch);
+    model_direct_account(vertices);
+}
+#endif
+// WORLD_SUBMIT_END_IMPLEMENTATION_END
 #if RE4DC_MV_SHADOWS
 // mv_shadow.cpp, inside stream_close only: one caster's volume (headers and 64-byte triangles, 32-byte multiples).
 extern "C" int re4dc_ui_mv_send(const void* data,unsigned bytes){
@@ -7242,6 +7443,12 @@ namespace {
 // (header + textured sprite body). The drain sends it in OT order between model parts.
 DeferredLighting* const kSpriteTag=reinterpret_cast<DeferredLighting*>(1);
 constexpr unsigned kSpriteNode=(sizeof(DeferredPart)+31)&~31U,kSpritePacket=sizeof(pvr_poly_hdr_t)+sizeof(pvr_sprite_txr_t);
+#if defined(RE4DC_ESP_SETUP_BATCH)
+// Guard admission and packet diagnostics retain their original full packets.
+// A body-only node reserves the same bytes, so queue pressure admits the same
+// sprites. Its unused header line is neither written nor read.
+DeferredLighting* const kSpriteBodyTag=reinterpret_cast<DeferredLighting*>(9);
+#endif
 #if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
 DeferredLighting* const kLineTag=reinterpret_cast<DeferredLighting*>(3);
 constexpr unsigned kLinePacket=sizeof(pvr_poly_hdr_t)+4*sizeof(pvr_vertex_t);
@@ -7252,11 +7459,25 @@ extern "C" unsigned re4dc_fog_enabled();
 #if defined(RE4DC_ESP_SPRITE_FAST) && RE4DC_ESP_SPRITE_FAST
 // ESP_SPRITE_FAST: the compiled header is a pure function of the texture (format, size, VRAM address) and the
 // sprite's blend and screen flag; consecutive sprites mostly share them, so the last one is kept.
+#if defined(RE4DC_ESP_SETUP_BATCH)
+struct FxHeaderKey{unsigned fmt,w,h;const void* txr;unsigned char src,dst,screen;
+    const DeferredPart* owner;unsigned color;
+};
+alignas(32)
+#else
 struct FxHeaderKey{unsigned fmt,w,h;const void* txr;unsigned char src,dst,screen;};
+#endif
 FxHeaderKey fx_hdr_key{~0U,0,0,nullptr,0,0,0};
 alignas(32) pvr_poly_hdr_t fx_hdr_cache;
+#if defined(RE4DC_ESP_SETUP_BATCH)
+void fx_setup_forget(){fx_hdr_key.owner=nullptr;}
 #endif
+#endif
+#if defined(RE4DC_ESP_SETUP_BATCH)
+void fx_send(unsigned char* packet,bool screen,bool body_only=false){
+#else
 void fx_send(unsigned char* packet,bool screen){
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(4);
 #endif
@@ -7268,7 +7489,12 @@ void fx_send(unsigned char* packet,bool screen){
 #else
     (void)screen;
 #endif
+#if defined(RE4DC_ESP_SETUP_BATCH)
+    if(body_only)stream_send(packet+sizeof(pvr_poly_hdr_t),sizeof(pvr_sprite_txr_t));
+    else stream_send(packet,kSpritePacket);
+#else
     stream_send(packet,kSpritePacket);
+#endif
 }
 #if defined(RE4DC_EFFECT_HAZE_LEAN) && (RE4DC_EFFECT_HAZE_LEAN & 4)
 // EFFECT_HAZE_LEAN bit 4 (STUDY2 M2): a PS2 haze sprite (esp_sub.cpp sets pad 1) as a regular octagon inscribed in
@@ -7316,13 +7542,31 @@ void oct_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
 #if RE4DC_FX_SPRITE_TRIM || RE4DC_FX_SPRITE_TRIM_DIAG
 #include "include/fx_sprite_trim.inc"   // fxtrim.mk
 #endif
+#if defined(RE4DC_ESP_SETUP_BATCH)
+bool fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out,
+               const DeferredPart* previous=nullptr){
+#else
 void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
+#endif
     const auto& t=e->package.textures()[0];
     auto* h=reinterpret_cast<pvr_poly_hdr_t*>(out);
 #if defined(RE4DC_ESP_SPRITE_FAST) && RE4DC_ESP_SPRITE_FAST
     const unsigned fmt=re4dc::texture::pvr_format(t);const void* txr=e->package.pvr_texture(0);
+#if defined(RE4DC_ESP_SETUP_BATCH)
+    const bool same=fx_hdr_key.fmt==fmt && fx_hdr_key.w==t.width && fx_hdr_key.h==t.height && fx_hdr_key.txr==txr &&
+        fx_hdr_key.src==s.src && fx_hdr_key.dst==s.dst && fx_hdr_key.screen==s.screen;
+    // A queued call passes its predecessor, or its own fresh node for a head.
+    // Other callers (including RTT capture) pass null: do not subtract before
+    // their standalone output buffer. Four arguments fit the SH-4 call ABI.
+    const auto* owner=previous?reinterpret_cast<const DeferredPart*>(out-kSpriteNode):nullptr;
+    // Queue allocations never reuse/retag an admitted node before reset, which
+    // forgets owner. Provenance alone suffices; do not fetch the preceding node.
+    const bool body_only=previous && previous!=owner && fx_hdr_key.owner==previous && same && fx_hdr_key.color==s.color;
+    if(!same){
+#else
     if(fx_hdr_key.fmt!=fmt || fx_hdr_key.w!=t.width || fx_hdr_key.h!=t.height || fx_hdr_key.txr!=txr ||
        fx_hdr_key.src!=s.src || fx_hdr_key.dst!=s.dst || fx_hdr_key.screen!=s.screen){
+#endif
         pvr_sprite_cxt_t c;pvr_sprite_cxt_txr(&c,PVR_LIST_TR_POLY,fmt,RE4DC_TSP_W(t),RE4DC_TSP_H(t),
                                               const_cast<void*>(txr),PVR_FILTER_BILINEAR);
         c.gen.culling=PVR_CULLING_NONE;
@@ -7335,7 +7579,12 @@ void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
         pvr_sprite_compile(&fx_hdr_cache,&c);
         fx_hdr_key=FxHeaderKey{fmt,RE4DC_TSP_W(t),RE4DC_TSP_H(t),txr,(unsigned char)s.src,(unsigned char)s.dst,(unsigned char)s.screen};
     }
+#if defined(RE4DC_ESP_SETUP_BATCH)
+    if(!body_only){*h=fx_hdr_cache;h->argb=s.color;h->oargb=0;}
+    fx_hdr_key.owner=owner;fx_hdr_key.color=s.color;
+#else
     *h=fx_hdr_cache;h->argb=s.color;h->oargb=0;
+#endif
 #else
     pvr_sprite_cxt_t c;pvr_sprite_cxt_txr(&c,PVR_LIST_TR_POLY,re4dc::texture::pvr_format(t),RE4DC_TSP_W(t),RE4DC_TSP_H(t),
                                           e->package.pvr_texture(0),PVR_FILTER_BILINEAR);
@@ -7355,6 +7604,9 @@ void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
     b->cx=s.x[2];b->cy=s.y[2];b->cz=s.z[2];b->dx=s.x[3];b->dy=s.y[3];b->dummy=0;
     b->auv=PVR_PACK_16BIT_UV(s.u[0]*su,s.v[0]*sv);b->buv=PVR_PACK_16BIT_UV(s.u[1]*su,s.v[1]*sv);
     b->cuv=PVR_PACK_16BIT_UV(s.u[2]*su,s.v[2]*sv);
+#if defined(RE4DC_ESP_SETUP_BATCH)
+    return body_only;
+#endif
 }
 }
 #if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
@@ -7475,7 +7727,7 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
 #endif
             ++fx_direct;++fx_count;return 1;
         }
-        const unsigned required=kSpriteNode+kFxOctPacket,margin=8192;
+        const unsigned required=kSpriteNode+kFxOctPacket,margin=RE4DC_FX_QUEUE_MARGIN;
         unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
         if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
             if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
@@ -7516,7 +7768,7 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
 #endif
             ++fx_direct;++fx_count;return 1;
         }
-        const unsigned required=kSpriteNode+kOctPacket,margin=8192;
+        const unsigned required=kSpriteNode+kOctPacket,margin=RE4DC_FX_QUEUE_MARGIN;
         unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
         if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
             if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
@@ -7541,7 +7793,7 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
         stream_select(PVR_LIST_TR_POLY);fx_send(packet,s->screen);
         ++fx_direct;++fx_count;return 1;
     }
-    const unsigned required=kSpriteNode+kSpritePacket,margin=8192;
+    const unsigned required=kSpriteNode+kSpritePacket,margin=RE4DC_FX_QUEUE_MARGIN;
     unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
@@ -7550,8 +7802,14 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
         storage=deferred_spill;top=&deferred_spill_top;
     }
     *top-=required;
+#if defined(RE4DC_ESP_SETUP_BATCH)
+    auto* node=new(storage+*top) DeferredPart{};node->changed[0]=s->screen;
+    const bool body_only=fx_packet(*s,e,storage+*top+kSpriteNode,deferred_last?deferred_last:node);
+    node->lighting=body_only?kSpriteBodyTag:kSpriteTag;
+#else
     auto* node=new(storage+*top) DeferredPart{};node->lighting=kSpriteTag;node->changed[0]=s->screen;
     fx_packet(*s,e,storage+*top+kSpriteNode);
+#endif
     if(deferred_last)deferred_last->next=node;else deferred_first=node;
     deferred_last=node;++deferred_count;
     AVD_EVENT(Enqueue,node,nullptr,unsigned(uintptr_t(node->lighting)));
@@ -7568,6 +7826,9 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
 #endif
 #if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
 #include "include/native_effect_strip21.inc"
+#endif
+#if defined(RE4DC_FLASHLIGHT_POOL) && RE4DC_FLASHLIGHT_POOL
+#include "include/native_flashlight_pool.inc"
 #endif
 #if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
 // Esp19's source line becomes one untextured, colour-interpolated strip in
@@ -7608,7 +7869,7 @@ extern "C" int re4dc_effect_line(const Re4dcEffectLine* s){
         AVD_EVENT(Direct,nullptr,nullptr,3);
         stream_select(PVR_LIST_TR_POLY);stream_send(packet,kLinePacket);++fx_direct;return 1;
     }
-    const unsigned required=kSpriteNode+kLinePacket,margin=8192;
+    const unsigned required=kSpriteNode+kLinePacket,margin=RE4DC_FX_QUEUE_MARGIN;
     unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
@@ -8235,15 +8496,126 @@ extern "C" int re4dc_ui_texture_resident(unsigned crc,unsigned fnv){
 #if RE4DC_SCENERY_PIECE_STATE
 extern "C" { std::uint32_t* re4dc_ps2_piece_slot=nullptr; } // native_static.cpp sets it around a PS2 part's bind
 #endif
+#if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
+// A refused/closed/discarded image supplies no usable receipt identity.
+extern "C" int re4dc_pvs23_scene(unsigned out[2]){
+#if RE4DC_TA_DIRECT && RE4DC_D349_RENDERER_STACK && RE4DC_PVR_STREAM
+    if(!out || !frame_ready || stream_aborted || !stream_scene)return 0;
+    out[0]=frame;out[1]=pvs23_scene_epoch;return pvs23_scene_epoch!=0;
+#else
+    (void)out;return 0;
+#endif
+}
+// Read-only proof prerequisite. Never loads, pins, allocates, evicts, updates
+// header slots, selects a list or publishes packets. False means draw normally.
+// True is only current material eligibility, never proof of eventual submission.
+// The proof caller must separately establish source/LOD/clip eligibility and
+// successful covering geometry submission before using any dependent cut.
+extern "C" int re4dc_pvs23_opaque_ready(const unsigned k[6],unsigned minimum_scratch){
+#if RE4DC_TA_DIRECT && RE4DC_D349_RENDERER_STACK && RE4DC_PVR_STREAM && !RE4DC_SCENERY_PIECE_STATE
+    if(!k || k[4]!=0U || (k[5]!=0U && k[5]!=2U) || !minimum_scratch ||
+       !frame_ready || stream_aborted || direct_open || draining_parts || source_draws_finished || !model_packets)return 0;
+    const unsigned slots=kModelPacketBytes/32U;
+    if(model_used>=slots || minimum_scratch>slots-model_used-1U)return 0;
+#if RE4DC_PS2_INTERIOR_CULL==2
+    if(re4dc_ps2_check_header)return 0;
+#endif
+#if defined(RE4DC_SKY_FAR) || defined(RE4DC_LOOK_TOGGLE)
+    if(re4dc_ps2_sky_header)return 0;
+#endif
+    if(stream_scene){
+        if(stream_list!=PVR_LIST_OP_POLY || (stream_closed_lists&(1U<<unsigned(PVR_LIST_OP_POLY))))return 0;
+    }else if(desired_list!=PVR_LIST_OP_POLY)return 0;
+#if RE4DC_UI_POLY_ORDER
+    if(ui_order)return 0;
+#endif
+#if RE4DC_PS2_WORLD_TRANSITION_OWNER
+    if(!re4dc_source_world_binding_valid())return 0;
+#endif
+#if RE4DC_PS2_WORLD_R11F_OWNER
+    if(!re4dc_r11f_binding_valid())return 0;
+#endif
+    const Key key{k[0],k[1]};const Entry* resident=nullptr;
+    for(const auto& entry:entries)if(entry.valid && entry.key==key){
+        if(resident)return 0; // ambiguous cache identity is not a proof
+        resident=&entry;
+    }
+    if(!resident || resident->frame!=frame || !resident->package.upload_complete() ||
+       resident->package.header().texture_count!=1U)return 0;
+    const auto& texture=resident->package.textures()[0];
+    const auto address=resident->package.pvr_texture(0);
+    // Exact dimensions only: padded, dropped or adapted representations need
+    // their own qualification. RGB565 is intrinsically opaque.
+    if(!address || texture.width!=k[2] || texture.height!=k[3] ||
+       texture.format!=re4dc::texture::kRgb565 ||
+       (texture.flags&(re4dc::texture::kAlpha|re4dc::texture::kBinaryAlpha|re4dc::texture::kTopDrop)))return 0;
+    pvr_poly_cxt_t c;
+    pvr_poly_cxt_txr(&c,PVR_LIST_OP_POLY,re4dc::texture::pvr_format(texture),
+        RE4DC_TSP_W(texture),RE4DC_TSP_H(texture),address,PVR_FILTER_BILINEAR);
+    c.gen.culling=k[5]==2U?PVR_CULLING_CW:PVR_CULLING_NONE;
+    c.depth.comparison=PVR_DEPTHCMP_GEQUAL;c.depth.write=PVR_DEPTHWRITE_ENABLE;
+    c.blend.src=PVR_BLEND_ONE;c.blend.dst=PVR_BLEND_ZERO;
+    c.txr.env=PVR_TXRENV_MODULATEALPHA;c.txr.alpha=PVR_TXRALPHA_DISABLE;c.txr.uv_clamp=PVR_UVCLAMP_NONE;
+#if RE4DC_NATIVE_FOG && RE4DC_PS2_WORLD_FOG_SOURCE
+    const unsigned fog=re4dc_ps2_world_fog()?1U:0U;
+    c.gen.fog_type=fog?PVR_FOG_TABLE:PVR_FOG_DISABLE;
+#else
+    const unsigned fog=0;
+#if RE4DC_NATIVE_FOG
+    c.gen.fog_type=PVR_FOG_TABLE;
+#endif
+#endif
+    pvr_poly_hdr_t expected;pvr_poly_compile(&expected,&c);
+#if RE4DC_PS2_WORLD_HDR_CACHE
+    if(RE4DC_PS2_HDR_ON){
+        const unsigned size=k[2]|k[3]<<16,mode=k[5]<<2|fog<<4|0x100U;
+        const unsigned set=(k[0]^(k[1]>>7)^(k[1]<<3)^(k[5]*0x3c1U))&(kPs2HdrSets-1U);
+        for(const auto& slot:ps2_hdr[set])if(slot.mode==mode && slot.crc==k[0] && slot.fnv==k[1] && slot.size==size){
+            if(slot.entry!=resident || slot.texture!=address || std::memcmp(slot.words,&expected,16))return 0;
+        }
+    }
+#endif
+    return 1;
+#else
+    (void)k;(void)minimum_scratch;return 0;
+#endif
+}
+#endif
+
+// WORLD_SUBMIT_BEGIN_IMPLEMENTATION
+#if RE4DC_SCENERY_SUBMIT_BATCH
+// One implementation for the ordinary and batched entry points: the cache,
+// material gates, header modifiers and accounting below remain shared.
+extern "C" __attribute__((noinline,noclone)) int re4dc_ps2_world_direct_begin_batch(const unsigned* k,Re4dcModelDirect* out,Re4dcWorldSubmitBatch* batch){
+    struct FailedBegin {
+        Re4dcWorldSubmitBatch* batch;bool accepted=false;
+        ~FailedBegin(){if(!accepted)re4dc_ps2_world_batch_close(batch);}
+    } failed_begin{batch};
+#else
 extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* out){
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    re4dc_ps2_world_batch_close(batch);
+#endif
     tamat::Scope source_scope(1);
 #endif
 #if RE4DC_TA_DIRECT
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    // A claimed group's validity walk can log and mutate failure state itself.
+    // Its ordinary unlocked entry boundary must precede the predicate too.
+    if(batch && batch->sq && re4dc_source_world_group_claimed())re4dc_ps2_world_batch_close(batch);
+    if(!re4dc_source_world_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_source_world_binding_failed();return 0;}
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return 0;}
 #endif
+#endif
     if(direct_open){RE4DC_WHD(1);re4dc_missing("native direct part nested");return 0;}
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    // ensure_model_storage may allocate and log only when the slab is absent.
+    if(!model_packets)re4dc_ps2_world_batch_close(batch);
+#endif
 #if RE4DC_WORLD_HOLE_DIAG
     whd_why=(!k || !out || k[4]>2 || k[5]>2)?10U:!frame_ready?2U:stream_aborted?3U:!ensure_model_storage()?4U:
             model_used+32>kModelPacketBytes/32?5U:0U;
@@ -8253,11 +8625,19 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
        !ensure_model_storage() || model_used+32>kModelPacketBytes/32)return 0;
 #endif
 #if RE4DC_UI_POLY_ORDER && RE4DC_SS_UI_ORDER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(ui_order && quads_flushed<nquad){re4dc_ps2_world_batch_close(batch);ui_order_flush();}
+#else
     if(ui_order && quads_flushed<nquad)ui_order_flush();
+#endif
     if(stream_aborted)return 0;
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_r11f_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_r11f_binding_failed();return 0;}
+#else
     if(!re4dc_r11f_binding_valid()){re4dc_r11f_binding_failed();return 0;}
+#endif
 #endif
     const Key key{k[0],k[1]};
 #if RE4DC_WORLD_RECT21
@@ -8274,6 +8654,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
     };
 #endif
 #if RE4DC_PS2_WORLD_PREFLIGHT_DIAG
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    re4dc_ps2_world_batch_close(batch);
+#endif
     sourceWorldDiagBind(key); // before a cache hit or a load, and before SQ lock
 #endif
 #if RE4DC_PS2_WORLD_HDR_CACHE
@@ -8289,6 +8672,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         hdr_size=k[2]|k[3]<<16;hdr_mode=k[4]|k[5]<<2|hdr_fog<<4|0x100U;
         hdr_set=(k[0]^(k[1]>>7)^(k[1]<<3)^(k[4]*0x9e5U)^(k[5]*0x3c1U))&(kPs2HdrSets-1U);
         if(frame-ps2_hdr_log>=600U){
+#if RE4DC_SCENERY_SUBMIT_BATCH
+            re4dc_ps2_world_batch_close(batch);
+#endif
             ps2_hdr_log=frame;
 #if RE4DC_PS2_WORLD_HDR_CACHE==2
             re4dc_log("PS2HDR frame=%u hits=%u fills=%u checked=%u mismatched=%u\n",frame,ps2_hdr_hits,ps2_hdr_fills,ps2_hdr_checked,ps2_hdr_bad);
@@ -8330,15 +8716,33 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         {constexpr bool pin=false;RE4DC_TOUCH(*handle);} // load()'s hit bookkeeping (pin=false)
         const unsigned pass=k[4];
         const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        if(!stream_scene || stream_list!=list
+#if RE4DC_UI_POLY_ORDER
+           || ui_order
+#endif
+        )re4dc_ps2_world_batch_close(batch);
+#endif
         stream_select(list);
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_source_world_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_source_world_binding_failed();return 0;}
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return 0;}
+#endif
 #endif
 
 #if RE4DC_PS2_WORLD_R11F_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        if(!re4dc_r11f_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_r11f_binding_failed();return 0;}
+#else
         if(!re4dc_r11f_binding_valid()){re4dc_r11f_binding_failed();return 0;}
 #endif
+#endif
 #if RE4DC_WORLD_AUTOSORT
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        if(!world_autosort)re4dc_ps2_world_batch_close(batch);
+#endif
         world_sort_begin();
 #endif
         if(stream_aborted){RE4DC_WHD(8);return 0;}
@@ -8352,11 +8756,19 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
             const Re4dcUiImage image{&key,nullptr,k[2],k[3],5,0,0};
             Entry* const ref_handle=load(image,false,&key);
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_source_world_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_source_world_binding_failed();return 0;}
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return 0;}
+#endif
 #endif
 
 #if RE4DC_PS2_WORLD_R11F_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+            if(!re4dc_r11f_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_r11f_binding_failed();return 0;}
+#else
             if(!re4dc_r11f_binding_valid()){re4dc_r11f_binding_failed();return 0;}
+#endif
 #endif
             bool bad=ref_handle!=handle;
             if(!bad){
@@ -8404,15 +8816,32 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
         RE4DC_GAD_HIT(handle->key);
     model_pending=model_used+count;model_handle=handle;
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        if(!stream_scene){re4dc_ps2_world_batch_close(batch);stream_open();}
+#else
         if(!stream_scene)stream_open();
+#endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_source_world_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_source_world_binding_failed();return 0;}
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return 0;}
+#endif
 #endif
 
 #if RE4DC_PS2_WORLD_R11F_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        if(!re4dc_r11f_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_r11f_binding_failed();return 0;}
+#else
         if(!re4dc_r11f_binding_valid()){re4dc_r11f_binding_failed();return 0;}
 #endif
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        auto* sq=batch && batch->sq?batch->sq:static_cast<std::uint32_t*>(static_cast<void*>(sq_lock((void*)PVR_TA_INPUT)));
+        if(batch)batch->sq=sq;
+#else
         auto* sq=static_cast<std::uint32_t*>(static_cast<void*>(sq_lock((void*)PVR_TA_INPUT)));
+#endif
         const auto* words=reinterpret_cast<const std::uint32_t*>(model_packets+model_used);
         for(unsigned i=0;i<8;++i)sq[i]=words[i];
 #if RE4DC_TA_HASH
@@ -8431,6 +8860,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #else
         out->u_scale=out->v_scale=1;
 #endif
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        failed_begin.accepted=true;
+#endif
         return 1;
     }
 #endif
@@ -8438,13 +8870,24 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #if RE4DC_WORLD_HOLE_DIAG
     whd_load_why="other";
 #endif
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    re4dc_ps2_world_batch_close(batch);
+#endif
     Entry* handle=load(image,false,&key);
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_source_world_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_source_world_binding_failed();return 0;}
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return 0;}
+#endif
 #endif
 
 #if RE4DC_PS2_WORLD_R11F_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_r11f_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_r11f_binding_failed();return 0;}
+#else
     if(!re4dc_r11f_binding_valid()){re4dc_r11f_binding_failed();return 0;}
+#endif
 #endif
     if(!handle || !frame_ready || stream_aborted || direct_open){RE4DC_WHD(!handle?6U:!frame_ready?2U:stream_aborted?3U:1U);++model_texture_rejects;return 0;}
     const auto& t=handle->package.textures()[0];
@@ -8455,15 +8898,33 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #endif
     const unsigned pass=k[4];
     const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!stream_scene || stream_list!=list
+#if RE4DC_UI_POLY_ORDER
+       || ui_order
+#endif
+    )re4dc_ps2_world_batch_close(batch);
+#endif
     stream_select(list);
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_source_world_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_source_world_binding_failed();return 0;}
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return 0;}
+#endif
 #endif
 
 #if RE4DC_PS2_WORLD_R11F_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_r11f_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_r11f_binding_failed();return 0;}
+#else
     if(!re4dc_r11f_binding_valid()){re4dc_r11f_binding_failed();return 0;}
 #endif
+#endif
 #if RE4DC_WORLD_AUTOSORT
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!world_autosort)re4dc_ps2_world_batch_close(batch);
+#endif
     world_sort_begin();
 #endif
     if(stream_aborted){RE4DC_WHD(8);return 0;}
@@ -8518,15 +8979,32 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
     RE4DC_GAD_HIT(handle->key);
     model_pending=model_used+count;model_handle=handle;
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!stream_scene){re4dc_ps2_world_batch_close(batch);stream_open();}
+#else
     if(!stream_scene)stream_open();
+#endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_source_world_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_source_world_binding_failed();return 0;}
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return 0;}
+#endif
 #endif
 
 #if RE4DC_PS2_WORLD_R11F_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    if(!re4dc_r11f_binding_valid()){re4dc_ps2_world_batch_close(batch);re4dc_r11f_binding_failed();return 0;}
+#else
     if(!re4dc_r11f_binding_valid()){re4dc_r11f_binding_failed();return 0;}
 #endif
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    auto* sq=batch && batch->sq?batch->sq:static_cast<std::uint32_t*>(static_cast<void*>(sq_lock((void*)PVR_TA_INPUT)));
+    if(batch)batch->sq=sq;
+#else
     auto* sq=static_cast<std::uint32_t*>(static_cast<void*>(sq_lock((void*)PVR_TA_INPUT)));
+#endif
     const auto* words=reinterpret_cast<const std::uint32_t*>(model_packets+model_used);
     for(unsigned i=0;i<8;++i)sq[i]=words[i];
 #if RE4DC_TA_HASH
@@ -8545,11 +9023,20 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #else
     out->u_scale=out->v_scale=1;
 #endif
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    failed_begin.accepted=true;
+#endif
     return 1;
 #else
     (void)k;(void)out;return 0;
 #endif
 }
+#if RE4DC_SCENERY_SUBMIT_BATCH
+extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* out){
+    return re4dc_ps2_world_direct_begin_batch(k,out,nullptr);
+}
+#endif
+// WORLD_SUBMIT_BEGIN_IMPLEMENTATION_END
 #if RE4DC_WORLD_HOLE_DIAG
 // WORLD_HOLE_DIAG: the last refusal of re4dc_ps2_world_direct_begin (0 none) and load()'s reason text; cleared.
 extern "C" unsigned re4dc_whd_abort(void** ra,unsigned* q){
@@ -8638,11 +9125,20 @@ extern "C" void re4dc_model_finish_source_draws(){
             deferred_first=deferred_first->next;stream_send(packet,bytes);continue;
         }
 #endif
+#if defined(RE4DC_ESP_SETUP_BATCH)
+        if(deferred_first->lighting==kSpriteTag || deferred_first->lighting==kSpriteBodyTag){
+            auto* packet=reinterpret_cast<unsigned char*>(deferred_first)+kSpriteNode;
+            const bool screen=deferred_first->changed[0]!=0;
+            const bool body_only=deferred_first->lighting==kSpriteBodyTag;
+            deferred_first=deferred_first->next;fx_send(packet,screen,body_only);continue;
+        }
+#else
         if(deferred_first->lighting==kSpriteTag){
             auto* packet=reinterpret_cast<unsigned char*>(deferred_first)+kSpriteNode;
             const bool screen=deferred_first->changed[0]!=0;
             deferred_first=deferred_first->next;fx_send(packet,screen);continue;
         }
+#endif
 #if RE4DC_FX_SPRITE_TRIM
         if(deferred_first->lighting==kFxOctTag){   // FX_SPRITE_TRIM octagon (fx_sprite_trim.inc)
 #if RE4DC_TA_MATERIAL_DIAG
@@ -8742,7 +9238,35 @@ extern "C" void* re4dc_model_static_lighting_storage(unsigned* bytes){
 
 extern "C" const Re4dcNativeFrameStats* re4dc_native_frame_stats(){return &completed_frame;}
 
+#if defined(RE4DC_FX_ROOM_SPILL_KB) && RE4DC_FX_ROOM_SPILL_KB
+// FX_ROOM_SPILL_KB=<n> (mendezfx.mk; render only, #41 / #55): the frame queue's spill (asked for only once frame_storage is
+// full) becomes an <n> KiB heap-4 room cell instead of the 8 KiB model-slab tail. It is allocated on the room's first
+// overflow (rooms that never overflow pay nothing) under the native-static reserve rule, kept for the room and freed
+// with the room's cells at room leave; a refused allocation falls back to the slab tail.
+extern "C" void* re4dc_static_alloc(unsigned bytes);
+extern "C" int re4dc_room4_state(unsigned* generation,unsigned* cells,unsigned* bytes,unsigned* stale,unsigned* refused);
+namespace fxroomspill {
+unsigned char* cell=nullptr;unsigned generation=~0U;bool tried=false;unsigned allocs=0,refusals=0;
+}
+#endif
 extern "C" void* re4dc_model_deferred_storage(unsigned* bytes){
+#if defined(RE4DC_FX_ROOM_SPILL_KB) && RE4DC_FX_ROOM_SPILL_KB
+    {
+        unsigned g,c,b,st,rf;
+        if(re4dc_room4_state(&g,&c,&b,&st,&rf)){
+            if(fxroomspill::generation!=g){fxroomspill::generation=g;fxroomspill::cell=nullptr;fxroomspill::tried=false;}
+            if(!fxroomspill::cell && !fxroomspill::tried){
+                fxroomspill::tried=true;
+                auto* p=static_cast<unsigned char*>(re4dc_static_alloc(RE4DC_FX_ROOM_SPILL_KB*1024U+32U));
+                if(p){fxroomspill::cell=reinterpret_cast<unsigned char*>((reinterpret_cast<std::uintptr_t>(p)+31U)&~std::uintptr_t(31));++fxroomspill::allocs;}
+                else ++fxroomspill::refusals;
+                re4dc_log("fx room spill: room=%03x generation=%u kib=%u %s allocs=%u refusals=%u\n",unsigned(re4dc_ps2_mesh_room()),g,
+                    unsigned(RE4DC_FX_ROOM_SPILL_KB),p?"ok":"refused",fxroomspill::allocs,fxroomspill::refusals);
+            }
+            if(fxroomspill::cell){*bytes=RE4DC_FX_ROOM_SPILL_KB*1024U;return fxroomspill::cell;}
+        }
+    }
+#endif
     *bytes=model_packets?kModelDeferredSpillBytes:0;
     return *bytes?reinterpret_cast<unsigned char*>(model_packets)+kModelPacketBytes+kModelPreparationBytes+kModelStaticLightBytes:nullptr;
 }
@@ -8817,6 +9341,9 @@ extern "C" int re4dc_ui_movie_cabin_complete(unsigned generation,const void* tex
     if(draining_parts)return 0;
     reset_deferred();source_draws_finished=true;
 #endif
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_cancel();
+#endif
     re4dc_ps2_world_movie_discard();stream_aborted=true;
 #if RE4DC_PVR_STREAM
     if(stream_scene)stream_close(false);
@@ -8854,6 +9381,9 @@ extern "C" int re4dc_ui_movie_handoff_ready(){
     if(draining_parts)return 0; // executing readers cannot be discarded
     reset_deferred();source_draws_finished=true;
 #endif
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_cancel();
+#endif
     re4dc_ps2_world_movie_discard();stream_aborted=true;
 #if RE4DC_PVR_STREAM
     if(stream_scene)stream_close(false);
@@ -8878,6 +9408,10 @@ extern "C" int re4dc_ui_movie_handoff_ready(){
 #endif
 #if RE4DC_ROUTE_MOVIES
 extern "C" int re4dc_ui_movie_open(unsigned width,unsigned height){
+#if RE4DC_WORLD_SCRATCH
+    // Close admission immediately; the final synchronous borrower restores mode.
+    re4dc_world_scratch_cancel();
+#endif
 #if RE4DC_CABIN_SOURCE
     MovieCabinUiScope owner;if(!owner.held || movie_cabin_ui_epoch==~0u)return 0;
 #endif
@@ -8914,6 +9448,10 @@ extern "C" int re4dc_ui_movie_open(unsigned width,unsigned height){
 }
 // The previous scene must have finished sampling the texture before rows change.
 extern "C" int re4dc_ui_movie_upload_begin(){
+#if RE4DC_WORLD_SCRATCH
+    // Close admission immediately; the final synchronous borrower restores mode.
+    re4dc_world_scratch_cancel();
+#endif
     if(!movie_texture)return 0;
 #if RE4DC_PVR_STREAM
     // A movie-owned presentation interrupts a source frame: its open (hidden
@@ -8991,6 +9529,10 @@ extern "C" int re4dc_ui_movie_present_now(){
 // own frames, under their UI quads (the action prompt), until switched off.
 extern "C" void re4dc_ui_movie_background(int on){movie_background=on!=0;}
 extern "C" int re4dc_ui_movie_close(){
+#if RE4DC_WORLD_SCRATCH
+    // Close admission immediately; the final synchronous borrower restores mode.
+    re4dc_world_scratch_cancel();
+#endif
 #if RE4DC_CABIN_SOURCE
     MovieCabinUiScope owner;if(!owner.held)return 0;
 #endif
@@ -9101,17 +9643,35 @@ extern "C" int re4dc_ui_part_key(const Re4dcModelPart* p,unsigned* crc,unsigned*
 extern "C" void __real_pvr_poly_compile(pvr_poly_hdr_t* dst,const pvr_poly_cxt_t* src);
 extern "C" void __real_pvr_sprite_compile(pvr_sprite_hdr_t* dst,const pvr_sprite_cxt_t* src);
 extern "C" void __real_pvr_poly_mod_compile(pvr_poly_mod_hdr_t* dst,const pvr_poly_cxt_t* src);
+#if defined(RE4DC_HDR_ALIGN_PROBE) && RE4DC_HDR_ALIGN_PROBE
+// HDR_ALIGN_PROBE (lane mipfault22, diagnostic): KOS compiles headers with movca.l, which allocates the whole
+// 32-byte line without reading it; a header dst that is not 32-byte aligned leaves stale bytes in the line on
+// console (emulators zero/keep memory). Logs each distinct caller once.
+static void hdr_align_probe(const void* dst,const char* kind,void* pr) {
+    static void* seen[16];static unsigned n;
+    if((reinterpret_cast<std::uintptr_t>(dst)&31U)==0)return;
+    for(unsigned i=0;i<n;++i)if(seen[i]==pr)return;
+    if(n<16)seen[n++]=pr;
+    std::printf("re4dc-hdr-misaligned: %s dst=%p pr=%p\n",kind,dst,pr);
+}
+#define RE4DC_HDR_PROBE(d,k) hdr_align_probe(d,k,__builtin_return_address(0))
+#else
+#define RE4DC_HDR_PROBE(d,k) ((void)0)
+#endif
 extern "C" void __wrap_pvr_poly_compile(pvr_poly_hdr_t* dst,const pvr_poly_cxt_t* src) {
+    RE4DC_HDR_PROBE(dst,"poly");
     pvr_poly_cxt_t c=*src;
     if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
     __real_pvr_poly_compile(dst,&c);
 }
 extern "C" void __wrap_pvr_sprite_compile(pvr_sprite_hdr_t* dst,const pvr_sprite_cxt_t* src) {
+    RE4DC_HDR_PROBE(dst,"sprite");
     pvr_sprite_cxt_t c=*src;
     if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
     __real_pvr_sprite_compile(dst,&c);
 }
 extern "C" void __wrap_pvr_poly_mod_compile(pvr_poly_mod_hdr_t* dst,const pvr_poly_cxt_t* src) {
+    RE4DC_HDR_PROBE(dst,"mod");
     pvr_poly_cxt_t c=*src;
     if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
     if(c.txr2.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr2.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;

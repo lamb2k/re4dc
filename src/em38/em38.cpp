@@ -122,8 +122,8 @@ static inline void EmRoutineSet(cEm* em, int r0, int r1, int r2, int r3)
 }
 
 // Routine test / store on the cModel status word (em10.cpp EM_RTN / EM_RTN_SET).
-#define EM_RTN(em, fc, fd) (((em)->stat & 0xFFFF0000) == (u32) (((fc) << 24) | ((fd) << 16)))
-#define EM_RTN_SET(em, fc, fd) ((em)->stat = (u32) (((fc) << 24) | ((fd) << 16)))
+#define EM_RTN(em, fc, fd) (((em)->stat & STAT_BE(0xFFFF0000)) == STAT_BE((u32) (((fc) << 24) | ((fd) << 16))))
+#define EM_RTN_SET(em, fc, fd) ((em)->stat = STAT_BE((u32) (((fc) << 24) | ((fd) << 16))))
 
 // int stores through a reference: the following pG load stays below them (em3a).
 static inline void IntSet(int& x, int v)

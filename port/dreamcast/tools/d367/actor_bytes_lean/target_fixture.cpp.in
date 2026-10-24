@@ -1,0 +1,54 @@
+// Included after the unmodified complete actor TU. Only the marked production
+// setup/color fragments are extracted below. Unchanged dynamic lighting calls
+// are observed edges; no geometry arithmetic or TA output is priced here.
+extern "C" void fixture_part_edge(const void*);
+extern "C" void fixture_color_edge(const void*, unsigned);
+extern "C" void fixture_light_edge(void*, const void*, const void*, unsigned);
+extern "C" {
+Re4dcModelPart fixture_part;
+Frame fixture_frame;
+Lights fixture_lights;
+alignas(32) pvr_vertex_t fixture_vertices[kMaxVertices];
+alignas(32) u8 fixture_outcodes[kMaxVertices];
+alignas(32) u8 fixture_colors[kMaxVertices * 4];
+alignas(32) u16 fixture_records[kMaxVertices * 4];
+unsigned fixture_counts[32], fixture_kind;
+}
+
+extern "C" void fixture_prepare(unsigned kind) {
+    fixture_kind = kind;
+    fixture_part = Re4dcModelPart{};
+    fixture_frame = Frame{};
+    fixture_lights.constant = kind < 4;
+    fixture_lights.fast = true;
+    fixture_lights.constant_rgb = 0x002468acU;
+#if RE4DC_LEON_LIGHT_HEADROOM
+    fixture_lights.half_post = (kind & 1U) != 0;
+#endif
+    fixture_part.alpha_state = 255 | ((kind == 2 || kind == 3) ? 256 : 0);
+    fixture_part.colors = fixture_colors;
+    for (unsigned i = 0; i < kMaxVertices; ++i) {
+        fixture_colors[i * 4 + 3] = u8(i * 7);
+        fixture_records[4 * i] = fixture_records[4 * i + 1] = fixture_records[4 * i + 2] = 0;
+        fixture_records[4 * i + 3] = u16(i);
+        fixture_vertices[i].argb = 0;
+    }
+    for (unsigned i = 0; i < 32; ++i) fixture_counts[i] = 32;
+}
+
+@FUNCTIONS@
+
+extern "C" const std::uintptr_t fixture_layout[] = {
+    1, sizeof(Part), sizeof(Frame), sizeof(Lights),
+    reinterpret_cast<std::uintptr_t>(&fixture_part),
+    reinterpret_cast<std::uintptr_t>(&fixture_frame),
+    reinterpret_cast<std::uintptr_t>(&fixture_lights),
+    reinterpret_cast<std::uintptr_t>(fixture_vertices),
+    reinterpret_cast<std::uintptr_t>(fixture_counts),
+    offsetof(Part,cache), offsetof(Part,primed),
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+    offsetof(Part,flat_primed),
+#else
+    0xffffffffU,
+#endif
+};

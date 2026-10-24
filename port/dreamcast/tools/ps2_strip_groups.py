@@ -26,7 +26,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('mesh'); ap.add_argument('sidecar'); ap.add_argument('out_mesh'); ap.add_argument('out_groups')
     ap.add_argument('--groups', type=int, default=4); ap.add_argument('--report')
+    ap.add_argument('--preserve-order', action='store_true',
+                    help='write metadata only, preserve all mesh bytes; OUT.re4mesh must be -')
     a = ap.parse_args()
+    if a.preserve_order:
+        from d367.visibility23.metadata import write_metadata
+        write_metadata(a)
+        return
     G = a.groups
     assert 1 <= G <= 8
     m = bytearray(open(a.mesh, 'rb').read())

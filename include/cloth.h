@@ -58,6 +58,9 @@ int ClothTexSetUp(void* tpl, GXTexObj* tex, int no, GXTlutObj* tlut);
 int PullCloth(Cloth** out);
 void ClothDraw();
 void clothTrans(Cloth* pCL);
+#if defined(RE4DC_CLOTH_NATIVE) && RE4DC_CLOTH_NATIVE
+void ClothDrawNow();   // cloth.cpp: CLOTH_NATIVE draw on a coarse image
+#endif
 }
 
 #endif

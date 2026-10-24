@@ -1,0 +1,1377 @@
+{
+  "status": "PASS",
+  "baseline": "ea969bb241f77291d2ca43d706c9dc2d1226ee76",
+  "scope": "Public-source host ASan/UBSan failure injection and complete Make-derived Test22 public SH4 translation-unit builds; no linked image or game execution.",
+  "compiler": "sh-elf-g++ (GCC) 15.2.0",
+  "runtime_source_sha256": {
+    "src/game/esp.cpp": "e0b0b39540eab8d3b46e90c2685604ad35f1eb2d8ec5026129dbf9a80a114bd2",
+    "src/st1/r117.cpp": "b1830e22c353f5c7efa669a15ab2d4aaafbff061b839688cc79a5fb30f72a9c1",
+    "port/dreamcast/game/esppool.mk": "fbe98591f1beeadfc4192dbf88d7d6dc321dc7642b88696afec4de6eb7a6b13d"
+  },
+  "source_test_bodies_sha256": {
+    "extracted_pool_bodies_sha256": "6858e97ed51b1ad783ef14eea2546cd1c3ac26df56ef08e7e0de05f133eec6c8",
+    "extracted_owner_bodies_sha256": "3555536970c4a0f859ae564d77069ba2bc2359610e6873cb206dd553b36b54fc",
+    "extracted_buffer_destructor_sha256": "90540d547721805d8089ee721740a7bccb6739dfdb3ba164fb7f26e7e20d189b",
+    "extracted_r117_bodies_sha256": "dc845fa59dae28d3cf7b85503cb6cd92a704b04a76eb6cbaa4aa98bb65ff3471"
+  },
+  "sanitizers": "AddressSanitizer + UndefinedBehaviorSanitizer; LeakSanitizer disabled (sandbox ptrace)",
+  "pool_runs": 48,
+  "pool_results": [
+    {
+      "arm": "pool-r0-o0-s0-d0",
+      "scenario": "refuse",
+      "stdout": "refuse live=4 destructs=0 owned=0 steals=0 bitmap=0"
+    },
+    {
+      "arm": "pool-r0-o0-s0-d0",
+      "scenario": "free",
+      "stdout": "free live=4 destructs=1 owned=0 steals=0 bitmap=0"
+    },
+    {
+      "arm": "pool-r0-o0-s0-d0",
+      "scenario": "forward",
+      "stdout": "forward live=4 destructs=1 owned=0 steals=1 bitmap=0"
+    },
+    {
+      "arm": "pool-r0-o0-s0-d0",
+      "scenario": "wrap",
+      "stdout": "wrap live=5 destructs=0 owned=1 steals=0 bitmap=0"
+    },
+    {
+      "arm": "pool-r0-o0-s0-d0",
+      "scenario": "forward-children",
+      "stdout": "forward-children live=2 destructs=3 owned=0 steals=1 bitmap=0"
+    },
+    {
+      "arm": "pool-r0-o0-s0-d0",
+      "scenario": "wrap-children",
+      "stdout": "wrap-children live=5 destructs=0 owned=1 steals=0 bitmap=0"
+    },
+    {
+      "arm": "pool-r1-o0-s0-d0",
+      "scenario": "refuse",
+      "stdout": "refuse live=4 destructs=0 owned=0 steals=0 bitmap=0"
+    },
+    {
+      "arm": "pool-r1-o0-s0-d0",
+      "scenario": "free",
+      "stdout": "free live=4 destructs=1 owned=0 steals=0 bitmap=0"
+    },
+    {
+      "arm": "pool-r1-o0-s0-d0",
+      "scenario": "forward",
+      "stdout": "forward live=4 destructs=1 owned=0 steals=1 bitmap=0"
+    },
+    {
+      "arm": "pool-r1-o0-s0-d0",
+      "scenario": "wrap",
+      "stdout": "wrap live=4 destructs=1 owned=0 steals=1 bitmap=0"
+    },
+    {
+      "arm": "pool-r1-o0-s0-d0",
+      "scenario": "forward-children",
+      "stdout": "forward-children live=2 destructs=3 owned=0 steals=1 bitmap=0"
+    },
+    {
+      "arm": "pool-r1-o0-s0-d0",
+      "scenario": "wrap-children",
+      "stdout": "wrap-children live=2 destructs=3 owned=0 steals=1 bitmap=0"
+    },
+    {
+      "arm": "pool-r0-o1-s0-d0",
+      "scenario": "refuse",
+      "stdout": "refuse live=4 destructs=0 owned=0 steals=0 bitmap=0"
+    },
+    {
+      "arm": "pool-r0-o1-s0-d0",
+      "scenario": "free",
+      "stdout": "free live=4 destructs=1 owned=0 steals=0 bitmap=0"
+    },
+    {
+      "arm": "pool-r0-o1-s0-d0",
+      "scenario": "forward",
+      "stdout": "forward live=4 destructs=1 owned=0 steals=1 bitmap=0"
+    },
+    {
+      "arm": "pool-r0-o1-s0-d0",
+      "scenario": "wrap",
+      "stdout": "wrap live=5 destructs=0 owned=1 steals=0 bitmap=0"
+    },
+    {
+      "arm": "pool-r0-o1-s0-d0",
+      "scenario": "forward-children",
+      "stdout": "forward-children live=2 destructs=3 owned=0 steals=1 bitmap=0"
+    },
+    {
+      "arm": "pool-r0-o1-s0-d0",
+      "scenario": "wrap-children",
+      "stdout": "wrap-children live=5 destructs=0 owned=1 steals=0 bitmap=0"
+    },
+    {
+      "arm": "pool-r1-o1-s0-d0",
+      "scenario": "refuse",
+      "stdout": "refuse live=4 destructs=0 owned=0 steals=0 bitmap=0"
+    },
+    {
+      "arm": "pool-r1-o1-s0-d0",
+      "scenario": "free",
+      "stdout": "free live=4 destructs=1 owned=0 steals=0 bitmap=0"
+    },
+    {
+      "arm": "pool-r1-o1-s0-d0",
+      "scenario": "forward",
+      "stdout": "forward live=4 destructs=1 owned=0 steals=1 bitmap=0"
+    },
+    {
+      "arm": "pool-r1-o1-s0-d0",
+      "scenario": "wrap",
+      "stdout": "wrap live=4 destructs=1 owned=0 steals=1 bitmap=0"
+    },
+    {
+      "arm": "pool-r1-o1-s0-d0",
+      "scenario": "forward-children",
+      "stdout": "forward-children live=2 destructs=3 owned=0 steals=1 bitmap=0"
+    },
+    {
+      "arm": "pool-r1-o1-s0-d0",
+      "scenario": "wrap-children",
+      "stdout": "wrap-children live=2 destructs=3 owned=0 steals=1 bitmap=0"
+    },
+    {
+      "arm": "pool-r0-o1-s1-d0",
+      "scenario": "refuse",
+      "stdout": "refuse live=4 destructs=0 owned=0 steals=0 bitmap=15"
+    },
+    {
+      "arm": "pool-r0-o1-s1-d0",
+      "scenario": "free",
+      "stdout": "free live=4 destructs=1 owned=0 steals=0 bitmap=15"
+    },
+    {
+      "arm": "pool-r0-o1-s1-d0",
+      "scenario": "forward",
+      "stdout": "forward live=4 destructs=1 owned=0 steals=1 bitmap=15"
+    },
+    {
+      "arm": "pool-r0-o1-s1-d0",
+      "scenario": "wrap",
+      "stdout": "wrap live=5 destructs=0 owned=1 steals=0 bitmap=15"
+    },
+    {
+      "arm": "pool-r0-o1-s1-d0",
+      "scenario": "forward-children",
+      "stdout": "forward-children live=2 destructs=3 owned=0 steals=1 bitmap=10"
+    },
+    {
+      "arm": "pool-r0-o1-s1-d0",
+      "scenario": "wrap-children",
+      "stdout": "wrap-children live=5 destructs=0 owned=1 steals=0 bitmap=15"
+    },
+    {
+      "arm": "pool-r1-o1-s1-d0",
+      "scenario": "refuse",
+      "stdout": "refuse live=4 destructs=0 owned=0 steals=0 bitmap=15"
+    },
+    {
+      "arm": "pool-r1-o1-s1-d0",
+      "scenario": "free",
+      "stdout": "free live=4 destructs=1 owned=0 steals=0 bitmap=15"
+    },
+    {
+      "arm": "pool-r1-o1-s1-d0",
+      "scenario": "forward",
+      "stdout": "forward live=4 destructs=1 owned=0 steals=1 bitmap=15"
+    },
+    {
+      "arm": "pool-r1-o1-s1-d0",
+      "scenario": "wrap",
+      "stdout": "wrap live=4 destructs=1 owned=0 steals=1 bitmap=15"
+    },
+    {
+      "arm": "pool-r1-o1-s1-d0",
+      "scenario": "forward-children",
+      "stdout": "forward-children live=2 destructs=3 owned=0 steals=1 bitmap=10"
+    },
+    {
+      "arm": "pool-r1-o1-s1-d0",
+      "scenario": "wrap-children",
+      "stdout": "wrap-children live=2 destructs=3 owned=0 steals=1 bitmap=3"
+    },
+    {
+      "arm": "pool-r0-o1-s1-d1",
+      "scenario": "refuse",
+      "stdout": "refuse live=4 destructs=0 owned=0 steals=0 bitmap=15"
+    },
+    {
+      "arm": "pool-r0-o1-s1-d1",
+      "scenario": "free",
+      "stdout": "free live=4 destructs=1 owned=0 steals=0 bitmap=15"
+    },
+    {
+      "arm": "pool-r0-o1-s1-d1",
+      "scenario": "forward",
+      "stdout": "forward live=4 destructs=1 owned=0 steals=1 bitmap=15"
+    },
+    {
+      "arm": "pool-r0-o1-s1-d1",
+      "scenario": "wrap",
+      "stdout": "wrap live=5 destructs=0 owned=1 steals=1 bitmap=15"
+    },
+    {
+      "arm": "pool-r0-o1-s1-d1",
+      "scenario": "forward-children",
+      "stdout": "forward-children live=2 destructs=3 owned=0 steals=1 bitmap=10"
+    },
+    {
+      "arm": "pool-r0-o1-s1-d1",
+      "scenario": "wrap-children",
+      "stdout": "wrap-children live=5 destructs=0 owned=1 steals=1 bitmap=15"
+    },
+    {
+      "arm": "pool-r1-o1-s1-d1",
+      "scenario": "refuse",
+      "stdout": "refuse live=4 destructs=0 owned=0 steals=0 bitmap=15"
+    },
+    {
+      "arm": "pool-r1-o1-s1-d1",
+      "scenario": "free",
+      "stdout": "free live=4 destructs=1 owned=0 steals=0 bitmap=15"
+    },
+    {
+      "arm": "pool-r1-o1-s1-d1",
+      "scenario": "forward",
+      "stdout": "forward live=4 destructs=1 owned=0 steals=1 bitmap=15"
+    },
+    {
+      "arm": "pool-r1-o1-s1-d1",
+      "scenario": "wrap",
+      "stdout": "wrap live=4 destructs=1 owned=0 steals=1 bitmap=15"
+    },
+    {
+      "arm": "pool-r1-o1-s1-d1",
+      "scenario": "forward-children",
+      "stdout": "forward-children live=2 destructs=3 owned=0 steals=1 bitmap=10"
+    },
+    {
+      "arm": "pool-r1-o1-s1-d1",
+      "scenario": "wrap-children",
+      "stdout": "wrap-children live=2 destructs=3 owned=0 steals=1 bitmap=3"
+    }
+  ],
+  "r117_runs": 36,
+  "r117_results": [
+    {
+      "arm": "r117-f0",
+      "scenario": "normal",
+      "fail_mask": 0,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "628bfe22356d91f686a6d153ffc4fcd4f39ef3d6d1a656d6c0ed3f765c363fc4",
+      "result": "normal sleeps=108 updates=36 requests=32 releases=27 sounds=4 mode=3 flags=0"
+    },
+    {
+      "arm": "r117-f0",
+      "scenario": "wait",
+      "fail_mask": 7,
+      "expected_original_null_fault": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": "AddressSanitizer:DEADLYSIGNAL"
+    },
+    {
+      "arm": "r117-f0",
+      "scenario": "direction",
+      "fail_mask": 7,
+      "expected_original_null_fault": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": "/workspace/scratch/c4e1a2818fde/effect-audit-controls-05/r117.cpp:187:43: runtime error: member access within null pointer of type 'struct cEsp'"
+    },
+    {
+      "arm": "r117-f0",
+      "scenario": "rotate",
+      "fail_mask": 7,
+      "expected_original_null_fault": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": "/workspace/scratch/c4e1a2818fde/effect-audit-controls-05/r117.cpp:206:27: runtime error: member access within null pointer of type 'struct cEsp'"
+    },
+    {
+      "arm": "r117-f0",
+      "scenario": "wrong",
+      "fail_mask": 7,
+      "expected_original_null_fault": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": "AddressSanitizer:DEADLYSIGNAL"
+    },
+    {
+      "arm": "r117-f0",
+      "scenario": "solved",
+      "fail_mask": 7,
+      "expected_original_null_fault": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": "AddressSanitizer:DEADLYSIGNAL"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "normal",
+      "fail_mask": 0,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "628bfe22356d91f686a6d153ffc4fcd4f39ef3d6d1a656d6c0ed3f765c363fc4",
+      "result": "normal sleeps=108 updates=36 requests=32 releases=27 sounds=4 mode=3 flags=0"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "wait",
+      "fail_mask": 7,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "797262171d7e482acf916504eb4f125786b60d68272c2e3a3485df8d1244aaa1",
+      "result": "wait mask=7 mode=0 sleeps=0 requests=3 updates=0 checks=6"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "direction",
+      "fail_mask": 1,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "c09054dbf0ea6bb7ce1c3673660a36cfda245a55e0628655d6cda684d25de174",
+      "result": "direction mask=1 mode=0 sleeps=0 requests=3 updates=2 checks=11"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "direction",
+      "fail_mask": 2,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "8cba47f57c3c82b2b157493f25ee804eb97b98dea3094214c512ee05e9745a7c",
+      "result": "direction mask=2 mode=0 sleeps=0 requests=3 updates=2 checks=11"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "direction",
+      "fail_mask": 3,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "efbb2037451cf9915a9341cddc2db7e025a765be4bb72d1133e50e8b87512dae",
+      "result": "direction mask=3 mode=0 sleeps=0 requests=3 updates=1 checks=8"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "direction",
+      "fail_mask": 4,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "cf1d34eac1d2c6be7cc853e59a608f8f20f222cdd6238c708d0e1dc2cb6b4ec8",
+      "result": "direction mask=4 mode=0 sleeps=0 requests=3 updates=2 checks=11"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "direction",
+      "fail_mask": 5,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "f2ef0b42dbc2ba73966c098be98ace7e909aa42eb8beb90d57158460cf571a63",
+      "result": "direction mask=5 mode=0 sleeps=0 requests=3 updates=1 checks=8"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "direction",
+      "fail_mask": 6,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "3e46f5716a5280b537d4a353a90cef2ef0b256acd03bfc6efdfabd9a0f021fa7",
+      "result": "direction mask=6 mode=0 sleeps=0 requests=3 updates=1 checks=8"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "direction",
+      "fail_mask": 7,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "6eddd535c93247478fdd0f07b1aec3353645105fac371a8faf9fe11143adbf03",
+      "result": "direction mask=7 mode=0 sleeps=0 requests=3 updates=0 checks=5"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "rotate",
+      "fail_mask": 1,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "9b0206403537a02c9cd035ce6f072a0400b2f06d3c97efdbe236a4c025d8ee10",
+      "result": "rotate mask=1 mode=0 sleeps=30 requests=3 updates=33 checks=40"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "rotate",
+      "fail_mask": 2,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "0fb0e0b651768227347b6a6decdaa4a57f6859553e7caf5edf94366f4d30b8b7",
+      "result": "rotate mask=2 mode=0 sleeps=30 requests=3 updates=33 checks=40"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "rotate",
+      "fail_mask": 3,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "6993c4f0d3e610e464c89e97fcc94efa58ad882969ff29bd1aec3049e681686d",
+      "result": "rotate mask=3 mode=0 sleeps=30 requests=3 updates=33 checks=40"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "rotate",
+      "fail_mask": 4,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "adb39dc8adcfc32e1ba0d0ee664c0d5ce68b27c2311dff3d25a2c348a12e3ee4",
+      "result": "rotate mask=4 mode=0 sleeps=30 requests=3 updates=33 checks=40"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "rotate",
+      "fail_mask": 5,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "894b01c71e1d94a4d81ad5accaab7798709fde667d6ea0b9416fc30bb9c1a2d5",
+      "result": "rotate mask=5 mode=0 sleeps=30 requests=3 updates=33 checks=40"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "rotate",
+      "fail_mask": 6,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "72c3c13ca6e935d22504eb2c0e507828ea06e5f2799205815b2007f3e74d9b19",
+      "result": "rotate mask=6 mode=0 sleeps=30 requests=3 updates=33 checks=40"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "rotate",
+      "fail_mask": 7,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "0c7e02f10b2372b381c419a647dff6c19afdcec9d10751ba118258c2f15ad6ca",
+      "result": "rotate mask=7 mode=0 sleeps=30 requests=3 updates=33 checks=40"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "wrong",
+      "fail_mask": 1,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "c0a3d395d91a10def7f8e0f59687ece61d8d10227482b5b720ede6d8397b8007",
+      "result": "wrong mask=1 mode=0 sleeps=16 requests=13 updates=0 checks=29"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "wrong",
+      "fail_mask": 2,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "1d774789d0488969659a7f7ad6f463a750b2be7c3b3b42a51b38fd4bc83eed7d",
+      "result": "wrong mask=2 mode=0 sleeps=16 requests=13 updates=0 checks=29"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "wrong",
+      "fail_mask": 3,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "716e5f498f95b342040fe7e4be5dc6b61b41e4934b5d6e408ea3f3b75ba73f84",
+      "result": "wrong mask=3 mode=0 sleeps=15 requests=13 updates=0 checks=22"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "wrong",
+      "fail_mask": 4,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "a67e1b7ba168f47b02c2003222fe9ba3238c6a4a5d102a0dcde1fd574b976e60",
+      "result": "wrong mask=4 mode=0 sleeps=17 requests=13 updates=0 checks=30"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "wrong",
+      "fail_mask": 5,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "901bd39da88d9f56557c592d6fb7ad4c7f302c2865161f0863c7d414da151e47",
+      "result": "wrong mask=5 mode=0 sleeps=16 requests=13 updates=0 checks=23"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "wrong",
+      "fail_mask": 6,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "c81c47e2e39bd2d6becbba89d6b624fdf303c4f7fb73a3ea52287652044447c3",
+      "result": "wrong mask=6 mode=0 sleeps=16 requests=13 updates=0 checks=23"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "wrong",
+      "fail_mask": 7,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "4fe42130aa78eb9c6af6686c274608a2a0c01a6d6157da1007cf50677a21b02f",
+      "result": "wrong mask=7 mode=0 sleeps=15 requests=13 updates=0 checks=16"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "solved",
+      "fail_mask": 1,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "f1ecb01e824a76cf5c2e14ec7b0dd313ed43e8d7254bc9bab76146ac7612feca",
+      "result": "solved mask=1 mode=3 sleeps=60 requests=7 updates=0 checks=14"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "solved",
+      "fail_mask": 2,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "1ce6eb7f6f73afe74aabb1b2bc87054756c974d872ecd773544363356f2d9862",
+      "result": "solved mask=2 mode=3 sleeps=61 requests=7 updates=0 checks=15"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "solved",
+      "fail_mask": 3,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "f55d31fbe94b9ed1d032a6b99bbe45b2a7fe61f662348757c2224f2b6bcd0ff8",
+      "result": "solved mask=3 mode=3 sleeps=60 requests=7 updates=0 checks=12"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "solved",
+      "fail_mask": 4,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "80867ec8eec87769166e58b3f06da39995e49d55a9396e0bac8e6bfc4dc317b7",
+      "result": "solved mask=4 mode=3 sleeps=61 requests=7 updates=0 checks=15"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "solved",
+      "fail_mask": 5,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "585449024c6de11e40f7e2abc9968448bb68aa8db7ff4375212da926b036d2e3",
+      "result": "solved mask=5 mode=3 sleeps=60 requests=7 updates=0 checks=12"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "solved",
+      "fail_mask": 6,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "9d55ae90a98af3f03c746a234ffa0b4f24e02c8fdf00990d40ce71a85edfed0b",
+      "result": "solved mask=6 mode=3 sleeps=61 requests=7 updates=0 checks=13"
+    },
+    {
+      "arm": "r117-f1",
+      "scenario": "solved",
+      "fail_mask": 7,
+      "expected_original_null_fault": false,
+      "stdout_sha256": "f21c90e91d85253b7809db6afdc172ccf567f97042548d557e62e7069f18d9d2",
+      "result": "solved mask=7 mode=3 sleeps=60 requests=7 updates=0 checks=10"
+    }
+  ],
+  "successful_r117_output_sha256": "628bfe22356d91f686a6d153ffc4fcd4f39ef3d6d1a656d6c0ed3f765c363fc4",
+  "successful_r117_outputs_equal": true,
+  "compiled": {
+    "esp": {
+      "baseline": {
+        "ii": {
+          "bytes": 101968,
+          "sha256": "4157fa305074efe38a0b6bceb94e3fb9a7cb876339a6016df6e6cfa11ea5c8c7"
+        },
+        "o": {
+          "bytes": 15608,
+          "sha256": "6854fd6cb69b28170d8466d54566bdc1c8e60d83d4d40fe56077dcbface2150f",
+          "executable_bytes": 5560,
+          "allocated_bytes": 17118,
+          "zero_fill_bytes": 11282
+        }
+      },
+      "absent": {
+        "ii": {
+          "bytes": 101968,
+          "sha256": "4157fa305074efe38a0b6bceb94e3fb9a7cb876339a6016df6e6cfa11ea5c8c7"
+        },
+        "o": {
+          "bytes": 15608,
+          "sha256": "6854fd6cb69b28170d8466d54566bdc1c8e60d83d4d40fe56077dcbface2150f",
+          "executable_bytes": 5560,
+          "allocated_bytes": 17118,
+          "zero_fill_bytes": 11282
+        }
+      },
+      "zero": {
+        "ii": {
+          "bytes": 101968,
+          "sha256": "4157fa305074efe38a0b6bceb94e3fb9a7cb876339a6016df6e6cfa11ea5c8c7"
+        },
+        "o": {
+          "bytes": 15608,
+          "sha256": "6854fd6cb69b28170d8466d54566bdc1c8e60d83d4d40fe56077dcbface2150f",
+          "executable_bytes": 5560,
+          "allocated_bytes": 17118,
+          "zero_fill_bytes": 11282
+        }
+      },
+      "r1-p0": {
+        "ii": {
+          "bytes": 102026,
+          "sha256": "316aa77c9d45a39ea0c5d3e28206fae6f1d1bfebb7684ffec7f207f17434cbe1"
+        },
+        "o": {
+          "bytes": 15608,
+          "sha256": "5fe25edcb3d01013702b0767594dbe8a740d52d8167a568d3a4344f0e1e68141",
+          "executable_bytes": 5560,
+          "allocated_bytes": 17118,
+          "zero_fill_bytes": 11282
+        }
+      },
+      "r0-p1": {
+        "ii": {
+          "bytes": 101968,
+          "sha256": "4157fa305074efe38a0b6bceb94e3fb9a7cb876339a6016df6e6cfa11ea5c8c7"
+        },
+        "o": {
+          "bytes": 15608,
+          "sha256": "6854fd6cb69b28170d8466d54566bdc1c8e60d83d4d40fe56077dcbface2150f",
+          "executable_bytes": 5560,
+          "allocated_bytes": 17118,
+          "zero_fill_bytes": 11282
+        }
+      },
+      "r1-p1": {
+        "ii": {
+          "bytes": 102026,
+          "sha256": "316aa77c9d45a39ea0c5d3e28206fae6f1d1bfebb7684ffec7f207f17434cbe1"
+        },
+        "o": {
+          "bytes": 15608,
+          "sha256": "5fe25edcb3d01013702b0767594dbe8a740d52d8167a568d3a4344f0e1e68141",
+          "executable_bytes": 5560,
+          "allocated_bytes": 17118,
+          "zero_fill_bytes": 11282
+        }
+      },
+      "stack": {
+        "baseline": [
+          {
+            "function": "<stdin>:338:7:static void* cEsp::operator new(unsigned int)",
+            "bytes": 24,
+            "kind": "static"
+          }
+        ],
+        "r1-p1": [
+          {
+            "function": "<stdin>:338:7:static void* cEsp::operator new(unsigned int)",
+            "bytes": 20,
+            "kind": "static"
+          }
+        ]
+      }
+    },
+    "r117": {
+      "baseline": {
+        "ii": {
+          "bytes": 231307,
+          "sha256": "67469ee315a52da85ab9e0af20da4177634093fa804ec32a79d016abd619507d"
+        },
+        "o": {
+          "bytes": 21988,
+          "sha256": "2f2e06d12427329cc2aa4fee46dcf66f4446aa6dece5e33d94500cb135410f76",
+          "executable_bytes": 10060,
+          "allocated_bytes": 10416,
+          "zero_fill_bytes": 4
+        }
+      },
+      "absent": {
+        "ii": {
+          "bytes": 231307,
+          "sha256": "67469ee315a52da85ab9e0af20da4177634093fa804ec32a79d016abd619507d"
+        },
+        "o": {
+          "bytes": 21988,
+          "sha256": "2f2e06d12427329cc2aa4fee46dcf66f4446aa6dece5e33d94500cb135410f76",
+          "executable_bytes": 10060,
+          "allocated_bytes": 10416,
+          "zero_fill_bytes": 4
+        }
+      },
+      "zero": {
+        "ii": {
+          "bytes": 231307,
+          "sha256": "67469ee315a52da85ab9e0af20da4177634093fa804ec32a79d016abd619507d"
+        },
+        "o": {
+          "bytes": 21988,
+          "sha256": "2f2e06d12427329cc2aa4fee46dcf66f4446aa6dece5e33d94500cb135410f76",
+          "executable_bytes": 10060,
+          "allocated_bytes": 10416,
+          "zero_fill_bytes": 4
+        }
+      },
+      "r1-p0": {
+        "ii": {
+          "bytes": 231307,
+          "sha256": "67469ee315a52da85ab9e0af20da4177634093fa804ec32a79d016abd619507d"
+        },
+        "o": {
+          "bytes": 21988,
+          "sha256": "2f2e06d12427329cc2aa4fee46dcf66f4446aa6dece5e33d94500cb135410f76",
+          "executable_bytes": 10060,
+          "allocated_bytes": 10416,
+          "zero_fill_bytes": 4
+        }
+      },
+      "r0-p1": {
+        "ii": {
+          "bytes": 231483,
+          "sha256": "a1026af8ce3115e15d715b570fd4e43406562b5861d2bd8b69e4659d5c19da4f"
+        },
+        "o": {
+          "bytes": 22044,
+          "sha256": "809c7a57ffba2013f4d46c87c482ec8accf906a01773a3d900558f0f21be4a7e",
+          "executable_bytes": 10116,
+          "allocated_bytes": 10472,
+          "zero_fill_bytes": 4
+        }
+      },
+      "r1-p1": {
+        "ii": {
+          "bytes": 231483,
+          "sha256": "a1026af8ce3115e15d715b570fd4e43406562b5861d2bd8b69e4659d5c19da4f"
+        },
+        "o": {
+          "bytes": 22044,
+          "sha256": "809c7a57ffba2013f4d46c87c482ec8accf906a01773a3d900558f0f21be4a7e",
+          "executable_bytes": 10116,
+          "allocated_bytes": 10472,
+          "zero_fill_bytes": 4
+        }
+      },
+      "stack": {
+        "baseline": [
+          {
+            "function": "D:/Bio4/Prog/r117.cpp:272:17:void r117_LightDirCalc(int)",
+            "bytes": 100,
+            "kind": "static"
+          },
+          {
+            "function": "D:/Bio4/Prog/r117.cpp:591:17:void r117_LightRotate(int, f32)",
+            "bytes": 80,
+            "kind": "static"
+          },
+          {
+            "function": "D:/Bio4/Prog/r117.cpp:439:13:void r117_LightMechanismMove()",
+            "bytes": 136,
+            "kind": "static"
+          }
+        ],
+        "r1-p1": [
+          {
+            "function": "D:/Bio4/Prog/r117.cpp:272:17:void r117_LightDirCalc(int)",
+            "bytes": 100,
+            "kind": "static"
+          },
+          {
+            "function": "D:/Bio4/Prog/r117.cpp:596:17:void r117_LightRotate(int, f32)",
+            "bytes": 80,
+            "kind": "static"
+          },
+          {
+            "function": "D:/Bio4/Prog/r117.cpp:444:13:void r117_LightMechanismMove()",
+            "bytes": 136,
+            "kind": "static"
+          }
+        ]
+      }
+    }
+  },
+  "off_identity": true,
+  "independent_knobs_compose": true,
+  "make_validation": [
+    {
+      "knob": "ESP_POOL_RECYCLE",
+      "value": "-1",
+      "rejected": true
+    },
+    {
+      "knob": "ESP_POOL_RECYCLE",
+      "value": "2",
+      "rejected": true
+    },
+    {
+      "knob": "ESP_POOL_RECYCLE",
+      "value": "bad",
+      "rejected": true
+    },
+    {
+      "knob": "R117_EFFECT_FAILURE_SAFE",
+      "value": "-1",
+      "rejected": true
+    },
+    {
+      "knob": "R117_EFFECT_FAILURE_SAFE",
+      "value": "2",
+      "rejected": true
+    },
+    {
+      "knob": "R117_EFFECT_FAILURE_SAFE",
+      "value": "bad",
+      "rejected": true
+    }
+  ],
+  "inventory": {
+    "files_scanned": 1728,
+    "call_sites": 2925,
+    "request_calls": 1807,
+    "request_calls_by_api": {
+      "EfmSeqSet": 1,
+      "Esp3f_Alloc": 3,
+      "EspEstSetSelect": 14,
+      "EspSeqSet": 7,
+      "EspgenDataSet": 1,
+      "EspgenSeqSet": 1,
+      "EstSet": 1763,
+      "PullEsp": 8,
+      "PullEspEspgen": 2,
+      "PullEspgen": 4,
+      "PullEspgenFront": 1,
+      "SetEstTbl": 2
+    },
+    "calls_by_api": {
+      "AreaSstSet": 1,
+      "EffAreaUpdate": 1,
+      "EffCallToolStateCallBack": 1,
+      "EffClearToolState": 2,
+      "EffEm2d_setTexRender": 1,
+      "EffGetAreaState": 16,
+      "EffGetToolState": 3,
+      "EffSetAreaState": 2,
+      "EffSetToolState": 1,
+      "EffSetToolStateCallBack": 5,
+      "EffectEfmDelete": 305,
+      "EffectEspDelete": 305,
+      "EffectEspgenDelete": 316,
+      "EfmDelete": 1,
+      "EfmSeqSet": 1,
+      "Esp07_ChkGnd": 2,
+      "Esp07_HitGnd": 1,
+      "Esp07_HitGndLight": 1,
+      "Esp07_HitWall": 1,
+      "Esp3f_Alloc": 3,
+      "EspDelete": 1,
+      "EspDrawLaserLine": 2,
+      "EspDrawLaserLine2": 1,
+      "EspEstSetSelect": 14,
+      "EspFootCall": 2,
+      "EspGenGetMoveLoop": 3,
+      "EspGenSetMoveLoop": 5,
+      "EspGetDmyPtr": 11,
+      "EspPullCoreKind": 70,
+      "EspSeqSet": 7,
+      "EspSetEatEffect": 1,
+      "EspSetGatling": 4,
+      "EspSetWaterBomb": 3,
+      "EspSetWaterHitmark": 1,
+      "EspgenDataSet": 1,
+      "EspgenDelete": 1,
+      "EspgenGetCallNo": 1,
+      "EspgenIncCallNo": 1,
+      "EspgenSeqSet": 1,
+      "EstSet": 1763,
+      "EstSetEm10WaterFall": 11,
+      "EventCutEstSet": 2,
+      "GetAreaState": 2,
+      "GetSstDispFlag": 3,
+      "PullEsp": 8,
+      "PullEspEspgen": 2,
+      "PullEspgen": 4,
+      "PullEspgenFront": 1,
+      "SetAreaState": 1,
+      "SetEsp": 2,
+      "SetEstTbl": 2,
+      "SetSstDispFlag": 17,
+      "SstSet": 6,
+      "r117_espEnd": 2
+    },
+    "wrappers": [
+      "AreaSstSet",
+      "EffAreaUpdate",
+      "EffEm2d_setTexRender",
+      "EffSetAreaState",
+      "Esp07_ChkGnd",
+      "Esp07_HitGnd",
+      "Esp07_HitGndLight",
+      "Esp07_HitWall",
+      "Esp0a_Trans",
+      "EspDrawLaserLine",
+      "EspDrawLaserLine2",
+      "EspFootCall",
+      "EspSetEatEffect",
+      "EspSetGatling",
+      "EspSetWaterBomb",
+      "EspSetWaterHitmark",
+      "EstSetEm10WaterFall",
+      "EventCutEstSet",
+      "SetEsp",
+      "SetSand",
+      "SetWater",
+      "SstSet"
+    ],
+    "references_by_kind": {
+      "declaration": 112,
+      "reference": 2,
+      "call": 2925,
+      "definition": 61
+    },
+    "unresolved_scope_calls": 66,
+    "factory_sites": 92,
+    "handle_pool_sites": 904,
+    "source_head": "ea969bb241f77291d2ca43d706c9dc2d1226ee76"
+  },
+  "inventory_source_sha256": {
+    "include/esp.h": "a02bdcd8632113b4c2e7b099ea90cfefea9c7f0f1c779b31e354dfd634e0e1ba",
+    "include/espgen.h": "245308dc8833b1e18f71682bcf2a0564e73480eda629f076313f6c037be09757",
+    "include/est.h": "386fddbed7d0504a1c2d19494ca2e1facef5f0a3b448a50f321527ebe1652d7e",
+    "include/obj.h": "f1ef75fafca7efcc3d982b5b7dc9d73ef2170364fd861a7b16b958802d417768",
+    "port/dreamcast/game/coarse.cpp": "24ddc68bb693a0ea5cde6f89591f960a3163c2520101022991967c1c4ad9331e",
+    "port/dreamcast/game/logic_trace.cpp": "3be992a562aa333ce576b5929394c50273c0cb01e9405e1ee84d1d70166418dc",
+    "port/dreamcast/game/option_rows.cpp": "5e70568afdca1f9b988b9118bf6c29f17839abdab67dc9294724ccef5a0fba87",
+    "port/dreamcast/game/platform/include/fx_core_source_prep.inc": "8f38ef2addf1714edb250dacedec28ed85ce5321c158ed2a680f50e0d5d92774",
+    "src/Sscrn/ss_main.cpp": "c76ac0bea5525a90d96a4846c7cff7e1c50a8e9f6df47ead2cd880a76b6dce2f",
+    "src/em10/em10.cpp": "065613c2d2297a5f843d71c897daffd14a715d7aac7e17c3fe563c6be990aaad",
+    "src/em22/em22.cpp": "1512d6963b2305fe63137feb611c4e3e9da487d90726dbe4e21c8be4ce814139",
+    "src/em24/em24.cpp": "11e232d0410ff29162154f024b9a5b9c0b4fe4bad0b67ea58ce1c185fae484a1",
+    "src/em25/em25.cpp": "c79ca36a291fcafedab2a351b341e45767a739ea8b5ea673f1c7621dd5dbb781",
+    "src/em26/em26.cpp": "15d1f77cebaddf2baa90ee0c7f5715baf92a974c859a2a871498d4a32cee2175",
+    "src/em27/em27.cpp": "808e5b87ca0c5b263ec92cbf50a60e712d9a69471de970d8c9d64755c24397e3",
+    "src/em28/em28.cpp": "a103ec13dbec46535569dd2244af7cd9f8bffb8aed2467079f0b09742a3b2816",
+    "src/em29/em29.cpp": "6d6e38691241cc5453c3875ae22b54193c5fc884b7689fa2b02d598bc97a36e1",
+    "src/em2a/em2a.cpp": "53a12e05267adaac1da10bec01815af5103e2e5733107f6205c05de5b3cdd429",
+    "src/em2b/em2b.cpp": "248179ca7012cdc83babfbfef7ce79c602085a92173d54b2b616430be4b9c5e8",
+    "src/em2c/em2c.cpp": "72e67b56bc958456decee97fd2f723ae9a8a602d3a21104013429ab2ddd93987",
+    "src/em2d/em2d.cpp": "fa7ff5f03a6f44a8ef30182c077ae1e4e5e1708985a8672da9994bd13990989d",
+    "src/em2e/em2e.cpp": "ec3c1c4ab5b3a64b59cc0649056a5622c0b73edec294d2684e9a559ee24105b4",
+    "src/em2f/em2f.cpp": "0a0000a6fcab526e145ef40f83b1a3da481b85cdd1d196eb6c689939cae40595",
+    "src/em31/em31.cpp": "4d82e0e447302d5ce07af2b066aeb072aa9766eafe60aa5a71c1c34c6d7146d2",
+    "src/em32/em32.cpp": "1906120c43ce96dde32f9847d3cc99fc5145ba317580cda9da348f9787a70376",
+    "src/em35/em35.cpp": "1f94046f029e08d9a8fc68d493fc74de02f0483e948ed9e3cf6d6e042c1556ee",
+    "src/em36/em36.cpp": "d060e486f9a19a729dc72185b37bcb6236f0668698bcce0a57d256f90874aabc",
+    "src/em38/em38.cpp": "a1dbe3b42e5715783bd717dc9fda82aa33d5d93b710bc5609762c079c95826b9",
+    "src/em39/em39.cpp": "1fbadfad916f83395371cb3164040b1f38c235878a9035c11b284e359609f907",
+    "src/em3a/em3a.cpp": "03190563a7bb61fb55ea20b06b04f369f8db7ceee7265f16d692b038e751d587",
+    "src/em3b/em3b.cpp": "c22db4a921a3aea099e10e8045d312c9a8f57157e742420c47307cd7bea4c8e3",
+    "src/em3c/em3c.cpp": "9677c5b5b60ec5aaba50909a2a0a1a9c2abaa883ae8f195bf7b6610a2ac11ecb",
+    "src/em3d/em3d.cpp": "a4d4b41122e9e560ab7e0167b7640beb44cda22101aab1037710bda0c8757b59",
+    "src/em3e/em3e.cpp": "6524011066943401e7e7f01f889ccb5a8e19973f63863dc78290432b5821889c",
+    "src/game/Espgen42.cpp": "62f9538df629fc58285c9115a535b4350ad1f92dc91a0003031401345335d836",
+    "src/game/Espgen43.cpp": "c5c97819ec65560a598116333f0f38b02f58e123b5653b787d951b8362eaa548",
+    "src/game/ctrl12.cpp": "30fa461ba6ce20fc315854886e386451b3fcc90ade5ccf9ca09a91d586607abb",
+    "src/game/ctrl14.cpp": "4077297773feb66aace27ca1f06e34b57aac1ef4a60a0b238dfb24eb5d07a47d",
+    "src/game/eff_sys.cpp": "713537960250b079a8eac6ce7c85d5af0d9b8af68ad2ca714553c29bb7eec937",
+    "src/game/emBar.cpp": "c609d9d54efbcf9a24ae7c477f4c92bdfb40366c8ff38ffe4dffa17b733d3a65",
+    "src/game/emBarred.cpp": "c7074f5a8df48d55eef64661c0df18bd3f23d2b37754657164e16308ac513942",
+    "src/game/em_sub.cpp": "27080c8094e0b7391b388aac6c5ee39661d8692505d08f36d08a368e1c030cfb",
+    "src/game/embarrel.cpp": "fb0700a0728f97f506cc42bdfff8511951ccfff2147de40818fd5faa061bad42",
+    "src/game/embox.cpp": "5c597c360cf129d57a9e47086a1a0cac3dc3b206c3fb37097b25aebd21a05e8e",
+    "src/game/emdoor.cpp": "e313c681b46d73f70f94024277b961908917d08b59e0ca8177b7e1de00cc4d1c",
+    "src/game/emitem.cpp": "ac6be12359c16f7c9b794934144bb7e967b6a4d513c8ddc93c8c202ad396d555",
+    "src/game/emmine.cpp": "5c1d9248401ea087b5dfd934953a5ee528990ffc41af5e0233a8ef3e9a15b28a",
+    "src/game/emrack.cpp": "99ae6e4d2cda170bd92dee10a6b5027a41f728ceeee5cbb81b1f434fefa190b6",
+    "src/game/emrock.cpp": "fdfdf824f604ba12a206cac67b0463bfe5c9a1089326f988e5f9ed9a2d6c78f3",
+    "src/game/emshield.cpp": "1d38f78d1e320dba6fd3f25391d096562817d3af1350adc80becf2dd750a1d1c",
+    "src/game/emtorch.cpp": "c2d129e1b12a7c689c9d1c306085c0967e99066829dd96c09f439bf5565adedf",
+    "src/game/emtree.cpp": "4c69614cffa28033dc2eec0872fa0b5ca1de89bdf5c0811587bbbe7dce824207",
+    "src/game/emwep.cpp": "c3d34e8fc9969c20a47969ea3178eebb318903a959e4204cdd5b0963a0dcfddd",
+    "src/game/emwindow.cpp": "63c40fe1a5b999a6925e3499243bf1f048d16159c29a9281cc8ae06f48625e76",
+    "src/game/esp.cpp": "e0b0b39540eab8d3b46e90c2685604ad35f1eb2d8ec5026129dbf9a80a114bd2",
+    "src/game/esp00.cpp": "24d768f87159787b36b112229c7b5100099d8f0b70fe9fff2086756739d3e71d",
+    "src/game/esp01.cpp": "bfb61bf66928526715aeda74469a787778055e26f60a24db1ddb7ab70c3d71a0",
+    "src/game/esp02.cpp": "760ee564fb020bc66af2a4a2b908858051015dcf1d1cace0c954a84f07945bdc",
+    "src/game/esp03.cpp": "0c2a391ec4469a92c31d36b18ccbc37e06ffcd9b811983970a22ab748fe012c9",
+    "src/game/esp04.cpp": "62b4840e52e45265fdee5620a18c5bd30a5e05edeed5bfd5d2826db899343934",
+    "src/game/esp05.cpp": "b464f2cebcdf8f4d593e8d1c5a75897c5e2ade5788e2a2c6e10909a55f8e84de",
+    "src/game/esp06.cpp": "70b50facd1b216fd93c94e64ac7bf3653b87f75f50c1ca8398e04fe1bec284a3",
+    "src/game/esp07.cpp": "4c9923154a9735b142187fee3be774d0778c9b0e520825bafffc3f2f320dc1f7",
+    "src/game/esp08.cpp": "9adab05f380fad0215ee4a367d5d402c317d927c1f98b0eb165b51f4a96edb15",
+    "src/game/esp09.cpp": "f8c6ddf8d950ce699d42b08fbcbfa847667796180bc6b2ab5c30ee8d014deb6f",
+    "src/game/esp0a.cpp": "c288cb3ac5e64613adfdb19aef7796d8f04e98313ef6fa3036f13922323449a6",
+    "src/game/esp0b.cpp": "90a57e15cfa4ac44e27a4cfe72ccf94f68f041a571e12c57675ec4f567b0e4cd",
+    "src/game/esp0c.cpp": "a4d75f0795e4683a699727321f717448b716ad1707b283f31e4b2be30cafa842",
+    "src/game/esp0d.cpp": "7dd882f76d693065ff345b2217489e15d509b491dd030f36688e60f62bb5b540",
+    "src/game/esp0e.cpp": "9da8b6a9c0f4d206f75f7d3f1bf198ad87967004804172e76cff5560cfaaf7c6",
+    "src/game/esp0f.cpp": "895344de5ce1563facc81ac9e281ae66962d2ff848c196e1da413cf775a1edd6",
+    "src/game/esp10.cpp": "c88e7e312f765d47c2c14c0435c93c315cdd0515409b021042d63bb47ce19100",
+    "src/game/esp11.cpp": "5df1a3b5c46bff62968994d7dd23c5c784762d8f6de4cbc2fcbc31f4b77251f3",
+    "src/game/esp12.cpp": "dc32c52294c6bd46ed0781cba98a3daa2d9bd5e7ae1d124911632d5ff853fb6b",
+    "src/game/esp13.cpp": "24ed8bd2e45caa3ba631663ca9a45f92c61dd8db759ca246e4034ffa47c8d718",
+    "src/game/esp14.cpp": "ffd156036755558aba0faf35f46dcaf7643f72366fc3fdf4623ac71bac3a7313",
+    "src/game/esp15.cpp": "948d935d3da35a7802573365c4b79be46c3a52a52efbb0aa90e0b3b7e72bc27b",
+    "src/game/esp16.cpp": "eb4855b741deffebdaa811bf55845e3177fca2a2de021fa6e1beeec3c268b013",
+    "src/game/esp17.cpp": "5c9df825e3f031237b70992f3da563b28b5f4d620d09173669faf341812fea1e",
+    "src/game/esp18.cpp": "9a95856ef6c74fe2cbd2669bb5b01ad0c8179cb44b4e1e0389f9d99631f98bc0",
+    "src/game/esp19.cpp": "1e962fc4fd48d609a5233a3b37e4467348f85613f591e6d0db94ab727cd2cf2b",
+    "src/game/esp1a.cpp": "94db715fff4fbd1cf6463f22fe1f9656accd3b5fa2e49c44905e2113ba9f257f",
+    "src/game/esp1b.cpp": "d04c833f3a9575486fb7636ab791dcf7cd76423854acc639d11f3f12ca4db81a",
+    "src/game/esp3f.cpp": "24580f611f57cc8643501dadbc02cdb189beefbbcf651db1cb7b527bc0cb05f7",
+    "src/game/esp40.cpp": "c8ce0e5e88d7daf02bc8f72021c5856690c646a99f0d66ced6da781b1bb46685",
+    "src/game/esp41.cpp": "a218d6162d44d1b35860363f2531d59ff35eca386f3051cba27b3c6d4ec30877",
+    "src/game/esp42.cpp": "6ad05ed030e92576df07ba0cded4689393c3ce220bfc3d17e0895c4b657e365b",
+    "src/game/esp43.cpp": "3a471fa9f8dc8d855866079ba03462c008a047bbb03369789b358a89c24c4c3a",
+    "src/game/esp44.cpp": "9b8a498cd852b38c79def6393af3cf55a4f47a7c8683e989103bc532bbafdfae",
+    "src/game/esp45.cpp": "ca605e58c2fe3d3d908f114e6b90bb0a8e51d39b1960ddccc49acf2237194951",
+    "src/game/esp46.cpp": "a4d5943288ce1ef1ef53ee994099c27460ffe3115803c1a9cf1dad49fb4a5e19",
+    "src/game/esp47.cpp": "b263931eea88b0751b3e9afb7ea79033a50a0947cfd3c5a4bf2e7fd347ad4064",
+    "src/game/esp48.cpp": "c67c48b3caca62bf8c15c0e1fbf4fa2a358891d494599ece1573ae3bdc8a6b88",
+    "src/game/esp49.cpp": "ffc74604369746331019ece1e5983370c3fce19922258fc9eb344a6a4cd64bb5",
+    "src/game/esp4a.cpp": "2197d46467dec0b29060c4567fa3d838c4ae365a2db4d5a10b9f6b61965857a1",
+    "src/game/esp4b.cpp": "824442bc76a670a0d78132f3a62e67d782e9540ca9553757a9b8c782b8418ced",
+    "src/game/esp4c.cpp": "e1e5001526d10ef01e6303295063aecccf8683672da941bd010ec07a94cb9a68",
+    "src/game/esp4d.cpp": "7ab5ca98a5bf384a234e253bea9db5046e6ec2b19acf66873bffa7d175a5a889",
+    "src/game/esp4e.cpp": "42e5a2ec99194d59ba5eaea9ee782c444287e7b78520887f93157ef2de40dbdc",
+    "src/game/esp4f.cpp": "bfb7e03ba5165ad8439f9989612c02d6020deaa72b80a984f03ce67ba923a85d",
+    "src/game/esp_app.cpp": "d2ea90dc88b16f03828e7312ba86a65f57ef82f4988d5544f3403a2fd31e0639",
+    "src/game/esp_efm.cpp": "91ba25a66a90326568c90b1ff0c32b67063371b33ea1c7298060c9edb86df4a2",
+    "src/game/esp_sub.cpp": "e7319e4e7bc6b541e8c821540967755b287d2c3ec2c2b71674dadd7be8c3eb5f",
+    "src/game/espgen.cpp": "43bc31c723c59f77d706864322de95d5dd4c3f29bb33bc7fb3dd64e6b1a2bb07",
+    "src/game/espgen00.cpp": "08abab772e8056ac5ff5ff409916b631a1809ea05217376449c177822ed4619c",
+    "src/game/espgen01.cpp": "914d309554ebc83317a93cf748c3b28716789e270eddd36f4fa9acf97e10dcff",
+    "src/game/espgen02.cpp": "20a253e7ed6b93a884507f8c5eeafa94db6634e1c2637d411daf7b499a5352c5",
+    "src/game/espgen10.cpp": "5f2d991b2839505a66d4f3e4b0b6489da15293bf3c91f6d1d6028ce653920ef2",
+    "src/game/espgen44.cpp": "08aba515d56c5e530d954a4489b00ef7a257d6705ace110eea7a5aa6ca459562",
+    "src/game/espgen45.cpp": "b663cc8d926267c4bcb7860403389f58234a30518733af73b766a9ce6f130ffb",
+    "src/game/est.cpp": "8b49c628aac0a10d084a7666e7d35bcafea3f503686d6078ed8aa9739b2312bd",
+    "src/game/event.cpp": "2dd3731880adea932d52b9fdeaef234d1a07a2fa6fbd4087a1f6df4577edb9d1",
+    "src/game/examine.cpp": "ba2cf8050522620b6d5d4de2ea6569bf5e936c3f73504265f8f10403c8177b54",
+    "src/game/filter07.cpp": "7b8298dbd651e26f8cd1cac357371548abf6829b5171a0aff14fa7b29fbc8c43",
+    "src/game/game.cpp": "810dc0bfa6042f34a5dc9cb876f2b077844a54d6c76d0f9e2a2f7e064a1e1c03",
+    "src/game/obj01.cpp": "3aebd1e34c8cebb174338089de25e6954aa995a3e4a2a4a36f618e84c95058d4",
+    "src/game/obj08.cpp": "08f930f5f37c6afd53e860c069994d8bb1eba6651efad510745b2152b0415d0b",
+    "src/game/obj10.cpp": "3fe7682ec580c24a6ffe694bd875a3fab607ef5299806aeb2d28eeb73e0c6064",
+    "src/game/obj14.cpp": "515d908265b66c49ff496e0cc866ecd103325d775ea9031b0d472a506ca90672",
+    "src/game/obj15.cpp": "587cb4272ca025a60449d2a984dd16d0e74cc4d92367e7d2e61da36b8224ae14",
+    "src/game/obj16.cpp": "f7b219e70fd3fbd57c668b8fc3db7580b65c39df64210037fc89d1d3a12f9ca7",
+    "src/game/obj1b.cpp": "ccbed628002724bb2bbbae6cc8fbca311ce02b66d180ef2e5366500bc423d626",
+    "src/game/obj1c.cpp": "e6c8b21f894002cedebde368f4757a353006b93d5adf24f3538982c0f20e3141",
+    "src/game/objMissile.cpp": "51f7e35953d34d9b1e3815e8c7e29aa805a9a47b46921a85d1a37a2fe02ad4fc",
+    "src/game/objPillar.cpp": "8dec898263de9a933308b7aa85d388faf70c169f0daa3c81e6a51d145d0450d5",
+    "src/game/objRobo.cpp": "f0c84407b83589449c6380f0211c5ae05ced6765b559ae6a79aec7e501ce0c3c",
+    "src/game/objRocket.cpp": "c4853ebaad29c0b35549956cf62a2f3cf940a408cfdfa2e8ceac86498a770b68",
+    "src/game/objSubWep.cpp": "47455cefcecf2a2778b8b661045bda163d0cdc82f84ce55fc8994566d7e2da9c",
+    "src/game/objTrolley.cpp": "8ed6bd4daecd02fed8e98550fab5abe0aaeba519614408c3819ae5c4a8317500",
+    "src/game/objWep.cpp": "b8e2e42ed1fb39aaa4012d9272a4db55c746a8a56f961ee116994fcef14788be",
+    "src/game/pl_dmg.cpp": "b4096f0426d61f2ae7fe9f9ff680782b3d66bbbf86bb5bbdf0e08607a912cb66",
+    "src/game/pl_knife.cpp": "61a6a3bc75c3f5fd8da21b06544cc397429cddeb727a57a25fc419b5ca023d93",
+    "src/game/pl_npc.cpp": "be698475cea0f38e4db40e6308c6ca0d156e99d1ed186987f16c63f3c980e74e",
+    "src/game/pl_sub.cpp": "48baf9cabffaf71a7093ce265471f7cb73ad06295f197489ae8604313052c199",
+    "src/game/pl_wep.cpp": "c0ada3f1d5a6c33a4eb54b4b6c3d928eb1a388abcf2127cc7e263de1e07c7276",
+    "src/game/player.cpp": "2e057dbe9771fec28c522dc5a407c615a695c78d5baf932224cf9bb3fefe0ddd",
+    "src/game/ps2_fx_common_haze.inc": "9c8bce25aab40e9366d544426ba929a4e24e316844a70abd633504c2736cb045",
+    "src/game/sce_at.cpp": "d7136020456aeeac72122daec47f4864889532075937a83c477ac098720c16ec",
+    "src/game/snd.cpp": "bd1dd308b7bff42b13e65ec3c174156da56c3f41f3e1c106a20919b68688c206",
+    "src/pl02/pl02.cpp": "bc6344b41a71f7fb1f338090280a6dc96d1adf00e1cd22621604c94e1722f29c",
+    "src/pl0a/pl_klauser.cpp": "de71dbe04239889ebebe01a2b7e4ac027d9ec295ac47f7151e9ecb6d379e3a06",
+    "src/pl0e/pl0e.cpp": "a9dff95e5f0d537cd6b378aafdae833048661e15fe6c8c52a9c2b01360b18283",
+    "src/pl0f/pl0f.cpp": "19d26b2865df4083f645f5b0397ceaaf4c16ea59001866cf2c9f674539d4581d",
+    "src/pl14/pl14.cpp": "ce00ec1737abd70dda21d75e2942bc04b630cf5ef50d60460c5c11459d53efb3",
+    "src/st1/r100.cpp": "a732b24228538d15b42343c7e26cb57bc0c502b8f79f9a3b409fd061132a9c6a",
+    "src/st1/r101.cpp": "87372c0ed2cc486ea0a3efc0c7e6c1bcbed75199ca2e0a1dfc3c05db93ad6dd1",
+    "src/st1/r103.cpp": "8c8b76079f1fab7d6ac8556f584bd570c7352f6306b480a9f64023b241e7fa71",
+    "src/st1/r105.cpp": "4586f55fa5062079c2ca0aba9d8f7d11aa15982e7aa8c8d60383fea325afd739",
+    "src/st1/r106.cpp": "69de1aab19713764a212ef25270fbfbf2a2ede0a6ed40819244a8763a236a150",
+    "src/st1/r108.cpp": "50e0619138759dfa8ddfaf6fe038a4264f6f2b640837605b22d37315d99a297c",
+    "src/st1/r10b.cpp": "22dfbb44e9a589a7f8cdfeb965b5a292fcf8fa2a8058f03e0500fce98482bc44",
+    "src/st1/r10c.cpp": "2add4ebc618de1380ed0ae80b9054fa3d9d82909da099e0b90c0b1adbffe8e19",
+    "src/st1/r10f.cpp": "e5165e05ccbcb0f0518064d651aafb2c6552d4167ee84a2297bd38dac4d5f9e5",
+    "src/st1/r111.cpp": "1294d719d663638a88c6b9866182f246895e2b2936c014da4f39e78e5cf44ff4",
+    "src/st1/r112.cpp": "514ce4266c2c3170d1a7d4631562d2673a60308c613b73785673ff881cee399f",
+    "src/st1/r113.cpp": "3a2c7bcb0e808948da96ee45f93f693b4dc88d3ef0939a798d0678d4b05d53a9",
+    "src/st1/r117.cpp": "b1830e22c353f5c7efa669a15ab2d4aaafbff061b839688cc79a5fb30f72a9c1",
+    "src/st1/r118.cpp": "0354093f59e070a1611ef67acbc676075b886044a07ed60d9345228175d2520e",
+    "src/st1/r119.cpp": "50459a511fce36fafebebe59fa99383044123cd6010d2fef2dbbb718546c0a04",
+    "src/st1/r11a.cpp": "d41cfbeee752bc8dbd18bd28f238fd48418b073a5c9e414eb72a8002caedee01",
+    "src/st1/r11b.cpp": "9b7e943c91a0e7b3c9f200e19b83ff406b54d4dece8faae416515d8c2bf2446b",
+    "src/st1/r11c.cpp": "0d144c5649bb8fa56b982eedc7d8778dd3057c75642fa288952a965a7c65b258",
+    "src/st1/r11d.cpp": "da0561328d92fd326a37b7b32b60d90930a5e566e7f92c77263707fcb938a52b",
+    "src/st1/r11e.cpp": "c4a539fe28d968904805458d7c6f50d6c977661f61ff79847ebc57369f7a1f94",
+    "src/st1/r11f.cpp": "c898c2fb18e3e252859705f0d3a6175bd1f2f6aa59570cd50dcbf16e7ed02e4d",
+    "src/st2/r200.cpp": "e5865340ba263fe7d1048019ce1d17e4f0f1ff5b734295377fc4a50493af65f5",
+    "src/st2/r201.cpp": "13265eb6c38e8b248c2109637ee263f4df4aa2cd34813d008404a35c16b0e67a",
+    "src/st2/r202.cpp": "cd4ce2aa4ddf4d2bbdfc5a89f5e922c10cbdb0e63acaa149625298942d94a6dd",
+    "src/st2/r204.cpp": "1a7c406ab3a5633e0494498a724adc0994b42d5c34d0dde84e8cff2a907c432d",
+    "src/st2/r205.cpp": "76213c6934ad53f516584ab345cf455f9f3d4cbf71f7e7130d2be451120c5c06",
+    "src/st2/r206.cpp": "cbb56be5ebdf1b83a5f6c1e9c4744c91dee318b839da46a46470fbe2d71930e5",
+    "src/st2/r207.cpp": "4368b4e116d06e00fb932be109499c63ad28aca1b91df4feaa11ebdba3741811",
+    "src/st2/r208.cpp": "33222970de982fc6366afb2c4455c5c957497ae845f19b257c2b4432c9aae52e",
+    "src/st2/r209.cpp": "49e6cc2a3f0ef1042c9be28ac3dcc590c83909f1a748e4803f39bc2ff79e71ee",
+    "src/st2/r20a.cpp": "25ab1042a298e5ce5e8bb16067026ec4bddc84234ece9144b0214ca77171682c",
+    "src/st2/r20b.cpp": "26cc52a08be5e6cb2ddced0afa7ea5464968b9c1518b181f13c4acc6d6e50f28",
+    "src/st2/r20c.cpp": "36cd0d59c05838b6aef316d34b8f02a7f762b4ad42af251a688e2933aa07e1ad",
+    "src/st2/r20d.cpp": "6796ca8edb0e8c087e777392dde042373b4726f09d86cc9c8b628d3ac36aa4b6",
+    "src/st2/r20e.cpp": "6b3c96c1ed5ef7f6ab74ec89bf7e62956a876ac3e83a310c136a18a87048d579",
+    "src/st2/r20f.cpp": "ceb505bea2b7e2511c2e47c90b4a207fbdfacc7478bda985f4eeae05c24eb381",
+    "src/st2/r211.cpp": "61b89cb1a2734c9913ec4e5a5683c2474a855ed2392c20fa85856b0ed6ded4c4",
+    "src/st2/r212.cpp": "7af0bd4f3b3a076e32e6d8fa629c2b8f3e0a9275affb57434c83991e6f4a8e7e",
+    "src/st2/r213.cpp": "e93871e1f5252cd198a0c743532d37c01a94f9413bb43154856d53e3cf2e1a4c",
+    "src/st2/r216.cpp": "84bcf99f876ac08df232311f08c6e4f29d272d5e23b33b08e192b79207837915",
+    "src/st2/r217.cpp": "76df196fb012e03ed2d4c778abf2af91da1940b6c578d6d9b2c73cc940a9b46b",
+    "src/st2/r21a.cpp": "3c839ccc922ee7bfe1abcc094ff5779294b1a2fae0314b1225dec76f18a204f2",
+    "src/st2/r21b.cpp": "0373b539162deba2a91e14a799863c7dffff7d4d7fc96c8317328d4550d3b7f0",
+    "src/st2/r21d.cpp": "7c939c01aa6d003135cd970f159c2463d324d47c6cc34ad4cba139a0b8c84dda",
+    "src/st2/r221.cpp": "9ff2a39859b07fd8bbb08624ed4b915d66d695198190fcb5f28d89244f8a3cd8",
+    "src/st2/r222.cpp": "0e6aee5fc87b432b019024f9c70ba62d4651b8509e0e75b747b2d45770c575ea",
+    "src/st2/r223.cpp": "396f3dbd749428517906558695111b10819795ebf2e88b6e701ef3d0e682e510",
+    "src/st2/r224.cpp": "86ff7b573fffe488be30c3d6aab8155545ebdb2e71fc36278c93317ab839ac16",
+    "src/st2/r225.cpp": "fd726c306d17cea427ddb9c88052377fd4eb1c9a4f4d05643fdb84a06a8e6f61",
+    "src/st2/r226.cpp": "c8fec564dc23899144f46450ba9a3a14dad8d6fbf9f4e4f4dd2b54d0434290b6",
+    "src/st2/r228.cpp": "0b6c241c190e1eacea7feb5cef9df35dcb08f32bcf06595c3e29cdd5742ac0ef",
+    "src/st2/r229.cpp": "7f8ca6bce1c2f96f9634464b8c0481ccb4e749ffbaaf464bf4dff8b3ce9ca63c",
+    "src/st2/r22c.cpp": "3a7c6f53da2ded7a36401997e5c9290092d0eb9e33ec4d695985be4b8a644079",
+    "src/st3/r300.cpp": "6733ab86e4a3acb57e741264a95c4613ff56cd20a440107b20e8748db0ca163e",
+    "src/st3/r301.cpp": "baa2dd64952464ae826c8c849c19ddff1c3d0c149188e4a9d9a1d764807ef22b",
+    "src/st3/r303.cpp": "78086b9365859e96ba37beb552a9fd3924f38808a9066b7be005aac589223b5a",
+    "src/st3/r304.cpp": "461713ce96df031030a05ce81bc7f47dae3db68345cc4ece4ae6d4bd9f9f560a",
+    "src/st3/r306.cpp": "a44dd53656625021c6e0e36caa0e1ad05abf80ed2c98384b64df54fd7c39baaf",
+    "src/st3/r307.cpp": "87f4840c783647229e7acee8da863730955dd310f582d3ed702d4dd740f46a8f",
+    "src/st3/r308.cpp": "269e7f0851b91ea133f4de20484a87a5fc697eddc0e3dd323cd84de60aaf8f7b",
+    "src/st3/r309.cpp": "df0df7060d3d07423e7348ebcae65458165c2bee71c8cee73f583c7b01cdf479",
+    "src/st3/r30b.cpp": "6c0db5ad426d981cf40e2fa66d17bfe661a1aee40867aaf48456779d5a6440f2",
+    "src/st3/r30d.cpp": "7482d82409c524b9f99508073c57f9e6bed0230f3d394a7f5d940ac10ca4e2ee",
+    "src/st3/r30f.cpp": "796abaddd5ad436b719b94ff287650fb32a8c8bb8374f9c0c91594a0e5c06145",
+    "src/st3/r310.cpp": "4b3ef03a76e4f148f48c5c9857ca1cf29785af094c9a5d3ed4660a7cf14601fa",
+    "src/st3/r311.cpp": "f9c7d75ba5539c4c502afeb38522e25a8510305aa272cf59f90b58bbb0b6a7e4",
+    "src/st3/r315.cpp": "c269b91375038c68a5c2c19c42a911cbab515ca64afb72df9c7598dd4bc19d8e",
+    "src/st3/r316.cpp": "d0ba7d9cd848ec376ba6fd6c1c76fb361e7aff120dee56242cc0552dcbf87cd7",
+    "src/st3/r317.cpp": "0dcf391f99e967871d68d58f9ba7b07ff78de39e9b60dbd94185553750c6eef6",
+    "src/st3/r318.cpp": "8009720a0abb1bab2d6905c1d045683448e06ab3479056c70962e1077164732d",
+    "src/st3/r31b.cpp": "e1d59c572b8dacc6f4e60cd01827d0f8276b5453bcb503bfe9920a4818006d73",
+    "src/st3/r31c.cpp": "405c6a88a50a41e71d11e0800a8970cc01e697a91fe466038004d71e4fb3e8b4",
+    "src/st3/r320.cpp": "c8b779f69eaa70b3b58ff93e92b8d8924767566495ecf73d37e6d3de06e30ab1",
+    "src/st3/r321.cpp": "91261ce9a0f3cf9122cb7fabae79be3bbb762cdec594efbf98b7baf3897e58eb",
+    "src/st3/r325.cpp": "6a74ada096dc2290d9b253b976d59f785c8825ec945921e41dd0ae6c7ac4093e",
+    "src/st3/r327.cpp": "8c9cf9eccfc6e5f4beacb7de6d6e5efa8b5c2ec5ba6b384ad89146f823a7a7d4",
+    "src/st3/r329.cpp": "989edcd4dcd9ccb95afe09e1e50a2f3fdc51e16ac3a60b7eb315574cf959b0ff",
+    "src/st3/r330.cpp": "609f5d6d824687c166dc6d4ff464f8d90158d51f30f007f1df86fd32325f0aa5",
+    "src/st3/r332.cpp": "432dd637aee5a0a083fefadbe3104d02f3a5c53e4e96ea67006467e8bc9b7761",
+    "src/st3/r333.cpp": "e19148743b50e898185e8dbd4223df2011b8ee7f68a4e9077fd0eea72408d134",
+    "src/st4/r403.cpp": "df2f5705147e86ea00c03e2c8c1fdb3f08b62950de490e4adaa892d567199639",
+    "src/st4/r404.cpp": "56cdb0e34453283045ef8ed35c4d39185676acfdda6dde5a51448897ae8f00d9",
+    "src/st4/r405.cpp": "7b3eba7f9a450b06faf1a1609ad900be749937394ab953689f09484470025b16",
+    "src/st4/r406.cpp": "c9318042bb6a2d7bc4dfd4d829e2485f856624cf45139083570a624dbc4cd8bb",
+    "src/st4/r40a.cpp": "b20b19429a3b458456a45b358f7cce5c93db91e73015b9eaeb045e1125018112",
+    "src/st4/r40d.cpp": "c7f28f0aac7defe0a1cedf547dd6d6aec7e5d21a01363491fe17307ba60d4813",
+    "src/st4/r40f.cpp": "6efb5fcb45cfea1cdff38f2103d819c539c605e5ac04d98a72d4e2a7217fd3bd",
+    "src/t_esp/db_port.cpp": "0a8b3db4b8b11b8acb2310293777613bd121cfd1be5b91e2f08e00b4db5eb44f",
+    "src/t_event/t_event.cpp": "a28b796b15d31fc0469f2c5ee47c3a2517ec96f9ee78b14d1c3b877da7a78a4c",
+    "src/wep/objMachinegun.cpp": "59d64c90dc169d0a0bd532c0ba07b53692bd5ec82f83c92834d1c1cd9d4e9e85",
+    "src/wep/objRuger.cpp": "f93779ba522473ad7878029ba0dab79073e16ea5da6d7029109d8e45c03a0ffc",
+    "src/wep/pl_knife.cpp": "fabaa454877097bc98966145cb7043a8bc41a176f49b81fe9e0bdbb56702ff64",
+    "src/wep01/objFn57.cpp": "e10a55333f0fd0f70b867714c7f35349a06b9f669ab60d2fefa5d0c9b82e15b6",
+    "src/wep02/objMauser.cpp": "182d33e2ca9a2b95fdb6c1cc8499aaa2006460719e2859d7ae73b65e0bc791d7",
+    "src/wep04/wep04.cpp": "9a2608688a0b12ce0ace19b60a460fadde1be31d613bb004456f29d1a98087ab",
+    "src/wep05/objCivilian.cpp": "26323feef89fc88a8b2b944a8ce3c094a9862a5abcad6b4fdd10f7f3f30b190c",
+    "src/wep06/wep06.cpp": "b6216d9f9448f70884d5e7d0d1fc741c364e2c9e0d48883f937c8673d7f2665c",
+    "src/wep07/wep07.cpp": "e86df46527087ce762d7d51f73baf732e1b86a158d1d2ff082f44cea601723d2",
+    "src/wep08/wep08.cpp": "c51ce71491bab86c4cdcd16bcd6560c6fcfaa7026e3b30a3fe8325ba5b27e1bd",
+    "src/wep09/objSniper.cpp": "1adf0926513d8f63617b917ff691e11d1c96bae7538cc38832b57f492bfd8a32",
+    "src/wep12/objTompson.cpp": "46c49f0a4355295d4f471fae8cf9200ffe06098a934d4ca019cc93885b0589c3",
+    "src/wep14/objMine.cpp": "12bfd2633aa41ddba29cfccdaee0fc5b1f5d9d5527c010b9098ee3e4532545f4",
+    "src/wep15/wep15.cpp": "a305603c81ed01f23d2d5a0b40654d3202cfe80bf5a3f296496ab72ede07e007",
+    "src/wep17/objVp70.cpp": "3f916c6d48a9c728fe95f802ee77a4f6a063590bfd3701a644980275ae411e55",
+    "src/wep17/wep17.cpp": "f7277beaa388071af26b82163e819f97ec917108a815093396d8da746ad19e08",
+    "src/wep27/wep27.cpp": "2de0998813ff5f5f194a1a3e5b20ec73577df8e802a35f2239fca58f56ef67f7",
+    "src/wep33/wep33.cpp": "8ba0e804ca75419eaa25f19015f1de9a4d2b8f8755fd4e7346dd473a71c71fcf",
+    "src/wep38/wep38.cpp": "662efedb84fa40834802bad1da81013c6bf09c282e1d7f6a8b872355d3618587",
+    "src/wep39/wep39.cpp": "320d2e1ed163ee0db1982223302bc99f2656105cbd13a339c9711ae48bad1567",
+    "src/wep44/wep44.cpp": "ff98c3d80f115cebac39818e64fe49689d0aa3dfa4371d0af1549a4e84a466bb"
+  },
+  "request_sites_sha256": "64ad4ce194881abbfbebffa75912d484ef3b22ebfd857720f4fbfac734c6ad1c",
+  "full_generated_receipts_sha256": {
+    "build-controls.json": "49d645ba03a9c250bc2d9928102feb0ce886b43a25e00199f7dd95ee45f54539",
+    "failure-controls.json": "7049a744695214feb0f257aca5899b4a5fcc174579cca510e3f77e936395a39a",
+    "inventory.json": "1bebbc69044d6dd733d090cb481a122cfd779ad12ec220657f66158ce705cce0"
+  },
+  "production_flags": {
+    "esp": [
+      "-O2",
+      "-fno-PIC",
+      "-fno-PIE",
+      "-fomit-frame-pointer",
+      "-m4-single",
+      "-ml",
+      "-mfsrra",
+      "-mfsca",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-matomic-model=soft-gusa",
+      "-ftls-model=local-exec",
+      "-D__DREAMCAST__",
+      "-isystem",
+      "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/include",
+      "-isystem",
+      "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/kernel/arch/dreamcast/include",
+      "-isystem",
+      "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/addons/include",
+      "-D_arch_dreamcast=1",
+      "-D_arch_sub_pristine=1",
+      "-Wall",
+      "-std=gnu++20",
+      "-fpermissive",
+      "-w",
+      "-O1",
+      "-include",
+      "/workspace/scratch/c4e1a2818fde/re4dc-effect-pool-audit/port/dreamcast/game/platform/include/re4dc_prelude.h",
+      "-I/workspace/scratch/c4e1a2818fde/re4dc-effect-pool-audit/include",
+      "-I/workspace/scratch/c4e1a2818fde/re4dc-effect-pool-audit/src",
+      "-I/workspace/scratch/c4e1a2818fde/re4dc-effect-pool-audit/port/dreamcast/game/platform/include",
+      "-DRE4DC_GAME",
+      "-fno-exceptions",
+      "-fno-unwind-tables",
+      "-fno-asynchronous-unwind-tables",
+      "-fno-threadsafe-statics",
+      "-DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1",
+      "-DRE4DC_SS_RESTORE_VALIDATE_FIRST=1",
+      "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+      "-DRE4DC_RENDER_FSAA=1",
+      "-DRE4DC_RENDER_OPTION=1",
+      "-DRE4DC_VIEW_DIST_OPTION=1",
+      "-DRE4DC_VIEW_DIST_BOOT=1",
+      "-DRE4DC_FAR_SHELL=1",
+      "-DRE4DC_FOLIAGE_OPTION=1",
+      "-DRE4DC_RES_MODES=9",
+      "-DRE4DC_RES_MODE=0",
+      "-DRE4DC_RES_CYCLE_FRAMES=0",
+      "-DRE4DC_ATCHK_LIST=1",
+      "-DRE4DC_ATCHK_CACHE=1",
+      "-DRE4DC_WORKAT_INLINE=1",
+      "-DRE4DC_ESP_OWNER=1",
+      "-DRE4DC_FX_SCAN=1",
+      "-DRE4DC_FX_MOVE=1",
+      "-DRE4DC_OT_MASK=1",
+      "-DRE4DC_PAD_PROMPTS=1",
+      "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+      "-DRE4DC_SKEL_FTRV=1",
+      "-DRE4DC_VEC_INLINE=1",
+      "-ffp-contract=off",
+      "-O2",
+      "-fwrapv",
+      "-fno-strict-aliasing",
+      "-fno-delete-null-pointer-checks",
+      "-fno-isolate-erroneous-paths-dereference",
+      "-DRE4DC_LEON_CLOTH_DRAWN=1",
+      "-DRE4DC_LOGIC_WASTE=1",
+      "-DRE4DC_LOGIC_WASTE_MASK=0x02",
+      "-DRE4DC_LOGIC_APPROX_MASK=0x01",
+      "-DRE4DC_RESET_HEAP_FIX=1",
+      "-DRE4DC_EM_READ_RETRY=1",
+      "-DRE4DC_RESET_MEM_FIX=1",
+      "-DRE4DC_SH4ZAM_RENDER=1",
+      "-DRE4DC_ACTOR_TRANSACTION=1",
+      "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+      "-DRE4DC_VMU_DIALOG=1",
+      "-I/workspace/scratch/c4e1a2818fde/re4dc-effect-pool-audit/port/dreamcast/game/public-assets",
+      "-DRE4DC_ACTOR_PL08=1",
+      "-DRE4DC_ACTOR_PL08_PACK=1",
+      "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+      "-DRE4DC_NMR_POOL=1",
+      "-DRE4DC_ACTOR_MATERIALS=4",
+      "-DRE4DC_NMR_LOD=1",
+      "-DRE4DC_ACTOR_MATERIALS=4",
+      "-DRE4DC_TEX_PKG_SKIP=1",
+      "-DRE4DC_GC_CENSUS_TRIM=1",
+      "-DRE4DC_GXF_JITTER=1",
+      "-DRE4DC_PACE_TRANS_SKIP=4063",
+      "-include",
+      "/workspace/scratch/c4e1a2818fde/effect-audit-sh4-02/profile/obj/subscreen.h",
+      "-DRE4DC_NATIVE_LASER=1",
+      "-DRE4DC_COARSE_FX_SPRITES=2",
+      "-DRE4DC_ESP_SPRITE_FAST=1",
+      "-DRE4DC_FX_STRIP21=1",
+      "-DRE4DC_ESP_TYPE_CAP=16",
+      "-I/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/sdk/include",
+      "-I/workspace/scratch/c4e1a2818fde/effect-audit-sh4-02/profile/kos-overlay"
+    ],
+    "r117": [
+      "-O2",
+      "-fno-PIC",
+      "-fno-PIE",
+      "-fomit-frame-pointer",
+      "-m4-single",
+      "-ml",
+      "-mfsrra",
+      "-mfsca",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-matomic-model=soft-gusa",
+      "-ftls-model=local-exec",
+      "-D__DREAMCAST__",
+      "-isystem",
+      "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/include",
+      "-isystem",
+      "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/kernel/arch/dreamcast/include",
+      "-isystem",
+      "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/addons/include",
+      "-D_arch_dreamcast=1",
+      "-D_arch_sub_pristine=1",
+      "-Wall",
+      "-std=gnu++20",
+      "-fpermissive",
+      "-w",
+      "-O1",
+      "-include",
+      "/workspace/scratch/c4e1a2818fde/re4dc-effect-pool-audit/port/dreamcast/game/platform/include/re4dc_prelude.h",
+      "-I/workspace/scratch/c4e1a2818fde/re4dc-effect-pool-audit/include",
+      "-I/workspace/scratch/c4e1a2818fde/re4dc-effect-pool-audit/src",
+      "-I/workspace/scratch/c4e1a2818fde/re4dc-effect-pool-audit/port/dreamcast/game/platform/include",
+      "-DRE4DC_GAME",
+      "-fno-exceptions",
+      "-fno-unwind-tables",
+      "-fno-asynchronous-unwind-tables",
+      "-fno-threadsafe-statics",
+      "-DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1",
+      "-DRE4DC_SS_RESTORE_VALIDATE_FIRST=1",
+      "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+      "-DRE4DC_RENDER_FSAA=1",
+      "-DRE4DC_RENDER_OPTION=1",
+      "-DRE4DC_VIEW_DIST_OPTION=1",
+      "-DRE4DC_VIEW_DIST_BOOT=1",
+      "-DRE4DC_FAR_SHELL=1",
+      "-DRE4DC_FOLIAGE_OPTION=1",
+      "-DRE4DC_RES_MODES=9",
+      "-DRE4DC_RES_MODE=0",
+      "-DRE4DC_RES_CYCLE_FRAMES=0",
+      "-DRE4DC_ATCHK_LIST=1",
+      "-DRE4DC_ATCHK_CACHE=1",
+      "-DRE4DC_WORKAT_INLINE=1",
+      "-DRE4DC_ESP_OWNER=1",
+      "-DRE4DC_FX_SCAN=1",
+      "-DRE4DC_FX_MOVE=1",
+      "-DRE4DC_OT_MASK=1",
+      "-DRE4DC_PAD_PROMPTS=1",
+      "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+      "-DRE4DC_SKEL_FTRV=1",
+      "-DRE4DC_VEC_INLINE=1",
+      "-ffp-contract=off",
+      "-DRE4DC_LEON_CLOTH_DRAWN=1",
+      "-DRE4DC_LOGIC_WASTE=1",
+      "-DRE4DC_LOGIC_WASTE_MASK=0x02",
+      "-DRE4DC_LOGIC_APPROX_MASK=0x01",
+      "-DRE4DC_RESET_HEAP_FIX=1",
+      "-DRE4DC_EM_READ_RETRY=1",
+      "-DRE4DC_RESET_MEM_FIX=1",
+      "-DRE4DC_SH4ZAM_RENDER=1",
+      "-DRE4DC_ACTOR_TRANSACTION=1",
+      "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+      "-DRE4DC_VMU_DIALOG=1",
+      "-I/workspace/scratch/c4e1a2818fde/re4dc-effect-pool-audit/port/dreamcast/game/public-assets",
+      "-DRE4DC_ACTOR_PL08=1",
+      "-DRE4DC_ACTOR_PL08_PACK=1",
+      "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+      "-DRE4DC_NMR_POOL=1",
+      "-DRE4DC_ACTOR_MATERIALS=4",
+      "-DRE4DC_NMR_LOD=1",
+      "-DRE4DC_ACTOR_MATERIALS=4",
+      "-DRE4DC_TEX_PKG_SKIP=1",
+      "-DRE4DC_GC_CENSUS_TRIM=1",
+      "-DRE4DC_GXF_JITTER=1",
+      "-DRE4DC_ALIVE_CAP_ON=1",
+      "-DRE4DC_ROUTE_CH21=1",
+      "-include",
+      "/workspace/scratch/c4e1a2818fde/effect-audit-sh4-02/profile/obj/route-movies.h",
+      "-D_prolog=st1_3_prolog",
+      "-D_epilog=st1_3_epilog",
+      "-D_unresolved=st1_3_unresolved",
+      "-D_ctors=re4dc_module_ctors",
+      "-D_dtors=re4dc_module_dtors",
+      "-I/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/sdk/include",
+      "-I/workspace/scratch/c4e1a2818fde/effect-audit-sh4-02/profile/kos-overlay"
+    ]
+  },
+  "test_source_sha256": {
+    "port/dreamcast/tools/d367/effect_pool_audit/build_controls.py": "141e7b4a0a79b5d4338d5d8d5b13f64e7be445d41911ecc11f37d4bedfc756a7",
+    "port/dreamcast/tools/d367/effect_pool_audit/inventory.py": "2618fe063edd3e086a591721e9136b1b2063eaa02fa1e425f12d29e5c363a19f",
+    "port/dreamcast/tools/d367/effect_pool_audit/pool_fixture.cpp.in": "be27e5d76bbc22c1e67dc53a996b6da5af299328c1d630faf134ec80db5f2219",
+    "port/dreamcast/tools/d367/effect_pool_audit/r117_fixture.cpp.in": "87df9c42b242ed750ba84d8fe30d49d22cc5ca658dbfa88560fb9149b61f9e5d",
+    "port/dreamcast/tools/d367/effect_pool_audit/source_tools.py": "a68b01075e611a356ab3eb2570a8bb07965ea4d96e5479086697b84f97f99a63",
+    "port/dreamcast/tools/d367/effect_pool_audit/test_failures.py": "bc7d6445016ed40cf63a76cb2eaaf0a48a4d6ff094a01db07e2742555c4da19f"
+  }
+}

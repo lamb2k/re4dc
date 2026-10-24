@@ -1,3 +1,4 @@
+#include "../world_scratch.h"
 #include "include/bfc_class.h"
 #include "include/movie_world_arena.h"
 #include "include/native_cabin.h"
@@ -16,6 +17,57 @@
 #endif
 #ifndef RE4DC_PS2_WORLD_MESH
 #define RE4DC_PS2_WORLD_MESH 0
+#endif
+#ifndef RE4DC_SCENERY_SELECT_ONLY
+#define RE4DC_SCENERY_SELECT_ONLY 0
+#endif
+#if RE4DC_SCENERY_SELECT_ONLY != 0 && RE4DC_SCENERY_SELECT_ONLY != 1
+#error SCENERY_SELECT_ONLY must be 0 or 1
+#endif
+#if RE4DC_SCENERY_SELECT_ONLY && !RE4DC_SCENERY_CHUNK
+#error SCENERY_SELECT_ONLY needs SCENERY_CHUNK
+#endif
+#ifndef RE4DC_SCENERY_REPLAY_LEAN
+#define RE4DC_SCENERY_REPLAY_LEAN 0
+#endif
+#if RE4DC_SCENERY_REPLAY_LEAN != 0 && RE4DC_SCENERY_REPLAY_LEAN != 1
+#error SCENERY_REPLAY_LEAN must be 0 or 1
+#endif
+#if RE4DC_SCENERY_REPLAY_LEAN && (!RE4DC_SCENERY_CHUNK || !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH)
+#error SCENERY_REPLAY_LEAN needs the direct PS2 scenery chunk path
+#endif
+#if RE4DC_SCENERY_REPLAY_LEAN && RE4DC_WORLD_SCRATCH
+#error SCENERY_REPLAY_LEAN needs WORLD_SCRATCH=0 (ordinary per-part scratch lifetime)
+#endif
+#ifndef RE4DC_SCENERY_UV_SNAPSHOT
+#define RE4DC_SCENERY_UV_SNAPSHOT 0
+#endif
+#if RE4DC_SCENERY_UV_SNAPSHOT != 0 && RE4DC_SCENERY_UV_SNAPSHOT != 1
+#error SCENERY_UV_SNAPSHOT must be 0 or 1
+#endif
+#if RE4DC_SCENERY_UV_SNAPSHOT && !RE4DC_SCENERY_CHUNK
+#error SCENERY_UV_SNAPSHOT needs SCENERY_CHUNK
+#endif
+#ifndef RE4DC_SCENERY_SUBMIT_BATCH
+#define RE4DC_SCENERY_SUBMIT_BATCH 0
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH != 0 && RE4DC_SCENERY_SUBMIT_BATCH != 1
+#error SCENERY_SUBMIT_BATCH must be 0 or 1
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH && (!RE4DC_SCENERY_CHUNK || !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH)
+#error SCENERY_SUBMIT_BATCH needs the direct PS2 scenery chunk path
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH && (RE4DC_PS2_PVS || RE4DC_WORLD_SCRATCH || RE4DC_TA_GUARD)
+#error SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_GUARD
+#endif
+#ifndef RE4DC_SCENERY_EMIT_PREFETCH
+#define RE4DC_SCENERY_EMIT_PREFETCH 0
+#endif
+#if RE4DC_SCENERY_EMIT_PREFETCH != 0 && RE4DC_SCENERY_EMIT_PREFETCH != 1
+#error SCENERY_EMIT_PREFETCH must be 0 or 1
+#endif
+#if RE4DC_SCENERY_EMIT_PREFETCH && (!RE4DC_SCENERY_CHUNK || !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH)
+#error SCENERY_EMIT_PREFETCH needs the direct PS2 scenery chunk path
 #endif
 #ifndef RE4DC_WORLD_RECT21
 #define RE4DC_WORLD_RECT21 0
@@ -56,7 +108,20 @@
 #include <cstring>
 #include <cstdlib>
 #include "native_static.h"
+#if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
+#include "include/pvs23_format.hpp"
+#include "include/pvs23_proof.hpp"
+extern "C" void re4dc_pvs23_observe(unsigned,unsigned,unsigned,const void*,const std::uint8_t*,unsigned,
+                                   const std::uint8_t*,unsigned,unsigned,unsigned,unsigned*);
+extern "C" void re4dc_pvs23_commit(unsigned,unsigned,const unsigned*,const unsigned*);
+#endif
 #include "cache20.h"
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+#include "include/pvs23_meter.hpp"
+extern "C" void re4dc_wm_corners(const std::uint8_t*,unsigned,unsigned);
+// WORLD_METER (game30.mk): the QA menu's world rows (0 = the game's own far / shell; defined before re4dc_ps2_mesh_draw).
+extern "C" volatile unsigned re4dc_qa_wopq_mm,re4dc_qa_wxlu_mm,re4dc_qa_wshell;
+#endif
 #if defined(RE4DC_RIGID_CENSUS) && RE4DC_RIGID_CENSUS == 2
 extern "C" volatile unsigned re4dc_rigid_hide;   // native_actor_fast.cpp (RIGID_CENSUS=2)
 #endif
@@ -64,6 +129,9 @@ extern "C" volatile unsigned re4dc_rigid_hide;   // native_actor_fast.cpp (RIGID
 #include "quality.h"
 #endif
 #include "native_model.h"
+#if RE4DC_SCENERY_SUBMIT_BATCH
+#include "include/scenery_submit_batch.h"
+#endif
 #include "re4dc_platform.h"
 #include "../../room/room_package.hpp"
 #include "../../room/static_room_prepare.hpp"
@@ -172,7 +240,20 @@ static volatile unsigned ps2_mask_select=1U+RE4DC_PS2_PASS_MASK_SELECT;
 #endif
 #if RE4DC_NATIVE_MESH && RE4DC_MESH_FASTPATH
 #include "../../room/mesh_fastpath.hpp"
-#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+// BACKFACE_ROOMS (backface.mk, lane fix-hideout23): the cull only in BACKFACE_ROOM_LIST; the flag is set per scene open.
+extern "C" { unsigned char re4dc_bf_room_on; }
+extern "C" unsigned re4dc_room_id_now();
+extern "C" void re4dc_bf_room_update(){
+    static const unsigned short rooms[]={RE4DC_BACKFACE_ROOM_LIST};
+    const unsigned r=re4dc_room_id_now();unsigned char on=0;
+    for(unsigned short x:rooms)if(x==r)on=1;
+    if(on!=re4dc_bf_room_on){re4dc_bf_room_on=on;re4dc_log("backface rooms: room %03x cpu back-face %s\n",r,on?"on":"off");}
+}
+#endif
+#include "../../room/backface_sh4.hpp"  // common SH-4 SQ ABI, owned by the main lane
+#elif defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
 #include "../../room/backface_emit.hpp"  // CPU_BACKFACE (backface.mk, lane backface22)
 #endif
 #if RE4DC_MESH_VP_SCHED
@@ -808,13 +889,24 @@ bool inverse(const float* m,float* out){
 // Combined screen matrix whose W is view depth: the same mapping as
 // native_model.cpp project() applied to modelview-space positions.
 void load_screen(const float* mv,const float* p,const float* v){
+#if RE4DC_SCENERY_REPLAY_LEAN && RE4DC_SCENERY_SCREEN_MEMO
+    alignas(32) static matrix_t screen;
+    static float last[20]; static bool have=false;
+    // Compare the existing bitwise key in place. A memo hit needs no 80-byte
+    // temporary input copy, and still reloads the matrix after a yielding bind.
+    if(have && !std::memcmp(mv,last,48) && !std::memcmp(p+1,last+12,16) &&
+       !std::memcmp(v,last+16,16)){mat_load(&screen);return;}
+    std::memcpy(last,mv,48);std::memcpy(last+12,p+1,16);std::memcpy(last+16,v,16);have=true;
+#endif
     const float sx=RE4DC_SCREEN_WF/v[2],sy=RE4DC_SCREEN_HF/v[3];
     const float row0[4]={RE4DC_SCREEN_HALF_WF*p[1],0,RE4DC_SCREEN_HALF_WF*p[2]-sx*(v[0]+v[2]*.5f),0};
     const float row1[4]={0,-RE4DC_SCREEN_HALF_HF*p[3],-RE4DC_SCREEN_HALF_HF*p[4]-sy*(v[1]+v[3]*.5f),0};
     const float row2[4]={0,0,1,0},row3[4]={0,0,-1,0};
     const float* rows[4]={row0,row1,row2,row3};
+#if !(RE4DC_SCENERY_REPLAY_LEAN && RE4DC_SCENERY_SCREEN_MEMO)
     alignas(32) static matrix_t screen;
-#if RE4DC_SCENERY_SCREEN_MEMO
+#endif
+#if RE4DC_SCENERY_SCREEN_MEMO && !RE4DC_SCENERY_REPLAY_LEAN
     // SCENERY_SCREEN_MEMO (scenery19): parts of one placement bind with the same inputs; the same inputs give the
     // same matrix (identical arithmetic), so reload the last one. Exact.
     static float last[20]; static bool have=false;
@@ -873,6 +965,10 @@ struct Emitter {
     unsigned limit=0; // packet slots strips may use: packet.capacity less any borrowed tail
     bool streaming=false,bound=false,submitted=false;
     bool vertex_alpha=false; // corner alpha from the colour palette (source vertex alpha)
+#if RE4DC_SCENERY_DEDUP==3
+    const re4dc::room::CompactVertex12* dd_base=nullptr;
+    unsigned dd_unique=0,dd_count=0; // borrowed meshlet context, no allocation or retained mask
+#endif
     re4dc::render::ClipParameters clip{};
 #if RE4DC_PS2_WORLD_MESH
     const unsigned* ps2=nullptr; // PS2_WORLD_MESH part: {crc, fnv, width, height, pass, cull}; binds by key, not by p
@@ -929,12 +1025,33 @@ struct Emitter {
     // clipper and the transform cache only. Nothing can be rolled back once
     // bound, so later failures abort the frame (submitted).
     bool direct=false; std::uint32_t* sq=nullptr; unsigned slots=0;
+#if RE4DC_SCENERY_SUBMIT_BATCH
+    Re4dcWorldSubmitBatch* submit_batch=nullptr; // borrowed only inside chunk_flush
+    void end_direct(){if(sq){
+        if(submit_batch)re4dc_ps2_world_direct_end_batch(slots,submit_batch);
+        else re4dc_model_direct_end(slots);
+        sq=nullptr;
+    }}
+#else
     void end_direct(){if(sq){re4dc_model_direct_end(slots);sq=nullptr;}}
+#endif
     void put(unsigned n){sq=re4dc_ta_put(sq,dst+used,n);slots+=n;}
 #endif
     bool bind(){
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        // Claimed transition groups may log from the validity walk itself.
+        if(submit_batch && !sq && re4dc_source_world_group_claimed())
+            re4dc_ps2_world_batch_close(submit_batch);
+        if(!re4dc_source_world_binding_valid()){
+            // A new part has not bound yet; release the previous part's idle
+            // lock before the existing owner-failure/abort callback.
+            if(submit_batch && !sq)re4dc_ps2_world_batch_close(submit_batch);
+            re4dc_source_world_binding_failed();return false;
+        }
+#else
         if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return false;}
+#endif
 #endif
         if(bound)return true;
 #if RE4DC_MV_SHADOWS
@@ -958,11 +1075,21 @@ struct Emitter {
 #if RE4DC_PS2_WORLD_MESH
 #if RE4DC_SCENERY_PIECE_STATE
             re4dc_ps2_piece_slot=ps2?piece_slot:nullptr;
+#if RE4DC_SCENERY_SUBMIT_BATCH
+            const int begun=ps2?(submit_batch?re4dc_ps2_world_direct_begin_batch(ps2,&out,submit_batch):
+                                re4dc_ps2_world_direct_begin(ps2,&out)):re4dc_model_direct_begin(&p,&out);
+#else
             const int begun=ps2?re4dc_ps2_world_direct_begin(ps2,&out):re4dc_model_direct_begin(&p,&out);
+#endif
             re4dc_ps2_piece_slot=nullptr;
             if(!begun)return false;
 #else
+#if RE4DC_SCENERY_SUBMIT_BATCH
+            if(!(ps2?(submit_batch?re4dc_ps2_world_direct_begin_batch(ps2,&out,submit_batch):
+                                  re4dc_ps2_world_direct_begin(ps2,&out)):re4dc_model_direct_begin(&p,&out)))return false;
+#else
             if(!(ps2?re4dc_ps2_world_direct_begin(ps2,&out):re4dc_model_direct_begin(&p,&out)))return false;
+#endif
 #endif
 #else
             if(!re4dc_model_direct_begin(&p,&out))return false;
@@ -970,12 +1097,24 @@ struct Emitter {
             sq=out.sq;submitted=true;
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
             if(!re4dc_source_world_binding_valid()){
+#if RE4DC_SCENERY_SUBMIT_BATCH
+                end_direct();
+                if(submit_batch)re4dc_ps2_world_batch_close(submit_batch);
+                re4dc_source_world_binding_failed();return false;
+#else
                 end_direct();re4dc_source_world_binding_failed();return false;
+#endif
             }
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
             if(!re4dc_r11f_binding_valid()) {
+#if RE4DC_SCENERY_SUBMIT_BATCH
+                end_direct();
+                if(submit_batch)re4dc_ps2_world_batch_close(submit_batch);
+                re4dc_r11f_binding_failed();return false;
+#else
                 end_direct();re4dc_r11f_binding_failed();return false;
+#endif
             }
 #endif
             packet.vertices=out.scratch;packet.capacity=out.scratch_capacity;
@@ -1025,12 +1164,23 @@ struct Emitter {
         return ((c>>12)&15U)*0x11000000U|((c>>8)&15U)*0x110000U|((c>>4)&15U)*0x1100U|(c&15U)*0x11U;
     }
     [[gnu::always_inline]] re4dc::render::StaticCorner corner(const re4dc::room::CompactVertex12& in)const{
+#if RE4DC_SCENERY_DEDUP==3
+        const auto& xyz=re4dc::room::MeshPackage::offline_position(dd_base,dd_unique,dd_count,in);
+        return {float(xyz.x),float(xyz.y),float(xyz.z),in.u,in.v,
+                palette?palette[in.color]:c4444?argb4444(in.color):argb1555(in.color)};
+#else
         return {float(in.x),float(in.y),float(in.z),in.u,in.v,
                 palette?palette[in.color]:c4444?argb4444(in.color):argb1555(in.color)};
+#endif
     }
 #else
     [[gnu::always_inline]] re4dc::render::StaticCorner corner(const re4dc::room::CompactVertex12& in)const{
+#if RE4DC_SCENERY_DEDUP==3
+        const auto& xyz=re4dc::room::MeshPackage::offline_position(dd_base,dd_unique,dd_count,in);
+        return {float(xyz.x),float(xyz.y),float(xyz.z),in.u,in.v,palette?palette[in.color]:argb1555(in.color)};
+#else
         return {float(in.x),float(in.y),float(in.z),in.u,in.v,palette?palette[in.color]:argb1555(in.color)};
+#endif
     }
 #endif
     void clip_vertex(const re4dc::render::StaticCorner& in,const re4dc::room::CompactBatch& batch,
@@ -2131,6 +2281,9 @@ inline int box_mask_lean(const float lo[3],const float hi[3],const float* m,cons
 }
 struct LeanSgStats { unsigned calls,bm,sel_bad,coef_bad,bm_bad; } lst;
 #endif
+#if defined(RE4DC_SCENERY_SELECT_LEAN2) && RE4DC_SCENERY_SELECT_LEAN2
+#include "include/scenery_select_lean2.inc"
+#endif
 #endif
 }
 #pragma GCC pop_options
@@ -2152,17 +2305,25 @@ namespace pvs { unsigned cl_tested=0,cl_skipped=0; } // PS2_PVS cluster counters
 // fmac) and colour (the same LUT words): every vertex word is the knob-off word. One word per meshlet (repeat offset |
 // repeat count << 24) and one byte per repeat (its first copy), in heap 4 beside the strip groups.
 namespace dedup {
+#if RE4DC_SCENERY_DEDUP!=3
 const void* pkg=nullptr;          // the package the tables belong to (ps2w.package once applied)
 std::uint32_t* lets=nullptr;      // per meshlet: offset into src | repeats << 24
 std::uint8_t* src=nullptr;        // per repeat: its first copy's corner
 void* block=nullptr; unsigned nlets=0,nsrc=0,bytes=0;
+#endif // mode3 derives every source from its current package, without retained table state
 // cache[u..n) from their first copies (cache[src[..]]), in[u..n) u, v, colour; oc likewise.
 __attribute__((noinline)) void fill(const re4dc::vp::Vertex12* in,pvr_vertex_t* cache,std::uint8_t* oc,unsigned u,
                                     unsigned n,const std::uint8_t* s,const re4dc::vp::Constants& k,unsigned clo=0,unsigned chi=255){
     const float au=k.f.au,bu=k.f.bu,av=k.f.av,bv=k.f.bv;
     const std::uint32_t* lut=k.lut;const std::uint32_t andm=k.and_mask,orb=k.or_bits;
     for(unsigned j=u;j<n;++j){
+#if RE4DC_SCENERY_DEDUP==3
+        const unsigned q=in[j].x; // validated SDO3 refs are this repeat vertex's x word
+        (void)s;
+        if(q<clo || q>chi)continue; // an unselected repeat never reads an unprimed first
+#else
         const unsigned q=*s++;
+#endif
         const pvr_vertex_t& a=cache[q];pvr_vertex_t& d=cache[j];
         d.x=a.x;d.y=a.y;d.z=a.z;oc[j]=oc[q];
         const auto& v=in[j];
@@ -2177,7 +2338,12 @@ __attribute__((noinline)) void fill(const re4dc::vp::Vertex12* in,pvr_vertex_t* 
         // check build: the knob-off kernel on this corner, word for word (outcode screen/depth bits only)
         static unsigned checked=0,bad=0;
         alignas(32) pvr_vertex_t t[2];std::uint8_t to[8];
+#if RE4DC_SCENERY_DEDUP==3
+        auto ref=v;ref.x=in[q].x;ref.y=in[q].y;ref.z=in[q].z;
+        re4dc::vp::transform_sched<re4dc::vp::kChecksAll>(&ref,1,t,to,k);
+#else
         re4dc::vp::transform_sched<re4dc::vp::kChecksAll>(&v,1,t,to,k);
+#endif
         std::uint32_t wa[6],wb[6];
         std::memcpy(wa,&t[0].x,24);std::memcpy(wb,&d.x,24);
         ++checked;
@@ -2215,6 +2381,18 @@ namespace piece { std::uint32_t* table=nullptr; const void* pkg=nullptr; }
 #pragma GCC push_options
 #pragma GCC optimize("O2")
 #endif
+#if RE4DC_WORLD_SCRATCH
+#if !RE4DC_NATIVE_MESH || !RE4DC_MESH_FASTPATH || !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH
+#error WORLD_SCRATCH requires the original indexed direct mesh fast path
+#endif
+static_assert(sizeof(pvr_vertex_t)*re4dc::vp::kCacheEntries==re4dc::world_scratch::kVertexBytes);
+static_assert(sizeof(pvr_vertex_t)*re4dc::vp::kCacheSlots==re4dc::world_scratch::kReservedBytes);
+extern "C" void re4dc_world_scratch_prime_reset(){
+#if RE4DC_PS2_WORLD_LEAN
+    lean::prime_at=nullptr;lean::primed=0;
+#endif
+}
+#endif
 struct MeshDraw : Emitter {
     const re4dc::room::MeshPackage& package; const re4dc::room::MeshPart& part;
     const std::uint32_t* lut; // mesh view's colour LUT (nullptr: per-corner path)
@@ -2250,6 +2428,13 @@ struct MeshDraw : Emitter {
     // fogged past the View far) instead of going through the clipper.
     float cull_far=0;
     unsigned part_index=0; // v2: index into the package's part LOD table
+#if RE4DC_PS2_PVS
+    unsigned pvs_placement=~0U,pvs_pending[3]={~0U,~0U,0};
+    void pvs_finish(bool success){
+        if(success && pvs_pending[2] && ps2)re4dc_pvs23_commit(pvs_placement,part_index,pvs_pending,ps2);
+        pvs_pending[2]=0;
+    }
+#endif
 #if RE4DC_QUALITY_ASSETS
     std::uint64_t skip_clusters=0; // Standard impt: clusters (bit = index in the part) drawn as tree quads
 #endif
@@ -2266,6 +2451,10 @@ struct MeshDraw : Emitter {
     }
     const re4dc::room::CompactVertex12* corners(const re4dc::room::Meshlet& l){
         const auto* base=package.vertices()+l.first_vertex;
+#if RE4DC_SCENERY_DEDUP==3
+        const unsigned rep=package.repeat_count(l);
+        dd_base=rep?base:nullptr;dd_unique=l.vertex_count-rep;dd_count=l.vertex_count;
+#endif
         if(!package.indexed(l))return base;
         // Three word moves per corner: R4IM vertices are 4-byte aligned.
         typedef std::uint32_t __attribute__((may_alias)) Word;
@@ -2278,9 +2467,38 @@ struct MeshDraw : Emitter {
         return gathered;
     }
 #if RE4DC_SCENERY_DEDUP
-    // SCENERY_DEDUP: the meshlet's repeat word (src offset | repeats << 24); 0 for other packages
+    // These getters follow corners(l), which refreshes the current meshlet's decoder
+    // even for plain/indexed geometry. Reuse that context rather than decode it twice.
+    // Modes 1/2 retain their external table word (src offset | repeats << 24).
     std::uint32_t dd_word(const re4dc::room::Meshlet& l)const{
+#if RE4DC_SCENERY_DEDUP==3
+        (void)l;
+        return (dd_count-dd_unique)<<24;
+#else
         return dedup::pkg==static_cast<const void*>(&package)?dedup::lets[&l-package.meshlets()]:0U;
+#endif
+    }
+    bool dd_active(std::uint32_t dw)const{
+#if RE4DC_SCENERY_DEDUP==3
+        (void)dw;return dd_base!=nullptr;
+#else
+        return dw>>24;
+#endif
+    }
+    unsigned dd_unique_count(const re4dc::room::Meshlet& l,std::uint32_t dw)const{
+#if RE4DC_SCENERY_DEDUP==3
+        (void)l;(void)dw;return dd_unique;
+#else
+        return l.vertex_count-(dw>>24);
+#endif
+    }
+    const std::uint8_t* dd_source(const re4dc::room::Meshlet& l,std::uint32_t dw)const{
+#if RE4DC_SCENERY_DEDUP==3
+        (void)l;(void)dw;
+        return reinterpret_cast<const std::uint8_t*>(dd_base+dd_unique);
+#else
+        (void)l;return dedup::src+(dw&0xffffffU);
+#endif
     }
 #endif
 #if RE4DC_MESH_FASTPATH
@@ -2288,17 +2506,47 @@ struct MeshDraw : Emitter {
     // the bound packet range (never sent: strips stop at 'limit').
     pvr_vertex_t* cache=nullptr; std::uint8_t* outcodes=nullptr;
     re4dc::vp::Constants k{};
+#if RE4DC_PS2_PVS
+    void pvs_observed(const re4dc::room::Meshlet& l){
+#if RE4DC_MESH_DIRECT
+        if(ps2 && direct && sq && pvs_placement!=~0U)
+            re4dc_pvs23_observe(pvs_placement,part_index,unsigned(&l-package.meshlets()),cache,
+                outcodes,l.vertex_count,package.strip_begin(l),l.strip_bytes,p.cull,limit,pvs_pending);
+#else
+        (void)l;
+#endif
+    }
+#endif
 #if RE4DC_MESH_PRIME_LAZY
     // MESH_PRIME_LAZY (exact): the cache's constant words are written for the entries a meshlet
     // uses, the first time they are needed, instead of all kCacheEntries at every borrow (one
     // borrow per part per placement: ~30k entries a frame for ~24k transformed PS2 world vertices).
     unsigned primed=0;
 #endif
+#if RE4DC_WORLD_SCRATCH
+    bool scratch_borrowed=false;
+    ~MeshDraw(){if(scratch_borrowed)re4dc_world_scratch_release();}
+#endif
     bool borrow(){
         if(cache)return true;
         if(!lut || limit<re4dc::vp::kCacheSlots+64U)return false; // small slab: per-corner path
         limit-=re4dc::vp::kCacheSlots;
         cache=dst+limit;outcodes=reinterpret_cast<std::uint8_t*>(cache+re4dc::vp::kCacheEntries);
+#if RE4DC_WORLD_SCRATCH
+        // Outcodes and all 264 packet slots remain in the original RAM tail.
+        // The only relocated storage is the projected record array, for PS2 world.
+        if(ps2){
+            void* selected=cache;
+            const int borrowed=re4dc_world_scratch_acquire(cache,&selected);
+            if(borrowed<0){re4dc_model_packet_abort();return false;}
+            if(borrowed){
+                cache=static_cast<pvr_vertex_t*>(selected);scratch_borrowed=true;
+                // acquire resets retained prime state on each mode/storage epoch.
+                // The unchanged prime below (or lazy per-entry prime) initializes
+                // flags and oargb before any projected entry can be consumed.
+            }
+        }
+#endif
 #if !RE4DC_MESH_PRIME_LAZY
         re4dc::vp::prime(cache,re4dc::vp::kCacheEntries);
 #endif
@@ -2396,11 +2644,14 @@ struct MeshDraw : Emitter {
 #if RE4DC_MESH_VP_SCHED==1
                 vp::transform_sched<vp::kChecksAll>(in+lo,vn,cache+lo,outcodes+lo,k);
 #if RE4DC_SCENERY_DEDUP
-                if(const std::uint32_t dw=dd_word(l);dw>>24)
-                    dedup::fill(in,cache,outcodes,l.vertex_count-(dw>>24),l.vertex_count,dedup::src+(dw&0xffffffU),k,lo,hi);
+                if(const std::uint32_t dw=dd_word(l);dd_active(dw))
+                    dedup::fill(in,cache,outcodes,dd_unique_count(l,dw),l.vertex_count,dd_source(l,dw),k,lo,hi);
 #endif
 #else
                 vp::transform<vp::kChecksAll>(in+lo,vn,cache+lo,outcodes+lo,k);
+#endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+                if(ps2)re4dc_wm_corners(outcodes+lo,vn,0x3fU);
 #endif
                 const std::uint8_t* const sb=package.strip_begin(l);
                 for(unsigned i=0;i<nr;++i){
@@ -2412,13 +2663,21 @@ struct MeshDraw : Emitter {
             }
         }
 #endif
+#if RE4DC_SCENERY_DEDUP==3
+        if(const std::uint32_t dw=dd_word(l);dd_active(dw) && checks!=vp::kChecksAll){
+            const unsigned u=dd_unique_count(l,dw);
+            if(checks==vp::kChecksNone)vp::transform<vp::kChecksNone>(in,u,cache,outcodes,k);
+            else vp::transform<vp::kChecksScreen>(in,u,cache,outcodes,k);
+            dedup::fill(in,cache,outcodes,u,l.vertex_count,dd_source(l,dw),k);
+        }else
+#endif
         if(checks==vp::kChecksNone)vp::transform<vp::kChecksNone>(in,l.vertex_count,cache,outcodes,k);
         else if(checks==vp::kChecksScreen)vp::transform<vp::kChecksScreen>(in,l.vertex_count,cache,outcodes,k);
 #if RE4DC_MESH_VP_SCHED==1 && RE4DC_SCENERY_DEDUP
-        else if(const std::uint32_t dw=dd_word(l);dw>>24){
-            const unsigned u=l.vertex_count-(dw>>24);
+        else if(const std::uint32_t dw=dd_word(l);dd_active(dw)){
+            const unsigned u=dd_unique_count(l,dw);
             vp::transform_sched<vp::kChecksAll>(in,u,cache,outcodes,k);
-            dedup::fill(in,cache,outcodes,u,l.vertex_count,dedup::src+(dw&0xffffffU),k);
+            dedup::fill(in,cache,outcodes,u,l.vertex_count,dd_source(l,dw),k);
         }
         else vp::transform_sched<vp::kChecksAll>(in,l.vertex_count,cache,outcodes,k);
 #elif RE4DC_MESH_VP_SCHED==1
@@ -2431,6 +2690,15 @@ struct MeshDraw : Emitter {
 #endif
 #if RE4DC_MESH_VP_SCHED==2
         if(checks==vp::kChecksAll)vp_sched_compare(in,l.vertex_count,cache,outcodes,k);
+#endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+        if(ps2){
+            unsigned count=l.vertex_count;
+#if RE4DC_MESH_VP_SCHED==1 && RE4DC_SCENERY_DEDUP
+            if(checks==vp::kChecksAll)if(const std::uint32_t dw=dd_word(l);dw>>24)count-=dw>>24;
+#endif
+            re4dc_wm_corners(outcodes,count,checks==vp::kChecksNone?0U:checks==vp::kChecksScreen?0x0fU:0x3fU);
+        }
 #endif
         const unsigned screen=vp::screen_mask(checks),depth=vp::depth_mask(checks);
 #if RE4DC_MESH_STRIP_LEAN==2
@@ -2445,7 +2713,11 @@ struct MeshDraw : Emitter {
 #if RE4DC_MESH_STRIP_LEAN==3
            && strip_lean_select==2U
 #endif
-          ){int result=1;s=strips_lean(s,end,base,batch,result);if(!s)return result;}
+          ){int result=1;s=strips_lean(s,end,base,batch,result);
+#if RE4DC_PS2_PVS
+                if(!s && result>0 && checks==vp::kChecksAll)pvs_observed(l);
+#endif
+                if(!s)return result;}
 #endif
         while(s<end){
             const unsigned n=*s++;
@@ -2478,8 +2750,24 @@ struct MeshDraw : Emitter {
             }
             s+=n;
         }
+#if RE4DC_PS2_PVS
+        if(checks==vp::kChecksAll)pvs_observed(l);
+#endif
         return 1;
     }
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
+    // The caller's source material still owns cull/depth/alpha. Two-sided cards and
+    // no-depth-write runs keep their original walk; accepted opaque strips use
+    // only the common assembly emitter for facing, run splitting and SQ writes.
+#if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
+    bool bf_on()const{return re4dc_bf_room_on && (p.cull==1U || p.cull==2U) && !(p.material_flags&4U) && p.depth_mode==0U;}
+#else
+    bool bf_on()const{return (p.cull==1U || p.cull==2U) && !(p.material_flags&4U) && p.depth_mode==0U;}
+#endif
+    void bf_send(const std::uint8_t* s,unsigned n){
+        slots+=re4dc::bf::strip_sq(cache,s,n,0xffU,p.cull,sq);
+    }
+#endif
 #if RE4DC_MESH_STRIP_LEAN==1 || RE4DC_MESH_STRIP_LEAN==3
     // MESH_STRIP_LEAN: meshlet()'s strip walk for kChecksAll meshlets on the store-queue sink. walk_lean()
     // (room/mesh_strip_lean.hpp) takes the strips up to the next one that needs the clipper with the same
@@ -2489,7 +2777,7 @@ struct MeshDraw : Emitter {
     // input = sum n - 2 * strips, stats.vertices = sum n. lean_flush() writes these back before the
     // clipper (which reads and updates the members) and at the end; the clip strip itself runs the
     // original code. Returns nullptr when the meshlet is done (result: meshlet()'s value).
-#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 1
     // CPU_BACKFACE (lane backface22): parts whose header culls (p.cull 1 CCW, 2 CW) send only the triangles the ISP would
     // keep (room/backface_emit.hpp); cull-none parts keep the unchanged paths. strips_bf: the lean walk's decisions in C
     // (depth-all cull, clipper for a depth crossing or n > limit, screen-all cull, else the back-face split).
@@ -2520,6 +2808,31 @@ struct MeshDraw : Emitter {
         result=1;return nullptr;
     }
 #endif
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
+    const std::uint8_t* strips_bf_sq(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
+                                     const re4dc::room::CompactBatch& batch,int& result){
+        for(;;){
+            const std::uint8_t* const mark=s;std::uint32_t* q=sq;const std::uint32_t* const qmark=q;
+            unsigned culled=0,emitted=0,accepted_triangles=0;
+            s=re4dc::vp::walk_lean_sq(s,end,outcodes,cache,limit,p.cull,q,culled,emitted,accepted_triangles);
+            // Backface splitting may send zero vertices or several pieces.
+            // Keep the C reference's source-strip counters; slots track actual
+            // SQ writes. lean_flush's output=slots-2*strips cannot be used here.
+            const unsigned strips=culled+emitted,sum=unsigned(s-mark)-strips;
+            input+=sum-2U*strips;stats.vertices+=sum;stats.strips_culled+=culled;stats.strips+=emitted;
+            slots+=unsigned(q-qmark)/8U;output+=accepted_triangles;sq=q;
+            // Actual emitted pieces are hashed by the common assembly trace
+            // hook in diagnostic builds. Do not replay rejected original strips.
+            if(s>=end){result=1;return nullptr;}
+            const unsigned n=*s++; // unchanged depth-crossing / oversize clipper
+            input+=n-2;
+            if(n<=limit)stats.vertices+=n;
+            result=clip_strip(base,batch,s,n);
+            if(result<=0)return nullptr;
+            s+=n;
+        }
+    }
+#endif
     void lean_flush(const std::uint8_t* s,const std::uint8_t* mark,std::uint32_t* q,const std::uint32_t* qmark,
                     unsigned culled,unsigned emitted){
         const unsigned strips=culled+emitted,sum=unsigned(s-mark)-strips,v=unsigned(q-qmark)/8U;
@@ -2528,7 +2841,9 @@ struct MeshDraw : Emitter {
     }
     const std::uint8_t* strips_lean(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
                                     const re4dc::room::CompactBatch& batch,int& result){
-#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
+        if(bf_on())return strips_bf_sq(s,end,base,batch,result);
+#elif defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
         if(bf_on())return strips_bf(s,end,base,batch,result);
 #endif
         for(;;){
@@ -2773,172 +3088,70 @@ struct MeshDraw : Emitter {
         std::uint8_t nr,gmask,lo,hi;  // nr 0xff: the whole meshlet; else the strip groups left (gmask: group bits)
         std::uint8_t pad[2];
     };
-    bool chunk_ok()const{
-        return package.lod() && !(lean::kMode&8U) && sg_groups<=8U
-#if RE4DC_PS2_PVS
-            && !pvs_set
-#endif
-#if RE4DC_PS2_INTERIOR_CULL
-            && !pc_mode
-#endif
-#if RE4DC_QUALITY_ASSETS
-            && !skip_clusters
-#endif
-            ;
+#include "include/scenery_chunk_select.inc"
+#if RE4DC_SCENERY_EMIT_PREFETCH
+    // SCENERY_EMIT_PREFETCH_MEMBERS_BEGIN
+    // Only immutable package input is hinted. No binding, matrix, material or
+    // scratch ownership is carried across the next part's bind (which may yield).
+    static void emit_prefetch_span(const void* ptr,unsigned bytes){
+        const auto* p=static_cast<const std::uint8_t*>(ptr);
+        __builtin_prefetch(p);
+        if((reinterpret_cast<std::uintptr_t>(p)&31U)+bytes>32U)
+            __builtin_prefetch(p+bytes-1U);
     }
-    // Picks appended at out (room for part.meshlet_count); returns how many.
-    __attribute__((noinline)) unsigned chunk_select(Pick* out){
-        const auto& lod=package.part_lods()[part_index];
-        const auto* clusters=package.clusters();const auto* levels=package.levels();const auto* all=package.meshlets();
-        const bool groups=sg && lean_am;
-        unsigned np=0;
-#if RE4DC_SCENERY_CONE
-        // SCENERY_CONE: the eye in grid coordinates (view = M g + t: e = -M^-1 t) and the culled side's sign (part cull
-        // 1 CCW / 2 CW, det(M), and the projection's fixed handedness RE4DC_SCENERY_CONE_SIGN).
-        bool cone_on=sg && cone::pkg==static_cast<const void*>(&package) && p.cull>0U && p.cull<=2U;
-        float ex=0,ey=0,ez=0,csgn=1;
-        if(cone_on){
-            const float* m=mvq;
-            const float c0=m[5]*m[10]-m[6]*m[9],c1=m[6]*m[8]-m[4]*m[10],c2=m[4]*m[9]-m[5]*m[8];
-            const float det=m[0]*c0+m[1]*c1+m[2]*c2;
-            if(!(std::fabs(det)>1e-20f))cone_on=false;
-            else{
-                const float id=-1.0f/det,tx=m[3],ty=m[7],tz=m[11];
-                // e = -adj(M) t / det
-                ex=id*(c0*tx+(m[2]*m[9]-m[1]*m[10])*ty+(m[1]*m[6]-m[2]*m[5])*tz);
-                ey=id*(c1*tx+(m[0]*m[10]-m[2]*m[8])*ty+(m[2]*m[4]-m[0]*m[6])*tz);
-                ez=id*(c2*tx+(m[1]*m[8]-m[0]*m[9])*ty+(m[0]*m[5]-m[1]*m[4])*tz);
-                csgn=float(RE4DC_SCENERY_CONE_SIGN)*(p.cull==1U?1.0f:-1.0f)*(det>0.0f?1.0f:-1.0f);
-            }
-        }
-#endif
-        for(unsigned c=lod.first_cluster;c<lod.first_cluster+lod.cluster_count;++c){
-            const auto& cl=clusters[c];
-            float lo[3],hi[3];
-            for(unsigned a=0;a<3;++a){lo[a]=float(cl.bounds_min[a]);hi[a]=float(cl.bounds_max[a]);}
-            unsigned cin;
-            if(lean_inside){cin=2;++lean::st.skipped;}
-            else if((lean::kMode&2U) && lean_am)cin=lean::box_class(lo,hi,mvq,lean_am,near,cull_far,nullptr);
-            else {
-                const re4dc::render::DrawBounds bounds{{lo[0],lo[1],lo[2]},{hi[0],hi[1],hi[2]}};
-                cin=re4dc::render::group_visible(bounds,mvq,p.projection,p.viewport,near,cull_far,0)?1U:0U;
-            }
-            if(!cin){++stats.clusters_culled;continue;}
-            if(cin==2)++lean::st.cl_inside;
-            ++stats.clusters_visible;
-            float depth=-mvq[11],radius=0;
-            for(unsigned a=0;a<3;++a){
-                depth-=mvq[8+a]*(lo[a]+hi[a])*0.5f;
-                radius+=std::fabs(mvq[8+a])*(hi[a]-lo[a])*0.5f;
-            }
-            depth-=radius;
-            if(depth<near)depth=near;
-            unsigned level=cl.level_count-1;
-            while(level && levels[cl.first_level+level].error*lod_scale>depth)--level;
-#if RE4DC_PS2_WORLD_NONEMPTY_LOD
-            if(ps2)level=re4dc::room::nonempty_lod(levels+cl.first_level,cl.level_count,level);
-#endif
-            ++stats.lod_draws[level<3?level:3];
-            const auto& lv=levels[cl.first_level+level];
-            for(unsigned i=0;i<lv.meshlet_count;++i){
-                const unsigned li=lv.first_meshlet+i;
-                const auto& l=all[li];
-#if defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK
-                if(RE4DC_C20_PREF_ON())RE4DC_C20_PREF(&all[li+1]);   // PREF_WALK: the next meshlet header (bounds)
-#endif
-                unsigned mask=0;
-                if(cin==2)++lean::st.skipped;
-                else if(groups){
-                    const float blo[3]={float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])};
-                    const float bhi[3]={float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])};
-#if RE4DC_SG_SELECT_LEAN
-                    const int mk=re4dc_sg_lean_on?lean::box_mask_lean(blo,bhi,mvq,lean_am,near,cull_far)
-                                                 :lean::box_mask(blo,bhi,mvq,lean_am,near,cull_far);
-#else
-                    const int mk=lean::box_mask(blo,bhi,mvq,lean_am,near,cull_far);
-#endif
-                    if(mk<0){++stats.groups_culled;continue;}
-                    mask=unsigned(mk);
-                }else{
-                    const re4dc::render::DrawBounds bounds{
-                        {float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])},
-                        {float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])}};
-                    if(!re4dc::render::group_visible(bounds,mvq,p.projection,p.viewport,near,cull_far,0)){++stats.groups_culled;continue;}
-                }
-                Pick& pk=out[np++];
-                pk.let=std::uint16_t(li);pk.nr=0xffU;
-                if(groups && mask){
-                    const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*li);
-                    unsigned glo,ghi,culled,nr;std::uint16_t r0[8],r1[8];
-#if RE4DC_SG_SELECT_LEAN
-                    if(re4dc_sg_lean_on){
-                        if(!sg_lp_ok){lean::sg_coef_lean(mvq,near,sg_lp);sg_lp_ok=true;}
-                        nr=lean::sg_select_lean(g,sg_groups,sg_lp,mask,r0,r1,glo,ghi,culled);
-                        ++lean::lst.calls;
-                    }else{
-                        if(!sg_coef_ok){lean::sg_coef(mvq,near,sg_coef);sg_coef_ok=true;}
-                        nr=lean::sg_select(g,sg_groups,sg_coef,mask,r0,r1,glo,ghi,culled);
-                    }
-#else
-                    if(!sg_coef_ok){lean::sg_coef(mvq,near,sg_coef);sg_coef_ok=true;}
-                    nr=lean::sg_select(g,sg_groups,sg_coef,mask,r0,r1,glo,ghi,culled);
-#endif
-                    ++lean::st.sg_tests;
-                    if(culled){
-                        lean::st.sg_culled+=culled;++lean::st.sg_meshlets;
-                        lean::st.sg_vskip+=nr?l.vertex_count-(ghi-glo+1U):l.vertex_count;
-                        // the visible groups as bits: group k (a record whose strip end moves) is kept when its range
-                        // is the next one sg_select returned
-                        unsigned bits=0,prev=0,j=0;
-                        for(unsigned k=0;k<sg_groups && j<nr;++k){
-                            const unsigned gend=g[8*k+6];
-                            if(gend==prev)continue;
-                            if(r0[j]==prev && r1[j]==gend){bits|=1U<<k;++j;}
-                            prev=gend;
-                        }
-                        pk.nr=std::uint8_t(nr);pk.gmask=std::uint8_t(bits);pk.lo=std::uint8_t(glo);pk.hi=std::uint8_t(ghi);
-                    }
-                }
-#if RE4DC_SCENERY_CONE
-                if(cone_on && pk.nr){
-                    // the groups still drawn (all non-empty ones for a whole pick), then each one's cone
-                    const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*li);
-                    const std::uint8_t* cr=cone::rec+8U*sg_groups*li;
-                    unsigned keep=0,prev=0;
-                    for(unsigned q=0;q<sg_groups;++q){const unsigned gend=g[8*q+6];if(gend!=prev)keep|=1U<<q;prev=gend;}
-                    if(pk.nr!=0xffU)keep&=pk.gmask;
-                    unsigned rej=0;
-                    for(unsigned q=0;q<sg_groups;++q){
-                        const std::uint8_t* r=cr+8U*q;
-                        if(!((keep>>q)&1U) || !r[3])continue;
-                        const std::uint16_t* b=g+8*q;
-                        const float vx=0.5f*(float(b[0])+float(b[3]))-ex,vy=0.5f*(float(b[1])+float(b[4]))-ey,
-                                    vz=0.5f*(float(b[2])+float(b[5]))-ez;
-                        const float d=csgn*(float(std::int8_t(r[0]))*vx+float(std::int8_t(r[1]))*vy+float(std::int8_t(r[2]))*vz);
-                        float R;std::memcpy(&R,r+4,4);
-                        ++cone::tests;
-                        if(d>R){const float e=d-R;if(e*e>cone::tab2[r[3]]*(vx*vx+vy*vy+vz*vz))rej|=1U<<q;}
-                    }
-                    if(rej){
-                        keep&=~rej;
-                        unsigned nr=0,vlo=255,vhi=0;
-                        const unsigned was=pk.nr==0xffU?l.vertex_count:unsigned(pk.hi-pk.lo+1U);
-                        for(unsigned q=0;q<sg_groups;++q)if((keep>>q)&1U){
-                            ++nr;const unsigned v0=g[8*q+7]&255U,v1=g[8*q+7]>>8;
-                            if(v0<vlo)vlo=v0;
-                            if(v1>vhi)vhi=v1;
-                        }
-                        cone::rejects+=__builtin_popcount(rej);
-                        if(!nr){--np;++cone::picks_dropped;cone::vskip+=was;continue;}
-                        cone::vskip+=was-(vhi-vlo+1U);
-                        pk.nr=std::uint8_t(nr);pk.gmask=std::uint8_t(keep);pk.lo=std::uint8_t(vlo);pk.hi=std::uint8_t(vhi);
-                    }
-                }
-#endif
-            }
-        }
-        return np;
+    void prefetch_emit_header(const Pick& pk)const{
+        // Meshlet has a 28-byte stride; only the first 16 bytes feed emission.
+        emit_prefetch_span(package.meshlets()+pk.let,16U);
     }
+    void prefetch_emit_payload(const Pick& pk)const{
+        if(!pk.nr)return;
+        const auto& l=package.meshlets()[pk.let];
+        const auto* base=package.vertices()+l.first_vertex;
+        const auto* raw=package.strips()+l.first_strip;
+        if(package.indexed(l)){
+            const auto* offsets=reinterpret_cast<const std::uint16_t*>(raw);
+            __builtin_prefetch(offsets);
+            // The pool base need not be referenced by this meshlet. Warm the
+            // first corner actually gathered, not vertex zero of the part pool.
+            emit_prefetch_span(base+offsets[0],sizeof(*base));
+            raw+=2U*l.vertex_count;
+        }else{
+            // The transform already streams three vertices ahead. Seed only
+            // its first (at most) three inputs, including a partial pick's lo.
+            const unsigned first=pk.nr==0xffU?0U:pk.lo;
+            const unsigned count=pk.nr==0xffU?l.vertex_count:unsigned(pk.hi-pk.lo)+1U;
+            if(first>=l.vertex_count || count>l.vertex_count-first)return;
+            emit_prefetch_span(base+first,(count<3U?count:3U)*sizeof(*base));
+        }
+        if(pk.nr==0xffU)__builtin_prefetch(raw);
+        else if(sg)__builtin_prefetch(sg+16U*sg_groups*pk.let);
+    }
+    const re4dc::room::CompactVertex12* emit_corners(const re4dc::room::Meshlet& l,const Pick& pk){
+        const auto* base=package.vertices()+l.first_vertex;
+#if RE4DC_SCENERY_DEDUP==3
+        // Match corners(): refresh or clear the decoder before every early return.
+        const unsigned rep=package.repeat_count(l);
+        dd_base=rep?base:nullptr;dd_unique=l.vertex_count-rep;dd_count=l.vertex_count;
+#endif
+        if(!package.indexed(l))return base;
+        if(!pk.nr)return gathered; // bind/borrow/prime still run; no consumer for this pick
+        // Keep the full gather for nonempty partial picks: the runtime R4SG
+        // reader has not proved that group lo/hi encloses every clipper input,
+        // and DEDUP's fill can read corners outside that interval. Hoist the
+        // immutable count before may-alias stores instead of rereading it.
+        const unsigned count=l.vertex_count;
+        typedef std::uint32_t __attribute__((may_alias)) Word;
+        const std::uint16_t* offsets=package.pool_offsets(l);
+        const Word* in=reinterpret_cast<const Word*>(base);
+        Word* out=reinterpret_cast<Word*>(gathered);
+        for(unsigned k=0;k<count;++k,out+=3){
+            const Word* c=in+3U*offsets[k];
+            out[0]=c[0];out[1]=c[1];out[2]=c[2];
+        }
+        return gathered;
+    }
+    // SCENERY_EMIT_PREFETCH_MEMBERS_END
+#endif
     int emit_pick(const Pick& pk){
         namespace vp=re4dc::vp;
         ++stats.groups_visible;
@@ -2957,7 +3170,11 @@ struct MeshDraw : Emitter {
             }
         } cen{this,l.vertex_count,stats.strips,stats.strips_culled,output,0};
 #endif
+#if RE4DC_SCENERY_EMIT_PREFETCH
+        const auto* base=emit_corners(l,pk);
+#else
         const auto* base=corners(l);
+#endif
         const auto* in=reinterpret_cast<const vp::Vertex12*>(base);
         if(l.vertex_count>primed){vp::prime(cache+primed,l.vertex_count-primed);primed=l.vertex_count;
             if(lean_part){lean::prime_at=cache;lean::primed=primed;}
@@ -2970,9 +3187,12 @@ struct MeshDraw : Emitter {
             if(!pk.nr)return 1;
             const unsigned vn=pk.hi-pk.lo+1U;
             vp::transform_sched<vp::kChecksAll>(in+pk.lo,vn,cache+pk.lo,outcodes+pk.lo,k);
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+            if(ps2)re4dc_wm_corners(outcodes+pk.lo,vn,0x3fU);
+#endif
 #if RE4DC_SCENERY_DEDUP
-            if(const std::uint32_t dw=dd_word(l);dw>>24)
-                dedup::fill(in,cache,outcodes,l.vertex_count-(dw>>24),l.vertex_count,dedup::src+(dw&0xffffffU),k,pk.lo,pk.hi);
+            if(const std::uint32_t dw=dd_word(l);dd_active(dw))
+                dedup::fill(in,cache,outcodes,dd_unique_count(l,dw),l.vertex_count,dd_source(l,dw),k,pk.lo,pk.hi);
 #endif
             const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*pk.let);
             unsigned prev=0;
@@ -2989,25 +3209,70 @@ struct MeshDraw : Emitter {
             return 1;
         }
 #if RE4DC_SCENERY_DEDUP
-        if(const std::uint32_t dw=dd_word(l);dw>>24){
-            const unsigned u=l.vertex_count-(dw>>24);
+        if(const std::uint32_t dw=dd_word(l);dd_active(dw)){
+            const unsigned u=dd_unique_count(l,dw);
             vp::transform_sched<vp::kChecksAll>(in,u,cache,outcodes,k);
-            dedup::fill(in,cache,outcodes,u,l.vertex_count,dedup::src+(dw&0xffffffU),k);
+            dedup::fill(in,cache,outcodes,u,l.vertex_count,dd_source(l,dw),k);
         }else
 #endif
         vp::transform_sched<vp::kChecksAll>(in,l.vertex_count,cache,outcodes,k);
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+        if(ps2){
+            unsigned count=l.vertex_count;
+#if RE4DC_SCENERY_DEDUP
+            if(const std::uint32_t dw=dd_word(l);dw>>24)count-=dw>>24;
+#endif
+            re4dc_wm_corners(outcodes,count,0x3fU);
+        }
+#endif
         int result=1;
         strips_lean(sb,sb+l.strip_bytes,base,batch,result);
+#if RE4DC_PS2_PVS
+        if(result>0)pvs_observed(l);
+#endif
         return result;
     }
+#if RE4DC_SCENERY_REPLAY_LEAN
+    // CHUNK_REPLAY_RESTART: a replay never calls selection/run on this object.
+    // bind overwrites packet/dst/limit; borrow overwrites outcodes and all of k.
+    // The gather buffer and clip setup belong to this unchanged package/pass.
+    // Reset the logical part and force borrow to validate each newly bound slab.
+    [[gnu::always_inline]] void chunk_restart(){
+        used=input=output=slots=0;
+        bound=submitted=false;
+        cache=nullptr;primed=0;
+#if RE4DC_PS2_PVS
+        pvs_pending[0]=pvs_pending[1]=~0U;pvs_pending[2]=0;
+#endif
+    }
+    // CHUNK_REPLAY_RESTART_END
+#endif
+#if RE4DC_SCENERY_EMIT_PREFETCH
+    __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n,const Pick* following=nullptr){
+#else
     __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n){
+#endif
+#if RE4DC_SCENERY_EMIT_PREFETCH
+        if(n>1U)prefetch_emit_header(pk[1]);
+        else if(n && following)prefetch_emit_header(*following);
+#endif
+#if !RE4DC_SCENERY_REPLAY_LEAN
         streaming=re4dc_model_packet_streaming()!=0;
         set_clip();
         palette=nullptr;
+#endif
         batch.uv_bias[0]=part.uv_bias[0];batch.uv_bias[1]=part.uv_bias[1];
         batch.uv_scale[0]=part.uv_scale[0];batch.uv_scale[1]=part.uv_scale[1];
         for(unsigned i=0;i<n;++i){
-#if defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK
+#if RE4DC_SCENERY_EMIT_PREFETCH
+            // Two selected headers ahead; one payload ahead. The current
+            // transform plus its strips supplies the lead time. following is
+            // the next queued part's first pick, still in this package/run.
+            if(i+2U<n)prefetch_emit_header(pk[i+2U]);
+            else if(i+2U==n && following)prefetch_emit_header(*following);
+            if(i+1U<n)prefetch_emit_payload(pk[i+1U]);
+            else if(following)prefetch_emit_payload(*following);
+#elif defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK
             // PREF_WALK (cache20.h): the next pick's corners and first strip bytes while this one is transformed / sent
             if(i+1<n && RE4DC_C20_PREF_ON()){
                 const auto& nl=package.meshlets()[pk[i+1].let];
@@ -3058,6 +3323,43 @@ struct MeshDraw : Emitter {
     }
 };
 #if RE4DC_SCENERY_CHUNK
+#if RE4DC_SCENERY_SELECT_ONLY
+// Selection borrows placement inputs only for this synchronous call. Replay
+// still owns the existing ChunkPart snapshot and constructs its full emitter.
+// The user-provided constructor deliberately leaves the lazy coefficient
+// arrays uninitialized; their guards are false until chunk_select fills them.
+struct ScenerySelector {
+    using Pick=MeshDraw::Pick;
+    const re4dc::room::MeshPackage& package;
+    const Re4dcModelPart& p;
+    const float* mvq;
+    float near,cull_far,lod_scale=0;
+    unsigned part_index=0;
+    const float* lean_am=nullptr;
+    const std::uint8_t* sg=nullptr;
+    unsigned sg_groups=0;
+    const unsigned* ps2=nullptr;
+#if RE4DC_PS2_PVS
+    const std::uint8_t* pvs_set=nullptr;
+#endif
+#if RE4DC_PS2_INTERIOR_CULL
+    unsigned pc_mode=0;
+#endif
+#if RE4DC_QUALITY_ASSETS
+    std::uint64_t skip_clusters=0;
+#endif
+    bool lean_inside=false,sg_coef_ok=false;
+    float sg_coef[40] __attribute__((aligned(8)));
+#if RE4DC_SG_SELECT_LEAN
+    bool sg_lp_ok=false;
+    lean::SgPlane sg_lp[5];
+#endif
+    ScenerySelector(const Re4dcModelPart& source,const re4dc::room::MeshPackage& mesh,
+                    const float* matrix,float clip_near,float reject_far)
+        :package(mesh),p(source),mvq(matrix),near(clip_near),cull_far(reject_far){}
+#include "include/scenery_chunk_select.inc"
+};
+#endif
 #pragma GCC pop_options
 #endif
 #endif
@@ -4242,6 +4544,13 @@ bool ps2_movie_layout(unsigned room){
     if(room==0x11f)return f.mesh==797056 && f.side==9076 && ps2_movie.capacity==811264;
 #if RE4DC_MOVIE_WORLD_ARENA_S30
     // The current r100 SMX/TR4 package, with its LUT and gather storage.
+#if RE4DC_SCENERY_DEDUP==3
+    // Exact compact SDO3 lineage: fresh open authenticated its original extent/CRC.
+    // h_ remains retained while the movie borrows this captured physical block.
+    if(room==0x100 && ps2w.package.offline_dedup() && ps2w.package.source_bytes()==1537920 &&
+       ps2w.package.header().bytes==1488192)
+        return f.mesh==1488192 && f.side==19612 && ps2_movie.capacity==1512928;
+#endif
     if(room==0x100)return f.mesh==1537920 && f.side==19612 && ps2_movie.capacity==1562656;
 #endif
     return false;
@@ -4263,7 +4572,7 @@ void ps2_movie_unpublish(){
 #if RE4DC_PS2_PASS_MASK
     ps2w.masked=false;
 #endif
-#if RE4DC_SCENERY_DEDUP
+#if RE4DC_SCENERY_DEDUP && RE4DC_SCENERY_DEDUP!=3
     dedup::pkg=nullptr; // until ps2_movie_reload reorders the package again
 #endif
 }
@@ -4432,6 +4741,15 @@ constexpr unsigned kIds=250,kMoved=16,kNone=0xFF;
 struct Head { char magic[4]; std::uint32_t version,count,crc; };
 #if RE4DC_PS2_WORLD_PARTS
 struct PartPose { const unsigned char* part; float pose[9]; };
+constexpr unsigned part_cell_bytes(unsigned count){
+    // Single-root witnesses append bind-root and inverse matrices to this cell.
+    // Room4 validates exact payload size, including a refused root witness.
+    return count*sizeof(PartPose)
+#if RE4DC_PS2_WORLD_ROOT_POSE
+        +(count==1?24U*sizeof(float):0U)
+#endif
+        ;
+}
 #endif
 struct Slot {
     const unsigned char* obj; std::uint32_t serial; float rest[12];
@@ -4563,7 +4881,7 @@ unsigned query(unsigned id){
 }
 }
 #endif
-#if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
+#if (defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL) || RE4DC_PS2_PVS
 // ENEMY_VIS_CULL (engine_preview.mk; lane engine19; read only). re4dc_ps2_world_intact: 1 when the PS2 world drawn
 // this frame is the package the room data file's OCCL section was compiled from (room and sidecar crc).
 // re4dc_ps2_placements_intact: 1 when every listed placement (an occluder's sources, u16 LE fields) is drawn at its
@@ -4578,6 +4896,12 @@ extern "C" int re4dc_ps2_world_intact(unsigned room,std::uint32_t crc){
     return (ps2w.storage && ps2w.parts && crc && enemyVisSidecarCrc==crc)?1:0;
 }
 extern "C" int re4dc_ps2_placements_intact(unsigned room,const unsigned char* fields,unsigned n){
+#if RE4DC_PS2_PVS
+    if(!ps2w.storage || !ps2w.parts || (!fields && n))return 0;
+#if RE4DC_PS2_WORLD_ROOMS
+    if(ps2w.room!=room)return 0;
+#endif
+#endif
     (void)room;
     for(unsigned i=0;i<n;++i){
         const unsigned p=unsigned(fields[2*i])|(unsigned(fields[2*i+1])<<8);
@@ -4634,6 +4958,10 @@ std::uint32_t ps2_crc32(const unsigned char* p,unsigned n){
 void ps2_free();
 #endif
 #if RE4DC_PS2_PVS
+// Admission and frame guards are provided by the independently qualified static
+// world proof unit. No guard/certificate, or a legacy sampled table: draw all.
+extern "C" int re4dc_pvs23_table_guard(unsigned,const void*,unsigned,unsigned,unsigned,unsigned) __attribute__((weak));
+extern "C" int re4dc_pvs23_frame_guard(unsigned,const float*,const float*,const float*,float,float) __attribute__((weak));
 // PS2_PVS (t2exact.mk; exact, render only; lane t2exact 2026-10-15, backlog B4): an offline potentially visible set per
 // camera cell (tools/d367/ps2world/pvs: pvs_prep.py, pvs_cast.cpp, pvs_emit.py). The room's X/Z grid of cells, each
 // with a Y range (local ground + the camera heights) and a bit set over the package's cluster instances (placement
@@ -4642,18 +4970,20 @@ void ps2_free();
 // A camera outside every cell's volume, no file, or a file built for another package: no set, everything is drawn as
 // before. Runtime toggle re4dc_ps2_pvs_on (warp line "pvs 0|1"; re4dc_ps2_pvs_set for a benchmark sweep row) on top of
 // the build knob. The file is read into one heap-4 block with the per-placement and per-part instance offsets.
-extern "C" { volatile unsigned re4dc_ps2_pvs_on=RE4DC_PS2_PVS_DEFAULT; void re4dc_ps2_pvs_set(unsigned on){re4dc_ps2_pvs_on=on<=2U?on:1U;} }
+extern "C" { volatile unsigned re4dc_ps2_pvs_on=RE4DC_PS2_PVS_DEFAULT; void re4dc_ps2_pvs_set(unsigned on); }
 namespace pvs {
 struct Head { char magic[4]; std::uint32_t version,mesh_crc,mesh_bytes,sidecar_crc,ninst,nx,nz; float x0,z0,cell;
               std::uint32_t nsets,set_bytes,ncells,pad[2]; };
 struct Cell { std::uint16_t set; std::int16_t ylo,yhi,pad; };
 static_assert(sizeof(Head)==64 && sizeof(Cell)==8);
+unsigned loaded_room=~0U,generation=0;
+bool can_cut(unsigned placement);
 unsigned char* block=nullptr; Head h{}; const Cell* cells=nullptr; const std::uint8_t* sets=nullptr;
 const std::uint16_t* base=nullptr; const std::uint16_t* poff=nullptr; // per placement (n+1) / per part: first instance
-const std::uint8_t* cur=nullptr; unsigned cur_frame=~0U; int cur_cell=-1; float eye[3]={0,0,0};
+const std::uint8_t* cur=nullptr; unsigned cur_frame=~0U,last_on=~0U; float last_view[12]{}; int cur_cell=-1; float eye[3]={0,0,0};
 unsigned frames=0,active=0,pl_tested=0,pl_skipped=0,logged=~0U,bytes=0; const char* why="off";
-void close(){if(block)re4dc_static_free(block);block=nullptr;cells=nullptr;sets=nullptr;base=nullptr;poff=nullptr;cur=nullptr;
-             cur_frame=~0U;cur_cell=-1;bytes=0;why="off";}
+void close(){++generation;if(block)re4dc_static_free(block);block=nullptr;cells=nullptr;sets=nullptr;base=nullptr;poff=nullptr;cur=nullptr;
+             cur_frame=~0U;cur_cell=-1;bytes=0;loaded_room=~0U;h={};why="off";}
 // The camera's world position from the world-to-view affine (rows): v = R w + t, so w = -R^-1 t.
 bool eye_of(const float* v,float e[3]){
     const float a=v[0],b=v[1],c=v[2],d=v[4],f=v[5],g=v[6],k=v[8],l=v[9],m=v[10];
@@ -4673,6 +5003,7 @@ void open(unsigned room,std::uint32_t mesh_crc,std::uint32_t mesh_bytes,std::uin
     if(f==FILEHND_INVALID){re4dc_log("PS2PVS room=%03x file=absent\n",room);return;}
     const unsigned size=unsigned(fs_total(f));
     const unsigned np=ps2w.nplacements,nparts=ps2w.package.header().part_count;
+    if(np>=65536U || nparts>=65536U){fs_close(f);why="instance capacity";return;}
     const unsigned extra=((np+1U)*2U+nparts*2U+31U)&~31U;
     auto* b=size>=sizeof(Head) && size<=262144U && !(size&31U)?static_cast<unsigned char*>(re4dc_static_alloc(size+extra)):nullptr;
     why=b?"read":"size or heap";
@@ -4684,39 +5015,71 @@ void open(unsigned room,std::uint32_t mesh_crc,std::uint32_t mesh_bytes,std::uin
     fs_close(f);
     if(ok){
         std::memcpy(&h,b,sizeof(h));why="header";
-        if(!std::memcmp(h.magic,"R4PV",4) && h.version==1 && h.mesh_crc==mesh_crc && h.mesh_bytes==mesh_bytes &&
-           h.sidecar_crc==side_crc && h.nx && h.nz && h.nx*h.nz<=65536U && h.set_bytes==(h.ninst+7U)/8U &&
-           sizeof(Head)+8U*h.nx*h.nz+h.nsets*h.set_bytes<=size && h.cell>0){
+        if(std::memcmp(h.magic,"R4PV",4))why="magic";
+        else if(h.version!=1U)why="version";
+        else if(h.mesh_crc!=mesh_crc)why="mesh crc";
+        else if(h.mesh_bytes!=mesh_bytes)why="mesh bytes";
+        else if(h.sidecar_crc!=side_crc)why="physical policy crc";
+        else if(!re4dc::pvs23::layout(h,size))why="layout";
+        else why=nullptr;
+        if(!why){
+            const unsigned used=sizeof(Head)+8U*h.nx*h.nz+h.nsets*h.set_bytes;
+            bool padding=true;for(unsigned i=used;i<size;++i)padding=padding && b[i]==0;
+            if(!padding){re4dc_static_free(b);why="padding";return;}
             // instance offsets, counted as pvs_prep.py counts them; the total must be the file's
             auto* pb=reinterpret_cast<std::uint16_t*>(b+size);auto* po=pb+np+1U;
             const auto& pk=ps2w.package;const auto* lods=pk.part_lods();
+            bool offsets_ok=true;
             for(unsigned m=0;m<pk.header().mesh_count;++m){
-                const auto& mesh=pk.meshes()[m];unsigned o=0;
-                for(unsigned k=0;k<mesh.part_count;++k){po[mesh.first_part+k]=std::uint16_t(o);o+=lods[mesh.first_part+k].cluster_count;}
+                const auto& mesh=pk.meshes()[m];std::uint64_t o=0;
+                for(unsigned k=0;k<mesh.part_count;++k){
+                    if(o>=65536U)offsets_ok=false;
+                    po[mesh.first_part+k]=std::uint16_t(o);o+=lods[mesh.first_part+k].cluster_count;
+                }
+                if(o>=65536U)offsets_ok=false;
             }
-            unsigned n=0;
+            std::uint64_t n=0;
             for(unsigned i=0;i<np;++i){
                 pb[i]=std::uint16_t(n);const auto& mesh=pk.meshes()[ps2w.placements[i].mesh];
                 for(unsigned k=0;k<mesh.part_count;++k)n+=lods[mesh.first_part+k].cluster_count;
             }
             pb[np]=std::uint16_t(n);
             why="instances";
-            if(n==h.ninst && n<65536U){
+            if(offsets_ok && n==h.ninst && n<65536U){
                 why=nullptr;
                 cells=reinterpret_cast<const Cell*>(b+sizeof(Head));sets=b+sizeof(Head)+8U*h.nx*h.nz;base=pb;poff=po;
-                for(unsigned c=0;c<h.nx*h.nz;++c)if(cells[c].set!=0xffffU && cells[c].set>=h.nsets){why="cell set";break;}
+                unsigned valid_cells=0;
+                for(unsigned c=0;c<h.nx*h.nz;++c){
+                    const Cell& cell=cells[c];
+                    if(cell.pad || (cell.set!=0xffffU && (cell.set>=h.nsets || cell.ylo>cell.yhi))){why="cell set/range";break;}
+                    if(cell.set!=0xffffU)++valid_cells;
+                }
+                if(!why && valid_cells!=h.ncells)why="cell count";
+                if(!why && (!re4dc_pvs23_table_guard || !re4dc_pvs23_frame_guard ||
+                    !re4dc_pvs23_table_guard(room,b,size,mesh_crc,mesh_bytes,side_crc)))why="uncertified";
             }
+        }else{
+            re4dc_log("PS2PVS header reject room=%03x why=%s version=%u mesh_crc=%08x/%08x mesh_bytes=%u/%u physical_policy=%08x/%08x file_bytes=%u\n",
+                      room,why,unsigned(h.version),unsigned(h.mesh_crc),unsigned(mesh_crc),unsigned(h.mesh_bytes),mesh_bytes,
+                      unsigned(h.sidecar_crc),unsigned(side_crc),size);
         }
     }
     if(why){if(b)re4dc_static_free(b);cells=nullptr;sets=nullptr;base=nullptr;poff=nullptr;}
-    else {block=b;bytes=size+extra;}
+    else {block=b;bytes=size+extra;loaded_room=room;}
     re4dc_log("PS2PVS room=%03x file=%s bytes=%u cells=%ux%u with_set=%u sets=%u instances=%u cell_mm=%d heap=%d\n",room,why?why:"ok",
-              size+extra,unsigned(h.nx),unsigned(h.nz),unsigned(h.ncells),unsigned(h.nsets),unsigned(h.ninst),int(h.cell),re4dc_static_heap_free());
+              size+extra,unsigned(h.nx),unsigned(h.nz),unsigned(h.ncells),unsigned(h.nsets),unsigned(h.ninst),
+              std::isfinite(h.cell) && h.cell>=0 && h.cell<2147483520.0f?int(h.cell):0,re4dc_static_heap_free());
 }
 // Once per frame: the camera's cell and its set (cur), or none.
-void frame(const float* view){
+void frame(const float* view,const float* projection,const float* viewport,float near,float far){
     const unsigned f=re4dc_ui_frame();
-    if(f==cur_frame)return;
+    const unsigned on=re4dc_ps2_pvs_on;
+    if(!cells || on!=1U || !re4dc_pvs23_frame_guard ||
+       !re4dc_pvs23_frame_guard(loaded_room,view,projection,viewport,near,far)){
+        cur=nullptr;cur_frame=~0U;cur_cell=-1;return;
+    }
+    if(f==cur_frame && on==last_on && !std::memcmp(last_view,view,sizeof(last_view)))return;
+    std::memcpy(last_view,view,sizeof(last_view));last_on=on;
     cur_frame=f;cur=nullptr;cur_cell=-1;++frames;
     if(!cells || re4dc_ps2_pvs_on!=1U || !eye_of(view,eye))return;
     const float fx=(eye[0]-h.x0)/h.cell,fz=(eye[2]-h.z0)/h.cell;
@@ -4727,12 +5090,21 @@ void frame(const float* view){
 }
 // A placement with no visible instance (no bit set in [base[i], base[i+1])).
 bool hidden(unsigned i){
+    if(!cur || !base || i>=ps2w.nplacements || !can_cut(i))return false;
     unsigned a=base[i];const unsigned e=base[i+1];
     ++pl_tested;
     for(;a<e;++a)if((cur[a>>3]>>(a&7U))&1U)return false;
     ++pl_skipped;return true;
 }
 } // namespace pvs
+#include "include/pvs23_runtime.inc"
+extern "C" void re4dc_ps2_pvs_set(unsigned on){
+    re4dc_ps2_pvs_on=on<=2U?on:1U;
+    pvs::cur=nullptr;pvs::cur_frame=~0U;pvs::cur_cell=-1;
+}
+extern "C" void re4dc_ps2_pvs_state(unsigned out[4]){
+    out[0]=re4dc_ps2_pvs_on;out[1]=pvs::block?1U:0U;out[2]=pvs::cur?1U:0U;out[3]=pvs::bytes;
+}
 #endif
 #if RE4DC_FAR_SHELL
 #define RE4DC_FAR_SHELL_PART 1
@@ -4971,7 +5343,19 @@ void scn21_open(){
 #endif
 }
 #endif
-#if RE4DC_SCENERY_DEDUP
+#if RE4DC_SCENERY_DEDUP==3
+// SDO3 is already reordered in the alternate package. The existing package owns
+// all source bytes; there is no room section, mask, table allocation or reload reorder.
+void dedup_free(){} // no retained pointers, mask, generation state or allocation in mode3
+void dedup_open(){
+    auto& pk=ps2w.package;
+    if(!pk.offline_dedup())return;
+    unsigned repeats=0;
+    for(unsigned i=0;i<pk.header().meshlet_count;++i)repeats+=pk.repeat_count(pk.meshlets()[i]);
+    re4dc_log("SCNDEDUP3 room=%03x meshlets=%u repeats=%u extra_heap=0 source_crc=%08x actual_crc=%08x\n",
+        ps2w.room,unsigned(pk.header().meshlet_count),repeats,unsigned(pk.source_crc()),unsigned(pk.header().crc));
+}
+#elif RE4DC_SCENERY_DEDUP
 namespace dedup {
 inline const re4dc::room::CompactVertex12& rec(const re4dc::room::MeshPackage& pk,const re4dc::room::Meshlet& l,unsigned k){
     const auto* v=pk.vertices()+l.first_vertex;
@@ -5199,10 +5583,26 @@ bool ps2_open(){
         if(fm!=FILEHND_INVALID)ps2w.alt=true;
     }
     if(fm==FILEHND_INVALID)fm=fs_open(mpath,O_RDONLY);
-#elif RE4DC_WORLD_VERT
+#elif RE4DC_WORLD_VERT || RE4DC_SCENERY_DEDUP==3
     file_t fm=fs_open(mpath,O_RDONLY);
 #else
     const file_t fm=fs_open(mpath,O_RDONLY);
+#endif
+#if RE4DC_SCENERY_DEDUP==3
+    // Bind alternate source CRC/extent to the freshly read standard file header.
+    unsigned dd_base_crc=0,dd_base_bytes=0;bool dd_alternate=false;
+    if(fm!=FILEHND_INVALID){
+        char dpath[48];snprintf(dpath,sizeof(dpath),"/cd/dc/native/r%03x/ps2-dd3.re4mesh",ps2w.room);
+        const file_t fd=fs_open(dpath,O_RDONLY);
+        if(fd!=FILEHND_INVALID){
+            alignas(32) std::uint32_t head[24];
+            const auto base_bytes=fs_total(fm);
+            if(fs_total(fd)>=112 && fs_total(fd)<=base_bytes && read_package(fm,reinterpret_cast<unsigned char*>(head),80U,0) &&
+               head[0]==0x4d493452U && head[1]==3U && head[2]==unsigned(base_bytes) && head[16]==re4dc::room::kColorArgb1555 && !head[17] && !head[18] && !head[19]){
+                dd_base_crc=head[3];dd_base_bytes=head[2];dd_alternate=true;fs_close(fm);fm=fd;
+            }else{fs_close(fd);fs_seek(fm,0,SEEK_SET);}
+        }
+    }
 #endif
     const file_t fp=fs_open(ppath,O_RDONLY);
 #else
@@ -5268,6 +5668,14 @@ bool ps2_open(){
     if(fm!=FILEHND_INVALID)fs_close(fm);
     if(fp!=FILEHND_INVALID)fs_close(fp);
     const char* why=ok?nullptr:s?"read":"missing or no heap";
+#if RE4DC_SCENERY_DEDUP==3
+    if(ok && msize>=80U){
+        std::uint32_t marker=0,crc=0,source=0,extent=0;std::memcpy(&marker,s+76,4);std::memcpy(&crc,s+12,4);std::memcpy(&source,s+72,4);std::memcpy(&extent,s+68,4);
+        if(dd_alternate && (marker!=re4dc::room::kOfflineDedupMarker || source!=dd_base_crc || (extent?extent:msize)!=dd_base_bytes)){why="offline source identity";ok=false;}
+        else if(!dd_alternate && marker){why="offline filename";ok=false;}
+        else if(dd_alternate && ps2_crc32(s+80,msize-80U)!=crc){why="offline crc";ok=false;}
+    }
+#endif
     if(ok && !ps2w.package.adopt(s,msize,true,true)){why=ps2w.package.error();ok=false;}
 #if RE4DC_PS2_OPEN_TRACE
     re4dc_log("PS2OPEN adopt ok=%d why=%s\n",int(ok),why?why:"-");
@@ -5308,7 +5716,11 @@ bool ps2_open(){
     const std::uint32_t policySourceCrc=
 #if RE4DC_WORLD_RECT21 && RE4DC_PS2_WORLD_ROOMS
         re4dc::rect21::provenance::policy_source_crc(ps2w.room,s+mbytes,psize,
+#if RE4DC_SCENERY_DEDUP==3
+            ps2w.package.source_crc(),ps2w.package.source_bytes(),
+#else
             ps2w.package.header().crc,ps2w.package.header().bytes,
+#endif
             ps2w.package.header().part_count,ps2w.package.header().mesh_count);
 #else
         h.crc;
@@ -5328,7 +5740,7 @@ bool ps2_open(){
     if(sourceWorldPackageGeneration!=~0U)++sourceWorldPackageGeneration;
     sourceWorldSidecarCrc=h.crc;
 #endif
-#if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
+#if (defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL) || RE4DC_PS2_PVS
     enemyVisSidecarCrc=policySourceCrc;
 #endif
 #if RE4DC_PS2_WORLD_DYNAMIC && RE4DC_PS2_WORLD_ROOMS
@@ -5394,7 +5806,14 @@ bool ps2_open(){
 #endif
 #endif
 #if RE4DC_PS2_PVS
-    pvs::open(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes,policySourceCrc);
+    // PVS23 authenticates the exact physical scoped policy, unlike original
+    // baked AREA/IDs/SG metadata which uses the provenance-mapped source CRC.
+#if RE4DC_SCENERY_DEDUP==3
+    // SDO3 certifies this exact source package's bounds, placements, meshlets and strip geometry.
+    pvs::open(ps2w.room,ps2w.package.source_crc(),ps2w.package.source_bytes(),h.crc);
+#else
+    pvs::open(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes,h.crc);
+#endif
 #endif
 #if RE4DC_MESH_FASTPATH
     auto* lut=reinterpret_cast<std::uint32_t*>(s+mbytes+pbytes);re4dc::vp::build_lut(lut);ps2w.lut=lut;
@@ -5403,7 +5822,11 @@ bool ps2_open(){
     const auto& mh=ps2w.package.header();
 #if RE4DC_PS2_INTERIOR_CULL
     // The cell's portals hold for the package it was built from only.
+#if RE4DC_SCENERY_DEDUP==3
+    pc::st.ok=ps2w.room==pc::kPcRoom && ps2w.package.source_crc()==pc::kPcMeshUse && policySourceCrc==pc::kPcSidecarUse && ps2w.package.source_bytes()==pc::kPcMeshBytesUse;
+#else
     pc::st.ok=ps2w.room==pc::kPcRoom && mh.crc==pc::kPcMeshUse && policySourceCrc==pc::kPcSidecarUse && mh.bytes==pc::kPcMeshBytesUse;
+#endif
     re4dc_log("PCCULL cell room=%03x mesh_crc=%08x sidecar_crc=%08x %s cells=%u portals=%u mode=%d\n",ps2w.room,unsigned(mh.crc),unsigned(h.crc),
         pc::st.ok?"adopted":"not this package",pc::kPcCellCount,pc::kPcPortalCount,int(RE4DC_PS2_INTERIOR_CULL));
     pc::data.lent=false;
@@ -5428,6 +5851,9 @@ bool ps2_open(){
         // PS2_STRIP_GROUPS: tools/ps2_strip_groups.py's group records for this exact package (mesh crc / bytes, R4PW
         // crc, record crc). Absent or not matching: no groups (the whole-meshlet path).
         char gpath[48];snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-world.r4sg",ps2w.room);
+#if RE4DC_SCENERY_DEDUP==3
+        if(ps2w.package.offline_dedup())snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-dd3.r4sg",ps2w.room);
+#endif
 #if RE4DC_SCENERY21_AB
         if(ps2w.alt)snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/sc21/ps2-world.r4sg",ps2w.room);
 #endif
@@ -5462,6 +5888,9 @@ bool ps2_open(){
             if(std::memcmp(gb,"R4SG",4) || w[1]!=1U || w[2]!=mh.meshlet_count || !w[3] || w[3]>8U || w[4]!=mh.crc ||
                w[5]!=mh.bytes || w[6]!=policySourceCrc || gsize!=32U+16U*w[2]*w[3] || ps2_crc32(gb+32,gsize-32U)!=w[7])gwhy="header";
         }
+#if RE4DC_SCENERY_DEDUP==3
+        if(!gwhy && ps2w.package.offline_dedup() && !ps2w.package.offline_groups(gb+32,gsize-32U,w[3]))gwhy="offline ranges";
+#endif
         if(gwhy){if(gb)re4dc_static_free(gb);}
         else {ps2w.sg_block=gb;ps2w.sg=gb+32;ps2w.sg_groups=w[3];
 #if RE4DC_WORLD_VERT
@@ -5505,6 +5934,10 @@ bool ps2_movie_reload(){
     snprintf(mesh_path,sizeof(mesh_path),"/cd/dc/native/r%03x/ps2-world.re4mesh",ps2w.room);
 #if RE4DC_SCENERY21_AB
     if(ps2w.alt)snprintf(mesh_path,sizeof(mesh_path),"/cd/dc/native/r%03x/sc21/ps2-world.re4mesh",ps2w.room);
+#endif
+#if RE4DC_SCENERY_DEDUP==3
+    // MeshPackage::close retains h_ while a movie borrows its storage; this chooses the captured file again.
+    if(ps2w.package.offline_dedup())snprintf(mesh_path,sizeof(mesh_path),"/cd/dc/native/r%03x/ps2-dd3.re4mesh",ps2w.room);
 #endif
     snprintf(side_path,sizeof(side_path),"/cd/dc/native/r%03x/ps2-world.r4pw",ps2w.room);
     const file_t fm=fs_open(mesh_path,O_RDONLY);
@@ -5555,8 +5988,12 @@ bool ps2_movie_reload(){
 #endif
     ps2w.gather=reinterpret_cast<re4dc::room::CompactVertex12*>(data+mb+pb+kLutBytes);
 #if RE4DC_SCENERY_DEDUP
+#if RE4DC_SCENERY_DEDUP==3
+    dedup_open(); // same stored order, refresh the package borrow only
+#else
     // the package was read again in its stored order: reorder it as at open (the strip groups stay rewritten)
     if(dedup::block){dedup::run(ps2w.package,nullptr,0,ps2w.gather,2);dedup::pkg=&ps2w.package;}
+#endif
 #endif
     ps2w.camera=false; // next source/coarse draw supplies the current camera
 #if RE4DC_PS2_WORLD_R11F_OWNER
@@ -5576,7 +6013,7 @@ bool ps2_movie_dyn_valid(){
 #if RE4DC_PS2_STRIP_GROUPS
     if(ps2w.sg_block && !re4dc_room4_cell_valid(ps2w.sg_block,0,ps2_movie.generation))return false;
 #endif
-#if RE4DC_SCENERY_DEDUP
+#if RE4DC_SCENERY_DEDUP && RE4DC_SCENERY_DEDUP!=3
     if(dedup::block && !re4dc_room4_cell_valid(dedup::block,0,ps2_movie.generation))return false;
 #endif
 #if RE4DC_PS2_WORLD_DYNAMIC
@@ -5584,7 +6021,7 @@ bool ps2_movie_dyn_valid(){
     if(dyn::slots && !re4dc_room4_cell_valid(dyn::slots,dyn::nslots*sizeof(dyn::Slot),ps2_movie.generation))return false;
 #if RE4DC_PS2_WORLD_PARTS
     if(dyn::slots)for(unsigned i=0;i<dyn::nslots;++i)if(dyn::slots[i].parts &&
-        !re4dc_room4_cell_valid(dyn::slots[i].parts,dyn::slots[i].nparts*sizeof(dyn::PartPose),ps2_movie.generation))return false;
+        !re4dc_room4_cell_valid(dyn::slots[i].parts,dyn::part_cell_bytes(dyn::slots[i].nparts),ps2_movie.generation))return false;
 #endif
 #endif
     return true;
@@ -5904,24 +6341,24 @@ int ps2_pass(unsigned pass,float zfar){
     }
 #endif
 #if RE4DC_PS2_PVS
-    pvs::frame(ps2w.view);
+    pvs::frame(ps2w.view,P,ps2w.viewport,near,cull_far);
     if(!pass){
         const unsigned f=re4dc_ui_frame();
         if(!(f%120) && pvs::logged!=f){
             pvs::logged=f;
-            re4dc_log("PS2PVS frame=%u on=%u file=%s cell=%d eye=%d,%d,%d active=%u/%u placements=%u/%u clusters=%u/%u\n",f,
+            re4dc_log("PS2PVS frame=%u on=%u file=%s cell=%d eye=%d,%d,%d active=%u/%u placements=%u/%u admitted_clusters=%u/%u prefix=%x commits=%u\n",f,
                 unsigned(re4dc_ps2_pvs_on),pvs::why?pvs::why:"ok",pvs::cur_cell,int(pvs::eye[0]),int(pvs::eye[1]),int(pvs::eye[2]),
-                pvs::active,pvs::frames,pvs::pl_skipped,pvs::pl_tested,pvs::cl_skipped,pvs::cl_tested);
+                pvs::active,pvs::frames,pvs::pl_skipped,pvs::pl_tested,pvs::cl_skipped,pvs::cl_tested,proof23::receipts.committed,proof23::commits);
         }
     }
     if(!pass && re4dc_ps2_pvs_on==2U){
         // pvs 2 (measurement): no set, and this frame's camera for the offline occlusion count (pvs_ceiling.py)
         std::uint32_t w[25];std::memcpy(w,ps2w.view,48);std::memcpy(w+12,P,28);std::memcpy(w+19,ps2w.viewport,24);
+        std::uint32_t far_bits;std::memcpy(&far_bits,&cull_far,sizeof(far_bits));
         re4dc_log("PS2CAM f=%u cf=%08x c=%08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x p=%08x %08x %08x %08x %08x %08x %08x vp=%08x %08x %08x %08x %08x %08x\n",
-            re4dc_ui_frame(),unsigned(*reinterpret_cast<const std::uint32_t*>(&cull_far)),w[0],w[1],w[2],w[3],w[4],w[5],w[6],w[7],w[8],w[9],w[10],w[11],
+            re4dc_ui_frame(),unsigned(far_bits),w[0],w[1],w[2],w[3],w[4],w[5],w[6],w[7],w[8],w[9],w[10],w[11],
             w[12],w[13],w[14],w[15],w[16],w[17],w[18],w[19],w[20],w[21],w[22],w[23],w[24]);
     }
-    const std::uint8_t* const pvs_cur=pvs::cur;
 #endif
 #if RE4DC_SCENERY_CONE
     if(!pass){
@@ -5940,20 +6377,81 @@ int ps2_pass(unsigned pass,float zfar){
     // SCENERY_CHUNK: the selected parts of this run (ChunkPart) and their picks, emitted in order by chunk_flush()
     // before any part that takes the ordinary path, when either list is full, and at the end of the pass.
     struct ChunkPart { float mvq[12]; unsigned key[6]; float cull_far,lod_scale; unsigned index,first,count;
+#if RE4DC_SCENERY_UV_SNAPSHOT
+                       float uv_offset[2];
+#endif
+#if RE4DC_PS2_PVS
+                       unsigned placement;
+#endif
                        std::uint8_t cull; bool marked; std::uint8_t sky; };
     static constexpr unsigned kChunkParts=48,kChunkPicks=320;
     ChunkPart cctx[kChunkParts];MeshDraw::Pick cpk[kChunkPicks];unsigned nctx=0,npk=0;
     const auto& cpkg=ps2w.package;
     auto chunk_flush=[&]()->int{
+#if RE4DC_SCENERY_REPLAY_LEAN
+        if(!nctx){npk=0;return 1;}
+#endif
+        // The pending selection/ordinary draw references this shared record.
+        // Queued emitters borrow its cull; restore the pending part on every exit.
+        struct CullScope {
+            unsigned& value;unsigned saved;
+            ~CullScope(){value=saved;}
+        } cull_scope{part.cull,part.cull};
+#if RE4DC_SCENERY_UV_SNAPSHOT
+        // A capacity drain may run after the next owner's UV was prepared.
+        // Restore that pending draw's bits on normal and abort exits alike.
+        // Component copies are plain SH4 moves; -Os calls memcpy even for 8 B.
+        struct UvScope {
+            float* value;float saved[2];
+            explicit UvScope(float* p):value(p),saved{p[0],p[1]}{}
+            ~UvScope(){value[0]=saved[0];value[1]=saved[1];}
+        } uv_scope(part.uv_offset);
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        // Only this synchronous replay owns the borrowed lock. Selection,
+        // ordinary draws, aborts and returning to the source never retain it.
+        struct SubmitScope {
+            Re4dcWorldSubmitBatch batch{};
+            ~SubmitScope(){re4dc_ps2_world_batch_close(&batch);}
+        } submit_scope;
+#endif
 #if RE4DC_SKY_ANY
         const unsigned sky_now=re4dc_ps2_sky_header; // the placement being selected keeps its own after the run
+#endif
+#if RE4DC_SCENERY_REPLAY_LEAN
+        // One full context per synchronous replay. Only UV fields of MeshPart
+        // are read by chunk_emit/borrow; selection/run still use their own part.
+        // Keep a stable reference to these four current-part values without
+        // changing the shared renderer's part-reference layout or hot methods.
+        re4dc::room::MeshPart replay_part{};
+        MeshDraw e{{part,{},near,far},cpkg,replay_part,ps2w.lut,ps2w.gather};
+        e.alpha=0xff000000U;e.direct=true;e.lean_part=true;
+        e.sg=ps2w.sg;e.sg_groups=ps2w.sg_groups;
+        e.streaming=re4dc_model_packet_streaming()!=0;e.set_clip();
+#if RE4DC_SCENERY_SUBMIT_BATCH
+        e.submit_batch=&submit_scope.batch;
+#endif
 #endif
         for(unsigned j=0;j<nctx;++j){
             const ChunkPart& x=cctx[j];
             part.cull=x.cull;
+#if RE4DC_SCENERY_UV_SNAPSHOT
+            part.uv_offset[0]=x.uv_offset[0];part.uv_offset[1]=x.uv_offset[1];
+#endif
 #if RE4DC_SKY_ANY
             re4dc_ps2_sky_header=x.sky;
 #endif
+#if RE4DC_SCENERY_REPLAY_LEAN
+            const auto& active_part=cpkg.parts()[x.index];
+            replay_part.uv_bias[0]=active_part.uv_bias[0];replay_part.uv_bias[1]=active_part.uv_bias[1];
+            replay_part.uv_scale[0]=active_part.uv_scale[0];replay_part.uv_scale[1]=active_part.uv_scale[1];
+            e.chunk_restart();
+#if RE4DC_PS2_VERTEX_ALPHA
+            e.lut=x.marked&&ps2w.lut?ps2_vertex_alpha_lut():ps2w.lut;
+            e.vertex_alpha=x.marked;e.c4444=x.marked;
+#endif
+            e.part_index=x.index;
+#else
 #if RE4DC_PS2_VERTEX_ALPHA
             MeshDraw e{{part,{},near,far},cpkg,cpkg.parts()[x.index],x.marked&&ps2w.lut?ps2_vertex_alpha_lut():ps2w.lut,ps2w.gather};
             e.alpha=0xff000000U;e.vertex_alpha=x.marked;e.c4444=x.marked;e.cull_far=x.cull_far;e.direct=true;
@@ -5962,13 +6460,39 @@ int ps2_pass(unsigned pass,float zfar){
             e.alpha=0xff000000U;e.vertex_alpha=false;e.cull_far=x.cull_far;e.direct=true;
 #endif
             e.part_index=x.index;e.lod_scale=x.lod_scale;e.lean_part=true;
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH && !RE4DC_SCENERY_REPLAY_LEAN
+            e.submit_batch=&submit_scope.batch;
+#endif
+#if RE4DC_PS2_PVS
+            e.pvs_placement=x.placement;
+#endif
+#if !RE4DC_SCENERY_REPLAY_LEAN
             e.sg=ps2w.sg;e.sg_groups=ps2w.sg_groups;
             std::memcpy(e.mvq,x.mvq,sizeof(x.mvq));std::memcpy(e.mv,x.mvq,sizeof(x.mvq));e.ps2=x.key;
+#else
+            // mv is used by bounds/selection only; emit_pick and the clipper
+            // consume mvq. The queued snapshot remains owned by this flush.
+            std::memcpy(e.mvq,x.mvq,sizeof(x.mvq));e.ps2=x.key;
+#endif
 #if RE4DC_SCENERY_PIECE_STATE
             e.piece_slot=piece::pkg==static_cast<const void*>(&cpkg)?piece::table+x.index:nullptr;
 #endif
+#if RE4DC_SCENERY_EMIT_PREFETCH
+            // Picks are packed even when an intervening part has no picks.
+            // Never look beyond this flush or change the selected draw order.
+            const unsigned next=x.first+x.count;
+            const int result=e.chunk_emit(cpk+x.first,x.count,next<npk?cpk+next:nullptr);
+#else
             const int result=e.chunk_emit(cpk+x.first,x.count);
+#endif
             e.end_direct();
+#if RE4DC_SCENERY_SUBMIT_BATCH
+            if(result<=0)re4dc_ps2_world_batch_close(&submit_scope.batch);
+#endif
+#if RE4DC_PS2_PVS
+            e.pvs_finish(result>0);
+#endif
             if(result>0)++c.native;
             else if(result<0){re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;}
 #if RE4DC_WORLD_HOLE_DIAG
@@ -6000,6 +6524,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
     const auto& pk=ps2w.package;
     for(unsigned i=0;i<ps2w.nplacements;++i){
+#if RE4DC_PS2_PVS
+        const std::uint8_t* const pvs_cur=pvs::can_cut(i)?pvs::cur:nullptr;
+#endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
         if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();++c.aborts;return -1;}
 #endif
@@ -6208,6 +6735,55 @@ int ps2_pass(unsigned pass,float zfar){
                 re4dc_source_world_binding_failed();++c.aborts;return -1;
             }
 #endif
+#if RE4DC_SCENERY_SELECT_ONLY
+            {
+                ScenerySelector d{part,pk,mvq,near,cull_far};
+                d.part_index=index;d.lod_scale=lod_scale;
+                d.lean_inside=lean_in==2;d.lean_am=(lean::kMode&2U)?amq:nullptr;
+                d.sg=ps2w.sg;d.sg_groups=ps2w.sg_groups;
+#if RE4DC_PS2_PVS
+                d.pvs_set=pvs_cur;
+#endif
+#if RE4DC_PS2_INTERIOR_CULL
+                d.pc_mode=pc_state?1U:0U;
+#endif
+                const auto& selected_part=pk.parts()[index];
+                if(d.chunk_ok() && selected_part.meshlet_count<=kChunkPicks){
+#if RE4DC_PS2_VERTEX_ALPHA
+                    const bool marked=(meta.reserved&1U)!=0;
+                    // Keep the original lazy LUT preparation at selection.
+                    if(marked && ps2w.lut)(void)ps2_vertex_alpha_lut();
+#else
+                    const bool marked=false;
+#endif
+#if defined(RE4DC_FOLIAGE_TRIM)
+                    const bool foliage_near=foliage_pass!=meta.pass && foliage::kNear<cull_far;
+#endif
+#include "include/scenery_part_far.inc"
+                    const unsigned key[6]={meta.crc,meta.fnv,meta.width,meta.height,pass,meta.cull};d.ps2=key;
+#if RE4DC_PS2_INTERIOR_ACTORS && RE4DC_PS2_INTERIOR_CULL==2
+                    if(!pass && !pcact::have_key){std::memcpy(pcact::key,key,sizeof(key));pcact::key[5]=0;pcact::have_key=true;}
+#endif
+                    // Preserve the original capacity flush and queue snapshot.
+                    if(nctx==kChunkParts || npk+selected_part.meshlet_count>kChunkPicks){if(chunk_flush()<0)return -1;}
+                    ChunkPart& x=cctx[nctx++];
+                    std::memcpy(x.mvq,mvq,sizeof(mvq));std::memcpy(x.key,key,sizeof(key));
+#if RE4DC_SCENERY_UV_SNAPSHOT
+                    x.uv_offset[0]=part.uv_offset[0];x.uv_offset[1]=part.uv_offset[1];
+#endif
+                    x.cull_far=d.cull_far;x.lod_scale=lod_scale;x.index=index;x.cull=meta.cull;
+#if RE4DC_PS2_PVS
+                    x.placement=i;
+#endif
+                    x.marked=marked;x.first=npk;
+#if RE4DC_SKY_ANY
+                    x.sky=std::uint8_t(re4dc_ps2_sky_header);
+#endif
+                    x.count=d.chunk_select(cpk+npk);npk+=x.count;
+                    continue;
+                }
+            }
+#endif
 #if RE4DC_PS2_VERTEX_ALPHA
             const bool marked=(meta.reserved&1U)!=0; // a --vertex-alpha tr4 part: ARGB4444 corners, alpha kept
             MeshDraw d{{part,{},near,far},pk,pk.parts()[index],
@@ -6218,6 +6794,9 @@ int ps2_pass(unsigned pass,float zfar){
             d.alpha=0xff000000U;d.vertex_alpha=false;d.cull_far=cull_far;d.direct=true;
 #endif
             d.part_index=index;d.lod_scale=lod_scale;
+#if RE4DC_PS2_PVS
+            d.pvs_placement=i;
+#endif
 #if defined(RE4DC_FOLIAGE_TRIM)
             const bool foliage_near=foliage_pass!=meta.pass && foliage::kNear<cull_far;
 #endif
@@ -6230,25 +6809,7 @@ int ps2_pass(unsigned pass,float zfar){
             d.sg=ps2w.sg;d.sg_groups=ps2w.sg_groups;
 #endif
 #endif
-#if defined(RE4DC_FOLIAGE_TRIM)
-            if(foliage_near){
-                d.cull_far=foliage::kNear; // the placement's inside test was against the pass far: test its clusters
-#if RE4DC_PS2_WORLD_LEAN
-                d.lean_inside=false;
-#endif
-            }
-#endif
-#if defined(RE4DC_TRANS_POLICY) && RE4DC_NATIVE_FOG
-            {   // TRANS_POLICY FAR: clusters past the room fog's threshold depth for this part's class are not drawn
-                const float tf=trans::far_of(meta,index,trans_pass);
-                if(tf>near && tf<d.cull_far){
-                    d.cull_far=tf;
-#if RE4DC_PS2_WORLD_LEAN
-                    d.lean_inside=false;
-#endif
-                }
-            }
-#endif
+#include "include/scenery_part_far.inc"
             std::memcpy(d.mvq,mvq,sizeof(mvq));std::memcpy(d.mv,mvq,sizeof(mvq));
             const unsigned key[6]={meta.crc,meta.fnv,meta.width,meta.height,pass,meta.cull};d.ps2=key;
 #if RE4DC_SCENERY_PIECE_STATE
@@ -6262,11 +6823,18 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #if RE4DC_SCENERY_CHUNK
             // SCENERY_CHUNK: select now, emit with the run (chunk_flush), in order.
+#if !RE4DC_SCENERY_SELECT_ONLY
             if(d.chunk_ok() && d.part.meshlet_count<=kChunkPicks){
                 if(nctx==kChunkParts || npk+d.part.meshlet_count>kChunkPicks){if(chunk_flush()<0)return -1;}
                 ChunkPart& x=cctx[nctx++];
                 std::memcpy(x.mvq,mvq,sizeof(mvq));std::memcpy(x.key,key,sizeof(key));
+#if RE4DC_SCENERY_UV_SNAPSHOT
+                x.uv_offset[0]=part.uv_offset[0];x.uv_offset[1]=part.uv_offset[1];
+#endif
                 x.cull_far=d.cull_far;x.lod_scale=lod_scale;x.index=index;x.cull=meta.cull;
+#if RE4DC_PS2_PVS
+                x.placement=i;
+#endif
                 x.marked=d.vertex_alpha;x.first=npk;
 #if RE4DC_SKY_ANY
                 x.sky=std::uint8_t(re4dc_ps2_sky_header);
@@ -6274,6 +6842,7 @@ int ps2_pass(unsigned pass,float zfar){
                 x.count=d.chunk_select(cpk+npk);npk+=x.count;
                 continue;
             }
+#endif
             if(chunk_flush()<0)return -1;
 #endif
 #if RE4DC_PS2_INTERIOR_CULL
@@ -6288,6 +6857,9 @@ int ps2_pass(unsigned pass,float zfar){
 #else
             const int result=d.run();
             d.end_direct(); // before any abort: releases the store queues
+#endif
+#if RE4DC_PS2_PVS
+            d.pvs_finish(result>0);
 #endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
             part.uv_offset[0]=part.uv_offset[1]=0.f;
@@ -6486,8 +7058,75 @@ void pc_scan(unsigned frame){
 #include "far_shell.inc"
 #undef RE4DC_FAR_SHELL_PART
 #endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+// WORLD_METER (game30.mk; QA disc only; display / render only). Per tick: us and vertices of the PS2 world's opaque pass
+// (0), its punch-through + translucent passes (1), the far shell (2); tick_log.cpp takes them once per tick.
+extern "C" { volatile unsigned re4dc_qa_wopq_mm,re4dc_qa_wxlu_mm,re4dc_qa_wshell; }
+extern "C" unsigned re4dc_wm_room(void);
+static unsigned wm_generation;
+extern "C" void re4dc_world_meter_identity(unsigned out[7]){
+    out[6]=wm_generation;
+    out[0]=re4dc_wm_room();out[1]=unsigned(re4dc_view_dist_get()); // existing FAR_SHELL/VIEW_DIST_OPTION interface
+#if RE4DC_PS2_PVS
+    out[2]=re4dc_ps2_pvs_on;
+#else
+    out[2]=~0U;
+#endif
+    out[3]=re4dc_qa_wopq_mm;out[4]=re4dc_qa_wxlu_mm;out[5]=re4dc_qa_wshell;
+}
+namespace wmeter {
+unsigned long long us[3];unsigned vtx[3],key[7];bool have_key=false;
+unsigned active_pass=3;re4dc::pvs23::Geometry geometry;
+void identity(){
+    unsigned now[7];re4dc_world_meter_identity(now);
+    if(!have_key || !re4dc::pvs23::same(now,key)){
+        std::memcpy(key,now,sizeof(key));have_key=true;
+        for(unsigned k=0;k<3;++k){us[k]=0;vtx[k]=0;}
+        geometry.clear();
+    }
+}
+struct Scope {
+    unsigned k,v0,previous;unsigned long long t0;const unsigned* src;
+    Scope(unsigned kind,const unsigned* vsrc,unsigned pass=3):k(kind),v0(*vsrc),previous(active_pass),t0(timer_us_gettime64()),src(vsrc){identity();active_pass=pass;}
+    ~Scope(){us[k]+=timer_us_gettime64()-t0;const unsigned v1=*src;if(v1>=v0)vtx[k]+=v1-v0;active_pass=previous;}
+};
+}
+extern "C" void re4dc_wm_corners(const std::uint8_t* codes,unsigned count,unsigned mask){
+    wmeter::geometry.add(wmeter::active_pass,codes,count,mask);
+}
+extern "C" void re4dc_world_meter_resume(){++wm_generation;}
+extern "C" int re4dc_world_meter_geometry_supported(){
+    return RE4DC_MESH_FASTPATH && RE4DC_MESH_VP_SCHED!=2;
+}
+extern "C" void re4dc_world_meter_take(unsigned* us_out,unsigned* vtx_out,unsigned* geometry_out,unsigned* identity_out){
+    wmeter::identity();std::memcpy(identity_out,wmeter::key,sizeof(wmeter::key));
+    for(unsigned k=0;k<3;++k){
+        us_out[k]=unsigned(wmeter::us[k]);vtx_out[k]=wmeter::vtx[k];wmeter::us[k]=0;wmeter::vtx[k]=0;
+        geometry_out[k]=unsigned(wmeter::geometry.transformed[k]);
+        geometry_out[k+3]=unsigned(wmeter::geometry.input_inside[k]);
+    }
+    wmeter::geometry.clear();
+}
+// The far a world pass draws with under the QA rows: pass 0 the opaque cut, passes 1 / 2 the translucent far (1 = Full: the
+// far before the View distance cut: re4dc_fog_note_far's, already within FOG_FAR / the lake cap).
+extern "C" float re4dc_wm_far(unsigned pass,float far){
+    const unsigned o=pass?re4dc_qa_wxlu_mm:re4dc_qa_wopq_mm;
+    if(!o)return far;
+    return o==1U?(far_shell_noted>far?far_shell_noted:far):float(o);
+}
+extern "C" float re4dc_wm_full(void){return far_shell_noted;}
+// native_ps2_world.cpp: the far shell's draw, metered (vertices = strip vertices sent).
+extern "C" int re4dc_wm_shell_draw(float cut,float full){
+    const wmeter::Scope wm_scope(2U,&farshell::st.strip_verts);
+    return re4dc_far_shell_draw(cut,full);
+}
+#endif
 extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
     RE4DC_BFC_SCOPE(1u,0u);  // BACKFACE_CENSUS
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    const wmeter::Scope wm_scope(pass?1U:0U,&stats.vertices,pass);
+    zfar=re4dc_wm_far(pass,zfar);
+#endif
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return 1;
 #endif
@@ -6628,6 +7267,9 @@ extern "C" void re4dc_ps2_mesh_log(unsigned frame){
 #endif
 }
 extern "C" void re4dc_ps2_mesh_retire(){
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    ++wm_generation; // also invalidate a same-room package reload or teleport
+#endif
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie.readers || ps2_movie.unavailable()){
         re4dc_missing("movie world arena retired before borrower cleanup");return;
@@ -6644,7 +7286,7 @@ extern "C" void re4dc_ps2_mesh_retire(){
     if(sourceWorldPackageGeneration!=~0U)++sourceWorldPackageGeneration;
     sourceWorldSidecarCrc=0;
 #endif
-#if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
+#if (defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL) || RE4DC_PS2_PVS
     enemyVisSidecarCrc=0;
 #endif
 #if RE4DC_PS2_PLACE_GATE
@@ -6720,11 +7362,9 @@ extern "C" void re4dc_ps2_dyn_parts(unsigned room,unsigned id,const void* object
     if(s.obj!=object || s.parts)return;
 #if RE4DC_PS2_WORLD_ROOT_POSE
     if(count==1)s.root_matrix_offset=matrix_offset+1U;
-    const unsigned root_bytes=count==1?24U*sizeof(float):0U;
-#else
-    const unsigned root_bytes=0;
 #endif
-    auto* poses=static_cast<dyn::PartPose*>(re4dc_static_alloc(count*sizeof(dyn::PartPose)+root_bytes));
+    const unsigned part_bytes=dyn::part_cell_bytes(count);
+    auto* poses=static_cast<dyn::PartPose*>(re4dc_static_alloc(part_bytes));
     if(!poses){re4dc_log("PS2PART no heap id=%02x parts=%u\n",id,count);return;}
     const auto* p=static_cast<const unsigned char*>(first);
     for(unsigned i=0;i<count;++i){
@@ -6742,7 +7382,7 @@ extern "C" void re4dc_ps2_dyn_parts(unsigned room,unsigned id,const void* object
     }
 #endif
     s.parts=poses;s.nparts=count;s.pose_offset=pose_offset;
-    re4dc_log("PS2PART bind id=%02x parts=%u bytes=%u heap=%d\n",id,count,unsigned(count*sizeof(dyn::PartPose)+root_bytes),re4dc_static_heap_free());
+    re4dc_log("PS2PART bind id=%02x parts=%u bytes=%u heap=%d\n",id,count,part_bytes,re4dc_static_heap_free());
 }
 extern "C" int re4dc_ps2_dyn_source(unsigned room,const void* object,unsigned serial){
     if(!dyn::ids || ps2w.room!=room)return 0;

@@ -1,0 +1,117 @@
+#if RE4DC_NATIVE_MES
+@GLYPH_TYPES@
+static pvr_ptr_t glyph_atlas=reinterpret_cast<void*>(0xa4600000U);
+static GlyphCell glyph_cells[kGlyphCells];
+static GlyphQuad glyph_quads[kGlyphCapacity];
+static pvr_poly_hdr_t glyph_headers[kGlyphBanks];
+static bool glyph_header_ready[kGlyphBanks];
+static unsigned nglyph,glyph_drawn;
+static Entry* const kGlyphRun=reinterpret_cast<Entry*>(glyph_cells);
+@GLYPH_HEADER@
+@GLYPH_RUN@
+#endif
+
+@NATIVE_ENQUEUE@
+
+static unsigned door_mark=~0U;
+#define RE4DC_DOOR_SPLIT(i) if((i)==door_mark){event({0x10000005U,unsigned(i)});}
+#if RE4DC_SS_UI_ORDER
+@NATIVE_DRAW@
+@NATIVE_ORDER@
+#else
+static void fixture_legacy_drain(){
+@NATIVE_LEGACY@
+}
+#endif
+
+static void drain(){
+#if RE4DC_SS_UI_ORDER
+    ui_order_flush();
+#else
+    fixture_legacy_drain();quads_flushed=nquad;
+#endif
+}
+
+struct FixtureTexture {
+    re4dc::texture::Header header;
+    re4dc::texture::Texture texture;
+};
+static_assert(offsetof(FixtureTexture,texture)==48 && sizeof(FixtureTexture)==144);
+static FixtureTexture texture_data[kFixtureEntries];
+static pvr_ptr_t texture_addresses[kFixtureEntries];
+static void seed_entry(unsigned i,unsigned blend,bool hot){
+    auto& e=entries[i];auto& data=texture_data[i];
+    data={};data.header.texture_count=1;data.header.texture_offset=48;
+    auto& t=data.texture;t.width=32U<<(i%5);t.height=32U<<((i+2)%5);
+    t.format=i%3;t.payload=(i&1)?re4dc::texture::kPayloadVq:re4dc::texture::kPayloadTwiddled;
+    t.flags=0;data.header.flags=(i%4==0)?0x80000000U|24U|(40U<<11):0;
+    texture_addresses[i]=reinterpret_cast<void*>(std::uintptr_t(0xa4000000U+i*0x2000U));
+    e.package.data_=reinterpret_cast<const u8*>(&data);e.package.size_=sizeof data;e.package.header_=&data.header;
+    e.package.pvr_textures_=&texture_addresses[i];e.valid=true;e.frame=0;e.key={i+1,i*17+9};
+#if RE4DC_UI_HEADERS
+    auto* w=reinterpret_cast<u32*>(&e.ui_header);
+    w[0]=PVR_CMD_POLYHDR|0x00400000U|i;for(unsigned n=1;n<8;++n)w[n]=0x12340000U+i*32+n;
+    e.ui_header_key=hot?blend:~0U;
+#else
+    (void)blend;(void)hot;
+#endif
+}
+static void begin_case(unsigned category){
+    observations.clear();event({0xb9000000U,category,total_cases});
+    nquad=quads_flushed=0;deferred_top=sizeof frame_storage;frame_ready=true;stream_aborted=false;
+    black=movie_override=false;door_mark=~0U;world_autosort=true;overlay_layer=total_cases%7;frame=1+total_cases;
+    drawn=1;culled=unsupported=dropped=missing=frame_queue_drops=0;
+    std::fill(std::begin(handles),std::end(handles),nullptr);
+    for(unsigned i=0;i<kFixtureEntries;++i)seed_entry(i,i%5,true);
+#if RE4DC_NATIVE_MES
+    nglyph=0;glyph_drawn=0;
+    for(unsigned b=0;b<kGlyphBanks;++b){
+        auto* w=reinterpret_cast<u32*>(&glyph_headers[b]);w[0]=PVR_CMD_POLYHDR|0x00400000U|0x100U|b;
+        for(unsigned n=1;n<8;++n)w[n]=0x24680000U+b*32+n;
+        glyph_header_ready[b]=true;
+    }
+#endif
+}
+static void end_case(){
+    event({nquad,quads_flushed,drawn,culled,unsupported,dropped,missing,frame_queue_drops,overlay_layer,unsigned(stream_aborted)});
+    event({diagnostic_calls,u32(diagnostic_hash),u32(diagnostic_hash>>32)});
+#if RE4DC_NATIVE_MES
+    event({nglyph,glyph_drawn});
+#endif
+    for(unsigned i=0;i<kFixtureEntries;++i){
+        event({unsigned(entries[i].valid),entries[i].frame,entries[i].key.crc,entries[i].key.fnv});
+#if RE4DC_UI_HEADERS
+        event({entries[i].ui_header_key});
+        u32 w[8];std::memcpy(w,&entries[i].ui_header,32);
+        if(w[4]==kUnspecifiedTail&&w[5]==kUnspecifiedTail&&w[6]==kUnspecifiedTail&&w[7]==kUnspecifiedTail)
+            for(unsigned n=4;n<8;++n)w[n]=0;
+        words(w,32);
+#endif
+    }
+    event({unsigned(observations.size())});
+    output.write(reinterpret_cast<const char*>(observations.data()),observations.size()*4);assert(output.good());++total_cases;
+}
+static Re4dcUiQuad make_quad(unsigned id){
+    Re4dcUiQuad q{};q.image={reinterpret_cast<void*>(std::uintptr_t(0x12000000U+(id%12)*0x1000U)),nullptr,
+        48U+(id%3)*16U,24U+(id%5)*8U,id%7,0xffffffffU,0};
+    const float x[]={-0.0f,0.125f,-15.5f,100.25f,639.875f,721.5f};
+    for(unsigned n=0;n<8;++n){q.xy[n]=x[(id+n)%6]+float(id%17);q.uv[n]=float(int((id+n)%17)-8)*.1875f;}
+    q.color=(id&1)?0x0180ffffU:0xffabcdefU;q.blend=id%5;q.masked=0;return q;
+}
+static void enqueue_copy(const Re4dcUiQuad& input){
+    Re4dcUiQuad q=input;auto before=quad_words(q);re4dc_ui_submit(&q);assert(quad_words(q)==before);
+    // A later source write must not change the native queue's snapshot.
+    q.color^=0xffffffffU;for(float& f:q.xy)f=-99.5f;for(float& f:q.uv)f=3.125f;
+}
+#if RE4DC_NATIVE_MES
+static void enqueue_glyphs(unsigned count,unsigned bank_stride,bool hot){
+    const unsigned first=nglyph;
+    for(unsigned i=0;i<count && nglyph<kGlyphCapacity;++i){
+        const unsigned k=nglyph++;auto& g=glyph_quads[k];
+        g={s16(-100+int(k)*9),s16(25+int(k)*7),s16(150+int(k)*9),s16(81+int(k)*7),
+            u8(k%kGlyphCells),u8(1+k%32),u8(1+(k*3)%32),u8((k/bank_stride)%kGlyphBanks),0xf090a0b0U+k};
+    }
+    if(!hot)for(bool& ready:glyph_header_ready)ready=false;
+    auto& q=quads[nquad];q={};q.image.width=first;q.image.height=nglyph-first;handles[nquad++]=kGlyphRun;
+}
+#endif

@@ -6,11 +6,11 @@
 
 For players. The full player guide is the [root README](../../README.md).
 
-- **Current build:** Test 22, on the [releases page](https://github.com/lamb2k/re4dc/releases/latest): mipmaps,
-  fewer pauses, and fixes for the dam crash, Ganado death stalls and the Mendez pause.
+- **Current build:** Test 23, on the [releases page](https://github.com/lamb2k/re4dc/releases/latest): PS2 river
+  water, trap explosions, Mendez no longer freezes, and no hang on slow disc reads.
 - **Playable:** New Game to the end of chapter 2-3, at the castle gate (r200).
 - **Testers:** the release also has a **QA build for testers** with teleports and a Diagnostics page.
-- **Next:** Test 23, see [Coming soon: Test 23](../../README.md#coming-soon-test-23).
+- **Next:** Test 24, see [Coming soon: Test 24](../../README.md#coming-soon-test-24).
 - **Runs on:** a real Dreamcast with GDEMU, or Flycast.
 - **Problems:** see [KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md), and report new ones with the
   [Game bug form](https://github.com/lamb2k/re4dc/issues/new/choose).

@@ -26,6 +26,9 @@
 #include "eprintf.h"
 #include "player.h"
 #include "read.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+#include "issue52_actor_diag.h"
+#endif
 #if RE4DC_WEAPON_HEAP4
 #include "item.h"
 #endif
@@ -551,6 +554,10 @@ int readEmData(ReadModule* m, int id, void* addr, u32 size)
     u32 bssSize = 0;
     u32 newSize;
     u32 dataSize;
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+    const unsigned issue52_token = id == 0x12 ?
+        re4dc_issue52_current(re4dc_issue52_source_task(), id) : 0;
+#endif
 
     switch (pG->pl_type) {
     case 0:
@@ -570,6 +577,10 @@ int readEmData(ReadModule* m, int id, void* addr, u32 size)
         break;
     }
     if (e->file == 0) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+        if (issue52_token) re4dc_issue52_detail(issue52_token,
+            re4dc_issue52_source_task(), I52_READ_ABSENT, 0, 0);
+#endif
         return 0;
     }
     name = (char*) FileTbl[e->file].name;
@@ -578,6 +589,10 @@ int readEmData(ReadModule* m, int id, void* addr, u32 size)
         name = (char*) FileTbl[e->file].name;
     }
     if (Dvd.FileExistCheck(name, &len) < 0) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+        if (issue52_token) re4dc_issue52_detail(issue52_token,
+            re4dc_issue52_source_task(), I52_READ_ABSENT, 0, 0);
+#endif
         pLog->err(0, 0, "readEmData(): error! %s", name);
         return 0;
     }
@@ -616,8 +631,16 @@ retry:
 #if defined(RE4DC_EM_READ_FAIL_INJECT) && RE4DC_EM_READ_FAIL_INJECT
 issued:
 #endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+    if (issue52_token) re4dc_issue52_detail(issue52_token,
+        re4dc_issue52_source_task(), I52_READ_SUBMIT, req, 0);
+#endif
     while ((ret = Dvd.ReadCheckInfo(req, &info)) != 1) {
         if (ret < 0) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+            if (issue52_token) re4dc_issue52_detail(issue52_token,
+                re4dc_issue52_source_task(), I52_READ_NEGATIVE, req, ret);
+#endif
 #if defined(RE4DC_EM_READ_RETRY) && RE4DC_EM_READ_RETRY
             if (++tries <= 8) {
                 int k;
@@ -646,6 +669,10 @@ issued:
             TaskSleep(1);
         }
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+    if (issue52_token) re4dc_issue52_detail(issue52_token,
+        re4dc_issue52_source_task(), I52_READ_COMPLETE, req, ret);
+#endif
     len = info.size[0][0];
     if (addr == NULL) {
         m->flag |= 4;
@@ -802,6 +829,12 @@ void* EmReadSearch(int id, void* addr, u32 size)
 
     id = checkAshleyId(id);
     m = SearchEmModule(id);
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+    const unsigned issue52_token = id == 0x12 ?
+        re4dc_issue52_current(re4dc_issue52_source_task(), id) : 0;
+    if (issue52_token) re4dc_issue52_detail(issue52_token,
+        re4dc_issue52_source_task(), m ? I52_READ_CACHED : I52_READ_MISS, 0, 0);
+#endif
     if (m != NULL) {
         EM_INIT_FUNC = m->pInitFunc;
         return m->pArc;

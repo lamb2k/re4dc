@@ -22,6 +22,10 @@
 #define RE4DC_LATE_NODRAW 0x04u
 #define RE4DC_LATE_ACT_CAP 0x08u
 #define RE4DC_LATE_LEON_SOURCE 0x10u
+// Private scratch QA only: exactly one bit; requires reviewed final-image admission.
+#define RE4DC_LATE_SCRATCH_A 0x80u
+#define RE4DC_LATE_SCRATCH_B 0x100u
+#define RE4DC_LATE_SCRATCH_C 0x200u
 
 #if defined(RE4DC_DBG_WARP) && RE4DC_DBG_WARP
 #ifdef __cplusplus
@@ -31,12 +35,20 @@ extern "C" {
 unsigned re4dc_warp_late(void);
 // 1 when warp.txt has a `late` line (the arm is a late-activation arm).
 int re4dc_warp_late_set(void);
+// 1 only inside the configured room/tick window, even when the mask is0. No side effects.
+int re4dc_warp_late_open(void);
+// Validated target/current room while open, else0; independent of the mask.
+unsigned re4dc_warp_late_room(void);
 #ifdef __cplusplus
 }
 #endif
 #define RE4DC_WARP_LATE(bits) (re4dc_warp_late() & (bits))
 #define RE4DC_WARP_LATE_SET() (re4dc_warp_late_set())
+#define RE4DC_WARP_LATE_OPEN() (re4dc_warp_late_open())
+#define RE4DC_WARP_LATE_ROOM() (re4dc_warp_late_room())
 #else
 #define RE4DC_WARP_LATE(bits) 0u
 #define RE4DC_WARP_LATE_SET() 0
+#define RE4DC_WARP_LATE_OPEN() 0
+#define RE4DC_WARP_LATE_ROOM() 0u
 #endif

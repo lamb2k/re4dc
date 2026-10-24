@@ -1,0 +1,321 @@
+{
+  "status": "PASS",
+  "scope": "Production-extracted Build 6 host semantic checks (no game data or target FP claim).\n\nCompare OFF/ON effective header + sprite bodies, FIFO/admission/accounting,\nand actual late Essential/trim state with the new early predicate and hook.\nThe KOS header compiler, texture resolver and stream transport are host shims.\nThe unchanged common-transform prefix and projection/texture admission are\ncontrolled boundaries, not a synthetic reimplementation of EspCommonTrans.\n",
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "sanitizer": "address,undefined; LeakSanitizer disabled because this sandbox cannot inspect /proc tasks",
+  "profiles": {
+    "0": {
+      "path": "/workspace/scratch/c4e1a2818fde/backface-tools/build6-profile-fx0-01/esp-profile.json",
+      "sha256": "3931a18a113b6af12fac3a345d02b11c798a6e62302e8a8b732b13358189ab17",
+      "fx_level": 0,
+      "fx_trim": 1,
+      "essential_boot": 0
+    },
+    "3": {
+      "path": "/workspace/scratch/c4e1a2818fde/backface-tools/build6-profile-fx3-01/esp-profile.json",
+      "sha256": "8f42e6be4cfa17125005267c6531fae53f583fa0083d229bdd134fc66fec3d44",
+      "fx_level": 3,
+      "fx_trim": 1,
+      "essential_boot": 1
+    }
+  },
+  "comparisons": [
+    {
+      "name": "queue-fx0",
+      "controls": {},
+      "trace_sha256": "b10da06ff29676ee68c373adce593921b6da9e0f0792ddd34e08e28670e51d49",
+      "trace_bytes": 80601,
+      "off": {
+        "observations": 378,
+        "sprites": 349,
+        "body_only": 0,
+        "bytes_sent": 34080,
+        "header_compiles": 30
+      },
+      "on": {
+        "observations": 378,
+        "sprites": 349,
+        "body_only": 166,
+        "bytes_sent": 28768,
+        "header_compiles": 30
+      }
+    },
+    {
+      "name": "queue-fx3",
+      "controls": {},
+      "trace_sha256": "b10da06ff29676ee68c373adce593921b6da9e0f0792ddd34e08e28670e51d49",
+      "trace_bytes": 80601,
+      "off": {
+        "observations": 378,
+        "sprites": 349,
+        "body_only": 0,
+        "bytes_sent": 34080,
+        "header_compiles": 30
+      },
+      "on": {
+        "observations": 378,
+        "sprites": 349,
+        "body_only": 166,
+        "bytes_sent": 28768,
+        "header_compiles": 30
+      }
+    },
+    {
+      "name": "re4dc_ta_guard",
+      "controls": {
+        "RE4DC_TA_GUARD": 1
+      },
+      "trace_sha256": "b10da06ff29676ee68c373adce593921b6da9e0f0792ddd34e08e28670e51d49",
+      "trace_bytes": 80601,
+      "off": {
+        "observations": 378,
+        "sprites": 349,
+        "body_only": 0,
+        "bytes_sent": 34080,
+        "header_compiles": 30
+      },
+      "on": {
+        "observations": 378,
+        "sprites": 349,
+        "body_only": 0,
+        "bytes_sent": 34080,
+        "header_compiles": 30
+      }
+    },
+    {
+      "name": "re4dc_ta_hash",
+      "controls": {
+        "RE4DC_TA_HASH": 1
+      },
+      "trace_sha256": "b10da06ff29676ee68c373adce593921b6da9e0f0792ddd34e08e28670e51d49",
+      "trace_bytes": 80601,
+      "off": {
+        "observations": 378,
+        "sprites": 349,
+        "body_only": 0,
+        "bytes_sent": 34080,
+        "header_compiles": 30
+      },
+      "on": {
+        "observations": 378,
+        "sprites": 349,
+        "body_only": 0,
+        "bytes_sent": 34080,
+        "header_compiles": 30
+      }
+    },
+    {
+      "name": "re4dc_ta_bin_diag",
+      "controls": {
+        "RE4DC_TA_BIN_DIAG": 1
+      },
+      "trace_sha256": "b10da06ff29676ee68c373adce593921b6da9e0f0792ddd34e08e28670e51d49",
+      "trace_bytes": 80601,
+      "off": {
+        "observations": 378,
+        "sprites": 349,
+        "body_only": 0,
+        "bytes_sent": 34080,
+        "header_compiles": 30
+      },
+      "on": {
+        "observations": 378,
+        "sprites": 349,
+        "body_only": 0,
+        "bytes_sent": 34080,
+        "header_compiles": 30
+      }
+    },
+    {
+      "name": "re4dc_ta_material_diag",
+      "controls": {
+        "RE4DC_TA_MATERIAL_DIAG": 1
+      },
+      "trace_sha256": "b10da06ff29676ee68c373adce593921b6da9e0f0792ddd34e08e28670e51d49",
+      "trace_bytes": 80601,
+      "off": {
+        "observations": 378,
+        "sprites": 349,
+        "body_only": 0,
+        "bytes_sent": 34080,
+        "header_compiles": 30
+      },
+      "on": {
+        "observations": 378,
+        "sprites": 349,
+        "body_only": 0,
+        "bytes_sent": 34080,
+        "header_compiles": 30
+      }
+    },
+    {
+      "name": "essential-fx0",
+      "controls": {},
+      "trace_sha256": "5bc365f6b87282c83e1d50813b7841491eb52200de7bb8eb075dd651db427cb0",
+      "trace_bytes": 21096540,
+      "off": {
+        "observations": 1054827,
+        "tail_visits": 1054827,
+        "drawn": 157833,
+        "fog_notes": 262144,
+        "mist_notes": 262144,
+        "torch_notes": 524288
+      },
+      "on": {
+        "observations": 1054827,
+        "tail_visits": 1049941,
+        "drawn": 157833,
+        "fog_notes": 262144,
+        "mist_notes": 262144,
+        "torch_notes": 524288
+      }
+    },
+    {
+      "name": "essential-fx3",
+      "controls": {},
+      "trace_sha256": "6b0df5ac15ca3cf1286c207601ea59f90f5f878928a903553e38845ad91468ab",
+      "trace_bytes": 21096540,
+      "off": {
+        "observations": 1054827,
+        "tail_visits": 1054827,
+        "drawn": 157813,
+        "fog_notes": 262144,
+        "mist_notes": 262144,
+        "torch_notes": 524288
+      },
+      "on": {
+        "observations": 1054827,
+        "tail_visits": 1049922,
+        "drawn": 157813,
+        "fog_notes": 262144,
+        "mist_notes": 262144,
+        "torch_notes": 524288
+      }
+    },
+    {
+      "name": "re4dc_fx_trim_log",
+      "controls": {
+        "RE4DC_FX_TRIM_LOG": 1
+      },
+      "trace_sha256": "6b0df5ac15ca3cf1286c207601ea59f90f5f878928a903553e38845ad91468ab",
+      "trace_bytes": 21096540,
+      "off": {
+        "observations": 1054827,
+        "tail_visits": 1054827,
+        "drawn": 157813,
+        "fog_notes": 262144,
+        "mist_notes": 262144,
+        "torch_notes": 524288
+      },
+      "on": {
+        "observations": 1054827,
+        "tail_visits": 1054827,
+        "drawn": 157813,
+        "fog_notes": 262144,
+        "mist_notes": 262144,
+        "torch_notes": 524288
+      }
+    },
+    {
+      "name": "re4dc_esp_census",
+      "controls": {
+        "RE4DC_ESP_CENSUS": 1
+      },
+      "trace_sha256": "6b0df5ac15ca3cf1286c207601ea59f90f5f878928a903553e38845ad91468ab",
+      "trace_bytes": 21096540,
+      "off": {
+        "observations": 1054827,
+        "tail_visits": 1054827,
+        "drawn": 157813,
+        "fog_notes": 262144,
+        "mist_notes": 262144,
+        "torch_notes": 524288
+      },
+      "on": {
+        "observations": 1054827,
+        "tail_visits": 1054827,
+        "drawn": 157813,
+        "fog_notes": 262144,
+        "mist_notes": 262144,
+        "torch_notes": 524288
+      }
+    },
+    {
+      "name": "re4dc_mist_cut",
+      "controls": {
+        "RE4DC_MIST_CUT": 1
+      },
+      "trace_sha256": "6b0df5ac15ca3cf1286c207601ea59f90f5f878928a903553e38845ad91468ab",
+      "trace_bytes": 21096540,
+      "off": {
+        "observations": 1054827,
+        "tail_visits": 1054827,
+        "drawn": 157813,
+        "fog_notes": 262144,
+        "mist_notes": 262144,
+        "torch_notes": 524288
+      },
+      "on": {
+        "observations": 1054827,
+        "tail_visits": 1054827,
+        "drawn": 157813,
+        "fog_notes": 262144,
+        "mist_notes": 262144,
+        "torch_notes": 524288
+      }
+    }
+  ],
+  "negative_controls": [
+    {
+      "name": "color-key",
+      "detected": true
+    },
+    {
+      "name": "previous-owner",
+      "detected": true
+    },
+    {
+      "name": "reset-owner",
+      "detected": true
+    },
+    {
+      "name": "frame-stamps",
+      "detected": true
+    },
+    {
+      "name": "keep-class",
+      "detected": true
+    }
+  ],
+  "reused_unchanged_checks": {
+    "receipt": "/workspace/scratch/c4e1a2818fde/backface-tools/build6-runtime-07/reused-native-receipt.json",
+    "sha256": "ddcd064e47e32d5d550ef843a09184146691f6d7ad62989e0351b05d07c34b13",
+    "comparisons": [
+      "queue-fx0",
+      "queue-fx3",
+      "re4dc_ta_bin_diag",
+      "re4dc_ta_guard",
+      "re4dc_ta_hash",
+      "re4dc_ta_material_diag"
+    ],
+    "reason": "Reused suite source, fixture and profile dependencies are byte-identical; only the other runtime path changed"
+  },
+  "source_sha256": {
+    "src/game/esp_sub.cpp": "8236feb688d9b07355b6193c98bcf1bfa587ddf8bb52bc78d06f2ef6e9499d1c",
+    "port/dreamcast/game/platform/native_ui.cpp": "6b75a06605e3249c2e298484c9557839a21adde8b1511f24debdb71d4bc43134",
+    "port/dreamcast/game/platform/include/native_effect_haze_batch.inc": "b505ff4856d1c9980737e1b86bf222aba74d36e8de988a08f341a2ec3a2ed6b7",
+    "port/dreamcast/game/platform/include/native_effect_stage1_batch.inc": "bbde967e08758b2c714aa8de0cb1990d1d84c31d455b96a45845e0657221df92",
+    "port/dreamcast/game/platform/include/fx_sprite_trim.inc": "9f74b574f55c0897849e0956688c1f3e868797a44e7d7ec432182706598fe1d2",
+    "port/dreamcast/game/platform/include/fx_sprite_trim_table.inc": "9e58e010758bbbe87899931e34f8b1749cecc700c4023f2ec5a0fb768a143e93",
+    "port/dreamcast/game/platform/include/native_ui.h": "7490e37bbe989399aa75108cf880027a4943da89ffa4999f272b0eccf4ffb882",
+    "port/dreamcast/tools/d367/esp_setup_lean/check_runtime.py": "ba0b2739e010cdda105e3483c998c84d702a3e16955e8bbd2f2c091410249de8",
+    "port/dreamcast/tools/d367/esp_setup_lean/runtime_queue.cpp.in": "0f6fbb5f66c811360ba0134938f2498349ec19897cb77c3d40083d86b4602804",
+    "port/dreamcast/tools/d367/esp_setup_lean/runtime_essential.cpp.in": "236ed4cdc12b4963a40b7c5ecafe75e0dd9fe40f9eb16e720df53f1aa47ea4d0"
+  },
+  "limitations": [
+    "No game data, Flycast or console execution.",
+    "Host FP and synthetic texture/stream stubs; no target FP or KOS bit-encoding proof.",
+    "Effective ordered header+body payload equality; redundant header bytes intentionally differ.",
+    "Early hook test controls the unchanged matrix/projection/texture-admission boundary; it does not execute all EspCommonTrans callbacks."
+  ]
+}

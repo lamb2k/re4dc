@@ -34,7 +34,7 @@ GAME_SRCS = $(filter-out $(addprefix $(ROOT)/,$(GAME_EXCLUDE)), \
 
 CENSUS_SRCS = $(filter-out $(addprefix $(ROOT)/,$(GAME_EXCLUDE)), \
 	$(foreach d,$(CENSUS_DIRS),$(wildcard $(ROOT)/$(d)/*.cpp)))
-PLATFORM_SRCS = $(wildcard platform/*.cpp)
+PLATFORM_SRCS = $(filter-out platform/backface_sh4_trace.cpp,$(wildcard platform/*.cpp))
 ifneq ($(VMU_CONTEXT),1)
 PLATFORM_SRCS := $(filter-out platform/vmu_lcd.cpp,$(PLATFORM_SRCS))
 endif
@@ -62,6 +62,18 @@ ifneq ($(GANADO_ROUTINE_BYTES),1)
 $(error GANADO_ROUTINE_BYTES must be 0 or 1)
 endif
 $(OBJDIR)/mod/em10g/shared/src/em10/em10.o: GAME_CPPFLAGS += -DRE4DC_GANADO_ROUTINE_BYTES=1
+endif
+
+# EM35_ROUTINE_BYTES=1 (lane fix-mendez-freeze23 2026-10-23, #55 item 5; default 0 = image unchanged): Mendez's
+# routine-byte repair, as GANADO_ROUTINE_BYTES. The catch hit stored the GC big-endian word 0x010D000n, which on the
+# Dreamcast set routine 1/0 step 0xD (no such Wait step): Mendez froze for the rest of the fight. The bear hug / catch
+# player callbacks' word test (EM_RTN) also read the wrong bytes and released Leon at once.
+EM35_ROUTINE_BYTES ?= 0
+ifneq ($(EM35_ROUTINE_BYTES),0)
+ifneq ($(EM35_ROUTINE_BYTES),1)
+$(error EM35_ROUTINE_BYTES must be 0 or 1)
+endif
+$(OBJDIR)/mod/em35/src/em35/em35.o: GAME_CPPFLAGS += -DRE4DC_EM35_ROUTINE_BYTES=1
 endif
 
 # EM_ADMISSION_DISP_FIX=1 (default 0): restore the caller's display flags when
@@ -182,6 +194,20 @@ $(OBJDIR)/src/game/espgen45.o: GAME_CPPFLAGS += -DRE4DC_WATER_PS2=1 -DRE4DC_WATE
   -DRE4DC_WATER_PS2_ROOMS=$(WATER_PS2_ROOMS)
 $(OBJDIR)/src/game/Espgen42.o $(OBJDIR)/src/game/espgen.o: GAME_CPPFLAGS += -DRE4DC_WATER_PS2=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_WATER_PS2=1
+endif
+# WATER_PS2_EXT=1 (lane fix-water-traps23 2026-10-23, GitHub #55 item 2; render only, default 0; needs WATER_PS2=1): the
+# rivers of r10c / r10d / r10e and the r10c waterfall curtains as the PS2 draws them (SST Esp08 world planes of the room
+# EFF: dark base 0xf7, noise 0xfe / 0xef, water 0xf2, falling-water streaks 0xc5), from src/game/water_ps2_ext.inc
+# (tools/d367/water/water_ps2_ext.py, read from the PS2 disc). Same native water layer as WATER_PS2, rows carry their
+# plane axes (vertical / tilted waterfall planes). WATER_PS2_EXT_ROOMS: bit 0 r10c, 1 r10d, 2 r10e (default 7).
+# Effect slots, generators, areas and Rnd() untouched (logic STRICT). Log: "water ext: ... not loaded" once per row.
+WATER_PS2_EXT ?= 0
+WATER_PS2_EXT_ROOMS ?= 7
+ifneq ($(WATER_PS2_EXT),0)
+ifneq ($(WATER_PS2_EXT)$(WATER_PS2),11)
+$(error WATER_PS2_EXT must be 0 or 1 and needs WATER_PS2=1)
+endif
+$(OBJDIR)/src/game/espgen45.o: GAME_CPPFLAGS += -DRE4DC_WATER_PS2_EXT=1 -DRE4DC_WATER_PS2_EXT_ROOMS=$(WATER_PS2_EXT_ROOMS)
 endif
 # PS2_CH1_ENEMY=1 (lane alivecap 2026-10-15, user 10-15 "the PS2 logic holistically for enemy spawns in chapter 1, with
 #   our game cutting out more when it hits our threshold"; CHANGES GAMEPLAY by design; default 0 = off): one umbrella
@@ -1790,6 +1816,28 @@ KOS_DISC_FIX ?= 0
 ifneq ($(filter $(KOS_DISC_FIX),0 1),$(KOS_DISC_FIX))
 $(error KOS_DISC_FIX must be 0 or 1)
 endif
+# DISC_DMA_WAIT_TIMEOUT=1 (issue #28 DreamShell, lane fix-dreamshell23 2026-10-23, default 0 = image unchanged; needs
+# KOS_DISC_FIX=1): KOS waited on a GD DMA completion with no limit (sector reads and stream requests), so a loader that
+# never completes a DMA (DreamShell's ISO loader, first read bgm/bio4str.hed) hung the boot before DISC_READ_FALLBACK=3's
+# plain-read fallback could run. kos-804b319-cdrom-dma-wait-timeout.patch bounds each wait (5 s + 8 ms a sector, the v2
+# command bound); a timeout closes the DMA state and returns ERR_TIMEOUT, and dvd_read_safe.cpp logs
+# "disc dma wait timeout" and falls back (stream: PIO/plain fill + session latch; sector read: latch + plain read).
+# DISC_DMA_DROP_TEST=1 (test discs only): the first DMA read never gets its completion (as DreamShell).
+DISC_DMA_WAIT_TIMEOUT ?= 0
+DISC_DMA_DROP_TEST ?= 0
+ifneq ($(filter $(DISC_DMA_WAIT_TIMEOUT),0 1),$(DISC_DMA_WAIT_TIMEOUT))
+$(error DISC_DMA_WAIT_TIMEOUT must be 0 or 1)
+endif
+ifeq ($(DISC_DMA_WAIT_TIMEOUT),1)
+ifneq ($(KOS_DISC_FIX),1)
+$(error DISC_DMA_WAIT_TIMEOUT=1 needs KOS_DISC_FIX=1 (DISC_COMPAT=1))
+endif
+endif
+ifeq ($(DISC_DMA_DROP_TEST),1)
+ifneq ($(DISC_DMA_WAIT_TIMEOUT),1)
+$(error DISC_DMA_DROP_TEST=1 needs DISC_DMA_WAIT_TIMEOUT=1)
+endif
+endif
 ifeq ($(KOS_DISC_FIX),1)
 KOSFIX := $(OBJDIR)/kosfix
 KOS_PATCHES := $(CURDIR)/../patches
@@ -1808,7 +1856,17 @@ $(KOSFIX)/cdrom.c: $(KOS_BASE)/kernel/arch/dreamcast/hardware/cdrom.c $(KOS_PATC
 	cp $< $(KOSFIX)/p-cd/kernel/arch/dreamcast/hardware/
 	patch --fuzz=0 -s -p1 -d $(KOSFIX)/p-cd < $(KOS_PATCHES)/kos-804b319-cdrom-hang-fixes.patch
 	patch --fuzz=0 -s -p1 -d $(KOSFIX)/p-cd < $(KOS_PATCHES)/kos-804b319-cdrom-dma-done.patch
+ifeq ($(DISC_DMA_WAIT_TIMEOUT),1)
+	patch --fuzz=0 -s -p1 -d $(KOSFIX)/p-cd < $(KOS_PATCHES)/kos-804b319-cdrom-dma-wait-timeout.patch
+endif
 	cp $(KOSFIX)/p-cd/kernel/arch/dreamcast/hardware/cdrom.c $@
+ifeq ($(DISC_DMA_WAIT_TIMEOUT),1)
+$(KOSFIX)/cdrom.c: $(KOS_PATCHES)/kos-804b319-cdrom-dma-wait-timeout.patch
+$(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_DMA_WAIT_TIMEOUT=1
+ifeq ($(DISC_DMA_DROP_TEST),1)
+$(KOSFIX)/cdrom.o: KOS_CFLAGS += -DRE4DC_DISC_DMA_DROP_TEST=1
+endif
+endif
 $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_KOS_DMA_COUNTERS=1
 endif
 # The stage row's GD DMA counters (platform/kos_dma_counters.h: empty unless KOS_DISC_FIX=1).
@@ -2228,6 +2286,23 @@ GAME_OPT ?= -O1
 GAME_CPPFLAGS = -std=gnu++20 -fpermissive -w $(GAME_OPT) \
 	-include platform/include/re4dc_prelude.h \
 	-I$(ROOT)/include -I$(ROOT)/src -Iplatform/include -DRE4DC_GAME
+# STAT_ROUTINE_BYTES=1 (lane stat-bytes23 2026-10-23; default 0 = image unchanged): every remaining GameCube
+# big-endian store / test of the cModel::stat routine word (STAT_BE in re4dc_prelude.h): player / partner / HUD
+# tests, the r100 trap dog (em21 + em2a), El Gigante (em2b), Luis (pl14), the boat (pl0f), the bell / gatling
+# objects and the later bosses. em10 / em35 keep their own GANADO_ / EM35_ROUTINE_BYTES knobs.
+STAT_ROUTINE_BYTES ?= 0
+ifneq ($(STAT_ROUTINE_BYTES),0)
+ifneq ($(STAT_ROUTINE_BYTES),1)
+$(error STAT_ROUTINE_BYTES must be 0 or 1)
+endif
+GAME_CPPFLAGS += -DRE4DC_STAT_ROUTINE_BYTES=1
+endif
+# STAT_DIAG=1 (test / QA discs only; default 0): STATDIAG log lines (player / partner routine-word tests where the
+# GameCube meaning and the raw word compare disagree, the r100 trap dog and its trap's routine changes, a self test).
+STAT_DIAG ?= 0
+ifneq ($(STAT_DIAG),0)
+GAME_CPPFLAGS += -DRE4DC_STAT_DIAG=1
+endif
 PLATFORM_CPPFLAGS = -std=gnu++20 -Wall -Wextra $(GAME_OPT) \
 	-Iplatform/include -DRE4DC_GAME
 
@@ -2266,6 +2341,10 @@ SDK_CFLAGS += -fno-unwind-tables -fno-asynchronous-unwind-tables
 endif
 # Opt-in game-side CPU knobs and the determinism trace (default off: no effect).
 include game30.mk
+# BACKFACE_CONE=1 (backface.mk, lane backface-cone23): the world back-face cone is SCENERY_CONE=1 (scenery19.mk).
+ifeq ($(BACKFACE_CONE),1)
+override SCENERY_CONE := 1
+endif
 # behave18 native actor runtime preview (ENGINE_PREVIEW; default off: nothing built).
 include engine_preview.mk
 
@@ -2730,6 +2809,39 @@ VRAM_PAGES_VQ_ONLY ?= 0
 # room change every unpinned, non-core texture of the old room closes (the listed keys of the new room are pinned),
 # so the new room's preload fills one hole-free region (r101 -> r100 x3 had 14 KB largest blocks and 82 evictions).
 VRAM_ROOM_ARENA ?= 0
+# VRAM_ROOM_ARENA_NO_TOP=1 (arena23 console experiment, default 0): long-lived
+# class 2 allocations use best fit below a47f2000 instead of top placement. The
+# final 56 KiB stays available to room/dynamic allocations. Room residency stays on.
+VRAM_ROOM_ARENA_NO_TOP ?= 0
+# CACHE_LINEWISE=1 (lane arena23, default 0 = image unchanged): DC* data-cache ops, route overlay load/release and the
+# sub screen code sync write back line by line (ocbwb) instead of KOS's whole-cache address-array path for ranges
+# >= 65560 bytes (platform/cache_lines.h). Cause candidate for the console-only 0x0c8a8001 st1_1 overlay fault.
+CACHE_LINEWISE ?= 0
+# FOLIAGE_MIP24=1 (lane mip-finish24 2026-10-24, render only, default 0 = image unchanged; needs WORLD_RECT21=1 and the
+# fol24 data set after mip22b): the rect21 scoped table binds the 86 foliage / cut-out rows that fol24 re-encodes with
+# coverage-preserving alpha mip chains (tools/d367/foliagemip22). Without fol24 those keys refuse the rect21 adapter.
+FOLIAGE_MIP24 ?= 0
+ifneq ($(filter-out 0 1,$(FOLIAGE_MIP24)),)
+$(error FOLIAGE_MIP24 must be 0 or 1)
+endif
+ifeq ($(FOLIAGE_MIP24),1)
+ifneq ($(WORLD_RECT21),1)
+$(error FOLIAGE_MIP24=1 needs WORLD_RECT21=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FOLIAGE_MIP24=1
+endif
+ifneq ($(CACHE_LINEWISE),0)
+$(OBJDIR)/platform/misc.o $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/subscreen_backing.o: PLATFORM_CPPFLAGS += -DRE4DC_CACHE_LINEWISE=1
+endif
+ifneq ($(filter-out 0 1,$(VRAM_ROOM_ARENA_NO_TOP)),)
+$(error VRAM_ROOM_ARENA_NO_TOP must be 0 or 1)
+endif
+ifeq ($(VRAM_ROOM_ARENA_NO_TOP),1)
+ifneq ($(VRAM_ROOM_ARENA)$(VRAM_PAGES)$(UI_VRAM),111)
+$(error VRAM_ROOM_ARENA_NO_TOP=1 needs VRAM_ROOM_ARENA=1 VRAM_PAGES=1 UI_VRAM=1)
+endif
+$(OBJDIR)/platform/vram_pages.o: PLATFORM_CPPFLAGS += -DRE4DC_VRAM_ROOM_ARENA_NO_TOP=1
+endif
 # CRASH_OVL_LINE=1 (lane mipfault22, diagnostic, default 0 = image unchanged): the crash screen lists each loaded
 # route overlay as name@image+bytes, so a console fault pc / pr in an overlay can be symbolized.
 CRASH_OVL_LINE ?= 0
@@ -2737,10 +2849,31 @@ CRASH_OVL_LINE ?= 0
 # texture upload and close, and at release).
 OVL_WATCH ?= 0
 # OVL_GUARD=1 (lane mipfault22, console diagnostic only): stop on the first changed word of a loaded route overlay's
-# code (checked per UI frame and texture upload / close) and arm the SH-4 UBC on st1_1 (see platform/modules.cpp).
+# code (checked per UI frame and texture upload / close); =2: instead, the SH-4 UBC on the st1_1 literal word that the
+# console fault read (st1_1+0x6114), reported from the next UI frame (see platform/modules.cpp).
 OVL_GUARD ?= 0
+# =3 (D4): both checks, plus a ring of the last 12 texture-RAM operations (alloc / free / upload) shown on the crash screen.
+# LOG_TRIM=N (diagnostic, default 0): the RAM boot log is N bytes shorter (mem.cpp / crash_screen.cpp), so a
+# diagnostic build can keep the reference image's _end (with IMAGE_PAD_BYTES) and so its heap and overlay addresses.
+# ARENA_RING=1 (lane mipfault22, diagnostic, default 0): the ring of the last 12 texture-RAM operations (A alloc / F free:
+# VRAM offset, bytes, arena class, caller; U upload: key crc, VRAM bytes, main-RAM package) on the crash screen.
+# OVL_GUARD=3 turns it on too.
+ARENA_RING ?= 0
+ifneq ($(filter 3,$(OVL_GUARD))$(filter-out 0,$(ARENA_RING)),)
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/vram_pages.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_ARENA_RING=1
+endif
+LOG_TRIM ?= 0
+ifneq ($(LOG_TRIM),0)
+$(OBJDIR)/platform/mem.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_TRIM=$(LOG_TRIM)
+endif
 ifneq ($(OVL_GUARD),0)
-$(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_GUARD=1
+$(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/vram_pages.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_GUARD=$(OVL_GUARD)
+endif
+# HDR_ALIGN_PROBE=1 (lane mipfault22, diagnostic, default 0): log each caller that compiles a PVR header into a dst that is
+# not 32-byte aligned (KOS compiles with movca.l). Needs TEX_MIP_DADJ (the wrapper it lives in).
+HDR_ALIGN_PROBE ?= 0
+ifneq ($(HDR_ALIGN_PROBE),0)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_HDR_ALIGN_PROBE=1
 endif
 ifneq ($(OVL_WATCH),0)
 $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_WATCH=1
@@ -3299,6 +3432,7 @@ include bodysvc20.mk
 # Resolved knobs for tools/d367/build-r21.sh (re4dc-knobs; builds nothing).
 include knobs.mk
 include esppool.mk
+include mendezfx.mk
 
 # Validate after all knob defaults and included recipes are available.
 ifneq ($(MOVIE_WORLD_ARENA_S30),0)
@@ -3319,3 +3453,9 @@ endif
 include bench.mk
 # QA_MENU=1: the tester QA disc menu (qamenu.mk; default 0: nothing compiled, image unchanged)
 include qamenu.mk
+
+# Isolated bounded A/B/C memory experiment; default 0.
+include worldscratch.mk
+
+# Pinned KOS whole-cache writeback repair; default 0, shared KOS untouched.
+include kos_cache_p2.mk

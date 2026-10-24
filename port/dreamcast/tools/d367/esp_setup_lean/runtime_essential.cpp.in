@@ -1,0 +1,78 @@
+// Extracted production class tables, late stateful trim and early predicate/hook.
+// The common-transform prefix and projection/texture admission are controlled seams.
+#include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <new>
+#include "native_ui.h"
+using f32=float;using u8=unsigned char;using s8=signed char;using u16=unsigned short;using u32=unsigned;
+struct cEsp {struct {u8 owner;}info;u8 m_Id,m_Tex_id,m_Parts_no;};
+struct Global {u32 Frame_cnt;} globals,*pG=&globals;
+alignas(16) unsigned char pool[128*0x150];
+struct EspSystem {void* pEspBuf;}sys{pool},*g_pEspSys=&sys;
+u8 re4dc_esp0e_glow=0,re4dc_fx_level=RE4DC_FX_LEVEL;
+@ESSENTIAL@
+@SCREEN_MACRO@
+unsigned observations=0,tail_visits=0,drawn=0,fog_notes=0,mist_notes=0,torch_notes=0;
+bool emitted=false;
+static void submit(cEsp* esp,const Re4dcEffectSprite& sprite,bool downstream_visible){
+@EARLY_HOOK@
+    ++tail_visits;
+    // These known observable effects occur later in the unchanged emitter.
+    if(esp->m_Id==0x15)++fog_notes;
+    if(esp->m_Id==0x48)++mist_notes;
+    if(re4dc_esp0e_glow)++torch_notes;
+    if(!downstream_visible)return;
+    if(FxTrimSprite(esp,&sprite,FxTrimArea(&sprite)))return;
+    emitted=true;++drawn;
+}
+static void word(FILE* f,u32 value){assert(std::fwrite(&value,4,1,f)==1);}
+static void run(FILE* f,unsigned slot,u8 owner,u8 tex,u8 id,bool screen,bool downstream_visible,float depth=0.01f,float size=100){
+    auto* esp=new(pool+(slot%128)*0x150)cEsp{{owner},id,tex,u8(screen?0xf8:0xfe)};
+    const auto before=*esp;
+    Re4dcEffectSprite sprite{};sprite.screen=screen;
+    const float x[4]={0,size,size,0},y[4]={size,size,0,0};
+    std::memcpy(sprite.x,x,sizeof x);std::memcpy(sprite.y,y,sizeof y);for(auto& z:sprite.z)z=depth;
+    emitted=false;submit(esp,sprite,downstream_visible);
+    assert(!std::memcmp(esp,&before,sizeof before));
+    word(f,++observations);word(f,emitted);word(f,fog_notes);word(f,mist_notes);word(f,torch_notes);
+}
+int main(int argc,char** argv){
+    assert(argc==2);FILE* f=std::fopen(argv[1],"wb");assert(f);
+    // Observe the Make-derived boot policy before changing the runtime dial.
+    pG->Frame_cnt=10;for(unsigned i=0;i<20;++i)run(f,i,0xd0,0x5f,0,false,true);
+    re4dc_fx_essential=1;
+    const u8 ids[]={0,0x0e,0x15,0x48};
+    for(unsigned owner=0;owner<256;++owner)for(unsigned tex=0;tex<256;++tex)
+    for(unsigned screen=0;screen<2;++screen)for(unsigned id=0;id<4;++id){
+        // Keep the frame stable to exercise true early hits, not just stamp misses.
+        pG->Frame_cnt=20;re4dc_esp0e_glow=0;
+        run(f,tex,owner,tex,ids[id],screen,true);
+        re4dc_esp0e_glow=1;run(f,tex,owner,tex,ids[id],screen,true);
+    }
+    re4dc_esp0e_glow=0;
+    // Layer buckets collide deliberately; clipped/missing sprites do not spend a slot.
+    for(unsigned phase=0;phase<4;++phase){
+        pG->Frame_cnt=30+phase;
+        for(unsigned n=0;n<280;++n){
+            run(f,n,0x10,0x12,0,false,(n%3)!=0);
+            run(f,n,0xd0,0x5f,0,false,true);
+            run(f,n,0x11,0xf3,0,false,(n%5)!=0);
+        }
+    }
+    // A/B/A, sentinel/wrap, cut-only intermediate frames, and toggles retain late reset timing.
+    const u32 frames[]={101,102,101,0xffffffffU,0,0xffffffffU,1,1,2,1,1};
+    for(unsigned cycle=0;cycle<3;++cycle)for(unsigned i=0;i<sizeof(frames)/sizeof(frames[0]);++i){
+        pG->Frame_cnt=frames[i];re4dc_fx_level=cycle;re4dc_fx_essential=cycle!=0;
+        run(f,1,0x10,0x12,0,false,true);run(f,2,0x10,0x12,0,false,true);run(f,3,0x10,0x12,0,false,true);
+        re4dc_fx_essential=1;run(f,4,0xd0,0x5f,0,false,(i&1)!=0);
+        pG->Frame_cnt=frames[i]+1;run(f,5,0xd0,0x5f,0,false,true);
+        pG->Frame_cnt=frames[i];run(f,6,0x10,0x12,0,false,true);
+        re4dc_fx_essential=0;for(unsigned n=0;n<80;++n)run(f,n,0x10,0,0,false,true,n&1?0.00001f:0.01f,n&2?1:100);
+        re4dc_fx_essential=1;run(f,7,0xd0,0x5f,0,false,true);
+    }
+    std::fclose(f);
+    std::printf("{\"observations\":%u,\"tail_visits\":%u,\"drawn\":%u,\"fog_notes\":%u,\"mist_notes\":%u,\"torch_notes\":%u}\n",
+        observations,tail_visits,drawn,fog_notes,mist_notes,torch_notes);
+}

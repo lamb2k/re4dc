@@ -1,0 +1,2327 @@
+{
+  "date": "2026-10-23",
+  "status": "PASS bounded spike; real-scene acceptance pending",
+  "baseline": "8c7226467dba68ac8ee16652accc10f683562685",
+  "scope": "Actual production SH4 translation-unit build and isolated compiled setup/selection comparisons; synthetic packages and modeled cycles. No r101, Flycast, physical-console, complete-frame or final-linked-image claim.",
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_static.cpp": "1d1dd2a818daf010a213a0494eebf3f64773aeeb5042350c7d5d9a583100add7",
+    "port/dreamcast/game/scenery19.mk": "8c63d4ecda14813e4f27e3be5e9c5e9a82f3b3565a9a4538d00cacc534b75e5f",
+    "port/dreamcast/game/platform/include/scenery_chunk_select.inc": "da87574562472d5f914467ba21541d8fe3ce6bc03cd06c55010381095b1ad6b7",
+    "port/dreamcast/game/platform/include/scenery_part_far.inc": "81099189e36cc324176605b1a0506a8bde2aa088ad498aa77e71101ff6d1303c",
+    "port/dreamcast/tools/d367/backface_cone_front/world_runtime_test.py": "f2aaea436995dda9c1c2f7d2af72d2a8c51245778aeeef1c9cd9497d51f7d86f",
+    "port/dreamcast/tools/d367/world_setup_spike/build_target.py": "a83d3c356db200150d23febc5aa45ae5f7f667005c87f851b4d64883bc96f29e",
+    "port/dreamcast/tools/d367/world_setup_spike/generate_fixture.py": "a6273926f6159df3a8b0cfffead31018e57c374c655c4a2c4908bb577f487ac0",
+    "port/dreamcast/tools/d367/world_setup_spike/queue_test.py": "2750c0d9d952cdd96e6049260e5d2199ea4bb381e7612ea1e069270438c8aa11",
+    "port/dreamcast/tools/d367/world_setup_spike/release_profile.py": "76f987d26a783b0ba17345569e685786998c2f52fff468328d0d4e6ce842093b",
+    "port/dreamcast/tools/d367/world_setup_spike/run_target.py": "046dee986ad7cda1f6b8792488c67ef3dfb16fcb88644afa1a0c1929b4a850ad",
+    "port/dreamcast/tools/d367/world_setup_spike/selection_cases.py": "2b8a90c92a0fd3822396047217353a33ebd6a2afd977be46a24e24ed2632d399",
+    "port/dreamcast/tools/d367/world_setup_spike/queue_fixture.cpp.in": "76b495d62fd7426e8448e41b1fd109bb56bc640017d636c820915356eff4dfc0",
+    "port/dreamcast/tools/d367/world_setup_spike/selection_fixture.cpp.in": "3c15bb2defd9eb23665b32a45bd4bf1aa171bcbbceb536e2e2590b331ba25bd8"
+  },
+  "receipt_sha256": {
+    "production": {
+      "path": "backface-tools/world-setup-target-01/build-controls.json",
+      "sha256": "4cfd602f496557d06bdd86973448a67c51704862e6f96e48dc2c62b4a52b242c"
+    },
+    "fixture": {
+      "path": "backface-tools/world-setup-target-clean/build-controls.json",
+      "sha256": "42752b4bb5bf97029105138de54c466b561ee9fb7253dfbbff38021a24602148"
+    },
+    "target": {
+      "path": "backface-tools/world-setup-run-04/target-controls.json",
+      "sha256": "68a7be40b69834894853f807337bf06081955848f8dbcde1ec2cd9e391329d65"
+    },
+    "queue": {
+      "path": "backface-tools/world-setup-queue-02/queue-controls.json",
+      "sha256": "ed6f2c3f8bba6712110c5312e1a2f41d38892af17c1f7be30428d3c0e262bec5"
+    },
+    "regression": {
+      "path": "backface-tools/world-spike-existing-controls-02/world-runtime-controls.json",
+      "sha256": "1513252f491ea671645cfbf8c7792a7c6efc14b5d32796bf058f1f5d256a1e16"
+    },
+    "make": {
+      "path": "backface-tools/world-setup-spike-controls-20261023/make-controls.json",
+      "sha256": "ea303894e2dc5d269469c58a24d20e5475c452d2dbde5c1a6846c780d6dcd4ef"
+    },
+    "inputs": {
+      "path": "backface-tools/world-setup-inputs-clean/fixture-inputs.json",
+      "sha256": "ee484cc8887af98ecf9d1ad4bd2a045798e672c385a4f78b8aa298df0022062f"
+    }
+  },
+  "compiler": "sh-elf-g++ (GCC) 15.2.0",
+  "profile": {
+    "scope": "Make-expanded Test22 public world configuration; complete TU compile only, no linked release image",
+    "missing_asset_overrides": [
+      "PS2_LEON=0",
+      "LEON_HAND_PACK=0",
+      "PS2_GANADO=0",
+      "PS2_GANADO_LIT=0",
+      "GANADO_LOD=0",
+      "GANADO_EVENT_KEEP_LOD=0",
+      "ACTOR_PROBE_LIGHT=1",
+      "GANADO_LIT=0",
+      "NATIVE_MODEL_REGISTRY_DYING=0",
+      "LEON_HEADLESS=0",
+      "PS2_CH2_ENEMY=0",
+      "ACTOR_GANADO_PS2_STUMP=0"
+    ],
+    "debug_records": false,
+    "modules_manifest_not_built": true,
+    "kos_library_patch_checks_not_executed": true
+  },
+  "production_objects": {
+    "baseline.ii": {
+      "bytes": 1042504,
+      "sha256": "23171ea17804a49d051d4bbe3532e1a47feffa02ad25e2439b6db52c4392c784"
+    },
+    "baseline.o": {
+      "bytes": 174744,
+      "sha256": "dd20d9ab5592c097567ebffb4f101edf4848c2768b232d06d37ba6a63681c865",
+      "executable_bytes": 67040,
+      "allocated_bytes": 110627,
+      "zero_fill_bytes": 17212
+    },
+    "absent.ii": {
+      "bytes": 1042504,
+      "sha256": "23171ea17804a49d051d4bbe3532e1a47feffa02ad25e2439b6db52c4392c784"
+    },
+    "absent.o": {
+      "bytes": 174744,
+      "sha256": "dd20d9ab5592c097567ebffb4f101edf4848c2768b232d06d37ba6a63681c865",
+      "executable_bytes": 67040,
+      "allocated_bytes": 110627,
+      "zero_fill_bytes": 17212
+    },
+    "zero.ii": {
+      "bytes": 1042504,
+      "sha256": "23171ea17804a49d051d4bbe3532e1a47feffa02ad25e2439b6db52c4392c784"
+    },
+    "zero.o": {
+      "bytes": 174744,
+      "sha256": "dd20d9ab5592c097567ebffb4f101edf4848c2768b232d06d37ba6a63681c865",
+      "executable_bytes": 67040,
+      "allocated_bytes": 110627,
+      "zero_fill_bytes": 17212
+    },
+    "on.ii": {
+      "bytes": 1049182,
+      "sha256": "4ac0548635b5d8d74af6bbcf7ae74d64f6b8112613e54fe8e936d28bed402b30"
+    },
+    "on.o": {
+      "bytes": 175580,
+      "sha256": "01ea3fd62fe51fa2638f9721c9086d3d7c308b701ddb3e6fa118aa3fc1279669",
+      "executable_bytes": 67264,
+      "allocated_bytes": 110851,
+      "zero_fill_bytes": 17212
+    }
+  },
+  "production_ps2_pass_static_frames": {
+    "baseline.o": [
+      {
+        "function": "<stdin>:6249:5:int {anonymous}::ps2_pass(unsigned int, float)",
+        "bytes": 8988,
+        "kind": "static"
+      }
+    ],
+    "absent.o": [
+      {
+        "function": "<stdin>:6130:5:int {anonymous}::ps2_pass(unsigned int, float)",
+        "bytes": 8988,
+        "kind": "static"
+      }
+    ],
+    "zero.o": [
+      {
+        "function": "<stdin>:6130:5:int {anonymous}::ps2_pass(unsigned int, float)",
+        "bytes": 8988,
+        "kind": "static"
+      }
+    ],
+    "on.o": [
+      {
+        "function": "<stdin>:6130:5:int {anonymous}::ps2_pass(unsigned int, float)",
+        "bytes": 8992,
+        "kind": "static"
+      }
+    ]
+  },
+  "fixture_elf_sha256": "d77b9dcad00722e699f90ada5247c4360d69f52614b29706168f8c89da902cb3",
+  "final_fixture_source_sha256": "dbe0ae3df3c09f0dce1d743259f578af15bc630dad36d205459115c64b38971c",
+  "fixture_layout": {
+    "input_bytes": 164,
+    "result_bytes": 252,
+    "pick_bytes": 8,
+    "full_draw_bytes": 776,
+    "selector_bytes": 392
+  },
+  "fpscr": 262144,
+  "arithmetic": "RN, DN=1; RZ not executed",
+  "target_interpreter_controls": {
+    "status": "PASS",
+    "indexed_address_opcodes": 2,
+    "indexed_signed_load_controls": 10,
+    "unsigned_word_multiply_controls": 64,
+    "subtract_borrow_controls": 128,
+    "scope": "32-bit indexed effective-address wrap, MULU.W and SUBC for actual compiler/newlib operations",
+    "manual": "https://www.renesas.com/en/document/mas/sh-4-software-manual"
+  },
+  "target_case_count": 52,
+  "target_cases": [
+    {
+      "name": "empty-part",
+      "input_sha256": "8d620e688056b281b1556d6f0dccae7e6e8ca1957a4567359310d95e5143a075",
+      "full": {
+        "instructions": 1158,
+        "peak_stack_bytes": 1156,
+        "observed_store_bytes": 1346,
+        "count": 0,
+        "eligible": 1,
+        "result_sha256": "cdb7600bbca09d0eb6d40df6808ae931f3a664cdc207f50f41c32e5f80fbe82f",
+        "semantic_picks_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "light": {
+        "instructions": 264,
+        "peak_stack_bytes": 748,
+        "observed_store_bytes": 244,
+        "count": 0,
+        "eligible": 1,
+        "result_sha256": "cdb7600bbca09d0eb6d40df6808ae931f3a664cdc207f50f41c32e5f80fbe82f",
+        "semantic_picks_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    {
+      "name": "zero-meshlet-level",
+      "input_sha256": "a21a7085a192c8f5354e8e8b8e2b0a109bd7773ddf7d8e6e1c556617b5089b05",
+      "full": {
+        "instructions": 1767,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1538,
+        "count": 0,
+        "eligible": 1,
+        "result_sha256": "c3de5d6d630a787e8148c0dfe8566236c6d5b2c9cfc65b5ccc7cad30b96bd205",
+        "semantic_picks_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "light": {
+        "instructions": 852,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 420,
+        "count": 0,
+        "eligible": 1,
+        "result_sha256": "c3de5d6d630a787e8148c0dfe8566236c6d5b2c9cfc65b5ccc7cad30b96bd205",
+        "semantic_picks_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    {
+      "name": "whole-inside",
+      "input_sha256": "64666e94de01bdda8465730a04c12f292b0a47872698ad85ece10d1a2bed2417",
+      "full": {
+        "instructions": 1426,
+        "peak_stack_bytes": 1156,
+        "observed_store_bytes": 1449,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "3766caada02b9c1123f5984dada7f023860998deb37dbdd3434d744475ade044",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 514,
+        "peak_stack_bytes": 748,
+        "observed_store_bytes": 331,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "3766caada02b9c1123f5984dada7f023860998deb37dbdd3434d744475ade044",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "whole-tested",
+      "input_sha256": "3bd39a033fcec33fa8c4a40536ea94775ac706cb07ef38ebd09622df70f7cc0d",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "no-group-table",
+      "input_sha256": "ab2d545412ad80900209e4756355012cf2b30d24a5b34c523abe9c3afa17e045",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "scalar-box-fallback",
+      "input_sha256": "5ccdb02df3077382119215784384bac37a782c34bf5e6b13bef91c96b33a3fa3",
+      "full": {
+        "instructions": 2123,
+        "peak_stack_bytes": 1192,
+        "observed_store_bytes": 1585,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "f9a2f9a879d2d6889e2a44033321d9617ee39594590bbd188ed2c9fc127717a8",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 1211,
+        "peak_stack_bytes": 784,
+        "observed_store_bytes": 479,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "f9a2f9a879d2d6889e2a44033321d9617ee39594590bbd188ed2c9fc127717a8",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "indexed-v3",
+      "input_sha256": "6caf96881839f90aee4c654fe9d71bb61f7ea62d2f551ac7ae64f85408aadb83",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "cluster-left",
+      "input_sha256": "02967b1d8124d67be9a3afa61ed940e3a7a3021078f6be33e49919ecc3ea1b82",
+      "full": {
+        "instructions": 1463,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1482,
+        "count": 0,
+        "eligible": 1,
+        "result_sha256": "e1ceaf138f480384fc555d1d0d0fe0a4256390ee1897bc97cc772d8c27ff5439",
+        "semantic_picks_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "light": {
+        "instructions": 560,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 372,
+        "count": 0,
+        "eligible": 1,
+        "result_sha256": "e1ceaf138f480384fc555d1d0d0fe0a4256390ee1897bc97cc772d8c27ff5439",
+        "semantic_picks_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    {
+      "name": "cluster-right",
+      "input_sha256": "07e0d63d4d5e883efb3b34c1f71f99adbc08fa49490b052db4b17b1e03f05889",
+      "full": {
+        "instructions": 1497,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1498,
+        "count": 0,
+        "eligible": 1,
+        "result_sha256": "e1ceaf138f480384fc555d1d0d0fe0a4256390ee1897bc97cc772d8c27ff5439",
+        "semantic_picks_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "light": {
+        "instructions": 594,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 388,
+        "count": 0,
+        "eligible": 1,
+        "result_sha256": "e1ceaf138f480384fc555d1d0d0fe0a4256390ee1897bc97cc772d8c27ff5439",
+        "semantic_picks_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    {
+      "name": "cluster-bottom",
+      "input_sha256": "0dd2bcf6bea8a7a72c4f6e750a90c7d7e80d8e89a29b26773628326dfbfa85a6",
+      "full": {
+        "instructions": 1581,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1518,
+        "count": 0,
+        "eligible": 1,
+        "result_sha256": "e1ceaf138f480384fc555d1d0d0fe0a4256390ee1897bc97cc772d8c27ff5439",
+        "semantic_picks_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "light": {
+        "instructions": 678,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 408,
+        "count": 0,
+        "eligible": 1,
+        "result_sha256": "e1ceaf138f480384fc555d1d0d0fe0a4256390ee1897bc97cc772d8c27ff5439",
+        "semantic_picks_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    {
+      "name": "cluster-top",
+      "input_sha256": "33f794042c5cbb2b5f34ec1c7506abba9bdca23fe2888796799d87aff5fcf6a0",
+      "full": {
+        "instructions": 1553,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1506,
+        "count": 0,
+        "eligible": 1,
+        "result_sha256": "e1ceaf138f480384fc555d1d0d0fe0a4256390ee1897bc97cc772d8c27ff5439",
+        "semantic_picks_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "light": {
+        "instructions": 650,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 396,
+        "count": 0,
+        "eligible": 1,
+        "result_sha256": "e1ceaf138f480384fc555d1d0d0fe0a4256390ee1897bc97cc772d8c27ff5439",
+        "semantic_picks_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    {
+      "name": "cluster-behind-near",
+      "input_sha256": "7416dab1127d0ec963c24993a2ef6f706c6389a3c0de280033b31082534cdfcb",
+      "full": {
+        "instructions": 1381,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1446,
+        "count": 0,
+        "eligible": 1,
+        "result_sha256": "e1ceaf138f480384fc555d1d0d0fe0a4256390ee1897bc97cc772d8c27ff5439",
+        "semantic_picks_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "light": {
+        "instructions": 478,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 336,
+        "count": 0,
+        "eligible": 1,
+        "result_sha256": "e1ceaf138f480384fc555d1d0d0fe0a4256390ee1897bc97cc772d8c27ff5439",
+        "semantic_picks_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    {
+      "name": "cluster-beyond-far",
+      "input_sha256": "b19747c281de323f44ea7f901a952860c67bfd0a807574b4235472000fd1494c",
+      "full": {
+        "instructions": 1392,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1450,
+        "count": 0,
+        "eligible": 1,
+        "result_sha256": "e1ceaf138f480384fc555d1d0d0fe0a4256390ee1897bc97cc772d8c27ff5439",
+        "semantic_picks_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "light": {
+        "instructions": 489,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 340,
+        "count": 0,
+        "eligible": 1,
+        "result_sha256": "e1ceaf138f480384fc555d1d0d0fe0a4256390ee1897bc97cc772d8c27ff5439",
+        "semantic_picks_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    {
+      "name": "partial-groups",
+      "input_sha256": "c488d006134ab591a5bcd8ee22fa9c37ff773f800396448f81842941b11c2997",
+      "full": {
+        "instructions": 3318,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 2062,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "080121d73a98aaab7fd37e5af68436d0f75e6c423997223f04e46a51c5d584ba",
+        "semantic_picks_sha256": "f101bef6ccfa81abc28861b7af7a7d496d574ca60670922d5a192f8aa1b5508c"
+      },
+      "light": {
+        "instructions": 2391,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 940,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "080121d73a98aaab7fd37e5af68436d0f75e6c423997223f04e46a51c5d584ba",
+        "semantic_picks_sha256": "f101bef6ccfa81abc28861b7af7a7d496d574ca60670922d5a192f8aa1b5508c"
+      }
+    },
+    {
+      "name": "zero-retained-groups-pick",
+      "input_sha256": "ba6c2c4aa74653313b3799ee9dba61ccddb25d1f8d58a76264a552f46ed8d9ea",
+      "full": {
+        "instructions": 3103,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 2034,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "f97873f3bfa7e4b1691622726725dcaa87b12edc1e24f8a1c092b78db68db63d",
+        "semantic_picks_sha256": "d4b209df77ebdd01d0c85e515bb4e70e72a8510d782737518ab5b1ba59d44381"
+      },
+      "light": {
+        "instructions": 2178,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 912,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "f97873f3bfa7e4b1691622726725dcaa87b12edc1e24f8a1c092b78db68db63d",
+        "semantic_picks_sha256": "d4b209df77ebdd01d0c85e515bb4e70e72a8510d782737518ab5b1ba59d44381"
+      }
+    },
+    {
+      "name": "near-group-split",
+      "input_sha256": "ad0f4ff366119ecd8e73fb29987868cfbe454ca57b5c5926812c3d349e9a7a48",
+      "full": {
+        "instructions": 3294,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 2054,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "080121d73a98aaab7fd37e5af68436d0f75e6c423997223f04e46a51c5d584ba",
+        "semantic_picks_sha256": "2622f43fbd356ebe86ba92045a51d58c1bfcbba87e0408bd9a7a37c3d693dc7d"
+      },
+      "light": {
+        "instructions": 2367,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 932,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "080121d73a98aaab7fd37e5af68436d0f75e6c423997223f04e46a51c5d584ba",
+        "semantic_picks_sha256": "2622f43fbd356ebe86ba92045a51d58c1bfcbba87e0408bd9a7a37c3d693dc7d"
+      }
+    },
+    {
+      "name": "cluster-mix",
+      "input_sha256": "82dec0a4ee06e3e572ae6a3c16dfea5ddcadd8c4b6ccc7d8407a2939c7f19866",
+      "full": {
+        "instructions": 2092,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1661,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "2f60a686d80ae09efa22f5a26102af57fc507c3e7453ac9ea3df718e6bfcf640",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 1177,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 547,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "2f60a686d80ae09efa22f5a26102af57fc507c3e7453ac9ea3df718e6bfcf640",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "lod-scale-0",
+      "input_sha256": "66803853032343b4efa52dc4d6ee0f8627089d8e319a4efd0db546e7a3de7d04",
+      "full": {
+        "instructions": 1841,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1549,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "22dbdc16364182681760d5a851efe66f96560708c877e732892a667b8018bd8c",
+        "semantic_picks_sha256": "950e49f903e461400c633e7da2558522e4387f1fe962b12abbe66a9ba536078f"
+      },
+      "light": {
+        "instructions": 930,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 431,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "22dbdc16364182681760d5a851efe66f96560708c877e732892a667b8018bd8c",
+        "semantic_picks_sha256": "950e49f903e461400c633e7da2558522e4387f1fe962b12abbe66a9ba536078f"
+      }
+    },
+    {
+      "name": "lod-scale-2",
+      "input_sha256": "d9e40d0439ef971280166351882716130bb819851fa251b8e87b2311bcde0ef6",
+      "full": {
+        "instructions": 1849,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1549,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "d441aa6571590b4b7666e256f64c42138a81e90281d0e1c6fae9392e3f7ced9c",
+        "semantic_picks_sha256": "41f95523381c22430f1749a5b3091227c266dcc37d45755c24ed4ea928590923"
+      },
+      "light": {
+        "instructions": 938,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 431,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "d441aa6571590b4b7666e256f64c42138a81e90281d0e1c6fae9392e3f7ced9c",
+        "semantic_picks_sha256": "41f95523381c22430f1749a5b3091227c266dcc37d45755c24ed4ea928590923"
+      }
+    },
+    {
+      "name": "lod-scale-100",
+      "input_sha256": "7f3c1f4555ef22fe3d86a6b0929c529bf336c258cd3a381a08644727739fe6be",
+      "full": {
+        "instructions": 1848,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1552,
+        "count": 2,
+        "eligible": 1,
+        "result_sha256": "6d094dab27090661518710aacfe69270f9148a1a29b5e716bb180a4bf77995de",
+        "semantic_picks_sha256": "dc86fa7a443753e1b5e44c4735f4371488a9ec826a83c0f0023cec69afe9e87e"
+      },
+      "light": {
+        "instructions": 937,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 434,
+        "count": 2,
+        "eligible": 1,
+        "result_sha256": "6d094dab27090661518710aacfe69270f9148a1a29b5e716bb180a4bf77995de",
+        "semantic_picks_sha256": "dc86fa7a443753e1b5e44c4735f4371488a9ec826a83c0f0023cec69afe9e87e"
+      }
+    },
+    {
+      "name": "empty-coarse-lod",
+      "input_sha256": "a430abb73d9dc929586d8327a7e1421b645b3eb40a2293850adb950c363e4e70",
+      "full": {
+        "instructions": 1841,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 928,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "many-meshlets",
+      "input_sha256": "d3333d4a5eb849a048f1b513b0dad6772ead364aab4ada30eae4159000688f34",
+      "full": {
+        "instructions": 7168,
+        "peak_stack_bytes": 1156,
+        "observed_store_bytes": 3682,
+        "count": 320,
+        "eligible": 1,
+        "result_sha256": "f3bef8abe510d0f849594799445146ad741bb985c213fa8516337c6378f66614",
+        "semantic_picks_sha256": "30fc17c104d14ada766960a27979f92acc89eecb10db3e3960a035f7653d4084"
+      },
+      "light": {
+        "instructions": 6894,
+        "peak_stack_bytes": 748,
+        "observed_store_bytes": 2564,
+        "count": 320,
+        "eligible": 1,
+        "result_sha256": "f3bef8abe510d0f849594799445146ad741bb985c213fa8516337c6378f66614",
+        "semantic_picks_sha256": "30fc17c104d14ada766960a27979f92acc89eecb10db3e3960a035f7653d4084"
+      }
+    },
+    {
+      "name": "repeated-plane-cache",
+      "input_sha256": "64495e321bfbc00fd705c1cb29b7695df5f855d53ff051fec91683ef3284e545",
+      "full": {
+        "instructions": 7628,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 3217,
+        "count": 6,
+        "eligible": 1,
+        "result_sha256": "2c70317fa8e6f7ccbd3bfad0279ac3fe7198e840c509b58408c1bd553b7f0799",
+        "semantic_picks_sha256": "c33146303190fd850bb6812076c38b2c05c1e49009e88114c4b85a5f85edc488"
+      },
+      "light": {
+        "instructions": 6676,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 2115,
+        "count": 6,
+        "eligible": 1,
+        "result_sha256": "2c70317fa8e6f7ccbd3bfad0279ac3fe7198e840c509b58408c1bd553b7f0799",
+        "semantic_picks_sha256": "c33146303190fd850bb6812076c38b2c05c1e49009e88114c4b85a5f85edc488"
+      }
+    },
+    {
+      "name": "second-part",
+      "input_sha256": "24d614c161ec4499f099e9b2f4ff23929aa210495995211d07b04caa6d32f38d",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "cone-winding-0",
+      "input_sha256": "401e4330e0a41349898de7370216b12658f4a252b0d51310cc010601851e4c71",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "marked-uv-cull-0",
+      "input_sha256": "d0dd876ad143b9cb30cb251763f5fb3b44fe4a53c1c30ba1d7802a0ba463f42d",
+      "full": {
+        "instructions": 1812,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1561,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 898,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 439,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "cone-winding-1",
+      "input_sha256": "12c1d47a4b46d5391c7a0ceaf9ed10efd3af26810f35a4abec8dd2f43a042cf7",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "marked-uv-cull-1",
+      "input_sha256": "2cb55dab5f49c400c29792076c948bf93a3aeafc6e0bd1f6ac57b0cd794352ad",
+      "full": {
+        "instructions": 1812,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1561,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 898,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 439,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "cone-winding-2",
+      "input_sha256": "16801037bf49ac263e120ff02dbd4252c0ce06e5ee73d01f1df90843cacc6b47",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "marked-uv-cull-2",
+      "input_sha256": "01eb1ca03ab201c11bee69e9ac542116db3e0200e53b0f53e6e3e5325baf37bd",
+      "full": {
+        "instructions": 1812,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1561,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 898,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 439,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "cone-determinant--1",
+      "input_sha256": "fae526e58575903b56d0d539527d837535a18f381d839da0fa4a60778c52ee56",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "cone-determinant-0",
+      "input_sha256": "00023f2a7be1c96b5cea9fb64d6aca477137c2eb41fac3ef5a74d03285bff865",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "cone-determinant-1",
+      "input_sha256": "12c1d47a4b46d5391c7a0ceaf9ed10efd3af26810f35a4abec8dd2f43a042cf7",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "sheared-reflection--1",
+      "input_sha256": "d4e7bb3a94d86f15c08499f7f56f898a96b5a638b39413beee6f94c7b3d834e8",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "sheared-reflection-1",
+      "input_sha256": "f2c309dcf03964db6df85ac8a0b91a3cf288fc40f37102cf4622a8c32853e559",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "screen-boundary--8",
+      "input_sha256": "a246e8b9ddb0970127fec4a0be7842f0c24090ecbf3052cd185f4fb0bc04e90a",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "screen-boundary--7",
+      "input_sha256": "a5aa023eccb2ae877e6e06fc6e188faf25d7af0945ed67ae9f1aaa84369d7a18",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "screen-boundary--6",
+      "input_sha256": "45eaf426f3399e2a64558bd7bada24bb4e79c3e53b44702d150d1a19ce0225ce",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "screen-boundary--5",
+      "input_sha256": "54440ac4a31867982b97ce11ae05630739b4756087d717c467069778804fef80",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "screen-boundary--4",
+      "input_sha256": "b4705291bb673ed759204c939e7270ce5291259710631ea708f1e0106fdd03f0",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "screen-boundary--3",
+      "input_sha256": "ee00b455d4bb7aaf03f8df31c38cdbc3063ba3ae6085a6d73141aaf62f243769",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "screen-boundary--2",
+      "input_sha256": "29144353659eff73f02d52b7f30944cb79fe7a6150f498cc4386bb5ff19acd08",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "screen-boundary--1",
+      "input_sha256": "b00749845455d31d7dfc933cbc33db6d97f3885ac182de1caa36cf6524775543",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "screen-boundary-+0",
+      "input_sha256": "518a608a4379951de1805ab8dc4568170f60511fa113929b7e5335cf76a6aac2",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "screen-boundary-+1",
+      "input_sha256": "65cdd65eb714a919cecbf0b596a73b5c3a33d691c52fd660bc52e3bfc473ff27",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "screen-boundary-+2",
+      "input_sha256": "65f71e7f1c50b41bb83f30f9f19d353f95e8b4b5c8f15568549d85584a9b562e",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "screen-boundary-+3",
+      "input_sha256": "a7d77a05cb6e844a7ea88b20cca3d697acd104896dcb909e024497f50405b87d",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "screen-boundary-+4",
+      "input_sha256": "699dd04b149f386d425c2780ce8ce52971579d4e4c0f44bf89bc250f72dadc60",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "screen-boundary-+5",
+      "input_sha256": "aa60d854d70240be78f15b26fd0ed6427917fa98365dafba72cecf28eec81395",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "screen-boundary-+6",
+      "input_sha256": "5ddf6e64fd96263df4f41b134e80f788d573d89b0501612359f9daac5f62c061",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "screen-boundary-+7",
+      "input_sha256": "8f130cbbb6f20cbbdb1463686fa0d1f46eed4594f295c315970e497c9f6eaa5c",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    },
+    {
+      "name": "screen-boundary-+8",
+      "input_sha256": "6a3aeacd7846b33fd59195dbc256ec0c4d10194e32860a06be5b2724c77fc689",
+      "full": {
+        "instructions": 1793,
+        "peak_stack_bytes": 1244,
+        "observed_store_bytes": 1545,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      },
+      "light": {
+        "instructions": 879,
+        "peak_stack_bytes": 836,
+        "observed_store_bytes": 427,
+        "count": 1,
+        "eligible": 1,
+        "result_sha256": "dda027efa5f5faf507fa655d3bb40a068b43d4f45a07e65afd9a198b028cbf5f",
+        "semantic_picks_sha256": "0775db85b967ebe31b9549162bfcf00a82b0b0f6e37be64d3bd45d96b0ea7ac1"
+      }
+    }
+  ],
+  "cost_pairs": [
+    {
+      "name": "empty-part",
+      "calls": 1,
+      "full": {
+        "instructions": 1158,
+        "model_cycles": 860,
+        "trace_sha256": "3f878c80db91d8d5461d918191837aba4289453f29cbf87582d8a7fd3895758c",
+        "symbol_instructions": {
+          "_memset": 684,
+          "_fixture_select_full": 229,
+          "_memcpy": 148,
+          "__ZN12_GLOBAL__N_18MeshDraw12chunk_selectEPNS0_4PickE.constprop.0": 64,
+          "__ZNK12_GLOBAL__N_18MeshDraw8chunk_okEv.constprop.0": 26,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 7
+        },
+        "icache": {
+          "model_cycles": 1350,
+          "instruction_fills": 34.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      },
+      "light": {
+        "instructions": 264,
+        "model_cycles": 228,
+        "trace_sha256": "0c18b4a1ef3738e01b3be3893a80451a78298c8f28e26a1f5718d36ec8e7e293",
+        "symbol_instructions": {
+          "_fixture_select_light": 136,
+          "__ZN12_GLOBAL__N_115ScenerySelector12chunk_selectEPNS_8MeshDraw4PickE": 64,
+          "__ZN12_GLOBAL__N_115ScenerySelectorC2ERK14Re4dcModelPartRKN5re4dc4room11MeshPackageEPKfff": 32,
+          "__ZNK12_GLOBAL__N_115ScenerySelector8chunk_okEv": 25,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 7
+        },
+        "icache": {
+          "model_cycles": 618,
+          "instruction_fills": 25.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      }
+    },
+    {
+      "name": "empty-part",
+      "calls": 32,
+      "full": {
+        "instructions": 37056,
+        "model_cycles": 27551,
+        "trace_sha256": "3007bac31aad975f5a9205e18a57b7a657ef06640b8b0f95fcc5390e452f6e09",
+        "symbol_instructions": {
+          "_memset": 21888,
+          "_fixture_select_full": 7328,
+          "_memcpy": 4736,
+          "__ZN12_GLOBAL__N_18MeshDraw12chunk_selectEPNS0_4PickE.constprop.0": 2048,
+          "__ZNK12_GLOBAL__N_18MeshDraw8chunk_okEv.constprop.0": 832,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 224
+        },
+        "icache": {
+          "model_cycles": 28041,
+          "instruction_fills": 34.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      },
+      "light": {
+        "instructions": 8448,
+        "model_cycles": 7327,
+        "trace_sha256": "d53c8e3ce740a5a5b0c1c6eb7c6ef818e1e14a054c1f0239392ff3f6ea318012",
+        "symbol_instructions": {
+          "_fixture_select_light": 4352,
+          "__ZN12_GLOBAL__N_115ScenerySelector12chunk_selectEPNS_8MeshDraw4PickE": 2048,
+          "__ZN12_GLOBAL__N_115ScenerySelectorC2ERK14Re4dcModelPartRKN5re4dc4room11MeshPackageEPKfff": 1024,
+          "__ZNK12_GLOBAL__N_115ScenerySelector8chunk_okEv": 800,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 224
+        },
+        "icache": {
+          "model_cycles": 10683,
+          "instruction_fills": 211.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      }
+    },
+    {
+      "name": "whole-inside",
+      "calls": 1,
+      "full": {
+        "instructions": 1426,
+        "model_cycles": 1058,
+        "trace_sha256": "0ee7f397bf4b61add78564517f7ef363a87a104673abc0dab684eecaeb84d602",
+        "symbol_instructions": {
+          "_memset": 684,
+          "__ZN12_GLOBAL__N_18MeshDraw12chunk_selectEPNS0_4PickE.constprop.0": 332,
+          "_fixture_select_full": 229,
+          "_memcpy": 148,
+          "__ZNK12_GLOBAL__N_18MeshDraw8chunk_okEv.constprop.0": 26,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 7
+        },
+        "icache": {
+          "model_cycles": 1773,
+          "instruction_fills": 53.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      },
+      "light": {
+        "instructions": 514,
+        "model_cycles": 415,
+        "trace_sha256": "b4244356f4ba8ca8e11ae60dc0ae7a764359f1222dd31483ce4d227c3a684b34",
+        "symbol_instructions": {
+          "__ZN12_GLOBAL__N_115ScenerySelector12chunk_selectEPNS_8MeshDraw4PickE": 314,
+          "_fixture_select_light": 136,
+          "__ZN12_GLOBAL__N_115ScenerySelectorC2ERK14Re4dcModelPartRKN5re4dc4room11MeshPackageEPKfff": 32,
+          "__ZNK12_GLOBAL__N_115ScenerySelector8chunk_okEv": 25,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 7
+        },
+        "icache": {
+          "model_cycles": 1007,
+          "instruction_fills": 41.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      }
+    },
+    {
+      "name": "whole-inside",
+      "calls": 32,
+      "full": {
+        "instructions": 45632,
+        "model_cycles": 33887,
+        "trace_sha256": "c946ca078d358d2bd845f1df127eb8bb6c0f09567fc609baafc01bef14f2c94d",
+        "symbol_instructions": {
+          "_memset": 21888,
+          "__ZN12_GLOBAL__N_18MeshDraw12chunk_selectEPNS0_4PickE.constprop.0": 10624,
+          "_fixture_select_full": 7328,
+          "_memcpy": 4736,
+          "__ZNK12_GLOBAL__N_18MeshDraw8chunk_okEv.constprop.0": 832,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 224
+        },
+        "icache": {
+          "model_cycles": 35935,
+          "instruction_fills": 115.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      },
+      "light": {
+        "instructions": 16448,
+        "model_cycles": 13311,
+        "trace_sha256": "122bb5847444a15ea16f3310add441af2e389d511dacdface42a15c3313e4efc",
+        "symbol_instructions": {
+          "__ZN12_GLOBAL__N_115ScenerySelector12chunk_selectEPNS_8MeshDraw4PickE": 10048,
+          "_fixture_select_light": 4352,
+          "__ZN12_GLOBAL__N_115ScenerySelectorC2ERK14Re4dcModelPartRKN5re4dc4room11MeshPackageEPKfff": 1024,
+          "__ZNK12_GLOBAL__N_115ScenerySelector8chunk_okEv": 800,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 224
+        },
+        "icache": {
+          "model_cycles": 16869,
+          "instruction_fills": 227.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      }
+    },
+    {
+      "name": "whole-tested",
+      "calls": 1,
+      "full": {
+        "instructions": 1793,
+        "model_cycles": 1357,
+        "trace_sha256": "e9d64e9c6ba079a9bf9e592ed16e97de1b71ab35bddc93a539eb1d2c73051423",
+        "symbol_instructions": {
+          "_memset": 684,
+          "__ZN12_GLOBAL__N_18MeshDraw12chunk_selectEPNS0_4PickE.constprop.0": 354,
+          "__ZN12_GLOBAL__N_14leanL9box_classEPKfS2_S2_S2_ffS2_": 345,
+          "_fixture_select_full": 229,
+          "_memcpy": 148,
+          "__ZNK12_GLOBAL__N_18MeshDraw8chunk_okEv.constprop.0": 26,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 7
+        },
+        "icache": {
+          "model_cycles": 2381,
+          "instruction_fills": 79.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      },
+      "light": {
+        "instructions": 879,
+        "model_cycles": 713,
+        "trace_sha256": "8db6661988b7e4eb6c7a14582e129330a59fa7f90a154f31a60c75fdf61fe0e0",
+        "symbol_instructions": {
+          "__ZN12_GLOBAL__N_14leanL9box_classEPKfS2_S2_S2_ffS2_": 345,
+          "__ZN12_GLOBAL__N_115ScenerySelector12chunk_selectEPNS_8MeshDraw4PickE": 334,
+          "_fixture_select_light": 136,
+          "__ZN12_GLOBAL__N_115ScenerySelectorC2ERK14Re4dcModelPartRKN5re4dc4room11MeshPackageEPKfff": 32,
+          "__ZNK12_GLOBAL__N_115ScenerySelector8chunk_okEv": 25,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 7
+        },
+        "icache": {
+          "model_cycles": 1602,
+          "instruction_fills": 67.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      }
+    },
+    {
+      "name": "whole-tested",
+      "calls": 32,
+      "full": {
+        "instructions": 57376,
+        "model_cycles": 43455,
+        "trace_sha256": "fc3d8f2d63b151c5c0ec21a056f579fb2c2d3343fae6413718d28c2ddb00c513",
+        "symbol_instructions": {
+          "_memset": 21888,
+          "__ZN12_GLOBAL__N_18MeshDraw12chunk_selectEPNS0_4PickE.constprop.0": 11328,
+          "__ZN12_GLOBAL__N_14leanL9box_classEPKfS2_S2_S2_ffS2_": 11040,
+          "_fixture_select_full": 7328,
+          "_memcpy": 4736,
+          "__ZNK12_GLOBAL__N_18MeshDraw8chunk_okEv.constprop.0": 832,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 224
+        },
+        "icache": {
+          "model_cycles": 46432,
+          "instruction_fills": 203.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      },
+      "light": {
+        "instructions": 28128,
+        "model_cycles": 22847,
+        "trace_sha256": "a6c27314d210ecd8e28847c81e312c96395f3edb3254233d9a67414390ca4abf",
+        "symbol_instructions": {
+          "__ZN12_GLOBAL__N_14leanL9box_classEPKfS2_S2_S2_ffS2_": 11040,
+          "__ZN12_GLOBAL__N_115ScenerySelector12chunk_selectEPNS_8MeshDraw4PickE": 10688,
+          "_fixture_select_light": 4352,
+          "__ZN12_GLOBAL__N_115ScenerySelectorC2ERK14Re4dcModelPartRKN5re4dc4room11MeshPackageEPKfff": 1024,
+          "__ZNK12_GLOBAL__N_115ScenerySelector8chunk_okEv": 800,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 224
+        },
+        "icache": {
+          "model_cycles": 26702,
+          "instruction_fills": 253.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      }
+    },
+    {
+      "name": "scalar-box-fallback",
+      "calls": 1,
+      "full": {
+        "instructions": 2123,
+        "model_cycles": 1647,
+        "trace_sha256": "995334e50f283805e5e6b18af5fe794f7f4c8d9472eadbdd0d66f9277621fece",
+        "symbol_instructions": {
+          "_memset": 684,
+          "__ZN5re4dc6render13group_visibleERKNS0_10DrawBoundsEPKfS5_S5_fff": 560,
+          "__ZN12_GLOBAL__N_18MeshDraw12chunk_selectEPNS0_4PickE.constprop.0": 471,
+          "_fixture_select_full": 227,
+          "_memcpy": 148,
+          "__ZNK12_GLOBAL__N_18MeshDraw8chunk_okEv.constprop.0": 26,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 7
+        },
+        "icache": {
+          "model_cycles": 2843,
+          "instruction_fills": 89.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      },
+      "light": {
+        "instructions": 1211,
+        "model_cycles": 1009,
+        "trace_sha256": "e572ef788656c7785fa72c95f86a60de2bc6f05fb078ec85e559355c6fc39b55",
+        "symbol_instructions": {
+          "__ZN5re4dc6render13group_visibleERKNS0_10DrawBoundsEPKfS5_S5_fff": 560,
+          "__ZN12_GLOBAL__N_115ScenerySelector12chunk_selectEPNS_8MeshDraw4PickE": 452,
+          "_fixture_select_light": 135,
+          "__ZN12_GLOBAL__N_115ScenerySelectorC2ERK14Re4dcModelPartRKN5re4dc4room11MeshPackageEPKfff": 32,
+          "__ZNK12_GLOBAL__N_115ScenerySelector8chunk_okEv": 25,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 7
+        },
+        "icache": {
+          "model_cycles": 1969,
+          "instruction_fills": 72.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      }
+    },
+    {
+      "name": "scalar-box-fallback",
+      "calls": 32,
+      "full": {
+        "instructions": 67936,
+        "model_cycles": 52735,
+        "trace_sha256": "3a45ae2d515bb33a2a07f1cad24c89dcc2ecc08562c3cf8ac868fc05a9cdc675",
+        "symbol_instructions": {
+          "_memset": 21888,
+          "__ZN5re4dc6render13group_visibleERKNS0_10DrawBoundsEPKfS5_S5_fff": 17920,
+          "__ZN12_GLOBAL__N_18MeshDraw12chunk_selectEPNS0_4PickE.constprop.0": 15072,
+          "_fixture_select_full": 7264,
+          "_memcpy": 4736,
+          "__ZNK12_GLOBAL__N_18MeshDraw8chunk_okEv.constprop.0": 832,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 224
+        },
+        "icache": {
+          "model_cycles": 68945,
+          "instruction_fills": 1205.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      },
+      "light": {
+        "instructions": 38752,
+        "model_cycles": 32319,
+        "trace_sha256": "368cb84e197f09f59bf7d13514e7cd75302a037223bccc58085c22c399069035",
+        "symbol_instructions": {
+          "__ZN5re4dc6render13group_visibleERKNS0_10DrawBoundsEPKfS5_S5_fff": 17920,
+          "__ZN12_GLOBAL__N_115ScenerySelector12chunk_selectEPNS_8MeshDraw4PickE": 14464,
+          "_fixture_select_light": 4320,
+          "__ZN12_GLOBAL__N_115ScenerySelectorC2ERK14Re4dcModelPartRKN5re4dc4room11MeshPackageEPKfff": 1024,
+          "__ZNK12_GLOBAL__N_115ScenerySelector8chunk_okEv": 800,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 224
+        },
+        "icache": {
+          "model_cycles": 36245,
+          "instruction_fills": 258.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      }
+    },
+    {
+      "name": "partial-groups",
+      "calls": 1,
+      "full": {
+        "instructions": 3318,
+        "model_cycles": 2625,
+        "trace_sha256": "2865bf62918b4fb1c293d7ef2213ffe4a648d5a63db90383c6b88c4ef258185d",
+        "symbol_instructions": {
+          "_memset": 684,
+          "__ZN12_GLOBAL__N_14leanL12sg_coef_leanEPKffPNS0_7SgPlaneE": 672,
+          "__ZN12_GLOBAL__N_18MeshDraw12chunk_selectEPNS0_4PickE.constprop.0": 639,
+          "__ZN12_GLOBAL__N_14leanL14sg_select_leanEPKtjPKNS0_7SgPlaneEjPtS6_RjS7_S7_": 340,
+          "__ZN12_GLOBAL__N_14leanL9box_classEPKfS2_S2_S2_ffS2_": 325,
+          "__ZN12_GLOBAL__N_14leanL13box_mask_leanEPKfS2_S2_S2_ff": 248,
+          "_fixture_select_full": 229,
+          "_memcpy": 148,
+          "__ZNK12_GLOBAL__N_18MeshDraw8chunk_okEv.constprop.0": 26,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 7
+        },
+        "icache": {
+          "model_cycles": 4362,
+          "instruction_fills": 139.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      },
+      "light": {
+        "instructions": 2391,
+        "model_cycles": 1974,
+        "trace_sha256": "27c12075c65b9a1f732ae07b843d0e2d69402d0948470595092b087b27dc6e29",
+        "symbol_instructions": {
+          "__ZN12_GLOBAL__N_14leanL12sg_coef_leanEPKffPNS0_7SgPlaneE": 672,
+          "__ZN12_GLOBAL__N_115ScenerySelector12chunk_selectEPNS_8MeshDraw4PickE": 606,
+          "__ZN12_GLOBAL__N_14leanL14sg_select_leanEPKtjPKNS0_7SgPlaneEjPtS6_RjS7_S7_": 340,
+          "__ZN12_GLOBAL__N_14leanL9box_classEPKfS2_S2_S2_ffS2_": 325,
+          "__ZN12_GLOBAL__N_14leanL13box_mask_leanEPKfS2_S2_S2_ff": 248,
+          "_fixture_select_light": 136,
+          "__ZN12_GLOBAL__N_115ScenerySelectorC2ERK14Re4dcModelPartRKN5re4dc4room11MeshPackageEPKfff": 32,
+          "__ZNK12_GLOBAL__N_115ScenerySelector8chunk_okEv": 25,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 7
+        },
+        "icache": {
+          "model_cycles": 3554,
+          "instruction_fills": 125.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      }
+    },
+    {
+      "name": "partial-groups",
+      "calls": 32,
+      "full": {
+        "instructions": 106176,
+        "model_cycles": 84031,
+        "trace_sha256": "03b98c99c9ea3058f7864c857b5e076b68b82335d98aa30b4006143a0f506399",
+        "symbol_instructions": {
+          "_memset": 21888,
+          "__ZN12_GLOBAL__N_14leanL12sg_coef_leanEPKffPNS0_7SgPlaneE": 21504,
+          "__ZN12_GLOBAL__N_18MeshDraw12chunk_selectEPNS0_4PickE.constprop.0": 20448,
+          "__ZN12_GLOBAL__N_14leanL14sg_select_leanEPKtjPKNS0_7SgPlaneEjPtS6_RjS7_S7_": 10880,
+          "__ZN12_GLOBAL__N_14leanL9box_classEPKfS2_S2_S2_ffS2_": 10400,
+          "__ZN12_GLOBAL__N_14leanL13box_mask_leanEPKfS2_S2_S2_ff": 7936,
+          "_fixture_select_full": 7328,
+          "_memcpy": 4736,
+          "__ZNK12_GLOBAL__N_18MeshDraw8chunk_okEv.constprop.0": 832,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 224
+        },
+        "icache": {
+          "model_cycles": 97269,
+          "instruction_fills": 1069.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      },
+      "light": {
+        "instructions": 76512,
+        "model_cycles": 63199,
+        "trace_sha256": "7accd942ef95f4b843ef9e84af72b4ed53ec291554a3ce7a7e6decd219f563b6",
+        "symbol_instructions": {
+          "__ZN12_GLOBAL__N_14leanL12sg_coef_leanEPKffPNS0_7SgPlaneE": 21504,
+          "__ZN12_GLOBAL__N_115ScenerySelector12chunk_selectEPNS_8MeshDraw4PickE": 19392,
+          "__ZN12_GLOBAL__N_14leanL14sg_select_leanEPKtjPKNS0_7SgPlaneEjPtS6_RjS7_S7_": 10880,
+          "__ZN12_GLOBAL__N_14leanL9box_classEPKfS2_S2_S2_ffS2_": 10400,
+          "__ZN12_GLOBAL__N_14leanL13box_mask_leanEPKfS2_S2_S2_ff": 7936,
+          "_fixture_select_light": 4352,
+          "__ZN12_GLOBAL__N_115ScenerySelectorC2ERK14Re4dcModelPartRKN5re4dc4room11MeshPackageEPKfff": 1024,
+          "__ZNK12_GLOBAL__N_115ScenerySelector8chunk_okEv": 800,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 224
+        },
+        "icache": {
+          "model_cycles": 67745,
+          "instruction_fills": 311.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      }
+    },
+    {
+      "name": "many-meshlets",
+      "calls": 1,
+      "full": {
+        "instructions": 7168,
+        "model_cycles": 5524,
+        "trace_sha256": "b4870bfe5485d8e0c45e950bfaeaf426367b4fa4815d788595fd2897ed44a3f8",
+        "symbol_instructions": {
+          "__ZN12_GLOBAL__N_18MeshDraw12chunk_selectEPNS0_4PickE.constprop.0": 6074,
+          "_memset": 684,
+          "_fixture_select_full": 229,
+          "_memcpy": 148,
+          "__ZNK12_GLOBAL__N_18MeshDraw8chunk_okEv.constprop.0": 26,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 7
+        },
+        "icache": {
+          "model_cycles": 6239,
+          "instruction_fills": 53.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      },
+      "light": {
+        "instructions": 6894,
+        "model_cycles": 4881,
+        "trace_sha256": "bce8644b5fa57a60cb43fc75e073108675d3a18a79ead3a75061f8092a962130",
+        "symbol_instructions": {
+          "__ZN12_GLOBAL__N_115ScenerySelector12chunk_selectEPNS_8MeshDraw4PickE": 6694,
+          "_fixture_select_light": 136,
+          "__ZN12_GLOBAL__N_115ScenerySelectorC2ERK14Re4dcModelPartRKN5re4dc4room11MeshPackageEPKfff": 32,
+          "__ZNK12_GLOBAL__N_115ScenerySelector8chunk_okEv": 25,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 7
+        },
+        "icache": {
+          "model_cycles": 5473,
+          "instruction_fills": 41.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      }
+    },
+    {
+      "name": "many-meshlets",
+      "calls": 32,
+      "full": {
+        "instructions": 229376,
+        "model_cycles": 176799,
+        "trace_sha256": "36dde1a11679c5ca91960324c443cc0abbfca652f9869f70245ee10afd5443f6",
+        "symbol_instructions": {
+          "__ZN12_GLOBAL__N_18MeshDraw12chunk_selectEPNS0_4PickE.constprop.0": 194368,
+          "_memset": 21888,
+          "_fixture_select_full": 7328,
+          "_memcpy": 4736,
+          "__ZNK12_GLOBAL__N_18MeshDraw8chunk_okEv.constprop.0": 832,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 224
+        },
+        "icache": {
+          "model_cycles": 178847,
+          "instruction_fills": 115.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      },
+      "light": {
+        "instructions": 220608,
+        "model_cycles": 156223,
+        "trace_sha256": "aca1600f2f33f68b32d41e539b752a2d4e2f9670fb39c1d9c5a7ce359b29b3b5",
+        "symbol_instructions": {
+          "__ZN12_GLOBAL__N_115ScenerySelector12chunk_selectEPNS_8MeshDraw4PickE": 214208,
+          "_fixture_select_light": 4352,
+          "__ZN12_GLOBAL__N_115ScenerySelectorC2ERK14Re4dcModelPartRKN5re4dc4room11MeshPackageEPKfff": 1024,
+          "__ZNK12_GLOBAL__N_115ScenerySelector8chunk_okEv": 800,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 224
+        },
+        "icache": {
+          "model_cycles": 159781,
+          "instruction_fills": 227.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      }
+    },
+    {
+      "name": "marked-uv-cull-1",
+      "calls": 1,
+      "full": {
+        "instructions": 1812,
+        "model_cycles": 1379,
+        "trace_sha256": "e0f6081818c620e282389f0fac8fce1fd0a4f5377c16861270468091f2adbb1c",
+        "symbol_instructions": {
+          "_memset": 684,
+          "__ZN12_GLOBAL__N_18MeshDraw12chunk_selectEPNS0_4PickE.constprop.0": 354,
+          "__ZN12_GLOBAL__N_14leanL9box_classEPKfS2_S2_S2_ffS2_": 345,
+          "_fixture_select_full": 236,
+          "_memcpy": 148,
+          "__ZNK12_GLOBAL__N_18MeshDraw8chunk_okEv.constprop.0": 26,
+          "__ZN12_GLOBAL__N_1L20ps2_vertex_alpha_lutEv": 12,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 7
+        },
+        "icache": {
+          "model_cycles": 2442,
+          "instruction_fills": 81.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      },
+      "light": {
+        "instructions": 898,
+        "model_cycles": 738,
+        "trace_sha256": "43389e7b53df195d26cd322262997e6dfea03541debf68fb9cff51eda1960a93",
+        "symbol_instructions": {
+          "__ZN12_GLOBAL__N_14leanL9box_classEPKfS2_S2_S2_ffS2_": 345,
+          "__ZN12_GLOBAL__N_115ScenerySelector12chunk_selectEPNS_8MeshDraw4PickE": 334,
+          "_fixture_select_light": 143,
+          "__ZN12_GLOBAL__N_115ScenerySelectorC2ERK14Re4dcModelPartRKN5re4dc4room11MeshPackageEPKfff": 32,
+          "__ZNK12_GLOBAL__N_115ScenerySelector8chunk_okEv": 25,
+          "__ZN12_GLOBAL__N_1L20ps2_vertex_alpha_lutEv": 12,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 7
+        },
+        "icache": {
+          "model_cycles": 1668,
+          "instruction_fills": 69.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      }
+    },
+    {
+      "name": "marked-uv-cull-1",
+      "calls": 32,
+      "full": {
+        "instructions": 57984,
+        "model_cycles": 44159,
+        "trace_sha256": "436602077f10042aac9936b106e894e85bd73854856743f5d8329eb3b168f487",
+        "symbol_instructions": {
+          "_memset": 21888,
+          "__ZN12_GLOBAL__N_18MeshDraw12chunk_selectEPNS0_4PickE.constprop.0": 11328,
+          "__ZN12_GLOBAL__N_14leanL9box_classEPKfS2_S2_S2_ffS2_": 11040,
+          "_fixture_select_full": 7552,
+          "_memcpy": 4736,
+          "__ZNK12_GLOBAL__N_18MeshDraw8chunk_okEv.constprop.0": 832,
+          "__ZN12_GLOBAL__N_1L20ps2_vertex_alpha_lutEv": 384,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 224
+        },
+        "icache": {
+          "model_cycles": 48477,
+          "instruction_fills": 267.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      },
+      "light": {
+        "instructions": 28736,
+        "model_cycles": 23647,
+        "trace_sha256": "cea0c6632caddc415ef4bf32db1fcc814956d490352153bebeb997b1a92870e6",
+        "symbol_instructions": {
+          "__ZN12_GLOBAL__N_14leanL9box_classEPKfS2_S2_S2_ffS2_": 11040,
+          "__ZN12_GLOBAL__N_115ScenerySelector12chunk_selectEPNS_8MeshDraw4PickE": 10688,
+          "_fixture_select_light": 4576,
+          "__ZN12_GLOBAL__N_115ScenerySelectorC2ERK14Re4dcModelPartRKN5re4dc4room11MeshPackageEPKfff": 1024,
+          "__ZNK12_GLOBAL__N_115ScenerySelector8chunk_okEv": 800,
+          "__ZN12_GLOBAL__N_1L20ps2_vertex_alpha_lutEv": 384,
+          "__ZN12_GLOBAL__N_15transL6far_ofERKNS_7Ps2PartEjj": 224
+        },
+        "icache": {
+          "model_cycles": 28845,
+          "instruction_fills": 379.0,
+          "scope": "Default instruction cache, initially cold once for this complete trace; synthetic link layout"
+        }
+      }
+    }
+  ],
+  "model": {
+    "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+    "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+    "flags": [
+      "--perfect-ic",
+      "--perfect-dc",
+      "--no-dma",
+      "--sq-cost",
+      "0"
+    ],
+    "exact_dynamic_instruction_and_delay_slot_counts": true,
+    "no_hardware_time_or_frame_speedup_claim": true
+  },
+  "icache_note": "One initially cold cache per complete trace; synthetic link layout;32 calls amortize initial fills. D-cache/data bus/SQ/DMA not priced.",
+  "queue_controls": {
+    "status": "PASS",
+    "cases": 3564,
+    "source_sha256": "1d1dd2a818daf010a213a0494eebf3f64773aeeb5042350c7d5d9a583100add7",
+    "extracted_sha256": {
+      "PICK_DEFINITION": "798589d65fec848b5cfc2f496583eb9ffda68813cad7cda73d05bf630294efe6",
+      "CHUNK_OK": "c644732131b1749aa137cf2d3a0ab1d6f2c8d7fc3c8c54fca5ec79091cf5635a",
+      "CHUNK_EMIT": "6e18029b92df76d5cda5dc040362e77e73c005e7a3371d34fd8f73cab2cc1ab1",
+      "CHUNK_PART": "a14ea703c0b8d1dd0b226e8c29e0e4f65211e3b8beb55e532d65170ba550f773",
+      "CHUNK_FLUSH": "3e481988c7b7b4eeb68f466e4acd65ad534c66bc992319e6603dc6c9b8532079",
+      "EARLY_BRANCH": "aa9835fe5ced67be515d0645744e8097f8a1571cb32c51a07b79684fc2f33e03",
+      "FULL_SETUP": "1a2d18ef7a4569e05bae8dda4ca5bbbabd71ff12cf9dda08b08a58e1f6205571",
+      "CHUNK_DISPATCH": "9f7dc6e41929089a4a385d7b38af10abe761794e397e724f67c6e613e8dea268"
+    },
+    "scope": "Actual new/old admission, full setup assignments, queue records, chunk_flush and chunk_emit control flow with controlled chunk_select/emit_pick edges; no target object layout, renderer output or timing claim."
+  },
+  "existing_regression": {
+    "source_sha256": "1d1dd2a818daf010a213a0494eebf3f64773aeeb5042350c7d5d9a583100add7",
+    "extracted_sha256": {
+      "WORTH_FRONT": "345245b15296d44db888e54a18e2163410d584efe2866241933f89c6a53a4929",
+      "FRONT_GATES": "4d6aa2edfbfa9c204bfdeb927c76614b289e6e52c7c68eafbfc45228dc011082",
+      "TRAILER": "fb2b2e0229b9bf73d578dc4548ab0f709c6d17b206bc402b353da28ae73eaa06",
+      "PICK": "1a77c26bb2e6a94ddb5539e2966cbda484da6bc6f9d1f4d780a9ee66cf3e2e73",
+      "BF_ON": "e056ba601bc99d85f427db8880000d3b094a24fa4fe004310b9480f0454c19f8",
+      "ROOM_UPDATE": "bc54fb400aee5bcd70b850223a76ce842b64fb74deaeb37050f0a778feac9d5b",
+      "BF_SQ": "12d67b7337bc7b38dbcb5622bd5e4d9d77fe39e92ad69ba14095b519dfea9be6",
+      "LEAN_FLUSH": "c3baa9b094011cbc53cb75e3db298b93bae65e20897d25b9d64fad5bf9a015ba",
+      "STRIPS_LEAN": "fd3cf854fe2919da2a5836dcb6b4ea23bcfc1f68fa2a8a21cd72d1c802fc9dfe",
+      "SELECT": "5f893f235c6329fe5e746c7cf53a0c11ba390958d8fc99cd3916c0130ab22b22",
+      "FRONT_MASK": "ff2406ffd75fdfba459364f2856dc9f0b4f9453cfda3b06c31dc0fdff33f1426",
+      "EMIT_PICK": "6697f8c4037342ee115f4abffa5453ebbc1d4d4dffcf134b1c40cfcd1e3b95a0",
+      "CHUNK_EMIT": "6e18029b92df76d5cda5dc040362e77e73c005e7a3371d34fd8f73cab2cc1ab1",
+      "CHUNK_PART": "a14ea703c0b8d1dd0b226e8c29e0e4f65211e3b8beb55e532d65170ba550f773",
+      "CHUNK_FLUSH": "3e481988c7b7b4eeb68f466e4acd65ad534c66bc992319e6603dc6c9b8532079",
+      "CHUNK_DISPATCH": "9f7dc6e41929089a4a385d7b38af10abe761794e397e724f67c6e613e8dea268"
+    },
+    "host": [
+      {
+        "mode": 0,
+        "rooms": 0,
+        "result": [
+          "production flush and capacity/ordinary caller cull lifetime PASS cases=147",
+          "world production-body host fixture PASS"
+        ]
+      },
+      {
+        "mode": 1,
+        "rooms": 0,
+        "result": [
+          "whole all-front PASS",
+          "whole mixed group routes PASS",
+          "whole all uncertain PASS",
+          "partial alternating groups PASS",
+          "partial empty pick PASS",
+          "all-depth cull before limit PASS",
+          "depth crossing clip PASS",
+          "oversize before screen cull PASS",
+          "all-screen cull PASS",
+          "clip failure stops later groups PASS",
+          "bind failure PASS",
+          "borrow failure PASS",
+          "gather failure after submit PASS",
+          "cull none PASS",
+          "alpha-mask guard PASS",
+          "no-depth-write guard PASS",
+          "unknown projection PASS",
+          "unsupported transform PASS",
+          "depth-varying group PASS",
+          "missing loaded matrix PASS",
+          "uncertain group backface PASS",
+          "metadata controls PASS",
+          "world cost admission, varying-depth projection and lazy prepare PASS",
+          "production flush and capacity/ordinary caller cull lifetime PASS cases=147",
+          "world production-body host fixture PASS"
+        ]
+      },
+      {
+        "mode": 2,
+        "rooms": 0,
+        "result": [
+          "whole all-front PASS",
+          "whole mixed group routes PASS",
+          "whole all uncertain PASS",
+          "partial alternating groups PASS",
+          "partial empty pick PASS",
+          "all-depth cull before limit PASS",
+          "depth crossing clip PASS",
+          "oversize before screen cull PASS",
+          "all-screen cull PASS",
+          "clip failure stops later groups PASS",
+          "bind failure PASS",
+          "borrow failure PASS",
+          "gather failure after submit PASS",
+          "cull none PASS",
+          "alpha-mask guard PASS",
+          "no-depth-write guard PASS",
+          "unknown projection PASS",
+          "unsupported transform PASS",
+          "depth-varying group PASS",
+          "missing loaded matrix PASS",
+          "uncertain group backface PASS",
+          "mode2 failed strict check falls back PASS",
+          "metadata controls PASS",
+          "world cost admission, varying-depth projection and lazy prepare PASS",
+          "mode2 pick/group rejection counters PASS",
+          "production flush and capacity/ordinary caller cull lifetime PASS cases=147",
+          "world production-body host fixture PASS"
+        ]
+      },
+      {
+        "mode": 0,
+        "rooms": 1,
+        "result": [
+          "room off/on/off proof gates and unculled packets PASS cases=10",
+          "production flush and capacity/ordinary caller cull lifetime PASS cases=147",
+          "world production-body host fixture PASS"
+        ]
+      },
+      {
+        "mode": 1,
+        "rooms": 1,
+        "result": [
+          "room off/on/off proof gates and unculled packets PASS cases=10",
+          "whole all-front PASS",
+          "whole mixed group routes PASS",
+          "whole all uncertain PASS",
+          "partial alternating groups PASS",
+          "partial empty pick PASS",
+          "all-depth cull before limit PASS",
+          "depth crossing clip PASS",
+          "oversize before screen cull PASS",
+          "all-screen cull PASS",
+          "clip failure stops later groups PASS",
+          "bind failure PASS",
+          "borrow failure PASS",
+          "gather failure after submit PASS",
+          "cull none PASS",
+          "alpha-mask guard PASS",
+          "no-depth-write guard PASS",
+          "unknown projection PASS",
+          "unsupported transform PASS",
+          "depth-varying group PASS",
+          "missing loaded matrix PASS",
+          "uncertain group backface PASS",
+          "metadata controls PASS",
+          "world cost admission, varying-depth projection and lazy prepare PASS",
+          "production flush and capacity/ordinary caller cull lifetime PASS cases=147",
+          "world production-body host fixture PASS"
+        ]
+      },
+      {
+        "mode": 2,
+        "rooms": 1,
+        "result": [
+          "room off/on/off proof gates and unculled packets PASS cases=10",
+          "whole all-front PASS",
+          "whole mixed group routes PASS",
+          "whole all uncertain PASS",
+          "partial alternating groups PASS",
+          "partial empty pick PASS",
+          "all-depth cull before limit PASS",
+          "depth crossing clip PASS",
+          "oversize before screen cull PASS",
+          "all-screen cull PASS",
+          "clip failure stops later groups PASS",
+          "bind failure PASS",
+          "borrow failure PASS",
+          "gather failure after submit PASS",
+          "cull none PASS",
+          "alpha-mask guard PASS",
+          "no-depth-write guard PASS",
+          "unknown projection PASS",
+          "unsupported transform PASS",
+          "depth-varying group PASS",
+          "missing loaded matrix PASS",
+          "uncertain group backface PASS",
+          "mode2 failed strict check falls back PASS",
+          "metadata controls PASS",
+          "world cost admission, varying-depth projection and lazy prepare PASS",
+          "mode2 pick/group rejection counters PASS",
+          "production flush and capacity/ordinary caller cull lifetime PASS cases=147",
+          "world production-body host fixture PASS"
+        ]
+      },
+      {
+        "mode": 0,
+        "kind": "pre-fix production flush must fail",
+        "lane": "capacity",
+        "baseline": "56dc28d5",
+        "status": "PASS",
+        "rejected_returncode": -6
+      },
+      {
+        "mode": 0,
+        "kind": "pre-fix production flush must fail",
+        "lane": "ordinary",
+        "baseline": "56dc28d5",
+        "status": "PASS",
+        "rejected_returncode": -6
+      }
+    ],
+    "metadata": [
+      {
+        "case": "valid producer trailer",
+        "accepted": true
+      },
+      {
+        "case": "null section",
+        "accepted": false
+      },
+      {
+        "case": "null group records",
+        "accepted": false
+      },
+      {
+        "case": "legacy only",
+        "accepted": false
+      },
+      {
+        "case": "truncated-0",
+        "accepted": false
+      },
+      {
+        "case": "truncated-15",
+        "accepted": false
+      },
+      {
+        "case": "truncated-287",
+        "accepted": false
+      },
+      {
+        "case": "truncated-319",
+        "accepted": false
+      },
+      {
+        "case": "truncated-847",
+        "accepted": false
+      },
+      {
+        "case": "tag",
+        "accepted": false
+      },
+      {
+        "case": "version",
+        "accepted": false
+      },
+      {
+        "case": "length",
+        "accepted": false
+      },
+      {
+        "case": "r4sg identity",
+        "accepted": false
+      },
+      {
+        "case": "mesh identity",
+        "accepted": false
+      },
+      {
+        "case": "mesh size",
+        "accepted": false
+      },
+      {
+        "case": "meshlet count",
+        "accepted": false
+      },
+      {
+        "case": "group count",
+        "accepted": false
+      },
+      {
+        "case": "prefix identity",
+        "accepted": false
+      },
+      {
+        "case": "negative cosine",
+        "accepted": false
+      },
+      {
+        "case": "nan sine",
+        "accepted": false
+      },
+      {
+        "case": "cosine one",
+        "accepted": false
+      },
+      {
+        "case": "subnormal cosine",
+        "accepted": false
+      },
+      {
+        "case": "normal nonpower",
+        "accepted": false
+      },
+      {
+        "case": "negative normal",
+        "accepted": false
+      },
+      {
+        "case": "subunit normal",
+        "accepted": false
+      },
+      {
+        "case": "excess normal",
+        "accepted": false
+      },
+      {
+        "case": "extra trailing bytes",
+        "accepted": false
+      },
+      {
+        "case": "zero groups",
+        "accepted": false
+      },
+      {
+        "case": "excess groups",
+        "accepted": false
+      },
+      {
+        "case": "overflow meshlets",
+        "accepted": false
+      },
+      {
+        "case": "disabled normal is valid metadata",
+        "accepted": true
+      },
+      {
+        "case": "count byte span mismatch",
+        "accepted": false
+      },
+      {
+        "case": "certified short strips",
+        "accepted": false
+      },
+      {
+        "case": "indices with zero strips",
+        "accepted": false
+      },
+      {
+        "case": "missing count record",
+        "accepted": false
+      },
+      {
+        "case": "zero-length strips",
+        "accepted": false
+      },
+      {
+        "case": "uncertified short strips retain fallback metadata",
+        "accepted": true
+      },
+      {
+        "case": "strip count exceeds byte-count limit",
+        "accepted": false
+      },
+      {
+        "case": "earlier trailer without nonempty counts",
+        "accepted": false
+      },
+      {
+        "case": "empty group with zero counts",
+        "accepted": true
+      },
+      {
+        "case": "decreasing group end",
+        "accepted": false
+      },
+      {
+        "case": "certified empty group",
+        "accepted": false
+      }
+    ],
+    "target": {
+      "status": "not requested"
+    },
+    "limits": "Host boundary-controlled production caller bodies and actual metadata reader; math helper and SH4 SQ implementation have separate gates. Full TU compile is optional, no whole-renderer execution or timing."
+  },
+  "make_controls": {
+    "passed": true,
+    "cases": [
+      {
+        "case": "default",
+        "returncode": 0,
+        "passed": true,
+        "output": ""
+      },
+      {
+        "case": "zero",
+        "returncode": 0,
+        "passed": true,
+        "output": ""
+      },
+      {
+        "case": "one",
+        "returncode": 0,
+        "passed": true,
+        "output": "-DRE4DC_SCENERY_CHUNK=1 -DRE4DC_SCENERY_SELECT_ONLY=1"
+      },
+      {
+        "case": "missing-chunk",
+        "returncode": 2,
+        "passed": true,
+        "output": "/workspace/scratch/c4e1a2818fde/re4dc-world-spike/port/dreamcast/game/scenery19.mk:25: *** SCENERY_SELECT_ONLY needs SCENERY_CHUNK.  Stop."
+      },
+      {
+        "case": "invalid",
+        "returncode": 2,
+        "passed": true,
+        "output": "/workspace/scratch/c4e1a2818fde/re4dc-world-spike/port/dreamcast/game/scenery19.mk:22: *** SCENERY_SELECT_ONLY must be 0 or 1.  Stop."
+      }
+    ]
+  },
+  "remaining_gates": [
+    "r101 eligible/fallback call census and matched world/frame timings",
+    "ineligible-path runtime cost",
+    "complete rendered output and real scene lifetime behavior",
+    "final linked memory and tight cutscene headroom",
+    "optional cone/front target coexistence"
+  ]
+}
