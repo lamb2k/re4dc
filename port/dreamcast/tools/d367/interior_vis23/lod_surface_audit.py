@@ -26,7 +26,7 @@ def canonical(tri):
  if not any(cross(sub(t[1],t[0]),sub(t[2],t[0]))):return None
  return min(t,t[1:]+t[:1],t[2:]+t[:2])
 def selectable(counts):
- if not counts:raise ValueError('Missing cluster levels')
+ if not counts or any(type(n) is not int or n<0 for n in counts):raise ValueError('Missing/invalid cluster level counts')
  selected=set()
  for raw in range(len(counts)):
   lv=raw
@@ -122,15 +122,16 @@ def main():
     for lv in range(cl['level_count']):
      fm,nm,_=p.levels[cl['first_level']+lv];counts.append(nm);ll=set();total=0
      for li in range(fm,fm+nm):
-      if li not in shape_cache:
-       corners,ix=p.let_tris(li);shape_cache[li]=[(tuple(tuple(0 if mesh['step'][k]==0 else int(corners[j][k]) for k in range(3)) for j in tri)) for tri in ix]
-      for tri in shape_cache[li]:
+      key=(pl['mesh'],li)
+      if key not in shape_cache:
+       corners,ix=p.let_tris(li);shape_cache[key]=[(tuple(tuple(0 if mesh['step'][k]==0 else int(corners[j][k]) for k in range(3)) for j in tri)) for tri in ix]
+      for tri in shape_cache[key]:
        t=canonical(tri)
        if t is not None:ll.add(t);total+=1
      levels.append(ll);raw_count.append(total)
     keep,selected=invariant(levels,counts)
     if eligible and not singular:facets.extend(keep)
-    r=dict(instance=instance,part=part,cluster=ci,level_meshlet_counts=counts,selectable_levels=selected,oriented_facets_per_level=[len(x) for x in levels],nondegenerate_triangles_per_level=raw_count,invariant_facets=len(keep),geometry_prerequisite=eligible,invariant_subset_verified=all(keep<=levels[lv] for lv in selected))
+    r=dict(instance=instance,part=part,cluster=ci,level_meshlet_counts=counts,selectable_levels=selected,oriented_facets_per_level=[len(x) for x in levels],nondegenerate_triangles_per_level=raw_count,invariant_facets=len(keep),invariant_oriented_grid_sha256=hashlib.sha256(json.dumps(sorted(keep),separators=(',',':')).encode()).hexdigest(),geometry_prerequisite=eligible,invariant_subset_verified=all(keep<=levels[lv] for lv in selected))
     clusters.append(r);instance_keys.append((pi,part,ci));instance+=1
   owner=ids[16+pl['placement']];comps=topology(facets)
   placements.append(dict(placement=pi,field=pl['placement'],owner=owner,conditional_source=owner!=255,mesh=pl['mesh'],singular_affine=singular,affine_bytes_sha256=hashlib.sha256(struct.pack('<12f',*[x for row in pl['affine'] for x in row])).hexdigest(),parts=parts,clusters=clusters,components=comps,oriented_invariant_facets=len(facets),closed_graphs=sum(x['closed_oriented_graph_prerequisite'] for x in comps),unresolved_boundaries=sum(len(x['boundary_edges']) for x in comps),enclosure_proven=False,fail_open=True))
@@ -144,8 +145,8 @@ def main():
    for j,r in enumerate(frame['instances']):
     if r['instance']!=j or tuple(r[k] for k in ['placement','part','cluster'])!=instance_keys[j]:raise ValueError('Replay source namespace mismatch')
     totals[r['placement']]+=r['corners']
-  weighted.append(dict(input=identity(replay),frames=len(rows),label='Earlier camera-build baked-pose host selector weights only; not current target counters or hull visibility',mean_selected_corners=sum(totals.values())/len(rows),closed_graph_prerequisite_corners_mean=sum(totals[i] for i,r in enumerate(placements) if r['closed_graphs'])/len(rows)))
- out=dict(schema=1,kind='Exact all-selectable-LOD invariant source-surface lemma and fail-open topology prerequisite; no hull/cull admission',tool=identity(Path(__file__)),source=source,staging_plan=identity(v.staging_plan),prepared_receipt=identity(root/'prepare-receipt.json'),reader=identity(reader),inputs=files,mesh_crc=f'{p.mesh_crc:08x}',policy_crc=f'{p.sidecar_crc:08x}',placements=placements,historical_camera_weights=weighted,total_clusters=instance,all_lod_subset_verified=all(c['invariant_subset_verified'] for r in placements for c in r['clusters']),actual_runtime_cuts=0,enclosures_proven=0,runtime_admitted=False,fail_open=True,limitations=['No seam welding, planar fills or sampled-ray enclosure.', 'Every cluster independently selects a source LOD; witnesses intersect that cluster selectable levels, including authored empty base.', 'Faces lost from this conservative subset are unresolved coverage, not proved physical holes.', 'Closed oriented edge graph is not non-self-intersection, interior-volume, source-state, numeric or material proof.', 'No unconditional current emitted opaque/depth/prefix/affine receipt is provided; all geometry remains drawn.', 'No all-LOD target interior membership, portal proof, timing, new data option or runtime implementation is claimed.'])
+  weighted.append(dict(input=identity(replay),frames=len(rows),label='Earlier camera-build baked-pose host selector weights only; not current target counters or hull visibility',mean_selected_corners=sum(totals.values())/len(rows),mean_selected_corners_in_placements_with_any_closed_graph=sum(totals[i] for i,r in enumerate(placements) if r['closed_graphs'])/len(rows)))
+ out=dict(schema=1,kind='Exact all-selectable-LOD invariant source-surface lemma and fail-open topology prerequisite; no hull/cull admission',tool=identity(Path(__file__)),source=source,staging_plan=identity(v.staging_plan),prepared_receipt=identity(root/'prepare-receipt.json'),reader=identity(reader),inputs=files,mesh_crc=f'{p.mesh_crc:08x}',policy_crc=f'{p.sidecar_crc:08x}',placements=placements,historical_camera_weights=weighted,total_clusters=instance,all_lod_subset_verified=all(c['invariant_subset_verified'] for r in placements for c in r['clusters']),actual_runtime_cuts=0,enclosures_proven=0,runtime_admitted=False,fail_open=True,limitations=['No seam welding, planar fills or sampled-ray enclosure.', 'Closed-graph camera weights include entire placements containing any such component; they are not component workload or hidden work.', 'Every cluster independently selects a source LOD; witnesses intersect that cluster selectable levels, including authored empty base.', 'Faces lost from this conservative subset are unresolved coverage, not proved physical holes.', 'Closed oriented edge graph is not non-self-intersection, interior-volume, source-state, numeric or material proof.', 'No unconditional current emitted opaque/depth/prefix/affine receipt is provided; all geometry remains drawn.', 'No all-LOD target interior membership, portal proof, timing, new data option or runtime implementation is claimed.'])
  v.out.parent.mkdir(parents=True,exist_ok=True)
  with v.out.open('x') as f:json.dump(out,f,indent=1);f.write('\n')
  print(json.dumps(dict(source=source['owned_head'],placements=len(placements),clusters=instance,invariant_facets=sum(r['oriented_invariant_facets'] for r in placements),closed_graphs=sum(r['closed_graphs'] for r in placements),unresolved_boundaries=sum(r['unresolved_boundaries'] for r in placements),enclosures_proven=0,runtime_cuts=0,historical_camera_weights=weighted)))
