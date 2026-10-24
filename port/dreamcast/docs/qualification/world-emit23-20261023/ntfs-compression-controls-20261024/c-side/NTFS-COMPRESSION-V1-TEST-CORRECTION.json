@@ -1,0 +1,9 @@
+{
+  "Status": "V1_TEST_ASSERTION_CORRECTED_NOT_COMPRESSION_REJECTION",
+  "Source": "test-ntfs-compression-controls-v1.ps1",
+  "Failure": "Expected missing literal compact exitcode nonzero, but native returned0 without a file. Wrapper already rejected missing via Get-Item; v2 now tests admission plus post-state.",
+  "CaptureMutation": 0,
+  "ReadonlyWorkaround": false,
+  "V1SourcePreserved": true,
+  "V1TinyFilesPreserved": true
+}

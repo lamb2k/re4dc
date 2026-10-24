@@ -1,0 +1,47 @@
+{
+  "schema": "owned-NTFS-compression-tiny-controls-v2",
+  "created_utc": "2026-10-24T02:54:41.543379+00:00",
+  "base_source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "preservation_parent": "3ab9fc88075fe6210677a29123201dedfb69dfc8",
+  "copied": [
+    {
+      "path": "c-side/test-ntfs-compression-controls-v1.ps1",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/test-ntfs-compression-controls-v1.ps1",
+      "bytes": 8361,
+      "sha256": "ed3086f0c9ee41fc93d8596bc4dd1db1fdcaf9989b3f1c7486a40a90141edaa6"
+    },
+    {
+      "path": "c-side/test-ntfs-compression-controls-v2.ps1",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/test-ntfs-compression-controls-v2.ps1",
+      "bytes": 8915,
+      "sha256": "4fd34f1f4b9a7d75eaea35f4c54d838d000a68c8883d0dbb6c4d636f840bfe42"
+    },
+    {
+      "path": "c-side/NTFS-COMPRESSION-CONTROLS-20261024-v2.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/NTFS-COMPRESSION-CONTROLS-20261024-v2.json",
+      "bytes": 5681,
+      "sha256": "7d40c885604c179797220a3f4e29d34e94f91d84cfe448bde2b8fef4f981083e"
+    },
+    {
+      "path": "c-side/NTFS-COMPRESSION-CONTROLS-NOTE-v2.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/NTFS-COMPRESSION-CONTROLS-NOTE-v2.md",
+      "bytes": 2510,
+      "sha256": "759ace74fce1e5907f3c523389d27ec2a174b1158aa19a7daaae9a333c8a610e"
+    },
+    {
+      "path": "c-side/NTFS-COMPRESSION-V1-TEST-CORRECTION.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/NTFS-COMPRESSION-V1-TEST-CORRECTION.json",
+      "bytes": 441,
+      "sha256": "786972ecb0ed130ae49e9e26c4b0e357314fdeded29bbc9295b6a0e34e19de9a"
+    },
+    {
+      "path": "c-side/NTFS-COMPRESSION-SOURCE-CHECK-v2.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/NTFS-COMPRESSION-SOURCE-CHECK-v2.json",
+      "bytes": 526,
+      "sha256": "181bfa53ffe51fdefe280bf8731ed593d655d6caf87c74cae2560f4401cdfa0a"
+    }
+  ],
+  "qualification": "Tiny synthetic NTFS ordinary compression controls only; no existing capture compressed, ratio or space claim",
+  "v1_test_correction_preserved": true,
+  "capture_payload_or_executable_copied": false
+}

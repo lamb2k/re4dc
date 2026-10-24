@@ -1,0 +1,16 @@
+{
+  "NativePowerShellSyntax": [
+    {
+      "Name": "test-ntfs-compression-controls-v1.ps1",
+      "Syntax": "PASS",
+      "Sha256": "ed3086f0c9ee41fc93d8596bc4dd1db1fdcaf9989b3f1c7486a40a90141edaa6"
+    },
+    {
+      "Name": "test-ntfs-compression-controls-v2.ps1",
+      "Syntax": "PASS",
+      "Sha256": "4fd34f1f4b9a7d75eaea35f4c54d838d000a68c8883d0dbb6c4d636f840bfe42"
+    }
+  ],
+  "ControlReceipt": "7d40c885604c179797220a3f4e29d34e94f91d84cfe448bde2b8fef4f981083e",
+  "ExistingCapturesCompressed": 0
+}

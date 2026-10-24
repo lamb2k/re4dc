@@ -1,0 +1,136 @@
+{
+  "Schema": "OWNED_NTFS_LZNT1_TINY_CONTROLS_V2",
+  "SealedUtc": "2026-10-24T02:53:32.4778884Z",
+  "Status": "PASS_TINY_CONTROLS_ONLY",
+  "Scope": "C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\ntfs-compression-controls-v2",
+  "Utility": {
+    "SHA256": "d693540c6c866a55750ef25becdb34aa81615b67be78ec70df976d4d72047972",
+    "Version": "10.0.26100.8941 (WinBuild.160101.0800)",
+    "Path": "C:\\WINDOWS\\System32\\compact.exe"
+  },
+  "Volume": {
+    "DriveLetter": "C",
+    "FileSystem": "NTFS",
+    "SizeRemaining": 32767889408
+  },
+  "SyntheticPayloadBytes": 262144,
+  "RoundTrip": {
+    "SameFullBytesFileIdLogicalSize": true,
+    "Restored": {
+      "Path": "C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\ntfs-compression-controls-v2\\roundtrip.dat",
+      "FileId": "E8D47561:00200000001B485F",
+      "Links": 1,
+      "LogicalBytes": 262144,
+      "StandardAllocationBytes": 262144,
+      "PhysicalStorageBytes": 262144,
+      "Attributes": "Archive",
+      "Readonly": false,
+      "Compressed": false,
+      "SHA256": "07db21bf961112bb72be157106ae1540a2e30d88cd90fb57deadc1277b0c738a"
+    },
+    "Compressed": {
+      "Path": "C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\ntfs-compression-controls-v2\\roundtrip.dat",
+      "FileId": "E8D47561:00200000001B485F",
+      "Links": 1,
+      "LogicalBytes": 262144,
+      "StandardAllocationBytes": 32768,
+      "PhysicalStorageBytes": 32768,
+      "Attributes": "Archive, Compressed",
+      "Readonly": false,
+      "Compressed": true,
+      "SHA256": "07db21bf961112bb72be157106ae1540a2e30d88cd90fb57deadc1277b0c738a"
+    },
+    "Before": {
+      "Path": "C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\ntfs-compression-controls-v2\\roundtrip.dat",
+      "FileId": "E8D47561:00200000001B485F",
+      "Links": 1,
+      "LogicalBytes": 262144,
+      "StandardAllocationBytes": 262144,
+      "PhysicalStorageBytes": 262144,
+      "Attributes": "Archive",
+      "Readonly": false,
+      "Compressed": false,
+      "SHA256": "07db21bf961112bb72be157106ae1540a2e30d88cd90fb57deadc1277b0c738a"
+    }
+  },
+  "ReadonlyAdmission": {
+    "RejectedBeforeNative": true,
+    "After": {
+      "Path": "C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\ntfs-compression-controls-v2\\readonly.dat",
+      "FileId": "E8D47561:00180000001C7012",
+      "Links": 1,
+      "LogicalBytes": 262144,
+      "StandardAllocationBytes": 262144,
+      "PhysicalStorageBytes": 262144,
+      "Attributes": "ReadOnly, Archive",
+      "Readonly": true,
+      "Compressed": false,
+      "SHA256": "07db21bf961112bb72be157106ae1540a2e30d88cd90fb57deadc1277b0c738a"
+    }
+  },
+  "SharingAdmission": {
+    "NativeAlsoRejected": true,
+    "RejectedBeforeNative": true,
+    "After": {
+      "Path": "C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\ntfs-compression-controls-v2\\sharing.dat",
+      "FileId": "E8D47561:001F00000031B572",
+      "Links": 1,
+      "LogicalBytes": 262144,
+      "StandardAllocationBytes": 262144,
+      "PhysicalStorageBytes": 262144,
+      "Attributes": "Archive",
+      "Readonly": false,
+      "Compressed": false,
+      "SHA256": "07db21bf961112bb72be157106ae1540a2e30d88cd90fb57deadc1277b0c738a"
+    }
+  },
+  "MissingLiteralAdmissionRejectedBeforeNative": true,
+  "NativeMissingLiteralExitCode": 0,
+  "NativeZeroExitIsNotSufficient": true,
+  "NativeInvocations": [
+    {
+      "Arguments": [
+        "/C",
+        "/F",
+        "/Q",
+        "C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\ntfs-compression-controls-v2\\roundtrip.dat"
+      ],
+      "ExitCode": 0,
+      "Output": "\r\n Compressing files in C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\ntfs-compression-controls-v2\\\r\n\r\n\r\n1 files within 1 directories were compressed.\r\n262,144 total bytes of data are stored in 32,768 bytes.\r\nThe compression ratio is 8.0 to 1.\r\n"
+    },
+    {
+      "Arguments": [
+        "/U",
+        "/F",
+        "/Q",
+        "C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\ntfs-compression-controls-v2\\roundtrip.dat"
+      ],
+      "ExitCode": 0,
+      "Output": "\r\n Uncompressing files in C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\ntfs-compression-controls-v2\\\r\n\r\n\r\n1 files within 1 directories were uncompressed.\r\n\r\n"
+    },
+    {
+      "Arguments": [
+        "/C",
+        "/F",
+        "/Q",
+        "C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\ntfs-compression-controls-v2\\sharing.dat"
+      ],
+      "ExitCode": 1,
+      "Output": "\r\n Compressing files in C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\ntfs-compression-controls-v2\\\r\n\r\nsharing.dat: The process cannot access the file because it is being used by another process.\r\n\r\n0 files within 1 directories were compressed.\r\n0 total bytes of data are stored in 0 bytes.\r\nThe compression ratio is 1.0 to 1.\r\n"
+    },
+    {
+      "Arguments": [
+        "/C",
+        "/F",
+        "/Q",
+        "C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\ntfs-compression-controls-v2\\does-not-exist.dat"
+      ],
+      "ExitCode": 0,
+      "Output": "\r\n Compressing files in C:\\Game Dev\\Emulators\\codex-lanes\\world-emit23\\ntfs-compression-controls-v2\\\r\n\r\n\r\n0 files within 1 directories were compressed.\r\n0 total bytes of data are stored in 0 bytes.\r\nThe compression ratio is 1.0 to 1.\r\n"
+    }
+  ],
+  "CaptureFilesCompressed": 0,
+  "ExecutableOrGamePayloadUsed": false,
+  "ActualCaptureRatioOrSavingClaimed": false,
+  "Next": "Root review and separate ONE existing eligible closed-capture trial admission required."
+}
