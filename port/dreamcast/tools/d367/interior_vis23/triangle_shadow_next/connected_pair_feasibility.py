@@ -22,10 +22,11 @@ TRIANGLES=((14,13,12),(13,14,15))
 
 def main():
  ap=argparse.ArgumentParser(description=__doc__)
- for n in ('source-tree','r6','base-evidence','smaller-evidence','discovery','reviews','out'):ap.add_argument('--'+n,type=Path,required=True)
+ for n in ('source-tree','r6','base-evidence','smaller-evidence','discovery','reviews','preserved-report','out'):ap.add_argument('--'+n,type=Path,required=True)
  a=ap.parse_args()
  if a.out.exists():raise ValueError('Preserve old report')
  resource.setrlimit(resource.RLIMIT_AS,(f.LIMIT,f.LIMIT))
+ if f.digest(a.preserved_report)!='7715fe03a89fd5d7e03b716065a57583bc061b66e549ca0b9059d2ae8906c181':raise ValueError('Preserved six-face result changed')
  if f.digest(a.discovery)!=DISCOVERY:raise ValueError('Discovery source changed')
  for name,digest in REVIEWS.items():
   if f.digest(a.reviews/name)!=digest:raise ValueError('Unreviewed theorem')
