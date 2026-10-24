@@ -51,7 +51,8 @@ struct Material {
     Request request{};
     Target target{};
     // Actual PS2 TexBlend wildcard247 replaces the TEXHeader. Preserve the
-    // existing authored normalized UV; no GC screen/refraction UV is invented.
+    // current converted authored UV; final PS2 GPU normalization is unqualified.
+    // No GC screen/refraction UV is invented.
     float u_scale=1.f,v_scale=1.f;
     unsigned source_alpha=240;
 };

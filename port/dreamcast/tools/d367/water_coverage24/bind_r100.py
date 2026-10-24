@@ -22,6 +22,7 @@ def main():
  assert calls[0x652c]=='GetTexRenderMgr__FPP12TexRenderMng'
  assert calls[0x659c].startswith('EstSet__')
  assert calls[0x65b8]==calls[0x6600]=='SmdGetObjPtr__Fi'
+ assert R.W(0x65ac)==0x24020040 and R.W(0x65b0)==0xac62005c and R.W(0x65b4)==0xac620060,'actual PS2 target64x64'
  assert R.W(0x65bc)==0x0000202d and R.W(0x6604)==0x24040001,'water IDs 0/1'
  assert R.W(0x6544)==0x240200f7 and R.W(0x65d8)==0x240500ff,'source texture/blend'
  assert R.W(0x65e0)==0x241300f0 and R.W(0x65e8)==0x24120002,'alpha/shader'
