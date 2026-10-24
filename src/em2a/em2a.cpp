@@ -153,7 +153,7 @@ void em2aDmCkTrap1(cEm2a* em)
     em->hp = 0;
     SndCall(8, 2, &em->pos, em->id, 0, em);
     EmDmBloodSet2(em, 0x22, 9, 0, 0, 0);
-    if ((em->stat & 0xFFFF0000) == 0x01050000) {
+    if ((em->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01050000)) {
         EmRoutineSet(em, 1, 4, 0, 0);
     } else {
         GameAddPoint(LVADD_CRITICALHIT);

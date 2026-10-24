@@ -347,7 +347,7 @@ static void r31c_AshleyDieCheck()
         pSUB = 0;
         if (!(stat & 1)) {
             pG->ashley_life = 0;
-            r30c_work.p->ashley->stat = 0x02000000;
+            r30c_work.p->ashley->stat = STAT_BE(0x02000000);
         }
         if ((s16) pG->ashley_life > 0) {
             SceSleep(1);

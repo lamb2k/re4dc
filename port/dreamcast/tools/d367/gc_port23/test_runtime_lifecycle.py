@@ -9,6 +9,27 @@ GAME = HERE.parents[2] / 'game'
 
 
 class RuntimeLifecycleTests(unittest.TestCase):
+    def test_current_audits_and_gc_room_hook_composition(self):
+        current = (GAME / 'ui_bridge.cpp').read_text()
+        incoming = subprocess.check_output(['git', '-C', str(GAME.parents[2]), 'show',
+            'd5c1ceab9e06461462669b3ce1d28a379747a74a:port/dreamcast/game/ui_bridge.cpp'], text=True)
+        include = '#include "platform/include/gc_asset_lifecycle.h"\n'
+        guard = '''#if RE4DC_GC_ASSET_GATE
+    if(pG)re4dc_gcasset_room_enter((unsigned(pG->stage_no)<<8)|pG->room_no);
+    else re4dc_gcasset::unresolved(re4dc_gcasset::Ui,"room-without-global");
+#endif
+'''
+        self.assertEqual(current.count(include), 1)
+        self.assertEqual(current.count(guard), 1)
+        self.assertEqual(current.replace(include, '').replace(guard, ''), incoming)
+        self.assertEqual(current.count('re4dc_cache_p2_diag_'), 3)
+        for path in ['port/dreamcast/game/kos_cache_p2.mk', 'port/dreamcast/game/platform/kos_cache_p2_diag.cpp',
+                     'port/dreamcast/docs/KOS_CACHE_P2_DIAG_20261023.md',
+                     'port/dreamcast/tools/d367/kos_cache_audit/test_cache_diag.py']:
+            expected = subprocess.check_output(['git', '-C', str(GAME.parents[2]), 'show',
+                'd5c1ceab9e06461462669b3ce1d28a379747a74a:' + path])
+            self.assertEqual((GAME.parents[2] / path).read_bytes(), expected)
+
     def test_actual_ui_helpers_and_audio_mutex_publication(self):
         ui = (GAME / 'platform/native_ui.cpp').read_text()
         audio = (GAME / 'platform/audio_aica.cpp').read_text()

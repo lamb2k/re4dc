@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import re
+import resource
 import subprocess
 import tempfile
 import unittest
@@ -187,7 +188,7 @@ class Diagnostic(unittest.TestCase):
         self.assertEqual(current.count('re4dc_cache_p2_diag_'),3)
     def test_make_guards_and_off_object_list(self):
         make='OBJDIR := /tmp/never-build-audits\nKOS_BASE := /root/work/kos-re4dc-d367\nTARGET := dummy\nPLATFORM_OBJS := /tmp/never-build-audits/platform/wanted.o /tmp/never-build-audits/platform/kos_cache_p2_diag.o\nOBJS = $(PLATFORM_OBJS)\ninclude '+str(GAME/'kos_cache_p2.mk')+'\nprint:\n\t@echo OBJS=$(OBJS)\n'
-        for p2,diag_on,ok in [(0,0,True),(1,0,True),(0,1,False),(1,1,True),(1,2,False)]:
+        for p2,diag_on,ok in [(0,0,True),(1,0,True),(0,1,False),(1,1,True),(1,2,False),(1,'0 1',False),(1,'1 0',False),(1,'%',False),(1,'',False)]:
             p=subprocess.run(['make','-s','-f','-','print',f'KOS_CACHE_P2={p2}',f'KOS_CACHE_P2_DIAG={diag_on}'],input=make,text=True,capture_output=True)
             self.assertEqual(p.returncode==0,ok,p.stderr)
             if ok:self.assertEqual('platform/kos_cache_p2_diag.o' in p.stdout,bool(diag_on))
@@ -211,6 +212,7 @@ class Diagnostic(unittest.TestCase):
     def test_actual_cpp_observer(self):
         with tempfile.TemporaryDirectory(dir='/dev/shm') as d:
             d=Path(d);(d/'kos').mkdir();(d/'kos/irq.h').write_text('extern unsigned irq_disable();\nextern void irq_restore(unsigned);\n')
+            (d/'kos/cache.h').write_text('#include <cstdint>\n#include <cstddef>\nvoid dcache_wback_range(uintptr_t,size_t);\n')
             test=r"""
 #include <cassert>
 #include <cstdarg>
@@ -221,13 +223,28 @@ unsigned irq_state=0;
 unsigned irq_disable(){unsigned old=irq_state;irq_state=0x100000f0;return old;}
 void irq_restore(unsigned x){irq_state=x;}
 std::vector<std::string> logs;
+unsigned flushes=0;bool startup_dirty=true;
+unsigned p1_cached_bss[16]{}; // logical cached startup zeros, separate from physical P2 state
 extern "C" void re4dc_log(const char* f,...){assert(!irq_state);char b[256];va_list a;va_start(a,f);int n=vsnprintf(b,sizeof(b),f,a);va_end(a);assert(n>0 && n<256);logs.emplace_back(b);}
 #define RE4DC_KOS_CACHE_P2_DIAG 1
 #define RE4DC_CACHE_DIAG_HOST_TEST 1
 #include "OBSERVER"
+void dcache_wback_range(uintptr_t address,size_t bytes){
+ assert(irq_state==0x100000f0 && bytes==64 && !(address&31));
+ assert(address==uintptr_t(&re4dc_cache_p2_diag_counters));++flushes;
+ if(startup_dirty){auto* p=(volatile unsigned*)address;for(unsigned i=0;i<16;i++)p[i]=p1_cached_bss[i];}
+ startup_dirty=false;
+}
 void seed(unsigned calls){re4dc_cache_p2_diag_counters.calls=calls;re4dc_cache_p2_diag_counters.timed=calls;re4dc_cache_p2_diag_counters.full512=calls;}
-int main(){
- seed(3);re4dc_cache_p2_diag_enter(0x101);assert(logs.size()==2 && logs[0].find("room=ffff phase=boot")!=std::string::npos);assert(logs[0].find("calls=3 timed=3")!=std::string::npos);
+int main(int argc,char**argv){
+ const bool cold=argc>1 && argv[1][0]=='c';
+ if(cold){
+  auto* p=(volatile unsigned*)&re4dc_cache_p2_diag_counters;for(unsigned i=0;i<16;i++)p[i]=0xffffffff;
+  re4dc_cache_p2_diag_enter(0x100);assert(logs[0].find("calls=0 timed=0")!=std::string::npos);logs.clear();
+ }else startup_dirty=false; // A prior whole helper cleaned P1 and wrote real P2 counts.
+ seed(3);re4dc_cache_p2_diag_enter(0x101);assert(logs.size()==2);
+ assert(logs[0].find(cold?"room=0100 phase=live":"room=ffff phase=boot")!=std::string::npos);
+ assert(logs[0].find("calls=3 timed=3")!=std::string::npos && flushes==1);
  seed(7);re4dc_cache_p2_diag_poll(0x101,149);assert(logs.size()==2 && re4dc_cache_p2_diag_counters.calls==7);
  re4dc_cache_p2_diag_poll(0x101,150);assert(logs.size()==4 && logs[2].find("room=0101 phase=live")!=std::string::npos);assert(logs[3].find("capacity=00000000:0001c000")!=std::string::npos);
  seed(2);re4dc_cache_p2_diag_leave(0x101);seed(4);re4dc_cache_p2_diag_enter(0x103);assert(logs[6].find("room=ffff phase=transition")!=std::string::npos);
@@ -239,6 +256,15 @@ int main(){
 """.replace('OBSERVER',str(GAME/'platform/kos_cache_p2_diag.cpp'))
             (d/'test.cpp').write_text(test)
             subprocess.run(['g++','-std=c++17','-O2','-Wall','-Wextra','-I',str(d),str(d/'test.cpp'),'-o',str(d/'test')],check=True)
-            subprocess.run([str(d/'test')],check=True)
+            for mode in ['cold','warm']:subprocess.run([str(d/'test'),mode],check=True)
+            observer=GAME/'platform/kos_cache_p2_diag.cpp'
+            broken=observer.read_text().replace('        dcache_wback_range(reinterpret_cast<uintptr_t>(&re4dc_cache_p2_diag_counters),\n                           sizeof(re4dc_cache_p2_diag_counters));\n','')
+            self.assertNotEqual(broken,observer.read_text())
+            (d/'broken.cpp').write_text(broken)
+            (d/'broken-test.cpp').write_text(test.replace(str(observer),str(d/'broken.cpp')))
+            subprocess.run(['g++','-std=c++17','-O2','-I',str(d),'-I',str(GAME/'platform'),str(d/'broken-test.cpp'),'-o',str(d/'broken-test')],check=True)
+            def no_core():resource.setrlimit(resource.RLIMIT_CORE,(0,0))
+            failed=subprocess.run([str(d/'broken-test'),'cold'],capture_output=True,cwd=d,preexec_fn=no_core)
+            self.assertNotEqual(failed.returncode,0,'missing first-writeback mutation falsely passed cold stale-RAM control')
 
 if __name__=='__main__':unittest.main(verbosity=2)

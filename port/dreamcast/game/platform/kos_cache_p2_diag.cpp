@@ -1,6 +1,7 @@
 #include "include/kos_cache_p2_diag.h"
 #if RE4DC_KOS_CACHE_P2_DIAG
 #include <kos/irq.h>
+#include <kos/cache.h>
 #include <stddef.h>
 #include <stdint.h>
 extern "C" void re4dc_log(const char*, ...);
@@ -13,6 +14,7 @@ static_assert(offsetof(Re4dcCacheP2Counters,full512)==32, "assembly layout");
 static_assert(offsetof(Re4dcCacheP2Counters,overflow)==28, "assembly layout");
 namespace {
 unsigned active_room=0xffff, phase=0, sequence=0, hook_reject=0;
+bool startup_coherent=false;
 // phase 0=boot,1=live room,2=unattributed transition. No loading guess.
 const char* const phases[]={"boot","live","transition"};
 volatile Re4dcCacheP2Counters* counters(){
@@ -28,6 +30,15 @@ void report(unsigned frame,unsigned next_room,unsigned next_phase){
     const auto saved=irq_disable();
     // A future unsafe hook must not log while its caller already masks IRQs.
     if(unsigned(saved)&0x100000f0U){++hook_reject;irq_restore(saved);return;}
+    if(!startup_coherent){
+        // KOS zeroes BSS through P1 after cache enable. First P2 snapshot
+        // must see those zeros even if no whole helper has run yet.
+        // 64B aligned range uses two OCBWB lines, never the whole helper.
+        // If a helper already ran, the P1 alias is clean: P2 counts survive.
+        dcache_wback_range(reinterpret_cast<uintptr_t>(&re4dc_cache_p2_diag_counters),
+                           sizeof(re4dc_cache_p2_diag_counters));
+        startup_coherent=true;
+    }
     volatile uint32_t* in=reinterpret_cast<volatile uint32_t*>(counters());
     uint32_t* out=reinterpret_cast<uint32_t*>(&copy);
     for(unsigned i=0;i<sizeof(copy)/4;++i){out[i]=in[i];in[i]=0;}

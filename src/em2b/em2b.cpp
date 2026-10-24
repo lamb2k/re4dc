@@ -132,7 +132,7 @@ static void plem2bDmBlow(cPlayer* pl);
 #define PL_ARC(no) PL_ARC_PTR(pl->subArc, no)
 
 // Routine word test: xFC / xFD as the upper half of cModel::stat.
-#define EM_RTN(em, fc, fd) (((em)->stat & 0xFFFF0000) == (u32) (((fc) << 24) | ((fd) << 16)))
+#define EM_RTN(em, fc, fd) (((em)->stat & STAT_BE(0xFFFF0000)) == STAT_BE((u32) (((fc) << 24) | ((fd) << 16))))
 
 // The enemy a player damage callback belongs to (pl_sub SetPlDamage's first argument).
 #define PL_EM(pl) ((cEm2b*) (pl)->dmgType)

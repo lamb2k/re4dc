@@ -651,9 +651,9 @@ static int dispBulletDigit(u8 no)
         return 0;
     }
 #if defined(RE4DC_SS_ACTOR_LIFETIME) && RE4DC_SS_ACTOR_LIFETIME
-    if ((re4dc_ss_actor_player_stat() & 0xFFFF0000) == 0x000F0000) {
+    if ((re4dc_ss_actor_player_stat() & STAT_BE(0xFFFF0000)) == STAT_BE(0x000F0000)) {
 #else
-    if ((pPL->stat & 0xFFFF0000) == 0x000F0000) {
+    if ((pPL->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x000F0000)) {
 #endif
         return 0;
     }
@@ -696,9 +696,9 @@ u8 dispBulletIconMarkNo(u8 no)
         return 0xFF;
     }
 #if defined(RE4DC_SS_ACTOR_LIFETIME) && RE4DC_SS_ACTOR_LIFETIME
-    if ((re4dc_ss_actor_player_stat() & 0xFFFF0000) == 0x000F0000) {
+    if ((re4dc_ss_actor_player_stat() & STAT_BE(0xFFFF0000)) == STAT_BE(0x000F0000)) {
 #else
-    if ((pPL->stat & 0xFFFF0000) == 0x000F0000) {
+    if ((pPL->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x000F0000)) {
 #endif
         if (pG->room_id == 0x333) {
             return 0xFF;
