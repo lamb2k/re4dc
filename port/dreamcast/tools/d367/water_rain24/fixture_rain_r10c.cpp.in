@@ -1,0 +1,103 @@
+
+#include <cstdint>
+#include <cstring>
+#include <cassert>
+#include <cmath>
+#include <cstdio>
+#include <initializer_list>
+using u32=uint32_t;using u8=uint8_t;using s8=int8_t;using f32=float;using u16=uint16_t;
+#define RE4DC_RAIN_PS2 1
+#define RE4DC_RAIN_DC 1
+#define RE4DC_RAIN_DC_N 320
+#define RAIN_DC_DRAWN 320
+using Mtx=float[3][4];using Mtx44=float[4][4];
+struct Vec{float x,y,z;};struct Model{};using cModel=Model;struct EspSeqData{};struct EspSeqOpt{};
+struct Camera {struct {Vec at,pos;}param;Vec up;Mtx v_mat{};Mtx44 ProjMat{};};
+struct Global{u32 room_id=0x10c,Frame_cnt=1,Stop_flg=0,Status_flg[4]{};u8 Rno0=3;Camera Cam;};Global global;Global* pG=&global;
+struct {float width=512,height=448;} Screen;bool pause_filter=false;unsigned moved=0,initialized=0,queued=0,sent=0;
+void Filter06Render();void Filter06Trans();int Render_checkBlurPermission();
+struct cParticle06{Vec m_Pos{},m_Spd{};u8 m_Alpha=0;void init(u32){++initialized;}void move(){++moved;}};
+cParticle06 particles[2048];
+bool alloc_fail=false;
+#define MEM_ALLOC(a,b,c) (alloc_fail ? nullptr : (void*)particles)
+struct Logger{template<class...T>void err(T...){}}logger;Logger* pLog=&logger;
+unsigned random_calls=0;float fRand1_1(){++random_calls;return 0.0f;}
+void memclr_asm(void* p,unsigned n){std::memset(p,0,n);}
+struct Filter06Work{cParticle06*p;u32 num;Vec spd;u8 col[4],cur[4];float colF[3],alphaF,rate,spread,rangeLR,rangeUp,rangeDepth,scale;u8 alphaMin;};
+Filter06Work flt06{};Vec cam_vec_LR{};
+void PSVECSubtract(const Vec*,const Vec*,Vec*){}void PSVECCrossProduct(const Vec*,const Vec*,Vec*){}void VECNormalize(Vec*,Vec*){}
+void PSMTXCopy(const Mtx&a,Mtx&b){std::memcpy(b,a,sizeof(Mtx));}
+void GXGetViewportv(float* v){for(int i=0;i<6;i++)v[i]=0;v[2]=512;v[3]=448;}
+void(*callback)()=nullptr;bool accept_ot=true;
+void AddOtDirect(int,void*,void(*f)(),int,int,int,float){if(accept_ot){callback=f;++queued;}}
+void Filter00Trans(){}void Filter01Trans(){}void Filter02Trans(){}void Filter03Trans(){}void Filter04Trans(){}void Filter05Trans(){}
+void Filter07Trans(){}void Filter08Trans(){}void Filter0aTrans(){}void Filter0bTrans(){}int Filter09GetbUse(){return pause_filter;}
+const u32 kRainPs2Lines=100;int s_rain_pending=0;Mtx s_rain_view{};Mtx44 s_rain_proj{};float s_rain_viewport[6]{};
+struct RainDcDrop{float x,y,d,len,w,a;};struct Re4dcRainStreak{float x,y0,y1,z,w;u32 tail,head;};
+RainDcDrop s_raindc[320];Re4dcRainStreak s_raindc_out[320];
+u32 s_raindc_seed=0x2545F491U,s_raindc_frame=0,s_raindc_pending=0,s_raindc_ready=0,s_raindc_alpha=0,s_raindc_frames=0,s_raindc_sent=0;float s_raindc_area=0;
+unsigned re4dc_rain_dc_streaks(const Re4dcRainStreak*,unsigned n){sent+=n;return n;}
+#if RE4DC_RAIN_R10C_DC
+u32 s_raindc_queued_room=0,s_raindc_queued_frame=0;
+static_assert(sizeof(s_raindc_queued_room)+sizeof(s_raindc_queued_frame)==8,"ticket must remain8B");
+#endif
+template<class...T>void re4dc_log(T...){}
+struct EspGenWork{u8 Id=1,Work8[4]{10,0,0,0};float Size_base_x=1;u8 Tex_id=0,Blend_type=0,Col_start_r=170,Col_start_g=170,Col_start_b=170,Col_start_a=80;float Col_d_a=.1f;Vec Speed{},R_speed{};};
+struct Espgen44Work{u8 type=0;};struct EspgenWork{Espgen44Work storage;void* work=&storage;};
+template<class...T>void Filter05SetParamF(T...){}template<class...T>void Filter05SetParamM(T...){}
+
+#define RE4DC_D349_RENDERER_STACK 1
+unsigned drains=0;void re4dc_model_finish_source_draws(){++drains;}
+void re4dc_rain_flush();
+
+/* EXTRACTED_SOURCE */
+// Mock boundary: actual ADEB hook calls the real extracted RainDcFlush here.
+void re4dc_rain_flush(){RainDcFlush();}
+void reset(){global=Global{};flt06=Filter06Work{};Screen.width=512;Screen.height=448;pause_filter=false;accept_ot=true;alloc_fail=false;moved=queued=initialized=sent=random_calls=drains=0;callback=nullptr;s_raindc_pending=s_raindc_ready=s_raindc_sent=s_raindc_frames=0;s_raindc_frame=0;s_raindc_seed=0x2545F491U;s_raindc_area=0;std::memset(s_raindc,0,sizeof(s_raindc));
+#if RE4DC_RAIN_R10C_DC
+s_raindc_queued_room=s_raindc_queued_frame=0;
+#endif
+}
+void setter(){EspGenWork record;record.Size_base_x=200;record.Col_d_a=1;record.Speed={21,-250,0};record.R_speed={0,0,0};EspgenWork owner;assert(Espgen44_SetFreeWork(&owner,&record,nullptr,nullptr,0,nullptr,nullptr,nullptr,nullptr)==1);}
+void setup(){reset();Filter06RoomInit();setter();}
+void run_callback(){if(callback){auto f=callback;callback=nullptr;f();}}
+void image(){FilterTrans();run_callback();GXSetDrawSync(0xADEB);}
+void night(){reset();pG->room_id=0x11b;flt06.num=1600;flt06.p=particles;flt06.col[0]=flt06.col[1]=flt06.col[2]=170;flt06.col[3]=60;flt06.rate=1;flt06.cur[3]=0;
+for(unsigned j=0;j<20;++j){pG->Frame_cnt+=j%7;flt06.col[3]=j%2?60:30;pG->room_id=j%3?0x11b:0x11a;pG->Stop_flg=j%5==0?0x08000000:0;image();std::fwrite(s_raindc,sizeof(s_raindc),1,stdout);std::fwrite(s_raindc_out,sizeof(s_raindc_out),1,stdout);std::fwrite(&s_raindc_seed,sizeof(s_raindc_seed),1,stdout);std::fwrite(&s_raindc_area,sizeof(s_raindc_area),1,stdout);}
+std::fwrite(&moved,sizeof(moved),1,stdout);std::fwrite(&sent,sizeof(sent),1,stdout);}
+int main(int argc,char**argv){if(argc>1){night();return 0;}
+setup();assert(flt06.num==1100&&initialized==1100&&random_calls==3300);image();assert(moved==1100&&queued==1&&drains==1);
+#if RE4DC_RAIN_R10C_DC
+assert(sent==320&&s_raindc_pending==0&&s_raindc_queued_room==0);
+unsigned n=sent;GXSetDrawSync(0xADEB);assert(sent==n);
+// Reject every wrong retained source-signature field, including null allocation.
+for(int field=0;field<13;field++){setup();flt06.cur[3]=80;
+switch(field){case 0:pG->room_id=0x10d;break;case 1:flt06.p=nullptr;break;case 2:flt06.num=1099;break;case 3:flt06.col[0]--;break;case 4:flt06.col[1]--;break;case 5:flt06.col[2]--;break;case 6:flt06.col[3]--;break;case 7:flt06.rate=.5f;break;case 8:flt06.scale=2;break;case 9:flt06.spd.x++;break;case 10:flt06.spd.y++;break;case 11:flt06.spd.z++;break;case 12:flt06.alphaMin=1;break;}
+Filter06Render();GXSetDrawSync(0xADEB);assert(sent==0&&s_raindc_pending==0);}
+// Both dispatcher refusal and post-callback loss of permission fail closed.
+for(int phase=0;phase<2;phase++)for(int gate=0;gate<6;gate++){setup();flt06.cur[3]=80;if(phase)Filter06Render();
+switch(gate){case 0:pG->Status_flg[1]=0x02000000;break;case 1:pause_filter=true;break;case 2:Screen.width=640;break;case 3:Screen.height=480;break;case 4:pG->Rno0=2;break;case 5:accept_ot=false;break;}
+if(!phase){FilterTrans();run_callback();}if(phase&&gate==5){ // OT refusal precedes callback; cannot revoke an already completed callback.
+GXSetDrawSync(0xADEB);assert(sent==320);continue;}
+GXSetDrawSync(0xADEB);assert(sent==0&&s_raindc_pending==0);}
+// Source failure/no visible alpha; source-authoritative fade uses80 and experimental120/100 gain.
+setup();alloc_fail=true;flt06.p=nullptr;setter();assert(flt06.num==0);image();assert(sent==0);
+setup();flt06.cur[3]=0;Filter06Render();GXSetDrawSync(0xADEB);assert(sent==0);
+setup();flt06.cur[3]=20;Filter06Render();GXSetDrawSync(0xADEB);assert(sent==320);assert((s_raindc_out[0].head>>24)==(u32)(s_raindc[0].a*.25f*1.2f));assert((s_raindc_out[0].head&0xffffff)==0xd2d2d2);
+// Normal callback-time tag equals the render frame, including0/UINT_MAX; stale frames/rooms are consumed.
+for(u32 frame:{0U,1U,0xffffffffU}){setup();pG->Frame_cnt=frame;flt06.cur[3]=80;Filter06Render();assert(s_raindc_queued_frame==frame);GXSetDrawSync(0xAAAA);assert(sent==0&&s_raindc_pending==1);GXSetDrawSync(0xADEB);assert(sent==320);}
+for(int loss=0;loss<7;loss++){setup();flt06.cur[3]=80;Filter06Render();
+switch(loss){case 0:++pG->Frame_cnt;break;case 1:pG->room_id=0x10d;break;case 2:flt06.num--;break;case 3:flt06.cur[3]=0;break;case 4:Filter06RoomInit();assert(s_raindc_pending==0);break;case 5:{Vec zero{};Filter06SetParam(0,0,0,0,0,0,&zero,0,&zero,0,0);assert(s_raindc_pending==0);break;}case 6:setter();assert(s_raindc_pending==0);flt06.cur[3]=80;break;}
+GXSetDrawSync(0xADEB);assert(sent==0&&s_raindc_pending==0);pG->room_id=0x10c;pG->Frame_cnt=1;GXSetDrawSync(0xADEB);assert(sent==0);}
+// Destroy actual controller cancels; a replacement wrong-profile callback cancels prior ticket.
+setup();flt06.cur[3]=80;Filter06Render();EspgenWork owner;owner.storage.type=1;Espgen44_Destruct(&owner);assert(s_raindc_pending==0);GXSetDrawSync(0xADEB);assert(sent==0);
+setup();flt06.cur[3]=80;Filter06Render();flt06.rate=0;Filter06Render();assert(s_raindc_pending==0);
+// Stop freezes source and private pool motion while continuing native draw; no catchup when unpaused.
+setup();image();RainDcDrop before[320];std::memcpy(before,s_raindc,sizeof(before));n=sent;unsigned m=moved;float alpha=flt06.alphaF;u32 seed=s_raindc_seed;pG->Stop_flg=0x08000000;pG->Frame_cnt+=100;image();assert(sent==n+320&&moved==m&&flt06.alphaF==alpha&&seed==s_raindc_seed&&std::memcmp(before,s_raindc,sizeof(before))==0);pG->Stop_flg=0;++pG->Frame_cnt;image();assert(s_raindc_frame==pG->Frame_cnt);
+// A real night replacement callback does not lose its new untagged ticket.
+setup();flt06.cur[3]=80;Filter06Render();pG->room_id=0x11b;flt06.num=1600;flt06.col[3]=60;flt06.cur[3]=60;Filter06Render();GXSetDrawSync(0xADEB);assert(sent==320&&(s_raindc_out[0].head&0xffffff)==0xb4b4b4);
+std::puts("PASS r10c signature/dispatcher/alloc/fade/frame+room/rebind/destruct/stop/consume/reused-night");
+#else
+assert(sent==0&&s_raindc_pending==0);std::puts("PASS off leaves r10c unadmitted");
+#endif
+}

@@ -1,0 +1,1 @@
+94f55 pre-review controls passed their recorded scope but omitted live-provider state mutation during native return. Independent review reproduced count/current alpha/target alpha/Stop/indoor false joins. Source94f55 is HOLD for that contract gap; these records are preserved history, not final acceptance. No guest bug or provider reachability is claimed.
