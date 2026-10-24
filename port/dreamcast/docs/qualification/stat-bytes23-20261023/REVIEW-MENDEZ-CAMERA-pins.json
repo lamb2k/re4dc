@@ -1,0 +1,69 @@
+{
+  "source": "2a14662d4b025031cd93f64eed6a5d8159d473b7",
+  "test_only_control": "ec0cd7208c9c0e0b7e8cde84dec2c6f85d36c534",
+  "source_pins": [
+    {
+      "path": "src/game/player.cpp",
+      "sha256": "c77019dd247c611c8ef7c1ab92202b26b5d470c6d8d01a7e3f76e73cd0ede0da"
+    },
+    {
+      "path": "src/game/cam_qfps.cpp",
+      "sha256": "8b403318f10a8321a8af99c223a5a4b011a547e53b8e7c3ba77be5ac8f21dac5"
+    },
+    {
+      "path": "src/game/cam_ctrl.cpp",
+      "sha256": "521cd463401f672e672d32a59eb25089fc395c23dbbada75966a2093d129b8b1"
+    },
+    {
+      "path": "src/game/atari.cpp",
+      "sha256": "4de95c3dc3f203dc0b5622741d491bb1986433a900c71511aaefefa1afead316"
+    },
+    {
+      "path": "src/game/sce_at.cpp",
+      "sha256": "d7136020456aeeac72122daec47f4864889532075937a83c477ac098720c16ec"
+    },
+    {
+      "path": "src/st1/r11f.cpp",
+      "sha256": "c898c2fb18e3e252859705f0d3a6175bd1f2f6aa59570cd50dcbf16e7ed02e4d"
+    },
+    {
+      "path": "port/dreamcast/game/platform/pad.cpp",
+      "sha256": "141b79ad9311c469776f5446a5abcf5c545a5f04f122aa507314d63b4ae4e99c"
+    },
+    {
+      "path": "port/dreamcast/game/dbgwarp_bridge.cpp",
+      "sha256": "06dcb69d8108c438ab577f6787ab3b468d2d4fed6cbe2e7c07e30873650b95a7"
+    },
+    {
+      "path": "port/dreamcast/game/logic_trace.cpp",
+      "sha256": "3be992a562aa333ce576b5929394c50273c0cb01e9405e1ee84d1d70166418dc"
+    }
+  ],
+  "evidence_pins": [
+    {
+      "path": "camera-off-control.json",
+      "sha256": "162e7fa28aebd945ce2b4bca6ccf42c049be4382e47dd4bf9a9583a1579ecc0d"
+    },
+    {
+      "path": "camera-on-control.json",
+      "sha256": "7002c1cdddc133ef86ac8e44128e86d09273862e1be84262b5c552fc61346af1"
+    },
+    {
+      "path": "mendez-bounded-r3-comparison.json",
+      "sha256": "1a42a6905340181ef7f85d8277491d733ac6abda5e0a2dd60bd3a54742442d02"
+    },
+    {
+      "path": "mendez-bounded-r3-route-results.json",
+      "sha256": "b7c5bb9c3d186a200a2be4aaf2532e64fae870fe2fb0896dc6d95ad9617801d9"
+    },
+    {
+      "path": "mendez-bounded-on-r3\\fixture-pad.txt",
+      "sha256": "d5f6af787212d6f242adf1e881c37768f5bfdd7b52245a405e3cbbb94af8fb58"
+    },
+    {
+      "path": "mendez-bounded-on-r3\\fixture-warp.txt",
+      "sha256": "3a2744d800341d2d539596e63dc39a061c5da4e6cf5bbeb47bfa469cafe8e41e"
+    }
+  ],
+  "reviewer_guest_runs": 0
+}

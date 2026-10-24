@@ -1,3 +1,12 @@
+# Correction and qualified r3 result — 2026-10-23
+
+The initial proposal below is superseded and its failed fixture bytes remain preserved. I incorrectly treated the post-S11 ordinary A acknowledgements as removable idle inputs. S11 invokes the original False Eye pickup handler, which waits for item-message dismissal; omitting its A inputs blocked the later goto while the source event owned control. This was a fixture error, not a production defect.
+
+Root's corrected r3 adds ordinary source-clock A2050/2080/2110 with releases, then waits for actual goto=3 and waits15 source ticks before ordinary window A. The earlier normal damage, intro/QTE, full S02/S10/S11, pickup trigger and normal window/door machinery remain. Both actual runs reach room10f in45.3/45.2 seconds; root inspected the ordinary window jump and event-clear standing in both arms before the door placement. The final r3 bytes and receipts are under `C:/Flycast-Evidence/re4-dreamcast/stat-bytes23/takeover-2a14662d/mendez-bounded-{off,on}-r3/`, pinned in REVIEW-MENDEZ-CAMERA-pins.json.
+
+The full unmodified comparison remains MUST-DIFFER for19 required lq rows from2229. The single-line legacy moved-predicate control restores MUST-IDENTICAL against OFF across2,643 common ticks, isolating the intended camera effect. See REVIEW-MENDEZ-CAMERA.md for the source chain and recorder semantics; four fewer lq notes must not be described as four fewer query calls. No parser fields were waived. The historical unproved conditions below describe the initial proposal, not a claim that r3 remained unrun.
+
+## Historical initial proposal (superseded)
 # Bounded Mendez repro proposal — source review only, 2026-10-23
 
 Candidate is **UNQUALIFIED**. Root owns any run and acceptance. No runtime, canonical fixture, SDK, guest or game-state edits were made. Frozen source is `2a14662d4b025031cd93f64eed6a5d8159d473b7`; full source/input SHA pins and proposed fixtures are in `C:/Flycast-Evidence/re4-dreamcast/stat-bytes23-20261023/mendez-bounded-proposal/` (`pins.json`, `SHA256SUMS`). Use the existing final OFF/ON discs and a maximum 60-second capture, stopping only on actual `phase=enter room=10f`. Reaching that line alone is insufficient to prove the window jump, as explained below.
@@ -15,3 +24,4 @@ Unproved conditions and required acceptance:
 - The planned250-tick window-to-door interval is unqualified against actual FCV duration. The existing event guard should defer a door goto while a triggered window event is active; it does not establish that a jump ever started. Reject missing/cut jump evidence rather than declaring success from the later teleport.
 - Require first ordinary pickup/S11 trigger, both real damage/death forms, QTE success, all three full movies with natural terminal1, actual normal window passage, and actual source door transition. Reject movie skip/failure, dropped required pad entry, source errors, capture cap or absent room10f marker.
 - OFF and ON must use identical candidate bytes; compare decisions over the complete common source interval through exit, and establish each run reaches the required events. Do not inherit a full-segment PASS from the current truncated comparison. Root's separate H2/KOS/GDEMU acceptance is unaffected by this proposal.
+
