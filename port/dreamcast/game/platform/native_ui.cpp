@@ -448,7 +448,23 @@ struct Source { Re4dcUiImage image{}; Key key{}; };
 // An uncached source descriptor still resolves through its existing owner table.
 Entry entries[kTextureCount]; Source sources[kSourceCount]; unsigned nsource;
 #if RE4DC_GC_ASSET_GATE
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+extern "C" { extern unsigned re4dc_gca_disc_reads; extern unsigned long long re4dc_gca_disc_us; }
+struct GcaFpProf {
+    static unsigned n; static unsigned long long us,bytes,bind_us;
+    unsigned long long t0=timer_us_gettime64();
+    ~GcaFpProf(){
+        us+=timer_us_gettime64()-t0;
+        if(!(++n&7))re4dc_log("GC-ASSET-PROF fp=%u fp_us=%llu fp_bytes=%llu bind_us=%llu catalog_reads=%u catalog_us=%llu\n",
+            n,us,bytes,bind_us,re4dc_gca_disc_reads,re4dc_gca_disc_us);
+    }
+};
+unsigned GcaFpProf::n; unsigned long long GcaFpProf::us,GcaFpProf::bytes,GcaFpProf::bind_us;
+#endif
 bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,unsigned offset,unsigned bytes) {
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+    GcaFpProf prof;
+#endif
     entry.asset={};
     if(!re4dc_gcasset::ensure_disc_catalog())return false;
     file_t file;{Re4dcIoScope io;file=fs_open(path,O_RDONLY);}
@@ -466,7 +482,13 @@ bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,un
     re4dc_gcasset::Digest digest{};
     if(okay)okay=re4dc_gcasset::fingerprint_read(digest,reader,const_cast<file_t*>(&file),bytes);
     {Re4dcIoScope io;fs_close(file);}
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+    GcaFpProf::bytes+=bytes;const unsigned long long bind_t0=timer_us_gettime64();
+#endif
     if(okay){char id[24];snprintf(id,sizeof id,"%08x-%08x",key.crc,key.fnv);entry.asset=re4dc_gcasset::bind_checked("texture",id,digest);okay=entry.asset.value!=0;}
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+    GcaFpProf::bind_us+=timer_us_gettime64()-bind_t0;
+#endif
     return okay;
 }
 void gcasset_texture_emitted(Entry* entry,re4dc_gcasset::Consumer consumer=re4dc_gcasset::Texture) {

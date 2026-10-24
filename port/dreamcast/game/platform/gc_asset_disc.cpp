@@ -6,6 +6,10 @@
 #include <cstdio>
 #include <cstring>
 #include <atomic>
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+#include <arch/timer.h>
+extern "C" { unsigned re4dc_gca_disc_reads; unsigned long long re4dc_gca_disc_us; }
+#endif
 #ifndef RE4DC_GC_ASSET_CATALOG_SHA256
 #define RE4DC_GC_ASSET_CATALOG_SHA256 "0"
 #endif
@@ -21,7 +25,14 @@ struct DiscGuard {
     ~DiscGuard(){if(held)disc_lock.clear(std::memory_order_release);}
 };
 void disc_failed(){disc_state.store(Failed);retire_catalog();}
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+struct DiscProf{unsigned long long t0;DiscProf():t0(timer_us_gettime64()){}
+    ~DiscProf(){++re4dc_gca_disc_reads;re4dc_gca_disc_us+=timer_us_gettime64()-t0;}};
+#endif
 unsigned disc_read(void*,unsigned offset,void* destination,unsigned bytes){
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+    DiscProf prof;
+#endif
     DiscGuard guard;
     if(!guard.held){disc_failed();return 0;}
     const unsigned state=disc_state.load();
