@@ -238,3 +238,20 @@ not added. The release recipe and coordinator status table are unchanged.
    per rendered frame at the r101 cross and in a representative text/menu view?
 2. Does console A/B show a benefit from less repeated stack/packet traffic,
    especially in HUD-only frames where the message-camera saving is absent?
+
+### 2026-10-24: Build 10 hand-back (`codex/world-census24-20261024`)
+
+Candidate: `WORLD_CENSUS24=1`, default 0. Base `011d8dee`.
+The [report](BUILD10_WORLD_CENSUS24_20261024.md) defines the complete-tick
+and drawn-tick denominators, exclusive phase/wait partition, successful
+output counts, actual-flip timeline and invalid-window conditions. The
+recipe and coordinator status table are unchanged.
+
+1. Can the local cross and farm runs supply complete zero-error windows,
+   resolved flags/asset hashes, both denominators and raw phase/count totals?
+2. What is the matched console off/on diagnostic overhead? Scope/counter
+   traffic is measured in the public fixtures, but its cache and timer
+   perturbation must not be subtracted as a portable model constant.
+3. Do the local appearance, STRICT gameplay and retirement/transition gates
+   remain unchanged, with actual-flip cadence consistent with the serial
+   and QA census rows?

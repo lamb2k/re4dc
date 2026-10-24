@@ -55,6 +55,26 @@ f32 ORTHO_R;
 #include "os_vi.h"
 #include "rnd.h"
 #include "sscrn.h"
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+#include "world_census24.h"
+// Keep these calls on existing source lines: disabled builds retain __LINE__.
+#define WC24_BEGIN() re4dc::wc24::begin_tick(pG->Frame_cnt, unsigned(pG->room_id));
+#define WC24_END() re4dc::wc24::end_tick();
+#define WC24_RESET() re4dc::wc24::reset();
+#define WC24_WAIT() re4dc::wc24::WaitScope wc24_wait(re4dc::wc24::VblankWait);
+#if RE4DC_PACE_CATCHUP
+#define WC24_DECISION() re4dc::wc24::decision(!re4dc_pace_skipping);
+#else
+#define WC24_DECISION() re4dc::wc24::decision(true);
+#endif
+#else
+#define WC24_BEGIN()
+#define WC24_END()
+#define WC24_RESET()
+#define WC24_WAIT()
+#define WC24_DECISION()
+#endif
+#line 58
 
 extern "C" {
 void __main();
@@ -216,7 +236,7 @@ int main()
     int ret;
 
     systemStartInit();
-RESTART:
+RESTART: WC24_RESET()
     {
         systemRestartInit();
 #if RE4DC_VMU_CONTEXT && !defined(__PPC__)
@@ -254,7 +274,7 @@ RESTART:
             BitOff(pG->Debug_flg[3], 0x2000);
         }
         TaskExec(0, Title_task, 0);
-        for (;;) {
+        for (;;) { WC24_BEGIN()
 #if defined(RE4DC_LOGIC_TRACE) && RE4DC_LOGIC_TRACE
             // Determinism trace (LOGIC_TRACE=1 test builds only): the state left by the previous
             // iteration's complete logic + render pass, independent of how long rendering took.
@@ -265,7 +285,7 @@ RESTART:
             // Render_swap); the logic tick below runs in full either way.
             re4dc_pace_begin();
 #endif
-            OTHER_PHASE(4); // definitive bench_iter boundary: after pace_begin
+            OTHER_PHASE(4); WC24_DECISION() // definitive bench_iter boundary: after pace_begin
             StopwatchInit();
             ProcessTickInit();
             MWC("top");
@@ -361,14 +381,14 @@ RESTART:
 #if RE4DC_PACE_CATCHUP
             if (!re4dc_pace_skipping)
 #endif
-            { RE4DC_DOORSPIN(0); while (vsync_cnt < GetSystemVcnt() - 1) {} RE4DC_DOORSPIN(1); }
+            { WC24_WAIT() RE4DC_DOORSPIN(0); while (vsync_cnt < GetSystemVcnt() - 1) {} RE4DC_DOORSPIN(1); }
             Render_swap();
             PPCSync();
 #if RE4DC_PACE_CATCHUP
             // The anchor clock (29.97 ticks/s) replaces the per-iteration wait while pacing.
             if (!re4dc_pace_end())
 #endif
-            { RE4DC_DOORSPIN(0); while (vsync_cnt < GetSystemVcnt()) {} RE4DC_DOORSPIN(1); }
+            { WC24_WAIT() RE4DC_DOORSPIN(0); while (vsync_cnt < GetSystemVcnt()) {} RE4DC_DOORSPIN(1); }
             vsync_cnt = 0;
             systemVSyncPost();
             BitOff(pG->System_flg, 0x10000000);
@@ -377,7 +397,7 @@ RESTART:
             ProcessTickLog();  // GAME_TICK_LOG: per-subsystem timing line every N frames
 #endif
             MWC("end");
-            ret = systemResetCheck();
+            ret = systemResetCheck(); WC24_END()
             if (ret == 1) {
                 goto RESTART;
             }

@@ -1,0 +1,1489 @@
+{
+  "status": "PASS",
+  "scope": "Build 10: independent Make-derived OFF identity and enabled SH4 objects.\n\nUses the public R21 + Test22 + current rr recipe, its real generated headers,\nthe existing private-asset fallbacks, and the QA menu prerequisites. No stub\ntarget headers, game data, executable, emulator, or console result is involved.\nThe optional unpinned compiler mode is preliminary evidence only.\n",
+  "baseline": "011d8dee628e0105fba987df26b649a795d67d24",
+  "compiler": "sh-elf-g++ (GCC) 15.2.0",
+  "compiler_sha256": "af53b5afb84afbf41a898d92d802aa0bb75bbe1094a7049427b16530fc0392fb",
+  "pinned_compiler": true,
+  "kos_revision": "804b3195ebd1a06a27cc2b3a5eacf7a2429040a3",
+  "sdk_revision": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+  "off_identity_comparisons": 64,
+  "source_sha256": {
+    "src/game/main.cpp": "2c7d24c986d4cb28c3e96c47e1e34ccaaa05f19e190a43b8e9cb2748bbf8f419",
+    "port/dreamcast/game/pace.cpp": "740e96d0edf26c7b8478e9a8ce0b1395dceeeab6b0918f2da2ad67e38b387764",
+    "port/dreamcast/game/pace_present.cpp": "d334cf33aab0c218e37964201fbab0e621d6cc0d2b27ed71967eb8b0c29d96b3",
+    "port/dreamcast/game/qa_menu.cpp": "f6389c3e45f6cdd801094d2c83577110e094ebe3acc147a9781db69cda8655d7",
+    "port/dreamcast/game/platform/native_static.cpp": "d15f4d6b3fdb84896bb6ba3d102822b33baab1832ef2c507150471da2ff115e0",
+    "port/dreamcast/game/platform/native_ps2_world.cpp": "a6d2cfc6bbfa7158168498ddafbecf88321769cdd88c88d3d4651ddc07c69e04",
+    "port/dreamcast/game/platform/native_ui.cpp": "1cb3429a6d40885d3634f78a584fc3979d6b55894154ba2d0af0107496f0d952",
+    "port/dreamcast/room/gpu_lifecycle.cpp": "f332753b01cee41dc0d6d7dbde1a1034b331e6b631dbae7645c78dfd1c2c71cd",
+    "port/dreamcast/game/world_census24.cpp": "787180a820f25d4b1ade7d8bcfbe801e001e3824ea69d436e493a537c8c01a86",
+    "port/dreamcast/game/platform/include/world_census24.h": "8ac6a608ffe4a4d1685a87dac666de40d211590420932ff075130595b3aa8c0d",
+    "port/dreamcast/game/Makefile": "e85445e12eb51fa3c1aaef07ca45b46d5b0b0e08d6d634bb864ffef01ecc5623",
+    "port/dreamcast/game/platform/far_shell.inc": "821896a4db5fa4c11c1c26c91a2157a82aec87ed2a591a7c25bcd1270dc5cfff",
+    "port/dreamcast/game/actor_ganado_ps2_stump.mk": "4e405949406531d8435bf7a292d9da8ccf1d3ea0d259c6f463e9e029827ffbf2",
+    "port/dreamcast/game/actorplan.mk": "d256e5c6abbcbc2301a83753017c6d0f466b215f301d847f26c7ff5aaa4ff4ce",
+    "port/dreamcast/game/backface.mk": "e579718e2109acb6f5cc04001e38323dbf6c5eee893f843e12c810b6ab3f312f",
+    "port/dreamcast/game/bench.mk": "7c6eca2f116b6fabe4799d33e79a44ac52e775462658124d6833fbd7eba3854d",
+    "port/dreamcast/game/blender30.mk": "9769d1141e1ca47e10ff94fa67f7a7799ec33c3fade565ada37b641e9186537d",
+    "port/dreamcast/game/bodysvc20.mk": "df456c8a62b5e3d58bc4b6f3c11ead1365d3f0ed75a53a0dc0ad2a8460135453",
+    "port/dreamcast/game/cache20.mk": "b88f46b5b4494d5a830d2c01e850fd75e64af66a063025e5568b2ce29100381c",
+    "port/dreamcast/game/charbake.mk": "b6e58694cab718df70b31915ada82417fc32b0ab7517ff6e85eedb5b6570d2d3",
+    "port/dreamcast/game/chardraw19.mk": "0a9db853a9432df007421d5a6e7ca8c90c2aa770fa46a30ed72a321f2f87403f",
+    "port/dreamcast/game/crowd.mk": "3b41a6951044114518ec24ad74da2d91cf8c333ae2a7e1c0d2d2f4c553875fca",
+    "port/dreamcast/game/dbgwarp.mk": "e0530c3591858f3c2ee5227e06571f0375f50831df1b80bf8b08a475062e83f0",
+    "port/dreamcast/game/demo_candidate.mk": "548266bfcb134492aed006771600fda3c2b3d5b046596a1fc2f7d074520912d4",
+    "port/dreamcast/game/effects30.mk": "e004cd9a8f4d25dd8e080bca8445f362ddaf1d41f96cb3b01a7e1b8ee7b9bcbd",
+    "port/dreamcast/game/engine_preview.mk": "6ad87f53c5f2c4f164b9c8229cdc077a895111057b4a17c6294e9eac38454e18",
+    "port/dreamcast/game/esppool.mk": "fbe98591f1beeadfc4192dbf88d7d6dc321dc7642b88696afec4de6eb7a6b13d",
+    "port/dreamcast/game/frontend30.mk": "c6ac0510ca94d30dbb41a36afd5e45e84555c49511f7003dde1f4c6511064614",
+    "port/dreamcast/game/fxtrim.mk": "40e2d18ee46a8284a1fb5773c46c60d73e970bc851c2be494e4f503616abb0d4",
+    "port/dreamcast/game/g1parts.mk": "f5ffeb4594647e7c239fac40a038f77ff43ebe2c4ed4f503af1436058c5c3a50",
+    "port/dreamcast/game/game30.mk": "37b84106d0aaef010823cd7ef01e468e3a2388c1535f60417b6ca4b5661d2553",
+    "port/dreamcast/game/hwfog.mk": "95d43fd37359ebd11e8d8f11efe678d479b69b3f648440440c24c595adefae25",
+    "port/dreamcast/game/knobs.mk": "8be88086cfa0e7f23b87ae1cdb4d09c0924ea783cea45009747b722383d59863",
+    "port/dreamcast/game/kos_cache_p2.mk": "0ca0b63cbfc3fe0e15a67752d86413088a867a630418782dded42539fbe9d3ae",
+    "port/dreamcast/game/logiclod20.mk": "d90740b778194734e335421da72b3593849e9d75f372c155a2cc56e40b0bd969",
+    "port/dreamcast/game/mcheck.mk": "988282bed93d335a6a1dae07cd74c8c85abf71f47e49847fd68ee28dc2bd94ba",
+    "port/dreamcast/game/mendezfx.mk": "b0c6641416b8d8672fc5f2a7319c7ed208af4ed9a83276499a24e31280ccd3dd",
+    "port/dreamcast/game/native_model_registry.mk": "bb8f9338a6a29674c248d9103f0a73e19118ff1f95548e91599abf27b2583f46",
+    "port/dreamcast/game/pace.mk": "78fef47bf1ec90662be905d449bb4ef139105e4d74c4fac6848f51ce3bf43710",
+    "port/dreamcast/game/post30.mk": "c9e7a3ff79f1a8d59a1adabbead4a269eda26a467185597bf96f3ab1542ac8d5",
+    "port/dreamcast/game/ps2leon.mk": "afacaa37db731ab421916f9a84b1fddd71bb036c7a5ef9a7a0e536d652fdd916",
+    "port/dreamcast/game/pvr_rtt.mk": "4b34e026faf4835b7339ee9eac9dd3ddcc8020153885f0acb1ed32bee175c2c3",
+    "port/dreamcast/game/qamenu.mk": "9f4f57e42c0e3f2fb21df320e4badb9295b375cf856a5d44410203a11b607558",
+    "port/dreamcast/game/quickweapon.mk": "6329640761dbc5802c32fd4272d90347b64807a0995c888098d7237ecd27abf0",
+    "port/dreamcast/game/records30.mk": "132df68c9fdd14efb107fcf921183b7519e430d82c6b87bc026108f50eba515c",
+    "port/dreamcast/game/rigid20.mk": "3608f11dd5572b98692db3839a8c92189cc09009eb11350a311949d644e07b63",
+    "port/dreamcast/game/safecuts.mk": "da6ba39b803e76b1f97e34688ae05bbc7baff5f5f47a9f0ff2efdbdea7d80afe",
+    "port/dreamcast/game/scenery19.mk": "c925576664844606a0021252065524f7cc81120058c814d121db77ad259efb19",
+    "port/dreamcast/game/scenery30.mk": "46acf4cb67022b9d4f820bf887075143e951b1895e3e1cb95e9e2335105411ec",
+    "port/dreamcast/game/shotfx20.mk": "dc5be227dcf55f1a28eeb68dfb58589cc929bc04fdb2e473a7efb8ac62e946a6",
+    "port/dreamcast/game/subscreen.mk": "326f2a516ee9b52dbc43ad32b3b2ec93a597265e4184811a52c6919643f2c95c",
+    "port/dreamcast/game/t2exact.mk": "1e0e369e489ff81f3dc4f7cbd1839e89f6313fe6c5e097a891198a62d2a4c175",
+    "port/dreamcast/game/tahash.mk": "c32223ced5323b52388ed5b282e223495a9dc89f927bfcc947d6f0423a00f184",
+    "port/dreamcast/game/vmu_context.mk": "c2f3714f6f86f7c96d7c8697498e7679bf5b1ae33820cba059a610772a0502e4",
+    "port/dreamcast/game/vmusave.mk": "c99a41216906a2b9d3c1c55be2a826cf0fba4eecb0d71d3b0c50c14ed885e5eb",
+    "port/dreamcast/game/world_census24.mk": "9013e9977a24a2beaab45c3eaddd22d5de36cc8b25aa43adc85cc45602b35b52",
+    "port/dreamcast/game/worldhole.mk": "fc39dd79c316360601ad59b1805662864fdd9a5c9a42542193513fc167fc3f2c",
+    "port/dreamcast/game/worldscratch.mk": "7a71efa755f0c1984df3eef28ff07122459b90ca86bf596872f7b8b5b013f057",
+    "port/dreamcast/game/platform/include/scenery_chunk_select.inc": "23726b3ce4fa1bd2e87c0fb8260b89b85d097d87ea9b95c6682ecb6147d95a46",
+    "port/dreamcast/game/platform/include/scenery_part_far.inc": "81099189e36cc324176605b1a0506a8bde2aa088ad498aa77e71101ff6d1303c",
+    "port/dreamcast/game/platform/include/scenery_select_lean2.inc": "9ed1d874a9fdc846568ffcb919e17c9cbc29d18dee629211cfb282f4d6ad1a18",
+    "port/dreamcast/game/platform/include/native_source_world.inc": "07e1f2ed2e4e02fb6ca47372832eff2f42a531edac6e1c80bf8a0d859635c6dc",
+    "port/dreamcast/game/platform/include/native_source_world_r11f.inc": "4bb82548b56d10eed48f74de41d97e242cb1943ffa18654b94d7679669996c4f",
+    "port/dreamcast/game/platform/include/source_world_frame.inc": "abe2a711f66d0b95cf9ae0056db933433d2a6b4d508377517226ff3d61a931ec",
+    "port/dreamcast/game/platform/include/source_world_memory.inc": "29c0dfead79cd74ce078662486193f6669caa8ee5a9ea993042e2329e461aac5",
+    "port/dreamcast/game/platform/include/source_world_pools.inc": "9a83c6ea6cc5f374bd6a073e4d024c3091cc5ca784b0083a114e45b02b9d4504",
+    "port/dreamcast/game/platform/include/source_world_r11f.inc": "6d707bda06b3d5043be6ef5df52e09ed1bab4d605bf73761eb80270581fae97e",
+    "port/dreamcast/game/platform/include/source_world_r11f_scroll.inc": "d25277ad66ad23235ccab94d2c37241ccfcb33b6f1f6a8eb37b0d73177bd4af9",
+    "port/dreamcast/game/platform/include/source_world_retained.inc": "075abf997f1e545114b27e935c734377c39eeef1ad92042a959ee40e6d4ba982",
+    "port/dreamcast/game/platform/include/source_world_scroll.inc": "683c0f787a38819099d5217151f9c46db15abe3d5e3f96a7a6c5bcb469bd0887",
+    "port/dreamcast/tools/cloud/build10/build_controls.py": "07198dba8201bbef0a7c5a0beb49d292ff328e0924be86c6820d95ba83603b88"
+  },
+  "wrapper_checks": {
+    "production": {
+      "partial_link": true,
+      "one_definition_per_wrapper": true,
+      "sha256": "5d2e01c2ee5591adb41988b72a0e6dc1cb9efb9dc7cf1fbf260b1b8c76fa66fc",
+      "bytes": 681464
+    },
+    "standalone_observer": {
+      "partial_link": true,
+      "one_definition_per_wrapper": true,
+      "sha256": "04851f150661b70ce4410184d83028492e2fefde60fb1f562de3745858e1e54f",
+      "bytes": 679404
+    }
+  },
+  "integer_core": {
+    "production": {
+      "assembly_sha256": "12c0087c33c198f715f7e553c9be143f6bfbc9f8bd7efa59f109811e96e94cf3",
+      "floating_instructions": 0,
+      "scope": "All compiler-emitted core instructions; external KOS/libc callees are not part of this proof"
+    },
+    "standalone_observer": {
+      "assembly_sha256": "961ac4f02b5c4d2331c1e1b477a3f14d5c6a0ede67f7adf7be9a44366a23f0ab",
+      "floating_instructions": 0,
+      "scope": "All compiler-emitted core instructions; external KOS/libc callees are not part of this proof"
+    }
+  },
+  "limits": [
+    "Independent translation units and relocatable integration only; no game executable linked",
+    "PVR declaration overlay applied; KOS library patches and runtime behavior not validated here",
+    "No private assets, emulator timing, physical-console timings, or gameplay claim"
+  ],
+  "full_target_receipt_sha256": "f0d8b7b6e40cdcce93aab4d618d74673207a2d31b2e15823ea5020db2b8280f8",
+  "reproduce_target": [
+    "python3",
+    "port/dreamcast/tools/cloud/build10/build_controls.py",
+    "--output",
+    "NEW_OUTPUT_DIRECTORY",
+    "--sh4-cxx",
+    "PINNED_PREFIX/bin/sh-elf-g++",
+    "--kos-root",
+    "PRISTINE_PINNED_KOS",
+    "--sdk-root",
+    "PINNED_SH4ZAM"
+  ],
+  "objects": {
+    "production": {
+      "main": {
+        "baseline.ii": {
+          "sha256": "dd8ce15c352386c094ea0e58292e80073cfa15315c6d7101a0b309425ff8479a",
+          "bytes": 193013
+        },
+        "baseline.o": {
+          "sha256": "c25902427b2bad0a347f936205cee530595f81a7f61e6c14a4f56e2dcc4579c1",
+          "bytes": 18704,
+          "executable_bytes": 3944,
+          "allocated_bytes": 41462,
+          "zero_fill_bytes": 37235,
+          "max_gcc_local_stack_bytes": 36
+        },
+        "absent.ii": {
+          "sha256": "dd8ce15c352386c094ea0e58292e80073cfa15315c6d7101a0b309425ff8479a",
+          "bytes": 193013
+        },
+        "absent.o": {
+          "sha256": "c25902427b2bad0a347f936205cee530595f81a7f61e6c14a4f56e2dcc4579c1",
+          "bytes": 18704,
+          "executable_bytes": 3944,
+          "allocated_bytes": 41462,
+          "zero_fill_bytes": 37235,
+          "max_gcc_local_stack_bytes": 36
+        },
+        "zero.ii": {
+          "sha256": "dd8ce15c352386c094ea0e58292e80073cfa15315c6d7101a0b309425ff8479a",
+          "bytes": 193013
+        },
+        "zero.o": {
+          "sha256": "c25902427b2bad0a347f936205cee530595f81a7f61e6c14a4f56e2dcc4579c1",
+          "bytes": 18704,
+          "executable_bytes": 3944,
+          "allocated_bytes": 41462,
+          "zero_fill_bytes": 37235,
+          "max_gcc_local_stack_bytes": 36
+        },
+        "on.ii": {
+          "sha256": "e1f187fd168b119fa6ee719331fbc9652b5fa70fc4a6d82c64ddc6ada2371fcc",
+          "bytes": 197577
+        },
+        "on.o": {
+          "sha256": "8dc34e642c62a52d5e4e6023178d0b5ad0b31d168958d147d06bf81186170887",
+          "bytes": 19108,
+          "executable_bytes": 4032,
+          "allocated_bytes": 41550,
+          "zero_fill_bytes": 37235,
+          "max_gcc_local_stack_bytes": 36
+        }
+      },
+      "pace": {
+        "baseline.ii": {
+          "sha256": "24a8397ff6af6a467520275ddd50c8a3f44f5691c5a66fd89cbcdfbd1605fdea",
+          "bytes": 92194
+        },
+        "baseline.o": {
+          "sha256": "4a6d80b4aa00117ec50aa59a7ec7b29b06fe7af7028297d287481233fde4c243",
+          "bytes": 21676,
+          "executable_bytes": 5140,
+          "allocated_bytes": 6156,
+          "zero_fill_bytes": 471,
+          "max_gcc_local_stack_bytes": 296
+        },
+        "absent.ii": {
+          "sha256": "24a8397ff6af6a467520275ddd50c8a3f44f5691c5a66fd89cbcdfbd1605fdea",
+          "bytes": 92194
+        },
+        "absent.o": {
+          "sha256": "4a6d80b4aa00117ec50aa59a7ec7b29b06fe7af7028297d287481233fde4c243",
+          "bytes": 21676,
+          "executable_bytes": 5140,
+          "allocated_bytes": 6156,
+          "zero_fill_bytes": 471,
+          "max_gcc_local_stack_bytes": 296
+        },
+        "zero.ii": {
+          "sha256": "24a8397ff6af6a467520275ddd50c8a3f44f5691c5a66fd89cbcdfbd1605fdea",
+          "bytes": 92194
+        },
+        "zero.o": {
+          "sha256": "4a6d80b4aa00117ec50aa59a7ec7b29b06fe7af7028297d287481233fde4c243",
+          "bytes": 21676,
+          "executable_bytes": 5140,
+          "allocated_bytes": 6156,
+          "zero_fill_bytes": 471,
+          "max_gcc_local_stack_bytes": 296
+        },
+        "on.ii": {
+          "sha256": "f29f6db9a0ec8d8333e1f0e53f34353b61da3449359e3e522fc64b2a4728e0f3",
+          "bytes": 94652
+        },
+        "on.o": {
+          "sha256": "bcb0aaffcbe68cf154e1e58e96f0d07c9742ac58ea87006ea5347eefd86ae334",
+          "bytes": 21860,
+          "executable_bytes": 5172,
+          "allocated_bytes": 6188,
+          "zero_fill_bytes": 471,
+          "max_gcc_local_stack_bytes": 296
+        }
+      },
+      "pace_present": {
+        "baseline.ii": {
+          "sha256": "73947b26a7bbba4001a7c207c193a3512c3a4419b942e66bb042059afaeb2d5f",
+          "bytes": 720121
+        },
+        "baseline.o": {
+          "sha256": "cdc1a4f0c3d1006fe3004976979a6fdef3992b6380ae1de81db6f5f1e77ed4b4",
+          "bytes": 9572,
+          "executable_bytes": 1992,
+          "allocated_bytes": 2435,
+          "zero_fill_bytes": 268,
+          "max_gcc_local_stack_bytes": 140
+        },
+        "absent.ii": {
+          "sha256": "73947b26a7bbba4001a7c207c193a3512c3a4419b942e66bb042059afaeb2d5f",
+          "bytes": 720121
+        },
+        "absent.o": {
+          "sha256": "cdc1a4f0c3d1006fe3004976979a6fdef3992b6380ae1de81db6f5f1e77ed4b4",
+          "bytes": 9572,
+          "executable_bytes": 1992,
+          "allocated_bytes": 2435,
+          "zero_fill_bytes": 268,
+          "max_gcc_local_stack_bytes": 140
+        },
+        "zero.ii": {
+          "sha256": "73947b26a7bbba4001a7c207c193a3512c3a4419b942e66bb042059afaeb2d5f",
+          "bytes": 720121
+        },
+        "zero.o": {
+          "sha256": "cdc1a4f0c3d1006fe3004976979a6fdef3992b6380ae1de81db6f5f1e77ed4b4",
+          "bytes": 9572,
+          "executable_bytes": 1992,
+          "allocated_bytes": 2435,
+          "zero_fill_bytes": 268,
+          "max_gcc_local_stack_bytes": 140
+        },
+        "on.ii": {
+          "sha256": "7abf45844bda674101525fa2501a5c5d1d9dc13df4959177ad0c5c2280d565d3",
+          "bytes": 722570
+        },
+        "on.o": {
+          "sha256": "bb1955788cd2999ef336641b0d71fd10fa6ff384f30157be889cabc7f4841912",
+          "bytes": 9760,
+          "executable_bytes": 2036,
+          "allocated_bytes": 2479,
+          "zero_fill_bytes": 268,
+          "max_gcc_local_stack_bytes": 140
+        }
+      },
+      "qa_menu": {
+        "baseline.ii": {
+          "sha256": "d1704ccbdd49c275d0ae7748198e05322008b18d9009e8b49ed7cc2ba005905b",
+          "bytes": 736041
+        },
+        "baseline.o": {
+          "sha256": "79b634cb37ce75e663bd2e918acceea5ecd20c8266993a8eb48fa4e4bc779c6c",
+          "bytes": 24668,
+          "executable_bytes": 9306,
+          "allocated_bytes": 35306,
+          "zero_fill_bytes": 23836,
+          "max_gcc_local_stack_bytes": 2160
+        },
+        "absent.ii": {
+          "sha256": "d1704ccbdd49c275d0ae7748198e05322008b18d9009e8b49ed7cc2ba005905b",
+          "bytes": 736041
+        },
+        "absent.o": {
+          "sha256": "79b634cb37ce75e663bd2e918acceea5ecd20c8266993a8eb48fa4e4bc779c6c",
+          "bytes": 24668,
+          "executable_bytes": 9306,
+          "allocated_bytes": 35306,
+          "zero_fill_bytes": 23836,
+          "max_gcc_local_stack_bytes": 2160
+        },
+        "zero.ii": {
+          "sha256": "d1704ccbdd49c275d0ae7748198e05322008b18d9009e8b49ed7cc2ba005905b",
+          "bytes": 736041
+        },
+        "zero.o": {
+          "sha256": "79b634cb37ce75e663bd2e918acceea5ecd20c8266993a8eb48fa4e4bc779c6c",
+          "bytes": 24668,
+          "executable_bytes": 9306,
+          "allocated_bytes": 35306,
+          "zero_fill_bytes": 23836,
+          "max_gcc_local_stack_bytes": 2160
+        },
+        "on.ii": {
+          "sha256": "4bcd1d977490604bcc4476bdbbe433e3b3678b8e0f52fed53c58ca7a383bd1fc",
+          "bytes": 741752
+        },
+        "on.o": {
+          "sha256": "28669ff48ceae5ccf47e89c0d29a61823eaf4caca61b3bde1153b54af1caf86f",
+          "bytes": 27316,
+          "executable_bytes": 10490,
+          "allocated_bytes": 36867,
+          "zero_fill_bytes": 23900,
+          "max_gcc_local_stack_bytes": 2160
+        }
+      },
+      "native_static": {
+        "baseline.ii": {
+          "sha256": "e885ea51117c88a68f56a63c5e74b8f159021c2c0b955a9f23a24e9a0bea65be",
+          "bytes": 1053052
+        },
+        "baseline.o": {
+          "sha256": "b44d84e549726f874a44c999fba37b95101b76a7c54af73d68a88af06b6110ef",
+          "bytes": 177088,
+          "executable_bytes": 68084,
+          "allocated_bytes": 111675,
+          "zero_fill_bytes": 17216,
+          "max_gcc_local_stack_bytes": 8992
+        },
+        "absent.ii": {
+          "sha256": "e885ea51117c88a68f56a63c5e74b8f159021c2c0b955a9f23a24e9a0bea65be",
+          "bytes": 1053052
+        },
+        "absent.o": {
+          "sha256": "b44d84e549726f874a44c999fba37b95101b76a7c54af73d68a88af06b6110ef",
+          "bytes": 177088,
+          "executable_bytes": 68084,
+          "allocated_bytes": 111675,
+          "zero_fill_bytes": 17216,
+          "max_gcc_local_stack_bytes": 8992
+        },
+        "zero.ii": {
+          "sha256": "e885ea51117c88a68f56a63c5e74b8f159021c2c0b955a9f23a24e9a0bea65be",
+          "bytes": 1053052
+        },
+        "zero.o": {
+          "sha256": "b44d84e549726f874a44c999fba37b95101b76a7c54af73d68a88af06b6110ef",
+          "bytes": 177088,
+          "executable_bytes": 68084,
+          "allocated_bytes": 111675,
+          "zero_fill_bytes": 17216,
+          "max_gcc_local_stack_bytes": 8992
+        },
+        "on.ii": {
+          "sha256": "5035a4e12cf8b6bea8ee3d5d6d395e16f6e97995b05ab9275e31048d48ad2acb",
+          "bytes": 1060962
+        },
+        "on.o": {
+          "sha256": "60b1c3132fed5dcce4963af7082b8f1b6c6cdf503dd79e554f84b49a090bebfa",
+          "bytes": 180180,
+          "executable_bytes": 69672,
+          "allocated_bytes": 113267,
+          "zero_fill_bytes": 17220,
+          "max_gcc_local_stack_bytes": 8996
+        }
+      },
+      "native_ps2_world": {
+        "baseline.ii": {
+          "sha256": "291cf396c65bc444bd162cae8626ca9841f9a3590deff098b5bda00f87231390",
+          "bytes": 694320
+        },
+        "baseline.o": {
+          "sha256": "1cc7545033e21c67fd75d0cbaf0ca7a3e0d8da5ecd18304cad2a024e41c2bcf7",
+          "bytes": 9164,
+          "executable_bytes": 1800,
+          "allocated_bytes": 2423,
+          "zero_fill_bytes": 308,
+          "max_gcc_local_stack_bytes": 152
+        },
+        "absent.ii": {
+          "sha256": "291cf396c65bc444bd162cae8626ca9841f9a3590deff098b5bda00f87231390",
+          "bytes": 694320
+        },
+        "absent.o": {
+          "sha256": "1cc7545033e21c67fd75d0cbaf0ca7a3e0d8da5ecd18304cad2a024e41c2bcf7",
+          "bytes": 9164,
+          "executable_bytes": 1800,
+          "allocated_bytes": 2423,
+          "zero_fill_bytes": 308,
+          "max_gcc_local_stack_bytes": 152
+        },
+        "zero.ii": {
+          "sha256": "291cf396c65bc444bd162cae8626ca9841f9a3590deff098b5bda00f87231390",
+          "bytes": 694320
+        },
+        "zero.o": {
+          "sha256": "1cc7545033e21c67fd75d0cbaf0ca7a3e0d8da5ecd18304cad2a024e41c2bcf7",
+          "bytes": 9164,
+          "executable_bytes": 1800,
+          "allocated_bytes": 2423,
+          "zero_fill_bytes": 308,
+          "max_gcc_local_stack_bytes": 152
+        },
+        "on.ii": {
+          "sha256": "cf51294c8bd83e63e071ff730ad3a8587160b8efc40b363e0ec8d12b47ff6d34",
+          "bytes": 697483
+        },
+        "on.o": {
+          "sha256": "618925fb843f785bf52527895d85a2a48327813e003c9ff283f2349dc19c3d8d",
+          "bytes": 9620,
+          "executable_bytes": 1984,
+          "allocated_bytes": 2607,
+          "zero_fill_bytes": 308,
+          "max_gcc_local_stack_bytes": 152
+        }
+      },
+      "native_ui": {
+        "baseline.ii": {
+          "sha256": "133d29cfb93c0172f62493773bec874ffb4a21496d2aa6350b4139a0eba8df64",
+          "bytes": 1461517
+        },
+        "baseline.o": {
+          "sha256": "cc3e1868d0ae0f8d3b2be1c1696353cdc1d83ad6caeb580c9c7b6aac983c234c",
+          "bytes": 403972,
+          "executable_bytes": 78142,
+          "allocated_bytes": 387874,
+          "zero_fill_bytes": 152400,
+          "max_gcc_local_stack_bytes": 2948
+        },
+        "absent.ii": {
+          "sha256": "133d29cfb93c0172f62493773bec874ffb4a21496d2aa6350b4139a0eba8df64",
+          "bytes": 1461517
+        },
+        "absent.o": {
+          "sha256": "cc3e1868d0ae0f8d3b2be1c1696353cdc1d83ad6caeb580c9c7b6aac983c234c",
+          "bytes": 403972,
+          "executable_bytes": 78142,
+          "allocated_bytes": 387874,
+          "zero_fill_bytes": 152400,
+          "max_gcc_local_stack_bytes": 2948
+        },
+        "zero.ii": {
+          "sha256": "133d29cfb93c0172f62493773bec874ffb4a21496d2aa6350b4139a0eba8df64",
+          "bytes": 1461517
+        },
+        "zero.o": {
+          "sha256": "cc3e1868d0ae0f8d3b2be1c1696353cdc1d83ad6caeb580c9c7b6aac983c234c",
+          "bytes": 403972,
+          "executable_bytes": 78142,
+          "allocated_bytes": 387874,
+          "zero_fill_bytes": 152400,
+          "max_gcc_local_stack_bytes": 2948
+        },
+        "on.ii": {
+          "sha256": "0b723b744bd9be154200026f19d093d94ae17fe3733c73ab3ec43a601d42ce7b",
+          "bytes": 1465280
+        },
+        "on.o": {
+          "sha256": "abea0f94ecacb8e091927b0d550292abbf896fb735ae64b5bdf90f9e4a0fad55",
+          "bytes": 405356,
+          "executable_bytes": 78518,
+          "allocated_bytes": 388250,
+          "zero_fill_bytes": 152400,
+          "max_gcc_local_stack_bytes": 2948
+        }
+      },
+      "gpu_lifecycle": {
+        "baseline.ii": {
+          "sha256": "5ac31574884b48308126a35efb3ac5f31616add0024df385fe4936e2e43d6128",
+          "bytes": 64319
+        },
+        "baseline.o": {
+          "sha256": "14dc2b8a156087c8efc34dfe43f1d9910b2af65852601d4cc1c150a88b451734",
+          "bytes": 856,
+          "executable_bytes": 40,
+          "allocated_bytes": 40,
+          "zero_fill_bytes": 0,
+          "max_gcc_local_stack_bytes": 4
+        },
+        "absent.ii": {
+          "sha256": "5ac31574884b48308126a35efb3ac5f31616add0024df385fe4936e2e43d6128",
+          "bytes": 64319
+        },
+        "absent.o": {
+          "sha256": "14dc2b8a156087c8efc34dfe43f1d9910b2af65852601d4cc1c150a88b451734",
+          "bytes": 856,
+          "executable_bytes": 40,
+          "allocated_bytes": 40,
+          "zero_fill_bytes": 0,
+          "max_gcc_local_stack_bytes": 4
+        },
+        "zero.ii": {
+          "sha256": "5ac31574884b48308126a35efb3ac5f31616add0024df385fe4936e2e43d6128",
+          "bytes": 64319
+        },
+        "zero.o": {
+          "sha256": "14dc2b8a156087c8efc34dfe43f1d9910b2af65852601d4cc1c150a88b451734",
+          "bytes": 856,
+          "executable_bytes": 40,
+          "allocated_bytes": 40,
+          "zero_fill_bytes": 0,
+          "max_gcc_local_stack_bytes": 4
+        },
+        "on.ii": {
+          "sha256": "0399313a101166c37f75fa0eece2d27edc6c07c810c910cf3f887867c7931091",
+          "bytes": 66707
+        },
+        "on.o": {
+          "sha256": "d6a783fe6ef8d13d1c248d7e2082efb9a4b5f07be26793d1014b1e1aa394a07d",
+          "bytes": 1004,
+          "executable_bytes": 68,
+          "allocated_bytes": 68,
+          "zero_fill_bytes": 0,
+          "max_gcc_local_stack_bytes": 12
+        }
+      },
+      "census": {
+        "sha256": "0319c71684f166e19bee5f832ded209143c8ecd80bc7a5c2113181228806c447",
+        "bytes": 19424,
+        "executable_bytes": 5596,
+        "allocated_bytes": 9252,
+        "zero_fill_bytes": 2469,
+        "max_gcc_local_stack_bytes": 340
+      }
+    },
+    "standalone_observer": {
+      "main": {
+        "baseline.ii": {
+          "sha256": "dd8ce15c352386c094ea0e58292e80073cfa15315c6d7101a0b309425ff8479a",
+          "bytes": 193013
+        },
+        "baseline.o": {
+          "sha256": "c25902427b2bad0a347f936205cee530595f81a7f61e6c14a4f56e2dcc4579c1",
+          "bytes": 18704,
+          "executable_bytes": 3944,
+          "allocated_bytes": 41462,
+          "zero_fill_bytes": 37235,
+          "max_gcc_local_stack_bytes": 36
+        },
+        "absent.ii": {
+          "sha256": "dd8ce15c352386c094ea0e58292e80073cfa15315c6d7101a0b309425ff8479a",
+          "bytes": 193013
+        },
+        "absent.o": {
+          "sha256": "c25902427b2bad0a347f936205cee530595f81a7f61e6c14a4f56e2dcc4579c1",
+          "bytes": 18704,
+          "executable_bytes": 3944,
+          "allocated_bytes": 41462,
+          "zero_fill_bytes": 37235,
+          "max_gcc_local_stack_bytes": 36
+        },
+        "zero.ii": {
+          "sha256": "dd8ce15c352386c094ea0e58292e80073cfa15315c6d7101a0b309425ff8479a",
+          "bytes": 193013
+        },
+        "zero.o": {
+          "sha256": "c25902427b2bad0a347f936205cee530595f81a7f61e6c14a4f56e2dcc4579c1",
+          "bytes": 18704,
+          "executable_bytes": 3944,
+          "allocated_bytes": 41462,
+          "zero_fill_bytes": 37235,
+          "max_gcc_local_stack_bytes": 36
+        },
+        "on.ii": {
+          "sha256": "e1f187fd168b119fa6ee719331fbc9652b5fa70fc4a6d82c64ddc6ada2371fcc",
+          "bytes": 197577
+        },
+        "on.o": {
+          "sha256": "8dc34e642c62a52d5e4e6023178d0b5ad0b31d168958d147d06bf81186170887",
+          "bytes": 19108,
+          "executable_bytes": 4032,
+          "allocated_bytes": 41550,
+          "zero_fill_bytes": 37235,
+          "max_gcc_local_stack_bytes": 36
+        }
+      },
+      "pace": {
+        "baseline.ii": {
+          "sha256": "109fe74c95877918c48df2a147579486b011164530f7181d5cb7aacf279077e8",
+          "bytes": 89458
+        },
+        "baseline.o": {
+          "sha256": "0424890a1e5ea35821cd551282d5f5d82ed1eedfc2f714ba1863e0313465850c",
+          "bytes": 19364,
+          "executable_bytes": 4096,
+          "allocated_bytes": 4852,
+          "zero_fill_bytes": 395,
+          "max_gcc_local_stack_bytes": 164
+        },
+        "absent.ii": {
+          "sha256": "109fe74c95877918c48df2a147579486b011164530f7181d5cb7aacf279077e8",
+          "bytes": 89458
+        },
+        "absent.o": {
+          "sha256": "0424890a1e5ea35821cd551282d5f5d82ed1eedfc2f714ba1863e0313465850c",
+          "bytes": 19364,
+          "executable_bytes": 4096,
+          "allocated_bytes": 4852,
+          "zero_fill_bytes": 395,
+          "max_gcc_local_stack_bytes": 164
+        },
+        "zero.ii": {
+          "sha256": "109fe74c95877918c48df2a147579486b011164530f7181d5cb7aacf279077e8",
+          "bytes": 89458
+        },
+        "zero.o": {
+          "sha256": "0424890a1e5ea35821cd551282d5f5d82ed1eedfc2f714ba1863e0313465850c",
+          "bytes": 19364,
+          "executable_bytes": 4096,
+          "allocated_bytes": 4852,
+          "zero_fill_bytes": 395,
+          "max_gcc_local_stack_bytes": 164
+        },
+        "on.ii": {
+          "sha256": "2a7342790f7262eea70bde8f7e720c536b30d8cdcbb9db2db5bc5a58e9b2bc69",
+          "bytes": 91871
+        },
+        "on.o": {
+          "sha256": "880a16add4d984cdfece953efc365e8ac74810deb4861f0bc5f84a7a9c019631",
+          "bytes": 19492,
+          "executable_bytes": 4120,
+          "allocated_bytes": 4876,
+          "zero_fill_bytes": 395,
+          "max_gcc_local_stack_bytes": 164
+        }
+      },
+      "pace_present": {
+        "baseline.ii": {
+          "sha256": "73947b26a7bbba4001a7c207c193a3512c3a4419b942e66bb042059afaeb2d5f",
+          "bytes": 720121
+        },
+        "baseline.o": {
+          "sha256": "cdc1a4f0c3d1006fe3004976979a6fdef3992b6380ae1de81db6f5f1e77ed4b4",
+          "bytes": 9572,
+          "executable_bytes": 1992,
+          "allocated_bytes": 2435,
+          "zero_fill_bytes": 268,
+          "max_gcc_local_stack_bytes": 140
+        },
+        "absent.ii": {
+          "sha256": "73947b26a7bbba4001a7c207c193a3512c3a4419b942e66bb042059afaeb2d5f",
+          "bytes": 720121
+        },
+        "absent.o": {
+          "sha256": "cdc1a4f0c3d1006fe3004976979a6fdef3992b6380ae1de81db6f5f1e77ed4b4",
+          "bytes": 9572,
+          "executable_bytes": 1992,
+          "allocated_bytes": 2435,
+          "zero_fill_bytes": 268,
+          "max_gcc_local_stack_bytes": 140
+        },
+        "zero.ii": {
+          "sha256": "73947b26a7bbba4001a7c207c193a3512c3a4419b942e66bb042059afaeb2d5f",
+          "bytes": 720121
+        },
+        "zero.o": {
+          "sha256": "cdc1a4f0c3d1006fe3004976979a6fdef3992b6380ae1de81db6f5f1e77ed4b4",
+          "bytes": 9572,
+          "executable_bytes": 1992,
+          "allocated_bytes": 2435,
+          "zero_fill_bytes": 268,
+          "max_gcc_local_stack_bytes": 140
+        },
+        "on.ii": {
+          "sha256": "7abf45844bda674101525fa2501a5c5d1d9dc13df4959177ad0c5c2280d565d3",
+          "bytes": 722570
+        },
+        "on.o": {
+          "sha256": "bb1955788cd2999ef336641b0d71fd10fa6ff384f30157be889cabc7f4841912",
+          "bytes": 9760,
+          "executable_bytes": 2036,
+          "allocated_bytes": 2479,
+          "zero_fill_bytes": 268,
+          "max_gcc_local_stack_bytes": 140
+        }
+      },
+      "qa_menu": {
+        "baseline.ii": {
+          "sha256": "d1704ccbdd49c275d0ae7748198e05322008b18d9009e8b49ed7cc2ba005905b",
+          "bytes": 736041
+        },
+        "baseline.o": {
+          "sha256": "79b634cb37ce75e663bd2e918acceea5ecd20c8266993a8eb48fa4e4bc779c6c",
+          "bytes": 24668,
+          "executable_bytes": 9306,
+          "allocated_bytes": 35306,
+          "zero_fill_bytes": 23836,
+          "max_gcc_local_stack_bytes": 2160
+        },
+        "absent.ii": {
+          "sha256": "d1704ccbdd49c275d0ae7748198e05322008b18d9009e8b49ed7cc2ba005905b",
+          "bytes": 736041
+        },
+        "absent.o": {
+          "sha256": "79b634cb37ce75e663bd2e918acceea5ecd20c8266993a8eb48fa4e4bc779c6c",
+          "bytes": 24668,
+          "executable_bytes": 9306,
+          "allocated_bytes": 35306,
+          "zero_fill_bytes": 23836,
+          "max_gcc_local_stack_bytes": 2160
+        },
+        "zero.ii": {
+          "sha256": "d1704ccbdd49c275d0ae7748198e05322008b18d9009e8b49ed7cc2ba005905b",
+          "bytes": 736041
+        },
+        "zero.o": {
+          "sha256": "79b634cb37ce75e663bd2e918acceea5ecd20c8266993a8eb48fa4e4bc779c6c",
+          "bytes": 24668,
+          "executable_bytes": 9306,
+          "allocated_bytes": 35306,
+          "zero_fill_bytes": 23836,
+          "max_gcc_local_stack_bytes": 2160
+        },
+        "on.ii": {
+          "sha256": "4bcd1d977490604bcc4476bdbbe433e3b3678b8e0f52fed53c58ca7a383bd1fc",
+          "bytes": 741752
+        },
+        "on.o": {
+          "sha256": "28669ff48ceae5ccf47e89c0d29a61823eaf4caca61b3bde1153b54af1caf86f",
+          "bytes": 27316,
+          "executable_bytes": 10490,
+          "allocated_bytes": 36867,
+          "zero_fill_bytes": 23900,
+          "max_gcc_local_stack_bytes": 2160
+        }
+      },
+      "native_static": {
+        "baseline.ii": {
+          "sha256": "e885ea51117c88a68f56a63c5e74b8f159021c2c0b955a9f23a24e9a0bea65be",
+          "bytes": 1053052
+        },
+        "baseline.o": {
+          "sha256": "b44d84e549726f874a44c999fba37b95101b76a7c54af73d68a88af06b6110ef",
+          "bytes": 177088,
+          "executable_bytes": 68084,
+          "allocated_bytes": 111675,
+          "zero_fill_bytes": 17216,
+          "max_gcc_local_stack_bytes": 8992
+        },
+        "absent.ii": {
+          "sha256": "e885ea51117c88a68f56a63c5e74b8f159021c2c0b955a9f23a24e9a0bea65be",
+          "bytes": 1053052
+        },
+        "absent.o": {
+          "sha256": "b44d84e549726f874a44c999fba37b95101b76a7c54af73d68a88af06b6110ef",
+          "bytes": 177088,
+          "executable_bytes": 68084,
+          "allocated_bytes": 111675,
+          "zero_fill_bytes": 17216,
+          "max_gcc_local_stack_bytes": 8992
+        },
+        "zero.ii": {
+          "sha256": "e885ea51117c88a68f56a63c5e74b8f159021c2c0b955a9f23a24e9a0bea65be",
+          "bytes": 1053052
+        },
+        "zero.o": {
+          "sha256": "b44d84e549726f874a44c999fba37b95101b76a7c54af73d68a88af06b6110ef",
+          "bytes": 177088,
+          "executable_bytes": 68084,
+          "allocated_bytes": 111675,
+          "zero_fill_bytes": 17216,
+          "max_gcc_local_stack_bytes": 8992
+        },
+        "on.ii": {
+          "sha256": "5035a4e12cf8b6bea8ee3d5d6d395e16f6e97995b05ab9275e31048d48ad2acb",
+          "bytes": 1060962
+        },
+        "on.o": {
+          "sha256": "60b1c3132fed5dcce4963af7082b8f1b6c6cdf503dd79e554f84b49a090bebfa",
+          "bytes": 180180,
+          "executable_bytes": 69672,
+          "allocated_bytes": 113267,
+          "zero_fill_bytes": 17220,
+          "max_gcc_local_stack_bytes": 8996
+        }
+      },
+      "native_ps2_world": {
+        "baseline.ii": {
+          "sha256": "291cf396c65bc444bd162cae8626ca9841f9a3590deff098b5bda00f87231390",
+          "bytes": 694320
+        },
+        "baseline.o": {
+          "sha256": "1cc7545033e21c67fd75d0cbaf0ca7a3e0d8da5ecd18304cad2a024e41c2bcf7",
+          "bytes": 9164,
+          "executable_bytes": 1800,
+          "allocated_bytes": 2423,
+          "zero_fill_bytes": 308,
+          "max_gcc_local_stack_bytes": 152
+        },
+        "absent.ii": {
+          "sha256": "291cf396c65bc444bd162cae8626ca9841f9a3590deff098b5bda00f87231390",
+          "bytes": 694320
+        },
+        "absent.o": {
+          "sha256": "1cc7545033e21c67fd75d0cbaf0ca7a3e0d8da5ecd18304cad2a024e41c2bcf7",
+          "bytes": 9164,
+          "executable_bytes": 1800,
+          "allocated_bytes": 2423,
+          "zero_fill_bytes": 308,
+          "max_gcc_local_stack_bytes": 152
+        },
+        "zero.ii": {
+          "sha256": "291cf396c65bc444bd162cae8626ca9841f9a3590deff098b5bda00f87231390",
+          "bytes": 694320
+        },
+        "zero.o": {
+          "sha256": "1cc7545033e21c67fd75d0cbaf0ca7a3e0d8da5ecd18304cad2a024e41c2bcf7",
+          "bytes": 9164,
+          "executable_bytes": 1800,
+          "allocated_bytes": 2423,
+          "zero_fill_bytes": 308,
+          "max_gcc_local_stack_bytes": 152
+        },
+        "on.ii": {
+          "sha256": "cf51294c8bd83e63e071ff730ad3a8587160b8efc40b363e0ec8d12b47ff6d34",
+          "bytes": 697483
+        },
+        "on.o": {
+          "sha256": "618925fb843f785bf52527895d85a2a48327813e003c9ff283f2349dc19c3d8d",
+          "bytes": 9620,
+          "executable_bytes": 1984,
+          "allocated_bytes": 2607,
+          "zero_fill_bytes": 308,
+          "max_gcc_local_stack_bytes": 152
+        }
+      },
+      "native_ui": {
+        "baseline.ii": {
+          "sha256": "133d29cfb93c0172f62493773bec874ffb4a21496d2aa6350b4139a0eba8df64",
+          "bytes": 1461517
+        },
+        "baseline.o": {
+          "sha256": "cc3e1868d0ae0f8d3b2be1c1696353cdc1d83ad6caeb580c9c7b6aac983c234c",
+          "bytes": 403972,
+          "executable_bytes": 78142,
+          "allocated_bytes": 387874,
+          "zero_fill_bytes": 152400,
+          "max_gcc_local_stack_bytes": 2948
+        },
+        "absent.ii": {
+          "sha256": "133d29cfb93c0172f62493773bec874ffb4a21496d2aa6350b4139a0eba8df64",
+          "bytes": 1461517
+        },
+        "absent.o": {
+          "sha256": "cc3e1868d0ae0f8d3b2be1c1696353cdc1d83ad6caeb580c9c7b6aac983c234c",
+          "bytes": 403972,
+          "executable_bytes": 78142,
+          "allocated_bytes": 387874,
+          "zero_fill_bytes": 152400,
+          "max_gcc_local_stack_bytes": 2948
+        },
+        "zero.ii": {
+          "sha256": "133d29cfb93c0172f62493773bec874ffb4a21496d2aa6350b4139a0eba8df64",
+          "bytes": 1461517
+        },
+        "zero.o": {
+          "sha256": "cc3e1868d0ae0f8d3b2be1c1696353cdc1d83ad6caeb580c9c7b6aac983c234c",
+          "bytes": 403972,
+          "executable_bytes": 78142,
+          "allocated_bytes": 387874,
+          "zero_fill_bytes": 152400,
+          "max_gcc_local_stack_bytes": 2948
+        },
+        "on.ii": {
+          "sha256": "0b723b744bd9be154200026f19d093d94ae17fe3733c73ab3ec43a601d42ce7b",
+          "bytes": 1465280
+        },
+        "on.o": {
+          "sha256": "abea0f94ecacb8e091927b0d550292abbf896fb735ae64b5bdf90f9e4a0fad55",
+          "bytes": 405356,
+          "executable_bytes": 78518,
+          "allocated_bytes": 388250,
+          "zero_fill_bytes": 152400,
+          "max_gcc_local_stack_bytes": 2948
+        }
+      },
+      "gpu_lifecycle": {
+        "baseline.ii": {
+          "sha256": "5ac31574884b48308126a35efb3ac5f31616add0024df385fe4936e2e43d6128",
+          "bytes": 64319
+        },
+        "baseline.o": {
+          "sha256": "14dc2b8a156087c8efc34dfe43f1d9910b2af65852601d4cc1c150a88b451734",
+          "bytes": 856,
+          "executable_bytes": 40,
+          "allocated_bytes": 40,
+          "zero_fill_bytes": 0,
+          "max_gcc_local_stack_bytes": 4
+        },
+        "absent.ii": {
+          "sha256": "5ac31574884b48308126a35efb3ac5f31616add0024df385fe4936e2e43d6128",
+          "bytes": 64319
+        },
+        "absent.o": {
+          "sha256": "14dc2b8a156087c8efc34dfe43f1d9910b2af65852601d4cc1c150a88b451734",
+          "bytes": 856,
+          "executable_bytes": 40,
+          "allocated_bytes": 40,
+          "zero_fill_bytes": 0,
+          "max_gcc_local_stack_bytes": 4
+        },
+        "zero.ii": {
+          "sha256": "5ac31574884b48308126a35efb3ac5f31616add0024df385fe4936e2e43d6128",
+          "bytes": 64319
+        },
+        "zero.o": {
+          "sha256": "14dc2b8a156087c8efc34dfe43f1d9910b2af65852601d4cc1c150a88b451734",
+          "bytes": 856,
+          "executable_bytes": 40,
+          "allocated_bytes": 40,
+          "zero_fill_bytes": 0,
+          "max_gcc_local_stack_bytes": 4
+        },
+        "on.ii": {
+          "sha256": "0399313a101166c37f75fa0eece2d27edc6c07c810c910cf3f887867c7931091",
+          "bytes": 66707
+        },
+        "on.o": {
+          "sha256": "d6a783fe6ef8d13d1c248d7e2082efb9a4b5f07be26793d1014b1e1aa394a07d",
+          "bytes": 1004,
+          "executable_bytes": 68,
+          "allocated_bytes": 68,
+          "zero_fill_bytes": 0,
+          "max_gcc_local_stack_bytes": 12
+        }
+      },
+      "census": {
+        "sha256": "59b7bc899d06b9f0041da9944e0173a9d1ed5294b7dcfe02636432d9ab204693",
+        "bytes": 19684,
+        "executable_bytes": 5628,
+        "allocated_bytes": 9284,
+        "zero_fill_bytes": 2469,
+        "max_gcc_local_stack_bytes": 340
+      }
+    }
+  },
+  "rejected_configurations": [
+    "WORLD_CENSUS24=2",
+    "QA_MENU=0",
+    "PS2_WORLD_MESH=0",
+    "PVR_STREAM=0",
+    "MESH_DIRECT=0",
+    "TA_DIRECT=0",
+    "MESH_VP_SCHED=2",
+    "MESH_STRIP_LEAN=2",
+    "MESH_CLIP_ACCEPT=2",
+    "PS2_INTERIOR_CULL=2",
+    "SG_SELECT_LEAN=2",
+    "SCENERY_DEDUP_CHECK=1",
+    "WORLD_CENSUS24_WINDOW=299",
+    "WORLD_CENSUS24_WINDOW=601"
+  ],
+  "make_flags_and_generated_headers_identical_off": true,
+  "controls": {
+    "geometry_final": {
+      "status": "PASS",
+      "scope": "Build 10 observation controls over Build 5's 78 actual-emitter cases.\n\nReuse the existing validated synthetic packages and controlled texture/TA/SQ\nsink. Extract the current production emitter, gather, clipping, replay and\nsubmission bodies; compare every TA/accounting word and SQ ownership trace\nwith WORLD_CENSUS24=0/1. The enabled arm links the real world_census24.cpp,\nwith host clock/thread/log adapters and an active world/tick scope. Packet\ntypes in the independent sink validate the header/corner census totals.\n\nThe original fixture controls picks rather than running world selection. It\ndoes not execute far_shell, SH4 FTRV/FSRRA, or a complete game frame. Host\nclock increments exercise accounting only; they are not timing evidence.\n",
+      "comparisons": 78,
+      "sanitized": false,
+      "source_sha256": {
+        "port/dreamcast/game/platform/native_static.cpp": "d15f4d6b3fdb84896bb6ba3d102822b33baab1832ef2c507150471da2ff115e0",
+        "port/dreamcast/game/platform/native_ui.cpp": "1cb3429a6d40885d3634f78a584fc3979d6b55894154ba2d0af0107496f0d952",
+        "port/dreamcast/game/world_census24.cpp": "787180a820f25d4b1ade7d8bcfbe801e001e3824ea69d436e493a537c8c01a86",
+        "port/dreamcast/game/platform/include/world_census24.h": "8ac6a608ffe4a4d1685a87dac666de40d211590420932ff075130595b3aa8c0d",
+        "port/dreamcast/tools/cloud/build10/check_geometry.py": "74c172831a22e96735ddad0b28039e8c1e4e072ef37f846be97f8869e93f1ad8",
+        "port/dreamcast/tools/cloud/build10/fixture_census.cpp.in": "751d8d2aa53f2040e1a620701880e67b99ecaee479cd4c32bc59296add734152",
+        "port/dreamcast/tools/cloud/build5/check_geometry.py": "5601b447da238ad18e3b43a14574a995e63cee012a0c349e846a9b3efd920e10",
+        "port/dreamcast/tools/cloud/build5/fixture_geometry.cpp.in": "610b19f7ff98d68967b149c81df12dceaecf0ceb36af7f6a9a732eb2a5dc661f",
+        "port/dreamcast/tools/d367/world_replay_lean/fixture_boundary.cpp.in": "b9c66c1d0352c25f3a88937233500888092468d0def8974c5d94cf2e2391aefb",
+        "port/dreamcast/tools/d367/world_replay_lean/check_geometry.py": "d79f4ecf2eb814816542712a05760f3dfb2cf71df05988fae9dcec5ff6ba8bee",
+        "port/dreamcast/tools/d367/world_replay_lean/check_runtime.py": "1cbf06804b5996afbe159ecd5c971a706d742595be3c4b13349e284eb167c9be",
+        "port/dreamcast/tools/d367/world_submit_spike/check_runtime.py": "6256c454fe90f494b4584f16af1a6a3a703fee37daaccf615bddb0a0ba86e2ba",
+        "port/dreamcast/room/mesh_fastpath.hpp": "732b9aa75741265ca59e729a5e9ce8c2c2a018d4d32812f412ae9eb721ea19cd",
+        "port/dreamcast/room/mesh_fastpath_sched.hpp": "dced065599a7fa28122a981fb3ef92e6da8f8e0c96e02f1cdc4b7093611f5120",
+        "port/dreamcast/room/mesh_strip_lean.hpp": "0cbfb2d425fecc2462641ae9391cbeb134553de15e11d8a290b9175165631b1c",
+        "port/dreamcast/room/pvr_geometry.cpp": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136",
+        "port/dreamcast/room/pvr_geometry.hpp": "0e7d6a83bff8a5e76794aea8e4da75a7adfc9c497f9b5ccb815a79a4e3d75d3c",
+        "port/dreamcast/room/static_room_prepare.hpp": "65f55db4ec1ab97162c38c6038d228a9df3b6814dc5e3e0cc1130ce148929329",
+        "port/dreamcast/room/instanced_mesh.hpp": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019",
+        "port/dreamcast/room/room_package.hpp": "0f68e9b943e018af1c1b67022d2f5774fed8f829c3a4e094b52fceccac9aa0fe"
+      },
+      "extracted_sha256": {
+        "BATCH_HEADER": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106",
+        "DIRECT_BEGIN": "8270ec128648bf052f6dd1197d8deaf56142abd84a2060ec6d2e3c01ce292810",
+        "DIRECT_END": "5ff4a17f69f12b13a71fc7a48e9e8d8784cb99b2afa28ecaadf2472811eff3f8",
+        "PICK_DEFINITION": "1a77c26bb2e6a94ddb5539e2966cbda484da6bc6f9d1f4d780a9ee66cf3e2e73",
+        "EMITTER_END": "6b28c9a4b898189f063c295881f4970342e8e87190bf6f3fad4e69e49410a2c8",
+        "EMITTER_BIND": "b4d2c592b6840a46fa18c2b94d1781827abf460d3a93e04d6a0eb7704886c3cc",
+        "CHUNK_EMIT": "8e315e3cf85d1d2746bcafabe0c4643fcbb25e15a78d0ee748cbaee9e3a413e8",
+        "CHUNK_PART": "524a9b4606bb2c7a94fede08df3c70512ccf37150cd40e9d807cbd27572efcb1",
+        "CHUNK_FLUSH": "f5b9c488cd6333be41877a3e2e0eb1ba79bd12fd08380e110371b7f4332a0ec7",
+        "EMITTER": "8a9b7ba9d3e82b2e127ca8c10d7a80b0abb3406234cdd339537065c079814e0a",
+        "BORROW_GATHER": "1be2499fc1d773a14f0b8d4c8aaf4d8c18b5a603522c7b48de82ca040e1c6bd6",
+        "CORNERS": "b353ba52dfa5cfdae95ddf46880a2eedf8225b64bd13fe10639a0a91b39e76d7",
+        "BORROW": "a1b45785e70448419ccaa3a763aca782abb831e2bf7015689d3dbeec7312eb48",
+        "LEAN_FLUSH": "c047c674224f875d123ac657bf43c25042a6c95dc50b5e3d5e1e0752cb0af806",
+        "STRIPS_LEAN": "a766d0ece5663c424e27e25aba3c9156792af5d66b2bcd9a7ebb401cf20287a9",
+        "EMIT_PICK": "c418702957931b1dc1431e10cf2ab068e3a1d968ef211feeca8ba48e777d82e8",
+        "ALPHA_LUT": "110edba6122304561529302889212ed2901c69e1cb30891016f631db9074cb54",
+        "EMIT_MEMBERS": "068c4f79eb688b3785440f92c2a083eed5e19f98fd1f1c071833c180c49084c9",
+        "LOAD_SCREEN": "a2b07b21fe5b4baaa8116e577fa991ec4c2d504990c515ab085390fa6eabc255",
+        "REPLAY_RESTART": "c20e2eb5790083de565c30871b2d7342beca01f64f1e8e8c86a53f642b03f191",
+        "SHADE_COLOR": "049d0df5b56cc36d551f44905b61baf81652e58b348a4b64edfacfa525dc3266",
+        "INTERPOLATE_VERTEX": "73866200f52c44203895d59fd39d50499233b7c6b72b5c077842269647c4d3a9",
+        "CLIP_PROJECTED_TRIANGLE": "375b70506db66236a1b5ad9e326f5e27fe991bf0e5a89f15cc698614f662cea3",
+        "STATIC_STATS": "24526a78a1920e26cd9aa169244abf410de07b3149e61d5845b4872018929375",
+        "REPORT_STATS": "d2174d66ac961ddd5e699b0f69895a2850cb68e7bfc79e56b8a28688fce2d178",
+        "ROOT": "a9901caa4cc038a0d82b1484c2f9b009416066433a2c6fd8249c81201321f584",
+        "CENSUS_HELPERS": "d652bf0647e0006ed2626a2114aba69018671c511a785a191c087ceb908fe123",
+        "CENSUS_FIXTURE": "751d8d2aa53f2040e1a620701880e67b99ecaee479cd4c32bc59296add734152"
+      },
+      "combinations": [
+        {
+          "knobs": {
+            "SCENERY_SELECT_ONLY": 1,
+            "SCENERY_SUBMIT_BATCH": 1,
+            "SCENERY_REPLAY_LEAN": 1,
+            "SCENERY_UV_SNAPSHOT": 1,
+            "SCENERY_SELECT_LEAN2": 0,
+            "SCENERY_EMIT_PREFETCH": 0
+          },
+          "comparisons": 78,
+          "exact_words_equal": true,
+          "exact_sq_ownership_equal": true,
+          "active_census_packet_counts_verified": true
+        }
+      ],
+      "output_sha256": {
+        "b1-r1-e0-wc0": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce",
+        "b1-r1-e0-wc1": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce"
+      },
+      "full_receipt_sha256": "5e8c9977578081e94ef35fe60a07edffb157b6b17166e29035b9c90dcb712a07",
+      "census_summary": {
+        "b1-r1-e0": {
+          "cases": 78,
+          "all_partitions_exact": true,
+          "intentional_error_cases": [
+            164,
+            165
+          ]
+        }
+      }
+    },
+    "geometry_matrix_earlier": {
+      "status": "PASS",
+      "scope": "Build 10 observation controls over Build 5's 78 actual-emitter cases.\n\nReuse the existing validated synthetic packages and controlled texture/TA/SQ\nsink. Extract the current production emitter, gather, clipping, replay and\nsubmission bodies; compare every TA/accounting word and SQ ownership trace\nwith WORLD_CENSUS24=0/1. The enabled arm links the real world_census24.cpp,\nwith host clock/thread/log adapters and an active world/tick scope. Packet\ntypes in the independent sink validate the header/corner census totals.\n\nThe original fixture controls picks rather than running world selection. It\ndoes not execute far_shell, SH4 FTRV/FSRRA, or a complete game frame. Host\nclock increments exercise accounting only; they are not timing evidence.\n",
+      "comparisons": 624,
+      "sanitized": false,
+      "source_sha256": {
+        "port/dreamcast/game/platform/native_static.cpp": "b0d63dea270a35f434862f884aef38a40844b9d322985a42f8026e81c814e086",
+        "port/dreamcast/game/platform/native_ui.cpp": "e424d066155f74d398948ae6ae00cf1629ef56e35568c305f11a10d8ef0e7467",
+        "port/dreamcast/game/world_census24.cpp": "bc119989de6a1b08c4fcee4a34335aec59498f65b703f59d87a7aee67fdb67e5",
+        "port/dreamcast/game/platform/include/world_census24.h": "8ac6a608ffe4a4d1685a87dac666de40d211590420932ff075130595b3aa8c0d",
+        "port/dreamcast/tools/cloud/build10/check_geometry.py": "74c172831a22e96735ddad0b28039e8c1e4e072ef37f846be97f8869e93f1ad8",
+        "port/dreamcast/tools/cloud/build10/fixture_census.cpp.in": "751d8d2aa53f2040e1a620701880e67b99ecaee479cd4c32bc59296add734152",
+        "port/dreamcast/tools/cloud/build5/check_geometry.py": "5601b447da238ad18e3b43a14574a995e63cee012a0c349e846a9b3efd920e10",
+        "port/dreamcast/tools/cloud/build5/fixture_geometry.cpp.in": "610b19f7ff98d68967b149c81df12dceaecf0ceb36af7f6a9a732eb2a5dc661f",
+        "port/dreamcast/tools/d367/world_replay_lean/fixture_boundary.cpp.in": "b9c66c1d0352c25f3a88937233500888092468d0def8974c5d94cf2e2391aefb",
+        "port/dreamcast/tools/d367/world_replay_lean/check_geometry.py": "d79f4ecf2eb814816542712a05760f3dfb2cf71df05988fae9dcec5ff6ba8bee",
+        "port/dreamcast/tools/d367/world_replay_lean/check_runtime.py": "1cbf06804b5996afbe159ecd5c971a706d742595be3c4b13349e284eb167c9be",
+        "port/dreamcast/tools/d367/world_submit_spike/check_runtime.py": "6256c454fe90f494b4584f16af1a6a3a703fee37daaccf615bddb0a0ba86e2ba",
+        "port/dreamcast/room/mesh_fastpath.hpp": "732b9aa75741265ca59e729a5e9ce8c2c2a018d4d32812f412ae9eb721ea19cd",
+        "port/dreamcast/room/mesh_fastpath_sched.hpp": "dced065599a7fa28122a981fb3ef92e6da8f8e0c96e02f1cdc4b7093611f5120",
+        "port/dreamcast/room/mesh_strip_lean.hpp": "0cbfb2d425fecc2462641ae9391cbeb134553de15e11d8a290b9175165631b1c",
+        "port/dreamcast/room/pvr_geometry.cpp": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136",
+        "port/dreamcast/room/pvr_geometry.hpp": "0e7d6a83bff8a5e76794aea8e4da75a7adfc9c497f9b5ccb815a79a4e3d75d3c",
+        "port/dreamcast/room/static_room_prepare.hpp": "65f55db4ec1ab97162c38c6038d228a9df3b6814dc5e3e0cc1130ce148929329",
+        "port/dreamcast/room/instanced_mesh.hpp": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019",
+        "port/dreamcast/room/room_package.hpp": "0f68e9b943e018af1c1b67022d2f5774fed8f829c3a4e094b52fceccac9aa0fe"
+      },
+      "extracted_sha256": {
+        "BATCH_HEADER": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106",
+        "DIRECT_BEGIN": "8270ec128648bf052f6dd1197d8deaf56142abd84a2060ec6d2e3c01ce292810",
+        "DIRECT_END": "5ff4a17f69f12b13a71fc7a48e9e8d8784cb99b2afa28ecaadf2472811eff3f8",
+        "PICK_DEFINITION": "1a77c26bb2e6a94ddb5539e2966cbda484da6bc6f9d1f4d780a9ee66cf3e2e73",
+        "EMITTER_END": "d5c9eb25651c2b21f169ad4a13c187959450156a77cb91ad2ec3ca2794d05d79",
+        "EMITTER_BIND": "b4d2c592b6840a46fa18c2b94d1781827abf460d3a93e04d6a0eb7704886c3cc",
+        "CHUNK_EMIT": "8e315e3cf85d1d2746bcafabe0c4643fcbb25e15a78d0ee748cbaee9e3a413e8",
+        "CHUNK_PART": "524a9b4606bb2c7a94fede08df3c70512ccf37150cd40e9d807cbd27572efcb1",
+        "CHUNK_FLUSH": "f5b9c488cd6333be41877a3e2e0eb1ba79bd12fd08380e110371b7f4332a0ec7",
+        "EMITTER": "4677b8a85910aab500cb974084783d101607b449176c358a96f9e4d4eab0da4f",
+        "BORROW_GATHER": "1be2499fc1d773a14f0b8d4c8aaf4d8c18b5a603522c7b48de82ca040e1c6bd6",
+        "CORNERS": "b353ba52dfa5cfdae95ddf46880a2eedf8225b64bd13fe10639a0a91b39e76d7",
+        "BORROW": "a1b45785e70448419ccaa3a763aca782abb831e2bf7015689d3dbeec7312eb48",
+        "LEAN_FLUSH": "c047c674224f875d123ac657bf43c25042a6c95dc50b5e3d5e1e0752cb0af806",
+        "STRIPS_LEAN": "a766d0ece5663c424e27e25aba3c9156792af5d66b2bcd9a7ebb401cf20287a9",
+        "EMIT_PICK": "c418702957931b1dc1431e10cf2ab068e3a1d968ef211feeca8ba48e777d82e8",
+        "ALPHA_LUT": "110edba6122304561529302889212ed2901c69e1cb30891016f631db9074cb54",
+        "EMIT_MEMBERS": "068c4f79eb688b3785440f92c2a083eed5e19f98fd1f1c071833c180c49084c9",
+        "LOAD_SCREEN": "a2b07b21fe5b4baaa8116e577fa991ec4c2d504990c515ab085390fa6eabc255",
+        "REPLAY_RESTART": "c20e2eb5790083de565c30871b2d7342beca01f64f1e8e8c86a53f642b03f191",
+        "SHADE_COLOR": "049d0df5b56cc36d551f44905b61baf81652e58b348a4b64edfacfa525dc3266",
+        "INTERPOLATE_VERTEX": "73866200f52c44203895d59fd39d50499233b7c6b72b5c077842269647c4d3a9",
+        "CLIP_PROJECTED_TRIANGLE": "375b70506db66236a1b5ad9e326f5e27fe991bf0e5a89f15cc698614f662cea3",
+        "STATIC_STATS": "24526a78a1920e26cd9aa169244abf410de07b3149e61d5845b4872018929375",
+        "REPORT_STATS": "d2174d66ac961ddd5e699b0f69895a2850cb68e7bfc79e56b8a28688fce2d178",
+        "ROOT": "a9901caa4cc038a0d82b1484c2f9b009416066433a2c6fd8249c81201321f584",
+        "CENSUS_HELPERS": "d652bf0647e0006ed2626a2114aba69018671c511a785a191c087ceb908fe123",
+        "CENSUS_FIXTURE": "751d8d2aa53f2040e1a620701880e67b99ecaee479cd4c32bc59296add734152"
+      },
+      "combinations": [
+        {
+          "knobs": {
+            "SCENERY_SELECT_ONLY": 1,
+            "SCENERY_SUBMIT_BATCH": 0,
+            "SCENERY_REPLAY_LEAN": 0,
+            "SCENERY_UV_SNAPSHOT": 1,
+            "SCENERY_SELECT_LEAN2": 0,
+            "SCENERY_EMIT_PREFETCH": 0
+          },
+          "comparisons": 78,
+          "exact_words_equal": true,
+          "exact_sq_ownership_equal": true,
+          "active_census_packet_counts_verified": true
+        },
+        {
+          "knobs": {
+            "SCENERY_SELECT_ONLY": 1,
+            "SCENERY_SUBMIT_BATCH": 0,
+            "SCENERY_REPLAY_LEAN": 0,
+            "SCENERY_UV_SNAPSHOT": 1,
+            "SCENERY_SELECT_LEAN2": 0,
+            "SCENERY_EMIT_PREFETCH": 1
+          },
+          "comparisons": 78,
+          "exact_words_equal": true,
+          "exact_sq_ownership_equal": true,
+          "active_census_packet_counts_verified": true
+        },
+        {
+          "knobs": {
+            "SCENERY_SELECT_ONLY": 1,
+            "SCENERY_SUBMIT_BATCH": 0,
+            "SCENERY_REPLAY_LEAN": 1,
+            "SCENERY_UV_SNAPSHOT": 1,
+            "SCENERY_SELECT_LEAN2": 0,
+            "SCENERY_EMIT_PREFETCH": 0
+          },
+          "comparisons": 78,
+          "exact_words_equal": true,
+          "exact_sq_ownership_equal": true,
+          "active_census_packet_counts_verified": true
+        },
+        {
+          "knobs": {
+            "SCENERY_SELECT_ONLY": 1,
+            "SCENERY_SUBMIT_BATCH": 0,
+            "SCENERY_REPLAY_LEAN": 1,
+            "SCENERY_UV_SNAPSHOT": 1,
+            "SCENERY_SELECT_LEAN2": 0,
+            "SCENERY_EMIT_PREFETCH": 1
+          },
+          "comparisons": 78,
+          "exact_words_equal": true,
+          "exact_sq_ownership_equal": true,
+          "active_census_packet_counts_verified": true
+        },
+        {
+          "knobs": {
+            "SCENERY_SELECT_ONLY": 1,
+            "SCENERY_SUBMIT_BATCH": 1,
+            "SCENERY_REPLAY_LEAN": 0,
+            "SCENERY_UV_SNAPSHOT": 1,
+            "SCENERY_SELECT_LEAN2": 0,
+            "SCENERY_EMIT_PREFETCH": 0
+          },
+          "comparisons": 78,
+          "exact_words_equal": true,
+          "exact_sq_ownership_equal": true,
+          "active_census_packet_counts_verified": true
+        },
+        {
+          "knobs": {
+            "SCENERY_SELECT_ONLY": 1,
+            "SCENERY_SUBMIT_BATCH": 1,
+            "SCENERY_REPLAY_LEAN": 0,
+            "SCENERY_UV_SNAPSHOT": 1,
+            "SCENERY_SELECT_LEAN2": 0,
+            "SCENERY_EMIT_PREFETCH": 1
+          },
+          "comparisons": 78,
+          "exact_words_equal": true,
+          "exact_sq_ownership_equal": true,
+          "active_census_packet_counts_verified": true
+        },
+        {
+          "knobs": {
+            "SCENERY_SELECT_ONLY": 1,
+            "SCENERY_SUBMIT_BATCH": 1,
+            "SCENERY_REPLAY_LEAN": 1,
+            "SCENERY_UV_SNAPSHOT": 1,
+            "SCENERY_SELECT_LEAN2": 0,
+            "SCENERY_EMIT_PREFETCH": 0
+          },
+          "comparisons": 78,
+          "exact_words_equal": true,
+          "exact_sq_ownership_equal": true,
+          "active_census_packet_counts_verified": true
+        },
+        {
+          "knobs": {
+            "SCENERY_SELECT_ONLY": 1,
+            "SCENERY_SUBMIT_BATCH": 1,
+            "SCENERY_REPLAY_LEAN": 1,
+            "SCENERY_UV_SNAPSHOT": 1,
+            "SCENERY_SELECT_LEAN2": 0,
+            "SCENERY_EMIT_PREFETCH": 1
+          },
+          "comparisons": 78,
+          "exact_words_equal": true,
+          "exact_sq_ownership_equal": true,
+          "active_census_packet_counts_verified": true
+        }
+      ],
+      "output_sha256": {
+        "b0-r0-e0-wc0": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce",
+        "b0-r0-e0-wc1": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce",
+        "b0-r0-e1-wc0": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce",
+        "b0-r0-e1-wc1": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce",
+        "b0-r1-e0-wc0": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce",
+        "b0-r1-e0-wc1": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce",
+        "b0-r1-e1-wc0": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce",
+        "b0-r1-e1-wc1": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce",
+        "b1-r0-e0-wc0": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce",
+        "b1-r0-e0-wc1": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce",
+        "b1-r0-e1-wc0": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce",
+        "b1-r0-e1-wc1": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce",
+        "b1-r1-e0-wc0": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce",
+        "b1-r1-e0-wc1": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce",
+        "b1-r1-e1-wc0": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce",
+        "b1-r1-e1-wc1": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce"
+      },
+      "full_receipt_sha256": "1344592fa7bc89add9479cb126f8c5d8fe49c1459b41ad89940a399cc7cff12b",
+      "census_summary": {
+        "b0-r0-e0": {
+          "cases": 78,
+          "all_partitions_exact": true,
+          "intentional_error_cases": [
+            164,
+            165
+          ]
+        },
+        "b0-r0-e1": {
+          "cases": 78,
+          "all_partitions_exact": true,
+          "intentional_error_cases": [
+            164,
+            165
+          ]
+        },
+        "b0-r1-e0": {
+          "cases": 78,
+          "all_partitions_exact": true,
+          "intentional_error_cases": [
+            164,
+            165
+          ]
+        },
+        "b0-r1-e1": {
+          "cases": 78,
+          "all_partitions_exact": true,
+          "intentional_error_cases": [
+            164,
+            165
+          ]
+        },
+        "b1-r0-e0": {
+          "cases": 78,
+          "all_partitions_exact": true,
+          "intentional_error_cases": [
+            164,
+            165
+          ]
+        },
+        "b1-r0-e1": {
+          "cases": 78,
+          "all_partitions_exact": true,
+          "intentional_error_cases": [
+            164,
+            165
+          ]
+        },
+        "b1-r1-e0": {
+          "cases": 78,
+          "all_partitions_exact": true,
+          "intentional_error_cases": [
+            164,
+            165
+          ]
+        },
+        "b1-r1-e1": {
+          "cases": 78,
+          "all_partitions_exact": true,
+          "intentional_error_cases": [
+            164,
+            165
+          ]
+        }
+      }
+    },
+    "geometry_sanitized_earlier": {
+      "status": "PASS",
+      "scope": "Build 10 observation controls over Build 5's 78 actual-emitter cases.\n\nReuse the existing validated synthetic packages and controlled texture/TA/SQ\nsink. Extract the current production emitter, gather, clipping, replay and\nsubmission bodies; compare every TA/accounting word and SQ ownership trace\nwith WORLD_CENSUS24=0/1. The enabled arm links the real world_census24.cpp,\nwith host clock/thread/log adapters and an active world/tick scope. Packet\ntypes in the independent sink validate the header/corner census totals.\n\nThe original fixture controls picks rather than running world selection. It\ndoes not execute far_shell, SH4 FTRV/FSRRA, or a complete game frame. Host\nclock increments exercise accounting only; they are not timing evidence.\n",
+      "comparisons": 78,
+      "sanitized": true,
+      "source_sha256": {
+        "port/dreamcast/game/platform/native_static.cpp": "b0d63dea270a35f434862f884aef38a40844b9d322985a42f8026e81c814e086",
+        "port/dreamcast/game/platform/native_ui.cpp": "e424d066155f74d398948ae6ae00cf1629ef56e35568c305f11a10d8ef0e7467",
+        "port/dreamcast/game/world_census24.cpp": "bc119989de6a1b08c4fcee4a34335aec59498f65b703f59d87a7aee67fdb67e5",
+        "port/dreamcast/game/platform/include/world_census24.h": "8ac6a608ffe4a4d1685a87dac666de40d211590420932ff075130595b3aa8c0d",
+        "port/dreamcast/tools/cloud/build10/check_geometry.py": "74c172831a22e96735ddad0b28039e8c1e4e072ef37f846be97f8869e93f1ad8",
+        "port/dreamcast/tools/cloud/build10/fixture_census.cpp.in": "751d8d2aa53f2040e1a620701880e67b99ecaee479cd4c32bc59296add734152",
+        "port/dreamcast/tools/cloud/build5/check_geometry.py": "5601b447da238ad18e3b43a14574a995e63cee012a0c349e846a9b3efd920e10",
+        "port/dreamcast/tools/cloud/build5/fixture_geometry.cpp.in": "610b19f7ff98d68967b149c81df12dceaecf0ceb36af7f6a9a732eb2a5dc661f",
+        "port/dreamcast/tools/d367/world_replay_lean/fixture_boundary.cpp.in": "b9c66c1d0352c25f3a88937233500888092468d0def8974c5d94cf2e2391aefb",
+        "port/dreamcast/tools/d367/world_replay_lean/check_geometry.py": "d79f4ecf2eb814816542712a05760f3dfb2cf71df05988fae9dcec5ff6ba8bee",
+        "port/dreamcast/tools/d367/world_replay_lean/check_runtime.py": "1cbf06804b5996afbe159ecd5c971a706d742595be3c4b13349e284eb167c9be",
+        "port/dreamcast/tools/d367/world_submit_spike/check_runtime.py": "6256c454fe90f494b4584f16af1a6a3a703fee37daaccf615bddb0a0ba86e2ba",
+        "port/dreamcast/room/mesh_fastpath.hpp": "732b9aa75741265ca59e729a5e9ce8c2c2a018d4d32812f412ae9eb721ea19cd",
+        "port/dreamcast/room/mesh_fastpath_sched.hpp": "dced065599a7fa28122a981fb3ef92e6da8f8e0c96e02f1cdc4b7093611f5120",
+        "port/dreamcast/room/mesh_strip_lean.hpp": "0cbfb2d425fecc2462641ae9391cbeb134553de15e11d8a290b9175165631b1c",
+        "port/dreamcast/room/pvr_geometry.cpp": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136",
+        "port/dreamcast/room/pvr_geometry.hpp": "0e7d6a83bff8a5e76794aea8e4da75a7adfc9c497f9b5ccb815a79a4e3d75d3c",
+        "port/dreamcast/room/static_room_prepare.hpp": "65f55db4ec1ab97162c38c6038d228a9df3b6814dc5e3e0cc1130ce148929329",
+        "port/dreamcast/room/instanced_mesh.hpp": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019",
+        "port/dreamcast/room/room_package.hpp": "0f68e9b943e018af1c1b67022d2f5774fed8f829c3a4e094b52fceccac9aa0fe"
+      },
+      "extracted_sha256": {
+        "BATCH_HEADER": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106",
+        "DIRECT_BEGIN": "8270ec128648bf052f6dd1197d8deaf56142abd84a2060ec6d2e3c01ce292810",
+        "DIRECT_END": "5ff4a17f69f12b13a71fc7a48e9e8d8784cb99b2afa28ecaadf2472811eff3f8",
+        "PICK_DEFINITION": "1a77c26bb2e6a94ddb5539e2966cbda484da6bc6f9d1f4d780a9ee66cf3e2e73",
+        "EMITTER_END": "d5c9eb25651c2b21f169ad4a13c187959450156a77cb91ad2ec3ca2794d05d79",
+        "EMITTER_BIND": "b4d2c592b6840a46fa18c2b94d1781827abf460d3a93e04d6a0eb7704886c3cc",
+        "CHUNK_EMIT": "8e315e3cf85d1d2746bcafabe0c4643fcbb25e15a78d0ee748cbaee9e3a413e8",
+        "CHUNK_PART": "524a9b4606bb2c7a94fede08df3c70512ccf37150cd40e9d807cbd27572efcb1",
+        "CHUNK_FLUSH": "f5b9c488cd6333be41877a3e2e0eb1ba79bd12fd08380e110371b7f4332a0ec7",
+        "EMITTER": "4677b8a85910aab500cb974084783d101607b449176c358a96f9e4d4eab0da4f",
+        "BORROW_GATHER": "1be2499fc1d773a14f0b8d4c8aaf4d8c18b5a603522c7b48de82ca040e1c6bd6",
+        "CORNERS": "b353ba52dfa5cfdae95ddf46880a2eedf8225b64bd13fe10639a0a91b39e76d7",
+        "BORROW": "a1b45785e70448419ccaa3a763aca782abb831e2bf7015689d3dbeec7312eb48",
+        "LEAN_FLUSH": "c047c674224f875d123ac657bf43c25042a6c95dc50b5e3d5e1e0752cb0af806",
+        "STRIPS_LEAN": "a766d0ece5663c424e27e25aba3c9156792af5d66b2bcd9a7ebb401cf20287a9",
+        "EMIT_PICK": "c418702957931b1dc1431e10cf2ab068e3a1d968ef211feeca8ba48e777d82e8",
+        "ALPHA_LUT": "110edba6122304561529302889212ed2901c69e1cb30891016f631db9074cb54",
+        "EMIT_MEMBERS": "068c4f79eb688b3785440f92c2a083eed5e19f98fd1f1c071833c180c49084c9",
+        "LOAD_SCREEN": "a2b07b21fe5b4baaa8116e577fa991ec4c2d504990c515ab085390fa6eabc255",
+        "REPLAY_RESTART": "c20e2eb5790083de565c30871b2d7342beca01f64f1e8e8c86a53f642b03f191",
+        "SHADE_COLOR": "049d0df5b56cc36d551f44905b61baf81652e58b348a4b64edfacfa525dc3266",
+        "INTERPOLATE_VERTEX": "73866200f52c44203895d59fd39d50499233b7c6b72b5c077842269647c4d3a9",
+        "CLIP_PROJECTED_TRIANGLE": "375b70506db66236a1b5ad9e326f5e27fe991bf0e5a89f15cc698614f662cea3",
+        "STATIC_STATS": "24526a78a1920e26cd9aa169244abf410de07b3149e61d5845b4872018929375",
+        "REPORT_STATS": "d2174d66ac961ddd5e699b0f69895a2850cb68e7bfc79e56b8a28688fce2d178",
+        "ROOT": "a9901caa4cc038a0d82b1484c2f9b009416066433a2c6fd8249c81201321f584",
+        "CENSUS_HELPERS": "d652bf0647e0006ed2626a2114aba69018671c511a785a191c087ceb908fe123",
+        "CENSUS_FIXTURE": "751d8d2aa53f2040e1a620701880e67b99ecaee479cd4c32bc59296add734152"
+      },
+      "combinations": [
+        {
+          "knobs": {
+            "SCENERY_SELECT_ONLY": 1,
+            "SCENERY_SUBMIT_BATCH": 1,
+            "SCENERY_REPLAY_LEAN": 1,
+            "SCENERY_UV_SNAPSHOT": 1,
+            "SCENERY_SELECT_LEAN2": 0,
+            "SCENERY_EMIT_PREFETCH": 0
+          },
+          "comparisons": 78,
+          "exact_words_equal": true,
+          "exact_sq_ownership_equal": true,
+          "active_census_packet_counts_verified": true
+        }
+      ],
+      "output_sha256": {
+        "b1-r1-e0-wc0": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce",
+        "b1-r1-e0-wc1": "3c9f730f64be429c80eb2923bdec07463cf267eee546c7966490d957061d50ce"
+      },
+      "full_receipt_sha256": "b8f5e444a658d4efcdf9be440770cd9f4fe9ae79d912eb02a139325de0054a71",
+      "census_summary": {
+        "b1-r1-e0": {
+          "cases": 78,
+          "all_partitions_exact": true,
+          "intentional_error_cases": [
+            164,
+            165
+          ]
+        }
+      }
+    },
+    "core": {
+      "status": "PASS",
+      "scope": "Run Build 10's actual core against a deterministic clock/thread/PVR oracle.",
+      "sanitized": false,
+      "leak_sanitizer": false,
+      "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+      "source_sha256": {
+        "port/dreamcast/game/world_census24.cpp": "787180a820f25d4b1ade7d8bcfbe801e001e3824ea69d436e493a537c8c01a86",
+        "port/dreamcast/game/platform/include/world_census24.h": "8ac6a608ffe4a4d1685a87dac666de40d211590420932ff075130595b3aa8c0d",
+        "port/dreamcast/tools/cloud/build10/check_core.cpp": "614c3371cbce5703c8a3f12f1e9c6616f27d4aaf8eebc9e7d26f51b16846f062",
+        "port/dreamcast/tools/cloud/build10/run_controls.py": "f7dd7efa658810bb7da084af5cd950742069d66599e3c55e774465c29ce94b41"
+      },
+      "assertions": "PASS: drawn/tick denominators, exclusive nesting, owner thread, emitted counts, actual-flip cadence, identity/pause, errors, logging attribution",
+      "console_measured": false,
+      "full_receipt_sha256": "7fb1fa1a2ba9774f4eef273fa8194e769488c980f95cce9488ff5a10bc952403"
+    },
+    "core_sanitized": {
+      "status": "PASS",
+      "scope": "Run Build 10's actual core against a deterministic clock/thread/PVR oracle.",
+      "sanitized": true,
+      "leak_sanitizer": false,
+      "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+      "source_sha256": {
+        "port/dreamcast/game/world_census24.cpp": "787180a820f25d4b1ade7d8bcfbe801e001e3824ea69d436e493a537c8c01a86",
+        "port/dreamcast/game/platform/include/world_census24.h": "8ac6a608ffe4a4d1685a87dac666de40d211590420932ff075130595b3aa8c0d",
+        "port/dreamcast/tools/cloud/build10/check_core.cpp": "614c3371cbce5703c8a3f12f1e9c6616f27d4aaf8eebc9e7d26f51b16846f062",
+        "port/dreamcast/tools/cloud/build10/run_controls.py": "f7dd7efa658810bb7da084af5cd950742069d66599e3c55e774465c29ce94b41"
+      },
+      "assertions": "PASS: drawn/tick denominators, exclusive nesting, owner thread, emitted counts, actual-flip cadence, identity/pause, errors, logging attribution",
+      "console_measured": false,
+      "full_receipt_sha256": "db0630dc765710cb5f454992dde182ca350ce335d2f020ce2183baec2e6602c4"
+    },
+    "qa": {
+      "status": "PASS",
+      "scope": "Render the actual paused QA census page using synthetic core observations.\n\nExtracts the framebuffer/font and census-page functions from qa_menu.cpp;\nlinks the real world_census24.cpp in its host test mode. Writes PPM captures\nand a receipt outside the source tree. This is a layout/bounds check, not a\nDreamcast rendering or timing result. Pillow is optional (--png).\n",
+      "source_sha256": {
+        "port/dreamcast/game/qa_menu.cpp": "f6389c3e45f6cdd801094d2c83577110e094ebe3acc147a9781db69cda8655d7",
+        "port/dreamcast/game/world_census24.cpp": "787180a820f25d4b1ade7d8bcfbe801e001e3824ea69d436e493a537c8c01a86",
+        "port/dreamcast/game/platform/include/world_census24.h": "8ac6a608ffe4a4d1685a87dac666de40d211590420932ff075130595b3aa8c0d",
+        "port/dreamcast/tools/cloud/build10/qa_render_fixture.cpp": "c6fe12b836e5b7f45f926100039de6455533524669a3d951dd7bd617053b1dc9",
+        "port/dreamcast/tools/cloud/build10/qa_render_check.py": "b8a82053b5884c16a3c3fadcd9d09d02ac9fb848b4fe71bbdb3160828ba57fae"
+      },
+      "extracted_sha256": "0bdf8532475f171384c49b6db65212c4f38e93c1dff4bd6c2b41038edbe25490",
+      "layouts": [
+        {
+          "width": 640,
+          "height": 480,
+          "bpp": 2,
+          "rows": 25,
+          "pages": 1,
+          "guards": true
+        },
+        {
+          "width": 640,
+          "height": 480,
+          "bpp": 4,
+          "rows": 25,
+          "pages": 1,
+          "guards": true
+        },
+        {
+          "width": 320,
+          "height": 240,
+          "bpp": 2,
+          "rows": 38,
+          "pages": 4,
+          "guards": true
+        },
+        {
+          "width": 320,
+          "height": 240,
+          "bpp": 4,
+          "rows": 38,
+          "pages": 4,
+          "guards": true
+        }
+      ],
+      "full_receipt_sha256": "8aa4c4ceaeffc2cc0a72704c67bf689f5b7381275f08a85fdfa08d2f43a813c2"
+    }
+  },
+  "coverage_limits": [
+    "Final geometry pair executes emitter/gather/clipping/replay/accounting bodies, not selection/far-shell loading/source entry adapters.",
+    "The624-case matrix and78-case sanitizer pair preserve their earlier source hashes; the final78-case pair qualifies final production source.",
+    "QA captures are synthetic framebuffer layout controls; no game image is committed.",
+    "No game executable, emulator run, private assets, or console performance/gameplay acceptance."
+  ]
+}

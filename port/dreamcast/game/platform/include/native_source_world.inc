@@ -130,11 +130,18 @@ extern "C" int re4dc_ps2_source_receipt_complete(unsigned native,unsigned genera
 }
 #endif
 extern "C" int re4dc_ps2_source_draw(unsigned generation) {
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    const re4dc::wc24::Scope wc_world(re4dc::wc24::NearOP,re4dc::wc24::Other);
+    Wc24PassResult wc_result;
+#endif
     unsigned current=0;const unsigned frame=re4dc_ui_frame();
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     if(re4dc_source_world_group_claimed() && !re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return -1;}
 #endif
     if(!re4dc_ps2_source_package(&current) || current!=generation)return 0;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_result.complete=sourceWorldImageFrame==frame && sourceWorldImageGeneration==generation && sourceWorldImageResult>0;
+#endif
     if(sourceWorldImageFrame==frame)return sourceWorldImageGeneration==generation?sourceWorldImageResult:0;
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     const bool transition=re4dc_source_world_transition_owner(frame,generation)!=0;
@@ -163,6 +170,9 @@ extern "C" int re4dc_ps2_source_draw(unsigned generation) {
     if(sourceWorldImageResult<0)re4dc_model_packet_abort();
     re4dc_log("PS2SOURCE_DRAW f=%u gen=%u result=%d native=%u fallback=%u abort=%u\n",
         frame,generation,sourceWorldImageResult,c.native,c.fallback,c.aborts);
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_result.complete=sourceWorldImageResult>0;
+#endif
     return sourceWorldImageResult;
 }
 extern "C" int re4dc_ps2_source_passes_complete() {

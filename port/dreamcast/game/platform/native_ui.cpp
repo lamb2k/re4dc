@@ -1,4 +1,22 @@
 #include "../world_scratch.h"
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+#include "include/world_census24.h"
+namespace {
+[[maybe_unused]] int wc24_post_result(int result,bool present){
+    if(result==0)re4dc::wc24::decision_posted(present);
+    return result;
+}
+[[maybe_unused]] int wc24_queue_result(int result,bool present){
+    if(result)re4dc::wc24::decision_posted(present);
+    return result;
+}
+}
+#define WC24_POST_RESULT(result,present) wc24_post_result((result),(present))
+#define WC24_QUEUE_RESULT(result,present) wc24_queue_result((result),(present))
+#else
+#define WC24_POST_RESULT(result,present) result
+#define WC24_QUEUE_RESULT(result,present) result
+#endif
 #if RE4DC_WORLD_SCRATCH
 extern "C" unsigned re4dc_ps2_mesh_room();
 #endif
@@ -1292,6 +1310,9 @@ void note(char code,volatile unsigned& n){
 // Wait until a KOS PVR flag clears (KOS wakes the flag's genwait queue: ta_busy at render start, render_busy at
 // render done). Returns false only past the bound.
 bool wait_clear(volatile int& flag,const char* what,char code,volatile unsigned& n){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::WaitScope wc24_wait(re4dc::wc24::PvrWait);
+#endif
     const int o=irq_disable();
     unsigned slices=0;
     while(flag && slices<kSlices)
@@ -1315,6 +1336,9 @@ void acquire_bank(){
     // a TA bank timeout, so the stop screen's rdy row can be checked in Flycast (renders never stall there).
     if(test_slices>0){
         test_slices=test_slices-1;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::WaitScope wc24_wait(re4dc::wc24::PvrWait);
+#endif
         const int o=irq_disable();genwait_wait((void*)&test_slices,"re4dc ready test",kSliceMs);irq_restore(o);
         note('K',ta_timeouts);
     }
@@ -1503,6 +1527,10 @@ void present_fence(){
     // The timed waiter can become runnable before the render/vblank IRQ
     // completes, then resume with its old error after presentation finished.
     // Recheck ownership before treating that timeout as an unfinished frame.
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    {
+    re4dc::wc24::WaitScope wc24_wait(re4dc::wc24::PvrWait);
+#endif
 #if RE4DC_PVR_READY_STRICT
     if(pvr_ready::present_wait()<0 && pvr_present_pending()){   // keeps waiting past 100 ms (bounded)
 #else
@@ -1513,6 +1541,9 @@ void present_fence(){
         latch::put('X');latch::bump(latch::kX);
 #endif
     }
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    }
+#endif
     ++fence_blocked;fence_wait_us+=timer_us_gettime64()-start;
     present_resolved=present_submitted;
     present_report();
@@ -1525,8 +1556,8 @@ void present_submit(bool present,unsigned ta_faults){
 #endif
     present_submitted=present_submitted+1;
 #if RE4DC_PACE_PRESENT
-    if(re4dc_steady_present(present))return; // Steady: released at its target field by pace_present.cpp
-    auto post=[](bool p){const int irq=irq_disable();const int r=pvr_present_async(p);if(r==0)re4dc_present_posted(p);irq_restore(irq);return r;};
+    if(WC24_QUEUE_RESULT(re4dc_steady_present(present),present))return; // Steady: released at its target field by pace_present.cpp
+    auto post=[](bool p){const int irq=irq_disable();const int r=WC24_POST_RESULT(pvr_present_async(p),p);if(r==0)re4dc_present_posted(p);irq_restore(irq);return r;};
     if(post(present)<0){
         present_fence();
         if(post(present)<0){present_failures=present_failures|2;present_report();}
@@ -1534,9 +1565,9 @@ void present_submit(bool present,unsigned ta_faults){
 #else
     // One decision is outstanding at a time: frame N's flip normally happened
     // long before frame N+1 finishes, so this rarely blocks.
-    if(pvr_present_async(present)<0){
+    if(WC24_POST_RESULT(pvr_present_async(present),present)<0){
         present_fence();
-        if(pvr_present_async(present)<0){present_failures=present_failures|2;present_report();}
+        if(WC24_POST_RESULT(pvr_present_async(present),present)<0){present_failures=present_failures|2;present_report();}
     }
 #endif
 }
@@ -1581,6 +1612,9 @@ void present_fence(){
     const auto start=timer_us_gettime64();
     {
         PvrWaiter waiter;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::WaitScope wc24_wait(re4dc::wc24::PvrWait);
+#endif
         const int o=irq_disable();
         while(present_resolved!=present_submitted)
             if(genwait_wait((void*)&present_resolved,"re4dc present fence",250)<0)++fence_timeouts;
@@ -1591,6 +1625,10 @@ void present_fence(){
 }
 void present_submit(bool present,unsigned ta_faults){
     present_decision=present;present_ta_faults=ta_faults;present_submitted=present_submitted+1;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    // Queued decision; the presenter may still reject it. PAGEFLIP is separate.
+    re4dc::wc24::decision_posted(present);
+#endif
     sem_signal(&present_request);
     // Let the higher-priority presenter reach its render-done wait now, as
     // OSResumeThread yields to a resumed higher-priority thread.
@@ -2259,6 +2297,9 @@ void stream_close(bool present) {
 #else
     if(pvr_list_finish()<0 || pvr_scene_finish()<0)re4dc_missing("native stream finish failed");
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::scene_finished(); // finished game scene, including a later discard
+#endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     // pvr_scene_finish can wait. Revalidate immediately before presentation.
     if(present && !re4dc_r11f_present(frame,source_draws_finished,stream_aborted))present=false;
@@ -2287,7 +2328,14 @@ void stream_close(bool present) {
 #else
     const bool shown=present;
 #endif
-    if(pvr_resolve_frame(shown)<0)re4dc_missing("native source presentation resolve failed");
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    {
+    re4dc::wc24::WaitScope wc24_wait(re4dc::wc24::PvrWait);
+#endif
+    if(WC24_POST_RESULT(pvr_resolve_frame(shown),shown)<0)re4dc_missing("native source presentation resolve failed");
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    }
+#endif
     }
 #endif
     if(!present)++stream_discards;
@@ -5763,10 +5811,25 @@ extern "C" void re4dc_ui_begin(){
     actor_texture_prepare(); // ordinary preload demotion has already finished
 #endif
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    {
+    // Common world preflight/texture work is charged once to Near OP / Other.
+    re4dc::wc24::Scope wc24_prepare(re4dc::wc24::NearOP,re4dc::wc24::Other);
+#endif
     sourceWorldTexturePrepare();
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    }
+#endif
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    {
+    re4dc::wc24::Scope wc24_prepare(re4dc::wc24::NearOP,re4dc::wc24::Other);
+#endif
     re4dc_r11f_prepare(frame);
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    }
+#endif
 #endif
     re4dc::profile::begin();
 #if defined(__sh__)
@@ -6734,16 +6797,25 @@ if(!handle){
     return 1;
 }
 extern "C" void re4dc_model_packet_commit(unsigned count){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::Scope wc24_submit(re4dc::wc24::Submit);
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(tamat::packet_source);
 #endif
     // A loaded but wholly clipped/rolled-back part owns no submitted packets.
     // Keep its upload cached; pin only when this part actually commits a draw.
     if(count){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24 && RE4DC_PVR_STREAM
+        re4dc::wc24::submitted_header(reinterpret_cast<const std::uint32_t*>(model_packets+model_used));
+#endif
         model_handle->frame=frame;model_used=model_pending+count;
         if(model_used*32>model_peak)model_peak=model_used*32;
 #if RE4DC_PVR_STREAM
         stream_send(model_packets,model_used*32);
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::count(re4dc::wc24::Corners,count);
+#endif
         stream_model_bytes+=model_used*32;
         if(stream_model_bytes>stream_peak_bytes)stream_peak_bytes=stream_model_bytes;
         model_used=0; // PVR owns copied packets; reuse the same bounded scratch.
@@ -6829,6 +6901,9 @@ extern "C" void re4dc_ta_hash(const void* data,unsigned bytes){
 }
 #endif
 extern "C" int re4dc_model_direct_begin(const Re4dcModelPart* p,Re4dcModelDirect* out){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::Scope wc24_material(re4dc::wc24::HeaderMaterial);
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(2);
 #endif
@@ -6853,6 +6928,9 @@ extern "C" int re4dc_model_direct_begin(const Re4dcModelPart* p,Re4dcModelDirect
     re4dc_ta_hash(header,32);
 #endif
     sq_flush(sq);
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::submitted_header(header);
+#endif
     direct_open=true;
     model_handle->frame=frame; // the header is in the TA: pinned for this scene
     ++frame_pvr_calls;frame_pvr_bytes+=32;stream_model_bytes+=32;
@@ -6871,12 +6949,18 @@ static void model_direct_account(unsigned vertices){
 #else
 extern "C" void re4dc_model_direct_end(unsigned vertices){
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::Scope wc24_submit(re4dc::wc24::Submit);
+#endif
 #if RE4DC_TA_DIRECT
 #if !RE4DC_SCENERY_SUBMIT_BATCH
     if(!direct_open)return;
     sq_unlock();direct_open=false;
 #endif
     if(vertices>32767)re4dc_missing("native direct part exceeded the store-queue window");
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::count(re4dc::wc24::Corners,vertices);
+#endif
     ++direct_parts;direct_slots+=vertices;
 #if RE4DC_TA_GUARD
     guard_account(1,vertices);
@@ -6890,15 +6974,24 @@ extern "C" void re4dc_model_direct_end(unsigned vertices){
 }
 #if RE4DC_SCENERY_SUBMIT_BATCH
 extern "C" void re4dc_model_direct_end(unsigned vertices){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::Scope wc24_submit(re4dc::wc24::Submit);
+#endif
     if(!direct_open)return;
     sq_unlock();direct_open=false;
     model_direct_account(vertices);
 }
 extern "C" void re4dc_ps2_world_batch_close(Re4dcWorldSubmitBatch* batch){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::Scope wc24_submit(re4dc::wc24::Submit);
+#endif
     // A nested-begin refusal does not revoke the current part's ownership.
     if(batch && batch->sq && !direct_open){sq_unlock();batch->sq=nullptr;}
 }
 extern "C" void re4dc_ps2_world_direct_end_batch(unsigned vertices,Re4dcWorldSubmitBatch* batch){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::Scope wc24_submit(re4dc::wc24::Submit);
+#endif
     if(!batch || !batch->sq){re4dc_model_direct_end(vertices);return;}
     if(!direct_open)return;
     direct_open=false;
@@ -8594,6 +8687,9 @@ extern "C" __attribute__((noinline,noclone)) int re4dc_ps2_world_direct_begin_ba
 #else
 extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* out){
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::Scope wc24_material(re4dc::wc24::HeaderMaterial);
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
 #if RE4DC_SCENERY_SUBMIT_BATCH
     re4dc_ps2_world_batch_close(batch);
@@ -8848,6 +8944,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         re4dc_ta_hash(words,32);
 #endif
         sq_flush(sq);
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::submitted_header(words);
+#endif
         direct_open=true;
         model_handle->frame=frame; // the header is in the TA: pinned for this scene
 #if RE4DC_PS2_WORLD_SOURCE_TEX_PREP
@@ -9011,6 +9110,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
     re4dc_ta_hash(words,32);
 #endif
     sq_flush(sq);
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::submitted_header(words);
+#endif
     direct_open=true;
     model_handle->frame=frame; // the header is in the TA: pinned for this scene
 #if RE4DC_PS2_WORLD_SOURCE_TEX_PREP

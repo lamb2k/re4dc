@@ -25,6 +25,9 @@
 #include <cmath>
 #include "native_render_profile.hpp"
 #include "include/native_ps2_world.h"
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+#include "include/world_census24.h"
+#endif
 // FOG_FAR_CAP (post30.mk, look study 2026-10-10): the PS2 world's 25 m cap follows FOG_FAR.
 #ifdef RE4DC_FAR_CAP
 #define RE4DC_PS2_FAR RE4DC_FAR_CAP
@@ -70,6 +73,14 @@ extern "C" int re4dc_ps2_world_packet_cull(unsigned,unsigned,unsigned,unsigned,u
 
 namespace re4dc { namespace room { namespace ps2 {
 namespace {
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+// An attempted world entry must reach its native passes. Source fallback or a
+// movie-suppressed synthetic success cannot certify a cheap complete world.
+struct Wc24WorldResult {
+    bool complete=false;
+    ~Wc24WorldResult(){if(!complete)re4dc::wc24::fault();}
+};
+#endif
 #include "include/ps2_world_data.inc"
 int open_file(void*,const char* p){return int(fs_open(p,O_RDONLY));}
 std::int64_t file_size(void*,int f){return fs_total(file_t(f));}
@@ -676,6 +687,10 @@ extern "C" int re4dc_ps2_world_covers(unsigned room){
 extern "C" int re4dc_ps2_world_covers(unsigned room){return room==0x101;}
 #endif
 extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float far){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    const re4dc::wc24::Scope wc_world(re4dc::wc24::NearOP,re4dc::wc24::Other);
+    re4dc::room::ps2::Wc24WorldResult wc_result;
+#endif
 #if RE4DC_MOVIE_WORLD_ARENA
     if(re4dc_ps2_mesh_movie_blocked())return 1;
 #endif
@@ -711,6 +726,9 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
 #endif
     }
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_result.complete=drawn;
+#endif
     return drawn?1:fallback(4);
 #endif
     state.pending=false;auto& owner=storage();Owner now{};
@@ -742,6 +760,10 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
 // PS2_WORLD_ROOMS=2, an image the coarse path does not draw (native_static.cpp re4dc_ps2_mesh_source, camera
 // already set): pass 0 now; re4dc_ps2_world_flush draws PT / TR as for a coarse image.
 extern "C" int re4dc_ps2_world_source_draw(){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    const re4dc::wc24::Scope wc_world(re4dc::wc24::NearOP,re4dc::wc24::Other);
+    re4dc::room::ps2::Wc24WorldResult wc_result;
+#endif
 #if RE4DC_MOVIE_WORLD_ARENA
     if(re4dc_ps2_mesh_movie_blocked())return 1;
 #endif
@@ -756,14 +778,23 @@ extern "C" int re4dc_ps2_world_source_draw(){
     re4dc_ps2_source_pass_begin(0);
     const int drawn=re4dc_ps2_mesh_draw(0,state.far);
     re4dc_ps2_source_pass_result(0,drawn);state.pending=true;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_result.complete=drawn==1;
+#endif
     return drawn;
 #else
     const bool drawn=re4dc_ps2_mesh_draw(0,state.far)!=0;state.pending=true;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_result.complete=drawn;
+#endif
     return drawn;
 #endif
 }
 #endif
 extern "C" int re4dc_ps2_world_pending(){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    const re4dc::wc24::Scope wc_world(re4dc::wc24::NearPT,re4dc::wc24::Other);
+#endif
 #if RE4DC_MOVIE_WORLD_ARENA
     if(re4dc_ps2_mesh_movie_blocked())return 0;
 #endif
@@ -771,6 +802,14 @@ extern "C" int re4dc_ps2_world_pending(){
     return state.pending && state.frame==re4dc_ui_frame() && state.flushed!=state.frame;
 }
 extern "C" void re4dc_ps2_world_flush(){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    // Shared deferred-pass dispatch/receipt work is charged to NearPT Other;
+    // each actual PT/TR pass supplies its own nested path and phases.
+    const re4dc::wc24::Scope wc_world(re4dc::wc24::NearPT,re4dc::wc24::Other);
+    re4dc::room::ps2::Wc24WorldResult wc_result;
+    wc_result.complete=!re4dc::room::ps2::state.pending;
+    bool wc_receipt=true;
+#endif
 #if RE4DC_MOVIE_WORLD_ARENA
     if(re4dc_ps2_mesh_movie_blocked())return;
 #endif
@@ -795,17 +834,30 @@ extern "C" void re4dc_ps2_world_flush(){
         unsigned generation=0;
         const bool transition=re4dc_ps2_source_package(&generation) &&
             re4dc_source_world_transition_owner(state.frame,generation);
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const int complete=transition?re4dc_ps2_source_receipt_complete(state.frame,generation):re4dc_ps2_source_passes_complete();
+        re4dc_source_world_flush_result(state.frame,complete);wc_receipt=complete!=0;
+#else
         re4dc_source_world_flush_result(state.frame,transition?
             re4dc_ps2_source_receipt_complete(state.frame,generation):re4dc_ps2_source_passes_complete());
+#endif
 #else
         const bool pt=re4dc_ps2_mesh_draw(1,state.far)!=0,tr=re4dc_ps2_mesh_draw(2,state.far)!=0;
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const int complete=re4dc_ps2_source_passes_complete();
+        re4dc_source_world_flush_result(state.frame,complete);wc_receipt=complete!=0;
+#else
         re4dc_source_world_flush_result(state.frame,re4dc_ps2_source_passes_complete());
+#endif
 #endif
 #endif
         if(!(state.frame%120) || !pt || !tr)re4dc_ps2_mesh_log(state.frame);
 #if RE4DC_FAR_SHELL
         re4dc_far_shell_log(state.frame);
+#endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        wc_result.complete=pt==1 && tr==1 && wc_receipt;
 #endif
         return;
     }

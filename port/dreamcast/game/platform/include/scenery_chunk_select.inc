@@ -15,6 +15,10 @@
     }
     // Picks appended at out (room for part.meshlet_count); returns how many.
     __attribute__((noinline)) unsigned chunk_select(Pick* out){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const re4dc::wc24::Scope wc_selection(re4dc::wc24::Selection);
+        unsigned wc_indexed=0,wc_plain=0,wc_empty=0;
+#endif
         const auto& lod=package.part_lods()[part_index];
         const auto* clusters=package.clusters();const auto* levels=package.levels();const auto* all=package.meshlets();
         const bool groups=sg && lean_am;
@@ -210,7 +214,18 @@
                     }
                 }
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+                // Only retained picks: a cone rejection above removes its
+                // provisional record. nr==0 still owns a replay/setup pick.
+                if(package.indexed(l))++wc_indexed;else ++wc_plain;
+                if(!pk.nr)++wc_empty;
+#endif
             }
         }
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::count(re4dc::wc24::PickedIndexed,wc_indexed);
+        re4dc::wc24::count(re4dc::wc24::PickedPlain,wc_plain);
+        re4dc::wc24::count(re4dc::wc24::PickedEmpty,wc_empty);
+#endif
         return np;
     }

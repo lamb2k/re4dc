@@ -116,6 +116,13 @@ extern "C" void re4dc_pvs23_observe(unsigned,unsigned,unsigned,const void*,const
 extern "C" void re4dc_pvs23_commit(unsigned,unsigned,const unsigned*,const unsigned*);
 #endif
 #include "cache20.h"
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+#include "include/world_census24.h"
+static unsigned wc24_generation; // native package and far-shell residency epoch
+#if defined(RE4DC_VIEW_DIST_OPTION) && RE4DC_VIEW_DIST_OPTION
+extern "C" int re4dc_view_dist_get(void);
+#endif
+#endif
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
 #include "include/pvs23_meter.hpp"
 extern "C" void re4dc_wm_corners(const std::uint8_t*,unsigned,unsigned);
@@ -954,6 +961,21 @@ namespace {
 bool scn21_arm_b(){return re4dc_bench_arm && re4dc_bench_arm()=='B';}
 #endif
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+// Accumulate scalar fallback work locally; one integer-only census call on
+// every exit, including a capacity failure partway through a strip.
+struct Wc24Count {
+    re4dc::wc24::Counter counter; unsigned n=0;
+    explicit Wc24Count(re4dc::wc24::Counter c):counter(c){}
+    ~Wc24Count(){if(n)re4dc::wc24::count(counter,n);}
+};
+// A rejected/aborted native pass may leave legacy world work outside the
+// census scope. Keep that window visibly invalid instead of pricing a part.
+struct Wc24PassResult {
+    bool complete=false;
+    ~Wc24PassResult(){if(!complete)re4dc::wc24::fault();}
+};
+#endif
 struct Emitter {
     const Re4dcModelPart& p;
     float mv[12];  // package -> view: group bounds
@@ -1035,9 +1057,18 @@ struct Emitter {
 #else
     void end_direct(){if(sq){re4dc_model_direct_end(slots);sq=nullptr;}}
 #endif
-    void put(unsigned n){sq=re4dc_ta_put(sq,dst+used,n);slots+=n;}
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+#define RE4DC_WC24_PUT_SCOPE() const re4dc::wc24::Scope wc_submit(re4dc::wc24::Submit);
+#else
+#define RE4DC_WC24_PUT_SCOPE()
+#endif
+    void put(unsigned n){RE4DC_WC24_PUT_SCOPE()sq=re4dc_ta_put(sq,dst+used,n);slots+=n;}
+#undef RE4DC_WC24_PUT_SCOPE
 #endif
     bool bind(){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const re4dc::wc24::Scope wc_header(re4dc::wc24::HeaderMaterial);
+#endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
 #if RE4DC_SCENERY_SUBMIT_BATCH
         // Claimed transition groups may log from the validity walk itself.
@@ -1136,6 +1167,9 @@ struct Emitter {
         return true;
     }
     bool flush(){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const re4dc::wc24::Scope wc_submit(re4dc::wc24::Submit);
+#endif
         if(!streaming || !used)return false;
         re4dc_model_packet_commit(used);submitted=true;used=0;
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
@@ -1206,6 +1240,11 @@ struct Emitter {
     template<class Vertex,class Index>
     int strip(const Vertex* base,const re4dc::room::CompactBatch& batch,
               const Index* index,unsigned count){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::Scope wc_phase(re4dc::wc24::Transform);
+        re4dc::wc24::count(re4dc::wc24::StripInputs,count);
+        Wc24Count wc_transformed(re4dc::wc24::Transformed);
+#endif
         input+=count-2;
         if(count<=limit){
             if(count>limit-used && !flush())return submitted?-1:0;
@@ -1213,6 +1252,9 @@ struct Emitter {
             const float screen_w=RE4DC_SCREEN_WF,screen_h=RE4DC_SCREEN_HF; // RES_MODES: one load per strip, not per corner
             const bool ready=re4dc::render::prepare_direct_strip(dst+used,count,near,far,
                 [&](std::uint32_t local,re4dc::render::DirectStripVertex& out){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+                    ++wc_transformed.n;
+#endif
                     out=re4dc::render::prepare_static_vertex(corner(base[index[local]]),batch,0.0f);
                     out.u=u(out.u);out.v=v(out.v);
                     if(!vertex_alpha)out.argb=(out.argb&0xffffffU)|alpha;
@@ -1220,6 +1262,9 @@ struct Emitter {
                     return true;
                 });
             stats.vertices+=count;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_phase.phase(re4dc::wc24::Submit);
+#endif
             if(ready){
                 if(outside)++stats.strips_culled;
 #if RE4DC_MESH_DIRECT
@@ -1237,6 +1282,10 @@ struct Emitter {
     template<class Vertex,class Index>
     int clip_strip(const Vertex* base,const re4dc::room::CompactBatch& batch,
                    const Index* index,unsigned count){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const re4dc::wc24::Scope wc_clip(re4dc::wc24::Clip);
+        Wc24Count wc_transformed(re4dc::wc24::Transformed);
+#endif
         ++stats.strips_clipped;
         float alphas[3]={float(alpha>>24)RE4DC_INV255,float(alpha>>24)RE4DC_INV255,float(alpha>>24)RE4DC_INV255};
 #if RE4DC_MESH_CLIP_LEAN && RE4DC_HW_LEAN && defined(__sh__)
@@ -1250,6 +1299,9 @@ struct Emitter {
             const float screen_w=RE4DC_SCREEN_WF,screen_h=RE4DC_SCREEN_HF,half_w=RE4DC_SCREEN_HALF_WF,half_h=RE4DC_SCREEN_HALF_HF;
             unsigned all=0x3fU;
             for(unsigned i=0;i<count && all;++i){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+                ++wc_transformed.n;
+#endif
                 const auto c=corner(base[index[i]]);
                 const float x=mvq[0]*c.x+mvq[1]*c.y+mvq[2]*c.z+mvq[3];
                 const float y=mvq[4]*c.x+mvq[5]*c.y+mvq[6]*c.z+mvq[7];
@@ -1291,6 +1343,9 @@ struct Emitter {
                 {const unsigned t=s2;s2=s1;s1=s0;s0=t;}
                 const re4dc::render::StaticCorner c=corner(base[index[i]]);
                 re4dc::render::RenderVertex& v=ring[s0];
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+                ++wc_transformed.n;
+#endif
                 clip_vertex(c,batch,v);
                 ring_alpha[s0]=vertex_alpha?float(c.argb>>24)RE4DC_INV255:alphas[0];
                 is_packed[s0]=false;
@@ -1336,6 +1391,9 @@ struct Emitter {
 #endif
         if(count<=kClipOnce){
             re4dc::render::RenderVertex once[kClipOnce];float once_alpha[kClipOnce];
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_transformed.n+=count;
+#endif
             for(unsigned i=0;i<count;++i){
                 const re4dc::render::StaticCorner c=corner(base[index[i]]);
                 clip_vertex(c,batch,once[i]);
@@ -1359,6 +1417,9 @@ struct Emitter {
             re4dc::render::RenderVertex tri[3];
             const re4dc::render::StaticCorner corners[3]={corner(base[index[i-2+(i&1)]]),
                 corner(base[index[i-1-(i&1)]]),corner(base[index[i]])};
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_transformed.n+=3U;
+#endif
             for(unsigned k=0;k<3;++k){
                 clip_vertex(corners[k],batch,tri[k]);
                 if(vertex_alpha)alphas[k]=float(corners[k].argb>>24)RE4DC_INV255;
@@ -2573,6 +2634,10 @@ struct MeshDraw : Emitter {
     // the same three outcomes, in the same order, as Emitter::strip().
     int meshlet(const re4dc::room::Meshlet& l,const re4dc::room::CompactBatch& batch){
         namespace vp=re4dc::vp;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::Scope wc_phase(re4dc::wc24::Selection);
+        Wc24Count wc_strip_inputs(re4dc::wc24::StripInputs);
+#endif
 #if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
         struct CenScope {
             const Emitter* e;unsigned n,s0,c0,o0,v0;
@@ -2588,6 +2653,9 @@ struct MeshDraw : Emitter {
         // RE4DC_MESH_CLASSIFY=0 (default) saves ~1.5 KiB of image, i.e. KOS heap,
         // at ~8 cycles per vertex for outcodes in every meshlet.
         const unsigned checks=RE4DC_MESH_CLASSIFY?vp::classify(bmin,bmax,mvq,p.projection,p.viewport,near,far):vp::kChecksAll;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        wc_phase.phase(re4dc::wc24::Transform);
+#endif
         const auto* base=corners(l);
         const auto* in=reinterpret_cast<const vp::Vertex12*>(base);
 #if RE4DC_MESH_PRIME_LAZY
@@ -2602,6 +2670,9 @@ struct MeshDraw : Emitter {
         // than near: every strip of the group would be culled after the transform), transforms only the corner
         // range of the groups left and walks only their strips (in stored order). All groups left: the whole path.
         if(sg && !sg_whole && checks==vp::kChecksAll && sq && lean_am){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            re4dc::wc24::Scope wc_groups(re4dc::wc24::Selection);
+#endif
             const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*unsigned(&l-package.meshlets()));
             unsigned lo,hi,culled;std::uint16_t r0[8],r1[8];
 #if RE4DC_SG_SELECT_LEAN
@@ -2633,11 +2704,18 @@ struct MeshDraw : Emitter {
             if(culled){
                 lean::st.sg_culled+=culled;++lean::st.sg_meshlets;
                 if(!nr){lean::st.sg_vskip+=l.vertex_count;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+                    re4dc::wc24::count(re4dc::wc24::PickedEmpty);
+#endif
 #if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
                     cen.n=0;
 #endif
                     return 1;}
                 const unsigned vn=hi-lo+1U;lean::st.sg_vskip+=l.vertex_count-vn;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+                wc_groups.phase(re4dc::wc24::Transform);
+                re4dc::wc24::count(re4dc::wc24::Transformed,vn);
+#endif
 #if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
                 cen.n=vn;
 #endif
@@ -2653,6 +2731,9 @@ struct MeshDraw : Emitter {
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
                 if(ps2)re4dc_wm_corners(outcodes+lo,vn,0x3fU);
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+                wc_groups.phase(re4dc::wc24::Submit);
+#endif
                 const std::uint8_t* const sb=package.strip_begin(l);
                 for(unsigned i=0;i<nr;++i){
                     int result=1;
@@ -2662,6 +2743,20 @@ struct MeshDraw : Emitter {
                 return 1;
             }
         }
+#endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        // Count the actual arithmetic input range. DEDUP's copied entries are
+        // prepared output but are not additional position transforms.
+        unsigned wc_vertices=l.vertex_count;
+#if RE4DC_SCENERY_DEDUP==3
+        if(checks!=vp::kChecksAll)
+            if(const std::uint32_t dw=dd_word(l);dd_active(dw))wc_vertices=dd_unique_count(l,dw);
+#endif
+#if RE4DC_MESH_VP_SCHED==1 && RE4DC_SCENERY_DEDUP
+        if(checks==vp::kChecksAll)
+            if(const std::uint32_t dw=dd_word(l);dd_active(dw))wc_vertices=dd_unique_count(l,dw);
+#endif
+        re4dc::wc24::count(re4dc::wc24::Transformed,wc_vertices);
 #endif
 #if RE4DC_SCENERY_DEDUP==3
         if(const std::uint32_t dw=dd_word(l);dd_active(dw) && checks!=vp::kChecksAll){
@@ -2700,6 +2795,9 @@ struct MeshDraw : Emitter {
             re4dc_wm_corners(outcodes,count,checks==vp::kChecksNone?0U:checks==vp::kChecksScreen?0x0fU:0x3fU);
         }
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        wc_phase.phase(re4dc::wc24::Submit);
+#endif
         const unsigned screen=vp::screen_mask(checks),depth=vp::depth_mask(checks);
 #if RE4DC_MESH_STRIP_LEAN==2
         if(checks==vp::kChecksAll && sq)strip_lean_compare(l);
@@ -2721,6 +2819,9 @@ struct MeshDraw : Emitter {
 #endif
         while(s<end){
             const unsigned n=*s++;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_strip_inputs.n+=n;
+#endif
             input+=n-2;
             vp::StripCodes c{0,0};
             if(screen)c=vp::codes(outcodes,s,n);
@@ -2788,9 +2889,15 @@ struct MeshDraw : Emitter {
     const std::uint8_t* strips_bf(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
                                   const re4dc::room::CompactBatch& batch,int& result){
         namespace vp=re4dc::vp;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        Wc24Count wc_strip_inputs(re4dc::wc24::StripInputs);
+#endif
         constexpr unsigned screen=vp::screen_mask(vp::kChecksAll),depth=vp::depth_mask(vp::kChecksAll);
         while(s<end){
             const unsigned n=*s++;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_strip_inputs.n+=n;
+#endif
             input+=n-2;
             const vp::StripCodes c=vp::codes(outcodes,s,n);
             if(c.all&depth){stats.vertices+=n;++stats.strips_culled;s+=n;continue;}
@@ -2811,6 +2918,9 @@ struct MeshDraw : Emitter {
 #if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
     const std::uint8_t* strips_bf_sq(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
                                      const re4dc::room::CompactBatch& batch,int& result){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        Wc24Count wc_strip_inputs(re4dc::wc24::StripInputs);
+#endif
         for(;;){
             const std::uint8_t* const mark=s;std::uint32_t* q=sq;const std::uint32_t* const qmark=q;
             unsigned culled=0,emitted=0,accepted_triangles=0;
@@ -2819,12 +2929,18 @@ struct MeshDraw : Emitter {
             // Keep the C reference's source-strip counters; slots track actual
             // SQ writes. lean_flush's output=slots-2*strips cannot be used here.
             const unsigned strips=culled+emitted,sum=unsigned(s-mark)-strips;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_strip_inputs.n+=sum;
+#endif
             input+=sum-2U*strips;stats.vertices+=sum;stats.strips_culled+=culled;stats.strips+=emitted;
             slots+=unsigned(q-qmark)/8U;output+=accepted_triangles;sq=q;
             // Actual emitted pieces are hashed by the common assembly trace
             // hook in diagnostic builds. Do not replay rejected original strips.
             if(s>=end){result=1;return nullptr;}
             const unsigned n=*s++; // unchanged depth-crossing / oversize clipper
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_strip_inputs.n+=n;
+#endif
             input+=n-2;
             if(n<=limit)stats.vertices+=n;
             result=clip_strip(base,batch,s,n);
@@ -2836,6 +2952,9 @@ struct MeshDraw : Emitter {
     void lean_flush(const std::uint8_t* s,const std::uint8_t* mark,std::uint32_t* q,const std::uint32_t* qmark,
                     unsigned culled,unsigned emitted){
         const unsigned strips=culled+emitted,sum=unsigned(s-mark)-strips,v=unsigned(q-qmark)/8U;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::count(re4dc::wc24::StripInputs,sum);
+#endif
         input+=sum-2U*strips;stats.vertices+=sum;stats.strips_culled+=culled;stats.strips+=emitted;
         slots+=v;output+=v-2U*emitted;sq=q;
     }
@@ -2868,6 +2987,9 @@ struct MeshDraw : Emitter {
             lean_flush(s,mark,q,qmark,culled,emitted);
             if(s>=end){result=1;return nullptr;}
             const unsigned n=*s++; // a strip for the clipper: meshlet()'s code
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            re4dc::wc24::count(re4dc::wc24::StripInputs,n);
+#endif
             input+=n-2;
             if(n<=limit)stats.vertices+=n;
             result=clip_strip(base,batch,s,n);
@@ -2926,6 +3048,9 @@ struct MeshDraw : Emitter {
              ,bool known=false // PS2_WORLD_LEAN bit 2: the meshlet's cluster (or placement) is inside every plane
 #endif
             ){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::Scope wc_phase(re4dc::wc24::Selection);
+#endif
 #if RE4DC_PS2_WORLD_LEAN
         if(known){
             ++lean::st.skipped;
@@ -2973,8 +3098,15 @@ struct MeshDraw : Emitter {
         }
 #endif
         ++stats.groups_visible;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::count(package.indexed(l)?re4dc::wc24::PickedIndexed:re4dc::wc24::PickedPlain);
+        wc_phase.phase(re4dc::wc24::Other);
+#endif
         if(!bind()){++stats.bind_rejects;return submitted?-1:0;}
         ++stats.batches;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        wc_phase.phase(re4dc::wc24::Transform);
+#endif
         if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
 #if RE4DC_MESH_FASTPATH
         // A slab too small to lend the cache behaves like any other
@@ -3002,6 +3134,9 @@ struct MeshDraw : Emitter {
     // v2: cluster test, then the coarsest level within tolerance at the
     // cluster's nearest view depth (group_visible's support radius along z).
     int draw_clusters(){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const re4dc::wc24::Scope wc_selection(re4dc::wc24::Selection);
+#endif
         const auto& lod=package.part_lods()[part_index];
         const auto* clusters=package.clusters();const auto* levels=package.levels();
         for(unsigned c=lod.first_cluster;c<lod.first_cluster+lod.cluster_count;++c){
@@ -3154,9 +3289,15 @@ struct MeshDraw : Emitter {
 #endif
     int emit_pick(const Pick& pk){
         namespace vp=re4dc::vp;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::Scope wc_phase(re4dc::wc24::Other);
+#endif
         ++stats.groups_visible;
         if(!bind()){++stats.bind_rejects;return submitted?-1:0;}
         ++stats.batches;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        wc_phase.phase(re4dc::wc24::Transform);
+#endif
         if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
         if(!borrow()){++stats.reserve_rejects;return submitted?-1:0;}
         const auto& l=package.meshlets()[pk.let];
@@ -3186,6 +3327,9 @@ struct MeshDraw : Emitter {
 #endif
             if(!pk.nr)return 1;
             const unsigned vn=pk.hi-pk.lo+1U;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            re4dc::wc24::count(re4dc::wc24::Transformed,vn);
+#endif
             vp::transform_sched<vp::kChecksAll>(in+pk.lo,vn,cache+pk.lo,outcodes+pk.lo,k);
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
             if(ps2)re4dc_wm_corners(outcodes+pk.lo,vn,0x3fU);
@@ -3193,6 +3337,9 @@ struct MeshDraw : Emitter {
 #if RE4DC_SCENERY_DEDUP
             if(const std::uint32_t dw=dd_word(l);dd_active(dw))
                 dedup::fill(in,cache,outcodes,dd_unique_count(l,dw),l.vertex_count,dd_source(l,dw),k,pk.lo,pk.hi);
+#endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_phase.phase(re4dc::wc24::Submit);
 #endif
             const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*pk.let);
             unsigned prev=0;
@@ -3208,6 +3355,13 @@ struct MeshDraw : Emitter {
             }
             return 1;
         }
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        unsigned wc_vertices=l.vertex_count;
+#if RE4DC_SCENERY_DEDUP
+        if(const std::uint32_t dw=dd_word(l);dd_active(dw))wc_vertices=dd_unique_count(l,dw);
+#endif
+        re4dc::wc24::count(re4dc::wc24::Transformed,wc_vertices);
+#endif
 #if RE4DC_SCENERY_DEDUP
         if(const std::uint32_t dw=dd_word(l);dd_active(dw)){
             const unsigned u=dd_unique_count(l,dw);
@@ -3224,6 +3378,9 @@ struct MeshDraw : Emitter {
 #endif
             re4dc_wm_corners(outcodes,count,0x3fU);
         }
+#endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        wc_phase.phase(re4dc::wc24::Submit);
 #endif
         int result=1;
         strips_lean(sb,sb+l.strip_bytes,base,batch,result);
@@ -3251,6 +3408,9 @@ struct MeshDraw : Emitter {
     __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n,const Pick* following=nullptr){
 #else
     __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n){
+#endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const re4dc::wc24::Scope wc_replay(re4dc::wc24::Other);
 #endif
 #if RE4DC_SCENERY_EMIT_PREFETCH
         if(n>1U)prefetch_emit_header(pk[1]);
@@ -3286,6 +3446,9 @@ struct MeshDraw : Emitter {
     }
 #endif
     int run(){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const re4dc::wc24::Scope wc_selection(re4dc::wc24::Selection);
+#endif
 #if RE4DC_PS2_WORLD_MESH
         // A PS2 part has no source image to reserve against; its direct bind checks the frame state.
         if(!ps2 && !re4dc_model_packet_reserve(&p,&packet)){++stats.reserve_rejects;return 0;}
@@ -6200,6 +6363,10 @@ static void note(unsigned pass,unsigned drawn_pass){
 }
 #endif
 int ps2_pass(unsigned pass,float zfar){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    const re4dc::wc24::Scope wc_selection(re4dc::wc24::Selection);
+    Wc24PassResult wc_result;
+#endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return -1;}
 #endif
@@ -6388,6 +6555,9 @@ int ps2_pass(unsigned pass,float zfar){
     ChunkPart cctx[kChunkParts];MeshDraw::Pick cpk[kChunkPicks];unsigned nctx=0,npk=0;
     const auto& cpkg=ps2w.package;
     auto chunk_flush=[&]()->int{
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const re4dc::wc24::Scope wc_replay(re4dc::wc24::Other);
+#endif
 #if RE4DC_SCENERY_REPLAY_LEAN
         if(!nctx){npk=0;return 1;}
 #endif
@@ -6946,6 +7116,9 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_WORLD_HOLE_DIAG
     whd::end_pass(pass,c.parts,re4dc_ui_frame(),ps2w.room);
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_result.complete=!c.fallback;
+#endif
     return c.fallback?0:1;
 }
 }
@@ -7023,6 +7196,10 @@ extern "C" int re4dc_ps2_mesh_movie_return(unsigned token,int retiring){
 }
 #endif
 extern "C" void re4dc_ps2_mesh_camera(const float* view,const float* projection,const float* viewport){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    const re4dc::wc24::Scope wc_world(re4dc::wc24::NearOP,re4dc::wc24::Other);
+    Wc24PassResult wc_result;
+#endif
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return;
 #endif
@@ -7030,6 +7207,9 @@ extern "C" void re4dc_ps2_mesh_camera(const float* view,const float* projection,
     std::memcpy(ps2w.projection,projection,sizeof(ps2w.projection));
     std::memcpy(ps2w.viewport,viewport,sizeof(ps2w.viewport));
     ps2w.camera=true;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_result.complete=true;
+#endif
 }
 #if RE4DC_PS2_INTERIOR_CULL==2
 // =2: count the check colour (RGB565 magenta, any dither of green) in the displayed framebuffer: the image the PVR
@@ -7057,6 +7237,33 @@ void pc_scan(unsigned frame){
 #define RE4DC_FAR_SHELL_PART 2
 #include "far_shell.inc"
 #undef RE4DC_FAR_SHELL_PART
+#endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+// Independent of WORLD_METER: enabling the census must not enable its QA
+// distance overrides or alter the renderer's existing selection policy.
+extern "C" void re4dc_wc24_identity(unsigned out[7]){
+#if defined(RE4DC_VIEW_DIST_OPTION) && RE4DC_VIEW_DIST_OPTION
+    out[0]=unsigned(re4dc_view_dist_get());
+#else
+    out[0]=~0U;
+#endif
+#if RE4DC_PS2_PVS
+    out[1]=re4dc_ps2_pvs_on;
+#else
+    out[1]=~0U;
+#endif
+#if RE4DC_FAR_SHELL
+    out[2]=unsigned(far_shell_mode);
+#else
+    out[2]=~0U;
+#endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    out[3]=re4dc_qa_wopq_mm;out[4]=re4dc_qa_wxlu_mm;out[5]=re4dc_qa_wshell;
+#else
+    out[3]=out[4]=out[5]=0;
+#endif
+    out[6]=wc24_generation;
+}
 #endif
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
 // WORLD_METER (game30.mk; QA disc only; display / render only). Per tick: us and vertices of the PS2 world's opaque pass
@@ -7122,6 +7329,11 @@ extern "C" int re4dc_wm_shell_draw(float cut,float full){
 }
 #endif
 extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    const re4dc::wc24::Scope wc_world(pass<3U?static_cast<re4dc::wc24::Path>(pass):re4dc::wc24::PathCount,
+                                     re4dc::wc24::Other);
+    Wc24PassResult wc_result;
+#endif
     RE4DC_BFC_SCOPE(1u,0u);  // BACKFACE_CENSUS
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     const wmeter::Scope wm_scope(pass?1U:0U,&stats.vertices,pass);
@@ -7131,7 +7343,15 @@ extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
     if(ps2_movie_blocked())return 1;
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    if(r11fNativeClaimed()){
+        const int result=r11fNativePass(pass,zfar);
+        wc_result.complete=result>0;
+        return result;
+    }
+#else
     if(r11fNativeClaimed())return r11fNativePass(pass,zfar);
+#endif
 #endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return -1;}
@@ -7144,6 +7364,10 @@ extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
     if(pass>2 || !ps2w.camera || !ps2_open())return 0;
 #if RE4DC_MOVIE_WORLD_ARENA
     MovieWorldRead read;
+#endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    // ps2_pass owns all of its early returns and the final fallback count.
+    wc_result.complete=true;
 #endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     const int result=ps2_pass(pass,zfar);
@@ -7267,6 +7491,9 @@ extern "C" void re4dc_ps2_mesh_log(unsigned frame){
 #endif
 }
 extern "C" void re4dc_ps2_mesh_retire(){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    ++wc24_generation;
+#endif
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     ++wm_generation; // also invalidate a same-room package reload or teleport
 #endif
@@ -7478,8 +7705,18 @@ extern "C" void re4dc_source_world_diag_report(unsigned,const char*);
 #endif
 // re4dc_static_submit on a non-coarse image of a no-std room: once per image, the loaded package only (no I/O).
 extern "C" void re4dc_ps2_mesh_source(unsigned room,const Re4dcModelPart& p){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    const re4dc::wc24::Scope wc_world(re4dc::wc24::NearOP,re4dc::wc24::Other);
+    Wc24PassResult wc_result;
+#endif
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return;
+#endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    // Ownership arbitration and inventory/duplicate callbacks need not launch
+    // another world. Once this adapter must launch, package/camera failure is
+    // an incomplete world, even when ordinary source geometry can fall back.
+    wc_result.complete=true;
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     if(room==0x11f && re4dc_r11f_legacy_blocked(re4dc_ui_frame()))return;
@@ -7502,6 +7739,9 @@ extern "C" void re4dc_ps2_mesh_source(unsigned room,const Re4dcModelPart& p){
 #endif
     static unsigned last=~0U,images=0;
     const unsigned frame=re4dc_ui_frame();
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_result.complete=frame==last;
+#endif
     (void)p; // an unbound scenery part carries no camera (world / view are the binding's): the game's
     if(frame==last || !ps2w.storage || ps2w.room!=room)return;
 #if RE4DC_PS2_WORLD_PREFLIGHT_DIAG
@@ -7524,6 +7764,9 @@ extern "C" void re4dc_ps2_mesh_source(unsigned room,const Re4dcModelPart& p){
     if(room==0x11f)r11fLegacyStamp(frame);
 #endif
     const int drawn=re4dc_ps2_world_source_draw();
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_result.complete=drawn>0;
+#endif
     if(++images<=8 || !(images%120))re4dc_log("PS2MESH source image frame=%u room=%03x drawn=%d images=%u\n",frame,room,drawn,images);
 }
 #endif
