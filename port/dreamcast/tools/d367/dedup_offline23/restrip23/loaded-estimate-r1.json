@@ -1,0 +1,116 @@
+{
+  "source": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "status": "OFFLINE_LOADED_CENSUS_ONLY_NOT_CAMERA_GATE",
+  "inputs_sha256": "41938182814397bf935357ce35e3d43403bca1ce84295dbbc215254dd5c324f2",
+  "rooms": {
+    "r100": {
+      "input": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r100-stripshare-v1/ps2-dd3.re4mesh",
+        "bytes": 1488192,
+        "sha256": "3d339013ff79b6b0c917b40beb326f9a063d959c9db10da33331a1f335d8fb1d"
+      },
+      "policy": {
+        "path": "/root/re4data/private/mip22b-20261022/dc/native/r100/ps2-world.r4pw",
+        "bytes": 19612,
+        "sha256": "07acc55b2b009abd8368af2880c556272cf6de41595908739afc589baceab6cd"
+      },
+      "groups": null,
+      "meshlets": 1967,
+      "changed_meshlets": 0,
+      "admission": {
+        "opaque": 1257,
+        "nonopaque_alpha_or_marked": 710
+      },
+      "all_loaded_LOD_strips_before": 26185,
+      "all_loaded_LOD_strips_after": 26185,
+      "all_loaded_LOD_corners_before": 123664,
+      "all_loaded_LOD_corners_after": 123664,
+      "all_loaded_LOD_triangles": 71294,
+      "average_strip_before": 4.722703838075234,
+      "average_strip_after": 4.722703838075234,
+      "corner_reduction_percent": 0.0,
+      "physical_bytes_before": 1488192,
+      "estimated_physical_bytes_after": 1488192,
+      "allocation32_before": 1488192,
+      "allocation32_after": 1488192,
+      "strip_pool_before": 103941,
+      "estimated_strip_pool_after": 103941,
+      "vertex_bytes_unchanged": 1288248,
+      "limits": "Loaded packages including unused LOD/fallback; not camera-weighted or clipped TA traffic. No asset written; not GO evidence."
+    },
+    "r101": {
+      "input": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r101-stripshare-v1/ps2-dd3.re4mesh",
+        "bytes": 1243808,
+        "sha256": "e7f257773fb7ee43271994c867f5f4307a2a13c1d85cd93afcbcc15488c00708"
+      },
+      "policy": {
+        "path": "/root/re4data/private/mip22b-20261022/dc/native/r101/ps2-world.r4pw",
+        "bytes": 17100,
+        "sha256": "2398a9b4c985c0227b98b17b22db12c6e6e5f3fe686546940812bab769d2ea3d"
+      },
+      "groups": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r101-stripshare-v1/ps2-dd3.r4sg",
+        "bytes": 117152,
+        "sha256": "b1ffc00c3e00ca69874e1b2a0fbe84d243653bd6ccd280c2e837e2731300e30d"
+      },
+      "meshlets": 1830,
+      "changed_meshlets": 0,
+      "admission": {
+        "opaque": 1678,
+        "nonopaque_alpha_or_marked": 152
+      },
+      "all_loaded_LOD_strips_before": 23166,
+      "all_loaded_LOD_strips_after": 23166,
+      "all_loaded_LOD_corners_before": 103562,
+      "all_loaded_LOD_corners_after": 103562,
+      "all_loaded_LOD_triangles": 57230,
+      "average_strip_before": 4.470430803764137,
+      "average_strip_after": 4.470430803764137,
+      "corner_reduction_percent": 0.0,
+      "physical_bytes_before": 1243808,
+      "estimated_physical_bytes_after": 1243808,
+      "allocation32_before": 1243808,
+      "allocation32_after": 1243808,
+      "strip_pool_before": 105079,
+      "estimated_strip_pool_after": 105079,
+      "vertex_bytes_unchanged": 1039104,
+      "limits": "Loaded packages including unused LOD/fallback; not camera-weighted or clipped TA traffic. No asset written; not GO evidence."
+    },
+    "r103": {
+      "input": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r103-stripshare-v1/ps2-dd3.re4mesh",
+        "bytes": 1047968,
+        "sha256": "2b805c88a9375180e41aeb55f8c0656d07fe96c32a12acf504b05be8b16d110a"
+      },
+      "policy": {
+        "path": "/root/re4data/private/mip22b-20261022/dc/native/r103/ps2-world.r4pw",
+        "bytes": 11272,
+        "sha256": "585972662d35ab6a9a4634227634a20b80e66ed2a294273245e17f20efa5fe31"
+      },
+      "groups": null,
+      "meshlets": 1448,
+      "changed_meshlets": 0,
+      "admission": {
+        "opaque": 1157,
+        "nonopaque_alpha_or_marked": 291
+      },
+      "all_loaded_LOD_strips_before": 19700,
+      "all_loaded_LOD_strips_after": 19700,
+      "all_loaded_LOD_corners_before": 85192,
+      "all_loaded_LOD_corners_after": 85192,
+      "all_loaded_LOD_triangles": 45792,
+      "average_strip_before": 4.3244670050761425,
+      "average_strip_after": 4.3244670050761425,
+      "corner_reduction_percent": 0.0,
+      "physical_bytes_before": 1047968,
+      "estimated_physical_bytes_after": 1047968,
+      "allocation32_before": 1047968,
+      "allocation32_after": 1047968,
+      "strip_pool_before": 92121,
+      "estimated_strip_pool_after": 92121,
+      "vertex_bytes_unchanged": 883260,
+      "limits": "Loaded packages including unused LOD/fallback; not camera-weighted or clipped TA traffic. No asset written; not GO evidence."
+    }
+  }
+}
