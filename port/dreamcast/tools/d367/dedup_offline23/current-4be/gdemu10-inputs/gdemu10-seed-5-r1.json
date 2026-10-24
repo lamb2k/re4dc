@@ -1,0 +1,12 @@
+{
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "seed": 5,
+  "environment": {
+    "RE4DC_GD_PROFILE": "gdemu",
+    "RE4DC_GD_JITTER": "20000",
+    "RE4DC_GD_SEED": "5"
+  },
+  "track03_sha256": "ff2bbc48a70be375c0c32000776fef4164a870c79ce23395eebc3c8c0430038a",
+  "fixture_wire_sha256": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f",
+  "capture": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu5-console-r1"
+}

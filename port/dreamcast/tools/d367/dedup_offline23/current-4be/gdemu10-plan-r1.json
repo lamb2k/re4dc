@@ -1,0 +1,54 @@
+{
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "kind": "FROZEN_NINE_INDEPENDENT_SEED_INPUTS_EXISTING_BASE",
+  "track03_sha256": "ff2bbc48a70be375c0c32000776fef4164a870c79ce23395eebc3c8c0430038a",
+  "fixture_wire_sha256": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f",
+  "source_pins": {
+    "/root/probe/lanes/route/out-fpdd23cur4be08e01ongW/re4dc-game.elf": "463045fc9d31f2729f406d6f25e7668e0bfa35d8b984c420dbc8554e46c1fb8f",
+    "/root/probe/lanes/route/out-fpdd23cur4be08e01ongW/resolved-knobs.txt": "f6268eaf0929d99e8e3eb9671c6e89cd2893ccda125fd69cf70c42d9323c4c1c",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/base-standard-current4be-on-r1/base.json": "fb5e9259fca59a03b185fa89330968e94829f53b207892ce0213e5360f7a382a",
+    "/root/work/lanes/dedup-offline23-current-d5c/port/dreamcast/tools/d367/fullplay/segments/door103-warp.txt": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/current-d5c-gdemu10.py": "784c5cc313a017def89c346e7f4e496227498a576e797e73bd58bb30ecbe7f1d",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/dedup-offline23/current-d5c-run-gdemu10.sh": "fe52ae68c920470344aa4a218673684fcf710c87707f501810a53758e320bdc5"
+  },
+  "inputs": {
+    "2": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/fixtures/gdemu10-seed-2-r1.json",
+      "sha256": "f235be1f7eda98f9f0d9205b0c6fb7ee67f62ba9d4e443e2d6e83fe8f33a98f2"
+    },
+    "3": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/fixtures/gdemu10-seed-3-r1.json",
+      "sha256": "a6ab23ee591e9f4d945c13ca639e10abb0276a84afb7ee5eb7f1cfd03c0b166e"
+    },
+    "4": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/fixtures/gdemu10-seed-4-r1.json",
+      "sha256": "4d4dabe0dadb2e7d52cf97d0b62c9d0a43529f1fbf24a1fc6745ce2c7b23161c"
+    },
+    "5": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/fixtures/gdemu10-seed-5-r1.json",
+      "sha256": "4d00b4df258279f74dda9373b8c29ddfc744838ecd6b85083e5e6183fe53b587"
+    },
+    "6": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/fixtures/gdemu10-seed-6-r1.json",
+      "sha256": "a03a3532037a031e5c94128962643b0f9bce421d7c2ed359b3255b243c493d87"
+    },
+    "7": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/fixtures/gdemu10-seed-7-r1.json",
+      "sha256": "2953263d64f1db467d0d96c04464da6401ff29c342a0f1f9e797fa31165ce57f"
+    },
+    "8": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/fixtures/gdemu10-seed-8-r1.json",
+      "sha256": "ef00954469c9e103daf8fe1ac428dbb51d89e86f4141a7c7deed3fbf70193704"
+    },
+    "9": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/fixtures/gdemu10-seed-9-r1.json",
+      "sha256": "c1ba0280fa1bbaf67c133116cb691123b766d7458f5291ab7dcc65018060db42"
+    },
+    "10": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/fixtures/gdemu10-seed-10-r1.json",
+      "sha256": "e5134023197da7029e0dc06c59426e9cf61f6ffd9fbb571b03faa4d4b29fd80f"
+    }
+  },
+  "existing_seed1": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/current-4be08e01/gdemu1-console-r1",
+  "limits": "Ten actual seeds required; no pass from serial profile alone. One guest/stat3/trace16/exact55, console jitter20000, same door103 fixture. No SDK/media staging."
+}
