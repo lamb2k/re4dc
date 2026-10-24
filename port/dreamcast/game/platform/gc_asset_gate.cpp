@@ -61,7 +61,9 @@ void catalog_fault_flush(){
 }
 #if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
 // GC_ASSET_PROF: every hash call >= 20 ms is logged with its caller and size.
-extern "C" unsigned long long timer_us_gettime64(void);
+}
+#include <arch/timer.h>
+namespace re4dc_gcasset {
 struct HashProf {
     const char* what;void* caller;unsigned bytes;unsigned long long t0;
     static unsigned long long total_us,total_bytes;static unsigned calls;
