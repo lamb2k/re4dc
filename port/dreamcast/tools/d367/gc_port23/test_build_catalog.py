@@ -100,6 +100,32 @@ class BuildCatalogTests(unittest.TestCase):
                 self.run_build(root, root / 'o2', dict(schema=1, entries=[
                     dict(kind='movie', id='10130', sha256='0' * 64, provenance='ps2', evidence='x')]))
 
+    def test_harvest_rows_join_as_unknown(self):
+        with tempfile.TemporaryDirectory() as t:
+            root = Path(t)
+            disc, mpath = self.make(root)
+            glyph = hashlib.sha256(b'cell').hexdigest()
+            geo = hashlib.sha256(b'geo').hexdigest()
+            log = root / 'run' / 'run-output.txt'
+            log.parent.mkdir()
+            log.write_text('x GC-ASSET-HARVEST v=1 kind=font-glyph id=%s sha256=%s\n' % (glyph[:40], glyph) +
+                           'GC-ASSET-HARVEST v=1 kind=font-glyph id=%s sha256=%s\n' % (glyph[:40], glyph) +
+                           'GC-ASSET-HARVEST v=1 kind=geometry id=%s sha256=%s\n' % (geo[:40], geo))
+            tsv = root / 'harvest.tsv'
+            build_catalog.main(['extract-harvest', str(tsv), str(log)])
+            self.assertEqual(len(tsv.read_text().splitlines()), 1)
+            msha = hashlib.sha256(mpath.read_bytes()).hexdigest()
+            build_catalog.main(['--disc-dir', str(disc), '--manifest', str(mpath), '--manifest-sha256', msha,
+                                '--harvest', str(tsv), '--harvest-sha256', hashlib.sha256(tsv.read_bytes()).hexdigest(),
+                                '--out-dir', str(root / 'o')])
+            rows = json.loads((root / 'o' / 'catalog.json').read_text())['entries']
+            hit = [r for r in rows if r['kind'] == 'font-glyph']
+            self.assertEqual([(r['id'], r['provenance']) for r in hit], [(glyph[:40], 'unknown')])
+            self.assertFalse([r for r in rows if r['kind'] == 'geometry'])
+            with self.assertRaises(SystemExit):
+                build_catalog.main(['--disc-dir', str(disc), '--manifest', str(mpath), '--manifest-sha256', msha,
+                                    '--harvest', str(tsv), '--harvest-sha256', '0' * 64, '--out-dir', str(root / 'o2')])
+
     def test_manifest_mismatch_refused(self):
         with tempfile.TemporaryDirectory() as t:
             root = Path(t)

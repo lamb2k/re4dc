@@ -40,6 +40,8 @@ import catalog_index  # noqa: E402
 TEX = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 MOVIE = re.compile(r'^r([0-9a-f]{3})s([0-9a-f]{2})(c?)\.seq$')
 VALID_NAME = re.compile(r'^[A-Za-z0-9._-]{1,31}$')
+HARVEST_KINDS = ('font-glyph', 'font-palette', 'sound-mram', 'sound-aram', 'layout')
+HARVEST_LINE = re.compile(r'GC-ASSET-HARVEST v=1 kind=([a-z0-9-]+) id=([0-9a-z._:/-]+) sha256=([0-9a-f]{64})')
 
 
 def sha(data):
@@ -174,6 +176,42 @@ def collect(disc):
     return rows
 
 
+def extract_harvest(logs, out):
+    """GC_ASSET_HARVEST=1 run logs -> harvest TSV (kind, id, sha256, evidence), sorted, deduplicated.
+
+    Only runtime-built kinds (HARVEST_KINDS) are kept; other misses are disc-rule
+    gaps and are printed, never added. Review the TSV, then pin it with --harvest."""
+    rows, other = {}, {}
+    for log in logs:
+        label = Path(log).parent.name + '/' + Path(log).name
+        for line in Path(log).read_text(errors='replace').splitlines():
+            m = HARVEST_LINE.search(line)
+            if not m:
+                continue
+            key = m.groups()
+            (rows if key[0] in HARVEST_KINDS else other).setdefault(key, label)
+    if Path(out).exists():
+        sys.exit('harvest output exists')
+    with open(out, 'w') as f:
+        for key in sorted(rows):
+            f.write('%s\t%s\t%s\tharvest-log=%s\n' % (key + (rows[key],)))
+    for key in sorted(other):
+        print('not-harvested %s %s %s (%s)' % (key + (other[key],)))
+    print('harvest rows %d, other misses %d' % (len(rows), len(other)))
+
+
+def read_harvest(raw):
+    out = {}
+    for n, line in enumerate(raw.decode('ascii').splitlines(), 1):
+        kind, ident, digest, evidence = line.split('\t')
+        if kind not in HARVEST_KINDS or not re.fullmatch(r'[0-9a-f]{64}', digest) or not evidence.strip():
+            sys.exit('invalid harvest row %d' % n)
+        if ident != digest[:40]:
+            sys.exit('harvest id is not the digest prefix, row %d' % n)
+        out[(kind, ident, digest)] = evidence
+    return out
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--disc-dir', required=True, type=Path, help='fp_iso.py extract output')
@@ -181,7 +219,15 @@ def main(argv=None):
     ap.add_argument('--manifest-sha256', required=True)
     ap.add_argument('--proofs', type=Path, help='{"schema":1,"entries":[{kind,id,sha256,provenance,evidence}]}')
     ap.add_argument('--proofs-sha256')
+    ap.add_argument('--harvest', type=Path, help='reviewed harvest TSV (extract-harvest output)')
+    ap.add_argument('--harvest-sha256')
     ap.add_argument('--out-dir', required=True, type=Path)
+    if argv is None:
+        argv = sys.argv[1:]
+    if argv and argv[0] == 'extract-harvest':
+        if len(argv) < 3:
+            sys.exit('usage: build_catalog.py extract-harvest OUT.tsv LOG...')
+        return extract_harvest(argv[2:], argv[1])
     a = ap.parse_args(argv)
     raw = a.manifest.read_bytes()
     if sha(raw) != a.manifest_sha256:
@@ -205,6 +251,15 @@ def main(argv=None):
                 sys.exit('invalid proof row')
             proofs[(r['kind'], r['id'], r['sha256'])] = r
     rows = collect(disc)
+    harvest_sha = None
+    if a.harvest:
+        hraw = a.harvest.read_bytes()
+        harvest_sha = sha(hraw)
+        if harvest_sha != a.harvest_sha256:
+            sys.exit('harvest pin mismatch')
+        for (kind, ident, digest), evidence in read_harvest(hraw).items():
+            rows.setdefault((kind, ident, digest), dict(kind=kind, id=ident, sha256=digest,
+                            source='runtime-harvest:' + evidence))
     if not set(proofs) <= set(rows):
         sys.exit('proof row matches no disc payload')
     out = []
@@ -224,8 +279,8 @@ def main(argv=None):
         c = counts.setdefault(r['kind'], {})
         c[r['provenance']] = c.get(r['provenance'], 0) + 1
     report = dict(schema=1, label='DIAGNOSTIC catalog: not a gate pass, origin unproven unless proofs',
-                  manifest_sha256=a.manifest_sha256, proofs_sha256=proofs_sha, rows=len(out), counts=counts,
-                  pin=pin.hex(), not_derivable=['font-glyph', 'font-palette', 'sound-mram', 'sound-aram', 'layout'])
+                  manifest_sha256=a.manifest_sha256, proofs_sha256=proofs_sha, harvest_sha256=harvest_sha, rows=len(out), counts=counts,
+                  pin=pin.hex(), runtime_harvest_kinds=list(HARVEST_KINDS))
     (a.out_dir / 'catalog.json').write_text(json.dumps(dict(schema=1, entries=out), indent=1, sort_keys=True) + '\n')
     (a.out_dir / 'catalog-report.json').write_text(json.dumps(report, indent=1, sort_keys=True) + '\n')
     print(json.dumps(counts, sort_keys=True))

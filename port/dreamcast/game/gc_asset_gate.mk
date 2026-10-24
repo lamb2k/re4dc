@@ -12,6 +12,14 @@ endif
 endif
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/gc_asset_motion_unknown.o,$(PLATFORM_OBJS))
 GC_ASSET_CATALOG_SHA256 ?= 0
+# GC_ASSET_HARVEST=1: offline catalog harvest build (logs catalog misses, no quarantine). Not a gate run.
+GC_ASSET_HARVEST ?= 0
+ifneq ($(GC_ASSET_HARVEST),0)
+ifneq ($(GC_ASSET_HARVEST)$(GC_ASSET_GATE),11)
+$(error GC_ASSET_HARVEST=1 requires GC_ASSET_GATE=1)
+endif
+PLATFORM_CPPFLAGS += -DRE4DC_GC_ASSET_HARVEST=1
+endif
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/gc_asset_gate.o,$(PLATFORM_OBJS))
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/gc_asset_members.o,$(PLATFORM_OBJS))
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/gc_asset_disc.o,$(PLATFORM_OBJS))

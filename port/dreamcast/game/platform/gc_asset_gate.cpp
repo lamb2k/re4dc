@@ -147,6 +147,17 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
     } else for(unsigned i=0;i<rows;++i)if(!std::strcmp(catalog[i].kind,kind) && !std::strcmp(catalog[i].id,id) &&
         !std::memcmp(catalog[i].digest.bytes,digest.bytes,32)){index=i;break;}
     if(!catalog_ok || !index_generation(epoch))return {};
+#if defined(RE4DC_GC_ASSET_HARVEST) && RE4DC_GC_ASSET_HARVEST
+    // GC_ASSET_HARVEST=1 (offline catalog harvest build, never a gate run): log
+    // each catalog miss and return no token; no quarantine slot, no fault, so the
+    // run keeps reaching later identities. build_catalog.py --harvest reviews them.
+    if(index==rows) {
+        char hex[65];
+        for(unsigned b=0;b<32;++b)std::snprintf(hex+2*b,3,"%02x",digest.bytes[b]);
+        re4dc_log("GC-ASSET-HARVEST v=1 kind=%s id=%s sha256=%s\n",kind,id,hex);
+        return {};
+    }
+#endif
     if(index==rows) {
         unsigned i=0;
         for(;i<unknown_count;++i)if(!index_compare(unknown_assets[i],kind,id,digest))break;
