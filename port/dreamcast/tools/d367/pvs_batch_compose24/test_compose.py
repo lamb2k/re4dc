@@ -33,7 +33,7 @@ class Controls(unittest.TestCase):
      with self.subTest(k=k,v=v):self.assertNotEqual(call({k:v}).returncode,0)
    for k in ZERO:
     with self.subTest(k=k):self.assertNotEqual(call({k:'1'}).returncode,0)
-   for d in [{'PS2_PVS_BATCH_COMPOSE':'0'},{'PS2_PVS_BATCH_COMPOSE':'2'},{'PS2_PVS_BATCH_COMPOSE':''},{'PS2_PVS_DEFAULT':'1'}]:self.assertNotEqual(call(d).returncode,0)
+   for d in [{'PS2_PVS_BATCH_COMPOSE':'0'},{'PS2_PVS_BATCH_COMPOSE':'2'},{'PS2_PVS_BATCH_COMPOSE':''},{'PS2_PVS_DEFAULT':'1'},{'PS2_INTERIOR_CULL':'2'}]:self.assertNotEqual(call(d).returncode,0)
    self.assertEqual(call({'PS2_PVS_BATCH_COMPOSE':'0','PS2_PVS':'0'}).returncode,0)
  def test_source_guards(self):
   for rel in ['platform/native_static.cpp','platform/native_ui.cpp']:
@@ -43,7 +43,7 @@ class Controls(unittest.TestCase):
     return subprocess.run(['g++','-x','c++','-E','-P',*[('-DRE4DC_'+k+'='+v) for k,v in d.items()],'-'],input=s,capture_output=True,text=True)
    self.assertEqual(compile({}).returncode,0,rel)
    must=ONE if rel.endswith('native_static.cpp') else [x for x in ONE if x in ['PS2_PVS','SCENERY_SUBMIT_BATCH','TA_DIRECT','PS2_WORLD_HDR_CACHE','PVR_STREAM','D349_RENDERER_STACK','PS2_WORLD_SOURCE_OWNER','PS2_WORLD_SOURCE_TEX_PREP']]
-   for k in must+ZERO+['PS2_PVS_DEFAULT','PS2_PVS_BATCH_COMPOSE']:
+   for k in must+ZERO+['PS2_PVS_DEFAULT','PS2_PVS_BATCH_COMPOSE','PS2_INTERIOR_CULL']:
     for v in (['0','2'] if k in must else ['2']):
      with self.subTest(rel=rel,k=k,v=v):self.assertNotEqual(compile({k:v}).returncode,0)
  def test_full_file_off_preprocess(self):
@@ -72,6 +72,7 @@ class Controls(unittest.TestCase):
   # Pick the second image declaration: the first belongs to optional diagnostic comparison.
   coldstart=full.index('    const Re4dcUiImage image{&key,nullptr,k[2],k[3],5,0,0};',full.index('return 1;'))
   cold=full[coldstart:full.index('    Entry* handle=load(image,false,&key);',coldstart)+len('    Entry* handle=load(image,false,&key);')]
+  after_load=full[full.index('    Entry* handle=load(image,false,&key);',coldstart)+len('    Entry* handle=load(image,false,&key);'):full.index('    const auto& t=handle->package.textures()[0];',coldstart)]
   prepare=between(sw,'void sourceWorldTexturePrepare() {','    // Also call prepare with an unusable frame to retire any previous ticket.')+'}\n'
   # Use the complete actual flush, with only external renderer methods mocked.
   flush=function(st,'auto chunk_flush=[&]()->int')
@@ -90,10 +91,11 @@ class Controls(unittest.TestCase):
 #define RE4DC_SCENERY_REPLAY_LEAN 1
 #define RE4DC_PS2_PVS 1
 #define RE4DC_TA_DIRECT 1
+#define RE4DC_WHD(x) ((void)0)
 #define RE4DC_SCENERY_UV_SNAPSHOT '''+str(snapshot)+r'''
 struct Key {unsigned crc,fnv;bool operator==(const Key& o)const{return crc==o.crc && fnv==o.fnv;}};
 struct Re4dcWorldSubmitBatch {std::uint32_t* sq=nullptr;};
-bool direct_open=false,sq_live=false;unsigned frame=7,unlocks=0,locks=0,logs=0,loads=0,missing=0;
+bool direct_open=false,sq_live=false,load_fail=false,frame_ready=true,stream_aborted=false;unsigned frame=7,unlocks=0,locks=0,logs=0,loads=0,missing=0,model_texture_rejects=0;
 struct Log {unsigned frame,crc,fnv;std::string what;};std::vector<Log> log_rows;
 void re4dc_log(const char* f,...){assert(!sq_live && !direct_open);++logs;va_list ap;va_start(ap,f);unsigned x=va_arg(ap,unsigned),y=va_arg(ap,unsigned);unsigned z=std::strstr(f,"ACQUIRE")?va_arg(ap,unsigned):0;va_end(ap);log_rows.push_back({x,y,z,f});}
 void* sq_lock(void*){assert(!sq_live);sq_live=true;++locks;static std::uint32_t words[128]{};return words;}
@@ -106,7 +108,7 @@ unsigned direct_parts=0,direct_slots=0,frame_pvr_calls=0,frame_pvr_bytes=0,strea
 '''+ending+r'''
 struct Entry {unsigned frame;};Entry entry{};Entry* model_handle=&entry;
 struct Re4dcUiImage {const Key* key;void* data;unsigned w,h,a,b,c;};
-Entry* load(const Re4dcUiImage&,bool,const Key*){assert(!sq_live && !direct_open);++loads;return &entry;}
+Entry* load(const Re4dcUiImage&,bool,const Key*){assert(!sq_live && !direct_open);++loads;return load_fail?nullptr:&entry;}
 std::uint32_t model_packets[128]{};constexpr unsigned kModelPacketBytes=4096;
 struct Re4dcModelDirect {std::uint32_t* sq;void* scratch;unsigned scratch_capacity;float u_scale,v_scale;};
 '''+failure+r'''
@@ -114,9 +116,9 @@ int fail(Re4dcWorldSubmitBatch* batch){FailedBegin failed_begin{batch};return 0;
 int hot(Re4dcWorldSubmitBatch* batch,const Key& key){FailedBegin failed_begin{batch};Re4dcModelDirect result{},*out=&result;
 '''+tails[0]+r'''
 }
-int cold(Re4dcWorldSubmitBatch* batch,const Key& key){unsigned k[6]={key.crc,key.fnv,8,8,0,0};
-'''+cold+r'''
-(void)handle;FailedBegin failed_begin{batch};Re4dcModelDirect result{},*out=&result;
+int cold(Re4dcWorldSubmitBatch* batch,const Key& key){FailedBegin failed_begin{batch};unsigned k[6]={key.crc,key.fnv,8,8,0,0};
+'''+cold+after_load+r'''
+(void)handle;Re4dcModelDirect result{},*out=&result;
 '''+tails[1]+r'''
 }
 '''+prepare+r'''
@@ -177,6 +179,8 @@ int main(){
  unsigned old_unlocks=unlocks;hot(&b,{9,2});fail(&b);assert(sq_live && unlocks==old_unlocks);
  re4dc_ps2_world_direct_end_batch(3,&b);fail(&b);assert(!sq_live && unlocks==old_unlocks+1);
  hot(&b,{9,2});re4dc_ps2_world_direct_end_batch(32768,&b);assert(!sq_live && missing==1);
+ hot(&b,{9,2});re4dc_ps2_world_direct_end_batch(3,&b);load_fail=true;
+ assert(!cold(&b,{1,2}) && !sq_live && !b.sq && model_texture_rejects==1);load_fail=false;
  queued(1,3,0);queued(1,3,1);queued(1,3,2,true);queued(1,3);queued(0,0);queued(unsigned(-1),3);cold_next=true;queued(1,3);
  assert(!sq_live && !direct_open);assert(sizeof(SourceWorldAcquireDiagnostic)==16);return 0;
 }

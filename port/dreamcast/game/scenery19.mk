@@ -47,6 +47,9 @@ endif
 ifneq ($(filter-out 0,$(WORLD_SCRATCH) $(TA_GUARD) $(PS2_WORLD_TRANSITION_OWNER) $(PS2_WORLD_R11F_OWNER) $(SCENERY_PIECE_STATE) $(SCENERY_DEDUP) $(SCENERY_CONE) $(CPU_BACKFACE) $(TA_MATERIAL_DIAG) $(WORLD_HOLE_DIAG) $(PS2_WORLD_PREFLIGHT_DIAG)),)
 $(error PS2_PVS_BATCH_COMPOSE has an unqualified owner, scratch or diagnostic path)
 endif
+ifneq ($(filter-out 0 1,$(PS2_INTERIOR_CULL)),)
+$(error PS2_PVS_BATCH_COMPOSE does not qualify interior header-check mode)
+endif
 $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_PVS_BATCH_COMPOSE=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_PVS_DEFAULT=0
 endif
