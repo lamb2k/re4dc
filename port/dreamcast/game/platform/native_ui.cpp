@@ -466,6 +466,17 @@ bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,un
 #endif
     entry.asset={};
     if(!re4dc_gcasset::ensure_disc_catalog())return false;
+    // gc-catalog24b: an immutable tex.pak member (key, offset, size) binds to the
+    // same token for the whole catalog epoch, so a reload reuses it instead of
+    // re-reading and re-hashing the member. Direct-mapped, 64 x 20 B = 1280 B.
+    struct FpCache { unsigned crc,fnv,offset,bytes,token; };
+    static FpCache fp_cache[64];
+    const bool cacheable=bytes!=0;
+    FpCache& slot=fp_cache[(key.crc^key.fnv^offset)&63U];
+    if(cacheable && slot.token && slot.crc==key.crc && slot.fnv==key.fnv && slot.offset==offset && slot.bytes==bytes &&
+       (slot.token>>14)==re4dc_gcasset::catalog_generation()){
+        entry.asset.value=slot.token;return true;
+    }
     file_t file;{Re4dcIoScope io;file=fs_open(path,O_RDONLY);}
     if(file==FILEHND_INVALID)return false;
     bool okay=true;
@@ -473,18 +484,34 @@ bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,un
         if(!bytes) { const auto length=fs_total(file);okay=length>=0;bytes=okay?unsigned(length):0; }
         if(okay)okay=fs_seek(file,offset,SEEK_SET)==off_t(offset);
     }
+    // The hash consumes 512 B at a time; serve it from 4 KiB disc reads (one GD
+    // command per 4 KiB instead of per 512 B). Same bytes, same digest.
+    struct Buffered { file_t fd;unsigned left,at,have;unsigned char data[4096]; };
+    static Buffered buffered;
+    buffered.fd=file;buffered.left=bytes;buffered.at=buffered.have=0;
     const auto reader=[](void* context,void* target,unsigned count)->unsigned {
-        Re4dcIoScope io;
-        const file_t fd=*static_cast<const file_t*>(context);const ssize_t got=fs_read(fd,target,count);
-        return got<0?0:unsigned(got);
+        auto& b=*static_cast<Buffered*>(context);unsigned done=0;
+        while(done<count){
+            if(b.at==b.have){
+                const unsigned want=b.left<sizeof b.data?b.left:unsigned(sizeof b.data);
+                if(!want)break;
+                Re4dcIoScope io;const ssize_t got=fs_read(b.fd,b.data,want);
+                if(got<=0)break;
+                b.have=unsigned(got);b.at=0;b.left-=b.have;
+            }
+            const unsigned take=count-done<b.have-b.at?count-done:b.have-b.at;
+            std::memcpy(static_cast<unsigned char*>(target)+done,b.data+b.at,take);b.at+=take;done+=take;
+        }
+        return done;
     };
     re4dc_gcasset::Digest digest{};
-    if(okay)okay=re4dc_gcasset::fingerprint_read(digest,reader,const_cast<file_t*>(&file),bytes);
+    if(okay)okay=re4dc_gcasset::fingerprint_read(digest,reader,&buffered,bytes);
     {Re4dcIoScope io;fs_close(file);}
 #if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
     GcaFpProf::bytes+=bytes;const unsigned long long bind_t0=timer_us_gettime64();
 #endif
     if(okay){char id[24];snprintf(id,sizeof id,"%08x-%08x",key.crc,key.fnv);entry.asset=re4dc_gcasset::bind_checked("texture",id,digest);okay=entry.asset.value!=0;}
+    if(okay && cacheable)slot={key.crc,key.fnv,offset,bytes,entry.asset.value};
 #if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
     GcaFpProf::bind_us+=timer_us_gettime64()-bind_t0;
 #endif

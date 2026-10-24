@@ -36,6 +36,8 @@ void retire_catalog();
 // Room changes do not close the handle; disc/source replacement must retire.
 bool ensure_disc_catalog();
 void retire_disc_catalog();
+// Current install epoch (token bits 14..31); a token from an older epoch is stale.
+unsigned catalog_generation();
 #if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
 unsigned prof_disc_reads();
 unsigned long long prof_disc_us();

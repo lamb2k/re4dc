@@ -101,8 +101,9 @@ bool install_index(CatalogReadAt read,void* context,unsigned bytes,const Digest&
     if(!new_catalog_epoch())return false;
     const unsigned epoch=catalog_epoch;
     if(!read || bytes<128 || bytes>128+CatalogLimit*112)return false;
-    IndexStream stream{read,context,0,epoch};Digest actual;
-    if(!fingerprint_read(actual,index_stream_read,&stream,bytes) || std::memcmp(actual.bytes,expected.bytes,32))return false;
+    // One sequential pass (gc-catalog24b): hash, validate and build the sparse
+    // index from 32-row reads. Same accept/reject verdicts as the old
+    // hash-then-row-by-row passes; nothing is published unless the pin matches.
     unsigned char header[128];
     if(index_read_at(read,context,epoch,0,header,sizeof header)!=sizeof header || std::memcmp(header,"GCIDX001",8) ||
        index_word(header+8)!=1 || !index_word(header+12) || index_word(header+12)>CatalogLimit ||
@@ -110,17 +111,30 @@ bool install_index(CatalogReadAt read,void* context,unsigned bytes,const Digest&
        bytes!=128+index_word(header+12)*112)return false;
     for(unsigned i=24;i<128;++i)if(header[i])return false;
     const unsigned rows=index_word(header+12);
+    const unsigned block_rows=rows<=SparseKeys*BufferRows?BufferRows:2*BufferRows;
+    IdentitySha hash;hash.update(header,sizeof header);
     AssetDescription previous{},current;
-    for(unsigned i=0;i<rows;++i){
-        if(!index_read_row(read,context,epoch,rows,bytes,i,current) ||
-           (i && index_compare(previous,current.kind,current.id,current.digest)>=0))return false;
-        previous=current;
+    for(unsigned h=0;h<rows;h+=BufferRows){
+        const unsigned n=rows-h<BufferRows?rows-h:BufferRows;
+        if(index_read_at(read,context,epoch,128+h*112,block_buffer,n*112)!=n*112)return false;
+        hash.update(block_buffer,n*112);
+        for(unsigned k=0;k<n;++k){
+            const unsigned i=h+k;
+            if(!index_decode_row(block_buffer+k*112,current) ||
+               (i && index_compare(previous,current.kind,current.id,current.digest)>=0))return false;
+            if(!(i%block_rows))sparse_prefix(current.kind,current.id,current.digest,sparse_key[i/block_rows]);
+            previous=current;
+        }
     }
+    Digest actual;hash.finish(actual.bytes);
+    if(std::memcmp(actual.bytes,expected.bytes,32) || !index_generation(epoch))return false;
+    sparse_block_rows=block_rows;sparse_blocks=(rows+block_rows-1)/block_rows;
     // Do not publish provisional globals or overwrite a newer callback install.
     if(active || !index_generation(epoch))return false;
     catalog_read=read;catalog_context=context;catalog_bytes=bytes;catalog_rows=rows;
     catalog_ok=true;return true;
 }
+unsigned catalog_generation(){return catalog_ok?catalog_epoch:0;}
 void retire_catalog(){
     // Invalidate before diagnostics/callbacks; a returned old row cannot become
     // current again, even if a callback installs a fresh catalog immediately.
@@ -132,18 +146,12 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
     const unsigned epoch=catalog_epoch,rows=catalog_rows;
     unsigned index=rows;AssetDescription row;
     if(catalog_read) {
-        unsigned lower=0,upper=rows;
-        while(lower<upper) {
-            const unsigned middle=(lower+upper)/2;
-            if(!index_row(middle,row)){catalog_fault(CatalogRead);return {};}
-            if(!catalog_ok || !index_generation(epoch))return {};
-            if(index_compare(row,kind,id,digest)<0)lower=middle+1;else upper=middle;
-        }
-        if(lower<rows) {
-            if(!index_row(lower,row)){catalog_fault(CatalogRead);return {};}
-            if(!catalog_ok || !index_generation(epoch))return {};
-            if(!index_compare(row,kind,id,digest))index=lower;
-        }
+        unsigned found=rows;
+        const SparseResult result=sparse_find(kind,id,digest,epoch,found);
+        if(!catalog_ok || !index_generation(epoch))return {};
+        if(result==SparseFault){catalog_fault(CatalogRead);return {};}
+        if(result==SparseFound)index=found;
+        (void)row;
     } else for(unsigned i=0;i<rows;++i)if(!std::strcmp(catalog[i].kind,kind) && !std::strcmp(catalog[i].id,id) &&
         !std::memcmp(catalog[i].digest.bytes,digest.bytes,32)){index=i;break;}
     if(!catalog_ok || !index_generation(epoch))return {};

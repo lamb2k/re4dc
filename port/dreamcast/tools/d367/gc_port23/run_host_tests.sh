@@ -14,6 +14,11 @@ if test -x /lib64/ld-linux-x86-64.so.2; then
 else
     "$SCRATCH/test_gate"
 fi
+# Sparse catalog index (gc-catalog24b): verdicts equal the exact lookup for every row.
+# GC24_CATALOG=<gc-assets.idx> also checks every row of a real catalog.
+g++ -std=c++17 -O2 -Wall -Wextra -Werror -DRE4DC_GC_ASSET_GATE=1 \
+    "$HERE/test_index_sparse.cpp" "$GAME/platform/gc_asset_gate.cpp" -o "$SCRATCH/test_index_sparse"
+/lib64/ld-linux-x86-64.so.2 "$SCRATCH/test_index_sparse" ${GC24_CATALOG:+"$GC24_CATALOG"}
 g++ -std=c++17 -O2 -Wall -Wextra -Werror "$HERE/test_packet_cursor.cpp" -o "$SCRATCH/test_packet_cursor"
 /lib64/ld-linux-x86-64.so.2 "$SCRATCH/test_packet_cursor"
 g++ -std=c++17 -O2 -Wall -Wextra -Werror -DRE4DC_GC_ASSET_GATE=1 -DRE4DC_GC_ASSET_TEST=1 \
