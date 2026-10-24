@@ -38,12 +38,12 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 1 | SCENERY_REPLAY_LEAN | landed 28da0980 |
 | 2 | ACTOR_SETUP_LEAN + SCENERY_UV_SNAPSHOT | landed 75229c8f |
 | 3 | SCENERY_SELECT_LEAN2 | landed ea969bb2; measurement paused. Builds 1 to 3 world knobs SELECT_ONLY, REPLAY_LEAN, SUBMIT_BATCH now ON in the recipe (e452afec): world 7.42 -> 6.88 ms MODELLED at r101 |
-| 4 | Bug audits: ESP_POOL_RECYCLE, R117_EFFECT_FAILURE_SAFE, KOS_CACHE_P2, R10C_SPAWN_LIVE_GUARD | landed 377569a3, default 0; gating with local Codex |
-| 5 | SCENERY_EMIT_PREFETCH | landed 82d5f827, default 0; local Codex measuring with LEAN2 (census + Flycast + console A/B) |
-| 6 | Effects per-sprite setup | next |
-| 7 | Character vertex and palette bytes | queued |
-| 8 | Animation sampling | queued |
-| 9 | UI draw | queued |
+| 4 | Bug audits: ESP_POOL_RECYCLE, R117_EFFECT_FAILURE_SAFE, KOS_CACHE_P2, R10C_SPAWN_LIVE_GUARD | landed 377569a3; recipe ON by local Codex (d5c1ceab) after gates |
+| 5 | SCENERY_EMIT_PREFETCH | landed 82d5f827, default 0. Local Codex Flycast A/B with LEAN2: cross -0.013 ms, forest +0.050 ms MODELLED (no gain); console pending. Alternative branch c3163443 NOT merged (narrower gather needs builder enclosure validation) |
+| 6 | ESP_SETUP_LEAN | landed 55c9aea7, default 0; needs sprite run census |
+| 7 | ACTOR_BYTES_LEAN | landed 55c9aea7, default 0 |
+| 8 | ANIM_SAMPLE_LEAN | landed 55c9aea7, default 0 |
+| 9 | UI_DRAW_LEAN | landed 55c9aea7, default 0 |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
 
