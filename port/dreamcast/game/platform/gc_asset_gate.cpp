@@ -85,46 +85,55 @@ bool install(const CatalogRow* rows, unsigned count) {
 bool install_index(CatalogReadAt read,void* context,unsigned bytes,const Digest& expected) {
     if(active){++errors;return false;}
     if(!new_catalog_epoch())return false;
+    const unsigned epoch=catalog_epoch;
     if(!read || bytes<128 || bytes>128+CatalogLimit*112)return false;
-    IndexStream stream{read,context,0};Digest actual;
+    IndexStream stream{read,context,0,epoch};Digest actual;
     if(!fingerprint_read(actual,index_stream_read,&stream,bytes) || std::memcmp(actual.bytes,expected.bytes,32))return false;
     unsigned char header[128];
-    if(read(context,0,header,sizeof header)!=sizeof header || std::memcmp(header,"GCIDX001",8) ||
+    if(index_read_at(read,context,epoch,0,header,sizeof header)!=sizeof header || std::memcmp(header,"GCIDX001",8) ||
        index_word(header+8)!=1 || !index_word(header+12) || index_word(header+12)>CatalogLimit ||
        index_word(header+16)!=112 || index_word(header+20)!=128 ||
        bytes!=128+index_word(header+12)*112)return false;
     for(unsigned i=24;i<128;++i)if(header[i])return false;
-    catalog_read=read;catalog_context=context;catalog_bytes=bytes;catalog_rows=index_word(header+12);
+    const unsigned rows=index_word(header+12);
     AssetDescription previous{},current;
-    for(unsigned i=0;i<catalog_rows;++i){
-        if(!index_row(i,current) || (i && index_compare(previous,current.kind,current.id,current.digest)>=0)){
-            catalog_read=nullptr;catalog_rows=catalog_bytes=0;return false;
-        }
+    for(unsigned i=0;i<rows;++i){
+        if(!index_read_row(read,context,epoch,rows,bytes,i,current) ||
+           (i && index_compare(previous,current.kind,current.id,current.digest)>=0))return false;
         previous=current;
     }
+    // Do not publish provisional globals or overwrite a newer callback install.
+    if(active || !index_generation(epoch))return false;
+    catalog_read=read;catalog_context=context;catalog_bytes=bytes;catalog_rows=rows;
     catalog_ok=true;return true;
 }
 void retire_catalog(){
+    // Invalidate before diagnostics/callbacks; a returned old row cannot become
+    // current again, even if a callback installs a fresh catalog immediately.
+    (void)new_catalog_epoch();
     if(active)unresolved(SourceGeometry,"catalog-retired-during-room");
-    catalog_ok=false;catalog=nullptr;catalog_read=nullptr;catalog_rows=catalog_bytes=unknown_count=0;
 }
 CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) {
     if(!catalog_ok || !token(kind,KindBytes) || !token(id,IdBytes))return {};
-    unsigned index=catalog_rows;AssetDescription row;
+    const unsigned epoch=catalog_epoch,rows=catalog_rows;
+    unsigned index=rows;AssetDescription row;
     if(catalog_read) {
-        unsigned lower=0,upper=catalog_rows;
+        unsigned lower=0,upper=rows;
         while(lower<upper) {
             const unsigned middle=(lower+upper)/2;
             if(!index_row(middle,row)){unresolved(SourceGeometry,"catalog-read");return {};}
+            if(!catalog_ok || !index_generation(epoch))return {};
             if(index_compare(row,kind,id,digest)<0)lower=middle+1;else upper=middle;
         }
-        if(lower<catalog_rows) {
+        if(lower<rows) {
             if(!index_row(lower,row)){unresolved(SourceGeometry,"catalog-read");return {};}
+            if(!catalog_ok || !index_generation(epoch))return {};
             if(!index_compare(row,kind,id,digest))index=lower;
         }
-    } else for(unsigned i=0;i<catalog_rows;++i)if(!std::strcmp(catalog[i].kind,kind) && !std::strcmp(catalog[i].id,id) &&
+    } else for(unsigned i=0;i<rows;++i)if(!std::strcmp(catalog[i].kind,kind) && !std::strcmp(catalog[i].id,id) &&
         !std::memcmp(catalog[i].digest.bytes,digest.bytes,32)){index=i;break;}
-    if(index==catalog_rows) {
+    if(!catalog_ok || !index_generation(epoch))return {};
+    if(index==rows) {
         unsigned i=0;
         for(;i<unknown_count;++i)if(!index_compare(unknown_assets[i],kind,id,digest))break;
         if(i==unknown_count) {
@@ -132,20 +141,28 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
             auto& unknown=unknown_assets[unknown_count++];unknown={};
             std::strcpy(unknown.kind,kind);std::strcpy(unknown.id,id);unknown.digest=digest;unknown.provenance=Unknown;
         }
-        index=catalog_rows+i;
+        index=rows+i;
     }
-    return {catalog_epoch<<14|index};
+    if(!catalog_ok || !index_generation(epoch))return {};
+    return {epoch<<14|index};
 }
 bool checked_current(CheckedAsset asset) {
-    return catalog_ok && catalog_epoch && asset.value>>14==catalog_epoch &&
+    return catalog_ok && index_generation(catalog_epoch) && asset.value>>14==catalog_epoch &&
         (asset.value&16383U)<catalog_rows+unknown_count;
 }
 bool describe_checked(CheckedAsset asset,AssetDescription* out) {
-    if(!out || !catalog_ok || asset.value>>14!=catalog_epoch || !catalog_epoch)return false;
-    const unsigned index=asset.value&16383U;
-    if(index<catalog_rows)return index_row(index,*out);
-    if(index-catalog_rows>=unknown_count)return false;
-    *out=unknown_assets[index-catalog_rows];return true;
+    if(!out)return false;
+    *out={};
+    if(!checked_current(asset))return false;
+    const unsigned epoch=catalog_epoch,rows=catalog_rows,index=asset.value&16383U;
+    AssetDescription row{};
+    if(index<rows){if(!index_row(index,row))return false;}
+    else {
+        if(index-rows>=unknown_count)return false;
+        row=unknown_assets[index-rows];
+    }
+    if(!index_generation(epoch) || !checked_current(asset))return false;
+    *out=row;return true;
 }
 static bool future_event(unsigned r,unsigned v){return admission_handoff && r==admission_room && v==admission_visit;}
 static void begin_at(unsigned r,unsigned v,unsigned mask,bool startup,bool admit,bool handoff=false,bool transition=false,unsigned from=FromStartup,TransitionReason why=InitialRoom) {
