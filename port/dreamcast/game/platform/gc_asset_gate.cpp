@@ -124,38 +124,69 @@ bool install(const CatalogRow* rows, unsigned count) {
     }
     catalog=rows;catalog_rows=count;catalog_ok=true;return true;
 }
+namespace {
+// One sequential pass (gc-catalog24b): hash, validate and build the sparse index
+// from the catalog bytes in any chunking. Same accept/reject verdicts as the old
+// hash-then-row-by-row passes; nothing is published unless the pin matches.
+struct InstallParse {
+    unsigned bytes=0,seen=0,rows=0,block_rows=0,row=0,carry=0;bool bad=false;
+    unsigned char header[128];unsigned char part[112];
+    IdentitySha hash;AssetDescription previous{},current;
+    void header_done(){
+        if(std::memcmp(header,"GCIDX001",8) || index_word(header+8)!=1 || !index_word(header+12) ||
+           index_word(header+12)>CatalogLimit || index_word(header+16)!=112 || index_word(header+20)!=128 ||
+           bytes!=128+index_word(header+12)*112){bad=true;return;}
+        for(unsigned i=24;i<128;++i)if(header[i]){bad=true;return;}
+        rows=index_word(header+12);block_rows=rows<=SparseKeys*BufferRows?BufferRows:2*BufferRows;
+    }
+    void row_done(){
+        if(row>=rows || !index_decode_row(part,current) ||
+           (row && index_compare(previous,current.kind,current.id,current.digest)>=0)){bad=true;return;}
+        if(!(row%block_rows))sparse_prefix(current.kind,current.id,current.digest,sparse_key[row/block_rows]);
+        previous=current;++row;
+    }
+    void feed(const unsigned char* p,unsigned n){
+        if(bad)return;
+        hash.update(p,n);
+        while(n && !bad){
+            if(seen<128){
+                const unsigned take=128-seen<n?128-seen:n;
+                std::memcpy(header+seen,p,take);seen+=take;p+=take;n-=take;
+                if(seen==128)header_done();
+                continue;
+            }
+            const unsigned take=112-carry<n?112-carry:n;
+            std::memcpy(part+carry,p,take);carry+=take;p+=take;n-=take;
+            if(carry==112){row_done();carry=0;}
+        }
+    }
+    bool complete(const Digest& expected){
+        if(bad || seen!=128 || row!=rows || carry)return false;
+        Digest actual;hash.finish(actual.bytes);
+        return !std::memcmp(actual.bytes,expected.bytes,32);
+    }
+};
+void install_sink(void* context,const unsigned char* data,unsigned n){static_cast<InstallParse*>(context)->feed(data,n);}
+}
 bool install_index(CatalogReadAt read,void* context,unsigned bytes,const Digest& expected) {
+    return install_index_stream(nullptr,nullptr,read,context,bytes,expected);
+}
+bool install_index_stream(CatalogStream stream,void* stream_context,CatalogReadAt read,void* context,unsigned bytes,const Digest& expected) {
     if(active){++errors;return false;}
     if(!new_catalog_epoch())return false;
     const unsigned epoch=catalog_epoch;
     if(!read || bytes<128 || bytes>128+CatalogLimit*112)return false;
-    // One sequential pass (gc-catalog24b): hash, validate and build the sparse
-    // index from 32-row reads. Same accept/reject verdicts as the old
-    // hash-then-row-by-row passes; nothing is published unless the pin matches.
-    unsigned char header[128];
-    if(index_read_at(read,context,epoch,0,header,sizeof header)!=sizeof header || std::memcmp(header,"GCIDX001",8) ||
-       index_word(header+8)!=1 || !index_word(header+12) || index_word(header+12)>CatalogLimit ||
-       index_word(header+16)!=112 || index_word(header+20)!=128 ||
-       bytes!=128+index_word(header+12)*112)return false;
-    for(unsigned i=24;i<128;++i)if(header[i])return false;
-    const unsigned rows=index_word(header+12);
-    const unsigned block_rows=rows<=SparseKeys*BufferRows?BufferRows:2*BufferRows;
-    IdentitySha hash;hash.update(header,sizeof header);
-    AssetDescription previous{},current;
-    for(unsigned h=0;h<rows;h+=BufferRows){
-        const unsigned n=rows-h<BufferRows?rows-h:BufferRows;
-        if(index_read_at(read,context,epoch,128+h*112,block_buffer,n*112)!=n*112)return false;
-        hash.update(block_buffer,n*112);
-        for(unsigned k=0;k<n;++k){
-            const unsigned i=h+k;
-            if(!index_decode_row(block_buffer+k*112,current) ||
-               (i && index_compare(previous,current.kind,current.id,current.digest)>=0))return false;
-            if(!(i%block_rows))sparse_prefix(current.kind,current.id,current.digest,sparse_key[i/block_rows]);
-            previous=current;
-        }
+    InstallParse parse;parse.bytes=bytes;
+    if(stream){
+        // Bulk sequential reader (the disc adapter's 16 KiB storage reads).
+        if(!stream(stream_context,install_sink,&parse) || !index_generation(epoch))return false;
+    } else for(unsigned at=0;at<bytes;){
+        const unsigned n=bytes-at<sizeof block_buffer?bytes-at:unsigned(sizeof block_buffer);
+        if(index_read_at(read,context,epoch,at,block_buffer,n)!=n)return false;
+        parse.feed(block_buffer,n);at+=n;
     }
-    Digest actual;hash.finish(actual.bytes);
-    if(std::memcmp(actual.bytes,expected.bytes,32) || !index_generation(epoch))return false;
+    if(!parse.complete(expected) || !index_generation(epoch))return false;
+    const unsigned rows=parse.rows,block_rows=parse.block_rows;
     sparse_block_rows=block_rows;sparse_blocks=(rows+block_rows-1)/block_rows;
     // Do not publish provisional globals or overwrite a newer callback install.
     if(active || !index_generation(epoch))return false;

@@ -69,26 +69,19 @@ SparseResult sparse_find(const char* kind,const char* id,const Digest& digest,un
     if(!lower)return SparseAbsent;          // q sorts before row 0
     const unsigned hi=lower-1;unsigned lo=hi;
     while(lo && !std::memcmp(sparse_key[lo],q,SparseKeyBytes))--lo; // equal prefixes may start in the previous block
-    for(unsigned b=lo;b<=hi;++b){
-        const unsigned start=b*sparse_block_rows,end=start+sparse_block_rows<rows?start+sparse_block_rows:rows;
-        for(unsigned h=start;h<end;h+=BufferRows){
-            const unsigned n=end-h<BufferRows?end-h:BufferRows;
-            if(index_read_at(catalog_read,catalog_context,epoch,128+h*112,block_buffer,n*112)!=n*112)return SparseFault;
-            AssetDescription row;
-            if(!index_decode_row(block_buffer+(n-1)*112,row))return SparseFault;
-            if(index_compare(row,kind,id,digest)<0)continue;   // beyond this part of the block
-            unsigned l=0,u=n;
-            while(l<u){
-                const unsigned m=(l+u)/2;
-                if(!index_decode_row(block_buffer+m*112,row))return SparseFault;
-                if(index_compare(row,kind,id,digest)<0)l=m+1;else u=m;
-            }
-            if(!index_decode_row(block_buffer+l*112,row))return SparseFault;
-            if(index_compare(row,kind,id,digest))return SparseAbsent;
-            index=h+l;return SparseFound;
-        }
+    // Binary search over the candidate rows with single-row reads (~5 x 112 B):
+    // small reads cost far less disc time than a whole 3.5 KiB block.
+    const unsigned first=lo*sparse_block_rows,last=(hi+1)*sparse_block_rows<rows?(hi+1)*sparse_block_rows:rows;
+    unsigned l=first,u=last;AssetDescription row;
+    while(l<u){
+        const unsigned m=(l+u)/2;
+        if(!index_read_row(catalog_read,catalog_context,epoch,rows,catalog_bytes,m,row))return SparseFault;
+        if(index_compare(row,kind,id,digest)<0)l=m+1;else u=m;
     }
-    return SparseAbsent;
+    if(l==last)return SparseAbsent;
+    if(!index_read_row(catalog_read,catalog_context,epoch,rows,catalog_bytes,l,row))return SparseFault;
+    if(index_compare(row,kind,id,digest))return SparseAbsent;
+    index=l;return SparseFound;
 }
 bool index_row(unsigned index,AssetDescription& out){
     const unsigned epoch=catalog_epoch,rows=catalog_rows;

@@ -1,6 +1,7 @@
 #include "include/gc_asset_gate.h"
 #if RE4DC_GC_ASSET_GATE
 #include "include/native_io.h"
+#include "../../room/room_storage.hpp"
 #include <kos/fs.h>
 #include <fcntl.h>
 #include <cstdio>
@@ -50,6 +51,23 @@ unsigned disc_read(void*,unsigned offset,void* destination,unsigned bytes){
     if(count<0 || unsigned(count)!=bytes){disc_failed();return 0;}
     return unsigned(count);
 }
+// Whole-catalog sequential read at install through the shared 16 KiB storage
+// bounce (room_storage read_chunks): ~55 aligned reads instead of ~250.
+struct DiscStream{void (*sink)(void*,const unsigned char*,unsigned);void* context;};
+bool disc_stream(void*,void (*sink)(void*,const unsigned char*,unsigned),void* sink_context){
+    DiscGuard guard;
+    if(!guard.held){disc_failed();return false;}
+    if(disc_state.load()!=Installing || disc_catalog==FILEHND_INVALID)return false;
+    Re4dcIoScope io;
+    const off_t total=fs_total(disc_catalog);
+    if(total<0 || fs_seek(disc_catalog,0,SEEK_SET)!=0){disc_failed();return false;}
+    DiscStream s{sink,sink_context};
+    const bool ok=re4dc::storage::read_chunks(disc_catalog,std::size_t(total),[](const std::uint8_t* p,std::size_t n,void* ctx){
+        auto& d=*static_cast<DiscStream*>(ctx);d.sink(d.context,p,unsigned(n));return true;
+    },&s);
+    if(!ok)disc_failed();
+    return ok && disc_state.load()==Installing;
+}
 bool disc_pin(Digest& digest){
     const char* text=RE4DC_GC_ASSET_CATALOG_SHA256;
     if(std::strlen(text)!=64)return false;
@@ -81,7 +99,7 @@ bool ensure_disc_catalog(){
         if(disc_state.load()!=Installing)return false;
         if(disc_catalog==FILEHND_INVALID){disc_failed();unresolved(SourceGeometry,"catalog-file-missing");return false;}
     }
-    if(bytes<128 || bytes>128+16376*112 || !install_index(disc_read,nullptr,unsigned(bytes),expected)){
+    if(bytes<128 || bytes>128+16376*112 || !install_index_stream(disc_stream,nullptr,disc_read,nullptr,unsigned(bytes),expected)){
         // Retain the exact fd, even after failure. Never close a busy reader or
         // silently retry/reopen; explicit safe-owner retirement is required.
         if(disc_state.load()==Installing)disc_failed();

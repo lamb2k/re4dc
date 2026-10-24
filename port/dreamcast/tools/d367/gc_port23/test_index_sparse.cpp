@@ -45,8 +45,22 @@ void make_blob(const std::vector<Row>& rows) {
     std::memcpy(blob.data() + 8, head, 16);
     for (const auto& r : rows) blob.insert(blob.end(), r.raw, r.raw + 112);
 }
-bool install() { return install_index(read_at, nullptr, unsigned(blob.size()), fingerprint(blob.data(), unsigned(blob.size()))); }
+bool use_stream;
+bool stream_odd(void*, void (*sink)(void*, const unsigned char*, unsigned), void* ctx) {
+    for (std::size_t at = 0; at < blob.size(); at += 1000) sink(ctx, blob.data() + at, unsigned(std::min<std::size_t>(1000, blob.size() - at)));
+    return true;
+}
+bool install() {
+    const Digest pin = fingerprint(blob.data(), unsigned(blob.size()));
+    return use_stream ? install_index_stream(stream_odd, nullptr, read_at, nullptr, unsigned(blob.size()), pin)
+                      : install_index(read_at, nullptr, unsigned(blob.size()), pin);
+}
+void check_one(const char* label);
 void check_all(const char* label) {
+    use_stream = false; check_one(label);
+    use_stream = true; check_one(label);
+}
+void check_one(const char* label) {
     assert(install());
     const unsigned n = (unsigned(blob.size()) - 128) / 112;
     unsigned binds = 0; reads = 0;
@@ -70,7 +84,7 @@ void check_all(const char* label) {
         assert(a.value && ((a.value & 16383u) >= n) != row_match);
         ++absent;
     }
-    std::printf("%s: rows=%u binds=%u reads/bind=%u absent=%u PASS\n", label, n, binds, per_bind, absent);
+    std::printf("%s [%s install]: rows=%u binds=%u reads/bind=%u absent=%u PASS\n", label, use_stream ? "stream" : "read", n, binds, per_bind, absent);
 }
 }
 int main(int argc, char** argv) {
