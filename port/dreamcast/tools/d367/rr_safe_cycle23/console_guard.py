@@ -10,13 +10,14 @@ import json
 import os
 from pathlib import Path
 import runpy
+import re
 import shutil
 import subprocess
 import sys
 import threading
 import time
 
-PROFILE = 'RR_QUICK_QA_CONSOLE_OBSERVE53_CHILD55_V1'
+PROFILE = 'RR_FINAL_GDI_BOOT45_CHILD55_LIMITED_V2'
 OBSERVE_SECONDS = 53
 CHILD_SECONDS = 55.0
 GIB = 1024 ** 3
@@ -59,10 +60,79 @@ def verify_files(pins):
         require(len(digest) == 64 and sha(path) == digest, 'file pin mismatch: ' + path)
 
 
+def config_values(text):
+    values, section = {}, None
+    for line in text.splitlines():
+        if not line.strip() or line.lstrip().startswith(('#', ';')):
+            continue
+        header = re.fullmatch(r'\[([A-Za-z0-9_]+)\]', line)
+        if header:
+            section = header[1].lower()
+            require(section not in values, 'duplicate config section')
+            values[section] = {}
+            continue
+        require(section is not None and '=' in line, 'malformed config line')
+        key, value = (x.strip() for x in line.split('=', 1))
+        require(bool(re.fullmatch(r'[A-Za-z0-9_.]+', key)), 'malformed config key')
+        key = key.lower()
+        require(key not in values[section], 'duplicate config key')
+        values[section][key] = value
+    require('config' in values, 'missing config section')
+    return values
+
+
+def enforce_limited_text(text, template_text):
+    actual, expected = config_values(text), config_values(template_text)
+    require(actual['config'].get('rend.emulateframebuffer') == 'yes', 'framebuffer must be enabled')
+    for section, values in actual.items():
+        if 'aica.limitfps' in values:
+            require(section == 'config', 'FPS key in foreign section')
+    limit = actual['config'].pop('aica.limitfps', None)
+    require(limit is None or limit.lower() in ('yes', 'true', '1'), 'wrong existing FPS limit')
+    port = actual['config'].get('debug.gdbport', '')
+    require(port.isdigit() and 3263 <= int(port) < 3400, 'unexpected GDB port')
+    expected['config']['debug.gdbport'] = port
+    expected['config']['rend.vsync'] = 'no'
+    require(actual == expected, 'foreign config content differs from pinned template/harness edits')
+    # Same policy as reviewed force_limited: one canonical yes in [config].
+    rows = [line for line in text.splitlines() if not re.match(r'^\s*aica\.LimitFPS\s*=', line, re.I)]
+    index = rows.index('[config]')
+    rows.insert(index + 1, 'aica.LimitFPS = yes')
+    result = '\n'.join(rows) + '\n'
+    require(config_values(result)['config']['aica.limitfps'] == 'yes', 'canonical FPS limit missing')
+    return result
+
+
+def limit_owned_config(cap, template_text):
+    cfg = cap / 'emu.cfg'
+    require(not cap.is_symlink() and not cfg.is_symlink(), 'foreign/symlink config')
+    parent = cap.stat()
+    before_stat = cfg.lstat()
+    with open(cfg, 'r+b') as f:
+        opened = os.fstat(f.fileno())
+        require((opened.st_dev, opened.st_ino) == (before_stat.st_dev, before_stat.st_ino), 'config changed before open')
+        before = f.read()
+        after = enforce_limited_text(before.decode('utf-8'), template_text).encode('utf-8')
+        with open(cap / 'bounded-prelimit-emu.cfg', 'xb') as saved:
+            saved.write(before)
+        f.seek(0); f.write(after); f.truncate(); f.flush()
+    named = cfg.lstat()
+    current_parent = cap.stat()
+    require((parent.st_dev, parent.st_ino) == (current_parent.st_dev, current_parent.st_ino), 'capture directory changed')
+    require(not cfg.is_symlink() and (named.st_dev, named.st_ino) == (opened.st_dev, opened.st_ino), 'config name changed')
+    require(cfg.read_bytes() == after and enforce_limited_text(after.decode(), template_text).encode() == after, 'config not canonical/idempotent')
+    receipt = dict(aica_LimitFPS='yes', scope='NEW_OWNED_CAPTURE_ONLY_BEFORE_EXACT_POPEN',
+                   before_sha256=hashlib.sha256(before).hexdigest(), after_sha256=hashlib.sha256(after).hexdigest(),
+                   template_sha256=hashlib.sha256(template_text.encode()).hexdigest())
+    with open(cap / 'bounded-limitfps.json', 'x', encoding='utf-8') as f:
+        json.dump(receipt, f, indent=2)
+    return receipt
+
+
 class ChildGuard:
     """Uses only the exact Popen object; never process-name/global termination."""
     def __init__(self, cap, console_sha, free_bytes, deadline=CHILD_SECONDS,
-                 floor=20 * GIB, popen=None):
+                 floor=20 * GIB, popen=None, template_text=None):
         self.cap = Path(cap).resolve()
         self.console_sha = console_sha
         self.free_bytes = free_bytes
@@ -80,6 +150,8 @@ class ChildGuard:
         self.cap_identity = None
         self.owned_tracks = {}
         self.removed_tracks = []
+        self.template_text = template_text
+        self.fps_limit = None
 
     def launch(self, args, *a, **kw):
         # Harness spawns reader/capture helpers too. Only exact guest basename is
@@ -92,6 +164,8 @@ class ChildGuard:
             require(list(map(str, args[1:])) == ['disc.gdi'], 'unexpected guest arguments')
             require(sha(exe) == self.console_sha, 'guest is not pinned console bytes')
             require(self.free_bytes() >= self.floor, 'C below absolute floor')
+            require(self.template_text is not None, 'pinned template text required')
+            self.fps_limit = limit_owned_config(self.cap, self.template_text)
             cfg_bytes = (self.cap / 'emu.cfg').read_bytes()
             with open(self.cap / 'bounded-launch-emu.cfg', 'xb') as f:
                 f.write(cfg_bytes)
@@ -162,10 +236,17 @@ class ChildGuard:
             self.reason = self.reason or 'CHILD_ELAPSED_OVER_BOUND'
         if self.child is None:
             self.reason = 'NO_GUEST'
+        if self.fps_limit:
+            try:
+                if sha(self.cap / 'emu.cfg') != self.fps_limit['after_sha256']:
+                    self.reason = self.reason or 'CONFIG_CHANGED_AFTER_LAUNCH'
+            except OSError:
+                self.reason = self.reason or 'CONFIG_POST_BINDING_FAILED'
         return dict(profile=PROFILE, status='FAIL' if self.reason else 'PROCESS_GUARD_PASS',
                     reason=self.reason, child_limit_s=self.deadline,
                     observed_child_elapsed_upper_s=elapsed, actual_console_sha256=self.console_sha,
                     saved_launch_cfg_sha256=self.cfg_sha, command=self.command,
+                    fps_limit=self.fps_limit,
                     removed_owned_capture_tracks=self.removed_tracks,
                     child_exit_code=None if self.child is None else self.child.poll(),
                     runtime_qualified=False)
@@ -208,13 +289,15 @@ def run(cfg, argv):
     requested = cfg.get('_requested_env', {})
     require(all(k.startswith('RE4DC_GD_') or k == 'FP_NOLIMIT' for k in requested), 'unsupported forwarded environment')
     require(cfg['expected_env'].get(argv[argv.index('--cap') + 1]) == requested, 'unplanned environment overrides')
+    require(requested.get('FP_NOLIMIT') == '0', 'explicit FP_NOLIMIT0 required')
     for k in list(os.environ):
         if k.startswith('RE4DC_GD_') or k in ('FP_NOLIMIT', 'RE4DC_CONSOLE_DYNAREC'):
             del os.environ[k]
     os.environ.update(requested)
     os.environ.update(RE4DC_EMU='console', RE4DC_CONSOLE_EXE=cfg['console'], RE4DC_MAX_FLYCASTS='16')
     old_popen, old_argv, old_unlink = subprocess.Popen, sys.argv, Path.unlink
-    guard = ChildGuard(cap, CONSOLE_SHA, lambda: shutil.disk_usage('C:\\').free)
+    guard = ChildGuard(cap, CONSOLE_SHA, lambda: shutil.disk_usage('C:\\').free,
+                       template_text=Path(cfg['template_cfg']).read_text())
     rc, error = 0, None
     try:
         subprocess.Popen = guard.launch

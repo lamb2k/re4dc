@@ -22,7 +22,8 @@ class GuardTests(unittest.TestCase):
         self.cap = Path(self.tmp.name)
         shutil.copyfile('/bin/sleep', self.cap / 'flycast.exe')
         (self.cap / 'flycast.exe').chmod(0o700)
-        (self.cap / 'emu.cfg').write_text('host-only config\n')
+        self.template=Path('/mnt/c/Flycast-Evidence/re4-dreamcast/d367-harness-par/emu.cfg').read_text()
+        (self.cap / 'emu.cfg').write_text(self.template.replace('rend.vsync = yes','rend.vsync = no'))
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -33,7 +34,7 @@ class GuardTests(unittest.TestCase):
         def host_popen(args, *a, **kw):
             return subprocess.Popen([args[0], '.04'], *a, **kw)
         return g.ChildGuard(self.cap, g.sha(self.cap/'flycast.exe'), free,
-                            deadline=deadline, popen=popen or host_popen)
+                            deadline=deadline, popen=popen or host_popen, template_text=self.template)
 
     def launch(self, guard):
         return guard.launch([str(self.cap/'flycast.exe'), 'disc.gdi'], cwd=self.cap)
@@ -103,6 +104,33 @@ class GuardTests(unittest.TestCase):
         guard.unlink_track(track,Path.unlink)
         self.assertFalse(track.exists())
 
+    def test_explicit_fps_before_actual_child_and_original_preserved(self):
+        before=(self.cap/'emu.cfg').read_bytes()
+        guard=self.guard(); self.launch(guard).wait(); r=guard.finish()
+        self.assertEqual((self.cap/'bounded-prelimit-emu.cfg').read_bytes(),before)
+        self.assertNotIn('aica.LimitFPS',self.template)
+        self.assertEqual(g.config_values((self.cap/'bounded-launch-emu.cfg').read_text())['config']['aica.limitfps'],'yes')
+        self.assertEqual(r['fps_limit']['before_sha256'],g.sha(self.cap/'bounded-prelimit-emu.cfg'))
+        self.assertEqual(r['fps_limit']['after_sha256'],r['saved_launch_cfg_sha256'])
+        self.assertEqual(g.enforce_limited_text((self.cap/'emu.cfg').read_text(),self.template),(self.cap/'emu.cfg').read_text())
+
+    def test_fps_wrong_duplicate_malformed_foreign_refuse_before_popen(self):
+        good=(self.cap/'emu.cfg').read_text()
+        bads=[good.replace('[config]','[config]\naica.LimitFPS = no'),
+              good.replace('[config]','[config]\naica.LimitFPS = yes\naica.LimitFPS = yes'),
+              good+'[config]\n',good+'malformed\n',good.replace('[input]','[input]\naica.LimitFPS = yes'),
+              good.replace('rend.EmulateFramebuffer = yes','rend.EmulateFramebuffer = no'),
+              good.replace('width = 640','width = 999'),good.replace('Debug.GDBPort = 3263','Debug.GDBPort = 9')]
+        for text in bads:
+            with self.subTest(text=text[-80:]),self.assertRaises(ValueError):g.enforce_limited_text(text,self.template)
+        for value in ('yes','true','1'):
+            self.assertEqual(g.config_values(g.enforce_limited_text(good.replace('[config]','[config]\naica.LimitFPS = '+value),self.template))['config']['aica.limitfps'],'yes')
+
+    def test_foreign_config_symlink_preserved(self):
+        cfg=self.cap/'emu.cfg';cfg.rename(self.cap/'foreign.cfg');cfg.symlink_to(self.cap/'foreign.cfg')
+        with self.assertRaisesRegex(ValueError,'symlink'):self.launch(self.guard())
+        self.assertTrue(cfg.is_symlink());self.assertTrue((self.cap/'foreign.cfg').exists())
+
     def test_unfinished_child_fails(self):
         def slow(args,*a,**kw): return subprocess.Popen([args[0], '2'], *a, **kw)
         guard=self.guard(popen=slow); self.launch(guard)
@@ -141,6 +169,18 @@ class CapsuleTests(unittest.TestCase):
         lease.write_text(json.dumps(dict(pid=os.getpid(),fd=999,start_ticks=capsule.start_ticks(os.getpid()),
                                   config_sha256=g.sha(cfg),lock_identity=[st.st_dev,st.st_ino])))
         with self.assertRaises((ValueError,OSError)): capsule.live_lease(lease,cfg)
+
+    def test_title_goal_grace_semantics_distinct_from_bounds(self):
+        row=dict(status='RUN_COMPLETE',errors=[],emu='console',seconds=45,stop='state title=',
+                 stopped='goal',stop_matched_s=3.0,elapsed_s=8.0)
+        result=capsule.boot_semantics('HOST CONTROL ONLY\nstate title=1\n',row)
+        self.assertEqual(result['status'],'BOOT_TITLE_GOAL_PASS')
+        self.assertTrue(result['process_bound_audit_required_separately']);self.assertFalse(result['runtime_qualified'])
+        for bad in [dict(row,stopped='reader'),dict(row,elapsed_s=7),dict(row,stop_matched_s=float('nan')),
+                    dict(row,errors=['failed']),dict(row,emu='harness'),dict(row,early_emulator_exit=0)]:
+            self.assertEqual(capsule.boot_semantics('state title=1\n',bad)['status'],'FAIL')
+        for text in ('no title','state title=1\nFAULT','state title=1\nopen failed'):
+            self.assertEqual(capsule.boot_semantics(text,row)['status'],'FAIL')
 
     def test_incomplete_whole_cycle_phase_refuses_before_lock(self):
         cfg=self.root/'whole-cycle-refuse.json'

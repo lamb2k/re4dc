@@ -7,12 +7,14 @@ import base64
 import hashlib
 import json
 import os
+import math
+import re
 from pathlib import Path
 import subprocess
 import sys
 import time
 
-from console_guard import HEAD, PROFILE, require, sha, verify_files, load_json
+from console_guard import HEAD, PROFILE, require, sha, verify_files, load_json, config_values
 
 PREFIX = 'port/dreamcast/tools/d367/'
 RR_LOCK = Path('/root/rr/rr.lock')
@@ -186,12 +188,43 @@ def audit(cfg):
         require(r['harness_sha256'] == cfg['harness_sha256'] and r['actual_console_sha256'] == cfg['console_sha256'], 'binary/source mismatch')
         require(r['child_limit_s'] == 55 and 0 <= r['observed_child_elapsed_upper_s'] <= 55, 'actual child over bound')
         require(sha(directory/'bounded-launch-emu.cfg') == r['saved_launch_cfg_sha256'], 'saved configuration mismatch')
+        fps = load_json(directory/'bounded-limitfps.json')
+        require(fps == r['fps_limit'] and fps['aica_LimitFPS'] == 'yes', 'FPS receipt mismatch')
+        require(sha(directory/'bounded-prelimit-emu.cfg') == fps['before_sha256'], 'pre-limit config mismatch')
+        require(fps['after_sha256'] == r['saved_launch_cfg_sha256'], 'FPS/launch config mismatch')
+        require(config_values((directory/'bounded-launch-emu.cfg').read_text())['config']['aica.limitfps'] == 'yes', 'launch FPS limit missing')
         require((directory/'run-result.json').is_file() and (directory/'run-output.txt').is_file(), 'reader results missing')
         actual = load_json(directory/'run-result.json')
         require(actual['emu'] == 'console' and actual['seconds'] == int(argv[argv.index('--seconds')+1]), 'actual reader profile mismatch')
         require(actual['status'] == 'RUN_COMPLETE' and not actual.get('errors'), 'reader did not complete')
     return dict(status='PLANNED_PROCESS_BOUNDS_COMPLETE', count=len(cfg['expected_runs']),
                 runtime_qualified=False, semantic_judges_required=True)
+
+
+def boot_semantics(text, actual):
+    matched = actual.get('stop_matched_s')
+    elapsed = actual.get('elapsed_s')
+    finite = lambda x: isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x)
+    bad = r'HALT|FAULT|MISSING|Out of memory|DISC READ FAILED|short read|open failed|read failed|upload FAILED|LOG OVERRUN'
+    checks = dict(title_marker='state title=' in text, no_error_rows=re.search(bad, text) is None,
+                  complete=actual.get('status') == 'RUN_COMPLETE' and actual.get('errors') == [],
+                  console=actual.get('emu') == 'console', observation45=actual.get('seconds') == 45,
+                  exact_stop=actual.get('stop') == 'state title=', goal=actual.get('stopped') == 'goal',
+                  no_early_exit='early_emulator_exit' not in actual and not actual.get('keys_pending'),
+                  goal_time=finite(matched) and 0 <= matched <= 45,
+                  # Reader rounds both times to 0.1s. Source goal stop waits5s.
+                  grace5=finite(matched) and finite(elapsed) and elapsed - matched >= 4.9)
+    return dict(status='BOOT_TITLE_GOAL_PASS' if all(checks.values()) else 'FAIL', checks=checks,
+                process_bound_audit_required_separately=True, runtime_qualified=False,
+                scope='Title goal only; not New Game, route, rendering, QA or physical console acceptance')
+
+
+def judge_boot(cfg):
+    require(len(cfg['expected_runs']) == 1, 'single boot only')
+    cap = next(iter(cfg['expected_runs']))
+    directory = Path(cfg['capture_paths_wsl'][cap])
+    return boot_semantics((directory/'run-output.txt').read_text(errors='replace'),
+                          load_json(directory/'run-result.json'))
 
 
 def child(config, lease, payload):
@@ -248,7 +281,7 @@ def hold(config, command):
                                   lock_identity=[st.st_dev, st.st_ino], config_sha256=sha(config))))
         env = dict(os.environ, RR_SAFE_CONFIG=str(Path(config).resolve()), RR_SAFE_LEASE=str(lease.resolve()),
                    MSYS2_ENV_CONV_EXCL='RR_SAFE_CONFIG;RR_SAFE_LEASE',
-                   WSLENV='RR_SAFE_CONFIG:RR_SAFE_LEASE:MSYS2_ENV_CONV_EXCL')
+                   FP_NOLIMIT='0', WSLENV='RR_SAFE_CONFIG:RR_SAFE_LEASE:MSYS2_ENV_CONV_EXCL:FP_NOLIMIT')
         # Git Bash inherits these Linux config/lease names for the WSL child
         # route. No installed rr-cycle invocation, metadata promotion or cleanup.
         return subprocess.call(command, env=env)
@@ -259,13 +292,17 @@ def main():
     sub = p.add_subparsers(dest='action', required=True)
     x = sub.add_parser('prepare'); x.add_argument('repo', type=Path); x.add_argument('out', type=Path)
     x = sub.add_parser('hold'); x.add_argument('config'); x.add_argument('command', nargs=argparse.REMAINDER)
-    x = sub.add_parser('audit'); x.add_argument('config')
+    for name in ('audit', 'judge-boot'):
+        x = sub.add_parser(name); x.add_argument('config')
     for name in ('child', 'launch'):
         x = sub.add_parser(name); x.add_argument('config'); x.add_argument('lease'); x.add_argument('payload')
     a = p.parse_args()
     if a.action == 'prepare':
         d = prepare(a.repo, a.out); print(json.dumps({k: d[k] for k in ('status', 'profile', 'source')})); return 0
     if a.action == 'audit': print(json.dumps(audit(load_json(a.config)), indent=2)); return 0
+    if a.action == 'judge-boot':
+        result = judge_boot(load_json(a.config)); print(json.dumps(result, indent=2))
+        return 0 if result['status'] == 'BOOT_TITLE_GOAL_PASS' else 1
     if a.action == 'hold': return hold(a.config, a.command[1:] if a.command[:1] == ['--'] else a.command)
     return (child if a.action == 'child' else launch)(a.config, a.lease, a.payload)
 

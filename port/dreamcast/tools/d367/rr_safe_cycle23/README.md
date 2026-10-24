@@ -1,10 +1,15 @@
 # RR bounded console adapter (source checkpoint; not a completed RR cycle)
 
 Source baseline: `fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2`.
-New observation profile: `RR_QUICK_QA_CONSOLE_OBSERVE53_CHILD55_V1`.
+New observation profile: `RR_FINAL_GDI_BOOT45_CHILD55_LIMITED_V2`.
 This deliberately differs from the installed 60/300-second harness profile.
 Installed cron's `1023-2350-fb254e82` captures remain legacy evidence. Its H2
 RUN_COMPLETE at 167.7 seconds with `emu=harness` cannot establish this profile.
+
+Successor to frozen2c6c62: only a newly owned capture emu.cfg is canonicalized
+to explicit aica.LimitFPS=yes immediately before guest Popen. Original template
+bytes remain unchanged; pre-limit cfg and before/after SHA are retained. Wrong,
+duplicate, malformed, foreign-section or non-template config content refuses.
 
 The source helper can prepare an isolated, hash-inventoried RR/reader capsule.
 Its only admitted execution entry is **one explicitly reviewed final-GDI boot**.
@@ -30,7 +35,9 @@ so root can review concrete changes before enabling a successor.
   conditions, clamps requested observation windows to 53 (boot stays 45),
   refuses full tier, and points FPD to the private directory. KOS's five scene
   durations and GD's duration become 53; GD cannot accept a longer SECS override.
-  KOS levels, endpoints, 4096-byte headroom requirement, all OOM/bad-read checks,
+  The retained KOS shell still declares its historical unthrottled setting;
+  actual V2 execution refuses FP_NOLIMIT other than0, so a future complete-cycle
+  successor must explicitly review its limited KOS profile. KOS levels, endpoints, 4096-byte headroom requirement, all OOM/bad-read checks,
   GD seeds, H2 movie/frame requirements and QA boot/warp conditions are retained.
   A gate that cannot finish in 53 seconds **fails**. Nothing is removed to fit.
 * `hold` takes the actual installed `/root/rr/rr.lock` nonblocking regardless of
@@ -86,7 +93,7 @@ python3 -B capsule.py prepare /root/probe/rr-safe-cycle23 /NEW/EXCLUSIVE/CAPSULE
 The second command copies only source/reference files and hashes the named
 console/template files; it creates no game image. A previously existing output
 is refused. Do not point it at installed RR or a frozen evidence directory.
-The 16 host methods use ordinary `/bin/sleep` children and an explicitly fake
+The 20 host methods use ordinary `/bin/sleep` children and an explicitly fake
 nested-call recorder. Those are routing/deadline controls, not synthetic runtime
 acceptance. Nested KOS/GD bodies make exactly three recorded wrapper calls;
 mutants using the original reader and 60-second duration are detected.
@@ -103,7 +110,7 @@ closure; label it reused evidence, not a fresh run.
 
 Root creates a configuration with status `ROOT_REVIEWED_CURRENT_HEAD_INPUTS`,
 source/profile above, exact `expected_runs` (one cap -> full argv), `expected_env`
-(cap -> allowed overrides), and all actual Windows `input_pins`. These must
+(cap -> allowed overrides, explicitly FP_NOLIMIT=0), and all actual Windows `input_pins`. These must
 include console, template cfg, original harness, Windows Python, retained
 programme/disc/assets/symbols and the actual root closure receipt. Bind
 `closure_receipt` and `programme_assets_closure_receipt_sha256` to that receipt;
@@ -133,7 +140,14 @@ bypass to the original reader. Root runs the **prepared capsule copy**:
 ```
 python3 -B /NEW/EXCLUSIVE/CAPSULE/capsule.py hold ROOT-REVIEWED.json -- <exact command vector>
 python3 -B /NEW/EXCLUSIVE/CAPSULE/capsule.py audit ROOT-REVIEWED.json
+python3 -B /NEW/EXCLUSIVE/CAPSULE/capsule.py judge-boot ROOT-REVIEWED.json
 ```
+
+The boot judge is separate from process bounds: it requires the title marker,
+goal stop, original45s request/5s grace, no source errors/early exit and no bad
+read/HALT/FAULT/MISSING rows. Its PASS is title-goal evidence only; both the bound
+audit (including no deadline and explicit saved FPS yes) and this semantic judge
+must pass. Neither establishes New Game, full route, QA or hardware acceptance.
 
 No shell-concatenated command is accepted. The Windows/WSL bridge remains subject
 to root's first actual console validation; host controls do not certify that OS
