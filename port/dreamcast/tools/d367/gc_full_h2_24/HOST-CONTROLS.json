@@ -1,0 +1,8 @@
+{
+  "returncode": 0,
+  "tests": 16,
+  "seconds": 0.26742081600241363,
+  "RAM_limit_bytes": 268435456,
+  "timeout_seconds": 120,
+  "SDK_stage_guest": false
+}

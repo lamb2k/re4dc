@@ -1,0 +1,4 @@
+from pathlib import Path
+import json,hashlib
+p=Path('/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-h2-prep-v1/INPUTS.json');j=json.loads(p.read_text());s=Path('/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/qa-final-8ce-independent-readback-v1/CANARY-BINDING.json');j['off_programme_binding']={'path':str(s),'identity':{'size':s.stat().st_size,'sha256':hashlib.sha256(s.read_bytes()).hexdigest()},'source':'8ce5ee2d00027268c3e69c9c300b819c1b14c63f'}
+s=Path('/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/stream-budget-427-qa-programmes-v1/MANIFEST.json');j['on_programme_binding']={'path':str(s),'identity':{'size':s.stat().st_size,'sha256':hashlib.sha256(s.read_bytes()).hexdigest()},'source':'427784b1f48aa30742850bb5025925ab619b740e'};p.write_text(json.dumps(j,indent=2)+'\n')

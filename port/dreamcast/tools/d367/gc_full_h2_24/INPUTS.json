@@ -1,0 +1,158 @@
+{
+  "helpers": {
+    "slot": {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/stat-guest-slot.sh",
+      "identity": {
+        "size": 249,
+        "sha256": "452123f936d4764244244f17d51d22299fdbd17eb0aada1de1991a4782d74549"
+      },
+      "windows_path": "C:\\Game Dev\\Emulators\\codex-lanes\\stat-bytes23\\stat-guest-slot.sh"
+    },
+    "bound": {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/census-bound-run.py",
+      "identity": {
+        "size": 2438,
+        "sha256": "e3f31e4a797b934543ac9e598a0e6350965533bdfe12299771200d11f183629c"
+      },
+      "windows_path": "C:\\Game Dev\\Emulators\\codex-lanes\\stat-bytes23\\census-bound-run.py"
+    },
+    "console": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/flycast-console-bin/flycast-console.exe",
+      "identity": {
+        "size": 14416384,
+        "sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a"
+      },
+      "windows_path": "C:\\Flycast-Evidence\\re4-dreamcast\\flycast-console-bin\\flycast-console.exe"
+    },
+    "python": {
+      "path": "/mnt/c/Users/lambd/AppData/Local/Programs/Python/Python312/python.exe",
+      "identity": {
+        "size": 104952,
+        "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+      },
+      "windows_path": "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+    },
+    "trace_lock": {
+      "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/trace_lock.sh",
+      "identity": {
+        "size": 2169,
+        "sha256": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688"
+      },
+      "windows_path": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-motion24-qa-memory-v2-dbqczoc8\\off\\source\\port\\dreamcast\\tools\\d367\\trace_lock.sh"
+    },
+    "harness": {
+      "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/fullplay/fp_run.py",
+      "identity": {
+        "size": 15608,
+        "sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747"
+      },
+      "windows_path": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-motion24-qa-memory-v2-dbqczoc8\\off\\source\\port\\dreamcast\\tools\\d367\\fullplay\\fp_run.py"
+    },
+    "WSL_python": {
+      "path": "/usr/bin/python3",
+      "identity": {
+        "size": 8020928,
+        "sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f"
+      }
+    }
+  },
+  "template": {
+    "emu.cfg": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/d367-harness-par/emu.cfg",
+      "identity": {
+        "size": 576,
+        "sha256": "e92b5817e28d4e96f4e7d038d64b365e356264d025e55b03f8184a0dd1817840"
+      }
+    },
+    "read_log.py": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/d367-harness-par/read_log.py",
+      "identity": {
+        "size": 5311,
+        "sha256": "6c43705318caa4c63fddd2995c04bdc9c3730abfe66400192be89f4d1e845059"
+      }
+    },
+    "capture_ui_vram.py": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/d367-harness-par/capture_ui_vram.py",
+      "identity": {
+        "size": 3725,
+        "sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57"
+      }
+    },
+    "data/T0000_vmu_save_A1.bin": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/d367-harness-par/data/T0000_vmu_save_A1.bin",
+      "identity": {
+        "size": 131072,
+        "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+      }
+    },
+    "data/vmu_save_A2.bin": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/d367-harness-par/data/vmu_save_A2.bin",
+      "identity": {
+        "size": 131072,
+        "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+      }
+    }
+  },
+  "pillow_launcher": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/pillow-isolated-prep-v1/pillow_launcher.py",
+    "windows_path": "C:\\Game Dev\\Emulators\\codex-lanes\\gc-motion24\\pillow-isolated-prep-v1\\pillow_launcher.py",
+    "identity": {
+      "size": 5077,
+      "sha256": "42cdc98cb3f2611a02afb6b0d8dc00cc5df5c6ee0450168558fd0feceab39e78"
+    }
+  },
+  "pillow_manifest": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/pillow-isolated-prep-v1/PILLOW-PINS.json",
+    "identity": {
+      "size": 17990,
+      "sha256": "e7027f68abb393a897c405c95465cc2a701a948f8ec4b990da460a18b9a492d4"
+    }
+  },
+  "pillow_seal": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/pillow-isolated-prep-v1/SOURCE-SEAL.json",
+    "identity": {
+      "size": 2490,
+      "sha256": "3bcff1c5a4eb7f5823296be065c097a246251ffd3c3d3d42ecf11073eeb7add2"
+    }
+  },
+  "fixtures": {
+    "warp": {
+      "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/fullplay/segments/h2-warp.txt",
+      "identity": {
+        "size": 363,
+        "sha256": "921ee89e2286ff7801736dabd1d9cb58321f25540ab3b3e3e63230eabb822012"
+      }
+    },
+    "pad": {
+      "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/fullplay/segments/h2-pad.txt",
+      "identity": {
+        "size": 215,
+        "sha256": "80a97aa5b3ac9c4e3f8945089108d98f432fa8f57b00d2e7385733cb8d461ac1"
+      }
+    }
+  },
+  "parent_common": {
+    "size": 9915,
+    "sha256": "db6a096a7403e634fd8d54691f7f17cbb72bf9c873647b4dbc613f555bc9142c"
+  },
+  "parent_owned_process": {
+    "size": 2552,
+    "sha256": "812b39c00151bad4ec2d888b36e5cf74407ce6b5234c219a675ffd04757a4ae7"
+  },
+  "off_programme_binding": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/qa-final-8ce-independent-readback-v1/CANARY-BINDING.json",
+    "identity": {
+      "size": 12075,
+      "sha256": "20036ec10222b8112c9273ccb2fa99fcb0f7f066e66f604c264d6ee1f25b23bc"
+    },
+    "source": "8ce5ee2d00027268c3e69c9c300b819c1b14c63f"
+  },
+  "on_programme_binding": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/stream-budget-427-qa-programmes-v1/MANIFEST.json",
+    "identity": {
+      "size": 11142,
+      "sha256": "73bc1537067aa0c28a8e25e5117d40d2ad045c7be7e83adf4893898b8ef52063"
+    },
+    "source": "427784b1f48aa30742850bb5025925ab619b740e"
+  }
+}
