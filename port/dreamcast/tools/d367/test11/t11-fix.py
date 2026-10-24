@@ -934,6 +934,14 @@ if os.path.isdir(PROPS24PD):
     for _r in 'r100 r101 r105 r107 r111 r11c r11f'.split():
         DATA['props24p']['st1/%s.dar' % _r] = '%s/st1/%s.dar' % (PROPS24PD, _r)
     PAK_DERIVED['props24p'] = PROPS24PD + '/pak-derived.json'
+# pui24 (lane purge-ui24 10-24, GC asset purge): fol24's tex.pak with the core HUD pictures as PS2 Core.dat pixels under
+# their GC keys (tools/d367/purgeui24/ps2_hud_pak.py; ammo lens, life sphere, gauge arcs / domes, name label, bullet,
+# partner icons, Ashley gauge, d-pad, the two UI_HUD_MASK composites): 14 packages, same sizes and formats. Data only, no
+# knob. After fol24; release line only (not KSETS). Private store copy: re4-assets-private/pui24-20261024.
+PUI24D = os.environ.get('PUI24D', '/root/re4data/private/pui24-20261024')
+if os.path.isdir(PUI24D):
+    DATA['pui24'] = {'dc/tex.pak': PUI24D + '/dc/tex.pak'}
+    PAK_DERIVED['pui24'] = PUI24D + '/pak-derived.json'
 # res22c (lane codex22, 10-22, data only): dc/resident.bin = mip22's remapped file + the listed keys it lacks
 # (mip22b ships the same resident.bin and remap; vram/resident_keys.py extend <out> mip22/dc/resident.bin mip22/dc/resident-remap.tsv vram/resident/r*.tsv; same inputs,
 # same bytes). Carries the first-use keys (HUD ammo digits in r000, shot effects, first Ganado pictures). Ships the remap
