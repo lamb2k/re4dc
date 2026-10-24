@@ -26,7 +26,11 @@ void motion_prepare(){
     // does not inspect or borrow their geometry owner/token or last model.
     motion.pending=motion.context?sanitize(motion.context):unsigned(MotionUnclassifiedWorld|MotionViewTrack);
 }
-void motion_accept_pending(unsigned records){if(motion.pending!=Accounted)accept(motion.pending,records);}
+void motion_accept_pending(unsigned records){
+    if(!records)return;
+    if(motion.pending==Accounted){motion.pending=MotionMissingRoute;return;}
+    accept(motion.pending,records);
+}
 void motion_accept_current(unsigned records){accept(motion.context,records);}
 void motion_pending_accounted(){motion.pending=Accounted;}
 void motion_unknown_flush(){

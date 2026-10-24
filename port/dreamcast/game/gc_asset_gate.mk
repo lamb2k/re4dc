@@ -48,5 +48,6 @@ endif
 # This detector has partial route coverage. Raw TR / shadow and alternate world
 # emitters are not admitted as complete Motion coverage; wired remains unchanged.
 PLATFORM_CPPFLAGS += -DRE4DC_GC_ASSET_MOTION_UNKNOWN=1
+GAME_CPPFLAGS += -DRE4DC_GC_ASSET_MOTION_UNKNOWN=1
 PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_motion_unknown.o
 endif

@@ -1,3 +1,4 @@
+#include "platform/include/gc_asset_motion_unknown.h"
 #include "actor_visibility_diag.h"
 // Recovered commonModelTrans -> existing native frame/packet/texture owner.
 // Diagnostic base-material connection; not full GX lighting/TEV emulation.
@@ -397,6 +398,10 @@ Entry* build(const Pending& q){
 void flush(){
     Pending& q=S->pend;
     if(!q.on)return;
+#if RE4DC_GC_ASSET_MOTION_UNKNOWN
+    // Held/cached merged groups never borrow the replay caller's current pose.
+    re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::MotionDelayedModel|re4dc_gcasset::MotionModelPose|re4dc_gcasset::MotionViewTrack);
+#endif
     q.on=false;
     ++st.groups;st.lists+=q.n;
     Re4dcModelPart r=q.rec;
