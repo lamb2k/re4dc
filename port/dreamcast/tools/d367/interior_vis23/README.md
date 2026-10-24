@@ -155,3 +155,14 @@ at a time needs at most one remaining draw per original meshlet. This is distinc
 from the generic component atlas's extra-draw estimate. See
 `PORTAL-RESEARCH-PLAN.md` for the source-only review boundary and unqualified
 cell closure, all-LOD membership, runtime/metadata and pixel requirements.
+
+
+Current r10d source lemma: `lod_surface_audit.py` binds exact current integration,
+resolved profile and original/current ownership provenance, intersects oriented
+source triangles over each cluster's independently selectable LODs, then audits
+unwelded edge topology. `surface_mesh.py` is a small read-only decoder;
+`check_surface_mesh.py` checks all decoded source records against the preserved
+reference. Fifteen focused core controls and five actual source/profile pin
+negatives exercise mixed LODs, empty fallback, cracks, winding, duplicates,
+ownership and fail-open behavior. See `LOD-SURFACE-LEMMA.md` for the bounded result.
+Closed graph prerequisites never admit an enclosure or runtime cut.
