@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <limits.h>
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+#include "platform/include/perf_phase_miss.h"
+#endif
 
 #ifndef RE4DC_WORLD_CENSUS24_WINDOW
 #define RE4DC_WORLD_CENSUS24_WINDOW 300
@@ -81,6 +84,9 @@ void clear_gpu(bool boundary) {
 }
 
 void clear_collection(bool clear_snapshot) {
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+    ppm14::abandon(clear_snapshot);
+#endif
     current = Frame{};
     window = Snapshot{};
     state = 0;
@@ -116,6 +122,9 @@ unsigned mean(uint64_t total, unsigned n) {
 }
 
 void finish_tick(uint64_t now) {
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+    ppm14::finish_tick(now);
+#endif
     charge(now);
     if (depth()) ++current.errors;
     const uint64_t wall = now >= current.begin ? now - current.begin : 0;
@@ -157,6 +166,9 @@ void finish_tick(uint64_t now) {
     gpu = Presentation{}; // intervals belong to the window in which they end
     unlock_irq(irq);
     sealed = window;
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+    ppm14::seal(sealed);
+#endif
     have_sealed = true;
     window = Snapshot{};
     char line[240];
@@ -167,7 +179,13 @@ void finish_tick(uint64_t now) {
 uint32_t enter_state(unsigned next) {
     if (!ours()) return NoToken;
     if (depth() == 63) { ++current.errors; return NoToken; }
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+    const uint64_t now = clock_us();
+    ppm14::transition(next,now);
+    charge(now);
+#else
     charge(clock_us());
+#endif
     const uint32_t token = (epoch << 16) | state;
     state = (next & 255u) | ((depth() + 1u) << 8);
     return token;
@@ -197,6 +215,9 @@ void begin_tick(uint32_t tick, uint32_t room) {
     state = 0;
     paused = false;
     gpu_armed = true;
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+    ppm14::begin_tick(now);
+#endif
 }
 void end_tick() { if (ours()) current.complete = true; }
 void decision(bool attempt) { if (ours()) current.attempt = attempt; }
@@ -225,12 +246,24 @@ void leave(uint32_t token) {
     if (token == NoToken || !ours() || (token >> 16) != epoch) return;
     const unsigned previous = token & 65535u;
     if (((previous >> 8) & 63u) + 1u != depth()) { ++current.errors; return; }
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+    const uint64_t now = clock_us();
+    ppm14::transition(previous,now);
+    charge(now);
+#else
     charge(clock_us());
+#endif
     state = previous;
 }
 void set_phase(Phase phase) {
     if (!ours() || !path_word() || unsigned(phase) >= PhaseCount) return;
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+    const uint64_t now = clock_us();
+    ppm14::transition((state & ~56u) | (unsigned(phase) << 3),now);
+    charge(now);
+#else
     charge(clock_us());
+#endif
     state = (state & ~56u) | (unsigned(phase) << 3);
 }
 void count(Counter counter, uint32_t amount) {
@@ -301,8 +334,15 @@ int summary(char* out, unsigned capacity) {
         "WC24 q=%u t=%u d=%u summary_overflow=1 full=QA", s.sequence,s.ticks,s.drawn);
     return n;
 }
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+unsigned line_count() { return 25 + ppm14::line_count(); }
+#else
 unsigned line_count() { return 25; }
+#endif
 int format_line(unsigned row, char* out, unsigned capacity) {
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+    if (row >= 25) return ppm14::format_line(row-25,out,capacity);
+#endif
     if (!capacity) return 0;
     out[0] = 0;
     if (!have_sealed) {

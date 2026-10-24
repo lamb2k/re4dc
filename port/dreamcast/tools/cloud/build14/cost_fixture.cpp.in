@@ -1,0 +1,26 @@
+// The actual production implementation and real pinned KOS PMU driver are
+// compiled unchanged. Only the fixture's input/global state is synthetic.
+#include "@DC@/game/perf_phase_miss.cpp"
+extern "C" {
+kthread_t* thd_current=reinterpret_cast<kthread_t*>(1);
+struct Arguments { unsigned state; uint64_t now; uint32_t* nodes; };
+__attribute__((noinline)) void fixture_transition(const Arguments* a) {
+    re4dc::ppm14::transition(a->state,a->now);
+}
+__attribute__((noinline)) void fixture_finish(const Arguments* a) {
+    re4dc::ppm14::finish_tick(a->now);
+}
+__attribute__((noinline)) uint32_t fixture_chase(const Arguments* a) {
+    return re4dc::ppm14::chase(a->nodes,re4dc::ppm14::ControlLoads);
+}
+__attribute__((used)) extern const uintptr_t fixture_layout[]={
+    sizeof(Arguments),offsetof(Arguments,now),offsetof(Arguments,nodes),
+    sizeof(re4dc::ppm14::Snapshot),
+    uintptr_t(&re4dc::ppm14::window),uintptr_t(&re4dc::ppm14::control),
+    uintptr_t(&re4dc::ppm14::owner),uintptr_t(&re4dc::ppm14::previous_count),
+    uintptr_t(&re4dc::ppm14::previous_us),uintptr_t(&re4dc::ppm14::bin),
+    uintptr_t(&re4dc::ppm14::owned),uintptr_t(&re4dc::ppm14::running),
+    uintptr_t(&re4dc::ppm14::active),uintptr_t(&re4dc::ppm14::paused),uintptr_t(&re4dc::ppm14::lost),
+    offsetof(re4dc::ppm14::Snapshot,total),offsetof(re4dc::ppm14::Snapshot,samples),
+    offsetof(re4dc::ppm14::Snapshot,wraps)};
+}

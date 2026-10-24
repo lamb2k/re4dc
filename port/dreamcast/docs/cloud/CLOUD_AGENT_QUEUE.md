@@ -343,3 +343,28 @@ public fixtures. The release recipe and coordinator status table are unchanged.
    smaller low-reuse working set despite repeated transforms? Include peak
    RAM, complete world cost, presentation cadence, look/STRICT and transition
    gates. The retained 3 KB gather allocation is not a heap saving.
+
+### 2026-10-24: Build 14 hand-back (`codex/perf-phase-miss-20261024`)
+
+Diagnostic: `PERF_PHASE_MISS=1`, default 0, requiring the landed census.
+Publication base `fc535318`, validation base `9b248c5b` (only a known-issues
+documentation link changed). The [report](BUILD14_PERF_PHASE_MISS_20261024.md) records
+20 complete OFF byte comparisons, 36 sanitized accounting/ownership controls,
+real KOS/target instruction traffic and paginated QA evidence. The observer
+uses PRFC1 only, rejects `PMC_ROW`, and stops touching an observably stolen
+counter. Event 15 (miss occurrences) and 37 (D-miss freeze cycles) are separate
+fixed builds/runs. The recipe and coordinator status table are unchanged.
+
+1. Do the paused-QA resident/miss-heavy controls qualify each event on the
+   physical console? Record all eight raw pairs, event and status. A simulated
+   passing response cannot issue `QUALIFIED` or `valid=1`; weak/noisy results
+   remain inconclusive.
+2. What sample counts, complete tick/draw denominators, phase/wait/residual
+   totals and errors occur in the matched cross/farm windows? Intervals are
+   exclusive, but the CPU-wide event includes observer, interrupt and other
+   scheduled work; qualification does not make the attribution uncontaminated.
+3. What is the console observer-off/on perturbation? The bounded scalar model
+   prices a sampled edge at 396 cycles plus unpriced hardware costs. Its
+   explicitly hypothetical 1,000-edge frame costs about 2.075 ms at 200 MHz;
+   this is not an r101 population or a portable subtraction constant. Use the
+   ordinary observer-off run for the play build's frame deadline.

@@ -21,6 +21,9 @@
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
 #include "world_census24.h"
 #define QA_CENSUS_ROW A_CENSUS,
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+#include "platform/include/perf_phase_miss.h"
+#endif
 #else
 #define QA_CENSUS_ROW
 #endif
@@ -499,8 +502,12 @@ void draw_census(const Fb& fb, unsigned page) {
              "WORLD CENSUS - SEALED WINDOW (GAME PAUSED) %u/%u", page + 1, pages);
     fb_center(fb, 12, 1, 2, kWhite, title);
     census_rows(fb, page * census_page_rows(fb), true);
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+    fb_text(fb, 30, fb.h - 26, 1, 2, kGrey, "A/RIGHT: NEXT LEFT: PREV X: PMU CONTROLS B: BACK");
+#else
     fb_text(fb, 30, fb.h - 26, 1, 2, kGrey, fb.w < 480 ? "A/RIGHT: NEXT LEFT: PREV B: BACK" :
             "A/RIGHT: NEXT PAGE   LEFT: PREVIOUS   B: BACK");
+#endif
 }
 #endif
 
@@ -670,6 +677,9 @@ int run(Menu& m, bool boot) {
         if ((press & CONT_DPAD_DOWN) && n) { s = (s + 1) % n; dirty = true; }
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         if (m.screen == M_CENSUS) {
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+            if (press & CONT_X) { re4dc::ppm14::run_controls(); dirty = true; }
+#endif
             const int pages = int(census_pages(fb));
             if (press & (CONT_A | CONT_DPAD_RIGHT | CONT_DPAD_DOWN)) {
                 m.census_page = (m.census_page + 1) % pages; dirty = true;
