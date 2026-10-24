@@ -133,6 +133,10 @@ extern "C" void re4dc_r11f_native_cancel(int failed) {
     if(failed || r.attempted)r.failed=true;
 }
 extern "C" int re4dc_r11f_native_draw(unsigned generation,unsigned source,const float* uv) {
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    const re4dc::wc24::Scope wc_world(re4dc::wc24::NearOP,re4dc::wc24::Other);
+    Wc24PassResult wc_result;
+#endif
     auto& r=r11fNativeReceipt;unsigned current=0;
     if(!uv || r.native!=re4dc_ui_frame() || !r.planned || r.failed || r.attempted ||
        r.generation!=generation || !re4dc_r11f_package(&current,1) || current!=generation ||
@@ -142,6 +146,9 @@ extern "C" int re4dc_r11f_native_draw(unsigned generation,unsigned source,const 
     r.source=source;r.uv[0]=uv[0];r.uv[1]=uv[1];r.uv_valid=true;
     re4dc_ps2_mesh_camera(view,projection,viewport);
     (void)re4dc_ps2_world_source_draw();
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_result.complete=!r.failed && (r.attempted&1U) && (r.completed&1U) && r.result[0]==1;
+#endif
     return !r.failed && (r.attempted&1U) && (r.completed&1U) && r.result[0]==1;
 }
 extern "C" int re4dc_r11f_native_complete(unsigned native,unsigned generation,unsigned source) {

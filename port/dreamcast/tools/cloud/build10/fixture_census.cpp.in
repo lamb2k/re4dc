@@ -1,0 +1,57 @@
+// Additional observer only. Build 5 supplies the geometry and sink unchanged.
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+static std::uint64_t wc24_clock;
+static unsigned wc24_logs;
+extern "C" std::uint64_t re4dc_wc24_test_clock(){return ++wc24_clock;}
+extern "C" std::uintptr_t re4dc_wc24_test_thread(){return 1;}
+extern "C" void re4dc_wc24_test_log(const char*){assert(!locked);++wc24_logs;}
+extern "C" void re4dc_wc24_identity(unsigned out[7]){
+    const unsigned identity[7]={0,0,1,0,0,0,1};
+    std::memcpy(out,identity,sizeof(identity));
+}
+static void wc24_begin_case(){
+    wc24_clock=0;wc24_logs=0;
+    re4dc::wc24::reset();
+    re4dc::wc24::begin_tick(1,0x101);
+    re4dc::wc24::decision(true);
+}
+static void wc24_finish_case(unsigned id){
+    using namespace re4dc::wc24;
+    scene_finished();decision_posted(true);end_tick();
+    // Seal the supported 300-draw window without repeating any renderer work.
+    // Counters in the snapshot are exactly the one controlled geometry draw.
+    for(unsigned tick=2;tick<=300;++tick){
+        wc24_clock+=100;
+        begin_tick(tick,0x101);decision(true);scene_finished();decision_posted(true);end_tick();
+    }
+    wc24_clock+=100;begin_tick(301,0x101);
+    Snapshot s{};
+    assert(snapshot(&s));assert(s.drawn==300 && s.ticks==300 && wc24_logs==1);
+    const bool incomplete=queue_fallback || queue_aborts;
+    assert(s.errors==unsigned(incomplete));
+    assert(sent.size()%8U==0);
+    unsigned corners=0,headers=0;
+    for(unsigned word=0;word<sent.size();word+=8){
+        const unsigned type=sent[word]>>29;
+        if(type==7U)++corners;
+        else {assert(type==4U || type==5U);++headers;}
+    }
+    const auto* counts=s.counters[NearOP];
+    assert(counts[Corners]==corners && counts[Headers]==headers);
+    assert(counts[MaterialChanges]<=headers);
+    if(headers)assert(counts[MaterialChanges]>0);
+    if(counts[StripInputs])assert(counts[Transformed]>0);
+    for(unsigned path=1;path<PathCount;++path)
+        for(unsigned counter=0;counter<CounterCount;++counter)assert(s.counters[path][counter]==0);
+    std::uint64_t phases=0,waits=0;
+    for(unsigned path=0;path<PathCount;++path)
+        for(unsigned phase=0;phase<PhaseCount;++phase)phases+=s.phase_us[path][phase];
+    for(unsigned wait=0;wait<WaitCount;++wait)waits+=s.wait_us[wait];
+    assert(phases>0 && s.residual_us>=0);
+    assert(phases+waits+std::uint64_t(s.residual_us)==s.wall_us);
+    std::fprintf(stderr,"WC24 {\"case\":%u,\"transformed\":%llu,\"corners\":%u,\"headers\":%u,"
+        "\"changes\":%llu,\"strip_inputs\":%llu,\"errors\":%u,\"partition_exact\":true}\n",id,
+        (unsigned long long)counts[Transformed],corners,headers,
+        (unsigned long long)counts[MaterialChanges],(unsigned long long)counts[StripInputs],s.errors);
+}
+#endif
