@@ -18,6 +18,17 @@ def audit_union(rows):
         keys.add(key);levels[t['instance']]=t['level'];total+=t['host_corner_records']
     return total
 
+def patch_associations(pid,source,cases):
+    keys=('instance','level','meshlet')
+    alone=[x for x in cases if x['sampled_patch_hit_counts'].get(pid,0)==x['sample_count']]
+    return dict(patch_id=pid,source=source,
+        associated_target_tuples=[[x['target'][k] for k in keys] for x in cases],
+        associated_target_corner_records_union=audit_union(cases),
+        patch_sample_hits_by_target=[dict(target_tuple=[x['target'][k] for k in keys],patch_samples_hit=x['sampled_patch_hit_counts'].get(pid,0),target_samples=x['sample_count']) for x in cases],
+        alone_all_fixed_samples_target_tuples=[[x['target'][k] for k in keys] for x in alone],
+        alone_all_fixed_samples_corner_records_union=audit_union(alone),
+        warning='Associated/touched target work only, not work hidden by this patch. Even single-patch all-sample hits are NO_CERTIFICATE. Groups overlap; never add group totals.')
+
 def source_record(t,level,li,pkg,materials,policy,conditional):
     m=pkg.pmeta[t['part']];_,det=rank.f.mapping(pkg,t['placement'])
     s={k:t[k] for k in ('placement','field','owner','part','cluster')};s.update(level=level,meshlet=li,level_count=t['level_count'])
@@ -66,7 +77,7 @@ def main():
                 roster.append(dict(**{k:t[k] for k in ('instance','placement','field','owner','part','cluster')},level=row['level'],meshlet=li,host_corner_records=pkg.lets[li]['vc'],box=rank.box_of(cs,world),selected_strip_groups=None,group_policy='FROZEN_REPLAY_HAS_NO_SG_SELECTION; whole authored let pre-SG ceiling'))
         audit_union([dict(target=t) for t in roster]);planned+=27*len(roster);contexts.append((camera,current,roster))
     token=Ledger(a.ledger).reserve(planned,'full eligible discovery planned rays; no refund on failure/rerun')
-    output=dict(schema='ELIGIBLE24_CURRENT_HOST_REPLAY_HINTS_V1',selection_label='CURRENT_HOST_REPLAY',historical_individual_let_or_group_identity=False,counts_and_lod_equality='Exact318-row old R6 equality is consistency only',source=source,inputs={n:f.identity(inputs/n) for n in f.audit.FROZEN_INPUT_SHA256},material_pins=materialpins,material_parts=materials,host_runtime=actual_runtime,authentic_camera_logs=logs,original_report=f.identity(a.prior_report),command=sys.argv,thread_policy='one worker and one numeric thread',source_pool='Complete current-host-selected static/unconditional nonsingular singleLOD pass0 intrinsic-opaque source lets, cull0/2, no vertex-alpha; strictly earlier placement enforced during BVH traversal',target_scope='Exact current-host-selected effective whole meshlets of unconditional/static ordinary target instances; no selected-group or guest-emission claim',certificate=None,runtime_admitted=False,gain_ms=None,views=[])
+    output=dict(classification='NO_CERTIFICATE',source_descriptor_prerequisites_only=True,unknown_renderer_obligations=['actual source side/winding','near/clip acceptance','material/depth/header commits','numeric/raster coverage','accepted source-prefix receipt'],schema='ELIGIBLE24_CURRENT_HOST_REPLAY_HINTS_V1',selection_label='CURRENT_HOST_REPLAY',historical_individual_let_or_group_identity=False,counts_and_lod_equality='Exact318-row old R6 equality is consistency only',source=source,inputs={n:f.identity(inputs/n) for n in f.audit.FROZEN_INPUT_SHA256},material_pins=materialpins,material_parts=materials,host_runtime=actual_runtime,authentic_camera_logs=logs,original_report=f.identity(a.prior_report),command=sys.argv,thread_policy='one worker and one numeric thread',source_pool='Complete current-host-selected static/unconditional nonsingular singleLOD pass0 intrinsic-opaque source lets, cull0/2, no vertex-alpha; strictly earlier placement enforced during BVH traversal',target_scope='Exact current-host-selected effective whole meshlets of unconditional/static ordinary target instances; no selected-group or guest-emission claim',certificate=None,runtime_admitted=False,gain_ms=None,views=[])
     for camera,current,roster in contexts:
         scene=EligibleScene(token);source_roster=[]
         for t,row in zip(targets,current):
@@ -94,7 +105,7 @@ def main():
         groups=[]
         for pid,q in patches.items():
             cases=[x for x in incremental if pid in {str(k) for k in x['sampled_patch_hit_counts']}]
-            if cases:groups.append(dict(patch_id=int(pid),source=q['source'],target_tuples=[[x['target'][k] for k in ('instance','level','meshlet')] for x in cases],nonoverlap_host_corner_ceiling=audit_union(cases),warning='Groups overlap in targets; do not add group ceilings'))
+            if cases:groups.append(patch_associations(int(pid),q['source'],cases))
         rows.sort(key=lambda x:(-int(x['all_fixed_samples_hit'] and x['outside_old_prefix_wholecluster_hint']),-x['target']['host_corner_records'],-x['usable_hit_count'],x['target']['instance'],x['target']['meshlet']))
         output['views'].append(dict(camera={k:v for k,v in camera.items() if k!='eye'},eye_exact=[str(v) for v in camera['eye']],target_roster=roster,source_roster=source_roster,source_triangles=len(scene.patch),source_patches=len(scene.patches),filtered_source_lets=scene.refused,ray_queries=scene.rays,all_sample_hit_lets=len(positives),all_hit_nonoverlap_corner_ceiling=audit_union(positives),incremental_lets_beyond_old_wholecluster_hints=len(incremental),incremental_nonoverlap_corner_ceiling=audit_union(incremental),ranked_lets=rows,patches=patches,common_source_groups=groups));gc.collect();print(json.dumps(dict(view=camera['label'],selected_targets=len(roster),eligible_triangles=len(scene.patch),hints=len(positives),incremental_hints=len(incremental),incremental_corners=audit_union(incremental))),flush=True)
     if token.used!=sum(v['ray_queries'] for v in output['views']):raise ValueError('Global ray query accounting mismatch')

@@ -56,6 +56,8 @@ class Controls(unittest.TestCase):
             self.assertEqual(json.loads(p.read_text())['reserved'],109999)
             bad=json.loads(p.read_text());bad['reserved']=-1;bad['runs']=[dict(reserved=-1)];p.write_text(json.dumps(bad))
             with self.assertRaises(ValueError):l.reserve(2,'negative counter cannot extend capacity')
+            bad['reserved']=1.5;bad['runs']=[dict(reserved=1.5)];p.write_text(json.dumps(bad))
+            with self.assertRaises(ValueError):l.reserve(2,'float counter cannot extend capacity')
             with self.assertRaises(FileExistsError):l.create()
         token=Token(1);token.take()
         with self.assertRaises(ValueError):token.take()
@@ -74,6 +76,14 @@ class Controls(unittest.TestCase):
         self.assertEqual(audit_union([row]),3)
         for other in (row,dict(target=dict(instance=1,level=1,meshlet=5,host_corner_records=2))):
             with self.assertRaises(ValueError):audit_union([row,other])
+    def test_patch_association_is_not_whole_target_coverage(self):
+        from run import patch_associations
+        a=dict(target=dict(instance=1,level=0,meshlet=4,host_corner_records=30),sampled_patch_hit_counts={2:26,3:1},sample_count=27)
+        b=dict(target=dict(instance=2,level=0,meshlet=5,host_corner_records=6),sampled_patch_hit_counts={2:27},sample_count=27)
+        group=patch_associations(2,{},[a,b])
+        self.assertEqual(group['associated_target_corner_records_union'],36)
+        self.assertEqual(group['alone_all_fixed_samples_corner_records_union'],6)
+        self.assertEqual([x['patch_samples_hit'] for x in group['patch_sample_hits_by_target']],[26,27])
     def test_actual_numeric_visible_let_observer(self):
         import numpy as np
         rm,_=selection.load()

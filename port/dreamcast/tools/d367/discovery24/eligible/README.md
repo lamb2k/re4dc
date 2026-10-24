@@ -6,7 +6,7 @@ held until the independent source review of its frozen checkpoint is CLEAR.
 
 The source pool is every CURRENT_HOST_REPLAY-selected actual source meshlet
 meeting static/unconditional/nonsingular, single authored sourceLOD, pass0,
-sourcecull0/2, no vertex alpha and the pinned intrinsic-opaque/material prerequisites.
+cull0/2 descriptor classes only, no vertex alpha and the pinned intrinsic-opaque/material prerequisites.
 There is no old512face cap. Ineligible nearer triangles never enter the BVH;
 sourcePlacement <targetPlacement is enforced in traversal before nearest update.
 Target physical placement/cluster is excluded, including its other lets. Shared
@@ -27,7 +27,7 @@ with FROZEN_REPLAY_HAS_NO_SG_SELECTION: full authored selected-let bounds/strip
 membership and pre-SG corner ceilings only. No guest transform/emission or actual
 SG work is inferred. No truncated viewport or projection tail is reconstructed.
 
-Every output is NO_CERTIFICATE.27fixed lo/mid/hi points (deduplicated for a flat
+Every output has top-level classification NO_CERTIFICATE. Source cull0/2 is only a descriptor-class prerequisite: actual source side/winding, near/clip acceptance, material/depth/header commits, numeric/raster coverage and accepted source-prefix receipts are UNKNOWN. 27fixed lo/mid/hi points (deduplicated for a flat
 box), approximate double rays, actual indexed/parity source triangles and
 connected real-edge components are discovery hints only. Edge/near contacts,
 holes, source winding, current header/depth/cull/clip/numeric/raster/material and
@@ -62,17 +62,17 @@ python3 -B port/dreamcast/tools/d367/discovery24/eligible/check.py \
  --out /mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-discovery24-eligible-r1/controls-NEW
 ```
 
-Eleven methods: nearer multiLOD/static/conditional/material/cull/alpha exclusions;
+Twelve methods: nearer multiLOD/static/conditional/material/cull/alpha exclusions;
 late/equal source prefix; own instance versus shared-placement geometry; edge and
-near uncertainty;256BVH/brute ray pairs; persistent reservation/rerun/negative-ledger
+near uncertainty;256BVH/brute ray pairs; persistent reservation/rerun/negative-or-float-ledger
 and token cap; triangle cap; exact-AST observer integrity and source mutant refusal;
 actual original numeric visible/offscreen-let observer; duplicate/alternativeLOD
-union refusal. All ray controls are charged to the same unit ledger.
+union refusal; patch touched-work versus single-patch sample coverage. All ray controls are charged to the same unit ledger.
 
 ## Pending full command
 
 After review, replace FROZEN_COMMIT with the immutable checkpoint from the lane
-handback and use the independently reviewed controls-r3/HOST-RUNTIME.json pin:
+handback and use the independently reviewed controls-r4/HOST-RUNTIME.json pin:
 
 ```
 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 \
@@ -81,7 +81,7 @@ python3 -B port/dreamcast/tools/d367/discovery24/eligible/run.py \
  --source-tree /root/probe/interior-discovery24 --source-commit FROZEN_COMMIT \
  --r6 /mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-fb254-lod-surface-r6 \
  --prior-report /mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-discovery24-r3/report.json \
- --runtime-pin /mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-discovery24-eligible-r1/controls-r3/HOST-RUNTIME.json \
+ --runtime-pin /mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-discovery24-eligible-r1/controls-r4/HOST-RUNTIME.json \
  --ledger /mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-discovery24-eligible-r1/RAY-LEDGER.json \
  --out /mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-discovery24-eligible-r1/run-r1
 ```
@@ -90,5 +90,8 @@ The output retains source/target tuples, raw view bits, exact source/input/runti
 pins and command, eligible source components, host selected grouping limitations,
 nonoverlapping per-camera corner ceilings, old-wholecluster comparison, resource
 peak/time and ledger. Targets already counted via a wholecluster must not be added
-again as child-let savings. Common-source group totals can overlap target work;
-never add groups or alternativeLOD counts. Results are not performance evidence.
+again as child-let savings. Common-source groups report touched/associated target work with per-target patch
+sample-hit counts. A separately named subset has all fixed samples hit by that
+patch alone; this still does not establish coverage of the target. Never describe
+associated corner totals as work hidden by that patch. Groups overlap; never add
+groups or alternativeLOD counts. Results are not performance evidence.
