@@ -15,6 +15,9 @@ extern void re4dc_log(const char* fmt, ...);
 extern void* re4dc_static_alloc(unsigned bytes);
 extern void re4dc_static_free(void* data);
 extern int re4dc_static_heap_free(void);
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+extern void re4dc_gcasset_room_parent_retire(void); /* memory-only revocation */
+#endif
 #if defined(RE4DC_SCENERY21_AB) && RE4DC_SCENERY21_AB
 extern char re4dc_bench_arm(void) __attribute__((weak));
 #endif
@@ -66,12 +69,18 @@ const void* re4dc_room_file_block(void) { return rf.block; }
 
 void re4dc_room_file_leave(void)
 {
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_room_parent_retire();
+#endif
     if (rf.block) re4dc_static_free(rf.block);
     memset(&rf, 0, sizeof(rf));
 }
 
 void re4dc_room_file_enter(unsigned room)
 {
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_room_parent_retire();
+#endif
     room &= 0xFFF;
     memset(&rf, 0, sizeof(rf));   /* the previous room's block was freed at re4dc_room_file_leave */
     rf.room = room;
@@ -129,6 +138,9 @@ void re4dc_room_file_enter(unsigned room)
     }
     fs_close(fd);
     if (why) {
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+        re4dc_gcasset_room_parent_retire();
+#endif
         if (rf.block) re4dc_static_free(rf.block);
         memset(&rf, 0, sizeof(rf));
         c_refused++;
@@ -157,3 +169,15 @@ const void* re4dc_room_section(const char tag[4], unsigned* len, unsigned* versi
 }
 
 unsigned re4dc_room_file_room(void) { return rf.room; }
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+/* Exact currently borrowed section, not a full parent-file hash. Its owner's
+ * mandatory retirement callback revokes old proof serials before reuse/free. */
+int re4dc_gcasset_room_span(const void* data, unsigned bytes, unsigned version, unsigned flags, const void* header)
+{
+    const uintptr_t base = (uintptr_t)rf.block, at = (uintptr_t)data;
+    if (!rf.block || !data || !bytes || header != &rf.hdr || at < base || at-base > rf.bytes || bytes > rf.bytes-(at-base)) return 0;
+    for (unsigned i=0; i<rf.nsec; ++i)
+        if (rf.sec[i].data == data && rf.sec[i].len == bytes && rf.sec[i].version == version && rf.sec[i].flags == flags) return 1;
+    return 0;
+}
+#endif

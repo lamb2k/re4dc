@@ -15,7 +15,14 @@ bool prepare_owner(PayloadProof& proof,const void* owner,const void* base,unsign
     bool conflict=false;
     for(auto* old=payloads;old;old=old->next)if(old!=&proof && old->owner &&
         (old->owner==owner || overlaps(base,bytes,old->base,old->bytes) || overlaps(base,bytes,old->layout,old->layout_bytes) ||
-         overlaps(layout,layout_bytes,old->base,old->bytes) || overlaps(layout,layout_bytes,old->layout,old->layout_bytes))){payload_retire(*old);conflict=true;}
+         overlaps(layout,layout_bytes,old->base,old->bytes) || overlaps(layout,layout_bytes,old->layout,old->layout_bytes))){
+        // A fully revoked composite may retain old accepted bookkeeping after
+        // a memory-only close/free. Reap it only here at the safe cold capture.
+        // Unpublished copy slots still own their buffers and are not composites.
+        const bool revoked=old->owner!=owner && !old->serial && old->layout_asset.value &&
+            (old->layout_bytes || !old->layout);
+        payload_retire(*old);if(!revoked)conflict=true;
+    }
     if(conflict){unresolved(SourceGeometry,"payload-owner-overlap");return false;}
     if(!proof.registered){
         if(payload_count==128){unresolved(SourceGeometry,"payload-owner-capacity");return false;}
@@ -118,6 +125,17 @@ bool payload_capture_composite(PayloadProof& proof,const void* owner,const void*
 void payload_invalidate(PayloadProof& proof,const void* owner){
     proof.serial=0;
     if(!proof.registered || !owner || proof.owner!=owner)payload_faults|=1U<<SourceGeometry;
+}
+bool payload_capture_receipt(PayloadProof& proof,const void* owner,const Digest& digest,unsigned bytes){
+    if(!bytes || bytes>40U*1024*1024){payload_retire(proof);unresolved(SourceGeometry,"receipt-bounds");return false;}
+    if(!payload_capture_digest(proof,owner,digest))return false;
+    proof.bytes=bytes;return true;
+}
+bool static_manifest_receipt(StaticManifest& manifest,StaticRole role,const PayloadProof& proof,const void* owner,unsigned version,unsigned flags){
+    AssetDescription description;
+    if(!owner || proof.owner!=owner || !proof.serial || proof.base || proof.layout || proof.layout_asset.value ||
+       !proof.bytes || !describe_checked(proof.asset,&description))return static_manifest_note(manifest,role,Unproven);
+    return static_manifest_note(manifest,role,Accepted,proof.bytes,version,flags,&description.digest);
 }
 bool payload_capture(PayloadProof& proof,const void* owner,const void* base,unsigned bytes,const void* layout,unsigned layout_bytes){
     if(!owner || !base || !bytes || bool(layout)!=bool(layout_bytes)){payload_retire(proof);unresolved(SourceGeometry,"payload-bounds");return false;}

@@ -23,6 +23,7 @@ GAME_CPPFLAGS += -DRE4DC_GC_ASSET_GATE=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_GC_ASSET_COARSE_LEON=$(COARSE_LEON)
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_GC_ASSET_LEON_HAND_PACK=$(if $(and $(filter 1,$(COARSE_LEON)),$(filter 1,$(ACTOR_TRANSACTION))),$(or $(LEON_HAND_PACK),0),0)
 $(OBJDIR)/platform/native_movie_stream.o: KOS_CFLAGS += -DRE4DC_GC_ASSET_GATE=1
+$(OBJDIR)/platform/room_file.o: KOS_CFLAGS += -DRE4DC_GC_ASSET_GATE=1
 PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_gate.o
 PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_members.o
 PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_disc.o

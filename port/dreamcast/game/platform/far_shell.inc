@@ -53,6 +53,10 @@ struct State {
     bool drawing = false;                 // re4dc_far_shell_draw holds pointers into block: a shortfall may not free it
 };
 State st;
+#if RE4DC_GC_ASSET_GATE
+// State is reset wholesale; this registered stable record must survive it.
+re4dc_gcasset::PayloadProof asset_proof;
+#endif
 // Residency policy (survives close()).
 struct Policy {
     unsigned room = ~0U;    // the room sync() last saw
@@ -67,11 +71,17 @@ bool yielded(unsigned room) {
     return false;
 }
 void close() {
+#if RE4DC_GC_ASSET_GATE
+    if(asset_proof.owner)re4dc_gcasset::payload_invalidate(asset_proof,&st);
+#endif
     if (st.block) re4dc_static_free(st.block);
     st = State{};
 }
 void open(unsigned room) {
     close();
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::payload_retire(asset_proof); // cold; close/shortfall itself never logs/hashes/reads catalog
+#endif
     char path[48];
     snprintf(path, sizeof(path), "/cd/dc/native/r%03x/far-shell.fsh", room);
     const int before = re4dc_static_heap_free();
@@ -134,6 +144,13 @@ void open(unsigned room) {
         st = State{};
     } else {
         st.bytes = size; st.room = room;
+#if RE4DC_GC_ASSET_GATE
+        re4dc_gcasset::StaticManifest source;
+        re4dc_gcasset::static_manifest_begin(source,re4dc_gcasset::StaticShell,room,gcasset_static_profile(),st.block,size);
+        for(unsigned i=0;i<re4dc_gcasset::StaticRoleCount;++i)
+            re4dc_gcasset::static_manifest_note(source,re4dc_gcasset::StaticRole(i),re4dc_gcasset::NotApplicable);
+        re4dc_gcasset::payload_capture_composite(asset_proof,&st,st.block,size,nullptr,0,source);
+#endif
     }
     re4dc_log("FARSHELL room=%03x open=%s bytes=%u groups=%u materials=%u vertices=%u heap=%d->%d\n", room, why ? why : "ok",
               size, st.h ? unsigned(st.h->groups) : 0U, st.h ? unsigned(st.h->materials) : 0U,
@@ -231,6 +248,9 @@ extern "C" float re4dc_far_shell_full(float cut) {
 extern "C" int re4dc_far_shell_draw(float cut, float full) {
     using namespace farshell;
     if (far_shell_mode != 1 || !st.h || st.room != ps2w.room || !ps2w.camera) return 0;
+#if RE4DC_GC_ASSET_GATE
+    GcStaticSourceScope gcasset_source_scope(asset_proof,&st);
+#endif
     const float* P = ps2w.projection;
     const float* V = ps2w.viewport;
     const float* v = ps2w.view;
