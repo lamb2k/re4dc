@@ -8,7 +8,11 @@
 #include <atomic>
 #if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
 #include <arch/timer.h>
-extern "C" { unsigned re4dc_gca_disc_reads; unsigned long long re4dc_gca_disc_us; }
+static unsigned re4dc_gca_disc_reads; static unsigned long long re4dc_gca_disc_us;
+namespace re4dc_gcasset {
+unsigned prof_disc_reads(){return re4dc_gca_disc_reads;}
+unsigned long long prof_disc_us(){return re4dc_gca_disc_us;}
+}
 #endif
 #ifndef RE4DC_GC_ASSET_CATALOG_SHA256
 #define RE4DC_GC_ASSET_CATALOG_SHA256 "0"

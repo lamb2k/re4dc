@@ -36,6 +36,10 @@ void retire_catalog();
 // Room changes do not close the handle; disc/source replacement must retire.
 bool ensure_disc_catalog();
 void retire_disc_catalog();
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+unsigned prof_disc_reads();
+unsigned long long prof_disc_us();
+#endif
 CheckedAsset bind_checked(const char* kind,const char* id,const Digest& actual_sha);
 bool checked_current(CheckedAsset); // memory only; no catalog read, hashing or logging
 bool describe_checked(CheckedAsset,AssetDescription*); // safe boundaries only: may read the catalog

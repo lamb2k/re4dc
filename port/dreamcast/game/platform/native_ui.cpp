@@ -449,14 +449,13 @@ struct Source { Re4dcUiImage image{}; Key key{}; };
 Entry entries[kTextureCount]; Source sources[kSourceCount]; unsigned nsource;
 #if RE4DC_GC_ASSET_GATE
 #if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
-extern "C" { extern unsigned re4dc_gca_disc_reads; extern unsigned long long re4dc_gca_disc_us; }
 struct GcaFpProf {
     static unsigned n; static unsigned long long us,bytes,bind_us;
     unsigned long long t0=timer_us_gettime64();
     ~GcaFpProf(){
         us+=timer_us_gettime64()-t0;
         if(!(++n&7))re4dc_log("GC-ASSET-PROF fp=%u fp_us=%llu fp_bytes=%llu bind_us=%llu catalog_reads=%u catalog_us=%llu\n",
-            n,us,bytes,bind_us,re4dc_gca_disc_reads,re4dc_gca_disc_us);
+            n,us,bytes,bind_us,re4dc_gcasset::prof_disc_reads(),re4dc_gcasset::prof_disc_us());
     }
 };
 unsigned GcaFpProf::n; unsigned long long GcaFpProf::us,GcaFpProf::bytes,GcaFpProf::bind_us;
