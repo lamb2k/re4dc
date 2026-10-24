@@ -49,6 +49,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 12 | SCENERY_LOCAL_INDEXED / SCENERY_DIRECT_STRIPS (world data variants) | landed 28c73edb (merge of f32f38e7), both default 0; knob-off image identical to Test 23 d28b3cfc |
 | 13 | SCENERY_RECORD_SPLIT (meshlet size sweep, 16+12 record split) | landed 606dd4c3 (merge of eef109c2), default 0 (meshlet default 64 kept) |
 | 14 | PERF_PHASE_MISS (phase miss counter) | landed 630d00ef (merge of 5a4d2cc0), default 0; knob-off image identical to Test 23 d28b3cfc |
+| 15 | WORLD_CENSUS24_ERRORS + world policy provenance recovery (world-policy-census-fix) | landed 1250754a (merge of 54c1b417), default 0; far_shell.inc conflict with I-001 resolved keeping both; knob-off image identical to Test 23 d28b3cfc |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
 
