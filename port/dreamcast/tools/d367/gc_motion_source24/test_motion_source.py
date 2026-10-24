@@ -39,7 +39,7 @@ void actual_retire_archive(const void* m){
 LOADER_RETIRE
 }
 int main(){
- unsigned owner=0,model=0,camera=0,shape=0;unsigned char fcv[64]{1,2,3},evd[96]{4,5},bind[80]{9,10};
+ unsigned owner=0,model=0,camera=0,shape=0;unsigned char fcv[64]{1,2,1},evd[96]{4,5},bind[80]{9,10};word(fcv+12,16);
  const auto original=gate_fingerprint(fcv,sizeof fcv);char id0[41],id1[41],id2[41];ident(original,id0);ident(gate_fingerprint(evd,sizeof evd),id1);ident(gate_fingerprint(bind,sizeof bind),id2);
  CatalogRow rows[]={{"motion",id0,original,PS2},{"motion",id1,gate_fingerprint(evd,sizeof evd),GameCube},{"motion",id2,gate_fingerprint(bind,sizeof bind),Authored}};
  assert(install(rows,3));begin(0x100,1,0x1f6);
@@ -66,7 +66,7 @@ int main(){
  assert(describe_checked(accepted[1],&description));assert(description.provenance==GameCube);
  // Deferred snapshot cannot follow a new generation at the same address.
  motion_source_retire(&owner);const unsigned before=accepts;
- assert(motion_source_adopt(&owner,fcv,sizeof fcv,MotionFcv));
+ assert(!motion_source_adopt(&owner,fcv,sizeof fcv,MotionFcv));fcv[2]=1;word(fcv+12,16);assert(motion_source_adopt(&owner,fcv,sizeof fcv,MotionFcv));faults=0;
  protected_context=true;motion_source_accept(receipt,1);protected_context=false;motion_source_flush();assert(accepts==before && faults==1);
  motion_source_reset(&model);auto stale=motion_source_snapshot(&model);assert(stale.fault);
  // Evaluation without any accepted records is never emission.
@@ -76,7 +76,7 @@ int main(){
  retire_catalog();protected_context=true;motion_source_accept(motion_source_snapshot(&model),1);protected_context=false;motion_source_flush();assert(accepts==evaluated);
  motion_source_retire(&owner);motion_source_reset(&model);motion_source_reset(&camera);motion_source_reset(&shape);
  // Complete original archive FCV capture, never only an MTC shell prefix.
- unsigned char arc[160]{};word(arc,2);word(arc+16,32);word(arc+20,96);std::memcpy(arc+24,"FCV",3);std::memcpy(arc+28,"BIN",3);
+ unsigned char arc[160]{};word(arc,2);word(arc+16,32);word(arc+20,96);std::memcpy(arc+24,"FCV",3);std::memcpy(arc+28,"BIN",3);arc[34]=1;word(arc+44,16);
  end(1);assert(install(rows,3));begin(0x100,2,0x1f6);
  const unsigned prior_hashes=hashes;actual_read_archive(&owner,arc,sizeof arc);assert(hashes==prior_hashes+2);assert(accepts==evaluated);
  motion_source_reset(&model);motion_source_note(&model,arc+32,MotionFcv);
@@ -86,7 +86,7 @@ int main(){
  assert(describe_checked(accepted[accepts-1],&description));assert(description.provenance==Unknown);
  actual_retire_archive(&owner);const unsigned original_accepts=accepts;
  protected_context=true;motion_source_accept(archive_receipt,1);protected_context=false;motion_source_flush();assert(accepts==original_accepts);
- motion_source_retire(&owner);std::memcpy(arc+28,"MTC",3);const unsigned prefix_hashes=hashes;assert(!motion_source_archive(&owner,arc,sizeof arc));assert(hashes==prefix_hashes);
+ motion_source_retire(&owner);arc[34]=1;word(arc+44,16);std::memcpy(arc+28,"MTC",3);const unsigned prefix_hashes=hashes;assert(!motion_source_archive(&owner,arc,sizeof arc));assert(hashes==prefix_hashes);
  word(arc+20,32);std::memcpy(arc+28,"FCV",3);assert(!motion_source_archive(&owner,arc,sizeof arc));
  // Invalid directory sizes/ranges and serial exhaustion do not read a span.
  word(arc,4097);assert(!motion_source_archive(&owner,arc,sizeof arc));
@@ -119,7 +119,7 @@ class MotionSourceTests(unittest.TestCase):
    self.assertNotEqual(run.returncode,0,run.stdout) if reject else self.assertEqual(run.returncode,0,run.stderr)
  def test_production_helper_with_real_hash_catalog_and_tokens(self):self.compile_run()
  def test_retirement_and_stale_mutations(self):
-  for mutant in [('for(auto& s:sources)if(s.owner==owner)s={};',''),('if(found && checked_current(found->asset))','if(found)'),('if(external){good=false;continue;}',''),('if(s.bytes==bytes && s.role==unsigned(role))return true;','if(s.bytes==bytes && s.role==unsigned(role)){capture(base,bytes);return true;}')]:
+  for mutant in [('for(auto& s:sources)if(s.owner==owner)s={};',''),('if(found && checked_current(found->asset))','if(found)'),('if(external){good=false;continue;}',''),('if(s.bytes==bytes && s.role==unsigned(role))return true;','if(s.bytes==bytes && s.role==unsigned(role)){capture(base,bytes);return true;}'),('if((role==MotionFcv || role==MotionShape) && !original_fcv(base,bytes))','if(false && (role==MotionFcv || role==MotionShape) && !original_fcv(base,bytes))')]:
    with self.subTest(mutant=mutant[0]):self.compile_run(mutant,reject=True)
  def test_default_header_evaluates_no_arguments_and_object_empty(self):
   with tempfile.TemporaryDirectory(prefix='gc-motion-off24-',dir='/dev/shm') as t:

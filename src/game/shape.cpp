@@ -276,7 +276,7 @@ void CalculateShape_new(cModelInfo* info, ShapeData* data, f32 rate, u8* dst)
                     s32 n;
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
                     if (num > 0) {
-                        re4dc_gcasset::motion_source_note(info,data,re4dc_gcasset::MotionFcv);
+                        re4dc_gcasset::motion_source_note(info,data,re4dc_gcasset::MotionShape);
                         re4dc_gcasset::motion_source_note(info,info->pData,re4dc_gcasset::MotionBind);
                     }
 #endif

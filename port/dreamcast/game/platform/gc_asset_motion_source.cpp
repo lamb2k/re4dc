@@ -41,7 +41,7 @@ Subject* subject(const void* owner,bool create){
 }
 unsigned lookup(const void* p,MotionSourceRole role){
     unsigned serial=0;
-    for(const auto& s:sources)if(s.serial && contains(s.base,s.bytes,p,1) && (s.role==unsigned(role) || s.role==MotionEvd)){
+    for(const auto& s:sources)if(s.serial && contains(s.base,s.bytes,p,1) && (s.role==unsigned(role) || s.role==MotionEvd || (role==MotionShape && s.role==MotionFcv))){
         if(serial)return 0;
         serial=s.serial;
     }
@@ -53,6 +53,15 @@ CheckedAsset capture(const void* base,unsigned bytes){
     return bind_checked("motion",id,digest);
 }
 unsigned word(const unsigned char* p){unsigned v;std::memcpy(&v,p,4);return v;}
+bool original_fcv(const void* base,unsigned bytes){
+    if(bytes<16)return false;
+    const auto* p=static_cast<const unsigned char*>(base);const unsigned count=p[2];
+    const unsigned prefix=((3+3*count+3)&~3U)+4+4*count;
+    if(!count || prefix>bytes)return false;
+    const unsigned table=prefix-4*count;
+    for(unsigned i=0;i<count;++i){const unsigned at=word(p+table+4*i);if(at<prefix || at>=bytes)return false;}
+    return true;
+}
 MotionReceipt selected(const void* owner){
     auto* s=subject(owner,false);if(s)return s->receipt;
     MotionReceipt result{};result.fault=1;return result;
@@ -70,6 +79,11 @@ bool motion_source_adopt(const void* owner,const void* base,unsigned bytes,Motio
         if(!s.owner && !free)free=&s;
     }
     if(!free || next_serial>=0xfffffffeU){unresolved(Motion,"motion-source-capacity-or-serial");return false;}
+    // Relocated tables contain absolute pointers. Reject those before a new
+    // owner can accidentally call prepared output an original FCV source.
+    if((role==MotionFcv || role==MotionShape) && !original_fcv(base,bytes)){
+        unresolved(Motion,"motion-original-fcv-layout");return false;
+    }
     const CheckedAsset asset=capture(base,bytes);
     if(!asset.value){unresolved(Motion,"motion-source-catalog-bind");return false;}
     *free={owner,base,bytes,++next_serial,unsigned(role),asset,false};return true;
