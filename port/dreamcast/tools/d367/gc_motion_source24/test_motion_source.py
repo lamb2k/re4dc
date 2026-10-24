@@ -14,6 +14,7 @@ PLATFORM=ROOT/'port/dreamcast/game/platform'
 FLAGS=['-std=c++17','-O2','-Wall','-Wextra','-Werror','-DRE4DC_GC_ASSET_GATE=1','-DRE4DC_GC_ASSET_MOTION_UNKNOWN=1','-DRE4DC_GC_ASSET_MOTION_SOURCE=1','-DRE4DC_GC_ASSET_TEST=1','-I'+str(PLATFORM/'include')]
 FIXTURE=r"""
 #include "gc_asset_motion_source.h"
+#include "gc_asset_motion_unknown.h"
 #include <cassert>
 #include <cstring>
 #include <cstdio>
@@ -31,6 +32,12 @@ void unresolved(Consumer c,const char*){assert(!protected_context && c==Motion);
 }
 void ident(const Digest& d,char* id){const char* h="0123456789abcdef";for(unsigned i=0;i<20;++i){id[2*i]=h[d.bytes[i]>>4];id[2*i+1]=h[d.bytes[i]&15];}id[40]=0;}
 void word(unsigned char* p,unsigned v){std::memcpy(p,&v,4);}
+void actual_read_archive(const void* m,void* pArc,unsigned len){
+LOADER_CAPTURE
+}
+void actual_retire_archive(const void* m){
+LOADER_RETIRE
+}
 int main(){
  unsigned owner=0,model=0,camera=0,shape=0;unsigned char fcv[64]{1,2,3},evd[96]{4,5},bind[80]{9,10};
  const auto original=gate_fingerprint(fcv,sizeof fcv);char id0[41],id1[41],id2[41];ident(original,id0);ident(gate_fingerprint(evd,sizeof evd),id1);ident(gate_fingerprint(bind,sizeof bind),id2);
@@ -53,8 +60,8 @@ int main(){
  const auto receipt=motion_source_snapshot(&model,&shape);assert(receipt.count==3 && !receipt.fault);
  motion_source_accept(receipt,0);protected_context=false;motion_source_flush();assert(!accepts && !faults);
  // Actual accepted record latches; all hashing/catalog/logging waits for flush.
- {MotionSourceScope scope(receipt);motion_source_prepare();protected_context=true;motion_source_accept_pending(7);protected_context=false;}
- assert(!accepts);motion_source_flush();assert(accepts==3 && !faults);
+ {MotionUnknownScope unknown(motion_model_reason());MotionSourceScope scope(receipt);motion_prepare();protected_context=true;motion_accept_pending(7);protected_context=false;}
+ assert(!accepts);motion_unknown_flush();assert(accepts==3 && faults==1);faults=0;
  AssetDescription description{};assert(describe_checked(accepted[0],&description));assert(!std::memcmp(description.digest.bytes,original.bytes,32));assert(description.provenance==PS2);
  assert(describe_checked(accepted[1],&description));assert(description.provenance==GameCube);
  // Deferred snapshot cannot follow a new generation at the same address.
@@ -70,7 +77,15 @@ int main(){
  motion_source_retire(&owner);motion_source_reset(&model);motion_source_reset(&camera);motion_source_reset(&shape);
  // Complete original archive FCV capture, never only an MTC shell prefix.
  unsigned char arc[160]{};word(arc,2);word(arc+16,32);word(arc+20,96);std::memcpy(arc+24,"FCV",3);std::memcpy(arc+28,"BIN",3);
- end(1);assert(install(rows,3));begin(0x100,2,0x1f6);assert(motion_source_archive(&owner,arc,sizeof arc));assert(accepts==evaluated);
+ end(1);assert(install(rows,3));begin(0x100,2,0x1f6);
+ const unsigned prior_hashes=hashes;actual_read_archive(&owner,arc,sizeof arc);assert(hashes==prior_hashes+2);assert(accepts==evaluated);
+ motion_source_reset(&model);motion_source_note(&model,arc+32,MotionFcv);
+ const auto archive_receipt=motion_source_snapshot(&model);const unsigned original_archive_hashes=hashes;
+ std::memset(arc+32,0xcc,64);actual_read_archive(&owner,arc,sizeof arc);assert(hashes==original_archive_hashes);
+ protected_context=true;motion_source_accept(archive_receipt,1);protected_context=false;motion_source_flush();assert(accepts==evaluated+1);
+ assert(describe_checked(accepted[accepts-1],&description));assert(description.provenance==Unknown);
+ actual_retire_archive(&owner);const unsigned original_accepts=accepts;
+ protected_context=true;motion_source_accept(archive_receipt,1);protected_context=false;motion_source_flush();assert(accepts==original_accepts);
  motion_source_retire(&owner);std::memcpy(arc+28,"MTC",3);const unsigned prefix_hashes=hashes;assert(!motion_source_archive(&owner,arc,sizeof arc));assert(hashes==prefix_hashes);
  word(arc+20,32);std::memcpy(arc+28,"FCV",3);assert(!motion_source_archive(&owner,arc,sizeof arc));
  // Invalid directory sizes/ranges and serial exhaustion do not read a span.
@@ -83,7 +98,14 @@ int main(){
 class MotionSourceTests(unittest.TestCase):
  def compile_run(self,mutant=None,reject=False):
   with tempfile.TemporaryDirectory(prefix='gc-motion-source24-',dir='/dev/shm') as t:
-   p=Path(t);(p/'fixture.cpp').write_text(FIXTURE)
+   p=Path(t)
+   read=(ROOT/'src/game/read.cpp').read_text()
+   def production_block(call):
+    at=read.index(call);start=read.rfind('#if',0,at);finish=read.index('#endif',at)+len('#endif')
+    return read[start:finish]
+   fixture=FIXTURE.replace('LOADER_CAPTURE',production_block('re4dc_gcasset::motion_source_archive(m,pArc,len);'))
+   fixture=fixture.replace('LOADER_RETIRE',production_block('re4dc_gcasset::motion_source_retire(m);'))
+   (p/'fixture.cpp').write_text(fixture)
    # Compile gate independently so only the diagnostic observation sink differs.
    subprocess.run(['g++',*FLAGS,'-Dfingerprint=gate_fingerprint','-Dbind_checked=gate_bind_checked','-Demitted_checked=gate_emitted_checked','-Dunresolved=gate_unresolved','-c',str(PLATFORM/'gc_asset_gate.cpp'),'-o',str(p/'gate.o')],check=True,timeout=60,capture_output=True,text=True)
    source=(PLATFORM/'gc_asset_motion_source.cpp').read_text()
@@ -91,7 +113,7 @@ class MotionSourceTests(unittest.TestCase):
     old,new=mutant;assert old in source;source=source.replace(old,new,1)
    source=source.replace('#include "include/gc_asset_motion_source.h"','#include "gc_asset_motion_source.h"')
    (p/'source.cpp').write_text(source)
-   compile=subprocess.run(['g++',*FLAGS,str(p/'fixture.cpp'),str(p/'source.cpp'),str(p/'gate.o'),'-o',str(p/'run')],capture_output=True,text=True,timeout=60)
+   compile=subprocess.run(['g++',*FLAGS,str(p/'fixture.cpp'),str(p/'source.cpp'),str(PLATFORM/'gc_asset_motion_unknown.cpp'),str(p/'gate.o'),'-o',str(p/'run')],capture_output=True,text=True,timeout=60)
    self.assertEqual(compile.returncode,0,compile.stderr)
    run=subprocess.run(['/lib64/ld-linux-x86-64.so.2',str(p/'run')],capture_output=True,text=True,timeout=10)
    self.assertNotEqual(run.returncode,0,run.stdout) if reject else self.assertEqual(run.returncode,0,run.stderr)
@@ -129,4 +151,16 @@ class MotionSourceTests(unittest.TestCase):
     out.append(line)
    baseline=subprocess.run(['git','show','140a699f8ead7b406e76581de7075191acf77a96:'+path],cwd=ROOT,check=True,capture_output=True,text=True).stdout
    self.assertEqual(''.join(out),baseline,path)
+ def test_unknown_helper_source_off_host_object_identity(self):
+  path='port/dreamcast/game/platform/gc_asset_motion_unknown.cpp'
+  baseline=subprocess.run(['git','show','140a699f8ead7b406e76581de7075191acf77a96:'+path],cwd=ROOT,check=True,capture_output=True,text=True).stdout
+  current=(ROOT/path).read_text()
+  with tempfile.TemporaryDirectory(prefix='gc-motion-off-identity-',dir='/dev/shm') as t:
+   p=Path(t);src=p/'gc_asset_motion_unknown.cpp';objects=[]
+   for i,source in enumerate([baseline,current]):
+    src.write_text(source)
+    obj=p/('arm'+str(i)+'.o')
+    subprocess.run(['g++','-std=c++17','-O2','-DRE4DC_GC_ASSET_GATE=1','-DRE4DC_GC_ASSET_MOTION_UNKNOWN=1','-I'+str(PLATFORM),'-c',str(src),'-o',str(obj)],check=True,timeout=60)
+    objects.append(obj.read_bytes())
+   self.assertEqual(*objects)
 if __name__=='__main__':unittest.main()
