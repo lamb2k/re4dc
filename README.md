@@ -149,12 +149,11 @@ Fixes and a little more speed, still up to the castle gate. Full details are in 
 
 Planned, with no date yet. Ticked items have passed our checks and will be in Test 23.
 
-- [ ] **Chapter 3-1 playable:** the castle's first part, past the gate.
+- [ ] **Chapter 3-1 playable:** the castle's first part, past the gate (Test 24).
 - [ ] **Mipmaps in more places**, with the room texture memory arranged to fit them.
-- [ ] **Faster drawing of hidden faces** of the world and the characters.
-- [ ] **Less scenery drawn when it can't be seen.**
-- [ ] **Faster inventory:** it reads only the item you open.
-- [ ] **A better-looking El Gigante up close.**
+- [ ] **Less scenery drawn when it can't be seen** (Test 24).
+- [x] **Faster inventory.**
+- [x] **A better-looking El Gigante up close.**
 - [x] **River water:** the cave river, the dam river by the water wheel and the merchant cave pool now draw their PS2 water ([#55](https://github.com/lamb2k/re4dc/issues/55)).
 - [x] **Trap explosions:** tree and door traps now explode with fire ([#55](https://github.com/lamb2k/re4dc/issues/55)).
 - [x] **Missing gears:** the lever gears stay drawn and turn ([#52](https://github.com/lamb2k/re4dc/issues/52)).
