@@ -41,6 +41,10 @@ def material_census(repo,pack,p):
     if digest(pack)!=PACK_SHA:raise ValueError('Unreviewed actual texture package')
     hdr=repo/'port/dreamcast/room/texture_package.hpp'
     table=repo/'port/dreamcast/tools/d367/texture_rect21/scoped_representations.inc'
+    for item in (hdr,table,table.with_name('world_rect_bind.h')):
+        rel=str(item.relative_to(repo))
+        import subprocess
+        if subprocess.check_output(['git','-C',str(repo),'show',audit.INTEGRATION+':'+rel])!=item.read_bytes():raise ValueError('Material source differs from exact integration '+rel)
     flags={k:1<<int(re.search(k+r'\s*=\s*1U\s*<<\s*(\d+)U',hdr.read_text())[1]) for k in ('kAlpha','kBinaryAlpha','kMipmap','kTopDrop')}
     forbidden=flags['kAlpha']|flags['kBinaryAlpha']|flags['kTopDrop']
     reps={}
@@ -68,7 +72,7 @@ def material_census(repo,pack,p):
                 elif desc[3]&forbidden:reason='alpha/binary-alpha/true-topdrop'
                 elif desc[:2]!=(m['w'],m['h']) and reps.get((*key,m['w'],m['h']))!=desc:reason='unproved size adaptation'
             results[part]=dict(eligible=reason is None,reason=reason,descriptor=desc,logical=[*key,m['w'],m['h']])
-    return results,dict(pack=identity(pack),header=identity(hdr),rect21_table=identity(table),actual_flags=flags,scope='Immutable descriptor prerequisite only; actual residency/header/depth/material commit still required')
+    return results,dict(pack=identity(pack),header=identity(hdr),rect21_table=identity(table),rect21_adapter=identity(table.with_name('world_rect_bind.h')),actual_flags=flags,scope='Immutable descriptor prerequisite only; actual residency/header/depth/material commit still required')
 
 
 def mapping(p,pi):
@@ -84,7 +88,7 @@ def mapping(p,pi):
 
 def collect(p,policy,ids,materials):
     conditional=audit.conditional_fields(ids)
-    faces=[];targets=[];reasons=collections.Counter();all_stable=0
+    faces=[];targets=[];reasons=collections.Counter();all_stable=0;ordinary_shape_stable=0
     for pi,pl in enumerate(p.placements):
         mesh=p.meshes[pl['mesh']];world,determinant=mapping(p,pi)
         static=pl['placement'] not in conditional and determinant!=0
@@ -109,6 +113,7 @@ def collect(p,policy,ids,materials):
                     levels.append(facets)
                 keep,selected=audit.invariant(levels,counts)
                 all_stable+=len(keep)
+                if meta['pass_']==0 and meta['cull'] in (0,2) and not(policy[32+part*16+15]&1):ordinary_shape_stable+=len(keep)
                 target=dict(instance=len(targets),placement=pi,field=pl['placement'],part=part,cluster=ci,static=static,ordinary=meta['pass_']==0,level_count=cl['level_count'])
                 if allq:
                     lo=tuple(min(q[k] for q in allq) for k in range(3));hi=tuple(max(q[k] for q in allq) for k in range(3))
@@ -125,10 +130,11 @@ def collect(p,policy,ids,materials):
                     n=cross(sub(wf[1],wf[0]),sub(wf[2],wf[0]));area2=sum(x*x for x in n)
                     if not area2:continue
                     faces.append(dict(placement=pi,field=pl['placement'],part=part,cluster=ci,meshlet=li,level=lv,corners=triple,grid=raw,level_count=cl['level_count'],cull=meta['cull'],area2=area2))
-    return faces,targets,dict(all_stable_faces=all_stable,eligible_stable_faces=len(faces),excluded=dict(reasons),unconditional_static_target_clusters=sum(t['static'] and t['ordinary'] and 'box' in t for t in targets))
+    return faces,targets,dict(all_stable_faces=all_stable,ordinary_shape_stable_faces=ordinary_shape_stable,eligible_stable_faces=len(faces),excluded=dict(reasons),unconditional_static_target_clusters=sum(t['static'] and t['ordinary'] and 'box' in t for t in targets))
 
 
 def cells(path,p):
+    if digest(path)!='4da375bab6e872d9db289b1ef891055f162ef802cb2dfac2216396edfa0b5d8d':raise ValueError('Unreviewed preserved camera domains')
     b=path.read_bytes();h=struct.unpack_from('<4s7I3f5I',b)
     magic,version,crc,mb,pc,ni,nx,nz,x0,z0,size,ns,sb,active,_,_=h
     if (magic,version,crc,mb,pc,ni)!=(b'R4PV',1,p.mesh_crc,len(p.m),p.sidecar_crc,318):raise ValueError('Frozen control PVS identity mismatch')
@@ -160,6 +166,11 @@ def main():
     resource.setrlimit(resource.RLIMIT_AS,(LIMIT,LIMIT))
     r=a.frozen
     if digest(r/'report.json')!=REPORT_SHA:raise ValueError('Frozen R6 report mismatch')
+    prior=json.loads((r/'report.json').read_text())
+    receipt=r/'prepared/prepare-receipt.json'
+    if digest(receipt)!=prior['prepared_receipt']['sha256']:raise ValueError('Prepare receipt identity changed')
+    prep=json.loads(receipt.read_text())
+    if (prep['exact_cameras'],prep['cells_with_domain'],prep['total_grid_cells'],prep['cell_mm'])!=(3155,19,550,2000):raise ValueError('Camera programme metadata changed')
     source=audit.bind_source(a.source_tree,r/'current-resolved-knobs.txt')
     inputs=r/'prepared/inputs'
     for name,pin in audit.FROZEN_INPUT_SHA256.items():
@@ -172,6 +183,7 @@ def main():
     if struct.unpack_from('<4sIII',ids)!=(b'R4ID',1,len(p.placements),original.sidecar_crc) or original.placements!=p.placements:raise ValueError('Original/current exact affine ownership binding')
     materials,materialpins=material_census(a.source_tree,Path(stage['replace']['dc/tex.pak']),p)
     faces,targets,census=collect(p,policy,ids[16:16+len(p.placements)],materials)
+    if census['ordinary_shape_stable_faces']!=33409:raise ValueError('Frozen R6 surface census mismatch')
     domains=cells(a.cells,p)
     selected=[];strata={}
     for one in (True,False):
@@ -197,7 +209,8 @@ def main():
     safe={(x['cell'],x['target']) for x in pairs if x['requested_interval']['proven']}
     mechanical={(x['cell'],x['target']) for x in pairs if x['requested_interval']['proven'] and x['single_lod'] and x['prefix_order']}
     # Receipt sets/16-panel admission and actual clipping/header/raster are absent.
-    out=dict(schema=1,kind='Sparse exact IDEAL triangle-shadow feasibility; no runtime admission',tool=identity(Path(__file__)),math_tool=identity(Path(__file__).with_name('exact_shadow.py')),source=source,inputs={name:identity(inputs/name) for name in audit.FROZEN_INPUT_SHA256},frozen_report=identity(r/'report.json'),staging_plan=identity(r/'current-staging-plan.json'),control_cells=identity(a.cells),material=materialpins,material_parts=materials,census=census,strata=strata,domains=len(domains),pair_tests=tested,float_rejections=filtered,exact_attempts=exact_attempts,nominal_hidden_cell_clusters=len(nominal),requested_interval_hidden_cell_clusters=len(safe),single_lod_prefix_prerequisite_cell_clusters=len(mechanical),selected_faces=selected,targets=[{k:v for k,v in t.items() if k not in ('box','box_float')} for t in targets],pairs=pairs,renderer_admitted_cell_clusters=0,actual_runtime_cuts=0,modelled_ms=None,go_1ms=False,coverage='Partial: top area-ranked face cap independently in one-LOD and multi-LOD strata. Untested faces remain unknown; no all-algorithm NO-GO.',ideal_uncertainty=dict(source_vertex_mm=32,eye_box_mm=32,target_box_mm=32,eye_plane_clearance_mm=2000,target_plane_clearance_mm=32,basis='Requested IDEAL perturbations only, not established actual SH4/raster error bounds'),limits=dict(rlimit_as_bytes=LIMIT,peak_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,jobs=1),limitations=['Exact full-product geometry theorem only; no sampled-ray proof.','Serialized f32 grid and int16 Y cells are ideal domains. Actual f32 selector preimage and true view eye need independent enclosure.','Current all-LOD witness membership is not source emission. Actual source cull side/near/far/strip clipping/header/material/prefix receipts remain required.','32mm perturbations do not prove actual SH4/FTRV/reciprocal/FPSCR/viewport/raster edge/sample/depth coverage.','Single-LOD prefix is a prerequisite, not runtime compatibility qualification or 16-panel receipt coverage.','No table/data/renderer changes, no target run, no hardware gain, no source-exclusive current net cost model.'])
+    camera_provenance=dict(prepare_receipt=identity(r/'prepared/prepare-receipt.json'),exact_cameras=3155,serialized_domains=19,old_capture_profile='e9bf7 CAMERA, 54s requested and 55.4-55.8s total wall; not current exact55 child qualification',views='hut / arrival-turn / walk',current_actual_draw_counters=False)
+    out=dict(schema=1,camera_provenance=camera_provenance,kind='Sparse exact IDEAL triangle-shadow feasibility; no runtime admission',tool=identity(Path(__file__)),math_tool=identity(Path(__file__).with_name('exact_shadow.py')),source=source,inputs={name:identity(inputs/name) for name in audit.FROZEN_INPUT_SHA256},frozen_report=identity(r/'report.json'),staging_plan=identity(r/'current-staging-plan.json'),control_cells=identity(a.cells),material=materialpins,material_parts=materials,census=census,strata=strata,domains=len(domains),pair_tests=tested,float_rejections=filtered,exact_attempts=exact_attempts,nominal_hidden_cell_clusters=len(nominal),requested_interval_hidden_cell_clusters=len(safe),single_lod_prefix_prerequisite_cell_clusters=len(mechanical),selected_faces=selected,targets=[{k:v for k,v in t.items() if k not in ('box','box_float')} for t in targets],pairs=pairs,renderer_admitted_cell_clusters=0,actual_runtime_cuts=0,modelled_ms=None,go_1ms=False,coverage='Partial: top area-ranked face cap independently in one-LOD and multi-LOD strata. Untested faces remain unknown; no all-algorithm NO-GO.',ideal_uncertainty=dict(source_vertex_mm=32,eye_box_mm=32,target_box_mm=32,eye_plane_clearance_mm=2000,target_plane_clearance_mm=32,basis='Requested IDEAL perturbations only, not established actual SH4/raster error bounds'),limits=dict(rlimit_as_bytes=LIMIT,peak_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,jobs=1),limitations=['Exact full-product geometry theorem only; no sampled-ray proof.','Serialized f32 grid and int16 Y cells are ideal domains. Actual f32 selector preimage and true view eye need independent enclosure.','Current all-LOD witness membership is not source emission. Actual source cull side/near/far/strip clipping/header/material/prefix receipts remain required.','32mm perturbations do not prove actual SH4/FTRV/reciprocal/FPSCR/viewport/raster edge/sample/depth coverage.','Single-LOD prefix is a prerequisite, not runtime compatibility qualification or 16-panel receipt coverage.','No table/data/renderer changes, no target run, no hardware gain, no source-exclusive current net cost model.'])
     a.out.parent.mkdir(parents=True,exist_ok=True)
     with a.out.open('x') as f:json.dump(out,f,indent=1);f.write('\n')
     print(json.dumps({k:out[k] for k in ('census','strata','domains','pair_tests','exact_attempts','nominal_hidden_cell_clusters','requested_interval_hidden_cell_clusters','single_lod_prefix_prerequisite_cell_clusters','renderer_admitted_cell_clusters','modelled_ms','limits')}))

@@ -2,7 +2,7 @@
 import random
 import unittest
 from fractions import Fraction as Q
-from exact_shadow import I, corners, cross, det, dot, h, prove, sub
+from exact_shadow import I, corners, cross, det, dot, h, nominal_filter, prove, sub
 
 
 class ExactShadowTests(unittest.TestCase):
@@ -70,6 +70,17 @@ class ExactShadowTests(unittest.TestCase):
             lam=[h(a,b,e,t)/(se-st) for a,b in ((self.tri[0],self.tri[1]),(self.tri[1],self.tri[2]),(self.tri[2],self.tri[0]))]
             self.assertEqual(sum(lam),1)
             self.assertTrue(all(x>0 for x in lam))
+
+    def test_requested_uncertainty_and_filter_positive(self):
+        triangle=((-20000,-20000,0),(20000,-20000,0),(0,20000,0))
+        eye=((-100,-100,10000),(100,100,12000))
+        target=((-100,-100,-12000),(100,100,-10000))
+        self.assertTrue(nominal_filter(triangle,eye,target))
+        self.assertTrue(prove(triangle,eye,target,vertex_error=32,eye_error=32,target_error=32,eye_clearance=2000,target_clearance=32)['proven'])
+        # Exact nominal plane/edge margins may hold when the requested enlarged
+        # uncertainty volume is ambiguous: no universal 32mm claim follows.
+        self.assertTrue(prove(self.tri,self.eye,self.target)['proven'])
+        self.assertFalse(prove(self.tri,self.eye,self.target,vertex_error=32)['proven'])
 
     def test_no_negative_perturbation_or_invalid_box(self):
         for kwargs in (dict(vertex_error=-1),dict(eye_error=-1),dict(target_error=-1),dict(eye_clearance=-1)):
