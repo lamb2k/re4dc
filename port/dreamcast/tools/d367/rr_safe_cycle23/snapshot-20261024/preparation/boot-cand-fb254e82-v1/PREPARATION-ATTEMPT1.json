@@ -1,0 +1,7 @@
+{
+  "status": "ABORTED_BEFORE_CONFIG_OR_CLOSURE_CREATION",
+  "scope": "read-only pending preparation",
+  "reason": "Original release/tree raw main is an original asset baseline, not the new actual-disc current programme. Its hash differs from current49a4 as expected. Do not bind it as current main.",
+  "resolution": "Current logical 1ST_READ.BIN49a4 bound to exact actual-disc full readback; actual current ELF and all14 rehashed. No candidate/media edits or guest.",
+  "original_candidate_untouched": true
+}

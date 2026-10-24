@@ -1,0 +1,9 @@
+One fresh final-GDI title observation completed by root, not by this snapshot worker.
+
+Candidate/source fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2; raw main49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b and all14/1712-file closure unchanged. Runtime adapter34a5c48bfe22c3d9718810166407048a906b8bcc, approved configb2f889d213bc31c92d478520a5d63a00891e3598e27ca14be68e9e172e6714c7. Actual console PID8704, child upper8.265999999945052s under55, explicit saved FPSyes cfg53fdeb0bb1e2ac715e592174363be99089102d88890f34fbc13d5d42031189d4. Title goal/grace5/errors0 and independent bounds both PASS.
+
+Actual receipt root is C:/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/bounded-console-boot-v3. ROOT-EXECUTION SHAef671589d893962edaad5cd1b9588d26a69e23ffe77158b27a6c04f520dfe7dd. ROOT-DELIVERY records title-only metadata acceptance; current candidate IDENTITY2e43f6f01573a604e323287e6e4134824b093daeec0cc31bbd559fd592132fab. Candidate metadata-before-acceptance is retained privately and satisfies the approved config historical input pins. Those old pins are intentionally unchanged. Programme/track/asset/recipe/QA ZIP bytes remain untouched.
+
+This is one log-only title boot. Existing old-profile quick/QA remains legacy; no fresh full quick/QA cycle, New Game, visual, route, hardware or performance acceptance. No extra runtime, build, SD, publication or cleanup follows.
+
+Source-only disaster-safe archive is on wip/rr-evidence24-20261024 under tools/d367/rr_safe_cycle23/snapshot-20261024. EXPORT-MAP.json distinguishes exact physical hashes from Git LF-normalized blobs and records reversible CRLF positions. Archived scripts are historical source, not instructions to rerun admission/acceptance. No binaries, disc/asset bodies, VMUs, screenshots or raw game logs are exported; referenced private evidence is hash-pinned only. Snapshot timestamp 2026-10-24T04:54:30.504866+00:00.

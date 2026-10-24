@@ -1,0 +1,171 @@
+{
+  "status": "PREPARED_INPUT_BINDING_ROOT_REVIEW_PENDING_NOT_RUNTIME_ACCEPTANCE",
+  "source": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "adapter_source": "34a5c48bfe22c3d9718810166407048a906b8bcc",
+  "prepared_utc": "2026-10-24T04:37:31.863431+00:00",
+  "candidate": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82",
+  "programme": {
+    "raw": {
+      "member": "1ST_READ.BIN",
+      "size": 3370820,
+      "sha256": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+      "basis": "actual-disc logical member from exact pinned full readback; not stale original release/tree main"
+    },
+    "elf": {
+      "path": "/root/probe/lanes/route/out-rrfb254e8rP/re4dc-game.elf",
+      "size": 28567156,
+      "sha256": "3a110765ef415dfd4e4a00104bfc6094b393f87cb9f9f55672046f90e702ee8f"
+    },
+    "overlays": {
+      "em22.ovl": {
+        "path": "/root/probe/lanes/route/out-rrfb254e8rP/em22.ovl",
+        "size": 27236,
+        "sha256": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e"
+      },
+      "em2b.ovl": {
+        "path": "/root/probe/lanes/route/out-rrfb254e8rP/em2b.ovl",
+        "size": 67900,
+        "sha256": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695"
+      },
+      "em2f.ovl": {
+        "path": "/root/probe/lanes/route/out-rrfb254e8rP/em2f.ovl",
+        "size": 16800,
+        "sha256": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1"
+      },
+      "em35.ovl": {
+        "path": "/root/probe/lanes/route/out-rrfb254e8rP/em35.ovl",
+        "size": 52392,
+        "sha256": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7"
+      },
+      "em3b.ovl": {
+        "path": "/root/probe/lanes/route/out-rrfb254e8rP/em3b.ovl",
+        "size": 7568,
+        "sha256": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417"
+      },
+      "pl0f.ovl": {
+        "path": "/root/probe/lanes/route/out-rrfb254e8rP/pl0f.ovl",
+        "size": 45608,
+        "sha256": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e"
+      },
+      "pl11.ovl": {
+        "path": "/root/probe/lanes/route/out-rrfb254e8rP/pl11.ovl",
+        "size": 35592,
+        "sha256": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e"
+      },
+      "pl14.ovl": {
+        "path": "/root/probe/lanes/route/out-rrfb254e8rP/pl14.ovl",
+        "size": 18832,
+        "sha256": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e"
+      },
+      "sscrn.ovl": {
+        "path": "/root/probe/lanes/route/out-rrfb254e8rP/sscrn.ovl",
+        "size": 134372,
+        "sha256": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60"
+      },
+      "st1_0.ovl": {
+        "path": "/root/probe/lanes/route/out-rrfb254e8rP/st1_0.ovl",
+        "size": 36340,
+        "sha256": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a"
+      },
+      "st1_1.ovl": {
+        "path": "/root/probe/lanes/route/out-rrfb254e8rP/st1_1.ovl",
+        "size": 81540,
+        "sha256": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0"
+      },
+      "st1_2.ovl": {
+        "path": "/root/probe/lanes/route/out-rrfb254e8rP/st1_2.ovl",
+        "size": 50076,
+        "sha256": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c"
+      },
+      "st1_3.ovl": {
+        "path": "/root/probe/lanes/route/out-rrfb254e8rP/st1_3.ovl",
+        "size": 88748,
+        "sha256": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc"
+      },
+      "st2_0.ovl": {
+        "path": "/root/probe/lanes/route/out-rrfb254e8rP/st2_0.ovl",
+        "size": 96788,
+        "sha256": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2"
+      }
+    }
+  },
+  "tracks": {
+    "gdemu/disc.gdi": {
+      "path": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/gdemu/disc.gdi",
+      "size": 87,
+      "sha256": "025516557d49e1835e7eb8571e09244b64db190cf3981ead555c54b1924ca19f",
+      "current_stat_fingerprint": [
+        87,
+        1792813906874617700
+      ],
+      "binding": "full hash checked during preparation"
+    },
+    "gdemu/track01.bin": {
+      "path": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/gdemu/track01.bin",
+      "size": 1058400,
+      "sha256": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9",
+      "current_stat_fingerprint": [
+        1058400,
+        1792813906885626100
+      ],
+      "binding": "full hash checked during preparation"
+    },
+    "gdemu/track02.raw": {
+      "path": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/gdemu/track02.raw",
+      "size": 1237152,
+      "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+      "current_stat_fingerprint": [
+        1237152,
+        1792813906896624300
+      ],
+      "binding": "full hash checked during preparation"
+    },
+    "gdemu/track03.bin": {
+      "path": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/gdemu/track03.bin",
+      "size": 1185760800,
+      "sha256": "7cc0a64936f8eafa4ec3fb605582500d9fbc6e5a712f407836009773c58624aa",
+      "current_stat_fingerprint": [
+        1185760800,
+        1792813914244356200
+      ],
+      "binding": "prior actual full hash plus current identical stat fingerprint; full hash checked by guard before guest"
+    }
+  },
+  "source_handback": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/INSPECTION.json",
+    "sha256": "d236b9d39f2d618d7c715f6d10c9d83bb10ebbabb7861b4064608a7ad7ecc447"
+  },
+  "asset_readback": {
+    "files": 1712,
+    "nonprogramme_unchanged": 1697,
+    "manifest_sha256": "4d07e720300fcd72ae1081a00fe6a702331983ed2e8af4fdfadb0346691a726a",
+    "basis": "existing actual handback; not new full-disc readback"
+  },
+  "console": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/flycast-console-bin/flycast-console.exe",
+    "size": 14416384,
+    "sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a"
+  },
+  "python": {
+    "path": "/mnt/c/Users/lambd/AppData/Local/Programs/Python/Python312/python.exe",
+    "size": 104952,
+    "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+  },
+  "syms": {
+    "path": "/root/probe/lanes/route/out-rrfb254e8rP/syms.txt",
+    "sha256": "8cb303b271aed50f068279a567b4f00368cd41be8e38333fefb02472afc68466",
+    "value": "0x3e16a0 0x3f16a4 0x3f16a0"
+  },
+  "original_template_sha256": "e92b5817e28d4e96f4e7d038d64b365e356264d025e55b03f8184a0dd1817840",
+  "original_template_modified": false,
+  "requested_launch": {
+    "FP_NOLIMIT": "0",
+    "aica_LimitFPS": "yes",
+    "enforced_by_adapter_before_exact_Popen": true,
+    "prelimit_and_launch_cfg_preserved": true
+  },
+  "media_copied": false,
+  "guest_launched": false,
+  "sdk_build": false,
+  "runtime_qualified": false
+}

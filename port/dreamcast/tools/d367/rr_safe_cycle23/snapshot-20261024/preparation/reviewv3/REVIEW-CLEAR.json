@@ -1,0 +1,25 @@
+{
+  "status": "CLEAR",
+  "scope": "V3 relocation/UNC and pending one-boot metadata binding only",
+  "adapter_source_commit": "34a5c48bfe22c3d9718810166407048a906b8bcc",
+  "prior_source_review_sha256": "6e70bd83bade582ae98f1fc764e30f509759c42a84d6ea2794356a7f0825641c",
+  "pending_configuration_sha256": "981d6f49363e4bb569ebcb6cef36b7c09f39ee9808b003fd6c0e5c9cc4099f0a",
+  "capsule_manifest_sha256": "1113b56b10f8da664cf39534a336218f6096f1bf08a65596325f059d1fe8df53",
+  "programme_assets_closure_receipt_sha256": "d1b6f2127a960bea245a8f8384f152c89aa7eaaea2a94c28ce624c3f933a60ed",
+  "windows_all49_preflight_receipt_sha256": "247cd1d513840742420f22efd66325182565cb5b675aa1c5bfc3ef95861ef071",
+  "readback_sha256": "38f528992686e0aed7135585c5b45f14966c1c4246da21a58e88584fc803e626",
+  "review_sha256": "951cf7172428132b60a5fc7d51fdf091f456844ecb3ed67fb28c7d74240b9f8a",
+  "generated_utc": "2026-10-24T04:40:48.071569+00:00",
+  "findings": [],
+  "execution_admitted": false,
+  "runtime_qualified": false,
+  "actual_guest": false,
+  "SDK": false,
+  "actual_binary_image_or_programme_read": false,
+  "source_tests_repeated": false,
+  "remaining_root_gates": [
+    "Approved config/alias/lease freeze",
+    "Fresh actual RR terminal/process/release/resource admission",
+    "Actual bound audit and title-goal decision"
+  ]
+}

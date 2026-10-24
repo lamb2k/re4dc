@@ -1,0 +1,12 @@
+{
+  "status": "REFUSED_BEFORE_GUEST",
+  "pending_config_sha256": "370ad23576222fb750ca3e2a5261e4008e08a780c3aea488e225114dd8c09402",
+  "reason": "Actual Windows Python cannot read the capsule through the WSL /mnt/c re-export UNC alias; PermissionError 13. The /root/probe programme UNC inputs were readable.",
+  "failed_input": "//wsl.localhost/Ubuntu-24.04/mnt/c/Game Dev/Emulators/codex-lanes/rr-safe-cycle23/boot-cand-fb254e82-v2/capsule/fullplay/_fp_run_original.py",
+  "approved_config_written": false,
+  "lease_created": false,
+  "guest_started": false,
+  "candidate_or_template_changed": false,
+  "next": "Prepare a new source-only capsule and runtime configuration under /root/probe, preserving the unchanged reviewed adapter and all v2 metadata. Recheck actual Windows input readability before root admission.",
+  "scope": "Host path preflight refusal, not a game, disc, performance or physical acceptance failure. No installed script or automation change."
+}

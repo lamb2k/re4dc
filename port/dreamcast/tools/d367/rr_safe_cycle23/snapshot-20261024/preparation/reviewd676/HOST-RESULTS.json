@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "source_commit": "34a5c48bfe22c3d9718810166407048a906b8bcc",
+  "methods": 10,
+  "elapsed_s": 0.48973434799700044,
+  "actual_guest": false,
+  "actual_process_kill": false,
+  "SDK": false,
+  "console_or_image_read": false,
+  "controls_sha256": "3f98af5221eef0db5d85f99d523d8ddd6f0907b2a7ac30263de9d50796e493da",
+  "transcript": "test_actual_template_and_exact_stock_gdb_vsync_edits (__main__.Controls.test_actual_template_and_exact_stock_gdb_vsync_edits) ... ok\ntest_audit_requires_both_fps_receipt_and_exact_launch_hash (__main__.Controls.test_audit_requires_both_fps_receipt_and_exact_launch_hash) ... ok\ntest_bad_or_symlink_cfg_never_reaches_mock_popen (__main__.Controls.test_bad_or_symlink_cfg_never_reaches_mock_popen) ... ok\ntest_canonical_cfg_saved_before_mock_popen_and_drift_fails (__main__.Controls.test_canonical_cfg_saved_before_mock_popen_and_drift_fails) ... ok\ntest_exact_source_and_pending_capsule (__main__.Controls.test_exact_source_and_pending_capsule) ... ok\ntest_explicit_fp0_required_before_harness (__main__.Controls.test_explicit_fp0_required_before_harness) ... ok\ntest_fp0_environment_and_pinned_template_reach_guard (__main__.Controls.test_fp0_environment_and_pinned_template_reach_guard) ... ok\ntest_pending_config_and_whole_cycle_refuse_without_lock (__main__.Controls.test_pending_config_and_whole_cycle_refuse_without_lock) ... ok\ntest_title_goal_and_independent_negative_semantics (__main__.Controls.test_title_goal_and_independent_negative_semantics) ... ok\ntest_wrong_duplicate_foreign_malformed_and_scope_mutants_refuse (__main__.Controls.test_wrong_duplicate_foreign_malformed_and_scope_mutants_refuse) ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 0.490s\n\nOK\n"
+}

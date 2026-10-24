@@ -1,0 +1,39 @@
+{
+  "status": "PRIVATE_CURRENT_CANDIDATE_METADATA_ACCEPTED_TITLE_ONLY",
+  "before": {
+    "README.txt": "a9439bbf77627c433ce859e91249828234bb92632ec3e2f65607e48818802cff",
+    "STEPS.txt": "96d9313f5c2946705ccd54f8a1af3869ebcbc97d90cbff04917f957bd13ed499",
+    "IDENTITY.json": "9ff3968e9760496cbe225a1dadfbd98482ec2dcd635b85feb4dab6c3ef8127a2",
+    "QUALIFICATION-SHA256SUMS.txt": "8ac2cac791745553d33189e0d2b0a2b49bbf114b47c87583e05a6ef754609326",
+    "SHA256SUMS.txt": "1e877f3c86c8091efeceeb0154c73eef9ed5f73b3a0a9dbc097f3f9c86270d31"
+  },
+  "after": {
+    "README.txt": "da7d157ee4ea4ba728e238bf5934fe2151dbeddd02fb8f826b02ae6130fc126e",
+    "STEPS.txt": "f5a4af45e23628014ad25b4654025230bba5216016ac563339cacd05579c8c2f",
+    "IDENTITY.json": "2e43f6f01573a604e323287e6e4134824b093daeec0cc31bbd559fd592132fab",
+    "QUALIFICATION-SHA256SUMS.txt": "794b62682038e5f061c18d8d414d1d7e1a60a485d25f1cb93bca6704aad6a00f",
+    "SHA256SUMS.txt": "1e877f3c86c8091efeceeb0154c73eef9ed5f73b3a0a9dbc097f3f9c86270d31"
+  },
+  "registry_sha256": "140c5762167edb3fb1fce1071882b93b1f843e79062b7271eab1fc5aa7f38d2c",
+  "boot": {
+    "status": "PASS_BOUNDED_FINAL_GDI_TITLE_BOOT",
+    "source": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+    "adapter": "34a5c48bfe22c3d9718810166407048a906b8bcc",
+    "profile": "RR_FINAL_GDI_BOOT45_CHILD55_LIMITED_V2",
+    "actual_console_sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a",
+    "exact_child_upper_seconds": 8.265999999945052,
+    "child_limit_seconds": 55,
+    "requested_observation_seconds": 45,
+    "stop": "state title=",
+    "grace_seconds": 5,
+    "explicit_FPS_limit": "yes",
+    "actual_launch_cfg_sha256": "53fdeb0bb1e2ac715e592174363be99089102d88890f34fbc13d5d42031189d4",
+    "root_execution_receipt": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/bounded-console-boot-v3/ROOT-EXECUTION.json",
+    "root_execution_receipt_sha256": "ef671589d893962edaad5cd1b9588d26a69e23ffe77158b27a6c04f520dfe7dd",
+    "bounds_receipt_sha256": "d67ea1d90fa7d61a3bfc918c19e432ff51be9095dcdbbeb5b8c14f0995b604a2",
+    "title_log_only": true,
+    "full_route_QA_hardware_or_performance_acceptance": false
+  },
+  "disc_assets_recipe_or_QA_zip_changed": false,
+  "publication_or_SD": false
+}

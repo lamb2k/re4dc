@@ -1,0 +1,29 @@
+{
+  "status": "PREPARED_ROOT_REVIEW_PENDING_NO_EXECUTION",
+  "adapter_source": "34a5c48bfe22c3d9718810166407048a906b8bcc",
+  "source": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "config": {
+    "path": "/root/probe/rr-safe-boot-fb254e82-v3/ROOT-REVIEW-PENDING.json",
+    "sha256": "981d6f49363e4bb569ebcb6cef36b7c09f39ee9808b003fd6c0e5c9cc4099f0a"
+  },
+  "capsule_manifest": {
+    "path": "/root/probe/rr-safe-boot-fb254e82-v3/capsule/CAPSULE.json",
+    "sha256": "1113b56b10f8da664cf39534a336218f6096f1bf08a65596325f059d1fe8df53"
+  },
+  "closure": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/bounded-console-boot-v3/PROGRAMME-ASSETS-CLOSURE.json",
+    "sha256": "d1b6f2127a960bea245a8f8384f152c89aa7eaaea2a94c28ce624c3f933a60ed"
+  },
+  "input_pins": 49,
+  "source_elf_all14_rehashed": true,
+  "raw_main_bound_to_actual_disc_readback": true,
+  "track03_rehashed_during_preparation": false,
+  "track03_prior_full_hash_current_fingerprint_bound": true,
+  "pending_entry_refusal_verified": true,
+  "capture_absent": true,
+  "lease_absent": true,
+  "SDK_guest_build_cleanup": false,
+  "root_resource_census_performed": false,
+  "requested_peak_new_c_bytes": 3221225472,
+  "launch_permitted": false
+}

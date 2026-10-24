@@ -1,0 +1,33 @@
+{
+  "source_commit": "2c6c62b483553c0788e9d12a15048b2c85ce7b34",
+  "files": {
+    "/root/probe/rr-safe-cycle23/port/dreamcast/tools/d367/rr_safe_cycle23/README.md": "6465a4f796a0f86a637be14562ed5e227fdd0741e68b6e920ad25031c2acc913",
+    "/root/probe/rr-safe-cycle23/port/dreamcast/tools/d367/rr_safe_cycle23/capsule.py": "8e045c28519d03f951a324a3690bf39e15a4dba2d9eda42e1fc0c00ec35043af",
+    "/root/probe/rr-safe-cycle23/port/dreamcast/tools/d367/rr_safe_cycle23/console_guard.py": "f05edaccc7a1840dc4185f5030e6c5c817e507afb1ca677ff1f3acfb2a63b129",
+    "/root/probe/rr-safe-cycle23/port/dreamcast/tools/d367/rr_safe_cycle23/test_adapter.py": "0cba22702cd15f22bfd3e25d248fbe62fb30f31b68ad34e8b56569afc9678ea7",
+    "/root/rr/bin/rr-cycle.sh": "9f1d3814a38f49a98fc742fd229ca72e44a5ee6afa3ccbb326f0f33589b6db31",
+    "/root/rr/bin/rr-jobs.sh": "926cc12c99ffc78a0dedbbac18f50d7096434bbd4343e871478a98092e802a3e",
+    "/root/rr/bin/rr-flycast.sh": "acb4a5db33528d73c96f16d7597fc600a5afa26f373c81f41a78642f7cf9c207",
+    "/root/rr/bin/rr.sh": "f569804a725352ec3ed5499dfa0285d2e208dbbe334597e425f51635fefe37bc",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/stat-guest-slot.sh": "452123f936d4764244244f17d51d22299fdbd17eb0aada1de1991a4782d74549",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/d367-harness-par/emu.cfg": "e92b5817e28d4e96f4e7d038d64b365e356264d025e55b03f8184a0dd1817840",
+    "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2:port/dreamcast/tools/d367/fullplay/fp_run.py": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747",
+    "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2:port/dreamcast/tools/d367/fullplay/kos_squeeze.sh": "2115c9639f7a264dd07b6d92186f787975ded011ed901111acfde15130598a3c",
+    "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2:port/dreamcast/tools/d367/fullplay/gdemu_gate.sh": "d15950db0c254f8e5b324364d6bffef6bfec06a709f2c9726648dff3633758a5",
+    "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2:port/dreamcast/tools/d367/trace_lock.sh": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/HANDBACK.json": "bb0d3d044e276fc6860abe3974a140b0ba8f3d7d13abc2c7290e6d28588dffa8",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/INSPECTION.json": "d236b9d39f2d618d7c715f6d10c9d83bb10ebbabb7861b4064608a7ad7ecc447",
+    "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/README.txt": "a9439bbf77627c433ce859e91249828234bb92632ec3e2f65607e48818802cff",
+    "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/STEPS.txt": "96d9313f5c2946705ccd54f8a1af3869ebcbc97d90cbff04917f957bd13ed499",
+    "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/IDENTITY.json": "9ff3968e9760496cbe225a1dadfbd98482ec2dcd635b85feb4dab6c3ef8127a2",
+    "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/QUALIFICATION-SHA256SUMS.txt": "8ac2cac791745553d33189e0d2b0a2b49bbf114b47c87583e05a6ef754609326"
+  },
+  "canonical_rr_lock_snapshot": {
+    "path": "/root/rr/rr.lock",
+    "device": 2080,
+    "inode": 1170658,
+    "regular": true,
+    "admission": false
+  },
+  "actual_binary_or_image_read": false
+}

@@ -1,0 +1,29 @@
+{
+  "status": "PASS_HOST_CONTROLS_ONLY",
+  "source_commit": "34a5c48bfe22c3d9718810166407048a906b8bcc",
+  "methods": 20,
+  "elapsed_s": 0.656,
+  "command": "python3 -B -m unittest -v test_adapter",
+  "evidence_kind": "Observed successful final source tool transcript; not an extra rerun",
+  "files": {
+    "README.md": {
+      "sha256": "2a95d08d214622f8b8b01fba24f34f0a5bad979c6b8e3bf10cc743bdad57c833",
+      "bytes": 13444
+    },
+    "capsule.py": {
+      "sha256": "df26d8722bebdbd4d5c63de39f9246966d11ed8aa9ae479eecdb16a4ece98626",
+      "bytes": 17834
+    },
+    "console_guard.py": {
+      "sha256": "b20e31f6b91552d21f9c74b721d361268d7e0f185fc4da2ba0653708897426e8",
+      "bytes": 16449
+    },
+    "test_adapter.py": {
+      "sha256": "1e26fd6c25905fbc410650bef7b57cca28686b969d322471d4d2066b0e5da325",
+      "bytes": 15556
+    }
+  },
+  "actual_guest": false,
+  "SDK": false,
+  "runtime_qualified": false
+}

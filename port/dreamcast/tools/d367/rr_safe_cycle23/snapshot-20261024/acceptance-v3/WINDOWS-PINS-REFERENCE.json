@@ -1,0 +1,7 @@
+{
+  "path": "/mnt/c/Game Dev/Emulators/codex-lanes/rr-safe-cycle23/boot-cand-fb254e82-v3/WINDOWS-PINS.json",
+  "sha256": "247cd1d513840742420f22efd66325182565cb5b675aa1c5bfc3ef95861ef071",
+  "status": "PASS_READ_ONLY_WINDOWS_ALL49",
+  "count": 49,
+  "preflight_source_sha256": "eff93d39a724e8fac07490f5bbf3adb7333d7bd1c33aae586a7b171b7ea28339"
+}

@@ -1,0 +1,23 @@
+{
+  "status": "CLEAR",
+  "adapter_source_commit": "2c6c62b483553c0788e9d12a15048b2c85ce7b34",
+  "adapter_source_seal_sha256": "5edf2d43180e6941df6369a57d9713361f6e5cb0b27382b260d54fd8aec3dbe5",
+  "scope": "Frozen source only: separately admitted single final-GDI boot45/title/grace5; whole cycle refused",
+  "generated_utc": "2026-10-24T04:21:39.642388+00:00",
+  "findings": [],
+  "readback_sha256": "f05d6b2647a6423550508341b6a909014daab55a5215da640fd1a000b21fab57",
+  "review_sha256": "b861d2b6357d3334edbc289a4bff3ddd4a3901aa082e849011e0675337ebd82b",
+  "host_receipt_sha256": "2bcdef37053fbbab59961190e9d0bfd63c8dca6e6dabe677bb8e0e7483be912e",
+  "independent_host_methods": 11,
+  "author_host_methods_read_not_rerun": 16,
+  "whole_cycle_admitted": false,
+  "execution_admitted": false,
+  "actual_candidate_boot": "PENDING",
+  "capsule_configuration": "PENDING_ROOT_REVIEW",
+  "semantic_boot_decision": "REQUIRED_SEPARATELY",
+  "actual_guest": false,
+  "SDK": false,
+  "actual_process_kill": false,
+  "console_or_image_read": false,
+  "media_mutation": false
+}

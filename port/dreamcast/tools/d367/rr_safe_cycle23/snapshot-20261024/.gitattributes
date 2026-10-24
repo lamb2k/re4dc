@@ -1,0 +1,2 @@
+* text eol=lf
+capture-metadata-only/*.cfg whitespace=-blank-at-eof

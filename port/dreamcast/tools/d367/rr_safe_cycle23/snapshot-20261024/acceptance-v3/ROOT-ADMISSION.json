@@ -1,0 +1,11 @@
+{
+  "status": "ROOT_ADMITTED_SINGLE_BOOT_NOT_RUNTIME_ACCEPTANCE",
+  "utc": "2026-10-24T04:41:21.967906+00:00",
+  "approved_config": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\rr-safe-boot-fb254e82-v3\\ROOT-REVIEWED.json",
+  "approved_config_sha256": "b2f889d213bc31c92d478520a5d63a00891e3598e27ca14be68e9e172e6714c7",
+  "C_free_bytes": 37840797696,
+  "input_pins_checked": 49,
+  "capsule_members_checked": 75,
+  "review_sha256": "6e70bd83bade582ae98f1fc764e30f509759c42a84d6ea2794356a7f0825641c",
+  "rr_status": "last good: sha fb254e82 image 49a4173a1792823f cycle 1023-2350-fb254e82 disc /mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/gdemu\nlast tried: fb254e82; origin/t15/int: fb254e82\ncycle running: no\nwatcher: cron installed\n2026-10-23T23:56:55-04:00 cycle 1023-2350-fb254e82 verdict PASS (413 s)\n2026-10-23T23:56:56-04:00 deleted old candidate /mnt/c/Game Dev/Emulators/RE4DC-RR/cand-d5c1ceab\n2026-10-24T00:00:01-04:00 cycle 1023-2350-fb254e82 QA PASS (reported only; the game verdict is unchanged)\n**Last good candidate:** t15/int fb254e82, image 49a4173a1792823f, cycle 1023-2350-fb254e82, disc `C:\\Game Dev\\Emulators\\RE4DC-RR\\cand-fb254e82\\gdemu`.\n## This cycle: PASS (quick tier)\n"
+}

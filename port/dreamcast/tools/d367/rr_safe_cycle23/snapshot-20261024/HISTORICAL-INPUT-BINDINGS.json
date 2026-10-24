@@ -1,0 +1,41 @@
+{
+  "scope": "Approved input pins intentionally describe pre-acceptance metadata; never repair the historical config",
+  "approved_config_sha256": "b2f889d213bc31c92d478520a5d63a00891e3598e27ca14be68e9e172e6714c7",
+  "bindings": [
+    {
+      "original_candidate_member": "README.txt",
+      "physical_private_backup": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/bounded-console-boot-v3/root-candidate-metadata-before-acceptance/README.txt",
+      "before_sha256": "a9439bbf77627c433ce859e91249828234bb92632ec3e2f65607e48818802cff",
+      "after_sha256": "da7d157ee4ea4ba728e238bf5934fe2151dbeddd02fb8f826b02ae6130fc126e",
+      "backup_verified": true
+    },
+    {
+      "original_candidate_member": "STEPS.txt",
+      "physical_private_backup": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/bounded-console-boot-v3/root-candidate-metadata-before-acceptance/STEPS.txt",
+      "before_sha256": "96d9313f5c2946705ccd54f8a1af3869ebcbc97d90cbff04917f957bd13ed499",
+      "after_sha256": "f5a4af45e23628014ad25b4654025230bba5216016ac563339cacd05579c8c2f",
+      "backup_verified": true
+    },
+    {
+      "original_candidate_member": "IDENTITY.json",
+      "physical_private_backup": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/bounded-console-boot-v3/root-candidate-metadata-before-acceptance/IDENTITY.json",
+      "before_sha256": "9ff3968e9760496cbe225a1dadfbd98482ec2dcd635b85feb4dab6c3ef8127a2",
+      "after_sha256": "2e43f6f01573a604e323287e6e4134824b093daeec0cc31bbd559fd592132fab",
+      "backup_verified": true
+    },
+    {
+      "original_candidate_member": "QUALIFICATION-SHA256SUMS.txt",
+      "physical_private_backup": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/bounded-console-boot-v3/root-candidate-metadata-before-acceptance/QUALIFICATION-SHA256SUMS.txt",
+      "before_sha256": "8ac2cac791745553d33189e0d2b0a2b49bbf114b47c87583e05a6ef754609326",
+      "after_sha256": "794b62682038e5f061c18d8d414d1d7e1a60a485d25f1cb93bca6704aad6a00f",
+      "backup_verified": true
+    },
+    {
+      "original_candidate_member": "SHA256SUMS.txt",
+      "physical_private_backup": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/bounded-console-boot-v3/root-candidate-metadata-before-acceptance/SHA256SUMS.txt",
+      "before_sha256": "1e877f3c86c8091efeceeb0154c73eef9ed5f73b3a0a9dbc097f3f9c86270d31",
+      "after_sha256": "1e877f3c86c8091efeceeb0154c73eef9ed5f73b3a0a9dbc097f3f9c86270d31",
+      "backup_verified": true
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "status": "PREPARED_ROOT_REVIEW_PENDING_NO_EXECUTION",
+  "adapter_source": "d67699b259b056ed25fd559f9ab331f1923fc4cb",
+  "source": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "config": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/rr-safe-cycle23/boot-cand-fb254e82-v1/ROOT-REVIEW-PENDING.json",
+    "sha256": "43f7613bf23a46a03da1303de544f512beee255670269ed203e1261561baf4c7"
+  },
+  "capsule_manifest": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/rr-safe-cycle23/boot-cand-fb254e82-v1/capsule/CAPSULE.json",
+    "sha256": "ed1a9facfb95c73eb3ad5ad00c103b036b91dce7b15ecf5d5192d4e0a9c8f17e"
+  },
+  "closure": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/bounded-console-boot-v1/PROGRAMME-ASSETS-CLOSURE.json",
+    "sha256": "87d94d046149851e32bc9cc72a5af359893afb70f498dc4902c6580edff57643"
+  },
+  "input_pins": 49,
+  "source_elf_all14_rehashed": true,
+  "raw_main_bound_to_actual_disc_readback": true,
+  "track03_rehashed_during_preparation": false,
+  "track03_prior_full_hash_current_fingerprint_bound": true,
+  "pending_entry_refusal_verified": true,
+  "capture_absent": true,
+  "lease_absent": true,
+  "SDK_guest_build_cleanup": false,
+  "root_resource_census_performed": false,
+  "requested_peak_new_c_bytes": 1073741824,
+  "launch_permitted": false
+}

@@ -1,0 +1,1 @@
+V1/d676 remains unchanged and non-executable at boot-cand-fb254e82-v1. V2 uses34a5, strengthening semantic BAD-READ/DISCNOTE trouble rejection after independent review and raising the future allowance from1GiB to root-requested3GiB. No candidate/source asset/template/media file changed and no guest occurred. Only V2 is submitted for current root acceptance.

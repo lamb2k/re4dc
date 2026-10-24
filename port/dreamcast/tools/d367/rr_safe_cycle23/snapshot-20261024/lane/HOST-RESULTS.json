@@ -1,0 +1,40 @@
+{
+  "status": "PASS_HOST_CONTROLS_ONLY",
+  "source_commit": "2c6c62b483553c0788e9d12a15048b2c85ce7b34",
+  "methods": 16,
+  "elapsed_s": 0.536,
+  "evidence_kind": "Observed successful tool transcript at final source bytes; not an additional rerun",
+  "command": "python3 -B -m unittest -v test_adapter",
+  "cwd": "/root/probe/rr-safe-cycle23/port/dreamcast/tools/d367/rr_safe_cycle23",
+  "controls": [
+    "ordinary host child deadline and unrelated process preservation",
+    "actual nested current-head KOS two calls and GD one call at53",
+    "nested duration/bypass mutants detected",
+    "actual tiny flock/current PID/start/inode and stale configuration",
+    "no guest/foreign executable/second guest/floor/monitor failure",
+    "duplicate JSON/incomplete audit and whole-cycle refusal",
+    "own capture track inode manifest and changed/foreign unlink refusal"
+  ],
+  "actual_guest": false,
+  "sdk_build": false,
+  "resource_census": false,
+  "runtime_qualified": false,
+  "files": {
+    "README.md": {
+      "sha256": "6465a4f796a0f86a637be14562ed5e227fdd0741e68b6e920ad25031c2acc913",
+      "bytes": 12410
+    },
+    "capsule.py": {
+      "sha256": "8e045c28519d03f951a324a3690bf39e15a4dba2d9eda42e1fc0c00ec35043af",
+      "bytes": 15169
+    },
+    "console_guard.py": {
+      "sha256": "f05edaccc7a1840dc4185f5030e6c5c817e507afb1ca677ff1f3acfb2a63b129",
+      "bytes": 11989
+    },
+    "test_adapter.py": {
+      "sha256": "0cba22702cd15f22bfd3e25d248fbe62fb30f31b68ad34e8b56569afc9678ea7",
+      "bytes": 12033
+    }
+  }
+}

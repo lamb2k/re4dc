@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "source_commit": "2c6c62b483553c0788e9d12a15048b2c85ce7b34",
+  "methods": 11,
+  "elapsed_s": 0.20067203999496996,
+  "actual_guest": false,
+  "actual_process_kill": false,
+  "SDK": false,
+  "console_or_image_read": false,
+  "controls_sha256": "defdaf3a05e4d48e9a08db1b61dcacc3140d7ae6cf936af2233aefc251dfbb43",
+  "transcript": "test_actual_nested_shells_and_bad_duration_reader_mutant (__main__.Controls.test_actual_nested_shells_and_bad_duration_reader_mutant) ... ok\ntest_actual_tiny_flock_missing_stale_and_wrong_inode (__main__.Controls.test_actual_tiny_flock_missing_stale_and_wrong_inode) ... ok\ntest_child_order_root3_then_trace16_then_revalidated_launch (__main__.Controls.test_child_order_root3_then_trace16_then_revalidated_launch) ... ok\ntest_deadline_floor_monitor_exact_mock_handle (__main__.Controls.test_deadline_floor_monitor_exact_mock_handle) ... ok\ntest_duplicate_partial_over_deadline_receipts_refused (__main__.Controls.test_duplicate_partial_over_deadline_receipts_refused) ... ok\ntest_floor_and_console_hash_checked_before_spawn (__main__.Controls.test_floor_and_console_hash_checked_before_spawn) ... ok\ntest_manual_boot_mutations_refuse_before_any_lock (__main__.Controls.test_manual_boot_mutations_refuse_before_any_lock) ... ok\ntest_no_guest_and_bad_launches_no_process (__main__.Controls.test_no_guest_and_bad_launches_no_process) ... ok\ntest_owned_link_manifest_and_foreign_identity_refusal (__main__.Controls.test_owned_link_manifest_and_foreign_identity_refusal) ... ok\ntest_sealed_source_and_receipt (__main__.Controls.test_sealed_source_and_receipt) ... ok\ntest_whole_cycle_refused_even_with_bypass_environment (__main__.Controls.test_whole_cycle_refused_even_with_bypass_environment) ... ok\n\n----------------------------------------------------------------------\nRan 11 tests in 0.201s\n\nOK\n"
+}

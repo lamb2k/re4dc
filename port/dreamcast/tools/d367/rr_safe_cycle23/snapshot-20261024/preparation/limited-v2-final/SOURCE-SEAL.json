@@ -1,0 +1,27 @@
+{
+  "status": "SOURCE_ONLY_EXPLICIT_LIMITED_SINGLE_BOOT",
+  "source_commit": "34a5c48bfe22c3d9718810166407048a906b8bcc",
+  "parent": "d67699b259b056ed25fd559f9ab331f1923fc4cb",
+  "files": {
+    "README.md": {
+      "sha256": "2a95d08d214622f8b8b01fba24f34f0a5bad979c6b8e3bf10cc743bdad57c833",
+      "bytes": 13444
+    },
+    "capsule.py": {
+      "sha256": "df26d8722bebdbd4d5c63de39f9246966d11ed8aa9ae479eecdb16a4ece98626",
+      "bytes": 17834
+    },
+    "console_guard.py": {
+      "sha256": "b20e31f6b91552d21f9c74b721d361268d7e0f185fc4da2ba0653708897426e8",
+      "bytes": 16449
+    },
+    "test_adapter.py": {
+      "sha256": "1e26fd6c25905fbc410650bef7b57cca28686b969d322471d4d2066b0e5da325",
+      "bytes": 15556
+    }
+  },
+  "host_results_sha256": "a57340cfbdd3fcf8b76f9028464cd9771f7245ef537393247d5bff4d28f302d0",
+  "whole_cycle_enabled": false,
+  "source_bytes": 63283,
+  "profile": "RR_FINAL_GDI_BOOT45_CHILD55_LIMITED_V2"
+}

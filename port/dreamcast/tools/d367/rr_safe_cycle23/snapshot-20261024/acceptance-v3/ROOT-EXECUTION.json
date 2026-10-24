@@ -1,0 +1,46 @@
+{
+  "status": "PASS_BOUNDED_FINAL_GDI_TITLE_BOOT",
+  "config_sha256": "b2f889d213bc31c92d478520a5d63a00891e3598e27ca14be68e9e172e6714c7",
+  "results": {
+    "run": {
+      "rc": 0,
+      "stdout_sha256": "698de87f2cb4d78e141c399d97f5e05651f93c6055b3775cf9306729a507ffae",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "bounds": {
+      "rc": 0,
+      "stdout_sha256": "8f1b4a728a861e6781a1ab15f1e30c1638cf134a9655e03118b7faf2f0bbabb8",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decision": {
+        "status": "PLANNED_PROCESS_BOUNDS_COMPLETE",
+        "count": 1,
+        "runtime_qualified": false,
+        "semantic_judges_required": true
+      }
+    },
+    "title": {
+      "rc": 0,
+      "stdout_sha256": "94ec057cd6bcef585107b353dfc627bb6e65d6f355f9e4ba98e285c41ea7d05a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decision": {
+        "status": "BOOT_TITLE_GOAL_PASS",
+        "checks": {
+          "title_marker": true,
+          "no_error_rows": true,
+          "complete": true,
+          "console": true,
+          "observation45": true,
+          "exact_stop": true,
+          "goal": true,
+          "no_early_exit": true,
+          "goal_time": true,
+          "grace5": true
+        },
+        "process_bound_audit_required_separately": true,
+        "runtime_qualified": false,
+        "scope": "Title goal only; not New Game, route, rendering, QA or physical console acceptance"
+      }
+    }
+  },
+  "scope": "One fresh current-candidate console title observation; no fresh full release/QA/route, hardware or performance claim."
+}

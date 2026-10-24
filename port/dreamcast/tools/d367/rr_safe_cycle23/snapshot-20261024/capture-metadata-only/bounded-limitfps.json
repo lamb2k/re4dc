@@ -1,0 +1,7 @@
+{
+  "aica_LimitFPS": "yes",
+  "scope": "NEW_OWNED_CAPTURE_ONLY_BEFORE_EXACT_POPEN",
+  "before_sha256": "8ae10cd6e898b117ee5478a36741056d2367a820c984a9dc23fafc79b735396c",
+  "after_sha256": "53fdeb0bb1e2ac715e592174363be99089102d88890f34fbc13d5d42031189d4",
+  "template_sha256": "e92b5817e28d4e96f4e7d038d64b365e356264d025e55b03f8184a0dd1817840"
+}

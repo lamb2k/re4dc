@@ -1,0 +1,371 @@
+{
+  "scope": "Private referenced bodies omitted; media/programme/VMU and raw game logs are never in this archive",
+  "pins": [
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/re4dc-game.elf",
+      "sha256": "3a110765ef415dfd4e4a00104bfc6094b393f87cb9f9f55672046f90e702ee8f",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/em22.ovl",
+      "sha256": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/em2b.ovl",
+      "sha256": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/em2f.ovl",
+      "sha256": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/em35.ovl",
+      "sha256": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/em3b.ovl",
+      "sha256": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/pl0f.ovl",
+      "sha256": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/pl11.ovl",
+      "sha256": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/pl14.ovl",
+      "sha256": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/sscrn.ovl",
+      "sha256": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/st1_0.ovl",
+      "sha256": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/st1_1.ovl",
+      "sha256": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/st1_2.ovl",
+      "sha256": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/st1_3.ovl",
+      "sha256": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/st2_0.ovl",
+      "sha256": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Game Dev\\Emulators\\RE4DC-RR\\cand-fb254e82\\gdemu\\disc.gdi",
+      "sha256": "025516557d49e1835e7eb8571e09244b64db190cf3981ead555c54b1924ca19f",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Game Dev\\Emulators\\RE4DC-RR\\cand-fb254e82\\gdemu\\track01.bin",
+      "sha256": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Game Dev\\Emulators\\RE4DC-RR\\cand-fb254e82\\gdemu\\track02.raw",
+      "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Game Dev\\Emulators\\RE4DC-RR\\cand-fb254e82\\gdemu\\track03.bin",
+      "sha256": "7cc0a64936f8eafa4ec3fb605582500d9fbc6e5a712f407836009773c58624aa",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\rr-candidate-handback\\fb254e82-20261024\\INSPECTION.json",
+      "sha256": "d236b9d39f2d618d7c715f6d10c9d83bb10ebbabb7861b4064608a7ad7ecc447",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\rr-candidate-handback\\fb254e82-20261024\\HANDBACK.json",
+      "sha256": "bb0d3d044e276fc6860abe3974a140b0ba8f3d7d13abc2c7290e6d28588dffa8",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\rr-candidate-handback\\fb254e82-20261024\\full-readback-manifest.json",
+      "sha256": "4d07e720300fcd72ae1081a00fe6a702331983ed2e8af4fdfadb0346691a726a",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\rr-candidate-handback\\fb254e82-20261024\\original-release-manifest.json",
+      "sha256": "927e564fb95821d2509cb9b2ef7f7a56ebc3164afd18c552451f509722136763",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Game Dev\\Emulators\\RE4DC-RR\\cand-fb254e82\\IDENTITY.json",
+      "sha256": "9ff3968e9760496cbe225a1dadfbd98482ec2dcd635b85feb4dab6c3ef8127a2",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Game Dev\\Emulators\\RE4DC-RR\\cand-fb254e82\\SHA256SUMS.txt",
+      "sha256": "1e877f3c86c8091efeceeb0154c73eef9ed5f73b3a0a9dbc097f3f9c86270d31",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Game Dev\\Emulators\\RE4DC-RR\\cand-fb254e82\\QUALIFICATION-SHA256SUMS.txt",
+      "sha256": "8ac2cac791745553d33189e0d2b0a2b49bbf114b47c87583e05a6ef754609326",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/work/lanes/stat-bytes23-takeover-scratch/release/manifest.json",
+      "sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/rr/work/1023-2350-fb254e82/recipe.conf",
+      "sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/resolved-knobs.txt",
+      "sha256": "63b9cdf90190a880422074bf4e7c7c488cd013463a18d9aaeb6fc3bd470a9a5b",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/syms.txt",
+      "sha256": "8cb303b271aed50f068279a567b4f00368cd41be8e38333fefb02472afc68466",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/stack.txt",
+      "sha256": "2521e0c5121485db437427b55cfbb02df70233cf492dbe609c6c06b79af0b809",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/lanes/route/out-rrfb254e8rP/missing.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\flycast-console-bin\\flycast-console.exe",
+      "sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\d367-harness-par\\emu.cfg",
+      "sha256": "e92b5817e28d4e96f4e7d038d64b365e356264d025e55b03f8184a0dd1817840",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\d367-harness-par\\read_log.py",
+      "sha256": "6c43705318caa4c63fddd2995c04bdc9c3730abfe66400192be89f4d1e845059",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\d367-harness-par\\capture_ui_vram.py",
+      "sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\d367-harness-par\\data\\T0000_vmu_save_A1.bin",
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\d367-harness-par\\data\\vmu_save_A2.bin",
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python312.dll",
+      "sha256": "9a0e3435aaa680d868150f87ab3e388ad2eebc22f87e036155c7b4eda8cd2120",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python3.dll",
+      "sha256": "fb975a606e7fbf74f64260e3f60c3490b4f74a183c0926fd6ed1ac4c52ac7b1c",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\vcruntime140.dll",
+      "sha256": "052ad6a20d375957e82aa6a3c441ea548d89be0981516ca7eb306e063d5027f4",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\vcruntime140_1.dll",
+      "sha256": "6a99bc0128e0c7d6cbbf615fcc26909565e17d4ca3451b97f8987f9c6acbc6c8",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/rr-safe-boot-fb254e82-v3/capsule/fullplay/_fp_run_original.py",
+      "sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/rr-safe-boot-fb254e82-v3/capsule/console_guard.py",
+      "sha256": "b20e31f6b91552d21f9c74b721d361268d7e0f185fc4da2ba0653708897426e8",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/rr-safe-boot-fb254e82-v3/capsule/capsule.py",
+      "sha256": "df26d8722bebdbd4d5c63de39f9246966d11ed8aa9ae479eecdb16a4ece98626",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/rr-safe-boot-fb254e82-v3/capsule/fullplay/fp_run.py",
+      "sha256": "1e1429a42f92746ad04c316b51b6a3c363e05a2b799f5307e647a2a1ffbbb64e",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "//wsl.localhost/Ubuntu-24.04/root/probe/rr-safe-boot-fb254e82-v3/capsule/CAPSULE.json",
+      "sha256": "1113b56b10f8da664cf39534a336218f6096f1bf08a65596325f059d1fe8df53",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\rr-candidate-handback\\fb254e82-20261024\\bounded-console-boot-v3\\PROGRAMME-ASSETS-CLOSURE.json",
+      "sha256": "d1b6f2127a960bea245a8f8384f152c89aa7eaaea2a94c28ce624c3f933a60ed",
+      "basis": "Exact historical approved config before candidate metadata acceptance; not rehashed by exporter",
+      "exported_body": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/bounded-console-boot-v3/capture/run-output.txt",
+      "sha256": "018e88e4dc6be42d307c50bfc3697a7fe347c153331e92ed3042219d48e9b62f",
+      "bytes": 23105,
+      "basis": "Current private small evidence hash only",
+      "exported_body": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/bounded-console-boot-v3/capture/flycast.log",
+      "sha256": "49ffdac8903a1b93f05d1e307ba516a93556ed1f558a4ec0b82cbca58675e41a",
+      "bytes": 2347,
+      "basis": "Current private small evidence hash only",
+      "exported_body": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/bounded-console-boot-v3/capture/serial.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "basis": "Current private small evidence hash only",
+      "exported_body": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/bounded-console-boot-v3/capture/read-log.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "basis": "Current private small evidence hash only",
+      "exported_body": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/bounded-console-boot-v3/capture/disc.gdi",
+      "sha256": "025516557d49e1835e7eb8571e09244b64db190cf3981ead555c54b1924ca19f",
+      "bytes": 87,
+      "basis": "Current private small evidence hash only",
+      "exported_body": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/bounded-console-boot-v3/capture/syms.txt",
+      "sha256": "dff72f0cc9616b14a9cf3c8eb1ff66db807c821311756ac7cec541227788495c",
+      "bytes": 28,
+      "basis": "Current private small evidence hash only",
+      "exported_body": false
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/README.txt",
+      "sha256": "da7d157ee4ea4ba728e238bf5934fe2151dbeddd02fb8f826b02ae6130fc126e",
+      "basis": "Root acceptance receipt after metadata hashes; candidate not edited or body exported",
+      "exported_body": false
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/STEPS.txt",
+      "sha256": "f5a4af45e23628014ad25b4654025230bba5216016ac563339cacd05579c8c2f",
+      "basis": "Root acceptance receipt after metadata hashes; candidate not edited or body exported",
+      "exported_body": false
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/IDENTITY.json",
+      "sha256": "2e43f6f01573a604e323287e6e4134824b093daeec0cc31bbd559fd592132fab",
+      "basis": "Root acceptance receipt after metadata hashes; candidate not edited or body exported",
+      "exported_body": false
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/QUALIFICATION-SHA256SUMS.txt",
+      "sha256": "794b62682038e5f061c18d8d414d1d7e1a60a485d25f1cb93bca6704aad6a00f",
+      "basis": "Root acceptance receipt after metadata hashes; candidate not edited or body exported",
+      "exported_body": false
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82/SHA256SUMS.txt",
+      "sha256": "1e877f3c86c8091efeceeb0154c73eef9ed5f73b3a0a9dbc097f3f9c86270d31",
+      "basis": "Root acceptance receipt after metadata hashes; candidate not edited or body exported",
+      "exported_body": false
+    }
+  ]
+}

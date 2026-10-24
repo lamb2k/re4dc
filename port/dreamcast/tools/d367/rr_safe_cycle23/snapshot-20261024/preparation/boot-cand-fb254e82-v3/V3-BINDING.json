@@ -1,0 +1,34 @@
+{
+  "status": "V3_PENDING_BINDING_WINDOWS_READBACK_COMPLETE_NO_EXECUTION",
+  "source_commit": "34a5c48bfe22c3d9718810166407048a906b8bcc",
+  "runtime_root": "/root/probe/rr-safe-boot-fb254e82-v3",
+  "runtime_config": {
+    "path": "/root/probe/rr-safe-boot-fb254e82-v3/ROOT-REVIEW-PENDING.json",
+    "sha256": "981d6f49363e4bb569ebcb6cef36b7c09f39ee9808b003fd6c0e5c9cc4099f0a"
+  },
+  "capsule_manifest": {
+    "path": "/root/probe/rr-safe-boot-fb254e82-v3/capsule/CAPSULE.json",
+    "sha256": "1113b56b10f8da664cf39534a336218f6096f1bf08a65596325f059d1fe8df53"
+  },
+  "closure": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr-candidate-handback/fb254e82-20261024/bounded-console-boot-v3/PROGRAMME-ASSETS-CLOSURE.json",
+    "sha256": "d1b6f2127a960bea245a8f8384f152c89aa7eaaea2a94c28ce624c3f933a60ed"
+  },
+  "windows_preflight": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/rr-safe-cycle23/boot-cand-fb254e82-v3/WINDOWS-PINS.json",
+    "sha256": "247cd1d513840742420f22efd66325182565cb5b675aa1c5bfc3ef95861ef071",
+    "status": "PASS_READ_ONLY_WINDOWS_ALL49",
+    "count": 49,
+    "preflight_source_sha256": "eff93d39a724e8fac07490f5bbf3adb7333d7bd1c33aae586a7b171b7ea28339"
+  },
+  "root_review_checklist_sha256": "a3fd3dcd41b56010d97484a90a0717cc3b5536afa08a8ee6567fb1a2cc5d1f75",
+  "review_copies_only": "/mnt/c/Game Dev/Emulators/codex-lanes/rr-safe-cycle23/boot-cand-fb254e82-v3",
+  "root_runtime_config_required": true,
+  "maximum_new_c_bytes": 3221225472,
+  "capture_absent": true,
+  "lease_absent": true,
+  "approved_config_created": false,
+  "adapter_runtime_or_guest_executed": false,
+  "SDK_build": false,
+  "resource_census": false
+}

@@ -1,0 +1,1 @@
+V2/d676/34a pending units remain unchanged. V3 only relocates runtime helpers/config from C-via-WSL re-export to /root/probe as requested after actual Windows preflight refusal. Same reviewed34a code, exact45/title/grace5, explicit owned-launch FPSyes and3GiB allowance. No candidate/template/asset/recipe/installed script edits, build/guest/media copy/cleanup.

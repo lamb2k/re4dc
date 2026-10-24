@@ -1,0 +1,31 @@
+{
+  "status": "SOURCE_ONLY_PARTIAL_CYCLE_ADAPTER",
+  "source_commit": "2c6c62b483553c0788e9d12a15048b2c85ce7b34",
+  "parent": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "branch": "origin/wip/rr-safe-cycle23-20261023",
+  "generated_utc": "2026-10-24T04:14:26.608586+00:00",
+  "files": {
+    "README.md": {
+      "sha256": "6465a4f796a0f86a637be14562ed5e227fdd0741e68b6e920ad25031c2acc913",
+      "bytes": 12410
+    },
+    "capsule.py": {
+      "sha256": "8e045c28519d03f951a324a3690bf39e15a4dba2d9eda42e1fc0c00ec35043af",
+      "bytes": 15169
+    },
+    "console_guard.py": {
+      "sha256": "f05edaccc7a1840dc4185f5030e6c5c817e507afb1ca677ff1f3acfb2a63b129",
+      "bytes": 11989
+    },
+    "test_adapter.py": {
+      "sha256": "0cba22702cd15f22bfd3e25d248fbe62fb30f31b68ad34e8b56569afc9678ea7",
+      "bytes": 12033
+    }
+  },
+  "source_bytes": 51601,
+  "host_receipt_sha256": "ed8cd26e98f19e7c078867375ca87a4b41c1aade527794ed7441ba65342759bc",
+  "whole_cycle_enabled": false,
+  "only_implemented_execution_phase": "FINAL_GDI_BOOT_ONLY",
+  "actual_execution_authorized": false,
+  "runtime_qualified": false
+}

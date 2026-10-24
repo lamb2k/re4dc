@@ -1,0 +1,31 @@
+{
+  "status": "CLEAR",
+  "adapter_source_commit": "34a5c48bfe22c3d9718810166407048a906b8bcc",
+  "adapter_source_seal_sha256": "9e2b85fa11522dd5972853c74bcd7c4130e6e4fbacc2ee4f4d770b539980479c",
+  "reviewed_parent_source_commit": "d67699b259b056ed25fd559f9ab331f1923fc4cb",
+  "confirmed_parent_finding": "Known BADRE/qualified DISCNOTE omissions repaired in34a5",
+  "pending_configuration_sha256": "370ad23576222fb750ca3e2a5261e4008e08a780c3aea488e225114dd8c09402",
+  "capsule_manifest_sha256": "08aca2ba8de8064872446a08b58991908bbe7bef0292bd7a263facbe297a63a9",
+  "programme_assets_closure_receipt_sha256": "d2fa4b5657d2d57fa664f2fbffa126d42a3e7ce5e3ba9195ab2b4b17fe6ea67e",
+  "scope": "Repaired limited single-boot source and pending v2 metadata/config shape; no execution admission",
+  "generated_utc": "2026-10-24T04:34:53.670017+00:00",
+  "findings": [],
+  "independent_host_methods": 10,
+  "author20_receipt_read_not_rerun": true,
+  "host_receipt_sha256": "fcaff3364626f3aeb4248cf518331e04083ca818d5f856b8ef3d7938c33670cc",
+  "review_sha256": "25781e983253b21b777afb6bc2dfbef2b90f0eff184890102afed212362c6d71",
+  "readback_sha256": "fecda4f9c18d4bfcb1a8dbc691520719ca9731bceb1d2379ddd4ba463b876c45",
+  "runtime_qualified": false,
+  "execution_admitted": false,
+  "whole_cycle_admitted": false,
+  "actual_guest": false,
+  "SDK": false,
+  "actual_process_kill": false,
+  "actual_binary_or_image_read": false,
+  "required_root_gates": [
+    "Separate approved config/alias/lease freeze",
+    "Current RR terminal/process and release priority",
+    "Fresh peak allocation and floors",
+    "Actual bound audit AND title-goal semantic decision"
+  ]
+}
