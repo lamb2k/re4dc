@@ -11,11 +11,28 @@
 //   copies inside the same frame's OT, the PVR renders a scene at a time.
 // - use: re4dc_rtt_texture gives the model path the texture (native_ui packet_begin under re4dc_rtt_override).
 // Room start (TexRenderMgrRoomInit) frees the textures. Nothing changes while no model asks for a target.
+#if defined(RE4DC_WATER_R100_MATERIAL) && RE4DC_WATER_R100_MATERIAL
+#include "water24_rtt_state.hpp"
+#endif
 namespace {
 namespace rtt {
 constexpr unsigned kSlots=8,kMaxSprites=96;
-struct Target { pvr_ptr_t tex; unsigned w,h,want_frame,rendered,frames; };
+struct Target { pvr_ptr_t tex; unsigned w,h,want_frame,rendered,frames;
+#if defined(RE4DC_WATER_R100_MATERIAL) && RE4DC_WATER_R100_MATERIAL
+    re4dc::water24::RttStamp water;
+#endif
+};
 Target targets[kSlots];
+#if defined(RE4DC_WATER_R100_MATERIAL) && RE4DC_WATER_R100_MATERIAL
+re4dc::water24::Serial water_epochs,water_fences;
+bool water_rendering=false;
+re4dc::water24::CaptureContext water_context(unsigned slot){
+    re4dc::water24::CaptureContext c{};
+    if(!re4dc_water24_capture_context(slot,&c))return re4dc::water24::CaptureContext{};
+    return c;
+}
+void water_drop(Target& t){t.water.sources_ok=false;}
+#endif
 unsigned char packets[kMaxSprites][kSpritePacket] __attribute__((aligned(32)));
 unsigned char packet_slot[kMaxSprites];
 unsigned packet_count,pending_count,pending_mask;
@@ -32,13 +49,26 @@ int capture(const Re4dcEffectSprite* s){
         t.tex=pvr_mem_malloc(t.w*t.h*2);
         if(!t.tex){++dropped;return 0;}
         std::memset(t.tex,0,t.w*t.h*2);
+#if defined(RE4DC_WATER_R100_MATERIAL) && RE4DC_WATER_R100_MATERIAL
+        t.water.epoch=water_epochs.next();
+#endif
         re4dc_log("PVR_RTT target slot=%d %ux%u vram=%08x bytes=%u\n",capture_slot,t.w,t.h,unsigned(uintptr_t(t.tex)),t.w*t.h*2);
     }
     if((s->color>>24)==0)return 0;
-    if(packet_count>=kMaxSprites){++dropped;return 0;}
+    if(packet_count>=kMaxSprites){
+#if defined(RE4DC_WATER_R100_MATERIAL) && RE4DC_WATER_R100_MATERIAL
+        water_drop(t);
+#endif
+        ++dropped;return 0;
+    }
     Re4dcEffectSprite m=*s;
     for(unsigned i=0;i<4;++i){
-        if(!std::isfinite(m.x[i]) || !std::isfinite(m.y[i])){++dropped;return 0;}
+        if(!std::isfinite(m.x[i]) || !std::isfinite(m.y[i])){
+#if defined(RE4DC_WATER_R100_MATERIAL) && RE4DC_WATER_R100_MATERIAL
+            water_drop(t);
+#endif
+            ++dropped;return 0;
+        }
         m.x[i]=m.x[i]*cap_kx-cap_ox;m.y[i]=m.y[i]*cap_ky;
     }
     m.screen=1;
@@ -47,7 +77,15 @@ int capture(const Re4dcEffectSprite* s){
 #else
     Entry* e=load(m.image);
 #endif
-    if(!e){++dropped;return 0;}
+    if(!e){
+#if defined(RE4DC_WATER_R100_MATERIAL) && RE4DC_WATER_R100_MATERIAL
+        water_drop(t);
+#endif
+        ++dropped;return 0;
+    }
+#if defined(RE4DC_WATER_R100_MATERIAL) && RE4DC_WATER_R100_MATERIAL
+    t.water.contributor(re4dc_water24_capture_contributor(e,&t.water.capture)!=0);
+#endif
     fx_packet(m,e,packets[packet_count]);
     packet_slot[packet_count++]=(unsigned char)capture_slot;if(packet_count>peak)peak=packet_count;
     ++captured;
@@ -86,7 +124,12 @@ void debug_overlay(){
 extern "C" void re4dc_rtt_capture_begin(int slot,unsigned tw,unsigned th,unsigned efb_w,unsigned efb_h,unsigned ofs){
     if(slot<0 || slot>=int(rtt::kSlots) || !efb_w || !efb_h)return;
     rtt::Target& t=rtt::targets[slot];
-    if(t.tex && (t.w!=tw || t.h!=th)){pvr_mem_free(t.tex);t.tex=nullptr;t.rendered=0;}
+    if(t.tex && (t.w!=tw || t.h!=th)){
+#if defined(RE4DC_WATER_R100_MATERIAL) && RE4DC_WATER_R100_MATERIAL
+        t.water.invalidate();(void)rtt::water_epochs.next();
+#endif
+        pvr_mem_free(t.tex);t.tex=nullptr;t.rendered=0;
+    }
     if(!(rtt::seen_mask&(1U<<slot))){rtt::seen_mask|=1U<<slot;re4dc_log("PVR_RTT slot %d first pass %ux%u efb %ux%u ofs %u\n",slot,tw,th,efb_w,efb_h,ofs);}
     t.w=tw;t.h=th;
     // texel = (EFB pixel - copy x) / 2; EFB pixel = sprite x * efb_w / 640 (y: efb_h / 480).
@@ -98,11 +141,18 @@ extern "C" void re4dc_rtt_capture_begin(int slot,unsigned tw,unsigned th,unsigne
         ++k;
     }
     rtt::packet_count=k;
+#if defined(RE4DC_WATER_R100_MATERIAL) && RE4DC_WATER_R100_MATERIAL
+    if(t.tex && !t.water.epoch)t.water.epoch=rtt::water_epochs.next();
+    t.water.begin(rtt::water_context(unsigned(slot)),frame);
+#endif
     rtt::capture_slot=slot;
 }
 extern "C" void re4dc_rtt_capture_end(){
 #if defined(RE4DC_PVR_RTT_STATS) && RE4DC_PVR_RTT_STATS
     if(rtt::capture_slot>=0)rtt::debug_overlay();
+#endif
+#if defined(RE4DC_WATER_R100_MATERIAL) && RE4DC_WATER_R100_MATERIAL
+    if(rtt::capture_slot>=0)rtt::targets[rtt::capture_slot].water.close(rtt::water_context(unsigned(rtt::capture_slot)));
 #endif
     rtt::capture_slot=-1;
 }
@@ -125,6 +175,11 @@ extern "C" void* re4dc_rtt_override_texture(unsigned* w,unsigned* h){
     *w=t.w;*h=t.h;return t.tex;
 }
 extern "C" void re4dc_rtt_room_reset(){
+#if defined(RE4DC_WATER_R100_MATERIAL) && RE4DC_WATER_R100_MATERIAL
+    // Serial namespaces never reset: a same-slot/same-address room revisit
+    // cannot resurrect a prior token. Exhaustion remains refused until restart.
+    (void)rtt::water_epochs.next();rtt::water_rendering=false;
+#endif
     for(auto& t:rtt::targets){if(t.tex)pvr_mem_free(t.tex);t=rtt::Target{};}
     rtt::packet_count=0;rtt::capture_slot=-1;rtt::override_slot=-1;
 }
@@ -151,11 +206,28 @@ extern "C" void re4dc_rtt_render_pending(){
         auto& t=rtt::targets[s];
         PVR_SET(PVR_FB_CFG_2,(fb&~7U)|2U);   // ARGB4444 pixel write
         pvr_state.bg_color=0;
+#if defined(RE4DC_WATER_R100_MATERIAL) && RE4DC_WATER_R100_MATERIAL
+        t.water.rendered=re4dc::water24::Target{};
+#endif
         if(pvr_scene_begin_rtt(t.tex,t.w,t.h,t.w)<0)break;
-        if(pvr_list_begin(PVR_LIST_TR_POLY)<0){pvr_scene_finish();break;}
+#if defined(RE4DC_WATER_R100_MATERIAL) && RE4DC_WATER_R100_MATERIAL
+        rtt::water_rendering=true;
+#endif
+        if(pvr_list_begin(PVR_LIST_TR_POLY)<0){pvr_scene_finish();
+#if defined(RE4DC_WATER_R100_MATERIAL) && RE4DC_WATER_R100_MATERIAL
+            rtt::water_rendering=false;
+#endif
+            break;
+        }
         for(unsigned i=0;i<rtt::packet_count;++i)if(rtt::packet_slot[i]==s)pvr_prim(rtt::packets[i],kSpritePacket);
         pvr_list_finish();pvr_scene_finish();
         pvr_wait_render_done();
+#if defined(RE4DC_WATER_R100_MATERIAL) && RE4DC_WATER_R100_MATERIAL
+        rtt::water_rendering=false;
+        const unsigned water_fence=rtt::water_fences.next();
+        t.water.publish(rtt::water_context(s),frame,s,&t,t.tex,t.w,t.h,water_fence,
+                        re4dc_water24_capture_fence_ok()!=0);
+#endif
         t.rendered=1;++t.frames;++rtt::renders;
 #if defined(RE4DC_PVR_RTT_STATS) && RE4DC_PVR_RTT_STATS
         if((t.frames&63)==1){   // PVR_RTT_STATS (test builds): the rendered texels (ARGB4444) read back
@@ -178,3 +250,28 @@ extern "C" void re4dc_rtt_render_pending(){
     pvr_state.bg_color=bg;
     PVR_SET(PVR_FB_CFG_2,fb);
 }
+
+#if defined(RE4DC_WATER_R100_MATERIAL) && RE4DC_WATER_R100_MATERIAL
+extern "C" int re4dc_water24_rtt_current(const re4dc::water24::Target* token){
+    if(!token || token->slot>=rtt::kSlots || rtt::water_epochs.exhausted ||
+       rtt::water_fences.exhausted || rtt::water_rendering)return 0;
+    const auto& t=rtt::targets[token->slot];
+    return t.water.current(*token,rtt::water_context(token->slot),frame,&t,t.tex,t.w,t.h,
+                           re4dc_water24_capture_fence_ok()!=0)?1:0;
+}
+extern "C" int re4dc_water24_rtt_target(unsigned slot,const re4dc::water24::Request* request,
+                                      re4dc::water24::Target* out){
+    if(out)*out=re4dc::water24::Target{};
+    if(!request || !out || slot>=rtt::kSlots ||
+       re4dc::water24::request_valid(*request)!=re4dc::water24::Why::Ready)return 0;
+    const auto& stamp=rtt::targets[slot].water;
+    const auto& g=stamp.rendered_context.geometry;
+    const auto& r=request->geometry;
+    if(request->native_frame!=frame || request->room!=stamp.rendered_context.room ||
+       r.owner!=g.owner || r.proof!=g.proof || r.generation!=g.generation ||
+       r.room_generation!=g.room_generation || r.bytes!=g.bytes || r.mesh_crc!=g.mesh_crc ||
+       r.policy_crc!=g.policy_crc || r.ids_policy_crc!=g.ids_policy_crc ||
+       !re4dc_water24_rtt_current(&stamp.rendered))return 0;
+    *out=stamp.rendered;return 1;
+}
+#endif

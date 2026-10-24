@@ -1,3 +1,9 @@
+#ifndef RE4DC_WATER_R100_MATERIAL
+#define RE4DC_WATER_R100_MATERIAL 0
+#endif
+#if RE4DC_WATER_R100_MATERIAL
+#include "include/water24_material.hpp"
+#endif
 #include "../world_scratch.h"
 #include "include/bfc_class.h"
 #include "include/movie_world_arena.h"
@@ -6602,6 +6608,69 @@ static void note(unsigned pass,unsigned drawn_pass){
 }
 }
 #endif
+#if RE4DC_WATER_R100_MATERIAL
+#if !RE4DC_GC_ASSET_GATE || !RE4DC_PS2_WORLD_DYNAMIC || !RE4DC_PS2_WORLD_ROOMS
+#error WATER_R100_MATERIAL requires GC_ASSET_GATE, PS2_WORLD_DYNAMIC and PS2_WORLD_ROOMS
+#endif
+extern "C" int re4dc_water24_geometry(re4dc::water24::Geometry* out){
+    if(out)*out=re4dc::water24::Geometry{};
+    if(!out || ps2w.room!=re4dc::water24::kRoom || !ps2w.storage || !ps2w.parts || !dyn::block ||
+       !dyn::ids || dyn::nids!=283 || !ps2w.asset_proof.owner || !ps2w.asset_proof.serial)return 0;
+    const auto* policy=reinterpret_cast<const Ps2Head*>(ps2w.parts)-1;
+    const auto* ids=reinterpret_cast<const dyn::Head*>(dyn::block);
+    const unsigned room_generation=re4dc_water24_room_generation();
+    if(!room_generation || ps2w.package.source_bytes()!=re4dc::water24::kMeshBytes ||
+       ps2w.package.source_crc()!=re4dc::water24::kMeshCrc ||
+       policy->crc!=re4dc::water24::kPolicyCrc || ids->crc!=re4dc::water24::kIdsPolicyCrc ||
+       dyn::ids[0]!=0 || dyn::ids[1]!=1)return 0;
+    out->owner=&ps2w;out->proof=&ps2w.asset_proof;out->generation=ps2w.asset_proof.serial;
+    out->room_generation=room_generation;out->bytes=ps2w.package.source_bytes();
+    out->mesh_crc=ps2w.package.source_crc();out->policy_crc=policy->crc;out->ids_policy_crc=ids->crc;
+    // Positive origin/constituents are independently checked by root's acquire;
+    // these exact geometry/policy pins never grant target-image provenance.
+    return 1;
+}
+extern "C" int re4dc_water24_source_current(const re4dc::water24::Request* r){
+    if(!r || re4dc::water24::request_valid(*r)!=re4dc::water24::Why::Ready ||
+       r->native_frame!=re4dc_ui_frame())return 0;
+    re4dc::water24::Geometry current{};
+    if(!re4dc_water24_geometry(&current) || r->geometry.owner!=current.owner ||
+       r->geometry.proof!=current.proof || r->geometry.generation!=current.generation ||
+       r->geometry.room_generation!=current.room_generation)return 0;
+    const unsigned slot=dyn::slot_of[r->source_id];
+    if(slot==dyn::kNone || slot>=dyn::nslots)return 0;
+    const auto& s=dyn::slots[slot];
+    if(!s.obj || s.obj!=r->source_object || s.serial!=r->source_serial)return 0;
+    std::uint32_t flags=0,serial=0;
+    std::memcpy(&flags,s.obj+dyn::off_flag,4);std::memcpy(&serial,s.obj+dyn::off_serial,4);
+    return (flags&7U)==7U && serial==s.serial;
+}
+namespace water24_static {
+// One serial renderer, one bounded descriptor, borrowed for a synchronous draw.
+// Water parts flush prior chunk work and never enter the mutable replay queue.
+re4dc::water24::Material material;
+bool in_use=false;
+struct Scope {
+    bool active=false;
+    bool open(const Ps2Placement& pl,unsigned part){
+        if(in_use || !re4dc::water24::candidate(ps2w.room,pl.placement,pl.mesh,part))return false;
+        in_use=true;
+        re4dc::water24::Request request{};
+        request.room=ps2w.room;request.native_frame=re4dc_ui_frame();request.source_id=pl.placement;
+        request.placement=pl.placement;request.mesh=pl.mesh;request.part=part;
+        if(!re4dc_water24_geometry(&request.geometry)){in_use=false;return false;}
+        const unsigned slot=dyn::slot_of[request.source_id];
+        if(slot==dyn::kNone || slot>=dyn::nslots){in_use=false;return false;}
+        request.source_object=dyn::slots[slot].obj;request.source_serial=dyn::slots[slot].serial;
+        material=re4dc::water24::Material{};
+        if(!re4dc_water24_source_current(&request) || !re4dc_water24_acquire(&request,&material) ||
+           !re4dc_water24_enter(&material)){in_use=false;return false;}
+        active=true;return true;
+    }
+    ~Scope(){if(active){re4dc_water24_leave(&material);in_use=false;}}
+};
+}
+#endif
 int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_GC_ASSET_GATE
     GcStaticSourceScope gcasset_source_scope(ps2w.asset_proof,&ps2w);
@@ -6936,6 +7005,13 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
     const auto& pk=ps2w.package;
     for(unsigned i=0;i<ps2w.nplacements;++i){
+#if RE4DC_WATER_R100_MATERIAL
+        const auto& water_pl=ps2w.placements[i];
+        const bool water_placement=re4dc::water24::candidate(ps2w.room,water_pl.placement,water_pl.mesh,water_pl.placement);
+        // Source alpha240 needs the existing TR phase. Do not close OP early.
+        // Exact GS pass semantics remain a separately labelled DC look gate.
+        if(water_placement && pass!=2)continue;
+#endif
 #if RE4DC_PS2_PVS
 #if RE4DC_PS2_PVS_BATCH_COMPOSE
         // Qualification mode ONLY: internal pvs::cur still authenticates source
@@ -6949,7 +7025,11 @@ int ps2_pass(unsigned pass,float zfar){
         if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();++c.aborts;return -1;}
 #endif
 #if RE4DC_PS2_PASS_MASK==2
-        if(ps2w.masked){
+        if(ps2w.masked
+#if RE4DC_WATER_R100_MATERIAL
+           && !water_placement
+#endif
+        ){
             // =2 (diagnostic): the scan beside the mask bit.
             const auto& m=pk.meshes()[ps2w.placements[i].mesh];
             bool any=false;
@@ -6970,9 +7050,17 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_PS2_PASS_MASK
         const bool masked=ps2w.masked && RE4DC_PS2_MASK_ON;
 #if defined(RE4DC_FOLIAGE_TRIM) && RE4DC_FOLIAGE_NEAR_FIX
+#if RE4DC_WATER_R100_MATERIAL
+        if(masked && !water_placement && !(ps2w.pass_mask[i]&pass_bits))continue;
+#else
         if(masked && !(ps2w.pass_mask[i]&pass_bits))continue;
+#endif
+#else
+#if RE4DC_WATER_R100_MATERIAL
+        if(masked && !water_placement && !((ps2w.pass_mask[i]>>pass)&1U))continue;
 #else
         if(masked && !((ps2w.pass_mask[i]>>pass)&1U))continue;
+#endif
 #endif
 #endif
         const auto& pl=ps2w.placements[i];const auto& mesh=pk.meshes()[pl.mesh];
@@ -6990,6 +7078,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
         {
         bool any=false;
+#if RE4DC_WATER_R100_MATERIAL
+        any=water_placement;
+#endif
         for(unsigned k=0;k<mesh.part_count && !any;++k)any=RE4DC_PASS_HIT(ps2w.parts[mesh.first_part+k].pass);
 #if defined(RE4DC_TRANS_POLICY)
         // TRANS_POLICY FLAT / CARD / SOFTA: a translucent-only placement can hold parts that now draw in pass 0 or 1
@@ -7126,7 +7217,16 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
             if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();++c.aborts;return -1;}
 #endif
+#if RE4DC_WATER_R100_MATERIAL
+            const unsigned index=mesh.first_part+k;
+            const bool water_material=re4dc::water24::candidate(ps2w.room,pl.placement,pl.mesh,index);
+            Ps2Part water_meta;
+            const Ps2Part* selected_meta=&ps2w.parts[index];
+            if(water_material){water_meta=*selected_meta;water_meta.pass=2;selected_meta=&water_meta;}
+            const auto& meta=*selected_meta;
+#else
             const unsigned index=mesh.first_part+k;const auto& meta=ps2w.parts[index];
+#endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
             R11fUvScope uvScope(part,pl.placement,pl.mesh,index,pass);
 #endif
@@ -7171,7 +7271,11 @@ int ps2_pass(unsigned pass,float zfar){
                 d.pc_mode=pc_state?1U:0U;
 #endif
                 const auto& selected_part=pk.parts()[index];
-                if(d.chunk_ok() && selected_part.meshlet_count<=kChunkPicks){
+                if(
+#if RE4DC_WATER_R100_MATERIAL
+                   !water_material &&
+#endif
+                   d.chunk_ok() && selected_part.meshlet_count<=kChunkPicks){
 #if RE4DC_PS2_VERTEX_ALPHA
                     const bool marked=(meta.reserved&1U)!=0;
                     // Keep the original lazy LUT preparation at selection.
@@ -7247,7 +7351,11 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_SCENERY_CHUNK
             // SCENERY_CHUNK: select now, emit with the run (chunk_flush), in order.
 #if !RE4DC_SCENERY_SELECT_ONLY
-            if(d.chunk_ok() && d.part.meshlet_count<=kChunkPicks){
+            if(
+#if RE4DC_WATER_R100_MATERIAL
+               !water_material &&
+#endif
+               d.chunk_ok() && d.part.meshlet_count<=kChunkPicks){
                 if(nctx==kChunkParts || npk+d.part.meshlet_count>kChunkPicks){if(chunk_flush()<0)return -1;}
                 ChunkPart& x=cctx[nctx++];
                 std::memcpy(x.mvq,mvq,sizeof(mvq));std::memcpy(x.key,key,sizeof(key));
@@ -7267,6 +7375,13 @@ int ps2_pass(unsigned pass,float zfar){
             }
 #endif
             if(chunk_flush()<0)return -1;
+#endif
+#if RE4DC_WATER_R100_MATERIAL
+            water24_static::Scope water_scope;
+            if(water_material){
+                if(!water_scope.open(pl,index)){++c.fallback;continue;}
+                d.alpha=water24_static::material.source_alpha<<24;
+            }
 #endif
 #if RE4DC_PS2_INTERIOR_CULL
 #if RE4DC_PS2_INTERIOR_CULL==2

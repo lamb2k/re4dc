@@ -43,7 +43,14 @@ def main():
   for mat,tri in B.triangles(model):
    pts=[tuple(v['p'][j]*f[8+j]+f[j] for j in range(3)) for v in tri]
    if nondeg(pts):original.append(pts)
-  source_vertices=sorted({v for tri in original for v in tri});actual=[];maxerr=0.
+  source_vertices=sorted({v for tri in original for v in tri});actual=[];maxerr=0.;maxuv=0.
+  source_uvs=collections.defaultdict(list)
+  for _,tri in B.triangles(model):
+   for v in tri:
+    pos=tuple(v['p'][j]*f[8+j]+f[j] for j in range(3))
+    source_uvs[pos].append(tuple(x/256. for x in v['raw']['uv']))
+  partrow=struct.unpack_from('<IIBBBBII4f',m,h[11]+36*part)
+
   fc,nc=struct.unpack_from('<II',m,lh[2]+8*part)
   for ci in range(fc,fc+nc):
    cluster=struct.unpack_from('<6HII',m,lh[3]+20*ci);fm,nm,error=struct.unpack_from('<IIf',m,lh[4]+12*cluster[6]);assert error==0.
@@ -53,10 +60,12 @@ def main():
     else:indices=range(nv)
     corners=[]
     for vi in indices:
-     q=struct.unpack_from('<3H',m,h[13]+12*(first+vi));local=[mr[8+j]+q[j]*mr[11+j] for j in range(3)]
+     q=struct.unpack_from('<6H',m,h[13]+12*(first+vi));local=[mr[8+j]+q[j]*mr[11+j] for j in range(3)]
      world=tuple(sum(pl[2+4*r+j]*local[j] for j in range(3))+pl[2+4*r+3] for r in range(3))
      nearest=min(source_vertices,key=lambda v:sum((v[j]-world[j])**2 for j in range(3)));err=max(abs(nearest[j]-world[j]) for j in range(3));maxerr=max(maxerr,err)
      if err>max(mr[11:14])+0.1:raise ValueError('current vertex differs beyond quantization')
+     uv=tuple(partrow[8+j]+q[3+j]*partrow[10+j] for j in range(2))
+     uverr=min(max(abs(v[j]-uv[j]) for j in range(2)) for v in source_uvs[nearest]);maxuv=max(maxuv,uverr)
      corners.append(nearest)
     end=off+nb
     while off<end:
@@ -68,7 +77,7 @@ def main():
     assert off==end
   source_counts=collections.Counter(canon(tri) for tri in original);actual_counts=collections.Counter(canon(tri) for tri in actual)
   exact=source_counts==actual_counts
-  bindings.append({'source_object_id':wanted,'source_placement':wanted,'source_bin':f[12],'current_placement_ordinal':ordinal,'current_mesh':pl[0],'current_part':part,'triangles':len(actual),'triangle_multiset_and_winding_match':exact,'original_triangles':len(original),'source_triangles_not_in_current':sum((source_counts-actual_counts).values()),'current_triangles_not_in_source':sum((actual_counts-source_counts).values()),'max_position_axis_error_mm':maxerr,'current_material':{'texture_key':'%08x-%08x'%meta[:2],'width':meta[2],'height':meta[3],'pass':meta[4],'cull':meta[5],'source_texture_index':meta[6]},'missing_material_state':['live source object alpha','shader2','refraction power and ratio','TexRender target ownership','captured scene ownership']})
+  bindings.append({'source_object_id':wanted,'source_placement':wanted,'source_bin':f[12],'current_placement_ordinal':ordinal,'current_mesh':pl[0],'current_part':part,'triangles':len(actual),'triangle_multiset_and_winding_match':exact,'original_triangles':len(original),'source_triangles_not_in_current':sum((source_counts-actual_counts).values()),'current_triangles_not_in_source':sum((actual_counts-source_counts).values()),'max_position_axis_error_mm':maxerr,'max_original_uv_axis_error':maxuv,'uv_projection':'authored PS2 normalized UV; no screen projection or refraction UV fabricated','current_material':{'texture_key':'%08x-%08x'%meta[:2],'width':meta[2],'height':meta[3],'pass':meta[4],'cull':meta[5],'source_texture_index':meta[6]},'missing_material_state':['live source object alpha240','actual PS2 TexBlend target ownership','independently accepted PS2 target contributors','target lifetime and completed fence']})
  result={'schema':'current-r100-water-geometry-v1','inputs':refs,'current_sidecar_crc':'%08x'%ph[5],'ids_source_policy_crc':'%08x'%ih[3],'ids_crc_equals_current':ih[3]==ph[5],'ids_compatibility':'Runtime WORLD_RECT21 reviewed remap required; this report does not forge or bypass CRC','bindings':bindings,'all_original_triangles_exact':all(x['triangle_multiset_and_winding_match'] for x in bindings),'interpretation':'Bounded original PS2 source geometry correspondence for the named selected-current1697 files; not automatic current-programme qualification or GC-ASSET provenance, dynamic material correctness, look or performance.'}
  a.out.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({'bindings':bindings,'sha256':sha(a.out.read_bytes())}))
 if __name__=='__main__':main()
