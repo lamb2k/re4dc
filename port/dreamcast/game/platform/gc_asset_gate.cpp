@@ -2,6 +2,7 @@
 #if RE4DC_GC_ASSET_GATE
 #include <cstdio>
 #include <cstring>
+#include <new>
 #include <atomic>
 extern "C" void re4dc_log(const char*, ...);
 namespace re4dc_gcasset {
@@ -59,12 +60,38 @@ void catalog_fault_flush(){
 }
 #include "include/gc_asset_index.inc"
 }
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+// GC_ASSET_PROF: every hash call >= 20 ms is logged with its caller and size.
+}
+#include <arch/timer.h>
+namespace re4dc_gcasset {
+struct HashProf {
+    const char* what;void* caller;unsigned bytes;unsigned long long t0;
+    static unsigned long long total_us,total_bytes;static unsigned calls;
+    HashProf(const char* w,void* c,unsigned n):what(w),caller(c),bytes(n),t0(timer_us_gettime64()){}
+    ~HashProf(){
+        const unsigned long long us=timer_us_gettime64()-t0;total_us+=us;total_bytes+=bytes;++calls;
+        if(us>=20000)re4dc_log("GC-ASSET-PROF hash=%s caller=%p bytes=%u us=%llu total_calls=%u total_us=%llu total_bytes=%llu\n",
+            what,caller,bytes,us,calls,total_us,total_bytes);
+    }
+};
+unsigned long long HashProf::total_us,HashProf::total_bytes;unsigned HashProf::calls;
+#define RE4DC_GCA_HASH_PROF(w,n) HashProf hash_prof(w,__builtin_return_address(0),n)
+#else
+#define RE4DC_GCA_HASH_PROF(w,n) ((void)0)
+#endif
+static_assert(sizeof(IdentitySha)<=sizeof(DigestStream::opaque) && alignof(IdentitySha)<=4,"digest stream storage");
+void digest_begin(DigestStream& s){new (s.opaque) IdentitySha();}
+void digest_update(DigestStream& s,const void* data,unsigned count){reinterpret_cast<IdentitySha*>(s.opaque)->update(data,count);}
+Digest digest_finish(DigestStream& s){Digest out{};reinterpret_cast<IdentitySha*>(s.opaque)->finish(out.bytes);return out;}
 Digest fingerprint(const void* data, unsigned count) {
+    RE4DC_GCA_HASH_PROF("ram",count);
     IdentitySha hash;Digest result{};
     if(!data && count) { ++queue_faults;return result; }
     hash.update(data,count);hash.finish(result.bytes);return result;
 }
 bool fingerprint_read(Digest& out, Read read, void* context, unsigned count) {
+    RE4DC_GCA_HASH_PROF("read",count);
     IdentitySha hash;unsigned char buffer[512];out={};
     while(count) {
         const unsigned take=count<sizeof buffer?count:sizeof buffer;
@@ -74,6 +101,7 @@ bool fingerprint_read(Digest& out, Read read, void* context, unsigned count) {
     hash.finish(out.bytes);return true;
 }
 bool fingerprint_read_prefix(Digest& out,Digest& first,Read read,void* context,unsigned count,unsigned prefix){
+    RE4DC_GCA_HASH_PROF("read-prefix",count);
     out={};first={};if(!prefix || prefix>count){++queue_faults;return false;}
     IdentitySha full,part;unsigned char buffer[512];
     while(count){const unsigned take=count<sizeof buffer?count:sizeof buffer;
@@ -96,31 +124,76 @@ bool install(const CatalogRow* rows, unsigned count) {
     }
     catalog=rows;catalog_rows=count;catalog_ok=true;return true;
 }
+namespace {
+// One sequential pass (gc-catalog24b): hash, validate and build the sparse index
+// from the catalog bytes in any chunking. Same accept/reject verdicts as the old
+// hash-then-row-by-row passes; nothing is published unless the pin matches.
+struct InstallParse {
+    unsigned bytes=0,seen=0,rows=0,block_rows=0,row=0,carry=0;bool bad=false;
+    unsigned char header[128];unsigned char part[112];
+    IdentitySha hash;AssetDescription previous{},current;
+    void header_done(){
+        if(std::memcmp(header,"GCIDX001",8) || index_word(header+8)!=1 || !index_word(header+12) ||
+           index_word(header+12)>CatalogLimit || index_word(header+16)!=112 || index_word(header+20)!=128 ||
+           bytes!=128+index_word(header+12)*112){bad=true;return;}
+        for(unsigned i=24;i<128;++i)if(header[i]){bad=true;return;}
+        rows=index_word(header+12);block_rows=rows<=SparseKeys*BufferRows?BufferRows:2*BufferRows;
+    }
+    void row_done(){
+        if(row>=rows || !index_decode_row(part,current) ||
+           (row && index_compare(previous,current.kind,current.id,current.digest)>=0)){bad=true;return;}
+        if(!(row%block_rows))sparse_prefix(current.kind,current.id,current.digest,sparse_key[row/block_rows]);
+        previous=current;++row;
+    }
+    void feed(const unsigned char* p,unsigned n){
+        if(bad)return;
+        hash.update(p,n);
+        while(n && !bad){
+            if(seen<128){
+                const unsigned take=128-seen<n?128-seen:n;
+                std::memcpy(header+seen,p,take);seen+=take;p+=take;n-=take;
+                if(seen==128)header_done();
+                continue;
+            }
+            const unsigned take=112-carry<n?112-carry:n;
+            std::memcpy(part+carry,p,take);carry+=take;p+=take;n-=take;
+            if(carry==112){row_done();carry=0;}
+        }
+    }
+    bool complete(const Digest& expected){
+        if(bad || seen!=128 || row!=rows || carry)return false;
+        Digest actual;hash.finish(actual.bytes);
+        return !std::memcmp(actual.bytes,expected.bytes,32);
+    }
+};
+void install_sink(void* context,const unsigned char* data,unsigned n){static_cast<InstallParse*>(context)->feed(data,n);}
+}
 bool install_index(CatalogReadAt read,void* context,unsigned bytes,const Digest& expected) {
+    return install_index_stream(nullptr,nullptr,read,context,bytes,expected);
+}
+bool install_index_stream(CatalogStream stream,void* stream_context,CatalogReadAt read,void* context,unsigned bytes,const Digest& expected) {
     if(active){++errors;return false;}
     if(!new_catalog_epoch())return false;
     const unsigned epoch=catalog_epoch;
     if(!read || bytes<128 || bytes>128+CatalogLimit*112)return false;
-    IndexStream stream{read,context,0,epoch};Digest actual;
-    if(!fingerprint_read(actual,index_stream_read,&stream,bytes) || std::memcmp(actual.bytes,expected.bytes,32))return false;
-    unsigned char header[128];
-    if(index_read_at(read,context,epoch,0,header,sizeof header)!=sizeof header || std::memcmp(header,"GCIDX001",8) ||
-       index_word(header+8)!=1 || !index_word(header+12) || index_word(header+12)>CatalogLimit ||
-       index_word(header+16)!=112 || index_word(header+20)!=128 ||
-       bytes!=128+index_word(header+12)*112)return false;
-    for(unsigned i=24;i<128;++i)if(header[i])return false;
-    const unsigned rows=index_word(header+12);
-    AssetDescription previous{},current;
-    for(unsigned i=0;i<rows;++i){
-        if(!index_read_row(read,context,epoch,rows,bytes,i,current) ||
-           (i && index_compare(previous,current.kind,current.id,current.digest)>=0))return false;
-        previous=current;
+    InstallParse parse;parse.bytes=bytes;
+    if(stream){
+        // Bulk sequential reader (the disc adapter's 16 KiB storage reads).
+        if(!stream(stream_context,install_sink,&parse) || !index_generation(epoch))return false;
+    } else for(unsigned at=0;at<bytes;){
+        const unsigned n=bytes-at<sizeof block_buffer?bytes-at:unsigned(sizeof block_buffer);
+        if(index_read_at(read,context,epoch,at,block_buffer,n)!=n)return false;
+        parse.feed(block_buffer,n);at+=n;
     }
+    if(!parse.complete(expected) || !index_generation(epoch))return false;
+    const unsigned rows=parse.rows,block_rows=parse.block_rows;
+    sparse_block_rows=block_rows;sparse_blocks=(rows+block_rows-1)/block_rows;
     // Do not publish provisional globals or overwrite a newer callback install.
     if(active || !index_generation(epoch))return false;
     catalog_read=read;catalog_context=context;catalog_bytes=bytes;catalog_rows=rows;
     catalog_ok=true;return true;
 }
+unsigned catalog_generation(){return catalog_ok?catalog_epoch:0;}
 void retire_catalog(){
     // Invalidate before diagnostics/callbacks; a returned old row cannot become
     // current again, even if a callback installs a fresh catalog immediately.
@@ -130,23 +203,39 @@ void retire_catalog(){
 CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) {
     if(!catalog_ok || !token(kind,KindBytes) || !token(id,IdBytes))return {};
     const unsigned epoch=catalog_epoch,rows=catalog_rows;
+    // Result cache (16 x 104 B = 1664 B BSS): repeated binds of the same identity
+    // (sound key-ons pumped every event, movie/model rebinds) skip the disc search.
+    // Tokens are epoch-tagged, so a retired/replaced catalog never hits.
+    struct BindCache{char kind[16],id[48];Digest digest;unsigned value;};
+    static BindCache bind_cache[16];static unsigned bind_cache_next;
+    for(const auto& c:bind_cache)if(c.value && c.value>>14==epoch && !std::strcmp(c.kind,kind) && !std::strcmp(c.id,id) &&
+        !std::memcmp(c.digest.bytes,digest.bytes,32))return {c.value};
+    struct CacheStore{const char* k;const char* i;const Digest& d;
+        void operator()(CheckedAsset a)const{if(!a.value)return;auto& c=bind_cache[bind_cache_next++&15];
+            std::strcpy(c.kind,k);std::strcpy(c.id,i);c.digest=d;c.value=a.value;}} store{kind,id,digest};
+    const CheckedAsset result=[&]()->CheckedAsset{
     unsigned index=rows;AssetDescription row;
     if(catalog_read) {
-        unsigned lower=0,upper=rows;
-        while(lower<upper) {
-            const unsigned middle=(lower+upper)/2;
-            if(!index_row(middle,row)){catalog_fault(CatalogRead);return {};}
-            if(!catalog_ok || !index_generation(epoch))return {};
-            if(index_compare(row,kind,id,digest)<0)lower=middle+1;else upper=middle;
-        }
-        if(lower<rows) {
-            if(!index_row(lower,row)){catalog_fault(CatalogRead);return {};}
-            if(!catalog_ok || !index_generation(epoch))return {};
-            if(!index_compare(row,kind,id,digest))index=lower;
-        }
+        unsigned found=rows;
+        const SparseResult result=sparse_find(kind,id,digest,epoch,found);
+        if(!catalog_ok || !index_generation(epoch))return {};
+        if(result==SparseFault){catalog_fault(CatalogRead);return {};}
+        if(result==SparseFound)index=found;
+        (void)row;
     } else for(unsigned i=0;i<rows;++i)if(!std::strcmp(catalog[i].kind,kind) && !std::strcmp(catalog[i].id,id) &&
         !std::memcmp(catalog[i].digest.bytes,digest.bytes,32)){index=i;break;}
     if(!catalog_ok || !index_generation(epoch))return {};
+#if defined(RE4DC_GC_ASSET_HARVEST) && RE4DC_GC_ASSET_HARVEST
+    // GC_ASSET_HARVEST=1 (offline catalog harvest build, never a gate run): log
+    // each catalog miss and return no token; no quarantine slot, no fault, so the
+    // run keeps reaching later identities. build_catalog.py --harvest reviews them.
+    if(index==rows) {
+        char hex[65];
+        for(unsigned b=0;b<32;++b)::snprintf(hex+2*b,3,"%02x",unsigned(digest.bytes[b]));
+        re4dc_log("GC-ASSET-HARVEST v=1 kind=%s id=%s sha256=%s\n",kind,id,hex);
+        return {};
+    }
+#endif
     if(index==rows) {
         unsigned i=0;
         for(;i<unknown_count;++i)if(!index_compare(unknown_assets[i],kind,id,digest))break;
@@ -159,6 +248,9 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
     }
     if(!catalog_ok || !index_generation(epoch))return {};
     return {epoch<<14|index};
+    }();
+    if(catalog_ok && index_generation(epoch))store(result);
+    return result;
 }
 bool checked_current(CheckedAsset asset) {
     return catalog_ok && index_generation(catalog_epoch) && asset.value>>14==catalog_epoch &&

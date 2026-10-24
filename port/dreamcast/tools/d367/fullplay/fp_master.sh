@@ -29,7 +29,7 @@ FINAL=
 if [ "${RE4DC_STAGE_EXT4:-1}" = 1 ]; then
   FINAL=$OUT; OUT=$WORK/out; mkdir -p "$OUT"
   DC=$here/../stage_ext4/disccache.py
-  KEY=$( { echo "kind=${TW:+twin}"; sha256sum "$0" "$MAN" "$IP"; [ -z "$TW" ] || { $TOOL/sh-elf-objcopy -R .stack -O binary $TW/re4dc-game.elf $WORK/k.bin; sha256sum $WORK/k.bin; for o in $TREE/dc/*.ovl; do sha256sum $TW/$(basename $o); done; for o in $TW/*.ovl; do sha256sum $o; done; }; } | sed 's#  .*/#  #' | sha256sum | cut -c1-64)
+  KEY=$( { echo "kind=${TW:+twin}"; sha256sum "$0" "$MAN" "$IP"; [ -z "${FP_GC_CATALOG:-}" ] || sha256sum "$FP_GC_CATALOG"; [ -z "$TW" ] || { $TOOL/sh-elf-objcopy -R .stack -O binary $TW/re4dc-game.elf $WORK/k.bin; sha256sum $WORK/k.bin; for o in $TREE/dc/*.ovl; do sha256sum $TW/$(basename $o); done; for o in $TW/*.ovl; do sha256sum $o; done; }; } | sed 's#  .*/#  #' | sha256sum | cut -c1-64)
   IDX=${RE4DC_STAGE_ROOT:-/root/stage}/fpimages/$KEY
   if [ -s $IDX/track03.sha256 ] && C3=$(python3 $DC link "$(cat $IDX/track03.sha256)" track03.iso "$FINAL/track03.iso" 2>/dev/null); then
     for f in track01-template.iso track02.raw base.json base-manifest.json base-diff.txt track03.sha256; do cp $IDX/$f "$FINAL/$f"; done
@@ -43,6 +43,13 @@ for f in dc/warp.txt dc/padscript.txt dc/w11.txt; do
   head -c $FIXB /dev/zero > $WORK/cdroot/$f
 done
 ALLOW=(--allow 'dc/warp\.txt' --allow 'dc/padscript\.txt' --allow 'dc/w11\.txt')
+# FP_GC_CATALOG=<file> (lane gc-catalog24b): stage a GC-ASSET diagnostic catalog as dc/gc-assets.idx; only that
+# one extra file is allowed in the base diff. Unset = unchanged behaviour.
+if [ -n "${FP_GC_CATALOG:-}" ]; then
+  [ -s "$FP_GC_CATALOG" ] && [ ! -e $WORK/cdroot/dc/gc-assets.idx ] || { echo "fp_master: bad FP_GC_CATALOG" >&2; exit 1; }
+  cp "$FP_GC_CATALOG" $WORK/cdroot/dc/gc-assets.idx
+  ALLOW+=(--allow 'dc/gc-assets\.idx')
+fi
 KIND=release
 if [ -n "$TW" ]; then
   KIND=twin

@@ -448,26 +448,130 @@ struct Source { Re4dcUiImage image{}; Key key{}; };
 // An uncached source descriptor still resolves through its existing owner table.
 Entry entries[kTextureCount]; Source sources[kSourceCount]; unsigned nsource;
 #if RE4DC_GC_ASSET_GATE
-bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,unsigned offset,unsigned bytes) {
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+struct GcaFpProf {
+    static unsigned n,streamed; static unsigned long long us,bytes,bind_us;
+    unsigned long long t0=timer_us_gettime64();
+    ~GcaFpProf(){
+        us+=timer_us_gettime64()-t0;
+        if(!(++n&7))re4dc_log("GC-ASSET-PROF fp=%u streamed=%u fp_us=%llu fp_bytes=%llu bind_us=%llu catalog_reads=%u catalog_us=%llu\n",
+            n,streamed,us,bytes,bind_us,re4dc_gcasset::prof_disc_reads(),re4dc_gcasset::prof_disc_us());
+    }
+};
+unsigned GcaFpProf::n,GcaFpProf::streamed; unsigned long long GcaFpProf::us,GcaFpProf::bytes,GcaFpProf::bind_us;
+#endif
+bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,unsigned offset,unsigned bytes,
+                                 const re4dc_gcasset::Digest* streamed=nullptr) {
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+    GcaFpProf prof;if(streamed)++GcaFpProf::streamed;
+#endif
     entry.asset={};
     if(!re4dc_gcasset::ensure_disc_catalog())return false;
-    file_t file;{Re4dcIoScope io;file=fs_open(path,O_RDONLY);}
+    // gc-catalog24b: an immutable tex.pak member (key, offset, size) binds to the
+    // same token for the whole catalog epoch, so a reload reuses it instead of
+    // re-reading and re-hashing the member. Direct-mapped, 64 x 20 B = 1280 B.
+    struct FpCache { unsigned crc,fnv,offset,bytes,token; };
+    static FpCache fp_cache[64];
+    const bool cacheable=bytes!=0;
+    FpCache& slot=fp_cache[(key.crc^key.fnv^offset)&63U];
+    if(cacheable && slot.token && slot.crc==key.crc && slot.fnv==key.fnv && slot.offset==offset && slot.bytes==bytes &&
+       (slot.token>>14)==re4dc_gcasset::catalog_generation()){
+        entry.asset.value=slot.token;return true;
+    }
+    if(streamed){
+        char id[24];snprintf(id,sizeof id,"%08x-%08x",key.crc,key.fnv);
+        entry.asset=re4dc_gcasset::bind_checked("texture",id,*streamed);
+        if(entry.asset.value && cacheable)slot={key.crc,key.fnv,offset,bytes,entry.asset.value};
+        return entry.asset.value!=0;
+    }
+    // Hash through the package's own open handle when it has one (no second
+    // open/directory lookup); upload() seeks before each of its reads.
+    const file_t own=entry.package.stream_file();
+    file_t file=own;
+    if(file==FILEHND_INVALID){Re4dcIoScope io;file=fs_open(path,O_RDONLY);}
     if(file==FILEHND_INVALID)return false;
     bool okay=true;
     {Re4dcIoScope io;
         if(!bytes) { const auto length=fs_total(file);okay=length>=0;bytes=okay?unsigned(length):0; }
         if(okay)okay=fs_seek(file,offset,SEEK_SET)==off_t(offset);
     }
-    const auto reader=[](void* context,void* target,unsigned count)->unsigned {
-        Re4dcIoScope io;
-        const file_t fd=*static_cast<const file_t*>(context);const ssize_t got=fs_read(fd,target,count);
-        return got<0?0:unsigned(got);
-    };
+    // Read through the shared storage bounce (the same 16 KiB reads upload()
+    // uses: one GD command per 16 KiB, no new buffer). Same bytes, same digest.
     re4dc_gcasset::Digest digest{};
-    if(okay)okay=re4dc_gcasset::fingerprint_read(digest,reader,const_cast<file_t*>(&file),bytes);
-    {Re4dcIoScope io;fs_close(file);}
+    if(okay){
+        re4dc_gcasset::DigestStream stream;re4dc_gcasset::digest_begin(stream);
+        Re4dcIoScope io;
+        okay=re4dc::storage::read_chunks(file,bytes,[](const std::uint8_t* p,std::size_t n,void* ctx){
+            re4dc_gcasset::digest_update(*static_cast<re4dc_gcasset::DigestStream*>(ctx),p,unsigned(n));return true;
+        },&stream);
+        if(okay)digest=re4dc_gcasset::digest_finish(stream);
+    }
+    if(own==FILEHND_INVALID){Re4dcIoScope io;fs_close(file);}
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+    GcaFpProf::bytes+=bytes;const unsigned long long bind_t0=timer_us_gettime64();
+#endif
     if(okay){char id[24];snprintf(id,sizeof id,"%08x-%08x",key.crc,key.fnv);entry.asset=re4dc_gcasset::bind_checked("texture",id,digest);okay=entry.asset.value!=0;}
+    if(okay && cacheable)slot={key.crc,key.fnv,offset,bytes,entry.asset.value};
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+    GcaFpProf::bind_us+=timer_us_gettime64()-bind_t0;
+#endif
     return okay;
+}
+// gc-catalog24b: hash the member from the bytes the streamed package already
+// reads (open: header + descriptors; upload: payload chunks; gap(): padding and
+// tail the upload skips, read here outside read_chunks). One load at a time on
+// the main thread; any out-of-order byte falls back to the full re-read above.
+struct GcaTexHash {
+    const re4dc::texture::Package* package=nullptr;
+    unsigned cursor=0;bool bad=false;
+    re4dc_gcasset::DigestStream stream;
+} gca_tex_hash;
+void gca_tex_bytes(void*,const re4dc::texture::Package* package,std::uint32_t offset,const std::uint8_t* data,std::size_t n){
+    auto& h=gca_tex_hash;
+    if(package!=h.package)return;
+    if(!offset){re4dc_gcasset::digest_begin(h.stream);h.cursor=0;h.bad=false;}   // a (re)open restarts the member
+    if(h.bad)return;
+    if(offset!=h.cursor){h.bad=true;return;}
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+    const unsigned long long hash_t0=timer_us_gettime64();
+#endif
+    re4dc_gcasset::digest_update(h.stream,data,unsigned(n));h.cursor+=unsigned(n);
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+    GcaFpProf::bytes+=n;GcaFpProf::bind_us+=timer_us_gettime64()-hash_t0;   // streamed: fp_bytes/bind_us = hashed bytes/us
+#endif
+}
+void gca_tex_gap(void*,const re4dc::texture::Package* package,file_t file,std::uint32_t base,std::uint32_t upto){
+    auto& h=gca_tex_hash;
+    if(package!=h.package || h.bad)return;
+    if(upto<h.cursor){h.bad=true;return;}
+    if(upto==h.cursor)return;
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+    static unsigned gap_n;static unsigned long long gap_us,gap_total;
+    const unsigned long long gap_t0=timer_us_gettime64();gap_total+=upto-h.cursor;
+    struct GapDone{unsigned long long t0;~GapDone(){gap_us+=timer_us_gettime64()-t0;
+        if(!(++gap_n&15))re4dc_log("GC-ASSET-PROF gaps=%u gap_bytes=%llu gap_us=%llu\n",gap_n,gap_total,gap_us);}} gap_done{gap_t0};
+#endif
+    Re4dcIoScope io;
+    if(file==FILEHND_INVALID || fs_seek(file,off_t(base+h.cursor),SEEK_SET)!=off_t(base+h.cursor) ||
+       !re4dc::storage::read_chunks(file,upto-h.cursor,[](const std::uint8_t* p,std::size_t n,void* ctx){
+           re4dc_gcasset::digest_update(*static_cast<re4dc_gcasset::DigestStream*>(ctx),p,unsigned(n));return true;
+       },&h.stream)){h.bad=true;return;}
+    h.cursor=upto;
+}
+void gca_tex_arm(Entry& entry){
+    gca_tex_hash.package=&entry.package;gca_tex_hash.cursor=0;gca_tex_hash.bad=true;   // valid only after an open reports byte 0
+    re4dc::texture::upload_observer={gca_tex_bytes,gca_tex_gap,nullptr};
+}
+void gca_tex_disarm(){re4dc::texture::upload_observer={};gca_tex_hash.package=nullptr;}
+// After a successful upload: bind from the streamed digest when the whole member
+// [0, bytes) was covered in order; otherwise the full re-read (same digest).
+bool gcasset_texture_finish(Entry& entry,const Key& key,const char* path,unsigned offset,unsigned bytes){
+    auto& h=gca_tex_hash;
+    const bool streamed=h.package==&entry.package && !h.bad && (!bytes || h.cursor==bytes);
+    gca_tex_disarm();
+    if(!streamed)return gcasset_texture_fingerprint(entry,key,path,offset,bytes);
+    const re4dc_gcasset::Digest digest=re4dc_gcasset::digest_finish(h.stream);
+    return gcasset_texture_fingerprint(entry,key,path,offset,bytes,&digest);
 }
 void gcasset_texture_emitted(Entry* entry,re4dc_gcasset::Consumer consumer=re4dc_gcasset::Texture) {
     if(!entry || !entry->valid)return;
@@ -3734,20 +3838,14 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #else
 #define RE4DC_OPEN_PACKAGE() RE4DC_OPEN_PACKAGE_RAW()
 #endif
-    bool ok=RE4DC_OPEN_PACKAGE();
 #if RE4DC_GC_ASSET_GATE
     // Hash only the accepted member at immutable load. This is preparation,
     // not an emission; cached/culled/preloaded Entries produce no GC-ASSET row.
-    if(ok) {
-#if RE4DC_TEX_PACK
-        const bool fingerprint_ok=gcasset_texture_fingerprint(*slot,key,in_pack?texpack::kPath:path,
-            in_pack?pack_offset:0,in_pack?pack_size:0);
-#else
-        const bool fingerprint_ok=gcasset_texture_fingerprint(*slot,key,path,0,0);
+    // gc-catalog24b: the digest is taken from the bytes open/upload read
+    // (gcasset_texture_finish after a successful upload).
+    slot->asset={};gca_tex_arm(*slot);
 #endif
-        if(!fingerprint_ok)re4dc_log("GC-ASSET-ERROR v=2 why=texture-fingerprint key=%08x-%08x\n",key.crc,key.fnv);
-    }
-#endif
+    bool ok=RE4DC_OPEN_PACKAGE();
     if(!ok) {RE4DC_PROFILE_COUNT(TextureOpenFailures,1);re4dc_log("native UI: package rejected: %s\n",slot->package.error());}
 #if RE4DC_UI_FRAG_RESERVE
     if(frag_held && key==frag_key){
@@ -3976,6 +4074,17 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     re4dc_log("native UI: bounded upload heap=%d->%d metadata=%u staging=shared-16384 source_allocation=0\n",heap_before,re4dc_ui_heap_free(),slot->package.metadata_bytes());
 #endif
     if(ok)++loads;
+#if RE4DC_GC_ASSET_GATE
+    if(ok){
+#if RE4DC_TEX_PACK
+        const bool fingerprint_ok=gcasset_texture_finish(*slot,key,in_pack?texpack::kPath:path,
+            in_pack?pack_offset:0,in_pack?pack_size:0);
+#else
+        const bool fingerprint_ok=gcasset_texture_finish(*slot,key,path,0,0);
+#endif
+        if(!fingerprint_ok)re4dc_log("GC-ASSET-ERROR v=2 why=texture-fingerprint key=%08x-%08x\n",key.crc,key.fnv);
+    } else gca_tex_disarm();
+#endif
     if(!ok) {RE4DC_TEXCHK_FAIL(key,texchk_why);return nullptr;}
     slot->valid=true;slot->key=key;
 #if RE4DC_TEX_RESIDENT

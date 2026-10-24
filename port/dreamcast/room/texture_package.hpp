@@ -133,6 +133,10 @@ public:
     // caller closes it and loads it again.
     bool upload();
     bool upload_complete() const { return upload_complete_; }
+    // The streamed package's own open handle (FILEHND_INVALID when none). The
+    // GC-ASSET gate hashes the member through it instead of opening the file
+    // again; upload() seeks before every read, so the position is not shared state.
+    file_t stream_file() const { return file_; }
     // Test hook: stop the next upload after this many real allocations, zero
     // for never. Bounded and per-package, so the partial-upload path is
     // exercised rather than assumed. close() clears it.
@@ -241,6 +245,20 @@ bool pack_window_active();
 struct PackWindowStats { unsigned fills, hits, misses, kb; };
 PackWindowStats pack_window_stats();
 #endif
+#endif
+
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+// GC-ASSET gate (gc-catalog24b): sees the member bytes a streamed package
+// already reads, in member order, so the gate can hash the member without a
+// second read. bytes(): header / descriptors at open, payload chunks at upload.
+// gap(): before each payload read and at the end of upload(), outside any
+// read_chunks call; the gate may read [its cursor, upto) through file.
+struct UploadObserver {
+    void (*bytes)(void* context, const Package* package, std::uint32_t offset, const std::uint8_t* data, std::size_t n);
+    void (*gap)(void* context, const Package* package, file_t file, std::uint32_t base, std::uint32_t upto);
+    void* context;
+};
+extern UploadObserver upload_observer;
 #endif
 
 } // namespace re4dc::texture

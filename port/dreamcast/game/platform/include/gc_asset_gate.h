@@ -36,6 +36,22 @@ void retire_catalog();
 // Room changes do not close the handle; disc/source replacement must retire.
 bool ensure_disc_catalog();
 void retire_disc_catalog();
+// Bulk sequential install (gc-catalog24b): stream() pushes the whole catalog in
+// order through sink; read() remains the row reader for later lookups.
+using CatalogStream = bool (*)(void* context,void (*sink)(void*,const unsigned char*,unsigned),void* sink_context);
+bool install_index_stream(CatalogStream,void* stream_context,CatalogReadAt,void* context,unsigned bytes,const Digest& expected_sha);
+// Current install epoch (token bits 14..31); a token from an older epoch is stale.
+unsigned catalog_generation();
+// Push-style identity digest (same SHA256 as fingerprint()), for callers whose
+// reader pushes chunks (room_storage read_chunks).
+struct DigestStream { alignas(4) unsigned char opaque[104]; };
+void digest_begin(DigestStream&);
+void digest_update(DigestStream&,const void*,unsigned);
+Digest digest_finish(DigestStream&);
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+unsigned prof_disc_reads();
+unsigned long long prof_disc_us();
+#endif
 CheckedAsset bind_checked(const char* kind,const char* id,const Digest& actual_sha);
 bool checked_current(CheckedAsset); // memory only; no catalog read, hashing or logging
 bool describe_checked(CheckedAsset,AssetDescription*); // safe boundaries only: may read the catalog
