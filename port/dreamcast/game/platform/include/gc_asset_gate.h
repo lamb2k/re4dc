@@ -16,6 +16,9 @@ struct Digest { unsigned char bytes[32]; };
 Digest fingerprint(const void* bytes, unsigned count);
 using Read = unsigned (*)(void* context, void* destination, unsigned bytes);
 bool fingerprint_read(Digest&, Read, void* context, unsigned bytes);
+// One complete read, with a second digest of the exact prefix in that same
+// byte sequence. Cold source/directory binding only; 512-byte scratch.
+bool fingerprint_read_prefix(Digest& full,Digest& prefix,Read,void* context,unsigned bytes,unsigned prefix_bytes);
 struct CatalogRow {
     const char* kind; const char* id; Digest digest; Provenance provenance;
 };

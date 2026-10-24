@@ -76,6 +76,7 @@ bool read_at(unsigned offset,void* to,unsigned bytes) {
     ++reads;read_bytes+=bytes;
     return ok;
 }
+#include "platform/include/gc_asset_hand_source.inc"
 // The package's directory (hands_pack.py checks every field it writes; here: the layout, the bounds the reads and
 // slots rely on, and the standard hands as blobs 0 (right) and 1 (left)).
 bool directory() {
@@ -97,6 +98,9 @@ bool directory() {
     }
     re4dc_log("LHPACK dir rows=%u blobs=%u src=%u file=%u why=%u\n",nrows,nblobs,nsrcs,file_bytes,bad);
     if(bad)return false;
+#if RE4DC_GC_ASSET_GATE
+    gcasset_hand_directory_candidate(h);
+#endif
     job_file=fs_open(package(),O_RDONLY);
     dir_state=1;
     return true;
@@ -368,6 +372,9 @@ extern "C" void re4dc_leon_hands_room_enter() {
         reads,read_bytes,hits,misses,async_reads,async_fails,async_max_us,pick_max_us,yields,hit_max_us,
         cell_blob[0],cell_blob[1],cell_blob[2],cell_blob[3]);
     mutex_unlock(&lh_mutex);
+#if RE4DC_GC_ASSET_GATE
+    gcasset_hand_directory_pump();
+#endif
 }
 // Weapon equip (read.cpp ReadWepData, after the weapon archive read): the weapon's own hand BINs into the other cells.
 extern "C" void re4dc_leon_hands_weapon(const char* name) {
@@ -390,6 +397,9 @@ extern "C" void re4dc_leon_hands_weapon(const char* name) {
     for(unsigned i=0;i<nblobs;++i)if((blobs[i].flags&4) && !done[blobs[i].role-5])prefetch(int(i));
 #endif
     mutex_unlock(&lh_mutex);
+#if RE4DC_GC_ASSET_GATE
+    gcasset_hand_directory_pump();
+#endif
 }
 // Movie open (native_movie.cpp) and a runtime sound bank conversion (audio_aica.cpp): give the AICA cells back.
 extern "C" void re4dc_leon_hands_yield() {

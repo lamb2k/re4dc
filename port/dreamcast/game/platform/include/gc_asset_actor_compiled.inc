@@ -29,6 +29,9 @@ extern "C" void re4dc_gcasset_actor_startup(){
     using namespace re4dc_gcasset;
     if(gcasset_compiled_started)return;
     gcasset_compiled_started=true;
+#if defined(RE4DC_GC_ASSET_HAND_SOURCE)
+    leon_hand_pack::gcasset_hand_startup();
+#endif
 #if RE4DC_ACTOR_TRANSACTION && !(defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD)
     PayloadSpan spans[48];unsigned count=0,metadata[8][6]{};
     for(unsigned k=0;k<8;++k){const auto in=gcasset_compiled_input(k);if(!in.positions.data)continue;

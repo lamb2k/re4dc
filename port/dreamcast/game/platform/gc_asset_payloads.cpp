@@ -100,7 +100,8 @@ bool payload_capture_digest(PayloadProof& proof,const void* owner,const Digest& 
     proof.owner=owner;proof.asset=asset;proof.serial=++payload_serial;return true;
 }
 bool payload_copy_register(PayloadProof& proof,const void* owner,const void* base,unsigned capacity){
-    if(!owner || !base || !capacity || proof.owner){unresolved(SourceGeometry,"copy-owner");return false;}
+    const auto start=reinterpret_cast<std::uintptr_t>(base);
+    if(!owner || !base || !capacity || capacity>~std::uintptr_t(0)-start || proof.owner){unresolved(SourceGeometry,"copy-owner");return false;}
     bool conflict=false;
     for(auto* old=payloads;old;old=old->next)if(old!=&proof && old->owner &&
         (old->owner==owner || overlaps(base,capacity,old->base,old->bytes) || overlaps(base,capacity,old->layout,old->layout_bytes))){

@@ -57,6 +57,17 @@ bool fingerprint_read(Digest& out, Read read, void* context, unsigned count) {
     }
     hash.finish(out.bytes);return true;
 }
+bool fingerprint_read_prefix(Digest& out,Digest& first,Read read,void* context,unsigned count,unsigned prefix){
+    out={};first={};if(!prefix || prefix>count){++queue_faults;return false;}
+    IdentitySha full,part;unsigned char buffer[512];
+    while(count){const unsigned take=count<sizeof buffer?count:sizeof buffer;
+        if(!read || read(context,buffer,take)!=take){++queue_faults;return false;}
+        full.update(buffer,take);const unsigned n=prefix<take?prefix:take;
+        if(n)part.update(buffer,n);
+        prefix-=n;count-=take;
+    }
+    full.finish(out.bytes);part.finish(first.bytes);return true;
+}
 bool install(const CatalogRow* rows, unsigned count) {
     if(active) { ++errors;return false; }
     if(!new_catalog_epoch())return false;

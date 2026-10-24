@@ -1,8 +1,8 @@
 # Packed hand source and copy contract
 
-The actual hand runtime remains unedited at the initial ticket milestone. This
-document separates a tested metadata contract from the pending closed-writer
-integration and independent review. No hand coverage or positive slot is claimed.
+The actual hand runtime now has cold source/directory observers. This document
+separates tested boundaries from the pending closed-writer integration and
+independent review. No hand coverage or positive slot is claimed.
 
 Root approved one exact full hand-container source proof captured after a
 complete successful read at named startup. It must retain the exact original
@@ -63,4 +63,28 @@ same-address reloads, invalid publication revokes any old positive, and source
 retirement or catalog replacement invalidates the child. The focused controls
 exercise those cases with the real core/helper and assert logging remains
 outside the simulated LH/SQ lock. Actual hand copy/derivation integration and
-source-handle/directory authentication remain pending.
+source-handle/copy integration remains pending.
+
+The cold observer reads the complete package at named startup, using a separate
+diagnostic handle and the existing immutable mounted-CD source-epoch contract.
+Every added filesystem call has a bounded Re4dcIoScope; hashing, catalog binding
+and diagnostics run outside those calls and outside LH. The full SHA and exact
+header/directory prefix SHA are computed in the same streaming read, with
+512-byte scratch and two SHA states. A changed header between the initial
+header read and full read is rejected. Cost is one additional whole-file read
+plus the 32-byte header read, with no per-draw IO and no retained blob snapshot.
+
+After the actual loader validates its directory, a memory-only observer compares
+its header/counts. The cold room/equip return then hashes the retained header,
+rows, blobs and source records after releasing LH, and compares the exact prefix
+digest. This does not alter the loader's handles, seek positions, allocations,
+transfer decisions or publication behavior. Later runtime handles are covered
+only by the pinned immutable mounted source contract; mutable/replaced mounts
+must retire the catalog epoch. Pointer/path equality alone grants nothing.
+
+Additional metadata is the full-source and two child proofs (132 target bytes
+expected), one 32-byte prefix digest, 32-byte header, prefix count and flags;
+actual target alignment/code/stack remains unmeasured. Fixed copy tickets and
+derivation state will add their explicitly priced records when wired. The new
+derivation helper controls pending, bounded, complete/abort, nested, stale-copy
+and catalog-retired cases; the four real writer scopes are still pending.
