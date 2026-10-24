@@ -49,6 +49,18 @@ prefill complete the ticket with an invalid token and explicitly fail. Stream
 stop/destroy/shutdown revoke admission; a retired catalog token also fails at
 the later pump. The fixed bridge only copies ticket/token values; it cannot
 hash, log, open a file, allocate or spin while a command is submitted. Additional
-observer state is approximately 80 bytes on SH4 before linking; final target
+observer state adds 72 bytes of BSS in the frozen3264 selected SH4 object; final target
 code and BSS still need allocated qualification. The special C object receives
 the gate definition through a target-specific default-off make rule.
+
+Frozen3264 selected-object qualification used the unchanged old standard542
+profile, with gate OFF/ON only; a separate C-only syntax variant changed the
+included CABIN_SOURCE flag from 0 to 1. Ordinary C OFF text/data/BSS is
+6649/8/332, ON 7785/8/404; CABIN1 is 9105/8/460 versus 10133/8/532.
+Direct-provider native_movie is 63530/520/539 versus 63966/528/539; native_ui is
+134893/100509/152415 versus 138660/100513/156439; the audio helper is empty OFF
+versus 4749/4/1369 ON. These objects include accumulated glyph/audio integration,
+not just movie deltas. Real d367 SDK archive/source hashes remained unchanged;
+all C bridge providers are present. No linked image, heap, guest or physical
+playback acceptance follows from selected objects. Tiny receipts are in
+`C:\Flycast-Evidence\re4-dreamcast\gc-port23-20261023\target-movie-3264d68f6-standard542`.

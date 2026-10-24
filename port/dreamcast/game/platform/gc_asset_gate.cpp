@@ -13,6 +13,7 @@ AssetDescription unknown_assets[UnknownLimit];unsigned unknown_count,catalog_epo
 CatalogReadAt catalog_read;void* catalog_context;unsigned catalog_bytes;
 const CatalogRow* catalog;
 unsigned catalog_rows, room, visit, wired, checked_mask, used, overflow, errors;
+char scope_text[24];
 unsigned emissions[ConsumerCount];
 bool active,catalog_ok;
 struct Queued { Consumer consumer; CheckedAsset asset;unsigned kind;Digest digest;unsigned room, visit; };
@@ -128,7 +129,8 @@ bool describe_checked(CheckedAsset asset,AssetDescription* out) {
     if(index-catalog_rows>=unknown_count)return false;
     *out=unknown_assets[index-catalog_rows];return true;
 }
-void begin(unsigned r, unsigned v, unsigned mask) {
+static void begin_at(unsigned r,unsigned v,unsigned mask,bool startup,bool admit) {
+    queue_active.store(0);
     if(active) { ++errors;end(0); }
     room=r;visit=v;wired=mask;checked_mask=used=overflow=errors=0;
     std::memset(emissions,0,sizeof emissions);active=true;
@@ -137,11 +139,22 @@ void begin(unsigned r, unsigned v, unsigned mask) {
     if(queue_lock.test_and_set(std::memory_order_acquire)) { ++errors;queue_active.store(0); }
     else {
         if(ticket_count || queue_head!=queue_tail)++errors;
-        queue_active.store(ticket_count==0 && queue_head==queue_tail);
+        queue_active.store(admit && ticket_count==0 && queue_head==queue_tail);
         queue_lock.clear(std::memory_order_release);
     }
-    re4dc_log("GC-ASSET-BEGIN v=1 room=%04x visit=%u wired=%03x required=%03x catalog=%u catalog_ok=%u\n",
-        room,visit,wired,Required,catalog_rows,unsigned(catalog_ok));
+    if(startup)std::strcpy(scope_text,"phase=startup");
+    else std::snprintf(scope_text,sizeof scope_text,"room=%04x",room);
+    re4dc_log("GC-ASSET-BEGIN v=1 %s visit=%u wired=%03x required=%03x catalog=%u catalog_ok=%u\n",
+        scope_text,visit,wired,Required,catalog_rows,unsigned(catalog_ok));
+}
+void begin(unsigned r,unsigned v,unsigned mask){begin_at(r,v,mask,false,true);}
+void begin_closed(unsigned r,unsigned v,unsigned mask){begin_at(r,v,mask,false,false);}
+void begin_startup_closed(unsigned v,unsigned mask){begin_at(0,v,mask,true,false);}
+void open_audio_admission(){
+    if(queue_lock.test_and_set(std::memory_order_acquire)){++queue_faults;return;}
+    if(!active || ticket_count || queue_head!=queue_tail)++queue_faults;
+    else queue_active.store(1);
+    queue_lock.clear(std::memory_order_release);
 }
 AudioTicket audio_ticket() {
     if(queue_lock.test_and_set(std::memory_order_acquire)) { ++queue_faults;return {32,0}; }
@@ -219,8 +232,8 @@ void emitted_checked(Consumer consumer,CheckedAsset asset) {
     seen[index/8]|=1U<<(index%8);
     if(row.provenance==PS2 || row.provenance==Authored)return;
     ++used;char sha[65];hex(row.digest,sha);
-    re4dc_log("GC-ASSET v=1 room=%04x visit=%u kind=%s id=%s sha256=%s provenance=%s consumer=%s action=emit\n",
-        room,visit,row.kind,row.id,sha,provenances[row.provenance],names[consumer]);
+    re4dc_log("GC-ASSET v=1 %s visit=%u kind=%s id=%s sha256=%s provenance=%s consumer=%s action=emit\n",
+        scope_text,visit,row.kind,row.id,sha,provenances[row.provenance],names[consumer]);
 }
 void end(unsigned frame) {
     if(!active) { re4dc_log("GC-ASSET-ERROR v=1 why=no-room-end\n");return; }
@@ -233,11 +246,11 @@ void end(unsigned frame) {
     errors+=queue_faults.exchange(0);
     // re4dc_log has a 256-byte buffer. Both maximum-width rows fit, including
     // 32-bit counters; one long END row would silently truncate the gate.
-    re4dc_log("GC-ASSET-COUNTS v=1 room=%04x visit=%u source_geometry=%u texture=%u effect_picture=%u weapon=%u font=%u ui=%u sound_bank=%u sound_stream=%u movie=%u\n",
-        room,visit,
+    re4dc_log("GC-ASSET-COUNTS v=1 %s visit=%u source_geometry=%u texture=%u effect_picture=%u weapon=%u font=%u ui=%u sound_bank=%u sound_stream=%u movie=%u\n",
+        scope_text,visit,
         emissions[0],emissions[1],emissions[2],emissions[3],emissions[4],emissions[5],emissions[6],emissions[7],emissions[8]);
-    re4dc_log("GC-ASSET-END v=1 room=%04x visit=%u frame=%u wired=%03x checked=%03x required=%03x unique=%u overflow=%u errors=%u catalog_ok=%u\n",
-        room,visit,frame,wired,checked_mask,Required,used,overflow,errors,unsigned(catalog_ok));
+    re4dc_log("GC-ASSET-END v=1 %s visit=%u frame=%u wired=%03x checked=%03x required=%03x unique=%u overflow=%u errors=%u catalog_ok=%u\n",
+        scope_text,visit,frame,wired,checked_mask,Required,used,overflow,errors,unsigned(catalog_ok));
     active=false;
 }
 #if defined(RE4DC_GC_ASSET_TEST)

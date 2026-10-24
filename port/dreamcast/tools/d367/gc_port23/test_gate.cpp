@@ -4,7 +4,9 @@
 #include <cstdio>
 #include <string>
 std::string output;
+bool audio_mutex;
 extern "C" void re4dc_log(const char* fmt, ...) {
+    assert(!audio_mutex);
     char line[256];va_list args;va_start(args,fmt);const int written=vsnprintf(line,sizeof line,fmt,args);va_end(args);
     assert(written>=0 && unsigned(written)<sizeof line);output+=line;
 }
@@ -68,4 +70,21 @@ int main() {
     test_max_counters();
     emitted(SourceGeometry,"abcdefghijklmno","abcdefghijklmnopqrstuvwxyz012345678901234567890",gc);
     end(0xffffffffU); // all production formatter rows must fit the real 256-byte logger
+    assert(install(catalog,2));output.clear();begin_startup_closed(1,Required);
+    assert(output.find("phase=startup")!=std::string::npos && output.find("room=")==std::string::npos);
+    audio_mutex=true;open_audio_admission();const auto startup_audio=audio_ticket();
+    queued(startup_audio,SoundBank,"sample","core:1",gc);close_audio_admission();audio_mutex=false;
+    pump();end(1);assert(rows()==1 && output.find("errors=0")!=std::string::npos);
+    // Preparing a room does not open admission before the unlocked BEGIN row.
+    output.clear();begin_closed(0x111,2,Required);assert(audio_ticket().serial==0);
+    audio_mutex=true;open_audio_admission();const auto admitted=audio_ticket();
+    queued(admitted,SoundBank,"sample","core:1",gc);close_audio_admission();audio_mutex=false;
+    pump();end(2);assert(rows()==1 && output.find("errors=1")!=std::string::npos);
+    // A paused startup producer cannot acquire the next game-room label.
+    output.clear();begin_startup_closed(3,Required);open_audio_admission();const auto startup_late=audio_ticket();
+    close_audio_admission();end(3);begin_closed(0x113,4,Required);open_audio_admission();
+    queued(startup_late,SoundBank,"sample","core:1",gc);pump();end(4);
+    assert(!rows() && output.find("errors=3")!=std::string::npos); // begin, refused reopen, old visit
+    output.clear();begin_startup_closed(0xffffffffU,0xffffffffU);test_max_counters();
+    emitted(SourceGeometry,"abcdefghijklmno","abcdefghijklmnopqrstuvwxyz012345678901234567890",gc);end(0xffffffffU);
 }

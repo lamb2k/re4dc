@@ -17,8 +17,16 @@ ROOM = re.compile(r'^[0-9a-f]{4}$')
 HERE = Path(__file__).resolve().parent
 
 
+def scope_name(row):
+    if 'room' in row and 'phase' not in row and isinstance(row['room'], str) and ROOM.fullmatch(row['room']):
+        return row['room']
+    if 'room' not in row and row.get('phase') == 'startup':
+        return '@startup'
+    raise ValueError('requires exactly one game room or named startup phase')
+
+
 def identity(row):
-    return tuple(row[k] for k in ('room', 'kind', 'id', 'sha256', 'provenance'))
+    return (scope_name(row), *(row[k] for k in ('kind', 'id', 'sha256', 'provenance')))
 
 
 def read_allowlist(path, baseline):
@@ -29,9 +37,10 @@ def read_allowlist(path, baseline):
             raise ValueError('allowlist schema must be 1 with an entries list')
         seen = set()
         for r in document['entries']:
-            if set(r) != {'room', 'kind', 'id', 'sha256', 'provenance', 'reason', 'owner', 'evidence'}:
+            location_field = 'phase' if scope_name(r) == '@startup' else 'room'
+            if set(r) != {location_field, 'kind', 'id', 'sha256', 'provenance', 'reason', 'owner', 'evidence'}:
                 raise ValueError('allowlist row fields differ from schema')
-            if not ROOM.fullmatch(r['room']) or not TOKEN.fullmatch(r['kind']) or not TOKEN.fullmatch(r['id']):
+            if not TOKEN.fullmatch(r['kind']) or not TOKEN.fullmatch(r['id']):
                 raise ValueError('allowlist requires exact room/kind/id; patterns are forbidden')
             if not SHA.fullmatch(r['sha256']) or r['provenance'] not in ('gc', 'unknown'):
                 raise ValueError('allowlist requires exact payload SHA256 and gc/unknown provenance')
@@ -69,6 +78,8 @@ def judge(logs, allowlist, requested):
     for name, content in logs:
         active = None
         file_visits = 0
+        startup_visits = 0
+        last_visit = 0
         for number, line in enumerate(content.splitlines(), 1):
             if 'GC-ASSET' not in line:
                 continue
@@ -80,25 +91,37 @@ def judge(logs, allowlist, requested):
                 if not prefix:
                     raise ValueError('unrecognized GC-ASSET diagnostic')
                 r = fields(line, prefix)
-                if not ROOM.fullmatch(r.get('room', '')) or not r.get('visit', '').isdigit():
+                scope = scope_name(r)
+                location_field = 'phase' if scope == '@startup' else 'room'
+                if not r.get('visit', '').isdigit() or not 0 < int(r['visit']) <= 0xffffffff:
                     raise ValueError('invalid room/visit')
-                key = (name, r['room'], int(r['visit']))
+                key = (name, scope, int(r['visit']))
                 if prefix == 'GC-ASSET-BEGIN ':
                     if active is not None or key in visits:
                         raise ValueError('nested or duplicate room visit')
-                    required = {'v', 'room', 'visit', 'wired', 'required', 'catalog', 'catalog_ok'}
+                    if key[2] <= last_visit:
+                        raise ValueError('visit serial must increase across startup and game rooms')
+                    if scope == '@startup':
+                        if file_visits or startup_visits:
+                            raise ValueError('startup must be the first and only named startup visit')
+                        startup_visits += 1
+                    elif startup_visits != 1:
+                        raise ValueError('game room requires preceding startup diagnostic coverage')
+                    last_visit = key[2]
+                    required = {'v', location_field, 'visit', 'wired', 'required', 'catalog', 'catalog_ok'}
                     if set(r) != required or int(r['wired'], 16) != REQUIRED or int(r['required'], 16) != REQUIRED:
                         raise ValueError('missing diagnostic consumer wiring')
                     if r['catalog_ok'] != '1' or not r['catalog'].isdigit():
                         raise ValueError('invalid provenance catalog')
-                    visits[key] = {'rows': set(), 'first_consumers': {c: 0 for c in CONSUMERS}, 'counts': None, 'ended': False, 'room': r['room']}
+                    visits[key] = {'rows': set(), 'first_consumers': {c: 0 for c in CONSUMERS}, 'counts': None, 'ended': False, 'scope': scope}
                     file_visits += 1
                     active = key
-                    observed.add(r['room'])
+                    if scope != '@startup':
+                        observed.add(scope)
                 elif prefix == 'GC-ASSET ':
                     if active != key:
                         raise ValueError('asset emission outside its room visit')
-                    if set(r) != {'v', 'room', 'visit', 'kind', 'id', 'sha256', 'provenance', 'consumer', 'action'}:
+                    if set(r) != {'v', location_field, 'visit', 'kind', 'id', 'sha256', 'provenance', 'consumer', 'action'}:
                         raise ValueError('asset diagnostic fields differ from schema')
                     if r['action'] != 'emit' or r['consumer'] not in CONSUMERS:
                         raise ValueError('load/ready/reserve is not draw/play evidence')
@@ -116,13 +139,13 @@ def judge(logs, allowlist, requested):
                 elif prefix == 'GC-ASSET-COUNTS ':
                     if active != key or visits[key]['counts'] is not None:
                         raise ValueError('duplicate/out-of-visit consumer counts')
-                    if set(r) != {'v', 'room', 'visit', *CONSUMERS}:
+                    if set(r) != {'v', location_field, 'visit', *CONSUMERS}:
                         raise ValueError('consumer counter fields differ from schema')
                     visits[key]['counts'] = {c: int(r[c]) for c in CONSUMERS}
                 else:
                     if active != key:
                         raise ValueError('end checkpoint without matching begin')
-                    required = {'v', 'room', 'visit', 'frame', 'wired', 'checked', 'required', 'unique', 'overflow', 'errors', 'catalog_ok'}
+                    required = {'v', location_field, 'visit', 'frame', 'wired', 'checked', 'required', 'unique', 'overflow', 'errors', 'catalog_ok'}
                     if set(r) != required:
                         raise ValueError('end checkpoint fields differ from schema')
                     if any(int(r[k], 16) != REQUIRED for k in ('wired', 'checked', 'required')):
@@ -148,8 +171,12 @@ def judge(logs, allowlist, requested):
             failures.append(f'{name}: missing end checkpoint for {active[1]} visit {active[2]}')
         if not file_visits:
             failures.append(f'{name}: missing diagnostic room coverage')
+        if startup_visits != 1:
+            failures.append(f'{name}: missing named startup diagnostic coverage')
     if not visits:
         failures.append('no complete diagnostic room visits; missing diagnostic coverage is not a pass')
+    if not observed:
+        failures.append('no diagnostic game rooms; startup alone is not route coverage')
     for room in sorted(set(requested) - observed):
         failures.append(f'{room}: requested room has no diagnostic coverage')
     for key, visit in visits.items():

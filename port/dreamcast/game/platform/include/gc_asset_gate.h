@@ -38,6 +38,11 @@ void emitted_checked(Consumer,CheckedAsset); // unlocked flush: first room use m
 // every emission then has Unknown provenance, rather than silently becoming PS2.
 bool install(const CatalogRow*, unsigned rows);
 void begin(unsigned room, unsigned visit, unsigned wired_consumers);
+// Runtime lifecycle: prepare/log with admission closed, then publish admission
+// under the existing audio mutex. Startup is a named phase with no game room.
+void begin_closed(unsigned room,unsigned visit,unsigned wired_consumers);
+void begin_startup_closed(unsigned visit,unsigned wired_consumers);
+void open_audio_admission(); // fixed state only, no logging/IO
 // digest is the hash of the actual immutable authored payload, computed at load
 // before pose/colour writes; GC lookup keys and source pointer values are not it.
 // Call only after vertices/sample key-on were accepted. Loads, reservations,

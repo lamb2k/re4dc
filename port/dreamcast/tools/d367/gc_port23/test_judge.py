@@ -17,13 +17,43 @@ EVENT = f'GC-ASSET v=1 room=0111 visit=1 kind=model id=em2a/trap sha256={DIGEST}
 END = ('GC-ASSET-COUNTS v=1 room=0111 visit=1 '
        + ' '.join(f'{c}={1 if c == "source_geometry" else 0}' for c in j.CONSUMERS)
        + '\nGC-ASSET-END v=1 room=0111 visit=1 frame=2 wired=1ff checked=1ff required=1ff unique=1 overflow=0 errors=0 catalog_ok=1')
+STARTUP = '\n'.join((BEGIN, END.replace('unique=1', 'unique=0'))).replace('room=0111', 'phase=startup')
 
 
 class JudgeTests(unittest.TestCase):
     def check(self, text, expected, required=('0111',), allow=None):
+        text = STARTUP + '\n' + text.replace('visit=1', 'visit=2')
         result = j.judge([('fixture', text)], {j.identity(ROW): ROW} if allow is None else allow, required)
         self.assertEqual(result['pass'], expected, result)
         return result
+
+    def test_startup_is_named_required_and_has_independent_exceptions(self):
+        room = '\n'.join((BEGIN, EVENT, END)).replace('visit=1', 'visit=2')
+        self.assertFalse(j.judge([('fixture', room)], {j.identity(ROW): ROW}, ['0111'])['pass'])
+        startup_row = dict(ROW);del startup_row['room'];startup_row['phase'] = 'startup'
+        startup = '\n'.join((BEGIN, EVENT, END)).replace('room=0111', 'phase=startup')
+        allow = {j.identity(ROW): ROW}
+        self.assertFalse(j.judge([('fixture', startup+'\n'+room)], allow, ['0111'])['pass'])
+        allow[j.identity(startup_row)] = startup_row
+        self.assertTrue(j.judge([('fixture', startup+'\n'+room)], allow, ['0111'])['pass'])
+        self.assertFalse(j.judge([('fixture', startup)], allow, [])['pass'])
+        for bad in (startup.replace('phase=startup', 'room=0000'),
+                    startup.replace('phase=startup', 'phase=startup room=0000'),
+                    startup.replace('phase=startup', 'phase=menu'),
+                    startup.replace('visit=1', 'visit=2')):
+            self.assertFalse(j.judge([('fixture', bad+'\n'+room)], allow, ['0111'])['pass'])
+
+    def test_startup_allowlist_cannot_borrow_room_or_grow(self):
+        startup = dict(ROW);del startup['room'];startup['phase'] = 'startup'
+        with tempfile.TemporaryDirectory() as folder:
+            current, accepted = (Path(folder)/n for n in ('current.json', 'accepted.json'))
+            accepted.write_text(json.dumps(dict(schema=1, entries=[ROW])))
+            current.write_text(json.dumps(dict(schema=1, entries=[startup])))
+            with self.assertRaises(ValueError):j.read_allowlist(current, accepted)
+            accepted.write_text(current.read_text())
+            self.assertEqual(len(j.read_allowlist(current, accepted)), 1)
+            startup['room'] = '0000';current.write_text(json.dumps(dict(schema=1, entries=[startup])))
+            with self.assertRaises(ValueError):j.read_allowlist(current, accepted)
 
     def test_exact_reviewed_gc_pass(self):
         self.check('\n'.join((BEGIN, EVENT, END)), True)
