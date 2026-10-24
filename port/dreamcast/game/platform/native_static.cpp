@@ -6355,9 +6355,10 @@ int ps2_pass(unsigned pass,float zfar){
         // pvs 2 (measurement): no set, and this frame's camera for the offline occlusion count (pvs_ceiling.py)
         std::uint32_t w[25];std::memcpy(w,ps2w.view,48);std::memcpy(w+12,P,28);std::memcpy(w+19,ps2w.viewport,24);
         std::uint32_t far_bits;std::memcpy(&far_bits,&cull_far,sizeof(far_bits));
-        re4dc_log("PS2CAM f=%u cf=%08x c=%08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x p=%08x %08x %08x %08x %08x %08x %08x vp=%08x %08x %08x %08x %08x %08x\n",
-            re4dc_ui_frame(),unsigned(far_bits),w[0],w[1],w[2],w[3],w[4],w[5],w[6],w[7],w[8],w[9],w[10],w[11],
-            w[12],w[13],w[14],w[15],w[16],w[17],w[18],w[19],w[20],w[21],w[22],w[23],w[24]);
+        // Fixed-width v2 record: 27 u32 words, 251 bytes including newline.
+        // The old labelled format exceeded the 256-byte logger and cut viewport data.
+        re4dc_log("PS2CAM2 %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x\n",
+            unsigned(re4dc_ui_frame()),unsigned(far_bits),w[0],w[1],w[2],w[3],w[4],w[5],w[6],w[7],w[8],w[9],w[10],w[11],w[12],w[13],w[14],w[15],w[16],w[17],w[18],w[19],w[20],w[21],w[22],w[23],w[24]);
     }
 #endif
 #if RE4DC_SCENERY_CONE

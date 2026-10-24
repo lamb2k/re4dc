@@ -1,0 +1,73 @@
+{
+  "status": "PASS_ACTUAL_SOURCE_FORMATTER_256B",
+  "native_sha256": "ed69961c72f07b7fe346fed77ca21f02559a7bd50cf2cd8858190fd83cee30ab",
+  "actual_call_sha256": "421814c02a1061b6ad578c893a6efd8aa2b39c95da5b06f06ea452e0e1b664db",
+  "old_call_sha256": "9387be4ad83c682dc0fcddf8276fe4f241e9a822dc436ffe5d19661fe3843875",
+  "fixed_bytes_including_newline": 251,
+  "logger_bytes": 256,
+  "cases": {
+    "old": [
+      {
+        "frame": 0,
+        "bytes": 255,
+        "stderr": "needed=255",
+        "exact_full_record": false
+      },
+      {
+        "frame": 800,
+        "bytes": 255,
+        "stderr": "needed=257",
+        "exact_full_record": false
+      },
+      {
+        "frame": 4294967295,
+        "bytes": 255,
+        "stderr": "needed=264",
+        "exact_full_record": false
+      }
+    ],
+    "fixed": [
+      {
+        "frame": 0,
+        "bytes": 251,
+        "stderr": "needed=251",
+        "exact_full_record": true
+      },
+      {
+        "frame": 800,
+        "bytes": 251,
+        "stderr": "needed=251",
+        "exact_full_record": true
+      },
+      {
+        "frame": 4294967295,
+        "bytes": 251,
+        "stderr": "needed=251",
+        "exact_full_record": true
+      }
+    ],
+    "swapped": [
+      {
+        "frame": 0,
+        "bytes": 251,
+        "stderr": "needed=251",
+        "exact_full_record": false
+      },
+      {
+        "frame": 800,
+        "bytes": 251,
+        "stderr": "needed=251",
+        "exact_full_record": false
+      },
+      {
+        "frame": 4294967295,
+        "bytes": 251,
+        "stderr": "needed=251",
+        "exact_full_record": false
+      }
+    ]
+  },
+  "malformed_controls": 5,
+  "pvs0_changed_region_identical": true,
+  "scope": "Host actual formatter/argument order; not new target or guest qualification."
+}
