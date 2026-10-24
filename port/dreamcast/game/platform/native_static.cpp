@@ -3128,6 +3128,11 @@ struct MeshDraw : Emitter {
     }
     const re4dc::room::CompactVertex12* emit_corners(const re4dc::room::Meshlet& l,const Pick& pk){
         const auto* base=package.vertices()+l.first_vertex;
+#if RE4DC_SCENERY_DEDUP==3
+        // Match corners(): refresh or clear the decoder before every early return.
+        const unsigned rep=package.repeat_count(l);
+        dd_base=rep?base:nullptr;dd_unique=l.vertex_count-rep;dd_count=l.vertex_count;
+#endif
         if(!package.indexed(l))return base;
         if(!pk.nr)return gathered; // bind/borrow/prime still run; no consumer for this pick
         // Keep the full gather for nonempty partial picks: the runtime R4SG
