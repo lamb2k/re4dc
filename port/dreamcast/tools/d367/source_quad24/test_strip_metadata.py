@@ -206,13 +206,15 @@ class Controls(unittest.TestCase):
             d=Path(tmp);review=d/'review';review.write_bytes(b'PUBLIC REVIEW FIXTURE');grant=d/'grant'
             args=types.SimpleNamespace(expected_source='1'*40,review=review,review_sha256=s.sha(review.read_bytes()),grant=grant,grant_sha256=None,out=d/'out')
             value=json.loads(json.dumps(s.grant_binding(args.expected_source,args.review_sha256,args.out)))
-            for kind in ('profile','path','caps','input','roster'):
+            for kind in ('profile','path','caps','input','roster','numeric_type','boolean_type'):
                 v=json.loads(json.dumps(value))
                 if kind=='profile':v['profile']='OLD'
                 if kind=='path':v['output']=str(d/'foreign')
                 if kind=='caps':v['limits']['strips']+=1
                 if kind=='input':v['raw_inputs']['mesh'][2]='0'*64
                 if kind=='roster':v['allowlist']=v['allowlist'][:-1]
+                if kind=='numeric_type':v['limits']['strips']=float(v['limits']['strips'])
+                if kind=='boolean_type':v['approved']=1
                 grant.write_text(json.dumps(v));args.grant_sha256=s.sha(grant.read_bytes())
                 with self.assertRaises(s.Refuse):s.authorize(args)
             grant.write_text(json.dumps(value));args.grant_sha256=s.sha(grant.read_bytes());s.authorize(args)

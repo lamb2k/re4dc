@@ -340,7 +340,7 @@ def grant_binding(source,review_sha,out):
 def authorize(args):
  if any(v is None for v in (args.grant,args.grant_sha256,args.review,args.review_sha256)):raise Refuse('NEW_ROOT_GRANT_AND_REVIEW_REQUIRED')
  grant=read_pin((str(args.grant),args.grant.stat().st_size,args.grant_sha256));read_pin((str(args.review),args.review.stat().st_size,args.review_sha256))
- if json.loads(grant)!=json.loads(json.dumps(grant_binding(args.expected_source,args.review_sha256,args.out))):raise Refuse('ROOT_GRANT_SCOPE_SOURCE_INPUTS_CAPS_MISMATCH')
+ if token(json.loads(grant))!=token(grant_binding(args.expected_source,args.review_sha256,args.out)):raise Refuse('ROOT_GRANT_SCOPE_SOURCE_INPUTS_CAPS_MISMATCH')
 
 def main():
  ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--repo',type=Path,required=True);ap.add_argument('--expected-source',required=True);ap.add_argument('--out',type=Path,required=True)
