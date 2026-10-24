@@ -2817,6 +2817,19 @@ VRAM_ROOM_ARENA_NO_TOP ?= 0
 # sub screen code sync write back line by line (ocbwb) instead of KOS's whole-cache address-array path for ranges
 # >= 65560 bytes (platform/cache_lines.h). Cause candidate for the console-only 0x0c8a8001 st1_1 overlay fault.
 CACHE_LINEWISE ?= 0
+# FOLIAGE_MIP24=1 (lane mip-finish24 2026-10-24, render only, default 0 = image unchanged; needs WORLD_RECT21=1 and the
+# fol24 data set after mip22b): the rect21 scoped table binds the 86 foliage / cut-out rows that fol24 re-encodes with
+# coverage-preserving alpha mip chains (tools/d367/foliagemip22). Without fol24 those keys refuse the rect21 adapter.
+FOLIAGE_MIP24 ?= 0
+ifneq ($(filter-out 0 1,$(FOLIAGE_MIP24)),)
+$(error FOLIAGE_MIP24 must be 0 or 1)
+endif
+ifeq ($(FOLIAGE_MIP24),1)
+ifneq ($(WORLD_RECT21),1)
+$(error FOLIAGE_MIP24=1 needs WORLD_RECT21=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FOLIAGE_MIP24=1
+endif
 ifneq ($(CACHE_LINEWISE),0)
 $(OBJDIR)/platform/misc.o $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/subscreen_backing.o: PLATFORM_CPPFLAGS += -DRE4DC_CACHE_LINEWISE=1
 endif
