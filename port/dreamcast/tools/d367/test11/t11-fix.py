@@ -674,6 +674,14 @@ DATA['sg109'] = {'dc/native/r109/ps2-world.r4sg': SG109D + '/r109/ps2-world.r4sg
 DATA['boss18g50r'] = {k: v for k, v in DATA['boss18g50'].items() if k != 'tex'}
 G18HD = os.environ.get('G18HD', '/root/re4data/private/garr18-head-20261019')
 DATA['garr18h'] = {'em/pl00.drs': G18HD + '/pl00.drs', 'em/pl08.drs': G18HD + '/pl08.drs'}
+# pmleon24 (lane purge-motion24 10-24, GC asset purge, data only): garr18h's pl00 / pl08 with Leon's FCV/SEQ motion from the
+# PS2 BIO4DAT.AFS pl00.dat / pl08.dat (tools/d367/motion/ps2_motion.py leon): 84 members already PS2-identical, 5 replaced
+# in place (FCV 23 empty, SEQ 59 last key 1 frame earlier, FCV 87 / 101 / 117 PS2 re-keyed); offsets and all other bytes
+# kept. After garr18h. Gates: bell-trg / door103 / shoot101 trace pairs STRICT, Leon run + aim stills pixel-identical.
+# Private store copy: re4-assets-private/pmleon24-20261024.
+PMLEON24D = os.environ.get('PMLEON24D', '/root/re4data/private/pmleon24-20261024')
+if os.path.isdir(PMLEON24D):
+    DATA['pmleon24'] = {'em/pl00.drs': PMLEON24D + '/em/pl00.drs', 'em/pl08.drs': PMLEON24D + '/em/pl08.drs'}
 # Lane engine19 (10-19; ENGINE_PREVIEW, the enemy logic engine): rc19 = one room data file per room,
 # dc/native/<room>/room.r4rc (tools/enginebake/room_compile.py, R4RC v1 GRID + OCCL v2 wall-check occluders; MANIFEST.tsv
 # beside them). Read only by an ENGINE_PREVIEW=1 or ENEMY_VIS_CULL program; knob-off programs never open it. Private store
