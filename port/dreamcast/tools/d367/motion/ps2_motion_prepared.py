@@ -69,9 +69,12 @@ class Prepared:
         self.first = min(o for o in self.offs if o)
         self.tab = {}
         for t in (b'ESQ\0', b'NTR\0', b'MTC\0'):
-            self.tab[t] = self.offs[self.tags.index(t)]
+            if t in self.tags:
+                self.tab[t] = self.offs[self.tags.index(t)]
         self.boundary = min(self.tab.values())
-        assert self.tags[-3:] == [b'ESQ\0', b'NTR\0', b'MTC\0'], self.tags[-3:]
+        order = sorted(self.tab, key=self.tab.get)
+        assert self.tags[n - len(order):] == order and order[-1] == b'MTC\0', self.tags[-3:]
+        self.tspan = {t: (self.tab[t], ([self.tab[u] for u in order[k + 1:]] + [rel])[0]) for k, t in enumerate(order)}
         self.starts = sorted(set(o for o in self.offs if self.first <= o < self.boundary))
         self.ends = self.starts[1:] + [self.boundary]
         mo = self.tab[b'MTC\0']
@@ -175,11 +178,13 @@ def rewrite(a):
             raise SystemExit('archive offset %#x points inside a resized member %#x' % (x, s))
         return starts_new[k] + (x - s)
     # tables: same sizes, rows remapped
-    esq_o, ntr_o, mtc_o = P.tab[b'ESQ\0'], P.tab[b'NTR\0'], P.tab[b'MTC\0']
-    esq = bytearray(P.b[esq_o:ntr_o]); ntr = bytearray(P.b[ntr_o:mtc_o]); mtc = bytearray(P.b[mtc_o:P.rel])
+    tb = {t: bytearray(P.b[a_:b_]) for t, (a_, b_) in P.tspan.items()}
+    esq, ntr, mtc = tb.get(b'ESQ\0'), tb.get(b'NTR\0'), tb[b'MTC\0']
     rel_desc = P.b[P.rel:]
-    final = boundary_new + len(esq) + len(ntr) + len(mtc) + len(rel_desc)
+    final = boundary_new + sum(len(v) for v in tb.values()) + len(rel_desc)
     for t, stride, fields in ((esq, 12, (0,)), (ntr, 12, (0, 4, 8))):
+        if t is None:
+            continue
         cnt = U32(t, 12)
         assert U32(t, 16) == stride
         for r in range(cnt):
@@ -187,8 +192,10 @@ def rewrite(a):
                 o = 32 + stride * r + f
                 struct.pack_into('<I', t, o, mapped(U32(t, o)))
         struct.pack_into('<I', t, 20, zlib.crc32(bytes(t[32:32 + stride * cnt])) & 0xffffffff)
-    struct.pack_into('<I', esq, 24, final)
-    struct.pack_into('<I', ntr, 28, final)
+    if esq is not None:
+        struct.pack_into('<I', esq, 24, final)
+    if ntr is not None:
+        struct.pack_into('<I', ntr, 28, final)
     rows = [(starts_new[k], r) for k, (_, _, _, r) in enumerate(new_members) if r]
     cap = (len(mtc) - 32) // 20
     if len(rows) > cap:
@@ -198,7 +205,9 @@ def rewrite(a):
     struct.pack_into('<I', mtc, 12, len(rows))
     struct.pack_into('<I', mtc, 20, zlib.crc32(tbl) & 0xffffffff)
     struct.pack_into('<I', mtc, 24, final)
-    out += esq + ntr + mtc + rel_desc
+    for t in sorted(tb, key=P.tab.get):
+        out += tb[t]
+    out += rel_desc
     assert len(out) == final
     struct.pack_into('<I', out, 4, final - 64)
     for i, o in enumerate(P.offs):
@@ -281,6 +290,8 @@ def verify(a):
                 bad.append('slot %d %s: non-motion member changed' % (i, t))
             ok['other'] += 1
     for t, stride, fields in ((b'ESQ\0', 12, (0,)), (b'NTR\0', 12, (0, 4, 8))):
+        if t not in new.tab:
+            continue
         no_, oo_ = new.tab[t], old.tab[t]
         cnt = U32(nb, no_ + 12)
         if zlib.crc32(nb[no_ + 32:no_ + 32 + stride * cnt]) & 0xffffffff != U32(nb, no_ + 20):
@@ -294,9 +305,9 @@ def verify(a):
     if zlib.crc32(nb[mo + 32:mo + 32 + 20 * U32(nb, mo + 12)]) & 0xffffffff != U32(nb, mo + 20):
         bad.append('MTC crc')
     for t in (b'ESQ\0', b'MTC\0'):
-        if U32(nb, new.tab[t] + 24) != len(nb):
+        if t in new.tab and U32(nb, new.tab[t] + 24) != len(nb):
             bad.append('%s archive size' % t)
-    if U32(nb, new.tab[b'NTR\0'] + 28) != len(nb):
+    if b'NTR\0' in new.tab and U32(nb, new.tab[b'NTR\0'] + 28) != len(nb):
         bad.append('NTR archive size')
     if nb[new.rel:] != ob[old.rel:]:
         bad.append('REL descriptor changed')
