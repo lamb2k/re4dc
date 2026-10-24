@@ -1,0 +1,1 @@
+raise RuntimeError('untrusted site executed')

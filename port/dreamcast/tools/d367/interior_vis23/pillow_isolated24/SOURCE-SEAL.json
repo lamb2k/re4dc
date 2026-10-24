@@ -1,0 +1,67 @@
+{
+  "status": "HOST_SOURCE_CONTROLS_ONLY_NO_GUEST",
+  "members": {
+    "HOST-CONTROLS.json": {
+      "size": 12920,
+      "sha256": "838281a44cab517e639ede47c8c0baa5f5e2256c89fad75796ded7f78fd83e01"
+    },
+    "host_controls.py": {
+      "size": 5188,
+      "sha256": "d6f71449b511286e0db7377c765eb9a4741907b083b42d36be71e3ef72c3283e"
+    },
+    "owned-help-path/bounded-launch.json": {
+      "size": 515,
+      "sha256": "583cf62a23523e0852fb5397e45e2fa8529c0e568216b1d7f5c77db074a317e2"
+    },
+    "OWNED-HOST-SCRATCH.json": {
+      "size": 206,
+      "sha256": "cc6cb728e5cec65786c2b0e6ed66cd923e0155bd42c0497b7c779e7f7b5fc3e6"
+    },
+    "PILLOW-PINS.json": {
+      "size": 17990,
+      "sha256": "e7027f68abb393a897c405c95465cc2a701a948f8ec4b990da460a18b9a492d4"
+    },
+    "pillow_launcher.py": {
+      "size": 5077,
+      "sha256": "42cdc98cb3f2611a02afb6b0d8dc00cc5df5c6ee0450168558fd0feceab39e78"
+    },
+    "pin-installed.py": {
+      "size": 1487,
+      "sha256": "57461033b5b96d24dbed6fdf05cd50e8696ebf63d527da1f8cf84413fbcd39dd"
+    },
+    "README.md": {
+      "size": 3474,
+      "sha256": "98abfbb2c30f015490ae8262d42adf4fdf70d00698ddf2b99c0e0456181ccc3d"
+    },
+    "seal.py": {
+      "size": 581,
+      "sha256": "6e8e2d7acfe6922b407604e336c01583b39b48a2142f615bd753830660d5d344"
+    },
+    "untrusted-site/PIL.py": {
+      "size": 45,
+      "sha256": "70f435bbb260e13b6c79669925bd8f9821694958c6f093b74075f7189af22e2d"
+    }
+  },
+  "unchanged_helpers": {
+    "python": {
+      "path": "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "size": 104952,
+      "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+    },
+    "bound": {
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\stat-bytes23\\census-bound-run.py",
+      "size": 2438,
+      "sha256": "e3f31e4a797b934543ac9e598a0e6350965533bdfe12299771200d11f183629c"
+    },
+    "harness": {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-motion24-qa-memory-v2-dbqczoc8\\off\\source\\port\\dreamcast\\tools\\d367\\fullplay\\fp_run.py",
+      "size": 15608,
+      "sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747"
+    },
+    "capture_template": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\d367-harness-par\\capture_ui_vram.py",
+      "size": 3725,
+      "sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57"
+    }
+  }
+}

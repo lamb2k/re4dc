@@ -1,0 +1,126 @@
+{
+  "status": "HOST_ONLY_PASS_NO_GUEST_NO_CAPTURED_IMAGES",
+  "checks": [
+    {
+      "name": "rgb-png",
+      "argv": [
+        "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-I",
+        "-S",
+        "-B",
+        "-X",
+        "pycache_prefix=C:\\Game Dev\\Emulators\\codex-lanes\\gc-motion24\\pillow-isolated-prep-v1\\absent-rgb-png-cache",
+        "C:\\Game Dev\\Emulators\\codex-lanes\\gc-motion24\\pillow-isolated-prep-v1\\pillow_launcher.py",
+        "--self-test"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"HOST_RGB_PNG_PASS_NO_GUEST\",\n  \"pillow\": \"12.3.0\",\n  \"png_bytes\": 76,\n  \"rgb_sha256\": \"b451c25ad712b47c55ec4fc27950bed8f757aace049b82e2afc8e4037bc4614a\",\n  \"loaded_PIL\": [\n    \"PIL\",\n    \"PIL.BmpImagePlugin\",\n    \"PIL.ExifTags\",\n    \"PIL.GifImagePlugin\",\n    \"PIL.GimpGradientFile\",\n    \"PIL.GimpPaletteFile\",\n    \"PIL.Image\",\n    \"PIL.ImageChops\",\n    \"PIL.ImageColor\",\n    \"PIL.ImageFile\",\n    \"PIL.ImageMath\",\n    \"PIL.ImageMode\",\n    \"PIL.ImageOps\",\n    \"PIL.ImagePalette\",\n    \"PIL.ImageSequence\",\n    \"PIL.JpegImagePlugin\",\n    \"PIL.JpegPresets\",\n    \"PIL.PaletteFile\",\n    \"PIL.PngImagePlugin\",\n    \"PIL.PpmImagePlugin\",\n    \"PIL.TiffTags\",\n    \"PIL._binary\",\n    \"PIL._deprecate\",\n    \"PIL._imaging\",\n    \"PIL._imagingmath\",\n    \"PIL._util\",\n    \"PIL._version\"\n  ],\n  \"site_imported\": false,\n  \"cache_prefix_exists\": false\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "isolated-env",
+      "argv": [
+        "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-I",
+        "-S",
+        "-B",
+        "-X",
+        "pycache_prefix=C:\\Game Dev\\Emulators\\codex-lanes\\gc-motion24\\pillow-isolated-prep-v1\\absent-isolated-env-cache",
+        "C:\\Game Dev\\Emulators\\codex-lanes\\gc-motion24\\pillow-isolated-prep-v1\\pillow_launcher.py",
+        "--self-test"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"HOST_RGB_PNG_PASS_NO_GUEST\",\n  \"pillow\": \"12.3.0\",\n  \"png_bytes\": 76,\n  \"rgb_sha256\": \"b451c25ad712b47c55ec4fc27950bed8f757aace049b82e2afc8e4037bc4614a\",\n  \"loaded_PIL\": [\n    \"PIL\",\n    \"PIL.BmpImagePlugin\",\n    \"PIL.ExifTags\",\n    \"PIL.GifImagePlugin\",\n    \"PIL.GimpGradientFile\",\n    \"PIL.GimpPaletteFile\",\n    \"PIL.Image\",\n    \"PIL.ImageChops\",\n    \"PIL.ImageColor\",\n    \"PIL.ImageFile\",\n    \"PIL.ImageMath\",\n    \"PIL.ImageMode\",\n    \"PIL.ImageOps\",\n    \"PIL.ImagePalette\",\n    \"PIL.ImageSequence\",\n    \"PIL.JpegImagePlugin\",\n    \"PIL.JpegPresets\",\n    \"PIL.PaletteFile\",\n    \"PIL.PngImagePlugin\",\n    \"PIL.PpmImagePlugin\",\n    \"PIL.TiffTags\",\n    \"PIL._binary\",\n    \"PIL._deprecate\",\n    \"PIL._imaging\",\n    \"PIL._imagingmath\",\n    \"PIL._util\",\n    \"PIL._version\"\n  ],\n  \"site_imported\": false,\n  \"cache_prefix_exists\": false\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "actual-wrapper-help",
+      "argv": [
+        "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-I",
+        "-S",
+        "-B",
+        "-X",
+        "pycache_prefix=C:\\Game Dev\\Emulators\\codex-lanes\\gc-motion24\\pillow-isolated-prep-v1\\absent-actual-wrapper-help-cache",
+        "C:\\Game Dev\\Emulators\\codex-lanes\\gc-motion24\\pillow-isolated-prep-v1\\pillow_launcher.py",
+        "--",
+        "C:\\Game Dev\\Emulators\\codex-lanes\\stat-bytes23\\census-bound-run.py",
+        "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-motion24-qa-memory-v2-dbqczoc8\\off\\source\\port\\dreamcast\\tools\\d367\\fullplay\\fp_run.py",
+        "--cap",
+        "C:\\Game Dev\\Emulators\\codex-lanes\\gc-motion24\\pillow-isolated-prep-v1\\owned-help-path",
+        "--syms",
+        "0 0 0",
+        "--seconds",
+        "45",
+        "--period",
+        "25",
+        "--help"
+      ],
+      "returncode": 0,
+      "stdout": "usage: fp_run.py [-h] [--disc DISC] --cap CAP --syms SYMS [--seconds SECONDS]\n                 [--vmu VMU] [--keys KEYS] [--stop STOP] [--grace GRACE]\n                 [--period PERIOD] [--name NAME] [--base BASE] [--warp WARP]\n                 [--pad PAD] [--w11 W11] [--align]\n\noptions:\n  -h, --help         show this help message and exit\n  --disc DISC\n  --cap CAP\n  --syms SYMS\n  --seconds SECONDS\n  --vmu VMU\n  --keys KEYS\n  --stop STOP\n  --grace GRACE\n  --period PERIOD\n  --name NAME\n  --base BASE        fp_master.sh base dir instead of --disc: its track03 +\n                     this segment fixtures\n  --warp WARP\n  --pad PAD\n  --w11 W11          /cd/dc/w11.txt fixture (W11_FIXTURE twin: die / save /\n                     file / mes)\n  --align            hwmodel Flycast (HW_FLYCAST), interpreter +\n                     HWTRACE_ALIGN=1: misaligned guest accesses (an address\n                     error on a Dreamcast, performed silently by Flycast) go\n                     to hwtrace.log\n",
+      "stderr": ""
+    },
+    {
+      "name": "actual-unchanged-bound-no-guest",
+      "state": {
+        "harness": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-motion24-qa-memory-v2-dbqczoc8\\off\\source\\port\\dreamcast\\tools\\d367\\fullplay\\fp_run.py",
+        "harness_sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747",
+        "deadline_seconds": 55,
+        "deadline_fired": false,
+        "expected_executable": "C:\\Flycast-Evidence\\re4-dreamcast\\flycast-console-bin\\flycast-console.exe",
+        "expected_executable_sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a"
+      },
+      "pass": true
+    },
+    {
+      "name": "capture-template-compiles-no-call",
+      "pass": true
+    },
+    {
+      "name": "adjacent-valid-hash-cache-ignored",
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"HOST_RGB_PNG_PASS_NO_GUEST\",\n  \"pillow\": \"12.3.0\",\n  \"png_bytes\": 76,\n  \"rgb_sha256\": \"b451c25ad712b47c55ec4fc27950bed8f757aace049b82e2afc8e4037bc4614a\",\n  \"loaded_PIL\": [\n    \"PIL\",\n    \"PIL.BmpImagePlugin\",\n    \"PIL.ExifTags\",\n    \"PIL.GifImagePlugin\",\n    \"PIL.GimpGradientFile\",\n    \"PIL.GimpPaletteFile\",\n    \"PIL.Image\",\n    \"PIL.ImageChops\",\n    \"PIL.ImageColor\",\n    \"PIL.ImageFile\",\n    \"PIL.ImageMath\",\n    \"PIL.ImageMode\",\n    \"PIL.ImageOps\",\n    \"PIL.ImagePalette\",\n    \"PIL.ImageSequence\",\n    \"PIL.JpegImagePlugin\",\n    \"PIL.JpegPresets\",\n    \"PIL.PaletteFile\",\n    \"PIL.PngImagePlugin\",\n    \"PIL.PpmImagePlugin\",\n    \"PIL.TiffTags\",\n    \"PIL._binary\",\n    \"PIL._deprecate\",\n    \"PIL._imaging\",\n    \"PIL._imagingmath\",\n    \"PIL._util\",\n    \"PIL._version\"\n  ],\n  \"site_imported\": false,\n  \"cache_prefix_exists\": false\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "cache-bytes-preserved-no-sentinel",
+      "caches": {
+        "C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\PIL\\__pycache__\\Image.cpython-312.pyc": "1aecfb2904a69ac3de2a274484e792b947009b5986105c96bab576927bca6743",
+        "C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\PIL\\__pycache__\\PngImagePlugin.cpython-312.pyc": "50520b868b6c9634bdd8ca37b705ebee1971cdc4c8d49db85074ab2b1efd8d64",
+        "C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\PIL\\__pycache__\\_version.cpython-312.pyc": "e9cf11ad8e57f61194af151bea0649dfd0b27e8605c75401b8bcdb25f06fab9c",
+        "C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\PIL\\__pycache__\\__init__.cpython-312.pyc": "e2cea424c91c98db1479783b68aec0a234409f42d10643f6ade0e2f5ca39d5f6"
+      },
+      "pass": true
+    },
+    {
+      "name": "mutated-__init__.py",
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\cache-copy\\pillow_launcher.py\", line 93, in <module>\n    if __name__=='__main__':main()\n                            ^^^^^^\n  File \"C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\cache-copy\\pillow_launcher.py\", line 82, in main\n    m=install(pinpath)\n      ^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\cache-copy\\pillow_launcher.py\", line 58, in install\n    for name,pin in m['package_files'].items():checked(root/name,pin)\n                                               ^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\cache-copy\\pillow_launcher.py\", line 11, in checked\n    raise RuntimeError('pinned bytes changed: '+str(path))\nRuntimeError: pinned bytes changed: C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\PIL\\__init__.py\n"
+    },
+    {
+      "name": "mutated-Image.py",
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\cache-copy\\pillow_launcher.py\", line 93, in <module>\n    if __name__=='__main__':main()\n                            ^^^^^^\n  File \"C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\cache-copy\\pillow_launcher.py\", line 82, in main\n    m=install(pinpath)\n      ^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\cache-copy\\pillow_launcher.py\", line 58, in install\n    for name,pin in m['package_files'].items():checked(root/name,pin)\n                                               ^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\cache-copy\\pillow_launcher.py\", line 11, in checked\n    raise RuntimeError('pinned bytes changed: '+str(path))\nRuntimeError: pinned bytes changed: C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\PIL\\Image.py\n"
+    },
+    {
+      "name": "mutated-_imaging.cp312-win_amd64.pyd",
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\cache-copy\\pillow_launcher.py\", line 93, in <module>\n    if __name__=='__main__':main()\n                            ^^^^^^\n  File \"C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\cache-copy\\pillow_launcher.py\", line 82, in main\n    m=install(pinpath)\n      ^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\cache-copy\\pillow_launcher.py\", line 58, in install\n    for name,pin in m['package_files'].items():checked(root/name,pin)\n                                               ^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\cache-copy\\pillow_launcher.py\", line 11, in checked\n    raise RuntimeError('pinned bytes changed: '+str(path))\nRuntimeError: pinned bytes changed: C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\PIL\\_imaging.cp312-win_amd64.pyd\n"
+    },
+    {
+      "name": "extra-module",
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\cache-copy\\pillow_launcher.py\", line 93, in <module>\n    if __name__=='__main__':main()\n                            ^^^^^^\n  File \"C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\cache-copy\\pillow_launcher.py\", line 82, in main\n    m=install(pinpath)\n      ^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\lambd\\AppData\\Local\\Temp\\pillow-only-host-qpkrh2_6\\cache-copy\\pillow_launcher.py\", line 57, in install\n    if seen!=set(m['package_files']):raise RuntimeError('package membership changed')\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: package membership changed\n"
+    },
+    {
+      "name": "existing-cache-prefix-refused",
+      "stderr": "Traceback (most recent call last):\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\gc-motion24\\pillow-isolated-prep-v1\\pillow_launcher.py\", line 93, in <module>\n    if __name__=='__main__':main()\n                            ^^^^^^\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\gc-motion24\\pillow-isolated-prep-v1\\pillow_launcher.py\", line 82, in main\n    m=install(pinpath)\n      ^^^^^^^^^^^^^^^^\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\gc-motion24\\pillow-isolated-prep-v1\\pillow_launcher.py\", line 44, in install\n    raise RuntimeError('Requires absent fresh -X pycache_prefix=absolute-path')\nRuntimeError: Requires absent fresh -X pycache_prefix=absolute-path\n",
+      "pass": true
+    }
+  ],
+  "count": 12
+}
