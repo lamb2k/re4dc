@@ -103,6 +103,10 @@ class Controls(unittest.TestCase):
         self.unknown(c.groups(results[:2],'e'*64),'THREE_COMPLETE_PARTITIONS')
         self.unknown(c.groups((results[0],)*3,'e'*64),'THREE_DISTINCT_CELL_DOMAINS')
         other=self.run_case((True,));self.unknown(c.groups((results[0],results[1],other),'e'*64))
+    def test_same_numeric_domains_with_distinct_bindings_are_not_three_domains(self):
+        inv=self.inv();results=tuple(c.evaluate(inv,replace(self.eyes(),source_binding_sha256=h*64),(self.assignment(),),c.Budget()) for h in ('a','b','c'))
+        for result in results:self.positive(result)
+        self.unknown(c.groups(results,'e'*64),'THREE_DISTINCT_CELL_DOMAINS')
     def test_stale_or_forged_metadata_cannot_change_group_signature(self):
         results=tuple(self.run_case((False,True),r) for r in (F(1,100),F(1,200),F(1,300)))
         r=results[0];proof=r.proofs[1]

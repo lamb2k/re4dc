@@ -266,7 +266,7 @@ def groups(results, material_sha256):
         parents=_inventory(inv)
         if any(r.partition.inventory != inv or len(r.proofs)!=len(parents) for r in results):
             raise Refuse('IDENTICAL_ORIGINAL_INVENTORY')
-        if len({r.partition.eyes for r in results}) != 3:
+        if len({(r.partition.eyes.low,r.partition.eyes.high) for r in results}) != 3:
             raise Refuse('THREE_DISTINCT_CELL_DOMAINS')
         masks={}
         for i,parent in enumerate(parents):
