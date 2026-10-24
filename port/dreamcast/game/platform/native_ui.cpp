@@ -532,7 +532,13 @@ void gca_tex_bytes(void*,const re4dc::texture::Package* package,std::uint32_t of
     if(!offset){re4dc_gcasset::digest_begin(h.stream);h.cursor=0;h.bad=false;}   // a (re)open restarts the member
     if(h.bad)return;
     if(offset!=h.cursor){h.bad=true;return;}
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+    const unsigned long long hash_t0=timer_us_gettime64();
+#endif
     re4dc_gcasset::digest_update(h.stream,data,unsigned(n));h.cursor+=unsigned(n);
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+    GcaFpProf::bytes+=n;GcaFpProf::bind_us+=timer_us_gettime64()-hash_t0;   // streamed: fp_bytes/bind_us = hashed bytes/us
+#endif
 }
 void gca_tex_gap(void*,const re4dc::texture::Package* package,file_t file,std::uint32_t base,std::uint32_t upto){
     auto& h=gca_tex_hash;
