@@ -69,4 +69,25 @@ authorized GC room hook; owned projection/mutants preserve the incoming d5c byte
 Open: full linked code/data/BSS and heap/KOS budget, runtime queue capacity and
 stack high-water, actual provider map, OFF image identity, H2/TEXCHK/VRAM/GDEMU,
 strict complete consumer coverage and terminal producer quiescence. Current
-SourceGeometry/Weapon bits remain unwired and Motion is proposed/unimplemented.
+SourceGeometry/Weapon/Motion bits remain unwired. Protocol v2 requires Motion
+explicitly but provides no Motion producer or ancestry proof.
+
+Successor repricing inputs (no new target run)
+-------------------------------------------
+
+Comparing the actual retained156 compiler dependency hashes with the current
+source requires recompiling14 of17 selected ON units: coarse_actor,
+native_actor_fast, native_ui, native_model, model_bridge, ui_bridge, audio_aica,
+native_movie, src/game/dvd and all five gc_asset helpers. Native_movie_stream.c,
+src/game/model and src/game/read have unchanged compiler inputs; reuse still
+requires identical command, dependency and object hashes through the harness.
+
+The directly changed runtime inputs are gc_asset_gate.cpp, gc_asset_members.cpp,
+native_actor_fast.cpp, native_model.cpp, native_ui.cpp, gc_asset_gate.h,
+gc_asset_members.h, gc_asset_actor.h and gc_asset_actor_select.inc. Price the
+four parallel Frame receipts (48B SH4 static assertion), tenth counter/name
+pointer (nominal4+4B before alignment), v2 report/formatter/consumer loops,
+raw/class/refusal scopes and member_contains. Actual code/data/BSS, queue node
+layout and compiler self-stack must be measured again; x86 host sections do not
+qualify console memory. Gate0 preprocessed token identity remains covered by
+the host controls; current OFF object/image identity is still unqualified.

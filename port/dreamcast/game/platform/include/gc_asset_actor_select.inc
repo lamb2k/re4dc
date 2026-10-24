@@ -110,11 +110,16 @@ extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_select(const Re4dcModelP
 extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_main_select(const Re4dcModelPart* part,const re4dc_gcasset::SourceUse* previous){
     using namespace re4dc_gcasset;
     if(!part)return {};
-    (void)previous;
     const ReplayUse saved=replay_use;
-    if(saved.serial!=0xffffffffU && !saved.payload)return {};
+    // Keep consumer attribution when ancestry is refused. Replay owns its
+    // frozen class; only a synchronous call may use the matching current class.
+    const unsigned mask=saved.serial!=0xffffffffU?saved.mask:
+        (previous && previous->model==part->model && previous->info==part->info && previous->mask?
+            previous->mask:gcasset_actor_consumer_mask(*part));
+    const SourceUse unknown{0,mask,part->model,part->info,nullptr};
+    if(saved.serial!=0xffffffffU && !saved.payload)return unknown;
     Re4dcActorSource source{};
-    if(!re4dc_actor_model_source(part->info,&source))return {};
+    if(!re4dc_actor_model_source(part->info,&source))return unknown;
     // Array-less parts consume the authenticated source via the existing lazy
     // skin path. Explicit arrays need an exact original-array match; an alien
     // or merely prepared pointer may not inherit a replacement descriptor.
@@ -127,6 +132,6 @@ extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_main_select(const Re4dcM
     // UV/color/weight/shape extents and their derivations are authenticated.
     // A complete stream plus position/normal bounds is insufficient. nTex is
     // not a UV extent, and an address prefix cannot supply the missing proof.
-    return {};
+    return unknown;
 }
 #endif

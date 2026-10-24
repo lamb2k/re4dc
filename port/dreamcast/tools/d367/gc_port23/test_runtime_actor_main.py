@@ -111,7 +111,7 @@ struct Re4dcActorSource{const unsigned char*positions,*normals;unsigned position
 Re4dcActorSource src{};
 extern "C" int re4dc_actor_model_source(const void*,Re4dcActorSource*out){*out=src;return 1;}
 extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**data){*data=nullptr;return 0x00100000U;}
-extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned){return 0;}
+extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned){return 1;}
 struct Chunk{unsigned position_count=1,normal_count=1,palette_count=1,uv_bytes=4,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};
 struct RegistryView{unsigned geometry_count=1;}registry;Chunk chunks[1];Chunk registry_gview(unsigned g){return chunks[g];}PayloadProof gcasset_registry[2];
 ''' + selection + r'''
@@ -175,7 +175,8 @@ struct Re4dcActorSource{const unsigned char*positions,*normals;unsigned position
 Re4dcActorSource current_source{};bool source_live=true;unsigned resolutions;
 extern "C" int re4dc_actor_model_source(const void*,Re4dcActorSource*out){assert(!sq);++resolutions;*out=current_source;return source_live;}
 extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**data){*data=nullptr;return 0x00100000U;}
-extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned){return 0;}
+unsigned weapon_role=1;
+extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned){return weapon_role;}
 struct Chunk{unsigned position_count=1,normal_count=1,palette_count=1,uv_bytes=4,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};
 struct RegistryView{unsigned geometry_count=1;}registry;Chunk chunks[1];Chunk registry_gview(unsigned g){return chunks[g];}PayloadProof gcasset_registry[2];
 ''' + selection + r'''
@@ -216,7 +217,7 @@ void clear_frames(){++frame_serial;}
 int main(){assert(install(nullptr,0));begin(0x111,1,Required);int model,info;unsigned char replacement[512]={51},original[536]={};
  auto&c=chunks[0];c.positions=replacement+64;c.normals=replacement+128;c.uv=replacement+144;c.stream=replacement+160;c.weights=replacement+256;assert(payload_capture(gcasset_registry[0],&registry,replacement,sizeof replacement));
  put(original,0,1);put(original,16,24);put(original,20,0x004e4942);assert(member_adopt(&original,original,sizeof original,true));const unsigned char*bin=original+24;assert(member_capture(bin));ModelMember member;assert(member_lookup(bin,&member));
- SourceUse outer{member.serial,1U<<SourceGeometry,&model,&info};Re4dcModelPart p{&model,&info,c.stream,c.uv,32,1,1};p.projection[5]=-1;p.projection[6]=-2;
+ SourceUse outer{member.serial,(1U<<SourceGeometry)|(1U<<Weapon),&model,&info};Re4dcModelPart p{&model,&info,c.stream,c.uv,32,1,1};p.projection[5]=-1;p.projection[6]=-2;
  current_source={c.positions,c.normals,1,1,1,0};source_use=outer;
  // Main/fallback replacement must replace an ambient original BIN context.
  assert(actual_fallback(p) && closes==1);flush();assert(source_use.serial==outer.serial && source_use.payload==nullptr);assert(logs.find("kind=geometry")!=std::string::npos && logs.find("kind=model")==std::string::npos);end(1);begin(0x111,2,Required);
@@ -232,15 +233,15 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);int model,info;uns
  clear_frames();logs.clear();unsigned char alien[64]{};p.positions=alien;p.normals=alien;assert(re4dc_actor_submit(&p));flush();assert(logs.find("unbound-accepted-model")!=std::string::npos);p.positions=p.normals=nullptr;
  // Raw generic fallback stays unknown even with matching model/info and
  // complete stream/position/normal spans: UV/color/weights/shape are unproved.
- clear_frames();logs.clear();current_source={bin+64,bin+128,1,1,1,0};p.stream=bin+160;p.uv=bin+144;assert(re4dc_actor_submit(&p));flush();assert(logs.find("unbound-accepted-model")!=std::string::npos && logs.find("kind=model")==std::string::npos);
+ clear_frames();logs.clear();current_source={bin+64,bin+128,1,1,1,0};p.stream=bin+160;p.uv=bin+144;assert(re4dc_actor_submit(&p));flush();assert(logs.find("unbound-accepted-model")!=std::string::npos && logs.find("kind=model")==std::string::npos && logs.find("consumer=3")!=std::string::npos);
  assert(member_contains(member.serial,bin+480,32) && !member_contains(member.serial,bin+481,32));
  clear_frames();logs.clear();p.stream=bin+500;assert(re4dc_actor_submit(&p));flush();assert(logs.find("unbound-accepted-model")!=std::string::npos);p.stream=bin+160;
  clear_frames();logs.clear();current_source.normals=alien;assert(re4dc_actor_submit(&p));flush();assert(logs.find("unbound-accepted-model")!=std::string::npos);current_source.normals=bin+128;
- clear_frames();defer=true;assert(re4dc_actor_submit(&p));assert(!queued.serial && !queued.payload);defer=false;current_source={c.positions,c.normals,1,1,1,0};logs.clear();{ReplayScope replay(member.serial,1U<<SourceGeometry);assert(re4dc_actor_submit(&p));}flush();assert(logs.find("unbound-accepted-model")!=std::string::npos);current_source={bin+64,bin+128,1,1,1,0};
+ clear_frames();defer=true;assert(re4dc_actor_submit(&p));assert(!queued.serial && !queued.payload && queued.mask==outer.mask);defer=false;current_source={c.positions,c.normals,1,1,1,0};logs.clear();weapon_role=0;source_use={0,1U<<SourceGeometry,&model,&info};{ReplayScope replay(0,queued.mask);assert(re4dc_actor_submit(&p));}flush();assert(logs.find("unbound-accepted-model")!=std::string::npos && logs.find("consumer=3")!=std::string::npos);weapon_role=1;source_use=outer;current_source={bin+64,bin+128,1,1,1,0};
  clear_frames();logs.clear();int other_info;outer.info=&other_info;source_use=outer;assert(re4dc_actor_submit(&p));flush();assert(logs.find("unbound-accepted-model")!=std::string::npos);outer.info=&info;source_use=outer;
  // Same Frame key after replacement generation change must fail BOTH the
  // actual UI acknowledgement and the explicit ActorSourceScope path.
- clear_frames();logs.clear();current_source={c.positions,c.normals,1,1,1,0};p.stream=c.stream;p.uv=c.uv;assert(re4dc_actor_submit(&p));flush();logs.clear();payload_retire(gcasset_registry[0]);replacement[0]=52;assert(payload_capture(gcasset_registry[0],&registry,replacement,sizeof replacement));assert(re4dc_actor_submit(&p));flush();assert(logs.find("unbound-accepted-model")!=std::string::npos);
+ clear_frames();logs.clear();current_source={c.positions,c.normals,1,1,1,0};p.stream=c.stream;p.uv=c.uv;assert(re4dc_actor_submit(&p));flush();logs.clear();payload_retire(gcasset_registry[0]);replacement[0]=52;assert(payload_capture(gcasset_registry[0],&registry,replacement,sizeof replacement));assert(re4dc_actor_submit(&p));flush();assert(logs.find("unbound-accepted-model")!=std::string::npos && logs.find("consumer=3")!=std::string::npos && logs.find("kind=geometry")==std::string::npos);
  logs.clear();source_use=outer;SkinEntry skin;OneScreen screen;{ActorSourceScope scope(&p,&current_source);sq=true;one_frame(p,1,2,skin,current_source,screen);scope.accepted();sq=false;}flush();assert(logs.find("unbound-accepted-payload")!=std::string::npos);
  // Fresh cache generation can qualify the current source; stale saved hand
  // or package generation cannot select a new owner on replay.
@@ -253,9 +254,12 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);int model,info;uns
         self.compile_run(fixture)
         mutants = [
             ('ambient original', '    re4dc_gcasset::ActorMainSourceScope gcasset_main_scope(&p);', ''),
-            ('cached generation', 'if(!saved.serial || saved.serial!=use.serial || saved.mask!=use.mask || saved.payload!=use.payload)use={};', '(void)saved;(void)use;'),
+            ('cached generation', 'if(!saved.serial || saved.serial!=use.serial || saved.mask!=use.mask || saved.payload!=use.payload){use.serial=0;use.payload=nullptr;}', '(void)saved;(void)use;'),
+            ('cached class erased', '{use.serial=0;use.payload=nullptr;}', 'use={};'),
             ('accepted snapshot bypass', 'payload_accept(current?selected.payload:nullptr,current?selected.serial:0,', 'payload_accept(((void)current,selected.payload),selected.serial,'),
-            ('unproved raw generic', '    // not a UV extent, and an address prefix cannot supply the missing proof.\n    return {};', '    // not a UV extent, and an address prefix cannot supply the missing proof.\n    return previous?*previous:SourceUse{};'),
+            ('unproved raw generic', '    // not a UV extent, and an address prefix cannot supply the missing proof.\n    return unknown;', '    // not a UV extent, and an address prefix cannot supply the missing proof.\n    return previous?*previous:SourceUse{};'),
+            ('raw class erased', '    return unknown;\n}\n#endif', '    return {};\n}\n#endif'),
+            ('replay class recaptured', 'saved.serial!=0xffffffffU?saved.mask:', 'false?saved.mask:'),
             ('mixed replay arrays', 'if(current.payload!=saved.payload || current.serial!=saved.serial)return {};', '(void)current;'),
         ]
         for label, old, new in mutants:

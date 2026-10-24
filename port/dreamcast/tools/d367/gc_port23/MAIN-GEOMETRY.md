@@ -50,7 +50,8 @@ caller BIN as replacement ancestry. Raw original replay remains unqualified.
 
 Both prepare_frame and one_frame stamp a parallel geometry receipt on a new
 cache entry and compare it on a cache hit. A source/proof/consumer generation
-mismatch clears diagnostic context; it does not change cache lookup, Frame
+mismatch clears diagnostic ancestry while retaining the current known consumer
+mask/model/info; it does not change cache lookup, Frame
 contents, allocation or render algorithms. Four fixed records hold serial,
 mask and proof pointer:48 bytes on SH4, statically checked against the actual
 four Frame slots. No Frame or deferred-node layout grows. Target text/stack and
@@ -86,3 +87,17 @@ coarse/transaction configurations; current native_model tokens are checked too.
 Target object/image identity remains open.
 Independent review, actual current-profile path census/target pricing, complete
 SourceGeometry/Weapon/Motion coverage, source catalog and final stop remain open.
+
+The frozen683 combined host sweep passed86 discovered/85 executed with one
+historical opt-in skip, plus C++ core/member/cursor controls. Independent review
+then reproduced a per-consumer attribution defect: a handled raw main draw and
+a stale Frame cleared the known Weapon mask along with ancestry. This successor
+retains serial0/null payload with only matching current class/model/info. Replay
+uses its frozen mask first, even if the current class has changed. It cannot
+promote that unknown identity to a fresh member or payload. Both actual cache
+functions clear only serial/payload; no cache or render algorithm changes.
+Known-Weapon raw main, deferred raw replay after class change and stale Frame
+acceptance now require consumer3 errors while emitting no asset-positive row.
+Three additional compiling mutants erase raw/cache class or recapture replay
+class; each must fail runtime assertions. Earlier683 source and its review
+counterexample remain preserved; overall coverage is still partial.

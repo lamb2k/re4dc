@@ -1751,7 +1751,7 @@ void gcasset_frame_stamp(Frame& f){
 }
 void gcasset_frame_check(Frame& f){
     const auto& saved=gcasset_frame_uses[&f-frames];auto& use=re4dc_gcasset::source_use;
-    if(!saved.serial || saved.serial!=use.serial || saved.mask!=use.mask || saved.payload!=use.payload)use={};
+    if(!saved.serial || saved.serial!=use.serial || saved.mask!=use.mask || saved.payload!=use.payload){use.serial=0;use.payload=nullptr;}
 }
 #endif
 
