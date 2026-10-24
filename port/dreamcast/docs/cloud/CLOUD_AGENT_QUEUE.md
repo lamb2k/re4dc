@@ -179,3 +179,14 @@ of a clamped sampler. No update-rate, quaternion or motion-data change is made.
    ordinary and wrapping poses at r101 and in the piled-body farm case?
 2. Does console A/B confirm that less sampler stack/traffic repays the
    once-per-pose dispatch cost in the measured mix?
+### 2026-10-24: Build 9 hand-back (`codex/ui-draw-lean-20261024`)
+
+Candidate: `UI_DRAW_LEAN=1`, default 0. Base `d5c1ceab`.
+The [report](BUILD9_UI_DRAW_LEAN_20261024.md) maps the existing HUD/glyph caches,
+prices repeated construction and records why a mutable projected-HUD cache was
+not added. The release recipe and coordinator status table are unchanged.
+
+1. What are ordinary ID quads, masked HUD quads, message glyphs and glyph runs
+   per rendered frame at the r101 cross and in a representative text/menu view?
+2. Does console A/B show a benefit from less repeated stack/packet traffic,
+   especially in HUD-only frames where the message-camera saving is absent?

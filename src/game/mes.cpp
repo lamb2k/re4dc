@@ -1191,6 +1191,17 @@ void draw(MesQue* q)
 // Screen-space ortho projection (512 x 384) for message glyphs.
 void messageCamera()
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_UI_DRAW_LEAN) && RE4DC_UI_DRAW_LEAN && RE4DC_NATIVE_MES
+    // The native glyph camera has fixed clipping planes. Keep C_MTXOrtho's f32
+    // operations in this immutable template; every call still restores GX projection.
+    // GXLoadPosMtxImm and GXSetCurrentMtx are empty native stubs, so no identity is built.
+    static const Mtx44 proj = {
+        {2.0f * (1.0f / 512.0f), 0.0f, 0.0f, (1.0f / 512.0f) * -512.0f},
+        {0.0f, 2.0f * (1.0f / -384.0f), 0.0f, (1.0f / -384.0f) * -384.0f},
+        {0.0f, 0.0f, -1.0f * (1.0f / -100.0f), 100.0f * (1.0f / -100.0f)},
+        {0.0f, 0.0f, 0.0f, 1.0f}};
+    GXSetProjection(proj, 1);
+#else
     Mtx44 proj;
     Mtx m;
 
@@ -1199,6 +1210,7 @@ void messageCamera()
     PSMTXIdentity(m);
     GXLoadPosMtxImm(m, 0);
     GXSetCurrentMtx(0);
+#endif
 }
 
 // OT callback / direct draw of one glyph.

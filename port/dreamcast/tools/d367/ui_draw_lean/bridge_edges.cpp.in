@@ -1,0 +1,44 @@
+// Evidence-only typed unchanged edges. The complete bridge TU is not edited.
+#include "light.h"
+#include "id_sys.h"
+#include "texture.h"
+#include "camera.h"
+#include "native_ui.h"
+#include "hud_source_mask.h"
+#include "re4dc_pad_prompts.h"
+#include <cstddef>
+#include <cstdint>
+
+Mtx IDSystem::m_scrn_mat;
+extern "C" {
+TexWk ui_fixture_wk[2];
+TEXPalette ui_fixture_tpl[2];
+TEXDescriptor ui_fixture_desc[2];
+TEXHeader ui_fixture_tex[2];
+CLUTHeader ui_fixture_clut[2];
+IdUnit ui_fixture_unit;
+float re4dc_res_vjitter;
+unsigned ui_fixture_mask_result;
+void re4dc_zam_MTXConcat(const float a[3][4],const float b[3][4],float d[3][4]) {
+    // Synthetic source screen matrix is identity. The unchanged SH4ZAM edge
+    // is represented by an exact copy; original matrix arithmetic is excluded.
+    __builtin_memcpy(d,b,48);
+}
+void re4dc_ui_submit(const Re4dcUiQuad*) {}
+int re4dc_ui_hud_mask_submit(const Re4dcUiQuad*,const Re4dcUiImage*) {return ui_fixture_mask_result;}
+void re4dc_lbx_note(unsigned,unsigned,unsigned,unsigned,const float*) {}
+void re4dc_option_rows_art(const Re4dcUiQuad*) {}
+unsigned re4dc_pad_prompt_kind(unsigned,int) {return 0;}
+int re4dc_ui_binocular_prompt(const Re4dcUiImage*,unsigned,Re4dcUiImage*) {return 0;}
+extern const std::uintptr_t ui_fixture_bridge_layout[]={
+    1,sizeof(IdUnit),sizeof(TexWk),sizeof(TEXHeader),sizeof(CLUTHeader),sizeof(TEXPalette),sizeof(TEXDescriptor),sizeof(Re4dcUiQuad),
+    reinterpret_cast<std::uintptr_t>(&ui_fixture_unit),reinterpret_cast<std::uintptr_t>(ui_fixture_wk),
+    reinterpret_cast<std::uintptr_t>(ui_fixture_tpl),reinterpret_cast<std::uintptr_t>(ui_fixture_desc),
+    reinterpret_cast<std::uintptr_t>(ui_fixture_tex),reinterpret_cast<std::uintptr_t>(ui_fixture_clut),
+    offsetof(TexWk,pTpl),offsetof(IdUnit,mat),offsetof(IdUnit,vtx),offsetof(IdUnit,col),offsetof(IdUnit,u0),
+    reinterpret_cast<std::uintptr_t>(&ui_fixture_mask_result)
+};
+}
+TexWk* IdGetTexWk(u8 id,int) {return &ui_fixture_wk[id==0x12];}
+extern "C" TEXDescriptor* TEXGet(TEXPalette* p,u32 id) {return &p->descriptorArray[id];}
+void CameraCurrentProjection() {}

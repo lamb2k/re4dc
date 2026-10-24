@@ -1,0 +1,3090 @@
+{
+  "status": "PASS",
+  "baseline": "d5c1ceab9e06461462669b3ce1d28a379747a74a",
+  "knob": "UI_DRAW_LEAN",
+  "default": 0,
+  "scope": "Create a compact review receipt; reconcile executed full objects with Make.\n\nAll input receipts remain reproducible from the neighboring tools. This report\ndoes not turn synthetic phase counts, perfect-D cycles or demand addresses\ninto measured console cache misses or frame-time results.\n",
+  "compiler": "sh-elf-g++ (GCC) 15.2.0",
+  "source_sha256": {
+    "port/dreamcast/game/game30.mk": "755562ee9ef019e6582b1aede248bd18994d11ff34b9a92a851de9186066e483",
+    "port/dreamcast/game/platform/native_ui.cpp": "6fb51fb0d573aec230646409a0372666e42146b42184362aacb6d3352f6bd67b",
+    "port/dreamcast/game/ui_bridge.cpp": "6658d94417839b71d212f9a22a6f8397cee958e5e2bc03e0135bc9380f3e6171",
+    "src/game/id_sys.cpp": "72f2bdcddcd01add6be2321010b730056e9c5822058324c6838f143e059b550d",
+    "src/game/mes.cpp": "767895ffc5d28423212b1e469cdf1df15f05638f9b67c3c67b8077c87d8305ae",
+    "port/dreamcast/game/platform/gx_stub.cpp": "9775ceea655cdeba1259b36f128f4222ea325d49b102ccdccea6efe853ca3881",
+    "port/dreamcast/room/pvr_geometry.cpp": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136",
+    "src/lib/mtx44.c": "89d191bf50e31f7ac4ebd7bc8803ce036b1b558c5f386ef46edc725a2ef7cc81",
+    "port/dreamcast/game/platform/sdk/strip_cw_asm.py": "9fba55cda20198c9fb206d488b9ef74979c43c3a7c7fe6f0b0c829aebbc96131",
+    "port/dreamcast/game/platform/mtx_sh4.S": "9480906e541813972fc658cadfcc6daa7d5f1e926fb6cd673b0f47a744ceaf34",
+    "port/dreamcast/game/platform/ps_alias_sh4.ld": "2df188a1eaebfb723bd866939c39d62e2036b17b853aa143e860e99d334d9dbb"
+  },
+  "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+  "profiles": {
+    "public": [],
+    "quad_reference": [
+      "UI_QUAD_LEAN=0"
+    ],
+    "quad_check": [
+      "UI_QUAD_LEAN=2"
+    ],
+    "headers_off": [
+      "UI_HEADERS=0"
+    ],
+    "no_order": [
+      "SS_UI_ORDER=0",
+      "WORLD_AUTOSORT=0",
+      "ITEM_UI_ORDER=0",
+      "UI_POLY_ORDER=0"
+    ],
+    "no_messages": [
+      "NATIVE_MES=0",
+      "RENDER_OPTION=0",
+      "RENDER_FSAA=0",
+      "VIEW_DIST_OPTION=0",
+      "BENCHMARK=0",
+      "SPEED_VMU_OFF=0",
+      "MCHECK_SAFE=0"
+    ],
+    "no_jitter": [
+      "RENDER_FSAA=0",
+      "RENDER_DOUBLE=1"
+    ],
+    "accepted_world": [
+      "SCENERY_SELECT_LEAN2=1",
+      "SCENERY_UV_SNAPSHOT=1",
+      "ACTOR_SETUP_LEAN=1",
+      "SCENERY_EMIT_PREFETCH=1"
+    ],
+    "world_stack_off": [
+      "SCENERY_SELECT_ONLY=0",
+      "SCENERY_REPLAY_LEAN=0",
+      "SCENERY_SUBMIT_BATCH=0"
+    ]
+  },
+  "off_preprocessed_and_raw_object_comparisons": 180,
+  "unchanged_on_comparisons": 36,
+  "inactive_non_native_message_camera_on_equals_off": true,
+  "public_executed_full_objects_equal_independent_make_objects": {
+    "native-l0": "ddc85a2996a9125bcca5d4262103fac8c1f5c77d6d51468815c34abde5433e02",
+    "native-l1": "14bfb7ed8feb99dff5e03a9b18c8135056ef8f171e415a9fe708e65b804fcb11",
+    "bridge-l0": "6b2d6b26f12335bd6495414c426d23cb85b1df2f73c50726fbd1b973a136b4d3",
+    "bridge-l1": "260a79dd2628524ad3cc1ae498608975db6f5df1a550a105fc224282bb1ebbbd",
+    "camera-l0": "591c7682107a8bc9eeff29cbd56eae71ffaad48e274101284422a5067a4493d5",
+    "camera-l1": "42a2706362fb42d11ad0908cbaffee7d27fe1592291db07485eb8326c7f01f19"
+  },
+  "production": {
+    "public": {
+      "native_ui": {
+        "off_ii_sha256": "4a99b905dd6af57326a3ee130b103cccdfbe1795aeefcf4866aff149b7c8d8a8",
+        "off_object_sha256": "ddc85a2996a9125bcca5d4262103fac8c1f5c77d6d51468815c34abde5433e02",
+        "on_ii_sha256": "4a1541d969806b02e016abdfba741d4fc4a88202f134294b40689214873d28bc",
+        "on_object_sha256": "14bfb7ed8feb99dff5e03a9b18c8135056ef8f171e415a9fe708e65b804fcb11",
+        "off": {
+          "executable_bytes": 77486,
+          "allocated_bytes": 387109,
+          "zero_fill_bytes": 152391
+        },
+        "on": {
+          "executable_bytes": 77534,
+          "allocated_bytes": 387157,
+          "zero_fill_bytes": 152391
+        },
+        "off_stack": [
+          {
+            "function": "<stdin>:5830:13:void ui_draw_quad(unsigned int)",
+            "bytes": 2460,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "<stdin>:5185:6:void {anonymous}::glyph_draw_run(unsigned int, unsigned int)",
+            "bytes": 2356,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:5852:13:void ui_draw_quad(unsigned int)",
+            "bytes": 504,
+            "kind": "static"
+          }
+        ]
+      },
+      "ui_bridge": {
+        "off_ii_sha256": "6bdf3ede9c9f70e030ffdb07e20503803dec6228d12f15257d0ae8e0a10d39d0",
+        "off_object_sha256": "6b2d6b26f12335bd6495414c426d23cb85b1df2f73c50726fbd1b973a136b4d3",
+        "on_ii_sha256": "c46a03d2664075c28a49bbe47c5ff6785ca4db03a98833d28a99b943fe31ad04",
+        "on_object_sha256": "260a79dd2628524ad3cc1ae498608975db6f5df1a550a105fc224282bb1ebbbd",
+        "off": {
+          "executable_bytes": 8404,
+          "allocated_bytes": 9974,
+          "zero_fill_bytes": 155
+        },
+        "on": {
+          "executable_bytes": 8348,
+          "allocated_bytes": 9918,
+          "zero_fill_bytes": 155
+        },
+        "off_stack": [
+          {
+            "function": "<stdin>:90:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 304,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "<stdin>:93:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 304,
+            "kind": "static"
+          }
+        ]
+      },
+      "id_sys": {
+        "off_ii_sha256": "abfa7b4071a99bb898b09b643ec37b28d96fea7f5c817c71efdc7373d5b00bfd",
+        "off_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "on_ii_sha256": "abfa7b4071a99bb898b09b643ec37b28d96fea7f5c817c71efdc7373d5b00bfd",
+        "on_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "off": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "on": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "off_stack": [],
+        "on_stack": []
+      },
+      "mes": {
+        "off_ii_sha256": "d6423b51de994f96f4b08e0ef9664ef31b1ec808c77a2ddbc8b36e00c0b6697e",
+        "off_object_sha256": "591c7682107a8bc9eeff29cbd56eae71ffaad48e274101284422a5067a4493d5",
+        "on_ii_sha256": "9ddc70ea98d222f3099adf721bb4951614561eb3bc001e2b0f27ba907044786c",
+        "on_object_sha256": "42a2706362fb42d11ad0908cbaffee7d27fe1592291db07485eb8326c7f01f19",
+        "off": {
+          "executable_bytes": 10564,
+          "allocated_bytes": 29278,
+          "zero_fill_bytes": 17809
+        },
+        "on": {
+          "executable_bytes": 10508,
+          "allocated_bytes": 29286,
+          "zero_fill_bytes": 17809
+        },
+        "off_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 116,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 0,
+            "kind": "static"
+          }
+        ]
+      },
+      "gx_stub": {
+        "off_ii_sha256": "3257175af647d050fc80ef6f26b8125c1ae2029c96a0fc24cf3d7fa0a48a8384",
+        "off_object_sha256": "4826fc560be1510c0bc2e9bacac660c572bd6c4055b28e8f05ef4ba64185c106",
+        "on_ii_sha256": "3257175af647d050fc80ef6f26b8125c1ae2029c96a0fc24cf3d7fa0a48a8384",
+        "on_object_sha256": "4826fc560be1510c0bc2e9bacac660c572bd6c4055b28e8f05ef4ba64185c106",
+        "off": {
+          "executable_bytes": 2376,
+          "allocated_bytes": 2990,
+          "zero_fill_bytes": 44
+        },
+        "on": {
+          "executable_bytes": 2376,
+          "allocated_bytes": 2990,
+          "zero_fill_bytes": 44
+        },
+        "off_stack": [],
+        "on_stack": []
+      }
+    },
+    "quad_reference": {
+      "native_ui": {
+        "off_ii_sha256": "075eabc78d990e2b6562b1bd1ed297f971ea45032d3d7a8d16a07a56dc800391",
+        "off_object_sha256": "0d0bd066c47baeb07ebb4438d55289e13562df95459abc2318aec1b4b1a03e33",
+        "on_ii_sha256": "86a1bbcf016352be0d356c1ca486d1bcb878fa5942ed89083d7ce5de53801f65",
+        "on_object_sha256": "5a8472a249c220ab0c088d58519d6a7f5626d581aa3bc00be6b8c6eb7a584e6c",
+        "off": {
+          "executable_bytes": 77266,
+          "allocated_bytes": 386889,
+          "zero_fill_bytes": 152391
+        },
+        "on": {
+          "executable_bytes": 77314,
+          "allocated_bytes": 386937,
+          "zero_fill_bytes": 152391
+        },
+        "off_stack": [
+          {
+            "function": "<stdin>:5830:13:void ui_draw_quad(unsigned int)",
+            "bytes": 2460,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "<stdin>:5185:6:void {anonymous}::glyph_draw_run(unsigned int, unsigned int)",
+            "bytes": 2356,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:5852:13:void ui_draw_quad(unsigned int)",
+            "bytes": 504,
+            "kind": "static"
+          }
+        ]
+      },
+      "ui_bridge": {
+        "off_ii_sha256": "e0c0ce1bdeb5f07ff372cf850d3fb8ad3a9b2e8255df501f6f78a94f9079b40f",
+        "off_object_sha256": "6f4966b8528f9a5dcebdf0011997a2102539ff25cfac6460b48b9fec16956ae5",
+        "on_ii_sha256": "ab7cd9443cfaf1ddf4c2cf5a6ad294f3470df8015a6aca800b2bffc2574728f9",
+        "on_object_sha256": "efd25da6401f22757a0bd43cd193f2caaceb0b10b8a984d866e2bd6877665c43",
+        "off": {
+          "executable_bytes": 8164,
+          "allocated_bytes": 9734,
+          "zero_fill_bytes": 155
+        },
+        "on": {
+          "executable_bytes": 8108,
+          "allocated_bytes": 9678,
+          "zero_fill_bytes": 155
+        },
+        "off_stack": [
+          {
+            "function": "<stdin>:90:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 316,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "<stdin>:93:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 316,
+            "kind": "static"
+          }
+        ]
+      },
+      "id_sys": {
+        "off_ii_sha256": "abfa7b4071a99bb898b09b643ec37b28d96fea7f5c817c71efdc7373d5b00bfd",
+        "off_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "on_ii_sha256": "abfa7b4071a99bb898b09b643ec37b28d96fea7f5c817c71efdc7373d5b00bfd",
+        "on_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "off": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "on": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "off_stack": [],
+        "on_stack": []
+      },
+      "mes": {
+        "off_ii_sha256": "d6423b51de994f96f4b08e0ef9664ef31b1ec808c77a2ddbc8b36e00c0b6697e",
+        "off_object_sha256": "591c7682107a8bc9eeff29cbd56eae71ffaad48e274101284422a5067a4493d5",
+        "on_ii_sha256": "9ddc70ea98d222f3099adf721bb4951614561eb3bc001e2b0f27ba907044786c",
+        "on_object_sha256": "42a2706362fb42d11ad0908cbaffee7d27fe1592291db07485eb8326c7f01f19",
+        "off": {
+          "executable_bytes": 10564,
+          "allocated_bytes": 29278,
+          "zero_fill_bytes": 17809
+        },
+        "on": {
+          "executable_bytes": 10508,
+          "allocated_bytes": 29286,
+          "zero_fill_bytes": 17809
+        },
+        "off_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 116,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 0,
+            "kind": "static"
+          }
+        ]
+      },
+      "gx_stub": {
+        "off_ii_sha256": "3257175af647d050fc80ef6f26b8125c1ae2029c96a0fc24cf3d7fa0a48a8384",
+        "off_object_sha256": "4826fc560be1510c0bc2e9bacac660c572bd6c4055b28e8f05ef4ba64185c106",
+        "on_ii_sha256": "3257175af647d050fc80ef6f26b8125c1ae2029c96a0fc24cf3d7fa0a48a8384",
+        "on_object_sha256": "4826fc560be1510c0bc2e9bacac660c572bd6c4055b28e8f05ef4ba64185c106",
+        "off": {
+          "executable_bytes": 2376,
+          "allocated_bytes": 2990,
+          "zero_fill_bytes": 44
+        },
+        "on": {
+          "executable_bytes": 2376,
+          "allocated_bytes": 2990,
+          "zero_fill_bytes": 44
+        },
+        "off_stack": [],
+        "on_stack": []
+      }
+    },
+    "quad_check": {
+      "native_ui": {
+        "off_ii_sha256": "b43c44214917930c0598b9b9c83b551a3a0315061fcbaaecb11252cecaa69232",
+        "off_object_sha256": "cea03c09b661691352a859bbb25bd0fa9d0a3262deebff56772e5e58c60ae6fe",
+        "on_ii_sha256": "b5d88346753c0837465c62564b07c46f4cd2c4351c4da94d7f8ebfac723f26ed",
+        "on_object_sha256": "152a9f13130bc4e4457a5a56720311702520f1e382f98f6431fcfecb9d86a6e0",
+        "off": {
+          "executable_bytes": 77842,
+          "allocated_bytes": 387666,
+          "zero_fill_bytes": 152415
+        },
+        "on": {
+          "executable_bytes": 77890,
+          "allocated_bytes": 387714,
+          "zero_fill_bytes": 152415
+        },
+        "off_stack": [
+          {
+            "function": "<stdin>:5830:13:void ui_draw_quad(unsigned int)",
+            "bytes": 2460,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "<stdin>:5185:6:void {anonymous}::glyph_draw_run(unsigned int, unsigned int)",
+            "bytes": 2356,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:5852:13:void ui_draw_quad(unsigned int)",
+            "bytes": 504,
+            "kind": "static"
+          }
+        ]
+      },
+      "ui_bridge": {
+        "off_ii_sha256": "831aaca3b51f061805f122aea9579d7af8b9e0f386fdbe7469ecaff6408d93ac",
+        "off_object_sha256": "b1abec10f0efa1beab802d2f69779c03dec680bf6f0adeecc838370fb4f40e90",
+        "on_ii_sha256": "73a48377d96500a10a66e4f3afedd8ba4edf487112c48e3ee2066ebeb5dc1f56",
+        "on_object_sha256": "04c8b62847544816aff56b15fe05ccbfe04fb9945a1edcf5ec9e5384935370df",
+        "off": {
+          "executable_bytes": 8624,
+          "allocated_bytes": 10321,
+          "zero_fill_bytes": 171
+        },
+        "on": {
+          "executable_bytes": 8568,
+          "allocated_bytes": 10265,
+          "zero_fill_bytes": 171
+        },
+        "off_stack": [
+          {
+            "function": "<stdin>:90:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 340,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "<stdin>:93:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 340,
+            "kind": "static"
+          }
+        ]
+      },
+      "id_sys": {
+        "off_ii_sha256": "abfa7b4071a99bb898b09b643ec37b28d96fea7f5c817c71efdc7373d5b00bfd",
+        "off_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "on_ii_sha256": "abfa7b4071a99bb898b09b643ec37b28d96fea7f5c817c71efdc7373d5b00bfd",
+        "on_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "off": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "on": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "off_stack": [],
+        "on_stack": []
+      },
+      "mes": {
+        "off_ii_sha256": "d6423b51de994f96f4b08e0ef9664ef31b1ec808c77a2ddbc8b36e00c0b6697e",
+        "off_object_sha256": "591c7682107a8bc9eeff29cbd56eae71ffaad48e274101284422a5067a4493d5",
+        "on_ii_sha256": "9ddc70ea98d222f3099adf721bb4951614561eb3bc001e2b0f27ba907044786c",
+        "on_object_sha256": "42a2706362fb42d11ad0908cbaffee7d27fe1592291db07485eb8326c7f01f19",
+        "off": {
+          "executable_bytes": 10564,
+          "allocated_bytes": 29278,
+          "zero_fill_bytes": 17809
+        },
+        "on": {
+          "executable_bytes": 10508,
+          "allocated_bytes": 29286,
+          "zero_fill_bytes": 17809
+        },
+        "off_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 116,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 0,
+            "kind": "static"
+          }
+        ]
+      },
+      "gx_stub": {
+        "off_ii_sha256": "3257175af647d050fc80ef6f26b8125c1ae2029c96a0fc24cf3d7fa0a48a8384",
+        "off_object_sha256": "4826fc560be1510c0bc2e9bacac660c572bd6c4055b28e8f05ef4ba64185c106",
+        "on_ii_sha256": "3257175af647d050fc80ef6f26b8125c1ae2029c96a0fc24cf3d7fa0a48a8384",
+        "on_object_sha256": "4826fc560be1510c0bc2e9bacac660c572bd6c4055b28e8f05ef4ba64185c106",
+        "off": {
+          "executable_bytes": 2376,
+          "allocated_bytes": 2990,
+          "zero_fill_bytes": 44
+        },
+        "on": {
+          "executable_bytes": 2376,
+          "allocated_bytes": 2990,
+          "zero_fill_bytes": 44
+        },
+        "off_stack": [],
+        "on_stack": []
+      }
+    },
+    "headers_off": {
+      "native_ui": {
+        "off_ii_sha256": "32aff9f4e52a55a2475cd56cbf8316675d20121f7d46d65fc95b7ebd8f4078e7",
+        "off_object_sha256": "efd92b7b1fc5b19e18f8213d95dfa5e786ea67c540dd173b46e4f757099dd6b6",
+        "on_ii_sha256": "fa012dd105a82cd6a49b1649bfd0d50a514d7d6eb7069ccc169bf6c2d7382dc8",
+        "on_object_sha256": "cb0e3aa07702059dfda15ec9bd2458d1da37fc5351b1c0db9a341c5735d95b2c",
+        "off": {
+          "executable_bytes": 77370,
+          "allocated_bytes": 358321,
+          "zero_fill_bytes": 152391
+        },
+        "on": {
+          "executable_bytes": 77418,
+          "allocated_bytes": 358369,
+          "zero_fill_bytes": 152391
+        },
+        "off_stack": [
+          {
+            "function": "<stdin>:5830:13:void ui_draw_quad(unsigned int)",
+            "bytes": 2452,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "<stdin>:5185:6:void {anonymous}::glyph_draw_run(unsigned int, unsigned int)",
+            "bytes": 2356,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:5852:13:void ui_draw_quad(unsigned int)",
+            "bytes": 504,
+            "kind": "static"
+          }
+        ]
+      },
+      "ui_bridge": {
+        "off_ii_sha256": "6bdf3ede9c9f70e030ffdb07e20503803dec6228d12f15257d0ae8e0a10d39d0",
+        "off_object_sha256": "6b2d6b26f12335bd6495414c426d23cb85b1df2f73c50726fbd1b973a136b4d3",
+        "on_ii_sha256": "c46a03d2664075c28a49bbe47c5ff6785ca4db03a98833d28a99b943fe31ad04",
+        "on_object_sha256": "260a79dd2628524ad3cc1ae498608975db6f5df1a550a105fc224282bb1ebbbd",
+        "off": {
+          "executable_bytes": 8404,
+          "allocated_bytes": 9974,
+          "zero_fill_bytes": 155
+        },
+        "on": {
+          "executable_bytes": 8348,
+          "allocated_bytes": 9918,
+          "zero_fill_bytes": 155
+        },
+        "off_stack": [
+          {
+            "function": "<stdin>:90:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 304,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "<stdin>:93:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 304,
+            "kind": "static"
+          }
+        ]
+      },
+      "id_sys": {
+        "off_ii_sha256": "abfa7b4071a99bb898b09b643ec37b28d96fea7f5c817c71efdc7373d5b00bfd",
+        "off_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "on_ii_sha256": "abfa7b4071a99bb898b09b643ec37b28d96fea7f5c817c71efdc7373d5b00bfd",
+        "on_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "off": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "on": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "off_stack": [],
+        "on_stack": []
+      },
+      "mes": {
+        "off_ii_sha256": "d6423b51de994f96f4b08e0ef9664ef31b1ec808c77a2ddbc8b36e00c0b6697e",
+        "off_object_sha256": "591c7682107a8bc9eeff29cbd56eae71ffaad48e274101284422a5067a4493d5",
+        "on_ii_sha256": "9ddc70ea98d222f3099adf721bb4951614561eb3bc001e2b0f27ba907044786c",
+        "on_object_sha256": "42a2706362fb42d11ad0908cbaffee7d27fe1592291db07485eb8326c7f01f19",
+        "off": {
+          "executable_bytes": 10564,
+          "allocated_bytes": 29278,
+          "zero_fill_bytes": 17809
+        },
+        "on": {
+          "executable_bytes": 10508,
+          "allocated_bytes": 29286,
+          "zero_fill_bytes": 17809
+        },
+        "off_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 116,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 0,
+            "kind": "static"
+          }
+        ]
+      },
+      "gx_stub": {
+        "off_ii_sha256": "3257175af647d050fc80ef6f26b8125c1ae2029c96a0fc24cf3d7fa0a48a8384",
+        "off_object_sha256": "4826fc560be1510c0bc2e9bacac660c572bd6c4055b28e8f05ef4ba64185c106",
+        "on_ii_sha256": "3257175af647d050fc80ef6f26b8125c1ae2029c96a0fc24cf3d7fa0a48a8384",
+        "on_object_sha256": "4826fc560be1510c0bc2e9bacac660c572bd6c4055b28e8f05ef4ba64185c106",
+        "off": {
+          "executable_bytes": 2376,
+          "allocated_bytes": 2990,
+          "zero_fill_bytes": 44
+        },
+        "on": {
+          "executable_bytes": 2376,
+          "allocated_bytes": 2990,
+          "zero_fill_bytes": 44
+        },
+        "off_stack": [],
+        "on_stack": []
+      }
+    },
+    "no_order": {
+      "native_ui": {
+        "off_ii_sha256": "475cd56fd72568d5440cdbb2130febecd61b4dc493cc6b4d66eb0f6dc5907935",
+        "off_object_sha256": "d6a1680f7b8e2b964cc1fd184e5f8541995ed09401309811119829b1e477026c",
+        "on_ii_sha256": "5c5ded30ca0f78ebcdaf6d8a5363c16585928fad15c137ff81dcbaefe3d94d12",
+        "on_object_sha256": "73f27773d5a83bbef0c7627d3514fe85d82cda2907fb516e5946e905b566cb4b",
+        "off": {
+          "executable_bytes": 76738,
+          "allocated_bytes": 386291,
+          "zero_fill_bytes": 152381
+        },
+        "on": {
+          "executable_bytes": 76662,
+          "allocated_bytes": 386215,
+          "zero_fill_bytes": 152381
+        },
+        "off_stack": [],
+        "on_stack": [
+          {
+            "function": "<stdin>:5185:6:void {anonymous}::glyph_draw_run(unsigned int, unsigned int)",
+            "bytes": 2360,
+            "kind": "static"
+          }
+        ]
+      },
+      "ui_bridge": {
+        "off_ii_sha256": "2f4c479988d66d1501ccedf736227c666d9a8899fb095bbca8f192e5e3425547",
+        "off_object_sha256": "b2c5bcdfb4b6460a67c671e4874bac63ced96a60936909363c4a2ebea5c25d00",
+        "on_ii_sha256": "fe7f67b2ba3aa0b0749d10e7e88393f25828a5ae9bbb28f3e674bacced8c2ca0",
+        "on_object_sha256": "ad3c9ee2ece5a7fc6a6a58a2b23c3aafb2514f693627c185298573396c796650",
+        "off": {
+          "executable_bytes": 8372,
+          "allocated_bytes": 9942,
+          "zero_fill_bytes": 155
+        },
+        "on": {
+          "executable_bytes": 8316,
+          "allocated_bytes": 9886,
+          "zero_fill_bytes": 155
+        },
+        "off_stack": [
+          {
+            "function": "<stdin>:90:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 304,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "<stdin>:93:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 304,
+            "kind": "static"
+          }
+        ]
+      },
+      "id_sys": {
+        "off_ii_sha256": "abfa7b4071a99bb898b09b643ec37b28d96fea7f5c817c71efdc7373d5b00bfd",
+        "off_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "on_ii_sha256": "abfa7b4071a99bb898b09b643ec37b28d96fea7f5c817c71efdc7373d5b00bfd",
+        "on_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "off": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "on": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "off_stack": [],
+        "on_stack": []
+      },
+      "mes": {
+        "off_ii_sha256": "d6423b51de994f96f4b08e0ef9664ef31b1ec808c77a2ddbc8b36e00c0b6697e",
+        "off_object_sha256": "591c7682107a8bc9eeff29cbd56eae71ffaad48e274101284422a5067a4493d5",
+        "on_ii_sha256": "9ddc70ea98d222f3099adf721bb4951614561eb3bc001e2b0f27ba907044786c",
+        "on_object_sha256": "42a2706362fb42d11ad0908cbaffee7d27fe1592291db07485eb8326c7f01f19",
+        "off": {
+          "executable_bytes": 10564,
+          "allocated_bytes": 29278,
+          "zero_fill_bytes": 17809
+        },
+        "on": {
+          "executable_bytes": 10508,
+          "allocated_bytes": 29286,
+          "zero_fill_bytes": 17809
+        },
+        "off_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 116,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 0,
+            "kind": "static"
+          }
+        ]
+      },
+      "gx_stub": {
+        "off_ii_sha256": "3257175af647d050fc80ef6f26b8125c1ae2029c96a0fc24cf3d7fa0a48a8384",
+        "off_object_sha256": "4826fc560be1510c0bc2e9bacac660c572bd6c4055b28e8f05ef4ba64185c106",
+        "on_ii_sha256": "3257175af647d050fc80ef6f26b8125c1ae2029c96a0fc24cf3d7fa0a48a8384",
+        "on_object_sha256": "4826fc560be1510c0bc2e9bacac660c572bd6c4055b28e8f05ef4ba64185c106",
+        "off": {
+          "executable_bytes": 2376,
+          "allocated_bytes": 2990,
+          "zero_fill_bytes": 44
+        },
+        "on": {
+          "executable_bytes": 2376,
+          "allocated_bytes": 2990,
+          "zero_fill_bytes": 44
+        },
+        "off_stack": [],
+        "on_stack": []
+      }
+    },
+    "no_messages": {
+      "native_ui": {
+        "off_ii_sha256": "693ae749701a76ad3814409d70a48a0267aea866ad9ceb4e5b5b90450e26279a",
+        "off_object_sha256": "2ca8c4be7dc3adbe8caec0ffbdc818dc5ddc5dd0385b6d79621e829ad1e8876f",
+        "on_ii_sha256": "d496235cea8230a41e0f5f7429faffded494eff4a7e8b1b473948af6d26e9089",
+        "on_object_sha256": "62a7c89f6d006e3acc95f2243553781a60c365aa4c89a563584e6564c693eae9",
+        "off": {
+          "executable_bytes": 72596,
+          "allocated_bytes": 368969,
+          "zero_fill_bytes": 140158
+        },
+        "on": {
+          "executable_bytes": 72552,
+          "allocated_bytes": 368925,
+          "zero_fill_bytes": 140158
+        },
+        "off_stack": [
+          {
+            "function": "<stdin>:5830:13:void ui_draw_quad(unsigned int)",
+            "bytes": 504,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "<stdin>:5852:13:void ui_draw_quad(unsigned int)",
+            "bytes": 504,
+            "kind": "static"
+          }
+        ]
+      },
+      "ui_bridge": {
+        "off_ii_sha256": "8cb40f186913c29bd28bc9e03a375207ccb335b3bed793b425f758b3068abb27",
+        "off_object_sha256": "83c8e45e0c83a3a9ed8001a76f5cc4613c32cf5aed01a804c449d352bbcea1d9",
+        "on_ii_sha256": "5d9fc15466c2a908f84d5a887f8e576d29489324893f5ee901aa51d175ab510b",
+        "on_object_sha256": "b06e02325760597142219aa015e9b5e12f40a42f55d3f00fa83f152921ec3024",
+        "off": {
+          "executable_bytes": 8272,
+          "allocated_bytes": 9845,
+          "zero_fill_bytes": 155
+        },
+        "on": {
+          "executable_bytes": 8216,
+          "allocated_bytes": 9789,
+          "zero_fill_bytes": 155
+        },
+        "off_stack": [
+          {
+            "function": "<stdin>:90:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 304,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "<stdin>:93:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 304,
+            "kind": "static"
+          }
+        ]
+      },
+      "id_sys": {
+        "off_ii_sha256": "2b8b54bf16b51040ed0589f938e8426c7a7dedbe349e2f818e2e411507ccb4b0",
+        "off_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "on_ii_sha256": "2b8b54bf16b51040ed0589f938e8426c7a7dedbe349e2f818e2e411507ccb4b0",
+        "on_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "off": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "on": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "off_stack": [],
+        "on_stack": []
+      },
+      "mes": {
+        "off_ii_sha256": "e93ad05852efdec72c3bfc6abfd2acf49274d504db13a4a08d74b0fe8af64d3f",
+        "off_object_sha256": "4dd697b63414b02386ebff7b3d9a12e2593a3e10b4fa0fca8742252f26fd0b0d",
+        "on_ii_sha256": "e93ad05852efdec72c3bfc6abfd2acf49274d504db13a4a08d74b0fe8af64d3f",
+        "on_object_sha256": "4dd697b63414b02386ebff7b3d9a12e2593a3e10b4fa0fca8742252f26fd0b0d",
+        "off": {
+          "executable_bytes": 10340,
+          "allocated_bytes": 29030,
+          "zero_fill_bytes": 17801
+        },
+        "on": {
+          "executable_bytes": 10340,
+          "allocated_bytes": 29030,
+          "zero_fill_bytes": 17801
+        },
+        "off_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 116,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 116,
+            "kind": "static"
+          }
+        ]
+      },
+      "gx_stub": {
+        "off_ii_sha256": "0c6eb18463486325230bcecc010c8bdefe4d2367b2f8ed2f2ac9d1ca5e7e7309",
+        "off_object_sha256": "d978e49377d41aca6514194c303d0795b4c3d3cc772f59197b401062bce90123",
+        "on_ii_sha256": "0c6eb18463486325230bcecc010c8bdefe4d2367b2f8ed2f2ac9d1ca5e7e7309",
+        "on_object_sha256": "d978e49377d41aca6514194c303d0795b4c3d3cc772f59197b401062bce90123",
+        "off": {
+          "executable_bytes": 2352,
+          "allocated_bytes": 2966,
+          "zero_fill_bytes": 44
+        },
+        "on": {
+          "executable_bytes": 2352,
+          "allocated_bytes": 2966,
+          "zero_fill_bytes": 44
+        },
+        "off_stack": [],
+        "on_stack": []
+      }
+    },
+    "no_jitter": {
+      "native_ui": {
+        "off_ii_sha256": "4a99b905dd6af57326a3ee130b103cccdfbe1795aeefcf4866aff149b7c8d8a8",
+        "off_object_sha256": "ddc85a2996a9125bcca5d4262103fac8c1f5c77d6d51468815c34abde5433e02",
+        "on_ii_sha256": "4a1541d969806b02e016abdfba741d4fc4a88202f134294b40689214873d28bc",
+        "on_object_sha256": "14bfb7ed8feb99dff5e03a9b18c8135056ef8f171e415a9fe708e65b804fcb11",
+        "off": {
+          "executable_bytes": 77486,
+          "allocated_bytes": 387109,
+          "zero_fill_bytes": 152391
+        },
+        "on": {
+          "executable_bytes": 77534,
+          "allocated_bytes": 387157,
+          "zero_fill_bytes": 152391
+        },
+        "off_stack": [
+          {
+            "function": "<stdin>:5830:13:void ui_draw_quad(unsigned int)",
+            "bytes": 2460,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "<stdin>:5185:6:void {anonymous}::glyph_draw_run(unsigned int, unsigned int)",
+            "bytes": 2356,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:5852:13:void ui_draw_quad(unsigned int)",
+            "bytes": 504,
+            "kind": "static"
+          }
+        ]
+      },
+      "ui_bridge": {
+        "off_ii_sha256": "9d7403f7301bf8f222da2724f868519fa44e12fc22ea58394362af702a564282",
+        "off_object_sha256": "9969d273da1681ff4c34bb4ca91257a556b3fb9ed861fb657bbdb0a696a5c8a5",
+        "on_ii_sha256": "7cb126e6a58b70ec214246b9ff811c088509cc3508eb4b6ffe0d78e2194e68ce",
+        "on_object_sha256": "28e236ae349aa2978cba7cb168fb447e6696207eda5df5ef98d3bac7e0c89fa5",
+        "off": {
+          "executable_bytes": 8400,
+          "allocated_bytes": 9970,
+          "zero_fill_bytes": 155
+        },
+        "on": {
+          "executable_bytes": 8344,
+          "allocated_bytes": 9914,
+          "zero_fill_bytes": 155
+        },
+        "off_stack": [
+          {
+            "function": "<stdin>:90:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 304,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "<stdin>:93:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 304,
+            "kind": "static"
+          }
+        ]
+      },
+      "id_sys": {
+        "off_ii_sha256": "2b8b54bf16b51040ed0589f938e8426c7a7dedbe349e2f818e2e411507ccb4b0",
+        "off_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "on_ii_sha256": "2b8b54bf16b51040ed0589f938e8426c7a7dedbe349e2f818e2e411507ccb4b0",
+        "on_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "off": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "on": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "off_stack": [],
+        "on_stack": []
+      },
+      "mes": {
+        "off_ii_sha256": "b349f278b5131f7ee1299a183b8473c25de5433fd7135abc9f445c6d1cf067e9",
+        "off_object_sha256": "591c7682107a8bc9eeff29cbd56eae71ffaad48e274101284422a5067a4493d5",
+        "on_ii_sha256": "abb976e69443902e017a6f2eff35cae899fb47e9f644ad61cf15efbdbe120a2b",
+        "on_object_sha256": "42a2706362fb42d11ad0908cbaffee7d27fe1592291db07485eb8326c7f01f19",
+        "off": {
+          "executable_bytes": 10564,
+          "allocated_bytes": 29278,
+          "zero_fill_bytes": 17809
+        },
+        "on": {
+          "executable_bytes": 10508,
+          "allocated_bytes": 29286,
+          "zero_fill_bytes": 17809
+        },
+        "off_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 116,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 0,
+            "kind": "static"
+          }
+        ]
+      },
+      "gx_stub": {
+        "off_ii_sha256": "0c6eb18463486325230bcecc010c8bdefe4d2367b2f8ed2f2ac9d1ca5e7e7309",
+        "off_object_sha256": "d978e49377d41aca6514194c303d0795b4c3d3cc772f59197b401062bce90123",
+        "on_ii_sha256": "0c6eb18463486325230bcecc010c8bdefe4d2367b2f8ed2f2ac9d1ca5e7e7309",
+        "on_object_sha256": "d978e49377d41aca6514194c303d0795b4c3d3cc772f59197b401062bce90123",
+        "off": {
+          "executable_bytes": 2352,
+          "allocated_bytes": 2966,
+          "zero_fill_bytes": 44
+        },
+        "on": {
+          "executable_bytes": 2352,
+          "allocated_bytes": 2966,
+          "zero_fill_bytes": 44
+        },
+        "off_stack": [],
+        "on_stack": []
+      }
+    },
+    "accepted_world": {
+      "native_ui": {
+        "off_ii_sha256": "4a99b905dd6af57326a3ee130b103cccdfbe1795aeefcf4866aff149b7c8d8a8",
+        "off_object_sha256": "ddc85a2996a9125bcca5d4262103fac8c1f5c77d6d51468815c34abde5433e02",
+        "on_ii_sha256": "4a1541d969806b02e016abdfba741d4fc4a88202f134294b40689214873d28bc",
+        "on_object_sha256": "14bfb7ed8feb99dff5e03a9b18c8135056ef8f171e415a9fe708e65b804fcb11",
+        "off": {
+          "executable_bytes": 77486,
+          "allocated_bytes": 387109,
+          "zero_fill_bytes": 152391
+        },
+        "on": {
+          "executable_bytes": 77534,
+          "allocated_bytes": 387157,
+          "zero_fill_bytes": 152391
+        },
+        "off_stack": [
+          {
+            "function": "<stdin>:5830:13:void ui_draw_quad(unsigned int)",
+            "bytes": 2460,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "<stdin>:5185:6:void {anonymous}::glyph_draw_run(unsigned int, unsigned int)",
+            "bytes": 2356,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:5852:13:void ui_draw_quad(unsigned int)",
+            "bytes": 504,
+            "kind": "static"
+          }
+        ]
+      },
+      "ui_bridge": {
+        "off_ii_sha256": "6bdf3ede9c9f70e030ffdb07e20503803dec6228d12f15257d0ae8e0a10d39d0",
+        "off_object_sha256": "6b2d6b26f12335bd6495414c426d23cb85b1df2f73c50726fbd1b973a136b4d3",
+        "on_ii_sha256": "c46a03d2664075c28a49bbe47c5ff6785ca4db03a98833d28a99b943fe31ad04",
+        "on_object_sha256": "260a79dd2628524ad3cc1ae498608975db6f5df1a550a105fc224282bb1ebbbd",
+        "off": {
+          "executable_bytes": 8404,
+          "allocated_bytes": 9974,
+          "zero_fill_bytes": 155
+        },
+        "on": {
+          "executable_bytes": 8348,
+          "allocated_bytes": 9918,
+          "zero_fill_bytes": 155
+        },
+        "off_stack": [
+          {
+            "function": "<stdin>:90:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 304,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "<stdin>:93:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 304,
+            "kind": "static"
+          }
+        ]
+      },
+      "id_sys": {
+        "off_ii_sha256": "abfa7b4071a99bb898b09b643ec37b28d96fea7f5c817c71efdc7373d5b00bfd",
+        "off_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "on_ii_sha256": "abfa7b4071a99bb898b09b643ec37b28d96fea7f5c817c71efdc7373d5b00bfd",
+        "on_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "off": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "on": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "off_stack": [],
+        "on_stack": []
+      },
+      "mes": {
+        "off_ii_sha256": "d6423b51de994f96f4b08e0ef9664ef31b1ec808c77a2ddbc8b36e00c0b6697e",
+        "off_object_sha256": "591c7682107a8bc9eeff29cbd56eae71ffaad48e274101284422a5067a4493d5",
+        "on_ii_sha256": "9ddc70ea98d222f3099adf721bb4951614561eb3bc001e2b0f27ba907044786c",
+        "on_object_sha256": "42a2706362fb42d11ad0908cbaffee7d27fe1592291db07485eb8326c7f01f19",
+        "off": {
+          "executable_bytes": 10564,
+          "allocated_bytes": 29278,
+          "zero_fill_bytes": 17809
+        },
+        "on": {
+          "executable_bytes": 10508,
+          "allocated_bytes": 29286,
+          "zero_fill_bytes": 17809
+        },
+        "off_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 116,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 0,
+            "kind": "static"
+          }
+        ]
+      },
+      "gx_stub": {
+        "off_ii_sha256": "3257175af647d050fc80ef6f26b8125c1ae2029c96a0fc24cf3d7fa0a48a8384",
+        "off_object_sha256": "4826fc560be1510c0bc2e9bacac660c572bd6c4055b28e8f05ef4ba64185c106",
+        "on_ii_sha256": "3257175af647d050fc80ef6f26b8125c1ae2029c96a0fc24cf3d7fa0a48a8384",
+        "on_object_sha256": "4826fc560be1510c0bc2e9bacac660c572bd6c4055b28e8f05ef4ba64185c106",
+        "off": {
+          "executable_bytes": 2376,
+          "allocated_bytes": 2990,
+          "zero_fill_bytes": 44
+        },
+        "on": {
+          "executable_bytes": 2376,
+          "allocated_bytes": 2990,
+          "zero_fill_bytes": 44
+        },
+        "off_stack": [],
+        "on_stack": []
+      }
+    },
+    "world_stack_off": {
+      "native_ui": {
+        "off_ii_sha256": "7a6a38d6b4a4bad4c439d18e490ce2d32c03dbfce31e9f135b2d6925d3f6ae86",
+        "off_object_sha256": "13c30521e795f4b4ff4822ba58341fa7a8ddd1807f2b3d391b253e21e12ad42e",
+        "on_ii_sha256": "512274c0c7e96bc50211f4f24ad8b783f61288b0742933988685f7cb7ae3f180",
+        "on_object_sha256": "2eaf00586001b324ba7eca3feebfde7d1c481be6072fb66d95dcd9eee74c242a",
+        "off": {
+          "executable_bytes": 77114,
+          "allocated_bytes": 386737,
+          "zero_fill_bytes": 152391
+        },
+        "on": {
+          "executable_bytes": 77162,
+          "allocated_bytes": 386785,
+          "zero_fill_bytes": 152391
+        },
+        "off_stack": [
+          {
+            "function": "<stdin>:5830:13:void ui_draw_quad(unsigned int)",
+            "bytes": 2460,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "<stdin>:5185:6:void {anonymous}::glyph_draw_run(unsigned int, unsigned int)",
+            "bytes": 2356,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:5852:13:void ui_draw_quad(unsigned int)",
+            "bytes": 504,
+            "kind": "static"
+          }
+        ]
+      },
+      "ui_bridge": {
+        "off_ii_sha256": "6bdf3ede9c9f70e030ffdb07e20503803dec6228d12f15257d0ae8e0a10d39d0",
+        "off_object_sha256": "6b2d6b26f12335bd6495414c426d23cb85b1df2f73c50726fbd1b973a136b4d3",
+        "on_ii_sha256": "c46a03d2664075c28a49bbe47c5ff6785ca4db03a98833d28a99b943fe31ad04",
+        "on_object_sha256": "260a79dd2628524ad3cc1ae498608975db6f5df1a550a105fc224282bb1ebbbd",
+        "off": {
+          "executable_bytes": 8404,
+          "allocated_bytes": 9974,
+          "zero_fill_bytes": 155
+        },
+        "on": {
+          "executable_bytes": 8348,
+          "allocated_bytes": 9918,
+          "zero_fill_bytes": 155
+        },
+        "off_stack": [
+          {
+            "function": "<stdin>:90:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 304,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "<stdin>:93:17:void re4dc_draw_id_quad(const IdUnit*)",
+            "bytes": 304,
+            "kind": "static"
+          }
+        ]
+      },
+      "id_sys": {
+        "off_ii_sha256": "abfa7b4071a99bb898b09b643ec37b28d96fea7f5c817c71efdc7373d5b00bfd",
+        "off_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "on_ii_sha256": "abfa7b4071a99bb898b09b643ec37b28d96fea7f5c817c71efdc7373d5b00bfd",
+        "on_object_sha256": "824421d4b9994120a5956dbc692f30cccd3160e21535ba6a01b1b72a4cea7306",
+        "off": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "on": {
+          "executable_bytes": 12984,
+          "allocated_bytes": 16474,
+          "zero_fill_bytes": 3012
+        },
+        "off_stack": [],
+        "on_stack": []
+      },
+      "mes": {
+        "off_ii_sha256": "d6423b51de994f96f4b08e0ef9664ef31b1ec808c77a2ddbc8b36e00c0b6697e",
+        "off_object_sha256": "591c7682107a8bc9eeff29cbd56eae71ffaad48e274101284422a5067a4493d5",
+        "on_ii_sha256": "9ddc70ea98d222f3099adf721bb4951614561eb3bc001e2b0f27ba907044786c",
+        "on_object_sha256": "42a2706362fb42d11ad0908cbaffee7d27fe1592291db07485eb8326c7f01f19",
+        "off": {
+          "executable_bytes": 10564,
+          "allocated_bytes": 29278,
+          "zero_fill_bytes": 17809
+        },
+        "on": {
+          "executable_bytes": 10508,
+          "allocated_bytes": 29286,
+          "zero_fill_bytes": 17809
+        },
+        "off_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 116,
+            "kind": "static"
+          }
+        ],
+        "on_stack": [
+          {
+            "function": "D:/Bio4/Prog/mes.cpp:1555:6:void messageCamera()",
+            "bytes": 0,
+            "kind": "static"
+          }
+        ]
+      },
+      "gx_stub": {
+        "off_ii_sha256": "3257175af647d050fc80ef6f26b8125c1ae2029c96a0fc24cf3d7fa0a48a8384",
+        "off_object_sha256": "4826fc560be1510c0bc2e9bacac660c572bd6c4055b28e8f05ef4ba64185c106",
+        "on_ii_sha256": "3257175af647d050fc80ef6f26b8125c1ae2029c96a0fc24cf3d7fa0a48a8384",
+        "on_object_sha256": "4826fc560be1510c0bc2e9bacac660c572bd6c4055b28e8f05ef4ba64185c106",
+        "off": {
+          "executable_bytes": 2376,
+          "allocated_bytes": 2990,
+          "zero_fill_bytes": 44
+        },
+        "on": {
+          "executable_bytes": 2376,
+          "allocated_bytes": 2990,
+          "zero_fill_bytes": 44
+        },
+        "off_stack": [],
+        "on_stack": []
+      }
+    }
+  },
+  "phases": {
+    "native": {
+      "scope": "Price complete public native UI emit functions with typed unchanged edges.\n\nProduction ui_draw_quad/glyph code and begin_pvr_packet execute unchanged.\nCached headers contain all eight defined seeded words. The metadata lookup\nedge supplies a real Texture and live Header; stream_send is an observed,\nzero-cost transport edge. Actual transport, allocation, upload and GPU costs\nare excluded. Scalar RN/DN execution is bounded fixture evidence, not general\nhardware FP conformance. Demand lines are touches, never measured misses.\n",
+      "arms": {
+        "l0": {
+          "quad": {
+            "instructions": 891,
+            "warm_cycles": 912,
+            "cold_icache_cycles": 1329,
+            "load_instructions": 158,
+            "store_instructions": 108,
+            "load_bytes": 611,
+            "store_bytes": 408,
+            "distinct_32byte_lines": 33,
+            "distinct_read_lines": 28,
+            "distinct_write_lines": 13,
+            "demand_line_visits": 266,
+            "repeated_demand_line_visits": 233,
+            "peak_stack_bytes": 2460,
+            "input": {
+              "name": "quad"
+            },
+            "output_sha256": "82c0ba539d859c7a326f1245c1ca8dbc7e85d3f04744d3bef16c342a815ef475",
+            "packet_sizes": [
+              160
+            ],
+            "ta_words": 40,
+            "state": {
+              "drawn": 3,
+              "glyph_drawn": 0,
+              "overlay_layer": 8
+            }
+          },
+          "glyph1": {
+            "instructions": 479,
+            "warm_cycles": 395,
+            "cold_icache_cycles": 781,
+            "load_instructions": 98,
+            "store_instructions": 77,
+            "load_bytes": 357,
+            "store_bytes": 308,
+            "distinct_32byte_lines": 25,
+            "distinct_read_lines": 20,
+            "distinct_write_lines": 13,
+            "demand_line_visits": 175,
+            "repeated_demand_line_visits": 150,
+            "peak_stack_bytes": 2460,
+            "input": {
+              "name": "glyph1",
+              "glyphs": 1
+            },
+            "output_sha256": "e98a45cd62ed5e7fe996f47496dfc92beb19fc82ce21a88e65ac31cfdbac1606",
+            "packet_sizes": [
+              160
+            ],
+            "ta_words": 40,
+            "state": {
+              "drawn": 2,
+              "glyph_drawn": 1,
+              "overlay_layer": 8
+            }
+          },
+          "glyph16": {
+            "instructions": 5106,
+            "warm_cycles": 4075,
+            "cold_icache_cycles": 4461,
+            "load_instructions": 969,
+            "store_instructions": 857,
+            "load_bytes": 3496,
+            "store_bytes": 3428,
+            "distinct_32byte_lines": 88,
+            "distinct_read_lines": 27,
+            "distinct_write_lines": 69,
+            "demand_line_visits": 1826,
+            "repeated_demand_line_visits": 1738,
+            "peak_stack_bytes": 2460,
+            "input": {
+              "name": "glyph16",
+              "glyphs": 16
+            },
+            "output_sha256": "54eeedf1ee74ec0a77ab4b4d6e4be3e81c7d5287b8fc4d6fcf76ab1238b68c8d",
+            "packet_sizes": [
+              1952,
+              128
+            ],
+            "ta_words": 520,
+            "state": {
+              "drawn": 2,
+              "glyph_drawn": 16,
+              "overlay_layer": 23
+            }
+          },
+          "glyph17-bank-scale": {
+            "instructions": 5854,
+            "warm_cycles": 4700,
+            "cold_icache_cycles": 5086,
+            "load_instructions": 1112,
+            "store_instructions": 964,
+            "load_bytes": 4015,
+            "store_bytes": 3856,
+            "distinct_32byte_lines": 94,
+            "distinct_read_lines": 33,
+            "distinct_write_lines": 69,
+            "demand_line_visits": 2076,
+            "repeated_demand_line_visits": 1982,
+            "peak_stack_bytes": 2460,
+            "input": {
+              "name": "glyph17-bank-scale",
+              "glyphs": 17,
+              "bank_changes": true,
+              "sx": 0.5,
+              "sy": 2.0
+            },
+            "output_sha256": "9c25c92f7cda0c2d2a118d5c387d8b4bff4bd642c87832c3196d624b1f37de3f",
+            "packet_sizes": [
+              1952,
+              416
+            ],
+            "ta_words": 592,
+            "state": {
+              "drawn": 2,
+              "glyph_drawn": 17,
+              "overlay_layer": 24
+            }
+          },
+          "glyph32-bank-fixed": {
+            "instructions": 10281,
+            "warm_cycles": 8120,
+            "cold_icache_cycles": 8494,
+            "load_instructions": 1940,
+            "store_instructions": 1767,
+            "load_bytes": 6952,
+            "store_bytes": 7068,
+            "distinct_32byte_lines": 102,
+            "distinct_read_lines": 41,
+            "distinct_write_lines": 68,
+            "demand_line_visits": 3707,
+            "repeated_demand_line_visits": 3605,
+            "peak_stack_bytes": 2460,
+            "input": {
+              "name": "glyph32-bank-fixed",
+              "glyphs": 32,
+              "bank_changes": true,
+              "autosort": 0,
+              "sx": 2.0,
+              "sy": 0.5
+            },
+            "output_sha256": "f20cd08ae9401223dd7dd69957f1c7b37c68f75b3697fef2b800fe25f65e03b7",
+            "packet_sizes": [
+              1952,
+              1952,
+              544
+            ],
+            "ta_words": 1112,
+            "state": {
+              "drawn": 2,
+              "glyph_drawn": 32,
+              "overlay_layer": 7
+            }
+          },
+          "quad-cover-scale": {
+            "instructions": 787,
+            "warm_cycles": 824,
+            "cold_icache_cycles": 1201,
+            "load_instructions": 134,
+            "store_instructions": 108,
+            "load_bytes": 515,
+            "store_bytes": 408,
+            "distinct_32byte_lines": 33,
+            "distinct_read_lines": 28,
+            "distinct_write_lines": 13,
+            "demand_line_visits": 242,
+            "repeated_demand_line_visits": 209,
+            "peak_stack_bytes": 2460,
+            "input": {
+              "name": "quad-cover-scale",
+              "sx": 0.5,
+              "sy": 2.0,
+              "cover": 2147549232
+            },
+            "output_sha256": "934a8151e4cd596d0dc5184c30c27555538b8c69a8b3549ed9138e39cd80b5ac",
+            "packet_sizes": [
+              160
+            ],
+            "ta_words": 40,
+            "state": {
+              "drawn": 3,
+              "glyph_drawn": 0,
+              "overlay_layer": 8
+            }
+          },
+          "quad-fixed": {
+            "instructions": 871,
+            "warm_cycles": 892,
+            "cold_icache_cycles": 1297,
+            "load_instructions": 154,
+            "store_instructions": 107,
+            "load_bytes": 595,
+            "store_bytes": 404,
+            "distinct_32byte_lines": 32,
+            "distinct_read_lines": 27,
+            "distinct_write_lines": 12,
+            "demand_line_visits": 261,
+            "repeated_demand_line_visits": 229,
+            "peak_stack_bytes": 2460,
+            "input": {
+              "name": "quad-fixed",
+              "autosort": 0,
+              "sx": 2.0,
+              "sy": 0.5
+            },
+            "output_sha256": "827ea7aa9dd1c0c0d956c19c69a3253550c23420fa5a36c70b55242e64e85bd0",
+            "packet_sizes": [
+              160
+            ],
+            "ta_words": 40,
+            "state": {
+              "drawn": 3,
+              "glyph_drawn": 0,
+              "overlay_layer": 7
+            }
+          }
+        },
+        "l1": {
+          "quad": {
+            "instructions": 496,
+            "warm_cycles": 567,
+            "cold_icache_cycles": 920,
+            "load_instructions": 100,
+            "store_instructions": 66,
+            "load_bytes": 383,
+            "store_bytes": 264,
+            "distinct_32byte_lines": 32,
+            "distinct_read_lines": 27,
+            "distinct_write_lines": 12,
+            "demand_line_visits": 166,
+            "repeated_demand_line_visits": 134,
+            "peak_stack_bytes": 504,
+            "input": {
+              "name": "quad"
+            },
+            "output_sha256": "82c0ba539d859c7a326f1245c1ca8dbc7e85d3f04744d3bef16c342a815ef475",
+            "packet_sizes": [
+              160
+            ],
+            "ta_words": 40,
+            "state": {
+              "drawn": 3,
+              "glyph_drawn": 0,
+              "overlay_layer": 8
+            }
+          },
+          "glyph1": {
+            "instructions": 399,
+            "warm_cycles": 320,
+            "cold_icache_cycles": 691,
+            "load_instructions": 80,
+            "store_instructions": 66,
+            "load_bytes": 279,
+            "store_bytes": 264,
+            "distinct_32byte_lines": 24,
+            "distinct_read_lines": 18,
+            "distinct_write_lines": 12,
+            "demand_line_visits": 146,
+            "repeated_demand_line_visits": 122,
+            "peak_stack_bytes": 2356,
+            "input": {
+              "name": "glyph1",
+              "glyphs": 1
+            },
+            "output_sha256": "e98a45cd62ed5e7fe996f47496dfc92beb19fc82ce21a88e65ac31cfdbac1606",
+            "packet_sizes": [
+              160
+            ],
+            "ta_words": 40,
+            "state": {
+              "drawn": 2,
+              "glyph_drawn": 1,
+              "overlay_layer": 8
+            }
+          },
+          "glyph16": {
+            "instructions": 3481,
+            "warm_cycles": 2485,
+            "cold_icache_cycles": 2856,
+            "load_instructions": 501,
+            "store_instructions": 591,
+            "load_bytes": 1618,
+            "store_bytes": 2364,
+            "distinct_32byte_lines": 86,
+            "distinct_read_lines": 25,
+            "distinct_write_lines": 67,
+            "demand_line_visits": 1092,
+            "repeated_demand_line_visits": 1006,
+            "peak_stack_bytes": 2356,
+            "input": {
+              "name": "glyph16",
+              "glyphs": 16
+            },
+            "output_sha256": "54eeedf1ee74ec0a77ab4b4d6e4be3e81c7d5287b8fc4d6fcf76ab1238b68c8d",
+            "packet_sizes": [
+              1952,
+              128
+            ],
+            "ta_words": 520,
+            "state": {
+              "drawn": 2,
+              "glyph_drawn": 16,
+              "overlay_layer": 23
+            }
+          },
+          "glyph17-bank-scale": {
+            "instructions": 4126,
+            "warm_cycles": 3014,
+            "cold_icache_cycles": 3385,
+            "load_instructions": 609,
+            "store_instructions": 681,
+            "load_bytes": 1997,
+            "store_bytes": 2724,
+            "distinct_32byte_lines": 92,
+            "distinct_read_lines": 31,
+            "distinct_write_lines": 67,
+            "demand_line_visits": 1290,
+            "repeated_demand_line_visits": 1198,
+            "peak_stack_bytes": 2356,
+            "input": {
+              "name": "glyph17-bank-scale",
+              "glyphs": 17,
+              "bank_changes": true,
+              "sx": 0.5,
+              "sy": 2.0
+            },
+            "output_sha256": "9c25c92f7cda0c2d2a118d5c387d8b4bff4bd642c87832c3196d624b1f37de3f",
+            "packet_sizes": [
+              1952,
+              416
+            ],
+            "ta_words": 592,
+            "state": {
+              "drawn": 2,
+              "glyph_drawn": 17,
+              "overlay_layer": 24
+            }
+          },
+          "glyph32-bank-fixed": {
+            "instructions": 7008,
+            "warm_cycles": 4924,
+            "cold_icache_cycles": 5286,
+            "load_instructions": 982,
+            "store_instructions": 1229,
+            "load_bytes": 3114,
+            "store_bytes": 4916,
+            "distinct_32byte_lines": 100,
+            "distinct_read_lines": 39,
+            "distinct_write_lines": 66,
+            "demand_line_visits": 2211,
+            "repeated_demand_line_visits": 2111,
+            "peak_stack_bytes": 2356,
+            "input": {
+              "name": "glyph32-bank-fixed",
+              "glyphs": 32,
+              "bank_changes": true,
+              "autosort": 0,
+              "sx": 2.0,
+              "sy": 0.5
+            },
+            "output_sha256": "f20cd08ae9401223dd7dd69957f1c7b37c68f75b3697fef2b800fe25f65e03b7",
+            "packet_sizes": [
+              1952,
+              1952,
+              544
+            ],
+            "ta_words": 1112,
+            "state": {
+              "drawn": 2,
+              "glyph_drawn": 32,
+              "overlay_layer": 7
+            }
+          },
+          "quad-cover-scale": {
+            "instructions": 495,
+            "warm_cycles": 567,
+            "cold_icache_cycles": 899,
+            "load_instructions": 100,
+            "store_instructions": 66,
+            "load_bytes": 381,
+            "store_bytes": 264,
+            "distinct_32byte_lines": 31,
+            "distinct_read_lines": 26,
+            "distinct_write_lines": 12,
+            "demand_line_visits": 166,
+            "repeated_demand_line_visits": 135,
+            "peak_stack_bytes": 504,
+            "input": {
+              "name": "quad-cover-scale",
+              "sx": 0.5,
+              "sy": 2.0,
+              "cover": 2147549232
+            },
+            "output_sha256": "934a8151e4cd596d0dc5184c30c27555538b8c69a8b3549ed9138e39cd80b5ac",
+            "packet_sizes": [
+              160
+            ],
+            "ta_words": 40,
+            "state": {
+              "drawn": 3,
+              "glyph_drawn": 0,
+              "overlay_layer": 8
+            }
+          },
+          "quad-fixed": {
+            "instructions": 476,
+            "warm_cycles": 547,
+            "cold_icache_cycles": 888,
+            "load_instructions": 96,
+            "store_instructions": 65,
+            "load_bytes": 367,
+            "store_bytes": 260,
+            "distinct_32byte_lines": 31,
+            "distinct_read_lines": 26,
+            "distinct_write_lines": 11,
+            "demand_line_visits": 161,
+            "repeated_demand_line_visits": 130,
+            "peak_stack_bytes": 504,
+            "input": {
+              "name": "quad-fixed",
+              "autosort": 0,
+              "sx": 2.0,
+              "sy": 0.5
+            },
+            "output_sha256": "827ea7aa9dd1c0c0d956c19c69a3253550c23420fa5a36c70b55242e64e85bd0",
+            "packet_sizes": [
+              160
+            ],
+            "ta_words": 40,
+            "state": {
+              "drawn": 3,
+              "glyph_drawn": 0,
+              "overlay_layer": 7
+            }
+          }
+        }
+      }
+    },
+    "bridge": {
+      "scope": "Price full compiled public re4dc_draw_id_quad with fixed typed service edges.\n\nThe fixture observes all 104 output bytes and mask submissions. Inputs use the\nactual target IdUnit/TPL/GX layouts. The bridge's arithmetic executes normally;\nthe unchanged matrix edge is an identity-screen copy, and texture/camera/native\nenqueue services use typed adapters. Adapter instructions are retained, their\noriginal game/service costs are not claimed. Normal RN/DN scalar arithmetic\nand bounded finite color conversions only; no hardware frame-time prediction.\n",
+      "arms": {
+        "l0": {
+          "ortho": {
+            "instructions": 799,
+            "warm_cycles": 1024,
+            "cold_icache_cycles": 1490,
+            "load_instructions": 197,
+            "store_instructions": 94,
+            "load_bytes": 688,
+            "store_bytes": 376,
+            "distinct_32byte_lines": 31,
+            "distinct_read_lines": 29,
+            "distinct_write_lines": 10,
+            "demand_line_visits": 291,
+            "repeated_demand_line_visits": 260,
+            "peak_stack_bytes": 308,
+            "input": {
+              "name": "ortho"
+            },
+            "observations": [
+              [
+                "quad",
+                "0000400000000000400000002000000005000000ffffffff00000000000040c1c0ff7fc000008842c0ff7fc00000884200001042000040c100001042000000be0000803e0000903f0000803e0000903f0000603f000000be0000603ffe8123bb0100000000000000"
+              ]
+            ]
+          },
+          "ortho-palette": {
+            "instructions": 811,
+            "warm_cycles": 1039,
+            "cold_icache_cycles": 1505,
+            "load_instructions": 203,
+            "store_instructions": 97,
+            "load_bytes": 708,
+            "store_bytes": 388,
+            "distinct_32byte_lines": 32,
+            "distinct_read_lines": 30,
+            "distinct_write_lines": 10,
+            "demand_line_visits": 300,
+            "repeated_demand_line_visits": 268,
+            "peak_stack_bytes": 308,
+            "input": {
+              "name": "ortho-palette",
+              "palette": true
+            },
+            "observations": [
+              [
+                "quad",
+                "00004000000048004000000020000000050000000100000020000000000040c1c0ff7fc000008842c0ff7fc00000884200001042000040c100001042000000be0000803e0000903f0000803e0000903f0000603f000000be0000603ffe8123bb0100000000000000"
+              ]
+            ]
+          },
+          "perspective-jitter": {
+            "instructions": 871,
+            "warm_cycles": 1160,
+            "cold_icache_cycles": 1624,
+            "load_instructions": 213,
+            "store_instructions": 94,
+            "load_bytes": 752,
+            "store_bytes": 376,
+            "distinct_32byte_lines": 31,
+            "distinct_read_lines": 29,
+            "distinct_write_lines": 10,
+            "demand_line_visits": 307,
+            "repeated_demand_line_visits": 276,
+            "peak_stack_bytes": 308,
+            "input": {
+              "name": "perspective-jitter",
+              "perspective": true,
+              "jitter": 0.0010416666666666667
+            },
+            "observations": [
+              [
+                "quad",
+                "0000400000000000400000002000000005000000ffffffff0000000000000043004081430000404400408143000040440000ecc1000000430000ecc1000000be0000803e0000903f0000803e0000903f0000603f000000be0000603ffe8123bb0100000000000000"
+              ]
+            ]
+          },
+          "mask": {
+            "instructions": 913,
+            "warm_cycles": 1144,
+            "cold_icache_cycles": 1675,
+            "load_instructions": 225,
+            "store_instructions": 101,
+            "load_bytes": 776,
+            "store_bytes": 404,
+            "distinct_32byte_lines": 34,
+            "distinct_read_lines": 32,
+            "distinct_write_lines": 10,
+            "demand_line_visits": 326,
+            "repeated_demand_line_visits": 292,
+            "peak_stack_bytes": 308,
+            "input": {
+              "name": "mask",
+              "mask": true
+            },
+            "observations": [
+              [
+                "mask",
+                "0000400000000000400000002000000005000000ffffffff00000000000040c1c0ff7fc000008842c0ff7fc00000884200001042000040c100001042000000be0000803e0000903f0000803e0000903f0000603f000000be0000603ffe8123bb0100000001000000",
+                "00004100001048004000000020000000050000000100000020000000"
+              ]
+            ]
+          }
+        },
+        "l1": {
+          "ortho": {
+            "instructions": 772,
+            "warm_cycles": 997,
+            "cold_icache_cycles": 1459,
+            "load_instructions": 196,
+            "store_instructions": 70,
+            "load_bytes": 686,
+            "store_bytes": 280,
+            "distinct_32byte_lines": 32,
+            "distinct_read_lines": 30,
+            "distinct_write_lines": 10,
+            "demand_line_visits": 266,
+            "repeated_demand_line_visits": 234,
+            "peak_stack_bytes": 308,
+            "input": {
+              "name": "ortho"
+            },
+            "observations": [
+              [
+                "quad",
+                "0000400000000000400000002000000005000000ffffffff00000000000040c1c0ff7fc000008842c0ff7fc00000884200001042000040c100001042000000be0000803e0000903f0000803e0000903f0000603f000000be0000603ffe8123bb0100000000000000"
+              ]
+            ]
+          },
+          "ortho-palette": {
+            "instructions": 784,
+            "warm_cycles": 1012,
+            "cold_icache_cycles": 1474,
+            "load_instructions": 202,
+            "store_instructions": 73,
+            "load_bytes": 706,
+            "store_bytes": 292,
+            "distinct_32byte_lines": 33,
+            "distinct_read_lines": 31,
+            "distinct_write_lines": 10,
+            "demand_line_visits": 275,
+            "repeated_demand_line_visits": 242,
+            "peak_stack_bytes": 308,
+            "input": {
+              "name": "ortho-palette",
+              "palette": true
+            },
+            "observations": [
+              [
+                "quad",
+                "00004000000048004000000020000000050000000100000020000000000040c1c0ff7fc000008842c0ff7fc00000884200001042000040c100001042000000be0000803e0000903f0000803e0000903f0000603f000000be0000603ffe8123bb0100000000000000"
+              ]
+            ]
+          },
+          "perspective-jitter": {
+            "instructions": 844,
+            "warm_cycles": 1133,
+            "cold_icache_cycles": 1580,
+            "load_instructions": 212,
+            "store_instructions": 70,
+            "load_bytes": 750,
+            "store_bytes": 280,
+            "distinct_32byte_lines": 32,
+            "distinct_read_lines": 30,
+            "distinct_write_lines": 10,
+            "demand_line_visits": 282,
+            "repeated_demand_line_visits": 250,
+            "peak_stack_bytes": 308,
+            "input": {
+              "name": "perspective-jitter",
+              "perspective": true,
+              "jitter": 0.0010416666666666667
+            },
+            "observations": [
+              [
+                "quad",
+                "0000400000000000400000002000000005000000ffffffff0000000000000043004081430000404400408143000040440000ecc1000000430000ecc1000000be0000803e0000903f0000803e0000903f0000603f000000be0000603ffe8123bb0100000000000000"
+              ]
+            ]
+          },
+          "mask": {
+            "instructions": 886,
+            "warm_cycles": 1117,
+            "cold_icache_cycles": 1648,
+            "load_instructions": 224,
+            "store_instructions": 77,
+            "load_bytes": 774,
+            "store_bytes": 308,
+            "distinct_32byte_lines": 35,
+            "distinct_read_lines": 33,
+            "distinct_write_lines": 10,
+            "demand_line_visits": 301,
+            "repeated_demand_line_visits": 266,
+            "peak_stack_bytes": 308,
+            "input": {
+              "name": "mask",
+              "mask": true
+            },
+            "observations": [
+              [
+                "mask",
+                "0000400000000000400000002000000005000000ffffffff00000000000040c1c0ff7fc000008842c0ff7fc00000884200001042000040c100001042000000be0000803e0000903f0000803e0000903f0000603f000000be0000603ffe8123bb0100000001000000",
+                "00004100001048004000000020000000050000000100000020000000"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "camera": {
+      "scope": "Run complete compiled messageCamera and unchanged production math/GX code.\n\nOFF constructor and ON immutable template are compared in all 16 matrix words\nat GXSetProjection entry and all seven resulting compact GX state words.\nOnly observable GX state must match: removed GX identity-load/current-matrix\ncalls are actual no-op functions in gx_stub.cpp. FP exception status is outside\nthe scalar interpreter; the compile-time template is qualified for normal RN.\n",
+      "arms": {
+        "l0": {
+          "instructions": 164,
+          "warm_cycles": 168,
+          "cold_icache_cycles": 308,
+          "load_instructions": 18,
+          "store_instructions": 36,
+          "load_bytes": 72,
+          "store_bytes": 144,
+          "distinct_32byte_lines": 8,
+          "distinct_read_lines": 6,
+          "distinct_write_lines": 5,
+          "demand_line_visits": 54,
+          "repeated_demand_line_visits": 46,
+          "peak_stack_bytes": 116,
+          "matrix": "0000803b0000000000000000000080bf00000000abaaaabb000000000000803f00000000000000000ad7233c000080bf0000000000000000000000000000803f",
+          "compact_words": [
+            1065353216,
+            998244352,
+            3212836864,
+            3148524203,
+            1065353216,
+            1008981770,
+            3212836864
+          ]
+        },
+        "l1": {
+          "instructions": 42,
+          "warm_cycles": 41,
+          "cold_icache_cycles": 100,
+          "load_instructions": 11,
+          "store_instructions": 7,
+          "load_bytes": 44,
+          "store_bytes": 28,
+          "distinct_32byte_lines": 5,
+          "distinct_read_lines": 4,
+          "distinct_write_lines": 2,
+          "demand_line_visits": 18,
+          "repeated_demand_line_visits": 13,
+          "peak_stack_bytes": 0,
+          "matrix": "0000803b0000000000000000000080bf00000000abaaaabb000000000000803f00000000000000000ad7233c000080bf0000000000000000000000000000803f",
+          "compact_words": [
+            1065353216,
+            998244352,
+            3212836864,
+            3148524203,
+            1065353216,
+            1008981770,
+            3212836864
+          ]
+        }
+      }
+    }
+  },
+  "interpreter_controls": {
+    "status": "PASS",
+    "controls": [
+      "fetches excluded; scalar load/store retained",
+      "PC-relative literal classified as data",
+      "data read of current opcode word retained",
+      "delay slot attributed exactly once",
+      "double-register move counted as one 8-byte load",
+      "32-bit effective address wrap",
+      "store queues excluded from cached footprint",
+      "cached PREF counted separately from demand loads"
+    ],
+    "conversion_cases": 14,
+    "conversion_boundaries_rejected": 2,
+    "conversion_scope": "Exact small nonnegative FLOAT(PR=1)/FCNVDS, finite signed16 FTRC; no general double arithmetic"
+  },
+  "raw_receipts": {
+    "controls": {
+      "file": "build9-controls-final-01/build-controls.json",
+      "sha256": "e038ca578528d42bae83a3ff949f76885bcf6a86dca039e3a503b4e44c29a9dd"
+    },
+    "native_build": {
+      "file": "build9-native-hoist-final-01/native-build.json",
+      "sha256": "8c87988d521a101e35e354f4d723fc99ac9348abb96870a0d6665abb95bcbfaa"
+    },
+    "native_run": {
+      "file": "build9-native-hoist-run-final-01/native-controls.json",
+      "sha256": "8f3197b960be333df0efdd8141bdf70bb080b4ad43d6e00804abfe8ebbf20314"
+    },
+    "bridge_build": {
+      "file": "build9-bridge-final-02/bridge-build.json",
+      "sha256": "4f9427d55980079074b0edf85edc71f83b7e02890b55ecc2892a23c3b890ab92"
+    },
+    "bridge_run": {
+      "file": "build9-bridge-run-final-02/bridge-controls.json",
+      "sha256": "862a0540840cf86b31f40130c6efa3fe348b276e1d1a63807082be2d76f08e1c"
+    },
+    "camera_build": {
+      "file": "build9-camera-01/camera-build.json",
+      "sha256": "d5578d3bee14b33dff7968843a3ed8f8423429c75fa73b7236e6718a109d797d"
+    },
+    "camera_run": {
+      "file": "build9-camera-run-final-01/camera-controls.json",
+      "sha256": "384fe3db1472769e29abd0afa859998a79b1d67f3d7327964149f9ed30929073"
+    },
+    "native_identity_refresh": {
+      "file": "build9-controls-native-hoist-01/build-controls.json",
+      "sha256": "1fa1095f3a92fe59478caf10d5d91c9f695e107949ef13715190b37e1fc34535"
+    },
+    "candidate_comparison": {
+      "file": "build9-native-inline-run-02/native-controls.json",
+      "sha256": "d79b4cd1d1e22c4f096635f33f566141a6852f84aeb139325364e157c6ad70b6"
+    },
+    "candidate_build": {
+      "file": "build9-native-inline-01/native-build.json",
+      "sha256": "a7aefe1aa71bd20a462f80cef31ac263b620096a439394206b0b9be637e1d9b2"
+    },
+    "dimension_hoist_run": {
+      "file": "build9-dimensions-run-01/native-controls.json",
+      "sha256": "4e1a77880ff62e8d6804b6f3bffe73277579fdb7c4acfb89f38d5469730cd69c"
+    },
+    "dimension_hoist_build": {
+      "file": "build9-dimensions-build-01/native-build.json",
+      "sha256": "0fc393fd7b6fcb7e8a9e4f59dbb502c99fd783458d3ce211b143e9ad86503bde"
+    }
+  },
+  "identity_refresh_scope": {
+    "retained_unaffected_comparisons": 144,
+    "refreshed_native_comparisons": 36,
+    "total_distinct_final_comparisons": 180,
+    "previous_native_control_comparisons": 36,
+    "scope": "Only native_ui.cpp changed after the full qualification; original source/Make hashes and all unaffected proofs are retained."
+  },
+  "candidate_comparison": {
+    "l0": {
+      "quad": {
+        "instructions": 891,
+        "warm_cycles": 912,
+        "cold_icache_cycles": 1329,
+        "load_instructions": 158,
+        "store_instructions": 108,
+        "load_bytes": 611,
+        "store_bytes": 408,
+        "distinct_32byte_lines": 33,
+        "distinct_read_lines": 28,
+        "distinct_write_lines": 13,
+        "demand_line_visits": 266,
+        "repeated_demand_line_visits": 233,
+        "peak_stack_bytes": 2460,
+        "input": {
+          "name": "quad"
+        },
+        "output_sha256": "82c0ba539d859c7a326f1245c1ca8dbc7e85d3f04744d3bef16c342a815ef475",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 3,
+          "glyph_drawn": 0,
+          "overlay_layer": 8
+        }
+      },
+      "glyph1": {
+        "instructions": 479,
+        "warm_cycles": 395,
+        "cold_icache_cycles": 781,
+        "load_instructions": 98,
+        "store_instructions": 77,
+        "load_bytes": 357,
+        "store_bytes": 308,
+        "distinct_32byte_lines": 25,
+        "distinct_read_lines": 20,
+        "distinct_write_lines": 13,
+        "demand_line_visits": 175,
+        "repeated_demand_line_visits": 150,
+        "peak_stack_bytes": 2460,
+        "input": {
+          "name": "glyph1",
+          "glyphs": 1
+        },
+        "output_sha256": "e98a45cd62ed5e7fe996f47496dfc92beb19fc82ce21a88e65ac31cfdbac1606",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 1,
+          "overlay_layer": 8
+        }
+      },
+      "glyph16": {
+        "instructions": 5106,
+        "warm_cycles": 4075,
+        "cold_icache_cycles": 4461,
+        "load_instructions": 969,
+        "store_instructions": 857,
+        "load_bytes": 3496,
+        "store_bytes": 3428,
+        "distinct_32byte_lines": 88,
+        "distinct_read_lines": 27,
+        "distinct_write_lines": 69,
+        "demand_line_visits": 1826,
+        "repeated_demand_line_visits": 1738,
+        "peak_stack_bytes": 2460,
+        "input": {
+          "name": "glyph16",
+          "glyphs": 16
+        },
+        "output_sha256": "54eeedf1ee74ec0a77ab4b4d6e4be3e81c7d5287b8fc4d6fcf76ab1238b68c8d",
+        "packet_sizes": [
+          1952,
+          128
+        ],
+        "ta_words": 520,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 16,
+          "overlay_layer": 23
+        }
+      }
+    },
+    "l1": {
+      "quad": {
+        "instructions": 749,
+        "warm_cycles": 817,
+        "cold_icache_cycles": 1197,
+        "load_instructions": 164,
+        "store_instructions": 71,
+        "load_bytes": 637,
+        "store_bytes": 284,
+        "distinct_32byte_lines": 30,
+        "distinct_read_lines": 25,
+        "distinct_write_lines": 12,
+        "demand_line_visits": 235,
+        "repeated_demand_line_visits": 205,
+        "peak_stack_bytes": 504,
+        "input": {
+          "name": "quad"
+        },
+        "output_sha256": "82c0ba539d859c7a326f1245c1ca8dbc7e85d3f04744d3bef16c342a815ef475",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 3,
+          "glyph_drawn": 0,
+          "overlay_layer": 8
+        }
+      },
+      "glyph1": {
+        "instructions": 515,
+        "warm_cycles": 495,
+        "cold_icache_cycles": 904,
+        "load_instructions": 135,
+        "store_instructions": 82,
+        "load_bytes": 499,
+        "store_bytes": 328,
+        "distinct_32byte_lines": 24,
+        "distinct_read_lines": 18,
+        "distinct_write_lines": 12,
+        "demand_line_visits": 217,
+        "repeated_demand_line_visits": 193,
+        "peak_stack_bytes": 2380,
+        "input": {
+          "name": "glyph1",
+          "glyphs": 1
+        },
+        "output_sha256": "e98a45cd62ed5e7fe996f47496dfc92beb19fc82ce21a88e65ac31cfdbac1606",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 1,
+          "overlay_layer": 8
+        }
+      },
+      "glyph16": {
+        "instructions": 5321,
+        "warm_cycles": 5195,
+        "cold_icache_cycles": 5604,
+        "load_instructions": 1366,
+        "store_instructions": 803,
+        "load_bytes": 5078,
+        "store_bytes": 3212,
+        "distinct_32byte_lines": 86,
+        "distinct_read_lines": 25,
+        "distinct_write_lines": 67,
+        "demand_line_visits": 2169,
+        "repeated_demand_line_visits": 2083,
+        "peak_stack_bytes": 2380,
+        "input": {
+          "name": "glyph16",
+          "glyphs": 16
+        },
+        "output_sha256": "54eeedf1ee74ec0a77ab4b4d6e4be3e81c7d5287b8fc4d6fcf76ab1238b68c8d",
+        "packet_sizes": [
+          1952,
+          128
+        ],
+        "ta_words": 520,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 16,
+          "overlay_layer": 23
+        }
+      }
+    },
+    "initial": {
+      "quad": {
+        "instructions": 749,
+        "warm_cycles": 817,
+        "cold_icache_cycles": 1191,
+        "load_instructions": 164,
+        "store_instructions": 71,
+        "load_bytes": 637,
+        "store_bytes": 284,
+        "distinct_32byte_lines": 31,
+        "distinct_read_lines": 26,
+        "distinct_write_lines": 12,
+        "demand_line_visits": 235,
+        "repeated_demand_line_visits": 204,
+        "peak_stack_bytes": 504,
+        "input": {
+          "name": "quad"
+        },
+        "output_sha256": "82c0ba539d859c7a326f1245c1ca8dbc7e85d3f04744d3bef16c342a815ef475",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 3,
+          "glyph_drawn": 0,
+          "overlay_layer": 8
+        }
+      },
+      "glyph1": {
+        "instructions": 506,
+        "warm_cycles": 423,
+        "cold_icache_cycles": 810,
+        "load_instructions": 109,
+        "store_instructions": 85,
+        "load_bytes": 395,
+        "store_bytes": 340,
+        "distinct_32byte_lines": 26,
+        "distinct_read_lines": 20,
+        "distinct_write_lines": 13,
+        "demand_line_visits": 194,
+        "repeated_demand_line_visits": 168,
+        "peak_stack_bytes": 2412,
+        "input": {
+          "name": "glyph1",
+          "glyphs": 1
+        },
+        "output_sha256": "e98a45cd62ed5e7fe996f47496dfc92beb19fc82ce21a88e65ac31cfdbac1606",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 1,
+          "overlay_layer": 8
+        }
+      },
+      "glyph16": {
+        "instructions": 5133,
+        "warm_cycles": 4103,
+        "cold_icache_cycles": 4490,
+        "load_instructions": 980,
+        "store_instructions": 865,
+        "load_bytes": 3534,
+        "store_bytes": 3460,
+        "distinct_32byte_lines": 88,
+        "distinct_read_lines": 27,
+        "distinct_write_lines": 68,
+        "demand_line_visits": 1845,
+        "repeated_demand_line_visits": 1757,
+        "peak_stack_bytes": 2412,
+        "input": {
+          "name": "glyph16",
+          "glyphs": 16
+        },
+        "output_sha256": "54eeedf1ee74ec0a77ab4b4d6e4be3e81c7d5287b8fc4d6fcf76ab1238b68c8d",
+        "packet_sizes": [
+          1952,
+          128
+        ],
+        "ta_words": 520,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 16,
+          "overlay_layer": 23
+        }
+      }
+    },
+    "inline": {
+      "quad": {
+        "instructions": 749,
+        "warm_cycles": 817,
+        "cold_icache_cycles": 1198,
+        "load_instructions": 164,
+        "store_instructions": 71,
+        "load_bytes": 637,
+        "store_bytes": 284,
+        "distinct_32byte_lines": 31,
+        "distinct_read_lines": 26,
+        "distinct_write_lines": 12,
+        "demand_line_visits": 235,
+        "repeated_demand_line_visits": 204,
+        "peak_stack_bytes": 504,
+        "input": {
+          "name": "quad"
+        },
+        "output_sha256": "82c0ba539d859c7a326f1245c1ca8dbc7e85d3f04744d3bef16c342a815ef475",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 3,
+          "glyph_drawn": 0,
+          "overlay_layer": 8
+        }
+      },
+      "glyph1": {
+        "instructions": 399,
+        "warm_cycles": 323,
+        "cold_icache_cycles": 693,
+        "load_instructions": 80,
+        "store_instructions": 66,
+        "load_bytes": 279,
+        "store_bytes": 264,
+        "distinct_32byte_lines": 24,
+        "distinct_read_lines": 18,
+        "distinct_write_lines": 12,
+        "demand_line_visits": 146,
+        "repeated_demand_line_visits": 122,
+        "peak_stack_bytes": 2356,
+        "input": {
+          "name": "glyph1",
+          "glyphs": 1
+        },
+        "output_sha256": "e98a45cd62ed5e7fe996f47496dfc92beb19fc82ce21a88e65ac31cfdbac1606",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 1,
+          "overlay_layer": 8
+        }
+      },
+      "glyph16": {
+        "instructions": 3481,
+        "warm_cycles": 2488,
+        "cold_icache_cycles": 2858,
+        "load_instructions": 501,
+        "store_instructions": 591,
+        "load_bytes": 1618,
+        "store_bytes": 2364,
+        "distinct_32byte_lines": 86,
+        "distinct_read_lines": 25,
+        "distinct_write_lines": 67,
+        "demand_line_visits": 1092,
+        "repeated_demand_line_visits": 1006,
+        "peak_stack_bytes": 2356,
+        "input": {
+          "name": "glyph16",
+          "glyphs": 16
+        },
+        "output_sha256": "54eeedf1ee74ec0a77ab4b4d6e4be3e81c7d5287b8fc4d6fcf76ab1238b68c8d",
+        "packet_sizes": [
+          1952,
+          128
+        ],
+        "ta_words": 520,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 16,
+          "overlay_layer": 23
+        }
+      }
+    }
+  },
+  "candidate_sources": {
+    "l0": "1b8521d6d46bfb48354e6a19a0a6ccae431572004331466b5bc93316ccd00a00",
+    "l1": "1b8521d6d46bfb48354e6a19a0a6ccae431572004331466b5bc93316ccd00a00",
+    "initial": "6b71400c94fa19d1f59b7345885f0ec2078118a1b9884eb837ea2e4979e945fd",
+    "inline": "b60d5a005790815bdaa710029ceb9635981f25d3a18b5c65f552365a24632196"
+  },
+  "dimension_hoist_comparison": {
+    "l0": {
+      "quad": {
+        "instructions": 891,
+        "warm_cycles": 912,
+        "cold_icache_cycles": 1329,
+        "load_instructions": 158,
+        "store_instructions": 108,
+        "load_bytes": 611,
+        "store_bytes": 408,
+        "distinct_32byte_lines": 33,
+        "distinct_read_lines": 28,
+        "distinct_write_lines": 13,
+        "demand_line_visits": 266,
+        "repeated_demand_line_visits": 233,
+        "peak_stack_bytes": 2460,
+        "input": {
+          "name": "quad"
+        },
+        "output_sha256": "82c0ba539d859c7a326f1245c1ca8dbc7e85d3f04744d3bef16c342a815ef475",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 3,
+          "glyph_drawn": 0,
+          "overlay_layer": 8
+        }
+      },
+      "glyph1": {
+        "instructions": 479,
+        "warm_cycles": 395,
+        "cold_icache_cycles": 781,
+        "load_instructions": 98,
+        "store_instructions": 77,
+        "load_bytes": 357,
+        "store_bytes": 308,
+        "distinct_32byte_lines": 25,
+        "distinct_read_lines": 20,
+        "distinct_write_lines": 13,
+        "demand_line_visits": 175,
+        "repeated_demand_line_visits": 150,
+        "peak_stack_bytes": 2460,
+        "input": {
+          "name": "glyph1",
+          "glyphs": 1
+        },
+        "output_sha256": "e98a45cd62ed5e7fe996f47496dfc92beb19fc82ce21a88e65ac31cfdbac1606",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 1,
+          "overlay_layer": 8
+        }
+      },
+      "glyph16": {
+        "instructions": 5106,
+        "warm_cycles": 4075,
+        "cold_icache_cycles": 4461,
+        "load_instructions": 969,
+        "store_instructions": 857,
+        "load_bytes": 3496,
+        "store_bytes": 3428,
+        "distinct_32byte_lines": 88,
+        "distinct_read_lines": 27,
+        "distinct_write_lines": 69,
+        "demand_line_visits": 1826,
+        "repeated_demand_line_visits": 1738,
+        "peak_stack_bytes": 2460,
+        "input": {
+          "name": "glyph16",
+          "glyphs": 16
+        },
+        "output_sha256": "54eeedf1ee74ec0a77ab4b4d6e4be3e81c7d5287b8fc4d6fcf76ab1238b68c8d",
+        "packet_sizes": [
+          1952,
+          128
+        ],
+        "ta_words": 520,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 16,
+          "overlay_layer": 23
+        }
+      },
+      "glyph17-bank-scale": {
+        "instructions": 5854,
+        "warm_cycles": 4700,
+        "cold_icache_cycles": 5086,
+        "load_instructions": 1112,
+        "store_instructions": 964,
+        "load_bytes": 4015,
+        "store_bytes": 3856,
+        "distinct_32byte_lines": 94,
+        "distinct_read_lines": 33,
+        "distinct_write_lines": 69,
+        "demand_line_visits": 2076,
+        "repeated_demand_line_visits": 1982,
+        "peak_stack_bytes": 2460,
+        "input": {
+          "name": "glyph17-bank-scale",
+          "glyphs": 17,
+          "bank_changes": true,
+          "sx": 0.5,
+          "sy": 2.0
+        },
+        "output_sha256": "9c25c92f7cda0c2d2a118d5c387d8b4bff4bd642c87832c3196d624b1f37de3f",
+        "packet_sizes": [
+          1952,
+          416
+        ],
+        "ta_words": 592,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 17,
+          "overlay_layer": 24
+        }
+      },
+      "glyph32-bank-fixed": {
+        "instructions": 10281,
+        "warm_cycles": 8120,
+        "cold_icache_cycles": 8494,
+        "load_instructions": 1940,
+        "store_instructions": 1767,
+        "load_bytes": 6952,
+        "store_bytes": 7068,
+        "distinct_32byte_lines": 102,
+        "distinct_read_lines": 41,
+        "distinct_write_lines": 68,
+        "demand_line_visits": 3707,
+        "repeated_demand_line_visits": 3605,
+        "peak_stack_bytes": 2460,
+        "input": {
+          "name": "glyph32-bank-fixed",
+          "glyphs": 32,
+          "bank_changes": true,
+          "autosort": 0,
+          "sx": 2.0,
+          "sy": 0.5
+        },
+        "output_sha256": "f20cd08ae9401223dd7dd69957f1c7b37c68f75b3697fef2b800fe25f65e03b7",
+        "packet_sizes": [
+          1952,
+          1952,
+          544
+        ],
+        "ta_words": 1112,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 32,
+          "overlay_layer": 7
+        }
+      },
+      "quad-cover-scale": {
+        "instructions": 787,
+        "warm_cycles": 824,
+        "cold_icache_cycles": 1201,
+        "load_instructions": 134,
+        "store_instructions": 108,
+        "load_bytes": 515,
+        "store_bytes": 408,
+        "distinct_32byte_lines": 33,
+        "distinct_read_lines": 28,
+        "distinct_write_lines": 13,
+        "demand_line_visits": 242,
+        "repeated_demand_line_visits": 209,
+        "peak_stack_bytes": 2460,
+        "input": {
+          "name": "quad-cover-scale",
+          "sx": 0.5,
+          "sy": 2.0,
+          "cover": 2147549232
+        },
+        "output_sha256": "934a8151e4cd596d0dc5184c30c27555538b8c69a8b3549ed9138e39cd80b5ac",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 3,
+          "glyph_drawn": 0,
+          "overlay_layer": 8
+        }
+      },
+      "quad-fixed": {
+        "instructions": 871,
+        "warm_cycles": 892,
+        "cold_icache_cycles": 1297,
+        "load_instructions": 154,
+        "store_instructions": 107,
+        "load_bytes": 595,
+        "store_bytes": 404,
+        "distinct_32byte_lines": 32,
+        "distinct_read_lines": 27,
+        "distinct_write_lines": 12,
+        "demand_line_visits": 261,
+        "repeated_demand_line_visits": 229,
+        "peak_stack_bytes": 2460,
+        "input": {
+          "name": "quad-fixed",
+          "autosort": 0,
+          "sx": 2.0,
+          "sy": 0.5
+        },
+        "output_sha256": "827ea7aa9dd1c0c0d956c19c69a3253550c23420fa5a36c70b55242e64e85bd0",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 3,
+          "glyph_drawn": 0,
+          "overlay_layer": 7
+        }
+      }
+    },
+    "l1": {
+      "quad": {
+        "instructions": 749,
+        "warm_cycles": 817,
+        "cold_icache_cycles": 1198,
+        "load_instructions": 164,
+        "store_instructions": 71,
+        "load_bytes": 637,
+        "store_bytes": 284,
+        "distinct_32byte_lines": 31,
+        "distinct_read_lines": 26,
+        "distinct_write_lines": 12,
+        "demand_line_visits": 235,
+        "repeated_demand_line_visits": 204,
+        "peak_stack_bytes": 504,
+        "input": {
+          "name": "quad"
+        },
+        "output_sha256": "82c0ba539d859c7a326f1245c1ca8dbc7e85d3f04744d3bef16c342a815ef475",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 3,
+          "glyph_drawn": 0,
+          "overlay_layer": 8
+        }
+      },
+      "glyph1": {
+        "instructions": 399,
+        "warm_cycles": 323,
+        "cold_icache_cycles": 693,
+        "load_instructions": 80,
+        "store_instructions": 66,
+        "load_bytes": 279,
+        "store_bytes": 264,
+        "distinct_32byte_lines": 24,
+        "distinct_read_lines": 18,
+        "distinct_write_lines": 12,
+        "demand_line_visits": 146,
+        "repeated_demand_line_visits": 122,
+        "peak_stack_bytes": 2356,
+        "input": {
+          "name": "glyph1",
+          "glyphs": 1
+        },
+        "output_sha256": "e98a45cd62ed5e7fe996f47496dfc92beb19fc82ce21a88e65ac31cfdbac1606",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 1,
+          "overlay_layer": 8
+        }
+      },
+      "glyph16": {
+        "instructions": 3481,
+        "warm_cycles": 2488,
+        "cold_icache_cycles": 2858,
+        "load_instructions": 501,
+        "store_instructions": 591,
+        "load_bytes": 1618,
+        "store_bytes": 2364,
+        "distinct_32byte_lines": 86,
+        "distinct_read_lines": 25,
+        "distinct_write_lines": 67,
+        "demand_line_visits": 1092,
+        "repeated_demand_line_visits": 1006,
+        "peak_stack_bytes": 2356,
+        "input": {
+          "name": "glyph16",
+          "glyphs": 16
+        },
+        "output_sha256": "54eeedf1ee74ec0a77ab4b4d6e4be3e81c7d5287b8fc4d6fcf76ab1238b68c8d",
+        "packet_sizes": [
+          1952,
+          128
+        ],
+        "ta_words": 520,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 16,
+          "overlay_layer": 23
+        }
+      },
+      "glyph17-bank-scale": {
+        "instructions": 4126,
+        "warm_cycles": 3017,
+        "cold_icache_cycles": 3387,
+        "load_instructions": 609,
+        "store_instructions": 681,
+        "load_bytes": 1997,
+        "store_bytes": 2724,
+        "distinct_32byte_lines": 92,
+        "distinct_read_lines": 31,
+        "distinct_write_lines": 67,
+        "demand_line_visits": 1290,
+        "repeated_demand_line_visits": 1198,
+        "peak_stack_bytes": 2356,
+        "input": {
+          "name": "glyph17-bank-scale",
+          "glyphs": 17,
+          "bank_changes": true,
+          "sx": 0.5,
+          "sy": 2.0
+        },
+        "output_sha256": "9c25c92f7cda0c2d2a118d5c387d8b4bff4bd642c87832c3196d624b1f37de3f",
+        "packet_sizes": [
+          1952,
+          416
+        ],
+        "ta_words": 592,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 17,
+          "overlay_layer": 24
+        }
+      },
+      "glyph32-bank-fixed": {
+        "instructions": 7008,
+        "warm_cycles": 4927,
+        "cold_icache_cycles": 5288,
+        "load_instructions": 982,
+        "store_instructions": 1229,
+        "load_bytes": 3114,
+        "store_bytes": 4916,
+        "distinct_32byte_lines": 100,
+        "distinct_read_lines": 39,
+        "distinct_write_lines": 66,
+        "demand_line_visits": 2211,
+        "repeated_demand_line_visits": 2111,
+        "peak_stack_bytes": 2356,
+        "input": {
+          "name": "glyph32-bank-fixed",
+          "glyphs": 32,
+          "bank_changes": true,
+          "autosort": 0,
+          "sx": 2.0,
+          "sy": 0.5
+        },
+        "output_sha256": "f20cd08ae9401223dd7dd69957f1c7b37c68f75b3697fef2b800fe25f65e03b7",
+        "packet_sizes": [
+          1952,
+          1952,
+          544
+        ],
+        "ta_words": 1112,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 32,
+          "overlay_layer": 7
+        }
+      },
+      "quad-cover-scale": {
+        "instructions": 645,
+        "warm_cycles": 729,
+        "cold_icache_cycles": 1089,
+        "load_instructions": 140,
+        "store_instructions": 71,
+        "load_bytes": 541,
+        "store_bytes": 284,
+        "distinct_32byte_lines": 31,
+        "distinct_read_lines": 26,
+        "distinct_write_lines": 12,
+        "demand_line_visits": 211,
+        "repeated_demand_line_visits": 180,
+        "peak_stack_bytes": 504,
+        "input": {
+          "name": "quad-cover-scale",
+          "sx": 0.5,
+          "sy": 2.0,
+          "cover": 2147549232
+        },
+        "output_sha256": "934a8151e4cd596d0dc5184c30c27555538b8c69a8b3549ed9138e39cd80b5ac",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 3,
+          "glyph_drawn": 0,
+          "overlay_layer": 8
+        }
+      },
+      "quad-fixed": {
+        "instructions": 729,
+        "warm_cycles": 797,
+        "cold_icache_cycles": 1166,
+        "load_instructions": 160,
+        "store_instructions": 70,
+        "load_bytes": 621,
+        "store_bytes": 280,
+        "distinct_32byte_lines": 30,
+        "distinct_read_lines": 25,
+        "distinct_write_lines": 11,
+        "demand_line_visits": 230,
+        "repeated_demand_line_visits": 200,
+        "peak_stack_bytes": 504,
+        "input": {
+          "name": "quad-fixed",
+          "autosort": 0,
+          "sx": 2.0,
+          "sy": 0.5
+        },
+        "output_sha256": "827ea7aa9dd1c0c0d956c19c69a3253550c23420fa5a36c70b55242e64e85bd0",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 3,
+          "glyph_drawn": 0,
+          "overlay_layer": 7
+        }
+      }
+    },
+    "initial": {
+      "quad": {
+        "instructions": 496,
+        "warm_cycles": 567,
+        "cold_icache_cycles": 920,
+        "load_instructions": 100,
+        "store_instructions": 66,
+        "load_bytes": 383,
+        "store_bytes": 264,
+        "distinct_32byte_lines": 32,
+        "distinct_read_lines": 27,
+        "distinct_write_lines": 12,
+        "demand_line_visits": 166,
+        "repeated_demand_line_visits": 134,
+        "peak_stack_bytes": 504,
+        "input": {
+          "name": "quad"
+        },
+        "output_sha256": "82c0ba539d859c7a326f1245c1ca8dbc7e85d3f04744d3bef16c342a815ef475",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 3,
+          "glyph_drawn": 0,
+          "overlay_layer": 8
+        }
+      },
+      "glyph1": {
+        "instructions": 399,
+        "warm_cycles": 320,
+        "cold_icache_cycles": 691,
+        "load_instructions": 80,
+        "store_instructions": 66,
+        "load_bytes": 279,
+        "store_bytes": 264,
+        "distinct_32byte_lines": 24,
+        "distinct_read_lines": 18,
+        "distinct_write_lines": 12,
+        "demand_line_visits": 146,
+        "repeated_demand_line_visits": 122,
+        "peak_stack_bytes": 2356,
+        "input": {
+          "name": "glyph1",
+          "glyphs": 1
+        },
+        "output_sha256": "e98a45cd62ed5e7fe996f47496dfc92beb19fc82ce21a88e65ac31cfdbac1606",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 1,
+          "overlay_layer": 8
+        }
+      },
+      "glyph16": {
+        "instructions": 3481,
+        "warm_cycles": 2485,
+        "cold_icache_cycles": 2856,
+        "load_instructions": 501,
+        "store_instructions": 591,
+        "load_bytes": 1618,
+        "store_bytes": 2364,
+        "distinct_32byte_lines": 86,
+        "distinct_read_lines": 25,
+        "distinct_write_lines": 67,
+        "demand_line_visits": 1092,
+        "repeated_demand_line_visits": 1006,
+        "peak_stack_bytes": 2356,
+        "input": {
+          "name": "glyph16",
+          "glyphs": 16
+        },
+        "output_sha256": "54eeedf1ee74ec0a77ab4b4d6e4be3e81c7d5287b8fc4d6fcf76ab1238b68c8d",
+        "packet_sizes": [
+          1952,
+          128
+        ],
+        "ta_words": 520,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 16,
+          "overlay_layer": 23
+        }
+      },
+      "glyph17-bank-scale": {
+        "instructions": 4126,
+        "warm_cycles": 3014,
+        "cold_icache_cycles": 3385,
+        "load_instructions": 609,
+        "store_instructions": 681,
+        "load_bytes": 1997,
+        "store_bytes": 2724,
+        "distinct_32byte_lines": 92,
+        "distinct_read_lines": 31,
+        "distinct_write_lines": 67,
+        "demand_line_visits": 1290,
+        "repeated_demand_line_visits": 1198,
+        "peak_stack_bytes": 2356,
+        "input": {
+          "name": "glyph17-bank-scale",
+          "glyphs": 17,
+          "bank_changes": true,
+          "sx": 0.5,
+          "sy": 2.0
+        },
+        "output_sha256": "9c25c92f7cda0c2d2a118d5c387d8b4bff4bd642c87832c3196d624b1f37de3f",
+        "packet_sizes": [
+          1952,
+          416
+        ],
+        "ta_words": 592,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 17,
+          "overlay_layer": 24
+        }
+      },
+      "glyph32-bank-fixed": {
+        "instructions": 7008,
+        "warm_cycles": 4924,
+        "cold_icache_cycles": 5286,
+        "load_instructions": 982,
+        "store_instructions": 1229,
+        "load_bytes": 3114,
+        "store_bytes": 4916,
+        "distinct_32byte_lines": 100,
+        "distinct_read_lines": 39,
+        "distinct_write_lines": 66,
+        "demand_line_visits": 2211,
+        "repeated_demand_line_visits": 2111,
+        "peak_stack_bytes": 2356,
+        "input": {
+          "name": "glyph32-bank-fixed",
+          "glyphs": 32,
+          "bank_changes": true,
+          "autosort": 0,
+          "sx": 2.0,
+          "sy": 0.5
+        },
+        "output_sha256": "f20cd08ae9401223dd7dd69957f1c7b37c68f75b3697fef2b800fe25f65e03b7",
+        "packet_sizes": [
+          1952,
+          1952,
+          544
+        ],
+        "ta_words": 1112,
+        "state": {
+          "drawn": 2,
+          "glyph_drawn": 32,
+          "overlay_layer": 7
+        }
+      },
+      "quad-cover-scale": {
+        "instructions": 495,
+        "warm_cycles": 567,
+        "cold_icache_cycles": 899,
+        "load_instructions": 100,
+        "store_instructions": 66,
+        "load_bytes": 381,
+        "store_bytes": 264,
+        "distinct_32byte_lines": 31,
+        "distinct_read_lines": 26,
+        "distinct_write_lines": 12,
+        "demand_line_visits": 166,
+        "repeated_demand_line_visits": 135,
+        "peak_stack_bytes": 504,
+        "input": {
+          "name": "quad-cover-scale",
+          "sx": 0.5,
+          "sy": 2.0,
+          "cover": 2147549232
+        },
+        "output_sha256": "934a8151e4cd596d0dc5184c30c27555538b8c69a8b3549ed9138e39cd80b5ac",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 3,
+          "glyph_drawn": 0,
+          "overlay_layer": 8
+        }
+      },
+      "quad-fixed": {
+        "instructions": 476,
+        "warm_cycles": 547,
+        "cold_icache_cycles": 888,
+        "load_instructions": 96,
+        "store_instructions": 65,
+        "load_bytes": 367,
+        "store_bytes": 260,
+        "distinct_32byte_lines": 31,
+        "distinct_read_lines": 26,
+        "distinct_write_lines": 11,
+        "demand_line_visits": 161,
+        "repeated_demand_line_visits": 130,
+        "peak_stack_bytes": 504,
+        "input": {
+          "name": "quad-fixed",
+          "autosort": 0,
+          "sx": 2.0,
+          "sy": 0.5
+        },
+        "output_sha256": "827ea7aa9dd1c0c0d956c19c69a3253550c23420fa5a36c70b55242e64e85bd0",
+        "packet_sizes": [
+          160
+        ],
+        "ta_words": 40,
+        "state": {
+          "drawn": 3,
+          "glyph_drawn": 0,
+          "overlay_layer": 7
+        }
+      }
+    }
+  },
+  "dimension_hoist_sources": {
+    "l0": "b60d5a005790815bdaa710029ceb9635981f25d3a18b5c65f552365a24632196",
+    "l1": "b60d5a005790815bdaa710029ceb9635981f25d3a18b5c65f552365a24632196",
+    "initial": "6fb51fb0d573aec230646409a0372666e42146b42184362aacb6d3352f6bd67b"
+  },
+  "tools_sha256": {
+    "port/dreamcast/tools/d367/ui_draw_lean/bridge_build.py": "4e609811a6131a170729228b2585c70fca38170a9a826436098d00aaa08a1f8c",
+    "port/dreamcast/tools/d367/ui_draw_lean/bridge_edges.cpp.in": "1ae756fbaf72a4ae4ee0ebbf705a0cfd0cb75d3416f04bfa21438420f327df28",
+    "port/dreamcast/tools/d367/ui_draw_lean/bridge_run.py": "af7238f016b53cec4aa909ec6cc4208f3afc7634033a245c49be9849a562689f",
+    "port/dreamcast/tools/d367/ui_draw_lean/build_controls.py": "984f556a5dcee9f7beee79beb86efea4db8d1f6312e727558ddae402b6e99298",
+    "port/dreamcast/tools/d367/ui_draw_lean/build_profile.py": "d9768c80edec4fc2fef9187a883cad2ac1b2f02b4a2c84be313661d4e7ec9ccc",
+    "port/dreamcast/tools/d367/ui_draw_lean/camera_build.py": "ebb9f739122f51768082c2522acb6a38264ea0ca75a7c376980cab52e75b548f",
+    "port/dreamcast/tools/d367/ui_draw_lean/camera_run.py": "8d493fd804b590ca5ce06443e730c497fefce67352c8fbba2003c0c5e51676d5",
+    "port/dreamcast/tools/d367/ui_draw_lean/check_runtime.py": "69e3d664ec5250c6a0adf3943b34d09442c1f43f15a36d83ae2c4b8a2c1a9df5",
+    "port/dreamcast/tools/d367/ui_draw_lean/fixture_bridge.cpp.in": "56082ee7f1f427f74040f947e4fcac231d97ac681995d4a5004ac46e7c240a6a",
+    "port/dreamcast/tools/d367/ui_draw_lean/fixture_cases.cpp.in": "b8556f9afb82205b56256668ea52eb2ccaee8b5ce2011b525e6c5853082cd821",
+    "port/dreamcast/tools/d367/ui_draw_lean/fixture_common.cpp.in": "3947a68ce72d941d23c69dc042edae34c1c9235ea1cd8a9fd748d40f6a40b540",
+    "port/dreamcast/tools/d367/ui_draw_lean/fixture_native.cpp.in": "fabfa1d9d381a7c4d34c539518fc385014b4a03687ebd3c097510b79450df69f",
+    "port/dreamcast/tools/d367/ui_draw_lean/native_build.py": "d9330ff71fca1b3b93ac56da07ab1aacbcf7e80c0ed787cbf66b1372ea90c1e2",
+    "port/dreamcast/tools/d367/ui_draw_lean/native_edges.cpp.in": "469ccf2960cadc465810ff42e664422be2a02226ceadc4a0fec1423797a0fccf",
+    "port/dreamcast/tools/d367/ui_draw_lean/native_fixture.inc": "fb9143b1bb44137a8a27fede7303eb1d723e402742e6c52c866cd5a533fb5b55",
+    "port/dreamcast/tools/d367/ui_draw_lean/native_run.py": "333752479b6de4b9cc20e6436d29b9aa8883ea1d7b831879397e85f2abd0ddcc",
+    "port/dreamcast/tools/d367/ui_draw_lean/summarize_receipts.py": "52eb7b033041074c3d847a562868fe6d2f5abb84fb732bd9c8eed011e7827343",
+    "port/dreamcast/tools/d367/ui_draw_lean/target_common.py": "28828749437aa3c63a5c630acc107e6ea3fee51a27ef3e0f304df9399a40e920"
+  }
+}

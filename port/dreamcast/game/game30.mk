@@ -1129,6 +1129,17 @@ ifneq ($(UI_QUAD_LEAN),0)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_UI_QUAD_LEAN=$(UI_QUAD_LEAN)
 $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_UI_QUAD_LEAN=$(UI_QUAD_LEAN)
 endif
+# UI_DRAW_LEAN=1 (default 0): retain the constant native-message projection, initialize only
+# the UI quad fields that need defaults, and write native packets once. Existing texture,
+# glyph and header caches, live geometry/colour, queue order and overlay depth remain authoritative.
+UI_DRAW_LEAN ?= 0
+ifneq ($(UI_DRAW_LEAN),0)
+ifneq ($(UI_DRAW_LEAN),1)
+$(error UI_DRAW_LEAN must be 0 or 1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_UI_DRAW_LEAN=1
+$(OBJDIR)/ui_bridge.o $(OBJDIR)/src/game/mes.o: GAME_CPPFLAGS += -DRE4DC_UI_DRAW_LEAN=1
+endif
 # LINK_ORDER=<file> (G; exact, code placement only): an ld --section-ordering-file that puts the hot
 #                    input sections first in .text (tools/d367/ordgen_c3.py from hwproject evidence: call
 #                    chains clustered to the 8 KB direct-mapped I-cache, placed by density). The r101-square
