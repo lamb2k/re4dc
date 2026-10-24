@@ -384,6 +384,140 @@ int EtcModelGetLastNo()
     return g_LastNo;
 }
 
+#if defined(RE4DC_PS2_ETS_MATCH) && RE4DC_PS2_ETS_MATCH == 2
+// PS2_ETS_MATCH=2 (lane purge-props24 2026-10-24, "drop what PS2 dropped"): the GC etc-list entries absent from the
+// room's PS2 rNNN.dat ETS, matched by id and position (etsdiff over the GC disc 1 room archives and the PS2 ISO,
+// chapter 1-2 rooms r100..r11f + r200; rooms not listed match PS2 entry for entry). Torches et1400 (cEmTorch type 0),
+// et0c00 / et3800 (type 2), et1c00 (r11f), et1000 (r11a type 4) and r11f's et0000 window panes. No room script reads
+// these slots (getRoomEtc* calls checked per room; r11c only registers et1400.bin as an effect model).
+struct Ps2EtsDrop {
+    u16 room;
+    u16 id;
+    u16 no;
+};
+static const Ps2EtsDrop g_ps2_ets_drop[] = {
+    {0x10c, 0x14, 0x0000},  // r10c et1400
+    {0x10c, 0x14, 0x0001},  // r10c et1400
+    {0x10c, 0x14, 0x0005},  // r10c et1400
+    {0x10c, 0x14, 0x0006},  // r10c et1400
+    {0x10c, 0x14, 0x0007},  // r10c et1400
+    {0x10c, 0x14, 0x0008},  // r10c et1400
+    {0x10c, 0x14, 0x000A},  // r10c et1400
+    {0x10c, 0x14, 0x000B},  // r10c et1400
+    {0x10c, 0x14, 0x000C},  // r10c et1400
+    {0x10c, 0x14, 0x0012},  // r10c et1400
+    {0x10c, 0x14, 0x0013},  // r10c et1400
+    {0x10c, 0x14, 0x0014},  // r10c et1400
+    {0x10c, 0x14, 0x0015},  // r10c et1400
+    {0x10c, 0x14, 0x0016},  // r10c et1400
+    {0x10d, 0x14, 0x0002},  // r10d et1400
+    {0x10d, 0x14, 0x0004},  // r10d et1400
+    {0x10d, 0x14, 0x0005},  // r10d et1400
+    {0x10e, 0x14, 0x0004},  // r10e et1400
+    {0x10e, 0x14, 0x0005},  // r10e et1400
+    {0x10e, 0x14, 0x0006},  // r10e et1400
+    {0x10e, 0x14, 0x0007},  // r10e et1400
+    {0x10f, 0x14, 0x0001},  // r10f et1400
+    {0x10f, 0x14, 0x0002},  // r10f et1400
+    {0x10f, 0x14, 0x0003},  // r10f et1400
+    {0x10f, 0x14, 0x0004},  // r10f et1400
+    {0x10f, 0x14, 0x000E},  // r10f et1400
+    {0x10f, 0x14, 0x0012},  // r10f et1400
+    {0x10f, 0x14, 0x0013},  // r10f et1400
+    {0x10f, 0x14, 0x0014},  // r10f et1400
+    {0x111, 0x14, 0x001C},  // r111 et1400
+    {0x111, 0x14, 0x001D},  // r111 et1400
+    {0x111, 0x14, 0x001E},  // r111 et1400
+    {0x111, 0x14, 0x001F},  // r111 et1400
+    {0x111, 0x14, 0x0020},  // r111 et1400
+    {0x111, 0x14, 0x0021},  // r111 et1400
+    {0x111, 0x14, 0x0022},  // r111 et1400
+    {0x111, 0x14, 0x0023},  // r111 et1400
+    {0x111, 0x14, 0x0024},  // r111 et1400
+    {0x111, 0x14, 0x0025},  // r111 et1400
+    {0x111, 0x14, 0x0026},  // r111 et1400
+    {0x113, 0x14, 0x0016},  // r113 et1400
+    {0x113, 0x0C, 0x0017},  // r113 et0c00
+    {0x118, 0x14, 0x000C},  // r118 et1400
+    {0x118, 0x14, 0x000D},  // r118 et1400
+    {0x118, 0x14, 0x000E},  // r118 et1400
+    {0x118, 0x14, 0x000F},  // r118 et1400
+    {0x118, 0x14, 0x0010},  // r118 et1400
+    {0x118, 0x14, 0x0011},  // r118 et1400
+    {0x11a, 0x14, 0x0000},  // r11a et1400
+    {0x11a, 0x14, 0x0001},  // r11a et1400
+    {0x11a, 0x14, 0x0002},  // r11a et1400
+    {0x11a, 0x14, 0x0003},  // r11a et1400
+    {0x11a, 0x14, 0x0004},  // r11a et1400
+    {0x11a, 0x10, 0x0005},  // r11a et1000
+    {0x11a, 0x14, 0x0006},  // r11a et1400
+    {0x11a, 0x14, 0x0007},  // r11a et1400
+    {0x11b, 0x14, 0x0001},  // r11b et1400
+    {0x11b, 0x14, 0x0002},  // r11b et1400
+    {0x11b, 0x14, 0x0003},  // r11b et1400
+    {0x11b, 0x14, 0x0004},  // r11b et1400
+    {0x11b, 0x14, 0x0005},  // r11b et1400
+    {0x11b, 0x14, 0x0006},  // r11b et1400
+    {0x11b, 0x14, 0x0007},  // r11b et1400
+    {0x11b, 0x14, 0x0008},  // r11b et1400
+    {0x11b, 0x14, 0x0009},  // r11b et1400
+    {0x11c, 0x38, 0x000B},  // r11c et3800
+    {0x11c, 0x0C, 0x000C},  // r11c et0c00
+    {0x11c, 0x14, 0x000E},  // r11c et1400
+    {0x11c, 0x14, 0x000F},  // r11c et1400
+    {0x11c, 0x14, 0x0010},  // r11c et1400
+    {0x11c, 0x14, 0x0011},  // r11c et1400
+    {0x11c, 0x14, 0x0016},  // r11c et1400
+    {0x11d, 0x14, 0x0002},  // r11d et1400
+    {0x11d, 0x14, 0x0003},  // r11d et1400
+    {0x11d, 0x14, 0x0004},  // r11d et1400
+    {0x11d, 0x14, 0x0005},  // r11d et1400
+    {0x11d, 0x14, 0x0006},  // r11d et1400
+    {0x11d, 0x14, 0x0007},  // r11d et1400
+    {0x11d, 0x14, 0x0008},  // r11d et1400
+    {0x11d, 0x14, 0x0009},  // r11d et1400
+    {0x11d, 0x14, 0x000A},  // r11d et1400
+    {0x11d, 0x14, 0x000B},  // r11d et1400
+    {0x11d, 0x14, 0x000C},  // r11d et1400
+    {0x11d, 0x14, 0x000D},  // r11d et1400
+    {0x11d, 0x14, 0x0016},  // r11d et1400
+    {0x11d, 0x14, 0x0017},  // r11d et1400
+    {0x11e, 0x14, 0x0000},  // r11e et1400
+    {0x11e, 0x14, 0x0003},  // r11e et1400
+    {0x11e, 0x14, 0x0005},  // r11e et1400
+    {0x11e, 0x14, 0x0006},  // r11e et1400
+    {0x11e, 0x14, 0x000A},  // r11e et1400
+    {0x11e, 0x14, 0x000C},  // r11e et1400
+    {0x11e, 0x14, 0x0010},  // r11e et1400
+    {0x11e, 0x14, 0x0018},  // r11e et1400
+    {0x11e, 0x14, 0x0019},  // r11e et1400
+    {0x11e, 0x14, 0x001A},  // r11e et1400
+    {0x11e, 0x14, 0x001B},  // r11e et1400
+    {0x11f, 0x00, 0x0001},  // r11f et0000
+    {0x11f, 0x00, 0x0002},  // r11f et0000
+    {0x11f, 0x00, 0x0003},  // r11f et0000
+    {0x11f, 0x00, 0x0004},  // r11f et0000
+    {0x11f, 0x00, 0x0005},  // r11f et0000
+    {0x11f, 0x00, 0x0006},  // r11f et0000
+    {0x11f, 0x00, 0x0007},  // r11f et0000
+    {0x11f, 0x00, 0x0008},  // r11f et0000
+    {0x11f, 0x1C, 0x000A},  // r11f et1c00
+    {0x200, 0x14, 0x0005},  // r200 et1400
+    {0x200, 0x14, 0x0006},  // r200 et1400
+    {0x200, 0x14, 0x0007},  // r200 et1400
+};
+
+static int ps2_ets_dropped(u32 room, u32 id, u32 no)
+{
+    for (u32 k = 0; k < sizeof(g_ps2_ets_drop) / sizeof(g_ps2_ets_drop[0]); k++) {
+        if (g_ps2_ets_drop[k].room == room && g_ps2_ets_drop[k].id == id && g_ps2_ets_drop[k].no == no) {
+            return 1;
+        }
+    }
+    return 0;
+}
+#endif
+
 // Creates every record of the room's etc list (EtcModelSet) and remembers the highest slot.
 int EtcModelListSet(EtcList* list)
 {
@@ -398,9 +532,16 @@ int EtcModelListSet(EtcList* list)
 #if defined(RE4DC_PS2_ETS_MATCH) && RE4DC_PS2_ETS_MATCH
         // PS2_ETS_MATCH (game30.mk, lane fix-r10d-speed23): etc entries the PS2 room lists (r10d.dat ETS) dropped.
         // r10d: the three et1400 torches (ids 2/4/5 of GC's 16 entries; the PS2 ETS has the other 13 and no et1400).
+#if RE4DC_PS2_ETS_MATCH == 1
         if (pG->room_id == 0x10D && d[i].id == 0x14) {
             continue;
         }
+#else
+        // =2 (lane purge-props24 2026-10-24): every chapter 1-2 room; see ps2_ets_dropped.
+        if (ps2_ets_dropped(pG->room_id, d[i].id, d[i].no)) {
+            continue;
+        }
+#endif
 #endif
         if (EtcModelSet(&d[i]) == 1) {
             if (g_LastNo < d[i].no) {

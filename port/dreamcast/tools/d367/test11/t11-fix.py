@@ -915,6 +915,25 @@ FOL24D = os.environ.get('FOL24D', '/root/re4data/private/fol24-20261024')
 if os.path.isdir(FOL24D):
     DATA['fol24'] = {'dc/tex.pak': FOL24D + '/dc/tex.pak'}
     PAK_DERIVED['fol24'] = FOL24D + '/pak-derived.json'
+# props24 (lane purge-props24 10-24, GC purge: set objects): the ch2 rooms' non-breakable etc models and room BINs as PS2
+# geometry + PS2 pictures (purge24/gen24.sh = objs13's ps2_objects.py + ps2_objects_tex.py): r10d r10e r10f r111 r112 r113
+# r11c r11d r11e r11f r200; offline census GC 54 -> 5 (r10c BIN 0x1f extended weights, r10f et2900 / r11c BIN 0x1f PS2
+# placeholders, r113 / r11c et0c00 and r11f et1c00 absent from the PS2 ETM: PS2_ETS_MATCH=2 drops their entries).
+# dc/tex.pak = fol24's pack + 16 keys (pack_add.py). After fol24 (its tex.pak). Release line only (fol24 is not in KSETS).
+# props24p (after props24): + window panes et0000 / et2500 emptied (the PS2 model is a placeholder) in r100 r101 r105 r107
+# r111 r11c r11f and et0001's PS2 picture in r111 r11c r11f (the pane no longer shares it). Store: RECIPE.txt + SHA256SUMS.
+PROPS24D = os.environ.get('PROPS24D', '/root/re4data/private/props24-20261024')
+if os.path.isdir(PROPS24D):
+    DATA['props24'] = {'dc/tex.pak': PROPS24D + '/dc/tex.pak', 'st2/r200.dar': PROPS24D + '/st2/r200.dar'}
+    for _r in 'r10d r10e r10f r111 r112 r113 r11c r11d r11e r11f'.split():
+        DATA['props24']['st1/%s.dar' % _r] = '%s/st1/%s.dar' % (PROPS24D, _r)
+    PAK_DERIVED['props24'] = PROPS24D + '/pak-derived.json'
+PROPS24PD = os.environ.get('PROPS24PD', '/root/re4data/private/props24p-20261024')
+if os.path.isdir(PROPS24PD):
+    DATA['props24p'] = {'dc/tex.pak': PROPS24PD + '/dc/tex.pak'}
+    for _r in 'r100 r101 r105 r107 r111 r11c r11f'.split():
+        DATA['props24p']['st1/%s.dar' % _r] = '%s/st1/%s.dar' % (PROPS24PD, _r)
+    PAK_DERIVED['props24p'] = PROPS24PD + '/pak-derived.json'
 # res22c (lane codex22, 10-22, data only): dc/resident.bin = mip22's remapped file + the listed keys it lacks
 # (mip22b ships the same resident.bin and remap; vram/resident_keys.py extend <out> mip22/dc/resident.bin mip22/dc/resident-remap.tsv vram/resident/r*.tsv; same inputs,
 # same bytes). Carries the first-use keys (HUD ammo digits in r000, shot effects, first Ganado pictures). Ships the remap
