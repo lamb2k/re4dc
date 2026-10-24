@@ -1,3 +1,8 @@
+Current protocol is v2/Required3ff; current wired1f6 remains incomplete because
+Motion and geometry/Weapon coverage are unwired. Historical v1 visits cannot
+pass the current judge. See PROTOCOL-V2.md; no lifecycle namespace is invented
+to imply Motion zero use.
+
 Diagnostic visits use three explicit namespaces. Startup/title/menu rows have
 `phase=startup`, loading/door rows have `phase=transition`, and both omit room.
 Game-room rows have `room=hhhh` and no phase field. The same visit serial

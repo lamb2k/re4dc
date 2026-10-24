@@ -17,6 +17,7 @@ char scope_text[24];
 unsigned emissions[ConsumerCount];
 bool active,catalog_ok;
 struct Queued { Consumer consumer; CheckedAsset asset;unsigned kind;Digest digest;unsigned room, visit; };
+static_assert(sizeof(Queued)==52,"tenth consumer must not grow audio queue events");
 Queued queue[32];
 std::atomic_flag queue_lock = ATOMIC_FLAG_INIT;
 std::atomic<unsigned> queue_faults{0}, queue_active{0};
@@ -24,7 +25,8 @@ unsigned admission_room,admission_visit;bool admission_handoff;
 unsigned queue_head, queue_tail;
 struct TicketSlot { unsigned serial, room, visit; };
 TicketSlot tickets[32];unsigned ticket_serial, ticket_count;
-const char* names[] = {"source_geometry", "texture", "effect_picture", "weapon", "font", "ui", "sound_bank", "sound_stream", "movie"};
+const char* names[] = {"source_geometry", "texture", "effect_picture", "weapon", "font", "ui", "sound_bank", "sound_stream", "movie", "motion"};
+static_assert(sizeof(names)/sizeof(*names)==ConsumerCount,"complete consumer protocol names");
 const char* provenances[] = {"unknown", "gc", "ps2", "authored"};
 bool token(const char* p, unsigned limit) {
     if(!p || !*p)return false;
@@ -172,13 +174,13 @@ static void begin_at(unsigned r,unsigned v,unsigned mask,bool startup,bool admit
     if(transition){
         if((why==InitialRoom && from!=FromStartup) || (why==RoomRetire && from>0xffffU) || unsigned(why)>RoomRetire)
             unresolved(Ui,"transition-metadata");
-        if(why==InitialRoom)re4dc_log("GC-ASSET-BEGIN v=1 %s visit=%u from_phase=startup transition_reason=initial-room wired=%03x required=%03x catalog=%u catalog_ok=%u\n",
+        if(why==InitialRoom)re4dc_log("GC-ASSET-BEGIN v=2 %s visit=%u from_phase=startup transition_reason=initial-room wired=%03x required=%03x catalog=%u catalog_ok=%u\n",
             scope_text,visit,wired,Required,catalog_rows,unsigned(catalog_ok));
-        else re4dc_log("GC-ASSET-BEGIN v=1 %s visit=%u from_room=%04x transition_reason=room-retire wired=%03x required=%03x catalog=%u catalog_ok=%u\n",
+        else re4dc_log("GC-ASSET-BEGIN v=2 %s visit=%u from_room=%04x transition_reason=room-retire wired=%03x required=%03x catalog=%u catalog_ok=%u\n",
             scope_text,visit,from,wired,Required,catalog_rows,unsigned(catalog_ok));
         return;
     }
-    re4dc_log("GC-ASSET-BEGIN v=1 %s visit=%u wired=%03x required=%03x catalog=%u catalog_ok=%u\n",
+    re4dc_log("GC-ASSET-BEGIN v=2 %s visit=%u wired=%03x required=%03x catalog=%u catalog_ok=%u\n",
         scope_text,visit,wired,Required,catalog_rows,unsigned(catalog_ok));
 }
 void begin(unsigned r,unsigned v,unsigned mask){begin_at(r,v,mask,false,true);}
@@ -241,7 +243,7 @@ void pump() {
         }
         const Queued q=queue[queue_head];queue_head=(queue_head+1)%32;queue_lock.clear(std::memory_order_release);
         if(!active || q.room!=room || q.visit!=visit) {
-            if(active)++errors;else re4dc_log("GC-ASSET-ERROR v=1 why=audio-room-lifetime\n");
+            if(active)++errors;else re4dc_log("GC-ASSET-ERROR v=2 why=audio-room-lifetime\n");
         } else if(q.kind){
             char id[65];hex(q.digest,id);id[40]=0;
             const char* kind=q.kind==SoundMram?"sound-mram":q.kind==SoundAram?"sound-aram":"sound-stream";
@@ -250,7 +252,7 @@ void pump() {
     }
     const unsigned faults=queue_faults.exchange(0);
     if(active)errors+=faults;
-    else if(faults)re4dc_log("GC-ASSET-ERROR v=1 why=unowned-audio count=%u\n",faults);
+    else if(faults)re4dc_log("GC-ASSET-ERROR v=2 why=unowned-audio count=%u\n",faults);
 }
 void checked(Consumer consumer) {
     if(!active)return;
@@ -259,15 +261,19 @@ void checked(Consumer consumer) {
 }
 void unresolved(Consumer consumer, const char* reason) {
     if(active)++errors;
-    re4dc_log("GC-ASSET-ERROR v=1 why=%s consumer=%u\n",reason?reason:"missing-identity",unsigned(consumer));
+    re4dc_log("GC-ASSET-ERROR v=2 why=%s consumer=%u\n",reason?reason:"missing-identity",unsigned(consumer));
 }
 void emitted(Consumer consumer, const char* kind, const char* id, const Digest& digest) {
-    if(!active){re4dc_log("GC-ASSET-ERROR v=1 why=no-room\n");return;}
+    if(!active){re4dc_log("GC-ASSET-ERROR v=2 why=no-room\n");return;}
+    if(consumer==Motion){unresolved(Motion,"motion-unwired");return;}
     emitted_checked(consumer,bind_checked(kind,id,digest));
 }
 void emitted_checked(Consumer consumer,CheckedAsset asset) {
-    if(!active) { re4dc_log("GC-ASSET-ERROR v=1 why=no-room\n");return; }
+    if(!active) { re4dc_log("GC-ASSET-ERROR v=2 why=no-room\n");return; }
     if(unsigned(consumer)>=ConsumerCount) { ++errors;return; }
+    // No reviewed Motion producer receipt exists: fail before catalog IO,
+    // Seen or PS2 suppression. Its zero counter is not a zero-use assertion.
+    if(consumer==Motion){unresolved(Motion,"motion-unwired");return;}
     ++emissions[consumer];checked(consumer);
     const unsigned index=asset.value&16383U;
     if(!catalog_ok || !catalog_epoch || asset.value>>14!=catalog_epoch || index>=catalog_rows+unknown_count) {
@@ -279,11 +285,11 @@ void emitted_checked(Consumer consumer,CheckedAsset asset) {
     seen[index/8]|=1U<<(index%8);
     if(row.provenance==PS2 || row.provenance==Authored)return;
     ++used;char sha[65];hex(row.digest,sha);
-    re4dc_log("GC-ASSET v=1 %s visit=%u kind=%s id=%s sha256=%s provenance=%s consumer=%s action=emit\n",
+    re4dc_log("GC-ASSET v=2 %s visit=%u kind=%s id=%s sha256=%s provenance=%s consumer=%s action=emit\n",
         scope_text,visit,row.kind,row.id,sha,provenances[row.provenance],names[consumer]);
 }
 void end(unsigned frame) {
-    if(!active) { re4dc_log("GC-ASSET-ERROR v=1 why=no-room-end\n");return; }
+    if(!active) { re4dc_log("GC-ASSET-ERROR v=2 why=no-room-end\n");return; }
     if(!admission_handoff)queue_active.store(0);
     pump();
     if(queue_lock.test_and_set(std::memory_order_acquire))++errors;
@@ -297,10 +303,10 @@ void end(unsigned frame) {
     errors+=queue_faults.exchange(0);
     // re4dc_log has a 256-byte buffer. Both maximum-width rows fit, including
     // 32-bit counters; one long END row would silently truncate the gate.
-    re4dc_log("GC-ASSET-COUNTS v=1 %s visit=%u source_geometry=%u texture=%u effect_picture=%u weapon=%u font=%u ui=%u sound_bank=%u sound_stream=%u movie=%u\n",
+    re4dc_log("GC-ASSET-COUNTS v=2 %s visit=%u source_geometry=%u texture=%u effect_picture=%u weapon=%u font=%u ui=%u sound_bank=%u sound_stream=%u movie=%u motion=%u\n",
         scope_text,visit,
-        emissions[0],emissions[1],emissions[2],emissions[3],emissions[4],emissions[5],emissions[6],emissions[7],emissions[8]);
-    re4dc_log("GC-ASSET-END v=1 %s visit=%u frame=%u wired=%03x checked=%03x required=%03x unique=%u overflow=%u errors=%u catalog_ok=%u\n",
+        emissions[0],emissions[1],emissions[2],emissions[3],emissions[4],emissions[5],emissions[6],emissions[7],emissions[8],emissions[9]);
+    re4dc_log("GC-ASSET-END v=2 %s visit=%u frame=%u wired=%03x checked=%03x required=%03x unique=%u overflow=%u errors=%u catalog_ok=%u\n",
         scope_text,visit,frame,wired,checked_mask,Required,used,overflow,errors,unsigned(catalog_ok));
     active=false;
 }
@@ -312,6 +318,7 @@ void test_queue_lock(bool held) {
     if(held)queue_lock.test_and_set(std::memory_order_acquire);else queue_lock.clear(std::memory_order_release);
 }
 void test_max_counters() { for(auto& value:emissions)value=0xffffffffU;overflow=errors=0xffffffffU; }
+unsigned test_catalog_rows(unsigned count){const unsigned old=catalog_rows;catalog_rows=count;return old;}
 #endif
 }
 #endif

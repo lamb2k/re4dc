@@ -3,6 +3,7 @@ import importlib.util
 import json
 from pathlib import Path
 import tempfile
+import subprocess
 import unittest
 
 spec = importlib.util.spec_from_file_location('gc_judge', Path(__file__).with_name('judge.py'))
@@ -12,16 +13,74 @@ DIGEST = 'a' * 64
 ROW = dict(room='0111', kind='model', id='em2a/trap', sha256=DIGEST, provenance='gc',
            reason='Audited bear trap source geometry pending PS2 descriptor', owner='gc-port23',
            evidence='GC-ASSETS-INVENTORY-20261023.md row 3')
-BEGIN = 'GC-ASSET-BEGIN v=1 room=0111 visit=1 wired=1ff required=1ff catalog=1 catalog_ok=1'
-EVENT = f'GC-ASSET v=1 room=0111 visit=1 kind=model id=em2a/trap sha256={DIGEST} provenance=gc consumer=source_geometry action=emit'
-END = ('GC-ASSET-COUNTS v=1 room=0111 visit=1 '
+BEGIN = 'GC-ASSET-BEGIN v=2 room=0111 visit=1 wired=3ff required=3ff catalog=1 catalog_ok=1'
+EVENT = f'GC-ASSET v=2 room=0111 visit=1 kind=model id=em2a/trap sha256={DIGEST} provenance=gc consumer=source_geometry action=emit'
+END = ('GC-ASSET-COUNTS v=2 room=0111 visit=1 '
        + ' '.join(f'{c}={1 if c == "source_geometry" else 0}' for c in j.CONSUMERS)
-       + '\nGC-ASSET-END v=1 room=0111 visit=1 frame=2 wired=1ff checked=1ff required=1ff unique=1 overflow=0 errors=0 catalog_ok=1')
+       + '\nGC-ASSET-END v=2 room=0111 visit=1 frame=2 wired=3ff checked=3ff required=3ff unique=1 overflow=0 errors=0 catalog_ok=1')
 STARTUP = '\n'.join((BEGIN, END.replace('unique=1', 'unique=0'))).replace('room=0111', 'phase=startup')
 INITIAL = (BEGIN.replace('room=0111', 'phase=transition from_phase=startup transition_reason=initial-room')+'\n'+END.replace('unique=1', 'unique=0').replace('room=0111', 'phase=transition')).replace('visit=1', 'visit=2')
 
 
 class JudgeTests(unittest.TestCase):
+    def test_protocol_v2_manifest_and_preserved_ordinals(self):
+        root = Path(__file__).resolve().parent
+        protocol = json.loads((root / 'protocol.json').read_text())
+        self.assertEqual(protocol['schema'], 2)
+        self.assertEqual(protocol['diagnostic_version'], j.PROTOCOL_VERSION)
+        self.assertEqual(protocol['consumers'], list(j.CONSUMERS))
+        self.assertEqual(protocol['required'], f'{j.REQUIRED:03x}')
+        self.assertEqual(protocol['required'], '3ff')
+        self.assertEqual(protocol['consumers'][8:], ['movie','motion'])
+        self.assertEqual(protocol['legacy_diagnostic_versions_rejected'], [1])
+        self.assertEqual(protocol['motion_identity_kind'], 'motion')
+        game = root.parents[2] / 'game'
+        source = (game / 'platform/gc_asset_gate.cpp').read_text()
+        names = source.split('const char* names[] = {',1)[1].split('};',1)[0]
+        self.assertEqual(j.re.findall(r'"([a-z_]+)"',names), list(j.CONSUMERS))
+        # Exact UI delta: version literal and explicit exclusion of Motion
+        # from a mask derived from Required. Actual wired value stays1f6.
+        old = subprocess.check_output(['git','-C',str(game.parents[2]),'show',
+            '01b967d0e:port/dreamcast/game/platform/native_ui.cpp'],text=True)
+        expected = old.replace('GC-ASSET-ERROR v=1 why=texture-fingerprint',
+                               'GC-ASSET-ERROR v=2 why=texture-fingerprint')
+        mask='unsigned mask=re4dc_gcasset::Required&~((1U<<re4dc_gcasset::SourceGeometry)|(1U<<re4dc_gcasset::Weapon));'
+        self.assertEqual(old.count(mask),1)
+        expected=expected.replace(mask,mask.replace('Weapon));','Weapon)|(1U<<re4dc_gcasset::Motion));'))
+        self.assertEqual((game/'platform/native_ui.cpp').read_text(),expected)
+        with tempfile.TemporaryDirectory() as folder:
+            path=Path(folder)/'protocol.json'
+            for key,value in [('schema',1),('required','1ff'),('diagnostic_version',1),
+                              ('consumers',list(j.CONSUMERS[:-1])),('motion_identity_kind','geometry')]:
+                changed=dict(protocol);changed[key]=value;path.write_text(json.dumps(changed))
+                with self.assertRaises(ValueError):j.read_protocol(path)
+
+    def test_legacy_and_missing_motion_are_not_current_coverage(self):
+        full = '\n'.join((STARTUP, INITIAL, '\n'.join((BEGIN,EVENT,END)).replace('visit=1','visit=3')))
+        allow = {j.identity(ROW):ROW}
+        legacy = full.replace('v=2','v=1').replace('3ff','1ff').replace(' motion=0','')
+        result = j.judge([('legacy',legacy)],allow,['0111'])
+        self.assertFalse(result['pass']);self.assertEqual(result['schema'],2)
+        self.assertTrue(any('historical' in failure for failure in result['failures']))
+        for missing in (full.replace('wired=3ff','wired=1ff').replace('checked=3ff','checked=1ff'),
+                        full.replace(' motion=0',''),
+                        full.replace('motion=0','motion=4294967296')):
+            self.assertFalse(j.judge([('missing-motion',missing)],allow,['0111'])['pass'])
+
+    def test_motion_cannot_borrow_geometry_identity_or_allowance(self):
+        motion_end = END.replace('source_geometry=1','source_geometry=0').replace('motion=0','motion=1')
+        event = EVENT.replace('consumer=source_geometry','consumer=motion')
+        self.check('\n'.join((BEGIN,event,motion_end)),False) # old model allowance cannot certify Motion
+        motion_event = event.replace('kind=model','kind=motion')
+        self.check('\n'.join((BEGIN,motion_event,motion_end)),False)
+        motion_row = dict(ROW,kind='motion',reason='Synthetic separately reviewed motion source')
+        self.check('\n'.join((BEGIN,motion_event,motion_end)),True,allow={j.identity(motion_row):motion_row})
+        with tempfile.TemporaryDirectory() as folder:
+            current,accepted=(Path(folder)/name for name in ('current.json','accepted.json'))
+            accepted.write_text(json.dumps(dict(schema=1,entries=[ROW])))
+            current.write_text(json.dumps(dict(schema=1,entries=[ROW,motion_row])))
+            with self.assertRaises(ValueError):j.read_allowlist(current,accepted)
+
     def check(self, text, expected, required=('0111',), allow=None):
         text = STARTUP + '\n' + INITIAL + '\n' + text.replace('visit=1', 'visit=3')
         result = j.judge([('fixture', text)], {j.identity(ROW): ROW} if allow is None else allow, required)
@@ -103,8 +162,8 @@ class JudgeTests(unittest.TestCase):
         self.check('\n'.join((EVENT, END)), False)
 
     def test_incomplete_wiring_and_runtime_coverage_fail(self):
-        self.check('\n'.join((BEGIN.replace('wired=1ff', 'wired=1fe'), EVENT, END)), False)
-        self.check('\n'.join((BEGIN, EVENT, END.replace('checked=1ff', 'checked=1fe'))), False)
+        self.check('\n'.join((BEGIN.replace('wired=3ff', 'wired=1fe'), EVENT, END)), False)
+        self.check('\n'.join((BEGIN, EVENT, END.replace('checked=3ff', 'checked=1fe'))), False)
 
     def test_missing_requested_room_fails(self):
         self.check('\n'.join((BEGIN, EVENT, END)), False, ('0111', '0113'))

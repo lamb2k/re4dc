@@ -8,8 +8,11 @@
 namespace re4dc_gcasset {
 enum Consumer : unsigned {
     SourceGeometry, Texture, EffectPicture, Weapon, Font, Ui,
-    SoundBank, SoundStream, Movie, ConsumerCount
+    SoundBank, SoundStream, Movie, Motion, ConsumerCount
 };
+static_assert(SourceGeometry==0 && Movie==8 && Motion==9 && ConsumerCount==10,"preserve diagnostic ordinals");
+// Protocol v2 requires Motion but does not implement or advertise its hook.
+constexpr unsigned ProtocolVersion=2;
 enum Provenance : unsigned { Unknown, GameCube, PS2, Authored };
 struct Digest { unsigned char bytes[32]; };
 // Immutable-load boundary only; never call while the G2/store-queue lock is held.
@@ -84,8 +87,10 @@ void end(unsigned frame);
 #if defined(RE4DC_GC_ASSET_TEST)
 void test_queue_lock(bool held);
 void test_max_counters();
+unsigned test_catalog_rows(unsigned);
 #endif
 constexpr unsigned Required = (1U << ConsumerCount) - 1;
+static_assert(Required==0x3ff,"Motion is required even while its producer is unwired");
 }
 #define RE4DC_GCA_EMITTED(...) ::re4dc_gcasset::emitted(__VA_ARGS__)
 #define RE4DC_GCA_CHECKED(...) ::re4dc_gcasset::checked(__VA_ARGS__)

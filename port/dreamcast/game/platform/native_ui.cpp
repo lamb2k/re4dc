@@ -3624,7 +3624,7 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #else
         const bool fingerprint_ok=gcasset_texture_fingerprint(*slot,key,path,0,0);
 #endif
-        if(!fingerprint_ok)re4dc_log("GC-ASSET-ERROR v=1 why=texture-fingerprint key=%08x-%08x\n",key.crc,key.fnv);
+        if(!fingerprint_ok)re4dc_log("GC-ASSET-ERROR v=2 why=texture-fingerprint key=%08x-%08x\n",key.crc,key.fnv);
     }
 #endif
     if(!ok) {RE4DC_PROFILE_COUNT(TextureOpenFailures,1);re4dc_log("native UI: package rejected: %s\n",slot->package.error());}
@@ -5529,7 +5529,7 @@ enum GcAssetPhase { GcStartup,GcRoom,GcTransition };GcAssetPhase gcasset_phase;u
 constexpr unsigned gcasset_wired_mask(){
     // Specialized static/coarse payload bridges are not integrated yet. Keep
     // both affected consumer classes visibly incomplete, even in empty rooms.
-    unsigned mask=re4dc_gcasset::Required&~((1U<<re4dc_gcasset::SourceGeometry)|(1U<<re4dc_gcasset::Weapon));
+    unsigned mask=re4dc_gcasset::Required&~((1U<<re4dc_gcasset::SourceGeometry)|(1U<<re4dc_gcasset::Weapon)|(1U<<re4dc_gcasset::Motion));
 #if !RE4DC_NATIVE_MES
     mask&=~(1U<<re4dc_gcasset::Font); // legacy font consumer is not qualified
 #endif

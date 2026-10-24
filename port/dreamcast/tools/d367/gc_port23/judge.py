@@ -9,12 +9,25 @@ import re
 import sys
 
 CONSUMERS = ('source_geometry', 'texture', 'effect_picture', 'weapon', 'font', 'ui',
-             'sound_bank', 'sound_stream', 'movie')
+             'sound_bank', 'sound_stream', 'movie', 'motion')
+PROTOCOL_VERSION = 2
 REQUIRED = (1 << len(CONSUMERS)) - 1
 TOKEN = re.compile(r'^[a-z0-9/._:-]+$')
 SHA = re.compile(r'^[0-9a-f]{64}$')
 ROOM = re.compile(r'^[0-9a-f]{4}$')
 HERE = Path(__file__).resolve().parent
+
+
+def read_protocol(path=HERE / 'protocol.json'):
+    raw = Path(path).read_bytes()
+    expected = dict(schema=2, gate='GC-ASSET', diagnostic_version=PROTOCOL_VERSION,
+                    required=f'{REQUIRED:03x}', consumers=list(CONSUMERS),
+                    motion_coverage='unwired; zero counter is not a zero-use assertion',
+                    motion_identity_kind='motion', legacy_diagnostic_versions_rejected=[1],
+                    catalog_format_schema=1, reviewed_allowlist_schema=1)
+    if json.loads(raw) != expected:
+        raise ValueError('current GC-ASSET protocol manifest differs from strict v2 contract')
+    return hashlib.sha256(raw).hexdigest()
 
 
 def scope_name(row):
@@ -81,12 +94,13 @@ def fields(line, prefix):
         if key in values or not value:
             raise ValueError('duplicate/empty diagnostic field: ' + key)
         values[key] = value
-    if values.get('v') != '1':
-        raise ValueError('missing/unsupported GC-ASSET diagnostic version')
+    if values.get('v') != str(PROTOCOL_VERSION):
+        raise ValueError('current GC-ASSET requires v=2; historical v=1 is legacy coverage')
     return values
 
 
 def judge(logs, allowlist, requested):
+    protocol_sha = read_protocol()
     failures = []
     visits = {}
     observed = set()
@@ -149,6 +163,8 @@ def judge(logs, allowlist, requested):
                         raise ValueError('asset diagnostic fields differ from schema')
                     if r['action'] != 'emit' or r['consumer'] not in CONSUMERS:
                         raise ValueError('load/ready/reserve is not draw/play evidence')
+                    if r['consumer'] == 'motion' and r['kind'] != 'motion':
+                        raise ValueError('Motion requires its own source identity; geometry cannot supply it')
                     if not TOKEN.fullmatch(r['kind']) or not TOKEN.fullmatch(r['id']) or not SHA.fullmatch(r['sha256']):
                         raise ValueError('invalid asset identity/payload digest')
                     if r['provenance'] not in ('gc', 'unknown'):
@@ -185,8 +201,8 @@ def judge(logs, allowlist, requested):
                         raise ValueError('consumer emission counts cannot explain asset rows')
                     if any(counts[c] < visits[key]['first_consumers'][c] for c in CONSUMERS):
                         raise ValueError('per-consumer count cannot explain its logged first-use rows')
-                    if any(counts[c] < 0 for c in CONSUMERS) or int(r['frame']) < 0:
-                        raise ValueError('negative counter/frame')
+                    if any(not 0 <= counts[c] <= 0xffffffff for c in CONSUMERS) or not 0 <= int(r['frame']) <= 0xffffffff:
+                        raise ValueError('counter/frame outside unsigned 32-bit range')
                     visits[key]['ended'] = True
                     previous_scope = scope
                     active = None
@@ -207,7 +223,8 @@ def judge(logs, allowlist, requested):
     for key, visit in visits.items():
         if not visit['ended']:
             failures.append(f'{key[1]} visit {key[2]}: no valid final checkpoint')
-    return {'schema': 1, 'gate': 'GC-ASSET', 'pass': not failures,
+    return {'schema': 2, 'protocol_version': PROTOCOL_VERSION, 'gate': 'GC-ASSET',
+            'protocol_sha256': protocol_sha, 'required': f'{REQUIRED:03x}', 'consumers': list(CONSUMERS), 'pass': not failures,
             'rooms': sorted(observed), 'visits': len(visits),
             'allowed_used': len(set().union(*(v['rows'] for v in visits.values()))) if visits else 0,
             'failures': failures}
@@ -228,7 +245,7 @@ def main():
             raise ValueError('--room must contain four lowercase hexadecimal digits')
         result = judge([(str(p), p.read_text(encoding='utf-8', errors='replace')) for p in args.logs], allow, args.room)
     except (ValueError, OSError, TypeError, KeyError) as error:
-        result = {'schema': 1, 'gate': 'GC-ASSET', 'pass': False, 'failures': [str(error)]}
+        result = {'schema': 2, 'protocol_version': PROTOCOL_VERSION, 'gate': 'GC-ASSET', 'pass': False, 'failures': [str(error)]}
     output = json.dumps(result, indent=2) + '\n'
     if args.json:
         args.json.write_text(output, encoding='utf-8')

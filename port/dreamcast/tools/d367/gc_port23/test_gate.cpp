@@ -5,10 +5,17 @@
 #include <string>
 std::string output;
 bool audio_mutex;
+unsigned maximum_asset,maximum_counts,maximum_begin,maximum_end;
 extern "C" void re4dc_log(const char* fmt, ...) {
     assert(!audio_mutex);
     char line[256];va_list args;va_start(args,fmt);const int written=vsnprintf(line,sizeof line,fmt,args);va_end(args);
     assert(written>=0 && unsigned(written)<sizeof line);output+=line;
+    const std::string text(line);unsigned* maximum=nullptr;
+    if(text.find("GC-ASSET v=")==0)maximum=&maximum_asset;
+    if(text.find("GC-ASSET-COUNTS ")==0)maximum=&maximum_counts;
+    if(text.find("GC-ASSET-BEGIN ")==0)maximum=&maximum_begin;
+    if(text.find("GC-ASSET-END ")==0)maximum=&maximum_end;
+    if(maximum && *maximum<unsigned(written))*maximum=unsigned(written);
 }
 using namespace re4dc_gcasset;
 unsigned rows() {
@@ -17,6 +24,7 @@ unsigned rows() {
     return n;
 }
 int main() {
+    static_assert(ProtocolVersion==2 && Required==0x3ff && Movie==8 && Motion==9 && ConsumerCount==10);
     const Digest golden=fingerprint("abc",3);
     const unsigned char abc[]={0xba,0x78,0x16,0xbf,0x8f,0x01,0xcf,0xea,0x41,0x41,0x40,0xde,0x5d,0xae,0x22,0x23,
         0xb0,0x03,0x61,0xa3,0x96,0x17,0x7a,0x9c,0xb4,0x10,0xff,0x61,0xf2,0x00,0x15,0xad};
@@ -66,10 +74,12 @@ int main() {
     assert(output.find("errors=2")!=std::string::npos); // lock contention cannot print errors=0
     output.clear();queued(audio_ticket(),SoundBank,"sample","core:1",gc);pump();
     assert(output.find("GC-ASSET-ERROR")!=std::string::npos); // after END stays an explicit error
-    output.clear();begin(0xffffffffU,0xffffffffU,0xffffffffU);
+    output.clear();const unsigned old_catalog_rows=test_catalog_rows(16376);begin(0xffffffffU,0xffffffffU,0xffffffffU);test_catalog_rows(old_catalog_rows);
     test_max_counters();
     emitted(SourceGeometry,"abcdefghijklmno","abcdefghijklmnopqrstuvwxyz012345678901234567890",gc);
+    test_max_counters();
     end(0xffffffffU); // all production formatter rows must fit the real 256-byte logger
+    assert(output.find("motion=4294967295\n")!=std::string::npos);
     assert(install(catalog,2));output.clear();begin_startup_closed(1,Required);
     assert(output.find("phase=startup")!=std::string::npos && output.find("room=")==std::string::npos);
     audio_mutex=true;open_audio_admission();const auto startup_audio=audio_ticket();
@@ -117,6 +127,17 @@ int main() {
     begin_transition_handoff(11,Required,0x111,RoomRetire);pump();end(11);
     // Maximum-width transition BEGIN, ASSET, COUNTS and END use production formatter.
     assert(install(catalog,2));output.clear();begin(0x111,0xfffffffeU,Required);assert(handoff_audio_admission(0,0xffffffffU));end(1);
-    begin_transition_handoff(0xffffffffU,0xffffffffU,0xffffffffU,RoomRetire);test_max_counters();
-    emitted(SourceGeometry,"abcdefghijklmno","abcdefghijklmnopqrstuvwxyz012345678901234567890",gc);end(0xffffffffU);
+    test_catalog_rows(16376);begin_transition_handoff(0xffffffffU,0xffffffffU,0xffffffffU,RoomRetire);test_catalog_rows(2);test_max_counters();
+    emitted(SourceGeometry,"abcdefghijklmno","abcdefghijklmnopqrstuvwxyz012345678901234567890",gc);test_max_counters();end(0xffffffffU);
+    // Even an already-seen PS2 geometry token cannot certify Motion.
+    CatalogRow own_sources[]={{"geometry","mesh",ps2,PS2},{"motion","pose",gc,GameCube}};
+    assert(install(own_sources,2));output.clear();begin(0x111,1,Required);
+    const auto mesh=bind_checked("geometry","mesh",ps2);emitted_checked(SourceGeometry,mesh);emitted_checked(Motion,mesh);end(1);
+    assert(output.find("motion-unwired consumer=9")!=std::string::npos && output.find("errors=1")!=std::string::npos);
+    output.clear();begin(0x111,2,Required);emitted(Motion,"motion","pose",gc);end(2);
+    assert(!rows() && output.find("motion-unwired consumer=9")!=std::string::npos && output.find("motion=0")!=std::string::npos);
+    output.clear();begin(0x111,3,Required&~(1U<<Motion));for(unsigned i=0;i<Motion;++i)checked(Consumer(i));end(3);
+    assert(output.find("wired=1ff checked=1ff required=3ff")!=std::string::npos && output.find("motion=0")!=std::string::npos);
+    assert(maximum_counts==255); // transition scope is three bytes longer than room=ffffffff
+    std::printf("GC-ASSET v2 production formatter maxima including newline: ASSET=%u COUNTS=%u BEGIN=%u END=%u (logger256)\n",maximum_asset,maximum_counts,maximum_begin,maximum_end);
 }

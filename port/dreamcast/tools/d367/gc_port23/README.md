@@ -1,9 +1,13 @@
 # GC-ASSET diagnostic gate (I-001, gc-port23)
 
-Incomplete integration checkpoint through88e9ac342. Host controls pass; no
-complete consumer mask, room gate, same-profile image identity, linked heap or
-guest acceptance is claimed. The selected SH4 object receipts at842b7d842 are
-syntax/size evidence for that frozen source and old standard542 profile only.
+Incomplete integration. Current protocol is v2 with ten required consumers
+(mask3ff); Motion is explicitly unwired and current runtime wired mask remains
+1f6. Raw generic geometry stays unqualified because complete UV/color/weight/
+shape consumption is unproved, even for a catalog-PS2 BIN. No complete room gate,
+same-profile image identity, linked heap or guest acceptance is claimed. Frozen
+156658987 selected SH4 receipts use the actual current5e4 profile and merged d5c
+source; they do not qualify newer main/cache/raw/v2 changes. Historical v1 logs
+are rejected by the current judge, not silently upgraded. See PROTOCOL-V2.md.
 Root owns local integration under CODEX-TAKEOVER-20261023.md. No recipe/rr,
 asset swaps, pruning, release or media changes belong to this checkpoint.
 
@@ -42,8 +46,9 @@ physical draw calls. Load, ready, reservation and culled work never count.
 
 | Consumer | Implemented accepted path | Remaining proof |
 |---|---|---|
-| Original source props/actors without NMRS | Bounded original BIN capture before calcModelAddr relocation/FE, actual model gateway, packet/direct/Leon-switch acceptance | Complete runtime/room qualification and specialized replacement consumers |
+| Original source props/actors without NMRS | Original BIN capture/class association before relocation; accepted raw gateway/packet/direct/defer produces explicit serial0 failures | COMPLETE UV/color/weight/shape source/derivation proof; full BIN hash alone is insufficient |
 | Weapons | All23 source archive audit: explicit held/secondary classes, exact hand infos, owner family and ambiguous casing/mine member roles; geometry and texture masks | Actual complete runtime/room qualification |
+| Motion | Required ordinal9/bit200 and separate identity namespace; actual producer is UNWIRED | Committed pose/history/blend/cache/event sources through accepted visible palette/Frame use; zero counter does not assert zero use |
 | Texture and UI pictures | Exact successful loose/tex.pak full member at load, accepted Entry latch and safe flush, both UI draw paths | Complete runtime/room qualification and qualified generated atlases |
 | Effect pictures | Single format-aware accepted packet observer with FX context and carried header; discard/retire reset | Complete runtime/room qualification |
 | Static replacement packages | Embedded PayloadProof helper and actual UI/deferred pointer+serial bridge | Shared native_static patch is a partial unapplied proposal; mixed-owner impostors, r11f/far-shell, extra R4SG interpretation and movie reload error exits remain open |

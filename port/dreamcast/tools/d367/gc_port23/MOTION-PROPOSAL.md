@@ -7,6 +7,11 @@ stated in CLAUDE178-184. No motion/event asset conversion, source swap or cloud
 animation implementation is authorized by this document. Current GC-ASSET is
 incomplete and cannot claim absence of GC assets with these inputs unattributed.
 
+Protocol update: root subsequently authorized the fail-closed v2 schema guard
+now implemented in PROTOCOL-V2.md. Motion is ordinal9/Required3ff, current wired
+mask stays1f6 and the actual producer remains unwired. The older "would append"
+paragraph below records the design direction, not the current protocol state.
+
 The initial trace is deliberately within existing read/model bridge declarations:
 
 - read.cpp binds a prepared enemy motion archive with exact pArc/len around731;
