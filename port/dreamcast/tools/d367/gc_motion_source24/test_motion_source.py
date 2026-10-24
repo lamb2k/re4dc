@@ -267,7 +267,8 @@ extern "C" void re4dc_motion_release(int token){assert(token==1 && native_slot.p
      continue
     out.append(line)
    baseline=subprocess.run(['git','show','140a699f8ead7b406e76581de7075191acf77a96:'+path],cwd=ROOT,check=True,capture_output=True,text=True).stdout
-   self.assertEqual(''.join(out),baseline,path)
+   projected=''.join(out).replace('            re4dc_motion_free(data);\n            fail("motion key offset"); }','            re4dc_motion_free(data);fail("motion key offset"); }')
+   self.assertEqual(projected,baseline,path)
  def test_host_32bit_storage_layout_control(self):
   # Host IA32 layout check only. Minimal standard declarations avoid requiring
   # target SDK/multilib C++ headers; this is not SH4/KOS object qualification.
@@ -286,4 +287,38 @@ extern "C" void re4dc_motion_release(int token){assert(token==1 && native_slot.p
    symbols=subprocess.run(['nm','-S','-C',str(obj)],check=True,capture_output=True,text=True).stdout
    state=[line for line in symbols.splitlines() if ' b ' in line or ' B ' in line]
    self.assertEqual(sum(int(line.split()[1],16) for line in state),8,state)
+ def test_actual_malformed_external_key_preserves_backing_ownership(self):
+  source=(PLATFORM/'native_motion.cpp').read_text()
+  at=source.index('            if(offset<head || offset>=size) {')
+  finish=source.index('fail("motion key offset"); }',at)+len('fail("motion key offset"); }')
+  actual=source[at:finish]
+  fixture=r'''#include <cassert>
+struct Binding {bool bounded;};bool reserved;unsigned freed,invalidated;bool stopped;
+bool reserved_data(const Binding&,void*){return reserved;}
+void re4dc_motion_free(void*){++freed;}
+void fail(const char*){stopped=true;}
+namespace re4dc_gcasset {void motion_source_external_invalidate(const void*){++invalidated;}}
+void invalid(Binding& b,void* data,unsigned offset,unsigned head,unsigned size){int s=0;
+BODY
+(void)b;(void)data;(void)s;
+}
+int main(){int data=0;for(bool held:{false,true}){Binding b{held};reserved=held;freed=invalidated=0;stopped=false;
+ invalid(b,&data,4,16,64);assert(stopped);
+#if RE4DC_MOTION_RESERVE_PACK || RE4DC_MOTION_BOUNDED_R11F
+ assert(freed==unsigned(!held));
+#else
+ assert(freed==1);
+#endif
+ assert(invalidated==RE4DC_GC_ASSET_MOTION_SOURCE);
+ }
+}
+'''.replace('BODY',actual).replace('for(bool held:{false,true})','for(unsigned value=0;value<2;++value)').replace('Binding b{held};','const bool held=value!=0;Binding b{held};')
+  with tempfile.TemporaryDirectory(prefix='gc-motion-bad-key-',dir='/dev/shm') as t:
+   p=Path(t);(p/'fixture.cpp').write_text(fixture)
+   for enabled in [0,1]:
+    for pack,bounded in [(0,0),(1,0),(0,1)]:
+     run=subprocess.run(['g++','-std=c++17','-O2','-Wall','-Wextra','-Werror','-DRE4DC_GC_ASSET_MOTION_SOURCE='+str(enabled),'-DRE4DC_MOTION_RESERVE_PACK='+str(pack),'-DRE4DC_MOTION_BOUNDED_R11F='+str(bounded),str(p/'fixture.cpp'),'-o',str(p/'run')],capture_output=True,text=True,timeout=60)
+     self.assertEqual(run.returncode,0,run.stderr)
+     result=subprocess.run(['/lib64/ld-linux-x86-64.so.2',str(p/'run')],capture_output=True,text=True,timeout=10)
+     self.assertEqual(result.returncode,0,result.stderr)
 if __name__=='__main__':unittest.main()

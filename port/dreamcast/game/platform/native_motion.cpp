@@ -763,15 +763,22 @@ unsigned* load(Binding& b,unsigned i) {
         for(unsigned j=0;j<data[2];++j) {
             const unsigned offset=table[j];
             if(offset<head || offset>=size) {
+#if RE4DC_GC_ASSET_MOTION_SOURCE
+            re4dc_gcasset::motion_source_external_invalidate(&s);
+#endif
 #if RE4DC_MOTION_RESERVE_PACK
             if(!reserved_data(b,data))
 #elif RE4DC_MOTION_BOUNDED_R11F
             if(!b.bounded)
 #endif
 #if RE4DC_GC_ASSET_MOTION_SOURCE
-            re4dc_gcasset::motion_source_external_invalidate(&s);
+            { // Keep the original ownership condition attached to this free.
 #endif
-            re4dc_motion_free(data);fail("motion key offset"); }
+            re4dc_motion_free(data);
+#if RE4DC_GC_ASSET_MOTION_SOURCE
+            }
+#endif
+            fail("motion key offset"); }
             table[j]=static_cast<unsigned>(reinterpret_cast<std::uintptr_t>(data)+offset);
         }
         s.data=data;s.used=++stamp;b.resident+=bytes;stats.resident_bytes+=bytes;
