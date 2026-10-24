@@ -2,6 +2,7 @@
 #if RE4DC_GC_ASSET_GATE
 #include <cstdio>
 #include <cstring>
+#include <new>
 #include <atomic>
 extern "C" void re4dc_log(const char*, ...);
 namespace re4dc_gcasset {
@@ -79,6 +80,10 @@ unsigned long long HashProf::total_us,HashProf::total_bytes;unsigned HashProf::c
 #else
 #define RE4DC_GCA_HASH_PROF(w,n) ((void)0)
 #endif
+static_assert(sizeof(IdentitySha)<=sizeof(DigestStream::opaque) && alignof(IdentitySha)<=4,"digest stream storage");
+void digest_begin(DigestStream& s){new (s.opaque) IdentitySha();}
+void digest_update(DigestStream& s,const void* data,unsigned count){reinterpret_cast<IdentitySha*>(s.opaque)->update(data,count);}
+Digest digest_finish(DigestStream& s){Digest out{};reinterpret_cast<IdentitySha*>(s.opaque)->finish(out.bytes);return out;}
 Digest fingerprint(const void* data, unsigned count) {
     RE4DC_GCA_HASH_PROF("ram",count);
     IdentitySha hash;Digest result{};
