@@ -461,6 +461,28 @@ format's purpose is not priced here.
 3. Pending: the owner is re-exporting r101 / r103 at 32 / 128 / 256 through `ps2_world_r4im.py` (64 must reproduce
    the shipped original mesh byte-identically first). 64 stays the default.
 
+**Claude follow-up (2026-10-24): meshlet size sweep, original-policy data.** Both rooms re-exported through their
+real chains; at 64 each chain reproduces the shipped files byte-identically. r103: `ps2_room_r4im.py` (t11 blackps2
+inputs, `--meshlet-vertices N`; r4pw / ids identical at every N). r101: the SMX colour hook (`ps2_world_r4im.py`
+underneath) -> `ps2_world_append.py` (14 baked objects) -> `ps2_strip_groups.py --groups 4` (mesh 500d17da, r4pw
+2c9deabb, r4sg 80da4063 at 64). Twin fpb13offW (census, matched overrides), err=0 and HALT / TEXCHK 0 in every arm.
+Flycast MODELLED, world us per drawn tick:
+
+| N | r101 cross | v | r101 R4SG | heap 4 free | r103 farm | v | heap 4 free |
+|---|---|---|---|---|---|---|---|
+| 32 | 15,430 (+1.49 ms) | 8,698 | 220,448 | 2,970,496 | 10,071 (+0.43) | 9,220 | 3,694,528 |
+| 64 | 13,938 | 11,248 | 117,152 | 3,145,728 | 9,637 | 11,328 | 3,723,936 |
+| 128 | 13,064 (-0.87) | 12,927 | 71,072 | 3,230,048 | 9,489 (-0.15) | 12,942 | 3,751,072 |
+| 256 | 12,766 (-1.17) | 14,020 | 51,872 | 3,270,784 | 9,288 (-0.35) | 13,686 | 3,767,520 |
+
+At 256 the cross loses 0.65 ms of selection and 0.62 ms of "other" (per-meshlet setup) against +0.29 ms of
+transform for +25% transformed inputs, and stops dropping ticks (t=307 -> 300 per 300 drawn). Look, tier 2 (frozen
+stills at tick 600): cross 64 vs 256 changes 0.178% of pixels, max 41, none above 48; farm differences (4.76%) sit
+only on Leon and the HUD ring (actor timing; identical for 128 and 256), world pixels unchanged. 32 is rejected.
+Not yet priced: PVR / TA load of the +25% inputs (Flycast's census is CPU world time). Console A/B disc pair is
+packaged (`b13-off` = 64, `b13-n256`, original-policy data). The default stays 64 until the console result; if it
+holds, the owner re-exports every PS2 world at 256 through its chain and re-keys the release data.
+
 ### 2026-10-24: Build 14 hand-back (`codex/perf-phase-miss-20261024`)
 
 Diagnostic: `PERF_PHASE_MISS=1`, default 0, requiring the landed census.
@@ -494,8 +516,8 @@ fixed builds/runs. The recipe and coordinator status table are unchanged.
    loader + standard clean, 60 s Flycast boot clean): `RE4DC-W2MS\b14-{off,e15,e37}`. They wait on the user's SD-card OK.
 2. Same windows as census rows: cross t=321-322 / d=300, farm t=300 / d=300, err=0, samples=0.
 3. Perturbation with the observer present but UNRUN (Flycast MODELLED, world us per drawn tick): cross
-   14,121 -> 15,235 (+1.11 ms; other +0.47, hdr +0.18, submit +0.23, xform +0.14), farm 9,747 -> 10,373
-   (+0.63 ms); cross wall 34.50 -> 35.87 ms per tick. Event 15 and 37 builds are identical in cost. So the boundary
+   14,121 -> 15,235 (+1.11 ms; other +0.47, hdr +0.18, submit +0.23, xform +0.14), farm 9,747 -> 10,368
+   (+0.62 ms); cross wall 34.50 -> 35.87 ms per tick. Event 15 and 37 builds are identical in cost. So the boundary
    hooks cost about 1 ms on the cross even before the counter runs; the play build's deadline must come from the
    observer-off build (as the report says), and any console miss attribution carries a perturbation of at least
    this size.
