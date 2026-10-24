@@ -12,6 +12,70 @@ GAME = HERE.parents[2] / 'game'
 
 
 class ActorAssetTests(unittest.TestCase):
+    def test_actual_replacement_weapon_class_and_frozen_replay(self):
+        selection = (GAME / 'platform/include/gc_asset_actor_select.inc').read_text()
+        bridge = (GAME / 'model_bridge.cpp').read_text()
+        fixture = r'''
+#include "gc_asset_actor.h"
+#include <cassert>
+#include <cstdarg>
+#include <cstdio>
+#include <cstring>
+#include <string>
+#include <vector>
+using namespace re4dc_gcasset;
+bool sq;std::string logs;
+extern "C" void re4dc_log(const char*fmt,...){assert(!sq);char text[256];va_list ap;va_start(ap,fmt);vsnprintf(text,sizeof text,fmt,ap);va_end(ap);logs+=text;}
+struct cModel{unsigned kindid=0,id=0x10,type=0,nParts=1;};struct cModelInfo{const void*pData=nullptr;};
+struct Body{cModelInfo*pRight=nullptr,*pLeft=nullptr;};struct Player:cModel{struct Body*Body=nullptr;}player;Player*pPL=&player;
+''' + function(bridge, 'extern "C" unsigned re4dc_gcasset_model_identity(') + '\n' + function(bridge, 'extern "C" unsigned re4dc_gcasset_weapon_consumer(') + r'''
+struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;};
+struct Re4dcActorSource{const unsigned char*positions,*normals;unsigned position_count,normal_count,palette_entries,small_normals;};
+struct Chunk{unsigned position_count=1,normal_count=1,palette_count=1,uv_bytes=4,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};
+struct RegistryView{unsigned geometry_count=1;}registry;Chunk chunks[1];Chunk registry_gview(unsigned g){return chunks[g];}PayloadProof gcasset_registry[2];
+''' + selection + r'''
+void put(std::vector<unsigned char>&a,unsigned offset,unsigned value){memcpy(a.data()+offset,&value,4);}
+std::vector<unsigned char> archive(unsigned arc){unsigned count=arc-3,at=16+count*8;std::vector<unsigned char>a(at+96);put(a,0,count);put(a,16+4*(count-1),at);put(a,16+4*count+4*(count-1),0x004e4942);a[at]=37;return a;}
+const void* adopt(std::vector<unsigned char>&a,OwnerFamily family){assert(member_adopt(&a,a.data(),a.size(),true,family));unsigned count;memcpy(&count,a.data(),4);const void*data=a.data()+16+count*8;assert(member_capture(data));return data;}
+int main(){assert(install(nullptr,0));begin(0x111,1,Required);unsigned char replacement[512]={91};auto&c=chunks[0];c.positions=replacement;c.normals=replacement+64;c.uv=replacement+128;c.stream=replacement+160;c.weights=replacement+256;assert(payload_capture(gcasset_registry[0],&registry,replacement,sizeof replacement));
+ cModel model;cModelInfo info;Re4dcModelPart p{&model,&info,c.stream,c.uv,32,1,1};Re4dcActorSource source{c.positions,c.normals,1,1,1,0};
+ const unsigned geometry=1U<<SourceGeometry,weapon=geometry|(1U<<Weapon);
+ auto selected=[&](){sq=true;auto use=re4dc_gcasset_actor_select(&p,&source);sq=false;return use;};
+ auto check=[&](unsigned kind,unsigned id,unsigned mask){model.kindid=kind;model.id=id;assert(selected().mask==mask);};
+ // Held, dropped launcher, thrown and player-backed projectiles are consumer
+ // classes even when current m_pWep is absent. No source pointer is provenance.
+ for(unsigned id:{0x21U,0x23U,0x24U,0x25U,0x27U,0x28U,0x2bU,0x2cU,0x2dU,0x2eU,0x2fU,0x30U,0x31U,0x32U,0x33U,0x34U,0x36U,0x3cU,0x3dU,0x1aU,0x22U,0x29U,0x2aU,0x3aU})check(1,id,weapon);
+ check(0,0x10,geometry);check(1,2,geometry);check(1,0x0a,0);check(0,0x4f,0);
+ auto shell=archive(0x7a),mine=archive(0x72),other=archive(4);const void*shell_data=adopt(shell,PlayerOwner);const void*mine_data=adopt(mine,PlayerOwner);const void*other_data=adopt(other,OtherOwner);
+ info.pData=shell_data;check(1,0x0a,weapon);check(0,0x4f,geometry);info.pData=mine_data;check(0,0x4f,weapon);check(1,0x0a,geometry);info.pData=other_data;check(1,0x0a,geometry);check(0,0x4f,geometry);
+ member_retire(&other);adopt(other,WeaponOwner);check(1,2,weapon);
+ Body body;player.Body=&body;body.pRight=&info;p.model=&player;player.kindid=0;player.id=0;assert(selected().mask==weapon);body.pRight=nullptr;assert(selected().mask==weapon); // weapon-family original member
+ info.pData=nullptr;assert(selected().mask==geometry);body.pLeft=&info;assert(selected().mask==weapon);body.pLeft=nullptr;p.model=&model;
+ // Accepted replacement emits its own whole-source identity for BOTH classes;
+ // the original BIN is used only for consumer attribution.
+ info.pData=shell_data;model.kindid=1;model.id=0x0a;const auto saved=selected();assert(saved.payload==&gcasset_registry[0] && saved.mask==weapon);
+ sq=true;{ActorSourceScope scope(&p,&source);scope.accepted();}sq=false;payload_flush_all();end(1);assert(logs.find("source_geometry=1")!=std::string::npos && logs.find("weapon=1")!=std::string::npos);assert(logs.find("kind=geometry")!=std::string::npos && logs.find("kind=model_bin")==std::string::npos);
+ AssetDescription row;assert(describe_checked(saved.payload->asset,&row));assert(row.provenance==Unknown && !memcmp(row.digest.bytes,fingerprint(replacement,sizeof replacement).bytes,32));
+ // Retirement removes ambiguous classification; saved replay keeps the exact
+ // earlier class mask, never recapturing a new current model/BIN role.
+ member_retire(&shell);assert(!selected().serial);info.pData=nullptr;model.kindid=0;model.id=0x10;
+ {ReplayScope replay(saved.serial,saved.mask,saved.payload);auto use=selected();assert(use.serial==saved.serial && use.payload==saved.payload && use.mask==weapon);}
+ begin(0x111,2,Required);logs.clear();payload_retire(gcasset_registry[0]);sq=true;{ReplayScope replay(saved.serial,saved.mask,saved.payload);ActorSourceScope scope(&p,&source);scope.accepted();}sq=false;payload_flush_all();assert(logs.find("unbound-accepted-payload")!=std::string::npos && logs.find("GC-ASSET v=")==std::string::npos);
+}
+'''
+        definitions = ['-DRE4DC_NATIVE_MODEL_REGISTRY=1', '-DRE4DC_NATIVE_MODEL_REGISTRY_PACK=1', '-DRE4DC_NMR_MASK=1']
+        self.compile_run(fixture, definitions, bridge_stubs=False)
+        # These mutants compile the same actual bodies; each must fail an
+        # executed assertion, rather than merely fail a text-presence check.
+        ambiguous = 'if(!bound && ((kind==1 && id==0x0a) || (kind==0 && id==0x4f)))return 0;'
+        replay = function(selection, '    if(replay_use.serial!=0xffffffffU)')
+        for label, old, new in [('drop Weapon', '?1U<<Weapon:0U', '?0U:0U'),
+                                ('unbound shared class', ambiguous, 'if(!bound && kind==255 && id==255)return 0;'),
+                                ('recapture replay', replay, '')]:
+            with self.subTest(mutant=label):
+                self.assertEqual(fixture.count(old), 1)
+                self.compile_run(fixture.replace(old, new), definitions, bridge_stubs=False, reject=True)
+
     def test_actual_compiled_capture_and_selection(self):
         compiled = (GAME / 'platform/include/gc_asset_actor_compiled.inc').read_text()
         selection = (GAME / 'platform/include/gc_asset_actor_select.inc').read_text()
@@ -139,7 +203,12 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);unsigned char a[64
         leave = function(registry, 'extern "C" void re4dc_registry_room_leave()')
         self.assertLess(leave.index('gcasset_registry_retire()'), leave.index('re4dc_static_free(pack.cell)'))
 
-    def compile_run(self, fixture, definitions=()):
+    def compile_run(self, fixture, definitions=(), bridge_stubs=True, reject=False):
+        if bridge_stubs:
+            fixture += '''
+extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**data){*data=nullptr;return 0x00100000U;}
+extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned){return 0;}
+'''
         with tempfile.TemporaryDirectory(prefix='gc-port23-actor-source-', dir='/dev/shm') as temporary:
             root = Path(temporary);(root / 'fixture.cpp').write_text(fixture);executable = root / 'fixture'
             subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
@@ -147,7 +216,9 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);unsigned char a[64
                             str(root / 'fixture.cpp'), str(GAME / 'platform/gc_asset_gate.cpp'),
                             str(GAME / 'platform/gc_asset_members.cpp'), str(GAME / 'platform/gc_asset_payloads.cpp'),
                             '-o', str(executable)], check=True)
-            subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
+            result = subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], capture_output=reject, text=True)
+            if reject:self.assertNotEqual(result.returncode, 0, 'compiled negative mutant escaped runtime controls')
+            else:result.check_returncode()
 
     def test_compiled_fragment_identity_and_retirement(self):
         spans = [b'ab', b'c']

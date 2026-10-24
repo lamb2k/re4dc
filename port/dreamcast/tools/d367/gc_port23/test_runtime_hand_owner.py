@@ -47,6 +47,8 @@ class HandOwnerTests(unittest.TestCase):
 #include <string>
 #include <sys/types.h>
 using namespace re4dc_gcasset;
+extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**data){*data=nullptr;return 0x00100000U;}
+extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned){return 0;}
 std::string logs;bool locked,sq,g2,partial;unsigned io;void(*before_write)(void*);void(*before_free)();
 extern "C" void re4dc_log(const char*fmt,...){assert(!sq && !g2 && !io);char text[256];va_list args;va_start(args,fmt);vsnprintf(text,sizeof text,fmt,args);va_end(args);logs+=text;}
 struct Re4dcIoScope{Re4dcIoScope(){assert(!locked && !sq && !g2);++io;}~Re4dcIoScope(){--io;}};

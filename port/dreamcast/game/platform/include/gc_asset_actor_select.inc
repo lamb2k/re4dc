@@ -2,7 +2,24 @@
 // is duplicated here; the caller's real Re4dcActorSource/part and chunk types
 // supply the exact consumed array addresses and extents.
 #if RE4DC_GC_ASSET_GATE
+extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**);
+extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned);
 namespace {
+unsigned gcasset_actor_consumer_mask(const Re4dcModelPart& part){
+    using namespace re4dc_gcasset;
+    const void* data=nullptr;ModelMember member;
+    const unsigned identity=re4dc_gcasset_model_identity(part.model,part.info,&data);
+    if(identity==0xffffffffU)return 0;
+    const bool bound=member_lookup(data,&member);
+    const unsigned kind=identity>>24,id=(identity>>16)&255U;
+    // These classes are shared with non-weapons. Only a live original member
+    // supplies their exact role; absent/retired binding cannot mean non-Weapon.
+    if(!bound && ((kind==1 && id==0x0a) || (kind==0 && id==0x4f)))return 0;
+    // Original BIN family/ARC selects a consumer only. It never supplies the
+    // replacement's ancestry or replaces the selected package/copy serial.
+    return (1U<<SourceGeometry)|(re4dc_gcasset_weapon_consumer(part.model,part.info,
+        bound?member.arc:0,bound?unsigned(member.family):unsigned(OtherOwner))?1U<<Weapon:0U);
+}
 inline bool gcasset_actor_inside(const re4dc_gcasset::PayloadProof& proof,const void* data,unsigned bytes){
     if(!proof.owner || !proof.serial || !proof.base || !data || !bytes)return false;
     const auto base=reinterpret_cast<std::uintptr_t>(proof.base),at=reinterpret_cast<std::uintptr_t>(data);
@@ -71,6 +88,8 @@ extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_select(const Re4dcModelP
 #endif
     // Other hand owners remain unqualified, never the caller BIN.
     if(!selected || ambiguous)return {};
-    return {selected->serial,1U<<SourceGeometry,part->model,part->info,selected};
+    const unsigned mask=gcasset_actor_consumer_mask(*part);
+    if(!mask)return {};
+    return {selected->serial,mask,part->model,part->info,selected};
 }
 #endif
