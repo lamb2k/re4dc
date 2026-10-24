@@ -1,0 +1,61 @@
+{
+  "files": {
+    "CONTRACT.json": {
+      "bytes": 205146,
+      "sha256": "b85506bc72d43283ef6f741dec3196b1b75dc615868555b2cb559086a237950e"
+    },
+    "README-ROOT.md": {
+      "bytes": 734,
+      "sha256": "95e443fb494573981c5be9bf7e836c8b3ca8ab48c476e9c16cbfe51e0d4b5dad"
+    },
+    "ROOT-HOST-CONTROLS.json": {
+      "bytes": 1552,
+      "sha256": "8b68dc1ec7c2278e834d2016a5b3f6a141f867bacfba9bffaf89d4891a56dec4"
+    },
+    "ROOT-HOST-FINAL.json": {
+      "bytes": 1552,
+      "sha256": "3f0ee4ad92b5b686388fd7e9bfc1f14401bd30e3bffb5585332d91b232291d1a"
+    },
+    "common.py": {
+      "bytes": 4685,
+      "sha256": "a57f82a49522572d470c1664f5019e9dfec23d833973767ce562d58050fa3c32"
+    },
+    "controller.py": {
+      "bytes": 5214,
+      "sha256": "badff29a148979caefd2952479a20eea99808c21ea0df5a5a4edd3ecfdfe845d"
+    },
+    "execute.sh": {
+      "bytes": 1204,
+      "sha256": "91a9b009d6fd312ac37fb001d4bd22676138b52a860b7bf7c7ad310333b1e0ac"
+    },
+    "postbuild.py": {
+      "bytes": 9704,
+      "sha256": "bf8b68530fbf48f6132433170f70b80760979ad99106e69dc0c09ba0e7ad91b3"
+    },
+    "root-recovery-before-finalization/common.py": {
+      "bytes": 4685,
+      "sha256": "a57f82a49522572d470c1664f5019e9dfec23d833973767ce562d58050fa3c32"
+    },
+    "root-recovery-before-finalization/controller.py": {
+      "bytes": 5196,
+      "sha256": "313b5ddb45e1fab06b4d469480eb39781b16a90ceeb91dbc94c0b935e351844d"
+    },
+    "root-recovery-before-finalization/execute.sh": {
+      "bytes": 1040,
+      "sha256": "76db2d9392f3886d4b37e4dcb1ba4144ecb8a886ad21b0afe0a19c7d4752cb5c"
+    },
+    "root-recovery-before-finalization/postbuild.py": {
+      "bytes": 9704,
+      "sha256": "bf8b68530fbf48f6132433170f70b80760979ad99106e69dc0c09ba0e7ad91b3"
+    },
+    "root-recovery-before-finalization/test_host.py": {
+      "bytes": 7111,
+      "sha256": "41a5f137c607b75d309a0389b8a2d27b04a75a29716a0f799575840dcd71fda0"
+    },
+    "test_host.py": {
+      "bytes": 7111,
+      "sha256": "41a5f137c607b75d309a0389b8a2d27b04a75a29716a0f799575840dcd71fda0"
+    }
+  },
+  "scope": "Source/controller preparation; no SDK execution yet"
+}
