@@ -1,0 +1,220 @@
+{
+  "source": "8ce5ee2d00027268c3e69c9c300b819c1b14c63f",
+  "scope": "Actual full normal link only; no guest, heap, cache execution, physical acceptance or performance gain. OFF programme/all14 match production; ON rain and diagnostics only.",
+  "arms": {
+    "off": {
+      "seconds": 117.68647648202023,
+      "files": {
+        "re4dc-game.elf": {
+          "bytes": 28568168,
+          "sha256": "3318e403f60292ce0b98aaeb98896b20b8df045ad3bc0a66baba7aee67f1a033"
+        },
+        "program.bin": {
+          "bytes": 3370820,
+          "sha256": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b"
+        },
+        "sscrn.ovl": {
+          "bytes": 134372,
+          "sha256": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60"
+        },
+        "st2_0.ovl": {
+          "bytes": 96788,
+          "sha256": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2"
+        },
+        "st1_3.ovl": {
+          "bytes": 88748,
+          "sha256": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc"
+        },
+        "st1_2.ovl": {
+          "bytes": 50076,
+          "sha256": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c"
+        },
+        "st1_1.ovl": {
+          "bytes": 81540,
+          "sha256": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0"
+        },
+        "st1_0.ovl": {
+          "bytes": 36340,
+          "sha256": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a"
+        },
+        "em35.ovl": {
+          "bytes": 52392,
+          "sha256": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7"
+        },
+        "em3b.ovl": {
+          "bytes": 7568,
+          "sha256": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417"
+        },
+        "pl14.ovl": {
+          "bytes": 18832,
+          "sha256": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e"
+        },
+        "pl11.ovl": {
+          "bytes": 35592,
+          "sha256": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e"
+        },
+        "em2b.ovl": {
+          "bytes": 67900,
+          "sha256": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695"
+        },
+        "em22.ovl": {
+          "bytes": 27236,
+          "sha256": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e"
+        },
+        "em2f.ovl": {
+          "bytes": 16800,
+          "sha256": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1"
+        },
+        "pl0f.ovl": {
+          "bytes": 45608,
+          "sha256": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e"
+        }
+      },
+      "addresses": {
+        "_edata": 2352246596,
+        "_etext": 2351296098,
+        "_end": 2353209524,
+        "__bss_start": 2352246600
+      },
+      "sizes": {
+        "text": 2693812,
+        "data": 675588,
+        "bss": 962900
+      },
+      "raw_object_count": 448,
+      "actual_compile_commands": 567,
+      "rain_record": [],
+      "postbuild_receipt_identity": {
+        "bytes": 469265,
+        "sha256": "08aec00f613c9725aec3500c455586dbdd9b015e3c0450131a8a032f178dd3b2"
+      },
+      "undefined_symbols": []
+    },
+    "on": {
+      "seconds": 119.60744367499137,
+      "files": {
+        "re4dc-game.elf": {
+          "bytes": 28588216,
+          "sha256": "7a23c2ac0b2f83a991e79b5309cef74bc211ceecab4b5b95cc80840c8a3d5339"
+        },
+        "program.bin": {
+          "bytes": 3374244,
+          "sha256": "32a7d852d9755d20e1346c1f0a17b39d88bdf1739389c592ea272e3ae040dc1a"
+        },
+        "sscrn.ovl": {
+          "bytes": 134372,
+          "sha256": "5b03d8596121d0c13f410f1b5770731d52a4f60a6c1debe467b46123757cc9db"
+        },
+        "st2_0.ovl": {
+          "bytes": 96788,
+          "sha256": "4548a914af1b0e3d3a8e9b2b97600860e948a2e3ac56b58376335ecfddcffcb1"
+        },
+        "st1_3.ovl": {
+          "bytes": 88748,
+          "sha256": "9364411735aff033a4ffe5cf0e94a2454c96bc2ee65b96a2cf95bc6057ac4676"
+        },
+        "st1_2.ovl": {
+          "bytes": 50076,
+          "sha256": "f31a2aa062904fa63c17ed875372250586ef4562f04416e2c5f5350f09957e38"
+        },
+        "st1_1.ovl": {
+          "bytes": 81540,
+          "sha256": "ff32871729d27eb6302d48864a897eeb4ad06d9e51acd73376449a6110288725"
+        },
+        "st1_0.ovl": {
+          "bytes": 36340,
+          "sha256": "bb8dfe722566f924755da4e7972870eb0beb7b3ea86e4b3072f602b00c8eb6ad"
+        },
+        "em35.ovl": {
+          "bytes": 52392,
+          "sha256": "f01eb99bd4db618307146810169713983f6ad4e218d76aadda580678d9eb43f6"
+        },
+        "em3b.ovl": {
+          "bytes": 7568,
+          "sha256": "3c8de9ed827dbc2dab5ea143512e472e05e53b62175002721690eef72a9624fc"
+        },
+        "pl14.ovl": {
+          "bytes": 18832,
+          "sha256": "9dbb890b7f5c0bee59c04a160efac8a5330f0a5040507585534121f77ad3f1db"
+        },
+        "pl11.ovl": {
+          "bytes": 35592,
+          "sha256": "4e965b4a0dd990606881b5f54f44b2214ec003a634e3263fd7780f98fa9254b9"
+        },
+        "em2b.ovl": {
+          "bytes": 67900,
+          "sha256": "9abb56184514283b2c2bb671b844a26a57e56b1dab2beb9bcfef21dfa8864662"
+        },
+        "em22.ovl": {
+          "bytes": 27236,
+          "sha256": "0b92d46ebf15d932ab06f672acd23aa1b24a906f31fcc8062455e71d7c862d61"
+        },
+        "em2f.ovl": {
+          "bytes": 16800,
+          "sha256": "5b7ea5e295af77bc7b23a67ef53ab30ee17cd3ab83d0ee85fa5ae576c617ce2b"
+        },
+        "pl0f.ovl": {
+          "bytes": 45608,
+          "sha256": "71b16e319e61d03f6e931a1a78de918afc13d132d432f7c8f7c47e057a58c2e9"
+        }
+      },
+      "addresses": {
+        "_edata": 2352250020,
+        "_etext": 2351299522,
+        "_end": 2353213108,
+        "__bss_start": 2352250024
+      },
+      "sizes": {
+        "text": 2697236,
+        "data": 675588,
+        "bss": 963060
+      },
+      "raw_object_count": 448,
+      "actual_compile_commands": 567,
+      "rain_record": [
+        {
+          "name": "_re4dc_rain_r10c_diag",
+          "value": 2352361088,
+          "bytes": 128,
+          "info": 17,
+          "other": 0,
+          "index": 11
+        }
+      ],
+      "postbuild_receipt_identity": {
+        "bytes": 467021,
+        "sha256": "89cd8407e65a24c912f0dd40126e78e2bd6e149da9f5738597ad369ce3a6c416"
+      },
+      "undefined_symbols": []
+    }
+  },
+  "delta": {
+    "text": 3424,
+    "data": 0,
+    "bss": 160
+  },
+  "linked_end_delta": 3584,
+  "receipt_identity": {
+    "bytes": 7797,
+    "sha256": "502ce30a286d64cce944924aee0c9e915266f915fa59f210f5c9cdc1649932b2"
+  },
+  "durable_private_manifest": {
+    "bytes": 7626,
+    "sha256": "2fbcec68eac36e71b8731335981768bd889aa53b9d9701b05a782e72b554a480"
+  },
+  "gc_memory_gate": {
+    "scope": "Separate prior diagnostic QA profile,45-second console runs under55 child cap, KOS48KiB",
+    "off": [
+      6112,
+      6176
+    ],
+    "on": [
+      4000,
+      4016
+    ],
+    "required": 4096,
+    "result": "ON_FAIL",
+    "attribution": "472 to512 nonarena difference plus1600 bootfit residue; no single allocation owner proved; allocation census prep active"
+  },
+  "created_utc": "2026-10-24T09:58:45.573300+00:00"
+}
