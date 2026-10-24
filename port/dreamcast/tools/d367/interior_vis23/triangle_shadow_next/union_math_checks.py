@@ -28,6 +28,7 @@ def main():
    for file in ('exact_shadow.py','test_exact_union.py'):(tmp/file).write_bytes((here/file).read_bytes())
    run=subprocess.run([sys.executable,str(tmp/'test_exact_union.py')],capture_output=True,text=True)
    if (run.returncode==0)!=(mutation is None):raise ValueError('Unexpected '+name+' '+run.stdout+run.stderr)
+   if mutation and ('AssertionError' not in run.stderr or 'ERROR:' in run.stderr):raise ValueError('Mutant did not fail the intended assertion '+name)
    records.append(dict(name=name,returncode=run.returncode,stdout=run.stdout,stderr=run.stderr,expected='pass' if mutation is None else 'assertion failure'))
  out=dict(kind='Exact IDEAL shared-index actual-triangle union synthetic controls only',tool_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),sources={file:hashlib.sha256((here/file).read_bytes()).hexdigest() for file in ('exact_union.py','exact_shadow.py','test_exact_union.py')},variants=records,renderer_admission=False,limits=dict(address_space_bytes=256*1024*1024,peak_child_rss_kib=resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss,jobs=1))
  a.out.parent.mkdir(parents=True,exist_ok=True)

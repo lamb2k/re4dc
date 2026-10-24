@@ -73,6 +73,7 @@ int main(){
    subprocess.run(['g++','-std=c++17','-O1','-fsanitize=undefined','-fno-sanitize-recover=all','-DRE4DC_PVS23_CERTIFICATES="cert.inc"','-I'+str(tmp),str(tmp/'fixture.cpp'),'-o',str(exe)],check=True,capture_output=True,text=True)
    run=subprocess.run([str(exe)],capture_output=True,text=True)
    if (run.returncode==0)!=(mutation is None):raise ValueError('Unexpected control '+label+' '+run.stdout+run.stderr)
+   if mutation and ('Assertion' not in run.stderr or 'failed' not in run.stderr):raise ValueError('Mutant did not fail an intended assertion '+label)
    records.append(dict(label=label,returncode=run.returncode,stdout=run.stdout,stderr=run.stderr,expected='pass' if mutation is None else 'assertion failure'))
  out=dict(kind='Unchanged actual-source two-triangle Panel/receipt controls on synthetic shared-cache transcript',tool_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),sources=pins,fixture_donor_sha256=hashlib.sha256(donor.read_bytes()).hexdigest(),variants=records,renderer_admission=False,scope='Controlled valid receipt state only; actual target frame/arithmetic/material/raster/source emission unqualified.',limits=dict(address_space_bytes=256*1024*1024,peak_child_rss_kib=resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss,jobs=1))
  a.out.parent.mkdir(parents=True,exist_ok=True)
