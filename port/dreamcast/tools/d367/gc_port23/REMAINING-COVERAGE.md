@@ -34,6 +34,13 @@ The source-linked23-archive audit is external
 WEAPON-CONSUMER-BOUNDARY.md (frozen980 source; weapon modules themselves need
 revalidation against the merged current source before final coverage).
 
+Current raw generic geometry is explicitly unqualified. Full original BIN SHA
+and position/normal/stream bounds do not prove complete UV/color/weight/shape
+inputs; nTex is not an array extent. Both main and native_model fallback keep
+unknown serial0 even for a catalog-PS2 BIN, while retaining known consumer
+failure attribution. Precisely bounded replacement UV/weights may qualify only
+when actual vertex color sources are unused. No geometry bit is granted.
+
 No current profile consumer can be checked merely because a hook name exists.
 For each row, pair the actual emitted gateway with rejection/zero-emission and
 retired/rebound negatives, including disabled branches. Keep counters described

@@ -47,6 +47,10 @@ namespace {
 re4dc_gcasset::SourceUse gcasset_actor_current_select(const Re4dcModelPart* part,const Re4dcActorSource* source,bool classify){
     using namespace re4dc_gcasset;
     if(!part || !source)return {};
+    // These reads are not among the selected package's proven five ranges.
+    // Never let a package/BIN token bless an external vertex color source.
+    if((part->alpha_state&256) || (part->lighting &&
+       (part->lighting->ambient_vertex || part->lighting->material_vertex)))return {};
     PayloadProof* selected=nullptr;bool ambiguous=false;
     const auto accept=[&](PayloadProof& proof){if(selected && selected!=&proof)ambiguous=true;else selected=&proof;};
 #if RE4DC_ACTOR_TRANSACTION && !(defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD)
@@ -106,9 +110,9 @@ extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_select(const Re4dcModelP
 extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_main_select(const Re4dcModelPart* part,const re4dc_gcasset::SourceUse* previous){
     using namespace re4dc_gcasset;
     if(!part)return {};
+    (void)previous;
     const ReplayUse saved=replay_use;
-    const bool replay=saved.serial!=0xffffffffU;
-    const SourceUse frozen{saved.serial,saved.mask,part->model,part->info,saved.payload};
+    if(saved.serial!=0xffffffffU && !saved.payload)return {};
     Re4dcActorSource source{};
     if(!re4dc_actor_model_source(part->info,&source))return {};
     // Array-less parts consume the authenticated source via the existing lazy
@@ -119,18 +123,10 @@ extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_main_select(const Re4dcM
         const auto replacement=re4dc_gcasset_actor_select(part,&source);
         if(replacement.serial)return replacement;
     }
-    if(replay)previous=&frozen;
-    // Preserve only the gateway's same original BIN, with all consumed source
-    // arrays and complete stream bounded by that current captured generation.
-    // Prepared non-BIN arrays without a controlled-copy receipt stay unknown.
-    if(!previous || previous->payload || !previous->serial || previous->model!=part->model || previous->info!=part->info ||
-       !source.position_count || source.position_count>32768 || !source.normal_count || source.normal_count>32768 ||
-       source.position_count!=part->position_count || source.normal_count!=part->normal_count ||
-       !member_contains(previous->serial,part->stream,part->stream_bytes) ||
-       !member_contains(previous->serial,source.positions,source.position_count*8) ||
-       !member_contains(previous->serial,source.normals,source.normal_count*(source.small_normals?4:8)))return {};
-    if(part->positions && (part->positions!=source.positions || part->normals!=source.normals || part->position_stride!=8 ||
-       part->normal_stride!=(source.small_normals?4U:8U) || part->normal_shift!=(source.small_normals?6U:14U)))return {};
-    return *previous;
+    // Raw generic input is deliberately unqualified until COMPLETE consumed
+    // UV/color/weight/shape extents and their derivations are authenticated.
+    // A complete stream plus position/normal bounds is insufficient. nTex is
+    // not a UV extent, and an address prefix cannot supply the missing proof.
+    return {};
 }
 #endif

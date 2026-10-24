@@ -80,7 +80,8 @@ extern "C" {unsigned char re4dc_dvd_buff[0x20000];}
 struct ModelData{const void*vtxOrig;unsigned nVtx,nNrm,weight_ext_num,weight_palette_num;};struct cModelInfo{ModelData*pData;};
 unsigned fingerprint(const void*){return 1;}
 namespace leon4k{struct Weight{unsigned char data[16];};struct Chunk{unsigned source_info,position_count,normal_count,palette_count,triangles,stream_bytes;const unsigned char*positions,*normals,*uv,*stream;const Weight*weights;};Chunk chunks[8];}
-struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;const unsigned char*positions=nullptr,*normals=nullptr;unsigned position_stride=8,normal_stride=8,normal_shift=14;};
+struct GcFixtureLighting{bool ambient_vertex=false,material_vertex=false;};
+struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;const unsigned char*positions=nullptr,*normals=nullptr;unsigned position_stride=8,normal_stride=8,normal_shift=14;unsigned alpha_state=255,flags=0;const GcFixtureLighting*lighting=nullptr;const unsigned char*colors=nullptr;};
 struct Re4dcActorSource{const unsigned char*positions,*normals;unsigned position_count,normal_count,palette_entries,small_normals;};
 ''' + hands + r'''
 namespace leon_hand_pack{void reset_role_ids(unsigned){}}

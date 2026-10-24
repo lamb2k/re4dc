@@ -5,12 +5,21 @@ unit. Current profile is still out-au23on5e4drP: COARSE_ONE_SUBMIT1,
 ACTOR_TRANSACTION1, COARSE_LEON1, LEON_HAND_PACK1 and RETAIN0. No coverage bits,
 catalog, allowance, asset, recipe, rr or cloud animation changes.
 
+The raw fallback allowance from narrow checkpoint2b4484f46 is SUPERSEDED:
+complete stream plus position/normal membership did not prove UV/color/weight/
+shape consumption. Current raw generic input is always unqualified until a
+complete constituent/controlled-derivation receipt exists. A PS2-marked BIN
+catalog row cannot override this guard. The native_model gateway preserves
+known consumer role/model/info with serial0; raw replay stays0, and final generic
+fallback clears any restored actor/payload context before direct/packet use.
+Accepted unknown input produces explicit per-consumer failures, not zero-use.
+
 Actual reachable boundaries:
 
 - native_model selects the original BIN context after static decline. The
   general re4dc_actor_submit now enters its own diagnostic scope immediately
   after qualification, before conversion/deferral/Frame preparation. It cannot
-  inherit an unrelated outer BIN merely because an actor attempt was called.
+  inherit any raw BIN merely because an actor attempt was called.
 - The general fallback remains reachable in the actual submit_chunks branch:
   one_chunk returns-1 for explicit arrays, the caller closes its shared window,
   then calls re4dc_actor_submit. The actual branch is executed by the host test.
@@ -32,13 +41,12 @@ returns empty. Original replay validates complete stream and source-array spans
 against the saved current member serial. This closes old queued stream A mixed
 with newly rebound source arrays B even while both owners remain alive.
 
-Without replay, exact matching replacement/copy identity takes precedence.
-An outer original context survives only with the SAME model/info and full live
-BIN bounds for submitted stream and resolved original arrays. Explicit array
-overrides must equal those original arrays and their expected strides; prepared
-or foreign arrays without a controlled-copy receipt remain unknown. Nothing
-here treats an address prefix, current model class or caller BIN as replacement
-ancestry. Ambiguous original cases fail instead of falling back to a guess.
+Without replay, only an exact replacement/copy identity can qualify. It proves
+the complete selected UV/weight ranges as well as geometry arrays/stream.
+Actual vertex-alpha and vertex ambient/material color consumers are rejected
+because no separate full color proof exists. Explicit foreign/prepared arrays
+also remain unknown. Nothing treats an address prefix, current model class or
+caller BIN as replacement ancestry. Raw original replay remains unqualified.
 
 Both prepare_frame and one_frame stamp a parallel geometry receipt on a new
 cache entry and compare it on a cache hit. A source/proof/consumer generation
@@ -63,8 +71,18 @@ drop main scope, drop cached-generation check, bypass accepted-context check,
 omit complete stream bounds and omit replay-array validation. Existing actual
 hand reload/replay controls now reject stale generations earlier at selection.
 
-Full host81 discovered/80 pass/one historical real-pack opt-in skip, plus C++
+The prior2b checkpoint had host81 discovered/80 pass/one opt-in skip; this raw
+successor needs a fresh complete suite before its combined protocol review.
+New controls mark a synthetic model/geometry row PS2, then exercise external
+UV/color/weight/shape inputs through actual gateway, packet/direct acceptance
+and defer/replay. Accepted asset counters must stay0 while source/Weapon errors
+remain visible. Four extra compiling mutants remove replacement UV/weight/
+color/foreign-array guards; three remove raw gateway/replay/fallback guards.
+These are synthetic source controls, not approval of private PS2 ancestry.
+
+Prior controls included C++
 controls. Actual native_actor_fast gate0 token streams equal d629 in four
-coarse/transaction configurations; target object/image identity remains open.
+coarse/transaction configurations; current native_model tokens are checked too.
+Target object/image identity remains open.
 Independent review, actual current-profile path census/target pricing, complete
 SourceGeometry/Weapon/Motion coverage, source catalog and final stop remain open.

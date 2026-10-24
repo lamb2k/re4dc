@@ -29,7 +29,8 @@ extern "C" void re4dc_log(const char*fmt,...){assert(!sq);char text[256];va_list
 struct cModel{unsigned kindid=0,id=0x10,type=0,nParts=1;};struct cModelInfo{const void*pData=nullptr;};
 struct Body{cModelInfo*pRight=nullptr,*pLeft=nullptr;};struct Player:cModel{struct Body*Body=nullptr;}player;Player*pPL=&player;
 ''' + function(bridge, 'extern "C" unsigned re4dc_gcasset_model_identity(') + '\n' + function(bridge, 'extern "C" unsigned re4dc_gcasset_weapon_consumer(') + r'''
-struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;const unsigned char*positions=nullptr,*normals=nullptr;unsigned position_stride=8,normal_stride=8,normal_shift=14;};
+struct GcFixtureLighting{bool ambient_vertex=false,material_vertex=false;};
+struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;const unsigned char*positions=nullptr,*normals=nullptr;unsigned position_stride=8,normal_stride=8,normal_shift=14;unsigned alpha_state=255,flags=0;const GcFixtureLighting*lighting=nullptr;const unsigned char*colors=nullptr;};
 struct Re4dcActorSource{const unsigned char*positions,*normals;unsigned position_count,normal_count,palette_entries,small_normals;};
 struct Chunk{unsigned position_count=1,normal_count=1,palette_count=1,uv_bytes=4,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};
 struct RegistryView{unsigned geometry_count=1;}registry;Chunk chunks[1];Chunk registry_gview(unsigned g){return chunks[g];}PayloadProof gcasset_registry[2];
@@ -91,7 +92,8 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);unsigned char repl
 using namespace re4dc_gcasset;
 std::string logs;extern "C" void re4dc_log(const char*fmt,...){char text[256];va_list ap;va_start(ap,fmt);vsnprintf(text,sizeof text,fmt,ap);va_end(ap);logs+=text;}
 namespace re4dc_gcasset{bool ensure_disc_catalog(){return true;}}
-struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;const unsigned char*positions=nullptr,*normals=nullptr;unsigned position_stride=8,normal_stride=8,normal_shift=14;};
+struct GcFixtureLighting{bool ambient_vertex=false,material_vertex=false;};
+struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;const unsigned char*positions=nullptr,*normals=nullptr;unsigned position_stride=8,normal_stride=8,normal_shift=14;unsigned alpha_state=255,flags=0;const GcFixtureLighting*lighting=nullptr;const unsigned char*colors=nullptr;};
 struct Re4dcActorSource{const unsigned char*positions,*normals;unsigned position_count,normal_count,palette_entries,small_normals;};
 namespace leon4k{struct Chunk{unsigned source_info,position_count=1,normal_count=1,palette_count=1,triangles=1,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};Chunk chunks[8];float bind[2][12]{};}
 unsigned char arrays[8][5][32]{};
@@ -130,7 +132,8 @@ int main(){assert(install(nullptr,0));begin_startup_closed(1,Required);
 using namespace re4dc_gcasset;
 bool sq;std::string logs;
 extern "C" void re4dc_log(const char*fmt,...){assert(!sq);char text[256];va_list ap;va_start(ap,fmt);vsnprintf(text,sizeof text,fmt,ap);va_end(ap);logs+=text;}
-struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;const unsigned char*positions=nullptr,*normals=nullptr;unsigned position_stride=8,normal_stride=8,normal_shift=14;};
+struct GcFixtureLighting{bool ambient_vertex=false,material_vertex=false;};
+struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;const unsigned char*positions=nullptr,*normals=nullptr;unsigned position_stride=8,normal_stride=8,normal_shift=14;unsigned alpha_state=255,flags=0;const GcFixtureLighting*lighting=nullptr;const unsigned char*colors=nullptr;};
 struct Re4dcActorSource{const unsigned char*positions,*normals;unsigned position_count,normal_count,palette_entries,small_normals;};
 struct Chunk{unsigned position_count=1,normal_count=1,palette_count=1,uv_bytes=4,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};
 struct RegistryView{unsigned geometry_count=2;}registry;Chunk chunks[2];Chunk registry_gview(unsigned g){return chunks[g];}

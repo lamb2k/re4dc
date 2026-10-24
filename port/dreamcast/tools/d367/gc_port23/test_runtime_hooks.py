@@ -72,7 +72,7 @@ int main(){using namespace re4dc_gcasset;int info,other;cModel model{1,0};
                             str(root / 'fixture.cpp'), '-o', str(executable)], check=True)
             subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
 
-    def test_integrated_replay_keeps_original_or_fails_retired(self):
+    def test_raw_replay_is_explicitly_unqualified(self):
         model = (GAME / 'platform/native_model.cpp').read_text()
         start = model.index('extern "C" void re4dc_model_submit(const Re4dcModelPart* p){')
         gateway = model[start:model.index('#if RE4DC_NATIVE_ACTOR\n', start)]+'observe_selected(p);\n}\n'
@@ -107,7 +107,7 @@ int main(){using namespace re4dc_gcasset;int ownerA,ownerB;cModel model{};auto a
  install(nullptr,0);begin(0x111,1,Required);assert(member_adopt(&ownerA,a.data(),128,true)&&member_capture(a.data()+32));assert(member_adopt(&ownerB,b.data(),128,true)&&member_capture(b.data()+32));assert(member_lookup(a.data()+32,&ma)&&member_lookup(b.data()+32,&mb));
  cModelInfo info{b.data()+32};Re4dcModelPart queued{&model,&info,0,nullptr,nullptr,{0,0,0},a.data()+32};
  {ReplayScope replay(ma.serial,1U<<SourceGeometry);re4dc_model_submit(&queued);}member_flush();
- assert(logs.find("id="+id(ma))!=std::string::npos);assert(logs.find("id="+id(mb))==std::string::npos);
+ assert(logs.find("unbound-accepted-model")!=std::string::npos);assert(logs.find("id="+id(ma))==std::string::npos && logs.find("id="+id(mb))==std::string::npos);
  logs.clear();member_retire(&ownerA);
  {ReplayScope replay(ma.serial,1U<<SourceGeometry);re4dc_model_submit(&queued);}member_flush();
  assert(logs.find("unbound-accepted-model")!=std::string::npos);assert(logs.find("id="+id(mb))==std::string::npos);
@@ -141,7 +141,7 @@ int main(){using namespace re4dc_gcasset;int ownerA,ownerB;cModel model{};auto a
 namespace re4dc_gcasset {SourceUse source_use;ReplayUse replay_use;}
 struct Re4dcModelPart {const void* model;const void* info;unsigned serial;const void* world;const void* view;unsigned source_key[3];const void* stream;};
 struct Info {const void* data;};
-unsigned a,b,lookups,selections,expected=77,calls;bool replace;
+unsigned a,b,lookups,selections,expected=0,calls;bool replace;
 #define RE4DC_PROFILE_SCOPE(...) ((void)0)
 #define RE4DC_MODEL_DIAG() true
 #define PP_PATH(...) ((void)0)
@@ -166,10 +166,10 @@ int main(){
   replace=false;re4dc_model_submit(&p);assert(calls==2&&selections==1&&lookups==1&&source_use.serial==99);
   source_use={77,1U<<SourceGeometry,p.model,p.info};DeferredPart node;freeze(&node,p);
   assert(node.asset_serial==77);
-  info.data=&b;source_use.serial=99;expected=77;replay(&node,p);
+  info.data=&b;source_use.serial=99;expected=0;replay(&node,p);
   assert(p.stream==&a && info.data==&b && lookups==1 && source_use.serial==99);
   assert(replay_use.serial==0xffffffffU); // replay cannot relabel old A geometry using current B info
-  expected=88;re4dc_model_submit(&p);assert(lookups==2);
+  expected=0;re4dc_model_submit(&p);assert(lookups==2);
   // An unqualified/static enqueue carries explicit zero, never a fresh lookup.
   source_use={};DeferredPart unknown;freeze(&unknown,p);expected=0;replay(&unknown,p);assert(lookups==2);
 }
